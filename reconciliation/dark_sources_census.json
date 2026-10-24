@@ -1,0 +1,513 @@
+{
+ "artifact": "dark_sources_census",
+ "source_file": "packages/ingestion-pipeline/src/signal-registry-extensions.ts",
+ "measured": "2026-10-20",
+ "d ark_constant": "DARK_NO_PIT = 'DARK: no point-in-time producer on the mint path. Env keys are not a feed.'",
+ "dark_evaluator_count": 21,
+ "count_by_family": {
+  "EFFICIENCY": 9,
+  "LUCK": 1,
+  "MICROCLIMATE": 2,
+  "NARRATIVE": 1,
+  "SITUATIONAL": 8
+ },
+ "count_by_verdict": {
+  "PRODUCER-EXISTS-AND-UNWIRED": 0,
+  "PRODUCER-MISSING": 21
+ },
+ "evaluators": [
+  {
+   "const_name": "nflTurnoverLuckSignal",
+   "signal_id": "nfl_turnover_luck",
+   "label": "NFL Turnover Luck (recovery variance vs skill)",
+   "family": "LUCK",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_player_stats_weekly",
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "DEFENSIVE_PLAYS",
+    "FUMBLES_FORCED",
+    "FUMBLES_RECOVERED_BY_TEAM",
+    "INTERCEPTIONS",
+    "OPPONENT_DROPBACKS"
+   ],
+   "producer_evidence": {
+    "DEFENSIVE_PLAYS": [],
+    "FUMBLES_FORCED": [],
+    "FUMBLES_RECOVERED_BY_TEAM": [],
+    "INTERCEPTIONS": [],
+    "OPPONENT_DROPBACKS": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflShortWeekRoadSignal",
+   "signal_id": "nfl_short_week_road_deficit",
+   "label": "NFL Short-Week Road Rest Deficit",
+   "family": "SITUATIONAL",
+   "category": "SCHEDULE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_schedule"
+   ],
+   "env_keys_read": [
+    "IS_DIVISION_RIVALRY",
+    "IS_ROAD_TEAM",
+    "OPP_REST_DAYS",
+    "REST_DAYS",
+    "TRAVEL_DISTANCE_MILES"
+   ],
+   "producer_evidence": {
+    "IS_DIVISION_RIVALRY": [],
+    "IS_ROAD_TEAM": [],
+    "OPP_REST_DAYS": [],
+    "REST_DAYS": [],
+    "TRAVEL_DISTANCE_MILES": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflAgeConditionedRestSignal",
+   "signal_id": "nfl_age_conditioned_rest",
+   "label": "NFL Age-Conditioned Rest Recovery",
+   "family": "SITUATIONAL",
+   "category": "SCHEDULE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_schedule",
+    "nfl_rosters"
+   ],
+   "env_keys_read": [
+    "OL_AVG_AGE",
+    "REST_DAYS",
+    "ROSTER_SNAP_WEIGHTED_AGE",
+    "STARTING_QB_AGE"
+   ],
+   "producer_evidence": {
+    "OL_AVG_AGE": [],
+    "REST_DAYS": [],
+    "ROSTER_SNAP_WEIGHTED_AGE": [],
+    "STARTING_QB_AGE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflFourthDownAggressionSignal",
+   "signal_id": "nfl_fourth_down_aggressiveness",
+   "label": "NFL Fourth-Down Coaching Aggressiveness",
+   "family": "SITUATIONAL",
+   "category": "PACE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp",
+    "nfl_coaching_history"
+   ],
+   "env_keys_read": [
+    "COACH_GO_FOR_IT_RATE",
+    "FOURTH_DOWN_LEVERAGE",
+    "LEAGUE_GO_FOR_IT_RATE"
+   ],
+   "producer_evidence": {
+    "COACH_GO_FOR_IT_RATE": [],
+    "FOURTH_DOWN_LEVERAGE": [],
+    "LEAGUE_GO_FOR_IT_RATE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflSecondAndTenTendencySignal",
+   "signal_id": "nfl_second_and_ten_tendency",
+   "label": "NFL 2nd-and-10 Play-Calling Tendency (Lopez)",
+   "family": "SITUATIONAL",
+   "category": "PACE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "LEAGUE_SECOND_AND_TEN_PASS_RATE",
+    "SECOND_AND_TEN_PASS_RATE"
+   ],
+   "producer_evidence": {
+    "LEAGUE_SECOND_AND_TEN_PASS_RATE": [],
+    "SECOND_AND_TEN_PASS_RATE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflPrimetimeTargetConcentrationSignal",
+   "signal_id": "nfl_primetime_target_concentration",
+   "label": "NFL Primetime Target Concentration",
+   "family": "SITUATIONAL",
+   "category": "PLAYER_AVAILABILITY",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_player_stats_weekly",
+    "nfl_schedule"
+   ],
+   "env_keys_read": [
+    "IS_PRIMETIME",
+    "LEAGUE_WR1_TARGET_SHARE",
+    "WR1_TARGET_SHARE"
+   ],
+   "producer_evidence": {
+    "IS_PRIMETIME": [],
+    "LEAGUE_WR1_TARGET_SHARE": [],
+    "WR1_TARGET_SHARE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflEarlyDownProeSignal",
+   "signal_id": "nfl_early_down_proe_momentum",
+   "label": "NFL Early-Down PROE Momentum",
+   "family": "SITUATIONAL",
+   "category": "PACE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "EARLY_DOWN_PROE",
+    "EARLY_DOWN_PROE_MOMENTUM"
+   ],
+   "producer_evidence": {
+    "EARLY_DOWN_PROE": [],
+    "EARLY_DOWN_PROE_MOMENTUM": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflTwoMinuteHurryUpSignal",
+   "signal_id": "nfl_two_minute_hurry_up",
+   "label": "NFL Two-Minute Hurry-Up Efficiency",
+   "family": "SITUATIONAL",
+   "category": "PACE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "LEAGUE_TWO_MINUTE_EPA",
+    "TWO_MINUTE_EPA_PER_PLAY"
+   ],
+   "producer_evidence": {
+    "LEAGUE_TWO_MINUTE_EPA": [],
+    "TWO_MINUTE_EPA_PER_PLAY": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflByeWeekDefensiveInstallSignal",
+   "signal_id": "nfl_bye_week_defensive_install",
+   "label": "NFL Bye-Week Defensive Installation Edge",
+   "family": "SITUATIONAL",
+   "category": "SCHEDULE",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_schedule",
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "COMING_OFF_BYE",
+    "DEFENSIVE_EPA_TREND"
+   ],
+   "producer_evidence": {
+    "COMING_OFF_BYE": [],
+    "DEFENSIVE_EPA_TREND": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflQbTwpRegressionSignal",
+   "signal_id": "nfl_qb_twp_regression",
+   "label": "NFL QB Turnover-Worthy-Play Regression",
+   "family": "EFFICIENCY",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp",
+    "nfl_player_stats_weekly"
+   ],
+   "env_keys_read": [
+    "OPP_DEF_INT_RATE",
+    "QB_INTERCEPTIONS",
+    "QB_PASS_ATTEMPTS",
+    "QB_TURNOVER_WORTHY_PLAYS"
+   ],
+   "producer_evidence": {
+    "OPP_DEF_INT_RATE": [],
+    "QB_INTERCEPTIONS": [],
+    "QB_PASS_ATTEMPTS": [],
+    "QB_TURNOVER_WORTHY_PLAYS": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflQbReceiverContinuitySignal",
+   "signal_id": "nfl_qb_receiver_continuity",
+   "label": "NFL QB-Receiver Continuity",
+   "family": "EFFICIENCY",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_rosters",
+    "nfl_player_stats_weekly"
+   ],
+   "env_keys_read": [
+    "QB_WR_GAMES_TOGETHER",
+    "QB_WR_TARGET_SHARE"
+   ],
+   "producer_evidence": {
+    "QB_WR_GAMES_TOGETHER": [],
+    "QB_WR_TARGET_SHARE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflPenaltyDifferentialSignal",
+   "signal_id": "nfl_penalty_differential_momentum",
+   "label": "NFL Penalty Differential Momentum",
+   "family": "EFFICIENCY",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "PENALTY_MOMENTUM",
+    "PENALTY_YARDS_AGAINST",
+    "PENALTY_YARDS_FOR"
+   ],
+   "producer_evidence": {
+    "PENALTY_MOMENTUM": [],
+    "PENALTY_YARDS_AGAINST": [],
+    "PENALTY_YARDS_FOR": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflBackupQbTargetSignal",
+   "signal_id": "nfl_backup_qb_target_distribution",
+   "label": "NFL Backup-QB Target Distribution Shift",
+   "family": "EFFICIENCY",
+   "category": "PLAYER_AVAILABILITY",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_injuries",
+    "nfl_player_stats_weekly"
+   ],
+   "env_keys_read": [
+    "BACKUP_TARGET_SHARE",
+    "QB_IS_BACKUP",
+    "STARTER_TARGET_SHARE"
+   ],
+   "producer_evidence": {
+    "BACKUP_TARGET_SHARE": [],
+    "QB_IS_BACKUP": [],
+    "STARTER_TARGET_SHARE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflManZoneArchetypeSignal",
+   "signal_id": "nfl_man_zone_receiver_archetype",
+   "label": "NFL Man/Zone Receiver Archetype Matchup",
+   "family": "EFFICIENCY",
+   "category": "PLAYER_AVAILABILITY",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_charting",
+    "nfl_player_stats_weekly"
+   ],
+   "env_keys_read": [
+    "DEF_MAN_RATE",
+    "WR_MAN_EPA",
+    "WR_ZONE_EPA"
+   ],
+   "producer_evidence": {
+    "DEF_MAN_RATE": [],
+    "WR_MAN_EPA": [],
+    "WR_ZONE_EPA": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflWr1VacatedSignal",
+   "signal_id": "nfl_wr1_vacated_target_efficiency",
+   "label": "NFL WR1-Out Efficiency Decay",
+   "family": "EFFICIENCY",
+   "category": "PLAYER_AVAILABILITY",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_injuries",
+    "nfl_player_stats_weekly"
+   ],
+   "env_keys_read": [
+    "VACATED_TARGET_SHARE",
+    "WR1_OUT",
+    "WR2_TARGET_SHARE"
+   ],
+   "producer_evidence": {
+    "VACATED_TARGET_SHARE": [],
+    "WR1_OUT": [],
+    "WR2_TARGET_SHARE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflRedzoneOppConversionSignal",
+   "signal_id": "nfl_redzone_opportunity_conversion",
+   "label": "NFL Red-Zone Opportunity Conversion",
+   "family": "EFFICIENCY",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "LEAGUE_REDZONE_TD_RATE",
+    "REDZONE_TDS",
+    "REDZONE_TRIPS"
+   ],
+   "producer_evidence": {
+    "LEAGUE_REDZONE_TD_RATE": [],
+    "REDZONE_TDS": [],
+    "REDZONE_TRIPS": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflNegBinomRedzoneTdSignal",
+   "signal_id": "nfl_negative_binomial_redzone_td",
+   "label": "NFL Negative-Binomial Red-Zone TD Rate",
+   "family": "EFFICIENCY",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp"
+   ],
+   "env_keys_read": [
+    "REDZONE_TD_DISPERSION",
+    "REDZONE_TD_MEAN",
+    "REDZONE_TD_OBSERVED"
+   ],
+   "producer_evidence": {
+    "REDZONE_TD_DISPERSION": [],
+    "REDZONE_TD_MEAN": [],
+    "REDZONE_TD_OBSERVED": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflRedzonePersonnelSignal",
+   "signal_id": "nfl_redzone_personnel_grouping",
+   "label": "NFL Red-Zone Personnel Grouping Edge",
+   "family": "EFFICIENCY",
+   "category": "TEAM_RATES",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_pbp",
+    "nfl_charting"
+   ],
+   "env_keys_read": [
+    "LEAGUE_REDZONE_PERSONNEL_SUCCESS",
+    "REDZONE_PERSONNEL_GROUPING",
+    "REDZONE_PERSONNEL_SUCCESS_RATE"
+   ],
+   "producer_evidence": {
+    "LEAGUE_REDZONE_PERSONNEL_SUCCESS": [],
+    "REDZONE_PERSONNEL_GROUPING": [],
+    "REDZONE_PERSONNEL_SUCCESS_RATE": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflRookieBreakoutSignal",
+   "signal_id": "nfl_rookie_breakout_cohort",
+   "label": "NFL Rookie Breakout Cohort",
+   "family": "NARRATIVE",
+   "category": "PLAYER_AVAILABILITY",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_rosters",
+    "nfl_player_stats_weekly"
+   ],
+   "env_keys_read": [
+    "PLAYER_DRAFT_CAPITAL",
+    "PLAYER_IS_ROOKIE",
+    "PLAYER_USAGE_TREND"
+   ],
+   "producer_evidence": {
+    "PLAYER_DRAFT_CAPITAL": [],
+    "PLAYER_IS_ROOKIE": [],
+    "PLAYER_USAGE_TREND": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflHighAltitudeSignal",
+   "signal_id": "nfl_high_altitude_fatigue",
+   "label": "NFL High-Altitude Fatigue Decay",
+   "family": "MICROCLIMATE",
+   "category": "VENUE_ENVIRONMENT",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_stadium_weather_feed"
+   ],
+   "env_keys_read": [
+    "IS_VISITING",
+    "STADIUM_ELEVATION_FT"
+   ],
+   "producer_evidence": {
+    "IS_VISITING": [],
+    "STADIUM_ELEVATION_FT": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  },
+  {
+   "const_name": "nflTurfSurfaceFatigueSignal",
+   "signal_id": "nfl_turf_surface_fatigue",
+   "label": "NFL Turf Surface Fatigue",
+   "family": "MICROCLIMATE",
+   "category": "VENUE_ENVIRONMENT",
+   "activationStatus": "DARK",
+   "blocked_reason_const": "DARK_NO_PIT",
+   "data_dependencies": [
+    "nfl_stadium_meta"
+   ],
+   "env_keys_read": [
+    "IS_ARTIFICIAL_TURF",
+    "TURF_SOFTNESS_INDEX"
+   ],
+   "producer_evidence": {
+    "IS_ARTIFICIAL_TURF": [],
+    "TURF_SOFTNESS_INDEX": []
+   },
+   "verdict": "PRODUCER-MISSING"
+  }
+ ]
+}

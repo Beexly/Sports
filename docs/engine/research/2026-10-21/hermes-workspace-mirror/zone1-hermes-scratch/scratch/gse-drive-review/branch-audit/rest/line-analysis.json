@@ -1,0 +1,988 @@
+[
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "rows": [
+   {
+    "path": "packages/ingestion-pipeline/package.json",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 7,
+    "n_removed": 3,
+    "added_missing": 4,
+    "rem_present": 2,
+    "missing_examples": [
+     "  \"main\": \"./dist/index.js\",",
+     "  \"types\": \"./dist/index.d.ts\",",
+     "    \"build\": \"tsc\",",
+     "    \"test:watch\": \"vitest\","
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/__tests__/process-sport.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 522,
+    "n_removed": 0,
+    "added_missing": 338,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect, vi, beforeEach } from \"vitest\";",
+     "import type { Mock } from \"vitest\";",
+     "import type { SportConfig } from \"../process-sport.js\";",
+     "// \u2500\u2500 Mocks \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+     "// All three external I/O boundaries: DB, data-ingestion, prediction-engine."
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/__tests__/settle-picks.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 481,
+    "n_removed": 0,
+    "added_missing": 481,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect, vi, beforeEach } from \"vitest\";",
+     "import type { Mock } from \"vitest\";",
+     "",
+     "// \u2500\u2500 Hoisted mocks (vi.hoisted runs before module evaluation) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+     ""
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 0,
+    "added_missing": 2,
+    "rem_present": 0,
+    "missing_examples": [
+     "export { settlePicks } from \"./settle-picks.js\";",
+     "export type { SettlePicksResult, SettlePicksSummary } from \"./settle-picks.js\";"
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/process-sport.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 26,
+    "n_removed": 0,
+    "added_missing": 17,
+    "rem_present": 0,
+    "missing_examples": [
+     "  detectPlayoffContext,",
+     "      // Playoff/series context (v6): detect if this is part of an active series.",
+     "      // Non-fatal \u2014 null when no prior series games exist in our DB.",
+     "      let playoffContext = null;",
+     "        playoffContext = await detectPlayoffContext("
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/settle-picks.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 355,
+    "n_removed": 0,
+    "added_missing": 355,
+    "rem_present": 0,
+    "missing_examples": [
+     "/**",
+     " * settlePicks \u2014 canonical settlement entry point.",
+     " *",
+     " * Fetches final scores from The Odds API for the last `daysFrom` days,",
+     " * then settles all PENDING picks for completed games."
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/tsconfig.json",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 1,
+    "added_missing": 1,
+    "rem_present": 1,
+    "missing_examples": [
+     "  \"exclude\": [\"node_modules\", \"dist\", \"src/**/*.test.ts\"]"
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/vitest.config.ts",
+    "status": "added",
+    "same_main": true,
+    "motif_same": true,
+    "motif_eq_main": true,
+    "n_added": 9,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/package.json",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 3,
+    "n_removed": 2,
+    "added_missing": 3,
+    "rem_present": 2,
+    "missing_examples": [
+     "  \"main\": \"./dist/index.js\",",
+     "  \"types\": \"./dist/index.d.ts\",",
+     "    \"build\": \"tsc\","
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 572,
+    "n_removed": 0,
+    "added_missing": 473,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { computePlayoffContextScore, computeGameContext } from \"../game-context.js\";",
+     "import { scoreGame } from \"../scoring.js\";",
+     "import type { PlayoffContext } from \"@sports/types\";",
+     "import type { OddsInput } from \"@sports/types\";",
+     "// \u2500\u2500\u2500 Fixtures \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/scoring.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 2,
+    "added_missing": 2,
+    "rem_present": 0,
+    "missing_examples": [
+     "  it(\"modelVersion is v6.0.0\", () => {",
+     "    expect(picks[0]?.modelVersion).toBe(\"v6.0.0\");"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/constants.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 8,
+    "n_removed": 1,
+    "added_missing": 7,
+    "rem_present": 0,
+    "missing_examples": [
+     "export const MODEL_VERSION = \"v6.0.0\";",
+     "  // \u2500\u2500 Playoff/series context (v6) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+     "  // Direct score contribution from series deficit / desperation.",
+     "  // Historical form signals (ATS/H2H/venue) are discounted proportionally",
+     "  // to desperationMultiplier, since regular-season trends are less reliable"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/game-context.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 111,
+    "n_removed": 8,
+    "added_missing": 76,
+    "rem_present": 8,
+    "missing_examples": [
+     "import type { FactorDetail, GameContextInput, AtsFormBucket, PlayoffContext } from \"@sports/types\";",
+     "  historicalFormScore: number;      // \u201310 to +10 (overall ATS form, after playoff discount)",
+     "  headToHeadScore: number;          // \u20135 to +5 (H2H ATS record, after playoff discount)",
+     "  venueFormScore: number;           // \u20135 to +5 (venue-specific ATS, after playoff discount)",
+     "  // v6 additions"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 0,
+    "added_missing": 2,
+    "rem_present": 0,
+    "missing_examples": [
+     "  // v6",
+     "  computePlayoffContextScore,"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/scoring.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 13,
+    "n_removed": 2,
+    "added_missing": 13,
+    "rem_present": 2,
+    "missing_examples": [
+     "  const playoffContextScore = ctx?.playoffContextScore ?? 0;",
+     "      scheduleStressScore + playoffContextScore + 10,",
+     "  if (playoffContextScore > 3) contextClauses.push(\"playoff desperation (trailing in series)\");",
+     "  else if (playoffContextScore > 0) contextClauses.push(\"playoff series context\");",
+     "  else if (playoffContextScore < -1) contextClauses.push(\"series lead complacency risk\");"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/tsconfig.json",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 1,
+    "added_missing": 1,
+    "rem_present": 0,
+    "missing_examples": [
+     "  \"exclude\": [\"node_modules\", \"dist\", \"src/**/*.test.ts\"]"
+    ]
+   }
+  ]
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK",
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 134,
+    "n_removed": 0,
+    "added_missing": 134,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, expect, it } from \"vitest\";",
+     "import type {",
+     "  EvidenceActivationStatus,",
+     "  FactorBreakdown,",
+     "  FactorDetail,"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 0,
+    "added_missing": 1,
+    "rem_present": 0,
+    "missing_examples": [
+     "export { extractPickSources } from \"./pick-sources.js\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/pick-sources.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 41,
+    "n_removed": 0,
+    "added_missing": 41,
+    "rem_present": 0,
+    "missing_examples": [
+     "/**",
+     " * Pick-level sources aggregator.",
+     " *",
+     " * The master prompt Track 1 output spec lists `sources[]` as a top-level",
+     " * peer of `pick / confidence / reasoning`. The data already exists nested"
+    ]
+   }
+  ]
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-codex",
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 134,
+    "n_removed": 0,
+    "added_missing": 134,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, expect, it } from \"vitest\";",
+     "import type {",
+     "  EvidenceActivationStatus,",
+     "  FactorBreakdown,",
+     "  FactorDetail,"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 0,
+    "added_missing": 1,
+    "rem_present": 0,
+    "missing_examples": [
+     "export { extractPickSources } from \"./pick-sources.js\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/pick-sources.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 41,
+    "n_removed": 0,
+    "added_missing": 41,
+    "rem_present": 0,
+    "missing_examples": [
+     "/**",
+     " * Pick-level sources aggregator.",
+     " *",
+     " * The master prompt Track 1 output spec lists `sources[]` as a top-level",
+     " * peer of `pick / confidence / reasoning`. The data already exists nested"
+    ]
+   }
+  ]
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-audit",
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 134,
+    "n_removed": 0,
+    "added_missing": 134,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, expect, it } from \"vitest\";",
+     "import type {",
+     "  EvidenceActivationStatus,",
+     "  FactorBreakdown,",
+     "  FactorDetail,"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 0,
+    "added_missing": 1,
+    "rem_present": 0,
+    "missing_examples": [
+     "export { extractPickSources } from \"./pick-sources.js\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/pick-sources.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 41,
+    "n_removed": 0,
+    "added_missing": 41,
+    "rem_present": 0,
+    "missing_examples": [
+     "/**",
+     " * Pick-level sources aggregator.",
+     " *",
+     " * The master prompt Track 1 output spec lists `sources[]` as a top-level",
+     " * peer of `pick / confidence / reasoning`. The data already exists nested"
+    ]
+   }
+  ]
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "rows": [
+   {
+    "path": "packages/ingestion-pipeline/package.json",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 4,
+    "n_removed": 2,
+    "added_missing": 2,
+    "rem_present": 0,
+    "missing_examples": [
+     "    \"test\": \"vitest run\"",
+     "    \"vitest\": \"^4.1.7\""
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/__tests__/source-snapshot.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 88,
+    "n_removed": 0,
+    "added_missing": 63,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { createHash } from \"node:crypto\";",
+     "import { stableStringify } from \"../source-snapshot\";",
+     "/**",
+     " * Unit tests for the stableStringify helper.",
+     " *"
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 4,
+    "n_removed": 4,
+    "added_missing": 4,
+    "rem_present": 4,
+    "missing_examples": [
+     "export { processSport } from \"./process-sport\";",
+     "export type { SportConfig, ProcessSportResult } from \"./process-sport\";",
+     "export { recordSourceSnapshot } from \"./source-snapshot\";",
+     "export type { SourceSnapshotInput } from \"./source-snapshot\";"
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/process-sport.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 1,
+    "added_missing": 1,
+    "rem_present": 1,
+    "missing_examples": [
+     "import { recordSourceSnapshot } from \"./source-snapshot\";"
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/source-snapshot.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 1,
+    "added_missing": 1,
+    "rem_present": 1,
+    "missing_examples": [
+     "export function stableStringify(value: unknown): string {"
+    ]
+   },
+   {
+    "path": "packages/ingestion-pipeline/vitest.config.ts",
+    "status": "added",
+    "same_main": true,
+    "motif_same": true,
+    "motif_eq_main": true,
+    "n_added": 9,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/package.json",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 4,
+    "n_removed": 3,
+    "added_missing": 3,
+    "rem_present": 3,
+    "missing_examples": [
+     "    \"@sports/types\": \"*\",",
+     "    \"vite\": \"^6.4.2\"",
+     "    \"vitest\": \"^4.1.7\""
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/evidence-readiness-matrix.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 167,
+    "n_removed": 1,
+    "added_missing": 71,
+    "rem_present": 1,
+    "missing_examples": [
+     "} from \"../evidence-readiness-matrix\";",
+     "  it(\"getEvidenceFactorDefinition throws on an unknown factor key\", () => {",
+     "    expect(() =>",
+     "      getEvidenceFactorDefinition(\"nonexistent.factor\" as \"market.odds\")",
+     "    ).toThrow(/Unknown evidence factor/);"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 615,
+    "n_removed": 0,
+    "added_missing": 402,
+    "rem_present": 0,
+    "missing_examples": [
+     "import {",
+     "  computeLineMovementScore,",
+     "  computeRestAdvantageScore,",
+     "  computeHistoricalFormScore,",
+     "  computeDataQuality,"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/kelly.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 2,
+    "added_missing": 2,
+    "rem_present": 2,
+    "missing_examples": [
+     "} from \"../kelly\";",
+     "import { MODEL_VERSION } from \"../constants\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 189,
+    "n_removed": 0,
+    "added_missing": 189,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect, beforeEach, afterEach } from \"vitest\";",
+     "import { getPlatformConfig } from \"../platform-config\";",
+     "",
+     "/**",
+     " * Unit tests for getPlatformConfig \u2014 verifies the \"fail closed\" invariant."
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/poisson.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 16,
+    "n_removed": 1,
+    "added_missing": 10,
+    "rem_present": 1,
+    "missing_examples": [
+     "} from \"../poisson\";",
+     "  it(\"returns 0 for non-finite lambda (Infinity or NaN)\", () => {",
+     "    expect(poissonPmf(3, Infinity)).toBe(0);",
+     "    expect(poissonPmf(3, NaN)).toBe(0);",
+     "  it(\"returns 1 when lambda <= 0 and k >= 0 (degenerate zero-rate distribution)\", () => {"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/readiness-gates.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 180,
+    "n_removed": 0,
+    "added_missing": 180,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect, beforeEach, afterEach } from \"vitest\";",
+     "import { getReadinessGates, bootstrapGateResponse } from \"../readiness\";",
+     "",
+     "/**",
+     " * Unit tests for getReadinessGates() \u2014 pins the mapping from PlatformConfig"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/scoring.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 609,
+    "n_removed": 3,
+    "added_missing": 284,
+    "rem_present": 3,
+    "missing_examples": [
+     "} from \"../scoring\";",
+     "} from \"../game-context\";",
+     "import { MODEL_VERSION } from \"../constants\";",
+     "  it(\"low consensus (\u224855.6%) with sufficient books = HIGH_VARIANCE via consensus path\", () => {",
+     "    // 9 books, 5 favor home (spread < 0) and 4 favor away (spread > 0)."
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/settlement.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 18,
+    "n_removed": 1,
+    "added_missing": 15,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { calculatePickResult } from \"../settlement\";",
+     "describe(\"calculatePickResult \u2014 fallthrough guard\", () => {",
+     "  it(\"returns PUSH for any unrecognized pickType (exhaustive fallthrough)\", () => {",
+     "    // TypeScript normally prevents this at compile time; the runtime guard",
+     "    // ensures the function never silently omits a result."
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 507,
+    "n_removed": 0,
+    "added_missing": 434,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect } from \"vitest\";",
+     "import { buildPickSignalSnapshot } from \"../signal-snapshot\";",
+     "import type { ScoredPick, GameContextInput } from \"@sports/types\";",
+     " * Unit tests for buildPickSignalSnapshot \u2014 pure function that captures",
+     " * what was known at prediction time for calibration / outcome-anchored learning."
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/game-context.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 2,
+    "added_missing": 2,
+    "rem_present": 2,
+    "missing_examples": [
+     "import { WEIGHTS } from \"./constants\";",
+     "import { clamp } from \"./scoring\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 17,
+    "n_removed": 17,
+    "added_missing": 17,
+    "rem_present": 16,
+    "missing_examples": [
+     "} from \"./scoring\";",
+     "} from \"./game-context\";",
+     "export type { GameContextInput, GameContextScores, AtsFormBucket } from \"./game-context\";",
+     "export { calculatePickResult } from \"./settlement\";",
+     "export type { SettlementResult } from \"./settlement\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/kelly.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 1,
+    "n_removed": 1,
+    "added_missing": 1,
+    "rem_present": 1,
+    "missing_examples": [
+     "import { americanToImpliedProbability, clamp } from \"./scoring\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/readiness.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 2,
+    "added_missing": 2,
+    "rem_present": 2,
+    "missing_examples": [
+     "import { getPlatformConfig } from \"./platform-config\";",
+     "import type { PlatformConfig, ConfidenceDisplayMode } from \"./platform-config\";"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/scoring.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 2,
+    "n_removed": 2,
+    "added_missing": 2,
+    "rem_present": 2,
+    "missing_examples": [
+     "} from \"./constants\";",
+     "import { computeGameContext } from \"./game-context\";"
+    ]
+   }
+  ]
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/evidence-readiness-matrix-gaps.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 322,
+    "n_removed": 0,
+    "added_missing": 322,
+    "rem_present": 0,
+    "missing_examples": [
+     "/**",
+     " * Targeted coverage for evidence-readiness-matrix branches not reached by",
+     " * evidence-readiness-matrix.test.ts.",
+     " *",
+     " * The primary test covers: ACTIVE status, missing market board"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context-functions.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 531,
+    "n_removed": 0,
+    "added_missing": 531,
+    "rem_present": 0,
+    "missing_examples": [
+     "/**",
+     " * Targeted unit tests for the individual exported pure functions in game-context.ts.",
+     " *",
+     " * The primary game-context.test.ts covers computeGameContext (the composite entry point).",
+     " * This file directly unit-tests each sub-function for branch coverage."
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 158,
+    "n_removed": 0,
+    "added_missing": 118,
+    "rem_present": 0,
+    "missing_examples": [
+     "import type { GameContextInput } from \"@sports/types\";",
+     "function minimalContext(overrides: Partial<GameContextInput> = {}): GameContextInput {",
+     "  return {",
+     "    bookmakerCoverageMax: 8,",
+     "    dataFreshnessMinutes: 15,"
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 167,
+    "n_removed": 0,
+    "added_missing": 167,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect, beforeEach, afterEach } from \"vitest\";",
+     "import { getPlatformConfig } from \"../platform-config.js\";",
+     "",
+     "const ENV_KEYS = [",
+     "  \"CANONICAL_HISTORY_ENABLED\","
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/readiness.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 223,
+    "n_removed": 0,
+    "added_missing": 223,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect, beforeEach, afterEach } from \"vitest\";",
+     "import { getReadinessGates, bootstrapGateResponse } from \"../readiness.js\";",
+     "",
+     "const ENV_KEYS = [",
+     "  \"CANONICAL_HISTORY_ENABLED\","
+    ]
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 314,
+    "n_removed": 0,
+    "added_missing": 259,
+    "rem_present": 0,
+    "missing_examples": [
+     "import { describe, it, expect } from \"vitest\";",
+     "import type { ScoredPick, GameContextInput, EvidenceRecord } from \"@sports/types\";",
+     "function pick(overrides: Partial<ScoredPick> = {}): ScoredPick {",
+     "    gameId: \"game-1\",",
+     "    pickType: \"SPREAD\","
+    ]
+   }
+  ]
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/model-promoter.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 0,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/oos-split.test.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 0,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 0,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/src/model-promoter.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": false,
+    "n_added": 0,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/src/oos-split.ts",
+    "status": "added",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 0,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   }
+  ]
+ },
+ {
+  "branch": "claude/launch-review-fixes",
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/probability-calibration.test.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 24,
+    "n_removed": 0,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   },
+   {
+    "path": "packages/prediction-engine/src/probability-calibration.ts",
+    "status": "modified",
+    "same_main": false,
+    "motif_same": false,
+    "motif_eq_main": true,
+    "n_added": 27,
+    "n_removed": 15,
+    "added_missing": 0,
+    "rem_present": 0,
+    "missing_examples": []
+   }
+  ]
+ }
+]

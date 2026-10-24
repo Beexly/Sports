@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkunderdog_react=self.webpackChunkunderdog_react||[]).push([["7213"],{73817:function(e,n,t){t.d(n,{createWebviewLocationService:()=>l});function l(e){let{initialState:n}=e,t=n?{...n}:{lat:null,long:null,locationToken:null,geoComplyLicenseKey:null};return{dispose:()=>{},getStateSnapshot:()=>({...t})}}}}]);
+//# sourceMappingURL=service.location.ca1e325f1dd5baf9.js.map

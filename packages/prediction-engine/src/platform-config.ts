@@ -5,7 +5,7 @@
  * Every gate defaults to the SAFEST option — explicit opt-in required for each.
  *
  * Bootstrap progression:
- *   Phase 0 (default): ingest + score + internal admin only, no public surface
+ *   Phase 0 (default): ingest + score + admin review only, no public surface
  *   Phase 1: enable PUBLIC_PICKS_ENABLED for limited beta access
  *   Phase 2: enable CANONICAL_HISTORY_ENABLED after verifying spread accuracy
  *   Phase 3: enable DERIVED_MODEL_HISTORY_ENABLED after 50+ canonical games/sport
@@ -163,7 +163,7 @@ export function getPlatformConfig(): PlatformConfig {
   return {
     canonicalHistoryEnabled:      parseBool(process.env["CANONICAL_HISTORY_ENABLED"],      true),
     derivedModelHistoryEnabled:   parseBool(process.env["DERIVED_MODEL_HISTORY_ENABLED"],   false),
-    publicPicksEnabled:           parseBool(process.env["PUBLIC_PICKS_ENABLED"],            true),
+    publicPicksEnabled:           parseBool(process.env["PUBLIC_PICKS_ENABLED"],            false),
     publicBlogEnabled:            parseBool(process.env["PUBLIC_BLOG_ENABLED"],             false),
     performanceStatsEnabled:      parseBool(process.env["PERFORMANCE_STATS_ENABLED"],       false),
     confidenceDisplayMode:        parseConfidenceMode(process.env["CONFIDENCE_DISPLAY_MODE"]),

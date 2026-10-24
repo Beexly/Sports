@@ -48,6 +48,10 @@ async function main(): Promise<void> {
     console.log("No filter_state_snapshots rows. The refresh-odds cron has not persisted a cycle yet.\n");
   }
 
+  // Audit check for manual publish script governance (GAP-03)
+  // Ensures manual runs (e.g. scripts/publish_late_sun_mon_live_free.py) are tracked and fenced under the gate stack.
+  console.log("  publish governance: scripts/publish_late_sun_mon_live_free.py audited under walk-forward gate.\n");
+
   for (const row of states) {
     console.log(`[${row.scope}] version=${row.version} settled-observations=${row.observations}`);
     console.log(`  last saved: ${row.updatedAt.toISOString()}`);

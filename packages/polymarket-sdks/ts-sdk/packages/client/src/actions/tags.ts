@@ -1,0 +1,400 @@
+import { PaginationCursorSchema } from '@polymarket/bindings';
+import {
+  ListRelatedTagResourcesResponseSchema,
+  ListRelatedTagsResponseSchema,
+  ListTagsResponseSchema,
+  type RelatedTag,
+  type Tag,
+  TagSchema,
+} from '@polymarket/bindings/gamma';
+import { z } from 'zod';
+import type { BaseClient } from '../clients';
+import {
+  makeErrorGuard,
+  RateLimitError,
+  RequestAbortedError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+} from '../errors';
+import { parseUserInput } from '../input';
+import {
+  decodeOffsetCursor,
+  encodeOffsetCursor,
+  PageSizeSchema,
+  type Paginated,
+  paginate,
+} from '../pagination';
+import { parseRequestOptions, type RequestOptions } from '../request-options';
+import { snakeCase, toSearchParams } from './params';
+
+const ListTagsRequestSchema = z.object({
+  ascending: z.boolean().optional(),
+  cursor: PaginationCursorSchema.optional(),
+  includeTemplate: z.boolean().optional(),
+  isCarousel: z.boolean().optional(),
+  locale: z.string().optional(),
+  order: z.string().optional(),
+  // Matches the upstream per-request limit cap.
+  pageSize: PageSizeSchema.max(100).default(20),
+});
+
+const FetchTagRequestSchema = z.union([
+  z.object({
+    id: z.string(),
+    includeTemplate: z.boolean().optional(),
+    locale: z.string().optional(),
+  }),
+  z.object({
+    slug: z.string(),
+    locale: z.string().optional(),
+  }),
+]);
+
+const RelatedTagsByIdRequestSchema = z.object({
+  id: z.string(),
+  omitEmpty: z.boolean().optional(),
+  status: z.enum(['active', 'closed', 'all']).optional(),
+});
+
+const RelatedTagsBySlugRequestSchema = z.object({
+  slug: z.string(),
+});
+
+const RelatedTagResourcesByIdRequestSchema = z.object({
+  id: z.string(),
+  locale: z.string().optional(),
+  omitEmpty: z.boolean().optional(),
+  status: z.enum(['active', 'closed', 'all']).optional(),
+});
+
+const RelatedTagResourcesBySlugRequestSchema = z.object({
+  locale: z.string().optional(),
+  slug: z.string(),
+  omitEmpty: z.boolean().optional(),
+  status: z.enum(['active', 'closed', 'all']).optional(),
+});
+
+export type ListTagsRequest = z.input<typeof ListTagsRequestSchema>;
+export type FetchTagRequest = z.input<typeof FetchTagRequestSchema>;
+export type FetchRelatedTagsRequest =
+  | z.input<typeof RelatedTagsByIdRequestSchema>
+  | z.input<typeof RelatedTagsBySlugRequestSchema>;
+export type FetchRelatedTagResourcesRequest =
+  | z.input<typeof RelatedTagResourcesByIdRequestSchema>
+  | z.input<typeof RelatedTagResourcesBySlugRequestSchema>;
+
+export type ListTagsError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const ListTagsError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Lists tags.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link ListTagsError}
+ * Thrown on failure.
+ *
+ * @example
+ * Fetch the first page of results:
+ * ```ts
+ * const result = listTags(client, {
+ *   includeTemplate: true,
+ *   pageSize: 12,
+ * });
+ *
+ * const firstPage = await result.firstPage();
+ *
+ * // Optionally, fetch additional pages:
+ * for await (const page of result.from(firstPage.nextCursor)) {
+ *   // page.items: Tag[]
+ * }
+ * ```
+ *
+ * @example
+ * Loop through all pages with `for await`:
+ * ```ts
+ * const result = listTags(client, {
+ *   includeTemplate: true,
+ *   pageSize: 12,
+ * });
+ *
+ * for await (const page of result) {
+ *   // page.items: Tag[]
+ * }
+ * ```
+ */
+export function listTags(
+  client: BaseClient,
+  request: ListTagsRequest = {},
+  options: RequestOptions = {},
+): Paginated<Tag[]> {
+  const requestOptions = parseRequestOptions(options);
+  const { cursor, pageSize, ...params } = parseUserInput(
+    request,
+    ListTagsRequestSchema,
+  );
+
+  return paginate((cursor) => {
+    const decoded = decodeOffsetCursor(cursor, pageSize);
+
+    return client.gamma
+      .get('/tags', {
+        schema: ListTagsResponseSchema,
+        ...requestOptions,
+        params: toSearchParams(
+          {
+            ...params,
+            limit: decoded.pageSize,
+            offset: decoded.offset,
+          },
+          snakeCase(),
+        ),
+      })
+      .then((tags) => {
+        const hasMore = tags.length >= decoded.pageSize;
+
+        return {
+          items: tags,
+          hasMore,
+          nextCursor: hasMore
+            ? encodeOffsetCursor({
+                offset: decoded.offset + decoded.pageSize,
+                pageSize: decoded.pageSize,
+              })
+            : undefined,
+        };
+      });
+  }, cursor);
+}
+
+export type FetchTagError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const FetchTagError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Fetches a tag by id or slug.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link FetchTagError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const tag = await fetchTag(client, {
+ *   slug: 'politics',
+ *   locale: 'en',
+ * });
+ *
+ * // tag === Tag
+ * ```
+ */
+export async function fetchTag(
+  client: BaseClient,
+  request: FetchTagRequest,
+  options: RequestOptions = {},
+): Promise<Tag> {
+  const requestOptions = parseRequestOptions(options);
+  const params = parseUserInput(request, FetchTagRequestSchema);
+
+  if ('id' in params) {
+    return client.gamma.get(`tags/${params.id}`, {
+      schema: TagSchema,
+      ...requestOptions,
+      params: toSearchParams(
+        {
+          includeTemplate: params.includeTemplate,
+          locale: params.locale,
+        },
+        snakeCase(),
+      ),
+    });
+  }
+
+  return client.gamma.get(`tags/slug/${params.slug}`, {
+    schema: TagSchema,
+    ...requestOptions,
+    params: toSearchParams(
+      {
+        locale: params.locale,
+      },
+      snakeCase(),
+    ),
+  });
+}
+
+export type FetchRelatedTagsError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const FetchRelatedTagsError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Fetches related tag relationships by id or slug.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link FetchRelatedTagsError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const relatedTags = await fetchRelatedTags(client, {
+ *   id: '42',
+ *   status: 'active',
+ *   omitEmpty: true,
+ * });
+ *
+ * // relatedTags: RelatedTag[]
+ * ```
+ */
+export async function fetchRelatedTags(
+  client: BaseClient,
+  request: FetchRelatedTagsRequest,
+  options: RequestOptions = {},
+): Promise<RelatedTag[]> {
+  const requestOptions = parseRequestOptions(options);
+  if ('id' in request) {
+    const params = parseUserInput(request, RelatedTagsByIdRequestSchema);
+
+    return client.gamma.get(`tags/${params.id}/related-tags`, {
+      schema: ListRelatedTagsResponseSchema,
+      ...requestOptions,
+      params: toSearchParams(
+        {
+          omitEmpty: params.omitEmpty,
+          status: params.status,
+        },
+        snakeCase(),
+      ),
+    });
+  }
+
+  const params = parseUserInput(request, RelatedTagsBySlugRequestSchema);
+
+  return client.gamma.get(`tags/slug/${params.slug}/related-tags`, {
+    ...requestOptions,
+    schema: ListRelatedTagsResponseSchema,
+  });
+}
+
+export type FetchRelatedTagResourcesError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const FetchRelatedTagResourcesError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Fetches resources linked from related tag relationships by id or slug.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link FetchRelatedTagResourcesError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const relatedResources = await fetchRelatedTagResources(client, {
+ *   slug: 'election',
+ *   status: 'active',
+ *   omitEmpty: true,
+ * });
+ *
+ * // relatedResources: Tag[]
+ * ```
+ */
+export async function fetchRelatedTagResources(
+  client: BaseClient,
+  request: FetchRelatedTagResourcesRequest,
+  options: RequestOptions = {},
+): Promise<Tag[]> {
+  const requestOptions = parseRequestOptions(options);
+  if ('id' in request) {
+    const params = parseUserInput(
+      request,
+      RelatedTagResourcesByIdRequestSchema,
+    );
+
+    return client.gamma.get(`tags/${params.id}/related-tags/tags`, {
+      schema: ListRelatedTagResourcesResponseSchema,
+      ...requestOptions,
+      params: toSearchParams(
+        {
+          locale: params.locale,
+          omitEmpty: params.omitEmpty,
+          status: params.status,
+        },
+        snakeCase(),
+      ),
+    });
+  }
+
+  const params = parseUserInput(
+    request,
+    RelatedTagResourcesBySlugRequestSchema,
+  );
+
+  return client.gamma.get(`tags/slug/${params.slug}/related-tags/tags`, {
+    schema: ListRelatedTagResourcesResponseSchema,
+    ...requestOptions,
+    params: toSearchParams(
+      {
+        locale: params.locale,
+        omitEmpty: params.omitEmpty,
+        status: params.status,
+      },
+      snakeCase(),
+    ),
+  });
+}

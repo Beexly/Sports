@@ -1,0 +1,68 @@
+{
+  "record_type": "osf_runtime_feed",
+  "generated_utc": "2026-10-22T17:45:11.830146+00:00",
+  "source": "nflverse play-by-play (CC-BY 4.0)",
+  "seasons": [
+    2024
+  ],
+  "families": [
+    {
+      "family": "qb_volatility",
+      "residual": 0.024421,
+      "precision_weight": 0.999874,
+      "normalized_weight": 0.200328,
+      "movement": 0.004892
+    },
+    {
+      "family": "team_ability",
+      "residual": 0.012442,
+      "precision_weight": 0.999968,
+      "normalized_weight": 0.200346,
+      "movement": 0.002493
+    },
+    {
+      "family": "defense_penalties_proe",
+      "residual": null,
+      "precision_weight": 0.0,
+      "normalized_weight": 0.0,
+      "movement": 0.0
+    },
+    {
+      "family": "receiving_xfp",
+      "residual": 10.94916,
+      "precision_weight": 0.992078,
+      "normalized_weight": 0.198766,
+      "movement": 2.176317
+    },
+    {
+      "family": "special_teams_ep_wp",
+      "residual": -0.026945,
+      "precision_weight": 0.999528,
+      "normalized_weight": 0.200258,
+      "movement": -0.005396
+    },
+    {
+      "family": "situational",
+      "residual": 0.008148,
+      "precision_weight": 0.999747,
+      "normalized_weight": 0.200302,
+      "movement": 0.001632
+    }
+  ],
+  "family_count": 6,
+  "total_precision_weight": 4.991195,
+  "uncapped_probability_movement": 2.179938,
+  "probability_cap": 0.12,
+  "capped_probability_movement": 0.12,
+  "cap_bound": true,
+  "sources": [
+    {
+      "season": 2024,
+      "path": "data\\nflverse\\pbp\\play_by_play_2024.csv",
+      "bytes": 99483794,
+      "sha256": "6ae564c2c49378ec531303292966caee596982278b9fcdad9c9dd0a0dc16bfa7",
+      "downloaded": true,
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv"
+    }
+  ]
+}

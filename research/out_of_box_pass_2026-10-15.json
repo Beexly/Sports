@@ -1,0 +1,43 @@
+{
+ "date": "2026-10-15",
+ "title": "Out-of-box pass: structural findings + falsifications",
+ "findings": {
+  "residual_fat_tail": "excess kurtosis 0.40, right tail fatter (+2.8 at q=0.99) \u2014 real but two-piece/asymmetric constructions all lose to symmetric gaussian+atoms",
+  "mu_grid_structure": "1175 games have integer mu (integer residuals), 1287 have half-mu (half-point residuals). Residual atoms genuinely sit on different grids by mu parity.",
+  "signed_atoms": "P(+3) vs P(-3) differ ~15% relative by favorite side \u2014 real signal the harness's symmetric atoms cannot express",
+  "why_parity_and_signed_lose": "my GH-quadrature continuous part carries +0.03 CRPS bias vs the harness's exact crps_energy \u2014 big enough to swamp 0.002-level gains. To express signed/parity atoms in the harness engine requires modifying crps_energy itself (out of scope: protected harness)."
+ },
+ "falsified_this_pass": [
+  [
+   "two-piece asymmetric sigma (GH mixture)",
+   "7.196-7.212",
+   "half-weight normalization + tail under-integration"
+  ],
+  [
+   "two-piece avg-sigma (half-normal corrected)",
+   "7.1362",
+   "close but loses"
+  ],
+  [
+   "mu-parity full grid atoms (8 atoms)",
+   "7.151-7.153",
+   "overfit \u2014 sparse cell masses"
+  ],
+  [
+   "parity-snapped 3/7 positions",
+   "7.1489",
+   "GH bias swamps gain"
+  ],
+  [
+   "signed atoms P3+/P3- (GH engine)",
+   "7.156",
+   "GH bias swamps gain; needs harness modification"
+  ],
+  [
+   "skew-driven two-piece via signed-move regimes",
+   "7.1656",
+   "engine bias only +0.003; skew signal (0.174 vs 0.042) is real but doesn't convert to CRPS \u2014 the two-piece shape costs more than the skew fit gains"
+  ]
+ ],
+ "verdict": "champion v3 (7.134568) survived EVERY structural challenger: asymmetric tails, parity grids, signed atoms, skew shapes, mixtures, KDE. The margin CRPS on the frozen filter is essentially exhausted for public information. Remaining gap to gate (0.0356) requires either harness-engine changes (protected) or new paid data planes."
+}

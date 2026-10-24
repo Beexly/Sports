@@ -224,6 +224,130 @@ export * from "./trend-discovery.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
 export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
+
+// =====================================================================
+// Literature index — pgvector retrieval over the structured premises
+// and the MIND corpus. See packages/prediction-engine/src/literature/.
+// =====================================================================
+export {
+  LITERATURE_EMBEDDING_MODEL,
+  LITERATURE_EMBEDDING_DIM,
+  premiseEmbeddingText,
+  eventEmbeddingText,
+  normalizeVector,
+  openRouterEmbedder,
+  hashedEmbedder,
+} from "./literature/literature-embeddings.js";
+export type { Embedder, EmbeddingResult } from "./literature/literature-embeddings.js";
+
+export {
+  LITERATURE_PILLARS,
+  derivePillars,
+  pillarsForSignal,
+} from "./literature/literature-pillars.js";
+export type { LiteraturePillar } from "./literature/literature-pillars.js";
+export {
+  MEASURE_REGISTRY,
+  MEASURE_RESOLUTION_ORDER,
+  CONCEPT_MIN_SUPPORT,
+  resolveMeasure,
+  directionSign,
+  agreementFor,
+  conceptActivationScore,
+  measurableTags,
+} from "./literature/literature-measures.js";
+export type {
+  MeasureSpec,
+  MeasureLevel,
+  MeasureResolution,
+  MeasureRefusal,
+  PremiseDirection,
+} from "./literature/literature-measures.js";
+export {
+  isGameKey,
+  resolveOwnGameOutcome,
+  groundingFor,
+} from "./literature/literature-residual-grounding.js";
+export type {
+  GroundingDb,
+  OwnGameOutcome,
+} from "./literature/literature-residual-grounding.js";
+
+export {
+  mindRecordToPremise,
+  bridgeRecordToPremise,
+  premiseContentHash,
+  vectorLiteral,
+  indexPremises,
+  indexCorpusItems,
+} from "./literature/literature-index-builder.js";
+export type {
+  SqlClient,
+  PremiseInput,
+  CorpusItemInput,
+  IndexedPremise,
+  BuildReport,
+} from "./literature/literature-index-builder.js";
+
+export {
+  retrieveForEvent,
+  applyResidualFeedback,
+  promotePremisesToCausalEdges,
+  runInterventionTest,
+  makeEventKey,
+  // ALIASED, NOT BARE. (Fixed 2026-10-20.)
+  //
+  // This module and ./performance-ci.js each export a function called
+  // `normalCdf`, and the barrel bound BOTH under the bare name. That is
+  // a duplicate export, and it is not a cosmetic one: it made
+  // `src/index.ts` fail to transform, which broke THREE test files
+  // that import the barrel --
+  //
+  //   src/__tests__/log-loss-isotonic-debug.test.ts
+  //   src/metrics/__tests__/metric-birth-certificate.test.ts
+  //   src/__tests__/honesty/honesty-surface.test.ts
+  //
+  // all with "Multiple exports with the same name \"normalCdf\"".
+  //
+  // The barrel's canonical `normalCdf` is the one from
+  // ./performance-ci.js -- it was bound first, and the other module's
+  // own comment says so ("This module's normalCdf is its own
+  // ~5e-10 Abramowitz-Stegun approximation; the barrel already binds
+  // `normalCdf` from ./performance-ci.js"). So the literature one is
+  // exported under a distinct name and nothing loses the binding.
+  normalCdf as literatureNormalCdf,
+  DEFAULT_TOP_K,
+  DEFAULT_MIN_SIMILARITY,
+} from "./literature/literature-retrieval.js";
+export type {
+  LiteratureEvent,
+  RetrievedPremise,
+  RetrievalOutcome,
+} from "./literature/literature-retrieval.js";
+
+// Literature discovery — the broader raw corpus, surfaced only on repeated
+// retrieval, structured only then.
+export {
+  findDiscoveryCandidates,
+  recordDiscoveryHit,
+  promoteDiscoveryToPremise,
+  runDiscoverySweep,
+  DEFAULT_DISCOVERY_THRESHOLD,
+} from "./literature/literature-discovery.js";
+export type { DiscoveryCandidate } from "./literature/literature-discovery.js";
+
+// Causal promotion — premises to edges, then do-calculus on promoted edges only.
+export {
+  runCausalPromotionSweep,
+  listPromotedEdges,
+  retireFailedEdges,
+  PROMOTION_CRITERIA,
+} from "./literature/literature-causal.js";
+export type {
+  CausalEdgeRecord,
+  CausalPromotionReport,
+  InterventionOutcome,
+} from "./literature/literature-causal.js";
 export type { ReadinessGates } from "./readiness.js";
 // Proof-of-record ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â tamper-evident Merkle commitment over published picks.
 export {
@@ -4491,6 +4615,7 @@ export {
   evaluateMindPrinciples,
   loadMindCorpus,
   loadVerifiedMindCorpus,
+  loadCitableMindCorpus,
   toVerifiedSituationalPrinciple,
   findMindCorpusPaths,
   matchApplicablePrinciples,
@@ -4675,3 +4800,907 @@ export type { LeverageBand } from "./nfl/leverage-surplus.js";
 
 export { applySituationalAdjustments, situationalExplosiveRate } from "./nfl/situational-adjustments.js";
 export type { SituationalInputs, SituationalResult } from "./nfl/situational-adjustments.js";
+
+// ---------------------------------------------------------------------------
+// The causal stack: discovery -> identification -> the gate.
+//
+// The three stages and the do-calculus engine were each complete and
+// none of them was exported, so a caller outside this package could
+// not use them at all. They are exported here, together, because the
+// point of the stack is that they run TOGETHER: a game matrix goes
+// in, a causal verdict comes out, and the verdict is computed against
+// the graph the pipeline discovered rather than against a graph an
+// edge asserts about itself.
+// ---------------------------------------------------------------------------
+export {
+  fci,
+  pagToAdmg,
+  pagToCausalADMG,
+  admgToCausalADMG,
+  dynotearsFit,
+  acyclicityExact,
+  matExpScaleSquaring,
+  orientPag,
+  possibleDSep,
+  literatureTerm,
+  pipelineGraphToCausalADMG,
+  graphForEdgeFromDiscovery,
+  type EdgeMark,
+  type FciEdge,
+  type FciResult,
+  type FciOptions,
+  type PagAdmg,
+  type DynotearsOptions,
+  type DynotearsResult,
+  type ClassALiteratureConstraint,
+  type EdgePenalty,
+  type NamedCausalGraph,
+} from "./causal/fci-pag.js";
+
+export {
+  discoverCausalStructure,
+  discoverCausalStructurePessimistic,
+  RESIDUAL_COVARIANCE_Z,
+  type DiscoverOptions,
+  type DiscoveredStructure,
+  type ProjectionDecision,
+} from "./causal/causal-discovery-pipeline.js";
+
+export {
+  solveProximalBridge,
+  proximalBridgeBasis,
+  proximalInstrumentBasis,
+  validateProximalDataset,
+  MIN_FREDHOLM_CONDITION_NUMBER,
+  MIN_J_TEST_P_VALUE,
+  MIN_BRIDGE_E_VALUE,
+  MIN_PROXIMAL_SAMPLE_SIZE,
+  DEFAULT_RIDGE_LAMBDA,
+  DEFAULT_HOLDOUT_FRACTION,
+  type ProximalDataset,
+  type ProximalBridgeOptions,
+  type ProximalRefusalCode,
+  type ProximalBridgeDiagnostics,
+  type ProximalBridgeAdmitted,
+  type ProximalBridgeRefused,
+  type ProximalBridgeResult,
+} from "./causal/proximal-bridge-id.js";
+
+export {
+  solveSemiparametricRatioFunctional,
+  extractRatioFunctional,
+  ratioEstimandSensitivity,
+  PROPENSITY_CLIP_LOW,
+  PROPENSITY_CLIP_HIGH,
+  MIN_EFFICIENCY_VARIANCE,
+  MIN_SEMIPARAMETRIC_SAMPLE_SIZE,
+  EFFICIENCY_PROJECTION_TOLERANCE,
+  MAX_CLIPPED_FRACTION,
+  VERMA_SPREAD_TOLERANCE,
+  type SemiparametricFailureReason,
+  type SemiparametricRatioResult,
+  type SemiparametricRatioSample,
+  type ExtractedRatioFunctional,
+  type RatioEstimandSensitivity,
+} from "./causal/semiparametric-estimand-solver.js";
+
+export {
+  computeTraceNonconformity,
+  shaferVovkRank,
+  computeConformalThreshold,
+  evaluateItcrTrace,
+  observeOrcaOutcome,
+  updateAciAlpha,
+  MAX_TRACE_NONCONFORMITY,
+  MIN_CALIBRATION_SET_SIZE,
+  DEFAULT_TRACE_MISCOVERAGE,
+  ACI_LEARNING_RATE,
+  MIN_NODE_VALIDITY,
+  MAX_NODE_VALIDITY,
+  ITCR_REFUSAL,
+  ACI_REFUSAL,
+  type ItcrRefusalCode,
+  type AciRefusalCode,
+  type ReasoningLayer,
+  type ItcrTraceNode,
+  type ItcrTrace,
+  type ItcrGateInput,
+  type ItcrGateResult,
+  type OrcaNodeState,
+  type OrcaObservation,
+  type AciUpdateResult,
+} from "./calibration/itcr-orca-gate.js";
+
+export {
+  runShpitserPearlID,
+  runShpitserPearlIDC,
+  isIdentifiable,
+  getAncestors,
+  getMaximalCComponents,
+  isDSeparated,
+  induceSubgraph,
+  mutilateADMG,
+  cFactorForComponent,
+  findIDEnablingEdgesForHedge,
+  formatSymbolicFactor,
+  FormulaClass,
+  type NodeId,
+  type CausalADMG,
+  type HedgeWitness,
+  type SymbolicFactor,
+  type IDResult,
+} from "./causal/do-calculus-id.js";
+
+export {
+  evaluateCausalClaim,
+  finalizeExpansion,
+  graphFromCausalEdge,
+  G3_REFUSAL,
+  type CausalClaimQuery,
+  type CausalClaimVerdict,
+  type G3RefusalCode,
+} from "./causal/causal-claim-gate.js";
+
+// The spec's section 4.4: the Hedge Collector and the ID-EnablingEdges
+// algorithm. Exported because a refusal that names the measurement
+// which would change the answer is only useful if the caller can see
+// the plan.
+export {
+  collectIDHedges,
+  intersectCandidateEdges,
+  tryMediatorExpansion,
+  expandWithMediator,
+  planHedgeBreakage,
+  setMediatorValidityPool,
+  MIN_MEDIATOR_SAMPLES,
+  MIN_EXPANSION_E_VALUE,
+  type MediatorCandidate,
+  type MediatorRejection,
+  type MediatorAttempt,
+  type CollectedHedge,
+  type HedgeBreakageReport,
+} from "./causal/hcid-mediator-expansion.js";
+
+// G7 -- the calibration-drift circuit breaker. Exported so the LIVE publish path
+// can consult it: a module nothing can import is not a gate.
+export {
+  g7CircuitBreaker,
+  g7VerdictForFamily,
+  g7HaltedGroupKeys,
+  g7HaltNote,
+  g7DriftVerdict,
+  marketFamilyKey,
+  G7_DEFAULT_OPTIONS,
+  G7_MIN_FAMILY_SAMPLES,
+  G7_NOISE_SIGMA,
+} from "./learning/g7-circuit-breaker.js";
+export type {
+  SettledObservation,
+  G7FamilyVerdict,
+  G7CircuitBreakerReport,
+  G7DriftVerdict,
+} from "./learning/g7-circuit-breaker.js";
+
+// T16 -- Same-cycle settlement loop (Murphy, Kalman, premise promotion, MP spectral).
+export {
+  murphyBrierDecomposition,
+  murphyCalibrationBins,
+  murphyCalibrationPartition,
+  G7_FAST_WINDOW_GAMES,
+  G7_SLOW_WINDOW_GAMES,
+  G7_ECE_HALT_THRESHOLD,
+  eceWindows,
+  eceDifference,
+  gateG7HaltsOnMarketFamily,
+  LAMBDA_CLV,
+  hybridClvTarget,
+  laplaceKalmanEdgeUpdate,
+  laplaceKalmanGain,
+  CLIP_MIN,
+  CLIP_MAX,
+  ETA_PROM,
+  KAPPA_CLV,
+  BETA_ATTR,
+  PROMOTION_MIN_EVALUATIONS,
+  PROMOTION_MIN_ATTRIBUTION,
+  PROMOTION_MIN_WEIGHT,
+  DEMOTION_MIN_EVALUATIONS,
+  DEMOTION_MAX_WEIGHT,
+  DEMOTION_MAX_ATTRIBUTION,
+  clipPromotionWeight,
+  counterfactualBrierDelta,
+  counterfactualClvDelta,
+  promotePremise,
+  premisePromotionStatus,
+  TRACY_WIDOM_BETA,
+  TRACY_WIDOM_LOCATION,
+  TRACY_WIDOM_SCALE,
+  GUMBEL_QUANTILES,
+  gumbelQuantileShift,
+  tracyWidomQuantileShift,
+  marchenkoPasturUpperEdge,
+  tracyWidomScale,
+  symmetricEigen,
+  participationRatio,
+  spectralParticipationRatio,
+  MIN_PARTICIPATION_RATIO,
+  standardizeColumns,
+  injectRankOneFactor,
+  detectSpectralSpike,
+  SHADOW_MIN_SETTLEMENTS,
+  S1_MAX_HYPERPARAMETER_NORM,
+  S1_MAX_NEW_HEDGES,
+  S2_MIN_EVALUE,
+  S2_MIN_EVALUE_LOG_LOSS,
+  S3_MAX_DIEBOLD_MARIANO_P,
+  S3_MIN_BRIER_LIFT,
+  evaluateShadowPromotionGates,
+} from "./learning/settlement-loop.js";
+export type {
+  MurphyBrierDecomposition,
+  MurphyBin,
+  MurphyOptions,
+  MurphyCalibrationPartition,
+  EceDriftOptions,
+  EceDrift,
+  LaplaceKalmanState,
+  PremisePromotionInput,
+  PremisePromotionResult,
+  PremiseStatus,
+  SymmetricEigen,
+  SpectralSpikeDetection,
+  ShadowGate,
+  ShadowGateInputs,
+  ShadowPromotionVerdict,
+} from "./learning/settlement-loop.js";
+
+// Cognitive Architecture, 50k MCP Router & Causal Pick Pipeline
+export {
+  authorizeCausalPublish,
+  emitPicks,
+  validateCertificate,
+  tryValidateCertificate,
+  runPickGates,
+  mintBoardOrParlayEntry,
+  PickGate,
+  PICK_GATE_ORDER,
+  PICK_GATE_REFUSAL,
+  CERTIFICATE_REFUSAL,
+  MIN_BRIDGE_PREMISE_SAMPLES,
+  MIN_SIGNAL_COVERAGE,
+  MIN_CONSENSUS_RATIO,
+  MIN_POSITIVITY,
+  MIN_EVIDENCE_FAITHFULNESS,
+  MIN_DECISION_COHERENCE,
+  MAX_CALIBRATION_DRIFT,
+  MAX_COVERAGE_INSTABILITY,
+  MIN_TRAILING_CLV,
+  MIN_CONFORMAL_EDGE,
+} from "./picks/pick-pipeline.js";
+export type {
+  PickGateId,
+  PickGateRefusalCode,
+  ValidatedCausalTrace,
+  CausalCertificate,
+  PublishableCertificate,
+  CertificateState,
+  PickGateInput,
+  PickPipelineInput,
+  PickEmission,
+  PublishRefusal,
+  GateOutcome,
+  PublishedBoardEntry,
+} from "./picks/pick-pipeline.js";
+
+
+export {
+  UniversalCausalSolver,
+  solveBenchmarkTask,
+  HLE_EPIDEMIOLOGY_TASK,
+  ARC_TASK_ROTATION,
+  FRONTIER_MATH_SYMPLECTIC_TASK,
+  CAUSAL_PHYS_INCLINE_TASK,
+} from "./benchmarks/universal-causal-solver.js";
+export type {
+  BenchmarkType,
+  BenchmarkTask,
+  CausalNode,
+  UniversalCausalSolution,
+} from "./benchmarks/universal-causal-solver.js";
+
+export {
+  runCognitiveRouter,
+  stageAContextBitmask,
+  stageBHnswZoomIn,
+  stageCbridgeSpectralRouting,
+  stageDCrossEquationComposition,
+  HnswIndex,
+  certifyRecallAt20,
+  CORPUS_SIZE_TARGET,
+  ACTIVE_MECHANISM_TARGET,
+  RECALL_FLOOR_AT_20,
+} from "./mcp/mcp-cognitive-router.js";
+export type {
+  CognitiveRouterInput,
+  CognitiveRouterResult,
+  CorpusPremise,
+  StageAResult,
+  StageBResult,
+  StageCResult,
+  StageDResult,
+  StageDMechanism,
+} from "./mcp/mcp-cognitive-router.js";
+
+export {
+  compileNonStatSituational,
+  compileNonStatSituationalBatch,
+  operatorFingerprint,
+  SPEC_C_COMPILER_ID,
+  SPEC_C_COMPILER_VERSION,
+  OPERATOR_KINDS,
+} from "./bridge/non-stat-situational-compiler.js";
+export type {
+  OperatorKind,
+  DarkSourceProxy,
+  TypedOperator,
+  CompileResult,
+  CompileBatch,
+} from "./bridge/non-stat-situational-compiler.js";
+
+// Component 7: Adaptive Agentic Skill-Tree & VoI Connector Router
+export {
+  REASONING_LAYERS,
+  REGISTERED_MCP_CONNECTORS,
+  DEFAULT_EVCI_CONFIG,
+  validateLayer0Fundamentals,
+  computeEvciForConnector,
+  executeAdaptiveEscalationLadder,
+} from "./mcp/adaptive-skill-tree-router.js";
+export type {
+  ReasoningLayerId,
+  Layer0FundamentalInput,
+  Layer0ValidationResult,
+  Layer1MarketInput,
+  Layer2SituationalInput,
+  Layer3TrackingInput,
+  Layer4CausalSynthesisInput,
+  Layer5ConformalInput,
+  ConnectorDefinition,
+  EvciEvaluation,
+  EvciRouterConfig,
+  EscalationLadderResult,
+  FullEscalationQuery,
+} from "./mcp/adaptive-skill-tree-router.js";
+
+// Component 8: Proactive Early-Week "Horizon-Zero" Slate & Surveillance Engine
+export {
+  HORIZON_STAGES,
+  computeMarginalizedScenarioIntegration,
+  evaluateEarlyWeekLockRule,
+  evaluateSurveillanceDelta,
+  lockEarlyWeekBoardPrice,
+} from "./slate/rolling-horizon-lifecycle.js";
+export type {
+  HorizonStage,
+  MarketType,
+  SurveillanceStatus,
+  ConditionalCommitmentRule,
+  EarlyWeekBoardEntry,
+  BoundaryScenario,
+  MarginalizedScenarioIntegrationResult,
+  EarlyWeekDecisionRuleInput,
+  EarlyWeekDecisionRuleOutput,
+  SurveillanceTriggerEvent,
+  LockWednesdayPriceOptions,
+} from "./slate/rolling-horizon-lifecycle.js";
+
+// Component 9: Three-Tier Epistemic Accuracy Stratification
+export {
+  APEX_THRESHOLDS,
+  classifyEpistemicTier,
+} from "./picks/selective-abstention-tiers.js";
+export type {
+  EpistemicTier,
+  CandidateLayerDirections,
+  EpistemicCandidate,
+  ApexChecklistBreakdown,
+  EpistemicClassificationResult,
+} from "./picks/selective-abstention-tiers.js";
+
+// Component 10: Enterprise B2B World-Model Cartridge SDK
+export {
+  GSEWeatherCartridge,
+  GSEGridCartridge,
+  GSELogisticsCartridge,
+  GSEVerifyCartridge,
+  WorldModelCartridgeRegistry,
+} from "./enterprise/universal-world-model-sdk.js";
+
+// Conformal Copula Kelly & TA-CQR Sizing (Component 7 / Invariant Matrix)
+export {
+  conformalRank,
+  taCqrScore,
+  taCqrLevels,
+  optimalLowerTailLevel,
+  frechetHoeffdingBounds,
+  isWithinFrechetHoeffding,
+  checkJointProbability,
+  assertJointProbability,
+  conformalHalfWidth,
+  slowConformalHalfWidth,
+  downsideThrottle,
+  conformalKellyStake as invariantConformalKellyStake,
+  slowConformalKellyStake,
+  SLOW_CONFORMAL_WINDOW_GAMES,
+  SLOW_CONFORMAL_COVERAGE,
+} from "./calibration/conformal-copula-kelly.js";
+export type {
+  FrechetHoeffdingBounds,
+  JointProbabilityCheck,
+  ConformalKellySizing,
+  ConformalKellySizingResult,
+  SlowConformalKellySizing,
+} from "./calibration/conformal-copula-kelly.js";
+
+// Automated Parlay Market Maker (APMM arXiv:2607.18299)
+export {
+  sgpFairPrice,
+  correlationDiscount,
+  hubThrottle,
+} from "./2607-18299-apmm-automated-parlay-market-maker.js";
+export type {
+  SgpLeg,
+} from "./2607-18299-apmm-automated-parlay-market-maker.js";
+
+// Decision-Time Price Archive
+export {
+  recordDecisionTimePrice,
+  validateDecisionTimePriceRow,
+  DECISION_TIME_PRICE_DIRNAME,
+  DEFAULT_DECISION_TIME_PRICE_DIR,
+} from "./edge-lab/decision-time-price-archive.js";
+export type {
+  DecisionTimePriceRow,
+  DecisionTimePriceRecordResult,
+  DecisionTimePriceRecordOptions,
+  PricedPropArchiveContext,
+} from "./edge-lab/decision-time-price-archive.js";
+
+export type {
+  EnterpriseVerticalId,
+  BitemporalWatermark,
+  IngestedSignals,
+  InterventionalQuery,
+  InterventionalDistribution,
+  MarketAnchor,
+  CalibratedDecision,
+  CartridgeSettledObservation,
+  SettlementFeedbackDelta,
+  CausalWorldModelCartridge,
+  WeatherSignal,
+  WeatherContext,
+  WeatherForecastOutcome,
+  GridSignal,
+  GridContext,
+  GridForecastOutcome,
+  LogisticsSignal,
+  LogisticsContext,
+  LogisticsOutcome,
+  BenchmarkSignal,
+  BenchmarkContext,
+  BenchmarkOutcome,
+} from "./enterprise/universal-world-model-sdk.js";
+
+
+// Components 11-13: Dyadic Trust, Role Isomorphism & Synaptic Plasticity
+export {
+  verifyRosterContinuityGate,
+  computeDyadicTrustState,
+  CANONICAL_2026_ROSTER_BINDINGS,
+  ARCHETYPE_AARON_RODGERS,
+} from "./behavioral/dyadic-trust-engine.js";
+export type {
+  PlayerRosterBinding,
+  QbBehavioralArchetype,
+  DyadicPlayImpulse,
+  MultimodalDiscourseImpulse,
+  DyadicTrustState,
+} from "./behavioral/dyadic-trust-engine.js";
+
+export {
+  computeCosineIsomorphism,
+  computeRoleIsomorphismTargetReallocation,
+} from "./causal/role-isomorphism-realloc.js";
+export type {
+  RouteTreeVector,
+  ReceiverCandidate,
+  ReallocationTransferResult,
+} from "./causal/role-isomorphism-realloc.js";
+
+export {
+  WordSynapsePlasticityEngine,
+} from "./learning/word-synapse-plasticity.js";
+export type {
+  WordTripleExtraction,
+  SynapticAssimilationResult,
+} from "./learning/word-synapse-plasticity.js";
+
+// Phase V Moonshot Architecture (v6.0 Omni-Cognitive World Model)
+export {
+  evaluateSymbolicAST,
+  evaluateJacobianAnalytical,
+  evaluateJacobianFiniteDiff,
+  compileLatexToSymbolicAST,
+  OmniVaultHarvester,
+} from "./ingest/omni-vault-harvester.js";
+export type {
+  VaultSourceType,
+  SymbolicExprNode,
+  CompiledFormulaDescriptor,
+} from "./ingest/omni-vault-harvester.js";
+
+export {
+  MultivariateMarkedHawkesEngine,
+} from "./behavioral/network-hawkes-dyads.js";
+export type {
+  MarkedEvent,
+  DyadicHawkesParams,
+  DyadicHawkesState,
+  CoverageShellContext,
+} from "./behavioral/network-hawkes-dyads.js";
+
+export {
+  AvHubertSidelineAffectEngine,
+} from "./perception/av-hubert-sideline-affect.js";
+export type {
+  BroadcastVideoCutaway,
+  HeuEmotionClass,
+  FacialActionUnits,
+  VisemePhonemeSequence,
+  AffectiveEmbedding,
+  CrossModalAgreementResult,
+} from "./perception/av-hubert-sideline-affect.js";
+
+export {
+  applyOrthogonalInPlaceTTTUpdate,
+  verifySubspaceOrthogonality,
+  TttReHarnessMemorySubstrate,
+} from "./learning/ttt-reharness-memory.js";
+export type {
+  BehavioralSynapseTriple,
+  ReHarnessSkillRevision,
+  SlotMemoryEntry,
+} from "./learning/ttt-reharness-memory.js";
+
+export {
+  ContinuousTimeCausalPfn,
+  CausalPomdpSimulator,
+} from "./causal/continuous-time-cpfn.js";
+export type {
+  ContinuousIntervention,
+  ObservationSchedule,
+  CausalTrajectoryEvaluation,
+  CausalPomdpState,
+  AlphaVectorBound,
+} from "./causal/continuous-time-cpfn.js";
+
+export {
+  CausalBeamTransferEngine,
+} from "./causal/causal-beam-transfer.js";
+export type {
+  PortableCausalBeam,
+  TargetDomainId,
+  BeamTransferResult,
+} from "./causal/causal-beam-transfer.js";
+
+// Open-Source Intelligence & Deep Infer / Harness2 Integration
+export {
+  evaluateFourthDownDecision,
+  computeConversionProbability,
+  computeFieldGoalProbability,
+  computeExpectedNetPuntYards,
+  getBaselineExpectedPoints,
+  estimateWinProbability,
+} from "./tactical/nfl-fourth-down-engine.js";
+export type {
+  FourthDownGameState,
+  FourthDownChoice,
+  FourthDownDecisionEvaluation,
+} from "./tactical/nfl-fourth-down-engine.js";
+
+export {
+  evaluateSgpCombination,
+  getPairwiseCorrelation,
+  normalCdf as copulaNormalCdf,
+  normalInv,
+} from "./parlay/correlated-sgp-combinator.js";
+export type {
+  PropType,
+  SgpLeg as CorrelatedSgpLeg,
+  SgpEvaluationResult,
+} from "./parlay/correlated-sgp-combinator.js";
+
+export {
+  cleanLatexString,
+  extractLatexSymbols,
+  classifyMathDomain,
+  parseLatexToAst,
+  calculateComplexityScore,
+  bridgeLatexToMind,
+} from "./ingest/latex-ocr-bridge.js";
+export type {
+  MathExpressionDomain,
+  MathASTNode,
+  ParsedMathExpression,
+} from "./ingest/latex-ocr-bridge.js";
+
+export {
+  evaluateKineticChainSequencing,
+  calculateAcwrAndFatigue,
+  evaluateQuarterbackBiomechanics,
+} from "./biomechanics/kinetic-chain-evaluator.js";
+export type {
+  KineticChainKeypoints,
+  QuarterbackWorkloadHistory,
+  BiomechanicalEvaluation,
+} from "./biomechanics/kinetic-chain-evaluator.js";
+
+export {
+  computeFlashMlaCompression,
+  evaluateEplbRouting,
+  calculateDynamicDraftLength,
+  scheduleMarketEmissionCount,
+  evaluateDSparkSpeculation,
+} from "./inference/deepinfer-dspark-speculator.js";
+
+export {
+  ceilingCloseness,
+  combineSpeedCeiling,
+  exceedanceRate,
+} from "./tracking/combine-ceiling.js";
+
+export { kineticTranslationDeficit } from "./tracking/kinetic-translation-deficit.js";
+
+export {
+  knownAnswerSeries,
+  recoverPlantedSlope,
+} from "./evaluation/known-answer-series.js";
+
+export {
+  expectedSeasonGoals,
+  gammaPoissonPosterior,
+  jeffreysGoalPrior,
+} from "./models/gamma-poisson-goals.js";
+export { hillSaturation } from "./models/hill-saturation.js";
+export { seriesWinProbability } from "./models/series-win.js";
+export { smoothLabel } from "./models/label-smoothing.js";
+export { attentionWeights } from "./models/scaled-dot-product.js";
+export { gradCamMap, guidedBackpropGate, guidedGradCam } from "./models/grad-cam.js";
+export { builderHmacSignature } from "./markets/builder-hmac.js";
+export { gaussianNeighborWeights, perplexity } from "./evaluation/neighbor-conditional.js";
+export {
+  COVERAGE_SCHEMES,
+  coverageFamily,
+  coverageSchemeUniqueness,
+  defenderOffenseDelta,
+  meanClassProbabilities,
+  neighborLabelMismatch,
+  speedFromDisplacement,
+  correctedAcceleration,
+} from "./nfl/coverage-scheme.js";
+export { keyNumberMass, NFL_KEY_NUMBERS as NFL_KEY_NUMBER_MASS_MAP } from "./nfl/key-number-mass.js";
+export {
+  GROUP_TACKLE_MIN,
+  MISSED_TACKLE_RATE_BAND,
+  TACKLE_DERIVATIVES,
+  TACKLE_FEATURES_PER_DEFENDER,
+  blockersBetween,
+  closingSpeed,
+  encircleQuadrants,
+  isChaseDown,
+  isGroupTackle,
+  isOpenField,
+  missedTackleRateBand,
+  tackleApproach,
+  tackleEfficiency,
+  tacklePlayPoints,
+  tackleYardsSaved,
+  yardsBetweenTackleAttempts,
+  isPastSideline,
+  initiatingDefenderIndex,
+  NFL_FIELD_WIDTH_YARDS,
+} from "./nfl/tackle-probability.js";
+export {
+  MARCEL_SEASON_WEIGHTS,
+  betaBinomialPosteriorMean,
+  marcelWeightedRate,
+} from "./mlb/strikeout-shrinkage.js";
+export {
+  alphaFromHalfLife,
+  geometricAdstock,
+  hillWithSlope,
+  logisticSaturation,
+  michaelisMenten,
+} from "./models/media-transforms.js";
+export { differenceInDifferences } from "./causal/two-by-two-did.js";
+export {
+  automaticAdequacyVerdict,
+  classifyUpper,
+} from "./evaluation/evidence-band.js";
+export { reliabilityCorrectedSlope } from "./evaluation/reliability-ratio.js";
+
+export {
+  POLYMARKET_PUBLISH_HOLD,
+  VENDORED_POLYMARKET_SDKS,
+  polymarketPublishAllowed,
+} from "./markets/polymarket-sdks.js";
+
+export {
+  NFLSCRAPR_JSON_PROBE,
+  approvedPbpSource,
+  nflscraprGameJsonUrl,
+  nflscraprRegularWeeks,
+} from "./ingestion/nflscrapr-contract.js";
+export type {
+  FlashMlaConfig,
+  FlashMlaCompressionSummary,
+  EplbRoutingSummary,
+  SpeculativeDraftEvaluation,
+} from "./inference/deepinfer-dspark-speculator.js";
+
+export {
+  proposeHarnessMutations,
+  applyMutationsToHarness,
+  probeHarnessBehavior,
+  executeContrastivePpcLoop,
+  composeFromMeasuredContrast,
+} from "./continual/harness2-propose-probe-compose.js";
+export type {
+  AgentHarness,
+  MutationType,
+  HarnessMutation,
+  BehavioralProbeScenario,
+  ProbeEvaluationScore,
+  ContrastivePpcResult,
+} from "./continual/harness2-propose-probe-compose.js";
+export * from "./forecasting/2505-15918-llm-bayesian-network-priors.js";
+export * from "./continual/2602-18266-model-smc-discovery.js";
+export * from "./decision/aa-decision-index-gate.js";
+export * from "./decision/2608-23885-phantom-optima-rto-audit.js";
+export * from "./forecasting/2610-16680-free-prob-particle-resampling.js";
+export * from "./continual/2608-11690-continual-drift-plasticity.js";
+export * from "./nfl/ngs-contextual-reconstructed.js";
+export {
+  evaluateDecisionTimeRepricing,
+  evaluatePreventDefenseRegime,
+  evaluateCompoundScheduleFatigueSpot,
+  evaluateDomeColdWindTransition,
+  parseBetSlipMetadata,
+} from "./game-context.js";
+export {
+  evaluateTimeoutPreserveVsIceValue,
+  evaluateCoachChallengeEV,
+  evaluateEndOfHalfClockBoundary,
+} from "./tactical/nfl-fourth-down-engine.js";
+export {
+  TOOMRE_TL,
+  teagContraction,
+  falsifiabilityFloorHolds,
+  gaussianCollapseWeight,
+  toomreTorsion,
+  multiScaleRefinementHolds,
+  evaluateTeagEpistemicContraction,
+  evaluateMultiScaleRefinementResidual,
+  evaluateDriftAdvectionPhaseTransition,
+  computePhysicsInformedSobolSensitivity,
+  runCounterfactualSelfInterrogation,
+} from "./reasoning/introspective-meta-reasoner.js";
+export {
+  evaluateAbnormalSituationManagement,
+  evaluateVolveDualHeadAnomalyGate,
+  evaluateLifecycleDataQualityGate,
+} from "./enterprise/universal-world-model-sdk.js";
+
+/* Streams 12–14 (2026-10-22). Explicit named exports so a duplicate barrel
+ * name cannot silently shadow an existing symbol. */
+
+export {
+  computeQbEpaGiniAndVolOe,
+  classifyGunslingerVsGameManager,
+  decomposeQbAgingAndSchemeSupport,
+  evaluateNflDraftPickSurplusValue,
+  evaluateProspectScoutingLinguisticProfile,
+} from "./nfl/osf-qb-volatility-and-prospects.js";
+export {
+  estimateMultilevelTeamEpaAbility,
+  computeRollingAndEwmaEpa,
+  predictGameWinLogisticEwma,
+  evaluateDynamicHomeFieldAdvantage,
+  blendEspnFpiAnd538EloPredictions,
+} from "./nfl/osf-team-ability-hfa-and-ewma.js";
+export {
+  evaluateDefenseAgainstWr1,
+  evaluateDefensiveDriveRestImpact,
+  evaluatePenaltyStabilityAndPredictiveWeight,
+  computeExpectedPassAndProe,
+} from "./nfl/osf-defense-penalties-and-proe.js";
+export {
+  computeReceiverExpectedFantasyPoints,
+  evaluateReceivingByPositionCurve,
+  evaluateBivariateTargetHeatmapKde,
+  evaluateSpatialCompletionSurfaceGam,
+} from "./nfl/osf-receiving-xfp-and-spatial-surfaces.js";
+export {
+  SEVEN_OUTCOMES,
+  computeNflfastrSevenOutcomeEp,
+  computeMonotonicGbdtWinProb,
+  computeExpectedFieldGoalMetric,
+  computeRerunPunterMetric,
+} from "./nfl/osf-special-teams-ep-wp-and-cv.js";
+export {
+  PAIR_CHANNELS,
+  engineerTrackingFramePairTensor,
+  computeFrameEmbeddingsPermInvariant,
+  computeCnnAttentionPlayEmbedding,
+  classifyCoverageEnsemble,
+  discoverCoverageGlobalStructure,
+  attributeCoverageHighlights,
+  runNgsAwsCnnAttentionCoveragePipeline,
+} from "./nfl/coverage-scheme.js";
+export {
+  computeLeverageAdjustedEpa,
+  computeNeutralScriptBaselineAndProe,
+  evaluateRedZoneAndTwoMinuteSplits,
+  evaluateDecisionBranchWp,
+  evaluatePersonnelBoxPassInteraction,
+  evaluateBackupQbReceiverDecoupling,
+  evaluatePlayerSpecificWeatherInteraction,
+  evaluateOffensiveLineAttritionCluster,
+  evaluateMarketMoveInformationCompleteness,
+  validateFeatureAgainstMisleadingStats,
+  X_SITUATIONAL_80_RECORD_CATALOG,
+  evaluateXSituationalRecordById,
+  type XSituationalRecord,
+  type XSituationalRecordResult,
+} from "./nfl/x-situational-80-rules.js";
+export {
+  TACKLE_FEATURE_NAMES,
+  computeTackleProbabilityFeatures,
+  computeTackleProbability,
+  computeMissedTackleHazard,
+  calibrateMissedTackleBand,
+} from "./nfl/tackle-probability.js";
+export {
+  computeClobMicroPrice,
+  fitLeadLagTransferEntropy,
+  simulateExecutionShortfall,
+} from "./markets/polymarket-sdks.js";
+export { attachNflscraprPbpBaselines } from "./ingestion/nflscrapr-contract.js";
+export {
+  filterKnownAt,
+  evaluateRewardBalancePassHeavy,
+  evaluateMisleadingMinimum,
+  evaluateProspectLinguisticBias,
+  evaluateRollingScheduleVolatility,
+  evaluateAgingCurvesByPosition,
+} from "./nfl/universal-handoff-warehouse-priors.js";
+export {
+  SECOND_WAVE_ARXIV_IDS,
+  bayesianReverseTokenLogitUpdate,
+  llmEmbeddingTabularForecaster,
+  evaluateSecondWaveArxivSituationalModels,
+} from "./forecasting/llm-probability-and-hybrid-forecasters.js";
+export {
+  FAMILY_NAMES,
+  PROBABILITY_MOVEMENT_CAP,
+  DEFAULT_FAMILY_VARIANCE,
+  DEFAULT_SIX_FAMILY_CORRELATION_MATRIX,
+  choleskyDecompose,
+  forwardSubstitute,
+  canonicalizeJson,
+  projectOntoMarket,
+  orthogonalizeAndShrink,
+  scrubSensitive,
+  emitMindFeedRecord,
+  runMasterSituationalReasoningOverlay,
+} from "./nfl/master-situational-reasoning-aggregator.js";

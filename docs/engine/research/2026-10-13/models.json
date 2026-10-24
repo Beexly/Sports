@@ -1,0 +1,96 @@
+{
+  "_comment": "Beex Command Deck roster — HOT-SWAPPABLE. The weekly scout agent regenerates this file; deck.py reloads it on every run. Adding a provider = one JSON entry, zero code. daily_quota null = no daily cap (subscription limits handled by cooldowns). Set enabled=false to bench a provider without deleting it.",
+  "_updated": "2026-07-30",
+  "providers": {
+    "claude":   { "kind": "cli", "bin": "claude", "enabled": true, "daily_quota": null,
+                  "strengths": "strongest agentic coder; your Max sub; save for deep work",
+                  "auth": "claude (login once with Claude subscription)" },
+
+    "gemini":   { "kind": "cli", "bin": "gemini", "enabled": true, "daily_quota": 950,
+                  "strengths": "free workhorse IF your OAuth still works — free tier reportedly forced to Antigravity CLI June 18 2026; deck routes around it automatically if dead",
+                  "auth": "gemini (Google OAuth)" },
+
+    "grok":     { "kind": "cli", "bin": "grok", "enabled": true, "daily_quota": null,
+                  "strengths": "SuperGrok sub; Grok 4.5; most permissive frontier model; open-sourced CLI Jul 15",
+                  "auth": "grok login" },
+
+    "codex":    { "kind": "cli", "bin": "codex", "enabled": true, "daily_quota": 15,
+                  "strengths": "works with a FREE ChatGPT account since 2026 (local tasks, small rolling quota) — frontier second opinions at $0",
+                  "auth": "codex login (free ChatGPT account is fine)" },
+
+    "nim":      { "kind": "compat", "enabled": true, "daily_quota": 2000,
+                  "base_url": "https://integrate.api.nvidia.com/v1", "key_env": "NVIDIA_API_KEY",
+                  "model": "moonshotai/kimi-k2.5",
+                  "strengths": "free 40 RPM; huge OSS models (Kimi K2.5, DeepSeek V3.2, GLM-5.1); the volume engine",
+                  "auth": "free key at build.nvidia.com" },
+
+    "groq":     { "kind": "compat", "enabled": true, "daily_quota": 950,
+                  "base_url": "https://api.groq.com/openai/v1", "key_env": "GROQ_API_KEY",
+                  "model": "moonshotai/kimi-k2",
+                  "strengths": "1,000 req/day/model, fastest inference anywhere; token/day caps burn fast in agents",
+                  "auth": "free key at console.groq.com" },
+
+    "github-models": { "kind": "compat", "enabled": true, "daily_quota": 45,
+                  "base_url": "https://models.github.ai/inference", "key_env": "GITHUB_PAT",
+                  "model": "openai/gpt-5", "max_tokens": 4000,
+                  "strengths": "50/day GPT-5-class one-shots, but 8K-in/4K-out — planning & review ONLY, never agentic",
+                  "auth": "GitHub PAT with models:read scope" },
+
+    "openrouter": { "kind": "compat", "enabled": true, "daily_quota": 45,
+                  "base_url": "https://openrouter.ai/api/v1", "key_env": "OPENROUTER_API_KEY",
+                  "model": "openai/gpt-oss-120b:free",
+                  "strengths": "many free models behind one key; 50/day free -> 1,000/day after ONE-TIME $10 (then set daily_quota to 950); roster rotates weekly",
+                  "auth": "free key at openrouter.ai" },
+
+    "zai":      { "kind": "compat", "enabled": true, "daily_quota": 900,
+                  "base_url": "https://api.z.ai/api/paas/v4", "key_env": "ZAI_API_KEY",
+                  "model": "glm-4.7-flash",
+                  "strengths": "GLM-4.7-Flash free ~1k/day; real coding ability; limits shift often",
+                  "auth": "free key at z.ai" },
+
+    "mistral":  { "kind": "compat", "enabled": true, "daily_quota": 400,
+                  "base_url": "https://api.mistral.ai/v1", "key_env": "MISTRAL_API_KEY",
+                  "model": "codestral-latest",
+                  "strengths": "1B tokens/MONTH free (Experiment tier); requires data-training opt-in — do NOT send private code",
+                  "auth": "free key at console.mistral.ai" },
+
+    "cerebras": { "kind": "compat", "enabled": false, "daily_quota": 300,
+                  "base_url": "https://api.cerebras.ai/v1", "key_env": "CEREBRAS_API_KEY",
+                  "model": "zai-glm-4.7",
+                  "strengths": "1M tokens/day free, insanely fast — but 8K context cap kills agent use; enable for short bulk only",
+                  "auth": "free key at cloud.cerebras.ai" },
+
+    "deepseek": { "kind": "compat", "enabled": false, "daily_quota": null,
+                  "base_url": "https://api.deepseek.com", "key_env": "DEEPSEEK_API_KEY",
+                  "model": "deepseek-v4-flash",
+                  "strengths": "NOT free but pennies: $0.14/M in, $0.014/M cached, $0.28/M out; 1M ctx; 2x price at Beijing peak hours; old deepseek-chat model IDs died Jul 24",
+                  "auth": "paid key at platform.deepseek.com (~$2 lasts weeks)" },
+
+    "ollama":   { "kind": "ollama", "enabled": true, "daily_quota": null,
+                  "model": "glm-4.7-flash",
+                  "strengths": "free, unlimited, private; GLM-4.7-Flash (30B-A3B) is the current best small local coder; also try qwen3-coder-next, gpt-oss:20b",
+                  "auth": "ollama pull glm-4.7-flash" },
+
+    "ollama-uncensored": { "kind": "ollama", "enabled": true, "daily_quota": null, "nsfw_ok": true,
+                  "model": "dolphin3",
+                  "strengths": "adult-lane writer, 100% local/private. Alternatives on ollama.com/library: dolphin-mistral, dolphin-mixtral, huihui_ai abliterated builds (check current tags). Nothing ever leaves your machine.",
+                  "auth": "ollama pull dolphin3" },
+
+    "venice":   { "kind": "compat", "enabled": false, "daily_quota": null, "nsfw_ok": true,
+                  "base_url": "https://api.venice.ai/api/v1", "key_env": "VENICE_API_KEY",
+                  "model": "venice-uncensored",
+                  "strengths": "privacy-first uncensored cloud API (paid; verify current models/pricing at venice.ai). Enable ONLY if you accept cloud for adult text; adult lane stays local-first regardless",
+                  "auth": "key at venice.ai" }
+  },
+
+  "lanes": {
+    "deep-code":  ["claude", "grok", "nim", "openrouter", "gemini", "codex", "ollama"],
+    "quick-code": ["gemini", "groq", "nim", "zai", "openrouter", "ollama", "claude"],
+    "plan-review":["github-models", "claude", "nim", "grok"],
+    "research":   ["gemini", "grok", "nim", "openrouter", "mistral", "ollama"],
+    "bulk":       ["ollama", "zai", "groq", "mistral", "openrouter"],
+    "private":    ["ollama"],
+    "adult":      ["ollama-uncensored", "venice"],
+    "media-ops":  ["ollama-uncensored"]
+  }
+}

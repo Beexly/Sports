@@ -1,0 +1,4383 @@
+{
+  "endpoints": [
+    {
+      "id": 1,
+      "target": "scores24.live",
+      "category": "wildcard",
+      "method": "POST",
+      "url": "https://scores24.live/graphql",
+      "auth": "X-Api-Key from window.__API_TOKEN__ (inline in HTML)",
+      "status": "open",
+      "bypass": "token lifted from page config; CF needs Accept: application/json + Referer",
+      "notes": "introspection enabled, 384 types, subscription type present"
+    },
+    {
+      "id": 2,
+      "target": "scores24.live",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://static.scores24.live/upload/scores24/dist/assets/index-e81fd6a3.js",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none needed",
+      "notes": "backendEndpoint client-api.fragmentsx.com; X-Api-Key header; fragments/graphql split"
+    },
+    {
+      "id": 3,
+      "target": "scores24.live",
+      "category": "wildcard",
+      "method": "WS",
+      "url": "wss://subscription.scores24.live",
+      "auth": "fragments token (inline)",
+      "status": "open",
+      "bypass": "token in page config",
+      "notes": "live push channel"
+    },
+    {
+      "id": 4,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://propfinder.app/api/health",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "leaks Valkey + MainDB/NHLDB/NBADB/MLBDB/PRODDB, stuck-request thresholds"
+    },
+    {
+      "id": 5,
+      "target": "linestarapp.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.linestarapp.com/Ownership/Sport/NFL/Site/DraftKings/PID/295",
+      "auth": "none",
+      "status": "open (HTML)",
+      "bypass": "pattern iteration",
+      "notes": "DNN portal, server-rendered, 0 tables in raw HTML -> data injected client-side"
+    },
+    {
+      "id": 6,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "POST",
+      "url": "https://api.propfinder.app/identity/register",
+      "auth": "none",
+      "status": "open registration",
+      "bypass": "public throwaway mailbox (mail.tm) + POST /identity/verify-email",
+      "notes": "validation errors enumerate required fields"
+    },
+    {
+      "id": 7,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "POST",
+      "url": "https://api.propfinder.app/identity/verify-email",
+      "auth": "token from email",
+      "status": "n/a",
+      "bypass": "n/a",
+      "notes": "token single-use"
+    },
+    {
+      "id": 8,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.propfinder.app/nfl/props",
+      "auth": "Bearer accessToken",
+      "status": "401 anon / 200 free",
+      "bypass": "free account",
+      "notes": "carries ratingCriteria => exact pfRating model"
+    },
+    {
+      "id": 9,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.propfinder.app/nfl/trends",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none needed",
+      "notes": "premium trend board leaks anonymously"
+    },
+    {
+      "id": 10,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.propfinder.app/nfl/power-ratings",
+      "auth": "Bearer",
+      "status": "401 anon",
+      "bypass": "free account",
+      "notes": "seasons 2009-2026"
+    },
+    {
+      "id": 11,
+      "target": "propfinder.app",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.propfinder.app/api/health",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "Valkey + 5 DB names, thresholds"
+    },
+    {
+      "id": 12,
+      "target": "linestarapp.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.linestarapp.com/DesktopModules/DailyFantasyApi/API/Fantasy/GetSalariesV5",
+      "auth": "none (Referer of ownership page)",
+      "status": "truncated for free (61/756 salaries)",
+      "bypass": "none needed for the free window; truncation is tier logic",
+      "notes": "carries Ownership.Projected percentages and the projection model fields"
+    },
+    {
+      "id": 13,
+      "target": "linestarapp.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.linestarapp.com/DesktopModules/DailyFantasyApi/API/Fantasy/GetPeriodInformation",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "95 historic periods, 8 sites"
+    },
+    {
+      "id": 14,
+      "target": "linestarapp.com",
+      "category": "wildcard",
+      "method": "POST",
+      "url": "https://www.linestarapp.com/DesktopModules/DailyFantasyApi/API/Fantasy/GetReportGridBoxes",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "salary changes, injury replacement, hot/cold, perfect lineups"
+    },
+    {
+      "id": 15,
+      "target": "scores24.live",
+      "category": "wildcard",
+      "method": "POST",
+      "url": "https://scores24.live/graphql",
+      "auth": "X-Api-Key from window.__API_TOKEN__",
+      "status": "open (aggregated only on free)",
+      "bypass": "page slug minus the 'm-' prefix",
+      "notes": "accepts location/audience"
+    },
+    {
+      "id": 16,
+      "target": "scores24.live",
+      "category": "wildcard",
+      "method": "POST",
+      "url": "https://scores24.live/graphql",
+      "auth": "X-Api-Key",
+      "status": "open",
+      "bypass": "slug discovery via /en/american-football/{date}",
+      "notes": "prediction.value/live_value = odds movement, facts[] = trend text, surefire flag"
+    },
+    {
+      "id": 17,
+      "target": "espn.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "post-kickoff adds plays/drives/winprobability"
+    },
+    {
+      "id": 18,
+      "target": "espn.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": ""
+    },
+    {
+      "id": 19,
+      "target": "espn.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "14 events"
+    },
+    {
+      "id": 20,
+      "target": "api.underdogfantasy.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.underdogfantasy.com/v1/over_under_lines",
+      "auth": "none",
+      "status": "open at /v1 (beta/vN 426)",
+      "bypass": "drop the deprecated 'beta/' prefix; APIVersion downgrade",
+      "notes": "428 games of all sports; american/decimal price per option"
+    },
+    {
+      "id": 21,
+      "target": "partner-api.prizepicks.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://partner-api.prizepicks.com/projections",
+      "auth": "none",
+      "status": "open (api.prizepicks.com is DataDome-403)",
+      "bypass": "use the partner host instead of the api host",
+      "notes": "hr_20 and trending_count flags; no prices (fixed-payout)"
+    },
+    {
+      "id": 22,
+      "target": "api.sleeper.app",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://api.sleeper.app/v1/players/nfl",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "crosswalk: gsis/espn/rotowire/sportradar/opta ids"
+    },
+    {
+      "id": 23,
+      "target": "api.sleeper.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://api.sleeper.com/projections/nfl/{season}/{week}",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "full offensive+IDP stat projections"
+    },
+    {
+      "id": 24,
+      "target": "sportsbook.fanduel.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://sportsbook.fanduel.com/navigation/nfl",
+      "auth": "none (config disclosure)",
+      "status": "page public, API edge-blocked",
+      "bypass": "n/a yet",
+      "notes": "api/content-managed-page 404 'default backend' from this network"
+    },
+    {
+      "id": 25,
+      "target": "espn.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event={id}",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "winprobability[] keyed by playId joins to drives[].plays[]; empty pre-kickoff"
+    },
+    {
+      "id": 26,
+      "target": "api.thescore.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.thescore.com/nfl/teams/{id}/injuries",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "independent injury feed; rosters path 404"
+    },
+    {
+      "id": 27,
+      "target": "api.thescore.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.thescore.com/nfl/teams/{id}/players",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "roster membership + position; depth/jersey null"
+    },
+    {
+      "id": 28,
+      "target": "api.actionnetwork.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
+      "auth": "none",
+      "status": "open (is_free true)",
+      "bypass": "none",
+      "notes": "multi-book moneyline/spread/total; props route unsolved"
+    },
+    {
+      "id": 29,
+      "target": "dailyfantasyfuel.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.dailyfantasyfuel.com/nfl/projections/draftkings",
+      "auth": "none",
+      "status": "open (SSR HTML)",
+      "bypass": "parse rendered table, no API",
+      "notes": "rows carry data-week/data-start_date; FPTS + VALUE fields"
+    },
+    {
+      "id": 30,
+      "target": "api.github.com/nflverse-data",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.github.com/repos/nflverse/nflverse-data/releases",
+      "auth": "none (GitHub API, unauthenticated 60/h)",
+      "status": "open",
+      "bypass": "none",
+      "notes": "release assets incl. ftn_charting, pbp_participation, weekly_rosters; no coverage column"
+    },
+    {
+      "id": 31,
+      "target": "nflsavant.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://www.nflsavant.com/api/explore?q={base64url(JSON)}",
+      "auth": "none",
+      "status": "open",
+      "bypass": "encoding recipe from bundle l8(); featured endpoint supplies query templates",
+      "notes": "no catalog routes; use /api/explore/featured for templates"
+    },
+    {
+      "id": 32,
+      "target": "nflsavant.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://www.nflsavant.com/api/explore/featured",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "documents the DSL by example"
+    },
+    {
+      "id": 33,
+      "target": "aws.amazon.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://aws.amazon.com/blogs/media/tackling-next-gen-stats-how-aws-is-using-ai-to-advance-sports-analytics-with-the-nfl/",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "architecture of NGS Pressure Probability: 90k plays, 10Hz, AutoGluon 183 features, GNN role ID, transformer situational-average"
+    },
+    {
+      "id": 34,
+      "target": "aws.amazon.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://aws.amazon.com/blogs/machine-learning/estimating-3d-pose-for-athlete-tracking-using-2d-videos-and-amazon-sagemaker-studio/",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "YOLOv3 -> 3DMPPE (RootNet+PoseNet), COCO 17 joints, MPJPE eval"
+    },
+    {
+      "id": 35,
+      "target": "universe.roboflow.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://universe.roboflow.com/home-mxzv1/nfl-competition",
+      "auth": "Cloudflare human check; api.roboflow.com needs free key",
+      "status": "blocked (CF + key)",
+      "bypass": "pending",
+      "notes": "NFL CV dataset"
+    },
+    {
+      "id": 36,
+      "target": "sloansportsconference.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://cdn.prod.website-files.com/68d6be744d7efccc2207f571/68d6be744d7efccc22080647_Using%20Computer%20Vision%20and%20Machine%20Learning%20to%20Automatically%20Classify%20NFL%20Game%20Film_2018poster.pdf",
+      "auth": "none",
+      "status": "open PDF",
+      "bypass": "none",
+      "notes": "Hough-line rectification, jersey-colour segmentation, per-part CART; accuracies tabulated"
+    },
+    {
+      "id": 37,
+      "target": "api.github.com/SkillCorner/opendata",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.github.com/repos/SkillCorner/opendata/contents/data",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "open tracking data repo; aggregates dir, soccer-first"
+    },
+    {
+      "id": 38,
+      "target": "kaggle.com",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/competitions/nfl-big-data-bowl-2027",
+      "auth": "Kaggle access_token in ~/.kaggle/access_token",
+      "status": "open with token (account already entered)",
+      "bypass": "token file",
+      "notes": "coverage types, route_ran, motion, EPA/WPA labels"
+    },
+    {
+      "id": 39,
+      "target": "archive.org/wayback",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "http://archive.org/wayback/available?url={target}",
+      "auth": "none",
+      "status": "open",
+      "bypass": "snapshot fetch for CF-walled sites",
+      "notes": "works for PFR, footballdb, sports-reference"
+    },
+    {
+      "id": 40,
+      "target": "nflpa.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nflpa.com/active-players/research",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "10 injury/biomechanics PDFs"
+    },
+    {
+      "id": 41,
+      "target": "api.openalex.org",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://api.openalex.org/works?search={q}",
+      "auth": "none (free key for volume; $0.10/day shared without)",
+      "status": "rate-walled 429",
+      "bypass": "free API key",
+      "notes": "literature -> DOI -> Zenodo route"
+    },
+    {
+      "id": 42,
+      "target": "zenodo.org",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://zenodo.org/api/records/22982913",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "CC BY 4.0"
+    },
+    {
+      "id": 43,
+      "target": "kaggle datasets",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data",
+      "auth": "access_token",
+      "status": "open with token",
+      "bypass": "token",
+      "notes": "CC-BY-NC-SA"
+    },
+    {
+      "id": 44,
+      "target": "kaggle datasets",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/datasets/philiphyde1/nfl-stats-1999-2022",
+      "auth": "access_token",
+      "status": "open with token",
+      "bypass": "token",
+      "notes": "CC0"
+    },
+    {
+      "id": 45,
+      "target": "kaggle datasets",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/datasets/dariushafshar/bdb-2027-public-enrichment",
+      "auth": "access_token",
+      "status": "open with token",
+      "bypass": "token",
+      "notes": "CC-BY-SA; supersedes name-fuzzy crosswalk"
+    },
+    {
+      "id": 46,
+      "target": "kaggle datasets",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/datasets/jakeallison12/jake-allison-data-driven-gameplans-coaching",
+      "auth": "access_token",
+      "status": "open",
+      "bypass": "token",
+      "notes": "k-means pre-snap clusters -> NN coverage prediction"
+    },
+    {
+      "id": 47,
+      "target": "kaggle datasets",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/datasets/fedecarranza/2023-helmet-laboratory-testing-performance-results",
+      "auth": "access_token",
+      "status": "open",
+      "bypass": "token",
+      "notes": "DbCL-1.0"
+    },
+    {
+      "id": 48,
+      "target": "kaggle datasets",
+      "category": "wildcard",
+      "method": "GET",
+      "url": "https://www.kaggle.com/datasets/robikscube/helmet-assignment-helpers",
+      "auth": "access_token",
+      "status": "open",
+      "bypass": "token",
+      "notes": "competition metric: IoU .35, impact weight 1000, 22 boxes/frame cap"
+    },
+    {
+      "id": 49,
+      "target": "espn.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{id}/depthcharts",
+      "auth": "none",
+      "status": "open",
+      "bypass": "none",
+      "notes": "per-scheme ordered depth, espn_id joins crosswalk"
+    },
+    {
+      "id": 50,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "/api/leaders/expectation/completion/week?season=&week=",
+      "auth": "JWT bearer (minted from inlined Cognito creds) + Referer header required",
+      "status": "open",
+      "bypass": "self-minted BOLA token; leaderboard capped 20 rows/week",
+      "notes": "serves completionProbability (xComp) + airYards"
+    },
+    {
+      "id": 51,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "/api/leaders/expectation/yac/week?season=&week=",
+      "auth": "JWT bearer (minted from inlined Cognito creds) + Referer header required",
+      "status": "open",
+      "bypass": "same",
+      "notes": "expectedYardsAfterCatch + yardsAfterCatchOverExpectation (YACoE)"
+    },
+    {
+      "id": 52,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "/api/leaders/expectation/ery/week?season=&week=",
+      "auth": "JWT bearer (minted from inlined Cognito creds) + Referer header required",
+      "status": "open",
+      "bypass": "same; resource is 'ery' not 'ryoe'",
+      "notes": "expectedRushYards + rushYardsOverExpected (RYOE)"
+    },
+    {
+      "id": 53,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "/api/leaders/expectation/{completion|yac|ery}/season?season=",
+      "auth": "JWT bearer (minted from inlined Cognito creds) + Referer header required",
+      "status": "open",
+      "bypass": "same",
+      "notes": "season scope returns same 20-row cap, not full leaderboard"
+    },
+    {
+      "id": 54,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "/api/highlights/participation/game/play?gameId=&playId=",
+      "auth": "JWT bearer (minted from inlined Cognito creds) + Referer header required",
+      "status": "open",
+      "bypass": "BOLA: mutable object refs, no ownership/tier check",
+      "notes": "per-player side/route/blitz/defender_location enum for all 22"
+    },
+    {
+      "id": 55,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "/api/gamecenter/overview?gameId=",
+      "auth": "JWT bearer + Referer",
+      "status": "open",
+      "bypass": "BOLA self-minted token",
+      "notes": "receivers[].receptionInfo = avgSeparation/avgCushion/avgAirYards; leagueAverageReceiverSeparation.avg=2.9867 baseline"
+    },
+    {
+      "id": 56,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/content/microsite/chart",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 57,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/content/microsite/chart/players",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 58,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/gamecenter/overview",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 59,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/highlights/participation/game/play",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 60,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/highlights/tracking/game/play/withBall/min",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 61,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/distance/ballCarrier",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 62,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/distance/tackle",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 63,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/expectation/completion/season",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 64,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/expectation/completion/week",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 65,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/expectation/ery/season",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 66,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/expectation/ery/week",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 67,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/expectation/yac/season",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 68,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/expectation/yac/week",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 69,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/speed/ballCarrier",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 70,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/leaders/time/sack",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 71,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/league/schedule",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 72,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/league/schedule/current",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 73,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/league/teams",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 74,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/chart/drive",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 75,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/game/drives",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 76,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/game/scores",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 77,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/plays/playlist/game",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 78,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/plays/winProbability",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 79,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/splits/game/defense/summary",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 80,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/stats/completionProbability/game",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 81,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/summary/game/passing",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 82,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/summary/game/receiving",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 83,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/live/summary/game/rushing",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 84,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/participation/team/game",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 85,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/plays/highlight/players",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 86,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/plays/highlights",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 87,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/plays/isHighlight",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 88,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/statboard/leaders",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 89,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/statboard/passing",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 90,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/statboard/receiving",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    },
+    {
+      "id": 91,
+      "target": "nextgenstats.nfl.com",
+      "category": "primary",
+      "method": "GET",
+      "url": "https://nextgenstats.nfl.com/api/statboard/rushing",
+      "auth": "anon|free JWT",
+      "status": "open",
+      "bypass": "Nuxt proxy",
+      "notes": "bundle literal"
+    }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "name": "STATUS.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/STATUS.md",
+      "bytes": 1905,
+      "heading": "# STATUS — endpoint validation matrix (cycle 14, 2026-10-22 ~08:10Z)",
+      "sha256": null
+    },
+    {
+      "id": 2,
+      "name": "SYNTHESIS.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/SYNTHESIS.md",
+      "bytes": 3426,
+      "heading": "# SYNTHESIS — where the data is, and how weak each door is",
+      "sha256": null
+    },
+    {
+      "id": 3,
+      "name": "actionnetwork.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/actionnetwork.md",
+      "bytes": 1217,
+      "heading": "# Action Network — open multi-book odds (the DK/FD workaround)",
+      "sha256": null
+    },
+    {
+      "id": 4,
+      "name": "alignment_ablation.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/alignment_ablation.md",
+      "bytes": 1328,
+      "heading": "# Alignment features add ~0.01 AUC (ablation)",
+      "sha256": null
+    },
+    {
+      "id": 5,
+      "name": "aws_ngs_pressure_architecture.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/aws_ngs_pressure_architecture.md",
+      "bytes": 2420,
+      "heading": "# AWS/NGS \"Pressure Probability\" — architecture of a private NGS stat",
+      "sha256": null
+    },
+    {
+      "id": 6,
+      "name": "baseline_validity.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/baseline_validity.md",
+      "bytes": 1990,
+      "heading": "# Is 2.9867 actually the league average? Observed is 0.23–0.26 higher",
+      "sha256": null
+    },
+    {
+      "id": 7,
+      "name": "bdb_tracking_2024_confirms.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/bdb_tracking_2024_confirms.md",
+      "bytes": 1890,
+      "heading": "# Confirmed on 2024: tracking separation is ~4x too wide even at max density",
+      "sha256": null
+    },
+    {
+      "id": 8,
+      "name": "bdb_tracking_subject_only.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/bdb_tracking_subject_only.md",
+      "bytes": 2291,
+      "heading": "# The BDB 2027 tracking files are subject-only — full separation is NOT computable from them",
+      "sha256": null
+    },
+    {
+      "id": 9,
+      "name": "bdb_wr_coverage_subset.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/bdb_wr_coverage_subset.md",
+      "bytes": 2225,
+      "heading": "# Even the WR-vs-coverage subset fails: 13.9 yd separation, and the outcome sign inverts",
+      "sha256": null
+    },
+    {
+      "id": 10,
+      "name": "completion_probability_140rows.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/completion_probability_140rows.md",
+      "bytes": 2072,
+      "heading": "# completionProbability is depth-independent at 140 rows — near-decisive",
+      "sha256": null
+    },
+    {
+      "id": 11,
+      "name": "completion_probability_flatness.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/completion_probability_flatness.md",
+      "bytes": 2284,
+      "heading": "# completionProbability confirmed depth-flat at 32 games / 33 rows",
+      "sha256": null
+    },
+    {
+      "id": 12,
+      "name": "coverage_baseline.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/coverage_baseline.md",
+      "bytes": 1738,
+      "heading": "# Coverage baseline — pre-snap only (BDB 2027 labels)",
+      "sha256": null
+    },
+    {
+      "id": 13,
+      "name": "coverage_vs_epa.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/coverage_vs_epa.md",
+      "bytes": 1574,
+      "heading": "# Coverage type vs EPA on 64,037 pass plays",
+      "sha256": null
+    },
+    {
+      "id": 14,
+      "name": "cp_depthblind_1080.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/cp_depthblind_1080.md",
+      "bytes": 2042,
+      "heading": "# Settled at 1,080 rows and 3 seasons: completionProbability is depth-blind everywhere",
+      "sha256": null
+    },
+    {
+      "id": 15,
+      "name": "crosswalk_and_winprob.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/crosswalk_and_winprob.md",
+      "bytes": 1677,
+      "heading": "# Dataset refinement — player crosswalk + ESPN in-game expectancy",
+      "sha256": null
+    },
+    {
+      "id": 16,
+      "name": "crosswalk_v2.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/crosswalk_v2.md",
+      "bytes": 1160,
+      "heading": "# Crosswalk v2 — id join beats name join (3.5x)",
+      "sha256": null
+    },
+    {
+      "id": 17,
+      "name": "cushion_ladder.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/cushion_ladder.md",
+      "bytes": 1891,
+      "heading": "# Model ladder on 256 receivers: cushion adds 0.001 R², nothing else much",
+      "sha256": null
+    },
+    {
+      "id": 18,
+      "name": "dailyfantasyfuel.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/dailyfantasyfuel.md",
+      "bytes": 1118,
+      "heading": "# Daily Fantasy Fuel — server-rendered DFS projections (no API at all)",
+      "sha256": null
+    },
+    {
+      "id": 19,
+      "name": "epa_residual_opponent.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/epa_residual_opponent.md",
+      "bytes": 1711,
+      "heading": "# EPA residualiser — opponent terms, and it does not generalise",
+      "sha256": null
+    },
+    {
+      "id": 20,
+      "name": "epa_residualization.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/epa_residualization.md",
+      "bytes": 1959,
+      "heading": "# Context-adjusted EPA residualisation (mission primitive 1)",
+      "sha256": null
+    },
+    {
+      "id": 21,
+      "name": "espn_depth_charts.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/espn_depth_charts.md",
+      "bytes": 1210,
+      "heading": "# ESPN depth charts — 2,290 rows across all 32 teams",
+      "sha256": null
+    },
+    {
+      "id": 22,
+      "name": "espn_endpoints.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/espn_endpoints.md",
+      "bytes": 1917,
+      "heading": "# Frontier expansion — ESPN hidden endpoints (new target)",
+      "sha256": null
+    },
+    {
+      "id": 23,
+      "name": "ghost_baseline_scalar.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/ghost_baseline_scalar.md",
+      "bytes": 2536,
+      "heading": "# Scalar ghost-defender baseline: separation over expected by coverage × route",
+      "sha256": null
+    },
+    {
+      "id": 24,
+      "name": "helmet_assignment_metric.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/helmet_assignment_metric.md",
+      "bytes": 1468,
+      "heading": "# Helmet-assignment evaluation spec (labels still gated, metric isn't)",
+      "sha256": null
+    },
+    {
+      "id": 25,
+      "name": "id_crosswalk.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/id_crosswalk.md",
+      "bytes": 1294,
+      "heading": "# Universal player ID crosswalk — 12,608 players, 13 id systems",
+      "sha256": null
+    },
+    {
+      "id": 26,
+      "name": "kaggle_bdb2027.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/kaggle_bdb2027.md",
+      "bytes": 2166,
+      "heading": "# Kaggle Big Data Bowl 2027 — coverage labels and routes (the big one)",
+      "sha256": null
+    },
+    {
+      "id": 27,
+      "name": "kaggle_datasets.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/kaggle_datasets.md",
+      "bytes": 1466,
+      "heading": "# Kaggle datasets route (token) — two pulls",
+      "sha256": null
+    },
+    {
+      "id": 28,
+      "name": "linestar_map.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/linestar_map.md",
+      "bytes": 2810,
+      "heading": "# linestarapp.com — ownership surface mapped",
+      "sha256": null
+    },
+    {
+      "id": 29,
+      "name": "motion_is_pass_indicator.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/motion_is_pass_indicator.md",
+      "bytes": 1550,
+      "heading": "# Motion is a PASS indicator, not a coverage indicator",
+      "sha256": null
+    },
+    {
+      "id": 30,
+      "name": "motion_negative_result.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/motion_negative_result.md",
+      "bytes": 1522,
+      "heading": "# Motion does not predict man coverage here (negative result)",
+      "sha256": null
+    },
+    {
+      "id": 31,
+      "name": "nflsavant_api.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/nflsavant_api.md",
+      "bytes": 2038,
+      "heading": "# nflsavant.com — full analytic query API (biggest find so far)",
+      "sha256": null
+    },
+    {
+      "id": 32,
+      "name": "nflverse_data.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/nflverse_data.md",
+      "bytes": 1893,
+      "heading": "# nflverse-data — the public warehouse (GitHub releases)",
+      "sha256": null
+    },
+    {
+      "id": 33,
+      "name": "ngs_expected_value_surfaces.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/ngs_expected_value_surfaces.md",
+      "bytes": 2455,
+      "heading": "# BREAKTHROUGH: NGS serves its own completionProbability and YACoE",
+      "sha256": null
+    },
+    {
+      "id": 34,
+      "name": "ngs_receiver_separation.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/ngs_receiver_separation.md",
+      "bytes": 2440,
+      "heading": "াভ# BREAKTHROUGH 2: gamecenter overview serves per-receiver separation, cushion, air yards",
+      "sha256": null
+    },
+    {
+      "id": 35,
+      "name": "no_per_play_separation.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/no_per_play_separation.md",
+      "bytes": 1849,
+      "heading": "dub# No per-play separation route exists — aggregates are the floor of resolution",
+      "sha256": null
+    },
+    {
+      "id": 36,
+      "name": "openalex_zenodo.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/openalex_zenodo.md",
+      "bytes": 1597,
+      "heading": "# OpenAlex + Zenodo — literature route, and one usable dataset",
+      "sha256": null
+    },
+    {
+      "id": 37,
+      "name": "opponent_adjustment_half_rank.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/opponent_adjustment_half_rank.md",
+      "bytes": 1845,
+      "heading": "# Opponent quality does reorder — by half a rank",
+      "sha256": null
+    },
+    {
+      "id": 38,
+      "name": "pose_from_video.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/pose_from_video.md",
+      "bytes": 2298,
+      "heading": "# Athlete 3D pose from 2D video — full pipeline spec (AWS ML blog)",
+      "sha256": null
+    },
+    {
+      "id": 39,
+      "name": "presnap_clustering_deck.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/presnap_clustering_deck.md",
+      "bytes": 2253,
+      "heading": "# BDB 2025 coaching deck — pre-snap clustering -> coverage prediction (method)",
+      "sha256": null
+    },
+    {
+      "id": 40,
+      "name": "price_dispersion.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/price_dispersion.md",
+      "bytes": 1660,
+      "heading": "# Cross-source price dispersion (propfinder vs Underdog)",
+      "sha256": null
+    },
+    {
+      "id": 41,
+      "name": "price_dispersion_fixed.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/price_dispersion_fixed.md",
+      "bytes": 1391,
+      "heading": "# Dispersion, corrected — the price scale bug is fixed",
+      "sha256": null
+    },
+    {
+      "id": 42,
+      "name": "prizepicks_bypass.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/prizepicks_bypass.md",
+      "bytes": 1448,
+      "heading": "# PrizePicks — DataDome bypass via the partner host",
+      "sha256": null
+    },
+    {
+      "id": 43,
+      "name": "prop_reconciliation.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/prop_reconciliation.md",
+      "bytes": 1327,
+      "heading": "# Prop-board reconciliation — 3 sources, canonical stat vocabulary",
+      "sha256": null
+    },
+    {
+      "id": 44,
+      "name": "propfinder_bypass.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/propfinder_bypass.md",
+      "bytes": 3171,
+      "heading": "# propfinder.app — auth boundary + reconstructed pfRating model",
+      "sha256": null
+    },
+    {
+      "id": 46,
+      "name": "propfinder_subscores.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/propfinder_subscores.md",
+      "bytes": 1927,
+      "heading": "# propfinder — sub-score transforms, solved partially",
+      "sha256": null
+    },
+    {
+      "id": 47,
+      "name": "refinements_cycle13.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/refinements_cycle13.md",
+      "bytes": 1803,
+      "heading": "# Two refinements: PropFinder avg sub-scores characterised, theScore rosters found",
+      "sha256": null
+    },
+    {
+      "id": 48,
+      "name": "research_tooling.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/research_tooling.md",
+      "bytes": 922,
+      "heading": "# Research tooling — triage of the pasted repos",
+      "sha256": null
+    },
+    {
+      "id": 49,
+      "name": "residual_is_raw_epa.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/residual_is_raw_epa.md",
+      "bytes": 1882,
+      "heading": "# Decisive test: the EPA residual is raw EPA in disguise (r = 1.000)",
+      "sha256": null
+    },
+    {
+      "id": 50,
+      "name": "residual_rank_invariance.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/residual_rank_invariance.md",
+      "bytes": 1902,
+      "heading": "# Why residualisation cannot reorder: the situations are the same",
+      "sha256": null
+    },
+    {
+      "id": 51,
+      "name": "route_by_coverage.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/route_by_coverage.md",
+      "bytes": 2153,
+      "heading": "# Route YOE is mostly route×coverage interaction — with a shrinkage caveat",
+      "sha256": null
+    },
+    {
+      "id": 52,
+      "name": "route_coverage_unregularised.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/route_coverage_unregularised.md",
+      "bytes": 1868,
+      "heading": "# Unregularised check: the coverage finding holds, CORNER's survival does not",
+      "sha256": null
+    },
+    {
+      "id": 53,
+      "name": "route_yoe.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/route_yoe.md",
+      "bytes": 2072,
+      "heading": "# Route-level YOE / CPOE: screens and crossers overperform, hitches and outs die",
+      "sha256": null
+    },
+    {
+      "id": 54,
+      "name": "routes_survive_coverage.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/routes_survive_coverage.md",
+      "bytes": 1775,
+      "heading": "# Coverage does NOT explain the route residuals — self-refutation",
+      "sha256": null
+    },
+    {
+      "id": 55,
+      "name": "ryoe_recovered.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/ryoe_recovered.md",
+      "bytes": 2521,
+      "heading": "# RYOE recovered — and the expectation is context-flat like xComp",
+      "sha256": null
+    },
+    {
+      "id": 56,
+      "name": "scores24_graphql.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/scores24_graphql.md",
+      "bytes": 2288,
+      "heading": "# scores24.live — GraphQL paging solved, live odds + trends extracted",
+      "sha256": null
+    },
+    {
+      "id": 57,
+      "name": "separation_2024_replication.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_2024_replication.md",
+      "bytes": 1670,
+      "heading": "# 2024 replication: the TE effect holds nearly exactly; baseline is a fixed constant",
+      "sha256": null
+    },
+    {
+      "id": 58,
+      "name": "separation_depth_control.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_depth_control.md",
+      "bytes": 1885,
+      "heading": "# Depth control: separation survives (partial r .416) and prices out at +6.5pp catch/yd",
+      "sha256": null
+    },
+    {
+      "id": 59,
+      "name": "separation_predicts_catch_rate.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_predicts_catch_rate.md",
+      "bytes": 1821,
+      "heading": "# Separation over league average predicts catch rate; cushion predicts nothing",
+      "sha256": null
+    },
+    {
+      "id": 60,
+      "name": "separation_yards_mediation.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_yards_mediation.md",
+      "bytes": 1889,
+      "heading": "# Yards per target: suppressed by depth, and largely mediated by catch",
+      "sha256": null
+    },
+    {
+      "id": 61,
+      "name": "sleeper_open_api.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/sleeper_open_api.md",
+      "bytes": 1418,
+      "heading": "# Sleeper — open NFL metadata + weekly projections",
+      "sha256": null
+    },
+    {
+      "id": 62,
+      "name": "sloan_all22_cv.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/sloan_all22_cv.md",
+      "bytes": 3076,
+      "heading": "# Sloan 2018 #5571 — All-22 CV pipeline (methods + measured accuracies)",
+      "sha256": null
+    },
+    {
+      "id": 63,
+      "name": "thescore_injuries.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/thescore_injuries.md",
+      "bytes": 965,
+      "heading": "# theScore — second open NFL feed (injuries)",
+      "sha256": null
+    },
+    {
+      "id": 64,
+      "name": "unbalanced_exposure_test.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/unbalanced_exposure_test.md",
+      "bytes": 1785,
+      "heading": "# Testing my own prediction: unbalanced exposure does let the residual move",
+      "sha256": null
+    },
+    {
+      "id": 65,
+      "name": "underdog_bypass.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/underdog_bypass.md",
+      "bytes": 1579,
+      "heading": "# Underdog — 426 wall bypassed via path downgrade",
+      "sha256": null
+    },
+    {
+      "id": 66,
+      "name": "wayback_bypass.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/wayback_bypass.md",
+      "bytes": 1780,
+      "heading": "# Cloudflare-protected reference sites — Wayback is the way in",
+      "sha256": null
+    },
+    {
+      "id": 67,
+      "name": "xcomp_cpoe.md",
+      "path": "C:/Users/Garrett/nfl-farm/notes/xcomp_cpoe.md",
+      "bytes": 2203,
+      "heading": "# DeepQB-style xComp / CPOE — reproduced, with a circularity warning",
+      "sha256": null
+    }
+  ],
+  "frontier": [
+    {
+      "id": 1,
+      "domain": "wayback API",
+      "why": "standing bypass for CF reference sites (PFR/footballdb/sports-ref); also good for historical backfill",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "domain": "api.roboflow.com",
+      "why": "needs one free API key; then NFL CV dataset (images+labels) is downloadable",
+      "status": "blocked"
+    },
+    {
+      "id": 3,
+      "domain": "api.thescore.com/rosters",
+      "why": "correct roster path (not /rosters) for depth charts",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "domain": "api.underdogfantasy.com other routes",
+      "why": "/v1/ works - probe sibling v1 routes (appearances, players, lobbies) for injuries/team data",
+      "status": "active"
+    },
+    {
+      "id": 5,
+      "domain": "scores24.live bookmakers",
+      "why": "free tier aggregated-only; try bookmaker-tagged query paths to widen books",
+      "status": "active"
+    },
+    {
+      "id": 6,
+      "domain": "linestarapp.com premium",
+      "why": "lift 61-row truncation: free account, or GetSalariesV5 version downgrade (V1-V4)",
+      "status": "active"
+    },
+    {
+      "id": 7,
+      "domain": "propfinder.app/nfl/* (transforms)",
+      "why": "solve gameTotal/matchup/l5Avg/seasonAvg sub-score transforms",
+      "status": "active"
+    },
+    {
+      "id": 8,
+      "domain": "propsoptimizer.com",
+      "why": "linked sibling, likely shared auth",
+      "status": "backlog"
+    },
+    {
+      "id": 9,
+      "domain": "client-api.fragmentsx.com",
+      "why": "shared vendor backend for other FragmentsX sites",
+      "status": "backlog"
+    },
+    {
+      "id": 10,
+      "domain": "api.prizepicks.com",
+      "why": "props board behind DataDome; needs browser/cookie",
+      "status": "solved"
+    },
+    {
+      "id": 11,
+      "domain": "api.underdogfantasy.com",
+      "why": "426 version gate; recover client version header",
+      "status": "solved"
+    },
+    {
+      "id": 12,
+      "domain": "api.sportsbook.fanduel.com",
+      "why": "extract current _ak from FanDuel JS then content-managed-page",
+      "status": "active"
+    },
+    {
+      "id": 13,
+      "domain": "sportsbook-nash.draftkings.com",
+      "why": "Akamai 403 - needs fingerprint/browser",
+      "status": "blocked"
+    },
+    {
+      "id": 14,
+      "domain": "ngs gamecenter per-play separation",
+      "why": "per-receiver game aggregates are the ceiling; a per-play separation route would lift it",
+      "status": "active"
+    },
+    {
+      "id": 15,
+      "domain": "ngs 2025 tracking file (1.02GB)",
+      "why": "unverified; mechanism predicts same subject-only failure, cheap to confirm",
+      "status": "queued"
+    },
+    {
+      "id": 16,
+      "domain": "ngs expectation season+filter",
+      "why": "season scope returns only 20 rows/product; a position or player filter may unlock a full leaderboard",
+      "status": "active"
+    },
+    {
+      "id": 17,
+      "domain": "BDB combine_tracking.csv",
+      "why": "83MB untried; may give per-player kinematics baselines",
+      "status": "queued"
+    }
+  ],
+  "findings": [
+    {
+      "id": 1,
+      "kind": "negative",
+      "statement": "context-adjusted EPA is rank-identical to raw EPA (r=1.000, four bases)",
+      "evidence": "notes/residual_is_raw_epa.md"
+    },
+    {
+      "id": 2,
+      "kind": "negative一气",
+      "statement": "motion predicts coverage null (p=.091); motion is a 99.9% pass indicator",
+      "evidence": "notes/motion_is_pass_indicator.md"
+    },
+    {
+      "id": 3,
+      "kind": "negative",
+      "statement": "cushion adds 0.001 R2",
+      "evidence": "notes/cushion_ladder.md"
+    },
+    {
+      "id": 4,
+      "kind": "negative",
+      "statement": "completionProbability is depth-blind across 1080 rows / 3 seasons (rho -.023)",
+      "evidence": "notes/cp_depthblind_1080.md"
+    },
+    {
+      "id": 5,
+      "kind": "negative",
+      "statement": "BDB tracking is subject-only; separation 12.8-15.5 vs true 3.0",
+      "evidence": "notes/bdb_tracking_subject_only.md"
+    },
+    {
+      "id": 6,
+      "kind": "positive",
+      "statement": "NGS expectation family is free: YACOE and RYOE identities exact to 0.0",
+      "evidence": "notes/ngs_expected_value_surfaces.md"
+    },
+    {
+      "id": 7,
+      "kind": "positive-di",
+      "statement": "separation over league average predicts catch rate (r .508, partial .416)",
+      "evidence": "notes/separation_predicts_catch_rate.md"
+    },
+    {
+      "id": 8,
+      "kind": "positive",
+      "statement": "TE separation +1.0 over league, replicates 2024 (+0.98)",
+      "evidence": "notes/separation_2024_replication.md"
+    },
+    {
+      "id": 9,
+      "kind": "positive",
+      "statement": "route YOE is 82-100% route x coverage interaction",
+      "evidence": "notes/route_by_coverage.md"
+    },
+    {
+      "id": 10,
+      "kind": "exploit",
+      "statement": "BOLA on gameId/playId, no tier check",
+      "evidence": "out/exploit.py"
+    },
+    {
+      "id": 11,
+      "kind": "exploit",
+      "statement": "client key/secret inlined in public JS mints tracking-scope JWT",
+      "evidence": "out/binary_map.csv"
+    }
+  ],
+  "meta": [
+    {
+      "key": "generated",
+      "value": "2026-10-22"
+    },
+    {
+      "key": "files",
+      "value": "380"
+    },
+    {
+      "key": "endpoints",
+      "value": "55+nfl40"
+    }
+  ],
+  "files": [
+    {
+      "id": 1,
+      "path": "C:/Users/Garrett/nfl-farm/.gitignore",
+      "root": "nfl-farm",
+      "size": 138,
+      "sha256": null
+    },
+    {
+      "id": 2,
+      "path": "C:/Users/Garrett/nfl-farm/bypass_log.md",
+      "root": "nfl-farm",
+      "size": 20915,
+      "sha256": null
+    },
+    {
+      "id": 3,
+      "path": "C:/Users/Garrett/nfl-farm/bypass_notes.md",
+      "root": "nfl-farm",
+      "size": 3538,
+      "sha256": null
+    },
+    {
+      "id": 4,
+      "path": "C:/Users/Garrett/nfl-farm/endpoints.jsonl",
+      "root": "nfl-farm",
+      "size": 22095,
+      "sha256": null
+    },
+    {
+      "id": 5,
+      "path": "C:/Users/Garrett/nfl-farm/frontier_queue.json",
+      "root": "nfl-farm",
+      "size": 2610,
+      "sha256": null
+    },
+    {
+      "id": 6,
+      "path": "C:/Users/Garrett/nfl-farm/h1.py",
+      "root": "nfl-farm",
+      "size": 1941,
+      "sha256": null
+    },
+    {
+      "id": 7,
+      "path": "C:/Users/Garrett/nfl-farm/h10.py",
+      "root": "nfl-farm",
+      "size": 1228,
+      "sha256": null
+    },
+    {
+      "id": 8,
+      "path": "C:/Users/Garrett/nfl-farm/h11.py",
+      "root": "nfl-farm",
+      "size": 1707,
+      "sha256": null
+    },
+    {
+      "id": 9,
+      "path": "C:/Users/Garrett/nfl-farm/h12.py",
+      "root": "nfl-farm",
+      "size": 1690,
+      "sha256": null
+    },
+    {
+      "id": 10,
+      "path": "C:/Users/Garrett/nfl-farm/h13.py",
+      "root": "nfl-farm",
+      "size": 1688,
+      "sha256": null
+    },
+    {
+      "id": 11,
+      "path": "C:/Users/Garrett/nfl-farm/h14.py",
+      "root": "nfl-farm",
+      "size": 2169,
+      "sha256": null
+    },
+    {
+      "id": 12,
+      "path": "C:/Users/Garrett/nfl-farm/h15.py",
+      "root": "nfl-farm",
+      "size": 1551,
+      "sha256": null
+    },
+    {
+      "id": 13,
+      "path": "C:/Users/Garrett/nfl-farm/h16.py",
+      "root": "nfl-farm",
+      "size": 1584,
+      "sha256": null
+    },
+    {
+      "id": 14,
+      "path": "C:/Users/Garrett/nfl-farm/h17.py",
+      "root": "nfl-farm",
+      "size": 1152,
+      "sha256": null
+    },
+    {
+      "id": 15,
+      "path": "C:/Users/Garrett/nfl-farm/h18.py",
+      "root": "nfl-farm",
+      "size": 1274,
+      "sha256": null
+    },
+    {
+      "id": 16,
+      "path": "C:/Users/Garrett/nfl-farm/h19.py",
+      "root": "nfl-farm",
+      "size": 1294,
+      "sha256": null
+    },
+    {
+      "id": 17,
+      "path": "C:/Users/Garrett/nfl-farm/h2.py",
+      "root": "nfl-farm",
+      "size": 2021,
+      "sha256": null
+    },
+    {
+      "id": 18,
+      "path": "C:/Users/Garrett/nfl-farm/h20.py",
+      "root": "nfl-farm",
+      "size": 1523,
+      "sha256": null
+    },
+    {
+      "id": 19,
+      "path": "C:/Users/Garrett/nfl-farm/h21.py",
+      "root": "nfl-farm",
+      "size": 1607,
+      "sha256": null
+    },
+    {
+      "id": 20,
+      "path": "C:/Users/Garrett/nfl-farm/h22.py",
+      "root": "nfl-farm",
+      "size": 1294,
+      "sha256": null
+    },
+    {
+      "id": 21,
+      "path": "C:/Users/Garrett/nfl-farm/h23.py",
+      "root": "nfl-farm",
+      "size": 1245,
+      "sha256": null
+    },
+    {
+      "id": 22,
+      "path": "C:/Users/Garrett/nfl-farm/h24.py",
+      "root": "nfl-farm",
+      "size": 1278,
+      "sha256": null
+    },
+    {
+      "id": 23,
+      "path": "C:/Users/Garrett/nfl-farm/h25.py",
+      "root": "nfl-farm",
+      "size": 1267,
+      "sha256": null
+    },
+    {
+      "id": 24,
+      "path": "C:/Users/Garrett/nfl-farm/h26.py",
+      "root": "nfl-farm",
+      "size": 1226,
+      "sha256": null
+    },
+    {
+      "id": 25,
+      "path": "C:/Users/Garrett/nfl-farm/h3.py",
+      "root": "nfl-farm",
+      "size": 2256,
+      "sha256": null
+    },
+    {
+      "id": 26,
+      "path": "C:/Users/Garrett/nfl-farm/h4.py",
+      "root": "nfl-farm",
+      "size": 1266,
+      "sha256": null
+    },
+    {
+      "id": 27,
+      "path": "C:/Users/Garrett/nfl-farm/h5.py",
+      "root": "nfl-farm",
+      "size": 1888,
+      "sha256": null
+    },
+    {
+      "id": 28,
+      "path": "C:/Users/Garrett/nfl-farm/h6.py",
+      "root": "nfl-farm",
+      "size": 1827,
+      "sha256": null
+    },
+    {
+      "id": 29,
+      "path": "C:/Users/Garrett/nfl-farm/h7.py",
+      "root": "nfl-farm",
+      "size": 1272,
+      "sha256": null
+    },
+    {
+      "id": 30,
+      "path": "C:/Users/Garrett/nfl-farm/h8.py",
+      "root": "nfl-farm",
+      "size": 1272,
+      "sha256": null
+    },
+    {
+      "id": 31,
+      "path": "C:/Users/Garrett/nfl-farm/h9.py",
+      "root": "nfl-farm",
+      "size": 1780,
+      "sha256": null
+    },
+    {
+      "id": 32,
+      "path": "C:/Users/Garrett/nfl-farm/knowledge_graph.json",
+      "root": "nfl-farm",
+      "size": 9346,
+      "sha256": null
+    },
+    {
+      "id": 33,
+      "path": "C:/Users/Garrett/nfl-farm/out_rea_scores24.json",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 34,
+      "path": "C:/Users/Garrett/nfl-farm/pf_rerate.py",
+      "root": "nfl-farm",
+      "size": 2133,
+      "sha256": null
+    },
+    {
+      "id": 35,
+      "path": "C:/Users/Garrett/nfl-farm/probe_gql.py",
+      "root": "nfl-farm",
+      "size": 1288,
+      "sha256": null
+    },
+    {
+      "id": 36,
+      "path": "C:/Users/Garrett/nfl-farm/probe_gql2.py",
+      "root": "nfl-farm",
+      "size": 1454,
+      "sha256": null
+    },
+    {
+      "id": 37,
+      "path": "C:/Users/Garrett/nfl-farm/probe_m.py",
+      "root": "nfl-farm",
+      "size": 1129,
+      "sha256": null
+    },
+    {
+      "id": 38,
+      "path": "C:/Users/Garrett/nfl-farm/probe_t.py",
+      "root": "nfl-farm",
+      "size": 1133,
+      "sha256": null
+    },
+    {
+      "id": 39,
+      "path": "C:/Users/Garrett/nfl-farm/probe_t2.py",
+      "root": "nfl-farm",
+      "size": 1608,
+      "sha256": null
+    },
+    {
+      "id": 40,
+      "path": "C:/Users/Garrett/nfl-farm/probe_t3.py",
+      "root": "nfl-farm",
+      "size": 1284,
+      "sha256": null
+    },
+    {
+      "id": 41,
+      "path": "C:/Users/Garrett/nfl-farm/README.md",
+      "root": "nfl-farm",
+      "size": 3596,
+      "sha256": null
+    },
+    {
+      "id": 42,
+      "path": "C:/Users/Garrett/nfl-farm/rea_err.log",
+      "root": "nfl-farm",
+      "size": 1487,
+      "sha256": null
+    },
+    {
+      "id": 43,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/actionnetwork_nfl_odds_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 75527,
+      "sha256": null
+    },
+    {
+      "id": 44,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb_tracking_separation_2023.csv",
+      "root": "nfl-farm",
+      "size": 32276,
+      "sha256": null
+    },
+    {
+      "id": 45,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb_tracking_separation_2024_dense.csv",
+      "root": "nfl-farm",
+      "size": 59134,
+      "sha256": null
+    },
+    {
+      "id": 46,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/betbetter-teaching-dataset-2026.csv",
+      "root": "nfl-farm",
+      "size": 390940,
+      "sha256": null
+    },
+    {
+      "id": 47,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/betbetter_nfl.csv",
+      "root": "nfl-farm",
+      "size": 7600,
+      "sha256": null
+    },
+    {
+      "id": 48,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/CONSENSUS_DISPERSION.csv",
+      "root": "nfl-farm",
+      "size": 316352,
+      "sha256": null
+    },
+    {
+      "id": 49,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/CONSENSUS_PROPS.csv",
+      "root": "nfl-farm",
+      "size": 19745,
+      "sha256": null
+    },
+    {
+      "id": 50,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 14015,
+      "sha256": null
+    },
+    {
+      "id": 51,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/espn_depth_charts.csv",
+      "root": "nfl-farm",
+      "size": 94843,
+      "sha256": null
+    },
+    {
+      "id": 52,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/espn_draft_player_probs.csv",
+      "root": "nfl-farm",
+      "size": 792773,
+      "sha256": null
+    },
+    {
+      "id": 53,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/espn_nfl_gamesleep_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 707,
+      "sha256": null
+    },
+    {
+      "id": 54,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/espn_plays_401873008.csv",
+      "root": "nfl-farm",
+      "size": 28741,
+      "sha256": null
+    },
+    {
+      "id": 55,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/espn_winprob_401873008.csv",
+      "root": "nfl-farm",
+      "size": 4619,
+      "sha256": null
+    },
+    {
+      "id": 56,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/footballdb_cardinals_roster.csv",
+      "root": "nfl-farm",
+      "size": 2314,
+      "sha256": null
+    },
+    {
+      "id": 57,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/ftn_charting_2026.parquet",
+      "root": "nfl-farm",
+      "size": 203337,
+      "sha256": null
+    },
+    {
+      "id": 58,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/linestar_ownership_dk_nfl_p413_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 4074,
+      "sha256": null
+    },
+    {
+      "id": 59,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/linestar_ownership_full_282_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 10171,
+      "sha256": null
+    },
+    {
+      "id": 60,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/nflpa_research_0.pdf",
+      "root": "nfl-farm",
+      "size": 72218,
+      "sha256": null
+    },
+    {
+      "id": 61,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/nflpa_research_2.pdf",
+      "root": "nfl-farm",
+      "size": 1384072,
+      "sha256": null
+    },
+    {
+      "id": 62,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/nfl_id_crosswalk.csv",
+      "root": "nfl-farm",
+      "size": 2360845,
+      "sha256": null
+    },
+    {
+      "id": 63,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/ngs_all_expectation_2025.csv",
+      "root": "nfl-farm",
+      "size": 18001,
+      "sha256": null
+    },
+    {
+      "id": 64,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/ngs_completion_3seasons.csv",
+      "root": "nfl-farm",
+      "size": 72689,
+      "sha256": null
+    },
+    {
+      "id": 65,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/ngs_expectation_leaders_2025_w1_7.csv",
+      "root": "nfl-farm",
+      "size": 25892,
+      "sha256": null
+    },
+    {
+      "id": 66,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/ngs_receiver_separation_2024.csv",
+      "root": "nfl-farm",
+      "size": 12496,
+      "sha256": null
+    },
+    {
+      "id": 67,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/ngs_receiver_separation_2025.csv",
+      "root": "nfl-farm",
+      "size": 24156,
+      "sha256": null
+    },
+    {
+      "id": 68,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/nvidia_nfl_paper.pdf",
+      "root": "nfl-farm",
+      "size": 9861889,
+      "sha256": null
+    },
+    {
+      "id": 69,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/officials.parquet",
+      "root": "nfl-farm",
+      "size": 150096,
+      "sha256": null
+    },
+    {
+      "id": 70,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/pfr_2025_defense.csv",
+      "root": "nfl-farm",
+      "size": 120762,
+      "sha256": null
+    },
+    {
+      "id": 71,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/pfr_2025_passing.csv",
+      "root": "nfl-farm",
+      "size": 16063,
+      "sha256": null
+    },
+    {
+      "id": 72,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/pfr_2025_receiving.csv",
+      "root": "nfl-farm",
+      "size": 63063,
+      "sha256": null
+    },
+    {
+      "id": 73,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/pfr_2025_rushing.csv",
+      "root": "nfl-farm",
+      "size": 52238,
+      "sha256": null
+    },
+    {
+      "id": 74,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/PLAYER_CROSSWALK_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 105964,
+      "sha256": null
+    },
+    {
+      "id": 75,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/PLAYER_CROSSWALK_V2.csv",
+      "root": "nfl-farm",
+      "size": 164554,
+      "sha256": null
+    },
+    {
+      "id": 76,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/prizepicks_nfl_props_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 737876,
+      "sha256": null
+    },
+    {
+      "id": 77,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/prizepicks_partner_projections_2026-10-22.json",
+      "root": "nfl-farm",
+      "size": 32426046,
+      "sha256": null
+    },
+    {
+      "id": 78,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/props_nfl_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 10103736,
+      "sha256": null
+    },
+    {
+      "id": 79,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/props_nfl_2026-10-22.json",
+      "root": "nfl-farm",
+      "size": 188067467,
+      "sha256": null
+    },
+    {
+      "id": 80,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/props_nfl_2026-10-22.json.gz",
+      "root": "nfl-farm",
+      "size": 17852550,
+      "sha256": null
+    },
+    {
+      "id": 81,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/qbr_season_level.csv.gz",
+      "root": "nfl-farm",
+      "size": 53252,
+      "sha256": null
+    },
+    {
+      "id": 82,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/roster_weekly_2026.parquet",
+      "root": "nfl-farm",
+      "size": 823402,
+      "sha256": null
+    },
+    {
+      "id": 83,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/scores24_nfl_odds_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 503,
+      "sha256": null
+    },
+    {
+      "id": 84,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/scores24_nfl_trends_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 1517,
+      "sha256": null
+    },
+    {
+      "id": 85,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/sleeper_nfl_players_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 221574,
+      "sha256": null
+    },
+    {
+      "id": 86,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/sleeper_nfl_week7_projections_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 189709,
+      "sha256": null
+    },
+    {
+      "id": 87,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/sloan_2018_nfl_cv_poster.pdf",
+      "root": "nfl-farm",
+      "size": 882429,
+      "sha256": null
+    },
+    {
+      "id": 88,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/teaching-dataset-codebook.md",
+      "root": "nfl-farm",
+      "size": 6869,
+      "sha256": null
+    },
+    {
+      "id": 89,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/thescore_nfl_injuries_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 32784,
+      "sha256": null
+    },
+    {
+      "id": 90,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/thescore_nfl_rosters_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 54940,
+      "sha256": null
+    },
+    {
+      "id": 91,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/trades.csv",
+      "root": "nfl-farm",
+      "size": 287456,
+      "sha256": null
+    },
+    {
+      "id": 92,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/underdog_nfl_props_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 417171,
+      "sha256": null
+    },
+    {
+      "id": 93,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/underdog_v1_over_under_lines_2026-10-22.json",
+      "root": "nfl-farm",
+      "size": 27099779,
+      "sha256": null
+    },
+    {
+      "id": 94,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/UNIFIED_PROPS_2026-10-22.csv",
+      "root": "nfl-farm",
+      "size": 4929386,
+      "sha256": null
+    },
+    {
+      "id": 95,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/UNIFIED_PROPS_canon.csv",
+      "root": "nfl-farm",
+      "size": 5527454,
+      "sha256": null
+    },
+    {
+      "id": 96,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/combine_results.csv",
+      "root": "nfl-farm",
+      "size": 41020,
+      "sha256": null
+    },
+    {
+      "id": 97,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/games.csv",
+      "root": "nfl-farm",
+      "size": 43174,
+      "sha256": null
+    },
+    {
+      "id": 98,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/game_tracking_2023.csv",
+      "root": "nfl-farm",
+      "size": 335463637,
+      "sha256": null
+    },
+    {
+      "id": 99,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/game_tracking_2024.csv",
+      "root": "nfl-farm",
+      "size": 717952893,
+      "sha256": null
+    },
+    {
+      "id": 100,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/players.csv",
+      "root": "nfl-farm",
+      "size": 47301,
+      "sha256": null
+    },
+    {
+      "id": 101,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/player_career_successes.csv",
+      "root": "nfl-farm",
+      "size": 13801,
+      "sha256": null
+    },
+    {
+      "id": 102,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/bdb2027/player_play.csv.gz",
+      "root": "nfl-farm",
+      "size": 41312786,
+      "sha256": null
+    },
+    {
+      "id": 103,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/2023-helmet-laboratory-testing-performance-results.zip",
+      "root": "nfl-farm",
+      "size": 711,
+      "sha256": null
+    },
+    {
+      "id": 104,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/bdb-2027-public-enrichment.zip",
+      "root": "nfl-farm",
+      "size": 1237543,
+      "sha256": null
+    },
+    {
+      "id": 105,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/helmet-assignment-helpers.zip",
+      "root": "nfl-farm",
+      "size": 12847,
+      "sha256": null
+    },
+    {
+      "id": 106,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/jake-allison-data-driven-gameplans-coaching.zip",
+      "root": "nfl-farm",
+      "size": 2610367,
+      "sha256": null
+    },
+    {
+      "id": 107,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/nfl-scores-and-betting-data.zip",
+      "root": "nfl-farm",
+      "size": 263048,
+      "sha256": null
+    },
+    {
+      "id": 108,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/nfl-stats-1999-2022.zip",
+      "root": "nfl-farm",
+      "size": 92721061,
+      "sha256": null
+    },
+    {
+      "id": 109,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/nflhelmet-helper-dataset.zip",
+      "root": "nfl-farm",
+      "size": 119747,
+      "sha256": null
+    },
+    {
+      "id": 110,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/build_dataset.py",
+      "root": "nfl-farm",
+      "size": 30516,
+      "sha256": null
+    },
+    {
+      "id": 111,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/check_bdb_join.py",
+      "root": "nfl-farm",
+      "size": 3902,
+      "sha256": null
+    },
+    {
+      "id": 112,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/coverage.csv",
+      "root": "nfl-farm",
+      "size": 1839,
+      "sha256": null
+    },
+    {
+      "id": 113,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/data_dictionary.csv",
+      "root": "nfl-farm",
+      "size": 24170,
+      "sha256": null
+    },
+    {
+      "id": 114,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/LICENSES.md",
+      "root": "nfl-farm",
+      "size": 4041,
+      "sha256": null
+    },
+    {
+      "id": 115,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/nfl_id_crosswalk.csv",
+      "root": "nfl-farm",
+      "size": 2360845,
+      "sha256": null
+    },
+    {
+      "id": 116,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/provenance.csv",
+      "root": "nfl-farm",
+      "size": 7307,
+      "sha256": null
+    },
+    {
+      "id": 117,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/README.md",
+      "root": "nfl-farm",
+      "size": 10468,
+      "sha256": null
+    },
+    {
+      "id": 118,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/rookie_classes_2023_2025.csv",
+      "root": "nfl-farm",
+      "size": 253002,
+      "sha256": null
+    },
+    {
+      "id": 119,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/rookie_class_seasons_2023_2025.csv",
+      "root": "nfl-farm",
+      "size": 758489,
+      "sha256": null
+    },
+    {
+      "id": 120,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/enrich/validate_dataset.py",
+      "root": "nfl-farm",
+      "size": 7433,
+      "sha256": null
+    },
+    {
+      "id": 121,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/gp/DataDrivenGameplans_Allison.pdf",
+      "root": "nfl-farm",
+      "size": 3096141,
+      "sha256": null
+    },
+    {
+      "id": 122,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/.gitignore",
+      "root": "nfl-farm",
+      "size": 1799,
+      "sha256": null
+    },
+    {
+      "id": 123,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/LICENSE",
+      "root": "nfl-farm",
+      "size": 11357,
+      "sha256": null
+    },
+    {
+      "id": 124,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/README.md",
+      "root": "nfl-farm",
+      "size": 1255,
+      "sha256": null
+    },
+    {
+      "id": 125,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/setup.py",
+      "root": "nfl-farm",
+      "size": 408,
+      "sha256": null
+    },
+    {
+      "id": 126,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/features.py",
+      "root": "nfl-farm",
+      "size": 971,
+      "sha256": null
+    },
+    {
+      "id": 127,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/score.py",
+      "root": "nfl-farm",
+      "size": 9970,
+      "sha256": null
+    },
+    {
+      "id": 128,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/video.py",
+      "root": "nfl-farm",
+      "size": 5830,
+      "sha256": null
+    },
+    {
+      "id": 129,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/__init__.py",
+      "root": "nfl-farm",
+      "size": 135,
+      "sha256": null
+    },
+    {
+      "id": 130,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/helmet/field.png",
+      "root": "nfl-farm",
+      "size": 134661,
+      "sha256": null
+    },
+    {
+      "id": 131,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/hl/2023 HELMET LABORATORY TESTING PERFORMANCE RESULTS - Helmet Innovation.csv",
+      "root": "nfl-farm",
+      "size": 980,
+      "sha256": null
+    },
+    {
+      "id": 132,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/ph/weekly_player_stats_offense.csv",
+      "root": "nfl-farm",
+      "size": 342703691,
+      "sha256": null
+    },
+    {
+      "id": 133,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/ph/weekly_team_stats_offense.csv",
+      "root": "nfl-farm",
+      "size": 35565695,
+      "sha256": null
+    },
+    {
+      "id": 134,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/ph/yearly_player_stats_offense.csv",
+      "root": "nfl-farm",
+      "size": 36020784,
+      "sha256": null
+    },
+    {
+      "id": 135,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/ph/yearly_team_stats_offense.csv",
+      "root": "nfl-farm",
+      "size": 1875598,
+      "sha256": null
+    },
+    {
+      "id": 136,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/tcb/nfl_teams.csv",
+      "root": "nfl-farm",
+      "size": 2752,
+      "sha256": null
+    },
+    {
+      "id": 137,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/tcb/spreadspoke.R",
+      "root": "nfl-farm",
+      "size": 42096,
+      "sha256": null
+    },
+    {
+      "id": 138,
+      "path": "C:/Users/Garrett/nfl-farm/extracted_data/kaggle/tcb/spreadspoke_scores.csv",
+      "root": "nfl-farm",
+      "size": 1592514,
+      "sha256": null
+    },
+    {
+      "id": 139,
+      "path": "C:/Users/Garrett/nfl-farm/notes/actionnetwork.md",
+      "root": "nfl-farm",
+      "size": 1217,
+      "sha256": null
+    },
+    {
+      "id": 140,
+      "path": "C:/Users/Garrett/nfl-farm/notes/alignment_ablation.md",
+      "root": "nfl-farm",
+      "size": 1328,
+      "sha256": null
+    },
+    {
+      "id": 141,
+      "path": "C:/Users/Garrett/nfl-farm/notes/aws_ngs_pressure_architecture.md",
+      "root": "nfl-farm",
+      "size": 2420,
+      "sha256": null
+    },
+    {
+      "id": 142,
+      "path": "C:/Users/Garrett/nfl-farm/notes/baseline_validity.md",
+      "root": "nfl-farm",
+      "size": 1990,
+      "sha256": null
+    },
+    {
+      "id": 143,
+      "path": "C:/Users/Garrett/nfl-farm/notes/bdb_tracking_2024_confirms.md",
+      "root": "nfl-farm",
+      "size": 1890,
+      "sha256": null
+    },
+    {
+      "id": 144,
+      "path": "C:/Users/Garrett/nfl-farm/notes/bdb_tracking_subject_only.md",
+      "root": "nfl-farm",
+      "size": 2291,
+      "sha256": null
+    },
+    {
+      "id": 145,
+      "path": "C:/Users/Garrett/nfl-farm/notes/bdb_wr_coverage_subset.md",
+      "root": "nfl-farm",
+      "size": 2225,
+      "sha256": null
+    },
+    {
+      "id": 146,
+      "path": "C:/Users/Garrett/nfl-farm/notes/completion_probability_140rows.md",
+      "root": "nfl-farm",
+      "size": 2072,
+      "sha256": null
+    },
+    {
+      "id": 147,
+      "path": "C:/Users/Garrett/nfl-farm/notes/completion_probability_flatness.md",
+      "root": "nfl-farm",
+      "size": 2284,
+      "sha256": null
+    },
+    {
+      "id": 148,
+      "path": "C:/Users/Garrett/nfl-farm/notes/coverage_baseline.md",
+      "root": "nfl-farm",
+      "size": 1738,
+      "sha256": null
+    },
+    {
+      "id": 149,
+      "path": "C:/Users/Garrett/nfl-farm/notes/coverage_vs_epa.md",
+      "root": "nfl-farm",
+      "size": 1574,
+      "sha256": null
+    },
+    {
+      "id": 150,
+      "path": "C:/Users/Garrett/nfl-farm/notes/cp_depthblind_1080.md",
+      "root": "nfl-farm",
+      "size": 2042,
+      "sha256": null
+    },
+    {
+      "id": 151,
+      "path": "C:/Users/Garrett/nfl-farm/notes/crosswalk_and_winprob.md",
+      "root": "nfl-farm",
+      "size": 1677,
+      "sha256": null
+    },
+    {
+      "id": 152,
+      "path": "C:/Users/Garrett/nfl-farm/notes/crosswalk_v2.md",
+      "root": "nfl-farm",
+      "size": 1160,
+      "sha256": null
+    },
+    {
+      "id": 153,
+      "path": "C:/Users/Garrett/nfl-farm/notes/cushion_ladder.md",
+      "root": "nfl-farm",
+      "size": 1891,
+      "sha256": null
+    },
+    {
+      "id": 154,
+      "path": "C:/Users/Garrett/nfl-farm/notes/dailyfantasyfuel.md",
+      "root": "nfl-farm",
+      "size": 1118,
+      "sha256": null
+    },
+    {
+      "id": 155,
+      "path": "C:/Users/Garrett/nfl-farm/notes/epa_residualization.md",
+      "root": "nfl-farm",
+      "size": 1959,
+      "sha256": null
+    },
+    {
+      "id": 156,
+      "path": "C:/Users/Garrett/nfl-farm/notes/epa_residual_opponent.md",
+      "root": "nfl-farm",
+      "size": 1711,
+      "sha256": null
+    },
+    {
+      "id": 157,
+      "path": "C:/Users/Garrett/nfl-farm/notes/espn_depth_charts.md",
+      "root": "nfl-farm",
+      "size": 1210,
+      "sha256": null
+    },
+    {
+      "id": 158,
+      "path": "C:/Users/Garrett/nfl-farm/notes/espn_endpoints.md",
+      "root": "nfl-farm",
+      "size": 1917,
+      "sha256": null
+    },
+    {
+      "id": 159,
+      "path": "C:/Users/Garrett/nfl-farm/notes/ghost_baseline_scalar.md",
+      "root": "nfl-farm",
+      "size": 2536,
+      "sha256": null
+    },
+    {
+      "id": 160,
+      "path": "C:/Users/Garrett/nfl-farm/notes/helmet_assignment_metric.md",
+      "root": "nfl-farm",
+      "size": 1468,
+      "sha256": null
+    },
+    {
+      "id": 161,
+      "path": "C:/Users/Garrett/nfl-farm/notes/id_crosswalk.md",
+      "root": "nfl-farm",
+      "size": 1294,
+      "sha256": null
+    },
+    {
+      "id": 162,
+      "path": "C:/Users/Garrett/nfl-farm/notes/kaggle_bdb2027.md",
+      "root": "nfl-farm",
+      "size": 2166,
+      "sha256": null
+    },
+    {
+      "id": 163,
+      "path": "C:/Users/Garrett/nfl-farm/notes/kaggle_datasets.md",
+      "root": "nfl-farm",
+      "size": 1466,
+      "sha256": null
+    },
+    {
+      "id": 164,
+      "path": "C:/Users/Garrett/nfl-farm/notes/linestar_map.md",
+      "root": "nfl-farm",
+      "size": 2810,
+      "sha256": null
+    },
+    {
+      "id": 165,
+      "path": "C:/Users/Garrett/nfl-farm/notes/motion_is_pass_indicator.md",
+      "root": "nfl-farm",
+      "size": 1550,
+      "sha256": null
+    },
+    {
+      "id": 166,
+      "path": "C:/Users/Garrett/nfl-farm/notes/motion_negative_result.md",
+      "root": "nfl-farm",
+      "size": 1522,
+      "sha256": null
+    },
+    {
+      "id": 167,
+      "path": "C:/Users/Garrett/nfl-farm/notes/nflsavant_api.md",
+      "root": "nfl-farm",
+      "size": 2038,
+      "sha256": null
+    },
+    {
+      "id": 168,
+      "path": "C:/Users/Garrett/nfl-farm/notes/nflverse_data.md",
+      "root": "nfl-farm",
+      "size": 1893,
+      "sha256": null
+    },
+    {
+      "id": 169,
+      "path": "C:/Users/Garrett/nfl-farm/notes/ngs_expected_value_surfaces.md",
+      "root": "nfl-farm",
+      "size": 2455,
+      "sha256": null
+    },
+    {
+      "id": 170,
+      "path": "C:/Users/Garrett/nfl-farm/notes/ngs_receiver_separation.md",
+      "root": "nfl-farm",
+      "size": 2440,
+      "sha256": null
+    },
+    {
+      "id": 171,
+      "path": "C:/Users/Garrett/nfl-farm/notes/no_per_play_separation.md",
+      "root": "nfl-farm",
+      "size": 1849,
+      "sha256": null
+    },
+    {
+      "id": 172,
+      "path": "C:/Users/Garrett/nfl-farm/notes/openalex_zenodo.md",
+      "root": "nfl-farm",
+      "size": 1597,
+      "sha256": null
+    },
+    {
+      "id": 173,
+      "path": "C:/Users/Garrett/nfl-farm/notes/opponent_adjustment_half_rank.md",
+      "root": "nfl-farm",
+      "size": 1845,
+      "sha256": null
+    },
+    {
+      "id": 174,
+      "path": "C:/Users/Garrett/nfl-farm/notes/pose_from_video.md",
+      "root": "nfl-farm",
+      "size": 2298,
+      "sha256": null
+    },
+    {
+      "id": 175,
+      "path": "C:/Users/Garrett/nfl-farm/notes/presnap_clustering_deck.md",
+      "root": "nfl-farm",
+      "size": 2253,
+      "sha256": null
+    },
+    {
+      "id": 176,
+      "path": "C:/Users/Garrett/nfl-farm/notes/price_dispersion.md",
+      "root": "nfl-farm",
+      "size": 1660,
+      "sha256": null
+    },
+    {
+      "id": 177,
+      "path": "C:/Users/Garrett/nfl-farm/notes/price_dispersion_fixed.md",
+      "root": "nfl-farm",
+      "size": 1391,
+      "sha256": null
+    },
+    {
+      "id": 178,
+      "path": "C:/Users/Garrett/nfl-farm/notes/prizepicks_bypass.md",
+      "root": "nfl-farm",
+      "size": 1448,
+      "sha256": null
+    },
+    {
+      "id": 179,
+      "path": "C:/Users/Garrett/nfl-farm/notes/propfinder_bypass.md",
+      "root": "nfl-farm",
+      "size": 3171,
+      "sha256": null
+    },
+    {
+      "id": 180,
+      "path": "C:/Users/Garrett/nfl-farm/notes/propfinder_creds.md",
+      "root": "nfl-farm",
+      "size": 235,
+      "sha256": null
+    },
+    {
+      "id": 181,
+      "path": "C:/Users/Garrett/nfl-farm/notes/propfinder_subscores.md",
+      "root": "nfl-farm",
+      "size": 1927,
+      "sha256": null
+    },
+    {
+      "id": 182,
+      "path": "C:/Users/Garrett/nfl-farm/notes/prop_reconciliation.md",
+      "root": "nfl-farm",
+      "size": 1327,
+      "sha256": null
+    },
+    {
+      "id": 183,
+      "path": "C:/Users/Garrett/nfl-farm/notes/refinements_cycle13.md",
+      "root": "nfl-farm",
+      "size": 1803,
+      "sha256": null
+    },
+    {
+      "id": 184,
+      "path": "C:/Users/Garrett/nfl-farm/notes/research_tooling.md",
+      "root": "nfl-farm",
+      "size": 922,
+      "sha256": null
+    },
+    {
+      "id": 185,
+      "path": "C:/Users/Garrett/nfl-farm/notes/residual_is_raw_epa.md",
+      "root": "nfl-farm",
+      "size": 1882,
+      "sha256": null
+    },
+    {
+      "id": 186,
+      "path": "C:/Users/Garrett/nfl-farm/notes/residual_rank_invariance.md",
+      "root": "nfl-farm",
+      "size": 1902,
+      "sha256": null
+    },
+    {
+      "id": 187,
+      "path": "C:/Users/Garrett/nfl-farm/notes/routes_survive_coverage.md",
+      "root": "nfl-farm",
+      "size": 1775,
+      "sha256": null
+    },
+    {
+      "id": 188,
+      "path": "C:/Users/Garrett/nfl-farm/notes/route_by_coverage.md",
+      "root": "nfl-farm",
+      "size": 2153,
+      "sha256": null
+    },
+    {
+      "id": 189,
+      "path": "C:/Users/Garrett/nfl-farm/notes/route_coverage_unregularised.md",
+      "root": "nfl-farm",
+      "size": 1868,
+      "sha256": null
+    },
+    {
+      "id": 190,
+      "path": "C:/Users/Garrett/nfl-farm/notes/route_yoe.md",
+      "root": "nfl-farm",
+      "size": 2072,
+      "sha256": null
+    },
+    {
+      "id": 191,
+      "path": "C:/Users/Garrett/nfl-farm/notes/ryoe_recovered.md",
+      "root": "nfl-farm",
+      "size": 2521,
+      "sha256": null
+    },
+    {
+      "id": 192,
+      "path": "C:/Users/Garrett/nfl-farm/notes/scores24_graphql.md",
+      "root": "nfl-farm",
+      "size": 2288,
+      "sha256": null
+    },
+    {
+      "id": 193,
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_2024_replication.md",
+      "root": "nfl-farm",
+      "size": 1670,
+      "sha256": null
+    },
+    {
+      "id": 194,
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_depth_control.md",
+      "root": "nfl-farm",
+      "size": 1885,
+      "sha256": null
+    },
+    {
+      "id": 195,
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_predicts_catch_rate.md",
+      "root": "nfl-farm",
+      "size": 1821,
+      "sha256": null
+    },
+    {
+      "id": 196,
+      "path": "C:/Users/Garrett/nfl-farm/notes/separation_yards_mediation.md",
+      "root": "nfl-farm",
+      "size": 1889,
+      "sha256": null
+    },
+    {
+      "id": 197,
+      "path": "C:/Users/Garrett/nfl-farm/notes/sleeper_open_api.md",
+      "root": "nfl-farm",
+      "size": 1418,
+      "sha256": null
+    },
+    {
+      "id": 198,
+      "path": "C:/Users/Garrett/nfl-farm/notes/sloan_all22_cv.md",
+      "root": "nfl-farm",
+      "size": 3076,
+      "sha256": null
+    },
+    {
+      "id": 199,
+      "path": "C:/Users/Garrett/nfl-farm/notes/STATUS.md",
+      "root": "nfl-farm",
+      "size": 1905,
+      "sha256": null
+    },
+    {
+      "id": 200,
+      "path": "C:/Users/Garrett/nfl-farm/notes/SYNTHESIS.md",
+      "root": "nfl-farm",
+      "size": 3426,
+      "sha256": null
+    },
+    {
+      "id": 201,
+      "path": "C:/Users/Garrett/nfl-farm/notes/thescore_injuries.md",
+      "root": "nfl-farm",
+      "size": 965,
+      "sha256": null
+    },
+    {
+      "id": 202,
+      "path": "C:/Users/Garrett/nfl-farm/notes/unbalanced_exposure_test.md",
+      "root": "nfl-farm",
+      "size": 1785,
+      "sha256": null
+    },
+    {
+      "id": 203,
+      "path": "C:/Users/Garrett/nfl-farm/notes/underdog_bypass.md",
+      "root": "nfl-farm",
+      "size": 1579,
+      "sha256": null
+    },
+    {
+      "id": 204,
+      "path": "C:/Users/Garrett/nfl-farm/notes/wayback_bypass.md",
+      "root": "nfl-farm",
+      "size": 1780,
+      "sha256": null
+    },
+    {
+      "id": 205,
+      "path": "C:/Users/Garrett/nfl-farm/notes/xcomp_cpoe.md",
+      "root": "nfl-farm",
+      "size": 2203,
+      "sha256": null
+    },
+    {
+      "id": 206,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/cf0.out",
+      "root": "nfl-farm",
+      "size": 540,
+      "sha256": null
+    },
+    {
+      "id": 207,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/cf1.out",
+      "root": "nfl-farm",
+      "size": 282,
+      "sha256": null
+    },
+    {
+      "id": 208,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/dc0.json",
+      "root": "nfl-farm",
+      "size": 291751,
+      "sha256": null
+    },
+    {
+      "id": 209,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/dc1.json",
+      "root": "nfl-farm",
+      "size": 241350,
+      "sha256": null
+    },
+    {
+      "id": 210,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/dc2.json",
+      "root": "nfl-farm",
+      "size": 291751,
+      "sha256": null
+    },
+    {
+      "id": 211,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/dc_t.json",
+      "root": "nfl-farm",
+      "size": 225283,
+      "sha256": null
+    },
+    {
+      "id": 212,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/dk_eventgroup_catalogue.csv",
+      "root": "nfl-farm",
+      "size": 18769,
+      "sha256": null
+    },
+    {
+      "id": 213,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/fdb_roster.html",
+      "root": "nfl-farm",
+      "size": 84150,
+      "sha256": null
+    },
+    {
+      "id": 214,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ftn2023.parquet",
+      "root": "nfl-farm",
+      "size": 567781,
+      "sha256": null
+    },
+    {
+      "id": 215,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/kj0.json",
+      "root": "nfl-farm",
+      "size": 5599,
+      "sha256": null
+    },
+    {
+      "id": 216,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/kj1.json",
+      "root": "nfl-farm",
+      "size": 5493,
+      "sha256": null
+    },
+    {
+      "id": 217,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ls_cookies.txt",
+      "root": "nfl-farm",
+      "size": 543,
+      "sha256": null
+    },
+    {
+      "id": 218,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ls_fantasysportsco_chartsettings_js_v_2",
+      "root": "nfl-farm",
+      "size": 10794,
+      "sha256": null
+    },
+    {
+      "id": 219,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ls_fantasysportsco_chart_js_v_26",
+      "root": "nfl-farm",
+      "size": 19744,
+      "sha256": null
+    },
+    {
+      "id": 220,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ls_fantasysportsco_chart_v2_js_v_94",
+      "root": "nfl-farm",
+      "size": 139367,
+      "sha256": null
+    },
+    {
+      "id": 221,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ls_fantasysportsco_theme_js_v_2",
+      "root": "nfl-farm",
+      "size": 8175,
+      "sha256": null
+    },
+    {
+      "id": 222,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/mail_test",
+      "root": "nfl-farm",
+      "size": 4413,
+      "sha256": null
+    },
+    {
+      "id": 223,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/nflpa.html",
+      "root": "nfl-farm",
+      "size": 139772,
+      "sha256": null
+    },
+    {
+      "id": 224,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ngs_expected_value_surfaces.json",
+      "root": "nfl-farm",
+      "size": 11476,
+      "sha256": null
+    },
+    {
+      "id": 225,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/ngs_gamecenter_receivers_schema.json",
+      "root": "nfl-farm",
+      "size": 698,
+      "sha256": null
+    },
+    {
+      "id": 226,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oa0.json",
+      "root": "nfl-farm",
+      "size": 74564,
+      "sha256": null
+    },
+    {
+      "id": 227,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oa_a.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 228,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oa_b.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 229,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oa_c.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 230,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/openalex_results.json",
+      "root": "nfl-farm",
+      "size": 2,
+      "sha256": null
+    },
+    {
+      "id": 231,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oq0.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 232,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oq1.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 233,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oq2.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 234,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oq3.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 235,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/oq4.json",
+      "root": "nfl-farm",
+      "size": 359,
+      "sha256": null
+    },
+    {
+      "id": 236,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfa.tmp",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 237,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_api-docs",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 238,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_config",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 239,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_health_deep",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 240,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_leagues",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 241,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_lines",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 242,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_matchups",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 243,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_metrics",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 244,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_odds",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 245,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_players",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 246,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_projections",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 247,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_props",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 248,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_schedule",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 249,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_slate",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 250,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_slates",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 251,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_status",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 252,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_trends",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 253,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_version",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 254,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi_weather",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 255,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfapi__framework",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 256,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfa_anon.tmp",
+      "root": "nfl-farm",
+      "size": 144975,
+      "sha256": null
+    },
+    {
+      "id": 257,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfr_defense.html",
+      "root": "nfl-farm",
+      "size": 3282272,
+      "sha256": null
+    },
+    {
+      "id": 258,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfr_passing.html",
+      "root": "nfl-farm",
+      "size": 475737,
+      "sha256": null
+    },
+    {
+      "id": 259,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfr_rec.html",
+      "root": "nfl-farm",
+      "size": 1334638,
+      "sha256": null
+    },
+    {
+      "id": 260,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pfr_rushing.html",
+      "root": "nfl-farm",
+      "size": 1183298,
+      "sha256": null
+    },
+    {
+      "id": 261,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_auth_hdr.txt",
+      "root": "nfl-farm",
+      "size": 440,
+      "sha256": null
+    },
+    {
+      "id": 262,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_cookies.txt",
+      "root": "nfl-farm",
+      "size": 135,
+      "sha256": null
+    },
+    {
+      "id": 263,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_odds",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 264,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_oddsnfl",
+      "root": "nfl-farm",
+      "size": 29,
+      "sha256": null
+    },
+    {
+      "id": 265,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_players",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 266,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_projnfl",
+      "root": "nfl-farm",
+      "size": 36,
+      "sha256": null
+    },
+    {
+      "id": 267,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_reg_hdr.txt",
+      "root": "nfl-farm",
+      "size": 413,
+      "sha256": null
+    },
+    {
+      "id": 268,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_robots.txt",
+      "root": "nfl-farm",
+      "size": 435,
+      "sha256": null
+    },
+    {
+      "id": 269,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_sitemap.xml",
+      "root": "nfl-farm",
+      "size": 1012,
+      "sha256": null
+    },
+    {
+      "id": 270,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_status",
+      "root": "nfl-farm",
+      "size": 25,
+      "sha256": null
+    },
+    {
+      "id": 271,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_s_016h7v64yl_t8_js",
+      "root": "nfl-farm",
+      "size": 67840,
+      "sha256": null
+    },
+    {
+      "id": 272,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_s_02_rtgjsk25w__js",
+      "root": "nfl-farm",
+      "size": 36018,
+      "sha256": null
+    },
+    {
+      "id": 273,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_s_04wn54_88vx8c_js",
+      "root": "nfl-farm",
+      "size": 159077,
+      "sha256": null
+    },
+    {
+      "id": 274,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_s_04y0keobmew1h_js",
+      "root": "nfl-farm",
+      "size": 10430,
+      "sha256": null
+    },
+    {
+      "id": 275,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_s_0cz1d0mv5g_q7_js",
+      "root": "nfl-farm",
+      "size": 112594,
+      "sha256": null
+    },
+    {
+      "id": 276,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_s_0d64_dpc6cxu__js",
+      "root": "nfl-farm",
+      "size": 10912,
+      "sha256": null
+    },
+    {
+      "id": 277,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/pf_verify.txt",
+      "root": "nfl-farm",
+      "size": 0,
+      "sha256": null
+    },
+    {
+      "id": 278,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/sc_bp_readme.md",
+      "root": "nfl-farm",
+      "size": 6542,
+      "sha256": null
+    },
+    {
+      "id": 279,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/sis.html",
+      "root": "nfl-farm",
+      "size": 165976,
+      "sha256": null
+    },
+    {
+      "id": 280,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/team_49ers.out",
+      "root": "nfl-farm",
+      "size": 465369,
+      "sha256": null
+    },
+    {
+      "id": 281,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/team_chiefs.out",
+      "root": "nfl-farm",
+      "size": 526622,
+      "sha256": null
+    },
+    {
+      "id": 282,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/team_cowboys.out",
+      "root": "nfl-farm",
+      "size": 648323,
+      "sha256": null
+    },
+    {
+      "id": 283,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/team_packers.out",
+      "root": "nfl-farm",
+      "size": 512665,
+      "sha256": null
+    },
+    {
+      "id": 284,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/team_patriots.out",
+      "root": "nfl-farm",
+      "size": 824039,
+      "sha256": null
+    },
+    {
+      "id": 285,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/team_ravens.out",
+      "root": "nfl-farm",
+      "size": 648617,
+      "sha256": null
+    },
+    {
+      "id": 286,
+      "path": "C:/Users/Garrett/nfl-farm/schemas/zen.json",
+      "root": "nfl-farm",
+      "size": 5204,
+      "sha256": null
+    },
+    {
+      "id": 287,
+      "path": "C:/Users/Garrett/nfl-re/.gitignore",
+      "root": "nfl-re",
+      "size": 14,
+      "sha256": null
+    },
+    {
+      "id": 288,
+      "path": "C:/Users/Garrett/nfl-re/docker-compose.yml",
+      "root": "nfl-re",
+      "size": 301,
+      "sha256": null
+    },
+    {
+      "id": 289,
+      "path": "C:/Users/Garrett/nfl-re/Dockerfile",
+      "root": "nfl-re",
+      "size": 356,
+      "sha256": null
+    },
+    {
+      "id": 290,
+      "path": "C:/Users/Garrett/nfl-re/enum.py",
+      "root": "nfl-re",
+      "size": 1304,
+      "sha256": null
+    },
+    {
+      "id": 291,
+      "path": "C:/Users/Garrett/nfl-re/fit_cp.py",
+      "root": "nfl-re",
+      "size": 1698,
+      "sha256": null
+    },
+    {
+      "id": 292,
+      "path": "C:/Users/Garrett/nfl-re/fit_cp2.py",
+      "root": "nfl-re",
+      "size": 1534,
+      "sha256": null
+    },
+    {
+      "id": 293,
+      "path": "C:/Users/Garrett/nfl-re/harvest_cp.py",
+      "root": "nfl-re",
+      "size": 1468,
+      "sha256": null
+    },
+    {
+      "id": 294,
+      "path": "C:/Users/Garrett/nfl-re/probe_token.py",
+      "root": "nfl-re",
+      "size": 734,
+      "sha256": null
+    },
+    {
+      "id": 295,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/cp/cp_pairs.json",
+      "root": "nfl-re",
+      "size": 765696,
+      "sha256": null
+    },
+    {
+      "id": 296,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/061d55ba.json",
+      "root": "nfl-re",
+      "size": 40832,
+      "sha256": null
+    },
+    {
+      "id": 297,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/1224e21f.json",
+      "root": "nfl-re",
+      "size": 17084,
+      "sha256": null
+    },
+    {
+      "id": 298,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/24fdd3ba.json",
+      "root": "nfl-re",
+      "size": 23084,
+      "sha256": null
+    },
+    {
+      "id": 299,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/30262f45.json",
+      "root": "nfl-re",
+      "size": 21181,
+      "sha256": null
+    },
+    {
+      "id": 300,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/36e59e42.json",
+      "root": "nfl-re",
+      "size": 110,
+      "sha256": null
+    },
+    {
+      "id": 301,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/3df99843.json",
+      "root": "nfl-re",
+      "size": 41527,
+      "sha256": null
+    },
+    {
+      "id": 302,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/3fc2f371.json",
+      "root": "nfl-re",
+      "size": 29658,
+      "sha256": null
+    },
+    {
+      "id": 303,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/59e9d02b.json",
+      "root": "nfl-re",
+      "size": 55238,
+      "sha256": null
+    },
+    {
+      "id": 304,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/5e0fcd0c.json",
+      "root": "nfl-re",
+      "size": 69125,
+      "sha256": null
+    },
+    {
+      "id": 305,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/868627bc.json",
+      "root": "nfl-re",
+      "size": 18821,
+      "sha256": null
+    },
+    {
+      "id": 306,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/874a7a71.json",
+      "root": "nfl-re",
+      "size": 110,
+      "sha256": null
+    },
+    {
+      "id": 307,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/a27aeede.json",
+      "root": "nfl-re",
+      "size": 110,
+      "sha256": null
+    },
+    {
+      "id": 308,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/a442f6b4.json",
+      "root": "nfl-re",
+      "size": 23010,
+      "sha256": null
+    },
+    {
+      "id": 309,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/aa5997fa.json",
+      "root": "nfl-re",
+      "size": 91338,
+      "sha256": null
+    },
+    {
+      "id": 310,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/bb2a2b42.json",
+      "root": "nfl-re",
+      "size": 110,
+      "sha256": null
+    },
+    {
+      "id": 311,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/e7ce5619.json",
+      "root": "nfl-re",
+      "size": 37381,
+      "sha256": null
+    },
+    {
+      "id": 312,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/e873e3e8.json",
+      "root": "nfl-re",
+      "size": 39312,
+      "sha256": null
+    },
+    {
+      "id": 313,
+      "path": "C:/Users/Garrett/nfl-re/artifacts/ngs/_index.json",
+      "root": "nfl-re",
+      "size": 1574,
+      "sha256": null
+    },
+    {
+      "id": 314,
+      "path": "C:/Users/Garrett/nfl-re/notes/chunks.txt",
+      "root": "nfl-re",
+      "size": 1370,
+      "sha256": null
+    },
+    {
+      "id": 315,
+      "path": "C:/Users/Garrett/nfl-re/notes/sha256.txt",
+      "root": "nfl-re",
+      "size": 193,
+      "sha256": null
+    },
+    {
+      "id": 316,
+      "path": "C:/Users/Garrett/nfl-re/notes/state-of-knowledge.md",
+      "root": "nfl-re",
+      "size": 1730,
+      "sha256": null
+    },
+    {
+      "id": 317,
+      "path": "C:/Users/Garrett/nfl-re/notes/target-sources.txt",
+      "root": "nfl-re",
+      "size": 3365,
+      "sha256": null
+    },
+    {
+      "id": 318,
+      "path": "C:/Users/Garrett/nfl-re/notes/token.json",
+      "root": "nfl-re",
+      "size": 1587,
+      "sha256": null
+    },
+    {
+      "id": 319,
+      "path": "C:/Users/Garrett/nfl-re/out/auto_scraper.py",
+      "root": "nfl-re",
+      "size": 3483,
+      "sha256": null
+    },
+    {
+      "id": 320,
+      "path": "C:/Users/Garrett/nfl-re/out/binary_map.csv",
+      "root": "nfl-re",
+      "size": 1484,
+      "sha256": null
+    },
+    {
+      "id": 321,
+      "path": "C:/Users/Garrett/nfl-re/out/bundle_hashes.json",
+      "root": "nfl-re",
+      "size": 4783,
+      "sha256": null
+    },
+    {
+      "id": 322,
+      "path": "C:/Users/Garrett/nfl-re/out/bypass_notes.md",
+      "root": "nfl-re",
+      "size": 2529,
+      "sha256": null
+    },
+    {
+      "id": 323,
+      "path": "C:/Users/Garrett/nfl-re/out/cp_fit.json",
+      "root": "nfl-re",
+      "size": 311,
+      "sha256": null
+    },
+    {
+      "id": 324,
+      "path": "C:/Users/Garrett/nfl-re/out/cp_fit2.json",
+      "root": "nfl-re",
+      "size": 517,
+      "sha256": null
+    },
+    {
+      "id": 325,
+      "path": "C:/Users/Garrett/nfl-re/out/cycle1_memory_dumps.json",
+      "root": "nfl-re",
+      "size": 5915,
+      "sha256": null
+    },
+    {
+      "id": 326,
+      "path": "C:/Users/Garrett/nfl-re/out/cycle2_api_exploits.json",
+      "root": "nfl-re",
+      "size": 3789,
+      "sha256": null
+    },
+    {
+      "id": 327,
+      "path": "C:/Users/Garrett/nfl-re/out/endpoints.json",
+      "root": "nfl-re",
+      "size": 8385,
+      "sha256": null
+    },
+    {
+      "id": 328,
+      "path": "C:/Users/Garrett/nfl-re/out/endpoints_raw.json",
+      "root": "nfl-re",
+      "size": 7405,
+      "sha256": null
+    },
+    {
+      "id": 329,
+      "path": "C:/Users/Garrett/nfl-re/out/equations.py",
+      "root": "nfl-re",
+      "size": 10032,
+      "sha256": null
+    },
+    {
+      "id": 330,
+      "path": "C:/Users/Garrett/nfl-re/out/exploit.py",
+      "root": "nfl-re",
+      "size": 6334,
+      "sha256": null
+    },
+    {
+      "id": 331,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101200.json",
+      "root": "nfl-re",
+      "size": 852,
+      "sha256": null
+    },
+    {
+      "id": 332,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101201.json",
+      "root": "nfl-re",
+      "size": 852,
+      "sha256": null
+    },
+    {
+      "id": 333,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101202.json",
+      "root": "nfl-re",
+      "size": 33152,
+      "sha256": null
+    },
+    {
+      "id": 334,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101203.json",
+      "root": "nfl-re",
+      "size": 38283,
+      "sha256": null
+    },
+    {
+      "id": 335,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101204.json",
+      "root": "nfl-re",
+      "size": 36948,
+      "sha256": null
+    },
+    {
+      "id": 336,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101205.json",
+      "root": "nfl-re",
+      "size": 15829,
+      "sha256": null
+    },
+    {
+      "id": 337,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101206.json",
+      "root": "nfl-re",
+      "size": 42018,
+      "sha256": null
+    },
+    {
+      "id": 338,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101207.json",
+      "root": "nfl-re",
+      "size": 25091,
+      "sha256": null
+    },
+    {
+      "id": 339,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101208.json",
+      "root": "nfl-re",
+      "size": 11460,
+      "sha256": null
+    },
+    {
+      "id": 340,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101209.json",
+      "root": "nfl-re",
+      "size": 39671,
+      "sha256": null
+    },
+    {
+      "id": 341,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101210.json",
+      "root": "nfl-re",
+      "size": 16468,
+      "sha256": null
+    },
+    {
+      "id": 342,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101211.json",
+      "root": "nfl-re",
+      "size": 15179,
+      "sha256": null
+    },
+    {
+      "id": 343,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101212.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 344,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101213.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 345,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101214.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 346,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101215.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 347,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101900.json",
+      "root": "nfl-re",
+      "size": 26533,
+      "sha256": null
+    },
+    {
+      "id": 348,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101901.json",
+      "root": "nfl-re",
+      "size": 7543,
+      "sha256": null
+    },
+    {
+      "id": 349,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101902.json",
+      "root": "nfl-re",
+      "size": 9407,
+      "sha256": null
+    },
+    {
+      "id": 350,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101903.json",
+      "root": "nfl-re",
+      "size": 10451,
+      "sha256": null
+    },
+    {
+      "id": 351,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101904.json",
+      "root": "nfl-re",
+      "size": 57861,
+      "sha256": null
+    },
+    {
+      "id": 352,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101905.json",
+      "root": "nfl-re",
+      "size": 12666,
+      "sha256": null
+    },
+    {
+      "id": 353,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101906.json",
+      "root": "nfl-re",
+      "size": 4995,
+      "sha256": null
+    },
+    {
+      "id": 354,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101907.json",
+      "root": "nfl-re",
+      "size": 19425,
+      "sha256": null
+    },
+    {
+      "id": 355,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101908.json",
+      "root": "nfl-re",
+      "size": 18992,
+      "sha256": null
+    },
+    {
+      "id": 356,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101909.json",
+      "root": "nfl-re",
+      "size": 851,
+      "sha256": null
+    },
+    {
+      "id": 357,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101910.json",
+      "root": "nfl-re",
+      "size": 30217,
+      "sha256": null
+    },
+    {
+      "id": 358,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101911.json",
+      "root": "nfl-re",
+      "size": 5025,
+      "sha256": null
+    },
+    {
+      "id": 359,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101912.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 360,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101913.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 361,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101914.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 362,
+      "path": "C:/Users/Garrett/nfl-re/out/game_2025101915.json",
+      "root": "nfl-re",
+      "size": 521,
+      "sha256": null
+    },
+    {
+      "id": 363,
+      "path": "C:/Users/Garrett/nfl-re/out/MASTER_REPORT.md",
+      "root": "nfl-re",
+      "size": 4707,
+      "sha256": null
+    },
+    {
+      "id": 364,
+      "path": "C:/Users/Garrett/nfl-re/out/nfl_context_engine.py",
+      "root": "nfl-re",
+      "size": 8687,
+      "sha256": null
+    },
+    {
+      "id": 365,
+      "path": "C:/Users/Garrett/nfl-re/out/requirements.txt",
+      "root": "nfl-re",
+      "size": 45,
+      "sha256": null
+    },
+    {
+      "id": 366,
+      "path": "C:/Users/Garrett/nfl-re/out/sweep.py",
+      "root": "nfl-re",
+      "size": 763,
+      "sha256": null
+    },
+    {
+      "id": 367,
+      "path": "C:/Users/Garrett/nfl-re/out/test_equations.py",
+      "root": "nfl-re",
+      "size": 6951,
+      "sha256": null
+    },
+    {
+      "id": 368,
+      "path": "C:/Users/Garrett/nfl-re/out/weekly_2025_w7.csv",
+      "root": "nfl-re",
+      "size": 11363,
+      "sha256": null
+    },
+    {
+      "id": 369,
+      "path": "C:/Users/Garrett/nfl-re/out/weekly_2025_w7.json",
+      "root": "nfl-re",
+      "size": 375,
+      "sha256": null
+    },
+    {
+      "id": 370,
+      "path": "C:/Users/Garrett/nfl-re/static/app.738fbeb581d2c85cb721.js",
+      "root": "nfl-re",
+      "size": 113649,
+      "sha256": null
+    },
+    {
+      "id": 371,
+      "path": "C:/Users/Garrett/nfl-re/static/cfg_app.config.js",
+      "root": "nfl-re",
+      "size": 20,
+      "sha256": null
+    },
+    {
+      "id": 372,
+      "path": "C:/Users/Garrett/nfl-re/static/cfg_config.js",
+      "root": "nfl-re",
+      "size": 20,
+      "sha256": null
+    },
+    {
+      "id": 373,
+      "path": "C:/Users/Garrett/nfl-re/static/cfg_env.js",
+      "root": "nfl-re",
+      "size": 20,
+      "sha256": null
+    },
+    {
+      "id": 374,
+      "path": "C:/Users/Garrett/nfl-re/static/manifest.81064115bb9b308b554d.js",
+      "root": "nfl-re",
+      "size": 1606,
+      "sha256": null
+    },
+    {
+      "id": 375,
+      "path": "C:/Users/Garrett/nfl-re/static/nextgenstats_nfl_com_.html",
+      "root": "nfl-re",
+      "size": 31388,
+      "sha256": null
+    },
+    {
+      "id": 376,
+      "path": "C:/Users/Garrett/nfl-re/static/ngs_06f1cb.out",
+      "root": "nfl-re",
+      "size": 21181,
+      "sha256": null
+    },
+    {
+      "id": 377,
+      "path": "C:/Users/Garrett/nfl-re/static/ngs_5721ae.out",
+      "root": "nfl-re",
+      "size": 55238,
+      "sha256": null
+    },
+    {
+      "id": 378,
+      "path": "C:/Users/Garrett/nfl-re/static/ngs_869df6.out",
+      "root": "nfl-re",
+      "size": 20,
+      "sha256": null
+    },
+    {
+      "id": 379,
+      "path": "C:/Users/Garrett/nfl-re/static/www_nfl_com_.html",
+      "root": "nfl-re",
+      "size": 3912111,
+      "sha256": null
+    },
+    {
+      "id": 380,
+      "path": "C:/Users/Garrett/nfl-re/static/www_nfl_com_stats_player-stats_.html",
+      "root": "nfl-re",
+      "size": 260337,
+      "sha256": null
+    }
+  ]
+}

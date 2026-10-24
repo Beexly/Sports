@@ -1,0 +1,27 @@
+import os
+from dotenv import load_dotenv
+
+from py_clob_client_v2 import ClobClient
+
+load_dotenv()
+
+YES = os.environ.get(
+    "YES_TOKEN_ID",
+    "78433024518676680431174478322854148606578065650008220678402966840627347604025",
+)
+
+
+def main():
+    host = os.environ.get("CLOB_API_URL", "http://localhost:8080")
+    chain_id = int(os.environ.get("CHAIN_ID", 80002))
+    client = ClobClient(host=host, chain_id=chain_id)
+
+    orderbook = client.get_order_book(YES)
+    print("orderbook", orderbook)
+
+    hash_ = client.get_order_book_hash(orderbook)
+    print("orderbook hash", hash_)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,67 @@
+import { getContractConfig } from "../../config.js";
+import type { SignedOrderV1, SignedOrderV2 } from "../../order-utils/index.js";
+import { SignatureTypeV2 } from "../../order-utils/index.js";
+import { type ClobSigner, getSignerAddress } from "../../signing/signer.js";
+import type {
+	Chain,
+	CreateOrderOptions,
+	UserMarketOrderV1,
+	UserMarketOrderV2,
+} from "../../types/index.js";
+import { buildMarketOrderCreationArgs } from "./buildMarketOrderCreationArgs.js";
+import { buildOrder } from "./buildOrder.js";
+import { resolveOrderRouting } from "./orderAsset.js";
+import { ROUNDING_CONFIG } from "./roundingConfig.js";
+
+export const createMarketOrder = async (
+	eoaSigner: ClobSigner,
+	chainId: Chain,
+	signatureType: SignatureTypeV2,
+	funderAddress: string | undefined,
+	userMarketOrder: UserMarketOrderV1 | UserMarketOrderV2,
+	options: CreateOrderOptions,
+	version: number,
+): Promise<SignedOrderV1 | SignedOrderV2> => {
+	const eoaSignerAddress = await getSignerAddress(eoaSigner);
+
+	// If funder address is not given, use the signer address
+	const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
+
+	// For POLY_1271, both maker and signer in the order are the wallet address
+	const signerForOrder = signatureType === SignatureTypeV2.POLY_1271 ? maker : eoaSignerAddress;
+	const contractConfig = getContractConfig(chainId);
+	const orderVersion = resolveOrderRouting(userMarketOrder, version).exchangeVersion ?? version;
+
+	const orderData = await buildMarketOrderCreationArgs(
+		signerForOrder,
+		maker,
+		signatureType,
+		userMarketOrder,
+		ROUNDING_CONFIG[options.tickSize],
+		orderVersion,
+	);
+
+	let exchangeContract: string;
+	switch (orderVersion) {
+		case 1:
+			if (signatureType === SignatureTypeV2.POLY_1271) {
+				throw new Error(`signature type POLY_1271 is not supported for v1 orders`);
+			}
+			exchangeContract = options.negRisk
+				? contractConfig.negRiskExchange
+				: contractConfig.exchange;
+			break;
+		case 2:
+			exchangeContract = options.negRisk
+				? contractConfig.negRiskExchangeV2
+				: contractConfig.exchangeV2;
+			break;
+		case 3:
+			exchangeContract = contractConfig.exchangeV3;
+			break;
+		default:
+			throw new Error(`unsupported order version ${orderVersion}`);
+	}
+
+	return buildOrder(eoaSigner, exchangeContract, chainId, orderData, orderVersion);
+};

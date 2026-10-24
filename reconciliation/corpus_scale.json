@@ -1,0 +1,51 @@
+{
+ "measured_at": "2026-10-20",
+ "method": "Walk every .json/.jsonl under the corpus roots; count records with a title or abstract, and distinct resolvable identifiers. Markdown arxiv-deep ledgers contribute their arXiv ids.",
+ "json_and_jsonl_files_scanned": 396,
+ "jsonl_line_records": 1130486,
+ "arxiv_deep_markdown_ledgers": 1513,
+ "total_citable_records": 23909,
+ "distinct_identifiers": 8077,
+ "identifiers_by_class": {
+  "URL": 575,
+  "arXiv": 7160,
+  "other": 342
+ },
+ "records_by_identifier_class": {
+  "arXiv": 15388,
+  "no-id": 6358,
+  "arXiv-md-ledger": 4964,
+  "other": 1288,
+  "URL": 875
+ },
+ "records_by_source_label": {
+  "unlabeled": 17763,
+  "ResearchSynthesis": 2314,
+  "Pinnacle": 911,
+  "arXiv": 905,
+  "player-prior": 440,
+  "Statrankings": 407,
+  "AcademicLiterature": 343,
+  "Kaggle": 269,
+  "position-prior": 202,
+  "pdf": 102,
+  "prior-only": 99,
+  "dst-box": 58,
+  "Crossref": 50,
+  "ar5iv": 26,
+  "usage-added": 14,
+  "usage-cascade": 3,
+  "NHL Web API": 2,
+  "PBP Stats": 1
+ },
+ "records_with_evaluate_context_field": 0,
+ "arxiv_ids_from_markdown_ledgers": 2121,
+ "claim_check": {
+  "brief_claims_2379_papers_structured_as_premises": false,
+  "measured_premises_in_arxiv_reasoning_bridge": 13,
+  "brief_claims_429_kaggle_datasets_structured": false,
+  "brief_claims_raw_base_50k_plus": false,
+  "measured_raw_citable_records": 23909,
+  "measured_distinct_identifiers": 8077
+ }
+}

@@ -1,0 +1,708 @@
+{
+  "targets": [
+    {
+      "index": 1,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+      "category": "API",
+      "the_leak": "The response is a live NFL scoreboard JSON with league/season metadata and event records; events include competitions, teams, status, broadcasts and venue-related game data when present.",
+      "action_item": "Poll this endpoint for the current NFL slate and normalize event, competition, team, status and broadcast fields."
+    },
+    {
+      "index": 2,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401547417",
+      "category": "API",
+      "the_leak": "This event-specific response exposes boxscore teams and statistics; each statistic includes name, displayValue, numeric value and label, and the payload also contains detailed game/player data.",
+      "action_item": "Use the event ID from scoreboard results to retrieve structured boxscore statistics rather than scraping the game article."
+    },
+    {
+      "index": 3,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams",
+      "category": "API",
+      "the_leak": "The teams payload is nested sports → leagues → teams and supplies team id, abbreviation, displayName, colors, active/all-star flags and ESPN team links.",
+      "action_item": "Build the team dimension from team IDs and retain abbreviation, display name, colors and canonical links."
+    },
+    {
+      "index": 4,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+      "category": "API",
+      "the_leak": "The response is grouped by team and injury; injury objects include longComment, shortComment, status, date and an athlete object with names and links.",
+      "action_item": "Ingest the team-grouped injury feed and timestamp status changes using the injury date and athlete ID/name fields."
+    },
+    {
+      "index": 5,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/21/roster",
+      "category": "API",
+      "the_leak": "The roster response exposes season metadata and athletes grouped by position; athlete records include IDs, names, weight, height, position and other biographical fields.",
+      "action_item": "Use team ID 21 as the roster lookup pattern and key player history by athlete ID, position group and season."
+    },
+    {
+      "index": 6,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=1000",
+      "category": "API",
+      "the_leak": "The same scoreboard schema accepts a limit query parameter; this fetched response includes NFL league/season metadata and event competition records suitable for a larger result window.",
+      "action_item": "Request an explicitly high limit when collecting a broad slate, while retaining pagination/volume safeguards in the client."
+    },
+    {
+      "index": 7,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2024&seasontype=2",
+      "category": "API",
+      "the_leak": "The fetched response identifies the NFL 2024 season and regular-season type (type 2) in league metadata and returns the corresponding scoreboard event structure.",
+      "action_item": "Use dates and seasontype parameters to backfill a season-specific regular-season event corpus without mixing it with the live slate."
+    },
+    {
+      "index": 8,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/21/schedule",
+      "category": "API",
+      "the_leak": "The team schedule response includes team identity (id, abbreviation, displayName), recordSummary, seasonSummary, standingSummary and scheduled event/game data.",
+      "action_item": "Use the team schedule endpoint for team-centric timelines and join its event IDs to summary/boxscore responses."
+    },
+    {
+      "index": 9,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/standings",
+      "category": "API",
+      "the_leak": "This fetched endpoint returns a fullViewLink object pointing to ESPN's NFL standings page rather than standings rows in the JSON response.",
+      "action_item": "Treat this endpoint as a redirect/discovery link only and use the linked standings page or another structured feed for row-level standings."
+    },
+    {
+      "index": 10,
+      "target_url": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard",
+      "category": "API",
+      "the_leak": "The NCAA football scoreboard returns college event competitions with event IDs, dates, attendance/type/time validity, teams, status and broadcast/network information; the fetched data also contains conference/bowl metadata.",
+      "action_item": "Extend the event-normalization pipeline to college football using sport path college-football and preserve conference and bowl fields when supplied."
+    },
+    {
+      "index": 11,
+      "target_url": "https://docs.sleeper.com/",
+      "category": "API",
+      "the_leak": "Sleeper documents a read-only, non-commercial API with no API token, including NFL state, league rosters and a full NFL player endpoint; it advises staying under 1000 calls/minute.",
+      "action_item": "Implement the documented GET endpoints and enforce a client-side rate limiter below 1000 requests/minute; use the player endpoint as the canonical player dimension."
+    },
+    {
+      "index": 12,
+      "target_url": "https://api.sleeper.app/v1/state/nfl",
+      "category": "API",
+      "the_leak": "The live raw JSON endpoint returns NFL state data directly, making it useful for discovering current season/week/status without parsing a web page.",
+      "action_item": "Poll this endpoint for season/week state and key downstream schedule/stat refresh jobs from the returned JSON."
+    },
+    {
+      "index": 13,
+      "target_url": "https://api.collegefootballdata.com/getting-started",
+      "category": "API",
+      "the_leak": "CFBD documents a REST base URL and a first request to GET /games with year and team filters, authenticated with a Bearer CFBD_API_KEY; it describes game, team and player retrieval.",
+      "action_item": "Create a typed CFBD client around the documented base URL, Bearer header, and query filters; keep the key in server-side secrets."
+    },
+    {
+      "index": 14,
+      "target_url": "https://github.com/nflverse/nfl_data_py",
+      "category": "API",
+      "the_leak": "The nflverse Python project documents imports for play-by-play, weekly/seasonal data, rosters, schedules, combine results and cross-site ID mappings, plus a function that returns available play-by-play columns.",
+      "action_item": "Use the column-list capability to generate schema checks before loading play-by-play and join player data through the supplied ID mappings."
+    },
+    {
+      "index": 15,
+      "target_url": "https://nflfastr.com/articles/nflfastR.html",
+      "category": "Logic",
+      "the_leak": "The nflfastR walkthrough shows a build pipeline that adds game, EPA, air-yac EPA, win probability, completion probability/CPOE, series, xYAC, xpass/pass-over-expectation and QB EPA variables before decoding player IDs.",
+      "action_item": "Reproduce the pipeline order in feature engineering and validate that derived columns are present before model training."
+    },
+    {
+      "index": 16,
+      "target_url": "https://nfl.balldontlie.io/",
+      "category": "API",
+      "the_leak": "BALLDONTLIE's NFL docs expose authenticated JSON endpoints for all stats and team stats, including /nfl/v1/stats and /nfl/v1/team_stats.",
+      "action_item": "Add API-key header support and pagination/query handling around the stats and team_stats resources, preserving the documented response objects."
+    },
+    {
+      "index": 17,
+      "target_url": "https://sportsdata.io/developers/api-documentation/nfl",
+      "category": "Competitor",
+      "the_leak": "SportsDataIO documents NFL HTTP GET feeds with an Ocp-Apim-Subscription-Key and JSON/XML formats, including final box scores by team and by game with season/week/team parameters.",
+      "action_item": "Use the documented parameter contract to build a competitor adapter and compare final-box-score coverage against open sources."
+    },
+    {
+      "index": 18,
+      "target_url": "https://developer.sportradar.com/football/reference/nfl-overview",
+      "category": "Competitor",
+      "the_leak": "Sportradar states its NFL API covers game/season stats, standings, team/player data and real-time scores; it says all NFL games, including preseason, have full play-by-play coverage and feeds update in real time.",
+      "action_item": "Benchmark required latency and preseason play-by-play coverage against this commercial reference before selecting a production feed."
+    },
+    {
+      "index": 19,
+      "target_url": "https://github.com/nflverse/nflfastR",
+      "category": "Logic",
+      "the_leak": "The nflfastR repository describes NFL play-by-play back to 1999 and documents derived completion probability, CPOE and expected yards-after-catch variables, with the latter metrics available back to 2006.",
+      "action_item": "Use nflfastR as the historical feature source, but gate models by metric availability year (1999 overall PBP versus 2006 for the cited derived fields)."
+    },
+    {
+      "index": 20,
+      "target_url": "https://sportsdata.io/developers/api-documentation/nba",
+      "category": "API",
+      "the_leak": "SportsDataIO documents HTTP GET JSON NBA feeds, including standings and player feeds; its page links active and injured-player endpoints.",
+      "action_item": "Use the documented injured-player and player endpoints as availability features, then join them to team/game data before modeling."
+    },
+    {
+      "index": 21,
+      "target_url": "https://developer.opticodds.com/docs/odds-api-getting-started-guide",
+      "category": "API",
+      "the_leak": "OpticOdds documents a unified v3 API for normalized odds, fixtures, live streaming, results, futures, player props, injuries, and historical price movement; it states odds can be pulled from up to five books per request.",
+      "action_item": "Ingest normalized multi-book snapshots and injury filters, retaining timestamped line movement for NFL-style market and availability features."
+    },
+    {
+      "index": 22,
+      "target_url": "https://api-sports.io/documentation/basketball/v1",
+      "category": "API",
+      "the_leak": "API-Basketball documentation exposes an odds endpoint and gives the base API host https://v1.basketball.api-sports.io/, with API-key authentication and GET examples.",
+      "action_item": "Prototype an odds collector against the documented basketball odds route and normalize bookmaker, market, and game identifiers for cross-sport modeling."
+    },
+    {
+      "index": 23,
+      "target_url": "https://www.rapidapi.com/belchiorarkad-FqvHs2EDOtP/api/sports-information",
+      "category": "API",
+      "the_leak": "The fetched API page describes live scores, stats, and data for NFL, NBA, MLB, NHL and more; it specifically lists NFL injury reports and NBA live scores/box scores.",
+      "action_item": "Evaluate its cross-league injury and live-stat routes as a low-cost supplementary feed, with rate-limit handling and source reconciliation."
+    },
+    {
+      "index": 24,
+      "target_url": "https://highlightly.net/nba-api/documentation/",
+      "category": "API",
+      "the_leak": "Highlightly documents real-time NBA/NCAAB data including scores, box scores, player statistics, lineups, predictions, and live game events; its page specifies the base URL https://nba.highlightly.net.",
+      "action_item": "Use lineup and live-event payloads to build confirmed-starter and possession-state features transferable to NFL availability and drive-state models."
+    },
+    {
+      "index": 25,
+      "target_url": "https://statpal.io/",
+      "category": "API",
+      "the_leak": "StatPal advertises live and historical coverage across 12+ sports and exposes demo feature selections for team lineups, weather forecasts, live detailed stats, head-to-head stats, and soccer match statistics.",
+      "action_item": "Test the lineup/weather/stat endpoints in a soccer ingestion proof of concept, then reuse the same pregame context schema for NFL games."
+    },
+    {
+      "index": 26,
+      "target_url": "https://the-odds-api.com/liveapi/guides/v4/",
+      "category": "API",
+      "the_leak": "The Odds API v4 guide documents GET /v4/sports?apiKey=... to discover in-season sports, followed by sport-key queries for upcoming events and bookmaker odds.",
+      "action_item": "Schedule sport discovery before event polling, then store sport keys, event IDs, bookmaker prices, and retrieval timestamps for closing-line features."
+    },
+    {
+      "index": 27,
+      "target_url": "https://www.api-football.com/documentation-v3",
+      "category": "API",
+      "the_leak": "API-Football documentation lists lineup, injury, in-play odds, live-bet, and pre-match odds endpoint groups.",
+      "action_item": "Join lineup and injury snapshots to odds timestamps; use the in-play odds groups to study repricing around lineup and match events."
+    },
+    {
+      "index": 28,
+      "target_url": "https://docs.sportradar.com/live-data/introduction/information-per-sport/ice-hockey",
+      "category": "API",
+      "the_leak": "Sportradar's ice-hockey live-data page describes sport-specific event information and NHL-specific data points supplied from official NHL feeds.",
+      "action_item": "Map hockey event-state fields such as period/game events into a generic state-transition table for NFL play-by-play feature engineering."
+    },
+    {
+      "index": 29,
+      "target_url": "https://nba.balldontlie.io/",
+      "category": "API",
+      "the_leak": "BALLDONTLIE's NBA documentation provides a player-injuries endpoint at /v1/player_injuries and shows JSON fields including player identity, return_date, description, and status.",
+      "action_item": "Poll the injury feed and convert status/return-date text into structured availability and uncertainty features, preserving the raw description for auditability."
+    },
+    {
+      "index": 30,
+      "target_url": "https://the-odds-api.com/sports-odds-data/nfl-odds.html",
+      "category": "API",
+      "the_leak": "The documented NFL request is GET /v4/sports/americanfootball_nfl/odds with regions, markets=h2h,spreads,totals, oddsFormat, and apiKey. Example JSON has id, sport_key, commence_time, home_team, away_team, bookmakers, market keys, outcome price and spread/total point.",
+      "action_item": "Ingest bookmaker markets by event ID and retain commence_time, last_update, price, and point for line-movement analysis."
+    },
+    {
+      "index": 31,
+      "target_url": "https://developer.sportradar.com/football/docs/nfl-ig-historical-data",
+      "category": "API",
+      "the_leak": "Sportradar states NFL history reaches back to 2000. Season Schedule uses {season_year}/{season_type}; Weekly Injuries uses {season_year}/{season_type}/{nfl_season_week}; Weekly Schedule uses the same week parameters. Older 2000–2020 seasons can have different fields.",
+      "action_item": "Build historical loads by season/year and inspect each response schema instead of assuming current-season fields; use schedule IDs to retrieve ID-keyed history."
+    },
+    {
+      "index": 32,
+      "target_url": "https://developer.sportradar.com/football/v5/reference/nfl-weekly-injuries",
+      "category": "API",
+      "the_leak": "The fetched reference exposes path parameters access_level, language, season_year, season_type, week_number, and format; format defaults to JSON and accepts json or xml. The page is marked URL Expired, so it should not be treated as a current v5 contract.",
+      "action_item": "Use this only as a migration clue; verify the current Sportradar version before production integration and request JSON explicitly."
+    },
+    {
+      "index": 33,
+      "target_url": "https://sportsgameodds.com/leagues/nfl-odds-api",
+      "category": "Competitor",
+      "the_leak": "Sports Game Odds documents an NFL events request: https://api.sportsgameodds.com/v2/events?apiKey=YOUR_API_KEY&oddsAvailable=true&leagueID=NFL&limit=10. It advertises pre-game/live markets, 85+ bookmakers, player props, and sub-minute refresh on Pro.",
+      "action_item": "Evaluate the events endpoint as a multi-bookmaker odds source; test leagueID=NFL and oddsAvailable=true filtering before adding props ingestion."
+    },
+    {
+      "index": 34,
+      "target_url": "https://opticodds.com/sports/nfl",
+      "category": "Competitor",
+      "the_leak": "OpticOdds' NFL page advertises pre-match and in-play odds, Bet Builder, player props, outrights, injury reports, schedules/rosters, historical scores/odds, and a real-time bet-grading API endpoint.",
+      "action_item": "Shortlist OpticOdds for a unified odds-plus-injuries feed, but request its endpoint/schema documentation before implementation because this page does not expose request parameters."
+    },
+    {
+      "index": 35,
+      "target_url": "https://developer.sportradar.com/sportradar-updates/changelog/nfl-api-estimated-injury-return-date",
+      "category": "API",
+      "the_leak": "Sportradar added injury.estimated_return_date to NFL Weekly Injuries. The documented JSON example includes status, status_date, estimated_return_date, practice.status, and primary injury body part; the example request is /nfl/official/trial/v7/en/seasons/2025/PST/4/injuries.json.",
+      "action_item": "Add estimated_return_date and practice.status to the injury model and use return-date deltas in player availability features."
+    },
+    {
+      "index": 36,
+      "target_url": "https://sportsdata.io/nfl-api",
+      "category": "Competitor",
+      "the_leak": "SportsDataIO's NFL product page explicitly lists JSON/XML API access and game-day coverage for schedules, injuries, weather forecasts, game odds, in-play odds, and odds grading/resulting.",
+      "action_item": "Use the product scope as a requirements checklist; prioritize schedule-weather-odds joins and confirm individual endpoint contracts in the developer documentation."
+    },
+    {
+      "index": 37,
+      "target_url": "https://nextgenstats.nfl.com/glossary",
+      "category": "Logic",
+      "the_leak": "NFL defines Completion Probability from receiver separation, receiver location, passer separation from the nearest rusher and other factors; xCOMP aggregates play-level probabilities into expected completion percentage.",
+      "action_item": "Prioritize separation, thrower pressure separation and field location as features in an NFL completion model; expose actual minus xCOMP as a signal."
+    },
+    {
+      "index": 38,
+      "target_url": "https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats",
+      "category": "API",
+      "the_leak": "NFL tracking captures player location, speed, distance and acceleration 10 times per second; raw data is used for automated reports and ML-derived metrics, creating 200+ data points per play.",
+      "action_item": "Design ingestion around high-frequency player coordinates and derive movement/acceleration features rather than relying only on box scores."
+    },
+    {
+      "index": 39,
+      "target_url": "https://www.amazon.science/blog/the-science-behind-nfl-next-gen-stats-new-passing-metric",
+      "category": "Logic",
+      "the_leak": "Amazon describes the science behind an NFL Next Gen Stats passing metric and identifies a spliced binned-Pareto distribution approach developed by Amazon researchers.",
+      "action_item": "For heavy-tailed passing outcomes, test binned distributional modeling instead of assuming a single normal outcome distribution."
+    },
+    {
+      "index": 40,
+      "target_url": "https://www.pff.com/news/bet-nfl-bet-terms-metrics-game-script-handicapping-success-rate-epa",
+      "category": "Competitor",
+      "the_leak": "PFF explains EPA as the difference in expected points before and after a play, recommends EPA per play for normalized efficiency, and notes analysts use deviations from a team’s record to identify over/under-achievement.",
+      "action_item": "Rank NFL teams and players by EPA/play and flag large gaps between efficiency and win-loss record for review."
+    },
+    {
+      "index": 41,
+      "target_url": "https://www.sportsline.com/insiders/how-does-sportsline-make-picks-and-grades/",
+      "category": "Competitor",
+      "the_leak": "SportsLine says its league-specific models parameterize expected team scoring using the active roster, adjust for defensive differentials, then run thousands of Monte Carlo game simulations to produce win, cover and total probabilities.",
+      "action_item": "Build separate sport/league models, roster-adjust parameters including non-stat contributors, simulate thousands of games, and publish calibrated outcome probabilities."
+    },
+    {
+      "index": 42,
+      "target_url": "https://unabated.com/post/finding-positive-ev-wagers-step-by-step-guide",
+      "category": "Competitor",
+      "the_leak": "Unabated defines positive EV as a win probability higher than the sportsbook price and promotes comparing market-maker odds; its Unabated Line is a no-vig fair-odds blend of sharp market makers.",
+      "action_item": "Create a market-maker consensus, remove vig, compare fair probability with available prices, and surface only positive-EV discrepancies."
+    },
+    {
+      "index": 43,
+      "target_url": "https://www.actionnetwork.com/education/how-injuries-affect-betting-lines-a-guide-to-market-movement",
+      "category": "Competitor",
+      "the_leak": "Action Network identifies injury news as a major line mover and highlights that when a high-usage player is out, secondary player props can become targets before books adjust.",
+      "action_item": "Prioritize rapid injury alerts, propagate role/usage changes to teammates’ props, and compare refreshed projections with stale market prices."
+    },
+    {
+      "index": 44,
+      "target_url": "https://www.nfeloapp.com/analysis/expected-points-added-epa-nfl/",
+      "category": "Logic",
+      "the_leak": "nfelo explains expected points as points expected from a possession in a game state and notes modern models incorporate down, distance, time remaining and opponent expected points after punts or turnovers.",
+      "action_item": "Train EP on full game state—not field position alone—including down, distance, clock and possession-transition value; compute EPA as state-to-state change."
+    },
+    {
+      "index": 45,
+      "target_url": "https://www.fantasypros.com/about/faq/football-inseason-accuracy-methodology/",
+      "category": "Competitor",
+      "the_leak": "FantasyPros evaluates weekly rankings under Half-PPR settings and snapshots expert rankings at defined Thursday and Sunday cutoffs, locking Thursday-game players to prevent later changes.",
+      "action_item": "For fair forecast evaluation, freeze predictions at explicit pre-game timestamps, lock already-started players, and score under a declared scoring system."
+    },
+    {
+      "index": 46,
+      "target_url": "https://www.fanduel.com/fanduel-sportsbook-house-rules-in",
+      "category": "Logic",
+      "the_leak": "FanDuel's Indiana rules say abandoned or postponed games must resume or be rescheduled within 60 hours of the initial kickoff time for bets to have action; the page also says the official nfl.com draft list is used for NFL Draft settlement.",
+      "action_item": "Implement a jurisdiction-aware 60-hour event-status rule and use the official NFL draft list as the settlement reference for draft markets."
+    },
+    {
+      "index": 47,
+      "target_url": "https://support.draftkings.com/dk/en-us/glossary-of-betting-terms?id=kb_article_view&sysparm_article=KB0010398",
+      "category": "Logic",
+      "the_leak": "DraftKings defines Off the Board (OTB) as a scheduled game where betting is not currently accepted, usually because the line is unavailable; it defines overtime as play after a tie at the end of normal time.",
+      "action_item": "Represent OTB as a first-class market state and explicitly distinguish regulation from overtime in event and settlement data."
+    },
+    {
+      "index": 48,
+      "target_url": "https://www.caesars.com/sportsbook-and-casino/support/house-rules",
+      "category": "Logic",
+      "the_leak": "Caesars' football rules state that all bets are action for first defensive action markets, and regular-season/division win totals require all scheduled games unless the winning market is already determined.",
+      "action_item": "Add football market-specific action thresholds and a futures exception when the outcome is mathematically determined before the schedule completes."
+    },
+    {
+      "index": 49,
+      "target_url": "https://www.pinnacle.com/en/future/betting-rules",
+      "category": "Logic",
+      "the_leak": "Pinnacle's rules say game and second-half bets include overtime; they also state that if a fixture is not started 12 hours after scheduled start, bets are void, with separate timing rules for fixtures not completed within 30 hours.",
+      "action_item": "Store market-period scope (including overtime) and automate start/completion timeouts independently for pregame and in-play settlement."
+    },
+    {
+      "index": 50,
+      "target_url": "https://www.circasports.com/house-rules",
+      "category": "Competitor",
+      "the_leak": "Circa's Nevada rules state wagers placed after an event's outcome is known are void and permit voiding wagers where odds are flagrantly illogical, backwards, or monstrously out of line with the prevailing marketplace, subject to regulatory approval.",
+      "action_item": "Flag late wagers against event-state timestamps and build an outlier-price review path that records the prevailing-market comparison and approval status."
+    },
+    {
+      "index": 51,
+      "target_url": "https://sportsbook.fanatics.com/legal/pa/house-rules/",
+      "category": "Logic",
+      "the_leak": "Fanatics' Pennsylvania rules say all bets include overtime unless stated otherwise; for NFL games, at least ten minutes of official fourth-quarter time must elapse for bets to have action, and a player must play at least one snap for bets to stand.",
+      "action_item": "Make overtime inclusion and minimum-play requirements explicit fields in NFL market metadata and settlement checks."
+    },
+    {
+      "index": 52,
+      "target_url": "https://williamhill.us/us/nv/support/house-rules/",
+      "category": "Logic",
+      "the_leak": "William Hill's football rules say a player must play in a game for game player propositions to stand; they also specify that an NFL sack settles as a pass attempt, while an NCAA sack settles as a rush attempt.",
+      "action_item": "Separate NFL and NCAA play classification in the stats adapter and apply participation validation before grading player props."
+    },
+    {
+      "index": 53,
+      "target_url": "https://sports.betmgm.com/en/blog/betting-guides/",
+      "category": "Competitor",
+      "the_leak": "BetMGM's official betting-guides index exposes dedicated NFL odds content alongside football, NBA, MLB and NHL betting guides, showing a sport/league content taxonomy.",
+      "action_item": "Mirror a sport-to-league guide taxonomy in content discovery and use NFL as a dedicated landing entity rather than only a generic football category."
+    },
+    {
+      "index": 54,
+      "target_url": "https://oneidacasinohotel.com/sportsbook-rules-of-play/",
+      "category": "Competitor",
+      "the_leak": "Oneida's rules say computer-generated point spreads and odds determine winners, losers, ties and payout odds; line changes are delivered through automatic risk-management-system updates and reflected on odds boards.",
+      "action_item": "Capture odds source/provenance and line-change events, and expose a real-time line-update stream rather than treating displayed odds as static text."
+    },
+    {
+      "index": 55,
+      "target_url": "https://www.circasports.com/sports-betting-101",
+      "category": "Competitor",
+      "the_leak": "Circa's Sports Betting 101 page explains totals/over-unders with a concrete football example: if two teams combine for 49 points or fewer, Under bettors win, while directing users to its house rules for official grading and payout policies.",
+      "action_item": "Use plain-language, numeric football examples in market education and link every explanation directly to the authoritative grading rules."
+    },
+    {
+      "index": 56,
+      "target_url": "https://www.nfl.com/news/next-gen-stats-new-advanced-metrics-you-need-to-know-for-the-2024-nfl-season",
+      "category": "Logic",
+      "the_leak": "NFL Tackle Probability uses a tree-based ML architecture with 20 features for each of 11 defenders every tenth of a second; its shift/motion classifier uses pre-snap speed, acceleration and distance and an isolation-forest model.",
+      "action_item": "Replicate the feature-timestamp structure for tackle-opportunity modeling and use isolation-forest anomaly detection as a baseline for pre-snap movement classification."
+    },
+    {
+      "index": 57,
+      "target_url": "https://developer.sportradar.com/football/docs/nfl-ig-api-basics",
+      "category": "API",
+      "the_leak": "Sportradar documents an authenticated NFL REST API returning JSON or XML, with base URL /nfl/official/{access_level}/v7/{language_code}/{feed}.{format}; it exposes 30+ focused feeds including schedules, play-by-play and game statistics.",
+      "action_item": "Implement a feed-oriented client with x-api-key authentication, selectable JSON/XML parsing, and separate schedule/game retrieval paths."
+    },
+    {
+      "index": 58,
+      "target_url": "https://developer.sportradar.com/football/reference/nfl-weekly-injuries",
+      "category": "API",
+      "the_leak": "The Weekly Injuries feed documents primary injury text, estimated return date, practice status, game status (Questionable/Doubtful/Out), and status-update timestamps; its page states injuries are made available according to game day timing.",
+      "action_item": "Persist injury status history rather than only the latest value, and schedule pulls around the documented game-day availability timing."
+    },
+    {
+      "index": 59,
+      "target_url": "https://www.statsperform.com/products/opta-data-feeds/",
+      "category": "Competitor",
+      "the_leak": "Stats Perform says Opta feeds capture, analyze and distribute highly detailed sports data live and in real time through proprietary collection technology, and its AI models analyze thousands of variables across decades of match data.",
+      "action_item": "Benchmark a real-time event pipeline against the vendor's live/historical split and expose a separate feature store for long-horizon predictive variables."
+    },
+    {
+      "index": 60,
+      "target_url": "https://developers.statsperform.com/sports-data-glossary",
+      "category": "Competitor",
+      "the_leak": "Stats Perform describes event data as records of every action captured by expert analysts, optical tracking and proprietary AI; Opta Vision tracks all 22 players continuously, totaling over 2 million points per game, and synchronizes trajectories with on-ball events.",
+      "action_item": "Model event and tracking streams as synchronized but distinct tables, retaining analyst/vision/AI provenance and continuous player trajectories."
+    },
+    {
+      "index": 61,
+      "target_url": "https://www.geniussports.com/engage/official-sports-data-api/",
+      "category": "Competitor",
+      "the_leak": "Genius Sports markets official, real-time data APIs for NFL and NCAA, including rich real-time and historical data and play-by-play for broadcasters, websites and apps, with separate betting/fantasy use cases.",
+      "action_item": "Treat official real-time play-by-play plus historical backfill as the minimum competitor feature set and evaluate separate media and betting delivery products."
+    },
+    {
+      "index": 62,
+      "target_url": "https://sports.yahoo.com/developer/",
+      "category": "Competitor",
+      "the_leak": "Yahoo describes a REST, resource-based Fantasy Sports API covering real-time football data for leagues, teams, players and matchups; access requires application review and usage may be throttled or limited for excessive short-period traffic.",
+      "action_item": "Design Yahoo integration around resource identifiers, an access-approval workflow and adaptive rate limiting to handle documented throttling."
+    },
+    {
+      "index": 63,
+      "target_url": "https://opensourcefootball.com/posts/2020-09-28-nflfastr-ep-wp-and-cp-models/",
+      "category": "Logic",
+      "the_leak": "Documents nflfastR EP/WP model feature sets; WP includes point differential transformed by remaining time and down, while EP is modeled from game-state features and calibrated with leave-one-season-out validation.",
+      "action_item": "Reproduce the feature transformations and season-held-out calibration design before training a replacement model."
+    },
+    {
+      "index": 64,
+      "target_url": "https://arxiv.org/html/2409.04889v1",
+      "category": "Logic",
+      "the_leak": "Formalizes EP using epochs ending at a score, half, or game and represents next-score outcomes with a probability vector including touchdown, field goal, no score, opponent safety, and opponent touchdown; EP is the weighted sum of those outcome values.",
+      "action_item": "Model mutually exclusive next-score outcomes and report uncertainty rather than relying only on an opaque point estimate."
+    },
+    {
+      "index": 65,
+      "target_url": "https://nflanalytic.com/explainer-expected-points.html",
+      "category": "Logic",
+      "the_leak": "Defines expected points as average net points favored by the offense from a down-distance-field-position situation, measured over historical plays, and positions it as the basis of EPA and fourth-down decisions.",
+      "action_item": "Build EP by conditioning on down, yards-to-go, and field position, then derive EPA from consecutive state values."
+    },
+    {
+      "index": 66,
+      "target_url": "https://www.espn.com.au/nfl/story/_/id/8379024/nfl-explaining-expected-points-metric",
+      "category": "Competitor",
+      "the_leak": "ESPN says its EP formula was estimated from 10 years of NFL play-by-play and uses down, distance, field position, home-field advantage, and time remaining; EPA is the difference between EP at the start of consecutive plays.",
+      "action_item": "Benchmark an EP/EPA implementation against these disclosed covariates and the consecutive-play difference definition."
+    },
+    {
+      "index": 67,
+      "target_url": "https://topfunky.com/2021/logistic-regression-nfl-win-probability/",
+      "category": "Logic",
+      "the_leak": "Presents an in-game NFL win-probability model using logistic regression trained on nflfastR play-by-play from 2009–2020, illustrating probability changes through game progression.",
+      "action_item": "Train a logistic WP baseline on play-level game state, then evaluate calibration and probability movement around scoring plays."
+    },
+    {
+      "index": 68,
+      "target_url": "https://bradcongelio.com/nfl-analytics-with-r-book/05-nfl-analytics-advanced-methods.html",
+      "category": "Logic",
+      "the_leak": "Explains NFL linear regression mathematically as a fitted line minimizing total squared distances, with intercept, slope, predictor, response, and error terms, and introduces logistic regression for binary win prediction.",
+      "action_item": "Use the stated regression equations as transparent baselines for points or win outcomes before adding nonlinear models."
+    },
+    {
+      "index": 69,
+      "target_url": "https://cfbfastr.sportsdataverse.org/articles/college-football-expected-points-model-fundamentals-part-i.html",
+      "category": "Logic",
+      "the_leak": "Explains EP as points expected before the next score (net of opponent points) and shows that the same down-and-distance at different field positions has different EP; EPA is the change in EP between states.",
+      "action_item": "Adapt the explicitly described state-value framing to NFL play-by-play while preserving net-of-opponent scoring semantics."
+    },
+    {
+      "index": 70,
+      "target_url": "https://rrappleye97.github.io/thesis-win-probability-model/",
+      "category": "Logic",
+      "the_leak": "Describes an NFL win-probability model developed from play-by-play game states, with the model estimating the chance the current team wins as the game state evolves.",
+      "action_item": "Use the thesis implementation as a reproducible WP reference and compare its state variables and validation procedure with a new model."
+    },
+    {
+      "index": 71,
+      "target_url": "https://www.nfeloapp.com/analysis/weighted-EPA-methodology-and-performance/",
+      "category": "Logic",
+      "the_leak": "WEPA discounts outcome-random plays such as recovered fumbles and upweights more predictive contexts such as close-game performance; the article says an earlier version overfit and used forward-looking training data.",
+      "action_item": "Create leakage-safe weighted EPA features, explicitly discount high-variance events, and evaluate with strictly forward/out-of-sample point-margin forecasts."
+    },
+    {
+      "index": 72,
+      "target_url": "https://iq.qu.edu/experiential-learning/course-projects-and-capstones/student-projects/predicting-nfl-total-score-and-point-spread-bets/",
+      "category": "Logic",
+      "the_leak": "An NFL study uses 2018–2023 games, pre-game player projections, weather, and stadium details; it compares linear regression, gradient boosting, and feed-forward neural networks with K-fold validation, forward selection, and lasso.",
+      "action_item": "Replicate the model tournament with time-aware validation as an additional safeguard, and only trigger bets when the forecast differs from the market by a predefined threshold."
+    },
+    {
+      "index": 73,
+      "target_url": "https://towardsdatascience.com/rating-sports-teams-maximizing-a-generic-system-772144574a07/",
+      "category": "Logic",
+      "the_leak": "The rating comparison treats overall skill as a core model input, compares enhanced Elo with Glicko, and uses Log5 as a paired-team baseline rather than relying only on win-loss percentage.",
+      "action_item": "Benchmark a simple Log5 baseline against Elo and Glicko; retain rating uncertainty where data volume differs across teams or players."
+    },
+    {
+      "index": 74,
+      "target_url": "https://cris.unibo.it/bitstream/11585/821483/2/Weighted%20ELO%20rating%20predictions%20in%20tennis.pdf",
+      "category": "Logic",
+      "the_leak": "The paper proposes Weighted Elo (WElo), adding last-match scoreline weighting to standard Elo because ordinary Elo does not fully reflect current form; it evaluates the method on more than 60,000 professional matches.",
+      "action_item": "For sports with meaningful margins, test a scoreline/form-weighted Elo update against result-only Elo, using rolling out-of-sample probability metrics."
+    },
+    {
+      "index": 75,
+      "target_url": "https://tht.fangraphs.com/elo-vs-regression-to-the-mean-a-theoretical-comparison/",
+      "category": "Logic",
+      "the_leak": "The article explains regression-to-mean shrinkage by adding league-average games (illustrated with a 70-game constant) and contrasts it with Elo's rating updates based on expected versus actual results.",
+      "action_item": "Use empirical-Bayes-style league-average pseudo-games as a shrinkage baseline, then test whether dynamic Elo updates improve forecast performance as sample size grows."
+    },
+    {
+      "index": 76,
+      "target_url": "https://betql.co/nfl/line-movement",
+      "category": "Competitor",
+      "the_leak": "The NFL line-movement explainer defines movement as the change from opening to current/closing line, describes closing lines as the final consensus after accumulated betting action, and gives an injury-driven movement example.",
+      "action_item": "Store open, intraday, and close spread/moneyline snapshots; add injury-news timestamps and use movement direction and magnitude as model features."
+    },
+    {
+      "index": 77,
+      "target_url": "https://scholarship.claremont.edu/cgi/viewcontent.cgi?article=5145&context=cmc_theses",
+      "category": "Logic",
+      "the_leak": "This NFL moneyline thesis analyzes high-frequency 2020–2024 odds and reports that early-week movement direction predicts continued movement; it attributes movement primarily to sportsbook adjustment to sharp action rather than injury news and tests close-game away-team effects.",
+      "action_item": "Engineer opening-24-hour and late-week movement features, test continuation with walk-forward regressions, and separate sharp-action signals from injury-report timing."
+    },
+    {
+      "index": 78,
+      "target_url": "https://www.nfl.com/videos/predicting-player-injury-with-the-digital-athlete",
+      "category": "Competitor",
+      "the_leak": "NFL describes Digital Athlete as an AI and machine-learning injury-prediction tool powered by AWS, positioned for player health and safety.",
+      "action_item": "Treat injury availability as a probabilistic input rather than a binary manual flag; maintain a separate injury-risk/availability pipeline and feed its calibrated output into game forecasts."
+    },
+    {
+      "index": 79,
+      "target_url": "https://support.betfair.com/app/answers/detail/6482-sportsbook-how-do-odds-work/",
+      "category": "Logic",
+      "the_leak": "Betfair's worked conversions state fractional implied probability as denominator divided by (numerator + denominator): 9/1 = 1/(9+1)=0.10, 1/1=0.50, and 1/4=4/(4+1)=0.80; decimal odds return includes stake.",
+      "action_item": "Normalize all incoming odds to decimal and calculate implied probability as 1/decimal price before comparing markets."
+    },
+    {
+      "index": 80,
+      "target_url": "https://unabated.com/post/getting-precise-about-closing-line-value",
+      "category": "Logic",
+      "the_leak": "The article defines CLV as the market moving after a wager in agreement with it, but warns that a nominal -2.5 to -3 move is less trustworthy in inefficient markets such as early-season college basketball.",
+      "action_item": "Store bet-time and close-time prices, and segment CLV validation by market liquidity/efficiency rather than treating every line move as equivalent."
+    },
+    {
+      "index": 81,
+      "target_url": "https://pikkit.com/blog/how-to-track-closing-line-value-clv-in-sports-betting",
+      "category": "Logic",
+      "the_leak": "Pikkit's odds-based CLV converts bet and closing prices to implied probabilities and subtracts them; its example +150 (40%) versus +130 (43.5%) produces +3.5 percentage points. It also recommends normalizing both sides to remove overround for vig-free CLV.",
+      "action_item": "Implement both raw probability CLV and normalized no-vig CLV, retaining the closing overround as a diagnostic field."
+    },
+    {
+      "index": 82,
+      "target_url": "https://www.oddsshopper.com/articles/betting-101/closing-line-value-explained",
+      "category": "Competitor",
+      "the_leak": "OddsShopper says raw closing odds contaminate CLV with vig, so comparison should use the no-vig closing price; it also warns that influencer-driven moves in thin markets are artificial CLV and that early bets trade more CLV for injury/weather/scratch risk.",
+      "action_item": "Build a no-vig close benchmark and flag thin-market or news-driven moves separately from efficient-market CLV."
+    },
+    {
+      "index": 83,
+      "target_url": "https://www.betstamp.com/education/understanding-implied-probability-and-edge",
+      "category": "Competitor",
+      "the_leak": "Betstamp explains that summed implied probabilities above 100% represent sportsbook overround/vig; its NFL example describes a 104% two-way total as a 4% bookmaker cushion rather than a probability error.",
+      "action_item": "Display overround explicitly and never treat sportsbook implied probabilities as a calibrated, fair probability without de-vigging."
+    },
+    {
+      "index": 84,
+      "target_url": "https://www.dratings.com/a-summary-of-different-no-vig-methods/",
+      "category": "Logic",
+      "the_leak": "The comparison lists Equal Margin (evenly distributes margin), proportional adjustment (makes probabilities sum to one), Shin (models informed bettors), and Odds Ratio (divides by the sum of odds), with Shin requiring assumptions/data about informed betting.",
+      "action_item": "Offer selectable de-vig methods; use proportional normalization as a baseline and expose Shin as a model-dependent alternative rather than silently mixing methods."
+    },
+    {
+      "index": 85,
+      "target_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10306238/",
+      "category": "Logic",
+      "the_leak": "This statistical paper models margin of victory as a random variable and derives wagering decisions from its distribution and sportsbook proposition; its NFL analysis reports spreads capture 86% and totals 79% of median-outcome variability, and says a one-point sportsbook bias can permit positive expected profit.",
+      "action_item": "For NFL spread/total models, estimate the full outcome distribution and test edge thresholds in points, not only win classification accuracy."
+    },
+    {
+      "index": 86,
+      "target_url": "https://arxiv.org/html/2602.09982",
+      "category": "Logic",
+      "the_leak": "The paper evaluates time-updating probability forecasts by treating each as a canonical Kelly bettor and comparing bankroll growth; it argues this preserves update order, which average log-loss/Brier aggregation can ignore, and derives market-clearing probabilities from bankroll/share conservation.",
+      "action_item": "For live NFL models, log each probability update and evaluate sequential Kelly growth alongside conventional log loss and Brier score."
+    },
+    {
+      "index": 87,
+      "target_url": "https://oddsjam.com/betting-calculators/kelly-criterion",
+      "category": "Competitor",
+      "the_leak": "OddsJam's calculator takes Kelly multiplier, odds, win percentage, and expected value to output fraction of bankroll and wager amount; the page positions Kelly as bankroll-management sizing based on perceived edge over the bookmaker.",
+      "action_item": "Expose full-, fractional-, and custom-multiplier Kelly sizing, while requiring model probability and odds as separate auditable inputs."
+    },
+    {
+      "index": 88,
+      "target_url": "https://www.sports-ai.dev/blog/ai-model-calibration-brier-score",
+      "category": "Competitor",
+      "the_leak": "Sports-AI defines calibration as events assigned p=0.60 occurring about 60% of the time, and states miscalibration distorts edge estimates, stake sizing, and CLV; it identifies Brier Score and Expected Calibration Error as primary metrics and notes ranking/AUC can be high despite poor calibration.",
+      "action_item": "Bucket NFL probabilities into reliability bins, report Brier and ECE, and calibrate probabilities before EV, CLV, or stake calculations."
+    },
+    {
+      "index": 89,
+      "target_url": "https://sportsdata.io/help/betting-data-integration-guide",
+      "category": "Competitor",
+      "the_leak": "SportsDataIO says its Aggregated Odds Feed links odds from multiple sportsbooks across money lines, point spreads, player props, and futures. It also says odds update because of player availability and market liquidity, and that timestamped line changes are available for both pre-match and in-play odds.",
+      "action_item": "Prioritize a cross-book odds table covering the full market taxonomy, and persist timestamped line-change events; treat player availability and liquidity as first-class features when interpreting moves."
+    },
+    {
+      "index": 90,
+      "target_url": "https://sportsdata.io/help/refresh-rates-feeds-and-timing",
+      "category": "Competitor",
+      "the_leak": "SportsDataIO states that live scores and box scores update as events progress, recommends syncing real-time scores every 3–5 seconds, and says its API caches content for a minimum of 3 seconds. It says play-by-play begins at the coin toss (where applicable) or first play and is commonly within 20–30 seconds of cable/OTA broadcast.",
+      "action_item": "Engineer ingestion around a 3–5 second polling floor and explicitly model feed latency; use coin-toss/first-play activation and broadcast-relative timing when building live signals."
+    },
+    {
+      "index": 91,
+      "target_url": "https://sportsdata.io/developers/fantasy-scoring-system/nfl",
+      "category": "Competitor",
+      "the_leak": "SportsDataIO's NFL fantasy rules award fractional and negative points and include IDP scoring. The listed offensive rules include 1 point per 25 passing yards, 4 per passing touchdown, −2 per interception, 1 per 10 rushing or receiving yards, 1 point per reception in PPR, and 6 per rushing/receiving touchdown.",
+      "action_item": "Make scoring configuration explicit rather than assuming standard fantasy points: support fractional values, negative events, PPR toggles, and defensive-player features in projections and evaluation."
+    },
+    {
+      "index": 92,
+      "target_url": "https://support.fantasypros.com/hc/en-us/articles/44470556043547-How-do-you-measure-the-in-season-accuracy-of-fantasy-football-experts",
+      "category": "Competitor",
+      "the_leak": "FantasyPros snapshots expert rankings at the start of Thursday Night Football and Sunday 1 p.m. games, locks Thursday players, and evaluates a pool built from both Expert Consensus Rankings and actual fantasy leaders. It assigns projected points from the historical production of each rank slot, computes an Accuracy Gap, converts weekly gaps to z-scores, and drops the worst week from Week 8 onward.",
+      "action_item": "For fair model benchmarking, freeze inputs at game-lock times, include both consensus-selected and surprise performers, map ranks to historical slot production, and normalize weekly errors before removing an outlier week."
+    },
+    {
+      "index": 93,
+      "target_url": "https://sportradar.com/betting-gaming/betting/sports-data/?lang=en-us",
+      "category": "Competitor",
+      "the_leak": "Sportradar says its live-data operation uses 12,600 scouts across 35 data applications and feeds, covering more than 900,000 events in 32 sports. It emphasizes accuracy, speed, depth, security, and integrity, and says its venue data capture can be AI-powered and produce up-to-the-second data and odds.",
+      "action_item": "Prioritize low-latency event capture, broad market/event coverage, and quality controls; combine venue-level human/scout provenance with automated collection and track integrity as a data-quality dimension."
+    },
+    {
+      "index": 94,
+      "target_url": "https://developer.sportradar.com/odds/reference/probabilities-overview",
+      "category": "Competitor",
+      "the_leak": "Sportradar's Probabilities API provides live and pre-match three-way win/lose/draw probabilities, features top US bookmakers, covers NFL and other sports, and offers probability breakdowns plus a live timeline for supported games. The documentation distinguishes event probabilities from seasonal and seasonal-outright probabilities.",
+      "action_item": "Use bookmaker-aware probability signals in both pre-match and live models, retain the full probability timeline rather than only the latest value, and separate event-level from season/outright probability features."
+    },
+    {
+      "index": 95,
+      "target_url": "https://www.fantasypros.com/api-data/",
+      "category": "Competitor",
+      "the_leak": "FantasyPros markets a single REST API spanning NFL rankings, projections, players, news, injuries and scoring; its injury data includes injury designations and practice-report status.",
+      "action_item": "Prioritize a unified NFL data layer that combines consensus rankings, projections, player metadata, news and practice/injury status, with predictable JSON and one key."
+    },
+    {
+      "index": 96,
+      "target_url": "https://www.rotowire.com/football/injury-report.php",
+      "category": "Competitor",
+      "the_leak": "RotoWire exposes an NFL injury-report table organized around player, team, position, injury, status and estimated return, and provides a team filter.",
+      "action_item": "Match the competitor baseline with a filterable injury monitor, but differentiate with historical status changes, update timestamps and export/API access."
+    },
+    {
+      "index": 97,
+      "target_url": "https://www.actionnetwork.com/nfl/projections",
+      "category": "Competitor",
+      "the_leak": "Action Network compares its model odds with consensus odds and displays scheduled/open lines, pro line, grade, edge, best odds, bet percentage and money percentage; it states a B grade or 3.5% edge threshold for projection-only bets.",
+      "action_item": "Build a transparent model-vs-market screen with opening/current lines, edge, grade and price-shopping, while clearly labeling premium-locked fields."
+    },
+    {
+      "index": 98,
+      "target_url": "https://sports.betmgm.com/en/blog/how-to-read-nfl-betting-odds-online-spread-over-under-money-line/",
+      "category": "Competitor",
+      "the_leak": "BetMGM explains the core NFL market vocabulary: spread, moneyline, over/under totals, parlays, props and teasers. It describes vig and gives worked examples for spread and American moneyline payouts.",
+      "action_item": "Add inline education beside NFL lines: explain favorite/underdog spread outcomes, vig, moneyline payout math, pushes and totals so users can interpret odds without leaving the product."
+    },
+    {
+      "index": 99,
+      "target_url": "https://aws.amazon.com/blogs/media/nfl-next-gen-stats-and-aws-decode-defense-coverage-patterns/",
+      "category": "Competitor",
+      "the_leak": "AWS describes NFL Coverage Responsibility as three linked ML models: targeted defender, matchup, and assignment identification. The models use X/Y coordinates, speed and acceleration recorded 10 times per second, probabilistic frame-by-frame outputs, scheme inputs, spatial-temporal deep learning, and random play truncation during training.",
+      "action_item": "Use this as a methodology benchmark: model defensive responsibility probabilistically at frame level, publish the tracking cadence/features and validation approach, and support evolving mid-play assignments rather than nearest-defender heuristics."
+    },
+    {
+      "index": 100,
+      "target_url": "https://www.api-football.com/news/post/how-to-get-started-with-api-nfl-the-complete-beginners-guide",
+      "category": "API",
+      "the_leak": "The API-Sports guide says API-NFL covers NFL and NCAA with quarter-by-quarter scores, historical games, standings, team/player statistics, injuries and bookmaker odds; its coverage flags should be checked because the injuries endpoint returns only currently injured players and does not preserve injury history. It also documents a GET-only base URL and x-apisports-key authentication.",
+      "action_item": "Implement the documented GET endpoints and coverage.injuries check; store current injury snapshots separately because the endpoint does not retain injury history."
+    }
+  ],
+  "summary": {
+    "total_count": 100,
+    "nfl_percentage": "68.0%"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "id": "019f282f-6fd4-716f-8af2-a5219fa3a338",
+  "startedAt": "2026-07-03T13:33:45.056Z",
+  "endedAt": "2026-07-03T13:33:46.903Z",
+  "endpoint": "search",
+  "formState": {
+    "parseFile": null,
+    "parseFileMeta": null,
+    "extractSetupCompleted": false,
+    "urls": [],
+    "extractSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "company_mission": {
+          "type": "string"
+        },
+        "supports_sso": {
+          "type": "boolean"
+        },
+        "is_open_source": {
+          "type": "boolean"
+        },
+        "is_in_yc": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extractPrompt": "Extract the company details, following the schema.",
+    "enableWebSearch": false,
+    "constrainUrls": false,
+    "options": {
+      "onlyMainContent": true,
+      "parsePDF": true,
+      "stealthMode": false,
+      "excludeTags": [],
+      "includeTags": [],
+      "waitFor": "",
+      "timeout": "",
+      "maxAge": "2 days",
+      "ignoreSitemap": false,
+      "crawlEntireDomain": false,
+      "sitemap": "include",
+      "limit": "10",
+      "maxDepth": "",
+      "excludePaths": [],
+      "includePaths": [],
+      "includeSubdomains": false,
+      "search": "",
+      "scrapeContentFromSearchResults": true,
+      "timeBasedSearch": "",
+      "location": "",
+      "prompt": ""
+    },
+    "formats": [],
+    "sources": [
+      "web"
+    ],
+    "categories": [],
+    "jsonSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "company_name": {
+          "type": "string"
+        },
+        "company_description": {
+          "type": "string"
+        }
+      }
+    },
+    "jsonPrompt": "",
+    "questionPrompt": "",
+    "highlightsQuery": "",
+    "agent": {},
+    "url": "https://nextgenstats.nfl.com/ ",
+    "endpoint": "search"
+  },
+  "status": "success",
+  "version": "Zi9Qhs2uodW_u2r8jUuh-",
+  "isPreview": false,
+  "web": [
+    {
+      "url": "https://nextgenstats.nfl.com/",
+      "title": "NFL Next Gen Stats: NGS",
+      "description": "NFL's Next Gen Stats captures real time location data, speed and acceleration for every player, every play on every inch of the field. Discover Next Gen ...",
+      "position": 1
+    },
+    {
+      "url": "https://www.nfl.com/next-gen-stats/",
+      "title": "NFL Next Gen Stats",
+      "description": "Tackling grades for all 32 NFL teams: Broncos, Lions rank in top five for 2024 season. video. Next Gen Stats: Top 5 Fastest Ball Carriers of the 2024 NFL ...",
+      "position": 2
+    },
+    {
+      "url": "https://www.nfl.com/videos/next-gen-stats-watch-saints-route-tree-on-game-tying-td",
+      "title": "Next Gen Stats: Watch Saints route tree on game-tying TD",
+      "description": "Take a look at the \"Next Gen Stats\" angle as the New Orleans Saints connect on a 17-yard touchdown pass from Derek Carr to Michael Thomas and Alvin Kamara ...",
+      "position": 3
+    },
+    {
+      "url": "https://x.com/NextGenStats",
+      "title": "Next Gen Stats (@NextGenStats) / Posts / X",
+      "description": "Christian Watson on deep passes (20+ air yds) since making his 2025 season debut in Week 8, per @NextGenStats: 9 receptions (1st in NFL)",
+      "position": 4
+    },
+    {
+      "url": "https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats",
+      "title": "Performance Tracking Data (Next Gen Stats)",
+      "description": "developed in partnership with Zebra Technologies ... More than 200 new data points are created on every play of every game. > Explore NFL ...",
+      "position": 5
+    },
+    {
+      "url": "https://www.instagram.com/nextgenstats/",
+      "title": "NFL Next Gen Stats (@nextgenstats)",
+      "description": "The official account of @NFL Next Gen Stats · Since 2023, the @philadelphiaeagles have made five first-round picks. · The @nyjets targeted high-production ...",
+      "position": 6
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Next_Gen_Stats",
+      "title": "Next Gen Stats",
+      "description": "Next Generation Stats, or simply Next Gen Stats (NGS), refers to data collected by the National Football League (NFL) and the advanced statistics drawn from ...",
+      "position": 7
+    },
+    {
+      "url": "https://pro.nfl.com/nflpro",
+      "title": "Available with NFL+ Premium | NFL Pro",
+      "description": "With NFL+ Premium, get access to NFL Pro and over 95 unique player and team performance stats and all-22 film for an advanced analytics platform (available on ...",
+      "position": 8
+    },
+    {
+      "url": "https://pro.nfl.com/",
+      "title": "NFL Pro: Home",
+      "description": "Your stats. Your way. Customize your analytics dashboard with over 95 unique player and team performance stats powered by Next Gen Stats. Subscribe Learn More.",
+      "position": 9
+    },
+    {
+      "url": "https://www.nfl.com/news/11-outrageous-next-gen-stats-entering-week-12",
+      "title": "11 Outrageous Next Gen Stats Entering Week 12 - NFL.com",
+      "description": "Next Gen Stats continues to evolve how we can quantify what we see on Sundays (and Mondays, Thursdays, an occasional Friday or Saturday and ...",
+      "position": 10
+    }
+  ],
+  "news": [],
+  "images": []
+}

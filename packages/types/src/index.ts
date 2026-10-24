@@ -617,6 +617,41 @@ export interface GameContextInput {
     /** Map a stated probability in [0,1] to its calibrated equivalent. */
     readonly predict: (p: number) => number;
   };
+  /**
+   * LIT-2 CORPUS ADJUSTMENT. The situational shift produced by the Layer-2
+   * literature corpus for this game (packages/prediction-engine/src/reasoning/
+   * corpus-evaluator.ts `evaluateFullCorpus` -> `corpusSituationalShift`).
+   *
+   * THE GAP THIS CLOSES. The corpus evaluator has been in the repo since
+   * 2026-10-17 and its output reaches `process-sport.ts:1454` as
+   * `factorBreakdown.situationalReading.corpusSituationalShift`.
+   *
+   * Under the WIRE-FIRST SEQUENCING and THE STACK doctrines, Layer 2 situational
+   * reasoning shifts the ranking probability (`rankingP`) directly over the
+   * market baseline.
+   *
+   * LAWS:
+   * - ABSENT = UNCHANGED. No adjustment means byte-identical output.
+   * - The shift is a RANKING adjustment, not a market probability claim. It cannot
+   *   move `trueProb`, `rawEdge`, or `shrunkEdge`.
+   */
+  corpusAdjustment?: number | null;
+  /**
+   * Weight applied to `corpusAdjustment` in the ranking path.
+   *
+   * Unshackled under the wire-first doctrine: defaults to 1.0 when a verified
+   * `corpusSituationalShift` is active, or scaled by the evaluator weight.
+   */
+  corpusWeight?: number | null;
+  // Situational split features (Factor A6, A23, A27, and empirical coaching biases)
+  altitudeFt?: number | null;
+  venueAltitudeFeet?: number | null;
+  refereeCrewFlagsPerGame?: number | null;
+  refereeName?: string | null;
+  coachAggressivenessScore?: number | null;
+  primaryPersonnelGrouping?: "ELEVEN_11" | "TWELVE_12" | "TWENTY_ONE_21" | "JUMBO_HEAVY" | null;
+  offensiveLineRunBlockGrade?: number | null;
+  opponentDefensiveFrontSevenGrade?: number | null;
   // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
   // "strict": only books whose over/under prices DISCRIMINATE
   // (overPrice !== underPrice) count as consensus votes; equal-juice books

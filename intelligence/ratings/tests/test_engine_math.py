@@ -52,6 +52,7 @@ CALLS = {
     "situational_adj": lambda: em.situational_adj(-3.0, days_rest_diff=3, tz_shift="we"),
     "phi_pdf": lambda: em.phi_pdf(0.0),
     "crps_gaussian": lambda: em.crps_gaussian(0.0, 1.0, 0.5),
+    "crps_laplace": lambda: em.crps_laplace(0.0, 1.0, 0.5),
     "pit_histogram": lambda: em.pit_histogram([0, 0, 0], [1, 1, 1], [-1.0, 0.1, 1.2]),
     "deflated_sharpe": lambda: em.deflated_sharpe(0.1, 250, 20),
     "gauss_solve": lambda: em.gauss_solve([[2.0, 1.0], [1.0, 3.0]], [3.0, 5.0]),
@@ -141,6 +142,20 @@ class TestShinDevig(unittest.TestCase):
         z, p1, p2 = em.shin_devig(0.5, 0.45)
         self.assertEqual(z, 0.0)
         self.assertAlmostEqual(p1, 0.5 / 0.95); self.assertAlmostEqual(p2, 0.45 / 0.95)
+
+
+class TestCrpsLaplace(unittest.TestCase):
+    def test_zero_residual_gives_quarter_scale(self):
+        # When x == mu, z = 0, so CRPS = b * (0 + 1 - 0.75) = 0.25 * b
+        self.assertAlmostEqual(em.crps_laplace(0.0, 1.0, 0.0), 0.25)
+        self.assertAlmostEqual(em.crps_laplace(10.0, 4.0, 10.0), 1.0)
+
+    def test_symmetry_around_mu(self):
+        self.assertAlmostEqual(em.crps_laplace(5.0, 2.0, 8.0), em.crps_laplace(5.0, 2.0, 2.0))
+
+    def test_negative_scale_raises(self):
+        with self.assertRaises(ValueError):
+            em.crps_laplace(0.0, -1.0, 0.0)
 
 
 if __name__ == "__main__":

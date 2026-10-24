@@ -1,0 +1,56 @@
+{
+  "name": "sports-prediction-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "workers/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "start": "npm run start --workspace=apps/web",
+    "test": "npm run test --workspaces --if-present",
+    "test:watch": "npm run test:watch --workspace=apps/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace=packages/db",
+    "db:push": "npm run db:push --workspace=packages/db",
+    "db:migrate": "npm run db:migrate --workspace=packages/db",
+    "db:seed": "npm run db:seed --workspace=packages/db",
+    "db:studio": "npm run db:studio --workspace=packages/db",
+    "workers:refresh": "node workers/data-refresh/dist/index.js",
+    "workers:picks": "node workers/pick-generation/dist/index.js",
+    "workers:content": "node workers/content-publishing/dist/index.js",
+    "guard:trust": "node scripts/guardrails/trust-gate.mjs",
+    "guard:model-freeze": "node scripts/guardrails/model-freeze.mjs",
+    "guard:draft-only": "node scripts/guardrails/draft-only.mjs",
+    "guard:claude-api": "node scripts/guardrails/claude-api-usage.mjs",
+    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
+    "evals:contracts": "node scripts/eval-contracts.mjs",
+    "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
+    "deploy:ready": "node scripts/check-deploy-readiness.mjs",
+    "stripe:seed": "node scripts/seed-stripe-prices.mjs",
+    "test:brand-safety": "npm run test:brand-safety --workspace=apps/web",
+    "test:cockpit": "npm run test:cockpit --workspace=apps/web",
+    "test:fast": "npm run test:brand-safety && npm run test:cockpit",
+    "smoke:launch-night": "node scripts/launch-night-smoke.mjs",
+    "smoke:prod": "node scripts/post-deploy-smoke.mjs",
+    "prod:probe": "node scripts/prod-probe.mjs",
+    "synthetic:run": "node scripts/synthetic-monitoring-runner.mjs",
+    "jarvis:diff": "node scripts/jarvis-diff.mjs",
+    "morning:setup": "node scripts/morning-setup.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "ioredis": "^5.10.1",
+    "pg": "^8.21.0"
+  }
+}

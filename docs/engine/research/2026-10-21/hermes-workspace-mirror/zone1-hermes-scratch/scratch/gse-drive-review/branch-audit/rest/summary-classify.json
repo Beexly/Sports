@@ -1,0 +1,670 @@
+[
+ {
+  "branch": "claude/sports-prediction-platform-6F7Wa",
+  "ahead": 16,
+  "behind": 3567,
+  "total_files": 53,
+  "rows": [
+   {
+    "path": "packages/ingestion-pipeline/package.json",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "a649e484978df57644c013065b584c8353b5608d",
+    "main": "5c8a4ad1e67b09d311eba748f0a56c5d40cece8f",
+    "motif": "5c8a4ad1e67b09d311eba748f0a56c5d40cece8f",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/__tests__/process-sport.test.ts",
+    "status": "added",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "816537854e1eb849eb989d241ca2c19bf1c42f0e",
+    "main": "242aad4b94d2855247bd4b5cc1fff01125759ad3",
+    "motif": "242aad4b94d2855247bd4b5cc1fff01125759ad3",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/__tests__/settle-picks.test.ts",
+    "status": "added",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "156a85d60c632e0b86bd7ff48d03f43968029f3f",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/index.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "2153c997ef717fe54561be2ac7ccc33fb77fdd04",
+    "main": "f2c305480822149c73cb389940f83f9d8ab7c619",
+    "motif": "f2c305480822149c73cb389940f83f9d8ab7c619",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/process-sport.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "6c8351099d193187178ada7136982efc68a170d1",
+    "main": "850fcef9260a6ad968278c213f0aa5174fd2fcda",
+    "motif": "850fcef9260a6ad968278c213f0aa5174fd2fcda",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/settle-picks.ts",
+    "status": "added",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "5724211aaa4958be7e3c42406b710695d3bc004a",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/tsconfig.json",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "ed70cfe7627d30513b05167a5a81297a72459675",
+    "main": "ca116a308f50ad351307362ba928753fa198a53a",
+    "motif": "ca116a308f50ad351307362ba928753fa198a53a",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/vitest.config.ts",
+    "status": "added",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "0f78dc014593e77e065fefa573c971a91457dcac",
+    "main": "0f78dc014593e77e065fefa573c971a91457dcac",
+    "motif": "0f78dc014593e77e065fefa573c971a91457dcac",
+    "same_main": true,
+    "motif_same_branch": true
+   },
+   {
+    "path": "packages/prediction-engine/package.json",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "ab51f28c919ed322b8252b547dcdebc2c2a824f5",
+    "main": "92b4dc0ff2e355c328e4df94a6df647ea532c9d2",
+    "motif": "92b4dc0ff2e355c328e4df94a6df647ea532c9d2",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "status": "added",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "44f1632d3cd571378af122a7060c9801673fb4c5",
+    "main": "03f1f3fde0176a358401ae2364bde40782ea57a7",
+    "motif": "03f1f3fde0176a358401ae2364bde40782ea57a7",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/scoring.test.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "c211d7bb42e156ba18080b4154dafcad707f2e4b",
+    "main": "24ff548f5b4aff7ec6e7d713c41b2f23aae752eb",
+    "motif": "24ff548f5b4aff7ec6e7d713c41b2f23aae752eb",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/constants.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "ac4be1700975b71ce2e3103e333ca875e840752c",
+    "main": "b494421bb7eba47d1370f02f8ddf534bf5d71df1",
+    "motif": "b494421bb7eba47d1370f02f8ddf534bf5d71df1",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/game-context.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "f36faece5feff01eabad7aad16a62e4167aa0880",
+    "main": "a6e11cb630f9bc107c39dbb51d84cf44a9ee3c71",
+    "motif": "a6e11cb630f9bc107c39dbb51d84cf44a9ee3c71",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "a8ab78e52dd490233ef969840f459b2ba9d35552",
+    "main": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "motif": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/scoring.ts",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "77fffec580c1caa3d219a2654f18a86d7a4882b2",
+    "main": "17919a01a06b7212b99f0f3459529bb661ee9035",
+    "motif": "17919a01a06b7212b99f0f3459529bb661ee9035",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/tsconfig.json",
+    "status": "modified",
+    "base": "d693ecf34f2c6e21d8f6adab450fc0c0c926edc7",
+    "branch": "ed70cfe7627d30513b05167a5a81297a72459675",
+    "main": "ce422e84fef6e785cbadff60fbcee191e6edc82e",
+    "motif": "ce422e84fef6e785cbadff60fbcee191e6edc82e",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK",
+  "ahead": 48,
+  "behind": 3539,
+  "total_files": 117,
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "28187fb011043e9db0c96941d393e7700d2bbbab",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "d6f694fe9df9c6449b038a46790cc84603e60162",
+    "main": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "motif": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/pick-sources.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "da8014d229f1cb1168a8099ab546c3bced40b88b",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-codex",
+  "ahead": 49,
+  "behind": 3539,
+  "total_files": 124,
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "28187fb011043e9db0c96941d393e7700d2bbbab",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "d6f694fe9df9c6449b038a46790cc84603e60162",
+    "main": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "motif": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/pick-sources.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "da8014d229f1cb1168a8099ab546c3bced40b88b",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "claude/keen-ptolemy-d0pbK-audit",
+  "ahead": 50,
+  "behind": 3539,
+  "total_files": 128,
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/pick-sources.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "28187fb011043e9db0c96941d393e7700d2bbbab",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "d6f694fe9df9c6449b038a46790cc84603e60162",
+    "main": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "motif": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/pick-sources.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "da8014d229f1cb1168a8099ab546c3bced40b88b",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "claude/magical-volta-yiUwL",
+  "ahead": 59,
+  "behind": 3539,
+  "total_files": 98,
+  "rows": [
+   {
+    "path": "packages/ingestion-pipeline/package.json",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "6e616abf8070f4a9c7ce2d9e799e46846abfd6ee",
+    "main": "5c8a4ad1e67b09d311eba748f0a56c5d40cece8f",
+    "motif": "5c8a4ad1e67b09d311eba748f0a56c5d40cece8f",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/__tests__/source-snapshot.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "853cb97d3e250b3743271ecdea0a0dc4dcfabd8c",
+    "main": "3bf12f9c2be2010853562c4fad92c5e2adaab9e9",
+    "motif": "3bf12f9c2be2010853562c4fad92c5e2adaab9e9",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/index.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "22a7e977873e96c920aee0367e25b21b5b43928e",
+    "main": "f2c305480822149c73cb389940f83f9d8ab7c619",
+    "motif": "f2c305480822149c73cb389940f83f9d8ab7c619",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/process-sport.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "8bd662d0fe1a7eac87aa479737a12ad4fa4e64cd",
+    "main": "850fcef9260a6ad968278c213f0aa5174fd2fcda",
+    "motif": "850fcef9260a6ad968278c213f0aa5174fd2fcda",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/src/source-snapshot.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "612727d93252a329600e3120019e32bd02e350db",
+    "main": "46a527b3b48e8cc6e4d3b9f144e3858afb828b6a",
+    "motif": "46a527b3b48e8cc6e4d3b9f144e3858afb828b6a",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/ingestion-pipeline/vitest.config.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "0f78dc014593e77e065fefa573c971a91457dcac",
+    "main": "0f78dc014593e77e065fefa573c971a91457dcac",
+    "motif": "0f78dc014593e77e065fefa573c971a91457dcac",
+    "same_main": true,
+    "motif_same_branch": true
+   },
+   {
+    "path": "packages/prediction-engine/package.json",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "441adc6736bab51046172508a402a5a386578004",
+    "main": "92b4dc0ff2e355c328e4df94a6df647ea532c9d2",
+    "motif": "92b4dc0ff2e355c328e4df94a6df647ea532c9d2",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/evidence-readiness-matrix.test.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "2474bf4e0149d5d6538e1e2d10e980b369148c87",
+    "main": "876a3b7d0608daa4b2372f6ae35c419b445ecfe9",
+    "motif": "876a3b7d0608daa4b2372f6ae35c419b445ecfe9",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "7f468b1ce1e4b6ad1ea695d4ae6b335dc6323cd7",
+    "main": "03f1f3fde0176a358401ae2364bde40782ea57a7",
+    "motif": "03f1f3fde0176a358401ae2364bde40782ea57a7",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/kelly.test.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "43d7f3d93202d19c9124d5f20c6d6fa78334dc4d",
+    "main": "1e89e41afe1943fa7323d59a0aa63a6be589546f",
+    "motif": "1e89e41afe1943fa7323d59a0aa63a6be589546f",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "b53cb4b8ce3e04957a254f4b840f1cc823505284",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/poisson.test.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "b627ada9d4a59c4caffba2a06c7af0c958adb587",
+    "main": "58ce1e491eb712d160efeef3c3ef615f11c2f856",
+    "motif": "58ce1e491eb712d160efeef3c3ef615f11c2f856",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/readiness-gates.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "eed8eff76bbb2018ca9862f8213ea682203a7623",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/scoring.test.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "d882bc2166f577fb1a740025bfce11cbfc7a217e",
+    "main": "24ff548f5b4aff7ec6e7d713c41b2f23aae752eb",
+    "motif": "24ff548f5b4aff7ec6e7d713c41b2f23aae752eb",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/settlement.test.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "5df9d1bba20057012b61f72991ab5e93b8d97c9d",
+    "main": "a2541233cff1f50d2ae97a5af61ac53a1822df2e",
+    "motif": "a2541233cff1f50d2ae97a5af61ac53a1822df2e",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+    "status": "added",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "7781c65c33f6334d08e6ae7ef4037aec52309df9",
+    "main": "0f96c6612c9496ce760759ee3224e6b6c4f236ad",
+    "motif": "0f96c6612c9496ce760759ee3224e6b6c4f236ad",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/game-context.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "5c067822a3220b7bbdbb8be29aacc08ee30d4b84",
+    "main": "a6e11cb630f9bc107c39dbb51d84cf44a9ee3c71",
+    "motif": "a6e11cb630f9bc107c39dbb51d84cf44a9ee3c71",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "663788bedf9790b0bba3b5da35f218097731d3c0",
+    "main": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "motif": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/kelly.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "67f90362c16ac88bbf7581dc333d3134e2bc33e7",
+    "main": "ae60515f9eb0d68d06824308dc352df196a1e4d5",
+    "motif": "ae60515f9eb0d68d06824308dc352df196a1e4d5",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/readiness.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "2b7bccfbd2aa387413a75e6c1b04cf2d2209aa8b",
+    "main": "19e6bf631e3e1653fa2b1f7f7d8183e5e03fb26c",
+    "motif": "19e6bf631e3e1653fa2b1f7f7d8183e5e03fb26c",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/scoring.ts",
+    "status": "modified",
+    "base": "7900d413b291a6b42f53e4f4e963178639b8d854",
+    "branch": "712cdc0ffb580b12ac0e4117cd0688213ba0a7c2",
+    "main": "17919a01a06b7212b99f0f3459529bb661ee9035",
+    "motif": "17919a01a06b7212b99f0f3459529bb661ee9035",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "claude/magical-volta-wXkx2",
+  "ahead": 48,
+  "behind": 3402,
+  "total_files": 64,
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/evidence-readiness-matrix-gaps.test.ts",
+    "status": "added",
+    "base": "1e006a21d1e64921b08881cf8f1708b61fc2c044",
+    "branch": "6c457affa8f91a3c4a3b3e855892df3aa0c09a08",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context-functions.test.ts",
+    "status": "added",
+    "base": "1e006a21d1e64921b08881cf8f1708b61fc2c044",
+    "branch": "3dd1b2cf8c1a7387ede9a2c73efe41e5d615fe9f",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/game-context.test.ts",
+    "status": "added",
+    "base": "1e006a21d1e64921b08881cf8f1708b61fc2c044",
+    "branch": "dae99d4a4b28c26c7e0514fbd0815f9ca526450c",
+    "main": "03f1f3fde0176a358401ae2364bde40782ea57a7",
+    "motif": "03f1f3fde0176a358401ae2364bde40782ea57a7",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/platform-config.test.ts",
+    "status": "added",
+    "base": "1e006a21d1e64921b08881cf8f1708b61fc2c044",
+    "branch": "9848b8ad5689874124ed0e85b4b5b805c36b180b",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/readiness.test.ts",
+    "status": "added",
+    "base": "1e006a21d1e64921b08881cf8f1708b61fc2c044",
+    "branch": "5ee5923b9b8b92a0a25bd61c942afad35c471a9a",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/signal-snapshot.test.ts",
+    "status": "added",
+    "base": "1e006a21d1e64921b08881cf8f1708b61fc2c044",
+    "branch": "76b73a457acd054f32fe8c511a410d7886b02ef9",
+    "main": "0f96c6612c9496ce760759ee3224e6b6c4f236ad",
+    "motif": "0f96c6612c9496ce760759ee3224e6b6c4f236ad",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "claude/laughing-wozniak-gyryjx",
+  "ahead": 27,
+  "behind": 2971,
+  "total_files": 93,
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/model-promoter.test.ts",
+    "status": "added",
+    "base": "d52b62a835e7c44de43bd455a8828bc094e79c7b",
+    "branch": "3b615d9bdb87c76fdc55b63f2dea894a2335c307",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/__tests__/oos-split.test.ts",
+    "status": "added",
+    "base": "d52b62a835e7c44de43bd455a8828bc094e79c7b",
+    "branch": "2e100288fb6c157dddcd6e773858f33820b45599",
+    "main": "d2eef80c8f4adfb3aee5c8234e3ddaf304a49fbe",
+    "motif": "d2eef80c8f4adfb3aee5c8234e3ddaf304a49fbe",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/index.ts",
+    "status": "modified",
+    "base": "d52b62a835e7c44de43bd455a8828bc094e79c7b",
+    "branch": "b720bccf5e86b8db4c119b0f91b4b5408d7ebe0a",
+    "main": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "motif": "5128a14e74b3c173e571a65457cb1735ed85ef21",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/model-promoter.ts",
+    "status": "added",
+    "base": "d52b62a835e7c44de43bd455a8828bc094e79c7b",
+    "branch": "6ab82a20855bc7916936a7fdfa67e4175485e668",
+    "main": "ABSENT",
+    "motif": "ABSENT",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/oos-split.ts",
+    "status": "added",
+    "base": "d52b62a835e7c44de43bd455a8828bc094e79c7b",
+    "branch": "f2d2cb1ad8432ee5fb191ceb644fea09f0b16cce",
+    "main": "5daca7283995cf4118a42172097819c905dea9cb",
+    "motif": "5daca7283995cf4118a42172097819c905dea9cb",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ },
+ {
+  "branch": "codex/galaxy-dynasty-studio-rescue-v2",
+  "ahead": 21,
+  "behind": 2971,
+  "total_files": 250,
+  "rows": []
+ },
+ {
+  "branch": "jarvis/os-foundation-fable5-v1",
+  "ahead": 21,
+  "behind": 3228,
+  "total_files": 98,
+  "rows": []
+ },
+ {
+  "branch": "claude/launch-review-fixes",
+  "ahead": 14,
+  "behind": 2685,
+  "total_files": 111,
+  "rows": [
+   {
+    "path": "packages/prediction-engine/src/__tests__/probability-calibration.test.ts",
+    "status": "modified",
+    "base": "a47aa4e01b1f978e63f090b24e4e36e963833ef7",
+    "branch": "80d41d90205ec397b01a8b17272a55a79f83f0cb",
+    "main": "880cfac515f14efcf82e58fdf278797160874184",
+    "motif": "880cfac515f14efcf82e58fdf278797160874184",
+    "same_main": false,
+    "motif_same_branch": false
+   },
+   {
+    "path": "packages/prediction-engine/src/probability-calibration.ts",
+    "status": "modified",
+    "base": "a47aa4e01b1f978e63f090b24e4e36e963833ef7",
+    "branch": "3e11a29e873c4820cb02ba66bad72ed961ebed64",
+    "main": "80e2ce5a2141b984ed023a2af43baec5e5d86597",
+    "motif": "80e2ce5a2141b984ed023a2af43baec5e5d86597",
+    "same_main": false,
+    "motif_same_branch": false
+   }
+  ]
+ }
+]

@@ -144,7 +144,7 @@ function buildPicksSummary(
   if (!gateOpen) {
     blockedReason = "PUBLIC_PICKS_ENABLED gate is off";
     explanation =
-      "Picks are scoring and publishing internally. The PUBLIC_PICKS_ENABLED " +
+      "Picks are scoring and staged in review. The PUBLIC_PICKS_ENABLED " +
       "gate is closed — no picks are exposed on the customer surface. " +
       "This is intentional until you open the gate.";
   } else if (assessment.picksStatus === "RED") {

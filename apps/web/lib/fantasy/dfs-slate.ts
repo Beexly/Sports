@@ -66,7 +66,8 @@ export const DFS_SLATE: readonly DfsPlayer[] = [
   d("dwr2", "Ja'Marr Chase", "WR", "CIN", "BAL", 7400, 17.5, 10, 28, 0.17),
   d("dwr3", "Puka Nacua", "WR", "LAR", "SEA", 6800, 16.0, 7, 29, 0.13),
   d("dwr4", "Stefon Diggs", "WR", "BUF", "MIA", 6600, 15.5, 9, 25, 0.14),
-  d("dwr5", "DK Metcalf", "WR", "SEA", "LAR", 5800, 13.0, 6, 24, 0.10),
+  d("dwr5", "DK Metcalf", "WR", "PIT", "CIN", 5800, 13.0, 6, 24, 0.10), // Traded to PIT in 2026 under Aaron Rodgers
+  d("dwr5b", "Germie Bernard", "WR", "PIT", "CIN", 3800, 12.5, 5, 22, 0.08), // 2026 breakout slot technician
   d("dwr6", "Rashee Rice", "WR", "KC", "DEN", 5400, 12.0, 4, 26, 0.09),
   d("dwr7", "CeeDee Lamb", "WR", "DAL", "PHI", 5000, 10.5, 5, 20, 0.07),
   d("dwr8", "Brian Thomas Jr.", "WR", "JAX", "HOU", 4600, 9.0, 4, 18, 0.05),

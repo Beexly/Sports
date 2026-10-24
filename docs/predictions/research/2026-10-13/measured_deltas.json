@@ -1,0 +1,37 @@
+{
+  "status": "stopped_gaussian_close_not_reproduced",
+  "clear": false,
+  "emission": "ZERO_OBJECT",
+  "vision_weight": 0,
+  "mu": "+spread_line (nflverse column, positive = home favored)",
+  "sigma": 13.45,
+  "data_source": "data/gse-dataset/games.jsonl (last written 2026-09-27)",
+  "filter": "game_type REG, settled true, 2017 W1 through 2026 W5, spread_line and margin non-null",
+  "n_locked": 2462,
+  "n_measured": 2416,
+  "gaussian_close_crps_locked": 7.154021,
+  "gaussian_close_crps_measured": 7.172045489,
+  "reproduction_tolerance": 0.00005,
+  "reproduced": false,
+  "gate_threshold": 7.099,
+  "gate_cleared": false,
+  "sign_check": {
+    "mu_plus_spread_line_crps": 7.172045489,
+    "mu_minus_spread_line_crps": 10.484034697,
+    "flip_cost_measured": 3.311989208,
+    "flip_crps_locked_reference": 10.435732,
+    "flip_cost_locked_reference": 3.28
+  },
+  "unreproduced_references": {
+    "7.129681": "not found in repository text search; not used"
+  },
+  "atoms": "residual atoms +/-3 and +/-7 not applied: scoring stopped before candidates ran",
+  "candidates": {
+    "rest": {"delta_vs_7.154021": null, "status": "not_scored"},
+    "division": {"delta_vs_7.154021": null, "status": "not_scored"},
+    "indoor": {"delta_vs_7.154021": null, "status": "not_scored"},
+    "short-week": {"delta_vs_7.154021": null, "status": "not_scored"},
+    "rest-deficit": {"delta_vs_7.154021": null, "status": "not_scored"}
+  },
+  "reason": "Locked Gaussian close 7.154021 on n=2462 could not be reproduced. games.jsonl has 2416 settled REG rows in range; 2026 weeks 3 to 5 have no scores. Measured 7.172045 is 0.018 off, above the 5e-5 tolerance. Candidates were not scored."
+}

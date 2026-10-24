@@ -19,6 +19,10 @@
 import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
 import { WEIGHTS } from "./constants.js";
 import { clamp } from "./scoring.js";
+import { evaluateHighAltitudeFatigueDecay } from "./signals/environmental/high-altitude-fatigue-decay.js";
+import { evaluateRefereeCrewTendencies } from "./signals/situational/referee-crew-tendencies.js";
+import { evaluateRedZonePersonnelGrouping } from "./signals/tactical/redzone-personnel-grouping.js";
+import { evaluateCoachingTendencies } from "./signals/situational/coaching-tendencies.js";
 
 // Re-export so consumers can import GameContextInput/AtsFormBucket from this module
 export type { GameContextInput, AtsFormBucket };
@@ -50,7 +54,11 @@ export interface GameContextScores {
   restDaysHome?: number | null;
   restDaysAway?: number | null;
   spreadMovementPts?: number | null;
-  factors: FactorDetail[];
+  // Situational split features
+  altitudeScore?: number;
+  refereeCrewScore?: number;
+  personnelScore?: number;
+  coachingScore?: number;  factors: FactorDetail[];
 }
 
 // ============================================================
@@ -983,6 +991,109 @@ export function computeGameContext(
   const dispersionScore = disp.penalty;
   if (disp.factor) factors.push(disp.factor);
 
+  // 13. High-Altitude Environmental Fatigue & Aerodynamics
+  let altitudeScore = 0;
+  const altitudeFeet = context.altitudeFt ?? context.venueAltitudeFeet ?? 0;
+  if (altitudeFeet >= 4000) {
+    const isAway = pickedSide === "AWAY";
+    const altResult = evaluateHighAltitudeFatigueDecay({
+      venueAltitudeFeet: altitudeFeet,
+      isVisitingTeam: isAway,
+      visitingTeamArrivalDaysPrior: 1,
+      defensiveSnapCountPaceProjection: 68,
+    });
+    if (altResult.isHighAltitudeVenue) {
+      if (marketType === "SPREAD" || marketType === "MONEYLINE") {
+        altitudeScore = pickedSide === "HOME" ? 2 : pickedSide === "AWAY" ? -2 : 0;
+      } else if (marketType === "TOTAL") {
+        altitudeScore = pickedSide === "OVER" ? 1 : -1;
+      }
+      factors.push({
+        name: "High-Altitude Venue Fatigue",
+        impact: altitudeScore > 0 ? "positive" : altitudeScore < 0 ? "negative" : "neutral",
+        description: altResult.explanation,
+        weight: altitudeScore,
+      });
+    }
+  }
+
+  // 14. Officiating Crew Tendencies & Crowd Acoustics
+  let refereeCrewScore = 0;
+  if (context.refereeCrewFlagsPerGame != null && context.refereeCrewFlagsPerGame > 0) {
+    const refResult = evaluateRefereeCrewTendencies({
+      refereeName: context.refereeName || "Officiating Crew",
+      crewFlagsPerGame: context.refereeCrewFlagsPerGame,
+      leagueAvgFlagsPerGame: 12.4,
+      defensiveHoldingFlagsPerGame: 1.9,
+      passInterferenceFlagsPerGame: 1.4,
+      homePenaltyRateRatio: 0.46,
+    });
+    if (marketType === "TOTAL") {
+      refereeCrewScore = refResult.penaltyPaceTier === "HEAVY_FLAGS"
+        ? (pickedSide === "UNDER" ? 2 : -2)
+        : refResult.penaltyPaceTier === "LET_THEM_PLAY"
+          ? (pickedSide === "OVER" ? 2 : -2)
+          : 0;
+    } else if (marketType === "SPREAD" || marketType === "MONEYLINE") {
+      if (refResult.homeFieldPenaltyYardageAdvantage > 5) {
+        refereeCrewScore = pickedSide === "HOME" ? 1 : pickedSide === "AWAY" ? -1 : 0;
+      }
+    }
+    if (refereeCrewScore !== 0) {
+      factors.push({
+        name: "Officiating Crew Tendency",
+        impact: refereeCrewScore > 0 ? "positive" : "negative",
+        description: `Referee flag tier: ${refResult.penaltyPaceTier} (${context.refereeCrewFlagsPerGame.toFixed(1)} flags/gm)`,
+        weight: refereeCrewScore,
+      });
+    }
+  }
+
+  // 15. Red Zone Personnel Grouping Leverage (12/13/21 jumbo vs 11)
+  let personnelScore = 0;
+  if (context.primaryPersonnelGrouping) {
+    const rzResult = evaluateRedZonePersonnelGrouping({
+      primaryRedZonePersonnelGrouping: context.primaryPersonnelGrouping,
+      offensiveLineRunBlockGrade: context.offensiveLineRunBlockGrade ?? 70,
+      opponentDefensiveFrontSevenGrade: context.opponentDefensiveFrontSevenGrade ?? 70,
+      goalLineDistanceYards: 3.0,
+    });
+    if (rzResult.defensivePersonnelMismatchTier === "HEAVY_RUN_LEVERAGE") {
+      personnelScore = pickedSide === "HOME" || pickedSide === "OVER" ? 2 : -1;
+    }
+    if (personnelScore !== 0) {
+      factors.push({
+        name: "Personnel Grouping Leverage",
+        impact: personnelScore > 0 ? "positive" : "negative",
+        description: `Primary grouping: ${context.primaryPersonnelGrouping} (Run Prob: ${(rzResult.expectedRunProbability * 100).toFixed(0)}%, PA Bonus: +${rzResult.playActionEpaBonus.toFixed(2)} EPA)`,
+        weight: personnelScore,
+      });
+    }
+  }
+
+  // 16. Coaching Situational Tendency & 4th-Down Aggressiveness
+  let coachingScore = 0;
+  if (context.coachAggressivenessScore != null) {
+    const coachResult = evaluateCoachingTendencies({
+      down: 4,
+      distance: 2,
+      coachAggressivenessScore: context.coachAggressivenessScore,
+    });
+    if (coachResult.fourthDownGoForItEdgeEv > 0.15) {
+      coachingScore = pickedSide === "HOME" ? 1 : 0;
+    } else if (coachResult.fourthDownGoForItEdgeEv < -0.15) {
+      coachingScore = pickedSide === "HOME" ? -1 : 0;
+    }
+    if (coachingScore !== 0) {
+      factors.push({
+        name: "Coaching Situational Tendency",
+        impact: coachingScore > 0 ? "positive" : "negative",
+        description: `Coach aggressiveness: ${context.coachAggressivenessScore.toFixed(2)} (4th-down edge: +${coachResult.fourthDownGoForItEdgeEv.toFixed(2)} EV)`,
+        weight: coachingScore,
+      });
+    }
+  }
+
   return {
     lineMovementScore,
     restAdvantageScore,
@@ -1008,6 +1119,11 @@ export function computeGameContext(
     injuryScore,
     ngsTrackingScore,
     dispersionScore,
+    // Situational splits
+    altitudeScore,
+    refereeCrewScore,
+    personnelScore,
+    coachingScore,
     factors,
   };
 }
@@ -1155,5 +1271,149 @@ export function computeSovereignSignalPlaneContribution(
     edgeScore,
     signalContributions: contributions,
   };
+}
+
+// ============================================================================
+// Stream 4: Layer-2 Situational Corpus Gap Remediation & Decision-Time Re-Pricing
+// ============================================================================
+
+export interface DecisionTimeRepricingInput {
+  readonly openFairProb: number;
+  readonly decisionFairProb: number;
+  readonly modelTrueProb: number;
+  readonly newsShockDeltaProb?: number;
+}
+
+export interface DecisionTimeRepricingResult {
+  readonly edgeVsOpen: number;
+  readonly edgeVsDecisionLine: number;
+  readonly steamAbsorbedFraction: number;
+  readonly staleSteamFadeRecommended: boolean;
+  readonly action: "PUBLISH_LIVE_EDGE" | "PASS_STALE_STEAM" | "FADE_OVERREACTION";
+}
+
+export function evaluateDecisionTimeRepricing(input: DecisionTimeRepricingInput): DecisionTimeRepricingResult {
+  const edgeVsOpen = Number((input.modelTrueProb - input.openFairProb).toFixed(4));
+  const edgeVsDecisionLine = Number((input.modelTrueProb - input.decisionFairProb).toFixed(4));
+  const move = input.decisionFairProb - input.openFairProb;
+  const shock = input.newsShockDeltaProb ?? move;
+  const steamAbsorbedFraction =
+    Math.abs(shock) > 1e-6 ? Number(Math.min(Math.max(move / shock, 0), 2.5).toFixed(4)) : 1.0;
+  const staleSteamFadeRecommended = Math.abs(move) >= 0.035 && steamAbsorbedFraction > 1.35 && edgeVsDecisionLine < 0;
+  const action =
+    edgeVsDecisionLine >= 0.02
+      ? "PUBLISH_LIVE_EDGE"
+      : staleSteamFadeRecommended
+        ? "FADE_OVERREACTION"
+        : "PASS_STALE_STEAM";
+  return {
+    edgeVsOpen,
+    edgeVsDecisionLine,
+    steamAbsorbedFraction,
+    staleSteamFadeRecommended,
+    action,
+  };
+}
+
+export interface PreventDefenseRegimeResult {
+  readonly preventActive: boolean;
+  readonly underneathCompletionLift: number;
+  readonly deepExplosiveSuppression: number;
+  readonly trailingPassRateLift: number;
+  readonly clockBleedSecondsPerPlay: number;
+}
+
+export function evaluatePreventDefenseRegime(
+  scoreDifferential: number,
+  gameSecondsRemaining: number,
+): PreventDefenseRegimeResult {
+  const absLead = Math.abs(scoreDifferential);
+  const preventActive = absLead >= 14 && gameSecondsRemaining <= 600 && gameSecondsRemaining > 0;
+  if (!preventActive) {
+    return {
+      preventActive: false,
+      underneathCompletionLift: 0,
+      deepExplosiveSuppression: 0,
+      trailingPassRateLift: 0,
+      clockBleedSecondsPerPlay: 0,
+    };
+  }
+  const intensity = Math.min(1.5, (absLead - 10) / 14) * Math.min(1.2, (600 - gameSecondsRemaining) / 300 + 0.4);
+  return {
+    preventActive: true,
+    underneathCompletionLift: Number((0.114 * intensity).toFixed(4)),
+    deepExplosiveSuppression: Number((-0.42 * Math.min(intensity, 1.2)).toFixed(4)),
+    trailingPassRateLift: Number((0.182 * intensity).toFixed(4)),
+    clockBleedSecondsPerPlay: Number((-6.5 * Math.min(intensity, 1.2)).toFixed(2)),
+  };
+}
+
+export interface CompoundScheduleFatigueInput {
+  readonly consecutiveRoadGames: number;
+  readonly priorGameOvertimeOrMnf: boolean;
+  readonly timeZonesCrossed: number;
+  readonly restDaysDelta: number;
+}
+
+export function evaluateCompoundScheduleFatigueSpot(input: CompoundScheduleFatigueInput): {
+  readonly compoundFatigueActive: boolean;
+  readonly q4DefensiveEpaPenalty: number;
+  readonly pointSpreadPenalty: number;
+} {
+  const compoundFatigueActive =
+    input.consecutiveRoadGames >= 2 && (input.priorGameOvertimeOrMnf || input.timeZonesCrossed >= 2);
+  if (!compoundFatigueActive) {
+    return { compoundFatigueActive: false, q4DefensiveEpaPenalty: 0, pointSpreadPenalty: 0 };
+  }
+  const tzFactor = 1 + 0.18 * Math.max(0, input.timeZonesCrossed - 1);
+  const restFactor = 1 + 0.12 * Math.max(0, -input.restDaysDelta);
+  const q4DefensiveEpaPenalty = Number((0.065 * tzFactor * restFactor).toFixed(4));
+  const pointSpreadPenalty = Number((-1.85 * tzFactor * restFactor).toFixed(2));
+  return { compoundFatigueActive: true, q4DefensiveEpaPenalty, pointSpreadPenalty };
+}
+
+export function evaluateDomeColdWindTransition(input: {
+  readonly isDomeTeamOnRoadOutdoors: boolean;
+  readonly temperatureF: number;
+  readonly windMph: number;
+}): {
+  readonly transitionActive: boolean;
+  readonly completionRateDelta: number;
+  readonly epaPerDropbackDelta: number;
+  readonly totalPointsDelta: number;
+} {
+  if (!input.isDomeTeamOnRoadOutdoors || (input.temperatureF > 40 && input.windMph < 13)) {
+    return { transitionActive: false, completionRateDelta: 0, epaPerDropbackDelta: 0, totalPointsDelta: 0 };
+  }
+  const coldExcess = Math.max(0, (40 - input.temperatureF) / 15);
+  const windExcess = Math.max(0, (input.windMph - 12) / 10);
+  const severity = Math.min(2.0, coldExcess + windExcess + 0.5 * coldExcess * windExcess);
+  return {
+    transitionActive: severity > 0,
+    completionRateDelta: Number((-0.048 * severity).toFixed(4)),
+    epaPerDropbackDelta: Number((-0.072 * severity).toFixed(4)),
+    totalPointsDelta: Number((-2.8 * severity).toFixed(2)),
+  };
+}
+
+export function parseBetSlipMetadata(rawSlipText: string): {
+  readonly americanOdds: number | null;
+  readonly lineValue: number | null;
+  readonly impliedProb: number | null;
+  readonly isSameGameParlay: boolean;
+} {
+  const oddsMatch = rawSlipText.match(/(?:^|\s)([+-]\d{3,4})(?:\s|$)/);
+  const lineMatch = rawSlipText.match(/(?:[+-]?\d+\.5)\b/);
+  const americanOdds = oddsMatch ? Number.parseInt(oddsMatch[1], 10) : null;
+  const lineValue = lineMatch ? Number.parseFloat(lineMatch[0]) : null;
+  let impliedProb: number | null = null;
+  if (americanOdds !== null && americanOdds !== 0) {
+    impliedProb =
+      americanOdds > 0
+        ? Number((100 / (americanOdds + 100)).toFixed(4))
+        : Number((Math.abs(americanOdds) / (Math.abs(americanOdds) + 100)).toFixed(4));
+  }
+  const isSameGameParlay = /\b(SGP|Same Game Parlay)\b/i.test(rawSlipText);
+  return { americanOdds, lineValue, impliedProb, isSameGameParlay };
 }
 

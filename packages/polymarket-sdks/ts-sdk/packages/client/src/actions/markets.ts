@@ -1,0 +1,895 @@
+import {
+  ClobAssetIdSchema,
+  ConditionIdSchema,
+  IsoDateTimeStringSchema,
+  type PaginationCursor,
+  PaginationCursorSchema,
+  PositionIdSchema,
+} from '@polymarket/bindings';
+import {
+  type ComboMarket,
+  ListComboMarketsResponseSchema,
+} from '@polymarket/bindings/combos';
+import {
+  CanonicalMarketConditionIdSchema,
+  FetchOpenInterestResponseSchema,
+  ListMarketHoldersResponseSchema,
+  ListPriceHistoryResponseSchema,
+  type MetaHolder,
+  type OpenInterest,
+  PriceHistoryInterval,
+  PriceHistoryIntervalSchema,
+  type PriceHistoryPoint,
+} from '@polymarket/bindings/data';
+import {
+  FetchMarketTagsResponseSchema,
+  ListMarketsKeysetResponseSchema,
+  type Market,
+  MarketResolutionStatus,
+  MarketSchema,
+  ProtocolVersion,
+  type TagReference,
+} from '@polymarket/bindings/gamma';
+import { z } from 'zod';
+import type { BaseClient } from '../clients';
+import {
+  makeErrorGuard,
+  RateLimitError,
+  RequestAbortedError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+} from '../errors';
+import { parseUserInput } from '../input';
+import { PageSizeSchema, type Paginated, paginate } from '../pagination';
+import { parsePolymarketSlugUrl } from '../polymarket-url';
+import { parseRequestOptions, type RequestOptions } from '../request-options';
+import {
+  ClosedFilterSchema,
+  distinctIdList,
+  EpochSecondsLikeSchema,
+  snakeCase,
+  toDataSearchParams,
+  toSearchParams,
+} from './params';
+
+export { PriceHistoryInterval };
+
+// The public markets endpoint forces active=true and archived=false server-side.
+const ListMarketsRequestSchema = z
+  .object({
+    ascending: z.boolean().optional(),
+    closed: ClosedFilterSchema.optional(),
+    clobTokenIds: z.array(z.string()).optional(),
+    cursor: PaginationCursorSchema.optional(),
+    pageSize: PageSizeSchema.optional(),
+    conditionIds: z.array(ConditionIdSchema).optional(),
+    cyom: z.boolean().optional(),
+    decimalized: z.boolean().optional(),
+    endDateMax: IsoDateTimeStringSchema.optional(),
+    endDateMin: IsoDateTimeStringSchema.optional(),
+    gameId: z.string().optional(),
+    ids: z.array(z.number().int()).optional(),
+    includeTag: z.boolean().optional(),
+    liquidityNumMax: z.number().optional(),
+    liquidityNumMin: z.number().optional(),
+    locale: z.string().optional(),
+    order: z.string().optional(),
+    /** Parent on-chain event IDs; at most 100 values. */
+    onchainEventIds: z.array(z.string()).max(100).optional(),
+    positionIds: z.array(PositionIdSchema).optional(),
+    questionIds: z.array(z.string()).optional(),
+    relatedTags: z.boolean().optional(),
+    /** Oracle request IDs; at most 100 values. */
+    requestIds: z.array(z.string()).max(100).optional(),
+    resolutionStatus: z.enum(MarketResolutionStatus).optional(),
+    rfqEnabled: z.boolean().optional(),
+    rewardsMinSize: z.number().optional(),
+    slug: z.array(z.string()).optional(),
+    sportsMarketTypes: z.array(z.string()).optional(),
+    startDateMax: IsoDateTimeStringSchema.optional(),
+    startDateMin: IsoDateTimeStringSchema.optional(),
+    tagId: z.number().int().optional(),
+    tagMatch: z.enum(['any', 'all']).optional(),
+    umaResolutionStatus: z.string().optional(),
+    version: z
+      .union([
+        z.enum(ProtocolVersion),
+        z.array(z.enum(ProtocolVersion)).min(1).max(2),
+      ])
+      .optional(),
+    volumeNumMax: z.number().optional(),
+    volumeNumMin: z.number().optional(),
+  })
+  .refine(
+    (params) =>
+      params.closed !== 'any' ||
+      [
+        params.ids,
+        params.slug,
+        params.clobTokenIds,
+        params.positionIds,
+        params.conditionIds,
+        params.questionIds,
+      ].some((ids) => ids !== undefined && ids.length > 0),
+    {
+      message: "closed: 'any' requires at least one identifier filter",
+      path: ['closed'],
+    },
+  );
+
+export type ListMarketsRequest = z.input<typeof ListMarketsRequestSchema>;
+
+const FetchMarketByIdRequestSchema = z.object({
+  id: z.string(),
+  includeTag: z.boolean().optional(),
+  locale: z.string().optional(),
+});
+
+const FetchMarketBySlugRequestSchema = z.object({
+  slug: z.string(),
+  includeTag: z.boolean().optional(),
+  locale: z.string().optional(),
+});
+
+const FetchMarketByUrlRequestSchema = z.object({
+  url: z.string(),
+  includeTag: z.boolean().optional(),
+  locale: z.string().optional(),
+});
+
+const FetchMarketRequestSchema = z.union([
+  FetchMarketByIdRequestSchema,
+  FetchMarketBySlugRequestSchema,
+  FetchMarketByUrlRequestSchema,
+]);
+
+export type FetchMarketRequest = z.input<typeof FetchMarketRequestSchema>;
+
+const FetchMarketTagsRequestSchema = z.object({
+  id: z.string(),
+});
+
+export type FetchMarketTagsRequest = z.input<
+  typeof FetchMarketTagsRequestSchema
+>;
+
+type ListMarketsParams = z.output<typeof ListMarketsRequestSchema>;
+
+export type ListMarketsError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const ListMarketsError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Lists markets.
+ *
+ * Defaults to open markets. Pass `closed: true` for closed markets or
+ * `closed: 'any'` for either state. The latter requires a non-empty `ids`,
+ * `slug`, `clobTokenIds`, `positionIds`, `conditionIds`, or `questionIds` filter.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * Legacy multi-outcome markets cannot be represented by the binary
+ * {@link Market} model and are omitted from results.
+ *
+ * Select one protocol with `version`, or pass both protocol versions in an array.
+ * Arrays accept one or two values. Omitting `version` uses the current server
+ * default of CTF markets (v1). Filter v2 markets by `resolutionStatus`, `requestIds`, or
+ * `onchainEventIds`. Each ID filter accepts at most 100 values. V1 markets
+ * use the separate `umaResolutionStatus` filter.
+ *
+ * @throws {@link ListMarketsError}
+ * Thrown on failure.
+ *
+ * @example
+ * Fetch the first page of results:
+ * ```ts
+ * const result = listMarkets(client, {
+ *   closed: false,
+ *   pageSize: 10,
+ * });
+ *
+ * const firstPage = await result.firstPage();
+ *
+ * // Optionally, fetch additional pages:
+ * for await (const page of result.from(firstPage.nextCursor)) {
+ *   // page.items: Market[]
+ * }
+ * ```
+ *
+ * @example
+ * Loop through all pages with `for await`:
+ * ```ts
+ * const result = listMarkets(client, {
+ *   closed: false,
+ *   pageSize: 10,
+ * });
+ *
+ * for await (const page of result) {
+ *   // page.items: Market[]
+ * }
+ * ```
+ */
+export function listMarkets(
+  client: BaseClient,
+  request: ListMarketsRequest = {},
+  options: RequestOptions = {},
+): Paginated<Market[]> {
+  const requestOptions = parseRequestOptions(options);
+  const params = parseUserInput(request, ListMarketsRequestSchema);
+
+  return paginate(
+    (cursor) =>
+      client.gamma
+        .get('/markets/keyset', {
+          schema: ListMarketsKeysetResponseSchema,
+          ...requestOptions,
+          params: toMarketsSearchParams({
+            ...params,
+            cursor: cursor ?? params.cursor,
+          }),
+        })
+        .then((response) => ({
+          items: response.items,
+          hasMore: response.nextCursor !== undefined,
+          nextCursor: response.nextCursor,
+        })),
+    params.cursor,
+  );
+}
+
+const ListComboMarketsRequestSchema = z.object({
+  cursor: PaginationCursorSchema.optional(),
+  pageSize: PageSizeSchema.max(100).optional(),
+  exclude: z.array(ConditionIdSchema).optional(),
+});
+
+export type ListComboMarketsRequest = z.input<
+  typeof ListComboMarketsRequestSchema
+>;
+
+export type ListComboMarketsError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const ListComboMarketsError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Lists markets available for Combos.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link ListComboMarketsError}
+ * Thrown on failure.
+ *
+ * @example
+ * Fetch the first page of results:
+ * ```ts
+ * const result = listComboMarkets(client, {
+ *   pageSize: 10,
+ * });
+ *
+ * const firstPage = await result.firstPage();
+ *
+ * // Optionally, fetch additional pages:
+ * for await (const page of result.from(firstPage.nextCursor)) {
+ *   // page.items: ComboMarket[]
+ * }
+ * ```
+ *
+ * @example
+ * Omit markets the caller has already displayed:
+ * ```ts
+ * const result = listComboMarkets(client, {
+ *   exclude: ['0x4cd77d456c83e7d8c569a8fb8f6396c3f40154f657e6d970733e2b1b6a7110ff'],
+ *   pageSize: 10,
+ * });
+ * ```
+ */
+export function listComboMarkets(
+  client: BaseClient,
+  request: ListComboMarketsRequest = {},
+  options: RequestOptions = {},
+): Paginated<ComboMarket[]> {
+  const requestOptions = parseRequestOptions(options);
+  const params = parseUserInput(request, ListComboMarketsRequestSchema);
+
+  return paginate(
+    (cursor) =>
+      client.rfq
+        .get('/v1/rfq/combo-markets', {
+          schema: ListComboMarketsResponseSchema,
+          ...requestOptions,
+          params: toComboMarketsSearchParams({
+            ...params,
+            cursor: cursor ?? params.cursor,
+          }),
+        })
+        .then((response) => ({
+          items: response.markets,
+          hasMore: response.nextCursor !== undefined,
+          nextCursor: response.nextCursor,
+        })),
+    params.cursor,
+  );
+}
+
+export type FetchMarketError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const FetchMarketError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Fetches a market.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * Legacy multi-outcome markets cannot be represented by the binary
+ * {@link Market} model, so fetching one fails with an
+ * {@link UnexpectedResponseError}.
+ *
+ * @throws {@link FetchMarketError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const market = await fetchMarket(client, {
+ *   id: '12345',
+ * });
+ *
+ * const marketBySlug = await fetchMarket(client, {
+ *   slug: 'some-market-slug',
+ * });
+ *
+ * const marketByUrl = await fetchMarket(client, {
+ *   url: 'https://polymarket.com/event/some-market-slug',
+ * });
+ *
+ * // market === Market
+ * ```
+ */
+export async function fetchMarket(
+  client: BaseClient,
+  request: FetchMarketRequest,
+  options: RequestOptions = {},
+): Promise<Market> {
+  const requestOptions = parseRequestOptions(options);
+  const params = parseUserInput(request, FetchMarketRequestSchema);
+
+  if ('id' in params) {
+    return fetchMarketById(client, params, requestOptions);
+  }
+
+  if ('url' in params) {
+    return fetchMarketBySlug(
+      client,
+      {
+        includeTag: params.includeTag,
+        locale: params.locale,
+        slug: parsePolymarketSlugUrl(params.url, 'market'),
+      },
+      requestOptions,
+    );
+  }
+
+  return fetchMarketBySlug(client, params, requestOptions);
+}
+
+export type FetchMarketTagsError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const FetchMarketTagsError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Fetches a market's tags.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link FetchMarketTagsError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const tags = await fetchMarketTags(client, {
+ *   id: '12345',
+ * });
+ *
+ * // tags: TagReference[]
+ * ```
+ */
+export async function fetchMarketTags(
+  client: BaseClient,
+  request: FetchMarketTagsRequest,
+  options: RequestOptions = {},
+): Promise<TagReference[]> {
+  const requestOptions = parseRequestOptions(options);
+  const params = parseUserInput(request, FetchMarketTagsRequestSchema);
+
+  return client.gamma.get(`markets/${params.id}/tags`, {
+    ...requestOptions,
+    schema: FetchMarketTagsResponseSchema,
+  });
+}
+
+const ListMarketHoldersRequestSchema = z
+  .object({
+    conditionIds: distinctIdList(CanonicalMarketConditionIdSchema, 20),
+    cursor: PaginationCursorSchema.optional(),
+    includePnl: z.boolean().optional(),
+    minBalance: z.number().nonnegative().optional(),
+    pageSize: PageSizeSchema.max(1000).default(100),
+  })
+  .superRefine(({ conditionIds, includePnl, pageSize }, context) => {
+    if (!includePnl) return;
+
+    if (conditionIds.length !== 1) {
+      context.addIssue({
+        code: 'custom',
+        message: 'includePnl requires exactly one conditionId',
+        path: ['conditionIds'],
+      });
+    }
+
+    if (pageSize > 100) {
+      context.addIssue({
+        code: 'custom',
+        message: 'includePnl supports pageSize at most 100',
+        path: ['pageSize'],
+      });
+    }
+  });
+
+export type ListMarketHoldersRequest = z.input<
+  typeof ListMarketHoldersRequestSchema
+>;
+export type ListMarketHoldersError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const ListMarketHoldersError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Lists top holders grouped by outcome for one or more markets.
+ *
+ * `conditionIds` accepts up to 20 distinct market condition IDs. `pageSize`
+ * defaults to 100 (max 1000) and applies separately to each outcome. Merge
+ * matching `assetId` groups across pages rather than relying on array position.
+ * `minBalance` uses display shares and defaults to `0`; `1` means one share,
+ * equivalent to 1,000,000 base units.
+ * Amounts are net holdings by default. `includePnl` switches to per-outcome
+ * gross holdings and adds position economics; it requires one condition ID and
+ * a page size of at most 100. Transient rate limits are retried by default.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link ListMarketHoldersError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const result = listMarketHolders(client, {
+ *   conditionIds: ['0xe546672750517f62c45a5a00067481981e62b9c20fa8220203232c9dc8fd2093'],
+ *   pageSize: 5,
+ * });
+ *
+ * for await (const page of result) {
+ *   // page.items: MetaHolder[]
+ * }
+ * ```
+ */
+export function listMarketHolders(
+  client: BaseClient,
+  request: ListMarketHoldersRequest,
+  options: RequestOptions = {},
+): Paginated<MetaHolder[]> {
+  const requestOptions = parseRequestOptions(options);
+  const { conditionIds, cursor, includePnl, minBalance, pageSize } =
+    parseUserInput(request, ListMarketHoldersRequestSchema);
+
+  return paginate(
+    (cursor) =>
+      client.data.get('/v2/holders', {
+        schema: ListMarketHoldersResponseSchema,
+        ...requestOptions,
+        params: toDataSearchParams({
+          condition: conditionIds,
+          limit: pageSize,
+          cursor,
+          includePnl,
+          minBalance,
+        }),
+      }),
+    cursor,
+  );
+}
+
+export type ListPriceHistoryRequest =
+  | {
+      assetId: string;
+      interval: PriceHistoryInterval;
+      bucketSeconds?: number;
+      cursor?: PaginationCursor;
+      pageSize?: number;
+      start?: never;
+      end?: never;
+      asOf?: never;
+    }
+  | {
+      assetId: string;
+      start: number | Date;
+      end?: number | Date;
+      bucketSeconds?: number;
+      cursor?: PaginationCursor;
+      pageSize?: number;
+      interval?: never;
+      asOf?: never;
+    }
+  | {
+      assetId: string;
+      asOf: number | Date;
+      interval?: never;
+      start?: never;
+      end?: never;
+      bucketSeconds?: never;
+      cursor?: never;
+      pageSize?: never;
+    };
+
+const MAX_PRICE_HISTORY_WINDOW_SECONDS = 15 * 24 * 60 * 60;
+/** Latest supported instant: 9999-12-31T23:59:59Z. */
+const MAX_PRICE_HISTORY_TIMESTAMP_SECONDS = 253_402_300_799;
+
+const PriceHistoryTimestampSchema = EpochSecondsLikeSchema.pipe(
+  z.number().int().positive().max(MAX_PRICE_HISTORY_TIMESTAMP_SECONDS),
+);
+
+const PriceHistoryAssetIdSchema = z.string().min(1).pipe(ClobAssetIdSchema);
+
+const PriceHistorySeriesRequestFields = {
+  assetId: PriceHistoryAssetIdSchema,
+  bucketSeconds: z.number().int().min(60).max(86_400).optional(),
+  cursor: PaginationCursorSchema.optional(),
+  pageSize: PageSizeSchema.max(10_000).default(10_000),
+};
+
+const PriceHistoryIntervalRequestSchema = z
+  .object({
+    ...PriceHistorySeriesRequestFields,
+    interval: PriceHistoryIntervalSchema,
+    start: z.never().optional(),
+    end: z.never().optional(),
+    asOf: z.never().optional(),
+  })
+  .superRefine(({ bucketSeconds, interval }, context) => {
+    const minimumBucketSeconds =
+      interval === PriceHistoryInterval.Max ||
+      interval === PriceHistoryInterval.OneMonth
+        ? 600
+        : interval === PriceHistoryInterval.OneWeek
+          ? 300
+          : 60;
+
+    if (bucketSeconds !== undefined && bucketSeconds < minimumBucketSeconds) {
+      context.addIssue({
+        code: 'custom',
+        message: `bucketSeconds must be at least ${minimumBucketSeconds} for this interval`,
+        path: ['bucketSeconds'],
+      });
+    }
+  });
+
+const PriceHistoryRangeRequestSchema = z
+  .object({
+    ...PriceHistorySeriesRequestFields,
+    start: PriceHistoryTimestampSchema,
+    end: PriceHistoryTimestampSchema.optional(),
+    interval: z.never().optional(),
+    asOf: z.never().optional(),
+  })
+  .superRefine(({ end, start }, context) => {
+    if (end !== undefined && end < start) {
+      context.addIssue({
+        code: 'custom',
+        message: 'end must not precede start',
+        path: ['end'],
+      });
+      return;
+    }
+
+    const upperBound = end ?? Math.floor(Date.now() / 1_000);
+    if (upperBound - start > MAX_PRICE_HISTORY_WINDOW_SECONDS) {
+      context.addIssue({
+        code: 'custom',
+        message: 'start to end must span at most 15 days',
+        path: ['end'],
+      });
+    }
+  });
+
+const PriceHistoryAsOfRequestSchema = z.object({
+  assetId: PriceHistoryAssetIdSchema,
+  asOf: PriceHistoryTimestampSchema,
+  interval: z.never().optional(),
+  start: z.never().optional(),
+  end: z.never().optional(),
+  bucketSeconds: z.never().optional(),
+  cursor: z.never().optional(),
+  pageSize: z.never().optional(),
+});
+
+const ListPriceHistoryRequestSchema = z.union([
+  PriceHistoryIntervalRequestSchema,
+  PriceHistoryRangeRequestSchema,
+  PriceHistoryAsOfRequestSchema,
+]) satisfies z.ZodType<ListPriceHistoryRequest, ListPriceHistoryRequest>;
+
+export type ListPriceHistoryError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const ListPriceHistoryError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Lists historical price observations for an exchange asset.
+ *
+ * Select exactly one time form: a relative `interval`, an explicit `start`
+ * with optional `end`, or the latest observation at or before an `asOf`
+ * instant. Time inputs accept Unix epoch seconds or `Date` values. When
+ * `bucketSeconds` is omitted, resolution is selected automatically for the
+ * requested window and reported on each point as `resolutionSeconds`. An
+ * explicit bucket is used exactly as requested and may produce an empty series
+ * when that resolution is unavailable for the window. Prices are decimal
+ * strings and returned timestamps are Unix epoch milliseconds. Series pages
+ * are ordered oldest first; an `asOf` request returns at most one item. Series
+ * page sizes default to and are capped at 10,000 points. Transient rate limits
+ * are retried by default.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link ListPriceHistoryError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const history = listPriceHistory(client, {
+ *   assetId: '17023124228269928849020611259015948850061676830917875073785033885105715180702',
+ *   interval: PriceHistoryInterval.OneDay,
+ *   bucketSeconds: 3600,
+ * });
+ *
+ * for await (const page of history) {
+ *   // page.items: PriceHistoryPoint[]
+ * }
+ * ```
+ */
+export function listPriceHistory(
+  client: BaseClient,
+  request: ListPriceHistoryRequest,
+  options: RequestOptions = {},
+): Paginated<PriceHistoryPoint[]> {
+  const requestOptions = parseRequestOptions(options);
+  const { assetId, cursor, pageSize, ...params } = parseUserInput(
+    request,
+    ListPriceHistoryRequestSchema,
+  );
+
+  return paginate(
+    (cursor) =>
+      client.data.get('/v2/prices-history', {
+        schema: ListPriceHistoryResponseSchema,
+        ...requestOptions,
+        params: toDataSearchParams({
+          ...params,
+          tokenId: assetId,
+          limit: pageSize,
+          cursor,
+        }),
+      }),
+    cursor,
+  );
+}
+
+const FetchOpenInterestRequestSchema = z.object({
+  conditionIds: distinctIdList(CanonicalMarketConditionIdSchema, 20).optional(),
+});
+
+export type FetchOpenInterestRequest = z.input<
+  typeof FetchOpenInterestRequestSchema
+>;
+
+export type FetchOpenInterestError =
+  | RequestAbortedError
+  | RateLimitError
+  | RequestRejectedError
+  | TransportError
+  | UnexpectedResponseError
+  | UserInputError;
+export const FetchOpenInterestError = makeErrorGuard(
+  RequestAbortedError,
+  RateLimitError,
+  RequestRejectedError,
+  TransportError,
+  UnexpectedResponseError,
+  UserInputError,
+);
+
+/**
+ * Fetches priced gross open interest for selected markets or globally.
+ *
+ * `conditionIds` accepts up to 20 distinct market condition IDs. Omit it for
+ * the global aggregate, whose `conditionId` is `null`. A requested servable
+ * market with no holdings has a zero value; an absent row means the market is
+ * not servable. Values are in USDC. Transient rate limits are retried
+ * by default.
+ *
+ * @remarks
+ * This is a low-level function. Most SDK consumers should prefer the client instance API.
+ *
+ * @throws {@link FetchOpenInterestError}
+ * Thrown on failure.
+ *
+ * @example
+ * ```ts
+ * const openInterest = await fetchOpenInterest(client, {
+ *   conditionIds: ['0xe546672750517f62c45a5a00067481981e62b9c20fa8220203232c9dc8fd2093'],
+ * });
+ *
+ * // openInterest: OpenInterest[]
+ * ```
+ */
+export async function fetchOpenInterest(
+  client: BaseClient,
+  request: FetchOpenInterestRequest = {},
+  options: RequestOptions = {},
+): Promise<OpenInterest[]> {
+  const requestOptions = parseRequestOptions(options);
+  const { conditionIds } = parseUserInput(
+    request,
+    FetchOpenInterestRequestSchema,
+  );
+
+  return client.data.get('/v2/oi', {
+    schema: FetchOpenInterestResponseSchema,
+    ...requestOptions,
+    params: toDataSearchParams({ condition: conditionIds }),
+  });
+}
+
+function toMarketsSearchParams(params: ListMarketsParams): URLSearchParams {
+  return toSearchParams(
+    params,
+    snakeCase<ListMarketsParams>({
+      cursor: 'after_cursor',
+      ids: 'id',
+      pageSize: 'limit',
+    }),
+  );
+}
+
+type ListComboMarketsParams = z.output<typeof ListComboMarketsRequestSchema>;
+
+function toComboMarketsSearchParams(
+  params: ListComboMarketsParams,
+): URLSearchParams {
+  return toSearchParams(
+    {
+      cursor: params.cursor,
+      exclude: params.exclude?.join(','),
+      pageSize: params.pageSize,
+    },
+    {
+      cursor: 'cursor',
+      exclude: 'exclude',
+      pageSize: 'limit',
+    },
+  );
+}
+
+async function fetchMarketBySlug(
+  client: BaseClient,
+  params: z.output<typeof FetchMarketBySlugRequestSchema>,
+  options: RequestOptions = {},
+): Promise<Market> {
+  const requestOptions = parseRequestOptions(options);
+  return client.gamma.get(`markets/slug/${params.slug}`, {
+    schema: MarketSchema,
+    ...requestOptions,
+    params: toSearchParams(
+      {
+        includeTag: params.includeTag,
+        locale: params.locale,
+      },
+      snakeCase(),
+    ),
+  });
+}
+
+async function fetchMarketById(
+  client: BaseClient,
+  params: z.output<typeof FetchMarketByIdRequestSchema>,
+  options: RequestOptions = {},
+): Promise<Market> {
+  const requestOptions = parseRequestOptions(options);
+  return client.gamma.get(`markets/${params.id}`, {
+    schema: MarketSchema,
+    ...requestOptions,
+    params: toSearchParams(
+      {
+        includeTag: params.includeTag,
+        locale: params.locale,
+      },
+      snakeCase(),
+    ),
+  });
+}

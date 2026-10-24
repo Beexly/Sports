@@ -1,0 +1,14 @@
+# Full sanitized conversation bodies are NOT committed.
+#
+# The 890 MB body set is a local extraction of third-party export data. The
+# committed artifacts are the cryptographic proof of completeness:
+#   brain/feeds/2026-10-22/grok_export_index.jsonl  (one line per body, sha256)
+#   docs/engine/research/2026-10-22/grok-export-2026-10-22/
+#       GROK_EXPORT_INGEST_MANIFEST.json             (every zip entry + sha256)
+#
+# Rebuild with: python scripts/ops/mine_grok_export_corpus.py
+# Verify with:  python scripts/ops/mine_grok_export_corpus.py --verify-deep
+#
+# Scoped ignore, following data/nflverse/.gitignore: the raw corpus is an input;
+# the index and manifest are the durable result.
+bodies/

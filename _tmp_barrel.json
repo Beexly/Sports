@@ -1,0 +1,98 @@
+{
+ "rundown-client": {
+  "apps/web/app/api/cron/free-spine-health/route.ts": [
+   "resolveRundownApiKey"
+  ],
+  "apps/web/app/api/ops/public-surface-truth/route.ts": [
+   "rundownApiKeyPresence"
+  ],
+  "packages/ingestion-pipeline/src/board-fill.ts": [
+   "rundownApiKeyPresence"
+  ],
+  "packages/ingestion-pipeline/src/process-sport.ts": [
+   "fetchRundownEventsForSport",
+   "resolveRundownApiKey"
+  ],
+  "packages/ingestion-pipeline/src/refresh-odds.ts": [
+   "resolveRundownApiKey"
+  ]
+ },
+ "odds-api-client": {
+  "apps/web/app/api/ops/odds-backfill/route.ts": [
+   "OddsApiClient"
+  ],
+  "apps/web/app/api/ops/props-slate/route.ts": [
+   "OddsApiClient"
+  ],
+  "packages/ingestion-pipeline/src/process-sport.ts": [
+   "OddsApiClient"
+  ],
+  "packages/ingestion-pipeline/src/settle-sport.ts": [
+   "OddsApiClient",
+   "OddsApiError"
+  ]
+ },
+ "kalshi-client": {
+  "packages/ingestion-pipeline/src/build-independent-fair-values.ts": [
+   "KalshiClient",
+   "KalshiGameRef",
+   "KalshiLeague",
+   "sportKeyToKalshiLeagueCode",
+   "toIndependentFairValue"
+  ],
+  "packages/ingestion-pipeline/src/exchange-tape-capture.ts": [
+   "eventTickerMatchesGame"
+  ],
+  "packages/ingestion-pipeline/src/kalshi-team-abbr.ts": [
+   "KalshiLeagueCode"
+  ]
+ },
+ "espn-powerindex-client": {
+  "packages/ingestion-pipeline/src/build-independent-fair-values.ts": [
+   "defaultPowerIndexSeason",
+   "getCachedEspnPowerIndexMap",
+   "lookupTeamFpi",
+   "sportKeyToPowerIndexLeague"
+  ]
+ },
+ "clubelo-client": {
+  "packages/ingestion-pipeline/src/build-independent-fair-values.ts": [
+   "getSharedClubEloClient",
+   "isClubEloSport"
+  ]
+ },
+ "polymarket-independent-client": {
+  "packages/ingestion-pipeline/src/build-independent-fair-values.ts": [
+   "PolymarketIndependentClient",
+   "isPolymarketIndependentEnabled"
+  ]
+ },
+ "mlb-statsapi-client": {
+  "packages/ingestion-pipeline/src/build-independent-fair-values.ts": [
+   "buildMlbWinPctLookup",
+   "fetchMlbStandings",
+   "lookupMlbWinPct"
+  ]
+ },
+ "predexon-client": {
+  "packages/ingestion-pipeline/src/exchange-tape-capture.ts": [
+   "PredExonClient",
+   "PredExonKalshiMarket",
+   "isPredExonIngestEnabled"
+  ]
+ },
+ "galaxy-kalshi-book": {
+  "packages/ingestion-pipeline/src/exchange-tape-capture.ts": [
+   "parseKalshiSpreadLine",
+   "parseKalshiTotalLine"
+  ],
+  "packages/ingestion-pipeline/src/process-sport.ts": [
+   "createGalaxySecondBook"
+  ]
+ },
+ "espn-odds-client": {
+  "packages/ingestion-pipeline/src/process-sport.ts": [
+   "fetchEspnOddsForSport"
+  ]
+ }
+}

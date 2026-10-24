@@ -58,6 +58,7 @@ import {
   isPlausibleEntryOdds,
   modelProbForReceipt,
   selectionIsHomeSide,
+  publicCommitPick,
 } from "@sports/prediction-engine";
 import {
   buildIndependentFairValues,
@@ -1377,12 +1378,31 @@ export async function processSport(
         olContinuityDelta: dynamicCtx?.gameContext.olContinuityDelta ?? null,
         dlContinuityDelta: dynamicCtx?.gameContext.dlContinuityDelta ?? null,
         dbContinuityDelta: dynamicCtx?.gameContext.dbContinuityDelta ?? null,
+        altitudeFt: dynamicCtx?.gameContext.altitudeFt ?? null,
+        coachAggressivenessScore: dynamicCtx?.gameContext.coachAggressivenessDelta != null
+          ? 0.50 + dynamicCtx.gameContext.coachAggressivenessDelta
+          : null,
         situationalReading: dynamicCtx?.situationalReading ?? null,
+        // LIT-2 CORPUS ADJUSTMENT. The Layer-2 corpus evaluator's situational
+        // shift for this game, wired directly into ranking probability (The Stack: Base + Reasoning).
+        ...(dynamicCtx?.situationalReading?.corpusSituationalShift != null
+          ? {
+              corpusAdjustment: dynamicCtx.situationalReading.corpusSituationalShift,
+              corpusWeight: 1.0,
+            }
+          : {}),
         ...(independentFairValues.length > 0
           ? { independentFairValues }
           : {}),
         ...(calibrationHistory && calibrationHistory.length > 0
           ? { calibrationHistory }
+          : {}),
+        ...(gates.calibrationAdjustmentsEnabled
+          ? {
+              probabilityCalibrator: {
+                predict: (p: number) => Math.min(0.99, Math.max(0.01, p)),
+              },
+            }
           : {}),
       };
 
@@ -1516,6 +1536,26 @@ export async function processSport(
         select: { id: true, result: true, selection: true, isPublished: true, line: true },
       });
 
+      const isPublic = gates.canExposePublicPicks;
+
+      // Honor the commit-reveal integrity gate (GAP-23) when publicly committing picks
+      if (isPublic) {
+        publicCommitPick(
+          {
+            pickId: `${pick.gameId}_${pick.pickType}`,
+            sport: sport.key,
+            market: pick.pickType,
+            selection: pick.selection,
+            modelVersion: CANONICAL_MODEL_VERSION,
+            committedAt: new Date().toISOString(),
+            line: String(pick.line),
+            edgeIndex: String(pick.edgeScore),
+          },
+          run.id,
+          process.env,
+        );
+      }
+
       // The CREATE payload — shared by both fresh-mint paths below: the normal
       // empty-slot create, and the supersede create (an unpublished PENDING
       // slot-holder was voided through the settlement outbox and the slot is
@@ -1527,6 +1567,7 @@ export async function processSport(
         ingestionRunId: run.id,
         isBootstrap,
         isFeatured,
+        isPublished: isPublic,
         // CLV lock snapshot — the line/price we ACTUALLY published at, captured
         // once at creation. Absent from the updateMany above, so the refresh
         // cycle can never overwrite it. `Pick.line` is now frozen alongside it

@@ -1,0 +1,64 @@
+# EDGE-014: Risk ladder scoring spec
+
+## Duplicate Gate
+
+duplicate_check_status: EXTENSION  
+matched_existing_ids: BUILD-GV2-017, CONTEST-007  
+relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work.  
+reason_not_duplicate: Contest-specific risk ladder extends no-bet/risk surfaces.  
+parent_id: BUILD-GV2-017  
+dependency_ids: none
+
+## Category
+
+trust / no-bet
+
+## Goal
+
+Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Risk ladder scoring spec.
+
+## Legal Boundary
+
+Legal risk: MEDIUM. Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval.
+
+## Data Boundary
+
+fake contest data only. Do not import real friend-history data without explicit consent and deletion controls.
+
+## Implementation Plan
+
+1. Verify the real GSE shipping clone, branch, dirty state, package manager, and existing cards.
+2. Read this card plus matched IDs: BUILD-GV2-017, CONTEST-007.
+3. Produce the smallest docs/spec/mock/fake-data implementation.
+4. Preserve GSE as sports intelligence, not sportsbook.
+5. Add validation for no secrets, no live prizes, no entry fees, no deposits, and no method leakage.
+
+## Testing Plan
+
+- JSON/schema validation if data files are added.
+- Copy scan for sportsbook-like pressure.
+- Feature flag disabled by default if code is ever approved.
+- No live contest, prize, deposit, or affiliate link.
+
+## Acceptance Criteria
+
+- Duplicate gate remains intact.
+- Approval gates are explicit.
+- No production data or real friend data is used.
+- Rollback is documented.
+
+## Rollback Plan
+
+Remove this card's docs/spec/mock or disable the feature flag. No billing, payments, or production data should be touched.
+
+## Priority
+
+P0
+
+## Difficulty
+
+M
+
+## Claude Code Prompt
+
+You are Claude Code in the real Galaxy Sports Edge / GSE shipping clone. Execute only EDGE-014: Risk ladder scoring spec. Verify repo root, branch, dirty state, and existing contest/community cards first. Do not duplicate prior work. Do not launch contests, prizes, deposits, payouts, paid entries, live leaderboards, or affiliate links. Use fake data unless explicit consent and approval exist. Preserve GSE as sports intelligence, not sportsbook. Report files changed, checks run, approvals needed, and rollback.

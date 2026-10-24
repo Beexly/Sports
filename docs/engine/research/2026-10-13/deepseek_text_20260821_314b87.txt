@@ -1,0 +1,283 @@
+
+### 6.2 The Architecture
+
+| Layer | Component | What It Does |
+|-------|-----------|--------------|
+| **Data Source** | Zenoti scheduled reports | Emails CSV of appointments, guests, etc. |
+| **Ingestion** | n8n (IMAP node) | Monitors dedicated inbox for report emails |
+| **Processing** | n8n + Python microserver | Downloads authenticated reports, parses CSV (handles quoted fields, escaped quotes, CRLF) |
+| **Action** | n8n (Microsoft Outlook node) | Creates tasks, checklists, assignments |
+
+### 6.3 The Production Example
+The `evolvemedspa-sa` repo pattern:
+1. Polls Outlook every minute for Zenoti report emails
+2. Detects report download links
+3. Downloads files via custom microserver
+4. Parses CSV data
+5. Appends clean data to target systems
+
+**This is a live production system, not a proof of concept.**
+
+### 6.4 CSV Parsing Considerations
+- Handle quoted fields
+- Handle escaped quotes
+- Handle CRLF line endings
+- Robust error handling for malformed data
+
+---
+
+## 7. THE AUTOMATION ARCHITECTURE
+
+### 7.1 Core Components
+
+| Component | Technology | Rationale |
+|-----------|------------|-----------|
+| **Workflow Engine** | n8n (self-hosted) | 400+ integrations, native Outlook nodes, active development |
+| **Deployment** | Docker / `selfhost-ai` stack | Quick deployment, includes n8n + Ollama for AI |
+| **Zenoti Connector** | `n8n-code/n8n-nodes-zenoti` | Native n8n node for Zenoti |
+| **Data Extraction (No-API)** | Python microserver (from `evolvemedspa-sa`) | Handles authenticated Zenoti downloads |
+| **Data Extraction (API)** | `LiftOffLLC/zenoti-sdk` or `frappe/ecommerce_integrations` | NodeJS/Python SDKs |
+| **Outlook Integration** | n8n's native Microsoft Outlook nodes | Create tasks, calendar events, monitor inboxes |
+| **AI Layer (Future)** | Ollama + `tacit-code/zenoti-mcp-server` | Local LLM for staff queries |
+
+### 7.2 Workflow Patterns
+
+#### Pattern 1: Daily Morning Checklist
+**Trigger:** Schedule (e.g., 6:00 AM daily)
+
+**Steps:**
+1. Fetch today's appointments from Zenoti (API or CSV)
+2. Group appointments by therapist
+3. For each therapist, create a checklist in Outlook/To Do:
+   - Room prep for each appointment
+   - Product stocking
+   - Client notes review
+4. Create location-wide opening checklist
+5. Assign all tasks to relevant staff
+
+#### Pattern 2: Recurring Checklists
+**Trigger:** Schedule
+- Weekly: Deep clean, inventory count
+- Monthly: Staff meetings, training
+
+**Steps:**
+1. Generate checklist template
+2. Assign to all staff or specific roles
+3. Create in Outlook as recurring tasks
+
+#### Pattern 3: No-Show / Cancellation Follow-up
+**Trigger:** Zenoti event (webhook if API, or email report if no-API)
+
+**Steps:**
+1. Detect no-show/cancellation
+2. Create task in Outlook for front desk: "Call [Client Name] to reschedule"
+3. Set due date for same day
+
+#### Pattern 4: Post-Appointment Follow-up
+**Trigger:** Appointment completed (API webhook or email report)
+
+**Steps:**
+1. 24 hours after appointment
+2. Create task: "Send post-visit satisfaction survey to [Client]"
+3. Or trigger automated email via Outlook
+
+#### Pattern 5: Staff Performance Tracking
+**Trigger:** Weekly
+
+**Steps:**
+1. Pull utilization data from Zenoti
+2. Calculate revenue per therapist
+3. Create Outlook task for manager: "Review performance data for [Therapist]"
+
+---
+
+## 8. PHASED IMPLEMENTATION ROADMAP
+
+### Phase 0: Audit (Week 1 — 2-3 hours)
+
+1. **Enable Work Tasks in Zenoti** (if not already):
+   - Organization level → Configurations → Enable work tasks
+   - Organization level → Configurations → Work Task Types → Add tasks
+   - Employee profiles → General tab → Job Info → Select Employee Work Tasks
+
+2. **Check if API access is already available:**
+   - Admin → Setup → Apps → Look for "Backend App"
+
+3. **Enable Outlook calendar sync** for all employees
+
+4. **Review existing Zenoti reports:**
+   - What's already being emailed?
+   - What reports are available but not used?
+
+### Phase 1: Native First (Week 1-2)
+
+1. Build daily checklists as **Work Task Types** in Zenoti:
+   - Opening checklist (setup, product prep, room readiness)
+   - Closing checklist (cleanup, inventory count, lockup)
+   - Weekly deep clean
+   - New client follow-up calls
+
+2. Assign tasks to specific employees
+
+3. Train staff to check-in/check-out of tasks
+
+**Success Metric:** Staff using Work Tasks consistently for 1 week
+
+### Phase 2: Light Automation (Week 2-4)
+
+#### If API Access is Granted:
+1. Deploy n8n (via `selfhost-ai` or standalone Docker)
+2. Install `n8n-code/n8n-nodes-zenoti`
+3. Build workflows:
+   - Morning: Fetch today's appointments → create Outlook tasks for each therapist
+   - On appointment complete: Create follow-up task in Outlook
+   - On no-show/cancel: Auto-create call-back task
+
+#### If API Access is Denied:
+1. Configure Zenoti to email daily appointment reports to a dedicated inbox
+2. Deploy n8n with IMAP monitoring
+3. Build workflows using the `evolvemedspa-sa` pattern:
+   - Detect report email → download CSV → parse → create Outlook tasks
+
+### Phase 3: Advanced (Month 2-3)
+
+1. Add **recurring checklists** (weekly deep clean, monthly inventory)
+2. Build **staff performance dashboards** from appointment data
+3. If using `selfhost-ai`, add **Ollama** for local AI:
+   - Staff can ask: "What's on today's checklist?"
+   - Auto-draft follow-up emails for no-shows
+4. Integrate **Harmonyze** for performance coaching insights
+
+### Phase 4: Full Integration (Month 3-6)
+
+1. Consider **ERPNext** if she needs full business management (inventory, accounting, etc.)
+2. Use `frappe/ecommerce_integrations` for full ERP integration
+3. Deploy `tacit-code/zenoti-mcp-server` for AI agent access
+
+---
+
+## 9. KEY SUCCESS METRICS
+
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| Staff adoption of checklists | 100% within 2 weeks | Zenoti Work Tasks logs |
+| Time saved on daily operations | 30 min/day | Staff feedback, time tracking |
+| No-show reduction | 10% decrease | Zenoti reports |
+| Task completion rate | >90% | Outlook task completion |
+| Staff satisfaction with system | >4/5 | Survey |
+
+---
+
+## 10. RISK ASSESSMENT & CONTINGENCY
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Corporate denies API access | High | Medium | Email/CSV workaround (already proven) |
+| Zenoti UI changes break Selenium | Medium | Low | Use email workaround as primary; Selenium as backup |
+| n8n self-hosting fails | Low | High | Use Zapier as fallback (paid) |
+| Staff resistance to new system | Medium | Medium | Train on Zenoti Work Tasks first; phase in automation |
+| Harmonyze doesn't deliver ROI | Low | Medium | Start with free trial; measure before committing |
+| API keys expire (12-month cycle) | Certain | Low | Document renewal process; set calendar reminder |
+
+---
+
+## 11. CRITICAL RESOURCES
+
+### Documentation
+- Zenoti API Docs: `docs.zenoti.com`
+- Zenoti Help Center: `help.zenoti.com` (Work Tasks, calendar sync, Zapier)
+- n8n Docs: `docs.n8n.io`
+- Harmonyze: `www.harmonyze.com`
+
+### GitHub Repositories (Bookmark These)
+
+| Repo | Purpose |
+|------|---------|
+| `github.com/n8n-code/n8n-nodes-zenoti` | n8n Zenoti connector |
+| `github.com/evolvemedspa-sa/zenoti-download-reports` | No-API production blueprint |
+| `github.com/LiftOffLLC/zenoti-sdk` | NodeJS SDK for Zenoti APIs |
+| `github.com/tacit-code/zenoti-mcp-server` | AI agent connector for Zenoti |
+| `github.com/frappe/ecommerce_integrations` | Battle-tested Zenoti API code |
+| `github.com/akhildhar/` (multiple repos) | Selenium scraping + email automation |
+| `github.com/dilawar30800/Zenoti-zapier-app` | Zapier app reference |
+
+### Deployment Resources
+- `github.com/kossakovsky/selfhost-ai` — Pre-configured AI homelab (includes n8n)
+- Docker Compose for n8n: `docker compose up`
+
+---
+
+## 12. NEXT STEPS (FOR THE DEVELOPER)
+
+### Immediate Actions (Week 1)
+1. **Clone these repos:**
+   - `n8n-code/n8n-nodes-zenoti`
+   - `evolvemedspa-sa/zenoti-download-reports`
+
+2. **Deploy n8n** using the `selfhost-ai` stack or standalone Docker
+
+3. **Install the Zenoti node** into n8n
+
+4. **Set up a test email inbox** for Zenoti reports
+
+5. **Configure Zenoti** to email a daily appointment report to that inbox
+
+### Week 2 Actions
+1. **Build a minimal n8n workflow:**
+   - IMAP trigger → detects report email
+   - HTTP Request → calls Python microserver to download authenticated report
+   - Parse CSV → extract appointments
+   - Outlook node → create tasks for each appointment
+
+2. **Test with real data** from the franchise location
+
+### Week 3 Actions
+1. **Extend workflow** to group appointments by therapist
+2. **Add recurring checklists** (opening/closing)
+3. **Build the Outlook task creation logic** with proper assignments
+
+### Week 4 Actions
+1. **Deploy to production** (or run alongside manual process)
+2. **Train staff** on the new system
+3. **Monitor and iterate** based on feedback
+
+### Month 2 Actions
+1. **Evaluate Harmonyze** for performance coaching
+2. **Add AI capabilities** via Ollama + MCP server
+3. **Build dashboards** for staff performance
+
+---
+
+## 13. THE BOTTOM LINE
+
+**Your mom has three layers of capability right now:**
+
+| Layer | What It Is | Effort | Cost |
+|-------|------------|--------|------|
+| **Layer 1: Native Zenoti** | Work Tasks, calendar sync, reports | Zero code, 1 hour setup | Free (included) |
+| **Layer 2: n8n Automation** | Custom workflows, Outlook tasks | Some code, 1-2 weeks | Free + hosting |
+| **Layer 3: AI/ERP** | Local AI, full ERP integration | More code, 1-2 months | Free + hosting |
+
+**Start with Layer 1.** It's already there, already paid for, and directly solves her checklist problem.
+
+**If Layer 1 isn't enough,** move to Layer 2. Use n8n + the email workaround (or API if available).
+
+**Keep Layer 3 in your back pocket** as a growth option.
+
+**Harmonyze is complementary** — it tells her *what* to improve. The n8n automation layer handles *how* to run daily operations.
+
+---
+
+## 14. CONTACT & HANDOFF INFORMATION
+
+- **Project Owner:** Mom (Massage Heights franchisee)
+- **Technical Lead:** [Insert Developer Name]
+- **Systems:** Zenoti, Harmonyze, n8n, Outlook
+- **Deployment Target:** Self-hosted (Docker)
+- **Handoff Date:** [Insert Date]
+
+---
+
+*This document is complete and ready for handoff to a coding agent. All research, constraints, strategies, and actionable steps are captured above.*
+
+*Generated: August 20, 2026*

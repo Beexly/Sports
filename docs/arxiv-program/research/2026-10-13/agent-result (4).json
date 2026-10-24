@@ -1,0 +1,82 @@
+{
+  "source_url": "https://arxiv.org/abs/2608.05030",
+  "source_url_citation": "https://arxiv.org/abs/2608.05030",
+  "extraction_timestamp": "2026-10-04T09:36:08.453Z",
+  "extraction_timestamp_citation": "https://arxiv.org/abs/2608.05030",
+  "title": "From Score Matrices to Football-Aware Match-State Simulation: An Auditable LLM Harness for Exact-Score Reranking",
+  "title_citation": "https://arxiv.org/abs/2608.05030",
+  "content_type": "technical paper",
+  "content_type_citation": "https://arxiv.org/abs/2608.05030",
+  "lora_training_pair": {
+    "instruction": "Compare the four documented iterations of the football exact-score forecasting harness and report the Top-1 accuracy, Top-3 accuracy, and candidate coverage achieved by the strongest iteration on the chronological replay benchmark.",
+    "instruction_citation": "https://arxiv.org/abs/2608.05030",
+    "input": "The paper describes V1 as a dynamic score-driven Dixon-Coles baseline, V2 as an LLM contextual-rating mapping into expected-goal parameters, V3 as goal-by-goal simulation over a frozen score-candidate set, and V4 as a version adding shared first-breakthrough and post-goal cascade judgments, time-aware stopping, and deterministic tail candidates. The benchmark is the first 150 matches of the 2025-26 English Premier League.",
+    "input_citation": "https://arxiv.org/abs/2608.05030",
+    "output": "V4 was the strongest iteration on the benchmark, reaching 14.7% Top-1 exact-score accuracy and 30.7% Top-3 exact-score accuracy. It increased candidate coverage to 84.7%. For comparison, V1 achieved 10.0% Top-1 and 26.7% Top-3, while V3 achieved 12.0% Top-1 and 30.0% Top-3. The paper characterizes these results as exploratory rather than an untouched benchmark, because the development slice was not fully held out and temporal input isolation could not rule out outcome memory in a closed LLM.",
+    "output_citation": "https://arxiv.org/abs/2608.05030"
+  },
+  "summary": "The paper presents an auditable hybrid architecture for football exact-score forecasting that combines dynamic Poisson-family score models with LLM-based contextual reasoning. It documents four iterations: a Dixon-Coles baseline, expected-goal parameter correction from LLM ratings, goal-by-goal simulation, and a final version incorporating first-breakthrough and post-goal cascade judgments, time-aware stopping, and deterministic tail candidates. On the first 150 matches of the 2025-26 English Premier League, V4 achieved 14.7% Top-1 and 30.7% Top-3 exact-score accuracy and raised candidate coverage to 84.7%. The paper also reports V1 native 1X2 metrics of 53.3% argmax accuracy, 0.9878 log loss, 0.5870 Brier score, and 0.2095 ranked probability score. The authors describe the benchmark as exploratory and note limitations involving development-slice contamination and possible outcome memory in a closed LLM.",
+  "summary_citation": "https://arxiv.org/abs/2608.05030",
+  "key_data_points": [
+    {
+      "value": "Benchmark: chronological replay of the first 150 matches of the 2025-26 English Premier League",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "V1 exact-score accuracy: 10.0% Top-1; 26.7% Top-3",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "V3 exact-score accuracy: 12.0% Top-1; 30.0% Top-3",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "V4 exact-score accuracy: 14.7% Top-1; 30.7% Top-3",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "V4 candidate coverage: 84.7%, up from V1's 77.3%",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "V1 native 1X2 argmax accuracy: 53.3%",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "V1 native 1X2 log loss: 0.9878; Brier score: 0.5870; ranked probability score: 0.2095",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    }
+  ],
+  "technical_entities": [
+    {
+      "value": "Dynamic Poisson-family models",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "Dixon-Coles model",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "Large language models (LLMs)",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "Expected-goal parameters",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "Goal-by-goal match-state simulation",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    },
+    {
+      "value": "Monte Carlo-style score selection and reranking harness",
+      "value_citation": "https://arxiv.org/abs/2608.05030"
+    }
+  ],
+  "intelligent_equation_extracted": null,
+  "intelligent_equation_extracted_citation": "",
+  "validation_status": "unverified",
+  "validation_status_citation": "https://arxiv.org/abs/2608.05030",
+  "raw_text_snippet": "Skip to main content Search arXiv Press Enter to search · Advanced search Computer Science > Artificial Intelligence arXiv:2608.05030 (cs) [Submitted on 5 Aug 2026] Title: From Score Matrices to Football-Aware Match-State Simulation: An Auditable LLM Harness for Exact-Score Reranking Authors: Shaopeng Liang View a PDF of the paper titled From Score Matrices to Football-Aware Match-State Simulation: An Auditable LLM Harness for Exact-Score Reranking, by Shaopeng Liang View PDF HTML (experimental) Abstract: Football score forecasting combines a strong statistical core with a difficult contextual edge. Dynamic Poisson-family models estimate team strength, expected goals, and coherent score probabilities, but do not directly understand roles, tactical matchups, motivation, or how a first goal changes behaviour. Large language models (LLMs) can reason about such concepts, yet are not calibrated probability engines. We combine both components through an auditable information harness. This paper",
+  "raw_text_snippet_citation": "https://arxiv.org/abs/2608.05030"
+}

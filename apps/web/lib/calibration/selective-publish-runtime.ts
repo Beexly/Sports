@@ -50,6 +50,13 @@ export function loadSelectiveRuntimeConfig(
   readonly enabled: boolean;
   readonly thresholds: SelectiveThresholds;
   readonly pausedGroups: readonly string[];
+  /**
+   * G7's machine-owned calibration-drift halts. SEPARATE from `pausedGroups`
+   * because `pausedGroups` is the founder's list and is advisory until the
+   * founder opts in; a machine-computed calibration halt must not need a human
+   * to approve it. The two are applied in COMBINATION.
+   */
+  readonly g7HaltedGroups: readonly string[];
   readonly pauseSource: "env" | "plan" | "durable" | "none";
   readonly pauseApplyEnabled: boolean;
   readonly pauseOperatorHint: string;
@@ -71,6 +78,9 @@ export function loadSelectiveRuntimeConfig(
       minGroupRes: null,
     },
     pausedGroups: pause.pausedGroups,
+    // Absent on plans persisted before G7 existed, and empty when no family has
+    // enough settled evidence to judge. Both are "no family is halted".
+    g7HaltedGroups: plan?.g7HaltedGroups ?? [],
     pauseSource: pause.source,
     pauseApplyEnabled: pause.applyEnabled && pause.pausedGroups.length > 0,
     pauseOperatorHint: pause.operatorHint,
@@ -319,6 +329,18 @@ export function passesPublicSelectiveFilter(
   }
   const groupKey = `${pick.sportKey ?? "unknown"}|${pick.pickType ?? "unknown"}`;
   if (cfg.pausedGroups.includes(groupKey)) return false;
+  // G7 -- the calibration-drift circuit breaker, on the LIVE public surface.
+  //
+  // This is the consumer the G7 module was written for. The module computed a
+  // per-family drift verdict; the proven-path plan carries the halt list; and
+  // this check is where a drifting family stops being published.
+  //
+  // It is deliberately NOT folded into `cfg.pausedGroups`. That list is the
+  // founder's, and it is advisory until the founder opts in. This one is
+  // machine-owned: a calibration halt must not require a human to approve it,
+  // and it must not silently flip the founder's own list either. Two lists, two
+  // owners, applied together.
+  if (cfg.g7HaltedGroups.includes(groupKey)) return false;
   return passesSelectiveThresholds(
     {
       p,

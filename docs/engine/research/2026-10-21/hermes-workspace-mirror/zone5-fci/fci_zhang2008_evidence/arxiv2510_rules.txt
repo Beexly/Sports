@@ -1,0 +1,149 @@
+
+<<<PAGE 6>>>
+BOSS, as it has a scalable implementation and yields excellent performance for CPDAG search.
+However, as shown in [7], initial CPDAGs produced by score-based methods can contain spurious
+adjacencies and incorrect orientations when latent variables are present. For example, in the model
+X Ñ Y Ð Z Ð W, a CPDAG cannot represent a bidirected edge. If the collider at Y is “covered,”
+the CPDAG may output X Ñ Y Ñ Z Ð W with an extra adjacency X Ñ Z. To correct this,
+GFCI verifies that X KK Z and removes X ˚ ´ ˚ Z, restoring the correct collider X˚Ñ Y Ð˚Z. In
+short, refinement beyond the score-based CPDAG is essential to account for latent confounders and
+selection bias. FCIT follows this general strategy but introduces more targeted refinement steps that
+involve fewer, more informative CI tests and ensure a structurally well-formed PAG.
+Algorithm 1 summarizes the main procedure (with notation in Table 1). The initial CPDAG is
+converted into a PAG by replacing each edge with an unoriented edge (˝´˝) and transferring any
+unshielded colliders identified in the CPDAG. This transfer is justified because the final PAG will be
+a subset of the CPDAG’s adjacencies, and collider structures are the only orientations that reliably
+carry over [7].
+The refinement phase uses the block_paths_recursively method (Algorithm 5, Appendix A). Instead of
+testing arbitrary subsets of adjacents or Possible-D-SEP sets, this procedure analyzes paths between
+nodes to construct blocking sets on the fly, choosing at each step a single CI tests to perform. This
+reduces the search space dramatically, addressing the repeated testing problem while improving
+statistical efficiency. At each step, the graph is checked to make sure it is a well-formed PAG; if not,
+the graph is reverted to the previous PAG before continuing. This ensures that the final PAG is legal.
+Importantly, discriminating paths are integrated directly into edge removal: candidate colliders on
+discriminating paths are hypothesized in all possible combinations, and edge removals are proposed
+whenever implied by the resulting blocking sets through testing.
+Although these additional checks appear more elaborate than adjacency-based testing, the implementa-
+tion of FCIT remains competitively fast in practice (Section 8). Crucially, unlike competing FCI-style
+algorithms, FCIT always produces a structurally well-formed PAG, eliminating the malformed outputs
+sometimes produced by FCI or GFCI variants.
+5
+Optimizing the Final FCI Orientation Rules
+A key feature of FCIT is that the final FCI orientation rules [12] are applied not only once at
+the end of the procedure, but repeatedly throughout the refinement process. While this ensures
+maximally informative orientations, it also creates performance bottlenecks: several of the rules are
+computationally expensive in their standard implementations. To make FCIT scalable, we therefore
+develop optimized implementations of the slowest rules. Because these rules are common to all
+FCI-style algorithms, our optimizations “lift all boats,” improving performance across the entire
+family of methods (including FCI, GFCI, BOSS-FCI, and GRaSP-FCI).
+We focus on four rules that are consistently the most time-consuming in practice. Full details of the
+rules and their optimized implementations are given in Appendix C.
+• Rule R4 (discriminating paths). This rule requires identifying discriminating paths and
+testing subsets of adjacents for nonadjacent pairs. We optimize this by replacing adjacency-
+based conditioning with the block_paths_recursively procedure, which constructs separating
+sets directly from path structure.
+• Rules R5 and R9 (all-circle-endpoint paths). These rules involve enumerating paths with
+circle endpoints of potentially unbounded length. We optimize this step using a modified
+Dijkstra-style shortest-path algorithm, which efficiently detects the relevant circle-path
+structures without exhaustive enumeration.
+• Rule R10 (semidirected paths). This rule requires finding semidirected paths in order to
+finalize circle endpoints. We implement a breadth-first semidirected path search, which
+avoids redundant exploration and significantly reduces runtime.
+Our optimizations reduce both the number of conditional independence tests and the number of
+path enumerations needed for these rules. In FCIT, where the final orientation rules are invoked
+repeatedly, even modest improvements compound into substantial runtime savings. As a result, these
+6
+
+<<<PAGE 22>>>
+Figure 8: Peter’s MAG example. Since z is a collider on the path x Ñ b Ñ z Ø y, it is already
+BlockedAfter under ∅. No additional conditioning is needed.
+• Rule R4, which requires searching for discriminating paths and can involve conditioning on
+many subsets of adjacent nodes of varaibles.
+• Rules R5 and R9, both of which involve identifying all-circle-endpoint paths of potentially
+unbounded length.
+• Rule R10, which requires finding certain semidirected paths to finalize circle endpoints.
+Below, we give our optimizations for each of these.
+C.1
+Zhang’s Final FCI Orientation Rules
+For completeness, we recap here the orientation rules (R0–R10) that Zhang [12] proves are both
+sound and complete for FCI in the presence of latent variables and selection bias. In these rules,
+α, β, γ, θ denote generic vertices, and the symbol “˚” is a wildcard that can represent an arrowhead
+(Ñ), a tail (´), or a circle (˝). Any rule that does not apply in a given configuration can be ignored.
+R0 (Unshielded collider): For every unshielded triple xα, γ, βy (i.e. α and β both adjacent to γ but
+not to each other):
+• If γ R Sepsetpα, βq, orient α˚ Ñ γ Ð˚β.
+R1: If α˚ Ñ β ˝ ´˚ γ and α and γ are not adjacent, orient β Ñ γ.
+R2: If either α Ñ β˚ Ñ γ or α˚ Ñ β Ñ γ, and there is an unoriented edge α ˚ ´˝ γ, orient
+α˚ Ñ γ.
+R3: If α˚ Ñ β Ð˚γ, and α ˚ ´˝ θ ˝ ´˚ γ, with α and γ not adjacent, and θ ˚ ´˝ β, then orient
+θ˚ Ñ β.
+R4 (Discriminating path): Let u “ xθ, . . . , α, β, γy be a discriminating path between θ and γ for
+β, and suppose β ˝ ´˚ γ is currently unoriented. Then:
+• If β P Sepsetpθ, γq, orient β ˝ ´˚ γ as β Ñ γ.
+• Otherwise orient xα, β, γy as α Ø β Ø γ.
+R5: If α ˝ ´˝ β and there is an uncovered circle-only path xα, . . . , βy such that α and β are not
+adjacent to one another’s immediate neighbors on that path, orient α ˝ ´˝ β (and every edge on the
+path) as undirected, i.e. α ´ β.
+R6: If α ´ β ˝ ´˚ γ, then orient β ˝ ´˚ γ as β ´ γ.
+R7: If α ´ β ˝ ´˝ γ and α and γ are not adjacent, orient β ˝ ´˝ γ as β ´ γ.
+R8: If α Ñ β Ñ γ or α ´ β Ñ γ, and α˝Ñ γ is present, orient α˝Ñ γ as α Ñ γ.
+R9: If α˝Ñ γ and there is an uncovered potentially-directed path xα, β, θ, . . . , γy such that β and γ
+are not adjacent, then orient α˝Ñ γ as α Ñ γ.
+R10: Suppose α˝Ñ γ, β Ñ γ Ð θ, and there exist uncovered potentially-directed paths p1 : α Ñ˚
+β and p2 : α Ñ˚ θ, where the two neighbors of α on p1 and p2 (denote them ν and ω) are distinct
+and not adjacent. In that case, orient α˝Ñ γ as α Ñ γ.
+22
+
+<<<PAGE 23>>>
+C.2
+Optimizing R4 Using Recursive Blocking
+A major bottleneck among the final orientation rules is Rule R4, which seeks discriminating paths of
+the form
+X˚Ñ ¨ ¨ ¨ Ø W Ð˝ V 1 ˝Ñ Y,
+where each internal collider along the path is a parent of Y . In the standard approach [10], applying
+R4 often requires exploring many potential conditioning sets, which is time-consuming and can lead
+to inaccuracies in dense graphs.
+To mitigate this, we leverage the recursive blocking procedure (Section 5) to focus only on a small,
+targeted collection of conditioning sets. Specifically:
+1. Enumerate discriminating paths. Identify all valid and unoriented discriminating paths
+from X to Y . Because FCIT prunes many extraneous edges beforehand, the number of such
+paths is usually modest.
+2. Collect collider candidates. For each path, record the possible collider nodes (including V 1
+if its endpoint with Y is a circle). These nodes form a small set of “candidate colliders” that
+we either include or exclude in our conditioning sets.
+3. Apply recursive blocking. For each subset Q of these candidate colliders, call the block_-
+paths_recursively subroutine to build a minimal set S that blocks all active paths from X to
+Y —assuming each node in Q is treated as a collider.
+4. Test subsets of common adjacents. Let C be the set of common adjacents of X and Y . For
+each subset C1 Ď C, we form S1 “ SzC1 (or vice versa, depending on how Q is handled)
+and test whether X KK Y | S1. If X KK Y | S1 and V 1 R S1, we orient the relevant structure
+as a new collider (e.g., W Ø V 1 Ð Y ); otherwise, we orient α˝Ñ γ as a noncollider.
+By confining the conditioning sets to those implied by the recursive blocking procedure on legitimate
+discriminating paths, we drastically reduce both the path search space and the number of conditional
+independence tests performed. We give pseudocode for this procedure in Algorithm 6.
+C.3
+Shortest-Path Searches for R5 and R9
+Rules R5 and R9 require checking whether a path composed entirely of circle endpoints exists
+between two nodes. Naively, one might enumerate all such paths, but this is prohibitively expensive
+for larger graphs. Instead, we construct an auxiliary circle-only graph:
+• The node set is the same as in the original PAG.
+• We add an undirected edge X ´ Y in the auxiliary graph if and only if X ˝´˝ Y in the PAG.
+We then run a shortest-path algorithm (e.g., BFS or Dijkstra’s, typically BFS with uniform edge
+weights) from X. If Y is reachable in this auxiliary graph, then at least one all-circle path exists in
+the original PAG. Because most edges with definite tails or arrowheads are excluded, the auxiliary
+graph is often much sparser, allowing us to detect or rule out circle-only paths much more efficiently
+than exhaustive enumeration.
+C.4
+Semidirected Path Checking for R10
+Rule R10 can also be a bottleneck, since it requires detecting semidirected paths in a partially oriented
+graph. Specifically, if
+α˝Ñ γ,
+β Ñ γ Ð θ,
+and semidirected paths p1 : α Ñ˚ β,
+p2 : α Ñ˚ θ
+exist with two distinct neighbors of α that are not adjacent (among other constraints), then we orient
+α˝ Ñ γ as α Ñ γ. Enumerating all such paths can be expensive, as can the method of judging
+whether semidirected paths exist if implemented naively.
+To address this, we implement a lightweight semidirected BFS:
+1. Check local structure. Verify that α˝Ñ γ and β Ñ γ Ð θ appear in the PAG.
+23

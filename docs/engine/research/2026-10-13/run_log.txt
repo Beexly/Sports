@@ -1,0 +1,15 @@
+===== PFR RUN START ===== 
+--- deps --- 
+deps OK 3.0.3
+--- SMOKE (headless) --- 
+[smoke test] engine=playwright  https://www.pro-football-reference.com/years/2025/passing.htm
+  ! BLOCKED (Cloudflare/JS challenge) https://www.pro-football-reference.com/years/2025/passing.htm
+    engine=playwright � try --headed, or run from your normal network
+[done] 0 CSV(s) written to ./pfr_csv
+--- SMOKE (headed fallback) --- 
+[smoke test] engine=playwright  https://www.pro-football-reference.com/years/2025/passing.htm
+  ! BLOCKED (Cloudflare/JS challenge) https://www.pro-football-reference.com/years/2025/passing.htm
+    engine=playwright � try --headed, or run from your normal network
+[done] 0 CSV(s) written to ./pfr_csv
+--- STILL BLOCKED - see errors above --- 
+__ALLDONE__ 

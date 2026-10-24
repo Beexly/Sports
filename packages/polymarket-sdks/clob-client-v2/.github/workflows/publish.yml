@@ -1,0 +1,41 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify package.json version matches release tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          pkg_version="$(node -p "require('./package.json').version")"
+          tag_version="${RELEASE_TAG#v}"
+          if [[ "$pkg_version" != "$tag_version" ]]; then
+            echo "::error::package.json version ($pkg_version) does not match release tag ($tag_version)"
+            exit 1
+          fi
+      - run: pnpm build
+      - run: |
+          if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
+            pnpm publish --no-git-checks --tag canary
+          else
+            pnpm publish --no-git-checks
+          fi

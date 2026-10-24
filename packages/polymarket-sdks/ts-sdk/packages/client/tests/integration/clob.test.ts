@@ -1,0 +1,326 @@
+import { OrderSide, type TokenId } from '@polymarket/bindings';
+import {
+  type PublicClient,
+  RewardMarketSort,
+  UserInputError,
+} from '@polymarket/client';
+import { expectPresent } from '@polymarket/types';
+import { vi } from 'vitest';
+import { describe, expect, it } from './fixtures';
+import { expectPageWindow } from './helpers';
+
+const REWARD_PAGE_WINDOW = 10;
+
+let liquidClobTokenIdPromise: Promise<TokenId> | undefined;
+
+describe('CLOB', () => {
+  describe('fetchCurrentRebates', () => {
+    it('rejects noncalendar dates and a zero maker before sending', async ({
+      publicClient,
+    }) => {
+      await expect(
+        publicClient.fetchCurrentRebates({
+          date: '2023-02-29',
+          makerAddress: `0x${'ab'.repeat(20)}`,
+        }),
+      ).rejects.toBeInstanceOf(UserInputError);
+      await expect(
+        publicClient.fetchCurrentRebates({
+          date: '2024-02-29',
+          makerAddress: `0x${'00'.repeat(20)}`,
+        }),
+      ).rejects.toBeInstanceOf(UserInputError);
+    });
+    it('fetches a direct collection for a maker and calendar day', async ({
+      publicClient,
+    }) => {
+      const fees = await publicClient.fetchCurrentRebates({
+        date: '2026-10-06',
+        makerAddress: `0x${'ab'.repeat(20)}`,
+      });
+      expect(Array.isArray(fees)).toBe(true);
+      for (const fee of fees) {
+        expect(fee.date).toBe('2026-10-06');
+        expect(fee.rebatedFeesUsdc).toEqual(expect.any(String));
+      }
+    });
+  });
+
+  describe('listRewardMarkets', () => {
+    it('validates page sizes and finite bounds before sending', ({
+      publicClient,
+    }) => {
+      expect(() =>
+        publicClient.listRewardMarkets({
+          pageSize: 501,
+        }),
+      ).toThrow(UserInputError);
+      expect(() =>
+        publicClient.listRewardMarkets({ minPrice: Number.NaN }),
+      ).toThrow(UserInputError);
+    });
+    it('continues reward market discovery through SDK pages', async ({
+      publicClient,
+    }) => {
+      const requests = vi.spyOn(globalThis, 'fetch');
+      const paginator = publicClient.listRewardMarkets({
+        minVolume24hr: 1,
+        maxVolume24hr: 1000000000,
+        pageSize: 2,
+        orderBy: RewardMarketSort.Volume24Hr,
+      });
+      let pages = 0;
+      for await (const page of paginator) {
+        expect(page.items).toHaveLength(2);
+        for (const market of page.items) {
+          expect(market.marketId).toEqual(expect.any(String));
+          expect(Array.isArray(market.rewardsConfig)).toBe(true);
+        }
+        if (++pages === 2) break;
+      }
+      expect(pages).toBe(2);
+      const urls = requests.mock.calls
+        .map(
+          ([input]) =>
+            new URL(input instanceof Request ? input.url : String(input)),
+        )
+        .filter((url) => url.pathname === '/rewards/markets/multi');
+      expect(urls).toHaveLength(2);
+      for (const url of urls) {
+        expect(url.searchParams.get('min_volume_24hr')).toBe('1');
+        expect(url.searchParams.get('max_volume_24hr')).toBe('1000000000');
+        expect(url.searchParams.has('min_volume24hr')).toBe(false);
+        expect(url.searchParams.has('max_volume24hr')).toBe(false);
+        expect(url.searchParams.has('exclude_tag_slug')).toBe(false);
+      }
+      requests.mockRestore();
+    });
+  });
+
+  describe('fetchOrderBook', () => {
+    it('fetches the order book for a token', async ({ publicClient }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchOrderBook({
+        tokenId,
+      });
+
+      expect(result.tokenId).toBe(tokenId);
+      expect(Array.isArray(result.bids)).toBe(true);
+      expect(Array.isArray(result.asks)).toBe(true);
+      expect(result.tickSize).toEqual(expect.any(Number));
+      expect(result.minOrderSize).toEqual(expect.any(String));
+      expect(result.negRisk).toEqual(expect.any(Boolean));
+      expect(result.hash).toEqual(expect.any(String));
+    });
+  });
+
+  describe('fetchOrderBooks', () => {
+    it('fetches order books for multiple tokens', async ({ publicClient }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchOrderBooks([{ tokenId }]);
+
+      expect(result[0]).toEqual(
+        expect.objectContaining({
+          tokenId,
+          asks: expect.any(Array),
+          bids: expect.any(Array),
+        }),
+      );
+    });
+  });
+
+  describe('fetchMidpoint', () => {
+    it('fetches the midpoint price for a token', async ({ publicClient }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchMidpoint({
+        tokenId,
+      });
+
+      expect(result).toEqual(expect.any(String));
+    });
+  });
+
+  describe('fetchMidpoints', () => {
+    it('fetches midpoint prices for multiple tokens', async ({
+      publicClient,
+    }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchMidpoints([{ tokenId }]);
+
+      expect(Object.keys(result)).toContain(tokenId);
+      expect(result[tokenId]).toEqual(expect.any(String));
+    });
+  });
+
+  describe('fetchPrice', () => {
+    it('fetches the quoted price for a token and side', async ({
+      publicClient,
+    }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchPrice({
+        tokenId,
+        side: OrderSide.BUY,
+      });
+
+      expect(result).toEqual(expect.any(String));
+    });
+  });
+
+  describe('fetchPrices', () => {
+    it('fetches quoted prices for multiple tokens', async ({
+      publicClient,
+    }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchPrices([
+        {
+          tokenId,
+          side: OrderSide.BUY,
+        },
+      ]);
+
+      expect(Object.keys(result)).toContain(tokenId);
+      expect(result[tokenId]?.BUY).toEqual(expect.any(String));
+      expect(result[tokenId]?.SELL).toBeUndefined();
+    });
+  });
+
+  describe('fetchSpread', () => {
+    it('fetches the spread for a token', async ({ publicClient }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchSpread({
+        tokenId,
+      });
+
+      expect(result).toEqual(expect.any(String));
+    });
+  });
+
+  describe('fetchSpreads', () => {
+    it('fetches spreads for multiple tokens', async ({ publicClient }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchSpreads([{ tokenId }]);
+
+      expect(Object.keys(result)).toContain(tokenId);
+      expect(result[tokenId]).toEqual(expect.any(String));
+    });
+  });
+
+  describe('fetchLastTradePrice', () => {
+    it('fetches the last traded price for a token', async ({
+      publicClient,
+    }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchLastTradePrice({
+        tokenId,
+      });
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          price: expect.any(String),
+          side: expect.any(String),
+        }),
+      );
+    });
+  });
+
+  describe('fetchLastTradePrices', () => {
+    it('fetches last traded prices for multiple tokens', async ({
+      publicClient,
+    }) => {
+      const tokenId = await selectLiquidClobTokenId(publicClient);
+
+      const result = await publicClient.fetchLastTradePrices([{ tokenId }]);
+
+      expect(result[0]).toEqual(
+        expect.objectContaining({
+          price: expect.any(String),
+          side: expect.any(String),
+          tokenId,
+        }),
+      );
+    });
+  });
+
+  describe('listCurrentRewards', () => {
+    it('lists current active market rewards', async ({ publicClient }) => {
+      const paginator = publicClient.listCurrentRewards();
+      const firstPage = await paginator.firstPage();
+
+      await expectPageWindow(paginator, firstPage, REWARD_PAGE_WINDOW - 1);
+    });
+  });
+
+  describe('listMarketRewards', () => {
+    it('fetches reward configurations for a market', async ({
+      publicClient,
+    }) => {
+      const currentRewards = await publicClient
+        .listCurrentRewards()
+        .firstPage();
+
+      const currentReward = currentRewards.items[0];
+
+      if (currentReward === undefined) {
+        return;
+      }
+
+      const result = await publicClient
+        .listMarketRewards({
+          conditionId: currentReward.conditionId,
+        })
+        .firstPage();
+
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(result.items[0]).toEqual(
+        expect.objectContaining({
+          conditionId: currentReward.conditionId,
+          question: expect.any(String),
+          tokens: expect.any(Array),
+        }),
+      );
+
+      await expectPageWindow(
+        publicClient.listMarketRewards({
+          conditionId: currentReward.conditionId,
+        }),
+        result,
+        REWARD_PAGE_WINDOW - 1,
+      );
+    });
+  });
+});
+
+async function selectLiquidClobTokenId(
+  publicClient: PublicClient,
+): Promise<TokenId> {
+  liquidClobTokenIdPromise ??= findLiquidClobTokenId(publicClient);
+
+  return liquidClobTokenIdPromise;
+}
+
+async function findLiquidClobTokenId(publicClient: PublicClient) {
+  const markets = await publicClient
+    .listMarkets({
+      closed: false,
+      pageSize: 100,
+      order: 'volume24hr',
+      ascending: false,
+    })
+    .firstPage()
+    .then((page) => page.items);
+
+  for (const market of markets) {
+    return expectPresent(market.outcomes.yes.tokenId);
+  }
+
+  throw new Error('Expected at least one live market with a CLOB token id');
+}

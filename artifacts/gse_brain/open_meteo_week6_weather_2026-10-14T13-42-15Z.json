@@ -1,0 +1,427 @@
+{
+ "generated_utc": "2026-10-14T13:42:15.455693+00:00",
+ "source": "open_meteo_stadium_weather_and_historical",
+ "week6_games_count": 14,
+ "outdoor_games_count": 11,
+ "indoor_games_count": 3,
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty": {
+  "http_status": 200,
+  "forecast_url": "https://api.open-meteo.com/v1/forecast",
+  "archive_url": "https://archive-api.open-meteo.com/v1/archive",
+  "geocoding_url": "https://geocoding-api.open-meteo.com/v1/search",
+  "truncation": false,
+  "access_restriction": "Fully keyless public Open-Meteo API (non-commercial free tier, no account required).",
+  "derivation": "City-level geocoding per Week-6 NFL stadium -> 7-day hourly forecast matched to exact kickoff UTC hour + dry-air density rho = P/(287.05*(T+273.15)) + historical archive endpoint verified for training weather effects. Indoor/dome games explicitly flagged.",
+  "joins_on": [
+   "game_id (2026_06_<AWAY>_<HOME>)",
+   "espn_event_id",
+   "venue"
+  ],
+  "weight": 0.0,
+  "validation_spec_met": false,
+  "weight_statement": "Weight remains 0 until VISION-CONTRACT falsifier and environmental overlay calibration validation spec are met."
+ },
+ "week6_kickoff_forecasts": [
+  {
+   "espn_event_id": "401872995",
+   "game_id": "2026_06_SEA_DEN",
+   "matchup": "SEA @ DEN",
+   "kickoff_utc": "2026-10-16T00:15Z",
+   "matched_forecast_hour_utc": "2026-10-16T00:00",
+   "venue": "Empower Field at Mile High",
+   "indoor": false,
+   "city": "Denver",
+   "state": "CO",
+   "geo": {
+    "lat": 39.73915,
+    "lon": -104.9847,
+    "elevation_m": 1609.0
+   },
+   "kickoff_weather": {
+    "temp_c": 6.9,
+    "rh_pct": 80,
+    "surface_pressure_hpa": 854.4,
+    "wind_kmh": 7.6,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.0628
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401872996",
+   "game_id": "2026_06_HOU_JAX",
+   "matchup": "HOU VS JAX",
+   "kickoff_utc": "2026-10-18T13:30Z",
+   "matched_forecast_hour_utc": "2026-10-18T13:00",
+   "venue": "Wembley Stadium",
+   "indoor": false,
+   "city": "London",
+   "state": "",
+   "geo": {
+    "lat": 51.50853,
+    "lon": -0.12574,
+    "elevation_m": 25.0
+   },
+   "kickoff_weather": {
+    "temp_c": 13.3,
+    "rh_pct": 65,
+    "surface_pressure_hpa": 1025.8,
+    "wind_kmh": 15.1,
+    "precip_prob_pct": 10,
+    "air_density_kg_m3": 1.2475
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401872999",
+   "game_id": "2026_06_CHI_ATL",
+   "matchup": "CHI @ ATL",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "Mercedes-Benz Stadium",
+   "indoor": true,
+   "city": "Atlanta",
+   "state": "GA",
+   "geo": {
+    "lat": 45.00473,
+    "lon": -84.14389,
+    "elevation_m": 272.0
+   },
+   "kickoff_weather": {
+    "temp_c": 16.3,
+    "rh_pct": 44,
+    "surface_pressure_hpa": 988.6,
+    "wind_kmh": 22.8,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.1898
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401872997",
+   "game_id": "2026_06_BAL_CLE",
+   "matchup": "BAL @ CLE",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "Huntington Bank Field",
+   "indoor": false,
+   "city": "Cleveland",
+   "state": "OH",
+   "geo": {
+    "lat": 41.4995,
+    "lon": -81.69541,
+    "elevation_m": 199.0
+   },
+   "kickoff_weather": {
+    "temp_c": 14.9,
+    "rh_pct": 39,
+    "surface_pressure_hpa": 1005.4,
+    "wind_kmh": 18.2,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.2159
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873003",
+   "game_id": "2026_06_TEN_IND",
+   "matchup": "TEN @ IND",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "Lucas Oil Stadium",
+   "indoor": true,
+   "city": "Indianapolis",
+   "state": "IN",
+   "geo": {
+    "lat": 39.76838,
+    "lon": -86.15804,
+    "elevation_m": 218.0
+   },
+   "kickoff_weather": {
+    "temp_c": 16.0,
+    "rh_pct": 34,
+    "surface_pressure_hpa": 1003.1,
+    "wind_kmh": 11.9,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.2085
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873001",
+   "game_id": "2026_06_NYJ_NE",
+   "matchup": "NYJ @ NE",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "Gillette Stadium",
+   "indoor": false,
+   "city": "Foxborough",
+   "state": "MA",
+   "geo": {
+    "lat": 42.06538,
+    "lon": -71.24783,
+    "elevation_m": 88.0
+   },
+   "kickoff_weather": {
+    "temp_c": 14.0,
+    "rh_pct": 44,
+    "surface_pressure_hpa": 1017.9,
+    "wind_kmh": 15.6,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.2349
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873000",
+   "game_id": "2026_06_NO_NYG",
+   "matchup": "NO @ NYG",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "MetLife Stadium",
+   "indoor": false,
+   "city": "East Rutherford",
+   "state": "NJ",
+   "geo": {
+    "lat": 40.83399,
+    "lon": -74.09709,
+    "elevation_m": 24.0
+   },
+   "kickoff_weather": {
+    "temp_c": 15.2,
+    "rh_pct": 33,
+    "surface_pressure_hpa": 1028.1,
+    "wind_kmh": 11.9,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.2421
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401872998",
+   "game_id": "2026_06_CAR_PHI",
+   "matchup": "CAR @ PHI",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "Lincoln Financial Field",
+   "indoor": false,
+   "city": "Philadelphia",
+   "state": "PA",
+   "geo": {
+    "lat": -22.33936,
+    "lon": -60.03157,
+    "elevation_m": 140.0
+   },
+   "kickoff_weather": {
+    "temp_c": 26.0,
+    "rh_pct": 41,
+    "surface_pressure_hpa": 999.4,
+    "wind_kmh": 11.6,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.1638
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873002",
+   "game_id": "2026_06_PIT_TB",
+   "matchup": "PIT @ TB",
+   "kickoff_utc": "2026-10-18T17:00Z",
+   "matched_forecast_hour_utc": "2026-10-18T17:00",
+   "venue": "Raymond James Stadium",
+   "indoor": false,
+   "city": "Tampa",
+   "state": "FL",
+   "geo": {
+    "lat": 27.94752,
+    "lon": -82.45843,
+    "elevation_m": 1.0
+   },
+   "kickoff_weather": {
+    "temp_c": 26.7,
+    "rh_pct": 63,
+    "surface_pressure_hpa": 1019.5,
+    "wind_kmh": 33.7,
+    "precip_prob_pct": 7,
+    "air_density_kg_m3": 1.1845
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873004",
+   "game_id": "2026_06_ARI_LAR",
+   "matchup": "ARI @ LAR",
+   "kickoff_utc": "2026-10-18T20:05Z",
+   "matched_forecast_hour_utc": "2026-10-18T20:00",
+   "venue": "SoFi Stadium",
+   "indoor": false,
+   "city": "Inglewood",
+   "state": "CA",
+   "geo": {
+    "lat": 33.96168,
+    "lon": -118.35313,
+    "elevation_m": 40.0
+   },
+   "kickoff_weather": {
+    "temp_c": 28.5,
+    "rh_pct": 27,
+    "surface_pressure_hpa": 1008.7,
+    "wind_kmh": 11.6,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.1649
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873006",
+   "game_id": "2026_06_LAC_KC",
+   "matchup": "LAC @ KC",
+   "kickoff_utc": "2026-10-18T20:25Z",
+   "matched_forecast_hour_utc": "2026-10-18T20:00",
+   "venue": "Arrowhead Stadium",
+   "indoor": false,
+   "city": "Kansas City",
+   "state": "MO",
+   "geo": {
+    "lat": 39.09973,
+    "lon": -94.57857,
+    "elevation_m": 274.0
+   },
+   "kickoff_weather": {
+    "temp_c": 18.8,
+    "rh_pct": 39,
+    "surface_pressure_hpa": 987.7,
+    "wind_kmh": 22.4,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.1786
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873005",
+   "game_id": "2026_06_BUF_LV",
+   "matchup": "BUF @ LV",
+   "kickoff_utc": "2026-10-18T20:25Z",
+   "matched_forecast_hour_utc": "2026-10-18T20:00",
+   "venue": "Allegiant Stadium",
+   "indoor": true,
+   "city": "Las Vegas",
+   "state": "NV",
+   "geo": {
+    "lat": 36.17497,
+    "lon": -115.13722,
+    "elevation_m": 610.0
+   },
+   "kickoff_weather": {
+    "temp_c": 25.8,
+    "rh_pct": 19,
+    "surface_pressure_hpa": 945.8,
+    "wind_kmh": 4.7,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.1022
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873007",
+   "game_id": "2026_06_DAL_GB",
+   "matchup": "DAL @ GB",
+   "kickoff_utc": "2026-10-19T00:20Z",
+   "matched_forecast_hour_utc": "2026-10-19T00:00",
+   "venue": "Lambeau Field",
+   "indoor": false,
+   "city": "Green Bay",
+   "state": "WI",
+   "geo": {
+    "lat": 44.51916,
+    "lon": -88.01983,
+    "elevation_m": 180.0
+   },
+   "kickoff_weather": {
+    "temp_c": 13.6,
+    "rh_pct": 61,
+    "surface_pressure_hpa": 996.2,
+    "wind_kmh": 28.1,
+    "precip_prob_pct": 0,
+    "air_density_kg_m3": 1.2103
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  },
+  {
+   "espn_event_id": "401873008",
+   "game_id": "2026_06_WSH_SF",
+   "matchup": "WSH @ SF",
+   "kickoff_utc": "2026-10-20T00:15Z",
+   "matched_forecast_hour_utc": "2026-10-20T00:00",
+   "venue": "Levi's Stadium",
+   "indoor": false,
+   "city": "Santa Clara",
+   "state": "CA",
+   "geo": {
+    "lat": 37.35411,
+    "lon": -121.95524,
+    "elevation_m": 23.0
+   },
+   "kickoff_weather": {
+    "temp_c": 20.1,
+    "rh_pct": 35,
+    "surface_pressure_hpa": 1011.6,
+    "wind_kmh": 14.5,
+    "precip_prob_pct": 3,
+    "air_density_kg_m3": 1.2017
+   },
+   "weight": 0.0,
+   "validation_spec_met": false
+  }
+ ],
+ "historical_archive_verification": [
+  {
+   "venue": "Empower Field at Mile High (Denver)",
+   "date": "2025-10-19",
+   "hour_utc": "2025-10-19T18:00",
+   "temp_c": 17.9,
+   "surface_pressure_hpa": 841.9,
+   "wind_kmh": 2.4,
+   "precip_mm": 0.0,
+   "air_density_kg_m3": 1.0077,
+   "weight": 0.0
+  },
+  {
+   "venue": "Lambeau Field (Green Bay)",
+   "date": "2025-11-23",
+   "hour_utc": "2025-11-23T18:00",
+   "temp_c": 7.3,
+   "surface_pressure_hpa": 996.2,
+   "wind_kmh": 12.9,
+   "precip_mm": 0.0,
+   "air_density_kg_m3": 1.2375,
+   "weight": 0.0
+  },
+  {
+   "venue": "Highmark Stadium (Orchard Park)",
+   "date": "2025-12-07",
+   "hour_utc": "2025-12-07T18:00",
+   "temp_c": -0.6,
+   "surface_pressure_hpa": 988.6,
+   "wind_kmh": 19.4,
+   "precip_mm": 0.8,
+   "air_density_kg_m3": 1.2636,
+   "weight": 0.0
+  }
+ ]
+}

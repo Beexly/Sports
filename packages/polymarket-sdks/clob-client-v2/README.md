@@ -1,0 +1,150 @@
+> [!WARNING]
+> **This package is deprecated.** Please migrate to the unified Polymarket SDK. Follow the [migration guide](https://docs.polymarket.com/migrate/clob-sdk-to-unified-sdk) to get started.
+
+# Polymarket CLOB Client V2
+
+<a href='https://www.npmjs.com/package/@polymarket/clob-client-v2'>
+    <img src='https://img.shields.io/npm/v/@polymarket/clob-client-v2.svg' alt='NPM'/>
+</a>
+
+TypeScript client for the Polymarket CLOB (v2)
+
+### Usage
+
+```ts
+// npm install @polymarket/clob-client-v2
+// npm install viem
+
+import { ApiKeyCreds, Chain, ClobClient, OrderType, Side } from "@polymarket/clob-client-v2";
+import { createWalletClient, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+
+const host = "<polymarket-clob-host>";
+const chainId = Chain.POLYGON; // or Chain.AMOY for testnet
+
+const account = privateKeyToAccount("0x..."); // your private key
+const walletClient = createWalletClient({ account, transport: http() });
+
+// Step 1: obtain API credentials using your wallet (L1 auth)
+const clobClient = new ClobClient({ host, chain: chainId, signer: walletClient });
+const creds = await clobClient.createOrDeriveApiKey();
+
+// Step 2: initialize a fully-authenticated client (L1 + L2)
+const client = new ClobClient({ host, chain: chainId, signer: walletClient, creds });
+
+// Place a resting limit buy (GTC)
+const resp = await client.createAndPostOrder(
+    {
+        tokenID: "", // token ID of the market outcome — get from https://docs.polymarket.com
+        price: 0.4,
+        side: Side.BUY,
+        size: 100,
+    },
+    { tickSize: "0.01" },
+    OrderType.GTC,
+);
+console.log(resp);
+```
+
+For a position-backed outcome, provide `positionID` instead. The client uses
+the identifier field to select Exchange V3 signing automatically:
+
+```ts
+const resp = await client.createAndPostOrder(
+    {
+        positionID: "", // position ID of the market outcome
+        price: 0.4,
+        side: Side.BUY,
+        size: 100,
+    },
+    { tickSize: "0.01" },
+    OrderType.GTC,
+);
+```
+
+See [examples](examples/) for more information.
+
+### Market Orders
+
+```ts
+// Market buy — amount is in USDC
+// OrderType.FOK: entire order must fill immediately or it is cancelled
+// OrderType.FAK: fills as much as possible, remainder is cancelled
+const resp = await client.createAndPostMarketOrder(
+    {
+        tokenID: "",
+        amount: 100, // USDC
+        side: Side.BUY,
+        orderType: OrderType.FOK,
+    },
+    { tickSize: "0.01" },
+    OrderType.FOK,
+);
+console.log(resp);
+```
+
+### Warm up order cache metadata
+
+The first order on a new client fetches the order version and the market's tick size,
+neg-risk flag, and fee details before it can be signed. Both are public GET requests and
+need no signer or credentials. To take them off the first trade, run them ahead of time
+on the same client instance that will submit orders:
+
+```ts
+await Promise.all([
+    client.getVersion(), // adopted as the order version for this client
+    client.getClobMarketInfo(conditionID), // caches tick size, neg risk, and fees for both outcomes
+]);
+```
+
+Each call asks the server and refreshes the caches, so repeating it costs one request. If
+the version request fails, `getVersion` adopts the default version 2 and the first order
+corrects it through the mismatch recovery built into order posting. With `throwOnError`
+both calls throw `ApiError` instead, so treat a rejected warm-up as a background failure.
+A new client instance starts with empty caches. Order creation and `getVersion` reuse a
+version or market request that is still in flight instead of starting another one. Orders
+never require these calls. An order placed before `getClobMarketInfo` resolves still
+performs its own token-to-market lookup. Books, balances, allowances, credentials, and
+builder fee rates are not cached by these calls.
+
+### Authentication
+
+The client has two authentication levels:
+
+**L1** — wallet signature (EIP-712). Required to create or derive API keys.
+
+```ts
+const client = new ClobClient({ host, chain: chainId, signer: walletClient });
+const creds = await client.createOrDeriveApiKey();
+```
+
+**L2** — HMAC with API credentials. Required for order placement, cancellation, and account data.
+
+```ts
+const creds: ApiKeyCreds = {
+    key: process.env.CLOB_API_KEY,
+    secret: process.env.CLOB_SECRET,
+    passphrase: process.env.CLOB_PASS_PHRASE,
+};
+const client = new ClobClient({ host, chain: chainId, signer: walletClient, creds });
+```
+
+### Error Handling
+
+By default, API errors are returned as `{ error: "...", status: ... }` objects. To have the client throw instead, pass `throwOnError: true`:
+
+```ts
+import { ApiError, ClobClient } from "@polymarket/clob-client-v2";
+
+const client = new ClobClient({ host, chain: chainId, signer: walletClient, creds, throwOnError: true });
+
+try {
+    const book = await client.getOrderBook(tokenID);
+} catch (e) {
+    if (e instanceof ApiError) {
+        console.log(e.message); // "No orderbook exists for the requested token id"
+        console.log(e.status);  // 404
+        console.log(e.data);    // full error response object
+    }
+}
+```

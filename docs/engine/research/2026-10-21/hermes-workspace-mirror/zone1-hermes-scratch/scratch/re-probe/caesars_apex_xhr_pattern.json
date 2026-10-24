@@ -1,0 +1,62 @@
+{
+  "captured_at": "2026-10-10 16:29-16:37 CDT",
+  "page": "https://sportsbook.caesars.com/odds/ncaaf -> SPA route https://sportsbook.caesars.com/americanfootball?id=b7eda1b3-0170-4510-9616-1bce561d7aa7",
+  "api_host": "https://api.americanwagering.com (Cezar's/William Hill 'American Wagering' platform; fronted by CloudFront+istio-envoy)",
+  "base_path": "/regions/us/locations/{state}/brands/czr  (state=co observed; site config sportsbook.caesars.com/us/config/czr/<state>.json)",
+  "required_headers": {
+    "x-platform": "cordova-desktop",
+    "x-app-version": "7.57.0",
+    "x-unique-device-id": "<uuid>",
+    "origin/referer": "https://sportsbook.caesars.com",
+    "x-aws-waf-token": "<AWS WAF browser token; present on requests that got 200>"
+  },
+  "observed_one_shot_requests_timing_ms_after_nav": [
+    {
+      "ms": 24146,
+      "GET": "/sb/bets/configuration"
+    },
+    {
+      "ms": 24194,
+      "GET": "/sb/v4/home"
+    },
+    {
+      "ms": 24557,
+      "GET": "/sb/v4/navigation-items"
+    },
+    {
+      "ms": 35817,
+      "GET": "/gw/growth/v4/sports/americanfootball/banners"
+    },
+    {
+      "ms": 35834,
+      "GET": "/sb/v4/sports/americanfootball/competitions/<id>/quick-picks"
+    },
+    {
+      "ms": 35841,
+      "GET": "/sb/v4/sports/americanfootball/competitions/<id>/tabs"
+    },
+    {
+      "ms": 37865,
+      "GET": "/sb/v3/sports-menu"
+    },
+    {
+      "ms": 37868,
+      "GET": "/sb/v3/teamMetadata"
+    }
+  ],
+  "pattern_verdict": "ONE-SHOT-PER-LOAD: 16 total api.americanwagering.com requests over the whole page lifetime (~3 min observed), each endpoint fired exactly once (banners retried once), zero repeats/polling afterwards. Data is fetched by GET-per-route, not streamed/polled.",
+  "bundle_derived_endpoints": [
+    "GET /sb/v4/home  (V4DtosHomePageSchema)",
+    "GET /sb/v4/sports/{sportId}/competitions/{competitionId}/tabs[/tabs/{tab}/secondary/{tab2}]  (V4DtosSportPageDtoSchema - carries the whole odds board)",
+    "GET /sb/v4/sports/{sportId}/quick-picks | .../competitions/{id}/quick-picks",
+    "GET /sb/v4/events/{eventId}/tabs/...  (V4DtosEventDetailPageDtoSchema)",
+    "GET /sb/v4/events/{eventId}/markets/{marketId}/moving-lines",
+    "GET /sb/v4/navigation-items (v3 fallback /sb/v3/navigation-items)",
+    "GET /sb/v4/live/tabs",
+    "GET /sb/v4/parlay-hub/quick-picks",
+    "GET /sb/v3/events/{eventId}/quick-picks",
+    "GET /sb/v3/sports-menu, /sb/v3/teamMetadata, /sb/bets/configuration"
+  ],
+  "waf_note": "v4 odds endpoints returned 403 (CloudFront/AWS WAF 'The request could not be satisfied') from both the browser session and curl in most attempts; one curl burst returned 200 with 644,729 bytes for /sb/v4/home and 200/7022 for /sb/v3/navigation-items, and /sb/v3/sports-menu 200 via CloudFront cache hit. So the API is reachable but rate/edge gated.",
+  "apex_note": "No 'apex'/'APEX' identifier exists anywhere in sportsbook.caesars.com HTML, /us/config/czr/*.json, or the 9.8MB main bundle (only a false-positive inside a base64 blob). The Caesars odds API is the americanwagering.com sb v3/v4 API."
+}

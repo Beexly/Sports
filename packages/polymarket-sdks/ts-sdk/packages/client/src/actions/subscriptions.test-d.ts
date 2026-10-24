@@ -1,0 +1,544 @@
+import { type PositionId, type TokenId, toTokenId } from '@polymarket/bindings';
+import type * as BindingExports from '@polymarket/bindings/subscriptions';
+import type {
+  CryptoPriceEvent,
+  CryptoPricesChainlinkTwapSixtyEvent,
+  CryptoPricesChainlinkTwapThirtyEvent,
+  CryptoTwapPriceEvent,
+  CustomMarketEvent,
+  EquityPriceEvent,
+  EquityTwapPriceEvent,
+  EquityTwapPriceSnapshotEvent,
+  MarketEvent,
+  SportsEvent,
+  StandardMarketEvent,
+  UserEvent,
+} from '@polymarket/bindings/subscriptions';
+import { UserOrderStatus } from '@polymarket/bindings/subscriptions';
+import { describe, expectTypeOf, it } from 'vitest';
+import type {
+  ConnectionLostError,
+  RequestRejectedError,
+  TransportError,
+  UserInputError,
+} from '../errors';
+import type * as ClientExports from '../index';
+import {
+  createPublicClient,
+  type EquityTwapPriceSubscription,
+  KnownPriceSource,
+  PerpsKlineInterval,
+  PriceProvider,
+  type PriceSource,
+  type PriceSubscriptionConfirmation,
+  type RealtimeErrorCode,
+  RealtimeKnownErrorCode,
+  type CryptoTwapPriceEvent as RootCryptoTwapPriceEvent,
+  type CryptoTwapPriceSubscription as RootCryptoTwapPriceSubscription,
+  type EquityTwapPriceEvent as RootEquityTwapPriceEvent,
+  type EquityTwapPriceSnapshotEvent as RootEquityTwapPriceSnapshotEvent,
+  type SecureClient,
+} from '../index';
+
+import type {
+  EventForSubscriptionSpecs,
+  MarketSubscription,
+  PublicSubscriptionSpec,
+  SubscribeError,
+  SubscriptionHandle,
+} from './subscriptions';
+
+declare const secureClient: SecureClient;
+
+const ASSET_ID = toTokenId('123');
+
+describe('SecureClient.subscribe user order statuses', () => {
+  it('exposes cancellation reasons as template literals on delivered orders', async () => {
+    const handle = await secureClient.subscribe([{ topic: 'user' }]);
+    for await (const event of handle) {
+      expectTypeOf(event).toEqualTypeOf<UserEvent>();
+      if (event.type === 'order') {
+        expectTypeOf(event.payload.status).toEqualTypeOf<
+          UserOrderStatus | `CANCELED_${string}` | null | undefined
+        >();
+        expectTypeOf<'CANCELED_MARKET_RESOLVED'>().toExtend<
+          typeof event.payload.status
+        >();
+        expectTypeOf(UserOrderStatus.Invalid).toExtend<
+          typeof event.payload.status
+        >();
+        expectTypeOf<'NOT_A_STATUS'>().not.toExtend<
+          typeof event.payload.status
+        >();
+      }
+    }
+  });
+});
+
+describe('price subscription contracts', () => {
+  it('exports provider selection only for the four vendor-neutral price topics', () => {
+    expectTypeOf<PriceProvider>().toEqualTypeOf<BindingExports.PriceProvider>();
+    expectTypeOf<BindingExports.PolyboltAck>()
+      .toHaveProperty('provider')
+      .toEqualTypeOf<PriceSource | undefined>();
+    expectTypeOf<PriceProvider>().toEqualTypeOf<
+      PriceProvider.Pyth | PriceProvider.Chainlink
+    >();
+    expectTypeOf<KnownPriceSource.Massive>().not.toExtend<PriceProvider>();
+    expectTypeOf<ClientExports.CryptoPriceSubscription>()
+      .toHaveProperty('provider')
+      .toEqualTypeOf<PriceProvider | undefined>();
+    expectTypeOf<ClientExports.CryptoTwapPriceSubscription>()
+      .toHaveProperty('provider')
+      .toEqualTypeOf<PriceProvider | undefined>();
+    expectTypeOf<ClientExports.EquityPriceSubscription>()
+      .toHaveProperty('provider')
+      .toEqualTypeOf<PriceProvider | undefined>();
+    expectTypeOf<ClientExports.EquityTwapPriceSubscription>()
+      .toHaveProperty('provider')
+      .toEqualTypeOf<PriceProvider | undefined>();
+    expectTypeOf<ClientExports.CryptoPricesSubscription>().not.toHaveProperty(
+      'provider',
+    );
+    expectTypeOf<ClientExports.CryptoPricesChainlinkTwapSubscription>().not.toHaveProperty(
+      'provider',
+    );
+    expectTypeOf<ClientExports.EquityPricesSubscription>().not.toHaveProperty(
+      'provider',
+    );
+    expectTypeOf<MarketSubscription>().not.toHaveProperty('provider');
+    expectTypeOf<PriceSubscriptionConfirmation>().toEqualTypeOf<{
+      symbol: string;
+      provider?: PriceSource;
+    }>();
+    expectTypeOf<ClientExports.EquityPriceSubscription>()
+      .toHaveProperty('onSubscribed')
+      .toEqualTypeOf<
+        | ((
+            confirmation: PriceSubscriptionConfirmation,
+          ) => void | Promise<void>)
+        | undefined
+      >();
+    void secureClient.subscribe([
+      {
+        topic: 'prices.crypto',
+        symbols: ['btcusd'],
+        onSubscribed(confirmation) {
+          expectTypeOf(
+            confirmation,
+          ).toEqualTypeOf<PriceSubscriptionConfirmation>();
+        },
+      },
+    ]);
+  });
+
+  it('exports known price sources while accepting future source names', () => {
+    expectTypeOf<KnownPriceSource>().toEqualTypeOf<BindingExports.KnownPriceSource>();
+    expectTypeOf<PriceSource>().toEqualTypeOf<BindingExports.PriceSource>();
+    expectTypeOf(KnownPriceSource.Pyth).toExtend<PriceSource>();
+    expectTypeOf(KnownPriceSource.Chainlink).toExtend<PriceSource>();
+    expectTypeOf(KnownPriceSource.Massive).toExtend<PriceSource>();
+    expectTypeOf<'future_price_source'>().toExtend<PriceSource>();
+    expectTypeOf<number>().not.toExtend<PriceSource>();
+    expectTypeOf<
+      | CryptoPriceEvent
+      | CryptoTwapPriceEvent
+      | EquityPriceEvent
+      | EquityTwapPriceEvent
+    >().toExtend<{ payload: { source: PriceSource } }>();
+  });
+
+  it('exports known realtime error codes while accepting future codes', () => {
+    expectTypeOf(
+      RealtimeKnownErrorCode.BadFilter,
+    ).toExtend<RealtimeErrorCode>();
+    expectTypeOf<'future_error_code'>().toExtend<RealtimeErrorCode>();
+    expectTypeOf<BindingExports.PolyboltAck>()
+      .toHaveProperty('code')
+      .toEqualTypeOf<RealtimeErrorCode | undefined>();
+  });
+
+  it('infers each price topic and only the requested mixed topics through the client', async () => {
+    expectTypeOf<RootCryptoTwapPriceSubscription>().toEqualTypeOf<{
+      topic: 'prices.crypto.twap';
+      symbols: readonly string[];
+      provider?: PriceProvider;
+      onSubscribed?: (
+        confirmation: PriceSubscriptionConfirmation,
+      ) => void | Promise<void>;
+    }>();
+    expectTypeOf<RootCryptoTwapPriceEvent>().toEqualTypeOf<CryptoTwapPriceEvent>();
+    const crypto = secureClient.subscribe([
+      {
+        topic: 'prices.crypto',
+        symbols: ['btcusd'],
+        provider: PriceProvider.Pyth,
+      },
+    ]);
+    expectTypeOf(crypto).resolves.toEqualTypeOf<
+      SubscriptionHandle<CryptoPriceEvent>
+    >();
+    const twap = secureClient.subscribe([
+      {
+        topic: 'prices.crypto.twap',
+        symbols: ['btcusd'],
+        provider: PriceProvider.Chainlink,
+      },
+    ]);
+    expectTypeOf(twap).resolves.toEqualTypeOf<
+      SubscriptionHandle<CryptoTwapPriceEvent>
+    >();
+    const equity = secureClient.subscribe([
+      { topic: 'prices.equity', symbol: 'aapl', provider: PriceProvider.Pyth },
+    ]);
+    expectTypeOf(equity).resolves.toEqualTypeOf<
+      SubscriptionHandle<EquityPriceEvent>
+    >();
+    const equityTwap = secureClient.subscribe([
+      {
+        topic: 'prices.equity.twap',
+        symbol: 'USDJPY',
+        provider: PriceProvider.Chainlink,
+      },
+    ]);
+    expectTypeOf(equityTwap).resolves.toEqualTypeOf<
+      SubscriptionHandle<EquityTwapPriceEvent>
+    >();
+    const mixed = secureClient.subscribe([
+      { topic: 'prices.crypto.twap', symbols: ['btcusd'] },
+      { topic: 'prices.equity', symbol: 'aapl' },
+      { topic: 'prices.equity.twap', symbol: 'USDJPY' },
+    ]);
+    expectTypeOf(mixed).resolves.toEqualTypeOf<
+      SubscriptionHandle<
+        CryptoTwapPriceEvent | EquityPriceEvent | EquityTwapPriceEvent
+      >
+    >();
+
+    for await (const event of await twap) {
+      if (event.type === 'subscribe') {
+        expectTypeOf(event).toEqualTypeOf<
+          Extract<CryptoTwapPriceEvent, { type: 'subscribe' }>
+        >();
+      } else {
+        expectTypeOf(event).toEqualTypeOf<
+          Extract<CryptoTwapPriceEvent, { type: 'update' }>
+        >();
+      }
+    }
+    for await (const event of await equity) {
+      if (event.type === 'subscribe') {
+        expectTypeOf(event).toEqualTypeOf<
+          Extract<EquityPriceEvent, { type: 'subscribe' }>
+        >();
+      } else {
+        expectTypeOf(event).toEqualTypeOf<
+          Extract<EquityPriceEvent, { type: 'update' }>
+        >();
+      }
+    }
+    for await (const event of await equityTwap) {
+      expectTypeOf(event.payload.windowSeconds).toEqualTypeOf<60>();
+      if (event.type === 'subscribe') {
+        expectTypeOf(event).toEqualTypeOf<EquityTwapPriceSnapshotEvent>();
+      } else {
+        expectTypeOf(event).toEqualTypeOf<
+          Extract<EquityTwapPriceEvent, { type: 'update' }>
+        >();
+      }
+    }
+  });
+
+  it('exports equity TWAP types only for secure subscriptions', () => {
+    expectTypeOf<EquityTwapPriceSubscription>().toEqualTypeOf<{
+      topic: 'prices.equity.twap';
+      symbol: string;
+      provider?: PriceProvider;
+      onSubscribed?: (
+        confirmation: PriceSubscriptionConfirmation,
+      ) => void | Promise<void>;
+    }>();
+    expectTypeOf<RootEquityTwapPriceEvent>().toEqualTypeOf<EquityTwapPriceEvent>();
+    expectTypeOf<RootEquityTwapPriceSnapshotEvent>().toEqualTypeOf<EquityTwapPriceSnapshotEvent>();
+    expectTypeOf<
+      Extract<PublicSubscriptionSpec, { topic: 'prices.equity.twap' }>
+    >().toEqualTypeOf<never>();
+  });
+
+  it('requires authentication and explicit symbols while preserving deprecated topics', () => {
+    const publicClient = createPublicClient();
+    // @ts-expect-error Crypto prices require a secure client.
+    publicClient.subscribe([{ topic: 'prices.crypto', symbols: ['btcusd'] }]);
+    publicClient.subscribe([
+      // @ts-expect-error TWAP prices require a secure client.
+      { topic: 'prices.crypto.twap', symbols: ['btcusd'] },
+    ]);
+    // @ts-expect-error Equity prices require a secure client.
+    publicClient.subscribe([{ topic: 'prices.equity', symbol: 'aapl' }]);
+    // @ts-expect-error Crypto prices require explicit symbols.
+    secureClient.subscribe([{ topic: 'prices.crypto' }]);
+    // @ts-expect-error TWAP prices require explicit symbols.
+    secureClient.subscribe([{ topic: 'prices.crypto.twap' }]);
+    expectTypeOf<BindingExports.CommentsEvent>();
+    expectTypeOf<ClientExports.CryptoPricesChainlinkTwapEvent>();
+    // @ts-expect-error Managers are implementation details, not root exports.
+    expectTypeOf<ClientExports.RealtimeWebSocketManager>();
+    // @ts-expect-error Managers are implementation details, not root exports.
+    expectTypeOf<ClientExports.RtdsWebSocketManager>();
+    publicClient.subscribe([
+      { topic: 'prices.crypto.binance', symbols: ['btcusdt'] },
+      { topic: 'prices.crypto.chainlink', symbols: ['btc/usd'] },
+      {
+        topic: 'prices.crypto.chainlink.twap',
+        symbols: ['btc/usd'],
+        windowSeconds: 60,
+      },
+      { topic: 'prices.equity.pyth', symbol: 'aapl', types: ['update'] },
+      { topic: 'comments' },
+    ]);
+  });
+
+  it('preserves deprecated RTDS TWAP window narrowing', () => {
+    type ThirtySecond = EventForSubscriptionSpecs<
+      [
+        {
+          topic: 'prices.crypto.chainlink.twap';
+          symbols: ['btc/usd'];
+          windowSeconds: 30;
+        },
+      ]
+    >;
+    type SixtySecond = EventForSubscriptionSpecs<
+      [
+        {
+          topic: 'prices.crypto.chainlink.twap';
+          symbols: ['btc/usd'];
+          windowSeconds: 60;
+        },
+      ]
+    >;
+    expectTypeOf<ThirtySecond>().toEqualTypeOf<CryptoPricesChainlinkTwapThirtyEvent>();
+    expectTypeOf<SixtySecond>().toEqualTypeOf<CryptoPricesChainlinkTwapSixtyEvent>();
+  });
+});
+
+describe('EventForSubscriptionSpecs', () => {
+  it('narrows equity TWAP and mixed price specs', () => {
+    type EquityTwapOnly = EventForSubscriptionSpecs<
+      readonly [
+        {
+          topic: 'prices.equity.twap';
+          symbol: 'USDJPY';
+        },
+      ]
+    >;
+    expectTypeOf<EquityTwapOnly>().toEqualTypeOf<EquityTwapPriceEvent>();
+
+    type MixedPrices = EventForSubscriptionSpecs<
+      readonly [
+        { topic: 'prices.crypto'; symbols: readonly ['btcusd'] },
+        { topic: 'prices.equity.twap'; symbol: 'USDJPY' },
+      ]
+    >;
+    expectTypeOf<MixedPrices>().toEqualTypeOf<
+      CryptoPriceEvent | EquityTwapPriceEvent
+    >();
+  });
+
+  it('narrows a standard market spec to standard market events', () => {
+    type MarketOnly = EventForSubscriptionSpecs<
+      readonly [
+        {
+          topic: 'market';
+          assetIds: readonly (TokenId | PositionId)[];
+        },
+      ]
+    >;
+    expectTypeOf<MarketOnly>().toEqualTypeOf<StandardMarketEvent>();
+    expectTypeOf<
+      Extract<MarketOnly, CustomMarketEvent>
+    >().toEqualTypeOf<never>();
+  });
+
+  it('narrows a custom-enabled market spec to all market events', () => {
+    type MarketOnly = EventForSubscriptionSpecs<
+      readonly [
+        {
+          customFeatureEnabled: true;
+          topic: 'market';
+          assetIds: readonly (TokenId | PositionId)[];
+        },
+      ]
+    >;
+    expectTypeOf<MarketOnly>().toEqualTypeOf<MarketEvent>();
+  });
+
+  it('narrows a custom-disabled market spec to standard market events', () => {
+    type MarketOnly = EventForSubscriptionSpecs<
+      readonly [
+        {
+          customFeatureEnabled: false;
+          topic: 'market';
+          assetIds: readonly (TokenId | PositionId)[];
+        },
+      ]
+    >;
+    expectTypeOf<MarketOnly>().toEqualTypeOf<StandardMarketEvent>();
+  });
+
+  it('keeps all market events when customFeatureEnabled is dynamic', () => {
+    type MarketOnly = EventForSubscriptionSpecs<
+      readonly [
+        {
+          customFeatureEnabled: boolean;
+          topic: 'market';
+          assetIds: readonly (TokenId | PositionId)[];
+        },
+      ]
+    >;
+    expectTypeOf<MarketOnly>().toEqualTypeOf<MarketEvent>();
+  });
+
+  it('unions the event types of a multi-topic spec', () => {
+    type Mixed = EventForSubscriptionSpecs<
+      readonly [
+        {
+          topic: 'market';
+          assetIds: readonly (TokenId | PositionId)[];
+        },
+        { topic: 'sports' },
+      ]
+    >;
+    expectTypeOf<Mixed>().toEqualTypeOf<StandardMarketEvent | SportsEvent>();
+  });
+
+  it('preserves event narrowing for a broad market spec in a mixed list', () => {
+    type Mixed = EventForSubscriptionSpecs<
+      readonly [MarketSubscription, { topic: 'sports' }]
+    >;
+
+    expectTypeOf<Mixed>().toEqualTypeOf<MarketEvent | SportsEvent>();
+  });
+});
+
+describe('SubscribeError', () => {
+  it('includes invalid input and transport failures', () => {
+    expectTypeOf<SubscribeError>().toEqualTypeOf<
+      | UserInputError
+      | TransportError
+      | ConnectionLostError
+      | RequestRejectedError
+    >();
+  });
+});
+
+describe('PublicClient.subscribe', () => {
+  it('infers the event type from object-literal subscription specs', async () => {
+    const client = createPublicClient();
+
+    // Intentionally not awaited; we only care about the static type.
+    const pending = client.subscribe([
+      { topic: 'market', assetIds: [ASSET_ID] },
+    ]);
+    expectTypeOf(pending).resolves.toEqualTypeOf<
+      SubscriptionHandle<StandardMarketEvent>
+    >();
+  });
+
+  it('retains tokenIds as a compatibility subscription input', async () => {
+    const client = createPublicClient();
+
+    const pending = client.subscribe([{ topic: 'market', tokenIds: ['123'] }]);
+    expectTypeOf(pending).resolves.toEqualTypeOf<
+      SubscriptionHandle<StandardMarketEvent>
+    >();
+  });
+
+  it('infers custom-enabled market events from object-literal subscription specs', async () => {
+    const client = createPublicClient();
+
+    // Intentionally not awaited; we only care about the static type.
+    const pending = client.subscribe([
+      { customFeatureEnabled: true, topic: 'market', assetIds: [ASSET_ID] },
+    ]);
+    expectTypeOf(pending).resolves.toEqualTypeOf<
+      SubscriptionHandle<MarketEvent>
+    >();
+  });
+
+  it('excludes secure-only events from a public subscription', async () => {
+    const client = createPublicClient();
+    const pending = client.subscribe([
+      { topic: 'market', assetIds: [ASSET_ID] },
+    ]);
+    const handle = await pending;
+
+    for await (const event of handle) {
+      expectTypeOf(event).toEqualTypeOf<StandardMarketEvent>();
+      expectTypeOf<Extract<typeof event, UserEvent>>().toEqualTypeOf<never>();
+    }
+  });
+});
+
+describe('Perps event horizon public subscription types', () => {
+  it('keeps precise requested market variants and event horizon metadata', () => {
+    async function consume(client: ClientExports.PublicClient) {
+      const handles = [
+        await client.subscribe([{ topic: 'perps.trades', instrumentId: 1 }]),
+        await client.subscribe([{ topic: 'perps.bbo', instrumentId: 1 }]),
+        await client.subscribe([{ topic: 'perps.book', instrumentId: 1 }]),
+        await client.subscribe([{ topic: 'perps.tickers' }]),
+        await client.subscribe([{ topic: 'perps.statistics' }]),
+        await client.subscribe([
+          {
+            topic: 'perps.candles',
+            instrumentId: 1,
+            interval: PerpsKlineInterval.OneMinute,
+          },
+        ]),
+      ] as const;
+      for (const handle of handles) {
+        for await (const event of handle) {
+          expectTypeOf(
+            event.eventTimestamp,
+          ).toEqualTypeOf<ClientExports.EpochMilliseconds | null>();
+          if (event.eventTimestamp !== null) {
+            expectTypeOf(
+              event.eventTimestamp,
+            ).toEqualTypeOf<ClientExports.EpochMilliseconds>();
+          } else {
+            expectTypeOf(event.eventTimestamp).toEqualTypeOf<null>();
+          }
+        }
+      }
+      const mixed = await client.subscribe([
+        { topic: 'perps.trades', instrumentId: 1 },
+        { topic: 'perps.book', instrumentId: 1 },
+      ]);
+      for await (const event of mixed) {
+        expectTypeOf(event).toEqualTypeOf<
+          BindingExports.PerpsTradeEvent | BindingExports.PerpsBookEvent
+        >();
+      }
+      for await (const event of handles[0]) {
+        expectTypeOf(event).toEqualTypeOf<BindingExports.PerpsTradeEvent>();
+      }
+      for await (const event of handles[1]) {
+        expectTypeOf(event).toEqualTypeOf<BindingExports.PerpsBboEvent>();
+      }
+      for await (const event of handles[2]) {
+        expectTypeOf(event).toEqualTypeOf<BindingExports.PerpsBookEvent>();
+      }
+      for await (const event of handles[3]) {
+        expectTypeOf(event).toEqualTypeOf<BindingExports.PerpsTickerEvent>();
+      }
+      for await (const event of handles[4]) {
+        expectTypeOf(event).toEqualTypeOf<BindingExports.PerpsStatisticEvent>();
+      }
+      for await (const event of handles[5]) {
+        expectTypeOf(event).toEqualTypeOf<BindingExports.PerpsCandleEvent>();
+      }
+    }
+    void consume;
+  });
+});

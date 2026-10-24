@@ -53,6 +53,44 @@ const WHITELIST_FILES = new Set([
   // exactly one plain-text alert to a NextAuth-VERIFIED address per settled
   // pick a user follows — never content, never bulk, never autonomous copy.
   "apps/web/lib/watchlist/channels/email-channel.ts",
+
+  // GAP-27, SECOND HALF: THE X TRANSPORT, AS A NAMED BOUNDARY.
+  //
+  // The guardrail above now MATCHES `api.x.com`, and doing so makes it report 9
+  // hits under workers/twitter-bot/. Those 9 are a real publish-side transport.
+  // They are listed here as a NAMED, DOCUMENTED boundary rather than left to a
+  // regex that happened to miss them -- which is the difference between a
+  // decision and an accident.
+  //
+  // WHY THIS IS AN EXCEPTION AND NOT A VIOLATION, AND WHAT WAS MEASURED:
+  //
+  // 1. THE ENGINE CANNOT TRIGGER IT. `workers/twitter-bot/` has ZERO importers
+  //    outside its own directory: no caller in apps/ or packages/, no cron, no
+  //    vercel.json entry, no CI reference, no .sh invocation. The send path is
+  //    a standalone operator-run worker, not a path the engine can reach. The
+  //    guardrail exists to catch paths "the engine could trigger"; this one is
+  //    not one.
+  // 2. IT IS TRIPLE-GATED ON THE SEND PATH, not at schedule time. The sender
+  //    checks `MUTE_BOT` at SEND time (a mute that applies on the next cycle is
+  //    not a mute), records the idempotency key BEFORE the request leaves (so a
+  //    lost response is UNKNOWN and NOT retried, rather than posted twice), and
+  //    the ledger it writes is the existing BotOutboxRecord table. The outbox
+  //    itself is a DRAFT planner: apps/web/app/api/cockpit/bot-outbox/preview
+  //    is operator-review-only and calls no transport.
+  // 3. IT IS A DELIBERATE, DOCUMENTED SUBSYSTEM with its own 41-test suite,
+  //    including the RFC 5849 section 3.4.1.1 base-string vector.
+  //
+  // WHAT WOULD REVOKE THIS: if anything in apps/ or packages/ ever imports
+  // workers/twitter-bot/, or a cron/vercel entry ever invokes it, this
+  // exception is WRONG and the guardrail should fail. The test added with
+  // this change asserts exactly that -- it fails if the transport becomes
+  // reachable from the engine.
+  //
+  // The *.test.js files in that directory are excluded by the test-file rule
+  // below; only the transport itself is listed here.
+  "workers/twitter-bot/oauth1.js",
+  "workers/twitter-bot/sender.js",
+  "workers/twitter-bot/x-client.js",
 ]);
 
 const WHITELIST_DIRS = new Set([
@@ -77,6 +115,16 @@ function isWhitelistedFile(relPath) {
   if (normalized.includes("__tests__")) return true;
   if (normalized.endsWith(".test.ts") || normalized.endsWith(".test.tsx")) return true;
   if (normalized.endsWith(".spec.ts") || normalized.endsWith(".spec.tsx")) return true;
+  // GAP-27: THE TEST-FILE RULE COVERED .ts BUT NOT .js. The X transport's
+  // own suite is *.test.js, so 8 of the 9 api.x.com hits were in TEST
+  // files. A test that asserts on a URL is not a send path -- it is the
+  // evidence that the send path is correct. Excluding .test.js/.spec.js
+  // closes that, and it also stops a test fixture from being able to fail
+  // the guardrail.
+  if (normalized.endsWith(".test.js") || normalized.endsWith(".test.jsx")) return true;
+  if (normalized.endsWith(".test.mjs") || normalized.endsWith(".test.cjs")) return true;
+  if (normalized.endsWith(".spec.js") || normalized.endsWith(".spec.jsx")) return true;
+  if (normalized.endsWith(".spec.mjs") || normalized.endsWith(".spec.cjs")) return true;
   if (normalized.endsWith(".prisma")) return true;
   return false;
 }
@@ -235,7 +283,18 @@ const ALWAYS_FORBIDDEN = [
   { id: "twilio", rx: /from\s+["']twilio["']|require\(\s*["']twilio["']\s*\)/, desc: "Twilio SDK import" },
   { id: "discord-webhook", rx: /discord\.com\/api\/webhooks|discordWebhook\(/i, desc: "Discord webhook" },
   { id: "slack-webhook", rx: /hooks\.slack\.com\/services|slackPost\(/i, desc: "Slack webhook" },
-  { id: "twitter-api", rx: /api\.twitter\.com|twitterPost\(|\btweet\s*\(/i, desc: "Twitter/X API" },
+  // GAP-27: THE PATTERN MISSED THE ACTUAL TRANSPORT. The real base URL in
+  // workers/twitter-bot/x-client.js is `https://api.x.com` -- X renamed the API
+  // host, and `api.twitter.com` appears NOWHERE in the tracked tree. The old
+  // pattern therefore matched a host that does not exist here, so a file that
+  // hard-codes the LIVE one passed clean.
+  //
+  // MEASURED: with the old pattern `api.x.com` does not match; with this one it
+  // does, and the guardrail then reports 9 hits under workers/twitter-bot/ --
+  // which is the POINT. Those 9 are the X transport, and they are now a NAMED,
+  // documented boundary (see WHITELIST_FILES below) rather than an accident of
+  // a regex that was looking in the wrong place.
+  { id: "twitter-api", rx: /api\.(?:twitter|x)\.com|twitterPost\(|\btweet\s*\(/i, desc: "Twitter/X API" },
 ];
 
 const DATA_ONLY_FORBIDDEN = [

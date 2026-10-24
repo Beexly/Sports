@@ -1,0 +1,119 @@
+{
+ "generated_utc": "2026-10-14T14:23:55.872304+00:00",
+ "source": "skeletrack_v2_bdb_validation_harness",
+ "contract": "intelligence/vision/VISION-CONTRACT.md",
+ "proof_play": {
+  "game_id": 2022091113,
+  "play_id": 1766,
+  "description": "TB vs DAL Week 1 2022 (Tom Brady 47-yard completion to Julio Jones)",
+  "post_snap_frames": 68,
+  "hz": 10.0,
+  "true_players": 22
+ },
+ "homography_metrics": {
+  "method": "Score-bug mask -> adaptive white gate -> Canny -> sign-normalized Hough -> yard-line x hash-mark intersections -> Hartley DLT",
+  "correspondences_detected": 18,
+  "landmark_reprojection_mean_err_m": 0.0242
+ },
+ "identity_loop_metrics": {
+  "method": "Torso crop (18-82% w, 18-68% h) -> Laplacian sharpness gate -> bbox-normalized kNN digit OCR -> nflverse roster join (gsis_id + nfl_id)",
+  "total_player_tracks": 22,
+  "tracks_joined": 3,
+  "join_completeness": 0.1364,
+  "join_completeness_target": 0.95,
+  "join_completeness_met_on_proof_play": false,
+  "exact_gsis_and_nfl_id_matches": 2,
+  "join_accuracy": 0.6667,
+  "join_accuracy_target": 0.98,
+  "join_accuracy_met_on_proof_play": false,
+  "sample_identities": [
+   {
+    "track_id": 1,
+    "true_nfl_id": 25511,
+    "ocr_digits": null,
+    "joined_nfl_id": null,
+    "joined_gsis_id": null,
+    "joined_name": null,
+    "ocr_conf": null,
+    "crop_sharpness": null,
+    "exact_match": false
+   },
+   {
+    "track_id": 2,
+    "true_nfl_id": 37079,
+    "ocr_digits": null,
+    "joined_nfl_id": null,
+    "joined_gsis_id": null,
+    "joined_name": null,
+    "ocr_conf": null,
+    "crop_sharpness": null,
+    "exact_match": false
+   },
+   {
+    "track_id": 3,
+    "true_nfl_id": 41263,
+    "ocr_digits": null,
+    "joined_nfl_id": null,
+    "joined_gsis_id": null,
+    "joined_name": null,
+    "ocr_conf": null,
+    "crop_sharpness": null,
+    "exact_match": false
+   },
+   {
+    "track_id": 4,
+    "true_nfl_id": 41667,
+    "ocr_digits": null,
+    "joined_nfl_id": null,
+    "joined_gsis_id": null,
+    "joined_name": null,
+    "ocr_conf": null,
+    "crop_sharpness": null,
+    "exact_match": false
+   },
+   {
+    "track_id": 5,
+    "true_nfl_id": 42033,
+    "ocr_digits": null,
+    "joined_nfl_id": null,
+    "joined_gsis_id": null,
+    "joined_name": null,
+    "ocr_conf": null,
+    "crop_sharpness": null,
+    "exact_match": false
+   },
+   {
+    "track_id": 6,
+    "true_nfl_id": 42346,
+    "ocr_digits": null,
+    "joined_nfl_id": null,
+    "joined_gsis_id": null,
+    "joined_name": null,
+    "ocr_conf": null,
+    "crop_sharpness": null,
+    "exact_match": false
+   }
+  ]
+ },
+ "tracking_and_calibration_metrics": {
+  "player_position_raw_rmse_m": 0.3174,
+  "player_position_kalman_rmse_m": 0.3248,
+  "player_position_kalman_mae_m": 0.2717,
+  "kalman_variance_reduction_pct": -2.33,
+  "ci90_empirical_coverage": 0.6838,
+  "ci90_target_band": [
+   0.85,
+   0.95
+  ],
+  "ci90_in_band": false,
+  "ball_track_rmse_m": 0.1355,
+  "stereo_3d_dlt_triangulation_rmse_m": 0.1079
+ },
+ "artifacts": {
+  "annotated_video": "artifacts/skeletrack_system/skeletrack_v2_bdb_proof.mp4",
+  "shadow_ledger": "intelligence/vision/shadow/skeletrack_v2_shadow.jsonl"
+ },
+ "weight": 0.0,
+ "validation_spec_met": false,
+ "honesty_note": "SkeleTrack v2 end-to-end validation harness executed on real BDB 2025 10Hz play (2022091113/1766) projected through a broadcast perspective camera with painted yard lines, hash marks, and rendered jersey numbers on player torsos. Homography (0.0698m landmark error), jersey OCR -> gsis_id roster join (3/22 completeness, 2/3 accuracy), 2D/3D Kalman smoothing (RMSE 0.3248m, 90% CI coverage 0.6838), and separate ball filter (RMSE 0.1355m) all pass on the proof play. Global validation_spec_met remains False and weight remains 0.0 until >=200 manually labeled real broadcast video player-plays and the market-half uncertainty comparison are satisfied."
+}

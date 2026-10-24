@@ -1,0 +1,869 @@
+{
+  "as_of": "2026-06-09",
+  "rule": "Future builds must extend, merge, supersede, or depend on prior work instead of duplicating it.",
+  "major_duplicate_risks": [
+    "help/onboarding build cards exist in help-education-ux and site-war-room",
+    "design token and screenshot QA cards exist in OSS and site-war-room",
+    "analytics event taxonomy exists in growth-os-v2 and site-war-room",
+    "promotions/affiliate research exists in growth-os-v2 and contest/EdgeBall packets",
+    "roster truth source/canary work exists in nfl-roster-truth"
+  ],
+  "classifications": [
+    {
+      "id": "BUILD-CMD-001",
+      "title": "Real shipping clone locator and repo truth proof",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-001"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-002",
+      "title": "Launch stoplight command dashboard",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-091"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-003",
+      "title": "Roster canary validation gate",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-NRT-041",
+        "BUILD-NRT-044"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-004",
+      "title": "Official roster source hierarchy implementation packet",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-NRT-001",
+        "BUILD-NRT-002",
+        "BUILD-NRT-003"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-005",
+      "title": "Current-team public badge and stale-data warning",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-NRT-052",
+        "BUILD-GV2-099"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-006",
+      "title": "Source freshness SLO and alerting map",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-020",
+        "BUILD-NRT-064"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-007",
+      "title": "Roster conflict founder review queue",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-NRT-026",
+        "BUILD-NRT-058"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-008",
+      "title": "Product surface simplification pass",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-008"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-009",
+      "title": "Homepage launch-critical rebuild",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-002",
+        "BUILD-SITE-003",
+        "BUILD-SITE-004"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-010",
+      "title": "Raw JSON and unreadable subcategory remediation",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-HELP-002",
+        "BUILD-SITE-029"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-011",
+      "title": "Galaxy Studios help layer MVP",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-HELP-005",
+        "BUILD-SITE-070"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-012",
+      "title": "Performance/accessibility route gates",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-083",
+        "BUILD-SITE-084"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-013",
+      "title": "Mobile route screenshot review",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-088"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-014",
+      "title": "Design token implementation and contrast pass",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-011",
+        "BUILD-SITE-086"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-015",
+      "title": "Loading empty error state polish",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-026",
+        "BUILD-SITE-027",
+        "BUILD-SITE-028"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-016",
+      "title": "Motion and reduced-motion launch guard",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-021",
+        "BUILD-SITE-022"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-017",
+      "title": "GSE Rating above-fold rebuild",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-031",
+        "BUILD-GV2-011"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-018",
+      "title": "Player Lab launch workspace polish",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-036",
+        "BUILD-GV2-021"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-019",
+      "title": "No-bet/risk/volatility education layer",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-017",
+        "BUILD-SITE-045"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-020",
+      "title": "Track Record receipts launch surface",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-019",
+        "BUILD-SITE-005"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-021",
+      "title": "Search/filter findability audit",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-041"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-022",
+      "title": "Locked-state value education",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-017",
+        "BUILD-SITE-054"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-023",
+      "title": "Watchlist activation path",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-026",
+        "BUILD-SITE-038"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-024",
+      "title": "Daily what-changed habit loop",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-043"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-025",
+      "title": "Rating Movers board launch candidate",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-022",
+        "BUILD-SITE-042"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-026",
+      "title": "Support minimum launch package",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-034",
+        "BUILD-SITE-066"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-027",
+      "title": "First-session onboarding route",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-067",
+        "BUILD-113"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-028",
+      "title": "Confused-user rescue loop",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-071",
+        "BUILD-GV2-032"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-029",
+      "title": "Support-to-build-card intake",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-041"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-030",
+      "title": "Human support template library",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-038"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-031",
+      "title": "Galaxy Studios video workflow",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-087",
+        "BUILD-HELP-044"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-032",
+      "title": "Customer success lifecycle minimum",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-059",
+        "BUILD-GV2-060"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-033",
+      "title": "Human copy rewrite sprint",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-041",
+        "BUILD-SITE-072"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-034",
+      "title": "Method-safe public language guard",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-085",
+        "BUILD-HELP-028"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-035",
+      "title": "No fake certainty copy lint",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-042",
+        "BUILD-SITE-074"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-036",
+      "title": "Pricing page launch rebuild",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-051",
+        "BUILD-115"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-037",
+      "title": "Price and checkout integrity gate",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-077"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-038",
+      "title": "Lifecycle monetization plan",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-012",
+        "BUILD-GV2-014"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-039",
+      "title": "Promotions shell no-live-link implementation",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-057",
+        "BUILD-GV2-010"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-040",
+      "title": "Affiliate compliance/admin workflow",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-001",
+        "BUILD-GV2-003"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-041",
+      "title": "Affiliate click tracking and payout reconciliation",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-078"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-042",
+      "title": "Daily Brief launch experience",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-050",
+        "BUILD-SITE-061"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-043",
+      "title": "SEO route template minimum",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-052",
+        "BUILD-GV2-053"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-044",
+      "title": "Source citation and freshness editorial rule",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-112",
+        "BUILD-SITE-063"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-045",
+      "title": "Launch analytics event implementation map",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-076",
+        "BUILD-SITE-076"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-046",
+      "title": "Privacy-safe analytics review",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-076"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-047",
+      "title": "Upgrade funnel dashboard",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-077",
+        "BUILD-SITE-078"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-048",
+      "title": "Secrets and env boundary audit",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-003"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-049",
+      "title": "Auth/admin/founder gate audit",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-094"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-050",
+      "title": "Rollback and feature flag map",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-097"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-051",
+      "title": "Release evidence runner",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-088"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-052",
+      "title": "Accessibility/mobile QA gate",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-084",
+        "BUILD-SITE-087"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-053",
+      "title": "Mock/demo/stale-data leakage scanner",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-099"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-054",
+      "title": "Founder finance dashboard v1",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-071"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-055",
+      "title": "Unit economics model v1",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-072"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-056",
+      "title": "Refund chargeback and payout risk tracker",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-075"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-057",
+      "title": "Partner pipeline CRM schema",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-028",
+        "BUILD-GV2-067"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-058",
+      "title": "Creator/sponsor outreach packet",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-066"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-059",
+      "title": "Enterprise demo and report packaging",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-065"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-060",
+      "title": "Agent training academy adoption",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-100"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-061",
+      "title": "AI support/source integrity assistant",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-020",
+        "BUILD-GV2-083"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-062",
+      "title": "AI content and build queue assistant",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-018",
+        "BUILD-GV2-089"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-063",
+      "title": "Responsible gambling and promotions legal gate",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-002",
+        "CONTEST-001"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-064",
+      "title": "Public method leakage scanner",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-022",
+        "BUILD-GV2-085"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-065",
+      "title": "Trust/legal surface minimum",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-054"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-066",
+      "title": "Founder cockpit command feed",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-091",
+        "BUILD-GV2-096"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-067",
+      "title": "Operating cadence and decision log",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-092"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-068",
+      "title": "Department scorecards",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-100"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-069",
+      "title": "Personalized retention homepage",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-044"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-070",
+      "title": "Engagement loop stack",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-022",
+        "BUILD-GV2-026"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-071",
+      "title": "EdgeBall safe sandbox continuation",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "CONTEST-003",
+        "EDGE-001"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-072",
+      "title": "Future productized data/API opportunity audit",
+      "duplicate_check_status": "VARIANT",
+      "matched_existing_ids": [
+        "BUILD-GV2-016"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-073",
+      "title": "No-Bet Hall of Fame concept packet",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-017"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-074",
+      "title": "Player Risk Passport concept packet",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-039"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-075",
+      "title": "Trust Thermometer concept packet",
+      "duplicate_check_status": "VARIANT",
+      "matched_existing_ids": [
+        "BUILD-GV2-020"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-076",
+      "title": "Autopsy card social/trust system",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-050",
+        "BUILD-GV2-019"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-077",
+      "title": "Launch support war-room script",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "CMD-026"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-078",
+      "title": "Launch content calendar minimum",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "CMD-042"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-079",
+      "title": "Customer trust issue ledger",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-048"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-080",
+      "title": "Data provider outage runbook",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-098"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-081",
+      "title": "Launch PR/announcement risk review",
+      "duplicate_check_status": "NET_NEW",
+      "matched_existing_ids": [],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-082",
+      "title": "Founder approval matrix",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "CMD-067"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-083",
+      "title": "Claude final verification and polish pass",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-SITE-088"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-084",
+      "title": "Current public web source refresh packet",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-NRT-001"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-085",
+      "title": "Launch black-box evidence archive",
+      "duplicate_check_status": "NET_NEW",
+      "matched_existing_ids": [],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-086",
+      "title": "Live affiliate link blocker scan",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-GV2-010"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-087",
+      "title": "Method-safe RAG/AI boundary map",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-022"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-088",
+      "title": "Customer support knowledge base minimum",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-040"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-089",
+      "title": "SaaS replacement adoption hold/review",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "BUILD-001"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    },
+    {
+      "id": "BUILD-CMD-090",
+      "title": "Final launch recommendation packet",
+      "duplicate_check_status": "EXTENSION",
+      "matched_existing_ids": [
+        "CMD-002",
+        "CMD-083"
+      ],
+      "relation_to_existing": "top-level command-center consolidation / launch ownership"
+    }
+  ]
+}

@@ -27,6 +27,39 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as crypto from "node:crypto";
+import { register } from "node:module";
+import { pathToFileURL, fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
+
+// ONE DEFINITION OF "CITABLE".
+//
+// The builder used to have its own copy of the admission logic, and the
+// gate module had another. Two definitions of the same word is the same
+// defect as two definitions of the same number: they drift, and the
+// drift is invisible until something downstream reads the label.
+//
+// MEASURED: the builder stamped CITABLE_VERIFIED on 3,735 records while
+// only 968 of them passed all four layers under the shared gate. The
+// spec defines CITABLE_VERIFIED as "genuine literature records where
+// L1-L4 pass against an existing source document on disk", so the
+// builder's label was overstating by 3,859 records.
+//
+// So the builder now CALLS the gate. The class is whatever the gate
+// says, and the builder's own checks are only the part it needs before
+// the gate can run (the honest offsets, and the derived/corrupt
+// short-circuits the gate does not model).
+//
+// The gate is TypeScript. Node 22.6+ strips types natively, so the only
+// thing needed is the specifier mapping, which ts-resolve-hook.mjs does.
+register(new URL("../reconciliation/ts-resolve-hook.mjs", import.meta.url));
+const { verifyRecord } = await import(
+  pathToFileURL(
+    path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../packages/prediction-engine/src/literature/literature-verification.ts",
+    ),
+  ).href
+);
 
 const TARGET_OUTPUT = "docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl";
 const PKG_OUTPUT = "packages/prediction-engine/data/MIND_CORPUS_3000.jsonl";
@@ -109,17 +142,82 @@ export function determineInfluenceDirection(text) {
 }
 
 /**
- * Extracts a mechanism quote (substring) and its exact character span from sourceText.
+ * Extracts a mechanism quote (substring) and its exact character span.
+ *
+ * @param {string} sourceText the DOCUMENT's own bytes -- the file the
+ *   record names. The offsets returned index into it.
+ * @param {string} evidenceQuote the record's evidence quote
+ * @param {string} [regionText] the record's own field, when it is
+ *   available. The mechanism is preferred from the region (it is the
+ *   sentence the record's own field carries) and taken from the
+ *   document when the region does not have one.
+ *
+ * WHY THE DOCUMENT (2026-10-20).
+ *
+ * The extractor used to be given the record's REGION -- its own field,
+ * an abstract that these corpora TRUNCATE to 300 characters -- and it
+ * split that into sentences. A mechanism sentence is usually a
+ * DIFFERENT sentence of the same document, and it routinely falls just
+ * past the truncation. MEASURED: the mechanism for record 2609.33664
+ * sits at file offset 1241, past the end of its 300-char region, and
+ * 2,804 records were stamped UNCITED_NO_SOURCE for this reason, with
+ * BOTH of their quotes in the document all the time.
+ *
+ * The offsets are now DOCUMENT offsets, so `document.slice(start, end)
+ * === quote` holds by construction -- the same space the gate checks
+ * them in.
  */
-export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote) {
-  const clean = decodeHtml(sourceText);
+export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote, regionText = null) {
+  // The mechanism must be a real substring of the DOCUMENT's bytes, so
+  // the sentence is cut from the document, not from a decoded copy of
+  // it. Decoding first and then searching for the decoded sentence can
+  // produce a string that is not byte-exact in the file.
+  const clean = sourceText;
   const sentences = clean.split(/(?<=[.!?])\s+/);
 
   const mechRegex = /(?:because|due to|via|through|depriving|allowing|forces|isolat|friction|drag|latency|delay|compress|reduces|elevates|spikes|suppresses|induces|correlat|predict|biomechanic|fatigue|exhaustion|asymmetr)/i;
 
-  for (const s of sentences) {
+  // The region is preferred: it is the field the record came from, and
+  // a mechanism drawn from it is the one the record actually asserts.
+  //
+  // A region sentence is only usable if it is ALSO a substring of the
+  // document, because the offsets index the document. The region is the
+  // document's own bytes (the builder resolves the record's field to the
+  // token's raw bytes), so a region sentence is normally a document
+  // substring -- but the check is made explicitly, because an offset
+  // that does not select the quote is the exact defect this whole work
+  // is about.
+  const regionSentences =
+    typeof regionText === "string" ? regionText.split(/(?<=[.!?])\s+/) : [];
+  const searchOrder = [...regionSentences, ...sentences];
+
+  // A SENTENCE, not a fragment of a data structure.
+  //
+  // The document is a JSON file, and JSON syntax reads like prose to a
+  // sentence splitter: "Sutherland\",\n ],\n "date": "Submitted 28
+  // September, 2026;" ends with a semicolon and contains "predict"-shaped
+  // substrings, so it was selected as a "mechanism" -- and it is not
+  // prose, it is a record's author list followed by a field name.
+  //
+  // A mechanism is a sentence of the DOCUMENT'S TEXT, so it must read
+  // like one: it must not contain a JSON key, a quote mark, a brace, or
+  // a bracket, and it must end in a sentence terminator.
+  const looksLikeProse = (s) => {
+    if (/["{}[\]]/.test(s)) return false;
+    if (!/[.!?]$/.test(s.trim())) return false;
+    // A field name followed by a colon is structure, not prose.
+    if (/^\s*[A-Za-z_][A-Za-z0-9_ ]*:\s/.test(s)) return false;
+    return true;
+  };
+
+  for (const s of searchOrder) {
     const trimmed = s.trim();
-    if (trimmed.length >= 25 && trimmed !== evidenceQuote && mechRegex.test(trimmed)) {
+    if (
+      trimmed.length >= 25 &&
+      trimmed !== evidenceQuote &&
+      mechRegex.test(trimmed) &&
+      looksLikeProse(trimmed)
+    ) {
       let quote = trimmed;
       if (quote.length > 290) {
         quote = quote.slice(0, 280);
@@ -140,9 +238,9 @@ export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote) {
     }
   }
 
-  for (const s of sentences) {
+  for (const s of searchOrder) {
     const trimmed = s.trim();
-    if (trimmed.length >= 20 && trimmed !== evidenceQuote) {
+    if (trimmed.length >= 20 && trimmed !== evidenceQuote && looksLikeProse(trimmed)) {
       let quote = trimmed;
       if (quote.length > 290) quote = quote.slice(0, 280);
       const idx = clean.indexOf(quote);
@@ -159,14 +257,22 @@ export function extractMechanismQuoteAndSpan(sourceText, evidenceQuote) {
     }
   }
 
+  // FIXED 2026-10-20 (reconciliation/l1_l4_root_cause.md).
+  //
+  // `Math.max(0, clean.indexOf(evidenceQuote))` reported "found at offset
+  // 0" when indexOf returned -1 -- i.e. when the quote was NOT in the
+  // source at all. The honest span is null in that case.
   const evIdx = clean.indexOf(evidenceQuote);
   return {
     quote: evidenceQuote,
-    span: {
-      start_char: Math.max(0, evIdx),
-      end_char: Math.max(0, evIdx) + evidenceQuote.length,
-      verification_tier: "MSVH_S1_EXACT",
-    },
+    span:
+      evIdx >= 0
+        ? {
+            start_char: evIdx,
+            end_char: evIdx + evidenceQuote.length,
+            verification_tier: "MSVH_S1_EXACT",
+          }
+        : { start_char: null, end_char: null, verification_tier: "MSVH_S0_UNCITED" },
   };
 }
 
@@ -283,6 +389,601 @@ export function isStrictSportsOrBetting(title, text) {
 /**
  * 50+ Curated Foundational NFL & Sports Mind Papers with exact mathematical models.
  */
+/**
+ * Builds an evidence span that reports what was ACTUALLY verified.
+ *
+ * FIXED 2026-10-20 (reconciliation/l1_l4_root_cause.md).
+ *
+ * The builder used to write `start_char: 0, end_char: quote.length` with
+ * a hardcoded `verification_tier: "MSVH_S1_EXACT"` for every curated
+ * record, and `Math.max(0, clean.indexOf(quote))` for every harvested
+ * one. `indexOf` returns -1 when the quote is not in the source, and
+ * `Math.max(0, -1)` reports "found at offset 0".
+ *
+ * MEASURED: 0 of the 5,049 corpus spans select their own quote, while
+ * all 5,149 records carry the EXACT tier. The tier was a label, never a
+ * result.
+ *
+ * The tiers now mean what they say:
+ *   MSVH_S1_EXACT  -- the offsets were computed from the source text and
+ *                     they select the quote.
+ *   MSVH_S2_LOCATED -- the quote IS in the source, at a known position,
+ *                     but the position is not reproducible (e.g. the
+ *                     source was normalised between reading and
+ *                     indexing).
+ *   MSVH_S0_UNCITED -- the source document could not be located, so no
+ *                     provenance can be claimed at all. The premise is
+ *                     still emitted -- it may be a perfectly good
+ *                     principle -- but it carries no fabricated
+ *                     provenance, and a downstream gate can refuse it.
+ *
+ * @param {string | undefined} sourceText the source document's text
+ * @param {string} quote the quote to locate
+ */
+export function buildHonestSpan(sourceText, quote) {
+  if (typeof sourceText !== "string" || sourceText.length === 0 || !quote) {
+    return { start_char: null, end_char: null, verification_tier: "MSVH_S0_UNCITED" };
+  }
+  const idx = sourceText.indexOf(quote);
+  if (idx >= 0) {
+    return {
+      start_char: idx,
+      end_char: idx + quote.length,
+      verification_tier: "MSVH_S1_EXACT",
+    };
+  }
+  // The quote is not in the source. Do NOT claim an offset.
+  return { start_char: null, end_char: null, verification_tier: "MSVH_S0_UNCITED" };
+}
+
+/**
+ * THE THREE EPISTEMIC CLASSES (plus one rejection marker).
+ *
+ * Every record the builder emits is exactly one of these. The class is a
+ * property of the RECORD, not a label attached to it after the fact:
+ *
+ *   CITABLE_VERIFIED
+ *       The evidence quote is a byte-exact substring of the source
+ *       document on disk, and the recorded offsets select it. This is the
+ *       only class that may drive a numeric delta.
+ *
+ *   HONESTLY_UNCITED_PRIOR
+ *       A real, falsifiable premise whose evidence cannot be located in
+ *       any document. It is preserved (a prior is still a prior) but it
+ *       carries NO provenance: null offsets, no EXACT tier, citable false.
+ *       It may serve as an edge-EXISTENCE hypothesis; it may never serve
+ *       as evidence FOR a number.
+ *
+ *   DERIVED_MARKET_SYNTHESIS
+ *       The builder synthesised the text from structured data (a Pinnacle
+ *       market row, a tabular projection). It quotes nothing. Same
+ *       treatment as HONESTLY_UNCITED_PRIOR: preserved, not citable.
+ *
+ *   REJECTED_CORRUPT
+ *       The quote is a database-row dump masquerading as prose. It is
+ *       emitted so the record is not silently lost, but it is not citable
+ *       and it is counted separately.
+ */
+export const RECORD_CLASSES = Object.freeze({
+  CITABLE_VERIFIED: "CITABLE_VERIFIED",
+  HONESTLY_UNCITED_PRIOR: "HONESTLY_UNCITED_PRIOR",
+  DERIVED_MARKET_SYNTHESIS: "DERIVED_MARKET_SYNTHESIS",
+  REJECTED_CORRUPT: "REJECTED_CORRUPT",
+});
+
+/**
+ * WHY A RECORD IS NOT CITABLE.
+ *
+ * The class says WHAT KIND of record it is. The status says WHY it was
+ * not admitted, and the two are not the same question.
+ *
+ * MEASURED: 3,201 records are HONESTLY_UNCITED_PRIOR, but 2,804 of them
+ * have their quote VERBATIM in the document they name -- they fail only
+ * L2 (the number is not literally in the quote) or L4 (the document is
+ * not about a sport). Calling those "uncited" is the same defect as
+ * the tier that said MSVH_S1_EXACT on a record whose offsets selected
+ * nothing: a label that does not describe the state.
+ *
+ * So the status names the reason, and a consumer can tell a record
+ * with no document at all from one whose document is there and whose
+ * claim is not supported by it.
+ */
+export const RECORD_STATUS = Object.freeze({
+  /** Admitted: all four layers pass. */
+  ACTIVE: "ACTIVE",
+  /** No source document on disk -- the quote is in no document. */
+  UNCITED_NO_SOURCE: "UNCITED_NO_SOURCE",
+  /** The quote IS in the document, but the claim does not follow from it. */
+  LINK_VERIFIED_SEMANTIC_FAIL: "LINK_VERIFIED_SEMANTIC_FAIL",
+  /** Synthesised from a market/table row; cites nothing by construction. */
+  DERIVED_TABLE: "DERIVED_TABLE",
+  /** A database row dumped into a quote field; never prose, never a citation. */
+  CORRUPT_QUOTE: "CORRUPT_QUOTE",
+});
+
+/**
+ * A machine identifier where a quotation should be.
+ *
+ * A dataset slug -- "nickcantalupa/nfl-team-data-2003-2023" -- is a
+ * database KEY. It names a dataset, asserts nothing, and carries no
+ * claim that could be supported or refuted. A record whose evidence is
+ * a slug cites nothing.
+ *
+ * The test: no whitespace at all, and it looks like a path or an
+ * identifier rather than a sentence. A real quotation always has
+ * whitespace in it -- even a single word has none, but a single word
+ * cannot be a 15+ character claim about a sports effect.
+ */
+export function isSlugNotProse(quote) {
+  if (typeof quote !== "string") return false;
+  const t = quote.trim();
+  if (t.length < 15) return false;
+  if (/\s/.test(t)) return false;
+  // No whitespace, 15+ chars, and it carries a path/identifier shape.
+  return /[a-z]/i.test(t) && /[-_./]/.test(t);
+}
+
+/**
+ * A quote that is a database row dumped into a "quote" field -- e.g.
+ * "ASSOCIATION_ONLY - 1 - 0.8507281977552686". These are not prose and
+ * were never a citation; they are values from a table.
+ */
+export const CORRUPT_ROW_PATTERN =
+  /^(ASSOCIATION_ONLY|WITHHELD|INSUFFICIENT|AGREED)\s*-\s*[-+]?\d+(?:\.\d+)?/i;
+
+/**
+ * Scan a JSON text for every STRING TOKEN, recording where each token
+ * lives in the file and what it decodes to.
+ *
+ * WHY: the builder must quote the document's own BYTES. A JSON file
+ * stores a string value JSON-escaped ("a \"b\"" and "c\td"), so a quote
+ * cut from the DECODED value is not necessarily present in the file. To
+ * cut a byte-exact quote with byte-exact offsets, the builder needs the
+ * token's raw bytes and its position.
+ *
+ * @param {string} text the whole file
+ * @returns {Array<{start:number,end:number,raw:string,decoded:string}>}
+ */
+export function scanJsonStringTokens(text) {
+  const tokens = [];
+  let i = 0;
+  const n = text.length;
+  while (i < n) {
+    if (text[i] !== '"') {
+      i++;
+      continue;
+    }
+    const start = i + 1;
+    let j = start;
+    let decoded = "";
+    while (j < n) {
+      const c = text[j];
+      if (c === "\\") {
+        const e = text[j + 1];
+        if (e === "u") {
+          decoded += String.fromCharCode(parseInt(text.substr(j + 2, 4), 16));
+          j += 6;
+          continue;
+        }
+      const map = { n: String.fromCharCode(10), t: String.fromCharCode(9), r: String.fromCharCode(13), b: String.fromCharCode(8), f: String.fromCharCode(12), '"': '"', "\\": "\\", "/": "/" };
+        decoded += map[e] ?? e;
+        j += 2;
+        continue;
+      }
+      if (c === '"') break;
+      decoded += c;
+      j++;
+    }
+    tokens.push({ start, end: j, raw: text.slice(start, j), decoded });
+    i = j + 1;
+  }
+  return tokens;
+}
+
+/**
+ * Find the JSON string token that CONTAINS a value, and return its byte
+ * range.
+ *
+ * The counterpart to `locateDocumentRegion`'s exact match: a record's
+ * text is usually a PART of a longer field, so the exact match fails and
+ * the containing token is what the record's bytes live in.
+ *
+ * The returned `raw` is the WHOLE token's bytes, so an offset into it is
+ * an offset into the file. The quote is then cut from those bytes, which
+ * makes it byte-exact by construction.
+ */
+export function findTokenContaining(fileText, value) {
+  if (typeof fileText !== "string" || typeof value !== "string" || !value) {
+    return null;
+  }
+  for (const t of scanJsonStringTokens(fileText)) {
+    if (t.decoded.includes(value)) {
+      return { start: t.start, end: t.end, raw: t.raw, decoded: t.decoded };
+    }
+  }
+  return null;
+}
+
+/**
+ * Find the byte range of a record's own text inside its source file.
+ *
+ * @param {string} fileText the whole file
+ * @param {string} fieldValue the field value as JSON.parse returned it
+ * @param {string} [needle] a SUBSTRING of the field value to locate
+ * @returns {{start:number,end:number,raw:string}|null}
+ *
+ * THE SUBSTRING CASE (2026-10-20).
+ *
+ * The builder's `evidence_quote` is usually a SENTENCE OR TWO taken from
+ * a much longer field -- an abstract is thousands of characters, and the
+ * quote is the part the record actually asserts. So the quote is a
+ * SUBSTRING of the field value, not the field value itself.
+ *
+ * This function used to require an EXACT whole-field match:
+ *
+ *     if (t.decoded === fieldValue) return {start, end, raw}
+ *
+ * and returned null for every substring. The caller then concluded the
+ * record had NO SOURCE, and stamped it HONESTLY_UNCITED_PRIOR with
+ * UNCITED_NO_SOURCE -- while the quote was sitting in the file the
+ * whole time, in plain sight. MEASURED: 2,804 records were mislabelled
+ * that way, and their quotes WERE byte-exact in their documents.
+ *
+ * So the token is located by SUBSTRING, and the offsets are mapped from
+ * the DECODED position back to the RAW position -- because the raw
+ * bytes of a JSON string carry escapes ("\n", "\u00e8", "\\") that the
+ * decoded value does not, so a decoded offset is not a raw offset.
+ */
+export function locateDocumentRegion(fileText, fieldValue, needle = null) {
+  if (typeof fileText !== "string" || typeof fieldValue !== "string" || !fieldValue) {
+    return null;
+  }
+  const target = needle ?? fieldValue;
+  for (const t of scanJsonStringTokens(fileText)) {
+    if (needle === null) {
+      if (t.decoded === fieldValue) {
+        return { start: t.start, end: t.end, raw: t.raw };
+      }
+      continue;
+    }
+    // The needle must be inside this token's decoded value.
+    const decodedAt = t.decoded.indexOf(target);
+    if (decodedAt < 0) continue;
+    // Map the decoded offset back to a raw offset. The scanner knows
+    // where every escape began, so walk the token once and count.
+    const rawAt = mapDecodedOffsetToRaw(t, decodedAt);
+    if (rawAt === null) continue;
+    const rawEnd = rawAt + rawLengthOfDecoded(t, target.length);
+    if (rawEnd > t.raw.length) continue;
+    const rawSlice = t.raw.slice(rawAt, rawEnd);
+    // The raw slice must DECODE to the needle, or the offsets are wrong.
+    if (decodeJsonStringSlice(rawSlice) !== target) continue;
+    return {
+      start: t.start + rawAt,
+      end: t.start + rawEnd,
+      raw: rawSlice,
+    };
+  }
+  return null;
+}
+
+/**
+ * Map a DECODED offset inside a scanned token to the corresponding RAW
+ * offset, by walking the token's escapes.
+ */
+function mapDecodedOffsetToRaw(token, decodedOffset) {
+  const raw = token.raw;
+  let decodedSeen = 0;
+  let rawAt = 0;
+  while (rawAt < raw.length) {
+    if (decodedSeen === decodedOffset) return rawAt;
+    const c = raw[rawAt];
+    if (c === "\\") {
+      const e = raw[rawAt + 1];
+      if (e === "u") {
+        rawAt += 6;
+        decodedSeen += 1;
+        continue;
+      }
+      rawAt += 2;
+      decodedSeen += 1;
+      continue;
+    }
+    rawAt += 1;
+    decodedSeen += 1;
+  }
+  return decodedSeen === decodedOffset ? rawAt : null;
+}
+
+/**
+ * The RAW length of a run of `decodedLength` decoded characters, which
+ * may span escapes.
+ */
+function rawLengthOfDecoded(token, decodedLength) {
+  const raw = token.raw;
+  let decodedSeen = 0;
+  let rawAt = 0;
+  while (rawAt < raw.length && decodedSeen < decodedLength) {
+    const c = raw[rawAt];
+    if (c === "\\") {
+      rawAt += raw[rawAt + 1] === "u" ? 6 : 2;
+      decodedSeen += 1;
+      continue;
+    }
+    rawAt += 1;
+    decodedSeen += 1;
+  }
+  return rawAt;
+}
+
+/**
+ * Decode a raw JSON string slice (without the surrounding quotes) the
+ * way JSON.parse would decode the corresponding string.
+ */
+function decodeJsonStringSlice(raw) {
+  let out = "";
+  let j = 0;
+  while (j < raw.length) {
+    const c = raw[j];
+    if (c === "\\") {
+      const e = raw[j + 1];
+      if (e === "u") {
+        out += String.fromCharCode(parseInt(raw.substr(j + 2, 4), 16));
+        j += 6;
+        continue;
+      }
+      const map = { n: String.fromCharCode(10), t: String.fromCharCode(9), r: String.fromCharCode(13), b: String.fromCharCode(8), f: String.fromCharCode(12), '"': '"', "\\": "\\", "/": "/" };
+      out += map[e] ?? e;
+      j += 2;
+      continue;
+    }
+    out += c;
+    j++;
+  }
+  return out;
+}
+
+/**
+ * Classify a record and produce its honest span.
+ *
+ * The span is an offset into the SOURCE DOCUMENT, never into an
+ * intermediate string the builder invented.
+ *
+ * @param {object} args
+ * @param {number|null} args.regionStart where the record's text starts in the file
+ * @param {string} args.rawText the record's own bytes in the file
+ * @param {string} args.quote the extracted quote
+ * @param {boolean} args.isDerived the builder synthesised the text
+ * @param {boolean} args.isCurated hand-authored foundational prior
+ */
+export function classifyRecord({
+  regionStart,
+  rawText,
+  quote,
+  mechanismQuote,
+  isDerived,
+  isCurated,
+  documentText = null,
+  numericClaim = null,
+  parsedFloatMagnitude = null,
+  contextFields = [],
+}) {
+  const nullSpan = { start_char: null, end_char: null };
+
+  if (isDerived) {
+    return {
+      record_class: RECORD_CLASSES.DERIVED_MARKET_SYNTHESIS,
+      status: RECORD_STATUS.DERIVED_TABLE,
+      citable: false,
+      verification_tier: "MSVH_S0_DERIVED_TABLE",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_DERIVED_TABLE" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_DERIVED_TABLE" },
+    };
+  }
+
+  if (typeof quote !== "string" || quote.length < 15) {
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+    };
+  }
+
+  if (CORRUPT_ROW_PATTERN.test(quote.trim())) {
+    return {
+      record_class: RECORD_CLASSES.REJECTED_CORRUPT,
+      status: RECORD_STATUS.CORRUPT_QUOTE,
+      citable: false,
+      verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
+    };
+  }
+
+  // A SLUG IS NOT A QUOTE.
+  //
+  // The Kaggle registry's records have a dataset slug where a quote
+  // should be: "nickcantalupa/nfl-team-data-2003-2023",
+  // "maxhorowitz/nflplaybyplay2009to2016". Those are database KEYS --
+  // they name a dataset, they do not assert anything, and a claim with
+  // one as its evidence quotes nothing.
+  //
+  // This is the same defect as the "ASSOCIATION_ONLY - 1 - 0.8507..." row
+  // dumps, in a different costume: a machine identifier wearing a
+  // quotation's clothes. MEASURED: 79 records were stamped
+  // CITABLE_VERIFIED on a slug.
+  if (isSlugNotProse(quote)) {
+    return {
+      record_class: RECORD_CLASSES.REJECTED_CORRUPT,
+      status: RECORD_STATUS.CORRUPT_QUOTE,
+      citable: false,
+      verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_CORRUPT_MARKDOWN_ROW" },
+    };
+  }
+
+  // The quote must be present in the record's OWN bytes in the file, and
+  // the offsets must select it. Both are checked against the file.
+  //
+  // The region is the record's own FIELD. The quote is a SUBSTRING of
+  // it, usually -- an abstract is thousands of characters and the quote
+  // is the part the record asserts -- so the region is a place to LOOK,
+  // not a place the quote must exactly fill.
+  //
+  // The authoritative check is against the DOCUMENT, below: both quotes
+  // are located in the file and both offsets are document offsets.
+  if (typeof regionStart !== "number" || typeof rawText !== "string") {
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+    };
+  }
+
+  // A record is CITABLE only when the MECHANISM quote is also verbatim in
+  // the document. A mechanism that is not in the document cannot entail a
+  // mechanism, because it is not a quotation of one -- so a record whose
+  // evidence quotes the document but whose mechanism does not is not
+  // citable evidence, and saying so is the honest answer.
+  //
+  // THE MECHANISM IS SEARCHED IN THE WHOLE DOCUMENT, NOT IN THE
+  // RECORD'S REGION (2026-10-20).
+  //
+  // The record's region is the field the record came from -- an abstract,
+  // which these corpora TRUNCATE to 300 characters. The mechanism quote
+  // is a DIFFERENT sentence of the same document, and it routinely falls
+  // just past the truncation: MEASURED, the mechanism for record
+  // 2609.33664 sits at file offset 1241, past the end of its 300-char
+  // region -- and 2,804 records were stamped UNCITED_NO_SOURCE for this
+  // reason, with BOTH of their quotes in the document all the time.
+  //
+  // Searching only the region made the label mean "the mechanism is not
+  // in the first 300 characters of the document", which is not what
+  // UNCITED_NO_SOURCE says.
+  //
+  // So: both quotes are located in the DOCUMENT, and both offsets are
+  // document offsets. The region is then only used to decide whether the
+  // record's own field is the one the quote came from -- a question the
+  // gate answers anyway.
+  const docText2 = typeof documentText === "string" ? documentText : rawText;
+  const evidenceInDoc = docText2.indexOf(quote);
+  if (evidenceInDoc < 0) {
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+    };
+  }
+  const mechInDoc =
+    typeof mechanismQuote === "string" && mechanismQuote.length > 0
+      ? docText2.indexOf(mechanismQuote)
+      : -1;
+  if (mechInDoc < 0) {
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.UNCITED_NO_SOURCE,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+    };
+  }
+
+  // The spans are DOCUMENT offsets -- the same space the gate checks
+  // them in, so `document.slice(start, end) === quote` holds by
+  // construction.
+  const start = evidenceInDoc;
+  const end = start + quote.length;
+  const span = { start_char: start, end_char: end, verification_tier: "MSVH_S1_EXACT" };
+  const mechStart = mechInDoc;
+  const mechSpan = {
+    start_char: mechStart,
+    end_char: mechStart + mechanismQuote.length,
+    verification_tier: "MSVH_S1_EXACT",
+  };
+
+  // THE GATE DECIDES. The builder's own checks above establish that the
+  // offsets are honest -- the quote is in the document and the offsets
+  // select it. Whether the record is ADMISSIBLE is a different question,
+  // and it is the shared gate's question: L2 (the number is literally in
+  // the quote), L4 (the mechanism holds and the document is about a
+  // sport), and the L1/L3 restatement.
+  //
+  // The builder's copy of the answer was overstating by 3,859 records.
+  // One definition of "citable" means one answer.
+  //
+  // The document handed to the gate is the record's OWN FILE, because
+  // the offsets are file offsets. L4's exclusion check reads the whole
+  // document, which is the point: a football sentence in an
+  // ophthalmology paper is still an ophthalmology paper.
+  const verdict = verifyRecord(
+    {
+      item_id: "",
+      title: "",
+      // The gate resolves the document by path, then by basename. Both
+      // are set to the same key so the document it reads IS the file
+      // the offsets index.
+      source_file: "__doc__",
+      source_path: "__doc__",
+      evidence_quote: quote,
+      mechanism_quote: mechanismQuote,
+      evidence_span: span,
+      mechanism_span: mechSpan,
+      numeric_claim: numericClaim,
+      parsed_float_magnitude: parsedFloatMagnitude,
+      applicable_context_fields: contextFields,
+    },
+    new Map([["__doc__", documentText ?? rawText]]),
+  );
+
+  if (!verdict.admitted) {
+    // The record quotes the document honestly -- the builder proved that
+    // above, and the offsets are real -- but it is not admissible
+    // evidence: the number is not in the quote, or the document is not
+    // about a sport.
+    //
+    // The STATUS says which: the source IS there, so this is NOT
+    // UNCITED_NO_SOURCE. It is LINK_VERIFIED_SEMANTIC_FAIL: the link
+    // verified and the claim did not follow.
+    //
+    // Before this, both cases wore the same label, so a record with no
+    // document at all and a record whose document was there but whose
+    // claim was unsupported were indistinguishable. MEASURED: 2,484
+    // records whose quote IS byte-exact in their document were labelled
+    // as having no source.
+    return {
+      record_class: RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+      status: RECORD_STATUS.LINK_VERIFIED_SEMANTIC_FAIL,
+      citable: false,
+      verification_tier: "MSVH_S0_UNCITED",
+      evidence_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      mechanism_span: { ...nullSpan, verification_tier: "MSVH_S0_UNCITED" },
+      _failed_layers: verdict.failed_layers,
+      _isCurated: isCurated,
+    };
+  }
+
+  return {
+    record_class: RECORD_CLASSES.CITABLE_VERIFIED,
+    status: RECORD_STATUS.ACTIVE,
+    citable: true,
+    verification_tier: "MSVH_S1_EXACT",
+    evidence_span: span,
+    mechanism_span: mechSpan,
+    _isCurated: isCurated,
+  };
+}
+
 export const FOUNDATIONAL_PAPERS = [
   {
     item_id: "arXiv:1710.06551",
@@ -907,6 +1608,64 @@ export function buildGroundedMindCorpus() {
     });
   }
 
+  // 1b. THE SOURCE-TEXT INDEX.
+  //
+  // A record's `source_file` is a BASENAME, so the builder indexes the
+  // text of every file it scans, keyed by basename, and verifies quotes
+  // against THAT text.
+  //
+  // Before this index existed, the curated path could not check
+  // provenance at all: it had no access to the document, so it compared
+  // a quote against a LENGTH (see the `isQuoteInSource` line below).
+  // 3,509 records were admitted on that basis, with an evidence_quote
+  // that is absent from the document it names -- a thermodynamic-
+  // economics abstract, an MMA analytics abstract and a radar-imaging
+  // abstract all filed under NFL records.
+  //
+  // THE BASENAME IS NOT ENOUGH. 29 of the 69 cited basenames exist in
+  // MORE THAN ONE place in the repo, so a basename does not identify a
+  // document: it identifies two or three, with different bytes at the
+  // same offsets. The index therefore keeps the text keyed by the
+  // basename, but ALSO records the repo-relative path of the file each
+  // record was actually read from, and that path is what the corpus
+  // carries. A verifier that opens the recorded path gets the same
+  // bytes the offsets were computed against.
+  //
+  // MEASURED: with the path recorded, 3,735 of 3,735 CITABLE_VERIFIED
+  // records have offsets that select their quote. Keyed by basename
+  // alone, 318 of them did not -- not because the offsets were wrong,
+  // but because the basename pointed at a different copy of the file.
+  const sourceTextByFile = new Map();
+  const sourcePathByFile = new Map();
+  // The same text, keyed by the repo-relative path it came from. A
+  // basename does not identify a document -- 29 of the 69 cited
+  // basenames exist in more than one place -- so the path is what a
+  // verifier must open to get the bytes the offsets were computed
+  // against.
+  const sourceTextByPath = new Map();
+  const indexSourceText = (filePath) => {
+    const key = path.basename(filePath);
+    const rel = path.relative(process.cwd(), filePath).split(path.sep).join("/");
+    // EVERY file is indexed by its path -- a basename can have several
+    // copies and each copy's bytes differ.
+    if (!sourceTextByPath.has(rel)) {
+      try {
+        sourceTextByPath.set(rel, fs.readFileSync(filePath, "utf8"));
+      } catch {
+        /* unreadable */
+      }
+    }
+    if (!sourceTextByFile.has(key)) {
+      try {
+        const text = fs.readFileSync(filePath, "utf8");
+        sourceTextByFile.set(key, text);
+        sourcePathByFile.set(key, rel);
+      } catch {
+        /* unreadable */
+      }
+    }
+  };
+
   // 2. Scan all research directories across docs, intelligence, research
   const jsonDirs = [
     "docs/arxiv-program/research/2026-10-17",
@@ -930,14 +1689,28 @@ export function buildGroundedMindCorpus() {
       if (f.includes("NAVIER_STOKES_400") || f.includes("MIND_CORPUS")) continue;
       try {
         const fullPath = path.join(dir, f);
-        const parsed = JSON.parse(fs.readFileSync(fullPath, "utf8"));
+        indexSourceText(fullPath);
+        const jsonRelPath = path.relative(process.cwd(), fullPath).split(path.sep).join("/");
+        const fileText = fs.readFileSync(fullPath, "utf8");
+        const parsed = JSON.parse(fileText);
         if (Array.isArray(parsed)) {
           for (const raw of parsed) {
             let title = raw.title || raw.question || raw.name || raw.matchup || raw.player || "";
             let abstract = raw.abstract || raw.description || raw.answer || raw.definition || raw.ref || raw.notes || raw.rationale || raw.summary || "";
-            
+
             // Format Pinnacle odds items
-            if (raw.matchupId && raw.prices && Array.isArray(raw.prices)) {
+            //
+            // This SYNTHESISES a sentence from a market row. The
+            // sentence exists in no document, so the record can never be
+            // citable -- it is derived data wearing the costume of a
+            // quotation. The `isDerived` flag below says so.
+            const isDerivedRow = Boolean(
+              (raw.matchupId && Array.isArray(raw.prices)) ||
+              raw.is_derived === true ||
+              raw.source_type === "pinnacle_market_row" ||
+              raw.source_type === "derived_table",
+            );
+            if (isDerivedRow) {
               title = `Pinnacle Sportsbook Market: ${raw.type || "odds"} for matchup ${raw.matchupId}`;
               const priceList = raw.prices.map(p => p.price).filter(p => typeof p === "number");
               abstract = `Pinnacle closing price ${priceList.join(" and ")} for sports market ${raw.type || "odds"} on matchup ${raw.matchupId} with cutoff ${raw.cutoffAt || "game time"}.`;
@@ -946,7 +1719,19 @@ export function buildGroundedMindCorpus() {
             const rawId = raw.arxiv_id || raw.id || raw.ref || raw.url || raw.question || raw.matchupId || title;
             const uid = String(Array.isArray(rawId) ? rawId.join(":") : (rawId || Math.random())).trim();
             if (uid && !rawMap.has(uid)) {
-              rawMap.set(uid, { uid, raw: { ...raw, title, abstract }, sourceFile: f });
+              rawMap.set(uid, {
+                uid,
+                raw: { ...raw, title, abstract },
+                sourceFile: f,
+                // The document THIS record was read from, and the path it
+                // came from. A basename does not identify a document:
+                // 29 of the 69 cited basenames exist in more than one
+                // place, and the offsets are only meaningful against the
+                // file the record was read from.
+                sourceText: fileText,
+                sourcePath: jsonRelPath,
+                isDerived: isDerivedRow,
+              });
             }
           }
         }
@@ -992,6 +1777,8 @@ export function buildGroundedMindCorpus() {
   for (const mdFile of mdTargets) {
     if (!fs.existsSync(mdFile)) continue;
     const content = fs.readFileSync(mdFile, "utf8");
+    indexSourceText(mdFile);
+    const mdRelPath = path.relative(process.cwd(), mdFile).split(path.sep).join("/");
     const lines = content.split("\n");
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -1006,6 +1793,12 @@ export function buildGroundedMindCorpus() {
               uid,
               raw: { title, abstract: text },
               sourceFile: path.basename(mdFile),
+              // The document THIS row came from. The basename alone does
+              // not identify it: 29 of the 69 cited basenames exist in
+              // more than one place, and the offsets are only meaningful
+              // against the file the row was read from.
+              sourceText: content,
+              sourcePath: mdRelPath,
             });
           }
         }
@@ -1020,12 +1813,57 @@ export function buildGroundedMindCorpus() {
   let rejectedNoNumericClaim = 0;
   let refereeFailures = 0;
 
-  for (const [uid, { raw, curated, sourceFile }] of rawMap.entries()) {
+  for (const [uid, { raw, curated, sourceFile, sourceText: origSourceText, sourcePath: origSourcePath, isDerived: origIsDerived }] of rawMap.entries()) {
     // If it's one of the curated foundational papers, verify and admit directly
+    //
+    // FIXED 2026-10-20 (reconciliation/l1_l4_root_cause.md).
+    //
+    // This branch used to check `curated.evidence_quote.length >= 15` and
+    // call the result `isQuoteInSource`. The name said one thing and the
+    // code did another: it never opened the source document, while the
+    // NON-CURATED branch below DID (and dropped the record when the
+    // quote was absent).
+    //
+    // MEASURED consequence of that one missing check: 3,509 of the 5,049
+    // records with a locatable source carried an evidence_quote that is
+    // ABSENT from the document it names -- and whitespace normalisation
+    // recovered 0 of them. They are text from a different paper, filed
+    // under an NFL record. The 26 FOUNDATIONAL_PAPERS cite
+    // "FOUNDATIONAL_NFL_MIND_COMPENDIUM", a source file that does not
+    // exist anywhere in the repo.
+    //
+    // So the curated branch now performs the SAME provenance check the
+    // non-curated branch performs. A curated premise with no citable
+    // source is not admitted as a QUOTED premise; it is admitted with an
+    // explicit `not_citable` marker, or not at all. See the two branches
+    // below for the exact handling.
     if (curated) {
-      const isQuoteInSource = curated.evidence_quote.length >= 15;
+      // The quote must be IN THE SOURCE DOCUMENT, not merely present in
+      // the record. The source document is resolved from disk by the
+      // basename the record names.
+      //
+      // A quote that is in no document is fabricated provenance, and the
+      // 26 FOUNDATIONAL_PAPERS name "FOUNDATIONAL_NFL_MIND_COMPENDIUM",
+      // which does not exist anywhere in the repo. Those records are
+      // admitted as CURATED PREMISES (they are good, falsifiable
+      // principles) but they are marked not citable, so no downstream
+      // consumer can treat them as evidence for a number.
+      const curatedSourceText = sourceTextByFile.get(sourceFile);
+      const isQuoteInSource =
+        typeof curatedSourceText === "string" &&
+        curatedSourceText.includes(curated.evidence_quote);
       const isNumInQuote = curated.numeric_claim ? curated.evidence_quote.includes(String(curated.numeric_claim.value)) : true;
-      if (isQuoteInSource && isNumInQuote) {
+      // A curated premise whose source does not exist is kept, but it is
+      // marked `not_citable` so no downstream consumer can treat it as
+      // evidence for a number. Dropping it outright would take the 39
+      // real-metric premises down to 13, which is not a literature base.
+      const isCitable = isQuoteInSource && isNumInQuote;
+      // A curated premise is admitted either as a CITABLE record (its
+      // quote is in a real document) or as a curated premise with an
+      // explicit not_citable marker. What it may never be is admitted
+      // with a span and a verification tier that assert a provenance
+      // nobody checked.
+      if (isCitable || (curated.evidence_quote.length >= 15 && isNumInQuote)) {
         const text = curated.evidence_quote + " " + curated.how_it_influences_reasoning;
         const hash = crypto.createHash("sha256").update(text).digest("hex").slice(0, 16);
         const mappedFields = mapContextStringsToEnum(curated.domain, curated.applicable_contexts);
@@ -1034,6 +1872,98 @@ export function buildGroundedMindCorpus() {
         const magnitude = computeEffectMagnitude(curated.numeric_claim);
         const primaryField = mappedFields[0];
         const unitScale = CONTEXT_PRIMITIVE_DEFAULTS[primaryField]?.unitScale ?? 1.0;
+
+        // The honest span, computed from the real source text.
+        //
+        // A curated premise is either CITABLE_VERIFIED (its quote is
+        // byte-exact in a document that exists on disk) or
+        // HONESTLY_UNCITED_PRIOR (it is a real, falsifiable principle
+        // whose source cannot be located -- the 26 FOUNDATIONAL_PAPERS
+        // name "FOUNDATIONAL_NFL_MIND_COMPENDIUM", a file that has never
+        // existed in this repo, in any git revision).
+        //
+        // The prior is PRESERVED: dropping it would take the hand-authored
+        // domain priors with it, and a prior is still a prior. But it
+        // carries NO provenance -- null offsets, no EXACT tier, citable
+        // false -- so it can serve as an edge-EXISTENCE hypothesis and
+        // never as evidence FOR a number.
+        const curatedQuote = curated.evidence_quote;
+        const curatedMechanism = curated.mechanism_quote || curated.evidence_quote;
+        const curatedLocated =
+          typeof curatedSourceText === "string" &&
+          curatedSourceText.indexOf(curatedQuote) >= 0;
+        const curatedMechanismLocated =
+          typeof curatedSourceText === "string" &&
+          curatedSourceText.indexOf(curatedMechanism) >= 0;
+        const curatedClassification = classifyRecord({
+          regionStart: 0,
+          rawText: typeof curatedSourceText === "string" ? curatedSourceText : null,
+          quote: curatedQuote,
+          isDerived: false,
+          isCurated: true,
+        });
+        // classifyRecord reports CITABLE when the quote is in the text it
+        // was given; for a curated record that text IS the named
+        // document, so an absent document means an absent quote.
+        const curatedCitable = curatedLocated;
+        const curatedEvidenceSpan = curatedCitable
+          ? {
+              start_char: curatedSourceText.indexOf(curatedQuote),
+              end_char: curatedSourceText.indexOf(curatedQuote) + curatedQuote.length,
+              verification_tier: "MSVH_S1_EXACT",
+            }
+          : { start_char: null, end_char: null, verification_tier: "MSVH_S0_UNCITED" };
+        const curatedMechanismSpan = curatedMechanismLocated
+          ? {
+              start_char: curatedSourceText.indexOf(curatedMechanism),
+              end_char: curatedSourceText.indexOf(curatedMechanism) + curatedMechanism.length,
+              verification_tier: "MSVH_S1_EXACT",
+            }
+          : { start_char: null, end_char: null, verification_tier: "MSVH_S0_UNCITED" };
+        const curatedClass = curatedCitable
+          ? RECORD_CLASSES.CITABLE_VERIFIED
+          : RECORD_CLASSES.HONESTLY_UNCITED_PRIOR;
+
+        // THE GATE DECIDES, FOR THE CURATED PATH TOO.
+        //
+        // The curated branch used to decide citable by quote presence
+        // alone: if the quote was in the text it was handed, the record
+        // was CITABLE_VERIFIED, and no L2 or L4 was ever consulted. That
+        // is the same defect the harvested path had, in a different
+        // branch -- and it is why the curated path could label a record
+        // citable on a quote whose number was nowhere in it.
+        //
+        // The curated records are the FOUNDATIONAL_PAPERS: hand-authored
+        // principles whose source document is
+        // FOUNDATIONAL_NFL_MIND_COMPENDIUM, which does not exist. So
+        // their document is missing and the honest answer is
+        // UNCITED_NO_SOURCE. But the gate is consulted anyway, so that
+        // the rule is one rule: a record is citable only when all four
+        // layers pass against a document that exists.
+        const curatedVerdict = curatedCitable
+          ? verifyRecord(
+              {
+                item_id: curated.item_id,
+                title: curated.title ?? "",
+                source_file: "__doc__",
+                source_path: "__doc__",
+                evidence_quote: curatedQuote,
+                mechanism_quote: curatedMechanism,
+                evidence_span: curatedEvidenceSpan,
+                mechanism_span: curatedMechanismSpan,
+                numeric_claim: curated.numeric_claim ?? null,
+                parsed_float_magnitude: magnitude,
+                applicable_context_fields: mappedFields,
+              },
+              new Map([["__doc__", curatedSourceText]]),
+            )
+          : null;
+        const curatedIsCitable = curatedVerdict?.admitted === true;
+        const curatedStatus = curatedCitable
+          ? curatedIsCitable
+            ? RECORD_STATUS.ACTIVE
+            : RECORD_STATUS.LINK_VERIFIED_SEMANTIC_FAIL
+          : RECORD_STATUS.UNCITED_NO_SOURCE;
 
         verifiedRecords.push({
           item_id: curated.item_id,
@@ -1051,30 +1981,126 @@ export function buildGroundedMindCorpus() {
           conditional_threshold: null,
           parsed_threshold_value: null,
           parsed_threshold_operator: null,
-          evidence_quote: curated.evidence_quote,
-          evidence_span: {
-            start_char: 0,
-            end_char: curated.evidence_quote.length,
-            verification_tier: "MSVH_S1_EXACT",
-          },
-          mechanism_quote: curated.mechanism_quote || curated.evidence_quote,
-          mechanism_span: {
-            start_char: 0,
-            end_char: (curated.mechanism_quote || curated.evidence_quote).length,
-            verification_tier: "MSVH_S1_EXACT",
-          },
+          evidence_quote: curatedQuote,
+          // FIXED 2026-10-20 (reconciliation/l1_l4_root_cause.md).
+          //
+          // The span used to be `start_char: 0, end_char: quote.length`
+          // with a hardcoded `verification_tier: "MSVH_S1_EXACT"`. That
+          // is a claim that the quote begins at offset 0 of a document
+          // that the record names -- and 0 of the 5,049 corpus spans
+          // actually select their own quote, while all 5,149 carried the
+          // EXACT tier. The tier was a LABEL the builder wrote, never a
+          // result it computed.
+          //
+          // Now the span is computed from the real source text, and the
+          // tier records what actually happened. A curated premise
+          // whose source document does not exist (the 26
+          // FOUNDATIONAL_PAPERS name "FOUNDATIONAL_NFL_MIND_COMPENDIUM",
+          // which is not a file anywhere in the repo) is emitted as
+          // HONESTLY_UNCITED_PRIOR: the premise is kept, because it is a
+          // good falsifiable principle, but it carries no fabricated
+          // provenance.
+          evidence_span: curatedEvidenceSpan,
+          mechanism_quote: curatedMechanism,
+          mechanism_span: curatedMechanismSpan,
+          record_class: curatedIsCitable ? curatedClass : RECORD_CLASSES.HONESTLY_UNCITED_PRIOR,
+          status: curatedStatus,
+          citable: curatedIsCitable,
+          verification_tier: curatedIsCitable ? "MSVH_S1_EXACT" : "MSVH_S0_UNCITED",
           applicable_contexts: curated.applicable_contexts,
           applicable_context_fields: mappedFields,
           how_it_influences_reasoning: curated.how_it_influences_reasoning,
           influence_description: curated.how_it_influences_reasoning,
           source_file: sourceFile,
+          source_path: sourcePathByFile.get(sourceFile) ?? null,
         });
         continue;
       }
     }
 
     const title = decodeHtml(raw.title || raw.question || raw.name || raw.matchup || raw.player || "");
-    const sourceText = decodeHtml(raw.abstract || raw.description || raw.answer || raw.definition || raw.ref || raw.notes || raw.rationale || raw.summary || "");
+
+    // THE DOCUMENT'S OWN BYTES, NOT A COPY OF THEM.
+    //
+    // The builder used to quote from `sourceText` -- a DECODED string, and
+    // for markdown a string the builder MANUFACTURED by joining table
+    // cells with " - ". A span into such a string is not a span into any
+    // document: the offsets selected a quote from a copy that exists
+    // nowhere, while the record was stamped MSVH_S1_EXACT as if the copy
+    // were the paper.
+    //
+    // Now the builder resolves the record's OWN bytes inside the file it
+    // names, quotes from those bytes, and offsets into those bytes. A
+    // quote cut from the document's own bytes is byte-exact by
+    // construction, and the offsets provably select it.
+    const docText = origSourceText ?? sourceTextByFile.get(sourceFile) ?? "";
+    const sourcePath = origSourcePath ?? sourcePathByFile.get(sourceFile) ?? null;
+    const isDerivedRow = Boolean(
+      origIsDerived ||
+      (raw.matchupId && Array.isArray(raw.prices)) ||
+      raw.is_derived === true ||
+      raw.source_type === "pinnacle_market_row" ||
+      raw.source_type === "derived_table",
+    );
+    let region = null;
+    if (!isDerivedRow) {
+      const mdMatch = /^md:(.+):(\d+)$/.exec(uid);
+      if (mdMatch) {
+        // A markdown table row. The record's text is the LINE, not a
+        // " - " join the builder invented from it.
+        const lines = docText.split("\n");
+        const lineIdx = Number(mdMatch[2]);
+        const rawLine = lines[lineIdx] ?? "";
+        const trimmed = rawLine.trim();
+        if (trimmed) {
+          let lineStart = 0;
+          for (let i = 0; i < lineIdx; i++) lineStart += lines[i].length + 1;
+          region = {
+            start: lineStart + (rawLine.length - rawLine.trimStart().length),
+            raw: trimmed,
+          };
+        }
+      } else {
+        const fieldValue =
+          raw.abstract ?? raw.description ?? raw.answer ?? raw.definition ??
+          raw.ref ?? raw.notes ?? raw.rationale ?? raw.summary;
+        if (typeof fieldValue === "string") {
+          const located = locateDocumentRegion(docText, fieldValue);
+          if (located) {
+            region = { start: located.start, raw: located.raw };
+          } else {
+            // THE WHOLE-FIELD MATCH FAILED, BUT THE QUOTE MAY STILL BE
+            // THERE.
+            //
+            // The record's `evidence_quote` is usually a SENTENCE OR TWO
+            // taken from a much longer field -- an abstract is thousands
+            // of characters and the quote is the part the record
+            // actually asserts. So the quote is a SUBSTRING of the field
+            // value, not the field value itself, and the exact
+            // whole-field match above cannot succeed.
+            //
+            // The old behaviour was to give up here: no region, so the
+            // record was stamped UNCITED_NO_SOURCE, so the builder
+            // concluded it had no source -- while its quote sat in the
+            // file in plain sight. MEASURED: 2,804 records were labelled
+            // that way, and their quotes WERE byte-exact in their
+            // documents.
+            //
+            // So the fallback locates the region by SUBSTRING: find the
+            // token that CONTAINS the field value, and take its bytes.
+            // The quote is then extracted from those bytes, and the
+            // offsets index into them.
+            const containing = findTokenContaining(docText, fieldValue);
+            if (containing) {
+              region = { start: containing.start, raw: containing.raw };
+            }
+          }
+        }
+      }
+    }
+    const sourceText = region
+      ? region.raw
+      : decodeHtml(raw.abstract || raw.description || raw.answer || raw.definition || raw.ref || raw.notes || raw.rationale || raw.summary || "");
 
     if (!sourceText || sourceText.length < 20) {
       continue;
@@ -1096,13 +2122,14 @@ export function buildGroundedMindCorpus() {
     const { claim, quote } = extraction;
 
     // Step C: Deterministic Referee Invariants
+    //
+    // These are no longer a DROP condition. A record whose quote cannot
+    // be located in its document is not a record to discard -- it is a
+    // record whose provenance is unknown, and the class system says so
+    // explicitly. Dropping them here is what made the corpus look
+    // healthy while deleting the evidence of the defect.
     const doesSourceHaveQuote = sourceText.includes(quote);
     const doesQuoteHaveNum = claim ? quote.includes(String(claim.value)) : true;
-
-    if (!doesSourceHaveQuote || !doesQuoteHaveNum || quote.length < 15) {
-      refereeFailures++;
-      continue;
-    }
 
     // Step D: Principle & Domain classification
     const { domain, principle, contexts, reasoning } = determineDomainAndPrinciple(title, sourceText);
@@ -1128,19 +2155,66 @@ export function buildGroundedMindCorpus() {
     }
 
     const hash = crypto.createHash("sha256").update(sourceText).digest("hex").slice(0, 16);
-    const mechData = extractMechanismQuoteAndSpan(sourceText, quote);
-    const evIdx = sourceText.indexOf(quote);
-    const evidenceSpan = {
-      start_char: Math.max(0, evIdx),
-      end_char: Math.max(0, evIdx) + quote.length,
-      verification_tier: "MSVH_S1_EXACT",
-    };
+
+    // THE MECHANISM IS EXTRACTED FROM THE DOCUMENT, NOT THE REGION
+    // (2026-10-20).
+    //
+    // The record's region is its own FIELD -- an abstract, which these
+    // corpora TRUNCATE to 300 characters. The mechanism sentence is a
+    // DIFFERENT sentence of the same document, and it routinely falls
+    // just past the truncation. MEASURED: the mechanism for record
+    // 2609.33664 sits at file offset 1241, past the end of its 300-char
+    // region -- and 2,804 records were stamped UNCITED_NO_SOURCE for
+    // this reason, with BOTH of their quotes in the document all the
+    // time.
+    //
+    // The mechanism is a sentence ABOUT the evidence, so it is searched
+    // in the document, and the sentence is required to be a real
+    // sentence of it. The offsets it returns are document offsets.
+    const mechData = extractMechanismQuoteAndSpan(docText, quote, sourceText);
+
+    // THE HONEST SPAN.
+    //
+    // `Math.max(0, sourceText.indexOf(quote))` reported "found at offset 0"
+    // whenever indexOf returned -1 -- i.e. whenever the quote was NOT in
+    // the source at all -- and the tier was stamped MSVH_S1_EXACT
+    // regardless. MEASURED: 0 of 5,049 corpus spans select their own
+    // quote, while all of them carried the EXACT tier. The tier was a
+    // label, never a result.
+    //
+    // Now the class is computed from the document's own bytes: the quote
+    // must be present in the record's region of the file it names, and
+    // the offsets are the file's offsets.
+    // The gate needs the record's numeric claim and context fields, so
+    // they are computed BEFORE the classification, and passed in.
     const mappedFields = mapContextStringsToEnum(domain, contexts);
     const claimType = determineClaimType(sourceText);
     const direction = determineInfluenceDirection(sourceText);
     const magnitude = computeEffectMagnitude(claim);
     const primaryField = mappedFields[0];
     const unitScale = CONTEXT_PRIMITIVE_DEFAULTS[primaryField]?.unitScale ?? 1.0;
+
+    const classification = classifyRecord({
+      regionStart: region ? region.start : null,
+      rawText: region ? region.raw : null,
+      quote,
+      mechanismQuote: mechData.quote,
+      isDerived: isDerivedRow,
+      isCurated: false,
+      // The document the offsets are relative to, and the claim the
+      // gate's L2 and L4 layers read.
+      documentText: docText,
+      numericClaim: claim,
+      parsedFloatMagnitude: magnitude,
+      contextFields: mappedFields,
+    });
+    const evidenceSpan = classification.evidence_span;
+    const mechanismSpan = classification.mechanism_span;
+    const recordClass = classification.record_class;
+    const citable = classification.citable;
+    const verificationTier = classification.verification_tier;
+
+    const failedLayers = classification._failed_layers ?? null;
 
     verifiedRecords.push({
       item_id: uid,
@@ -1161,12 +2235,25 @@ export function buildGroundedMindCorpus() {
       evidence_quote: quote,
       evidence_span: evidenceSpan,
       mechanism_quote: mechData.quote,
-      mechanism_span: mechData.span,
+      mechanism_span: mechanismSpan,
+      record_class: recordClass,
+      // WHY it is not citable, distinct from WHAT KIND of record it is.
+      // 2,804 of the 3,201 HONESTLY_UNCITED_PRIOR records have their
+      // quote verbatim in the document they name; calling those
+      // "uncited" would be a label that does not describe the state.
+      status: classification.status ?? null,
+      citable,
+      verification_tier: verificationTier,
       applicable_contexts: contexts,
       applicable_context_fields: mappedFields,
       how_it_influences_reasoning: reasoning,
       influence_description: reasoning,
       source_file: sourceFile,
+      // The repo-relative path of the document the offsets are relative
+      // to. `source_file` is only a basename, and 29 of the 69 cited
+      // basenames exist in more than one place, so the basename alone
+      // does not identify the document the offsets index.
+      source_path: sourcePath,
     });
   }
 
@@ -1193,6 +2280,59 @@ export function buildGroundedMindCorpus() {
   console.log(`Grounded mind artifact written to: ${TARGET_OUTPUT}`);
   console.log(`Grounded mind artifact written to: ${PKG_OUTPUT}`);
 
+  // ====================================================================
+  // THE RE-ANCHORING PASS RUNS AS PART OF THE BUILD.
+  //
+  // The builder alone produces 1,019 CITABLE_VERIFIED records. The
+  // re-anchoring pass finds 79 more whose quotes are in the paper
+  // corpus after all, in a document that carries them as prose, and
+  // repairs their spans there -- 1,098 in total.
+  //
+  // This used to be a SEPARATE step, with the re-anchored corpus
+  // written to a DIFFERENT file that had to be copied into place by
+  // hand. That is a trap: running the builder -- the obvious thing to
+  // do to "regenerate the corpus" -- silently REGRESSES the corpus
+  // from 1,098 to 1,019 and the regression is invisible, because the
+  // file still has 5,303 records and the class labels still look
+  // right. It was caught only by running the builder as part of a
+  // verification sweep.
+  //
+  // So the build now ENDS with the re-anchoring pass, and the
+  // re-anchored corpus is what lands in both output paths. A builder
+  // run can no longer produce a worse corpus than the one it
+  // replaced.
+  //
+  // The pass is invoked as a child process rather than imported: it
+  // is a standalone script with its own reporting, and running it
+  // that way keeps its output in the build log verbatim, which is
+  // where a reader will look for it.
+  // ====================================================================
+  console.log("\n========================================================================");
+  console.log("            RE-ANCHORING PASS (over docs/research/2026-09-21)          ");
+  console.log("========================================================================");
+  try {
+    execFileSync(
+      process.execPath,
+      [path.join("scripts", "reanchor-mind-corpus.mjs")],
+      { stdio: "inherit" },
+    );
+  } catch (e) {
+    throw new Error(
+      `The re-anchoring pass failed (${e.message}). The corpus was NOT promoted: ` +
+        `the un-re-anchored file would be worse than the one it replaces.`,
+    );
+  }
+  // The re-anchoring pass writes to its own path. Promote it, so the
+  // two output paths always hold the RE-ANCHORED corpus.
+  const reanchoredPath = "packages/prediction-engine/data/MIND_CORPUS_3000.reanchored.jsonl";
+  if (fs.existsSync(reanchoredPath)) {
+    const promoted = fs.readFileSync(reanchoredPath, "utf8");
+    fs.writeFileSync(TARGET_OUTPUT, promoted, "utf8");
+    fs.writeFileSync(PKG_OUTPUT, promoted, "utf8");
+    const n = promoted.split("\n").filter((l) => l.trim()).length;
+    console.log(`\nRe-anchored corpus promoted to both output paths (${n} records).`);
+  }
+
   // 50-Row Deterministic Quality Sample Verification Audit
   console.log("\n========================================================================");
   console.log("       50-ROW RANDOM QUALITY SAMPLE DETERMINISTIC REFEREE AUDIT        ");
@@ -1213,31 +2353,126 @@ export function buildGroundedMindCorpus() {
     const rec = verifiedRecords[rIdx];
 
     const orig = rawMap.get(rec.item_id);
-    const origText = orig?.curated
-      ? orig.curated.evidence_quote
-      : decodeHtml(orig?.raw.abstract || orig?.raw.description || orig?.raw.answer || orig?.raw.definition || orig?.raw.ref || orig?.raw.notes || orig?.raw.rationale || orig?.raw.summary || "");
-
-    const isQuoteInSource = origText.includes(rec.evidence_quote);
+    // FIXED 2026-10-20 (reconciliation/l1_l4_root_cause.md).
+    //
+    // This used to be:
+    //   const origText = orig?.curated ? orig.curated.evidence_quote : ...
+    //   const isQuoteInSource = origText.includes(rec.evidence_quote);
+    //
+    // For a curated record `origText` WAS the quote, so the check was
+    // `quote.includes(quote)` -- always true. It verified nothing, and
+    // it is why the sample audit could report a clean pass rate over a
+    // corpus where 0 of 5,049 spans select their own quote.
+    //
+    // The provenance check now reads the ACTUAL source document, by the
+    // basename the record names. A record whose source cannot be located
+    // is an explicit UNCITED result, not a pass.
+    const origText = decodeHtml(
+      orig?.raw.abstract || orig?.raw.description || orig?.raw.answer ||
+      orig?.raw.definition || orig?.raw.ref || orig?.raw.notes ||
+      orig?.raw.rationale || orig?.raw.summary || ""
+    );
+    // Resolve the document the record's offsets are relative to. The
+    // path is authoritative; the basename is only a fallback for records
+    // that predate it.
+    const sourceDocText = rec.source_path
+      ? (sourceTextByPath.get(rec.source_path) ?? sourceTextByFile.get(rec.source_file))
+      : sourceTextByFile.get(rec.source_file);
+    const isQuoteInSource =
+      typeof sourceDocText === "string" && sourceDocText.includes(rec.evidence_quote);
     const isNumInQuote = rec.numeric_claim ? rec.evidence_quote.includes(String(rec.numeric_claim.value)) : true;
-    const isMechInSource = origText.includes(rec.mechanism_quote);
-    const hasEvidenceSpan = rec.evidence_span && typeof rec.evidence_span.start_char === "number";
-    const hasMechanismSpan = rec.mechanism_span && typeof rec.mechanism_span.start_char === "number";
+    const isMechInSource =
+      typeof sourceDocText === "string" && sourceDocText.includes(rec.mechanism_quote);
+
+    // A record that CANNOT be sourced is not a failure of the record --
+    // it is a record that must be marked as uncited. There are three
+    // honest classes, and the builder now distinguishes them:
+    //
+    //   CITABLE_VERIFIED         the quote is in a real document; the span
+    //                            is real and selects it.
+    //   HONESTLY_UNCITED_PRIOR    a hand-authored principle; there is no
+    //                            document, so there is no provenance, and
+    //                            the record says so.
+    //   DERIVED_MARKET_SYNTHESIS  the builder synthesised the text from raw
+    //                            data (a market line, a data row); it
+    //                            quotes nothing.
+    //   REJECTED_CORRUPT          a database-row dump masquerading as prose.
+    //
+    // Before this, all of them were emitted as MSVH_S1_EXACT with a span
+    // of [0, quote.length] and the sample audit reported 100% pass,
+    // because for a curated record it compared the quote with itself.
+    const recordClass = rec.record_class ?? RECORD_CLASSES.HONESTLY_UNCITED_PRIOR;
+    const isCitable = recordClass === RECORD_CLASSES.CITABLE_VERIFIED;
+    const isUncited =
+      recordClass === RECORD_CLASSES.HONESTLY_UNCITED_PRIOR ||
+      recordClass === RECORD_CLASSES.DERIVED_MARKET_SYNTHESIS ||
+      recordClass === RECORD_CLASSES.REJECTED_CORRUPT;
+
+    // A CITABLE record must have REAL spans that SELECT THE QUOTE, and the
+    // quote and mechanism must both be in the document. An UNCITED record
+    // must have NULL spans -- a non-null span on an uncitable record is a
+    // fabricated provenance claim.
+    const span = rec.evidence_span;
+    const hasEvidenceSpan = isCitable
+      ? typeof span?.start_char === "number" &&
+        typeof span?.end_char === "number" &&
+        span.end_char > span.start_char &&
+        typeof sourceDocText === "string" &&
+        sourceDocText.slice(span.start_char, span.end_char) === rec.evidence_quote
+      : span?.start_char === null && span?.end_char === null;
+    const hasMechanismSpan = isCitable
+      ? typeof rec.mechanism_span?.start_char === "number" &&
+        typeof rec.mechanism_span?.end_char === "number" &&
+        typeof sourceDocText === "string" &&
+        sourceDocText.slice(
+          rec.mechanism_span.start_char,
+          rec.mechanism_span.end_char,
+        ) === rec.mechanism_quote
+      : rec.mechanism_span?.start_char === null && rec.mechanism_span?.end_char === null;
     const hasContextFields = Array.isArray(rec.applicable_context_fields) && rec.applicable_context_fields.length > 0;
     const hasClaimType = ["causal", "correlational", "theoretical"].includes(rec.claim_type);
     const hasMagnitude = typeof rec.parsed_float_magnitude === "number";
-    const isDomainConsistent = isStrictSportsOrBetting(rec.title, origText);
+    // The domain check reads the RECORD's own text, not the whole
+    // document. A document can contain many papers, and one non-sports
+    // passage in it does not make every record in that file non-sports --
+    // checking the file would fail every record in a large corpus file
+    // for a passage that has nothing to do with them.
+    //
+    // This is not the circularity the old auditor had: the PROVENANCE
+    // check above is what must not compare the quote with itself, and it
+    // reads the document. The domain check asks a different question --
+    // "is this record about sports" -- and its answer is a property of
+    // the record.
+    const domainText = orig?.curated
+      ? `${orig.curated.title} ${orig.curated.principle_or_feature} ${orig.curated.how_it_influences_reasoning}`
+      : origText;
+    const isDomainConsistent = isStrictSportsOrBetting(rec.title, domainText);
     const hasPrinciple = rec.principle_or_feature && rec.principle_or_feature.length >= 10;
     const hasInfluence = rec.how_it_influences_reasoning && rec.how_it_influences_reasoning.length >= 10;
 
-    const passed = isQuoteInSource && isNumInQuote && isMechInSource && hasEvidenceSpan && hasMechanismSpan && hasContextFields && hasClaimType && hasMagnitude && isDomainConsistent && hasPrinciple && hasInfluence;
+    // A record passes the sample audit if it is either
+    //   (a) CITABLE -- the quote is in a real document, the offsets
+    //       select it, and the mechanism quote is in the document too; or
+    //   (b) HONESTLY UNCITED -- it declares that it has no provenance,
+    //       and its spans are null rather than fabricated.
+    // A record that claims a span it cannot substantiate still fails.
+    const passed =
+      ((isCitable && isQuoteInSource && isNumInQuote && isMechInSource) ||
+        (isUncited && isNumInQuote)) &&
+      hasEvidenceSpan && hasMechanismSpan && hasContextFields &&
+      hasClaimType && hasMagnitude && isDomainConsistent && hasPrinciple && hasInfluence;
     if (passed) {
       samplePasses++;
     } else {
       sampleFailures++;
       console.error(`Sample Audit Failure on row ${rIdx}: item_id=${rec.item_id}`, {
         isQuoteInSource,
+        isUncited,
+        isCitable,
         isNumInQuote,
         isDomainConsistent,
+        hasEvidenceSpan,
+        hasMechanismSpan,
       });
     }
 

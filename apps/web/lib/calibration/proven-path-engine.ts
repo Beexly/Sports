@@ -30,6 +30,13 @@
 
 import type { CalibrationSample } from "@sports/prediction-engine";
 import {
+  g7CircuitBreaker,
+  g7HaltNote,
+  g7HaltedGroupKeys,
+  type SettledObservation,
+} from "@sports/prediction-engine";
+
+import {
   brierDecomposition,
   expectedCalibrationError,
 } from "@sports/prediction-engine";
@@ -68,6 +75,14 @@ export type ProvenPathPickRow = {
   readonly marketP?: number | null;
   readonly y: 0 | 1;
   readonly groupKey: string;
+  /**
+   * When the pick settled, as epoch-ms. Null when the caller did not supply one.
+   *
+   * ONLY G7 reads it. The bake-off does not need a timestamp -- it is a pooled
+   * score over the whole set -- but the drift rule compares a RECENT window
+   * against a SLOW baseline, and "recent" has to mean recent BY TIME.
+   */
+  readonly settledAt?: number | null;
 };
 
 export type ScoreBakeoffRow = {
@@ -114,6 +129,24 @@ export type ProvenPathPlan = {
     readonly significanceDead: readonly string[];
   };
   readonly keepGroups: readonly string[];
+  /**
+   * G7's CALIBRATION-DRIFT HALT LIST -- machine-owned, and SEPARATE from
+   * `pauseGroups`.
+   *
+   * `pauseGroups` is the founder's list and is advisory until the founder
+   * opts in (`ranking-pause-apply.ts`). THIS list is not: a machine-computed
+   * calibration halt must not need a human to approve it, and it must not
+   * overwrite the founder's list either. The live publish path applies the two
+   * IN COMBINATION.
+   *
+   * Absent on plans persisted before this field existed, and absent whenever
+   * there is not enough settled, time-stamped evidence to judge a family --
+   * a family with fewer than G7_MIN_FAMILY_SAMPLES settled bets is not a
+   * family that has been proven to drift.
+   */
+  readonly g7HaltedGroups?: readonly string[];
+  /** A one-line, operator-readable note for the G7 verdict. */
+  readonly g7Note?: string;
   readonly defaultDelta: number;
   readonly pathSteps: readonly string[];
   readonly honesty: string;
@@ -330,6 +363,47 @@ export function buildProvenPathPlan(
   const significanceDead = significance.pauseCandidates;
   const pauseGroups = unionSorted(resNearZero, significanceDead);
 
+  // G7 -- THE CALIBRATION-DRIFT CIRCUIT BREAKER, per market family.
+  //
+  // This is the producer the G7 module was written for. The module computed the
+  // verdict correctly but nothing consumed it; this is the call site, and the
+  // verdict it produces is what the live publish path reads.
+  //
+  // WHAT `p` IS. G7 is a CALIBRATION rule -- it asks whether the engine's own
+  // forecast has drifted away from its realised outcomes. So the probability
+  // must be the ENGINE's: `pIndependent` (the model's own trueProb) when the
+  // row has one, and `pConfidence` otherwise. It is deliberately NOT
+  // `marketP`: that is the MARKET's forecast, and grading the market against
+  // the outcome is a different question (and one the engine cannot fix).
+  //
+  // WHY THE TIMESTAMP IS REQUIRED. The fast window is the most RECENT 30
+  // settled bets and the slow baseline the most recent 250, ordered by
+  // settlement time. A row without a settlement time is not eligible -- it is
+  // skipped, not defaulted, because a row with an unknown time has no place in
+  // either window.
+  //
+  // WHY IT IS SEPARATE FROM `pauseGroups`. `pauseGroups` is the founder's list
+  // and is advisory until the founder opts in. This is a machine-owned signal:
+  // a calibration halt must not need a human to approve it, and it must not
+  // overwrite the founder's list either. The publish path applies the two in
+  // combination.
+  const g7Observations: SettledObservation[] = [];
+  for (const r of rows) {
+    const settledAt = r.settledAt;
+    if (settledAt == null || !Number.isFinite(settledAt)) continue;
+    const raw = r.pIndependent ?? r.pConfidence;
+    if (!Number.isFinite(raw)) continue;
+    g7Observations.push({
+      groupKey: r.groupKey,
+      p: Math.min(1, Math.max(0, raw)),
+      y: r.y,
+      settledAt,
+    });
+  }
+  const g7Report = g7CircuitBreaker(g7Observations);
+  const g7HaltedGroups = g7HaltedGroupKeys(g7Report);
+  const g7Note = g7HaltNote(g7Report);
+
   const sweep = selectivePublishSweep(selectiveRows, {
     deltas: [0, 0.08, 0.1, 0.12, 0.15, 0.18],
     edges: [null, 0.03, 0.05],
@@ -393,6 +467,8 @@ export function buildProvenPathPlan(
       "pauseGroups = Res≈0 ∪ significance-dead (same as RPCP); apply stays OFF until RANKING_PAUSE_APPLY. " +
       "If selectiveGainRes≈0 and independents still weak, need sport models / features — not maps. " +
       "Maps will not unlock PROVEN.",
+    g7HaltedGroups,
+    g7Note,
     floorsUnchanged: true,
     rankingPolarityLaw: "positive_separation_required",
   };

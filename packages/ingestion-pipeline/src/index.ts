@@ -940,3 +940,9 @@ export {
   type DerivedMetrics,
 } from "./reasoning-trace.js";
 export { traceHoldoutGame, type HoldoutScheduleRow } from "./reasoning-trace/from-bridge.js";
+export {
+  runSettlementLearningLoop,
+  type SettledPickObservation,
+  type SettlementLearningState,
+  type SettlementLearningReport,
+} from "./settlement-learning-loop.js";

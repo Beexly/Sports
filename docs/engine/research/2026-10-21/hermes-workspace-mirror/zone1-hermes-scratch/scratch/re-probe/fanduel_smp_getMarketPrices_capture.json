@@ -1,0 +1,122 @@
+{
+  "captured_at": "2026-10-10T21:29:03Z (CDT local 16:29)",
+  "source": "chrome-devtools network capture on https://sportsbook.fanduel.com/navigation/ncaaf (page load)",
+  "request": {
+    "method": "POST",
+    "url": "https://smp.nj.sportsbook.fanduel.com/api/sports/fixedodds/readonly/v1/getMarketPrices?priceHistory=0",
+    "status": 200,
+    "headers": {
+      "x-application": "FhMFpcPWXMeyZxOx",
+      "content-type": "application/json",
+      "origin": "https://sportsbook.fanduel.com",
+      "referer": "https://sportsbook.fanduel.com/",
+      "accept": "application/json"
+    },
+    "body": {
+      "marketIds": [
+        "734.154525715",
+        "734.154528291",
+        "734.154528277",
+        "734.168823936",
+        "734.168823934",
+        "734.168823935",
+        "734.188987838",
+        "734.188987840",
+        "734.188987837",
+        "734.188987843",
+        "734.188987842",
+        "734.188987841",
+        "734.188987960",
+        "734.188987957",
+        "734.188987959",
+        "734.188988005",
+        "734.188987998",
+        "734.188988004",
+        "734.188988006",
+        "734.188988010",
+        "734.188988013",
+        "734.188988103",
+        "734.188988101",
+        "734.188988100",
+        "734.188988249",
+        "734.188988248",
+        "734.188988251",
+        "734.188988338",
+        "734.188988335",
+        "734.188988336",
+        "734.188988114",
+        "734.188988115",
+        "734.188988117",
+        "734.188988167",
+        "734.188988163",
+        "734.188988166",
+        "734.188988208",
+        "734.188988206",
+        "734.188988210",
+        "734.188988334",
+        "734.188988331",
+        "734.188988333",
+        "734.188988424",
+        "734.188988423",
+        "734.188988435",
+        "734.190243426",
+        "734.190243429",
+        "734.190243425",
+        "734.168823978",
+        "734.168823981",
+        "734.168823982",
+        "734.145387761",
+        "734.190641852",
+        "734.190640275",
+        "734.190641853",
+        "734.190479192",
+        "734.190479191",
+        "734.190479193",
+        "734.190641972",
+        "734.190479523",
+        "734.190749753",
+        "734.190749752",
+        "734.190805455",
+        "734.190749747",
+        "734.190749746",
+        "734.190830309",
+        "734.190749760",
+        "734.190749759",
+        "734.190808276",
+        "734.190749748"
+      ]
+    },
+    "note": "70 marketIds = pollingConfig.batchSize; 4 identical POSTs fired in one page load (per-card/betslip subscription batches)"
+  },
+  "response_sample": {
+    "first_market": {
+      "marketId": "734.154525715",
+      "inplay": false,
+      "runnerDetails": [
+        {
+          "selectionId": 10782388,
+          "winRunnerOdds": {
+            "trueOdds": {
+              "decimalOdds": {
+                "decimalOdds": 7.5
+              }
+            },
+            "americanDisplayOdds": {
+              "americanOdds": 650.0,
+              "americanOddsInt": 650
+            }
+          },
+          "handicap": 0.0,
+          "runnerStatus": "ACTIVE"
+        }
+      ]
+    }
+  },
+  "response_headers": {
+    "server": "Cougar - 4.12.9 (Cougar 2 mode)",
+    "content-type": "application/json;charset=utf-8",
+    "x-application": "FhMFpcPWXMeyZxOx",
+    "cache-control": "no-cache",
+    "access-control-allow-origin": "https://sportsbook.fanduel.com"
+  }
+}

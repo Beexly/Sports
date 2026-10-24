@@ -377,3 +377,12 @@ export function validateHomographyScale(
     );
   }
 }
+
+export {
+  conditionNumber2x3 as computePinholeConditionNumber,
+  imageJacobian2x3 as computePinholeImageJacobian2x3,
+  insituMeasureGate,
+  projectPinhole as computePinholeProjection,
+  pullImageCovarianceToWorld3D,
+  pushWorldCovarianceToImage2D,
+} from "./pinhole-jacobian.js";

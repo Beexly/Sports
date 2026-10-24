@@ -1,0 +1,105 @@
+
+<<<PAGE 4>>>
+R0′d: For all unshielded triples A∗−◦B◦−∗C and for all unshielded triples A∗→B◦−∗C: If B /∈SAC,
+then mark the unshielded triple for orientation as collider A∗→B←∗C.
+R1′: For all unshielded triples A∗→
+∗B◦−⋆
+∗C: If SAC is weakly minimal and B ∈SAC, then mark
+the edge between B and C for orientation as B→
+∗C.
+R2′: For all A→
+∗B∗→
+∗C with A⋆−◦
+∗C and for all A∗→
+∗B→
+∗C with A⋆−◦
+∗C: Mark the edge between
+A and C for orientation as A⋆→
+∗C.
+R3′: For all unshielded triples A∗→
+∗B←∗
+∗C with A⋆−◦
+∗D◦−⋆
+∗C and D⋆−◦
+∗B: If SAC is weakly
+minimal and D ∈SAC, then mark the edge between D and B for orientation as D⋆→
+∗B.
+R4′: Use the discriminating path rule of [Colombo et al., 2012] with the following modiﬁcation:
+When the rule instructs to test whether any pair (A, B) of variables is conditionally independent given
+any set S, then i) if A and B are connected by an edge with empty middle mark do not make this test,
+and ii) else replace S with [S ∪pa({A, B}, C(G))] \ {A, B, nodes in the future of both A and B}.
+R8′: For all A→
+∗B→
+∗C with A◦−⋆
+∗C: Mark the edge between A and C for orientation as A→
+∗C.
+R9′: For all A1◦→
+∗An for which a) there is an uncovered potentially directed path from A1 to An
+through A2, . . . , An−1 (in this order) such that b) A2 is not adjacent to An: If for all k = 1, . . . , n−1
+ia) Ak→
+∗Ak+1 or ib) SAk+1Ak−1 is weakly minimal and Ak ∈SAk+1Ak−1 (with the convention
+A0 = An), then mark the edge between A1 and An for orientation as A1→
+∗An.
+R10′: For all A◦→
+∗D for which a) there is Bn→
+∗D←
+∗Cm, b) an uncovered potentially directed
+path pB from A ≡B0 to Bn through B1, . . . , Bn−1 (in this order), c) an uncovered potentially
+directed path pC from A ≡C0 to Cm through C1, . . . , Cm−1 (in this order) such that d) B1 and
+C1 are not adjacent: If i) SB1C1 is weakly minimal and A ∈SB1C1, ii) for all k = 0, . . . , n −2
+iia) Bk+1→
+∗Bk+2 or iib) SBk+2Bk is weakly minimal and Bk+1 ∈SBk+2Bk, and iii) for all
+k = 0, . . . , m −2 iiia) Ck+1→
+∗Ck+2 or iiib) SCk+2Ck is weakly minimal and Ck+1 ∈SCk+2Ck,
+then mark the edge between A and D for orientation as A→
+∗D.
+These rules orient edge marks. They are complemented by the following two rules for updating
+middle marks:
+APR: (ancestor-parent-rule, see Lemma 1) Replace all edges A→
+! B by A→B, all edges A→
+L B with
+A > B by A→B, and all edges A→
+R B with A < B by A→B.
+MMR: (middle-mark-rule) Replace all edges A∗→
+? B with A < B by A∗→
+L B, all edges A∗→
+? B with
+A > B by A∗→
+R B, all edges A∗→
+R B with A < B by A∗→
+! B, and all edges A∗→
+L B with A > B by
+A∗→
+! B.
+S5
+Pseudocode for Algorithms S2 and S3
+In Sec. 3.4 of the main text we give pseudocode for LPCMCI in Algorithm 1. This involves calls to
+Algorithms S2 and S3, for which we here provide pseudocode and further explanations.
+Algorithm S2 removes the edges between all pairs (Xi
+t−τ, Xj
+t ) of variables that are not adjacent in
+M(G) and for which one of them is an ancestor of the other (it may also removed edges between
+some pairs of non-adjacent variables for which neither one of them is ancestor of the other, but this is
+not guaranteed). To this end the algorithm tests for CI given S ∪Sdef, where the cardinality |S| = p
+of S ⊆Ssearch = apdst(Xj
+t , Xi
+t−τ, C(G)) \ Sdef is successively increased. The apdst sets are
+deﬁned in Sec. S7 below, they exclude all variables that have already been identiﬁed as non-ancestors
+of Xj
+t . This reﬂects the ﬁrst design principle behind LPCMCI, see Sect. 3.1. The default conditioning
+set Sdef = pa({Xi
+t−τ, Xj
+t }, C(G)) consists of all variables that have been marked as parents of Xi
+t−τ
+or Xj
+t in C(G), which implies that they are ancestors of Xi
+t−τ or Xj
+t in G. The extension of S to
+S ∪Sdef reﬂects the second design principle behind LPCMCI, see Sect. 3.1, and according to Lemma
+S4 cannot destroy m-separations. The parentships used to deﬁne Sdef are found by the application of
+orientation rules in line 18 (with Alg. S4, see further below in this section) that are made if at least
+one edge was removed in the current step of the repeat-loop (or have been passed on from an earlier
+iteration in the preliminary phase of LPCMCI). It is then necessary to restart with p = 0, otherwise
+future separating sets might not be weakly minimal. The rules may also ﬁnd non-ancestorships, these
+then further restrict the apdst sets. Another novelty is that some edges are tested and removed (if
+4

@@ -1,0 +1,87 @@
+[
+ {
+  "domain": "wayback API",
+  "why": "standing bypass for CF reference sites (PFR/footballdb/sports-ref); also good for historical backfill",
+  "status": "active"
+ },
+ {
+  "domain": "api.roboflow.com",
+  "why": "needs one free API key; then NFL CV dataset (images+labels) is downloadable",
+  "status": "blocked"
+ },
+ {
+  "domain": "api.thescore.com/rosters",
+  "why": "correct roster path (not /rosters) for depth charts",
+  "status": "active"
+ },
+ {
+  "domain": "api.underdogfantasy.com other routes",
+  "why": "/v1/ works - probe sibling v1 routes (appearances, players, lobbies) for injuries/team data",
+  "status": "active"
+ },
+ {
+  "domain": "scores24.live bookmakers",
+  "why": "free tier aggregated-only; try bookmaker-tagged query paths to widen books",
+  "status": "active"
+ },
+ {
+  "domain": "linestarapp.com premium",
+  "why": "lift 61-row truncation: free account, or GetSalariesV5 version downgrade (V1-V4)",
+  "status": "active"
+ },
+ {
+  "domain": "propfinder.app/nfl/* (transforms)",
+  "why": "solve gameTotal/matchup/l5Avg/seasonAvg sub-score transforms",
+  "status": "active"
+ },
+ {
+  "domain": "propsoptimizer.com",
+  "why": "linked sibling, likely shared auth",
+  "status": "backlog"
+ },
+ {
+  "domain": "client-api.fragmentsx.com",
+  "why": "shared vendor backend for other FragmentsX sites",
+  "status": "backlog"
+ },
+ {
+  "domain": "api.prizepicks.com",
+  "why": "props board behind DataDome; needs browser/cookie",
+  "status": "solved"
+ },
+ {
+  "domain": "api.underdogfantasy.com",
+  "why": "426 version gate; recover client version header",
+  "status": "solved"
+ },
+ {
+  "domain": "api.sportsbook.fanduel.com",
+  "why": "extract current _ak from FanDuel JS then content-managed-page",
+  "status": "active"
+ },
+ {
+  "domain": "sportsbook-nash.draftkings.com",
+  "why": "Akamai 403 - needs fingerprint/browser",
+  "status": "blocked"
+ },
+ {
+  "domain": "ngs gamecenter per-play separation",
+  "why": "per-receiver game aggregates are the ceiling; a per-play separation route would lift it",
+  "status": "active"
+ },
+ {
+  "domain": "ngs 2025 tracking file (1.02GB)",
+  "why": "unverified; mechanism predicts same subject-only failure, cheap to confirm",
+  "status": "queued"
+ },
+ {
+  "domain": "ngs expectation season+filter",
+  "why": "season scope returns only 20 rows/product; a position or player filter may unlock a full leaderboard",
+  "status": "active"
+ },
+ {
+  "domain": "BDB combine_tracking.csv",
+  "why": "83MB untried; may give per-player kinematics baselines",
+  "status": "queued"
+ }
+]

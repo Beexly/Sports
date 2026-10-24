@@ -128,6 +128,9 @@ SOVEREIGN_SIGNAL_KEYS = (
     "cognitive.coach_speak_delta",
     "cognitive.scheme_shift",
     "cognitive.tendency_break",
+    "ngs.avg_separation",
+    "ngs.ryoe_per_att",
+    "ngs.cpoe",
 )
 
 TOTAL_UNDER_ALIGNED_KEYS = {
@@ -251,11 +254,11 @@ def compute_pick_probability_from_db_signals(
         max(0.05, min(0.95, market_fair_prob + structural_delta_prob + cont_delta_prob + signal_plane_delta)),
         4,
     )
-    raw_edge = round(true_prob - market_fair_prob, 4)
-    shrunk_edge = round(raw_edge * 0.82, 4)
-    expected_clv = round(raw_edge * 0.75, 4)
-    edge_score = round(max(0.0, min(100.0, 50.0 + 180.0 * raw_edge)), 1)
-    confidence = int(round(max(50.0, min(95.0, 50.0 + 175.0 * raw_edge))))
+    model_edge = round(true_prob - market_fair_prob, 4)
+    shrunk_edge = round(model_edge * 0.82, 4)
+    expected_clv = round(model_edge * 0.75, 4)
+    edge_score = round(max(0.0, min(100.0, 50.0 + 180.0 * model_edge)), 1)
+    confidence = int(round(max(50.0, min(95.0, 50.0 + 175.0 * model_edge))))
 
     return {
         "equation": "trueProb = clamp(marketFairProb + structuralDeltaProb + continuityDeltaProb + sum(weight_k * directionalReading_k * 0.25), 0.05, 0.95)",
@@ -264,7 +267,7 @@ def compute_pick_probability_from_db_signals(
         "continuityDeltaProb": cont_delta_prob,
         "signalPlaneDeltaProb": signal_plane_delta,
         "trueProb": true_prob,
-        "rawEdge": raw_edge,
+        "rawEdge": model_edge,
         "shrunkEdge": shrunk_edge,
         "expectedClv": expected_clv,
         "edgeScore": edge_score,
@@ -752,7 +755,7 @@ def sync_database(dry_run: bool = False):
             )
 
             true_prob = sig_attr["trueProb"]
-            raw_edge = sig_attr["rawEdge"]
+            model_edge = sig_attr["rawEdge"]
             shrunk_edge = sig_attr["shrunkEdge"]
             expected_clv = sig_attr["expectedClv"]
             edge_score = sig_attr["edgeScore"]
@@ -760,10 +763,10 @@ def sync_database(dry_run: bool = False):
             tier = "PREMIUM" if confidence >= 67 else "FREE"
             pick_grade = "STRONG_PLAY" if (confidence >= 68 and edge_score >= 67.0) else "SOLID_PLAY"
 
-            full_reasoning = (
+            reasoning_summary = (
                 f"{play['reasoning']} [Signal Plane Attribution: marketFair={play['market_fair_prob']:.3f}, "
                 f"structural={play['structural_delta_prob']:+.4f}, continuity={sig_attr['continuityDeltaProb']:+.4f}, "
-                f"signalPlane14Keys={sig_attr['signalPlaneDeltaProb']:+.4f} -> trueProb={true_prob:.4f} ({raw_edge*100:+.2f}% raw edge, "
+                f"signalPlane14Keys={sig_attr['signalPlaneDeltaProb']:+.4f} -> trueProb={true_prob:.4f} ({model_edge*100:+.2f}% raw edge, "
                 f"EdgeIdx={edge_score}/100, Score={confidence}/100)]."
             )
 
@@ -778,7 +781,7 @@ def sync_database(dry_run: bool = False):
                 ],
                 "rankingP": true_prob,
                 "edgeScore": edge_score,
-                "trueEvScore": round(raw_edge * 100, 2),
+                "trueEvScore": round(model_edge * 100, 2),
                 "rankingSource": "independent_blend",
                 "consensusScore": 30,
                 "marketFairProb": play["market_fair_prob"],
@@ -791,13 +794,13 @@ def sync_database(dry_run: bool = False):
                 "continuityDeltas": cont_deltas,
                 "injuryEvidence": inj_ev,
                 "signalPlaneAttribution": sig_attr,
-                "reasoningTrace": full_reasoning,
+                "reasoningTrace": reasoning_summary,
                 "noBet": None,
                 "independentEdge": {
                     "decision": "PLAY",
                     "trueProb": true_prob,
                     "marketFairProb": play["market_fair_prob"],
-                    "rawEdge": raw_edge,
+                    "rawEdge": model_edge,
                     "shrunkEdge": shrunk_edge,
                     "expectedClv": expected_clv,
                     "sources": [
@@ -828,7 +831,7 @@ def sync_database(dry_run: bool = False):
                 print(f"    signalPlaneDeltaProb= {sig_attr['signalPlaneDeltaProb']:+.4f} (sum of 14 keys below)")
                 for c in sig_attr["signalContributions"]:
                     print(f"      - {c['key']:28s} | w={c['weight']:.3f} | ATL={c['homeValue']:+.3f} (raw {c['homeRaw']:+.3f}) | CHI={c['awayValue']:+.3f} (raw {c['awayRaw']:+.3f}) | dir={c['directionalReading']:+.4f} -> dProb={c['probContribution']:+.5f}")
-                print(f"    => trueProb = {true_prob:.4f} ({true_prob*100:.2f}%), rawEdge = {raw_edge:+.4f} ({raw_edge*100:+.2f}%), EdgeIdx = {edge_score}/100, Score = {confidence}/100\n")
+                print(f"    => trueProb = {true_prob:.4f} ({true_prob*100:.2f}%), modelEdge = {model_edge:+.4f} ({model_edge*100:+.2f}%), EdgeIdx = {edge_score}/100, Score = {confidence}/100\n")
 
             cur.execute("""
                 SELECT id FROM picks
@@ -858,8 +861,8 @@ def sync_database(dry_run: bool = False):
                     WHERE id = %s;
                 """, (play["selection"], play["line"], confidence, edge_score,
                       play["bookmaker_count"], tier, pick_grade, play["risk_level"],
-                      full_reasoning, full_reasoning[:140], json.dumps(fb), pid))
-                print(f"  Published {play['matchup']} -> {play['selection']} (trueProb={true_prob:.4f}, RawEdge={raw_edge*100:+.2f}%, EdgeIdx={edge_score}, Conf={confidence}/100, SigDelta={sig_attr['signalPlaneDeltaProb']:+.4f}, ContDelta={sig_attr['continuityDeltaProb']:+.4f})")
+                      reasoning_summary, reasoning_summary[:140], json.dumps(fb), pid))
+                print(f"  Published {play['matchup']} -> {play['selection']} (trueProb={true_prob:.4f}, RawEdge={model_edge*100:+.2f}%, EdgeIdx={edge_score}, Conf={confidence}/100, SigDelta={sig_attr['signalPlaneDeltaProb']:+.4f}, ContDelta={sig_attr['continuityDeltaProb']:+.4f})")
             else:
                 new_pid = make_cuid("c")
                 cur.execute("""
@@ -878,9 +881,9 @@ def sync_database(dry_run: bool = False):
                     );
                 """, (new_pid, gid, play["pick_type"], play["selection"], play["line"],
                       confidence, edge_score, play["bookmaker_count"], tier,
-                      pick_grade, play["risk_level"], full_reasoning, full_reasoning[:140],
+                      pick_grade, play["risk_level"], reasoning_summary, reasoning_summary[:140],
                       json.dumps(fb)))
-                print(f"  Inserted & Published {play['matchup']} -> {play['selection']} (EdgeIdx={edge_score}, RawEdge={raw_edge*100:+.2f}%)")
+                print(f"  Inserted & Published {play['matchup']} -> {play['selection']} (EdgeIdx={edge_score}, RawEdge={model_edge*100:+.2f}%)")
 
         # =====================================================================
         # 6. Final verification checks

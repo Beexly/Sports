@@ -1,0 +1,795 @@
+import type {
+  ClobTrade,
+  NotificationsResponse,
+} from '@polymarket/bindings/clob';
+import type {
+  Activity,
+  ComboActivity,
+  ComboPosition,
+  PortfolioValue,
+  Position,
+  TraderLeaderboardStanding,
+  UserPnlSeries,
+  UserStats,
+  UserVolume,
+} from '@polymarket/bindings/data';
+import type { Prettify } from '@polymarket/types';
+import {
+  type DownloadAccountingSnapshotRequest,
+  type DropNotificationsRequest,
+  downloadAccountingSnapshot,
+  dropNotifications,
+  type FetchPortfolioValueRequest,
+  type FetchTraderLeaderboardStandingRequest,
+  type FetchUserPnlRequest,
+  type FetchUserStatsRequest,
+  type FetchUserVolumeRequest,
+  fetchClosedOnlyMode,
+  fetchNotifications,
+  fetchPortfolioValue,
+  fetchTraderLeaderboardStanding,
+  fetchUserPnl,
+  fetchUserStats,
+  fetchUserVolume,
+  type ListAccountTradesRequest,
+  type ListActivityRequest,
+  type ListComboActivityRequest,
+  type ListComboPositionsRequest,
+  type ListPositionsRequest,
+  listAccountTrades,
+  listActivity,
+  listComboActivity,
+  listComboPositions,
+  listPositions,
+} from '../actions';
+import type {
+  BaseClient,
+  BasePublicClient,
+  BaseSecureClient,
+} from '../clients';
+import type { Paginated } from '../pagination';
+import type { RequestOptions } from '../request-options';
+
+type DefaultAccountWallet<TRequest extends { user?: string }> = Prettify<
+  Omit<TRequest, 'user'> & {
+    /**
+     * Wallet address to use.
+     *
+     * @defaultValue `client.account.wallet`
+     */
+    user?: string;
+  }
+>;
+
+export type SecureListPositionsRequest =
+  DefaultAccountWallet<ListPositionsRequest>;
+export type SecureListComboPositionsRequest =
+  DefaultAccountWallet<ListComboPositionsRequest>;
+export type SecureFetchPortfolioValueRequest =
+  DefaultAccountWallet<FetchPortfolioValueRequest>;
+export type SecureFetchTraderLeaderboardStandingRequest =
+  DefaultAccountWallet<FetchTraderLeaderboardStandingRequest>;
+export type SecureFetchUserPnlRequest =
+  DefaultAccountWallet<FetchUserPnlRequest>;
+export type SecureFetchUserStatsRequest =
+  DefaultAccountWallet<FetchUserStatsRequest>;
+export type SecureFetchUserVolumeRequest =
+  DefaultAccountWallet<FetchUserVolumeRequest>;
+export type SecureDownloadAccountingSnapshotRequest =
+  DefaultAccountWallet<DownloadAccountingSnapshotRequest>;
+export type SecureListActivityRequest =
+  DefaultAccountWallet<ListActivityRequest>;
+export type SecureListComboActivityRequest =
+  DefaultAccountWallet<ListComboActivityRequest>;
+
+export type PublicAccountActions = Prettify<{
+  /**
+   * Lists positions for a wallet, or a market's holders when anchored on a
+   * single `conditionId` without a `user`.
+   *
+   * `OPEN` (the default) includes settled-but-unredeemed winners;
+   * `REDEEMABLE` narrows to those winners, `REDEEMABLE_LOST` lists held
+   * zero-payout positions, `MERGEABLE` lists live complementary pairs, and
+   * `CLOSED` lists exited positions. Lost rows report `status: 'REDEEMABLE'`;
+   * mergeable rows report `status: 'OPEN'`.
+   *
+   * `REDEEMABLE_LOST` requires `user`. For `MERGEABLE`, provide `user` to
+   * filter to mergeable positions; a `conditionId`-only request falls back
+   * to the broader `OPEN` listing.
+   *
+   * `sortBy` defaults to `TOKENS` for `MERGEABLE`, `REALIZED_PNL` for
+   * `CLOSED`, and `CURRENT_VALUE` for the other statuses.
+   * For wallet-anchored `CLOSED` listings, `TOKENS`, `CURRENT_VALUE`, `PRICE`
+   * and `UNREALIZED_PNL` sort by realized PnL in the requested direction.
+   * Keep the original filters and requested sort when resuming a cursor. If
+   * an older cursor is rejected with HTTP 400 because the ordering changed,
+   * discard it and explicitly fetch a new first page; the paginator does not
+   * restart the listing.
+   * `title` filters by case-insensitive substring (max 200 Unicode characters).
+   * `%` and `_` are wildcards. Blank input is ignored; other patterns are
+   * preserved unchanged on every page, including cursor replay.
+   *
+   * @throws {@link ListPositionsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listPositions({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Position[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listPositions({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Position[]
+   * }
+   * ```
+   */
+  listPositions(
+    request: ListPositionsRequest,
+    options?: RequestOptions,
+  ): Paginated<Position[]>;
+  /**
+   * Lists combo positions for a wallet.
+   *
+   * @throws {@link ListComboPositionsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listComboPositions({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   * ```
+   *
+   * @example
+   * Filter to any of several resolved statuses:
+   * ```ts
+   * const paginator = client.listComboPositions({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   status: [
+   *     ComboPositionStatus.ResolvedWin,
+   *     ComboPositionStatus.ResolvedPartial,
+   *     ComboPositionStatus.ResolvedLoss,
+   *   ],
+   * });
+   * ```
+   */
+  listComboPositions(
+    request: ListComboPositionsRequest,
+    options?: RequestOptions,
+  ): Paginated<ComboPosition[]>;
+  /**
+   * Fetches the total value for a wallet's positions.
+   *
+   * When `conditionIds` is present, only those single-market positions are
+   * included; portfolio-level combo positions are excluded. Accepts at most
+   * 20 distinct condition IDs.
+   *
+   * @throws {@link FetchPortfolioValueError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const value = await client.fetchPortfolioValue({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   conditionIds: ['0xe546672750517f62c45a5a00067481981e62b9c20fa8220203232c9dc8fd2093'],
+   * });
+   * ```
+   */
+  fetchPortfolioValue(
+    request: FetchPortfolioValueRequest,
+    options?: RequestOptions,
+  ): Promise<PortfolioValue>;
+  /**
+   * Fetches one trader's standing on both the PnL and volume boards.
+   *
+   * `window` defaults to one day and `category` to overall. A `null` rank means
+   * the trader is unranked on that board. Returns `null` for an unknown wallet.
+   *
+   * @throws {@link FetchTraderLeaderboardStandingError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const standing = await client.fetchTraderLeaderboardStanding({
+   *   user: '0xa71093cafc0c099b4ccab24c3cb8018d817923c4',
+   *   window: LeaderboardWindow.All,
+   * });
+   * ```
+   */
+  fetchTraderLeaderboardStanding(
+    request: FetchTraderLeaderboardStandingRequest,
+    options?: RequestOptions,
+  ): Promise<TraderLeaderboardStanding | null>;
+  /**
+   * Fetches profile and lifetime trading statistics for a wallet.
+   *
+   * `tradedMarketCount` is the exact number of distinct markets traded.
+   *
+   * Returns `null` when the wallet is not a known user.
+   *
+   * @throws {@link FetchUserStatsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const stats = await client.fetchUserStats({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   * });
+   * ```
+   */
+  fetchUserStats(
+    request: FetchUserStatsRequest,
+    options?: RequestOptions,
+  ): Promise<UserStats | null>;
+  /**
+   * Fetches a wallet's cumulative PnL series.
+   *
+   * `interval` defaults to one day and `fidelity` defaults to one hour. Each
+   * point is cumulative through its timestamp; nullable amounts mean the
+   * source was unavailable and are never coerced to zero.
+   *
+   * @throws {@link FetchUserPnlError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const pnl = await client.fetchUserPnl({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   interval: UserPnlInterval.OneWeek,
+   *   fidelity: UserPnlFidelity.ThreeHours,
+   * });
+   * ```
+   */
+  fetchUserPnl(
+    request: FetchUserPnlRequest,
+    options?: RequestOptions,
+  ): Promise<UserPnlSeries>;
+  /**
+   * Fetches a wallet's trading volume for a time window.
+   *
+   * Volume is returned in shares and USD. Window bounds accept epoch seconds
+   * or `Date` values and are widened to whole UTC days.
+   *
+   * @throws {@link FetchUserVolumeError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const volume = await client.fetchUserVolume({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   window: { start: new Date('2026-08-01T00:00:00Z') },
+   * });
+   * ```
+   */
+  fetchUserVolume(
+    request: FetchUserVolumeRequest,
+    options?: RequestOptions,
+  ): Promise<UserVolume>;
+  /**
+   * Downloads an accounting snapshot archive for a wallet.
+   *
+   * @throws {@link DownloadAccountingSnapshotError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const snapshot = await client.downloadAccountingSnapshot({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   * });
+   * ```
+   */
+  downloadAccountingSnapshot(
+    request: DownloadAccountingSnapshotRequest,
+    options?: RequestOptions,
+  ): Promise<Blob>;
+  /**
+   * Lists wallet activity.
+   * Trades and redemptions expose available token outcomes. Narrow splits, merges and redemptions on
+   * `isCombo` before using market-only metadata; a basket's outcome names its
+   * token side, not a selected leg.
+   *
+   * Every activity type is included by default, including deposits and
+   * withdrawals; use the `type` filter to narrow results. An omitted `window`
+   * serves the most recent three years; `window: 'full'` requests the complete
+   * history. Window bounds accept Unix epoch seconds or `Date` values. Results
+   * are newest-first by default. `pageSize` defaults to 100 (max 1000), and
+   * transient rate limits are retried by default.
+   *
+   * @throws {@link ListActivityError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listActivity({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: Activity[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listActivity({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   pageSize: 10,
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: Activity[]
+   * }
+   * ```
+   */
+  listActivity(
+    request: ListActivityRequest,
+    options?: RequestOptions,
+  ): Paginated<Activity[]>;
+  /**
+   * Lists combo lifecycle activity for a wallet.
+   *
+   * @throws {@link ListComboActivityError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listComboActivity({
+   *   user: '0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b',
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   * ```
+   */
+  listComboActivity(
+    request: ListComboActivityRequest,
+    options?: RequestOptions,
+  ): Paginated<ComboActivity[]>;
+}>;
+
+export type SecureAccountActions = Prettify<{
+  /**
+   * Lists positions for a wallet across their lifecycle.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   * This also supplies the wallet required by `REDEEMABLE_LOST` and scopes
+   * `MERGEABLE` to that wallet's live complementary pairs.
+   * To list a market's holders (a `conditionId` anchor with no wallet), use
+   * a public client's `listPositions` instead; its `MERGEABLE` filter falls
+   * back to `OPEN` without `user`, and `REDEEMABLE_LOST` requires `user`.
+   *
+   * `OPEN` (the default) includes settled-but-unredeemed winners;
+   * `REDEEMABLE` narrows to those winners, `REDEEMABLE_LOST` lists held
+   * zero-payout positions, `MERGEABLE` lists live complementary pairs, and
+   * `CLOSED` lists exited positions. Lost rows report `status: 'REDEEMABLE'`;
+   * mergeable rows report `status: 'OPEN'`.
+   *
+   * `sortBy` defaults to `TOKENS` for `MERGEABLE`, `REALIZED_PNL` for
+   * `CLOSED`, and `CURRENT_VALUE` for the other statuses.
+   * For wallet-anchored `CLOSED` listings, `TOKENS`, `CURRENT_VALUE`, `PRICE`
+   * and `UNREALIZED_PNL` sort by realized PnL in the requested direction.
+   * Keep the original filters and requested sort when resuming a cursor. If
+   * an older cursor is rejected with HTTP 400 because the ordering changed,
+   * discard it and explicitly fetch a new first page; the paginator does not
+   * restart the listing.
+   * `title` filters by case-insensitive substring (max 200 Unicode characters).
+   * `%` and `_` are wildcards. Blank input is ignored; other patterns are
+   * preserved unchanged on every page, including cursor replay.
+   *
+   * @throws {@link ListPositionsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results for the authenticated account:
+   * ```ts
+   * const paginator = client.listPositions({
+   *   pageSize: 10,
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   * ```
+   */
+  listPositions(
+    request?: SecureListPositionsRequest,
+    options?: RequestOptions,
+  ): Paginated<Position[]>;
+  /**
+   * Lists combo positions for a wallet.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   *
+   * @throws {@link ListComboPositionsError}
+   * Thrown on failure.
+   *
+   * @example
+   * Filter the authenticated account's positions to multiple statuses:
+   * ```ts
+   * const paginator = client.listComboPositions({
+   *   status: [
+   *     ComboPositionStatus.ResolvedWin,
+   *     ComboPositionStatus.ResolvedPartial,
+   *   ],
+   * });
+   * ```
+   */
+  listComboPositions(
+    request?: SecureListComboPositionsRequest,
+    options?: RequestOptions,
+  ): Paginated<ComboPosition[]>;
+  /**
+   * Fetches the total value for a wallet's positions.
+   *
+   * When `conditionIds` is present, only those single-market positions are
+   * included; portfolio-level combo positions are excluded. Accepts at most
+   * 20 distinct condition IDs.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   *
+   * @throws {@link FetchPortfolioValueError}
+   * Thrown on failure.
+   */
+  fetchPortfolioValue(
+    request?: SecureFetchPortfolioValueRequest,
+    options?: RequestOptions,
+  ): Promise<PortfolioValue>;
+  /**
+   * Fetches one trader's standing on both the PnL and volume boards.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   * `window` defaults to one day and `category` to overall. A `null` rank means
+   * the trader is unranked on that board. Returns `null` for an unknown wallet.
+   *
+   * @throws {@link FetchTraderLeaderboardStandingError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const standing = await client.fetchTraderLeaderboardStanding({
+   *   window: LeaderboardWindow.All,
+   * });
+   * ```
+   */
+  fetchTraderLeaderboardStanding(
+    request?: SecureFetchTraderLeaderboardStandingRequest,
+    options?: RequestOptions,
+  ): Promise<TraderLeaderboardStanding | null>;
+  /**
+   * Fetches profile and lifetime trading statistics for a wallet.
+   *
+   * `tradedMarketCount` is the exact number of distinct markets traded.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   * Returns `null` when the wallet is not a known user.
+   *
+   * @throws {@link FetchUserStatsError}
+   * Thrown on failure.
+   */
+  fetchUserStats(
+    request?: SecureFetchUserStatsRequest,
+    options?: RequestOptions,
+  ): Promise<UserStats | null>;
+  /**
+   * Fetches the cumulative PnL series for a wallet.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   * `interval` defaults to one day and `fidelity` defaults to one hour.
+   *
+   * @throws {@link FetchUserPnlError}
+   * Thrown on failure.
+   */
+  fetchUserPnl(
+    request?: SecureFetchUserPnlRequest,
+    options?: RequestOptions,
+  ): Promise<UserPnlSeries>;
+  /**
+   * Fetches trading volume for a wallet over a time window.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   * Window bounds accept epoch seconds or `Date` values and are widened to
+   * whole UTC days.
+   *
+   * @throws {@link FetchUserVolumeError}
+   * Thrown on failure.
+   */
+  fetchUserVolume(
+    request?: SecureFetchUserVolumeRequest,
+    options?: RequestOptions,
+  ): Promise<UserVolume>;
+  /**
+   * Downloads an accounting snapshot archive for a wallet.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   *
+   * @throws {@link DownloadAccountingSnapshotError}
+   * Thrown on failure.
+   */
+  downloadAccountingSnapshot(
+    request?: SecureDownloadAccountingSnapshotRequest,
+    options?: RequestOptions,
+  ): Promise<Blob>;
+  /**
+   * Lists wallet activity.
+   * Trades and redemptions expose available token outcomes. Narrow splits, merges and redemptions on
+   * `isCombo` before using market-only metadata; a basket's outcome names its
+   * token side, not a selected leg.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   *
+   * Every activity type is included by default, including deposits and
+   * withdrawals; use the `type` filter to narrow results. An omitted `window`
+   * serves the most recent three years; `window: 'full'` requests the complete
+   * history. Window bounds accept Unix epoch seconds or `Date` values. Results
+   * are newest-first by default. `pageSize` defaults to 100 (max 1000), and
+   * transient rate limits are retried by default.
+   *
+   * @throws {@link ListActivityError}
+   * Thrown on failure.
+   */
+  listActivity(
+    request?: SecureListActivityRequest,
+    options?: RequestOptions,
+  ): Paginated<Activity[]>;
+  /**
+   * Lists combo lifecycle activity for a wallet.
+   *
+   * Defaults to the authenticated account's wallet when `user` is omitted.
+   *
+   * @throws {@link ListComboActivityError}
+   * Thrown on failure.
+   */
+  listComboActivity(
+    request?: SecureListComboActivityRequest,
+    options?: RequestOptions,
+  ): Paginated<ComboActivity[]>;
+  /**
+   * Lists trades for the authenticated account across all pages.
+   *
+   * @throws {@link ListAccountTradesError}
+   * Thrown on failure.
+   *
+   * @example
+   * Fetch the first page of results:
+   * ```ts
+   * const paginator = client.listAccountTrades({
+   *   market: '0x0000000000000000000000000000000000000000000000000000000000000001',
+   * });
+   *
+   * const firstPage = await paginator.firstPage();
+   *
+   * // Optionally, fetch additional pages:
+   * for await (const page of paginator.from(firstPage.nextCursor)) {
+   *   // page.items: ClobTrade[]
+   * }
+   * ```
+   *
+   * @example
+   * Loop through all pages with `for await`:
+   * ```ts
+   * const paginator = client.listAccountTrades({
+   *   market: '0x0000000000000000000000000000000000000000000000000000000000000001',
+   * });
+   *
+   * for await (const page of paginator) {
+   *   // page.items: ClobTrade[]
+   * }
+   * ```
+   */
+  listAccountTrades(
+    request?: ListAccountTradesRequest,
+    options?: RequestOptions,
+  ): Paginated<ClobTrade[]>;
+  /**
+   * Fetches notifications for the authenticated account.
+   * Notifications of a kind this SDK version does not recognize are omitted.
+   *
+   * @throws {@link FetchNotificationsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const notifications = await client.fetchNotifications();
+   * ```
+   */
+  fetchNotifications(options?: RequestOptions): Promise<NotificationsResponse>;
+  /**
+   * Drops notifications for the authenticated account.
+   *
+   * @throws {@link DropNotificationsError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * await client.dropNotifications({
+   *   ids: ['1', '2'],
+   * });
+   * ```
+   */
+  dropNotifications(request: DropNotificationsRequest): Promise<void>;
+  /**
+   * Fetches whether the account is restricted to closed-only trading.
+   *
+   * @throws {@link FetchClosedOnlyModeError}
+   * Thrown on failure.
+   *
+   * @example
+   * ```ts
+   * const closedOnly = await client.fetchClosedOnlyMode();
+   * ```
+   */
+  fetchClosedOnlyMode(options?: RequestOptions): Promise<boolean>;
+}>;
+
+function publicAccountActions(client: BaseClient): PublicAccountActions {
+  return {
+    listPositions: listPositions.bind(null, client),
+    listComboPositions: listComboPositions.bind(null, client),
+    fetchPortfolioValue: fetchPortfolioValue.bind(null, client),
+    fetchTraderLeaderboardStanding: fetchTraderLeaderboardStanding.bind(
+      null,
+      client,
+    ),
+    fetchUserStats: fetchUserStats.bind(null, client),
+    fetchUserPnl: fetchUserPnl.bind(null, client),
+    fetchUserVolume: fetchUserVolume.bind(null, client),
+    downloadAccountingSnapshot: downloadAccountingSnapshot.bind(null, client),
+    listActivity: listActivity.bind(null, client),
+    listComboActivity: listComboActivity.bind(null, client),
+  };
+}
+
+type WithAccountWallet<TRequest> = Omit<TRequest, 'user'> & { user: string };
+
+function withAccountWallet<TRequest extends { user?: string }>(
+  client: BaseSecureClient,
+  request: TRequest = {} as TRequest,
+): WithAccountWallet<TRequest> {
+  if (
+    request === null ||
+    typeof request !== 'object' ||
+    Array.isArray(request)
+  ) {
+    return request as WithAccountWallet<TRequest>;
+  }
+
+  return {
+    ...request,
+    user: request.user === undefined ? client.account.wallet : request.user,
+  };
+}
+
+export function accountActions(client: BasePublicClient): PublicAccountActions;
+export function accountActions(client: BaseSecureClient): SecureAccountActions;
+export function accountActions(
+  client: BaseClient,
+): PublicAccountActions | SecureAccountActions {
+  const actions = publicAccountActions(client);
+
+  if (client.isPublicClient()) {
+    return actions;
+  }
+
+  return {
+    ...actions,
+    listPositions: (
+      request?: SecureListPositionsRequest,
+      options?: RequestOptions,
+    ) => listPositions(client, withAccountWallet(client, request), options),
+    listComboPositions: (
+      request?: SecureListComboPositionsRequest,
+      options?: RequestOptions,
+    ) =>
+      listComboPositions(client, withAccountWallet(client, request), options),
+    fetchPortfolioValue: (
+      request?: SecureFetchPortfolioValueRequest,
+      options?: RequestOptions,
+    ) =>
+      fetchPortfolioValue(client, withAccountWallet(client, request), options),
+    fetchTraderLeaderboardStanding: (
+      request?: SecureFetchTraderLeaderboardStandingRequest,
+      options?: RequestOptions,
+    ) =>
+      fetchTraderLeaderboardStanding(
+        client,
+        withAccountWallet(client, request),
+        options,
+      ),
+    fetchUserStats: (
+      request?: SecureFetchUserStatsRequest,
+      options?: RequestOptions,
+    ) => fetchUserStats(client, withAccountWallet(client, request), options),
+    fetchUserPnl: (
+      request?: SecureFetchUserPnlRequest,
+      options?: RequestOptions,
+    ) => fetchUserPnl(client, withAccountWallet(client, request), options),
+    fetchUserVolume: (
+      request?: SecureFetchUserVolumeRequest,
+      options?: RequestOptions,
+    ) => fetchUserVolume(client, withAccountWallet(client, request), options),
+    downloadAccountingSnapshot: (
+      request?: SecureDownloadAccountingSnapshotRequest,
+      options?: RequestOptions,
+    ) =>
+      downloadAccountingSnapshot(
+        client,
+        withAccountWallet(client, request),
+        options,
+      ),
+    listActivity: (
+      request?: SecureListActivityRequest,
+      options?: RequestOptions,
+    ) => listActivity(client, withAccountWallet(client, request), options),
+    listComboActivity: (
+      request?: SecureListComboActivityRequest,
+      options?: RequestOptions,
+    ) => listComboActivity(client, withAccountWallet(client, request), options),
+    listAccountTrades: listAccountTrades.bind(null, client),
+    fetchNotifications: fetchNotifications.bind(null, client),
+    dropNotifications: dropNotifications.bind(null, client),
+    fetchClosedOnlyMode: fetchClosedOnlyMode.bind(null, client),
+  };
+}
+
+// Error unions and runtime `isError` guards for every action bound above.
+// Surfaced at the root entry point through `export * from './decorators'`.
+// Keep this list in sync with the methods on PublicAccountActions / SecureAccountActions.
+export {
+  DownloadAccountingSnapshotError,
+  DropNotificationsError,
+  FetchClosedOnlyModeError,
+  FetchNotificationsError,
+  FetchPortfolioValueError,
+  FetchTraderLeaderboardStandingError,
+  FetchUserPnlError,
+  FetchUserStatsError,
+  FetchUserVolumeError,
+  ListAccountTradesError,
+  ListActivityError,
+  ListComboActivityError,
+  ListComboPositionsError,
+  ListPositionsError,
+} from '../actions';
+export {
+  ComboActivityType,
+  SortDirection,
+  TipSide,
+  TradeFilterType,
+} from '../actions/activity';
+export type { ComboPositionStatusFilter } from '../actions/portfolio';
+export {
+  ComboPositionSortBy,
+  ComboPositionStatus,
+  PositionFilterType,
+  PositionSortBy,
+  PositionStatus,
+  UserPnlFidelity,
+  UserPnlInterval,
+} from '../actions/portfolio';

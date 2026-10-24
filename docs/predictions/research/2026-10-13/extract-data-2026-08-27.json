@@ -1,0 +1,480 @@
+{
+  "provider_details": {
+    "organization_name": "The Odds API",
+    "organization_name_citation": "https://the-odds-api.com/",
+    "data_source_origins": [
+      {
+        "value": "Aggregated bookmaker odds collected from over 40 bookmakers around the world.",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      }
+    ],
+    "supported_sports": [
+      {
+        "value": "Football (NFL, College Football/NCAA, CFL, Aussie Rules/AFL)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Soccer (EPL, EFL Championship, German Bundesliga, UEFA Europa and Champions Leagues, Italian Serie A, Spanish La Liga, Brazil Série A, French Ligue 1)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Basketball (NBA, WNBA, US College Basketball/NCAA, Euroleague)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Baseball (MLB, MiLB, KBO, NPB)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Ice hockey (NHL, SHL, HockeyAllsvenskan)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Cricket (Test matches, IPL, Big Bash)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Rugby league (Aussie NRL)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Golf (Masters Tournament, PGA Championship, US Open, The Open Championship)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Tennis (all Grand Slams and more)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      },
+      {
+        "value": "Politics (Next US President odds)",
+        "value_citation": "https://the-odds-api.com/sports-odds-data/live-sports-odds.html"
+      }
+    ]
+  },
+  "api_key_configuration": {
+    "key_format": "Provider-issued API key associated with a subscription; delivered via email or available in the accounts dashboard.",
+    "key_format_citation": "https://the-odds-api.com/terms-and-conditions.html",
+    "rate_limiting_tiers": [
+      {
+        "tier_name": "Free / Starter",
+        "tier_name_citation": "https://the-odds-api.com/",
+        "requests_per_second": 30,
+        "requests_per_second_citation": "https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html",
+        "monthly_quota": 500,
+        "monthly_quota_citation": "https://the-odds-api.com/"
+      },
+      {
+        "tier_name": "20K",
+        "tier_name_citation": "https://the-odds-api.com/",
+        "requests_per_second": 30,
+        "requests_per_second_citation": "https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html",
+        "monthly_quota": 20000,
+        "monthly_quota_citation": "https://the-odds-api.com/"
+      },
+      {
+        "tier_name": "100K",
+        "tier_name_citation": "https://the-odds-api.com/",
+        "requests_per_second": 30,
+        "requests_per_second_citation": "https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html",
+        "monthly_quota": 100000,
+        "monthly_quota_citation": "https://the-odds-api.com/"
+      },
+      {
+        "tier_name": "5M",
+        "tier_name_citation": "https://the-odds-api.com/",
+        "requests_per_second": 30,
+        "requests_per_second_citation": "https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html",
+        "monthly_quota": 5000000,
+        "monthly_quota_citation": "https://the-odds-api.com/"
+      },
+      {
+        "tier_name": "15M",
+        "tier_name_citation": "https://the-odds-api.com/",
+        "requests_per_second": 30,
+        "requests_per_second_citation": "https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html",
+        "monthly_quota": 15000000,
+        "monthly_quota_citation": "https://the-odds-api.com/"
+      }
+    ],
+    "authentication_method": "apiKey query parameter, for example ?apiKey=YOUR_API_KEY",
+    "authentication_method_citation": "https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html"
+  },
+  "data_feed_structure": {
+    "endpoints": [
+      {
+        "path": "/v4/sports/?apiKey={apiKey}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "all",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/sports/{sport}/odds/?apiKey={apiKey}&regions={regions}&markets={markets}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "regions",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "markets",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "oddsFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventIds",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "bookmakers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "commenceTimeFrom",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "commenceTimeTo",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeLinks",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeSids",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeBetLimits",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeRotationNumbers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}&dateFormat={dateFormat}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "daysFrom",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventIds",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/sports/{sport}/events?apiKey={apiKey}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventIds",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "commenceTimeFrom",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "commenceTimeTo",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeRotationNumbers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/sports/{sport}/events/{eventId}/odds?apiKey={apiKey}&regions={regions}&markets={markets}&dateFormat={dateFormat}&oddsFormat={oddsFormat}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventId",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "regions",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "markets",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "oddsFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "bookmakers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeLinks",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeSids",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeBetLimits",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeRotationNumbers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "includeMultipliers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/sports/{sport}/events/{eventId}/markets?apiKey={apiKey}&regions={regions}&dateFormat={dateFormat}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventId",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "regions",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "bookmakers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/sports/{sport}/participants?apiKey={apiKey}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/historical/sports/{sport}/odds?apiKey={apiKey}&regions={regions}&markets={markets}&date={date}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "regions",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "markets",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "oddsFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventIds",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "bookmakers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "date",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/historical/sports/{sport}/events?apiKey={apiKey}&date={date}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "date",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      },
+      {
+        "path": "/v4/historical/sports/{sport}/events/{eventId}/odds?apiKey={apiKey}&regions={regions}&markets={markets}&dateFormat={dateFormat}&oddsFormat={oddsFormat}&date={date}",
+        "path_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "method": "GET",
+        "method_citation": "https://the-odds-api.com/liveapi/guides/v4/",
+        "parameters": [
+          {
+            "value": "sport",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "eventId",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "apiKey",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "regions",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "markets",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "dateFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "oddsFormat",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "bookmakers",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          },
+          {
+            "value": "date",
+            "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+          }
+        ]
+      }
+    ],
+    "odds_formats": [
+      {
+        "value": "decimal",
+        "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+      },
+      {
+        "value": "american",
+        "value_citation": "https://the-odds-api.com/liveapi/guides/v4/"
+      }
+    ]
+  }
+}

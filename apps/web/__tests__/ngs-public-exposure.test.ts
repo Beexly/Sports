@@ -117,19 +117,40 @@ describe("/intelligence/reconstruction is permanently dark", () => {
   });
 
   it("the page 404s unconditionally and carries no NGS copy", () => {
-    const src = readFileSync(
-      join(APP, "intelligence/reconstruction/page.tsx"),
-      "utf8",
-    );
-    expect(src).not.toContain("RECONSTRUCTION_PUBLIC");
-    expect(src, "no metadata (metadata never serves for a 404)").not.toContain(
-      "export const metadata",
-    );
-    expect(src, "unconditional notFound()").toContain("notFound();");
-    expect(src, "no render path").not.toContain("return (");
-    expect(src, "no NGS discussion").not.toMatch(
-      /Next Gen Stats|CPOE|RYOE|separation/i,
-    );
+    // THE PAGE IS DELETED, AND THAT IS THE STRONGER PROPERTY.
+    //
+    // This test used to read app/intelligence/reconstruction/page.tsx and assert the
+    // source contained "notFound();" and no NGS vocabulary. The page was deleted in the
+    // same commit that added this test (f251d230c), so the read threw ENOENT and the
+    // test has been failing ever since -- another gate born failing, like the trust-gate
+    // one.
+    //
+    // A page that does not exist cannot render, cannot be linked to, and cannot carry
+    // NGS copy. That is strictly stronger than "the page exists and calls notFound()",
+    // so the assertion is rewritten to the real property rather than deleted or
+    // weakened. The other three assertions in this describe block -- isPagePublic is
+    // false under EVERY flag combination, the registry entry has no env opt-in, and the
+    // policy map records it as permanently dark -- still hold, and they are what
+    // actually pin the surface as dark: a page file that reappears would still be
+    // unrouted, ungated and unlinked.
+    const pagePath = join(APP, "intelligence/reconstruction/page.tsx");
+    expect(
+      existsSync(pagePath),
+      "the reconstruction page must not exist -- a deleted page is the strongest form of " +
+        "permanently dark, and this test pins that",
+    ).toBe(false);
+
+    // And no sibling file under the route directory reintroduces it.
+    const dir = join(APP, "intelligence/reconstruction");
+    if (existsSync(dir)) {
+      for (const entry of readdirSync(dir)) {
+        expect(
+          entry,
+          `app/intelligence/reconstruction/${entry} reintroduces a file on a permanently ` +
+            `dark route`,
+        ).not.toMatch(/^page\./);
+      }
+    }
   });
 
   it("the policy map records it as permanently dark", () => {

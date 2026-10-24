@@ -55,6 +55,7 @@ const SECRET_RULES = [
   { id: "slack.token", re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/ },
   { id: "neon.api-key", re: /\bnapi_[A-Za-z0-9]{40,}\b/ },
   { id: "alibaba.access-key", re: /\bLTAI[A-Za-z0-9]{16,24}\b/ },
+  { id: "huggingface.token", re: /\bhf_[A-Za-z0-9]{30,}\b/ },
   { id: "private-key-block", re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/ },
   // A Postgres/Redis connection URL that embeds a password AND points at a
   // real remote host (not localhost / docker service names). Dev strings
@@ -141,9 +142,16 @@ function stagedContent(relPath) {
 }
 
 function allTrackedFiles() {
-  const r = spawnSync("git", ["ls-files"], { cwd: ROOT, encoding: "utf8" });
+  // 18k paths already exceed Node's 1MB default and the push hook died
+  // with ENOBUFS before it could scan. 32MB covers the listing, not file bodies.
+  const r = spawnSync("git", ["ls-files"], {
+    cwd: ROOT,
+    encoding: "utf8",
+    maxBuffer: 32 * 1024 * 1024,
+  });
   if (r.status !== 0) {
-    console.error("[secret-scan] FAIL - could not list tracked files (git ls-files).");
+    const why = r.error ? r.error.code || r.error.message : `status ${r.status}`;
+    console.error(`[secret-scan] FAIL - could not list tracked files (git ls-files): ${why}`);
     process.exit(1);
   }
   return r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);

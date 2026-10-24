@@ -1,10 +1,14 @@
-# DOSSIERS_58_FULL
+# DOSSIERS_58_FULL — High-Relevance Research Dossiers
 
-Full High-58 dossier text is on the operator box at `/workspace/gold-sheet/push/DOSSIERS_58_FULL.md` (68507 bytes, MD5 `d3e0b2a12dcae49400f27854fa8d4521`).
+The complete High-58 research dossiers are tracked in the repository at:
+[`docs/predictions/research/2026-10-13/GSE_58_paper_dossiers.md`](file:///c:/Users/Garrett/Sports-wt-audit-20261020/docs/predictions/research/2026-10-13/GSE_58_paper_dossiers.md)
 
-**Status:** Full blob MCP upload still pending (~69KB). This file is an index only.
-
-Upload parts from prepared JSON `/workspace/agent-tools/upload_ready/dpart_{0,1,2}.json`:
-- `docs/ops/DOSSIERS_58_FULL.part00.md`
-- `docs/ops/DOSSIERS_58_FULL.part01.md`
-- `docs/ops/DOSSIERS_58_FULL.part02.md`
+**Provenance:** Full-text reads of arXiv PDFs + code/data hunt across 8 research clusters:
+- Cluster A: Win probability & calibration (1704.00197, 2207.13770, etc.)
+- Cluster B: Score distributions & margin models
+- Cluster C: Market pricing & alt-lines
+- Cluster D: Player props & latent skills
+- Cluster E: In-game dynamics & momentum
+- Cluster F: Decision theory, bet sizing & Kelly
+- Cluster G: Multi-task & meta-learning
+- Cluster H: Tracking & computer vision

@@ -47,7 +47,7 @@ export const LAYER_1_PLATFORM_BANS: ComplianceRule[] = [
     // exact same phrase list. Matches the full vocab, not just the "AI-powered" family —
     // this is the platform-wide catch-all rule.
     pattern: buildPositioningRegex(),
-    message: "Banned: 'AI-powered' / 'AI-driven' framing. The platform's position is 'We're not AI. We're math you can read.' (DEC-001/002)",
+    message: "Banned: Unsubstantiated 'AI-powered' / 'AI-driven' marketing claims (DEC-001/002)",
     suggestion: "Use 'deterministic scoring' or 'factor model' instead.",
   },
   {

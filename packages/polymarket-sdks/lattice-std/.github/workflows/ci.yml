@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Grant only the permissions each job needs.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Pinned, so a forge release cannot change the build under the tests.
+      - uses: foundry-rs/foundry-toolchain@908c540300062bd5a7e473851cdb4282204cee09 # v1
+        with:
+          version: v1.7.1
+          # These tests use local fixtures, so there is no RPC data to cache.
+          cache: false
+      - name: format
+        run: forge fmt --check
+      - name: test
+        run: forge test
+      # The declared floor is a promise to every consumer that pins to it, and
+      # nothing else in CI compiles at it: the pinned toolchain always builds
+      # with a far newer solc.
+      - name: pragma floor compiles
+        run: |
+          FLOOR=$(sed -n 's/^pragma solidity >=\([0-9.]*\).*/\1/p' src/Lattice.sol)
+          test -n "$FLOOR" || { echo "no >= floor declared in src/Lattice.sol"; exit 1; }
+          echo "src/Lattice.sol declares a floor of $FLOOR"
+          forge build --use "$FLOOR"
+      - name: coverage gate (100% lines, statements, branches, functions)
+        run: ./bash/check-coverage.sh

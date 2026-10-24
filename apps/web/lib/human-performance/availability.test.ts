@@ -6,7 +6,7 @@ import {
   loadRosterAvailability,
   type AvailabilityInputs,
 } from "./availability";
-import { MAX_BAND_WIDEN } from "./types";
+import { MAX_BAND_WIDEN, SIM_PRIOR_WEIGHT_CAP, buildOutputBehavior } from "./types";
 
 const base: AvailabilityInputs = { playerId: "p1", injuryStatus: "None" };
 
@@ -117,5 +117,73 @@ describe("loadRosterAvailability — batch", () => {
     const r = await loadRosterAvailability({ players: [{ name: "Some Player", team: "KC" }], fetcher: async () => { throw new Error("down") } });
     expect(r.status).toBe("source-error");
     expect(r.rows).toEqual([]);
+  });
+});
+
+// ======================================================================
+// THE NON-CONFIDENCE TIER GATE.
+//
+// NON_CONFIDENCE_TIERS was declared and never read, so a signal
+// carrying the "inferred" or "illustrative" tier could publish a
+// confidence of 0.95 -- exactly what the constant exists to prevent,
+// and what the file's own header claims is "enforced here, not just
+// intended".
+// ======================================================================
+describe("buildOutputBehavior -- the non-confidence tier gate", () => {
+  const base = {
+    whatChanged: "something moved",
+    whyItMatters: "it matters",
+    whatCouldBreakTheRead: "a lot",
+    verdict: "play" as const,
+  };
+
+  it("CAPS the confidence of a non-confidence tier", () => {
+    const out = buildOutputBehavior({
+      ...base,
+      confidence: 0.95,
+      provenanceTier: "inferred",
+    });
+    expect(out).not.toBeNull();
+    // Not 0.95. The cap is the simulation-prior ceiling.
+    expect(out!.confidence).toBeLessThanOrEqual(SIM_PRIOR_WEIGHT_CAP);
+    expect(out!.confidence).toBeCloseTo(SIM_PRIOR_WEIGHT_CAP, 10);
+  });
+
+  it("CAPS the illustrative tier too", () => {
+    const out = buildOutputBehavior({
+      ...base,
+      confidence: 0.99,
+      provenanceTier: "illustrative",
+    });
+    expect(out!.confidence).toBeLessThanOrEqual(SIM_PRIOR_WEIGHT_CAP);
+  });
+
+  it("LEAVES an official tier alone", () => {
+    const out = buildOutputBehavior({
+      ...base,
+      confidence: 0.95,
+      provenanceTier: "official",
+    });
+    expect(out!.confidence).toBeCloseTo(0.95, 10);
+  });
+
+  it("LEAVES a licensed tier alone", () => {
+    const out = buildOutputBehavior({
+      ...base,
+      confidence: 0.8,
+      provenanceTier: "licensed",
+    });
+    expect(out!.confidence).toBeCloseTo(0.8, 10);
+  });
+
+  it("a non-confidence tier can still report a LOW confidence as itself", () => {
+    // The gate CAPS, it does not flatten. A prior that honestly says
+    // "I am 2% sure" keeps its 2%.
+    const out = buildOutputBehavior({
+      ...base,
+      confidence: 0.02,
+      provenanceTier: "inferred",
+    });
+    expect(out!.confidence).toBeCloseTo(0.02, 10);
   });
 });

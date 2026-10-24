@@ -1,0 +1,117 @@
+import { SignatureTypeV2, type SignedOrderV1, type SignedOrderV2 } from "../order-utils/index.js";
+import type { ClobSigner } from "../signing/signer.js";
+import type {
+	Chain,
+	CreateOrderOptions,
+	ExchangeV3OrderAmounts,
+	UserMarketOrderV1,
+	UserMarketOrderV2,
+	UserOrderV1,
+	UserOrderV2,
+} from "../types/index.js";
+
+import { createExchangeV3OrderFromAmounts } from "./helpers/createExchangeV3OrderFromAmounts.js";
+import { createMarketOrder, createOrder } from "./helpers/index.js";
+
+export class OrderBuilder {
+	readonly signer: ClobSigner;
+
+	readonly chainId: Chain;
+
+	// Signature type used sign orders, defaults to EOA type
+	readonly signatureType: SignatureTypeV2;
+
+	// Address which holds funds to be used.
+	// Used for Polymarket proxy wallets and other smart contract wallets
+	// If not provided, funderAddress is the signer address
+	readonly funderAddress?: string;
+
+	/**
+	 * Optional function to dynamically resolve the signer.
+	 * If provided, this function will be called to obtain a fresh signer instance
+	 * (e.g., for smart contract wallets or when the signer may change).
+	 * Should return a Wallet or JsonRpcSigner, or a Promise resolving to one.
+	 * If not provided, the static `signer` property is used.
+	 */
+	private getSigner?: () => Promise<ClobSigner> | ClobSigner;
+
+	constructor(
+		signer: ClobSigner,
+		chainId: Chain,
+		signatureType?: SignatureTypeV2,
+		funderAddress?: string,
+		getSigner?: () => Promise<ClobSigner> | ClobSigner,
+	) {
+		this.signer = signer;
+		this.chainId = chainId;
+		this.signatureType = signatureType === undefined ? SignatureTypeV2.EOA : signatureType;
+		this.funderAddress = funderAddress;
+		this.getSigner = getSigner;
+	}
+
+	/**
+	 * Generate and sign a order
+	 */
+	public async buildOrder(
+		userOrder: UserOrderV1 | UserOrderV2,
+		options: CreateOrderOptions,
+		version: number = 2,
+	): Promise<SignedOrderV1 | SignedOrderV2> {
+		const signer = await this.resolveSigner();
+		return createOrder(
+			signer,
+			this.chainId,
+			this.signatureType,
+			this.funderAddress,
+			userOrder,
+			options,
+			version,
+		);
+	}
+
+	/**
+	 * Generate and sign a market order
+	 */
+	public async buildMarketOrder(
+		userMarketOrder: UserMarketOrderV1 | UserMarketOrderV2,
+		options: CreateOrderOptions,
+		version: number = 2,
+	): Promise<SignedOrderV1 | SignedOrderV2> {
+		const signer = await this.resolveSigner();
+		return createMarketOrder(
+			signer,
+			this.chainId,
+			this.signatureType,
+			this.funderAddress,
+			userMarketOrder,
+			options,
+			version,
+		);
+	}
+
+	/**
+	 * Generate and sign an ExchangeV3 order using exact base-unit amounts.
+	 */
+	public async buildExchangeV3OrderFromAmounts(
+		userOrder: ExchangeV3OrderAmounts,
+	): Promise<SignedOrderV2> {
+		const signer = await this.resolveSigner();
+		return createExchangeV3OrderFromAmounts(
+			signer,
+			this.chainId,
+			this.signatureType,
+			this.funderAddress,
+			userOrder,
+		);
+	}
+
+	/** Unified getter: use fresh signer if available */
+	private async resolveSigner(): Promise<ClobSigner> {
+		if (this.getSigner) {
+			const s = await this.getSigner();
+			if (!s) throw new Error("getSigner() function returned undefined or null");
+			return s;
+		}
+		return this.signer;
+	}
+}

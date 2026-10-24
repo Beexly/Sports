@@ -1,0 +1,9 @@
+id,severity,area,evidence,owner,required_before_launch
+LB-REALAPP-001,P0,homepage/runtime,/ returns 500 and screenshot shows production error card.,Website / DevOps,Fix homepage DB dependency or graceful degraded fallback.
+LB-REALAPP-002,P0,database/env,Server logs show Prisma authentication failure for local database user sports.,Infrastructure / Data,Provide valid DB credentials or fail closed with launch-safe empty states.
+LB-REALAPP-003,P0,route health,/api/health returns 503; prod-probe fails.,Infrastructure / QA,Health endpoint must be green in target launch environment.
+LB-REALAPP-004,P0,board,/board and /api/board/state return 500 from gateDecision query.,Product / Data,Board must render or be intentionally gated with clear copy.
+LB-REALAPP-005,P0,tests,npm.cmd test fails guardrails subprocess tests plus missing lib file header.,QA / Engineering,Full test suite must pass or failures must be fixed/approved.
+LB-REALAPP-006,P0,promotions,/api/promotions returns 500 from Prisma promotion query.,Promotions / Infrastructure,Promotions API must return safe empty response when data unavailable.
+LB-REALAPP-007,P0,roster truth,No app-rendered Player Lab/roster source verified; Najee/Rico not present in app data.,NFL Data Accuracy,Either add current roster gate or remove roster/player claims from launch scope.
+LB-REALAPP-008,P1,source authority,Four plausible Sports clones exist; selected active clone is C:\Users\Garrett\Sports.,Executive / Founder,Confirm authoritative shipping clone before code fixes or deploy.

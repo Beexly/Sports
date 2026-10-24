@@ -1,0 +1,30 @@
+import os
+from dotenv import load_dotenv
+
+from py_clob_client_v2 import ClobClient
+
+load_dotenv()
+
+YES = os.environ.get(
+    "YES_TOKEN_ID",
+    "78433024518676680431174478322854148606578065650008220678402966840627347604025",
+)
+NO = os.environ.get(
+    "NO_TOKEN_ID",
+    "50346565575310273995396997144874891836871065259829083228393044602519086496922",
+)
+
+
+def main():
+    host = os.environ.get("CLOB_API_URL", "http://localhost:8080")
+    chain_id = int(os.environ.get("CHAIN_ID", 80002))
+    client = ClobClient(host=host, chain_id=chain_id)
+
+    print("YES BUY", client.get_price(YES, "BUY"))
+    print("YES SELL", client.get_price(YES, "SELL"))
+    print("NO BUY", client.get_price(NO, "BUY"))
+    print("NO SELL", client.get_price(NO, "SELL"))
+
+
+if __name__ == "__main__":
+    main()

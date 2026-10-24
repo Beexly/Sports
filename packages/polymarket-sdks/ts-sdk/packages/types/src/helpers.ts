@@ -1,0 +1,78 @@
+import { InvariantError } from './errors';
+
+export type { Tagged } from 'type-fest';
+
+/**
+ * Flattens an object type for clearer IDE hovers and inferred signatures.
+ */
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
+/**
+ * Asserts that a condition is truthy.
+ *
+ * @internal
+ *
+ * @param condition - Value expected to be truthy.
+ * @param message - Message used for the thrown `InvariantError`.
+ */
+export function invariant(
+  condition: unknown,
+  message: string,
+): asserts condition {
+  if (!condition) {
+    throw new InvariantError(message);
+  }
+}
+
+/**
+ * Throws an `InvariantError` and narrows the current code path to `never`.
+ *
+ * Useful for unreachable branches and exhaustive checks.
+ *
+ * @param message - Message used for the thrown `InvariantError`.
+ */
+export function never(message = 'Unexpected call to never()'): never {
+  throw new InvariantError(message);
+}
+
+/**
+ * Resolves after the provided delay in milliseconds.
+ */
+export function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function unrefTimer(timer: unknown): void {
+  const maybeUnref = (timer as { unref?: () => void }).unref;
+  if (typeof maybeUnref === 'function') maybeUnref.call(timer);
+}
+
+/**
+ * Runs `callback` on an interval without forcing Node processes to stay alive
+ * solely because the timer exists. In browsers, this behaves exactly like
+ * `setInterval`.
+ */
+export function setNonBlockingInterval(
+  callback: () => void,
+  ms: number,
+): ReturnType<typeof setInterval> {
+  const timer = setInterval(callback, ms);
+  unrefTimer(timer);
+  return timer;
+}
+
+/**
+ * Runs `callback` after a timeout without forcing Node processes to stay alive
+ * solely because the timer exists. In browsers, this behaves exactly like
+ * `setTimeout`.
+ */
+export function setNonBlockingTimeout(
+  callback: () => void,
+  ms: number,
+): ReturnType<typeof setTimeout> {
+  const timer = setTimeout(callback, ms);
+  unrefTimer(timer);
+  return timer;
+}

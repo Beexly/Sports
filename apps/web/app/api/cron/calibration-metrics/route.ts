@@ -203,6 +203,10 @@ async function loadSettledCalibrationSamples(): Promise<{
         factorBreakdown: pick.factorBreakdown,
         proofReceipt: pick.proofReceipt,
         game: pick.game,
+        // G7 needs the settlement time: the drift rule's fast window is the
+        // most RECENT settled bets, and "recent" has to mean recent by time.
+        // The query already selects settledAt, so this is the value it read.
+        settledAt: pick.settledAt ?? null,
       });
       if (proven) {
         provenRows.push(proven);

@@ -1,0 +1,423 @@
+{
+  "job": "NEW research only: one shop photo or product URL to 3D asset and a 9:16 turntable-ad workflow; excluded previously crawled brands are not included.",
+  "clones": [
+    {
+      "name": "fal.ai / Hyper3D Rodin",
+      "url": "https://fal.ai/models/fal-ai/hyper3d/rodin",
+      "what_they_ship": "GLB model mesh (PBR or shaded) plus textures/preview; no 9:16 MP4 orbit export is stated.",
+      "features": [
+        {
+          "value": "Input: the endpoint UI shows one image added; API accepts an image URL (and the readme says string or array for image-to-3D)."
+        },
+        {
+          "value": "Time-to-mesh: not stated on the fetched endpoint page."
+        },
+        {
+          "value": "fal.ai status: yes—this is the fal.ai-hosted Hyper3D Rodin endpoint."
+        },
+        {
+          "value": "Commercial license: endpoint is labeled Commercial use; verify the underlying Rodin terms for the client deliverable."
+        }
+      ],
+      "pipeline": "One shop-photo URL → Rodin image-to-3D → GLB/PBR asset → animate a camera orbit and render/crop to 9:16 in a separate video renderer.",
+      "pricing": "$0.40 per generation; HighPack adds $0.80 per generation.",
+      "clone_this": "Clone the one-photo → GLB → camera-turntable path, using the explicit fal.ai per-generation price and making 9:16 rendering a separate final step.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "This week, ask a Woodlands plate, roofer, or dental-equipment shop for one clean product-photo URL; run one regular Rodin generation at $0.40, send the GLB through a vertical orbit template, and sell the result as a fixed-price proof before offering HighPack texture quality."
+    },
+    {
+      "name": "Hyper3D Rodin",
+      "url": "https://hyper3d.ai/features/image-to-3d",
+      "what_they_ship": "Textured exports in GLB, OBJ, FBX, USDZ, STL and GLTF; no direct 9:16 MP4 orbit output is stated.",
+      "features": [
+        {
+          "value": "Input: one image is enough for most objects; optional additional views provide more detail/control."
+        },
+        {
+          "value": "Time-to-mesh: the site says image-to-3D in seconds."
+        },
+        {
+          "value": "fal.ai status: yes—Rodin is also hosted at fal.ai, but the direct site itself is the product workspace."
+        },
+        {
+          "value": "Commercial license: paid plans add commercial licensing; Creator advertises unlimited export/any use and Business includes commercial-license benefits."
+        }
+      ],
+      "pipeline": "One photo/product URL → Rodin geometry and AI texturing → preview/refine → GLB/USDZ/etc. → separate orbit-camera render to 9:16.",
+      "pricing": "Direct site is pay-by-result with $1.50 direct credits; Free is $0 for exploration, Creator is $30/mo (~60 models), Business $120/mo (~416 models); actual per-result credit draw varies.",
+      "clone_this": "Clone the one-image-first flow, preview-before-confirming-credit economics, and export-ready textured asset; add the vertical orbit render as the missing product step.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Use the free-start workspace to make one sample from a local shop's product URL, show the rotating GLB in a review link, then charge for the finished 9:16 render and reserve Creator/Business only when weekly volume justifies it."
+    },
+    {
+      "name": "3D AI Studio",
+      "url": "https://www.3daistudio.com/ImageTo3D",
+      "what_they_ship": "GLB, OBJ, FBX, STL, USDZ, PLY, BLEND, DAE and 3MF downloads; browser 3D viewer with auto-rotate; no explicit 9:16 MP4 orbit export is stated.",
+      "features": [
+        {
+          "value": "Input: one JPG, PNG or WebP photo/sketch/concept image; higher plans also support 2–4 image multi-view."
+        },
+        {
+          "value": "Time-to-mesh: fastest result is advertised around 20 seconds; the platform says average generation under 60 seconds, while some high-quality models take 2–4 minutes."
+        },
+        {
+          "value": "fal.ai status: no fal.ai-hosted endpoint is stated on the fetched pages."
+        },
+        {
+          "value": "Commercial license: paid plans advertise private, commercially usable assets that are customer-owned."
+        }
+      ],
+      "pipeline": "Upload one shop photo → choose one of 15+ engines → preview/auto-rotate → optional remesh, texture or other tools → export GLB/FBX/USDZ/etc. → separate vertical video render.",
+      "pricing": "No single fixed price: the site says roughly 25–35 credits per 3D generation depending on model/settings; one-time packs are $34/2,000, $69/5,000 or $399/35,000 credits, with credits never expiring.",
+      "clone_this": "Clone the one-upload, many-engine, multi-format browser workflow and attach a reusable orbit-render template after export.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Take one photo URL from a Woodlands product listing, generate fast previews in the browser, choose the best engine, export GLB, and sell a same-week vertical orbit plus the reusable 3D asset; use a credit pack rather than a long subscription for the pilot."
+    },
+    {
+      "name": "Alpha3D",
+      "url": "https://alpha3d.io/image-to-3d",
+      "what_they_ship": "Textured mesh exports as GLB, FBX, OBJ or STL; the broader workflow also lists USDZ; no direct MP4 orbit export is stated.",
+      "features": [
+        {
+          "value": "Input: one photo is supported; multi-view uses 2–8 reference angles, with plan limits of 4 or 8 views."
+        },
+        {
+          "value": "Time-to-mesh: matching textured mesh in minutes; clear single-object photo on an uncluttered background is recommended."
+        },
+        {
+          "value": "fal.ai status: no fal.ai endpoint is stated on the fetched pages."
+        },
+        {
+          "value": "Commercial license: paid plans include a private commercial license."
+        }
+      ],
+      "pipeline": "Single photo → source mesh → retopology/UV unwrap/PBR texturing/optional rigging → GLB/FBX/OBJ/STL export → separate camera orbit render for 9:16.",
+      "pricing": "Per-generation price is not published; Tester is €5/mo with 90 3D credits (~3 models/month), Basic €16/mo with ~35 models, Creator €50/mo with ~107 models, and Creator Pro €150/mo with ~333 models.",
+      "clone_this": "Clone the full-distance pipeline—photo to source mesh, then topology, UV, texture and export—instead of stopping at an attractive raw mesh.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Have a Woodlands operator upload one clean plate, roof-component, or dental-chair photo, run the €5 Tester path, export GLB, and quote a vertical orbit as the paid service; use multi-view only when the client can supply more angles."
+    },
+    {
+      "name": "Kaedim",
+      "url": "https://www.kaedim3d.com",
+      "what_they_ship": "OBJ, OBJ pre-modifiers, MTL, FBX, GLB, GLTF and USD; game-ready assets can be textured/rigged; no MP4 orbit export is stated.",
+      "features": [
+        {
+          "value": "Input: one 2D image is supported; up to 10 images of the same object can be uploaded. Inputs include sketches, art, photos, product images and briefs."
+        },
+        {
+          "value": "Time-to-mesh: documentation says image-to-3D within minutes, while the homepage describes desired output in hours; revision time is not guaranteed."
+        },
+        {
+          "value": "fal.ai status: no fal.ai hosting is stated."
+        },
+        {
+          "value": "Commercial license: customer assets are described as fully owned with commercial rights; customer IP is not used to train AI models."
+        }
+      ],
+      "pipeline": "Photo/reference pack → preprocessing → 2D-to-3D → artist verification/cleanup and revisions → export → separate orbit render.",
+      "pricing": "Per-generation price is not stated; current FAQ says off-the-shelf plans are temporarily closed, no free trial is offered, and enterprise users should request a quote.",
+      "clone_this": "Clone the human-in-the-loop QA and full-ownership promise for high-value dental or roofing equipment where back-side accuracy matters more than instant output.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Send one product photo to Kaedim for a quote only when the item is valuable enough to support enterprise pricing; meanwhile make a low-cost first proof elsewhere, then use the Kaedim-quality/ownership pitch to upsell a polished 9:16 campaign asset."
+    },
+    {
+      "name": "Hunyuan3D-2",
+      "url": "https://github.com/Tencent-Hunyuan/Hunyuan3D-2",
+      "what_they_ship": "Textured 3D mesh; local code can save GLB/OBJ, and the hosted API example returns GLB; no native 9:16 orbit video is stated.",
+      "features": [
+        {
+          "value": "Input: single-image image-to-shape is documented; a separate Hunyuan3D-2mv model handles multi-view."
+        },
+        {
+          "value": "Time-to-mesh: base-model time is not stated; a distilled fast model can halve DiT inference time."
+        },
+        {
+          "value": "fal.ai status: yes—fal.ai hosts a Hunyuan3D v2 endpoint."
+        },
+        {
+          "value": "Commercial license: Tencent Community License has territory and scale restrictions; the fetched license excludes EU/UK/South Korea and requires additional commercial approval above 1M monthly active users, so check before client delivery."
+        }
+      ],
+      "pipeline": "One image → Hunyuan shape mesh → optional Hunyuan Paint texture stage → GLB/OBJ → camera orbit render.",
+      "pricing": "Local repository has no per-generation price; fal.ai v2 is listed at $0.16 for white mesh and $0.48 with textures.",
+      "clone_this": "Clone the decoupled shape-first/texturing-second pipeline: iterate cheaply on geometry, texture only the selected final, then render the orbit.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Use a single product-photo URL in the fal.ai white-mesh pass for quick silhouette approval, spend the higher textured pass only after the client approves, then turn the GLB into the paid vertical ad; do not promise unrestricted commercial rights without license review."
+    },
+    {
+      "name": "TRELLIS.2",
+      "url": "https://microsoft.github.io/TRELLIS.2/",
+      "what_they_ship": "High-resolution PBR textured GLB asset; no native 9:16 MP4 orbit output is stated.",
+      "features": [
+        {
+          "value": "Input: image-to-3D from an image; the associated hosted API accepts image_url; multi-image behavior is not clearly specified on the fetched landing page."
+        },
+        {
+          "value": "Time-to-mesh: H100 benchmarks are 3s at 512³, 17s at 1024³ and 60s at 1536³ for shape plus material."
+        },
+        {
+          "value": "fal.ai status: yes—fal.ai hosts TRELLIS.2."
+        },
+        {
+          "value": "Commercial license: GitHub describes MIT for code/model, but the project page says the provided materials are solely academic/research and not intended for commercial exploitation; treat as research-only until terms are reconciled."
+        }
+      ],
+      "pipeline": "Shop-photo URL → TRELLIS.2 shape/material generation → PBR GLB → separate vertical orbit render; use 512/1024/1536 resolution as a client-facing quality ladder.",
+      "pricing": "Local project price is not stated; fal.ai lists $0.25 at 512p, $0.30 at 1024p and $0.35 at 1536p per request.",
+      "clone_this": "Clone the explicit resolution/time ladder and native PBR-material output, but add a legal gate before commercial ad work.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Prototype a Woodlands product from one image at fal.ai 512p for $0.25, show the client the fast proof, then only use 1024p/1536p for a final if commercial terms are cleared; render the approved GLB as 9:16 separately."
+    },
+    {
+      "name": "TRELLIS",
+      "url": "https://github.com/microsoft/TRELLIS",
+      "what_they_ship": "Meshes, 3D Gaussians and radiance fields; official example exports GLB and PLY and writes MP4 preview videos such as sample_mesh.mp4; 9:16 is not stated.",
+      "features": [
+        {
+          "value": "Input: one image-conditioned prompt is documented; the repo also includes multi-image conditioning."
+        },
+        {
+          "value": "Time-to-mesh: not stated in the fetched repo."
+        },
+        {
+          "value": "fal.ai status: yes—fal.ai hosts TRELLIS single-image and multi-image endpoints."
+        },
+        {
+          "value": "Commercial license: models and most code are MIT, but listed submodules have separate licenses; retain license notices."
+        }
+      ],
+      "pipeline": "One shop photo → TRELLIS representation → mesh/GLB or Gaussian/radiance-field output → official render_video to MP4 → crop/compose to 9:16.",
+      "pricing": "Local/open-source price is not stated; fal.ai page states $0.02 per generation.",
+      "clone_this": "Clone the rare end-to-end documented mesh-to-video path: single image, export GLB, and render an MP4 preview without requiring desktop Blender.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Run three cheap $0.02 fal.ai concept passes from one product photo, pick the best silhouette, export/render the sample MP4, and sell the final vertical crop plus a GLB handoff."
+    },
+    {
+      "name": "InstantMesh",
+      "url": "https://github.com/TencentARC/InstantMesh",
+      "what_they_ship": "Default OBJ mesh with vertex colors; optional textured mesh via --export_texmap; --save_video writes a video preview; 9:16 is not stated.",
+      "features": [
+        {
+          "value": "Input: single image; foreground is segmented with rembg; sparse-view variants exist but additional multi-view support is listed as a todo."
+        },
+        {
+          "value": "Time-to-mesh: not stated; textured export and NeRF UV unwarping can take longer."
+        },
+        {
+          "value": "fal.ai status: no fal.ai InstantMesh endpoint is stated on the fetched repo."
+        },
+        {
+          "value": "Commercial license: Apache License 2.0 explicitly permits commercial use, modification and distribution, subject to notices/state-change conditions."
+        }
+      ],
+      "pipeline": "One photo → rembg foreground segmentation → sparse-view reconstruction → OBJ/texture-map export → --save_video preview → vertical crop/edit.",
+      "pricing": "No per-generation price or subscription is stated; self-hosted open-source code.",
+      "clone_this": "Clone the simple single-photo plus automatic segmentation plus save_video path for a low-cost local proof of concept.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "For a one-photo pilot, run the local Gradio/CLI workflow on a cleaned product image, save the video preview, crop it into a vertical social proof, and only pay for a cloud model when the client wants better texture fidelity."
+    },
+    {
+      "name": "TripoSR",
+      "url": "https://github.com/VAST-AI-Research/TripoSR",
+      "what_they_ship": "Fast reconstructed 3D model with vertex colors or baked texture; the fal.ai endpoint can return GLB/OBJ; no native 9:16 orbit export is stated.",
+      "features": [
+        {
+          "value": "Input: single image is the documented default; CLI can accept more than one image path."
+        },
+        {
+          "value": "Time-to-mesh: less than 0.5 seconds on an NVIDIA A100."
+        },
+        {
+          "value": "fal.ai status: yes—fal.ai hosts TripoSR."
+        },
+        {
+          "value": "Commercial license: official repo is MIT and explicitly permits commercial use; fal.ai endpoint is labeled commercial use."
+        }
+      ],
+      "pipeline": "Single shop photo → feed-forward reconstruction → vertex-color or baked-texture mesh/GLB → orbit camera render.",
+      "pricing": "Local repo has no price; fal.ai lists $0.07 per generation.",
+      "clone_this": "Clone the fastest low-cost single-photo mesh pass for rapid qualification before spending on higher-quality texturing.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Use one photo URL in fal.ai for a $0.07 speed pass, send the resulting GLB to a vertical orbit template, and offer the shop a same-day teaser with an upgrade path to a more detailed textured model."
+    },
+    {
+      "name": "Stable Fast 3D",
+      "url": "https://huggingface.co/stabilityai/stable-fast-3d",
+      "what_they_ship": "Textured, UV-unwrapped, relatively low-poly 3D mesh asset; file format and 9:16 MP4 output are not stated.",
+      "features": [
+        {
+          "value": "Input: one image of an object; expected input size is 512×512; multi-view is not stated."
+        },
+        {
+          "value": "Time-to-mesh: under one second per the model card."
+        },
+        {
+          "value": "fal.ai status: no fal.ai deployment is stated; Hugging Face says it is not deployed by an inference provider."
+        },
+        {
+          "value": "Commercial license: Community License permits limited commercial use for organizations/individuals at or below $1M annual revenue with registration; above $1M needs an enterprise license and distribution requires attribution/notice."
+        }
+      ],
+      "pipeline": "512×512 shop image → delighting/material prediction → UV-unwrapped textured mesh → convert/render orbit elsewhere.",
+      "pricing": "No per-generation price or plan economics is stated; local model access is gated by acceptance of the license/contact terms.",
+      "clone_this": "Clone the sub-second local reconstruction plus UV-unwrapped output for a fast first-pass preview, not as a claim of perfect product geometry.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "For a small Woodlands operator under the revenue threshold, test one 512×512 photo locally, confirm the required Stability attribution/registration, then render a vertical orbit; do not use this as the default for a larger client without enterprise clearance."
+    },
+    {
+      "name": "TRELLIS 3D AI",
+      "url": "https://trellis3d.co",
+      "what_they_ship": "GLB, OBJ, STL, GLTF, USDZ and PLY downloads with browser 3D preview; no 9:16 orbit-video output is stated.",
+      "features": [
+        {
+          "value": "Input: upload one clear, well-lit image; multi-view is not stated on the fetched page."
+        },
+        {
+          "value": "Time-to-mesh: results in seconds is claimed, but no measured benchmark is given."
+        },
+        {
+          "value": "fal.ai status: no fal.ai hosting is stated."
+        },
+        {
+          "value": "Commercial license: page says generated assets can be used commercially subject to its terms of service."
+        }
+      ],
+      "pipeline": "One image → browser generate/preview → download GLB/USDZ/etc. → separate orbit render.",
+      "clone_this": "Clone the frictionless upload → generate → preview → multi-format-download funnel and make the 9:16 orbit the paid add-on.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Use the free online conversion to make a Woodlands shop a no-risk sample from one product photo, download GLB, and charge for the branded vertical orbit plus caption/CTA rather than for the mesh alone.",
+      "pricing": "Free online version; paid-plan and per-generation economics are not stated on the fetched page."
+    },
+    {
+      "name": "Zakeke",
+      "url": "https://www.zakeke.com/3d-configurator-for-ecommerce/",
+      "what_they_ship": "Real-time 3D configurator/AR experiences; existing CAD, FBX, OBJ or USDZ auto-converts to GLB in seconds; animated/explode views are stated, but not a 9:16 MP4 orbit export.",
+      "features": [
+        {
+          "value": "Input: merchants can send product photos for model creation or upload an existing model; one-photo sufficiency and multi-view requirements are not stated."
+        },
+        {
+          "value": "Time-to-mesh: photo-to-model time is not stated; source CAD/FBX/OBJ/USDZ conversion to GLB is stated in seconds."
+        },
+        {
+          "value": "fal.ai status: no fal.ai hosting is stated."
+        },
+        {
+          "value": "Commercial license: not stated on the fetched page."
+        }
+      ],
+      "pipeline": "Photo/model handoff → model creation or source upload → GLB conversion → variants/material rules → interactive 3D/AR; separate vertical ad render required.",
+      "pricing": "Free download/entry and API custom setup are stated; per-generation price is not stated.",
+      "clone_this": "Clone the photo fallback plus configurable variants and dynamic pricing, then add a one-click vertical orbit export that the fetched product does not document.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Use the free entry point to approach a Woodlands ecommerce merchant with one product URL/photo, scope a model-and-variants pilot, and price the 9:16 orbit as a campaign deliverable while reserving Zakeke for the interactive PDP upsell."
+    },
+    {
+      "name": "Threekit",
+      "url": "https://www.threekit.com",
+      "what_they_ship": "Photorealistic 2D product imagery, configurable 3D visuals, AR and product-video use cases; file formats and ready-to-post 9:16 orbit export are not stated.",
+      "features": [
+        {
+          "value": "Input: the fetched page discusses photos, specs, RFPs and design/catalog inputs, but does not establish one-photo-to-mesh or a multi-view requirement."
+        },
+        {
+          "value": "Time-to-mesh: not stated; the platform emphasizes instant quoting and reusable visual content."
+        },
+        {
+          "value": "fal.ai status: no fal.ai hosting is stated."
+        },
+        {
+          "value": "Commercial license: not stated; sales/demo-led enterprise offering."
+        }
+      ],
+      "pipeline": "Existing product/design/catalog source → governed configurable 3D and photorealistic imagery/AR → separate vertical orbit output unless scoped with the vendor.",
+      "pricing": "Per-generation price and plan economics are not stated; book-a-demo/sales-led.",
+      "clone_this": "Clone the single-source-of-truth idea—reuse one product source across 2D, 3D, AR, and product video—rather than the enterprise buying motion.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Use one product URL/photo only as a sales brief for a demo with a larger Woodlands manufacturer; for this week's deliverable, use a lightweight mesh tool and pitch Threekit as the catalog-scale phase-two system."
+    },
+    {
+      "name": "Cylindo",
+      "url": "https://www.cylindo.com",
+      "what_they_ship": "4-photo-to-100+ product-image workflow, 360° spins with 4K zoom, AR, configurable 3D/lifestyle scenes and product-accurate visuals; downloadable mesh formats and 9:16 MP4 export are not stated.",
+      "features": [
+        {
+          "value": "Input: headline explicitly says 4 photos; one-photo input is not stated."
+        },
+        {
+          "value": "Time-to-mesh: not stated; lifestyle environments are advertised in minutes, not weeks."
+        },
+        {
+          "value": "fal.ai status: no fal.ai hosting is stated."
+        },
+        {
+          "value": "Commercial license: not stated; pricing is sales/demo-led."
+        }
+      ],
+      "pipeline": "Four product photos/catalog data → product-accurate 3D/360/lifestyle content → PDP/channel distribution; a separate ad render is needed for 9:16 unless contracted.",
+      "clone_this": "Clone the product-accurate reusable asset, 360°/4K detail and no-new-photoshoot catalog approach, but do not advertise it as one-photo-to-orbit.",
+      "beat_this": "Desktop Blender, $99/mo, no 9:16.",
+      "money_move": "Do not promise a one-photo result; if a shop can supply four angles from a product URL, use Cylindo as the multi-photo benchmark, otherwise deliver the one-photo orbit with a single-image mesh tool this week.",
+      "pricing": "Per-generation price and plan economics are not stated; book-a-demo/sales-led."
+    }
+  ],
+  "steals": [
+    {
+      "value": "Make the price ladder explicit: fal.ai Rodin ($0.40), TRELLIS.2 ($0.25–$0.35), TRELLIS ($0.02) and TripoSR ($0.07) make it possible to sell a cheap proof before a premium final (https://fal.ai/models/fal-ai/hyper3d/rodin)."
+    },
+    {
+      "value": "Copy Hyper3D's preview-before-confirming-credit-spend and free-start pattern; it reduces the risk of trying a one-photo product reconstruction (https://hyper3d.ai/pricing)."
+    },
+    {
+      "value": "Copy 3D AI Studio's one-upload funnel, browser auto-rotate preview, eight-format export and customer-owned commercial assets (https://www.3daistudio.com/ImageTo3D)."
+    },
+    {
+      "value": "Copy Alpha3D's continuation beyond generation: retopology, UV unwrap, PBR texturing and export in the same workflow (https://alpha3d.io/image-to-3d)."
+    },
+    {
+      "value": "Copy Kaedim's customer-IP posture and human QA/revision loop for high-value equipment; it states full ownership/commercial rights and no training on customer IP (https://www.kaedim3d.com)."
+    },
+    {
+      "value": "Copy TRELLIS's documented mesh-to-video sample path: render_video plus GLB export, then add a vertical aspect-ratio preset (https://github.com/microsoft/TRELLIS)."
+    },
+    {
+      "value": "Use Poly Haven's CC0 HDRIs, textures and models for orbit-ad lighting/set dressing without a commercial asset fee (https://polyhaven.com/license)."
+    },
+    {
+      "value": "Copy Needle's no-per-view-fee commercial hosting model for the interactive GLB review/QR upsell, while keeping the 9:16 MP4 as a separate deliverable (https://needle.tools/pricing)."
+    },
+    {
+      "value": "Copy 8th Wall's free/no-login commercial AR distribution as an upsell: the same GLB can become an image-target WebAR experience (https://8thwall.org/)."
+    },
+    {
+      "value": "Copy Zakeke's variant/configurator and dynamic-pricing framing for a second sale after the first orbit ad (https://www.zakeke.com/3d-configurator-for-ecommerce/)."
+    }
+  ],
+  "do_not_copy": [
+    {
+      "value": "Do not treat a GLB as a finished ad: most candidates stop at mesh/AR/PDP output and do not state a ready-to-post 9:16 MP4 orbit. Budget a camera, render and vertical-crop step (https://trellis3d.co)."
+    },
+    {
+      "value": "Do not sell TRELLIS.2 for commercial client work without resolving the license contradiction: GitHub describes MIT, while the project page says its materials are academic/research-only and not for commercial exploitation (https://microsoft.github.io/TRELLIS.2/)."
+    },
+    {
+      "value": "Do not ignore license thresholds: Stable Fast 3D requires registration for commercial use, attribution/notice on distribution, and enterprise licensing above $1M annual revenue (https://huggingface.co/stabilityai/stable-fast-3d/blob/main/LICENSE.md)."
+    },
+    {
+      "value": "Do not promise one-photo fidelity for products with hidden geometry; use multi-view when available and disclose that unseen sides are inferred. Hyper3D, Alpha3D and Kaedim all document optional/additional views for more control (https://hyper3d.ai/features/image-to-3d)."
+    },
+    {
+      "value": "Do not copy Cylindo's four-photo requirement as a one-photo offer, or imply that its custom sales pricing is a per-generation price (https://www.cylindo.com)."
+    },
+    {
+      "value": "Do not make Kaedim or Threekit the default same-week low-ticket path: both are demo/enterprise-oriented, and Kaedim says current off-the-shelf plans are temporarily closed or quote-led (https://docs.kaedim3d.com/welcome/faq)."
+    },
+    {
+      "value": "Do not confuse delivery tools with reconstruction: Needle, Theatre.js and 8th Wall can host/animate/deliver a generated asset, but their fetched pages do not document one-photo-to-mesh generation (https://engine.needle.tools/docs/cloud/)."
+    },
+    {
+      "value": "Do not source a random CGTrader model without checking the asset-specific license; the marketplace exposes royalty-free, editorial and custom license categories (https://www.cgtrader.com/)."
+    }
+  ]
+}

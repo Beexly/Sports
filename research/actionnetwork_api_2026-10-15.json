@@ -1,0 +1,42 @@
+{
+ "date": "2026-10-15",
+ "title": "Action Network public API \u2014 historical odds + public bet percentages, keyless",
+ "discovery": {
+  "endpoint": "https://api.actionnetwork.com/web/v1/scoreboard/nfl?season={YYYY}&week={N}",
+  "auth": "NONE \u2014 plain GET with browser User-Agent",
+  "payload": "games[] with teams, start_time, rotation numbers, odds[] per book (up to 33-41 books), each with:",
+  "fields": [
+   "spread_away/spread_home (closing line)",
+   "spread_away_money/spread_home_money (vig)",
+   "ml_away/ml_home",
+   "total/over/under + over/under odds",
+   "spread_away_public/spread_home_public (PERCENT OF BETS on each side)",
+   "total_over_public/total_under_public",
+   "ml_*_public",
+   "num_bets (e.g. 61155 on a single game)",
+   "inserted (line timestamp)"
+  ]
+ },
+ "coverage_measured": {
+  "public_bet_pct_by_season": "full 2020-2025 (every game, every week), partial 2019, none pre-2019",
+  "odds_records": "2023 W1: 41 book records per game; all 16 games have spread+total",
+  "live": "current board with 33 book records per game"
+ },
+ "why_it_matters_for_the_gate": [
+  "public bet % = crowd position \u2014 the classic contrarian signal plane, never wired into any GSE construction",
+  "closing juice by book = market confidence (partially tested via nflverse vig: +0.0009 gain in atoms)",
+  "per-book line DISAGREEMENT (dispersion across 30+ books) = uncertainty measure beyond a single closing line",
+  "bet% vs money% divergence (tickets vs dollars) = sharp/public split proxy"
+ ],
+ "next_steps": [
+  "harvest 2020-2025 all weeks (~6x25 requests, ~150 calls, keyless)",
+  "build walk-forward features: public% deviation from 50, book-dispersion of closing spread, money%-vs-bet% gap",
+  "test in champion v3 cascade: sigma regime + atom key dims",
+  "respect their infrastructure: 0.5-1s delay between calls, cache to disk, single harvest pass"
+ ],
+ "companion_apis": {
+  "scoresandodds_market_comparison": "https://rga51lus77.execute-api.us-east-1.amazonaws.com/prod/market-comparison?sport=nfl&event=nfl/{id}&market={spread|total|moneyline} \u2014 works, needs live event ids from game pages (data-event=\"nfl/{id}\"), current-day only",
+  "espn_site_api": "scoreboard/summary \u2014 open/close per provider (already harvested)",
+  "espn_core_api": "teamrankings movement series (already harvested)"
+ }
+}

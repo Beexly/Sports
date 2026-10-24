@@ -314,3 +314,91 @@ class SituationalEngine:
                 agree += 1
         frac = agree / tot if tot else 0.0
         return {"agree_frac": frac, "n": tot, "pass": bool(frac >= 0.80)}
+
+def evaluate_timeout_preserve_vs_ice_value(
+    fg_distance_yards: float,
+    half_seconds_remaining: float,
+    score_differential: float,
+    timeouts_remaining: int,
+) -> dict:
+    if timeouts_remaining <= 0:
+        return {
+            "preserve_timeout_wp_value": 0.0,
+            "ice_kicker_make_prob_delta": 0.0,
+            "net_preserve_advantage_wp": 0.0,
+            "recommendation": "ICE_NEUTRAL",
+        }
+    ice_delta = 0.011 if fg_distance_yards >= 52.0 else -0.004
+    close_game = abs(score_differential) <= 8.0
+    clock_window = 35.0 <= half_seconds_remaining <= 210.0
+    preserve_wp = 0.054 if (close_game and clock_window) else (0.022 if close_game else 0.008)
+    net_adv = round(preserve_wp + 0.35 * ice_delta, 4)
+    return {
+        "preserve_timeout_wp_value": round(preserve_wp, 4),
+        "ice_kicker_make_prob_delta": ice_delta,
+        "net_preserve_advantage_wp": net_adv,
+        "recommendation": "PRESERVE_TIMEOUT" if net_adv >= 0.01 else "ICE_NEUTRAL",
+    }
+
+
+def evaluate_coach_challenge_ev(
+    call_category: str,
+    wp_swing_if_overturned: float,
+    quarter: int,
+    half_seconds_remaining: float,
+    score_differential: float,
+) -> dict:
+    rates = {
+        "BOUNDARY_CATCH": 0.54,
+        "CATCH_FUMBLE": 0.39,
+        "SPOT_OF_BALL": 0.31,
+        "PASS_INTERFERENCE": 0.14,
+    }
+    p_over = rates.get(call_category, 0.31)
+    high_lev = quarter in (2, 4) and half_seconds_remaining <= 240.0 and abs(score_differential) <= 10.0
+    cost_wp = 0.048 if high_lev else (0.024 if quarter >= 3 else 0.011)
+    ev = round(p_over * wp_swing_if_overturned - (1.0 - p_over) * cost_wp, 4)
+    return {
+        "overturn_prob": p_over,
+        "timeout_shadow_cost_wp": cost_wp,
+        "expected_net_wp": ev,
+        "should_challenge": bool(ev > 0.005),
+    }
+
+
+def evaluate_prevent_defense_regime(score_differential: float, game_seconds_remaining: float) -> dict:
+    abs_lead = abs(score_differential)
+    active = abs_lead >= 14.0 and 0.0 < game_seconds_remaining <= 600.0
+    if not active:
+        return {
+            "prevent_active": False,
+            "underneath_completion_lift": 0.0,
+            "deep_explosive_suppression": 0.0,
+            "trailing_pass_rate_lift": 0.0,
+        }
+    intensity = min(1.5, (abs_lead - 10.0) / 14.0) * min(1.2, (600.0 - game_seconds_remaining) / 300.0 + 0.4)
+    return {
+        "prevent_active": True,
+        "underneath_completion_lift": round(0.114 * intensity, 4),
+        "deep_explosive_suppression": round(-0.42 * min(intensity, 1.2), 4),
+        "trailing_pass_rate_lift": round(0.182 * intensity, 4),
+    }
+
+
+def evaluate_end_of_half_clock_boundary(
+    half: int,
+    seconds_remaining_in_half: float,
+    offense_timeouts: int,
+    yardline_100: float,
+    receives_second_half_kickoff: bool,
+) -> dict:
+    double_dip = 0.038 if (half == 1 and receives_second_half_kickoff and seconds_remaining_in_half <= 120.0) else 0.0
+    urgency = 1.65 if (seconds_remaining_in_half <= 50.0 and offense_timeouts <= 1) else 1.25
+    leave_time_risk = 0.045 if (seconds_remaining_in_half > 75.0 and yardline_100 <= 35.0) else 0.012
+    return {
+        "double_dip_middle_eight_bonus_wp": double_dip,
+        "clock_runoff_urgency_multiplier": urgency,
+        "optimal_leave_no_time_threshold_sec": round(leave_time_risk * 1000.0, 2),
+    }
+
+

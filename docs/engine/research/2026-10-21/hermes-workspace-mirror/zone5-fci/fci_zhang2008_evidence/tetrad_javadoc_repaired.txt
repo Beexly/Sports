@@ -1,0 +1,24 @@
+  >> R10 Suppose α o→ γ, β → γ ← θ, p1 is an uncovered potentially directed (semidirected) path from α to β, and p2 is an uncovered p.d.
+     NONASCII: 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3 'β'=U+03B2 '→'=U+2192 'γ'=U+03B3 '←'=U+2190 'θ'=U+03B8 'α'=U+03B1 'β'=U+03B2
+
+  >> R5 For every (remaining) α o−−o β, if there is an uncovered circle path p = <α,γ,...,θ,β> between α and β s.t.
+     NONASCII: 'α'=U+03B1 '−'=U+2212 '−'=U+2212 'β'=U+03B2 'α'=U+03B1 'γ'=U+03B3 'θ'=U+03B8 'β'=U+03B2 'α'=U+03B1 'β'=U+03B2
+
+  >> R6 If α —- β o−−∗ γ (α and γ may or may not be adjacent), then orient β o−−∗ γ as β −−∗ γ.
+     NONASCII: 'α'=U+03B1 '—'=U+2014 'β'=U+03B2 '−'=U+2212 '−'=U+2212 '∗'=U+2217 'γ'=U+03B3 'α'=U+03B1 'γ'=U+03B3 'β'=U+03B2 '−'=U+2212 '−'=U+2212 '∗'=U+2217 'γ'=U+03B3 'β'=U+03B2 '−'=U+2212 '−'=U+2212 '∗'=U+2217 'γ'=U+03B3
+
+  >> R7 If α −−o β o−−∗ γ, and α, γ are not adjacent, then orient β o−−∗ γ as β −−∗ γ.
+     NONASCII: 'α'=U+03B1 '−'=U+2212 '−'=U+2212 'β'=U+03B2 '−'=U+2212 '−'=U+2212 '∗'=U+2217 'γ'=U+03B3 'α'=U+03B1 'γ'=U+03B3 'β'=U+03B2 '−'=U+2212 '−'=U+2212 '∗'=U+2217 'γ'=U+03B3 'β'=U+03B2 '−'=U+2212 '−'=U+2212 '∗'=U+2217 'γ'=U+03B3
+
+  >> R8 If α → β → γ or α−−◦β → γ, and α o→ γ, orient α o→ γ as α → γ.
+     NONASCII: 'α'=U+03B1 '→'=U+2192 'β'=U+03B2 '→'=U+2192 'γ'=U+03B3 'α'=U+03B1 '−'=U+2212 '−'=U+2212 '◦'=U+25E6 'β'=U+03B2 '→'=U+2192 'γ'=U+03B3 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3
+
+  >> R9 If α o→ γ, and p = <α,β,θ,...,γ> is an uncovered potentialy directed path from α to γ such that γ and β are not adjacent, then orient α o→ γ as α → γ.
+     NONASCII: 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3 'α'=U+03B1 'β'=U+03B2 'θ'=U+03B8 'γ'=U+03B3 'α'=U+03B1 'γ'=U+03B3 'γ'=U+03B3 'β'=U+03B2 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3 'α'=U+03B1 '→'=U+2192 'γ'=U+03B3
+
+  >> Implements Zhang's rules R8, R9, R10, applies them over the graph once.
+     NONASCII: 
+
+  >> Orients the graph (in place) according to rules in the graph (FCI step D). Zhang's rules R1-R10.
+     NONASCII: 
+

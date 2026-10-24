@@ -1,0 +1,268 @@
+import { describe, expect, it } from 'vitest';
+import { MarketEventSchema, TradeStatus, UserEventSchema } from './clob';
+
+const CONDITION_ID = `0x${'ab'.repeat(32)}`;
+
+describe('UserEventSchema', () => {
+  const orderCancellation = (status: string) => ({
+    asset_id: '1',
+    event_type: 'order',
+    id: '0x01',
+    market: CONDITION_ID,
+    original_size: '5',
+    owner: 'owner-1',
+    price: '0.5',
+    side: 'BUY',
+    size_matched: '0',
+    status,
+    timestamp: '1710000000000',
+    type: 'CANCELLATION',
+  });
+
+  it.each([
+    'CANCELED',
+    'INVALID',
+    'CANCELED_MARKET_RESOLVED',
+    "CANCELED_order couldn't be fully filled. FOK orders are fully filled or killed.",
+  ])('accepts order cancellations with status %s', (status) => {
+    const result = UserEventSchema.safeParse(orderCancellation(status));
+
+    expect(result.success).toBe(true);
+    expect(result.data?.payload).toMatchObject({ status });
+  });
+
+  it('still rejects an unknown order status', () => {
+    const result = UserEventSchema.safeParse(orderCancellation('NOT_A_STATUS'));
+
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts short trade statuses from the user websocket and normalizes them', () => {
+    const result = UserEventSchema.safeParse({
+      asset_id: '1',
+      event_type: 'trade',
+      fee_rate_bps: '0',
+      id: 'trade-1',
+      last_update: '1710000000',
+      maker_address: '0x0000000000000000000000000000000000000001',
+      market: CONDITION_ID,
+      match_time: '1710000000',
+      owner: 'owner-1',
+      price: '0.5',
+      side: 'BUY',
+      size: '1',
+      status: 'CONFIRMED',
+      taker_order_id: 'order-1',
+      timestamp: '1710000000000',
+      trade_owner: 'owner-1',
+      type: 'TRADE',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({
+      payload: {
+        assetId: '1',
+        conditionId: CONDITION_ID,
+        status: TradeStatus.Confirmed,
+        tokenId: '1',
+      },
+      topic: 'user',
+      type: 'trade',
+    });
+  });
+
+  it('still accepts prefixed trade statuses', () => {
+    const result = UserEventSchema.safeParse({
+      asset_id: '1',
+      event_type: 'trade',
+      fee_rate_bps: '0',
+      id: 'trade-2',
+      last_update: '1710000000',
+      maker_address: '0x0000000000000000000000000000000000000001',
+      market: CONDITION_ID,
+      match_time: '1710000000',
+      owner: 'owner-1',
+      price: '0.5',
+      side: 'BUY',
+      size: '1',
+      status: TradeStatus.Matched,
+      taker_order_id: 'order-2',
+      timestamp: '1710000000001',
+      trade_owner: 'owner-1',
+      type: 'TRADE',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('normalizes empty-string fee_rate_bps to null on trades and maker orders', () => {
+    const result = UserEventSchema.safeParse({
+      asset_id: '1',
+      event_type: 'trade',
+      fee_rate_bps: '',
+      id: 'trade-3',
+      last_update: '1710000000',
+      maker_address: '0x0000000000000000000000000000000000000001',
+      maker_orders: [
+        {
+          asset_id: '1',
+          fee_rate_bps: '',
+          matched_amount: '10',
+          order_id: 'order-4',
+          owner: 'owner-2',
+          price: '0.5',
+          side: 'SELL',
+        },
+      ],
+      market: CONDITION_ID,
+      match_time: '1710000000',
+      owner: 'owner-1',
+      price: '0.5',
+      side: 'BUY',
+      size: '1',
+      status: 'CONFIRMED',
+      taker_order_id: 'order-3',
+      timestamp: '1710000000002',
+      trade_owner: 'owner-1',
+      type: 'TRADE',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({
+      payload: {
+        feeRateBps: null,
+        makerOrders: [{ feeRateBps: null }],
+      },
+    });
+  });
+});
+
+describe('MarketEventSchema', () => {
+  const NEW_MARKET = {
+    event_type: 'new_market',
+    id: '5290391',
+    market: CONDITION_ID,
+    assets_ids: ['1', '2'],
+    outcomes: ['Over', 'Under'],
+    timestamp: '1791133357388',
+  };
+
+  it('normalizes a space-separated game_start_time to ISO 8601', () => {
+    const result = MarketEventSchema.safeParse({
+      ...NEW_MARKET,
+      game_start_time: '2026-10-17 23:30:00+00',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({
+      payload: { gameStartTime: '2026-10-17T23:30:00.000Z' },
+    });
+  });
+
+  it('keeps an ISO 8601 game_start_time unchanged', () => {
+    const result = MarketEventSchema.safeParse({
+      ...NEW_MARKET,
+      game_start_time: '2024-01-15T19:00:00Z',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({
+      payload: { gameStartTime: '2024-01-15T19:00:00Z' },
+    });
+  });
+
+  it('normalizes an empty game_start_time to null', () => {
+    const result = MarketEventSchema.safeParse({
+      ...NEW_MARKET,
+      game_start_time: '',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({ payload: { gameStartTime: null } });
+  });
+
+  it('normalizes empty-string best_bid and best_ask to null on price changes', () => {
+    const result = MarketEventSchema.safeParse({
+      event_type: 'price_change',
+      market: CONDITION_ID,
+      price_changes: [
+        {
+          asset_id: '1',
+          best_ask: '',
+          best_bid: '',
+          hash: 'hash-1',
+          price: '0.5',
+          side: 'BUY',
+          size: '10',
+        },
+      ],
+      timestamp: '1710000000000',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({
+      payload: {
+        conditionId: CONDITION_ID,
+        priceChanges: [
+          { assetId: '1', bestAsk: null, bestBid: null, tokenId: '1' },
+        ],
+      },
+    });
+  });
+
+  it('keeps populated best_bid_ask decimals intact', () => {
+    const result = MarketEventSchema.safeParse({
+      asset_id: '1',
+      best_ask: '0.51',
+      best_bid: '0.49',
+      event_type: 'best_bid_ask',
+      market: CONDITION_ID,
+      spread: '',
+      timestamp: '1710000000000',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw result.error;
+    }
+
+    expect(result.data).toMatchObject({
+      payload: {
+        bestAsk: '0.51',
+        bestBid: '0.49',
+        spread: null,
+      },
+    });
+  });
+});

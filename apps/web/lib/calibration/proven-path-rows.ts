@@ -184,6 +184,19 @@ export function receiptMarketFairProb(
 export type SettledPickForProvenPath = {
   readonly confidence: number;
   readonly result: "WIN" | "LOSS" | string;
+  /**
+   * When the pick SETTLED, as a Date, an epoch-ms number, or an ISO string.
+   *
+   * Carried because G7 (the calibration-drift circuit breaker) compares a RECENT
+   * window of settled bets against a SLOW baseline, and the only honest way to
+   * pick "recent" is by settlement time. Without it the fast window would be
+   * "the last N in whatever order the caller happened to pass", which makes the
+   * rule a function of the query's ORDER BY rather than of when the bets settled.
+   *
+   * OPTIONAL, and a row without one is simply not eligible for G7 -- it is not
+   * an error, and it does not stop the row from entering the bake-off.
+   */
+  readonly settledAt?: Date | number | string | null;
   readonly pickType?: string | null;
   readonly factorBreakdown?: unknown;
   /** Immutable lock-time receipt; its marketFairProb backs up the factor breakdown. */
@@ -214,10 +227,12 @@ export function toProvenPathPickRow(
   const sport =
     pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
   const market = pick.pickType ?? "unknown";
+  const settledAtMs = toEpochMs(pick.settledAt);
   return {
     pConfidence,
     pEdge: null, // never edge-as-p
     pIndependent,
+    settledAt: settledAtMs,
     y: (pick.result === "WIN" ? 1 : 0) as 0 | 1,
     groupKey: `${sport}|${market}`,
     marketP,
@@ -257,4 +272,27 @@ export function toProvenPathPickRows(
   picks: readonly SettledPickForProvenPath[],
 ): ProvenPathPickRow[] {
   return toProvenPathPickRowsReport(picks).rows;
+}
+
+/**
+ * A settlement timestamp as epoch-ms, or null when it is absent or unusable.
+ *
+ * Accepts a Date, an epoch-ms number, or an ISO string, because the three come
+ * from three different places in this repo (Prisma gives a Date, a DB row
+ * sometimes gives a string, and a hand-built fixture may give a number).
+ *
+ * Null rather than NaN or 0, so a caller can tell "not settled / unknown" from
+ * "settled at the epoch" -- G7 rejects a non-finite timestamp, and 0 is finite.
+ */
+export function toEpochMs(value: Date | number | string | null | undefined): number | null {
+  if (value == null) return null;
+  if (value instanceof Date) {
+    const ms = value.getTime();
+    return Number.isFinite(ms) ? ms : null;
+  }
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  const trimmed = value.trim();
+  if (trimmed === "") return null;
+  const ms = Date.parse(trimmed);
+  return Number.isFinite(ms) ? ms : null;
 }

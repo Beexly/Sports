@@ -108,6 +108,98 @@ jobs:
       - name: Verify L11 calibration evidence still adds up
         run: node --test docs/calibration-proposals/evidence/verify-evidence.test.mjs
 
+      # The MIND falsification suite is written with node:test, NOT vitest, so the
+      # prediction-engine vitest config's include pattern (`src/**/*.test.ts`,
+      # `test/**/*.spec.ts`) does NOT collect it. Measured before this step was
+      # added: `vitest run src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts`
+      # exits 1 with "No test files found", and `node --test` on the same file
+      # reports 11 passing tests.
+      #
+      # Those 11 tests are not incidental. Probe T1 in that file is the
+      # IN-QUOTE NUMERIC PERTURBATION probe -- the assertion that mutating
+      # numeric_claim from 0.024 to 0.048 scales total_delta by exactly 2x and
+      # updates the rendered prose without a legacy string -- which is the same
+      # property the goal spec's Table 5 T1 row names, applied to the MIND
+      # engine's corpus rather than the literature corpus. It also carries the
+      # ACWR content-driven invariants, the residual-hardcode eradication
+      # invariant, and the class-A exclusivity probes.
+      #
+      # A gate that CI never executes is not a gate. It sat in the repository
+      # looking like one, and would have stayed green while the behaviour it
+      # pins drifted. This step is what makes it real.
+      - name: Run the MIND falsification suite (node:test, not collected by vitest)
+        run: node --import tsx --test packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts
+
+      # THE OTHER node:test GUARDRAILS. Twenty suites, 322 assertions, and until this
+      # step was added NONE of them had ever gated a commit.
+      #
+      # The pattern is the one the MIND step above already established: the
+      # prediction-engine vitest config's include patterns (`src/**/*.test.ts`,
+      # `test/**/*.spec.ts`) do NOT collect `node:test` files, so `npm test` skips
+      # them entirely. A guard that CI never executes is not a gate -- it sits in the
+      # repository looking like one and stays green while the behaviour it pins
+      # drifts. That is the SAME failure mode as the class-A guard, the canonical AST
+      # (private to a script), and the 7.099 CRPS bar (in three documents, enforced
+      # nowhere).
+      #
+      # MEASURED, not assumed: every one of these twenty was run individually and
+      # exits 0 today. They are added as a MATRIX rather than one long `node --test`
+      # invocation so that a failure names the suite that broke instead of pointing at
+      # a wall of TAP output, and so a slow suite cannot mask a fast one.
+      #
+      # The list is a MATRIX OF MATRICES: every file is listed explicitly, so a new
+      # guardrail suite is NOT picked up automatically. That is deliberate -- a suite
+      # that fails on its first appearance should be added here on purpose, after it
+      # has been seen green, rather than silently becoming a gate the day it is
+      # written.
+      # THE GAP CLOSURE LEDGER. Every status in reconciliation/gap_closures.json is
+      # RE-DERIVED from a mechanical probe on every run -- a grep, a file check, an
+      # artifact's own count -- so a closure that stops holding flips itself.
+      #
+      # And a flip is not silent: the script reads the PREVIOUS ledger first, and a gap
+      # that was `closed` and is no longer closed is a REGRESSION that exits 1 with the
+      # gap named. A closure is therefore a claim CI re-checks, not a note somebody
+      # wrote once.
+      #
+      # The ledger is a SEPARATE file on purpose: reconciliation/gaps.json is GENERATED
+      # by reconciliation/_build_gaps.py, so a hand-added `status` field there would be
+      # wiped on the next regeneration.
+      - name: Verify the gap closure ledger (re-derives every status; fails on a regression)
+        run: node reconciliation/_verify_gap_closures.mjs
+
+      - name: Run the node:test guardrail ${{ matrix.suite }}
+        run: node --test ${{ matrix.suite }}
+        strategy:
+          fail-fast: false
+          matrix:
+            suite:
+              - scripts/ai/build-call-site-inventory.test.mjs
+              - scripts/db/prune-usage.test.mjs
+              - scripts/edge-lab/freeze-model-hash.test.mjs
+              - scripts/factors/index.test.mjs
+              - scripts/guardrails/commercial-copy-scan.test.mjs
+              - scripts/guardrails/draft-only.test.mjs
+              - scripts/guardrails/dependency-audit.test.mjs
+              - scripts/guardrails/ingestion-source-clearance.test.mjs
+              - scripts/guardrails/no-unsupported-performance-claims.test.mjs
+              - scripts/guardrails/node-container-parity.test.mjs
+              - scripts/guardrails/node-version-parity.test.mjs
+              - scripts/guardrails/sealed-holdout-open-scan.test.mjs
+              - scripts/guardrails/trust-gate.test.mjs
+              - scripts/lib/node-runtime-pin.test.mjs
+              - scripts/nova/convergence-inventory.test.mjs
+              - scripts/nova/multihead-inventory.test.mjs
+              - scripts/nova/nova-intelligence.test.mjs
+              - scripts/nova/source-runtime.test.mjs
+              - scripts/ops/cron-matrix-from-vercel.test.mjs
+              - scripts/ops/free-auto-settle.test.mjs
+              - scripts/__tests__/cv-no-synthetic-rng.test.mjs
+
+      # The seven `apps/mobile/tests/*.test.js` suites are NOT in the matrix: they
+      # fail today, and a red suite is not a gate. They are excluded here on purpose
+      # rather than left to fail the build, and their status is recorded in
+      # handoff/NODE_TEST_SUITES_IN_CI.md.
+
       # §10.9: the budget acceptance run is mandatory and its evidence is
       # RETAINED — a missing artifact fails the build.
       - name: Upload budget acceptance artifact (§10.9)
@@ -273,6 +365,28 @@ jobs:
 
       - name: Run secret-scan guardrail (all tracked files)
         run: node scripts/guardrails/secret-scan.mjs --all
+
+  # --------------------------------------------------------------
+  # 5c. Class-A Literature Coverage Guard (GAP-14 closure)
+  #     Enforces that all 114 read sites and 12 insert paths honor
+  #     the verified Class-A literature constraint without bypass.
+  # --------------------------------------------------------------
+  class-a-coverage:
+    name: Class-A Literature Coverage Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run Class-A literature coverage check
+        run: node reconciliation/_check_class_a_coverage.mjs
 
   # --------------------------------------------------------------
   # 6. Composite guardrails job — convenience target for local + branch

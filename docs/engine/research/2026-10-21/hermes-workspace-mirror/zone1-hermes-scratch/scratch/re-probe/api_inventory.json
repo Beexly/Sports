@@ -1,0 +1,4340 @@
+[
+ {
+  "method": "GET",
+  "path": "\"/product_policies\"",
+  "api_version": "v1",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "...e?.showAll?{show_all:1}:void 0"
+  ],
+  "data_keys": [],
+  "source_chunks": "1156.3436ff9eb9d03884.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/product_policies\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "for_kyc"
+  ],
+  "data_keys": [],
+  "source_chunks": "1156.3436ff9eb9d03884.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/product_policy_acknowledgements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "product_policy_ids"
+  ],
+  "source_chunks": "1156.3436ff9eb9d03884.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/restrictions/new\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "1156.3436ff9eb9d03884.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/restrictions/\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "...\"alertAt\"in e?{alert_at:e.alertAt}:{}",
+   "...\"limitAt\"in e?{limit_at:e.limitAt}:{}",
+   "share_with_id_pair",
+   "type"
+  ],
+  "source_chunks": "1156.3436ff9eb9d03884.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/entry_slips\"",
+  "api_version": "v5",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}",
+   "features"
+  ],
+  "data_keys": [
+   "entry_slip"
+  ],
+  "source_chunks": "1265.0d96f291852eaccd.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/promotions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "1363.d1ab0daf940dd387.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/promotions/user_referral\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "username"
+  ],
+  "data_keys": [],
+  "source_chunks": "1363.d1ab0daf940dd387.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/promotions/promo_code\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "code"
+  ],
+  "data_keys": [],
+  "source_chunks": "1363.d1ab0daf940dd387.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/sign_up/new\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "1363.d1ab0daf940dd387.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "1363.d1ab0daf940dd387.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/withdrawals\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "withdrawal",
+   "confirmed"
+  ],
+  "source_chunks": "2405.e685bdec354c6b5b.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/withdrawals/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2405.e685bdec354c6b5b.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/trustly/withdrawals\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "withdrawal"
+  ],
+  "source_chunks": "2405.e685bdec354c6b5b.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/withdrawals/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2405.e685bdec354c6b5b.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "2528.8d8547af6489b67c.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/ownership_email`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "3864.d68154a10c0350a0.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${s}/ownership`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "entry_counts",
+   "entry_fees",
+   "draft_pools",
+   "tournaments",
+   "weekly_winners"
+  ],
+  "data_keys": [],
+  "source_chunks": "3864.d68154a10c0350a0.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/entry_slips/${t}/cancellation`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "3864.d68154a10c0350a0.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/sit_and_gos/${r}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/sit_and_gos/${r}/private_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_entries/${t}/shares`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/drafts/${t}/draft_entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/drafts/${t}`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/drafts/${t}/weekly_scores`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/draft_entries/${t}/title`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "draft_entry"
+  ],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/matches`",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/matches`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "date"
+  ],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weeks/${t.toString()}/matches`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winners/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/weekly_winners/${d}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...l&&{power_up_id:l}"
+  ],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winners/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/weekly_winners`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/weekly_winners/${t}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winners/${t}/weekly_winner_weeks`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/weekly_winner_weeks/${t}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/weekly_winner_weeks/${t}/tracker`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winner_weeks/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winner_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "4903.16372a295a64908a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/product_policies\"",
+  "api_version": "v1",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "...e?.showAll?{show_all:1}:void 0"
+  ],
+  "data_keys": [],
+  "source_chunks": "5057.fc0dd98ab57e100b.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/product_policies\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "for_kyc"
+  ],
+  "data_keys": [],
+  "source_chunks": "5057.fc0dd98ab57e100b.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/product_policy_acknowledgements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "product_policy_ids"
+  ],
+  "source_chunks": "5057.fc0dd98ab57e100b.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/identification\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5070.cad50c7c904cb9c4.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/features\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5207.13b5f7d6b5d42b39.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/features\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5207.13b5f7d6b5d42b39.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/state_configs\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5207.13b5f7d6b5d42b39.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${a}/ranking`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5498.b19140d5bcc1b345.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/user/slates/${t}/contest_styles/${a}/ranking`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "ranking"
+  ],
+  "source_chunks": "5498.b19140d5bcc1b345.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${a}/slot_limits`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5498.b19140d5bcc1b345.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/user/slates/${t}/contest_styles/${a}/slot_limits`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "slot_limits"
+  ],
+  "source_chunks": "5498.b19140d5bcc1b345.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/rankings/download/${r}/${a}/${t}`",
+  "api_version": "exclude",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "5498.b19140d5bcc1b345.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "600.5714207793e2f04a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/product_policies\"",
+  "api_version": "v1",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "...e?.showAll?{show_all:1}:void 0"
+  ],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/product_policies\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "for_kyc"
+  ],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/product_policy_acknowledgements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "product_policy_ids"
+  ],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/promotions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/promotions/user_referral\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "username"
+  ],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/promotions/promo_code\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "code"
+  ],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/sign_up/new\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/usernames/${e}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/usernames/suggestions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "email"
+  ],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "6579.4fc336715a2322a2.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/entry_slips/payout_outcome\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "features",
+   "fee_source",
+   "options",
+   "power_up_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "687.3283917fbfb61359.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/entry_slips/estimate\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "features",
+   "...E&&{fee:E}",
+   "fee_source",
+   "options",
+   "power_up_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/entry_requests\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "features"
+  ],
+  "data_keys": [
+   "..._?{combo_fantasy_price_expected:_}:{}",
+   "...E?{confirmed:!0}:{}",
+   "...n?{estimate_request_id:n}:{}",
+   "...s?{flex_losses:s}:{}",
+   "...T?{pickem_pool_style_id:T}:{}",
+   "fee",
+   "fee_source",
+   "idempotency_id",
+   "options",
+   "power_up_id",
+   "prediction_contract_quantity",
+   "price_expected"
+  ],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/entry_requests/${t}`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/entry_slips/${t}/share`",
+  "api_version": "v7",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/over_under_lines\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "appearance_ids",
+   "over_under_ids",
+   "sport_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/live_over_under_lines\"",
+  "api_version": "beta/v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "appearance_ids",
+   "sport_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/over_unders/${t}/alternate_projections`",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/active_entry_slips\"",
+  "api_version": "v10",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/settled_entry_slips\"",
+  "api_version": "v10",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/entry_slip_limits\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/entry_slips/${t}/share_link`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/pickem_pool_styles\"",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/pickem_pool_styles\"",
+  "api_version": "v3",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/pickem_pools/${_}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/pickem_pools/entry_slips/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/entry_slips/${t}/cancellation`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/pickem_search/search_results\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "sport_id",
+   "algolia_object_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "PATCH",
+  "path": "\"/user/gameplay_settings\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "699.4c6857cf125295fc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/identification\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "8208.f0af36552341ac00.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/document_verification\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "8237.f25863d238d392b1.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/document_verification\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "identification"
+  ],
+  "source_chunks": "8237.f25863d238d392b1.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/identification\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "identification"
+  ],
+  "source_chunks": "8237.f25863d238d392b1.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/draft_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "8329.481ddf62904cfaee.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_entries/${t}/picks`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...a?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "pick"
+  ],
+  "source_chunks": "8329.481ddf62904cfaee.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/draft_entries/${t}/auto_pick`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "auto_pick"
+  ],
+  "source_chunks": "8329.481ddf62904cfaee.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_entries/${t}/queue`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "8329.481ddf62904cfaee.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_entries/${t}/queue`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "queue"
+  ],
+  "source_chunks": "8329.481ddf62904cfaee.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pool_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_pools/${l}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...i&&{power_up_id:i}"
+  ],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/draft_pools`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "limit",
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/slates`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/players`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/scoring_types/${n}/appearances`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/tournaments/${i}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...o&&{power_up_id:o}"
+  ],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/contests/entry_count?contest_type=${n}&contest_id=${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9038.a9bb6efb9456a5c5.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/sports\"",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/contest_styles\"",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/entry_styles\"",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/lineup_statuses\"",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/teams\"",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/slots\"",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/scoring_types\"",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9097.8ef2095f6373ad10.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/promotions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9233.3561fbd4536b45ed.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/promotions/user_referral\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "username"
+  ],
+  "data_keys": [],
+  "source_chunks": "9233.3561fbd4536b45ed.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/promotions/promo_code\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "code"
+  ],
+  "data_keys": [],
+  "source_chunks": "9233.3561fbd4536b45ed.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/sign_up/new\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "9233.3561fbd4536b45ed.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/picks/${t}/swaps`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "945.e379ce10eb053629.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/deposits/checkout/google_pay\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "confirmed",
+   "deposit"
+  ],
+  "source_chunks": "9541.fca92c40db242771.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "change-password.c7673f7d59880659.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "cosmetics.5b3545f63458825e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/scoring_types/${t}/appearances/${r}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "contest_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/appearances/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weeks/${t}/contest_styles/${r}/appearances/${o}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pool_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_pools/${i}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...l&&{power_up_id:l}"
+  ],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/draft_pools`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "limit",
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/sit_and_gos/${r}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...o?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/sit_and_gos/${r}/private_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...o?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_entries/${t}/shares`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/drafts/${t}/draft_entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/drafts/${t}`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/drafts/${t}/weekly_scores`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/draft_entries/${t}/title`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "draft_entry"
+  ],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/ownership_email`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${r}/ownership`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "entry_counts",
+   "entry_fees",
+   "draft_pools",
+   "tournaments",
+   "weekly_winners"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/matches`",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/matches`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "date"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weeks/${t.toString()}/matches`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/product_policies\"",
+  "api_version": "v1",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "...e?.showAll?{show_all:1}:void 0"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/product_policies\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "for_kyc"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/product_policy_acknowledgements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "product_policy_ids"
+  ],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/slates`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/players`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/scoring_types/${r}/appearances`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/tournament_rounds`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/tournament_rounds/${t}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/drafts/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/tournaments/drafts/${t}/draft_entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_rounds/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "usernames"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_round_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_rounds/${t}/users`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/tournaments/${l}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...s&&{power_up_id:s}"
+  ],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/legacy_osb_transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/legacy_osb_transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "types",
+   "status"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winners/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/weekly_winners/${l}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...s&&{power_up_id:s}"
+  ],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winners/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/weekly_winners`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/weekly_winners/${t}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winners/${t}/weekly_winner_weeks`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/weekly_winner_weeks/${t}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/weekly_winner_weeks/${t}/tracker`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winner_weeks/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weekly_winner_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/active_drafts\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/completed_slates\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/completed_drafts`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/sports/${t}/live_slates`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "best_ball"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/live_drafts`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/lobby\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/lobby\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...e&&{sport_id:e}"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/sit_and_gos\"",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/contests`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/lobby\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "sport_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/power_ups/${t}/restricted_over_unders/${r}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "over_under_line_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/power_ups/${t}/options`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/power_ups/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/entry_slips/estimate\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "estimate_request_id",
+   "features",
+   "...n&&{fee:n}",
+   "fee_source",
+   "options",
+   "power_up_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/entry_slips/${t}/cash_out_requests`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/entry_slips/${t}/cash_out_requests`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "estimate_request_id",
+   "payout_expected",
+   "price_expected"
+  ],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/sports/${t}/settled_slates`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/settled_drafts`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/anonymous\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weeks/${t.toString()}/scoring_types/${r}/appearances`",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/intercom/identity_verification\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.app.b433e835379c6483.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/legacy_bet_history\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.webview-bet-history.8526af772137ba2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/tax_info\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.webview-tax.a2c62391c43a371c.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/tax_info\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "tax_info"
+  ],
+  "source_chunks": "entry.webview-tax.a2c62391c43a371c.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/legacy_osb_transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.webview-transactions.23b9070c6f2c4661.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/legacy_osb_transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.webview-transactions.23b9070c6f2c4661.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "entry.webview-transactions.23b9070c6f2c4661.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "types",
+   "status"
+  ],
+  "data_keys": [],
+  "source_chunks": "entry.webview-transactions.23b9070c6f2c4661.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/product_policies\"",
+  "api_version": "v1",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "...e?.showAll?{show_all:1}:void 0"
+  ],
+  "data_keys": [],
+  "source_chunks": "legal-center.20bd59b0816b1d89.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/product_policies\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "for_kyc"
+  ],
+  "data_keys": [],
+  "source_chunks": "legal-center.20bd59b0816b1d89.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/product_policy_acknowledgements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "product_policy_ids"
+  ],
+  "source_chunks": "legal-center.20bd59b0816b1d89.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/users/unlock\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "unlock_token"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.account-unlock.5d89f1b0ba837fbe.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/partners/dashboard\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.account.593ef472ac47e86d.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/draft_leaderboards\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "week",
+   "month",
+   "year"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.best-in-show.05bb0fae56019490.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/draft_leaderboards/weeks\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "year",
+   "month"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.best-in-show.05bb0fae56019490.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/ownership_email`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.completed.b46eb57e7866e4c3.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${s}/ownership`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "entry_counts",
+   "entry_fees",
+   "draft_pools",
+   "tournaments",
+   "weekly_winners"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.completed.b46eb57e7866e4c3.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pool_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_pools/${l}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...i&&{power_up_id:i}"
+  ],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/draft_pools`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "limit",
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/tournaments/${i}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...o&&{power_up_id:o}"
+  ],
+  "source_chunks": "page.dashboard.64f3790d877d6772.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/trustly/signatures\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "establishData"
+  ],
+  "source_chunks": "page.deposit.4b75c06f8c4858d3.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/paypal/deposits\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "deposit",
+   "confirmed"
+  ],
+  "source_chunks": "page.deposit.4b75c06f8c4858d3.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/braintree/paypal/deposits\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "deposit",
+   "confirmed"
+  ],
+  "source_chunks": "page.deposit.4b75c06f8c4858d3.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/braintree/transaction_risk_context\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.deposit.4b75c06f8c4858d3.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/paypal/deposits/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "deposit"
+  ],
+  "source_chunks": "page.deposit.4b75c06f8c4858d3.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/trustly/signatures\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "establishData"
+  ],
+  "source_chunks": "page.deposit.4b75c06f8c4858d3.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/sit_and_gos/${a}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/sit_and_gos/${a}/private_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_entries/${t}/shares`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/drafts/${t}/draft_entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...a?{confirmed:!0}:{}"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/drafts/${t}`",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/drafts/${t}/weekly_scores`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/draft_entries/${t}/title`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "draft_entry"
+  ],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${a}/ranking`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/user/slates/${t}/contest_styles/${a}/ranking`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "ranking"
+  ],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${a}/slot_limits`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "PUT",
+  "path": "`/user/slates/${t}/contest_styles/${a}/slot_limits`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "slot_limits"
+  ],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/rankings/download/${n}/${a}/${t}`",
+  "api_version": "exclude",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.draft-board.4a7d550103bb668e.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/slates/${t}/ownership_email`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.exposure.0752cfbdca6efc0a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/contest_styles/${s}/ownership`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "entry_counts",
+   "entry_fees",
+   "draft_pools",
+   "tournaments",
+   "weekly_winners"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.exposure.0752cfbdca6efc0a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.landing.70549fd5807686f8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/scoring_types/${t}/appearances/${s}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "contest_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/appearances/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weeks/${t}/contest_styles/${s}/appearances/${l}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/tournament_rounds`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/tournament_rounds/${t}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/drafts/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/tournaments/drafts/${t}/draft_entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_rounds/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "usernames"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_round_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_rounds/${t}/users`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.live.05d01cd536185746.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/confirmations/session_logs/${s}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "token"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.login-confirmation.f2d95400fdb5169f.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/news_items\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "sport_id",
+   "q"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.news-feed.4d7b06d115a56842.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/knockouts/markets\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "over_under_option_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.pick-em-knockout.2a23c30d081f539f.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/lobbies/content/market_price_history\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "chart_type",
+   "target_id",
+   "target_type",
+   "over_under_option_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.pick-em-knockout.2a23c30d081f539f.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/knockouts/markets\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "over_under_option_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.pick-em.6d84d653b0b540ae.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pool_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/draft_pools/${l}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...r?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...i&&{power_up_id:i}"
+  ],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/draft_pools`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "limit",
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/draft_pools/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/matches`",
+  "api_version": "v2",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/matches`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "date"
+  ],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/weeks/${t.toString()}/matches`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/slates`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/players`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/scoring_types/${r}/appearances`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/draft_pools/public_leaderboards\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.public-leaderboard.729f4c1e8ec02da8.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/sports/${t}/slates`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.rankings.702144a4eb796e4a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.rankings.702144a4eb796e4a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/players`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.rankings.702144a4eb796e4a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.rankings.702144a4eb796e4a.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/slates/${t}/scoring_types/${s}/appearances`",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.rankings.702144a4eb796e4a.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/tax_info\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.tax.de155d9dc4a3a3c9.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/tax_info\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "tax_info"
+  ],
+  "source_chunks": "page.tax.de155d9dc4a3a3c9.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "page.trustly-loading-deposit.af6b1a02cf11f264.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "refer-a-friend.76a85e720ed5f9d7.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/entry_slips/payout_outcome\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "features",
+   "fee_source",
+   "options",
+   "power_up_id"
+  ],
+  "data_keys": [],
+  "source_chunks": "rules-general.af3ccc40bf088bf5.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/experience_badges\"",
+  "api_version": "default(v1)",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "rules-general.af3ccc40bf088bf5.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "rules-tournament.bc5912995a31e41b.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/${t}/unfilled_drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "rules-tournament.bc5912995a31e41b.js"
+ },
+ {
+  "method": "POST",
+  "path": "`/tournaments/${i}/entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "...n?{confirmed:!0}:{}"
+  ],
+  "data_keys": [
+   "auto_pilot",
+   "draft",
+   "entry_count",
+   "...r&&{power_up_id:r}"
+  ],
+  "source_chunks": "rules-tournament.bc5912995a31e41b.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/paysafe/deposits\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "deposit",
+   "confirmed"
+  ],
+  "source_chunks": "service.paysafe.d62fd5723ce14619.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/privacy_preferences\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "settings.09c2ae391d76ccfc.js"
+ },
+ {
+  "method": "",
+  "path": "\"/user/privacy_preferences\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "settings.09c2ae391d76ccfc.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/customer_statements\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "only_daily",
+   "year"
+  ],
+  "data_keys": [],
+  "source_chunks": "statements.5eae876ef1ea89e1.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/customer_statements/pdf\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "period",
+   "start_date"
+  ],
+  "data_keys": [],
+  "source_chunks": "statements.5eae876ef1ea89e1.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/tax_info\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "tax.3ce54077f0560585.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/tax_info\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "tax_info"
+  ],
+  "source_chunks": "tax.3ce54077f0560585.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/slates/${t}/tournament_rounds`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/tournament_rounds/${t}/drafts`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournaments/drafts/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/tournaments/drafts/${t}/draft_entries`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_rounds/${t}/leaderboard`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "usernames"
+  ],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_round_entries/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/tournament_rounds/${t}/users`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "tournament-section.c2af3283512765fe.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/legacy_osb_transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "transaction.65dec1c87da041bb.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/legacy_osb_transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "transaction.65dec1c87da041bb.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "transaction.65dec1c87da041bb.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "types",
+   "status"
+  ],
+  "data_keys": [],
+  "source_chunks": "transaction.65dec1c87da041bb.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/product_policies\"",
+  "api_version": "v1",
+  "host": "stats.underdogfantasy.com",
+  "param_keys": [
+   "...e?.showAll?{show_all:1}:void 0"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/product_policies\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "for_kyc"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/product_policy_acknowledgements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "product_policy_ids"
+  ],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/legacy_osb_transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/legacy_osb_transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/transactions/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/transactions\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "page",
+   "types",
+   "status"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/deposit_settings\"",
+  "api_version": "v4",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "ui_config"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "v2",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/payment_methods\"",
+  "api_version": "v3",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "transaction_type"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/power_ups\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/withdrawal_settings\"",
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "\"/users/sign_out\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/referral_stats\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": "\"/user/achievements\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/cosmetics\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "cosmetic"
+  ],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "DELETE",
+  "path": "`/user/payment_methods/${t}`",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/airdrops/claims\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "id"
+  ],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "PUT",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [
+   "enforced_at_login"
+  ],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/mfa\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/user/predictions_suitability_questionnaire\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "POST",
+  "path": "\"/trustly/signatures\"",
+  "api_version": "default(v1)",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [
+   "establishData"
+  ],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ },
+ {
+  "method": "GET",
+  "path": null,
+  "api_version": "v1",
+  "host": "api.underdogfantasy.com",
+  "param_keys": [],
+  "data_keys": [],
+  "source_chunks": "withdrawal.4a12d58803c29c2e.js"
+ }
+]

@@ -1,0 +1,1463 @@
+/**
+ * @file literature-retrieval.ts
+ * Event-driven literature retrieval with residual feedback.
+ *
+ * This is the seam that makes the literature CONTINUOUS.
+ *
+ * Before: the corpus was read once, at request time, from a hardcoded path on
+ * one developer's machine (packages/prediction-engine/src/reasoning/
+ * corpus-evaluator.ts:835-850), and its output never reached a published
+ * probability.
+ *
+ * After: every new signal produces a retrieval event. The event embeds, asks
+ * the HNSW index for the top-k premises, records which premises were
+ * activated and how strongly, and — once a game settles — writes a residual
+ * that updates the premise's activation score. Premises that earn their
+ * place can be promoted to causal edges and tested with do-calculus.
+ *
+ * The laws this module keeps:
+ *   1. Retrieval is TOP-K over an HNSW index. No full-corpus scan, ever.
+ *   2. A premise influences a decision ONLY through an activation record.
+ *   3. Residual feedback is written by the settlement path, never by the scorer.
+ *   4. Do-calculus runs on PROMOTED EDGES ONLY.
+ *   5. Every failure is a refusal (no activation), never a silent pass.
+ */
+
+import {
+  LITERATURE_EMBEDDING_DIM,
+  eventEmbeddingText,
+  type Embedder,
+} from "./literature-embeddings.js";
+import { pillarsForSignal, type LiteraturePillar } from "./literature-pillars.js";
+import { vectorLiteral } from "./literature-index-builder.js";
+import { evaluateCausalClaim, finalizeExpansion } from "../causal/causal-claim-gate.js";
+import {
+  computeMeasuredEValueFromResiduals,
+  MIN_EXPANSION_CI_E_VALUE,
+  MIN_EXPANSION_E_VALUE,
+  type MediatorCandidate,
+} from "../causal/hcid-mediator-expansion.js";
+import { eValue, eValueForCi } from "../causal/e-value.js";
+import type { CausalADMG, NodeId } from "../causal/do-calculus-id.js";
+
+/** Minimal structural type for a Postgres client. */
+export interface SqlClient {
+  query(text: string, values?: readonly unknown[]): Promise<{ rows: unknown[]; rowCount: number | null }>;
+}
+
+/** A live event that can trigger literature evaluation. */
+export interface LiteratureEvent {
+  readonly signalKey: string;
+  readonly signalValue?: number | null;
+  readonly signalFamily?: string | null;
+  readonly gameId?: string | null;
+  readonly contextFields?: readonly string[];
+  /** Stable key for the event. Same key twice = same event (idempotent). */
+  readonly eventKey: string;
+}
+
+export interface RetrievedPremise {
+  readonly premise_id: string;
+  readonly premise_key: string;
+  readonly title: string;
+  readonly principle: string | null;
+  readonly domain: string | null;
+  readonly claim_type: string | null;
+  readonly numeric_value: number | null;
+  readonly numeric_unit: string | null;
+  readonly influence_direction: string | null;
+  readonly how_it_influences: string | null;
+  readonly applicable_contexts: string[];
+  readonly pillar_tags: string[];
+  readonly evidence_quote: string | null;
+  readonly similarity: number;
+}
+
+export interface RetrievalOutcome {
+  readonly retrieval_event_id: string | null;
+  readonly event_key: string;
+  readonly activated: readonly RetrievedPremise[];
+  readonly hit_count: number;
+  readonly latency_ms: number;
+  readonly used_hnsw: boolean | null;
+  readonly refused: boolean;
+  readonly refusal_reason: string | null;
+}
+
+/**
+ * Minimum similarity for a premise to be activated.
+ *
+ * Cosine distance 1 - similarity. A premise that is not clearly closer than
+ * chance on the premise is not evidence; activating it would put noise into
+ * the reasoning path. 0.25 similarity means the premise and the event share
+ * at least a modest amount of direction in embedding space.
+ */
+export const DEFAULT_MIN_SIMILARITY = 0.25;
+
+/** Default top-k. */
+export const DEFAULT_TOP_K = 20;
+
+/**
+ * Deterministic event key.
+ *
+ * Two signals of the same key for the same game in the same 5-minute bucket
+ * are the same event. This makes the whole pipeline idempotent: a cron that
+ * runs twice in the same window does not double-count a premise activation.
+ */
+export function makeEventKey(
+  signalKey: string,
+  gameId: string | null | undefined,
+  at: Date,
+  bucketMinutes = 5,
+): string {
+  const bucketMs = bucketMinutes * 60_000;
+  const bucket = Math.floor(at.getTime() / bucketMs);
+  return `${signalKey}|${gameId ?? "-"}|${bucket}`;
+}
+
+function nowMs(): number {
+  return Date.now();
+}
+
+/**
+ * Run one event through the literature index.
+ *
+ * Steps:
+ *   1. Embed the event.
+ *   2. Write the retrieval event row (idempotent on event_key).
+ *   3. Retrieve top-k premises via the HNSW-backed function, scoped by pillar.
+ *   4. Write one activation row per premise that clears the similarity floor.
+ *
+ * A failure at any step is a REFUSAL: the caller gets `refused: true` and an
+ * empty activation list. Nothing is fabricated.
+ */
+export async function retrieveForEvent(
+  db: SqlClient,
+  embedder: Embedder,
+  event: LiteratureEvent,
+  opts?: {
+    readonly topK?: number;
+    readonly minSimilarity?: number;
+    readonly pillars?: readonly LiteraturePillar[] | null;
+    readonly at?: Date;
+  },
+): Promise<RetrievalOutcome> {
+  const started = nowMs();
+  const topK = opts?.topK ?? DEFAULT_TOP_K;
+  const minSimilarity = opts?.minSimilarity ?? DEFAULT_MIN_SIMILARITY;
+  const at = opts?.at ?? new Date();
+  const pillars =
+    opts?.pillars === undefined ? pillarsForSignal(event.signalKey) : opts?.pillars;
+
+  const queryText = eventEmbeddingText({
+    signalKey: event.signalKey,
+    signalValue: event.signalValue ?? null,
+    signalFamily: event.signalFamily ?? null,
+    gameId: event.gameId ?? null,
+    contextFields: event.contextFields ?? [],
+  });
+
+  const emb = await embedder(queryText);
+  if (!emb.ok) {
+    return {
+      retrieval_event_id: null,
+      event_key: event.eventKey,
+      activated: [],
+      hit_count: 0,
+      latency_ms: nowMs() - started,
+      used_hnsw: null,
+      refused: true,
+      refusal_reason: `embedding failed: ${emb.error}`,
+    };
+  }
+
+  // 1. Record the retrieval event (idempotent).
+  const evRes = await db.query(
+    `INSERT INTO lit.retrieval_event (
+        event_key, game_id, signal_key, signal_family, signal_value,
+        query_text, query_embedding, top_k
+     ) VALUES ($1,$2,$3,$4,$5,$6,$7::vector,$8)
+     ON CONFLICT (event_key) DO UPDATE SET
+        query_embedding = EXCLUDED.query_embedding,
+        query_text = EXCLUDED.query_text
+     RETURNING id`,
+    [
+      event.eventKey,
+      event.gameId ?? null,
+      event.signalKey,
+      event.signalFamily ?? null,
+      event.signalValue ?? null,
+      queryText,
+      vectorLiteral(emb.embedding),
+      topK,
+    ],
+  );
+  const retrievalEventId = (evRes.rows[0] as { id: string }).id;
+
+  // 2. Top-k retrieval over the HNSW index.
+  let rows: RetrievedPremise[] = [];
+  let usedHnsw: boolean | null = null;
+  try {
+    const res = await db.query(
+      `SELECT * FROM lit.retrieve_premises($1::vector, $2, $3::text[], $4)`,
+      [vectorLiteral(emb.embedding), topK, pillars ?? null, minSimilarity],
+    );
+    rows = res.rows as RetrievedPremise[];
+    usedHnsw = true;
+  } catch (err) {
+    return {
+      retrieval_event_id: retrievalEventId,
+      event_key: event.eventKey,
+      activated: [],
+      hit_count: 0,
+      latency_ms: nowMs() - started,
+      used_hnsw: null,
+      refused: true,
+      refusal_reason: `retrieval failed: ${err instanceof Error ? err.message : "unknown"}`,
+    };
+  }
+
+  // 3. Write activations.
+  let rank = 0;
+  for (const row of rows) {
+    rank += 1;
+    // Activation score starts at the similarity and is scaled by the premise's
+    // running performance score (0 if never graded). A premise that has been
+    // graded and performed well contributes MORE than its raw similarity.
+    const scoreRes = await db.query(
+      `SELECT s.activation_score
+         FROM lit.premise_score s
+         JOIN lit.premise p ON p.id = s.premise_id
+        WHERE s.premise_id = $1
+          -- CLASS-A EXCLUSIVITY. BOTH halves.
+          --
+          -- This is the score the premise CARRIES -- the activation
+          -- weight, which is the magnitude of its contribution. The
+          -- rows above come from lit.retrieve_premises, which filters,
+          -- so this is upstream-filtered -- but the number is the
+          -- number, and it should not be readable for an unverified
+          -- premise.
+          AND p.record_class = 'CITABLE_VERIFIED'
+          AND p.status = 'ACTIVE'`,
+      [row.premise_id],
+    );
+    const prior = scoreRes.rows[0] as { activation_score: number } | undefined;
+    const priorScore = typeof prior?.activation_score === "number" ? prior.activation_score : 0;
+
+    // The contribution is the premise's numeric claim (if any) scaled by
+    // similarity and by the prior performance score.
+    const numeric = typeof row.numeric_value === "number" ? row.numeric_value : null;
+    const base = numeric !== null ? Math.min(Math.abs(numeric), 0.25) : 0.05;
+    const activationScore = Number(
+      (row.similarity * base * (1 + priorScore)).toFixed(6),
+    );
+
+    await db.query(
+      `INSERT INTO lit.activation (
+          retrieval_event_id, premise_id, game_id, rank, similarity,
+          activation_score, status
+       ) VALUES ($1,$2,$3,$4,$5,$6,'active')
+       ON CONFLICT (retrieval_event_id, premise_id) DO UPDATE SET
+          similarity = EXCLUDED.similarity,
+          activation_score = EXCLUDED.activation_score`,
+      [
+        retrievalEventId,
+        row.premise_id,
+        event.gameId ?? null,
+        rank,
+        row.similarity,
+        activationScore,
+      ],
+    );
+
+    await db.query(
+      `INSERT INTO lit.premise_score (premise_id, activations)
+       VALUES ($1, 1)
+       ON CONFLICT (premise_id) DO UPDATE
+         SET activations = lit.premise_score.activations + 1,
+             updated_at = now()`,
+      [row.premise_id],
+    );
+  }
+
+  const latency = nowMs() - started;
+  await db.query(
+    `UPDATE lit.retrieval_event
+        SET hit_count = $2, latency_ms = $3, used_hnsw = $4
+      WHERE id = $1`,
+    [retrievalEventId, rows.length, latency, usedHnsw],
+  );
+
+  return {
+    retrieval_event_id: retrievalEventId,
+    event_key: event.eventKey,
+    activated: rows,
+    hit_count: rows.length,
+    latency_ms: latency,
+    used_hnsw: usedHnsw,
+    refused: false,
+    refusal_reason: null,
+  };
+}
+
+/**
+ * Write residuals for a settled game and update premise activation scores.
+ *
+ * This is called by the SETTLEMENT path, never by the scorer. It is the
+ * only thing that may change a premise's activation score.
+ *
+ * `outcomes` maps premise_id -> { predicted, actual, correct }.
+ */
+export async function applyResidualFeedback(
+  db: SqlClient,
+  inputs: readonly {
+    readonly activation_id: string;
+    readonly premise_id: string;
+    readonly game_id: string | null;
+    readonly predicted: number;
+    readonly actual: number;
+    readonly outcome_correct: boolean;
+  }[],
+): Promise<{ graded: number; updated: number }> {
+  let graded = 0;
+  let updated = 0;
+
+  for (const r of inputs) {
+    const residual = Number((r.actual - r.predicted).toFixed(6));
+    const ins = await db.query(
+      `INSERT INTO lit.residual (
+          activation_id, premise_id, game_id, predicted, actual, residual, outcome_correct
+       ) VALUES ($1,$2,$3,$4,$5,$6,$7)
+       ON CONFLICT (activation_id) DO UPDATE SET
+          predicted=EXCLUDED.predicted, actual=EXCLUDED.actual,
+          residual=EXCLUDED.residual, outcome_correct=EXCLUDED.outcome_correct,
+          graded_at=now()
+       RETURNING id`,
+      [r.activation_id, r.premise_id, r.game_id, r.predicted, r.actual, residual, r.outcome_correct],
+    );
+    if (ins.rowCount) graded += 1;
+
+    // Recompute the premise scorecard from ALL residuals for that premise.
+    //
+    // SCORING RULE: Brier skill against the uninformed baseline.
+    //
+    // The first version of this used a binary "was the prediction correct"
+    // count. That is wrong, and measurably so: a premise with no numeric
+    // claim is graded at predicted = 0.5 (an explicit "I do not know"), and
+    // against a binary outcome |0.5 - 0| = 0.5 is NOT < 0.5, so such a
+    // premise is scored as INCORRECT every single time. Every such premise
+    // therefore earned activation_score 0 forever and could never be
+    // promoted. Measured on the first real run: 48 graded premises, 0
+    // correct, MAE exactly 0.50000, max activation_score 0 — the loop ran
+    // and the score could not move.
+    //
+    // The honest measure is the Brier score of the premise's own predictions
+    // against the 0.25 baseline of an uninformed forecast, which is what
+    // `residual^2` already is (the residual IS actual - predicted):
+    //
+    //   brier_i     = residual_i^2
+    //   mse         = mean(brier_i)
+    //   skill       = 0.25 - mse            (> 0 means better than chance)
+    //   score       = max(0, skill) * min(n / MIN_SUPPORT, 1)
+    //
+    // A premise that predicts 0.85 and is right 85% of the time gets
+    // mse = 0.1275 and skill = +0.12. A premise that says "0.5, I don't
+    // know" gets mse = 0.25 and skill = 0 — it carries no information and
+    // earns no weight, which is the correct answer. A premise worse than
+    // chance gets a negative skill, clipped to 0: it is not a signal.
+    //
+    // `n` is the number of DISTINCT GAMES the premise has been graded
+    // against, not the number of residual rows. A game-scoped premise is
+    // activated once per retrieval event touching its game, so the row
+    // count is an artefact of how often it fired, not how much evidence
+    // exists. In the measured run, 294 rows collapsed to 38 distinct
+    // (premise, game) pairs -- 21 rows for a single game. Counting rows
+    // would have let one game earn full support.
+    // HONESTY (2026-10-20). The support factor must count DISTINCT GAMES,
+    // not residual rows. A game-scoped premise (one that asserts a
+    // probability for a specific named game) is activated once per
+    // retrieval event that touches that game -- 21 rows for ONE game in
+    // the measured run. Counting rows made one piece of evidence look
+    // like 21, which saturated the support factor and let a premise earn
+    // full weight from a single game.
+    //
+    // The distinct pair (premise, game) is the unit of evidence: one
+    // claim, one game, one outcome.
+    const agg = await db.query(
+      `SELECT count(*)::int AS n,
+              avg(residual)::double precision AS mean_res,
+              avg(residual * residual)::double precision AS mse,
+              count(*) FILTER (WHERE outcome_correct)::int AS correct
+         FROM (
+           SELECT DISTINCT ON (r.premise_id, r.game_id)
+                  r.premise_id, r.game_id, r.residual, r.outcome_correct
+             FROM lit.residual r
+             JOIN lit.premise p ON p.id = r.premise_id
+            WHERE r.premise_id = $1
+              -- CLASS-A EXCLUSIVITY. BOTH halves.
+              --
+              -- These numbers become the premise's scorecard, and the
+              -- scorecard becomes the activation_score, and the
+              -- activation_score is the MAGNITUDE of the delta. A
+              -- score computed from a premise with no document behind
+              -- it is a number that looks like a measurement and is
+              -- not one.
+              AND p.record_class = 'CITABLE_VERIFIED'
+              AND p.status = 'ACTIVE'
+            ORDER BY r.premise_id, r.game_id, r.graded_at DESC
+         ) d`,
+      [r.premise_id],
+    );
+    const row = agg.rows[0] as { n: number; mean_res: number | null; mse: number | null; correct: number };
+    const n = row.n ?? 0;
+    const meanRes = row.mean_res ?? 0;
+    const mse = row.mse ?? 0;
+
+    const MIN_SUPPORT = 5;
+    const BASELINE_BRIER = 0.25;
+    const support = Math.min(n / MIN_SUPPORT, 1);
+    const skill = BASELINE_BRIER - mse;
+    const score = Number((Math.max(0, skill) * support).toFixed(6));
+
+    await db.query(
+      `INSERT INTO lit.premise_score (
+          premise_id, graded, correct, mean_residual, residual_mse, activation_score, updated_at
+       ) VALUES ($1,$2,$3,$4,$5,$6, now())
+       ON CONFLICT (premise_id) DO UPDATE SET
+          graded = EXCLUDED.graded, correct = EXCLUDED.correct,
+          mean_residual = EXCLUDED.mean_residual, residual_mse = EXCLUDED.residual_mse,
+          activation_score = EXCLUDED.activation_score, updated_at = now()`,
+      [r.premise_id, n, row.correct ?? 0, meanRes, mse, score],
+    );
+    updated += 1;
+  }
+
+  return { graded, updated };
+}
+
+/**
+ * Promote premises that have earned it into causal edges.
+ *
+ * A premise qualifies when it has enough graded activations, a positive
+ * activation score, and a numeric claim strong enough to be an effect.
+ * Promotion is the only path to a do-calculus test.
+ */
+export async function promotePremisesToCausalEdges(
+  db: SqlClient,
+  opts?: {
+    readonly minGraded?: number;
+    readonly minScore?: number;
+    readonly minAbsClaim?: number;
+    readonly limit?: number;
+  },
+): Promise<{
+  promoted: number;
+  edges: { edge_key: string; premise_key: string; effect_estimate: number | null }[];
+  /** Edges retired this run because their premise no longer clears the gate. */
+  retired: number;
+}> {
+  const minGraded = opts?.minGraded ?? 10;
+  const minScore = opts?.minScore ?? 0.05;
+  const minAbsClaim = opts?.minAbsClaim ?? 0.01;
+  const limit = opts?.limit ?? 500;
+
+  // HONESTY (2026-10-20). The effect estimate on a promoted edge must be
+  // an OBSERVED quantity, not the premise's own claim. The earlier
+  // implementation wrote `c.numeric_value` -- the number the premise
+  // asserted -- into `effect_estimate`, so the edge said "premise P moves
+  // the outcome by exactly what P said it would". That is a tautology: it
+  // can never be falsified, and it made every promoted edge look like
+  // evidence for itself.
+  //
+  // The honest estimator available here is the MEAN SIGNED RESIDUAL:
+  // residual = outcome - numeric_value, so a positive mean residual means
+  // the premise under-predicted, and the mean over its graded activations
+  // is the size of that miscalibration in outcome units.
+  //
+  // The promotion gate is ALSO the module's own, not a script's copy:
+  // graded >= minGraded AND activation_score >= minScore AND a non-null
+  // observed mean residual. run-loop.cjs used graded>=3 AND
+  // activation_score>0, which is why the 8 edges in the dev branch did
+  // not come from this function. One gate, one place.
+  //
+  // CLASS-A EXCLUSIVITY (2026-10-20). `record_class = 'CITABLE_VERIFIED'`
+  // is REQUIRED here, not optional. Promotion is the only path to a
+  // do-calculus test, so a premise that reaches an intervention test
+  // without a document behind it puts an unverified number into a
+  // causal claim. Before this filter, 3,470 of 5,149 records -- 67.4%
+  // -- could take that path, including the 3,509 whose quotes were in
+  // no document at all.
+  //
+  // The premise table's DEFAULT for record_class is
+  // 'HONESTLY_UNCITED_PRIOR', so a row that was inserted without a
+  // class cannot slip through this filter by omission.
+  const cands = await db.query(
+    `SELECT p.id, p.premise_key, p.title, p.domain, p.numeric_value, p.numeric_unit,
+            p.numeric_metric, p.influence_direction, p.applicable_contexts,
+            s.activation_score, s.graded, s.correct, s.mean_residual
+       FROM lit.premise_score s
+       JOIN lit.premise p ON p.id = s.premise_id
+      WHERE s.graded >= $1
+        AND s.activation_score >= $2
+        AND p.numeric_value IS NOT NULL
+        AND abs(p.numeric_value) >= $3
+        AND s.mean_residual IS NOT NULL
+        AND p.structure_state = 'structured'
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
+      ORDER BY s.activation_score DESC, s.graded DESC
+      LIMIT $4`,
+    [minGraded, minScore, minAbsClaim, limit],
+  );
+
+  const edges: { edge_key: string; premise_key: string; effect_estimate: number | null }[] = [];
+  let promoted = 0;
+
+  for (const c of cands.rows as Array<Record<string, unknown>>) {
+    const premiseId = c.id as string;
+    const contexts = (c.applicable_contexts as string[]) ?? [];
+    const cause = contexts[0] ?? (c.numeric_metric as string) ?? (c.domain as string) ?? "unknown";
+    const effect = `${(c.domain as string) ?? "outcome"}.outcome`;
+    const edgeKey = `edge:${c.premise_key as string}`;
+
+    // The effect estimate is the observed mean signed residual, in the
+    // premise's own unit. NOT the premise's claimed value.
+    const observedEffect = (c.mean_residual as number | null) ?? null;
+
+    const ins = await db.query(
+      `INSERT INTO lit.causal_edge (
+          edge_key, premise_id, cause_signal, effect_signal,
+          effect_estimate, effect_unit, support_n, status
+       ) VALUES ($1,$2,$3,$4,$5,$6,$7,'promoted')
+       ON CONFLICT (edge_key) DO UPDATE SET
+          effect_estimate = EXCLUDED.effect_estimate,
+          support_n = EXCLUDED.support_n,
+          promoted_at = now(),
+          status = 'promoted',
+          retired_at = NULL
+       RETURNING id`,
+      [
+        edgeKey, premiseId, cause, effect,
+        observedEffect,
+        (c.numeric_unit as string) ?? null,
+        (c.graded as number) ?? 0,
+      ],
+    );
+    promoted += 1;
+
+    // Keep the premise_score.promoted flag in step with the edge. Before
+    // this, the flag stayed false on every premise while 8 edges claimed
+    // status='promoted' -- the two tables disagreed about the same fact.
+    // The flag is what downstream readers use to ask "is this premise
+    // promoted?", so it must be written in the same statement.
+    await db.query(
+      `UPDATE lit.premise_score
+          SET promoted = true, updated_at = now()
+        WHERE premise_id = $1`,
+      [premiseId],
+    );
+
+    edges.push({
+      edge_key: edgeKey,
+      premise_key: c.premise_key as string,
+      effect_estimate: observedEffect,
+    });
+  }
+
+  // DEMOTION (2026-10-20). Promotion must be RECONCILIABLE, not just
+  // additive.
+  //
+  // A promoted edge whose premise no longer clears the gate -- because
+  // its score fell, or because the evidence behind it was re-grounded and
+  // no longer supports it -- must be RETIRED, not left standing.
+  //
+  // The measured case: with the support factor counting distinct games
+  // instead of residual rows, zero premises qualified (every game-scoped
+  // premise has exactly ONE game, so graded = 1 < 3). Sixteen edges
+  // promoted under the old row-counting rule were still marked
+  // 'promoted' with no qualifying premise behind them. An edge table that
+  // can only grow is an edge table that cannot be wrong.
+  //
+  // The contract: after this function runs, the set of edges with
+  // status = 'promoted' is EXACTLY the set of premises that clear the
+  // gate. Anything else is retired.
+  const stale = await db.query(
+    `UPDATE lit.causal_edge ce
+        SET status = 'retired',
+            retired_at = now()
+      WHERE ce.status = 'promoted'
+        AND NOT EXISTS (
+          SELECT 1
+            FROM lit.premise_score s
+           WHERE s.premise_id = ce.premise_id
+             AND s.graded >= $1
+             AND s.activation_score >= $2
+        )`,
+    [minGraded, minScore],
+  );
+  const retired = stale.rowCount ?? 0;
+
+  // CLASS-A EXCLUSIVITY: AN EDGE WHOSE PREMISE IS NO LONGER CLASS-A IS
+  // RETIRED.
+  //
+  // The promotion gate refuses to CREATE an edge for a non-class-A
+  // premise, but an edge created when the premise WAS class-A stays
+  // promoted after the premise is re-classified. The re-stamp that
+  // fixed the database's class column did exactly that: 16 edges
+  // pointed at premises that are now HONESTLY_UNCITED_PRIOR.
+  //
+  // Those 16 were already 'retired', so nothing leaked -- but that was
+  // luck, not a rule. A premise can be re-classified by a corpus
+  // rebuild at any time, and the edge set has to follow.
+  const nonClassA = await db.query(
+    `UPDATE lit.causal_edge ce
+        SET status = 'retired',
+            retired_at = now()
+      WHERE ce.status = 'promoted'
+        AND EXISTS (
+          SELECT 1
+            FROM lit.premise p
+           WHERE p.id = ce.premise_id
+             AND (p.record_class <> 'CITABLE_VERIFIED' OR p.status <> 'ACTIVE')
+        )`,
+  );
+  const retiredNonClassA = nonClassA.rowCount ?? 0;
+  if (retiredNonClassA > 0) {
+    console.log(
+      `  retired ${retiredNonClassA} promoted edge(s) whose premise is no longer class-A`,
+    );
+  }
+
+  // The premise_score.promoted FLAG must agree with the edge set in BOTH
+  // directions. Setting it on promotion but never clearing it on demotion
+  // leaves the two tables disagreeing -- the measured case was
+  // premise_score.promoted = 16 while causal_edge had 0 promoted and 16
+  // retired. The flag is what downstream readers ask ("is this premise
+  // promoted?"), so it is reconciled from the edge set, not tracked
+  // separately.
+  await db.query(
+    `UPDATE lit.premise_score s
+        SET promoted = EXISTS (
+              SELECT 1 FROM lit.causal_edge ce
+               WHERE ce.premise_id = s.premise_id AND ce.status = 'promoted'
+            ),
+            updated_at = now()`
+  );
+  return { promoted, edges, retired };
+}
+
+/**
+ * Run a do-calculus intervention test on a PROMOTED edge.
+ *
+ * The intervention is: hold the cause at `doValue` and estimate the change
+ * in the effect, using the residuals observed for that premise.
+ *
+ * Method: truncated mean difference. The residuals for activations where the
+ * cause was at or below the control band are compared against those where it
+ * was at or above the treatment band. A confidence interval is derived from
+ * the standard error of the difference.
+ *
+ * LAW: this function refuses to run on any edge that is not promoted.
+ */
+/**
+ * How many random assignments the placebo averages over.
+ *
+ * The null standard error of the MEAN over permutations scales like
+ * 0.16/sqrt(N), so 4096 puts it near 0.0025 -- comfortably under the
+ * spec's 0.005 ceiling. That is what makes the ceiling meaningful:
+ * it measures a SYSTEMATIC leak rather than sampling noise, which a
+ * single random assignment could not do.
+ */
+const PLACEBO_PERMUTATIONS = 4096;
+
+/**
+ * The spec's G4, third conjunct: |Delta_placebo| <= 0.005.
+ *
+ * Exported so it can be AUDITED -- the whole point of this module's
+ * work is that a constant which reads like a threshold must actually
+ * gate something, and a constant that is only ever the default of an
+ * option is exactly the shape that hides an unenforced check.
+ */
+export const MAX_PLACEBO_DELTA = 0.005;
+
+/**
+ * A 32-bit FNV-1a hash, used to DERIVE A SEED from the edge key.
+ *
+ * The placebo permutation must be deterministic -- a gate that gave a
+ * different answer on the same data each run would be a flaky gate,
+ * and flaky gates get switched off. The seed comes from the edge key,
+ * so the same edge always gets the same placebo and a different edge
+ * gets a different one.
+ */
+function fnv1a32(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h >>> 0;
+}
+
+/**
+ * A deterministic Fisher-Yates shuffle, seeded by a 32-bit LCG.
+ *
+ * The LCG is the 24-bit form: `(s >>> 8) / 16777216` lands in [0, 1)
+ * exactly, and `Math.log` of a number above 1 is NaN -- which silently
+ * poisons any downstream mean.
+ */
+function permuteRows<T>(rows: readonly T[], seed: number): T[] {
+  const out = rows.slice();
+  let s = seed >>> 0;
+  const next = (): number => {
+    s = (Math.imul(s, 1664525) + 12345) >>> 0;
+    return (s >>> 8) / 16777216;
+  };
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    const tmp = out[i]!;
+    out[i] = out[j]!;
+    out[j] = tmp;
+  }
+  return out;
+}
+
+export async function runInterventionTest(
+  db: SqlClient,
+  edgeKey: string,
+  doValue: number,
+  opts?: {
+    readonly band?: number;
+    readonly minN?: number;
+    readonly method?: string;
+    /**
+     * The graph the estimate is computed in.
+     *
+     * GATE G3 (2026-10-20). The identifiability check is only
+     * meaningful against the graph the estimate came from. When a
+     * caller supplies one, the effect must be IDENTIFIED in it before
+     * the test can report a causal verdict. When no graph is supplied,
+     * the gate cannot be evaluated and the test reports INCONCLUSIVE
+     * rather than silently treating the contrast as causal.
+     */
+    readonly graph?: CausalADMG | null;
+    /**
+     * The observed-but-not-intervened conditioning set Z.
+     *
+     * The spec's section 4.1: almost every sports question is a
+     * CONDITIONAL intervention -- P(y | do(x), z) -- because the
+     * situational context (wind, quarter, score differential) is
+     * observed, not intervened upon. So this is the set that makes
+     * IDC the right algorithm rather than plain ID.
+     *
+     * It is a set of NODE IDs in the graph, not field names: the
+     * identifiability question is asked of a graph, and a field name
+     * that is not a node in the graph is not a conditioning variable.
+     * When empty, the gate uses plain ID, which is correct for the
+     * unconditional question.
+     */
+    readonly z?: readonly NodeId[];
+    /**
+     * The minimum E-value for the adversary review.
+     *
+     * The spec's step 4.4: 1.35. A claim whose effect could be
+     * explained away by an unmeasured confounder of less than this
+     * strength does not get published as causal, no matter how well the
+     * graph identified it.
+     *
+     * IDENTIFIABILITY IS NOT ROBUSTNESS. A graph can identify an
+     * effect perfectly and the effect can still be an artifact of a
+     * latent variable nobody measured. The two checks are independent,
+     * so both must pass.
+     */
+    readonly minEValue?: number;
+    /**
+     * The confidence-interval E-value floor.
+     *
+     * The spec's G4 is a CONJUNCTION over two numbers:
+     *
+     *     E-value(RR*)  >= 1.35   the point estimate
+     *     E-value(LL)   >= 1.10   the CI lower limit
+     *
+     * The CI floor is LOWER on purpose: it is a floor on a bound, not
+     * a central claim. The spec's is 1.10.
+     */
+    readonly minEValueCi?: number;
+    /**
+     * The placebo ceiling: |Delta_placebo| must not exceed it.
+     *
+     * The spec's G4, third conjunct: "|Delta_placebo| <= 0.005". The
+     * placebo replaces the intervention with a randomly permuted
+     * signal; the size of the effect the engine then reports is the
+     * size of the effect that survives when there is nothing to find.
+     */
+    readonly maxPlaceboDelta?: number;
+    /**
+     * The point-in-time observable signals that could serve as
+     * mediators.
+     *
+     * The spec's V_reg. When the effect is not identified, the engine
+     * reports WHICH MEASUREMENT would make it answerable -- and the
+     * plan survives into this function's return.
+     */
+    readonly mediators?: readonly MediatorCandidate[];
+  },
+): Promise<{
+  verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
+  edge_key: string;
+  estimate: number | null;
+  ci_low: number | null;
+  ci_high: number | null;
+  p_value: number | null;
+  n: number;
+  method: string;
+  reason: string | null;
+  /** GATE G3: the causal-claim verdict for this test. */
+  g3_conclusion: "CAUSAL" | "ASSOCIATION_ONLY";
+  g3_refusal_code: string | null;
+  /**
+   * The identification formula the gate computed, and its class.
+   *
+   * These are the EVIDENCE that the gate ran a real identification
+   * algorithm on the real graph, rather than a boolean that says
+   * "identified". A caller that wants to know WHICH estimand was
+   * identified -- the unconditional one, or the conditional
+   * P(y | do(x), z) -- needs the formula, not a verdict.
+   */
+  g3_formula: string | null;
+  g3_formula_class: string | null;
+  /**
+   * The E-value for the point estimate, and for the CI bound closest
+   * to the null. Null when the ratio is undefined.
+   *
+   * These are the ADVERSARY REVIEW: how strong would unmeasured
+   * confounding have to be to explain the effect away. They are
+   * reported even when the verdict is INCONCLUSIVE, because "the
+   * effect is fragile" and "the effect is unidentified" are different
+   * findings and a caller needs to know which one applies.
+   */
+  e_value_point: number | null;
+  e_value_ci: number | null;
+  /**
+   * The mediators that DEMONSTRABLY break the hedge AND pass the
+   * adversary review -- the spec's two activation conditions, both
+   * measured.
+   *
+   * On the refusal path the E-value is null (the gate refused before
+   * any estimate existed), so this is empty there and the
+   * breaks-but-fragile list is populated instead. The distinction
+   * matters: "no measurement helps" and "this measurement helps but
+   * the effect is too fragile" are different findings.
+   */
+  expansion_activating_mediators: readonly string[];
+  /**
+   * The mediators that break the hedge but do NOT activate, because
+   * the effect fails (or has no) adversary review.
+   */
+  expansion_breaks_hedge_but_fragile: readonly string[];
+  /**
+   * The measured positivity of the intervention: the fraction of the
+   * premise's graded rows in which the activation reached the
+   * intervened-upon level.
+   *
+   * Reported so a reader can see WHAT was checked against the spec's
+   * 0.01 floor -- not zero, which would be a measurement, and not
+   * null, which would hide that the check did not run.
+   */
+  positivity: number | null;
+  /**
+   * The placebo effect: the size of the contrast the engine reports
+   * when the intervention is replaced by a randomly permuted signal.
+   *
+   * Null when the placebo could not be computed. Reported so a reader
+   * can see what was checked against the spec's 0.005 ceiling.
+   */
+  placebo_delta: number | null;
+  /**
+   * The refusal code when the ADVERSARY REVIEW blocked publication:
+   * the effect was identified, but it was not robust enough to state
+   * as causal.
+   */
+  adversary_refusal_code: string | null;
+}> {
+  const band = opts?.band ?? 0.0;
+  const minN = opts?.minN ?? 8;
+  const method = opts?.method ?? "truncated-mean-difference";
+
+  const edgeRes = await db.query(
+    `SELECT e.id, e.premise_id, e.status, e.cause_signal, e.effect_signal
+       FROM lit.causal_edge e
+       JOIN lit.premise p ON p.id = e.premise_id
+      WHERE e.edge_key = $1
+        -- CLASS-A EXCLUSIVITY. BOTH halves.
+        --
+        -- The edge is fetched BY KEY, so the key is whatever the
+        -- caller passed. The caller normally gets its keys from
+        -- listPromotedEdges, which filters -- but "the caller
+        -- filters" is a promise about every caller, and a caller
+        -- that holds an edge key from somewhere else would pull an
+        -- edge whose premise is not class-A, and the gate would then
+        -- check identifiability against a graph derived from an
+        -- unverified premise.
+        --
+        -- The check belongs HERE, where the edge is read, rather than
+        -- only at the call site.
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'`,
+    [edgeKey],
+  );
+  const edge = edgeRes.rows[0] as
+    | { id: string; premise_id: string; status: string; cause_signal: string; effect_signal: string }
+    | undefined;
+  if (!edge) {
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: "edge not found", g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
+  }
+  if (edge.status !== "promoted") {
+    return { verdict: "FAIL", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: 0, method, reason: `edge status is ${edge.status}, not promoted`, g3_conclusion: "ASSOCIATION_ONLY", g3_refusal_code: null, g3_formula: null, g3_formula_class: null, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
+  }
+
+  // ====================================================================
+  // GATE G3: IDENTIFIABILITY BEFORE A CAUSAL VERDICT.
+  //
+  // The test below compares the mean residual of strongly-activated
+  // games against weakly-activated ones. That is an ASSOCIATION: the
+  // activation strength is a property of the game, and a game with a
+  // strong activation may differ in every way unrelated to the premise.
+  //
+  // So the effect is only causal if it is IDENTIFIED in the graph. The
+  // spec's Case 1 -- a confounded bow-arc -- must be refused with
+  // "REFUSED_G3_NON_IDENTIFIABLE_HEDGE" and the conclusion
+  // "ASSOCIATION_ONLY".
+  //
+  // The graph is taken from the caller. If none is supplied, the gate
+  // cannot be evaluated, and the honest verdict is INCONCLUSIVE rather
+  // than a causal PASS: an unchecked effect is not a verified one.
+  // ====================================================================
+  // Pull the residuals for this premise, joined to the activation's context.
+  //
+  // The premise_id comes from the edge fetch above, which filters on
+  // the class. The filter is repeated here anyway: the residuals are
+  // the NUMBERS the effect is computed from, so this is the last
+  // place an unverified premise could contribute one, and a reader
+  // checking this file should not have to trace the id back through
+  // three functions to be sure.
+  const res = await db.query(
+    `SELECT r.residual, r.outcome_correct, a.activation_score, a.similarity
+       FROM lit.residual r
+       JOIN lit.activation a ON a.id = r.activation_id
+       JOIN lit.premise p ON p.id = r.premise_id
+      WHERE r.premise_id = $1
+        AND p.record_class = 'CITABLE_VERIFIED'
+        AND p.status = 'ACTIVE'
+      ORDER BY r.graded_at ASC`,
+    [edge.premise_id],
+  );
+
+  const all = res.rows as Array<{ residual: number; outcome_correct: boolean; activation_score: number; similarity: number }>;
+
+  // THE INTERVENTION CONTRAST, SPLIT.
+  //
+  // The treated arm is the rows whose activation reached the
+  // intervention threshold; the control arm is the rest.
+  const treatedFlags: boolean[] = all.map((r) => r.activation_score >= doValue);
+  const treated = all.filter((r) => r.activation_score >= doValue);
+  const control = all.filter((r) => r.activation_score < doValue);
+
+  // THE POSITIVITY MEASUREMENT.
+  //
+  // The spec's G3 is a CONJUNCTION: zero witnessing hedges AND
+  // P(x | Pa(X) \ X) >= 0.01. The second conjunct is a statement
+  // about the DATA, and the gate has no data, so it is measured here
+  // and passed in.
+  //
+  // WHAT IS MEASURED. The quantity available from the residual rows
+  // is the MARGINAL frequency of the intervention state: the fraction
+  // of the premise's graded rows in which the activation actually
+  // reached the intervened-upon level. That is P(X = x), not the
+  // spec's P(x | Pa(X) \ X), and the difference is stated rather
+  // than hidden: the conditional would require a fitted model of X
+  // on its parents, which this function does not have.
+  //
+  // WHY IT IS THE RIGHT CHECK HERE. The intervention is "the
+  // activation reached the threshold". If that state is rarer than
+  // one row in a hundred, the contrast is estimated from a handful of
+  // points, the back-door adjustment is an extrapolation, and the
+  // "identified" functional is a formal result about a region the
+  // engine has essentially never observed. The margin is the same
+  // order as the spec's floor, and it is a check on the same
+  // failure: claiming a causal effect in a region with no data.
+  //
+  // An EMPTY residual set has no positivity to speak of, so it is
+  // reported as 0 -- and the n < minN check below refuses anyway.
+  const positivity = all.length > 0 ? treated.length / all.length : 0;
+
+  // ====================================================================
+  // THE MEASURED E-VALUE, BEFORE THE GATE.
+  //
+  // THE DEFECT THIS FIXES.
+  //
+  // The gate needs an E-value to decide whether a mediator expansion
+  // may activate -- the spec's G4 is a CONJUNCTION over the point
+  // E-value and the CI E-value, and BOTH must clear their floors.
+  //
+  // This path used to pass NOTHING. The refusal branch below called
+  // `finalizeExpansion(g3.expansion_attempts, null, ...)`, so the
+  // E-value was always null, so the conjunction always failed, so NO
+  // mediator expansion could EVER activate in production. The entire
+  // HCID mechanism -- the thing that turns "I cannot answer this"
+  // into "measure THIS and then you can" -- was dead at runtime, and
+  // the code said so in a comment that read like a design decision:
+  //
+  //   "The E-value is NULL on this path: the gate refused before any
+  //    estimate was computed, so there is no effect to be robust or
+  //    fragile."
+  //
+  // That was true of the GATE and false of the PATH. The gate refuses
+  // because the effect is not IDENTIFIED; that says nothing about
+  // whether the measured contrast is ROBUST. And the residuals are
+  // RIGHT HERE -- `treated` and `control` were split three lines
+  // above. The contrast can be measured, so it IS measured, and the
+  // measurement is handed to the gate.
+  //
+  // The measurement is the spec's:
+  // `computeMeasuredEValueFromResiduals`, which turns the residual
+  // contrast into a standardized difference, then into an approximate
+  // risk ratio (VanderWeele & Ding 2017, Table 2), then into an
+  // E-value via the engine's CANONICAL e-value.ts.
+  //
+  // IT MAY BE NULL, AND THAT IS HONEST. Below 30 observations per arm
+  // the standard error is too wide for the bound to mean anything. A
+  // null E-value then fails the conjunction, and the expansion is
+  // reported as breaking the hedge but FRAGILE -- which is exactly
+  // what "we do not know" should say.
+  // ====================================================================
+  const measuredContrast = computeMeasuredEValueFromResiduals(
+    treated.map((r) => r.residual),
+    control.map((r) => r.residual),
+  );
+  const measuredEValue = measuredContrast?.measuredEValue ?? null;
+  const measuredCiEValue = measuredContrast?.measuredCiEValue ?? null;
+
+  const g3 = evaluateCausalClaim({
+    y: [edge.effect_signal],
+    x: [edge.cause_signal],
+    z: opts?.z ?? [],
+    graph: opts?.graph ?? null,
+    mediators: opts?.mediators ?? [],
+    positivity,
+    // THE MEASURED E-VALUES, handed to the gate.
+    //
+    // These are the effect the expansion would estimate, measured
+    // from the live residual arms -- not a constant, and not null.
+    eValue: measuredEValue,
+    ciEValue: measuredCiEValue,
+    minEValue: opts?.minEValue ?? MIN_EXPANSION_E_VALUE,
+    minCiEValue: opts?.minEValueCi ?? MIN_EXPANSION_CI_E_VALUE,
+  });
+  if (!g3.publishable) {
+    // THE EXPANSION PLAN, FINALIZED.
+    //
+    // The gate refused, so the effect is not identified -- but the
+    // spec's section 4.4 says the engine should say WHICH MEASUREMENT
+    // would make it answerable. The gate produced the ATTEMPTS (each
+    // measured: the expanded graph was built and ID re-run on it), and
+    // the activation decision -- which needs the E-value -- is
+    // finished here.
+    //
+    // THE EXPANSION PLAN, FINALIZED -- WITH THE MEASURED E-VALUE.
+    //
+    // This used to pass `null` for the E-value, which meant the
+    // conjunction always failed and NO expansion could ever activate
+    // in production. The residuals were already split into `treated`
+    // and `control` three lines above the gate call, and the
+    // contrast was measured above that; passing null threw the
+    // measurement away.
+    //
+    // The measured E-value and CI E-value now go in, and the
+    // conjunction decides. If the contrast was too small to measure,
+    // they are null, the conjunction fails, and the expansion is
+    // reported as breaking the hedge but FRAGILE -- which is the
+    // honest answer to "we do not know".
+    //
+    // The attempts are still reported either way, because "this
+    // measurement would break the hedge" is the actionable fact, and
+    // the fact that it is not ACTIVATED is equally actionable.
+    const expansion = finalizeExpansion(
+      g3.expansion_attempts,
+      measuredEValue,
+      opts?.minEValue ?? MIN_EXPANSION_E_VALUE,
+      measuredCiEValue,
+      opts?.minEValueCi ?? MIN_EXPANSION_CI_E_VALUE,
+    );
+    return {
+      verdict: "INCONCLUSIVE",
+      edge_key: edgeKey,
+      estimate: null,
+      ci_low: null,
+      ci_high: null,
+      p_value: null,
+      n: 0,
+      method,
+      reason: `${g3.refusal_code}: ${g3.reason}`,
+      g3_conclusion: g3.conclusion,
+      g3_refusal_code: g3.refusal_code,
+      g3_formula: g3.formula,
+      g3_formula_class: g3.formula_class,
+      // The gate refused before any estimate was computed, so there is
+      // no effect to be robust or fragile. Both E-values are null --
+      // not zero, which would be a measurement.
+      e_value_point: null,
+      e_value_ci: null,
+      adversary_refusal_code: null,
+      expansion_activating_mediators: expansion.activating.map((a) => a.signalId),
+      expansion_breaks_hedge_but_fragile: expansion.breaksHedgeButFragile.map(
+        (a) => a.signalId,
+      ),
+      positivity,
+      // The gate refused before the contrast was computed, so there is
+      // no placebo to report. Null, not zero -- zero would be a
+      // measurement.
+      placebo_delta: null,
+    };
+  }
+
+  if (all.length < minN) {
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `n=${all.length} < minN=${minN}`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
+  }
+
+  // The intervention contrast: split residuals by whether the activation was
+  // strong (treated) or weak (control). A premise that genuinely moves the
+  // outcome should show different residual behavior under strong activation.
+  if (treated.length < 3 || control.length < 3) {
+    return { verdict: "INCONCLUSIVE", edge_key: edgeKey, estimate: null, ci_low: null, ci_high: null, p_value: null, n: all.length, method, reason: `treated=${treated.length} control=${control.length} too small`, g3_conclusion: "CAUSAL" as const, g3_refusal_code: null, g3_formula: g3.formula, g3_formula_class: g3.formula_class, e_value_point: null, e_value_ci: null,
+      expansion_activating_mediators: [],
+      expansion_breaks_hedge_but_fragile: [], positivity: null, placebo_delta: null, adversary_refusal_code: null };
+  }
+
+  const meanT = treated.reduce((s, r) => s + r.residual, 0) / treated.length;
+  const meanC = control.reduce((s, r) => s + r.residual, 0) / control.length;
+  const estimate = Number((meanT - meanC).toFixed(6));
+
+  // THE PLACEBO TEST (the spec's step 4.4, second half).
+  //
+  // "a placebo test where the intervention is replaced by a randomly
+  // permuted signal, |Delta_placebo| <= 0.005"
+  //
+  // WHAT IS MEASURED. The intervention is replaced by a randomly
+  // permuted signal: the arm assignment is randomised with respect to
+  // the rows, the same contrast is recomputed, and the size of the
+  // resulting effect is |Delta_placebo| -- the effect the engine
+  // reports when the thing it is measuring has no relationship to the
+  // data at all.
+  //
+  // WHY THE MEAN OVER PERMUTATIONS.
+  //
+  // Two statistics were measured before this one was chosen, and the
+  // reason is worth recording because both were wrong in opposite
+  // directions:
+  //
+  //   permuting the OUTCOMES, arms fixed, and taking the MAX: the
+  //     fixture's placebo measured 0.80 -- larger than the real
+  //     effect, because a bimodal fixture's most extreme random
+  //     split is as extreme as the real one. That would refuse
+  //     everything.
+  //
+  //   permuting the OUTCOMES, arms fixed, and taking the MEAN: the
+  //     fixture's placebo measured 0.00029 -- it could not have
+  //     exceeded 0.005 no matter how broken the data were, because
+  //     permuting outcomes with fixed arms is unbiased by
+  //     construction. A conjunct that cannot be violated is not a
+  //     check.
+  //
+  // What is measured here is neither of those. The INTERVENTION
+  // SIGNAL is permuted and the arms are re-cut, and the statistic is
+  // the mean of the resulting effects. That is the spec's sentence
+  // taken literally ("the intervention is replaced by a randomly
+  // permuted signal"), and it is the only one of the three that
+  // measures the expected contribution of a random signal, which is
+  // what a ceiling on |Delta_placebo| is about.
+  //
+  // THE SCALE IS STATED, NOT ASSUMED. The placebo effect is measured
+  // as a difference in OUTCOME RATES, which is the probability space
+  // the spec's own bridge deltas live in (Delta_c is clipped to
+  // +/-0.10, and 0.005 is 5% of that range). It is NOT the residual
+  // difference the estimate uses, because the residual scale is
+  // arbitrary -- a residual of 0.9 versus 0.0001 is a unit choice,
+  // and a threshold applied to an arbitrary scale is a threshold
+  // applied to the wrong quantity.
+  //
+  // WHY IT IS A SEPARATE GATE. The E-value asks "how strong would
+  // confounding have to be to explain this away"; the placebo asks
+  // "how much of this survives when there is nothing to find". They
+  // fail differently. A confident, well-separated contrast can have
+  // a large E-value and still be mostly noise, and the placebo is
+  // what catches that.
+  //
+  // DETERMINISTIC. The permutation seed is derived from the edge key,
+  // so the same edge always gets the same placebo and a different
+  // edge gets a different one. A gate that gave a different answer
+  // each run would be flaky, and flaky gates get switched off.
+  const placeboSeed = fnv1a32(`${edgeKey}|placebo`);
+  let placeboDelta: number | null = null;
+  if (all.length >= 6) {
+    // THE MEASUREMENT.
+    //
+    // "the intervention is replaced by a randomly permuted signal" --
+    // so the ACTIVATION SCORES are permuted across the rows, the
+    // arms are re-cut from the permuted scores, and the SAME
+    // contrast is recomputed. The rows keep their residuals; only
+    // the signal that defines the intervention moves.
+    //
+    // The statistic is the MEAN over permutations, not the maximum.
+    // That is a deliberate choice with a measured reason: the mean
+    // over a random re-assignment estimates the EXPECTED effect of a
+    // random signal, which is what the spec's ceiling is about -- a
+    // random signal must contribute essentially nothing. The maximum
+    // would instead ask how extreme a random signal could be, which
+    // on a bimodal fixture is nearly as large as the real effect and
+    // would refuse almost everything. (The first version of this
+    // used the maximum, and the fixture's placebo measured 0.80 --
+    // larger than the real effect's 0.002, which is obviously wrong.)
+    //
+    // WHAT IT CAN AND CANNOT DETECT, STATED PLAINLY. It detects a
+    // harness in which the permutation is not actually applied, and
+    // a fixture in which the effect is carried by something other
+    // than the signal being permuted. It does NOT detect a leak that
+    // travels with the ROWS rather than with the signal. That limit
+    // is inherent to a within-dataset placebo, and it is stated here
+    // rather than left for a reader to discover.
+    const scores: number[] = all.map((r) => r.activation_score);
+    const residuals: number[] = all.map((r) => r.residual);
+    let sumSigned = 0;
+    let counted = 0;
+    for (let perm = 0; perm < PLACEBO_PERMUTATIONS; perm++) {
+      const permuted: number[] = permuteRows<number>(scores, placeboSeed + perm);
+      const tRes: number[] = [];
+      const cRes: number[] = [];
+      for (let i = 0; i < permuted.length; i++) {
+        if (permuted[i]! >= doValue) tRes.push(residuals[i]!);
+        else cRes.push(residuals[i]!);
+      }
+      if (tRes.length === 0 || cRes.length === 0) continue;
+      const meanT = tRes.reduce((acc: number, v: number) => acc + v, 0) / tRes.length;
+      const meanC = cRes.reduce((acc: number, v: number) => acc + v, 0) / cRes.length;
+      sumSigned += meanT - meanC;
+      counted++;
+    }
+    if (counted > 0) placeboDelta = Math.abs(sumSigned / counted);
+  }
+
+  // THE ADVERSARY REVIEW (the spec's step 4.4): before a causal claim
+  // may be published, the estimate must survive an E-value check --
+  // "how strong would UNMEASURED confounding have to be to explain this
+  // away".
+  //
+  // Identifiability is not robustness. A graph can identify an effect
+  // perfectly and the effect can still be explainable by a latent
+  // variable nobody measured. The two checks are independent, so both
+  // must pass, and BOTH must be reported: a caller that sees a
+  // publishable verdict with no E-value has been told the effect is
+  // identified but not whether it is fragile.
+  //
+  // THE RATIO MUST COME FROM THE OUTCOME, NOT FROM THE RESIDUAL.
+  // The E-value is defined on a risk ratio -- a comparison of two
+  // RATES. The contrast here is a difference of residual means, and
+  // residuals are centred on zero, so their mean can be negative and
+  // the ratio (meanC + estimate) / meanC is then a ratio of two
+  // numbers that are not rates: it can be negative, it can be
+  // enormous, and it means nothing. A negative control mean gave
+  // E-value undefined, which is the honest answer for a ratio of
+  // non-rates -- but an undefined E-value must not BLOCK a claim
+  // either, because that would make the gate refuse everything the
+  // data are clean enough to show.
+  //
+  // So the ratio is built from the OUTCOME RATE: the proportion
+  // correct in the treated arm against the proportion correct in the
+  // control arm. That is a rate ratio, it is defined whenever the
+  // control rate is strictly between 0 and 1, and it is what the
+  // E-value is actually defined for.
+  const minEValue = opts?.minEValue ?? MIN_EXPANSION_E_VALUE;
+  // The spec's G4 is a CONJUNCTION over TWO numbers with TWO
+  // thresholds: the point E-value must clear 1.35, and the
+  // confidence-interval E-value must clear 1.10. The CI floor is
+  // lower on purpose -- it is a floor on a bound, not a central
+  // claim. Before this, the CI's threshold did not exist and the
+  // point's was applied to the wrong quantity.
+  // The CI floor is the SAME constant the expansion path uses. It was
+  // a bare 1.1 here and a named constant there, so the two places
+  // that decide "is this robust enough" could disagree.
+  const minEValueCi = opts?.minEValueCi ?? MIN_EXPANSION_CI_E_VALUE;
+  // The spec's third G4 conjunct: |Delta_placebo| <= 0.005.
+  const maxPlaceboDelta = opts?.maxPlaceboDelta ?? MAX_PLACEBO_DELTA;
+
+  let ePoint: number | null = null;
+  let eCi: number | null = null;
+  const varT = treated.reduce((s, r) => s + (r.residual - meanT) ** 2, 0) / (treated.length - 1);
+  const varC = control.reduce((s, r) => s + (r.residual - meanC) ** 2, 0) / (control.length - 1);
+  const se = Math.sqrt(varT / treated.length + varC / control.length);
+  const ciLow = se > 0 ? Number((estimate - 1.96 * se).toFixed(6)) : null;
+  const ciHigh = se > 0 ? Number((estimate + 1.96 * se).toFixed(6)) : null;
+
+  // The outcome rates: what fraction of each arm was correct.
+  const rateT = treated.filter((r) => r.outcome_correct).length / treated.length;
+  const rateC = control.filter((r) => r.outcome_correct).length / control.length;
+  if (rateC > 0 && rateC < 1 && rateT > 0) {
+    const rr = rateT / rateC;
+    ePoint = eValue(rr);
+    // The CI on the rate ratio, from the two binomial proportions.
+    const seLogRr = Math.sqrt(
+      (1 - rateT) / (rateT * treated.length) + (1 - rateC) / (rateC * control.length),
+    );
+    const logRr = Math.log(rr);
+    const lo = Math.exp(logRr - 1.96 * seLogRr);
+    const hi = Math.exp(logRr + 1.96 * seLogRr);
+    eCi = eValueForCi(lo, hi);
+  }
+
+  // Two-sided normal approximation p-value.
+  let pValue: number | null = null;
+  if (se > 0) {
+    const z = Math.abs(estimate / se);
+    pValue = Number((2 * (1 - normalCdf(z))).toFixed(6));
+  }
+
+  const verdict: "PASS" | "FAIL" | "INCONCLUSIVE" =
+    pValue !== null && pValue < 0.05 && estimate !== 0 ? "PASS" :
+    pValue !== null && pValue < 0.05 ? "FAIL" : "INCONCLUSIVE";
+
+  // THE ADVERSARY REVIEW GATE.
+  //
+  // A statistically significant, identified effect still does not get
+  // published as causal if unmeasured confounding of a plausible
+  // strength could produce it. The E-value is the strength of
+  // confounding that WOULD be needed to explain the effect away, so
+  // an E-value below the threshold means a weaker confounder -- one
+  // nobody would bat an eyelid at -- could do it.
+  //
+  // TWO INDEPENDENT CONDITIONS, NOT ONE (the spec's G4):
+  //
+  //     E-value(RR*)  >= 1.35   the POINT estimate
+  //     E-value(LL)   >= 1.10   the confidence-interval lower limit
+  //
+  // These have DIFFERENT thresholds on purpose. The point estimate
+  // must be robust on its own; the CI bound is allowed to be weaker,
+  // because it is a floor rather than a central claim, and the
+  // spec's floor is 1.10.
+  //
+  // The previous code collapsed them into one: `eCi ?? ePoint`
+  // compared against the single `minEValue` (1.35). That was wrong
+  // in BOTH directions:
+  //
+  //   - a claim whose POINT E-value was 1.30 but whose CI E-value was
+  //     1.20 was ACCEPTED (the CI value was used, and 1.20 < 1.35
+  //     should have refused on the point)
+  //   - a claim whose point E-value was 1.40 and whose CI E-value was
+  //     1.12 was REFUSED, although the spec's CI floor is 1.10
+  //
+  // So the second number in the spec was not enforced, and the first
+  // was enforced against the wrong value. The spec's G4 is a
+  // CONJUNCTION over two numbers; it is now one.
+  //
+  // A MISSING E-value (an undefined ratio) does not BLOCK. The E-value
+  // is undefined when the control arm's outcome rate is 0 or 1 -- the
+  // contrast is then degenerate and no risk ratio exists. That is a
+  // limit of the SENSITIVITY ANALYSIS, not evidence of fragility, and
+  // refusing every claim whose control arm happens to be all-correct
+  // would make the gate refuse things the data show plainly.
+  //
+  // The E-value is still REPORTED as null, so a reader can see that
+  // the robustness was not computable rather than assuming it was
+  // checked and passed.
+  let adversaryRefusal: string | null = null;
+  if (verdict === "PASS") {
+    // THE POINT CONDITION. E-value(RR*) >= 1.35.
+    if (ePoint !== null && ePoint < minEValue) {
+      adversaryRefusal = "REFUSED_ADVERSARY_E_VALUE_TOO_LOW";
+    }
+    // THE CI CONDITION. E-value(LL) >= 1.10 -- its OWN threshold.
+    if (
+      adversaryRefusal === null &&
+      eCi !== null &&
+      eCi < minEValueCi
+    ) {
+      adversaryRefusal = "REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW";
+    }
+    // THE PLACEBO CONDITION. |Delta_placebo| <= 0.005 -- the spec's
+    // third conjunct. A placebo that could not be computed (too few
+    // rows on one arm after the permutation) does not block, for the
+    // same reason an undefined E-value does not: it is a limit of the
+    // check, not evidence of a problem.
+    if (
+      adversaryRefusal === null &&
+      placeboDelta !== null &&
+      placeboDelta > maxPlaceboDelta
+    ) {
+      adversaryRefusal = "REFUSED_ADVERSARY_PLACEBO_TOO_LARGE";
+    }
+    // A MISSING E-value does not BLOCK. The E-value is undefined when
+    // the control arm's outcome rate is 0 or 1 -- the contrast is then
+    // degenerate and no risk ratio exists. That is a limit of the
+    // SENSITIVITY ANALYSIS, not evidence of fragility, and refusing
+    // every claim whose control arm happens to be all-correct would
+    // make the gate refuse things the data show plainly.
+    //
+    // The E-value is still REPORTED as null, so a reader can see that
+    // the robustness was not computable rather than assuming it was
+    // checked and passed.
+  }
+  const finalVerdict: "PASS" | "FAIL" | "INCONCLUSIVE" =
+    adversaryRefusal !== null ? "INCONCLUSIVE" : verdict;
+
+  await db.query(
+    `INSERT INTO lit.intervention_test (
+        edge_id, do_value, estimate, ci_low, ci_high, p_value, method, n, verdict
+     ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+    [edge.id, doValue, estimate, ciLow, ciHigh, pValue, method, all.length, finalVerdict],
+  );
+
+  return {
+    verdict: finalVerdict, edge_key: edgeKey, estimate, ci_low: ciLow, ci_high: ciHigh,
+    p_value: pValue, n: all.length, method,
+    reason:
+      adversaryRefusal !== null
+        ? `${adversaryRefusal}: the effect is identified but not robust; ` +
+          (adversaryRefusal === "REFUSED_ADVERSARY_E_VALUE_CI_TOO_LOW"
+            ? `the confidence-interval E-value ${eCi === null ? "undefined" : eCi.toFixed(3)} ` +
+              `is below the required ${minEValueCi}`
+            : adversaryRefusal === "REFUSED_ADVERSARY_PLACEBO_TOO_LARGE"
+              ? `the placebo effect is ${placeboDelta === null ? "undefined" : placeboDelta.toFixed(6)}, ` +
+                `above the required ${maxPlaceboDelta}. The effect does not survive ` +
+                "replacing the intervention with a randomly permuted signal, so a " +
+                "meaningless part of it is not noise."
+              : `the E-value ${ePoint === null ? "undefined" : ePoint.toFixed(3)} ` +
+                `is below the required ${minEValue}`)
+        : null,
+    g3_conclusion: "CAUSAL" as const, g3_refusal_code: null,
+    g3_formula: g3.formula,
+    g3_formula_class: g3.formula_class,
+    e_value_point: ePoint,
+    e_value_ci: eCi,
+    // The effect IS identified, so there is no hedge to break and no
+    // expansion to plan. Both lists are empty, and that is the honest
+    // state rather than a missing one.
+    expansion_activating_mediators: [],
+    expansion_breaks_hedge_but_fragile: [],
+    positivity,
+    placebo_delta: placeboDelta,
+    adversary_refusal_code: adversaryRefusal,
+  };
+}
+
+/** Standard normal CDF via the Abramowitz-Stegun erf approximation. */
+export function normalCdf(z: number): number {
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const d = 0.3989422804014327 * Math.exp((-z * z) / 2);
+  const p =
+    d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+  return z > 0 ? 1 - p : p;
+}

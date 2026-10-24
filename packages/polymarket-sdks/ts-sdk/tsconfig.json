@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "paths": {
+      "@polymarket/bindings": ["./packages/bindings/src"],
+      "@polymarket/bindings/clob": ["./packages/bindings/src/clob"],
+      "@polymarket/bindings/combos": ["./packages/bindings/src/combos"],
+      "@polymarket/bindings/data": ["./packages/bindings/src/data"],
+      "@polymarket/bindings/gamma": ["./packages/bindings/src/gamma"],
+      "@polymarket/bindings/perps": ["./packages/bindings/src/perps"],
+      "@polymarket/bindings/relayer": ["./packages/bindings/src/relayer"],
+      "@polymarket/bindings/subscriptions": [
+        "./packages/bindings/src/subscriptions"
+      ],
+      "@polymarket/client": ["./packages/client/src"],
+      "@polymarket/client/node": ["./packages/client/src/node.ts"],
+      "@polymarket/client/actions": ["./packages/client/src/actions"],
+      "@polymarket/client/decorators": ["./packages/client/src/decorators"],
+      "@polymarket/client/ethers-v5": ["./packages/client/src/ethers-v5.ts"],
+      "@polymarket/client/privy": ["./packages/client/src/privy.ts"],
+      "@polymarket/client/viem": ["./packages/client/src/viem.ts"],
+      "@polymarket/types": ["./packages/types/src"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"]
+}

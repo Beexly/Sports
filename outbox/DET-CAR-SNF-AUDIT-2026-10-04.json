@@ -1,0 +1,1811 @@
+{
+  "audit_metadata": {
+    "title": "MANDATORY GSE ENGINE GATE & ROSTER/SIGNAL ENFORCEMENT AUDIT",
+    "auditor": "Worker 3 Sovereign Engine Gate Auditor",
+    "event_id": "401872978",
+    "matchup": "Detroit Lions at Carolina Panthers",
+    "audited_at": "2026-10-05T00:57:42.278370+00:00",
+    "stamp_standard": "ENGINE_GATE_V1",
+    "governing_doctrines": [
+      "Doctrine 5 / Law 9: Strict fail-closed on non-positive Wilson 95% LCB edge",
+      "Doctrine 6: Zero-tolerance inactive gate (ESPN + Sleeper)",
+      "Doctrine 11: Ground-truth box score audit & zero-tout complacency",
+      "Doctrine 12: Mandatory engine gate & live roster truth floor"
+    ]
+  },
+  "event_metadata": {
+    "event_id": "401872978",
+    "name": "Detroit Lions at Carolina Panthers",
+    "short_name": "DET @ CAR",
+    "date_utc": "2026-10-05T00:20Z",
+    "venue": "Bank of America Stadium, Charlotte, NC",
+    "weather": {
+      "temp": 68.0,
+      "wind": 5.0,
+      "condition": "CALM_FAIR"
+    },
+    "captured_at": "2026-10-05T00:57:43.549790+00:00",
+    "draftkings_market": {
+      "details": "DET -3.5",
+      "over_under": 52.5,
+      "spread": 3.5,
+      "over_odds": -112.0,
+      "under_odds": -108.0,
+      "away_team": "DET",
+      "away_ml": -192,
+      "away_spread_odds": -115.0,
+      "home_team": "CAR",
+      "home_ml": 160,
+      "home_spread_odds": -105.0
+    }
+  },
+  "roster_gate_summary": {
+    "espn_roster_feed": "PASS (active)",
+    "sleeper_db_feed": "PASS (active)",
+    "feed_errors": [],
+    "negative_control_verdicts": [
+      {
+        "candidate_id": "neg_montgomery_det",
+        "player": "David Montgomery",
+        "claimed_team": "DET",
+        "g1_passed": false,
+        "reason": "BLOCK: stale roster -- live team is HOU, not DET espn_id=4035538",
+        "verdict": "PROPERLY_BLOCKED"
+      },
+      {
+        "candidate_id": "neg_dalton_car",
+        "player": "Andy Dalton",
+        "claimed_team": "CAR",
+        "g1_passed": false,
+        "reason": "BLOCK: stale roster -- live team is PHI, not CAR espn_id=14012",
+        "verdict": "PROPERLY_BLOCKED"
+      },
+      {
+        "candidate_id": "neg_diontae_car",
+        "player": "Diontae Johnson",
+        "claimed_team": "CAR",
+        "g1_passed": false,
+        "reason": "BLOCK: not on any live NFL roster",
+        "verdict": "PROPERLY_BLOCKED"
+      },
+      {
+        "candidate_id": "neg_barkley_phi_inactive",
+        "player": "Saquon Barkley",
+        "claimed_team": "PHI",
+        "g1_passed": false,
+        "reason": "BLOCK: Sleeper injury status 'out' espn_id=3929630",
+        "verdict": "PROPERLY_BLOCKED"
+      }
+    ]
+  },
+  "candidate_evaluations": [
+    {
+      "candidate_id": "live_amonra_rec_7_5",
+      "category": "live",
+      "player": "Amon-Ra St. Brown",
+      "team": "DET",
+      "market": "receptions",
+      "side": "OVER",
+      "line": 7.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 20,
+      "empirical_hits": 10,
+      "win_prob": 0.5,
+      "wilson_lcb": 0.3274,
+      "edge_pct": -3.49,
+      "lcb_edge_pct": -20.75,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4374302"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.49"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=20 p_hat=0.500 p_lcb=0.327 implied=0.535 edge=-3.5% lcb_edge=-20.7%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-20.6% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 20,
+          "p_hat": 0.5,
+          "p_lcb": 0.32739023917605586
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Amon-Ra St. Brown",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.5,
+          "posterior_variance_p": 0.01087,
+          "lcb_p": 0.3285,
+          "nominal_edge_pct": -3.49,
+          "lcb_edge_pct": -20.64,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 6.12,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 7.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 7.2,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            4.0,
+            9.0,
+            10.0,
+            11.0,
+            8.0,
+            4.0,
+            13.0,
+            6.0,
+            0.0,
+            9.0,
+            2.0,
+            5.0,
+            9.0,
+            6.0,
+            9.0,
+            8.0,
+            7.0,
+            7.0,
+            9.0,
+            4.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_gibbs_rush_98_5",
+      "category": "live",
+      "player": "Jahmyr Gibbs",
+      "team": "DET",
+      "market": "rushing_yards",
+      "side": "OVER",
+      "line": 98.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 20,
+      "empirical_hits": 5,
+      "win_prob": 0.25,
+      "wilson_lcb": 0.1274,
+      "edge_pct": -28.49,
+      "lcb_edge_pct": -40.75,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4429795"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.42"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=20 p_hat=0.250 p_lcb=0.127 implied=0.535 edge=-28.5% lcb_edge=-40.8%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-41.2% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 20,
+          "p_hat": 0.25,
+          "p_lcb": 0.12736943565526043
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Jahmyr Gibbs",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.2652,
+          "posterior_variance_p": 0.008624,
+          "lcb_p": 0.1231,
+          "nominal_edge_pct": -26.97,
+          "lcb_edge_pct": -41.17,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 15.54,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 98.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 88.0,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            99.0,
+            52.0,
+            156.0,
+            80.0,
+            41.0,
+            2.0,
+            38.0,
+            43.0,
+            68.0,
+            219.0,
+            39.0,
+            142.0,
+            25.0,
+            136.0,
+            65.0,
+            54.0,
+            91.0,
+            67.0,
+            94.0,
+            19.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_jamo_rec_yds_52_5",
+      "category": "live",
+      "player": "Jameson Williams",
+      "team": "DET",
+      "market": "receiving_yards",
+      "side": "OVER",
+      "line": 52.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 20,
+      "empirical_hits": 10,
+      "win_prob": 0.5,
+      "wilson_lcb": 0.3274,
+      "edge_pct": -3.49,
+      "lcb_edge_pct": -20.75,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4426388"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.33"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=20 p_hat=0.500 p_lcb=0.327 implied=0.535 edge=-3.5% lcb_edge=-20.7%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-20.6% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 20,
+          "p_hat": 0.5,
+          "p_lcb": 0.32739023917605586
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Jameson Williams",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.5,
+          "posterior_variance_p": 0.01087,
+          "lcb_p": 0.3285,
+          "nominal_edge_pct": -3.49,
+          "lcb_edge_pct": -20.64,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 6.12,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 52.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 54.0,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            49.0,
+            33.0,
+            45.0,
+            74.0,
+            37.0,
+            70.0,
+            134.0,
+            96.0,
+            144.0,
+            0.0,
+            88.0,
+            119.0,
+            66.0,
+            0.0,
+            66.0,
+            9.0,
+            40.0,
+            43.0,
+            108.0,
+            23.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_mcmillan_rec_yds_73_5",
+      "category": "live",
+      "player": "Tetairoa McMillan",
+      "team": "CAR",
+      "market": "receiving_yards",
+      "side": "OVER",
+      "line": 73.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 21,
+      "empirical_hits": 7,
+      "win_prob": 0.3333,
+      "wilson_lcb": 0.192,
+      "edge_pct": -20.16,
+      "lcb_edge_pct": -34.29,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4685472"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.38"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=21 p_hat=0.333 p_lcb=0.192 implied=0.535 edge=-20.2% lcb_edge=-34.3%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-34.4% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 21,
+          "p_hat": 0.3333333333333333,
+          "p_lcb": 0.1919573166303937
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Tetairoa McMillan",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.3435,
+          "posterior_variance_p": 0.009452,
+          "lcb_p": 0.1905,
+          "nominal_edge_pct": -19.14,
+          "lcb_edge_pct": -34.44,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 10.73,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 73.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 71.5,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            17.0,
+            101.0,
+            75.0,
+            81.0,
+            85.0,
+            5.0,
+            73.0,
+            25.0,
+            43.0,
+            35.0,
+            130.0,
+            60.0,
+            46.0,
+            99.0,
+            33.0,
+            29.0,
+            73.0,
+            62.0,
+            48.0,
+            100.0,
+            68.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_hubbard_rush_yds_66_5",
+      "category": "live",
+      "player": "Chuba Hubbard",
+      "team": "CAR",
+      "market": "rushing_yards",
+      "side": "OVER",
+      "line": 66.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 19,
+      "empirical_hits": 3,
+      "win_prob": 0.1579,
+      "wilson_lcb": 0.0649,
+      "edge_pct": -37.7,
+      "lcb_edge_pct": -47.0,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4241416"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.31"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=19 p_hat=0.158 p_lcb=0.065 implied=0.535 edge=-37.7% lcb_edge=-47.0%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-47.9% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 19,
+          "p_hat": 0.15789473684210525,
+          "p_lcb": 0.06491514581122722
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Chuba Hubbard",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.1785,
+          "posterior_variance_p": 0.007009,
+          "lcb_p": 0.0561,
+          "nominal_edge_pct": -35.64,
+          "lcb_edge_pct": -47.88,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 24.8,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 66.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 52.0,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            82.0,
+            53.0,
+            49.0,
+            46.0,
+            10.0,
+            12.0,
+            27.0,
+            29.0,
+            83.0,
+            16.0,
+            21.0,
+            14.0,
+            17.0,
+            34.0,
+            31.0,
+            49.0,
+            73.0,
+            38.0,
+            57.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_hubbard_rec_3_5",
+      "category": "live",
+      "player": "Chuba Hubbard",
+      "team": "CAR",
+      "market": "receptions",
+      "side": "OVER",
+      "line": 3.5,
+      "odds": -110.0,
+      "implied_prob": 0.5238,
+      "sample_size": 19,
+      "empirical_hits": 3,
+      "win_prob": 0.1579,
+      "wilson_lcb": 0.0649,
+      "edge_pct": -36.59,
+      "lcb_edge_pct": -45.89,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4241416"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.4"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=19 p_hat=0.158 p_lcb=0.065 implied=0.524 edge=-36.6% lcb_edge=-45.9%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-46.8% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 19,
+          "p_hat": 0.15789473684210525,
+          "p_lcb": 0.06491514581122722
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Chuba Hubbard",
+          "market_odds_decimal": 1.9090909090909092,
+          "market_implied_prob": 0.5238,
+          "posterior_mean_p": 0.1785,
+          "posterior_variance_p": 0.007009,
+          "lcb_p": 0.0561,
+          "nominal_edge_pct": -34.53,
+          "lcb_edge_pct": -46.77,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 24.8,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 3.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -110.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 3.0,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            4.0,
+            2.0,
+            3.0,
+            2.0,
+            2.0,
+            3.0,
+            1.0,
+            1.0,
+            2.0,
+            4.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            2.0,
+            3.0,
+            2.0,
+            5.0,
+            3.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_hutchinson_sacks_0_75",
+      "category": "live",
+      "player": "Aidan Hutchinson",
+      "team": "DET",
+      "market": "player_sacks",
+      "side": "OVER",
+      "line": 0.75,
+      "odds": -135.0,
+      "implied_prob": 0.5745,
+      "sample_size": 20,
+      "empirical_hits": 13,
+      "win_prob": 0.65,
+      "wilson_lcb": 0.4665,
+      "edge_pct": 7.55,
+      "lcb_edge_pct": -10.8,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4372099"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.34"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=20 p_hat=0.650 p_lcb=0.466 implied=0.574 edge=+7.6% lcb_edge=-10.8%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-2.2% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 20,
+          "p_hat": 0.65,
+          "p_lcb": 0.466496754125936
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Aidan Hutchinson",
+          "market_odds_decimal": 1.7407407407407407,
+          "market_implied_prob": 0.5745,
+          "posterior_mean_p": 0.7242,
+          "posterior_variance_p": 0.010061,
+          "lcb_p": 0.5528,
+          "nominal_edge_pct": 14.98,
+          "lcb_edge_pct": -2.17,
+          "full_kelly_pct": 35.2,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 2.8,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 0.75,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -135.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 0.9,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            0.5,
+            1.0,
+            2.0,
+            1.0,
+            2.0,
+            2.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.5,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            2.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "live_lions_team_sacks_3_5",
+      "category": "live",
+      "player": "Detroit Lions",
+      "team": "DET",
+      "market": "team_sacks",
+      "side": "OVER",
+      "line": 3.5,
+      "odds": -110.0,
+      "implied_prob": 0.5238,
+      "sample_size": 10,
+      "empirical_hits": 5,
+      "win_prob": 0.5,
+      "wilson_lcb": 0.2693,
+      "edge_pct": -2.38,
+      "lcb_edge_pct": -25.46,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "team market (no player)"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_det_team_boxscores @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.56"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=10 p_hat=0.500 p_lcb=0.269 implied=0.524 edge=-2.4% lcb_edge=-25.5%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-25.2% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 10,
+          "p_hat": 0.5,
+          "p_lcb": 0.26925566160142683
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Detroit Lions",
+          "market_odds_decimal": 1.9090909090909092,
+          "market_implied_prob": 0.5238,
+          "posterior_mean_p": 0.5,
+          "posterior_variance_p": 0.019231,
+          "lcb_p": 0.2719,
+          "nominal_edge_pct": -2.38,
+          "lcb_edge_pct": -25.2,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 10.34,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 3.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -110.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 3.2,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            5.0,
+            2.0,
+            5.0,
+            0.0,
+            4.0,
+            7.0,
+            3.0,
+            2.0,
+            3.0,
+            4.0
+          ],
+          "source": "espn_det_team_boxscores",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "legacy_amonra_rec_6_5",
+      "category": "legacy",
+      "player": "Amon-Ra St. Brown",
+      "team": "DET",
+      "market": "receptions",
+      "side": "OVER",
+      "line": 6.5,
+      "odds": -120.0,
+      "implied_prob": 0.5455,
+      "sample_size": 20,
+      "empirical_hits": 12,
+      "win_prob": 0.6,
+      "wilson_lcb": 0.4185,
+      "edge_pct": 5.45,
+      "lcb_edge_pct": -12.69,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4374302"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.48"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=20 p_hat=0.600 p_lcb=0.419 implied=0.545 edge=+5.5% lcb_edge=-12.7%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-12.4% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 20,
+          "p_hat": 0.6,
+          "p_lcb": 0.4185406283212074
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Amon-Ra St. Brown",
+          "market_odds_decimal": 1.8333333333333335,
+          "market_implied_prob": 0.5455,
+          "posterior_mean_p": 0.5939,
+          "posterior_variance_p": 0.01051,
+          "lcb_p": 0.421,
+          "nominal_edge_pct": 4.85,
+          "lcb_edge_pct": -12.45,
+          "full_kelly_pct": 10.67,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 4.28,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 6.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -120.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 7.8,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            4.0,
+            9.0,
+            10.0,
+            11.0,
+            8.0,
+            4.0,
+            13.0,
+            6.0,
+            0.0,
+            9.0,
+            2.0,
+            5.0,
+            9.0,
+            6.0,
+            9.0,
+            8.0,
+            7.0,
+            7.0,
+            9.0,
+            4.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "legacy_gibbs_rush_74_5",
+      "category": "legacy",
+      "player": "Jahmyr Gibbs",
+      "team": "DET",
+      "market": "rushing_yards",
+      "side": "OVER",
+      "line": 74.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 20,
+      "empirical_hits": 8,
+      "win_prob": 0.4,
+      "wilson_lcb": 0.2424,
+      "edge_pct": -13.49,
+      "lcb_edge_pct": -29.25,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4429795"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.51"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=20 p_hat=0.400 p_lcb=0.242 implied=0.535 edge=-13.5% lcb_edge=-29.3%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-29.3% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 20,
+          "p_hat": 0.4,
+          "p_lcb": 0.24237593194656679
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Jahmyr Gibbs",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.4061,
+          "posterior_variance_p": 0.01051,
+          "lcb_p": 0.2417,
+          "nominal_edge_pct": -12.88,
+          "lcb_edge_pct": -29.32,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 8.73,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 74.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 88.0,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            99.0,
+            52.0,
+            156.0,
+            80.0,
+            41.0,
+            2.0,
+            38.0,
+            43.0,
+            68.0,
+            219.0,
+            39.0,
+            142.0,
+            25.0,
+            136.0,
+            65.0,
+            54.0,
+            91.0,
+            67.0,
+            94.0,
+            19.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "legacy_mcmillan_rec_yds_64_5",
+      "category": "legacy",
+      "player": "Tetairoa McMillan",
+      "team": "CAR",
+      "market": "receiving_yards",
+      "side": "OVER",
+      "line": 64.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 21,
+      "empirical_hits": 10,
+      "win_prob": 0.4762,
+      "wilson_lcb": 0.3101,
+      "edge_pct": -5.87,
+      "lcb_edge_pct": -22.47,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4685472"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.37"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=21 p_hat=0.476 p_lcb=0.310 implied=0.535 edge=-5.9% lcb_edge=-22.5%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-22.4% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 21,
+          "p_hat": 0.47619047619047616,
+          "p_lcb": 0.31014816332604134
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Tetairoa McMillan",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.4776,
+          "posterior_variance_p": 0.010397,
+          "lcb_p": 0.3109,
+          "nominal_edge_pct": -5.72,
+          "lcb_edge_pct": -22.4,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 6.4,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 64.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 78.5,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            17.0,
+            101.0,
+            75.0,
+            81.0,
+            85.0,
+            5.0,
+            73.0,
+            25.0,
+            43.0,
+            35.0,
+            130.0,
+            60.0,
+            46.0,
+            99.0,
+            33.0,
+            29.0,
+            73.0,
+            62.0,
+            48.0,
+            100.0,
+            68.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    },
+    {
+      "candidate_id": "legacy_hubbard_rush_yds_54_5",
+      "category": "legacy",
+      "player": "Chuba Hubbard",
+      "team": "CAR",
+      "market": "rushing_yards",
+      "side": "OVER",
+      "line": 54.5,
+      "odds": -115.0,
+      "implied_prob": 0.5349,
+      "sample_size": 19,
+      "empirical_hits": 4,
+      "win_prob": 0.2105,
+      "wilson_lcb": 0.0982,
+      "edge_pct": -32.44,
+      "lcb_edge_pct": -43.67,
+      "g4_passed": false,
+      "status": "ABSTAIN",
+      "gates": [
+        {
+          "gate": "G1",
+          "ok": true,
+          "detail": "PASS espn_id=4241416"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "line: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "odds: espn_core_odds_feed @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "projection: gse_prediction_engine @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G2",
+          "ok": true,
+          "detail": "history: espn_athlete_gamelogs_2025_2026 @ 2026-10-05T00:57:42.278370+00:00"
+        },
+        {
+          "gate": "G-Sig",
+          "ok": true,
+          "detail": "Signal Registry verified: 47 catalogued (1 active in blend, 1 evaluated)"
+        },
+        {
+          "gate": "G3",
+          "ok": true,
+          "detail": "JEV CAUTION conf=0.36"
+        },
+        {
+          "gate": "G4",
+          "ok": false,
+          "detail": "Wilson: n=19 p_hat=0.211 p_lcb=0.098 implied=0.535 edge=-32.4% lcb_edge=-43.7%; BDR-Kelly: REJECTED_NO_LCB_EDGE f*=0.0% lcb_edge=-44.3% ruin=0.0000; SVI=67.8 EPA_base=0.36"
+        }
+      ],
+      "math_synthesis": {
+        "wilson_lcb": {
+          "n": 19,
+          "p_hat": 0.21052631578947367,
+          "p_lcb": 0.0982139719775769
+        },
+        "bayesian_kelly": {
+          "player_or_asset": "Chuba Hubbard",
+          "market_odds_decimal": 1.8695652173913042,
+          "market_implied_prob": 0.5349,
+          "posterior_mean_p": 0.228,
+          "posterior_variance_p": 0.008246,
+          "lcb_p": 0.0915,
+          "nominal_edge_pct": -30.69,
+          "lcb_edge_pct": -44.33,
+          "full_kelly_pct": 0.0,
+          "robust_fraction_pct": 0.0,
+          "recommended_stake_dollars": 0.0,
+          "uncertainty_discount_pct": 19.22,
+          "status": "REJECTED_NO_LCB_EDGE",
+          "ruin_probability_at_50pct_dd": 0.0,
+          "ruin_probability": 0.0
+        },
+        "svi": {
+          "score": 67.83,
+          "gsu_index": 28.275436423622303,
+          "pli": 0.11999520019199231,
+          "rivalry_factor": 1.0658992845289317
+        },
+        "epa_baseline": 0.3596727578505947
+      },
+      "signal_diagnostics": {
+        "active_sources": [
+          "nfl_epa_adj"
+        ],
+        "total_signals_evaluated": 1
+      },
+      "provenance": {
+        "line": {
+          "value": 54.5,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "odds": {
+          "value": -115.0,
+          "source": "espn_core_odds_feed",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "projection": {
+          "value": 52.0,
+          "source": "gse_prediction_engine",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        },
+        "history": {
+          "value": [
+            82.0,
+            53.0,
+            49.0,
+            46.0,
+            10.0,
+            12.0,
+            27.0,
+            29.0,
+            83.0,
+            16.0,
+            21.0,
+            14.0,
+            17.0,
+            34.0,
+            31.0,
+            49.0,
+            73.0,
+            38.0,
+            57.0
+          ],
+          "source": "espn_athlete_gamelogs_2025_2026",
+          "captured_at": "2026-10-05T00:57:42.278370+00:00"
+        }
+      },
+      "stamped_at": "2026-10-05T00:57:42.278370+00:00",
+      "stamp": "ENGINE_GATE_V1"
+    }
+  ],
+  "sgp_parlay_evaluation": {
+    "legs": [
+      "live_amonra_rec_7_5",
+      "live_mcmillan_rec_yds_73_5",
+      "live_hutchinson_sacks_0_75"
+    ],
+    "status": "ABSTAIN",
+    "joint_probability": 0.1804,
+    "fair_american_odds": 454,
+    "correlation_alpha_pct": 66.52,
+    "frechet_compliant": true,
+    "was_matrix_repaired": false
+  },
+  "audit_summary": {
+    "total_candidates_evaluated": 16,
+    "negative_controls_blocked": 4,
+    "negative_controls_block_rate_pct": 100.0,
+    "total_board_props_evaluated": 12,
+    "total_play_count": 0,
+    "total_abstain_count": 12,
+    "law_9_fail_closed_compliance_pct": 100.0,
+    "unflinching_audit_verdict": "EVERY candidate prop fails closed to ABSTAIN under real empirical Wilson 95% LCB evaluation. Book lines are heavily inflated compared to legacy tout lines (Gibbs 98.5 vs 74.5, Amon-Ra 7.5 vs 6.5, McMillan 73.5 vs 64.5, Hubbard 66.5 vs 54.5). The legacy script's scalar shortcut 'edge_pct * 0.8' was an invalid tout bypass. Real empirical sample evaluation proves that none of the candidate lines offer a statistically positive 95% Lower Credible Bound (LCB <= 0%). Zero picks forced. Full fail-closed protection."
+  }
+}

@@ -1,0 +1,47 @@
+{
+ "date": "2026-10-15",
+ "title": "Deep legal source hunt \u2014 findings",
+ "NEW_PLANES_FOUND": {
+  "1_action_network": {
+   "status": "HARVESTED AND JOINED",
+   "endpoint": "api.actionnetwork.com/web/v1/scoreboard/nfl?season={Y}&week={W} (keyless, browser UA)",
+   "what": "per-book closing lines + PUBLIC BET PERCENTAGES + bet counts, 2020-2026",
+   "harvested": "1697 games / 113 weeks (scratch/an_odds/harvest.json), 1253 frozen games matched, 1195 with public%",
+   "signal_test": "public%-deviation from 50 correlates with residual sd (13.06 -> 12.45 as public piles in) but does NOT improve champion v3 when added to atoms or sigma (7.1375 / 7.1350 vs 7.1346). Interpretation: public position is already priced into the closing vig \u2014 the vig-atom channel (champion v3) is the compressed version of this signal.",
+   "falsified_configs": [
+    "pub% in atoms: 7.1375",
+    "pub% sigma layer: 7.1350",
+    "pub%-merged sigma: 7.1409",
+    "pub%-only sigma: 7.1409"
+   ]
+  },
+  "2_cross_book_dispersion": {
+   "status": "SIGNAL CONFIRMED, HARVEST NEEDS REDO",
+   "what": "stdev of closing spread across ~7-45 books per game \u2014 direct market-uncertainty measure",
+   "blocker": "AN odds[] arrays mix line-movement snapshots; need per-book max(inserted) filter (inserted timestamp exists on every record)",
+   "next": "re-harvest 2023 with timestamp filter, test dispersion as sigma covariate"
+  },
+  "3_nflverse_injuries": {
+   "status": "HARVESTED, FALSIFIED FOR SIGMA",
+   "what": "official NFL weekly injury reports 2017-2026 (52138 rows, keyless)",
+   "signal_test": "QB-out games raw residual sd 13.08 vs 12.74 baseline \u2014 real but already priced into spread_line; adding to champion atoms or sigma made it worse (7.1367/7.1368 vs 7.1346)"
+  },
+  "4_nflverse_pbp_epa": {
+   "status": "IN CHAMPION (from previous pass)",
+   "what": "rolling EPA diff drives the 3/7 atom masses \u2014 the -0.0024 that beat the mixture"
+  }
+ },
+ "KNOWN_BUT_LIMITED": {
+  "scoresandodds_market_comparison": "AWS execute-api, keyless, current-day only, needs live event ids",
+  "oddstrader_graphql": "schema fully mapped, history endpoints empty on free tier (live-window only)",
+  "espn_core_api": "open/close + TR movement already harvested",
+  "covers/vegasinsider/sbr": "HTML-only, no better data than the APIs above"
+ },
+ "champion_status": {
+  "crps": 7.134568,
+  "n": 2462,
+  "holdout_confirmed": "6.985 vs 7.010 flat on 2024-2026W5",
+  "gate_7_099_gap": 0.0356,
+  "honest_read": "public data is largely exhausted for the sigma/atom framework. The remaining ~0.036 to the gate requires either multi-timestamp closing lines (paid), sharp/public DOLLAR splits (vs bet counts \u2014 AN has num_bets but money% fields were null on historical records), or a different forecast target."
+ }
+}

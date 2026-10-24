@@ -1,0 +1,38 @@
+schedule weather columns present: ['wind', 'temp', 'roof', 'surface']
+
+=== WIND MILL (props context; spread/total addends remain BLOCKED) ===
+0-14 {'attempts': 66528, 'completion': 0.6456, 'completion_wilson': [np.float64(0.642), np.float64(0.6493)], 'yards_per_attempt': 10.962, 'adot_gt20_share': 0.1037, 'epa_per_dropback': 0.0422, 'dropbacks': 75336}
+15-19 {'attempts': 6928, 'completion': 0.6306, 'completion_wilson': [np.float64(0.6192), np.float64(0.6419)], 'yards_per_attempt': 10.644, 'adot_gt20_share': 0.0996, 'epa_per_dropback': -0.023, 'dropbacks': 7883}
+>=20 {'attempts': 1796, 'completion': 0.6225, 'completion_wilson': [np.float64(0.5998), np.float64(0.6446)], 'yards_per_attempt': 10.818, 'adot_gt20_share': 0.0896, 'epa_per_dropback': 0.0248, 'dropbacks': 2053}
+  completion Wilson non-overlap vs 0-14, bin 15-19: GRADUATES (base [[np.float64(0.642), np.float64(0.6493)]], bin [0.6192,0.6419])
+  completion Wilson non-overlap vs 0-14, bin >=20: FAILS (base [[np.float64(0.642), np.float64(0.6493)]], bin [0.5998,0.6446])
+
+=== COLD MILL (A29): temp <= 25F vs 26-70F ===
+cold dropbacks 2058 across 29 games; mid 59832 across 797 games
+{'cold_games': 29, 'cold_epa_per_dropback': -0.053, 'mid_epa_per_dropback': 0.0333, 'cold_completion': 0.6279, 'mid_completion': 0.6404}
+
+=== RAIN/SNOW fumbles (A31): precipitation column check ===
+no precipitation/weather column in schedules
+
+=== ROOF MILL (A30): game total by roof ===
+outdoors {'games': 5115, 'mean_total': 43.22, 'sd_total': 14.13}
+closed {'games': 591, 'mean_total': 46.83, 'sd_total': 13.4}
+open {'games': 128, 'mean_total': 46.73, 'sd_total': 13.51}
+
+=== RZ TD rate by yardline bin (per-play, all REG offense plays) ===
+1-2: {'n_plays': 5087, 'td_rate': 0.4244}
+3-5: {'n_plays': 5399, 'td_rate': 0.3136}
+6-10: {'n_plays': 8795, 'td_rate': 0.1767}
+11-15: {'n_plays': 18537, 'td_rate': 0.053}
+16-20: {'n_plays': 10384, 'td_rate': 0.0634}
+
+=== 4th-down conversion by distance bin ===
+4th&1-1: {'n_plays': 3082, 'conversion_rate': 0.4504}
+4th&2-3: {'n_plays': 3979, 'conversion_rate': 0.1759}
+4th&4-6: {'n_plays': 5988, 'conversion_rate': 0.0698}
+4th&7-30: {'n_plays': 13375, 'conversion_rate': 0.0203}
+
+=== SIGMA LADDER (margin sd, early vs late) ===
+{'early_w1_4_sd': 9.072, 'late_w5_18_sd': 9.282, 'n_early': 1686, 'n_late': 5298} | claimed: 13.8 vs 13.2
+
+saved data/allseat_mills.json

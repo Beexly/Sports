@@ -1,0 +1,78 @@
+{
+  "sigma_ladder": {
+    "early_w1_4_sd": 14.364,
+    "late_w5_18_sd": 14.687,
+    "n_early": 1686,
+    "n_late": 5298
+  },
+  "rz_tensor": {
+    "snap 1-2": {
+      "n_snaps": 4968,
+      "td_rate_per_snap": 0.4344,
+      "verdict": "OK"
+    },
+    "snap 3-5": {
+      "n_snaps": 4948,
+      "td_rate_per_snap": 0.3422,
+      "verdict": "OK"
+    },
+    "snap 6-10": {
+      "n_snaps": 7905,
+      "td_rate_per_snap": 0.1966,
+      "verdict": "OK"
+    },
+    "snap 11-15": {
+      "n_snaps": 8989,
+      "td_rate_per_snap": 0.1094,
+      "verdict": "OK"
+    },
+    "snap 16-20": {
+      "n_snaps": 9127,
+      "td_rate_per_snap": 0.072,
+      "verdict": "OK"
+    },
+    "drive 1-2": {
+      "n_drives": 0,
+      "td_rate_per_drive": null,
+      "verdict": "NOT_RUN (n<200)"
+    },
+    "drive 3-5": {
+      "n_drives": 0,
+      "td_rate_per_drive": null,
+      "verdict": "NOT_RUN (n<200)"
+    },
+    "drive 6-10": {
+      "n_drives": 0,
+      "td_rate_per_drive": null,
+      "verdict": "NOT_RUN (n<200)"
+    },
+    "drive 11-15": {
+      "n_drives": 0,
+      "td_rate_per_drive": null,
+      "verdict": "NOT_RUN (n<200)"
+    },
+    "drive 16-20": {
+      "n_drives": 0,
+      "td_rate_per_drive": null,
+      "verdict": "NOT_RUN (n<200)"
+    }
+  },
+  "fourth_down_tensor": {
+    "4th&1": {
+      "n_attempts": 2081,
+      "conversion_rate": 0.6699
+    },
+    "4th&2-3": {
+      "n_attempts": 1257,
+      "conversion_rate": 0.5617
+    },
+    "4th&4-6": {
+      "n_attempts": 889,
+      "conversion_rate": 0.4747
+    },
+    "4th&7+": {
+      "n_attempts": 988,
+      "conversion_rate": 0.2804
+    }
+  }
+}

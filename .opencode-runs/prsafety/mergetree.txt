@@ -1,0 +1,1926 @@
+##### PR 876
+# threedot_name_status:
+M	apps/web/package.json
+M	package-lock.json
+M	package.json
+M	packages/crypto/package.json
+M	packages/db/package.json
+M	workers/content-publishing/package.json
+M	workers/data-refresh/package.json
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=8edad328b4503cbccef6c7b4d5c5b23f423e1326
+# residual_numstat_main_to_result:
+6	6	apps/web/package.json
+263	244	package-lock.json
+2	2	package.json
+1	1	packages/crypto/package.json
+1	1	packages/db/package.json
+1	1	workers/content-publishing/package.json
+1	1	workers/data-refresh/package.json
+# residual_name_status_main_to_result:
+M	apps/web/package.json
+M	package-lock.json
+M	package.json
+M	packages/crypto/package.json
+M	packages/db/package.json
+M	workers/content-publishing/package.json
+M	workers/data-refresh/package.json
+##### PR 878
+# threedot_name_status:
+A	.cursor/Dockerfile
+A	.cursor/dev.sh
+A	.cursor/environment.json
+A	.cursor/install.sh
+A	.cursor/start.sh
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=120d878ff7ef3c64d1d6053431eaa5249229bfce
+# residual_numstat_main_to_result:
+45	0	.cursor/Dockerfile
+6	0	.cursor/dev.sh
+16	0	.cursor/environment.json
+15	0	.cursor/install.sh
+104	0	.cursor/start.sh
+# residual_name_status_main_to_result:
+A	.cursor/Dockerfile
+A	.cursor/dev.sh
+A	.cursor/environment.json
+A	.cursor/install.sh
+A	.cursor/start.sh
+##### PR 879
+# threedot_name_status:
+M	apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+M	apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+M	apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+M	apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+M	apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+M	apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+M	apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+M	apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+M	apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+M	apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+M	apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+M	apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+M	apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+M	apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+M	apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+M	apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+M	apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+M	apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+M	apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+M	apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+M	apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+M	apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+M	apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+M	apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+M	apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+M	apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+A	docs/ops/ENGINE_DOCTRINE.md
+M	docs/research/2026-09-21/wiring/IMPLEMENTED.md
+A	packages/prediction-engine/src/__tests__/frontier-signal-catalog.test.ts
+A	packages/prediction-engine/src/frontier-signal-catalog.ts
+A	packages/prediction-engine/src/markets/1301-0594-information-incorporation-surprise.test.ts
+A	packages/prediction-engine/src/markets/1301-0594-information-incorporation-surprise.ts
+A	packages/prediction-engine/src/markets/2108-02419v1-bbe-implementer.test.ts
+A	packages/prediction-engine/src/markets/2108-02419v1-bbe-implementer.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+A	wire/CORPUS-RESCUE
+A	wire/CQR-TEST
+A	wire/PORT-CONTRACT
+A	wire/STRAY-ARCHIVE
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+
+Auto-merging apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+Auto-merging apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+Auto-merging apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+Auto-merging apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+Auto-merging apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+Auto-merging apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+Auto-merging apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+Auto-merging apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+Auto-merging apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+Auto-merging apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+Auto-merging apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+Auto-merging apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+Auto-merging apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+Auto-merging apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+Auto-merging apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+Auto-merging apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+Auto-merging apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+Auto-merging docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+##### PR 881
+# threedot_name_status:
+A	docs/ops/ENGINE_DOCTRINE.md
+A	packages/prediction-engine/src/__tests__/frontier-signal-catalog.test.ts
+A	packages/prediction-engine/src/frontier-signal-catalog.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=3e762d14b1df8992f5f7c4e5ce7f777fea03a52c
+# residual_numstat_main_to_result:
+203	0	docs/ops/ENGINE_DOCTRINE.md
+58	0	packages/prediction-engine/src/__tests__/frontier-signal-catalog.test.ts
+203	0	packages/prediction-engine/src/frontier-signal-catalog.ts
+481	0	packages/verifier/src/__tests__/nflverse-releases.test.ts
+550	0	packages/verifier/src/loaders/nflverse-releases.ts
+# residual_name_status_main_to_result:
+A	docs/ops/ENGINE_DOCTRINE.md
+A	packages/prediction-engine/src/__tests__/frontier-signal-catalog.test.ts
+A	packages/prediction-engine/src/frontier-signal-catalog.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+##### PR 882
+# threedot_name_status:
+M	docs/ops/AGENT_LEDGER.md
+M	packages/data-ingestion/src/__tests__/espn-schedule-seed.test.ts
+M	packages/data-ingestion/src/espn-schedule-seed.ts
+M	packages/ingestion-pipeline/src/seed-games-from-espn.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=2c30967a3fd36baea35e6d53c061346e81d64704
+# residual_numstat_main_to_result:
+1	1	docs/ops/AGENT_LEDGER.md
+1	1	packages/data-ingestion/src/__tests__/espn-schedule-seed.test.ts
+1	1	packages/data-ingestion/src/espn-schedule-seed.ts
+4	4	packages/ingestion-pipeline/src/seed-games-from-espn.ts
+# residual_name_status_main_to_result:
+M	docs/ops/AGENT_LEDGER.md
+M	packages/data-ingestion/src/__tests__/espn-schedule-seed.test.ts
+M	packages/data-ingestion/src/espn-schedule-seed.ts
+M	packages/ingestion-pipeline/src/seed-games-from-espn.ts
+##### PR 883
+# threedot_name_status:
+M	AGENTS.md
+M	apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+M	apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+M	apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+M	apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+M	apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+M	apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+M	apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+M	apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+M	apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+M	apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+M	apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+M	apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+M	apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+M	apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+M	apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+M	apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+M	apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+M	apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+M	apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+M	apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+M	apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+M	apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+M	apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+M	apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+M	apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+M	apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+M	apps/web/lib/calibration/crpsmod-loss.test.ts
+M	apps/web/lib/calibration/crpsmod-loss.ts
+A	docs/research/2026-09-23-research-csv-inventory.md
+A	packages/prediction-engine/src/__tests__/book-path-tail-shrink.test.ts
+A	packages/prediction-engine/src/__tests__/market-clv-features.test.ts
+A	packages/prediction-engine/src/__tests__/signal-gap-map.test.ts
+A	packages/prediction-engine/src/__tests__/steelers-ml-285-regression.test.ts
+A	packages/prediction-engine/src/book-path-tail-shrink.ts
+M	packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+M	packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+M	packages/prediction-engine/src/index.ts
+A	packages/prediction-engine/src/market-clv-features.ts
+M	packages/prediction-engine/src/ratings/sel-strengths.test.ts
+A	packages/prediction-engine/src/signal-gap-map.ts
+A	packages/prediction-engine/src/signals/__tests__/expected-turnover-diff.test.ts
+A	packages/prediction-engine/src/signals/expected-turnover-diff.ts
+M	packages/prediction-engine/src/threat/generation-of-threat.test.ts
+M	packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+packages/prediction-engine/src/__tests__/market-clv-features.test.ts
+packages/prediction-engine/src/__tests__/steelers-ml-285-regression.test.ts
+packages/prediction-engine/src/index.ts
+packages/prediction-engine/src/market-clv-features.ts
+packages/prediction-engine/src/ratings/sel-strengths.test.ts
+packages/prediction-engine/src/signal-gap-map.ts
+
+Auto-merging AGENTS.md
+Auto-merging apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+Auto-merging apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+Auto-merging apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+Auto-merging apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+Auto-merging apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+Auto-merging apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+Auto-merging apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+Auto-merging apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+Auto-merging apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+Auto-merging apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+Auto-merging apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+Auto-merging apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+Auto-merging apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+Auto-merging apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+Auto-merging apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+Auto-merging apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+Auto-merging apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+Auto-merging apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+Auto-merging apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+Auto-merging apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+Auto-merging apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+Auto-merging apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+Auto-merging apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+Auto-merging apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+Auto-merging apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+Auto-merging apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+Auto-merging apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+Auto-merging apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+Auto-merging packages/prediction-engine/src/__tests__/market-clv-features.test.ts
+CONFLICT (add/add): Merge conflict in packages/prediction-engine/src/__tests__/market-clv-features.test.ts
+Auto-merging packages/prediction-engine/src/__tests__/steelers-ml-285-regression.test.ts
+CONFLICT (add/add): Merge conflict in packages/prediction-engine/src/__tests__/steelers-ml-285-regression.test.ts
+Auto-merging packages/prediction-engine/src/index.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/index.ts
+Auto-merging packages/prediction-engine/src/market-clv-features.ts
+CONFLICT (add/add): Merge conflict in packages/prediction-engine/src/market-clv-features.ts
+Auto-merging packages/prediction-engine/src/ratings/sel-strengths.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ratings/sel-strengths.test.ts
+Auto-merging packages/prediction-engine/src/signal-gap-map.ts
+CONFLICT (add/add): Merge conflict in packages/prediction-engine/src/signal-gap-map.ts
+Auto-merging packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+##### PR 884
+# threedot_name_status:
+M	AGENTS.md
+M	apps/web/app/api/cron/health-alert/route.ts
+M	apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+M	apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+M	apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+M	apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+M	apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+M	apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+M	apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+M	apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+M	apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+M	apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+M	apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+M	apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+M	apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+M	apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+M	apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+M	apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+M	apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+M	apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+M	apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+M	apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+M	apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+M	apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+M	apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+M	apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+M	apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+M	apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+M	apps/web/lib/calibration/crpsmod-loss.test.ts
+M	apps/web/lib/calibration/crpsmod-loss.ts
+A	docs/research/2026-09-23-night-log-lane-d.md
+A	docs/research/2026-09-23-research-csv-inventory.md
+M	packages/data-ingestion/src/index.ts
+A	packages/data-ingestion/src/research-power-ratings.test.ts
+A	packages/data-ingestion/src/research-power-ratings.ts
+A	packages/ingestion-pipeline/src/__tests__/external-ratings-fair-value.test.ts
+M	packages/ingestion-pipeline/src/build-independent-fair-values.ts
+A	packages/ingestion-pipeline/src/external-ratings-fair-value.ts
+M	packages/ingestion-pipeline/src/index.ts
+M	packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+M	packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+M	packages/prediction-engine/src/index.ts
+A	packages/prediction-engine/src/power-ratings-fair-value.test.ts
+A	packages/prediction-engine/src/power-ratings-fair-value.ts
+M	packages/prediction-engine/src/ratings/sel-strengths.test.ts
+M	packages/prediction-engine/src/threat/generation-of-threat.test.ts
+M	packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+packages/prediction-engine/src/index.ts
+packages/prediction-engine/src/ratings/sel-strengths.test.ts
+packages/prediction-engine/src/threat/generation-of-threat.test.ts
+packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+
+Auto-merging AGENTS.md
+Auto-merging apps/web/app/api/cron/health-alert/route.ts
+Auto-merging apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+Auto-merging apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+Auto-merging apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+Auto-merging apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+Auto-merging apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+Auto-merging apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+Auto-merging apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+Auto-merging apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+Auto-merging apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+Auto-merging apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+Auto-merging apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+Auto-merging apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+Auto-merging apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+Auto-merging apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+Auto-merging apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+Auto-merging apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+Auto-merging apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+Auto-merging apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+Auto-merging apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+Auto-merging apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+Auto-merging apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+Auto-merging apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+Auto-merging apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+Auto-merging apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+Auto-merging apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+Auto-merging apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+Auto-merging apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+Auto-merging apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+Auto-merging packages/data-ingestion/src/index.ts
+Auto-merging packages/ingestion-pipeline/src/index.ts
+Auto-merging packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+Auto-merging packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+Auto-merging packages/prediction-engine/src/index.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/index.ts
+Auto-merging packages/prediction-engine/src/ratings/sel-strengths.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ratings/sel-strengths.test.ts
+Auto-merging packages/prediction-engine/src/threat/generation-of-threat.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/threat/generation-of-threat.test.ts
+Auto-merging packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+##### PR 885
+# threedot_name_status:
+M	docs/research/2026-09-21/wiring/IMPLEMENTED.md
+A	packages/prediction-engine/src/invention/1210-4854-text-event-semantic-alignment.test.ts
+A	packages/prediction-engine/src/invention/1210-4854-text-event-semantic-alignment.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=63e03f6ac38ea680effab577b6e958334142fece
+# residual_numstat_main_to_result:
+3	3	docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+235	0	packages/prediction-engine/src/invention/1210-4854-text-event-semantic-alignment.test.ts
+436	0	packages/prediction-engine/src/invention/1210-4854-text-event-semantic-alignment.ts
+# residual_name_status_main_to_result:
+M	docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+A	packages/prediction-engine/src/invention/1210-4854-text-event-semantic-alignment.test.ts
+A	packages/prediction-engine/src/invention/1210-4854-text-event-semantic-alignment.ts
+##### PR 886
+# threedot_name_status:
+A	.cursor/environment.json
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=2aaaa4a438995e6eeae2d3c5d3541466d32fab0d
+# residual_numstat_main_to_result:
+17	0	.cursor/environment.json
+# residual_name_status_main_to_result:
+A	.cursor/environment.json
+##### PR 887
+# threedot_name_status:
+M	AGENTS.md
+M	apps/web/app/pricing/page.tsx
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/crpsmod-loss.test.ts
+M	apps/web/lib/calibration/crpsmod-loss.ts
+M	apps/web/tsconfig.json
+M	docs/ops/AGENT_LEDGER.md
+A	docs/ops/CHECKOUT_HEALTH_MONITOR_RUNBOOK.md
+M	docs/ops/OPERATOR.md
+A	docs/ops/handoff/2026-09-23-ci-pr-board-greening.md
+A	packages/prediction-engine/src/__tests__/frontier-signal-catalog.test.ts
+M	packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+M	packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+A	packages/prediction-engine/src/frontier-signal-catalog.ts
+M	packages/prediction-engine/src/ratings/sel-strengths.test.ts
+M	packages/prediction-engine/src/threat/generation-of-threat.test.ts
+M	packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+M	scripts/e2e/pricing-smoke.mjs
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+AGENTS.md
+apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+apps/web/lib/calibration/crpsmod-loss.ts
+docs/ops/AGENT_LEDGER.md
+
+Auto-merging AGENTS.md
+CONFLICT (content): Merge conflict in AGENTS.md
+Auto-merging apps/web/app/pricing/page.tsx
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+Auto-merging apps/web/lib/calibration/crpsmod-loss.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/crpsmod-loss.ts
+Auto-merging apps/web/tsconfig.json
+Auto-merging docs/ops/AGENT_LEDGER.md
+CONFLICT (content): Merge conflict in docs/ops/AGENT_LEDGER.md
+##### PR 888
+# threedot_name_status:
+M	AGENTS.md
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/crpsmod-loss.test.ts
+M	apps/web/lib/calibration/crpsmod-loss.ts
+M	apps/web/tsconfig.json
+M	packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+M	packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+M	packages/prediction-engine/src/ratings/sel-strengths.test.ts
+M	packages/prediction-engine/src/threat/generation-of-threat.test.ts
+M	packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+apps/web/tsconfig.json
+packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+packages/prediction-engine/src/ratings/sel-strengths.test.ts
+
+Auto-merging AGENTS.md
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+Auto-merging apps/web/lib/calibration/crpsmod-loss.test.ts
+Auto-merging apps/web/lib/calibration/crpsmod-loss.ts
+Auto-merging apps/web/tsconfig.json
+CONFLICT (content): Merge conflict in apps/web/tsconfig.json
+Auto-merging packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+Auto-merging packages/prediction-engine/src/ratings/sel-strengths.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ratings/sel-strengths.test.ts
+Auto-merging packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+##### PR 889
+# threedot_name_status:
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/crpsmod-loss.test.ts
+M	apps/web/lib/calibration/crpsmod-loss.ts
+M	apps/web/tsconfig.json
+M	packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+M	packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+M	packages/prediction-engine/src/ratings/sel-strengths.test.ts
+M	packages/prediction-engine/src/threat/generation-of-threat.test.ts
+M	packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+apps/web/tsconfig.json
+packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+packages/prediction-engine/src/ratings/sel-strengths.test.ts
+
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+Auto-merging apps/web/lib/calibration/crpsmod-loss.test.ts
+Auto-merging apps/web/lib/calibration/crpsmod-loss.ts
+Auto-merging apps/web/tsconfig.json
+CONFLICT (content): Merge conflict in apps/web/tsconfig.json
+Auto-merging packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+Auto-merging packages/prediction-engine/src/ratings/sel-strengths.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ratings/sel-strengths.test.ts
+Auto-merging packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+##### PR 891
+# threedot_name_status:
+A	apps/web/lib/calibration/2403-11016v3-minimax-regret-selection.test.ts
+A	apps/web/lib/calibration/2403-11016v3-minimax-regret-selection.ts
+A	apps/web/lib/calibration/2406-03321v2-decision-utility-ensemble.test.ts
+A	apps/web/lib/calibration/2406-03321v2-decision-utility-ensemble.ts
+A	docs/ops/FREE_MODEL_LANES.md
+A	docs/ops/OPENCODE_CHEAP_WIRING_PROMPT.md
+M	docs/research/2026-09-21/wiring/IMPLEMENTED.md
+A	packages/data-ingestion/src/2108-02419v1-joint-market-simulator.test.ts
+A	packages/data-ingestion/src/2108-02419v1-joint-market-simulator.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+docs/ops/FREE_MODEL_LANES.md
+
+Auto-merging docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+CONFLICT (content): Merge conflict in docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+Auto-merging docs/ops/FREE_MODEL_LANES.md
+CONFLICT (add/add): Merge conflict in docs/ops/FREE_MODEL_LANES.md
+##### PR 892
+# threedot_name_status:
+M	AGENTS.md
+M	docs/research/2026-09-21/wiring/IMPLEMENTED.md
+A	packages/prediction-engine/src/invention/1301-0594-markets-steam-surprise.test.ts
+A	packages/prediction-engine/src/invention/1301-0594-markets-steam-surprise.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=e0dad37fe5d12527ac0a1f12a8f6dab7966c1f73
+# residual_numstat_main_to_result:
+4	4	AGENTS.md
+3	3	docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+113	0	packages/prediction-engine/src/invention/1301-0594-markets-steam-surprise.test.ts
+204	0	packages/prediction-engine/src/invention/1301-0594-markets-steam-surprise.ts
+# residual_name_status_main_to_result:
+M	AGENTS.md
+M	docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+A	packages/prediction-engine/src/invention/1301-0594-markets-steam-surprise.test.ts
+A	packages/prediction-engine/src/invention/1301-0594-markets-steam-surprise.ts
+##### PR 898
+# threedot_name_status:
+A	docs/models/mlb-independent-model.md
+M	docs/ops/AGENT_LEDGER.md
+A	packages/prediction-engine/src/__tests__/mlb-independent-model.test.ts
+M	packages/prediction-engine/src/index.ts
+A	packages/prediction-engine/src/mlb-independent-model.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=b156c268fa805803b88a70387819c1a7e60c9bfb
+# residual_numstat_main_to_result:
+220	0	docs/models/mlb-independent-model.md
+1	1	docs/ops/AGENT_LEDGER.md
+120	0	packages/prediction-engine/src/__tests__/mlb-independent-model.test.ts
+20	0	packages/prediction-engine/src/index.ts
+111	0	packages/prediction-engine/src/mlb-independent-model.ts
+# residual_name_status_main_to_result:
+A	docs/models/mlb-independent-model.md
+M	docs/ops/AGENT_LEDGER.md
+A	packages/prediction-engine/src/__tests__/mlb-independent-model.test.ts
+M	packages/prediction-engine/src/index.ts
+A	packages/prediction-engine/src/mlb-independent-model.ts
+##### PR 902
+# threedot_name_status:
+A	docs/calibration-proposals/2026-09-23-eprocess-vs-close-shadow-redesign.md
+A	packages/prediction-engine/src/__tests__/shadow-calibration-eprocess.test.ts
+A	packages/prediction-engine/src/shadow-calibration-eprocess.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=d5a043d6ed45a2b2ffca072e7726e0e3cef6fdce
+# residual_numstat_main_to_result:
+107	0	docs/calibration-proposals/2026-09-23-eprocess-vs-close-shadow-redesign.md
+149	0	packages/prediction-engine/src/__tests__/shadow-calibration-eprocess.test.ts
+320	0	packages/prediction-engine/src/shadow-calibration-eprocess.ts
+# residual_name_status_main_to_result:
+A	docs/calibration-proposals/2026-09-23-eprocess-vs-close-shadow-redesign.md
+A	packages/prediction-engine/src/__tests__/shadow-calibration-eprocess.test.ts
+A	packages/prediction-engine/src/shadow-calibration-eprocess.ts
+##### PR 903
+# threedot_name_status:
+M	packages/quote-plane/src/__tests__/situation-join.test.ts
+M	packages/quote-plane/src/__tests__/situation-snapshot-precedence.test.ts
+M	packages/quote-plane/src/precedence.ts
+M	packages/quote-plane/src/situation-join.ts
+M	packages/quote-plane/src/situation-snapshot.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=57bfb448a84eea2d0e2b7e89461a1793fff4aaa8
+# residual_numstat_main_to_result:
+2	1	packages/quote-plane/src/__tests__/situation-join.test.ts
+14	0	packages/quote-plane/src/__tests__/situation-snapshot-precedence.test.ts
+9	0	packages/quote-plane/src/precedence.ts
+7	7	packages/quote-plane/src/situation-join.ts
+2	4	packages/quote-plane/src/situation-snapshot.ts
+# residual_name_status_main_to_result:
+M	packages/quote-plane/src/__tests__/situation-join.test.ts
+M	packages/quote-plane/src/__tests__/situation-snapshot-precedence.test.ts
+M	packages/quote-plane/src/precedence.ts
+M	packages/quote-plane/src/situation-join.ts
+M	packages/quote-plane/src/situation-snapshot.ts
+##### PR 906
+# threedot_name_status:
+M	apps/web/__tests__/market-coverage.test.ts
+M	apps/web/lib/board/market-coverage.ts
+M	docs/ops/AGENT_LEDGER.md
+M	packages/ingestion-pipeline/src/__tests__/process-sport.test.ts
+M	packages/ingestion-pipeline/src/process-sport.ts
+A	packages/ingestion-pipeline/src/total-drop-signals.test.ts
+A	packages/ingestion-pipeline/src/total-drop-signals.ts
+A	packages/prediction-engine/src/__tests__/scoring-total-drop-reasons.test.ts
+M	packages/prediction-engine/src/index.ts
+M	packages/prediction-engine/src/scoring.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+packages/prediction-engine/src/scoring.ts
+
+Auto-merging docs/ops/AGENT_LEDGER.md
+Auto-merging packages/ingestion-pipeline/src/__tests__/process-sport.test.ts
+Auto-merging packages/ingestion-pipeline/src/process-sport.ts
+Auto-merging packages/prediction-engine/src/index.ts
+Auto-merging packages/prediction-engine/src/scoring.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/scoring.ts
+##### PR 907
+# threedot_name_status:
+A	apps/web/__tests__/extraction-modes.test.ts
+A	apps/web/__tests__/free-lane-response-cache.test.ts
+A	apps/web/__tests__/jynx-complete.test.ts
+A	apps/web/__tests__/sports-data-candidates-accessors.test.ts
+M	apps/web/lib/claude-api/free-lane.ts
+A	apps/web/lib/entity-graph/index.ts
+A	apps/web/lib/entity-graph/normalize.test.ts
+A	apps/web/lib/entity-graph/normalize.ts
+A	apps/web/lib/entity-graph/repository.test.ts
+A	apps/web/lib/entity-graph/repository.ts
+A	docs/adr/pre-implementation-change-proposal-template.md
+A	handoff/AUTH_AUDIT.md
+A	handoff/CLAIMS_AUDIT.md
+A	handoff/CONTRAST_AUDIT.md
+A	handoff/DB_AUDIT.md
+M	handoff/DOC_DRIFT.md
+A	handoff/GRADE_AUDIT.md
+A	handoff/INVENTORY.md
+A	handoff/JOURNAL.md
+M	handoff/LEDGER.md
+A	handoff/PERF_AUDIT.md
+A	handoff/PICKS_AUDIT.md
+A	handoff/RESPONSIVE_AUDIT.md
+A	handoff/ROUTE_AUTH_INVENTORY.md
+A	handoff/SAFETY_CHECK.md
+A	handoff/STATES_AUDIT.md
+A	handoff/STRIPE_AUDIT.md
+A	handoff/TEST_GAP_MAP.md
+A	handoff/UI_AUDIT.md
+A	handoff/VISUAL_QA.md
+A	handoff/accent-math.mjs
+A	handoff/audit-odds.md
+A	handoff/auth-page-check.sh
+A	handoff/auth-premium-check.sh
+A	handoff/auth-scan.mjs
+A	handoff/contrast-scan.mjs
+A	handoff/db-schema-scan.mjs
+A	handoff/grade-audit-probe.cjs
+A	handoff/grade-audit-probe.ts
+A	handoff/grade-audit-probe2.cjs
+A	handoff/grade-audit-probe3.cjs
+A	handoff/perf-scan.mjs
+A	handoff/pick-lifecycle-scan.mjs
+A	handoff/responsive-scan.mjs
+A	handoff/safety-db-scan.mjs
+A	handoff/stripe-keymode-scan.mjs
+A	handoff/surface-math.mjs
+A	handoff/ui-audit-scan.mjs
+A	handoff/visual-qa-scan.mjs
+M	package.json
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=314ac4a98ff04fe1e66634032ae3974ba1ab794c
+# residual_numstat_main_to_result:
+163	0	apps/web/__tests__/extraction-modes.test.ts
+107	0	apps/web/__tests__/free-lane-response-cache.test.ts
+237	0	apps/web/__tests__/jynx-complete.test.ts
+247	0	apps/web/__tests__/sports-data-candidates-accessors.test.ts
+67	34	apps/web/lib/claude-api/free-lane.ts
+2	0	apps/web/lib/entity-graph/index.ts
+73	0	apps/web/lib/entity-graph/normalize.test.ts
+29	0	apps/web/lib/entity-graph/normalize.ts
+302	0	apps/web/lib/entity-graph/repository.test.ts
+264	0	apps/web/lib/entity-graph/repository.ts
+63	0	docs/adr/pre-implementation-change-proposal-template.md
+215	0	handoff/AUTH_AUDIT.md
+80	0	handoff/CLAIMS_AUDIT.md
+260	0	handoff/CONTRAST_AUDIT.md
+203	0	handoff/DB_AUDIT.md
+307	119	handoff/DOC_DRIFT.md
+177	0	handoff/GRADE_AUDIT.md
+74	0	handoff/INVENTORY.md
+31	0	handoff/JOURNAL.md
+63	66	handoff/LEDGER.md
+205	0	handoff/PERF_AUDIT.md
+377	0	handoff/PICKS_AUDIT.md
+238	0	handoff/RESPONSIVE_AUDIT.md
+197	0	handoff/ROUTE_AUTH_INVENTORY.md
+191	0	handoff/SAFETY_CHECK.md
+232	0	handoff/STATES_AUDIT.md
+258	0	handoff/STRIPE_AUDIT.md
+75	0	handoff/TEST_GAP_MAP.md
+341	0	handoff/UI_AUDIT.md
+219	0	handoff/VISUAL_QA.md
+98	0	handoff/accent-math.mjs
+192	0	handoff/audit-odds.md
+17	0	handoff/auth-page-check.sh
+36	0	handoff/auth-premium-check.sh
+128	0	handoff/auth-scan.mjs
+213	0	handoff/contrast-scan.mjs
+773	0	handoff/db-schema-scan.mjs
+82	0	handoff/grade-audit-probe.cjs
+115	0	handoff/grade-audit-probe.ts
+74	0	handoff/grade-audit-probe2.cjs
+74	0	handoff/grade-audit-probe3.cjs
+387	0	handoff/perf-scan.mjs
+296	0	handoff/pick-lifecycle-scan.mjs
+210	0	handoff/responsive-scan.mjs
+69	0	handoff/safety-db-scan.mjs
+67	0	handoff/stripe-keymode-scan.mjs
+61	0	handoff/surface-math.mjs
+170	0	handoff/ui-audit-scan.mjs
+528	0	handoff/visual-qa-scan.mjs
+1	1	package.json
+# residual_name_status_main_to_result:
+A	apps/web/__tests__/extraction-modes.test.ts
+A	apps/web/__tests__/free-lane-response-cache.test.ts
+A	apps/web/__tests__/jynx-complete.test.ts
+A	apps/web/__tests__/sports-data-candidates-accessors.test.ts
+M	apps/web/lib/claude-api/free-lane.ts
+A	apps/web/lib/entity-graph/index.ts
+A	apps/web/lib/entity-graph/normalize.test.ts
+A	apps/web/lib/entity-graph/normalize.ts
+A	apps/web/lib/entity-graph/repository.test.ts
+A	apps/web/lib/entity-graph/repository.ts
+A	docs/adr/pre-implementation-change-proposal-template.md
+A	handoff/AUTH_AUDIT.md
+A	handoff/CLAIMS_AUDIT.md
+A	handoff/CONTRAST_AUDIT.md
+A	handoff/DB_AUDIT.md
+M	handoff/DOC_DRIFT.md
+A	handoff/GRADE_AUDIT.md
+A	handoff/INVENTORY.md
+A	handoff/JOURNAL.md
+M	handoff/LEDGER.md
+A	handoff/PERF_AUDIT.md
+A	handoff/PICKS_AUDIT.md
+A	handoff/RESPONSIVE_AUDIT.md
+A	handoff/ROUTE_AUTH_INVENTORY.md
+A	handoff/SAFETY_CHECK.md
+A	handoff/STATES_AUDIT.md
+A	handoff/STRIPE_AUDIT.md
+A	handoff/TEST_GAP_MAP.md
+A	handoff/UI_AUDIT.md
+A	handoff/VISUAL_QA.md
+A	handoff/accent-math.mjs
+A	handoff/audit-odds.md
+A	handoff/auth-page-check.sh
+A	handoff/auth-premium-check.sh
+A	handoff/auth-scan.mjs
+A	handoff/contrast-scan.mjs
+A	handoff/db-schema-scan.mjs
+A	handoff/grade-audit-probe.cjs
+A	handoff/grade-audit-probe.ts
+A	handoff/grade-audit-probe2.cjs
+A	handoff/grade-audit-probe3.cjs
+A	handoff/perf-scan.mjs
+A	handoff/pick-lifecycle-scan.mjs
+A	handoff/responsive-scan.mjs
+A	handoff/safety-db-scan.mjs
+A	handoff/stripe-keymode-scan.mjs
+A	handoff/surface-math.mjs
+A	handoff/ui-audit-scan.mjs
+A	handoff/visual-qa-scan.mjs
+M	package.json
+##### PR 909
+# threedot_name_status:
+M	docs/research/2026-09-21/wiring/IMPLEMENTED.md
+A	gse-ml-service/app/models/coverage_classifier.py
+A	gse-ml-service/app/models/film_splitter.py
+A	gse-ml-service/app/models/highlight_detector.py
+A	gse-ml-service/app/tests/test_coverage_classifier.py
+A	gse-ml-service/app/tests/test_film_splitter.py
+A	gse-ml-service/app/tests/test_highlight_detector.py
+A	packages/data-ingestion/src/ethandojo-handoff-adapters.test.ts
+A	packages/data-ingestion/src/ethandojo-handoff-adapters.ts
+A	packages/data-ingestion/src/overthecap-salaries.test.ts
+A	packages/data-ingestion/src/overthecap-salaries.ts
+A	packages/prediction-engine/src/ethandojo/handoff-suite.test.ts
+A	packages/prediction-engine/src/ethandojo/handoff-suite.ts
+A	packages/prediction-engine/src/fantasy/draft-copilot.test.ts
+A	packages/prediction-engine/src/fantasy/draft-copilot.ts
+A	packages/prediction-engine/src/fantasy/trade-analyzer.test.ts
+A	packages/prediction-engine/src/fantasy/trade-analyzer.ts
+A	packages/prediction-engine/src/film/coverage-analyzer.test.ts
+A	packages/prediction-engine/src/film/coverage-analyzer.ts
+A	packages/prediction-engine/src/film/film-splitter.test.ts
+A	packages/prediction-engine/src/film/film-splitter.ts
+A	packages/prediction-engine/src/film/highlight-detector.test.ts
+A	packages/prediction-engine/src/film/highlight-detector.ts
+A	packages/prediction-engine/src/nfl/contract-value.test.ts
+A	packages/prediction-engine/src/nfl/contract-value.ts
+A	packages/prediction-engine/src/nfl/ethandojo-game-predictor.test.ts
+A	packages/prediction-engine/src/nfl/ethandojo-game-predictor.ts
+A	packages/prediction-engine/src/nfl/exploit-finder.test.ts
+A	packages/prediction-engine/src/nfl/exploit-finder.ts
+A	packages/prediction-engine/src/nfl/fourth-down-grader.test.ts
+A	packages/prediction-engine/src/nfl/fourth-down-grader.ts
+A	packages/prediction-engine/src/nfl/offensive-coordinator.test.ts
+A	packages/prediction-engine/src/nfl/offensive-coordinator.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+
+Auto-merging docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+CONFLICT (content): Merge conflict in docs/arxiv-program/research/2026-09-21/wiring/IMPLEMENTED.md
+##### PR 911
+# threedot_name_status:
+M	AGENTS.md
+M	apps/web/__tests__/cqr.test.ts
+M	apps/web/app/api/cron/health-alert/route.ts
+M	apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+M	apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+M	apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+M	apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+M	apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+M	apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+M	apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+M	apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+M	apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+M	apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+M	apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+M	apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+M	apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+M	apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+M	apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+M	apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+M	apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+M	apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+M	apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+M	apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+M	apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+M	apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+M	apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+M	apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+M	apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+M	apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+M	apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+M	apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+M	apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+M	apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+M	apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+M	apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+M	apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+M	apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+M	apps/web/lib/calibration/crpsmod-loss.test.ts
+M	apps/web/lib/calibration/crpsmod-loss.ts
+A	docs/research/2026-09-23-night-log-lane-d.md
+A	docs/research/2026-09-23-research-csv-inventory.md
+M	packages/data-ingestion/src/index.ts
+A	packages/data-ingestion/src/research-power-ratings.test.ts
+A	packages/data-ingestion/src/research-power-ratings.ts
+M	packages/ingestion-pipeline/src/__tests__/board-fill.test.ts
+M	packages/ingestion-pipeline/src/__tests__/build-independent-fair-values-rights-gate.test.ts
+A	packages/ingestion-pipeline/src/__tests__/external-ratings-fair-value.test.ts
+M	packages/ingestion-pipeline/src/__tests__/process-sport.test.ts
+M	packages/ingestion-pipeline/src/__tests__/refresh-odds.test.ts
+M	packages/ingestion-pipeline/src/__tests__/seed-games-from-espn.test.ts
+M	packages/ingestion-pipeline/src/__tests__/settle-sport.test.ts
+M	packages/ingestion-pipeline/src/__tests__/signal-registry-migration.test.ts
+M	packages/ingestion-pipeline/src/__tests__/team-game-log-repair.test.ts
+M	packages/ingestion-pipeline/src/build-independent-fair-values.ts
+A	packages/ingestion-pipeline/src/external-ratings-fair-value.ts
+M	packages/ingestion-pipeline/src/index.ts
+M	packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+M	packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+M	packages/prediction-engine/src/index.ts
+A	packages/prediction-engine/src/power-ratings-fair-value.test.ts
+A	packages/prediction-engine/src/power-ratings-fair-value.ts
+M	packages/prediction-engine/src/ratings/sel-strengths.test.ts
+M	packages/prediction-engine/src/threat/generation-of-threat.test.ts
+M	packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+packages/prediction-engine/src/index.ts
+packages/prediction-engine/src/ratings/sel-strengths.test.ts
+packages/prediction-engine/src/threat/generation-of-threat.test.ts
+packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+
+Auto-merging AGENTS.md
+Auto-merging apps/web/app/api/cron/health-alert/route.ts
+Auto-merging apps/web/lib/calibration/1501-01126v1-composite-risk-measure.ts
+Auto-merging apps/web/lib/calibration/1904-02855v1-gp-pit-recalibration.ts
+Auto-merging apps/web/lib/calibration/1904-06019-weighted-split-conformal-covariate-shift.ts
+Auto-merging apps/web/lib/calibration/1906-02530-shift-stress-harness.ts
+Auto-merging apps/web/lib/calibration/1908-08980v1-ignorance-score-selection.ts
+Auto-merging apps/web/lib/calibration/1909-03725v3-isotonic-distributional-regression.ts
+Auto-merging apps/web/lib/calibration/1910-02600-evidential-regression-head.ts
+Auto-merging apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+CONFLICT (content): Merge conflict in apps/web/lib/calibration/1910-03779-peer-prediction-aggregation.ts
+Auto-merging apps/web/lib/calibration/1910-07325v1-energy-score-multivariate.ts
+Auto-merging apps/web/lib/calibration/1910-07912v2-consistent-interval-scores-murphy.ts
+Auto-merging apps/web/lib/calibration/1910-10562-nested-conformal-qoob.ts
+Auto-merging apps/web/lib/calibration/2002-12860v1-quantile-regularization-ckl.ts
+Auto-merging apps/web/lib/calibration/2004-08607-accumulator-diffusion-search.ts
+Auto-merging apps/web/lib/calibration/2004-14108v2-variogram-score-fq-pilot.ts
+Auto-merging apps/web/lib/calibration/2012-04626v2-minimax-regret-umdp.ts
+Auto-merging apps/web/lib/calibration/2101-02104v1-half-life-rating-climatology.ts
+Auto-merging apps/web/lib/calibration/2106-06317v1-automatic-risk-adaptation.ts
+Auto-merging apps/web/lib/calibration/2110-03874-bradley-terry-uq.ts
+Auto-merging apps/web/lib/calibration/2203-01420v1-median-world-regret.ts
+Auto-merging apps/web/lib/calibration/2210-08740v1-risk-sensitive-staking-mdp.ts
+Auto-merging apps/web/lib/calibration/2501-02087v2-spectral-risk-betting.ts
+Auto-merging apps/web/lib/calibration/2502-06884-two-threshold-conformal-abstention.ts
+Auto-merging apps/web/lib/calibration/2505-03585v1-robust-kelly-mmd.ts
+Auto-merging apps/web/lib/calibration/2506-11399v1-dynamo-home-advantage.ts
+Auto-merging apps/web/lib/calibration/2510-26456v1-weight-constraint-horserace.ts
+Auto-merging apps/web/lib/calibration/2512-16968v1-travel-burden-fatigue.ts
+Auto-merging apps/web/lib/calibration/2604-20172v2-cover-robbins-stake-multiplier.ts
+Auto-merging apps/web/lib/calibration/2606-05551v2-action-conditional-conformal.ts
+Auto-merging apps/web/lib/calibration/2606-18686v1-simulated-world-benchmark.ts
+Auto-merging apps/web/lib/calibration/2606-29203-inverse-gap-weighted-allocation.ts
+Auto-merging apps/web/lib/calibration/2608-20511-edge-directed-calibration-test.ts
+Auto-merging apps/web/lib/calibration/2608-25940v2-metric-redundancy-audit.ts
+Auto-merging apps/web/lib/calibration/2609-05561-rollcast-anchors.ts
+Auto-merging apps/web/lib/calibration/2609-19035-cpit-calibration.ts
+Auto-merging packages/data-ingestion/src/index.ts
+Auto-merging packages/ingestion-pipeline/src/__tests__/process-sport.test.ts
+Auto-merging packages/ingestion-pipeline/src/index.ts
+Auto-merging packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ensemble/covariance-intersection.test.ts
+Auto-merging packages/prediction-engine/src/ensemble/soft-global-combination.test.ts
+Auto-merging packages/prediction-engine/src/index.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/index.ts
+Auto-merging packages/prediction-engine/src/ratings/sel-strengths.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/ratings/sel-strengths.test.ts
+Auto-merging packages/prediction-engine/src/threat/generation-of-threat.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/threat/generation-of-threat.test.ts
+Auto-merging packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+CONFLICT (content): Merge conflict in packages/prediction-engine/src/weather/adaweather-combiner.test.ts
+##### PR 913
+# threedot_name_status:
+M	packages/prediction-engine/src/__tests__/conformal-margin-set.test.ts
+M	packages/prediction-engine/src/__tests__/tweedie-aci.test.ts
+M	packages/prediction-engine/src/conformal-margin-set.ts
+M	packages/prediction-engine/src/tweedie-aci.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=3a5a49704b100f06d2525e5d8d02bab099076dd0
+# residual_numstat_main_to_result:
+27	2	packages/prediction-engine/src/__tests__/conformal-margin-set.test.ts
+46	10	packages/prediction-engine/src/__tests__/tweedie-aci.test.ts
+26	18	packages/prediction-engine/src/conformal-margin-set.ts
+31	11	packages/prediction-engine/src/tweedie-aci.ts
+# residual_name_status_main_to_result:
+M	packages/prediction-engine/src/__tests__/conformal-margin-set.test.ts
+M	packages/prediction-engine/src/__tests__/tweedie-aci.test.ts
+M	packages/prediction-engine/src/conformal-margin-set.ts
+M	packages/prediction-engine/src/tweedie-aci.ts
+##### PR 914
+# threedot_name_status:
+A	docs/factors/A1.yaml
+A	docs/factors/A10.yaml
+A	docs/factors/A11.yaml
+A	docs/factors/A12.yaml
+A	docs/factors/A13.yaml
+A	docs/factors/A14.yaml
+A	docs/factors/A15.yaml
+A	docs/factors/A16.yaml
+A	docs/factors/A17.yaml
+A	docs/factors/A18.yaml
+A	docs/factors/A19.yaml
+A	docs/factors/A2.yaml
+A	docs/factors/A20.yaml
+A	docs/factors/A21.yaml
+A	docs/factors/A22.yaml
+A	docs/factors/A23.yaml
+A	docs/factors/A24.yaml
+A	docs/factors/A25.yaml
+A	docs/factors/A26.yaml
+A	docs/factors/A27.yaml
+A	docs/factors/A28.yaml
+A	docs/factors/A3.yaml
+A	docs/factors/A4.yaml
+A	docs/factors/A5.yaml
+A	docs/factors/A6.yaml
+A	docs/factors/A7.yaml
+A	docs/factors/A8.yaml
+A	docs/factors/A9.yaml
+A	docs/factors/INDEX.md
+M	package-lock.json
+A	packages/verifier/fixtures/picks-h1.json
+A	packages/verifier/package.json
+A	packages/verifier/src/__tests__/duel.test.ts
+A	packages/verifier/src/__tests__/factgraph.test.ts
+A	packages/verifier/src/__tests__/holdout.test.ts
+A	packages/verifier/src/__tests__/joint.test.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/__tests__/scorecard.test.ts
+A	packages/verifier/src/__tests__/stats-pins.test.ts
+A	packages/verifier/src/__tests__/v530.test.ts
+A	packages/verifier/src/candidates/v530.ts
+A	packages/verifier/src/cli/c395-live-smoke.ts
+A	packages/verifier/src/cli/factors-index.ts
+A	packages/verifier/src/cli/factors-run.ts
+A	packages/verifier/src/cli/verify-holdout.ts
+A	packages/verifier/src/duel.ts
+A	packages/verifier/src/factgraph.ts
+A	packages/verifier/src/holdout.ts
+A	packages/verifier/src/index.ts
+A	packages/verifier/src/joint.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+A	packages/verifier/src/scorecard.ts
+A	packages/verifier/src/stats.ts
+A	packages/verifier/src/types.ts
+A	packages/verifier/tsconfig.json
+A	packages/verifier/vitest.config.ts
+A	scripts/factors/A1.mjs
+A	scripts/factors/A10.mjs
+A	scripts/factors/A11.mjs
+A	scripts/factors/A12.mjs
+A	scripts/factors/A13.mjs
+A	scripts/factors/A14.mjs
+A	scripts/factors/A15.mjs
+A	scripts/factors/A16.mjs
+A	scripts/factors/A17.mjs
+A	scripts/factors/A18.mjs
+A	scripts/factors/A19.mjs
+A	scripts/factors/A2.mjs
+A	scripts/factors/A20.mjs
+A	scripts/factors/A21.mjs
+A	scripts/factors/A22.mjs
+A	scripts/factors/A23.mjs
+A	scripts/factors/A24.mjs
+A	scripts/factors/A25.mjs
+A	scripts/factors/A26.mjs
+A	scripts/factors/A27.mjs
+A	scripts/factors/A28.mjs
+A	scripts/factors/A3.mjs
+A	scripts/factors/A4.mjs
+A	scripts/factors/A5.mjs
+A	scripts/factors/A6.mjs
+A	scripts/factors/A7.mjs
+A	scripts/factors/A8.mjs
+A	scripts/factors/A9.mjs
+A	scripts/factors/_lib.mjs
+A	scripts/factors/index.mjs
+A	scripts/factors/index.test.mjs
+A	scripts/factors/lib/common.mjs
+A	scripts/factors/run.mjs
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=bd1611598682be895e17594256c87f3d9a001155
+# residual_numstat_main_to_result:
+20	0	docs/factors/A1.yaml
+20	0	docs/factors/A10.yaml
+20	0	docs/factors/A11.yaml
+20	0	docs/factors/A12.yaml
+20	0	docs/factors/A13.yaml
+20	0	docs/factors/A14.yaml
+20	0	docs/factors/A15.yaml
+20	0	docs/factors/A16.yaml
+20	0	docs/factors/A17.yaml
+20	0	docs/factors/A18.yaml
+20	0	docs/factors/A19.yaml
+20	0	docs/factors/A2.yaml
+20	0	docs/factors/A20.yaml
+20	0	docs/factors/A21.yaml
+20	0	docs/factors/A22.yaml
+20	0	docs/factors/A23.yaml
+20	0	docs/factors/A24.yaml
+20	0	docs/factors/A25.yaml
+26	0	docs/factors/A26.yaml
+20	0	docs/factors/A27.yaml
+20	0	docs/factors/A28.yaml
+20	0	docs/factors/A3.yaml
+20	0	docs/factors/A4.yaml
+20	0	docs/factors/A5.yaml
+20	0	docs/factors/A6.yaml
+20	0	docs/factors/A7.yaml
+20	0	docs/factors/A8.yaml
+20	0	docs/factors/A9.yaml
+35	0	docs/factors/INDEX.md
+17	0	package-lock.json
+46	0	packages/verifier/fixtures/picks-h1.json
+25	0	packages/verifier/package.json
+136	0	packages/verifier/src/__tests__/duel.test.ts
+283	0	packages/verifier/src/__tests__/factgraph.test.ts
+182	0	packages/verifier/src/__tests__/holdout.test.ts
+143	0	packages/verifier/src/__tests__/joint.test.ts
+481	0	packages/verifier/src/__tests__/nflverse-releases.test.ts
+178	0	packages/verifier/src/__tests__/scorecard.test.ts
+317	0	packages/verifier/src/__tests__/stats-pins.test.ts
+97	0	packages/verifier/src/__tests__/v530.test.ts
+191	0	packages/verifier/src/candidates/v530.ts
+48	0	packages/verifier/src/cli/c395-live-smoke.ts
+40	0	packages/verifier/src/cli/factors-index.ts
+65	0	packages/verifier/src/cli/factors-run.ts
+83	0	packages/verifier/src/cli/verify-holdout.ts
+112	0	packages/verifier/src/duel.ts
+341	0	packages/verifier/src/factgraph.ts
+216	0	packages/verifier/src/holdout.ts
+15	0	packages/verifier/src/index.ts
+178	0	packages/verifier/src/joint.ts
+550	0	packages/verifier/src/loaders/nflverse-releases.ts
+227	0	packages/verifier/src/scorecard.ts
+340	0	packages/verifier/src/stats.ts
+167	0	packages/verifier/src/types.ts
+14	0	packages/verifier/tsconfig.json
+4	0	packages/verifier/vitest.config.ts
+726	0	scripts/factors/A1.mjs
+752	0	scripts/factors/A10.mjs
+438	0	scripts/factors/A11.mjs
+324	0	scripts/factors/A12.mjs
+347	0	scripts/factors/A13.mjs
+388	0	scripts/factors/A14.mjs
+333	0	scripts/factors/A15.mjs
+244	0	scripts/factors/A16.mjs
+229	0	scripts/factors/A17.mjs
+232	0	scripts/factors/A18.mjs
+319	0	scripts/factors/A19.mjs
+536	0	scripts/factors/A2.mjs
+269	0	scripts/factors/A20.mjs
+250	0	scripts/factors/A21.mjs
+285	0	scripts/factors/A22.mjs
+178	0	scripts/factors/A23.mjs
+229	0	scripts/factors/A24.mjs
+224	0	scripts/factors/A25.mjs
+79	0	scripts/factors/A26.mjs
+210	0	scripts/factors/A27.mjs
+201	0	scripts/factors/A28.mjs
+626	0	scripts/factors/A3.mjs
+695	0	scripts/factors/A4.mjs
+555	0	scripts/factors/A5.mjs
+755	0	scripts/factors/A6.mjs
+627	0	scripts/factors/A7.mjs
+418	0	scripts/factors/A8.mjs
+776	0	scripts/factors/A9.mjs
+436	0	scripts/factors/_lib.mjs
+366	0	scripts/factors/index.mjs
+284	0	scripts/factors/index.test.mjs
+576	0	scripts/factors/lib/common.mjs
+137	0	scripts/factors/run.mjs
+# residual_name_status_main_to_result:
+A	docs/factors/A1.yaml
+A	docs/factors/A10.yaml
+A	docs/factors/A11.yaml
+A	docs/factors/A12.yaml
+A	docs/factors/A13.yaml
+A	docs/factors/A14.yaml
+A	docs/factors/A15.yaml
+A	docs/factors/A16.yaml
+A	docs/factors/A17.yaml
+A	docs/factors/A18.yaml
+A	docs/factors/A19.yaml
+A	docs/factors/A2.yaml
+A	docs/factors/A20.yaml
+A	docs/factors/A21.yaml
+A	docs/factors/A22.yaml
+A	docs/factors/A23.yaml
+A	docs/factors/A24.yaml
+A	docs/factors/A25.yaml
+A	docs/factors/A26.yaml
+A	docs/factors/A27.yaml
+A	docs/factors/A28.yaml
+A	docs/factors/A3.yaml
+A	docs/factors/A4.yaml
+A	docs/factors/A5.yaml
+A	docs/factors/A6.yaml
+A	docs/factors/A7.yaml
+A	docs/factors/A8.yaml
+A	docs/factors/A9.yaml
+A	docs/factors/INDEX.md
+M	package-lock.json
+A	packages/verifier/fixtures/picks-h1.json
+A	packages/verifier/package.json
+A	packages/verifier/src/__tests__/duel.test.ts
+A	packages/verifier/src/__tests__/factgraph.test.ts
+A	packages/verifier/src/__tests__/holdout.test.ts
+A	packages/verifier/src/__tests__/joint.test.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/__tests__/scorecard.test.ts
+A	packages/verifier/src/__tests__/stats-pins.test.ts
+A	packages/verifier/src/__tests__/v530.test.ts
+A	packages/verifier/src/candidates/v530.ts
+A	packages/verifier/src/cli/c395-live-smoke.ts
+A	packages/verifier/src/cli/factors-index.ts
+A	packages/verifier/src/cli/factors-run.ts
+A	packages/verifier/src/cli/verify-holdout.ts
+A	packages/verifier/src/duel.ts
+A	packages/verifier/src/factgraph.ts
+A	packages/verifier/src/holdout.ts
+A	packages/verifier/src/index.ts
+A	packages/verifier/src/joint.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+A	packages/verifier/src/scorecard.ts
+A	packages/verifier/src/stats.ts
+A	packages/verifier/src/types.ts
+A	packages/verifier/tsconfig.json
+A	packages/verifier/vitest.config.ts
+A	scripts/factors/A1.mjs
+A	scripts/factors/A10.mjs
+A	scripts/factors/A11.mjs
+A	scripts/factors/A12.mjs
+A	scripts/factors/A13.mjs
+A	scripts/factors/A14.mjs
+A	scripts/factors/A15.mjs
+A	scripts/factors/A16.mjs
+A	scripts/factors/A17.mjs
+A	scripts/factors/A18.mjs
+A	scripts/factors/A19.mjs
+A	scripts/factors/A2.mjs
+A	scripts/factors/A20.mjs
+A	scripts/factors/A21.mjs
+A	scripts/factors/A22.mjs
+A	scripts/factors/A23.mjs
+A	scripts/factors/A24.mjs
+A	scripts/factors/A25.mjs
+A	scripts/factors/A26.mjs
+A	scripts/factors/A27.mjs
+A	scripts/factors/A28.mjs
+A	scripts/factors/A3.mjs
+A	scripts/factors/A4.mjs
+A	scripts/factors/A5.mjs
+A	scripts/factors/A6.mjs
+A	scripts/factors/A7.mjs
+A	scripts/factors/A8.mjs
+A	scripts/factors/A9.mjs
+A	scripts/factors/_lib.mjs
+A	scripts/factors/index.mjs
+A	scripts/factors/index.test.mjs
+A	scripts/factors/lib/common.mjs
+A	scripts/factors/run.mjs
+##### PR 915
+# threedot_name_status:
+M	scripts/guardrails/trust-gate.mjs
+A	scripts/guardrails/trust-gate.test.mjs
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+scripts/guardrails/trust-gate.mjs
+
+Auto-merging scripts/guardrails/trust-gate.mjs
+CONFLICT (content): Merge conflict in scripts/guardrails/trust-gate.mjs
+##### PR 916
+# threedot_name_status:
+A	docs/factors/A1.yaml
+A	docs/factors/A10.yaml
+A	docs/factors/A11.yaml
+A	docs/factors/A12.yaml
+A	docs/factors/A13.yaml
+A	docs/factors/A14.yaml
+A	docs/factors/A15.yaml
+A	docs/factors/A16.yaml
+A	docs/factors/A17.yaml
+A	docs/factors/A18.yaml
+A	docs/factors/A19.yaml
+A	docs/factors/A2.yaml
+A	docs/factors/A20.yaml
+A	docs/factors/A21.yaml
+A	docs/factors/A22.yaml
+A	docs/factors/A23.yaml
+A	docs/factors/A24.yaml
+A	docs/factors/A25.yaml
+A	docs/factors/A26.yaml
+A	docs/factors/A27.yaml
+A	docs/factors/A28.yaml
+A	docs/factors/A3.yaml
+A	docs/factors/A4.yaml
+A	docs/factors/A5.yaml
+A	docs/factors/A6.yaml
+A	docs/factors/A7.yaml
+A	docs/factors/A8.yaml
+A	docs/factors/A9.yaml
+A	docs/factors/INDEX.md
+M	package-lock.json
+A	packages/verifier/fixtures/picks-h1.json
+A	packages/verifier/package.json
+A	packages/verifier/src/__tests__/calibration-pins.test.ts
+A	packages/verifier/src/__tests__/duel.test.ts
+A	packages/verifier/src/__tests__/exact-pins.test.ts
+A	packages/verifier/src/__tests__/factgraph.test.ts
+A	packages/verifier/src/__tests__/holdout.test.ts
+A	packages/verifier/src/__tests__/integrity-pins.test.ts
+A	packages/verifier/src/__tests__/joint.test.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/__tests__/scorecard.test.ts
+A	packages/verifier/src/__tests__/stats-pins.test.ts
+A	packages/verifier/src/__tests__/v530.test.ts
+A	packages/verifier/src/calibration.ts
+A	packages/verifier/src/candidates/v530.ts
+A	packages/verifier/src/cli/c395-live-smoke.ts
+A	packages/verifier/src/cli/factors-index.ts
+A	packages/verifier/src/cli/factors-run.ts
+A	packages/verifier/src/cli/verify-holdout.ts
+A	packages/verifier/src/duel.ts
+A	packages/verifier/src/exact.ts
+A	packages/verifier/src/factgraph.ts
+A	packages/verifier/src/holdout.ts
+A	packages/verifier/src/index.ts
+A	packages/verifier/src/integrity.ts
+A	packages/verifier/src/joint.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+A	packages/verifier/src/scorecard.ts
+A	packages/verifier/src/stats.ts
+A	packages/verifier/src/types.ts
+A	packages/verifier/tsconfig.json
+A	packages/verifier/vitest.config.ts
+A	scripts/factors/A1.mjs
+A	scripts/factors/A10.mjs
+A	scripts/factors/A11.mjs
+A	scripts/factors/A12.mjs
+A	scripts/factors/A13.mjs
+A	scripts/factors/A14.mjs
+A	scripts/factors/A15.mjs
+A	scripts/factors/A16.mjs
+A	scripts/factors/A17.mjs
+A	scripts/factors/A18.mjs
+A	scripts/factors/A19.mjs
+A	scripts/factors/A2.mjs
+A	scripts/factors/A20.mjs
+A	scripts/factors/A21.mjs
+A	scripts/factors/A22.mjs
+A	scripts/factors/A23.mjs
+A	scripts/factors/A24.mjs
+A	scripts/factors/A25.mjs
+A	scripts/factors/A26.mjs
+A	scripts/factors/A27.mjs
+A	scripts/factors/A28.mjs
+A	scripts/factors/A3.mjs
+A	scripts/factors/A4.mjs
+A	scripts/factors/A5.mjs
+A	scripts/factors/A6.mjs
+A	scripts/factors/A7.mjs
+A	scripts/factors/A8.mjs
+A	scripts/factors/A9.mjs
+A	scripts/factors/_lib.mjs
+A	scripts/factors/index.mjs
+A	scripts/factors/index.test.mjs
+A	scripts/factors/lib/common.mjs
+A	scripts/factors/run.mjs
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=e53bfc5c7f098a01de0776255519b72f9cf3152a
+# residual_numstat_main_to_result:
+20	0	docs/factors/A1.yaml
+20	0	docs/factors/A10.yaml
+20	0	docs/factors/A11.yaml
+20	0	docs/factors/A12.yaml
+20	0	docs/factors/A13.yaml
+20	0	docs/factors/A14.yaml
+20	0	docs/factors/A15.yaml
+20	0	docs/factors/A16.yaml
+20	0	docs/factors/A17.yaml
+20	0	docs/factors/A18.yaml
+20	0	docs/factors/A19.yaml
+20	0	docs/factors/A2.yaml
+20	0	docs/factors/A20.yaml
+20	0	docs/factors/A21.yaml
+20	0	docs/factors/A22.yaml
+20	0	docs/factors/A23.yaml
+20	0	docs/factors/A24.yaml
+20	0	docs/factors/A25.yaml
+26	0	docs/factors/A26.yaml
+20	0	docs/factors/A27.yaml
+20	0	docs/factors/A28.yaml
+20	0	docs/factors/A3.yaml
+20	0	docs/factors/A4.yaml
+20	0	docs/factors/A5.yaml
+20	0	docs/factors/A6.yaml
+20	0	docs/factors/A7.yaml
+20	0	docs/factors/A8.yaml
+20	0	docs/factors/A9.yaml
+35	0	docs/factors/INDEX.md
+17	0	package-lock.json
+46	0	packages/verifier/fixtures/picks-h1.json
+25	0	packages/verifier/package.json
+224	0	packages/verifier/src/__tests__/calibration-pins.test.ts
+136	0	packages/verifier/src/__tests__/duel.test.ts
+130	0	packages/verifier/src/__tests__/exact-pins.test.ts
+283	0	packages/verifier/src/__tests__/factgraph.test.ts
+182	0	packages/verifier/src/__tests__/holdout.test.ts
+225	0	packages/verifier/src/__tests__/integrity-pins.test.ts
+143	0	packages/verifier/src/__tests__/joint.test.ts
+481	0	packages/verifier/src/__tests__/nflverse-releases.test.ts
+237	0	packages/verifier/src/__tests__/scorecard.test.ts
+317	0	packages/verifier/src/__tests__/stats-pins.test.ts
+97	0	packages/verifier/src/__tests__/v530.test.ts
+378	0	packages/verifier/src/calibration.ts
+191	0	packages/verifier/src/candidates/v530.ts
+48	0	packages/verifier/src/cli/c395-live-smoke.ts
+40	0	packages/verifier/src/cli/factors-index.ts
+65	0	packages/verifier/src/cli/factors-run.ts
+83	0	packages/verifier/src/cli/verify-holdout.ts
+112	0	packages/verifier/src/duel.ts
+251	0	packages/verifier/src/exact.ts
+341	0	packages/verifier/src/factgraph.ts
+216	0	packages/verifier/src/holdout.ts
+18	0	packages/verifier/src/index.ts
+322	0	packages/verifier/src/integrity.ts
+178	0	packages/verifier/src/joint.ts
+550	0	packages/verifier/src/loaders/nflverse-releases.ts
+302	0	packages/verifier/src/scorecard.ts
+340	0	packages/verifier/src/stats.ts
+198	0	packages/verifier/src/types.ts
+14	0	packages/verifier/tsconfig.json
+4	0	packages/verifier/vitest.config.ts
+726	0	scripts/factors/A1.mjs
+752	0	scripts/factors/A10.mjs
+438	0	scripts/factors/A11.mjs
+324	0	scripts/factors/A12.mjs
+347	0	scripts/factors/A13.mjs
+388	0	scripts/factors/A14.mjs
+333	0	scripts/factors/A15.mjs
+244	0	scripts/factors/A16.mjs
+229	0	scripts/factors/A17.mjs
+232	0	scripts/factors/A18.mjs
+319	0	scripts/factors/A19.mjs
+536	0	scripts/factors/A2.mjs
+269	0	scripts/factors/A20.mjs
+250	0	scripts/factors/A21.mjs
+285	0	scripts/factors/A22.mjs
+178	0	scripts/factors/A23.mjs
+229	0	scripts/factors/A24.mjs
+224	0	scripts/factors/A25.mjs
+79	0	scripts/factors/A26.mjs
+210	0	scripts/factors/A27.mjs
+201	0	scripts/factors/A28.mjs
+626	0	scripts/factors/A3.mjs
+695	0	scripts/factors/A4.mjs
+555	0	scripts/factors/A5.mjs
+755	0	scripts/factors/A6.mjs
+627	0	scripts/factors/A7.mjs
+418	0	scripts/factors/A8.mjs
+776	0	scripts/factors/A9.mjs
+436	0	scripts/factors/_lib.mjs
+366	0	scripts/factors/index.mjs
+284	0	scripts/factors/index.test.mjs
+576	0	scripts/factors/lib/common.mjs
+137	0	scripts/factors/run.mjs
+# residual_name_status_main_to_result:
+A	docs/factors/A1.yaml
+A	docs/factors/A10.yaml
+A	docs/factors/A11.yaml
+A	docs/factors/A12.yaml
+A	docs/factors/A13.yaml
+A	docs/factors/A14.yaml
+A	docs/factors/A15.yaml
+A	docs/factors/A16.yaml
+A	docs/factors/A17.yaml
+A	docs/factors/A18.yaml
+A	docs/factors/A19.yaml
+A	docs/factors/A2.yaml
+A	docs/factors/A20.yaml
+A	docs/factors/A21.yaml
+A	docs/factors/A22.yaml
+A	docs/factors/A23.yaml
+A	docs/factors/A24.yaml
+A	docs/factors/A25.yaml
+A	docs/factors/A26.yaml
+A	docs/factors/A27.yaml
+A	docs/factors/A28.yaml
+A	docs/factors/A3.yaml
+A	docs/factors/A4.yaml
+A	docs/factors/A5.yaml
+A	docs/factors/A6.yaml
+A	docs/factors/A7.yaml
+A	docs/factors/A8.yaml
+A	docs/factors/A9.yaml
+A	docs/factors/INDEX.md
+M	package-lock.json
+A	packages/verifier/fixtures/picks-h1.json
+A	packages/verifier/package.json
+A	packages/verifier/src/__tests__/calibration-pins.test.ts
+A	packages/verifier/src/__tests__/duel.test.ts
+A	packages/verifier/src/__tests__/exact-pins.test.ts
+A	packages/verifier/src/__tests__/factgraph.test.ts
+A	packages/verifier/src/__tests__/holdout.test.ts
+A	packages/verifier/src/__tests__/integrity-pins.test.ts
+A	packages/verifier/src/__tests__/joint.test.ts
+A	packages/verifier/src/__tests__/nflverse-releases.test.ts
+A	packages/verifier/src/__tests__/scorecard.test.ts
+A	packages/verifier/src/__tests__/stats-pins.test.ts
+A	packages/verifier/src/__tests__/v530.test.ts
+A	packages/verifier/src/calibration.ts
+A	packages/verifier/src/candidates/v530.ts
+A	packages/verifier/src/cli/c395-live-smoke.ts
+A	packages/verifier/src/cli/factors-index.ts
+A	packages/verifier/src/cli/factors-run.ts
+A	packages/verifier/src/cli/verify-holdout.ts
+A	packages/verifier/src/duel.ts
+A	packages/verifier/src/exact.ts
+A	packages/verifier/src/factgraph.ts
+A	packages/verifier/src/holdout.ts
+A	packages/verifier/src/index.ts
+A	packages/verifier/src/integrity.ts
+A	packages/verifier/src/joint.ts
+A	packages/verifier/src/loaders/nflverse-releases.ts
+A	packages/verifier/src/scorecard.ts
+A	packages/verifier/src/stats.ts
+A	packages/verifier/src/types.ts
+A	packages/verifier/tsconfig.json
+A	packages/verifier/vitest.config.ts
+A	scripts/factors/A1.mjs
+A	scripts/factors/A10.mjs
+A	scripts/factors/A11.mjs
+A	scripts/factors/A12.mjs
+A	scripts/factors/A13.mjs
+A	scripts/factors/A14.mjs
+A	scripts/factors/A15.mjs
+A	scripts/factors/A16.mjs
+A	scripts/factors/A17.mjs
+A	scripts/factors/A18.mjs
+A	scripts/factors/A19.mjs
+A	scripts/factors/A2.mjs
+A	scripts/factors/A20.mjs
+A	scripts/factors/A21.mjs
+A	scripts/factors/A22.mjs
+A	scripts/factors/A23.mjs
+A	scripts/factors/A24.mjs
+A	scripts/factors/A25.mjs
+A	scripts/factors/A26.mjs
+A	scripts/factors/A27.mjs
+A	scripts/factors/A28.mjs
+A	scripts/factors/A3.mjs
+A	scripts/factors/A4.mjs
+A	scripts/factors/A5.mjs
+A	scripts/factors/A6.mjs
+A	scripts/factors/A7.mjs
+A	scripts/factors/A8.mjs
+A	scripts/factors/A9.mjs
+A	scripts/factors/_lib.mjs
+A	scripts/factors/index.mjs
+A	scripts/factors/index.test.mjs
+A	scripts/factors/lib/common.mjs
+A	scripts/factors/run.mjs
+##### PR 917
+# threedot_name_status:
+M	.github/workflows/ci.yml
+A	scripts/research/mimo-xfp/BUS_AND_AGENTS_NOTE.md
+A	scripts/research/mimo-xfp/PREREGISTRATION.md
+A	scripts/research/mimo-xfp/PREREGISTRATION_UNIT2.md
+A	scripts/research/mimo-xfp/PREREGISTRATION_UNIT3.md
+A	scripts/research/mimo-xfp/README.md
+A	scripts/research/mimo-xfp/RESULT_UNIT1.md
+A	scripts/research/mimo-xfp/RESULT_UNIT2.md
+A	scripts/research/mimo-xfp/RESULT_UNIT3_BLOCKED.md
+A	scripts/research/mimo-xfp/pull_data.py
+A	scripts/research/mimo-xfp/pull_data_unit2.py
+A	scripts/research/mimo-xfp/results/fpoe_extreme_high.csv
+A	scripts/research/mimo-xfp/results/fpoe_extreme_low.csv
+A	scripts/research/mimo-xfp/results/rate_table.json
+A	scripts/research/mimo-xfp/results/receiver_week_air_yards_sample.csv
+A	scripts/research/mimo-xfp/results/unit1_holdout.json
+A	scripts/research/mimo-xfp/results/unit2_holdout.json
+A	scripts/research/mimo-xfp/unit2_air_yards.py
+A	scripts/research/mimo-xfp/verify-record.test.mjs
+A	scripts/research/mimo-xfp/xfp_unit1.py
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=ff056e704de0af274a75b66ba5a93c9a24eebe75
+# residual_numstat_main_to_result:
+3	0	.github/workflows/ci.yml
+23	0	scripts/research/mimo-xfp/BUS_AND_AGENTS_NOTE.md
+88	0	scripts/research/mimo-xfp/PREREGISTRATION.md
+67	0	scripts/research/mimo-xfp/PREREGISTRATION_UNIT2.md
+69	0	scripts/research/mimo-xfp/PREREGISTRATION_UNIT3.md
+21	0	scripts/research/mimo-xfp/README.md
+63	0	scripts/research/mimo-xfp/RESULT_UNIT1.md
+54	0	scripts/research/mimo-xfp/RESULT_UNIT2.md
+41	0	scripts/research/mimo-xfp/RESULT_UNIT3_BLOCKED.md
+75	0	scripts/research/mimo-xfp/pull_data.py
+76	0	scripts/research/mimo-xfp/pull_data_unit2.py
+21	0	scripts/research/mimo-xfp/results/fpoe_extreme_high.csv
+21	0	scripts/research/mimo-xfp/results/fpoe_extreme_low.csv
+32	0	scripts/research/mimo-xfp/results/rate_table.json
+18151	0	scripts/research/mimo-xfp/results/receiver_week_air_yards_sample.csv
+22	0	scripts/research/mimo-xfp/results/unit1_holdout.json
+28	0	scripts/research/mimo-xfp/results/unit2_holdout.json
+312	0	scripts/research/mimo-xfp/unit2_air_yards.py
+170	0	scripts/research/mimo-xfp/verify-record.test.mjs
+339	0	scripts/research/mimo-xfp/xfp_unit1.py
+# residual_name_status_main_to_result:
+M	.github/workflows/ci.yml
+A	scripts/research/mimo-xfp/BUS_AND_AGENTS_NOTE.md
+A	scripts/research/mimo-xfp/PREREGISTRATION.md
+A	scripts/research/mimo-xfp/PREREGISTRATION_UNIT2.md
+A	scripts/research/mimo-xfp/PREREGISTRATION_UNIT3.md
+A	scripts/research/mimo-xfp/README.md
+A	scripts/research/mimo-xfp/RESULT_UNIT1.md
+A	scripts/research/mimo-xfp/RESULT_UNIT2.md
+A	scripts/research/mimo-xfp/RESULT_UNIT3_BLOCKED.md
+A	scripts/research/mimo-xfp/pull_data.py
+A	scripts/research/mimo-xfp/pull_data_unit2.py
+A	scripts/research/mimo-xfp/results/fpoe_extreme_high.csv
+A	scripts/research/mimo-xfp/results/fpoe_extreme_low.csv
+A	scripts/research/mimo-xfp/results/rate_table.json
+A	scripts/research/mimo-xfp/results/receiver_week_air_yards_sample.csv
+A	scripts/research/mimo-xfp/results/unit1_holdout.json
+A	scripts/research/mimo-xfp/results/unit2_holdout.json
+A	scripts/research/mimo-xfp/unit2_air_yards.py
+A	scripts/research/mimo-xfp/verify-record.test.mjs
+A	scripts/research/mimo-xfp/xfp_unit1.py
+##### PR 918
+# threedot_name_status:
+M	.github/workflows/ci.yml
+A	apps/web/__tests__/checkout-price-posture.test.ts
+A	apps/web/__tests__/client-ip-adoption.test.ts
+A	apps/web/__tests__/gsn-transmission-unavailable.test.ts
+A	apps/web/__tests__/in-play-exclusion-surface.test.tsx
+A	apps/web/__tests__/ops-read-secret.test.ts
+A	apps/web/__tests__/performance-lanes-c352.test.ts
+A	apps/web/__tests__/pick-card-lock-price.test.tsx
+A	apps/web/__tests__/public-clv-denominator.test.ts
+A	apps/web/app/api/cron/refresh-wire/route.ts
+M	apps/web/lib/news/impact.ts
+A	apps/web/lib/news/reporter-roster-fixtures.ts
+A	apps/web/lib/news/reporter-roster.test.ts
+A	apps/web/lib/news/reporter-roster.ts
+M	apps/web/lib/news/rss.ts
+A	apps/web/lib/news/wire-store.test.ts
+A	apps/web/lib/news/wire-store.ts
+A	apps/web/lib/ops/checkout-price-posture.ts
+A	apps/web/lib/ops/deployed-version-slice.test.ts
+A	apps/web/lib/ops/line-archive-freshness.test.ts
+A	apps/web/lib/ops/line-archive-freshness.ts
+A	apps/web/lib/picks/picks-pool-ordering.test.ts
+A	apps/web/lib/testing/auth-mock.ts
+M	apps/web/lib/watchlist/alert-dispatch.ts
+M	apps/web/lib/watchlist/alert-eligibility.ts
+A	apps/web/lib/watchlist/status-alert-hook.test.ts
+A	apps/web/lib/watchlist/status-alert-hook.ts
+A	apps/web/lib/watchlist/wire-alert-hook.test.ts
+A	apps/web/lib/watchlist/wire-alert-hook.ts
+A	docs/calibration-proposals/2026-09-15-shrinkage-display-probability-v5.2.8.md
+A	docs/calibration-proposals/2026-09-15-v530-joint-refit.md
+A	docs/calibration-proposals/evidence/2026-09-15-a2-shrinkage-scorecard.json
+A	docs/calibration-proposals/evidence/2026-09-15-a8-boltzmann-vs-isotonic.json
+A	docs/calibration-proposals/evidence/README.md
+A	docs/calibration-proposals/evidence/verify-evidence.test.mjs
+M	packages/data-ingestion/src/__tests__/galaxy-kalshi-book.test.ts
+M	packages/data-ingestion/src/index.ts
+M	packages/data-ingestion/src/predexon-client.ts
+A	packages/ingestion-pipeline/src/__tests__/exchange-tape-capture.test.ts
+A	packages/ingestion-pipeline/src/__tests__/mint-withhold.test.ts
+A	packages/ingestion-pipeline/src/__tests__/prop-sample-reader.test.ts
+A	packages/ingestion-pipeline/src/exchange-tape-capture.ts
+A	packages/ingestion-pipeline/src/mint-withhold.ts
+M	packages/ingestion-pipeline/src/prop-line-rows.ts
+A	packages/ingestion-pipeline/src/prop-sample-reader.ts
+A	packages/prediction-engine/src/__tests__/spread-consensus-clause.test.ts
+A	packages/prediction-engine/src/calibration/__tests__/venn-width-harness.test.ts
+A	packages/prediction-engine/src/calibration/venn-width-harness.ts
+A	packages/prediction-engine/src/edge-lab/__tests__/weather-game-field.test.ts
+A	packages/prediction-engine/src/edge-lab/weather-game-field.ts
+A	packages/types/src/__tests__/ranking-candidates.test.ts
+M	packages/types/src/index.ts
+A	packages/types/src/ranking-candidates.ts
+A	scripts/ops/measure-venn-widths.ts
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=42ceeb79f42b56bf0cc151838f1da74ea85cafe2
+# residual_numstat_main_to_result:
+3	0	.github/workflows/ci.yml
+72	0	apps/web/__tests__/checkout-price-posture.test.ts
+122	0	apps/web/__tests__/client-ip-adoption.test.ts
+123	0	apps/web/__tests__/gsn-transmission-unavailable.test.ts
+140	0	apps/web/__tests__/in-play-exclusion-surface.test.tsx
+161	0	apps/web/__tests__/ops-read-secret.test.ts
+170	0	apps/web/__tests__/performance-lanes-c352.test.ts
+150	0	apps/web/__tests__/pick-card-lock-price.test.tsx
+113	0	apps/web/__tests__/public-clv-denominator.test.ts
+84	0	apps/web/app/api/cron/refresh-wire/route.ts
+7	4	apps/web/lib/news/impact.ts
+216	0	apps/web/lib/news/reporter-roster-fixtures.ts
+193	0	apps/web/lib/news/reporter-roster.test.ts
+395	0	apps/web/lib/news/reporter-roster.ts
+6	0	apps/web/lib/news/rss.ts
+304	0	apps/web/lib/news/wire-store.test.ts
+784	0	apps/web/lib/news/wire-store.ts
+93	0	apps/web/lib/ops/checkout-price-posture.ts
+88	0	apps/web/lib/ops/deployed-version-slice.test.ts
+131	0	apps/web/lib/ops/line-archive-freshness.test.ts
+189	0	apps/web/lib/ops/line-archive-freshness.ts
+116	0	apps/web/lib/picks/picks-pool-ordering.test.ts
+77	0	apps/web/lib/testing/auth-mock.ts
+28	7	apps/web/lib/watchlist/alert-dispatch.ts
+55	11	apps/web/lib/watchlist/alert-eligibility.ts
+396	0	apps/web/lib/watchlist/status-alert-hook.test.ts
+405	0	apps/web/lib/watchlist/status-alert-hook.ts
+469	0	apps/web/lib/watchlist/wire-alert-hook.test.ts
+302	0	apps/web/lib/watchlist/wire-alert-hook.ts
+139	0	docs/calibration-proposals/2026-09-15-shrinkage-display-probability-v5.2.8.md
+160	0	docs/calibration-proposals/2026-09-15-v530-joint-refit.md
+195	0	docs/calibration-proposals/evidence/2026-09-15-a2-shrinkage-scorecard.json
+25	0	docs/calibration-proposals/evidence/2026-09-15-a8-boltzmann-vs-isotonic.json
+41	0	docs/calibration-proposals/evidence/README.md
+197	0	docs/calibration-proposals/evidence/verify-evidence.test.mjs
+4	0	packages/data-ingestion/src/__tests__/galaxy-kalshi-book.test.ts
+4	0	packages/data-ingestion/src/index.ts
+141	1	packages/data-ingestion/src/predexon-client.ts
+302	0	packages/ingestion-pipeline/src/__tests__/exchange-tape-capture.test.ts
+101	0	packages/ingestion-pipeline/src/__tests__/mint-withhold.test.ts
+517	0	packages/ingestion-pipeline/src/__tests__/prop-sample-reader.test.ts
+452	0	packages/ingestion-pipeline/src/exchange-tape-capture.ts
+93	0	packages/ingestion-pipeline/src/mint-withhold.ts
+11	2	packages/ingestion-pipeline/src/prop-line-rows.ts
+765	0	packages/ingestion-pipeline/src/prop-sample-reader.ts
+176	0	packages/prediction-engine/src/__tests__/spread-consensus-clause.test.ts
+167	0	packages/prediction-engine/src/calibration/__tests__/venn-width-harness.test.ts
+268	0	packages/prediction-engine/src/calibration/venn-width-harness.ts
+261	0	packages/prediction-engine/src/edge-lab/__tests__/weather-game-field.test.ts
+482	0	packages/prediction-engine/src/edge-lab/weather-game-field.ts
+376	0	packages/types/src/__tests__/ranking-candidates.test.ts
+1	0	packages/types/src/index.ts
+294	0	packages/types/src/ranking-candidates.ts
+53	0	scripts/ops/measure-venn-widths.ts
+# residual_name_status_main_to_result:
+M	.github/workflows/ci.yml
+A	apps/web/__tests__/checkout-price-posture.test.ts
+A	apps/web/__tests__/client-ip-adoption.test.ts
+A	apps/web/__tests__/gsn-transmission-unavailable.test.ts
+A	apps/web/__tests__/in-play-exclusion-surface.test.tsx
+A	apps/web/__tests__/ops-read-secret.test.ts
+A	apps/web/__tests__/performance-lanes-c352.test.ts
+A	apps/web/__tests__/pick-card-lock-price.test.tsx
+A	apps/web/__tests__/public-clv-denominator.test.ts
+A	apps/web/app/api/cron/refresh-wire/route.ts
+M	apps/web/lib/news/impact.ts
+A	apps/web/lib/news/reporter-roster-fixtures.ts
+A	apps/web/lib/news/reporter-roster.test.ts
+A	apps/web/lib/news/reporter-roster.ts
+M	apps/web/lib/news/rss.ts
+A	apps/web/lib/news/wire-store.test.ts
+A	apps/web/lib/news/wire-store.ts
+A	apps/web/lib/ops/checkout-price-posture.ts
+A	apps/web/lib/ops/deployed-version-slice.test.ts
+A	apps/web/lib/ops/line-archive-freshness.test.ts
+A	apps/web/lib/ops/line-archive-freshness.ts
+A	apps/web/lib/picks/picks-pool-ordering.test.ts
+A	apps/web/lib/testing/auth-mock.ts
+M	apps/web/lib/watchlist/alert-dispatch.ts
+M	apps/web/lib/watchlist/alert-eligibility.ts
+A	apps/web/lib/watchlist/status-alert-hook.test.ts
+A	apps/web/lib/watchlist/status-alert-hook.ts
+A	apps/web/lib/watchlist/wire-alert-hook.test.ts
+A	apps/web/lib/watchlist/wire-alert-hook.ts
+A	docs/calibration-proposals/2026-09-15-shrinkage-display-probability-v5.2.8.md
+A	docs/calibration-proposals/2026-09-15-v530-joint-refit.md
+A	docs/calibration-proposals/evidence/2026-09-15-a2-shrinkage-scorecard.json
+A	docs/calibration-proposals/evidence/2026-09-15-a8-boltzmann-vs-isotonic.json
+A	docs/calibration-proposals/evidence/README.md
+A	docs/calibration-proposals/evidence/verify-evidence.test.mjs
+M	packages/data-ingestion/src/__tests__/galaxy-kalshi-book.test.ts
+M	packages/data-ingestion/src/index.ts
+M	packages/data-ingestion/src/predexon-client.ts
+A	packages/ingestion-pipeline/src/__tests__/exchange-tape-capture.test.ts
+A	packages/ingestion-pipeline/src/__tests__/mint-withhold.test.ts
+A	packages/ingestion-pipeline/src/__tests__/prop-sample-reader.test.ts
+A	packages/ingestion-pipeline/src/exchange-tape-capture.ts
+A	packages/ingestion-pipeline/src/mint-withhold.ts
+M	packages/ingestion-pipeline/src/prop-line-rows.ts
+A	packages/ingestion-pipeline/src/prop-sample-reader.ts
+A	packages/prediction-engine/src/__tests__/spread-consensus-clause.test.ts
+A	packages/prediction-engine/src/calibration/__tests__/venn-width-harness.test.ts
+A	packages/prediction-engine/src/calibration/venn-width-harness.ts
+A	packages/prediction-engine/src/edge-lab/__tests__/weather-game-field.test.ts
+A	packages/prediction-engine/src/edge-lab/weather-game-field.ts
+A	packages/types/src/__tests__/ranking-candidates.test.ts
+M	packages/types/src/index.ts
+A	packages/types/src/ranking-candidates.ts
+A	scripts/ops/measure-venn-widths.ts
+##### PR 922
+# threedot_name_status:
+A	data/reasoning/x-sweep-2026-09-26-pm.json
+A	docs/reasoning/competitive-intel-intake-2026-09-26.md
+A	docs/reasoning/x-sweep-2026-09-26-pm.md
+# conflicts_vs_main:
+merge_tree_exit=0
+result_tree=c99548947f49060ffb27725e4d8090773ad2f0e9
+# residual_numstat_main_to_result:
+44	0	data/reasoning/x-sweep-2026-09-26-pm.json
+51	0	docs/reasoning/competitive-intel-intake-2026-09-26.md
+31	0	docs/reasoning/x-sweep-2026-09-26-pm.md
+# residual_name_status_main_to_result:
+A	data/reasoning/x-sweep-2026-09-26-pm.json
+A	docs/reasoning/competitive-intel-intake-2026-09-26.md
+A	docs/reasoning/x-sweep-2026-09-26-pm.md
+##### PR 944
+# threedot_name_status:
+A	apps/web/__tests__/cron-route-contracts.test.ts
+A	apps/web/__tests__/engine-dfs-slate-route.test.ts
+A	apps/web/__tests__/engine-slate-freshness.test.ts
+A	apps/web/__tests__/generate-drafts-route.test.ts
+A	apps/web/__tests__/inguries-resolution.test.ts
+A	apps/web/__tests__/player-stats-team-key.test.ts
+A	apps/web/__tests__/refresh-odds-route.test.ts
+M	apps/web/__tests__/signal-ledger-write-route.test.ts
+M	apps/web/__tests__/signal-ledger-writer.test.ts
+M	apps/web/app/api/cron/autonomy-cycle/route.ts
+M	apps/web/app/api/cron/engine-dfs-slate/route.ts
+M	apps/web/app/api/cron/generate-drafts/route.ts
+M	apps/web/app/api/cron/generate-signal-slate/route.ts
+M	apps/web/app/api/cron/jarvis-snapshot/route.ts
+M	apps/web/app/api/cron/refresh-odds/route.ts
+M	apps/web/app/api/cron/signal-ledger-write/route.ts
+M	apps/web/lib/fantasy/engine-slate.ts
+M	apps/web/lib/ingestion/injuries.ts
+M	apps/web/lib/ingestion/player-stats.ts
+M	apps/web/lib/ops/signal-ledger-writer.ts
+A	docs/engine/research/2026-09-27/secondary-injury-backtest-attempt.md
+M	docs/ops/AGENT_LEDGER.md
+M	package.json
+A	packages/data-ingestion/src/nflverse-player-stats-columns.test.ts
+M	packages/data-ingestion/src/nflverse-source.ts
+A	packages/data-ingestion/src/normalizer-price-bounds.test.ts
+M	packages/data-ingestion/src/normalizer.ts
+A	packages/ingestion-pipeline/src/in-play-guard.test.ts
+A	scripts/guardrails/public-private-surface-doctrine.mjs
+A	scripts/guardrails/public-private-surface-doctrine.test.mjs
+# conflicts_vs_main:
+merge_tree_exit=1
+# CONFLICTS:
+docs/ops/AGENT_LEDGER.md
+
+Auto-merging docs/ops/AGENT_LEDGER.md
+CONFLICT (content): Merge conflict in docs/ops/AGENT_LEDGER.md
+DONE

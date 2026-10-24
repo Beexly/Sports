@@ -9,6 +9,48 @@
  * Record improvement (verbatim):
  * Build the NO TEARS causal-graph layer for GSE's feature stack: NOTEARS (continuous DAG optimization with l1, threshold omega via bootstrap stability selection) on a ~35-node team-week panel (EPA/play, dropback/rush EPA, pressure rates, turnover/explosive rates, 3rd-down, red-zone TD%, pace, PROE, rest days, travel, QB EPA, injury counts, market spread/total), run per-season on nflverse 2015-2026; keep edges with stability >= 0.6; the prediction stack uses only the Markov blanket of the spread-cover target -- confounded leaves pruned. Improvement beyond the paper: DYNOTEARS dynamic extension learning contemporaneous W plus lagged A jointly from team-week sequences, plus NOTEARS-MLP for nonlinear edges, then compare stability (hypothesis: lag-aware graphs flip contemporaneous edges, e.g. defensive EPA -> offensive EPA becomes last-week defensive EPA -> this-week offensive EPA only; nonlinear variant surfaces threshold effects like pressure only mattering above ~30%).
  *
+ * SCOPE, AND WHICH PART OF THE ABOVE IS IMPLEMENTED HERE (added 2026-10-20).
+ *
+ * The paragraph above is the research-ledger text, quoted VERBATIM, and
+ * it is the SPEC for what this module was to become. A reader who stops
+ * at that paragraph would conclude the module learns a lagged
+ * DYNOTEARS with a joint (W_0, A_1..A_p) fit and a NOTEARS-MLP for
+ * nonlinear edges.
+ *
+ * NEITHER IS IMPLEMENTED. This module is CONTEMPORANEOUS NOTEARS only:
+ * a single W, least-squares, no lags, no MLP, no DYNOTEARS. The
+ * exported surface is `notearsFit`, `acyclicity`, `matExp`,
+ * `thresholdEdges`, `jaccardEdges` and `pruneToGraph`.
+ *
+ * The contemporaneous `W_0` fit WITH the exact acyclicity constraint
+ * and its exact gradient lives in `fci-pag.ts` (`dynotearsFit`), and it
+ * profiles the PER-COLUMN variance -- the Kaiser & Sipos
+ * non-equal-variance objective in substance. But it is CONTEMPORANEOUS
+ * ONLY, and its own header says so: "DYNOTEARS here is
+ * CONTEMPORANEOUS ONLY. Lagged terms (A) are out of scope."
+ *
+ * The LAGGED matrices A_1..A_p, the joint (W_0, A) fit, and the
+ * NOTEARS-MLP do not exist anywhere in this repository. The
+ * `periodic-timeseries-id.ts` module the project spec names for them
+ * DOES NOT EXIST either -- verified by `git log --all -- '*periodic*'`
+ * returning empty.
+ *
+ * So the ledger text above is a SPECIFICATION, not a description of
+ * this file. That distinction was not marked anywhere, which is the
+ * same defect the audit has been hunting: a passage that reads as a
+ * claim of capability to a reader who has not been told it is a
+ * proposal.
+ *
+ * WHAT IS HERE: the contemporaneous NOTEARS fit, the acyclicity
+ * constraint, thresholding, Jaccard stability, and Markov-blanket
+ * pruning -- all of which match the FIRST part of the ledger text.
+ * The "Improvement beyond the paper" sentence -- the part that
+ * describes the lagged and nonlinear extensions -- is NOT here.
+ *
+ * A test that exercises only the contemporaneous primitives (the 4
+ * tests in 1803-01422v2-notears-dag.test.ts) cannot fail on the
+ * missing part, which is why the gap survived.
+ *
  * ACCEPTANCE GATE (verbatim):
  * ADOPT the graph-pruned feature set only if ALL hold: (a) held-out Brier on 2024-2025 with <=60% of features is within 0.002 of the full-feature baseline (parity) or better; (b) learned-edge Jaccard similarity across season-blocked folds >= 0.5; (c) directed edges respect known football directionality on >=80% of high-confidence edges. Reject if Brier worsens by >0.003 or stability < 0.5.
  */

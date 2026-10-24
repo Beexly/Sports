@@ -1,0 +1,318 @@
+{
+ "schema": "nfl-ngs/1",
+ "generated": "2026-10-22",
+ "proxy_base": "https://nextgenstats.nfl.com",
+ "direct_base": "https://api.ngs.nfl.com",
+ "auth": {
+  "anonymous": "none",
+  "cognito": "Bearer <NGSCognitoIdToken> (user pool JWT)"
+ },
+ "nfl_token_flow": {
+  "endpoint": "https://api.nfl.com/identity/v3/token",
+  "method": "POST",
+  "content_type": "application/json",
+  "body": {
+   "clientKey": "4cFUW6DmwJpzT9L7LrG3qRAcABG5s04g",
+   "clientSecret": "CZuvCL49d9OwfGsR",
+   "deviceId": "<any>"
+  },
+  "grants_roles": [
+   "ngs_tracking",
+   "ngs_advanced_stats",
+   "hawkeye_tracking",
+   "ngs_platform",
+   "football",
+   "content"
+  ]
+ },
+ "endpoints": [
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/content/microsite/chart",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/content/microsite/chart/players",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/gamecenter/overview",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/highlights/participation/game/play",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/highlights/tracking/game/play/withBall/min",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/distance/ballCarrier",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/distance/tackle",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/expectation/completion/season",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/expectation/completion/week",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/expectation/ery/season",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/expectation/ery/week",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/expectation/yac/season",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/expectation/yac/week",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/speed/ballCarrier",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/leaders/time/sack",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/league/schedule",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/league/schedule/current",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/league/teams",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/chart/drive",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/game/drives",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/game/scores",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/plays/playlist/game",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/plays/winProbability",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/splits/game/defense/summary",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/stats/completionProbability/game",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/summary/game/passing",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/summary/game/receiving",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/live/summary/game/rushing",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/participation/team/game",
+   "method": "GET",
+   "auth": "cognito",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/plays/highlight/players",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/plays/highlights",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/plays/isHighlight",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/statboard/leaders",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/statboard/passing",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/statboard/receiving",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  },
+  {
+   "host_proxy": "https://nextgenstats.nfl.com",
+   "host_direct": "https://api.ngs.nfl.com",
+   "path": "/api/statboard/rushing",
+   "method": "GET",
+   "auth": "anonymous",
+   "notes": ""
+  }
+ ]
+}

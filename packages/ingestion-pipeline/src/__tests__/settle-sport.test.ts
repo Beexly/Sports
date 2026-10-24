@@ -192,15 +192,19 @@ vi.mock("@sports/data-ingestion", async () => {
   };
 });
 
-vi.mock("@sports/prediction-engine", () => ({
-  calculatePickResult: mocks.calculatePickResult,
-  deriveClosingSnapshotFromOdds: mocks.deriveClosingSnapshotFromOdds,
-  gradePickClv: mocks.gradePickClv,
-  // Real pure implementation of the no-drift helper settle-sport now imports:
-  // the grading line is the locked CLV line, falling back to the pick line.
-  selectGradingLine: (pick: { clvLockLine: number | null; line: number }) =>
-    pick.clvLockLine ?? pick.line,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    calculatePickResult: mocks.calculatePickResult,
+    deriveClosingSnapshotFromOdds: mocks.deriveClosingSnapshotFromOdds,
+    gradePickClv: mocks.gradePickClv,
+    // Real pure implementation of the no-drift helper settle-sport now imports:
+    // the grading line is the locked CLV line, falling back to the pick line.
+    selectGradingLine: (pick: { clvLockLine: number | null; line: number }) =>
+      pick.clvLockLine ?? pick.line,
+  };
+});
 
 import {
   settleSport,

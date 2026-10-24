@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-10",
+  "public_api": "NONE FOUND",
+  "evidence": {
+    "robots": "User-agent: * ; Disallow: /wp-admin/ ; Sitemap: https://www.circasports.com/sitemap_index.xml \u2014 no /api or odds paths allowed/blocked",
+    "sitemap_children": "post, page, app-update, event, category, post_tag, event-series, faq_category, author, events \u2014 all marketing/blog/event pages; NO odds/lines/sportsbook board pages",
+    "site_pages_probed": [
+      "https://www.circasports.com/ (WordPress marketing site)",
+      "https://www.circasports.com/betting-menu-odds (static copy \u2014 zero first-party data XHR)"
+    ],
+    "api_host": "api.circasports.com EXISTS (Cloudflare-proxied, same A records as www.circasports.com: 104.20.23.129 / 172.66.147.239) but returns HTTP 403 'Attention Required! | Cloudflare' block page for / and every probed path (/v1/sports, /sports, /odds, /v2/events, /swagger, /openapi.json, /health) \u2014 also 403 when loaded in a real Chrome session",
+    "third_party_corroboration": "oddspapi.io/blog/circa-sports-api-odds-access \u2014 'Circa Sports does not offer a public API, developer portal or documentation.'",
+    "browser_network_on_public_pages": "Homepage and /betting-menu-odds emit only analytics/ad pixels (Google, DoubleClick, Amazon Ads, Reddit, Snapchat, Stackadapt, mgln.ai, quantserve) plus www.circasports.com/cdn-cgi/rum. Zero first-party odds/data XHR. Odds are app-only (per-state iOS/Android app pages)."
+  },
+  "conclusion": "No public Circa API and no odds pages exist on the public site, so there is no browser-recordable odds-page XHR pattern there; odds surface only in the native Circa app, whose api.circasports.com host is Cloudflare-blocked."
+}

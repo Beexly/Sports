@@ -1,0 +1,143 @@
+{
+ "branch": "dev-lit-vectors-2026-10",
+ "measured_at": "2026-10-20T07:45:29.717Z",
+ "index": {
+  "premises": 5509,
+  "premise_vectors": 5509,
+  "corpus_items": 1268,
+  "corpus_vectors": 1268,
+  "structured": 5509,
+  "raw_premises": 0
+ },
+ "pillar_coverage": [
+  {
+   "pillar": "injury_availability",
+   "premises": 1665
+  },
+  {
+   "pillar": "market_microstructure",
+   "premises": 1626
+  },
+  {
+   "pillar": "tactical_schematic",
+   "premises": 1317
+  },
+  {
+   "pillar": "personnel_availability",
+   "premises": 1161
+  },
+  {
+   "pillar": "efficiency_usage",
+   "premises": 988
+  },
+  {
+   "pillar": "physical_environment",
+   "premises": 720
+  },
+  {
+   "pillar": "narrative_context",
+   "premises": 634
+  },
+  {
+   "pillar": "cognition_decision",
+   "premises": 596
+  },
+  {
+   "pillar": "situational",
+   "premises": 118
+  }
+ ],
+ "premises_without_pillar": 1465,
+ "retrieval_events": {
+  "retrieval_events": 60,
+  "distinct_signals": 2,
+  "distinct_games": 15,
+  "events_with_hits": 58,
+  "avg_latency_ms": "79.78",
+  "max_latency_ms": "214",
+  "hnsw_backed": 60
+ },
+ "signal_family_coverage": [
+  {
+   "family": "cognitive",
+   "events": 60,
+   "events_with_hits": 58,
+   "avg_hits": "12.97"
+  }
+ ],
+ "activations": {
+  "activations": 781,
+  "distinct_premises_activated": 69,
+  "events_with_activations": 58,
+  "avg_activation_score": "0.13830"
+ },
+ "residuals": {
+  "residuals": 295,
+  "premises_graded": 38,
+  "games_graded": 38,
+  "mean_abs_residual": "0.440447",
+  "mean_signed_residual": "0.186183",
+  "correct": 174
+ },
+ "residual_trend": [
+  {
+   "half": "first_half",
+   "n": 19,
+   "mean_abs_residual": "0.448330",
+   "mse": "0.230829"
+  },
+  {
+   "half": "second_half",
+   "n": 19,
+   "mean_abs_residual": "0.410965",
+   "mse": "0.197704"
+  }
+ ],
+ "residual_trend_basis": "distinct (premise_id, game_id) pairs",
+ "residual_trend_supportable": true,
+ "residual_trend_n": 38,
+ "residuals_improved": true,
+ "premise_scores": {
+  "scored_premises": 69,
+  "scoring_premises": 24,
+  "promoted_flag": 0,
+  "avg_activation_score": "0.009934",
+  "max_activation_score": "0.045553"
+ },
+ "causal_edges": {
+  "causal_edges": 16,
+  "promoted_edges": 0,
+  "retired_edges": 16
+ },
+ "intervention_tests": [
+  {
+   "verdict": "INCONCLUSIVE",
+   "n": 38,
+   "avg_estimate": null,
+   "avg_p_value": null
+  }
+ ],
+ "discovery": {
+  "corpus_hits": 602,
+  "distinct_corpus_surfaced": 42,
+  "structured_from_corpus": 75
+ },
+ "latency": {
+  "p50_ms": "77.00",
+  "p95_ms": "79.05",
+  "p99_ms": "136.12"
+ },
+ "query_plan": [
+  "Limit",
+  "  InitPlan 1",
+  "    ->  Limit",
+  "          ->  Seq Scan on premise_vector",
+  "  ->  Nested Loop",
+  "        ->  Index Scan using premise_vector_hnsw_idx on premise_vector v",
+  "              Order By: (embedding <=> (InitPlan 1).col1)",
+  "        ->  Index Scan using premise_pkey on premise p",
+  "              Index Cond: (id = v.premise_id)",
+  "              Filter: (structure_state = 'structured'::text)"
+ ],
+ "uses_hnsw_index": true
+}

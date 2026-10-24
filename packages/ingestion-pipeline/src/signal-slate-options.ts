@@ -31,6 +31,18 @@ export type SignalSlateOptions = {
   /**
    * Walk-forward emission override. Production omits this and reads
    * walk-forward-gate.json. passed !== true blocks every Pick write.
+   *
+   * The override is a TEST-HARNESS ESCAPE HATCH from reading the file, not a
+   * way around the gate: it is evaluated by the same constitutional
+   * conjunction the file is (n >= 150 AND delta_vs_gaussian >= 0.01 AND
+   * crps <= 7.099). An override that carries `passed: true` and no evidence
+   * is BLOCKED -- a bare boolean is the hole the gate exists to close. Tests
+   * that need the minting path open supply the evidence.
    */
-  readonly emissionGate?: { readonly passed: boolean };
+  readonly emissionGate?: {
+    readonly passed: boolean;
+    readonly crps?: number | null;
+    readonly n?: number | null;
+    readonly deltaVsGaussian?: number | null;
+  };
 };

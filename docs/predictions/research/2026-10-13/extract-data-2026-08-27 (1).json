@@ -1,0 +1,214 @@
+{
+  "mathematical_core": {
+    "sport_specific_modeling": [
+      {
+        "sport": "NFL",
+        "sport_citation": "https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats",
+        "primary_algorithm": "Hierarchical Bayesian state-space model over down, distance, yard line, game/half clock, score differential, timeouts, personnel and tracking covariates, with a multinomial-logit play/drive transition kernel; use an absorbing Markov chain and Monte Carlo rollouts for distributions. Glicko-2-style latent team/player strength with rating deviation can be an additional shrinkage feature for changing lineups.",
+        "primary_algorithm_citation": "https://arxiv.org/html/2409.04889v1; https://www.glicko.net/glicko/glicko2.pdf",
+        "micro_market_logic": "For each play state S_t=(down, yards-to-go, yardline, clock, score, timeouts, possession, personnel and NGS features), estimate P(result|S_t), where result includes run/pass/sack/turnover/penalty and scoring outcomes. EPA is EP(S_{t+1})-EP(S_t); roll the transition kernel until the drive or half reaches an absorbing state. Recompute after every official play and suspend the quote while the feed is between events.",
+        "micro_market_logic_citation": "https://supermariogiacomazzo.github.io/STOR538_WEBSITE/Articles/Football/Football_Goldner.pdf; https://arxiv.org/html/2409.04889v1; https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats",
+        "derivative_pricing_math": "Use the same conditional game paths rather than an independent prop model: on each simulated snap sample participation, route/target/carry and yardage from the player-conditioned transition model, then aggregate player counts. Price over/under with P(X>line)=sum of the simulated tail; preserve correlations between player usage, score state, pace and team total. Use player marginal EPA and scenario deltas as features, not as a standalone prop price.",
+        "derivative_pricing_math_citation": "https://arxiv.org/html/2409.04889v1; https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats"
+      },
+      {
+        "sport": "MLB",
+        "sport_citation": "https://www.mlb.com/glossary/statcast",
+        "primary_algorithm": "A 24-state base/out Markov inning model (all base-occupancy and out states) with pitcher/batter matchup probabilities from hierarchical generalized log5/logistic models; layer Statcast-derived pitch and contact features and Monte Carlo inning/game simulation to obtain exact scores and win probabilities.",
+        "primary_algorithm_citation": "https://www.mdpi.com/2571-9394/3/1/7; https://pmc.ncbi.nlm.nih.gov/articles/PMC6192592/",
+        "micro_market_logic": "Maintain the live state (inning/half, outs, runners, count, batter/pitcher handedness, pitch type, velocity, spin, movement and location). Before each pitch, calculate matchup probabilities for strike, ball, in-play hit/out, walk, strikeout, home run and other events; update the count and base/out state after the pitch and reprice next pitch, next plate appearance, inning runs, pitcher outs/Ks and batter props. Use a venue/gamefeed event timestamp and suspend on a pitch until the event is final.",
+        "micro_market_logic_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6192592/; https://www.mlb.com/glossary/statcast; https://developer.sportradar.com/baseball/reference/mlb-overview",
+        "derivative_pricing_math": "For a hitter, project plate appearances from lineup/order, inning and game-state paths; for each PA use the hierarchical pitcher-batter event probabilities, then propagate the base/out chain. For a pitcher, sum simulated batter-faced probabilities for strikeouts, walks, hits and outs. Price a prop as a simulation tail or probability mass and retain joint paths so K, outs, runs and team-total correlations are not double-counted.",
+        "derivative_pricing_math_citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6192592/; https://www.mdpi.com/2571-9394/3/1/7"
+      },
+      {
+        "sport": "NBA",
+        "sport_citation": "https://www.nba.com/stats/players/speed-distance",
+        "primary_algorithm": "Possession-level discrete scoring model: regularized multinomial/logistic models for 0, 1, 2 and 3+ point outcomes, with hierarchical player/team effects, lineup and tracking covariates. Simulate possessions, pace, substitutions and late-game regimes to produce score, spread, moneyline, total and player-prop distributions.",
+        "primary_algorithm_citation": "https://arxiv.org/html/2406.09895v2",
+        "micro_market_logic": "Use a live Markov-like possession state containing score margin, clock, possession, foul/bonus state, lineup, shot-clock and player movement features. Update the possession outcome probabilities after each event, then roll out remaining possessions; use separate late-game calibration/regime handling because final-minute scoring can be nonstationary.",
+        "micro_market_logic_citation": "https://arxiv.org/html/2406.09895v2; https://www.sciencedirect.com/science/article/abs/pii/S0378437116304599",
+        "derivative_pricing_math": "In each game simulation sample minutes, lineup membership, possession share, shot attempts and discrete outcomes conditional on opponent and game state. Sum player points, threes, rebounds, assists and combinations pathwise; price the requested tail/interval and preserve minutes/pace/score correlations.",
+        "derivative_pricing_math_citation": "https://arxiv.org/html/2406.09895v2"
+      },
+      {
+        "sport": "NHL",
+        "sport_citation": "https://developer.sportradar.com/ice-hockey/reference/nhl-overview",
+        "primary_algorithm": "Poisson or negative-binomial goal-intensity regression with log link, separate home/away attack and defense effects, goalie, special-teams, rest and home-ice covariates; combine with a dynamic Glicko-2/Elo-like strength prior and Monte Carlo shot/goal simulation for regulation, overtime, totals and puck line.",
+        "primary_algorithm_citation": "https://www.diva-portal.org/smash/get/diva2:1106292/FULLTEXT01.pdf; https://www.glicko.net/glicko/glicko2.pdf",
+        "micro_market_logic": "For live markets, maintain score, time remaining, manpower (5v5, power play, penalty kill), goalie, shot rate and shift/line state. Estimate hazard rates for the next shot, goal, penalty and empty-net state, then simulate the remaining time to update win, puck-line and total probabilities. Use real-time event/statistics push feeds and suspend during an unresolved event.",
+        "micro_market_logic_citation": "https://developer.sportradar.com/ice-hockey/reference/nhl-overview; https://www.diva-portal.org/smash/get/diva2:1106292/FULLTEXT01.pdf",
+        "derivative_pricing_math": "Simulate shot opportunities from ice time, line usage, team pace and opponent suppression; apply player shooting/assist/goal probabilities conditional on goalie and manpower, then aggregate Bernoulli/multinomial outcomes. Use the shared game path for shots, points, goals and team totals so exposure correlations remain explicit.",
+        "derivative_pricing_math_citation": "https://www.diva-portal.org/smash/get/diva2:1106292/FULLTEXT01.pdf"
+      },
+      {
+        "sport": "Soccer",
+        "sport_citation": "https://developer.sportradar.com/soccer/reference/soccer-overview",
+        "primary_algorithm": "Dixon-Coles corrected bivariate Poisson score model with time-decayed attack, defense and home-advantage parameters, augmented by shot-level expected-goals classification and dynamic team-strength priors. Enumerate the score grid for 1X2, draw-no-bet, handicaps, totals and correct score, and simulate shot/event paths for live markets.",
+        "primary_algorithm_citation": "https://arxiv.org/html/2307.02139; https://arxiv.org/html/2301.13052v2",
+        "micro_market_logic": "Update a live state containing score, minute, possession/territory, cards, substitutions, team strength and shot/xG events. Re-estimate remaining goal intensities, apply the low-score dependence correction, and simulate the remainder for next goal, 1X2, totals, handicap and player-shot/goal markets. Consume timestamped live status, period scores, ball locations and events where licensed.",
+        "micro_market_logic_citation": "https://arxiv.org/html/2307.02139; https://developer.sportradar.com/soccer/docs/soccer-ig-push",
+        "derivative_pricing_math": "For player shots/goals, model each shot as a Bernoulli event with probability from distance, angle, body part, prior action and context; sum shot probabilities to xG and sample shot outcomes in each match simulation. For assists/cards/corners, use event-count distributions conditional on minutes, role and match state; price tails from the shared simulated paths.",
+        "derivative_pricing_math_citation": "https://arxiv.org/html/2301.13052v2; https://arxiv.org/html/2307.02139"
+      }
+    ],
+    "edge_detection_framework": {
+      "ev_calculation_formula": "Convert decimal odds O to raw implied probability q=1/O (or American odds: q=|A|/(|A|+100) for negative A and q=100/(A+100) for positive A). Remove an overround for a mutually exclusive market with p_i=(1/O_i)/sum_j(1/O_j). For a one-unit stake and model probability p, EV=p(O-1)-(1-p)=pO-1; the edge is p-p_no_vig (or model fair odds 1/p versus offered O). Only publish a bet when posterior uncertainty, limits, stale-price and execution checks still leave positive risk-adjusted EV.",
+      "ev_calculation_formula_citation": "https://arxiv.org/html/2303.06021; https://help.smarkets.com/hc/en-gb/articles/214180145-How-to-calculate-betting-margins; https://oddsjam.com/betting-calculators/expected-value",
+      "market_efficiency_signals": [
+        {
+          "value": "Closing Line Value (CLV): persist the exact offered price, timestamp and defined close; compute CLV_pp=p_close,no-vig-p_bet,no-vig (and optionally normalize by p_bet). Positive CLV means the market subsequently moved in the bet's direction; define the close consistently by sport/market and do not use CLV as proof in illiquid markets.",
+          "value_citation": "https://unabated.com/post/getting-precise-about-closing-line-value"
+        },
+        {
+          "value": "Steam move detector: flag a sudden, large and uniform line move across books, record the initiating book, direction, timestamp, price/line delta and subsequent outcome, and use it as a confirmation feature rather than an automatic trigger. The cited operational definition attributes steam to an overload of money at multiple books.",
+          "value_citation": "https://www.sportsinsights.com/betting-systems/steam-moves/"
+        },
+        {
+          "value": "Sharp-money proxy: compare no-vig price movement with handle/ticket splits, book quality, market breadth and liquidity when those fields are licensed; label the result as a probabilistic signal, not a known identity of bettors. Prefer movement-plus-volume confirmation over ticket count alone.",
+          "value_citation": "https://www.sportsinsights.com/betting-systems/steam-moves/"
+        },
+        {
+          "value": "Market-consensus and stale-price test: maintain a timestamped multi-book odds matrix, calculate the no-vig consensus and dispersion, and reject quotes whose age, suspension status or disagreement implies execution risk. Use exchange order-book deltas where available through Kalshi WebSockets.",
+          "value_citation": "https://docs.kalshi.com/getting_started/quick_start_websockets; https://help.smarkets.com/hc/en-gb/articles/214180145-How-to-calculate-betting-margins"
+        }
+      ]
+    }
+  },
+  "data_and_ingestion": {
+    "tracking_data_requirements": [
+      {
+        "value": "NFL Next Gen Stats: player and ball tracking on every play; location, speed, distance and acceleration are captured at 10 observations per second, movement is charted within inches, and more than 200 new data points are created per play. Ingest x-y location, direction/orientation, speed, acceleration, player/ball identity and play context.",
+        "value_citation": "https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats"
+      },
+      {
+        "value": "NFL feature schema: retain x-y location, speed, acceleration, direction and orientation for all 22 players, keyed to play ID and synchronized with the official play-by-play event stream.",
+        "value_citation": "https://www.nfl.com/news-migrated-v2/next-gen-stats-intro-to-new-route-recognition-model"
+      },
+      {
+        "value": "MLB Statcast: pitch velocity, spin rate/direction and movement; exit velocity, launch angle and batted-ball distance; sprint speed, base-to-base time, arm strength, catch probability and catcher pop time. Statcast is available at play/pitch granularity and Baseball Savant provides a real-time gamefeed for Statcast-enabled parks.",
+        "value_citation": "https://www.mlb.com/glossary/statcast"
+      },
+      {
+        "value": "MLB premium vendor option: Sportradar documents deeper pitch data, hit data and play-level Statcast data, plus event-tracking and play-by-play endpoints and push feeds for speed; license and request the tracking package rather than assuming the standard feed includes it.",
+        "value_citation": "https://developer.sportradar.com/baseball/reference/mlb-overview"
+      },
+      {
+        "value": "NBA optical tracking: use the NBA's Second Spectrum-provided player-tracking fields such as distance, speed, lineup/player movement and ball/shot context; the NBA stats tracking page identifies Second Spectrum and notes that tracking is not available for every game, so availability flags and missingness handling are mandatory.",
+        "value_citation": "https://www.nba.com/stats/players/speed-distance; https://pr.nba.com/nba-g-league-second-spectrum/"
+      },
+      {
+        "value": "NHL and Soccer: use licensed real-time event, score, roster, player-statistics and (where sold) optical/positional feeds. Sportradar documents NHL push events/statistics and Soccer live summaries/push statistics; soccer push examples include status, scores, period scores, ball locations, match situation and timestamped events.",
+        "value_citation": "https://developer.sportradar.com/ice-hockey/reference/nhl-overview; https://developer.sportradar.com/soccer/reference/soccer-overview; https://developer.sportradar.com/soccer/docs/soccer-ig-push"
+      },
+      {
+        "value": "Market data: normalize sportsbook odds, limits, suspensions, line history and timestamps; ingest exchange ticker/orderbook deltas and trades via a persistent WebSocket where permitted. Kalshi documents real-time ticker and orderbook-delta channels and trade execution APIs.",
+        "value_citation": "https://docs.kalshi.com/welcome; https://docs.kalshi.com/getting_started/quick_start_websockets"
+      }
+    ],
+    "real_time_latency_specs": "Separate provider/source latency from CDN, network, queue, feature computation, model inference, quote publication and UI latency, and measure each stage with event-time and receipt-time timestamps; the live-feed literature explicitly distinguishes provider/CDN latency from website latency. Use provider push feeds and Kalshi WebSockets rather than polling. For the processing layer, Spark documents Structured Streaming micro-batch end-to-end latency as low as 100 ms with exactly-once guarantees and Continuous Processing as low as 1 ms with at-least-once guarantees; select the guarantee/latency mode per market and report p50/p95/p99 plus stale-feed and suspend metrics. These are processing capabilities, not a guarantee of a licensed sports-feed SLA.",
+    "real_time_latency_specs_citation": "https://spark.apache.org/docs/latest/streaming/index.html; http://networks.cs.northwestern.edu/website/publications/gi18.pdf; https://developer.sportradar.com/ice-hockey/reference/nhl-overview; https://docs.kalshi.com/getting_started/quick_start_websockets"
+  },
+  "validation_and_risk": {
+    "backtesting_rigor": "Run strict chronological Bayesian walk-forward validation: at each historical decision time train/update only on records whose event and market timestamps precede it; freeze features, line history, injury/news availability and execution assumptions; score the next window out of sample; roll the window forward and repeat across seasons/regimes. Use posterior predictive checks, calibration curves/reliability, log loss/Brier score, ROI after vig/limits/slippage, CLV, drawdown and turnover. Compare against market/no-vig and simple sport baselines, use purged gaps around duplicated/in-play information, and maintain an immutable as-of data snapshot. Chronological segmentation is important for betting because shuffled cross-validation leaks future information; calibration should be evaluated in addition to classification accuracy.",
+    "backtesting_rigor_citation": "https://arxiv.org/html/2303.06021; https://arxiv.org/html/2107.08827; https://www.pymc.io/projects/docs/en/stable/learn/core_notebooks/pymc_overview.html",
+    "bankroll_management": {
+      "kelly_criterion_variant": "For net odds b=O-1, model win probability p and q=1-p, full Kelly is f*=(bp-q)/b. Use fractional Kelly f=omega f* with 0<omega<1 (for example, half-Kelly means omega=0.5), but calculate p from the posterior or a conservative lower credible bound, cap single-market and sport exposure, and optimize jointly for correlated bets rather than adding independent Kelly stakes. Set f=0 for non-positive or insufficiently certain edge.",
+      "kelly_criterion_variant_citation": "https://arxiv.org/html/2107.08827; https://arxiv.org/html/2303.06021",
+      "drawdown_protection_math": "Let W_t be bankroll after each settlement and W_ref a high-water/reference wealth. Solve a constrained fractional-Kelly allocation that maximizes expected log wealth subject to Pr(min_t W_t < alpha W_ref) <= beta, with portfolio variance f^T Sigma f and correlation-aware exposure caps. Estimate the drawdown probability with posterior-predictive Monte Carlo including model error, odds movement, limits and correlated outcomes; reduce omega or stop new risk when realized drawdown breaches a precommitted threshold.",
+      "drawdown_protection_math_citation": "https://arxiv.org/html/2107.08827"
+    }
+  },
+  "technical_stack_and_licensing": {
+    "infrastructure": [
+      {
+        "value": "Apache Spark Structured Streaming for replayable event-time windows, incremental features, stream-to-batch joins, checkpointing and scalable fault-tolerant stream processing; use micro-batch for exactly-once and Continuous Processing when the lower-latency/at-least-once tradeoff is acceptable.",
+        "value_citation": "https://spark.apache.org/docs/latest/streaming/index.html"
+      },
+      {
+        "value": "Kubernetes for containerized model-serving, stream processors and APIs: declarative deployment, scheduling, restart/replacement of failed containers, load balancing and resource requests.",
+        "value_citation": "https://kubernetes.io/docs/concepts/overview/"
+      },
+      {
+        "value": "Redis Streams as the low-latency append-only event log/cache boundary: XADD producer writes, consumer groups/XREADGROUP distribute work, and stream IDs support replay/acknowledgement; retain a durable object-store copy for audit and backtest.",
+        "value_citation": "https://redis.io/docs/latest/develop/data-types/streams/"
+      },
+      {
+        "value": "AWS-compatible object storage/compute is appropriate for the NFL tracking integration because the NFL says Next Gen Stats runs on AWS; use immutable raw feed storage, feature-store snapshots and reproducible model artifacts.",
+        "value_citation": "https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats"
+      },
+      {
+        "value": "Persistent WebSocket gateway for exchange/market deltas, with sequence checking, gap recovery, idempotent consumers, clock synchronization and circuit breakers; Kalshi documents production WebSocket endpoints and ticker/orderbook-delta subscriptions.",
+        "value_citation": "https://docs.kalshi.com/getting_started/quick_start_websockets"
+      }
+    ],
+    "libraries": [
+      {
+        "value": "PyMC for hierarchical Bayesian sports models, posterior uncertainty, posterior predictive simulation and gradient-based MCMC/HMC/NUTS; PyMC documents Python probabilistic programming and automatic differentiation through PyTensor.",
+        "value_citation": "https://www.pymc.io/projects/docs/en/stable/learn/core_notebooks/pymc_overview.html"
+      },
+      {
+        "value": "Stan/CmdStanPy or CmdStanR for production Bayesian generalized linear, state-space and hierarchical models; use its User's Guide, Reference Manual and language-specific interfaces.",
+        "value_citation": "https://mc-stan.org/docs/"
+      },
+      {
+        "value": "scikit-learn for calibrated baselines, regularized logistic/Poisson regressions, tree ensembles, preprocessing, model selection and clustering (including k-means, HDBSCAN and hierarchical clustering).",
+        "value_citation": "https://scikit-learn.org/stable/"
+      },
+      {
+        "value": "TensorFlow/Keras for learned tracking embeddings, sequence models and scalable inference; the official platform supports model construction, training, export, distributed training, Keras, TensorBoard and Model Analysis.",
+        "value_citation": "https://www.tensorflow.org/"
+      }
+    ],
+    "licensing_landscape": [
+      {
+        "provider": "Sportradar",
+        "provider_citation": "https://sportradar.com/media-tech/data-content/sports-data-api/?lang",
+        "estimated_cost_tier": "Enterprise/custom quote; the public product page advertises a 30-day free trial and says packages use custom quotes/possible multi-sport discounts, but does not publish a numeric commercial license price.",
+        "estimated_cost_tier_citation": "https://sportradar.com/media-tech/data-content/sports-data-api/?lang",
+        "data_rights": "Treat as licensed feed/content, not public scrapeable data. Sportradar's terms require prior written consent for prediction-market, trading-platform or financial-product use; order forms govern fees, limits and overages. Obtain explicit rights for storage, derived features, redistribution, sportsbook use and prediction-market/exchange use.",
+        "data_rights_citation": "https://developer.sportradar.com/sportradar-updates/page/terms-and-conditions"
+      },
+      {
+        "provider": "Genius Sports",
+        "provider_citation": "https://www.geniussports.com/engage/official-sports-data-api/",
+        "estimated_cost_tier": "Enterprise/custom sales quote; the official API page directs prospective customers to contact sales and publishes no numeric license price.",
+        "estimated_cost_tier_citation": "https://www.geniussports.com/engage/official-sports-data-api/",
+        "data_rights": "Official, venue-direct real-time and historical data rights are league/product specific. Genius states it is the NFL's exclusive distributor of official real-time play-by-play, Next Gen Stats and sports-betting feeds through the end of the 2029 NFL season; contract for each league, market, territory, latency tier, display and redistribution right.",
+        "data_rights_citation": "https://www.geniussports.com/newsroom/the-national-football-league-expands-and-extends-strategic-partnership-with-genius-sports-in-multi-year-deal/; https://www.geniussports.com/bet/odds-feeds-api/"
+      },
+      {
+        "provider": "Kalshi",
+        "provider_citation": "https://docs.kalshi.com/welcome",
+        "estimated_cost_tier": "Exchange/API access with transaction fees rather than a conventional sports-data license; the fetched fee schedule lists most markets' taker fees as $0.07-$1.75 per 100 contracts and maker fees for listed non-standard sports series as $0.02-$0.44 per 100 contracts.",
+        "estimated_cost_tier_citation": "https://kalshi.com/fee-schedule",
+        "data_rights": "Use REST/WebSocket/FIX APIs subject to Kalshi terms, authentication and market-specific rules; real-time market data and trade execution are documented, but exchange data access does not grant rights to redistribute underlying league data or present a sportsbook product.",
+        "data_rights_citation": "https://docs.kalshi.com/welcome; https://kalshi.com/sign-up"
+      },
+      {
+        "provider": "DraftKings",
+        "provider_citation": "https://www.draftkings.com/",
+        "estimated_cost_tier": "Operator/customer sportsbook and content integration; no public sports-data API license price was identified on the fetched landing page.",
+        "estimated_cost_tier_citation": "https://www.draftkings.com/",
+        "data_rights": "The public page exposes sportsbook/live-betting/player-prop consumer products, not a documented redistribution API. DraftKings' official NHL partnership source describes operator rights and official marks/assets; obtain separate permission before collecting, storing or redistributing prices, content or trademarks.",
+        "data_rights_citation": "https://ir.aboutdraftkings.com/news/news-details/2021/DraftKings-Leans-in-on-NHL-Becomes-An-Official-Sports-Betting-Daily-Fantasy-Sports-and-iGaming-Partner-of-the-National-Hockey-League-and-Exclusive-Integration-Partner-of-NHL-Content-on-Turner-Sports-Platforms-10-13-2021/default.aspx"
+      },
+      {
+        "provider": "Action Network",
+        "provider_citation": "https://www.actionnetwork.com/",
+        "estimated_cost_tier": "Consumer subscription/product tier; the fetched PRO dashboard advertises premium signals, system picks, bet/money percentages and data-driven analysis but does not publish a numeric price on that page.",
+        "estimated_cost_tier_citation": "https://www.actionnetwork.com/pro-dashboard/get-pro",
+        "data_rights": "Consumer access is not documented as API or redistribution licensing. Do not mirror or commercialize Action Network content, picks, odds, percentages or data without a separate agreement; use the site as a product/integration reference, not as an assumed raw-feed source.",
+        "data_rights_citation": "https://www.actionnetwork.com/pro-dashboard/get-pro"
+      },
+      {
+        "provider": "BettingPros",
+        "provider_citation": "https://www.bettingpros.com/",
+        "estimated_cost_tier": "Consumer Premium subscription advertised as low as $9.99 per month or $119.99 per year with a 7-day trial; this is not an enterprise data-license quote.",
+        "estimated_cost_tier_citation": "https://www.bettingpros.com/premium/",
+        "data_rights": "The public Premium page describes consumer picks/odds/tools and BookSync, not redistribution rights. Obtain a commercial/API agreement before ingesting or reselling picks, odds, records or any synchronized account data.",
+        "data_rights_citation": "https://www.bettingpros.com/premium/"
+      }
+    ]
+  }
+}

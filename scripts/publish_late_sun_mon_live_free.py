@@ -495,17 +495,28 @@ def main():
                 cont_deltas=cont_deltas,
             )
 
-            true_prob = max(0.6020, min(0.6160, sig_attr["trueProb"]))
-            raw_edge = round(true_prob - play["market_fair_prob"], 4)
-            shrunk_edge = round(raw_edge * 0.65, 4)
+            # GAP-02: Consult walk-forward emission gate
+            walk_forward_gate_file = os.path.join(REPO_ROOT, "packages", "ingestion-pipeline", "walk-forward-gate.json")
+            emission_gate_passed = False
+            if os.path.exists(walk_forward_gate_file):
+                try:
+                    with open(walk_forward_gate_file, "r", encoding="utf-8") as wf:
+                        emission_gate_passed = json.load(wf).get("passed", False)
+                except Exception:
+                    emission_gate_passed = False
+
+            # GAP-01: Remove fixed clamp window; use uncorrupted engine output
+            true_prob = sig_attr["trueProb"]
+            model_edge = round(true_prob - play["market_fair_prob"], 4)
+            shrunk_edge = round(model_edge * 0.65, 4)
             expected_clv = round(shrunk_edge * 0.85, 4)
-            edge_score = min(71.2, max(68.4, sig_attr["edgeScore"]))
-            confidence = max(66, min(69, sig_attr["confidence"]))
+            edge_score = sig_attr["edgeScore"]
+            confidence = sig_attr["confidence"]
             tier = "FREE"
-            pick_grade = "STRONG_PLAY"
+            pick_grade = "STRONG_PLAY" if (confidence >= 68 and edge_score >= 67.0) else "SOLID_PLAY"
 
             # Clean human reasoning without robotic bracket dumps
-            full_reasoning = play["reasoning"]
+            reasoning_summary = play["reasoning"]
 
             fb = {
                 "factors": [
@@ -516,7 +527,7 @@ def main():
                 ],
                 "rankingP": true_prob,
                 "edgeScore": edge_score,
-                "trueEvScore": round(raw_edge * 100, 2),
+                "trueEvScore": round(model_edge * 100, 2),
                 "rankingSource": "independent_blend",
                 "consensusScore": 30,
                 "marketFairProb": play["market_fair_prob"],
@@ -529,13 +540,13 @@ def main():
                 "continuityDeltas": cont_deltas,
                 "injuryEvidence": inj_ev,
                 "signalPlaneAttribution": sig_attr,
-                "reasoningTrace": full_reasoning,
+                "reasoningTrace": reasoning_summary,
                 "noBet": None,
                 "independentEdge": {
                     "decision": "PLAY",
                     "trueProb": true_prob,
                     "marketFairProb": play["market_fair_prob"],
-                    "rawEdge": raw_edge,
+                    "rawEdge": model_edge,
                     "shrunkEdge": shrunk_edge,
                     "expectedClv": expected_clv,
                     "sources": [
@@ -595,7 +606,7 @@ def main():
                 """, (
                     play["selection"], play["line"], confidence, edge_score,
                     play["bookmaker_count"], pick_grade, play["risk_level"],
-                    full_reasoning, full_reasoning, json.dumps(fb), pid
+                    reasoning_summary, reasoning_summary, json.dumps(fb), pid
                 ))
             else:
                 pid = make_cuid("c")
@@ -616,7 +627,7 @@ def main():
                 """, (
                     pid, gid, play["pick_type"], play["selection"], play["line"],
                     confidence, edge_score, play["bookmaker_count"],
-                    pick_grade, play["risk_level"], full_reasoning, full_reasoning, json.dumps(fb)
+                    pick_grade, play["risk_level"], reasoning_summary, reasoning_summary, json.dumps(fb)
                 ))
 
             cur.execute("""

@@ -1,0 +1,311 @@
+# GSE data scout digest
+
+Items: **96**
+
+This file is generated. Do not hand-edit.
+
+## adapt (14)
+
+- **Odds API GET /v4/sports/{sport}/events/{eventId}/markets** AI=95 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports-{sport}-events-{eventId}-markets
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - High leverage addition for checking available prop and alt markets before spending event-odds credits on the already-licensed Odds API. Extends GSE capability safely within current vendor terms.
+- **Odds API GET /v4/sports/{sport}/events/{eventId}/odds** AI=95 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports-{sport}-events-{eventId}-odds
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Unlocks player props and advanced event-specific markets on the currently licensed vendor. Represents the highest-ROI capability gap for the platform without altering legal standing or ToS.
+- **the-odds-api/samples-nodejs** AI=95 — https://github.com/the-odds-api/samples-nodejs
+  - rights `licensed` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This official SDK sample repository directly supports unlocking unused endpoints on the already licensed Odds API vendor. It provides immediate high leverage for adding player props, event markets, and historical data without new ToS risks.
+- **the-odds-api/samples-python** AI=95 — https://github.com/the-odds-api/samples-python
+  - rights `licensed` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Official Python samples for The Odds API provide direct reference patterns for expanding into event odds and player props. Highly leveraged since GSE already maintains a paid vendor contract with this provider.
+- **benthomas66/bayesian-prediction-and-model-evaluation** AI=92 — https://github.com/benthomas66/bayesian-prediction-and-model-evaluation
+  - rights `research_only` · license `MIT` · source `GitHubWatchlist`
+  - This Bayesian prediction pipeline uses a walk-forward historical evaluation process against real sportsbook lines. GSE can adopt its validation methodology and process loop without taking the domain-specific WNBA model.
+- **Odds API GET /v4/sports/{sport}/participants** AI=90 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports-{sport}-participants
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Provides stable participant IDs for team and player matching on the existing licensed Odds API feed. Crucial for robust entity resolution without resorting to risky scrapers.
+- **Odds API GET /v4/historical/sports/{sport}/events/{eventId}/odds** AI=85 — https://the-odds-api.com/liveapi/guides/v4/#v4-historical-sports-{sport}-events-{eventId}-odds
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Unlocks historical player props on the existing vendor feed for backtesting and honesty metrics. To be integrated after live event-odds ingestion is stable.
+- **Odds API GET /v4/historical/sports/{sport}/odds** AI=85 — https://the-odds-api.com/liveapi/guides/v4/#v4-historical-sports-{sport}-odds
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Unlocks closing-line and calibration archives on the same licensed Odds API subscription. Essential for verifying edge over time, though gated behind higher tier costs.
+- **the-odds-api/apps-script** AI=85 — https://github.com/the-odds-api/apps-script
+  - rights `licensed` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Google Apps Script integration guide for The Odds API offers auxiliary workflow ideas for reporting and internal tools. Low direct engineering leverage for core backend ingestion, but safe and compliant.
+- **Odds API GET /v4/historical/sports/{sport}/events** AI=80 — https://the-odds-api.com/liveapi/guides/v4/#v4-historical-sports-{sport}-events
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Enables historical event ID lookups required to query historical event-odds and player props. Essential prerequisite for the historical calibration pipeline.
+- **big-main/chalkpicks-pro** AI=60 — https://github.com/big-main/chalkpicks-pro
+  - rights `research_only` · license `MIT` · source `GitHubWatchlist`
+  - Chalkpicks-pro features AI analytics, +EV tools, and an immutable Pick Ledger. Its median-implied fair math is weaker than GSE's de-vig, making it useful strictly for schema inspiration.
+- **kunalvij4/sharpEdge** AI=60 — https://github.com/kunalvij4/sharpEdge
+  - rights `research_only` · license `NOASSERTION` · source `GitHubWatchlist`
+  - SharpEdge connects to sportsbook APIs for real-time odds and +EV calculation. It provides minor schema reference value, but relies on inferior median-implied fair math.
+- **makaops/PolyPulse** AI=60 — https://github.com/makaops/PolyPulse
+  - rights `research_only` · license `NOASSERTION` · source `GitHubWatchlist`
+  - PolyPulse bridges prediction markets and sportsbook odds with a +EV engine and trader leaderboards. It provides useful schema ideas for cross-market tracking, but avoids core GSE de-vig rigor.
+- **acsqlworks/-EV-Sports-Betting-Engine** AI=40 — https://github.com/acsqlworks/-EV-Sports-Betting-Engine
+  - rights `research_only` · license `NOASSERTION` · source `GitHubWatchlist`
+  - A SQL Server schema for tracking bets and calculating expected value. GSE must avoid replacing its robust de-vig math with median-implied fair, but the schema layout can be reviewed for warehouse ideas.
+
+## already_wired (19)
+
+- **Odds API GET /v4/sports** AI=100 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Already implemented in the data ingestion package as core methods for sports listing. Essential foundation for the application's basic navigation and schedule mapping.
+- **Odds API GET /v4/sports/{sport}/events** AI=100 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports-{sport}-events
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Already wired to fetch event lists and scheduling metadata. Provides the necessary event IDs for downstream market queries.
+- **Odds API GET /v4/sports/{sport}/odds** AI=100 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports-{sport}-odds
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Already wired for featured h2h, spreads, and totals. Serves as the primary source for baseline market odds ingestion.
+- **Odds API GET /v4/sports/{sport}/scores** AI=100 — https://the-odds-api.com/liveapi/guides/v4/#v4-sports-{sport}-scores
+  - rights `licensed` · license `The Odds API commercial subscription` · source `OddsApiCatalog`
+  - Already wired for game results using the daysFrom parameter. Critical for settling picks and evaluating past performance accurately.
+- **nflverse/nflverse-data** AI=100 — https://github.com/nflverse/nflverse-data
+  - rights `cleared-with-attribution` · license `CC-BY-4.0` · source `GitHubWatchlist`
+  - Automated nflverse data repository under CC-BY-4.0. Already fully integrated into GSE with proper attribution and registry compliance.
+- **openfootball/football.json** AI=100 — https://github.com/openfootball/football.json
+  - rights `cleared` · license `CC0-1.0` · source `GitHubWatchlist`
+  - Public domain football data in JSON under CC0-1.0. Already mapped and active in the GSE source-registry.
+- **sedemmler/WagerBrain** AI=100 — https://github.com/sedemmler/WagerBrain
+  - rights `research_only` · license `MIT` · source `GitHubWatchlist`
+  - WagerBrain provides Python betting math like Kelly and EV calculations, but GSE already implements its required de-vig and optimization math.
+- **sportdb/sport.db** AI=100 — https://github.com/sportdb/sport.db
+  - rights `cleared` · license `CC0-1.0` · source `GitHubWatchlist`
+  - This repository references openfootball/sport.db, which is already wired into the GSE source-registry under CC0 licensing.
+- **yorobot/sport.db.more** AI=100 — https://github.com/yorobot/sport.db.more
+  - rights `cleared` · license `CC0-1.0` · source `GitHubWatchlist`
+  - This repository also points to the CC0 openfootball/sport.db ecosystem that is already part of the GSE source-registry.
+- **openfootball/england** AI=95 — https://github.com/openfootball/england
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - Openfootball dataset for English and Welsh leagues including the Premier League under CC0 terms. Fits seamlessly into existing ingestion structures.
+- **openfootball/espana** AI=95 — https://github.com/openfootball/espana
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - This repository provides public domain football data for La Liga under a CC0-1.0 license. It is already wired into the GSE source-registry as part of the openfootball ecosystem.
+- **openfootball/worldcup** AI=95 — https://github.com/openfootball/worldcup
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - Open-licensed public domain football dataset in Football.TXT format for World Cup events. Fully compatible with GSE's honesty SaaS constraints.
+- **openfootball/worldcup.json** AI=95 — https://github.com/openfootball/worldcup.json
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - Structured JSON version of openfootball's world cup datasets requiring no API key. Directly accelerates historical analysis without scraping risks.
+- **papagorgio23/bettoR** AI=40 — https://github.com/papagorgio23/bettoR
+  - rights `research_only` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This R package implements standard odds, EV, and Kelly math that Galaxy Sports Edge already possesses natively. Re-implementing or integrating it provides zero new leverage.
+- **openfootball/awesome-football** AI=10 — https://github.com/openfootball/awesome-football
+  - rights `cleared` · license `NOASSERTION` · source `GitHubSearch`
+  - This repository provides a collection of awesome football datasets and links. It is already integrated into the GSE source-registry.
+- **openfootball/deutschland** AI=10 — https://github.com/openfootball/deutschland
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - This repository provides public domain German football data under a CC0 license. It is already wired into the GSE source-registry.
+- **openfootball/openfootball.github.io** AI=10 — https://github.com/openfootball/openfootball.github.io
+  - rights `cleared` · license `NOASSERTION` · source `GitHubSearch`
+  - This repository hosts the website and documentation for openfootball data. It is already tracked and wired in GSE.
+- **openfootball/quick-starter** AI=10 — https://github.com/openfootball/quick-starter
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - This repository supplies starter templates and CLI tooling for building football databases from open datasets. It is already handled by the existing integration.
+- **openfootball/south-america** AI=10 — https://github.com/openfootball/south-america
+  - rights `cleared` · license `CC0-1.0` · source `GitHubSearch`
+  - This repository contains public domain football data for South America under a CC0 license. It is already wired into the source registry.
+
+## candidate (50)
+
+- **jbdrak/propprofessor-mcp** AI=92 — https://github.com/jbdrak/propprofessor-mcp
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - Provides an MCP server and CLI for live sportsbook data ingestion, movement analysis, and AI agent workflows that can be adapted for licensed pipelines.
+- **oddsflowai-team/oddsflow-partners-platform** AI=92 — https://github.com/oddsflowai-team/oddsflow-partners-platform
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - AI-powered odds intelligence and agentic AI infrastructure for odds monitoring, feed quality auditing, and anomaly detection.
+- **kachence/polymm** AI=88 — https://github.com/kachence/polymm
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - A Polymarket sports market-making and de-vig arbitrage bot using Python. It provides direct inspiration and math logic for de-vigging sportsbook odds and hedging.
+- **LuciferForge/polymarket-odds-scanner** AI=85 — https://github.com/LuciferForge/polymarket-odds-scanner
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - Polymarket odds scanner comparing prediction market prices against ESPN odds, offering high leverage for cross-market edge detection.
+- **minus5/go-uof-sdk** AI=85 — https://github.com/minus5/go-uof-sdk
+  - rights `paid-required` · license `MIT` · source `GitHubWatchlist`
+  - The Sportradar Unified Odds Feed SDK is an official enterprise data pipeline requiring a paid commercial token. It aligns with GSE's requirement for rights-gated, legal ingestion without scraping.
+- **odds-api/odds-api** AI=85 — https://github.com/odds-api/odds-api
+  - rights `candidate` · license `Apache-2.0` · source `GitHubSearch`
+  - This repository provides OpenAPI specs, SDKs, and MCP for The Odds API, which aligns with GSE's existing vendor usage. It helps implement uncalled endpoints like event odds and player props.
+- **TheSportsDB official JSON API** AI=75 — https://www.thesportsdb.com/api.php
+  - rights `candidate` · license `TheSportsDB Terms of use (2025-07-01)` · source `TheSportsDB`
+  - TheSportsDB offers a legitimate official API route for metadata with clear paid-tier terms for commercial applications. It provides a clean alternative to scraping, provided trademarked logos are omitted from the UI.
+- **TralahM/thesportsdb** AI=75 — https://github.com/TralahM/thesportsdb
+  - rights `candidate` · license `GPL-3.0` · source `GitHubSearch`
+  - Unofficial Python wrapper for TheSportsDB API, which is useful for sports metadata. Commercial use requires a paid key per ToS notes.
+- **api-evangelist/thesportsdb** AI=75 — https://github.com/api-evangelist/thesportsdb
+  - rights `candidate` · license `NOASSERTION` · source `GitHubWatchlist`
+  - TheSportsDB offers official API access for metadata using paid keys, avoiding prohibited web scraping while enriching sports metadata.
+- **infersports/infersports-skill** AI=75 — https://github.com/infersports/infersports-skill
+  - rights `unknown` · license `MIT` · source `GitHubSearch`
+  - InferSports provides keyless, read-only Asian-priced football and basketball odds via a Claude Code agent skill. It offers clean API structuring concepts, though rights status for commercial production is uncertain.
+- **zag2me/TheSportsDB** AI=75 — https://github.com/zag2me/TheSportsDB
+  - rights `candidate` · license `NOASSERTION` · source `GitHubSearch`
+  - TheSportsDB shared repo provides an official API copy and modify route under current ToS. It serves as a strong candidate for metadata enrichment once a paid commercial key is secured.
+- **CarlaPaiva/TheSportsDBClient** AI=72 — https://github.com/CarlaPaiva/TheSportsDBClient
+  - rights `candidate` · license `NOASSERTION` · source `GitHubSearch`
+  - A .NET client implementation for TheSportsDB API. It offers convenient wrapper logic for interacting with the official metadata endpoint.
+- **enen92/script.module.thesportsdb** AI=70 — https://github.com/enen92/script.module.thesportsdb
+  - rights `candidate` · license `GPL-2.0` · source `GitHubSearch`
+  - Another Python module wrapper for TheSportsDB API. Serves the same utility as the previous item with similar licensing and commercial constraints.
+- **sefininio/TheSportsDB** AI=70 — https://github.com/sefininio/TheSportsDB
+  - rights `candidate` · license `Apache-2.0` · source `GitHubSearch`
+  - A GraphQL wrapper for TheSportsDB API under an Apache-2.0 license. It can help structure metadata queries if integrating the paid official API into GSE.
+- **bweezy615/sooth** AI=65 — https://github.com/bweezy615/sooth
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Sooth provides multi-sport pricing and de-vigged fair lines but lacks clear licensing and risks touching unpermissioned sources. It offers marginal warehouse ideas compared to existing GSE de-vig logic.
+- **gpsanant/theSportsDB** AI=65 — https://github.com/gpsanant/theSportsDB
+  - rights `candidate` · license `NOASSERTION` · source `GitHubSearch`
+  - This repository provides a JavaScript implementation for interacting with TheSportsDB. While the upstream service requires a paid key for commercial use, client wrappers offer structural convenience.
+- **HarryShomer/Hockey-Scraper** AI=60 — https://github.com/HarryShomer/Hockey-Scraper
+  - rights `unknown` · license `GPL-3.0` · source `GitHubWatchlist`
+  - Provides NHL play-by-play and shift data, but relies on scraping rather than an official licensed feed or open-licensed bulk dataset. Marginal value compared to structured openfootball or nflverse sources.
+- **Jelle-S/TheSportsDb** AI=60 — https://github.com/Jelle-S/TheSportsDb
+  - rights `candidate` · license `GPL-3.0` · source `GitHubSearch`
+  - PHP library wrapper for TheSportsDB API. GSE stack is TypeScript/Node, making a PHP library less directly adaptable.
+- **katiekloss/jellyfin-plugin-thesportsdb** AI=50 — https://github.com/katiekloss/jellyfin-plugin-thesportsdb
+  - rights `candidate` · license `NOASSERTION` · source `GitHubSearch`
+  - Another Jellyfin plugin variant for TheSportsDB metadata ingestion. Like other media server plugins, it falls outside the core scope of honesty SaaS and odds processing.
+- **retrorat1/Jellyfin.Plugin.TheSportsDB** AI=50 — https://github.com/retrorat1/Jellyfin.Plugin.TheSportsDB
+  - rights `candidate` · license `MIT` · source `GitHubSearch`
+  - A Jellyfin media server plugin utilizing TheSportsDB metadata. This codebase is domain-specific to media organization rather than sports betting analytics.
+- **andr3w321/espn_scraper** AI=45 — https://github.com/andr3w321/espn_scraper
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - ESPN scoreboard scraper targets HTML/private API data that is brittle and violates core ingestion principles. GSE prefers official licensed sources like Odds API or open-licensed repositories.
+- **auroradan/PrizePicks-Prop-Finder** AI=45 — https://github.com/auroradan/PrizePicks-Prop-Finder
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Item uses Selenium to scrape PrizePicks player projection lines and queries The Odds API. Violates hard rules against scraping DFS/sportsbook HTML and introduces unnecessary brittle browser automation.
+- **zag2me/metadata.thesportsdb.com** AI=45 — https://github.com/zag2me/metadata.thesportsdb.com
+  - rights `candidate` · license `NOASSERTION` · source `GitHubSearch`
+  - An unlicenced and inactive repository mirroring metadata from TheSportsDB. Offers minimal utility for production sports data ingestion.
+- **LangoMike/PolyEdge** AI=40 — https://github.com/LangoMike/PolyEdge
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Prediction market pick curator that integrates with PolyRouter without providing clear open-source rights or direct data ingestion value.
+- **aws-solutions-library-samples/guidance-for-building-an-event-driven-sportsbook-on-aws** AI=40 — https://github.com/aws-solutions-library-samples/guidance-for-building-an-event-driven-sportsbook-on-aws
+  - rights `unknown` · license `MIT-0` · source `GitHubWatchlist`
+  - An AWS serverless sportsbook architecture guidance template, which is useful for general scaling patterns but not an active data source.
+- **baronet2/FirstCyclingAPI** AI=40 — https://github.com/baronet2/FirstCyclingAPI
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - FirstCycling unofficial API wrapper targets cycling data which falls outside primary major sports markets. It relies on scraping an unofficial site, conflicting with GSE data hygiene.
+- **theoddsapi/theoddsapi-js** AI=40 — https://github.com/theoddsapi/theoddsapi-js
+  - rights `vendor_candidate` · license `MIT` · source `GitHubWatchlist`
+  - This is an alternate wrapper for a competing or redundant odds vendor, creating an auth and host mismatch with GSE's existingOdds API client.
+- **thespread/api** AI=40 — https://github.com/thespread/api
+  - rights `unknown` · license `NOASSERTION` · source `GitHubSearch`
+  - TheSpread.io API provides Vegas odds aggregation, but the repository lacks an explicit license (NOASSERTION).
+- **Wysdomos/mlb-slate** AI=35 — https://github.com/Wysdomos/mlb-slate
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Daily MLB slate analysis tool featuring interactive boards and sportsbook links, but contains no structured raw data or API integration suitable for GSE ingestion.
+- **louaih/bonus-hedge** AI=35 — https://github.com/louaih/bonus-hedge
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - Calculates bonus bet hedging opportunities across multiple sportsbooks, typically requiring direct bookmaker account integration or scraping.
+- **Sapphocrosscountryskiing319/polymarket-odds-scanner** AI=30 — https://github.com/Sapphocrosscountryskiing319/polymarket-odds-scanner
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - Scans Polymarket sports markets against sportsbook odds to find betting gaps, but implies unverified sportsbook data fetching.
+- **SportsGameOdds/sports-betting-arbitrage-calculator** AI=30 — https://github.com/SportsGameOdds/sports-betting-arbitrage-calculator
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - Depends on an external third-party API (SportsGameOdds) rather than expanding on GSE's already wired Odds API vendor capabilities. Arbitrage calculators do not align with core honesty SaaS ingestion.
+- **cloudbet/wiki** AI=25 — https://github.com/cloudbet/wiki
+  - rights `unknown` · license `Apache-2.0` · source `GitHubWatchlist`
+  - Cloudbet community wiki offers no actionable data for GSE's strict rights-gated odds ingestion pipeline. It provides zero leverage for core de-vig math or verified picks.
+- **mojtaba-eshghie/BetTrace** AI=25 — https://github.com/mojtaba-eshghie/BetTrace
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - A RAG-based Sportsbook Assistant. Does not provide structured odds data, historical datasets, or ingestible licensed feeds required for GSE de-vig pipelines.
+- **Goose39/virtual-sportsbook** AI=15 — https://github.com/Goose39/virtual-sportsbook
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - A basic virtual sportsbook application with no integration into licensed odds vendors or open data registries. Completely misaligned with GSE data-scout priorities.
+- **LaChance-Lab/sportsbook-betting-casino** AI=15 — https://github.com/LaChance-Lab/sportsbook-betting-casino
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - Generic sportsbook and casino repository providing no unique, licensed, or compliant data feeds for Galaxy Sports Edge.
+- **englianhu/data-analysis** AI=15 — https://github.com/englianhu/data-analysis
+  - rights `unknown` · license `GPL-3.0` · source `GitHubWatchlist`
+  - This repository focuses on financial and sports betting market analysis with an HTML language tag. It does not provide clean, rights-gated data ingestible by GSE.
+- **naveengoudamk/betnow-sportsbook** AI=15 — https://github.com/naveengoudamk/betnow-sportsbook
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This repository provides a Next.js sports betting and casino frontend template without novel data ingestion leverage.
+- **omidzed/Lets-Parlay** AI=15 — https://github.com/omidzed/Lets-Parlay
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - A virtual MMA sportsbook web application for zero-risk fun betting deployed on AWS EC2. Offers no data ingestion leverage for backend odds analysis.
+- **BenBrostoff/draftfast** AI=10 — https://github.com/BenBrostoff/draftfast
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Draftfast automates and optimizes lineup construction explicitly for DraftKings and FanDuel. It relies on unauthorized interactions with commercial platforms, which is blocked by GSE policy.
+- **DimaKudosh/pydfs-lineup-optimizer** AI=10 — https://github.com/DimaKudosh/pydfs-lineup-optimizer
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - This DFS lineup optimizer targets popular commercial daily fantasy sites directly, raising severe ToS and data ingestion compliance flags. GSE strictly rejects unauthorized sportsbook and DFS platform scraping.
+- **KengoA/fantasy-basketball** AI=10 — https://github.com/KengoA/fantasy-basketball
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - This repository scrapes statistics and optimises lineups specifically for DraftKings using genetic algorithms. Scraping DraftKings violates the core safety and rights-gated ingestion rules.
+- **bernick4-cyber/draftkings-best-ball-optimizer** AI=10 — https://github.com/bernick4-cyber/draftkings-best-ball-optimizer
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This package is designed as a fantasy football best ball draft optimizer for DraftKings using historical ADP and rookie performance. It targets DraftKings data structures, making it incompatible with GSE's rights-gated ingestion rules.
+- **declanwalpole/sportsbook-odds-scraper** AI=10 — https://github.com/declanwalpole/sportsbook-odds-scraper
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Directly violates the hard rule against scraping DraftKings, FanDuel, BetMGM, or SBR HTML. Unlicensed sportsbook scrapers are strictly toxic for GSE.
+- **mihailgaberov/sportsbook-like-app** AI=10 — https://github.com/mihailgaberov/sportsbook-like-app
+  - rights `unknown` · license `MIT` · source `GitHubWatchlist`
+  - A simple React single-page application proof-of-concept for a sportsbook interface. Has zero relevance to Galaxy Sports Edge ingestion, honesty SaaS mechanics, or de-vig math.
+- **Pringleman83/SportsBook** AI=0 — https://github.com/Pringleman83/SportsBook
+  - rights `unknown` · license `GPL-3.0` · source `GitHubWatchlist`
+  - A generic sports data scraping tool without specific rights clearance or structured API integration. It violates the strict rules against generic sportsbook HTML scraping.
+- **casino-api777/NexusGGR** AI=0 — https://github.com/casino-api777/NexusGGR
+  - rights `unknown` · license `BSL-1.0` · source `GitHubWatchlist`
+  - This repository provides commercial casino and sportsbook API turnkey scripts and turnkey whitelabel solutions. It is irrelevant to GSE's odds honesty SaaS ingestion pipeline and lacks proper open data licensing.
+- **jacksebastian17/betting-algo** AI=0 — https://github.com/jacksebastian17/betting-algo
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This item relies on an algorithmic web scraper for positive EV bets without rights clearance. It violates the strict rule against scraping sportsbooks or handling unstructured HTML.
+- **personal-coding/Live-Sports-Arbitrage-Bet-Finder** AI=0 — https://github.com/personal-coding/Live-Sports-Arbitrage-Bet-Finder
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This repository provides an automated bot for live sports arbitrage directly across FanDuel, DraftKings, and William Hill. It directly violates the hard rule against scraping DraftKings and FanDuel HTML.
+- **u1n2c3/Uniconbet** AI=0 — https://github.com/u1n2c3/Uniconbet
+  - rights `unknown` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This repository provides sports betting integration for Uniconbet, involving direct sportsbook interaction and wagering. It has no relevance to GSE's honesty SaaS model and violates scraping rules.
+
+## probe_only (3)
+
+- **ClubElo HTTP CSV API (Wayback /API 2024-06-16)** AI=50 — https://web.archive.org/web/20240616190931id_/http://www.clubelo.com/API
+  - rights `permission_required` · license `API docs (archive)` · source `ClubEloArchive`
+  - The ClubElo CSV endpoints power an existing client in GSE, but lack formal source-registry registration. Live usage requires renewed confirmation from the author to avoid compliance gaps.
+- **ClubElo reuse grant (Wayback About 2023-01-17)** AI=45 — https://web.archive.org/web/20230117101035id_/http://clubelo.com/About
+  - rights `permission_required` · license `Author citation required (archive, not live-verified)` · source `ClubEloArchive`
+  - ClubElo relies on historical archive proof and restricted live scraping rules that prevent safe automated integration without fresh confirmation. It remains a probe-only candidate due to uncertain live terms.
+- **ClubElo robots.txt (Wayback 2023-01-17)** AI=40 — https://web.archive.org/web/20230117101035id_/http://clubelo.com/robots.txt
+  - rights `permission_required` · license `robots.txt (archive)` · source `ClubEloArchive`
+  - The archived robots.txt indicates strict historical crawl limits on the main HTML site. It reinforces that only explicitly documented endpoints should be accessed.
+
+## permission_required (2)
+
+- **api-evangelist/sportsbook-api** AI=40 — https://github.com/api-evangelist/sportsbook-api
+  - rights `permission_required` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Includes forbidden sportsbooks (DraftKings, FanDuel, BetMGM) and Kalshi live trading data which violates the explicit rule against permission-required sources. GSE live pick path stays fail-closed.
+- **abudnick8/prop-edge** AI=20 — https://github.com/abudnick8/prop-edge
+  - rights `permission_required` · license `NOASSERTION` · source `GitHubWatchlist`
+  - Prop-edge scans Kalshi and Polymarket alongside DraftKings, hitting permission barriers on prediction market live trading and sportsbook automation. GSE picks must remain fail-closed and fully compliant.
+
+## block (8)
+
+- **tunjayoff/sofascore_scraper** AI=10 — https://github.com/tunjayoff/sofascore_scraper
+  - rights `excluded` · license `MIT` · source `GitHubWatchlist`
+  - This item is a SofaScore private-API wrapper for football match data. It violates the hard rule against sports private-API scraping.
+- **Mg30/odds-portal-scraper** AI=0 — https://github.com/Mg30/odds-portal-scraper
+  - rights `excluded` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This Node.js CLI scrapes Odds Portal, which is excluded under the rights-gated and anti-scraping rules for Galaxy Sports Edge.
+- **agad495/DKscraPy** AI=0 — https://github.com/agad495/DKscraPy
+  - rights `excluded` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This item is a direct scraper for DraftKings, violating hard rules against scraping sportsbook HTML or private APIs.
+- **anthonyliao/draftkings-data-scraper** AI=0 — https://github.com/anthonyliao/draftkings-data-scraper
+  - rights `excluded` · license `MIT` · source `GitHubWatchlist`
+  - This is a DraftKings player data and salary scraper, which violates the strict rule against scraping sportsbook properties.
+- **cvidan/bet365-scraper** AI=0 — https://github.com/cvidan/bet365-scraper
+  - rights `excluded` · license `NOASSERTION` · source `GitHubWatchlist`
+  - This item scrapes Bet365 using Selenium, violating the strict prohibition against scraping commercial sportsbooks.
+- **flancast90/sportsbookreview-scraper** AI=0 — https://github.com/flancast90/sportsbookreview-scraper
+  - rights `excluded` · license `MIT` · source `GitHubWatchlist`
+  - SportsbookReview scraper directly violates hard rules against scraping sportsbook aggregator HTML and private odds feeds. Must be blocked immediately.
+- **gingeleski/odds-portal-scraper** AI=0 — https://github.com/gingeleski/odds-portal-scraper
+  - rights `excluded` · license `Unlicense` · source `GitHubWatchlist`
+  - This repository scrapes Odds Portal, which violates source rights and anti-scraping policies for aggregated odds sites.
+- **jaebradley/draftkings_client** AI=0 — https://github.com/jaebradley/draftkings_client
+  - rights `excluded` · license `MIT` · source `GitHubWatchlist`
+  - DraftKings client violates hard rules against direct sportsbook API automation and ToS restrictions. GSE strictly uses authorized aggregator paths like The Odds API.

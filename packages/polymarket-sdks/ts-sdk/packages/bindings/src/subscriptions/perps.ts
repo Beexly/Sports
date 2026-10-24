@@ -1,0 +1,506 @@
+import { z } from 'zod';
+import {
+  PerpsAccountFundingPaymentEntrySchema,
+  PerpsBalanceSchema,
+  PerpsPortfolioSchema,
+} from '../perps/account';
+import { PerpsBuilderEarningSchema } from '../perps/builders';
+import {
+  PerpsInstrumentIdSchema,
+  type PerpsKlineInterval,
+  PerpsOrderIdSchema,
+} from '../perps/common';
+import {
+  PerpsDepositUpdateSchema,
+  PerpsWithdrawalUpdateSchema,
+} from '../perps/funds';
+import {
+  PerpsBboUpdateSchema,
+  PerpsBookUpdateSchema,
+  PerpsCandleSchema,
+  PerpsPublicTradeUpdateSchema,
+  PerpsStatisticUpdateSchema,
+  PerpsTickerEntrySchema,
+} from '../perps/market';
+import { PerpsNotificationSchema } from '../perps/notifications';
+import {
+  PerpsAccountFillUpdateSchema,
+  PerpsOrderUpdateSchema,
+} from '../perps/orders';
+import { type EpochMilliseconds, EpochMillisecondsSchema } from '../shared';
+
+const SequenceSchema = z.number().int().nonnegative();
+
+// Wire ets is an unsigned epoch-ms value; zero attests no event horizon.
+const PerpsEventHorizonSchema = EpochMillisecondsSchema.refine(
+  (value) => value >= 0,
+).transform((value) => (value === 0 ? null : value));
+
+const TradesChannelSchema = z.string().regex(/^trades::\d+$/);
+const BboChannelSchema = z.string().regex(/^bbo::\d+$/);
+const BookChannelSchema = z.string().regex(/^book::\d+$/);
+const TickersChannelSchema = z.string().regex(/^tickers::(all|\d+)$/);
+const StatisticsChannelSchema = z.string().regex(/^statistics::(all|\d+)$/);
+const CandlesChannelSchema = z
+  .string()
+  .regex(/^klines::\d+::(1m|5m|15m|1h|4h|1d|1w)$/);
+const TpslChannelSchema = z.string().regex(/^tpsl::\d+$/);
+const PerpsSessionChannelSchema = z.enum([
+  'balances',
+  'portfolio',
+  'orders',
+  'fills',
+  'funding',
+  'deposits',
+  'withdrawals',
+  'notifications',
+]);
+
+const PerpsUpdateEnvelopeSchema = z.object({
+  ts: EpochMillisecondsSchema,
+  ets: PerpsEventHorizonSchema,
+  sq: SequenceSchema,
+});
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsTradeEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: TradesChannelSchema,
+  data: z.array(PerpsPublicTradeUpdateSchema),
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  topic: 'perps.trades' as const,
+  type: 'trade' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: data,
+}));
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsTradeEvent = z.infer<typeof PerpsTradeEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsBboEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: BboChannelSchema,
+  data: PerpsBboUpdateSchema,
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  topic: 'perps.bbo' as const,
+  type: 'bbo' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: data,
+}));
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsBboEvent = z.infer<typeof PerpsBboEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsBookEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: BookChannelSchema,
+  data: PerpsBookUpdateSchema,
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  topic: 'perps.book' as const,
+  type: 'book' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: {
+    instrumentId: instrumentIdFromChannel(ch),
+    ...data,
+  },
+}));
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsBookEvent = z.infer<typeof PerpsBookEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsTickerEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: TickersChannelSchema,
+  data: PerpsTickerEntrySchema,
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  topic: 'perps.tickers' as const,
+  type: 'ticker' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: data,
+}));
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsTickerEvent = z.infer<typeof PerpsTickerEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsStatisticEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: StatisticsChannelSchema,
+  data: PerpsStatisticUpdateSchema,
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  topic: 'perps.statistics' as const,
+  type: 'statistic' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: data,
+}));
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsStatisticEvent = z.infer<typeof PerpsStatisticEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsCandleEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: CandlesChannelSchema,
+  data: z.array(PerpsCandleSchema),
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  topic: 'perps.candles' as const,
+  type: 'candle' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: {
+    instrumentId: instrumentIdFromChannel(ch),
+    interval: candleIntervalFromChannel(ch),
+    candles: data,
+  },
+}));
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsCandleEvent = z.infer<typeof PerpsCandleEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsMarketDataEventSchema = z.union([
+  PerpsTradeEventSchema,
+  PerpsBboEventSchema,
+  PerpsBookEventSchema,
+  PerpsTickerEventSchema,
+  PerpsStatisticEventSchema,
+  PerpsCandleEventSchema,
+]);
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsMarketDataEvent = z.infer<typeof PerpsMarketDataEventSchema>;
+
+const PerpsSessionUpdateEnvelopeSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: PerpsSessionChannelSchema,
+});
+
+function perpsSessionEventSchema<
+  TType extends string,
+  TChannel extends z.infer<typeof PerpsSessionChannelSchema>,
+  TPayload extends z.ZodType,
+>(type: TType, channel: TChannel, payload: TPayload) {
+  return PerpsSessionUpdateEnvelopeSchema.extend({
+    ch: z.literal(channel),
+    data: payload,
+  }).transform((message) => {
+    const event = message as {
+      ch: TChannel;
+      data: z.output<TPayload>;
+      sq: number;
+      ts: number;
+      ets: EpochMilliseconds | null;
+    };
+
+    return {
+      type,
+      channel: event.ch,
+      timestamp: event.ts,
+      /** Newest reflected event time; null means the event horizon is unknown. */
+      eventTimestamp: event.ets,
+      sequence: event.sq,
+      payload: event.data,
+    };
+  });
+}
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsBalanceUpdateEventSchema = perpsSessionEventSchema(
+  'balance',
+  'balances',
+  PerpsBalanceSchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsBalanceUpdateEvent = z.infer<
+  typeof PerpsBalanceUpdateEventSchema
+>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsPortfolioUpdateEventSchema = perpsSessionEventSchema(
+  'portfolio',
+  'portfolio',
+  PerpsPortfolioSchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsPortfolioUpdateEvent = z.infer<
+  typeof PerpsPortfolioUpdateEventSchema
+>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsOrderUpdateEventSchema = perpsSessionEventSchema(
+  'order',
+  'orders',
+  PerpsOrderUpdateSchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsOrderUpdateEvent = z.infer<typeof PerpsOrderUpdateEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsFillUpdateEventSchema = perpsSessionEventSchema(
+  'fill',
+  'fills',
+  z.array(PerpsAccountFillUpdateSchema),
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsFillUpdateEvent = z.infer<typeof PerpsFillUpdateEventSchema>;
+
+/**
+ * Live builder receipts. Sequence numbers are sparse engine sequences.
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsBuilderFillUpdateEventSchema =
+  PerpsUpdateEnvelopeSchema.extend({
+    ch: z.literal('builderFills'),
+    data: z.array(PerpsBuilderEarningSchema),
+  }).transform(({ ch, ts, ets, sq, data }) => ({
+    type: 'builderFill' as const,
+    channel: ch,
+    timestamp: ts,
+    /** Newest reflected event time; null means the event horizon is unknown. */
+    eventTimestamp: ets,
+    sequence: sq,
+    payload: data,
+  }));
+
+/** @experimental This API may change in a breaking way in any release, including patch releases. */
+export type PerpsBuilderFillUpdateEvent = z.infer<
+  typeof PerpsBuilderFillUpdateEventSchema
+>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsFundingUpdateEventSchema = perpsSessionEventSchema(
+  'funding',
+  'funding',
+  PerpsAccountFundingPaymentEntrySchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsFundingUpdateEvent = z.infer<
+  typeof PerpsFundingUpdateEventSchema
+>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsDepositUpdateEventSchema = perpsSessionEventSchema(
+  'deposit',
+  'deposits',
+  PerpsDepositUpdateSchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsDepositUpdateEvent = z.infer<
+  typeof PerpsDepositUpdateEventSchema
+>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsWithdrawalUpdateEventSchema = perpsSessionEventSchema(
+  'withdrawal',
+  'withdrawals',
+  PerpsWithdrawalUpdateSchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsWithdrawalUpdateEvent = z.infer<
+  typeof PerpsWithdrawalUpdateEventSchema
+>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsNotificationUpdateEventSchema = perpsSessionEventSchema(
+  'notification',
+  'notifications',
+  PerpsNotificationSchema,
+);
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsNotificationUpdateEvent = z.infer<
+  typeof PerpsNotificationUpdateEventSchema
+>;
+
+/**
+ * Backpressure control frame on the `notifications` channel. The server sends
+ * it when one or more notification data frames were dropped; `sq` is the
+ * highest engine sequence among the dropped notifications.
+ *
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsNotificationsResyncFrameSchema = z
+  .object({
+    ch: z.literal('notifications'),
+    ts: EpochMillisecondsSchema,
+    ets: PerpsEventHorizonSchema,
+    sq: SequenceSchema,
+    type: z.literal('resync'),
+  })
+  .transform(({ ch, ts, ets, sq }) => ({
+    type: 'resync' as const,
+    reason: 'server' as const,
+    channel: ch,
+    timestamp: ts,
+    /** Newest reflected event time; null means the event horizon is unknown. */
+    eventTimestamp: ets,
+    sequence: sq,
+  }));
+
+const PerpsTpSlLifecycleUpdateSchema = z.object({
+  oid: PerpsOrderIdSchema,
+  st: z.enum(['untriggered', 'armed', 'activated', 'cancelled', 'expired']),
+  reason: z.string().optional(),
+});
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsTpSlUpdateEventSchema = PerpsUpdateEnvelopeSchema.extend({
+  ch: TpslChannelSchema,
+  data: PerpsTpSlLifecycleUpdateSchema.transform((update) => ({
+    orderId: update.oid,
+    status: update.st,
+    reason: update.reason,
+  })),
+}).transform(({ ch, ts, ets, sq, data }) => ({
+  type: 'tpsl' as const,
+  channel: ch,
+  timestamp: ts,
+  /** Newest reflected event time; null means the event horizon is unknown. */
+  eventTimestamp: ets,
+  sequence: sq,
+  payload: data,
+}));
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsTpSlUpdateEvent = z.infer<typeof PerpsTpSlUpdateEventSchema>;
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export const PerpsSessionUpdateEventSchema = z.union([
+  PerpsBalanceUpdateEventSchema,
+  PerpsPortfolioUpdateEventSchema,
+  PerpsOrderUpdateEventSchema,
+  PerpsFillUpdateEventSchema,
+  PerpsBuilderFillUpdateEventSchema,
+  PerpsFundingUpdateEventSchema,
+  PerpsDepositUpdateEventSchema,
+  PerpsWithdrawalUpdateEventSchema,
+  PerpsNotificationUpdateEventSchema,
+  PerpsTpSlUpdateEventSchema,
+]);
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsSessionUpdateEvent = z.infer<
+  typeof PerpsSessionUpdateEventSchema
+>;
+
+/**
+ * A recovery signal after reconnect, a sequence gap, or dropped notifications.
+ * For `reason: 'server'`, `sequence` is the highest dropped notification
+ * sequence, not a backfill lower bound. Backfill from the last notification
+ * successfully processed and deduplicate by notification id.
+ *
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsResyncEvent =
+  | {
+      type: 'resync';
+      reason: 'reconnect' | 'sequence_gap';
+      /** Local recovery has no attested event horizon. */
+      eventTimestamp?: never;
+      channel?: string;
+      previousSequence?: number;
+      sequence?: number;
+    }
+  | (z.infer<typeof PerpsNotificationsResyncFrameSchema> & {
+      previousSequence?: never;
+    });
+
+/**
+ * @experimental This API may change in a breaking way in any release, including patch releases.
+ */
+export type PerpsSessionEvent = PerpsSessionUpdateEvent | PerpsResyncEvent;
+
+function instrumentIdFromChannel(channel: string) {
+  const [, rawInstrumentId] = channel.split('::');
+  return PerpsInstrumentIdSchema.parse(Number(rawInstrumentId));
+}
+
+function candleIntervalFromChannel(channel: string) {
+  const [, , interval] = channel.split('::');
+  return interval as Exclude<PerpsKlineInterval, PerpsKlineInterval.OneSecond>;
+}

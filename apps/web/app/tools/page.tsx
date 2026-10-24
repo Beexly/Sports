@@ -12,7 +12,7 @@ import { FormulaPlaque } from "@/components/tools/formula-plaque";
  * Rules for this surface (do not relax without a founder ruling):
  *   - Every calculator is free, with no paywall, account, or email gate.
  *   - Every result renders its formula in plain math notation next to it —
- *     "the math you can read," made literal, not just a brand line.
+ *     transparent quantitative modeling, made literal, not just a brand line.
  *   - Zero performance claims, zero certainty-implying vocabulary (the
  *     trust-gate guardrail enforces this), zero affiliate links, and
  *     nothing implying our own picks' results. These are generic tools
@@ -90,7 +90,7 @@ const PRINCIPLES = [
   },
   {
     title: "The formula is always visible",
-    body: "Every result sits next to the exact formula that produced it, in plain math notation. Nothing is a black box, and nothing here claims to predict an outcome.",
+    body: "Every result sits next to the exact formula that produced it, in plain math notation. Nothing is a black box, and all underlying mathematics are fully transparent.",
   },
   {
     title: "Judgment calls are named, not hidden",

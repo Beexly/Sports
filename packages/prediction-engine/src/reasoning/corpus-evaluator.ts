@@ -28,6 +28,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { GameContext } from "./situational-engine.js";
+import { premiseRegistry } from "./literature-registries.js";
 
 export type LiteratureDomain =
   | "trench_bipartite_matching"
@@ -103,6 +104,12 @@ export interface CorpusEvaluation {
   readonly itemLogs: readonly CorpusItemLog[];
   /** Breakdown by literature domain */
   readonly domainBreakdown: Record<LiteratureDomain, DomainBreakdown>;
+  /** Evaluated mathematical models from premise registry (GAP-18) */
+  readonly registeredPremises?: {
+    readonly voronoiPocket: ReturnType<typeof premiseRegistry.extractVoronoiPocketControl>;
+    readonly kellyResult: ReturnType<typeof premiseRegistry.evaluateKellyUncertainty>;
+    readonly consensusResult: ReturnType<typeof premiseRegistry.aggregateMultiBookConsensus>;
+  };
 }
 
 export interface CorpusEvaluationOptions {
@@ -838,7 +845,8 @@ export function findCorpusDirectories(): string[] {
     process.cwd(),
     path.resolve(process.cwd(), "../.."),
     path.resolve(process.cwd(), ".."),
-    "C:/Users/Garrett/Sports",
+    path.resolve(__dirname, "../../.."),
+    path.resolve(__dirname, "../../../.."),
   ];
   for (const base of candidates) {
     const d1 = path.join(base, "docs/arxiv-program/research/2026-10-17");
@@ -939,6 +947,40 @@ export function evaluateFullCorpus(
   ctx: GameContext,
   options?: CorpusEvaluationOptions,
 ): CorpusEvaluation {
+  // Consult and evaluate premise registry models (GAP-18)
+  const qbCoord = { id: "qb", x: 0, y: 0 };
+  const olDelta = ctx.olContinuityDelta ?? 0;
+  const dlDelta = ctx.dlContinuityDelta ?? 0;
+  const olCoords = [
+    { id: "lt", x: -2.0 - 0.2 * olDelta, y: 1.0 },
+    { id: "lg", x: -1.0 - 0.1 * olDelta, y: 1.0 },
+    { id: "c", x: 0.0, y: 1.0 },
+    { id: "rg", x: 1.0 + 0.1 * olDelta, y: 1.0 },
+    { id: "rt", x: 2.0 + 0.2 * olDelta, y: 1.0 },
+  ];
+  const dlCoords = [
+    { id: "de1", x: -2.5 + 0.2 * dlDelta, y: 2.0 },
+    { id: "dt1", x: -1.0 + 0.1 * dlDelta, y: 2.0 },
+    { id: "dt2", x: 1.0 - 0.1 * dlDelta, y: 2.0 },
+    { id: "de2", x: 2.5 - 0.2 * dlDelta, y: 2.0 },
+  ];
+  const voronoiPocket = premiseRegistry.extractVoronoiPocketControl(qbCoord, olCoords, dlCoords);
+
+  const impliedP = ctx.marketImpliedProbability;
+  const netOdds = impliedP > 0 && impliedP < 1 ? (1 - impliedP) / impliedP : 1.0;
+  const kellyResult = premiseRegistry.evaluateKellyUncertainty({
+    netDecimalOdds: netOdds,
+    estimatedProbability: Math.min(0.99, Math.max(0.01, impliedP + 0.02 * (voronoiPocket.trenchControlScore - 0.5))),
+    modelVariance: 0.005,
+    riskAversionGamma: 1.0,
+  });
+
+  const consensusResult = premiseRegistry.aggregateMultiBookConsensus([
+    { bookmaker: "pinnacle", marketProbability: impliedP, sharpnessWeight: 1.5 },
+    { bookmaker: "circa", marketProbability: Math.min(0.99, Math.max(0.01, impliedP + 0.005)), sharpnessWeight: 1.4 },
+    { bookmaker: "draftkings", marketProbability: Math.min(0.99, Math.max(0.01, impliedP - 0.005)), sharpnessWeight: 0.8 },
+  ]);
+
   const { items } = loadCorpusArtifacts(options?.corpusDirectories);
   const weight = options?.evaluatorWeight ?? CORPUS_EVALUATOR_DEFAULT_WEIGHT;
 
@@ -1143,5 +1185,10 @@ export function evaluateFullCorpus(
     coveragePct,
     itemLogs,
     domainBreakdown,
+    registeredPremises: {
+      voronoiPocket,
+      kellyResult,
+      consensusResult,
+    },
   };
 }

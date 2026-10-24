@@ -1,0 +1,210 @@
+{
+  "rows": [
+    {
+      "id": "63d5c908",
+      "source": "Lin 1991 Jensen-Shannon divergence",
+      "url_opened": "https://ieeexplore.ieee.org/document/61115",
+      "url_opened_citation": "https://ieeexplore.ieee.org/document/61115",
+      "http_status": 200,
+      "page": "not obtained",
+      "footer_or_header": "Not obtained: the fetched IEEE body is an abstract/metadata page, not the paginated article.",
+      "footer_or_header_citation": "https://ieeexplore.ieee.org/document/61115",
+      "equation_as_printed": "Not obtained. The allowed IEEE/metadata fetches did not expose the journal-page equations (4.1) or (5.1).",
+      "equation_as_printed_citation": "https://ieeexplore.ieee.org/document/61115",
+      "eight_lines_around": [
+        "Divergence measures based on the Shannon entropy",
+        "Publisher: IEEE",
+        "PDF",
+        "Sign In or Purchase",
+        "## Abstract:",
+        "A novel class of information-theoretic divergence measures based on the Shannon entropy is introduced.",
+        "Published in: IEEE Transactions on Information Theory (Volume: 37, Issue: 1, January 1991)",
+        "Page(s): 145 - 151"
+      ],
+      "eight_lines_around_citation": "https://ieeexplore.ieee.org/document/61115",
+      "matches_landed_form": "no",
+      "diff_if_no": "The journal pages containing the weighted Jensen-Shannon equation (4.1) on page 147 and the n-distribution form (5.1) on page 149 were not retrieved; only abstract/citation metadata was available.",
+      "replacement_used": "https://www.semanticscholar.org/paper/Divergence-measures-based-on-the-Shannon-entropy-Lin/8b586837ac372141eedafd124c57335cbc893bed (abstract/metadata only; does not close the row)",
+      "failed_fetches": [
+        {
+          "url": "https://doi.org/10.1109/18.61115",
+          "status": "scrape error: all scraping engines failed"
+        },
+        {
+          "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=61115",
+          "status": "200 body; IEEE account/purchase page, no paper body"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/Divergence-measures-based-on-the-Shannon-entropy-Lin/8b586837ac372141eedafd124c57335cbc893bed",
+          "status": "200 body; abstract/metadata only, no equation text"
+        },
+        {
+          "url": "https://www.scirp.org/reference/referencespapers?referenceid=1866692",
+          "status": "200 body; citation page only, no equation text"
+        },
+        {
+          "url": "https://api.unpaywall.org/v2/10.1109/18.61115?email=research@example.com",
+          "status": "422; response says to use the caller's own email address"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/3083137_Divergence_measures_based_on_the_Shannon_entropy",
+          "status": "200 body; resolves to a different error-correcting-codes article, not Lin's paper"
+        }
+      ]
+    },
+    {
+      "id": "5421d3fd",
+      "source": "Herbrich, Graepel, Obermayer 2000 large-margin rank boundaries",
+      "url_opened": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/2000-Herbrich-et-al-Large-margin-rank-boundaries-for-ordinal-regression.pdf",
+      "url_opened_citation": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/2000-Herbrich-et-al-Large-margin-rank-boundaries-for-ordinal-regression.pdf",
+      "http_status": 404,
+      "page": "not available",
+      "footer_or_header": "We are sorry, the page you requested cannot be found.",
+      "footer_or_header_citation": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/2000-Herbrich-et-al-Large-margin-rank-boundaries-for-ordinal-regression.pdf",
+      "equation_as_printed": "Not obtained: the allowed PDF URL returned a 404 page.",
+      "equation_as_printed_citation": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/2000-Herbrich-et-al-Large-margin-rank-boundaries-for-ordinal-regression.pdf",
+      "eight_lines_around": [
+        "We are sorry, the page you requested cannot be found.",
+        "The requested PDF was not returned.",
+        "Return to Microsoft Research",
+        "Search the Microsoft Research site",
+        "Submit",
+        "Follow us:",
+        "Microsoft Research",
+        "No paper page or equation body was present."
+      ],
+      "eight_lines_around_citation": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/2000-Herbrich-et-al-Large-margin-rank-boundaries-for-ordinal-regression.pdf",
+      "matches_landed_form": "no",
+      "diff_if_no": "The landed form L = max(0, -y(x1-x2) + m) could not be checked because the allowed PDF and the Microsoft Research replacement page both returned no paper body.",
+      "replacement_used": "https://www.microsoft.com/en-us/research/publication/large-margin-rank-boundaries-for-ordinal-regression (404-style Microsoft Research page; no equation)",
+      "failed_fetches": [
+        {
+          "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/2000-Herbrich-et-al-Large-margin-rank-boundaries-for-ordinal-regression.pdf",
+          "status": "404 page body: page requested cannot be found"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/research/publication/large-margin-rank-boundaries-for-ordinal-regression",
+          "status": "404-style Microsoft Research body; no paper equation"
+        }
+      ]
+    },
+    {
+      "id": "0d183c3c",
+      "source": "Chen, Chen, Li arXiv:1710.06056 H-threshold",
+      "url_opened": "https://arxiv.org/pdf/1710.06056",
+      "url_opened_citation": "https://arxiv.org/pdf/1710.06056",
+      "http_status": 200,
+      "page": 8,
+      "footer_or_header": "The Firecrawl PDF text body does not expose a running page footer/header; the page-8 equation and surrounding article text were returned.",
+      "footer_or_header_citation": "https://arxiv.org/pdf/1710.06056",
+      "equation_as_printed": "h(c)=|\\log c|(1+|\\log c|^{-\\alpha})",
+      "equation_as_printed_citation": "https://arxiv.org/pdf/1710.06056",
+      "eight_lines_around": [
+        "T₁ = inf{n>1: Σ_(i,j)∈A exp{-|sup_Wij l_n(θ) − sup_Wji l_n(θ)|} ≤ e^{-h(c)}},",
+        "(3.1)",
+        "and",
+        "T₂ = inf{n>1: min_(i,j)∈A |sup_Wij l_n(θ) − sup_Wji l_n(θ)| ≥ h(c)},",
+        "(3.2)",
+        "where h(c) = |log c|(1 + |log c|^{-α}) for some constant α ∈ (0,1) and c is the relative cost introduced in (2).",
+        "We note that T₂ is obtained by replacing the summation in T₁ by maximization and taking log and minus on both sides.",
+        "Upon stopping, the decision about the global rank is made according to the rank of MLE at the stopping time T."
+      ],
+      "eight_lines_around_citation": "https://arxiv.org/pdf/1710.06056",
+      "matches_landed_form": "yes",
+      "diff_if_no": "",
+      "replacement_used": "none"
+    },
+    {
+      "id": "a1133d03",
+      "source": "Chen, Chen, Li arXiv:1710.06056 concordant-pair sampling loss",
+      "url_opened": "https://arxiv.org/pdf/1710.06056",
+      "url_opened_citation": "https://arxiv.org/pdf/1710.06056",
+      "http_status": 200,
+      "page": 2,
+      "footer_or_header": "The Firecrawl PDF text body does not expose a running page footer/header; the page-2 loss formula and surrounding article text were returned.",
+      "footer_or_header_citation": "https://arxiv.org/pdf/1710.06056",
+      "equation_as_printed": "Σ_{i<j} I(θ_i>θ_j) I(R_i>R_j) + I(θ_i<θ_j) I(R_i<R_j) + cT,",
+      "equation_as_printed_citation": "https://arxiv.org/pdf/1710.06056",
+      "eight_lines_around": [
+        "A sequential procedure chooses a pair (i,j) for the next comparison in each stage and decides the stopping time T.",
+        "Upon stopping, the final decision is to choose the global rank R := (R₁,...,R_K)",
+        "from the set of all permutations of {1,2,...,K}. The loss function of this sequential design",
+        "problem is defined by combining the cost of data collection and the Kendall’s tau distance",
+        "Σ_{i<j} I(θ_i>θ_j) I(R_i>R_j) + I(θ_i<θ_j) I(R_i<R_j) + cT,",
+        "where the constant c > 0 indicates the relative cost of each comparison and I(·) denotes an indicator function.",
+        "Although according to the final decision, our problem seems to be a multi-hypotheses sequential testing problem with adaptive experiment selection",
+        "there exist fundamental differences. First, ... the ranking problem ... consists of composite hypotheses."
+      ],
+      "eight_lines_around_citation": "https://arxiv.org/pdf/1710.06056",
+      "matches_landed_form": "yes",
+      "diff_if_no": "",
+      "replacement_used": "none"
+    },
+    {
+      "id": "e861b7a0",
+      "source": "Divos et al. arXiv:1811.03931 next-goal home",
+      "url_opened": "https://arxiv.org/pdf/1811.03931",
+      "url_opened_citation": "https://arxiv.org/pdf/1811.03931",
+      "http_status": 200,
+      "page": 20,
+      "footer_or_header": "November 12, 2018; Football_HEAD (the extracted page header/footer text immediately following equation (A1)).",
+      "footer_or_header_citation": "https://arxiv.org/pdf/1811.03931",
+      "equation_as_printed": "X_t = (λ₁/(λ₁+λ₂))[1−e^{−(λ₁+λ₂)(T−t)}].",
+      "equation_as_printed_citation": "https://arxiv.org/pdf/1811.03931",
+      "eight_lines_around": [
+        "A.2 Non-European Bets",
+        "Bets in this category have a value at the end of the game that depends not only on the final score, but also on the score before the end of the game or the order of scores.",
+        "We consider two popular bets in this category: Next Goal and Half Time / Full Time bets.",
+        "Valuation of these bets follows from Corollary 3.9.",
+        "X_t = λ₁/(λ₁+λ₂) [1−e^{−(λ₁+λ₂)(T−t)}].",
+        "X_t = λ₂/(λ₁+λ₂) [1−e^{−(λ₁+λ₂)(T−t)}].",
+        "(A1)",
+        "A.2.2 Half Time / Full Time. Half Time / Full Time bets win if the half time and the full time is won by the predicted team or is a draw."
+      ],
+      "eight_lines_around_citation": "https://arxiv.org/pdf/1811.03931",
+      "matches_landed_form": "yes",
+      "diff_if_no": "",
+      "replacement_used": "none"
+    },
+    {
+      "id": "6de366c3",
+      "source": "Divos et al. arXiv:1811.03931 odd total",
+      "url_opened": "https://arxiv.org/pdf/1811.03931",
+      "url_opened_citation": "https://arxiv.org/pdf/1811.03931",
+      "http_status": 200,
+      "page": 20,
+      "footer_or_header": "November 12, 2018; Football_HEAD (extracted running header/footer text in the same Appendix-A page).",
+      "footer_or_header_citation": "https://arxiv.org/pdf/1811.03931",
+      "equation_as_printed": "exp[−(λ₁+λ₂)] cosh[(λ₁+λ₂)]",
+      "equation_as_printed_citation": "https://arxiv.org/pdf/1811.03931",
+      "eight_lines_around": [
+        "A.1 European Bets",
+        "The value of a European bet at the end of the game only depends on the final scores.",
+        "The formulae of this section follow directly from Proposition 3.15.",
+        "Table A1 summarizes the payoff functions and the valuation formulae for some of the most common types of in-play football bets.",
+        "| Odd | 1(N_T¹+N_T²=1 mod 2) | exp[−(λ₁+λ₂)] cosh[(λ₁+λ₂)] |",
+        "| Even | 1(N_T¹+N_T²=0 mod 2) | exp[−(λ₁+λ₂)] sinh[(λ₁+λ₂)] |",
+        "Odd and Even bets pay out if the total number of goals is an odd or an even number.",
+        "A.2 Non-European Bets"
+      ],
+      "eight_lines_around_citation": "https://arxiv.org/pdf/1811.03931",
+      "matches_landed_form": "yes",
+      "diff_if_no": "",
+      "replacement_used": "none"
+    }
+  ],
+  "GAP_LIST": [
+    {
+      "id": "63d5c908",
+      "next_url": "https://www.semanticscholar.org/paper/Divergence-measures-based-on-the-Shannon-entropy-Lin/8b586837ac372141eedafd124c57335cbc893bed",
+      "status": "still held",
+      "reason": "No allowed fetched source exposed a journal PDF body with page 147 equation (4.1) and page 149 equation (5.1); the best available replacement is abstract/metadata only."
+    },
+    {
+      "id": "5421d3fd",
+      "next_url": "https://www.microsoft.com/en-us/research/publication/large-margin-rank-boundaries-for-ordinal-regression",
+      "status": "still held",
+      "reason": "The allowed PDF returned a 404 page and the listed Microsoft Research replacement contained no paper body or margin-ranking equation."
+    }
+  ]
+}

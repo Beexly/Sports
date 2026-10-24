@@ -1,0 +1,20 @@
+{
+ "date": "2026-10-15",
+ "status": "ran_live",
+ "movement_file": "research/line_movement_pit_safe.csv",
+ "source": "ESPN core API (keyless): teamrankings spreadHistory movement series 2017-2022, ESPN BET open/close 2024-2025, DraftKings 2026, Caesars-NJ post line 2023 W6-18 opens",
+ "n_matched": 2397,
+ "frozen_n": 2462,
+ "refused_no_open": 65,
+ "mean_delta_vs_13_45": 0.001343,
+ "se_mean_delta": 0.003306,
+ "implied_crps": 7.155364,
+ "delta_vs_joint_hetero": 0.012742,
+ "joint_hetero_reference": 7.142622,
+ "gate": 7.099,
+ "gate_cleared": false,
+ "emission": "ZERO_OBJECT",
+ "max_abs_mean_shift": 0.0,
+ "scorer": "dfs/walk_forward/line_movement_score.py @ grok/walk-forward-2026-10-14 (86a06c260)",
+ "scorer_patch_note": "scratch-run only: harness load_frozen rows lack gameday; stamp check fell back to movement file gameday column. Repo tree untouched."
+}

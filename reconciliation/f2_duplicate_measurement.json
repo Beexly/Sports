@@ -1,0 +1,142 @@
+{
+ "artifact": "f2_duplicate_measurement",
+ "measured_at": "2026-10-20",
+ "estimator": "packages/prediction-engine/src/bridge/bridge-model.ts (the repo's own fitBridge/predictBridge)",
+ "question": "Is pregame_context_logit a duplicate of the LIVE historical_strength family (f2 = 1), or does it carry information Elo does not?",
+ "design": {
+  "train_seasons": "< 2025 only (FORBIDDEN #16 respected)",
+  "train_rows": 6955,
+  "holdout_season": 2025,
+  "holdout_games_scored": 285,
+  "holdout_refused": 0,
+  "refusals": {
+   "train missing a prior feature": 36
+  },
+  "permutations": 20,
+  "never_permuted": "margin_diff",
+  "permuted": [
+   "scored_diff",
+   "allowed_diff",
+   "opp_scored_diff",
+   "opp_allowed_diff",
+   "rest_diff",
+   "dome",
+   "neutral"
+  ]
+ },
+ "arm_a_full": {
+  "brier": 0.223743,
+  "log_loss": 0.636548,
+  "brier_base_rate": 0.248889,
+  "brier_coin": 0.25,
+  "base_rate_home_win": 0.533333,
+  "skill_vs_base_rate": 0.025146,
+  "skill_ci95": [
+   0.00971,
+   0.040319
+  ],
+  "p_skill_gt_0": 0.9992
+ },
+ "arm_b_shuffled": {
+  "note": "The same estimator on the same rows with the seven non-strength features permuted in TRAINING, scored on the unpermuted holdout. margin_diff (the strength-class proxy) is never permuted.",
+  "brier_mean_over_permutations": 0.22185,
+  "brier_per_permutation": [
+   0.222483,
+   0.221916,
+   0.222167,
+   0.221575,
+   0.221168,
+   0.221771,
+   0.22257,
+   0.222202,
+   0.221929,
+   0.222314,
+   0.221951,
+   0.221203,
+   0.22177,
+   0.221681,
+   0.221918,
+   0.221449,
+   0.221711,
+   0.221652,
+   0.221926,
+   0.221649
+  ],
+  "brier_full_arm": 0.223743,
+  "degradation": -0.001893,
+  "skill_vs_base_rate": 0.027039,
+  "skill_ci95": [
+   0.012118,
+   0.041676
+  ],
+  "p_skill_gt_0": 0.9996,
+  "permutations_beating_full_arm": 20,
+  "permutations_run": 20
+ },
+ "duplicate_test": {
+  "design": "permutation test on the repo's own fitBridge/predictBridge. ARM A = real training rows. ARM B = the seven non-strength features permuted in training. margin_diff is never permuted. Bootstrap resamples GAMES, paired, 10,000 replicates.",
+  "corr_bridge_vs_shuffled_arm": 0.938046,
+  "incremental_value_of_the_seven_non_strength_features": -0.001893,
+  "incremental_value_ci95": [
+   -0.008075,
+   0.004245
+  ],
+  "p_incremental_gt_0": 0.266,
+  "verdict": "DUPLICATE: the seven non-strength features contribute NOTHING measurable beyond the strength class. Permuting them in training does not degrade the model -- the point estimate is NEGATIVE (permuting them scores BETTER), the 95% CI on their incremental value includes zero, and every one of the 20 permutations beat the full arm. The f2 = 1 duplicate claim HOLDS on the measurement. The burden is on showing the extra information exists, and it does not.",
+  "verdict_logic": "One-sided. To REFUTE the duplicate claim, permuting the seven features must DEGRADE the model in >95% of paired bootstrap replicates. It degrades in only 26.6%. The duplicate claim is therefore confirmed, and the burden of proof for the extra information lies with the claimant.",
+  "permutations_beating_full_arm_note": "20 of 20 permutations scored BELOW the full arm. Permuting the seven non-strength features in training made the model slightly BETTER on the holdout, which is what overfitting noise features looks like."
+ },
+ "calibration": {
+  "ece_raw_binned_10bins": 0.051868,
+  "ece_debiased_10bins": 0.049822,
+  "debias_correction": 0.002047,
+  "nonempty_bins": 8,
+  "published_gate_max_ece": 0.06,
+  "raw_passes_gate": true,
+  "debiased_passes_gate": true,
+  "note": "The repo's C-290 concern (docs/engine/research/2026-10-02/corpus-deep/deep/c03/challenges.md item 20) was that the raw binned ECE is upward-biased at n=285 and the 'eligible' call is too conservative. MEASURED: the debiased estimator does read lower, but BOTH pass the 0.06 gate, so the ECE gate is not the blocker."
+ },
+ "home_sign_measured": {
+  "margin_diff": 1,
+  "scored_diff": 1,
+  "allowed_diff": 1,
+  "opp_scored_diff": 1,
+  "opp_allowed_diff": 1,
+  "rest_diff": 1,
+  "dome": -1,
+  "neutral": -1
+ },
+ "home_sign_published": {
+  "margin_diff": 1,
+  "scored_diff": 1,
+  "allowed_diff": 1,
+  "opp_scored_diff": 1,
+  "opp_allowed_diff": 1,
+  "rest_diff": 1,
+  "dome": -1,
+  "neutral": -1
+ },
+ "home_sign_matches_published": true,
+ "coefficients_measured": {
+  "margin_diff": 0.05606062,
+  "scored_diff": 0.00098853,
+  "allowed_diff": 0.08960762,
+  "opp_scored_diff": 0.51015195,
+  "opp_allowed_diff": 0.20566623,
+  "rest_diff": 0.0541399,
+  "dome": -0.02325362,
+  "neutral": -0.05042645
+ },
+ "published_bridge_fit_json": {
+  "trainRows": 6955,
+  "emitted": 285,
+  "brier": 0.2237430131385838
+ },
+ "reproduction_check": {
+  "brier_matches_published_exactly": true,
+  "ece_raw_matches_published_exactly": true,
+  "home_sign_matches_published": true,
+  "note": "The published holdout doc reports skill +0.026190 against the TRAINING base rate (0.564297, 6,991 rows of 1999-2024). This script reports +0.025146 against the 2025 HOLDOUT's own base rate (0.533333). Both are correct; the base rate differs by construction. The Brier (0.223743) and the raw ECE (0.051868) reproduce EXACTLY, which is the check that matters: the estimator, the features and the split are the published ones."
+ },
+ "reproduction": "node reconciliation/measure_f2_duplicate.mjs"
+}

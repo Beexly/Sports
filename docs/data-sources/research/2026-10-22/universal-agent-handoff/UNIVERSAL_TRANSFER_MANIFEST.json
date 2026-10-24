@@ -1,0 +1,2004 @@
+{
+ "generated_utc": "2026-10-22T15:53:41Z",
+ "agent": "hermes/autonomous nfl-farm run (2026-10-22)",
+ "source_trees": [
+  "C:/Users/Garrett/nfl-farm",
+  "C:/Users/Garrett/nfl-re"
+ ],
+ "archive": "C:/Users/Garrett/nfl-farm/AGENT_HANDOFF_UNIVERSAL.tar.gz",
+ "archive_bytes": 593595039,
+ "archive_sha256": "5097ee74d129a76e7aeb78b887f353379e580572c3908017f272cb0c9a01807d",
+ "files_in_source_tree": 380,
+ "files_in_archive": 383,
+ "bytes_in_source_tree": 1941912828,
+ "bytes_hashed": 2535624738,
+ "endpoints_documented": {
+  "primary": 52,
+  "wildcard": 39,
+  "total": 91
+ },
+ "payloads_extracted": {
+  "primary": 319,
+  "wildcard": 61,
+  "total": 380
+ },
+ "payload_bytes": {
+  "primary": 1937395775,
+  "wildcard": 4517053,
+  "total": 1941912828
+ },
+ "payload_mb": 1941.91,
+ "classification_rulebrains": "primary = files under extracted_data/schemas/notes/out/artifacts or NFL-domain endpoints; wildcard = root scripts, docs, incidental and non-NFL material",
+ "verification": {
+  "method": "extracted archive to scratch, sha256 compared per file against on-disk originals",
+  "files_compared": 382,
+  "mismatchesbrains": 0,
+  "note": "archive self-inclusion (tar.gz inside itself) excluded from comparison as it is a truncated prefix",
+  "missing_from_archive": 0,
+  "mismatches": 0
+ },
+ "file_manifest": {
+  "nfl-farm/.gitignore": {
+   "sha256": "f2f27c0110e15ca682e23a6c387269a867ccb0eb2dc6d233b0d2a5cea26ce7f0",
+   "location_in_archive": "nfl-farm/.gitignore",
+   "bytes": 138
+  },
+  "nfl-farm/AGENT_HANDOFF_UNIVERSAL.tar.gz": {
+   "sha256": "5097ee74d129a76e7aeb78b887f353379e580572c3908017f272cb0c9a01807d",
+   "location_in_archive": "nfl-farm/AGENT_HANDOFF_UNIVERSAL.tar.gz",
+   "bytes": 593595039
+  },
+  "nfl-farm/bypass_log.md": {
+   "sha256": "e1c1fa271b3027d57db6199a7f9cb43ce0050c0b61fea25ccc08495669a2817d",
+   "location_in_archive": "nfl-farm/bypass_log.md",
+   "bytes": 20915
+  },
+  "nfl-farm/bypass_notes.md": {
+   "sha256": "c7102856e47a49d871d9b19b4f08911a43e787a94a001e4d540a07c20c6b3679",
+   "location_in_archive": "nfl-farm/bypass_notes.md",
+   "bytes": 3538
+  },
+  "nfl-farm/endpoints.jsonl": {
+   "sha256": "07fa345da0f8fc48bbce7af984be445d47b17a04e20d6ef9c46bae127944ece9",
+   "location_in_archive": "nfl-farm/endpoints.jsonl",
+   "bytes": 22095
+  },
+  "nfl-farm/extracted_data/actionnetwork_nfl_odds_2026-10-22.csv": {
+   "sha256": "c09064c74f350f9fc9dc8778087429e89f8d4164e20f655d7e3254032f1bf79f",
+   "location_in_archive": "nfl-farm/extracted_data/actionnetwork_nfl_odds_2026-10-22.csv",
+   "bytes": 75527
+  },
+  "nfl-farm/extracted_data/bdb2027/combine_results.csv": {
+   "sha256": "e4773ef68167d508f3916d446cd411dfd77a87e5765d3babcb986201fb143b86",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/combine_results.csv",
+   "bytes": 41020
+  },
+  "nfl-farm/extracted_data/bdb2027/games.csv": {
+   "sha256": "ca33543f6939af4ee393c568c60920c476ba91ddbfbdce5a06578b9492fa11fd",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/games.csv",
+   "bytes": 43174
+  },
+  "nfl-farm/extracted_data/bdb2027/game_tracking_2023.csv": {
+   "sha256": "385e620b6b94e8cd91f0d5776395b76b10d52a34401c764c21b4e98ab617855c",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/game_tracking_2023.csv",
+   "bytes": 335463637
+  },
+  "nfl-farm/extracted_data/bdb2027/game_tracking_2024.csv": {
+   "sha256": "06b7f34304414306dab53d5cb4c5d28485c5f62376442bcb913f9f01184ece6d",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/game_tracking_2024.csv",
+   "bytes": 717952893
+  },
+  "nfl-farm/extracted_data/bdb2027/players.csv": {
+   "sha256": "2cd7e0309e7aa40533028dc537c2c877dbedbe0fdb14f337fc18af31a5861c12",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/players.csv",
+   "bytes": 47301
+  },
+  "nfl-farm/extracted_data/bdb2027/player_career_successes.csv": {
+   "sha256": "0d4b8975debda4e2481218f30a16429dad5b806ecdd2fc4367291ac1460ed0a9",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/player_career_successes.csv",
+   "bytes": 13801
+  },
+  "nfl-farm/extracted_data/bdb2027/player_play.csv.gz": {
+   "sha256": "3a0436336b5728e0102f023681aae3f58f90da9beb16e53f2976755ec6dd3c54",
+   "location_in_archive": "nfl-farm/extracted_data/bdb2027/player_play.csv.gz",
+   "bytes": 41312786
+  },
+  "nfl-farm/extracted_data/bdb_tracking_separation_2023.csv": {
+   "sha256": "cd9595266a74af079299473e34c2d3a6d386064929c1b5cc5c382f410fc25b78",
+   "location_in_archive": "nfl-farm/extracted_data/bdb_tracking_separation_2023.csv",
+   "bytes": 32276
+  },
+  "nfl-farm/extracted_data/bdb_tracking_separation_2024_dense.csv": {
+   "sha256": "2ff03b9c288a9a6a0a739695e6c60916e06a9adf6a4384778f2426af712152f3",
+   "location_in_archive": "nfl-farm/extracted_data/bdb_tracking_separation_2024_dense.csv",
+   "bytes": 59134
+  },
+  "nfl-farm/extracted_data/betbetter-teaching-dataset-2026.csv": {
+   "sha256": "bf8fb58dfd31d32d506625095e77715204ea61e0926fc6ad609f1ab998e5ca59",
+   "location_in_archive": "nfl-farm/extracted_data/betbetter-teaching-dataset-2026.csv",
+   "bytes": 390940
+  },
+  "nfl-farm/extracted_data/betbetter_nfl.csv": {
+   "sha256": "10bc266547a9f0ecf91d7eb383c49c9f36df8487b09301a1ba89b0585d255250",
+   "location_in_archive": "nfl-farm/extracted_data/betbetter_nfl.csv",
+   "bytes": 7600
+  },
+  "nfl-farm/extracted_data/CONSENSUS_DISPERSION.csv": {
+   "sha256": "42d673f1971f165b4356b73e5a3c9f9924ab7314e94e6d7ca99da2ae381e3e85",
+   "location_in_archive": "nfl-farm/extracted_data/CONSENSUS_DISPERSION.csv",
+   "bytes": 316352
+  },
+  "nfl-farm/extracted_data/CONSENSUS_PROPS.csv": {
+   "sha256": "4bc7c9b46af68590eae34eff953fd1892085b252cf9d647f5a5d23b5f8ca1f15",
+   "location_in_archive": "nfl-farm/extracted_data/CONSENSUS_PROPS.csv",
+   "bytes": 19745
+  },
+  "nfl-farm/extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv": {
+   "sha256": "2a4495c3fb12b828d9ecf9d0918f87eb1027572c4e804caf776e042a8336ba50",
+   "location_in_archive": "nfl-farm/extracted_data/dailyfantasyfuel_nfl_projections_2026-10-22.csv",
+   "bytes": 14015
+  },
+  "nfl-farm/extracted_data/espn_depth_charts.csv": {
+   "sha256": "e1c40dea352ee53f87e14c19faf153dc97f04fb09e82357bbc3e502aa5316ad9",
+   "location_in_archive": "nfl-farm/extracted_data/espn_depth_charts.csv",
+   "bytes": 94843
+  },
+  "nfl-farm/extracted_data/espn_draft_player_probs.csv": {
+   "sha256": "56b7c23308ebce9c1db934e87f39194541c8a4a61c2218ef5dec3f7a0de8204f",
+   "location_in_archive": "nfl-farm/extracted_data/espn_draft_player_probs.csv",
+   "bytes": 792773
+  },
+  "nfl-farm/extracted_data/espn_nfl_gamesleep_2026-10-22.csv": {
+   "sha256": "34b84c6c4cd1a1d3dc4022dcf3aa2d7b2c164989ca8ebec6c5e65237bf1b1040",
+   "location_in_archive": "nfl-farm/extracted_data/espn_nfl_gamesleep_2026-10-22.csv",
+   "bytes": 707
+  },
+  "nfl-farm/extracted_data/espn_plays_401873008.csv": {
+   "sha256": "9faec79309fdf57c4ba7f1a86e6fce160abd7b36411640a3e680e61ec92440a4",
+   "location_in_archive": "nfl-farm/extracted_data/espn_plays_401873008.csv",
+   "bytes": 28741
+  },
+  "nfl-farm/extracted_data/espn_winprob_401873008.csv": {
+   "sha256": "97e4338c94857221fe9b82a4a8f3cd92ae365ff15fc6688311ecaf8f1044b873",
+   "location_in_archive": "nfl-farm/extracted_data/espn_winprob_401873008.csv",
+   "bytes": 4619
+  },
+  "nfl-farm/extracted_data/footballdb_cardinals_roster.csv": {
+   "sha256": "6bff31487d1cb16d395c4f85d2d14a1e0c103461edf81b9ec2acab237e6cba0c",
+   "location_in_archive": "nfl-farm/extracted_data/footballdb_cardinals_roster.csv",
+   "bytes": 2314
+  },
+  "nfl-farm/extracted_data/ftn_charting_2026.parquet": {
+   "sha256": "5a8128260c0d69b5507a3046f9f7aa2b932754ac4b6180a6e528ed70ad739741",
+   "location_in_archive": "nfl-farm/extracted_data/ftn_charting_2026.parquet",
+   "bytes": 203337
+  },
+  "nfl-farm/extracted_data/kaggle/2023-helmet-laboratory-testing-performance-results.zip": {
+   "sha256": "2ccbeed4149b4337c83375e995d7d2c4d2389e18602e262be38712f031c69339",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/2023-helmet-laboratory-testing-performance-results.zip",
+   "bytes": 711
+  },
+  "nfl-farm/extracted_data/kaggle/bdb-2027-public-enrichment.zip": {
+   "sha256": "f7742e3249011e0a3584c2ac3309a4aa5ed42d454cd005dc6a06e44021be4325",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/bdb-2027-public-enrichment.zip",
+   "bytes": 1237543
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/build_dataset.py": {
+   "sha256": "736a1330bff5014cd31491dbaf4cbb982d85fcb1957e9d57f89e6bd8c9dc13b3",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/build_dataset.py",
+   "bytes": 30516
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/check_bdb_join.py": {
+   "sha256": "11004abc36eee3fe01f8df3a52e028ad084b4177cd7466367a61df2c7eaee01a",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/check_bdb_join.py",
+   "bytes": 3902
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/coverage.csv": {
+   "sha256": "c233babd536f5ae31744f0a8d6e1aab264d60c9ca10897d7a5814df694e30635",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/coverage.csv",
+   "bytes": 1839
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/data_dictionary.csv": {
+   "sha256": "9c4602b9f1a49e9da3a4c6caf12f3c6c94261e7c05a25e94efcca8ae763550df",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/data_dictionary.csv",
+   "bytes": 24170
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/LICENSES.md": {
+   "sha256": "db932b5859c9575f7b71edbc73209de0559fc5320e8ae8988e553d0e021542ea",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/LICENSES.md",
+   "bytes": 4041
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/nfl_id_crosswalk.csv": {
+   "sha256": "6a8fb0739f062c750d208ab06e9d08660889bf5582443f75b754cd19debe4c19",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/nfl_id_crosswalk.csv",
+   "bytes": 2360845
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/provenance.csv": {
+   "sha256": "a5920d5d18918c285c80584baa25e04d9c1e9534a532845d29b4f9a282d72e41",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/provenance.csv",
+   "bytes": 7307
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/README.md": {
+   "sha256": "3d61e854a529b1e26d042d43a0f5bcb5329a7d4db09a478be5a147dedea8acc6",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/README.md",
+   "bytes": 10468
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/rookie_classes_2023_2025.csv": {
+   "sha256": "3c975726cec23b73ec4439ab51c473f124ed558f6012524a4d8cbd7762f887db",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/rookie_classes_2023_2025.csv",
+   "bytes": 253002
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/rookie_class_seasons_2023_2025.csv": {
+   "sha256": "a72a8ae0457a5110fa63bcabbbeda36527c218facb7ef9d711dc2af4d02dc59b",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/rookie_class_seasons_2023_2025.csv",
+   "bytes": 758489
+  },
+  "nfl-farm/extracted_data/kaggle/enrich/validate_dataset.py": {
+   "sha256": "bf6629f6d242ab73c4799da20823598bfa545f3e1ac05e7709825801fdcb0814",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/enrich/validate_dataset.py",
+   "bytes": 7433
+  },
+  "nfl-farm/extracted_data/kaggle/gp/DataDrivenGameplans_Allison.pdf": {
+   "sha256": "2affb80a1d30e7aac15df00aab11217ec70e60df01f530b5424a3fa30fa64db7",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/gp/DataDrivenGameplans_Allison.pdf",
+   "bytes": 3096141
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/.gitignore": {
+   "sha256": "79b6f8054f8ef5e9e78c18174bf57caf29b11410166b9268d6923e87520eb88f",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/.gitignore",
+   "bytes": 1799
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/features.py": {
+   "sha256": "2906b7e0cec1960d069a6787b18dde2d768848a89e88cdbf0ff5fdbbc5583340",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/features.py",
+   "bytes": 971
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/score.py": {
+   "sha256": "3c1a977aca98616c6231b8bad300f04a0c3e6cfccdec65d0797be8cc9814b4dc",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/score.py",
+   "bytes": 9970
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/video.py": {
+   "sha256": "09817e0d6b19f5bbf81328e0ea738e0557a26ad0d61009b0fb5bf5f293a8f05b",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/video.py",
+   "bytes": 5830
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/__init__.py": {
+   "sha256": "16cae920313b960120a97f08521672593afeb5dd91f3aed7eee4bf0bac49d356",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/helmet_assignment/__init__.py",
+   "bytes": 135
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/LICENSE": {
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/LICENSE",
+   "bytes": 11357
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/README.md": {
+   "sha256": "a47f34ad237dc6dfd3cf3a42e4f862fbd4aa8b1960245b8ba0cb7f95727f135f",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/README.md",
+   "bytes": 1255
+  },
+  "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/setup.py": {
+   "sha256": "11e5ba8a0894d96f8c91143e1ccef9441687be194e6f064482c4f89d099f8abe",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hah/helmet-assignment-main/setup.py",
+   "bytes": 408
+  },
+  "nfl-farm/extracted_data/kaggle/helmet/field.png": {
+   "sha256": "a402fdf7522ee1484f95febd4908bc2c1f12b15fc7124db5db96c516995fc22c",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/helmet/field.png",
+   "bytes": 134661
+  },
+  "nfl-farm/extracted_data/kaggle/helmet-assignment-helpers.zip": {
+   "sha256": "4bab037ea709c997c1290e3e6860676d3bafea162b83c001b05ccc0dbbc90139",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/helmet-assignment-helpers.zip",
+   "bytes": 12847
+  },
+  "nfl-farm/extracted_data/kaggle/hl/2023 HELMET LABORATORY TESTING PERFORMANCE RESULTS - Helmet Innovation.csv": {
+   "sha256": "914fba0f69267c23ae5024eb2f8a6fa6ba52b693eb9453666b3c1cb0b104630d",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/hl/2023 HELMET LABORATORY TESTING PERFORMANCE RESULTS - Helmet Innovation.csv",
+   "bytes": 980
+  },
+  "nfl-farm/extracted_data/kaggle/jake-allison-data-driven-gameplans-coaching.zip": {
+   "sha256": "9b8099b4b9d87cc9afc03a76c439381fe1d4d6eb60d9fb029d7d4d2016bd0b5a",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/jake-allison-data-driven-gameplans-coaching.zip",
+   "bytes": 2610367
+  },
+  "nfl-farm/extracted_data/kaggle/nfl-scores-and-betting-data.zip": {
+   "sha256": "c8057c4548addf750175e89832a3c06b5651ff88d33d2289d724c406ba4c424a",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/nfl-scores-and-betting-data.zip",
+   "bytes": 263048
+  },
+  "nfl-farm/extracted_data/kaggle/nfl-stats-1999-2022.zip": {
+   "sha256": "019dd8d8070436f935106ec4a6929e077a614b607c349f776c869e1b59048e28",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/nfl-stats-1999-2022.zip",
+   "bytes": 92721061
+  },
+  "nfl-farm/extracted_data/kaggle/nflhelmet-helper-dataset.zip": {
+   "sha256": "f45a0048cc4ceddcc5e94be05fae9dc3d1b38f40b7826a499440b8237d3c5827",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/nflhelmet-helper-dataset.zip",
+   "bytes": 119747
+  },
+  "nfl-farm/extracted_data/kaggle/ph/weekly_player_stats_offense.csv": {
+   "sha256": "342c0b622a1d75e23dff1c559211bf17796c70c7eb69d4bff5d8023aa49c47f4",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/ph/weekly_player_stats_offense.csv",
+   "bytes": 342703691
+  },
+  "nfl-farm/extracted_data/kaggle/ph/weekly_team_stats_offense.csv": {
+   "sha256": "8d747f88358f2b5a5de30972be3a46e2df934893aefac16df16a5d0fcc5d11b3",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/ph/weekly_team_stats_offense.csv",
+   "bytes": 35565695
+  },
+  "nfl-farm/extracted_data/kaggle/ph/yearly_player_stats_offense.csv": {
+   "sha256": "45d9479d6f74f35fe89415aa71eae51abee44f8406007d00c8c4cd21314a22d6",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/ph/yearly_player_stats_offense.csv",
+   "bytes": 36020784
+  },
+  "nfl-farm/extracted_data/kaggle/ph/yearly_team_stats_offense.csv": {
+   "sha256": "02ed40b3f0dbb7caf68d1e18591739595c8aa07b88466df0875bf521edcd8fec",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/ph/yearly_team_stats_offense.csv",
+   "bytes": 1875598
+  },
+  "nfl-farm/extracted_data/kaggle/tcb/nfl_teams.csv": {
+   "sha256": "6cbeb782c50ae48a9bea26e32841ef95403c1c8dad3299317c5dd73809d4bccb",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/tcb/nfl_teams.csv",
+   "bytes": 2752
+  },
+  "nfl-farm/extracted_data/kaggle/tcb/spreadspoke.R": {
+   "sha256": "be791e15a671963e510b4fdfdac952c41bc3636c348d4a99452b24a5f00ac764",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/tcb/spreadspoke.R",
+   "bytes": 42096
+  },
+  "nfl-farm/extracted_data/kaggle/tcb/spreadspoke_scores.csv": {
+   "sha256": "d73c43a546581329e682f17a1047871a7181580f2a6b7d64c36a7f5d5a62ca78",
+   "location_in_archive": "nfl-farm/extracted_data/kaggle/tcb/spreadspoke_scores.csv",
+   "bytes": 1592514
+  },
+  "nfl-farm/extracted_data/linestar_ownership_dk_nfl_p413_2026-10-22.csv": {
+   "sha256": "17728fcfa4ab37f9f7c50e2bda5d3384f35aa2395d91aec0406b57e29300402c",
+   "location_in_archive": "nfl-farm/extracted_data/linestar_ownership_dk_nfl_p413_2026-10-22.csv",
+   "bytes": 4074
+  },
+  "nfl-farm/extracted_data/linestar_ownership_full_282_2026-10-22.csv": {
+   "sha256": "911aa1a6b56b3c779ef0ed01d0f966c58875501944e9d4c11dd8b6206097f473",
+   "location_in_archive": "nfl-farm/extracted_data/linestar_ownership_full_282_2026-10-22.csv",
+   "bytes": 10171
+  },
+  "nfl-farm/extracted_data/nflpa_research_0.pdf": {
+   "sha256": "f3b1de793ab2c6732ce4f8cb1ee7503fd398d0c865f57698fe0d8b6333b1cae2",
+   "location_in_archive": "nfl-farm/extracted_data/nflpa_research_0.pdf",
+   "bytes": 72218
+  },
+  "nfl-farm/extracted_data/nflpa_research_2.pdf": {
+   "sha256": "9b3404a7cc16b3acb806c0e828d8d0889feced9e187e423ebda64dd40a73a9df",
+   "location_in_archive": "nfl-farm/extracted_data/nflpa_research_2.pdf",
+   "bytes": 1384072
+  },
+  "nfl-farm/extracted_data/nfl_id_crosswalk.csv": {
+   "sha256": "6a8fb0739f062c750d208ab06e9d08660889bf5582443f75b754cd19debe4c19",
+   "location_in_archive": "nfl-farm/extracted_data/nfl_id_crosswalk.csv",
+   "bytes": 2360845
+  },
+  "nfl-farm/extracted_data/ngs_all_expectation_2025.csv": {
+   "sha256": "822c0696b186d3942d6130a9dda0c6fd09d6a04407392e400169af2397af57fa",
+   "location_in_archive": "nfl-farm/extracted_data/ngs_all_expectation_2025.csv",
+   "bytes": 18001
+  },
+  "nfl-farm/extracted_data/ngs_completion_3seasons.csv": {
+   "sha256": "49f3ed77d85c76920ce375548d56fd5b9044546d0cff1125b3fdd2a4913e8af7",
+   "location_in_archive": "nfl-farm/extracted_data/ngs_completion_3seasons.csv",
+   "bytes": 72689
+  },
+  "nfl-farm/extracted_data/ngs_expectation_leaders_2025_w1_7.csv": {
+   "sha256": "ebb6ee588e8b924d008c5ab7270c7ebd0f7f5c15db7246ca568bb285c77f54ed",
+   "location_in_archive": "nfl-farm/extracted_data/ngs_expectation_leaders_2025_w1_7.csv",
+   "bytes": 25892
+  },
+  "nfl-farm/extracted_data/ngs_receiver_separation_2024.csv": {
+   "sha256": "8b6dede465a3001ce29c63b0191851c379c95abf03e532a2821ee12d007b9c89",
+   "location_in_archive": "nfl-farm/extracted_data/ngs_receiver_separation_2024.csv",
+   "bytes": 12496
+  },
+  "nfl-farm/extracted_data/ngs_receiver_separation_2025.csv": {
+   "sha256": "7dc3966858a57c1ed15b02337a4b1e6970574cf57c1929e29d0821c1ca60c60c",
+   "location_in_archive": "nfl-farm/extracted_data/ngs_receiver_separation_2025.csv",
+   "bytes": 24156
+  },
+  "nfl-farm/extracted_data/nvidia_nfl_paper.pdf": {
+   "sha256": "8569d82e6015166473afc94781990263ba1fac4a51360ee2410a323dea30a173",
+   "location_in_archive": "nfl-farm/extracted_data/nvidia_nfl_paper.pdf",
+   "bytes": 9861889
+  },
+  "nfl-farm/extracted_data/officials.parquet": {
+   "sha256": "fec0532a78c81027c2e2e73a077bc332147f473b8377ae39e8302e2bfe42e7c9",
+   "location_in_archive": "nfl-farm/extracted_data/officials.parquet",
+   "bytes": 150096
+  },
+  "nfl-farm/extracted_data/pfr_2025_defense.csv": {
+   "sha256": "30f11305c19a0da782c237146ce1bccfdf0510ba4ff5ca5e41d25f3c8712e9c6",
+   "location_in_archive": "nfl-farm/extracted_data/pfr_2025_defense.csv",
+   "bytes": 120762
+  },
+  "nfl-farm/extracted_data/pfr_2025_passing.csv": {
+   "sha256": "fbca12e591c44285c0dcbae51c4bb1b93708426ee6d3a22f8f514a1842fc5b26",
+   "location_in_archive": "nfl-farm/extracted_data/pfr_2025_passing.csv",
+   "bytes": 16063
+  },
+  "nfl-farm/extracted_data/pfr_2025_receiving.csv": {
+   "sha256": "0c0a42d8ddc9c821049a21b35f56fe1a6c09543448b11c11125f30d66f3924fb",
+   "location_in_archive": "nfl-farm/extracted_data/pfr_2025_receiving.csv",
+   "bytes": 63063
+  },
+  "nfl-farm/extracted_data/pfr_2025_rushing.csv": {
+   "sha256": "87847323d1709c96baf56827d4d2d1ac381182f9906fd8bd97a9bf69fdae7bf9",
+   "location_in_archive": "nfl-farm/extracted_data/pfr_2025_rushing.csv",
+   "bytes": 52238
+  },
+  "nfl-farm/extracted_data/PLAYER_CROSSWALK_2026-10-22.csv": {
+   "sha256": "c848b59b1b7dbdae462c64453c6109348926b383d563ffa8193cd8aee7f1e1e8",
+   "location_in_archive": "nfl-farm/extracted_data/PLAYER_CROSSWALK_2026-10-22.csv",
+   "bytes": 105964
+  },
+  "nfl-farm/extracted_data/PLAYER_CROSSWALK_V2.csv": {
+   "sha256": "597a9309978ca5518ddcf683e637807b4ab6c54e87b5ac9bb5ac7005e79492e8",
+   "location_in_archive": "nfl-farm/extracted_data/PLAYER_CROSSWALK_V2.csv",
+   "bytes": 164554
+  },
+  "nfl-farm/extracted_data/prizepicks_nfl_props_2026-10-22.csv": {
+   "sha256": "8b5afb9a4e4d101b8e25fcfa38a06de6c2b923400258fdfec0a8509adb843a81",
+   "location_in_archive": "nfl-farm/extracted_data/prizepicks_nfl_props_2026-10-22.csv",
+   "bytes": 737876
+  },
+  "nfl-farm/extracted_data/prizepicks_partner_projections_2026-10-22.json": {
+   "sha256": "276ebf4d26782054bd053436d09d3e66727a9c3207f23c952fbb3cdf54293bf8",
+   "location_in_archive": "nfl-farm/extracted_data/prizepicks_partner_projections_2026-10-22.json",
+   "bytes": 32426046
+  },
+  "nfl-farm/extracted_data/props_nfl_2026-10-22.csv": {
+   "sha256": "b6717c04c136b2b10af68df63a6e3fd98b47116ae909c097b5716e58c1b4f00e",
+   "location_in_archive": "nfl-farm/extracted_data/props_nfl_2026-10-22.csv",
+   "bytes": 10103736
+  },
+  "nfl-farm/extracted_data/props_nfl_2026-10-22.json": {
+   "sha256": "428f87ab9ba86f160e825549e1e91c28e9b2fbc8794e154734673d569bdc9a92",
+   "location_in_archive": "nfl-farm/extracted_data/props_nfl_2026-10-22.json",
+   "bytes": 188067467
+  },
+  "nfl-farm/extracted_data/props_nfl_2026-10-22.json.gz": {
+   "sha256": "8a076f3b3f5662d12bb1c3d432149e2ed6a1974189aded6a924b7c5665f948d0",
+   "location_in_archive": "nfl-farm/extracted_data/props_nfl_2026-10-22.json.gz",
+   "bytes": 17852550
+  },
+  "nfl-farm/extracted_data/qbr_season_level.csv.gz": {
+   "sha256": "273dec9c90b09bf4ddab977722eb60e21cb86e4e7a70f3c3030d5c661b4ce422",
+   "location_in_archive": "nfl-farm/extracted_data/qbr_season_level.csv.gz",
+   "bytes": 53252
+  },
+  "nfl-farm/extracted_data/roster_weekly_2026.parquet": {
+   "sha256": "951448fb9e22f11585f37593ce1e0bbcf2b0c01b13390559d2c9d773bb786c99",
+   "location_in_archive": "nfl-farm/extracted_data/roster_weekly_2026.parquet",
+   "bytes": 823402
+  },
+  "nfl-farm/extracted_data/scores24_nfl_odds_2026-10-22.csv": {
+   "sha256": "ce1a6ed4e834516d652d27b1721efb9fb6618d79cdfb788773ddfa95f5662829",
+   "location_in_archive": "nfl-farm/extracted_data/scores24_nfl_odds_2026-10-22.csv",
+   "bytes": 503
+  },
+  "nfl-farm/extracted_data/scores24_nfl_trends_2026-10-22.csv": {
+   "sha256": "0695deb3eb7134ac37e7e6ada17a8636b9a43b86ea93695f921bcd131333b36e",
+   "location_in_archive": "nfl-farm/extracted_data/scores24_nfl_trends_2026-10-22.csv",
+   "bytes": 1517
+  },
+  "nfl-farm/extracted_data/sleeper_nfl_players_2026-10-22.csv": {
+   "sha256": "7b0d33ffa0fdd7a6f6b1717efe3f018a748dcc4e3c90a04ab969ccf8954a9683",
+   "location_in_archive": "nfl-farm/extracted_data/sleeper_nfl_players_2026-10-22.csv",
+   "bytes": 221574
+  },
+  "nfl-farm/extracted_data/sleeper_nfl_week7_projections_2026-10-22.csv": {
+   "sha256": "a497bdae3941ef6531b256e54af8cca89ad8295ff038870b36eb69fc9353b524",
+   "location_in_archive": "nfl-farm/extracted_data/sleeper_nfl_week7_projections_2026-10-22.csv",
+   "bytes": 189709
+  },
+  "nfl-farm/extracted_data/sloan_2018_nfl_cv_poster.pdf": {
+   "sha256": "8e0cb4a85e6e26570aafa23746d5beb71410af83b076216067b7cb80496197d3",
+   "location_in_archive": "nfl-farm/extracted_data/sloan_2018_nfl_cv_poster.pdf",
+   "bytes": 882429
+  },
+  "nfl-farm/extracted_data/teaching-dataset-codebook.md": {
+   "sha256": "91302f91153e9129d0bbd8bd92ceb7a7874502a7ad26dcc08f74fc0053391977",
+   "location_in_archive": "nfl-farm/extracted_data/teaching-dataset-codebook.md",
+   "bytes": 6869
+  },
+  "nfl-farm/extracted_data/thescore_nfl_injuries_2026-10-22.csv": {
+   "sha256": "97d5251091be3573327d2067408ec04962946495ecc242f38b7f3a0da525e125",
+   "location_in_archive": "nfl-farm/extracted_data/thescore_nfl_injuries_2026-10-22.csv",
+   "bytes": 32784
+  },
+  "nfl-farm/extracted_data/thescore_nfl_rosters_2026-10-22.csv": {
+   "sha256": "981f9f24a8e210b7c291913f935df61330eb9eaa76d4d95fcbd1ba47f90c5526",
+   "location_in_archive": "nfl-farm/extracted_data/thescore_nfl_rosters_2026-10-22.csv",
+   "bytes": 54940
+  },
+  "nfl-farm/extracted_data/trades.csv": {
+   "sha256": "cb9169eaa155036158ca6e9522ededaea0ee9fee95198f4fde15dc1ae7a33afe",
+   "location_in_archive": "nfl-farm/extracted_data/trades.csv",
+   "bytes": 287456
+  },
+  "nfl-farm/extracted_data/underdog_nfl_props_2026-10-22.csv": {
+   "sha256": "219eda61b3f1e6d3c2321bb421caffd4d3a31ef19e1ed67ee6f9009439d5fce0",
+   "location_in_archive": "nfl-farm/extracted_data/underdog_nfl_props_2026-10-22.csv",
+   "bytes": 417171
+  },
+  "nfl-farm/extracted_data/underdog_v1_over_under_lines_2026-10-22.json": {
+   "sha256": "40b1515e20d7721b30d6ca699e0f4607a767399a27d89e51ee83a89b2fc67d95",
+   "location_in_archive": "nfl-farm/extracted_data/underdog_v1_over_under_lines_2026-10-22.json",
+   "bytes": 27099779
+  },
+  "nfl-farm/extracted_data/UNIFIED_PROPS_2026-10-22.csv": {
+   "sha256": "e5a7c4fb81f0f8aa9141e5865a90f17a6bc8d9557ba8961244e24909b29ee201",
+   "location_in_archive": "nfl-farm/extracted_data/UNIFIED_PROPS_2026-10-22.csv",
+   "bytes": 4929386
+  },
+  "nfl-farm/extracted_data/UNIFIED_PROPS_canon.csv": {
+   "sha256": "18e86295c5b281c4e00844dcdd6418c32932ec314440ea3d0db212178c0af6b2",
+   "location_in_archive": "nfl-farm/extracted_data/UNIFIED_PROPS_canon.csv",
+   "bytes": 5527454
+  },
+  "nfl-farm/frontier_queue.json": {
+   "sha256": "b3e8af1e84051b9040dfe2aaa29f01182033fba5f767f08604fa1a8a9a4eaaa6",
+   "location_in_archive": "nfl-farm/frontier_queue.json",
+   "bytes": 2610
+  },
+  "nfl-farm/h1.py": {
+   "sha256": "5957c2a62e4b788e4e71a301f7cacf4ff5acc040f80dba9d2165ddd49633154d",
+   "location_in_archive": "nfl-farm/h1.py",
+   "bytes": 1941
+  },
+  "nfl-farm/h10.py": {
+   "sha256": "8d78ad06f7ef43c5c93fb0eebf12c680abd6ab7d9350b13ac71871d1e975a490",
+   "location_in_archive": "nfl-farm/h10.py",
+   "bytes": 1228
+  },
+  "nfl-farm/h11.py": {
+   "sha256": "6df4256b0101856ad7f33d2e8cee50b4aea8d02980ba44eaf04df2595059374b",
+   "location_in_archive": "nfl-farm/h11.py",
+   "bytes": 1707
+  },
+  "nfl-farm/h12.py": {
+   "sha256": "ad086af6d4e37a2ae7b3d4dc7b7877d51bce341300266b444847b6f7352881cd",
+   "location_in_archive": "nfl-farm/h12.py",
+   "bytes": 1690
+  },
+  "nfl-farm/h13.py": {
+   "sha256": "f8eb325b9289fbefe0d3966e2be4082053fe2b0a42f6747cc0c2c435c799283e",
+   "location_in_archive": "nfl-farm/h13.py",
+   "bytes": 1688
+  },
+  "nfl-farm/h14.py": {
+   "sha256": "fd575893c33d40cd88ea227ec165791e4f7a8d033d1b12cdf30ca64ef8c198ba",
+   "location_in_archive": "nfl-farm/h14.py",
+   "bytes": 2169
+  },
+  "nfl-farm/h15.py": {
+   "sha256": "db7dc6244e6dffd774bffcba8ab0e05ce06992d6b6d485ca3c130a43c3957c0c",
+   "location_in_archive": "nfl-farm/h15.py",
+   "bytes": 1551
+  },
+  "nfl-farm/h16.py": {
+   "sha256": "fb1fe0276eeefd4034f97cf44a6699f501b35795b6520b9d6ccbaaf4dd76f6b9",
+   "location_in_archive": "nfl-farm/h16.py",
+   "bytes": 1584
+  },
+  "nfl-farm/h17.py": {
+   "sha256": "4596653a9d79a51daef3cc28d3f37a379266290c80d5fa370804b85a524ba6f8",
+   "location_in_archive": "nfl-farm/h17.py",
+   "bytes": 1152
+  },
+  "nfl-farm/h18.py": {
+   "sha256": "ba9c8a98dfdfb7ccf855eb5716a2e7085bfa4eb0764e6138c9e8ad1661a65990",
+   "location_in_archive": "nfl-farm/h18.py",
+   "bytes": 1274
+  },
+  "nfl-farm/h19.py": {
+   "sha256": "a562e204df15dd84b5939331608a15675fbc5bbfcd1d12427be2d5b1b2ed2524",
+   "location_in_archive": "nfl-farm/h19.py",
+   "bytes": 1294
+  },
+  "nfl-farm/h2.py": {
+   "sha256": "0957218fd95c7906c520b2ac17fd76f1fdf26776d3bada786ef9cd61692ff7b4",
+   "location_in_archive": "nfl-farm/h2.py",
+   "bytes": 2021
+  },
+  "nfl-farm/h20.py": {
+   "sha256": "9429ca9507a1951280493d63a2854202e765598635ad42b25fa2b4dff07b68d5",
+   "location_in_archive": "nfl-farm/h20.py",
+   "bytes": 1523
+  },
+  "nfl-farm/h21.py": {
+   "sha256": "6fd8c25cc38d2020370a6339999f16f8f6e73def4ca7252aac3cd8e9814ee36e",
+   "location_in_archive": "nfl-farm/h21.py",
+   "bytes": 1607
+  },
+  "nfl-farm/h22.py": {
+   "sha256": "a562e204df15dd84b5939331608a15675fbc5bbfcd1d12427be2d5b1b2ed2524",
+   "location_in_archive": "nfl-farm/h22.py",
+   "bytes": 1294
+  },
+  "nfl-farm/h23.py": {
+   "sha256": "b65641ba8f34d2c8d2b92ade1477ccac63a8a22da96fb18007b97cadefc2750c",
+   "location_in_archive": "nfl-farm/h23.py",
+   "bytes": 1245
+  },
+  "nfl-farm/h24.py": {
+   "sha256": "6656d27e2b5ce42690cc2cfbab5132f2dc62f174fb428d4f8a22052e151e170c",
+   "location_in_archive": "nfl-farm/h24.py",
+   "bytes": 1278
+  },
+  "nfl-farm/h25.py": {
+   "sha256": "4eaf8a664e7c856fdd4933aaf8d351dad0b8e490805cefd22205c881796c309b",
+   "location_in_archive": "nfl-farm/h25.py",
+   "bytes": 1267
+  },
+  "nfl-farm/h26.py": {
+   "sha256": "708d5ebb3a469d301fcd5f125e4c75adca35bb3f35190d5427ad8f0baa6d8ab2",
+   "location_in_archive": "nfl-farm/h26.py",
+   "bytes": 1226
+  },
+  "nfl-farm/h3.py": {
+   "sha256": "b2aba35936f034052d90101adfe6cf34b4281b7e83e9fd1faffed4b3ea35c42c",
+   "location_in_archive": "nfl-farm/h3.py",
+   "bytes": 2256
+  },
+  "nfl-farm/h4.py": {
+   "sha256": "3fe3b2145ed9a5fc299c55c9945825a1a27c0d5b730f7527a50f2af093b917b1",
+   "location_in_archive": "nfl-farm/h4.py",
+   "bytes": 1266
+  },
+  "nfl-farm/h5.py": {
+   "sha256": "40c281dd0dbfa59bcdf829d77d0f4a61bd5c1c5e97c2de34eff1f0c6b51b65c3",
+   "location_in_archive": "nfl-farm/h5.py",
+   "bytes": 1888
+  },
+  "nfl-farm/h6.py": {
+   "sha256": "c7e94019c3dfe6333ec9d000427cf960d1c4f873816e27dc9ce44727b1bf7452",
+   "location_in_archive": "nfl-farm/h6.py",
+   "bytes": 1827
+  },
+  "nfl-farm/h7.py": {
+   "sha256": "c61871d86470a3b832755a9f15bfe3947346ff12f20a395c3d0dbd1b3846c6ea",
+   "location_in_archive": "nfl-farm/h7.py",
+   "bytes": 1272
+  },
+  "nfl-farm/h8.py": {
+   "sha256": "b44a1b30227d78976249a08b72fbf8f7a5d76289e51f8188ac570bc08efa0e55",
+   "location_in_archive": "nfl-farm/h8.py",
+   "bytes": 1272
+  },
+  "nfl-farm/h9.py": {
+   "sha256": "22beeb049fe2bd7b6883b356b57fb0846e89b956ee8dd77801c9bec59b49242c",
+   "location_in_archive": "nfl-farm/h9.py",
+   "bytes": 1780
+  },
+  "nfl-farm/knowledge_graph.json": {
+   "sha256": "97030b6c95bb1700d10dd62926101a1b5c65172580e6b5f155bff965fa753d06",
+   "location_in_archive": "nfl-farm/knowledge_graph.json",
+   "bytes": 9346
+  },
+  "nfl-farm/notes/actionnetwork.md": {
+   "sha256": "c960a98b2b2221c68ec2c6657338e779bb1272aed89a70c6f56aa6a1f6b896cf",
+   "location_in_archive": "nfl-farm/notes/actionnetwork.md",
+   "bytes": 1217
+  },
+  "nfl-farm/notes/alignment_ablation.md": {
+   "sha256": "6679813db2f0eada66eb624828314cb290a06d8e09d81be49d7a8ee9c5f0e305",
+   "location_in_archive": "nfl-farm/notes/alignment_ablation.md",
+   "bytes": 1328
+  },
+  "nfl-farm/notes/aws_ngs_pressure_architecture.md": {
+   "sha256": "ce25075971d01a82086ec36230b8140080ad9c66a90081d2b2b16774a8278186",
+   "location_in_archive": "nfl-farm/notes/aws_ngs_pressure_architecture.md",
+   "bytes": 2420
+  },
+  "nfl-farm/notes/baseline_validity.md": {
+   "sha256": "c64d949c057f2a07844ac6701b38a8ba22d75aab092825efcfd9304fce0a0acc",
+   "location_in_archive": "nfl-farm/notes/baseline_validity.md",
+   "bytes": 1990
+  },
+  "nfl-farm/notes/bdb_tracking_2024_confirms.md": {
+   "sha256": "731b13ad3e9d5c8f1d95d2c4d71fcece1cbe392db3c60d453def0fa405d9af2a",
+   "location_in_archive": "nfl-farm/notes/bdb_tracking_2024_confirms.md",
+   "bytes": 1890
+  },
+  "nfl-farm/notes/bdb_tracking_subject_only.md": {
+   "sha256": "8a74b18bab0f93e83a48d655d07469e0578067fe115300bd588274e582f42810",
+   "location_in_archive": "nfl-farm/notes/bdb_tracking_subject_only.md",
+   "bytes": 2291
+  },
+  "nfl-farm/notes/bdb_wr_coverage_subset.md": {
+   "sha256": "eb7cc3282855441e2797d69c925c0ae9f02d4387617f9f9345bd0cd611bc83e8",
+   "location_in_archive": "nfl-farm/notes/bdb_wr_coverage_subset.md",
+   "bytes": 2225
+  },
+  "nfl-farm/notes/completion_probability_140rows.md": {
+   "sha256": "c2b4146d3ead161a52f85397f3ded6dca47dad9b81e3c8d345212e861002a735",
+   "location_in_archive": "nfl-farm/notes/completion_probability_140rows.md",
+   "bytes": 2072
+  },
+  "nfl-farm/notes/completion_probability_flatness.md": {
+   "sha256": "db9cb5216967418cbf731ffe386457a8fdcbfa2996536aa94230d89428c01385",
+   "location_in_archive": "nfl-farm/notes/completion_probability_flatness.md",
+   "bytes": 2284
+  },
+  "nfl-farm/notes/coverage_baseline.md": {
+   "sha256": "aee2df275512ea93946fbbf9027affe014e0d68a20900dad9e11e6b193ad1252",
+   "location_in_archive": "nfl-farm/notes/coverage_baseline.md",
+   "bytes": 1738
+  },
+  "nfl-farm/notes/coverage_vs_epa.md": {
+   "sha256": "0748d6974cc93de3253883efd4a6c4b06cfcc06f97b240935ea11fb96a1bcd33",
+   "location_in_archive": "nfl-farm/notes/coverage_vs_epa.md",
+   "bytes": 1574
+  },
+  "nfl-farm/notes/cp_depthblind_1080.md": {
+   "sha256": "dea53614d2886912d80dafca6eb352816a590439df355c4d3a2f57ff1c633fd1",
+   "location_in_archive": "nfl-farm/notes/cp_depthblind_1080.md",
+   "bytes": 2042
+  },
+  "nfl-farm/notes/crosswalk_and_winprob.md": {
+   "sha256": "c00eebbee7524a1fad830c7eebef391ec98a802a1d4ba73caf8ffdf1674207a2",
+   "location_in_archive": "nfl-farm/notes/crosswalk_and_winprob.md",
+   "bytes": 1677
+  },
+  "nfl-farm/notes/crosswalk_v2.md": {
+   "sha256": "75d432e059d2d1daf4980ae6d19dcfd5eca7215161ea6f7254b7eb490fc8c990",
+   "location_in_archive": "nfl-farm/notes/crosswalk_v2.md",
+   "bytes": 1160
+  },
+  "nfl-farm/notes/cushion_ladder.md": {
+   "sha256": "0bb081aa3667ef18926de2341fdd1ed003461bf243215380730d25ba57fb65b8",
+   "location_in_archive": "nfl-farm/notes/cushion_ladder.md",
+   "bytes": 1891
+  },
+  "nfl-farm/notes/dailyfantasyfuel.md": {
+   "sha256": "9a98e3faa66a97c9257821f639411499f6c4cb2867ad4d4c9d67a3f0be098fd1",
+   "location_in_archive": "nfl-farm/notes/dailyfantasyfuel.md",
+   "bytes": 1118
+  },
+  "nfl-farm/notes/epa_residualization.md": {
+   "sha256": "7d439d893081d5ee518dbfbeaeeb2a0e0e994c1afbdd6e48f47f4c13a5ad3cc7",
+   "location_in_archive": "nfl-farm/notes/epa_residualization.md",
+   "bytes": 1959
+  },
+  "nfl-farm/notes/epa_residual_opponent.md": {
+   "sha256": "c1d8ecfafe216b255895b60be070d4789b34f17b51d8f21acfeb800d06271319",
+   "location_in_archive": "nfl-farm/notes/epa_residual_opponent.md",
+   "bytes": 1711
+  },
+  "nfl-farm/notes/espn_depth_charts.md": {
+   "sha256": "32fefaf7534b870e3e1eaaf64902500e99d19b94da6845b90ce75d06b9339cf9",
+   "location_in_archive": "nfl-farm/notes/espn_depth_charts.md",
+   "bytes": 1210
+  },
+  "nfl-farm/notes/espn_endpoints.md": {
+   "sha256": "772f288baa7c86d878ab75c76980928e96cdd22df8ca9d78760fa2b18cb5736e",
+   "location_in_archive": "nfl-farm/notes/espn_endpoints.md",
+   "bytes": 1917
+  },
+  "nfl-farm/notes/ghost_baseline_scalar.md": {
+   "sha256": "92f42589fac082e36c789f416b0275e8195354c9e2e3e3d1b1182233b1cbdedc",
+   "location_in_archive": "nfl-farm/notes/ghost_baseline_scalar.md",
+   "bytes": 2536
+  },
+  "nfl-farm/notes/helmet_assignment_metric.md": {
+   "sha256": "e637ec39737ee91ff64867f0aa7d01e3fcf9e3bcb793d4564c3727f86b352b19",
+   "location_in_archive": "nfl-farm/notes/helmet_assignment_metric.md",
+   "bytes": 1468
+  },
+  "nfl-farm/notes/id_crosswalk.md": {
+   "sha256": "7aa6fb63ad2fe5894a9a5ab9f43265e40d64e9ab9ebbe2786af4bd918fd501d7",
+   "location_in_archive": "nfl-farm/notes/id_crosswalk.md",
+   "bytes": 1294
+  },
+  "nfl-farm/notes/kaggle_bdb2027.md": {
+   "sha256": "899da3e540a41d4d26792f644b00149388bd61888a65ed1030f9f69ea395e807",
+   "location_in_archive": "nfl-farm/notes/kaggle_bdb2027.md",
+   "bytes": 2166
+  },
+  "nfl-farm/notes/kaggle_datasets.md": {
+   "sha256": "f6b35a7961214d9cf830555a894a76b5fe3d5fe38e37f004bf8c30e58fb7b08c",
+   "location_in_archive": "nfl-farm/notes/kaggle_datasets.md",
+   "bytes": 1466
+  },
+  "nfl-farm/notes/linestar_map.md": {
+   "sha256": "d0002b4f1b8ded44dfaf808ab41f03d466da926a22b9266ed4154b668088e2f3",
+   "location_in_archive": "nfl-farm/notes/linestar_map.md",
+   "bytes": 2810
+  },
+  "nfl-farm/notes/motion_is_pass_indicator.md": {
+   "sha256": "0a3e7aedafbb1adc00100505d7eee8003b83284ae1eaa99b3dbe8a9b3821acd6",
+   "location_in_archive": "nfl-farm/notes/motion_is_pass_indicator.md",
+   "bytes": 1550
+  },
+  "nfl-farm/notes/motion_negative_result.md": {
+   "sha256": "34d5fb24439fd5554913b74304365e3f7c512dec2c66ad9d36a8c1e07a250daf",
+   "location_in_archive": "nfl-farm/notes/motion_negative_result.md",
+   "bytes": 1522
+  },
+  "nfl-farm/notes/nflsavant_api.md": {
+   "sha256": "cdf0f62df4620384b7b547e773f75df6e7d1b1f1faf97def4ecaa82f5836e300",
+   "location_in_archive": "nfl-farm/notes/nflsavant_api.md",
+   "bytes": 2038
+  },
+  "nfl-farm/notes/nflverse_data.md": {
+   "sha256": "89c40c35bca86c625453a16bd262077e168a369807f34a5f900ff68eeded6b47",
+   "location_in_archive": "nfl-farm/notes/nflverse_data.md",
+   "bytes": 1893
+  },
+  "nfl-farm/notes/ngs_expected_value_surfaces.md": {
+   "sha256": "46ca24f680d25261e709c6fa87ed4026390cc2aec3e41b60dadb3f5d93a5ac6a",
+   "location_in_archive": "nfl-farm/notes/ngs_expected_value_surfaces.md",
+   "bytes": 2455
+  },
+  "nfl-farm/notes/ngs_receiver_separation.md": {
+   "sha256": "dbe65fa5c5f35cc12013e61bd64ea0b6790c846df16bbe499af0da93170da85e",
+   "location_in_archive": "nfl-farm/notes/ngs_receiver_separation.md",
+   "bytes": 2440
+  },
+  "nfl-farm/notes/no_per_play_separation.md": {
+   "sha256": "733b06b1f02df402f515aa4c41f4ca95f46d2bb5f968262eb6efa964e074e79e",
+   "location_in_archive": "nfl-farm/notes/no_per_play_separation.md",
+   "bytes": 1849
+  },
+  "nfl-farm/notes/openalex_zenodo.md": {
+   "sha256": "7faf51b3c51f40489021d1b399583ea272007b1319186b18fc9a8b760027682d",
+   "location_in_archive": "nfl-farm/notes/openalex_zenodo.md",
+   "bytes": 1597
+  },
+  "nfl-farm/notes/opponent_adjustment_half_rank.md": {
+   "sha256": "f908edea388a43bc21d6c87736ea4e5270b66a9bded8216dc3819a8ceb8faabe",
+   "location_in_archive": "nfl-farm/notes/opponent_adjustment_half_rank.md",
+   "bytes": 1845
+  },
+  "nfl-farm/notes/pose_from_video.md": {
+   "sha256": "56b04fbc6a31d366d7c9bfabd1ae99bfa72f493f066bfc4601b354d3cc6e7150",
+   "location_in_archive": "nfl-farm/notes/pose_from_video.md",
+   "bytes": 2298
+  },
+  "nfl-farm/notes/presnap_clustering_deck.md": {
+   "sha256": "f97c24b860e0c7b256aa47d34f7d52b13aa5295e3349f72c8f9a4c1b88bee4f9",
+   "location_in_archive": "nfl-farm/notes/presnap_clustering_deck.md",
+   "bytes": 2253
+  },
+  "nfl-farm/notes/price_dispersion.md": {
+   "sha256": "36f260643ed9f1cd9062530fd15b1ec34e4b882c154fe30e39535ee439fd541d",
+   "location_in_archive": "nfl-farm/notes/price_dispersion.md",
+   "bytes": 1660
+  },
+  "nfl-farm/notes/price_dispersion_fixed.md": {
+   "sha256": "355a1f6886bb87f0db84bd5b1b00ab88d38ed08770ba9a5507a2609ecfcbbcb6",
+   "location_in_archive": "nfl-farm/notes/price_dispersion_fixed.md",
+   "bytes": 1391
+  },
+  "nfl-farm/notes/prizepicks_bypass.md": {
+   "sha256": "ec7f3bd4d94fca2e98c948dd023ce04cc8082bf1c341c705d6fd518ad4413eff",
+   "location_in_archive": "nfl-farm/notes/prizepicks_bypass.md",
+   "bytes": 1448
+  },
+  "nfl-farm/notes/propfinder_bypass.md": {
+   "sha256": "fd5010561994e30e2f76f7989092c03b3619c202d13f4aaafdadb7e6a62e4e0a",
+   "location_in_archive": "nfl-farm/notes/propfinder_bypass.md",
+   "bytes": 3171
+  },
+  "nfl-farm/notes/propfinder_creds.md": {
+   "sha256": "5d62e7a125f3ed838908fa00b581eb8e9728fe2a83a0468b6feebaa93f45e3a1",
+   "location_in_archive": "nfl-farm/notes/propfinder_creds.md",
+   "bytes": 235
+  },
+  "nfl-farm/notes/propfinder_subscores.md": {
+   "sha256": "d0335fa65a7b57583fa37d3a09dfc3410b57fc638247bfbcfbe29abd0ddd57f5",
+   "location_in_archive": "nfl-farm/notes/propfinder_subscores.md",
+   "bytes": 1927
+  },
+  "nfl-farm/notes/prop_reconciliation.md": {
+   "sha256": "df2e1e956db1a33c65ef4b22b75e9bd014f0e9559bf847da5444809894c46097",
+   "location_in_archive": "nfl-farm/notes/prop_reconciliation.md",
+   "bytes": 1327
+  },
+  "nfl-farm/notes/refinements_cycle13.md": {
+   "sha256": "d49629fafd9922216195fe0e618738ca64b8a2d3e5c226faf0c973657fd2aaee",
+   "location_in_archive": "nfl-farm/notes/refinements_cycle13.md",
+   "bytes": 1803
+  },
+  "nfl-farm/notes/research_tooling.md": {
+   "sha256": "0cb271b5b8468b13ca821db1a9bde9c801924e4f759649d1984429b18f39d6f6",
+   "location_in_archive": "nfl-farm/notes/research_tooling.md",
+   "bytes": 922
+  },
+  "nfl-farm/notes/residual_is_raw_epa.md": {
+   "sha256": "8784227c1f1eb5d45ce8dd9cedf0c31b0aefefb09811de1fa6c2413caf80713d",
+   "location_in_archive": "nfl-farm/notes/residual_is_raw_epa.md",
+   "bytes": 1882
+  },
+  "nfl-farm/notes/residual_rank_invariance.md": {
+   "sha256": "7c811e631095d7e01bfdeb1bb6e17a51e7f389551b4411ba3f2750b43cd6fac9",
+   "location_in_archive": "nfl-farm/notes/residual_rank_invariance.md",
+   "bytes": 1902
+  },
+  "nfl-farm/notes/routes_survive_coverage.md": {
+   "sha256": "f4c74a8d75be7e1791f53c1c63f75363a233afafd27c284f456169306f0bf96c",
+   "location_in_archive": "nfl-farm/notes/routes_survive_coverage.md",
+   "bytes": 1775
+  },
+  "nfl-farm/notes/route_by_coverage.md": {
+   "sha256": "69c0697ca52507207c255d741f190bf11ba852c2d23bea2fed9b0a69e7399d21",
+   "location_in_archive": "nfl-farm/notes/route_by_coverage.md",
+   "bytes": 2153
+  },
+  "nfl-farm/notes/route_coverage_unregularised.md": {
+   "sha256": "5b7e93be6ea3f00c9795d62777cd5db161ca323160a9464f7b8cbd3fbcbdea7d",
+   "location_in_archive": "nfl-farm/notes/route_coverage_unregularised.md",
+   "bytes": 1868
+  },
+  "nfl-farm/notes/route_yoe.md": {
+   "sha256": "3169b5f2b4d39c59f5edf1cc9993e3353683b45fed2d0e4a4a4d71caefa2eb6f",
+   "location_in_archive": "nfl-farm/notes/route_yoe.md",
+   "bytes": 2072
+  },
+  "nfl-farm/notes/ryoe_recovered.md": {
+   "sha256": "7ab62d76df38367b0dc69548fb0b49610782141b3c9a3936707c169245de2121",
+   "location_in_archive": "nfl-farm/notes/ryoe_recovered.md",
+   "bytes": 2521
+  },
+  "nfl-farm/notes/scores24_graphql.md": {
+   "sha256": "d79a0cd747c939c28ff4e0b5ac802c4e7d8ccc7e3bd9d50c4184f1c9ef743eef",
+   "location_in_archive": "nfl-farm/notes/scores24_graphql.md",
+   "bytes": 2288
+  },
+  "nfl-farm/notes/separation_2024_replication.md": {
+   "sha256": "2c3416e52e9ae94b67853ee37f2d1982b7e804be53cdb6e2eaad0124c98ae43c",
+   "location_in_archive": "nfl-farm/notes/separation_2024_replication.md",
+   "bytes": 1670
+  },
+  "nfl-farm/notes/separation_depth_control.md": {
+   "sha256": "db437aeb32054fc57ef5b50760569714b924bbc2ae4227b16235190017a60e01",
+   "location_in_archive": "nfl-farm/notes/separation_depth_control.md",
+   "bytes": 1885
+  },
+  "nfl-farm/notes/separation_predicts_catch_rate.md": {
+   "sha256": "f5b9dffbb5aaf6ae26376d646c15b2e9730d3ad331927247839a99320384517c",
+   "location_in_archive": "nfl-farm/notes/separation_predicts_catch_rate.md",
+   "bytes": 1821
+  },
+  "nfl-farm/notes/separation_yards_mediation.md": {
+   "sha256": "1690650874b15dca4387822a054760c872bd59a267e1aab3904e6751e560e762",
+   "location_in_archive": "nfl-farm/notes/separation_yards_mediation.md",
+   "bytes": 1889
+  },
+  "nfl-farm/notes/sleeper_open_api.md": {
+   "sha256": "02699f243baf8997b8800795968ef48e87508020d320bbfa760e17fd1c06f544",
+   "location_in_archive": "nfl-farm/notes/sleeper_open_api.md",
+   "bytes": 1418
+  },
+  "nfl-farm/notes/sloan_all22_cv.md": {
+   "sha256": "3e3822599ab732b0f365f6c10e28b152153068c2acbbb0982aa86e4d9ae93660",
+   "location_in_archive": "nfl-farm/notes/sloan_all22_cv.md",
+   "bytes": 3076
+  },
+  "nfl-farm/notes/STATUS.md": {
+   "sha256": "bb001e3e8018f1ebbf1b3237d7f250c11d91be4406f3db324c56068ac9e8a648",
+   "location_in_archive": "nfl-farm/notes/STATUS.md",
+   "bytes": 1905
+  },
+  "nfl-farm/notes/SYNTHESIS.md": {
+   "sha256": "03e1dcd82f28ce432e9de97bb7933e2decb2fc89126eae4611f8a576ede63418",
+   "location_in_archive": "nfl-farm/notes/SYNTHESIS.md",
+   "bytes": 3426
+  },
+  "nfl-farm/notes/thescore_injuries.md": {
+   "sha256": "96f4789d35a34ad1d04bcf02d1adb7a41a4530ba3f2999b6053bace51da3ffcf",
+   "location_in_archive": "nfl-farm/notes/thescore_injuries.md",
+   "bytes": 965
+  },
+  "nfl-farm/notes/unbalanced_exposure_test.md": {
+   "sha256": "ea16db32fc0e8c09d095764a41e9c28c41589a3e89183c344672710bb2dc5061",
+   "location_in_archive": "nfl-farm/notes/unbalanced_exposure_test.md",
+   "bytes": 1785
+  },
+  "nfl-farm/notes/underdog_bypass.md": {
+   "sha256": "d156855e32bd56ec79c65a93d6128b5f689e4b25a3e2e9f566436661564ffa91",
+   "location_in_archive": "nfl-farm/notes/underdog_bypass.md",
+   "bytes": 1579
+  },
+  "nfl-farm/notes/wayback_bypass.md": {
+   "sha256": "fd6f42b951d30815e7441715ad1a8987d65c83cd0386d14b20b6ca2ef7f9d7a2",
+   "location_in_archive": "nfl-farm/notes/wayback_bypass.md",
+   "bytes": 1780
+  },
+  "nfl-farm/notes/xcomp_cpoe.md": {
+   "sha256": "570c45652b4f5f58e32a113d5d2ace532720ddd3124157cc20bd341889c6dd45",
+   "location_in_archive": "nfl-farm/notes/xcomp_cpoe.md",
+   "bytes": 2203
+  },
+  "nfl-farm/out_rea_scores24.json": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/out_rea_scores24.json",
+   "bytes": 0
+  },
+  "nfl-farm/pf_rerate.py": {
+   "sha256": "370a28545af41427257fe24ad360154c81b14768c7810a2ecbdc81737f6a93c4",
+   "location_in_archive": "nfl-farm/pf_rerate.py",
+   "bytes": 2133
+  },
+  "nfl-farm/probe_gql.py": {
+   "sha256": "d5e6abdf7373af63c9def0d27b37b7d42ab31052a65d521621fbf48803fc32bc",
+   "location_in_archive": "nfl-farm/probe_gql.py",
+   "bytes": 1288
+  },
+  "nfl-farm/probe_gql2.py": {
+   "sha256": "1ec88838eda20852f0fb03a098d513a78e9bccf5674671463e0a8e8ecb3f67aa",
+   "location_in_archive": "nfl-farm/probe_gql2.py",
+   "bytes": 1454
+  },
+  "nfl-farm/probe_m.py": {
+   "sha256": "a82603ca49e965b8d833d59c8fa23528cecfc219b3748d1cb198baff425d8a7b",
+   "location_in_archive": "nfl-farm/probe_m.py",
+   "bytes": 1129
+  },
+  "nfl-farm/probe_t.py": {
+   "sha256": "c1ec7c47f57bbdaa5060abc412d6dfcbb2e827b8ef8b4d14d98821b6836b9371",
+   "location_in_archive": "nfl-farm/probe_t.py",
+   "bytes": 1133
+  },
+  "nfl-farm/probe_t2.py": {
+   "sha256": "d47156516c1c22d319ba0d93ee28777fcc50b916ddb87721d6b450ccf7ac0360",
+   "location_in_archive": "nfl-farm/probe_t2.py",
+   "bytes": 1608
+  },
+  "nfl-farm/probe_t3.py": {
+   "sha256": "82a6a7423e5fb731c32662daca0ab2f649c82751dccc4601bde2016f656a8a14",
+   "location_in_archive": "nfl-farm/probe_t3.py",
+   "bytes": 1284
+  },
+  "nfl-farm/README.md": {
+   "sha256": "67cab864749ead07b5bca390f84294c808399524d0f2fee6c18abadb30eee4a8",
+   "location_in_archive": "nfl-farm/README.md",
+   "bytes": 3596
+  },
+  "nfl-farm/rea_err.log": {
+   "sha256": "9fb60b866aa3c1c24fb4af91c137cdbe24748ada496152edd711e22bdbcc1b1f",
+   "location_in_archive": "nfl-farm/rea_err.log",
+   "bytes": 1487
+  },
+  "nfl-farm/schemas/cf0.out": {
+   "sha256": "d4bc90b54b34d8bfc0f7319cd4ec810fe19931396d4a2a780248a04bb8118aa5",
+   "location_in_archive": "nfl-farm/schemas/cf0.out",
+   "bytes": 540
+  },
+  "nfl-farm/schemas/cf1.out": {
+   "sha256": "d32b5af22df389eb20e34e70bde9e80ba72493bb3204d310d3c447efa6348efc",
+   "location_in_archive": "nfl-farm/schemas/cf1.out",
+   "bytes": 282
+  },
+  "nfl-farm/schemas/dc0.json": {
+   "sha256": "4223015282d8e8ac208a0cd370f0d54c336dadd96b0a63aea5b651898f5e7618",
+   "location_in_archive": "nfl-farm/schemas/dc0.json",
+   "bytes": 291751
+  },
+  "nfl-farm/schemas/dc1.json": {
+   "sha256": "d35be5d2ab7904bc255c4044ed83a326ea611cacf902ff1b5dc6ea72bb0e9c8f",
+   "location_in_archive": "nfl-farm/schemas/dc1.json",
+   "bytes": 241350
+  },
+  "nfl-farm/schemas/dc2.json": {
+   "sha256": "4223015282d8e8ac208a0cd370f0d54c336dadd96b0a63aea5b651898f5e7618",
+   "location_in_archive": "nfl-farm/schemas/dc2.json",
+   "bytes": 291751
+  },
+  "nfl-farm/schemas/dc_t.json": {
+   "sha256": "fefa6f405b9c2249734cc4b198d024355f64fe17bbf3dc90c82cc040aea73246",
+   "location_in_archive": "nfl-farm/schemas/dc_t.json",
+   "bytes": 225283
+  },
+  "nfl-farm/schemas/dk_eventgroup_catalogue.csv": {
+   "sha256": "34b62bd6883a4da319f6cf02fc262b20222926282780a1022660ca509be1a145",
+   "location_in_archive": "nfl-farm/schemas/dk_eventgroup_catalogue.csv",
+   "bytes": 18769
+  },
+  "nfl-farm/schemas/fdb_roster.html": {
+   "sha256": "f92666a756d3b05461ce06e89881449863d2e34654778b649c219d1fdc856d06",
+   "location_in_archive": "nfl-farm/schemas/fdb_roster.html",
+   "bytes": 84150
+  },
+  "nfl-farm/schemas/ftn2023.parquet": {
+   "sha256": "162f0f48a8fca23f86a334c78e27f8daa7443e6b383beada0416b65c593b2c0e",
+   "location_in_archive": "nfl-farm/schemas/ftn2023.parquet",
+   "bytes": 567781
+  },
+  "nfl-farm/schemas/kj0.json": {
+   "sha256": "ea1f72ab2214a91cfbf50e98a26e38e91ece507a22d559c331e2d9e2984c405e",
+   "location_in_archive": "nfl-farm/schemas/kj0.json",
+   "bytes": 5599
+  },
+  "nfl-farm/schemas/kj1.json": {
+   "sha256": "79f13b2d3eac5c30c5b9f4bb69780020b71c3b29f6435d4e77df4ceffca57151",
+   "location_in_archive": "nfl-farm/schemas/kj1.json",
+   "bytes": 5493
+  },
+  "nfl-farm/schemas/ls_cookies.txt": {
+   "sha256": "59d486cc0eb239b1b9c1e6cf17e5d51a99fe9593fb19ab6cd3454516d5aa7c1b",
+   "location_in_archive": "nfl-farm/schemas/ls_cookies.txt",
+   "bytes": 543
+  },
+  "nfl-farm/schemas/ls_fantasysportsco_chartsettings_js_v_2": {
+   "sha256": "f5e1c398d407ae3bc7739bae7e862c74b6684c659b9cddd2caefc2411fbfa1c7",
+   "location_in_archive": "nfl-farm/schemas/ls_fantasysportsco_chartsettings_js_v_2",
+   "bytes": 10794
+  },
+  "nfl-farm/schemas/ls_fantasysportsco_chart_js_v_26": {
+   "sha256": "84632454635aa036bda1573398e82cdce92bb25ef9385b682346ef37a00c167e",
+   "location_in_archive": "nfl-farm/schemas/ls_fantasysportsco_chart_js_v_26",
+   "bytes": 19744
+  },
+  "nfl-farm/schemas/ls_fantasysportsco_chart_v2_js_v_94": {
+   "sha256": "ff5aff25ec4c9c1bfa38f02f449d48aba64c77894c996e7ed23c6afdd8849367",
+   "location_in_archive": "nfl-farm/schemas/ls_fantasysportsco_chart_v2_js_v_94",
+   "bytes": 139367
+  },
+  "nfl-farm/schemas/ls_fantasysportsco_theme_js_v_2": {
+   "sha256": "f5a66abc13e10836b81ab6548dbf126b0161f3d1dd1d1efe5db34dec4f52595e",
+   "location_in_archive": "nfl-farm/schemas/ls_fantasysportsco_theme_js_v_2",
+   "bytes": 8175
+  },
+  "nfl-farm/schemas/mail_test": {
+   "sha256": "319da39c2fa6607423accfd628611f7d6e6073df6e377640e4e90d93b65f764a",
+   "location_in_archive": "nfl-farm/schemas/mail_test",
+   "bytes": 4413
+  },
+  "nfl-farm/schemas/nflpa.html": {
+   "sha256": "9f1ebf70cdee26cb8b39a98fe526472de31d146118a62c5a6b135f67d1c275dd",
+   "location_in_archive": "nfl-farm/schemas/nflpa.html",
+   "bytes": 139772
+  },
+  "nfl-farm/schemas/ngs_expected_value_surfaces.json": {
+   "sha256": "dab30d1071e5cf447ecd1abd1a8c199365609ae169b04d99c0e5a1dba76db81b",
+   "location_in_archive": "nfl-farm/schemas/ngs_expected_value_surfaces.json",
+   "bytes": 11476
+  },
+  "nfl-farm/schemas/ngs_gamecenter_receivers_schema.json": {
+   "sha256": "7b02bf466a6f5f30ef00f829bb9821c0ac7e6a211e6f4de8c76dc0647e68616d",
+   "location_in_archive": "nfl-farm/schemas/ngs_gamecenter_receivers_schema.json",
+   "bytes": 698
+  },
+  "nfl-farm/schemas/oa0.json": {
+   "sha256": "7e4c29815a2889439c7fe2110da5d7fe750d89fe6c311c1b8eec20d8522bec7a",
+   "location_in_archive": "nfl-farm/schemas/oa0.json",
+   "bytes": 74564
+  },
+  "nfl-farm/schemas/oa_a.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oa_a.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/oa_b.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oa_b.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/oa_c.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oa_c.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/openalex_results.json": {
+   "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+   "location_in_archive": "nfl-farm/schemas/openalex_results.json",
+   "bytes": 2
+  },
+  "nfl-farm/schemas/oq0.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oq0.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/oq1.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oq1.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/oq2.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oq2.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/oq3.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oq3.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/oq4.json": {
+   "sha256": "8e54b03eba550e120b6531323d76171f94fe4d412b5e6a72a8ec89ad554b4d21",
+   "location_in_archive": "nfl-farm/schemas/oq4.json",
+   "bytes": 359
+  },
+  "nfl-farm/schemas/pfa.tmp": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfa.tmp",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_api-docs": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_api-docs",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_config": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_config",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_health_deep": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_health_deep",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_leagues": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_leagues",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_lines": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_lines",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_matchups": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_matchups",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_metrics": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_metrics",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_odds": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_odds",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_players": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_players",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_projections": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_projections",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_props": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_props",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_schedule": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_schedule",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_slate": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_slate",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_slates": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_slates",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_status": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_status",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_trends": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_trends",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_version": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_version",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi_weather": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi_weather",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfapi__framework": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pfapi__framework",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pfa_anon.tmp": {
+   "sha256": "7633b7ac849cf4d87920a53c830f0c444cb717d1241f6760b1ae766ef0cf471d",
+   "location_in_archive": "nfl-farm/schemas/pfa_anon.tmp",
+   "bytes": 144975
+  },
+  "nfl-farm/schemas/pfr_defense.html": {
+   "sha256": "26f83eb9cb0604e26f95545d9b3f6439b617bfbd1cc1b6f18c994a73564b47a2",
+   "location_in_archive": "nfl-farm/schemas/pfr_defense.html",
+   "bytes": 3282272
+  },
+  "nfl-farm/schemas/pfr_passing.html": {
+   "sha256": "cd4db7edd9971558729e1d6725d678b8de55d2c650491544bb108c270f554eb9",
+   "location_in_archive": "nfl-farm/schemas/pfr_passing.html",
+   "bytes": 475737
+  },
+  "nfl-farm/schemas/pfr_rec.html": {
+   "sha256": "4150da7a251c878ab8d919d09083fc8ad27e8692f040a61e83ba4024df2ae1c4",
+   "location_in_archive": "nfl-farm/schemas/pfr_rec.html",
+   "bytes": 1334638
+  },
+  "nfl-farm/schemas/pfr_rushing.html": {
+   "sha256": "87ba97a5deed4642635c63e50283c8402592d28791f4aa8c808a23fdcce4b5c8",
+   "location_in_archive": "nfl-farm/schemas/pfr_rushing.html",
+   "bytes": 1183298
+  },
+  "nfl-farm/schemas/pf_auth_hdr.txt": {
+   "sha256": "ed8b4732f3744ab5b1d7d8cfafd2839eca439988984fce49cfa91b5ae1d106c3",
+   "location_in_archive": "nfl-farm/schemas/pf_auth_hdr.txt",
+   "bytes": 440
+  },
+  "nfl-farm/schemas/pf_cookies.txt": {
+   "sha256": "be7a52d6d1b2e5e2c7a9e338f3ab71b4b2e76797f19cc06d5899aece2701365b",
+   "location_in_archive": "nfl-farm/schemas/pf_cookies.txt",
+   "bytes": 135
+  },
+  "nfl-farm/schemas/pf_odds": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pf_odds",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pf_oddsnfl": {
+   "sha256": "a37c090a9e19663c7c137de8a3e2f1f28c5f944d2c53da259a9275e5f7a16938",
+   "location_in_archive": "nfl-farm/schemas/pf_oddsnfl",
+   "bytes": 29
+  },
+  "nfl-farm/schemas/pf_players": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pf_players",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/pf_projnfl": {
+   "sha256": "deb552b592340bf5fdbad058e7a17382e832c759668ea90d6695833b6a8ecbc4",
+   "location_in_archive": "nfl-farm/schemas/pf_projnfl",
+   "bytes": 36
+  },
+  "nfl-farm/schemas/pf_reg_hdr.txt": {
+   "sha256": "5423dc140d0788267ab0cb6cba57c39e2a46021bd08f78341cc2dfd77d04d555",
+   "location_in_archive": "nfl-farm/schemas/pf_reg_hdr.txt",
+   "bytes": 413
+  },
+  "nfl-farm/schemas/pf_robots.txt": {
+   "sha256": "a5b3658e62cb02aa290e5e368514210e431e507f17a5c4c8ec16da90017ffdaa",
+   "location_in_archive": "nfl-farm/schemas/pf_robots.txt",
+   "bytes": 435
+  },
+  "nfl-farm/schemas/pf_sitemap.xml": {
+   "sha256": "f14783a8a2ea9295dfa5cc1aed13f5c588e5ba2cb8615af66b78979f3d964ce2",
+   "location_in_archive": "nfl-farm/schemas/pf_sitemap.xml",
+   "bytes": 1012
+  },
+  "nfl-farm/schemas/pf_status": {
+   "sha256": "06f978ed6fdbf1b3c3d362cef8ec0453d8149efbec0db3a65b61499004231061",
+   "location_in_archive": "nfl-farm/schemas/pf_status",
+   "bytes": 25
+  },
+  "nfl-farm/schemas/pf_s_016h7v64yl_t8_js": {
+   "sha256": "fa1bea669b95711c612fd79449c20626a708a563f7f8e279ab1af923c8ff0155",
+   "location_in_archive": "nfl-farm/schemas/pf_s_016h7v64yl_t8_js",
+   "bytes": 67840
+  },
+  "nfl-farm/schemas/pf_s_02_rtgjsk25w__js": {
+   "sha256": "5c25990b7a1b62c6113177f4b8b7b5ff1d4ed09a9848d84db37f5b53bb4c08f6",
+   "location_in_archive": "nfl-farm/schemas/pf_s_02_rtgjsk25w__js",
+   "bytes": 36018
+  },
+  "nfl-farm/schemas/pf_s_04wn54_88vx8c_js": {
+   "sha256": "2168a46638283023ab44c80abe29a30fd698947c689ee15bb8edaea311c26c71",
+   "location_in_archive": "nfl-farm/schemas/pf_s_04wn54_88vx8c_js",
+   "bytes": 159077
+  },
+  "nfl-farm/schemas/pf_s_04y0keobmew1h_js": {
+   "sha256": "a1a2f72bb8612f1b4abcbf6bec0bd735893619191737f17e687e03c4529fdfda",
+   "location_in_archive": "nfl-farm/schemas/pf_s_04y0keobmew1h_js",
+   "bytes": 10430
+  },
+  "nfl-farm/schemas/pf_s_0cz1d0mv5g_q7_js": {
+   "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+   "location_in_archive": "nfl-farm/schemas/pf_s_0cz1d0mv5g_q7_js",
+   "bytes": 112594
+  },
+  "nfl-farm/schemas/pf_s_0d64_dpc6cxu__js": {
+   "sha256": "15a9ebbb2c38b97ad1964d85cdccb76c35af322064fa440eb2135a3c6a7fee70",
+   "location_in_archive": "nfl-farm/schemas/pf_s_0d64_dpc6cxu__js",
+   "bytes": 10912
+  },
+  "nfl-farm/schemas/pf_verify.txt": {
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "location_in_archive": "nfl-farm/schemas/pf_verify.txt",
+   "bytes": 0
+  },
+  "nfl-farm/schemas/sc_bp_readme.md": {
+   "sha256": "4a272ae1941c9c13ff5fa0c9b9b6c651935b183c2c035172a58a16787fcdccf0",
+   "location_in_archive": "nfl-farm/schemas/sc_bp_readme.md",
+   "bytes": 6542
+  },
+  "nfl-farm/schemas/sis.html": {
+   "sha256": "ce98d11d048e8a578dbf182fc5c638c0997a7881f06cd8534d36777df36d8c84",
+   "location_in_archive": "nfl-farm/schemas/sis.html",
+   "bytes": 165976
+  },
+  "nfl-farm/schemas/team_49ers.out": {
+   "sha256": "04b17b419737148527f083dbc280628c977e9aa5b84b905e94bddf20c7880ef5",
+   "location_in_archive": "nfl-farm/schemas/team_49ers.out",
+   "bytes": 465369
+  },
+  "nfl-farm/schemas/team_chiefs.out": {
+   "sha256": "3b53b007d763bf6261a8a9806b71841490e0b8a5b77b476eb78279daf96afc4d",
+   "location_in_archive": "nfl-farm/schemas/team_chiefs.out",
+   "bytes": 526622
+  },
+  "nfl-farm/schemas/team_cowboys.out": {
+   "sha256": "05913d79dd0583fb37a4ee0d306bd2934ada54f702fcdcf5a6c15bf65901ae18",
+   "location_in_archive": "nfl-farm/schemas/team_cowboys.out",
+   "bytes": 648323
+  },
+  "nfl-farm/schemas/team_packers.out": {
+   "sha256": "a1166f83646291b81417477746973e1ca49d2afea8b6d1fc9af61e6fdeb3bfde",
+   "location_in_archive": "nfl-farm/schemas/team_packers.out",
+   "bytes": 512665
+  },
+  "nfl-farm/schemas/team_patriots.out": {
+   "sha256": "0ca03e89dfea03be01004b30471ea63e6b092ff9220d2ce5d998e1990af6e5c0",
+   "location_in_archive": "nfl-farm/schemas/team_patriots.out",
+   "bytes": 824039
+  },
+  "nfl-farm/schemas/team_ravens.out": {
+   "sha256": "afd6d8347a7f510dced0e9aa08187cafb681a4142d4bd2a21154b4648499e414",
+   "location_in_archive": "nfl-farm/schemas/team_ravens.out",
+   "bytes": 648617
+  },
+  "nfl-farm/schemas/zen.json": {
+   "sha256": "7d40e848656df9ef26b3bd398567865707ab1b4dfc8fee76f0806c8ad64fc54f",
+   "location_in_archive": "nfl-farm/schemas/zen.json",
+   "bytes": 5204
+  },
+  "nfl-farm/UNIVERSAL_AGENT_DOSSIER.md": {
+   "sha256": "e6243055ea592ef0ea326f7175d1f94d1292e7e6b09733e76cdfc01a59546bcb",
+   "location_in_archive": "nfl-farm/UNIVERSAL_AGENT_DOSSIER.md",
+   "bytes": 22663
+  },
+  "nfl-farm/universal_intel.db": {
+   "sha256": "b177d83c542392e4e9af958e244c88befb7823ca9f11773ab3967a1fd527097b",
+   "location_in_archive": "nfl-farm/universal_intel.db",
+   "bytes": 94208
+  },
+  "nfl-re/.gitignore": {
+   "sha256": "260a50379f400d0eab5e74d8d839840b873c1cc72c5402e2a2fea7f62cb4e106",
+   "location_in_archive": "nfl-re/.gitignore",
+   "bytes": 14
+  },
+  "nfl-re/artifacts/cp/cp_pairs.json": {
+   "sha256": "60def5a197fb4d1af90b982a55728b91748a6c363d23cbd8414503003193d4c4",
+   "location_in_archive": "nfl-re/artifacts/cp/cp_pairs.json",
+   "bytes": 765696
+  },
+  "nfl-re/artifacts/ngs/061d55ba.json": {
+   "sha256": "a7e4c830ce90b5b8c1a2adbdc993918084f099b6fccb46ca3d6274c85aa64aeb",
+   "location_in_archive": "nfl-re/artifacts/ngs/061d55ba.json",
+   "bytes": 40832
+  },
+  "nfl-re/artifacts/ngs/1224e21f.json": {
+   "sha256": "658d53fbc386e51b5a74eef70139bf89aacd9066520dd2660e0820725105ca07",
+   "location_in_archive": "nfl-re/artifacts/ngs/1224e21f.json",
+   "bytes": 17084
+  },
+  "nfl-re/artifacts/ngs/24fdd3ba.json": {
+   "sha256": "181ec56566c73c05c05f87c7a42716595e6edeafa0783cc10b86e994518ed60a",
+   "location_in_archive": "nfl-re/artifacts/ngs/24fdd3ba.json",
+   "bytes": 23084
+  },
+  "nfl-re/artifacts/ngs/30262f45.json": {
+   "sha256": "cefb82b7b3f65dd2e68f859c03a341b80a1226d2f4d91833ad9c9f815e5de234",
+   "location_in_archive": "nfl-re/artifacts/ngs/30262f45.json",
+   "bytes": 21181
+  },
+  "nfl-re/artifacts/ngs/36e59e42.json": {
+   "sha256": "64d2a85d34d3793e534a2a283c68d426c6296461f6385752e62e3f6bf5e24e31",
+   "location_in_archive": "nfl-re/artifacts/ngs/36e59e42.json",
+   "bytes": 110
+  },
+  "nfl-re/artifacts/ngs/3df99843.json": {
+   "sha256": "9e71554724190dc6653d20c3be29283514ae6f37611d65b272a16302f2606279",
+   "location_in_archive": "nfl-re/artifacts/ngs/3df99843.json",
+   "bytes": 41527
+  },
+  "nfl-re/artifacts/ngs/3fc2f371.json": {
+   "sha256": "5a12a78681e39455c2866d915f7a7edc52ab8e0c5380001561a0f3ae4dc9cb14",
+   "location_in_archive": "nfl-re/artifacts/ngs/3fc2f371.json",
+   "bytes": 29658
+  },
+  "nfl-re/artifacts/ngs/59e9d02b.json": {
+   "sha256": "1f49969655e9760e0f3b69f30cf588f0c310b40eb12156c9563cf457d901f41e",
+   "location_in_archive": "nfl-re/artifacts/ngs/59e9d02b.json",
+   "bytes": 55238
+  },
+  "nfl-re/artifacts/ngs/5e0fcd0c.json": {
+   "sha256": "030c43d573d73a9a2b3a2bec258373a084bfdc75b63f55f5f5c2780af35c3a75",
+   "location_in_archive": "nfl-re/artifacts/ngs/5e0fcd0c.json",
+   "bytes": 69125
+  },
+  "nfl-re/artifacts/ngs/868627bc.json": {
+   "sha256": "73b4951b53c800c86ae193ab6b65e1c13b98f7be419743d3ccc1d93220ca5f74",
+   "location_in_archive": "nfl-re/artifacts/ngs/868627bc.json",
+   "bytes": 18821
+  },
+  "nfl-re/artifacts/ngs/874a7a71.json": {
+   "sha256": "64d2a85d34d3793e534a2a283c68d426c6296461f6385752e62e3f6bf5e24e31",
+   "location_in_archive": "nfl-re/artifacts/ngs/874a7a71.json",
+   "bytes": 110
+  },
+  "nfl-re/artifacts/ngs/a27aeede.json": {
+   "sha256": "64d2a85d34d3793e534a2a283c68d426c6296461f6385752e62e3f6bf5e24e31",
+   "location_in_archive": "nfl-re/artifacts/ngs/a27aeede.json",
+   "bytes": 110
+  },
+  "nfl-re/artifacts/ngs/a442f6b4.json": {
+   "sha256": "66825bb4185d4d6eff9cfcfc2eceebabfa91159d281adadb8fd8c5c07faf6859",
+   "location_in_archive": "nfl-re/artifacts/ngs/a442f6b4.json",
+   "bytes": 23010
+  },
+  "nfl-re/artifacts/ngs/aa5997fa.json": {
+   "sha256": "5810747116cbb33bf3ec8a49476da1539307db37e7036d79f941abe8fa0e968f",
+   "location_in_archive": "nfl-re/artifacts/ngs/aa5997fa.json",
+   "bytes": 91338
+  },
+  "nfl-re/artifacts/ngs/bb2a2b42.json": {
+   "sha256": "64d2a85d34d3793e534a2a283c68d426c6296461f6385752e62e3f6bf5e24e31",
+   "location_in_archive": "nfl-re/artifacts/ngs/bb2a2b42.json",
+   "bytes": 110
+  },
+  "nfl-re/artifacts/ngs/e7ce5619.json": {
+   "sha256": "029fa526105636ac09f5ebac738711fbfe07e89ab225c19512db248d28bd6335",
+   "location_in_archive": "nfl-re/artifacts/ngs/e7ce5619.json",
+   "bytes": 37381
+  },
+  "nfl-re/artifacts/ngs/e873e3e8.json": {
+   "sha256": "6493189e69f6727742efcc51900aaa8a78b8108703efbe59c3bf45ea12092ddc",
+   "location_in_archive": "nfl-re/artifacts/ngs/e873e3e8.json",
+   "bytes": 39312
+  },
+  "nfl-re/artifacts/ngs/_index.json": {
+   "sha256": "d66b155678074479de25738fbdf8968a0776843718434e5a5582382ac9173eaa",
+   "location_in_archive": "nfl-re/artifacts/ngs/_index.json",
+   "bytes": 1574
+  },
+  "nfl-re/docker-compose.yml": {
+   "sha256": "1294337b6cb29d31508f5691efe0c5301628ae7033daeb9a35766aabafc51c2e",
+   "location_in_archive": "nfl-re/docker-compose.yml",
+   "bytes": 301
+  },
+  "nfl-re/Dockerfile": {
+   "sha256": "bd574cb493845ec860494a75d0059a2951fa82ad82e27c1105b241dea0721792",
+   "location_in_archive": "nfl-re/Dockerfile",
+   "bytes": 356
+  },
+  "nfl-re/enum.py": {
+   "sha256": "fac0fe375b3584de66ee5bb773d18f8de54bcdacb2f22a5ad969206fceeba4fd",
+   "location_in_archive": "nfl-re/enum.py",
+   "bytes": 1304
+  },
+  "nfl-re/fit_cp.py": {
+   "sha256": "b3fcbd54da0881fd0b011d8ab8b9a32b96e658dcef7ee1c40050ea4770f6da4b",
+   "location_in_archive": "nfl-re/fit_cp.py",
+   "bytes": 1698
+  },
+  "nfl-re/fit_cp2.py": {
+   "sha256": "c63257b6eddf56bd79bbdd3b9ae12599dadc78fd4df11084b71ea1328c06bbc2",
+   "location_in_archive": "nfl-re/fit_cp2.py",
+   "bytes": 1534
+  },
+  "nfl-re/harvest_cp.py": {
+   "sha256": "cc0319bec90e1d0f2650621448ada27e69afdd07ac4225cc13d2044472b2bdbc",
+   "location_in_archive": "nfl-re/harvest_cp.py",
+   "bytes": 1468
+  },
+  "nfl-re/notes/chunks.txt": {
+   "sha256": "ab111778860957b5706fa0e0323dc345da7d0788831b60ee2da17849fb48402c",
+   "location_in_archive": "nfl-re/notes/chunks.txt",
+   "bytes": 1370
+  },
+  "nfl-re/notes/sha256.txt": {
+   "sha256": "77c770e55bb7ad2d2b0360f8927f0f06bfe81fb39e4e925ec63d07703680f31a",
+   "location_in_archive": "nfl-re/notes/sha256.txt",
+   "bytes": 193
+  },
+  "nfl-re/notes/state-of-knowledge.md": {
+   "sha256": "3439364ba36ec59e40b1af1fa775184d46919a716ace9f4768f33de18e397abe",
+   "location_in_archive": "nfl-re/notes/state-of-knowledge.md",
+   "bytes": 1730
+  },
+  "nfl-re/notes/target-sources.txt": {
+   "sha256": "0248bc2c1106ca204dd5ecc8c46b31edba410fc7d012a9bc393e967656953ad4",
+   "location_in_archive": "nfl-re/notes/target-sources.txt",
+   "bytes": 3365
+  },
+  "nfl-re/notes/token.json": {
+   "sha256": "828a0e18ed80ca0f51f95e9961ffcceee891adce28e76a06ff32cde4e4e4249f",
+   "location_in_archive": "nfl-re/notes/token.json",
+   "bytes": 1587
+  },
+  "nfl-re/out/auto_scraper.py": {
+   "sha256": "58262b3e4359e3706ff314455971d127fd5269eb4f16a7313be8c567223199e8",
+   "location_in_archive": "nfl-re/out/auto_scraper.py",
+   "bytes": 3483
+  },
+  "nfl-re/out/binary_map.csv": {
+   "sha256": "338a5357c74db3ecb356924fae62f711bf9684044eb1e1805cab94221f4965b9",
+   "location_in_archive": "nfl-re/out/binary_map.csv",
+   "bytes": 1484
+  },
+  "nfl-re/out/bundle_hashes.json": {
+   "sha256": "f5d5dd7258a67b40295f32b531d41c356af2a1551ec30d3041eee53751e21fbc",
+   "location_in_archive": "nfl-re/out/bundle_hashes.json",
+   "bytes": 4783
+  },
+  "nfl-re/out/bypass_notes.md": {
+   "sha256": "993f118d146d5fd50392622b57691020fa13784b79b606eb24dbfd629c5ca870",
+   "location_in_archive": "nfl-re/out/bypass_notes.md",
+   "bytes": 2529
+  },
+  "nfl-re/out/cp_fit.json": {
+   "sha256": "30434548b320f829201dc24062135bc97297b7d7240895b35008607214e51d3f",
+   "location_in_archive": "nfl-re/out/cp_fit.json",
+   "bytes": 311
+  },
+  "nfl-re/out/cp_fit2.json": {
+   "sha256": "98315e71f5fbba7ed5c40b4712c49f36174e7c710e4352bb9deb4ba332dfc4ea",
+   "location_in_archive": "nfl-re/out/cp_fit2.json",
+   "bytes": 517
+  },
+  "nfl-re/out/cycle1_memory_dumps.json": {
+   "sha256": "fddc5b11da23ca770078b8a117910384914752cbfee6ddb592619c0bb22437db",
+   "location_in_archive": "nfl-re/out/cycle1_memory_dumps.json",
+   "bytes": 5915
+  },
+  "nfl-re/out/cycle2_api_exploits.json": {
+   "sha256": "385adc3ad43928c244cf4d4d00aa6b18ebf4244fc66941acc6936e5db3f158d0",
+   "location_in_archive": "nfl-re/out/cycle2_api_exploits.json",
+   "bytes": 3789
+  },
+  "nfl-re/out/endpoints.json": {
+   "sha256": "93eea4202b956deebc83fbd0e0c681c5fc4c52fe15e75184471d3062bdf7cf41",
+   "location_in_archive": "nfl-re/out/endpoints.json",
+   "bytes": 8385
+  },
+  "nfl-re/out/endpoints_raw.json": {
+   "sha256": "79a8faec6e9b939a1b4cff0e482239c40c2ee373137bf631ca589bd3949d5b0c",
+   "location_in_archive": "nfl-re/out/endpoints_raw.json",
+   "bytes": 7405
+  },
+  "nfl-re/out/equations.py": {
+   "sha256": "1a41ce25badf98a8f44fb33bc15ffb3d6e37602695a0b34483be7347e0dc4f51",
+   "location_in_archive": "nfl-re/out/equations.py",
+   "bytes": 10032
+  },
+  "nfl-re/out/exploit.py": {
+   "sha256": "241b7ae7e30f7184f9a521cf87610f93fae4c7e8bc094d63906bfd8d09f87ec3",
+   "location_in_archive": "nfl-re/out/exploit.py",
+   "bytes": 6334
+  },
+  "nfl-re/out/game_2025101200.json": {
+   "sha256": "772b19d2db02d231cb583b95c3da714ed57c2e21f26188625d2f9cb0f4c67bf2",
+   "location_in_archive": "nfl-re/out/game_2025101200.json",
+   "bytes": 852
+  },
+  "nfl-re/out/game_2025101201.json": {
+   "sha256": "d25168a69c5e9feb7b3f6b588dc822ef6f83f778c0f7e85097e13b51dcae6896",
+   "location_in_archive": "nfl-re/out/game_2025101201.json",
+   "bytes": 852
+  },
+  "nfl-re/out/game_2025101202.json": {
+   "sha256": "2baa43b226be3425823c985f8e60c04f8986fe0225f0674821494c668114375a",
+   "location_in_archive": "nfl-re/out/game_2025101202.json",
+   "bytes": 33152
+  },
+  "nfl-re/out/game_2025101203.json": {
+   "sha256": "0f9e184973cb19db2f6de1ba131be2741925738d793afeb4f3f1c715bf8dc125",
+   "location_in_archive": "nfl-re/out/game_2025101203.json",
+   "bytes": 38283
+  },
+  "nfl-re/out/game_2025101204.json": {
+   "sha256": "9eb9e07d28c011e5b0e8acbbd95c80fca17e98ace74cd78a5ca5643d41b348fe",
+   "location_in_archive": "nfl-re/out/game_2025101204.json",
+   "bytes": 36948
+  },
+  "nfl-re/out/game_2025101205.json": {
+   "sha256": "44aeefeb4ef3836d633c89a721f7d43fe50470a576544d8d1d6f21cc9b20b6c8",
+   "location_in_archive": "nfl-re/out/game_2025101205.json",
+   "bytes": 15829
+  },
+  "nfl-re/out/game_2025101206.json": {
+   "sha256": "92c85608dce83ec31126c7c8ef2e7dabb091ad11ff2e7fb825225dd9e20d8128",
+   "location_in_archive": "nfl-re/out/game_2025101206.json",
+   "bytes": 42018
+  },
+  "nfl-re/out/game_2025101207.json": {
+   "sha256": "93a5ebbd96a3330c358c7ff1e627e653f28f057fa21c519592c917ad422a7445",
+   "location_in_archive": "nfl-re/out/game_2025101207.json",
+   "bytes": 25091
+  },
+  "nfl-re/out/game_2025101208.json": {
+   "sha256": "f91ee41222f35328889b01dd9b8caf5d23663725f52b87793d2f3a3dc5c54916",
+   "location_in_archive": "nfl-re/out/game_2025101208.json",
+   "bytes": 11460
+  },
+  "nfl-re/out/game_2025101209.json": {
+   "sha256": "0171c1b1e6e1784bf97bcbc797eb17c6e961e20230dbc5f0277e54c3d855dcca",
+   "location_in_archive": "nfl-re/out/game_2025101209.json",
+   "bytes": 39671
+  },
+  "nfl-re/out/game_2025101210.json": {
+   "sha256": "9064f2a73c2cc372fd45118b5133b6bbbe93ea2b58e3be5f73e0fd8fa288b8a9",
+   "location_in_archive": "nfl-re/out/game_2025101210.json",
+   "bytes": 16468
+  },
+  "nfl-re/out/game_2025101211.json": {
+   "sha256": "c9f1f9b0c1392901f6fe10a8fbc606857b4e93b81265b1decf1f174b56651bf8",
+   "location_in_archive": "nfl-re/out/game_2025101211.json",
+   "bytes": 15179
+  },
+  "nfl-re/out/game_2025101212.json": {
+   "sha256": "10fc731d130e4f091339a99e0baba6aff06ed608f164cc5c9c73f12a95b0e696",
+   "location_in_archive": "nfl-re/out/game_2025101212.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101213.json": {
+   "sha256": "f490067da4be12af46d2294c37ae31603a66762c00344b347179145811b6f11a",
+   "location_in_archive": "nfl-re/out/game_2025101213.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101214.json": {
+   "sha256": "f42ef355a6dd4aa8e1dd7d11702b3d54742de636a04c688fa4f7257b4d6ec0ee",
+   "location_in_archive": "nfl-re/out/game_2025101214.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101215.json": {
+   "sha256": "d1e2b18d9d96fbe45b159228061ba2971f21ad976d59009e9263a0736edf1514",
+   "location_in_archive": "nfl-re/out/game_2025101215.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101900.json": {
+   "sha256": "df6c3b1d62bed5fd7d310db4af6641479a2023ff97a52769ed947c6c682b3ddb",
+   "location_in_archive": "nfl-re/out/game_2025101900.json",
+   "bytes": 26533
+  },
+  "nfl-re/out/game_2025101901.json": {
+   "sha256": "3600ca00727044d9fbb7c024dc61bca29e2a2507cb4c56d22beb5aefa2aaaee0",
+   "location_in_archive": "nfl-re/out/game_2025101901.json",
+   "bytes": 7543
+  },
+  "nfl-re/out/game_2025101902.json": {
+   "sha256": "6c1a159f9715f7e2b56f8a90095d122ae8dff16057808ce81a4e8c447a77a3ef",
+   "location_in_archive": "nfl-re/out/game_2025101902.json",
+   "bytes": 9407
+  },
+  "nfl-re/out/game_2025101903.json": {
+   "sha256": "0ada1339fab6318d96b6d129a9dbada3cfbf05f6b6243689bef8421f3f310569",
+   "location_in_archive": "nfl-re/out/game_2025101903.json",
+   "bytes": 10451
+  },
+  "nfl-re/out/game_2025101904.json": {
+   "sha256": "315300b734c8c34a72b0dfcbcfdb562e247728c86458fef52bab977e15c0cf56",
+   "location_in_archive": "nfl-re/out/game_2025101904.json",
+   "bytes": 57861
+  },
+  "nfl-re/out/game_2025101905.json": {
+   "sha256": "46a5edf667902584cd6e15c5a8e5811325c4fff35fbb40f6126bd54e061e4aee",
+   "location_in_archive": "nfl-re/out/game_2025101905.json",
+   "bytes": 12666
+  },
+  "nfl-re/out/game_2025101906.json": {
+   "sha256": "6d0eecece7de4f23a2a6e255650530582eaf46c8077bcf7930bff1a37b898366",
+   "location_in_archive": "nfl-re/out/game_2025101906.json",
+   "bytes": 4995
+  },
+  "nfl-re/out/game_2025101907.json": {
+   "sha256": "e4e6dd95f1412268246330f5f0ed6699ef542ba424c07037af14366a9c01aed7",
+   "location_in_archive": "nfl-re/out/game_2025101907.json",
+   "bytes": 19425
+  },
+  "nfl-re/out/game_2025101908.json": {
+   "sha256": "75300425b2df98b24361e85c5c422946d3dc76d2269822c2ee8b0fe68f01d1f1",
+   "location_in_archive": "nfl-re/out/game_2025101908.json",
+   "bytes": 18992
+  },
+  "nfl-re/out/game_2025101909.json": {
+   "sha256": "1b0ef080e3225a1ac27c8a373afff8ae3576f6334a2c454e0d336d210826a8ca",
+   "location_in_archive": "nfl-re/out/game_2025101909.json",
+   "bytes": 851
+  },
+  "nfl-re/out/game_2025101910.json": {
+   "sha256": "c1a9ab2328ca794c3fc6b243ff9f34e032c9673b0601a42630e9c84b09f35c1e",
+   "location_in_archive": "nfl-re/out/game_2025101910.json",
+   "bytes": 30217
+  },
+  "nfl-re/out/game_2025101911.json": {
+   "sha256": "57d585820980ae3e5248514cf950fc5c7eb46e6d23fbeea2a18832af3fb91115",
+   "location_in_archive": "nfl-re/out/game_2025101911.json",
+   "bytes": 5025
+  },
+  "nfl-re/out/game_2025101912.json": {
+   "sha256": "7c2f212cfc4bb7fe6028cab851ff1af5a32c875bf3919f2058a76711af4b5969",
+   "location_in_archive": "nfl-re/out/game_2025101912.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101913.json": {
+   "sha256": "cfb009a81521200a083a17141028769aaeca5b95ccdbf877eb1960b944b984a1",
+   "location_in_archive": "nfl-re/out/game_2025101913.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101914.json": {
+   "sha256": "417b84660b89865ecf02a56b36482b43d9b52f598e73d725f300367a68756a98",
+   "location_in_archive": "nfl-re/out/game_2025101914.json",
+   "bytes": 521
+  },
+  "nfl-re/out/game_2025101915.json": {
+   "sha256": "74cc0d3ab455c8552ec93f478efcba2ae63583b78ecf3612c437184a4cf75cb1",
+   "location_in_archive": "nfl-re/out/game_2025101915.json",
+   "bytes": 521
+  },
+  "nfl-re/out/MASTER_REPORT.md": {
+   "sha256": "e5db4741645aad625121e92a2e86e520651bf0c70f52ee7cd2e17bc4dbc9c8f6",
+   "location_in_archive": "nfl-re/out/MASTER_REPORT.md",
+   "bytes": 4707
+  },
+  "nfl-re/out/nfl_context_engine.py": {
+   "sha256": "937632547311a9f8fadbda15b56251a870ad765f6f49f9b6af5d2d321e8d3794",
+   "location_in_archive": "nfl-re/out/nfl_context_engine.py",
+   "bytes": 8687
+  },
+  "nfl-re/out/requirements.txt": {
+   "sha256": "a129d371bafd7bed20053c3a4604258544d23772dca97847ec4f5691ba47f349",
+   "location_in_archive": "nfl-re/out/requirements.txt",
+   "bytes": 45
+  },
+  "nfl-re/out/sweep.py": {
+   "sha256": "b920b80de4259319eb865fddc7c9e247790bc07f530c85ade2289f19941177cf",
+   "location_in_archive": "nfl-re/out/sweep.py",
+   "bytes": 763
+  },
+  "nfl-re/out/test_equations.py": {
+   "sha256": "671b72684450900d0151c28577587fea4e30649f583351036650da3a6b4d20bf",
+   "location_in_archive": "nfl-re/out/test_equations.py",
+   "bytes": 6951
+  },
+  "nfl-re/out/weekly_2025_w7.csv": {
+   "sha256": "d1a8910702dd6a602ac482d4da7d77de70dabb37d44d572f76b7b83bf382e606",
+   "location_in_archive": "nfl-re/out/weekly_2025_w7.csv",
+   "bytes": 11363
+  },
+  "nfl-re/out/weekly_2025_w7.json": {
+   "sha256": "9a89178a1e3d65768a968510a9efdf31a649fdc79653145192a07dec20aea006",
+   "location_in_archive": "nfl-re/out/weekly_2025_w7.json",
+   "bytes": 375
+  },
+  "nfl-re/probe_token.py": {
+   "sha256": "36bb0aac4975cc824f655b73e472cdff81e09cebb3c6fd452760211336c5733d",
+   "location_in_archive": "nfl-re/probe_token.py",
+   "bytes": 734
+  },
+  "nfl-re/static/app.738fbeb581d2c85cb721.js": {
+   "sha256": "39ffdf25a2368ba33d403b6a4ff59e5242c6af9b8d87d8b1c8580aaf495c3d0f",
+   "location_in_archive": "nfl-re/static/app.738fbeb581d2c85cb721.js",
+   "bytes": 113649
+  },
+  "nfl-re/static/cfg_app.config.js": {
+   "sha256": "af99b0a2193d73769b44ca7c26a27e356b19ef00c9d14977d6888cf84e3c1035",
+   "location_in_archive": "nfl-re/static/cfg_app.config.js",
+   "bytes": 20
+  },
+  "nfl-re/static/cfg_config.js": {
+   "sha256": "af99b0a2193d73769b44ca7c26a27e356b19ef00c9d14977d6888cf84e3c1035",
+   "location_in_archive": "nfl-re/static/cfg_config.js",
+   "bytes": 20
+  },
+  "nfl-re/static/cfg_env.js": {
+   "sha256": "af99b0a2193d73769b44ca7c26a27e356b19ef00c9d14977d6888cf84e3c1035",
+   "location_in_archive": "nfl-re/static/cfg_env.js",
+   "bytes": 20
+  },
+  "nfl-re/static/manifest.81064115bb9b308b554d.js": {
+   "sha256": "3015825d03df329518c541c25eb512c300c7b76829692accde215bd6f767c53e",
+   "location_in_archive": "nfl-re/static/manifest.81064115bb9b308b554d.js",
+   "bytes": 1606
+  },
+  "nfl-re/static/nextgenstats_nfl_com_.html": {
+   "sha256": "72d373bc63b0f77a082df57fd18ee0c9b97fb4b1439d82ab5b4fbd3b421dc1ff",
+   "location_in_archive": "nfl-re/static/nextgenstats_nfl_com_.html",
+   "bytes": 31388
+  },
+  "nfl-re/static/ngs_06f1cb.out": {
+   "sha256": "cefb82b7b3f65dd2e68f859c03a341b80a1226d2f4d91833ad9c9f815e5de234",
+   "location_in_archive": "nfl-re/static/ngs_06f1cb.out",
+   "bytes": 21181
+  },
+  "nfl-re/static/ngs_5721ae.out": {
+   "sha256": "1f49969655e9760e0f3b69f30cf588f0c310b40eb12156c9563cf457d901f41e",
+   "location_in_archive": "nfl-re/static/ngs_5721ae.out",
+   "bytes": 55238
+  },
+  "nfl-re/static/ngs_869df6.out": {
+   "sha256": "af99b0a2193d73769b44ca7c26a27e356b19ef00c9d14977d6888cf84e3c1035",
+   "location_in_archive": "nfl-re/static/ngs_869df6.out",
+   "bytes": 20
+  },
+  "nfl-re/static/www_nfl_com_.html": {
+   "sha256": "9dd46f9f201f3df7ff2a4116feee6313e987981a639e5c88be668637fe0e96cf",
+   "location_in_archive": "nfl-re/static/www_nfl_com_.html",
+   "bytes": 3912111
+  },
+  "nfl-re/static/www_nfl_com_stats_player-stats_.html": {
+   "sha256": "bca98ef42ac86dd3adc1c963ed255a9b28015391734e9a7b5905faa55293bd36",
+   "location_in_archive": "nfl-re/static/www_nfl_com_stats_player-stats_.html",
+   "bytes": 260337
+  }
+ },
+ "integrity_verified": true,
+ "no_data_filtered": true,
+ "sample_endpoints": {
+  "primary": 52,
+  "wildcard": 39
+ },
+ "archive_split": {
+  "reason": "GitHub 100MB file limit",
+  "parts": [
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part00",
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part01",
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part02",
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part03",
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part04",
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part05",
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part06"
+  ],
+  "part_bytes": [
+   94371840,
+   94371840,
+   94371840,
+   94371840,
+   94371840,
+   94371840,
+   27363999
+  ],
+  "reassembly": "cat AGENT_HANDOFF_UNIVERSAL.tar.gz.part* > AGENT_HANDOFF_UNIVERSAL.tar.gz && sha256sum -c <<< \"$(cat ARCHIVE_SHA256)\"  && tar -xzf AGENT_HANDOFF_UNIVERSAL.tar.gz"
+ },
+ "archive_sha256_note": "archive_sha256 is the hash of the whole tar.gz; verify after reassembly",
+ "post_archive_audit": {
+  "performed_utc": "2026-10-22T16:03:11Z",
+  "method": "fresh recursive walk of both trees vs manifest file_manifest",
+  "live_files": 391,
+  "archived_files": 383,
+  "in_archive_missing_from_disk": 0,
+  "live_but_post_archive": [
+   "AGENT_HANDOFF_UNIVERSAL.tar.gz.part00..part06 (reassembly chunks, by design)",
+   "UNIVERSAL_TRANSFER_MANIFEST.json (written after archiving, by design)"
+  ],
+  "archive_hash_reverified": true,
+  "parts_reassemble_to_manifest_sha256": true,
+  "git_clean": true,
+  "git_synced_to_origin": true,
+  "tracked_parts": 7,
+  "deletions": 0,
+  "gaps": 0
+ }
+}

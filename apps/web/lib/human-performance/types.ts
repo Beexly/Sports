@@ -139,7 +139,32 @@ export function buildOutputBehavior(input: {
   const required = [input.whatChanged, input.whyItMatters, input.whatCouldBreakTheRead];
   if (required.some((s) => !s || !s.trim())) return null;
   if (!Number.isFinite(input.confidence)) return null;
-  const confidence = Math.max(0, Math.min(1, input.confidence));
+  let confidence = Math.max(0, Math.min(1, input.confidence));
+
+  // THE NON-CONFIDENCE TIERS GATE. (Added 2026-10-20.)
+  //
+  // NON_CONFIDENCE_TIERS was declared and NEVER READ. The file's own
+  // header says the posture is "enforced here, not just intended":
+  //
+  //   "Tiers that may never raise confidence on their own."
+  //
+  // and the two neighbours in the same file -- MAX_BAND_WIDEN and
+  // WATCHLIST_THRESHOLD -- ARE compared at their call sites. This one
+  // was not, so a signal carrying the "inferred" or "illustrative"
+  // tier could publish a confidence of 0.95, which is exactly the
+  // thing the constant exists to prevent.
+  //
+  // So the constant now GATES. A non-confidence tier may not raise
+  // confidence above the cap, and a tier outside the list is
+  // unaffected.
+  //
+  // The cap is SIM_PRIOR_WEIGHT_CAP -- the same 0.05 ceiling the
+  // simulation-prior block names for "the absolute ceiling a
+  // simulation prior may ever contribute". And THAT constant was
+  // also declared and never read; it is read here, so it gates.
+  if (NON_CONFIDENCE_TIERS.includes(input.provenanceTier)) {
+    confidence = Math.min(confidence, SIM_PRIOR_WEIGHT_CAP);
+  }
   return {
     whatChanged: input.whatChanged.trim(),
     whyItMatters: input.whyItMatters.trim(),

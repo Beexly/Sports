@@ -79,6 +79,11 @@ import {
   pairedClosingFields,
 } from "./ledger-chain-store.js";
 import { resolveCanonicalGame, type GameIdentityDb } from "./game-identity.js";
+import {
+  runSettlementLearningLoop,
+  type SettledPickObservation,
+  type SettlementLearningReport,
+} from "./settlement-learning-loop.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -157,6 +162,8 @@ export interface SettleSportResult {
   error?: string;
   /** Set when the cycle skipped paid work for a classified reason (e.g. "spend_guard"). */
   note?: string;
+  /** Continual learning & recalibration report from post-settlement loop (GAP-08). */
+  readonly learningReport?: SettlementLearningReport | null;
 }
 
 /** Upstream feed identifier stamped on every settlement observation. */
@@ -194,6 +201,7 @@ export async function settleSport(
   let anomaliesPromoted = 0;
   let anomaliesResolved = 0;
   let outboxAppended = 0;
+  const settledPicksForLearning: SettledPickObservation[] = [];
 
   const skipped = (note: string): SettleSportResult => ({
     sport: sport.key,
@@ -869,6 +877,20 @@ export async function settleSport(
             await markPostSettlementWorkFailed(workDelegate, pick.id, "SNAPSHOT_OUTCOME", snapErr);
           }
           picksSettled++;
+          settledPicksForLearning.push({
+            pickId: pick.id,
+            gameId: game.id,
+            sport: sport.key,
+            pickType: pick.pickType,
+            selection: pick.selection,
+            trueProb: pick.trueProb,
+            rankingP: pick.rankingP ?? undefined,
+            marketFairProb: pick.marketFairProb ?? undefined,
+            result,
+            settledAt: settledAt.toISOString(),
+            clvLockPrice: pick.clvLockPrice ?? null,
+            closingPrice: closeAmerican !== null ? americanToDecimalOrNull(closeAmerican) : null,
+          });
         }
 
         // Write TeamGameLog entries for ATS form tracking.
@@ -952,6 +974,19 @@ export async function settleSport(
       }
     }
 
+    let learningReport: SettlementLearningReport | null = null;
+    if (settledPicksForLearning.length > 0) {
+      try {
+        learningReport = await runSettlementLearningLoop(settledPicksForLearning);
+      } catch (learningErr) {
+        console.warn(
+          `${logPrefix} Settlement learning loop warning: ${
+            learningErr instanceof Error ? learningErr.message : String(learningErr)
+          }`,
+        );
+      }
+    }
+
     return {
       sport: sport.key,
       status: "success",
@@ -963,6 +998,7 @@ export async function settleSport(
       anomaliesPromoted,
       anomaliesResolved,
       outboxAppended,
+      learningReport,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

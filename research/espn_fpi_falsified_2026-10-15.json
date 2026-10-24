@@ -1,0 +1,52 @@
+{
+ "date": "2026-10-15",
+ "title": "ESPN FPI per-game predictor - harvested, falsified, parked",
+ "source": "sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{eid}/competitions/{eid}/predictor (keyless)",
+ "coverage": {
+  "n": 2462,
+  "seasons": "2017-2026",
+  "note": "100% of frozen filter; lastModified post-game but gameProjection equals the winprobability series play-1 value (verified 2017_14_SF_HOU et al), i.e. a pre-game snapshot"
+ },
+ "fields": [
+  "gameProjection (FPI win prob pct)",
+  "teamPredPtDiff (FPI expected margin, home sign)",
+  "gameQuality",
+  "matchupQuality",
+  "teamOffEff/teamDefEff/teamSTEff/teamTotEff",
+  "teamChanceLoss/teamChanceTie",
+  "oppSeasonStrengthRating"
+ ],
+ "market_relationship": {
+  "corr_fpi_close": 0.9065,
+  "abs_disagreement_median_pts": 1.66,
+  "p90_disagreement_pts": 4.48
+ },
+ "falsifier_results": {
+  "rmse_close_vs_actual": 12.799,
+  "rmse_fpi_vs_actual": 13.154,
+  "best_blend_alpha": 0.0,
+  "verdict": "FPI adds ZERO margin accuracy to the close at any blend weight.",
+  "stratified_fade_test": {
+   "rule": "when |FPI - close| >= 4 pts, bet FPI's side vs the close at -110",
+   "record": "152-174-9 (46.6%) in 326 decisions",
+   "z_vs_breakeven_52_4": -2.09,
+   "interpretation": "FPI-fade is NEGATIVELY edged - FPI overreacts; the market already knows."
+  },
+  "converse_market_side": {
+   "record": "174-152-9 (53.4%)",
+   "z": 0.35,
+   "verdict": "noise, not edge"
+  },
+  "permutation_check": {
+   "p_value": 0.1175,
+   "n_simulations": 2000
+  },
+  "season_stability": "market-side rate ranges 0.433-0.679 by season - unstable, no persistent signal"
+ },
+ "verdict": {
+  "as_strategy": "REFUSED. No ATS edge in either direction; permutation p=0.12.",
+  "as_covariate": "PARKED for the GSE covariate bench: FPI win prob + predPtDiff are causally-safe pre-game model opinions; useful only if a future bind needs an independent prior where the market is unavailable (e.g. 2023 W2-5 where no opening line exists).",
+  "honesty": "The headline finding is NEGATIVE: two independent probes (line movement, FPI) both confirm the close is the efficient frontier. Emission stays ZERO_OBJECT."
+ },
+ "harvest_tooling": "scratch/harvest_espn_fpi.py -> scratch/espn_fpi.json (2462/2462, resumable)"
+}

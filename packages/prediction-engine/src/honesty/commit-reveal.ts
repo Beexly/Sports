@@ -52,7 +52,7 @@ function canonicalBody(body: PickCommitmentBody, salt: string): string {
 /** Bind a pick at lock time. Salt is caller-supplied so tests stay deterministic. */
 export function commitPick(body: PickCommitmentBody, salt: string): PickCommitment {
   if (!salt) {
-    throw new Error("commitPick: salt required (do not invent one).");
+    throw new TypeError("commitPick: salt required (do not invent one).");
   }
   return {
     commitment: fingerprintPayload(canonicalBody(body, salt)),

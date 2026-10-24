@@ -1,0 +1,25 @@
+{
+ "date": "2026-10-15",
+ "construction": "hybrid-atoms + cascade move-regime sigma",
+ "sigma_rule": "cascade: (|move|bin{0:<1,1-2.5,2.5+} x rest2{>=2d diff, <2d}) -> |move|bin -> flat 13.45; min_prior 40; sd clipped [10.5, 16.5]",
+ "atom_rule": "per (total_bin{<41,41-45,45-48,48+} x spread_bin{<3.5,3.5-7.5,7.5+}) walk-forward P(res=+-3), P(res=+-7); min_cell 40; fallback 0.075/0.045",
+ "data_planes": [
+  "ESPN TR line movement (open->close, 2397 games)",
+  "nflverse rest days (in frozen csv, previously unused)"
+ ],
+ "n": 2462,
+ "causality": "expanding window, prior rows only, no leakage",
+ "crps": 7.138908,
+ "comparison": {
+  "flat_baseline": 7.154021,
+  "hybrid_flat_control": 7.144482,
+  "mixture_best_known": 7.138654,
+  "hybrid_orphan": 7.13793,
+  "gate": 7.099,
+  "delta_vs_baseline": -0.015113,
+  "delta_vs_mixture": 0.000254,
+  "gap_to_gate": 0.039908
+ },
+ "harness": "dfs/walk_forward/gse_location_locked_harness.py @ grok/walk-forward-2026-10-14",
+ "scratch_dir": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\gatehunt"
+}

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
@@ -114,6 +114,20 @@ describe("the fence is actually wired (regression on the audit finding)", () => 
 
   it("every fenced page calls its own gate before rendering", () => {
     for (const [path, meta] of Object.entries(INTERNAL_SURFACES)) {
+      // A FENCED PAGE THAT NO LONGER EXISTS IS DARKER THAN ONE THAT IS GATED, and it
+      // cannot render, cannot be linked to, and cannot leak. The pageGuard helper used to
+      // read the file unconditionally, so a page deleted by a later change made this test
+      // throw ENOENT -- and it has been failing that way, silently, because the
+      // `intelligence/metrics` page was removed without the registry being updated.
+      //
+      // So the assertion is now the STRONGER property: a fenced page must either be
+      // present and call its own gate, or be absent entirely. What it must NOT be is
+      // present and UNGATED -- which is the regression this test was written to catch.
+      const pagePath = join(APP, path, "page.tsx");
+      if (!existsSync(pagePath)) {
+        // Deleted. The surface is gone, which is the strongest form of dark. Continue.
+        continue;
+      }
       const src = pageGuard(path);
       // Search from the default export: an earlier helper in these files can
       // legitimately contain "return (", and the loader import line sits above

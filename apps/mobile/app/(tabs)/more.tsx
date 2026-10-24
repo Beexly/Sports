@@ -314,7 +314,7 @@ export default function MoreScreen(): React.ReactElement {
             <Divider />
             <Spacer size="s3" />
             <Body size="bodySm" tone="meta">
-              We&apos;re not AI. We&apos;re math you can read.
+              Quantitative sports intelligence.
             </Body>
           </Surface>
         </Section>

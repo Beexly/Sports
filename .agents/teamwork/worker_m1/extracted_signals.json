@@ -1,0 +1,875 @@
+[
+  {
+    "id": "prefetched_exchange",
+    "label": "Caller-supplied / Pre-fetched Exchange Fair Value",
+    "category": "ODDS",
+    "family": "MARKET",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [],
+    "owner": "core-pipeline",
+    "data_dependencies": [
+      "input.prefetched"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 1.0,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "kalshi",
+    "label": "Kalshi Exchange Real-time Fair Value",
+    "category": "ODDS",
+    "family": "MARKET",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl",
+      "baseball_mlb",
+      "basketball_nba",
+      "icehockey_nhl"
+    ],
+    "owner": "market-data",
+    "data_dependencies": [
+      "kalshi_api"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 1.0,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "espn_powerindex",
+    "label": "ESPN Football Power Index (FPI) Logistic",
+    "category": "RATINGS",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl",
+      "americanfootball_ncaaf",
+      "basketball_nba",
+      "basketball_ncaab"
+    ],
+    "owner": "quant-modeling",
+    "data_dependencies": [
+      "espn_fpi_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.8,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "clubelo",
+    "label": "ClubElo European Football Ratings",
+    "category": "RATINGS",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "soccer_epl",
+      "soccer_usa_mls"
+    ],
+    "owner": "quant-soccer",
+    "data_dependencies": [
+      "clubelo_csv"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.9,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "poisson_dixon_coles",
+    "label": "Team Rate Scoring Model (Dixon-Coles / Poisson)",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "soccer_epl",
+      "soccer_usa_mls",
+      "icehockey_nhl",
+      "baseball_mlb"
+    ],
+    "owner": "quant-rates",
+    "data_dependencies": [
+      "teamGameLog"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 1.0,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "skellam_cover",
+    "label": "Skellam Cover Spread Fair Value",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "SPREAD_COVER_PROBABILITY",
+    "valid_sports": [
+      "soccer_epl",
+      "soccer_usa_mls",
+      "icehockey_nhl",
+      "baseball_mlb"
+    ],
+    "owner": "quant-rates",
+    "data_dependencies": [
+      "teamGameLog"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.85,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "mlb_standings",
+    "label": "MLB Official Standings Win% Logistic",
+    "category": "STANDINGS",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "baseball_mlb"
+    ],
+    "owner": "quant-mlb",
+    "data_dependencies": [
+      "mlb_stats_api"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.75,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "elo",
+    "label": "Chronological Team Results Elo",
+    "category": "RATINGS",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [],
+    "owner": "quant-elo",
+    "data_dependencies": [
+      "teamGameLog"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.9,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "polymarket_gamma_internal",
+    "label": "Polymarket Prediction Exchange Gamma Fair Value",
+    "category": "ODDS",
+    "family": "MARKET",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl",
+      "basketball_nba"
+    ],
+    "owner": "quant-markets",
+    "data_dependencies": [
+      "polymarket_api"
+    ],
+    "activation_status": "SHADOW_ONLY",
+    "trust_weight": 0.5,
+    "acquisition_task": null,
+    "blocked_reason": "Compliance hold: default OFF. Internal estimator only."
+  },
+  {
+    "id": "nfl_epa_adj",
+    "label": "NFL Opponent-Adjusted EPA/Play (nflverse)",
+    "category": "RATINGS",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "data-eng-nflverse",
+    "data_dependencies": [
+      "teamGameEfficiency"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 1.0,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_contract_incentives",
+    "label": "NFL Player Contract Incentives & Milestones",
+    "category": "MILESTONES",
+    "family": "NARRATIVE",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-narrative",
+    "data_dependencies": [
+      "contract_milestones_feed"
+    ],
+    "activation_status": "BLOCKED_MISSING_SOURCE",
+    "trust_weight": 0.0,
+    "acquisition_task": "GSE-DATA-209",
+    "blocked_reason": "Verified contract milestone feed awaiting data partnership clearance."
+  },
+  {
+    "id": "nfl_cognitive_load_fatigue",
+    "label": "NFL Cognitive Load & Thursday Night Travel Stress",
+    "category": "SCHEDULE",
+    "family": "SITUATIONAL",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "data-eng-nfl",
+    "data_dependencies": [
+      "stadium_coordinates",
+      "flight_schedules"
+    ],
+    "activation_status": "BLOCKED_MISSING_SOURCE",
+    "trust_weight": 0.0,
+    "acquisition_task": "GSE-DATA-104",
+    "blocked_reason": "Circadian travel stress and stadium timezone vectors not yet mapped in db."
+  },
+  {
+    "id": "nfl_beat_desk_corroboration",
+    "label": "NFL Beat Reporter Injury & Depth Chart Insights",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "NARRATIVE",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "osint-desk",
+    "data_dependencies": [
+      "beat_reporter_rss_whitelist"
+    ],
+    "activation_status": "BLOCKED_MISSING_SOURCE",
+    "trust_weight": 0.0,
+    "acquisition_task": "GSE-DATA-312",
+    "blocked_reason": "Beat reporter whitelist pending scraping rights review; sample data feeds disabled."
+  },
+  {
+    "id": "nfl_trench_pass_block_win_rate",
+    "label": "NFL Offensive vs Defensive Line Pass Block Win Rate (PBWR)",
+    "category": "TEAM_RATES",
+    "family": "TRENCHES",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-trenches",
+    "data_dependencies": [
+      "next_gen_stats_pbwr"
+    ],
+    "activation_status": "BLOCKED_MISSING_SOURCE",
+    "trust_weight": 0.0,
+    "acquisition_task": "GSE-DATA-401",
+    "blocked_reason": "Next Gen Stats trench telemetry requires licensing execution."
+  },
+  {
+    "id": "nfl_luck_fumble_regression",
+    "label": "NFL Fumble Recovery & 3rd Down Conversion Luck Regression",
+    "category": "TEAM_RATES",
+    "family": "LUCK",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-regression",
+    "data_dependencies": [
+      "pbp_luck_matrix"
+    ],
+    "activation_status": "BLOCKED_MISSING_SOURCE",
+    "trust_weight": 0.0,
+    "acquisition_task": "GSE-DATA-502",
+    "blocked_reason": "Expected vs actual fumble recovery rates module awaiting backtest corpus."
+  },
+  {
+    "id": "nfl_wind_elasticity",
+    "label": "NFL Wind Elasticity & Convex Passing/FG Decay",
+    "category": "WEATHER",
+    "family": "MICROCLIMATE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-weather",
+    "data_dependencies": [
+      "nfl_stadium_weather_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_coaching_tendencies",
+    "label": "NFL Coaching 2nd-Down Run Alternation & 4th Down Conservatism",
+    "category": "PACE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-coaching",
+    "data_dependencies": [
+      "nflverse_play_calling_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_injury_trajectory",
+    "label": "NFL Practice Report Wed/Thu/Fri Trajectory & Questionable Fade",
+    "category": "INJURIES",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-injuries",
+    "data_dependencies": [
+      "nfl_official_injury_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.12,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_redzone_te_leverage",
+    "label": "NFL Red Zone TE Leverage & Scoring Efficiency",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "2WAY_PROBABILITY",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-personnel",
+    "data_dependencies": [
+      "nfl_personnel_rz_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_offensive_line_trench",
+    "label": "NFL Offensive Line Continuity & PBWR Trench Edge",
+    "category": "TEAM_RATES",
+    "family": "TRENCHES",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-trenches",
+    "data_dependencies": [
+      "nfl_snap_counts",
+      "nfl_pfr_advstats"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.12,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_referee_crew_tendencies",
+    "label": "NFL Referee Crew Penalty & Total Points Elasticity",
+    "category": "OFFICIALS",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-officials",
+    "data_dependencies": [
+      "nflverse_officials",
+      "games_csv_referee"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_circadian_travel_fatigue",
+    "label": "NFL Circadian Rhythm & Timezone Travel Fatigue",
+    "category": "SCHEDULE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-travel",
+    "data_dependencies": [
+      "nfl_stadium_timezones",
+      "nfl_schedules"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.09,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_contract_milestones",
+    "label": "NFL Late-Season Contract Incentives & Milestone Funneling",
+    "category": "MILESTONES",
+    "family": "NARRATIVE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-incentives",
+    "data_dependencies": [
+      "nflverse_contracts_otc"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.11,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_wr1_out_redistribution",
+    "label": "NFL Alpha WR1-Out Vacated Target Reallocation & Efficiency Decay",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-targets",
+    "data_dependencies": [
+      "nfl_injuries",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.14,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_turnover_luck",
+    "label": "NFL Turnover Luck (recovery variance vs skill)",
+    "category": "TEAM_RATES",
+    "family": "LUCK",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-luck",
+    "data_dependencies": [
+      "nfl_player_stats_weekly",
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.12,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_short_week_road_deficit",
+    "label": "NFL Short-Week Road Rest Deficit",
+    "category": "SCHEDULE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-situational",
+    "data_dependencies": [
+      "nfl_schedule"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.11,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_age_conditioned_rest",
+    "label": "NFL Age-Conditioned Rest Recovery",
+    "category": "SCHEDULE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-situational",
+    "data_dependencies": [
+      "nfl_schedule",
+      "nfl_rosters"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_fourth_down_aggressiveness",
+    "label": "NFL Fourth-Down Coaching Aggressiveness",
+    "category": "PACE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-coaching",
+    "data_dependencies": [
+      "nfl_pbp",
+      "nfl_coaching_history"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.09,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_second_and_ten_tendency",
+    "label": "NFL 2nd-and-10 Play-Calling Tendency (Lopez)",
+    "category": "PACE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-coaching",
+    "data_dependencies": [
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.07,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_primetime_target_concentration",
+    "label": "NFL Primetime Target Concentration",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-targets",
+    "data_dependencies": [
+      "nfl_player_stats_weekly",
+      "nfl_schedule"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_early_down_proe_momentum",
+    "label": "NFL Early-Down PROE Momentum",
+    "category": "PACE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-pace",
+    "data_dependencies": [
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_two_minute_hurry_up",
+    "label": "NFL Two-Minute Hurry-Up Efficiency",
+    "category": "PACE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-pace",
+    "data_dependencies": [
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_bye_week_defensive_install",
+    "label": "NFL Bye-Week Defensive Installation Edge",
+    "category": "SCHEDULE",
+    "family": "SITUATIONAL",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-schematic",
+    "data_dependencies": [
+      "nfl_schedule",
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.09,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_qb_twp_regression",
+    "label": "NFL QB Turnover-Worthy-Play Regression",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-efficiency",
+    "data_dependencies": [
+      "nfl_pbp",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.13,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_qb_receiver_continuity",
+    "label": "NFL QB-Receiver Continuity",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-chemistry",
+    "data_dependencies": [
+      "nfl_rosters",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_penalty_differential_momentum",
+    "label": "NFL Penalty Differential Momentum",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-discipline",
+    "data_dependencies": [
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.07,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_backup_qb_target_distribution",
+    "label": "NFL Backup-QB Target Distribution Shift",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-targets",
+    "data_dependencies": [
+      "nfl_injuries",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.11,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_man_zone_receiver_archetype",
+    "label": "NFL Man/Zone Receiver Archetype Matchup",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-matchups",
+    "data_dependencies": [
+      "nfl_charting",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_wr1_vacated_target_efficiency",
+    "label": "NFL WR1-Out Efficiency Decay",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-targets",
+    "data_dependencies": [
+      "nfl_injuries",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_redzone_opportunity_conversion",
+    "label": "NFL Red-Zone Opportunity Conversion",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-redzone",
+    "data_dependencies": [
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.11,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_negative_binomial_redzone_td",
+    "label": "NFL Negative-Binomial Red-Zone TD Rate",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-redzone",
+    "data_dependencies": [
+      "nfl_pbp"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.1,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_redzone_personnel_grouping",
+    "label": "NFL Red-Zone Personnel Grouping Edge",
+    "category": "TEAM_RATES",
+    "family": "EFFICIENCY",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-redzone",
+    "data_dependencies": [
+      "nfl_pbp",
+      "nfl_charting"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.09,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_rookie_breakout_cohort",
+    "label": "NFL Rookie Breakout Cohort",
+    "category": "PLAYER_AVAILABILITY",
+    "family": "NARRATIVE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-narrative",
+    "data_dependencies": [
+      "nfl_rosters",
+      "nfl_player_stats_weekly"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.06,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_high_altitude_fatigue",
+    "label": "NFL High-Altitude Fatigue Decay",
+    "category": "VENUE_ENVIRONMENT",
+    "family": "MICROCLIMATE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-weather",
+    "data_dependencies": [
+      "nfl_stadium_weather_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.07,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_linear_wind_pass_impact",
+    "label": "NFL Linear Wind Passing Impact",
+    "category": "WEATHER",
+    "family": "MICROCLIMATE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-weather",
+    "data_dependencies": [
+      "nfl_stadium_weather_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_temperature_precipitation_decay",
+    "label": "NFL Temperature & Precipitation Decay",
+    "category": "WEATHER",
+    "family": "MICROCLIMATE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-weather",
+    "data_dependencies": [
+      "nfl_stadium_weather_feed"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.08,
+    "acquisition_task": null,
+    "blocked_reason": null
+  },
+  {
+    "id": "nfl_turf_surface_fatigue",
+    "label": "NFL Turf Surface Fatigue",
+    "category": "VENUE_ENVIRONMENT",
+    "family": "MICROCLIMATE",
+    "output_kind": "CONTINUOUS_VALUE",
+    "valid_sports": [
+      "americanfootball_nfl"
+    ],
+    "owner": "quant-biomechanics",
+    "data_dependencies": [
+      "nfl_stadium_meta"
+    ],
+    "activation_status": "ACTIVE",
+    "trust_weight": 0.06,
+    "acquisition_task": null,
+    "blocked_reason": null
+  }
+]

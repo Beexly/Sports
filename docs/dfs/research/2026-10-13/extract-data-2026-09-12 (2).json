@@ -1,0 +1,2151 @@
+{
+  "url": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+  "feature_inventory": [
+    {
+      "name": "Statcast leaderboard",
+      "name_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "functionality": "Displays leaders in Statcast metrics and exposes category navigation, qualifiers, filters, and CSV download.",
+      "functionality_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "data_consumed": "Batted-ball events, launch angle, exit velocity, distance, hard-hit and barrel measures.",
+      "data_consumed_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "name": "Statcast Search",
+      "name_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "functionality": "Queries MLB Statcast database per pitch, game, player, team, or season.",
+      "functionality_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "data_consumed": "Pitch-level Statcast records and filters; metric definitions via MLB Glossary.",
+      "data_consumed_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_search"
+    },
+    {
+      "name": "Expected Statistics leaderboard",
+      "name_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "functionality": "Compares BA/SLG/wOBA with expected versions and differences.",
+      "functionality_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "data_consumed": "PA, BIP, BA/xBA, SLG/xSLG, wOBA/xwOBA.",
+      "data_consumed_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
+    },
+    {
+      "name": "Sprint Speed leaderboard",
+      "name_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "functionality": "Ranks players by Statcast foot-speed metric.",
+      "functionality_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "data_consumed": "Competitive runs, bolts, HP-to-1B and sprint speed.",
+      "data_consumed_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed"
+    },
+    {
+      "name": "FanGraphs major-league leaders",
+      "name_citation": "https://www.fangraphs.com/leaders/major-league",
+      "functionality": "Shows sortable batting leader table and minimum playing-time control.",
+      "functionality_citation": "https://www.fangraphs.com/leaders/major-league",
+      "data_consumed": "G, PA, HR, R, RBI, SB, BB%, K%, ISO, BABIP, AVG, OBP, SLG, wOBA, xwOBA, wRC+, BsR, Off, Def, WAR.",
+      "data_consumed_citation": "https://www.fangraphs.com/leaders/major-league",
+      "url_citation": "https://www.fangraphs.com/leaders/major-league"
+    },
+    {
+      "name": "FanGraphs projection selector",
+      "name_citation": "https://www.fangraphs.com/projections.aspx",
+      "functionality": "Offers preseason, in-season, 3-year and on-pace projection families, with bat/pitch and position/team filters.",
+      "functionality_citation": "https://www.fangraphs.com/projections.aspx",
+      "data_consumed": "Player projections from ZiPS, Steamer, Depth Charts, ATC, THE BAT, THE BAT X, OOPSY and related variants.",
+      "data_consumed_citation": "https://www.fangraphs.com/projections.aspx",
+      "url_citation": "https://www.fangraphs.com/projections.aspx"
+    },
+    {
+      "name": "Baseball Reference league averages",
+      "name_citation": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+      "functionality": "Provides year-by-year major-league batting totals/averages.",
+      "functionality_citation": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+      "data_consumed": "Year, teams, batting population and standard batting rates/counts.",
+      "data_consumed_citation": "https://www.baseball-reference.com/leagues/majors/bat.shtml",
+      "url_citation": "https://www.baseball-reference.com/leagues/majors/bat.shtml"
+    },
+    {
+      "name": "Baseball Reference pitching averages",
+      "name_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "functionality": "Provides year-by-year major-league pitching totals/averages.",
+      "functionality_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "data_consumed": "Year, teams, pitchers, ERA, IP, WHIP and rate/counting stats.",
+      "data_consumed_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "url_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml"
+    },
+    {
+      "name": "NBA season summary",
+      "name_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "functionality": "Season navigation, standings, awards, leaders and links to per-game, totals, per-100, advanced and shooting tables.",
+      "functionality_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "data_consumed": "2025-26 season results and player/team statistics",
+      "data_consumed_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html"
+    },
+    {
+      "name": "Basketball-Reference advanced table",
+      "name_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "functionality": "Presents player advanced statistics in a sortable-looking tabular listing.",
+      "functionality_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "data_consumed": "player, age, team, position, games, starts, minutes and advanced rate/value metrics",
+      "data_consumed_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html"
+    },
+    {
+      "name": "NBA Stats filters",
+      "name_citation": "https://www.nba.com/stats/players/traditional",
+      "functionality": "Provides season, season type, per mode, season segment and extensive player bio/team/game filters.",
+      "functionality_citation": "https://www.nba.com/stats/players/traditional",
+      "data_consumed": "season, season type, per mode, position, starter/bench, experience, draft, college, country, height/weight, team, opponent, location, quarter and date ranges",
+      "data_consumed_citation": "https://www.nba.com/stats/players/traditional",
+      "url_citation": "https://www.nba.com/stats/players/traditional"
+    },
+    {
+      "name": "NBA traditional player table",
+      "name_citation": "https://www.nba.com/stats/players/traditional",
+      "functionality": "Displays player traditional statistics and rank columns.",
+      "functionality_citation": "https://www.nba.com/stats/players/traditional",
+      "data_consumed": "player/team identity and GP, W, L, minutes, scoring, shooting, rebounds, assists, turnovers, steals, blocks, fouls, fantasy points and double/triple doubles",
+      "data_consumed_citation": "https://www.nba.com/stats/players/traditional",
+      "url_citation": "https://www.nba.com/stats/players/traditional"
+    },
+    {
+      "name": "NBA team box scores",
+      "name_citation": "https://www.nba.com/stats/teams/boxscores",
+      "functionality": "Lists team game box-score rows with game/date/result and linked event-level measures.",
+      "functionality_citation": "https://www.nba.com/stats/teams/boxscores",
+      "data_consumed": "team, matchup, date, W/L, minutes, points, FGM/FGA/FG%, 3PM/3PA/3P%, FTM/FTA/FT%, rebounds, assists, steals, blocks, turnovers and plus/minus",
+      "data_consumed_citation": "https://www.nba.com/stats/teams/boxscores",
+      "url_citation": "https://www.nba.com/stats/teams/boxscores"
+    },
+    {
+      "name": "DFS lineup optimizer",
+      "url_citation": "https://www.fantasylabs.com/",
+      "functionality": "Builds and optimizes fantasy lineups; homepage links NFL and MMA optimizer how-to content.",
+      "functionality_citation": "https://www.fantasylabs.com/",
+      "data_consumed": "Player projections, salaries, contest constraints and lineup rules (the homepage does not expose the underlying fields).",
+      "data_consumed_citation": "https://www.fantasylabs.com/"
+    },
+    {
+      "name": "Portfolio EV",
+      "url_citation": "https://www.oddsshopper.com/",
+      "functionality": "Offers diversified positive-EV betting strategies with custom devigging and backtested data.",
+      "functionality_citation": "https://www.oddsshopper.com/",
+      "data_consumed": "Odds across sportsbooks and backtested strategy data.",
+      "data_consumed_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "name": "Arbitrage finder",
+      "url_citation": "https://www.oddsshopper.com/",
+      "functionality": "Finds guaranteed-profit opportunities from sportsbook odds differences.",
+      "functionality_citation": "https://www.oddsshopper.com/",
+      "data_consumed": "Cross-book odds.",
+      "data_consumed_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "name": "Odds screen / live odds",
+      "url_citation": "https://www.oddsshopper.com/",
+      "functionality": "Compares real-time odds across major sportsbooks, including in-game markets.",
+      "functionality_citation": "https://www.oddsshopper.com/",
+      "data_consumed": "Real-time sportsbook market odds.",
+      "data_consumed_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "name": "Roster and injury intelligence",
+      "url_citation": "https://props.cash/",
+      "functionality": "Provides real-time injuries, lineup changes and matchup context and explains impact on player performance.",
+      "functionality_citation": "https://props.cash/",
+      "data_consumed": "Injuries, lineup changes, matchup context and odds.",
+      "data_consumed_citation": "https://props.cash/"
+    },
+    {
+      "name": "AI prop predictor",
+      "url_citation": "https://playerprops.ai/",
+      "functionality": "Provides instant AI projections for players across major sports.",
+      "functionality_citation": "https://playerprops.ai/",
+      "data_consumed": "Historical player/team data, posted lines, real-time odds and sharp/public sentiment.",
+      "data_consumed_citation": "https://playerprops.ai/"
+    },
+    {
+      "name": "Pick builder and export",
+      "url_citation": "https://www.pickfinder.app/",
+      "functionality": "Builds picks and exports them to Pick’Em apps for tracking/management.",
+      "functionality_citation": "https://www.pickfinder.app/",
+      "data_consumed": "Player props, lines and odds.",
+      "data_consumed_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "name": "Custom Discord alerts",
+      "url_citation": "https://www.pickfinder.app/",
+      "functionality": "Notifies users when new player-prop lines drop or update.",
+      "functionality_citation": "https://www.pickfinder.app/",
+      "data_consumed": "New/updated player-prop lines.",
+      "data_consumed_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "name": "DFS and Pick’em optimizers",
+      "url_citation": "https://dailyfantasyfuel.com/",
+      "functionality": "Provides lineup, PrizePicks and Underdog +EV optimizers plus prop analytics.",
+      "functionality_citation": "https://dailyfantasyfuel.com/",
+      "data_consumed": "DFS salaries, player props, hit rates, trends, injuries and multi-book lines.",
+      "data_consumed_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "name": "Expert start/sit and league sync",
+      "url_citation": "https://www.fantasypros.com/",
+      "functionality": "Syncs a fantasy league and shows expert start/sit recommendations.",
+      "functionality_citation": "https://www.fantasypros.com/",
+      "data_consumed": "League roster and expert recommendations.",
+      "data_consumed_citation": "https://www.fantasypros.com/"
+    },
+    {
+      "name": "League Dominator / projections",
+      "url_citation": "https://www.footballguys.com/",
+      "functionality": "Shows best lineups and customizable DFS weekly projections and lineup optimization.",
+      "functionality_citation": "https://www.footballguys.com/",
+      "data_consumed": "League settings, player projections and contest format.",
+      "data_consumed_citation": "https://www.footballguys.com/"
+    },
+    {
+      "name": "Betting picks and expert analysis",
+      "url_citation": "https://www.bettingpros.com/",
+      "functionality": "Publishes free sports betting picks, odds and expert analysis.",
+      "functionality_citation": "https://www.bettingpros.com/",
+      "data_consumed": "Sportsbook odds and expert pick records.",
+      "data_consumed_citation": "https://www.bettingpros.com/"
+    },
+    {
+      "name": "Predictive model / model edges",
+      "url_citation": "https://www.actionnetwork.com/",
+      "functionality": "Homepage surfaces model-edge, projections, odds, picks and rankings content.",
+      "functionality_citation": "https://www.actionnetwork.com/",
+      "data_consumed": "Game/player odds and editorial/model outputs; methodology not disclosed on homepage.",
+      "data_consumed_citation": "https://www.actionnetwork.com/"
+    },
+    {
+      "name": "DFS projections board and lineup optimizer",
+      "name_citation": "https://www.linestarapp.com/Projections",
+      "functionality": "Shows a player pool, sortable analytics columns, player filters, rules/stacking/advanced controls, and an option to optimize 10 lineups.",
+      "functionality_citation": "https://www.linestarapp.com/Projections",
+      "data_consumed": "Player salaries, proprietary projections, consensus projections, fantasy history, opponent/matchup data, ownership, Vegas implied points, and alert signals.",
+      "data_consumed_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "name": "Projected ownership",
+      "name_citation": "https://www.linestarapp.com/Ownership",
+      "functionality": "Provides projected tournament ownership as a player-level analytic and a separate ownership board.",
+      "functionality_citation": "https://www.linestarapp.com/Ownership",
+      "data_consumed": "Projected tournament ownership percentage and actual tournament ownership percentage.",
+      "data_consumed_citation": "https://www.linestarapp.com/Ownership",
+      "url_citation": "https://www.linestarapp.com/Ownership"
+    },
+    {
+      "name": "PropsAI",
+      "name_citation": "https://www.linestarapp.com/Props",
+      "functionality": "Offers AI prop picks and edges as a dedicated tool linked from the NFL navigation.",
+      "functionality_citation": "https://www.linestarapp.com/Props",
+      "data_consumed": "The fetched page does not expose the underlying model inputs or prop table.",
+      "data_consumed_citation": "https://www.linestarapp.com/Props",
+      "url_citation": "https://www.linestarapp.com/Props"
+    },
+    {
+      "name": "Salary comparison",
+      "name_citation": "https://www.linestarapp.com/SalaryComparison",
+      "functionality": "A cross-site salary comparison tool for DraftKings and FanDuel.",
+      "functionality_citation": "https://www.linestarapp.com/SalaryComparison",
+      "data_consumed": "DraftKings and FanDuel player salaries; no additional formula was exposed on the fetched page.",
+      "data_consumed_citation": "https://www.linestarapp.com/SalaryComparison",
+      "url_citation": "https://www.linestarapp.com/SalaryComparison"
+    },
+    {
+      "name": "Starting-lineup dashboard",
+      "name_citation": "https://www.linestarapp.com/DailyDashboard",
+      "functionality": "Dashboard for confirmed/expected starters and status alerts.",
+      "functionality_citation": "https://www.linestarapp.com/DailyDashboard",
+      "data_consumed": "Starter status, player/team/opponent context and status alert icons.",
+      "data_consumed_citation": "https://www.linestarapp.com/DailyDashboard",
+      "url_citation": "https://www.linestarapp.com/DailyDashboard"
+    },
+    {
+      "name": "PropFinder player dashboard",
+      "name_citation": "https://propfinder.app/",
+      "functionality": "Displays performance trends, matchup analysis, advanced stats, opponent-specific game logs, injury reports, real-time odds, and custom filters.",
+      "functionality_citation": "https://propfinder.app/",
+      "data_consumed": "Player trends, matchup data, advanced statistics, game logs, injuries and real-time sportsbook odds.",
+      "data_consumed_citation": "https://propfinder.app/",
+      "url_citation": "https://propfinder.app/"
+    },
+    {
+      "name": "PropFinder football research boards",
+      "name_citation": "https://propfinder.app/nfl",
+      "functionality": "Covers receiving/rushing/passing props, target share, snap counts, coverage matchups, usage trends, QB rankings, model spreads/totals/projections and weather.",
+      "functionality_citation": "https://propfinder.app/nfl",
+      "data_consumed": "Player prop lines, target share, snaps, coverage matchups, weekly usage, model spreads, totals, projections, QB adjustments and weather.",
+      "data_consumed_citation": "https://propfinder.app/nfl",
+      "url_citation": "https://propfinder.app/nfl"
+    },
+    {
+      "name": "SaberSim lineup optimizer",
+      "name_citation": "https://www.sabersim.com/dfs/draftkings",
+      "functionality": "Builds large pools of high-upside lineups and supports filtering, diversification, tweaking, lineup rules and contest entry editing.",
+      "functionality_citation": "https://www.sabersim.com/dfs/draftkings",
+      "data_consumed": "DFS slate/player data, user rules, exposures/stacks and contest entries.",
+      "data_consumed_citation": "https://www.sabersim.com/dfs/draftkings",
+      "url_citation": "https://www.sabersim.com/dfs/draftkings"
+    },
+    {
+      "name": "SaberSim contest simulations",
+      "name_citation": "https://www.sabersim.com/dfs/draftkings",
+      "functionality": "Simulates contests thousands of times to identify the most profitable lineups for each contest.",
+      "functionality_citation": "https://www.sabersim.com/dfs/draftkings",
+      "data_consumed": "Contest payout/structure and lineup outcomes; exact simulation variables are not disclosed.",
+      "data_consumed_citation": "https://www.sabersim.com/dfs/draftkings",
+      "url_citation": "https://www.sabersim.com/dfs/draftkings"
+    },
+    {
+      "name": "RotoWire NFL optimizer",
+      "name_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "functionality": "Builds DraftKings lineups, supports stacks, groups, exposures and other customizations, and can build multiple lineups.",
+      "functionality_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "data_consumed": "RotoWire projections, DraftKings salaries, player positions/teams/opponents and lock/exclude/like settings.",
+      "data_consumed_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "url_citation": "https://www.rotowire.com/daily/nfl/optimizer.php"
+    },
+    {
+      "name": "RotoGrinders premium tools/content",
+      "name_citation": "https://www.rotogrinders.com/",
+      "functionality": "The home page links to premium NFL content and tools, including projections, pOWN% and injury-report tools; many entries are marked Premium Tool or Premium Only.",
+      "functionality_citation": "https://www.rotogrinders.com/",
+      "data_consumed": "DFS projections, ownership (pOWN%), injury information and expert content; detail is not exposed on the home page.",
+      "data_consumed_citation": "https://www.rotogrinders.com/",
+      "url_citation": "https://www.rotogrinders.com/"
+    },
+    {
+      "name": "NFL/Savant navigation",
+      "url_citation": "https://www.nflsavant.com/",
+      "functionality": "Links to Players, Teams, Games, League, Seasons, Leaderboards, Fantasy, Compare, Combine and Explore.",
+      "functionality_citation": "https://www.nflsavant.com/",
+      "data_consumed": "NFL player/team/game/league/season and leaderboard data.",
+      "data_consumed_citation": "https://www.nflsavant.com/"
+    },
+    {
+      "name": "NFL/Savant stat boards",
+      "url_citation": "https://www.nflsavant.com/",
+      "functionality": "Provides leaderboard boards for receiving, NGS receiving, routes, passing, NGS passing, rushing, NGS rushing, pass rush, movers and penalties.",
+      "functionality_citation": "https://www.nflsavant.com/",
+      "data_consumed": "EPA, air yards, target share, CPOE, pressure %, rank delta and flags.",
+      "data_consumed_citation": "https://www.nflsavant.com/"
+    },
+    {
+      "name": "NFL/Savant featured query",
+      "url_citation": "https://www.nflsavant.com/",
+      "functionality": "Shows “Best QB · EPA per dropback,” grouped by passer with a minimum of 100 dropbacks.",
+      "functionality_citation": "https://www.nflsavant.com/",
+      "data_consumed": "Passer, EPA/play, plays, pass yards, TDs, EPA/play and CPOE.",
+      "data_consumed_citation": "https://www.nflsavant.com/"
+    },
+    {
+      "name": "PFR season menu",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "functionality": "Exposes standard, advanced and fantasy player-stat links plus team and defensive-stat links.",
+      "functionality_citation": "https://www.pro-football-reference.com/years/2025/",
+      "data_consumed": "Passing, rushing, receiving, scrimmage, defense, kicking, punting, returns, scoring, advanced and fantasy tables.",
+      "data_consumed_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "name": "PFR opposition/defense table",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "functionality": "Ranks teams by opposition and defensive statistics.",
+      "functionality_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "data_consumed": "Team, games, points allowed, total yards, plays, turnovers, passing/rushing and penalty metrics.",
+      "data_consumed_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "name": "NGS receiving leaders",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "functionality": "Season/week controls and a receiving-leaders table; page says NGS tracks receiver/TE style and tendencies.",
+      "functionality_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "data_consumed": "Cushion, separation, targeted/share air yards, receptions, targets, catch %, yards, TD, YAC and expected YAC.",
+      "data_consumed_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "name": "NGS rushing leaders",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "functionality": "Season/week controls and sortable rushing categories including efficiency, 8+ defenders and time behind line.",
+      "functionality_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "data_consumed": "Efficiency, 8+D%, TLOS, attempts, yards, RYOE, average, RYOE/attempt, ROE% and TD.",
+      "data_consumed_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "name": "Football Outsiders requested pages",
+      "url_citation": "https://www.footballoutsiders.com/stats/nfl/team-defense",
+      "functionality": "Fetched pages returned no substantive content in this run; no features can be confirmed.",
+      "functionality_citation": "https://www.footballoutsiders.com/stats/nfl/team-defense"
+    },
+    {
+      "name": "Polymarket public market listing",
+      "name_citation": "https://docs.polymarket.com/",
+      "functionality": "The quickstart shows listing markets with closed=false, paginating the first page, and printing market questions.",
+      "functionality_citation": "https://docs.polymarket.com/",
+      "data_consumed": "Market objects/items, including at least question; the API example requests closed=false and limit=5.",
+      "data_consumed_citation": "https://docs.polymarket.com/",
+      "url_citation": "https://docs.polymarket.com/"
+    },
+    {
+      "name": "Prediction-market event and market records",
+      "name_citation": "https://gamma-api.polymarket.com/events",
+      "functionality": "The fetched endpoint returns a JSON array of event objects, each of which can contain nested markets, series, tags, and event metadata.",
+      "functionality_citation": "https://gamma-api.polymarket.com/events",
+      "data_consumed": "Event IDs/tickers/slugs/titles, descriptions, dates, category, liquidity, volume, open interest, status flags, nested market quotes and token IDs.",
+      "data_consumed_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "name": "NFL sportsbook game-lines view",
+      "name_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "functionality": "Displays Games/Futures/Stats & Trends/News navigation, game-line subcategories, week navigation, and per-game Spread, Total, and Moneyline odds with More Bets links.",
+      "functionality_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "data_consumed": "Teams, home/away designation, game date/time, spread and vig, total and vig, moneyline, event IDs, and team-logo image URLs.",
+      "data_consumed_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "url_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+    },
+    {
+      "name": "Calibration definition and reliability diagrams",
+      "name_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "functionality": "Defines a calibrated binary classifier as one for which predictions near 0.8 correspond to approximately 80% positives; reliability diagrams plot conditional positive frequency against predicted probability.",
+      "functionality_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "data_consumed": "predict_proba outputs, binary labels, and binned predictions.",
+      "data_consumed_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "name": "Generalized ECE lens framework",
+      "name_citation": "https://arxiv.org/pdf/2205.11454",
+      "functionality": "Uses output and target transformations (a lens), a distance function, and an estimation scheme to measure calibration for deployment-specific reliability conditions.",
+      "functionality_citation": "https://arxiv.org/pdf/2205.11454",
+      "data_consumed": "Classifier probability vector g(x), labels y, optional bins, selection conditions, and class groupings.",
+      "data_consumed_citation": "https://arxiv.org/pdf/2205.11454",
+      "url_citation": "https://arxiv.org/abs/2205.11454"
+    },
+    {
+      "name": "Grouping-loss estimator",
+      "name_citation": "https://arxiv.org/pdf/2210.16315",
+      "functionality": "Partitions feature space within confidence-score level sets, estimates between-region explained grouping loss with a debiased estimator, and uses a kernel/LOWESS estimate for binning-induced grouping loss.",
+      "functionality_citation": "https://arxiv.org/pdf/2210.16315",
+      "data_consumed": "Features X, binary labels Y, confidence scores S, bins and partition regions; code exposes X, y_labels and y_scores.",
+      "data_consumed_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "url_citation": "https://github.com/aperezlebel/beyond_calibration"
+    },
+    {
+      "name": "Calibration-sharpness diagram",
+      "name_citation": "https://arxiv.org/pdf/2406.04068",
+      "functionality": "Plots confidence calibration, a sharpness/generalization band, and a density estimate of predicted confidence; the dashed diagonal represents perfect confidence calibration.",
+      "functionality_citation": "https://arxiv.org/pdf/2406.04068",
+      "data_consumed": "Predicted confidence h(x), pointwise correctness, conditional expectations, Bregman divergence estimates and confidence density.",
+      "data_consumed_citation": "https://arxiv.org/pdf/2406.04068",
+      "url_citation": "https://arxiv.org/abs/2406.04068"
+    },
+    {
+      "name": "Cross-validated probability calibration",
+      "name_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "functionality": "CalibratedClassifierCV fits sigmoid or isotonic calibrators on held-out folds; with ensemble=True it averages calibrated probabilities from k classifier-calibrator couples.",
+      "functionality_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "data_consumed": "Base estimator outputs from decision_function or predict_proba, labels, cv split, method and ensemble settings.",
+      "data_consumed_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    }
+  ],
+  "data_columns": [
+    {
+      "header": "Rk.",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation": "Rk.",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "ordinal",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Ranking column.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "Player",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Player identity.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "BBE",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation": "BBE",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "count",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Batted Ball Events.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "LA",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation": "LA",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "degrees",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Launch angle.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "EV",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation": "EV",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "MPH",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Exit velocity.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "Distance",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "feet",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Batted-ball distance.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "Hard Hit",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation": "95 MPH+",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "percent",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Hard-hit threshold shown as 95 MPH+.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "Barrels",
+      "header_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "abbreviation": "Brls/BBE",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "unit": "count/percent",
+      "unit_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "tooltip_or_explainer": "Barrels, barrels per BBE and barrels per PA.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "header": "PA",
+      "header_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "abbreviation": "PA",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "unit": "plate appearances",
+      "unit_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "tooltip_or_explainer": "Expected-statistics and leader tables.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
+    },
+    {
+      "header": "xBA",
+      "header_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "abbreviation": "xBA",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "unit_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "tooltip_or_explainer": "Expected batting average.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
+    },
+    {
+      "header": "xSLG",
+      "header_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "abbreviation": "xSLG",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "unit_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "tooltip_or_explainer": "Expected slugging.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
+    },
+    {
+      "header": "xwOBA",
+      "header_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "abbreviation": "xwOBA",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "unit_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "tooltip_or_explainer": "Expected weighted on-base average.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
+    },
+    {
+      "header": "Sprint Speed",
+      "header_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "abbreviation": "",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "unit": "ft/sec",
+      "unit_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "tooltip_or_explainer": "Statcast foot-speed metric.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed"
+    },
+    {
+      "header": "Competitive Runs",
+      "header_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "abbreviation_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "unit": "count",
+      "unit_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "tooltip_or_explainer": "Runs qualifying for sprint-speed calculation.",
+      "tooltip_or_explainer_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed"
+    },
+    {
+      "header": "WAR",
+      "header_citation": "https://www.fangraphs.com/leaders/major-league",
+      "abbreviation": "WAR",
+      "abbreviation_citation": "https://www.fangraphs.com/leaders/major-league",
+      "unit_citation": "https://www.fangraphs.com/leaders/major-league",
+      "tooltip_or_explainer": "FanGraphs value metric in leader/projection tables.",
+      "tooltip_or_explainer_citation": "https://www.fangraphs.com/leaders/major-league",
+      "url_citation": "https://www.fangraphs.com/leaders/major-league"
+    },
+    {
+      "header": "ERA",
+      "header_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "abbreviation": "ERA",
+      "abbreviation_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "unit_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "tooltip_or_explainer": "Earned run average in pitching tables.",
+      "tooltip_or_explainer_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "url_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml"
+    },
+    {
+      "header": "WHIP",
+      "header_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "abbreviation": "WHIP",
+      "abbreviation_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "unit_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "tooltip_or_explainer": "Pitching rate in Baseball Reference table.",
+      "tooltip_or_explainer_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml",
+      "url_citation": "https://www.baseball-reference.com/leagues/majors/pitch.shtml"
+    },
+    {
+      "header": "Team standings: W/L/W-L%/GB/PS/G/PA/G/SRS",
+      "header_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "abbreviation": "W, L, W/L%, GB, PS/G, PA/G, SRS",
+      "abbreviation_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "unit": "wins/losses, percentage, games back, points per game, points allowed per game, rating",
+      "unit_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "tooltip_or_explainer": "Standings table headers shown for Eastern Conference.",
+      "tooltip_or_explainer_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html"
+    },
+    {
+      "header": "Advanced player metrics",
+      "header_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "abbreviation": "PER, TS%, 3PAr, FTr, ORB%, DRB%, TRB%, AST%, STL%, BLK%, TOV%, USG%, OWS, DWS, WS, WS/48, OBPM, DBPM, BPM, VORP",
+      "abbreviation_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "unit": "rate/percentage or value; no unit legend captured",
+      "unit_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "tooltip_or_explainer": "Advanced player table header explicitly lists these metrics.",
+      "tooltip_or_explainer_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026_advanced.html"
+    },
+    {
+      "header": "Traditional player metrics",
+      "header_citation": "https://www.nba.com/stats/players/traditional",
+      "abbreviation": "GP, W, L, Min, PTS, FGM, FGA, FG%, 3PM, 3PA, 3P%, FTM, FTA, FT%, OREB, DREB, REB, AST, TOV, STL, BLK, PF, FP, DD2, TD3, +/-",
+      "abbreviation_citation": "https://www.nba.com/stats/players/traditional",
+      "unit": "games, minutes, points, makes/attempts, percentages, counting stats and plus/minus",
+      "unit_citation": "https://www.nba.com/stats/players/traditional",
+      "tooltip_or_explainer": "Traditional table header lists these fields and subsequent rank columns.",
+      "tooltip_or_explainer_citation": "https://www.nba.com/stats/players/traditional",
+      "url_citation": "https://www.nba.com/stats/players/traditional"
+    },
+    {
+      "header": "Team box-score metrics",
+      "header_citation": "https://www.nba.com/stats/teams/boxscores",
+      "abbreviation": "FGM, FGA, FG%, 3PM, 3PA, 3P%, FTM, FTA, FT%, OREB, DREB, REB, AST, STL, BLK, TOV, +/-",
+      "abbreviation_citation": "https://www.nba.com/stats/teams/boxscores",
+      "unit": "makes/attempts, percentages, counting stats and plus/minus",
+      "unit_citation": "https://www.nba.com/stats/teams/boxscores",
+      "tooltip_or_explainer": "Team box-score rows expose these measures, with many values linked to NBA Stats event URLs.",
+      "tooltip_or_explainer_citation": "https://www.nba.com/stats/teams/boxscores",
+      "url_citation": "https://www.nba.com/stats/teams/boxscores"
+    },
+    {
+      "header": "NBA filter dimensions",
+      "header_citation": "https://www.nba.com/stats/players/traditional",
+      "abbreviation": "Season, Season Type, Per Mode, Season Segment, Position, Starter/Bench, Experience, Draft Year, Draft Pick, College, Country, Height, Weight, Team, VS Team, Division, Conference, Outcome, Location, Quarter, Date Range",
+      "abbreviation_citation": "https://www.nba.com/stats/players/traditional",
+      "unit": "categorical filters; date fields",
+      "unit_citation": "https://www.nba.com/stats/players/traditional",
+      "tooltip_or_explainer": "Rendered filter controls include the listed choices.",
+      "tooltip_or_explainer_citation": "https://www.nba.com/stats/players/traditional",
+      "url_citation": "https://www.nba.com/stats/players/traditional"
+    },
+    {
+      "header": "EV / positive EV",
+      "url_citation": "https://www.oddsshopper.com/",
+      "abbreviation": "EV",
+      "abbreviation_citation": "https://www.oddsshopper.com/",
+      "unit": "percentage/value",
+      "unit_citation": "https://www.oddsshopper.com/",
+      "tooltip_or_explainer": "OddsShopper describes Portfolio EV and +EV feeds; homepage does not define the calculation.",
+      "tooltip_or_explainer_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "header": "Arbitrage",
+      "url_citation": "https://www.oddsshopper.com/",
+      "abbreviation": "ARB",
+      "abbreviation_citation": "https://www.oddsshopper.com/",
+      "unit": "percentage/value",
+      "unit_citation": "https://www.oddsshopper.com/",
+      "tooltip_or_explainer": "Arbitrage identifies cross-book guaranteed-profit differences.",
+      "tooltip_or_explainer_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "header": "Hitrate",
+      "url_citation": "https://dailyfantasyfuel.com/",
+      "abbreviation": "HR",
+      "abbreviation_citation": "https://dailyfantasyfuel.com/",
+      "unit": "percentage",
+      "unit_citation": "https://dailyfantasyfuel.com/",
+      "tooltip_or_explainer": "Daily Fantasy Fuel says props include hit rates and filters.",
+      "tooltip_or_explainer_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "header": "Line movement",
+      "url_citation": "https://www.pickfinder.app/",
+      "abbreviation": "LM",
+      "abbreviation_citation": "https://www.pickfinder.app/",
+      "unit": "odds/line",
+      "unit_citation": "https://www.pickfinder.app/",
+      "tooltip_or_explainer": "PickFinder tracks line changes over time; PlayerProps.ai says it tracks shifts in real time.",
+      "tooltip_or_explainer_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "header": "Projection",
+      "url_citation": "https://playerprops.ai/",
+      "abbreviation": "Proj",
+      "abbreviation_citation": "https://playerprops.ai/",
+      "unit": "projected stat/value",
+      "unit_citation": "https://playerprops.ai/",
+      "tooltip_or_explainer": "PlayerProps.ai and Daily Fantasy Fuel advertise projections, but no visible unit definition on the fetched homepages.",
+      "tooltip_or_explainer_citation": "https://playerprops.ai/"
+    },
+    {
+      "header": "Sharp vs public sentiment",
+      "url_citation": "https://playerprops.ai/",
+      "abbreviation": "S/P",
+      "abbreviation_citation": "https://playerprops.ai/",
+      "unit": "sentiment",
+      "unit_citation": "https://playerprops.ai/",
+      "tooltip_or_explainer": "PlayerProps.ai explicitly lists sharp vs public sentiment as research data.",
+      "tooltip_or_explainer_citation": "https://playerprops.ai/"
+    },
+    {
+      "header": "Value",
+      "header_citation": "https://www.linestarapp.com/Projections",
+      "unit": "projection points per salary unit (displayed as X); exact denominator/unit not stated",
+      "unit_citation": "https://www.linestarapp.com/Projections",
+      "tooltip_or_explainer": "Value — Projection/Salary",
+      "tooltip_or_explainer_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "header": "Projection",
+      "header_citation": "https://www.linestarapp.com/Projections",
+      "unit": "fantasy points",
+      "unit_citation": "https://www.linestarapp.com/Projections",
+      "tooltip_or_explainer": "LineStar Proprietary Projection (editable)",
+      "tooltip_or_explainer_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "header": "Consensus",
+      "header_citation": "https://www.linestarapp.com/Projections",
+      "unit": "fantasy points",
+      "unit_citation": "https://www.linestarapp.com/Projections",
+      "tooltip_or_explainer": "Consensus Projection (aggregate industry projection)",
+      "tooltip_or_explainer_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "header": "Floor / Ceiling / Range",
+      "header_citation": "https://www.linestarapp.com/Projections",
+      "unit": "fantasy points or modeled outcome range",
+      "unit_citation": "https://www.linestarapp.com/Projections",
+      "tooltip_or_explainer": "Low/high/range outcome fields; no calculation method disclosed.",
+      "tooltip_or_explainer_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "header": "Projected Ownership",
+      "header_citation": "https://www.linestarapp.com/Ownership",
+      "abbreviation": "pOwn%",
+      "abbreviation_citation": "https://www.linestarapp.com/Ownership",
+      "unit": "percent",
+      "unit_citation": "https://www.linestarapp.com/Ownership",
+      "tooltip_or_explainer": "Projected tournament Ownership % Tonight",
+      "tooltip_or_explainer_citation": "https://www.linestarapp.com/Ownership",
+      "url_citation": "https://www.linestarapp.com/Ownership"
+    },
+    {
+      "header": "AlertScore",
+      "header_citation": "https://www.linestarapp.com/Projections",
+      "unit": "score",
+      "unit_citation": "https://www.linestarapp.com/Projections",
+      "tooltip_or_explainer": "Net Positive Alerts Appearing on Players",
+      "tooltip_or_explainer_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "header": "PLAYER / POS / TEAM / OPP / SAL / FPTS / VAL / MIN EXP / MAX EXP / RST%",
+      "header_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "abbreviation": "SAL, FPTS, VAL, EXP, RST%",
+      "abbreviation_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "unit": "SAL dollars; FPTS fantasy points; VAL ratio; EXP percent/exposure; RST% percent",
+      "unit_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "tooltip_or_explainer": "The optimizer table includes lock, exclude, like, position, team, opponent, salary, fantasy points, value, min/max exposure and RST%.",
+      "tooltip_or_explainer_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "url_citation": "https://www.rotowire.com/daily/nfl/optimizer.php"
+    },
+    {
+      "header": "Rank / Last / User / Pts",
+      "header_citation": "https://www.rotogrinders.com/",
+      "abbreviation": "Pts",
+      "abbreviation_citation": "https://www.rotogrinders.com/",
+      "unit": "points",
+      "unit_citation": "https://www.rotogrinders.com/",
+      "tooltip_or_explainer": "Community leaderboard fields; not a DFS projection metric.",
+      "tooltip_or_explainer_citation": "https://www.rotogrinders.com/",
+      "url_citation": "https://www.rotogrinders.com/"
+    },
+    {
+      "header": "Tm",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Team name.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "W",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "wins",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "L",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "losses",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "T",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "ties",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "W-L%",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Win-loss percentage.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "PF",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "points",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Points for.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "PA",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "points",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Points against.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "PD",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "points",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Point differential.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "MoV",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "unit": "points/game",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Margin of victory.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "SoS",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Strength of schedule.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "SRS",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Simple rating system.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "OSRS",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Offensive SRS.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "DSRS",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/",
+      "tooltip_or_explainer": "Defensive SRS.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "header": "Rk",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Rank.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "G",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "games",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Games played.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "PA",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "points",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Points allowed.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "Yds",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "yards",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Total yards allowed.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "Ply",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "plays",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Opponent plays.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "Y/P",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "yards/play",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Yards per play.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "TO",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Opponent turnovers.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "Cmp",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "completions",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Opponent passing completions.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "Att",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "attempts",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Opponent passing attempts; in the passing section.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "Y/A",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "unit": "yards/attempt",
+      "unit_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Yards per rushing attempt in the rushing section.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "EXP",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm",
+      "tooltip_or_explainer": "Expected points column shown in opposition table.",
+      "tooltip_or_explainer_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "header": "CUSHAverage Cushion",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "CUSH",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "yards",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "tooltip_or_explainer": "Average cushion.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "SEPAverage Separation",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "SEP",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "yards",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "tooltip_or_explainer": "Average separation.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "TAYTargeted Air Yards",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "TAY",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "yards",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "tooltip_or_explainer": "Targeted air yards.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "TAY%% Share of Team’s Air Yards",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "TAY%",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "percent",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "tooltip_or_explainer": "Share of team air yards.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "RECReceptions",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "REC",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "receptions",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "TARTargets",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "TAR",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "targets",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "CTCH%Catch Percentage",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "CTCH%",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "percent",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "YDSReceiving Yards",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "YDS",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "yards",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "YAC/RYAC/Reception",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "YAC/R",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "yards/reception",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "xYAC/RExpected YAC/Reception",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "abbreviation": "EYAC/R",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "unit": "yards/reception",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "tooltip_or_explainer": "Expected YAC per reception.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "header": "EFFEfficiency",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "EFF",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "8+D%8+ Defenders in the Box",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "8+D%",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "unit": "percent",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "tooltip_or_explainer": "Percentage of attempts against 8+ defenders in box.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "TLOSAvg Time Behind Line Of Scrimmage",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "TLOS",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "unit": "seconds",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "tooltip_or_explainer": "Average time behind line of scrimmage.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "ATTRushing Attempts",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "ATT",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "unit": "attempts",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "RYOERush Yards Over Expected",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "RYOE",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "unit": "yards",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "tooltip_or_explainer": "Rush yards over expected.",
+      "tooltip_or_explainer_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "RYOE/AttRush Yards Over Expected per Attempt",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "RYOE/Att",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "unit": "yards/attempt",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "ROE%Rush Pct Over Expected",
+      "url_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "abbreviation": "ROE%",
+      "abbreviation_citation": "https://nextgenstats.nfl.com/stats/rushing",
+      "unit": "percent",
+      "unit_citation": "https://nextgenstats.nfl.com/stats/rushing"
+    },
+    {
+      "header": "id",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "tooltip_or_explainer": "Event identifier.",
+      "tooltip_or_explainer_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "title",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "tooltip_or_explainer": "Event title/question text.",
+      "tooltip_or_explainer_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "liquidity",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "unit": "numeric amount (unit not stated)",
+      "unit_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "volume",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "unit": "numeric amount (unit not stated)",
+      "unit_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "openInterest",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "unit": "numeric amount (unit not stated)",
+      "unit_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "outcomes",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "tooltip_or_explainer": "Nested market field represented as a JSON-encoded array, e.g. Yes/No.",
+      "tooltip_or_explainer_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "outcomePrices",
+      "header_citation": "https://gamma-api.polymarket.com/events",
+      "unit": "decimal price/probability-like value",
+      "unit_citation": "https://gamma-api.polymarket.com/events",
+      "tooltip_or_explainer": "JSON-encoded prices aligned with outcomes.",
+      "tooltip_or_explainer_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "header": "Spread",
+      "header_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "unit": "points plus American odds",
+      "unit_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "tooltip_or_explainer": "DraftKings page labels the game-line column Spread; examples include +7 -112 and -7 -108.",
+      "tooltip_or_explainer_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "url_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+    },
+    {
+      "header": "Total",
+      "header_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "unit": "points plus American odds",
+      "unit_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "tooltip_or_explainer": "Over/under is shown with O/U notation, such as O49.5 -118 and U49.5 -102.",
+      "tooltip_or_explainer_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "url_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+    },
+    {
+      "header": "Moneyline",
+      "header_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "unit": "American odds",
+      "unit_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "tooltip_or_explainer": "Moneyline values are displayed per team, e.g. +270 and -340.",
+      "tooltip_or_explainer_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "url_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+    },
+    {
+      "header": "Brier loss",
+      "header_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "abbreviation": "Brier",
+      "abbreviation_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "unit": "unitless loss",
+      "unit_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "tooltip_or_explainer": "Proper scoring metric combining calibration and refinement/generalization; lower is better in the displayed tables.",
+      "tooltip_or_explainer_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html"
+    },
+    {
+      "header": "Log loss",
+      "header_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "abbreviation": "NLL",
+      "abbreviation_citation": "https://arxiv.org/pdf/2406.04068",
+      "unit": "unitless loss",
+      "unit_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "tooltip_or_explainer": "Negative log-likelihood/cross-entropy; used both as a generalization metric and to fit temperature T.",
+      "tooltip_or_explainer_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html"
+    },
+    {
+      "header": "Roc auc",
+      "header_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "abbreviation": "ROC AUC",
+      "abbreviation_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "unit": "area",
+      "unit_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "tooltip_or_explainer": "Ranking metric; sigmoid calibration preserves it, while isotonic can change it through ties.",
+      "tooltip_or_explainer_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html"
+    },
+    {
+      "header": "Precision / Recall / F1",
+      "header_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "abbreviation": "P/R/F1",
+      "abbreviation_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "unit": "score",
+      "unit_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "tooltip_or_explainer": "Prediction-accuracy measures shown alongside calibration metrics; calibration should not significantly change them.",
+      "tooltip_or_explainer_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "url_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html"
+    },
+    {
+      "header": "Test Accuracy, ECE, ACE, SmoothECE, NLL, MSE/Brier Score",
+      "header_citation": "https://arxiv.org/pdf/2406.04068",
+      "abbreviation": "ECE/ACE/SmoothECE/NLL/MSE",
+      "abbreviation_citation": "https://arxiv.org/pdf/2406.04068",
+      "unit": "metrics scaled by 100 in Table 1",
+      "unit_citation": "https://arxiv.org/pdf/2406.04068",
+      "tooltip_or_explainer": "The paper explicitly recommends reporting calibration and prediction metrics with an additional generalization metric such as NLL; its Table 1 uses these headers.",
+      "tooltip_or_explainer_citation": "https://arxiv.org/pdf/2406.04068",
+      "url_citation": "https://arxiv.org/abs/2406.04068"
+    },
+    {
+      "header": "frac_pos, counts, mean_scores",
+      "header_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "abbreviation": "n/a",
+      "abbreviation_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "unit": "array dimensions (bins, C)",
+      "unit_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "tooltip_or_explainer": "cluster_evaluate returns fraction of positives, sample count, and mean score for every cluster in every score bin.",
+      "tooltip_or_explainer_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "url_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py"
+    }
+  ],
+  "formulas_and_math": [
+    {
+      "formula_name": "Qualifier",
+      "formula_name_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "verbatim_text": "* Qualifiers: 2.1 PA per team game for batters, 1.25 PA per team game for pitchers.",
+      "verbatim_text_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "context": "Minimum playing-time qualification on Statcast leaderboards.",
+      "context_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "formula_name": "EV50",
+      "formula_name_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "verbatim_text": "For a batter, EV50 is an average of the hardest 50% of his batted balls. For a pitcher it is the average of his softest 50% of batted balls allowed.",
+      "verbatim_text_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "context": "Definition attached to EV50 table header.",
+      "context_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "formula_name": "Sprint Speed",
+      "formula_name_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "verbatim_text": "feet per second in a player’s seasonal average; the best of these runs, approximately two-thirds, are averaged for a player’s seasonal ...",
+      "verbatim_text_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "context": "Definition and inclusion method shown in Sprint Speed explainer; page text is truncated after “seasonal”.",
+      "context_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed"
+    },
+    {
+      "formula_name": "Value",
+      "formula_name_citation": "https://www.linestarapp.com/Projections",
+      "verbatim_text": "ValueProjection/Salary",
+      "verbatim_text_citation": "https://www.linestarapp.com/Projections",
+      "context": "LineStar expresses projected point value relative to player salary.",
+      "context_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "formula_name": "EPA per dropback",
+      "formula_name_citation": "https://www.nflsavant.com/",
+      "verbatim_text": "EPA / play",
+      "verbatim_text_citation": "https://www.nflsavant.com/",
+      "context": "Featured QB query labels the metric EPA per dropback and displays Passer EPA/play.",
+      "context_citation": "https://www.nflsavant.com/",
+      "url_citation": "https://www.nflsavant.com/"
+    },
+    {
+      "formula_name": "PFR displayed rate metrics",
+      "verbatim_text": "Y/P; Y/A; NY/A; Sc%; TO%; EXP",
+      "context": "Column labels shown in opposition table; fetched page does not provide calculation definitions.",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/opp.htm"
+    },
+    {
+      "verbatim_text": "No explicit formula is published in the three fetched pages.",
+      "verbatim_text_citation": "https://docs.polymarket.com/",
+      "context": "The pages expose prices/odds and a fee field but do not state a calculation formula.",
+      "context_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://docs.polymarket.com/"
+    },
+    {
+      "formula_name": "Log-loss and Brier score",
+      "formula_name_citation": "https://arxiv.org/pdf/2210.16315",
+      "verbatim_text": "phi^LL(S,Y) := - sum_{k=1}^K Y_k log S_k;  phi^BS(S,Y) := sum_{k=1}^K (S_k - Y_k)^2",
+      "verbatim_text_citation": "https://arxiv.org/pdf/2210.16315",
+      "context": "Proper scoring rules for probability vectors; corresponding divergences are KL and squared error.",
+      "context_citation": "https://arxiv.org/pdf/2210.16315",
+      "url_citation": "https://arxiv.org/abs/2210.16315"
+    },
+    {
+      "formula_name": "Calibration/grouping/irreducible decomposition",
+      "formula_name_citation": "https://arxiv.org/pdf/2210.16315",
+      "verbatim_text": "E[d_phi(S,Y)] = E[d_phi(S,C)] + E[d_phi(C,Q)] + E[d_phi(Q,Y)]",
+      "verbatim_text_citation": "https://arxiv.org/pdf/2210.16315",
+      "context": "The terms are calibration loss CL, grouping loss GL, and irreducible loss IL.",
+      "context_citation": "https://arxiv.org/pdf/2210.16315",
+      "url_citation": "https://arxiv.org/abs/2210.16315"
+    },
+    {
+      "formula_name": "GECE histogram estimator",
+      "formula_name_citation": "https://arxiv.org/pdf/2205.11454",
+      "verbatim_text": "GECE(g) = sum_{B in mathbb{B}} (|B|/|mathbb{B}|) d(gbar_B, ybar_B)",
+      "verbatim_text_citation": "https://arxiv.org/pdf/2205.11454",
+      "context": "Bins are formed after applying the lens output transformation; d compares average lensed outputs and targets.",
+      "context_citation": "https://arxiv.org/pdf/2205.11454",
+      "url_citation": "https://arxiv.org/abs/2205.11454"
+    },
+    {
+      "formula_name": "Inter-interval distance",
+      "formula_name_citation": "https://arxiv.org/pdf/2205.11454",
+      "verbatim_text": "d_[l,h](g, ybar) = max(0, max(l - ybar, ybar - h))",
+      "verbatim_text_citation": "https://arxiv.org/pdf/2205.11454",
+      "context": "A non-metric distance for Likert-style confidence intervals; error occurs when mean label lies outside [l,h].",
+      "context_citation": "https://arxiv.org/pdf/2205.11454",
+      "url_citation": "https://arxiv.org/abs/2205.11454"
+    },
+    {
+      "formula_name": "Bregman divergence and decomposition",
+      "formula_name_citation": "https://arxiv.org/pdf/2406.04068",
+      "verbatim_text": "d_phi(x,y) = phi(x) - phi(y) - nabla phi(y)^T(x-y); E[d_phi(Z,X)] = [E phi(Z) - E phi(E[Z|X])] + E[d_phi(E[Z|X],X)]",
+      "verbatim_text_citation": "https://arxiv.org/pdf/2406.04068",
+      "context": "The first bracket is the sharpness gap and the second term is calibration error; L2 ECE is the ECE induced by a Bregman divergence.",
+      "context_citation": "https://arxiv.org/pdf/2406.04068",
+      "url_citation": "https://arxiv.org/abs/2406.04068"
+    },
+    {
+      "formula_name": "Platt sigmoid",
+      "formula_name_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "verbatim_text": "p(y_i=1|f_i) = 1/(1 + exp(A f_i + B))",
+      "verbatim_text_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "context": "A and B are fitted by maximum likelihood; f_i is the uncalibrated classifier output.",
+      "context_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "formula_name": "Isotonic regression objective",
+      "formula_name_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "verbatim_text": "minimize sum_i (y_i - fhat_i)^2 subject to fhat_i >= fhat_j whenever f_i >= f_j",
+      "verbatim_text_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "context": "Non-parametric stepwise non-decreasing calibration mapping.",
+      "context_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "formula_name": "Temperature scaling",
+      "formula_name_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "verbatim_text": "softmax(z/T)",
+      "verbatim_text_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "context": "T is learned by minimizing log_loss on a hold-out calibration set and does not change the argmax accuracy.",
+      "context_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    }
+  ],
+  "pricing_ownership": [
+    {
+      "metric_name": "Data Export",
+      "metric_name_citation": "https://www.fangraphs.com/leaders/major-league",
+      "value_callouts": "FanGraphs labels data export “Members Only”; the page also says member support funds analysis, stats, projections and related coverage.",
+      "value_callouts_citation": "https://www.fangraphs.com/leaders/major-league",
+      "url_citation": "https://www.fangraphs.com/leaders/major-league"
+    },
+    {
+      "metric_name": "MLB Statcast/Statcast Search",
+      "metric_name_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "value_callouts": "No price or ownership statement was visible in fetched content.",
+      "value_callouts_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_search"
+    },
+    {
+      "metric_name": "Stathead / ad-free access",
+      "metric_name_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "value_callouts": "The page links “Become a Stathead & surf this site ad-free” and calls Stathead “Basketball’s Most Powerful Research Tools”; no price shown in fetched page.",
+      "value_callouts_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html"
+    },
+    {
+      "metric_name": "Props.Cash annual all-sports promotion",
+      "metric_name_citation": "https://props.cash/",
+      "value_callouts": "$119.99/year with “ANNUAL40” banner; pricing section also shows $199.99/year annual plan.",
+      "value_callouts_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "metric_name": "Props.Cash monthly",
+      "metric_name_citation": "https://props.cash/",
+      "value_callouts": "$19.99/month.",
+      "value_callouts_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "metric_name": "Props.Cash NBA Pass",
+      "metric_name_citation": "https://props.cash/",
+      "value_callouts": "$99.99/year.",
+      "value_callouts_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "metric_name": "Outlier Premium",
+      "metric_name_citation": "https://www.outlier.bet/",
+      "value_callouts": "$19.99/month; 7-day free trial advertised.",
+      "value_callouts_citation": "https://www.outlier.bet/",
+      "url_citation": "https://www.outlier.bet/"
+    },
+    {
+      "metric_name": "Outlier Premium+",
+      "metric_name_citation": "https://www.outlier.bet/",
+      "value_callouts": "$29.99/month.",
+      "value_callouts_citation": "https://www.outlier.bet/",
+      "url_citation": "https://www.outlier.bet/"
+    },
+    {
+      "metric_name": "Outlier Pro",
+      "metric_name_citation": "https://www.outlier.bet/",
+      "value_callouts": "$79.99/month.",
+      "value_callouts_citation": "https://www.outlier.bet/",
+      "url_citation": "https://www.outlier.bet/"
+    },
+    {
+      "metric_name": "Daily Fantasy Fuel",
+      "metric_name_citation": "https://dailyfantasyfuel.com/",
+      "value_callouts": "$29.99/month; 7-day free trial.",
+      "value_callouts_citation": "https://dailyfantasyfuel.com/",
+      "url_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "metric_name": "PlayerProps.ai 6-month VIP",
+      "metric_name_citation": "https://playerprops.ai/",
+      "value_callouts": "$295 for 6 months; pay for 5, get 1 free; page says $1.62/day.",
+      "value_callouts_citation": "https://playerprops.ai/",
+      "url_citation": "https://playerprops.ai/"
+    },
+    {
+      "metric_name": "PickFinder monthly",
+      "metric_name_citation": "https://www.pickfinder.app/",
+      "value_callouts": "From $19.99/month.",
+      "value_callouts_citation": "https://www.pickfinder.app/",
+      "url_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "metric_name": "LineStar membership",
+      "metric_name_citation": "https://www.linestarapp.com/Projections",
+      "value_callouts": "$39.99/month or $239.99/year; page also says premium data/tools are under 66 cents a day.",
+      "value_callouts_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "metric_name": "PropFinder Free",
+      "metric_name_citation": "https://propfinder.app/",
+      "value_callouts": "$0; access to 1 game per league and limited props.",
+      "value_callouts_citation": "https://propfinder.app/",
+      "url_citation": "https://propfinder.app/"
+    },
+    {
+      "metric_name": "PropFinder Monthly / Yearly",
+      "metric_name_citation": "https://propfinder.app/",
+      "value_callouts": "$14.99/month or $149.99/year; all major listed leagues, all prop markets including alternates, PF Ratings and Cheatsheets.",
+      "value_callouts_citation": "https://propfinder.app/",
+      "url_citation": "https://propfinder.app/"
+    },
+    {
+      "metric_name": "SaberSim trial",
+      "metric_name_citation": "https://www.sabersim.com/dfs/draftkings",
+      "value_callouts": "$7 for 7 days; cancel any time; everything included.",
+      "value_callouts_citation": "https://www.sabersim.com/dfs/draftkings",
+      "url_citation": "https://www.sabersim.com/dfs/draftkings"
+    },
+    {
+      "metric_name": "Stathead ad-free access",
+      "metric_name_citation": "https://www.pro-football-reference.com/years/2025/",
+      "value_callouts": "Page callout says “Become a Stathead & surf this site ad-free”; no price shown.",
+      "value_callouts_citation": "https://www.pro-football-reference.com/years/2025/",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "metric_name": "market fee",
+      "metric_name_citation": "https://gamma-api.polymarket.com/events",
+      "value_callouts": "Nested market records expose fee values such as 20000000000000000 and 75000000000000000; unit/decimal interpretation is not explained on the fetched page.",
+      "value_callouts_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "metric_name": "marketMakerAddress",
+      "metric_name_citation": "https://gamma-api.polymarket.com/events",
+      "value_callouts": "Nested market records expose an on-chain marketMakerAddress.",
+      "value_callouts_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "metric_name": "DraftKings displayed odds",
+      "metric_name_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "value_callouts": "Example fetched game lines include spread +7/-7 at -112/-108, total O49.5/U49.5 at -118/-102, and moneyline +270/-340.",
+      "value_callouts_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "url_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+    },
+    {
+      "metric_name": "Access / ownership",
+      "metric_name_citation": "https://github.com/aperezlebel/beyond_calibration",
+      "value_callouts": "GitHub repository is public, Python code, BSD-style paper/research context is visible; no commercial pricing, subscription, or ownership-transfer information is present on the fetched pages.",
+      "value_callouts_citation": "https://github.com/aperezlebel/beyond_calibration",
+      "url_citation": "https://github.com/aperezlebel/beyond_calibration"
+    }
+  ],
+  "calibration_accuracy": [
+    {
+      "metric": "App Store rating",
+      "metric_citation": "https://playerprops.ai/",
+      "figure": "4.7/5 stars",
+      "figure_citation": "https://playerprops.ai/",
+      "sample_size": "Hundreds of verified reviews (site wording)",
+      "sample_size_citation": "https://playerprops.ai/",
+      "url_citation": "https://playerprops.ai/"
+    },
+    {
+      "metric": "Props.Cash community callout",
+      "metric_citation": "https://props.cash/",
+      "figure": "200,000 fans",
+      "figure_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "metric": "PickFinder user callout",
+      "metric_citation": "https://www.pickfinder.app/",
+      "figure": "150,000+ sports bettors",
+      "figure_citation": "https://www.pickfinder.app/",
+      "url_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "metric": "BettingPros sample record",
+      "metric_citation": "https://www.bettingpros.com/",
+      "figure": "5-star MLB Total Earned Runs picks 24-13 (65%), +11.7 units this week",
+      "figure_citation": "https://www.bettingpros.com/",
+      "sample_size": "37 picks implied by 24-13",
+      "sample_size_citation": "https://www.bettingpros.com/",
+      "date_range": "This week; homepage link query shows 2026-09-03 to 2026-09-10",
+      "date_range_citation": "https://www.bettingpros.com/",
+      "url_citation": "https://www.bettingpros.com/"
+    },
+    {
+      "metric": "Example Brier/log-loss/ROC AUC/precision/recall/F1",
+      "metric_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "figure": "GaussianNB table: Logistic 0.098932/0.323200/0.937443/0.871965/0.851348/0.861533; NB 0.117608/0.782755/0.940373/0.857400/0.875941/0.866571; NB+Isotonic 0.098332/0.370738/0.938613/0.883065/0.836224/0.859007; NB+Sigmoid 0.108880/0.368896/0.940201/0.861106/0.871277/0.866161.",
+      "figure_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "sample_size": "100,000 synthetic samples; 1,000 train and 99,000 test",
+      "sample_size_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "date_range": "Not applicable; synthetic example",
+      "date_range_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "url_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html"
+    },
+    {
+      "metric": "Accuracy claims / empirical findings",
+      "metric_citation": "https://arxiv.org/abs/2210.16315; https://arxiv.org/abs/2205.11454; https://arxiv.org/abs/2406.04068",
+      "figure": "Grouping-loss paper reports substantial grouping loss for most evaluated networks on ImageNet-R and stronger effects under distribution shift; context-specific ECE paper finds Top-1 ECE can fail to measure other reliability definitions; reassessment paper warns calibration and accuracy need NLL or MSE/generalization metrics.",
+      "figure_citation": "https://arxiv.org/pdf/2210.16315; https://arxiv.org/pdf/2205.11454; https://arxiv.org/pdf/2406.04068",
+      "sample_size": "ImageNet-R described as 30,000 images and 200 classes; 15 vision models evaluated.",
+      "sample_size_citation": "https://arxiv.org/pdf/2210.16315",
+      "date_range": "Not applicable; benchmark experiments",
+      "date_range_citation": "https://arxiv.org/pdf/2210.16315",
+      "url_citation": "https://arxiv.org/abs/2210.16315"
+    }
+  ],
+  "edge_value_language": [
+    {
+      "term": "Statcast foot speed metric",
+      "term_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "verbatim_quote": "Sprint Speed is Statcast’s foot speed metric",
+      "verbatim_quote_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed",
+      "url_citation": "https://baseballsavant.mlb.com/leaderboard/sprint_speed"
+    },
+    {
+      "term": "On-pace disclaimer",
+      "term_citation": "https://www.fangraphs.com/projections.aspx",
+      "verbatim_quote": "these are not projections",
+      "verbatim_quote_citation": "https://www.fangraphs.com/projections.aspx",
+      "url_citation": "https://www.fangraphs.com/projections.aspx"
+    },
+    {
+      "term": "Stathead",
+      "term_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "verbatim_quote": "Basketball's Most Powerful Research Tools",
+      "verbatim_quote_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html"
+    },
+    {
+      "term": "ad-free",
+      "term_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "verbatim_quote": "Become a Stathead & surf this site ad-free.",
+      "verbatim_quote_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html"
+    },
+    {
+      "term": "profitable edges",
+      "term_citation": "https://www.oddsshopper.com/",
+      "verbatim_quote": "We stress-test millions of strategies across billions of odds to surface profitable edges.",
+      "verbatim_quote_citation": "https://www.oddsshopper.com/",
+      "url_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "term": "+EV",
+      "term_citation": "https://props.cash/",
+      "verbatim_quote": "Find the plays with the highest expected value using real-time data and odds analysis.",
+      "verbatim_quote_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "term": "Find your edge",
+      "term_citation": "https://www.outlier.bet/",
+      "verbatim_quote": "Quickly analyze thousands of picks. Find your edge. Beat the odds.",
+      "verbatim_quote_citation": "https://www.outlier.bet/",
+      "url_citation": "https://www.outlier.bet/"
+    },
+    {
+      "term": "high-value bets",
+      "term_citation": "https://www.pickfinder.app/",
+      "verbatim_quote": "Daily projections ... curated list of high-value bets based on data and analysis.",
+      "verbatim_quote_citation": "https://www.pickfinder.app/",
+      "url_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "term": "independently verified",
+      "term_citation": "https://dailyfantasyfuel.com/",
+      "verbatim_quote": "Our projections have been independently verified as one of the best in the industry.",
+      "verbatim_quote_citation": "https://dailyfantasyfuel.com/",
+      "url_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "term": "Leverage",
+      "term_citation": "https://www.linestarapp.com/Projections",
+      "verbatim_quote": "Leverage (Low Ownership Meets High Projection) Tournament Usage",
+      "verbatim_quote_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "term": "Safety",
+      "term_citation": "https://www.linestarapp.com/Projections",
+      "verbatim_quote": "Safety Score (High Ownership Meets High Projection Scoring) Cash Game Usage",
+      "verbatim_quote_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "term": "high-upside lineups",
+      "term_citation": "https://www.sabersim.com/dfs/draftkings",
+      "verbatim_quote": "Quickly build large pools of high-upside lineups",
+      "verbatim_quote_citation": "https://www.sabersim.com/dfs/draftkings",
+      "url_citation": "https://www.sabersim.com/dfs/draftkings"
+    },
+    {
+      "term": "best props / winning insights",
+      "term_citation": "https://propfinder.app/",
+      "verbatim_quote": "find the best props",
+      "verbatim_quote_citation": "https://propfinder.app/",
+      "url_citation": "https://propfinder.app/"
+    },
+    {
+      "term": "Explore the Data",
+      "term_citation": "https://www.nflsavant.com/",
+      "verbatim_quote": "Explore the Data.",
+      "verbatim_quote_citation": "https://www.nflsavant.com/",
+      "url_citation": "https://www.nflsavant.com/"
+    },
+    {
+      "term": "Leaders",
+      "term_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "verbatim_quote": "Next Generation Stats - Receiving Leaders",
+      "verbatim_quote_citation": "https://nextgenstats.nfl.com/stats/receiving",
+      "url_citation": "https://nextgenstats.nfl.com/stats/receiving"
+    },
+    {
+      "term": "resolution condition",
+      "term_citation": "https://gamma-api.polymarket.com/events",
+      "verbatim_quote": "If the Dallas Mavericks win by over 5.5 points, the market will resolve to “Yes”.",
+      "verbatim_quote_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "term": "50-50 fallback",
+      "term_citation": "https://gamma-api.polymarket.com/events",
+      "verbatim_quote": "If the game is not completed by December 11, 2021, the market will resolve 50-50.",
+      "verbatim_quote_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "term": "grouping loss",
+      "term_citation": "https://arxiv.org/abs/2210.16315",
+      "verbatim_quote": "even a perfectly calibrated classifier with the best possible accuracy can have confidence scores that are far from the true posterior probabilities",
+      "verbatim_quote_citation": "https://arxiv.org/abs/2210.16315",
+      "url_citation": "https://arxiv.org/abs/2210.16315"
+    },
+    {
+      "term": "context-specific reliability",
+      "term_citation": "https://arxiv.org/abs/2205.11454",
+      "verbatim_quote": "definitions of ECE that focus solely on the predicted class fail to accurately measure calibration error under a selection of practically useful definitions of reliability",
+      "verbatim_quote_citation": "https://arxiv.org/abs/2205.11454",
+      "url_citation": "https://arxiv.org/abs/2205.11454"
+    },
+    {
+      "term": "overfitting / data threshold",
+      "term_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "verbatim_quote": "'isotonic' will perform as well as or better than 'sigmoid' when there is enough data (greater than ~ 1000 samples) to avoid overfitting",
+      "verbatim_quote_citation": "https://scikit-learn.org/stable/modules/calibration.html",
+      "url_citation": "https://scikit-learn.org/stable/modules/calibration.html"
+    }
+  ],
+  "alerts_notifications": [
+    {
+      "trigger": "New or updated player-prop lines",
+      "trigger_citation": "https://www.pickfinder.app/",
+      "url_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "trigger": "Injury, lineup-change and real-time roster updates",
+      "trigger_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "trigger": "Line movement / bumps; Daily Fantasy Fuel advertises updates every 5 minutes",
+      "trigger_citation": "https://dailyfantasyfuel.com/",
+      "url_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "trigger": "Net-positive player alerts",
+      "trigger_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "trigger": "Expected starter, good Vegas odds, matchup/rank and situation trends",
+      "trigger_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "trigger": "Breaking news / surprise scratch",
+      "trigger_citation": "https://www.sabersim.com/dfs/draftkings",
+      "url_citation": "https://www.sabersim.com/dfs/draftkings"
+    }
+  ],
+  "export_api_surface": [
+    {
+      "type": "CSV download",
+      "type_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "path_or_format": "Download CSV",
+      "path_or_format_citation": "https://baseballsavant.mlb.com/statcast_leaderboard",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+    },
+    {
+      "type": "CSV documentation",
+      "type_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "path_or_format": "https://baseballsavant.mlb.com/csv-docs",
+      "path_or_format_citation": "https://baseballsavant.mlb.com/statcast_search",
+      "url_citation": "https://baseballsavant.mlb.com/statcast_search"
+    },
+    {
+      "type": "Event-detail links",
+      "type_citation": "https://www.nba.com/stats/teams/boxscores",
+      "path_or_format": "https://www.nba.com/stats/events/?...ContextMeasure=FGM...",
+      "path_or_format_citation": "https://www.nba.com/stats/teams/boxscores",
+      "url_citation": "https://www.nba.com/stats/teams/boxscores"
+    },
+    {
+      "type": "Pick’Em export",
+      "type_citation": "https://www.pickfinder.app/",
+      "path_or_format": "Export picks to Pick’Em app; exact file/API format not disclosed.",
+      "path_or_format_citation": "https://www.pickfinder.app/",
+      "url_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "type": "DFS lineup export",
+      "type_citation": "https://dailyfantasyfuel.com/",
+      "path_or_format": "1-click export into DraftKings and FanDuel.",
+      "path_or_format_citation": "https://dailyfantasyfuel.com/",
+      "url_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "type": "Mobile apps",
+      "type_citation": "https://www.oddsshopper.com/",
+      "path_or_format": "Apple App Store and Google Play links; no public API documented on homepage.",
+      "path_or_format_citation": "https://www.oddsshopper.com/",
+      "url_citation": "https://www.oddsshopper.com/"
+    },
+    {
+      "type": "Table export",
+      "type_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "path_or_format": "Excel and CSV",
+      "path_or_format_citation": "https://www.rotowire.com/daily/nfl/optimizer.php",
+      "url_citation": "https://www.rotowire.com/daily/nfl/optimizer.php"
+    },
+    {
+      "type": "Mobile app",
+      "type_citation": "https://propfinder.app/",
+      "path_or_format": "iOS/Android or responsive browser; no public API documented",
+      "path_or_format_citation": "https://propfinder.app/",
+      "url_citation": "https://propfinder.app/"
+    },
+    {
+      "type": "Query deep link",
+      "type_citation": "https://www.nflsavant.com/",
+      "path_or_format": "NFL/Savant “Open in Explore” link with encoded query parameters (q=...).",
+      "path_or_format_citation": "https://www.nflsavant.com/",
+      "url_citation": "https://www.nflsavant.com/"
+    },
+    {
+      "type": "REST/API request",
+      "type_citation": "https://docs.polymarket.com/",
+      "path_or_format": "https://gamma-api.polymarket.com/markets/keyset?closed=false&limit=5 (shown as curl with URL-encoded parameters)",
+      "path_or_format_citation": "https://docs.polymarket.com/",
+      "url_citation": "https://docs.polymarket.com/"
+    },
+    {
+      "type": "REST JSON endpoint",
+      "type_citation": "https://gamma-api.polymarket.com/events",
+      "path_or_format": "https://gamma-api.polymarket.com/events",
+      "path_or_format_citation": "https://gamma-api.polymarket.com/events",
+      "url_citation": "https://gamma-api.polymarket.com/events"
+    },
+    {
+      "type": "SDK",
+      "type_citation": "https://docs.polymarket.com/",
+      "path_or_format": "TypeScript @polymarket/client and Python polymarket AsyncPublicClient",
+      "path_or_format_citation": "https://docs.polymarket.com/",
+      "url_citation": "https://docs.polymarket.com/"
+    },
+    {
+      "type": "Python API",
+      "type_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "path_or_format": "cluster_evaluate(X, y_labels, y_scores, bins=15, clustering=\"kmeans\", n_clusters=2, test_size=0.5, return_clustering=None, n_jobs=1)",
+      "path_or_format_citation": "https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+      "url_citation": "https://github.com/aperezlebel/beyond_calibration"
+    },
+    {
+      "type": "Source/notebook downloads",
+      "type_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "path_or_format": "plot_calibration_curve.py, .ipynb, and .zip download links",
+      "path_or_format_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html",
+      "url_citation": "https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html"
+    }
+  ],
+  "paywalled_content": [
+    {
+      "feature_name": "FanGraphs Data Export",
+      "feature_name_citation": "https://www.fangraphs.com/leaders/major-league",
+      "restriction_type": "Members Only",
+      "restriction_type_citation": "https://www.fangraphs.com/leaders/major-league",
+      "url_citation": "https://www.fangraphs.com/leaders/major-league"
+    },
+    {
+      "feature_name": "FanGraphs historical/split projection data",
+      "feature_name_citation": "https://www.fangraphs.com/projections.aspx",
+      "restriction_type": "Members Exclusive Data",
+      "restriction_type_citation": "https://www.fangraphs.com/projections.aspx",
+      "url_citation": "https://www.fangraphs.com/projections.aspx"
+    },
+    {
+      "feature_name": "rbsdm stats pages",
+      "feature_name_citation": "https://rbsdm.com/stats/",
+      "restriction_type": "Blocked/unavailable in this fetch; no relevant content extracted.",
+      "restriction_type_citation": "https://rbsdm.com/stats/",
+      "url_citation": "https://rbsdm.com/stats/"
+    },
+    {
+      "feature_name": "Stathead research tools",
+      "feature_name_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "restriction_type": "Marketing link to paid/ad-free Stathead; fetched page does not state price or enforce a paywall on the season tables.",
+      "restriction_type_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html",
+      "url_citation": "https://www.basketball-reference.com/leagues/NBA_2026.html"
+    },
+    {
+      "feature_name": "Cleaning the Glass efficiency page",
+      "feature_name_citation": "https://cleaningtheglass.com/stats/efficiency",
+      "restriction_type": "Blocked/error response (“Uh oh, looks like there was some kind of error”); no efficiency content could be verified in this run.",
+      "restriction_type_citation": "https://cleaningtheglass.com/stats/efficiency",
+      "url_citation": "https://cleaningtheglass.com/stats/efficiency"
+    },
+    {
+      "feature_name": "Outlier EV+ indicators and Positive EV Power Feed",
+      "feature_name_citation": "https://www.outlier.bet/",
+      "restriction_type": "Subscription plans; 7-day free trial, then paid tiers.",
+      "restriction_type_citation": "https://www.outlier.bet/",
+      "url_citation": "https://www.outlier.bet/"
+    },
+    {
+      "feature_name": "Props.Cash advanced filters, correlated props and real-time edge tools",
+      "feature_name_citation": "https://props.cash/",
+      "restriction_type": "Pricing/subscription advertised; homepage does not state which features are free.",
+      "restriction_type_citation": "https://props.cash/",
+      "url_citation": "https://props.cash/"
+    },
+    {
+      "feature_name": "PlayerProps.ai full research stack",
+      "feature_name_citation": "https://playerprops.ai/",
+      "restriction_type": "Paid monthly/6-month/annual plans; free/community content also advertised.",
+      "restriction_type_citation": "https://playerprops.ai/",
+      "url_citation": "https://playerprops.ai/"
+    },
+    {
+      "feature_name": "Footballguys Premium subscription",
+      "feature_name_citation": "https://www.footballguys.com/",
+      "restriction_type": "Premium subscription required for premium tools/advice; money-back guarantee advertised.",
+      "restriction_type_citation": "https://www.footballguys.com/",
+      "url_citation": "https://www.footballguys.com/"
+    },
+    {
+      "feature_name": "Daily Fantasy Fuel advanced tools",
+      "feature_name_citation": "https://dailyfantasyfuel.com/",
+      "restriction_type": "Paid monthly plan, while some optimizer links are explicitly described as free.",
+      "restriction_type_citation": "https://dailyfantasyfuel.com/",
+      "url_citation": "https://dailyfantasyfuel.com/"
+    },
+    {
+      "feature_name": "FantasyPros premium features",
+      "feature_name_citation": "https://www.fantasypros.com/",
+      "restriction_type": "Homepage displays “Upgrade to premium” and premium content category.",
+      "restriction_type_citation": "https://www.fantasypros.com/",
+      "url_citation": "https://www.fantasypros.com/"
+    },
+    {
+      "feature_name": "PickFinder premium Discord / full tool access",
+      "feature_name_citation": "https://www.pickfinder.app/",
+      "restriction_type": "Try-for-free CTA and premium Discord are advertised; exact gating not specified.",
+      "restriction_type_citation": "https://www.pickfinder.app/",
+      "url_citation": "https://www.pickfinder.app/"
+    },
+    {
+      "feature_name": "LineStar full projections and advanced data",
+      "feature_name_citation": "https://www.linestarapp.com/Projections",
+      "restriction_type": "Premium membership required; fetched board shows unlock links and masked/limited values",
+      "restriction_type_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "feature_name": "LineStar complete board, live updates and lineup optimizer",
+      "feature_name_citation": "https://www.linestarapp.com/Projections",
+      "restriction_type": "Premium membership required",
+      "restriction_type_citation": "https://www.linestarapp.com/Projections",
+      "url_citation": "https://www.linestarapp.com/Projections"
+    },
+    {
+      "feature_name": "RotoGrinders projections, pOWN% and tools",
+      "feature_name_citation": "https://www.rotogrinders.com/",
+      "restriction_type": "Premium-only or premium tool labels on home page",
+      "restriction_type_citation": "https://www.rotogrinders.com/",
+      "url_citation": "https://www.rotogrinders.com/"
+    },
+    {
+      "feature_name": "PropFinder expanded props and ratings",
+      "feature_name_citation": "https://propfinder.app/",
+      "restriction_type": "Free tier limitation; subscription unlocks full markets/features",
+      "restriction_type_citation": "https://propfinder.app/",
+      "url_citation": "https://propfinder.app/"
+    },
+    {
+      "feature_name": "PFR ad-free browsing",
+      "feature_name_citation": "https://www.pro-football-reference.com/years/2025/",
+      "restriction_type": "Stathead subscription callout; price or exact restriction not shown on fetched page.",
+      "restriction_type_citation": "https://www.pro-football-reference.com/years/2025/",
+      "url_citation": "https://www.pro-football-reference.com/years/2025/"
+    },
+    {
+      "feature_name": "Football Outsiders team-defense/QB/RB/WR pages",
+      "feature_name_citation": "https://www.footballoutsiders.com/stats/nfl/team-defense",
+      "restriction_type": "No substantive page content returned in this run; access status cannot be characterized.",
+      "restriction_type_citation": "https://www.footballoutsiders.com/stats/nfl/team-defense",
+      "url_citation": "https://www.footballoutsiders.com/stats/nfl/team-defense"
+    },
+    {
+      "feature_name": "Polymarket API documentation and Gamma event response",
+      "feature_name_citation": "https://docs.polymarket.com/",
+      "restriction_type": "No paywall or login gate observed in fetched content.",
+      "restriction_type_citation": "https://docs.polymarket.com/",
+      "url_citation": "https://docs.polymarket.com/"
+    },
+    {
+      "feature_name": "DraftKings NFL odds page",
+      "feature_name_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "restriction_type": "Odds and event links are visible; page includes a Log In link, but no subscription/paywall message was observed.",
+      "restriction_type_citation": "https://sportsbook.draftkings.com/leagues/football/nfl",
+      "url_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+    },
+    {
+      "feature_name": "arXiv papers and GitHub implementation",
+      "feature_name_citation": "https://arxiv.org/abs/2210.16315; https://github.com/aperezlebel/beyond_calibration",
+      "restriction_type": "No paywall observed on fetched abstract/full-text and public repository pages; arXiv abstract pages expose PDF links and GitHub is public.",
+      "restriction_type_citation": "https://arxiv.org/abs/2210.16315; https://github.com/aperezlebel/beyond_calibration",
+      "url_citation": "https://arxiv.org/abs/2210.16315"
+    }
+  ],
+  "scoring_ranking_logic": {
+    "sort_key": "[https://baseballsavant.mlb.com/statcast_leaderboard] Tables expose Rk. and sortable leader/projection columns; fetched pages do not state a universal composite ranking formula.; [https://www.basketball-reference.com/leagues/NBA_2026.html] Rank columns are provided for nearly every traditional metric; Basketball-Reference season page shows leaders such as PPG, RPG, APG and WS.; [https://www.linestarapp.com/Projections] Default visible sort is Value descending; RotoWire is sorted by game time in the fetched view.; [https://www.nflsavant.com/] NFL/Savant featured query is sorted by EPA/play descending; PFR opposition table displays Rk; NGS pages are leader tables with season/week controls.; [https://arxiv.org/abs/2210.16315] No universal product ranking; paper Figure 7 sorts models by model accuracy while reporting debiased explained grouping-loss lower bound and calibration loss.",
+    "sort_key_citation": "https://baseballsavant.mlb.com/statcast_leaderboard; https://www.nba.com/stats/players/traditional; Sort: Value↓; Sorted By Game Time; https://www.nflsavant.com/; https://arxiv.org/pdf/2210.16315",
+    "composite_metrics": "[https://baseballsavant.mlb.com/statcast_leaderboard] FanGraphs exposes composite/value metrics including wRC+, Off, Def and WAR; no weighting formula is stated on fetched pages.; [https://www.basketball-reference.com/leagues/NBA_2026.html] No composite ranking formula or weights were disclosed in fetched pages; Basketball-Reference exposes composite advanced metrics (PER, WS, BPM, VORP) as columns.; [https://www.fantasylabs.com/] PickFinder says daily projections are a curated list of high-value bets; Outlier says EV+ feed can be filtered to the user strategy. Exact ranking formula is not disclosed on fetched homepages.; [https://www.linestarapp.com/Projections] LineStar exposes Value, Leverage, Safety, SIC Score, AlertScore and Consensus as separate decision metrics.; [https://www.nflsavant.com/] PFR season table includes SRS, OSRS and DSRS; no weighting formula stated.; [https://arxiv.org/abs/2210.16315] ECE variants use weighted per-bin distance; Brier/log-loss combine calibration with resolution/sharpness and uncertainty, so lower Brier alone is not sufficient evidence of better calibration.",
+    "composite_metrics_citation": "https://www.fangraphs.com/leaders/major-league; https://www.basketball-reference.com/leagues/NBA_2026_advanced.html; https://www.pickfinder.app/; LineStar table headers and explainers; https://www.pro-football-reference.com/years/2025/; https://scikit-learn.org/stable/modules/calibration.html",
+    "weights_and_parameters": "[https://baseballsavant.mlb.com/statcast_leaderboard] Statcast qualifier parameters are 2.1 PA/team game (batters) and 1.25 PA/team game (pitchers).; [https://www.basketball-reference.com/leagues/NBA_2026.html] No weights or ranking parameters captured.; [https://www.linestarapp.com/Projections] No weights or ranking parameters are disclosed; SaberSim says contest simulations are run thousands of times for ROI.; [https://www.nflsavant.com/] NFL/Savant featured query says group by passer and minimum 100 dropbacks; no weights stated.; [https://arxiv.org/abs/2210.16315] GECE histogram weight is |B|/|mathbb{B}|; sklearn example uses cv=2, sigmoid/isotonic methods; grouping code defaults bins=15, clustering=kmeans, n_clusters=2 and test_size=0.5.",
+    "weights_and_parameters_citation": "https://baseballsavant.mlb.com/statcast_leaderboard; https://www.basketball-reference.com/leagues/NBA_2026_advanced.html; Contest Sims / Optimize for ROI description; https://www.nflsavant.com/; https://arxiv.org/pdf/2205.11454; https://raw.githubusercontent.com/aperezlebel/beyond_calibration/main/src/partitioning.py",
+    "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard; https://www.basketball-reference.com/leagues/NBA_2026.html; https://www.fantasylabs.com/; https://www.linestarapp.com/Projections; https://www.nflsavant.com/; https://docs.polymarket.com/; https://arxiv.org/abs/2210.16315"
+  },
+  "projection_method": {
+    "methodology_type": "[https://baseballsavant.mlb.com/statcast_leaderboard] Multiple named projection systems and variants; aggregate/playing-time methods are explicitly described for some systems.; [https://www.basketball-reference.com/leagues/NBA_2026.html] No projection methodology disclosed; [https://www.fantasylabs.com/] AI/data-driven projections and market/odds analytics; [https://www.linestarapp.com/Projections] Proprietary/aggregate projection and simulation methods; [https://www.nflsavant.com/] No projection methodology evidenced; [https://arxiv.org/abs/2210.16315] Post-hoc probability calibration, generalized calibration-error estimation, and nonparametric/kernel estimation",
+    "methodology_type_citation": "https://www.fangraphs.com/projections.aspx; https://www.basketball-reference.com/leagues/NBA_2026.html; https://playerprops.ai/; LineStar Proprietary Projection; Consensus aggregate industry projection; RotoWire Projections; SaberSim contest simulations; https://www.nflsavant.com/; https://scikit-learn.org/stable/modules/calibration.html; https://arxiv.org/pdf/2205.11454; https://arxiv.org/pdf/2406.04068",
+    "description": "[https://baseballsavant.mlb.com/statcast_leaderboard] FanGraphs lists ZiPS, ZiPS DC, Steamer, Depth Charts, ATC, THE BAT, THE BAT X and OOPSY. It states Depth Charts combine ZiPS and Steamer with playing time allocated by staff; ZiPS DC is prorated to Depth Charts playing time; ATC is courtesy of Ariel Cohen. On-pace views are explicitly not projections.; [https://www.basketball-reference.com/leagues/NBA_2026.html] Fetched pages are historical/current statistics and filters; no forecasts or projection model description was present.; [https://www.fantasylabs.com/] PlayerProps.ai calls its outputs AI projections and says they use historical player/team data, real-time odds comparison, and sharp/public sentiment. Daily Fantasy Fuel says its projections were independently verified, but gives no model details.; [https://www.linestarapp.com/Projections] LineStar identifies its projection as proprietary and editable and provides an aggregate industry consensus. RotoWire states it uses RotoWire projections. SaberSim states it simulates contests thousands of times for ROI. No model training, historical window, or calibration procedure is disclosed in the fetched pages.; [https://www.nflsavant.com/] Fetched pages present historical/season and weekly leaderboard statistics; they do not state a forecasting or projection model.; [https://docs.polymarket.com/] No forecasting, projection, or model methodology is stated. Polymarket documentation describes APIs and prediction markets; the event endpoint reports market prices, not a documented estimator.; [https://arxiv.org/abs/2210.16315] Methods map classifier scores to probabilities using sigmoid, isotonic, or temperature scaling; estimate GECE with lens/binning; estimate continuous conditional quantities with Nadaraya-Watson kernel regression (paper uses Gaussian bandwidth sigma=0.05 for diagrams).",
+    "description_citation": "https://www.fangraphs.com/projections.aspx; https://www.basketball-reference.com/leagues/NBA_2026.html; https://playerprops.ai/; Projection explainers and optimizer/product descriptions; https://nextgenstats.nfl.com/stats/receiving; https://docs.polymarket.com/; https://scikit-learn.org/stable/modules/calibration.html; https://arxiv.org/pdf/2406.04068",
+    "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard; https://www.basketball-reference.com/leagues/NBA_2026.html; https://www.fantasylabs.com/; https://www.linestarapp.com/Projections; https://www.nflsavant.com/; https://docs.polymarket.com/; https://arxiv.org/abs/2210.16315"
+  },
+  "deep_structure": {
+    "source_type": "Rendered HTML/Markdown tables and controls; no API JSON/schema was exposed in fetched page text.; Rendered HTML/Markdown tables and hyperlinks; NBA Stats event links encode query parameters such as ContextMeasure, GameID, Season, SeasonType and TeamID.; Rendered homepage Markdown/content extraction; no raw API, schema, JSON-LD keys or page-source internals exposed in the fetched evidence.; Rendered HTML-to-Markdown pages with tables, navigation links, tooltips and image/icon assets; Rendered HTML converted to Markdown; tabular data represented as Markdown tables and NFL/Savant query represented as an encoded Explore URL.; JSON array of event objects with nested objects/arrays (Gamma endpoint); documentation page also contains TypeScript, Python, and curl code blocks.; Public research repository plus Python source and arXiv full-text PDFs",
+    "source_type_citation": "https://baseballsavant.mlb.com/statcast_search; https://www.nba.com/stats/teams/boxscores; https://www.fantasylabs.com/; Fetched pages expose rendered headings, table headers, tooltip text and linked image assets; https://www.nflsavant.com/; https://gamma-api.polymarket.com/events; https://github.com/aperezlebel/beyond_calibration; https://arxiv.org/pdf/2210.16315",
+    "keys": [
+      {
+        "value": "Rk., Player, Team, BBE, LA, EV, Distance, Hard Hit, Barrels",
+        "value_citation": "https://baseballsavant.mlb.com/statcast_leaderboard"
+      },
+      {
+        "value": "FanGraphs projection type query values: zips, zipsdc, steamer, fangraphsdc, atc, thebat, thebatx, oopsy",
+        "value_citation": "https://www.fangraphs.com/projections.aspx"
+      },
+      {
+        "value": "ContextMeasure",
+        "value_citation": "https://www.nba.com/stats/teams/boxscores"
+      },
+      {
+        "value": "GameID",
+        "value_citation": "https://www.nba.com/stats/teams/boxscores"
+      },
+      {
+        "value": "Season",
+        "value_citation": "https://www.nba.com/stats/teams/boxscores"
+      },
+      {
+        "value": "SeasonType",
+        "value_citation": "https://www.nba.com/stats/teams/boxscores"
+      },
+      {
+        "value": "TeamID",
+        "value_citation": "https://www.nba.com/stats/teams/boxscores"
+      },
+      {
+        "value": "LineStar navigation routes: /Projections, /Ownership, /Props, /SalaryComparison, /DailyDashboard"
+      },
+      {
+        "value": "RotoWire optimizer table columns and Export Table Data control"
+      },
+      {
+        "value": "PropFinder pricing/features sections and /nfl route"
+      },
+      {
+        "value": "SaberSim product sections: Lineup Optimizer, Lineup Rules, Contest Sims, Entry Editor, Automatic Alerts, Late Swap"
+      },
+      {
+        "value": "NFL/Savant Explore query includes groupBy, metrics, filters, sort and limit.",
+        "value_citation": "https://www.nflsavant.com/"
+      },
+      {
+        "value": "NGS tables expose season and week selectors.",
+        "value_citation": "https://nextgenstats.nfl.com/stats/receiving"
+      },
+      {
+        "value": "event: id, ticker, slug, title, description, resolutionSource, startDate, creationDate, endDate, active, closed, archived, restricted, liquidity, volume, openInterest, sortBy, category, competitive, volume24hr, volume1wk, volume1mo, volume1yr, liquidityAmm, liquidityClob, commentCount, markets, series, tags, cyom, showAllOutcomes, showMarketImages, enableNegRisk, seriesSlug, eventMetadata, version",
+        "value_citation": "https://gamma-api.polymarket.com/events"
+      },
+      {
+        "value": "market: id, question, conditionId, slug, resolutionSource, endDate, category, liquidity, startDate, fee, description, outcomes, outcomePrices, volume, active, marketType, closed, marketMakerAddress, volumeNum, liquidityNum, clobTokenIds, bestBid, bestAsk, spread, lastTradePrice, rewardsMinSize, rewardsMaxSpread, feesEnabled, feeType",
+        "value_citation": "https://gamma-api.polymarket.com/events"
+      },
+      {
+        "value": "DraftKings navigation/query parameters: category=games, subcategory=game-lines (also td-scorers, passing, receiving, rushing, alt-lines, halves, defensive, special-teams, weekly-specials), nav_1=week-1 or all",
+        "value_citation": "https://sportsbook.draftkings.com/leagues/football/nfl"
+      },
+      {
+        "value": "src/partitioning.py; cluster_evaluate; frac_pos; counts; mean_scores"
+      },
+      {
+        "value": "src/test_figures.py; src/test_data.py; src/networks/*; _utils.py; _plot.py; _linalg.py"
+      },
+      {
+        "value": "scikit-learn keys: CalibratedClassifierCV, CalibrationDisplay.from_estimator, calibration_curve, method=\"sigmoid\"|\"isotonic\", cv, ensemble, calibrated_classifiers_"
+      },
+      {
+        "value": "Repository README datasets: ImageNet-1K validation, ImageNet-R, ImageNet-C, Yahoo Answers Topics; embeddings are extracted from the last-layer feature space"
+      }
+    ],
+    "url_citation": "https://baseballsavant.mlb.com/statcast_leaderboard; https://www.basketball-reference.com/leagues/NBA_2026.html; https://www.fantasylabs.com/; https://www.linestarapp.com/Projections; https://www.nflsavant.com/; https://docs.polymarket.com/; https://arxiv.org/abs/2210.16315"
+  }
+}

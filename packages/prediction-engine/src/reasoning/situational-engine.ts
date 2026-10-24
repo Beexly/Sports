@@ -71,7 +71,6 @@ export interface SituationalReading {
   /** Weighted mean of the active signals on this outcome. Null when none are active. */
   readonly signalImplied: number | null;
   readonly divergence: number | null;
-  readonly divergenceIsEdge: false;
   readonly consistency: AggregationTrace["consistency"];
   readonly reasoningTrace: string;
   readonly publishablePick: false;
@@ -189,7 +188,6 @@ export function interpretSituation(
       marketImplied: market,
       signalImplied,
       divergence,
-      divergenceIsEdge: false,
       consistency: aggregated.data.consistency,
       reasoningTrace,
       publishablePick: false,

@@ -1,0 +1,387 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-10-21T14:20:00Z",
+  "description": "Machine-readable registry of all 37 integrity gates across GSE architecture",
+  "gates": [
+    {
+      "id": "GATE-01",
+      "name": "canScore",
+      "file": "packages/prediction-engine/src/readiness.ts:130",
+      "checks": "Whether the scoring engine is authorized to compute game probability models",
+      "default_state": true,
+      "tier": "readiness",
+      "enforcement": "runtime_precondition",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-02",
+      "name": "canPersistPicks",
+      "file": "packages/prediction-engine/src/readiness.ts:131",
+      "checks": "Whether generated picks are authorized to be written to persistent database storage",
+      "default_state": true,
+      "tier": "readiness",
+      "enforcement": "runtime_database_write",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-03",
+      "name": "canPersistCanonicalHistory",
+      "file": "packages/prediction-engine/src/readiness.ts:132",
+      "checks": "Controls canonical history ledger recording vs synthetic bootstrap mode",
+      "default_state": true,
+      "tier": "readiness",
+      "enforcement": "runtime_history_persistence",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-04",
+      "name": "canUseDerivedHistory",
+      "file": "packages/prediction-engine/src/readiness.ts:133",
+      "checks": "Enables usage of derived model historical metrics in live scoring",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_scoring_feature",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-05",
+      "name": "canExposePublicPicks",
+      "file": "packages/prediction-engine/src/readiness.ts:134",
+      "checks": "Public pick board gating (GAP-21 reconciled); fails closed 503 when off",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_api_route",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-06",
+      "name": "canPromoteFeaturedPicks",
+      "file": "packages/prediction-engine/src/readiness.ts:135",
+      "checks": "Auto-promotes qualified high-edge picks to the featured board spotlight",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_promotion",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-07",
+      "name": "canPublishContent",
+      "file": "packages/prediction-engine/src/readiness.ts:136",
+      "checks": "Authorizes automated public blog and analysis syndication generation",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_content_publish",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-08",
+      "name": "canExposePerformanceStats",
+      "file": "packages/prediction-engine/src/readiness.ts:137",
+      "checks": "Authorizes display of cumulative performance track records to public viewers",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_api_route",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-09",
+      "name": "canLearnFromOutcomes",
+      "file": "packages/prediction-engine/src/readiness.ts:141",
+      "checks": "Authorizes online learning feedback from settled games into model parameters",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_settlement_learning",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-10",
+      "name": "canApplyCalibrationAdjustments",
+      "file": "packages/prediction-engine/src/readiness.ts:142",
+      "checks": "Applies isotonic and PAVA calibration adjustments onto raw model confidences",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_calibration",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-11",
+      "name": "forceNoBetIfStale",
+      "file": "packages/prediction-engine/src/readiness.ts:144",
+      "checks": "Stale-data kill switch returning 503 when live odds feed exceeds SLA threshold",
+      "default_state": false,
+      "tier": "readiness",
+      "enforcement": "runtime_api_route",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-12",
+      "name": "minDataQualityForGameLog",
+      "file": "packages/prediction-engine/src/readiness.ts:140",
+      "checks": "Minimum data quality threshold (score >= 40) required to persist team game logs",
+      "default_state": 40,
+      "tier": "data_quality",
+      "enforcement": "runtime_ingestion_filter",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-13",
+      "name": "assertDisplaySubstantiated",
+      "file": "packages/prediction-engine/src/guards/display-substantiated.ts:117",
+      "checks": "Enforces Wilson score lower confidence bound and provenance on public marketing claims",
+      "default_state": true,
+      "tier": "honesty_guard",
+      "enforcement": "runtime_assertion",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-14",
+      "name": "publicCommitPick",
+      "file": "packages/prediction-engine/src/honesty/commit-reveal.ts:78",
+      "checks": "Generates irreversible SHA-256 cryptographic commitment hash prior to event kickoff",
+      "default_state": true,
+      "tier": "honesty_guard",
+      "enforcement": "runtime_cryptographic_audit",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-15",
+      "name": "noBetEvaluation",
+      "file": "packages/prediction-engine/src/honesty/no-bet-gate.ts:56",
+      "checks": "Detects unstable edges and advises PASS when model confidence is fragile or inverted",
+      "default_state": true,
+      "tier": "honesty_guard",
+      "enforcement": "runtime_decision_filter",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-16",
+      "name": "runShuffledTimePlacebo",
+      "file": "packages/prediction-engine/src/honesty/placebo-leak.ts:101",
+      "checks": "Verifies that temporally shuffled data produces zero statistically significant edge",
+      "default_state": true,
+      "tier": "causal_validation",
+      "enforcement": "ci_statistical_test",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-17",
+      "name": "validateWalkForwardIntegrity",
+      "file": "packages/prediction-engine/src/promotion/integrity.ts:99",
+      "checks": "Enforces strict temporal embargo and purge windows preventing future information leakage",
+      "default_state": true,
+      "tier": "walk_forward",
+      "enforcement": "audit_backtest_gate",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-18",
+      "name": "evaluatePromotion",
+      "file": "packages/prediction-engine/src/promotion/evaluate.ts:25",
+      "checks": "3-leg promotion protocol requiring N >= 500 settled games and delta Brier >= 0.002",
+      "default_state": true,
+      "tier": "model_promotion",
+      "enforcement": "founder_override_gate",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-19",
+      "name": "lineIntegrityPublishGuard",
+      "file": "packages/prediction-engine/src/scoring.ts:1389",
+      "checks": "Suppresses picks when bookmakers have not actively quoted the line",
+      "default_state": false,
+      "tier": "market_integrity",
+      "enforcement": "runtime_publish_filter",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-20",
+      "name": "leakageClean",
+      "file": "packages/ingestion-pipeline/src/leakage-gate.ts:29",
+      "checks": "Detects and penalizes factor weights derived from lookahead features",
+      "default_state": true,
+      "tier": "feature_store",
+      "enforcement": "runtime_factor_weight",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-21",
+      "name": "mintWithholdGate",
+      "file": "packages/ingestion-pipeline/src/mint-withhold.ts:43",
+      "checks": "Withholds uncalibrated or fragile signal slates from publication during minting",
+      "default_state": true,
+      "tier": "ingestion_mint",
+      "enforcement": "runtime_mint_filter",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-22",
+      "name": "publishGuardsBridge",
+      "file": "packages/ingestion-pipeline/src/publish-guards-bridge.ts:54",
+      "checks": "Bridges prediction engine honesty guards into ingestion pipeline publication path",
+      "default_state": true,
+      "tier": "pipeline_bridge",
+      "enforcement": "runtime_guard_bridge",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-23",
+      "name": "draftOnlyGuardrail",
+      "file": "scripts/guardrails/draft-only.mjs:5",
+      "checks": "Static AST scanner blocking direct public publication writes without explicit authorization",
+      "default_state": true,
+      "tier": "ci_guardrail",
+      "enforcement": "ci_static_analysis",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-24",
+      "name": "trustGateBannedPhrases",
+      "file": "scripts/guardrails/trust-gate.mjs:15",
+      "checks": "Scans codebase to reject deceptive marketing terminology and non-probabilistic claims",
+      "default_state": true,
+      "tier": "ci_guardrail",
+      "enforcement": "ci_static_analysis",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-25",
+      "name": "unenforcedThresholdsAuditor",
+      "file": "reconciliation/_audit_unenforced_thresholds.mjs:25",
+      "checks": "Verifies AST threshold comparisons across 187 mathematical constants ensuring zero dead exports",
+      "default_state": true,
+      "tier": "ci_guardrail",
+      "enforcement": "ci_ast_audit",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-26",
+      "name": "classACoverageCheck",
+      "file": "reconciliation/_check_class_a_coverage.mjs:15",
+      "checks": "Asserts zero data leakage and 100% test coverage across Class-A literature premises",
+      "default_state": true,
+      "tier": "ci_guardrail",
+      "enforcement": "ci_coverage_audit",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-27",
+      "name": "g7CalibrationCircuitBreaker",
+      "file": "packages/prediction-engine/src/learning/g7-circuit-breaker.ts:40",
+      "checks": "Automatically halts pick emissions on any market family where ECE_30 - ECE_250 > 0.02",
+      "default_state": true,
+      "tier": "runtime_circuit_breaker",
+      "enforcement": "runtime_publish_gate",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-28",
+      "name": "g1SampleFloorCoverage",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:500",
+      "checks": "Enforces N >= 30 sample floor and Cov_sig >= 0.65 signal family coverage",
+      "default_state": true,
+      "tier": "pick_pipeline_g1",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-29",
+      "name": "g2ConsensusDeadband",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:530",
+      "checks": "Enforces conflict consensus deadband eta_c >= 0.20 and verified Class-A literature",
+      "default_state": true,
+      "tier": "pick_pipeline_g2",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-30",
+      "name": "g3PearlIdentifiability",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:560",
+      "checks": "Requires 0 unhandled hedges and positivity > 0.01 via Shpitser-Pearl do-calculus ID",
+      "default_state": true,
+      "tier": "pick_pipeline_g3",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-31",
+      "name": "g4AdversaryEValue",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:590",
+      "checks": "Requires point E-value >= 1.35, CI >= 1.10, and placebo leakage <= 0.005",
+      "default_state": true,
+      "tier": "pick_pipeline_g4",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-32",
+      "name": "g5FaithfulnessEntitySwap",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:620",
+      "checks": "Requires entity-swap divergence <= 0.02 and CausalPhys reasoning accuracy >= 0.85",
+      "default_state": true,
+      "tier": "pick_pipeline_g5",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-33",
+      "name": "g6ConformalStopping",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:650",
+      "checks": "Enforces ITCR stopping alpha <= tau_conformal and Fréchet copula bounds",
+      "default_state": true,
+      "tier": "pick_pipeline_g6",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-34",
+      "name": "g7CalibrationDrift",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:680",
+      "checks": "Halts picks when fast-vs-slow ECE drift exceeds 0.02",
+      "default_state": true,
+      "tier": "pick_pipeline_g7",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-35",
+      "name": "g8ClvTrailingEdge",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:710",
+      "checks": "Requires 50-game trailing CLV >= -0.002 and lower conformal bound edge > 0.015",
+      "default_state": true,
+      "tier": "pick_pipeline_g8",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-36",
+      "name": "g9PriceArchiveWriteReceipt",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:740",
+      "checks": "Synchronously validates durable fsync receipt of decision-time price archive write",
+      "default_state": true,
+      "tier": "pick_pipeline_g9",
+      "enforcement": "runtime_conjunction",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-37",
+      "name": "validatedCausalTraceBrand",
+      "file": "packages/prediction-engine/src/picks/pick-pipeline.ts:16",
+      "checks": "Compile-time unique symbol phantom brand rejecting unbranded or withheld traces at build time",
+      "default_state": true,
+      "tier": "compile_time_type_brand",
+      "enforcement": "typescript_type_system",
+      "fail_closed": true
+    },
+    {
+      "id": "GATE-38",
+      "name": "g0EntityTemporalTruth",
+      "file": "packages/prediction-engine/src/behavioral/dyadic-trust-engine.ts:160",
+      "checks": "Guarantees zero-ghost-roster and live point-in-time entity continuity, rejecting stale cross-season bindings with REFUSED_L0_STALE_ENTITY_BINDING",
+      "default_state": true,
+      "tier": "roster_continuity_firewall",
+      "enforcement": "runtime_roster_gate",
+      "fail_closed": true
+    }
+  ]
+}

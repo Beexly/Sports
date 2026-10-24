@@ -156,7 +156,7 @@ function answerPicks(summary: OwnerSummary): JarvisAnswer {
   } else if (picks.isPublicGateOpen && picks.today === 0) {
     answer = "The public picks gate is open but no picks have been published today.";
   } else {
-    answer = `Picks are internal only. ${picks.today > 0 ? `${picks.today} pick${picks.today === 1 ? "" : "s"} published internally today. ` : "No picks published today. "}The PUBLIC_PICKS_ENABLED gate is closed.`;
+    answer = `Picks are gated from public exposure. ${picks.today > 0 ? `${picks.today} pick${picks.today === 1 ? "" : "s"} generated today. ` : "No picks generated today. "}The PUBLIC_PICKS_ENABLED gate is closed.`;
   }
 
   const supporting = [
@@ -433,7 +433,7 @@ function answerMeeting(summary: OwnerSummary): JarvisAnswer {
 
   const bullets: string[] = [
     `Status: ${overallColor} — ${summary.oneLiner}`,
-    `Picks: ${picks.today} published today (${picks.isPublicGateOpen ? "public" : "internal only"})`,
+    `Picks: ${picks.today} published today (${picks.isPublicGateOpen ? "public" : "gated"})`,
     `Performance: Target ${performance.targetPct}% — ${performance.displaySafe ? `${performance.actualWinRate ?? "?"}% (${performance.record})` : "Gated"}`,
     `Open decisions: ${decisions.length}`,
     `Critical warnings: ${criticalWarnings.length}`,

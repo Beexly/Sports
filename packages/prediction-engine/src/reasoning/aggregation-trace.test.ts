@@ -125,7 +125,6 @@ describe("interpretSituation", () => {
     expect(result.data.dormantSignals.map((item) => item.signalId).sort()).toEqual(["luck", "stale"]);
     expect(result.data.signalImplied).toBeCloseTo(0.6, 10);
     expect(result.data.divergence).toBeCloseTo(0.6 - 0.78, 10);
-    expect(result.data.divergenceIsEdge).toBe(false);
     expect(result.data.publishablePick).toBe(false);
     expect(result.data.reasoningTrace).toContain("not an edge");
   });
@@ -155,7 +154,6 @@ describe("interpretSituation", () => {
       "marketImplied",
       "signalImplied",
       "divergence",
-      "divergenceIsEdge",
       "consistency",
       "reasoningTrace",
       "publishablePick",

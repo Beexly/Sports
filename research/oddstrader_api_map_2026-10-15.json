@@ -1,0 +1,20 @@
+{
+ "oddstrader_api_mapped": {
+  "graphql": "https://ms.virginia.us-east-1.oddstrader.com/odds-v2/odds-v2-service?query={...}",
+  "key_endpoints": [
+   "eventsByDateNew(startDate, spids, limit) { events { eid des participants } }",
+   "eventsV2(eid:[..]) { events { marketTypes { mtid nam } } }",
+   "lineHistory(eid!, mtid!, paid!, partid) { tim lines }",
+   "openingLines(eid!, mtid!, paid, tmid)",
+   "consensusHistory(eid, mtid)",
+   "currentLines",
+   "openingLinesByPlayer",
+   "weather(cities)"
+  ],
+  "nfl_spid": 4,
+  "spread_mtid": 401,
+  "total_mtid": 402,
+  "ml_mtid": 83,
+  "finding": "lineHistory/consensusHistory/openingLines all return EMPTY for completed 2026 and 2023 games with every paid/mtid/partid combination tried \u2014 history appears live-window-only (WebSocket liveOddsService) or paid-tier. Full schema is open and introspectable; revisit with an authenticated session if the paid tier is unlocked."
+ }
+}

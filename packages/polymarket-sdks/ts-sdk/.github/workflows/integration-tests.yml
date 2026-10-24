@@ -1,0 +1,90 @@
+name: Integration Tests
+
+on:
+  workflow_call:
+    inputs:
+      environment_config:
+        description: JSON environment fork for integration endpoints
+        required: false
+        default: '{}'
+        type: string
+      test_file_pattern:
+        description: Optional integration test file pattern
+        required: false
+        default: ''
+        type: string
+      test_name_pattern:
+        description: Optional Vitest test name pattern
+        required: false
+        default: ''
+        type: string
+  workflow_dispatch:
+    inputs:
+      environment_config:
+        description: JSON environment fork for integration endpoints
+        required: false
+        default: '{}'
+        type: string
+      test_file_pattern:
+        description: Optional integration test file pattern
+        required: false
+        default: ''
+        type: string
+      test_name_pattern:
+        description: Optional Vitest test name pattern
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  integration-tests:
+    name: Run
+    runs-on: arc-public-runner-set-euw1
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Set Up Repository
+        uses: ./.github/actions/setup
+
+      - name: Run
+        run: |
+          test_file_pattern='${{ inputs.test_file_pattern }}'
+          test_name_pattern='${{ inputs.test_name_pattern }}'
+          args=()
+
+          if [ -n "$test_file_pattern" ]; then
+            args+=("$test_file_pattern")
+          fi
+
+          if [ -n "$test_name_pattern" ]; then
+            args+=("-t" "$test_name_pattern")
+          fi
+
+          if [ "${#args[@]}" -gt 0 ]; then
+            pnpm test:client:integration "${args[@]}"
+          else
+            pnpm test:client:integration
+          fi
+        env:
+          POLYMARKET_INTEGRATION_ENVIRONMENT_CONFIG: ${{ inputs.environment_config }}
+          POLYMARKET_RUN_METERED_TESTS: '1'
+          PRIVY_TEST_APP_ID: ${{ vars.PRIVY_TEST_APP_ID }}
+          PRIVY_TEST_APP_SECRET: ${{ secrets.PRIVY_TEST_APP_SECRET }}
+          PRIVY_TEST_WALLET_ID: ${{ vars.PRIVY_TEST_WALLET_ID }}
+          POLYMARKET_BUILDER_CODE: ${{ vars.POLYMARKET_BUILDER_CODE }}
+          POLYMARKET_BUILDER_API_KEY: ${{ vars.POLYMARKET_BUILDER_API_KEY }}
+          POLYMARKET_BUILDER_PASSPHRASE: ${{ secrets.POLYMARKET_BUILDER_PASSPHRASE }}
+          POLYMARKET_BUILDER_SECRET: ${{ secrets.POLYMARKET_BUILDER_SECRET }}
+          POLYMARKET_PRIVATE_KEY: ${{ secrets.POLYMARKET_PRIVATE_KEY }}
+          POLYMARKET_DEPOSIT_WALLET: ${{ vars.POLYMARKET_DEPOSIT_WALLET }}
+          POLYMARKET_PROXY_PRIVATE_KEY: ${{ secrets.POLYMARKET_PROXY_PRIVATE_KEY }}
+          POLYMARKET_PROXY_WALLET: ${{ vars.POLYMARKET_PROXY_WALLET }}
+          POLYMARKET_SAFE_PRIVATE_KEY: ${{ secrets.POLYMARKET_SAFE_PRIVATE_KEY }}
+          POLYMARKET_SAFE_WALLET: ${{ vars.POLYMARKET_SAFE_WALLET }}
+          POLYMARKET_RELAYER_API_KEY: ${{ vars.POLYMARKET_RELAYER_API_KEY }}
+          POLYMARKET_RELAYER_API_KEY_ADDRESS: ${{ vars.POLYMARKET_RELAYER_API_KEY_ADDRESS }}
