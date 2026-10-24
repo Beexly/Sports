@@ -33,3 +33,12 @@ export type { KilledEdge } from "./killed.js"
 export { SOURCE_REGISTRY } from "./registry.js"
 export type { SourceRow, SourceStatus } from "./registry.js"
 export { SHOWDOWN_CAP, SHOWDOWN_SLOTS, CAPTAIN_MULT, captainSalary, captainPoints, underCap, withinTeamLimit } from "./lineup.js"
+export {
+  SCORES365_ORIGIN,
+  SPORT_AMERICAN_FOOTBALL,
+  NFL_COMPETITION_ID,
+  currentGamesUrl,
+  fixturesUrl,
+  parseScores365,
+} from "./scores365.js"
+export type { LiveGame, LiveSide, ScoresBoard } from "./scores365.js"
