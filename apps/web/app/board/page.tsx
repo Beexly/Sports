@@ -6,6 +6,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { isRealInstant } from "@/lib/time/local-time";
 import { formatCentralTime } from "@/lib/time/central";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { boardMarketLabel } from "@/lib/board/market-label";
@@ -43,7 +44,7 @@ export const dynamic = "force-dynamic";
  */
 const CT_SUFFIX = " CT";
 function timeLabel(value: string): ReactNode {
-  const date = new Date(value);
+  const date = new Date(value)
   if (Number.isNaN(date.getTime())) return "Unavailable";
   return `${formatCentralTime(value)}${CT_SUFFIX}`;
 }

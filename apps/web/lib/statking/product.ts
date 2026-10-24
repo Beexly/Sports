@@ -58,8 +58,8 @@ export interface SourceRecord { source_id: string; canonical_name: string; sourc
 export interface MediaItem { item_id: string; platform: string; source_name: string; title: string; rights_mode: string; activation_status: string; source_trust: number; detected_players: string[]; detected_teams: string[]; topics: string[]; signal_candidate: string; next_action: string; [key: string]: unknown; }
 export interface SourceTarget { source_id: string; name: string; category: string; value_score: number; moat_score: number; ease_score: number; cost_risk_score: number; rights_clarity_score: number; activation_priority: number; activation_path: string; recommended_next_action: string; [key: string]: unknown; }
 
-export function loadPlayers(): StatKingPlayer[] { return readJson<{players: StatKingPlayer[]}>("data/statking/snapshots/players.json").players; }
-export function loadTeams(): StatKingTeam[] { return readJson<{teams: StatKingTeam[]}>("data/statking/snapshots/teams.json").teams; }
+export function loadPlayers(): StatKingPlayer[] { return readJson<{players: StatKingPlayer[]}>("data/statking/snapshots/players.json").players ?? []; }
+export function loadTeams(): StatKingTeam[] { return readJson<{teams: StatKingTeam[]}>("data/statking/snapshots/teams.json").teams ?? []; }
 export function loadWeeklyStats(): WeeklyStat[] { return readJson<{rows: WeeklyStat[]}>("data/statking/snapshots/player_weekly_stats.json").rows; }
 export function loadSources(): SourceRecord[] { return readJson<{sources: SourceRecord[]}>("data/source-atlas/source_registry.json").sources; }
 export function loadSummary() { return readJson<{source_count:number; candidate_capacity:number; candidate_count:number; discovery_query_count:number; metric_count:number; systems:string[]}>("data/statking/hardening_summary.json"); }

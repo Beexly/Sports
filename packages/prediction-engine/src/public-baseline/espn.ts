@@ -52,21 +52,21 @@ export function parseEspnScoreboard(payload: unknown): EspnBoard {
     }
     if (!home || !away) continue
     games.push({
-      id,
-      competitionId: null,
-      competition: "NFL",
-      startTime: typeof row.date === "string" ? row.date : "",
-      status,
-      home,
-      away,
+        id,
+        competitionId: null, // ESPN ids live in their own space; 352 is 365Scores-only
+        competition: "NFL",
+        startTime: typeof row.date === "string" ? row.date : "",
+        status,
+        home,
+        away,
     })
-  }
-  return {
+    }
+    return {
     ttl: 0,
     lastUpdateId: null,
     paging: { previousPage: null, nextPage: null },
     season,
     week,
     games,
-  }
+    }
 }

@@ -32,7 +32,7 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 export const dynamic = "force-dynamic";
 
 // C-352: the break-even the record is judged at. 52.4% is the hold-adjusted
-// line a bettor must clear, not the coin-flip 50% — passing VerdictLine the
+// line a bettor must clear, not the coin-flip 50% - passing VerdictLine the
 // 0.5 default would flatter a sub-market record with a verdict word it has
 // not earned.
 const BREAKEVEN_THRESHOLD = 0.524;
@@ -211,7 +211,7 @@ export default async function PerformancePage() {
 
   // C-352 lanes: the published record is the BOOK lane (rows that carried at
   // least one stored bookmaker price). Model-signal rows stay in the record in
-  // their own lane, labelled not bettable, and never lift the hero — summing
+  // their own lane, labelled not bettable, and never lift the hero - summing
   // the two is the lying 53.2% headline the 2026-09-14 audit caught.
   const laneOfSummary = (s: PerformanceSummary) =>
     decodeLaneModelVersion(s.modelVersion).lane;
@@ -412,7 +412,7 @@ export default async function PerformancePage() {
                 >
                   <div className="border-b border-mineral px-6 py-4">
                     <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
-                      All-Time Record — book-priced picks
+                      All-Time Record - book-priced picks
                     </h2>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
