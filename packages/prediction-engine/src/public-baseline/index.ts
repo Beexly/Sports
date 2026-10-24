@@ -40,5 +40,9 @@ export {
   currentGamesUrl,
   fixturesUrl,
   parseScores365,
+  homeVsAway,
+  homeAwayScore,
 } from "./scores365.js"
 export type { LiveGame, LiveSide, ScoresBoard } from "./scores365.js"
+export { ESPN_NFL_SCOREBOARD, parseEspnScoreboard } from "./espn.js"
+export type { EspnBoard } from "./espn.js"
