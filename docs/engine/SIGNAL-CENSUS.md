@@ -20,6 +20,16 @@ contains its rows, and `.worktrees/calib-boundary` has only the doctrine prose.
 Rows below are therefore re-derived from code. Where the founder's list names a
 family, that row is first.
 
+## Coordinator psychology (item 8) — BUILT, EVIDENCE-GATED (2026-10-24)
+
+`nfl/coordinator-psychology-tensor.ts`: the tendency breaker fires ONLY from a
+counted formation/down rate (rate + sampleN >= 20 on the row); the grudge score
+is a NAMED GAP because `coaching_tree_and_grudge_ledger.jsonl` is not in the
+repository (searched tree + worktrees); the Q4 PROE override therefore does not
+fire — asserted by test. Shadow wiring already lives in
+`coach-sim/sinkhorn-targets.ts` (applyShadowHaircut); the tensor only adds a
+capped cost addendum (<= 0.05) when a measured tension exists.
+
 ## L3 travel — REACHES THE TRAIL AND THE AUDIT (2026-10-24)
 
 `engine/travel-factor.ts` consumes `nfl/stadium-coordinates-c33.ts` (32 OSM
