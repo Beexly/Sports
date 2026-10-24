@@ -52,6 +52,16 @@ function side(raw: unknown): LiveSide {
   return { name, abbr, score: played(row.score) }
 }
 
+export function homeVsAway(game: LiveGame): string {
+  return `${game.home.abbr} vs ${game.away.abbr}`
+}
+
+export function homeAwayScore(game: LiveGame): string {
+  const home = game.home.score == null ? "—" : String(game.home.score)
+  const away = game.away.score == null ? "—" : String(game.away.score)
+  return `${home}–${away}`
+}
+
 export function parseScores365(payload: unknown): ScoresBoard {
   const body = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : {}
   const games = Array.isArray(body.games) ? body.games : []
