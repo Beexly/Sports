@@ -61,15 +61,18 @@ describe("NE@CHI 401873010 public-feed fixture", () => {
       pages += 1
     }
 
-    // forward: nextPage chain
+    // forward: nextPage chain (walks the future)
+    let firstBoard: ScoresBoard | null = null
     while (url && pages < 3 && !game) {
       visit(parseScores365(await getJson(url)) as ScoresBoard)
+      if (!firstBoard) firstBoard = lastBoard
       const nxt = lastBoard!.paging.nextPage
       url = typeof nxt === "string" && nxt ? abs(nxt) : null
     }
-    // backward: previousPage chain (past games sit behind the aftergame cursor)
-    url = lastBoard && typeof lastBoard.paging.previousPage === "string"
-      ? abs(lastBoard.paging.previousPage)
+    // backward: page 1's previousPage cursor walks to the games just before
+    // the current window (the Oct 22 CHI vs NE final sits one page back).
+    url = firstBoard && typeof firstBoard.paging.previousPage === "string"
+      ? abs(firstBoard.paging.previousPage)
       : null
     while (url && pages < 10 && !game) {
       visit(parseScores365(await getJson(url)) as ScoresBoard)
