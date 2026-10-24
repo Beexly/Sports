@@ -29,9 +29,10 @@
   ],
   "closed": [
     {"site": "FantasyPros v2 API", "result": "403 Missing Authentication Token. The partners host above does not need that token."},
-    {"site": "Rotowire injury table", "result": "200, but team=ALL returns 5 rows and ignores the team filter. Not a full injury report."},
-    {"site": "Pro Football Reference", "result": "403. The 2026 week file already in nflverse pfr_advstats is the public copy."},
-    {"site": "FTN", "result": "403 on the site. nflverse ftn_charting through 2026 is the public copy. No login was attempted."},
+    {"site": "Pro Football Reference", "result": "The browser stopped on a Cloudflare check. The 2026 week files (pressure, rush contact, drops, snaps) are the public copy, rolled in pfr-ftn-2026.json."},
+    {"site": "FTN site", "result": "The article page did not render in the browser. The week-6 DVOA table is the one printed in the public article. Charting tendencies are counted from the public FTN play file, 15,203 plays."},
+    {"site": "RotoWire", "result": "The injury table is still 5 rows. The lineup page rendered: 14 games, 208 players."},
+    {"site": "Fantasy Life", "result": "The week-7 rankings URL is Joe Metz's five-standout column, not a board. The prose was not copied."},
     {"site": "Next Gen Stats", "result": "401. Not bypassed. Participation through 2025 already carries time to throw and was_pressure."},
     {"site": "Fantasy Life", "result": "Public pages are articles. An SSE url on the page carried a token. The token was not used."},
     {"site": "NumberFire", "result": "Public pages are articles and FanDuel links. No rankings feed."},
