@@ -91,8 +91,8 @@ export function parseScores365(payload: unknown): ScoresBoard {
     ttl: typeof body.ttl === "number" ? body.ttl : 0,
     lastUpdateId: typeof body.lastUpdateId === "number" ? body.lastUpdateId : null,
     paging: {
-      previousPage: typeof paging.previousPage === "string" ? paging.previousPage : null,
-      nextPage: typeof paging.nextPage === "string" ? paging.nextPage : null,
+      previousPage: typeof paging.previousPage === "number" ? paging.previousPage : null,
+      nextPage: typeof paging.nextPage === "number" ? paging.nextPage : null,
     },
     games: parsed,
   }
