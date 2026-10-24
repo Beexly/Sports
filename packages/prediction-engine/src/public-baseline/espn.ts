@@ -53,6 +53,7 @@ export function parseEspnScoreboard(payload: unknown): EspnBoard {
     if (!home || !away) continue
     games.push({
       id,
+      competitionId: null,
       competition: "NFL",
       startTime: typeof row.date === "string" ? row.date : "",
       status,
@@ -60,5 +61,12 @@ export function parseEspnScoreboard(payload: unknown): EspnBoard {
       away,
     })
   }
-  return { ttl: 0, lastUpdateId: null, season, week, games }
+  return {
+    ttl: 0,
+    lastUpdateId: null,
+    paging: { previousPage: null, nextPage: null },
+    season,
+    week,
+    games,
+  }
 }
