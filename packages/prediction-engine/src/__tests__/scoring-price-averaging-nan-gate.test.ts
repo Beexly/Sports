@@ -105,13 +105,29 @@ describe("scoreSpreadPick — chosen-side price is averaged in probability space
 
     // The customer-visible numbers. Pre-fix this exact fixture published
     // "Fair value: 49%. Edge: +44.2%. Confidence: 85/100 (ELITE PLAY)".
-    expect(pick!.reasoning).toContain("Fair value: 49%.");
+    // "Fair value" is now split into the market number and the engine's own, so
+    // the prose cannot be read as one blended claim (2026-10-23).
+    expect(pick!.reasoning).toContain("Market fair: 49%");
+    expect(pick!.reasoning).toMatch(/engine fair: \d+%|model unpriced/);
     expect(pick!.reasoning).toContain("Edge: -2.3%.");
     expect(pick!.reasoning).not.toContain("Edge: +44.2%");
 
     // A market priced this tightly cannot be a maxed-out Edge Index.
     expect(toEdgeIndex(pick!.edgeScore)).toBeLessThan(65);
     expect(pick!.pickGrade).not.toBe("ELITE_PLAY");
+  });
+});
+
+describe("formatFairValueClause", () => {
+  it("names both numbers so neither can be read as the other", async () => {
+    const { formatFairValueClause } = await import("../scoring");
+    expect(formatFairValueClause(0.49, 0.32)).toBe("Market fair: 49%, engine fair: 32%.");
+  });
+
+  it("says the model is unpriced instead of lending it the market figure", async () => {
+    const { formatFairValueClause } = await import("../scoring");
+    expect(formatFairValueClause(0.49, null)).toContain("model unpriced");
+    expect(formatFairValueClause(0.49, Number.NaN)).toContain("model unpriced");
   });
 });
 

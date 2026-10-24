@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {
+      "id": "windy-pass-under",
+      "loadedSurfaces": ["wind_mph", "pressure_rate", "cb_availability"],
+      "outcome": 1,
+      "marketProb": 0.52,
+      "facts": { "wind_mph": 14.3, "pressure_rate": 0.31, "cb_availability": "missing_starters" }
+    },
+    {
+      "id": "calm-shootout-over",
+      "loadedSurfaces": ["wind_mph", "pace_seconds", "redzone_td_rate"],
+      "outcome": 0,
+      "marketProb": 0.55,
+      "facts": { "wind_mph": 3.1, "pace_seconds": 24.1, "redzone_td_rate": 0.61 }
+    },
+    {
+      "id": "ol-thin-home",
+      "loadedSurfaces": ["interior_ol_out", "qb_pressure_rate", "rb_ypc"],
+      "outcome": 1,
+      "marketProb": 0.48,
+      "facts": { "interior_ol_out": 2, "qb_pressure_rate": 0.34, "rb_ypc": 4.2 }
+    },
+    {
+      "id": "unsettled-teaser",
+      "loadedSurfaces": ["rest_days", "travel_miles"],
+      "outcome": null,
+      "marketProb": 0.5,
+      "facts": { "rest_days": 6, "travel_miles": 1840 }
+    }
+  ]
+}

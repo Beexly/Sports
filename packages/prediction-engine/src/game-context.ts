@@ -44,6 +44,12 @@ export interface GameContextScores {
   injuryScore: number;              // -5 to +5 (structured practice/injury availability signal)
   ngsTrackingScore: number;         // -5 to +5 (in-season NGS tracking features: RYOE, separation, box rate)
   dispersionScore: number;          // -8 to 0 (multi-book market dispersion uncertainty penalty)
+  // Raw quantities behind the scores, OPTIONAL and prose-only: the reasoning
+  // cites them as units so specificity is earned rather than inert. Absent
+  // values fall back to the direction word and change no score.
+  restDaysHome?: number | null;
+  restDaysAway?: number | null;
+  spreadMovementPts?: number | null;
   factors: FactorDetail[];
 }
 
@@ -980,6 +986,14 @@ export function computeGameContext(
   return {
     lineMovementScore,
     restAdvantageScore,
+    // Raw units passed through for the PROSE only — scores above still drive
+    // every decision. Null when the fixture never supplied them.
+    restDaysHome: context.restDaysHome ?? null,
+    restDaysAway: context.restDaysAway ?? null,
+    spreadMovementPts:
+      typeof context.openingSpread === "number" && typeof context.currentSpread === "number"
+        ? Math.abs(context.currentSpread - context.openingSpread)
+        : null,
     historicalFormScore,
     dataQualityPenalty,
     dataQualityScore: dq.qualityScore,

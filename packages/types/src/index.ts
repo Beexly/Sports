@@ -779,6 +779,24 @@ export interface OddsInput {
   sport: string;
   bookmakerOdds: BookmakerOddsInput[];
   context?: GameContextInput;   // enriched when available
+  /**
+   * L0 usage / L1 health / L2 shadow packet. When present the reasoning trail
+   * LEADS with these named signals (or named gaps) and market factors follow —
+   * the point of the whole exercise. Absent means the caller has no packet yet;
+   * the trail then starts with gaps rather than pretending.
+   */
+  coachTrail?: {
+    week: number;
+    injuries?: readonly unknown[];
+    usageShifts?: readonly unknown[];
+    shadows?: readonly unknown[];
+    /** Team codes (BAL, CIN, ...) — enable the L3 travel factor. */
+    homeTeamCode?: string;
+    awayTeamCode?: string;
+    /** Measured staff go-rates (0.51–0.94, fourth-down-aggression.ts). Away default PHI 0.94. */
+    staffAggressionHome?: number;
+    staffAggressionAway?: number;
+  };
 }
 
 export interface BookmakerOddsInput {

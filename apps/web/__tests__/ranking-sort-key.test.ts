@@ -15,7 +15,7 @@ import {
 const CASES: {
   readonly name: string;
   readonly pick: { readonly confidence: number; readonly factorBreakdown?: unknown };
-  readonly basis: "rankingP" | "rankingScore" | "confidence";
+  readonly basis: "rankingP" | "rankingScore" | "marketFairProb" | "confidence";
   readonly key: number;
 }[] = [
   { name: "finite rankingP wins", pick: { confidence: 90, factorBreakdown: { rankingP: 0.41 } }, basis: "rankingP", key: 0.41 },
@@ -28,6 +28,10 @@ const CASES: {
   { name: "null rankingP falls through", pick: { confidence: 80, factorBreakdown: { rankingP: null } }, basis: "confidence", key: 0.8 },
   { name: "rankingScore second", pick: { confidence: 80, factorBreakdown: { rankingScore: 55 } }, basis: "rankingScore", key: 0.55 },
   { name: "rankingScore clamps", pick: { confidence: 80, factorBreakdown: { rankingScore: 140 } }, basis: "rankingScore", key: 1 },
+  { name: "marketFairProb after the model branches", pick: { confidence: 90, factorBreakdown: { marketFairProb: 0.47 } }, basis: "marketFairProb", key: 0.47 },
+  { name: "marketFairProb clamps", pick: { confidence: 90, factorBreakdown: { marketFairProb: 1.7 } }, basis: "marketFairProb", key: 1 },
+  { name: "rankingScore outranks marketFairProb", pick: { confidence: 90, factorBreakdown: { rankingScore: 55, marketFairProb: 0.47 } }, basis: "rankingScore", key: 0.55 },
+  { name: "marketFairProb outranks confidence", pick: { confidence: 20, factorBreakdown: { marketFairProb: 0.47 } }, basis: "marketFairProb", key: 0.47 },
   { name: "absent breakdown", pick: { confidence: 72 }, basis: "confidence", key: 0.72 },
   { name: "null breakdown", pick: { confidence: 72, factorBreakdown: null }, basis: "confidence", key: 0.72 },
   { name: "non-object breakdown", pick: { confidence: 72, factorBreakdown: "{}" }, basis: "confidence", key: 0.72 },
@@ -148,7 +152,7 @@ describe("rankingBasisCensus", () => {
 
   it("every row lands in exactly one branch", () => {
     const census = rankingBasisCensus(CASES.map((c) => c.pick));
-    expect(census.rankingP + census.rankingScore + census.confidence).toBe(
+    expect(census.rankingP + census.rankingScore + census.marketFairProb + census.confidence).toBe(
       census.total,
     );
     expect(census.total).toBe(CASES.length);
@@ -215,5 +219,61 @@ describe("signed-edge ranking (the open half of the confidence inversion)", () =
     const shuffled = [...rows].reverse().sort(comparePicksByRanking);
     expect(shuffled).toEqual([...rows].sort(comparePicksByRanking));
     expect(comparePicksByRanking(rows[0]!, rows[0]!)).toBe(0);
+  });
+});
+
+/**
+ * The MARKET branch (2026-10-23). `marketFairProb` is the receipt's committed
+ * market-implied probability, measured on prod graded rows (n=1,697): Spearman
+ * +0.1845 [CI .1408,.2280] vs confidence's -0.0171, ECE 0.0202 vs 0.1079,
+ * Brier 0.2364 vs 0.2744 (delta 0.0380, CI [.0289,.0475]).
+ *
+ * It sits BELOW rankingP and rankingScore — those are the engine's own priced
+ * ranks and outrank a market echo — and ABOVE confidence, which is the branch
+ * it replaces. These tests exist so a later "simplification" cannot quietly
+ * drop it back under the anti-predictive key.
+ */
+describe("marketFairProb branch (measured 2026-10-23)", () => {
+  it("outranks confidence even when confidence is higher on the raw scale", () => {
+    const lowConfMarket = { confidence: 20, factorBreakdown: { marketFairProb: 0.48 } };
+    const highConf = { confidence: 95 };
+    expect([highConf, lowConfMarket].sort(comparePicksByRanking)[0]).toBe(lowConfMarket);
+  });
+
+  it("is a TIER, because the keys are not on a common scale", () => {
+    // confidence/100 runs 0.50-0.95 while mfp sits near 0.5-0.6, so raw-key
+    // comparison alone would let the anti-predictive fallback win on value. The
+    // branch must order first. Both halves of that are pinned here.
+    const modelP = { confidence: 20, factorBreakdown: { rankingP: 0.4 } };
+    const market = { confidence: 95, factorBreakdown: { marketFairProb: 0.9 } };
+    expect([market, modelP].sort(comparePicksByRanking)[0]).toBe(modelP);
+
+    const weakMarket = { confidence: 10, factorBreakdown: { marketFairProb: 0.45 } };
+    const strongConfidence = { confidence: 99 };
+    expect([strongConfidence, weakMarket].sort(comparePicksByRanking)[0]).toBe(weakMarket);
+
+    // Same row carrying both: the model branch wins the cascade.
+    const both = { confidence: 20, factorBreakdown: { rankingP: 0.4, marketFairProb: 0.9 } };
+    expect(readRankingKey(both).basis).toBe("rankingP");
+    expect(readRankingKey(both).key).toBeCloseTo(0.4, 10);
+  });
+
+  it("still loses to a measured signed edge", () => {
+    const edge = { confidence: 30, factorBreakdown: { independentEdge: { expectedClv: 0.2 } } };
+    const market = { confidence: 95, factorBreakdown: { marketFairProb: 0.9 } };
+    expect([market, edge].sort(comparePicksByRanking)[0]).toBe(edge);
+  });
+
+  it("treats zero as a value, not absence", () => {
+    const read = readRankingKey({ confidence: 99, factorBreakdown: { marketFairProb: 0 } });
+    expect(read.basis).toBe("marketFairProb");
+    expect(read.key).toBe(0);
+  });
+
+  it("falls through on non-finite values", () => {
+    for (const bad of [Number.NaN, Number.POSITIVE_INFINITY, "0.5", null]) {
+      const read = readRankingKey({ confidence: 80, factorBreakdown: { marketFairProb: bad } });
+      expect(read.basis, String(bad)).toBe("confidence");
+    }
   });
 });

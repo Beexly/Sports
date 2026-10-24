@@ -116,6 +116,46 @@ function indexesAtHold(hold: number): number[] {
   return out;
 }
 
+describe("reasoning specificity carries units", () => {
+  it("cites the rest days behind a rest edge, not just the word", () => {
+    // Production arrives pre-scored: the score decides whether the clause fires,
+    // the days supply the unit.
+    const ctx: GameContextInput = { ...RICH_CONTEXT, restAdvantageScore: 7, restDaysHome: 7, restDaysAway: 2 };
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);
+    const withContext = picks.filter((p) => p.reasoning.includes("Context:"));
+    for (const p of withContext) {
+      expect(p.reasoning).toMatch(/home \d+ days rest v away \d+/);
+    }
+  });
+
+  it("states what would prove the read wrong when a signal is adverse", () => {
+    // Dispersion is computed from marketSpreadDispersion, so the input must move
+    // that, not the score: 2.0+ pts of spread disagreement is a -5 penalty.
+    const ctx: GameContextInput = { ...RICH_CONTEXT, marketSpreadDispersion: 2.4 };
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);
+    const withFalsifier = picks.filter((p) => p.reasoning.includes("Would be wrong if"));
+    expect(withFalsifier.length).toBeGreaterThan(0);
+    expect(withFalsifier[0]!.reasoning).toContain("the books tighten toward the far side");
+    // It sits before Confidence so the claim reads, then fails, then grades.
+    expect(withFalsifier[0]!.reasoning.indexOf("Would be wrong if")).toBeLessThan(
+      withFalsifier[0]!.reasoning.indexOf("Confidence:"),
+    );
+  });
+
+  it("stays silent when nothing adverse is present", () => {
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8), AT);
+    for (const p of picks) expect(p.reasoning).not.toContain("Would be wrong if");
+  });
+
+  it("falls back to the bare direction word when the days are absent", () => {
+    const ctx: GameContextInput = { ...RICH_CONTEXT, restAdvantageScore: 7, restDaysHome: undefined, restDaysAway: undefined };
+    const picks = scoreGame(uniformSpread(0.03, 8, 0.8, ctx), AT);
+    for (const p of picks.filter((x) => x.reasoning.includes("Context:"))) {
+      expect(p.reasoning).not.toContain("days rest");
+    }
+  });
+});
+
 describe("the published Edge Index spans its whole axis on real markets", () => {
   /**
    * The retired scale (`50 + 1000 · rawEdge`) produced 43–45 at a 1% hold and
@@ -296,7 +336,9 @@ describe("one ladder, one model version, one scale", () => {
   it("MODEL_VERSION moved past the last half-scale version", () => {
     expect(LEGACY_HALF_SCALE_THROUGH_MODEL_VERSION).toBe("v5.2.7");
     expect(MODEL_VERSION).not.toBe(LEGACY_HALF_SCALE_THROUGH_MODEL_VERSION);
-    expect(MODEL_VERSION).toBe("v5.3.0");
+    // v5.3.1 = fairProbability recalibration; the Edge Index scale is untouched,
+    // so this only ever moves forward past the half-scale era.
+    expect(MODEL_VERSION).toBe("v5.3.1");
   });
 
   it("every published pick carries the model version that defines its scale", () => {

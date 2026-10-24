@@ -1,0 +1,49 @@
+{
+  "seasons": "2023-2025 REG",
+  "shell": "SINGLE is Cover 0, Cover 1, Cover 3. SPLIT is Cover 2, Cover 4, Cover 6.",
+  "rule": "Targeted routes only. Gap is single-high EPA minus split-safety EPA. Kept only when every season has at least 80 targets on each side and the gap keeps its sign. Not a spread.",
+  "routes": [
+    {
+      "route": "HITCH/CURL",
+      "favors": "SPLIT",
+      "seasons": [
+        {"season": 2023, "single": {"n": 1381, "epa": 0.113}, "split": {"n": 1276, "epa": 0.194}},
+        {"season": 2024, "single": {"n": 1510, "epa": 0.161}, "split": {"n": 1205, "epa": 0.214}},
+        {"season": 2025, "single": {"n": 1413, "epa": 0.114}, "split": {"n": 1502, "epa": 0.173}}
+      ]
+    },
+    {
+      "route": "IN/DIG",
+      "favors": "SPLIT",
+      "seasons": [
+        {"season": 2023, "single": {"n": 885, "epa": 0.272}, "split": {"n": 496, "epa": 0.403}},
+        {"season": 2024, "single": {"n": 943, "epa": 0.423}, "split": {"n": 448, "epa": 0.568}},
+        {"season": 2025, "single": {"n": 839, "epa": 0.251}, "split": {"n": 537, "epa": 0.291}}
+      ]
+    },
+    {
+      "route": "QUICK OUT",
+      "favors": "SINGLE",
+      "seasons": [
+        {"season": 2023, "single": {"n": 1858, "epa": 0.073}, "split": {"n": 1187, "epa": 0.016}},
+        {"season": 2024, "single": {"n": 1882, "epa": 0.060}, "split": {"n": 1018, "epa": 0.025}},
+        {"season": 2025, "single": {"n": 1819, "epa": 0.086}, "split": {"n": 1145, "epa": 0.029}}
+      ]
+    },
+    {
+      "route": "SHALLOW CROSS/DRAG",
+      "favors": "SINGLE",
+      "seasons": [
+        {"season": 2023, "single": {"n": 688, "epa": 0.131}, "split": {"n": 357, "epa": -0.026}},
+        {"season": 2024, "single": {"n": 721, "epa": 0.158}, "split": {"n": 321, "epa": 0.137}},
+        {"season": 2025, "single": {"n": 637, "epa": 0.156}, "split": {"n": 399, "epa": -0.096}}
+      ]
+    }
+  ],
+  "runBox": [
+    {"box": 5, "seasons": [{"season": 2023, "n": 582, "epa": 0.150}, {"season": 2024, "n": 892, "epa": 0.102}, {"season": 2025, "n": 560, "epa": 0.136}]},
+    {"box": 6, "seasons": [{"season": 2023, "n": 5769, "epa": -0.023}, {"season": 2024, "n": 7478, "epa": -0.009}, {"season": 2025, "n": 7359, "epa": 0.012}]},
+    {"box": 7, "seasons": [{"season": 2023, "n": 4953, "epa": -0.069}, {"season": 2024, "n": 4468, "epa": -0.056}, {"season": 2025, "n": 5008, "epa": -0.046}]},
+    {"box": 8, "seasons": [{"season": 2023, "n": 1903, "epa": -0.104}, {"season": 2024, "n": 1075, "epa": -0.013}, {"season": 2025, "n": 962, "epa": -0.044}]}
+  ]
+}

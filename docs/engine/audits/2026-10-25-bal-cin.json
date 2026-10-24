@@ -1,0 +1,598 @@
+[
+  {
+    "layer": "L0",
+    "side": "AWAY",
+    "claim": "J.Chase target share 15.5% over weeks 4-5 (n=84 targets), 24.5% over weeks 1-3 (n=102), delta -9.0 points.",
+    "value": -9.0,
+    "unit": "percentage points",
+    "crossCheck": "pbp target counts 13 v 25 agree",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "Z.Flowers target share 31.7% over weeks 5-6 (n=63 targets), 16.4% over weeks 1-3 (n=73), delta +15.3 points.",
+    "value": 15.3,
+    "unit": "percentage points",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "M.Andrews target share 15.9% over weeks 5-6 v 24.7% over weeks 1-3, delta -8.8 points.",
+    "value": -8.8,
+    "unit": "percentage points",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "D.Henry rush share 71.2% over weeks 5-6 (n=59 rushes) v 68.0% over weeks 1-3 (n=97), delta +3.2 points.",
+    "value": 3.2,
+    "unit": "percentage points",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "T.Huntley takes 18.6% of rushes over weeks 5-6 against L.Jackson 17.5% over weeks 1-3.",
+    "value": 18.6,
+    "unit": "%",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "AWAY",
+    "claim": "C.Brown rush share 47.8% over weeks 4-5 (n=46) v 72.1% over weeks 1-3 (n=68), delta -24.3 points; S.Perine rises to 37.0% from 14.7%.",
+    "value": -24.3,
+    "unit": "percentage points",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "Z.Flowers moved from second option (16.4% target share, weeks 1-3) to primary (31.7%, weeks 5-6) between week 3 and week 6.",
+    "value": "second option to primary target",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "AWAY",
+    "claim": "C.Brown moved from lead back (72.1% rush share, weeks 1-3) to platoon (47.8%, weeks 4-5) with S.Perine at 37.0% between week 3 and week 5.",
+    "value": "lead back to platoon",
+    "source": "nflverse play_by_play_2026.csv.gz columns receiver_player_name, rush_player_name, pass_attempt, rush_attempt, posteam, week",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "Pre-snap motion on 45.9% of plays weeks 5-6 (n=353) v 46.7% weeks 1-3 (n=501).",
+    "value": 45.9,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; filter all scrimmage plays",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "AWAY",
+    "claim": "Pre-snap motion on 46.6% of plays weeks 4-5 (n=339) v 37.8% weeks 1-3 (n=513).",
+    "value": 46.6,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; filter all scrimmage plays",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "route participation, primary alignment",
+    "wallReason": "pbp_participation release carries assets only through 2025; route and alignment columns unavailable. Snap share is NO LONGER walled: nflverse snap_counts_2026.csv supplies offense_pct/defense_pct (see the snap rows above)",
+    "source": "https://github.com/nflverse/nflverse-data/releases/tag/pbp_participation",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "AWAY",
+    "claim": "WALL",
+    "value": "personnel frequency 11/12/21",
+    "wallReason": "offense_personnel lives only in the 2026-missing participation file",
+    "source": "https://github.com/nflverse/nflverse-data/releases/tag/pbp_participation",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "HOME",
+    "claim": "Lamar Jackson (QB) listed Questionable with Ankle.",
+    "value": "Questionable",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "HOME",
+    "claim": "Jaylinn Hawkins (S) listed Questionable with Knee.",
+    "value": "Questionable",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "HOME",
+    "claim": "Tavius Robinson (LB) listed Questionable with Pectoral.",
+    "value": "Questionable",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "HOME",
+    "claim": "Cam Jurgens (C) listed Questionable with Concussion.",
+    "value": "Questionable",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "HOME",
+    "claim": "T.J. Tampa (CB) listed Injured Reserve with Toe.",
+    "value": "Injured Reserve",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "AWAY",
+    "claim": "Tanner Hudson (TE) on Injured Reserve with Pectoral.",
+    "value": "Injured Reserve",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "AWAY",
+    "claim": "Swayze Bozeman (LB) on Injured Reserve with Forearm.",
+    "value": "Injured Reserve",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "AWAY",
+    "claim": "Jalen Davis (CB) on Injured Reserve with Hamstring.",
+    "value": "Injured Reserve",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "AWAY",
+    "claim": "Andrei Iosivas (WR) on Injured Reserve with Thumb.",
+    "value": "Injured Reserve",
+    "source": "ESPN site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873012 section injuries[].athlete/details.type",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L1",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "practice status (DNP/Limited/Full) and replacement snaps",
+    "wallReason": "injuries_2026.csv maxes at week 7 with practice_status for week 7 only; no week-8 practice rows and no snap counts for replacements",
+    "source": "https://github.com/nflverse/nflverse-data/releases/tag/injuries",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2a",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "shadow rate per CB v WR, snapCount_shadowed",
+    "wallReason": "curl 403; Firecrawl render returns 24,514 bytes of team nav only, no shadow_situations table and no MU column — matrix is client-rendered behind subscription",
+    "source": "https://ftnfantasy.com/nfl/shadow-coverage-matrix",
+    "fetchedAt": "2026-10-23T12:52:43Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2b",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "defense personnel faced by grouping, EPA per play",
+    "wallReason": "defense_personnel absent with 2026 participation; not inferred from defenders_in_box",
+    "source": "https://github.com/nflverse/nflverse-data/releases/tag/pbp_participation",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "BAL defense blitz rate on 1st 12.5% (16 of 128 pass plays).",
+    "value": 12.5,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "BAL defense blitz rate on 2nd 14.0% (13 of 93 pass plays).",
+    "value": 14.0,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "BAL defense blitz rate on 3rd-and-short 10.0% (2 of 20 pass plays).",
+    "value": 10.0,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "BAL defense blitz rate on 3rd-and-long 22.9% (11 of 48 pass plays).",
+    "value": 22.9,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "AWAY",
+    "claim": "CIN defense blitz rate on 1st 14.7% (25 of 170 pass plays).",
+    "value": 14.7,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "AWAY",
+    "claim": "CIN defense blitz rate on 2nd 8.3% (10 of 121 pass plays).",
+    "value": 8.3,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "AWAY",
+    "claim": "CIN defense blitz rate on 3rd-and-short 14.3% (3 of 21 pass plays).",
+    "value": 14.3,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "AWAY",
+    "claim": "CIN defense blitz rate on 3rd-and-long 27.3% (15 of 55 pass plays).",
+    "value": 27.3,
+    "unit": "%",
+    "source": "nflverse ftn_charting_2026.csv columns is_motion, n_blitzers, n_pass_rushers, nflverse_play_id; blitz = n_blitzers >= 1",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "coverage type distribution (man/zone, press/off)",
+    "wallReason": "defense_coverage_type and defense_man_zone_type exist only in the 2026-missing participation file",
+    "source": "https://github.com/nflverse/nflverse-data/releases/tag/pbp_participation",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "AWAY",
+    "claim": "WALL",
+    "value": "top route concepts with frequency",
+    "wallReason": "route column absent for 2026",
+    "source": "https://github.com/nflverse/nflverse-data/releases/tag/pbp_participation",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2d",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "staff head-to-head record and adjustment note",
+    "wallReason": "summary payload carries lastFiveGames and standings but no staff head-to-head block",
+    "source": "ESPN summary event=401873012 (no headToHead section returned)",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "medium"
+  },
+  {
+    "layer": "L3",
+    "side": "HOME",
+    "claim": "Baltimore rest 7 days; last game 2026-10-18.",
+    "value": 7,
+    "unit": "days",
+    "source": "nflverse schedules games.csv columns away_rest, home_rest, div_game, roof, surface, gametime",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "AWAY",
+    "claim": "Cincinnati rest 14 days; last game 2026-10-11, week 7 bye.",
+    "value": 14,
+    "unit": "days",
+    "source": "nflverse schedules games.csv columns away_rest, home_rest, div_game, roof, surface, gametime",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "AWAY",
+    "claim": "Rest differential +7 in favour of Cincinnati.",
+    "value": 7,
+    "unit": "days",
+    "source": "nflverse schedules games.csv columns away_rest, home_rest, div_game, roof, surface, gametime",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "HOME",
+    "claim": "Divisional game, both AFC North.",
+    "value": 1,
+    "unit": "boolean",
+    "source": "nflverse schedules games.csv columns away_rest, home_rest, div_game, roof, surface, gametime column div_game",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "HOME",
+    "claim": "Kickoff window 13:00 local, Sunday early.",
+    "value": "1pm",
+    "source": "ESPN scoreboard event 401873012 date 2026-10-25T17:00Z",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "HOME",
+    "claim": "Records Baltimore 4-2, Cincinnati 3-2; Cincinnati off bye.",
+    "value": "4-2 / 3-2",
+    "source": "ESPN scoreboard competitors[].records; nflverse games.csv week gap",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "AWAY",
+    "claim": "Travel Cincinnati to Baltimore: 423 miles venue-to-venue (Paycor Stadium to M&T Bank Stadium).",
+    "value": 423,
+    "unit": "miles",
+    "crossCheck": "same 423 pinned in stadium-coordinates-c33 test",
+    "source": "docs/engine/intel/kb/geo/stadiums-osm-nominatim.json (OSM Nominatim venue geocodes; haversine) consumed by engine/travel-factor.ts and travelMiles()",
+    "fetchedAt": "2026-10-23T12:53:20Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L3",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "revenge-game flag",
+    "wallReason": "no column carries the flag; a prior meeting date alone does not settle it",
+    "source": "nflverse games.csv (no revenge column)",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "medium"
+  },
+  {
+    "layer": "L4",
+    "side": "HOME",
+    "claim": "Roof outdoors, surface grass.",
+    "value": "outdoors / grass",
+    "source": "nflverse schedules games.csv columns away_rest, home_rest, div_game, roof, surface, gametime columns roof, surface",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L4",
+    "side": "HOME",
+    "claim": "Forecast at kickoff 65 F, wind 2 mph SE, precipitation probability 0%.",
+    "value": "65 F / 2 mph SE / 0%",
+    "sourceTimestamp": "2026-10-23T14:52:46+00:00",
+    "source": "api.weather.gov/gridpoints/LWX/109,90/forecast/hourly period 2026-10-25T13:00-04:00",
+    "fetchedAt": "2026-10-23T12:52:56Z",
+    "confidence": "low"
+  },
+  {
+    "layer": "L4",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "crew chief, referee, crew holding/DPI rates",
+    "wallReason": "referee column empty for the 2026 fixture; assignment not published, no league average substituted",
+    "source": "nflverse schedules games.csv column referee (+ NFL Savant crew pages)",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L5",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "separation, time to throw, pressure rate, cushion, RYOE",
+    "wallReason": "NGS API returns 401 without auth; public player pages are JS-rendered",
+    "source": "https://nextgenstats.nfl.com/api/league/2026/REG/lead",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L5",
+    "side": "HOME",
+    "claim": "WALL",
+    "value": "published coordinator scheme-intent quote",
+    "wallReason": "no post-practice press conference transcript located for week 8 at fetch time",
+    "source": "https://www.baltimoreravens.com/news ; https://www.bengals.com/news",
+    "fetchedAt": "2026-10-23T12:52:00Z",
+    "confidence": "low"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "Marlon Humphrey (BAL def, weeks 5-6): 8 targets, 80.0% completion allowed, 1 pressures",
+    "value": 8,
+    "unit": "targets",
+    "crossCheck": "Tavius Robinson figures agree with ESPN injury availability (Questionable, pectoral)",
+    "source": "nflverse pfr_advstats release advstats_week_def_2026.csv columns pfr_player_name, def_targets, def_completion_pct, def_pressures, def_sacks, def_times_blitzed (team=BAL, weeks 5-6)",
+    "fetchedAt": "2026-10-23T12:53:05Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "Nate Wiggins (BAL def, weeks 5-6): 7 targets, 40.0% completion allowed",
+    "value": 7,
+    "unit": "targets",
+    "crossCheck": "Tavius Robinson figures agree with ESPN injury availability (Questionable, pectoral)",
+    "source": "nflverse pfr_advstats release advstats_week_def_2026.csv columns pfr_player_name, def_targets, def_completion_pct, def_pressures, def_sacks, def_times_blitzed (team=BAL, weeks 5-6)",
+    "fetchedAt": "2026-10-23T12:53:05Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "Kyle Hamilton (BAL def, weeks 5-6): 6 targets, 70.0% completion allowed, 11 blitzes",
+    "value": 6,
+    "unit": "targets",
+    "crossCheck": "Tavius Robinson figures agree with ESPN injury availability (Questionable, pectoral)",
+    "source": "nflverse pfr_advstats release advstats_week_def_2026.csv columns pfr_player_name, def_targets, def_completion_pct, def_pressures, def_sacks, def_times_blitzed (team=BAL, weeks 5-6)",
+    "fetchedAt": "2026-10-23T12:53:05Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "Roquan Smith (BAL def, weeks 5-6): 7 targets, 80.0% completion allowed, 2 pressures, 7 blitzes",
+    "value": 7,
+    "unit": "targets",
+    "crossCheck": "Tavius Robinson figures agree with ESPN injury availability (Questionable, pectoral)",
+    "source": "nflverse pfr_advstats release advstats_week_def_2026.csv columns pfr_player_name, def_targets, def_completion_pct, def_pressures, def_sacks, def_times_blitzed (team=BAL, weeks 5-6)",
+    "fetchedAt": "2026-10-23T12:53:05Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L2c",
+    "side": "HOME",
+    "claim": "Tavius Robinson (BAL def, weeks 5-6): 2 targets, 50.0% completion allowed, 2 pressures, 7 blitzes",
+    "value": 2,
+    "unit": "targets",
+    "crossCheck": "Tavius Robinson figures agree with ESPN injury availability (Questionable, pectoral)",
+    "source": "nflverse pfr_advstats release advstats_week_def_2026.csv columns pfr_player_name, def_targets, def_completion_pct, def_pressures, def_sacks, def_times_blitzed (team=BAL, weeks 5-6)",
+    "fetchedAt": "2026-10-23T12:53:05Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "T.J. Hawkins report pairing: Jaylinn Hawkins (S) Questionable knee while carrying 6 targets and 2 blitzes over weeks 5-6 — the outage sits on an involved coverage body.",
+    "value": 6,
+    "unit": "targets",
+    "source": "nflverse pfr_advstats release advstats_week_def_2026.csv columns pfr_player_name, def_targets, def_completion_pct, def_pressures, def_sacks, def_times_blitzed (team=BAL, weeks 5-6); ESPN summary injuries",
+    "fetchedAt": "2026-10-23T12:53:05Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "Lamar Jackson (QB) snap share 100.0% weeks 1-3, 0% weeks 5-6 — Tyler Huntley took 100%.",
+    "value": "100.0 -> 0.0",
+    "unit": "% snaps",
+    "crossCheck": "Flowers snaps +54.3pp agrees with target share +15.3pp (pbp); Bateman -31.3pp agrees with target share drop",
+    "source": "nflverse snap_counts_2026.csv column offense_pct (team, week; mean per week over the window)",
+    "fetchedAt": "2026-10-23T12:53:20Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "Zay Flowers (WR) snap share 31.0% weeks 1-3, 85.0% weeks 5-6.",
+    "value": "31.0 -> 85.0",
+    "unit": "% snaps",
+    "crossCheck": "Flowers snaps +54.3pp agrees with target share +15.3pp (pbp); Bateman -31.3pp agrees with target share drop",
+    "source": "nflverse snap_counts_2026.csv column offense_pct (team, week; mean per week over the window)",
+    "fetchedAt": "2026-10-23T12:53:20Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "HOME",
+    "claim": "Rashod Bateman (WR) snap share 86.3% weeks 1-3, 55.0% weeks 5-6.",
+    "value": "86.3 -> 55.0",
+    "unit": "% snaps",
+    "crossCheck": "Flowers snaps +54.3pp agrees with target share +15.3pp (pbp); Bateman -31.3pp agrees with target share drop",
+    "source": "nflverse snap_counts_2026.csv column offense_pct (team, week; mean per week over the window)",
+    "fetchedAt": "2026-10-23T12:53:20Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L0",
+    "side": "AWAY",
+    "claim": "Samaje Perine (RB) snap share 33.3% weeks 1-3, 43.5% weeks 4-5.",
+    "value": "33.3 -> 43.5",
+    "unit": "% snaps",
+    "crossCheck": "Flowers snaps +54.3pp agrees with target share +15.3pp (pbp); Bateman -31.3pp agrees with target share drop",
+    "source": "nflverse snap_counts_2026.csv column offense_pct (team, week; mean per week over the window)",
+    "fetchedAt": "2026-10-23T12:53:20Z",
+    "confidence": "high"
+  },
+  {
+    "layer": "L5",
+    "side": "HOME",
+    "claim": "scores24 model projects total over 45.5 at 1.56 for this fixture (their simulation conclusion, ingested for comparison).",
+    "value": "over 45.5 @ 1.56",
+    "crossCheck": "cross-model read against GSE total projection, not against a book",
+    "source": "scores24.live rapi /localized/matches/american-football/25-10-2026-baltimore-ravens-cincinnati-bengals/prediction-conclusion-market?lang=en (payload: docs/engine/intel/kb/scores24/bal-cin-prediction-conclusion.json)",
+    "fetchedAt": "2026-10-23T12:53:40Z",
+    "confidence": "medium"
+  },
+  {
+    "layer": "L5",
+    "side": "HOME",
+    "claim": "scores24 trends feed carries a results-trend block with min/max odds for this fixture.",
+    "value": "results trend block present",
+    "source": "scores24.live rapi /localized/matches/american-football/25-10-2026-baltimore-ravens-cincinnati-bengals/trends?lang=en (payload: docs/engine/intel/kb/scores24/bal-cin-trends.html)",
+    "fetchedAt": "2026-10-23T12:53:38Z",
+    "confidence": "medium"
+  }
+]

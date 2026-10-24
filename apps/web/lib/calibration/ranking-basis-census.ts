@@ -22,7 +22,7 @@
  * numbers are directly comparable rather than describing different slices.
  */
 
-import { readRankingKey, type RankingBasisCensus } from "@/lib/ranking/sort-key";
+import { rankingBasisCensus, type RankingBasisCensus } from "@/lib/ranking/sort-key";
 import { SEED_MODEL_VERSION } from "@/lib/calibration/confidence-tail";
 
 /** The subset of the Prisma client this needs. Injected, never imported. */
@@ -64,21 +64,9 @@ export async function loadRankingBasisCensus(db: RankingBasisDb): Promise<Rankin
     select: { confidence: true, factorBreakdown: true },
   });
 
-  let rankingP = 0;
-  let rankingScore = 0;
-  let confidence = 0;
-  for (const r of rows) {
-    const basis = readRankingKey(r).basis;
-    if (basis === "rankingP") rankingP += 1;
-    else if (basis === "rankingScore") rankingScore += 1;
-    else confidence += 1;
-  }
-  const total = rows.length;
-  return {
-    rankingP,
-    rankingScore,
-    confidence,
-    total,
-    confidenceShare: total === 0 ? 0 : confidence / total,
-  };
+  // Delegated, not re-implemented: a second copy of the cascade is how a census
+  // drifts from the comparator it claims to describe (sort-key.ts says the same
+  // about its own basis/key split). The market branch therefore lands here for
+  // free instead of needing a parallel edit.
+  return rankingBasisCensus(rows);
 }

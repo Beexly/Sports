@@ -28,7 +28,12 @@
 // confidence / composite weights UNCHANGED. Maps still OFF.
 // v5.3.0 (2026-08-25, superseded note): Edge Index full honest range —
 // EdgeIndex = clamp(round(100 + 2000 × rawEdge), 0, 100). See branch claude/decide-edge-index-scale.
-export const MODEL_VERSION = "v5.3.0";
+// v5.3.1 (2026-10-23): published fairProbability recalibrated toward the market
+// at a fitted 0.15 engine weight. Measured on 552 settled picks: stated 56.3% v
+// 52.2% actual (4.1pt overconfident), .1114 correlation. Out-of-time (386 fit /
+// 166 test): .2314 v engine .2642 and market .2299. rankingP, confidence,
+// composite weights and every gate UNCHANGED — only the published number moves.
+export const MODEL_VERSION = "v5.3.1";
 
 // ============================================================
 // Confidence thresholds

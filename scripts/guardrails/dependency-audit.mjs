@@ -91,6 +91,12 @@ const ACCEPTED = [
     maxSeverity: "high",
   },
   {
+    package: "zod",
+    reviewBy: "2027-01-15",
+    reason: "Waived 2026-10-24: the advisory is fixed only in zod 4.6.6+, and the codebase (fable/labeling.ts, gse/waitlist-validation.ts) is written against the zod 3 API - a first 4.6.6 lock bump broke type-check on those two files (TS2554/TS2769). Migration to zod 4 is a tracked task; the affected usage is request validation, not auth surface.",
+    maxSeverity: "high",
+  },
+  {
     package: "postcss",
     reviewBy: "2027-01-15",
     reason: "Only the copy bundled inside next/node_modules is affected; it is remediated by the same next@16 major upgrade. The top-level postcss is already patched.",

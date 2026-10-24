@@ -54,7 +54,12 @@ const FIXTURE_MODE = scanRootIndex !== -1;
 const pinIndex = argv.indexOf("--pin");
 const AS_JSON = argv.includes("--json");
 
-const SKIP_DIRS = new Set(["node_modules", ".next", "dist", "build", "coverage", ".git", ".turbo", "out", "target"]);
+const SKIP_DIRS = new Set([
+  "node_modules", ".next", "dist", "build", "coverage", ".git", ".turbo", "out", "target",
+  // Sibling agent worktrees are separate checkouts; walking them reports their
+  // container pins as if this tree shipped them.
+  ".worktrees",
+]);
 const YAML_EXTS = new Set([".yml", ".yaml"]);
 
 /**
