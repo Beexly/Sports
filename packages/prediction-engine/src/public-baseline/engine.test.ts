@@ -7,7 +7,7 @@ import { KILLED_EDGES, mayReopen } from "./killed.js"
 import { ANCHOR_MOTION_PA_SINGLE, computeGseDwp, computeGseQptsr, computeGseSii, computeGseSpese, computeGseSva, computeGseTor } from "./metrics.js"
 import { SOURCE_REGISTRY } from "./registry.js"
 import { captainPoints, captainSalary, SHOWDOWN_CAP, underCap, withinTeamLimit } from "./lineup.js"
-import { multiplicativeDevig, powerDevig } from "./devig.js"
+import { additiveDevig, compareDevig, multiplicativeDevig, powerDevig, shinDevig } from "./devig.js"
 import { parseEspnScoreboard } from "./espn.js"
 import { NFL_COMPETITION_ID, fixturesUrl, homeAwayScore, homeVsAway, parseScores365 } from "./scores365.js"
 import { bestTeamTitleRate, brierScore, pageCusum, reliabilityBins, seriesWinProb } from "./research.js"
@@ -202,6 +202,15 @@ describe("shrinkage, withhold, metrics, fence", () => {
     assert.ok(power[0]! < 0.6)
     assert.ok(Math.abs(0.584 + 0.4202 - 1) > 0.004)
     assert.ok(0.6557 > 0.6)
+    const book = compareDevig([-150, 130])
+    assert.ok(Math.abs(book.additive[0]! - 0.5826086957) < 1e-9)
+    assert.ok(Math.abs(book.shin[0]! - book.additive[0]!) < 1e-9)
+    assert.ok(Math.abs(book.powerK - 1.05297) < 1e-4)
+    const three = [-100, 700 / 3, 300]
+    const shin = shinDevig(three)
+    const add = additiveDevig(three)
+    assert.ok(Math.abs(shin[0]! - add[0]!) > 0.001)
+    assert.ok(Math.abs(shin.reduce((s, p) => s + p, 0) - 1) < 1e-8)
   })
 
   it("scores calibration, finds a break, and shows the best team does not always win", () => {
