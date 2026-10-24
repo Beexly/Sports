@@ -35,18 +35,28 @@ describe("NE@CHI 401873010 public-feed fixture", () => {
   })
 
   it("finds the matching NFL row on the 365Scores fixtures board (competition 352)", async () => {
-    const board = parseScores365(await getJson(fixturesUrl())) as ScoresBoard
-    const game = board.games.find(
-      (g) =>
-        g.competitionId === 352 &&
-        ((g.home.abbr === "CHI" && g.away.abbr === "NE") || (g.home.abbr === "NE" && g.away.abbr === "CHI")),
-    )
+    // Walk the paged fixtures board until the CHI/NE row appears (or 4 pages).
+    let url: string | null = fixturesUrl()
+    let pages = 0
+    let game = null as ReturnType<typeof parseScores365>["games"][number] | null
+    while (url && pages < 4 && !game) {
+      const board = parseScores365(await getJson(url)) as ScoresBoard
+      game =
+        board.games.find(
+          (g) =>
+            g.competitionId === 352 &&
+            ((g.home.abbr === "CHI" && g.away.abbr === "NE") || (g.home.abbr === "NE" && g.away.abbr === "CHI")),
+        ) ?? null
+      pages += 1
+      const nxt = board.paging.nextPage
+      url = typeof nxt === "number" ? `${fixturesUrl()}&page=${nxt}` : null
+    }
     assert.ok(game, "a competition-352 CHI/NE row must exist in the fixtures window")
-    assert.equal(game.competitionId, 352)
+    assert.equal(game!.competitionId, 352)
     // A Final row keeps its real score; -1/absent stays unplayed.
-    if (game.status.toLowerCase().includes("final")) {
-      assert.notEqual(game.home.score, null)
-      assert.notEqual(game.away.score, null)
+    if (game!.status.toLowerCase().includes("final")) {
+      assert.notEqual(game!.home.score, null)
+      assert.notEqual(game!.away.score, null)
     }
   })
 
