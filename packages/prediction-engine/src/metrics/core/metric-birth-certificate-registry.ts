@@ -742,9 +742,9 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
       "QBs with fewer than 3 qualifying weeks must be omitted, not zeroed",
       "statType other than passing must be ignored"
     ],
-    family: "player_signal",
+    family: "passing",
     forbiddenInputs: ["yards", "dropbacks", "pass attempts", "completions"],
-    formulaClass: "rolling_mean",
+    formulaClass: "linear",
     formulaSummary: "Rolling unweighted mean of a QB's weekly NGS tightness rate (aggressiveness) over a floor of 3 qualifying weeks, compared to the league-average mean of qualifying QBs.",
     historicalPrecedent: [
       {

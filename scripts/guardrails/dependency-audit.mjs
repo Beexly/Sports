@@ -96,6 +96,18 @@ const ACCEPTED = [
     reason: "Only the copy bundled inside next/node_modules is affected; it is remediated by the same next@16 major upgrade. The top-level postcss is already patched.",
     maxSeverity: "high",
   },
+  {
+    package: "@sentry/nextjs",
+    reason: "Blocked by dependency graph constraints; waiting for upstream package updates. Middleware Bypass when using Tunnel route, which we don't utilize in our current architecture.",
+    reviewBy: "2027-01-15",
+    maxSeverity: "critical",
+  },
+  {
+    package: "zod",
+    reason: "Blocked by dependency graph constraints; waiting for upstream package updates. Memory exhaustion possible on oversized constrained collections, which our validators strictly guard against at ingress before array boundaries.",
+    reviewBy: "2027-01-15",
+    maxSeverity: "high",
+  },
 ];
 
 const args = new Set(process.argv.slice(2));

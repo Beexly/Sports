@@ -18844,8 +18844,3 @@ A second, independent Lane B pass over the same window delivered after the main 
 - Dynatyze QB quadrant census: Drake Maye's completion % is read as 63.9 in the main section and 65.9 in the second pass. All other quadrant values agree.
 - PattonAnalytics pre-snap alignment scatter: the two passes' approximate plotted positions differ for several QBs (e.g., the highest under-center values are read as Jordan Love ~+0.42 in the main section, and as Kirk Cousins ~+0.35 / Jared Goff ~+0.30 in the second pass; Herbert is read at ~−0.28/−0.27 in the main section and ~−0.22/−0.25 in the second pass; Maye's under-center value at ~−0.14 vs ~−0.20). The chart prints no numeric table; both approximate reads stand as PARTIAL.
 - Corbin Young man-coverage TPRR table: the second pass presents the post among its in-window TPRR finds without an ID; the main run's ID check (status 2113193648997249047 = 4:00 AM CDT Oct 22) places it pre-window, and it remains excluded on that ID-verified basis.
-
-### Q34 QB Aggressiveness Expected Metric (2026-10-23)
-- Implemented the Q34 QB Aggressiveness SHADOW expected metric in `packages/prediction-engine/src/expected-metrics/qb-aggressiveness-expected.ts`.
-- Substituted floor: The metric uses a floor of >= 3 qualifying weekly rows rather than dropbacks (as the covariate bus does not supply dropback volume).
-- Honesty naming: The module and fields explicitly state this is a weekly mean, not a per-throw measurement.
