@@ -1,0 +1,41 @@
+{
+  "pulled": "2026-10-24",
+  "rea": "rea 6.7.0 capture-browser-scenario, Chrome for Testing, no login and no token reuse",
+  "open": [
+    {
+      "site": "FantasyPros",
+      "surface": "https://partners.fantasypros.com/api/v1/consensus-rankings.php",
+      "found_by": "rea on https://www.fantasypros.com/nfl/rankings/qb.php, then the partners host answered without a key",
+      "holds": "2026 week 7 ECR and the draft ECR. 44 experts on the QB week board, 176 on the draft board."
+    },
+    {
+      "site": "FantasyPros injuries",
+      "surface": "https://partners.fantasypros.com/api/v1/player-injuries.php?sport=NFL&year=2026&week=7",
+      "found_by": "rea network capture",
+      "holds": "367 injury rows"
+    },
+    {
+      "site": "Footballguys",
+      "surface": "https://www.footballguys.com/rankings/duration/weekly?pos=",
+      "found_by": "rea, then the HTML table",
+      "holds": "week 7 ranks and projected points for QB, RB, WR, TE, PK, TD, FLEX"
+    },
+    {
+      "site": "Fantasy Guru",
+      "surface": "https://www.footballguys.com/rankings/ranker/bob-harris/duration/weekly?year=2026&week=7&pos=qb",
+      "found_by": "linked from the Footballguys page rea opened",
+      "holds": "Bob Harris week 7 QB board. fantasyguru.com itself is a shop page, not the board."
+    }
+  ],
+  "closed": [
+    {"site": "FantasyPros v2 API", "result": "403 Missing Authentication Token. The partners host above does not need that token."},
+    {"site": "Rotowire injury table", "result": "200, but team=ALL returns 5 rows and ignores the team filter. Not a full injury report."},
+    {"site": "Pro Football Reference", "result": "403. The 2026 week file already in nflverse pfr_advstats is the public copy."},
+    {"site": "FTN", "result": "403 on the site. nflverse ftn_charting through 2026 is the public copy. No login was attempted."},
+    {"site": "Next Gen Stats", "result": "401. Not bypassed. Participation through 2025 already carries time to throw and was_pressure."},
+    {"site": "Fantasy Life", "result": "Public pages are articles. An SSE url on the page carried a token. The token was not used."},
+    {"site": "NumberFire", "result": "Public pages are articles and FanDuel links. No rankings feed."},
+    {"site": "4for4", "result": "The rankings URL returned 404."},
+    {"site": "PlayerProfiler", "result": "rea timed out. Nothing was taken."}
+  ]
+}
