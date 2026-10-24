@@ -10,6 +10,7 @@ import { captainPoints, captainSalary, SHOWDOWN_CAP, underCap, withinTeamLimit }
 import { multiplicativeDevig, powerDevig } from "./devig.js"
 import { parseEspnScoreboard } from "./espn.js"
 import { NFL_COMPETITION_ID, fixturesUrl, homeAwayScore, homeVsAway, parseScores365 } from "./scores365.js"
+import { bestTeamTitleRate, brierScore, pageCusum, reliabilityBins, seriesWinProb } from "./research.js"
 import { SHIFT_FLOOR, shouldWithhold, situationalShift } from "./withhold.js"
 
 describe("538 team Elo", () => {
@@ -201,5 +202,41 @@ describe("shrinkage, withhold, metrics, fence", () => {
     assert.ok(power[0]! < 0.6)
     assert.ok(Math.abs(0.584 + 0.4202 - 1) > 0.004)
     assert.ok(0.6557 > 0.6)
+  })
+
+  it("scores calibration, finds a break, and shows the best team does not always win", () => {
+    assert.equal(brierScore([{ p: 1, y: 1 }, { p: 0, y: 0 }]), 0)
+    assert.equal(brierScore([{ p: 0.5, y: 1 }, { p: 0.5, y: 0 }]), 0.25)
+    assert.equal(brierScore([]), null)
+    const bins = reliabilityBins(
+      [
+        { p: 0.2, y: 0 },
+        { p: 0.8, y: 1 },
+      ],
+      5,
+    )
+    assert.equal(bins?.length, 2)
+    assert.equal(seriesWinProb(0.6, 1), 0.6)
+    const series = seriesWinProb(0.6, 7)
+    assert.ok(series != null && series > 0.6 && series < 1)
+    assert.equal(pageCusum([0, 0, 0, 0], 0, 1).breakAt, null)
+    assert.equal(pageCusum([0, 0, 3, 3], 0, 4).breakAt, 3)
+    const games = [
+      { home: 0, away: 1, pHome: 0.9 },
+      { home: 1, away: 0, pHome: 0.1 },
+    ]
+    const rate = bestTeamTitleRate(games, 2, 0, 200, 7)
+    assert.ok(rate != null && rate > 0.7)
+    const coin = bestTeamTitleRate(
+      [
+        { home: 0, away: 1, pHome: 0.5 },
+        { home: 1, away: 0, pHome: 0.5 },
+      ],
+      2,
+      0,
+      400,
+      11,
+    )
+    assert.ok(coin != null && coin < 0.7)
   })
 })
