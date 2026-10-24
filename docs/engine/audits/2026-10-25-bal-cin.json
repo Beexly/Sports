@@ -1,0 +1,102 @@
+{
+  "game_id": "401873012",
+  "matchup": "BAL@CIN",
+  "status": "scheduled",
+  "play_signed": false,
+  "class_a_imports_odds": false,
+  "note": "Wall register only. No wall below is a signed factor for this game. A public source name is not a joined row.",
+  "final": null,
+  "walls": [
+    {
+      "id": "L0",
+      "name": "participation",
+      "status": "named-gap",
+      "public_source": "sportsdataverse api.nfl.com v2 + nflverse package counts",
+      "blocked": "in-season motion charting is not on the public play-by-play"
+    },
+    {
+      "id": "L1",
+      "name": "practice injury report",
+      "status": "named-gap",
+      "public_source": "public injury report status only",
+      "blocked": "DNP/LP/FP practice detail is not in the report"
+    },
+    {
+      "id": "L2a",
+      "name": "FTN shadow matrix",
+      "status": "named-gap",
+      "public_source": "none — api.ftnfantasy.com is identity-gated",
+      "blocked": "no account, no token, no bypass"
+    },
+    {
+      "id": "L2b",
+      "name": "route x shell",
+      "status": "reference-only",
+      "public_source": "hermes/ship-night-findings 4fecd26 cube: hitch/dig vs split-safety, quick-out/shallow-cross vs single-high",
+      "blocked": "four-route reference is not a BAL@CIN factor row"
+    },
+    {
+      "id": "L2c",
+      "name": "player vs scheme",
+      "status": "named-gap",
+      "public_source": "NGS participation is a postseason release",
+      "blocked": "in-season participation is gated"
+    },
+    {
+      "id": "L2d",
+      "name": "coach names",
+      "status": "named-gap",
+      "public_source": "nflverse games.csv coach columns",
+      "blocked": "CoachGrudgeTensor builder is not written"
+    },
+    {
+      "id": "L3",
+      "name": "stadium coordinates",
+      "status": "named-gap",
+      "public_source": "public OSM when the file is in tree",
+      "blocked": "revenge and contract-milestone builders are not written"
+    },
+    {
+      "id": "L4",
+      "name": "referee",
+      "status": "named-gap",
+      "public_source": "scores24 public HTML",
+      "blocked": "parser is not in this repo; crew is not confirmed here"
+    },
+    {
+      "id": "L5",
+      "name": "weekly NGS and transcripts",
+      "status": "named-gap",
+      "public_source": "transcripts only where the page is public",
+      "blocked": "in-season NGS separation is gated"
+    },
+    {
+      "id": "W10",
+      "name": "PlayerVendettaVector",
+      "status": "named-gap",
+      "public_source": "public matchup history",
+      "blocked": "builder not written"
+    },
+    {
+      "id": "W11",
+      "name": "TendencyBreakerTrigger",
+      "status": "named-gap",
+      "public_source": "public tendency splits",
+      "blocked": "builder not written"
+    },
+    {
+      "id": "W12",
+      "name": "college coverage shells",
+      "status": "named-gap",
+      "public_source": "public college play-by-play",
+      "blocked": "not joined"
+    },
+    {
+      "id": "W13",
+      "name": "sign-stability cell join",
+      "status": "named-gap",
+      "public_source": "nflverse play-by-play 2023-2025 on game_id+play_id",
+      "blocked": "the gate consumes a cell; it does not build the cube"
+    }
+  ]
+}

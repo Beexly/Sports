@@ -60,3 +60,33 @@ export { ESPN_NFL_SCOREBOARD, parseEspnScoreboard } from "./espn.js"
 export type { EspnBoard } from "./espn.js"
 export { brierScore, reliabilityBins, pageCusum, seriesWinProb, bestTeamTitleRate } from "./research.js"
 export type { ReliabilityBin, SeasonGame } from "./research.js"
+export {
+  WP_GARBAGE_HI,
+  WP_GARBAGE_LO,
+  feedDest,
+  isKneelOrSpike,
+  isGarbageWp,
+  gradeRealizedPlays,
+  FeedWriter,
+  settleAndWrite,
+} from "./realized-settlement.js"
+export type { RealizedPlay, TrainerRecord } from "./realized-settlement.js"
+export {
+  CADENCE,
+  T_MINUS_MINUTES,
+  FIVE_MIN_SLOTS,
+  XOR_WORDS,
+  chicagoParts,
+  dueVersion,
+  tMinus90,
+  sealLock,
+  emptyMask,
+  slotIndex,
+  setBit,
+  xorMasks,
+} from "./cadence.js"
+export type { CadenceVersion, WallClock, SnapshotLock } from "./cadence.js"
+export { findBookImports, assertNoBookInCoachSource } from "./no-book-fence.js"
+export { NE_CHI_GAME_ID, NE_CHI_FINAL, rejectNarrative } from "./narrative-rejections.js"
+export type { PublicFacts, NarrativeClaim, NarrativeRejection } from "./narrative-rejections.js"
+export { marchenkoPasturEdges, flagOutsideBulk } from "./marchenko.js"

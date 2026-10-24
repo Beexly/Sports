@@ -2,6 +2,9 @@
  * Markov simulator tests: cell gate refuses unstable/missing cells, the seven
  * metrics go null with them, the anchors are constants (never refit), the
  * NegBin/FG/kneeldown step parameters hold, and the coach path stays odds-free.
+ *
+ * James-Stein: a single cell is not shrunk (d < 3 returns the raw lean).
+ * |lean| < 0.03 withholds. A d >= 3 vector with a sampling variance does shrink.
  */
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
@@ -10,7 +13,6 @@ import { describe, it } from "node:test"
 import {
   advanceOutcome,
   ANCHORS,
-  cellKey,
   checkdownSubstitution,
   COPULA_TAUS,
   FG_RATES,
@@ -21,11 +23,11 @@ import {
   REDZONE_TD_VARIANCE_TO_MEAN,
   sevenMetrics,
   SHADOW_HAIRCUT_MIN,
+  shrinkSituational,
   sinkhorn,
   type Cube,
   type MarkovState,
 } from "./markov-simulator.js"
-import { positivePartJamesStein } from "./public-baseline/jamesStein.js"
 import { shouldWithhold } from "./public-baseline/withhold.js"
 
 const stable = (n: number, epaSum: number) => ({
@@ -50,6 +52,14 @@ const BASE_STATE: MarkovState = {
   yardline: 45,
 }
 
+const cells = {
+  packageCell: stable(500, 10),
+  shellBoxCell: stable(500, 10),
+  pressureCell: stable(500, 10),
+  routeCell: stable(500, 10),
+  outcomeCell: stable(1000, 40),
+}
+
 describe("markov cell gate", () => {
   it("accepts a reported, sign-stable cell", () => {
     const cube: Cube = { "outcome|3|1|9": stable(5656, 944.6) }
@@ -61,23 +71,20 @@ describe("markov cell gate", () => {
     const cube: Cube = { "outcome|3|1|9": unstable(100, 5) }
     const g = gateCell(cube, "outcome|3|1|9")
     assert.ok("receipt" in g)
-    assert.equal(g.receipt.reason, "unstable-cell")
+    if ("receipt" in g) assert.equal(g.receipt.reason, "unstable-cell")
   })
 
   it("refuses a missing cell with a missing-cell receipt", () => {
     const g = gateCell({}, "outcome|3|1|9")
     assert.ok("receipt" in g)
-    assert.equal(g.receipt.reason, "missing-cell")
+    if ("receipt" in g) assert.equal(g.receipt.reason, "missing-cell")
   })
 })
 
 describe("advanceOutcome", () => {
   it("draws no EPA and emits a receipt when the outcome cell is unstable", () => {
     const r = advanceOutcome(BASE_STATE, {
-      packageCell: stable(500, 10),
-      shellBoxCell: stable(500, 10),
-      pressureCell: stable(500, 10),
-      routeCell: stable(500, 10),
+      ...cells,
       outcomeCell: unstable(50, -2),
       rawSituationalEpa: 0.4,
     })
@@ -91,35 +98,62 @@ describe("advanceOutcome", () => {
     if (!r.ok) assert.equal(r.receipt.module, "personnel-package")
   })
 
-  it("withholds when |situationalShift| < 0.03 and applies the shrink", () => {
+  it("withholds a single cell under 0.03 and does not inflate it", () => {
     const raw = 0.02
-    const shrunk = positivePartJamesStein([raw])[0]
-    const r = advanceOutcome(BASE_STATE, {
-      packageCell: stable(500, 10),
-      shellBoxCell: stable(500, 10),
-      pressureCell: stable(500, 10),
-      routeCell: stable(500, 10),
-      outcomeCell: stable(1000, 40),
-      rawSituationalEpa: raw,
-    })
+    assert.equal(shrinkSituational(raw), raw)
+    const r = advanceOutcome(BASE_STATE, { ...cells, rawSituationalEpa: raw })
     assert.equal(r.ok, true)
     if (r.ok) {
-      assert.equal(r.withheld, shouldWithhold(Math.abs(situationalShift(raw, shrunk))))
-      assert.equal(r.epa, 0) // withheld cell does not move the projection
+      assert.equal(r.withheld, shouldWithhold(raw))
+      assert.equal(r.epa, 0)
     }
   })
 
-  it("moves the projection when the shift clears the floor", () => {
+  it("moves the projection when a single cell clears the floor", () => {
+    const raw = 0.9
+    const r = advanceOutcome(BASE_STATE, { ...cells, rawSituationalEpa: raw })
+    assert.equal(r.ok, true)
+    if (r.ok) {
+      assert.equal(r.withheld, false)
+      assert.equal(r.epa, raw)
+    }
+  })
+
+  it("does not shrink d = 2 even when sigma2 is supplied", () => {
+    assert.equal(shrinkSituational(0.9, [0.1], 0.083), 0.9)
+  })
+
+  it("shrinks a d >= 3 vector by the positive-part factor", () => {
+    const raw = 0.9
+    const siblings = [0.1, 0.1] as const
+    const sigma2 = 0.083
+    const expected = shrinkSituational(raw, siblings, sigma2)
+    assert.ok(Math.abs(expected - 0.81) < 1e-12)
     const r = advanceOutcome(BASE_STATE, {
-      packageCell: stable(500, 10),
-      shellBoxCell: stable(500, 10),
-      pressureCell: stable(500, 10),
-      routeCell: stable(500, 10),
-      outcomeCell: stable(1000, 40),
-      rawSituationalEpa: 0.9,
+      ...cells,
+      rawSituationalEpa: raw,
+      siblingEpas: siblings,
+      sigma2,
     })
     assert.equal(r.ok, true)
-    if (r.ok) assert.equal(r.withheld, false)
+    if (r.ok) {
+      assert.equal(r.withheld, false)
+      assert.ok(Math.abs(r.epa - expected) < 1e-12)
+    }
+  })
+
+  it("positive-part zeros a dominated vector and then withholds", () => {
+    const r = advanceOutcome(BASE_STATE, {
+      ...cells,
+      rawSituationalEpa: 0.01,
+      siblingEpas: [0.01, 0.01],
+      sigma2: 0.01,
+    })
+    assert.equal(r.ok, true)
+    if (r.ok) {
+      assert.equal(r.withheld, true)
+      assert.equal(r.epa, 0)
+    }
   })
 })
 
@@ -140,14 +174,8 @@ describe("measured anchors (constants, never refit)", () => {
   })
 
   it("step 6: trailing inside two minutes substitutes the checkdown", () => {
-    assert.equal(
-      checkdownSubstitution({ ...BASE_STATE, clockSeconds: 90, scoreDiff: -4 }),
-      true,
-    )
-    assert.equal(
-      checkdownSubstitution({ ...BASE_STATE, clockSeconds: 90, scoreDiff: 4 }),
-      false,
-    )
+    assert.equal(checkdownSubstitution({ ...BASE_STATE, clockSeconds: 90, scoreDiff: -4 }), true)
+    assert.equal(checkdownSubstitution({ ...BASE_STATE, clockSeconds: 90, scoreDiff: 4 }), false)
   })
 
   it("step 7: calm field-goal make rates by band", () => {
@@ -179,10 +207,8 @@ describe("seven metrics go null on an unstable cell", () => {
       "sii|split": stable(300, 30),
     }
     const input = { sii: { single: stable(300, 45), split: stable(300, 30) } }
-    const outUnstable = sevenMetrics(cubeUnstable, input)
-    assert.equal(outUnstable["GSE-SII"], null)
-    const outStable = sevenMetrics(cubeStable, input)
-    assert.equal(outStable["GSE-SII"], (45 / 300) - (30 / 300))
+    assert.equal(sevenMetrics(cubeUnstable, input)["GSE-SII"], null)
+    assert.equal(sevenMetrics(cubeStable, input)["GSE-SII"], 45 / 300 - 30 / 300)
   })
 
   it("all seven keys exist and default to null", () => {
@@ -205,7 +231,7 @@ describe("sinkhorn on stable cells", () => {
       assert.ok(Math.abs(row.reduce((a, b) => a + b, 0) - 1) < 1e-9)
     }
     for (let j = 0; j < 3; j++) {
-      const col = P.reduce((a, r) => a + r[j], 0)
+      const col = P.reduce((a, r) => a + r[j]!, 0)
       assert.ok(Math.abs(col - 1) < 1e-9)
     }
   })

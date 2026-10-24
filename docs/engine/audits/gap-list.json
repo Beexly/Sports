@@ -1,26 +1,32 @@
 {
   "audited_at": "2026-10-24",
   "branch": "engine/public-baseline-2026-10-24",
-  "head": "4e55d02ee",
+  "head": "child-of-1d679ba77",
   "roots_scanned": [
     "packages/prediction-engine/src/public-baseline/",
-    "packages/prediction-engine/src/simulators/",
+    "packages/prediction-engine/src/markov-simulator.ts",
     "apps/web/lib/intelligence-core/"
   ],
   "live": {
     "packages/prediction-engine/src/public-baseline/elo538.ts": ["winProb", "movMultiplier", "absDeltaMultiplier", "replay", "publicPrior", "HFA=65", "K=20", "REVERT=1/3->1505", "REVERSIONS(11)"],
-    "packages/prediction-engine/src/public-baseline/jamesStein.ts": ["positivePartJamesStein"],
-    "packages/prediction-engine/src/public-baseline/withhold.ts": ["situationalShift", "shouldWithhold", "SHIFT_FLOOR"],
+    "packages/prediction-engine/src/public-baseline/jamesStein.ts": ["positivePartJamesStein", "d<3 returns raw"],
+    "packages/prediction-engine/src/public-baseline/withhold.ts": ["situationalShift(obs[], restDays)", "shouldWithhold", "SHIFT_FLOOR=0.03"],
     "packages/prediction-engine/src/public-baseline/metrics.ts": ["cellEpa", "computeGseSii", "computeGseQptsr", "computeGseRls", "computeGseSpese", "computeGseTor", "computeGseSva", "computeGseDwp", "shannonBits"],
     "packages/prediction-engine/src/public-baseline/fence.ts": ["assertCoachInputs", "CoachFenceError"],
-    "packages/prediction-engine/src/public-baseline/lineup.ts": ["SHOWDOWN_CAP=50000", "SHOWDOWN_SLOTS", "CAPTAIN_MULT=1.5", "captainSalary", "captainPoints", "underCap", "withinTeamLimit"],
+    "packages/prediction-engine/src/public-baseline/no-book-fence.ts": ["findBookImports", "assertNoBookInCoachSource"],
+    "packages/prediction-engine/src/public-baseline/lineup.ts": ["SHOWDOWN_CAP=50000", "SHOWDOWN_SLOTS", "CAPTAIN_MULT=1.5"],
     "packages/prediction-engine/src/public-baseline/killed.ts": ["KILLED_EDGES (steam r=+0.005 n=193)", "mayReopen"],
     "packages/prediction-engine/src/public-baseline/registry.ts": ["SOURCE_REGISTRY"],
-    "packages/prediction-engine/src/public-baseline/devig.ts": ["americanImplied", "multiplicativeDevig", "additiveDevig", "shinDevig", "powerExponent"],
-    "packages/prediction-engine/src/public-baseline/research.ts": ["brierScore", "reliabilityBins", "pageCusum", "seriesWinProb"],
-    "packages/prediction-engine/src/public-baseline/scores365.ts": ["currentGamesUrl", "fixturesUrl", "parseScores365", "fixturesWindow", "NFL_COMPETITION_ID=352", "numeric paging"],
-    "packages/prediction-engine/src/public-baseline/espn.ts": ["ESPN_NFL_SCOREBOARD", "parseEspnScoreboard (homeAway-keyed, pre+0 unplayed)"],
-    "packages/prediction-engine/src/public-baseline/milp.ts": ["solveLineupsViaPydfs (pydfs-lineup-optimizer MIT bridge)", "pydfsAvailable"],
+    "packages/prediction-engine/src/public-baseline/devig.ts": ["americanImplied", "multiplicativeDevig", "additiveDevig", "shinDevig", "powerDevig", "powerExponent"],
+    "packages/prediction-engine/src/public-baseline/research.ts": ["brierScore", "reliabilityBins", "pageCusum", "seriesWinProb", "bestTeamTitleRate"],
+    "packages/prediction-engine/src/public-baseline/scores365.ts": ["NFL_COMPETITION_ID=352", "string cursor paging", "sports=6 is not NFL"],
+    "packages/prediction-engine/src/public-baseline/espn.ts": ["parseEspnScoreboard (homeAway-keyed, pre+0 unplayed)"],
+    "packages/prediction-engine/src/public-baseline/milp.ts": ["solveLineupsViaPydfs", "pydfsAvailable"],
+    "packages/prediction-engine/src/public-baseline/realized-settlement.ts": ["gradeRealizedPlays", "FeedWriter single-writer", "brain/feeds/<date>/trainer.jsonl", "refuses mind.jsonl"],
+    "packages/prediction-engine/src/public-baseline/cadence.ts": ["v1.0 Tue 04:00 CT", "v2.0 Wed 17:00 CT", "v3.0 Fri 16:30 CT", "v4.0 T-90m", "sealLock merkle", "Uint32Array(9) XOR"],
+    "packages/prediction-engine/src/public-baseline/narrative-rejections.ts": ["401873010 CHI 30 NE 24", "playSigned false"],
+    "packages/prediction-engine/src/public-baseline/marchenko.ts": ["marchenkoPasturEdges", "flagOutsideBulk only if public and unpriced"],
+    "packages/prediction-engine/src/markov-simulator.ts": ["shrinkSituational d>=3", "gateCell", "ANCHORS", "kneeldown -1.06", "NegBin VMR 1.82-1.92", "seven metrics null on unstable"],
     "packages/prediction-engine/scripts/pydfs_bridge.py": ["stdin JSON -> Captain/Classic lineups (1.5x mirrored)"],
     "packages/prediction-engine/src/simulators/2306-00840v1-muzero-planning-audit.ts": ["MuZero planning audit (paper 2306.00840v1)"],
     "apps/web/lib/intelligence-core/engine.ts": ["intelligence-core engine"],
@@ -35,15 +41,7 @@
     "apps/web/lib/intelligence-core/ngs-units.ts": ["NGS units"]
   },
   "gaps": [
-    {"module": "packages/prediction-engine/src/markov-simulator.ts", "reason": "named-gap", "publicSource": "nflverse play-by-play 2023-2025 (cell join on game_id+play_id); anchors fixed by work order (motion+PA vs single-high +0.167 EPA n=5656; pressure>2.0s ~0.42 EPA tax; sack 15.8% vs 10.1%; two-high 18.2%->15.6%)"},
-    {"module": "settlement: T+2h realized-pbp grader -> brain/feeds/<date>/", "reason": "named-gap", "publicSource": "nflverse play-by-play (post-final)"},
-    {"module": "cadence locks: v1.0 Tue 04:00 / v2.0 Wed 17:00 / v3.0 Fri 16:30 / v4.0 Sun T-90m with valid_time+transaction_time+Merkle", "reason": "named-gap", "publicSource": "internal (cube hash)"},
-    {"module": "5-minute XOR pass (288-bit changed-bits)", "reason": "named-gap", "publicSource": "internal"},
-    {"module": "no-book-in-coach-engine-fence.ts build-time guard", "reason": "named-gap", "publicSource": "internal"},
-    {"module": "NE@CHI narrative rejections (4 OL vs 2, 15mph wind vs 5.1, Bears -1.5 vs -3.0, Gonzalez hip vs illness)", "reason": "named-gap", "publicSource": "public pre-kickoff bundle (weather reports, OL depth, injury report)"},
-    {"module": "docs/engine/audits/2026-10-25-bal-cin.json", "reason": "named-gap", "publicSource": "ESPN scoreboard 401873012 + 365Scores fixtures 352 at T-0"},
-    {"module": "sign-stability join 2023/2024/2025 (game_id+play_id cell builder)", "reason": "named-gap", "publicSource": "nflverse play-by-play seasons 2023-2025"},
-    {"module": "Marchenko-Pastur/BBP bulk-edge watcher", "reason": "named-gap", "publicSource": "cube eigenvalues from public factors"},
+    {"module": "sign-stability join 2023/2024/2025 (game_id+play_id cell builder)", "reason": "named-gap", "publicSource": "nflverse play-by-play seasons 2023-2025. The gate consumes a cell. It does not build the cube."},
     {"module": "coach grudge tensor (CoachGrudgeTensor)", "reason": "named-gap", "publicSource": "public games.csv coach names"},
     {"module": "player vendetta vector (PlayerVendettaVector)", "reason": "named-gap", "publicSource": "public matchup history"},
     {"module": "tendency breaker trigger (TendencyBreakerTrigger)", "reason": "named-gap", "publicSource": "public tendency splits"},
@@ -51,12 +49,21 @@
     {"module": "in-season NGS participation", "reason": "named-gap", "publicSource": "postseason NGS release"},
     {"module": "college coverage shells", "reason": "named-gap", "publicSource": "public college pbp"},
     {"module": "L4 referee parser (scores24 public HTML + crew-list confirm)", "reason": "named-gap", "publicSource": "scores24 public HTML"},
-    {"module": "L3 stadium coordinates (OSM)", "reason": "named-gap", "publicSource": "public OSM if file exists"},
+    {"module": "L3 stadium coordinates (OSM) plus revenge/milestone builders", "reason": "named-gap", "publicSource": "public OSM if file exists"},
     {"module": "L1 practice detail DNP/LP/FP", "reason": "named-gap", "publicSource": "public injury report gives status only"},
-    {"module": "Class C nflfastR EPA/WP/XYAC + nfl4th call-through", "reason": "named-gap", "publicSource": "nflfastR model artifacts (R) — call, never reimplement"}
+    {"module": "Class C nflfastR EPA/WP/XYAC + nfl4th call-through", "reason": "named-gap", "publicSource": "nflfastR model artifacts (R) — call, never reimplement"},
+    {"module": "GRPO / LoRA", "reason": "named-gap", "publicSource": "parked until the public path is green on apps/web vitest"},
+    {"module": "RAG-Anything", "reason": "named-gap", "publicSource": "parked. Not a coach input."},
+    {"module": "live Brier on the public join, cutoff pre-Week-6 2026", "reason": "named-gap", "publicSource": "public scores only, after the cube exists"},
+    {"module": "cadence cron registration", "reason": "named-gap", "publicSource": "locks are pure functions. No scheduler is registered from this commit."}
   ],
   "fixtures": {
-    "ne_chi_401873010": {"espn_final": [30, 24], "total": 54, "365scores_competition": 352},
-    "bal_cin_401873012": {"status": "scheduled", "audit_path": "docs/engine/audits/2026-10-25-bal-cin.json (absent -> named gap)"}
+    "ne_chi_401873010": {"espn_final": [30, 24], "total": 54, "365scores_competition": 352, "play_signed": false},
+    "bal_cin_401873012": {"status": "scheduled", "audit_path": "docs/engine/audits/2026-10-25-bal-cin.json", "play_signed": false}
+  },
+  "tests": {
+    "command": "npx tsx --test packages/prediction-engine/src/markov-simulator.test.ts packages/prediction-engine/src/public-baseline/public-path.test.ts",
+    "result": "30 pass / 0 fail on 2026-10-24 in the web sandbox",
+    "not_run_here": "apps/web vitest"
   }
 }
