@@ -385,7 +385,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
 
       {/* Books are the price check. They do not choose the side. */}
       <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-ion-3">
-        Books, read after the lock
+        Books, read after the projection
       </p>
       <div className="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
         <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
