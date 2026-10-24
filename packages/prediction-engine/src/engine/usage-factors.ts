@@ -131,3 +131,74 @@ export function usageShiftsFromSnaps(
   }
   return out;
 }
+
+/** One row of nflverse pfr_advstats weekly def file. */
+export interface PfrDefRow {
+  readonly team: string;
+  readonly week: string;
+  readonly pfrPlayerName: string;
+  readonly position: string;
+  readonly defPressures: number;
+  readonly defSacks: number;
+}
+
+/**
+ * Pass-rush usage from PFR advanced rows: a rusher's share of the TEAM's total
+ * pressures in the window, recent v prior. Emits at the same 20-point
+ * role-change rule. Zero-recent with prior pressure emits at 0 — a rusher who
+ * stops producing is a scheme change, not a silence.
+ */
+export function usageShiftsFromPfr(
+  rows: readonly PfrDefRow[],
+  recentWeeks: readonly string[],
+  priorWeeks: readonly string[],
+  source: string,
+  fetchedAt: string,
+): UsageShift[] {
+  const out: UsageShift[] = [];
+  const inWindow = (r: PfrDefRow, w: readonly string[]) => w.includes(r.week);
+  const teamOf = rows[0]?.team ?? "";
+  const pressure = (r: PfrDefRow) => (r.defPressures || 0) + (r.defSacks || 0);
+
+  const byPlayer = new Map<string, PfrDefRow[]>();
+  for (const r of rows) {
+    const k = r.pfrPlayerName;
+    if (!byPlayer.has(k)) byPlayer.set(k, []);
+    byPlayer.get(k)!.push(r);
+  }
+
+  const teamTotal = (w: readonly string[]) =>
+    rows.filter((r) => inWindow(r, w)).reduce((a, r) => a + pressure(r), 0);
+
+  for (const [name, rs] of byPlayer) {
+    const prior = (() => {
+      const t = teamTotal(priorWeeks);
+      if (!t) return null;
+      const mine = rs.filter((r) => inWindow(r, priorWeeks)).reduce((a, r) => a + pressure(r), 0);
+      return Math.round((mine / t) * 100) / 100;
+    })();
+    const recent = (() => {
+      const t = teamTotal(recentWeeks);
+      if (!t) return null;
+      const mine = rs.filter((r) => inWindow(r, recentWeeks)).reduce((a, r) => a + pressure(r), 0);
+      return Math.round((mine / t) * 100) / 100;
+    })();
+    if (prior === null) continue;
+    const recentFinal = recent ?? 0;
+    const delta = Math.round((recentFinal - prior) * 100) / 100;
+    if (Math.abs(delta) < 0.2) continue;
+    const role = (rs[0]?.position ?? "DEF") + " (pressure share)";
+    out.push({
+      team: teamOf,
+      player: name,
+      role,
+      priorShare: prior,
+      recentShare: recentFinal,
+      delta,
+      situation: "share of team pressures, weeks " + priorWeeks.join("/") + " v " + recentWeeks.join("/"),
+      source,
+      fetchedAt,
+    });
+  }
+  return out;
+}
