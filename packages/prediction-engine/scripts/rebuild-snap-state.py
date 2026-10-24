@@ -49,6 +49,27 @@ def main():
     if held < 0.4:
         print("  FAIL pressure table moved")
         bad += 1
+    routes = json.loads((DATA / "route-shell.json").read_text())
+    for route in routes["routes"]:
+        gaps = []
+        for season in route["seasons"]:
+            gap = season["single"]["epa"] - season["split"]["epa"]
+            gaps.append(gap)
+            if season["single"]["n"] < 80 or season["split"]["n"] < 80:
+                print("thin route", route["route"], season["season"])
+                bad += 1
+        same = all(g > 0 for g in gaps) or all(g < 0 for g in gaps)
+        print(f"route {route['route']:22} favors {route['favors']:6} gaps={[round(g, 3) for g in gaps]}")
+        if not same:
+            print("  FAIL route gap flipped")
+            bad += 1
+    light = [s for s in routes["runBox"] if s["box"] == 5][0]
+    loaded = [s for s in routes["runBox"] if s["box"] == 7][0]
+    for a, b in zip(light["seasons"], loaded["seasons"]):
+        if a["epa"] <= b["epa"]:
+            print("FAIL box", a["season"])
+            bad += 1
+    print("run box 5 stays ahead of box 7")
     return bad
 
 
