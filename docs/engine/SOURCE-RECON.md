@@ -175,6 +175,17 @@ scores24 in any browser). Alternatively a history rewrite (filter-repo) would
 purge it, but the branch is shared and a force-push is not worth the risk for
 an ephemeral token.
 
+## History-scrub attempt: blocked by MSYS path conversion (2026-10-24)
+
+Tried `git filter-branch --index-filter` (pure update-index with precomputed
+blob SHAs) to purge the token from pushed history. Fails on this box: inside
+filter-branch's temp dir, every git call reports
+`fatal: not a git repository: '/c/Users/Garrett/Sports/.git'` — the MSYS-style
+path form leaks into the child environment no matter how GIT_DIR is exported
+(Windows form verified correct in the parent shell). The scrub needs either a
+git-bash-free runner (PowerShell/cmd), or git-filter-repo, or the one-click
+dashboard ack. Repo left intact: HEAD 1a42e7667, tree clean, no force-push.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
