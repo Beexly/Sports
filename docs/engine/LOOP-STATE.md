@@ -14,6 +14,8 @@ The 21-wakeup marker called the plan complete. That was wrong about the drive lo
 - Kneel uses `kneelProbability`. Field goals score only at 48–52 yards (`FG_MAKE_50` 0.641). Sack conversion is pinned and unused: there is no pressure frequency (`SIM_GAPS.pressureRate = null`). A `qb_hit` on 15.16% of pass plays is not a pressure and is not used.
 - Pass rate, completion, yards, fourth-down conversion, extra points, and seconds per play are counted from play-by-play. Pressure is counted too: participation `was_pressure` on 2023–2025 dropbacks is 29.2%, and 6.9% of those dropbacks are sacks at -6.6 yards. The drive rolls the sack. It does not invent yards for a hurry that is not a sack.
 - The situational cube is `src/nfl/data/*.json`, read by `situational-reality.ts`. 11 personnel is +0.10 EPA against cover 1 and about 0 against cover 2. Play-action with motion is +0.20 against single-high and +0.04 against split safety. 2026 participation is still unpublished. 2026 quarterback pressure is the PFR week file through week 6. These cells are not a point spread. Scoring does not read them.
+- Public boards, not a spread: FantasyPros week-7 and draft ECR plus 367 injuries, and Footballguys week-7 ranks including Bob Harris at quarterback. They disagree on QB1 (Purdy vs Love). `src/nfl/public-boards.ts`.
+- PFR, FTN, and RotoWire, still not a spread: 2026 quarterback pressure, pass rush, yards before contact, snaps, FTN motion by team, the week-6 DVOA table from the public article, and the week-7 lineup card. `src/nfl/site-rebuild.ts`. The PFR site itself stopped the browser. Scoring does not read it.
 
 ## Completion status of the docx items
 
