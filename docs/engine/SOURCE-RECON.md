@@ -125,6 +125,20 @@ FootballGuys, SB Nation, Yahoo team feed, static.nfl.com, PFR via render,
 status.arctic-shift, r.jina.ai proxy). Wave 7 re-rendered 11 of the failures
 through Firecrawl. See `kb/*/index.md` for per-host status.
 
+## scores24 matchesShow — route still unfound (2026-10-24)
+
+Falsified shapes (all "Not found", with `timezone_offset=0` supplied):
+`/rapi/american-football/matches/{matchSlug}`, `/rapi/american-football/matches/m-{matchSlug}`,
+`/rapi/american-football/matchesShow?matchSlug=...`. Key observation: the PUBLIC
+match page's own hydration shows `matchesShow` returning `httpStatus 404` too —
+so even the site's SSR fails on that route, meaning match data likely arrives
+through the URQL/GraphQL `FRAGMENTS` layer (documents + client-api host) rather
+than `/rapi`. Next probe: read the FRAGMENTS document list from the page and the
+`/graphql` endpoint with the `__API_TOKEN__` bearer.
+
+`/localized/matches/{sport}/{matchSlug}/prediction-conclusion-market` remains the
+one proven per-match data route (needs `timezone_offset=0`).
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
