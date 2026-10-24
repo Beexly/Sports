@@ -1,11 +1,16 @@
 /**
- * What the closing line has already priced, and what it cannot price.
+ * One snap table. It is the league_sii cube, pooled.
  *
- * Team-week motion, play-action, and EPA were correlated with the closing-spread
- * residual on 672 games, weeks 4+, 2023-2025. Those correlations are about zero.
- * The same events at the snap are not zero. Scoring does not read this module.
- * A pre-game average of these rates is not a side.
+ * SINGLE is Cover 0, Cover 1, and Cover 3. SPLIT is Cover 2, Cover 4, and
+ * Cover 6. That is the definition already pinned in league_sii.json.
+ * A second join with a different shell does not get to disagree with it.
+ *
+ * Team-week motion, play-action, and EPA were correlated with the closing
+ * spread on 672 games, weeks 4+, 2023-2025. Those correlations are about
+ * zero. The snap cells are not a side. Scoring does not read this module.
  */
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 export const PREGAME_SPREAD_CORRELATION = {
   games: 672,
@@ -21,32 +26,38 @@ export interface SnapCell {
   epa: number;
 }
 
-const SHELL: Record<string, SnapCell> = {
-  "0-0-single": { n: 13336, epa: -0.002 },
-  "0-0-two": { n: 11878, epa: 0.013 },
-  "0-1-single": { n: 2871, epa: 0.091 },
-  "0-1-two": { n: 1619, epa: 0.056 },
-  "1-0-single": { n: 11295, epa: 0.029 },
-  "1-0-two": { n: 8931, epa: 0.007 },
-  "1-1-single": { n: 5232, epa: 0.173 },
-  "1-1-two": { n: 3044, epa: 0.088 },
-};
-
-const PRESSURE: Record<string, SnapCell> = {
-  "0-0": { n: 27711, epa: 0.278 },
-  "0-1": { n: 11018, epa: -0.137 },
-  "1-0": { n: 11523, epa: 0.097 },
-  "1-1": { n: 1015, epa: -0.074 },
-};
-
-export function snapStateEpa(motion: boolean, playAction: boolean, shell: "single" | "two"): SnapCell {
-  const key = `${motion ? 1 : 0}-${playAction ? 1 : 0}-${shell}`;
-  return SHELL[key];
+interface SiiCube {
+  rows: Array<Array<string | number>>;
 }
 
-/** quick is time-to-throw under 2.0 seconds. */
+interface PressureFile {
+  cells: Array<{ quick: boolean; pressure: boolean; n: number; epa: number }>;
+}
+
+function sii(): SiiCube {
+  return JSON.parse(readFileSync(join(__dirname, "data", "league_sii.json"), "utf8")) as SiiCube;
+}
+
+export function snapStateEpa(motion: boolean, playAction: boolean, shell: "single" | "split"): SnapCell {
+  const pa = playAction ? "PA" : "NO_PA";
+  const mot = motion ? "MOT" : "NO_MOT";
+  const sh = shell === "single" ? "SINGLE" : "SPLIT";
+  let n = 0;
+  let sum = 0;
+  for (const row of sii().rows) {
+    if (row[1] !== pa || row[2] !== mot || row[3] !== sh) continue;
+    n += row[4] as number;
+    sum += row[5] as number;
+  }
+  return { n, epa: n ? sum / n : 0 };
+}
+
+/** Pass plays with a tracked time, regular season 2023-2025. Quick is under 2.0s. */
 export function pressureStateEpa(quick: boolean, pressure: boolean): SnapCell {
-  return PRESSURE[`${quick ? 1 : 0}-${pressure ? 1 : 0}`];
+  const file = JSON.parse(readFileSync(join(__dirname, "data", "snap-pressure.json"), "utf8")) as PressureFile;
+  const cell = file.cells.find((row) => row.quick === quick && row.pressure === pressure);
+  if (!cell) return { n: 0, epa: 0 };
+  return { n: cell.n, epa: cell.epa };
 }
 
 /** A feature the close already contains may not move a side. */
