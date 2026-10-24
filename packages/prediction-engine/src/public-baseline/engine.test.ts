@@ -7,7 +7,8 @@ import { KILLED_EDGES, mayReopen } from "./killed.js"
 import { ANCHOR_MOTION_PA_SINGLE, computeGseDwp, computeGseQptsr, computeGseSii, computeGseSpese, computeGseSva, computeGseTor } from "./metrics.js"
 import { SOURCE_REGISTRY } from "./registry.js"
 import { captainPoints, captainSalary, SHOWDOWN_CAP, underCap, withinTeamLimit } from "./lineup.js"
-import { NFL_COMPETITION_ID, fixturesUrl, parseScores365 } from "./scores365.js"
+import { parseEspnScoreboard } from "./espn.js"
+import { NFL_COMPETITION_ID, fixturesUrl, homeAwayScore, homeVsAway, parseScores365 } from "./scores365.js"
 import { SHIFT_FLOOR, shouldWithhold, situationalShift } from "./withhold.js"
 
 describe("538 team Elo", () => {
@@ -142,8 +143,50 @@ describe("shrinkage, withhold, metrics, fence", () => {
     assert.equal(board.games.length, 1)
     assert.equal(board.games[0]!.home.score, null)
     assert.equal(board.games[0]!.away.abbr, "CIN")
+    assert.equal(homeVsAway(board.games[0]!), "BAL vs CIN")
+    assert.equal(homeAwayScore(board.games[0]!), "—–—")
     assert.equal(board.ttl, 300)
     assert.match(fixturesUrl(NFL_COMPETITION_ID), /competitions=352/)
     assert.equal(parseScores365({ ttl: 5, games: [] }).games.length, 0)
+  })
+
+  it("reads ESPN home vs away and ignores a scheduled zero", () => {
+    const board = parseEspnScoreboard({
+      season: { year: 2026 },
+      week: { number: 7 },
+      events: [
+        {
+          id: "401873010",
+          date: "2026-10-23T00:15:00Z",
+          competitions: [
+            {
+              status: { type: { state: "post", shortDetail: "Final" } },
+              competitors: [
+                { homeAway: "away", score: "24", team: { abbreviation: "NE", displayName: "New England Patriots" } },
+                { homeAway: "home", score: "30", team: { abbreviation: "CHI", displayName: "Chicago Bears" } },
+              ],
+            },
+          ],
+        },
+        {
+          id: "401873012",
+          date: "2026-10-25T17:00:00Z",
+          competitions: [
+            {
+              status: { type: { state: "pre", shortDetail: "Sun 12:00" } },
+              competitors: [
+                { homeAway: "home", score: "0", team: { abbreviation: "BAL", displayName: "Baltimore Ravens" } },
+                { homeAway: "away", score: "0", team: { abbreviation: "CIN", displayName: "Cincinnati Bengals" } },
+              ],
+            },
+          ],
+        },
+      ],
+    })
+    assert.equal(board.week, 7)
+    assert.equal(homeVsAway(board.games[0]!), "CHI vs NE")
+    assert.equal(homeAwayScore(board.games[0]!), "30–24")
+    assert.equal(board.games[1]!.home.score, null)
+    assert.equal(homeVsAway(board.games[1]!), "BAL vs CIN")
   })
 })
