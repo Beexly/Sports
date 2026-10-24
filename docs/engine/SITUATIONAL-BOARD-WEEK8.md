@@ -151,3 +151,35 @@
 - **SEA rush-share moves:** E.Wilson 40.0→65.4 (+25.4); J.Price 35.0→0 (-35.0)
 - **SEA pass rush (w5-6, PFR):** Nick Emmanwori 5pr 1sk; Byron Murphy 3pr 2sk; Ernest Jones 2pr 2sk
 
+
+## PFR pass-side pressure (weeks 5-6, per team — advstats_week_pass_2026.csv)
+
+- **ARI:** Jacoby Brissett 16pr 5sk 1hu
+- **ATL:** Michael Penix 16pr 8sk 3hu
+- **BAL:** Tyler Huntley 18pr 6sk 3hu
+- **CAR:** Bryce Young 10pr 2sk 6hu
+- **CIN:** Joe Burrow 4pr 0sk 0hu
+- **CLE:** Deshaun Watson 28pr 13sk 6hu
+- **DEN:** Bo Nix 13pr 3sk 5hu
+- **DET:** Jared Goff 5pr 3sk 0hu
+- **GB:** Jordan Love 19pr 5sk 6hu
+- **HOU:** C.J. Stroud 5pr 2sk 1hu
+- **IND:** Daniel Jones 24pr 7sk 10hu
+- **KC:** Patrick Mahomes 3pr 0sk 0hu
+- **LA:** Matthew Stafford 13pr 4sk 1hu
+- **LV:** Kirk Cousins 15pr 3sk 3hu
+- **MIA:** Malik Willis 10pr 3sk 5hu
+- **MIN:** Kyler Murray 3pr 2sk 0hu
+- **NO:** Tyler Shough 12pr 1sk 7hu
+- **NYG:** Jameis Winston 17pr 6sk 4hu; J.J. McCarthy 2pr 1sk 0hu
+- **NYJ:** Geno Smith 17pr 7sk 4hu
+- **PIT:** Aaron Rodgers 13pr 6sk 2hu
+- **SEA:** Sam Darnold 33pr 10sk 10hu
+- **SF:** Brock Purdy 15pr 5sk 3hu
+- **TB:** Jalon Daniels 16pr 6sk 6hu
+- **TEN:** Cam Ward 19pr 4sk 11hu
+
+## Contract-year factor
+
+- OverTheCap contract-history ingested (kb/contracts/overthecap-contract-history.md);
+  per-team expiring-contract extraction is the next parser. Named gap until then.
