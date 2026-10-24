@@ -91,8 +91,8 @@ export function parseScores365(payload: unknown): ScoresBoard {
     ttl: typeof body.ttl === "number" ? body.ttl : 0,
     lastUpdateId: typeof body.lastUpdateId === "number" ? body.lastUpdateId : null,
     paging: {
-      previousPage: typeof paging.previousPage === "number" ? paging.previousPage : null,
-      nextPage: typeof paging.nextPage === "number" ? paging.nextPage : null,
+      previousPage: typeof paging.previousPage === "string" ? paging.previousPage : null,
+      nextPage: typeof paging.nextPage === "string" ? paging.nextPage : null,
     },
     games: parsed,
   }
@@ -125,8 +125,10 @@ export async function fixturesWindow(
     const missing = [...wantIds].filter((id) => !seen.has(id))
     if (missing.length === 0) break
     const nxt = board.paging.nextPage
-    // numeric paging from the live payload (parallel-session verified)
-    url = typeof nxt === "number" ? `${fixturesUrl()}&page=${nxt}` : null
+    // live payload paging is a relative cursor path (/web/games/?...aftergame=ID&direction=1)
+    url = typeof nxt === "string" && nxt.length > 0
+      ? (nxt.startsWith("http") ? nxt : `${SCORES365_ORIGIN}${nxt}`)
+      : null
   }
   const covered = [...wantIds].every((id) => seen.has(id))
   return { games, pages, covered }

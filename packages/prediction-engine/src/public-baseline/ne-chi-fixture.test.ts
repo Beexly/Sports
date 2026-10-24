@@ -35,12 +35,13 @@ describe("NE@CHI 401873010 public-feed fixture", () => {
   })
 
   it("finds the matching NFL row on the 365Scores fixtures board (competition 352)", async () => {
-    // Walk the paged fixtures board until the CHI/NE row appears (or 4 pages).
+    // The order says: follow paging.previousPage AND paging.nextPage until the
+    // window covers the events. Forward first, then backward (past games sit
+    // behind the aftergame cursor).
     let url: string | null = fixturesUrl()
     let pages = 0
     let game = null as ReturnType<typeof parseScores365>["games"][number] | null
-    while (url && pages < 4 && !game) {
-      const board = parseScores365(await getJson(url)) as ScoresBoard
+    const visit = (board: ScoresBoard) => {
       game =
         board.games.find(
           (g) =>
@@ -48,12 +49,25 @@ describe("NE@CHI 401873010 public-feed fixture", () => {
             ((g.home.abbr === "CHI" && g.away.abbr === "NE") || (g.home.abbr === "NE" && g.away.abbr === "CHI")),
         ) ?? null
       pages += 1
-      const nxt = board.paging.nextPage
-      url = typeof nxt === "number" ? `${fixturesUrl()}&page=${nxt}` : null
     }
-    assert.ok(game, "a competition-352 CHI/NE row must exist in the fixtures window")
+    const abs = (u: string) => (u.startsWith("http") ? u : `https://webws.365scores.com${u}`)
+    while (url && pages < 3 && !game) {
+      visit(parseScores365(await getJson(url)) as ScoresBoard)
+      if (game) break
+      const board = parseScores365(await getJson(url)) as ScoresBoard
+      const nxt = board.paging.nextPage
+      url = typeof nxt === "string" && nxt ? abs(nxt) : null
+    }
+    // backward: previousPage walks to older games
+    url = typeof board?.paging.previousPage === "string" ? abs(board.paging.previousPage) : null
+    while (url && pages < 7 && !game) {
+      const b = parseScores365(await getJson(url)) as ScoresBoard
+      visit(b)
+      const prev = b.paging.previousPage
+      url = typeof prev === "string" && prev ? abs(prev) : null
+    }
+    assert.ok(game, "a competition-352 CHI/NE row must exist within the paged window (both directions)")
     assert.equal(game!.competitionId, 352)
-    // A Final row keeps its real score; -1/absent stays unplayed.
     if (game!.status.toLowerCase().includes("final")) {
       assert.notEqual(game!.home.score, null)
       assert.notEqual(game!.away.score, null)

@@ -113,7 +113,7 @@ describe("365Scores fixtures paging (competition 352)", () => {
   const page1 = {
     ttl: 300,
     lastUpdateId: 1,
-    paging: { previousPage: null, nextPage: 2 },
+    paging: { previousPage: null, nextPage: "/web/games/?competitions=352&aftergame=4714179&direction=1" },
     games: [
       {
         id: 4714179,
@@ -129,7 +129,7 @@ describe("365Scores fixtures paging (competition 352)", () => {
   const page2 = {
     ttl: 300,
     lastUpdateId: 2,
-    paging: { previousPage: 1, nextPage: null },
+    paging: { previousPage: "/web/games/?competitions=352&aftergame=4714179&direction=-1", nextPage: null },
     games: [
       {
         id: 4715000,
@@ -148,7 +148,7 @@ describe("365Scores fixtures paging (competition 352)", () => {
     const g = board.games[0]
     assert.equal(g.competitionId, NFL_COMPETITION_ID)
     assert.equal(g.home.score, null)
-    assert.equal(board.paging.nextPage, 2)
+    assert.equal(board.paging.nextPage, "/web/games/?competitions=352&aftergame=4714179&direction=1")
   })
 
   it("a Final game keeps its real score (no null)", () => {
@@ -179,7 +179,7 @@ describe("365Scores fixtures paging (competition 352)", () => {
     const endless = {
       ttl: 300,
       lastUpdateId: 9,
-      paging: { previousPage: null, nextPage: 99 },
+      paging: { previousPage: null, nextPage: "/web/games/?competitions=352&aftergame=9999999&direction=1" },
       games: [],
     }
     const result = await fixturesWindow(
