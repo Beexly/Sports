@@ -255,7 +255,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">You are here</p>
               <p className="mt-1 text-sm font-semibold text-ion-white">The board</p>
               <p className="mt-0.5 text-xs leading-5 text-ion-2">
-                Every game today: scoring, published, and passed on. The full picture.
+                Every game today: the projection is locked first. The book only prices it.
               </p>
             </div>
             <Link

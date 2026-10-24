@@ -36,6 +36,9 @@ function toTraceFamily(f: SignalObservation["family"]): TraceFamily {
  * publishable, non-shadowed observations enter the trace: shadowed families
  * must not re-enter reasoning through a second door (the spine already
  * enforces this inside reason(); we mirror the filter here).
+ *
+ * Lean in [0, 1] is preserved as a probability. Non-positive or out-of-range
+ * leans become undefined so the trace can still run (no early abort).
  */
 export function toTraceObservations(
   ctx: SituationalContext,
@@ -54,7 +57,7 @@ export function toTraceObservations(
       reasoningPath: o.tier === 5 ? "chatter" : "measured",
       outcome: "home_win",
       probability:
-        o.lean != null && o.lean > 0 && o.lean < 1 ? o.lean : undefined,
+        o.lean != null && o.lean >= 0 && o.lean <= 1 ? o.lean : undefined,
       declaredWeight: o.trust,
       evidenceTimestamp: o.knownAt,
       provenance: [o.origin],

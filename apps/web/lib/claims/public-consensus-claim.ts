@@ -39,6 +39,14 @@ export type PublicConsensusEvidence = {
 export type PublicConsensusPick = Omit<PublicPick, "reasoning" | "reasoningShort"> & {
   reasoning: string | null;
   reasoningShort: string | null;
+  /**
+   * Expected market movement toward this pick (timing only; measured 2026-10-23
+   * on n=1,009 CLV rows — confidence predicts beating the close, it does NOT
+   * predict winning, which is what marketFairProb ranks). Server-computed so a
+   * viewer who cannot see confidence still gets the timing tag.
+   */
+  moveRisk?: "high" | "mid" | "low" | "unknown";
+  moveRiskLabel?: string;
   consensusPct?: number | null;
   bookmakerCount?: number;
   consensusProvider?: string | null;
