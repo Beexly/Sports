@@ -162,6 +162,19 @@ unfound; its own SSR 404s) or GraphQL (POST is browser-gated). The L4 crew wall
 is therefore DISPOSITIONED: named route absence + two blocked transports, with
 the browser-POST probe as the recorded next step.
 
+## GitGuardian follow-up (2026-10-24)
+
+The scores24 browser token captured during recon was committed inside two KB
+html artifacts (mp4.html, root.html) and later redacted in the working tree —
+but GitGuardian scans the pushed commits, so the historical occurrence still
+fails the check. Current tree: zero `[REDACTED-BROWSER-TOKEN]` occurrences (verified by grep).
+Exact next human step: dashboard.gitguardian.com -> occurrences for
+Beexly/Sports PR #1195 -> mark the scores24 session token as
+revoked/ignored (it is an ephemeral public-page token; rotate by loading
+scores24 in any browser). Alternatively a history rewrite (filter-repo) would
+purge it, but the branch is shared and a force-push is not worth the risk for
+an ephemeral token.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
