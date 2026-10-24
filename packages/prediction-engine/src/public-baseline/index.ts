@@ -44,5 +44,6 @@ export {
   homeAwayScore,
 } from "./scores365.js"
 export type { LiveGame, LiveSide, ScoresBoard } from "./scores365.js"
+export { americanImplied, multiplicativeDevig, powerDevig } from "./devig.js"
 export { ESPN_NFL_SCOREBOARD, parseEspnScoreboard } from "./espn.js"
 export type { EspnBoard } from "./espn.js"
