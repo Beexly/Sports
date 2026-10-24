@@ -67,7 +67,11 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
 
   return {
     scoreMean: mean / 2 + 1.5,
-    marginMean: 3 + coachShift + kneelHaircut * 0.1,
+    // Injuries shift BOTH the total and the margin: half the drop-off lands on
+    // the total, half on the margin (stated modeling split — the injured side
+    // gets worse relative to a healthy opponent). The stub left the margin at
+    // a constant 3 regardless of inputs.
+    marginMean: 3 + coachShift + kneelHaircut * 0.1 - injury * 0.5,
     totalP10: mean - 7,
     totalP90: mean + 7,
     playerStats: Object.fromEntries(
