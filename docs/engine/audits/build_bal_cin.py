@@ -65,7 +65,15 @@ r(layer="L3", side="AWAY", claim="Rest differential +7 in favour of Cincinnati."
 r(layer="L3", side="HOME", claim="Divisional game, both AFC North.", value=1, unit="boolean", source=G + " column div_game", fetchedAt=F + "2:00Z", confidence="high")
 r(layer="L3", side="HOME", claim="Kickoff window 13:00 local, Sunday early.", value="1pm", source="ESPN scoreboard event 401873012 date 2026-10-25T17:00Z", fetchedAt=F + "2:00Z", confidence="high")
 r(layer="L3", side="HOME", claim="Records Baltimore 4-2, Cincinnati 3-2; Cincinnati off bye.", value="4-2 / 3-2", source="ESPN scoreboard competitors[].records; nflverse games.csv week gap", fetchedAt=F + "2:00Z", confidence="high")
-r(layer="L3", side="AWAY", claim="WALL", value="travel direction and miles", source="ESPN venue address (city only, no lat/lon)", fetchedAt=F + "2:00Z", confidence="low", wallReason="venue payload returns address city Baltimore MD with no coordinates, so distance cannot be derived")
+# L3 travel — computed from the committed OSM geocodes, not hand-typed
+import json as _json, math as _math
+_geo = _json.load(open(r"docs/engine/intel/kb/geo/stadiums-osm-nominatim.json", encoding="utf-8"))
+_a, _b = _geo["BAL"], _geo["CIN"]
+_p1, _p2 = _math.radians(_a["lat"]), _math.radians(_b["lat"])
+_dl = _math.radians(_b["lon"] - _a["lon"]); _dp = _p2 - _p1
+_h = _math.sin(_dp / 2) ** 2 + _math.cos(_p1) * _math.cos(_p2) * _math.sin(_dl / 2) ** 2
+_miles = round(2 * 3958.8 * _math.asin(_math.sqrt(_h)))
+r(layer="L3", side="AWAY", claim="Travel Cincinnati to Baltimore: " + str(_miles) + " miles venue-to-venue (Paycor Stadium to M&T Bank Stadium).", value=_miles, unit="miles", source="docs/engine/intel/kb/geo/stadiums-osm-nominatim.json (OSM Nominatim venue geocodes; haversine) consumed by engine/travel-factor.ts and travelMiles()", fetchedAt=F + "3:20Z", confidence="high", crossCheck="same 423 pinned in stadium-coordinates-c33 test")
 r(layer="L3", side="HOME", claim="WALL", value="revenge-game flag", source="nflverse games.csv (no revenge column)", fetchedAt=F + "2:00Z", confidence="medium", wallReason="no column carries the flag; a prior meeting date alone does not settle it")
 
 r(layer="L4", side="HOME", claim="Roof outdoors, surface grass.", value="outdoors / grass", source=G + " columns roof, surface", fetchedAt=F + "2:00Z", confidence="high")

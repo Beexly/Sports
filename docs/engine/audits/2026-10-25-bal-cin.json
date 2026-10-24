@@ -400,12 +400,13 @@
   {
     "layer": "L3",
     "side": "AWAY",
-    "claim": "WALL",
-    "value": "travel direction and miles",
-    "wallReason": "venue payload returns address city Baltimore MD with no coordinates, so distance cannot be derived",
-    "source": "ESPN venue address (city only, no lat/lon)",
-    "fetchedAt": "2026-10-23T12:52:00Z",
-    "confidence": "low"
+    "claim": "Travel Cincinnati to Baltimore: 423 miles venue-to-venue (Paycor Stadium to M&T Bank Stadium).",
+    "value": 423,
+    "unit": "miles",
+    "crossCheck": "same 423 pinned in stadium-coordinates-c33 test",
+    "source": "docs/engine/intel/kb/geo/stadiums-osm-nominatim.json (OSM Nominatim venue geocodes; haversine) consumed by engine/travel-factor.ts and travelMiles()",
+    "fetchedAt": "2026-10-23T12:53:20Z",
+    "confidence": "high"
   },
   {
     "layer": "L3",

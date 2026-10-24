@@ -39,7 +39,7 @@ function game(injuries: InjuryRow[] = [], usageShifts: UsageShift[] = [], week =
       scheduleDensityAway: 1,
       dataFreshnessMinutes: 2,
     },
-    coachTrail: { week, injuries, usageShifts },
+    coachTrail: { week, injuries, usageShifts, homeTeamCode: "BAL", awayTeamCode: "CIN" },
   };
 }
 
@@ -96,6 +96,21 @@ describe("the trail leads with the coach layer", () => {
   it("puts the coach note BEFORE the market clause", () => {
     const pick = scoreGame(game([flowerOut], [chaseDrop]), AT)[0]!;
     expect(pick.reasoning.indexOf("J.Chase")).toBeLessThan(pick.reasoning.indexOf("Market fair"));
+  });
+
+  it("carries the L3 travel distance in the trail when codes are present", () => {
+    const pick = scoreGame(game([flowerOut], [chaseDrop]), AT)[0]!;
+    expect(pick.reasoning).toContain("423 miles");
+    expect(pick.reasoning).toContain("423 miles venue-to-venue");
+  });
+
+  it("omits travel silently when the packet carries no codes", () => {
+    // Codes absent = caller has no packet location info; the gap variant fires
+    // only when a code is present but unknown (unit-tested in travel-factor).
+    const noCodes = { ...game([flowerOut], [chaseDrop]), coachTrail: { week: 7, injuries: [flowerOut], usageShifts: [chaseDrop] } };
+    const pick = scoreGame(noCodes as never, AT)[0]!;
+    expect(pick.reasoning).not.toContain("miles venue-to-venue");
+    expect(pick.reasoning).toContain("No material shadow coverage");
   });
 
   it("names the gap instead of inventing a read when the packet is empty", () => {

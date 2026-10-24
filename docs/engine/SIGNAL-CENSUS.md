@@ -20,6 +20,16 @@ contains its rows, and `.worktrees/calib-boundary` has only the doctrine prose.
 Rows below are therefore re-derived from code. Where the founder's list names a
 family, that row is first.
 
+## L3 travel — REACHES THE TRAIL AND THE AUDIT (2026-10-24)
+
+`engine/travel-factor.ts` consumes `nfl/stadium-coordinates-c33.ts` (32 OSM
+Nominatim venue geocodes) and emits a FactorDetail from team CODES, or a named
+gap when a code is missing/unknown. Wired through `CoachTrailInput.homeTeamCode/
+awayTeamCode` into all three scoring sites; the note renders the distance
+("423 miles venue-to-venue per OSM Nominatim geocodes"). The BAL/CIN audit travel
+row is no longer a WALL — it reads 423 miles, cross-checked against the pinned
+test. Audit: 60 rows, 12 walls.
+
 ## L0 / L1 producers (added since the census opened)
 
 - `L0 USAGE` — `engine/usage-factors.ts` (2,296 bytes) on the remote. Emits who got

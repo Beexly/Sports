@@ -790,6 +790,9 @@ export interface OddsInput {
     injuries?: readonly unknown[];
     usageShifts?: readonly unknown[];
     shadows?: readonly unknown[];
+    /** Team codes (BAL, CIN, ...) — enable the L3 travel factor. */
+    homeTeamCode?: string;
+    awayTeamCode?: string;
   };
 }
 
