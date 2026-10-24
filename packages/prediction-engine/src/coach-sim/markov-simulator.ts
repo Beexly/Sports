@@ -18,11 +18,20 @@
  * - Kneel uses kneelProbability. Yards do not become points.
  * - A field goal scores only inside 48–52 yards, at FG_MAKE_50 (0.641).
  *   Every other kick distance is a named gap and scores 0.
+<<<<<<< HEAD
  * - Sack conversion (15.8% / 10.1%) is the chance a pressure becomes a sack.
  *   How often a dropback is pressured is no longer a blank: 16,777 of 57,524
  *   joined dropbacks, 2023–2025. The drive uses the sack rate itself
  *   (3,989 / 57,524) and the mean sack of -6.6 yards. It does not invent
  *   a hurry-yard penalty for the pressures that are not sacks.
+=======
+ * - Sack conversion (15.8% / 10.1%) is pinned, but no pressure frequency is.
+<<<<<<< HEAD
+ *   Sacks are not rolled. qb_hit is not pressure. See SIM_GAPS.pressureRate.
+=======
+ *   Sacks are not rolled. See SIM_GAPS.
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
+>>>>>>> 3d81853f2 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
  */
 import { CONVERSION_BY_BUCKET } from "../nfl/pressure-timing.js";
 import { KNEEL_MEAN_YD, KNEEL_RATE_PER_WINNING_GAME, kneelProbability } from "../nfl/kneeldown-mass.js";
@@ -38,6 +47,8 @@ export interface CoachSimInput {
   injuryDropOff?: number;
   neutralPassRate?: number;
   staffAggression?: number;
+  /** Away staff go-rate. Defaults to STAFF_AGGRESSION.PHI (documented default). */
+  staffAggressionAway?: number;
   shadows?: Array<{ wr: string; shadowRate: number }>;
 }
 
@@ -57,6 +68,7 @@ export const QUICK_PRESSURE_SACK = CONVERSION_BY_BUCKET.immediate;
 export const NORMAL_PRESSURE_SACK = CONVERSION_BY_BUCKET.mid;
 
 /**
+<<<<<<< HEAD
  * Regular-season plays, nflverse play_by_play_2023/2024/2025.csv.gz.
  * season_type = REG. Streaming count, not a model.
  * gz sha256:
@@ -95,6 +107,19 @@ export const SIM_GAPS = {
   completionYardsSpread: "normal, measured sd",
   twoPointAttemptRate: null,
   fgMakeExcept50: null,
+=======
+ * Not measurements. They exist so a drive can reach a 4th down.
+ * pressureRate is null on purpose: the conversion rates above have no frequency to multiply.
+ */
+export const SIM_GAPS = {
+  neutralPassRate: 0.5,
+  completion: 0.62,
+  runGain: 4,
+  shortYardageConversion: 0.5,
+  secondsPerPlay: 28,
+  touchdownPoints: 7,
+  pressureRate: null,
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
 } as const;
 
 const KNEEL_HAIRCUT = KNEEL_MEAN_YD * KNEEL_RATE_PER_WINNING_GAME * 0.5;
@@ -169,11 +194,19 @@ interface DriveSample {
 function driveSample(input: CoachSimInput, n: number, homeStaff: number): DriveSample {
   const margins = new Float64Array(n);
   const totals = new Float64Array(n);
+<<<<<<< HEAD
+=======
+  const awayStaff = input.staffAggressionAway ?? STAFF_AGGRESSION.PHI;
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
   const rand = mulberry32(seedFor(input, homeStaff));
   let wpSum = 0;
   let fourthDowns = 0;
   for (let i = 0; i < n; i++) {
+<<<<<<< HEAD
     const game = playGame(rand, input.neutralPassRate ?? MEASURED_DRIVE.neutralPassRate, homeStaff);
+=======
+    const game = playGame(rand, input.neutralPassRate ?? SIM_GAPS.neutralPassRate, homeStaff, awayStaff);
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
     margins[i] = game.home - game.away;
     totals[i] = game.home + game.away;
     wpSum += game.wpSum;
@@ -189,6 +222,7 @@ interface GamePoints {
   fourthDowns: number;
 }
 
+<<<<<<< HEAD
 function standardNormal(rand: () => number): number {
   let u = 0;
   let v = 0;
@@ -203,6 +237,9 @@ function scoreTouchdown(rand: () => number, score: (pts: number) => void): void 
 }
 
 function playGame(rand: () => number, passRate: number, homeStaff: number): GamePoints {
+=======
+function playGame(rand: () => number, passRate: number, homeStaff: number, awayStaff: number): GamePoints {
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
   let home = 0;
   let away = 0;
   let q = 1;
@@ -255,16 +292,28 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
         scoreDiff: lead(),
         timeRemaining: Math.max(0, gameSeconds),
         timeouts: 2,
+<<<<<<< HEAD
         staffAggression: offenseHome ? homeStaff : STAFF_AGGRESSION.PHI,
+=======
+        staffAggression: offenseHome ? homeStaff : awayStaff,
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
       });
       fourthDowns++;
       wpSum += decision.wpDelta;
       if (decision.action === "GO") {
+<<<<<<< HEAD
         const made = rand() < fourthDownMakeRate(dist);
         if (made) {
           yl += dist;
           if (yl >= 100) {
             scoreTouchdown(rand, score);
+=======
+        const made = rand() < SIM_GAPS.shortYardageConversion;
+        if (made) {
+          yl += dist;
+          if (yl >= 100) {
+            score(SIM_GAPS.touchdownPoints);
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
             give();
           } else {
             down = 1;
@@ -285,6 +334,7 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
       const pass = rand() < passRate;
       let gain: number;
       if (pass) {
+<<<<<<< HEAD
         if (rand() < POOLED_DROPBACK.sackRate) {
           gain = POOLED_DROPBACK.sackYards;
         } else {
@@ -293,12 +343,28 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
               ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
               : 0;
         }
+=======
+<<<<<<< HEAD
+        gain =
+          rand() < MEASURED_DRIVE.completionExSack
+            ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
+            : 0;
+>>>>>>> 3d81853f2 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
       } else {
         gain = MEASURED_DRIVE.yardsPerCarry + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
       }
       yl += gain;
       if (yl >= 100) {
         scoreTouchdown(rand, score);
+=======
+        gain = rand() < SIM_GAPS.completion ? 4 + Math.floor(rand() * 10) : 0;
+      } else {
+        gain = SIM_GAPS.runGain + Math.floor(rand() * 5) - 2;
+      }
+      yl += gain;
+      if (yl >= 100) {
+        score(SIM_GAPS.touchdownPoints);
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
         give();
       } else if (gain >= dist) {
         down = 1;
@@ -307,7 +373,11 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
         down += 1;
         dist = Math.max(1, dist - gain);
       }
+<<<<<<< HEAD
       clock -= MEASURED_DRIVE.secondsPerPlay;
+=======
+      clock -= SIM_GAPS.secondsPerPlay;
+>>>>>>> e5604da69 (wip(plumb): CoachTrailInput + CoachLockPacket + CoachSimInput carry staffAggressionHome/Away; scoring pass-through deferred — tsc resolved CoachTrailInput from a copy missing the fields (symlink family), unblocked by deferring the scoring-side lines. Sim accepts the away rate; default PHI unchanged.)
     }
 
     if (clock <= 0) {

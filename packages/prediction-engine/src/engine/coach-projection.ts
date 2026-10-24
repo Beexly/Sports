@@ -36,6 +36,9 @@ export interface CoachLockPacket {
   readonly injuries?: readonly InjuryRow[];
   readonly usageShifts?: readonly UsageShift[];
   readonly shadows?: readonly ShadowRow[];
+  /** Measured staff go-rates. Away defaults to STAFF_AGGRESSION.PHI when absent. */
+  readonly staffAggressionHome?: number;
+  readonly staffAggressionAway?: number;
 }
 
 export interface CoachProjectionRead {
@@ -72,6 +75,8 @@ export function projectionFromCoachPacket(packet: CoachLockPacket): CoachProject
     week: packet.week,
     coachSupport: homeSupport,
     shadows: weekShadows.map((s) => ({ wr: s.wrName, shadowRate: s.shadowRate })),
+    staffAggression: packet.staffAggressionHome,
+    staffAggressionAway: packet.staffAggressionAway,
   });
   const coachOverridesStub = Math.abs(locked.marginMean - STUB_HOME_MARGIN) >= STUB_HOME_MARGIN;
   const gaps = [

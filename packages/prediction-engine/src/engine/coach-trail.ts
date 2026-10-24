@@ -25,6 +25,9 @@ export interface CoachTrailInput {
   /** Team CODES (BAL, CIN, ...). When both resolve, the L3 travel distance joins the trail. */
   readonly homeTeamCode?: string;
   readonly awayTeamCode?: string;
+  /** Measured staff go-rates (fourth-down-aggression.ts: 0.51-0.94). */
+  readonly staffAggressionHome?: number;
+  readonly staffAggressionAway?: number;
 }
 
 export function coachTrailFactors(input: CoachTrailInput): FactorDetail[] {

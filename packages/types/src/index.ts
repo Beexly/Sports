@@ -793,6 +793,9 @@ export interface OddsInput {
     /** Team codes (BAL, CIN, ...) — enable the L3 travel factor. */
     homeTeamCode?: string;
     awayTeamCode?: string;
+    /** Measured staff go-rates (0.51–0.94, fourth-down-aggression.ts). Away default PHI 0.94. */
+    staffAggressionHome?: number;
+    staffAggressionAway?: number;
   };
 }
 
