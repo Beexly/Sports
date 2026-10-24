@@ -106,6 +106,25 @@ shape, so its required params still need reading out of the bundle.
 Also confirmed: match pages exist for college/NFL alike under
 `/en/american-football/m-<dd-mm-yyyy>-<teams>` (seen: `m-24-10-2026-cincinnati-bearcats-texas-tech-red-raiders`).
 
+## REA verdict on NGS (2026-10-24): the env is runtime-injected, period
+
+Ran `rea-agents analyze-javascript-application` on the extracted NGS app. The
+analysis graph confirms `NGS_COGNITO_TOKEN_URL` / `NGS_COGNITO_ID` are read from
+`/env/` at RUNTIME (operation_kind=read, property_path=["env", ...]) — the values
+are not compiled into any static chunk (29.7 MB evidence graph, saved locally).
+The only capture path left is a live browser session (DevTools on a signed-in
+NFL property). This closes the static-analysis avenue with evidence, not opinion.
+
+## KB wave 6/7 (2026-10-24): +26 new hosts attempted
+
+Curl-first with Chrome headers, then Firecrawl render for the CF/403 set. 15
+hosts landed on wave 6 (ESPN core/web/cdn APIs, api+forecast weather.gov,
+Open-Meteo forecast+geocode, Nominatim, api.github, raw.githubusercontent,
+sleeper state, ESPN news JSON, SI, FoxSports, PFT, 33rd Team, DraftSharks,
+FootballGuys, SB Nation, Yahoo team feed, static.nfl.com, PFR via render,
+status.arctic-shift, r.jina.ai proxy). Wave 7 re-rendered 11 of the failures
+through Firecrawl. See `kb/*/index.md` for per-host status.
+
 ## Dead ends recorded
 
 - `client-api.fragmentsx.com` appears in the bundle but does not resolve (NXDOMAIN);
