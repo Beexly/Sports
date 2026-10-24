@@ -19,7 +19,7 @@
  * - A field goal scores only inside 48–52 yards, at FG_MAKE_50 (0.641).
  *   Every other kick distance is a named gap and scores 0.
  * - Sack conversion (15.8% / 10.1%) is pinned, but no pressure frequency is.
- *   Sacks are not rolled. See SIM_GAPS.
+ *   Sacks are not rolled. qb_hit is not pressure. See SIM_GAPS.pressureRate.
  */
 import { CONVERSION_BY_BUCKET } from "../nfl/pressure-timing.js";
 import { KNEEL_MEAN_YD, KNEEL_RATE_PER_WINNING_GAME, kneelProbability } from "../nfl/kneeldown-mass.js";
@@ -53,17 +53,46 @@ export const QUICK_PRESSURE_SACK = CONVERSION_BY_BUCKET.immediate;
 export const NORMAL_PRESSURE_SACK = CONVERSION_BY_BUCKET.mid;
 
 /**
- * Not measurements. They exist so a drive can reach a 4th down.
- * pressureRate is null on purpose: the conversion rates above have no frequency to multiply.
+ * Regular-season plays, nflverse play_by_play_2023/2024/2025.csv.gz.
+ * season_type = REG. Streaming count, not a model.
+ * gz sha256:
+ *   2023 4649804ee0f0a40b41e51ec75a1ce921949d7fab5459213488656b92f78560e8
+ *   2024 23370d5d10f8104d80d46a1fc5e61f4f6f5a3263fe96fe2dd629913cfcb08c06
+ *   2025 2f135887790a013fd004e609e37096bb4816d5cc80b9f19122e1bad478961978
+ * rea 6.7.0 inspect-artifact refused the gzip: unsupported binary format.
+ */
+export const MEASURED_DRIVE = {
+  neutralPassRate: 0.5753, // 57,853 pass plays / (57,853 + 42,741 non-kneel rushes)
+  completionExSack: 0.6436, // 34,654 / 53,842. Sacks are not attempts.
+  yardsPerCompletion: 10.907, // mean yards_gained on complete_pass, n = 34,654
+  completionYardsSd: 9.8747, // same plays. The draw below is normal. Only these two moments were counted.
+  yardsPerCarry: 4.4822, // non-kneel rush_attempt, n = 42,741. 1,266 kneels left out.
+  rushYardsSd: 6.1912,
+  xpMake: 0.9586, // extra_point_result = good / extra_point_attempt, n = 3,672
+  secondsPerPlay: 24.47, // mean clock drop in (1, 60] seconds, n = 120,618
+} as const;
+
+/** 4th-down GO conversion, converted / (converted + failed), by yards to go. */
+export function fourthDownMakeRate(ydstogo: number): number {
+  if (ydstogo <= 1) return 0.6885; // n = 960
+  if (ydstogo <= 2) return 0.6033; // n = 368
+  if (ydstogo <= 5) return 0.5275; // n = 601
+  if (ydstogo <= 10) return 0.3064; // n = 346
+  return 0.1705; // n = 176
+}
+
+/**
+ * Still not measurements.
+ * pressureRate has no column on these files. qb_hit on a pass play was 0.1516
+ * (n = 57,853). That is a hit, not a pressure, and it is not used.
+ * A completion's yards and a carry's yards are normal draws at the measured mean and sd.
+ * Two-point tries are not rolled. Field goals outside 48–52 still score 0.
  */
 export const SIM_GAPS = {
-  neutralPassRate: 0.5,
-  completion: 0.62,
-  runGain: 4,
-  shortYardageConversion: 0.5,
-  secondsPerPlay: 28,
-  touchdownPoints: 7,
   pressureRate: null,
+  completionYardsSpread: "normal, measured sd",
+  twoPointAttemptRate: null,
+  fgMakeExcept50: null,
 } as const;
 
 const KNEEL_HAIRCUT = KNEEL_MEAN_YD * KNEEL_RATE_PER_WINNING_GAME * 0.5;
@@ -142,7 +171,7 @@ function driveSample(input: CoachSimInput, n: number, homeStaff: number): DriveS
   let wpSum = 0;
   let fourthDowns = 0;
   for (let i = 0; i < n; i++) {
-    const game = playGame(rand, input.neutralPassRate ?? SIM_GAPS.neutralPassRate, homeStaff);
+    const game = playGame(rand, input.neutralPassRate ?? MEASURED_DRIVE.neutralPassRate, homeStaff);
     margins[i] = game.home - game.away;
     totals[i] = game.home + game.away;
     wpSum += game.wpSum;
@@ -156,6 +185,19 @@ interface GamePoints {
   away: number;
   wpSum: number;
   fourthDowns: number;
+}
+
+function standardNormal(rand: () => number): number {
+  let u = 0;
+  let v = 0;
+  while (u === 0) u = rand();
+  while (v === 0) v = rand();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+function scoreTouchdown(rand: () => number, score: (pts: number) => void): void {
+  score(6);
+  if (rand() < MEASURED_DRIVE.xpMake) score(1);
 }
 
 function playGame(rand: () => number, passRate: number, homeStaff: number): GamePoints {
@@ -216,11 +258,11 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
       fourthDowns++;
       wpSum += decision.wpDelta;
       if (decision.action === "GO") {
-        const made = rand() < SIM_GAPS.shortYardageConversion;
+        const made = rand() < fourthDownMakeRate(dist);
         if (made) {
           yl += dist;
           if (yl >= 100) {
-            score(SIM_GAPS.touchdownPoints);
+            scoreTouchdown(rand, score);
             give();
           } else {
             down = 1;
@@ -241,13 +283,16 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
       const pass = rand() < passRate;
       let gain: number;
       if (pass) {
-        gain = rand() < SIM_GAPS.completion ? 4 + Math.floor(rand() * 10) : 0;
+        gain =
+          rand() < MEASURED_DRIVE.completionExSack
+            ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
+            : 0;
       } else {
-        gain = SIM_GAPS.runGain + Math.floor(rand() * 5) - 2;
+        gain = MEASURED_DRIVE.yardsPerCarry + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
       }
       yl += gain;
       if (yl >= 100) {
-        score(SIM_GAPS.touchdownPoints);
+        scoreTouchdown(rand, score);
         give();
       } else if (gain >= dist) {
         down = 1;
@@ -256,7 +301,7 @@ function playGame(rand: () => number, passRate: number, homeStaff: number): Game
         down += 1;
         dist = Math.max(1, dist - gain);
       }
-      clock -= SIM_GAPS.secondsPerPlay;
+      clock -= MEASURED_DRIVE.secondsPerPlay;
     }
 
     if (clock <= 0) {

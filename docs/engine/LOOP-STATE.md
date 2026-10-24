@@ -11,8 +11,8 @@ The 21-wakeup marker called the plan complete. That was wrong about the drive lo
 - Location is unchanged when `staffAggression` is omitted or PHI: margin `3 + coachSupport*0.15 + kneel haircut`, total `46.5 + coachSupport*0.15`. Injury still splits half onto the margin. Scoring's override gate is the same.
 - `n` sets the total band. It is not a fixed ±7.
 - Home staff aggression is applied inside the drive (4th-down policy on the live state). Away stays PHI. At n=2,000, home staff 0.51 vs 0.94 moves the margin by about 5 points.
-- Kneel uses `kneelProbability`. Field goals score only at 48–52 yards (`FG_MAKE_50` 0.641). Sack conversion is pinned and unused: there is no pressure frequency (`SIM_GAPS.pressureRate = null`).
-- Unpinned rates that only move the ball to a 4th down are listed in `SIM_GAPS`. They do not choose the side on the scoring path.
+- Kneel uses `kneelProbability`. Field goals score only at 48–52 yards (`FG_MAKE_50` 0.641). Sack conversion is pinned and unused: there is no pressure frequency (`SIM_GAPS.pressureRate = null`). A `qb_hit` on 15.16% of pass plays is not a pressure and is not used.
+- Pass rate, completion rate (sacks excluded), yards per completion, yards per carry, 4th-down conversion by distance, extra-point rate, and seconds per play are counted from nflverse regular-season play-by-play 2023–2025 (`MEASURED_DRIVE`). Yard draws are normal at the measured mean and standard deviation. Two-point tries are not rolled.
 
 ## Completion status of the docx items
 
