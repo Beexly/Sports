@@ -90,3 +90,34 @@ export { findBookImports, assertNoBookInCoachSource } from "./no-book-fence.js"
 export { NE_CHI_GAME_ID, NE_CHI_FINAL, rejectNarrative } from "./narrative-rejections.js"
 export type { PublicFacts, NarrativeClaim, NarrativeRejection } from "./narrative-rejections.js"
 export { marchenkoPasturEdges, flagOutsideBulk } from "./marchenko.js"
+export {
+  gaussSolve,
+  bradleyTerryProb,
+  bradleyTerryMle,
+  colleyRatings,
+  masseyRatings,
+  srsRatings,
+  spPlusEfficiencyRatings,
+  fpiDecomposition,
+  pffStyleUnitGrades,
+  kalmanRatings,
+  hmm2RegimeFit,
+  invertCompetitorRatingDeltas,
+  marketStrengthsLeastSquares,
+  stackWithMarket,
+  publicHypeValuationCheck,
+  deflatedSharpe,
+  shinDevigClosedForm,
+  normCdf,
+  invNorm,
+  erf,
+} from "./rankings.js"
+export type {
+  TeamGame,
+  RatingMap,
+  KalmanRating,
+  EpaSplit,
+  PffSplits,
+  CompetitorRatingDelta,
+  MarketSlateRow,
+} from "./rankings.js"
