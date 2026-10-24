@@ -733,4 +733,34 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+
+  {
+    allowedInputs: ["aggressiveness", "statType", "week"],
+    failureModes: [
+      "week 0 (season aggregate) must be unconditionally excluded",
+      "weeks >= asOfWeek must be excluded to maintain point-in-time discipline",
+      "QBs with fewer than 3 qualifying weeks must be omitted, not zeroed",
+      "statType other than passing must be ignored"
+    ],
+    family: "player_signal",
+    forbiddenInputs: ["yards", "dropbacks", "pass attempts", "completions"],
+    formulaClass: "rolling_mean",
+    formulaSummary: "Rolling unweighted mean of a QB's weekly NGS tightness rate (aggressiveness) over a floor of 3 qualifying weeks, compared to the league-average mean of qualifying QBs.",
+    historicalPrecedent: [
+      {
+        name: "QB Tight-Window Aggressiveness (Q34)",
+        reason: "A QB risk-profile input (gunslinger vs checkdown) for game-script and prop reasoning, measured independently of outcomes."
+      }
+    ],
+    internalName: "qb_aggressiveness_expected",
+    metricId: "qb-aggressiveness-expected",
+    protectedComponents: ["weekly_ngs_mean", "substituted_floor_of_3_weeks"],
+    publicExposure: "hidden",
+    publicName: "QB Aggressiveness Expected",
+    sourceRightsRequired: ["derived metric only", "no raw NGS payloads"],
+    status: "SHADOW",
+    targetQuestion: "How aggressively does this QB throw into tight coverage compared to the league average?",
+    targetVariable: "tight-window throwing rate",
+    validationMethods: ["walk_forward"],
+  },
 ] as const;
