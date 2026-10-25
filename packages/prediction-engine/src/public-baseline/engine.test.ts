@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 import { absDeltaMultiplier, HFA, K, movMultiplier, publicPrior, replay, REVERSIONS, winProb } from "./elo538.js"
 import { assertCoachInputs, CoachFenceError } from "./fence.js"
-import { positivePartJamesStein, shrinkSituational } from "./jamesStein.js"
+import { positivePartJamesStein, shrinkSituational, pitNoYbcCell } from "./jamesStein.js"
 import { KILLED_EDGES, mayReopen } from "./killed.js"
 import { ANCHOR_MOTION_PA_SINGLE, computeGseDwp, computeGseQptsr, computeGseSii, computeGseSpese, computeGseSva, computeGseTor } from "./metrics.js"
 import { SOURCE_REGISTRY } from "./registry.js"
@@ -80,6 +80,15 @@ describe("shrinkage, withhold, metrics, fence", () => {
     const afterDelete = shrinkSituational(ablated, sigma2)
     assert.ok(Math.abs(afterDelete - raw) < 1e-12, "deleting a sibling (d<3) returns raw; shrink is gone")
     assert.notEqual(shrunk, afterDelete)
+  })
+
+  it("pitNoYbcCell uses measured YBC vector and moves when sibling deleted", () => {
+    const cell = pitNoYbcCell()
+    const raw = 1.36
+    assert.ok(Math.abs(cell - raw) > 1e-4, "measured d=3 vector must shrink the published cell")
+    const ablated = shrinkSituational([1.36, 0.93], 0.05)
+    assert.ok(Math.abs(ablated - raw) < 1e-12, "deleting sibling returns raw Steelers YBC")
+    assert.notEqual(cell, ablated)
   })
 
   it("withholds a quiet shift and keeps a measured one", () => {
