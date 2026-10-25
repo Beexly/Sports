@@ -74,11 +74,11 @@ export function normalInv(p: number): number {
   let r: number;
 
   if (q > 0.02425) {
-    const u = q - 0.5;
+    const u = pClamped - 0.5;
     const u2 = u * u;
     const a0 = a[0]!, a1 = a[1]!, a2 = a[2]!, a3 = a[3]!, a4 = a[4]!, a5 = a[5]!;
     const b0 = b[0]!, b1 = b[1]!, b2 = b[2]!, b3 = b[3]!, b4 = b[4]!;
-    r = (u * (((((a0 * u2 + a1) * u2 + a2) * u2 + a3) * u2 + a4) * u2 + a5)) /
+    return (u * (((((a0 * u2 + a1) * u2 + a2) * u2 + a3) * u2 + a4) * u2 + a5)) /
         (((((b0 * u2 + b1) * u2 + b2) * u2 + b3) * u2 + b4) * u2 + 1);
   } else {
     const v = Math.sqrt(-2 * Math.log(q));
@@ -86,10 +86,8 @@ export function normalInv(p: number): number {
     const d0 = d[0]!, d1 = d[1]!, d2 = d[2]!, d3 = d[3]!;
     r = (((((c0 * v + c1) * v + c2) * v + c3) * v + c4) * v + c5) /
         ((((d0 * v + d1) * v + d2) * v + d3) * v + 1);
-    if (pClamped < 0.5) r = -r;
+    return pClamped < 0.5 ? -r : r;
   }
-
-  return pClamped < 0.5 && q > 0.02425 ? -r : r;
 }
 
 /**
@@ -141,8 +139,16 @@ export function getPairwiseCorrelation(legA: SgpLeg, legB: SgpLeg): number {
     return 0.31;
   }
 
+  // Same-Team Spread Cover + Offensive Yardage (Passing / Rushing / Receiving)
+  if (sameTeam && (
+    (legA.propType === 'SPREAD' && (legB.propType === 'PASSING_YARDS' || legB.propType === 'RUSHING_YARDS' || legB.propType === 'RECEIVING_YARDS')) ||
+    (legB.propType === 'SPREAD' && (legA.propType === 'PASSING_YARDS' || legA.propType === 'RUSHING_YARDS' || legA.propType === 'RECEIVING_YARDS'))
+  )) {
+    return 0.36;
+  }
+
   // Default baseline correlation
-  return sameTeam ? 0.05 : -0.02;
+  return sameTeam ? 0.12 : -0.02;
 }
 
 /**
@@ -226,9 +232,9 @@ export function evaluateSgpCombination(
 
   // 4. Threshold vector in standard normal space
   const thresholds: number[] = legs.map((leg) => {
-    // If OVER: success when random uniform > (1 - p), which corresponds to z > normalInv(1 - p)
-    // Equivalently: z_i >= normalInv(1 - leg.individualFairProb)
-    return normalInv(1 - leg.individualFairProb);
+    return leg.direction === 'OVER'
+      ? normalInv(1 - leg.individualFairProb)
+      : normalInv(leg.individualFairProb);
   });
 
   // 5. Monte Carlo sampling of Gaussian Copula

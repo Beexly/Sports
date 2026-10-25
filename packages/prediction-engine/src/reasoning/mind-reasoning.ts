@@ -45,9 +45,6 @@ export interface MindRecord {
   /** Corpus schema: denominator used to scale parsed_float_magnitude into probability space. */
   readonly unit_scale_denominator?: number;
   readonly evidence_quote: string;
-  readonly evidence_span?: CharacterSpan;
-  readonly mechanism_quote?: string;
-  readonly mechanism_span?: CharacterSpan;
   readonly applicable_contexts: readonly string[];
   /** Corpus schema: 16-primitive context fields. Legacy rows carry only applicable_contexts. */
   readonly applicable_context_fields?: readonly ContextFieldEnum[];

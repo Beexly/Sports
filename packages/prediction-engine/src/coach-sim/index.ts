@@ -16,3 +16,42 @@ export type { FourthDownState, FourthDownDecision } from "./fourth-down-policy.j
 export { allocateTargets, applyShadowHaircut } from "./sinkhorn-targets.js";
 export type { EligibleTarget, TargetAllocation } from "./sinkhorn-targets.js";
 
+export {
+  YBC_PER_RUSH_32,
+  AT_OR_BEHIND_LOS_RATE_32,
+  EPA_VS_BLITZ_32,
+  MEASURED_CELL_PRIORS,
+  shrinkPublishedCell,
+  getTeamShrunkTrenchAndBlitzCell,
+  pitNoYbcCell,
+} from "../nfl/published-cells-shrinkage.js";
+export type {
+  NflTeamCode,
+  ShrunkCellResult,
+  PitNoYbcCellResult,
+  TeamShrunkTrenchAndBlitzCell,
+} from "../nfl/published-cells-shrinkage.js";
+
+export {
+  estimateStudentTEpaAbility,
+  evaluateQbGiniVolatilityMultiplier,
+  computeDefensiveWr1SplitAdjustment,
+  decomposePenaltyEpaShrinkage,
+  computeShrunkIndividualHfa,
+  computeNeutralPassTendencyOverExpected,
+  computeRerunPuntFieldPositionDelta,
+  buildReceiverPropQuantileDistribution,
+  evaluateRbHighValueTouchTrap,
+  applyQuarterbackAndRoomAttritionToReceiver,
+  applySingleGameVarianceCompressionToRatingEdge,
+} from "./oct24-intel-master-kernels.js";
+export type {
+  QbVolatilityAdjustment,
+  Wr1SplitDefensiveProfile,
+  ReceiverPropQuantileDistribution,
+  ReceiverAttritionInput,
+  ReceiverAttritionResult,
+} from "./oct24-intel-master-kernels.js";
+
+
+

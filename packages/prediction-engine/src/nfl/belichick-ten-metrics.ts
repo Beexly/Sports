@@ -641,3 +641,20 @@ export function evaluateBelichickTenMetrics(inputs: BelichickMetricInputs): Beli
     evDecisions: situationSpecificEvOptimization(inputs.situations ?? []),
   }
 }
+
+export {
+  YBC_PER_RUSH_32,
+  AT_OR_BEHIND_LOS_RATE_32,
+  EPA_VS_BLITZ_32,
+  MEASURED_CELL_PRIORS,
+  shrinkPublishedCell,
+  getTeamShrunkTrenchAndBlitzCell,
+  pitNoYbcCell,
+} from "./published-cells-shrinkage.js"
+export type {
+  NflTeamCode,
+  ShrunkCellResult,
+  PitNoYbcCellResult,
+  TeamShrunkTrenchAndBlitzCell,
+} from "./published-cells-shrinkage.js"
+
