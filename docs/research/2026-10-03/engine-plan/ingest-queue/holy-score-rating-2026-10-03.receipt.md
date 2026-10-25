@@ -1,7 +1,7 @@
 lane: gse-night-research
 date: 2026-10-03
 kind: mind-candidate-receipt
-status: staged_not_trained
+status: landed
 writer: existing trainer only
 mind_jsonl: not_written
 mind_train: not_started
