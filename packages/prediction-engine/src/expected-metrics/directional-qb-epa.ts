@@ -1,5 +1,4 @@
 import type { DirectionalAttemptPlay } from "./nflverse-pbp-mapper.js";
-import { num, roundMetric } from "./numeric.js";
 
 /** Minimum distinct weeks of data required for a QB to appear in a window. */
 export const DEFAULT_MIN_PASSER_ATTEMPTS = 80; // season-to-date

@@ -119,6 +119,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly directionalPlays: readonly DirectionalAttemptPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
