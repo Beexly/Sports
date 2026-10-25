@@ -158,4 +158,5 @@ export {
   type PbpRow,
   type TransitionPair,
   type MappedExpectedMetricsPlays,
+  type DirectionalAttemptPlay,
 } from "./nflverse-pbp-mapper.js";
