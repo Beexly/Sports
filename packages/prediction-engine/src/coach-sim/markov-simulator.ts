@@ -30,6 +30,11 @@ import { KNEEL_MEAN_YD, KNEEL_RATE_PER_WINNING_GAME, kneelProbability } from "..
 import { evaluateFourthDown, STAFF_AGGRESSION } from "./fourth-down-policy.js";
 import { allocateTargets, applyShadowHaircut, type EligibleTarget } from "./sinkhorn-targets.js";
 import { POOLED_DROPBACK } from "../nfl/situational-reality.js";
+import {
+  evaluateBelichickTenMetrics,
+  type BelichickMetricInputs,
+  type BelichickMetricBundle,
+} from "../nfl/belichick-ten-metrics.js";
 
 export interface CoachSimInput {
   homeTeam: string;
@@ -42,6 +47,10 @@ export interface CoachSimInput {
   /** Away staff go-rate. Defaults to STAFF_AGGRESSION.PHI (documented default). */
   staffAggressionAway?: number;
   shadows?: Array<{ wr: string; shadowRate: number }>;
+  /** Belichick ten-metric snap inputs for the home team's offense. */
+  belichickHome?: BelichickMetricInputs;
+  /** Belichick ten-metric snap inputs for the away team's offense. */
+  belichickAway?: BelichickMetricInputs;
 }
 
 export interface CoachProjection {
@@ -49,6 +58,8 @@ export interface CoachProjection {
   marginMean: number;
   totalP10: number;
   totalP90: number;
+  /** Share of simulated games the home team won. */
+  winProbHome: number;
   playerStats: Record<string, { mean: number; p10: number; p90: number }>;
   fourthDownWP?: number;
   targetShares?: Array<{ playerId: string; share: number }>;
@@ -107,15 +118,20 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
   const homeStaff = input.staffAggression ?? STAFF_AGGRESSION.PHI;
   const location = pointLocation(input);
   const awayStaff = input.staffAggressionAway ?? STAFF_AGGRESSION.PHI;
-  const baseline = driveSample(input, games, STAFF_AGGRESSION.PHI, awayStaff);
+  const metricsHome = input.belichickHome ? evaluateBelichickTenMetrics(input.belichickHome) : null;
+  const metricsAway = input.belichickAway ? evaluateBelichickTenMetrics(input.belichickAway) : null;
+  const baseline = driveSample(input, games, STAFF_AGGRESSION.PHI, awayStaff, metricsHome, metricsAway);
   const played =
-    homeStaff === STAFF_AGGRESSION.PHI && awayStaff === STAFF_AGGRESSION.PHI ? baseline : driveSample(input, games, homeStaff, awayStaff);
+    homeStaff === STAFF_AGGRESSION.PHI && awayStaff === STAFF_AGGRESSION.PHI
+      ? baseline
+      : driveSample(input, games, homeStaff, awayStaff, metricsHome, metricsAway);
   const marginDelta = mean(played.margins) - mean(baseline.margins);
   const totalDelta = mean(played.totals) - mean(baseline.totals);
   const marginMean = location.margin + marginDelta;
   const totalMean = location.total + totalDelta;
   const half = bandHalfWidth(played.totals);
   const fourthDownWP = played.fourthDowns > 0 ? played.wpSum / played.fourthDowns : baselineWp(homeStaff);
+  const winProbHome = homeWinRate(played.margins);
 
   const eligible: EligibleTarget[] = [
     { playerId: "WR1", role: "WR1", baseShare: 0.28, shadowRate: 0.6 },
@@ -130,6 +146,7 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
     marginMean,
     totalP10: totalMean - half,
     totalP90: totalMean + half,
+    winProbHome,
     playerStats: Object.fromEntries(
       allocated.map((a) => [a.playerId, { mean: a.share * 8, p10: a.share * 4, p90: a.share * 12 }]),
     ),
@@ -170,14 +187,28 @@ interface DriveSample {
   fourthDowns: number;
 }
 
-function driveSample(input: CoachSimInput, n: number, homeStaff: number, awayStaff: number): DriveSample {
+function driveSample(
+  input: CoachSimInput,
+  n: number,
+  homeStaff: number,
+  awayStaff: number,
+  metricsHome: BelichickMetricBundle | null,
+  metricsAway: BelichickMetricBundle | null,
+): DriveSample {
   const margins = new Float64Array(n);
   const totals = new Float64Array(n);
   const rand = mulberry32(seedFor(input, homeStaff));
   let wpSum = 0;
   let fourthDowns = 0;
   for (let i = 0; i < n; i++) {
-    const game = playGame(rand, input.neutralPassRate ?? MEASURED_DRIVE.neutralPassRate, homeStaff, awayStaff);
+    const game = playGame(
+      rand,
+      input.neutralPassRate ?? MEASURED_DRIVE.neutralPassRate,
+      homeStaff,
+      awayStaff,
+      metricsHome,
+      metricsAway,
+    );
     margins[i] = game.home - game.away;
     totals[i] = game.home + game.away;
     wpSum += game.wpSum;
@@ -206,7 +237,14 @@ function scoreTouchdown(rand: () => number, score: (pts: number) => void): void 
   if (rand() < MEASURED_DRIVE.xpMake) score(1);
 }
 
-function playGame(rand: () => number, passRate: number, homeStaff: number, awayStaff: number): GamePoints {
+function playGame(
+  rand: () => number,
+  passRate: number,
+  homeStaff: number,
+  awayStaff: number,
+  metricsHome: BelichickMetricBundle | null,
+  metricsAway: BelichickMetricBundle | null,
+): GamePoints {
   let home = 0;
   let away = 0;
   let q = 1;
@@ -226,7 +264,9 @@ function playGame(rand: () => number, passRate: number, homeStaff: number, awayS
   };
   const give = () => {
     offenseHome = !offenseHome;
-    yl = 25;
+    const stMetrics = offenseHome ? metricsHome : metricsAway;
+    const stIndex = stMetrics?.fieldPositionIndex?.[0];
+    yl = stIndex ? Math.round(stIndex.efpStYards) : 25;
     down = 1;
     dist = 10;
   };
@@ -287,9 +327,11 @@ function playGame(rand: () => number, passRate: number, homeStaff: number, awayS
       clock -= 8;
     } else {
       const pass = rand() < passRate;
+      const offMetrics = offenseHome ? metricsHome : metricsAway;
       let gain: number;
       if (pass) {
-        if (rand() < POOLED_DROPBACK.sackRate) {
+        const sackRate = quickPressureSackRate(offMetrics);
+        if (rand() < sackRate) {
           gain = POOLED_DROPBACK.sackYards;
         } else {
           gain =
@@ -297,10 +339,6 @@ function playGame(rand: () => number, passRate: number, homeStaff: number, awayS
               ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
               : 0;
         }
-        gain =
-          rand() < MEASURED_DRIVE.completionExSack
-            ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
-            : 0;
       } else {
         gain = MEASURED_DRIVE.yardsPerCarry + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
       }
@@ -308,6 +346,24 @@ function playGame(rand: () => number, passRate: number, homeStaff: number, awayS
       if (yl >= 100) {
         scoreTouchdown(rand, score);
         give();
+      } else if (yl >= 80 && offMetrics) {
+        const rate = redZoneTdRate(offMetrics, pass ? "pass" : "run", yl);
+        if (rand() < rate) {
+          scoreTouchdown(rand, score);
+          give();
+        } else {
+          down += 1;
+          dist = Math.max(1, dist - gain);
+        }
+      } else if (down === 3) {
+        const convProb = thirdDownConvProb(offMetrics, dist);
+        if (rand() < convProb) {
+          down = 1;
+          dist = Math.min(10, 100 - yl);
+        } else {
+          down += 1;
+          dist = Math.max(1, dist - gain);
+        }
       } else if (gain >= dist) {
         down = 1;
         dist = Math.min(10, 100 - yl);
@@ -348,6 +404,44 @@ function quantile(xs: Float64Array, q: number): number {
   if (lo === hi) return copy[lo]!;
   const w = i - lo;
   return copy[lo]! * (1 - w) + copy[hi]! * w;
+}
+
+function homeWinRate(margins: Float64Array): number {
+  let wins = 0
+  for (let i = 0; i < margins.length; i++) if (margins[i]! > 0) wins++
+  return wins / margins.length
+}
+
+/**
+ * Metric 2 — quick-pressure survivor as the sack rate on a pass dropback.
+ * Falls back to the pooled measured sack rate when no package is supplied.
+ */
+function quickPressureSackRate(metrics: BelichickMetricBundle | null): number {
+  if (!metrics || metrics.pressurePackages.length === 0) return POOLED_DROPBACK.sackRate
+  const top = metrics.pressurePackages[0]!
+  return top.quickPressureRate > 0 ? top.quickPressureRate : top.sackRate
+}
+
+/**
+ * Metric 4 — third-down conversion by coverage and distance bucket.
+ * Falls back to the pooled 0.40 when no table is supplied.
+ */
+function thirdDownConvProb(metrics: BelichickMetricBundle | null, dist: number): number {
+  if (!metrics || metrics.thirdDownConversions.length === 0) return 0.4
+  const bucket = dist <= 3 ? "1-3" : dist <= 6 ? "4-6" : "7+"
+  const row = metrics.thirdDownConversions.find((r) => r.key.includes(bucket))
+  return row ? row.conversionRate : 0.4
+}
+
+/**
+ * Metric 5 — red-zone TD rate by play type and zone.
+ * `goal-to-go` fires at yardline >= 90, `red-zone` at >= 80.
+ */
+function redZoneTdRate(metrics: BelichickMetricBundle | null, playType: "run" | "pass", yl: number): number {
+  if (!metrics || metrics.redZoneEfficiency.length === 0) return 0.5
+  const zone = yl >= 90 ? "goal-to-go" : "red-zone"
+  const row = metrics.redZoneEfficiency.find((r) => r.key === `${playType}|${zone}`)
+  return row ? row.tdRate : 0.5
 }
 
 function seedFor(input: CoachSimInput, homeStaff: number): number {
