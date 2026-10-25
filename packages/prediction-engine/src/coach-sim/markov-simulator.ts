@@ -273,7 +273,10 @@ function playGame(
   };
   const give = () => {
     offenseHome = !offenseHome;
-    const stMetrics = offenseHome ? metricsHome : metricsAway;
+    // Semantic inversion: the bundle describes the opponent's defensive and
+    // coverage tendencies, so the team now receiving the ball is read against
+    // the OTHER team's table (the unit that just punted/kicked to them).
+    const stMetrics = offenseHome ? metricsAway : metricsHome;
     const stIndex = stMetrics?.fieldPositionIndex?.[0];
     yl = stIndex ? Math.round(stIndex.efpStYards) : 25;
     down = 1;
@@ -336,10 +339,15 @@ function playGame(
       clock -= 8;
     } else {
       const pass = rand() < passRate;
-      const offMetrics = offenseHome ? metricsHome : metricsAway;
+      // Semantic inversion: instead of applying a team's own tables to its own
+      // offense, apply the OPPONENT's defensive tables to the offense being
+      // simulated. The bundle is defensive/coverage data (rush packages,
+      // coverage conversions, red-zone allowed), so the defense's table must
+      // describe the offense it is defending.
+      const defMetricsForOffense = offenseHome ? metricsAway : metricsHome;
       let gain: number;
       if (pass) {
-        const sackRate = quickPressureSackRate(offMetrics);
+        const sackRate = quickPressureSackRate(defMetricsForOffense);
         if (rand() < sackRate) {
           gain = POOLED_DROPBACK.sackYards;
         } else {
@@ -355,12 +363,12 @@ function playGame(
       if (yl >= 100) {
         scoreTouchdown(rand, score);
         give();
-      } else if (yl >= 80 && offMetrics && offMetrics.redZoneEfficiency.length > 0 && down >= 3) {
+      } else if (yl >= 80 && defMetricsForOffense && defMetricsForOffense.redZoneEfficiency.length > 0 && down >= 3) {
         // Red-zone table present: replace the third-down conversion roll, not the
         // whole down structure. Firing on down 1–2 bypassed first-down progression
         // and rolled a per-play TD rate up to four times per trip, which inflated
         // scoring for any team carrying a bundle — even one with an empty table.
-        const rate = redZoneTdRate(offMetrics, pass ? "pass" : "run", yl);
+        const rate = redZoneTdRate(defMetricsForOffense, pass ? "pass" : "run", yl);
         if (rand() < rate) {
           scoreTouchdown(rand, score);
           give();
@@ -369,7 +377,7 @@ function playGame(
           dist = Math.max(1, dist - gain);
         }
       } else if (down === 3) {
-        const convProb = thirdDownConvProb(offMetrics, dist);
+        const convProb = thirdDownConvProb(defMetricsForOffense, dist);
         if (rand() < convProb) {
           down = 1;
           dist = Math.min(10, 100 - yl);
