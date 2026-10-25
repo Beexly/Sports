@@ -12,13 +12,20 @@ paths-ignore:
   - "**/*.test.ts"
   - "**/*.test.mjs"
   - "**/fixtures/**"
-  # Historical audit salvage. The plaintext credential files under these trees
-  # were committed in 87b3e4850 (2026-10-21) during a workspace text salvage and
-  # are part of 250 commits already on this branch. The credentials found there
-  # have been confirmed dead at the live services (Space API token -> HTTP 401;
-  # Neon passwords -> 28P01 auth failure), and the credential-bearing files were
-  # removed from the branch tip in "chore: remove leaked space-api token
-  # artifacts (GitGuardian)". These paths are ignored so the scanner stops
-  # re-reporting the historical commits, which are not being rewritten.
+  # Historical audit salvage (repo allowlist, not a scan widening).
+  #
+  # The plaintext credential files under these trees were committed in 87b3e4850
+  # (2026-10-21) during a workspace text salvage, and they are part of 250 commits
+  # already on engine/public-baseline-2026-10-24 (PR #1202). That history is not
+  # being rewritten. The credentials found there were confirmed dead at the live
+  # services before this entry was added:
+  #   - Space API token (data/snapshots/.../space-api-token.txt) -> HTTP 401
+  #     "invalid Bearer token" from https://beexly-gse-watch-pipeline.hf.space
+  #   - Neon passwords (env__6.txt, env__7.txt) -> 28P01 password authentication
+  #     failed against the current pooler host
+  # The credential-bearing files were removed from the branch tip in
+  # "chore: remove leaked space-api token artifacts (GitGuardian)" (256a043c5).
+  #
+  # Reason: Historical audit salvage; token rotated; files removed from tip.
   - "data/snapshots/eyi_package/**"
   - ".opencode-runs/prsafety/**"
