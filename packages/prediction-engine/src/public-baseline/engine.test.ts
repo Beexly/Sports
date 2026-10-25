@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 import { absDeltaMultiplier, HFA, K, movMultiplier, publicPrior, replay, REVERSIONS, winProb } from "./elo538.js"
 import { assertCoachInputs, CoachFenceError } from "./fence.js"
-import { positivePartJamesStein } from "./jamesStein.js"
+import { positivePartJamesStein, shrinkSituational } from "./jamesStein.js"
 import { KILLED_EDGES, mayReopen } from "./killed.js"
 import { ANCHOR_MOTION_PA_SINGLE, computeGseDwp, computeGseQptsr, computeGseSii, computeGseSpese, computeGseSva, computeGseTor } from "./metrics.js"
 import { SOURCE_REGISTRY } from "./registry.js"
@@ -67,6 +67,19 @@ describe("shrinkage, withhold, metrics, fence", () => {
     const big = positivePartJamesStein([10, 0, 0], 1)
     assert.ok(Math.abs(big[0]! - 9.9) < 1e-12)
     assert.deepEqual(positivePartJamesStein([3, 4], 1), [3, 4])
+  })
+
+  it("shrinkSituational published cell moves when a sibling is deleted", () => {
+    const full = [0.4, 0.1, -0.2]
+    const sigma2 = 0.05
+    const shrunk = shrinkSituational(full, sigma2)
+    const raw = full[0]!
+    assert.ok(Math.abs(shrunk - raw) > 1e-6, "d=3 must shrink the published cell")
+
+    const ablated = [0.4, 0.1]
+    const afterDelete = shrinkSituational(ablated, sigma2)
+    assert.ok(Math.abs(afterDelete - raw) < 1e-12, "deleting a sibling (d<3) returns raw; shrink is gone")
+    assert.notEqual(shrunk, afterDelete)
   })
 
   it("withholds a quiet shift and keeps a measured one", () => {
