@@ -14,7 +14,7 @@ describe("epa-per-target", () => {
     const pushPlays = (playerId: string, targets: number, epa: number) => {
       for (let i = 0; i < targets; i++) {
         plays.push({
-          playId: \`p-\${playerId}-\${i}\`,
+          playId: `p-${playerId}-${i}`,
           week: 1,
           receiverPlayerId: playerId,
           epa: epa / targets
@@ -79,7 +79,7 @@ describe("epa-per-target", () => {
     const pushPlays = (playerId: string, targets: number, epa: number | null) => {
       for (let i = 0; i < targets; i++) {
         plays.push({
-          playId: \`p-\${playerId}-\${i}\`,
+          playId: `p-${playerId}-${i}`,
           week: 1,
           receiverPlayerId: playerId,
           epa: epa === null ? null : (epa / targets)
@@ -89,9 +89,9 @@ describe("epa-per-target", () => {
 
     // WR1: 21 targets, 1 has null EPA (20 valid)
     for(let i=0; i<20; i++) {
-        plays.push({playId: \`p-WR1-\${i}\`, week: 1, receiverPlayerId: "WR1", epa: 1.0}); // sum 20
+        plays.push({playId: `p-WR1-${i}`, week: 1, receiverPlayerId: "WR1", epa: 1.0}); // sum 20
     }
-    plays.push({playId: \`p-WR1-null\`, week: 1, receiverPlayerId: "WR1", epa: null}); // total 21 targets
+    plays.push({playId: `p-WR1-null`, week: 1, receiverPlayerId: "WR1", epa: null}); // total 21 targets
 
     // UNK1: 20 targets, missing position
     pushPlays("UNK1", 20, 10.0);
@@ -114,10 +114,10 @@ describe("epa-per-target", () => {
   it("enforces strict point-in-time discipline", () => {
     const plays: TargetPlay[] = [];
     for(let i=0; i<20; i++) {
-        plays.push({playId: \`p-WR1-w1-\${i}\`, week: 1, receiverPlayerId: "WR1", epa: 1.0}); // Week 1
+        plays.push({playId: `p-WR1-w1-${i}`, week: 1, receiverPlayerId: "WR1", epa: 1.0}); // Week 1
     }
     for(let i=0; i<10; i++) {
-        plays.push({playId: \`p-WR1-w2-\${i}\`, week: 2, receiverPlayerId: "WR1", epa: 2.0}); // Week 2
+        plays.push({playId: `p-WR1-w2-${i}`, week: 2, receiverPlayerId: "WR1", epa: 2.0}); // Week 2
     }
 
     const positionLookup = new Map([["WR1", "WR"]]);
