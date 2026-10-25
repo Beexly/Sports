@@ -477,13 +477,37 @@ function quickPressureSackRate(metrics: BelichickMetricBundle | null): number {
 
 /**
  * Metric 4 — third-down conversion by coverage and distance bucket.
- * Falls back to the pooled 0.40 when no table is supplied.
+ *
+ * Volume-weighted across every coverage row in the distance bucket. The table
+ * is keyed `${coverage}|${bucket}`, and coverage is NOT a state in the drive
+ * chain, so a single-row lookup cannot be coverage-specific — it can only be
+ * whichever row the sort happened to put first. That is an accident, not a
+ * model. On the plan fixture the sort puts `zone|1-3` (7 attempts, 0 converts)
+ * first and the `man|1-3` row (5 attempts, 5 converts) is never read, which
+ * reports a 0.000 short third-down conversion rate for a defense that actually
+ * converted 5 of 12.
+ *
+ * Weighting by `attempts` reproduces the measured count: 5/12 ≈ 0.4167. It is
+ * the same rule as the pressure aggregate — use the volume already measured.
+ * Max would return 1.0 and treat a 5-attempt sample as the rate for every
+ * short third down, discarding the 7 zone snaps that converted at zero.
+ *
+ * Falls back to the pooled 0.40 when no table is supplied or the bucket is
+ * empty. No new state, no invented coverage model.
  */
 function thirdDownConvProb(metrics: BelichickMetricBundle | null, dist: number): number {
   if (!metrics || metrics.thirdDownConversions.length === 0) return 0.4
   const bucket = dist <= 3 ? "1-3" : dist <= 6 ? "4-6" : "7+"
-  const row = metrics.thirdDownConversions.find((r) => r.key.includes(bucket))
-  return row ? row.conversionRate : 0.4
+  let weightedConv = 0
+  let attempts = 0
+  for (const row of metrics.thirdDownConversions) {
+    if (!row.key.includes(bucket)) continue
+    const n = row.attempts ?? 0
+    if (n <= 0) continue
+    weightedConv += row.conversionRate * n
+    attempts += n
+  }
+  return attempts > 0 ? weightedConv / attempts : 0.4
 }
 
 /**
