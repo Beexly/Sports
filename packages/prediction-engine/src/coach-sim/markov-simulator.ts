@@ -120,9 +120,18 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
   const awayStaff = input.staffAggressionAway ?? STAFF_AGGRESSION.PHI;
   const metricsHome = input.belichickHome ? evaluateBelichickTenMetrics(input.belichickHome) : null;
   const metricsAway = input.belichickAway ? evaluateBelichickTenMetrics(input.belichickAway) : null;
-  const baseline = driveSample(input, games, STAFF_AGGRESSION.PHI, awayStaff, metricsHome, metricsAway);
+  // Baseline is the no-metric reference. The metric tables are applied to the
+  // played sample only, so their effect survives the played − baseline
+  // subtraction. Passing the metrics to both sides made the term cancel
+  // exactly whenever played === baseline (the default-staff path), which left
+  // marginMean metric-invariant while winProbHome moved.
+  const baseline = driveSample(input, games, STAFF_AGGRESSION.PHI, awayStaff, null, null);
+  // The redundant-second-sample shortcut only holds when there is no metric
+  // table to apply. With metrics present the played sample must be drawn
+  // separately, or the metric effect is discarded along with the shortcut.
+  const noMetric = metricsHome === null && metricsAway === null;
   const played =
-    homeStaff === STAFF_AGGRESSION.PHI && awayStaff === STAFF_AGGRESSION.PHI
+    noMetric && homeStaff === STAFF_AGGRESSION.PHI && awayStaff === STAFF_AGGRESSION.PHI
       ? baseline
       : driveSample(input, games, homeStaff, awayStaff, metricsHome, metricsAway);
   const marginDelta = mean(played.margins) - mean(baseline.margins);
@@ -346,7 +355,11 @@ function playGame(
       if (yl >= 100) {
         scoreTouchdown(rand, score);
         give();
-      } else if (yl >= 80 && offMetrics) {
+      } else if (yl >= 80 && offMetrics && offMetrics.redZoneEfficiency.length > 0 && down >= 3) {
+        // Red-zone table present: replace the third-down conversion roll, not the
+        // whole down structure. Firing on down 1–2 bypassed first-down progression
+        // and rolled a per-play TD rate up to four times per trip, which inflated
+        // scoring for any team carrying a bundle — even one with an empty table.
         const rate = redZoneTdRate(offMetrics, pass ? "pass" : "run", yl);
         if (rand() < rate) {
           scoreTouchdown(rand, score);
@@ -419,7 +432,13 @@ function homeWinRate(margins: Float64Array): number {
 function quickPressureSackRate(metrics: BelichickMetricBundle | null): number {
   if (!metrics || metrics.pressurePackages.length === 0) return POOLED_DROPBACK.sackRate
   const top = metrics.pressurePackages[0]!
-  return top.quickPressureRate > 0 ? top.quickPressureRate : top.sackRate
+  // A zero here means "no sacks in the dominant package", which for a thin
+  // sample is noise, not a real zero. Falling through to top.sackRate returned
+  // 0 as well and the offense was never sacked. Keep the pooled rate as the
+  // floor so an absent/empty signal can never erase pressure.
+  if (top.quickPressureRate > 0) return top.quickPressureRate
+  if (top.sackRate > 0) return top.sackRate
+  return POOLED_DROPBACK.sackRate
 }
 
 /**
