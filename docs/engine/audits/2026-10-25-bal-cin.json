@@ -5,6 +5,20 @@
   "status": "scheduled",
   "play_signed": false,
   "class_a_imports_odds": false,
+  "coach_input": "docs/engine/corpus/x-pull-2026-10-24.md",
+  "install": "Practice the unblitzed Ravens dropback (-0.028). Cincinnati blitzes at 17.8% and still pressures at 39.3%. The weighted 0.029 is the expectation, not the install. Ball to Flowers in the slot. Coverage rule is Chase. Lamar is two scripts, rush docked.",
+  "will_not": ["install the blend", "test Cincinnati outside", "mark Lamar in", "mint a ticket"],
+  "coach_read": {
+    "lamar_jackson": { "status": "questionable", "detail": "ankle", "post_id": "2113738867526475833" },
+    "bengals_blitz_rate": 0.178,
+    "bengals_pressure_rate": 0.393,
+    "ravens_epa_per_dropback_blitzed": 0.292,
+    "ravens_epa_per_dropback_unblitzed": -0.028,
+    "ravens_expected_epa_per_dropback": 0.02896,
+    "bengals_pressure_rate": 0.393,
+    "chase_vs_ravens_since_2024": { "targets": 14.5, "yards": 174.8, "fpg": 34.5, "post_id": "2113672517315617153" },
+    "measurement_post_id": "2113699922398646589"
+  },
   "note": "Wall register only. No wall below is a signed factor for this game. A public source name is not a joined row.",
   "final": null,
   "walls": [
@@ -18,9 +32,9 @@
     {
       "id": "L1",
       "name": "practice injury report",
-      "status": "named-gap",
-      "public_source": "public injury report status only",
-      "blocked": "DNP/LP/FP practice detail is not in the report"
+      "status": "coach-read",
+      "public_source": "X corpus Friday designation, post 2113738867526475833: Lamar Jackson questionable, ankle, vs Cincinnati",
+      "blocked": "DNP/LP/FP practice grades are still not in the corpus"
     },
     {
       "id": "L2a",

@@ -61,6 +61,27 @@ export type { EspnBoard } from "./espn.js"
 export { brierScore, reliabilityBins, pageCusum, seriesWinProb, bestTeamTitleRate } from "./research.js"
 export type { ReliabilityBin, SeasonGame } from "./research.js"
 export {
+  parseXPull,
+  availabilityFromPosts,
+  measurementsFromPosts,
+  expectedEpaPerDropback,
+  readCoachBrief,
+  loadCoachCorpus,
+  requireCorpus,
+  personnelOnField,
+  advanceWithCorpus,
+} from "./x-corpus.js"
+export type { CoachPost, CoachBrief, Availability, Measurement } from "./x-corpus.js"
+export {
+  scanNumbers,
+  publishFromCorpus,
+  markApplied,
+  correctShowdownOwnership,
+} from "./corpus-ledger.js"
+export type { NumberToken, NumberUse, CoachPublished, OwnershipPosition } from "./corpus-ledger.js"
+export { callSheet } from "./call-sheet.js"
+export type { Call } from "./call-sheet.js"
+export {
   WP_GARBAGE_HI,
   WP_GARBAGE_LO,
   feedDest,

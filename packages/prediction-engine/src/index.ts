@@ -4733,6 +4733,17 @@ export {
   rejectNarrative,
   marchenkoPasturEdges,
   flagOutsideBulk,
+  parseXPull,
+  readCoachBrief,
+  loadCoachCorpus,
+  requireCorpus,
+  personnelOnField,
+  advanceWithCorpus,
+  expectedEpaPerDropback,
+  publishFromCorpus,
+  correctShowdownOwnership,
+  scanNumbers,
+  callSheet,
 } from "./public-baseline/index.js";
 
 // ── Situational work, measured 2026-10-22/23 (nfl-farm cycles 1-36) ───────────
