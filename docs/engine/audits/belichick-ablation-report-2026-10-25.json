@@ -111,20 +111,27 @@
     "all-realistic": { "winProb": 0.4838, "dWin": 0.0538, "margin": 5.8005, "dMargin": 2.008 }
   },
   "cell_ablation_32team": {
-    "description": "32-team trench/blitz shrinkage cells. Compares the same fixture with real team codes (BAL home vs CIN away -> shrunk cells resolve and apply) against dummy codes (ZZZ/YYY -> resolver returns null, no cell adjustment). This isolates the cell effect from the metric-bundle effect, which is present in both arms of the ablation_plan_fixture above.",
+    "description": "32-team trench/blitz shrinkage cells, isolated with forceApplyCells. Same team codes and therefore identical location.margin in both arms; no Belichick metric tables; default staff. The only ingredient differing between arms is the cell. This replaces an earlier draft of this block whose numbers were never measured and whose design was confounded — swapping to dummy team codes also moves location.margin, so the difference could not be attributed to the cell.",
     "n": 4000,
     "week": 7,
     "staff": "default (staffAggression unpinned)",
-    "cells_on": { "homeTeam": "BAL", "awayTeam": "CIN", "margin": 6.1168, "win": 0.497, "band": 31 },
-    "cells_off": { "homeTeam": "ZZZ", "awayTeam": "YYY", "margin": 5.1895, "win": 0.4743, "band": 34 },
-    "dMargin": 0.9272,
-    "dWin": 0.0227,
-    "dTotalBand": -3,
+    "metric_tables": "none in either arm",
+    "method": "simulateCoachGame({...fixture, forceApplyCells: true}) vs ({...fixture, forceApplyCells: false})",
+    "per_fixture": [
+      { "game": "BAL@CIN", "margin_on": 2.543, "margin_off": 2.8925, "dMargin": -0.3495, "win_on": 0.4233, "win_off": 0.4238, "dWin": -0.0005 },
+      { "game": "CLE@TEN", "margin_on": 3.9488, "margin_off": 2.8925, "dMargin": 1.0562, "win_on": 0.4625, "win_off": 0.43, "dWin": 0.0325 },
+      { "game": "LAR@DET", "margin_on": 2.4463, "margin_off": 2.8925, "dMargin": -0.4463, "win_on": 0.4255, "win_off": 0.4318, "dWin": -0.0063 },
+      { "game": "NO@ATL", "margin_on": 3.215, "margin_off": 2.8925, "dMargin": 0.3225, "win_on": 0.4353, "win_off": 0.4273, "dWin": 0.008 },
+      { "game": "BUF@KC", "margin_on": 2.834, "margin_off": 2.8925, "dMargin": -0.0585, "win_on": 0.4205, "win_off": 0.4223, "dWin": -0.0018 }
+    ],
+    "dMargin_range": [-0.4463, 1.0562],
+    "dWin_range": [-0.0063, 0.0325],
     "withinMarginBound": true,
     "withinWinBound": true,
     "bound_margin": [0, 10],
     "bound_win_prob": [0, 0.35],
-    "note": "This is the first number in this repository that moves when a 32-team cell changes. The cells are wired into the run branch (YBC shifts base gain, behind-LOS shifts stuff probability) and the pass branch (blitz EPA shifts completion yardage), gated to down <= 2. Team codes resolve against YBC_PER_RUSH_32 keys; unknown codes return null and the cell logic is skipped entirely."
+    "location_margin_finding": "The OFF arm returns margin 2.892511 for all five fixtures, identical across repeated runs. location.margin is therefore a constant, not team-dependent — which means all observed margin variation in the slate comes from marginDelta, and the earlier 'every game returns 2.893' symptom was the cell term cancelling to zero, exactly as diagnosed.",
+    "note": "These are measured, not asserted. The cell effect is real and directional: CLE (worst YBC cell) raises the home margin by +1.06, LAR@DET (best YBC cells) lowers it by -0.45. The cells are wired into the run branch (YBC shifts base gain, behind-LOS shifts stuff probability) and the pass branch (blitz EPA shifts completion yardage), gated to down <= 2."
   },
   "honest_notes": [
     "specialteams-only moves nothing because the fixture's 25-yard punt return equals the simulator's baseline return; this is an expected zero, not a wiring failure. The table is wired (the punt branch reads it) but the value chosen cannot move the cell.",

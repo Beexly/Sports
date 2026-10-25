@@ -57,6 +57,16 @@ export interface CoachSimInput {
   belichickHome?: BelichickMetricInputs;
   /** Belichick ten-metric snap inputs for the away team's offense. */
   belichickAway?: BelichickMetricInputs;
+  /**
+   * Measurement-only override for the 32-team trench/blitz cells.
+   * Defaults to true. Setting false resolves no cell, so the played sample is
+   * a true no-cell draw; combined with no metric tables and default staff the
+   * played sample collapses onto the baseline and the cell term measures as
+   * exactly zero. This exists so an ablation can isolate the cell effect while
+   * holding the team codes — and therefore location.margin — fixed. Do not set
+   * it in production paths.
+   */
+  forceApplyCells?: boolean;
 }
 
 export interface CoachProjection {
@@ -168,15 +178,20 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
   // subtraction. Passing the metrics to both sides made the term cancel
   // exactly whenever played === baseline (the default-staff path), which left
   // marginMean metric-invariant while winProbHome moved.
-  const baseline = driveSample(input, games, STAFF_AGGRESSION.PHI, awayStaff, null, null);
+  const baseline = driveSample(input, games, STAFF_AGGRESSION.PHI, awayStaff, null, null, false);
   // The redundant-second-sample shortcut only holds when there is no metric
-  // table to apply. With metrics present the played sample must be drawn
-  // separately, or the metric effect is discarded along with the shortcut.
+  // table AND no trench/blitz cell to apply. With either present the played
+  // sample must be drawn separately, or the effect is discarded along with the
+  // shortcut. The cells are resolved inside playGame from the team codes, so if
+  // they were applied to the baseline as well they would subtract out exactly.
   const noMetric = metricsHome === null && metricsAway === null;
+  const forceCells = input.forceApplyCells ?? true;
+  const hasCells =
+    forceCells && (resolveTrenchCell(input.homeTeam) !== null || resolveTrenchCell(input.awayTeam) !== null);
   const played =
-    noMetric && homeStaff === STAFF_AGGRESSION.PHI && awayStaff === STAFF_AGGRESSION.PHI
+    noMetric && !hasCells && homeStaff === STAFF_AGGRESSION.PHI && awayStaff === STAFF_AGGRESSION.PHI
       ? baseline
-      : driveSample(input, games, homeStaff, awayStaff, metricsHome, metricsAway);
+      : driveSample(input, games, homeStaff, awayStaff, metricsHome, metricsAway, forceCells);
   const marginDelta = mean(played.margins) - mean(baseline.margins);
   const totalDelta = mean(played.totals) - mean(baseline.totals);
   const marginMean = location.margin + marginDelta;
@@ -246,6 +261,7 @@ function driveSample(
   awayStaff: number,
   metricsHome: BelichickMetricBundle | null,
   metricsAway: BelichickMetricBundle | null,
+  applyCells: boolean,
 ): DriveSample {
   const margins = new Float64Array(n);
   const totals = new Float64Array(n);
@@ -262,6 +278,7 @@ function driveSample(
       metricsAway,
       input.homeTeam,
       input.awayTeam,
+      applyCells,
     );
     margins[i] = game.home - game.away;
     totals[i] = game.home + game.away;
@@ -300,6 +317,7 @@ function playGame(
   metricsAway: BelichickMetricBundle | null,
   homeTeam: string,
   awayTeam: string,
+  applyCells: boolean,
 ): GamePoints {
   let home = 0;
   let away = 0;
@@ -317,8 +335,8 @@ function playGame(
   // OFFENSE-side tendencies (yards before contact, stuff rate, blitz EPA), so
   // the team holding the ball reads its OWN cell — the opposite convention from
   // the defensive metric bundle, which reads the opponent's table.
-  const homeCell = resolveTrenchCell(homeTeam);
-  const awayCell = resolveTrenchCell(awayTeam);
+  const homeCell = applyCells ? resolveTrenchCell(homeTeam) : null;
+  const awayCell = applyCells ? resolveTrenchCell(awayTeam) : null;
 
   const lead = () => (offenseHome ? home - away : away - home);
   const score = (pts: number) => {
