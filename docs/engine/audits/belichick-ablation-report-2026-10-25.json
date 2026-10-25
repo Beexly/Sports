@@ -1,0 +1,89 @@
+{
+  "report": "belichick-ablation",
+  "audited_at": "2026-10-25",
+  "branch": "integration/belichick-ablation-reconciled",
+  "base_branch": "engine/public-baseline-2026-10-24",
+  "doctrine": "No PR until real deltas are in this file.",
+  "commits": [
+    {
+      "sha": "2d1ac8c0a",
+      "subject": "fix(coach-sim): three mechanical fixes — baseline contamination, red-zone down guard, zero-sack pooled fallback",
+      "patches": [
+        "baseline in simulateCoachGame receives null, null so it is a true un-metric reference; redundant-sample shortcut only fires when noMetric is true",
+        "red-zone branch requires down >= 3 and non-empty redZoneEfficiency",
+        "quickPressureSackRate falls back to POOLED_DROPBACK.sackRate when sample sack rate is 0"
+      ]
+    },
+    {
+      "sha": "c6a44268a",
+      "subject": "fix(coach-sim): semantic inversion — opponent defensive tables applied to the offense on the field",
+      "patches": [
+        "defMetricsForOffense = offenseHome ? metricsAway : metricsHome",
+        "quickPressureSackRate, redZoneTdRate, thirdDownConvProb call sites now read the defending team's table"
+      ]
+    },
+    {
+      "sha": "af9b5b290",
+      "subject": "fix(coach-sim): trips-weighted aggregatePressure — volume-weighted sack rate across rush packages",
+      "patches": [
+        "aggregatePressure sums rate * snaps across all rush packages and divides by total snaps",
+        "quickPressureSackRate uses aggregatePressure instead of pressurePackages[0]",
+        "fixture 4-rusher x 10 snaps 0 sacks + 5-rusher x 4 snaps 2 sacks -> trips 14, sack rate 2/14 = 0.1429 (old top-package read = 0.5)"
+      ]
+    },
+    {
+      "sha": "56f0d24ff",
+      "subject": "test(coach-sim): realistic multi-package ablation fixture with plausibility bounds",
+      "patches": [
+        "fixture is 10 four-man zone snaps (0 sacks) + 2 five-man man sacks + 2 five-man man pressures = 14 snaps",
+        "staffAggression unpinned so the default-staff path runs",
+        "assertions bound |dMargin| in (0, 10) and |dWinProbHome| in (0, 0.35)"
+      ]
+    }
+  ],
+  "test_matrix": [
+    { "file": "packages/prediction-engine/src/coach-sim/belichick-ablation.test.ts", "runner": "vitest", "result": "4/4 passing" },
+    { "file": "packages/prediction-engine/src/coach-sim/markov-simulator.test.ts", "runner": "vitest", "result": "5/5 passing" },
+    { "file": "packages/prediction-engine/src/__tests__/scoring-locked-price.test.ts", "runner": "vitest", "result": "8/8 passing" },
+    { "file": "packages/prediction-engine/src/__tests__/x-situational-80-records-complete.test.ts", "runner": "vitest", "result": "80/80 passing" },
+    { "file": "packages/prediction-engine/src/metrics/__tests__/gse-proprietary-seven.test.ts", "runner": "vitest", "result": "5/5 passing" },
+    { "file": "packages/prediction-engine/src/public-baseline/public-path.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/call-sheet.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/corpus-ledger.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/x-corpus.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/ne-chi-fixture.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/reasoning/mind-reasoning.mutation-v2.spec.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" }
+  ],
+  "ablation_plan_fixture": {
+    "description": "Plan Patch 3 fixture: 14-snap multi-package table, all four metric tables present, default staff, BAL home vs CIN",
+    "n": 4000,
+    "staff": "default (PHI both sides)",
+    "margin_with": 6.745,
+    "margin_without": 3.7925,
+    "dMargin": 2.9525,
+    "win_with": 0.5095,
+    "win_without": 0.43,
+    "dWin": 0.0795,
+    "dBand": 1.0,
+    "withinMarginBound": true,
+    "withinWinBound": true,
+    "bound_margin": [0, 10],
+    "bound_win_prob": [0, 0.35]
+  },
+  "ablation_isolated_tables": {
+    "description": "Same base game, one metric table active at a time, n=4000, default staff",
+    "baseline": { "winProb": 0.43, "margin": 3.7925 },
+    "pressure-only": { "winProb": 0.5635, "dWin": 0.1335, "margin": 8.1865, "dMargin": 4.394 },
+    "thirddown-only": { "winProb": 0.4728, "dWin": 0.0428, "margin": 5.1568, "dMargin": 1.3643 },
+    "redzone-only": { "winProb": 0.3715, "dWin": -0.0585, "margin": 1.9728, "dMargin": -1.8197 },
+    "specialteams-only": { "winProb": 0.43, "dWin": 0, "margin": 3.7925, "dMargin": 0 },
+    "all-realistic": { "winProb": 0.5615, "dWin": 0.1315, "margin": 8.1383, "dMargin": 4.3457 }
+  },
+  "honest_notes": [
+    "specialteams-only moves nothing because the fixture's 25-yard punt return equals the simulator's baseline return; this is an expected zero, not a wiring failure. The table is wired (the punt branch reads it) but the value chosen cannot move the cell.",
+    "thirddown-only moves the home margin UP by 1.36 even though the man-coverage row converts at 1.0 and applies to the away offense. Cause: thirdDownConversionByCoverage sorts rows by attempts descending, and the simulator's lookup uses key.includes(bucket), so the highest-volume row wins. In this fixture the zone row (7 attempts, 0.0 conversion) outranks the man row (5 attempts, 1.0), killing away third-down conversions and raising the home margin. This is pre-existing lookup behavior, not introduced by these patches, and is not changed here.",
+    "redzone-only moves the home margin DOWN by 1.82 because the red-zone branch replaces the third-down conversion roll with a direct per-play TD roll at 4/12 = 0.333; for the away offense that direct TD probability exceeds the continuation value of converting and running more plays.",
+    "Deltas are deterministic for this fixture (seed excludes metric tables), so the test asserts bounds rather than point values; a seed shift cannot fail a correct run.",
+    "The 3.4 margin / 0.08 win-prob numbers that appeared in the plan draft were assertion-shape only; the real measured values are in ablation_plan_fixture above."
+  ]
+}
