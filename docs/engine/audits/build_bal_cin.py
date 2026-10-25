@@ -154,7 +154,9 @@ if os.path.exists(out):
 envelope = {
     "event_id": "401873012",
     "game_id": "401873012",
-    "matchup": "BAL@CIN",
+    "matchup": "CIN@BAL",
+    "home_team": "BAL",
+    "away_team": "CIN",
     "status": "scheduled",
     "play_signed": False,
     "class_a_imports_odds": False,
