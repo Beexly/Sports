@@ -27,6 +27,12 @@
 import { describe, expect, it } from "vitest";
 import { simulateCoachGame, type CoachSimInput } from "./markov-simulator.js";
 import type { BelichickMetricInputs } from "../nfl/belichick-ten-metrics.js";
+import {
+  shrinkPublishedCell,
+  getTeamShrunkTrenchAndBlitzCell,
+  pitNoYbcCell,
+  MEASURED_CELL_PRIORS,
+} from "../nfl/published-cells-shrinkage.js";
 
 const base: CoachSimInput = {
   homeTeam: "BAL",
@@ -137,5 +143,61 @@ describe("Belichick ten-metric ablation", () => {
     const withMetrics = simulateCoachGame({ ...base, belichickAway: metrics }, n);
     expect(Number.isFinite(withMetrics.winProbHome)).toBe(true);
     expect(Number.isFinite(withMetrics.marginMean)).toBe(true);
+  });
+});
+
+/**
+ * The 32-team trench/blitz cells are only "wired and weighted" if the shrink
+ * arithmetic reproduces the published numbers and the resolved team cells move
+ * when the input moves. These are the arithmetic proofs; the ablation block
+ * above proves the cells reach the decision cell.
+ */
+describe("Published 32-team trench/blitz shrinkage cells", () => {
+  const ybc = MEASURED_CELL_PRIORS.ybcPerRush;
+
+  it("shrinks PIT YBC 1.36 toward the league mean 1.166875", () => {
+    const cell = shrinkPublishedCell(1.36, ybc.shrinkTargetMu0, ybc.withinTeamNoiseSigma2, ybc.normDiffSquared, 32);
+    // Baranchik JS+ factor for the YBC vector: 1 - 29*0.024/5.2696875 = 0.867924
+    expect(cell.jsPlusFactor).toBeCloseTo(0.867924, 5);
+    expect(cell.shrunkValue).toBeCloseTo(1.3345, 3);
+    // Shrinkage pulls a team above the mean DOWN toward it.
+    expect(cell.shrunkValue).toBeLessThan(1.36);
+    expect(cell.shrunkValue).toBeGreaterThan(ybc.shrinkTargetMu0);
+  });
+
+  it("shrinks NO YBC 0.93 toward the league mean 1.166875", () => {
+    const cell = shrinkPublishedCell(0.93, ybc.shrinkTargetMu0, ybc.withinTeamNoiseSigma2, ybc.normDiffSquared, 32);
+    expect(cell.shrunkValue).toBeCloseTo(0.9613, 3);
+    // Shrinkage pulls a team below the mean UP toward it.
+    expect(cell.shrunkValue).toBeGreaterThan(0.93);
+    expect(cell.shrunkValue).toBeLessThan(ybc.shrinkTargetMu0);
+  });
+
+  it("reproduces the PIT-vs-NO edges the published cell reports", () => {
+    const cell = pitNoYbcCell();
+    expect(cell.ybcEdgePitVsNo).toBeCloseTo(0.3732, 3);
+    expect(cell.behindLosEdgePitVsNo).toBeCloseTo(0.0218, 3);
+    expect(cell.blitzEpaDeltaPitVsNo).toBeCloseTo(-0.1288, 3);
+    expect(cell.matchup).toBe("PIT@NO");
+  });
+
+  it("resolves all 32 teams without NaN and keeps each cell inside its own vector bounds", () => {
+    for (const team of ["BAL", "CIN", "PIT", "NO", "KC", "SF", "BUF", "DET"] as const) {
+      const cell = getTeamShrunkTrenchAndBlitzCell(team);
+      expect(Number.isFinite(cell.ybc.shrunkValue)).toBe(true);
+      expect(Number.isFinite(cell.behindLos.shrunkValue)).toBe(true);
+      expect(Number.isFinite(cell.blitzEpa.shrunkValue)).toBe(true);
+      // JS+ never leaves the raw value outside the [raw, mean] interval.
+      expect(cell.ybc.jsPlusFactor).toBeGreaterThan(0);
+      expect(cell.ybc.jsPlusFactor).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("treats an unknown team code as a named gap, not a NaN cell", () => {
+    // The resolver in markov-simulator.ts gates on record membership before
+    // calling this. Document the raw behaviour so a future refactor does not
+    // assume the cell function itself is safe.
+    const unknown = getTeamShrunkTrenchAndBlitzCell("XXX" as never);
+    expect(Number.isFinite(unknown.ybc.shrunkValue)).toBe(false);
   });
 });

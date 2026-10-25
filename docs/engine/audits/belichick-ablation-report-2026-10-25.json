@@ -53,7 +53,7 @@
     }
   ],
   "test_matrix": [
-    { "file": "packages/prediction-engine/src/coach-sim/belichick-ablation.test.ts", "runner": "vitest", "result": "4/4 passing" },
+    { "file": "packages/prediction-engine/src/coach-sim/belichick-ablation.test.ts", "runner": "vitest", "result": "9/9 passing (4 metric-bundle ablation + 5 shrinkage-cell arithmetic)" },
     { "file": "packages/prediction-engine/src/coach-sim/markov-simulator.test.ts", "runner": "vitest", "result": "5/5 passing" },
     { "file": "packages/prediction-engine/src/__tests__/scoring-locked-price.test.ts", "runner": "vitest", "result": "8/8 passing" },
     { "file": "packages/prediction-engine/src/__tests__/x-situational-80-records-complete.test.ts", "runner": "vitest", "result": "80/80 passing" },
@@ -110,6 +110,22 @@
     "specialteams-only": { "winProb": 0.43, "dWin": 0, "margin": 3.7925, "dMargin": 0 },
     "all-realistic": { "winProb": 0.4838, "dWin": 0.0538, "margin": 5.8005, "dMargin": 2.008 }
   },
+  "cell_ablation_32team": {
+    "description": "32-team trench/blitz shrinkage cells. Compares the same fixture with real team codes (BAL home vs CIN away -> shrunk cells resolve and apply) against dummy codes (ZZZ/YYY -> resolver returns null, no cell adjustment). This isolates the cell effect from the metric-bundle effect, which is present in both arms of the ablation_plan_fixture above.",
+    "n": 4000,
+    "week": 7,
+    "staff": "default (staffAggression unpinned)",
+    "cells_on": { "homeTeam": "BAL", "awayTeam": "CIN", "margin": 6.1168, "win": 0.497, "band": 31 },
+    "cells_off": { "homeTeam": "ZZZ", "awayTeam": "YYY", "margin": 5.1895, "win": 0.4743, "band": 34 },
+    "dMargin": 0.9272,
+    "dWin": 0.0227,
+    "dTotalBand": -3,
+    "withinMarginBound": true,
+    "withinWinBound": true,
+    "bound_margin": [0, 10],
+    "bound_win_prob": [0, 0.35],
+    "note": "This is the first number in this repository that moves when a 32-team cell changes. The cells are wired into the run branch (YBC shifts base gain, behind-LOS shifts stuff probability) and the pass branch (blitz EPA shifts completion yardage), gated to down <= 2. Team codes resolve against YBC_PER_RUSH_32 keys; unknown codes return null and the cell logic is skipped entirely."
+  },
   "honest_notes": [
     "specialteams-only moves nothing because the fixture's 25-yard punt return equals the simulator's baseline return; this is an expected zero, not a wiring failure. The table is wired (the punt branch reads it) but the value chosen cannot move the cell.",
     "FIXED 2026-10-25: the thirddown-only delta used to be POSITIVE (+1.3643 margin) because thirdDownConversionByCoverage sorts rows by attempts descending and the old single-row .find() read took the first row matching the bucket. On this fixture the zone row (7 attempts, 0.0 conversion) sorted first and the man row (5 attempts, 1.0) was never read, so away third downs converted at 0 and the home margin rose. The lookup is now volume-weighted across every row in the bucket, applying 5/12 = 0.4167. The thirddown-only delta is now NEGATIVE (-0.2265 margin, -0.0070 win), which is the correct direction: a 0.4167 short third-down conversion rate helps the away offense against the home defense.",
@@ -118,6 +134,11 @@
     "CONVERGENCE CAVEAT: the drive chain is finite-state with an absorbing end-of-game. Margin and win probability are Monte Carlo estimates of the absorbing distribution, not a solved stationary distribution. n=4000 is not a convergence rate and must not be read as one. The measured standard error is in se_measurement: dMargin 2.0372 +/- 0.0751 (95% CI 1.8899 to 2.1845), dWin 0.0597 +/- 0.0033 (95% CI 0.0533 to 0.0660) over 12 independent seeds. The single-seed week-7 value sits inside both intervals. Treat n=4000 as calibrated for roughly 0.15 margin-point resolution at 95%, and no finer.",
     "The deltas are deterministic for a fixed seed because seedFor excludes the metric tables; the SE above comes from varying week, which changes the seed only. A seed shift cannot fail a correct run, which is why the test asserts bounds rather than point values.",
     "The 3.4 margin / 0.08 win-prob numbers in the plan draft were assertion-shape only. The real measured values are in ablation_plan_fixture and se_measurement.",
-    "None of these numbers is a promotion. A cell is weighted only when a published number moves as one measured sibling is deleted; this report proves the metric tables move the coach-sim cell under an ablation, not that they move a published number."
+    "None of these numbers is a promotion. A cell is weighted only when a published number moves as one measured sibling is deleted; this report proves the metric tables move the coach-sim cell under an ablation, not that they move a published number.",
+    "32-TEAM CELL WIRING 2026-10-25: the trench/blitz cells are now read in playGame. The run branch shifts base gain by (ybc.shrunkValue - 1.166875) * 0.45 and shifts stuff probability by (behindLos.shrunkValue - 0.465156) * 0.50; the pass branch shifts completion yardage by blitzEpa.shrunkValue * 10 * 0.35. All three are gated to down <= 2. The cell ablation in cell_ablation_32team measures dMargin +0.9272 and dWin +0.0227 when real team codes replace null-resolving codes.",
+    "The stuffed-run branch takes 0 gain as the at/behind-LOS bucket's central value. The exact conditional mean of a stuffed carry is a named gap — this repository measures the SHARE of runs at or behind the line, not the yardage distribution within that share. The non-stuffed draw is renormalised by 1/(1-stuffProb) so a league-average cell still reproduces MEASURED_DRIVE.yardsPerCarry (4.4822) exactly; a team with an above-average stuff rate therefore loses ground per carry, which is the intended direction.",
+    "BLITZ_EPA_TO_YARDS = 10 is a conventional first-order yards-per-EPA conversion. The exact conversion is field-position dependent and is a named gap. The blitz cell only fires when the metric bundle carries a pressure package; with no bundle the pass branch is unchanged.",
+    "getTeamShrunkTrenchAndBlitzCell does NOT guard unknown team codes — it indexes YBC_PER_RUSH_32 directly and an unknown key yields undefined that propagates as NaN. The resolver in markov-simulator.ts gates on hasOwnProperty(YBC_PER_RUSH_32, team) first. The unit test documents the raw NaN behaviour so a future refactor does not assume the cell function itself is safe.",
+    "The team codes in CoachSimInput must be the 32 abbreviations (BAL, CIN, PIT...). A full name like 'Ravens' or 'CIN@BAL' resolves to null and silently skips the cell logic. That is a named gap, not a crash."
   ]
 }

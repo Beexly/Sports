@@ -35,6 +35,12 @@ import {
   type BelichickMetricInputs,
   type BelichickMetricBundle,
 } from "../nfl/belichick-ten-metrics.js";
+import {
+  getTeamShrunkTrenchAndBlitzCell,
+  YBC_PER_RUSH_32,
+  type TeamTrenchAndBlitzCell,
+  type NflTeamCode,
+} from "../nfl/published-cells-shrinkage.js";
 
 export interface CoachSimInput {
   homeTeam: string;
@@ -89,6 +95,43 @@ export const MEASURED_DRIVE = {
   xpMake: 0.9586, // extra_point_result = good / extra_point_attempt, n = 3,672
   secondsPerPlay: 24.47, // mean clock drop in (1, 60] seconds, n = 120,618
 } as const;
+
+/**
+ * Shrinkage targets for the 32-team published trench/blitz cells.
+ *
+ * These are the measured league means of the 32 published team values — the
+ * point each team cell is shrunk toward. They are NOT modeling choices: each
+ * equals the arithmetic mean of the vector in published-cells-shrinkage.ts, and
+ * the shrink module recomputes its own mean from the vector, so these constants
+ * exist only as a readability aid and a guard against a cell being read without
+ * a target. A mismatch would be caught by the module's own consistency check.
+ */
+const YBC_LEAGUE_MEAN = 1.166875;
+const LOS_LEAGUE_MEAN = 0.465156;
+
+/**
+ * Conventional yards-per-EPA used to express the blitz cell on the same yardage
+ * scale as the drive chain. The exact conversion is field-position dependent and
+ * is a named gap; 10 yards/EPA is the conventional first-order value.
+ */
+const BLITZ_EPA_TO_YARDS = 10;
+
+/**
+ * Narrow a packet team string to the 32-code union without throwing.
+ *
+ * getTeamShrunkTrenchAndBlitzCell does not guard unknown codes — it indexes the
+ * record directly, so an unknown key yields undefined values that propagate as
+ * NaN. The membership check must happen here, against the record's own keys.
+ */
+function asNflTeamCode(team: string): NflTeamCode | null {
+  return Object.prototype.hasOwnProperty.call(YBC_PER_RUSH_32, team) ? (team as NflTeamCode) : null;
+}
+
+/** Resolve a team's shrunk trench/blitz cell, or null when the code is unknown. */
+function resolveTrenchCell(team: string): TeamTrenchAndBlitzCell | null {
+  const code = asNflTeamCode(team);
+  return code ? getTeamShrunkTrenchAndBlitzCell(code) : null;
+}
 
 /** 4th-down GO conversion, converted / (converted + failed), by yards to go. */
 export function fourthDownMakeRate(ydstogo: number): number {
@@ -217,6 +260,8 @@ function driveSample(
       awayStaff,
       metricsHome,
       metricsAway,
+      input.homeTeam,
+      input.awayTeam,
     );
     margins[i] = game.home - game.away;
     totals[i] = game.home + game.away;
@@ -253,6 +298,8 @@ function playGame(
   awayStaff: number,
   metricsHome: BelichickMetricBundle | null,
   metricsAway: BelichickMetricBundle | null,
+  homeTeam: string,
+  awayTeam: string,
 ): GamePoints {
   let home = 0;
   let away = 0;
@@ -265,6 +312,13 @@ function playGame(
   let wpSum = 0;
   let fourthDowns = 0;
   let plays = 0;
+
+  // Shrunk 32-team trench/blitz cells, resolved once per game. These are
+  // OFFENSE-side tendencies (yards before contact, stuff rate, blitz EPA), so
+  // the team holding the ball reads its OWN cell — the opposite convention from
+  // the defensive metric bundle, which reads the opponent's table.
+  const homeCell = resolveTrenchCell(homeTeam);
+  const awayCell = resolveTrenchCell(awayTeam);
 
   const lead = () => (offenseHome ? home - away : away - home);
   const score = (pts: number) => {
@@ -345,19 +399,52 @@ function playGame(
       // coverage conversions, red-zone allowed), so the defense's table must
       // describe the offense it is defending.
       const defMetricsForOffense = offenseHome ? metricsAway : metricsHome;
+      // The trench/blitz cell is an OFFENSE-side tendency, so the team holding
+      // the ball reads its own cell. Gated to early downs (down <= 2) per the
+      // doctrine: these cells describe first/second-down tendencies and are not
+      // asserted to describe third/fourth-down play calling.
+      const offCell = offenseHome ? homeCell : awayCell;
+      const earlyDown = down <= 2;
       let gain: number;
       if (pass) {
         const sackRate = quickPressureSackRate(defMetricsForOffense);
         if (rand() < sackRate) {
           gain = POOLED_DROPBACK.sackYards;
         } else {
+          // Blitz EPA cell: how a team's completion expectation moves when the
+          // defense pressures without getting home. Expressed on the drive's
+          // yardage scale via BLITZ_EPA_TO_YARDS. Applied only when the metric
+          // bundle reports a pressure package that did not convert to a sack.
+          const pressured = defMetricsForOffense !== null && defMetricsForOffense.pressurePackages.length > 0;
+          const blitzEpaYards =
+            pressured && earlyDown && offCell ? offCell.blitzEpa.shrunkValue * BLITZ_EPA_TO_YARDS * 0.35 : 0;
           gain =
             rand() < MEASURED_DRIVE.completionExSack
-              ? MEASURED_DRIVE.yardsPerCompletion + MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
+              ? MEASURED_DRIVE.yardsPerCompletion +
+                blitzEpaYards +
+                MEASURED_DRIVE.completionYardsSd * standardNormal(rand)
               : 0;
         }
       } else {
-        gain = MEASURED_DRIVE.yardsPerCarry + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
+        // Run branch: YBC cell shifts the base gain; behind-LOS cell shifts the
+        // probability the carry is stopped at or behind the line. Both gated to
+        // early downs. The stuffed branch takes 0 gain (the at/behind-LOS
+        // bucket's central value); the non-stuffed draw is renormalised so a
+        // league-average cell reproduces MEASURED_DRIVE.yardsPerCarry exactly.
+        const baseGain =
+          MEASURED_DRIVE.yardsPerCarry +
+          (offCell && earlyDown ? (offCell.ybc.shrunkValue - YBC_LEAGUE_MEAN) * 0.45 : 0);
+        const stuffProb = Math.max(
+          0,
+          Math.min(
+            1,
+            LOS_LEAGUE_MEAN + (offCell && earlyDown ? (offCell.behindLos.shrunkValue - LOS_LEAGUE_MEAN) * 0.5 : 0),
+          ),
+        );
+        gain =
+          rand() < stuffProb
+            ? 0
+            : baseGain / Math.max(0.1, 1 - stuffProb) + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
       }
       yl += gain;
       if (yl >= 100) {
