@@ -62,12 +62,26 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
+  // directional-qb-epa
+  "week", "passer_player_id", "pass_location", "pass_length", "air_yards", "qb_spike",
 ] as const;
 
 /** One projected pbp row record, exactly as `parseCsv` emits it. */
 export type PbpRow = Readonly<Record<string, string>>;
 
 /** One before→after transition for EPA/WPA. Indices point into the sibling plays array. */
+export interface DirectionalAttemptPlay {
+  readonly playId: string;
+  readonly week: number;
+  readonly playType: string;
+  readonly passerPlayerId: string;
+  readonly passLocation: string;
+  readonly passLength: string;
+  readonly airYards: number;
+  readonly qbSpike: number;
+  readonly epa: number | null;
+}
+
 export interface TransitionPair {
   readonly beforeIndex: number;
   readonly afterIndex: number;
@@ -380,6 +394,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const directionalPlays: DirectionalAttemptPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -570,6 +585,20 @@ export function mapNflversePbpToExpectedMetrics(
       const key = driveKeyOf(row);
       const playType = row["play_type"];
       const isScrimmage = (playType === "pass" || playType === "run") && (row["posteam"] ?? "") !== "";
+
+      if (playType === "pass" && (row["passer_player_id"] ?? "") !== "") {
+        directionalPlays.push({
+          playId,
+          week: num(row["week"]),
+          playType,
+          passerPlayerId: row["passer_player_id"] ?? "",
+          passLocation: row["pass_location"] ?? "",
+          passLength: row["pass_length"] ?? "",
+          airYards: num(row["air_yards"]),
+          qbSpike: bin(row["qb_spike"]),
+          epa: null,
+        });
+      }
       const successPlay: SuccessPlay | null = isScrimmage
         ? {
             playId,
@@ -611,6 +640,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    directionalPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
