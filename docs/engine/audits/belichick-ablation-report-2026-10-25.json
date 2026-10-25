@@ -4,6 +4,7 @@
   "branch": "integration/belichick-ablation-reconciled",
   "base_branch": "engine/public-baseline-2026-10-24",
   "doctrine": "No PR until real deltas are in this file.",
+  "measurement_condition": "default staff (staffAggression unpinned), BAL home vs CIN, n=4000 per seed. Every number below comes from this one condition; the earlier pinned-staff isolate run is superseded and not reported.",
   "commits": [
     {
       "sha": "2d1ac8c0a",
@@ -39,6 +40,16 @@
         "staffAggression unpinned so the default-staff path runs",
         "assertions bound |dMargin| in (0, 10) and |dWinProbHome| in (0, 0.35)"
       ]
+    },
+    {
+      "sha": "2afb4837a",
+      "subject": "fix(coach-sim): volume-weighted third-down lookup — read every coverage row in the bucket",
+      "patches": [
+        "thirdDownConvProb replaces the single .find() row read with a volume-weighted average over every row matching the distance bucket",
+        "weight is row.attempts; rate is row.conversionRate; result is sum(rate*n)/sum(n)",
+        "plan fixture bucket 1-3: zone row 7 attempts at 0.0 plus man row 5 attempts at 1.0 -> 5/12 = 0.4167 (old find-after-sort read = 0.0)",
+        "empty or unmatched bucket still returns the pooled 0.40 fallback"
+      ]
     }
   ],
   "test_matrix": [
@@ -47,43 +58,66 @@
     { "file": "packages/prediction-engine/src/__tests__/scoring-locked-price.test.ts", "runner": "vitest", "result": "8/8 passing" },
     { "file": "packages/prediction-engine/src/__tests__/x-situational-80-records-complete.test.ts", "runner": "vitest", "result": "80/80 passing" },
     { "file": "packages/prediction-engine/src/metrics/__tests__/gse-proprietary-seven.test.ts", "runner": "vitest", "result": "5/5 passing" },
-    { "file": "packages/prediction-engine/src/public-baseline/public-path.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
-    { "file": "packages/prediction-engine/src/public-baseline/call-sheet.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
-    { "file": "packages/prediction-engine/src/public-baseline/corpus-ledger.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
-    { "file": "packages/prediction-engine/src/public-baseline/x-corpus.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
-    { "file": "packages/prediction-engine/src/public-baseline/ne-chi-fixture.test.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" },
-    { "file": "packages/prediction-engine/src/reasoning/mind-reasoning.mutation-v2.spec.ts", "runner": "tsx --test", "result": "passing (within 33/33 across 9 suites)" }
+    { "file": "packages/prediction-engine/src/public-baseline/public-path.test.ts", "runner": "tsx --test", "result": "passing (33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/call-sheet.test.ts", "runner": "tsx --test", "result": "passing (33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/corpus-ledger.test.ts", "runner": "tsx --test", "result": "passing (33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/x-corpus.test.ts", "runner": "tsx --test", "result": "passing (33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/public-baseline/ne-chi-fixture.test.ts", "runner": "tsx --test", "result": "passing (33/33 across 9 suites)" },
+    { "file": "packages/prediction-engine/src/reasoning/mind-reasoning.mutation-v2.spec.ts", "runner": "tsx --test", "result": "passing (33/33 across 9 suites)" }
   ],
   "ablation_plan_fixture": {
     "description": "Plan Patch 3 fixture: 14-snap multi-package table, all four metric tables present, default staff, BAL home vs CIN",
     "n": 4000,
-    "staff": "default (PHI both sides)",
-    "margin_with": 6.745,
+    "seed": "week 7",
+    "staff": "default (staffAggression unpinned)",
+    "third_down_rate_applied": "5/12 = 0.4167 (volume-weighted)",
+    "margin_with": 5.8005,
     "margin_without": 3.7925,
-    "dMargin": 2.9525,
-    "win_with": 0.5095,
+    "dMargin": 2.008,
+    "win_with": 0.4838,
     "win_without": 0.43,
-    "dWin": 0.0795,
+    "dWin": 0.0538,
     "dBand": 1.0,
     "withinMarginBound": true,
     "withinWinBound": true,
     "bound_margin": [0, 10],
     "bound_win_prob": [0, 0.35]
   },
+  "se_measurement": {
+    "description": "Standard error of the plan-fixture delta across independent seeds. week feeds seedFor only (markov-simulator.ts line 528); the football logic does not read it, so weeks 1-12 give 12 independent runs on identical football parameters.",
+    "k_seeds": 12,
+    "seeds_by": "week 1..12",
+    "n_per_seed": 4000,
+    "dMargin_per_seed": [2.214, 2.0403, 2.3515, 2.1665, 2.008, 1.508, 2.315, 2.1925, 1.8137, 1.651, 2.1525, 2.0348],
+    "dMargin_mean": 2.0372,
+    "dMargin_sd": 0.2603,
+    "dMargin_se": 0.0751,
+    "dMargin_ci95": [1.8899, 2.1845],
+    "dWin_per_seed": [0.0655, 0.0543, 0.063, 0.0735, 0.0745, 0.0657, 0.0538, 0.0368, 0.0667, 0.0648, 0.0495, 0.048],
+    "dWin_mean": 0.0597,
+    "dWin_sd": 0.0113,
+    "dWin_se": 0.0033,
+    "dWin_ci95": [0.0533, 0.066],
+    "single_seed_check": "week 7 single-seed dMargin 2.008 lies inside [1.8899, 2.1845]; dWin 0.0538 lies inside [0.0533, 0.066]",
+    "resolution_at_95pct": "plus or minus 0.147 margin points, plus or minus 0.0065 win probability"
+  },
   "ablation_isolated_tables": {
-    "description": "Same base game, one metric table active at a time, n=4000, default staff",
+    "description": "Same base game, one metric table active at a time, n=4000, week 7, default staff (staffAggression unpinned). Supersedes the pinned-staff isolate run.",
     "baseline": { "winProb": 0.43, "margin": 3.7925 },
-    "pressure-only": { "winProb": 0.5635, "dWin": 0.1335, "margin": 8.1865, "dMargin": 4.394 },
-    "thirddown-only": { "winProb": 0.4728, "dWin": 0.0428, "margin": 5.1568, "dMargin": 1.3643 },
+    "pressure-only": { "winProb": 0.5327, "dWin": 0.1027, "margin": 7.1183, "dMargin": 3.3258 },
+    "thirddown-only": { "winProb": 0.423, "dWin": -0.007, "margin": 3.566, "dMargin": -0.2265 },
     "redzone-only": { "winProb": 0.3715, "dWin": -0.0585, "margin": 1.9728, "dMargin": -1.8197 },
     "specialteams-only": { "winProb": 0.43, "dWin": 0, "margin": 3.7925, "dMargin": 0 },
-    "all-realistic": { "winProb": 0.5615, "dWin": 0.1315, "margin": 8.1383, "dMargin": 4.3457 }
+    "all-realistic": { "winProb": 0.4838, "dWin": 0.0538, "margin": 5.8005, "dMargin": 2.008 }
   },
   "honest_notes": [
     "specialteams-only moves nothing because the fixture's 25-yard punt return equals the simulator's baseline return; this is an expected zero, not a wiring failure. The table is wired (the punt branch reads it) but the value chosen cannot move the cell.",
-    "thirddown-only moves the home margin UP by 1.36 even though the man-coverage row converts at 1.0 and applies to the away offense. Cause: thirdDownConversionByCoverage sorts rows by attempts descending, and the simulator's lookup uses key.includes(bucket), so the highest-volume row wins. In this fixture the zone row (7 attempts, 0.0 conversion) outranks the man row (5 attempts, 1.0), killing away third-down conversions and raising the home margin. This is pre-existing lookup behavior, not introduced by these patches, and is not changed here.",
+    "FIXED 2026-10-25: the thirddown-only delta used to be POSITIVE (+1.3643 margin) because thirdDownConversionByCoverage sorts rows by attempts descending and the old single-row .find() read took the first row matching the bucket. On this fixture the zone row (7 attempts, 0.0 conversion) sorted first and the man row (5 attempts, 1.0) was never read, so away third downs converted at 0 and the home margin rose. The lookup is now volume-weighted across every row in the bucket, applying 5/12 = 0.4167. The thirddown-only delta is now NEGATIVE (-0.2265 margin, -0.0070 win), which is the correct direction: a 0.4167 short third-down conversion rate helps the away offense against the home defense.",
+    "Weighted is the only defensible aggregation of the three available. Max returns 1.0 and treats a 5-snap sample as the rate for every short third down, discarding the 7 zone snaps that converted at zero. The old find-after-sort takes the common package and drops the rare one. Weighted reproduces the measured count, 5 conversions in 12 snaps. Same rule as the pressure aggregate: use the volume already measured.",
     "redzone-only moves the home margin DOWN by 1.82 because the red-zone branch replaces the third-down conversion roll with a direct per-play TD roll at 4/12 = 0.333; for the away offense that direct TD probability exceeds the continuation value of converting and running more plays.",
-    "Deltas are deterministic for this fixture (seed excludes metric tables), so the test asserts bounds rather than point values; a seed shift cannot fail a correct run.",
-    "The 3.4 margin / 0.08 win-prob numbers that appeared in the plan draft were assertion-shape only; the real measured values are in ablation_plan_fixture above."
+    "CONVERGENCE CAVEAT: the drive chain is finite-state with an absorbing end-of-game. Margin and win probability are Monte Carlo estimates of the absorbing distribution, not a solved stationary distribution. n=4000 is not a convergence rate and must not be read as one. The measured standard error is in se_measurement: dMargin 2.0372 +/- 0.0751 (95% CI 1.8899 to 2.1845), dWin 0.0597 +/- 0.0033 (95% CI 0.0533 to 0.0660) over 12 independent seeds. The single-seed week-7 value sits inside both intervals. Treat n=4000 as calibrated for roughly 0.15 margin-point resolution at 95%, and no finer.",
+    "The deltas are deterministic for a fixed seed because seedFor excludes the metric tables; the SE above comes from varying week, which changes the seed only. A seed shift cannot fail a correct run, which is why the test asserts bounds rather than point values.",
+    "The 3.4 margin / 0.08 win-prob numbers in the plan draft were assertion-shape only. The real measured values are in ablation_plan_fixture and se_measurement.",
+    "None of these numbers is a promotion. A cell is weighted only when a published number moves as one measured sibling is deleted; this report proves the metric tables move the coach-sim cell under an ablation, not that they move a published number."
   ]
 }
