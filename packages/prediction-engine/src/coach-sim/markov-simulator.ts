@@ -434,19 +434,45 @@ function homeWinRate(margins: Float64Array): number {
 }
 
 /**
- * Metric 2 — quick-pressure survivor as the sack rate on a pass dropback.
+ * Trips-weighted sack rate across rush packages.
+ *
+ * Volume-aware: each package's sack rate is weighted by its snap count, so a
+ * rare high-sack blitz cannot dominate a common four-man rush. The previous
+ * top-package read took one package's rate regardless of how often it occurred.
+ *
+ * Why the aggregate uses `sackRate`, not `quickPressureRate`: quickPressureRate
+ * is a CONDITIONAL rate whose denominator is only the quick snaps inside the
+ * package. Multiplying it by the package's total snaps counts each quick sack
+ * more than once. On the 14-snap fixture below it yields 4 sacks from 2 actual
+ * sacks (0.2857 vs the measured 2/14 = 0.1429). Only `sackRate` x `snaps`
+ * reproduces the measured sack count. Nothing here is invented: both fields
+ * come straight from the evaluated metric bundle.
+ */
+export function aggregatePressure(
+  packages: readonly { sackRate?: number; snaps?: number; quickPressureRate?: number }[],
+): { sackRate: number; trips: number } {
+  let totalSacks = 0
+  let totalTrips = 0
+  for (const p of packages) {
+    const snaps = p.snaps ?? 0
+    if (snaps <= 0) continue
+    totalSacks += (p.sackRate ?? 0) * snaps
+    totalTrips += snaps
+  }
+  return { sackRate: totalTrips > 0 ? totalSacks / totalTrips : 0, trips: totalTrips }
+}
+
+/**
+ * Metric 2 — trips-weighted sack rate on a pass dropback.
  * Falls back to the pooled measured sack rate when no package is supplied.
  */
 function quickPressureSackRate(metrics: BelichickMetricBundle | null): number {
   if (!metrics || metrics.pressurePackages.length === 0) return POOLED_DROPBACK.sackRate
-  const top = metrics.pressurePackages[0]!
-  // A zero here means "no sacks in the dominant package", which for a thin
-  // sample is noise, not a real zero. Falling through to top.sackRate returned
-  // 0 as well and the offense was never sacked. Keep the pooled rate as the
-  // floor so an absent/empty signal can never erase pressure.
-  if (top.quickPressureRate > 0) return top.quickPressureRate
-  if (top.sackRate > 0) return top.sackRate
-  return POOLED_DROPBACK.sackRate
+  const agg = aggregatePressure(metrics.pressurePackages)
+  // A zero aggregate means "no sacks across the sampled packages", which for a
+  // thin sample is noise, not a real zero. Keep the pooled rate as the floor so
+  // an absent/empty signal can never erase pressure.
+  return agg.sackRate > 0 ? agg.sackRate : POOLED_DROPBACK.sackRate
 }
 
 /**
