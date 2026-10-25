@@ -2,6 +2,25 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["target", "own_epa"],
+    failureModes: ["null EPA on unratable plays must be excluded from means", "position must be verified, never guessed"],
+    family: "receiving",
+    forbiddenInputs: ["dummy data", "nflverse ref epa"],
+    formulaClass: "linear",
+    formulaSummary: "Per-target EPA efficiency shrunk toward positional mean, with strict 20-target floor.",
+    historicalPrecedent: [{ name: "EPA per target leaderboard", reason: "Per-target efficiency is the receiving counterpart to per-attempt QB efficiency." }],
+    internalName: "epa_per_target_shadow",
+    metricId: "epa-per-target",
+    protectedComponents: ["shrinkage factor", "positional mean floor", "null EPA exclusion"],
+    publicExposure: "hidden",
+    publicName: "EPA Per Target",
+    sourceRightsRequired: ["derived metric only"],
+    status: "SHADOW",
+    targetQuestion: "How efficient is this player per opportunity?",
+    targetVariable: "epa_per_target",
+    validationMethods: ["walk_forward", "clv"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",

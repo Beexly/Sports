@@ -149,6 +149,19 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+
+// EPA per Target (SHADOW)
+export {
+  computeEpaPerTarget,
+  EPA_PER_TARGET_FEATURE_KEYS,
+  EPA_PER_TARGET_MODEL_VERSION,
+  EPA_PER_TARGET_PROVENANCE,
+  type TargetPlay,
+  type EpaPerTargetMetric,
+  type EpaPerTargetOutput,
+  type TargetWindow,
+} from "./epa-per-target.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

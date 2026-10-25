@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type TargetPlay } from "./epa-per-target.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -103,6 +104,7 @@ export interface MappedExpectedMetricsPlays {
   readonly wpaPairs: readonly TransitionPair[];
 
   readonly successPlays: readonly SuccessPlay[];
+  readonly targetPlays: readonly TargetPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
 
@@ -379,6 +381,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpRef: number[] = [];
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
+  const targetPlays: TargetPlay[] = [];
   const drivePlays: DrivePlay[] = [];
 
   for (const gameId of gameIds) {
@@ -499,6 +502,20 @@ export function mapNflversePbpToExpectedMetrics(
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
       }
+
+      // (g) Target series — pass rows with a non-empty receiver.
+      //     Null own EPA is attached post-fit via attachOwnEpa.
+      if (playType === "pass") {
+        const receiver = row["receiver_player_id"] ?? "";
+        if (receiver !== "") {
+          targetPlays.push({
+            playId,
+            week: num(row["week"]),
+            receiverPlayerId: receiver,
+            epa: null, // fit-free mapper; attach post-fit via attachOwnEpa
+          });
+        }
+      }
     }
 
     // (d) EPA/WPA transition pairs — after = row j's own emitted play.
@@ -610,6 +627,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpRef,
     wpaPairs,
     successPlays,
+    targetPlays,
     drivePlays,
     counts: {
       sourceRows,

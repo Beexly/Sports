@@ -19077,3 +19077,6 @@ Method note: read-only browser lane as @GalaxySportsHQ (Lane B: @PattonAnalytics
 - nflcoachprofiles.com — @PattonAnalytics bio link (not opened; public accessibility not verified).
 - establishtherun.com — link cards on @EstablishTheRun posts.
 - Fantasy Points Data — cited as the data source on the @KyleM_FF, @SmolaDS, @ffdataroma, @SleeperJaguars and @BetTheHaus feed posts above, in addition to the named-account citations in the Lane A portion.
+
+### Agent Activity Log
+- 2026-10-24: Q38: Added `epa-per-target` expected metric as a SHADOW module enforcing a 20-target minimum floor, Bayesian shrinkage, and point-in-time calculation rules.
