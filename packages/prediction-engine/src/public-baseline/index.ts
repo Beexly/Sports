@@ -11,7 +11,7 @@ export {
   publicPrior,
 } from "./elo538.js"
 export type { EloGame, ReplayRow } from "./elo538.js"
-export { positivePartJamesStein } from "./jamesStein.js"
+export { positivePartJamesStein, shrinkSituational } from "./jamesStein.js"
 export { SHIFT_FLOOR, situationalShift, shouldWithhold } from "./withhold.js"
 export {
   ANCHOR_MOTION_PA_SINGLE,
