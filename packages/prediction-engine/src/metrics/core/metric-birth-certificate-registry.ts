@@ -736,9 +736,9 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
   {
     allowedInputs: ["down", "ydstogo", "yards_gained", "touchdown", "turnover", "defteam", "week"],
     failureModes: ["null EPA/unratable plays scored as zero", "empty defteam attributed to guessed defense"],
-    family: "situational",
+    family: "environment",
     forbiddenInputs: ["tracking data", "expected variables", "game context outside of yardage/down/turnover"],
-    formulaClass: "deterministic_rule",
+    formulaClass: "composite_score",
     formulaSummary: "Defensive success allowed split by down based on standard yardage fractions, dropping unratable plays.",
     historicalPrecedent: [{ name: "Defensive Success Rate", reason: "Need defensive-allowed surface to evaluate which defenses get off the field." }],
     internalName: "defensive_success_allowed_shadow",
