@@ -736,9 +736,9 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
   {
     allowedInputs: ["raw defensive EPA per play", "remaining schedule"],
     failureModes: ["including special teams plays", "averaging non-finite EPA values", "ignoring point-in-time constraints"],
-    family: "team_strength",
+    family: "team",
     forbiddenInputs: ["future plays", "nflverse expected points calibration column"],
-    formulaClass: "average_with_shrinkage",
+    formulaClass: "composite_score",
     formulaSummary: "Average of shrunk defensive EPA/play allowed by remaining opponents on the schedule.",
     historicalPrecedent: [{ name: "Remaining Schedule Strength", reason: "Team strength evaluation depends on the difficulty of the remaining schedule." }],
     internalName: "remaining_schedule_difficulty",
@@ -750,6 +750,6 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     status: "SHADOW",
     targetQuestion: "How difficult is a team's remaining schedule based on defensive efficiency?",
     targetVariable: "remaining schedule defensive EPA allowed",
-    validationMethods: ["correlation"],
+    validationMethods: ["spearman"],
   },
 ] as const;
