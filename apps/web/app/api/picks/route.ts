@@ -28,6 +28,7 @@ import { evaluateNoBet } from "@/lib/picks/no-bet-evaluation";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { moveRisk, moveRiskLabel } from "@/lib/ranking/move-risk";
 import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
 import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
@@ -412,6 +413,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // trust signal on the teaser is the Edge Index, not the confidence number.
     const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
 
+    // Timing tag, computed from the raw confidence server-side (never from
+    // shownConfidence, so a teaser still gets it). Confidence predicts the
+    // market moving toward a pick, not the pick landing — cycle 23/25.
+    const pickRisk = moveRisk({ confidence: pick.confidence });
+
     // One book count for both the "No book price attached" pill and the
     // market-implied percentage: the immutable mint-time snapshot when the pick
     // has one, else the live Pick.bookmakerCount (rewritten every refresh
@@ -618,6 +624,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       };
 
       return {
+        moveRisk: pickRisk,
+        moveRiskLabel: moveRiskLabel(pickRisk),
         id: pick.id,
         game: {
           homeTeam: pick.game.homeTeamName,

@@ -30,6 +30,11 @@ const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
 const SKIP_DIRS = new Set([
   "node_modules",
   ".git",
+  // Sibling agent worktrees are full checkouts. Walking them reports the same
+  // violation once per worktree under a path that is not this tree's, which
+  // reads as 20 failures where there is one. Scoped runs can still target one
+  // with --root.
+  ".worktrees",
   ".next",
   "dist",
   "build",

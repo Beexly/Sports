@@ -2,10 +2,19 @@
  * PFR defensive advanced-stats typed access — the consumer layer over the
  * nflverse `pfr_advstats` release asset's `def` variant (variant='def').
  *
- * Turns the CC-BY-4.0 `advstats_week_def_<season>.csv` (Pro-Football-Reference
+ * Turns the `advstats_week_def_<season>.csv` release asset (Pro-Football-Reference
  * defensive charting) into typed rows carrying the defensive metrics that no
  * box score contains: pressures, TFL, pass deflections, blitz/hurry/hit/sack
  * components, and coverage context (targets, completions, yards, PD rating).
+ *
+ * LICENSING — TWO REGISTRIES, ONE DELIBERATE SPLIT.
+ * The ingestion registry clears this via `nflverse` (attribution required). The
+ * SCRAPING registry (`source-rights-registry.ts`) is stricter and keeps
+ * `pfr-advstats-via-nflverse` at permission_required, because the charting is
+ * Sports-Reference's and nflverse only redistributes it. That asymmetry is the
+ * safe direction, not a contradiction, so this file asserts clearance through
+ * `assertIngestible("nflverse")` on every parse and does not restate a permissive
+ * licence on a dataset line.
  *
  * COLUMN MAPPING (verified against the live nflverse release, 2022–2025):
  *
@@ -42,6 +51,7 @@
 import type { CsvTable } from "./nflverse-source.js";
 import type { IdCrosswalk } from "./nflverse-id-crosswalk.js";
 import { resolveGsisFromRow } from "./nflverse-id-crosswalk.js";
+import { assertIngestible } from "./source-registry.js";
 
 /** Column-name aliases the parser resolves from the CSV header. Each tuple is
  * [primary, ...fallbacks]; the first that exists in the header wins. This lets
@@ -218,9 +228,11 @@ export interface PfrDefCovariateRow {
  *                  later) — never fabricated.
  */
 export function parsePfrDef(
+  // asserts `nflverse` clearance before rows are accepted — see LICENSING above
   table: CsvTable,
   crosswalk?: IdCrosswalk,
 ): PfrDefRow[] {
+  assertIngestible("nflverse");
   const out: PfrDefRow[] = [];
 
   // Pre-resolve column names once per parse (header is uniform across rows).

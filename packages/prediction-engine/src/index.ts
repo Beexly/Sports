@@ -4549,3 +4549,69 @@ export {
   fetchUpcomingWindows,
   type GameWindow,
 } from "./watch/watch-scheduler.js";
+
+// ── Situational work, measured 2026-10-22/23 (nfl-farm cycles 1-36) ───────────
+// Registry first: it carries the verdict and the weight for every situational
+// term, including the killed ones, so call sites do not re-derive coefficients.
+export {
+  SITUATIONAL_CONSTANTS,
+  MATERIAL_WEIGHT,
+  constantWeight,
+  isMaterial,
+  verdictCensus,
+} from "./nfl/situational-constants.js";
+export type { ConstantVerdict, SituationalConstant } from "./nfl/situational-constants.js";
+
+export {
+  KNEEL_MASS,
+  KNEEL_MEAN_YD,
+  KNEEL_RATE_PER_WINNING_GAME,
+  kneelProbability,
+  kneeldownExpectedHaircutYd,
+  halfHookLossProbability,
+} from "./nfl/kneeldown-mass.js";
+export type { VictoryFormationState } from "./nfl/kneeldown-mass.js";
+
+export {
+  pressureBucket,
+  pressureWeight,
+  expectedSacks,
+  finishingMultiplier,
+  CONVERSION_BY_BUCKET,
+} from "./nfl/pressure-timing.js";
+export type { PressureBucket } from "./nfl/pressure-timing.js";
+
+export {
+  WP_DELTA,
+  LEAGUE_GO_RATE,
+  isFourthDownSpot,
+  classifyDecision,
+  decisionCostVsGoing,
+  expectedBranch,
+} from "./nfl/fourth-down-aggression.js";
+export type { FourthDownDecision } from "./nfl/fourth-down-aggression.js";
+
+export {
+  BASE_EXPLOSIVE_RATE,
+  explosiveRateWithSafetyOuts,
+  explosiveMultiplierForSafetyOuts,
+} from "./nfl/safety-explosive.js";
+
+export {
+  THETA_BY_PAIRING,
+  jointExceedance,
+  jointForPairing,
+  independenceErrorPp,
+} from "./nfl/sgp-copula.js";
+export type { SgpPairing } from "./nfl/sgp-copula.js";
+
+export {
+  MIN_ROUTES_FOR_SURPLUS,
+  leverageSurplus,
+  leverageBand,
+  leverageNote,
+} from "./nfl/leverage-surplus.js";
+export type { LeverageBand } from "./nfl/leverage-surplus.js";
+
+export { applySituationalAdjustments, situationalExplosiveRate } from "./nfl/situational-adjustments.js";
+export type { SituationalInputs, SituationalResult } from "./nfl/situational-adjustments.js";
