@@ -140,6 +140,15 @@ export {
   type SuccessRateSplit,
 } from "./success-rate.js";
 
+// Defensive success allowed (deterministic).
+export {
+  defensiveSuccessAllowed,
+  type DefensiveSuccessPlay,
+  type DefensiveSuccessAllowedSplit,
+  type DefensiveSuccessAllowedResult,
+  type DefensiveSuccessWindow,
+} from "./defensive-success-allowed.js";
+
 // Drive aggregation (deterministic; glass-box, enters dark).
 export {
   buildDrives,

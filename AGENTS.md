@@ -19238,3 +19238,5 @@ Three full Fantasy Points Data tables, each splitting the same per-route columns
 - @DBro_FFB feed-only (PARTIAL tails): DK Metcalf — 12 deep targets, stated third-most among WRs; Woody Marks among 39 qualifying RBs — 14th in yards after contact per attempt, 9th in missed tackle rate (both citing @FantasyPtsData).
 - @RyanJ_Heath: a tutorial video for "Data Suite 2.0" (analytics tooling announcement, via a @FantasyPtsData repost); no data values.
 - After-window exclusion recorded by the lane: @ScottBarrettDFB's "Most Air Yards by a TE in a Single Game [Since 2023]" list (data @FantasyPtsData) was posted after 9:08 AM Oct 25 and belongs to the next window.
+
+- Added Defensive Success Allowed calculation to `packages/prediction-engine/src/expected-metrics/defensive-success-allowed.ts`. Verified by Q40.
