@@ -154,8 +154,17 @@ export {
 export {
   mapNflversePbpToExpectedMetrics,
   attachOwnEpa,
+  attachDefensivePlayEpa,
   NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS,
   type PbpRow,
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Remaining Schedule Difficulty (SHADOW).
+export {
+  computeRemainingScheduleDifficulty,
+  type DefensivePlay,
+  type RemainingScheduleDifficultyResult,
+  type RemainingScheduleDifficultyOpponent,
+} from "./remaining-schedule-difficulty.js";
