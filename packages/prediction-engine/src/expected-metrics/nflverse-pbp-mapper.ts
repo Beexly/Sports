@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type DefensivePlay } from "./remaining-schedule-difficulty.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -105,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  /** epa: null on every play; attach post-fit via attachDefensivePlayEpa. */
+  readonly defensivePlays: readonly DefensivePlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const defensivePlays: DefensivePlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -597,6 +601,17 @@ export function mapNflversePbpToExpectedMetrics(
         epa: null, // fit-free mapper; attach post-fit via attachOwnEpa
         terminalOutcome: mapDriveResult(driveFdr.get(key) ?? "", driveHasPunt.get(key) === true),
       });
+
+      const defteam = row["defteam"] ?? "";
+      if (isScrimmage && defteam !== "") {
+        defensivePlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          defteam,
+          week: num(row["week"]),
+          epa: null, // attach post-fit
+        });
+      }
     }
   }
 
@@ -611,6 +626,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    defensivePlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
@@ -636,6 +652,20 @@ export function attachOwnEpa(
   epaByPlayId: ReadonlyMap<string, number>,
 ): DrivePlay[] {
   return drivePlays.map((p) => {
+    const epa = epaByPlayId.get(p.playId);
+    return epa === undefined ? { ...p } : { ...p, epa };
+  });
+}
+
+/**
+ * Post-fit helper: returns a NEW DefensivePlay array with our OWN fitted EPA
+ * attached by playId. Pure; ids missing from the map keep epa null. Never mutates the input.
+ */
+export function attachDefensivePlayEpa(
+  defensivePlays: readonly DefensivePlay[],
+  epaByPlayId: ReadonlyMap<string, number>,
+): DefensivePlay[] {
+  return defensivePlays.map((p) => {
     const epa = epaByPlayId.get(p.playId);
     return epa === undefined ? { ...p } : { ...p, epa };
   });
