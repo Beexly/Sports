@@ -27,6 +27,7 @@
 import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected-points.js";
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
+import { type DefensiveSuccessPlay } from "./defensive-success-allowed.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
 
 /**
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -103,6 +104,7 @@ export interface MappedExpectedMetricsPlays {
   readonly wpaPairs: readonly TransitionPair[];
 
   readonly successPlays: readonly SuccessPlay[];
+  readonly defensiveSuccessPlays: readonly DefensiveSuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
 
@@ -379,6 +381,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpRef: number[] = [];
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
+  const defensiveSuccessPlays: DefensiveSuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
 
   for (const gameId of gameIds) {
@@ -498,6 +501,19 @@ export function mapNflversePbpToExpectedMetrics(
           touchdown: bin(row["touchdown"]),
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
+
+        defensiveSuccessPlays.push({
+          playId,
+          teamId: row["posteam"] ?? "",
+          playerId: (row["rusher_player_id"] || row["receiver_player_id"]) ?? "",
+          down,
+          ydstogo,
+          yardsGained: num(row["yards_gained"]),
+          touchdown: bin(row["touchdown"]),
+          turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
+          defteam: row["defteam"] ?? "",
+          week: num(row["week"]),
+        });
       }
     }
 
@@ -610,6 +626,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpRef,
     wpaPairs,
     successPlays,
+    defensiveSuccessPlays,
     drivePlays,
     counts: {
       sourceRows,
