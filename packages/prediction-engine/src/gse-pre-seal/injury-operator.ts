@@ -25,9 +25,26 @@ const SINKHORN_TOL = 1e-6;
 const EPA_FACTOR_MIN = 0.5;
 const EPA_FACTOR_MAX = 1.2;
 
-/** Sealed EPA dropoff table. Replacement-to-starter EPA-per-play ratios. */
+/**
+ * Sealed EPA dropoff table. Replacement-to-starter EPA-per-play ratios.
+ *
+ * QB_QUESTIONABLE is the EV-weighted EPA/play retention for a QB1 listed
+ * Questionable who starts. Measured 0.0947 EPA/play dropoff (2024-2026,
+ * opponent-adjusted, within-team bootstrap; P(start|QB1 Questionable) = 0.341,
+ * effect-if-start 0.1159, effect-if-sit 0.0838 -> EV 0.341*0.1159 +
+ * 0.659*0.0838 = 0.0947). Converted to this table's retention space against
+ * the sealed QB1 anchor: QB1 0.78 implies a 22% dropoff, and the sealed QB1
+ * dropoff is 0.11 EPA/play, so a healthy starter is 0.11/0.22 = 0.50 EPA/play.
+ * Retention = 1 - 0.0947/0.50 = 0.8106.
+ *
+ * BLOCKER: the 2024/2025 injuries CSVs are not present in this checkout, so the
+ * estimator cannot be re-run here. The value is frozen from the measured run;
+ * do not re-derive it from market data. Re-run fit_qb_questionable.py against
+ * data/gse-dataset/current/injuries_{2024,2025,2026}.csv when that data lands.
+ */
 const EPA_DROPOFF: Record<string, number> = {
   QB1: 0.78,
+  QB_QUESTIONABLE: 0.8106,
   RB1: 0.85,
   WR1: 0.82,
   WR2: 0.88,
