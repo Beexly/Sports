@@ -143,9 +143,20 @@ export interface TuesdayMasterLock {
 // --------------------------------------------------------------------------- //
 
 /**
+ * Canonical id for a team's personnel-group call row. Single source of truth
+ * for the `${team}-personnel` format: buildPersonnelCalls mints ids here and
+ * the injury-advance invalidator resolves them here. Nothing parses the id
+ * back into a team name, so a team whose name contains "-personnel" or a regex
+ * metacharacter cannot be mis-read.
+ */
+export function personnelCallId(team: string): string {
+  return `${team}-personnel`;
+}
+
+/**
  * Build one personnel-group call row per team from its sealed target rooms.
  *
- * The id is `${team}-personnel`, which is the key a caller uses to supply a
+ * The id is `personnelCallId(team)`, which is the key a caller uses to supply a
  * market quote for that team's personnel grouping. Per-player prop rows are a
  * downstream concern (they need prop markets and player-level projections this
  * module does not hold), so they are not fabricated here.
@@ -161,7 +172,7 @@ export function buildPersonnelCalls(games: readonly WeeklyGameInput[]): Call[] {
       if (targets.length === 0) continue;
       const totalShare = targets.reduce((sum, target) => sum + target.baseShare, 0);
       calls.push({
-        id: `${team}-personnel`,
+        id: personnelCallId(team),
         install: `${team} personnel group: ${targets.length} targets, ${(totalShare * 100).toFixed(1)}% base share`,
         expectation: null,
         alert: `${team} target distribution`,
@@ -285,19 +296,19 @@ export function advanceWeeklyLockWithInjuries(
   // Invalidate tickets for advanced games. A ticket is a priced claim against
   // the projection at quote time; the overlay just moved that projection. Only
   // drop rows whose team belongs to an advanced game — unaffected games keep
-  // their tickets. Rows are keyed `${team}-personnel` by buildPersonnelCalls.
-  const affectedTeams = new Set<string>();
+  // their tickets. Ids are minted by personnelCallId(), so the comparison is an
+  // exact string match against the canonical id rather than a regex parse of
+  // the row's id back into a team name.
+  const affectedCallIds = new Set<string>();
   for (const game of lock.games) {
     if (advance.byGameId[game.gameId] === undefined) continue;
-    affectedTeams.add(game.coachLock.frozenCoachInput.homeTeam);
-    affectedTeams.add(game.coachLock.frozenCoachInput.awayTeam);
+    affectedCallIds.add(personnelCallId(game.coachLock.frozenCoachInput.homeTeam));
+    affectedCallIds.add(personnelCallId(game.coachLock.frozenCoachInput.awayTeam));
   }
   const signedCalls =
     lock.signedCalls === undefined
       ? undefined
-      : lock.signedCalls.filter(
-          (call) => !affectedTeams.has(call.id.replace(/-personnel$/, "")),
-        );
+      : lock.signedCalls.filter((call) => !affectedCallIds.has(call.id));
 
   return {
     ...lock,
