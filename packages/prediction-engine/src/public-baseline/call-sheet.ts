@@ -6,10 +6,27 @@
  * You install the modal tendency. The weighted number is the expectation, not a hiding place.
  * You do not fade a team for a body count. You sit the man who is out.
  * If your tendency is what they are built to punish, you change it.
- * None of this mints a ticket.
+ * None of this mints a ticket. Pricing happens later, in calibration-map.ts,
+ * and only when the isotonic calibration and contradiction gate both pass.
  */
 import type { CoachPost } from "./x-corpus.js"
 import { publishFromCorpus, type CoachPublished } from "./corpus-ledger.js"
+
+/**
+ * A priced ticket. The call sheet itself never fills this in; it is minted by
+ * signCallSheetTickets() in calibration-map.ts after the calibrated edge clears
+ * the threshold and the contradiction gate allows the direction.
+ */
+export type SignedTicket = {
+  readonly callId: string
+  readonly marketLabel: string
+  readonly americanOdds: number
+  readonly noVigImpliedProb: number
+  readonly rawModelProb: number
+  readonly calibratedProb: number
+  readonly edgePct: number
+  readonly kellyQuarterUnits: number
+}
 
 export type Call = {
   id: string
@@ -17,7 +34,8 @@ export type Call = {
   expectation: string | null
   alert: string
   willNot: string
-  ticket: null
+  /** Null until a signed ticket clears the gate. Never a placeholder price. */
+  ticket: SignedTicket | null
 }
 
 function text(posts: readonly CoachPost[], id: string): string {

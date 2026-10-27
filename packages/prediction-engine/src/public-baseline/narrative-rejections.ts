@@ -37,11 +37,13 @@ export type NarrativeRejection = {
 }
 
 export function rejectNarrative(claim: NarrativeClaim, facts: PublicFacts): NarrativeRejection {
-  const base = {
+  // Annotated rather than inferred: an inferred object literal widens gameId to
+  // `string`, which fails NarrativeRejection's literal type `typeof NE_CHI_GAME_ID`.
+  const base: Omit<NarrativeRejection, "reason"> = {
     gameId: NE_CHI_GAME_ID,
     claim: claim.id,
-    accepted: false as const,
-    playSigned: false as const,
+    accepted: false,
+    playSigned: false,
   }
   if (claim.id === "bears-spread") {
     return {

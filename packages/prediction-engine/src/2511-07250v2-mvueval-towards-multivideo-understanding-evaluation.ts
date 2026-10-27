@@ -1,6 +1,10 @@
 /**
  * arXiv:2511.07250v2 — MVU-Eval: Towards Multi-Video Understanding Evaluation for Multimodal LLMs
  *
+ * GENERIC BASELINE — NOT THE PAPER IMPLEMENTATION. This module ships a streaming
+ * classification-drift baseline (prequential accuracy, ADWIN, Friedman/Nemenyi),
+ * NOT the paper's multi-video MLLM benchmark. Do not cite as a paper reproduction.
+ *
  * Benchmark harness for streaming classification on sports data streams: prequential evaluation with ADWIN
  * drift detection, the Friedman + Nemenyi significance protocol, and sample/compute-efficiency frontiers
  * for the online model portfolio.

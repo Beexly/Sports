@@ -653,8 +653,8 @@ export {
 } from "./published-cells-shrinkage.js"
 export type {
   NflTeamCode,
-  ShrunkCellResult,
+  ShrunkCell,
   PitNoYbcCellResult,
-  TeamShrunkTrenchAndBlitzCell,
+  TeamTrenchAndBlitzCell,
 } from "./published-cells-shrinkage.js"
 

@@ -1,6 +1,10 @@
 /**
  * arXiv:2607.18009v1 — Bayesian Conway-Maxwell-Poisson model with spike-and-slab priors for dispersed count data with application to football scores
  *
+ * GENERIC BASELINE — NOT THE PAPER IMPLEMENTATION. This module ships probabilistic
+ * symbolic-regression helpers with honest-uncertainty gates, NOT the paper's CMP
+ * spike-and-slab model (zero CMP code here). Do not cite as a paper reproduction.
+ *
  * P-SR probabilistic symbolic regression for equations with honest uncertainty: each discovered equation
  * ships with coefficient credible intervals and a posterior over equation structures (not a point
  * estimate).

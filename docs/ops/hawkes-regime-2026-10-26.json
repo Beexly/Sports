@@ -1,0 +1,34 @@
+{
+  "model": "univariate exponential Hawkes",
+  "branching_ratio": "n = alpha / beta",
+  "synthetic_validation": {
+    "true_n": 0.6,
+    "recovered": {
+      "mu": 0.166021,
+      "alpha": 0.399756,
+      "beta": 1.240079,
+      "n": 0.322364,
+      "half_life_s": 0.56,
+      "regime": "self_exciting",
+      "events": 49,
+      "neg_loglik": 111.315
+    },
+    "note": "short-window MLE is biased low; regime classification only"
+  },
+  "real_steam_series": {
+    "source": "C:\\Users\\Garrett\\Downloads\\circa_observations.db",
+    "events": 1,
+    "window_s": 1.0,
+    "fit": {
+      "mu": null,
+      "alpha": null,
+      "beta": null,
+      "n": null,
+      "half_life_s": null,
+      "regime": "insufficient_events",
+      "events": 1
+    },
+    "note": "fewer than 5 events: estimator returns insufficient_events and does not claim a regime"
+  },
+  "sealed_center": "untouched \u2014 external evidence stream only"
+}

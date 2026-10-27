@@ -1,11 +1,11 @@
 import assert from "node:assert/strict"
-import { join } from "node:path"
 import { describe, it } from "node:test"
 import { correctShowdownOwnership, markApplied, publishFromCorpus, scanNumbers } from "./corpus-ledger.js"
 import { parseXPull } from "./x-corpus.js"
 import { readFileSync } from "node:fs"
+import { CORPUS_PATH } from "./corpus-path.js"
 
-const posts = parseXPull(readFileSync(join(process.cwd(), "docs/engine/corpus/x-pull-2026-10-24.md"), "utf8"))
+const posts = parseXPull(readFileSync(CORPUS_PATH, "utf8"))
 
 describe("coach ledger", () => {
   const published = publishFromCorpus(posts)

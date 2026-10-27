@@ -1,6 +1,11 @@
 /**
  * arXiv:2409.17129v1 — Bayesian Bivariate Conway-Maxwell-Poisson Regression Model for Correlated Count Data in Sports
  *
+ * GENERIC BASELINE — NOT THE PAPER IMPLEMENTATION. This module ships a simplified
+ * CMP count model (un-normalized lambda^k/(k!)^nu with a truncated normalizing
+ * constant and simplified bivariate effects), NOT the paper's full Bayesian
+ * bivariate CMP regression. Do not cite as a paper reproduction.
+ *
  * Bivariate Conway-Maxwell-Poisson for totals: joint count model with time-varying (random-walk) dispersion
  * so variance itself is predictable (weather-driven inflation), scored by joint log-loss.
  *

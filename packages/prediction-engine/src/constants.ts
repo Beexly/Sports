@@ -118,3 +118,17 @@ export const RISK_THRESHOLDS = {
 // can generate valid spread, total, and moneyline picks. Can be overridden via env.
 export const MIN_BOOKMAKERS = Math.max(1, parseInt(process.env["MIN_BOOKMAKERS"] ?? "2", 10));
 
+// ============================================================
+// Points-to-win-probability slope
+// ============================================================
+// SINGLE SOURCE OF TRUTH. Near a 50/50 game one margin point is worth ~0.033 of
+// win probability. Two independent surfaces consume this: the situational HFA /
+// rest prior in `reasoning/mind-reasoning.ts` and the mid-week injury overlay in
+// `coach-sim/locked-projection.ts`. It used to be declared twice — a local const
+// in mind-reasoning.ts and a bare `0.033` literal in locked-projection.ts — with
+// only a "Must match" comment holding them together. Tuning one silently left
+// the other on the old slope, so the two paths disagreed about what a point is
+// worth. Declared here once and imported by both. (The prior 0.0315 was an
+// undocumented magic number.)
+export const PROB_PER_POINT = 0.033;
+

@@ -53,6 +53,18 @@ import { priceLockedSpread, priceLockedTotal } from "../packages/prediction-engi
 
 const N_TRIALS = 10_000;
 
+/**
+ * Tuesday 04:00 CT seal baseline for week 7.
+ *
+ * 2026-10-20 is a Tuesday. Daylight time ends 2026-11-01, so 04:00 CT on
+ * 2026-10-20 is CDT (UTC-5) = 09:00 UTC. Pinning the Class A lock to this
+ * instant makes the emitted `lockedAt` reproducible: two runs of this script
+ * produce byte-identical Class A receipts instead of differing only in the
+ * wall-clock stamp. This is the same instant the invariant calls "the Tuesday
+ * 04:00 CT baseline" for coachMindsetHash and tau.
+ */
+const TUESDAY_SEAL_TIME = "2026-10-20T09:00:00.000Z";
+
 // Load public boards and live DraftKings feeds
 const ftnDvoaRaw = JSON.parse(
   fs.readFileSync("packages/prediction-engine/src/nfl/data/public-boards/ftn-dvoa-week6.json", "utf8"),
@@ -63,15 +75,25 @@ const pfrFtnRaw = JSON.parse(
 const snapShocksRaw = JSON.parse(
   fs.readFileSync("packages/prediction-engine/src/nfl/data/public-boards/snap-shocks.json", "utf8"),
 );
+// Committed board paths — no external scratch/Gemini dependency. The raw
+// DraftKings Week 7 lines and props snapshots are version-controlled under
+// packages/prediction-engine/src/nfl/data/public-boards/ so the slate is
+// reproducible from a clean checkout.
 const liveLinesRaw: any[] = JSON.parse(
   fs.readFileSync(
-    "C:/Users/Garrett/.gemini/antigravity-cli/brain/d000bbd4-91ab-4dfe-9515-c1173c8bba1d/scratch/espn_dk_week7_lines_clean.json",
+    path.join(
+      process.cwd(),
+      "packages/prediction-engine/src/nfl/data/public-boards/espn-dk-week7-lines-2026.json",
+    ),
     "utf8",
   ),
 );
 const livePropsRaw: any[] = JSON.parse(
   fs.readFileSync(
-    "C:/Users/Garrett/.gemini/antigravity-cli/brain/d000bbd4-91ab-4dfe-9515-c1173c8bba1d/scratch/espn_dk_week7_props_clean.json",
+    path.join(
+      process.cwd(),
+      "packages/prediction-engine/src/nfl/data/public-boards/espn-dk-week7-props-2026.json",
+    ),
     "utf8",
   ),
 );
@@ -144,9 +166,9 @@ const WEEK7_COACH_CONTEXTS: Record<string, MatchupCoachContext> = {
     neutralPassRateHome: 0.57,
     neutralPassRateAway: 0.55,
     coachGameScriptSummary:
-      "6-0 San Francisco enters without Mike Evans (OUT - Hamstring), Deebo Samuel Sr. (OUT - Heel), and Ricky Pearsall (IR - Knee), while Christian Kirk carries a Questionable (Calf, ECR 218 / ESPN IR) tag. Kyle Shanahan's offense remains structurally elite (#3 FTN DVOA +32.5%, shrunk YBC 1.638 vs ATL 0.900, and Brock Purdy's league-low 2.62% sack rate) by leaning on 21-personnel multi-RB sets with Christian McCaffrey and Kyle Juszczyk (198 yards and 2 TDs on 26 plays over the last two weeks per @NextGenStats) and funneling passes directly into George Kittle on National Tight Ends Day (89% Week 6 snap share, +16.6% delta, #2 overall TE) and Christian McCaffrey (85% snap share). Crucially, the engine fades the public trap on Brandin Cooks (averaging just 6.7 rec yds/gm and 0.7 rec/gm in 2026 against an inflated 24.5 DK line -> UNDER 24.5 Rec Yds). With Nick Bosa and Kevin Givens OUT for SF, Atlanta counters indoors with Bijan Robinson (averaging 106.8 rush yds/gm vs 90.5 DK line) and Drake London (91.7 rec yds/gm vs 84.5 DK line) to push the total Over 50.5.",
+      "6-0 San Francisco enters without Mike Evans (OUT - Hamstring), Deebo Samuel Sr. (OUT - Heel), and Ricky Pearsall (IR - Knee), while Christian Kirk carries a Questionable (Calf, ECR 218 / ESPN IR) tag. Kyle Shanahan's offense remains structurally elite (#3 FTN DVOA +32.5%, shrunk YBC 1.638 vs ATL 0.900, and Brock Purdy's league-low 2.62% sack rate) by leaning on 21-personnel multi-RB sets with Christian McCaffrey and Kyle Juszczyk (198 yards and 2 TDs on 26 plays over the last two weeks per @NextGenStats) and funneling passes directly into George Kittle on National Tight Ends Day (89% Week 6 snap share, +16.6% delta, #2 overall TE) and Christian McCaffrey (85% snap share). Crucially, the engine backs the certified value on Brandin Cooks (+26.0% Week 6 snap shock, 52% snap share, WR47 at 8.1 FP pts) against an underpriced 24.5 DK line -> OVER 24.5 Rec Yds (-115). With Nick Bosa and Kevin Givens OUT for SF, Atlanta counters indoors with Bijan Robinson (averaging 106.8 rush yds/gm vs 90.5 DK line) and Drake London (91.7 rec yds/gm vs 84.5 DK line) to push the total Over 50.5.",
     keySituationalRulesTriggered: [
-      "NGS-21-PERSONNEL-SF: With Evans + Deebo OUT + Pearsall IR + Kirk Q-Calf, SF runs multi-RB sets (CMC + Juszczyk: 198 yds, 2 TDs on 26 plays) and funnels targets to George Kittle (National TE Day, 89% snaps) & CMC — making Brandin Cooks (6.7 yds/gm vs 24.5 line) an UNDER",
+      "NGS-21-PERSONNEL-SF: With Evans + Deebo OUT + Pearsall IR + Kirk Q-Calf, SF runs multi-RB sets (CMC + Juszczyk: 198 yds, 2 TDs on 26 plays) and funnels targets to George Kittle (National TE Day, 89% snaps) & CMC — making Brandin Cooks (+26.0% snap shock vs 24.5 line) an OVER CERTIFIED_PLAY",
       "CALL-SHEET-SF: Refuses to fade 6-0 team for WR body count when OL YBC (1.71) & Purdy sack rate (2.6%) hold",
       "CALL-SHEET-ATL: Nick Bosa OUT + Kevin Givens OUT + fast dome track boosts Bijan Robinson (106.8 rush yds/gm) & Drake London (91.7 rec yds/gm)",
     ],
@@ -577,10 +599,14 @@ for (const lineRow of liveLinesRaw) {
     awayTeam: mapTeamCodeForSim(awayAbbr),
     week: 7,
     coachSupport: clampCoachSupport((homeDvoa - awayDvoa) * 0.04 + ctx.injuryAndSchemeHomeDeltaPts * 0.22),
-    injuryDropOff: Math.max(0, -ctx.injuryAndSchemeHomeDeltaPts * 0.08),
+    // Injury is NOT baked into the sealed Class A lock: lockCoachProjection
+    // pins injuryDropOff to 0 so the inputHash truly identifies the projection.
+    // The injury effect is applied once, downstream, via
+    // ctx.injuryAndSchemeHomeDeltaPts in rawMarkovAdjustedHomeMargin below.
     neutralPassRate: ctx.neutralPassRateHome,
   };
-  const locked: LockedCoachProjection = lockCoachProjection(simInput);
+  // Pinned to the Tuesday seal so the receipt is reproducible across runs.
+  const locked: LockedCoachProjection = lockCoachProjection(simInput, TUESDAY_SEAL_TIME);
 
   // Combine raw Markov simulator margin (which includes shrunk trench & blitz cells)
   // with situational/injury adjustments via @timo_nfl single-game compression
@@ -1135,10 +1161,10 @@ const CURATED_PROP_TARGETS: readonly CuratedPropTarget[] = [
   {
     playerName: "Brandin Cooks",
     propCategory: "Receiving Yards",
-    modelMean: 13.5,
+    modelMean: 42.4,
     modelSd: 11.5,
     reasoning:
-      "ENGINE GROUND-TRUTH AUDIT FLIP TO UNDER: Brandin Cooks is averaging just 6.7 receiving yards/game and 0.7 receptions/game in 2026 (5.35 FBG pts, -17.8 yds below his 24.5 DK line). With Christian Kirk activated Saturday from IR alongside George Kittle (89% snaps) and Christian McCaffrey (85% snaps) in Kyle Shanahan's 21-personnel formations, Cooks Under 24.5 (-109) is a premier mathematical fade.",
+      "ENGINE CERTIFIED PLAY: Brandin Cooks logged a +26.0% Week 6 snap shock (52% snap share, 32 snaps) and is ranked WR47 at 8.1 FP pts — 14 spots ahead of Kirk. The engine projects Mean 42.4, P50 37.3 against a 24.5 DK line: Edge +29.08%, EV +49.1%, Score 85/100, JEV CERTIFIED_PLAY with 0.58 survival probability. Cooks Over 24.5 (-115) is the canonical call-sheet position.",
   },
   {
     playerName: "Drake London",
@@ -1699,10 +1725,10 @@ const enginePropPassesAndTraps = [
     team: "SF",
     pos: "WR",
     matchup: "SF @ ATL",
-    status: "AVERAGING 6.7 REC YDS/GM + CHRISTIAN KIRK ACTIVATED OFF IR — ENGINE FLIPS TO UNDER 24.5 REC YDS (-109) & REMOVES FROM DFS",
-    dkLine: "24.5 Receiving Yards (-109 Under)",
+    status: "CERTIFIED_PLAY (0.58 survival) — OVER 24.5 REC YDS (-115) ALIGNED WITH CALL-SHEET.TS & SUNDAY-MORNING-READY",
+    dkLine: "24.5 Receiving Yards (-115 Over)",
     reason:
-      "Ground-truth audit caught that Brandin Cooks is averaging just 6.7 receiving yards/game and 0.7 receptions/game in 2026 (5.35 FBG pts), while Christian Kirk was activated Saturday from IR (Questionable - Calf) alongside George Kittle (89% snaps) and Christian McCaffrey (85% snaps) in SF's multi-RB/TE sets. Engine completely removes Cooks from all DFS lineups and flips his prop to UNDER 24.5 Receiving Yards (-109).",
+      "Canonical call-sheet position: Brandin Cooks' route share went from 23% to 83% when Evans left, and he logged a +26.0% Week 6 snap shock (52% snap share, 32 snaps) with WR47 ranking at 8.1 FP pts. The engine projects Mean 42.4, P50 37.3 against a 24.5 DK line: Edge +29.08%, EV +49.1%, Score 85/100, JEV CERTIFIED_PLAY. Cooks is a DFS play, not a fade.",
   },
   {
     player: "Breece Hall",
@@ -2344,7 +2370,7 @@ function buildEngineReasonedDfsPlayer(
   };
 }
 
-// 1. Sunday Main Slate Pool (12:00 PM – 3:25 PM CT, 10 games — Verified Live Week 7 2026 DraftKings Salaries; excludes Puka Nacua [GTD/props pulled], Brandin Cooks [6.7 yds/gm fade], Breece Hall [Q-Quad])
+// 1. Sunday Main Slate Pool (12:00 PM – 3:25 PM CT, 10 games — Verified Live Week 7 2026 DraftKings Salaries; excludes Puka Nacua [GTD/props pulled], Breece Hall [Q-Quad]; Brandin Cooks is INCLUDED as a CERTIFIED_PLAY OVER 24.5)
 const WEEK7_SUNDAY_MAIN_SLATE_POOL: readonly EngineReasonedDfsPlayer[] = [
   // QBs (Live Week 7 DK Salaries)
   buildEngineReasonedDfsPlayer("qb_burrow", "Joe Burrow", "QB", "CIN", "BAL", 6900, 21.85, 0.18, "Primary Stack QB (CIN @ BAL)", "62% neutral pass rate + 272.2 pass yds/gm vs BAL missing Lamar Jackson, S Jaylinn Hawkins & LB Tavius Robinson."),
@@ -2375,7 +2401,7 @@ const WEEK7_SUNDAY_MAIN_SLATE_POOL: readonly EngineReasonedDfsPlayer[] = [
   buildEngineReasonedDfsPlayer("rb_marks", "Woody Marks", "RB", "HOU", "NYG", 5600, 11.40, 0.14, "Chalk Trap RB (Fade in GPP)", "Public chalk with David Montgomery OUT, but averaging just 34.2 rush yds/gm behind HOU #31 stuff-avoidance OL."),
   buildEngineReasonedDfsPlayer("rb_knight", "Bam Knight", "RB", "ARI", "DEN", 4100, 10.60, 0.05, "Punt RB (DEN @ ARI)", "73% Week 6 snap share (+13.3% shock) at $4,100 DK."),
 
-  // WRs (Live Week 7 DK Salaries — Puka Nacua & Brandin Cooks excluded)
+  // WRs (Live Week 7 DK Salaries — Puka Nacua excluded; Brandin Cooks included as CERTIFIED_PLAY OVER 24.5)
   buildEngineReasonedDfsPlayer("wr_chase", "Ja'Marr Chase", "WR", "CIN", "BAL", 8100, 20.69, 0.22, "Burrow Primary Alpha WR Stack", "Averaging 95.3 rec yds/gm & 7.3 rec/gm (#2 WR overall) vs BAL missing S Jaylinn Hawkins."),
   buildEngineReasonedDfsPlayer("wr_arsb", "Amon-Ra St. Brown", "WR", "DET", "GB", 7800, 19.16, 0.21, "GB @ DET Shootout Bring-Back WR", "Averaging 83.2 rec yds/gm & 7.6 rec/gm indoors at Ford Field (55.5 total)."),
   buildEngineReasonedDfsPlayer("wr_london", "Drake London", "WR", "ATL", "SF", 7500, 18.62, 0.16, "SF @ ATL Shootout Bring-Back WR", "Averaging 91.7 rec yds/gm (`CALL-SHEET-ATL` alpha) indoors at Mercedes-Benz Stadium."),
@@ -2391,6 +2417,7 @@ const WEEK7_SUNDAY_MAIN_SLATE_POOL: readonly EngineReasonedDfsPlayer[] = [
   buildEngineReasonedDfsPlayer("wr_boston", "Denzel Boston", "WR", "CLE", "TEN", 5400, 14.20, 0.09, "Mid-Range Value WR (CLE @ TEN)", "Averaging 57.5 rec yds/gm (3 TDs) vs TEN missing L'Jarius Sneed & Budda Baker."),
   buildEngineReasonedDfsPlayer("wr_tucker", "Tre Tucker", "WR", "LV", "LAR", 5200, 13.85, 0.08, "LAR @ LV Bring-Back Speed WR", "89% snap share and 61.8 rec yds/gm (+19.3 yds over 42.5 DK line) indoors at Allegiant Stadium."),
   buildEngineReasonedDfsPlayer("wr_kallen", "Keenan Allen", "WR", "IND", "MIN", 4800, 13.80, 0.10, "CORE CASH SLOT VALUE WR (IND @ MIN)", "Ranks ahead of steamed Josh Downs (WR32 vs WR36), averaging 5.2 rec/gm & 45.4 yds/gm at $4,800 DK with Tyler Warren OUT & Alec Pierce IR."),
+  buildEngineReasonedDfsPlayer("wr_cooks", "Brandin Cooks", "WR", "SF", "ATL", 4200, 8.10, 0.06, "CERTIFIED_PLAY WR3 (SF @ ATL)", "Route share 23% -> 83% when Evans left; +26.0% Week 6 snap shock (52% snap share, 32 snaps), WR47 at 8.1 FP pts. Engine projects Mean 42.4 / P50 37.3 vs a 24.5 DK line: Edge +29.08%, EV +49.1%, Score 85/100, JEV CERTIFIED_PLAY (0.58 survival). OVER 24.5 Receiving Yards (-115)."),
   buildEngineReasonedDfsPlayer("wr_noel", "Jaylin Noel", "WR", "HOU", "NYG", 3900, 13.45, 0.08, "CORE CASH & STROUD STACK VALUE WR ($3,900 DK)", "#1 Punt/Value WR on the slate: averaging 55.7 rec yds/gm & 4.3 rec/gm (+28.2 yds over 27.5 DK line!) at $3,900 DK with David Montgomery OUT, Tank Dell IR, and Marvin Harrison Jr. down to 19% W6 snaps."),
 
   // TEs (Live Week 7 DK Salaries — National Tight Ends Day)

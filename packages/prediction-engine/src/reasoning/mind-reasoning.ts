@@ -14,6 +14,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { GameContext } from "./situational-engine.js";
+import { PROB_PER_POINT } from "../constants.js";
 
 export interface MindRecord {
   readonly item_id: string;
@@ -976,7 +977,21 @@ export function generateSameGameParlay(
 
   // Leg 1: Side Anchor (Favored side from situational shift)
   const homeProb = ctx.marketImpliedProbability >= 0.5 ? ctx.marketImpliedProbability : 1 - ctx.marketImpliedProbability;
-  const p1 = Math.max(0.51, Math.min(0.72, homeProb + (alt >= 2000 ? 0.02 : 0) + (olDelta > 0 ? 0.02 : 0)));
+  // Modern HFA prior: ~1.5–1.8 points. Near a 50/50 game the point-to-win-prob
+  // slope is ~0.033 per point, so a 1.6-pt prior is ~0.053 of win probability
+  // credited to the home side. (Documented band 1.5–1.8, not a fluid-dynamics term.)
+  const HFA_PRIOR_POINTS = 1.6;
+  // PROB_PER_POINT is imported from constants.ts — the one shared binding the
+  // injury overlay in coach-sim/locked-projection.ts also consumes. Declaring a
+  // local copy here is what let the two surfaces drift.
+  const hfaBoost = HFA_PRIOR_POINTS * PROB_PER_POINT;
+  // Post-2011 rest-differential decay (arXiv:2408.10867v1): the pre-2011 bye
+  // edge was +2.2 pts/game and is mitigated since the 2011 CBA. Keep only a
+  // small, capped residual (~0.15 pt per rest day beyond even rest).
+  const restDiff = (ctx.restDaysHome ?? 4) - (ctx.restDaysAway ?? 4);
+  const restEdgePoints = Math.max(-0.6, Math.min(0.6, restDiff * 0.15));
+  const restBoost = restEdgePoints * PROB_PER_POINT;
+  const p1 = Math.max(0.51, Math.min(0.78, homeProb + hfaBoost + restBoost + (alt >= 2000 ? 0.02 : 0) + (olDelta > 0 ? 0.02 : 0)));
   const leg1Odds = probToAmericanOdds(p1);
   const leg1: ParlayLeg = {
     description: `${ctx.homeTeam} Moneyline`,
@@ -984,7 +999,7 @@ export function generateSameGameParlay(
     selection: `${ctx.homeTeam} ML`,
     unadjustedOdds: leg1Odds,
     probability: p1,
-    correlationRationale: "Home anchor driven by physiological altitude, crowd decibel advantages, and trench continuity.",
+    correlationRationale: `Home anchor driven by the modern HFA prior (~1.5–1.8 pts, +${(hfaBoost * 100).toFixed(1)}% win prob) and the post-2011 rest-differential decay (arXiv:2408.10867v1, ${restEdgePoints >= 0 ? "+" : ""}${restEdgePoints.toFixed(2)} pts for a ${restDiff}-day rest edge).`,
   };
 
   // Leg 2: Total (Under in thin air / wind / cold / fatigued DL; Over in dome / high coach pace)
@@ -1001,7 +1016,7 @@ export function generateSameGameParlay(
     unadjustedOdds: leg2Odds,
     probability: p2,
     correlationRationale: isUnderFavorable
-      ? "Aerodynamic drag and 4th-quarter trench endurance decay compress late-game scoring and red zone conversion."
+      ? "Adverse weather (wind, cold, altitude) and late-game trench endurance decay suppress drive efficiency and red-zone conversion, compressing scoring."
       : "High fourth-down aggressiveness and fast paced drives elevate scoring ceiling.",
   };
 
@@ -1143,8 +1158,8 @@ export function generateFantasyDfsAdvice(
       team: ctx.awayTeam,
       role: "Vertical Deep Route Specialist",
       action: "FADE_AVOID",
-      reasoning: `Aerodynamic drag in ${wind}mph wind and ${temp}°F cold suppresses deep ball trajectory completion rate; fade low-volume perimeter variance (arXiv:2401.16392).`,
-      citedPrinciples: ["Navier-Stokes Aerodynamic Drag (arXiv:2401.16392)", "Thermal Friction Loss"],
+      reasoning: `Adverse weather (${wind}mph wind, ${temp}°F cold) increases variance and suppresses deep-ball efficiency. The modern HFA prior (~1.5–1.8 pts) calibrates home-field expectations; the post-2011 rest-differential decay (arXiv:2408.10867v1) adjusts for schedule inequity. Fade low-volume perimeter variance rather than chase it.`,
+      citedPrinciples: ["Modern Home-Field Advantage Prior (~1.5–1.8 pts)", "Post-2011 Rest-Differential Decay (arXiv:2408.10867v1)"],
     });
   } else if (restAway <= 4) {
     targets.push({
@@ -1152,8 +1167,8 @@ export function generateFantasyDfsAdvice(
       team: ctx.awayTeam,
       role: "Short-Rest Rotational Front",
       action: "FADE_AVOID",
-      reasoning: `Short-rest Thursday fatigue decay (Lopez et al. 28% workload drop, arXiv:2408.10867) limits 4th-quarter snap efficiency and pressure generation.`,
-      citedPrinciples: ["Short-Rest Thursday Asymmetry (arXiv:2408.10867)", "ACWR Workload Hazard"],
+      reasoning: `Rest-differential decay: the bye-week edge was +2.2 points per game before the 2011 CBA and has been mitigated since (arXiv:2408.10867v1). Short-rest units lose 4th-quarter snap efficiency and pressure generation; do not price the pre-2011 advantage.`,
+      citedPrinciples: ["Post-2011 Rest-Differential Decay (arXiv:2408.10867v1)", "ACWR Workload Hazard"],
     });
   } else {
     targets.push({

@@ -21,7 +21,7 @@ export interface ArxivPaperPremise {
     | "ENVIRONMENT_AND_CONTEXT"
     | "ATMOSPHERE_AND_REFEREE_BIAS"
     | "CIRCADIAN_TRAVEL_DYSRHYTHMIA"
-    | "FLUID_DYNAMICS_BALL_FLIGHT"
+    | "ALTITUDE_AND_AIR_DENSITY"
     | "TRENCH_OL_CONTINUITY"
     | "COACHING_FOURTH_DOWN_DRAG"
     | "TURNOVER_LUCK_REGRESSION"
@@ -165,12 +165,21 @@ export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
     },
   },
 
-  // 5. Environmental Aerodynamics & Wind Drag
+  // 5. Environmental Wind & Passing/Kicking Efficiency
+  //
+  // arXiv:2607.24573 is real, but its actual title is "LLM-SoccerArena:
+  // Benchmarking LLMs on Real-World Predictions in Sports" — an LLM
+  // Brier-scoring protocol, not a fluid-dynamics study. The earlier title
+  // suffix "& Ball Aerodynamics in Turbulent Wind Regimes" and the "non-linear
+  // aerodynamic drag" concept were fabricated additions to a real ID. Wind
+  // does degrade deep passing and field goal reliability, but that is a
+  // measured, empirical effect — no fluid-dynamics framing and no fabricated
+  // paper is needed to say it.
   {
-    arxivId: "2607.24573",
-    title: "LLM-SoccerArena & Ball Aerodynamics in Turbulent Wind Regimes",
+    arxivId: "EQ-WIND-001",
+    title: "Sustained Wind & Passing/Kicking Efficiency",
     pillar: "ENVIRONMENT_AND_CONTEXT",
-    situationalConcept: "Non-linear aerodynamic drag suppresses deep passing efficiency and kicking range at wind > 14 mph.",
+    situationalConcept: "Sustained wind degrades deep passing and field goal reliability; offenses shorten throws and burn clock.",
     greyAreaSignal: "Situational total depression under sustained crosswinds.",
     evaluateContext: (ctx) => {
       if (ctx.weatherWindMph !== undefined && ctx.weatherWindMph >= 15) {
@@ -178,27 +187,34 @@ export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
           applicable: true,
           reason: `Sustained surface winds of ${ctx.weatherWindMph} mph compromise field goal reliability and explosive downfield pass rate.`,
           situationalBiasDirection: "UNDER",
-          situationalNarrative: "Weather aerodynamic drag forces horizontal checkdown run script, draining game clock.",
+          situationalNarrative: "Sustained wind pushes offenses toward shorter, quicker throws and shortens effective field goal range, draining game clock.",
         };
       }
-      return { applicable: false, reason: "Wind conditions within neutral aerodynamic corridor.", situationalBiasDirection: "PASS", situationalNarrative: "" };
+      return { applicable: false, reason: "Wind conditions within neutral range.", situationalBiasDirection: "PASS", situationalNarrative: "" };
     },
   },
 
-  // 6. Navier-Stokes Barometric Air Density Impact
+  // 6. Altitude & Reduced Air Density (honest drag reasoning)
+  //
+  // Altitude does lower air density and therefore aerodynamic drag, but the
+  // measured effect on an NFL ball is small — on the order of one to two yards
+  // of field goal range at Mile High, not the large expansion a fluid-dynamics
+  // framing implied. Air is a compressible gas; incompressible Navier-Stokes
+  // does not describe ball flight. Model this as a modest OVER lean on long
+  // field goals and deep passing, and do not cite a fabricated paper for it.
   {
-    arxivId: "2610.15000",
-    title: "Incompressible Navier-Stokes Density & Barometric Ball Flight Aerodynamics",
-    pillar: "FLUID_DYNAMICS_BALL_FLIGHT",
-    situationalConcept: "Air density rho(h, T) non-linearly expands ball carry distance at altitude and cold temperatures.",
-    greyAreaSignal: "Expands field goal range and passing explosive rate in high elevation venues (Denver/Utah).",
+    arxivId: "EQ-ALTITUDE-001",
+    title: "Reduced Air Density & Ball-Flight Drag at Altitude",
+    pillar: "ALTITUDE_AND_AIR_DENSITY",
+    situationalConcept: "Thinner air at altitude lowers drag on long field goals and deep passes by a modest amount.",
+    greyAreaSignal: "Slight OVER lean on long field goals and deep passing in high-elevation venues (Denver/Utah).",
     evaluateContext: (ctx) => {
       if (ctx.altitudeFt !== undefined && ctx.altitudeFt >= 4500) {
         return {
           applicable: true,
-          reason: `Barometric air density reduced by 15-18% at ${ctx.altitudeFt} ft elevation.`,
+          reason: `Reduced air density at ${ctx.altitudeFt} ft elevation lowers ball-flight drag modestly.`,
           situationalBiasDirection: "OVER",
-          situationalNarrative: "Navier-Stokes projectile drag reduced; field goal conversion threshold expands by +3.5 to 5.0 yards.",
+          situationalNarrative: "Altitude gives a small lift to long field goal range and deep passing efficiency — a one-to-two yard effect, not a large one.",
         };
       }
       return { applicable: false, reason: "Standard barometric air density baseline.", situationalBiasDirection: "PASS", situationalNarrative: "" };

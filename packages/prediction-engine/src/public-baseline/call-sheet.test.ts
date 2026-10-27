@@ -1,10 +1,10 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
-import { describe, it } from "node:test"
+import { describe, it } from "vitest"
 import { loadCoachCorpus } from "./x-corpus.js"
+import { CORPUS_PATH } from "./corpus-path.js"
 
-const brief = loadCoachCorpus(join(process.cwd(), "docs/engine/corpus/x-pull-2026-10-24.md"))
+const brief = loadCoachCorpus(CORPUS_PATH)
 
 function call(id: string) {
   const found = brief.calls.find((row) => row.id === id)

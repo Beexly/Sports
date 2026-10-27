@@ -80,7 +80,22 @@ export {
 } from "./corpus-ledger.js"
 export type { NumberToken, NumberUse, CoachPublished, OwnershipPosition } from "./corpus-ledger.js"
 export { callSheet } from "./call-sheet.js"
-export type { Call } from "./call-sheet.js"
+export type { Call, SignedTicket } from "./call-sheet.js"
+export {
+  calibrateGseProbability,
+  signCallSheetTickets,
+  contradictionGate,
+  assertNoContradictoryTickets,
+  parseTicketLegs,
+  detectTicketDirection,
+} from "./calibration-map.js"
+export type {
+  MarketQuoteForCall,
+  SignedCall,
+  ContradictionGateResult,
+  TicketDirection,
+  TicketLeg,
+} from "./calibration-map.js"
 export {
   WP_GARBAGE_HI,
   WP_GARBAGE_LO,
@@ -142,3 +157,16 @@ export type {
   CompetitorRatingDelta,
   MarketSlateRow,
 } from "./rankings.js"
+export {
+  computeConformalQuantile,
+  buildConformalPredictionInterval,
+  evaluateConformalDiagnostic,
+  hashEpaDropoffTable,
+  reallocateEpaDropoff,
+} from "./conformal-diagnostic.js"
+export type {
+  SealedEpaDropoffTable,
+  ConformalPredictionInterval,
+  ConformalDiagnosticResult,
+  EpaReallocationResult,
+} from "./conformal-diagnostic.js"

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict"
-import { join } from "node:path"
 import { describe, it } from "node:test"
 import { advanceWithCorpus, loadCoachCorpus, personnelOnField, requireCorpus } from "./x-corpus.js"
 import type { MarkovState } from "../markov-simulator.js"
+import { CORPUS_PATH } from "./corpus-path.js"
 
-const CORPUS = join(process.cwd(), "docs/engine/corpus/x-pull-2026-10-24.md")
+const CORPUS = CORPUS_PATH
 
 const stable = (n: number, epaSum: number) => ({
   n,

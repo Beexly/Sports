@@ -274,7 +274,18 @@ export function getTeamShrunkTrenchAndBlitzCell(team: NflTeamCode): TeamTrenchAn
  * for the offense, so the edge is NO minus PIT on the at-or-behind rate).
  * blitzEpaDeltaPitVsNo = -0.1288 EPA/dropback blitz vulnerability on PIT.
  */
-export function pitNoYbcCell() {
+export interface PitNoYbcCellResult {
+  readonly matchup: "PIT@NO";
+  readonly awayTeam: "PIT";
+  readonly homeTeam: "NO";
+  readonly pit: TeamTrenchAndBlitzCell;
+  readonly no: TeamTrenchAndBlitzCell;
+  readonly ybcEdgePitVsNo: number;
+  readonly behindLosEdgePitVsNo: number;
+  readonly blitzEpaDeltaPitVsNo: number;
+}
+
+export function pitNoYbcCell(): PitNoYbcCellResult {
   const pit = getTeamShrunkTrenchAndBlitzCell("PIT");
   const no = getTeamShrunkTrenchAndBlitzCell("NO");
   const ybcEdgePitVsNo = +(pit.ybc.shrunkValue - no.ybc.shrunkValue).toFixed(4);

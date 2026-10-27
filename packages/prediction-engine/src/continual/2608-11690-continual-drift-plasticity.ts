@@ -22,9 +22,9 @@ export function computeLayerWiseWassersteinDriftBound(
   for (let l = 0; l < n; l++) {
     let downstreamProd = 1;
     for (let k = l + 1; k < n; k++) {
-      downstreamProd *= Math.max(0, layerLipschitzConstants[k]);
+      downstreamProd *= Math.max(0, layerLipschitzConstants[k] ?? 0);
     }
-    const contrib = Math.max(0, layerParameterDrifts[l]) * downstreamProd;
+    const contrib = Math.max(0, layerParameterDrifts[l] ?? 0) * downstreamProd;
     bound += contrib;
     if (contrib > maxContrib) {
       maxContrib = contrib;
@@ -48,8 +48,10 @@ export function alignGradientWithReplayCurvature(
   let dot = 0;
   let normSq = 0;
   for (let i = 0; i < n; i++) {
-    dot += liveGrad[i] * replayCurvatureGrad[i];
-    normSq += replayCurvatureGrad[i] * replayCurvatureGrad[i];
+    const lg = liveGrad[i] ?? 0;
+    const rc = replayCurvatureGrad[i] ?? 0;
+    dot += lg * rc;
+    normSq += rc * rc;
   }
   if (dot >= 0 || normSq <= 1e-12) {
     return {
@@ -60,7 +62,7 @@ export function alignGradientWithReplayCurvature(
   const scale = dot / normSq;
   const alignedGrad = [];
   for (let i = 0; i < n; i++) {
-    alignedGrad.push(Number((liveGrad[i] - scale * replayCurvatureGrad[i]).toFixed(6)));
+    alignedGrad.push(Number(((liveGrad[i] ?? 0) - scale * (replayCurvatureGrad[i] ?? 0)).toFixed(6)));
   }
   return {
     alignedGrad,
@@ -105,14 +107,15 @@ export function computeHeteroskedasticQuantileSmoothLoss(input: {
   if (k === 0) return { pinballLossNormalized: 0, nonCrossingPenalty: 0, totalLoss: 0 };
   let pinball = 0;
   for (let i = 0; i < k; i++) {
-    const u = (input.targetY - input.predictedQuantiles[i]) / sigma;
-    const tau = input.quantileLevelsTau[i];
+    const q = input.predictedQuantiles[i] ?? 0;
+    const u = (input.targetY - q) / sigma;
+    const tau = input.quantileLevelsTau[i] ?? 0.5;
     pinball += u >= 0 ? tau * u : (tau - 1) * u;
   }
   pinball /= k;
   let crossing = 0;
   for (let i = 0; i < k - 1; i++) {
-    crossing += Math.max(0, input.predictedQuantiles[i] - input.predictedQuantiles[i + 1]);
+    crossing += Math.max(0, (input.predictedQuantiles[i] ?? 0) - (input.predictedQuantiles[i + 1] ?? 0));
   }
   const totalLoss = Number((pinball + 2.0 * crossing).toFixed(6));
   return {
@@ -136,15 +139,17 @@ export function fuseLongShortViewsAngular(
   let nL = 0;
   let nS = 0;
   for (let i = 0; i < n; i++) {
-    dot += longViewEmbedding[i] * shortViewEmbedding[i];
-    nL += longViewEmbedding[i] * longViewEmbedding[i];
-    nS += shortViewEmbedding[i] * shortViewEmbedding[i];
+    const lv = longViewEmbedding[i] ?? 0;
+    const sv = shortViewEmbedding[i] ?? 0;
+    dot += lv * sv;
+    nL += lv * lv;
+    nS += sv * sv;
   }
   const cos = nL > 0 && nS > 0 ? dot / (Math.sqrt(nL) * Math.sqrt(nS)) : 0;
   const gate = Math.min(1, Math.max(0, 0.5 * (cos + 1)));
   const raw = [];
   for (let i = 0; i < n; i++) {
-    raw.push(gate * longViewEmbedding[i] + (1 - gate) * shortViewEmbedding[i] + biasOffset);
+    raw.push(gate * (longViewEmbedding[i] ?? 0) + (1 - gate) * (shortViewEmbedding[i] ?? 0) + biasOffset);
   }
   const mean = raw.reduce((a, b) => a + b, 0) / n;
   const variance = raw.reduce((a, b) => a + (b - mean) * (b - mean), 0) / n;

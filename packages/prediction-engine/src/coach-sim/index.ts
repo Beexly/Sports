@@ -27,9 +27,9 @@ export {
 } from "../nfl/published-cells-shrinkage.js";
 export type {
   NflTeamCode,
-  ShrunkCellResult,
+  ShrunkCell,
   PitNoYbcCellResult,
-  TeamShrunkTrenchAndBlitzCell,
+  TeamTrenchAndBlitzCell,
 } from "../nfl/published-cells-shrinkage.js";
 
 export {
