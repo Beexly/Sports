@@ -56,3 +56,7 @@ export type {
 export { drawSchemePlay, schemeReasoningLine, centerEpa, flagRate } from "./scheme-state.js";
 export type { SchemePlay, SchemeFlagDraw, SchemeFamily, SchemeFlagId } from "./scheme-state.js";
 export { SCHEME_FLAGS, SCHEME_YARDS_PER_EPA, QB_DECISION_DISCLOSED, SEPARATION_DISCLOSED } from "./scheme-state.js";
+
+export { effectiveN, loadMultiplier, scaleDropoff } from "./load-scaling.js";
+export { LEAGUE_HHI, LOAD_FLOOR, LOAD_CEIL } from "./load-scaling.js";
+export { sinkhornLogDomain } from "./sinkhorn-targets.js";

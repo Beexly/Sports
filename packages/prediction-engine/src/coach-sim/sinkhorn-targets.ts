@@ -299,6 +299,112 @@ export function sinkhorn(
 }
 
 /**
+ * Log-domain Sinkhorn (Schmitzer, arXiv:1610.06519).
+ *
+ * Iterates the dual potentials instead of the scaling factors. The kernel is
+ * never formed, so a small epsilon does not overflow u and v.
+ *
+ *   psi = -C_ij + beta_j
+ *   alpha_i = eps * log(r_i) - eps * logsumexp_j(psi / eps)
+ *
+ * Not called by allocateTargets or sinkhorn. Swapping it into the injury
+ * overlay changes how sharp the plan is, and that is a re-seal, not a
+ * mid-week edit. Epsilon-scaling is not in this function.
+ */
+export function sinkhornLogDomain(
+  r: readonly number[],
+  c: readonly number[],
+  C: readonly (readonly number[])[],
+  eps: number = SINKHORN_EPS,
+  maxIter: number = SINKHORN_MAX_ITER,
+  tol: number = 1e-9,
+): { plan: number[][]; info: SinkhornInfo } {
+  const n = r.length;
+  const m = c.length;
+  const firstRow = C[0];
+  if (eps <= 0) throw new Error("epsilon must be positive");
+  if (C.length !== n || firstRow === undefined || firstRow.length !== m) {
+    throw new Error(
+      `dimension mismatch: len(r)=${n}, len(c)=${m}, shape(C)=(${C.length},${firstRow?.length ?? 0})`,
+    );
+  }
+  for (const v of r) if (v < 0) throw new Error("marginals r and c must be non-negative");
+  for (const v of c) if (v < 0) throw new Error("marginals r and c must be non-negative");
+
+  const alpha = new Array<number>(n).fill(0);
+  const beta = new Array<number>(m).fill(0);
+  let iterations = 0;
+
+  const lse = (values: readonly number[]): number => {
+    let max = -Infinity;
+    for (const v of values) if (v > max) max = v;
+    if (!Number.isFinite(max)) return -Infinity;
+    let sum = 0;
+    for (const v of values) sum += Math.exp((v - max) / eps);
+    return max / eps + Math.log(sum);
+  };
+
+  for (iterations = 1; iterations <= maxIter; iterations++) {
+    const nextAlpha = new Array<number>(n);
+    for (let i = 0; i < n; i++) {
+      const psi: number[] = new Array(m);
+      const row = C[i]!;
+      for (let j = 0; j < m; j++) psi[j] = -(row[j]!) + beta[j]!;
+      const ri = r[i]!;
+      nextAlpha[i] = ri <= 0 ? -1e6 : eps * Math.log(ri) - eps * lse(psi);
+    }
+    const nextBeta = new Array<number>(m);
+    for (let j = 0; j < m; j++) {
+      const psi: number[] = new Array(n);
+      for (let i = 0; i < n; i++) psi[i] = -(C[i]![j]!) + nextAlpha[i]!;
+      const cj = c[j]!;
+      nextBeta[j] = cj <= 0 ? -1e6 : eps * Math.log(cj) - eps * lse(psi);
+    }
+    let shift = 0;
+    for (let i = 0; i < n; i++) shift = Math.max(shift, Math.abs(nextAlpha[i]! - alpha[i]!));
+    for (let j = 0; j < m; j++) shift = Math.max(shift, Math.abs(nextBeta[j]! - beta[j]!));
+    for (let i = 0; i < n; i++) alpha[i] = nextAlpha[i]!;
+    for (let j = 0; j < m; j++) beta[j] = nextBeta[j]!;
+    if (shift < tol) break;
+  }
+
+  const plan: number[][] = [];
+  for (let i = 0; i < n; i++) {
+    const row: number[] = new Array(m);
+    for (let j = 0; j < m; j++) {
+      row[j] = Math.exp((alpha[i]! + beta[j]! - C[i]![j]!) / eps);
+    }
+    plan.push(row);
+  }
+
+  let rowResidual = 0;
+  for (let i = 0; i < n; i++) {
+    let sum = 0;
+    for (let j = 0; j < m; j++) sum += plan[i]![j]!;
+    rowResidual = Math.max(rowResidual, Math.abs(sum - r[i]!));
+  }
+  let colResidual = 0;
+  for (let j = 0; j < m; j++) {
+    let sum = 0;
+    for (let i = 0; i < n; i++) sum += plan[i]![j]!;
+    colResidual = Math.max(colResidual, Math.abs(sum - c[j]!));
+  }
+  let objective = 0;
+  for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) objective += plan[i]![j]! * C[i]![j]!;
+
+  return {
+    plan,
+    info: {
+      iterations,
+      rowResidual,
+      colResidual,
+      converged: rowResidual < 1e-6 && colResidual < 1e-6,
+      objective,
+    },
+  };
+}
+
+/**
  * Build a sealed interchangeability cost matrix from role labels.
  *
  * Lower cost = cheaper to move target share. Two players sharing an exact role
