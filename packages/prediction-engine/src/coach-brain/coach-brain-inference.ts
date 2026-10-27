@@ -18,7 +18,19 @@ export interface CoachBrainGuardrails {
   tolerance?: number; // max allowed probability divergence (default 0.05)
   expectedTendencies?: string[]; // e.g. ['neutralPassRate', 'staffAggression']
   allowedInjuries?: string[]; // only these player names may be cited as injury deltas
+  /** Sealed packet's inactive player ids. When present this is the authoritative allow-list. */
+  inactivePlayerIds?: readonly string[];
 }
+
+/**
+ * Last-resort name list used only when the caller supplies neither
+ * allowedInjuries nor inactivePlayerIds. Never the primary check: the sealed
+ * packet's inactivePlayerIds is authoritative when available.
+ */
+const FALLBACK_HALLUCINATED_NAMES: readonly string[] = [
+  'Davante Adams', 'Christian McCaffrey', 'Tyreek Hill', 'Justin Jefferson',
+  'Travis Kelce', 'Puka Nacua', 'Cooper Kupp', 'Nico Collins', 'Stefon Diggs',
+];
 
 export interface ValidationResult {
   valid: boolean;
@@ -74,30 +86,39 @@ export function validateCoachBrainResponse(
   const violations: string[] = [];
   const tolerance = guardrails.tolerance ?? 0.05;
 
-  // 1. Extract mentioned probability (e.g. "58.2%" or "probability: 0.58")
+  // 1. Extract mentioned probability (e.g. "58.2%", "100%", or "probability: 0.58")
   let extractedProb: number | undefined;
-  const percentRegex = /(\d{1,2}(?:\.\d+)?)\s*%/g;
-  const decimalRegex = /(?:probability|win prob|projected win rate)[^\d]{1,15}(0\.\d+)/gi;
+  // Three digits so "100%" is not silently truncated to "10".
+  const percentRegex = /(?<![\d.])(\d{1,3}(?:\.\d+)?)\s*%/g;
+  const decimalRegex = /(?:probability|win prob|projected win rate)[^\d]{1,15}(0?\.\d+)/gi;
 
-  const percentMatches = [...response.matchAll(percentRegex)];
-  const decimalMatches = [...response.matchAll(decimalRegex)];
-
-  if (percentMatches.length > 0) {
-    // Look for probability nearest the calibratedProb value or first probability mentioned
-    for (const m of percentMatches) {
-      if (m[1] !== undefined) {
-        const val = parseFloat(m[1]) / 100.0;
-        if (val >= 0.1 && val <= 0.9) {
-          extractedProb = val;
-          break;
-        }
-      }
-    }
-  } else if (decimalMatches.length > 0 && decimalMatches[0] && decimalMatches[0][1] !== undefined) {
-    extractedProb = parseFloat(decimalMatches[0][1]);
+  const candidates: number[] = [];
+  for (const m of response.matchAll(percentRegex)) {
+    if (m[1] === undefined) continue;
+    const pct = parseFloat(m[1]);
+    if (Number.isFinite(pct) && pct >= 0 && pct <= 100) candidates.push(pct / 100);
+  }
+  for (const m of response.matchAll(decimalRegex)) {
+    if (m[1] === undefined) continue;
+    const dec = parseFloat(m[1]);
+    if (Number.isFinite(dec) && dec > 0 && dec <= 1) candidates.push(dec);
   }
 
-  if (extractedProb !== undefined) {
+  // Prefer the candidate closest to the locked probability; taking the first
+  // match latches onto unrelated situational numbers in prose.
+  if (candidates.length > 0) {
+    extractedProb = candidates.reduce((best, cur) =>
+      Math.abs(cur - guardrails.calibratedProb) < Math.abs(best - guardrails.calibratedProb) ? cur : best,
+    );
+  }
+
+  if (extractedProb === undefined) {
+    // No citable probability means the response cannot be anchored to the sealed
+    // state. This used to fall through as a silent pass of the grounding gate.
+    violations.push(
+      `Missing grounded probability: response cites no win probability, so it cannot be anchored to locked calibratedProb ${(guardrails.calibratedProb * 100).toFixed(1)}%`
+    );
+  } else {
     const diff = Math.abs(extractedProb - guardrails.calibratedProb);
     if (diff > tolerance) {
       violations.push(
@@ -125,22 +146,28 @@ export function validateCoachBrainResponse(
 
   // 3. Check for ungrounded injury hallucinations
   const citedInjuries: string[] = [];
-  const commonHallucinatedNames = [
-    'Davante Adams', 'Christian McCaffrey', 'Tyreek Hill', 'Justin Jefferson',
-    'Travis Kelce', 'Puka Nacua', 'Cooper Kupp', 'Nico Collins', 'Stefon Diggs'
-  ];
+  const allowedList = guardrails.allowedInjuries ?? [];
+  const inactiveList = guardrails.inactivePlayerIds ?? [];
+  const allowedSet = new Set([...allowedList, ...inactiveList].map(s => s.toLowerCase()));
 
-  const allowedSet = new Set((guardrails.allowedInjuries ?? []).map(s => s.toLowerCase()));
+  // Candidate names come from the sealed packet when one is supplied: a name it
+  // marks inactive is legal to cite, a name it does not list is not. The static
+  // fallback list only runs when the caller provides no packet ids at all, so it
+  // cannot go stale against the weekly overlay.
+  const candidateNames = new Set<string>([...allowedList, ...inactiveList]);
+  if (candidateNames.size === 0) {
+    for (const name of FALLBACK_HALLUCINATED_NAMES) candidateNames.add(name);
+  }
 
-  for (const name of commonHallucinatedNames) {
-    if (response.toLowerCase().includes(name.toLowerCase())) {
-      if (!allowedSet.has(name.toLowerCase())) {
-        violations.push(
-          `Ungrounded injury hallucination: cited '${name}' which is not in the allowed injury overlay [${(guardrails.allowedInjuries ?? []).join(', ')}]`
-        );
-      } else {
-        citedInjuries.push(name);
-      }
+  const responseLower = response.toLowerCase();
+  for (const name of candidateNames) {
+    if (!responseLower.includes(name.toLowerCase())) continue;
+    if (allowedSet.has(name.toLowerCase())) {
+      citedInjuries.push(name);
+    } else {
+      violations.push(
+        `Ungrounded injury hallucination: cited '${name}' which is not in the allowed injury overlay [${[...allowedSet].join(', ')}]`
+      );
     }
   }
 

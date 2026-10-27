@@ -57,10 +57,16 @@ const CALIBRATION_KNOTS: ReadonlyArray<readonly [number, number]> = [
   [0.67, 0.618],
   [0.75, 0.698],
   [0.95, 0.912],
+  // Upper tail. 0.95 is the last measured knot; above it we continue the final
+  // segment's slope (0.214 per 0.20) to 1.0 so an overconfident 0.97-0.99 is
+  // separated instead of collapsing onto the single 0.95 point. Linear
+  // extrapolation past observed support, not a measured knot -- revisit once
+  // raw probabilities above 0.95 appear in the graded sample.
+  [1.0, 0.9655],
 ]
 
 export function calibrateGseProbability(rawProb: number): number {
-  const p = Math.min(0.95, Math.max(0.05, rawProb))
+  const p = Math.min(1.0, Math.max(0.05, rawProb))
   for (let i = 0; i < CALIBRATION_KNOTS.length - 1; i++) {
     const [x0, y0] = CALIBRATION_KNOTS[i]!
     const [x1, y1] = CALIBRATION_KNOTS[i + 1]!

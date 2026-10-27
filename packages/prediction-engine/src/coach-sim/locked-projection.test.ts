@@ -8,6 +8,7 @@ import {
   verifyCoachMindsetUnchanged,
 } from "./locked-projection.js";
 import { PROB_PER_POINT } from "../constants.js";
+import { sealLock } from "../public-baseline/cadence.js";
 import {
   assertTauSealed,
   makeNextScoreSamples,
@@ -150,8 +151,26 @@ describe("locked-projection: immutable Tuesday v1.0 coach mindset + dynamic inju
       { homeTargets: [], awayTargets },
       "2026-10-20T09:00:00.000Z",
     );
-    // Pin a known baseline so the assertion isolates the slope itself.
-    const baseline = { ...v1, winProbHome: 0.5 };
+    // Pin a known baseline so the assertion isolates the slope itself. The pin
+    // must be applied through the seal: mutating winProbHome on a sealed lock is
+    // the exact crafted-lock case applyInjuryOverlay now rejects.
+    const pinnedAt = "2026-10-20T09:00:00.000Z";
+    const baseline = {
+      ...v1,
+      winProbHome: 0.5,
+      cadenceLock: sealLock(
+        "v1.0",
+        {
+          coachMindsetHash: v1.coachMindsetHash,
+          coachTau: v1.coachTau,
+          scoreMean: v1.scoreMean,
+          marginMean: v1.marginMean,
+          winProbHome: 0.5,
+        },
+        pinnedAt,
+        pinnedAt,
+      ),
+    };
     const v3 = applyInjuryOverlay(baseline, {
       version: "v3.0",
       recordedAtIso: "2026-10-23T21:30:00.000Z",
@@ -162,6 +181,46 @@ describe("locked-projection: immutable Tuesday v1.0 coach mindset + dynamic inju
     // 0.5 + 1 pt * 0.033 = 0.533. The overlay must use the same
     // points-to-win-probability slope as mind-reasoning's PROB_PER_POINT.
     expect(v3.winProbHome).toBeCloseTo(0.5 + PROB_PER_POINT, 4);
+  });
+
+  it("rejects an injury overlay on a lock whose seal no longer matches its payload", () => {
+    const v1 = lockTuesdayCoachBaseline(
+      baseCoachInput,
+      { homeTargets: [], awayTargets },
+      "2026-10-20T09:00:00.000Z",
+    );
+    // Crafted lock: tau moved without resealing. The internal hash<->tau check
+    // would recompute the hash from the same crafted tau and pass, so the seal
+    // check at the top of the overlay is the only thing that catches this.
+    const crafted = { ...v1, coachTau: 0.31 };
+    expect(() =>
+      applyInjuryOverlay(crafted, {
+        version: "v3.0",
+        recordedAtIso: "2026-10-23T21:30:00.000Z",
+        inactivePlayerIds: [],
+      }),
+    ).toThrow(/seal does not match its payload/);
+  });
+
+  it("refuses to stack an injury overlay on anything but a v1.0 baseline", () => {
+    const v1 = lockTuesdayCoachBaseline(
+      baseCoachInput,
+      { homeTargets: [], awayTargets },
+      "2026-10-20T09:00:00.000Z",
+    );
+    const v3 = applyCadenceInjuryOverlay(v1, {
+      version: "v3.0",
+      recordedAtIso: "2026-10-23T21:30:00.000Z",
+      inactivePlayerIds: [],
+      awayInjuryPointsDelta: -1.5,
+    });
+    expect(() =>
+      applyInjuryOverlay(v3, {
+        version: "v4.0",
+        recordedAtIso: "2026-10-25T17:00:00.000Z",
+        inactivePlayerIds: [],
+      }),
+    ).toThrow(/must be applied to a v1\.0 Tuesday baseline/);
   });
 
   it("shares ONE points-to-win-probability slope with mind-reasoning instead of duplicating the literal", () => {

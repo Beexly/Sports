@@ -1177,7 +1177,8 @@ function ruleR7(g: EdgeMap): boolean {
         if (alpha === gamma) continue;
         if (markAt(g, alpha, beta) !== "tail") continue; // alpha -o beta
         if (markAt(g, beta, alpha) !== "circle") continue;
-        // MUTANT: the non-adjacency condition is gone
+        // alpha and gamma must be non-adjacent for the circle to become a tail.
+        if (isAdj(g, alpha, gamma)) continue;
         if (setMark(g, beta, gamma, "tail")) changed = true;
         break;
       }

@@ -22,6 +22,22 @@ describe("calibration-map & signed call sheet tickets", () => {
     expect(p67).toBeGreaterThan(p53)
   })
 
+  it("keeps the isotonic map strictly monotone through 1.0 instead of collapsing the tail at 0.95", () => {
+    // The old clamp collapsed every raw probability >= 0.95 onto the single
+    // 0.95 knot, so an overconfident 0.99 and a 0.95 were indistinguishable and
+    // the tail escaped the map. Above 0.95 the curve continues the final
+    // observed segment's slope as documented extrapolation.
+    const grid = [0.95, 0.96, 0.97, 0.98, 0.99, 1.0].map((p) => calibrateGseProbability(p));
+    for (let i = 1; i < grid.length; i++) {
+      expect(grid[i]).toBeGreaterThanOrEqual(grid[i - 1]);
+    }
+    // Strict separation: the tail is not a single flat point.
+    expect(grid[5]).toBeGreaterThan(grid[0]);
+    expect(calibrateGseProbability(1.0)).toBeCloseTo(0.9655, 4);
+    expect(calibrateGseProbability(1.5)).toBeCloseTo(0.9655, 4); // clamps at 1.0, not silently below it
+    expect(calibrateGseProbability(0.02)).toBeCloseTo(0.05, 4); // lower bound still clamps
+  })
+
   it("mints signed tickets from the verified Oct 24 coach call sheet (SF-personnel Brandin Cooks 83% route share -> OVER)", () => {
     const brief = loadCoachCorpus(corpusPath())
     const signed = signCallSheetTickets(brief.calls, {

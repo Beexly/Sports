@@ -165,6 +165,35 @@ export function applyInjuryOverlay(
   baselineLock: TuesdayCoachBaselineLock,
   overlay: CadenceInjuryOverlayInput,
 ): TuesdayCoachBaselineLock {
+  // SEAL CHECK 0: verify the incoming lock's cadence seal before trusting
+  // coachTau. The internal checks below recompute the mindset hash from the
+  // lock's own fields, so a crafted lock carrying a recomputed hash would pass
+  // them. Recomputing the cadence seal over the payload catches a mutated
+  // tau/hash/projection triple; a v2.0+ input is refused so an overlay cannot
+  // be stacked on another overlay.
+  if (baselineLock.cadenceLock.version !== "v1.0") {
+    throw new Error(
+      `CRITICAL: injury overlay must be applied to a v1.0 Tuesday baseline, got ${baselineLock.cadenceLock.version}`,
+    );
+  }
+  const verifiedSeal = sealLock(
+    "v1.0",
+    {
+      coachMindsetHash: baselineLock.coachMindsetHash,
+      coachTau: baselineLock.coachTau,
+      scoreMean: baselineLock.scoreMean,
+      marginMean: baselineLock.marginMean,
+      winProbHome: baselineLock.winProbHome,
+    },
+    baselineLock.cadenceLock.validTime,
+    baselineLock.cadenceLock.transactionTime,
+  );
+  if (verifiedSeal.merkle !== baselineLock.cadenceLock.merkle) {
+    throw new Error(
+      "CRITICAL: baseline cadence seal does not match its payload (hash/tau consistency failed)",
+    );
+  }
+
   const scratched = new Set(overlay.inactivePlayerIds);
   const shadows = baselineLock.frozenCoachInput.shadows ?? [];
   const activeHome = baselineLock.baseRooms.homeTargets.filter(
