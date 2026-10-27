@@ -1,7 +1,6 @@
-import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
-import { describe, it } from "node:test"
+import { describe, it, expect } from "vitest"
 import { chicagoParts, dueVersion, emptyMask, sealLock, setBit, slotIndex, tMinus90, xorMasks } from "./cadence.js"
 import { flagOutsideBulk, marchenkoPasturEdges } from "./marchenko.js"
 import { NE_CHI_FINAL, rejectNarrative } from "./narrative-rejections.js"
@@ -20,24 +19,18 @@ describe("realized settlement", () => {
 
   it("strips kneels, spikes, garbage win probability, and missing EPA", () => {
     const { records, dropped } = settleAndWrite(new FeedWriter(), "2026-10-22", plays, "2026-10-22T02:00:00Z")
-    assert.deepEqual(records.map((r) => r.playId), ["1"])
-    assert.equal(records[0]?.dest, "brain/feeds/2026-10-22/trainer.jsonl")
-    assert.deepEqual(
-      dropped.map((d) => d.reason),
-      ["kneel-or-spike", "kneel-or-spike", "garbage-wp", "garbage-wp", "epa-absent"],
-    )
+    expect(records.map((r) => r.playId)).toEqual(["1"])
+    expect(records[0]?.dest).toBe("brain/feeds/2026-10-22/trainer.jsonl")
+    expect(dropped.map((d) => d.reason)).toEqual(["kneel-or-spike", "kneel-or-spike", "garbage-wp", "garbage-wp", "epa-absent"])
   })
 
   it("refuses a second write and refuses mind.jsonl", () => {
     const writer = new FeedWriter()
     const once = settleAndWrite(writer, "2026-10-22", plays, "2026-10-22T02:00:00Z")
-    assert.equal(once.records.length, 1)
-    assert.throws(() => settleAndWrite(writer, "2026-10-22", plays, "2026-10-22T02:00:00Z"), /single-writer/)
-    assert.throws(
-      () => writer.write({ ...once.records[0]!, key: "other", dest: "brain/mind.jsonl" }),
-      /mind\.jsonl/,
-    )
-    assert.equal(feedDest("2026-10-22").includes("mind.jsonl"), false)
+    expect(once.records.length).toBe(1)
+    expect(() => settleAndWrite(writer, "2026-10-22", plays, "2026-10-22T02:00:00Z")).toThrow(/single-writer/)
+    expect(() => writer.write({ ...once.records[0]!, key: "other", dest: "brain/mind.jsonl" })).toThrow(/mind\.jsonl/)
+    expect(feedDest("2026-10-22").includes("mind.jsonl")).toBe(false)
   })
 })
 
@@ -46,24 +39,24 @@ describe("cadence locks", () => {
     const tue = chicagoParts(new Date("2026-10-27T09:00:00Z"))
     const wed = chicagoParts(new Date("2026-10-28T22:00:00Z"))
     const fri = chicagoParts(new Date("2026-10-30T21:30:00Z"))
-    assert.equal(dueVersion(tue), "v1.0")
-    assert.equal(dueVersion(wed), "v2.0")
-    assert.equal(dueVersion(fri), "v3.0")
-    assert.equal(dueVersion(chicagoParts(new Date("2026-10-27T09:01:00Z"))), null)
+    expect(dueVersion(tue)).toBe("v1.0")
+    expect(dueVersion(wed)).toBe("v2.0")
+    expect(dueVersion(fri)).toBe("v3.0")
+    expect(dueVersion(chicagoParts(new Date("2026-10-27T09:01:00Z")))).toBe(null)
   })
 
   it("v4.0 is kickoff minus 90 minutes", () => {
     const kick = new Date("2026-10-25T17:25:00Z")
-    assert.equal(tMinus90(kick).toISOString(), "2026-10-25T15:55:00.000Z")
+    expect(tMinus90(kick).toISOString()).toBe("2026-10-25T15:55:00.000Z")
   })
 
   it("merkle changes when the payload changes and ignores key order", () => {
     const a = sealLock("v1.0", { b: 1, a: 2 }, "2026-10-27T09:00:00Z", "2026-10-27T09:00:01Z")
     const b = sealLock("v1.0", { a: 2, b: 1 }, "2026-10-27T09:00:00Z", "2026-10-27T09:00:01Z")
     const c = sealLock("v1.0", { a: 2, b: 3 }, "2026-10-27T09:00:00Z", "2026-10-27T09:00:01Z")
-    assert.equal(a.merkle, b.merkle)
-    assert.notEqual(a.merkle, c.merkle)
-    assert.equal(a.merkle.length, 64)
+    expect(a.merkle).toBe(b.merkle)
+    expect(a.merkle).not.toBe(c.merkle)
+    expect(a.merkle.length).toBe(64)
   })
 
   it("xor of two 288-bit masks is the changed slots", () => {
@@ -73,20 +66,20 @@ describe("cadence locks", () => {
     setBit(left, slotIndex(3, 20))
     setBit(right, slotIndex(3, 20))
     const changed = xorMasks(left, right)
-    assert.equal(changed[0]! & 1, 1)
-    assert.equal(changed.length, 9)
+    expect(changed[0]! & 1).toBe(1)
+    expect(changed.length).toBe(9)
     const bit = slotIndex(3, 20)
     const word = Math.floor(bit / 32)
     const mask = 1 << (bit % 32)
-    assert.equal(changed[word]! & mask, 0)
+    expect(changed[word]! & mask).toBe(0)
   })
 })
 
 describe("narrative rejections on 401873010", () => {
   it("final is CHI 30, NE 24, total 54, and no claim signs a PLAY", () => {
-    assert.equal(NE_CHI_FINAL.homeScore, 30)
-    assert.equal(NE_CHI_FINAL.awayScore, 24)
-    assert.equal(NE_CHI_FINAL.total, 54)
+    expect(NE_CHI_FINAL.homeScore).toBe(30)
+    expect(NE_CHI_FINAL.awayScore).toBe(24)
+    expect(NE_CHI_FINAL.total).toBe(54)
     const claims = [
       rejectNarrative({ id: "ol-4-vs-2", chi: 4, ne: 2 }, {}),
       rejectNarrative({ id: "wind-15", claimedMph: 15 }, { windMph: 5.1 }),
@@ -95,21 +88,23 @@ describe("narrative rejections on 401873010", () => {
       rejectNarrative({ id: "gonzalez-hip" }, { gonzalezStatus: "illness" }),
     ]
     for (const row of claims) {
-      assert.equal(row.accepted, false)
-      assert.equal(row.playSigned, false)
-      assert.equal(row.gameId, "401873010")
+      expect(row.accepted).toBe(false)
+      expect(row.playSigned).toBe(false)
+      expect(row.gameId).toBe("401873010")
     }
-    assert.match(claims[0]!.reason, /named-gap/)
-    assert.match(claims[1]!.reason, /5\.1/)
-    assert.match(claims[2]!.reason, /class-a/)
-    assert.match(claims[4]!.reason, /illness/)
+    expect(claims[0]!.reason).toMatch(/named-gap/)
+    expect(claims[1]!.reason).toMatch(/5\.1/)
+    expect(claims[2]!.reason).toMatch(/class-a/)
+    expect(claims[4]!.reason).toMatch(/illness/)
   })
 })
 
 describe("no-book fence", () => {
   it("rejects a book import and accepts the markov source", () => {
-    assert.equal(findBookImports('import { x } from "./odds-api.js"').length, 1)
-    const src = readFileSync(join(process.cwd(), "packages/prediction-engine/src/markov-simulator.ts"), "utf-8")
+    expect(findBookImports('import { x } from "./odds-api.js"').length).toBe(1)
+    // Resolve from THIS file, not process.cwd(): vitest runs with cwd at the
+    // package dir, so the repo-relative literal doubled the package segment.
+    const src = readFileSync(join(__dirname, "..", "markov-simulator.ts"), "utf-8")
     assertNoBookInCoachSource(src, "markov-simulator.ts")
   })
 })
@@ -117,16 +112,16 @@ describe("no-book fence", () => {
 describe("Marchenko-Pastur", () => {
   it("places the bulk at 0 and 4 when sigma2 = 1 and gamma = 1", () => {
     const edges = marchenkoPasturEdges(1, 1)
-    assert.ok(edges)
-    assert.ok(Math.abs(edges!.lower - 0) < 1e-12)
-    assert.ok(Math.abs(edges!.upper - 4) < 1e-12)
+    expect(edges).toBeTruthy()
+    expect(Math.abs(edges!.lower - 0) < 1e-12).toBeTruthy()
+    expect(Math.abs(edges!.upper - 4) < 1e-12).toBeTruthy()
   })
 
   it("flags an unpriced public spike and withholds a priced one", () => {
     const edges = marchenkoPasturEdges(1, 1)!
-    assert.equal(flagOutsideBulk(5, edges, { public: true, priced: false }).reason, "outside-bulk")
-    assert.equal(flagOutsideBulk(5, edges, { public: true, priced: true }).flag, false)
-    assert.equal(flagOutsideBulk(5, edges, { public: false, priced: false }).reason, "not-public")
-    assert.equal(flagOutsideBulk(2, edges, { public: true, priced: false }).reason, "inside-bulk")
+    expect(flagOutsideBulk(5, edges, { public: true, priced: false }).reason).toBe("outside-bulk")
+    expect(flagOutsideBulk(5, edges, { public: true, priced: true }).flag).toBe(false)
+    expect(flagOutsideBulk(5, edges, { public: false, priced: false }).reason).toBe("not-public")
+    expect(flagOutsideBulk(2, edges, { public: true, priced: false }).reason).toBe("inside-bulk")
   })
 })

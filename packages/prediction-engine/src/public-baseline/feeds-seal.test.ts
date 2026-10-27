@@ -9,8 +9,8 @@
  * - Anchor events: 401873010 home CHI 30, away NE 24, final.
  *   401873012 home BAL, away CIN, scheduled (state "pre", score "0" -> null).
  */
-import assert from "node:assert/strict"
-import { describe, it } from "node:test"
+
+import { describe, it, expect } from "vitest"
 import { assertCoachInputs, CoachFenceError } from "./fence.js"
 import { parseEspnScoreboard } from "./espn.js"
 import { fixturesWindow, parseScores365, NFL_COMPETITION_ID } from "./scores365.js"
@@ -32,23 +32,29 @@ const MARKET_CONTAMINATED_ROW = { ...PUBLIC_ESPN_ROW, odds: "CHI -3.0", spread: 
 describe("espn seal", () => {
   it("accepts the public row into the coach path", () => {
     const { odds: _odds, spread: _spread, ...clean } = MARKET_CONTAMINATED_ROW
-    assert.doesNotThrow(() => assertCoachInputs(clean))
+    expect(() => assertCoachInputs(clean)).not.toThrow()
   })
 
   it("throws when an odds key rides into the coach path", () => {
-    assert.throws(() => assertCoachInputs(MARKET_CONTAMINATED_ROW), CoachFenceError)
+    expect(() => assertCoachInputs(MARKET_CONTAMINATED_ROW)).toThrow(CoachFenceError)
   })
 
   it("throws on a spread key too", () => {
-    assert.throws(
-      () => assertCoachInputs({ ...PUBLIC_ESPN_ROW, spread: -3 }),
-      (e: unknown) => e instanceof CoachFenceError && (e as CoachFenceError).key === "spread",
-    )
+    // Vitest's toThrow accepts an error class, regex or string — not an arbitrary
+    // predicate. Capture the throw and assert the fence key explicitly.
+    let caught: unknown;
+    try {
+      assertCoachInputs({ ...PUBLIC_ESPN_ROW, spread: -3 });
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(CoachFenceError);
+    expect((caught as CoachFenceError).key).toBe("spread");
   })
 
   it("public espn.jsonl rows contain no market keys at all", () => {
     const keys = Object.keys(PUBLIC_ESPN_ROW)
-    for (const key of keys) assert.ok(!/odds|spread|mr_/i.test(key), key)
+    for (const key of keys) expect(!/odds|spread|mr_/i.test(key)).toBeTruthy(key)
   })
 })
 
@@ -76,10 +82,10 @@ describe("espn homeAway parsing", () => {
     }
     const board = parseEspnScoreboard(payload)
     const game = board.games[0]
-    assert.equal(game.home.abbr, "CHI")
-    assert.equal(game.home.score, 30)
-    assert.equal(game.away.abbr, "NE")
-    assert.equal(game.away.score, 24)
+    expect(game.home.abbr).toBe("CHI")
+    expect(game.home.score).toBe(30)
+    expect(game.away.abbr).toBe("NE")
+    expect(game.away.score).toBe(24)
   })
 
   it("401873012 scheduled: state pre plus score 0 is unplayed (null, not 0)", () => {
@@ -102,10 +108,10 @@ describe("espn homeAway parsing", () => {
     }
     const board = parseEspnScoreboard(payload)
     const game = board.games[0]
-    assert.equal(game.home.abbr, "BAL")
-    assert.equal(game.home.score, null)
-    assert.equal(game.away.abbr, "CIN")
-    assert.equal(game.away.score, null)
+    expect(game.home.abbr).toBe("BAL")
+    expect(game.home.score).toBe(null)
+    expect(game.away.abbr).toBe("CIN")
+    expect(game.away.score).toBe(null)
   })
 })
 
@@ -146,17 +152,17 @@ describe("365Scores fixtures paging (competition 352)", () => {
   it("parses competitionId and paging, and -1 stays unplayed", () => {
     const board = parseScores365(page1)
     const g = board.games[0]
-    assert.equal(g.competitionId, NFL_COMPETITION_ID)
-    assert.equal(g.home.score, null)
-    assert.equal(board.paging.nextPage, "/web/games/?competitions=352&aftergame=4714179&direction=1")
+    expect(g.competitionId).toBe(NFL_COMPETITION_ID)
+    expect(g.home.score).toBe(null)
+    expect(board.paging.nextPage).toBe("/web/games/?competitions=352&aftergame=4714179&direction=1")
   })
 
   it("a Final game keeps its real score (no null)", () => {
     const board = parseScores365(page2)
     const g = board.games[0]
-    assert.equal(g.status, "Final")
-    assert.equal(g.home.score, 30)
-    assert.equal(g.away.score, 24)
+    expect(g.status).toBe("Final")
+    expect(g.home.score).toBe(30)
+    expect(g.away.score).toBe(24)
   })
 
   it("windows follow nextPage until the wanted ids are covered", async () => {
@@ -169,10 +175,10 @@ describe("365Scores fixtures paging (competition 352)", () => {
       },
       new Set([4714179, 4715000]),
     )
-    assert.equal(result.covered, true)
-    assert.equal(result.pages, 2)
-    assert.equal(result.games.length, 2)
-    assert.ok(calls[0].includes("competitions=352"))
+    expect(result.covered).toBe(true)
+    expect(result.pages).toBe(2)
+    expect(result.games.length).toBe(2)
+    expect(calls[0].includes("competitions=352")).toBeTruthy()
   })
 
   it("stops at maxPages and reports uncovered", async () => {
@@ -187,7 +193,7 @@ describe("365Scores fixtures paging (competition 352)", () => {
       new Set([401873010]),
       3,
     )
-    assert.equal(result.covered, false)
-    assert.equal(result.pages, 3)
+    expect(result.covered).toBe(false)
+    expect(result.pages).toBe(3)
   })
 })

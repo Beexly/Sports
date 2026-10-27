@@ -1,5 +1,4 @@
-import assert from "node:assert/strict"
-import { describe, it } from "node:test"
+import { describe, it, expect } from "vitest"
 import { absDeltaMultiplier, HFA, K, movMultiplier, publicPrior, replay, REVERSIONS, winProb } from "./elo538.js"
 import { assertCoachInputs, CoachFenceError } from "./fence.js"
 import { positivePartJamesStein } from "./jamesStein.js"
@@ -16,26 +15,26 @@ import { SHIFT_FLOOR, shouldWithhold, situationalShift } from "./withhold.js"
 describe("538 team Elo", () => {
   it("matches the published win probability at home field", () => {
     const p = winProb(HFA)
-    assert.ok(Math.abs(p - 1 / (10 ** (-65 / 400) + 1)) < 1e-15)
-    assert.ok(p > 0.59 && p < 0.6)
+    expect(Math.abs(p - 1 / (10 ** (-65 / 400) + 1)) < 1e-15).toBeTruthy()
+    expect(p > 0.59 && p < 0.6).toBeTruthy()
   })
 
   it("uses a winner-signed margin multiplier, and the absolute form disagrees on an upset", () => {
     const upset = movMultiplier(14, 120, 0)
     const wrong = absDeltaMultiplier(14, 120)
-    assert.notEqual(upset, wrong)
-    assert.ok(upset > wrong)
+    expect(upset).not.toBe(wrong)
+    expect(upset > wrong).toBeTruthy()
     const favorite = movMultiplier(14, 120, 1)
-    assert.ok(Math.abs(favorite - wrong) < 1e-12)
+    expect(Math.abs(favorite - wrong) < 1e-12).toBeTruthy()
   })
 
   it("uses denominator 1 on a tie", () => {
     const tie = movMultiplier(0, 40, 0.5)
-    assert.equal(tie, Math.log(1 + 1) * 2.2)
+    expect(tie).toBe(Math.log(1 + 1) * 2.2)
   })
 
   it("replays a season boundary, a pinned reversion, and the K update", () => {
-    assert.equal(Object.keys(REVERSIONS).length, 11)
+    expect(Object.keys(REVERSIONS).length).toBe(11)
     const rows = replay(
       [
         { team1: "CLE", team2: "PIT", season: 1998, score1: 21, score2: 7, result1: 1 },
@@ -47,31 +46,31 @@ describe("538 team Elo", () => {
     const firstP = winProb(firstDiff)
     const mult = movMultiplier(14, firstDiff, 1)
     const shift = K * mult * (1 - firstP)
-    assert.ok(Math.abs(rows[0]!.prob1 - firstP) < 1e-12)
-    assert.ok(Math.abs(rows[0]!.shift - shift) < 1e-9)
-    assert.equal(rows[1]!.elo1, 1300)
-    assert.equal(rows[1]!.elo2, 1400)
+    expect(Math.abs(rows[0]!.prob1 - firstP) < 1e-12).toBeTruthy()
+    expect(Math.abs(rows[0]!.shift - shift) < 1e-9).toBeTruthy()
+    expect(rows[1]!.elo1).toBe(1300)
+    expect(rows[1]!.elo2).toBe(1400)
   })
 
   it("does not pretend equal ratings are a team projection", () => {
     const prior = publicPrior({ site: "CIN" })
-    assert.ok(Math.abs(prior.pHome - winProb(HFA)) < 1e-12)
-    assert.ok(prior.pBal < 0.5)
-    assert.match(prior.note, /Not the coach projection/)
+    expect(Math.abs(prior.pHome - winProb(HFA)) < 1e-12).toBeTruthy()
+    expect(prior.pBal < 0.5).toBeTruthy()
+    expect(prior.note).toMatch(/Not the coach projection/)
   })
 })
 
 describe("shrinkage, withhold, metrics, fence", () => {
   it("positive-part James-Stein zeros a tiny vector and barely moves a large one", () => {
-    assert.deepEqual(positivePartJamesStein([1, 0, 0], 1), [0, 0, 0])
+    expect(positivePartJamesStein([1, 0, 0], 1)).toEqual([0, 0, 0])
     const big = positivePartJamesStein([10, 0, 0], 1)
-    assert.ok(Math.abs(big[0]! - 9.9) < 1e-12)
-    assert.deepEqual(positivePartJamesStein([3, 4], 1), [3, 4])
+    expect(Math.abs(big[0]! - 9.9) < 1e-12).toBeTruthy()
+    expect(positivePartJamesStein([3, 4], 1)).toEqual([3, 4])
   })
 
   it("withholds a quiet shift and keeps a measured one", () => {
-    assert.equal(shouldWithhold(0), true)
-    assert.equal(shouldWithhold(situationalShift([{ lean: 0 }])), true)
+    expect(shouldWithhold(0)).toBe(true)
+    expect(shouldWithhold(situationalShift([{ lean: 0 }]))).toBe(true)
     const loud = situationalShift(
       [
         { lean: 0.62, freshness: 0.9, trust: 0.95 },
@@ -79,52 +78,52 @@ describe("shrinkage, withhold, metrics, fence", () => {
       ],
       7,
     )
-    assert.ok(loud > SHIFT_FLOOR)
-    assert.equal(shouldWithhold(loud), false)
-    assert.ok(Math.abs(7 * 0.025 - 0.175) < 1e-12)
+    expect(loud > SHIFT_FLOOR).toBeTruthy()
+    expect(shouldWithhold(loud)).toBe(false)
+    expect(Math.abs(7 * 0.025 - 0.175) < 1e-12).toBeTruthy()
   })
 
   it("rejects unstable cells and computes the seven from counted cells", () => {
     const single = { n: ANCHOR_MOTION_PA_SINGLE.n, epaSum: ANCHOR_MOTION_PA_SINGLE.epa * ANCHOR_MOTION_PA_SINGLE.n, signStable: true }
     const split = { n: 4000, epaSum: 0.064 * 4000, signStable: true }
     const sii = computeGseSii(single, split)
-    assert.ok(sii != null && Math.abs(sii - (0.167 - 0.064)) < 1e-12)
-    assert.equal(computeGseSii(single, { ...split, signStable: false }), null)
+    expect(sii != null && Math.abs(sii - (0.167 - 0.064)) < 1e-12).toBeTruthy()
+    expect(computeGseSii(single, { ...split, signStable: false })).toBe(null)
     const q = computeGseQptsr({ n: 100, epaSum: -42, signStable: true }, { n: 100, epaSum: 0, signStable: true })
-    assert.ok(q != null && Math.abs(q - -0.42) < 1e-12)
-    assert.equal(computeGseSpese([0.5, 0.5], [1, 0]), 1)
-    assert.ok((computeGseTor({ n: 10, epaSum: 2, signStable: true }, { n: 10, epaSum: -1, signStable: true }) ?? 0) > 0)
-    assert.equal(computeGseSva([{ epa: 1, leverage: 2 }, { epa: -1, leverage: 2 }]), 0)
-    assert.equal(computeGseSva([{ epa: 1, leverage: -1 }]), null)
-    assert.ok(Math.abs((computeGseDwp([{ wpChosen: 0.4, wpBest: 0.55 }]) ?? 0) - -0.15) < 1e-12)
+    expect(q != null && Math.abs(q - -0.42) < 1e-12).toBeTruthy()
+    expect(computeGseSpese([0.5, 0.5], [1, 0])).toBe(1)
+    expect((computeGseTor({ n: 10, epaSum: 2, signStable: true }, { n: 10, epaSum: -1, signStable: true }) ?? 0) > 0).toBeTruthy()
+    expect(computeGseSva([{ epa: 1, leverage: 2 }, { epa: -1, leverage: 2 }])).toBe(0)
+    expect(computeGseSva([{ epa: 1, leverage: -1 }])).toBe(null)
+    expect(Math.abs((computeGseDwp([{ wpChosen: 0.4, wpBest: 0.55 }]) ?? 0) - -0.15) < 1e-12).toBeTruthy()
   })
 
   it("refuses a book price and keeps the steam result dead", () => {
-    assert.throws(() => assertCoachInputs({ homeSpread: -3 }), CoachFenceError)
-    assert.throws(() => assertCoachInputs({ mr_mid: 0.2 }), CoachFenceError)
-    assert.doesNotThrow(() => assertCoachInputs({ flowersTarget: 0.28, olOut: 2 }))
+    expect(() => assertCoachInputs({ homeSpread: -3 })).toThrow(CoachFenceError)
+    expect(() => assertCoachInputs({ mr_mid: 0.2 })).toThrow(CoachFenceError)
+    expect(() => assertCoachInputs({ flowersTarget: 0.28, olOut: 2 })).not.toThrow()
     const steam = KILLED_EDGES.find((e) => e.id === "steam")
-    assert.ok(steam)
-    assert.equal(mayReopen(steam!, { r: 0.02, n: 400, preregistered: true }), false)
-    assert.equal(mayReopen(steam!, { r: 0.08, n: 400, preregistered: false }), false)
-    assert.equal(mayReopen(steam!, { r: 0.08, n: 400, preregistered: true }), true)
+    expect(steam).toBeTruthy()
+    expect(mayReopen(steam!, { r: 0.02, n: 400, preregistered: true })).toBe(false)
+    expect(mayReopen(steam!, { r: 0.08, n: 400, preregistered: false })).toBe(false)
+    expect(mayReopen(steam!, { r: 0.08, n: 400, preregistered: true })).toBe(true)
   })
 
   it("does not list a gated product as public code", () => {
     const pff = SOURCE_REGISTRY.find((row) => row.id === "pff")
-    assert.equal(pff?.status, "IDENTITY-GATED")
-    assert.equal(SOURCE_REGISTRY.find((row) => row.id === "fivethirtyeight-nfl-elo")?.status, "PUBLIC-CODE")
-    assert.equal(SOURCE_REGISTRY.find((row) => row.id === "pydfs-lineup-optimizer")?.status, "PUBLIC-CODE")
-    assert.equal(SOURCE_REGISTRY.find((row) => row.id === "the-odds-api")?.status, "IDENTITY-GATED")
+    expect(pff?.status).toBe("IDENTITY-GATED")
+    expect(SOURCE_REGISTRY.find((row) => row.id === "fivethirtyeight-nfl-elo")?.status).toBe("PUBLIC-CODE")
+    expect(SOURCE_REGISTRY.find((row) => row.id === "pydfs-lineup-optimizer")?.status).toBe("PUBLIC-CODE")
+    expect(SOURCE_REGISTRY.find((row) => row.id === "the-odds-api")?.status).toBe("IDENTITY-GATED")
   })
 
   it("enforces the showdown cap the commercial tools resell", () => {
-    assert.equal(captainSalary(10000), 15000)
-    assert.equal(captainPoints(10), 15)
-    assert.equal(underCap(40000, 10000, SHOWDOWN_CAP), true)
-    assert.equal(underCap(40000, 10001, SHOWDOWN_CAP), false)
-    assert.equal(withinTeamLimit({ CIN: 4 }, "CIN", 4), false)
-    assert.equal(withinTeamLimit({ CIN: 3 }, "CIN", 4), true)
+    expect(captainSalary(10000)).toBe(15000)
+    expect(captainPoints(10)).toBe(15)
+    expect(underCap(40000, 10000, SHOWDOWN_CAP)).toBe(true)
+    expect(underCap(40000, 10001, SHOWDOWN_CAP)).toBe(false)
+    expect(withinTeamLimit({ CIN: 4 }, "CIN", 4)).toBe(false)
+    expect(withinTeamLimit({ CIN: 3 }, "CIN", 4)).toBe(true)
   })
 
   it("reads a 365Scores game and treats -1 as unplayed", () => {
@@ -142,14 +141,14 @@ describe("shrinkage, withhold, metrics, fence", () => {
         },
       ],
     })
-    assert.equal(board.games.length, 1)
-    assert.equal(board.games[0]!.home.score, null)
-    assert.equal(board.games[0]!.away.abbr, "CIN")
-    assert.equal(homeVsAway(board.games[0]!), "BAL vs CIN")
-    assert.equal(homeAwayScore(board.games[0]!), "—–—")
-    assert.equal(board.ttl, 300)
-    assert.match(fixturesUrl(NFL_COMPETITION_ID), /competitions=352/)
-    assert.equal(parseScores365({ ttl: 5, games: [] }).games.length, 0)
+    expect(board.games.length).toBe(1)
+    expect(board.games[0]!.home.score).toBe(null)
+    expect(board.games[0]!.away.abbr).toBe("CIN")
+    expect(homeVsAway(board.games[0]!)).toBe("BAL vs CIN")
+    expect(homeAwayScore(board.games[0]!)).toBe("—–—")
+    expect(board.ttl).toBe(300)
+    expect(fixturesUrl(NFL_COMPETITION_ID)).toMatch(/competitions=352/)
+    expect(parseScores365({ ttl: 5, games: [] }).games.length).toBe(0)
   })
 
   it("reads ESPN home vs away and ignores a scheduled zero", () => {
@@ -185,38 +184,38 @@ describe("shrinkage, withhold, metrics, fence", () => {
         },
       ],
     })
-    assert.equal(board.week, 7)
-    assert.equal(homeVsAway(board.games[0]!), "CHI vs NE")
-    assert.equal(homeAwayScore(board.games[0]!), "30–24")
-    assert.equal(board.games[1]!.home.score, null)
-    assert.equal(homeVsAway(board.games[1]!), "BAL vs CIN")
+    expect(board.week).toBe(7)
+    expect(homeVsAway(board.games[0]!)).toBe("CHI vs NE")
+    expect(homeAwayScore(board.games[0]!)).toBe("30–24")
+    expect(board.games[1]!.home.score).toBe(null)
+    expect(homeVsAway(board.games[1]!)).toBe("BAL vs CIN")
   })
 
   it("de-vigs -150/+130 without raising the favorite", () => {
     const mult = multiplicativeDevig([-150, 130])
     const power = powerDevig([-150, 130])
-    assert.ok(Math.abs(mult[0]! - 0.5798319328) < 1e-9)
-    assert.ok(Math.abs(mult[1]! - 0.4201680672) < 1e-9)
-    assert.ok(Math.abs(power[0]! - 0.583982635) < 1e-6)
-    assert.ok(Math.abs(power[1]! - 0.416017365) < 1e-6)
-    assert.ok(power[0]! < 0.6)
-    assert.ok(Math.abs(0.584 + 0.4202 - 1) > 0.004)
-    assert.ok(0.6557 > 0.6)
+    expect(Math.abs(mult[0]! - 0.5798319328) < 1e-9).toBeTruthy()
+    expect(Math.abs(mult[1]! - 0.4201680672) < 1e-9).toBeTruthy()
+    expect(Math.abs(power[0]! - 0.583982635) < 1e-6).toBeTruthy()
+    expect(Math.abs(power[1]! - 0.416017365) < 1e-6).toBeTruthy()
+    expect(power[0]! < 0.6).toBeTruthy()
+    expect(Math.abs(0.584 + 0.4202 - 1) > 0.004).toBeTruthy()
+    expect(0.6557 > 0.6).toBeTruthy()
     const book = compareDevig([-150, 130])
-    assert.ok(Math.abs(book.additive[0]! - 0.5826086957) < 1e-9)
-    assert.ok(Math.abs(book.shin[0]! - book.additive[0]!) < 1e-9)
-    assert.ok(Math.abs(book.powerK - 1.05297) < 1e-4)
+    expect(Math.abs(book.additive[0]! - 0.5826086957) < 1e-9).toBeTruthy()
+    expect(Math.abs(book.shin[0]! - book.additive[0]!) < 1e-9).toBeTruthy()
+    expect(Math.abs(book.powerK - 1.05297) < 1e-4).toBeTruthy()
     const three = [-100, 700 / 3, 300]
     const shin = shinDevig(three)
     const add = additiveDevig(three)
-    assert.ok(Math.abs(shin[0]! - add[0]!) > 0.001)
-    assert.ok(Math.abs(shin.reduce((s, p) => s + p, 0) - 1) < 1e-8)
+    expect(Math.abs(shin[0]! - add[0]!) > 0.001).toBeTruthy()
+    expect(Math.abs(shin.reduce((s, p) => s + p, 0) - 1) < 1e-8).toBeTruthy()
   })
 
   it("scores calibration, finds a break, and shows the best team does not always win", () => {
-    assert.equal(brierScore([{ p: 1, y: 1 }, { p: 0, y: 0 }]), 0)
-    assert.equal(brierScore([{ p: 0.5, y: 1 }, { p: 0.5, y: 0 }]), 0.25)
-    assert.equal(brierScore([]), null)
+    expect(brierScore([{ p: 1, y: 1 }, { p: 0, y: 0 }])).toBe(0)
+    expect(brierScore([{ p: 0.5, y: 1 }, { p: 0.5, y: 0 }])).toBe(0.25)
+    expect(brierScore([])).toBe(null)
     const bins = reliabilityBins(
       [
         { p: 0.2, y: 0 },
@@ -224,18 +223,18 @@ describe("shrinkage, withhold, metrics, fence", () => {
       ],
       5,
     )
-    assert.equal(bins?.length, 2)
-    assert.equal(seriesWinProb(0.6, 1), 0.6)
+    expect(bins?.length).toBe(2)
+    expect(seriesWinProb(0.6, 1)).toBe(0.6)
     const series = seriesWinProb(0.6, 7)
-    assert.ok(series != null && series > 0.6 && series < 1)
-    assert.equal(pageCusum([0, 0, 0, 0], 0, 1).breakAt, null)
-    assert.equal(pageCusum([0, 0, 3, 3], 0, 4).breakAt, 3)
+    expect(series != null && series > 0.6 && series < 1).toBeTruthy()
+    expect(pageCusum([0, 0, 0, 0], 0, 1).breakAt).toBe(null)
+    expect(pageCusum([0, 0, 3, 3], 0, 4).breakAt).toBe(3)
     const games = [
       { home: 0, away: 1, pHome: 0.9 },
       { home: 1, away: 0, pHome: 0.1 },
     ]
     const rate = bestTeamTitleRate(games, 2, 0, 200, 7)
-    assert.ok(rate != null && rate > 0.7)
+    expect(rate != null && rate > 0.7).toBeTruthy()
     const coin = bestTeamTitleRate(
       [
         { home: 0, away: 1, pHome: 0.5 },
@@ -246,6 +245,6 @@ describe("shrinkage, withhold, metrics, fence", () => {
       400,
       11,
     )
-    assert.ok(coin != null && coin < 0.7)
+    expect(coin != null && coin < 0.7).toBeTruthy()
   })
 })

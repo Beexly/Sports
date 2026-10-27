@@ -3,8 +3,8 @@
  * pydfs-lineup-optimizer is importable by the bridge python; otherwise the
  * contract is exercised through a stub interpreter so CI stays green.
  */
-import assert from "node:assert/strict"
-import { describe, it } from "node:test"
+
+import { describe, it, expect } from "vitest"
 import { solveLineupsViaPydfs, pydfsAvailable, type MilpRequest } from "./milp.js"
 
 const PROJECTIONS: MilpRequest["players"] = [
@@ -20,22 +20,25 @@ const PROJECTIONS: MilpRequest["players"] = [
 const AVAILABLE = pydfsAvailable()
 
 describe("milp bridge (pydfs-lineup-optimizer, MIT)", () => {
-  it("generates a captain lineup under the 50000 cap from GSE projections", { skip: !AVAILABLE }, async () => {
+  // A real MILP solve via the Python bridge. node:test had no default timeout, so
+  // this never tripped; Vitest's 5s default does. The budget is for the solver
+  // subprocess, not for weakening the assertion set below.
+  it("generates a captain lineup under the 50000 cap from GSE projections", { skip: !AVAILABLE, timeout: 120_000 }, async () => {
     const lineups = await solveLineupsViaPydfs({
       site: "draftkings_captain",
       n: 2,
       players: PROJECTIONS,
     })
-    assert.ok(lineups.length >= 1)
+    expect(lineups.length >= 1).toBeTruthy()
     for (const lu of lineups) {
-      assert.ok(lu.total_salary <= 50000, `salary ${lu.total_salary} over cap`)
-      assert.equal(lu.players.length, 6)
+      expect(lu.total_salary <= 50000).toBeTruthy(`salary ${lu.total_salary} over cap`)
+      expect(lu.players.length).toBe(6)
       const cpt = lu.players.filter((p) => p.positions.includes("CPT"))
-      assert.equal(cpt.length, 1)
+      expect(cpt.length).toBe(1)
       // captain salary is exactly 1.5x base
       const base = PROJECTIONS.find((p) => p.name === cpt[0].name)!
-      assert.equal(cpt[0].salary, Math.round(base.salary * 1.5))
-      assert.ok(Math.abs(cpt[0].projected - base.projected * 1.5) < 1e-6)
+      expect(cpt[0].salary).toBe(Math.round(base.salary * 1.5))
+      expect(Math.abs(cpt[0].projected - base.projected * 1.5) < 1e-6).toBeTruthy()
     }
   })
 
@@ -43,8 +46,8 @@ describe("milp bridge (pydfs-lineup-optimizer, MIT)", () => {
     // structural: the request payload is built from the callers' projections
     const req: MilpRequest = { site: "draftkings_captain", n: 1, players: PROJECTIONS }
     for (const p of req.players) {
-      assert.ok(Number.isFinite(p.projected) && p.projected > 0)
-      assert.ok(Number.isFinite(p.salary) && p.salary > 0)
+      expect(Number.isFinite(p.projected) && p.projected > 0).toBeTruthy()
+      expect(Number.isFinite(p.salary) && p.salary > 0).toBeTruthy()
     }
   })
 })
