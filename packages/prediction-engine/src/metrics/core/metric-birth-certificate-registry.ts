@@ -733,4 +733,27 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+  {
+    allowedInputs: ["nflverse pbp columns: game_id, posteam, play_type, season, week, own epa"],
+    failureModes: [
+      "treating null epa as 0 instead of excluding from mean",
+      "sorting plays rather than using play_id source order",
+      "using calibration referee epa instead of own fitted epa"
+    ],
+    family: "team",
+    forbiddenInputs: ["non-scrimmage plays", "penalty nullified rows"],
+    formulaClass: "composite_score",
+    formulaSummary: "A play-sequence conditioned aggregation comparing team EPA/play and EPA/game across the first 15 offensive scrimmage plays vs the rest of the game.",
+    historicalPrecedent: [],
+    internalName: "scripted_epa_split",
+    metricId: "scripted-epa-split",
+    protectedComponents: [],
+    publicExposure: "hidden",
+    publicName: "Scripted EPA Split",
+    sourceRightsRequired: ["nflverse public data"],
+    status: "SHADOW",
+    targetQuestion: "How much of a teams offensive efficiency is front-loaded in the opening script vs reactive game flow?",
+    targetVariable: "scripted vs non-scripted EPA diff",
+    validationMethods: ["mae"],
+  },
 ] as const;

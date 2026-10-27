@@ -159,3 +159,13 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Scripted EPA split (deterministic; SHADOW module).
+export {
+  computeScriptedEpaSplits,
+  SCRIPTED_EPA_MODEL_VERSION,
+  type ScriptedPlay,
+  type ScriptedEpaSplitArm,
+  type ScriptedEpaDiagnostic,
+  type TeamScriptedEpaSplit,
+} from "./scripted-epa-split.js";
