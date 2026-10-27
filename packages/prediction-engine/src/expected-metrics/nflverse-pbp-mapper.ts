@@ -42,7 +42,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -58,6 +58,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // success rate
   "play_type", "yards_gained", "interception", "fumble_lost",
   "rusher_player_id", "receiver_player_id",
+  "passer_player_id", "play_action", "qb_spike",
   // drives
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
@@ -105,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  /** Expected-metrics play-action EPA split metric (SHADOW) */
+  readonly playActionPlays: readonly import("./play-action-epa-split.js").PlayActionDropbackPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const playActionPlays: import("./play-action-epa-split.js").PlayActionDropbackPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -499,6 +503,20 @@ export function mapNflversePbpToExpectedMetrics(
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
       }
+
+      // (g) Play-action dropback plays
+      if (playType === "pass" && (row["posteam"] ?? "") !== "") {
+        playActionPlays.push({
+          playId,
+          passerId: row["passer_player_id"] ?? "",
+          teamId: row["posteam"] ?? "",
+          week: num(row["week"]),
+          playAction: numOrNull(row["play_action"]) as 0 | 1 | null,
+          qbSpike: numOrNull(row["qb_spike"]) as 0 | 1 | null,
+          playType,
+          epa: null, // attachOwnEpa later
+        });
+      }
     }
 
     // (d) EPA/WPA transition pairs — after = row j's own emitted play.
@@ -611,6 +629,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    playActionPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
