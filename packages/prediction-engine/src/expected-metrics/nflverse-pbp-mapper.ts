@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type ScriptedPlay } from "./scripted-epa-split.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -105,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpaToScriptedPlays). */
+  readonly scriptedPlays: readonly ScriptedPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const scriptedPlays: ScriptedPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -488,6 +492,14 @@ export function mapNflversePbpToExpectedMetrics(
       //     returns null for them (unratable, never a silent failure).
       const playType = row["play_type"];
       if ((playType === "pass" || playType === "run") && (row["posteam"] ?? "") !== "") {
+        scriptedPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          posteam: row["posteam"] ?? "",
+          playType,
+          week: num(row["week"]),
+          epa: null,
+        });
         successPlays.push({
           playId,
           teamId: row["posteam"] ?? "",
@@ -611,6 +623,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    scriptedPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
@@ -636,6 +649,22 @@ export function attachOwnEpa(
   epaByPlayId: ReadonlyMap<string, number>,
 ): DrivePlay[] {
   return drivePlays.map((p) => {
+    const epa = epaByPlayId.get(p.playId);
+    return epa === undefined ? { ...p } : { ...p, epa };
+  });
+}
+
+
+/**
+ * Post-fit helper: returns a NEW ScriptedPlay array with our OWN fitted EPA
+ * attached by playId. Pure; ids missing from the map keep epa null.
+ * Never mutates the input.
+ */
+export function attachOwnEpaToScriptedPlays(
+  scriptedPlays: readonly ScriptedPlay[],
+  epaByPlayId: ReadonlyMap<string, number>,
+): ScriptedPlay[] {
+  return scriptedPlays.map((p) => {
     const epa = epaByPlayId.get(p.playId);
     return epa === undefined ? { ...p } : { ...p, epa };
   });
