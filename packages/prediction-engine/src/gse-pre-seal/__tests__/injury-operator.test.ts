@@ -8,7 +8,12 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { injuryRealloc, EPA_DROPOFF, EPA_DROPOFF_SHA256 } from "../injury-operator.js";
+import {
+  injuryRealloc,
+  EPA_DROPOFF,
+  EPA_DROPOFF_SHA256,
+  QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF,
+} from "../injury-operator.js";
 
 describe("sealed EPA dropoff table invariants", () => {
   it("freezes QB_QUESTIONABLE inside the accepted factor band", () => {
@@ -17,6 +22,19 @@ describe("sealed EPA dropoff table invariants", () => {
     expect(factor).toBeCloseTo(0.8106, 4);
     expect(factor!).toBeGreaterThanOrEqual(0.5);
     expect(factor!).toBeLessThanOrEqual(1.2);
+  });
+
+  it("derives the retention factor from the frozen EV-weighted dropoff", () => {
+    // The raw measurement is frozen as its own constant so provenance stays
+    // auditable. This pins the arithmetic that converts it into this table's
+    // retention space: healthy starter = QB1 dropoff / QB1's implied dropoff
+    // share = 0.11 / 0.22 = 0.50 EPA/play; retention = 1 - 0.0947/0.50.
+    const healthyStarterEpa = 0.11 / (1 - EPA_DROPOFF.QB1);
+    expect(healthyStarterEpa).toBeCloseTo(0.5, 6);
+    const derivedRetention = 1 - QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF / healthyStarterEpa;
+    expect(derivedRetention).toBeCloseTo(EPA_DROPOFF.QB_QUESTIONABLE, 4);
+    // Guard the raw measurement itself against silent drift.
+    expect(QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF).toBeCloseTo(0.0947, 4);
   });
 
   it("applies the QB_QUESTIONABLE factor to a starting quarterback's share", () => {

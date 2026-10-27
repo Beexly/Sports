@@ -42,6 +42,15 @@ const EPA_FACTOR_MAX = 1.2;
  * do not re-derive it from market data. Re-run fit_qb_questionable.py against
  * data/gse-dataset/current/injuries_{2024,2025,2026}.csv when that data lands.
  */
+/**
+ * The measured EV-weighted EPA/play dropoff for a QB1 listed Questionable who
+ * starts: 0.341 * 0.1159 + 0.659 * 0.0838 = 0.0947 EPA/play. This is the raw
+ * measurement; EPA_DROPOFF.QB_QUESTIONABLE is its retention-space equivalent
+ * (1 - 0.0947/0.50 = 0.8106). Freezing the raw value here keeps the provenance
+ * auditable without changing the table's retention semantics.
+ */
+const QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947;
+
 const EPA_DROPOFF: Record<string, number> = {
   QB1: 0.78,
   QB_QUESTIONABLE: 0.8106,
@@ -249,4 +258,9 @@ function round(m: Record<string, number>): Record<string, number> {
   return out;
 }
 
-export { EPA_DROPOFF, EPA_DROPOFF_SHA256, SINKHORN_EPS };
+export {
+  EPA_DROPOFF,
+  EPA_DROPOFF_SHA256,
+  SINKHORN_EPS,
+  QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF,
+};
