@@ -275,6 +275,8 @@ export function computePlayActionEpaSplit(
       for (const play of Array.from(inWindow.values())) {
         if (play.playType !== "pass" || play.teamId === "") continue;
 
+        if (requirePasserId && play.passerId === "") continue;
+
         if (play.qbSpike === 1) {
           stats.excludedQbSpike++;
           continue;
