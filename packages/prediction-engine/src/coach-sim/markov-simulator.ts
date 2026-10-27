@@ -29,6 +29,7 @@ import { CONVERSION_BY_BUCKET } from "../nfl/pressure-timing.js";
 import { KNEEL_MEAN_YD, KNEEL_RATE_PER_WINNING_GAME, kneelProbability } from "../nfl/kneeldown-mass.js";
 import { evaluateFourthDown, STAFF_AGGRESSION } from "./fourth-down-policy.js";
 import { allocateTargets, applyShadowHaircut, type EligibleTarget } from "./sinkhorn-targets.js";
+import { drawSchemePlay } from "./scheme-state.js";
 import { POOLED_DROPBACK } from "../nfl/situational-reality.js";
 import {
   evaluateBelichickTenMetrics,
@@ -464,6 +465,8 @@ function playGame(
             ? 0
             : baseGain / Math.max(0.1, 1 - stuffProb) + MEASURED_DRIVE.rushYardsSd * standardNormal(rand);
       }
+      const scheme = drawSchemePlay(rand, pass ? "dropback" : "run");
+      gain += scheme.yards;
       yl += gain;
       if (yl >= 100) {
         scoreTouchdown(rand, score);

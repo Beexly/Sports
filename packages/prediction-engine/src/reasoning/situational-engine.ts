@@ -21,6 +21,7 @@ import {
   evaluateMindReasoning,
   type MindEvaluationResult,
 } from "./mind-reasoning.js";
+import { schemeReasoningLine, type SchemePlay } from "../coach-sim/scheme-state.js";
 
 export interface GameContext {
   readonly homeTeam: string;
@@ -60,6 +61,8 @@ export interface GameContext {
   readonly precipitationRateMmHr?: number;
   readonly offensivePaceSec?: number;
   readonly surfaceTractionCoeff?: number;
+  /** FTN scheme draw from the drive. Absent reads do not change. */
+  readonly schemePlay?: SchemePlay;
 }
 
 export interface SituationalReading {
@@ -176,6 +179,7 @@ export function interpretSituation(
     `Trench/secondary continuity: OL delta ${context.olContinuityDelta ?? 0}, DL delta ${context.dlContinuityDelta ?? 0}, DB delta ${context.dbContinuityDelta ?? 0}.`,
     `Corpus evaluator: touched ${corpusEvaluation.itemsEvaluatedCount} items (${corpusEvaluation.totalLoadedCount} loaded, ${corpusEvaluation.itemsSkippedCount} skipped, ${corpusEvaluation.coveragePct.toFixed(1)}% coverage). Net shift: ${corpusSituationalShift.toFixed(6)} (weight ${corpusEvaluation.evaluatorWeight}).`,
     `Mind Reasoning: ${mindEvaluation.applicablePrinciples.length} principles active. Lean: ${mindEvaluation.situationalPick.selection} (${(mindEvaluation.situationalPick.modelFairProbability * 100).toFixed(1)}% fair vs ${(market * 100).toFixed(1)}% market). SGP: ${mindEvaluation.sameGameParlay.name}.`,
+    ...(context.schemePlay ? [schemeReasoningLine(context.schemePlay)] : []),
   ].join(". ");
 
   return {
