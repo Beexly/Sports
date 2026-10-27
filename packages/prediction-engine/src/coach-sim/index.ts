@@ -5,7 +5,7 @@
  * Entry point: lockCoachProjection. Call this first. The market is not an argument.
  */
 export { simulateCoachGame, runSimulations } from "./markov-simulator.js";
-export type { CoachSimInput, CoachProjection } from "./markov-simulator.js";
+export type { CoachSimInput, CoachProjection, SchemeSample } from "./markov-simulator.js";
 
 export { lockCoachProjection } from "./locked-projection.js";
 export type { LockedCoachProjection } from "./locked-projection.js";

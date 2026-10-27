@@ -29,7 +29,7 @@ import { CONVERSION_BY_BUCKET } from "../nfl/pressure-timing.js";
 import { KNEEL_MEAN_YD, KNEEL_RATE_PER_WINNING_GAME, kneelProbability } from "../nfl/kneeldown-mass.js";
 import { evaluateFourthDown, STAFF_AGGRESSION } from "./fourth-down-policy.js";
 import { allocateTargets, applyShadowHaircut, type EligibleTarget } from "./sinkhorn-targets.js";
-import { drawSchemePlay } from "./scheme-state.js";
+import { drawSchemePlay, type SchemeFlagId } from "./scheme-state.js";
 import { POOLED_DROPBACK } from "../nfl/situational-reality.js";
 import {
   evaluateBelichickTenMetrics,
@@ -80,6 +80,36 @@ export interface CoachProjection {
   playerStats: Record<string, { mean: number; p10: number; p90: number }>;
   fourthDownWP?: number;
   targetShares?: Array<{ playerId: string; share: number }>;
+  /** Mean centered scheme yards per play, and how often each flag fired. */
+  scheme?: SchemeSample;
+}
+
+const SCHEME_FLAG_IDS = [
+  "play_action",
+  "rpo",
+  "qb_out_of_pocket",
+  "no_huddle",
+  "blitz",
+  "box",
+  "motion",
+] as const satisfies readonly SchemeFlagId[];
+
+export interface SchemeSample {
+  readonly plays: number;
+  readonly yardsPerPlay: number;
+  readonly fired: Readonly<Record<SchemeFlagId, number>>;
+}
+
+function emptyFired(): Record<SchemeFlagId, number> {
+  return {
+    play_action: 0,
+    rpo: 0,
+    qb_out_of_pocket: 0,
+    no_huddle: 0,
+    blitz: 0,
+    box: 0,
+    motion: 0,
+  };
 }
 
 /** Pinned. FG_MAKE_50 lives only in this module; no distance curve elsewhere. */
@@ -220,6 +250,11 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
     ),
     fourthDownWP,
     targetShares: allocated.map((a) => ({ playerId: a.playerId, share: a.share })),
+    scheme: {
+      plays: played.schemePlays,
+      yardsPerPlay: played.schemePlays > 0 ? played.schemeYards / played.schemePlays : 0,
+      fired: played.schemeFired,
+    },
   };
 }
 
@@ -253,6 +288,9 @@ interface DriveSample {
   totals: Float64Array;
   wpSum: number;
   fourthDowns: number;
+  schemePlays: number;
+  schemeYards: number;
+  schemeFired: Record<SchemeFlagId, number>;
 }
 
 function driveSample(
@@ -269,6 +307,9 @@ function driveSample(
   const rand = mulberry32(seedFor(input, homeStaff));
   let wpSum = 0;
   let fourthDowns = 0;
+  let schemePlays = 0;
+  let schemeYards = 0;
+  const schemeFired = emptyFired();
   for (let i = 0; i < n; i++) {
     const game = playGame(
       rand,
@@ -285,8 +326,11 @@ function driveSample(
     totals[i] = game.home + game.away;
     wpSum += game.wpSum;
     fourthDowns += game.fourthDowns;
+    schemePlays += game.schemePlays;
+    schemeYards += game.schemeYards;
+    for (const id of SCHEME_FLAG_IDS) schemeFired[id] += game.schemeFired[id];
   }
-  return { margins, totals, wpSum, fourthDowns };
+  return { margins, totals, wpSum, fourthDowns, schemePlays, schemeYards, schemeFired };
 }
 
 interface GamePoints {
@@ -294,6 +338,9 @@ interface GamePoints {
   away: number;
   wpSum: number;
   fourthDowns: number;
+  schemePlays: number;
+  schemeYards: number;
+  schemeFired: Record<SchemeFlagId, number>;
 }
 
 function standardNormal(rand: () => number): number {
@@ -331,6 +378,9 @@ function playGame(
   let wpSum = 0;
   let fourthDowns = 0;
   let plays = 0;
+  let schemePlays = 0;
+  let schemeYards = 0;
+  const schemeFired = emptyFired();
 
   // Shrunk 32-team trench/blitz cells, resolved once per game. These are
   // OFFENSE-side tendencies (yards before contact, stuff rate, blitz EPA), so
@@ -467,6 +517,9 @@ function playGame(
       }
       const scheme = drawSchemePlay(rand, pass ? "dropback" : "run");
       gain += scheme.yards;
+      schemePlays += 1;
+      schemeYards += scheme.yards;
+      for (const flag of scheme.flags) if (flag.on) schemeFired[flag.id] += 1;
       yl += gain;
       if (yl >= 100) {
         scoreTouchdown(rand, score);
@@ -509,7 +562,7 @@ function playGame(
     }
   }
 
-  return { home, away, wpSum, fourthDowns };
+  return { home, away, wpSum, fourthDowns, schemePlays, schemeYards, schemeFired };
 }
 
 function bandHalfWidth(totals: Float64Array): number {
