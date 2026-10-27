@@ -4744,6 +4744,8 @@ export {
   correctShowdownOwnership,
   scanNumbers,
   callSheet,
+} from "./public-baseline/index.js";
+
 export * from './public-baseline/index.js';
 export * from './reasoning/gse-coach-brain-llm.js';
 
