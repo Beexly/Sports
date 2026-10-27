@@ -3,6 +3,7 @@
  * QB pre-snap motion snap-timing variance.
  *
  * ENABLED = false until tracking and scheme priors are wired.
+ * Human call required before activation — flipping this changes production predictions.
  */
 export const ENABLED = false;
 

@@ -3,6 +3,7 @@
  *
  * Frame-level hidden Markov model that assigns blockers to rushers.
  * ENABLED = false until tracking data and the Tuesday seal are wired.
+ * Human call required before activation — flipping this changes production predictions.
  */
 export const ENABLED = false;
 

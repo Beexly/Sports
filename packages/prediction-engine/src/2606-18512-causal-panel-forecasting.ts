@@ -4,6 +4,7 @@
  *
  * Layers on top of Sinkhorn target reallocation.
  * ENABLED = false until the Tuesday seal and injury pipeline are wired.
+ * Human call required before activation — flipping this changes production predictions.
  */
 export const ENABLED = false;
 
