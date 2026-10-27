@@ -68,6 +68,17 @@ export {
   type ExpectedRushModel,
 } from "./expected-rush-yards.js";
 
+// Play Action EPA Split (SHADOW)
+export {
+  computePlayActionEpaSplit,
+  PLAY_ACTION_EPA_SPLIT_VERSION,
+  type PlayActionDropbackPlay,
+  type PlayActionEpaArm,
+  type PlayActionEpaSplitWindow,
+  type PlayerPlayActionEpaSplit,
+  type TeamPlayActionEpaSplit,
+} from "./play-action-epa-split.js";
+
 // Expected YAC → GSE-xYAC.
 export {
   fitExpectedYacModel,
