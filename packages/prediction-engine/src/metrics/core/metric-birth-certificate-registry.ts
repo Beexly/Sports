@@ -733,4 +733,34 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+
+  {
+    allowedInputs: ["raw play-by-play yards", "down", "distance", "field position", "play_action flag", "our own expected points"],
+    failureModes: [
+      "spike plays skewing non-PA averages",
+      "shrinking to the wrong arm mean",
+      "using nflverse EPA instead of our own",
+      "dropping null EPA instead of explicitly excluding and counting",
+    ],
+    family: "passing",
+    forbiddenInputs: ["tracking data", "separation metrics", "box counts", "nflverse EPA values", "nflverse WPA values"],
+    formulaClass: "linear",
+    formulaSummary: "Compares the EPA per dropback on play-action vs non-play-action dropbacks using empirical Bayes shrinkage.",
+    historicalPrecedent: [
+      {
+        name: "Play-action efficiency",
+        reason: "Disentangling whether QB efficiency depends on the fake or just correlates with a respected run game is a core play-design input.",
+      },
+    ],
+    internalName: "play_action_epa_split",
+    metricId: "play-action-epa-split",
+    protectedComponents: ["shrinkage constant", "floor drops", "windowing"],
+    publicExposure: "hidden",
+    publicName: "Play Action EPA Split",
+    sourceRightsRequired: ["derived from public pbp only", "no tracking or charting required"],
+    status: "SHADOW",
+    targetQuestion: "Does this QB's efficiency truly depend on the play-action fake?",
+    targetVariable: "PA expected points differential",
+    validationMethods: ["rmse", "walk_forward"],
+  },
 ] as const;
