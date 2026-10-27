@@ -1,15 +1,24 @@
-def censoring_compatible_min(xs):
-    """Guarded censoring-compatible reduction from Bladt arXiv:2610.24911 printed eq (4).
-    s(x) = min_j ψ_j(x^{(j)}) with identity ψ; returns min of finite numeric coordinates.
-    Fail-closed on empty, non-numeric, or non-finite inputs.
+def censoring_compatible_min(x, psi_list):
+    """Guarded min reduction from Bladt arXiv:2610.24911 printed eq (4) / Def 1 / Thm 1 (ii).
+    s(x) = min_j psi_j(x^{(j)}). Returns the min or None on non-numeric/non-finite/mismatched.
+    Fail-closed. Censoring-compatible by construction when psi nondecreasing.
     """
     import math
-    if not xs or not hasattr(xs, '__iter__'):
-        return None
     try:
-        vals = [float(x) for x in xs]
-        if not vals or not all(math.isfinite(v) for v in vals):
+        if not isinstance(x, (list, tuple)) or not isinstance(psi_list, (list, tuple)):
             return None
+        if len(x) != len(psi_list) or len(x) == 0:
+            return None
+        vals = []
+        for xi, psi in zip(x, psi_list):
+            # psi assumed callable; evaluate
+            try:
+                v = float(psi(float(xi)))
+            except Exception:
+                return None
+            if not math.isfinite(v):
+                return None
+            vals.append(v)
         return min(vals)
-    except (TypeError, ValueError, OverflowError):
+    except (TypeError, ValueError, OverflowError, AttributeError):
         return None
