@@ -4744,7 +4744,8 @@ export {
   correctShowdownOwnership,
   scanNumbers,
   callSheet,
-} from "./public-baseline/index.js";
+export * from './public-baseline/index.js';
+export * from './reasoning/gse-coach-brain-llm.js';
 
 // ── Situational work, measured 2026-10-22/23 (nfl-farm cycles 1-36) ───────────
 // Registry first: it carries the verdict and the weight for every situational
