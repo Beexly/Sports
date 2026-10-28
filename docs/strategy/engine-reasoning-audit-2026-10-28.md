@@ -62,6 +62,28 @@ Measured, one strong starter out:
 fractions. Reaching 20 needs roughly four simultaneous strong injuries. **In normal weeks the
 engine never chooses a side; `scoring.ts` falls through to the market.**
 
+### 2b. The simulator can reason per drive — the projection starves it
+
+`markov-simulator.ts` accepts `belichickHome`/`belichickAway`, evaluates them at 205-206, and feeds
+them into the drive loop at 402 and 470 for special-teams and defensive decisions. That is real
+in-drive reasoning over scheme and ST metrics.
+
+But `engine/coach-projection.ts` — the only caller on the scoring path — never mentions belichick.
+Measured: `lockCoachProjection` called without them returns `marginMean 1.669`, identical to the
+stub path, because `metricsHome`/`metricsAway` are null.
+
+So the loop is capable and the input is empty. That is a wiring gap, not a capability gap.
+
+### 2c. A team-strength rating already exists and is unwired
+
+`decision/2001-09097v1-gap-stat-ratings.ts` implements exactly what the location lacks: a 4-way
+per-team rating (home/away offense/defense) on EPA/play, pressure rate, first-down rate and
+explosive rate, with `predictStatDifferential(table, home, away)` returning the differential.
+It is `ENABLED = false` and its own header says "NOT wired into any publish path."
+
+No duplicate implementation exists — it is the only GAP table in the tree. Step 1 below is
+therefore wiring, not writing.
+
 ### 3. Two real inputs are disconnected by name
 
 `coach-projection.ts:83-84` records both as gaps:
@@ -88,8 +110,10 @@ should be doing.
 
 ## What closing it takes, in order
 
-1. **Feed the location.** Team offensive/defensive EPA and pace from the 2026 pbp into
-   `pointLocation` so margin and total start from the matchup, not from 3 and 46.5.
+1. **Feed the location** — and use what already exists. Wire `predictStatDifferential` from
+   `decision/2001-09097v1-gap-stat-ratings.ts` into `pointLocation` so margin starts from the
+   matchup. Supply `belichickHome`/`belichickAway` from `coach-projection.ts` so the drive loop
+   stops running blind. Neither needs new code.
 2. **Re-scale the coach shift** so a real signal can move the side — either raise the 0.15
    multiplier or lower the stub threshold, and measure which calibrates better.
 3. **Connect `injuryDropOff`** by converting availability weights to score points.
