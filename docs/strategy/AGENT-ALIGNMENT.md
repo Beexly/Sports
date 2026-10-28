@@ -92,6 +92,8 @@ Do not re-litigate these. If a decision needs reversing, say so explicitly.
 
 ## 6. Starting a session aligned
 
+0. `node scripts/guardrails/alignment-guard.mjs --check` — tells you whether this record is stale
+   against the newest engine commit. The pre-commit hook enforces the same rule.
 1. Read this file and `docs/strategy/completion-note-2026-10-28.md`.
 2. `git -C C:/Users/Garrett/Sports status` — the tree is shared with other live sessions. Diff
    before you write.

@@ -12,4 +12,14 @@ if [ "$status" -ne 0 ]; then
   echo "pre-commit: secret-scan blocked this commit (see above)." 1>&2
   exit "$status"
 fi
+
+# Alignment guardrail: a commit touching the engine surface must also stage
+# docs/strategy/AGENT-ALIGNMENT.md, so parallel sessions stay aligned.
+# Bypass a genuine no-op with GSE_ALIGN_SKIP=1.
+node scripts/guardrails/alignment-guard.mjs
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "pre-commit: alignment-guard blocked this commit (see above)." 1>&2
+  exit "$status"
+fi
 exit 0
