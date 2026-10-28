@@ -196,8 +196,33 @@ recomputed from source. What can be checked is internal consistency, and it hold
 - `go − fg` = 0.1113 − (−0.0837) = **0.195**, matching the bound `GO_OVER_FG_WP` and the header's
   "+19.5 wp points"
 
-**DWP derivation re-run matches bound constants; no update required** — with the honest caveat that
-this is a consistency check against the recorded counts, not a re-derivation from raw pbp.
+**Result: bound constants retained, but they do NOT reproduce on the data that is on disk.**
+
+Applying the recorded filter and aggregation verbatim to the seasons that are on disk:
+
+| Season | go | field_goal | punt |
+|---|---|---|---|
+| bound (2018–2021) | **+0.1113** | **−0.0837** | **−0.2892** |
+| 2022 | −0.0022 (n=214) | −0.0128 (n=82) | −0.0374 (n=6) |
+| 2023 | +0.0239 (n=226) | −0.0157 (n=76) | −0.0258 (n=4) |
+| 2024 | +0.0185 (n=228) | −0.0150 (n=62) | −0.0372 (n=5) |
+| 2025 | +0.0199 (n=245) | **+0.0134** (n=53) | — |
+
+The bound magnitudes are roughly **5× larger** than the same formula produces on any adjacent
+season, and the field-goal sign flips positive in 2025. Branch classification was checked and is
+sound: there is no decision column, `no_play` is excluded, and `go` is pass-or-run on 4th and ≤2.
+
+So the recorded formula is not sufficient to reproduce the bound constants. Three candidate causes,
+none confirmed:
+
+1. the 2018–2021 population differs — 4th-down aggression was rarer, so the selected go plays are a
+   different set
+2. the fit used a delta against the counterfactual branch rather than raw `wpa`
+3. `wpa` sign convention differs between the fit and the current pbp
+
+**Disposition: constants retained, not updated.** A re-run on the actual source would settle it; that
+requires the 2018–2021 pbp, which is not on disk. Recording this as a discrepancy is more honest
+than recording a match the data does not support.
 
 **Bound constants:** `go` +0.1113, `field_goal` −0.0837, `punt` −0.2892, `other` 0. Also bound:
 `LEAGUE_GO_RATE` 0.694, `GO_OVER_FG_WP` 0.195, `AGGRESSION_MIN` 0.51, `AGGRESSION_MAX` 0.94.
