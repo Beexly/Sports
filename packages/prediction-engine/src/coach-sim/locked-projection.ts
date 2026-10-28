@@ -13,6 +13,7 @@ import { createHash } from "node:crypto";
 import { simulateCoachGame, type CoachSimInput, type CoachProjection } from "./markov-simulator.js";
 import {
   allocateTargets,
+  sinkhornTargetAllocation,
   applyShadowHaircut,
   type EligibleTarget,
   type TargetAllocation,
@@ -160,6 +161,14 @@ export function lockTuesdayCoachBaseline(
  * Apply a mid-week injury overlay. Sinkhorn target reallocation plus a
  * bounded points-equivalent EPA dropoff. The sealed mindset, its hash, and
  * tau are carried over byte-for-byte. Throws if tau moved.
+ *
+ * The reallocation now runs through `sinkhornTargetAllocation`, so the active
+ * set's shares are the column marginal of an entropy-regularized transport plan
+ * rather than a bare softmax normalization. Both the source marginal (survivors'
+ * raw base shares) and the demand marginal (the coach cost model over survivors)
+ * are explicit, and the plan's marginals are enforced by the solver. The seal is
+ * unaffected either way: target allocations are not part of the cadence-lock
+ * payload, so no seal check reads them.
  */
 export function applyInjuryOverlay(
   baselineLock: TuesdayCoachBaselineLock,
@@ -202,8 +211,14 @@ export function applyInjuryOverlay(
   const activeAway = baselineLock.baseRooms.awayTargets.filter(
     (t) => !scratched.has(t.playerId),
   );
-  const homeTargetAllocations = applyShadowHaircut(allocateTargets(activeHome), shadows);
-  const awayTargetAllocations = applyShadowHaircut(allocateTargets(activeAway), shadows);
+  const homeTargetAllocations = applyShadowHaircut(
+    sinkhornTargetAllocation(activeHome),
+    shadows,
+  );
+  const awayTargetAllocations = applyShadowHaircut(
+    sinkhornTargetAllocation(activeAway),
+    shadows,
+  );
 
   const homeDelta = overlay.homeInjuryPointsDelta ?? 0;
   const awayDelta = overlay.awayInjuryPointsDelta ?? 0;

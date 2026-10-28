@@ -179,47 +179,33 @@ def estimate_partial_pooling(
         X.append(row)
         y.append(o["margin"] - hfa)
 
-    # 13 games and 26 teams is underdetermined: a near-zero ridge would fit the
-    # sample perfectly (sigma -> 0) and leave the shrinkage weights at ~1. Use
-    # iterative empirical-Bayes ridge regression instead: lambda = sigma^2/tau^2,
-    # re-estimated from the residuals until it stops moving.
-    lam = 2.0  # neutral starting ridge; replaced by sigma^2/tau^2 on iteration 2+
-    raw = [0.0] * n
-    sigma2 = 13.5 * 13.5
-    tau2 = 1.0
-    for _ in range(25):
-        XtX = [[0.0] * n for _ in range(n)]
-        Xty = [0.0] * n
-        for k in range(m):
-            row = X[k]
-            for i in range(n):
-                if row[i] == 0:
-                    continue
-                Xty[i] += row[i] * y[k]
-                for j in range(n):
-                    XtX[i][j] += row[i] * row[j]
+    # Single lightly-penalised fit, then one method-of-moments pass.
+    #
+    # The previous implementation iterated lambda = sigma^2/tau^2 to a fixed
+    # point. That iteration is DIVERGENT for this model: as lambda grows the
+    # penalised ratings shrink toward zero, which shrinks var(raw), which floors
+    # tau^2 at 1e-6, which grows lambda further. It "converges" on the zero
+    # vector — every rating reported as 0.0 with sigma^2 equal to the raw margin
+    # variance. That is what put tau=0.001 in the quarantined candidates.
+    #
+    # The variance components are estimated ONCE from a lightly penalised fit
+    # (lam=2 is ~0.15% of the diagonal mass at 318 games, so the fit is
+    # effectively unshrunk) and the shrinkage is applied in a single step below.
+    lam = 2.0
+    XtX = [[0.0] * n for _ in range(n)]
+    Xty = [0.0] * n
+    for k in range(m):
+        row = X[k]
         for i in range(n):
-            XtX[i][i] += lam
+            if row[i] == 0:
+                continue
+            Xty[i] += row[i] * y[k]
+            for j in range(n):
+                XtX[i][j] += row[i] * row[j]
+    for i in range(n):
+        XtX[i][i] += lam
 
-        raw = _solve_linear(XtX, Xty)
-
-        # Residuals under the current fit.
-        res = []
-        for k in range(m):
-            o = observations[k]
-            pred = raw[idx[o["home"]]] - raw[idx[o["away"]]] + hfa
-            res.append(o["margin"] - pred)
-        sigma2_new = sum(r * r for r in res) / max(1, len(res))
-
-        # Between-team variance, corrected for sampling noise.
-        var_raw = sum((r - sum(raw) / n) ** 2 for r in raw) / max(1, n - 1)
-        tau2_new = max(1e-6, var_raw - sigma2_new / max(1, m / n))
-
-        lam_new = max(1e-3, sigma2_new / tau2_new)
-        if abs(lam_new - lam) < 1e-6:
-            sigma2, tau2 = sigma2_new, tau2_new
-            break
-        lam, sigma2, tau2 = lam_new, sigma2_new, tau2_new
+    raw = _solve_linear(XtX, Xty)
 
     # Final residuals under the converged fit.
     residuals = []
@@ -242,7 +228,18 @@ def estimate_partial_pooling(
     mean_raw = sum(raw_vals) / max(1, len(raw_vals))
     var_raw = sum((r - mean_raw) ** 2 for r in raw_vals) / max(1, len(raw_vals) - 1)
 
-    within = [by_team[t]["rss"] / by_team[t]["n"] for t in teams if by_team[t]["n"] > 0]
+    # Sampling variance of each team's ESTIMATED MEAN rating, not the per-game
+    # residual variance. rss is a SUM over n games, so the mean squared residual
+    # per game is rss/n ~= sigma^2 and the variance of the mean is rss/n^2.
+    # Dividing by n instead of n^2 over-corrects by a factor of ~20: it subtracts
+    # the full game-level variance (137.8) from the between-team variance (28.7),
+    # drives tau^2 negative, floors it at 1e-6, and collapses every shrinkage
+    # weight to zero so all 32 ratings report 0.0.
+    within = [
+        by_team[t]["rss"] / (by_team[t]["n"] ** 2)
+        for t in teams
+        if by_team[t]["n"] > 0
+    ]
     mean_within = sum(within) / max(1, len(within)) if within else sigma2
     tau2 = max(1e-6, var_raw - mean_within)
     tau = math.sqrt(tau2)
@@ -641,6 +638,48 @@ def load_slate_observations() -> list[dict]:
     return obs
 
 
+def load_settled_observations(
+    seasons: tuple[int, ...] = (2025, 2026),
+    max_week_2026: int = 3,
+) -> list[dict]:
+    """Build game observations from settled games in the GSE game dataset.
+
+    The candidate baseline needs genuine per-team ratings. Fitting on the
+    week-7 slate alone (13 games across 26 teams) is underdetermined: the
+    empirical-Bayes shrinkage weight collapses toward zero and tau floors at
+    the 1e-6 guard, which is what produced the all-(-0.0) ratings vector in the
+    quarantined placeholder candidates.
+
+    This loader fits on games that actually have final scores, read from
+    ``data/gse-dataset/games.jsonl``. The window is the 2025 season plus 2026
+    through ``max_week_2026``. That is a documented carryover prior, not a
+    cross-season state model: 2025 games anchor each team's strength and 2026
+    games update it. A true season-carryover state model is out of scope for
+    the pre-seal candidate and is called out here so nobody mistakes this for
+    one.
+    """
+    path = REPO_ROOT / "data" / "gse-dataset" / "games.jsonl"
+    obs: list[dict] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        g = json.loads(line)
+        if g.get("season") not in seasons:
+            continue
+        if not g.get("settled"):
+            continue
+        if g.get("home_score") is None or g.get("away_score") is None:
+            continue
+        if g.get("season") == 2026 and g.get("week", 0) > max_week_2026:
+            continue
+        obs.append({
+            "home": g["home_team"],
+            "away": g["away_team"],
+            "margin": float(g["home_score"]) - float(g["away_score"]),
+        })
+    return obs
+
+
 def load_conformal_observations() -> list[dict]:
     """
     Build model-vs-market totals for the conformal diagnostic.
@@ -706,14 +745,44 @@ def run_all_tests() -> dict:
         return results
 
     # Write the initial candidate baseline (parent seal hash).
+    #
+    # The candidate descends from the ACTIVE seal, so its parent link must be
+    # that seal's merkle. The previous default here was 64 characters of
+    # sequential hex ("faab2827c4e9b8a1d2f3..."), which fabricated a lineage no
+    # payload ever produced and made the seal chain unverifiable. Read the real
+    # merkle from the seal record instead.
+    seal_merkle = json.loads(SEAL_PATH.read_text())["merkle"]
+    if not seal_merkle or len(seal_merkle) != 64:
+        raise SealBrokenError(
+            f"seal center at {SEAL_PATH} carries no usable 64-hex merkle "
+            f"(got {seal_merkle!r}); refusing to fabricate a parent link"
+        )
     prior = load_candidate()
-    parent_hash = prior["parent_seal_hash"] if prior else "faab2827c4e9b8a1d2f3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5"
+    if prior and prior.get("parent_seal_hash") != seal_merkle:
+        # A candidate that claims a different parent than the active seal is a
+        # broken lineage. Refuse rather than silently re-stamp it, because a
+        # candidate whose parent link was rewritten cannot prove what it descends
+        # from. Re-run with the prior candidate deleted to start a clean chain.
+        raise SealBrokenError(
+            f"candidate lineage broken: candidate parent_seal_hash "
+            f"{prior.get('parent_seal_hash')} does not match active seal merkle "
+            f"{seal_merkle}"
+        )
+    parent_hash = seal_merkle
     write_candidate("init", {}, parent_hash, reset=True)
     hash_after_init = candidate_hash()
     results["candidate_init_hash"] = hash_after_init
 
     # --- Test 7: PPM writes shrunken ratings into candidate ---
-    ppm = estimate_partial_pooling(observations)
+    # Fit on settled games, not on the 13 upcoming slate games. A 13-game fit
+    # across 26 teams is underdetermined and shrinks every rating to the league
+    # mean with tau at the 1e-6 floor — a placeholder wearing a rating's name.
+    settled = load_settled_observations()
+    results["settled_loaded"] = f"{len(settled)} games"
+    if len(settled) < 32:
+        results["settled_loaded"] = f"FAILED: only {len(settled)} settled games, need >= 32"
+        return results
+    ppm = estimate_partial_pooling(settled)
     merged, hash_after_ppm = write_candidate("partial_pooling", {
         "ratings": ppm["ratings"],
         "params": ppm["params"],

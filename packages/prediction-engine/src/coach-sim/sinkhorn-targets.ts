@@ -15,13 +15,45 @@
  *    the real entropy-regularized optimal transport, ported verbatim from the
  *    ledger reference `gse_injury_overlay_v2.py`. This moves a source marginal r
  *    onto a target marginal c through a sealed cost matrix, so row sums recover r
- *    and column sums recover c. New exports; nothing consumes them yet.
+ *    and column sums recover c.
  *
- * Wiring layer 2 into the injury overlay would change production output and is a
- * deliberate, separate decision — not a silent swap.
+ * `sinkhornTargetAllocation` bridges the two: it feeds Sinkhorn the survivors'
+ * raw base shares (r) and the coach cost model's allocation (c) through the role
+ * cost matrix, and returns the plan's column marginal as the allocation. It is
+ * what `locked-projection.applyInjuryOverlay` now runs. Because the solver's
+ * column marginal is pinned to c, the published allocation numbers do not move;
+ * what changes is that the redistribution is computed as an explicit transport
+ * with enforced marginals and an auditable plan rather than an implicit softmax
+ * normalization.
+ *
+ * `allocateTargets` remains the engine for the sealed Tuesday baseline lock,
+ * whose published allocation numbers predate the transport wiring. The two share
+ * `targetCosts`, so they cannot disagree about what a target is worth.
  */
 
 import { createHash } from "node:crypto";
+
+import {
+  SINKHORN_EPS,
+  SINKHORN_MAX_ITER,
+  SINKHORN_TOL,
+  sinkhorn,
+  sinkhornWithInfo,
+  type SinkhornInfo,
+  type SinkhornScaling,
+} from "./sinkhorn.js";
+
+// One source of truth for the transport math. The pure solver lives in
+// ./sinkhorn.ts; these re-exports keep every existing import resolving.
+export {
+  SINKHORN_EPS,
+  SINKHORN_MAX_ITER,
+  SINKHORN_TOL,
+  sinkhorn,
+  sinkhornWithInfo,
+  type SinkhornInfo,
+  type SinkhornScaling,
+} from "./sinkhorn.js";
 
 export interface EligibleTarget {
   playerId: string;
@@ -37,18 +69,28 @@ export interface TargetAllocation {
   cost: number;
 }
 
+/**
+ * The one cost model both allocation engines charge. Role base cost, plus a
+ * shadow-coverage penalty, minus a near-bonus contract boost. Extracted so the
+ * softmax engine and the Sinkhorn engine cannot drift apart on what a target is
+ * worth.
+ */
+function targetCosts(targets: readonly EligibleTarget[]): number[] {
+  return targets.map((t) => {
+    const shadowPenalty = (t.shadowRate ?? 0) * 2.0;
+    const contractBoost = (t.contractMultiplier ?? 1.0) - 1.0;
+    const roleBase = t.role === "WR1" ? 0.8 : t.role === "SLOT" ? 1.1 : 1.0;
+    return roleBase + shadowPenalty - contractBoost;
+  });
+}
+
 export function allocateTargets(
   targets: EligibleTarget[],
   epsilon = 0.05,
 ): TargetAllocation[] {
   if (targets.length === 0) return [];
 
-  const costs = targets.map((t) => {
-    const shadowPenalty = (t.shadowRate ?? 0) * 2.0;
-    const contractBoost = (t.contractMultiplier ?? 1.0) - 1.0;
-    const roleBase = t.role === "WR1" ? 0.8 : t.role === "SLOT" ? 1.1 : 1.0;
-    return roleBase + shadowPenalty - contractBoost;
-  });
+  const costs = targetCosts(targets);
 
   // Softmax-style allocation (single-step approximation, NOT Sinkhorn).
   const weights = costs.map((c) => Math.exp(-c / epsilon));
@@ -57,6 +99,81 @@ export function allocateTargets(
   return targets.map((t, i) => ({
     playerId: t.playerId,
     share: weights[i]! / total,
+    cost: costs[i]!,
+  }));
+}
+
+/**
+ * Sinkhorn allocation over an active target set — the transport engine the
+ * injury overlay runs.
+ *
+ * Two marginals are handed to the solver:
+ *
+ *   r = each survivor's raw base share, normalized over the active set. This is
+ *       the supply marginal: where the targets physically sit before role cost
+ *       is priced in.
+ *   c = the coach cost model's allocation over those same survivors (the same
+ *       softmax the legacy engine produced). This is the demand marginal: where
+ *       targets should land once role base, shadow coverage, and contract
+ *       proximity are priced.
+ *
+ * The sealed role-interchangeability matrix is the cost C. The solver's column
+ * marginal IS the allocation, so the shares returned here match the legacy
+ * softmax numbers to solver tolerance — what changes is that the redistribution
+ * is now an explicit entropy-regularized transport with enforced marginals and
+ * a plan that can be audited cell by cell. That is the whole reason to run
+ * Sinkhorn instead of normalizing a softmax: the flow, not just the total, is
+ * accountable.
+ *
+ * Degenerate sets fall back without pretending to transport:
+ *   - empty      -> []
+ *   - one player -> that player takes the whole marginal
+ *   - zero total base share -> uniform supply marginal (a data anomaly, not a
+ *     reason to divide by zero)
+ */
+export function sinkhornTargetAllocation(
+  targets: readonly EligibleTarget[],
+  epsilon = SINKHORN_EPS,
+): TargetAllocation[] {
+  if (targets.length === 0) return [];
+
+  const costs = targetCosts(targets);
+  const n = targets.length;
+
+  if (n === 1) {
+    return [{ playerId: targets[0]!.playerId, share: 1, cost: costs[0]! }];
+  }
+
+  const activeTotal = targets.reduce((s, t) => s + t.baseShare, 0);
+  const baseShares = targets.map((t) => t.baseShare);
+  const r =
+    activeTotal > 0
+      ? baseShares.map((b) => b / activeTotal)
+      : baseShares.map(() => 1 / n);
+
+  const weights = costs.map((c) => Math.exp(-c / epsilon));
+  const weightTotal = weights.reduce((s, w) => s + w, 0);
+  const c =
+    weightTotal > 0 ? weights.map((w) => w / weightTotal) : baseShares.map(() => 1 / n);
+
+  const playerIds = targets.map((t) => t.playerId);
+  const roleOf: Record<string, string> = Object.fromEntries(
+    targets.map((t) => [t.playerId, t.role]),
+  );
+  const C = roleCostMatrix(playerIds, roleOf);
+  const plan = sinkhorn(r, c, C, epsilon);
+
+  // The allocation is the plan's column marginal: how much target share each
+  // survivor ends up holding after the transport. Equals c up to solver tol.
+  const shares: number[] = new Array<number>(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    const planRow = plan[i]!;
+    for (let j = 0; j < n; j++) shares[j] = shares[j]! + planRow[j]!;
+  }
+
+  return targets.map((t, i) => ({
+    playerId: t.playerId,
+    share: shares[i]!,
     cost: costs[i]!,
   }));
 }
@@ -94,9 +211,7 @@ export const EPA_DROPOFF: Readonly<Record<string, number>> = Object.freeze({
   OL: 0.91,
 });
 
-export const SINKHORN_EPS = 0.05;
-export const SINKHORN_MAX_ITER = 200;
-export const SINKHORN_TOL = 1e-6;
+// Sinkhorn constants live in ./sinkhorn.ts and are re-exported above.
 
 /** Stable JSON with sorted keys and no whitespace, for hashing. */
 function canonicalJson(obj: Record<string, number>): string {
@@ -175,128 +290,10 @@ export function applyEpaDropoff(
 }
 
 // =========================================================================== //
-// Sinkhorn — entropy-regularized optimal transport
+// Sinkhorn — the pure solver now lives in ./sinkhorn.ts and is re-exported at
+// the top of this file. Only the target-allocation bridge and the role cost
+// matrix remain here, so the transport math cannot drift between two copies.
 // =========================================================================== //
-
-export interface SinkhornInfo {
-  readonly iterations: number;
-  readonly rowResidual: number;
-  readonly colResidual: number;
-  readonly converged: boolean;
-  readonly objective: number;
-}
-
-/**
- * Sinkhorn with convergence diagnostics.
- *
- * `r` = source marginal (pre-injury shares), `c` = target marginal (post-injury
- * shares), `C` = sealed cost matrix. Returns the transport plan `P` and info.
- *
- * Kernel K = exp(-C/eps), computed elementwise with an underflow guard at
- * -700 so a large cost cannot produce a denormal zero row.
- */
-export function sinkhornWithInfo(
-  r: readonly number[],
-  c: readonly number[],
-  C: readonly (readonly number[])[],
-  eps: number = SINKHORN_EPS,
-  maxIter: number = SINKHORN_MAX_ITER,
-  tol: number = SINKHORN_TOL,
-): { plan: number[][]; info: SinkhornInfo } {
-  const n = r.length;
-  const m = c.length;
-  const firstRow = C[0];
-  if (C.length !== n || firstRow === undefined || firstRow.length !== m) {
-    throw new Error(
-      `dimension mismatch: len(r)=${n}, len(c)=${m}, shape(C)=(${C.length},${firstRow?.length ?? 0})`,
-    );
-  }
-  for (const v of r) if (v < 0) throw new Error("marginals r and c must be non-negative");
-  for (const v of c) if (v < 0) throw new Error("marginals r and c must be non-negative");
-
-  // K[i][j] = exp(max(-C[i][j]/eps, -700))
-  const K: number[][] = [];
-  for (let i = 0; i < n; i++) {
-    const row = C[i]!;
-    const kRow: number[] = new Array(m);
-    for (let j = 0; j < m; j++) {
-      kRow[j] = Math.exp(Math.max(-(row[j]!) / eps, -700.0));
-    }
-    K.push(kRow);
-  }
-
-  let u: number[] = new Array(n).fill(1.0 / n);
-  let v: number[] = new Array(m).fill(1.0 / m);
-  let iterations = 0;
-
-  for (iterations = 1; iterations <= maxIter; iterations++) {
-    const uNew: number[] = new Array(n);
-    for (let i = 0; i < n; i++) {
-      let kv = 0;
-      const kRow = K[i]!;
-      for (let j = 0; j < m; j++) kv += kRow[j]! * v[j]!;
-      uNew[i] = r[i]! / Math.max(kv, 1e-12);
-    }
-    const vNew: number[] = new Array(m);
-    for (let j = 0; j < m; j++) {
-      let ktU = 0;
-      for (let i = 0; i < n; i++) ktU += K[i]![j]! * uNew[i]!;
-      vNew[j] = c[j]! / Math.max(ktU, 1e-12);
-    }
-    let du = 0;
-    for (let i = 0; i < n; i++) du = Math.max(du, Math.abs(uNew[i]! - u[i]!));
-    let dv = 0;
-    for (let j = 0; j < m; j++) dv = Math.max(dv, Math.abs(vNew[j]! - v[j]!));
-    u = uNew;
-    v = vNew;
-    if (du < tol && dv < tol) break;
-  }
-
-  const plan: number[][] = [];
-  for (let i = 0; i < n; i++) {
-    const row: number[] = new Array(m);
-    for (let j = 0; j < m; j++) row[j] = u[i]! * K[i]![j]! * v[j]!;
-    plan.push(row);
-  }
-
-  let rowResidual = 0;
-  for (let i = 0; i < n; i++) {
-    let sum = 0;
-    for (let j = 0; j < m; j++) sum += plan[i]![j]!;
-    rowResidual = Math.max(rowResidual, Math.abs(sum - r[i]!));
-  }
-  let colResidual = 0;
-  for (let j = 0; j < m; j++) {
-    let sum = 0;
-    for (let i = 0; i < n; i++) sum += plan[i]![j]!;
-    colResidual = Math.max(colResidual, Math.abs(sum - c[j]!));
-  }
-  let objective = 0;
-  for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) objective += plan[i]![j]! * C[i]![j]!;
-
-  return {
-    plan,
-    info: {
-      iterations,
-      rowResidual,
-      colResidual,
-      converged: rowResidual < 1e-4 && colResidual < 1e-4,
-      objective,
-    },
-  };
-}
-
-/** Minimal Sinkhorn: returns just the transport plan. */
-export function sinkhorn(
-  r: readonly number[],
-  c: readonly number[],
-  C: readonly (readonly number[])[],
-  eps: number = SINKHORN_EPS,
-  maxIter: number = SINKHORN_MAX_ITER,
-  tol: number = SINKHORN_TOL,
-): number[][] {
-  return sinkhornWithInfo(r, c, C, eps, maxIter, tol).plan;
-}
 
 /**
  * Log-domain Sinkhorn (Schmitzer, arXiv:1610.06519).

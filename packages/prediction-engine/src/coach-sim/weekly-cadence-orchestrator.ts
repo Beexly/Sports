@@ -177,7 +177,6 @@ export function buildPersonnelCalls(games: readonly WeeklyGameInput[]): Call[] {
         expectation: null,
         alert: `${team} target distribution`,
         willNot: "",
-        ticket: null,
       });
     }
   }
