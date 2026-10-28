@@ -85,26 +85,101 @@ export function computeGseDwp(decision: FourthDownDecision): MetricResult<number
 }
 
 /**
- * SII — Scheme-Interaction Index. Requires a pairwise shell table
- * (coverage family x route concept EPA matrix). Not present in the repo.
+ * SII — Scheme-Interaction Index.
+ *
+ * EPA lift of a scheme flag inside a defensive-box bucket, against that flag's
+ * own marginal. Derived 2026-10-28 from pbp_participation_2026_reconstructed
+ * joined to play_by_play_2026 (13,684 rows, 2026 season). Cells under n=25 are
+ * dropped by the derivation, not here.
+ *
+ * Reference point, motion: marginal EPA +0.0083; motion vs a 9+ box is +0.1231
+ * (lift +0.1113, n=61) while motion vs a 7 box is −0.0248 (lift −0.0366,
+ * n=1,302). The sign flip across boxes is the whole point of the metric.
  */
-export function computeGseSii(_input: {
-  readonly shellTable: ReadonlyArray<unknown>;
-}): MetricResult<null> {
-  return GAP("pairwise shell table (coverage x route EPA matrix) does not exist in the repo");
+export const SII_MOTION_MARGINAL_EPA = 0.0083;
+
+export interface SiiCell {
+  readonly flag: "motion" | "play_action" | "rpo" | "screen";
+  readonly boxBucket: "<=6" | "7" | "8" | "9+";
+  readonly epa: number;
+  readonly n: number;
 }
 
-/** RLS — Route Liberation Score. Requires route-level separation data (2026 participation is unpublished). */
+export function computeGseSii(input: {
+  readonly cells: readonly SiiCell[];
+  readonly flag: SiiCell["flag"];
+  readonly marginalEpa: number;
+  readonly minN?: number;
+}): MetricResult<number | null> {
+  const minN = input.minN ?? 25;
+  const cells = input.cells.filter((c) => c.flag === input.flag && c.n >= minN);
+  if (!cells.length) return GAP(`no ${input.flag} cell clears n>=${minN}`);
+  const totalN = cells.reduce((s, c) => s + c.n, 0);
+  const weighted = cells.reduce((s, c) => s + c.epa * c.n, 0) / totalN;
+  return {
+    value: Math.round((weighted - input.marginalEpa) * 10000) / 10000,
+    status: "measured",
+    source: `scheme x box EPA lift, n=${totalN} across ${cells.length} cells (2026 participation x pbp)`,
+  };
+}
+
+/**
+ * RLS — Route Liberation Score. Still a gap.
+ *
+ * No separation or cushion column exists in any local file. ngs_highlights_2026
+ * is play-level, not player-level; pbp_participation carries player lists but no
+ * separation. Needs the NGS player-tracking feed.
+ */
 export function computeGseRls(_input: { readonly routeSeparation: readonly unknown[] }): MetricResult<null> {
-  return GAP("route-level separation data requires the 2026 participation file (unpublished upstream)");
+  return GAP("no separation or cushion column in any local file; needs the NGS player-tracking feed");
 }
 
-/** SPESE — Special-Teams Expected Points. Requires a pinned ST drive model. */
-export function computeGseSpese(_input: { readonly stPlays: readonly unknown[] }): MetricResult<null> {
-  return GAP("special-teams expected-points model is not built in this repo");
+/**
+ * SPESE — Special-Teams Expected Points.
+ *
+ * Mean EPA on a team's special-teams plays. Derived 2026-10-28: 1,743 ST plays
+ * across 32 teams (punt −0.0317, kickoff +0.2306, field goal +0.2237).
+ *
+ * CAVEAT: raw nflverse `epa` does not share a sign convention across the three
+ * play types, so the per-team number is a relative ranking, not an absolute
+ * points value. Do not sum it into a scoreline.
+ */
+export function computeGseSpese(input: {
+  readonly stEpa: number;
+  readonly stPlays: number;
+  readonly minPlays?: number;
+}): MetricResult<number | null> {
+  const minPlays = input.minPlays ?? 10;
+  if (input.stPlays < minPlays) return GAP(`only ${input.stPlays} ST plays, need ${minPlays}`);
+  return {
+    value: Math.round(input.stEpa * 10000) / 10000,
+    status: "measured",
+    source: `mean ST epa over ${input.stPlays} plays (2026 pbp; mixed sign convention across punt/kickoff/FG)`,
+  };
 }
 
-/** TOR — Turnover Regret. Requires fumble-recovery luck regression (no pinned rate). */
-export function computeGseTor(_input: { readonly fumbles: readonly unknown[] }): MetricResult<null> {
-  return GAP("fumble-recovery luck regression has no pinned rate in this repo");
+/**
+ * TOR — Turnover Regret.
+ *
+ * Fumble-recovery rate against the league rate. Derived 2026-10-28: 204 fumbles,
+ * league mean recovery 0.4373 — so the coin is not 50% and 0.4373 is the
+ * reference, not 0.5. Above it is luck, below it is not.
+ */
+export const TOR_LEAGUE_RECOVERY_RATE = 0.4373;
+
+export function computeGseTor(input: {
+  readonly fumbles: number;
+  readonly lost: number;
+  readonly minFumbles?: number;
+  readonly leagueRate?: number;
+}): MetricResult<number | null> {
+  const minFumbles = input.minFumbles ?? 5;
+  if (input.fumbles < minFumbles) return GAP(`only ${input.fumbles} fumbles, need ${minFumbles}`);
+  const rate = input.lost / input.fumbles;
+  const league = input.leagueRate ?? TOR_LEAGUE_RECOVERY_RATE;
+  return {
+    value: Math.round((rate - league) * 10000) / 10000,
+    status: "measured",
+    source: `recovery ${rate.toFixed(3)} v league ${league} over ${input.fumbles} fumbles (2026 pbp)`,
+  };
 }

@@ -1,0 +1,442 @@
+{
+ "rows_joined": 13684,
+ "source": "pbp_participation_2026_reconstructed + play_by_play_2026",
+ "sii": {
+  "is_motion": {
+   "marginal_epa": 0.0083,
+   "cells": {
+    "0|<=6": {
+     "epa": 0.0313,
+     "n": 2615,
+     "lift_vs_marginal": 0.0195
+    },
+    "0|7": {
+     "epa": -0.0248,
+     "n": 1302,
+     "lift_vs_marginal": -0.0366
+    },
+    "0|8": {
+     "epa": 0.0125,
+     "n": 252,
+     "lift_vs_marginal": 0.0007
+    },
+    "0|9+": {
+     "epa": 0.1231,
+     "n": 61,
+     "lift_vs_marginal": 0.1113
+    },
+    "1|<=6": {
+     "epa": 0.0116,
+     "n": 3322,
+     "lift_vs_marginal": 0.0033
+    },
+    "1|7": {
+     "epa": -0.0058,
+     "n": 2177,
+     "lift_vs_marginal": -0.0141
+    },
+    "1|8": {
+     "epa": 0.0488,
+     "n": 385,
+     "lift_vs_marginal": 0.0404
+    },
+    "1|9+": {
+     "epa": 0.0561,
+     "n": 79,
+     "lift_vs_marginal": 0.0478
+    }
+   }
+  },
+  "is_play_action": {
+   "marginal_epa": 0.1067,
+   "cells": {
+    "0|<=6": {
+     "epa": 0.0107,
+     "n": 5409,
+     "lift_vs_marginal": 0.0126
+    },
+    "0|7": {
+     "epa": -0.0354,
+     "n": 2768,
+     "lift_vs_marginal": -0.0335
+    },
+    "0|8": {
+     "epa": -0.0151,
+     "n": 420,
+     "lift_vs_marginal": -0.0132
+    },
+    "0|9+": {
+     "epa": -0.0509,
+     "n": 91,
+     "lift_vs_marginal": -0.049
+    },
+    "1|<=6": {
+     "epa": 0.1185,
+     "n": 528,
+     "lift_vs_marginal": 0.0118
+    },
+    "1|7": {
+     "epa": 0.0747,
+     "n": 711,
+     "lift_vs_marginal": -0.032
+    },
+    "1|8": {
+     "epa": 0.1304,
+     "n": 217,
+     "lift_vs_marginal": 0.0237
+    },
+    "1|9+": {
+     "epa": 0.3383,
+     "n": 49,
+     "lift_vs_marginal": 0.2316
+    }
+   }
+  },
+  "is_rpo": {
+   "marginal_epa": -0.1102,
+   "cells": {
+    "0|<=6": {
+     "epa": 0.0305,
+     "n": 5578,
+     "lift_vs_marginal": 0.0161
+    },
+    "0|7": {
+     "epa": -0.013,
+     "n": 3398,
+     "lift_vs_marginal": -0.0274
+    },
+    "0|8": {
+     "epa": 0.0325,
+     "n": 629,
+     "lift_vs_marginal": 0.0181
+    },
+    "0|9+": {
+     "epa": 0.0853,
+     "n": 140,
+     "lift_vs_marginal": 0.0709
+    },
+    "1|<=6": {
+     "epa": -0.139,
+     "n": 359,
+     "lift_vs_marginal": -0.0288
+    },
+    "1|7": {
+     "epa": -0.0116,
+     "n": 81,
+     "lift_vs_marginal": 0.0986
+    }
+   }
+  },
+  "is_screen_pass": {
+   "marginal_epa": -0.1292,
+   "cells": {
+    "0|<=6": {
+     "epa": 0.0326,
+     "n": 5591,
+     "lift_vs_marginal": 0.017
+    },
+    "0|7": {
+     "epa": -0.0136,
+     "n": 3345,
+     "lift_vs_marginal": -0.0291
+    },
+    "0|8": {
+     "epa": 0.0394,
+     "n": 621,
+     "lift_vs_marginal": 0.0238
+    },
+    "0|9+": {
+     "epa": 0.0853,
+     "n": 140,
+     "lift_vs_marginal": 0.0697
+    },
+    "1|<=6": {
+     "epa": -0.1791,
+     "n": 346,
+     "lift_vs_marginal": -0.0499
+    },
+    "1|7": {
+     "epa": 0.003,
+     "n": 134,
+     "lift_vs_marginal": 0.1322
+    }
+   }
+  }
+ },
+ "tor": {
+  "n_fumbles": 204,
+  "teams": {
+   "ATL": {
+    "fumbles": 5,
+    "lost": 2,
+    "recovery_rate": 0.4,
+    "regret_vs_50": -0.1
+   },
+   "BUF": {
+    "fumbles": 10,
+    "lost": 5,
+    "recovery_rate": 0.5,
+    "regret_vs_50": 0.0
+   },
+   "CHI": {
+    "fumbles": 8,
+    "lost": 6,
+    "recovery_rate": 0.75,
+    "regret_vs_50": 0.25
+   },
+   "CLE": {
+    "fumbles": 10,
+    "lost": 5,
+    "recovery_rate": 0.5,
+    "regret_vs_50": 0.0
+   },
+   "DEN": {
+    "fumbles": 8,
+    "lost": 2,
+    "recovery_rate": 0.25,
+    "regret_vs_50": -0.25
+   },
+   "DET": {
+    "fumbles": 6,
+    "lost": 1,
+    "recovery_rate": 0.1667,
+    "regret_vs_50": -0.3333
+   },
+   "GB": {
+    "fumbles": 12,
+    "lost": 3,
+    "recovery_rate": 0.25,
+    "regret_vs_50": -0.25
+   },
+   "IND": {
+    "fumbles": 5,
+    "lost": 4,
+    "recovery_rate": 0.8,
+    "regret_vs_50": 0.3
+   },
+   "JAX": {
+    "fumbles": 5,
+    "lost": 0,
+    "recovery_rate": 0.0,
+    "regret_vs_50": -0.5
+   },
+   "LAC": {
+    "fumbles": 11,
+    "lost": 5,
+    "recovery_rate": 0.4545,
+    "regret_vs_50": -0.0455
+   },
+   "LV": {
+    "fumbles": 6,
+    "lost": 3,
+    "recovery_rate": 0.5,
+    "regret_vs_50": 0.0
+   },
+   "MIA": {
+    "fumbles": 8,
+    "lost": 4,
+    "recovery_rate": 0.5,
+    "regret_vs_50": 0.0
+   },
+   "MIN": {
+    "fumbles": 5,
+    "lost": 2,
+    "recovery_rate": 0.4,
+    "regret_vs_50": -0.1
+   },
+   "NE": {
+    "fumbles": 8,
+    "lost": 4,
+    "recovery_rate": 0.5,
+    "regret_vs_50": 0.0
+   },
+   "NO": {
+    "fumbles": 10,
+    "lost": 6,
+    "recovery_rate": 0.6,
+    "regret_vs_50": 0.1
+   },
+   "NYG": {
+    "fumbles": 10,
+    "lost": 4,
+    "recovery_rate": 0.4,
+    "regret_vs_50": -0.1
+   },
+   "NYJ": {
+    "fumbles": 8,
+    "lost": 3,
+    "recovery_rate": 0.375,
+    "regret_vs_50": -0.125
+   },
+   "PHI": {
+    "fumbles": 5,
+    "lost": 1,
+    "recovery_rate": 0.2,
+    "regret_vs_50": -0.3
+   },
+   "PIT": {
+    "fumbles": 5,
+    "lost": 3,
+    "recovery_rate": 0.6,
+    "regret_vs_50": 0.1
+   },
+   "SEA": {
+    "fumbles": 11,
+    "lost": 6,
+    "recovery_rate": 0.5455,
+    "regret_vs_50": 0.0455
+   },
+   "TB": {
+    "fumbles": 6,
+    "lost": 4,
+    "recovery_rate": 0.6667,
+    "regret_vs_50": 0.1667
+   },
+   "TEN": {
+    "fumbles": 8,
+    "lost": 4,
+    "recovery_rate": 0.5,
+    "regret_vs_50": 0.0
+   },
+   "WAS": {
+    "fumbles": 5,
+    "lost": 1,
+    "recovery_rate": 0.2,
+    "regret_vs_50": -0.3
+   }
+  }
+ },
+ "spese": {
+  "n_st_plays": 1743,
+  "teams": {
+   "ARI": {
+    "st_plays": 65,
+    "epa_per_play": -0.0276
+   },
+   "ATL": {
+    "st_plays": 55,
+    "epa_per_play": -0.0735
+   },
+   "BAL": {
+    "st_plays": 58,
+    "epa_per_play": 0.159
+   },
+   "BUF": {
+    "st_plays": 47,
+    "epa_per_play": 0.4132
+   },
+   "CAR": {
+    "st_plays": 45,
+    "epa_per_play": 0.2061
+   },
+   "CHI": {
+    "st_plays": 43,
+    "epa_per_play": 0.1858
+   },
+   "CIN": {
+    "st_plays": 53,
+    "epa_per_play": 0.3064
+   },
+   "CLE": {
+    "st_plays": 63,
+    "epa_per_play": 0.2531
+   },
+   "DAL": {
+    "st_plays": 49,
+    "epa_per_play": 0.0267
+   },
+   "DEN": {
+    "st_plays": 59,
+    "epa_per_play": 0.0604
+   },
+   "DET": {
+    "st_plays": 56,
+    "epa_per_play": 0.2405
+   },
+   "GB": {
+    "st_plays": 55,
+    "epa_per_play": 0.0859
+   },
+   "HOU": {
+    "st_plays": 60,
+    "epa_per_play": 0.0745
+   },
+   "IND": {
+    "st_plays": 58,
+    "epa_per_play": 0.62
+   },
+   "JAX": {
+    "st_plays": 48,
+    "epa_per_play": 0.2279
+   },
+   "KC": {
+    "st_plays": 41,
+    "epa_per_play": 0.1449
+   },
+   "LA": {
+    "st_plays": 51,
+    "epa_per_play": -0.2823
+   },
+   "LAC": {
+    "st_plays": 58,
+    "epa_per_play": -0.163
+   },
+   "LV": {
+    "st_plays": 57,
+    "epa_per_play": 0.0724
+   },
+   "MIA": {
+    "st_plays": 54,
+    "epa_per_play": -0.0554
+   },
+   "MIN": {
+    "st_plays": 59,
+    "epa_per_play": 0.2988
+   },
+   "NE": {
+    "st_plays": 45,
+    "epa_per_play": -0.0318
+   },
+   "NO": {
+    "st_plays": 55,
+    "epa_per_play": -0.1361
+   },
+   "NYG": {
+    "st_plays": 54,
+    "epa_per_play": 0.2631
+   },
+   "NYJ": {
+    "st_plays": 57,
+    "epa_per_play": 0.1232
+   },
+   "PHI": {
+    "st_plays": 54,
+    "epa_per_play": 0.3686
+   },
+   "PIT": {
+    "st_plays": 61,
+    "epa_per_play": 0.1747
+   },
+   "SEA": {
+    "st_plays": 53,
+    "epa_per_play": 0.5617
+   },
+   "SF": {
+    "st_plays": 48,
+    "epa_per_play": 0.2373
+   },
+   "TB": {
+    "st_plays": 58,
+    "epa_per_play": 0.147
+   },
+   "TEN": {
+    "st_plays": 57,
+    "epa_per_play": -0.0543
+   },
+   "WAS": {
+    "st_plays": 67,
+    "epa_per_play": 0.076
+   }
+  }
+ }
+}
