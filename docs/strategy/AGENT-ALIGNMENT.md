@@ -32,6 +32,7 @@ stops. It is the shared context that used to live only in whichever chat happene
    now build the JSON string directly — Python's C encoder ignores a float subclass `__repr__`, so
    `json.dumps` could not express the fixed-point rule. The MAX_SAFE_INTEGER throw is narrowed to
    the MAX_SAFE_INTEGER..1e21 band only: above 1e21 both runtimes use exponent notation and agree.
+   Stage A binds its mask words as query parameters rather than interpolating them.
 5. **Do not reseal mid-week.** Re-running the seal pipeline is a founder call, not an agent call.
 6. **No odds, no splits, no legality.** The engine is a reasoning engine. NFL sides are closed
    (49.83% ATS over 895 held-out games); the product is calibration and props.

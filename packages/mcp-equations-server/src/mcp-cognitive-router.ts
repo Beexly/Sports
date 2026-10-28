@@ -50,6 +50,8 @@ export function buildContextMask(signals: readonly Signal[]): Uint32Array {
     if (!Number.isInteger(s.family) || s.family < 0 || s.family >= SIGNAL_FAMILIES) {
       throw new Error(`signal family out of range: ${s.family}`);
     }
+    // Written as `!(abs > 0)` rather than `=== 0` on purpose: it also rejects NaN, which
+    // `=== 0` would let through.
     if (!(Math.abs(s.displacement) > 0) || !Number.isFinite(s.n) || !(s.n >= MIN_SAMPLE)) continue;
     const word = Math.floor(s.family / 32);
     mask[word] = (mask[word]! | (1 << (s.family % 32))) >>> 0;
@@ -104,18 +106,25 @@ export async function stageA(
   }
   const res = await db.query<{ id: string }>(
     `SELECT id FROM v_class_a_literature_premises
-     WHERE embedding IS NOT NULL AND (${terms}) LIMIT $1`,
-    [limit],
+     WHERE embedding IS NOT NULL AND (${terms.sql}) LIMIT $${terms.params.length + 1}`,
+    [...terms.params, limit],
   );
   return res.rows.map((r) => r.id);
 }
 
-function maskTerms(arr: readonly number[]): string | null {
-  const t = arr
-    .map((w, i) => (w === 0 ? null : `(context_mask[${i + 1}] & ${w}) <> 0`))
-    .filter(Boolean)
-    .join(" OR ");
-  return t || null;
+/**
+ * Build the Stage A predicate. Word values are bound as parameters rather than interpolated;
+ * the array subscript is a constant 1..9 so it stays inline.
+ */
+function maskTerms(arr: readonly number[]): { sql: string; params: number[] } | null {
+  const parts: string[] = [];
+  const params: number[] = [];
+  arr.forEach((w, i) => {
+    if (w === 0) return;
+    params.push(w);
+    parts.push(`(context_mask[${i + 1}] & $${params.length}) <> 0`);
+  });
+  return parts.length ? { sql: parts.join(" OR "), params } : null;
 }
 
 /**

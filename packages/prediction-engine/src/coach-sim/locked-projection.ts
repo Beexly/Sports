@@ -63,6 +63,8 @@ export function canonicalizeForSeal(value: unknown): string {
   if (t === "function" || t === "symbol" || t === "bigint" || t === "undefined") {
     throw new Error(`canonicalizeForSeal: unsupported ${t}`);
   }
+  // Array holes and undefined elements become `null`, matching JSON.stringify. Object
+  // members set to undefined are dropped instead — also matching JSON.stringify.
   if (Array.isArray(value)) {
     return `[${value.map((v) => (v === undefined ? "null" : canonicalizeForSeal(v))).join(",")}]`;
   }
