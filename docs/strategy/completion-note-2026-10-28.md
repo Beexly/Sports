@@ -145,7 +145,11 @@ SII re-derivation claim. Both conditioned on the seal resolved at runtime.
 
 ## ALIGNMENT CHECK — 2026-10-28
 
-Run before further work, against the four prior sessions.
+Conflict: two parallel metrics modules with the same seven names and incompatible signatures, from
+session 3 (Integrate belichick-ten-metrics into simulation). Stopped. Awaiting resolution.
+
+Re-run and re-confirmed 2026-10-28 after the first pass; origin had not moved and every finding
+below reproduced. Run before further work, against the four prior sessions.
 
 **Step 1 — sealed-tau invariant. HOLDS.** Every file this session edited was grepped for `tau`,
 `coachMindsetHash` and `new Date(`. All nine return zero. No file re-estimates tau after the seal,
@@ -187,9 +191,11 @@ same conflict as step 3.
 
 ### Result
 
-**Conflict: two parallel metrics modules with the same seven names and incompatible signatures —
-`public-baseline/metrics.ts` (read by the simulation) versus `metrics/gse-proprietary-seven.ts`
-(edited by this session). Stopped. Awaiting resolution.**
+Conflict: two parallel metrics modules with the same seven names and incompatible signatures, from
+session 3 (Integrate belichick-ten-metrics into simulation). Stopped. Awaiting resolution.
+
+`public-baseline/metrics.ts` is read by the simulation; `metrics/gse-proprietary-seven.ts` is what
+this session edited.
 
 Files affected: `packages/prediction-engine/src/public-baseline/metrics.ts`,
 `packages/prediction-engine/src/metrics/gse-proprietary-seven.ts`,
