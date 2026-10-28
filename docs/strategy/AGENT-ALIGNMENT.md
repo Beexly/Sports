@@ -73,10 +73,10 @@ now tracked.
 |---|---|---|---|
 | D3 | `candidates/` is untracked — `git status` shows `?? candidates/`. Git cannot recover it on a clean. | High | **RESOLVED 2026-10-28** — tracked in `e825f29d6`+ ; `_quarantine/` is canonical, `_QUARANTINE_PLACEHOLDER_20261027_185538/` is the superseded audit trail |
 | D6 | Cron drift: duplicate Sunday v4.0 at 10:30 and 13:35, plus orphan `cadence-v2.5-thu-1630` absent from `CADENCE` in `cadence.ts`. | Medium | **RESOLVED 2026-10-28** — both v4.0 slots registered as distinct early/afternoon-slate locks, v2.5 registered; registry and `CADENCE` are 1:1 at 6/6 with zero orphans |
-| D8 | Scheme-layer commit `cffa75a` is not in the repo. Do not cite it as verified. | Medium | **OPEN** |
-| — | Google Docs API append 403 (project 868513040414). | Blocker | **OPEN, outside agent reach** |
-| — | QB estimator re-run needs 2024/2025 injury CSVs + `fit_qb_questionable2.py`. Constant `0.0947` stands but is unconfirmed. | Blocker | **OPEN, outside agent reach** |
-| — | RLS needs the NGS player-tracking feed. Not on disk. | Gap | **HONEST GAP** |
+| D8 | Scheme-layer commit `cffa75a` is not in the repo. | Medium | **RESOLVED 2026-10-28** — `cffa75a7ef` is reachable from origin HEAD and resolves via the GitHub API. The record was stale, not the commit. |
+| — | Google Docs 403 on the source docs. | Blocker | **RESOLVED 2026-10-28** — authenticated browser + `/mobilebasic` view; all 3 docs ingested to `docs/engine/research/2026-10-28/` (235,531 chars). |
+| — | QB estimator re-run needs 2024/2025 injury CSVs + `fit_qb_questionable2.py`. | Blocker | **HALF RESOLVED 2026-10-28** — `injuries_{2024,2025,2026}.csv` downloaded from the nflverse release (237 QB rows, Questionable statuses present). The fit script still does not exist anywhere on disk and no derivation method is documented; writing it is the remaining step. Constant `0.0947` still unconfirmed. |
+| — | RLS needs the NGS player-tracking feed. | Gap | **RESOLVED 2026-10-28** — `data/nflverse/ngs_receiving.csv.gz`, 15,348 rows through 2026 week 7, `avg_separation` + `avg_cushion` non-null on all 617 current-season rows. The per-season release files lag at 2024; the unseasoned combined file is the live one. |
 | — | 146 modules sit at `ENABLED=false`; 46 are liftable, 100 carry a gate or stub. | Backlog | **OPEN** |
 
 Resolved since the 2026-10-27 consolidation plan: D1 (fabricated parent hash), D2 (tau
