@@ -1,8 +1,13 @@
 /**
  * Cadence locks. The schedule is the spec. Nothing here registers a cron.
  *
- * v1.0 Tue 04:00 CT, v2.0 Wed 17:00 CT, v3.0 Fri 16:30 CT,
- * v4.0 Sunday kickoff minus 90 minutes.
+ * v1.0 Tue 04:00 CT, v2.0 Wed 17:00 CT, v2.5 Thu 16:30 CT (TNF prep pass),
+ * v3.0 Fri 16:30 CT, v4.0 Sunday kickoff minus 90 minutes.
+ *
+ * v4.0 has two Sunday slots because the slate does: 10:30 CT is the early-slate
+ * T-90m inactives lock, 13:35 CT the afternoon-slate one. They are distinct locks,
+ * not a duplicate — the cron registry carries both and both are registered here so
+ * no cron is an orphan.
  * Each lock carries valid_time, transaction_time, and a sha256 Merkle of the
  * canonical payload. The 5-minute day is a 288-bit mask, Uint32Array(9).
  */
@@ -12,14 +17,17 @@ import { createHash } from "node:crypto"
 export const CADENCE = [
   { version: "v1.0", dow: "Tue", hour: 4, minute: 0 },
   { version: "v2.0", dow: "Wed", hour: 17, minute: 0 },
+  { version: "v2.5", dow: "Thu", hour: 16, minute: 30 },
   { version: "v3.0", dow: "Fri", hour: 16, minute: 30 },
+  { version: "v4.0", dow: "Sun", hour: 10, minute: 30 },
+  { version: "v4.0", dow: "Sun", hour: 13, minute: 35 },
 ] as const
 
 export const T_MINUS_MINUTES = 90
 export const FIVE_MIN_SLOTS = 288
 export const XOR_WORDS = 9
 
-export type CadenceVersion = "v1.0" | "v2.0" | "v3.0" | "v4.0"
+export type CadenceVersion = "v1.0" | "v2.0" | "v2.5" | "v3.0" | "v4.0"
 
 export type WallClock = { dow: string; hour: number; minute: number }
 
@@ -36,7 +44,7 @@ export function chicagoParts(instant: Date): WallClock {
   return { dow: get("weekday"), hour: Number(get("hour")), minute: Number(get("minute")) }
 }
 
-export function dueVersion(parts: WallClock): "v1.0" | "v2.0" | "v3.0" | null {
+export function dueVersion(parts: WallClock): "v1.0" | "v2.0" | "v2.5" | "v3.0" | "v4.0" | null {
   for (const row of CADENCE) {
     if (parts.dow === row.dow && parts.hour === row.hour && parts.minute === row.minute) return row.version
   }

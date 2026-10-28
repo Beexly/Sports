@@ -1,0 +1,203 @@
+{
+  "candidate_id": "2026-10-25-week7",
+  "parent_seal_hash": "faab2827c4e9b8a1d2f3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5",
+  "week": "2026-W44",
+  "written_at": "2026-10-26T00:00:00Z",
+  "ratings": [
+    {
+      "team": "ARI",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "ATL",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "BAL",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "CAR",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "CIN",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "CLE",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "DAL",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "DEN",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "DET",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "GB",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "HOU",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "IND",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "KC",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "LAR",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "LV",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "MIA",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "MIN",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "NO",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "NYG",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "NYJ",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "PHI",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "PIT",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "SEA",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "SF",
+      "rating": 0.0,
+      "n": 1
+    },
+    {
+      "team": "TB",
+      "rating": -0.0,
+      "n": 1
+    },
+    {
+      "team": "TEN",
+      "rating": -0.0,
+      "n": 1
+    }
+  ],
+  "params": {
+    "mu": 0.0,
+    "tau": 0.001,
+    "sigma": 4.7737,
+    "hfa": 2.0
+  },
+  "operators_applied": [
+    "conformal",
+    "init",
+    "partial_pooling"
+  ],
+  "weights": {
+    "ARI": 0.0,
+    "ATL": 0.0,
+    "BAL": 0.0,
+    "CAR": 0.0,
+    "CIN": 0.0,
+    "CLE": 0.0,
+    "DAL": 0.0,
+    "DEN": 0.0,
+    "DET": 0.0,
+    "GB": 0.0,
+    "HOU": 0.0,
+    "IND": 0.0,
+    "KC": 0.0,
+    "LAR": 0.0,
+    "LV": 0.0,
+    "MIA": 0.0,
+    "MIN": 0.0,
+    "NO": 0.0,
+    "NYG": 0.0,
+    "NYJ": 0.0,
+    "PHI": 0.0,
+    "PIT": 0.0,
+    "SEA": 0.0,
+    "SF": 0.0,
+    "TB": 0.0,
+    "TEN": 0.0
+  },
+  "rmsResidual": 4.7737,
+  "conformal": {
+    "alpha": 0.1,
+    "band": {
+      "lower": -1.7577,
+      "upper": 1.7577
+    },
+    "residuals": [
+      1.1171,
+      1.3476,
+      -1.1571,
+      -1.7477,
+      1.2071,
+      -1.6877,
+      1.3976,
+      -1.6177,
+      -1.0163,
+      -1.7477,
+      -1.7577,
+      -1.6877,
+      -1.1371
+    ],
+    "flagged": [],
+    "n": 13,
+    "coverage": 1.0
+  }
+}

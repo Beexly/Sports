@@ -63,8 +63,8 @@ Step 1 is 3/4 (ws6-status artifact still missing). Step 3 was already complete. 
 
 | # | Defect | Severity | Status |
 |---|---|---|---|
-| D3 | `candidates/` is untracked — `git status` shows `?? candidates/`. Git cannot recover it on a clean. | High | **OPEN** |
-| D6 | Cron drift: duplicate Sunday v4.0 at 10:30 and 13:35, plus orphan `cadence-v2.5-thu-1630` absent from `CADENCE` in `cadence.ts`. | Medium | **OPEN** |
+| D3 | `candidates/` is untracked — `git status` shows `?? candidates/`. Git cannot recover it on a clean. | High | **RESOLVED 2026-10-28** — tracked in `e825f29d6`+ ; `_quarantine/` is canonical, `_QUARANTINE_PLACEHOLDER_20261027_185538/` is the superseded audit trail |
+| D6 | Cron drift: duplicate Sunday v4.0 at 10:30 and 13:35, plus orphan `cadence-v2.5-thu-1630` absent from `CADENCE` in `cadence.ts`. | Medium | **RESOLVED 2026-10-28** — both v4.0 slots registered as distinct early/afternoon-slate locks, v2.5 registered; registry and `CADENCE` are 1:1 at 6/6 with zero orphans |
 | D8 | Scheme-layer commit `cffa75a` is not in the repo. Do not cite it as verified. | Medium | **OPEN** |
 | — | Google Docs API append 403 (project 868513040414). | Blocker | **OPEN, outside agent reach** |
 | — | QB estimator re-run needs 2024/2025 injury CSVs + `fit_qb_questionable2.py`. Constant `0.0947` stands but is unconfirmed. | Blocker | **OPEN, outside agent reach** |
