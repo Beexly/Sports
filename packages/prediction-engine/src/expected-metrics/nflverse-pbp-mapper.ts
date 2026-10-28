@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type QbPenaltyPlay } from "./qb-penalty-epa.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -57,7 +58,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "spread_line", "result",
   // success rate
   "play_type", "yards_gained", "interception", "fumble_lost",
-  "rusher_player_id", "receiver_player_id",
+  "rusher_player_id", "receiver_player_id", "passer_player_id", "penalty", "penalty_team",
   // drives
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
@@ -105,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+
+  readonly qbPenaltyPlays: readonly QbPenaltyPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -379,6 +382,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpRef: number[] = [];
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
+  const qbPenaltyPlays: QbPenaltyPlay[] = [];
   const drivePlays: DrivePlay[] = [];
 
   for (const gameId of gameIds) {
@@ -564,9 +568,25 @@ export function mapNflversePbpToExpectedMetrics(
       }
     }
 
+
     for (let k = 0; k < rows.length; k++) {
       const row = rows[k]!;
       const playId = `${row["game_id"] ?? ""}-${row["play_id"] ?? ""}`;
+      const passer_player_id = row["passer_player_id"] ?? "";
+      if (passer_player_id !== "") {
+        qbPenaltyPlays.push({
+          playId,
+          game_id: row["game_id"] ?? "",
+          week: num(row["week"]),
+          posteam: row["posteam"] ?? "",
+          defteam: row["defteam"] ?? "",
+          passer_player_id,
+          penalty: bin(row["penalty"]),
+          penalty_team: row["penalty_team"] ?? "",
+          yards_gained: num(row["yards_gained"]),
+          epa: null, // attach via attachOwnEpa
+        });
+      }
       const key = driveKeyOf(row);
       const playType = row["play_type"];
       const isScrimmage = (playType === "pass" || playType === "run") && (row["posteam"] ?? "") !== "";
@@ -611,6 +631,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    qbPenaltyPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

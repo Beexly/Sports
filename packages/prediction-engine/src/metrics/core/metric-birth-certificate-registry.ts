@@ -2,6 +2,28 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["penalty flag", "penalty_team", "defteam", "yards_gained", "passer_player_id", "own epa", "week", "game_id"],
+    failureModes: [
+      "Missing own-EPA must be excluded from totals but counted in diagnostics",
+      "Must not misclassify offensive penalties or non-zero yards gained",
+    ],
+    family: "passing",
+    forbiddenInputs: ["referee epa"],
+    formulaClass: "composite_score",
+    formulaSummary: "Total own-EPA gained on plays with defensive penalties and zero yards gained, windowed by distinct weeks per player.",
+    historicalPrecedent: [{ name: "QB EPA gained on defensive penalties", reason: "QB environment edge (discipline/hard count)" }],
+    internalName: "qb_penalty_epa_shadow",
+    metricId: "qb-penalty-epa",
+    protectedComponents: ["identification rule", "window limit", "floor omission"],
+    publicExposure: "hidden",
+    publicName: "QB Penalty EPA (Shadow)",
+    sourceRightsRequired: ["derived pbp metrics only"],
+    status: "SHADOW",
+    targetQuestion: "How much EPA does a QB's offense gain because the defense fouled?",
+    targetVariable: "EPA from defensive penalties",
+    validationMethods: [],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",
