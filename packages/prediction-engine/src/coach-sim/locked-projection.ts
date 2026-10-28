@@ -21,31 +21,54 @@ import {
 import { sealLock, type CadenceVersion, type SnapshotLock } from "../public-baseline/cadence.js";
 
 /**
- * Recursive lexicographic key sort, matching Python's
- * `json.dumps(obj, sort_keys=True, separators=(",", ":"))`.
+ * Canonical JSON matching Python's `json.dumps(sort_keys=True, separators=(",",":"))`.
  *
- * `JSON.stringify` emits keys in insertion order, so two runtimes hashing the same
- * logical object produce different digests (dd6549a… vs 0821671… on the shared
- * fixture). Sorting at every depth makes the bytes a function of the value alone.
- * `undefined` members are dropped, matching JSON.stringify's own behaviour.
+ * Emits the string directly rather than rebuilding an object and calling JSON.stringify.
+ * That matters: a JS object enumerates integer-like keys ("2", "10") in ascending numeric
+ * order before all other keys, so `{"10":..,"2":..}` round-trips to `{"2":..,"10":..}` while
+ * Python sorts lexicographically to `"10","2"`. Any config keyed by week or family id hits it.
+ *
+ * Also throws on values that cannot round-trip identically (NaN, Infinity, functions,
+ * symbols, non-plain objects) instead of silently sealing a corrupted digest.
  */
-export function canonicalizeForSeal(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(canonicalizeForSeal);
-  if (value !== null && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    const out: Record<string, unknown> = {};
-    for (const k of Object.keys(record).sort()) {
-      if (record[k] !== undefined) out[k] = canonicalizeForSeal(record[k]);
+export function canonicalizeForSeal(value: unknown): string {
+  if (value === null) return "null";
+  const t = typeof value;
+  if (t === "number") {
+    if (!Number.isFinite(value as number)) {
+      throw new Error(`canonicalizeForSeal: non-finite number ${String(value)}`);
     }
-    return out;
+    if (!Number.isSafeInteger(value as number) && Number.isInteger(value as number)) {
+      throw new Error(`canonicalizeForSeal: integer beyond MAX_SAFE_INTEGER ${String(value)}`);
+    }
+    return JSON.stringify(value);
   }
-  return value;
+  if (t === "string" || t === "boolean") return JSON.stringify(value);
+  if (t === "function" || t === "symbol" || t === "bigint" || t === "undefined") {
+    throw new Error(`canonicalizeForSeal: unsupported ${t}`);
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map((v) => (v === undefined ? "null" : canonicalizeForSeal(v))).join(",")}]`;
+  }
+  const proto = Object.getPrototypeOf(value);
+  if (proto !== Object.prototype && proto !== null) {
+    throw new Error("canonicalizeForSeal: non-plain object (Date/Map/Set/typed array)");
+  }
+  const rec = value as Record<string, unknown>;
+  const parts: string[] = [];
+  for (const k of Object.keys(rec).sort()) {
+    const v = rec[k];
+    if (v === undefined) continue;
+    parts.push(`${JSON.stringify(k)}:${canonicalizeForSeal(v)}`);
+  }
+  return `{${parts.join(",")}}`;
 }
 
 /** SHA-256 over the canonical form. Cross-runtime stable. */
 export function computeCanonicalSealDigest(payload: unknown): string {
-  return createHash("sha256").update(JSON.stringify(canonicalizeForSeal(payload)), "utf8").digest("hex");
+  return createHash("sha256").update(canonicalizeForSeal(payload), "utf8").digest("hex");
 }
+
 import { PROB_PER_POINT } from "../constants.js";
 import {
   assertTauSealed,
@@ -110,7 +133,7 @@ export function computeCoachMindsetSha256(
   input: PureCoachInput,
   coachTau = 0.5,
 ): string {
-  const canonical = JSON.stringify(canonicalizeForSeal({
+  const canonical = canonicalizeForSeal({
     home: input.homeTeam,
     away: input.awayTeam,
     week: input.week,
@@ -122,7 +145,7 @@ export function computeCoachMindsetSha256(
     belichickHome: input.belichickHome ?? null,
     belichickAway: input.belichickAway ?? null,
     tau: coachTau,
-  }));
+  });
   return createHash("sha256").update(canonical).digest("hex");
 }
 
@@ -351,7 +374,7 @@ function hashInput(input: CoachSimInput): string {
   // identity. Including it made the "sealed" projection non-reproducible
   // across injury revisions — the same game with the same coach inputs would
   // hash differently when only the injury estimate changed.
-  const raw = JSON.stringify(canonicalizeForSeal({
+  const raw = canonicalizeForSeal({
     home: input.homeTeam,
     away: input.awayTeam,
     week: input.week,
@@ -359,7 +382,7 @@ function hashInput(input: CoachSimInput): string {
     pass: input.neutralPassRate ?? null,
     staff: input.staffAggression ?? null,
     shadows: (input.shadows ?? []).map((s) => s.wr + ":" + s.shadowRate).sort(),
-  }));
+  });
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (h * 31 + raw.charCodeAt(i)) | 0;
   return (h >>> 0).toString(16);

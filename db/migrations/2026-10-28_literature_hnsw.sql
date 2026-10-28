@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS literature_premises (
   id                 text PRIMARY KEY,
   premise            text NOT NULL,
   cluster            text NOT NULL,
-  context_mask       int[] NOT NULL DEFAULT '{}',
+  context_mask       int[] NOT NULL DEFAULT '{0,0,0,0,0,0,0,0,0}',
   embedding          vector(1024),
   record_class       text NOT NULL DEFAULT 'CITABLE_VERIFIED',
   citable            boolean NOT NULL DEFAULT true,
@@ -18,7 +18,20 @@ CREATE TABLE IF NOT EXISTS literature_premises (
   created_at         timestamptz NOT NULL DEFAULT now()
 );
 
--- Stage A: bitmask prefilter.
+-- A short or empty mask makes context_mask[k] NULL, so every bitwise term is NULL and the
+-- row is invisible to every non-empty query. Pin the shape.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'lit_premises_mask_shape') THEN
+    ALTER TABLE literature_premises
+      ADD CONSTRAINT lit_premises_mask_shape
+      CHECK (array_length(context_mask, 1) = 9 AND array_lower(context_mask, 1) = 1);
+  END IF;
+END $$;
+
+-- Stage A: bitmask prefilter. NOTE: the router's predicate is per-element arithmetic
+-- ((context_mask[i] & w) <> 0), which GIN array_ops cannot serve — this index is not used
+-- by the current query shape and is kept for a future set-position column.
 CREATE INDEX IF NOT EXISTS idx_lit_premises_context_gin
   ON literature_premises USING gin (context_mask);
 

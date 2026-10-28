@@ -73,6 +73,13 @@ describe("golden digest parity across runtimes", () => {
     expect(computeCanonicalSealDigest([3, 1, 2])).not.toBe(computeCanonicalSealDigest([1, 2, 3]));
   });
 
+  it("sorts integer-like keys lexicographically, not numerically", () => {
+    // A JS object enumerates "2" before "10"; Python sorts "10" before "2". Rebuilding an
+    // object before stringify silently produced the numeric order and diverged.
+    const payload = { "10": "a", "2": "b", a: "c" };
+    expect(computeCanonicalSealDigest(payload)).toBe(pythonDigest(payload));
+  });
+
   it("agrees with Python on integral floats", () => {
     // JS has no int/float split: 27.0 serialises as "27". Python emits "27.0" unless the
     // value is narrowed, so this is the case key-sorting alone cannot fix.

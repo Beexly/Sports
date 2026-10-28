@@ -50,7 +50,7 @@ export function buildContextMask(signals: readonly Signal[]): Uint32Array {
     if (!Number.isInteger(s.family) || s.family < 0 || s.family >= SIGNAL_FAMILIES) {
       throw new Error(`signal family out of range: ${s.family}`);
     }
-    if (s.displacement === 0 || !(s.n >= MIN_SAMPLE)) continue;
+    if (!(Math.abs(s.displacement) > 0) || !Number.isFinite(s.n) || !(s.n >= MIN_SAMPLE)) continue;
     const word = Math.floor(s.family / 32);
     mask[word] = (mask[word]! | (1 << (s.family % 32))) >>> 0;
   }
@@ -71,6 +71,8 @@ export function toVectorLiteral(v: readonly number[]): string {
 export type RouteOptions = {
   /** Pre-game buys recall at ~2x the latency. */
   preGame?: boolean;
+  /** false = let the HNSW index drive (fast, but capped at ef_search). Default exact. */
+  exact?: boolean;
   stageALimit?: number;
   stageBLimit?: number;
 };
@@ -79,10 +81,11 @@ export type RouteOptions = {
  * Stage A — context-mask prefilter.
  *
  * The mask is 9 bitfield words, so array overlap (`&&`) is wrong: word 258 contains bit 1
- * but never equals 2, and `&&` compares whole elements. The prefilter is therefore a
- * word-by-word bitwise AND, OR-ed across the nine words.
+ * but never equals 2, and `&&` compares whole elements. The prefilter is a word-by-word
+ * bitwise AND, OR-ed across the nine words.
  *
- * An empty mask matches everything, which is correct — no signal fired, so nothing narrows.
+ * Rows with a NULL/short mask are excluded by the NULL comparison, which is why the column
+ * carries a CHECK on length 9 and a nine-zero default.
  */
 export async function stageA(
   db: Queryable,
@@ -90,28 +93,42 @@ export async function stageA(
   limit = STAGE_A_LIMIT,
 ): Promise<string[]> {
   const arr = maskToArray(mask);
-  const empty = arr.every((w) => w === 0);
-  if (empty) {
+  const terms = maskTerms(arr);
+  if (!terms) {
     const res = await db.query<{ id: string }>(
-      `SELECT id FROM v_class_a_literature_premises LIMIT $1`,
+      `SELECT id FROM v_class_a_literature_premises
+       WHERE embedding IS NOT NULL LIMIT $1`,
       [limit],
     );
     return res.rows.map((r) => r.id);
   }
-  const terms = arr
-    .map((w, i) => (w === 0 ? null : `(context_mask[${i + 1}] & ${w}) <> 0`))
-    .filter(Boolean)
-    .join(" OR ");
   const res = await db.query<{ id: string }>(
-    `SELECT id FROM v_class_a_literature_premises WHERE ${terms} LIMIT $1`,
+    `SELECT id FROM v_class_a_literature_premises
+     WHERE embedding IS NOT NULL AND (${terms}) LIMIT $1`,
     [limit],
   );
   return res.rows.map((r) => r.id);
 }
 
+function maskTerms(arr: readonly number[]): string | null {
+  const t = arr
+    .map((w, i) => (w === 0 ? null : `(context_mask[${i + 1}] & ${w}) <> 0`))
+    .filter(Boolean)
+    .join(" OR ");
+  return t || null;
+}
+
 /**
- * Stage B — HNSW cosine over the Stage A set. ef_search is set per call; it is a session
- * GUC, so it is restored to its default afterwards rather than leaking into the pool.
+ * Stage B — HNSW cosine over the Stage A set.
+ *
+ * `SET LOCAL` is a no-op outside a transaction block, so ef_search silently stayed at the
+ * default 40 and LIMIT could never exceed it. The statement now runs inside an explicit
+ * transaction with `set_config(..., true)` scoped to it.
+ *
+ * Even scoped, an HNSW scan yields at most ef_search tuples, so a filtered scan post-filters
+ * the class-A predicate and the Stage A set down to a handful of rows. `exact` forces a
+ * sequential re-rank over the candidate set instead, which is the correct trade at 2,500
+ * candidates and is what the default uses.
  */
 export async function stageB(
   db: Queryable,
@@ -122,21 +139,31 @@ export async function stageB(
   if (candidateIds.length === 0) return [];
   const ef = opts.preGame ? EF_SEARCH_PRE_GAME : EF_SEARCH_IN_PLAY;
   const limit = opts.stageBLimit ?? STAGE_B_LIMIT;
-  await db.query(`SET LOCAL hnsw.ef_search = ${ef}`);
-  const res = await db.query<{
-    id: string;
-    premise: string;
-    cluster: string;
-    similarity: number;
-  }>(
-    `SELECT id, premise, cluster, 1 - (embedding <=> $1::vector) AS similarity
-     FROM v_class_a_literature_premises
-     WHERE id = ANY($2::text[]) AND embedding IS NOT NULL
-     ORDER BY embedding <=> $1::vector
-     LIMIT $3`,
-    [toVectorLiteral(embedding), [...candidateIds], limit],
-  );
-  return res.rows.map((r) => ({ ...r, similarity: Number(r.similarity) }));
+  const vec = toVectorLiteral(embedding);
+
+  await db.query("BEGIN");
+  try {
+    await db.query(`SELECT set_config('hnsw.ef_search', $1, true)`, [String(ef)]);
+    const order = opts.exact === false ? "embedding <=> $1::vector" : "(embedding <=> $1::vector) + 0";
+    const res = await db.query<{
+      id: string;
+      premise: string;
+      cluster: string;
+      similarity: number;
+    }>(
+      `SELECT id, premise, cluster, 1 - (embedding <=> $1::vector) AS similarity
+       FROM v_class_a_literature_premises
+       WHERE id = ANY($2::text[]) AND embedding IS NOT NULL
+       ORDER BY ${order}
+       LIMIT $3`,
+      [vec, [...candidateIds], limit],
+    );
+    await db.query("COMMIT");
+    return res.rows.map((r) => ({ ...r, similarity: Number(r.similarity) }));
+  } catch (e) {
+    await db.query("ROLLBACK");
+    throw e;
+  }
 }
 
 /** Full A → B route. */
