@@ -159,3 +159,11 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+export {
+  computeNeutralScriptEpa,
+  type NeutralScriptEpaOutput,
+  type NeutralScriptEpaTeamOutput,
+  type NeutralScriptEpaGrain,
+  type NeutralScriptEpaDiagnostics,
+} from "./neutral-script-epa.js";

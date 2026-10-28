@@ -40,9 +40,22 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  * Because the projection physically drops every non-allowlisted column at
  * parse time, mapping `sp` or an FTN column is structurally unreachable.
  */
+
+/** One play state for the neutral-script EPA shadow metric. */
+export interface NeutralScriptPlay extends WpPlay {
+  readonly week: number;
+  readonly posteam: string;
+  readonly defteam: string;
+  readonly play_type: string;
+  readonly qb_kneel: string;
+  readonly qb_spike: string;
+  /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
+  readonly epa: number | null;
+}
+
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -56,7 +69,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "score_differential", "posteam_timeouts_remaining", "defteam_timeouts_remaining",
   "spread_line", "result",
   // success rate
-  "play_type", "yards_gained", "interception", "fumble_lost",
+  "play_type", "yards_gained", "interception", "fumble_lost", "qb_kneel", "qb_spike",
   "rusher_player_id", "receiver_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
@@ -105,6 +118,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly neutralScriptPlays: readonly NeutralScriptPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +394,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const neutralScriptPlays: NeutralScriptPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -481,6 +496,32 @@ export function mapNflversePbpToExpectedMetrics(
           });
           wpRef.push(num(row["wp"]));
         }
+      }
+
+      // Neutral script EPA plays
+      if ((row["play_type"] === "pass" || row["play_type"] === "run") && row["posteam"] !== "" && row["defteam"] !== "") {
+        const spreadRaw = numOrNull(row["spread_line"]);
+        const rowResultStr = row["result"];
+        const rowResult = rowResultStr === "" || rowResultStr === undefined ? 0 : num(rowResultStr);
+        neutralScriptPlays.push({
+            playId,
+            scoreDifferential: num(row["score_differential"]),
+            gameSecondsRemaining: num(row["game_seconds_remaining"]),
+            yardline100,
+            down,
+            ydstogo,
+            posteamTimeouts: num(row["posteam_timeouts_remaining"]),
+            defteamTimeouts: num(row["defteam_timeouts_remaining"]),
+            spreadLine: spreadRaw === null ? null : row["posteam"] === row["home_team"] ? spreadRaw : -spreadRaw,
+            posteamWon: (rowResult > 0) === (row["posteam"] === row["home_team"]) ? 1 : 0,
+            week: num(row["week"]),
+            posteam: row["posteam"] ?? "",
+            defteam: row["defteam"] ?? "",
+            play_type: row["play_type"] ?? "",
+            qb_kneel: row["qb_kneel"] ?? "",
+            qb_spike: row["qb_spike"] ?? "",
+            epa: null,
+        });
       }
 
       // (e) Success series — scrimmage pass/run rows with a possession team.
@@ -611,6 +652,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    neutralScriptPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

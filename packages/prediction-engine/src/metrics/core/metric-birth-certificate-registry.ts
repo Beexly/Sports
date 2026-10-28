@@ -733,4 +733,29 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     targetVariable: "decision quality",
     validationMethods: ["clv", "bucket_lift", "walk_forward", "drift_test"],
   },
+
+  {
+    allowedInputs: ["own fitted EPA", "own fitted WP", "play type", "quarterback clock plays"],
+    failureModes: [
+      "including qb_kneel or qb_spike plays pollutes the denominator",
+      "using referee wp or epa instead of own fitted variants breaks the pure computation contract",
+      "reporting metric below the 100-play floor allows noisy samples to appear as edge",
+      "applying full-game EPA to neutral-script queries pollutes reads with garbage time"
+    ],
+    family: "team",
+    forbiddenInputs: ["full game EPA", "referee nflverse wp/epa", "garbage time plays", "prevent defense plays"],
+    formulaClass: "linear",
+    formulaSummary: "Filtered expected points added per play, restricted to neutral game scripts (own WP 20-80%). Clock-killing plays are excluded.",
+    historicalPrecedent: [{ name: "Neutral-script filtering", reason: "EPA measured only while the game is still in doubt is the cleanest script-neutral team-strength cut the engine can serve into matchup reasoning." }],
+    internalName: "neutral_script_epa_shadow",
+    metricId: "neutral-script-epa",
+    protectedComponents: ["band cutoffs", "clock play exclusion rules", "window floors"],
+    publicExposure: "hidden",
+    publicName: "Neutral Script EPA",
+    sourceRightsRequired: ["no protected data required"],
+    status: "SHADOW",
+    targetQuestion: "How efficiently is this team operating when the game is still in doubt?",
+    targetVariable: "script-neutral strength",
+    validationMethods: ["walk_forward"],
+  },
 ] as const;
