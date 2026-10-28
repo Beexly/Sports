@@ -92,16 +92,19 @@ export function computeGseDwp(decision: FourthDownDecision): MetricResult<number
  * joined to play_by_play_2026 (13,684 rows, 2026 season). Cells under n=25 are
  * dropped by the derivation, not here.
  *
- * Reference point, motion: marginal EPA +0.0083; motion vs a 9+ box is +0.0561
- * (lift +0.0478, n=79) while motion vs a 7 box is −0.0058 (lift −0.0141,
- * n=2,177). The sign flip across boxes is the whole point of the metric.
+ * Reference point, motion: marginal EPA −0.0021. Against a 9+ box, motion is
+ * −0.0435 (lift −0.0414, n=109) while NO motion at the same box is +0.2078
+ * (lift +0.1888, n=92). The flip is between motion and no-motion at a stacked
+ * box, not across boxes — motion costs you exactly where the defence has already
+ * committed numbers.
  *
- * CORRECTION 2026-10-28: the first version of this docstring quoted the
- * NO-MOTION cells (+0.1231 at 9+, −0.0248 at 7) as if they were motion. The
- * derivation emits both flag states and the `0|` keys were read as motion. The
- * sign flip survives; the magnitudes were wrong and are now the `1|` cells.
+ * CORRECTION 2026-10-28, twice. First the docstring quoted the NO-MOTION cells as
+ * if they were motion (the derivation keys flag state as 0| and 1|). Then, once
+ * weeks 6-7 were reconstructed, the motion-at-9+ cell flipped from +0.0561 to
+ * −0.0435 and the marginal from +0.0083 to −0.0021. The weeks 1-5 reading was an
+ * artifact of the short window. These are the weeks 1-7 figures.
  */
-export const SII_MOTION_MARGINAL_EPA = 0.0083;
+export const SII_MOTION_MARGINAL_EPA = -0.0021;
 
 export interface SiiCell {
   readonly flag: "motion" | "play_action" | "rpo" | "screen";
@@ -178,11 +181,11 @@ export function computeGseSpese(input: {
 /**
  * TOR — Turnover Regret.
  *
- * Fumble-recovery rate against the league rate. Derived 2026-10-28: 204 fumbles,
- * league mean recovery 0.4373 — so the coin is not 50% and 0.4373 is the
- * reference, not 0.5. Above it is luck, below it is not.
+ * Fumble-recovery rate against the league rate. Derived 2026-10-28 over weeks
+ * 1-7: 252 fumbles, league mean recovery 0.4384 — so the coin is not 50% and
+ * 0.4384 is the reference, not 0.5. Above it is luck, below it is not.
  */
-export const TOR_LEAGUE_RECOVERY_RATE = 0.4373;
+export const TOR_LEAGUE_RECOVERY_RATE = 0.4384;
 
 export function computeGseTor(input: {
   readonly fumbles: number;
