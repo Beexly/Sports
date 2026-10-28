@@ -1,0 +1,53 @@
+diff --git a/apps/web/lib/scraping/source-rights-registry.ts b/apps/web/lib/scraping/source-rights-registry.ts
+index 486f50590..59efc7dd2 100644
+--- a/apps/web/lib/scraping/source-rights-registry.ts
++++ b/apps/web/lib/scraping/source-rights-registry.ts
+@@ -146,6 +146,48 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
+       "clean and is the approved route for trench/coverage signals).",
+   },
+ 
++  {
++    source_id: "kaggle-cfb-pbp-2025",
++    source_name: "College football play-by-play 2025 (Kaggle robbypeery/college-football-data-2025)",
++    source_url: "https://www.kaggle.com/datasets/robbypeery/college-football-data-2025",
++    terms_url: "https://www.apache.org/licenses/LICENSE-2.0",
++    robots_url: null,
++    jurisdiction: "US",
++    source_type: "open_dataset",
++    status: "approved_open_license",
++    automation_allowed: true,
++    public_logged_off_allowed: true,
++    commercial_display_allowed: true,
++    storage_allowed: true,
++    derived_analytics_allowed: true,
++    model_training_allowed: true,
++    attribution_required: true,
++    attribution_text:
++      "College football play-by-play from Kaggle dataset robbypeery/college-football-data-2025 (Apache 2.0).",
++    personal_data_risk: "low",
++    copyright_expression_risk: "low",
++    database_right_risk: "low",
++    technical_controls_detected: false,
++    cease_and_desist_received: false,
++    reviewed_at: "2026-09-04",
++    reviewed_by: "hermes-agent",
++    evidence_urls: [
++      "https://www.kaggle.com/datasets/robbypeery/college-football-data-2025",
++      "https://www.apache.org/licenses/LICENSE-2.0",
++    ],
++    unlock_condition: null,
++    vendor_contact: null,
++    notes:
++      "Licence read live on the Kaggle page 2026-09-04: 'License: Apache 2.0' (declared by the re-uploader). " +
++      "The page's About section says 'No description available' and names NO upstream source; the schema " +
++      "(id_play, EPA, wp, spread, formatted_spread, over_under) matches CollegeFootballData.com (CFBD) " +
++      "play-by-play exactly, but that upstream grant is INFERRED, not stated — a re-upload inherits its " +
++      "upstream's rights and does not launder them, so re-verify before any public/commercial display. " +
++      "SCOPE: FEATURE INPUT ONLY, never a calibration corpus (single 2025 season, no moneyline column). " +
++      "Data warts: spread/over_under ~95% populated; numeric spread occasionally contains vendor text " +
++      "(e.g. 'DraftKings'). Local copy: C:/Users/Garrett/Downloads/cfb_pbp_2025_all.csv (554,440,205 bytes).",
++  },
++
+   {
+     source_id: "pfr-advstats-via-nflverse",
+     source_name: "PFR advanced stats (pfr_advstats release via nflverse)",

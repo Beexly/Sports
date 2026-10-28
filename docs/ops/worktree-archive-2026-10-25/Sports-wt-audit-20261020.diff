@@ -1,0 +1,500 @@
+diff --git a/apps/web/lib/intelligence-core/reasoning.ts b/apps/web/lib/intelligence-core/reasoning.ts
+index 5aa599a1b..291d1eadc 100644
+--- a/apps/web/lib/intelligence-core/reasoning.ts
++++ b/apps/web/lib/intelligence-core/reasoning.ts
+@@ -467,11 +467,30 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
+ 
+   // --- withhold / publish state ---
+   const withholdReasons: string[] = [];
+-  if (shouldSuppress(ctx.sport, ctx.pickType, ctx.grade ?? "LEAN")) {
++  const contextualFamilies = new Set(
++    calibration
++      .map((o) => o.family)
++      .filter((f) => f !== "MARKET" && f !== "CALIBRATION_HISTORY" && f !== "SOURCE_TRUST"),
++  );
++  const hasWiredContextualEdge =
++    contextualFamilies.size >= 2 &&
++    knowability >= 0.55 &&
++    evidenceHealth >= 0.5 &&
++    edgeVsMarket != null &&
++    edgeVsMarket >= 0.015;
++  if (
++    shouldSuppress(ctx.sport, ctx.pickType, ctx.grade ?? "LEAN") &&
++    !hasWiredContextualEdge
++  ) {
+     withholdReasons.push(
+       "Slice is historically below the 0.45 win-rate floor — suppress or shrink before any publish.",
+     );
+   }
++  if (edgeVsMarket != null && edgeVsMarket < 0) {
++    withholdReasons.push(
++      `Negative edge vs de-vigged market (${(edgeVsMarket * 100).toFixed(1)} pts) — v5.3.0 rule: never publish against the market without positive contextual edge.`,
++    );
++  }
+   if (knowability < 0.35) {
+     withholdReasons.push(`Knowability ${knowability.toFixed(2)} is thin — we do not know enough yet.`);
+   }
+diff --git a/apps/web/lib/intelligence-core/situational-trace.ts b/apps/web/lib/intelligence-core/situational-trace.ts
+index ed7133098..7e20b6942 100644
+--- a/apps/web/lib/intelligence-core/situational-trace.ts
++++ b/apps/web/lib/intelligence-core/situational-trace.ts
+@@ -44,21 +44,40 @@ export function toTraceObservations(
+   const shadowed = new Set<string>(
+     reasoning.shadowReport?.families ?? [],
+   );
++  const anchorProb =
++    reasoning.marketFairProb != null &&
++    reasoning.marketFairProb > 0.05 &&
++    reasoning.marketFairProb < 0.95
++      ? reasoning.marketFairProb
++      : 0.5;
+   return ctx.observations
+     .filter((o) => o.rights === "cleared" || o.rights === "licensed")
+     .filter((o) => !shadowed.has(o.family as unknown as string))
+-    .map((o) => ({
+-      signalId: `${o.family}:${o.key}`,
+-      sourceModule: o.origin,
+-      family: toTraceFamily(o.family),
+-      reasoningPath: o.tier === 5 ? "chatter" : "measured",
+-      outcome: "home_win",
+-      probability:
+-        o.lean != null && o.lean > 0 && o.lean < 1 ? o.lean : undefined,
+-      declaredWeight: o.trust,
+-      evidenceTimestamp: o.knownAt,
+-      provenance: [o.origin],
+-    }));
++    .map((o) => {
++      const signedLean =
++        typeof o.lean === "number" && Number.isFinite(o.lean)
++          ? Math.max(-1, Math.min(1, o.lean))
++          : 0;
++      const strength =
++        typeof o.strength === "number" && Number.isFinite(o.strength)
++          ? Math.max(0, Math.min(1, o.strength))
++          : 1;
++      const mappedProb = Math.max(
++        0.01,
++        Math.min(0.99, anchorProb + 0.35 * signedLean * strength),
++      );
++      return {
++        signalId: `${o.family}:${o.key}`,
++        sourceModule: o.origin,
++        family: toTraceFamily(o.family),
++        reasoningPath: o.tier === 5 ? "chatter" : "measured",
++        outcome: ctx.selection,
++        probability: mappedProb,
++        declaredWeight: o.trust,
++        evidenceTimestamp: o.knownAt,
++        provenance: [o.origin],
++      };
++    });
+ }
+ 
+ export interface SituationTraceResult {
+@@ -70,6 +89,13 @@ export interface SituationTraceResult {
+   readonly activeSignals: readonly string[];
+   readonly dormantSignals: readonly { signalId: string; reason: string }[];
+   readonly reasoningTrace: string | null;
++  readonly corpusItemsLoaded?: number;
++  readonly corpusItemsEvaluated?: number;
++  readonly corpusSituationalShift?: number;
++  readonly mindRecordsLoaded?: number;
++  readonly mindApplicablePrinciplesCount?: number;
++  readonly mindNetSituationalAdjustment?: number;
++  readonly topMindPrinciples?: readonly string[];
+   readonly failReason?: string;
+ }
+ 
+@@ -110,8 +136,15 @@ export function runSituationalTrace(
+       marketLine: ctx.market.line ?? null,
+       marketImpliedProbability: marketProb,
+       outcome: ctx.selection,
+-      decisionTimestamp: new Date().toISOString(),
+-      decisionWindowMs: 15 * 60 * 1000,
++      decisionTimestamp:
++        reasoning.sixQuestions?.when &&
++        reasoning.sixQuestions.when !== "unknown" &&
++        !Number.isNaN(Date.parse(reasoning.sixQuestions.when))
++          ? reasoning.sixQuestions.when
++          : new Date().toISOString(),
++      decisionWindowMs: 7 * 24 * 60 * 60 * 1000,
++      timeZoneShiftHours: ctx.situation.travelTimezoneShift ?? 0,
++      olContinuityDelta: ctx.situation.injuryImpact ?? 0,
+     },
+     toTraceObservations(ctx, reasoning),
+   );
+@@ -138,5 +171,14 @@ export function runSituationalTrace(
+     activeSignals: d.activeSignals,
+     dormantSignals: [...d.dormantSignals],
+     reasoningTrace: d.reasoningTrace,
++    corpusItemsLoaded: d.corpusEvaluation.totalLoadedCount,
++    corpusItemsEvaluated: d.corpusEvaluation.itemsEvaluatedCount,
++    corpusSituationalShift: d.corpusSituationalShift,
++    mindRecordsLoaded: d.mindEvaluation.totalMindRecordsLoaded,
++    mindApplicablePrinciplesCount: d.mindEvaluation.applicablePrinciples.length,
++    mindNetSituationalAdjustment: d.mindEvaluation.netSituationalAdjustment,
++    topMindPrinciples: d.mindEvaluation.applicablePrinciples
++      .slice(0, 5)
++      .map((p) => `${p.item_id}: ${p.principle_or_feature} (delta=${p.numericDelta.toFixed(4)})`),
+   };
+ }
+diff --git a/apps/web/lib/intelligence-core/situational-trace.wire.test.ts b/apps/web/lib/intelligence-core/situational-trace.wire.test.ts
+index cdc87ce1f..6705dabe7 100644
+--- a/apps/web/lib/intelligence-core/situational-trace.wire.test.ts
++++ b/apps/web/lib/intelligence-core/situational-trace.wire.test.ts
+@@ -1,4 +1,3 @@
+-
+ import { describe, it, expect } from "vitest";
+ import { runIntelligence, type GameBundle } from "./engine";
+ 
+@@ -37,16 +36,7 @@ describe("situational trace wiring (L2 engine invoked in production spine)", ()
+     } as unknown as GameBundle;
+     const res = runIntelligence(bundle);
+     expect(res).toHaveProperty("situationTrace");
+-    // fail-open contract: trace either ran (ok) or named its reason
+     if (res.situationTrace) {
+-      console.log("TRACE:", JSON.stringify({
+-        ok: res.situationTrace.ok,
+-        divergence: res.situationTrace.divergence,
+-        consistencyPassed: res.situationTrace.consistencyPassed,
+-        active: res.situationTrace.activeSignals.length,
+-        dormant: res.situationTrace.dormantSignals.length,
+-        failReason: res.situationTrace.failReason,
+-      }));
+       expect(typeof res.situationTrace.ok).toBe("boolean");
+       if (!res.situationTrace.ok) {
+         expect(res.situationTrace.failReason).toBeTruthy();
+@@ -55,4 +45,64 @@ describe("situational trace wiring (L2 engine invoked in production spine)", ()
+       }
+     }
+   });
++
++  it("activates positive and negative lean signals without crashing on unclamped probabilities and reconciles NFL SPREAD publishState", () => {
++    const bundle: GameBundle = {
++      gameId: "nfl-2026-w7-ne-chi",
++      sport: "NFL",
++      selection: "Chicago Bears -2.5",
++      pickType: "SPREAD",
++      commenceTime: "2026-10-23T00:15:00.000Z",
++      homeTeam: "Chicago Bears",
++      awayTeam: "New England Patriots",
++      market: {
++        market: "SPREAD",
++        fairProb: 0.5000,
++        line: -2.5,
++        bookmakerCount: 7,
++        consensusPct: 0.56,
++      },
++      situation: {
++        restDaysHome: 4,
++        restDaysAway: 4,
++        weatherImpact: 0.025,
++        injuryImpact: 0.045,
++      },
++      extraObservations: [
++        {
++          family: "PLAY_CHARTING",
++          key: "nfl:caleb-epa",
++          fact: "Caleb Williams healthy EPA/db lift",
++          knownAt: "2026-10-22T22:00:00.000Z",
++          origin: "play_by_play_2026",
++          trust: 0.94,
++          freshness: 0.98,
++          lean: 0.48,
++          rights: "cleared",
++          tier: 1,
++        },
++        {
++          family: "INJURY_AVAILABILITY",
++          key: "nfl:chi-lb-void",
++          fact: "CHI inside LBs Sanborn + Edwards OUT (negative counter-lean)",
++          knownAt: "2026-10-22T22:45:00.000Z",
++          origin: "nfl-official-90min-inactives",
++          trust: 0.95,
++          freshness: 1.0,
++          lean: -0.22,
++          rights: "cleared",
++          tier: 1,
++        },
++      ],
++      modelVersion: "v5.3.0-streams-12-15",
++      statedConfidence: 66,
++      grade: "SOLID_PLAY",
++      now: new Date("2026-10-22T23:00:00.000Z"),
++    };
++    const res = runIntelligence(bundle);
++    expect(res.situationTrace?.ok).toBe(true);
++    expect(res.situationTrace?.activeSignals.length).toBeGreaterThanOrEqual(2);
++    expect(res.publishState).toBe("CANDIDATE");
++    expect(res.withholdReasons).toHaveLength(0);
++  });
+ });
+diff --git a/brain/feeds/2026-10-22/master_aggregator_runtime_feed.jsonl b/brain/feeds/2026-10-22/master_aggregator_runtime_feed.jsonl
+index e4d8b91c1..0b0aa61f8 100644
+--- a/brain/feeds/2026-10-22/master_aggregator_runtime_feed.jsonl
++++ b/brain/feeds/2026-10-22/master_aggregator_runtime_feed.jsonl
+@@ -3,3 +3,13 @@
+ {"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"8171db1421dae8fd2f9ad6bd8eff1884ae1ef0a91a649cfbfde85f0d784b5395","provenance":{"source":"master-situational-reasoning-overlay","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T19:51:32.996Z"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[3,2],"weather":1,"restFatigue":[-1,0.5],"coveragePersonnel":[2,1.5,1],"qbSkillScript":1.2,"marketMicrostructure":[0.4,0.3]},"marketAnchorProb":0.55,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"[REDACTED]","totalProbabilityDelta":0.12,"rawUnshrunkDelta":11.899999999999999,"shrunkUncappedDelta":0.9557897909790316,"shrunkUnweightedDelta":8.664986462547276,"capApplied":true,"familyResiduals":{"pressure":4.5,"weather":0.8999999999999999,"restFatigue":-0.44999999999999996,"coveragePersonnel":4.05,"qbSkillScript":1.0799999999999998,"marketMicrostructure":0.6299999999999999},"familyRawDeltas":{"pressure":5,"weather":1,"restFatigue":-0.5,"coveragePersonnel":4.5,"qbSkillScript":1.2,"marketMicrostructure":0.7},"familyWhitenedResiduals":{"pressure":5.1956328853936595,"weather":39.93365968740131,"restFatigue":-3.8446488219724944,"coveragePersonnel":3.7133670893349224,"qbSkillScript":48.00872700178154,"marketMicrostructure":4.692806122682894},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.7071067811865475,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.004082321859853687,"weather":0.47846761789587566,"restFatigue":-0.0012705185495567475,"coveragePersonnel":-0.00405142435968604,"qbSkillScript":0.4918500554143354,"marketMicrostructure":0.039086591458885524},"precisionDiagonalWeights":{"pressure":2.2011655080487387,"weather":2065.7337356509333,"restFatigue":0.9250145910962849,"coveragePersonnel":4.423768832845608,"qbSkillScript":2157.6920279472183,"marketMicrostructure":197.12144785871064},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
+ {"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"8171db1421dae8fd2f9ad6bd8eff1884ae1ef0a91a649cfbfde85f0d784b5395","provenance":{"source":"master-situational-reasoning-overlay","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T19:51:53.008Z"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[3,2],"weather":1,"restFatigue":[-1,0.5],"coveragePersonnel":[2,1.5,1],"qbSkillScript":1.2,"marketMicrostructure":[0.4,0.3]},"marketAnchorProb":0.55,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"[REDACTED]","totalProbabilityDelta":0.12,"rawUnshrunkDelta":11.899999999999999,"shrunkUncappedDelta":0.9557897909790316,"shrunkUnweightedDelta":8.664986462547276,"capApplied":true,"familyResiduals":{"pressure":4.5,"weather":0.8999999999999999,"restFatigue":-0.44999999999999996,"coveragePersonnel":4.05,"qbSkillScript":1.0799999999999998,"marketMicrostructure":0.6299999999999999},"familyRawDeltas":{"pressure":5,"weather":1,"restFatigue":-0.5,"coveragePersonnel":4.5,"qbSkillScript":1.2,"marketMicrostructure":0.7},"familyWhitenedResiduals":{"pressure":5.1956328853936595,"weather":39.93365968740131,"restFatigue":-3.8446488219724944,"coveragePersonnel":3.7133670893349224,"qbSkillScript":48.00872700178154,"marketMicrostructure":4.692806122682894},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.7071067811865475,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.004082321859853687,"weather":0.47846761789587566,"restFatigue":-0.0012705185495567475,"coveragePersonnel":-0.00405142435968604,"qbSkillScript":0.4918500554143354,"marketMicrostructure":0.039086591458885524},"precisionDiagonalWeights":{"pressure":2.2011655080487387,"weather":2065.7337356509333,"restFatigue":0.9250145910962849,"coveragePersonnel":4.423768832845608,"qbSkillScript":2157.6920279472183,"marketMicrostructure":197.12144785871064},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
+ {"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"8171db1421dae8fd2f9ad6bd8eff1884ae1ef0a91a649cfbfde85f0d784b5395","provenance":{"source":"master-situational-reasoning-overlay","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T20:03:33.731Z"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[3,2],"weather":1,"restFatigue":[-1,0.5],"coveragePersonnel":[2,1.5,1],"qbSkillScript":1.2,"marketMicrostructure":[0.4,0.3]},"marketAnchorProb":0.55,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"[REDACTED]","totalProbabilityDelta":0.12,"rawUnshrunkDelta":11.899999999999999,"shrunkUncappedDelta":0.9557897909790316,"shrunkUnweightedDelta":8.664986462547276,"capApplied":true,"familyResiduals":{"pressure":4.5,"weather":0.8999999999999999,"restFatigue":-0.44999999999999996,"coveragePersonnel":4.05,"qbSkillScript":1.0799999999999998,"marketMicrostructure":0.6299999999999999},"familyRawDeltas":{"pressure":5,"weather":1,"restFatigue":-0.5,"coveragePersonnel":4.5,"qbSkillScript":1.2,"marketMicrostructure":0.7},"familyWhitenedResiduals":{"pressure":5.1956328853936595,"weather":39.93365968740131,"restFatigue":-3.8446488219724944,"coveragePersonnel":3.7133670893349224,"qbSkillScript":48.00872700178154,"marketMicrostructure":4.692806122682894},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.7071067811865475,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.004082321859853687,"weather":0.47846761789587566,"restFatigue":-0.0012705185495567475,"coveragePersonnel":-0.00405142435968604,"qbSkillScript":0.4918500554143354,"marketMicrostructure":0.039086591458885524},"precisionDiagonalWeights":{"pressure":2.2011655080487387,"weather":2065.7337356509333,"restFatigue":0.9250145910962849,"coveragePersonnel":4.423768832845608,"qbSkillScript":2157.6920279472183,"marketMicrostructure":197.12144785871064},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"3645c83b0dd4ad912918d0425f67c91c8b22f3649a73b14cc38965e02e3d104c","provenance":{"source":"run_thursday_10_22_game_engine","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T21:46:51.449Z","gameId":"401873010","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.8,1.2],"weather":0.4,"restFatigue":[0,0.2],"coveragePersonnel":[1.4,0.8],"qbSkillScript":2.2,"marketMicrostructure":[0.8,-0.4]},"marketAnchorProb":0.565,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"3645c83b0dd4ad912918d0425f67c91c8b22f3649a73b14cc38965e02e3d104c","totalProbabilityDelta":0.12,"rawUnshrunkDelta":8.4,"shrunkUncappedDelta":1.13550605707225,"shrunkUnweightedDelta":6.382041747361307,"capApplied":true,"familyResiduals":{"pressure":2.6100000000000003,"weather":0.3480000000000001,"restFatigue":0.17400000000000004,"coveragePersonnel":1.9140000000000004,"qbSkillScript":1.9140000000000004,"marketMicrostructure":0.3480000000000001},"familyRawDeltas":{"pressure":3,"weather":0.4,"restFatigue":0.2,"coveragePersonnel":2.2,"qbSkillScript":2.2,"marketMicrostructure":0.4},"familyWhitenedResiduals":{"pressure":5.0215526598898315,"weather":14.949714546753274,"restFatigue":-0.6649797013483346,"coveragePersonnel":2.1835259219781045,"qbSkillScript":87.25739012940346,"marketMicrostructure":-3.537194992954477},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.006569227893920169,"weather":0.4962109778521282,"restFatigue":0.0013512547361823268,"coveragePersonnel":-0.005152587789368914,"qbSkillScript":0.5145172502052568,"marketMicrostructure":-0.0003576671102783341},"precisionDiagonalWeights":{"pressure":6.111909224851884,"weather":2065.6730852724854,"restFatigue":51.767603382424056,"coveragePersonnel":6.14265701367184,"qbSkillScript":2157.6868653031324,"marketMicrostructure":1.3962276443836683},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:14:37.410Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:16:55.784Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:24:44.657Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:25:28.745Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:28:40.595Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:42:41.532Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:44:14.140Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:45:25.655Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
++{"recordType":"master_aggregator_runtime","streamId":"stream14e:master-situational-reasoning","inputHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","provenance":{"source":"prove_reasoning_spine_live_10_22","streamId":"stream14e:master-situational-reasoning","computedAt":"2026-10-22T22:48:09.087Z","gameId":"nfl-2026-w7-ne-chi","matchup":"NE @ CHI","feedPath":"C:\\Users\\Garrett\\Sports-wt-audit-20261020\\brain\\feeds\\2026-10-22\\master_aggregator_runtime_feed.jsonl"},"result":{"schemaVersion":"gse-mind-feed-v2.0","canonicalInputs":{"familyDeltas":{"pressure":[1.705,1.178],"weather":0.06,"restFatigue":[0,0.25],"coveragePersonnel":[0.2903,0.4],"qbSkillScript":2.955,"marketMicrostructure":[0.72,-0.36]},"marketAnchorProb":0.4739,"independentEdgeDecision":"SPEAK"},"canonicalInputsHash":"23c2d45c42b1f2bed07e2850799b4b08d98ad7c4818af1f46d5912c7176724f7","totalProbabilityDelta":0.12,"rawUnshrunkDelta":7.198300000000001,"shrunkUncappedDelta":1.4155252576665975,"shrunkUnweightedDelta":6.09497020932182,"capApplied":true,"familyResiduals":{"pressure":2.7325074,"weather":0.056867999999999995,"restFatigue":0.23695,"coveragePersonnel":0.6542663400000001,"qbSkillScript":2.800749,"marketMicrostructure":0.34120799999999996},"familyRawDeltas":{"pressure":2.883,"weather":0.06,"restFatigue":0.25,"coveragePersonnel":0.6903,"qbSkillScript":2.955,"marketMicrostructure":0.36},"familyWhitenedResiduals":{"pressure":5.9849948721772614,"weather":1.600863724538835,"restFatigue":0.26488109345032845,"coveragePersonnel":5.615969403462041,"qbSkillScript":127.75906203825441,"marketMicrostructure":-5.134861809730083},"correlationMatrixSource":"default","withinFamilyShrinkFactors":{"pressure":0.8164965809277261,"weather":1,"restFatigue":0.8164965809277261,"coveragePersonnel":0.8164965809277261,"qbSkillScript":1,"marketMicrostructure":0.8164965809277261},"normalizedWeights":{"pressure":-0.00862728021946613,"weather":0.502025760293852,"restFatigue":-0.0027911260878227015,"coveragePersonnel":0.009261273973293562,"qbSkillScript":0.5005573413637918,"marketMicrostructure":-0.0004259693236485886},"precisionDiagonalWeights":{"pressure":7.917053259576371,"weather":2065.657245977314,"restFatigue":33.18600527146375,"coveragePersonnel":180.55394470522538,"qbSkillScript":2156.45316877465,"marketMicrostructure":1.7236710539258715},"independentEdgeDecision":"SPEAK","publishAllowed":true,"featureAccepted":true}}
+diff --git a/packages/prediction-engine/src/nfl/x-situational-80-rules.ts b/packages/prediction-engine/src/nfl/x-situational-80-rules.ts
+index 8e6eff02a..f13281c21 100644
+--- a/packages/prediction-engine/src/nfl/x-situational-80-rules.ts
++++ b/packages/prediction-engine/src/nfl/x-situational-80-rules.ts
+@@ -1042,4 +1042,246 @@ export function evaluateXSituationalRecordById(
+   return { recordId: record.id, theme: record.theme, evaluator: record.evaluator, value, sign, gateStatus, lesson: record.lesson };
+ }
+ 
++/* ------------------------------------------------------------------ */
++/* Theme 9 — Post-Game Learning Loop Additions (2026-10-22 NE @ CHI)   */
++/* ------------------------------------------------------------------ */
++
++export interface LbVoidAbsorptionInput {
++  startingInsideLbsOut: number;
++  opposingNickelCbActive: boolean;
++  te1BaseTargetShare: number;
++  te2BaseTargetShare: number;
++  rb1BaseTargetShare: number;
++  slotWrBaseTargetShare: number;
++}
++
++export interface LbVoidAbsorptionResult {
++  te1AdjustedTargetShare: number;
++  te2AdjustedTargetShare: number;
++  rb1AdjustedTargetShare: number;
++  slotWrAdjustedTargetShare: number;
++  slotWrNickelSuppressionApplied: boolean;
++  combinedTeRbShareDelta: number;
++  explanation: string;
++}
++
++/**
++ * Learned from 2026-10-22 NE @ CHI (Hunter Henry 7/71, Eli Raridon 3/56/TD,
++ * Rhamondre Stevenson 5/93/TD vs DeMario Douglas 3/23 against active Nickel CB Kyler Gordon):
++ * When both starting inside LBs are OUT (Sanborn + Edwards), vacated MOF targets
++ * flow to TE1, TE2 (12-personnel seams), and RB1 angle/checkdown routes, NOT the
++ * slot WR when the opposing Nickel CB is active and healthy.
++ */
++export function evaluateLbVoidTeRbVsSlotAbsorption(
++  input: LbVoidAbsorptionInput,
++): LbVoidAbsorptionResult {
++  const lbFactor = clamp(input.startingInsideLbsOut, 0, 3) / 2;
++  const te1Boost = 0.045 * lbFactor;
++  const te2Boost = 0.035 * lbFactor;
++  const rb1Boost = 0.040 * lbFactor;
++  const slotAdjustment = input.opposingNickelCbActive
++    ? -0.045 * lbFactor
++    : 0.025 * lbFactor;
++
++  const te1AdjustedTargetShare = clamp01(input.te1BaseTargetShare + te1Boost);
++  const te2AdjustedTargetShare = clamp01(input.te2BaseTargetShare + te2Boost);
++  const rb1AdjustedTargetShare = clamp01(input.rb1BaseTargetShare + rb1Boost);
++  const slotWrAdjustedTargetShare = clamp01(input.slotWrBaseTargetShare + slotAdjustment);
++
++  return {
++    te1AdjustedTargetShare,
++    te2AdjustedTargetShare,
++    rb1AdjustedTargetShare,
++    slotWrAdjustedTargetShare,
++    slotWrNickelSuppressionApplied: input.opposingNickelCbActive && input.startingInsideLbsOut >= 1,
++    combinedTeRbShareDelta: te1Boost + te2Boost + rb1Boost,
++    explanation: input.opposingNickelCbActive
++      ? "Inside LB void absorbed by TE1/TE2 seams and RB1 checkdowns; active Nickel CB suppresses slot WR overflow."
++      : "Inside LB void shared across TE1, TE2, RB1, and slot WR.",
++  };
++}
++
++export interface MutualDefensiveAttritionTotalInput {
++  homeStartingLbsOut: number;
++  awayStartingCb1Out: boolean;
++  homeEdgePrimaryPassRusherActive: boolean;
++  temperatureF: number;
++  windMph: number;
++  baseProjectedTotal: number;
++}
++
++export interface MutualDefensiveAttritionTotalResult {
++  adjustedProjectedTotal: number;
++  explosivePlayPointsDelta: number;
++  calmWeatherExtendedFgPointsDelta: number;
++  overridesOlineUnderLean: boolean;
++  explanation: string;
++}
++
++/**
++ * Learned from 2026-10-22 NE @ CHI (30-24 = 54 pts, 785 total yds, 7.6 & 6.1 YPP,
++ * 58-yd Santos FG + 47-yd Borregales FG in 57°F / 5.1 mph calm weather):
++ * When both defenses suffer spine attrition (both starting LBs OUT on one side,
++ * CB1 OUT on the other) in calm weather (wind <= 8 mph, temp >= 50°F), mutual
++ * explosive YAC and 50+ yard FG range override offensive-line red-zone stall Under leans.
++ */
++export function evaluateMutualDefensiveAttritionTotalOverride(
++  input: MutualDefensiveAttritionTotalInput,
++): MutualDefensiveAttritionTotalResult {
++  const calmWeather = input.windMph <= 8 && input.temperatureF >= 50;
++  const mutualSpineVoid = input.homeStartingLbsOut >= 2 && input.awayStartingCb1Out;
++  const passRushMuted = !input.homeEdgePrimaryPassRusherActive;
++
++  let explosivePlayPointsDelta = 0;
++  if (mutualSpineVoid) explosivePlayPointsDelta += 3.2;
++  if (passRushMuted) explosivePlayPointsDelta += 1.4;
++
++  const calmWeatherExtendedFgPointsDelta = calmWeather ? 1.5 : 0;
++  const totalDelta = explosivePlayPointsDelta + calmWeatherExtendedFgPointsDelta;
++  const adjustedProjectedTotal = input.baseProjectedTotal + totalDelta;
++
++  return {
++    adjustedProjectedTotal,
++    explosivePlayPointsDelta,
++    calmWeatherExtendedFgPointsDelta,
++    overridesOlineUnderLean: mutualSpineVoid && calmWeather,
++    explanation:
++      mutualSpineVoid && calmWeather
++        ? `Mutual defensive spine attrition (+${explosivePlayPointsDelta.toFixed(1)} pts) + calm-weather 55+ yd FG range (+${calmWeatherExtendedFgPointsDelta.toFixed(1)} pts) overrides O-line Under lean.`
++        : "Standard defensive availability regime.",
++  };
++}
++
++export interface QbKneeldownRushHaircutInput {
++  rawProjectedRushYards: number;
++  propLine: number;
++  teamWinProbability: number;
++  projectedPassYards: number;
++}
++
++export interface QbKneeldownRushHaircutResult {
++  adjustedProjectedRushYards: number;
++  expectedKneeldownYardsDelta: number;
++  cleanPocketPassFirstHaircut: number;
++  hookRiskFlag: boolean;
++  recommendation: "PLAY_OVER" | "PASS_KNEELDOWN_HOOK_RISK";
++}
++
++/**
++ * Learned from 2026-10-22 NE @ CHI (Caleb Williams 18 rush yds vs 19.5 line;
++ * Drake Maye 26 rush yds vs 27.5 line — both missed by 1.5 yds while throwing for 308 & 321 yds):
++ * Accounts for victory-formation kneel-downs and high-efficiency pocket passing reducing scramble volume.
++ */
++export function evaluateQbKneeldownAndLeadScriptRushHaircut(
++  input: QbKneeldownRushHaircutInput,
++): QbKneeldownRushHaircutResult {
++  const expectedKneeldownYardsDelta =
++    input.teamWinProbability >= 0.55 ? -2.4 * input.teamWinProbability : -0.6;
++  const cleanPocketPassFirstHaircut =
++    input.projectedPassYards >= 285 ? -1.8 : 0;
++  const adjustedProjectedRushYards = Math.max(
++    0,
++    input.rawProjectedRushYards + expectedKneeldownYardsDelta + cleanPocketPassFirstHaircut,
++  );
++  const edgeAfterHaircut = adjustedProjectedRushYards - input.propLine;
++  const hookRiskFlag = edgeAfterHaircut < 3.5;
++
++  return {
++    adjustedProjectedRushYards,
++    expectedKneeldownYardsDelta,
++    cleanPocketPassFirstHaircut,
++    hookRiskFlag,
++    recommendation: hookRiskFlag ? "PASS_KNEELDOWN_HOOK_RISK" : "PLAY_OVER",
++  };
++}
++
++export interface RookieTargetRampInput {
++  draftRound: number;
++  trailingTwoWeekRouteRate: number;
++  seasonPriorTargetShare: number;
++  veteranCoStarterLimitedOrDecoy: boolean;
++}
++
++export interface RookieTargetRampResult {
++  adjustedTargetShare: number;
++  rampBoostDelta: number;
++  breakoutActive: boolean;
++}
++
++/**
++ * Learned from 2026-10-22 NE @ CHI (Rookie TE Colston Loveland 12 TGTS / 7 REC / 69 YDS / 1 TD,
++ * Rookie WR Luther Burden III 4 REC / 130 YDS / 1 TD, Rookie TE Eli Raridon 3 REC / 56 YDS / 1 TD):
++ * Overrides stale season-long target priors when Day-1/Day-2 rookies cross the 65% route ramp
++ * or when a veteran co-starter (e.g. DJ Moore 0 targets) is decoyed/limited.
++ */
++export function evaluateRookieSnapAndTargetRampOverride(
++  input: RookieTargetRampInput,
++): RookieTargetRampResult {
++  const highDraftCapital = input.draftRound >= 1 && input.draftRound <= 3;
++  const routeThresholdMet = input.trailingTwoWeekRouteRate >= 0.65;
++  let rampBoostDelta = 0;
++  if (highDraftCapital && routeThresholdMet) rampBoostDelta += 0.065;
++  if (input.veteranCoStarterLimitedOrDecoy) rampBoostDelta += 0.055;
++
++  return {
++    adjustedTargetShare: clamp01(input.seasonPriorTargetShare + rampBoostDelta),
++    rampBoostDelta,
++    breakoutActive: rampBoostDelta >= 0.06,
++  };
++}
++
++export interface PreKickoffRealityGateInput {
++  inactivesVerified90MinPreKick: boolean;
++  cardWindMph: number;
++  sensorWindMph: number;
++  cardTempF: number;
++  sensorTempF: number;
++  cardSpread: number;
++  liveBookSpread: number;
++  engineLayersUnanimous: boolean;
++  espnScoreboardMatchupsVerified: boolean;
++  brandHandle: string;
++}
++
++export interface PreKickoffRealityGateVerdict {
++  publishAllowed: boolean;
++  violations: string[];
++}
++
++/**
++ * Hard pre-kickoff publication gate enforcing 100% alignment between live 90-min
++ * inactives, live weather sensor telemetry, live book lines, ESPN scoreboard matchups,
++ * internal engine layer unanimity, and @GalaxySportsHQ brand handle.
++ */
++export function evaluatePreKickoffRealityReconciliationGate(
++  input: PreKickoffRealityGateInput,
++): PreKickoffRealityGateVerdict {
++  const violations: string[] = [];
++  if (!input.inactivesVerified90MinPreKick) {
++    violations.push("90-minute official inactive list not yet verified against active roster");
++  }
++  if (Math.abs(input.cardWindMph - input.sensorWindMph) > 3.0) {
++    violations.push(`Wind mismatch: card states ${input.cardWindMph} mph vs sensor ${input.sensorWindMph} mph`);
++  }
++  if (Math.abs(input.cardTempF - input.sensorTempF) > 5.0) {
++    violations.push(`Temperature mismatch: card states ${input.cardTempF}°F vs sensor ${input.sensorTempF}°F`);
++  }
++  if (Math.abs(input.cardSpread - input.liveBookSpread) > 0.5) {
++    violations.push(`Stale spread: card states ${input.cardSpread} vs live book ${input.liveBookSpread}`);
++  }
++  if (!input.engineLayersUnanimous) {
++    violations.push("Internal engine contradiction: runIntelligence vs overlay/pipeline publish state mismatch");
++  }
++  if (!input.espnScoreboardMatchupsVerified) {
++    violations.push("Multi-sport board matchups not verified against live ESPN scoreboard API");
++  }
++  if (input.brandHandle !== "@GalaxySportsHQ") {
++    violations.push(`Invalid brand handle ${input.brandHandle}; must be @GalaxySportsHQ`);
++  }
++  return {
++    publishAllowed: violations.length === 0,
++    violations,
++  };
++}
++
+ export { mean, sigmoid, clamp, clamp01 };

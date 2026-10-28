@@ -41,6 +41,15 @@ export function canonicalizeForSeal(value: unknown): string {
     if (!Number.isSafeInteger(value as number) && Number.isInteger(value as number)) {
       throw new Error(`canonicalizeForSeal: integer beyond MAX_SAFE_INTEGER ${String(value)}`);
     }
+    // Python switches to scientific notation below 1e-4 ("1e-05") while JS stays fixed-point
+    // down to 1e-6 ("0.00001"). Pin the divergence zone to a fixed 8-decimal form so both
+    // runtimes emit the same bytes. Python mirrors this exactly.
+    if (Number.isInteger(value as number)) return String(value);
+    const abs = Math.abs(value as number);
+    if (abs < 1e-4) {
+      const fixed = (value as number).toFixed(8).replace(/0+$/, "").replace(/\.$/, "");
+      return fixed === "-0" ? "0" : fixed;
+    }
     return JSON.stringify(value);
   }
   if (t === "string" || t === "boolean") return JSON.stringify(value);

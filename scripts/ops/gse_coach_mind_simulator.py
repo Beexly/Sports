@@ -69,18 +69,41 @@ FORBIDDEN_MARKET_TOKENS = (
 )
 
 
+def _canon(x) -> str:
+    """Canonical JSON, mirroring canonicalizeForSeal in locked-projection.ts.
+
+    Built as a string rather than via json.dumps: the C encoder formats floats itself and
+    ignores a float subclass __repr__, so the sub-1e-4 fixed-point rule cannot be expressed
+    through it. Key order is lexicographic at every depth, matching sort_keys=True.
+    """
+    if x is None:
+        return "null"
+    if isinstance(x, bool):
+        return "true" if x else "false"
+    if isinstance(x, int):
+        return str(x)
+    if isinstance(x, float):
+        if x != x or x in (float("inf"), float("-inf")):
+            raise ValueError(f"canonical_hash: non-finite {x}")
+        if x.is_integer():
+            return str(int(x))
+        if abs(x) < 1e-4:
+            fixed = f"{x:.8f}".rstrip("0").rstrip(".")
+            return fixed if fixed != "-0" else "0"
+        return repr(x)
+    if isinstance(x, str):
+        return json.dumps(x, ensure_ascii=False)
+    if isinstance(x, (list, tuple)):
+        return "[" + ",".join(_canon(v) for v in x) + "]"
+    if isinstance(x, (dict, MappingProxyType)):
+        return "{" + ",".join(
+            f"{json.dumps(k, ensure_ascii=False)}:{_canon(x[k])}" for k in sorted(x.keys())
+        ) + "}"
+    raise TypeError(f"canonical_hash: unsupported {type(x).__name__}")
+
+
 def canonical_hash(obj) -> str:
-    def to_plain(x):
-        if isinstance(x, (dict, MappingProxyType)):
-            return {k: to_plain(x[k]) for k in sorted(x.keys())}
-        if isinstance(x, (list, tuple)):
-            return [to_plain(v) for v in x]
-        # JS has no int/float distinction: 27.0 serialises as "27". Python emits "27.0",
-        # so integral floats must be narrowed or the two runtimes never agree.
-        if isinstance(x, float) and x.is_integer():
-            return int(x)
-        return x
-    blob = json.dumps(to_plain(obj), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    blob = _canon(obj).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()
 
 

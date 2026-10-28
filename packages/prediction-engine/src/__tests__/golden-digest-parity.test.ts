@@ -28,11 +28,29 @@ const FIXTURE = {
   charlie: { zulu: { zulu: 9, alpha: 8 }, alpha: 7 },
 };
 
+// Mirrors scripts/ops/gse_coach_mind_simulator.py _canon exactly: string-built, UTF-8
+// literal, integral floats narrowed, sub-1e-4 floats pinned to 8 decimals, NaN a hard error.
 const PYTHON = `
 import hashlib, json, sys
-fixture = json.loads(sys.stdin.read())
-canonical = json.dumps(fixture, sort_keys=True, separators=(",", ":"))
-print(hashlib.sha256(canonical.encode("utf-8")).hexdigest())
+
+def canon(x):
+    if x is None: return "null"
+    if isinstance(x, bool): return "true" if x else "false"
+    if isinstance(x, int): return str(x)
+    if isinstance(x, float):
+        if x != x or x in (float("inf"), float("-inf")): raise ValueError("non-finite")
+        if x.is_integer(): return str(int(x))
+        if abs(x) < 1e-4:
+            f = f"{x:.8f}".rstrip("0").rstrip(".")
+            return f if f != "-0" else "0"
+        return repr(x)
+    if isinstance(x, str): return json.dumps(x, ensure_ascii=False)
+    if isinstance(x, list): return "[" + ",".join(canon(v) for v in x) + "]"
+    if isinstance(x, dict):
+        return "{" + ",".join(json.dumps(k, ensure_ascii=False) + ":" + canon(x[k]) for k in sorted(x.keys())) + "}"
+    raise TypeError(type(x).__name__)
+
+print(hashlib.sha256(canon(json.loads(sys.stdin.read())).encode("utf-8")).hexdigest())
 `;
 
 function pythonDigest(payload: unknown): string {
@@ -78,6 +96,23 @@ describe("golden digest parity across runtimes", () => {
     // object before stringify silently produced the numeric order and diverged.
     const payload = { "10": "a", "2": "b", a: "c" };
     expect(computeCanonicalSealDigest(payload)).toBe(pythonDigest(payload));
+  });
+
+  it("keeps non-ASCII literal instead of escaping it (C2)", () => {
+    // Python defaults to ensure_ascii=True and emits \u03c4; JS emits the character.
+    const payload = { symbol: "τ", dash: "—", name: "café" };
+    expect(computeCanonicalSealDigest(payload)).toBe(pythonDigest(payload));
+  });
+
+  it("agrees with Python below the scientific-notation threshold (C3)", () => {
+    // Python formats < 1e-4 as "1e-05"; JS stays fixed-point. Both are pinned to 8 decimals.
+    const payload = { tiny: 0.00001, smaller: 2.5e-7, normal: 0.5 };
+    expect(computeCanonicalSealDigest(payload)).toBe(pythonDigest(payload));
+  });
+
+  it("throws on NaN rather than emitting null (C5)", () => {
+    expect(() => computeCanonicalSealDigest({ bad: NaN })).toThrow(/non-finite/);
+    expect(() => computeCanonicalSealDigest({ bad: Infinity })).toThrow(/non-finite/);
   });
 
   it("agrees with Python on integral floats", () => {

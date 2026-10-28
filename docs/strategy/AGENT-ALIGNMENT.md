@@ -27,6 +27,10 @@ stops. It is the shared context that used to live only in whichever chat happene
    `locked-projection.ts`, `canonical_hash` in the simulator, `sort_keys=True` in the delta writer).
    The conflict was deeper than key order: Python emitted `27.0` where JS emits `27`, so integral
    floats are narrowed too. `golden-digest-parity.test.ts` pins it, including a real-payload case.
+   **All three remaining traps are closed (C2/C3/C5):** non-ASCII stays literal (`ensure_ascii=False`),
+   sub-1e-4 floats are pinned to 8 decimals on both sides, and NaN/Infinity throw. Both canonicalizers
+   now build the JSON string directly — Python's C encoder ignores a float subclass `__repr__`, so
+   `json.dumps` could not express the fixed-point rule.
 5. **Do not reseal mid-week.** Re-running the seal pipeline is a founder call, not an agent call.
 6. **No odds, no splits, no legality.** The engine is a reasoning engine. NFL sides are closed
    (49.83% ATS over 895 held-out games); the product is calibration and props.
