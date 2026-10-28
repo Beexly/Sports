@@ -122,10 +122,18 @@ describe("no production importer bypasses the refusal guards", () => {
       const base = file.split(/[\\/]/).pop() ?? "";
       if (base.startsWith("2606-18512") || base.startsWith("2609-33664")) continue;
       const code = readFileSync(file, "utf8");
-      if (
-        /2606-18512-causal-panel-forecasting/.test(code) ||
-        /2609-33664-hmm-pass-blocking/.test(code)
-      ) {
+      // Match actual import/export/require statements, not bare mentions.
+      // Catalog files (model-registry.generated.ts) list module ids as string
+      // metadata; that is not an importer and cannot bypass a runtime refusal.
+      const importLines = code
+        .split("\n")
+        .filter((line) => /^\s*(import|export)\s/.test(line));
+      const reachesGated = importLines.some(
+        (line) =>
+          /2606-18512-causal-panel-forecasting/.test(line) ||
+          /2609-33664-hmm-pass-blocking/.test(line),
+      );
+      if (reachesGated) {
         offenders.push(relative(SRC, file));
       }
     }
