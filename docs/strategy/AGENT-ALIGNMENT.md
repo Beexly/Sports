@@ -30,7 +30,8 @@ stops. It is the shared context that used to live only in whichever chat happene
    **All three remaining traps are closed (C2/C3/C5):** non-ASCII stays literal (`ensure_ascii=False`),
    sub-1e-4 floats are pinned to 8 decimals on both sides, and NaN/Infinity throw. Both canonicalizers
    now build the JSON string directly — Python's C encoder ignores a float subclass `__repr__`, so
-   `json.dumps` could not express the fixed-point rule.
+   `json.dumps` could not express the fixed-point rule. The MAX_SAFE_INTEGER throw is narrowed to
+   the MAX_SAFE_INTEGER..1e21 band only: above 1e21 both runtimes use exponent notation and agree.
 5. **Do not reseal mid-week.** Re-running the seal pipeline is a founder call, not an agent call.
 6. **No odds, no splits, no legality.** The engine is a reasoning engine. NFL sides are closed
    (49.83% ATS over 895 held-out games); the product is calibration and props.

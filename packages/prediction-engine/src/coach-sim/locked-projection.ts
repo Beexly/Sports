@@ -38,8 +38,15 @@ export function canonicalizeForSeal(value: unknown): string {
     if (!Number.isFinite(value as number)) {
       throw new Error(`canonicalizeForSeal: non-finite number ${String(value)}`);
     }
-    if (!Number.isSafeInteger(value as number) && Number.isInteger(value as number)) {
-      throw new Error(`canonicalizeForSeal: integer beyond MAX_SAFE_INTEGER ${String(value)}`);
+    // Integers above MAX_SAFE_INTEGER have already lost precision at parse time, so a
+    // literal like 9007199254740993 is really ...992 and cannot be recovered. Above 1e21
+    // both runtimes switch to exponent notation and agree again, so only the band between
+    // MAX_SAFE_INTEGER and 1e21 is genuinely ambiguous — that band throws.
+    if (Number.isInteger(value as number) && !Number.isSafeInteger(value as number)) {
+      if (Math.abs(value as number) < 1e21) {
+        throw new Error(`canonicalizeForSeal: integer beyond MAX_SAFE_INTEGER ${String(value)}`);
+      }
+      return String(value);
     }
     // Python switches to scientific notation below 1e-4 ("1e-05") while JS stays fixed-point
     // down to 1e-6 ("0.00001"). Pin the divergence zone to a fixed 8-decimal form so both

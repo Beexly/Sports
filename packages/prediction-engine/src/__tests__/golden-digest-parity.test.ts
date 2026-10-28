@@ -39,7 +39,9 @@ def canon(x):
     if isinstance(x, int): return str(x)
     if isinstance(x, float):
         if x != x or x in (float("inf"), float("-inf")): raise ValueError("non-finite")
-        if x.is_integer(): return str(int(x))
+        if x.is_integer():
+            if abs(x) >= 1e21: return repr(x)
+            return str(int(x))
         if abs(x) < 1e-4:
             f = f"{x:.8f}".rstrip("0").rstrip(".")
             return f if f != "-0" else "0"
@@ -125,6 +127,18 @@ describe("golden digest parity across runtimes", () => {
   it("throws on NaN rather than emitting null (C5)", () => {
     expect(() => computeCanonicalSealDigest({ bad: NaN })).toThrow(/non-finite/);
     expect(() => computeCanonicalSealDigest({ bad: Infinity })).toThrow(/non-finite/);
+  });
+
+  it("agrees above 1e21 where both runtimes use exponent notation", () => {
+    const payload = { huge: 1e21, bigger: 1.5e22 };
+    expect(computeCanonicalSealDigest(payload)).toBe(pythonDigest(payload));
+  });
+
+  it("throws in the ambiguous band between MAX_SAFE_INTEGER and 1e21", () => {
+    // 9007199254740993 is really ...992 in JS; emitting it would seal a number the caller
+    // did not write.
+    expect(() => computeCanonicalSealDigest({ n: 9007199254740993 })).toThrow(/MAX_SAFE_INTEGER/);
+    expect(() => computeCanonicalSealDigest({ n: 1e20 })).toThrow(/MAX_SAFE_INTEGER/);
   });
 
   it("Python also rejects non-finite (C5, both sides)", () => {

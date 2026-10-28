@@ -86,6 +86,10 @@ def _canon(x) -> str:
         if x != x or x in (float("inf"), float("-inf")):
             raise ValueError(f"canonical_hash: non-finite {x}")
         if x.is_integer():
+            # Above 1e21 both runtimes use exponent notation; below it Python's int() would
+            # print full digits where JS prints an exponent. Mirror JS exactly.
+            if abs(x) >= 1e21:
+                return repr(x)
             return str(int(x))
         if abs(x) < 1e-4:
             fixed = f"{x:.8f}".rstrip("0").rstrip(".")
