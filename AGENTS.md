@@ -19408,3 +19408,88 @@ Lane B totals: searches — "EPA" ~30 viewed / 2 NFL-analytics captures (INCOMPL
 - **RB evaluation scatter framework** (@TylerSutphenFF, status 2115067881277055315, Oct 27, 2026, plus 6 chart replies; RBs, last 4 weeks; each chart PARTIAL — plotted values not printed in text): (1) Expected Points (xFP) vs Fantasy Points Over Expected (FPOE); (2) TPRR vs YPRR for RBs (status 2115067897320219064; chart footer: DYNATYZE); (3) Snap % vs Expected Fantasy Points Per Game (xFPTS/G); (4) Rush Plays vs Red Zone Role; (5) Yards After Contact Per Attempt vs Rushing Yards Over Expected Per Attempt; (6) High-Value Touches vs WAR (Wins Above Replacement). Definitions are given in the reply texts as quadrant descriptions (e.g., top-right of chart 1 = high volume and over-performing it; backs with high snap share but low expected points described as "empty calories"). Source not stated in post text. Attributed innovation note: one RB evaluation system built as six paired-metric quadrant scatters.
 - **Pass YPG allowed in off-coverage** (@danorlovsky7, status 2114736052162199998, Oct 26, 2026): Houston's defense is allowing 192 pass yards per game in off-coverage, defined in the post as a 5+ yard cushion, "20 more … than any we've ever tracked" (comparator not further specified; @PaulHembo tagged; tracking source unnamed).
 - Incidental sighting (seen on a post page's "Discover more" module, not counted as a feed capture; ID/time not verified beyond a 15h label): @HaydenWinks — with Cole Kmet out, Luther Burden ran a route on 73% of routes in non 3-TE sets last week, described as a meaningful jump vs his season baseline.
+
+## Advanced Metrics Benchmark — X Sweep, Wed Oct 28, 2026, 9:08 AM CDT run (window: posts after 9:08 AM CDT Tue Oct 27, 2026 through 9:08 AM CDT Wed Oct 28, 2026) — COMPLETE (all lanes, after one outage recovery; watermark advanced)
+
+Method note: read-only browser lanes as @GalaxySportsHQ; no likes, reposts, replies, follows, DMs, bookmarks, or posts were made by any lane (confirmed in the lane reports). Lane A (11 profiles in order): complete. Lane B ran in two tasks: the first task completed all 5 Latest searches, then X returned outage errors (5xx / "Something went wrong") and the browser was closed by the system before any profile or feed work was attempted; a second task completed all 11 profiles plus the @NFL_Researcher supplement and both Following-feed passes. WATERMARK ADVANCED: the next run's lower bound is status ID 2115445868022823404 (@PattonAnalytics, the largest in-window ID seen). Chart values read from timeline screenshots rather than opened status pages are flagged PARTIAL. One search capture was excluded on a date check: a rookie-WR TPRR list matching the @DynoGameTheory post already filed in the Oct 27 section (status 2114766231006052592, Oct 26, below this window's watermark) — recorded here as a duplicate, not re-inventoried. Full tables are in docs/research/2026-10-28/full-tables/ (1 CSV; several tables this run are flagged PARTIAL in the entries and were not CSV'd, per the gap audit in the run log).
+
+### Lane A
+
+#### @cmain7, @RyanPaganetti, @jmthrivept
+- No in-window data/analytics posts found by the lane in this window (profiles read; posts viewed were outside the window or carried no new metric). Recorded as negative findings for this window.
+
+#### @sfdata9ers
+- **Week 8 QB EPA/Play, early window** (18 QBs as printed): Joe Burrow 0.62 top; Malik Willis 0.58; J.J. McCarthy 0.53; Baker Mayfield 0.42; Josh Allen 0.39; Jared Goff 0.37; Caleb Williams 0.31; Patrick Mahomes 0.29; Sam Darnold 0.17; Jaxson Dart 0.17; Dak Prescott 0.15; Jordan Love 0.12; Bo Nix 0.08; Lamar Jackson −0.04; Jalen Hurts −0.12; Justin Herbert −0.18; Bryce Young −0.34; Cam Ward −0.55 bottom. Source not stated in the captured header. Values as transcribed by the lane from the chart.
+- **Week 8 Receiving Performances, top 30** — PARTIAL: the lane captured the table's existence and its top names (Luther Burden and Jaxon Smith-Njigba at the top, consistent with the account's Week 7 format of TGTS / CATCH% / YDS / YAC% / TD / aDoT / EPA per Target / EPA), but the full cell values were not captured in the lane's report as received, and rows 10–18 were not legible. No CSV filed for this table. Source not stated in the captured header.
+
+#### @hawkblogger, @MagicSportsGuy, @DevyEusuf, @statyxio
+- No in-window data/analytics posts captured by the lane in this window beyond items noted as duplicates of the Oct 27 section or post-window exclusions. Recorded as negative/thin findings for this window; the bounded timeline scroll is noted as a completeness caveat in the run log.
+
+#### @SumerSports
+- Lane A found no in-window posts on the profile in this window. SumerSports-branded coverage tables surfaced in Lane B's pass are inventoried under Lane B below, flagged PARTIAL for attribution.
+
+#### @GridironInfo_ (every chart carries a printed footer: "@GridironInfo_ | Data: nflverse (nflDataPy)" / "nflverse (nflfastR)" / ESPN / Kalshi, with a date)
+- **Playoff probabilities after Week 8** (the post-window item noted in the Oct 27 run, ~9:15 AM Oct 27, now in-window) — PARTIAL: conference playoff-probability charts were captured at headline level (top seeds as printed); the full per-team lists were not legible in the lane's read. Source as stated in the related posts: Kalshi. Method/model not stated in the post as read.
+- **Week 8 QB EPA/Play vs CPOE / success-rate items** — PARTIAL: headline values as printed in post text only; the plotted per-QB values were not legible. Source: nflverse (nflfastR) per the account's chart footers.
+- Week 8 single-game team items (drive start, success rate, time of possession for the Monday game) were captured as printed at headline level — PARTIAL, same footer sources.
+
+#### @ScottBarrettDFB (source as stated for the data items: @FantasyPtsData)
+- **YPRR leaders** and a **TE yards-after-catch item** were captured in this window as list posts in the account's established @FantasyPtsData-sourced format; values as printed in the posts. Attributed note: the same YPRR/TPRR family already inventoried in prior runs, presented here as updated Week 8 leader lists (a different data cut of an already-inventoried metric).
+
+### Lane B — searches
+
+Search totals as reported: "EPA" viewed large volume / captures as below (INCOMPLETE for global volume, same disclosed limitation as prior runs — the bare term is globally noisy); "CPOE", "TPRR", "pass rush win rate", and "aggressiveness" searches completed for the window with the captures below.
+
+#### EPA
+- **@PattonAnalytics — EPA on failed plays** (status 2115445868022823404, Oct 28, 2026; the largest in-window ID seen): a team/QB cut of expected points added restricted to failed plays, presented as its own leaderboard rather than as a component of total EPA. Definition as given in the post as read; source as stated in the post. Attributed innovation note: EPA split by play outcome (failed plays only) as a standalone diagnostic.
+- **Josh Allen Next Gen Stats panels** (via the EPA search; source as stated: Next Gen Stats): five-panel QB metric set including EPA per dropback, plus the two leaderboards transcribed below.
+  - **Air Yards Differential (IAY − CAY) leaderboard** (10 rows as printed): values as transcribed by the lane; Joe Burrow −1.3 appears in the same leaderboard in the @NFL_Researcher Burrow post below. PARTIAL for any cells the lane flagged as small-print.
+  - **Expected YAC (xYAC) leaderboard** (10 rows as printed): values as transcribed by the lane. PARTIAL for small-print cells as flagged.
+- **@priceacarter-style down-split items and other EPA captures**: recorded as printed in the lane report at headline level; no new named metric beyond the down-split framing already inventoried on Oct 27.
+
+#### CPOE
+- **EPA + CPOE composite, updated** (@daniel_rotman15 family, already inventoried Oct 27 as "The 50 Best QB Seasons Since 2018"): the window's capture is the same composite presented with an updated/current-season cut — recorded as an attributed re-cut of an already-inventoried metric, not a new metric. Chart rows PARTIAL (small print), as on Oct 27.
+- CPOE vs EPA/play scatter captures (multiple accounts) — PARTIAL, plotted values not printed in text; the Maye top-right pattern matches the Oct 27 captures.
+
+#### TPRR
+- No new in-window TPRR metric was verified. The one rookie-WR TPRR list surfaced by the search matches the @DynoGameTheory post already filed Oct 27 (status 2114766231006052592, Oct 26) and is excluded as a duplicate (see method note). Other TPRR mentions in-window were rank mentions without new definitions or full tables, recorded at headline level in the lane report.
+
+#### "pass rush win rate"
+- Leaderboard mentions as printed (pressures and pass-rush win rate leaders in the account's usual PFF/ESPN-attributed formats); no new named metric and no full table was captured in this window. The ESPN win-rate leaderboard (espn.com) was again cited by a reply as its source — the same endpoint note as Oct 27.
+
+#### "aggressiveness"
+- **NGS Agg% table, updated cut** (@SuperSai_1; source as stated: Next Gen Stats): the window's table prints an Aggressiveness (Agg%) column with Josh Allen at 25.0% at the top of the captured rows, alongside Intended Air Yards per Attempt. PARTIAL: final digits of several Agg% cells were cut off in the lane's read, as with the Oct 27 capture of the same table family. Attributed note: same NGS Agg% column as Oct 27, different sample/cut (the Oct 27 capture, min 95 attempts, was headed by Malik Willis at 22.3…%).
+
+### Lane B — profiles
+
+#### @PattonAnalytics (source as stated: StatRankings, chart credit "Plot: @PattonAnalytics," unless noted)
+- **Offensive Play Caller Sequencing by Series** (status 2115086227520708749, Oct 27, 2026 — the post-window item noted in the Oct 27 run, now in-window): a by-series play-caller sequencing chart (run/pass sequencing by series for offensive play callers, with Matt Jones and Dan Campbell among the callers discussed in the post text as read). Chart cell values PARTIAL (small print). Attributed note: sequencing — the order of play types within a series — as the measured object, rather than aggregate run/pass rates.
+- **EPA on deep throws** (already inventoried Oct 27, status 2115062049797513280): no duplicate filed; the in-window @PattonAnalytics capture is the failed-plays EPA item under Searches above (status 2115445868022823404).
+
+#### @EstablishTheRun, @DonAtkinsonNFL, @DynatyzeFF, @32BeatWriters
+- No in-window data/analytics captures (promos, news, beat quotes, and box-score commentary only), as reported by the lane. The DYNATYZE-branded chart family remains attributed to its posting accounts, as on Oct 27.
+
+#### @FantasyPtsData
+- No new standalone in-window chart post captured; the account's Data Suite 2.0 remains the cited source behind other accounts' in-window tables (the @ScottBarrettDFB items above), the same pattern as Oct 27. Endpoint note unchanged: Data Suite 2.0 is the account's own public data product at fantasypoints.com.
+
+#### @PFF (source not stated in the posts; definitions not given unless noted)
+- Week 8 leaderboard lists as printed, each a top-5 (or as printed) in the account's established formats: passing grade leaders, big-time throw rate, turnover-worthy play items, pressure/sack leaderboards, receiving and rushing grade leaders, and coverage items — values as printed in the posts and transcribed by the lane at headline level. No new named PFF metric was introduced in this window.
+- The @PFF Kirk Cousins / Raiders graphic noted as post-window in the Oct 27 run (~9:16 AM Oct 27) was NOT found by the remainder lane: a targeted from:PFF Cousins search returned no in-window result, and no dedicated Cousins graphic appeared in the bounded profile scroll. Recorded as not found, not as a capture.
+
+#### @NFLResearcher
+- No in-window posts (same determination as prior runs; its only findable post remains a January reply).
+
+#### @NFL_Researcher (supplement; source as stated: @NextGenStats unless noted)
+- **Most pass yards by route type this season** (status 2115157572287213594, Oct 27, 2026 — the post-window item noted in the Oct 27 run, now in-window): FULL list as printed — Go 2,182; Out 1,851; Curl 1,631; In 1,580; Crossing 1,155; Comeback 1,067; Slant 966; Screen 897; Post 810; Corner 702; Seam (value not captured in the lane's report — PARTIAL for this one cell); Flat 532. Table: `nfl-researcher-pass-yards-by-route-ngs-2026.csv`. Attributed note: the passing-side counterpart to the Oct 27 receiving-yards-by-route table (same route taxonomy, QB pass yards instead of receiver yards).
+- **Joe Burrow Next Gen Stats panels** (status 2115302816624500962): multi-panel NGS QB set as printed, including a Completion % table, an Air Yards Differential table (Burrow −1.3 as printed), and an Expected YAC table — the same NGS metric family as the Josh Allen panels captured in the EPA search, presented per-QB. Values as transcribed by the lane; small-print cells PARTIAL as flagged.
+- **Most QB pressures / quick pressures**: no new in-window list captured beyond the Oct 27 tables; the "Quick pressure: under 2.5 seconds" definition from Oct 27 stands as the inventoried definition.
+
+#### UNVERIFIABLE (2, same as prior runs)
+- @FTNData — protected ("These posts are protected"); read-only rules forbid following; 0 viewable.
+- @NerdingonNFL — public profile but the Posts tab renders nothing; the only findable item remains the Aug 28 repost stating the account is now @ProGridSports (already recorded Oct 27; adding @ProGridSports to the sweep list remains Garrett's call, not made here).
+
+#### Coverage EPA tables (source as stated in the graphics: SumerSports) — PARTIAL
+- **Coverage EPA/play allowed tables** surfaced in Lane B's pass: EPA per play allowed split by coverage type (man / zone families as titled in the graphics), with team values as printed. PARTIAL: the posting account attribution and several cell values were not fully captured in the lane's report as received, so the tables are inventoried at headline level only, with SumerSports as the stated data source/branding. Attributed note: coverage-type EPA allowed as a team defensive cut.
+
+### Lane B — Following feed (2 passes)
+- The feed passes were algorithmic samples (the lane reported roughly 70 unique in-window posts seen across both passes, ordered by repost activity, so both passes are sampling passes, not enumerations). Feed captures duplicated the profile/search captures above; no feed-only new metric was verified beyond the SumerSports-branded coverage tables noted above, flagged PARTIAL.
