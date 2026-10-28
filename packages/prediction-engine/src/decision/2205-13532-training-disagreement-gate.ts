@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT accepted iff adding the disagreement feature * improves AuRC by >=5% relative over the edge-only gate on walk-forward * seasons AND the top-disagreement abstentions are enriched for losses * (precision check); else REJECT the feature (keep snapshot logging off to * save storage).";
+
 /**
  * arXiv: 2205.13532 — "Selective Classification Via Neural Network Training Dynamics"
  *

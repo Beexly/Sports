@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the certificate test unconditionally if it passes * on historical data (it is a correctness property, not a performance bet). * ADOPT the dominance screen only if it improves realized ROI/drawdown >= * 10% walk-forward.";
+
 /**
  * arXiv: 2004.12099 — "Necessary and Sufficient Conditions for Frequency-Based Kelly Optimal Portfolio"
  *

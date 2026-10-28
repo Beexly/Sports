@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT the disagreement rule iff it beats the single-threshold rule by >=2 selective-ROI points at matched abstention rate on the chronological test block; ADAPT the LCB upgrade gate iff it blocks the known-bad candidate while passing the known-good one.";
+
 /**
  * arXiv: 2510.19672 — "Policy Learning with Abstention"
  *

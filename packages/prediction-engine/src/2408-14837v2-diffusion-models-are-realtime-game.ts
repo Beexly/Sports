@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT conditioning noise augmentation as a mandatory training stabilizer for ALL GSE autoregressive simulators if it flattens the 64-play divergence curve by \u226530% vs baseline on 2024 held-out games.";
+
 /** Hierarchical conditioning state: play window + drive summary. */
 export interface SimState {
   /** Recent play embeddings (short window). */

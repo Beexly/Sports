@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT bar: closed-form stakes must reproduce * (i)-(iii) to 1e-6; backtest must show fractional-Kelly (kappa=0.25) * beats flat 1-unit staking on log-wealth with lower max drawdown on >=1 * full season of engine picks, else staking stays flat.";
+
 /**
  * arXiv: 2002.03448v1 — "Kelly Criterion: From a Simple Random Walk to Lévy Processes"
  *

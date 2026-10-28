@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "Adopt if, on 2019-2024 walk-forward, the GAP-featured * model beats the market-only baseline by >=0.005 Brier points AND shows * positive CLV (mean line move in our favour >= +0.3 points) AND realised * ROI CI excludes zero under Level Stakes.";
+
 /**
  * arXiv: 2001.09097v1 — "Forecasting football matches by predicting match statistics"
  *

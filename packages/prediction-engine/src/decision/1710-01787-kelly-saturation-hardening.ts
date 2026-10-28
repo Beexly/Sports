@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the drawdown-constrained sizer if, on the held-out * 2025-2026 backtest, it delivers realized max drawdown <= 0.8x baseline * drawdown with log growth >= 0.95x baseline growth. REJECT (keep current * sizer) otherwise.";
+
 /**
  * arXiv: 1710.01787 — "On Kelly Betting: Some Limitations"
  *

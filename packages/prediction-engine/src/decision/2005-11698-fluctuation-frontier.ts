@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the frontier-chosen fraction if its realized * (<W>, sigma_W) point lies within 15% of the predicted frontier * (validating the framework on GSE data) AND it matches or beats baseline * realized growth at lower realized fluctuation.";
+
 /**
  * arXiv: 2005.11698 — "Phase transitions in optimal strategies for betting"
  *

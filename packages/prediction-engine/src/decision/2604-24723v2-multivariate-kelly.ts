@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "At N = 10 over 100 random instances: max relative error vs brute force \u2264 10\u207b\u2076; Newton-CG optimum \u2265 greedy lower bound on every instance; adopt as the slate stake allocator if it beats current per-pick fractional Kelly on realized log-wealth and max drawdown on Neon picks slates.";
+
 /**
  * arXiv: 2604.24723v2 — "Efficient Multivariate Kelly Optimization Reveals Sigmoidal Scaling Laws"
  *

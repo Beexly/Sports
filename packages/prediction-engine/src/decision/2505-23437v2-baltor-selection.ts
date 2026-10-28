@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the rule into the posting pipeline only if, on the 2024\u20132025 test window, BALToR-selected picks beat the random-selection baseline by \u22651.5 pp hit rate at c=0.70 with empirical coverage within 0.02 of target, and beat the existing confidence-top-N rule (if any) by \u22650.5 pp. Otherwise REJECT.";
+
 /**
  * arXiv: 2505.23437v2 — "Bounded-Abstention Pairwise Learning to Rank"
  *

@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT if 2025 held-out shows the hybrid U beats temperature-scaling-only and MC-Dropout-only baselines on selective hit rate at 80% coverage by >=1 pp with positive fitted weights on disagreement/contradiction terms (w_D, w_C > 0). REJECT if w_D/w_C fit at ~0.";
+
 /**
  * arXiv: 2607.24875v1 — "FinAbstain: Uncertainty-Calibrated Multimodal RAG for Selective Financial Forecasting"
  *

@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the \u03b5=0.15\u20130.2 plug-in rule achieves |r\u0302\u2212\u03b5| \u2264 2pp and beats the no-gate baseline on published-game ROI by \u22651pp with lower CRPS error; adopt the entropy criterion if it also beats the 0700 conformal gate.";
+
 /**
  * arXiv: 2503.23782v1 — "Distributional regression with reject option"
  *

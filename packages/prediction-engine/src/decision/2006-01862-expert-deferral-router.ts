@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT accepted if the router's system units beat both * always-model and confidence-threshold routing on walk-forward seasons AND * the per-subpopulation audit shows no biased under-deferral; else REJECT.";
+
 /**
  * arXiv: 2006.01862 — "Consistent Estimators for Learning to Defer to an Expert"
  *

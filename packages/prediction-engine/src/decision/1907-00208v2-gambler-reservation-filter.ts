@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the filter iff, on the time-ordered test window, * retained-picks ROI exceeds the all-picks baseline ROI by >= 2 percentage * points AND retention >= 60% (it must not achieve ROI by abstaining on * nearly everything).";
+
 /**
  * arXiv: 1907.00208v2 — "Deep Gamblers: Learning to Abstain with Portfolio Theory"
  *

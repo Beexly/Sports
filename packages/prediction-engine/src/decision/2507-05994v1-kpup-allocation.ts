@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if on walk-forward (k chosen on 2023, evaluated 2024-2025) the k-PUP bankroll multiple exceeds flat fractional-Kelly by >=10% with max drawdown no worse than 1.2x the baseline's.";
+
 /**
  * arXiv: 2507.05994v1 — "Beating the Best Constant Rebalancing Portfolio in Long-Term Investment: A Generalization of the Kelly Criterion and Universal Learning Algorithm for Markets with Serial Dependence"
  *

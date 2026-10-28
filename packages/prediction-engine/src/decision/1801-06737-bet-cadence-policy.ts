@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the cadence optimizer if it beats baseline * realized net log growth by >= 3% on the held-out season with no increase * in realized max drawdown. REJECT otherwise.";
+
 /**
  * arXiv: 1801.06737 — "At What Frequency Should the Kelly Bettor Bet?"
  *

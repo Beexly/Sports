@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the DP-distilled linear staking rule if it beats half-Kelly on terminal log growth with max drawdown \u2264 half-Kelly's across the 2023\u20132025 second-half windows, and the distilled slope m is within 25% of the Kelly slope; REJECT otherwise.";
+
 /**
  * arXiv: 2505.00724 — "Optimal Blackjack Betting Strategies Through Dynamic Programming and Expected Utility Theory"
  *

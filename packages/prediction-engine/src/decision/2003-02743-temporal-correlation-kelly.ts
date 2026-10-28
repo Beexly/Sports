@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT correlation-aware sizing if the autocorrelation is * statistically significant in at least one major market AND the sizing * beats baseline realized log growth by >= 3% on the held-out window.";
+
 /**
  * arXiv: 2003.02743 — "A Generalization of the Classical Kelly Betting Formula to the Case of Temporal Correlation"
  *

@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "Accept the adaptation if the PPO agent's mean percentile rank over the 8 held-out NFL slates \u2265 the optimizer baseline's mean percentile by \u2265 5 points, with the improvement consistent across \u2265 5 of 8 slates.";
+
 /** One step's data for the PPO surrogate. */
 export interface PpoStep {
   /** Probability ratio pi_new/pi_old. */

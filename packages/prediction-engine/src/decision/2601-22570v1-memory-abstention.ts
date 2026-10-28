@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT if on 2024 the memory-augmented abstention policy yields higher ROI at matched coverage than raw-confidence abstention, with AURC reduced by >=10% relative.";
+
 /**
  * arXiv: 2601.22570v1 — "Leveraging Data to Say No: Memory Augmented Plug-and-Play Selective Prediction"
  *

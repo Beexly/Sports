@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT the forcing rule iff forced picks beat the empirical-disagreement baseline by \u22651 selective-ROI point at matched coverage on chronological slate evaluation.";
+
 /**
  * arXiv: 2605.02611 — "Selective Prediction from Agreement: A Lipschitz-Consistent Version Space Approach"
  *

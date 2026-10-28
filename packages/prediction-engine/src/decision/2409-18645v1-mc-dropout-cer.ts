@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT bar: MC-dropout + CER must beat the current * single-pass baseline on AURCC and realized ROI at fixed coverage on a * hold-out season; if only the metrics move but ROI doesn't, adopt the * abstention machinery as a monitoring layer (risk\u2013coverage reporting) * rather than a selection change.";
+
 /**
  * arXiv: 2409.18645v1 — "The Craft of Selective Prediction: Towards Reliable Case Outcome Classification"
  *

@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT the alignment method if a reimplementation on the public BasketHAR data reaches macro F1 \u2265 0.65 within a clean leave-one-chunk-out protocol; reject the method if macro F1 falls below 0.55 once window leakage is removed.";
+
 /** Cosine similarity between modality embeddings. */
 export function cosSim(a: readonly number[], b: readonly number[]): number {
   if (a.length !== b.length || a.length === 0) throw new Error("cosSim: dim mismatch");

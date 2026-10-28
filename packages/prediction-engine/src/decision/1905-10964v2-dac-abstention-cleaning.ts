@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the post-cleaning retrained model beats the * all-data baseline on test Brier by >=0.003 with the abstained fraction * <=25% of training games; reject if the gain is <0.003 or cleaning removes * >40% of games (sample destruction).";
+
 /**
  * arXiv: 1905.10964v2 — "Combating Label Noise in Deep Learning Using Abstention"
  *

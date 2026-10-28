@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT accepted if walk-forward realized average loss stays within \u00b10.03 units of nominal across all four test seasons AND posts \u2265 70% as many picks as the baseline gate at matched realized loss; else REJECT.";
+
 /**
  * arXiv: 2603.24704 — "Conformal Selective Prediction with General Risk Control"
  *

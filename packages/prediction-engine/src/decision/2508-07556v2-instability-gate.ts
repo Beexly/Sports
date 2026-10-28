@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT if at c=0.70 on 2024-2025 engine picks, instability-selected picks beat confidence-top-70% selection by >=1.0pp hit rate (or +1.0pp cover rate for spreads), two-sided McNemar p<0.10.";
+
 /**
  * arXiv: 2508.07556v2 — "Uncertainty-Driven Reliability: Selective Prediction and Trustworthy Deployment in Modern Machine Learning"
  *

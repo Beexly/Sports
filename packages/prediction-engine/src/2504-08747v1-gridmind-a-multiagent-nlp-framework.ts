@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "Adopt the architecture (agent decomposition + RAG + NL-to-SQL + synthesis) as GSE's conversational-layer reference design. Do not adopt GridMind itself \u2014 no code/data, vendor-locked metrics, 58% accuracy. Kill the fan-facing variant if the eval in \u00a712 doesn't clear 85% accuracy.";
+
 /** A decomposed sub-task in the agent plan. */
 export interface SubTask {
   id: string;

@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the 1/2-Kelly backtest on the engine's historical picks shows log-wealth >= flat staking with no worse max drawdown - then wire fractional-Kelly units into the posted-pick pipeline; reject the sizing layer (keep flat units) if Kelly underperforms flat or if realized edge is too noisy for stable stakes (stake variance > 3x flat). The paper's parimutuel formulas themselves are NOT adopted (wrong market structure for US books).";
+
 /**
  * arXiv: physics/0607166 — "Kelly Criterion revisited: optimal bets"
  *

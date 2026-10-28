@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the trainable abstention layer into the engine * only if: (a) it beats fixed-threshold abstention on out-of-sample ROI at * >=2 abstention rates, (b) the learned reject region is stable across CV * folds (boundary direction cosine similarity >=0.8 -- else it's * noise-fitting), and (c) abstention doesn't concentrate on a single * league/market.";
+
 /**
  * arXiv: 1011.3177v3 — "The Data Replication Method for the Classification with Reject Option"
  *

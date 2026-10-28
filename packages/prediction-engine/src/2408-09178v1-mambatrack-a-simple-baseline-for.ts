@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if MTP (or its per-role variant) beats the Kalman baseline by \u226515% mean displacement error on held-out NFL tracking frames AND inference stays <50 ms/frame on GSE hardware; otherwise REJECT (Kalman remains the cheaper choice).";
+
 /** Role-specific process-noise / interaction parameters. */
 export interface RoleParams {
   /** Role label, e.g. "QB". */

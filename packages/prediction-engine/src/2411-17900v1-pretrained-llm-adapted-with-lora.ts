@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT iff on 2024 (a) beats (b) by \u22651pp ROI (transfer works in this domain) AND (a) beats fractional-Kelly by \u22652pp with drawdown no worse; if (a)\u2248(b), REJECT the pretraining complexity and use the from-scratch DT.";
+
 /** One step of a staking trajectory. */
 export interface TrajectoryStep {
   /** State: [bankroll, edge, clvHistory, weeksRemaining]. */

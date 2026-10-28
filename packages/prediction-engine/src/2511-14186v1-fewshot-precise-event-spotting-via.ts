@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "Adopt the UMEG-Net spotter as GSE's broadcast event-spotter only if on held-out NFL games it beats E2E-Spot trained on the same 100 clips by >=3pp F1evt AND achieves Edit score >=50.";
+
 /** Graph summary for the multi-entity input. */
 export interface EntityGraph {
   nodes: number; // 22 players + ball + landmarks

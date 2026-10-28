@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the LLM proposal layer if: (a) anonymized-label LLM F1 \u2265 PC F1 on synthetic; (b) LLM priors reduce NOTEARS SHD on synthetic by \u226510% or raise probe hit rate by \u22650.05; (c) per-edge cost stays under $0.50 at 35 vars. Reject if (a) fails.";
+
 /** Partial correlation of x,y given z (the PC test statistic core). */
 export function partialCorrelation(
   x: readonly number[],

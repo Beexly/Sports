@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT the detector if whale-flagged line moves reverse at a rate >=10 points higher than size-matched unflagged moves over a full season AND the fade-the-whale paper portfolio is profitable after vig.";
+
 /**
  * arXiv: 2601.20452v1 — "Manipulation in Prediction Markets: An Agent-based Modeling Experiment"
  *

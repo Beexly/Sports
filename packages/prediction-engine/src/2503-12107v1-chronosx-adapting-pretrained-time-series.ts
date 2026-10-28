@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT into the engine if adapters beat the covariate-free fine-tuned backbone by \u22650.01 WQL on 2022\u20132024 AND the ablation (adapters with shuffled covariates) shows no gain; keep the frozen backbone + adapters (don't full-FT) if adapter-only is within 0.005 WQL of full-FT.";
+
 /** Adapter block parameters (the only trainable part). */
 export interface AdapterBlock {
   /** Down-projection then up-projection gain on covariates. */

@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT OU-adjusted sizing if it beats static Kelly on * realized log-wealth growth with no worse max drawdown; REJECT if the OU * parameter estimates are unstable week-to-week (b_hat sign flips on > 20% * of markets).";
+
 /**
  * arXiv: 0903.2910v1 — "Application of the Kelly Criterion to Ornstein-Uhlenbeck Processes"
  *

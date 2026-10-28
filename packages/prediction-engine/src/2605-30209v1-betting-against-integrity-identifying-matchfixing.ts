@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT conditional on \u00a712: fit the baseline hurdle SSM on one season of live odds-movement data; require \u0394AIC \u2265 10\u2074 over the no-state hurdle before proceeding; adopt only if flagged residuals predict line moves above chance.";
+
 /** Hurdle-ARX(1) parameters. */
 export interface HurdleSsmParams {
   /** Hurdle intercept (logit of P(activity)). */

@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the ROC-tuned abstention threshold beats a fixed 70%-confidence cutoff on test-window published ROI by \u22651pp at comparable coverage, with empirical coverage within \u00b13pp of the 1\u2212\u03b1 target.";
+
 /**
  * arXiv: 2502.07255v2 — "Beyond Confidence: Adaptive Abstention in Dual-Threshold Conformal Prediction for Autonomous System Perception"
  *

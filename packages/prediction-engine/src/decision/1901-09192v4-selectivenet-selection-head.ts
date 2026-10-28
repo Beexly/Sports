@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if (a) beats (b) on test-window ROI of the covered * set by >=2 percentage points of ROI at matched 30% coverage AND the * win-rate lift is significant at p<0.05 (paired over picks); reject if the * gap is <2pp or insignificant -- then the threshold-on-edge null stands.";
+
 /**
  * arXiv: 1901.09192v4 — "SelectiveNet: A Deep Neural Network with an Integrated Reject Option"
  *

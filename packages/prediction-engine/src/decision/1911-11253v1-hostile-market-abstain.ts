@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT if the abstain head cuts the outright-wrong-pick * rate by >=40% relative to the 1006 governor at the SAME no-bet rate * (+/-2 pp), with no loss of hit rate on the published set; otherwise * REJECT.";
+
 /**
  * arXiv: 1911.11253v1 — "Playing it Safe: Adversarial Robustness with an Abstain Option"
  *

@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the abstention model beats the baseline on * test-window covered-set accuracy by >=2pp with p<0.05 AND >= the DAC * variant (replicating the paper's NotWrong > DAC ordering); reject if it * doesn't beat the baseline -- then post-hoc thresholding stands and the * extra machinery is dropped.";
+
 /**
  * arXiv: 2104.08281v1 — "Controlled Abstention Neural Networks for Identifying Skillful Predictions for Classification Problems"
  *

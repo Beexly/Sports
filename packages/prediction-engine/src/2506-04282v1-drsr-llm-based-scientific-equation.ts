@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT dual reasoning if full DrSR-style beats plain GSE-SR by \u226515% OOD NMSE on 2024\u20132025 AND valid-program rate \u226590% (vs whatever plain achieves); REJECT if the insight/idea modules add cost without \u226515% gain.";
+
 /** A structured insight extracted from search history. */
 export interface SearchInsight {
   text: string;

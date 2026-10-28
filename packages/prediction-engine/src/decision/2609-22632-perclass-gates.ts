@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT accepted if per-class gating holds all market types under their caps with >= 15% lower abstention than the global gate on walk-forward seasons; else REJECT. Hard fail: if any market type's realized error exceeds its cap in >1 of 4 test seasons, fall back to additive-only and re-test before any ship decision.";
+
 /**
  * arXiv: 2609.22632 — "Classification with Abstention under Class-Conditional Error Constraints"
  *

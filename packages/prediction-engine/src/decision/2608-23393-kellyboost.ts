@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "Gate: ADOPT the CRRA-dialed KellyBoost portfolio layer if, on the 2023-2025 NFL walk-forward, it beats independent 1/4-Kelly staking by >= +0.05 mean log-growth per week with max drawdown no worse than 1.2x the baseline's, and the paired weekly difference has bootstrap Pr(Delta>0) >= 0.80; REJECT (keep flat/independent Kelly) otherwise.";
+
 /**
  * arXiv: 2608.23393 — "KellyBoost: Growth-Optimal Portfolio Construction with Gradient-Boosted Trees"
  *

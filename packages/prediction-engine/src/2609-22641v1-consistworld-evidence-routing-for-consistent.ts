@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT if on held-out 2024 plays: (a) fused cross-view player-position disagreement <= 0.5 yards mean (vs >=0.8 yards for naive averaging), AND (b) retrieval-based handoff reconstruction error <= 1.0 yard, AND (c) ablation shows the visibility gate (not just retrieval) contributes >=15% of the disagreement reduction; reject if geometric retrieval shows no advantage over recency-based retrieval.";
+
 /** One camera's per-chunk track estimate with pose quality. */
 export interface ViewChunk {
   camera: "broadcast" | "all22" | "endzone";

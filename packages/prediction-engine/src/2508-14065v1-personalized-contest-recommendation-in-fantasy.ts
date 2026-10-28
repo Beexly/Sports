@@ -15,6 +15,9 @@
 /** Disabled: requires unavailable training data or model artifact. */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the offline test beats the LightGBM baseline by >=5% relative on P/R@5 on the time-ordered test window; REJECT if the deep model can't beat gradient boosting at GSE's data scale.";
+
 /** Dot-product score between user and item tower embeddings. */
 export function towerScore(user: readonly number[], item: readonly number[]): number {
   if (user.length !== item.length || user.length === 0) throw new Error("towerScore: dim mismatch");
