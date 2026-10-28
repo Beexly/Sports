@@ -1,0 +1,55 @@
+{
+ "derivation_script": "artifacts/gap-metrics-derivation-2026-10-28.py (unchanged; only input coverage differs)",
+ "derivation_reads": "pbp_participation_2026_reconstructed.parquet + play_by_play_2026.parquet",
+ "note_on_chain": "The derivation does NOT read ftn_charting directly. It reads the participation reconstruction, whose scheme flags were built from FTN. The mirror FTN and the participation flags agree 1.0 on is_motion and 1.0 on defenders_in_box across all 18,019 joined plays, so the mirror is the effective input, one hop removed. Recorded rather than claimed as direct.",
+ "join_key": [
+  "nflverse_game_id",
+  "play_id"
+ ],
+ "columns_read_from_ftn_surface": [
+  "is_motion",
+  "is_play_action",
+  "is_rpo",
+  "is_screen_pass",
+  "defenders_in_box",
+  "n_blitzers"
+ ],
+ "ftn_file_read": "data/nflverse/ftn_charting_2026.parquet",
+ "ftn_sha256_recomputed": "c6d79944c54502c6b40a17cfe1e63b128ad4ef3e8676b912bae443e7843a53de",
+ "ftn_sha256_recorded": "c6d79944c54502c6b40a17cfe1e63b128ad4ef3e8676b912bae443e7843a53de",
+ "sha_matches_recorded": true,
+ "old": {
+  "weeks": "1-5",
+  "rows_joined": 13684,
+  "motion_marginal_epa": 0.0083,
+  "motion_box_9plus": {
+   "epa": 0.0561,
+   "n": 79,
+   "lift_vs_marginal": 0.0478
+  },
+  "motion_box_7": {
+   "epa": -0.0058,
+   "n": 2177,
+   "lift_vs_marginal": -0.0141
+  }
+ },
+ "new": {
+  "weeks": "1-7",
+  "rows_joined": 18524,
+  "motion_marginal_epa": -0.0021,
+  "motion_box_9plus": {
+   "flag_state": true,
+   "box": "9+",
+   "epa": -0.0435,
+   "n": 109,
+   "lift_vs_marginal": -0.0414
+  },
+  "motion_box_7": {
+   "flag_state": true,
+   "box": "7",
+   "epa": -0.0259,
+   "n": 2983,
+   "lift_vs_marginal": -0.0239
+  }
+ }
+}

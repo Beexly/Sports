@@ -1,0 +1,25 @@
+{
+ "id": "sii-rederivation-2026-10-28",
+ "timestamp": "2026-10-28T15:22:21+00:00",
+ "source": {
+  "type": "other",
+  "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2026.parquet",
+  "raw_excerpt": "ftn_charting_2026.parquet 18019 rows 29 cols weeks 1-7 sha256 c6d79944c54502c6b40a17cfe1e63b128ad4ef3e8676b912bae443e7843a53de"
+ },
+ "claim": {
+  "subject": "gse.sii.motion_marginal_epa",
+  "predicate": "rederived_on_weeks_1_7",
+  "object": "-0.0021",
+  "game_id": null,
+  "week": 8
+ },
+ "confidence": 1.0,
+ "sealed_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+ "conditions_on": {
+  "version": "v1.0",
+  "tau": 0.42,
+  "qb_questionable_epa": 0.0947
+ },
+ "status": "ingested",
+ "notes": "SII re-derived on weeks 1-7 after the FTN mirror swap. old marginal +0.0083 (weeks 1-5, 13684 joined) -> new -0.0021 (weeks 1-7, 18524 joined). old 9+ cell +0.0561 -> new -0.0435. derivation reads participation not FTN directly; flags agree 1.0. ftn sha matches recorded digest."
+}

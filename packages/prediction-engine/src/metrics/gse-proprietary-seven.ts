@@ -181,10 +181,45 @@ export function computeGseSii(input: {
  * RLS becomes buildable the moment a separation tendency exists; it does not
  * need new modelling code.
  */
-export function computeGseRls(_input: { readonly routeSeparation: readonly unknown[] }): MetricResult<null> {
-  return GAP(
-    "no separation tendency fitted on disk; reconstruction exists in apps/web/lib/reconstruction but has no truth set (ngs defender_location is a categorical label, 0 route rows)",
-  );
+export const RLS_GAP_MESSAGE =
+  "no separation tendency fitted on disk; reconstruction exists in apps/web/lib/reconstruction but has no truth set (ngs defender_location is a categorical label, 0 route rows)";
+
+/**
+ * An EB-shrunk separation tendency, the shape separation-reconstruct.ts takes.
+ *
+ * `estimate` is the receiver's de-noised typical separation. `sd` is the tendency's
+ * own uncertainty. No per-play coordinate is carried here — the reconstruction adds
+ * that only in its calibrated regime, which needs a truth set this pass does not have.
+ */
+export interface SeparationTendency {
+  readonly estimate: number;
+  readonly sd: number;
+  readonly n: number;
+}
+
+/**
+ * RLS — Route Liberation Score, uncalibrated regime.
+ *
+ * With no tendency the kernel returns the gap and the precise message. With a
+ * tendency it returns the tendency's estimate and says so, because that is the
+ * honest output of the uncalibrated regime: a tendency is a real claim, a fabricated
+ * per-play coordinate is not.
+ *
+ * The tendency is NOT invented here. Callers pass one, or they get the gap.
+ */
+export function computeGseRls(input: {
+  readonly routeSeparation?: readonly unknown[];
+  readonly tendency?: SeparationTendency;
+}): MetricResult<number | null> {
+  const t = input.tendency;
+  if (!t) return GAP(RLS_GAP_MESSAGE);
+  if (!Number.isFinite(t.estimate)) return GAP("separation tendency estimate is not finite");
+  if (!Number.isInteger(t.n) || t.n <= 0) return GAP(`separation tendency n must be a positive integer, got ${t.n}`);
+  return {
+    value: round(t.estimate),
+    status: "measured",
+    source: `uncalibrated regime: tendency ${t.estimate.toFixed(2)} ± ${t.sd.toFixed(2)} over n=${t.n}; no truth set, so no per-play expansion`,
+  };
 }
 
 /**

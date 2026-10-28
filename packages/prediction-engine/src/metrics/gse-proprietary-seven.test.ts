@@ -66,9 +66,22 @@ describe("SPESE", () => {
 });
 
 describe("RLS", () => {
-  it("is still an honest gap", () => {
+  it("is still an honest gap with no tendency", () => {
     const r = computeGseRls({ routeSeparation: [] });
     expect(r.status).toBe("gap");
     expect(r.source).toContain("separation tendency");
+  });
+
+  it("emits the uncalibrated regime when a tendency is supplied", () => {
+    const r = computeGseRls({ tendency: { estimate: 3.21, sd: 0.37, n: 40 } });
+    expect(r.status).toBe("measured");
+    expect(r.value).toBeCloseTo(3.21, 4);
+    expect(r.source).toContain("uncalibrated regime");
+    expect(r.source).toContain("no truth set");
+  });
+
+  it("gaps on a non-finite estimate or a bad n", () => {
+    expect(computeGseRls({ tendency: { estimate: NaN, sd: 1, n: 5 } }).status).toBe("gap");
+    expect(computeGseRls({ tendency: { estimate: 3, sd: 1, n: 0 } }).status).toBe("gap");
   });
 });
