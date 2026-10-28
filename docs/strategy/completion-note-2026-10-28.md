@@ -142,3 +142,55 @@ PFR SHA-256s were replaced with real full digests; the earlier truncated version
 
 Two records in `artifacts/delta-2026-10-28.jsonl`: the PlayerProfiler hash (not re-appended) and the
 SII re-derivation claim. Both conditioned on the seal resolved at runtime.
+
+## ALIGNMENT CHECK — 2026-10-28
+
+Run before further work, against the four prior sessions.
+
+**Step 1 — sealed-tau invariant. HOLDS.** Every file this session edited was grepped for `tau`,
+`coachMindsetHash` and `new Date(`. All nine return zero. No file re-estimates tau after the seal,
+changes the mindset hash, or writes a clock value into it.
+
+**Step 2 — overnight handoff plan. No conflict found.** The plan artefacts on disk
+(`docs/reasoning/overnight-agent-prompt-2026-09-26.md`, `overnight-audit-2026-09-27.md`,
+`.hermes/plans/calibration-state.md`) predate this work and mark no metric-kernel item that the
+SII/SPESE/TOR/QPTSR/DWP/RLS work undoes. Nothing overlaps by name.
+
+**Step 3 — kernel paths. CONFLICT.** Two complete, parallel metrics modules exist with the same
+seven function names and incompatible signatures:
+
+| | `public-baseline/metrics.ts` (session: belichick-ten-metrics, commit `50966a0ad`) | `metrics/gse-proprietary-seven.ts` (this session) |
+|---|---|---|
+| `computeGseSii` | `(single: Cell, split: Cell)` | `({ cells, flag, marginalEpa })` |
+| `computeGseQptsr` | `(quickPressure, checkdown)` | `({ pressuresByBucket })` |
+| `computeGseRls` | `(onShell, otherShell)` | `({ routeSeparation, tendency })` |
+| `computeGseSpese` | `(betweenTwenties[], redZone[])` | `({ stEpa, stPlays })` |
+| `computeGseTor` | `(lightBox, loadedBox)` | `({ fumbles, lost })` |
+| `computeGseDwp` | `(decisions[])` | `(decision: FourthDownDecision)` |
+| `computeGseSva` | present | **absent** |
+
+`markov-simulator.ts:15` imports from `./public-baseline/metrics.js`. The simulation therefore reads
+the public-baseline copy, not the module this session has been verifying and updating. The two
+disagree on every signature and on SVA's existence.
+
+This went unnoticed because `markov-simulator.test.ts` is a `node:test` file, so `vitest run` reports
+"no test suite found" and never executes it.
+
+**Step 4 — invented values. NONE REMAIN.** The four PFR digests were re-verified against the files
+on disk: all four are real full 64-character digests and match. No other invented formula,
+coefficient, join or digest found.
+
+**Step 5 — layer placement. No prior convention to conflict with.** `packages/data-ingestion/src/`
+holds paper-named modules and contains **no parquet loaders at all**, so nothing there establishes a
+loader convention. The only prior metrics convention is `public-baseline/metrics.ts`, which is the
+same conflict as step 3.
+
+### Result
+
+**Conflict: two parallel metrics modules with the same seven names and incompatible signatures —
+`public-baseline/metrics.ts` (read by the simulation) versus `metrics/gse-proprietary-seven.ts`
+(edited by this session). Stopped. Awaiting resolution.**
+
+Files affected: `packages/prediction-engine/src/public-baseline/metrics.ts`,
+`packages/prediction-engine/src/metrics/gse-proprietary-seven.ts`,
+`packages/prediction-engine/src/markov-simulator.ts`.
