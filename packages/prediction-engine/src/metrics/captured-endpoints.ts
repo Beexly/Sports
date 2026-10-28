@@ -12,10 +12,23 @@
  * under different filenames; both are kept because both are on disk.
  */
 import { readFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 
-const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
+/** Repo root, found by walking up for a package.json + data marker. Avoids import.meta
+ *  (the project compiles as CommonJS) and __dirname (undefined under vitest's ESM). */
+function repoRoot(): string {
+  let dir = process.cwd();
+  for (let i = 0; i < 8; i++) {
+    if (existsSync(join(dir, "data", "nflverse")) && existsSync(join(dir, "artifacts"))) return dir;
+    const up = dirname(dir);
+    if (up === dir) break;
+    dir = up;
+  }
+  return process.cwd();
+}
+
+const REPO_ROOT = repoRoot();
 const CAP_DIR = "artifacts/api-captures";
 
 export type CaptureHost = string;

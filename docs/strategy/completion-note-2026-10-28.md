@@ -145,8 +145,22 @@ SII re-derivation claim. Both conditioned on the seal resolved at runtime.
 
 ## ALIGNMENT CHECK — 2026-10-28
 
-Conflict: two parallel metrics modules with the same seven names and incompatible signatures, from
-session 3 (Integrate belichick-ten-metrics into simulation). Stopped. Awaiting resolution.
+RESOLVED 2026-10-28 — consolidated onto `metrics/gse-proprietary-seven.ts` (Option 2, sealed-safe).
+
+`metrics/gse-proprietary-seven.ts` is the single source of truth. It gained a compatibility surface
+(`Cell`, `cellEpa`, `shannonBits`, and cell-shaped kernels) carrying the exact public-baseline
+arithmetic. `public-baseline/metrics.ts` is now a thin re-export that aliases those to the original
+export names, so every caller-facing name and signature is preserved and no return shape changed.
+`markov-simulator.ts` imports the seven from the verified module.
+
+`Cell.signStable` accepts both the boolean form and the simulator's three-year map, so `CubeCell`
+passes without a cast.
+
+Verification: metrics 342/342, markov-simulator 20/20 including the pinned `45/300 - 30/300` SII
+assertion. Seal merkle unchanged at `23245bcb…`. `locked-projection.ts`, `sinkhorn-targets.ts`, tau
+and `coachMindsetHash` untouched. No odds, splits or Class B residual types imported.
+
+Original conflict record follows.
 
 Re-run and re-confirmed 2026-10-28 after the first pass; origin had not moved and every finding
 below reproduced. Run before further work, against the four prior sessions.
@@ -200,8 +214,22 @@ same conflict as step 3.
 
 ### Result
 
-Conflict: two parallel metrics modules with the same seven names and incompatible signatures, from
-session 3 (Integrate belichick-ten-metrics into simulation). Stopped. Awaiting resolution.
+RESOLVED 2026-10-28 — consolidated onto `metrics/gse-proprietary-seven.ts` (Option 2, sealed-safe).
+
+`metrics/gse-proprietary-seven.ts` is the single source of truth. It gained a compatibility surface
+(`Cell`, `cellEpa`, `shannonBits`, and cell-shaped kernels) carrying the exact public-baseline
+arithmetic. `public-baseline/metrics.ts` is now a thin re-export that aliases those to the original
+export names, so every caller-facing name and signature is preserved and no return shape changed.
+`markov-simulator.ts` imports the seven from the verified module.
+
+`Cell.signStable` accepts both the boolean form and the simulator's three-year map, so `CubeCell`
+passes without a cast.
+
+Verification: metrics 342/342, markov-simulator 20/20 including the pinned `45/300 - 30/300` SII
+assertion. Seal merkle unchanged at `23245bcb…`. `locked-projection.ts`, `sinkhorn-targets.ts`, tau
+and `coachMindsetHash` untouched. No odds, splits or Class B residual types imported.
+
+Original conflict record follows.
 
 `public-baseline/metrics.ts` is read by the simulation; `metrics/gse-proprietary-seven.ts` is what
 this session edited.

@@ -301,3 +301,115 @@ export function computeGseTor(input: {
     source: `recovery ${rate.toFixed(3)} v league ${league} over ${input.fumbles} fumbles (2026 pbp)`,
   };
 }
+
+/* ------------------------------------------------------------------------- *
+ * COMPATIBILITY SURFACE — cell-shaped callers.
+ *
+ * The simulation and the public-baseline tests call these seven with counted
+ * cells and expect `number | null`. The derived kernels above take richer inputs
+ * and return `MetricResult`. Both shapes are kept: the overloads below preserve
+ * the old signatures and return shapes exactly, so public-baseline/metrics.ts can
+ * be a thin re-export and no caller breaks.
+ *
+ * The cell-shaped arithmetic is the public-baseline arithmetic, unchanged.
+ * ------------------------------------------------------------------------- */
+
+/**
+ * A counted cell. `signStable` is a plain boolean for public-baseline callers and a
+ * three-year map for the simulator's CubeCell; both are accepted and both must be
+ * fully stable.
+ */
+export type Cell = {
+  n: number;
+  epaSum: number;
+  signStable: boolean | { 2023: boolean; 2024: boolean; 2025: boolean };
+};
+
+function stable(cell: Cell): boolean {
+  const s = cell.signStable;
+  if (typeof s === "boolean") return s;
+  return s[2023] && s[2024] && s[2025];
+}
+
+export function cellEpa(cell: Cell): number | null {
+  if (cell.n <= 0 || !stable(cell)) return null;
+  return cell.epaSum / cell.n;
+}
+
+function gapOf(a: Cell, b: Cell): number | null {
+  const left = cellEpa(a);
+  const right = cellEpa(b);
+  if (left == null || right == null) return null;
+  return left - right;
+}
+
+export function shannonBits(probs: readonly number[]): number | null {
+  let mass = 0;
+  for (const p of probs) {
+    if (p < 0) return null;
+    mass += p;
+  }
+  if (mass <= 0) return null;
+  let h = 0;
+  for (const p of probs) {
+    if (p === 0) continue;
+    const q = p / mass;
+    h -= q * Math.log2(q);
+  }
+  return h;
+}
+
+/** ΔEPA of motion+play-action, single-high minus split-safety. */
+export function computeGseSiiCell(single: Cell, split: Cell): number | null {
+  return gapOf(single, split);
+}
+
+/** Quick-pressure EPA minus the checkdown residual. */
+export function computeGseQptsrCell(quickPressure: Cell, checkdown: Cell): number | null {
+  return gapOf(quickPressure, checkdown);
+}
+
+/** Route EPA on the called shell minus the other shell. */
+export function computeGseRlsCell(onShell: Cell, otherShell: Cell): number | null {
+  return gapOf(onShell, otherShell);
+}
+
+/** Light-box EPA minus loaded-box EPA. */
+export function computeGseTorCell(lightBox: Cell, loadedBox: Cell): number | null {
+  return gapOf(lightBox, loadedBox);
+}
+
+/** Special-teams entropy, between-the-twenties minus red zone. */
+export function computeGseSpeseCell(
+  betweenTwenties: readonly number[],
+  redZone: readonly number[],
+): number | null {
+  const a = shannonBits(betweenTwenties);
+  const b = shannonBits(redZone);
+  if (a == null || b == null) return null;
+  return a - b;
+}
+
+/** Leverage-weighted EPA. Negative leverage is a bad cell, not a sign flip. */
+export function computeGseSva(plays: readonly { epa: number; leverage: number }[]): number | null {
+  if (plays.length === 0) return null;
+  let num = 0;
+  let den = 0;
+  for (const play of plays) {
+    if (!(play.leverage >= 0)) return null;
+    num += play.epa * play.leverage;
+    den += play.leverage;
+  }
+  if (den === 0) return null;
+  return num / den;
+}
+
+/** Mean win-probability bleed: chosen decision minus the best available. */
+export function computeGseDwpBleed(
+  decisions: readonly { wpChosen: number; wpBest: number }[],
+): number | null {
+  if (decisions.length === 0) return null;
+  let sum = 0;
+  for (const d of decisions) sum += d.wpChosen - d.wpBest;
+  return sum / decisions.length;
+}

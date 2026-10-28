@@ -91,6 +91,7 @@ export function fantasypointsNameMatchRank(query: string, candidate: string): nu
   for (const tok of tokens) if (!c.includes(tok)) return null;
   if (c.startsWith(q)) return 0;
   const first = tokens[0];
+  if (first === undefined) return null;
   return c.split(/[\s'']+/).some((w) => w.startsWith(first)) ? 1 : 2;
 }
 

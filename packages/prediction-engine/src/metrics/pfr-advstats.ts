@@ -38,11 +38,29 @@
  * `_pct`, `_per_*`, `yds`, `air`). Where a name does not settle the unit, the unit is
  * left null rather than guessed.
  */
-import { asyncBufferFromFile, parquetReadObjects } from "hyparquet";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { parquetReadObjects } from "hyparquet";
+import * as hyparquet from "hyparquet";
 
-const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
+const asyncBufferFromFile = (hyparquet as unknown as {
+  asyncBufferFromFile: (p: string) => Promise<unknown>;
+}).asyncBufferFromFile;
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+
+/** Repo root, found by walking up for a package.json + data marker. Avoids import.meta
+ *  (the project compiles as CommonJS) and __dirname (undefined under vitest's ESM). */
+function repoRoot(): string {
+  let dir = process.cwd();
+  for (let i = 0; i < 8; i++) {
+    if (existsSync(join(dir, "data", "nflverse")) && existsSync(join(dir, "artifacts"))) return dir;
+    const up = dirname(dir);
+    if (up === dir) break;
+    dir = up;
+  }
+  return process.cwd();
+}
+
+const REPO_ROOT = repoRoot();
 
 export const PFR_ATTRIBUTION = "Pro-Football-Reference via nflverse pfr_advstats mirror";
 export const PFR_DIR = "data/nflverse";
@@ -95,8 +113,8 @@ export interface PfrRow {
 
 async function loadTable(table: PfrTable): Promise<PfrRow[]> {
   const meta = PFR_REGISTRY[table];
-  const file = await asyncBufferFromFile(resolve(REPO_ROOT, PFR_DIR, meta.file));
-  const rows = (await parquetReadObjects({ file })) as Record<string, unknown>[];
+  const file = (await asyncBufferFromFile(resolve(REPO_ROOT, PFR_DIR, meta.file))) as never;
+  const rows = (await parquetReadObjects({ file: file as never })) as Record<string, unknown>[];
   const out: PfrRow[] = [];
   for (const r of rows) {
     out.push({

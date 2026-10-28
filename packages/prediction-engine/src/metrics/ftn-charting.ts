@@ -27,12 +27,30 @@
  * not coerced to false. A missing box stays missing and the derivation's existing
  * drop applies downstream.
  */
-import { asyncBufferFromFile, parquetReadObjects } from "hyparquet";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { parquetReadObjects } from "hyparquet";
+import * as hyparquet from "hyparquet";
+
+const asyncBufferFromFile = (hyparquet as unknown as {
+  asyncBufferFromFile: (p: string) => Promise<unknown>;
+}).asyncBufferFromFile;
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 
 /** Repo root, resolved from this module so the default path does not depend on cwd. */
-const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
+/** Repo root, found by walking up for a package.json + data marker. Avoids import.meta
+ *  (the project compiles as CommonJS) and __dirname (undefined under vitest's ESM). */
+function repoRoot(): string {
+  let dir = process.cwd();
+  for (let i = 0; i < 8; i++) {
+    if (existsSync(join(dir, "data", "nflverse")) && existsSync(join(dir, "artifacts"))) return dir;
+    const up = dirname(dir);
+    if (up === dir) break;
+    dir = up;
+  }
+  return process.cwd();
+}
+
+const REPO_ROOT = repoRoot();
 
 export const FTN_ATTRIBUTION = "FTN Data via nflverse";
 export const FTN_PATH = "data/nflverse/ftn_charting_2026.parquet";
@@ -106,8 +124,8 @@ function orNull(v: unknown): string | null {
  */
 export async function loadFtnCharting2026(path: string = FTN_PATH): Promise<FtnFrame> {
   const abs = path === FTN_PATH ? resolve(REPO_ROOT, FTN_PATH) : path;
-  const file = await asyncBufferFromFile(abs);
-  const rows = await parquetReadObjects({ file });
+  const file = (await asyncBufferFromFile(abs)) as never;
+  const rows = await parquetReadObjects({ file: file as never });
 
   const plays: FtnPlayFrame[] = [];
   const weeks = new Set<number>();

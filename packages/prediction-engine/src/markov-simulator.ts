@@ -12,7 +12,15 @@
  */
 import { positivePartJamesStein } from "./public-baseline/jamesStein.js"
 import { shouldWithhold } from "./public-baseline/withhold.js"
-import { computeGseDwp, computeGseSpese, computeGseSva } from "./public-baseline/metrics.js"
+import {
+  computeGseDwpBleed,
+  computeGseQptsrCell,
+  computeGseRlsCell,
+  computeGseSiiCell,
+  computeGseSpeseCell,
+  computeGseSva,
+  computeGseTorCell,
+} from "./metrics/gse-proprietary-seven.js"
 
 export type NamedGapReceipt = {
   module: string
@@ -202,25 +210,22 @@ export function sevenMetrics(cube: Cube, input: SevenMetricsInput): Record<strin
     "GSE-DWP": null,
   }
   if (input.sii && gate("sii|single") && gate("sii|split")) {
-    out["GSE-SII"] = cellDelta(cube["sii|single"], cube["sii|split"])
+    out["GSE-SII"] = computeGseSiiCell(input.sii.single, input.sii.split)
   }
   if (input.qptsr && gate("qptsr|quick") && gate("qptsr|checkdown")) {
-    out["GSE-QPTSR"] = cellDelta(cube["qptsr|quick"], cube["qptsr|checkdown"])
+    out["GSE-QPTSR"] = computeGseQptsrCell(input.qptsr.quickPressure, input.qptsr.checkdown)
   }
   if (input.rls && gate("rls|on") && gate("rls|other")) {
-    out["GSE-RLS"] = cellDelta(cube["rls|on"], cube["rls|other"])
+    out["GSE-RLS"] = computeGseRlsCell(input.rls.onShell, input.rls.otherShell)
   }
   if (input.tor && gate("tor|light") && gate("tor|loaded")) {
-    out["GSE-TOR"] = cellDelta(cube["tor|light"], cube["tor|loaded"])
+    out["GSE-TOR"] = computeGseTorCell(input.tor.lightBox, input.tor.loadedBox)
   }
-  if (input.spese) out["GSE-SPESE"] = computeGseSpese(input.spese.betweenTwenties, input.spese.redZone)
+  if (input.spese) {
+    out["GSE-SPESE"] = computeGseSpeseCell(input.spese.betweenTwenties, input.spese.redZone)
+  }
   if (input.sva) out["GSE-SVA"] = computeGseSva(input.sva.plays)
-  if (input.dwp) out["GSE-DWP"] = computeGseDwp(input.dwp.decisions)
+  if (input.dwp) out["GSE-DWP"] = computeGseDwpBleed(input.dwp.decisions)
   return out
 }
 
-function cellDelta(a: CubeCell, b: CubeCell): number | null {
-  const stable = (c: CubeCell) => c.signStable[2023] && c.signStable[2024] && c.signStable[2025]
-  if (!stable(a) || !stable(b) || a.n <= 0 || b.n <= 0) return null
-  return a.epaSum / a.n - b.epaSum / b.n
-}
