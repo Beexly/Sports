@@ -8,6 +8,18 @@
  */
 export const ENABLED = false;
 
+/**
+ * Acceptance gate.
+ *
+ * Shrinkage only earns its place where the MLE is unstable. ADOPT if the shrunk
+ * estimate beats plain BTL MLE on held-out log-loss in the low-n regime (pairs
+ * with fewer than ~10 meetings) AND does not degrade log-loss at high n, where
+ * the MLE should already be near-optimal. REJECT if the gain is flat across n —
+ * that means the prior is doing nothing and the extra matrix inverse is cost.
+ */
+export const ACCEPTANCE_GATE =
+  "ADOPT if shrunk BTL beats plain MLE on held-out log-loss at n<10 meetings per pair and does not degrade at high n; REJECT if the gain is flat across n.";
+
 function identity(n: number): number[][] {
   return Array.from({ length: n }, (_, i) =>
     Array.from({ length: n }, (_, j) => (i === j ? 1 : 0))

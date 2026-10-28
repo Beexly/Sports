@@ -26,6 +26,9 @@ Kelly sizing.
  * owner: Mimo | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2023/2024 cold-start + backup-QB log-loss tests.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT if either Test 1 or Test 2 passes -- Test 1 (cold-start): player-kernel GP wins by >=0.02 mean log-loss in weeks 1-4 of 2023/2024 vs GSE's current team rating and Elo; Test 2 (backup QBs): log-loss >=0.03 better than team-rating baseline on the 2023-2024 backup-QB subset. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export interface PersonnelGame {
   /** Signed snap-share vector: +share for winner's players, -share for loser's. */

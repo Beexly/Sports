@@ -26,6 +26,9 @@ audit.
  * owner: Hermes | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: INFRA
  */
 export const ENABLED = false; // Gate needs modern-data replication (Tests 2a/2b, dead-source drop).
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT gate: (a) Test 2 calibration must hold on modern data -- bootstrap means must pass the y=x check; (b) the factor hierarchy must replicate directionally on 2020-2025 data (turnovers dominant, r-balance signal present); (c) any result depending on the dead nflgame data source is dropped. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: INFRA";
+
 
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;

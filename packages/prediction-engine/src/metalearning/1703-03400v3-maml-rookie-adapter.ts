@@ -25,6 +25,9 @@ so inner steps and meta-gradients are exact.
  * owner: Hermes | bucket: MODEL | lane: metalearning_fewshot | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2023-2025 new-regime Brier comparison at K in {2,4}.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADOPT iff MAML beats pretrain+fine-tune by >=0.02 Brier on new-regime win prediction at K in {2,4} (2023-2025) AND shows the paper's no-overfit behavior (performance non-decreasing over 1->5 inner steps). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: metalearning_fewshot | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export interface FewShotTask {
   supportX: number[][];

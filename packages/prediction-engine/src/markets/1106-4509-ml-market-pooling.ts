@@ -25,6 +25,9 @@ weights self-tune to the historically accurate models.
  * owner: Hermes | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE
  */
 export const ENABLED = false; // Gate needs 2025 holdout comparison vs current combination.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT is confirmed if the fitted mixture<->product interpolation beats GSE's current combination by >=1.5% log-loss on the 2025 holdout with the fitted parameter stable across folds (std < 0.15). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 
 export type ProbVector = number[];
 

@@ -24,6 +24,9 @@ pipeline from the paper is rejected outright.
  * owner: Motif-lab | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE
  */
 export const ENABLED = false; // Gate needs locked 2025 evaluation vs stats baseline.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* Adopt tweet-volume momentum as a totals-model feature if the locked 2025 online test shows >=3pp O/U accuracy gain over the stats baseline with CI excluding zero; adopt the injury-news sentiment lane only if a beat-writer sentiment feature adds >=2pp WTS accuracy over volume alone; reject the unigram/CCA pipeline entirely. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 
 /** rateP-style EWMA with locked theta = 0.2. */
 export function ewma(values: number[], theta = 0.2): number[] {

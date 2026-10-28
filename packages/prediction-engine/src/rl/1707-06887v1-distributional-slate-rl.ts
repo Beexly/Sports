@@ -25,6 +25,9 @@ mean - lambda*std) instead of the plain mean.
  * owner: Hermes | bucket: MODEL | lane: rl_sequential_decisions | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2024 holdout vs fractional-Kelly ROI.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADOPT for the staking module iff on the 2024 holdout the distributional policy beats fractional-Kelly ROI by >=2pp AND max drawdown is no worse than the Kelly baseline (within 0.5u). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: rl_sequential_decisions | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export const N_ATOMS = 51;
 

@@ -136,6 +136,9 @@ import { partialCorr, pcorPvalue } from "./2003-03685v2-pcmci-team-panel.js";
 export const ENABLED = false;
 
 // ---------------------------------------------------------------------------
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "---------------------------------------------------------------------------";
+
 // Types
 // ---------------------------------------------------------------------------
 

@@ -26,6 +26,9 @@ never sees the outcome (no-outcome-feedback modularization).
  * owner: Mimo | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL
  */
 export const ENABLED = false; // Gate needs nflverse 2015-2024 poor-overlap evaluation.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* Adopt if PPTA achieves coverage >=90% with bias <=50% of IPTW's bias under the poor-overlap regime, at <=20% wider intervals than overlap weights; reject otherwise (if overlap weights match it, take the cheaper estimator). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 
 function sigmoid(x: number): number {
   return 1 / (1 + Math.exp(-x));

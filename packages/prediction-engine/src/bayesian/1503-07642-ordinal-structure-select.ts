@@ -25,6 +25,9 @@ must be non-decreasing in the cut and valid probabilities.
  * owner: Mimo | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2020-2024 holdout log-loss comparison.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* Gate (ADAPT->keep): the structure-selected model beats PO-only by >= 0.003 log-loss on 2020-2024 holdout AND no covariate-grid point violates stochastic ordering. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 function sigmoid(x: number): number {
   return 1 / (1 + Math.exp(-x));

@@ -25,6 +25,9 @@ team's rank range across all defensible specifications.
  * owner: Mimo | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2011 replication data (Tests A/B/C).
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* Gate (ADAPT stays ADAPT): Tests A and B pass (PQL ranks Oklahoma St. #2, FE ranks Alabama #2 in 2011, with sigma_t^2 in expected bands) and Test C shows the rank-range protocol flags >= 1 non-robust top-10 team in a typical week. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export interface TeamRating {
   team: string;

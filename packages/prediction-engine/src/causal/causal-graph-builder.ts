@@ -197,6 +197,9 @@ import type { ClassALiteratureConstraint } from "./fci-pag.js";
 export const ENABLED = false;
 
 // ---------------------------------------------------------------------------
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "---------------------------------------------------------------------------";
+
 // Types
 // ---------------------------------------------------------------------------
 

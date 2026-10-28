@@ -25,6 +25,9 @@ sensitivity analysis reports how much hidden bias would tip Iv to cover 0.
  * owner: Mimo | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL
  */
 export const ENABLED = false; // Gate needs the rest-advantage replication data.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT if on the rest-advantage replication: Iv width <= 1.4x Ic width AND the Gamma-value tipping Iv to include 0 is >= 1.3. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 
 export interface SituGame {
   spread: number;

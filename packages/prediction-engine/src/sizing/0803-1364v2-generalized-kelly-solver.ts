@@ -25,6 +25,9 @@ refuses Kelly sizing when backtest N < 1/(2*G_K(p_hat)).
  * owner: Hermes | bucket: MODEL | lane: sizing | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2024 walk-forward data; pure functions testable on synthetic data.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT if on the 2024 walk-forward (a) the generalized multi-pick Kelly solver beats independent per-pick Kelly on log-growth AND has lower max drawdown, AND (b) Laplace-smoothed sizing (Eq. 16) beats raw-p-hat Kelly on log-growth. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: sizing | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export interface KellyPick {
   /** Model win probability. */

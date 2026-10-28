@@ -27,6 +27,9 @@ do-not-bet-into regimes.
  * owner: Hermes | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs prediction-market order-flow data (Tests 1a/1b).
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT gate: (a) Test 1 must replicate the qualitative pattern (order-flow decomposition adds explanatory power) on prediction-market data; (b) the SL detector must beat a volume-only baseline out-of-sample. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export interface Trade {
   side: "buy" | "sell";

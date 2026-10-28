@@ -27,6 +27,9 @@ hard and regime-specific features to move freely.
  * owner: Hermes | bucket: MODEL | lane: continual_online_learning | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2020-2025 walk-forward vs plain refit.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADOPT per-feature importance-weighted anchoring if on 2020-2025 walk-forward: (i) (C) beats (B) on >=2 of 1887's 4 metrics, (ii) worst-week Brier improves >=0.002 vs plain refit (A), (iii) the shared-feature core is stable across seasons. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: continual_online_learning | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 /**
  * EWC penalty with the Fisher diagonal replaced by normalized GBM feature

@@ -25,6 +25,9 @@ analogues) is emitted per player as prop-model features.
  * owner: Mimo | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs 2024-2025 holdout RMSE vs EM imputation.
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADOPT LMC imputation for the prop pipeline iff LMC rank 2 or 3 beats EM imputation by >= 5% relative RMSE with Wilcoxon p < 0.01 on the 2024-2025 holdout; also require rank-3 SVD specialization embedding to add >= 0.005 OOS R^2 when appended to the existing prop feature set. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;

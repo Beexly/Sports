@@ -25,6 +25,9 @@ rating, producing live win probability plus live spread/total distributions.
  * owner: Hermes | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE
  */
 export const ENABLED = false; // Gate needs nflverse play-by-play (Test 1: b != 0, p < 0.01).
+/** Acceptance gate, lifted from the source. */
+export const ACCEPTANCE_GATE = "* ADAPT if Test 1 passes -- a statistically significant lead-dependent scoring rate (restoring coefficient b significantly != 0, p < 0.01, expected sign) is a real, novel term for GSE's live models. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 
 export type Scorer = "A" | "B";
 
