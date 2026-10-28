@@ -22,4 +22,13 @@ if [ "$status" -ne 0 ]; then
   echo "pre-commit: alignment-guard blocked this commit (see above)." 1>&2
   exit "$status"
 fi
+
+# Definition of done: not behind origin, test staged with the change, record staged, handoff
+# entry for today. Bypass a genuine no-op with GSE_DOD_SKIP=1.
+node scripts/guardrails/definition-of-done.mjs
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "pre-commit: definition-of-done blocked this commit (see above)." 1>&2
+  exit "$status"
+fi
 exit 0
