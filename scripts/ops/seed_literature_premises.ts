@@ -8,7 +8,12 @@
 
 import { readFileSync } from "node:fs";
 import { Client } from "pg";
-import { route, type Signal } from "../../packages/mcp-equations-server/src/mcp-cognitive-router.js";
+import {
+  buildContextMask,
+  maskToArray,
+  route,
+  type Signal,
+} from "../../packages/mcp-equations-server/src/mcp-cognitive-router.js";
 
 const GATEWAY = process.env.NEON_AI_GATEWAY_BASE_URL!;
 const TOKEN = process.env.NEON_AI_GATEWAY_TOKEN!;
@@ -42,15 +47,25 @@ function maskFor(text: string): Signal[] {
   }));
 }
 
-async function embed(input: string): Promise<number[]> {
-  const r = await fetch(`${GATEWAY}/v1/embeddings`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "qwen3-embedding-0-6b", input }),
-  });
-  if (!r.ok) throw new Error(`embed ${r.status}: ${await r.text()}`);
-  const j = (await r.json()) as { data: Array<{ embedding: number[] }> };
-  return j.data[0]!.embedding;
+async function embed(input: string, attempt = 1): Promise<number[]> {
+  try {
+    const r = await fetch(`${GATEWAY}/v1/embeddings`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "qwen3-embedding-0-6b", input }),
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!r.ok) throw new Error(`embed ${r.status}: ${await r.text()}`);
+    const j = (await r.json()) as { data: Array<{ embedding: number[] }> };
+    const v = j.data[0]?.embedding;
+    if (!v || v.length !== 1024) throw new Error(`bad embedding (${v?.length ?? 0} dims)`);
+    return v;
+  } catch (e) {
+    // One gateway hiccup must not abandon a 120-row seed run.
+    if (attempt >= 3) throw e;
+    await new Promise((res) => setTimeout(res, 500 * attempt));
+    return embed(input, attempt + 1);
+  }
 }
 
 function sentences(path: string): string[] {
@@ -75,23 +90,16 @@ async function main() {
       if (seen.has(s)) continue;
       seen.add(s);
       const id = `P-SEED-${String(inserted + 1).padStart(3, "0")}`;
-      const mask = maskFor(s);
+      // Build the mask once through the router's own function — the previous two-step
+      // insert-zeros-then-update duplicated this logic and left rows invisible to Stage A
+      // if the UPDATE failed.
+      const mask = maskToArray(buildContextMask(maskFor(s)));
       const vec = await embed(s);
       await db.query(
         `INSERT INTO literature_premises (id, premise, cluster, context_mask, embedding)
          VALUES ($1,$2,$3,$4::int[],$5::vector) ON CONFLICT (id) DO NOTHING`,
-        [id, s, "M1", Array.from(new Uint32Array(9)).map(() => 0), `[${vec.join(",")}]`],
+        [id, s, "M1", mask, `[${vec.join(",")}]`],
       );
-      // write the real mask
-      const words = new Uint32Array(9);
-      for (const sig of mask) {
-        const w = Math.floor(sig.family / 32);
-        words[w] = (words[w]! | (1 << (sig.family % 32))) >>> 0;
-      }
-      await db.query(`UPDATE literature_premises SET context_mask = $2::int[] WHERE id = $1`, [
-        id,
-        Array.from(words, (w) => w | 0),
-      ]);
       inserted++;
     }
   }

@@ -144,6 +144,9 @@ export async function stageB(
   await db.query("BEGIN");
   try {
     await db.query(`SELECT set_config('hnsw.ef_search', $1, true)`, [String(ef)]);
+    // `+ 0` defeats the index's ordered-scan shortcut so Postgres re-ranks the whole
+    // candidate set exactly. Without it the HNSW scan yields at most ef_search tuples and
+    // the LIMIT is silently capped. `exact: false` opts back into the fast, capped path.
     const order = opts.exact === false ? "embedding <=> $1::vector" : "(embedding <=> $1::vector) + 0";
     const res = await db.query<{
       id: string;

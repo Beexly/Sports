@@ -53,6 +53,18 @@ def canon(x):
 print(hashlib.sha256(canon(json.loads(sys.stdin.read())).encode("utf-8")).hexdigest())
 `;
 
+/** Hash a Python *expression* — needed for values JSON cannot carry (NaN, Infinity). */
+function pythonDigestExpr(expr: string): string {
+  const res = spawnSync("python3", ["-c", PYTHON_EXPR.replace("__EXPR__", expr)], { encoding: "utf8" });
+  if (res.status !== 0) throw new Error(`python3 failed: ${res.stderr}`);
+  return res.stdout.trim();
+}
+
+const PYTHON_EXPR = PYTHON.replace(
+  'print(hashlib.sha256(canon(json.loads(sys.stdin.read())).encode("utf-8")).hexdigest())',
+  'print(hashlib.sha256(canon(__EXPR__).encode("utf-8")).hexdigest())',
+);
+
 function pythonDigest(payload: unknown): string {
   // Round-trip through JSON so Python sees exactly what JS would serialise.
   const wire = JSON.stringify(payload);
@@ -113,6 +125,13 @@ describe("golden digest parity across runtimes", () => {
   it("throws on NaN rather than emitting null (C5)", () => {
     expect(() => computeCanonicalSealDigest({ bad: NaN })).toThrow(/non-finite/);
     expect(() => computeCanonicalSealDigest({ bad: Infinity })).toThrow(/non-finite/);
+  });
+
+  it("Python also rejects non-finite (C5, both sides)", () => {
+    // JSON.stringify turns NaN into null, so a JSON round-trip never reaches Python's
+    // guard. Pass a Python expression instead.
+    expect(() => pythonDigestExpr('{"bad": float("nan")}')).toThrow(/non-finite/);
+    expect(() => pythonDigestExpr('{"bad": float("inf")}')).toThrow(/non-finite/);
   });
 
   it("agrees with Python on integral floats", () => {
