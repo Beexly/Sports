@@ -34,8 +34,9 @@ export type Call = {
   expectation: string | null
   alert: string
   willNot: string
+  ticket: null,
   /** Null until a signed ticket clears the gate. Never a placeholder price. */
-  ticket: SignedTicket | null
+  ticket?: SignedTicket | null
 }
 
 function text(posts: readonly CoachPost[], id: string): string {

@@ -38,7 +38,7 @@ export type Measurement = {
 export type CoachBrief = {
   corpusRead: true
   coachInput: true
-  ticket: null
+  ticket?: null
   posts: CoachPost[]
   availability: Availability[]
   measurements: Measurement[]
@@ -49,7 +49,7 @@ export type CoachBrief = {
     "401873010": {
       gameId: "401873010"
       coachInput: true
-      ticket: null
+      ticket?: null
       mayeEpaPerDropback: number
       williamsEpaPerDropback: number
       santosFieldGoalYards: 58
@@ -58,7 +58,7 @@ export type CoachBrief = {
     "401873012": {
       gameId: "401873012"
       coachInput: true
-      ticket: null
+      ticket?: null
       lamar: Availability
       bengalsBlitzRate: number
       bengalsPressureRate: number
@@ -100,6 +100,7 @@ export function parseXPull(markdown: string): CoachPost[] {
       url: urlMatch[0],
       text,
       coachInput: true,
+      ticket: null,
     })
   }
   return posts
@@ -204,6 +205,7 @@ export function availabilityFromPosts(posts: readonly CoachPost[]): Availability
         team,
         postId: check.postId,
         coachInput: true,
+        ticket: null,
       })
     }
   }
