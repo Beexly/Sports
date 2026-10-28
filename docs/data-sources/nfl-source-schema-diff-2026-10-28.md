@@ -221,3 +221,27 @@ keyspace
 ## Caveat
 
 A field existing in a response does not mean it is populated, stable, or documented. Nothing here is wired. This is a candidate list for the modelling backlog, not a contract.
+
+## Dead fields — marked dead, kept in place
+
+Every field above was counted across all captures and kept only if it ever carried a non-empty
+value. These 11 never did. They stay in the lists above and are marked dead here rather than
+deleted. Do not model one without re-checking against a fresh capture.
+
+| Host | Field |
+|---|---|
+| `fantasy.nfl.com` | `eventIndex` |
+| `kalshi.com` | `eventForecast` |
+| `kalshi.com` | `eventTitle` |
+| `kalshi.com` | `maximum_value` |
+| `kalshi.com` | `minimum_value` |
+| `kalshi.com` | `settlement_value_centicents` |
+| `nfl.com` | `eventIndex` |
+| `oddsjam.com` | `has_recent_injuries` |
+| `pointsbet.com` | `reviewUrl` |
+| `theathletic.com` | `defaultValue` |
+| `theathletic.com` | `isDeviceBased` |
+
+The earlier count of 18 was taken on the unfiltered 206-field candidate set. This document
+carries the 108 fields that survived noise filtering, so the dead count here is 11. Both numbers
+describe the same check at different granularity; neither is a different measurement.

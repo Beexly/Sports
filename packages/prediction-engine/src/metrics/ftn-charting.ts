@@ -169,6 +169,84 @@ export interface FtnSchemeRow {
   readonly defendersInBox: number | undefined;
 }
 
+/**
+ * Build SII cells from the frame.
+ *
+ * This is the wire between the loader and the kernel. The frame carries the flags and
+ * the box; the caller supplies EPA per play, keyed `gameId:playId`, because EPA lives
+ * in the pbp the derivation already joins and not in the FTN file.
+ *
+ * Grouping is flag x box bucket, exactly the shape the derivation produces. The bucket
+ * edges are the derivation's: <=6, 7, 8, 9+. A play with no box, no EPA, or no flag
+ * value is skipped — the derivation's existing null policy, not a new one.
+ */
+export const SII_BOX_EDGES = [0, 6, 7, 8, 20] as const;
+export const SII_BOX_LABELS = ["<=6", "7", "8", "9+"] as const;
+export type SiiBoxLabel = (typeof SII_BOX_LABELS)[number];
+
+export function boxLabel(box: number): SiiBoxLabel | null {
+  if (!Number.isFinite(box)) return null;
+  if (box <= 6) return "<=6";
+  if (box === 7) return "7";
+  if (box === 8) return "8";
+  return "9+";
+}
+
+export interface SiiCellDraft {
+  readonly flag: "motion" | "play_action" | "rpo" | "screen";
+  /** Whether the flag was ON. Both states are emitted; the kernel selects. */
+  readonly flagState: boolean;
+  readonly boxBucket: SiiBoxLabel;
+  readonly epa: number;
+  readonly n: number;
+}
+
+const FLAG_OF: ReadonlyArray<[SiiCellDraft["flag"], keyof FtnSchemeRow]> = [
+  ["motion", "isMotion"],
+  ["play_action", "isPlayAction"],
+  ["rpo", "isRpo"],
+  ["screen", "isScreenPass"],
+];
+
+export function siiCellsFromFrame(
+  frame: FtnFrame,
+  epaByPlay: ReadonlyMap<string, number>,
+): SiiCellDraft[] {
+  const acc = new Map<string, { sum: number; n: number }>();
+
+  for (const row of schemeRows(frame)) {
+    const epa = epaByPlay.get(`${row.gameId}:${row.playId}`);
+    if (epa === undefined || !Number.isFinite(epa)) continue;
+    const box = row.defendersInBox;
+    if (box === undefined) continue;
+    const label = boxLabel(box);
+    if (label === null) continue;
+
+    for (const [flag, key] of FLAG_OF) {
+      const on = row[key];
+      if (typeof on !== "boolean") continue;
+      const k = `${flag}|${on ? 1 : 0}|${label}`;
+      const cur = acc.get(k) ?? { sum: 0, n: 0 };
+      cur.sum += epa;
+      cur.n += 1;
+      acc.set(k, cur);
+    }
+  }
+
+  const cells: SiiCellDraft[] = [];
+  for (const [k, v] of acc) {
+    const [flag, state, label] = k.split("|");
+    cells.push({
+      flag: flag as SiiCellDraft["flag"],
+      flagState: state === "1",
+      boxBucket: label as SiiBoxLabel,
+      epa: v.sum / v.n,
+      n: v.n,
+    });
+  }
+  return cells;
+}
+
 export function schemeRows(frame: FtnFrame): FtnSchemeRow[] {
   return frame.plays.map((p) => ({
     gameId: p.gameId,

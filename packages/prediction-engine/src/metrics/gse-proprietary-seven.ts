@@ -136,6 +136,8 @@ export type SiiFlag = keyof typeof SII_MARGINAL_EPA_BY_FLAG;
 
 export interface SiiCell {
   readonly flag: SiiFlag;
+  /** Whether the flag was ON. Omitted means "assume on", for callers predating it. */
+  readonly flagState?: boolean;
   readonly boxBucket: "<=6" | "7" | "8" | "9+";
   readonly epa: number;
   readonly n: number;
@@ -150,8 +152,14 @@ export function computeGseSii(input: {
   readonly minN?: number;
 }): MetricResult<number | null> {
   const minN = input.minN ?? SII_MIN_N;
+  // Only ON cells. A cell without flagState is treated as ON so older callers keep working.
   const cells = input.cells.filter(
-    (c) => c.flag === input.flag && c.n >= minN && Number.isFinite(c.epa) && Number.isInteger(c.n),
+    (c) =>
+      c.flag === input.flag &&
+      c.flagState !== false &&
+      c.n >= minN &&
+      Number.isFinite(c.epa) &&
+      Number.isInteger(c.n),
   );
   if (!cells.length) return GAP(`no ${input.flag} cell clears n>=${minN} with finite epa`);
   const marginal = input.marginalEpa ?? SII_MARGINAL_EPA_BY_FLAG[input.flag];

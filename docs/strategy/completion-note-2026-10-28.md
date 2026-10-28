@@ -10,7 +10,7 @@ the sealed tree was not touched, and no reseal happened.
 
 | Path | What |
 |---|---|
-| `packages/prediction-engine/src/metrics/ftn-charting.ts` | typed FTN loader + scheme-flag frame |
+| `packages/prediction-engine/src/metrics/ftn-charting.ts` | typed FTN loader, scheme-flag frame, and the SII cell bridge |
 | `packages/prediction-engine/src/metrics/ftn-charting.test.ts` | 4 tests |
 | `packages/prediction-engine/src/metrics/pfr-advstats.ts` | four typed PFR loaders, 41 adapters, registry |
 | `packages/prediction-engine/src/metrics/pfr-advstats.test.ts` | 5 tests |
@@ -68,11 +68,44 @@ Six, all from real payloads: `ActionNetworkNextData`, `PpNewsRow`, `PpNewsEnvelo
   is not a truth set: `defender_location` is categorical and zero route rows carry it.
 - **62 of 70 captured endpoints are stubs.** Most are literally `{}`. They are registered as stubs
   with the observed reason rather than given an invented schema.
-- **18 dead schema-diff fields** stay listed, including `eventForecast` on Kalshi.
+- **Dead schema-diff fields** are now marked dead in
+  `docs/data-sources/nfl-source-schema-diff-2026-10-28.md` and kept in place. The count is **11**,
+  not 18: 18 was taken on the unfiltered 206-field candidate set, the document carries the 108 that
+  survived noise filtering, and 11 of those are dead. Same check, different granularity.
 - **74 hosts with no public JSON** stay gap records.
 - **PFR columns are adapter-only.** No kernel in `metrics/` takes a PFR advanced input, so
   `PFR_KERNEL_WIRED` is empty for all four tables. No future kernel was invented.
 - **`offense_formation` is null on weeks 6–7 rows** where FTN did not chart the play (315 rows).
+
+## The SII wire, and its fidelity proof
+
+`siiCellsFromFrame(frame, epaByPlay)` is the wire between the loader and the kernel. The frame
+carries flags and box; the caller supplies EPA keyed `gameId:playId`, because EPA lives in the pbp
+the derivation already joins and not in the FTN file.
+
+It was proved faithful rather than merely exercised. Feeding it the derivation's own 18,524 EPA
+entries reproduces the derivation's numbers exactly:
+
+| Quantity | Derivation | Bridge |
+|---|---|---|
+| motion marginal | −0.0021 | **−0.0021** |
+| motion @ 9+ | −0.0435, n=109 | **−0.0435089, n=109** |
+| motion @ 7 | −0.0259, n=2,983 | **−0.0259386, n=2,983** |
+
+A bug was found and fixed doing this: the cell carried no flag state, so motion-on and motion-off
+cells mixed and the marginal came out +0.0096. `SiiCellDraft` now carries `flagState`, and the
+kernel selects ON cells only (a cell without the field is treated as ON so older callers still work).
+
+## 2026 pbp
+
+Path, unchanged and not replaced: `intelligence/coaching/data/play_by_play_2026.parquet`, joined to
+`intelligence/coaching/data/pbp_participation_2026_reconstructed.parquet` on `nflverse_game_id` +
+`play_id`. Weeks 1–7. No digest was previously recorded, so it was computed once here:
+
+`199bf357304652c852d47c57137bd3fb943936cceaf9a824c83f0ea44f146c9a`
+
+The pbp feeds SPESE, TOR, QPTSR and DWP and is the pbp side of the SII join. It is not an input to
+the PFR loaders or the PlayerProfiler parser.
 
 ## Digests
 
@@ -101,7 +134,7 @@ PFR SHA-256s were replaced with real full digests; the earlier truncated version
 
 ## Suites
 
-`src/metrics` 339/339 green (313 before, 26 added). `src/coach-sim`, `src/team-ratings`,
+`src/metrics` 342/342 green (313 before, 29 added). `src/coach-sim`, `src/team-ratings`,
 `src/calibration`, `src/public-baseline` 368/369 — the single failure is the network-dependent
 `NE@CHI` ESPN fixture, pre-existing and unrelated.
 

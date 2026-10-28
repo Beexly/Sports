@@ -7,8 +7,10 @@ import {
   FTN_INTEGER_COUNTS,
   FTN_ROWS,
   FTN_SHA256,
+  boxLabel,
   loadFtnCharting2026,
   schemeRows,
+  siiCellsFromFrame,
 } from "./ftn-charting.js";
 
 describe("FTN charting loader", () => {
@@ -45,5 +47,33 @@ describe("FTN charting loader", () => {
     expect(Object.keys(rows[0]).sort()).toEqual(
       ["defendersInBox", "gameId", "isMotion", "isPlayAction", "isRpo", "isScreenPass", "playId"].sort(),
     );
+  }, 60_000);
+
+  it("buckets a box at the derivation's edges", () => {
+    expect(boxLabel(5)).toBe("<=6");
+    expect(boxLabel(6)).toBe("<=6");
+    expect(boxLabel(7)).toBe("7");
+    expect(boxLabel(8)).toBe("8");
+    expect(boxLabel(9)).toBe("9+");
+    expect(boxLabel(Number.NaN)).toBeNull();
+  });
+
+  it("builds SII cells from the frame and the supplied EPA", async () => {
+    const frame = await loadFtnCharting2026();
+    const epa = new Map<string, number>();
+    for (const p of frame.plays.slice(0, 500)) epa.set(`${p.gameId}:${p.playId}`, 0.1);
+    const cells = siiCellsFromFrame(frame, epa);
+    expect(cells.length).toBeGreaterThan(0);
+    for (const c of cells) {
+      expect(["motion", "play_action", "rpo", "screen"]).toContain(c.flag);
+      expect(["<=6", "7", "8", "9+"]).toContain(c.boxBucket);
+      expect(c.n).toBeGreaterThan(0);
+    }
+  }, 60_000);
+
+  it("skips a play with no EPA rather than counting it as zero", async () => {
+    const frame = await loadFtnCharting2026();
+    const cells = siiCellsFromFrame(frame, new Map());
+    expect(cells).toHaveLength(0);
   }, 60_000);
 });
