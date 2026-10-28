@@ -64,6 +64,11 @@ Step 2 (simulator deployed, selftest zero skips) and Step 4 (ticket: null routed
 calibration-map.ts — grep gate now matches the 4 permitted post-gate lines exactly) are DONE.
 Step 1 is 3/4 (ws6-status artifact still missing). Step 3 was already complete. Steps 5–6 remain.
 
+**Two consecutive fresh-process sweeps, 65 files / 467 tests, zero failures both times** (metrics,
+coach-sim, coach-brain, gse-pre-seal, p0-seal-isolation, calibration-knots-monotone,
+golden-digest-parity). Rule 4 closed, D3 closed, D6 closed. `repomix-public-surface.md` is clean and
+now tracked.
+
 | # | Defect | Severity | Status |
 |---|---|---|---|
 | D3 | `candidates/` is untracked — `git status` shows `?? candidates/`. Git cannot recover it on a clean. | High | **RESOLVED 2026-10-28** — tracked in `e825f29d6`+ ; `_quarantine/` is canonical, `_QUARANTINE_PLACEHOLDER_20261027_185538/` is the superseded audit trail |
