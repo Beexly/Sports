@@ -37,7 +37,10 @@ REPO = Path(__file__).resolve().parents[2]
 CACHE = Path(__file__).resolve().parent / ".wall-clear"
 OUTROOT = REPO / "docs" / "data-sources" / "research"
 
-DEFAULT_TTL = 25 * 60          # cf_clearance is short-lived; stay well inside it
+# Measured 2026-10-28: a clearance on PFR survived 45 min across 30 polls (3 throttled,
+# recovered, never died, IP unchanged). The probe stopped at 45, so 45 is a floor, not a
+# ceiling. 40 min sits under the floor so a dead cookie is never served.
+DEFAULT_TTL = 40 * 60
 INTERSTITIAL_MARKERS = ("just a moment", "checking your browser", "cf-challenge")
 
 
