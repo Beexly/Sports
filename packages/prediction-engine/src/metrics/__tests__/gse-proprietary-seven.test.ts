@@ -34,15 +34,29 @@ describe("DWP uses the pinned decision deltas", () => {
   });
 });
 
-describe("the five honest gaps", () => {
-  it("returns gap with the named missing input", () => {
-    expect(computeGseSii({ shellTable: [] }).source).toContain("shell table");
-    expect(computeGseRls({ routeSeparation: [] }).source).toContain("participation");
-    expect(computeGseSpese({ stPlays: [] }).source).toContain("special-teams");
-    expect(computeGseTor({ fumbles: [] }).source).toContain("fumble-recovery");
-    for (const r of [computeGseSii({ shellTable: [] }), computeGseRls({ routeSeparation: [] }), computeGseSpese({ stPlays: [] }), computeGseTor({ fumbles: [] })]) {
-      expect(r.status).toBe("gap");
-      expect(r.value).toBeNull();
-    }
+describe("the honest gap", () => {
+  it("RLS returns gap with the named missing input", () => {
+    const r = computeGseRls({ routeSeparation: [] });
+    expect(r.source).toContain("separation tendency");
+    expect(r.status).toBe("gap");
+    expect(r.value).toBeNull();
+  });
+
+  it("SII gaps when no cell clears the floor", () => {
+    const r = computeGseSii({ cells: [], flag: "motion", marginalEpa: 0 });
+    expect(r.status).toBe("gap");
+    expect(r.value).toBeNull();
+  });
+
+  it("SPESE gaps under the play floor", () => {
+    const r = computeGseSpese({ stEpa: 0.1, stPlays: 4 });
+    expect(r.status).toBe("gap");
+    expect(r.value).toBeNull();
+  });
+
+  it("TOR gaps under the fumble floor", () => {
+    const r = computeGseTor({ fumbles: 3, lost: 2 });
+    expect(r.status).toBe("gap");
+    expect(r.value).toBeNull();
   });
 });
