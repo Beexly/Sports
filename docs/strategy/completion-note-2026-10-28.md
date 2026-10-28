@@ -177,8 +177,17 @@ seven function names and incompatible signatures:
 the public-baseline copy, not the module this session has been verifying and updating. The two
 disagree on every signature and on SVA's existence.
 
-This went unnoticed because `markov-simulator.test.ts` is a `node:test` file, so `vitest run` reports
-"no test suite found" and never executes it.
+This went unnoticed for two compounding reasons, both now confirmed:
+
+1. `markov-simulator.test.ts` is a `node:test` file, so `vitest run` reports "no test suite found"
+   and never executes it.
+2. `tsconfig.json` includes `src/**/*.ts` but excludes `**/*.test.ts`, so the test is outside the
+   type-check too. And `markov-simulator.ts` itself type-checks cleanly because it imports the
+   module whose signature matches — the two modules are each internally consistent. Nothing is
+   broken in isolation; they simply coexist and disagree.
+
+So neither the test runner nor the compiler has a reason to complain, which is why a duplicate
+metrics surface survived two days.
 
 **Step 4 — invented values. NONE REMAIN.** The four PFR digests were re-verified against the files
 on disk: all four are real full 64-character digests and match. No other invented formula,
