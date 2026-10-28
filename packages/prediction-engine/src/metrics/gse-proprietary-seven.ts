@@ -92,9 +92,14 @@ export function computeGseDwp(decision: FourthDownDecision): MetricResult<number
  * joined to play_by_play_2026 (13,684 rows, 2026 season). Cells under n=25 are
  * dropped by the derivation, not here.
  *
- * Reference point, motion: marginal EPA +0.0083; motion vs a 9+ box is +0.1231
- * (lift +0.1113, n=61) while motion vs a 7 box is −0.0248 (lift −0.0366,
- * n=1,302). The sign flip across boxes is the whole point of the metric.
+ * Reference point, motion: marginal EPA +0.0083; motion vs a 9+ box is +0.0561
+ * (lift +0.0478, n=79) while motion vs a 7 box is −0.0058 (lift −0.0141,
+ * n=2,177). The sign flip across boxes is the whole point of the metric.
+ *
+ * CORRECTION 2026-10-28: the first version of this docstring quoted the
+ * NO-MOTION cells (+0.1231 at 9+, −0.0248 at 7) as if they were motion. The
+ * derivation emits both flag states and the `0|` keys were read as motion. The
+ * sign flip survives; the magnitudes were wrong and are now the `1|` cells.
  */
 export const SII_MOTION_MARGINAL_EPA = 0.0083;
 

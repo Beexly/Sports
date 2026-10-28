@@ -40,7 +40,8 @@ for f in FLAGS:
         if row["count"] < 25:
             continue
         lift = float(row["mean"] - marg.loc[flag])
-        cells[f"{int(flag)}|{box}"] = {"epa": round(float(row["mean"]), 4),
+        cells[f"{int(flag)}|{box}"] = {"flag_state": bool(flag), "box": str(box),
+                                       "epa": round(float(row["mean"]), 4),
                                        "n": int(row["count"]), "lift_vs_marginal": round(lift, 4)}
     sii[f] = {"marginal_epa": round(float(marg.loc[True]), 4) if True in marg.index else None,
               "cells": cells}
