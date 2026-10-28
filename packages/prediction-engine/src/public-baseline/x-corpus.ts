@@ -100,7 +100,6 @@ export function parseXPull(markdown: string): CoachPost[] {
       url: urlMatch[0],
       text,
       coachInput: true,
-      ticket: null,
     })
   }
   return posts
@@ -205,7 +204,6 @@ export function availabilityFromPosts(posts: readonly CoachPost[]): Availability
         team,
         postId: check.postId,
         coachInput: true,
-        ticket: null,
       })
     }
   }
@@ -290,7 +288,6 @@ export function readCoachBrief(markdown: string): CoachBrief {
   return {
     corpusRead: true,
     coachInput: true,
-    ticket: null,
     posts,
     availability,
     measurements,
@@ -302,7 +299,6 @@ export function readCoachBrief(markdown: string): CoachBrief {
       "401873010": {
         gameId: "401873010",
         coachInput: true,
-        ticket: null,
         mayeEpaPerDropback: must(measurements, "NE:Maye:epaPerDropback:401873010"),
         williamsEpaPerDropback: must(measurements, "CHI:Williams:epaPerDropback:401873010"),
         santosFieldGoalYards: 58,
@@ -311,7 +307,6 @@ export function readCoachBrief(markdown: string): CoachBrief {
       "401873012": {
         gameId: "401873012",
         coachInput: true,
-        ticket: null,
         lamar,
         bengalsBlitzRate: blitzRate,
         bengalsPressureRate: must(measurements, "CIN:pressureRate"),

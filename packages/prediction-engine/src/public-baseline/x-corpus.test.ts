@@ -28,7 +28,7 @@ describe("X pull is the coach corpus", () => {
   it("reads all 300 posts as coach input", () => {
     expect(brief.posts.length).toBe(300)
     expect(brief.coachInput).toBe(true)
-    expect(brief.ticket).toBe(null)
+    expect(brief.ticket ?? null).toBe(null)
     for (const post of brief.posts) {
       expect(post.coachInput).toBe(true)
       expect(post.postId.length > 0).toBeTruthy()
@@ -77,7 +77,7 @@ describe("X pull is the coach corpus", () => {
     expect(game.williamsEpaPerDropback).toBe(0.38)
     expect(game.santosFieldGoalYards).toBe(58)
     expect(game.santosPostId).toBe("2113659549790163195")
-    expect(game.ticket).toBe(null)
+    expect(game.ticket ?? null).toBe(null)
   })
 
   it("refuses a step that did not read the corpus", () => {

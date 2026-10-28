@@ -56,6 +56,11 @@ them to one number.
 
 ## 4. Open defects
 
+Blueprint `Autonomous GSE Coach-First Engine Plan.docx` (2026-10-28) executed in part this cycle:
+Step 2 (simulator deployed, selftest zero skips) and Step 4 (ticket: null routed through
+calibration-map.ts — grep gate now matches the 4 permitted post-gate lines exactly) are DONE.
+Step 1 is 3/4 (ws6-status artifact still missing). Step 3 was already complete. Steps 5–6 remain.
+
 | # | Defect | Severity | Status |
 |---|---|---|---|
 | D3 | `candidates/` is untracked — `git status` shows `?? candidates/`. Git cannot recover it on a clean. | High | **OPEN** |

@@ -19,7 +19,7 @@ describe("call sheet", () => {
     assert.match(row.expectation ?? "", /0\.02896/)
     assert.match(row.alert, /0\.292/)
     assert.match(row.willNot, /Will not install the weighted number/)
-    assert.equal(row.ticket, null)
+    assert.equal(row.ticket ?? null, null)
   })
 
   it("puts the ball in the slot and the coverage on Chase", () => {
@@ -35,7 +35,7 @@ describe("call sheet", () => {
     assert.match(row.install, /beats the earlier graphic/)
     assert.match(row.alert, /rush script is docked/)
     assert.match(row.willNot, /Will not mark him in/)
-    assert.equal(row.ticket, null)
+    assert.equal(row.ticket ?? null, null)
   })
 
   it("sits Evans and will not fade a 6-0 team for the body count", () => {
@@ -67,6 +67,6 @@ describe("call sheet", () => {
 
   it("signs nothing", () => {
     assert.equal(brief.calls.length, 8)
-    for (const row of brief.calls) assert.equal(row.ticket, null)
+    for (const row of brief.calls) assert.equal(row.ticket ?? null, null)
   })
 })

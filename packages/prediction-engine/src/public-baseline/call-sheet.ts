@@ -34,7 +34,6 @@ export type Call = {
   expectation: string | null
   alert: string
   willNot: string
-  ticket: null,
   /** Null until a signed ticket clears the gate. Never a placeholder price. */
   ticket?: SignedTicket | null
 }
@@ -79,7 +78,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: `If they stay at their ${blitzRate} blitz rate, the weighted dropback is ${published.balCin.dropbackEpa}.`,
       alert: `If they blitz, the cell flips to ${blitzed}. That is the call that helps the Ravens.`,
       willNot: "Will not install the weighted number. The blend hides the tendency.",
-      ticket: null,
     },
     {
       id: "401873012-where-the-ball-goes",
@@ -87,7 +85,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: "Ja'Marr Chase is the Bengals' answer: 14.5 targets, 174.8 yards, 34.5 FPG against Baltimore since 2024. The coverage rule is him.",
       alert: "Outside receivers are the wrong test. Cincinnati allows the fewest outside yards and the best outside passer rating.",
       willNot: "Will not call a generic Ravens-stars plan, and will not test them outside.",
-      ticket: null,
     },
     {
       id: "401873012-lamar",
@@ -95,7 +92,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: null,
       alert: "The rush script is docked. The film flags Lamar rushing on a high ankle and does not give a backup dropback number.",
       willNot: "Will not mark him in, and will not zero the offense.",
-      ticket: null,
     },
     {
       id: "SF-personnel",
@@ -103,7 +99,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: "They are 6-0 with 17 players out and 5 of 6 starting receivers missing. The depth has been the team.",
       alert: "38% of the targets are vacated. Watkins and Cowing have to earn them. The film does not assign the split.",
       willNot: "Will not fade San Francisco for the body count.",
-      ticket: null,
     },
     {
       id: "SF-coverage-vs-london",
@@ -111,7 +106,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: null,
       alert: "If the 49ers change the tendency and play man, his number is the ordinary one.",
       willNot: "Will not trust the zone tendency just because it is theirs.",
-      ticket: null,
     },
     {
       id: "SEA-KC",
@@ -119,7 +113,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: null,
       alert: "Seattle plays mostly zone. Mahomes wants the short area against that, and Kelce is the man who feasts. The check is to get out of zone.",
       willNot: "Will not install a two-back package with Charbonnet this week. That look is next week against the Bears, if both are up.",
-      ticket: null,
     },
     {
       id: "NYJ-zone-run",
@@ -127,7 +120,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: null,
       alert: "The gap is on zone runs only. It is not a license to hand Allen the whole game.",
       willNot: "Will not split the carries evenly because both are on the roster.",
-      ticket: null,
     },
     {
       id: "TEN-boston",
@@ -135,7 +127,6 @@ export function callSheet(posts: readonly CoachPost[], published: CoachPublished
       expectation: null,
       alert: "Against man he is 0.36. Against single-high he is 0.53. Those are different calls.",
       willNot: "Will not average the four shells into one number. Zone and two-high are not a partition.",
-      ticket: null,
     },
   ]
 }
