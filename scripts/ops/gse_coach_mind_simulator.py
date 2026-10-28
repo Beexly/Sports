@@ -75,6 +75,10 @@ def canonical_hash(obj) -> str:
             return {k: to_plain(x[k]) for k in sorted(x.keys())}
         if isinstance(x, (list, tuple)):
             return [to_plain(v) for v in x]
+        # JS has no int/float distinction: 27.0 serialises as "27". Python emits "27.0",
+        # so integral floats must be narrowed or the two runtimes never agree.
+        if isinstance(x, float) and x.is_integer():
+            return int(x)
         return x
     blob = json.dumps(to_plain(obj), sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()

@@ -22,8 +22,11 @@ stops. It is the shared context that used to live only in whichever chat happene
 2. **Never re-estimate tau after the seal.** `locked-projection.ts` throws on mutation; six tests
    prove it. Do not write a clock value into `coachMindsetHash`.
 3. **`sealed_hash` is resolved at runtime.** Never hard-code `23245bcb…` or any other digest.
-4. **New data is Class B** until the serializer conflict closes (TypeScript insertion-order digest
-   `dd6549a…` versus Python `sort_keys` digest `0821671…` on the same fixture).
+4. **New data is Class B** until the serializer conflict closes — **CLOSED 2026-10-28.** Both
+   runtimes now sort keys recursively and agree bit for bit (`canonicalizeForSeal` in
+   `locked-projection.ts`, `canonical_hash` in the simulator, `sort_keys=True` in the delta writer).
+   The conflict was deeper than key order: Python emitted `27.0` where JS emits `27`, so integral
+   floats are narrowed too. `golden-digest-parity.test.ts` pins it, including a real-payload case.
 5. **Do not reseal mid-week.** Re-running the seal pipeline is a founder call, not an agent call.
 6. **No odds, no splits, no legality.** The engine is a reasoning engine. NFL sides are closed
    (49.83% ATS over 895 held-out games); the product is calibration and props.
