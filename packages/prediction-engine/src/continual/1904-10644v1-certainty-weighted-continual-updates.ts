@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT certainty-weighted updates if (B) beats (A) on >=2 of 1887's 4 metrics with worst-week Brier improving >=0.001. ADOPT the Stein coreset buffer if (C) beats the reservoir buffer on worst-week Brier by >=0.002 and on anytime Brier. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: continual_online_learning | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Natural-gradient step for logistic regression: F^{-1} g via damped solve. */
 export function naturalGradLogistic(
   X: number[][],

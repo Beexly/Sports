@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT only if GLMF beats the current GSE shrinkage/matchup prior by a statistically significant log-likelihood margin with zero convergence failures across folds; ADAPT (offline research prior) if it only matches; otherwise REJECT. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** ALS for biased matrix factorization: R ~= mu + bu + bi + p_u . q_i. */
 export function alsFactorize(
   ratings: { u: number; i: number; r: number }[],

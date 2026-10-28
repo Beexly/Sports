@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the supervised orienter if: (a) held-out synthetic UT-F1 >= 0.8; (b) real-data orientation agreement across season splits >= 0.7; (c) >=80% of hand-labeled known colliders recovered (e.g., offensive EPA -> win <- defensive EPA); (d) adding orientations strictly improves the ledger-1967 quantitative-probing hit rate vs the unoriented skeleton. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: causal_discovery | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Pearson correlation. */
 export function pearson(xs: number[], ys: number[]): number {
   const n = xs.length;

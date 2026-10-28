@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT as the standard GSE timeline-QA benchmark if a 200-question pilot shows the four question types are answerable by humans at >=90% (validating question quality); REJECT if auto-generated questions are noisy (human accuracy <80%). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: nlp | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Cosine similarity between embeddings. */
 export function cosineSimNlp(a: number[], b: number[]): number {
   let dot = 0;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the pipeline if on the NFL 4th-down replication (a) post-match |standardized bias| < 0.2 for all covariates, (b) the ATT estimate has |t| > 2 and the sign is unchanged when FG attempts are excluded from the control pool, and (c) Rosenbaum Gamma for loss of significance >= 1.5. REJECT if balance fails or Gamma < 1.2. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Stratified (exact-match) ATT: mean treated-minus-control within strata. */
 export function stratifiedATT(y: number[], t: number[], strata: number[]): number {
   const sIds = [...new Set(strata)];

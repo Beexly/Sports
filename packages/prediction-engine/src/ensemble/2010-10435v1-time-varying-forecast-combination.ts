@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Time-varying combination must beat equal weights and static OLS on OOS Brier/ASCFE with DM p<0.10 on a >=2-season backtest; if weights collapse to near-constant (no time variation found), fall back to static combination and record the negative. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: mixed | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Exponentially weighted average (Hedge) update on the simplex. */
 export function ewaUpdate(w: number[], losses: number[], eta: number): number[] {
   const n = w.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if: on the rolling 3-train/1-test nflverse protocol, the bivariate attack/defence SSM achieves mean test average-NLL improvement >= 0.01 over the Elo-Davidson baseline across all three test windows AND no window shows degradation; REJECT if: the SSM fails to beat Elo-Davidson on >=2 of 3 test windows, or the attack/defence decomposition adds no interpretable signal beyond the single-skill SSM. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 export interface AR1State {
   level: number;
   variance: number;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT the DAG+matching template if the NFL icing replication achieves post-match SMD < 0.1 on all observed confounders AND the 99% permutation CI for the ATT either excludes 0 with |ATT| >= 0.03 (real effect -- publish) or includes 0 with CI half-width < 0.03 (clean null -- prune the feature). REJECT if balance fails or CI half-width > 0.05. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Stratified (exact-match) ATT: mean treated-minus-control within strata. */
 export function stratifiedATT(y: number[], t: number[], strata: number[]): number {
   const sIds = [...new Set(strata)];

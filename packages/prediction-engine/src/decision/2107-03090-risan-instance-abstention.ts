@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT accepted if the joint (f, rho) learner beats the * global gate by >= 3 points of accepted hit-rate at matched coverage on * clean data AND degrades less under 20% injected noise; else REJECT (keep * the fixed-predictor learned score from 1775).";
+
 /**
  * arXiv: 2107.03090 — "RISAN: Robust Instance Specific Deep Abstention Network"
  *

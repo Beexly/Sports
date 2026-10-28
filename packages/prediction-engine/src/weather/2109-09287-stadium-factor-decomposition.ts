@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the stadium-factor table if the full model beats both baselines by >= 0.003 log-loss on 2025 holdout AND neutral-event factors are ~= 0 (structural sanity) AND Denver's kicking/punting factor is positive and stable across >= 3 seasons. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: weather | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Wind chill (Fahrenheit). */
 export function windChill(tempF: number, windMph: number): number {
   if (tempF > 50 || windMph < 3) return tempF;

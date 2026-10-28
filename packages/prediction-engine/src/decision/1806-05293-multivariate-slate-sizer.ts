@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the slate sizer only if it beats baseline realized * log growth by >= 5% on the held-out season with max drawdown no worse than * baseline. REJECT otherwise (keep independent sizing).";
+
 /**
  * arXiv: 1806.05293 — "Generalized framework for applying the Kelly criterion to stock markets"
  *

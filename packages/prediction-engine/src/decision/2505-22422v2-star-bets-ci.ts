@@ -9,6 +9,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "At n = 256, Bernoulli(0.3), \u03b4 = 0.05, over 1,000 reps: STaR-Bets mean CI width must be \u2264 1.1\u00d7 the randomized Clopper-Pearson mean width (near-optimality, Fig. 2R) with empirical coverage in [0.93, 0.97] (validity, Fig. 3).";
+
 /**
  * arXiv: 2505.22422v2 — "STaR-Bets: Sequential Target-Recalculating Bets for Tighter Confidence Intervals"
  *

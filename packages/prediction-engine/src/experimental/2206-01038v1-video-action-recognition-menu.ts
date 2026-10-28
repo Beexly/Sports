@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the video lane's architecture menu iff the SoccerNet reproduction lands within 3 points of published accuracy AND a pilot fine-tune on ~200 labeled NFL plays achieves top-1 >= 0.70 on play-type classification; if the NFL pilot < 0.60, park the lane. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled dot-product attention for one query row. */
 export function attentionRow(q: number[], K: number[][], V: number[][]): number[] {
   const d = q.length;

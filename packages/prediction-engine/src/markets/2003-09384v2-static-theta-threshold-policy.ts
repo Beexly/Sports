@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the profit-maximizing static-theta threshold policy if, on the 2015-2024 NFL backtest: (i) some static theta yields total profit >= 20% above the current GSE threshold policy's total profit at comparable bet counts, AND (ii) per-season-optimal theta is unstable (optimal theta differs by >= 5 pp across >= 3 of the 10 seasons). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 /** Brier score for probabilistic forecasts. */
 export function brierScore(ps: readonly number[], ys: readonly number[]): number {
   if (ps.length === 0 || ps.length !== ys.length) throw new Error("brierScore: length mismatch");

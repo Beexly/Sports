@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the diversity-weighted combiner if, on the held-out 2025 season, it beats the simple-average baseline by >=2% relative log-loss AND beats the static skill-weighted baseline by >=1% relative, with calibration slope within [0.9, 1.1]. REJECT (keep simple average) if it fails either gate or the meta-learner's feature importances concentrate on <3 pairs (degenerate map). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Pairwise diversity matrix among K forecast vectors (mean absolute difference). */
 export function diversityMatrix(F: number[][]): number[][] {
   const K = F.length;

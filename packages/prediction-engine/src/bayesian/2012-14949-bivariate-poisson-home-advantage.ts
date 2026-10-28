@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT->keep if: simulation replication shows MAB(T-hat) <= 0.10 and >=50% bias reduction vs linear regression AND 2020-season holdout predictive log-likelihood beats GSE's current score model by >= 0.01 nats/game. Fail -> REJECT. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Bivariate Poisson PMF via the common-shock convolution sum. */
 export function bivPoissonPmf(x: number, y: number, l1: number, l2: number, l3: number): number {
   let s = 0;

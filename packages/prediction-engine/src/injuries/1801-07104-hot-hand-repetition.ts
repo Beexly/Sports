@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT the repetition/interruption feature family if the NFL replication finds a player-adjusted within-drive repetition effect >= +2pp catch rate with |z| > 3 AND a between-drive interruption effect <= -1pp with |z| > 2. REJECT if both |z| < 2 (no signal in football touches).";
+
 export interface Touch {
   playerId: string;
   driveId: number;

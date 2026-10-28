@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the ITS harness into GSE's backtest QA only if the positive-control test detects the 2011 regime break (p < 0.05 on the trend-break term) without flagging spurious breaks in stable eras (2012-2019); reject the injury-taxonomy feature if conditioning-share of inactives adds no >=0.002 holdout log-loss improvement to the spread model over a simple starter-out count.";
+
 function erf(x: number): number {
   const t = 1 / (1 + 0.3275911 * Math.abs(x));
   const y =

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT NCP if it achieves nominal coverage within 2pp AND mean width <= plain-CP width on the 2025 holdout; KEEP the path-selection protocol regardless (it is process, not a claim); REJECT the random-split calibration design outright -- never use it on ordered NFL data. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: calibration | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Split-conformal quantile of nonconformity scores (finite-sample corrected). */
 export function conformalQuantile(scores: readonly number[], alpha: number): number {
   if (scores.length === 0) throw new Error("conformalQuantile: empty");

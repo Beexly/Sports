@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the hybrid architecture if, on the 2015-2024 leave-one-season-out test, the hybrid model's mean moneyline log-loss beats both the market-consensus baseline and the plain-covariate XGBoost by >= 0.005 (absolute), with the improvement present in >= 7 of the 10 held-out seasons. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 /** Solve a square linear system via Gauss-Jordan with partial pivoting. */
 export function solveLinear(A: number[][], b: number[]): number[] {
   const n = A.length;

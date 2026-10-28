@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT if a replay of decay epsilon-greedy on 2024 NFL posted picks shows (a) cumulative-regret reduction >= 20% vs equal-split A/B in ROI terms by Week 9, AND (b) the selector's traffic share for the ex-post best arm >= 70% by Week 12; REJECT otherwise (the mechanism adds complexity without demonstrated traffic-savings). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Epsilon-greedy arm selection. */
 export function epsilonGreedyStep(q: number[], eps: number, rand: () => number): number {
   if (rand() < eps) return Math.floor(rand() * q.length);

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Rebuild on one NFL season of drive data: require group lasso \u2265 ridge on Brier score for held-out games, and both significantly better than an ELO-only baseline at 10% (paired t-test); improvement experiment success = Brier-score improvement \u2265 5% over the goal-indicator version. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Block soft-thresholding for one group (group-lasso proximal step). */
 export function groupSoftThreshold(beta: number[], t: number): number[] {
   const norm = Math.sqrt(beta.reduce((s, b) => s + b * b, 0));

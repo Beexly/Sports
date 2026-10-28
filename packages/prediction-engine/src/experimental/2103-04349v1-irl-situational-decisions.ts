@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT gate: (a) Test 1 must show the IRL recovers a known reward function on synthetic ground truth (the paper never validates its IRL -- do not skip this); (b) inferred NFL weights must not all sit at optimization bounds (the paper's bound artifact); (c) expert-definition sensitivity must be checked (winners vs top-EPA teams). If (a) fails, the method is unvalidated machinery -> REJECT. The cricket simulator and DLS results are not adopted under any gate. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Feature expectations from expert trajectories (list of feature-sum vectors). */
 export function featureExpectations(trajs: number[][]): number[] {
   const d = trajs[0]!.length;

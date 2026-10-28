@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Simulation Rand 0.9988 vs best baseline 0.9005 (K-means), 42/50 correct-K recovery, real-data concordance 0.948; improvement success = concordance RI >= 0.95 maintained AND archetype assignments improve a downstream 3P-attempt-rate prediction task (held-out RMSE). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** NMF via multiplicative updates (Frobenius): V ~= W H, V >= 0. */
 export function nmfFrobenius(
   V: number[][],

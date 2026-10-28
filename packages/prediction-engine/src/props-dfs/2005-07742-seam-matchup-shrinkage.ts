@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Replicate on one MLB season: SEAM-style convex blend beats batter-only and pitcher-only on 0.90-nominal conditional coverage for matchups with >= 10 holdout balls in play; improvement experiment success = 0.90-nominal conditional coverage >= 0.80 with calibration error not worse than the paper's. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Beta posterior update after s successes and f failures. */
 export function betaUpdate(a: number, b: number, s: number, f: number): { a: number; b: number } {
   return { a: a + s, b: b + f };

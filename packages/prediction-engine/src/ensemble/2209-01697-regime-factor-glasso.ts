@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Gate is the break-alignment/post-break MSFE test: detected Bai-Perron break dates must align with the known regime events, and post-break combined MSFE/log-score must beat both equal weights and sample-precision weights (the paper's RD-FGL beat EW by 30-70% MSFE where structure/breaks exist is the reference magnitude) \u2014 with a stable-period negative control (no spurious breaks; FGL no worse than EW in stable periods). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Projected-gradient NNLS stacking: min ||Fw - y||^2 s.t. w >= 0. */
 export function stackNNLS(F: number[][], y: number[], iters = 500, lr = 0.05): number[] {
   const K = F[0]!.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT accepted iff FFORMA-style blender beats SA by >=2% relative log-loss on the 2024 walk-forward AND beats the NN-stack in >=2 of 3 markets; reject if neither beats SA by >=1.5%. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Projected-gradient NNLS stacking: min ||Fw - y||^2 s.t. w >= 0. */
 export function stackNNLS(F: number[][], y: number[], iters = 500, lr = 0.05): number[] {
   const K = F[0]!.length;

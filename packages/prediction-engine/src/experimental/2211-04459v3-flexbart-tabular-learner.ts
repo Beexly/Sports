@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt flexBART iff: (a) out-of-sample RMSE on 2024 improves >=3% over one-hot XGBoost (paper's benchmark gains were 5-30% on categorical-heavy data), AND (b) 80%/90% posterior intervals achieve empirical coverage within +-3 pp of nominal, with runtime acceptable for weekly batch; reject if gains <3% (check the DGP2 singleton-outlier caveat) or MCMC cost exceeds the batch window; reject the network extension if gs2/gs3 don't beat flexBART_unif on the schedule-graph task. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: experimental | verdict: ADOPT | doctrine: INFRA";
+
 export interface TreeStump {
   splitVar: number;
   splitVal: number;

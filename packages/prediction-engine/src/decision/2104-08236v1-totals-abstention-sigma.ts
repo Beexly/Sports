@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT if the abstention model reduces test-window * covered-set MAE vs baseline by >=0.5 points of total (or >=3% relative) * with sigma z-scores within [-0.2, 0.2] mean and [0.8, 1.2] std; reject if * the MAE gap is smaller or sigma is miscalibrated -- then use the simpler * baseline, which the paper itself calls 'a simple yet powerful method.'";
+
 /**
  * arXiv: 2104.08236v1 — "Controlled Abstention Neural Networks for Identifying Skillful Predictions for Regression Problems"
  *

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the adapted design if BOTH hold on the 2024 holdout: (1) the surprising-news coefficient beta-hat_surprising > 0 with 95% CI excluding zero (behavioral replication); (2) a contrarian rule shows positive mean CLV per event at >= +0.5% average with two-sided p<0.05 on >=100 surprising events. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Solve a square linear system via Gauss-Jordan with partial pivoting. */
 export function solveLinear(A: number[][], b: number[]): number[] {
   const n = A.length;

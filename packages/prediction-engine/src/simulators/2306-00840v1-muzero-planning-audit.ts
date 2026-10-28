@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the prior-constrained planning design if: (a) simulator error grows monotonically with horizon AND with play novelty, AND (b) league-prior-constrained MCTS backtests >= +0.05 EPA/play over the historical policy on 2024 held-out weeks, AND (c) uniform-prior MCTS does not beat it; reject the planning use-case if the simulator's error on novel plays is flat or if prior-constrained search cannot beat history. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: world_models_simulators | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Exponential moving average update. */
 export function emaUpdate(prev: number[], next: number[], momentum: number): number[] {
   return prev.map((p, i) => momentum * p + (1 - momentum) * next[i]!);

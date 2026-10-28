@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* G-Elo must beat GSE's current Elo-Davidson-equivalent on the NFL 2019-2023 walk-forward backtest: log-loss improvement Delta-LS >= 0.005 AND accuracy >= baseline + 1pp. If it fails, keep the frequency-based coefficient formulas as the calibration method for the existing Elo and drop the AC update. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: team_ratings | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Brier score for probabilistic forecasts. */
 export function brierScore(ps: readonly number[], ys: readonly number[]): number {
   if (ps.length === 0 || ps.length !== ys.length) throw new Error("brierScore: length mismatch");

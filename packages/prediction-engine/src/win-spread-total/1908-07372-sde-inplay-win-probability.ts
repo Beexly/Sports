@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the SDE in-play model if its 2023-2024 in-play Brier beats the naive score-and-time baseline by >=0.005 and matches or beats GSE's current ML in-play model on log-loss; adopt only the shock-perturbation layer if the full model ties but the turnover-shock response improves probability calibration in the 5 minutes after turnovers. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: win_spread_total | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 export interface AR1State {
   level: number;
   variance: number;

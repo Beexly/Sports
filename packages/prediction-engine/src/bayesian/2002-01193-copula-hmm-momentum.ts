@@ -24,6 +24,9 @@ import { gaussCopulaJoint as gaussCopulaJointIntegral } from "../markets/2106-05
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* On 2023-2024 holdout, the copula-HMM's one-step-ahead predictive log-likelihood beats the independence-HMM baseline by >= 0.02 nats/observation on average across team-seasons AND the Viterbi state dummies are jointly significant (p < 0.05) for next-drive points. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled forward algorithm; returns log-likelihood of the observation sequence. */
 export function hmmForwardLogLik(
   pi: number[],

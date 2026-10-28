@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* On 2022-2024 holdout FG data, the sparse form-HMM beats the plain logistic baseline by >= 0.005 log-loss AND the simulation replication selects zero noise covariates in >=75/100 runs. Fail either -> REJECT for production (keep as screening tool only). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled forward algorithm; returns log-likelihood of the observation sequence. */
 export function hmmForwardLogLik(
   pi: number[],

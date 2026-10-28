@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT outcome-dependent BPS only if 2025 mean log score beats the equal-weight pool by >=0.02 nats AND beats BMA-style weighting, with 80% interval coverage in [0.75, 0.85]; REJECT (fall back to constant-weight pool + baseline) if log-score gain < 0.01 nats or outcome-dependent weights collapse to near-constant. Dynamic discount layer accepted separately if it beats static BPS on second-half log score.";
+
 export type Regime = "blowout" | "close";
 
 /** Outcome regime from a realized margin (for outcome-dependent pools). */

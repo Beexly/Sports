@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Accept iff it beats CUSUM on F1 against injury/role-change ground truth on 2019-2023 AND the within-+-1-week precision justifies the alert volume (<=2 flags per team-week on average); REJECT if the changepoint rate approaches the paper's 40% (pure noise) or EM fails to converge on 17-game series \u2014 fall back to BOCPD. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /**
  * Two-sided Page's CUSUM changepoint detector; returns alarm indices.
  * The in-control mean is estimated from an initial Phase-I window

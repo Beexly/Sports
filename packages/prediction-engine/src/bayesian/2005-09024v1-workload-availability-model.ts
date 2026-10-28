@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if held-out 2025 availability AUC beats the pooled baseline by >=3 pp AND individual lag curves show meaningful heterogeneity (psi_ml significantly >0). REJECT if lag curves collapse to a single global curve with no individual signal. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Solve a square linear system via Gauss-Jordan with partial pivoting. */
 export function solveLinear(A: number[][], b: number[]): number[] {
   const n = A.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT the retrieval task into the clip-search product iff a CLIP-style modern baseline beats the paper's R@1 by >=5 points on GOAL-NFL pilot data; REJECT the generation task entirely. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: nlp | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled dot-product attention for one query row. */
 export function attentionRow(q: number[], K: number[][], V: number[][]): number[] {
   const d = q.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT if the degeneracy diagnostic confirms the factor structure in GSE's model-panel forecast errors and the resulting optimal weights beat equal weights and static OLS on OOS MSFE (the paper proves weight consistency under its assumptions). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Projected-gradient NNLS stacking: min ||Fw - y||^2 s.t. w >= 0. */
 export function stackNNLS(F: number[][], y: number[], iters = 500, lr = 0.05): number[] {
   const K = F[0]!.length;

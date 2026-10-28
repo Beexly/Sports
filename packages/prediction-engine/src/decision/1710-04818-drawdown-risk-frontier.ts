@@ -12,6 +12,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT if the r_cur^X-constrained allocation cuts max * drawdown >=25% versus unconstrained category-Kelly while keeping >=90% of * final bankroll on the 2025-2026 replay; otherwise REJECT.";
+
 /**
  * arXiv: 1710.04818 — "1632 A General Framework for Portfolio Theory. Part II: Drawdown Risk Measures"
  *

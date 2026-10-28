@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff on the strictly-future test window the C51 stopping policy beats the best timing benchmark by >=1.5pp of CLV per bet with realized ROI no worse than the 'bet at open' baseline; otherwise REJECT (timing alpha doesn't survive transaction reality). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: rl_sequential_decisions | verdict: ADOPT | doctrine: PROPRIETARY_EDGE";
+
 export interface StoppingState {
   edge: number;
   hoursToKickoff: number;

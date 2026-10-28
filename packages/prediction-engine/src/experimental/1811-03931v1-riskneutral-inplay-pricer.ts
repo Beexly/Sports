@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the risk-neutral in-play pricer as GSE's live-totals engine if the reproducibility test hits calibration error <= 2.0 bid-ask spreads with jump correlation >= 0.70 on 2024 holdout games; reject if intensities must be re-fit so often that the 'constant lambda' closed forms add nothing over a direct empirical jump model -- then keep only the implied-intensity calibration idea.";
+
 function erf(x: number): number {
   const t = 1 / (1 + 0.3275911 * Math.abs(x));
   const y =

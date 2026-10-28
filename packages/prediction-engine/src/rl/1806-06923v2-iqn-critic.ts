@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff the CVaR(0.25)-policy beats the mean-policy (scalar CQL) on 2024 max drawdown by >=1.0u with ROI no worse than -1pp vs the mean policy, AND quantile calibration ECE <= 0.05; if calibration fails, REJECT the critic but keep the distortion-rule idea for the 1922 C51 head.";
+
 /** Cosine embedding of quantile fractions: phi_j(tau) = cos(pi * j * tau). */
 export function cosineTauEmbedding(taus: number[], dim: number): number[][] {
   return taus.map((tau) =>

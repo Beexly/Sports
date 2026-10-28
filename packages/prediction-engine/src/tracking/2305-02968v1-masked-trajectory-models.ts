@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if: (a) heteromodal MTM masked-frame RMSE >= 15% lower than the full-modality-only model on held-out weeks, OR (b) prop-model log-loss improves >= 0.002 with MTM embeddings vs without, on held-out weeks 13-18; REJECT if neither holds. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: selfsupervised_tracking | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Random binary mask over n positions with keep-probability (1 - p). */
 export function randomMask(n: number, p: number, rand: () => number): boolean[] {
   return Array.from({ length: n }, () => rand() > p);

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff on the 2025 holdout it improves mean log score over the weight-optimized LP by >=0.02 AND its PIT Cramer distance is <= LP's (no calibration regression), with no systematic under-prediction (PIT CDF within +-0.05 of diagonal at all deciles). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Regularized incomplete beta I_x(a,b) via Simpson integration. */
 export function regIncBeta(x: number, a: number, b: number, steps = 400): number {
   if (x <= 0) return 0;

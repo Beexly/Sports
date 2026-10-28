@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "Replicated fractional-Kelly portfolio must satisfy: * annualized SD in [0.16, 0.19], max drawdown in [38%, 46%], final wealth * within 10% of $576,464 \u2014 i.e., reproduce the paper's risk profile, not * just its return; then the variance-budgeted alpha must beat fixed alpha * on realized growth/risk.";
+
 /**
  * arXiv: 2109.10814v1 — "Fractional Growth Portfolio Investment"
  *

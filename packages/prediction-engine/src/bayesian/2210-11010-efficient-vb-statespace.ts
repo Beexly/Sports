@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Gate (ADAPT->keep): predictive log-likelihood beats static-strength baseline by >= 0.01 nats/game on 2020-2024 AND runtime <= 5% of MCMC per season AND median posterior-SD underestimation <= 20% (ratio >= 0.8); fail any -> REJECT for production (keep as research prototype). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 export interface AR1State {
   level: number;
   variance: number;

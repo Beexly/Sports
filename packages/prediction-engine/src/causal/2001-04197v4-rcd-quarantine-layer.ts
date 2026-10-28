@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the RCD quarantine layer if: (a) model (b) matches or beats (a) on 2024-2025 Brier (parity within 0.002) while removing >=15% of directed edges as confounded; (b) bootstrap Jaccard of bi-directed edge set >= 0.5; (c) >=3 of 5 hand-labeled known-confounded pairs are flagged bi-directed. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: causal_discovery | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Least-squares residualization of each column on ancestor columns. */
 export function residualizeOnAncestors(X: number[][], ancestors: number[][]): number[][] {
   const n = X.length;

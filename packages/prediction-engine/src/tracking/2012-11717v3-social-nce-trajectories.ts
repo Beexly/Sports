@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if: (a) impossible-trajectory rate reduced >= 25% vs vanilla with FDE no worse than +2%, AND (b) random negatives do not beat Social-NCE (sanity check that the prior, not just contrast, drives the gain). REJECT if (a) fails. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: selfsupervised_tracking | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Cosine similarity. */
 export function cosineSim(a: number[], b: number[]): number {
   let dot = 0;

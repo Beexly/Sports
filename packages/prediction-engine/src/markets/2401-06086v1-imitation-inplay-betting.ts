@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the imitation-learning loop for GSE's in-play lane only if the learned policy beats every scripted baseline on 2025 holdout profit with p < 0.05 (Wilcoxon, as in the paper); if it merely matches the best baseline, keep the scripted policies and the recorded live-odds dataset as the asset; reject the 'learner beats teachers' claim as a simulator artifact. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 /** Epsilon-greedy arm selection. */
 export function epsilonGreedyStep(q: number[], eps: number, rand: () => number): number {
   if (rand() < eps) return Math.floor(rand() * q.length);

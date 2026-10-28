@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT accepted if walk-forward mean quantile loss >=2% below the simple-average baseline at >= 4 of 5 grid levels AND the joint tail-functional loss >=2% below FC-SA, with per-level VRate within [0.7alpha, 1.3alpha] (calibration guard); else REJECT. Hard fail: if any level's weights collapse to a single model for >80% of weeks (combination adds nothing), reject. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Pinball (quantile) loss. */
 export function pinballLoss(y: number, q: number, alpha: number): number {
   const e = y - q;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT accepted if feature-conditioned weights achieve >=2% relative log-loss improvement over BOTH SA and constant OP weights on the 2024 weeks-10-18 walk-forward, with >=3 regime features selected in >50% of Gibbs draws. Hard fail: weights collapse to near-constant (max range < 0.05 across games). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Projected-gradient NNLS stacking: min ||Fw - y||^2 s.t. w >= 0. */
 export function stackNNLS(F: number[][], y: number[], iters = 500, lr = 0.05): number[] {
   const K = F[0]!.length;

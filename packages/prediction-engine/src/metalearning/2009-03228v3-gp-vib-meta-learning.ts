@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff GP-VIB (beta tuned) beats the league-average prior by >=0.01 Brier on new-regime first-4-game predictions (2023-2025 LOSO) AND the beta>0 model beats the beta=0 ablation on NLL by a statistically clear margin (paired t-test p<0.05). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: metalearning_fewshot | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** RBF kernel. */
 export function rbfKernelGp(x: number[], y: number[], l: number): number {
   let s = 0;

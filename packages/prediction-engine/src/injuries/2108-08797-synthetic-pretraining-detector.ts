@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Gate (numeric): ADAPT the synthetic-pretraining recipe if the replication shows F2 gain >= 0.03 with no increase in false negatives. REJECT if synthetic pretraining degrades real-data calibration (PPV drop > 0.05 on real data). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Temperature-scaled softmax. */
 export function temperatureSoftmax(logits: number[], T: number): number[] {
   const mx = Math.max(...logits);

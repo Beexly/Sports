@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the DCP prop framework iff the geometric-Poisson/NB model beats naive Poisson by elpd_loo with se_diff >= 3 on 2024 rushing-attempt counts AND the positive-EV simulation shows Sharpe >= 1.0 over >=100 bets; REJECT as a framework if the Poisson is within se_diff < 1 with a flat/negative betting sim. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 /** Poisson PMF (log-space for stability). */
 export function poissonPmf(k: number, lambda: number): number {
   if (lambda <= 0) return k === 0 ? 1 : 0;

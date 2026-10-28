@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the dominance screen only if it improves realized * ROI per unit of max drawdown (Calmar-style) by >= 10% on the held-out * season without reducing hit-rate transparency (same number of graded * picks or explicit 'suppressed as redundant' labeling). REJECT otherwise.";
+
 /**
  * arXiv: 1807.05265 — "Rebalancing Frequency Considerations for Kelly-Optimal Stock Portfolios in a Control-Theoretic Framework"
  *

@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the odds fusion level only if the 2023-2025 holdout shows the fused model beats both the history-only and odds-only baselines on moneyline log-loss by >=0.005 with 95% posterior CI excluding zero; reject if the mixture weight collapses to p~0 (pure market model).";
+
 /** Remove overround by renormalizing (proportional de-vigging). */
 export function devig(rawImplied: number[]): number[] {
   const s = rawImplied.reduce((a, b) => a + b, 0);

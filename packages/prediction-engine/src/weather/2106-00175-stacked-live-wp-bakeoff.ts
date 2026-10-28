@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the stacked ML live model if it beats the classical baseline by >= 1 pp accuracy AND >= 0.005 log-loss at every game decile on the holdout. REJECT if the ML wins accuracy but loses log-loss \u2014 that reproduces the paper's limitation and is unusable for staking. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: weather | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Projected-gradient NNLS stacking: min ||Fw - y||^2 s.t. w >= 0. */
 export function stackNNLS(F: number[][], y: number[], iters = 500, lr = 0.05): number[] {
   const K = F[0]!.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT inference-time refinement if it improves held-out RMSE by >=8% over no-refinement decoding at equal-or-fewer equation evaluations on the 2024-2025 window; REJECT if refinement gains vanish on noisy real data or merely recover the pre-training prior's favorite shapes. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: symreg_equation_discovery | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Normalized mean squared error. */
 export function nmse(y: number[], pred: number[]): number {
   const m = y.reduce((a, b) => a + b, 0) / y.length;

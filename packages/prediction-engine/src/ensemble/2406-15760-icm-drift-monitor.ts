@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT if the offline replay fires an alarm within 3 weeks of the 2024 kickoff-rule change on the TOTALS stream with \u22641 false alarm per season on 2024\u20132026 data \u2014 then deploy the monitor as a weekly cron job feeding the recalibration queue. Reject if alarms are dominated by noise (\u22653 false alarms/season) or if detection latency exceeds 6 weeks. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Split-conformal quantile of nonconformity scores (finite-sample corrected). */
 export function conformalQuantile(scores: readonly number[], alpha: number): number {
   if (scores.length === 0) throw new Error("conformalQuantile: empty");

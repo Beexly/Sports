@@ -24,6 +24,9 @@ import { gaussCopulaJoint as gaussCopulaJointIntegral } from "../markets/2106-05
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT gate: (a) the nested dependence term beta_3 must be empirically != 0 on NFL data (garbage-time/prevent-defense mechanism); (b) exact-score log-loss must improve over the independent baseline out-of-sample; (c) step-3 parameter averaging replaced by a principled reconciliation. If (a) fails, the mechanism is soccer-specific theater and the paper drops to REJECT. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: INFRA";
+
 /** Poisson PMF (log-space for stability). */
 export function poissonPmf(k: number, lambda: number): number {
   if (lambda <= 0) return k === 0 ? 1 : 0;

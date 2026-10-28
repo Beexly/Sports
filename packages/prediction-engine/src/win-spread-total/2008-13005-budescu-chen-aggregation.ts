@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt Budescu-Chen if it beats simple averaging on 2024-2025 Brier by >=0.002 OR wins the truth-knower simulation more often than Variance-EM; adopt the evaluation-honesty rule regardless; reject the assertiveness recalibration if the engine's assertiveness already sits at its Brier-optimal point. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: win_spread_total | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Mean leave-one-out gain of each source over a trailing window. */
 export function looGains(P: number[][], y: number[]): number[] {
   const K = P[0]!.length;

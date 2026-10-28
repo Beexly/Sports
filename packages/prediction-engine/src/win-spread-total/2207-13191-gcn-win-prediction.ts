@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt as a ratings/ensemble arm iff the calibrated GCN beats the engine's current win-probability model on 2023-2024 Brier by >=0.003 with acceptable calibration (ECE within 0.005 of baseline); reject if it merely matches Elo \u2014 keep the BuildLeagueGraph construction as a feature-engineering recipe only. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: win_spread_total | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Symmetric normalization of adjacency with self-loops: D^-1/2 (A+I) D^-1/2. */
 export function normalizeAdj(A: number[][]): number[][] {
   const n = A.length;

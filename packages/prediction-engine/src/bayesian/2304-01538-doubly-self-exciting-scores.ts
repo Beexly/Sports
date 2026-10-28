@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the doubly self-exciting hierarchy and the Wasserstein-barycenter divide-and-conquer if drive-level DSE beats baseline on 2025 held-out log-likelihood; REJECT game-level self-excitation unless WAIC/LOO supports it (the paper's own evidence says it usually does not); REJECT the plug-in offset as a final implementation - propagate uncertainty jointly in the production version. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Poisson PMF (log-space for stability). */
 export function poissonPmf(k: number, lambda: number): number {
   if (lambda <= 0) return k === 0 ? 1 : 0;

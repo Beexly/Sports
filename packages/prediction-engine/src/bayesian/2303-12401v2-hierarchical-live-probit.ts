@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT iff the architecture survives chronological evaluation: under rolling-origin validation, the play-indexed Bayesian probit must beat a static pre-match-probability-plus-score baseline on log-loss; if the live model adds nothing once the split is chronological, the adaptation fails. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Numerically stable logistic. */
 export function logistic(x: number): number {
   if (x >= 0) {

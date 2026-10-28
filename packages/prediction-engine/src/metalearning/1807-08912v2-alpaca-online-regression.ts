@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff ALPaCA's week-1-to-8 NLL on margin beats BOTH MAML-style adaptation and the static prior by >=0.05 nats/game averaged over 2023-2024, with near-monotonic improvement (no MAML-style early overfit dips). Reject if the recursive updates show no advantage over plain refit at week <=4.";
+
 export interface BLRPosterior {
   mean: number[];
   cov: number[][];

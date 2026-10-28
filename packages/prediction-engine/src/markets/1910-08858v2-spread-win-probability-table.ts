@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the empirical P(Win|PS) mapping as a GSE odds-lane feature if the locked 2022-2025 holdout shows calibration error (ECE) <= 2pp on the spread->win-rate table; adopt the full +EV screen as a signal only if holdout ROI is positive with a 95% CI excluding 0 at achievable lines (second-best consensus, not panel max). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: markets | verdict: ADAPT | doctrine: BASELINE";
+
 /** Brier score for probabilistic forecasts. */
 export function brierScore(ps: readonly number[], ys: readonly number[]): number {
   if (ps.length === 0 || ps.length !== ys.length) throw new Error("brierScore: length mismatch");

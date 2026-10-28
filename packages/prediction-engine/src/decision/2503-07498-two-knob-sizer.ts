@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the two-knob sizer if it beats half-Kelly independent staking on terminal log growth with max drawdown \u2264 half-Kelly's over 2023\u20132025, AND the fitted GMV leverage ratio f";
+
 // arXiv: 2503.07498 — "Optimal Diversification and Leverage in a Utility-Based Portfolio Allocation Approach"
 //
 // ADDITIVE utility. Not wired into any publish path (wiring changes published picks and is a NEEDS HUMAN CALL).

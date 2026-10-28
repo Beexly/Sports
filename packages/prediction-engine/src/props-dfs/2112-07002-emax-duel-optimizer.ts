@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt iff on 2024 Showdown backtests the exact 2-entry method's realized best-entry score beats the top-2-EV baseline by >=2.0 points on average across >=20 contests AND simulated E[max] improvement is >=4.0 points; reject if the Gaussian assumption systematically misses high-variance captain plays. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 function phiStd(x: number): number {
   return Math.exp(-0.5 * x * x) / 2.5066282746310002;
 }

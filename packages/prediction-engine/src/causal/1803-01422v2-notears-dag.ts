@@ -57,6 +57,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the graph-pruned feature set only if ALL hold: (a) held-out Brier on 2024-2025 with <=60% of features is within 0.002 of the full-feature baseline (parity) or better; (b) learned-edge Jaccard similarity across season-blocked folds >= 0.5; (c) directed edges respect known football directionality on >=80% of high-confidence edges. Reject if Brier worsens by >0.003 or stability < 0.5.";
+
 export type Edge = [number, number];
 
 function zeros(n: number, m: number): number[][] {

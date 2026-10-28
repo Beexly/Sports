@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT iff the NFL replication shows the naive censor-at-IR estimate and the IPW total effect differ by >=20% (competing-event distinction matters empirically) with identified positivity (no weight truncation beyond [0.1,10] needed for >95% of player-weeks); REJECT the full machinery if the difference is <10% \u2014 keep only the taxonomy as a reporting standard. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Truncate propensity weights to [lo, hi]. */
 export function truncateWeights(w: number[], lo: number, hi: number): number[] {
   return w.map((x) => Math.min(hi, Math.max(lo, x)));

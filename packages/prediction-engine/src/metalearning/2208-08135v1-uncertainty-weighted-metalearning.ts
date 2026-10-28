@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff the homoscedastic variant beats vanilla MAML by >=0.02 Brier on new-regime win prediction at K in {2,4} (2023-2025) AND shows the paper's robustness (loss spread across alpha values <= half of MAML's spread); reject if init-selection picks checkpoints no better than the global init at K=4. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: metalearning_fewshot | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** RBF kernel. */
 export function rbfKernelGp(x: number[], y: number[], l: number): number {
   let s = 0;

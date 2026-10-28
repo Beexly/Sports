@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT the recipe iff per-position log-value models beat pooled + naive baselines on the \u00a712 gate (per-position R2 >=3 points above pooled on >=3 of 4 skill positions AND beat the current-salary naive) with time-ordered validation; REJECT any claim that crowd-style valuations are the right target \u2014 use realized fantasy points/salaries, not crowd valuations. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Soft-thresholding operator. */
 export function softThreshold(z: number, t: number): number {
   if (z > t) return z - t;

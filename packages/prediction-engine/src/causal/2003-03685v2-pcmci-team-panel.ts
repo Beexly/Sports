@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the PCMCI+-pruned feature set if: (a) held-out 2024-2025 Brier within 0.002 of the all-lags baseline (or better) while using <=60% of features; (b) median cross-team-season edge Jaccard >= 0.5; (c) contemporaneous orientation precision on domain-known directions (pressure->sacks, turnovers->EPA) >= 0.75. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: causal_discovery | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Pearson correlation. */
 export function pearson(xs: number[], ys: number[]): number {
   const n = xs.length;

@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT (A) leg-level abstention only if parlay backtest * ROI improves by >=5.0 pp per dollar staked vs all-legs baseline over >=300 * settled slips (bootstrap p<0.05). ADOPT (B) the text pipeline only if * injury-signal F1 >= 0.60 vs official reports AND engine spread MAE * improves >=0.15 points on the covered games. Otherwise REJECT.";
+
 /**
  * arXiv: 1803.08355v2 — "Structured Output Learning with Abstention: Application to Accurate Opinion Prediction"
  *

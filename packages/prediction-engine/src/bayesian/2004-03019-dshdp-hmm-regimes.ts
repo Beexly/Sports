@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* DS-HDP-HMM wins held-out NLL vs sticky HDP-HMM in >=60% of team-seasons AND inferred kappa_j shows real heterogeneity (spread > 0.3 in >=50% of fits). Fail -> REJECT (fixed-K HMM from 1654 suffices). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled forward algorithm; returns log-likelihood of the observation sequence. */
 export function hmmForwardLogLik(
   pi: number[],

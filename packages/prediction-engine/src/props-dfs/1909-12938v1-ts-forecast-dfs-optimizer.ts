@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the TS-forecast stage only if lineups built on TS forecasts beat lineups built on trailing-average forecasts by >=5% realized points on 2022-2024 rolling slates. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: mixed | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Simple exponential smoothing one-step forecast. */
 export function sesForecast(xs: number[], alpha: number): number {
   let level = xs[0]!;

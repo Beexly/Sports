@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the opponent-specific player-distribution + Monte Carlo aggregation pattern iff the hierarchical gamma beats pooled baselines on 2025 held-out log-likelihood by >=3%; REJECT the paper's literal estimation procedure (moment + 5% tail rule, no pooling). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: bayesian | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Beta posterior update after s successes and f failures. */
 export function betaUpdate(a: number, b: number, s: number, f: number): { a: number; b: number } {
   return { a: a + s, b: b + f };

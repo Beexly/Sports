@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the chalk-meter + contrarian tilt iff, on 2023-2025 backtest, template-fading lineups achieve >=10% higher ROI than template-following lineups on top-quartile-concentration slates (paired by slate, p<0.05), with no significant ROI loss on bottom-quartile slates. Otherwise REJECT. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Jaccard similarity between two lineups (player sets). */
 export function lineupJaccard(a: number[], b: number[]): number {
   const sa = new Set(a);

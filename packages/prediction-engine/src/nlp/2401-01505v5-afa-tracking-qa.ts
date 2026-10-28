@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt if AFA beats standard attention by >=1.5pp accuracy AND >=1.0pp macro-F1 on the 2024 holdout; reject otherwise (the paper's own margin is ~1.2pp - demand at least parity with that on football data). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: nlp | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled dot-product attention for one query row. */
 export function attentionRow(q: number[], K: number[][], V: number[][]): number[] {
   const d = q.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt fractional/drawdown-Kelly as the GSE sizing protocol iff on the 2024-2025 NFL backtest the tuned-fraction Kelly (or KellyDrawdown) achieves (a) ruin% <= 1%, (b) median final wealth >= 110% of the flat-betting baseline's median, and (c) beats fixed half-Kelly (omega=0.5) on median wealth. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: markets | verdict: ADOPT | doctrine: BASELINE";
+
 /** Kelly fraction for a binary bet: f* = (bp - q) / b. */
 export function kellyBinary(p: number, b: number): number {
   const q = 1 - p;

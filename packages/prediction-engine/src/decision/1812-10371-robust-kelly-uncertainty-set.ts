@@ -11,6 +11,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT robust sizing only if it improves * worst-decile-of-weeks realized growth by >= 20% relative to baseline while * keeping total realized log growth >= 0.9x baseline. REJECT otherwise.";
+
 /**
  * arXiv: 1812.10371 — "Distributional Robust Kelly Gambling: Optimal Strategy under Uncertainty in the Long-Run"
  *

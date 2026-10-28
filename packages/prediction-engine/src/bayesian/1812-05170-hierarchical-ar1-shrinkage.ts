@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the hierarchical Bayesian estimation layer if, on 2025 held-out games, the multi-level AR(1) model improves out-of-sample log-likelihood over the no-shrinkage baseline by >=2% AND posterior 95% intervals achieve nominal coverage on held-out EPA/play; REJECT the full TPT play-simulator build if a one-team prototype exceeds 48 hours compute or fails the Table-2-style shrinkage-wins check. Simulator build proceeds only after the estimation gate passes.";
+
 /**
  * Empirical-Bayes shrinkage of a raw group estimate toward the group mean:
  * est = B * groupMean + (1 - B) * x, B = varWithin / (varWithin + varBetween).

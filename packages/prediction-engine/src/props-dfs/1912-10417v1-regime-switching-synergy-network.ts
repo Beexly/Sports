@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT if Test 1 passes (regimes are real, not k-artifacts) AND Test 2 passes (synergies replicate out-of-sample with >=+1.5 pts/game and p<0.05). REJECT if regimes are degenerate or synergies don't replicate. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Scaled forward algorithm; returns log-likelihood of the observation sequence. */
 export function hmmForwardLogLik(
   pi: number[],

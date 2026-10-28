@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the EMS portfolio optimizer if on 2024 backtests the G-SAA or PROP+ 150-entry portfolio beats the 150\u00d7-max-EV baseline on simulated EMS by \u22655.0 points AND on realized best-entry finish percentile by \u22655 percentile points across \u226510 slates; reject if the SAA MILP doesn't solve within 30 minutes per slate. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 function phiStd(x: number): number {
   return Math.exp(-0.5 * x * x) / 2.5066282746310002;
 }

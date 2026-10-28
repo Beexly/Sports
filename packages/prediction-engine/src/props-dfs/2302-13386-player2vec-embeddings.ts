@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Gate (ADAPT): the embedding-plus-MLP predicts play-outcome distributions with mean KL ~= 0.3 on held-out playoff games, embeddings recover known roles, and the matchup optimizer produces sensible orderings; adopt as ADAPT (weakened only by missing baselines); improvement success = held-out KL <= 0.25 (>= ~17% relative improvement) with the same 25-game validation protocol. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Plain biased matrix factorization trained by SGD (win-prob / fantasy-points). */
 export function mfSgd(
   obs: { u: number; i: number; r: number }[],

@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADOPT the analytic pricer if its drawdown-probability predictions are calibrated (calibration slope in [0.8, 1.2], Brier within 5% of Monte Carlo) while running \u2265 100\u00d7 faster than Monte Carlo; REJECT if Laplace inversion is unstable or the BM approximation miscalibrates on real weekly data. * * Scope note: this module ships the BM-with-drift analytic pricer. The * jump-diffusion extension and the calibration-slope check require real * weekly bankroll data (not available in this environment) and are * deferred to the human call above. jumpDiffusionMonteCarloDrawdownProb * is provided as the calibration reference the extension will fit * against.";
+
 /**
  * arXiv: 2411.18374 — "Drawdowns of diffusions"
  *

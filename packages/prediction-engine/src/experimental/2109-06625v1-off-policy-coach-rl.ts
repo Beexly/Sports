@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Accept Prong A if held-out OPE shows >=0.5 wins/season gain over coaching behavior with effective sample size >50% of nominal (weights not degenerate) \u2014 and the learned policy's recommendations are interpretable (e.g., more aggressive on 4th-and-short in opponent territory). Reject if IS weights collapse or the policy just rediscovers 'always go for it' without situational nuance. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** CQL(H) conservative penalty: alpha * (E_{a~rand}[Q] - E_{a~data}[Q]). */
 export function cqlPenalty(qData: number[], qRandom: number[], alpha: number): number {
   const mD = qData.reduce((a, b) => a + b, 0) / qData.length;

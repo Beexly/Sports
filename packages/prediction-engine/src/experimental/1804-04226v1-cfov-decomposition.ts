@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the Consistency/Form/Opposition/Venue feature set for GSE props only if the time-ordered test shows >=3pp accuracy gain or >=0.01 log-loss improvement over the career-average baseline; reject if the gain vanishes under honest time-ordered evaluation (the paper's random-split numbers do not count as evidence).";
+
 export interface PlayerGame {
   playerId: string;
   opp: string;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if: (a) ATSCC-style segment embeddings achieve NMI \u2265 0.40 against charted route concepts on held-out weeks (vs \u2264 0.30 for TS2Vec), AND (b) segment boundaries match charted break points with F1 \u2265 0.50. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: selfsupervised_tracking | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Cosine similarity. */
 export function cosineSim(a: number[], b: number[]): number {
   let dot = 0;

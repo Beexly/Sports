@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if smoothed BOA beats plain BOA by >=1% on margin MAE OR the event-adjustment front-end improves holiday/short-rest-week MAE by >=5% without hurting normal weeks. REJECT if the smoother's selected lambda collapses to ~=0 AND the front-end shows no holiday-week gain. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Exponentially weighted average (Hedge) update on the simplex. */
 export function ewaUpdate(w: number[], losses: number[], eta: number): number[] {
   const n = w.length;

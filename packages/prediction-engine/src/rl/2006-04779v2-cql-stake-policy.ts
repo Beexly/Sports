@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff on 2024 holdout the CQL policy beats the fractional-Kelly baseline by >=2pp ROI with max drawdown no worse than baseline (within 0.5u) AND the empirical lower-bound diagnostic holds (predicted value <= realized return on >=90% of weeks); if the lower-bound diagnostic fails, REJECT (the safety property is the whole point). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: rl_sequential_decisions | verdict: ADOPT | doctrine: PROPRIETARY_EDGE";
+
 /** CQL(H) conservative penalty: alpha * (E_{a~rand}[Q] - E_{a~data}[Q]). */
 export function cqlPenalty(qData: number[], qRandom: number[], alpha: number): number {
   const mD = qData.reduce((a, b) => a + b, 0) / qData.length;

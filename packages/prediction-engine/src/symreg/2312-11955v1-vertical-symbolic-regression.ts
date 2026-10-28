@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT vertical staging if VSR-PySR matches or beats horizontal test R^2 with <=50% of the expression length or <=50% of the compute time; REJECT if horizontal wins on both accuracy and simplicity - the oracle-free approximation does not transfer. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: symreg_equation_discovery | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 export interface ParetoPoint {
   error: number;
   complexity: number;

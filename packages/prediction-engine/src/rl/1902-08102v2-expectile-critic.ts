@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the expectile head as the default critic iff on 2024 its mean-consistency error is the lowest of the four AND its greedy policy ROI is within 1pp of the best quantile head; if a quantile head dominates on both, REJECT expectiles but KEEP the mean-consistency diagnostic as a permanent gate for all future critic changes.";
+
 /** Expectile loss: mean of |tau - 1{e<0}| * e^2 (asymmetric least squares). */
 export function expectileLoss(errors: number[], tau: number): number {
   let s = 0;

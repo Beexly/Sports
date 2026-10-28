@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Kairosis median achieves positive skill vs uniform median benchmark on both Brier and log-loss across the pick set; margin should exceed the paper's ~0.04\u20130.06 skill units to justify the added machinery. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /**
  * Kairosis-style Bayesian change-point time weighting: maintain a run-length
  * posterior over forecast streams; weight = posterior mass on the current regime.

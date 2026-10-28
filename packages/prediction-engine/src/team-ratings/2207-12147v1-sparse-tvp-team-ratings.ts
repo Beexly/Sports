@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff rolling 2022-2024 RMSE beats the Elo baseline by >=3% AND the posterior classifies at least 20% of team coefficients as dynamic (the model actually uses its flexibility); reject if classification collapses to all-fixed or MCMC makes weekly refits unreliable. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: mixed | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Soft thresholding operator. */
 export function softThreshold(x: number, lam: number): number {
   if (x > lam) return x - lam;

@@ -15,6 +15,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff the retrieval+meta-metric-learner beats plain Matching Network by >=3pp accuracy on new-regime win prediction at K in {2,4} (2023-2025 test regimes), AND the random-auxiliary ablation shows no gain (proving retrieval, not just extra data, drives it).";
+
 export function cosineSim(a: number[], b: number[]): number {
   let dot = 0;
   let na = 0;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Test A (fit): all R-hat < 1.1 and effective sample sizes > 400 for ability parameters (the paper's Section 6.1 bar). Test B (predictive gain): hold out the following week's games; lpd^c must beat the FOMC baseline by >= 1.0 per 1,000 events. Test C: per-event-type team-ability rankings correlate (Spearman rho >= 0.5) with independent season performance measures (e.g., offensive EPA rankings). If the lpd^c gap vs FOMC is < 0.5 per 1,000 events, the NFL event stream carries no Hawkes-like excitation worth the complexity -> REJECT. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: live_ingame | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Hawkes intensity at time t given past events (exponential kernel). */
 export function hawkesIntensity(
   t: number,

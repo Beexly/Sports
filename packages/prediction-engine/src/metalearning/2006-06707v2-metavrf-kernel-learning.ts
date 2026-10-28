@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff MetaVRF beats the league-average prior by >=0.01 Brier on new-regime first-4-game predictions (2023-2025 LOSO) AND beats fixed-bandwidth RBF-KRR by >=0.005 Brier. Reject if the LSTM context adds nothing over MetaVRF w/o LSTM. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: metalearning_fewshot | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** RBF kernel. */
 export function rbfKernelGp(x: number[], y: number[], l: number): number {
   let s = 0;

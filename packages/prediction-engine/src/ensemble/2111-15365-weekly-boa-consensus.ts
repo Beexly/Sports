@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff on 2024-2025 the BOA consensus beats the static equal-weight baseline by >=1.5% relative Brier AND the Kelly-staked max drawdown is <=70% of the best single expert's (the paper's tail-risk signature), with week-to-week weight churn not exceeding 2x the uniform baseline's. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: ensembles | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Exponentially weighted average (Hedge) update on the simplex. */
 export function ewaUpdate(w: number[], losses: number[], eta: number): number[] {
   const n = w.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if: the AutoGluon-based stack beats the hand-tuned baseline by >=0.003 log-loss on the 2023-2025 held-out seasons AND the search costs <=100 GPU/CPU-hours total. REJECT if: improvement <0.003 log-loss, or any season shows the wrapper leaking future information (positive control: shuffling season labels must destroy the edge), or inference latency >1s/game. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: nas_automl | verdict: ADOPT | doctrine: INFRA";
+
 /** Projected-gradient NNLS stacking: min ||Fw - y||^2 s.t. w >= 0. */
 export function stackNNLS(F: number[][], y: number[], iters = 500, lr = 0.05): number[] {
   const K = F[0]!.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff on realized 2024 settlement the CQL staking policy beats fractional-Kelly ROI by >=2pp with stake MAPD <= 25% AND the sensitivity re-scoring keeps the sign of the lift under all 3 outcome models; REJECT if the lift vanishes under alternative evaluators. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: rl_sequential_decisions | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** CQL(H) conservative penalty: alpha * (E_{a~rand}[Q] - E_{a~data}[Q]). */
 export function cqlPenalty(qData: number[], qRandom: number[], alpha: number): number {
   const mD = qData.reduce((a, b) => a + b, 0) / qData.length;

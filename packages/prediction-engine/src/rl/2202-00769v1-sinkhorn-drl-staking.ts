@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT iff on 2024 the joint policy Pareto-dominates the best scalar policy on >=2 of {ROI, max drawdown, CLV} with the third no worse than -5% relative; otherwise REJECT (compute not justified for a scalar-equivalent result). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: rl_sequential_decisions | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** 1D Wasserstein-1 distance via sorted quantile matching. */
 export function wasserstein1d(xs: number[], ys: number[]): number {
   const a = [...xs].sort((x, y) => x - y);

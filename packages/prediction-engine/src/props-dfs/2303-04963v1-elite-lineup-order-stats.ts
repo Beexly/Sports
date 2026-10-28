@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADAPT: elite-lineup identification without shared-court history is a genuinely transferable DFS/stacks technique, and the unanimous-consent ensemble is a portable high-precision filter for any GPP lineup pipeline; first reproduce the paper's 86.7%-level test precision vs the 62.1% prevalence baseline on one NBA season of public data, then confirm optimizer ROI improvement with vs without unanimity filtering on one NFL DFS slate. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** Order-statistic predictors: sorted projections/ceilings/ownership per lineup. */
 export function orderStatFeatures(lineup: number[]): number[] {
   return [...lineup].sort((a, b) => b - a);

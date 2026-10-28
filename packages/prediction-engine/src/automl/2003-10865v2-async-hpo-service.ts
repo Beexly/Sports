@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT if: the async method reaches the synchronous-BOHB final log-loss in <=60% of the wall-clock time with 8 workers, AND beats the 1-epoch baseline's final log-loss by >=0.001. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: nas_automl | verdict: ADAPT | doctrine: INFRA";
+
 /** Successive-halving bracket: keep top 1/eta configs by low-fidelity loss. */
 export function successiveHalving(losses: number[][], eta = 3): number[] {
   // losses[rung][config]; returns surviving config indices after all rungs

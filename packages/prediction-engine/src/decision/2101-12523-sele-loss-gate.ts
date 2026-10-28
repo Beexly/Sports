@@ -10,6 +10,9 @@
  */
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "ADAPT accepted if the learned score's AuRC beats the * probability-threshold baseline by >= 10% relative on walk-forward seasons * AND the win holds at the actual operating coverage (posted card size); * else REJECT. Hard fail: if the learned score's top-coverage picks don't * beat the baseline's at the exact card size GSE publishes, do not ship * regardless of AuRC.";
+
 /**
  * arXiv: 2101.12523 — "Optimal strategies for reject option classifiers"
  *

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt the decorrelation loss (gamma > 0) if, on the 2020-2024 chronological test: (i) some gamma in {0.2, 0.4, 0.6} yields total ROI >= 2 percentage points above the gamma = 0 model under identical sharpe staking, AND (ii) the gamma = 0 model does not already beat market consensus on XENT, AND (iii) model-market correlation decreases monotonically in gamma. Reject (keep pure-accuracy training) if no gamma beats gamma = 0 by >= 2pp ROI or the model is already XENT-superior. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: markets | verdict: ADOPT | doctrine: BASELINE";
+
 /** Numerically stable logistic. */
 export function logistic(x: number): number {
   if (x >= 0) {

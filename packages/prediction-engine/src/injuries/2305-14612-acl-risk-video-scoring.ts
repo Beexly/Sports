@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Gate (numeric): ADAPT if the replication achieves automated-vs-manual ICC >= 0.75 on the composite score; REJECT if ICC < 0.6 (2D pose noise swamps the clinical signal) or if the AHP-weighted composite fails to separate known groups (p > 0.05 for any pair). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Scaled dot-product attention for one query row. */
 export function attentionRow(q: number[], K: number[][], V: number[][]): number[] {
   const d = q.length;

@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* Adopt iff on the 2020-2022 fit: (a) league offensive-EPA Delta-hat > 0 with p < 0.05, (b) unbiased variance sigma-hat^2 >= 0 (sanity), (c) the sign of offensive-EPA Delta-hat persists on the 2023-2024 holdout (p < 0.10); reject if Delta-hat is indistinguishable from the naive mean difference. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Mimo | bucket: MODEL | lane: causal_injury | verdict: ADAPT | doctrine: SITUATIONAL";
+
 /** Stratified (exact-match) ATT: mean treated-minus-control within strata. */
 export function stratifiedATT(y: number[], t: number[], strata: number[]): number {
   const sIds = [...new Set(strata)];

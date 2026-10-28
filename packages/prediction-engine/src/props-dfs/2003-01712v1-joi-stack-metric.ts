@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the JOI stack metric iff (a) predicted JOI achieves Spearman rho >= 0.40 vs actual next-season JOI/dropback on unseen pairs, AND (b) top-decile-JOI stacks outscore baseline stacks by >= 5% in the DFS backtest (paired t, p < 0.05). * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Hermes | bucket: MODEL | lane: props_dfs | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 export interface PairSequence {
   pairId: string;
   dropbacksTogether: number;

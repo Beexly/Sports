@@ -22,6 +22,9 @@
 
 export const ENABLED = false;
 
+/** Acceptance gate, lifted from the header. */
+export const ACCEPTANCE_GATE = "* ADOPT the teacher-student update if on 2020-2025 walk-forward: (i) the distilled student matches or beats hard-label refit on anytime Brier while improving ECE by >=0.002, (ii) adding the cyclic buffer + RWalk improves December/playoff-regime Brier by >=0.003 with no metric worse by >0.001; REJECT distillation if the student's edge comes only from the teacher's information (teacher-frozen-since-August control); REJECT the RWalk half if it adds nothing over the buffer alone. * * Gate status: NOT EVALUATED. The gate requires historical walk-forward data * not available in this environment; it is documented here for future * evaluation. Pure functions below are exercised on synthetic data in the * adjacent test file. * * owner: Motif-lab | bucket: MODEL | lane: continual_online_learning | verdict: ADAPT | doctrine: PROPRIETARY_EDGE";
+
 /** EMA teacher weight update: theta_t = m * theta_t + (1 - m) * theta_s. */
 export function teacherEmaUpdate(
   teacher: number[],
