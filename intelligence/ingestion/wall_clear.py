@@ -106,6 +106,41 @@ def egress_ip() -> str | None:
         return None
 
 
+def _content(page, attempts: int = 3) -> str:
+    """Page HTML that survives a page which keeps navigating.
+
+    content() refuses while a navigation is in flight, so fall back to reading
+    the DOM directly before giving up.
+    """
+    for i in range(attempts):
+        try:
+            return page.content()
+        except Exception:
+            try:
+                return page.evaluate("() => document.documentElement.outerHTML")
+            except Exception:
+                pass
+            if i == attempts - 1:
+                return ""
+            page.wait_for_timeout(1200)
+    return ""
+
+
+def _ua(page) -> str:
+    try:
+        return page.evaluate("() => navigator.userAgent")
+    except Exception:
+        return ""
+
+
+def _title(page) -> str:
+    """page.title() that survives a navigating page."""
+    try:
+        return page.title()
+    except Exception:
+        return ""
+
+
 def solve(url: str, timeout: float = 60.0) -> dict:
     """Clear the interstitial for `url` in a real browser and persist the result."""
     try:
@@ -126,10 +161,14 @@ def solve(url: str, timeout: float = 60.0) -> dict:
         try:
             page.goto(url, wait_until="domcontentloaded", timeout=int(timeout * 1000))
             page.wait_for_timeout(2000)
-            if not is_interstitial(page.content(), page.title()):
+            try:
+                page.wait_for_load_state("domcontentloaded", timeout=10_000)
+            except Exception:
+                pass  # a page that keeps navigating still yields usable content
+            if not is_interstitial(_content(page), _title(page)):
                 # no wall on this host right now; keep the session cookies anyway
                 jar = {c["name"]: c["value"] for c in ctx.cookies()}
-                rec = save_clearance(host, jar, page.evaluate("() => navigator.userAgent"))
+                rec = save_clearance(host, jar, _ua(page))
                 rec["interstitial"] = False
                 return rec
             res = cloudflare.solve(page, timeout=timeout)
@@ -168,7 +207,13 @@ def fetch(url: str, *, force: bool = False, ttl: int = DEFAULT_TTL,
         if solves >= max_solves:
             return r
         solves += 1
-        rec = solve(url)
+        try:
+            rec = solve(url)
+        except Exception:
+            if solves >= max_solves:
+                raise
+            time.sleep(2)
+            rec = solve(url)
 
 
 def main(argv: list[str] | None = None) -> int:
