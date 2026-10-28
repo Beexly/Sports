@@ -103,6 +103,12 @@ export function computeGseDwp(decision: FourthDownDecision): MetricResult<number
  * weeks 6-7 were reconstructed, the motion-at-9+ cell flipped from +0.0561 to
  * −0.0435 and the marginal from +0.0083 to −0.0021. The weeks 1-5 reading was an
  * artifact of the short window. These are the weeks 1-7 figures.
+ *
+ * STABILITY (docs/strategy/sii-stability-2026-10-28.md): split-half check. Only
+ * the 9+ box keeps its direction across windows (−0.067 then −0.680); boxes 7 and
+ * 8 flip sign. The 9+ bucket is 140 plays. So SII at 9+ is a DIRECTION, not a
+ * magnitude, and SII at 7/8 is not usable yet. Do not add SII into a score as if
+ * the magnitude were settled.
  */
 export const SII_MOTION_MARGINAL_EPA = -0.0021;
 
