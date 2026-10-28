@@ -147,7 +147,7 @@ export function computeQbPenaltyEpa(
     });
   }
 
-  const featureKeys = ["penalty", "penalty_team", "defteam", "yards_gained", "epa"] as const;
+  const featureKeys = ["penalty", "penalty_team", "defteam", "yards_gained", "epa"];
 
   return {
     window,
