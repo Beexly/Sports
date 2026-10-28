@@ -7,8 +7,16 @@ egress IP changes. No browser per request after the first.
 
 Why the browser is not optional: `cf_clearance` is issued only to a client that
 passes Cloudflare's heuristics, and it is bound to both the UA and the egress
-IP. Vanilla Playwright scores as automation; headless fails the interstitial
-even with stealth patches (measured). So the solve runs headed, on patchright.
+IP. Vanilla Playwright scores as automation and fails the interstitial.
+
+Two backends, tried in order:
+
+1. **cloakbrowser** — Chromium with fingerprints patched at C++ source level. Clears
+   PFR *headless* in ~7 s with no wall shown at all (measured 2026-10-28, 448 KB).
+2. **patchright, headed** — the fallback. Headless patchright does not clear the wall.
+
+Headless is the default because the cloak backend makes it work; the headed path is
+only reached when cloakbrowser is absent.
 
 Proven live 2026-10-27 against pro-football-reference.com (403 to curl):
 interstitial detected -> solved -> replayed 200 / 274,980 bytes, and a follow-up
@@ -147,20 +155,27 @@ def _title(page) -> str:
 def solve(url: str, timeout: float = 60.0) -> dict:
     """Clear the interstitial for `url` in a real browser and persist the result."""
     try:
-        from patchright.sync_api import sync_playwright
         from pypasser.antibot import cloudflare
     except ImportError as e:  # pragma: no cover - depends on host env
         raise WallClearUnavailable(
-            "wall-clear needs patchright and pypasser: "
-            "python -m pip install pypasser patchright && patchright install chromium"
+            "wall-clear needs pypasser: python -m pip install pypasser"
         ) from e
 
     host = _host(url)
-    with sync_playwright() as p:
-        # headed is required: headless fails the interstitial even with stealth patches
-        browser = p.chromium.launch(headless=False)
+    try:
+        import cloakbrowser as _cb
+        browser = _cb.launch(headless=True)
         ctx = browser.new_context(viewport={"width": 1440, "height": 900})
         page = ctx.new_page()
+        _pw = None
+    except Exception:
+        from patchright.sync_api import sync_playwright
+        _pw = sync_playwright().start()
+        browser = _pw.chromium.launch(headless=False)   # headless patchright fails the wall
+        ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+        page = ctx.new_page()
+
+    if True:
         try:
             page.goto(url, wait_until="domcontentloaded", timeout=int(timeout * 1000))
             page.wait_for_timeout(2000)
@@ -184,8 +199,13 @@ def solve(url: str, timeout: float = 60.0) -> dict:
             rec["ip"] = egress_ip()
             return rec
         finally:
-            ctx.close()
-            browser.close()
+            try: ctx.close()
+            except Exception: pass
+            try: browser.close()
+            except Exception: pass
+            if _pw is not None:
+                try: _pw.stop()
+                except Exception: pass
 
 
 def fetch(url: str, *, force: bool = False, ttl: int = DEFAULT_TTL,
