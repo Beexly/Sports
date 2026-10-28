@@ -1,0 +1,239 @@
+# GSE — The Plan
+### Architect: Fable 5.1 · 2026-09-15 · supersedes "The Honest Map"
+
+Every number here was measured this session, read-only, with the command recorded in
+`scratchpad/FINDINGS.md` (F1–F19). Nothing below is an opinion about the football or the
+market; the opinions are only about what to do.
+
+---
+
+## CONTEXT — the five facts that decide everything
+
+1. **The NFL game market is closed.** ~190 specifications tested out of sample. The closing line
+   is efficient (home covers 49.05% on n=7,081, 27 seasons). No defensive trait is mispriced
+   (14 tests, none reach |z|=1). Published edges decay after publication (wind: real for 20
+   years, dead by 2025). Our own team model hit 49.83% ATS on 895 held-out games.
+   **Nobody spends another hour trying to beat NFL sides or totals with public data.**
+
+2. **Our engine has negative standalone skill and a real orthogonal signal.** Head-to-head on
+   540 identical picks: model Brier 0.251, market 0.220, a constant 0.248. But corr(model,
+   outcome) = +0.146 while corr(model, market) = +0.128. **At 10% weight blended toward the
+   market it beats the market out of sample** (0.20818 vs 0.20905; football 0.18825 vs 0.18946).
+   That is the one lever on the engine, and it is a calibration gain, not an edge.
+
+3. **The product loses money and the record is baseball.** Only computable market: 180–44,
+   80.36%, **−2.88% ROI** (break-even at −373 is 82.12%). Record is **72.5% MLB, 3.1% NFL**;
+   **86% of the NFL record is preseason**; regular-season NFL = **11 picks**. Spreads/totals:
+   1,459 settled, **zero** stored prices, ~46.5% win rate.
+
+4. **The only validated NFL model is props.** Brier skill 4.2% over climatology, 0 decile
+   inversions, 12,571 out-of-sample predictions. Blocked by: `PickType` has no prop value and
+   `@@unique([gameId,pickType])`; ingest fetches 2 of ~13 markets at a credit cap of 8; the
+   prop archive has **zero readers**; `/fantasy/props` is 12 fictional players on a normal CDF.
+
+5. **Zero customers.** 2 users (one is a Stripe test), 2 checkout attempts ever (last 08-19,
+   three weeks *before* the 503 began), 1 waitlist lead, 0 product events. The constraint is
+   demand. And **the repo's problem is not missing capability** — 22 of 25 "advanced" techniques
+   already exist; `pfr_adv_stats`, fixture tombstoning, in-play disclosure, the Pinnacle
+   archive were all *built and never wired*.
+
+---
+
+## PRODUCT DEFINITION — locked, so nobody re-derives it
+
+**Galaxy Sports Edge is an NFL-first product that publishes three things:**
+
+1. **NFL player props** — the validated model, graded against posted lines.
+2. **Market-anchored NFL game probabilities** — the engine shrunk 90% toward the market, with
+   honest calibration and a vig-free exchange reference. Sold as *calibration*, never as edge.
+3. **The public record of what does not work** — the reliability table, the 190 dead
+   hypotheses, the decay curves. The only position in this market that cannot be copied by a
+   competitor with something to hide.
+
+**It stops publishing:** MLB spreads and totals (45.5%/45.4%), NFL preseason, soccer
+moneylines, and any row with no book price. Volume that loses is not volume.
+
+---
+
+## THE PLAN — five phases, each ends in something a human can see
+
+Rules for the executing model: ≤5 files per task, one commit per task, verify block before
+every commit (`npm run typecheck && npm run lint && npx vitest run <file>`), never touch the
+frozen paths (schema, migrations, `.github/`, `scripts/guardrails/`, `.claude/`, `.env*`,
+lockfile). Never flip an env flag. Never bump MODEL_VERSION. Report `NOT RUN` rather than
+invent a result.
+
+### Phase 0 — Stop lying, stop bleeding (days 1–2)
+
+| # | change | files | verify |
+|---|---|---|---|
+| 0.1 | **Land PR #819.** Merge `origin/main`; conflicts are exactly `AGENTS.md` and `apps/web/__tests__/preview-legacy-redirect.test.tsx`. CI is green on the head. | 2 | `git merge-tree` clean, CI green, PR mergeable |
+| 0.2 | **Render the in-play disclosure.** Four producers, zero renderers (Devin was right and it's wider). Render `policy.inPlayNote` on `/clv` `ClvScoreboard` when `inPlayExcluded > 0`; same for the calibration surfaces. Add a page test. | `apps/web/app/clv/page.tsx` + calibration renderers + 1 test | test asserts the count appears |
+| 0.3 | **`/gsn` failure says it failed.** Remove `SAMPLE_TRANSMISSION` from the fallback path in `lib/gsn/build-transmission.ts:38-44,:125-131`. | 1 | no invented counts render on empty/error |
+| 0.4 | **`/performance` judged at the real bar.** Pass `threshold={0.524}` at `page.tsx:385`; split bettable vs model-signal lanes; keep model-signal rows in the record. | 2 | page shows both lanes at 0.524 |
+| 0.5 | **Gate preseason at mint.** No preseason gate exists anywhere on the publish path (`settle-sport.ts:33-36` deliberately *fetches* it). Add a season-type check in `process-sport.ts` before mint; NFL preseason rows are withheld. Withhold-only → no MODEL_VERSION bump. | 1–2 | test: a preseason fixture mints no pick |
+| 0.6 | **Close the soccer leak.** `isThreeWayMoneylineSport` (`scoring.ts:1116`) is correct and applied at `:1225`, yet 42 book-priced MLS MLs minted under v5.2.7 through 09-10. A second mint path bypasses it. Find every site that creates `pickType: MONEYLINE` and assert the guard at each. Do **not** re-grade the 29 draws — `settlement.ts:94` grades them correctly for a 3-way market; the defect was publishing them. | 1–3 | test: soccer sport key mints no ML through any path |
+| 0.7 | **Fix the selection-string price.** `"Columbus Crew SC ML (+102)"` locked at −135; `(-19084)` is not a price. The card must render `clvLockPrice`, never a string-embedded number. | 1 | test pins card price == lock price |
+
+### Phase 1 — Wire what is already built (week 1)
+
+| # | change | files | verify |
+|---|---|---|---|
+| 1.1 | **Fill `pfr_adv_stats` from nflverse.** PFR scraping is `forbidden`; the registry says "use nflverse's `pfr_advstats` release." `lib/ingestion/pfr-adv-stats.ts` is written and tested with zero importers. Point it at the nflverse release, schedule it beside `refresh-player-stats`. This is the founder's own football signal (broken tackles, yards after contact). | 2 | table > 0 rows; cron entry resolves |
+| 1.2 | **Tombstone fixture twins.** `findTwinCandidate` detects; `mergedIntoGameId` has no writer. Every NFL game this week is 2 rows (11 books / 0 books), neither tombstoned. Write the alias in the ingestion path the design already specifies (`game-identity.ts:95-99`). | 1–2 | this week's 16 NFL games → 16 canonical rows |
+| 1.3 | **Widen prop ingest.** `NFL_EVENT_ODDS_MARKETS` from 2 to every market the engine scores (pass yds/tds/comp/int, rush yds/att/td, rec/rec yds/rec td, anytime td, sacks — verify keys against the Odds API docs, do not guess). Credit cap is a founder env. | 1 | prop rows land for ≥8 markets |
+| 1.4 | **Build the prop reader.** `decodePropMarket` has one caller: its own test. Write `OddsLineSnapshot → RateSample` and the `player_game_stats` outcome join (keyed `(playerId, season, week)`, no `gameId` — the game→week map is part of the work). | 2–3 | a graded prop sample exists |
+| 1.5 | **Kalshi via PredExon, not direct.** Kalshi Trade API is `paid-required` (Dev Agreement §3). PredExon is `use-with-caution`, commercial-use true, founder holds the key, `PREDEXON_INGEST` default OFF. Wire the reader; **founder flips the flag**. This is the second book for `MIN_BOOKMAKERS=2` and a vig-free CLV reference at 1-cent spreads. Note the API renamed price fields to `*_dollars`/`*_fp`. | 2 | NFL games carry a PredExon/Kalshi price |
+| 1.6 | **Unlink the fiction.** 125 of 158 public pages unreachable; 0 of 12 Fantasy tools on live data; `/fantasy/nba` is titled "Fictional… Validator Demo" in the nav. Remove from nav/footer (code stays). Fantasy 12 → 3. Fix the 12 label/page mismatches by renaming the *label*. | nav.tsx, footer.tsx, mobile-nav.tsx | 37 labels → ≤12; every label matches its H1 |
+
+### Phase 2 — The holdout, permanently (week 1–2)
+
+The 500-adjustments failure has one cause: every adjustment improved the training score
+(0.24476→0.23828→0.23680→0.23676) while the holdout degraded (0.25010→0.24756→0.25547→0.28754).
+Without a holdout they are indistinguishable.
+
+| # | change | verify |
+|---|---|---|
+| 2.1 | `packages/verifier`: a **frozen holdout** (every settled pick from a fixed date forward, never trained on), a **scorecard** (Brier + log-loss vs `marketFairProb` on identical rows), and a **duel** (candidate must beat the market-anchored baseline on the holdout). No pre-registration ceremony, no four gates — one harness, one number. | re-grade v5.0.0→v5.2.7: all score worse than market on the holdout, as measured |
+| 2.2 | **Rule, enforced in CI:** no MODEL_VERSION bump ships without a passing scorecard on the frozen holdout. `model-freeze.mjs` already guards the bump; the scorecard becomes its precondition. (`scripts/guardrails/` is frozen — the *founder* lands this hook.) | founder-landed |
+| 2.3 | **First candidate through the harness: shrinkage.** `p = market + 0.10·(model − market)`. Measured 0.20818 vs 0.20905 holdout; football 0.18825 vs 0.18946. P(better) 0.75–0.87 — suggestive, not established. Score it on the frozen holdout. If it passes, it is a v5.2.8 **founder** proposal with the measurement attached. | scorecard |
+
+#### 2.4 The candidate queue — every idea from the dumps, sequenced, none written off
+
+The founder's standard is "10 things that improve 0.2% is real movement." That standard is
+only meetable through 2.1: each item below is one script, one pre-registered margin, one
+number on the frozen holdout, logged in the fact-graph. Items are grouped by what blocks them
+**today**, not by whether anyone likes them.
+
+**A. Testable this week — data already in nflverse or our DB. Run in this order (cheapest,
+most decision-relevant first). Each is a 2.1 candidate; a pass is a v5.2.8 line item.**
+
+| # | candidate | data | status | note |
+|---|---|---|---|---|
+| A1 | **Birthday + former-team target share** (founder's own example) | nflverse `rosters` (birth_date, team history) + pbp targets | **never run** | Estimand: residual target share on (birthday ∨ former-team) games vs the player's trailing-5 DYN baseline. Pooled mean residual, cluster-robust by player. This is the founder's "unseen factor" test and it costs one afternoon. |
+| A2 | Shrinkage weight `w` (F18) | our settled picks + `marketFairProb` | **passed, holdout** | The first positive in ~190 specs. Goes first through 2.1 to confirm it survives the frozen split. |
+| A3 | Referee tendencies (Vinovich under, Hussey home, Eck favorite) | nflverse `games.csv` has `referee` | never run | Discover ≤2019 / validate 2020+. Kill if |z|<1 on the validate era. |
+| A4 | Eastward travel ≥2 zones, afternoon kickoff (Fodor & Krieger spec) | nflverse stadium/location + kickoff | partial (F12 tested west-early and east-late, not this spec) | Run the exact published spec, then the 2020+ decay check. |
+| A5 | Wind/precip on totals (Borghesi) | nflverse `temp`,`wind`,`roof` | **measured: decayed to ~0 by 2025** | Re-run yearly; it is a 30-second script. Not dead forever, dead now. |
+| A6 | Permutation entropy of within-drive play calling (W8) | pbp | never run | vs `pass_oe`, ≥0.02 R² margin. |
+| A7 | Intrinsic dimension of play-call manifold (W7) | pbp | never run | vs distinct-play-type count. |
+| A8 | Boltzmann-informed recalibration of our own `p` | our picks | never run | A transform, not a feature; scored on holdout Brier vs isotonic. |
+| A9 | DFA scaling exponent of EPA sequences (W6) | pbp | never run | Low prior (Koopman p=0.89). Cheap; run anyway. |
+| A10 | Wasserstein barycenter distance (W5) | pbp | never run | Low prior (W2 was field-position in disguise). |
+| A11 | HMM form regimes, pooled fit + shuffle gate (T3) | pbp | never run | Report K* under AIC and BIC both. |
+| A12 | Prelec 4th-down weighting (IRL) | pbp | never run | Not a pick improvement; a coaching-behavior estimand. Runs last in this group. |
+| A13 | Persistent homology (T7, Null A + Null B) | pbp | never run | Published prior is null. Single shot, no rescue. |
+
+Already measured and dead on the holdout, so **not** in the queue unless a new spec is stated:
+rest (r=0.0084, n=2,953), intransitivity (sign opposite), Moskowitz blowout fade (50.49%),
+coach revenge (n=70), divisional-rematch under, first-meeting-loser (52.07% < 52.38%; the
+Autopsy's arithmetic on this one was wrong). The team model itself: 49.83% ATS on 895 held-out
+games — that is the honest ceiling on public-data game sides, and it is why A1–A13 are
+features for **props and calibration**, not new side picks.
+
+**B. Blocked on data we do not have — not written off; each names the acquisition that
+unblocks it.**
+
+| candidate | needs | nearest path |
+|---|---|---|
+| Betfair order-flow imbalance, WoM, iceberg detection | exchange L2 stream | No US access. Kalshi via PredExon (1.5) is the only exchange feed we can legally read; forward-only from flip date. |
+| Prelec near-expiry distortion, FLB child-market tails | in-play prediction-market prices | Kalshi forward-only (65 settled, 49 preseason). Pre-register before scoring; earliest read Week 8. |
+| Open-to-close line movement (Claremont AUC 0.702→0.730) | opening lines | oddsmagnet totals usable (90.3%), spreads not (19.4%). Kalshi opens from 1.5. |
+| Props regression-to-stable-metrics, snap-count-on-return | prop lines + graded outcomes | Phase 1.3/1.4. This is the highest-ceiling item in the dumps and it is already the Phase 3 program. |
+| Vector-field potentials, DYN separation features, coverage-split man/zone, Weibull AFT in-play | player tracking | No public NFL tracking data. NGS is aggregates; `pfr_advstats` (1.1) is the closest we get. |
+| Critical slowing down, wearables, biometrics | athlete sensor data | Does not exist outside teams. |
+
+**C. Infrastructure, not prediction — real, and Phase 5, because it multiplies a product that
+must exist first.** Phase VI's 20 repos (Ghost/Listmonk/Dub/Mautic/n8n/PostHog…), Phase VII's
+viral mechanics, the Neon Auth swap. Deploying an attribution stack in front of zero customers
+and a 49.8% side model attributes nothing.
+
+**What the queue changes:** the previous lead ran ~190 specs, got one positive, and the other
+ideas went into "explicitly out." That is what "writing things off" looks like. Under 2.4 every
+item has a status, a data dependency, and a slot; the only way off the list is a number on the
+frozen holdout or a named data gap.
+
+### Phase 3 — Props becomes a product (weeks 2–4) — the only untested market
+
+Sequenced so nothing irreversible happens before the measurement:
+
+1. Phase 1.3 + 1.4 accumulate a graded sample (~250/week at full-slate ingest).
+2. **Grade the HB engine against posted prop lines through the Phase 2 harness**, target
+   n≈500, power certificate stated *before* looking. Skill is 4.2% and over-confident above the
+   median; the honest prior is "maybe."
+3. **Only on a passing scorecard**: founder migration — `PickType` gains a prop value and
+   `@@unique([gameId,pickType])` is relaxed to admit player rows. Schema is law-2 frozen; this
+   is a founder-authorized change and nothing before step 2 touches it.
+4. Replace `/fantasy/props` (12 invented players) with the real board.
+
+If step 2 fails, three weeks were spent closing the last open question honestly — and that
+result is publishable under product #3.
+
+### Phase 4 — Publish what doesn't work (parallel, week 2+)
+
+One script, public data, reproducible: the reliability table (stuff rate +0.68, success +0.63,
+pressure +0.43, explosive-allowed −0.04), the market-gap table (every trait priced at z<1), the
+decay curves (wind 2023→2025), the 190 dead hypotheses with their out-of-sample numbers.
+Nobody in this market publishes this because nobody can afford to. It requires no edge and
+cannot be copied by a competitor with something to hide.
+
+### Phase 5 — The river (after a human arrives)
+
+Checkout fix (founder env, #822) → `track()` wired (22 events defined, 0 dispatched) → one
+non-Google sign-in (email OTP; **not** a Neon Auth swap — that's Vite/React-Router and an
+auth-stack change, founder decision) → email capture on `/` and under the `/picks` paywall →
+delete the affiliate code that contradicts the published pledge (ruling F-6). **No new revenue
+surface until this one takes a dollar.** Expect no dollars until Phase 4 puts a human on the site.
+
+---
+
+## FOUNDER DECISIONS — yours, not an agent's
+
+1. **Rotate the two Neon connection strings pasted in chat.** Today.
+2. `PREDEXON_INGEST=true` (1.5) and `EVENT_ODDS_CREDIT_CAP` raised (1.3).
+3. Checkout: `PRICING_PHASE=FOUNDING` or six new Stripe Prices (#822).
+4. The CI precondition hook (2.2) — `scripts/guardrails/` is frozen for agents.
+5. Shrinkage as v5.2.8 (2.3), on the scorecard.
+6. The props schema migration (Phase 3 step 3), on the scorecard.
+7. Amputate the fantasy suite or merely unlink it (1.6 unlinks; deletion is yours).
+8. **Stop feeding external research dumps into the project until Phases 0–2 ship.** Four of
+   the last six proposals were already tested and dead; every citation predated 2012.
+
+---
+
+## EXPLICITLY OUT — only three things, everything else is in the 2.4 queue
+
+- **Beating NFL sides/totals as the product goal.** Measured closed on 895 held-out games
+  (49.83% ATS). Side-market *features* still run through 2.4 as calibration/props inputs; what
+  is out is selling a side pick as an edge.
+- Re-grading the 29 soccer draws — correctly graded for a 3-way market; the fix is upstream (0.6).
+- Any MODEL_VERSION change from an agent session.
+
+Everything that used to sit here (Kalshi order flow, Prelec, vector fields, TDA, Weibull AFT,
+tracking-data features) is now in 2.4 §B with the data acquisition that unblocks it named.
+
+---
+
+## VERIFICATION — how the founder knows each phase landed
+
+- **P0:** #819 merged; `/clv` shows the exclusion count; `/gsn` never fabricates; `/performance`
+  shows two lanes at 0.524; a preseason fixture and a soccer key mint no pick; card price ==
+  lock price.
+- **P1:** `pfr_adv_stats > 0`; this week's NFL games are 16 rows not 32; ≥8 prop markets
+  landing; `decodePropMarket` has a production caller; PredExon prices on NFL games; nav ≤12
+  labels, each matching its page.
+- **P2:** the harness re-grades v5.0.0→v5.2.7 and none beat the market on the frozen holdout —
+  if any does, the harness is wrong and gets fixed before it grades anything else. Then A1–A13
+  each have a row in the fact-graph with a holdout number and a verdict; A1 (birthday/former
+  team) and A2 (shrinkage) are the first two rows.
+- **P3:** a graded prop sample with a pre-stated power certificate and a scorecard verdict.
+- **P4:** the reliability table reproduces from one script and matches FINDINGS.md.
+
+## What I will not claim
+
+I did not find an edge in NFL game markets and I am telling you not to look for one there
+again. I found that your engine carries a real signal it has been drowning by trusting itself
+too much, that your only validated model has no product around it, that your football read was
+right about the game and already in the price, and that the premier product has eleven real
+picks. That is the whole picture. It is smaller than the site suggests and more honest than
+anything a competitor publishes, and the plan above is built on it rather than around it.

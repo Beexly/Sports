@@ -1,0 +1,535 @@
+Primary-Source Synthesis and Unified Multi-Agent Execution Plan for the GSE Sealed Coach-First Architecture
+The Galaxy Sports Edge (GSE) prediction and ranking architecture is governed by a strict, non-negotiable epistemic boundary: all football projections, rankings, fourth-down policies, and positional value tables originate from a bottom-up Belichick-Adams Coach-First simulation locked every Tuesday at 04:00 CT (v1.0)1. At the moment of the Tuesday seal, the engine serializes team ratings, the scheme interchangeability cost matrix , the inverse-MDP fourth-down risk preference , and the Sealed EPA Dropoff Table into a canonical 64-character SHA-256 digest (coachMindsetHash)3. Across all subsequent mid-week injury designations—Wednesday practice reports (v2.0), Thursday Night Football inactives (v2.5), Friday final injury designations (v3.0), and Sunday T-90m official inactive lists (v4.0)—the coachMindsetHash and  remain byte-for-byte invariant2. Mid-week updates are mathematically restricted to adjusting execution weights via entropy-regularized Sinkhorn-Knopp optimal transport and multiplying those feasible shares by the pre-sealed EPA dropoff factors5.
+External sportsbook numbers (spreads, totals, moneyline odds, and player props) have zero causal influence on on-field kinematics and never enter the baseline projection1. Market lines are observed strictly after the seal, stripped of vigorish via multiplicative or Shin de-vigging, and evaluated against the sealed model total  using a finite-sample split conformal residual diagnostic 4. Any external market total falling outside the symmetric conformal prediction interval  raises a diagnostic Residual Flag (flagged: true) for operator review and downstream ticket gating without ever mutating team ratings, , , the EPA dropoff table, or coachMindsetHash4.
+This report delivers two integrated components: first, the primary-source mathematical synthesis across all five research tasks (finite-sample conformal diagnostics, Sinkhorn-Knopp optimal transport, Empirical Bayes frozen EPA dropoffs, inverse-MDP fourth-down risk recovery, and workspace/repository governance documents), quoting existing theorems and algorithms verbatim and flagging market-anchored or mid-week re-estimation literature as out of scope; second, the unified multi-agent execution plan that consolidates the 96-agent Six-Division hierarchy, Hermes, Motif, Grok, DeepSeek, and GSE-COACH-BRAIN-V1 onto a single deterministic pipeline ahead of the Tuesday, October 27, 2026 (04:00 CT) NFL Week 8 Lock2.
+
+Task 1: Finite-Sample Conformal Prediction for Residual Diagnostics
+1.1 Primary Literature Catalog for Task 1
+
+Paper / Document Title
+Authors
+Year
+Direct Link or Drive file_id
+Scope Status
+Distribution-Free Predictive Inference for Regression
+Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan J. Tibshirani, Larry Wasserman
+2018
+https://www.stat.berkeley.edu/~ryantibs/papers/conformal-jasa.pdf (https://arxiv.org/abs/1604.04173)10
+IN-SCOPE (Primary Split & Full Conformal)
+Predictive inference with the jackknife+
+Rina Foygel Barber, Emmanuel J. Candès, Aaditya Ramdas, Ryan J. Tibshirani
+2021
+https://projecteuclid.org/journals/annals-of-statistics/volume-49/issue-1/Predictive-inference-with-the-jackknife/10.1214/20-AOS1965.full (https://arxiv.org/abs/1905.02928)12
+IN-SCOPE (Primary Jackknife+ & CV+)
+Conformal prediction beyond exchangeability
+Rina Foygel Barber, Emmanuel J. Candès, Aaditya Ramdas, Ryan J. Tibshirani
+2023
+https://www.stat.berkeley.edu/~ryantibs/papers/nexcp.pdf (https://projecteuclid.org/journals/annals-of-statistics/volume-51/issue-2/Conformal-prediction-beyond-exchangeability/10.1214/23-AOS2276.pdf)14
+IN-SCOPE (Split & Nonexchangeable Jackknife+)
+A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification
+Anastasios N. Angelopoulos, Stephen Bates
+2021 / 2023
+https://arxiv.org/abs/2107.07511 (https://arxiv.org/html/2107.07511v6)16
+IN-SCOPE (Order-Statistic Quantile Exposition)
+Inductive Confidence Machines for Regression
+Harris Papadopoulos, Kostas Proedrou, Volodya Vovk, Alex Gammerman
+2002
+https://doi.org/10.1007/3-540-36755-1_29 (https://www.researchgate.net/publication/225209224_Inductive_Confidence_Machines_for_Regression)18
+IN-SCOPE (Original Split/Inductive Conformal)
+Algorithmic Learning in a Random World
+Vladimir Vovk, Alex Gammerman, Glenn Shafer
+2005 / 2022
+https://www.alrw.net/ (https://doi.org/10.1007/978-3-031-06649-8)20
+IN-SCOPE (Foundational Conformal Monograph)
+Conformalized Quantile Regression
+Yaniv Romano, Evan Patterson, Emmanuel J. Candès
+2019
+https://arxiv.org/abs/1905.03222 (https://arxiv.org/pdf/1905.03222)22
+IN-SCOPE (CQR & Order-Statistic Coverage Proof)
+Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournament
+(Authors in arXiv:2208.08598)
+2022
+https://arxiv.org/pdf/2208.0859824
+IN-SCOPE (Sports MOV Conformal Region without Vegas Lines)
+GSE Conformal Diagnostic Residual Flag & Sealed EPA Dropoff Specification
+Garrett Baxley, Grok-2, Hermes
+2026
+https://drive.google.com/open?id=1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS (1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS)4
+IN-SCOPE (Governing GSE Diagnostic Spec)
+Predicting NFL Point Spreads via Machine Learning
+(ResearchGate 380303073)
+2024
+https://www.researchgate.net/publication/380303073_Predicting_NFL_Point_Spreads_via_Machine_Learning25
+OUT OF SCOPE (Uses closing Vegas spread as predictor)
+Inpredictable Methodology (Gamblers are Bayesians)
+Mike Beuoy
+2016
+https://www.inpredictable.com/p/methodology.html26
+OUT OF SCOPE (Re-estimates team ratings from market lines)
+Adaptive Conformal Inference by Betting
+Aleksandr Podkopaev, Darren Xu, Kuang-Chih Lee
+2024
+https://arxiv.org/abs/2412.1931827
+OUT OF SCOPE (Online gradient / betting updates)
+Protected Probabilistic Regression
+Vladimir Vovk
+2021
+https://arxiv.org/pdf/2105.0866929
+OUT OF SCOPE (Online martingale density mutation)
+1.2 Verbatim Mathematical Statements and Algorithm Steps
+In Distribution-Free Predictive Inference for Regression (Lei, G'Sell, Rinaldo, Tibshirani, & Wasserman, 2018) and its companion exposition (https://aldosolari.github.io/SL/docs/SLIDES/Conformal.pdf), split conformal prediction constructs a distribution-free prediction band around a pre-trained regression estimator  using the  order statistic of held-out absolute residuals10:
+"Algorithm 2 Split conformal prediction.
+Require: Training , , algorithm , validation sample size , level 
+1: Split  into  of size  and  of size .
+2: Train 
+3: Compute  for .
+4: Sort  in increasing order: 
+5: Compute  with 
+
+"30
+Lei et al. (2018) establish both the finite-sample lower coverage bound under exchangeability and the anti-conservative upper bound when residuals have a continuous joint distribution in Theorem 1 (Full Conformal) and Theorem 2 (Split Conformal, where  is split into two equal halves of size )10:
+"Theorem 1. If  are i.i.d., then for a new i.i.d. pair ,
+
+for the conformal prediction band  constructed in (7) (i.e., Algorithm 1). If we assume additionally that for all , the fitted absolute residuals  have a continuous joint distribution, then it also holds that
+
+"10
+"Theorem 2. If  are iid, then for a new iid draw ,
+
+for the split conformal prediction band  constructed in Algorithm 2. Moreover, if we assume additionally that the residuals  have a continuous joint distribution, then
+
+"10
+In Predictive inference with the jackknife+ (Barber, Candès, Ramdas, & Tibshirani, 2021) and Conformal prediction beyond exchangeability (Barber et al., 2023), the holdout residual order statistic around a fixed predictor  is written directly in terms of  calibration residuals15:
+"Specifically, given a model  that was fitted on an initial training data set, and given  additional data points  (the holdout set), we define residuals
+
+and then compute the prediction interval at the new feature vector  as
+
+Equivalently, we can write
+
+"15
+When leave-one-out models  are used without sample splitting (jackknife+), Barber, Candès, Ramdas, and Tibshirani (2021) define the empirical quantile operator  as "the -th smallest value in " and prove the finite-sample coverage guarantee under exchangeability31:
+"Theorem: [B., Candès, Ramdas, Tibshirani] If  are exchangeable (e.g., i.i.d.), and  treats data points symmetrically, then jackknife+ satisfies
+
+"31
+Similarly, Angelopoulos and Bates (2021/2023) and Romano, Patterson, and Candès (2019) state the exact rank-order identity underlying the order statistic 16:
+"By definition, since , follows that
+
+"34
+1.3 Sports Residual Applications and Out-of-Scope Flags
+In the sports analytics literature, arXiv:2208.08598 (Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournament, 2022) applies conformal prediction to game margin of victory  estimated strictly from team strength parameters  and home advantage  without market spreads, forming the conformal prediction region  using the absolute residual 24. Within the GSE architecture (packages/prediction-engine/src/public-baseline/conformal-diagnostic.ts and Grok-Conformal-Diagnostic-and-EPA-Dropoff-Spec.md), this exact finite-sample order statistic  is applied to the residual  (after multiplicative de-vig) to construct 4.
+In contrast, three categories of external sources are explicitly flagged as out of scope:
+Predicting NFL Point Spreads via Machine Learning (https://www.researchgate.net/publication/380303073_Predicting_NFL_Point_Spreads_via_Machine_Learning, 2024) notes that "Most of the point-spread research work involves using the closing Vegas spread as an independent variable to predict the actual game spreads and bets against the spread"25. Out of Scope: Market-anchored models are prohibited.
+Inpredictable Methodology (https://www.inpredictable.com/p/methodology.html) updates internal team ratings in response to betting market movements ("revised 'best estimate' spread = original...")26. Out of Scope: Mutating ratings from market lines is prohibited.
+Adaptive Conformal Inference by Betting (https://arxiv.org/abs/2412.19318, 2024) and Protected Probabilistic Regression (https://arxiv.org/pdf/2105.08669, 2021) adjust model weights or conformal quantiles online via gradient descent or betting martingales28. Out of Scope: Re-estimating parameters after the Tuesday 04:00 CT seal is prohibited.
+Task 2: Entropy-Regularized Optimal Transport for Target Reallocation Under Fixed Marginals
+2.1 Primary Literature Catalog for Task 2
+
+Paper / Document Title
+Authors
+Year
+Direct Link or Drive file_id
+Scope Status
+A Relationship Between Arbitrary Positive Matrices and Doubly Stochastic Matrices
+Richard Sinkhorn
+1964
+https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-35/issue-2/A-Relationship-Between-Arbitrary-Positive-Matrices-and-Doubly-Stochastic-Matrices/10.1214/aoms/1177703591.full35
+IN-SCOPE (Original Diagonal Scaling Theorem)
+Concerning nonnegative matrices and doubly stochastic matrices
+Richard Sinkhorn, Paul Knopp
+1967
+https://msp.org/pjm/1967/21-2/pjm-v21-n2-p14-s.pdf (https://projecteuclid.org/journals/pacific-journal-of-mathematics/volume-21/issue-2/Concerning-nonnegative-matrices-and-doubly-stochastic-matrices/pjm/1102992505.full)36
+IN-SCOPE (Sinkhorn-Knopp Convergence Proof)
+Sinkhorn Distances: Lightspeed Computation of Optimal Transport
+Marco Cuturi
+2013
+http://papers.neurips.cc/paper/4927-sinkhorn-distances-lightspeed-computation-of-optimal-transport.pdf38
+IN-SCOPE (Entropic OT & Lemma 2 Scaling)
+Computational Optimal Transport: With Applications to Data Sciences
+Gabriel Peyré, Marco Cuturi
+2019
+https://optimaltransport.github.io/pdf/ComputationalOT.pdf (https://www.emerald.com/ftmal/article/11/5-6/355/1332396/Computational-Optimal-Transport-with-Applications)39
+IN-SCOPE (Proposition 4.3 & Log-Domain OT)
+Near-linear time approximation algorithms for optimal transport via Sinkhorn iteration
+Jason M. Altschuler, Jonathan Weed, Philippe Rigollet
+2017
+https://arxiv.org/pdf/1705.0963441
+IN-SCOPE (Early-Stopping  Marginal Bound)
+Stabilized Sparse Scaling Algorithms for Entropy Regularized Transport Problems
+Bernhard Schmitzer
+2019
+https://epubs.siam.org/doi/pdf/10.1137/16M1106018 (https://arxiv.org/abs/1610.06519)42
+IN-SCOPE (Log-Domain Absorption Stability)
+gse_injury_overlay.py & _goal set.docx
+Garrett Baxley, Grok
+2026
+uploaded:gse_injury_overlay.py & uploaded:_goal set.docx5
+IN-SCOPE (GSE Usage Reallocation & Hash Guard)
+2.2 Verbatim Mathematical Statements and Algorithm Steps
+The foundational theorem of Sinkhorn (1964) and Sinkhorn and Knopp (1967) establishes that alternating row and column normalizations of a nonnegative matrix  with total support converge to a unique doubly stochastic matrix 36:
+"THEOREM. Let  be a nonnegative  matrix. A necessary and sufficient condition that there exist a doubly stochastic matrix  of the form  where  and  are diagonal matrices with positive main diagonals is that  has total support. If  exists then it is unique. Also  and  are unique up to a scalar multiple if and only if  is fully indecomposable."36 "Iteratively set:
+
+"36
+Cuturi (2013) introduced entropic regularization to the optimal transport problem over the transport polytope  and proved in Lemma 2 that the unique optimal coupling is recovered via Sinkhorn-Knopp scaling38:
+"
+
+where  is the entropy of ."38 "Lemma 2. For , the solution  is unique and has the form , where  and  are two non-negative vectors of  uniquely defined up to a multiplicative factor and  is the element-wise exponential of . Proof. Let  be the Lagrangian of the regularized problem with dual variables  for the two equality constraints in :
+
+For any couple , . Since  is strictly positive, Sinkhorn's theorem (1967) states that there exists a unique matrix of the form  that belongs to , where .  is thus necessarily that matrix, and can be computed with Sinkhorn's fixed-point iteration:
+
+"38
+In Computational Optimal Transport (Peyré & Cuturi, 2019, Section 4.1–4.2, Proposition 4.3) and _goal set.docx, the primal problem with regularization parameter  and cost matrix  is stated as6:
+"
+
+where ."6 "Define the kernel . The iteration is
+
+After convergence the plan is
+
+"6
+2.3 Usage Redistribution, Numerical Stability, and Early-Stopping Results
+For numerical stability and deterministic termination in a pipeline where the sealed object hash must never mutate:
+Near-Linear Time Early Stopping (Altschuler, Weed, & Rigollet, 2017): Algorithm 3 () halts as soon as the  marginal violation falls below , 41. By Lemma 2, each step reduces the dual Lyapunov potential  by the exact Kullback-Leibler divergence to the target marginals, , guaranteeing termination in  iterations (Theorem 2)41.
+Log-Domain Stabilization (Schmitzer, 2019): To prevent floating-point overflow/underflow for small , Algorithm 2 absorbs large scaling factors into dual potentials  whenever  or , which is mathematically identical to standard scaling iterates45.
+GSE Usage Redistribution (gse_injury_overlay.py & sinkhorn-targets.ts): When an injured player's target/carry share is removed from , sinkhorn_with_info clamps the exponent at -700.0 (math.exp(max(-C[i][j] / eps, -700.0))), guards denominators with max(..., 1e-12), stops when du < 1e-6 and dv < 1e-6 (up to max_iter = 200), and verifies row_residual < 1e-4 and col_residual < 1e-45. The column sums feasible[player] = sum(P[i][j] for i in range(len(players))) become the post-injury shares, leaving , , and coachMindsetHash untouched5.
+Task 3: Empirical Bayes or Hierarchical Models for Player-Level EPA Dropoffs Estimated Once and Frozen
+3.1 Primary Literature Catalog for Task 3
+
+Paper / Document Title
+Authors
+Year
+Direct Link or Drive file_id
+Scope Status
+Parametric Empirical Bayes Inference: Theory and Applications
+Carl N. Morris
+1983
+https://doi.org/10.2307/2287098 (https://www.semanticscholar.org/paper/Parametric-Empirical-Bayes-Inference%3A-Theory-and-Morris/2446ff36818d62c8851e39bef95da9c02235388a)46
+IN-SCOPE (Estimate-Once Plug-In EB Theory)
+Improving pairwise comparison models using Empirical Bayes shrinkage
+Stephen Ragain, Alexander Peysakhovich, Johan Ugander
+2018
+https://arxiv.org/abs/1807.09236 (https://stacks.stanford.edu/file/druid:rd472bx1101/thesis-upload-augmented.pdf)48
+IN-SCOPE (Implemented in 1807-09236-empirical-bayes-btl.ts)
+nflWAR: A Reproducible Method for Offensive Player Evaluation in Football
+Ronald Yurko, Samuel Ventura, Maksim Horowitz
+2019
+https://arxiv.org/abs/1802.00998 (https://doi.org/10.1515/jqas-2018-0010)50
+IN-SCOPE (Multilevel EPA Replacement Baseline)
+From Control to Treatment: Causal Forecasting Beyond the Observed Panel
+Dennis Shen
+2026
+https://arxiv.org/abs/2606.1851252
+IN-SCOPE (Implemented in 2606-18512-causal-panel-forecasting.ts)
+A multilevel model with heterogeneous variances for snap timing in the NFL
+Quang Nguyen, Ronald Yurko
+2025
+https://arxiv.org/abs/2502.1631353
+IN-SCOPE (Implemented in 2502-16313-snap-timing-multilevel.ts)
+Who Blocks Whom? Probabilistic Pass-Blocking Assignments in American Football
+(Authors in arXiv:2609.33664)
+2026
+https://arxiv.org/abs/2609.3366454
+IN-SCOPE (Implemented in 2609-33664-hmm-pass-blocking.ts)
+gse_injury_overlay.py & conformal-diagnostic.ts
+Garrett Baxley, Grok-2, Hermes
+2026
+uploaded:gse_injury_overlay.py & 1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS4
+IN-SCOPE (Sealed EPA Dropoff Table & SHA-256 Lock)
+Deriving Circa's Proprietary Numbers (§2 Injury Adjustment Magnitudes)
+Garrett Baxley
+2026
+uploaded:Pasted Text.txt56
+OUT OF SCOPE for Sealed Table (Measures mid-week market )
+3.2 Verbatim Mathematical Statements and Algorithm Steps
+Morris (1983) formalizes the Parametric Empirical Bayes principle that separates hyperparameter estimation (performed once on historical data) from downstream plug-in evaluation57:
+"Empirical Bayes estimates them once, then plugs them in... In empirical Bayes, the model is hierarchical but the hyperparameter  is estimated from the marginal distribution of the data, typically by moments or maximum likelihood. Posterior summaries of the latent effects use the plug-in distribution
+
+Empirical Bayes uses one estimated shrinkage rule and acts as though it were fixed."58 "Given a prior distribution of  as , the posterior expectation of  given  is  where ... ."57
+Ragain, Peysakhovich, and Ugander (2018, arXiv:1807.09236) extend Empirical Bayes shrinkage to Bradley-Terry-Luce (BTL) / Multinomial Logit (MNL) skill models  using the Fisher information matrix  and prior covariance 3. In the GSE repository (packages/prediction-engine/src/1807-09236-empirical-bayes-btl.ts), this pre-seal shrinkage step is implemented as3:
+"1807-09236-empirical-bayes-btl.ts — Empirical Bayes shrinkage of BTL MLEs (shrinkBtl, R = (I + A S)^-1)."3
+In nflWAR: A Reproducible Method for Offensive Player Evaluation in Football (Yurko, Ventura, & Horowitz, 2019, arXiv:1802.00998), multilevel models isolate individual player Expected Points Added (EPA) above a frozen positional replacement-level baseline (defined as the bottom 25th percentile of players by snap/usage threshold at each position)51:
+""59 ""60
+In the GSE production pipeline (gse_injury_overlay.py and packages/prediction-engine/src/public-baseline/conformal-diagnostic.ts), the pre-estimated positional/player EPA replacement ratios are frozen into EPA_DROPOFF (SealedEpaDropoffTable), hashed into EPA_DROPOFF_SHA256 (hashEpaDropoffTable) at the Tuesday 04:00 CT seal, and applied post-Sinkhorn without mid-week re-estimation4:
+"EPA_FACTOR_MIN: float = 0.5; EPA_FACTOR_MAX: float = 1.2 EPA_DROPOFF: Dict[str, float] = {'QB1': 0.78, 'RB1': 0.85, 'WR1': 0.82, 'WR2': 0.88, 'TE1': 0.84, 'OL': 0.91} def _canonical_hash(obj: Mapping[str, object]) -> str: blob = json.dumps(obj, sort_keys=True, separators=(',', ':')).encode('utf-8') return hashlib.sha256(blob).hexdigest() EPA_DROPOFF_SHA256: str = _canonical_hash(EPA_DROPOFF) effective = share * factor"5
+Task 4: Inverse Reinforcement Learning or Inverse Optimization for Fourth-Down Risk Preference
+4.1 Primary Literature Catalog for Task 4
+
+Paper / Document Title
+Authors
+Year
+Direct Link or Drive file_id
+Scope Status
+Learning Risk Preferences in Markov Decision Processes: An Application to the Fourth Down Decision in the National Football League
+Nathan Sandholtz, Lucas Wu, Martin Puterman, Timothy C. Y. Chan
+2023 / 2024
+https://arxiv.org/abs/2309.00756 (https://projecteuclid.org/journals/annals-of-applied-statistics/volume-18/issue-4/Learning-risk-preferences-in-Markov-decision-processes--An-application/10.1214/24-AOAS1933.full)62
+IN-SCOPE (Primary Inverse-MDP  Recovery; wired in 2309-00756-inverse-mdp-fourth-down.ts)
+Do Firms Maximize? Evidence from Professional Football
+David Romer
+2006
+https://eml.berkeley.edu/~dromer/papers/JPE_April06.pdf (https://doi.org/10.1086/501171)64
+IN-SCOPE (Bellman Equation for 4th-Down Field Position Value)
+What was lost? A causal estimate of fourth down behavior in the National Football League
+Derrick R. Yam, Michael J. Lopez
+2019
+https://doi.org/10.3233/JSA-190294 (https://www.researchgate.net/publication/334016501_What_was_lost_A_causal_estimate_of_fourth_down_behavior_in_the_National_Football_League)66
+IN-SCOPE (Fixed-Strategy Counterfactual Win Valuation)
+4.2 Verbatim Mathematical Statements and Algorithm Steps
+In Learning Risk Preferences in Markov Decision Processes: An Application to the Fourth Down Decision in the National Football League (Sandholtz, Wu, Puterman, & Chan, 2023/2024, arXiv:2309.00756), fourth-down play-calling and subsequent game states are formulated as a Markov Decision Process (MDP) in which the decision-maker optimizes a scalar risk quantile  of the future value distribution rather than its expectation68:
+"Our goal is to estimate the implicit risk sensitivity of coaches on fourth downs based on their observed decisions. To do this, we assume that coaches optimize with respect to an unknown quantile of the future game value distribution. Mathematically, letting  denote the random variable for future game value conditional on taking action  in game situation , instead of choosing an action that maximizes , the coach maximizes
+
+the -quantile of ."68
+To invert the MDP for the scalar parameter , Sandholtz et al. (2023/2024) formulate an inverse optimization problem that minimizes the decision suboptimality residual over the coach's observed historical fourth-down choices68:
+"We assume that coaches' observed decisions are optimal but that the risk preferences governing their decisions are unknown. This yields a novel inverse decision problem for which the optimality criterion, or risk measure, of the MDP is the estimand. Using the quantile function to parameterize risk, we estimate which quantile-optimal policy yields the coaches' observed decisions as minimally suboptimal."68
+In the foundational dynamic-programming formulation of Romer (2006), the state-value function  across the 101 discrete first-down/kickoff situations satisfies the Bellman equation64:
+"
+
+"64
+Within the GSE codebase (packages/prediction-engine/src/2309-00756-inverse-mdp-fourth-down.ts and src/coach-sim/locked-projection.ts), the discrete quantile-MDP inversion is implemented via quantileValue, decisionResidual, recoverTau, and assertTauSealed3:
+"recoverTau is called only at locked-projection.ts:112 (the pre-seal Tuesday v1.0 construction) and inside the 2309 module's own helper. The injury path (applyInjuryOverlay, line 163) never re-estimates tau — it carries tau byte-for-byte and enforces SEAL CHECK 1 (assertTauSealed) and SEAL CHECK 2 (recomputed coachMindsetHash). No post-seal re-estimation exists."3
+Task 5: Google Drive and Workspace Documents Restating the Sealed-Object Invariant and Diagnostic Boundary
+The table below catalogs all nine primary documents in the account's Google Drive, Google Docs, and workspace artifacts that contain "Belichick-Adams", "coach-first", "coachMindsetHash", "EPA dropoff", "conformal residual", or "Tuesday 04:00 CT", followed by verbatim summaries of their sealed-object invariant and diagnostic boundary sections.
+
+#
+Document Title
+Authors / Owner
+Year / Date
+Direct Link or Drive file_id
+Matched Keywords
+1
+10/23 — Master Architectural and Operational Plan: The Belichick-Adams Coach-First Simulation and Projection Engine
+Garrett Baxley
+2026-10-24
+https://drive.google.com/open?id=1HqUJEWfndJw45SXIzvQUTQJaVbFRoLDKFYsiIegJQ3k (1HqUJEWfndJw45SXIzvQUTQJaVbFRoLDKFYsiIegJQ3k)
+Belichick-Adams, coach-first1
+2
+GSE Conformal Diagnostic Residual Flag & Sealed EPA Dropoff Specification (in 2026-10-25_181330-gse-unified-coach-brain-and-tuesday-lock-pipeline.md & GSE-PLAN-PROGRESS-AUDIT-2026-10-26.md)
+Garrett Baxley, Grok-2, Hermes
+2026-10-26
+uploaded:2026-10-25_180500-gse-unified-coach-brain-and-tuesday-lock-pipeline.md / 1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS
+coachMindsetHash, EPA dropoff, conformal residual, Tuesday 04:00 CT2
+3
+GSE DeepSeek Overnight Handoff v3 — Completion Log (2026-10-25-overnight-completion.md)
+Garrett Baxley, Hermes
+2026-10-26
+uploaded:2026-10-25-overnight-completion.md
+coachMindsetHash, EPA dropoff, Tuesday 04:00 CT3
+4
+Finish-for-tonight — 2026-10-26 (2026-10-26-finish.md)
+Garrett Baxley, Hermes
+2026-10-26
+uploaded:2026-10-26-finish.md
+conformal, EPA table, assertTauSealed7
+5
+_goal set.docx (Overnight-3 Goal Set & Seal-Sinkhorn Invariant Specification)
+Garrett Baxley, Grok
+2026-10-26
+uploaded:_goal set.docx
+coachMindsetHash, EPA dropoff, Tuesday6
+6
+gse_injury_overlay.py
+Garrett Baxley
+2026-10-26
+uploaded:gse_injury_overlay.py
+EPA dropoff, Tuesday 04:00 CT, EPA_DROPOFF_SHA2565
+7
+Neuro-Symbolic and Causal Architecture for Institutional Sports Intelligence at Scale (GSE Mind v6.0-Ultra)
+Garrett Baxley
+2026-10-23
+https://drive.google.com/open?id=1RXRKFVFaA22z0nj8lL1OCF6HJ7WP0jtzQz7U7XW-3jc (1RXRKFVFaA22z0nj8lL1OCF6HJ7WP0jtzQz7U7XW-3jc)
+Sinkhorn-Knopp, Shin de-vig, AuthorizedPublishReceipt69
+8
+GSE Causal Inference Engine Plan v2
+Garrett Baxley
+2026-10-21
+https://drive.google.com/open?id=1XkQElUlBumFojLY7497OVthxHpBaY82D3wYLv5ZFZ4c (1XkQElUlBumFojLY7497OVthxHpBaY82D3wYLv5ZFZ4c)
+SPEC-C Author Lane, SPEC-B Pricing Solver, TA-CQR8
+9
+agent-bus-main (1).zip
+Garrett Baxley, Motif, Hermes
+2026-10-02
+https://drive.google.com/open?id=1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS (1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS)
+tau_hat_fourth_down, crepes conformal, LeakageGate4
+Verbatim Quotes Restating the Sealed-Object Invariant and Diagnostic Boundary
+In Document 1 (10/23 — Master Architectural and Operational Plan: The Belichick-Adams Coach-First Simulation and Projection Engine, file_id: 1HqUJEWfndJw45SXIzvQUTQJaVbFRoLDKFYsiIegJQ3k), the Coach-First boundary is defined as follows1:
+"This overarching plan establishes a permanent architectural inversion that supersedes all prior specifications: the sportsbook line has zero causal influence on what transpires on the football field and must be exiled to the final comparison step of the pipeline... Only at the very last stage—after the internal numbers are locked—does the system inspect sportsbook lines to identify where the book disagrees with the simulated reality."1
+In Document 2 (GSE Conformal Diagnostic Residual Flag & Sealed EPA Dropoff Specification and 2026-10-25_181330-gse-unified-coach-brain-and-tuesday-lock-pipeline.md, file_id: 1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS / uploaded:2026-10-25_180500-gse-unified-coach-brain-and-tuesday-lock-pipeline.md), the diagnostic residual flag, prediction interval, and sealed EPA dropoff table invariants are stated verbatim2:
+"Any game where  triggers a Residual Flag.
+Strict Diagnostic Boundary: The flag indicates an external market total sitting outside the empirical residual band generated under the sealed process.
+Invariance Guarantee: It is strictly diagnostic. It does NOT change sealed ratings, the EPA dropoff table, the ranking, the prediction, or the coachMindsetHash.
+Inclusion in Tuesday Seal: The entire serialized table is hashed directly into the coachMindsetHash on the Tuesday v1.0 lock at 04:00 CT.
+Injury Execution: When an injury occurs (Wed v2.0, Fri v3.0, Sun T-90 v4.0), the engine queries the sealed dropoff value for the inactive player and reallocates that residual down the depth chart exclusively under the already-sealed parameters.
+Zero-Drift Constraint: Because the table itself resides inside the hashed object, the operator leaves coachMindsetHash byte-for-byte unchanged across all injury versions.
+Zero Mid-Week Re-estimation: The table is never recalibrated or adjusted post-seal based on market closing lines, practice reports, or external observations."4
+In Document 3 (GSE DeepSeek Overnight Handoff v3 — Completion Log, uploaded:2026-10-25-overnight-completion.md) and Document 4 (Finish-for-tonight — 2026-10-26, uploaded:2026-10-26-finish.md), the codebase enforcement of the Tuesday seal and post-seal diagnostic boundary is documented3:
+"lockTuesdayCoachBaseline() now SHA-256-seals coachMindsetHash + recovered tau (from inverse-MDP) and freezes the pure coach input. applyInjuryOverlay() performs Sinkhorn target reallocation + bounded EPA points dropoff, then enforces assertTauSealed() and re-derives the mindset hash to prove it did not move."3 "Boundary: Seal locked. No re-estimation, no recoverTau, no ENABLED flip, no push, no PR. Hawkes and CQR remain external diagnostics; they do not enter the baseline. The injury residuals in the evidence file are the only new usable output tonight."7
+In Document 5 (_goal set.docx, uploaded:_goal set.docx) and Document 6 (gse_injury_overlay.py, uploaded:gse_injury_overlay.py), the Seal-Sinkhorn invariant test and EPA table hash verification are specified5:
+"After the overlay returns, the test calls assertTauSealed(before, after). It must return true. The recovered  and the mindset hash must be bit-identical to the values from the original Tuesday lock. The only quantities that are allowed to differ are the execution weights (the Sinkhorn plan and the EPA-adjusted shares). What fails the test: Any code path that re-estimates , mutates the mindset hash, or replaces the sealed cost matrix or EPA table after the Tuesday lock will fail the assertion."6 "The EPA table and the cost matrix are sealed at Tuesday 04:00 CT. Neither tau nor any other sealed coach parameter enters this module, so the overlay cannot move them."5
+In Document 7 (Neuro-Symbolic and Causal Architecture for Institutional Sports Intelligence at Scale, file_id: 1RXRKFVFaA22z0nj8lL1OCF6HJ7WP0jtzQz7U7XW-3jc), Document 8 (GSE Causal Inference Engine Plan v2, file_id: 1XkQElUlBumFojLY7497OVthxHpBaY82D3wYLv5ZFZ4c), and Document 9 (agent-bus-main (1).zip, file_id: 1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS), the multi-agent firewall isolating pre-seal authoring from post-seal pricing and diagnostics is codified4:
+"1. Author Lane (situational_force_layer2): Permitted Inputs: Point-in-time (PIT) signals () & Class-A literature. Emitted Artifacts: Immutable introspection/dossiers/<season>/<week>/<game_id>/v2.json chained via prev_sha. Hard Isolation & Firewall Invariant: Zero import paths to SPEC-B pricing solvers; stamped by UTC server clock prior to cutoff."8
+Unified Multi-Agent Execution Plan: Consolidating the Fleet on Beexly/Sports
+To bring every agent across Beexly/Sports, Beexly/agent-bus, C:/Users/Garrett/Sports, and the 96-agent Six-Division hierarchy together moving in the same direction, this execution plan establishes a single operational state machine grounded in the verified repository state as of Monday, October 26, 2026 on branch engine/public-baseline-2026-10-243.
+
+6.1 Audit of Baseline (Oct 25) vs. Current Verified State (Oct 26 Evening)
+Across the last 36 hours of autonomous execution on C:/Users/Garrett/Sports (engine/public-baseline-2026-10-24), the structural defects that previously caused Sunday-morning script improvisation and multi-agent drift have been resolved and pinned by unit and invariant tests2:
+
+Architectural Subsystem
+Oct 25 Baseline (Start of Plan)
+Oct 26 Current State (Verified Tonight)
+Verification Proof
+1. Tuesday 04:00 CT Coach Mindset Seal
+applyInjuryOverlay was a no-op stub; mutable injuryDropOff and wall-clock new Date() leaked into the hash;  was unsealed2.
+locked-projection.ts pins injuryDropOff: 0 at baseline, seals coachMindsetHash + recovered  (0.42), and enforces assertTauSealed + hash recomputation on every injury overlay3.
+locked-projection.test.ts: 7/7 PASS; 2309-inverse-mdp.test.ts: 10/10 PASS3.
+2. Sinkhorn-Knopp & Sealed EPA Dropoff
+Ad-hoc or missing target share redistribution when starters were scratched2.
+Implemented in both TypeScript (sinkhorn-targets.ts, conformal-diagnostic.ts) and Python (gse_injury_overlay.py, run_week7_injury_pass.py). Processed 13 Week 7 games (1.989 total mass moved, 0.153 per game) with zero hash drift4.
+sinkhorn-targets.test.ts: 22/22 PASS; verify_engine.py: 8/8 PASS4.
+3. Conformal Residual Diagnostics & De-Vig
+Unspecified; no formal boundary between market lines and sealed totals4.
+public-baseline/conformal-diagnostic.ts, gse-pre-seal/conformal-diagnostic.ts, and devig.ts (multiplicativeDevig) compute $\hat{q} =
+r
+4. Isotonic Calibration & Ticket Signing
+Raw confidences inflated by ~5.2 pts (Brier 0.2484); call-sheet.ts forced ticket = null with zero production callers for signCallSheetTickets()2.
+calibration-map.ts + weekly-cadence-orchestrator.ts apply frozen monotonic PAVA knots (CALIBRATION_KNOTS), price tickets via de-vigged edges, enforce contradictionGate, and invalidate stale tickets on injury advances3.
+calibration-map.test.ts: 23/23 PASS; calibration-knots-monotone.test.ts: 4/4 PASS; weekly-cadence-orchestrator.test.ts: 6/6 PASS3.
+5. Provenance & Physics Integrity
+Fabricated arXiv:2401.16392 / 2610.15000 Navier-Stokes citations in mind-reasoning.ts and arxiv-reasoning-bridge.ts; 24 mislabeled stubs; duplicated 0.0315 vs 0.033 slopes3.
+All 35 fabricated provenance strings removed (KNOWN_VIOLATIONS = 0); HFA (1.5–1.8 pts) and post-2011 rest decay (arXiv:2408.10867v1) wired; PROB_PER_POINT = 0.033 unified in constants.ts; 24 stubs re-headered3.
+mind-reasoning-hfa.test.ts: 7/7 PASS; arxiv-reasoning-bridge.test.ts: 7/7 PASS; provenance-integrity.test.ts: 4/4 PASS; module-header-accuracy.test.ts: 2/2 PASS3.
+6. Coach Brain LLM & SFT Datasets
+5,149 records in MIND_CORPUS_3000.jsonl and 80 X-situational rules scattered; no Merkle prompt gate2.
+data/llm/gse-coach-brain-v1-sft.jsonl and train/val splits compiled; gse-coach-brain-llm.ts patched to bind TuesdayMasterLock Merkle and coachMindsetHash4.
+SFT datasets validated; gse-coach-brain-llm.ts patched4.
+7. Passive Market & Steam Observability
+No structured local database for passive bookmaker reverse-engineering56.
+collect_circa.py polls SBR spread/total/moneyline __NEXT_DATA__ and VegasInsider into circa_observations.db; hawkes.py runs external exponential Hawkes steam classification7.
+circa_observations.db active; hawkes-regime-2026-10-26.json logged7.
+6.2 Multi-Agent Division Alignment and Epistemic Lane Protocol
+To prevent circular self-certification or silent drift across the 96 specialized agents governed by GSE MAIN BOT (0c671b12-97a1-458f-a611-d91d1f1dc9d8) and the active coding/research fleet (Hermes, Motif, Grok 4.7, DeepSeek), every task on Beexly/agent-bus is enforced by the atomic lease-and-fence state machine persisted at bus/gse/claimed/<ticket-id>/status.json8. An agent cannot execute a ticket in inbox/ until it atomically transitions status.json from state: "open", fence: 0, lease_holder: null to state: "claimed", lease_holder: "<agent_id>", fence: 18. Moving a ticket to done/ requires writing RESULT.md with three verifiable cryptographic proofs: receipt (the git commit SHA-256), action_dependence (empirical proof that output probabilities or AST structures respond to input perturbation), and response_validity (independent verifier exit code 0)8.
+
+Division / Agent Role
+Epistemic Lane (Beexly/agent-bus)
+Exact Scope & Permitted Actions Under the Sealed Architecture
+Cryptographic Proof Required to Close Ticket (RESULT.md)
+DIV-1 (Football Intel) & nflverse Producers
+Pre-Seal Data Ingestion (packages/data-ingestion, data/gse-dataset/current/)
+Pull official nflverse play-by-play, rosters, depth charts, snap counts, and official Wed/Fri/T-90m injury reports; maintain circa_observations.db via collect_circa.py4.
+receipt (git SHA-256), schema validation, and test_asof_no_leakage.py exit code 04.
+DIV-2 (Signal & Research) & Author Lane (situational_force_layer2)
+Lane 1: SPEC-C Author Lane
+Execute pre-seal (prior to Tuesday 04:00 CT): run 9-dim Markov drive sim, inverse-MDP recoverTau, Empirical Bayes shrinkage (shrinkBtl), and lock CoachMindsetBaseline + SealedEpaDropoffTable into coachMindsetHash. Zero imports from SPEC-B market pricing2.
+receipt (Tuesday v1.0 coachMindsetHash + packet Merkle), action_dependence, and p0-seal-isolation.test.ts exit 03.
+DIV-3 (Engine QA), Adversary Red-Team & Dual Judges
+Lanes 2 & 3: Judge Lanes () & Adversary Red-Team
+Run structural/numerical do-calculus verifiers (A082/A083), p0-seal-isolation.test.ts, provenance-integrity.test.ts, barrel-type-exports.test.ts, and verify_engine.py. Veto any unverified citation or post-seal parameter mutation3.
+Independent verifier exit code 0 (response_validity) and KNOWN_VIOLATIONS = 03.
+SPEC-B Pricing & Calibration Solver (Hermes / Engine)
+Lane 4: Pricing, Injury Overlay & Conformal Diagnostics
+Post-seal execution: run applyInjuryOverlay / injury_overlay (Sinkhorn + sealed EPA dropoff) for v2.0–v4.0, run multiplicativeDevig, evaluate evaluateConformalDiagnostic ($
+r_i
+DIV-4 (Content & Media) & GSE-COACH-BRAIN-V1 LLM
+Grounded Narrative & Draft-Only Transport (GAP-27)
+Generate call sheets, SGP cards, and interactive CLI/web responses strictly from buildCoachBrainSystemPrompt(packet) gated by verifyCoachBrainOutputAgainstPacket(). Stage X dispatches strictly as drafts (GAP-27)2.
+gse-coach-brain-llm.test.ts exit 0 (violations.length === 0) and GAP27_DRAFT_ONLY_X_TRANSPORT exit 04.
+DIV-5 / DIV-6 (Owner Ops & Settlement Resolver)
+Lanes 5 & 6: Settlement Resolver & Surface Fence
+Run T+120m post-game settlement (settlement-loop.ts), Murphy Brier decomposition (calibration.ts), and no-raw-ngs-fence.ts route protection; manage .env.local credentials and worktree archival3.
+Two-phase commit receipt after 24h stat lock; trust-gate.test.mjs exit 04.
+6.3 Sequenced Execution Plan for the Agent Fleet (Immediate to 72 Hours)
+Unify Conformal Diagnostic Exports and Finalize the gse-coach-brain-llm.ts Verification Gate (Immediate — Tonight, Oct 26): Reconcile the two conformal diagnostic modules (packages/prediction-engine/src/public-baseline/conformal-diagnostic.ts and packages/prediction-engine/src/gse-pre-seal/conformal-diagnostic.ts) so public-baseline/index.ts exports a single canonical surface combining multiplicativeDevig (packages/prediction-engine/src/gse-pre-seal/devig.ts), computeConformalQuantile, buildConformalPredictionInterval, evaluateConformalDiagnostic, and hashEpaDropoffTable4. Run npx vitest run packages/prediction-engine/src/reasoning/gse-coach-brain-llm.test.ts against the patched TuesdayMasterLock type in gse-coach-brain-llm.ts to verify 3/3 passing tests4.
+Refresh nflverse Week 7–8 Injury and Play-by-Play Tables (Immediate — Prior to Tuesday 04:00 CT): As logged in docs/ops/nflverse-week7-injury-check-2026-10-26.md, the local CSV data/gse-dataset/current/injuries_2026.csv currently stops at Week 3 (733 rows and zero Week 7 rows)7. DIV-1 / Data Ingestion must pull the current 2026 nflverse release (injuries, depth_charts, snap_counts, and play_by_play_2026.parquet) from https://github.com/nflverse/nflverse-data/releases so that the Week 8 baseline and mid-week injury passes operate on complete table-level data4.
+Rotate Local Neon gse-postgres Credentials and Execute the Tuesday 04:00 CT (v1.0) Week 8 Seal (Tuesday, Oct 27 at 04:00 CT): Update the stale password in C:/Users/Garrett/Sports/.env.local (DATABASE_URL for ep-summer-moon-apv5ccys-pooler.c-7.us-east-1.aws.neon.tech) directly in local storage without pasting credentials into chat3. If Neon remains offline at 04:00 CT, the orchestrator reads from the repo-committed boards in packages/prediction-engine/src/nfl/data/public-boards/3. Execute generateTuesdayMasterLock across all 14 NFL Week 8 games (from Thursday's CAR @ GB through Monday's CHI @ SEA), locking team ratings, , recovered fourth-down , and SealedEpaDropoffTable into coachMindsetHash3.
+Register the 5 Automated Weekly Cadence Cron Triggers in Hermes (jobs.json, Hours 12–24): Keep the 3 retired z-ai/glm-5.3-flash jobs disabled (enabled: false) or repointed to active free routing3, and register the five deterministic weekly cadence jobs in C:/Users/Garrett/AppData/Local/hermes/cron/jobs.json: v1.0 Tuesday 04:00 CT Lock (generateTuesdayMasterLock), v2.0 Wednesday 17:00 CT Injury Pass (advanceWeeklyLockWithInjuries + run_week8_injury_pass.py), v2.5 Thursday 16:30 CT TNF T-90m Lock, v3.0 Friday 16:30 CT Master Packet Delivery (evaluating conformal residual flags  and MILP DFS lineups), and v4.0 Sunday 10:30 CT / 13:35 CT T-90m Inactive Diff2.
+Non-Destructive Worktree Archival and Legacy Test Migration (Hours 24–48): Run a non-destructive git status --porcelain and unpushed-commit audit across the 20 secondary worktrees (Sports-wt-*, Sports-live, Sports-continuity2, etc.), archiving any uncommitted work into docs/ops/worktree-recovery-2026-10-26/ so all agents work exclusively on C:/Users/Garrett/Sports2. Migrate the 8 remaining node:test files in packages/prediction-engine/src/public-baseline/*.test.ts to vitest imports (matching call-sheet.test.ts) and resolve the src/tracking/pinhole-jacobian.ts TS2532 cluster so repo-wide tsc --noEmit reaches zero errors3.
+Passive Circa/Hawkes Diagnostic Polling and Post-Settlement Loop (Hours 48–72): Run collect_circa.py at 15-second passive polling intervals to populate circa_observations.db (odds_snapshots, openings, and sharp_moves) across SBR spread, total, and moneyline pages56. Once 5 or more line moves accumulate on a game series, hawkes.py transitions from insufficient_events to emitting external univariate exponential Hawkes steam regime classifications strictly as read-only diagnostics alongside the conformal residual flag7. After official GameStatus == "Final" and the 24-hour stat lock, execute the Settlement Resolver Lane (calibration.ts Murphy Brier partition, clusterBootstrap, and relabelingNull) to prepare candidate parameters exclusively for the following week's Tuesday 04:00 CT seal4.
+6.4 Mandatory Verification Checklist for Agent Ticket Closure
+Every agent claiming a ticket on Beexly/agent-bus must execute and attach the output of the following five verification commands in RESULT.md3:
+
+Verification Gate
+Exact Command / Suite
+Required Invariant Verdict
+1. Conformal Diagnostic & Sealed EPA Hash
+npx vitest run packages/prediction-engine/src/public-baseline/conformal-diagnostic.test.ts
+5/5 PASS — Order statistic $\hat{q} =
+2. Tuesday Seal, Sinkhorn & Tau Invariance
+npx vitest run packages/prediction-engine/src/coach-sim/locked-projection.test.ts packages/prediction-engine/src/coach-sim/weekly-cadence-orchestrator.test.ts packages/prediction-engine/src/2309-00756-inverse-mdp-fourth-down.test.ts
+23/23 PASS — assertTauSealed(before, after) === true; coachMindsetHash byte-identical across v1.0 to v3.0/v4.0; stale signedCalls invalidated on injury advance3.
+3. P0 Seal Isolation & Monotone Calibration
+npx vitest run packages/prediction-engine/src/__tests__/p0-seal-isolation.test.ts packages/prediction-engine/src/__tests__/calibration-knots-monotone.test.ts packages/prediction-engine/src/__tests__/barrel-type-exports.test.ts
+11/11 PASS — Zero references to coachTau or coachMindsetHash inside P0 modules; all 8 CALIBRATION_KNOTS strictly monotone; zero phantom barrel exports3.
+4. Grounded Coach Brain LLM Gate
+npx vitest run packages/prediction-engine/src/reasoning/gse-coach-brain-llm.test.ts
+3/3 PASS — System prompt injects TuesdayMasterLock Merkle and coachMindsetHash; unsealed gameId or mismatched hash rejected4.
+5. Python Pre-Seal & Injury Pass Suite
+python3 verify_engine.py & python3 packages/prediction-engine/src/gse-pre-seal/run_week7_injury_pass.py
+8/8 PASS — Tau tamper triggers SEAL BROKEN; Sinkhorn converges (row_residual < 1e-4); candidate hash 3988c7a6… and sealed Merkle 23245bcbba04… unchanged5.
+Works cited
+10/23, https://drive.google.com/open?id=1HqUJEWfndJw45SXIzvQUTQJaVbFRoLDKFYsiIegJQ3k
+2026-10-25_180500-gse-unified-coach-brain-and-tuesday-lock-pipeline.md
+2026-10-25-overnight-completion.md
+agent-bus-main (1).zip, https://drive.google.com/open?id=1HpUgu3i_jlCETnmXxxlPLdGTFXlPylXS
+gse_injury_overlay.py
+_goal set.docx
+2026-10-26-finish.md
+GSE Causal Inference Engine Plan v2, https://drive.google.com/open?id=1XkQElUlBumFojLY7497OVthxHpBaY82D3wYLv5ZFZ4c
+Google Sports Data, https://support.google.com/knowledgepanel/answer/9787176
+Distribution-Free Predictive Inference for Regression, https://www.stat.berkeley.edu/~ryantibs/papers/conformal-jasa.pdf
+[1604.04173] Distribution-Free Predictive Inference For Regression, https://arxiv.org/abs/1604.04173
+Predictive inference with the jackknife+ - Project Euclid, https://projecteuclid.org/journals/annals-of-statistics/volume-49/issue-1/Predictive-inference-with-the-jackknife/10.1214/20-AOS1965.full
+[1905.02928] Predictive inference with the jackknife+ - arXiv, https://arxiv.org/abs/1905.02928
+Conformal prediction beyond exchangeability - Project Euclid, https://projecteuclid.org/journals/annals-of-statistics/volume-51/issue-2/Conformal-prediction-beyond-exchangeability/10.1214/23-AOS2276.pdf
+https://www.stat.berkeley.edu/~ryantibs/papers/nexcp.pdf
+A Gentle Introduction to Conformal Prediction and Distribution-Free, https://arxiv.org/html/2107.07511v6
+A Gentle Introduction to Conformal Prediction and Distribution-Free, https://arxiv.org/abs/2107.07511
+Inductive Confidence Machines for Regression - UCL Open, https://ucl.scienceopen.com/book?vid=5c3cfe55-83d9-484f-96f1-32f8398d0a67
+Inductive Confidence Machines for Regression | Request PDF, https://www.researchgate.net/publication/225209224_Inductive_Confidence_Machines_for_Regression
+Vovk, Gammerman and Shafer "Algorithmic learning in a random, https://www.alrw.net/
+Algorithmic Learning in a Random World [2 ed.] 9783031066481, https://dokumen.pub/algorithmic-learning-in-a-random-world-2nbsped-9783031066481-9783031066498.html
+Conformalized Quantile Regression - arXiv, https://arxiv.org/pdf/1905.03222
+[1905.03222] Conformalized Quantile Regression - arXiv, https://arxiv.org/abs/1905.03222
+Using Conformal Win Probability to Predict the Winners of the ... - arXiv, https://arxiv.org/pdf/2208.08598
+(PDF) Predicting NFL Point Spreads via Machine Learning, https://www.researchgate.net/publication/380303073_Predicting_NFL_Point_Spreads_via_Machine_Learning
+Methodology - inpredictable, https://www.inpredictable.com/p/methodology.html
+[2412.19318] Adaptive Conformal Inference by Betting - arXiv, https://arxiv.org/abs/2412.19318
+Adaptive Conformal Inference by Betting - arXiv, https://arxiv.org/html/2412.19318v1
+Enhancement of prediction algorithms by betting - arXiv, https://arxiv.org/pdf/2105.08669
+Conformal prediction - Aldo Solari, https://aldosolari.github.io/SL/docs/SLIDES/Conformal.pdf
+Distribution-free prediction: exchangeability and beyond, https://rinafb.github.io/slides/IMS2022_slides.pdf
+Discriminative Jackknife: Quantifying Uncertainty in Deep Learning, https://par.nsf.gov/servlets/purl/10179549
+JAWS-X: Addressing Efficiency Bottlenecks of Conformal Prediction, https://proceedings.mlr.press/v202/prinster23a/prinster23a.pdf
+Improved Conformalized Quantile Regression - arXiv, https://arxiv.org/html/2207.02808v8
+A Relationship Between Arbitrary Positive Matrices and Doubly, https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-35/issue-2/A-Relationship-Between-Arbitrary-Positive-Matrices-and-Doubly-Stochastic-Matrices/10.1214/aoms/1177703591.full
+Concerning nonnegative matrices and doubly stochastic matrices, https://msp.org/pjm/1967/21-2/pjm-v21-n2-p14-s.pdf
+Concerning nonnegative matrices and doubly stochastic matrices., https://projecteuclid.org/journals/pacific-journal-of-mathematics/volume-21/issue-2/Concerning-nonnegative-matrices-and-doubly-stochastic-matrices/pjm/1102992505.full
+Sinkhorn Distances: Lightspeed Computation of Optimal Transport, http://papers.neurips.cc/paper/4927-sinkhorn-distances-lightspeed-computation-of-optimal-transport.pdf
+ComputationalOT.pdf - Computational Optimal Transport, https://optimaltransport.github.io/pdf/ComputationalOT.pdf
+Computational Optimal Transport with Applications to Data Sciences, https://www.emerald.com/ftmal/article/11/5-6/355/1332396/Computational-Optimal-Transport-with-Applications
+Near-linear time approximation algorithms for optimal transport via, https://arxiv.org/pdf/1705.09634
+Stabilized Sparse Scaling Algorithms for Entropy Regularized, https://epubs.siam.org/doi/pdf/10.1137/16M1106018
+Stabilized Sparse Scaling Algorithms for Entropy Regularized ... - arXiv, https://arxiv.org/abs/1610.06519
+Transform a rank-N matrix to a double stochastic matrix without, https://math.stackexchange.com/questions/4619257/transform-a-rank-n-matrix-to-a-double-stochastic-matrix-without-any-iterative
+https://arxiv.org/html/1610.06519
+Parametric Empirical Bayes Inference: Theory and Applications, https://www.semanticscholar.org/paper/Parametric-Empirical-Bayes-Inference%3A-Theory-and-Morris/2446ff36818d62c8851e39bef95da9c02235388a
+The statistics-resampling package manual - GNU Octave, https://gnu-octave.github.io/statistics-resampling/function/bootridge.html
+Improving pairwise comparison models using Empirical Bayes, https://arxiv.org/abs/1807.09236
+modern probabilistic models for human choices and rankings a, https://stacks.stanford.edu/file/druid:rd472bx1101/thesis-upload-augmented.pdf
+A Reproducible Method for Offensive Player Evaluation in Football, https://arxiv.org/abs/1802.00998
+nflWAR: a reproducible method for offensive player evaluation in, https://ideas.repec.org/a/bpj/jqsprt/v15y2019i3p163-183n1.html
+Causal Forecasting Beyond the Observed Panel - arXiv, https://arxiv.org/abs/2606.18512
+A multilevel model with heterogeneous variances for snap timing in, https://arxiv.org/abs/2502.16313
+Who Blocks Whom? Probabilistic Pass-Blocking Assignments for, https://arxiv.org/abs/2609.33664
+Who Blocks Whom? Probabilistic Pass-Blocking Assignments ... - arXiv, https://arxiv.org/pdf/2609.33664
+Pasted Text.txt
+Double Shrinkage Empirical Bayesian Estimation for Unknown and, https://www.researchgate.net/publication/264875462_Double_Shrinkage_Empirical_Bayesian_Estimation_for_Unknown_and_Unequal_Variances
+Empirical Bayes vs Hierarchical Bayes: Plug-In Shrinkage versus, https://theorempath.com/topics/empirical-bayes-vs-hierarchical-bayes
+GitHub - edwinbudding/WAR_Project: My attempt to create wins, https://github.com/edwinbudding/WAR_Project
+Forecasting NFL Quarterback Performance and Contract Value with, https://bignokh.com/2025/12/12/forecasting-nfl-quarterback-performance-and-contract-value-with-neural-networks/
+A Reproducible Method for Offensive Player Evaluation in Football, https://arxiv.org/html/1802.00998v2
+Learning Risk Preferences in Markov Decision Processes - arXiv, https://arxiv.org/abs/2309.00756
+Learning risk preferences in Markov decision processes, https://projecteuclid.org/journals/annals-of-applied-statistics/volume-18/issue-4/Learning-risk-preferences-in-Markov-decision-processes--An-application/10.1214/24-AOAS1933.full
+Do Firms Maximize? Evidence from Professional Football, https://eml.berkeley.edu/~dromer/papers/JPE_April06.pdf
+The Cloud Hunter's Problem: An Automated Decision Algorithm to, https://journals.ametsoc.org/view/journals/mwre/139/7/2010mwr3576.1.xml
+What was lost? A causal estimate of fourth down behavior in the, https://www.researchgate.net/publication/334016501_What_was_lost_A_causal_estimate_of_fourth_down_behavior_in_the_National_Football_League
+Attacking players and goal scoring, https://www.jhse.es/index.php/jhse/article/view/attacking-players-goal-scoring
+(PDF) Learning Risk Preferences in Markov Decision Processes, https://www.researchgate.net/publication/373686605_Learning_Risk_Preferences_in_Markov_Decision_Processes_an_Application_to_the_Fourth_Down_Decision_in_Football
+Neuro-Symbolic and Causal Architecture for Institutional Sports Intelligence at Scale, https://drive.google.com/open?id=1RXRKFVFaA22z0nj8lL1OCF6HJ7WP0jtzQz7U7XW-3jc
+collect_circa.py
+circa_observations.db
