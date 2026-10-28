@@ -41,6 +41,70 @@ to be recorded, not smoothed.
 required.** The kernel binds no SPESE rate constant — it takes `stEpa` and `stPlays` as inputs and
 applies only `SPESE_MIN_PLAYS = 10`, which is a floor, not a measurement.
 
+### The count, decomposed
+
+The 1,743 → 2,815 jump is **two changes, not one**. Both were verified by re-running the same
+script with one variable moved at a time:
+
+| pbp window | extra_point in filter | ST plays |
+|---|---|---|
+| weeks 1–5 | no | **1,743** |
+| weeks 1–7 | no | 2,326 |
+| weeks 1–7 | yes | **2,815** |
+
+- 1,743 is the pre-extra_point count **on the weeks 1–5 pbp**. It reproduces exactly on that window.
+- The pbp was later refreshed to weeks 1–7, which alone takes the same filter from 1,743 to 2,326.
+- Adding `extra_point` takes it from 2,326 to 2,815 — a difference of 489, against 495 extra_point
+  plays in the pbp, the other 6 dropping on the NaN box.
+
+So the brief's before/after pair spans a window change as well as the filter change. The filter
+change is the real one and it is in place; the window change is separate and also real.
+
+**Filter, verbatim:** `ST_TYPES = ["punt", "field_goal", "kickoff", "extra_point"]`. `extra_point`
+is present. **NaN boxes are dropped** at line 31, before the filter. **Path read:**
+`intelligence/coaching/data/play_by_play_2026.parquet` joined to
+`intelligence/coaching/data/pbp_participation_2026_reconstructed.parquet` on
+`nflverse_game_id` + `play_id`. SPESE reads no FTN column.
+
+### Constants the derivation emits
+
+Per-team `epa_per_play` over the filtered, non-NaN ST set, as emitted on the current pbp. These are the values the kernel receives; none is bound as a constant.
+
+| Team | ST plays | epa_per_play |
+|---|---|---|
+| ARI | 106 | 0.0092 |
+| ATL | 91 | -0.0661 |
+| BAL | 98 | 0.0928 |
+| BUF | 79 | 0.2849 |
+| CAR | 82 | 0.0688 |
+| CHI | 85 | 0.1878 |
+| CIN | 80 | 0.2323 |
+| CLE | 99 | 0.1111 |
+| DAL | 73 | 0.0389 |
+| DEN | 96 | 0.1 |
+| DET | 86 | 0.1682 |
+| GB | 88 | -0.0239 |
+| HOU | 100 | 0.1446 |
+| IND | 95 | 0.2492 |
+| JAX | 74 | 0.274 |
+| KC | 76 | 0.0392 |
+| LA | 89 | -0.1175 |
+| LAC | 80 | -0.0429 |
+| LV | 97 | 0.0474 |
+| MIA | 73 | -0.0561 |
+| MIN | 76 | 0.2624 |
+| NE | 85 | 0.0511 |
+| NO | 97 | -0.0674 |
+| NYG | 91 | 0.0559 |
+| NYJ | 89 | 0.0772 |
+| PHI | 81 | 0.2295 |
+| PIT | 99 | 0.1628 |
+| SEA | 88 | 0.3786 |
+| SF | 89 | 0.1484 |
+| TB | 97 | 0.2153 |
+| TEN | 87 | 0.0314 |
+| WAS | 89 | 0.1039 |
+
 **Caveat that stands:** raw nflverse `epa` does not share a sign convention across punt, kickoff and
 field goal (punt −0.0317, kickoff +0.2306, field goal +0.2237). The per-team number ranks teams; it
 does not sum into a scoreline.
