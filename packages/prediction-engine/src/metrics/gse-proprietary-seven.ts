@@ -106,10 +106,18 @@ export function computeGseDwp(decision: FourthDownDecision): MetricResult<number
  *
  * STABILITY (docs/strategy/sii-stability-2026-10-28.md): split-half check. Only
  * the 9+ box keeps its direction across windows (−0.067 then −0.680); boxes 7 and
- * 8 flip sign. The 9+ bucket is 140 plays. So SII at 9+ is a DIRECTION, not a
- * magnitude, and SII at 7/8 is not usable yet. Do not add SII into a score as if
- * the magnitude were settled.
+ * 8 flip sign.
+ *
+ * OUT OF SAMPLE (docs/strategy/sii-out-of-sample-2026-10-28.md): the 9+ effect
+ * replicates on both full prior seasons — −0.199 (2024) and −0.212 (2025). So the
+ * effect is real and the magnitude is ≈ −0.20. The 2026 pooled −0.0435 is the
+ * weakest of four windows and is the outlier, not the headline. Box 8 is
+ * consistently slightly negative; box 7 does not replicate.
+ *
+ * Use SII at 9+ only. The prior-season figure is the estimate; the current-season
+ * figure is a reading, not a replacement.
  */
+export const SII_STACKED_BOX_MOTION_GAP = -0.2;
 export const SII_MOTION_MARGINAL_EPA = -0.0021;
 
 export interface SiiCell {
