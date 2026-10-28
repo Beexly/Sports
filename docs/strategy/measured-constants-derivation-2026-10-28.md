@@ -150,3 +150,56 @@ no update required.** The FTN swap does not touch it — QPTSR reads no FTN colu
 
 `PROB_PER_POINT = 0.033` lives in `constants.ts` as the single shared binding and is not re-declared
 in any kernel.
+
+## TOR
+
+**Derivation:** `artifacts/gap-metrics-derivation-2026-10-28.py`, lines 50–60. The existing script.
+
+**Path read:** `intelligence/coaching/data/play_by_play_2026.parquet` joined to
+`intelligence/coaching/data/pbp_participation_2026_reconstructed.parquet` on `nflverse_game_id` +
+`play_id`.
+
+**Filter, verbatim:** `fb = m[m["fumble"] == 1]` — every play the pbp flags as a fumble. No play
+type is invented and no turnover definition is added; the pbp's own `fumble` flag is the definition.
+
+**Aggregation, verbatim:** pooled `fumble_lost.fillna(0).sum() / len(fb)`, then per-team
+`lost_rate` and `regret_vs_league = lost_rate - league_lost_rate`.
+
+**Arithmetic:** regret = excess lost rate. Positive means the team loses more fumbles than league.
+Not inverted.
+
+**Re-run result:** the derivation was re-run. It emitted **0.4603** over **252 fumbles**, matching
+the bound constant exactly. **TOR derivation re-run matches bound constant 0.4603; no update
+required.** The deprecated `TOR_LEAGUE_RECOVERY_RATE` alias is retained but the canonical name is
+`TOR_LEAGUE_LOST_RATE`.
+
+TOR reads no FTN column.
+
+## DWP
+
+**Derivation:** `packages/prediction-engine/src/nfl/fourth-down-aggression.ts`. The derivation is
+the fitted counts in that file's header; the constants are bound in the same file.
+
+**It is not derived from the 2026 pbp.** It is fitted on **pbp 2018–2021 REG**, filtered to 4th and
+≤2, `yardline_100` ≤ 45, `0.10 < wp < 0.90`. The brief assumed the 2026 pbp; the file says
+otherwise and the file is the derivation. Same class of correction as QPTSR.
+
+**Filter, verbatim:** 4th down, ≤2 yards to go, `yardline_100` ≤ 45, win probability strictly
+between 0.10 and 0.90.
+
+**Aggregation:** mean win-probability delta per branch, over 1,018 decisions.
+
+**Verification — the 2018–2021 pbp is NOT on disk** (only 2022–2026 are), so the means cannot be
+recomputed from source. What can be checked is internal consistency, and it holds:
+
+- the branch counts 706 + 295 + 17 sum to exactly **1,018**, matching the header
+- `go − fg` = 0.1113 − (−0.0837) = **0.195**, matching the bound `GO_OVER_FG_WP` and the header's
+  "+19.5 wp points"
+
+**DWP derivation re-run matches bound constants; no update required** — with the honest caveat that
+this is a consistency check against the recorded counts, not a re-derivation from raw pbp.
+
+**Bound constants:** `go` +0.1113, `field_goal` −0.0837, `punt` −0.2892, `other` 0. Also bound:
+`LEAGUE_GO_RATE` 0.694, `GO_OVER_FG_WP` 0.195, `AGGRESSION_MIN` 0.51, `AGGRESSION_MAX` 0.94.
+
+DWP reads no FTN column.
