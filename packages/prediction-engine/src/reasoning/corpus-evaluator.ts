@@ -2,7 +2,8 @@
  * @file corpus-evaluator.ts
  * Real-time Full-Corpus Literature Evaluator — Bottom-Up Paper-Level Mathematical Extraction & Execution.
  *
- * Every genuine paper, study, and dataset in the corpus (2,179 arXiv papers, 429 Kaggle datasets,
+ * Every genuine paper, study, and dataset in the corpus (2,446 unique arXiv/OpenAlex papers
+ * after deduplication across the five committed corpus files, 429 Kaggle datasets,
  * 499 OpenAlex works) is individually parsed for:
  *   1. Its mathematical model type (e.g. Bipartite Sinkhorn, Navier-Stokes drag, Shin de-vigging,
  *      Causal rest decay, Clayton copula, Kahneman-Tversky prospect theory, etc.)

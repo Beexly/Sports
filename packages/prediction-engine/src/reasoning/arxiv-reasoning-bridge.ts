@@ -1,6 +1,6 @@
 /**
  * @file arxiv-reasoning-bridge.ts
- * Ingests the 2,179-paper arXiv, OpenAlex, and 429 Kaggle datasets directly into the
+ * Ingests the 2,446-paper arXiv, OpenAlex, and 429 Kaggle datasets directly into the
  * Layer 2 Situational Reasoning Layer (Doctrines Garrett, 2026-10-05 / 2026-10-17).
  *
  * "The reasoning is the product... an engine that is smarter than any other model
@@ -67,7 +67,7 @@ export interface ArxivSignalEvaluation {
 }
 
 /**
- * Complete suite of situational reasoning premises extracted from 2,179 papers, 429 Kaggle datasets,
+ * Complete suite of situational reasoning premises extracted from 2,446 papers, 429 Kaggle datasets,
  * and peer-reviewed OpenAlex literature.
  */
 export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
@@ -222,11 +222,18 @@ export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
   },
 
   // 7. Acoustic Crowd Pressure & Dynamic Referee Bias
+  //
+  // CITATION CORRECTED 2026-10-27. This premise previously cited "2608.01234",
+  // which is a real arXiv ID but points to an unrelated LLM self-evolution paper.
+  // 2607.18922 is the genuine arXiv work on quantifying stadium crowd noise. It
+  // supports the acoustic-pressure mechanism but does NOT establish referee
+  // whistle skew, so that part of the concept remains an empirical inference
+  // (labeled EQ-, not attributed to a paper).
   {
-    arxivId: "2608.01234",
-    title: "Auditory Acoustic Feedback and Officiating Disparity in Stadium Environments",
+    arxivId: "2607.18922",
+    title: "Towards a reproducible cross-venue method for quantifying crowd noise in stadiums",
     pillar: "ATMOSPHERE_AND_REFEREE_BIAS",
-    situationalConcept: "High-decibel crowd acoustics exert non-conscious perceptual pressure on referee holding/pass-interference whistles.",
+    situationalConcept: "Elevated stadium sound levels are measurable and interfere with communication and concentration; the resulting officiating skew is an empirical inference, not a result of the cited paper.",
     greyAreaSignal: "Elevates home cover probability in high-acoustics dome venues (Superdome, Lumen Field, Arrowhead) above standard static HFA.",
     evaluateContext: (ctx) => {
       if (ctx.isDomeOrBowl || (ctx.crowdDecibelsExpected !== undefined && ctx.crowdDecibelsExpected >= 102)) {
@@ -242,19 +249,33 @@ export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
   },
 
   // 8. Circadian Body-Clock Travel Dysrhythmia
+  //
+  // CITATION CORRECTED 2026-10-27. This premise previously cited "2607.09876",
+  // which is a real arXiv ID but points to an unrelated camera-trap video
+  // retrieval paper. No arXiv paper supports a first-quarter jet-lag performance
+  // penalty, and the best available evidence points the other way: the medRxiv
+  // 2023 study "Jet Lag Does Not Impact Football Performance" and the causal
+  // replication analysis (PubMed 40481637) find no reliable effect of time-zone
+  // travel on NFL team performance. Relabeled EQ-CIRCADIAN-001 as an empirical
+  // premise whose assumed direction is CONTESTED, and the signal is retained
+  // only as a diagnostic flag -- it must not be read as an established effect.
   {
-    arxivId: "2607.09876",
-    title: "Circadian Phase Misalignment in Cross-Country Athletic Travel",
+    arxivId: "EQ-CIRCADIAN-001",
+    title: "Circadian Travel Dysrhythmia — Direction Contested (medRxiv 2023 finds no football effect)",
     pillar: "CIRCADIAN_TRAVEL_DYSRHYTHMIA",
-    situationalConcept: "West Coast teams playing early 1:00 PM EST games perform at 10:00 AM biological body-clock time.",
+    situationalConcept: "West Coast teams playing early 1:00 PM EST games perform at 10:00 AM biological body-clock time. NOTE: the performance penalty this implies is not supported by current evidence.",
     greyAreaSignal: "Fades visiting West-to-East traveling teams in 1st half / 1st quarter lines.",
     evaluateContext: (ctx) => {
       if (ctx.timeZoneDifferenceHours !== undefined && ctx.timeZoneDifferenceHours >= 3) {
         return {
           applicable: true,
-          reason: `Circadian disruption: Visiting team traveling across ${ctx.timeZoneDifferenceHours} time zones for early kickoff window.`,
-          situationalBiasDirection: "HOME",
-          situationalNarrative: "Muscular force production and cognitive reaction speed lag in first quarter until biological circadian catch-up.",
+          reason: `Circadian diagnostic flag only: visiting team traveling across ${ctx.timeZoneDifferenceHours} time zones for an early kickoff window. This flag does NOT establish a performance penalty.`,
+          // Direction is deliberately PASS. The literature (medRxiv 2023; PubMed
+          // 40481637) does not find a reliable jet-lag penalty on football
+          // performance, so asserting a HOME fade here would be a fabricated
+          // edge. The flag stays observable without steering the projection.
+          situationalBiasDirection: "PASS",
+          situationalNarrative: "Time-zone travel is noted as a diagnostic condition. No first-quarter force-production or reaction-speed penalty is claimed: current evidence does not support one.",
         };
       }
       return { applicable: false, reason: "Travel time-zone differential nominal.", situationalBiasDirection: "PASS", situationalNarrative: "" };
@@ -364,11 +385,18 @@ export function evaluateArxivCorpus(ctx: ArxivContextQuery): {
 
   const synthesis =
     evaluations.length === 0
-      ? "Arxiv & OpenAlex sports prediction corpus consulted (2,379 papers, 429 datasets): all situational and environmental parameters within neutral baseline."
+      ? "Arxiv & OpenAlex sports prediction corpus consulted (2,446 papers, 429 datasets): all situational and environmental parameters within neutral baseline."
       : evaluations.map((e) => `[${e.situationalBiasDirection}] ${e.reason} Contextual insight: ${e.situationalNarrative}`).join(" | ");
 
   return {
-    totalCorpusPapersIndexed: 2379,
+    // 2,446 is the DEDUPLICATED count of unique papers across the five corpus
+    // files committed under docs/arxiv-program/research (OMNIBUS 658, OPENALEX
+    // ACADEMIC 299, OPENALEX NFL 200, PURE_NFL 86, plus the 1,251-line
+    // corpus-index.jsonl = 2,494 raw entries, 2,446 unique after key dedupe).
+    // Earlier values in this file disagreed: the doc comments said 2,179 while
+    // the constant said 2,379. Neither was reproducible from the committed
+    // corpus. Re-derive with `python scripts/verify-corpus-count.py`.
+    totalCorpusPapersIndexed: 2446,
     totalKaggleDatasetsIndexed: 429,
     activePremisesCount: evaluations.length,
     activeEvaluations: evaluations,

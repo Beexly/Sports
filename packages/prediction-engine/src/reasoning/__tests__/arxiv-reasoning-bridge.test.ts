@@ -3,7 +3,7 @@ import * as assert from "node:assert/strict";
 import { evaluateArxivCorpus, type ArxivContextQuery } from "../arxiv-reasoning-bridge.js";
 
 describe("arxiv-reasoning-bridge deep alpha pillars", () => {
-  it("consults the full 2,379-paper and 429-dataset corpus", () => {
+  it("consults the full 2,446-paper and 429-dataset corpus", () => {
     const ctx: ArxivContextQuery = {
       sport: "NFL",
       homeTeam: "Kansas City Chiefs",
@@ -15,7 +15,10 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     };
 
     const res = evaluateArxivCorpus(ctx);
-    assert.equal(res.totalCorpusPapersIndexed, 2379);
+    // 2,446 = deduplicated unique papers across the five committed corpus files.
+    // Re-derive with `python scripts/verify-corpus-count.py`. This assertion
+    // previously expected 2,379, which no committed corpus file reproduces.
+    assert.equal(res.totalCorpusPapersIndexed, 2446);
     assert.equal(res.totalKaggleDatasetsIndexed, 429);
     assert.ok(res.situationalReasoningSynthesis.includes("all situational and environmental parameters within neutral baseline"));
   });
