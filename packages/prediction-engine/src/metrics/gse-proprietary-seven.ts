@@ -124,14 +124,26 @@ export function computeGseSii(input: {
 }
 
 /**
- * RLS — Route Liberation Score. Still a gap.
+ * RLS — Route Liberation Score. Still a gap, but the reason is now precise.
  *
- * No separation or cushion column exists in any local file. ngs_highlights_2026
- * is play-level, not player-level; pbp_participation carries player lists but no
- * separation. Needs the NGS player-tracking feed.
+ * The reconstruction machinery already exists: apps/web/lib/reconstruction/
+ * separation-reconstruct.ts takes an EB-shrunk receiver separation tendency plus
+ * play covariates and returns a per-play estimate, with an explicit uncalibrated
+ * regime that emits the tendency rather than inventing a coordinate.
+ *
+ * What is missing is the input, not the model. No separation tendency is fitted
+ * anywhere on disk. ngs_highlight_participation_2026 has was_running_route and
+ * defender_location, but defender_location is a categorical line label
+ * (RIGHT_INTERIOR_LINE), not x/y — and zero route rows carry it at all. So the
+ * truth set is absent and the reconstruction stays in its uncalibrated regime.
+ *
+ * RLS becomes buildable the moment a separation tendency exists; it does not
+ * need new modelling code.
  */
 export function computeGseRls(_input: { readonly routeSeparation: readonly unknown[] }): MetricResult<null> {
-  return GAP("no separation or cushion column in any local file; needs the NGS player-tracking feed");
+  return GAP(
+    "no separation tendency fitted on disk; reconstruction exists in apps/web/lib/reconstruction but has no truth set (ngs defender_location is a categorical label, 0 route rows)",
+  );
 }
 
 /**

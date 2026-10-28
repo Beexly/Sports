@@ -69,6 +69,6 @@ describe("RLS", () => {
   it("is still an honest gap", () => {
     const r = computeGseRls({ routeSeparation: [] });
     expect(r.status).toBe("gap");
-    expect(r.source).toContain("NGS");
+    expect(r.source).toContain("separation tendency");
   });
 });
