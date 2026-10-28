@@ -32,3 +32,17 @@ script, the content OS, and the prior Hermes prompts.
 Several of these are the same document at different revisions — `GSE Coach-Brain LLM & Engine` exists
 in four variants and `Master Execution Report` in three. They were all unique by content, so all were
 kept. **The newest revision is not marked**; treat them as a revision set, not as separate sources.
+
+## Rendering quality — read this before quoting the coach-brain file
+
+The `.docx` conversion strips tags and joins paragraphs, which **concatenates code lines**:
+`MappingProxyTypeimport`, `Pathfrom`, `digestdef`. The `.txt` export of the same document keeps the
+line structure (904 lines vs 567) and is word-for-word identical otherwise — verified, zero words
+present in one and absent from the other.
+
+`GSE_Coach-Brain_LLM_&_Engine.CLEAN.txt` is that `.txt` export and is the copy to quote. The
+docx-derived `GSE_Coach-Brain_LLM_&_Engine*.txt` files are kept for the revision set but their code
+blocks are run together.
+
+The other docx-derived files here have the same flattening; it only bites where the source contains
+code.
