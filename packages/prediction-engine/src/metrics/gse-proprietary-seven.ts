@@ -17,6 +17,7 @@ import {
   type PressureBucket,
 } from "../nfl/pressure-timing.js";
 import { WP_DELTA, type FourthDownDecision } from "../nfl/fourth-down-aggression.js";
+import { round } from "./core/math.js";
 
 export interface MetricResult<T = number> {
   readonly value: T | null;
@@ -120,26 +121,44 @@ export function computeGseDwp(decision: FourthDownDecision): MetricResult<number
 export const SII_STACKED_BOX_MOTION_GAP = -0.2;
 export const SII_MOTION_MARGINAL_EPA = -0.0021;
 
+/**
+ * Marginal EPA per flag. Only `motion` is derived; the other three are 0
+ * placeholders and a caller passing `marginalEpa` explicitly overrides them.
+ */
+export const SII_MARGINAL_EPA_BY_FLAG = {
+  motion: SII_MOTION_MARGINAL_EPA,
+  play_action: 0,
+  rpo: 0,
+  screen: 0,
+} as const;
+
+export type SiiFlag = keyof typeof SII_MARGINAL_EPA_BY_FLAG;
+
 export interface SiiCell {
-  readonly flag: "motion" | "play_action" | "rpo" | "screen";
+  readonly flag: SiiFlag;
   readonly boxBucket: "<=6" | "7" | "8" | "9+";
   readonly epa: number;
   readonly n: number;
 }
 
+export const SII_MIN_N = 25;
+
 export function computeGseSii(input: {
   readonly cells: readonly SiiCell[];
-  readonly flag: SiiCell["flag"];
-  readonly marginalEpa: number;
+  readonly flag: SiiFlag;
+  readonly marginalEpa?: number;
   readonly minN?: number;
 }): MetricResult<number | null> {
-  const minN = input.minN ?? 25;
-  const cells = input.cells.filter((c) => c.flag === input.flag && c.n >= minN);
-  if (!cells.length) return GAP(`no ${input.flag} cell clears n>=${minN}`);
+  const minN = input.minN ?? SII_MIN_N;
+  const cells = input.cells.filter(
+    (c) => c.flag === input.flag && c.n >= minN && Number.isFinite(c.epa) && Number.isInteger(c.n),
+  );
+  if (!cells.length) return GAP(`no ${input.flag} cell clears n>=${minN} with finite epa`);
+  const marginal = input.marginalEpa ?? SII_MARGINAL_EPA_BY_FLAG[input.flag];
   const totalN = cells.reduce((s, c) => s + c.n, 0);
   const weighted = cells.reduce((s, c) => s + c.epa * c.n, 0) / totalN;
   return {
-    value: Math.round((weighted - input.marginalEpa) * 10000) / 10000,
+    value: round(weighted - marginal),
     status: "measured",
     source: `scheme x box EPA lift, n=${totalN} across ${cells.length} cells (2026 participation x pbp)`,
   };
@@ -178,15 +197,21 @@ export function computeGseRls(_input: { readonly routeSeparation: readonly unkno
  * play types, so the per-team number is a relative ranking, not an absolute
  * points value. Do not sum it into a scoreline.
  */
+export const SPESE_MIN_PLAYS = 10;
+
 export function computeGseSpese(input: {
   readonly stEpa: number;
   readonly stPlays: number;
   readonly minPlays?: number;
 }): MetricResult<number | null> {
-  const minPlays = input.minPlays ?? 10;
+  const minPlays = input.minPlays ?? SPESE_MIN_PLAYS;
+  if (!Number.isFinite(input.stEpa)) return GAP("stEpa is not finite");
+  if (!Number.isInteger(input.stPlays) || input.stPlays < 0) {
+    return GAP(`stPlays must be a non-negative integer, got ${input.stPlays}`);
+  }
   if (input.stPlays < minPlays) return GAP(`only ${input.stPlays} ST plays, need ${minPlays}`);
   return {
-    value: Math.round(input.stEpa * 10000) / 10000,
+    value: round(input.stEpa),
     status: "measured",
     source: `mean ST epa over ${input.stPlays} plays (2026 pbp; mixed sign convention across punt/kickoff/FG)`,
   };
@@ -195,11 +220,27 @@ export function computeGseSpese(input: {
 /**
  * TOR — Turnover Regret.
  *
- * Fumble-recovery rate against the league rate. Derived 2026-10-28 over weeks
- * 1-7: 252 fumbles, league mean recovery 0.4384 — so the coin is not 50% and
- * 0.4384 is the reference, not 0.5. Above it is luck, below it is not.
+ * Excess LOST-fumble rate against the league. Derived 2026-10-28 over weeks
+ * 1-7: 252 fumbles, pooled league lost rate 0.4603 — so the coin is not 50% and
+ * 0.4603 is the reference, not 0.5. Positive means the team loses more fumbles
+ * than league, which is the regret direction.
+ *
+ * The reference is the POOLED rate, not the mean of per-team rates (0.4384). The
+ * mean over-weights teams with few fumbles; the pooled rate is the league's
+ * actual share.
+ *
+ * NAMING CORRECTION 2026-10-28: the constant was called RECOVERY_RATE and the
+ * field `recovery_rate`, but the arithmetic is `lost / fumbles` — a LOST rate.
+ * Offences recover their own fumbles slightly more than half the time, so a
+ * recovery rate would be ~0.56 and the sign would invert. The arithmetic was
+ * right for regret; only the names were wrong. Renamed rather than re-derived.
  */
-export const TOR_LEAGUE_RECOVERY_RATE = 0.4384;
+export const TOR_LEAGUE_LOST_RATE = 0.4603;
+
+/** @deprecated alias — the value is a lost rate, not a recovery rate. */
+export const TOR_LEAGUE_RECOVERY_RATE = TOR_LEAGUE_LOST_RATE;
+
+export const TOR_MIN_FUMBLES = 5;
 
 export function computeGseTor(input: {
   readonly fumbles: number;

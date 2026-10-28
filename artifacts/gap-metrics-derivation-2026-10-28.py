@@ -28,6 +28,7 @@ out = {"rows_joined": int(len(m)), "source": "pbp_participation_2026_reconstruct
 
 # ---- SII ----
 FLAGS = ["is_motion", "is_play_action", "is_rpo", "is_screen_pass"]
+m = m[m["defenders_in_box"].notna()]
 m["box_bucket"] = pd.cut(m["defenders_in_box"], [0, 6, 7, 8, 20], labels=["<=6", "7", "8", "9+"])
 sii = {}
 for f in FLAGS:
@@ -54,14 +55,17 @@ if len(fb):
     for team, g in fb.groupby("posteam_b"):
         if len(g) < 5:
             continue
-        rec = float(g["fumble_lost"].fillna(0).sum())
-        tor[team] = {"fumbles": int(len(g)), "lost": int(rec),
-                     "recovery_rate": round(rec / len(g), 4),
-                     "regret_vs_50": round(rec / len(g) - 0.5, 4)}
-out["tor"] = {"n_fumbles": int(len(fb)), "teams": tor}
+        lost = float(g["fumble_lost"].fillna(0).sum())
+        tor[team] = {"fumbles": int(len(g)), "lost": int(lost),
+                     "lost_rate": round(lost / len(g), 4)}
+league_lost = float(fb["fumble_lost"].fillna(0).sum()) / len(fb) if len(fb) else None
+for team, rec in tor.items():
+    rec["regret_vs_league"] = round(rec["lost_rate"] - league_lost, 4)
+out["tor"] = {"n_fumbles": int(len(fb)), "league_lost_rate": round(league_lost, 4), "teams": tor}
 
 # ---- SPESE ----
-st = m[m["play_type_b"].isin(["punt", "field_goal", "kickoff"])] if "play_type_b" in m.columns else pd.DataFrame()
+ST_TYPES = ["punt", "field_goal", "kickoff", "extra_point"]
+st = m[m["play_type_b"].isin(ST_TYPES)] if "play_type_b" in m.columns else pd.DataFrame()
 spese = {}
 if len(st):
     for team, g in st.groupby("posteam_b"):
