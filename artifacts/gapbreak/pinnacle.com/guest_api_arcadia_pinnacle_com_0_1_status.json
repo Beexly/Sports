@@ -1,0 +1,139 @@
+{
+  "code": "ONLINE",
+  "description": "System is operating correctly, no known issues.",
+  "services": [
+    {
+      "name": "api",
+      "status": "ONLINE"
+    },
+    {
+      "name": "etl",
+      "status": "ONLINE"
+    },
+    {
+      "name": "search",
+      "status": "ONLINE"
+    },
+    {
+      "name": "websocket",
+      "status": "ONLINE"
+    }
+  ],
+  "upstream": [
+    {
+      "health": "ONLINE",
+      "name": "account",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "bet_acceptance",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "betting",
+      "status": "ENABLED"
+    },
+    {
+      "health": "ONLINE",
+      "name": "cashier",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "casino",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "chub",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "customer",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "em_bonus",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "geolocation",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "horseracing",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "leaderboard",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "login",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "lookup",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "notification",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "profile",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "racebook",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "racebook_betting",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "registration",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "responsible_gaming",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "risk",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "transaction",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "translation",
+      "status": ""
+    },
+    {
+      "health": "ONLINE",
+      "name": "twodo",
+      "status": ""
+    }
+  ]
+}

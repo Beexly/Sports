@@ -1,0 +1,129 @@
+{
+  "id": "optiwebRemote",
+  "name": "optiwebRemote",
+  "metaData": {
+    "name": "optiwebRemote",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "0.8.1",
+      "buildName": "optiwebRemote"
+    },
+    "remoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "module"
+    },
+    "ssrRemoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "module"
+    },
+    "types": {
+      "path": "",
+      "name": ""
+    },
+    "globalName": "optiwebRemote",
+    "pluginVersion": "0.2.5",
+    "publicPath": "https://1516174774.rsc.cdn77.org/optiweb-mf/0.8.1/"
+  },
+  "shared": [
+    {
+      "id": "optiwebRemote:@mui/material",
+      "name": "@mui/material",
+      "version": "6.1.5",
+      "singleton": true,
+      "requiredVersion": "^6.1.5",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "chunks/material-DQ1NqhJa.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "optiwebRemote:@mui/lab",
+      "name": "@mui/lab",
+      "version": "6.0.0-beta.14",
+      "singleton": true,
+      "requiredVersion": "^6.0.0-beta.14",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "chunks/lab-2AEbhG9_.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "optiwebRemote:@emotion/react",
+      "name": "@emotion/react",
+      "version": "11.13.3",
+      "singleton": true,
+      "requiredVersion": "^11.13.3",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "chunks/emotion-react.browser.esm-DxlJrY_B.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "optiwebRemote:@emotion/styled",
+      "name": "@emotion/styled",
+      "version": "11.13.0",
+      "singleton": true,
+      "requiredVersion": "^11.13.0",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "chunks/emotion-styled.browser.esm-BZZ0wfV2.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    }
+  ],
+  "remotes": [],
+  "exposes": [
+    {
+      "id": "optiwebRemote:OptiwebWrapper",
+      "name": "OptiwebWrapper",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "chunks/OptiwebWrapper-DJnk30RY.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": [
+            "assets/style-NzT3w0l7.css"
+          ]
+        }
+      },
+      "path": "./OptiwebWrapper"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "name": "Pinnacle",
+  "shortDomain": "Pinnacle.com",
+  "url": "https://www.pinnacle.com",
+  "language": {
+    "default": "en-GB",
+    "licensesCanOverride": true,
+    "supported": [
+      "cs-CZ",
+      "de-DE",
+      "en-GB",
+      "es-ES",
+      "fi-FI",
+      "fr-FR",
+      "it-IT",
+      "ja-JP",
+      "ko-KR",
+      "pt-PT",
+      "ru-RU",
+      "sv-SE",
+      "zh-CN",
+      "zh-TW"
+    ]
+  },
+  "currency": {
+    "default": {
+      "curacao": "EUR",
+      "malta": "EUR",
+      "sweden": "SEK",
+      "ontario": "CAD",
+      "nolicense": "EUR",
+      "anjouan": "EUR",
+      "commercialanjouan": "EUR"
+    },
+    "overrides": {},
+    "intl": {
+      "nonStandard": ["VND", "MGA"]
+    }
+  },
+  "features": {
+    "casino": {
+      "enabled": true
+    },
+    "anjouanSeal": {
+      "enabled": true,
+      "id": "f49e0e95-cc2a-4abf-89de-609208c51cca"
+    }
+  },
+  "registrationBlacklist": {
+    "cn": [
+      "moc.elcannip.aidacra.dorperp",
+      "teb.elcannip.aidacra.dorperp",
+      "moc.elcannip.aidacra.ic.2v",
+      "moc.elcannip.www",
+      "teb.elcnanip.www"
+    ]
+  }
+}

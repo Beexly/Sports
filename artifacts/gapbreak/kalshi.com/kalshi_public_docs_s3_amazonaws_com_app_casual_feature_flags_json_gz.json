@@ -1,0 +1,1549 @@
+{
+  "breaking_news": false,
+  "disable_elections_fees": true,
+  "disable_elections_top_holders": true,
+  "interest_rate": "3.5% APY",
+  "interest_rate_amount": "3.5%",
+  "margin_interest_rate_amount": "3.5%",
+  "crypto_enabled": false,
+  "block_new_yorkers_zero_hash": false,
+  "restricted_trading_state_name_mappings": {},
+  "fifteen_min_market_keyword": "15 Min Markets",
+  "fifteen_min_markets_ordering": [
+    "KXGOLD15M",
+    "KXSILVER15M",
+    "KXWTI15M",
+    "KXBRENT15M",
+    "KXBTC15M",
+    "KXETH15M",
+    "KXSOL15M",
+    "KXEURUSD15M",
+    "KXGBPUSD15M",
+    "KXUSDJPY15M",
+    "KXAUDUSD15M",
+    "KXUSDCAD15M"
+  ],
+  "fifteen_min_commodity_assets": [
+    {
+      "series_ticker": "KXGOLD15M",
+      "symbol": "GOLD",
+      "color": "#DAA520",
+      "decimals": 2
+    },
+    {
+      "series_ticker": "KXSILVER15M",
+      "symbol": "SILVER",
+      "color": "#A8A9AD",
+      "decimals": 3
+    },
+    {
+      "series_ticker": "KXCOPPER15M",
+      "symbol": "COPPER",
+      "color": "#B87333",
+      "decimals": 5
+    },
+    {
+      "series_ticker": "KXWTI15M",
+      "symbol": "WTI",
+      "color": "#546E7A",
+      "decimals": 2
+    },
+    {
+      "series_ticker": "KXBRENT15M",
+      "symbol": "BRENT",
+      "color": "#546E7A",
+      "decimals": 2
+    },
+    {
+      "series_ticker": "KXPLATINUM15M",
+      "symbol": "PLATINUM",
+      "color": "#8C9EAD",
+      "decimals": 3
+    },
+    {
+      "series_ticker": "KXPALLADIUM15M",
+      "symbol": "PALLADIUM",
+      "color": "#B08D7A",
+      "decimals": 3
+    },
+    {
+      "series_ticker": "KXNATGAS15M",
+      "symbol": "NATGAS",
+      "color": "#5B8DEF",
+      "decimals": 5
+    },
+    {
+      "series_ticker": "KXEURUSD15M",
+      "symbol": "EURUSD",
+      "color": "#4D73EE",
+      "decimals": 5
+    },
+    {
+      "series_ticker": "KXGBPUSD15M",
+      "symbol": "GBPUSD",
+      "color": "#00A600",
+      "decimals": 5
+    },
+    {
+      "series_ticker": "KXUSDJPY15M",
+      "symbol": "USDJPY",
+      "color": "#00A600",
+      "decimals": 3
+    },
+    {
+      "series_ticker": "KXAUDUSD15M",
+      "symbol": "AUDUSD",
+      "color": "#008F9C",
+      "decimals": 5
+    },
+    {
+      "series_ticker": "KXUSDCAD15M",
+      "symbol": "USDCAD",
+      "color": "#D84A4A",
+      "decimals": 5
+    },
+    {
+      "series_ticker": "KX2YRRATE15M",
+      "symbol": "US2Y",
+      "color": "#5B8DEF",
+      "decimals": 5,
+      "prefix": "",
+      "suffix": "%",
+      "trading_hours": [
+        {
+          "weekday": "monday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "tuesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "wednesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "02:45",
+          "close": "03:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "05:00",
+          "close": "17:00"
+        },
+        {
+          "weekday": "friday",
+          "open": "02:45",
+          "close": "17:00"
+        }
+      ]
+    },
+    {
+      "series_ticker": "KX5YRRATE15M",
+      "symbol": "US5Y",
+      "color": "#4A78DC",
+      "decimals": 5,
+      "prefix": "",
+      "suffix": "%",
+      "trading_hours": [
+        {
+          "weekday": "monday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "tuesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "wednesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "02:45",
+          "close": "03:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "05:00",
+          "close": "17:00"
+        },
+        {
+          "weekday": "friday",
+          "open": "02:45",
+          "close": "17:00"
+        }
+      ]
+    },
+    {
+      "series_ticker": "KX10YRRATE15M",
+      "symbol": "US10Y",
+      "color": "#3963C9",
+      "decimals": 5,
+      "prefix": "",
+      "suffix": "%",
+      "trading_hours": [
+        {
+          "weekday": "monday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "tuesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "wednesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "02:45",
+          "close": "03:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "05:00",
+          "close": "17:00"
+        },
+        {
+          "weekday": "friday",
+          "open": "02:45",
+          "close": "17:00"
+        }
+      ]
+    },
+    {
+      "series_ticker": "KX30YRRATE15M",
+      "symbol": "US30Y",
+      "color": "#284EB6",
+      "decimals": 5,
+      "prefix": "",
+      "suffix": "%",
+      "trading_hours": [
+        {
+          "weekday": "monday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "tuesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "wednesday",
+          "open": "02:45",
+          "close": "17:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "02:45",
+          "close": "03:00"
+        },
+        {
+          "weekday": "thursday",
+          "open": "05:00",
+          "close": "17:00"
+        },
+        {
+          "weekday": "friday",
+          "open": "02:45",
+          "close": "17:00"
+        }
+      ]
+    }
+  ],
+  "restricted_trading_categories": [
+    {
+      "state": "NV",
+      "categories": [
+        "Sports",
+        "Elections",
+        "Entertainment"
+      ],
+      "subcategories": [
+        "Sports"
+      ],
+      "geo": true
+    },
+    {
+      "state": "MI",
+      "categories": [
+        "Sports"
+      ],
+      "subcategories": [
+        "Sports"
+      ],
+      "geo": true
+    },
+    {
+      "state": "WA",
+      "categories": [
+        "Sports",
+        "Elections",
+        "Entertainment",
+        "Politics",
+        "Science and Technology",
+        "Mentions"
+      ],
+      "subcategories": [
+        "Sports"
+      ],
+      "geo": true,
+      "sell_positions_allowed": true
+    },
+    {
+      "state": "TRIBE_BL",
+      "categories": [
+        "Sports"
+      ],
+      "subcategories": [
+        "Sports"
+      ],
+      "geo": true
+    },
+    {
+      "state": "TRIBE_CRR",
+      "categories": [
+        "Sports"
+      ],
+      "subcategories": [
+        "Sports"
+      ],
+      "geo": true
+    },
+    {
+      "state": "TRIBE_BV",
+      "categories": [
+        "Sports"
+      ],
+      "subcategories": [
+        "Sports"
+      ],
+      "geo": true
+    }
+  ],
+  "show_home_margin_section": true,
+  "show_nevada_trading_paused_banner": true,
+  "nevada_restriction_modal_title": "Some markets are unavailable in your state",
+  "nevada_restriction_modal_subtitle": "Your state government is preventing your access to fair, federally-regulated prediction market trading with no house advantage. Act Now. Contact your lawmaker and join Freedom to Forecast.",
+  "zero_hash_method_name": "Crypto (USDC)",
+  "disable_verified": false,
+  "is_card_payment_enabled": true,
+  "elections_cash_out_enabled": true,
+  "elections_cash_out_enabled_on_explore": false,
+  "twenty_four_seven_trading": true,
+  "close_hour": 7,
+  "elections_bold_rules_enabled": true,
+  "ios_min_version": {
+    "major": 9,
+    "minor": 10,
+    "patch": 3
+  },
+  "android_min_version": {
+    "major": 9,
+    "minor": 10,
+    "patch": 3
+  },
+  "ios_force_update_version": {
+    "major": 9,
+    "minor": 9,
+    "patch": 107
+  },
+  "android_force_update_version": {
+    "major": 9,
+    "minor": 9,
+    "patch": 107
+  },
+  "advisory_update_subtitle": "Update your app to ensure smooth trading.",
+  "card_withdrawal": true,
+  "high_temp_tickers": [
+    "HIGHNY",
+    "HIGHAUS",
+    "HIGHCHI",
+    "HIGHNY",
+    "KXPHILHIGH",
+    "KXHOUHIGH",
+    "KXHIGHPHIL",
+    "KXHIGHOU",
+    "KXHIGHNY",
+    "KXHIGHMIA",
+    "KXHIGHHOU",
+    "KXHIGHDEN",
+    "KXHIGHCHI",
+    "KXHIGHAUS",
+    "KXDENHIGH"
+  ],
+  "card_withdrawal_fee": 200,
+  "bank_withdrawal_fee": 0,
+  "card_withdrawal_fee_label": "$2",
+  "bank_withdrawal_fee_label": "$0",
+  "quick_withdrawals_disclaimer": true,
+  "underlying_chart_tickers": [
+    "BTC",
+    "BTCD",
+    "BTCMINY",
+    "BTCMAXY",
+    "KXBTC",
+    "KXBTCD",
+    "KXBTCMINY",
+    "KXBTCMAXY",
+    "KXBTCMAX100",
+    "ETH",
+    "ETHD",
+    "ETHMINY",
+    "ETHMAXY",
+    "KXETH",
+    "KXETHD",
+    "KXETHMINY",
+    "KXETHMAXY",
+    "KXGOLD15M",
+    "KXSILVER15M",
+    "KXWTI15M",
+    "KXBRENT15M",
+    "KXEURUSD15M",
+    "KXGBPUSD15M",
+    "KXUSDJPY15M",
+    "KXAUDUSD15M",
+    "KXUSDCAD15M"
+  ],
+  "flip_sell_enabled": true,
+  "payout_zero_disclaimer": true,
+  "twilio_unable_to_send_message": true,
+  "optional_netting": true,
+  "elections_auth": true,
+  "multivariate_beta_setting": false,
+  "show_beta_settings": true,
+  "all_bank_accounts": true,
+  "enable_withdrawal_mfa": true,
+  "enable_new_mfa_methods": true,
+  "crypto_withdraw_enabled": true,
+  "crypto_deposit_enabled": true,
+  "debit_card_fee_enabled": true,
+  "debit_card_fee": 2,
+  "global_parlays_enabled": true,
+  "sports_widgets_enabled": true,
+  "superbowl_fees_enabled": false,
+  "live_feed_enabled": true,
+  "live_chat_max_message_length": 300,
+  "live_chat_highlight_tickers": [],
+  "live_chat_highlight_limit": 5,
+  "max_crypto_withdrawal_cents": 40000000,
+  "special_schedule_fees_enabled": false,
+  "special_march_madness_fees_enabled": false,
+  "can_show_brackets": true,
+  "maker_fees_label": true,
+  "crypto_withdrawal_docv": true,
+  "enable_aeropay": true,
+  "enable_aeropay_ids": [],
+  "auto_load_chart_series_tickers": [
+    "KXBTC15M",
+    "KXETH15M",
+    "KXSOL15M",
+    "KXXRP15M",
+    "KXDOGE15M",
+    "KXHYPE15M",
+    "KXBNB15M",
+    "KXNEAR15M",
+    "KXZEC15M",
+    "KXGOLD15M",
+    "KXSILVER15M",
+    "KXWTI15M",
+    "KXBRENT15M",
+    "KXEURUSD15M",
+    "KXGBPUSD15M",
+    "KXUSDJPY15M",
+    "KXAUDUSD15M",
+    "KXUSDCAD15M"
+  ],
+  "enable_webview_log": false,
+  "markets_to_remove": [
+    "ETHMAXY-24DEC31-4000",
+    "BTCMAXY-24DEC31-70000",
+    "VULTURES-2-24MAY05",
+    "SPACEXSTARSHIP-24MAY31",
+    "SPACEXSTARSHIP-24JUL31",
+    "SPACEXSTARSHIP-24JUN30",
+    "UNIPRESIDENTS-24SEP01-Y",
+    "UNIPRESIDENTS-24SEP01-UCLA",
+    "LBJR-NONE",
+    "NEWALBUMKDOT-24-DEC31",
+    "KXNOBELPEACE-25",
+    "KXLAGODAYS-25FEB-0",
+    "KXDELAWAREINCORP-26-APPL",
+    "KXNEWCOINLAUNCH-26-DJTJR",
+    "KXNCAAF-26-AZST",
+    "KXNOBELPEACE-25",
+    "KXFDABANS-26-SSRI",
+    "KXSECPRESSMENTION-25AUG28-WALLSTREET",
+    "KXSECPRESSMENTION-25AUG28-STOCKS",
+    "KXSECPRESSMENTION-25AUG28-ATC",
+    "KXSECPRESSMENTION-25AUG28-BESSENT",
+    "KXSECPRESSMENTION-25AUG28-SP500",
+    "KXSECPRESSMENTION-25AUG28-TRADEWAR",
+    "KXSPOTIFYALBUMRELEASE-25-RIHA",
+    "KXNEXTPOPE-35-JDV",
+    "KXWLEADER-25-2-AALS",
+    "KXBILLBOARDRUNNERUPALBUM-25MAY31-WIW",
+    "KXVOTERECNCH-26-MLAW",
+    "KXVOTERECNCH-26-BUR",
+    "KXVOTERECNCH-26-MHAR",
+    "KXVOTERECNCH-26-ACLY",
+    "KXVOTERECNCH-26-TBUR",
+    "KXVOTERECNCH-26-KSEL",
+    "KXVOTERECNCH-26-WDAV",
+    "KXVOTERECNCH-26-ABIG",
+    "KXVOTERECNCH-26-AHAR",
+    "KXVOTERECNCH-26-AOGL",
+    "KXNYCMDEBMENTION-25JUN04-CONG",
+    "KXSPOTIFY100MILLION-25JUN30-MANC",
+    "KXUSOPEN-25-MATT",
+    "KXUSOPEN-25-ABAD",
+    "KXUSOPEN-25-BBOT",
+    "KXUSOPEN-25-JBRA",
+    "KXUSOPEN-25-HBUC",
+    "KXUSOPEN-25-RCAM",
+    "KXUSOPEN-25-YCAO",
+    "KXUSOPEN-25-FCAP",
+    "KXMUSKDOGE-26-JUN01",
+    "KXMUSKDOGE-26-JUN15",
+    "KXPARTYLEADEROUT-25-CSCH",
+    "KXBOND-30-EDW",
+    "KXBOND-30-EDG",
+    "KXNYKCOACH-25-JBOR",
+    "KXNYKCOACH-25-JKID",
+    "KXLEAVEXAI-25-KKOS",
+    "KXLEAVEXAI-25-CSZE",
+    "KXLEAVEXAI-25-MKRO",
+    "KXZAMBIAPRES-26-ELUN",
+    "KXJUULFLAVOR-27-CLA",
+    "KXJUULFLAVOR-27-BAN",
+    "KXJUULFLAVOR-27-APP",
+    "KXJUULFLAVOR-27-CAF",
+    "KXJUULFLAVOR-27-BUB",
+    "KXJUULFLAVOR-27-WAT",
+    "KXJUULFLAVOR-27-PIN",
+    "KXJUULFLAVOR-27-MEN",
+    "KXTRADEOFFNBA-25-MKEL",
+    "KXCOUNTRYSTARLINK-25-LK",
+    "KXRTFREAKIERFRIDAY-80",
+    "KXNBAFINALSMENTION-25JUN05-FLAG",
+    "KXDJTGOLF-25JUN16"
+  ],
+  "incentives_enabled": false,
+  "incentives_bonus": 5,
+  "attribution_survey_answers": {
+    "Facebook": [],
+    "Instagram": [],
+    "TikTok": [],
+    "Snapchat": [],
+    "X": [],
+    "Google Search": [],
+    "Spotify": [],
+    "Streaming": [
+      "Hulu",
+      "Disney+",
+      "Peacock",
+      "Amazon Fire TV",
+      "Tubi",
+      "MLB",
+      "Fox",
+      "NBC Sports",
+      "IMG College",
+      "CTIX",
+      "Roku",
+      "STNEWS",
+      "ONEFox",
+      "SI",
+      "LG",
+      "YouTube TV",
+      "The Dawgs",
+      "Johnny McCarthy",
+      "Graviteh",
+      "Mark Fighting",
+      "Trice",
+      "Other"
+    ],
+    "TV": [
+      "A&E",
+      "CNN",
+      "Fox News",
+      "TNT",
+      "Syfy",
+      "DirectTV Sports",
+      "MSNBC",
+      "Fox Business",
+      "TBS",
+      "USA",
+      "AMC",
+      "Tru",
+      "Tennis Network",
+      "IFV",
+      "We",
+      "CNBC",
+      "Fox Sports",
+      "BBC",
+      "Other"
+    ],
+    "Youtube/Podcasts": [
+      "Andrew Shultz/Flagrant",
+      "Tim Dillon",
+      "Tim Pool",
+      "Adam Mockler",
+      "David Pakman",
+      "Ben Shapiro",
+      "Steven Crowder",
+      "RSBN",
+      "Graviteh",
+      "Hoopers Ln.",
+      "Johnny McCarthy",
+      "The Dawgs",
+      "jakedezgolf",
+      "WrestleTalk",
+      "JDfromNY206",
+      "Hustl",
+      "Genial MMA",
+      "Allan Lichtman",
+      "Just Alyx",
+      "Tactical Manager TV",
+      "The Thomas Mott Show",
+      "LouHoopsta",
+      "I Ask AI",
+      "MLS Moves",
+      "Flying Fluffy Panthers Hockey",
+      "SLOAN",
+      "Aaron Bennett",
+      "Other"
+    ],
+    "Billboard / Subway / Taxi Ad": [],
+    "Streaming Audio/Radio": [
+      "AM/FM",
+      "Sports Radio",
+      "Music Radio",
+      "News Radio",
+      "iHeart",
+      "Audacy",
+      "Sirius",
+      "Spotify",
+      "KNBR",
+      "Other"
+    ],
+    "Celebrity": [
+      "Andrew Schulz",
+      "Daniel Negreanu",
+      "Ben Shapiro"
+    ],
+    "Mobile Game/App Ad": [],
+    "Friend or Family Member": [],
+    "App Store": [
+      "Apple App Store",
+      "Google Play"
+    ],
+    "Other": []
+  },
+  "show_margin_banner_on_empty_search_page": true,
+  "attribution_survey_titles": [
+    "Friends/family",
+    "News/Press",
+    "Youtube/Podcast",
+    "X/Twitter",
+    "Instagram account I like",
+    "Instagram/Facebook ads",
+    "Google/Reddit ads",
+    "TikTok",
+    "Billboards",
+    "Radio/Streaming",
+    "TV",
+    "Daniel Negreanu"
+  ],
+  "sell_max_cost_enabled": true,
+  "zendesk_support_images": {
+    "36584685284756": "https://kalshiexchange.zendesk.com/system/photos/43335945924884/image__14_.png",
+    "41027912808980": "https://kalshiexchange.zendesk.com/system/photos/43737208664980/Gemini_Generated_Image_tcgbr4tcgbr4tcgb.png",
+    "33428054621716": "https://kalshi-public-docs.s3.us-east-1.amazonaws.com/zendesk-support-images/TE5452491-U07UXRND89W-7b89b598f6bc-512.jpeg",
+    "39092360114324": "https://kalshiexchange.zendesk.com/system/photos/40793550474388/Kalshi_Logo.png",
+    "405173154151": "https://kalshiexchange.zendesk.com/system/photos/40793550474388/Kalshi_Logo.png",
+    "41674332299284": "https://kalshiexchange.zendesk.com/system/photos/41715812540052/linkedinpfp.jpg",
+    "43390654033556": "https://kalshiexchange.zendesk.com/system/photos/40793550474388/Kalshi_Logo.png",
+    "36738319515412": "https://kalshiexchange.zendesk.com/system/photos/40793550474388/Kalshi_Logo.png",
+    "411021056591": "https://kalshiexchange.zendesk.com/system/photos/40793550474388/Kalshi_Logo.png"
+  },
+  "zendesk_support_names": {
+    "36584685284756": "Shannon",
+    "41027912808980": "Tim",
+    "33428054621716": "Joe",
+    "39092360114324": "Forrest",
+    "405173154151": "Jack",
+    "41674332299284": "Seth",
+    "43390654033556": "Kalshi ",
+    "36738319515412": "Kalshi ",
+    "411021056591": "Kalshi Support"
+  },
+  "zendesk_enabled": true,
+  "zendesk_enable_new_tickets": true,
+  "impression_tracking_enabled_for_social_posts": false,
+  "enable_new_webview": false,
+  "zendesk_wait_time": "15 min",
+  "exchange_closed_message": "Exchange closed - come back at 5am ET!",
+  "enable_spreads_and_totals": true,
+  "enable_props": true,
+  "enable_new_sports_view": true,
+  "referral_bonus": 10,
+  "referral_bonus_info_description": "Use your bonus within 30 days or it will expire. You can't withdraw bonus credit itself, but you can withdraw any winnings you make with it.",
+  "treatment_experiment_threshold": 150,
+  "parlay_enabled": true,
+  "parlay_label": "Combo",
+  "parlay_emails": [],
+  "single_game_parlay_enabled": true,
+  "single_game_parlay_label": "Build your combo",
+  "single_game_parlay_emails": [],
+  "parlay_quote_timeout": 3,
+  "amountToTradeToClaimReferralsCredit": 1000,
+  "amountToTradeToUnlockReferrals": 1000,
+  "referralBonusInCents": 1000,
+  "maxReferrals": 10,
+  "props_scope": [
+    "Brace",
+    "Spread",
+    "Game Spread",
+    "Point Total",
+    "Total Runs",
+    "Run Total",
+    "Exact Match Score",
+    "Set Spread",
+    "Set Winner",
+    "Total Games",
+    "Total Sets",
+    "Team Total",
+    "Team Total Touchdowns",
+    "Team Total Yards",
+    "Field Goals",
+    "Defense",
+    "Touchdowns",
+    "Goals",
+    "Goalscorer",
+    "Head-to-Head",
+    "Rushing Yards",
+    "Receiving Yards",
+    "Passing Yards",
+    "Passing Touchdowns",
+    "Passing",
+    "Rushing",
+    "Receiving",
+    "Yards",
+    "YRFI/NRFI",
+    "BTTS",
+    "Team to Score First",
+    "First Team to Score",
+    "First Team to Score a TD",
+    "Team Shots",
+    "Team Shots on Goal",
+    "Correct Score",
+    "Corners",
+    "Shots",
+    "Score or Assist",
+    "Goalkeeper Saves",
+    "Assists",
+    "Stolen Bases",
+    "Receptions",
+    "Player Points",
+    "Player Assists",
+    "Player Rebounds",
+    "Player Steals",
+    "Player Blocks",
+    "Player Threes",
+    "Double Double",
+    "Triple Double",
+    "Home Runs",
+    "Strikeouts",
+    "Hits",
+    "Hits + Runs + RBIs",
+    "Total Bases",
+    "Outs Recorded",
+    "Walks",
+    "Hits Allowed",
+    "Earned Runs",
+    "Runs",
+    "RBIs",
+    "Singles",
+    "Doubles",
+    "Triples",
+    "Hole Scores",
+    "Eagles",
+    "Race to 10 Points",
+    "Race to 25 Points",
+    "Race to 50 Points",
+    "Race to Points",
+    "Round 1 Finishing Position",
+    "Top 3 Finish",
+    "Top 5 Finish",
+    "Top 10 Finish",
+    "Top 20 Finish",
+    "Top 5 Finisher",
+    "Top 10 Finisher",
+    "Top 20 Finisher",
+    "Make the Cut",
+    "Golf Specials",
+    "Method of Victory",
+    "Go the Distance",
+    "Round of Victory",
+    "Round of Finish",
+    "Method of Finish",
+    "1st Half",
+    "1st Half / Full Time",
+    "First Half / Fulltime",
+    "1st Half Winner",
+    "2nd Half Winner",
+    "1st Half Spread",
+    "2nd Half Spread",
+    "1st Half Point Total",
+    "2nd Half Point Total",
+    "1st Half Total",
+    "2nd Half Total",
+    "1st Half BTTS",
+    "2nd Half BTTS",
+    "1st Half Correct Score",
+    "2nd Half Correct Score",
+    "1st Quarter",
+    "2nd Quarter",
+    "3rd Quarter",
+    "4th Quarter",
+    "1st Quarter Winner",
+    "2nd Quarter Winner",
+    "3rd Quarter Winner",
+    "4th Quarter Winner",
+    "1st Quarter Spread",
+    "2nd Quarter Spread",
+    "3rd Quarter Spread",
+    "4th Quarter Spread",
+    "1st Quarter Point Total",
+    "2nd Quarter Point Total",
+    "3rd Quarter Point Total",
+    "4th Quarter Point Total",
+    "1st Quarter Total",
+    "2nd Quarter Total",
+    "3rd Quarter Total",
+    "4th Quarter Total",
+    "First 3 Innings Winner",
+    "First 3 Innings Spread",
+    "First 3 Innings Total",
+    "First 5 Innings Winner",
+    "First 5 Innings Spread",
+    "First 5 Innings Total",
+    "First 7 Innings Winner",
+    "First 7 Innings Spread",
+    "First 7 Innings Total",
+    "2-Point Conversion",
+    "4th Down Conversions",
+    "Any D/ST Touchdown",
+    "D/ST Touchdown",
+    "Comeback Win",
+    "First Touchdown Time",
+    "Highest Scoring Quarter",
+    "Largest Lead",
+    "Lead Changes",
+    "Most Fantasy Points",
+    "Most Receiving Yards",
+    "Most Rushing Yards",
+    "Non-QB Pass Attempt",
+    "Number of Touchdowns",
+    "Overtime",
+    "Sacks",
+    "Scoreless Quarter",
+    "Winning Margin",
+    "Seattle Passing Attempt from 1-Yard Line",
+    "1st TD",
+    "2nd TD",
+    "3rd TD",
+    "4th TD",
+    "5th TD",
+    "6th TD",
+    "7th TD",
+    "8th TD",
+    "9th TD",
+    "10th TD",
+    "11th TD",
+    "12th TD",
+    "13th TD",
+    "14th TD",
+    "15th TD",
+    "16th TD",
+    "17th TD",
+    "18th TD",
+    "Game Props",
+    "Margin of Victory",
+    "Voter Turnout",
+    "Vote Percent",
+    "Fed Rate After Meeting",
+    "Dissenting Members",
+    "Dissenting Vote Count",
+    "Seat Count",
+    "Closest Race",
+    "Chart Position",
+    "Fastest Lap",
+    "Top Constructor",
+    "Podium Finishers",
+    "Duration"
+  ],
+  "max_amount_in_cents_for_rfq_without_funds": 100000,
+  "parlay_markets_to_hide": [
+    "KXNFLANYTD-25OCT02SFLA-SFDEF",
+    "KXNFLFIRSTTD-25OCT02SFLA-SFDEF",
+    "KXNFLFIRSTTD-25OCT02SFLA-LADEF",
+    "KXNFLANYTD-25OCT02SFLA-SFST",
+    "KXNFLFIRSTTD-25OCT02SFLA-SFST",
+    "KXNFLFIRSTTD-25OCT02SFLA-LAST"
+  ],
+  "parlay_quote_timeout_ms": 1100,
+  "series_props_scopes": [
+    "Brace",
+    "Spread",
+    "Game Spread",
+    "Point Total",
+    "Total Runs",
+    "Run Total",
+    "Exact Match Score",
+    "Set Spread",
+    "Set Winner",
+    "Total Games",
+    "Total Sets",
+    "Team Total",
+    "Team Total Touchdowns",
+    "Team Total Yards",
+    "Field Goals",
+    "Defense",
+    "Touchdowns",
+    "Goals",
+    "Goalscorer",
+    "Head-to-Head",
+    "Rushing Yards",
+    "Receiving Yards",
+    "Passing Yards",
+    "Passing Touchdowns",
+    "Passing",
+    "Rushing",
+    "Receiving",
+    "Yards",
+    "YRFI/NRFI",
+    "BTTS",
+    "Team to Score First",
+    "First Team to Score",
+    "First Team to Score a TD",
+    "Team Shots",
+    "Team Shots on Goal",
+    "Correct Score",
+    "Corners",
+    "Shots",
+    "Score or Assist",
+    "Goalkeeper Saves",
+    "Assists",
+    "Stolen Bases",
+    "Receptions",
+    "Player Points",
+    "Player Assists",
+    "Player Rebounds",
+    "Player Steals",
+    "Player Blocks",
+    "Player Threes",
+    "Double Double",
+    "Triple Double",
+    "Home Runs",
+    "Strikeouts",
+    "Hits",
+    "Hits + Runs + RBIs",
+    "Total Bases",
+    "Outs Recorded",
+    "Walks",
+    "Hits Allowed",
+    "Earned Runs",
+    "Runs",
+    "RBIs",
+    "Singles",
+    "Doubles",
+    "Triples",
+    "Hole Scores",
+    "Eagles",
+    "Race to 10 Points",
+    "Race to 25 Points",
+    "Race to 50 Points",
+    "Race to Points",
+    "Round 1 Finishing Position",
+    "Top 3 Finish",
+    "Top 5 Finish",
+    "Top 10 Finish",
+    "Top 20 Finish",
+    "Top 5 Finisher",
+    "Top 10 Finisher",
+    "Top 20 Finisher",
+    "Make the Cut",
+    "Golf Specials",
+    "Method of Victory",
+    "Go the Distance",
+    "Round of Victory",
+    "Round of Finish",
+    "Method of Finish",
+    "1st Half",
+    "1st Half / Full Time",
+    "First Half / Fulltime",
+    "1st Half Winner",
+    "2nd Half Winner",
+    "1st Half Spread",
+    "2nd Half Spread",
+    "1st Half Point Total",
+    "2nd Half Point Total",
+    "1st Half Total",
+    "2nd Half Total",
+    "1st Half BTTS",
+    "2nd Half BTTS",
+    "1st Half Correct Score",
+    "2nd Half Correct Score",
+    "1st Quarter",
+    "2nd Quarter",
+    "3rd Quarter",
+    "4th Quarter",
+    "1st Quarter Winner",
+    "2nd Quarter Winner",
+    "3rd Quarter Winner",
+    "4th Quarter Winner",
+    "1st Quarter Spread",
+    "2nd Quarter Spread",
+    "3rd Quarter Spread",
+    "4th Quarter Spread",
+    "1st Quarter Point Total",
+    "2nd Quarter Point Total",
+    "3rd Quarter Point Total",
+    "4th Quarter Point Total",
+    "1st Quarter Total",
+    "2nd Quarter Total",
+    "3rd Quarter Total",
+    "4th Quarter Total",
+    "First 3 Innings Winner",
+    "First 3 Innings Spread",
+    "First 3 Innings Total",
+    "First 5 Innings Winner",
+    "First 5 Innings Spread",
+    "First 5 Innings Total",
+    "First 7 Innings Winner",
+    "First 7 Innings Spread",
+    "First 7 Innings Total",
+    "2-Point Conversion",
+    "4th Down Conversions",
+    "Any D/ST Touchdown",
+    "D/ST Touchdown",
+    "Comeback Win",
+    "First Touchdown Time",
+    "Highest Scoring Quarter",
+    "Largest Lead",
+    "Lead Changes",
+    "Most Fantasy Points",
+    "Most Receiving Yards",
+    "Most Rushing Yards",
+    "Non-QB Pass Attempt",
+    "Number of Touchdowns",
+    "Overtime",
+    "Sacks",
+    "Scoreless Quarter",
+    "Winning Margin",
+    "Seattle Passing Attempt from 1-Yard Line",
+    "1st TD",
+    "2nd TD",
+    "3rd TD",
+    "4th TD",
+    "5th TD",
+    "6th TD",
+    "7th TD",
+    "8th TD",
+    "9th TD",
+    "10th TD",
+    "11th TD",
+    "12th TD",
+    "13th TD",
+    "14th TD",
+    "15th TD",
+    "16th TD",
+    "17th TD",
+    "18th TD",
+    "Game Props",
+    "Margin of Victory",
+    "Voter Turnout",
+    "Vote Percent",
+    "Fed Rate After Meeting",
+    "Dissenting Members",
+    "Dissenting Vote Count",
+    "Seat Count",
+    "Closest Race",
+    "Chart Position",
+    "Fastest Lap",
+    "Top Constructor",
+    "Podium Finishers",
+    "Duration"
+  ],
+  "parlay_search_terms": [
+    "parlay",
+    "combo",
+    "combos",
+    "comb",
+    "parla",
+    "parlays"
+  ],
+  "show_player_props": true,
+  "series_risk_limits": {
+    "KXNBAPTS": 10000,
+    "KXNBAAST": 10000,
+    "KXNBAREB": 10000,
+    "KXNBA3PT": 10000,
+    "KXNBA2D": 10000,
+    "KXNBA3D": 10000
+  },
+  "series_yes_only": [
+    "KXNBAPTS",
+    "KXNBAAST",
+    "KXNBAREB",
+    "KXNBA3PT",
+    "KXNBA2D",
+    "KXNBA3D",
+    "KXNBABLK",
+    "KXNBASTL",
+    "KXNBAFTM",
+    "KXNBAPRA",
+    "KXNBASTOCK"
+  ],
+  "player_id_custom_strike_keys": [
+    "basketball_player",
+    "baseball_player",
+    "football_player",
+    "football_team",
+    "soccer_player",
+    "hockey_player",
+    "golf_hole"
+  ],
+  "quick_orders_at_99_limit": true,
+  "poll_market_price_interval": 60,
+  "responsible_trading_enabled": true,
+  "bracket_submission_end_date": "2026-03-19 16:00 UTC",
+  "bracket_restricted_states": [
+    "NY",
+    "FL"
+  ],
+  "esports_livestream_enabled_ios": true,
+  "bracket_espn_import_enabled": "false",
+  "bracket_billion_dollar_enabled": true,
+  "bracket_tournament_id": "march_madness-2026",
+  "bracket_scoring_by_round": {
+    "Round of 64": 10,
+    "Round of 32": 20,
+    "Round of 16": 40,
+    "Round of 8": 80,
+    "Round of 4": 160,
+    "Championship": 320
+  },
+  "bracket_rules": "# $1 Billion Perfect Bracket Challenge \n\n$1 Billion for a perfect bracket\n\n$1 Million for the highest scoring bracket if no perfect bracket is submitted\n\n$1 Million to charity and scholarships\n\nBY CREATING A BRACKET, YOU ACKNOWLEDGE THAT YOU READ AND UNDERSTAND THE FULL CONTEST RULES, AVAILABLE BELOW. YOU CAN ALSO READ THE FULL RULES [HERE](https://kalshi.com/docs/bracket-challenge/OFFICIAL_RULES.pdf).\n\nIf no perfect bracket is submitted, a $1 million Secondary Prize will be awarded to the highest scoring bracket. If more than one person submits a perfect bracket, or there is a tie for highest scoring brackets, the Grand Prize or Secondary Prize will be split equally among those entrants. \n\nNo purchase or payment of any kind is necessary to play or win. A purchase or payment will not increase chances of winning. \n\nBy creating a bracket, you agree to the Official Rules and Kalshi terms, which include a binding arbitration agreement and class action waiver.\n\nSIG Parametrics, LLC, a member of the Susquehanna International Group of Companies, is financially backing this promotion.\n\nSome highlights:\n\n # Full Rules \n\n OFFICIAL RULES $1 BILLION 2026 PERFECT BRACKET MEN\u2019S COLLEGE BASKETBALL CONTEST NO PURCHASE OR PAYMENT OF ANY KIND IS NECESSARY TO PLAY OR WIN. A PURCHASE OR PAYMENT OF ANY KIND WILL NOT INCREASE YOUR CHANCES OF WINNING. VOID WHERE PROHIBITED OR RESTRICTED BY LAW. IN ORDER TO PARTICIPATE, YOU MUST REGISTER AND HAVE A VALID KALSHI USER ACCOUNT. REGISTRATION FOR A USER ACCOUNT IS FREE. YOU MUST ALSO BE ELIGIBLE TO ENTER UNDER THESE OFFICIAL RULES. IMPORTANT LEGAL NOTICE! PLEASE READ CAREFULLY. THESE OFFICIAL RULES (\u201cRULES\u201d OR \u201cOFFICIAL RULES\u201d) AFFECT AND CONTROL YOUR LEGAL RIGHTS AND OBLIGATIONS. YOU MUST AGREE TO AND ACCEPT THESE RULES WITHOUT EXCEPTION IN ORDER TO ENTER THE CONTEST AND QUALIFY TO WIN ANY PRIZE. THESE OFFICIAL RULES INCLUDE AN ARBITRATION AND CLASS ACTION WAIVER AGREEMENT WHICH REQUIRES THAT ANY PAST, PENDING, OR FUTURE DISPUTES BETWEEN YOU AND KALSHI RELATED IN ANY WAY TO THE CONTEST SHALL BE RESOLVED BY FINAL AND BINDING ARBITRATION ON AN INDIVIDUAL BASIS ONLY AND FOR YOUR OWN LOSSES ONLY. YOU MAY NOT PROCEED AS A CLASS REPRESENTATIVE, MEMBER OR PART OF ANY PROPOSED CLASS, COLLECTIVE ACTION, PRIVATE ATTORNEY GENERAL SUIT, QUI TAM ACTION OR ANY REPRESENTATIVE PROCEEDING, OR OTHERWISE SEEK TO RECOVER ON BEHALF OF OTHERS OR FOR THE BENEFIT OF OTHERS IN ANY TYPE OF CLAIM OR ACTION. ARBITRATION MEANS YOU WILL NOT BE ABLE TO SEEK DAMAGES IN COURT OR PRESENT YOUR CASE TO A JURY, UNLESS OTHERWISE PERMITTED BY THESE TERMS. OPT-OUT. IF YOU DO NOT WISH TO BE SUBJECT TO ARBITRATION ON A RETROACTIVE BASIS AND AS TO ANY FUTURE CLAIMS, YOU MAY OPT OUT OF THE ARBITRATION AGREEMENT PRIOR TO ENTERING THE CONTEST BY FOLLOWING THE INSTRUCTIONS PROVIDED IN THE \u201cBINDING ARBITRATION AGREEMENT AND CLASS ACTION WAIVER\u201d \u2013 SEE SECTION 13 OF THESE OFFICIAL RULES, BELOW. OPT-OUT REQUESTS SENT AFTER YOU SUBMIT AN ENTRY INTO THE CONTEST SHALL BE NULL AND VOID. EVEN IF YOU OPT OUT OF THE ARBITRATION AGREEMENT IN SECTION 13, ALL OTHER REMAINING SECTIONS OF THESE OFFICIAL RULES APPLY. PARTICIPANTS IN THE CONTEST MUST REGISTER AND MAINTAIN AN ACCOUNT WITH SPONSOR AND ACCEPT CERTAIN LEGAL TERMS ASSOCIATED WITH AFFILIATES OF KALSHI INC., INCLUDING THE KALSHI MEMBER AGREEMENT, KALSHIEX RULEBOOK, THE KALSHI KLEAR RULEBOOK, PRIVACY POLICY, AND KALSHI KLEAR PARTICIPANT AGREEMENT (COLLECTIVELY, THE \u201cTERMS\u201d). NOTWITHSTANDING THE TERMS, THESE DM1\\20763708.4 OFFICIAL RULES SHALL GOVERN AND CONTROL THE CONTEST OFFERED BY SPONSOR. These Rules should not be determined to be a substitute or replacement for, or otherwise render inapplicable, the Terms. Solely with respect to this $1 Billion 2026 Perfect Bracket Men\u2019s College Basketball Contest (the \u201cContest\u201d), to the extent that any provision of these Rules conflicts with any provision in the Terms, the provision contained in these Rules shall apply, and the provision contained in these Rules shall be deemed to supersede the conflicting provision contained in the Terms. Other than the application of a provision in these Rules to the Contest that explicitly conflicts with a provision in the Terms, in no way shall these Rules be deemed to replace or nullify any provision contained in Terms. By participating in this Contest, entrants (\u201cEntrants\u201d or \u201cParticipants\u201d) agree to be bound by these Rules and by the decisions of the Sponsor, which shall be final in all matters relating to the Contest and to be subject to the sole and absolute discretion of the Sponsor. Eligibility to enter, claim and receive the Grand Prize (defined below) or Secondary Prize (defined below) is contingent upon fulfilling all requirements set out in these Rules. 1. Sponsor The sole sponsor of the Contest is Kalshi Inc. (\u201cKalshi,\u201d or \u201cSponsor\u201d). Apple, Google and the NCAA are not sponsors of, responsible for conducting, or involved with the Contest in any manner. NCAA\u00ae and MARCH MADNESS\u00ae are registered trademarks of the NCAA. 2. Eligibility Requirements IN ORDER TO PARTICIPATE, YOU MUST AT TIME OF ENTRY BE A LEGAL RESIDENT OF THE UNITED STATES, INCLUDING RESIDENTS OF WASHINGTON D.C. AND UNITED STATES TERRITORIES, BUT EXCLUDING RESIDENTS OF FLORIDA AND NEW YORK, AND BE PHYSICALLY LOCATED IN, THE UNITED STATES (OTHER THAN NEW YORK OR FLORIDA) AT THE TIME OF ENTRY. THE USE OF VIRTUAL PRIVATE NETWORKS OR OTHER MECHANISMS TO CHANGE OR AFFECT LOCATION AT THE TIME OF ENTRY IS PROHIBITED. YOU MUST HAVE A VALID KALSHI USER ACCOUNT (DEFINED BELOW) THAT HAS PASSED KALSHI\u2019S KYC PROCESS (DESCRIBED BELOW) AT ALL TIMES DURING THE CONTEST PERIOD AND MUST BE THE AUTHORIZED USER AND HOLDER OF THE ACCOUNT. ENTRY BY OTHER PERSONS OR BY PROXY VIA YOUR ACCOUNT IS PROHIBITED. YOU MUST BE EIGHTEEN (18) YEARS OF AGE OR OLDER AT THE TIME OF ENTRY. 2 The following individuals are not eligible to participate in the Contest or win a prize: Residents of Florida or New York, or persons located in New York or Florida at the time of entry; non-residents of the United States or persons located outside of the United States at the time of entry; any person who is a player, coach, team staff member, or officiant for the 2026 NCAA Men\u2019s College Basketball Tournament; Officers, directors, employees, agents and representatives of the Sponsor, its parents, subsidiaries, affiliated companies, or of any other parties involved in the operation of the Contest, each of the immediate family members of such excluded individuals (i.e., spouses, parents, children, siblings and the \u201csteps\u201d of each), and all persons living in the same household of each. INDIVIDUALS WHO DO NOT MEET THESE ELIGIBILITY REQUIREMENTS MAY NOT ENTER THE CONTESTS OR RECEIVE THE GRAND PRIZE (DEFINED BELOW) OR SECONDARY PRIZE (DEFINED BELOW). ANY ATTEMPT TO ENTER THE CONTEST BY AN INDIVIDUAL WHO DOES NOT MEET THESE ELIGIBILITY REQUIREMENTS OR FAILURE TO COMPLY WITH THESE OFFICIAL RULES WILL RESULT IN DISQUALIFICATION AND INELIGIBILITY TO CLAIM OR WIN THE GRAND PRIZE (DEFINED BELOW) OR SECONDARY PRIZE (DEFINED BELOW). In addition to other remedies provided in these Rules, your failure to comply with these Rules may, among other things, result in disqualification from the Contest, removal from the Contest, and forfeiture of any Prize (as defined below) as determined by Sponsor in its sole and absolute discretion. 3. Overview of Perfect Bracket Challenge The Contest is a free-to-play (\u201cFTP\u201d) contest to be held during the 2026 NCAA Division I Men\u2019s Basketball Tournament (the \u201cTournament\u201d) scheduled to occur from the tip-off of the first game of the First Round of the Tournament on March 19, 2026 through the conclusion of the final game of the Tournament scheduled to occur on April 6, 2026, exclusively for Kalshi customers. Each Entrant must select, for each Tournament Game in each Round (as defined below), the winning team in every such game using the contest entry form (\u201cContest Entry Form\u201d) provided via the Site (defined below) or the App (defined below). If an Entrant submits and Sponsor duly receives a Contest Entry Form with a \u201cPerfect Bracket\u201d - correctly selecting the correct winning Team (or, for games involving the winners of \u201cFirst Four\u201d games that have yet to be played, the correct winning seed) for every game in every Round (defined below) on the Contest Entry Form, including the championship game - the Entrant will be eligible to claim the Grand Prize (defined below) subject to all of the terms and conditions of these Rules. The schedule of Contest Period rounds (each, a \u201cRound\u201d, and, collectively, the \u201cRounds\u201d) is set forth below: First Round (Round of 64): March 19-20 Second Round (Round of 32): March 21-22 Third Round (Round of 16): March 26-27 \u25cf \u25cf \u25cf 3 \u25cf \u25cf \u25cf Fourth Round (Round of 8): March 28-29 Fifth Round (Round of 4): April 4 Championship Game: April 6 4. Contest Period / Contest Entry Lock The Contest will commence March 19, 2026 at 12:01 p.m. Eastern Time through April 6, 2026 at 11:59 p.m. Eastern Time (\u201cContest Period\u201d). Contest Entry Forms will open at approximately 2:00 PM ET on March 16, 2026. Only those Brackets completed, submitted, and accepted by the earlier of (i) March 19, 2026 at 1:00:00 PM ET, or (ii) tip-off of the first game of the First Round of the Tournament (excluding any games played during play-in rounds) (\u201cContest Lock\u201d) will be deemed valid Contest entries. At its sole and absolute discretion, Kalshi may move the Contest Lock to an earlier date and/or time. Contest Entry Forms may NOT be submitted after the Contest Lock. All dates and times applicable to the Contest are based on the current schedule for the Tournament and are subject to change. Sponsor does not control the Tournament schedule and is not responsible for any changes made by the applicable governing bodies or broadcasters. Sponsor shall not be liable for any problems that occur during the entry process, however so caused, including, without limitation, late, incomplete, delayed, undelivered, or misdirected entries or Contest Entry Forms, no matter the cause, and Sponsor shall not have any obligation to advise an individual of any incomplete, invalid, or undeliverable submission, Contest Entry Forms, or entry. All entries and Contest Entry Forms become the exclusive property of Sponsor and will not be acknowledged or returned. 5. How to Enter/Limits on Number of Entries To participate, you must FIRST have an active account with Kalshi (\u201cUser Account\u201d) that has successfully completed and been accepted by Kalshi\u2019s KYC process, including (without limitation) the submission of your legal name, address, email address, and phone number. If you do not have a User Account, you can create one free of charge at https://kalshi.com/ (the \u201cSite\u201d) or via Kalshi\u2019s mobile app (the \u201cApp\u201d). Kalshi is not responsible for any delays in the creation of a User Account or inability of any person to enter the Contest due to delay. Create an Account with Kalshi NOW. To enter the Contest, a Participant must access the Site or App and sign into their User Account. Once logged-in, follow the links and instructions provided to agree to these Official Rules and to enter the Contest by selecting the winner for every game in every bracket. For purposes of these Rules, the term \u201cContest Entry\u201d shall mean the receipt by Sponsor of a Contest Entry Form with a fully completed bracket showing such entrant\u2019s selection of the winner of each game in the Tournament, with such submission being made by an eligible person in accordance with these Official Rules. All Contest Entry submissions are final. Once a Contest Entry is submitted electronically and the Contest Lock is in place, the Participant may not change, cancel, recall or otherwise change or 4 resubmit an entry. Any incomplete brackets will be null and void. Sponsor shall have no ability or obligation to correct any claimed or actual errors in any submission. Participant further agrees that the contents of the Contest Entry Form as received and stored in Sponsor\u2019s servers and data shall control, notwithstanding any contrary records, data, photographs or other evidence possessed or submitted by Participant. Contest Entry Forms cannot be submitted by email, phone, in-person, or by any other means not expressly provided for herein. Automated entries (including but not limited to entries submitted using any bot, script, macro, or Contest submission service), copies, third party entries, facsimiles and/or mechanical reproductions are not permitted and shall be disqualified. The number of entries possible in the Contest shall be limited to one (1) Contest Entry per person/Account, with entrants capped at ten million (10,000,000) total entries (\u201cEntry Cap\u201d). Kalshi may increase the Entry Cap in its sole and absolute discretion, with notice given on the Site. If Sponsor, in its sole discretion, determines that an Entrant has utilized or created multiple User Accounts, usernames, or identities for purposes of entering the Contest, all Contest Entries made by such Entrant will be voided, and the Entrant will be disqualified and ineligible to claim or win the Grand Prize or Secondary Prize. For purposes of this Contest, a Contest Entry Form is \u201creceived\u201d when Sponsor\u2019s servers accept and record the Contest Entry information. Proof of sending (such as an automated computer receipt confirming entry or \u201cthanks for entering\u201d message) does not constitute proof of actual receipt of a Contest Entry for purposes of this Contest. Sponsor\u2019s database clock will be the official timekeeper for this Contest. Please Note: If submitting a Contest Entry via a Mobile Device, your wireless-service provider\u2019s text and data rates may apply. Please consult your wireless-service provider regarding its pricing plans. 6. Grand Prize for Perfect Bracket Only A payment of one-billion US dollars (US $1,000,000,000) (the \u201cGrand Prize\u201d) will be awarded to any eligible Entrant that submits a Perfect Bracket and complies with all Rules. If more than one Entrant has successfully submitted a Perfect Bracket, the Perfect Bracket Grand Prize will be evenly split among such Entrants. The total approximate retail value of the Perfect Bracket Grand Prize is one-billion US dollars (US $1,000,000,000). In its sole and absolute discretion, Sponsor may elect to award the Grand Prize in the form of ten (10) equal installments of one hundred million US dollars (US $100,000,000) each, paid on an annual basis over ten (10) calendar years. 7. Secondary Prize for \u201cBest\u201d Bracket 5 In the event that no Grand Prize is awarded, a payment of one million US dollars (US $1,000,000) (the \u201cSecondary Prize\u201d) will be awarded to the eligible Entrant that submits the highest scoring Contest Entry (\u201cBest Bracket\u201d), with its score determined by the summation of points per correct pick, in accordance with the below allocation. A \u201ccorrect pick\u201d is a pick that accurately selects the winner of the given game. Tournament Round Points Per Correct Pick First Round (Round of 64) Second Round (Round of 32) 10 Point 20 Points Third Round (Round of 16) Fourth Round (Round of 8) Fifth Round (Round of 4) 40 Points 80 Points 160 Points Championship Game 320 Points If more than one Entrant ties for the Best Bracket, the Secondary Prize will be evenly split among such Entrants. The total approximate retail value of the Secondary Prize is one million US dollars (US $1,000,000). 8. Grand and Secondary Prize Redemption Process PLEASE NOTE THAT EVEN IF YOUR CONTEST ENTRY FORM BRACKET IS LISTED AS A PERFECT BRACKET AND/OR THE BEST BRACKET AT THE CLOSE OF THIS CONTEST, YOU HAVE NOT YET WON THE GRAND PRIZE OR SECONDARY PRIZE(S). A POTENTIAL WINNER IS SUBJECT TO VERIFICATION BY SPONSOR AND/OR THIRD PARTIES INVOLVED IN CREATING, PRODUCING, OR DELIVERING THE CONTEST, AND MUST MEET ALL ELIGIBILITY REQUIREMENTS AND REQUIREMENTS OF THESE OFFICIAL RULES BEFORE AN ENTRANT WILL BE CONFIRMED AS A WINNER AND THE GRAND PRIZE AND/OR SECONDARY PRIZE WILL BE AWARDED. In order to claim the Grand Prize and/or Secondary Prize, the winner(s) must execute all documents as Sponsor may reasonably request and respond in a timely manner to Sponsor\u2019s reasonable requests to facilitate Grand Prize and/or Secondary Prize fulfillment. In the event a winner is not able to meet or violates these Rules, as determined by Sponsor in its sole and absolute discretion, that winner may not be entitled to the Grand Prize and/or Secondary Prize, or any other prize, compensation, or monetary value whatsoever, as determined by Sponsor in its sole discretion, and Sponsor will have no further obligation to that winner. Any potential Grand Prize and/or Secondary Prize winner will be notified within approximately 30 days after the conclusion of the Contest Period via email. A potential Grand Prize and/or Secondary Prize Winner will be required to fully complete, sign, notarize and return an Affidavit of Eligibility and Liability/Publicity Release ('Affidavit/Release'), together with any additional information required by Sponsor (such as W-9 Request for Taxpayer Identification Number). The information provided in potential winner's Affidavit/Release must be correct, complete, and 6 mirror the information provided in winner's User Account registration information, or potential winner will be disqualified. Except where prohibited by law, potential winner must complete and return all such required documents by the deadline specified by Sponsor or the Grand Prize and/or Secondary Prize will be forfeited. If the potential winner cannot be contacted, fails to sign and return the required documentation or provide other requested information within the required time period (as applicable), or does not comply with these Official Rules, the potential winner forfeits the Grand Prize and/or Secondary Prize. Winner will be issued an IRS Form 1099 which documents the value of the prize for tax purposes. The right to receive the Grand Prize and/or Secondary Prize cannot be transferred or assigned. A Grand Prize and/or Secondary Prize winner is solely responsible for all federal, state, local, or other applicable taxes associated with the acceptance and use of the Grand Prize and/or Secondary Prize. A Grand Prize and/or Secondary Prize winner agrees and acknowledges that Sponsor may withhold and remit a portion of the Grand Prize and/or Secondary Prize value to comply with applicable tax laws. A Grand Prize and/or Secondary Prize winner also agrees to provide Sponsor with a valid social security number, or any other information Sponsor may require in connection with applicable tax reporting or withholding requirements or other laws or regulations. The failure to provide such information shall result is disqualification. All costs and expenses associated with Grand Prize and/or Secondary Prize acceptance and use not specifically provided herein are the sole responsibility of the winner. It is your responsibility to retain copies of these Official Rules as updated from time to time. 8. Limitation of Liability As a further condition and agreement for the opportunity to enter the Contest, Entrant expressly agrees that all liabilities shall be limited as set forth below: BY ENTERING AND/OR PARTICIPATING IN THE CONTEST, YOU UNDERSTAND AND AGREE THAT KALSHI, AS WELL AS PARTIES INVOLVED IN CREATING, PRODUCING, OR DELIVERING THE CONTEST, AND ANY OF KALSHI\u2019S OR THE AFOREMENTIONED PARTIES\u2019 AFFILIATES, SUBSIDIARIES, AGENTS, EMPLOYEES, OFFICERS, DIRECTORS, CONSULTANTS, SUPPLIERS, ADVERTISERS, PAYMENT SERVICE PROVIDERS, PARTNERS, AND CONTRACTORS (\u201cRELEASED PARTIES\u201d) LIMIT THEIR LIABILITY IN CONNECTION WITH YOUR ENTRY INTO AND PARTICIPATION IN THE CONTEST AS SET FORTH IN THIS SECTION. UNDER NO CIRCUMSTANCES SHALL THE RELEASED PARTIES BE LIABLE TO YOU FOR ANY LOSS OR DAMAGES OF ANY KIND (INCLUDING, WITHOUT LIMITATION, FOR ANY SPECIAL, DIRECT, INDIRECT, INCIDENTAL, EXEMPLARY, ECONOMIC, PUNITIVE, OR CONSEQUENTIAL DAMAGES) THAT ARE DIRECTLY OR INDIRECTLY RELATED TO: (1) THE CONTEST, THESE RULES, YOUR ENTRY INTO, OR PARTICIPATION IN THE CONTEST; (2) THE CONTENT, PRODUCTS, SERVICES, AND PROMOTIONS ON THE SITE OR YOUR UPLOADED INFORMATION; (3) THE USE OF, INABILITY 7 TO USE, OR PERFORMANCE OF THE SITE OR ANY KALSHI MOBILE APPLICATION; (4) ANY ACTION TAKEN IN CONNECTION WITH AN INVESTIGATION BY THE RELEASED PARTIES OR LAW ENFORCEMENT AUTHORITIES REGARDING YOUR USE OF THE SITE, RELATED MOBILE APPLICATIONS, OR CONTENT; (5) ANY ACTION TAKEN IN CONNECTION WITH COPYRIGHT OWNERS; (6) ANY ERRORS OR OMISSIONS IN THE TECHNICAL OPERATION OF THE SITE OR RELATED MOBILE APPLICATION OR (7) ANY UNAUTHORIZED HUMAN INTERVENTION OR INTERFERENCE IN THE CONTEST OR THE TOURNAMENT. THIS IS SO EVEN TO THE EXTENT ANY DAMAGES OR ACTIONS OR OMISSIONS WERE FORESEEABLE OR EVEN IN THE EVENT THE RELEASED PARTIES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE, STRICT LIABILITY, TORT (INCLUDING, WITHOUT LIMITATION, WHETHER CAUSED IN WHOLE OR IN PART BY NEGLIGENCE, ACTS OF GOD, TELECOMMUNICATIONS FAILURE, THEFT, DESTRUCTION OR ACTS OF ANY THIRD PERSONS). THE RELEASED PARTIES ARE NOT RESPONSIBLE FOR ANY DAMAGE TO ANY ENTRANT\u2019S COMPUTER, HARDWARE, COMPUTER SOFTWARE, OR OTHER EQUIPMENT OR TECHNOLOGY, INCLUDING, WITHOUT LIMITATION, DAMAGE FROM ANY SECURITY BREACH OR FROM ANY VIRUS, BUGS, TAMPERING, FRAUD, ERROR, OMISSION, INTERRUPTION, DEFECT, DELAY IN OPERATION OR TRANSMISSION, COMPUTER LINE OR NETWORK FAILURE, OR ANY OTHER TECHNICAL OR OTHER MALFUNCTION. IN NO EVENT WILL THE RELEASED PARTIES BE LIABLE TO YOU OR ANYONE ELSE FOR LOSS OR INJURY, INCLUDING, WITHOUT LIMITATION, DEATH OR PERSONAL INJURY. TO THE EXTENT A STATE MAY NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, THE ABOVE LIMITATIONS OR EXCLUSIONS MAY NOT APPLY TO YOU BUT ONLY TO SUCH EXTENT AS PROVIDED BY APPLICABLE LAW. IN NO EVENT SHALL THE RELEASED PARTIES\u2019 TOTAL LIABILITY TO YOU FOR ALL DAMAGES, LOSSES, OR CAUSES OF ACTION EXCEED ONE HUNDRED DOLLARS ($100.00 USD). YOU RECOGNIZE AND CONFIRM THAT IN THE EVENT YOU INCUR ANY DAMAGES, LOSSES, OR INJURIES THAT ARISE OUT OF THE ACTS OR OMISSIONS OF ANY OF THE SPONSOR ENTITIES AND INDIVIDUALS, ANY DAMAGES CAUSED TO YOU ARE NOT IRREPARABLE OR SUFFICIENT TO ENTITLE YOU TO AN INJUNCTION PREVENTING THE CONTINUATION OF THE CONTEST OR ANY EXPLOITATION OF YOUR UPLOADED CONTENT OR ANY WEBSITE, SERVICES, OR OTHER PROPERTY OWNED OR CONTROLLED BY ANY 8 OF THE RELEASED PARTIES, AND YOU WILL HAVE NO RIGHTS TO ENJOIN OR RESTRAIN THE DEVELOPMENT, PRODUCTION, DISTRIBUTION, ADVERTISING, EXHIBITION OR EXPLOITATION OF THE CONTEST, ANY KALSHI WEBSITE OR PLATFORM, OR OTHER PROPERTY OR YOUR UPLOADED INFORMATION OR ANY AND ALL ACTIVITIES OR ACTIONS RELATED THERETO. IF YOU ARE A CONSUMER WHO RESIDES IN CALIFORNIA, YOU WAIVE YOUR RIGHTS UNDER CALIFORNIA CIVIL CODE \u00a7 1542, WHICH PROVIDES: \u201cA GENERAL RELEASE DOES NOT EXTEND TO CLAIMS THAT THE CREDITOR OR RELEASING PARTY DOES NOT KNOW OR SUSPECT TO EXIST IN HIS OR HER FAVOR AT THE TIME OF EXECUTING THE RELEASE AND THAT, IF KNOWN BY HIM OR HER, WOULD HAVE MATERIALLY AFFECTED HIS OR HER SETTLEMENT WITH THE DEBTOR OR RELEASED PARTY.\u201d 9. Malfunctions or Errors DISCLAIMER OF WARRANTIES. THE CONTEST, IN WHOLE AND IN PART (INCLUDING, WITHOUT LIMITATION, ALL CONTENT, AND CUSTOMER MATERIALS), ARE PROVIDED, TRANSMITTED, DISTRIBUTED, AND MADE AVAILABLE \u201cAS IS\u201d AND \u201cAS AVAILABLE\u201d WITHOUT EXPRESS OR IMPLIED WARRANTIES OF ANY KIND, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF TITLE, IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, WE MAKE NO WARRANTY: (A) THAT THE CONTEST WILL BE UNINTERRUPTED OR ERROR FREE; (B) THAT DEFECTS OR ERRORS IN THE CONTESTS WILL BE CORRECTED; (C) THAT THE CONTEST WILL BE FREE FROM VIRUSES OR OTHER HARMFUL COMPONENTS; (D) AS TO THE QUALITY, ACCURACY, COMPLETENESS AND VALIDITY OF ANY INFORMATION OR MATERIALS IN CONNECTION WITH THE CONTESTS; (E) THAT YOUR USE OF THE CONTEST WILL MEET YOUR REQUIREMENTS; OR (F) THAT TRANSMISSIONS OR DATA WILL BE SECURE. SOME JURISDICTIONS DO NOT ALLOW THE DISCLAIMER, EXCLUSION OR LIMITATION OF CERTAIN WARRANTIES, LIABILITIES AND DAMAGES, SO SOME OF THE ABOVE DISCLAIMERS, EXCLUSIONS AND LIMITATIONS MAY NOT APPLY TO YOU. IN SUCH JURISDICTIONS, OUR WARRANTIES AND LIABILITY WILL BE LIMITED TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW. In the event of a Site malfunction that impacts a Contest Entry, the impacted Contest Entry will be voided. Sponsor reserves the right to remove any part of the Contest from the Site at any time. Any part of the Contest that indicates incorrect behavior affecting Contest data that may be due to error, misconfiguration or a bug, will be cancelled and removed from the Site. We reserve the right to alter a Contest Entry or User Account details under such circumstances, at our sole discretion, in order to correct any mistake. 9 Sponsor reserves the right to declare participation in the Contest void, partially or in full, if, in our sole discretion, we deem it obvious that there was an error, mistake, misprint or technical error. You agree that if the Grand Prize or Secondary Prize has been awarded in error to you, it will be voided, and it will be considered a debt owed to us by you. We retain absolute discretion in the event of a discrepancy between the result showing on a user\u2019s device and the server software. Such discretion includes the authority to recognize the result showing on the server software as the official and governing result. 10. Rules Modifications Sponsor reserves the right to amend these Rules at any time, and it is your responsibility to review these Rules, for any changes. By entering the Contest or by participating in the Contest after Sponsor changes these Rules, you accept all changes thereto. Any change in the structure of the Grand Prize and/or Secondary Prize shall be made prior to the tip-off of the first game of the First Round of the Tournament. 11. Contest Modifications Sponsor reserves the right to change, modify, suspend, delay, or cancel the Contest at any time. In the event the format of the Tournament changes or the Tournament is delayed, including before or during the Tournament, Sponsor may modify, delay, or cancel the Contest. In the event Sponsor changes, modifies, suspends, delays, or cancels the Contest, Entrants may not be entitled to the Grand Prize, Secondary Prize, or any other prize, compensation, or monetary value whatsoever, as determined by Sponsor in its sole discretion, and Sponsor will have no further obligations to the Entrants. The Tournament must be played to completion in order for the Grand Prize or Secondary Prize to be paid out. 12. Disqualification Sponsor, in its sole discretion and for any reason or no reason at all, may disqualify, exclude or remove any Entrant(s) and/or individual(s) from participation in the Contest, including, but not limited to, in instances where Sponsor determines, in its sole and absolute discretion, that there are irregularities, fraudulent activities, or abuses occurring in connection with the individual or Entrant\u2019s entry or selections. UNDER NO CIRCUMSTANCES SHALL ENTRANT, WHETHER DIRECTLY OR INDIRECTLY, COMMUNICATE WITH ANY PLAYER, STUDENT, STAFF, COACH OR ANY PERSON AFFILIATED WITH ANY TEAM INVOLVED IN THE TOURNAMENT, THREATEN ANY SUCH PLAYERS OR PERSONS, AFFECT THEIR CHANCE OF WINNING OR LOSING THE CONTEST, OR OTHERWISE INTEND OR ATTEMPT TO INFLUENCE THE OUTCOME OF ANY GAME OR PART OF A GAME IN ANY WAY. ANY INTERFERENCE BY OR ON BEHALF OF AN ENTRANT SHALL BE GROUNDS FOR DISQUALIFICATION. By entering or participating in the Contest, you acknowledge and agree that Sponsor, in its sole and absolute discretion and for any reason or no reason at all, may disqualify or exclude you from participation in the Contest and/or remove you from the Contest. 10 13. BINDING ARBITRATION AGREEMENT AND CLASS ACTION WAIVER THIS SECTION 13 BINDING ARBITRATION AGREEMENT AND CLASS ACTION WAIVER APPLIES ONLY TO DISPUTES RELATED TO THE CONTESTS. PLEASE READ THIS ARBITRATION & CLASS ACTION WAIVER AGREEMENT (THE \u201cAGREEMENT\u201d) CAREFULLY BECAUSE IT REQUIRES YOU AND KALSHI TO ARBITRATE CERTAIN DISPUTES AND CLAIMS AND LIMITS THE MANNER IN WHICH YOU AND KALSHI CAN SEEK RELIEF FROM EACH OTHER IN ALL MATTERS THAT ARISE OUT OF OR RELATE TO THE CONTEST. THIS AGREEMENT APPLIES TO ANY CLAIMS YOU OR SPONSOR CURRENTLY POSSESS AND ANY CLAIMS THE PARTIES MAY RAISE IN THE FUTURE THAT ARISE FROM OR RELATE TO THE CONTEST. WHILE YOU MUST AGREE TO THESE OFFICIAL RULES, THERE IS AN OPTION TO OPT OUT OF THE ARBITRATION PROVISIONS. THE OPTION TO OPT-OUT IS TIME-LIMITED, MUST BE COMPLETED PRIOR TO ENTERING THE CONTEST, AND REQUIRES YOUR IMMEDIATE ATTENTION. If you reside in or access the Service at any time while located in the United States, this Section 13 (Binding Arbitration Agreement and Class Action Waiver Agreement) shall be construed under and be subject to the Federal Arbitration Act, notwithstanding any other choice of law set out in these Official Rules. THIS AGREEMENT INCLUDES AN ARBITRATION PROVISION WHICH SETS FORTH HOW PAST, PENDING OR FUTURE DISPUTES BETWEEN YOU AND KALSHI THAT ARISE FROM OR RELATE TO THE CONTEST SHALL BE RESOLVED BY FINAL AND BINDING ARBITRATION. ARBITRATION MEANS YOU WILL NOT BE ABLE TO SEEK DAMAGES IN COURT OR PRESENT YOUR CASE TO A JURY. THIS ARBITRATION AND CLASS ACTION WAIVER AGREEMENT ALSO REQUIRES THAT ANY PAST, PENDING OR FUTURE DISPUTES WITH THE SPONSOR SHALL PROCEED FOR YOUR OWN LOSSES ONLY. YOU MAY NOT PROCEED AS A CLASS REPRESENTATIVE, MEMBER OR PART OF ANY PROPOSED CLASS, COLLECTIVE ACTION, PRIVATE ATTORNEY GENERAL SUIT, QUI TAM ACTION, OR ANY REPRESENTATIVE PROCEEDING, OR OTHERWISE SEEK TO RECOVER ON BEHALF OF OTHERS OR FOR THE BENEFIT OF OTHERS IN ANY TYPE OF CLAIM OR ACTION. A. Acceptance of Terms. By entering the Contest, or clicking to accept or agree to these Rules where that option is made available, you confirm that you have read and accept and agree to this Agreement. Except to the extent that you may opt-out as provided below, all of your activity on the Site and all of your transactions with Kalshi arising from or related to the Contest, including all events which occurred before your acceptance of this Agreement, shall be subject to this Agreement. 11 B. Scope of Agreement to Arbitrate. You and Kalshi agree that any past, pending, or future dispute, claim or controversy arising out of or relating to the Contest or these Official rules (including without limitation any dispute concerning the breach, enforcement, construction, validity, interpretation, enforceability, or arbitrability of this Agreement or the Rules (a \u201cDispute\u201d), shall be determined by arbitration, including claims that arose before acceptance of any version of this Agreement. In addition, in the event of any Dispute concerning or relating to this Agreement \u2014 including the scope, validity, enforceability, or severability of this Agreement or its provisions, as well as the arbitrability of any claims \u2014 You and Kalshi agree and delegate to the Arbitrator the exclusive jurisdiction to rule on their own jurisdiction over the Dispute, including any objections with respect to the scope, validity, enforceability, or severability of this Agreement or its provisions, as well as the arbitrability of any claims or counterclaims presented as part of the Dispute. C. Notwithstanding the above provision and Agreement to Arbitrate, all parties retain the right to seek relief in a small claims court for disputes or claims solely within the scope of a small claim\u2019s court jurisdiction. D. Lack of Estoppel or Preclusive Effect. The parties agree that any issues determined in arbitration or any other proceeding between the parties shall be conducted and decided for the benefit of the parties or express third-party beneficiaries only and shall have no preclusive or estoppel effect against a party in any subsequent or other arbitration or litigation matter, such that all issues shall be decided anew in any subsequent or other proceedings involving either party. The parties reach this agreement in order to narrowly and efficiently tailor their legal positions without concern that any third party may attempt to offensively use any finding or determination of fact or law against You or Kalshi. E. Third-Party Beneficiaries. You further agree and intend that this Agreement and the Rules are entered into for the express benefit of your spouse, heirs, children and next-of-kin and shall bind same to the extent of any claims arising from your entry into the Contest or award of the Grand Prize or Secondary Prize which is brought by them or by any person for the use or benefit of your spouse, heirs, children and next-of-kin. Kalshi agrees also that this Agreement is intended to benefit and shall bind any successor-in-interest or assignee of Kalshi. F. Intellectual Property. Notwithstanding the requirement to arbitrate in this Section 13, you and Kalshi are NOT required to arbitrate any claims for the alleged unlawful use of copyrights, trademarks, trade names, trade dress, logos, trade secrets, or patents, and the parties agree that in the event of infringement of copyrights, trademarks, trade names, trade dress, logos, trade secrets, or patents of a party, they shall also be entitled to seek injunctive relief from a court of competent jurisdiction, and the parties shall not be able to hold out an Entrant\u2019s access to the Contest as a basis to enforce this Arbitration Agreement as to such claims. 12 G. Separate Agreement. The parties acknowledge that this Agreement is a separate agreement between the parties governed by the Federal Arbitration Act, and that any alleged or determined invalidity or illegality of all or any part of the Official Rules, Terms, or the Contest shall have no effect upon the validity and enforceability of this Agreement. H. Applicable Law. While the Federal Arbitration Act shall control, to the extent the law of any state is applied or considered with respect to issues bearing upon the enforceability or scope of this Agreement, the parties agree that the law of the State of Delaware shall exclusively apply, notwithstanding any consideration or application of choice of law or conflicts of law principles. INITIATING ARBITRATION UNDER JAMS RULES I. You or Kalshi may seek arbitration of a Dispute in accordance with the provisions of this Agreement. You and Kalshi agree that JAMS (\u201cJAMS\u201d) will administer the arbitration under its Comprehensive Arbitration Rules and Procedures and, to the extent applicable, the JAMS Mass Arbitration Procedures and Guidelines (collectively, the \u201cJAMS Rules\u201d) in effect at the time this Agreement is accepted by the User. Any arbitration proceeding shall be commenced and administered by JAMS\u2019 offices in New York, NY. The parties expressly agree that, to the extent applicable, the JAMS Mass Arbitration Procedures and Guidelines in effect at the time this Agreement is accepted by the User. Notwithstanding the foregoing, the Sponsor reserves the right, in its sole discretion, to reject Mass Arbitration. In the event the Sponsor exercises its right to reject Mass Arbitration, this Agreement shall be deemed inapplicable to those claims, and each affected claimant may pursue their claim individually in a court of competent jurisdiction, subject to any applicable venue, jurisdiction, and choice-of-law provisions set forth in these Official Rules. If the JAMS Rules are updated or changed in any way which may be applicable to a dispute between the parties, the parties agree to consider whether the most recent version of the JAMS Rules shall apply. The JAMS Rules referenced above are available at https://www.jamsadr.com/adr-rules-procedures/. You and Kalshi further agree: 1. The arbitration will be handled on the merits by a sole arbitrator. The parties agree that any JAMS arbitrator appointed, including merits and process arbitrators, must have the following minimum qualification: practicing attorneys or retired federal court judges who have at least ten years of substantive expertise in litigating and resolving of complex business disputes, including motions to compel arbitration and litigation or adjudication regarding whether disputes are arbitrable; 2. For purpose of Sections 16.1 and 16.2 of the JAMS Rules, the JAMS Streamlined Arbitration Rules and Procedures and JAMS Expedited 13 Procedures shall not apply unless otherwise explicitly agreed to by all parties to the Dispute; 3. In lieu of JAMS Rule 15, the parties shall be presented with a list of eight (8) potential arbitrators, be allowed three (3) strikes and the parties shall rank those potential arbitrators in order of preference. JAMS shall select the arbitrator with the highest combined preference (e.g., if both parties select a potential arbitrator as their top preference, that arbitrator will be selected). To the extent a process arbitrator is appointed pursuant to the JAMS Rules, the selection process shall also be as prescribed in this paragraph; 4. In lieu of JAMS Rule 18, the parties shall have the right to submit a dispositive motion at the outset of the arbitration to the Arbitrator in order to resolve issues other than the ultimate issue of fact. The submission and scheduling of such motions shall be addressed at a conference held before the JAMS arbitrator, and the Parties agree that any dispositive motions shall be resolved and the remainder of the arbitral proceeding stayed pending resolution, absent good cause and immediate necessity to proceed; 5. Location of Arbitration. The arbitration hearing will be held in New York, NY , provided that either you or the Sponsor may elect that the arbitration proceedings be conducted telephonically or via other remote electronic means. Notwithstanding the locations of the parties or witnesses or the election by a party for a remote proceeding, the party submitting the demand for arbitration shall commence the arbitration with JAMS\u2019 offices in New York, NY; 6. The JAMS Rules will govern payment of all arbitration fees, currently available at https://www.jamsadr.com/arbitration-fees, You will only be required to pay arbitration fees of $250 in connection with any arbitration initiated under this Section 13, but You will still be responsible for paying Your own attorneys\u2019 fees; 7. Except as otherwise waived or limited under the Official Rules, the JAMS arbitrator shall be authorized to award any remedies, including equitable or injunctive relief, that would be available in an individual lawsuit except: a. In any arbitration arising out of or related to this Agreement, the arbitrator(s) are not empowered to award punitive or exemplary damages, and the parties waive any right to recover any such damages; and 14 b. In any arbitration arising out of or related to this Agreement, the arbitrator(s) may not award any incidental, indirect or consequential damages, including damages for lost profits; 8. The arbitration decision and award shall consist of a written statement signed by the Arbitrator regarding the disposition of each claim and the relief, if any, as to each claim. Unless the parties agree otherwise, the award shall be a reasoned award and contain a concise written statement of the reasons for the award; 9. Except as and to the extent otherwise may be required by law, the arbitration proceeding, pleadings, and any award shall be treated as confidential and shall not be used by the parties except as may be necessary in connection with a court application for a preliminary remedy, a judicial challenge to an award or its confirmation and enforcement; 10. In the event JAMS is unavailable or unwilling to hear the dispute in accordance with this Agreement, the parties shall agree to, or a court shall select, another arbitration provider subject to the procedural agreements of this Section 13; and 11. You and Kalshi agree that any award issued by the Arbitrator in excess of $50,000 in favor of either party, or any award which grants any form of declaratory or equitable relief that would significantly impact other Kalshi Users or the operation of the Site, may be appealed in accordance with the JAMS Optional Arbitration Appeal Procedures at either party\u2019s election. The JAMS Optional Arbitration Appeal Procedures are available at https://www.jamsadr.com/adr-rules-procedures/. J. Batch Arbitration/Mediation. To increase efficiency of resolution, in the event 20 or more similar arbitration demands against Kalshi, presented by or with the assistance of the same law firm or organization or group of law firms or organizations working in coordination, are submitted to JAMS in accordance with the rules described above within a 60-day period, JAMS shall consolidate those arbitrations as contemplated in the JAMS Mass Arbitration Rules. Following the submission, initial presentation and resolution of briefing and motion practice contemplated in Section 13.9.4 on dispositive issues other than the ultimate issue of fact, to the extent claims and issues remain pending, JAMS shall group the arbitration demands into a first batch of no more than 25 demands to be set for resolution as a single arbitration. Once resolution of the first batch has concluded (or sooner if the parties agree), counsel for the parties must engage in a single mediation before a JAMS mediator of all remaining demands from claimants. Counsel for the parties must agree on a mediator within thirty (30) days after conclusion of the first batch. If the parties cannot agree on a JAMS mediator within 30 days, JAMS will appoint a JAMS mediator as an administrative matter. All parties will cooperate for the purpose of ensuring that the mediation is scheduled as quickly as practicable after the mediator is appointed. If the parties 15 are unable to resolve their demands by mediation, JAMS shall continue to batch the remaining arbitration demands into batches of no more than 100 demands per batch (plus, to the extent there are fewer than 100 arbitration demands left over after the batching described above, a final batch consisting of the remaining demands) for administration. A single arbitration with one set of filing and administrative fees and one arbitrator will be assigned per batch. For avoidance of doubt, consolidation does not require that all arbitrations in a single batch be decided the same, nor does it impair Your right to present any evidence or argument that You think particular to Your case, so long as it is consistent with JAMS Rules. You agree to cooperate in good faith with the Sponsor and JAMS to implement such a batch approach to resolution and fees and to efficiently consolidate discovery, submission of evidence, and motion practice. K. By signing a demand for arbitration, a party certifies, to the best of their knowledge, information, and belief, formed after an inquiry reasonable under the circumstances, that: (i) the demand for arbitration is not being presented for any improper purpose, such as to harass, cause unnecessary delay, or needlessly increase the cost of dispute resolution; (ii) the claims and other legal contentions are warranted by existing law or by a non-frivolous argument for extending, modifying, or reversing existing law or for establishing new law; and (iii) the factual contentions have evidentiary support or, if specifically so identified, will likely have evidentiary support after a reasonable opportunity for further investigation or discovery. The Arbitrator shall be authorized to afford any relief or impose any sanctions available under Federal Rule of Civil Procedure 11 or any applicable state law (including attorney\u2019s fees) for either party\u2019s violation of this requirement. OPTION AND PROCEDURE TO OPT OUT OF ARBITRATION L. YOU MAY OPT OUT OF THE AGREEMENT TO ARBITRATE BY FOLLOWING THE INSTRUCTIONS BELOW. IF YOU DO NOT OPT-OUT, THE ARBITRATION PROVISIONS WILL APPLY RETROACTIVELY TO ALL CLAIMS YOU MAY POSSESS, WHETHER ASSERTED TO DATE OR NOT. M. OPT-OUT. IF YOU DO NOT WISH TO AGREE TO THE PROVISIONS OF THIS SECTION 13 AGREEMENT REQUIRING ARBITRATION AND CLASS ACTION WAIVER, YOU MUST, PRIOR TO SUBMITTING A CONTEST ENTRY, SEND AN EMAIL TO LEGAL@KALSHI.COM WITH THE SUBJECT \u201cOPT-OUT\u201d. **REQUESTS TO OPT OUT AFTER SUBMITTING A CONTEST ENTRY SHALL NOT BE EFFECTIVE.** N. Whether to agree to arbitration is an important decision. It is Your decision to make and You are not required to rely solely on the information provided in these Official Rules. You should take reasonable steps to conduct further research and to consult with counsel (at your expense) regarding the consequences of your decision. 16 WAIVER OF CLASS RELIEF AND COLLECTIVE ACTION O. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NEITHER YOU NOR KALSHI SHALL BE ENTITLED TO ARBITRATE OR LITIGATE ANY DISPUTE IN A REPRESENTATIVE CAPACITY. YOU MAY ONLY ARBITRATE OR LITIGATE ON AN INDIVIDUAL CLAIMS BASIS ONLY AND FOR YOUR OWN LOSSES ONLY. UNDER THIS AGREEMENT, YOU MAY NOT PROCEED IN ARBITRATION OR COURT AS A CLASS REPRESENTATIVE, MEMBER OR PART OF ANY PROPOSED CLASS, COLLECTIVE ACTION, PRIVATE ATTORNEY GENERAL SUIT, QUI TAM ACTION OR ANY REPRESENTATIVE PROCEEDING, OR OTHERWISE SEEK TO RECOVER ON BEHALF OF OTHERS OR FOR THE BENEFIT OR USE OF OTHERS IN ANY TYPE OF CLAIM OR ACTION. YOU AND KALSHI ARE EACH WAIVING RESPECTIVE RIGHTS TO PARTICIPATE IN A CLASS ACTION. BY ACCEPTING THIS AGREEMENT, YOU GIVE UP YOUR RIGHT TO PARTICIPATE IN ANY PAST, PENDING OR FUTURE CLASS ACTION OR ANY OTHER CONSOLIDATED OR REPRESENTATIVE PROCEEDING, INCLUDING ANY PROCEEDING EXISTING AS OF THE DATE YOU AGREED TO THIS AGREEMENT. P. Severability. This Agreement applies solely to the extent permitted by law. If for any reason any provision of this Agreement or portion thereof, is found to be unlawful, void, or unenforceable, that part of this Agreement will be deemed severable and shall not affect the validity and enforceability of the remainder of this Agreement which shall continue in full force and effect. To the fullest extent allowable by law and equity, the parties agree that any such provision may be blue-penciled or otherwise construed by the forum presiding over any dispute to give effect to the intent of the parties and consistent with the overall purpose and intent of the agreement, and may be deemed replaced by an enforceable provision that comes closest to the intention underlying the unenforceable provision. END OF SECTION 13 ARBITRATION AGREEMENT 14. Waiver of Jury Trial and Class Action Entrant and each of the Released Parties acknowledge and agree that each such party is waiving the right to a trial by jury both as to all arbitrable claims, and as to any other legal action if a claim is deemed not subject to the arbitration provisions above. Entrant and each of the Released Parties acknowledge and agree that each such party is waiving the right to participate as a plaintiff or class member in any class-wide arbitration, purported class action lawsuit, private attorney-general action, or any other representative proceeding as to all claims. Accordingly, Entrant and each of the Released Parties agree that each party may bring disputes against another party in an individual capacity, and not as a plaintiff or class member in any purported class or representative proceeding, including, without limitation, a federal or state class action lawsuit. However, nothing in this section limits a party\u2019s right as an individual plaintiff to file against 17 another party an arbitration action as permitted under these Official Rules (or any other legal action if a claim is deemed not subject to the arbitration provisions above). 15. Entry Conditions By participating in the Contest, each Participant agrees to comply with and be bound by (i) these Official Rules; and (ii) the decisions of the Sponsor which are binding and final. 16. Publicity Except where prohibited by law, by accepting the Grand Prize or Secondary Prize, the winner hereby grants Sponsor and its representatives an irrevocable, perpetual, worldwide, royalty-free, non-exclusive and sub-licensable right and license to use, distribute, and publicly display the winner\u2019s name, the contents of any posts, and information about the Grand Prize or Secondary Prize award, in any way, at any time, in any and all media, including without limitation, for use in advertising and marketing, without any additional approval or consideration. By accepting the Grand Prize or Secondary Prize, the winner represents and warrants that he or she has the right to grant the foregoing license. 17. Damages and Disqualification Sponsor may actively seek damages from any person acting in bad faith to undermine the legitimate function of the Contest to the fullest extent permitted by law. You may be disqualified from the Contest if you violate these Official Rules. Sponsor reserves the right in its sole discretion to disqualify any individual it finds to be tampering with the entry process or the operation of the Contest or to be acting in violation of these Official Rules or in a disruptive manner. Any attempt by any person to deliberately undermine the legitimate operation of the Contest may be a violation of criminal and civil law and, should such an attempt be made, Sponsor reserves the right to seek damages from any such person to the fullest extent permitted by law. Sponsor\u2019s failure to enforce any term of these Official Rules shall not constitute a waiver of that provision. 18. General Terms Sponsor reserves the right to cancel, suspend and/or modify the Contest or these Rules, or any part of the Contest or these Rules, as determined by Sponsor in its sole discretion. Any notice regarding cancellation, suspension and/or modification will be posted by Sponsor on the Site. In the event of modifying the Contest or these Rules, a participant\u2019s continued enrollment and/or participation in the Contest constitutes acceptance of the modified Rules. Any Participant posting or seen to be posting comments on Sponsor\u2019s social media pages or elsewhere during the course of the Contest that are considered bullying, spiteful, or upsetting to other participants or any other user of the Site, or directly aimed at Sponsor, will have their comments removed and may be disqualified from the Contest. Sponsor reserves the right to alert the operators of any social media sites to any such behavior. 18 19. Odds of Winning The odds of winning the Grand Prize and/or Secondary Prize depend on the number of eligible Contest Entries received by Sponsor, and the Entrant\u2019s ability to correctly predict the winning team for the games in the Tournament as specified in these Official Rules. 20. Governing Law / Exclusive Forum All issues and questions concerning the construction, validity, interpretation and enforceability of these Rules, the rights and obligations of Entrants and winners, and the rights and obligations of the Sponsor in connection with the Contest, shall be governed by, and construed in accordance with, the laws of State of Delaware, without giving effect to any choice of law or conflict of law rules. 21. Exclusive Forum and Venue Subject to and without any waiver of the Arbitration Agreement contained in Section 13 and the exclusive delegation by the parties to the Arbitrator, the parties agree that any lawsuits filed by a party asserting any dispute, controversy, or claim arising out of or in connection with these Official Rules or the Arbitration Agreement, must be filed in the state or federal courts in Delaware and you and we consent to the venue and personal jurisdiction of those courts. Notwithstanding the foregoing, any motion to compel arbitration or to enforce an arbitral award issued hereunder may be brought before any court of competent jurisdiction. 22. Personal Jurisdiction in Delaware Courts Only You agree and understand that Kalshi is not shipping any good to you in the State where you live. Kalshi is an internet-based business and does not, by entering into these Rules with you, agree to be subject to any suit in the courts of any state other than Delaware. Further to this express purpose, you and Kalshi have agreed to arbitrate all disputes (Section 13) and further have allowed either party to elect to a remote arbitration hearing in order that neither you nor Kalshi must appear in a court in a State which is both inconvenient and which lacks personal jurisdiction over you or the Sponsor. Accordingly, you expressly agree that Kalshi is not agreeing to or subjecting itself to the jurisdiction of any court of any state other than Delaware by entering into these Rules, the Arbitration Agreement or providing you with access to the Site or the Contest. 23. Force Majeure In the event of a Force Majeure Event (as defined below), Sponsor may reschedule, delay, postpone, alter, or modify the Contest, or may cancel the Contest altogether. As used herein, \u201cForce Majeure Event\u201d means the interruption of or material interference with Sponsor\u2019s ability to hold the Contest or to grant the Grand Prize or Secondary Prize by any cause or occurrence 19 not within Sponsor\u2019s reasonable control, including, but not limited to, fire, flood, epidemic, pandemic, earthquake, explosion, hurricane, terrorist threat or activity, public health emergency (e.g., COVID-19), act of God or public enemy, satellite or equipment failure, riot or civil disturbance, war (declared or undeclared), or any federal, state or local government law, order, or regulation, or order of any court. 24. Severability In the event any provision of these Rules is held unenforceable, such provision will be ineffective but shall not affect the enforceability of the remaining provisions. To the fullest extent allowable by law and equity, the parties agree that any such provision may be blue-penciled or otherwise construed by the forum presiding over any dispute to give effect to the intent of the parties and consistent with the overall purpose and intent of the Rules, and may be deemed replaced by an enforceable provision that comes closest to the intention underlying the unenforceable provision. 25. Contingency Kalshi may, in its discretion, enter into one or more contracts with a third party (\u201cHedge Provider\u201d) to hedge its obligations under this promotion, in which case payment of the Grand Prize shall be contingent on payment by the Hedge Provider under such contracts, and Kalshi shall have no liability whatsoever for the Grand Prize if it does not promptly receive payment from the Hedge Provider. In the event that Hedge Provider promptly pays Kalshi the entirety of the Grand Prize, and such payment is not otherwise encumbered or subject to legal dispute, Sponsor shall not elect to award the Grand Prize in the form of ten (10) equal installments. 26. Privacy Any personally identifiable information collected during an entrant\u2019s participation in the Contest will be collected and used by Sponsor and its designees for the administration and fulfillment of the Contest and as otherwise described in these Rules, the Privacy Policy, and the Terms. 27. Winner\u2019s List The name of any Grand Prize or Secondary Prize winner may be obtained following winner selection and verification by sending a self-addressed stamped envelope to: Kalshi Inc., Attn: Legal Department, 416 W. 13th Street #207, New York, NY 10014. Requests must be received by Kalshi no later than April 30, 2026.",
+  "nevada_trading_paused_title": "Trading paused",
+  "nevada_trading_paused_top_markdown": "# Why some markets are unavailable in Nevada\n\nA Nevada court has issued a temporary restraining order affecting certain markets on Kalshi. **We strongly disagree, and are fighting this decision.** As a CFTC-regulated exchange, we believe state regulators cannot override our federal framework.",
+  "nevada_trading_paused_bottom_markdown": "## Make your voice heard\n\nThis restriction isn't our decision. **[Contact your Nevada representative](https://www.leg.state.nv.us/whosmylegislator/)** and let them know you support free access to federally regulated prediction markets in Nevada.",
+  "nevada_trading_paused_checklist_items": [
+    {
+      "label": "Trade crypto and all other non-restricted markets",
+      "allowed": true
+    },
+    {
+      "label": "View, manage, or close any existing position",
+      "allowed": true
+    },
+    {
+      "label": "Withdraw funds at any time",
+      "allowed": true
+    },
+    {
+      "label": "Open or add to positions in sports, politics, or entertainment markets",
+      "allowed": false
+    }
+  ],
+  "slippage_level_to_percentage": {
+    "none": 0,
+    "low": 2,
+    "high": 4
+  },
+  "scopes_type_map": {
+    "up_down": [
+      "Artist Streams (Up/Down)",
+      "Album Streams (Up/Down)",
+      "Indices (Up/Down)"
+    ],
+    "streaming": [
+      "Artist Streams"
+    ]
+  },
+  "deposit_supported_card_types_message": "Only Visa, Mastercard, and Discover are accepted",
+  "flip_right_logo_milestone_types": [
+    "basketball_game",
+    "baseball_game",
+    "baseball_tournament"
+  ],
+  "disable_combo_sell_when_known": true,
+  "logo_league_restrictions": [
+    "La Liga"
+  ],
+  "banner_cta_exists": "false",
+  "button_cta_exists": "false",
+  "banner_cta_is_persisted": "false",
+  "banner_message": "SAVE KALSHI IN NY",
+  "cta_title": "SAVE KALSHI IN NY",
+  "cta_message": "Governor Kathy Hochul is trying to ban Kalshi in NY.%Over 1 million New Yorkers use Kalshi. Together, they've made over $200 million in profit.%The Governor is attempting to ban Kalshi to protect casinos, a business model that is predatory for consumers: the house sets the prices, they ban anyone who wins, and they profit from addicts and customer losses.%As an exchange, Kalshi doesn't work this way. We want to see New Yorkers protected.",
+  "phone_number": "5184748390",
+  "cta_secondary_message": "Tell Governor Hochul to stop putting casinos over consumers and monopolies over fair markets.",
+  "cta_ny": "true",
+  "advocacy_campaigns": [
+    {
+      "state": "CT",
+      "state_name": "Connecticut",
+      "url": "https://www.freedomtoforecast.com/connecticut",
+      "cta_content": {
+        "primary_message": "Connecticut is trying to limit your access to fair, federally-regulated prediction market trading with no house advantage. If they succeed, a state order will shut down Sports markets in CT.\n\nIt\u2019s not decided yet. AG William Tong could still change course, but only if enough people speak up.",
+        "secondary_message": "We\u2019re fighting for your right to trade, but we\u2019re stronger with your voice. Join us and tell him to reconsider."
+      }
+    },
+    {
+      "state": "AZ",
+      "state_name": "Arizona",
+      "url": "https://www.freedomtoforecast.com/arizona",
+      "cta_content": {
+        "primary_message": "Arizonans, Attorney General Kris Mayes took it upon herself to use the courts in an attempt to shut down predictive markets in our state. Hundreds of thousands of Arizonans use a safe, secure, and federally regulated marketplace and we can tell Mayes to leave our marketplace alone.",
+        "secondary_message": "Sign up at www.freedomtoforecast.com to fight back!"
+      }
+    },
+    {
+      "state": "MI",
+      "state_name": "Michigan",
+      "url": "https://www.freedomtoforecast.com/michigan"
+    },
+    {
+      "state": "NV",
+      "state_name": "Nevada",
+      "url": "https://www.freedomtoforecast.com/nevada"
+    },
+    {
+      "state": "WA",
+      "state_name": "Washington",
+      "url": "https://www.freedomtoforecast.com/washington"
+    }
+  ],
+  "important_events_calendar_events": [
+    {
+      "title": "Robinhood Q3 Funded Accounts",
+      "event_ticker": "KXHOOD-26NOVFUNDED"
+    },
+    {
+      "title": "Dancing with the Stars",
+      "event_ticker": "KXDWTSELIMINATION-26OCT28"
+    },
+    {
+      "title": "Chipotle Q3 restaurants",
+      "event_ticker": "KXCMG-26OCTREST"
+    },
+    {
+      "title": "Inflation: September",
+      "event_ticker": "KXCPI-26SEP"
+    },
+    {
+      "title": "Fed Decision: October",
+      "event_ticker": "KXFEDDECISION-26OCT"
+    },
+    {
+      "title": "US Gas Prices",
+      "event_ticker": "KXAAAGASM-26OCT31"
+    },
+    {
+      "title": "Texas Senate Race",
+      "event_ticker": "SENATETX-26"
+    }
+  ],
+  "freedom_to_forecast_campaigns": [
+    {
+      "state": "FL",
+      "state_name": "Florida",
+      "show_banner": false,
+      "show_popup": false
+    },
+    {
+      "state": "ME",
+      "state_name": "Maine",
+      "show_banner": false,
+      "show_popup": false,
+      "cta_content": {
+        "title": "Prediction markets are open. Keep them that way",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "TX",
+      "state_name": "Texas",
+      "show_banner": false,
+      "show_popup": false,
+      "cta_content": {
+        "title": "Prediction markets are open. Keep them that way",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "GA",
+      "state_name": "Georgia",
+      "show_banner": false,
+      "show_popup": false,
+      "cta_content": {
+        "title": "Stand with traders for open prediction markets",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "SC",
+      "state_name": "South Carolina",
+      "show_banner": false,
+      "show_popup": false,
+      "cta_content": {
+        "title": "Prediction markets are open. Keep them that way",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "IN",
+      "state_name": "Indiana",
+      "show_banner": false,
+      "show_popup": false,
+      "cta_content": {
+        "title": "Prediction markets are open. Keep them that way",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "NY",
+      "state_name": "New York",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "Keep prediction markets open in New York.",
+        "primary_message": "New York is challenging Kalshi\u2019s ability to operate in the state. Stay informed and make your voice heard on the future of prediction-market access in New York.",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "WV",
+      "state_name": "West Virginia",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "West Virginia, join the prediction-market movement.",
+        "primary_message": "Prediction markets are growing quickly across the country. Join to stay connected to what\u2019s happening in West Virginia.",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "IN",
+      "state_name": "Indiana",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "Indiana, be part of what\u2019s next.",
+        "primary_message": "Prediction markets are growing quickly across the country. Join the Indiana community to stay informed and involved.",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "MD",
+      "state_name": "Maryland",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "Maryland, join the prediction-market community.",
+        "primary_message": "The future of prediction markets is being shaped right now. Join the Maryland community and stay connected to what comes next.",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "CO",
+      "state_name": "Colorado",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "Colorado, join the prediction-market community.",
+        "primary_message": "The future of prediction markets is being shaped right now. Join the Colorado community and stay connected to what comes next.",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "NV",
+      "state_name": "Nevada",
+      "show_popup": true,
+      "show_banner": true,
+      "cta_content": {
+        "title": "Nevada lost access. Make sure your voice is heard.",
+        "primary_message": "State action has restricted prediction markets in Nevada. Learn what changed and how to share your views with Nevada officials."
+      }
+    },
+    {
+      "state": "NJ",
+      "state_name": "New Jersey",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "New Jersey, join the prediction-market community",
+        "primary_message": "The future of prediction markets is being shaped right now. Join the New Jersey community and stay connected to what comes next.",
+        "secondary_message": ""
+      }
+    },
+    {
+      "state": "MO",
+      "state_name": "Missouri",
+      "show_popup": false,
+      "show_banner": false,
+      "cta_content": {
+        "title": "Missouri, be part of what\u2019s next.",
+        "primary_message": "Prediction markets are growing quickly across the country. Join the Missouri community to stay informed and involved.",
+        "secondary_message": ""
+      }
+    }
+  ],
+  "american_odds_banner_content": {
+    "message": "Price display update",
+    "action_type": "open_cta",
+    "action_label": "Learn more",
+    "icon": "campaign",
+    "background_color": "",
+    "text_color": ""
+  },
+  "american_odds_cta_content": {
+    "title": "Price display update",
+    "primary_message": "We're writing to give you an update on a change to how prices are displayed on Kalshi.\n\nOn August 7, the CFTC \u2014 the federal agency that regulates Kalshi \u2014 issued guidance stating that regulated exchanges should not display pricing in the American odds format. In line with that guidance, we will be removing American odds from the Kalshi App on Aug 31. Going forward, prices can be viewed in cents, %, or multiplier formats.\n\nTo be clear: Nothing about the markets themselves is changing. Contract prices, order books, payouts, and your positions all work exactly as they do today. This change only affects how prices are shown on screen.",
+    "secondary_message": "We understand that this update means a change from the American odds format some of you prefer. As a CFTC-regulated exchange, we follow our regulator\u2019s guidance \u2014 which is what lets us offer these markets legally.\n\nThanks for trading with us!",
+    "button_label": "Learn more",
+    "action_type": "link",
+    "action_target": "https://www.cftc.gov/PressRoom/PressReleases/9278-26",
+    "icon": "campaign",
+    "show_announcement_button": true
+  },
+  "weather_underlying_charts": [
+    {
+      "series_ticker": "KXTEMPMIAH",
+      "city": "miami",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_DFW_TICKER",
+      "city": "dfw",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_HOUSTON_TICKER",
+      "city": "houston",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_PHL_TICKER",
+      "city": "phl-delaware-valley",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_PUGET_TICKER",
+      "city": "puget-sound",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_SFBAY_TICKER",
+      "city": "sf-bay",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_BOSTON_TICKER",
+      "city": "greater-boston",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_SEMICH_TICKER",
+      "city": "southeast-michigan",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_KC_TICKER",
+      "city": "kansas-city",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMP_MSP_TICKER",
+      "city": "minneapolis-st-paul",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMPNYCHS",
+      "city": "nyc",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMPCHIHS",
+      "city": "chicago",
+      "color": "#FF770D"
+    },
+    {
+      "series_ticker": "KXTEMPLAXHS",
+      "city": "la-coastal",
+      "color": "#FF770D"
+    }
+  ],
+  "freedom_to_forecast_cta_content": {
+    "title": "Join traders across the country",
+    "primary_message": "Across the country, access to federally regulated prediction markets is being challenged. We are doing everything we can to ensure that access remains available; however, your voice matters most.\nI agree to sign the petition supporting legal predictions markets in the U.S., have updates from Freedom to Forecast, and have my information used for advocacy opportunities.",
+    "secondary_message": "Add your voice to the movement for open, nationwide access",
+    "button_label": "Join the movement"
+  },
+  "backup_rfq_series_tickers": [
+    "KXNFLTD",
+    "KXNFLFIRSTTD",
+    "KXNFLRECYDS",
+    "KXNFLRSHYDS",
+    "KXNFLREC",
+    "KXNFLPASSYDS",
+    "KXNBAPTS",
+    "KXNBA3PT",
+    "KXNBAPRA"
+  ],
+  "auto_sell_stop_loss_series_tickers": [
+    "KXBTC15M"
+  ],
+  "auto_sell_stop_loss_slippage_cents": 2,
+  "prop_to_protection": {
+    "KXNFLTD": "KXNFLTDPROT",
+    "KXNFLPASSYDS": "KXNFLPASSYDSPROT",
+    "KXNFLRECYDS": "KXNFLRECYDSPROT",
+    "KXNFLRSHYDS": "KXNFLRSHYDSPROT",
+    "KXNFLREC": "KXNFLRECPROT",
+    "KXNFLPASSTDS": "KXNFLPASSTDSPROT",
+    "KXNBAPTS": "KXNBAPTSPROT",
+    "KXNBAREB": "KXNBAREBPROT",
+    "KXNBAAST": "KXNBAASTPROT",
+    "KXNBA3PT": "KXNBA3PTPROT"
+  },
+  "protection_messages": {
+    "KXNFLTDPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNFLPASSYDSPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNFLRECYDSPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNFLRSHYDSPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNFLRECPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNFLPASSTDSPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNBAPTSPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNBAREBPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNBAASTPROT": "Early exit payout applies if the player misses their target and does not play in the second half.",
+    "KXNBA3PTPROT": "Early exit payout applies if the player misses their target and does not play in the second half."
+  },
+  "hidden_series_scopes": [
+    "Protected Props"
+  ]
+}
