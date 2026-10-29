@@ -91,8 +91,8 @@ const nextConfig = {
           compiler.hooks.normalModuleFactory.tap("shim-node-corpus", (nmf) => {
             nmf.hooks.beforeResolve.tap("shim-node-corpus", (data) => {
               if (!data?.request) return;
-              if (data.request === "node:fs") data.request = fsShim;
-              else if (data.request === "node:path") data.request = pathShim;
+              if (data.request === "node:path") data.request = pathShim;
+              else if (data.request.startsWith("node:")) data.request = fsShim;
             });
           });
         },
