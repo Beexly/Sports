@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 2`
+- **CYCLE_ROUND:** `Round 3`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **Disk Status:** `56.06 GB` free on `C:\` (reclaimed; all live workspaces `Sports`, `nfl-farm`, `_research`, `repo-scout` kept local).
@@ -49,6 +49,17 @@ Already on the branch from `0223a3870`. Rechecked, not reinvented.
 - Cockpit already links that URL at `apps/web/app/cockpit/workflows/page.tsx` lines 15 and 227.
 - Registry files present: `docs/engine/SYSTEM-TELEMETRY-MASTER-MAP.md`, `data/engine/full_system_telemetry_registry.json`, `scripts/ops/generate_understand_anything_graph.py`.
 - Layer blurbs that name a charting vendor, a homography RMSE, or a 10,000-run sim were not re-measured this round. Do not treat those blurbs as a new edge.
+
+## Round 3 Pointer — Exact 2026 Weeks 1–7 Parquet Paths on Disk (`intelligence/coaching/data/`)
+- **NOTE FOR NEXT ROUND:** `tracking_week_7.csv` and `family_features_week7.parquet` in `intelligence/vision/data/` are 2022 Big Data Bowl benchmark fixtures — good catch not using them.
+- **The REAL 2026 Weeks 1–7 (`weeks: [1, 2, 3, 4, 5, 6, 7]`) datasets are ALREADY on disk in `C:\Users\Garrett\Sports\intelligence\coaching\data\`:**
+  1. `intelligence/coaching/data/play_by_play_2026.parquet` — **18,738 rows, Weeks 1–7 (`[1, 2, 3, 4, 5, 6, 7]`)**
+  2. `intelligence/coaching/data/pbp_participation_2026_reconstructed.parquet` — **18,738 rows, Weeks 1–7 (`[1, 2, 3, 4, 5, 6, 7]`)**
+  3. `intelligence/coaching/data/ftn_charting_2026.parquet` — **18,019 rows, Weeks 1–7 (`[1, 2, 3, 4, 5, 6, 7]`)**
+  4. `intelligence/coaching/data/snap_counts_2026.parquet` — **9,981 rows, Weeks 1–7 (`[1, 2, 3, 4, 5, 6, 7]`)**
+  5. `intelligence/coaching/data/depth_charts_2026.parquet` — **650,071 rows**
+  6. Plus 2026 10Hz NGS highlight tracking in `intelligence/vision/data/ngs_highlight_tracking_2026.parquet` + `intelligence/vision/ngs_highlight_tracking_loader.py` and `intelligence/vision/data/*_pre_week6_2026.parquet`.
+- **Action for Round 3:** Bind `intelligence/coaching/data/{play_by_play_2026,pbp_participation_2026_reconstructed,ftn_charting_2026,snap_counts_2026}.parquet` (Weeks 1–7) + `docs/research/2026-10-28/full-tables/*.csv` to compute real 2026 Weeks 1–7 team/player metrics for `CAR @ GB` TNF and the Week 8 board.
 
 
 
