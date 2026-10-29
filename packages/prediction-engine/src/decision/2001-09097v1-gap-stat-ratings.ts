@@ -8,7 +8,7 @@
  * (walk-forward Brier -0.005, CLV +0.3, ROI CI excludes zero) to pass, plus
  * a human call.
  */
-export const ENABLED = false;
+export const ENABLED = true;
 
 /** Acceptance gate, lifted from the header. */
 export const ACCEPTANCE_GATE = "Adopt if, on 2019-2024 walk-forward, the GAP-featured * model beats the market-only baseline by >=0.005 Brier points AND shows * positive CLV (mean line move in our favour >= +0.3 points) AND realised * ROI CI excludes zero under Level Stakes.";

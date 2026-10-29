@@ -39,17 +39,17 @@ export function evaluateModelSmcCandidatePool(
 
   let mapIdx = 0;
   for (let i = 1; i < weights.length; i++) {
-    if (weights[i] > weights[mapIdx]) mapIdx = i;
+    if ((weights[i] ?? 0) > (weights[mapIdx] ?? 0)) mapIdx = i;
   }
 
   return {
     posteriorWeights: particles.map((p, i) => ({
       modelId: p.modelId,
-      weight: Number(weights[i].toFixed(6)),
-      bicPenalizedLogScore: Number(logScores[i].toFixed(4)),
+      weight: Number((weights[i] ?? 0).toFixed(6)),
+      bicPenalizedLogScore: Number((logScores[i] ?? 0).toFixed(4)),
     })),
     effectiveSampleSize: Number(ess.toFixed(4)),
     resamplingTriggered: ess < particles.length * 0.5,
-    mapModelId: particles[mapIdx].modelId,
+    mapModelId: particles[mapIdx]?.modelId ?? "",
   };
 }

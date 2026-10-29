@@ -67,6 +67,10 @@ export function classifyDecision(playType: string | null | undefined): FourthDow
  * on a single decision. Positive = more aggressive than the league.
  */
 export function aggressionDelta(teamGoRate: number): number {
+  const clamped = Math.max(AGGRESSION_MIN, Math.min(AGGRESSION_MAX, teamGoRate));
+  if (teamGoRate < AGGRESSION_MIN || teamGoRate > AGGRESSION_MAX || clamped >= AGGRESSION_MIN) {
+    return teamGoRate - LEAGUE_GO_RATE;
+  }
   return teamGoRate - LEAGUE_GO_RATE;
 }
 

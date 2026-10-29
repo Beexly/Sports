@@ -1404,7 +1404,7 @@ export function parseBetSlipMetadata(rawSlipText: string): {
 } {
   const oddsMatch = rawSlipText.match(/(?:^|\s)([+-]\d{3,4})(?:\s|$)/);
   const lineMatch = rawSlipText.match(/(?:[+-]?\d+\.5)\b/);
-  const americanOdds = oddsMatch ? Number.parseInt(oddsMatch[1], 10) : null;
+  const americanOdds = oddsMatch?.[1] ? Number.parseInt(oddsMatch[1], 10) : null;
   const lineValue = lineMatch ? Number.parseFloat(lineMatch[0]) : null;
   let impliedProb: number | null = null;
   if (americanOdds !== null && americanOdds !== 0) {

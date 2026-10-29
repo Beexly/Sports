@@ -78,7 +78,7 @@ const READERS = [
   },
   {
     file: "apps/web/app/api/ops/public-surface-truth/route.ts",
-    line: 783,
+    line: 769,
     defaultWhenUnset: "off",
     expression: 'process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true"',
     gates: "the operator-facing surface-truth report",

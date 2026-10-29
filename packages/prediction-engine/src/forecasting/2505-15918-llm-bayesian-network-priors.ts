@@ -26,7 +26,7 @@ export function computeLlmDirichletPosterior(input: LlmDirichletPriorInput): Llm
   const alpha0 = input.baseSmoothingAlpha0 ?? 1e-3;
   const pSum = input.llmPriorProbs.reduce((a, b) => a + Math.max(0, b), 0) || 1;
   const alphaPrior = input.llmPriorProbs.map((p) => alpha0 + input.pseudoCountStrengthN0 * (Math.max(0, p) / pSum));
-  const alphaPosterior = alphaPrior.map((a, i) => a + Math.max(0, input.empiricalCounts[i]));
+  const alphaPosterior = alphaPrior.map((a, i) => a + Math.max(0, input.empiricalCounts[i] ?? 0));
   const totalPost = alphaPosterior.reduce((a, b) => a + b, 0) || 1;
   const totalPrior = alphaPrior.reduce((a, b) => a + b, 0);
   return {
@@ -53,8 +53,8 @@ export function evaluateBidirectionalBayesTokenCoherence(
   if (n === 0) return { meanBayesDiscrepancy: 1, coherent: false };
   let sumDiff = 0;
   for (let i = 0; i < n; i++) {
-    const impliedForward = Math.min(1, Math.max(0, reverseCondProbs[i] * marginalPriorRatio[i]));
-    sumDiff += Math.abs(forwardCondProbs[i] - impliedForward);
+    const impliedForward = Math.min(1, Math.max(0, (reverseCondProbs[i] ?? 0) * (marginalPriorRatio[i] ?? 0)));
+    sumDiff += Math.abs((forwardCondProbs[i] ?? 0) - impliedForward);
   }
   const meanBayesDiscrepancy = Number((sumDiff / n).toFixed(6));
   return {

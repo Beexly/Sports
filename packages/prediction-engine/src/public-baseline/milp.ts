@@ -5,10 +5,9 @@
  * settings AND by lineup.ts on the TS side.
  */
 import { spawn } from "node:child_process"
-import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const HERE = dirname(fileURLToPath(import.meta.url))
+const HERE = typeof __dirname === "string" ? __dirname : dirname(process.argv[1] ?? ".")
 const BRIDGE = join(HERE, "..", "..", "scripts", "pydfs_bridge.py")
 
 export type MilpPlayer = {

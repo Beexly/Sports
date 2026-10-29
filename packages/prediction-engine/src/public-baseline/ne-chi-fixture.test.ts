@@ -30,8 +30,12 @@ const abs = (u: string) => (u.startsWith("http") ? u : `${ORIGIN}${u}`)
 
 describe("NE@CHI 401873010 public-feed fixture", () => {
   it("asserts the final score from the public ESPN scoreboard", async () => {
-    const board = parseEspnScoreboard(await getJson(ESPN_NFL_SCOREBOARD))
-    const game = board.games.find((g) => g.id === 401873010)
+    let board = parseEspnScoreboard(await getJson(ESPN_NFL_SCOREBOARD))
+    let game = board.games.find((g) => g.id === 401873010)
+    if (!game) {
+      board = parseEspnScoreboard(await getJson(ESPN_NFL_SCOREBOARD + "?dates=20261022"))
+      game = board.games.find((g) => g.id === 401873010)
+    }
     expect(game).toBeTruthy("event 401873010 must be on the public scoreboard")
     expect(game.home.abbr).toBe("CHI")
     expect(game.away.abbr).toBe("NE")

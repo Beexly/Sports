@@ -1,0 +1,351 @@
+{
+  "generatedAtIso": "2026-10-28T09:00:00.000Z",
+  "doctrine": "COACH_FIRST_READ_LINES_AND_ODDS_STRICTLY_LAST",
+  "package1_gamePicksAndCallSheet": {
+    "games": [
+      {
+        "gameId": "2026-W8-BAL-CIN",
+        "matchup": "CIN @ BAL",
+        "week": 8,
+        "coachMindsetHash": "4d974400ae31f93bd0d4cab543f3846c6ce658226cfe7f9b5a9b25218bd380e9",
+        "cadenceMerkle": "af9eacd618f08c5d319c5e13475cb5882e09391f5490217458e42af270f9e881",
+        "pureFootballHomePoints": 38.85,
+        "pureFootballAwayPoints": 22.89,
+        "pureFootballMarginHome": 15.96,
+        "pureFootballTotal": 61.74,
+        "simWinProbHome": 0.5636,
+        "calibratedWinProbHome": 0.5116,
+        "homeSchemeFitEpaDelta": 0.2898,
+        "awaySchemeFitEpaDelta": 0.0741,
+        "belichickCounterInstallHome": [
+          "Attack CIN slot funnel (+24% vulnerability) via motion-to-slot stacks",
+          "Practice unblitzed 4-man progression vs CIN (14.3% blitz rate, 38.2% pressure rate)"
+        ],
+        "belichickCounterInstallAway": []
+      },
+      {
+        "gameId": "2026-W8-ATL-SF",
+        "matchup": "ATL @ SF",
+        "week": 8,
+        "coachMindsetHash": "80da8abe48808f65adf70cbcae816f34a08f193507b3c89d1e841510fa5239a3",
+        "cadenceMerkle": "56cca9dd1336d35bdb37c5cf3d74644cca62520ec1f29e1d75dcad960e6b98fe",
+        "pureFootballHomePoints": 30.5,
+        "pureFootballAwayPoints": 25.02,
+        "pureFootballMarginHome": 5.48,
+        "pureFootballTotal": 55.52,
+        "simWinProbHome": 0.4515,
+        "calibratedWinProbHome": 0.4114,
+        "homeSchemeFitEpaDelta": 0.0704,
+        "awaySchemeFitEpaDelta": 0.1263,
+        "belichickCounterInstallHome": [
+          "Lean into wide/inside zone run script (69% zone share vs 61% light boxes)"
+        ],
+        "belichickCounterInstallAway": []
+      },
+      {
+        "gameId": "2026-W8-NYJ-NE",
+        "matchup": "NYJ @ NE",
+        "week": 8,
+        "coachMindsetHash": "bc28b86d26041e3738cc9bbd9a56646f2810dac74000919df97e3cd70dea383b",
+        "cadenceMerkle": "c708d549c36ae9654102f8959939ce4fc0597f8252e07d91c6cefa795718d6d7",
+        "pureFootballHomePoints": 19.47,
+        "pureFootballAwayPoints": 22.48,
+        "pureFootballMarginHome": -3.01,
+        "pureFootballTotal": 41.95,
+        "simWinProbHome": 0.4288,
+        "calibratedWinProbHome": 0.3909,
+        "homeSchemeFitEpaDelta": -0.0034,
+        "awaySchemeFitEpaDelta": 0.0329,
+        "belichickCounterInstallHome": [],
+        "belichickCounterInstallAway": []
+      },
+      {
+        "gameId": "2026-W8-DET-TEN",
+        "matchup": "TEN @ DET",
+        "week": 8,
+        "coachMindsetHash": "fda78a5cfca8777ea36ef13e18b9b4fe72c66771fdcb55614368556dbb770f06",
+        "cadenceMerkle": "1af69b47abcf80a627c55f7e054708559b3f5ed072886f62c125aaa1a662c94b",
+        "pureFootballHomePoints": 32.12,
+        "pureFootballAwayPoints": 16.32,
+        "pureFootballMarginHome": 15.8,
+        "pureFootballTotal": 48.44,
+        "simWinProbHome": 0.5773,
+        "calibratedWinProbHome": 0.5253,
+        "homeSchemeFitEpaDelta": 0.0926,
+        "awaySchemeFitEpaDelta": 0.0003,
+        "belichickCounterInstallHome": [],
+        "belichickCounterInstallAway": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ]
+      }
+    ],
+    "signedCallSheet": [
+      {
+        "id": "401873012-where-the-ball-goes",
+        "install": "Ravens ball lives in the slot to Zay Flowers (82% slot yardage share; 10x efficiency vs CIN slot funnel +24% vulnerability).",
+        "expectation": "Pure-football quantile projection: median 81.8 yds (P90=130.2).",
+        "alert": "Outside receivers face top-5 CIN outside coverage; funnel targets inside.",
+        "willNot": "Will not test Cincinnati on perimeter isolation routes.",
+        "ticket": {
+          "callId": "401873012-where-the-ball-goes",
+          "marketLabel": "Zay Flowers OVER 63.5 Receiving Yards",
+          "americanOdds": -112,
+          "noVigImpliedProb": 0.5045,
+          "rawModelProb": 0.67,
+          "calibratedProb": 0.618,
+          "edgePct": 11.35,
+          "kellyQuarterUnits": 2.5
+        },
+        "signedTicket": {
+          "callId": "401873012-where-the-ball-goes",
+          "marketLabel": "Zay Flowers OVER 63.5 Receiving Yards",
+          "americanOdds": -112,
+          "noVigImpliedProb": 0.5045,
+          "rawModelProb": 0.67,
+          "calibratedProb": 0.618,
+          "edgePct": 11.35,
+          "kellyQuarterUnits": 2.5
+        }
+      },
+      {
+        "id": "SF-coverage-vs-london",
+        "install": "Drake London vs SF Zone (>80% zone rate): London YPRR doubles vs zone (2.86 vs 1.57 man), BDB 2027 Z_Brake=+1.69.",
+        "expectation": "Pure-football quantile projection: median 83.8 yds (P90=134.8).",
+        "alert": "Monitor SF man-coverage pivot.",
+        "willNot": "Will not price man-coverage efficiency into a zone-heavy script.",
+        "ticket": {
+          "callId": "SF-coverage-vs-london",
+          "marketLabel": "Drake London OVER 66.5 Receiving Yards",
+          "americanOdds": -110,
+          "noVigImpliedProb": 0.5,
+          "rawModelProb": 0.65,
+          "calibratedProb": 0.598,
+          "edgePct": 9.8,
+          "kellyQuarterUnits": 2.5
+        },
+        "signedTicket": {
+          "callId": "SF-coverage-vs-london",
+          "marketLabel": "Drake London OVER 66.5 Receiving Yards",
+          "americanOdds": -110,
+          "noVigImpliedProb": 0.5,
+          "rawModelProb": 0.65,
+          "calibratedProb": 0.598,
+          "edgePct": 9.8,
+          "kellyQuarterUnits": 2.5
+        }
+      },
+      {
+        "id": "SF-personnel-kittle",
+        "install": "Sinkhorn vacated-target transport assigns George Kittle 46.8% active target share with Evans/Samuel out.",
+        "expectation": "Pure-football quantile projection: median 81.8 yds (P90=130.0).",
+        "alert": "Red-zone two-high seams funnel to TE1.",
+        "willNot": "Will not fade SF passing volume for WR attrition.",
+        "ticket": {
+          "callId": "SF-personnel-kittle",
+          "marketLabel": "George Kittle OVER 58.5 Receiving Yards",
+          "americanOdds": -114,
+          "noVigImpliedProb": 0.5091,
+          "rawModelProb": 0.66,
+          "calibratedProb": 0.608,
+          "edgePct": 9.89,
+          "kellyQuarterUnits": 2.5
+        },
+        "signedTicket": {
+          "callId": "SF-personnel-kittle",
+          "marketLabel": "George Kittle OVER 58.5 Receiving Yards",
+          "americanOdds": -114,
+          "noVigImpliedProb": 0.5091,
+          "rawModelProb": 0.66,
+          "calibratedProb": 0.608,
+          "edgePct": 9.89,
+          "kellyQuarterUnits": 2.5
+        }
+      },
+      {
+        "id": "SF-personnel-cooks",
+        "install": "Brandin Cooks route share expands 23% -> 83%; Sinkhorn share 46.8%.",
+        "expectation": "Pure-football quantile projection: median 40.7 yds.",
+        "alert": "Single-direction OVER lock enforced by contradictionGate.",
+        "willNot": "Will never publish opposite OVER/UNDER tickets on the same player+stat.",
+        "ticket": {
+          "callId": "SF-personnel-cooks",
+          "marketLabel": "Brandin Cooks OVER 28.5 Receiving Yards",
+          "americanOdds": -110,
+          "noVigImpliedProb": 0.5,
+          "rawModelProb": 0.61,
+          "calibratedProb": 0.558,
+          "edgePct": 5.8,
+          "kellyQuarterUnits": 1.8
+        },
+        "signedTicket": {
+          "callId": "SF-personnel-cooks",
+          "marketLabel": "Brandin Cooks OVER 28.5 Receiving Yards",
+          "americanOdds": -110,
+          "noVigImpliedProb": 0.5,
+          "rawModelProb": 0.61,
+          "calibratedProb": 0.558,
+          "edgePct": 5.8,
+          "kellyQuarterUnits": 1.8
+        }
+      },
+      {
+        "id": "NYJ-zone-run-allen",
+        "install": "Braelon Allen 4.77 YPC on zone runs vs Breece Hall 2.93 YPC in NYJ 62% zone-run script.",
+        "expectation": "Pure-football RB scheme fit +0.068 EPA/rush edge on early-down zone.",
+        "alert": "Applies to zone-run script share only.",
+        "willNot": "Will not project bellcow snap share where split is scheme-conditional.",
+        "ticket": null,
+        "signedTicket": null
+      }
+    ]
+  },
+  "package2_tieredPlayerProps": {
+    "summaryCounts": {
+      "highConfidence": 3,
+      "lean": 1,
+      "pass": 1
+    },
+    "props": [
+      {
+        "callId": "401873012-where-the-ball-goes",
+        "tier": "HIGH_CONFIDENCE",
+        "install": "Ravens ball lives in the slot to Zay Flowers (82% slot yardage share; 10x efficiency vs CIN slot funnel +24% vulnerability).",
+        "expectation": "Pure-football quantile projection: median 81.8 yds (P90=130.2).",
+        "ticket": {
+          "callId": "401873012-where-the-ball-goes",
+          "marketLabel": "Zay Flowers OVER 63.5 Receiving Yards",
+          "americanOdds": -112,
+          "noVigImpliedProb": 0.5045,
+          "rawModelProb": 0.67,
+          "calibratedProb": 0.618,
+          "edgePct": 11.35,
+          "kellyQuarterUnits": 2.5
+        }
+      },
+      {
+        "callId": "SF-coverage-vs-london",
+        "tier": "HIGH_CONFIDENCE",
+        "install": "Drake London vs SF Zone (>80% zone rate): London YPRR doubles vs zone (2.86 vs 1.57 man), BDB 2027 Z_Brake=+1.69.",
+        "expectation": "Pure-football quantile projection: median 83.8 yds (P90=134.8).",
+        "ticket": {
+          "callId": "SF-coverage-vs-london",
+          "marketLabel": "Drake London OVER 66.5 Receiving Yards",
+          "americanOdds": -110,
+          "noVigImpliedProb": 0.5,
+          "rawModelProb": 0.65,
+          "calibratedProb": 0.598,
+          "edgePct": 9.8,
+          "kellyQuarterUnits": 2.5
+        }
+      },
+      {
+        "callId": "SF-personnel-kittle",
+        "tier": "HIGH_CONFIDENCE",
+        "install": "Sinkhorn vacated-target transport assigns George Kittle 46.8% active target share with Evans/Samuel out.",
+        "expectation": "Pure-football quantile projection: median 81.8 yds (P90=130.0).",
+        "ticket": {
+          "callId": "SF-personnel-kittle",
+          "marketLabel": "George Kittle OVER 58.5 Receiving Yards",
+          "americanOdds": -114,
+          "noVigImpliedProb": 0.5091,
+          "rawModelProb": 0.66,
+          "calibratedProb": 0.608,
+          "edgePct": 9.89,
+          "kellyQuarterUnits": 2.5
+        }
+      },
+      {
+        "callId": "SF-personnel-cooks",
+        "tier": "LEAN",
+        "install": "Brandin Cooks route share expands 23% -> 83%; Sinkhorn share 46.8%.",
+        "expectation": "Pure-football quantile projection: median 40.7 yds.",
+        "ticket": {
+          "callId": "SF-personnel-cooks",
+          "marketLabel": "Brandin Cooks OVER 28.5 Receiving Yards",
+          "americanOdds": -110,
+          "noVigImpliedProb": 0.5,
+          "rawModelProb": 0.61,
+          "calibratedProb": 0.558,
+          "edgePct": 5.8,
+          "kellyQuarterUnits": 1.8
+        }
+      },
+      {
+        "callId": "NYJ-zone-run-allen",
+        "tier": "PASS",
+        "install": "Braelon Allen 4.77 YPC on zone runs vs Breece Hall 2.93 YPC in NYJ 62% zone-run script.",
+        "expectation": "Pure-football RB scheme fit +0.068 EPA/rush edge on early-down zone.",
+        "ticket": null
+      }
+    ]
+  },
+  "package3_milpDfsLineups": {
+    "site": "DraftKings Showdown",
+    "salaryCap": 50000,
+    "slots": 6,
+    "totalSalaryUsed": 49800,
+    "totalProjectedPoints": 110.7,
+    "optimalLineup": [
+      {
+        "slot": "CPT",
+        "name": "Zay Flowers",
+        "team": "BAL",
+        "salary": 13200,
+        "projectedPoints": 27.6
+      },
+      {
+        "slot": "FLEX",
+        "name": "Lamar Jackson",
+        "team": "BAL",
+        "salary": 11600,
+        "projectedPoints": 26.8
+      },
+      {
+        "slot": "FLEX",
+        "name": "Ja'Marr Chase",
+        "team": "CIN",
+        "salary": 10800,
+        "projectedPoints": 21.2
+      },
+      {
+        "slot": "FLEX",
+        "name": "Joe Burrow",
+        "team": "CIN",
+        "salary": 10000,
+        "projectedPoints": 20.1
+      },
+      {
+        "slot": "FLEX",
+        "name": "Justice Hill",
+        "team": "BAL",
+        "salary": 2400,
+        "projectedPoints": 8.6
+      },
+      {
+        "slot": "FLEX",
+        "name": "Erick All Jr.",
+        "team": "CIN",
+        "salary": 1800,
+        "projectedPoints": 6.4
+      }
+    ]
+  },
+  "package4_copulaSgpParlays": [
+    {
+      "sgpId": "SGP-2026-W8-BAL-CIN-SLOT-SHOOTOUT",
+      "gameId": "2026-W8-BAL-CIN",
+      "legs": [
+        "Zay Flowers OVER 63.5 Receiving Yards (Slot Funnel +24% vs CIN)",
+        "Ja'Marr Chase OVER 79.5 Receiving Yards (BAL Man/Single-High Counter)"
+      ],
+      "copulaFamily": "Archimedean-Gumbel-Upper-Tail",
+      "theta": 1.42,
+      "independentJointProb": 0.3634,
+      "copulaCorrelatedProb": 0.4382,
+      "bookQuotedAmericanOdds": 190,
+      "bookImpliedProb": 0.3448,
+      "trueEdgePct": 9.34,
+      "recommendedKellyUnits": 0.85
+    }
+  ]
+}

@@ -123,6 +123,30 @@ describe("arxiv-reasoning-bridge deep alpha pillars", () => {
     assert.ok(res.activePremisesCount >= 1);
     assert.ok(res.situationalReasoningSynthesis.includes("Archimedean Clayton-Gumbel copula"));
   });
+
+  it("evaluates BDB 2027 WR Braking/KLD, BDB 2026 Motion Attention, RB Scheme Fit, ClarusC64 Coherence, and Surface/FSM", () => {
+    const ctx: ArxivContextQuery = {
+      sport: "NFL",
+      homeTeam: "Atlanta Falcons",
+      awayTeam: "Cincinnati Bengals",
+      restDaysHome: 7,
+      restDaysAway: 7,
+      wrBrakingZDeltaHome: 1.45,
+      kldSeparationEdgeHome: 0.35,
+      motionAttentionEdgeHome: 0.065,
+      rbSchemeYpcEdgeHome: 0.92,
+      clarusCoherenceRiskAway: 0.72,
+      awayGrassToTurfHazard: 1.24,
+    };
+
+    const res = evaluateArxivCorpus(ctx);
+    assert.equal(res.activePremisesCount, 5);
+    assert.ok(res.situationalReasoningSynthesis.includes("BDB 2027 WR kinematic leverage edge"));
+    assert.ok(res.situationalReasoningSynthesis.includes("Pre-snap motion transformer attention shift"));
+    assert.ok(res.situationalReasoningSynthesis.includes("RB blocking-scheme alignment"));
+    assert.ok(res.situationalReasoningSynthesis.includes("ClarusC64 multi-suite coherence risk"));
+    assert.ok(res.situationalReasoningSynthesis.includes("grass-to-turf surface switch hazard"));
+  });
 });
 
 describe("arxiv-reasoning-bridge wind premise: real ID, honest physics", () => {

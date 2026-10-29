@@ -41,7 +41,7 @@ export function multiScaleRefinementHolds(grids: readonly GridResidual[]): boole
     if (!Number.isFinite(g.residual) || g.residual < 0) return false;
   }
   for (let i = 1; i < grids.length; i++) {
-    if (grids[i].residual > grids[i - 1].residual) return false;
+    if ((grids[i]?.residual ?? 0) > (grids[i - 1]?.residual ?? 0)) return false;
   }
   return true;
 }
@@ -107,8 +107,8 @@ export function evaluateMultiScaleRefinementResidual(grids: readonly GridResidua
     return { classification: "INVALID_GRIDS", holds: false, fineToCoarseRatio: null };
   }
   const holds = multiScaleRefinementHolds(grids);
-  const coarse = grids[0].residual;
-  const fine = grids[grids.length - 1].residual;
+  const coarse = grids[0]?.residual ?? 0;
+  const fine = grids[grids.length - 1]?.residual ?? 0;
   const fineToCoarseRatio = coarse > 0 ? Number((fine / coarse).toFixed(4)) : null;
   const classification =
     holds && fineToCoarseRatio !== null && fineToCoarseRatio < 0.85
@@ -171,7 +171,7 @@ export function computePhysicsInformedSobolSensitivity(
   );
   let dominantFactorIndex = 0;
   for (let i = 1; i < st.length; i++) {
-    if (st[i] > st[dominantFactorIndex]) dominantFactorIndex = i;
+    if ((st[i] ?? 0) > (st[dominantFactorIndex] ?? 0)) dominantFactorIndex = i;
   }
   return {
     firstOrderIndices: s1,

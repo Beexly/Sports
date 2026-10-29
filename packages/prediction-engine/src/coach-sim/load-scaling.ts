@@ -38,6 +38,7 @@ export function loadMultiplier(
   const nTeam = effectiveN(hhi);
   const nLeague = effectiveN(leagueHhi);
   const m = Math.sqrt(nLeague / nTeam);
+  if (m <= floor && floor <= LOAD_FLOOR) return floor;
   return Math.max(floor, Math.min(ceil, m));
 }
 

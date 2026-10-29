@@ -188,56 +188,13 @@ def parse_equations_feed(path: str) -> List[Dict[str, Any]]:
     return records
 
 def parse_survivor_edges(path: str) -> List[Dict[str, Any]]:
-    records = []
-    if not os.path.exists(path):
-        print(f"[WARN] Survivor edges not found at {path}")
-        return records
-        
-    with open(path, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                edge = json.loads(line)
-                game_id = edge.get('game_id', '')
-                market = edge.get('market', '')
-                marketFairProb = edge.get('marketFairProb', 0.5)
-                confidence = edge.get('confidence', 0.5)
-                brier = edge.get('brier_improvement', 0.0)
-                edge_type = edge.get('edge_type', 'calibration')
-                
-                user_content = (
-                    f"Evaluate pricing discrepancy and true probability for {game_id} on market {market}.\n"
-                    f"Model raw confidence: {confidence:.3f}"
-                )
-                assistant_content = (
-                    f"### Calibration Analysis\n"
-                    f"- Raw Model Confidence: {confidence:.3f}\n"
-                    f"- De-Vigged Market Fair Probability: {marketFairProb:.3f}\n"
-                    f"- Calibration Edge Type: {edge_type}\n"
-                    f"- Brier Score Improvement: +{brier:.4f}\n\n"
-                    f"### Verdict\n"
-                    f"Apply isotonic -5.2pt adjustment to raw confidence. The true calibrated probability is {marketFairProb:.3f}."
-                )
-                
-                leaf = compute_merkle_leaf(f"{game_id}|{market}|{marketFairProb}")
-                
-                records.append({
-                    "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
-                        {"role": "user", "content": user_content},
-                        {"role": "assistant", "content": assistant_content}
-                    ],
-                    "metadata": {
-                        "source": "SURVIVOR_EDGES",
-                        "game_id": game_id,
-                        "merkle_leaf": leaf
-                    }
-                })
-            except Exception:
-                continue
-    return records
+    """
+    STANDING DOCTRINE (HARD): READ LINES AND ODDS STRICTLY LAST (Step N / Zone 3).
+    Market-derived `marketFairProb` target records from `survivor_edges.jsonl` are
+    quarantined from Zone 1/2 Coach-Brain SFT training so the Coach-Brain never
+    memorizes bookmaker lines as its football projection.
+    """
+    return []
 
 def main():
     parser = argparse.ArgumentParser(description="Compile GSE Coach Brain SFT Corpus")

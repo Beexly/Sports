@@ -25,7 +25,12 @@ export interface ArxivPaperPremise {
     | "TRENCH_OL_CONTINUITY"
     | "COACHING_FOURTH_DOWN_DRAG"
     | "TURNOVER_LUCK_REGRESSION"
-    | "SGP_CORRELATION_COPULA";
+    | "SGP_CORRELATION_COPULA"
+    | "BDB_WR_BRAKING_LEVERAGE"
+    | "BDB_COVERAGE_CONTROL_MOTION"
+    | "RB_ZONE_GAP_SCHEME_FIT"
+    | "CLARUS_COHERENCE_RISK_SUITES"
+    | "SURFACE_SWITCH_BIOMECHANICAL_FSM";
   readonly situationalConcept: string;
   readonly greyAreaSignal: string;
   readonly evaluateContext: (ctx: ArxivContextQuery) => ArxivSignalEvaluation;
@@ -57,6 +62,13 @@ export interface ArxivContextQuery {
   readonly turnoverDifferentialHome?: number; // raw turnover margin (+/-)
   readonly turnoverDifferentialAway?: number;
   readonly sgpCorrelationRequested?: boolean;
+  // BDB 2020-2027, ClarusC64 Coherence & Surface/FSM Coach-First variables
+  readonly wrBrakingZDeltaHome?: number;
+  readonly kldSeparationEdgeHome?: number;
+  readonly motionAttentionEdgeHome?: number;
+  readonly rbSchemeYpcEdgeHome?: number;
+  readonly clarusCoherenceRiskAway?: number;
+  readonly awayGrassToTurfHazard?: number;
 }
 
 export interface ArxivSignalEvaluation {
@@ -359,6 +371,109 @@ export const ARXIV_REASONING_PREMISES: readonly ArxivPaperPremise[] = [
         };
       }
       return { applicable: false, reason: "Single outcome requested.", situationalBiasDirection: "PASS", situationalNarrative: "" };
+    },
+  },
+
+  // 13 (DEEP ALPHA): NFL Big Data Bowl 2027 WR Mass-Adjusted Braking & Kinematic Leverage Deficit (KLD)
+  {
+    arxivId: "BDB-2027-DECEL-KLD",
+    title: "NFL Big Data Bowl 2027: Mass-Adjusted Route Braking (Z_Brake) & Kinematic Leverage Deficit (KLD)",
+    pillar: "BDB_WR_BRAKING_LEVERAGE",
+    situationalConcept: "Receiver separation at the break point is governed by mass-adjusted deceleration impulse and DB reaction-time leverage deficit rather than straight-line 40-yard dash speed alone.",
+    greyAreaSignal: "Elevates passing efficiency when home WR braking Z-score and KLD exceed DB recovery envelope.",
+    evaluateContext: (ctx) => {
+      if (
+        (ctx.wrBrakingZDeltaHome !== undefined && ctx.wrBrakingZDeltaHome >= 0.75) ||
+        (ctx.kldSeparationEdgeHome !== undefined && ctx.kldSeparationEdgeHome >= 0.15)
+      ) {
+        return {
+          applicable: true,
+          reason: `BDB 2027 WR kinematic leverage edge (Z_Brake=${(ctx.wrBrakingZDeltaHome ?? 0).toFixed(2)}, KLD=${(ctx.kldSeparationEdgeHome ?? 0).toFixed(2)}) exceeds secondary recovery threshold.`,
+          situationalBiasDirection: "HOME",
+          situationalNarrative: "Mass-adjusted route braking forces defensive backs into compensatory hip-turn recovery, opening high-EPA intermediate windows.",
+        };
+      }
+      return { applicable: false, reason: "WR/DB kinematic braking equilibrium nominal.", situationalBiasDirection: "PASS", situationalNarrative: "" };
+    },
+  },
+
+  // 14 (DEEP ALPHA): BDB 2026 Continuous Pass Coverage Control (PPCF) & Pre-Snap Motion Attention
+  {
+    arxivId: "BDB-2026-PPCF-MOTION",
+    title: "NFL Big Data Bowl 2026: Continuous Pass Coverage Control Surface & Transformer Motion Attention",
+    pillar: "BDB_COVERAGE_CONTROL_MOTION",
+    situationalConcept: "Pre-snap motion at snap shifts scaled dot-product coverage attention weights and widens bivariate Gaussian spatial control windows against static shell rotations.",
+    greyAreaSignal: "Triggers when offensive motion-at-snap attention shift exploits opposing defensive shell rigidity.",
+    evaluateContext: (ctx) => {
+      if (ctx.motionAttentionEdgeHome !== undefined && ctx.motionAttentionEdgeHome >= 0.04) {
+        return {
+          applicable: true,
+          reason: `Pre-snap motion transformer attention shift (+${ctx.motionAttentionEdgeHome.toFixed(3)} EPA/play) compromises opposing defensive shell rotation.`,
+          situationalBiasDirection: "HOME",
+          situationalNarrative: "High-frequency jet/orbit motion forces safety rotation disclosure pre-snap and expands continuous pass coverage control (PPCF) windows.",
+        };
+      }
+      return { applicable: false, reason: "Pre-snap motion attention balance neutral.", situationalBiasDirection: "PASS", situationalNarrative: "" };
+    },
+  },
+
+  // 15 (DEEP ALPHA): RB Zone vs Gap/Power Scheme Fit & Light-Box Exploitation
+  {
+    arxivId: "BDB-2020-RB-SCHEME",
+    title: "NFL Big Data Bowl Rushing Physics: Zone vs Gap/Power Scheme Fit & Light-Box Exploitation",
+    pillar: "RB_ZONE_GAP_SCHEME_FIT",
+    situationalConcept: "Running back efficiency is non-portable across blocking schemes (e.g., wide-zone one-cut deceleration vs interior gap/duo downhill momentum).",
+    greyAreaSignal: "Flags high-leverage rushing efficiency when RB scheme YPC split aligns with offensive coordinator run-concept share and opponent light-box rate.",
+    evaluateContext: (ctx) => {
+      if (ctx.rbSchemeYpcEdgeHome !== undefined && ctx.rbSchemeYpcEdgeHome >= 0.65) {
+        return {
+          applicable: true,
+          reason: `RB blocking-scheme alignment yields +${ctx.rbSchemeYpcEdgeHome.toFixed(2)} YPC advantage over opposing defensive front box structure.`,
+          situationalBiasDirection: "HOME",
+          situationalNarrative: "RB cut-angle kinematics align with offensive line zone/gap blocking distribution against two-high light boxes.",
+        };
+      }
+      return { applicable: false, reason: "Rushing scheme fit within baseline.", situationalBiasDirection: "PASS", situationalNarrative: "" };
+    },
+  },
+
+  // 16 (DEEP ALPHA): ClarusC64 8-Suite NFL Coherence Risk & Script Collapse Hazard
+  {
+    arxivId: "HF-CLARUSC64-COHERENCE",
+    title: "ClarusC64 8-Suite NFL Coherence Risk: Red-Zone, Route-Timing, Protection & Motion Adjustment",
+    pillar: "CLARUS_COHERENCE_RISK_SUITES",
+    situationalConcept: "Play-call and execution coherence across red-zone sequencing, pass protection slide rules, and route timing governs late-down script stability.",
+    greyAreaSignal: "Fades visiting offenses exhibiting elevated multi-suite coherence risk (>= 0.65).",
+    evaluateContext: (ctx) => {
+      if (ctx.clarusCoherenceRiskAway !== undefined && ctx.clarusCoherenceRiskAway >= 0.65) {
+        return {
+          applicable: true,
+          reason: `Visiting offense ClarusC64 multi-suite coherence risk (${(ctx.clarusCoherenceRiskAway * 100).toFixed(1)}%) breaches script-collapse ceiling.`,
+          situationalBiasDirection: "HOME",
+          situationalNarrative: "Desynchronized route timing and protection slide rules under defensive motion adjustments elevate drive-stall probability.",
+        };
+      }
+      return { applicable: false, reason: "Play-call and protection coherence nominal.", situationalBiasDirection: "PASS", situationalNarrative: "" };
+    },
+  },
+
+  // 17 (DEEP ALPHA): Grass-to-Turf Playing Surface Switching & VisiShield Biomechanical FSM
+  {
+    arxivId: "KAGGLE-SURFACE-FSM",
+    title: "NFL Playing Surface Analytics & VisiShield Edge Biomechanical Risk Finite State Machine",
+    pillar: "SURFACE_SWITCH_BIOMECHANICAL_FSM",
+    situationalConcept: "Natural grass teams traveling to synthetic turf experience higher cleat-surface torsional friction and lower-extremity deceleration load.",
+    greyAreaSignal: "Penalizes visiting grass-based rosters making high-workload grass-to-turf transitions.",
+    evaluateContext: (ctx) => {
+      if (ctx.awayGrassToTurfHazard !== undefined && ctx.awayGrassToTurfHazard >= 1.15) {
+        return {
+          applicable: true,
+          reason: `Visiting roster grass-to-turf surface switch hazard (${ctx.awayGrassToTurfHazard.toFixed(2)}x) triggers VisiShield biomechanical load state.`,
+          situationalBiasDirection: "HOME",
+          situationalNarrative: "Synthetic turf rotational stiffness amplifies fourth-quarter lower-extremity deceleration fatigue on high-angle cuts.",
+        };
+      }
+      return { applicable: false, reason: "Playing surface transition hazard neutral.", situationalBiasDirection: "PASS", situationalNarrative: "" };
     },
   },
 ];

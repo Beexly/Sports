@@ -18,7 +18,7 @@ export function attentionWeights(query: readonly number[], keys: readonly (reado
   const width = query.length;
   if (width === 0 || keys.some((k) => k.length !== width)) throw new Error("query and keys must share a positive width");
   const scale = Math.sqrt(width);
-  const scores = keys.map((key) => query.reduce((sum, q, i) => sum + q * key[i], 0) / scale);
+  const scores = keys.map((key) => query.reduce((sum, q, i) => sum + q * (key[i] ?? 0), 0) / scale);
   if (scores.some((s) => !Number.isFinite(s))) throw new Error("attention scores must be finite");
   return softmax(scores);
 }

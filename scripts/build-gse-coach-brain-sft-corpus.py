@@ -145,7 +145,7 @@ def parse_x_situational(path: str) -> List[Dict[str, Any]]:
         
     return records
 
-def parse_equations_feed(path: str) -> List[Dict[str, Any]]:
+def parse_equations_feed(path: str, source_tag: str = "SUNDAY_45_EQUATIONS") -> List[Dict[str, Any]]:
     records = []
     if not os.path.exists(path):
         print(f"[WARN] Equations feed not found at {path}")
@@ -158,15 +158,16 @@ def parse_equations_feed(path: str) -> List[Dict[str, Any]]:
                 continue
             try:
                 eq = json.loads(line)
-                item_id = eq.get('itemId', 'EQ')
+                item_id = eq.get('itemId') or eq.get('equation_id', 'EQ')
                 title = eq.get('title', '')
-                latex = eq.get('equationLatex', '')
+                latex = eq.get('equationLatex') or eq.get('formula', '')
                 summary = eq.get('verbatimSummary', '')
-                app = eq.get('engineApplication', '')
+                app = eq.get('engineApplication') or eq.get('application', '')
                 domain = eq.get('domain', 'sports_analytics')
+                pillar = eq.get('primaryImpactPillar') or eq.get('category', '')
                 
                 user_content = (
-                    f"[Domain: {domain}] Explain the formulation and GSE engine application of: {title} ({item_id})\n\n"
+                    f"[Domain: {domain} | Pillar: {pillar}] Explain the formulation and GSE Coach-First engine application of: {title} ({item_id})\n\n"
                     f"Equation: {latex}"
                 )
                 assistant_content = (
@@ -183,8 +184,60 @@ def parse_equations_feed(path: str) -> List[Dict[str, Any]]:
                         {"role": "assistant", "content": assistant_content}
                     ],
                     "metadata": {
-                        "source": "SUNDAY_45_EQUATIONS",
+                        "source": source_tag,
                         "itemId": item_id,
+                        "merkle_leaf": leaf
+                    }
+                })
+            except Exception:
+                continue
+    return records
+
+
+def parse_clarusc64_coherence(path: str) -> List[Dict[str, Any]]:
+    records = []
+    if not os.path.exists(path):
+        print(f"[WARN] ClarusC64 coherence feed not found at {path}")
+        return records
+
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+                rec_id = row.get('record_id', '')
+                suite_label = row.get('suite_label', '')
+                kernel_target = row.get('gse_kernel_target', '')
+                bench = row.get('benchmark_row', {})
+                summary = bench.get('matchup_summary', '')
+                question = bench.get('question', '')
+                label = bench.get('ground_truth_label', '')
+                rationale = bench.get('ground_truth_rationale', '')
+                outcome = bench.get('outcome_signal', '')
+
+                user_content = (
+                    f"[ClarusC64 Suite: {suite_label} | Kernel: {kernel_target}]\n"
+                    f"Scenario: {summary}\n"
+                    f"Context: {json.dumps(bench, sort_keys=True)}\n"
+                    f"Task: {question}"
+                )
+                assistant_content = (
+                    f"### Coherence Verdict\n{label}\n\n"
+                    f"### Tactical & Kinematic Rationale\n{rationale}\n\n"
+                    f"### Expected On-Field Outcome Signal\n{outcome}"
+                )
+                leaf = compute_merkle_leaf(f"{rec_id}|{summary}|{label}|{rationale}")
+                records.append({
+                    "messages": [
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": user_content},
+                        {"role": "assistant", "content": assistant_content}
+                    ],
+                    "metadata": {
+                        "source": "CLARUSC64_8_COHERENCE_SUITES",
+                        "record_id": rec_id,
                         "merkle_leaf": leaf
                     }
                 })
@@ -198,6 +251,11 @@ def main():
     mind_path = 'C:/Users/Garrett/Sports/docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl'
     x_path = 'C:/Users/Garrett/Sports/docs/engine/research/2026-10-21/X-SITUATIONAL-TRAINING-CORPUS-2026-10-21.md'
     eq_path = 'C:/Users/Garrett/Sports/brain/feeds/2026-10-25/sunday_45_corpus_and_equations_feed.jsonl'
+    ultrascale_path = 'C:/Users/Garrett/Sports/brain/feeds/2026-10-28/hf_ultrascale_playbook_feed.jsonl'
+    openalex_arxiv_path = 'C:/Users/Garrett/Sports/brain/feeds/2026-10-28/openalex_arxiv_nfl_coaching_scheme_fit_feed.jsonl'
+    kaggle_physics_path = 'C:/Users/Garrett/Sports/brain/feeds/2026-10-28/kaggle_20_kernels_bdb_physics_feed.jsonl'
+    hf_datasets_path = 'C:/Users/Garrett/Sports/brain/feeds/2026-10-28/hf_34_datasets_empirical_feed.jsonl'
+    clarus_path = 'C:/Users/Garrett/Sports/data/coach-brain/clarusc64_8_coherence_suites_zone1.jsonl'
 
     print("=== GSE Coach Brain SFT Corpus Builder ===")
     print(f"Ingesting MIND: {mind_path}")
@@ -209,10 +267,39 @@ def main():
     print(f" -> Loaded {len(x_records)} X-Situational rules")
 
     print(f"Ingesting Equations: {eq_path}")
-    eq_records = parse_equations_feed(eq_path)
+    eq_records = parse_equations_feed(eq_path, "SUNDAY_45_EQUATIONS")
     print(f" -> Loaded {len(eq_records)} Equation records")
 
-    all_records = mind_records + x_records + eq_records
+    print(f"Ingesting HF Ultra-Scale Playbook: {ultrascale_path}")
+    ultrascale_records = parse_equations_feed(ultrascale_path, "HF_ULTRASCALE_PLAYBOOK")
+    print(f" -> Loaded {len(ultrascale_records)} Ultra-Scale Playbook records")
+
+    print(f"Ingesting OpenAlex + arXiv Coaching/Scheme/Fit Corpus: {openalex_arxiv_path}")
+    oa_arxiv_records = parse_equations_feed(openalex_arxiv_path, "OPENALEX_ARXIV_COACHING_SCHEME_FIT")
+    print(f" -> Loaded {len(oa_arxiv_records)} OpenAlex/arXiv Coaching & Scheme records")
+
+    print(f"Ingesting Kaggle 29 Kernels + BDB 2027 Physics Feed: {kaggle_physics_path}")
+    kaggle_records = parse_equations_feed(kaggle_physics_path, "KAGGLE_BDB_PHYSICS")
+    print(f" -> Loaded {len(kaggle_records)} Kaggle BDB Physics records")
+
+    print(f"Ingesting HF 34 Datasets Empirical Feed: {hf_datasets_path}")
+    hf_records = parse_equations_feed(hf_datasets_path, "HF_34_DATASETS_EMPIRICAL")
+    print(f" -> Loaded {len(hf_records)} HF Empirical Dataset records")
+
+    print(f"Ingesting ClarusC64 8 Coherence Risk Suites: {clarus_path}")
+    clarus_records = parse_clarusc64_coherence(clarus_path)
+    print(f" -> Loaded {len(clarus_records)} ClarusC64 Coherence records")
+
+    all_records = (
+        mind_records
+        + x_records
+        + eq_records
+        + ultrascale_records
+        + oa_arxiv_records
+        + kaggle_records
+        + hf_records
+        + clarus_records
+    )
     
     # Deduplication by merkle_leaf
     seen_leaves = set()

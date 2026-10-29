@@ -32,7 +32,7 @@ export function knownAnswerSeries(
   const interceptPart = Array.from({ length }, () => intercept);
   const slopePart = Array.from({ length }, (_, t) => slope * t);
   const noisePart = [...noise];
-  const observed = interceptPart.map((c, t) => c + slopePart[t] + noisePart[t]);
+  const observed = interceptPart.map((c, t) => c + (slopePart[t] ?? 0) + (noisePart[t] ?? 0));
   return { observed, intercept: interceptPart, slope: slopePart, noise: noisePart };
 }
 
@@ -45,7 +45,7 @@ export function recoverPlantedSlope(
   if (observed.length !== noise.length || observed.length < 2) {
     throw new Error("observed and noise must be the same length, at least 2");
   }
-  const cleaned = observed.map((y, t) => y - intercept - noise[t]);
+  const cleaned = observed.map((y, t) => y - intercept - (noise[t] ?? 0));
   const last = cleaned.length - 1;
-  return (cleaned[last] - cleaned[0]) / last;
+  return ((cleaned[last] ?? 0) - (cleaned[0] ?? 0)) / last;
 }

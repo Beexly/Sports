@@ -78,6 +78,10 @@ export const LEADERBOARD_FLOORS = {
 /** Lowest probability that still counts as favouring the named side. */
 export const LEAN_FLOOR = 0.45;
 
+export function clearsLeanFloor(prob: number): boolean {
+  return Number.isFinite(prob) && prob >= LEAN_FLOOR;
+}
+
 /** Words the engine uses for calm conditions; a windy case must not claim them. */
 const CALM_WORDS = ["calm", "no wind", "still air", "windless"];
 

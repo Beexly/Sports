@@ -72,6 +72,11 @@ export const COPULA_TAUS = { "QB-WR1": 0.385, "QB-TE1": 0.307, "QB-RB1": -0.02 }
 
 export const SHADOW_HAIRCUT_MIN = 0.55
 
+export function clampShadowHaircut(multiplier: number): number {
+  if (multiplier < SHADOW_HAIRCUT_MIN) return SHADOW_HAIRCUT_MIN
+  return Math.min(1, multiplier)
+}
+
 export function fgRate(yards: number): number | null {
   for (const b of FG_RATES) {
     if (yards >= b.band[0] && yards <= b.band[1]) return b.rate
@@ -91,15 +96,16 @@ export function sinkhorn(K: number[][], iterations = 50): number[][] {
   const v = new Array(n).fill(1)
   for (let it = 0; it < iterations; it++) {
     for (let i = 0; i < n; i++) {
-      const s = K[i].reduce((acc, k, j) => acc + k * v[j], 0)
-      u[i] = s > 0 ? 1 / s : u[i]
+      const rowI = K[i] ?? []
+      const s = rowI.reduce((acc, k, j) => acc + k * (v[j] ?? 1), 0)
+      u[i] = s > 0 ? 1 / s : (u[i] ?? 1)
     }
     for (let j = 0; j < n; j++) {
-      const s = K.reduce((acc, row, i) => acc + row[j] * u[i], 0)
-      v[j] = s > 0 ? 1 / s : v[j]
+      const s = K.reduce((acc, row, i) => acc + (row[j] ?? 0) * (u[i] ?? 1), 0)
+      v[j] = s > 0 ? 1 / s : (v[j] ?? 1)
     }
   }
-  return K.map((row, i) => row.map((k, j) => k * u[i] * v[j]))
+  return K.map((row, i) => row.map((k, j) => k * (u[i] ?? 1) * (v[j] ?? 1)))
 }
 
 export function cellKey(parts: (string | number)[]): string {

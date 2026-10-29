@@ -12,15 +12,16 @@ export function gradCamMap(activations: readonly (readonly number[])[], gradient
   if (activations.length === 0 || activations.length !== gradients.length) {
     throw new Error("activations and gradients need the same positive channel count");
   }
-  const spatial = activations[0].length;
+  const firstChan = activations[0] ?? [];
+  const spatial = firstChan.length;
   if (spatial === 0) throw new Error("each channel needs at least one location");
   const weights = activations.map((channel, c) => {
     const grad = gradients[c];
-    if (channel.length !== spatial || grad.length !== spatial) throw new Error("channels must share a spatial length");
+    if (!grad || channel.length !== spatial || grad.length !== spatial) throw new Error("channels must share a spatial length");
     return grad.reduce((sum, g) => sum + g, 0) / spatial;
   });
   return Array.from({ length: spatial }, (_, i) => {
-    const raw = weights.reduce((sum, w, c) => sum + w * activations[c][i], 0);
+    const raw = weights.reduce((sum, w, c) => sum + w * (activations[c]?.[i] ?? 0), 0);
     return raw > 0 ? raw : 0;
   });
 }
@@ -39,5 +40,5 @@ export function guidedGradCam(cam: readonly number[], guidedSignal: readonly num
   if (cam.length === 0 || cam.length !== guidedSignal.length) {
     throw new Error("cam and guided signal must share a positive length");
   }
-  return cam.map((value, i) => value * guidedSignal[i]);
+  return cam.map((value, i) => value * (guidedSignal[i] ?? 0));
 }

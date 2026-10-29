@@ -45,6 +45,8 @@ stops. It is the shared context that used to live only in whichever chat happene
 
 ## 3. Verified state — 2026-10-28
 
+**Green (2026-10-28 Master Corpus & Coach-Scheme-Player-Fit Integration):** `packages/prediction-engine` `tsc --noEmit` exits 0 with **zero TypeScript errors** (all 38 prior errors resolved), `reconciliation/_audit_unenforced_thresholds.mjs` exits 0 (`T12 GATE PASS`), `test/causal-engine.mutation-v4.spec.ts` 10/10, `test/pick-pipeline.t8.spec.ts` 63/63, `test/public-picks-enabled-readers.t21.spec.ts` 5/5, `src/coach-sim/coach-scheme-player-fit-engine.test.ts` 6/6, `src/reasoning/__tests__/arxiv-reasoning-bridge.test.ts` 8/8, `src/public-baseline/ne-chi-fixture.test.ts` 5/5, `src/coach-sim/locked-projection.test.ts` 9/9, `src/coach-sim/belichick-ablation.test.ts` 9/9, `src/coach-sim/markov-simulator.test.ts` 5/5. OpenAlex (`761` works) + HF Ultra-Scale Playbook (`50` equations) + Kaggle (`29` notebooks + `64`-file BDB 2027 Combine suite + `8` datasets) + HF (`34` datasets including all `8` `ClarusC64` coherence suites) ingested, split by firewall (`0` market cols in Zone 1/2), perturbation-audited (`3,078` pre-cutoff + `272` holdout games invariant), and compiled into `data/llm/gse-coach-brain-v1-sft.jsonl` (`6,469` records).
+
 **Green.** `packages/prediction-engine`: metrics 342/342, markov-simulator 20/20, coach-sim +
 coach-brain + gse-pre-seal 102/102. tsc 46 errors, all pre-existing and outside the metrics
 surface.

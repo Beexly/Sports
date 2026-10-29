@@ -75,15 +75,15 @@ export function rerankToolCandidatesWithParamProbe(
   if (valid.length === 0) {
     return { selectedCandidateId: null, probeGuidedScore: 0, rerankedChangedTop1: false };
   }
-  const greedyBest = [...valid].sort((a, b) => b.greedyRankScore - a.greedyRankScore)[0];
-  let bestId = valid[0].candidateId;
+  const greedyBest = [...valid].sort((a, b) => b.greedyRankScore - a.greedyRankScore)[0]!;
+  let bestId = valid[0]?.candidateId ?? "";
   let bestScore = Number.NEGATIVE_INFINITY;
 
   for (const c of valid) {
     let dot = probeBias;
     const len = Math.min(c.hiddenStateFeatures.length, probeWeights.length);
     for (let i = 0; i < len; i++) {
-      dot += c.hiddenStateFeatures[i] * probeWeights[i];
+      dot += (c.hiddenStateFeatures[i] ?? 0) * (probeWeights[i] ?? 0);
     }
     const pCorrect = 1 / (1 + Math.exp(-dot));
     const combined = 0.65 * pCorrect + 0.35 * c.greedyRankScore;

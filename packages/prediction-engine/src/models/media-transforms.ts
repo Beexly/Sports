@@ -38,7 +38,7 @@ export function geometricAdstock(
     let acc = 0;
     for (let lag = 0; lag < lMax; lag += 1) {
       const i = t - lag;
-      if (i >= 0) acc += series[i] * kernel[lag];
+      if (i >= 0) acc += (series[i] ?? 0) * (kernel[lag] ?? 0);
     }
     return acc;
   });

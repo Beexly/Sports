@@ -37,7 +37,7 @@ export function resampleFloorFractionResidual(
   const allocated = detCopies.reduce((a, b) => a + b, 0);
   const remainderR = Math.max(0, ensembleSizeN - allocated);
 
-  const rawRem = normW.map((w, i) => Math.max(0, ensembleSizeN * w - detCopies[i]));
+  const rawRem = normW.map((w, i) => Math.max(0, ensembleSizeN * w - (detCopies[i] ?? 0)));
   const remSum = rawRem.reduce((a, b) => a + b, 0) || 1;
   const residualWeights = rawRem.map((r) => Number((r / remSum).toFixed(6)));
 
