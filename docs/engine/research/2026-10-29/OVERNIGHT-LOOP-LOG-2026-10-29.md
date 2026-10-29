@@ -40,4 +40,15 @@ Did not build pre-week-8 kinematic artifacts. The inputs on disk are not 2026 we
 - Live fetch: `/` status 200, 142404 bytes, no `Carolina Panthers` and no `Minnesota Vikings`. `/packages` HTTP 404. `/fantasy/dfs` status 200, 877939 bytes, same absence. The week-8 board is not on the live HTML.
 - Gate unchanged: PASS. No PLAY. Telegram daemon not started. Sonar 0 of 4.
 
+## Founder add — Understand-Anything graph (verified this round, not rebuilt)
+
+Already on the branch from `0223a3870`. Rechecked, not reinvented.
+
+- `http://127.0.0.1:5173/?token=gse-telemetry-2026` returned HTTP 200. Title in the HTML: Understand Anything.
+- `C:/Users/Garrett/Sports/.ua/knowledge-graph.json`: 1315 nodes, 1105 edges, 7 layers, tour length 6. Counts read from the file, not copied from the note.
+- Cockpit already links that URL at `apps/web/app/cockpit/workflows/page.tsx` lines 15 and 227.
+- Registry files present: `docs/engine/SYSTEM-TELEMETRY-MASTER-MAP.md`, `data/engine/full_system_telemetry_registry.json`, `scripts/ops/generate_understand_anything_graph.py`.
+- Layer blurbs that name a charting vendor, a homography RMSE, or a 10,000-run sim were not re-measured this round. Do not treat those blurbs as a new edge.
+
+
 
