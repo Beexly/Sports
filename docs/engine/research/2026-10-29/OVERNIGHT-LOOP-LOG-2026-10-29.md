@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 8`
+- **CYCLE_ROUND:** `Round 9`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -132,6 +132,19 @@ No-huddle EPA gap measured. Cards not changed. Weight not promoted.
 - Sack count on plays where `sack` is true, over plays that are a pass or a sack: Carolina 17 of 251 (0.0677). Green Bay 14 of 286 (0.0490).
 - Not wired into the simulator. No Brier test. Quad-engine API harvest: none. Vitest: not run.
 - Production still listed Building. Newest at check: `sports-movr6b8x5`, 3 minutes old. No Ready alias. Live routes not re-fetched.
+
+## Round 9 — 2026-10-29 02:14 CT
+
+Box-count rush EPA joined. Cards not changed. Main was behind and is now caught up.
+
+- Join: play file `old_game_id` + `play_id` to participation `defenders_in_box`. 18,019 box keys. 279 rush plays matched for CAR and GB.
+- Light box is 6 or fewer. Stacked box is 8 or more. Rush plays only. Non-null EPA.
+- Carolina: light box 72 plays, -0.0040 per play. Stacked box 10 plays, -0.0887. Mid box 60 plays.
+- Green Bay: light box 73 plays, -0.3417 per play. Stacked box 10 plays, 0.1893. Mid box 54 plays.
+- Not promoted. Stacked samples are 10 plays. Green Bay's light-box rush number is the counter-note, not a new side.
+- Push: `1cf3f5623` was on the baseline branch only. `git push origin HEAD:main` fast-forwarded main `71dc74539..1cf3f5623`. Both remotes were then at `1cf3f5623`.
+- Production build of `71dc745` compiled 248/248 pages and reached `Build Completed` / `Deploying outputs`. Status was still Building at inspect. `/packages` is in that build's route table.
+
 
 
 
