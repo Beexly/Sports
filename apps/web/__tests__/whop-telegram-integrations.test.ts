@@ -9,14 +9,95 @@ import {
   sendTelegramMessage,
 } from "@/lib/integrations/telegram";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
-import { LIVE_SLATE_COACH_WRITEUPS } from "@/lib/writeups/coach-writeup-engine";
+import { buildCoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
 import { POST as whopWebhookRoute } from "@/app/api/webhooks/whop/route";
 import { POST as telegramWebhookRoute } from "@/app/api/webhooks/telegram/route";
 
 describe("Whop & Telegram Integrations Suite", () => {
   const secret = "test_whop_secret_key_12345";
   const pkg = LIVE_PACKAGE_CATALOG[0]!;
-  const writeup = LIVE_SLATE_COACH_WRITEUPS[0]!;
+  const writeup = buildCoachGameWriteup({
+    matchup: "Fixture Away @ Fixture Home",
+    windowSlot: "TNF",
+    gameId: "fixture-only",
+    awayTeam: "Fixture Away",
+    homeTeam: "Fixture Home",
+    kickoff: "2026-10-30T00:15Z",
+    paceOfPlay: {
+      neutralSecPerSnap: 28,
+      passEpaPlay: 0.01,
+      rushEpaPlay: 0,
+      noHuddleRate: 0.05,
+      notes: "fixture",
+    },
+    schemeMatchup: {
+      coverageShell: "fixture shell not a live read",
+      blitzRateVsPressureToSack: "fixture pressure note",
+      personnelTendencies: "fixture",
+      coachingEdge: "fixture",
+      notes: "fixture",
+    },
+    sideTotalCall: {
+      sideSelection: "FIXTURE SIDE -9.5",
+      sideConfidence: "61/100",
+      sideExpectedClv: 0.01,
+      sideDecision: "PLAY",
+      totalSelection: "OVER 40",
+      totalConfidence: "61/100",
+      totalExpectedClv: 0.01,
+      totalDecision: "PLAY",
+      rationale: "formatter fixture only",
+    },
+    topProps: [
+      {
+        playerId: "fixture-player",
+        playerName: "Fixture Player",
+        propType: "Receiving Yards",
+        line: 40.5,
+        side: "OVER",
+        confidence: "61/100",
+        expectedClv: 0.01,
+        decision: "PLAY",
+        nEffTargetNotes: "N_eff fixture",
+      },
+    ],
+    correlatedSgpTicket: {
+      title: "Fixture SGP",
+      legs: [
+        {
+          description: "Fixture leg",
+          pickType: "TOTAL",
+          selection: "OVER 40",
+          confidence: "61/100",
+          expectedClv: 0.01,
+          decision: "PLAY",
+        },
+      ],
+      jointWinProb: 0.2,
+      fairOdds: "+200",
+      marketOdds: "+180",
+      edgeScore: 0.01,
+      correlationRationale: "fixture",
+    },
+    dfsStacks: {
+      captainPicks: [{ player: "Fixture Captain", position: "WR", salary: 10000, leverageNote: "fixture" }],
+      cashCore: [{ player: "Fixture Core", position: "RB", salary: 8000, projection: 10, floorNote: "fixture" }],
+      gppStacks: [
+        {
+          primaryStack: { qb: "Fixture QB", passCatchers: ["Fixture WR"] },
+          bringBack: "Fixture Bring",
+          valueFiller: "Fixture Value",
+          correlationTheme: "fixture",
+        },
+      ],
+    },
+    quadEngineCitations: {
+      arxiv: ["arxiv:0000.00000"],
+      openalex: ["openalex:W0"],
+      kaggle: ["kaggle:fixture"],
+      hf: ["hf:fixture"],
+    },
+  });
 
   describe("Whop Webhook Signature & Membership Verification", () => {
     it("verifies authentic HMAC-SHA256 signatures and rejects tampered bodies or wrong secrets", () => {
@@ -169,6 +250,8 @@ describe("Whop & Telegram Integrations Suite", () => {
       expect(dataPicksLocked.vipUnlocked).toBe(false);
       expect(dataPicksLocked.previewReply).toContain("LOCKED");
       expect(dataPicksLocked.previewReply).toContain("https://www.galaxysportsedge.com/packages");
+      expect(dataPicksLocked.previewReply).toContain("Carolina Panthers @ Green Bay Packers");
+      expect(dataPicksLocked.previewReply).toContain("PASS");
       expect(dataPicksLocked.previewReply).not.toContain(writeup.sideTotalCall.sideSelection);
 
       // /props BEFORE unlock -> MUST BE LOCKED (no playerName leaked)
@@ -244,7 +327,9 @@ describe("Whop & Telegram Integrations Suite", () => {
       );
       const dataPicksUnlocked = await resPicksUnlocked.json();
       expect(dataPicksUnlocked.vipUnlocked).toBe(true);
-      expect(dataPicksUnlocked.previewReply).toContain(writeup.sideTotalCall.sideSelection);
+      expect(dataPicksUnlocked.previewReply).toContain("PASS");
+      expect(dataPicksUnlocked.previewReply).toContain("Carolina Panthers @ Green Bay Packers");
+      expect(dataPicksUnlocked.previewReply).not.toContain(writeup.sideTotalCall.sideSelection);
     });
   });
 });

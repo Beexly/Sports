@@ -24,7 +24,7 @@ import { publishedTickerLine, heldTickerLine } from "@/lib/board/market-label";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
-  LIVE_SLATE_COACH_WRITEUPS,
+  LIVE_WEEK8_2026_BOARD,
   getRedactedTeasersForWindowSlot,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
@@ -368,7 +368,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               {/* Free Pace-of-Play & Scheme Matchup Teasers (with Strict Lock Redaction) */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((w) => (
+                {LIVE_WEEK8_2026_BOARD.slice(0, 4).map((w) => (
                   <Link
                     key={w.id}
                     href="/packages"
@@ -376,16 +376,16 @@ export default async function HomePage(): Promise<JSX.Element> {
                   >
                     <div className="flex items-center justify-between text-[10px] font-mono">
                       <span className="text-plasma uppercase">{w.windowSlot}</span>
-                      <span className="text-ion-2">{w.paceOfPlay.neutralSecPerSnap}s / snap · {Math.round(w.paceOfPlay.noHuddleRate * 100)}% No-Huddle</span>
+                      <span className="text-ion-2">posted {w.postedDetails} · {w.postedTotal}</span>
                     </div>
                     <div className="mt-1.5 text-sm font-semibold text-ion-white group-hover:text-plasma">
                       {w.matchup}
                     </div>
                     <p className="mt-1.5 text-xs text-ion-1 line-clamp-2">
-                      {w.schemeMatchup.coverageShell}
+                      PASS. No packaged side or total. Pace and shell are not recorded.
                     </p>
                     <div className="mt-3 border-t border-mineral/40 pt-2 font-mono text-[10px] text-plasma">
-                      🔒 Side ({w.sideTotalCall.sideConfidence}) · Total ({w.sideTotalCall.totalConfidence}) · {w.topProps.length} Props · SGP Locked
+                      No packaged side · no props · no parlay
                     </div>
                   </Link>
                 ))}

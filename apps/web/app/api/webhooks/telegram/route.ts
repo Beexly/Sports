@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendTelegramMessage } from "@/lib/integrations/telegram";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
-import { LIVE_SLATE_COACH_WRITEUPS } from "@/lib/writeups/coach-writeup-engine";
+import { LIVE_WEEK8_2026_BOARD } from "@/lib/writeups/coach-writeup-engine";
 import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
 
 /**
@@ -50,160 +50,28 @@ export async function POST(req: Request) {
         break;
       }
 
-      case "/picks": {
-        if (!vipUnlocked) {
-          const teaserList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-            return [
-              `🏈 *${w.matchup}* (${w.windowSlot})`,
-              `• Neutral Pace: *${w.paceOfPlay.neutralSecPerSnap}s/snap* · Pass EPA: *${w.paceOfPlay.passEpaPlay > 0 ? `+${w.paceOfPlay.passEpaPlay}` : w.paceOfPlay.passEpaPlay}*`,
-              `• Scheme Read: _${w.schemeMatchup.coverageShell}_`,
-              `• Side Call: 🔒 *[LOCKED — Conf ${w.sideTotalCall.sideConfidence} · +${(w.sideTotalCall.sideExpectedClv * 100).toFixed(1)}c CLV]*`,
-              `• Total Call: 🔒 *[LOCKED — Conf ${w.sideTotalCall.totalConfidence} · +${(w.sideTotalCall.totalExpectedClv * 100).toFixed(1)}c CLV]*`,
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `🎯 *GSE Slate Environment & Pace Teaser (Picks Locked)*`,
-            ``,
-            teaserList,
-            ``,
-            `🔒 *Official Side & Total selections are gated to package buyers.*`,
-            `👉 *Unlock Instant Package ($25–$35):* https://www.galaxysportsedge.com/packages`,
-            `🔑 _Already purchased? Reply_ \`/unlock <your_stripe_session_id>\``,
-          ].join("\n");
-        } else {
-          const picksList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-            return [
-              `🏈 *${w.matchup}* (${w.windowSlot})`,
-              `• Side: *${w.sideTotalCall.sideSelection}* (Conf: *${w.sideTotalCall.sideConfidence}* · +${(w.sideTotalCall.sideExpectedClv * 100).toFixed(1)}c)`,
-              `• Total: *${w.sideTotalCall.totalSelection}* (Conf: *${w.sideTotalCall.totalConfidence}* · +${(w.sideTotalCall.totalExpectedClv * 100).toFixed(1)}c)`,
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `🔓 *VIP UNLOCKED — GSE Official Slate Picks*`,
-            ``,
-            picksList,
-          ].join("\n");
-        }
-        break;
-      }
-
-      case "/props": {
-        if (!vipUnlocked) {
-          const propTeasers = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-            return [
-              `📊 *${w.matchup}* (${w.windowSlot}) — *${w.topProps.length} Cleared Positive-CLV Props*`,
-              ...w.topProps.map(
-                (p, idx) =>
-                  `  • Prop #${idx + 1} (${p.propType}): 🔒 *[PLAYER, DIRECTION & LINE LOCKED — Conf ${p.confidence} · +${(p.expectedClv * 100).toFixed(1)}c CLV]*`,
-              ),
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `📊 *GSE Player Prop N_eff Target Concentration Teaser (Locked)*`,
-            ``,
-            propTeasers,
-            ``,
-            `🔒 *Player names, Over/Under directions, and lines require package unlock.*`,
-            `👉 *Unlock Now:* https://www.galaxysportsedge.com/packages`,
-            `🔑 _Reply_ \`/unlock <your_stripe_session_id>\` _after checkout._`,
-          ].join("\n");
-        } else {
-          const propsList = LIVE_SLATE_COACH_WRITEUPS.flatMap((w) => w.topProps)
-            .slice(0, 5)
-            .map(
-              (p) =>
-                `• *${p.playerName}* ${p.side} ${p.line} ${p.propType}\n  Confidence: *${p.confidence}* · CLV: +${(p.expectedClv * 100).toFixed(1)}c\n  _${p.nEffTargetNotes}_`,
-            )
-            .join("\n\n");
-
-          reply = [
-            `🔓 *VIP UNLOCKED — Top Player Props · N_eff Volume Edges:*`,
-            ``,
-            propsList,
-          ].join("\n");
-        }
-        break;
-      }
-
-      case "/parlays": {
-        if (!vipUnlocked) {
-          const sgpTeasers = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-            const ticket = w.correlatedSgpTicket;
-            return [
-              `🔥 *${w.matchup} — Correlated SGP Structure*`,
-              `• Legs: 🔒 *[${ticket.legs.length} Correlated Legs LOCKED]*`,
-              `• Pricing Edge: Fair *${ticket.fairOdds}* vs Market *${ticket.marketOdds}* (+${(ticket.edgeScore * 100).toFixed(1)}% Copula Edge)`,
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `🎲 *Correlated Same Game Parlay (SGP) Edge Preview (Locked)*`,
-            ``,
-            sgpTeasers,
-            ``,
-            `🔒 *Exact SGP legs are gated to package buyers.*`,
-            `👉 *Unlock Now:* https://www.galaxysportsedge.com/packages`,
-          ].join("\n");
-        } else {
-          const parlayList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-            const ticket = w.correlatedSgpTicket;
-            const legs = ticket.legs.map((l) => `  - ${l.description} (Conf: *${l.confidence}*)`).join("\n");
-            return [
-              `🔥 *${ticket.title}*`,
-              legs,
-              `Odds: Fair *${ticket.fairOdds}* vs Market *${ticket.marketOdds}* (Edge: +${(ticket.edgeScore * 100).toFixed(1)}%)`,
-              `_${ticket.correlationRationale}_`,
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `🔓 *VIP UNLOCKED — Correlated Same Game Parlays (SGP):*`,
-            ``,
-            parlayList,
-          ].join("\n");
-        }
-        break;
-      }
-
+      case "/picks":
+      case "/props":
+      case "/parlays":
       case "/dfs": {
-        if (!vipUnlocked) {
-          const dfsTeasers = LIVE_SLATE_COACH_WRITEUPS.slice(0, 3).map((w) => {
-            return [
-              `⚡ *${w.matchup} (${w.windowSlot}) DFS Architecture:*`,
-              `• Captain (1.5x): 🔒 *[LOCKED]*`,
-              `• Cash Core (${w.dfsStacks.cashCore.length} Players): 🔒 *[LOCKED]*`,
-              `• GPP Leverage Stack: 🔒 *[QB + Pass Catchers + Bring-Back LOCKED]*`,
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `💼 *GSE DFS Pro Lineup & Leverage Preview (Locked)*`,
-            ``,
-            dfsTeasers,
-            ``,
-            `🔒 *Unlock the Sunday DFS Pro 20-Max Pack ($29) or All-In Package:*`,
-            `👉 https://www.galaxysportsedge.com/packages`,
-          ].join("\n");
-        } else {
-          const dfsItems = LIVE_SLATE_COACH_WRITEUPS.slice(0, 3).map((w) => {
-            const cap = w.dfsStacks.captainPicks[0];
-            const gpp = w.dfsStacks.gppStacks[0];
-            return [
-              `⚡ *${w.matchup} DFS Blueprint:*`,
-              `• Captain: *${cap?.player}* (${cap?.position}) — ${cap?.leverageNote}`,
-              `• GPP: *${gpp?.primaryStack.qb}* + ${gpp?.primaryStack.passCatchers.join(", ")} (Bring: *${gpp?.bringBack}*)`,
-            ].join("\n");
-          }).join("\n\n");
-
-          reply = [
-            `🔓 *VIP UNLOCKED — DFS Pro Lineup Recommendations:*`,
-            ``,
-            dfsItems,
-          ].join("\n");
-        }
+        const board = LIVE_WEEK8_2026_BOARD.map((w) =>
+          [
+            `🏈 *${w.matchup}* (${w.windowSlot})`,
+            `• Posted: *${w.postedDetails}* · total *${w.postedTotal}*`,
+            `• Gate: *PASS* — no packaged side, prop, parlay, or captain`,
+            `• 🔒 *[LOCKED — no packaged play]*`,
+          ].join("\n"),
+        ).join("\n\n");
+        reply = [
+          vipUnlocked
+            ? `🔓 *VIP chat verified — still no packaged play*`
+            : `🎯 *Week 8 board (picks locked)*`,
+          ``,
+          board,
+          ``,
+          `🔒 *No side, prop, parlay, or lineup is packaged.*`,
+          `👉 https://www.galaxysportsedge.com/packages`,
+        ].join("\n");
         break;
       }
 

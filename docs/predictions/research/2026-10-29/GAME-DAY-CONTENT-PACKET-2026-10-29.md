@@ -1,27 +1,21 @@
-# GAME-DAY CONTENT & VIP BROADCAST PACKET — 2026-10-29 (WEEK 9 TNF + SUNDAY SLATE)
+# Game-day content packet — 2026-10-29 Round 1
 
-- **Generated:** `2026-10-29 00:50 CT`
-- **Doctrine:** Coach & Reasoning Mind First — Book & Salary Cap Last. Zero third-party branding (`FTN`, `Circa`, `Pinnacle`, `nflverse` strictly forbidden). Confidence always formatted as `XX/100` (never `%`).
+Status: DO NOT POST a pick, prop, parlay, or lineup.
 
----
+## Slate
 
-## 1. TNF RAVENS @ DOLPHINS — FREE PUBLIC TEASER (X / PUBLIC TELEGRAM / HOMEPAGE)
+TNF is Carolina Panthers at Green Bay Packers, event 401873023, kickoff 2026-10-30T00:15Z. Posted number at fetch 2026-10-29T05:53:36Z: GB -3.5, total 47.5. That number is the board, not a side.
 
-**Game Environment & Pre-Snap Pace Autopsy (`BAL @ MIA` — Thu 7:15 PM CT):**
-- **Pace & Play-Clock Cadence:** Neutral situation pace projects at **25.8 sec/snap** with a **19.4% no-huddle rate**, creating **124.6 combined plays** and a **34.2% tail probability** of clearing **52+ combined points**.
-- **Coverage Shell Funnel vs Route Tree:** Miami's defensive structure shifts between simulated zero/man pressure looks and split-safety shells, funneling Baltimore into **12-personnel play-action crossers** (+0.29 EPA/play) and middle-of-field TE/Z-receiver isolation routes.
-- **Trench Leverage & Effective Load ($N_{\text{eff}} = 1/\text{HHI}$):** Interior pocket integrity and pre-snap motion force defensive line communication resets, concentrating first-read and red-zone usage into high-leverage $N_{\text{eff}}$ target shares.
+Sunday and Monday games are on the same snapshot: docs/engine/research/2026-10-29/espn-scoreboard-week8-2026-10-29.json. Byes: NO, NYG, SF, HOU.
 
-🔒 **Official TNF Vault Contents (Locked on Public Surface):**
-- **Calibrated Side Call:** `[LOCKED — Conf 76/100 · +4.6c Expected CLV]`
-- **Calibrated Total Call:** `[LOCKED — Conf 72/100 · +3.4c Expected CLV]`
-- **2 $N_{\text{eff}}$ Player Props:** `[LOCKED — Conf 78/100 & 74/100]`
-- **3-Leg Correlated Same-Game Parlay (`+375` vs `+295` Fair Odds):** `[LOCKED — +11.4% Correlation Edge vs Book Hold]`
-- **TNF Showdown 1.5x Captain & 20-Max GPP Lineup Construction:** `[LOCKED — /fantasy/dfs & /packages]`
+The earlier packet named Ravens at Dolphins as TNF and attached confidence figures. That matchup is not tonight, and those figures were not computed. Do not post them.
 
-👉 **Unlock Instant In-Card Reveal:** https://www.galaxysportsedge.com/packages
+## Public teaser (only text allowed until a later round clears the gate)
 
----
+Thursday night is Panthers at Packers. Posted number is home -3.5 with a 47.5 total. No side, total, prop, or lineup clears the gate: pace, shell, trench, and load concentration are not recorded for this slate, and expected CLV is not recorded. Vault stays shut. https://www.galaxysportsedge.com/packages
 
-## 2. ROUND 1+ EXPANSION QUEUE (FOR HERMES OVERNIGHT LOOP)
-- Append Sunday 12:00 PM, 3:25 PM, SNF, and MNF public teaser threads + VIP `@GalaxySportsEdge_bot` 06:00 CT broadcast payloads below during Cycles 1–4.
+Do not attach a confidence figure. Do not attach a CLV figure. Do not name a captain.
+
+## VIP broadcast
+
+Not drafted. A verified chat still has no packaged play.

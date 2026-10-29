@@ -12,9 +12,9 @@ export interface RedactedWriteupTeaser {
   matchup: string;
   kickoff: string;
   paceOfPlay: {
-    neutralSecPerSnap: number;
-    noHuddleRate: number;
-    passEpaPlay: number;
+    neutralSecPerSnap: number | null;
+    noHuddleRate: number | null;
+    passEpaPlay: number | null;
     notes: string;
   };
   schemeMatchup: {
@@ -181,25 +181,25 @@ export function PaywallRevealCard({
           <div className="mt-4 space-y-2.5 border-t border-mineral/50 pt-3">
             <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-ion-2">
               <span>Free Pace-of-Play &amp; Scheme Teaser</span>
-              <span className="text-plasma">T-48h 10,000-Sim Feed</span>
+              <span className="text-plasma">Board only · no packaged play</span>
             </div>
             {teasers.slice(0, 2).map((t) => (
               <div key={t.id} className="border border-mineral/50 bg-carbon p-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-ion-white">{t.matchup}</span>
                   <span className="font-mono text-[10px] text-plasma">
-                    {t.paceOfPlay.neutralSecPerSnap}s/snap · {Math.round(t.paceOfPlay.noHuddleRate * 100)}% No-Huddle
+                    pace not recorded
                   </span>
                 </div>
                 <p className="mt-1 text-[11px] text-ion-1 line-clamp-2">
                   {t.schemeMatchup.coverageShell}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-mineral/30 pt-1.5 font-mono text-[10px] text-ion-2">
-                  <span>Side Conf: <strong className="text-ion-white">{t.lockedSummary.sideConfidence}</strong> (+{t.lockedSummary.sideExpectedClvCents}c CLV)</span>
+                  <span>Side: PASS · no packaged play</span>
                   <span>·</span>
-                  <span>Total Conf: <strong className="text-ion-white">{t.lockedSummary.totalConfidence}</strong></span>
+                  <span>Total: PASS</span>
                   <span>·</span>
-                  <span className="text-plasma">{t.lockedSummary.propsCount} N_eff Props</span>
+                  <span className="text-plasma">0 props</span>
                 </div>
               </div>
             ))}

@@ -12,5 +12,20 @@
 ## Round 0 Baseline (Pre-Seeded 00:50 CT)
 - **Commits Live on `origin/main` & `origin/engine/public-baseline-2026-10-24`:** `ae45a345d` -> `c1aa47aa3`
 - **Quad-Engine Registry:** `3,742` canonical items (`data/engine/quad_engine_crosswalk_registry.json`)
-- **All-Windows Writeups:** `data/writeups/latest_slate_writeups.json` (TNF Ravens @ Dolphins, Sun 12:00 PM / 3:05 PM / 3:25 PM, SNF, MNF)
+- **All-Windows Writeups:** replaced in Round 1. The pre-seed line that named Ravens @ Dolphins was wrong.
 - **Next Action for Round 1:** Execute Cycle 1 -> Cycle 6 and append Round 1 verification results below.
+
+## Round 1 — 2026-10-29 01:14 CT
+
+Known defect fixed. Did not invent a play.
+
+- Live scoreboard snapshot `docs/engine/research/2026-10-29/espn-scoreboard-week8-2026-10-29.json` fetched 2026-10-29T05:53:36Z. TNF is Carolina Panthers @ Green Bay Packers, event 401873023, kickoff 2026-10-30T00:15Z, posted GB -3.5, total 47.5. 14 games. Byes NO, NYG, SF, HOU.
+- `apps/web/lib/writeups/week8-2026-board.ts` holds that board. Every card is `publication: PASS`. `LIVE_SLATE_COACH_WRITEUPS` is empty. `buildCoachGameWriteup` throws if asked to invent a packaged play.
+- `scripts/ops/generate_slate_writeups.py` no longer embeds the 2024 Vikings @ Rams fixture. Exit 0. Wrote 14 PASS cards to `data/writeups/latest_slate_writeups.json` and `data/packages/live-slate-writeups.json`.
+- Public surfaces (home, packages, DFS, paywall teaser, Telegram `/picks` `/props` `/parlays` `/dfs`) show the board and PASS. They do not show a confidence figure or a CLV figure. Telegram daemon was not started.
+- Vitest from `apps/web`: `__tests__/coach-writeup-engine.test.ts` and `__tests__/whop-telegram-integrations.test.ts` — 2 files, 11 tests, exit 0, started 01:14:41.
+- Not run: vision parquet extension, Weeks 1-7 kinematic bind, Sonar (0 of 4), full `npx vitest run`, pytest, `vercel ls`. No `soe_yd`, `art_mean`, or `pocket_depth_yd` number is claimed.
+- Gate: side, total, props, SGP, DFS captain all PASS. Reason: no book-last comparison was computed. A PASS is not a lean.
+
+Next round must bind measured Weeks 1-7 tables before any PLAY. Do not stamp the cadence tick. Do not restore the 2024 fixture.
+

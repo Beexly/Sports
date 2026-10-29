@@ -6,7 +6,7 @@ import { loadCurrentDfsSlate } from "@/lib/fantasy/dfs-current-slate";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { getPackageBySlug } from "@/lib/packages/catalog";
 import {
-  LIVE_SLATE_COACH_WRITEUPS,
+  LIVE_WEEK8_2026_BOARD,
   getRedactedTeasersForWindowSlot,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
@@ -202,17 +202,17 @@ export default async function DfsSuitePage() {
             </h2>
           </div>
           <span className="border border-plasma/40 bg-plasma/10 px-3 py-1 font-mono text-xs text-plasma">
-            Coach Mind First · 10,000 Correlated Sims Complete
+            Board only · no packaged lineup
           </span>
         </div>
 
         <div className="mt-6 space-y-6">
-          {LIVE_SLATE_COACH_WRITEUPS.map((w) => (
+          {LIVE_WEEK8_2026_BOARD.map((w) => (
             <div key={w.id} className="border border-mineral/70 bg-carbon p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral/50 pb-3">
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-wider text-plasma">
-                    {w.windowSlot} · Game ID: {w.gameId}
+                    {w.windowSlot} · ESPN {w.espnEventId}
                   </span>
                   <h3 className="mt-0.5 font-display text-xl font-semibold text-ion-white">
                     {w.matchup}
@@ -220,54 +220,19 @@ export default async function DfsSuitePage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Neutral Pace: <strong className="text-ion-white">{w.paceOfPlay.neutralSecPerSnap}s/snap</strong>
+                    Posted: <strong className="text-ion-white">{w.postedDetails}</strong>
                   </span>
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    No-Huddle: <strong className="text-ion-white">{Math.round(w.paceOfPlay.noHuddleRate * 100)}%</strong>
+                    Total: <strong className="text-ion-white">{w.postedTotal}</strong>
                   </span>
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Pass EPA/Play:{" "}
-                    <strong className="text-plasma">
-                      {w.paceOfPlay.passEpaPlay > 0 ? `+${w.paceOfPlay.passEpaPlay}` : w.paceOfPlay.passEpaPlay}
-                    </strong>
+                    Gate: <strong className="text-plasma">PASS</strong>
                   </span>
                 </div>
               </div>
-
-              <div className="mt-4 grid gap-4 md:grid-cols-3">
-                <div className="border border-mineral/40 bg-eclipse p-4">
-                  <div className="font-mono text-[10px] uppercase text-plasma">
-                    1. Pace, Play-Volume &amp; Game Environment
-                  </div>
-                  <p className="mt-1.5 text-xs leading-5 text-ion-1">{w.paceOfPlay.notes}</p>
-                </div>
-
-                <div className="border border-mineral/40 bg-eclipse p-4">
-                  <div className="font-mono text-[10px] uppercase text-plasma">
-                    2. Coaching Scheme &amp; Coverage Shell Funnel
-                  </div>
-                  <p className="mt-1.5 text-xs leading-5 text-ion-1">{w.schemeMatchup.coverageShell}</p>
-                  <p className="mt-1.5 text-[11px] text-ion-2">{w.schemeMatchup.blitzRateVsPressureToSack}</p>
-                </div>
-
-                <div className="border border-mineral/40 bg-eclipse p-4">
-                  <div className="font-mono text-[10px] uppercase text-plasma">
-                    3. Trench Leverage &amp; Load Scaling (N_eff)
-                  </div>
-                  <p className="mt-1.5 text-xs leading-5 text-ion-1">{w.schemeMatchup.coachingEdge}</p>
-                  <p className="mt-1.5 text-[11px] text-ion-2">{w.schemeMatchup.notes}</p>
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-mineral/40 pt-3 font-mono text-xs">
-                <span className="text-ion-2">
-                  Simulated DFS Outputs: <strong className="text-ion-white">{w.dfsStacks?.captainPicks.length ?? 1} Captain Leverage Targets</strong> ·{" "}
-                  <strong className="text-ion-white">{w.dfsStacks?.cashCore.length ?? 2} Cash Core Anchors</strong> ·{" "}
-                  <strong className="text-ion-white">{w.dfsStacks?.gppStacks.length ?? 1} Primary GPP Stack Blueprints</strong>
-                </span>
-                <span className="text-plasma">
-                  🔒 Exact Player Names, Salaries, Ownership Leverage &amp; Constructed Lineups in Paywall Vault Below ↓
-                </span>
+              <p className="mt-4 text-xs leading-5 text-ion-1">{w.passReason}</p>
+              <div className="mt-4 border-t border-mineral/40 pt-3 font-mono text-xs text-ion-2">
+                No captain, cash core, or stack. Salary comparison was not run.
               </div>
             </div>
           ))}
