@@ -15,6 +15,15 @@ Offense filter: `posteam` is the team, and `play_type` is `pass` or `run`. First
 
 These rates are not compared to the posted number. They are not an expected CLV.
 
+EPA is the `epa` column on the same pass-or-run filter. Every counted play had a non-null value.
+
+- Carolina weeks 1-7: EPA sum 24.730 on 392 plays, 0.0631 per play.
+- Green Bay weeks 1-7: EPA sum -1.270 on 423 plays, -0.0030 per play.
+- Carolina week 7 only (`2026_07_TB_CAR`): 54 plays, EPA sum -14.456, -0.2677 per play, first-and-10 passes 13 of 21.
+- Green Bay week 7 only (`2026_07_GB_DET`): 65 plays, EPA sum 2.402, 0.0369 per play, first-and-10 passes 11 of 22.
+
+Week 7 is one game each, against Tampa Bay and Detroit, not against each other. A per-play EPA is not a spread.
+
 ## What was not counted
 
 - No pocket depth, separation, or rush-threat number. `ngs_highlight_tracking_2026.parquet` is season 2026 but weeks 0-5 only (7,345,682 rows). It does not cover week 6 or week 7. The 2022 tracking CSVs were not used.

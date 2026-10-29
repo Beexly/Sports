@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 3`
+- **CYCLE_ROUND:** `Round 4`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **Disk Status:** `56.06 GB` free on `C:\` (reclaimed; all live workspaces `Sports`, `nfl-farm`, `_research`, `repo-scout` kept local).
@@ -71,6 +71,15 @@ Pointer checked. Coaching parquets are 2026 weeks 1-7. Vision tracking CSVs were
 - `ngs_highlight_tracking_2026.parquet`: 7,345,682 rows, season [2026], weeks [0, 1, 2, 3, 4, 5]. Not weeks 1-7. Not used as a week-7 tracking source.
 - Simulated TNF box-score CSV was not used as a line. Coverage chart rows were not turned into a shell call.
 - Production deploy `sports-mm8nmsmlc` was still Building at inspect time (created 01:33 CT). Result not known. Gate remains PASS.
+
+## Round 4 — 2026-10-29 01:42 CT
+
+EPA counted. Still not a side.
+
+- Same pass-or-run filter. `epa` was non-null on every counted play. CAR weeks 1-7: sum 24.730 on 392 plays (0.0631 per play). GB weeks 1-7: sum -1.270 on 423 plays (-0.0030 per play).
+- Week 7 only: CAR 54 plays, EPA sum -14.456, first-and-10 passes 13/21, game `2026_07_TB_CAR`. GB 65 plays, EPA sum 2.402, first-and-10 passes 11/22, game `2026_07_GB_DET`.
+- Production: `sports-3ycpmjua1` still status Building 13 minutes after create, Builds line `[0ms]`. Three production deploys were in Building (4m, 9m, 12m). Older ones are Error. Live board is still not confirmed. Gate remains PASS. No 10,000-run stamp was executed.
+
 
 
 
