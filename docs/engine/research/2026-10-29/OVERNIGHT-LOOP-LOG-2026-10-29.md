@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 15`
+- **CYCLE_ROUND:** `Round 16`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -216,6 +216,18 @@ Formula: mean EPA on the flagged play minus mean EPA on the unflagged play. Earl
 - Green Bay late screens: 7 plays. Not used.
 - League RPO: early gap -0.1848 on 106 plays. Late gap -0.2939 on 42 plays. Sign holds. Carolina flips. Green Bay has 0 late RPO plays. Not promoted.
 - Deploy: canceled 7 newer Building deployments so they would stop competing at output upload. Kept `dpl_9uWSSBu7MRgftZgLBgxESWRa1vwU` (`71dc7453`), the build that had already compiled 248 pages. Quad harvest: none.
+
+## Round 16 — 2026-10-29 02:59 CT
+
+Next-play EPA after an explosive play. Explosive means the prior pass or run by the same team in the same game had EPA of at least 1.0. Cards not changed. The sports-web redeploy was left running.
+
+Formula: mean EPA of the next play after an explosive, minus mean EPA of the next play after a non-explosive. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap +0.0018 (1,431 after explosive versus 6,658). Late gap -0.0154 (535 versus 2,401). The sign flips. There is no drive cascade. Not promoted.
+- Carolina: early gap -0.0053. Late gap +0.4384 on 19 plays. Sign flips. Not used.
+- Green Bay: early gap -0.3199 on 47 plays. Late gap -0.2796 on 22 plays. The sign holds, and it is mean-reversion, not a tempo boost. The late cell is 22 plays. Not promoted.
+- Deploy at check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` was Building on `sports-web`, commit `71dc74539`, URL `sports-deej11ou1`. It was not canceled. Quad harvest: none.
+
 
 
 
