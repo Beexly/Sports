@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 23`
+- **CYCLE_ROUND:** `Round 24`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -305,6 +305,18 @@ Formula: late mean minus early mean.
 - Carolina defense: early 0.0283 on 267 plays. Late 0.0155 on 119. Change -0.0128. Slightly better, not a swing.
 - Green Bay defense: early -0.0388 on 324 plays. Late -0.0992 on 136. Change -0.0605. They allowed less late. Both cells are large. It is a covariate, not a side.
 - Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
+## Round 24 — 2026-10-29 03:43 CT
+
+Trailing versus leading EPA. Tied plays (`score_differential` of 0) are excluded. Trailing means the differential is negative. Pass and run, non-null EPA. Cards not changed. The alias was not re-fetched this round.
+
+Formula: trailing mean minus leading mean. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap -0.0007. Late gap +0.0132. Both are noise. Not a weight.
+- Carolina late trailing is 54 plays at -0.2677, and every one of those plays is `2026_07_TB_CAR`, at home. That is the same cell as the late home number from Round 21. It is not a second finding. Not promoted.
+- Green Bay: early trailing -0.2800 on 75 plays, leading 0.1250 on 119, gap -0.4050. Late trailing 0.0505 on 53, leading -0.0815 on 54, gap +0.1320. The sign flips. The early trailing slump does not hold. Not a side.
+- Quad harvest: none.
+
 
 
 
