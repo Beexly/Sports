@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 19`
+- **CYCLE_ROUND:** `Round 20`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -260,6 +260,19 @@ Formula: adjusted early mean versus raw early mean, scored by absolute error aga
 - Carolina: early raw 0.1151, adjusted 0.0858, both on 265 plays. Late raw -0.0455 on 127 plays. Raw error 0.1606. Adjusted error 0.1312. The schedule was a little soft. The adjustment does not explain the late drop. Not a side.
 - Green Bay: early raw -0.0206, adjusted 0.0535, both on 290 plays. Late raw 0.0353 on 133 plays. Raw error 0.0559. Adjusted error 0.0182. They faced tougher defenses than the raw mean shows. Not promoted into a spread.
 - Quad harvest: none. Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`.
+
+## Round 20 — 2026-10-29 03:24 CT
+
+Third-down EPA and conversion. Third down, pass or run, non-null EPA. Conversion means `first_down` is true. Cards not changed. The alias was not re-fetched this round.
+
+Formula: late mean minus early mean, on EPA and on conversion rate.
+
+- League: early EPA -0.0309, conversion 0.4061, 1,997 plays. Late EPA 0.0301, conversion 0.4169, 734 plays. Conversion is stable. EPA flips sign. Not a weight.
+- Carolina: early EPA -0.0826, conversion 0.3800, 50 plays. Late EPA -0.1546, conversion 0.4643, 28 plays. Conversion rose while EPA fell. The 28-play cell was not promoted.
+- Green Bay: early EPA -0.2263, conversion 0.2807, 57 plays. Late EPA 0.3738, conversion 0.4848, 33 plays. The early "bad on third down" reading does not hold. Not promoted into a side.
+- Third-and-short and third-and-long cells are 9 to 15 plays. Not used.
+- Quad harvest: none.
+
 
 
 
