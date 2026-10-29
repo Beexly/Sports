@@ -2,6 +2,30 @@ import type { GseMetricBirthCertificate } from "./metric-birth-certificate.js";
 
 export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[] = [
   {
+    allowedInputs: ["down", "ydstogo", "qb_kneel", "qb_spike", "fixed_drive"],
+    failureModes: [
+      "turnovers/conversions on 2nd down should not count as creations",
+      "clock plays (kneels/spikes) must not act as valid next plays or valid attempts",
+      "drive-ending plays (resolving on 2nd) are dropped, not failed",
+      "small attempt sample sizes can cause noisy rates if floor is disabled"
+    ],
+    family: "team",
+    forbiddenInputs: ["defteam", "epa", "wpa", "success_rate", "score_differential", "ftn_charting"],
+    formulaClass: "composite_score",
+    formulaSummary: "The share of 2nd & 8+ plays whose strictly next offensive play in the same drive is a 3rd down with 4 or fewer yards to go, excluding knee/spike sequences and drive-ending plays.",
+    historicalPrecedent: [{ name: "Sumer Sports 1st down success to 3rd down rate", reason: "Measures within-series drive sequencing and sustainability independent of conversion logic." }],
+    internalName: "manageable_third_down_rate_shadow",
+    metricId: "manageable-third-down-rate",
+    protectedComponents: ["attempt thresholds", "rolling windows", "conversion distinction"],
+    publicExposure: "hidden",
+    publicName: "Manageable Third Down Rate",
+    sourceRightsRequired: ["public play-by-play required", "no external charting dependencies"],
+    status: "SHADOW",
+    targetQuestion: "How often does an offense sequence 2nd and long into a manageable 3rd down, sustaining drives?",
+    targetVariable: "manageable third down creation rate",
+    validationMethods: ["mae", "rmse", "walk_forward"],
+  },
+  {
     allowedInputs: ["source age", "source count", "expected source count", "provider trust", "rights status", "contradictions", "required-field coverage"],
     failureModes: ["fresh data can still be wrong", "single-source data can be display-ready but not decision-ready"],
     family: "source",

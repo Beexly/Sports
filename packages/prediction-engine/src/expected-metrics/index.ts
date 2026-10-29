@@ -140,6 +140,15 @@ export {
   type SuccessRateSplit,
 } from "./success-rate.js";
 
+
+// Manageable Third Down Rate (SHADOW)
+export {
+  computeManageableThirdDownRate,
+  MANAGEABLE_THIRD_DOWN_MODEL_VERSION,
+  type ManageableThirdDownPlay,
+  type ManageableThirdDownWindowSplit,
+} from "./manageable-third-down.js";
+
 // Drive aggregation (deterministic; glass-box, enters dark).
 export {
   buildDrives,
