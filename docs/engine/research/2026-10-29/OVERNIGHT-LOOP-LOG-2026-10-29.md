@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 28`
+- **CYCLE_ROUND:** `Round 29`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -356,6 +356,16 @@ Explosive-play rate. An explosive play is a pass or run with EPA of at least 1.0
 - Carolina: 57/265 early (0.2151), 24/127 late (0.1890). Change -0.0261. The mean EPA drop is not an explosive-rate collapse. Not promoted.
 - Green Bay: 57/290 early (0.1966), 26/133 late (0.1955). Change -0.0011. Flat. Not a side.
 - Quad harvest: none.
+
+## Round 29 — 2026-10-29 04:10 CT
+
+Success rate and bust rate. Success means EPA above 0. A bust means EPA of -1.0 or worse. Pass and run plays. Cards not changed.
+
+- League success: 0.4360 early, 0.4346 late. Bust: 0.1367 early, 0.1383 late. Flat.
+- Carolina success: 117/265 early (0.4415), 54/127 late (0.4252). Bust: 34/265 (0.1283), 18/127 (0.1417). The mean drop is not a success-rate collapse and not a bust-rate spike. Not promoted.
+- Green Bay success: 118/290 early (0.4069), 48/133 late (0.3609). Bust: 0.1552 early, 0.1504 late. Success dipped. Busts did not rise. Not a side.
+- Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
 
 
 
