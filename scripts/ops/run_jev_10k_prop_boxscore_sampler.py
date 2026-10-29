@@ -41,8 +41,9 @@ TRENDS_JSON = REPO / "data" / "engine" / "nfl_2026_w1_w7_trends_and_usage.json"
 OUT_PROPS_JSON = REPO / "data" / "engine" / "nfl_2026_w8_jev_10k_player_props.json"
 
 # Active Week 8 Depth Chart & Posted Prop Reference Lines for CAR @ GB TNF
-# Matthew Golden (W8 DNP - Shoulder in injuries_2026.csv) is strictly excluded;
-# Sinkhorn reallocates primary WR volume across Jayden Reed, Christian Watson, Romeo Doubs, and Tucker Kraft.
+# Verified against data/gse-dataset/current/snap_counts_2026.csv (W7 snaps) & data/gse-dataset/current/injuries_2026.csv (W8).
+# Matthew Golden (W8 DNP - Shoulder) and Jayden Reed (IR since W2) are strictly excluded;
+# Sinkhorn reallocates primary WR volume across Christian Watson (81% W7 snaps), Savion Williams (60% W7 snaps), Bo Melton, and Tucker Kraft (88% W7 snaps).
 CAR_GB_ROSTER_AND_LINES = {
     "GB": {
         "QB1": {
@@ -74,7 +75,7 @@ CAR_GB_ROSTER_AND_LINES = {
             },
         },
         "WR1": {
-            "name": "Jayden Reed",
+            "name": "Christian Watson",
             "position": "WR",
             "gp": 7,
             "prior_rec_yds": 64.5,
@@ -85,7 +86,7 @@ CAR_GB_ROSTER_AND_LINES = {
             },
         },
         "WR2": {
-            "name": "Christian Watson",
+            "name": "Savion Williams",
             "position": "WR",
             "gp": 6,
             "prior_rec_yds": 48.5,
@@ -96,7 +97,7 @@ CAR_GB_ROSTER_AND_LINES = {
             },
         },
         "WR3": {
-            "name": "Romeo Doubs",
+            "name": "Bo Melton",
             "position": "WR",
             "gp": 6,
             "prior_rec_yds": 42.5,
@@ -159,7 +160,7 @@ CAR_GB_ROSTER_AND_LINES = {
             },
         },
         "WR2": {
-            "name": "Xavier Legette",
+            "name": "Jalen Coker",
             "position": "WR",
             "gp": 7,
             "prior_rec_yds": 39.5,
@@ -170,7 +171,7 @@ CAR_GB_ROSTER_AND_LINES = {
             },
         },
         "WR3": {
-            "name": "Jalen Coker",
+            "name": "John Metchie",
             "position": "WR",
             "gp": 6,
             "prior_rec_yds": 35.0,
@@ -181,7 +182,7 @@ CAR_GB_ROSTER_AND_LINES = {
             },
         },
         "TE1": {
-            "name": "Ja'Tavion Sanders",
+            "name": "Mitchell Evans",
             "position": "TE",
             "gp": 7,
             "prior_rec_yds": 27.5,
@@ -198,8 +199,8 @@ PLAIN_FOOTBALL_PROP_NOTES = {
     ("Josh Jacobs", "Rushing Yards"): (
         "Josh Jacobs faces a Carolina run defense missing two starting linebackers, and Green Bay should lean on the ground game in the second half. Take OVER 62.5 rushing yards."
     ),
-    ("Jayden Reed", "Receiving Yards"): (
-        "With Matthew Golden sidelined by a shoulder injury, Jayden Reed steps in as Jordan Love's primary slot and motion target against a depleted Carolina secondary. Take OVER 56.5 receiving yards."
+    ("Christian Watson", "Receiving Yards"): (
+        "With Matthew Golden sidelined by a shoulder injury and Jayden Reed on IR, Christian Watson (81% Week 7 snaps, 8 targets) operates as Jordan Love's clear #1 target against a depleted Carolina secondary. Take OVER 56.5 receiving yards."
     ),
     ("Jordan Love", "Passing Yards"): (
         "Jordan Love gets a clean pocket at Lambeau Field against a Panthers front missing edge rusher Jaelan Phillips and cornerback Akayleb Evans. Take OVER 236.5 passing yards."
@@ -211,10 +212,10 @@ PLAIN_FOOTBALL_PROP_NOTES = {
         "Carolina is missing two starting guards on a short week at Lambeau Field, leaving Bryce Young without time to push the ball downfield to Tetairoa McMillan. Take UNDER 54.5 receiving yards."
     ),
     ("Tucker Kraft", "Receiving Yards"): (
-        "Tucker Kraft stays on the field for nearly every snap and attacks the middle of the field where Carolina is missing starting linebacker Thomas Incoom. Take OVER 38.5 receiving yards."
+        "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's linebackers. Take OVER 38.5 receiving yards."
     ),
-    ("Christian Watson", "Receiving Yards"): (
-        "Christian Watson stretches the field on play-action throws and picks up extra targets with Matthew Golden out of the lineup. Take OVER 44.5 receiving yards."
+    ("Savion Williams", "Receiving Yards"): (
+        "Savion Williams played 60% of offensive snaps in Week 7 and steps into the WR2 role with Matthew Golden out of the lineup. Sit near 44.5 receiving yards."
     ),
     ("Bryce Young", "Passing Yards"): (
         "Bryce Young faces steady four-man pressure behind a patched-up offensive line on the road in cold Green Bay weather. Take UNDER 188.5 passing yards."

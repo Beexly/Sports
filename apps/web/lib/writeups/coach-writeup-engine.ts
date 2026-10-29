@@ -275,7 +275,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Green Bay\u2019s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under.",
       "blitzRateVsPressureToSack": "Green Bay Packers wins the pass-rush battle up front and forces hurried throws when Carolina Panthers falls behind the chains.",
-      "personnelTendencies": "Green Bay Packers features Jayden Reed and Josh Jacobs on early downs, while Carolina Panthers leans on Tetairoa McMillan and Chuba Hubbard.",
+      "personnelTendencies": "Green Bay Packers features Christian Watson and Josh Jacobs on early downs, while Carolina Panthers leans on Tetairoa McMillan and Chuba Hubbard.",
       "coachingEdge": "Green Bay Packers has protected the football and tackled cleanly over the last three weeks compared to Carolina Panthers.",
       "notes": "Fair Line: GB -5.7 (Posted GB -3.5) \u2022 Fair Total: 44.7 (Posted 47.5)."
     },
@@ -304,20 +304,6 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "nEffTargetNotes": "Josh Jacobs faces a Carolina run defense missing two starting linebackers, and Green Bay should lean on the ground game in the second half. Take OVER 62.5 rushing yards.",
         "pOver": 0.6002,
         "pUnder": 0.3998
-      },
-      {
-        "playerId": "jayden-reed",
-        "playerName": "Jayden Reed",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 56.5,
-        "side": "OVER",
-        "confidence": "63/100",
-        "expectedClv": 0.1026,
-        "decision": "PLAY",
-        "nEffTargetNotes": "With Matthew Golden sidelined by a shoulder injury, Jayden Reed steps in as Jordan Love's primary slot and motion target against a depleted Carolina secondary. Take OVER 56.5 receiving yards.",
-        "pOver": 0.6264,
-        "pUnder": 0.3736
       },
       {
         "playerId": "jordan-love",
@@ -371,9 +357,23 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "60/100",
         "expectedClv": 0.0789,
         "decision": "PLAY",
-        "nEffTargetNotes": "Tucker Kraft stays on the field for nearly every snap and attacks the middle of the field where Carolina is missing starting linebacker Thomas Incoom. Take OVER 38.5 receiving yards.",
+        "nEffTargetNotes": "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's linebackers. Take OVER 38.5 receiving yards.",
         "pOver": 0.6027,
         "pUnder": 0.3973
+      },
+      {
+        "playerId": "josh-jacobs",
+        "playerName": "Josh Jacobs",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 15.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.1362,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Josh Jacobs projects around 21.9 receiving yards based on his current role and trench matchup. Take OVER 15.5 receiving yards.",
+        "pOver": 0.66,
+        "pUnder": 0.34
       }
     ],
     "correlatedSgpTicket": {
@@ -396,9 +396,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         },
         {
-          "description": "Jayden Reed Receiving Yards",
+          "description": "Christian Watson Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Jayden Reed OVER 56.5",
+          "selection": "Christian Watson OVER 56.5",
           "line": 56.5,
           "confidence": "62/100",
           "expectedClv": 0.0962,
@@ -409,15 +409,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+275",
       "marketOdds": "+380",
       "edgeScore": 0.0471,
-      "correlationRationale": "When Green Bay Packers -3.5 and UNDER 47.5 cash together, Jayden Reed OVER 56.5 receiving yards fits the exact same game script."
+      "correlationRationale": "When Green Bay Packers -3.5 and UNDER 47.5 cash together, Christian Watson OVER 56.5 receiving yards fits the exact same game script."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Jayden Reed",
+          "player": "Christian Watson",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Green Bay Packers averaging 6.8 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Green Bay Packers averaging 7.4 targets per game."
         },
         {
           "player": "Tetairoa McMillan",
@@ -432,7 +432,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 18.4,
-          "floorNote": "Steady pocket passer averaging 268.9 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 279.7 passing yards per game."
         },
         {
           "player": "Chuba Hubbard",
@@ -447,13 +447,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Jordan Love",
             "passCatchers": [
-              "Jayden Reed",
-              "Christian Watson"
+              "Christian Watson",
+              "Tucker Kraft"
             ]
           },
           "bringBack": "Tetairoa McMillan",
-          "valueFiller": "Darren Waller",
-          "correlationTheme": "Pair Jordan Love with Christian Watson and bring it back with Tetairoa McMillan, then add a two-player mini-stack from a second game."
+          "valueFiller": "John Metchie",
+          "correlationTheme": "Pair Jordan Love with Tucker Kraft and bring it back with Tetairoa McMillan, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -491,7 +491,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Josh Allen faces a Baltimore secondary missing cornerback T.J. Tampa and safety Jaylinn Hawkins, setting up big plays down the field for both offenses. The spread is priced tightly at a field goal, so pass on the side and bet the over.",
       "blitzRateVsPressureToSack": "Buffalo Bills wins the pass-rush battle up front and forces hurried throws when Baltimore Ravens falls behind the chains.",
-      "personnelTendencies": "Buffalo Bills features Khalil Shakir and James Cook on early downs, while Baltimore Ravens leans on Zay Flowers and Derrick Henry.",
+      "personnelTendencies": "Buffalo Bills features Keon Coleman and James Cook on early downs, while Baltimore Ravens leans on Zay Flowers and Derrick Henry.",
       "coachingEdge": "Buffalo Bills has protected the football and tackled cleanly over the last three weeks compared to Baltimore Ravens.",
       "notes": "Fair Line: BUF -2.6 (Posted BUF -3) \u2022 Fair Total: 56.7 (Posted 54.5)."
     },
@@ -508,8 +508,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "khalil-shakir",
-        "playerName": "Khalil Shakir",
+        "playerId": "keon-coleman",
+        "playerName": "Keon Coleman",
         "propType": "Receiving Yards",
         "market": "rec_yds",
         "line": 55.5,
@@ -517,7 +517,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "59/100",
         "expectedClv": 0.0662,
         "decision": "PLAY",
-        "nEffTargetNotes": "Khalil Shakir catches clean passes against the Baltimore Ravens defense as a primary option for Buffalo Bills. Take OVER 55.5 receiving yards.",
+        "nEffTargetNotes": "Keon Coleman catches clean passes against the Baltimore Ravens defense as a primary option for Buffalo Bills. Take OVER 55.5 receiving yards.",
         "pOver": 0.59,
         "pUnder": 0.41
       },
@@ -570,9 +570,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         },
         {
-          "description": "Khalil Shakir Receiving Yards",
+          "description": "Keon Coleman Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Khalil Shakir OVER 55.5",
+          "selection": "Keon Coleman OVER 55.5",
           "line": 55.5,
           "confidence": "59/100",
           "expectedClv": 0.0662,
@@ -583,15 +583,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+333",
       "marketOdds": "+410",
       "edgeScore": 0.04,
-      "correlationRationale": "When Buffalo Bills -3 and OVER 54.5 cash together, Khalil Shakir OVER 55.5 receiving yards fits the exact same game script."
+      "correlationRationale": "When Buffalo Bills -3 and OVER 54.5 cash together, Keon Coleman OVER 55.5 receiving yards fits the exact same game script."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Khalil Shakir",
+          "player": "Keon Coleman",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Buffalo Bills averaging 5.3 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Buffalo Bills averaging 4.0 targets per game."
         },
         {
           "player": "Zay Flowers",
@@ -606,14 +606,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 22.1,
-          "floorNote": "Steady pocket passer averaging 239.2 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 250.7 passing yards per game."
         },
         {
           "player": "Derrick Henry",
           "position": "RB",
           "salary": 6200,
           "projection": 19.8,
-          "floorNote": "Three-down workhorse handling 21.1 carries per game."
+          "floorNote": "Three-down workhorse handling 21.0 carries per game."
         }
       ],
       "gppStacks": [
@@ -621,12 +621,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Josh Allen",
             "passCatchers": [
-              "Khalil Shakir",
+              "Keon Coleman",
               "Dalton Kincaid"
             ]
           },
           "bringBack": "Zay Flowers",
-          "valueFiller": "Rashod Bateman",
+          "valueFiller": "Ja'Kobi Lane",
           "correlationTheme": "Pair Josh Allen with Dalton Kincaid and bring it back with Zay Flowers, then add a two-player mini-stack from a second game."
         }
       ]
@@ -780,7 +780,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 20.3,
-          "floorNote": "Steady pocket passer averaging 264.0 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 275.5 passing yards per game."
         },
         {
           "player": "Tony Pollard",
@@ -800,7 +800,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
             ]
           },
           "bringBack": "Carnell Tate",
-          "valueFiller": "Elic Ayomanor",
+          "valueFiller": "Wan'Dale Robinson",
           "correlationTheme": "Pair Joe Burrow with Ja'Marr Chase and bring it back with Carnell Tate, then add a two-player mini-stack from a second game."
         }
       ]
@@ -839,7 +839,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Dallas moves the ball well indoors on turf, yet Arizona's rushing attack can shorten the game and keep this within a touchdown. The posted line already accounts for the Cowboys' pass rush advantage, so pass on both the side and total.",
       "blitzRateVsPressureToSack": "Dallas Cowboys wins the pass-rush battle up front and forces hurried throws when Arizona Cardinals falls behind the chains.",
-      "personnelTendencies": "Dallas Cowboys features CeeDee Lamb and Javonte Williams on early downs, while Arizona Cardinals leans on Trey McBride and Jeremiyah Love.",
+      "personnelTendencies": "Dallas Cowboys features CeeDee Lamb and Javonte Williams on early downs, while Arizona Cardinals leans on Trey McBride and Zonovan Knight.",
       "coachingEdge": "Dallas Cowboys has protected the football and tackled cleanly over the last three weeks compared to Arizona Cardinals.",
       "notes": "Fair Line: DAL -6.5 (Posted DAL -7) \u2022 Fair Total: 51.7 (Posted 54.5)."
     },
@@ -884,16 +884,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.46
       },
       {
-        "playerId": "jeremiyah-love",
-        "playerName": "Jeremiyah Love",
+        "playerId": "zonovan-knight",
+        "playerName": "Zonovan Knight",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 55.5,
+        "line": 56.5,
         "side": "OVER",
         "confidence": "53/100",
         "expectedClv": 0.0062,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Jeremiyah Love priced accurately near 55.5 rushing yards against Dallas Cowboys. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Zonovan Knight priced accurately near 56.5 rushing yards against Dallas Cowboys. Sit this prop out.",
         "pOver": 0.53,
         "pUnder": 0.47
       }
@@ -939,7 +939,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "CeeDee Lamb",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Dallas Cowboys averaging 11.9 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Dallas Cowboys averaging 11.6 targets per game."
         },
         {
           "player": "Trey McBride",
@@ -954,14 +954,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 20.9,
-          "floorNote": "Steady pocket passer averaging 259.6 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 264.4 passing yards per game."
         },
         {
-          "player": "Jeremiyah Love",
+          "player": "Zonovan Knight",
           "position": "RB",
           "salary": 6200,
-          "projection": 17.7,
-          "floorNote": "Three-down workhorse handling 13.4 carries per game."
+          "projection": 17.9,
+          "floorNote": "Three-down workhorse handling 12.5 carries per game."
         }
       ],
       "gppStacks": [
@@ -1013,7 +1013,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Detroit leads the entire NFL with only twelve missed tackles through seven weeks and dominates the line of scrimmage at Ford Field against a Minnesota offense starting a backup quarterback. Take the Lions laying three points at home and pass on the total.",
       "blitzRateVsPressureToSack": "Detroit Lions wins the pass-rush battle up front and forces hurried throws when Minnesota Vikings falls behind the chains.",
-      "personnelTendencies": "Detroit Lions features A.St. Brown and Jahmyr Gibbs on early downs, while Minnesota Vikings leans on Justin Jefferson and Aaron Jones.",
+      "personnelTendencies": "Detroit Lions features Amon-Ra St. Brown and Jahmyr Gibbs on early downs, while Minnesota Vikings leans on Justin Jefferson and Jordan Mason.",
       "coachingEdge": "Detroit Lions has protected the football and tackled cleanly over the last three weeks compared to Minnesota Vikings.",
       "notes": "Fair Line: DET -6.5 (Posted DET -3) \u2022 Fair Total: 48.7 (Posted 46.5)."
     },
@@ -1030,16 +1030,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "a-st-brown",
-        "playerName": "A.St. Brown",
+        "playerId": "amon-ra-st-brown",
+        "playerName": "Amon-Ra St. Brown",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 76.5,
+        "line": 75.5,
         "side": "OVER",
         "confidence": "59/100",
         "expectedClv": 0.0662,
         "decision": "PLAY",
-        "nEffTargetNotes": "A.St. Brown catches clean passes against the Minnesota Vikings defense as a primary option for Detroit Lions. Take OVER 76.5 receiving yards.",
+        "nEffTargetNotes": "Amon-Ra St. Brown catches clean passes against the Minnesota Vikings defense as a primary option for Detroit Lions. Take OVER 75.5 receiving yards.",
         "pOver": 0.59,
         "pUnder": 0.41
       },
@@ -1048,26 +1048,26 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "playerName": "Justin Jefferson",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 62.5,
+        "line": 61.5,
         "side": "OVER",
         "confidence": "58/100",
         "expectedClv": 0.0562,
         "decision": "PLAY",
-        "nEffTargetNotes": "Justin Jefferson catches clean passes against the Detroit Lions defense as a primary option for Minnesota Vikings. Take OVER 62.5 receiving yards.",
+        "nEffTargetNotes": "Justin Jefferson catches clean passes against the Detroit Lions defense as a primary option for Minnesota Vikings. Take OVER 61.5 receiving yards.",
         "pOver": 0.58,
         "pUnder": 0.42
       },
       {
-        "playerId": "aaron-jones",
-        "playerName": "Aaron Jones",
+        "playerId": "jordan-mason",
+        "playerName": "Jordan Mason",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 66.5,
+        "line": 62.5,
         "side": "UNDER",
         "confidence": "57/100",
         "expectedClv": 0.0462,
         "decision": "PLAY",
-        "nEffTargetNotes": "Aaron Jones gets steady early-down carries against the Detroit Lions defense as a primary option for Minnesota Vikings. Take UNDER 66.5 rushing yards.",
+        "nEffTargetNotes": "Jordan Mason gets steady early-down carries against the Detroit Lions defense as a primary option for Minnesota Vikings. Take UNDER 62.5 rushing yards.",
         "pOver": 0.43,
         "pUnder": 0.57
       }
@@ -1092,10 +1092,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PASS"
         },
         {
-          "description": "A.St. Brown Receiving Yards",
+          "description": "Amon-Ra St. Brown Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "A.St. Brown OVER 76.5",
-          "line": 76.5,
+          "selection": "Amon-Ra St. Brown OVER 75.5",
+          "line": 75.5,
           "confidence": "59/100",
           "expectedClv": 0.0662,
           "decision": "PLAY"
@@ -1105,12 +1105,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+338",
       "marketOdds": "+390",
       "edgeScore": 0.0438,
-      "correlationRationale": "When Detroit Lions -3 and OVER 46.5 cash together, A.St. Brown OVER 76.5 receiving yards fits the exact same game script."
+      "correlationRationale": "When Detroit Lions -3 and OVER 46.5 cash together, Amon-Ra St. Brown OVER 75.5 receiving yards fits the exact same game script."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "A.St. Brown",
+          "player": "Amon-Ra St. Brown",
           "position": "WR",
           "salary": 10200,
           "leverageNote": "Primary red-zone and third-down receiver for Detroit Lions averaging 11.3 targets per game."
@@ -1119,7 +1119,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Justin Jefferson",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Minnesota Vikings averaging 6.4 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for Minnesota Vikings averaging 6.2 targets per game when playing from behind."
         }
       ],
       "cashCore": [
@@ -1128,14 +1128,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 21.0,
-          "floorNote": "Steady pocket passer averaging 282.3 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 298.0 passing yards per game."
         },
         {
-          "player": "Aaron Jones",
+          "player": "Jordan Mason",
           "position": "RB",
           "salary": 6200,
-          "projection": 19.2,
-          "floorNote": "Three-down workhorse handling 17.5 carries per game."
+          "projection": 18.6,
+          "floorNote": "Three-down workhorse handling 15.0 carries per game."
         }
       ],
       "gppStacks": [
@@ -1143,13 +1143,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Jared Goff",
             "passCatchers": [
-              "A.St. Brown",
-              "Jahmyr Gibbs"
+              "Amon-Ra St. Brown",
+              "Sam LaPorta"
             ]
           },
           "bringBack": "Justin Jefferson",
-          "valueFiller": "Jordan Addison",
-          "correlationTheme": "Pair Jared Goff with Jahmyr Gibbs and bring it back with Justin Jefferson, then add a two-player mini-stack from a second game."
+          "valueFiller": "T.J. Hockenson",
+          "correlationTheme": "Pair Jared Goff with Sam LaPorta and bring it back with Justin Jefferson, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -1287,13 +1287,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Garrett Wilson",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for New York Jets averaging 7.4 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for New York Jets averaging 7.3 targets per game."
         },
         {
           "player": "Brock Bowers",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Las Vegas Raiders averaging 10.4 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for Las Vegas Raiders averaging 10.2 targets per game when playing from behind."
         }
       ],
       "cashCore": [
@@ -1302,7 +1302,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 18.7,
-          "floorNote": "Steady pocket passer averaging 207.1 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 231.9 passing yards per game."
         },
         {
           "player": "Ashton Jeanty",
@@ -1318,12 +1318,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
             "qb": "Geno Smith",
             "passCatchers": [
               "Garrett Wilson",
-              "Kenyon Sadiq"
+              "Omar Cooper"
             ]
           },
           "bringBack": "Brock Bowers",
-          "valueFiller": "Ashton Jeanty",
-          "correlationTheme": "Pair Geno Smith with Kenyon Sadiq and bring it back with Brock Bowers, then add a two-player mini-stack from a second game."
+          "valueFiller": "Michael Mayer",
+          "correlationTheme": "Pair Geno Smith with Omar Cooper and bring it back with Brock Bowers, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -1361,7 +1361,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Pittsburgh's front four dominates a bruised Cleveland offensive line while the Browns have missed fifty-one tackles on defense, pointing to a physical, clock-chewing divisional battle. Pass on the spread and take the under.",
       "blitzRateVsPressureToSack": "Pittsburgh Steelers wins the pass-rush battle up front and forces hurried throws when Cleveland Browns falls behind the chains.",
-      "personnelTendencies": "Pittsburgh Steelers features D.K. Metcalf and Jaylen Warren on early downs, while Cleveland Browns leans on KC Concepcion and Quinshon Judkins.",
+      "personnelTendencies": "Pittsburgh Steelers features Germie Bernard and Jaylen Warren on early downs, while Cleveland Browns leans on Denzel Boston and Quinshon Judkins.",
       "coachingEdge": "Pittsburgh Steelers has protected the football and tackled cleanly over the last three weeks compared to Cleveland Browns.",
       "notes": "Fair Line: PIT -5.2 (Posted PIT -3.5) \u2022 Fair Total: 38.8 (Posted 39.5)."
     },
@@ -1378,30 +1378,30 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "d-k-metcalf",
-        "playerName": "D.K. Metcalf",
+        "playerId": "germie-bernard",
+        "playerName": "Germie Bernard",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 58.5,
+        "line": 52.5,
         "side": "OVER",
         "confidence": "59/100",
         "expectedClv": 0.0662,
         "decision": "PLAY",
-        "nEffTargetNotes": "D.K. Metcalf catches clean passes against the Cleveland Browns defense as a primary option for Pittsburgh Steelers. Take OVER 58.5 receiving yards.",
+        "nEffTargetNotes": "Germie Bernard catches clean passes against the Cleveland Browns defense as a primary option for Pittsburgh Steelers. Take OVER 52.5 receiving yards.",
         "pOver": 0.59,
         "pUnder": 0.41
       },
       {
-        "playerId": "kc-concepcion",
-        "playerName": "KC Concepcion",
+        "playerId": "denzel-boston",
+        "playerName": "Denzel Boston",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 54.5,
+        "line": 58.5,
         "side": "OVER",
         "confidence": "58/100",
         "expectedClv": 0.0562,
         "decision": "PLAY",
-        "nEffTargetNotes": "KC Concepcion catches clean passes against the Pittsburgh Steelers defense as a primary option for Cleveland Browns. Take OVER 54.5 receiving yards.",
+        "nEffTargetNotes": "Denzel Boston catches clean passes against the Pittsburgh Steelers defense as a primary option for Cleveland Browns. Take OVER 58.5 receiving yards.",
         "pOver": 0.58,
         "pUnder": 0.42
       },
@@ -1440,10 +1440,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         },
         {
-          "description": "D.K. Metcalf Receiving Yards",
+          "description": "Germie Bernard Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "D.K. Metcalf OVER 58.5",
-          "line": 58.5,
+          "selection": "Germie Bernard OVER 52.5",
+          "line": 52.5,
           "confidence": "59/100",
           "expectedClv": 0.0662,
           "decision": "PLAY"
@@ -1453,21 +1453,21 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+352",
       "marketOdds": "+425",
       "edgeScore": 0.0363,
-      "correlationRationale": "When Pittsburgh Steelers -3.5 and UNDER 39.5 cash together, D.K. Metcalf OVER 58.5 receiving yards fits the exact same game script."
+      "correlationRationale": "When Pittsburgh Steelers -3.5 and UNDER 39.5 cash together, Germie Bernard OVER 52.5 receiving yards fits the exact same game script."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "D.K. Metcalf",
+          "player": "Germie Bernard",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Pittsburgh Steelers averaging 8.3 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Pittsburgh Steelers averaging 6.2 targets per game."
         },
         {
-          "player": "KC Concepcion",
+          "player": "Denzel Boston",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Cleveland Browns averaging 6.4 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for Cleveland Browns averaging 6.0 targets per game when playing from behind."
         }
       ],
       "cashCore": [
@@ -1476,7 +1476,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.9,
-          "floorNote": "Steady pocket passer averaging 217.6 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 242.7 passing yards per game."
         },
         {
           "player": "Quinshon Judkins",
@@ -1491,13 +1491,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Aaron Rodgers",
             "passCatchers": [
-              "D.K. Metcalf",
-              "Germie Bernard"
+              "Germie Bernard",
+              "D.K. Metcalf"
             ]
           },
-          "bringBack": "KC Concepcion",
+          "bringBack": "Denzel Boston",
           "valueFiller": "Harold Fannin",
-          "correlationTheme": "Pair Aaron Rodgers with Germie Bernard and bring it back with KC Concepcion, then add a two-player mini-stack from a second game."
+          "correlationTheme": "Pair Aaron Rodgers with D.K. Metcalf and bring it back with Denzel Boston, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -1535,7 +1535,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Tampa Bay gets strong interior line play at home while Atlanta funnels short catches to running backs to protect the middle of the field. With the spread sitting right on the key number below a field goal, Vegas has this division game priced accurately.",
       "blitzRateVsPressureToSack": "Tampa Bay Buccaneers wins the pass-rush battle up front and forces hurried throws when Atlanta Falcons falls behind the chains.",
-      "personnelTendencies": "Tampa Bay Buccaneers features Emeka Egbuka and Bucky Irving on early downs, while Atlanta Falcons leans on Drake London and Bi.Robinson.",
+      "personnelTendencies": "Tampa Bay Buccaneers features Chris Godwin and Bucky Irving on early downs, while Atlanta Falcons leans on Drake London and Bijan Robinson.",
       "coachingEdge": "Tampa Bay Buccaneers has protected the football and tackled cleanly over the last three weeks compared to Atlanta Falcons.",
       "notes": "Fair Line: TB -2.7 (Posted TB -2.5) \u2022 Fair Total: 43.0 (Posted 44.5)."
     },
@@ -1552,16 +1552,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "emeka-egbuka",
-        "playerName": "Emeka Egbuka",
+        "playerId": "chris-godwin",
+        "playerName": "Chris Godwin",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 51.5,
+        "line": 50.5,
         "side": "OVER",
         "confidence": "55/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Emeka Egbuka priced accurately near 51.5 receiving yards against Atlanta Falcons. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Chris Godwin priced accurately near 50.5 receiving yards against Atlanta Falcons. Sit this prop out.",
         "pOver": 0.55,
         "pUnder": 0.45
       },
@@ -1570,18 +1570,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "playerName": "Drake London",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 76.5,
+        "line": 75.5,
         "side": "OVER",
         "confidence": "54/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Drake London priced accurately near 76.5 receiving yards against Tampa Bay Buccaneers. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Drake London priced accurately near 75.5 receiving yards against Tampa Bay Buccaneers. Sit this prop out.",
         "pOver": 0.54,
         "pUnder": 0.46
       },
       {
-        "playerId": "bi-robinson",
-        "playerName": "Bi.Robinson",
+        "playerId": "bijan-robinson",
+        "playerName": "Bijan Robinson",
         "propType": "Rushing Yards",
         "market": "rush_yds",
         "line": 80.5,
@@ -1589,7 +1589,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "53/100",
         "expectedClv": 0.0062,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Bi.Robinson priced accurately near 80.5 rushing yards against Tampa Bay Buccaneers. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Bijan Robinson priced accurately near 80.5 rushing yards against Tampa Bay Buccaneers. Sit this prop out.",
         "pOver": 0.53,
         "pUnder": 0.47
       }
@@ -1614,10 +1614,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PASS"
         },
         {
-          "description": "Emeka Egbuka Receiving Yards",
+          "description": "Chris Godwin Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Emeka Egbuka OVER 51.5",
-          "line": 51.5,
+          "selection": "Chris Godwin OVER 50.5",
+          "line": 50.5,
           "confidence": "55/100",
           "expectedClv": 0.0,
           "decision": "PASS"
@@ -1632,16 +1632,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Emeka Egbuka",
+          "player": "Chris Godwin",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Tampa Bay Buccaneers averaging 8.2 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Tampa Bay Buccaneers averaging 4.5 targets per game."
         },
         {
           "player": "Drake London",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Atlanta Falcons averaging 8.1 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for Atlanta Falcons averaging 8.0 targets per game when playing from behind."
         }
       ],
       "cashCore": [
@@ -1650,10 +1650,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 16.9,
-          "floorNote": "Steady pocket passer averaging 154.8 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 169.8 passing yards per game."
         },
         {
-          "player": "Bi.Robinson",
+          "player": "Bijan Robinson",
           "position": "RB",
           "salary": 6200,
           "projection": 20.8,
@@ -1665,13 +1665,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Baker Mayfield",
             "passCatchers": [
-              "Emeka Egbuka",
-              "Chris Godwin"
+              "Chris Godwin",
+              "Cade Otton"
             ]
           },
           "bringBack": "Drake London",
           "valueFiller": "Kyle Pitts",
-          "correlationTheme": "Pair Baker Mayfield with Chris Godwin and bring it back with Drake London, then add a two-player mini-stack from a second game."
+          "correlationTheme": "Pair Baker Mayfield with Cade Otton and bring it back with Drake London, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -1824,7 +1824,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 20.5,
-          "floorNote": "Steady pocket passer averaging 234.8 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 246.7 passing yards per game."
         },
         {
           "player": "Jonathan Taylor",
@@ -1840,12 +1840,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
             "qb": "Trevor Lawrence",
             "passCatchers": [
               "Parker Washington",
-              "Brenton Strange"
+              "Jakobi Meyers"
             ]
           },
           "bringBack": "Josh Downs",
-          "valueFiller": "Tyler Warren",
-          "correlationTheme": "Pair Trevor Lawrence with Brenton Strange and bring it back with Josh Downs, then add a two-player mini-stack from a second game."
+          "valueFiller": "Laquon Treadwell",
+          "correlationTheme": "Pair Trevor Lawrence with Jakobi Meyers and bring it back with Josh Downs, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -1883,7 +1883,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Matthew Stafford and the Rams offense match up well against the Chargers secondary inside SoFi Stadium, but the Chargers play slow and protect the football to stay in games. Vegas has the number dialed in, so pass on this matchup.",
       "blitzRateVsPressureToSack": "Los Angeles Rams wins the pass-rush battle up front and forces hurried throws when Los Angeles Chargers falls behind the chains.",
-      "personnelTendencies": "Los Angeles Rams features P.Nacua and K.Williams on early downs, while Los Angeles Chargers leans on Tre Harris and Omarion Hampton.",
+      "personnelTendencies": "Los Angeles Rams features Puka Nacua and Kyren Williams on early downs, while Los Angeles Chargers leans on KeAndre Lambert-Smith and Omarion Hampton.",
       "coachingEdge": "Los Angeles Rams has protected the football and tackled cleanly over the last three weeks compared to Los Angeles Chargers.",
       "notes": "Fair Line: LAR -9.0 (Posted LAR -6.5) \u2022 Fair Total: 45.6 (Posted 45.5)."
     },
@@ -1900,8 +1900,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "p-nacua",
-        "playerName": "P.Nacua",
+        "playerId": "puka-nacua",
+        "playerName": "Puka Nacua",
         "propType": "Receiving Yards",
         "market": "rec_yds",
         "line": 80.5,
@@ -1909,21 +1909,21 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "55/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has P.Nacua priced accurately near 80.5 receiving yards against Los Angeles Chargers. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Puka Nacua priced accurately near 80.5 receiving yards against Los Angeles Chargers. Sit this prop out.",
         "pOver": 0.55,
         "pUnder": 0.45
       },
       {
-        "playerId": "tre-harris",
-        "playerName": "Tre Harris",
+        "playerId": "keandre-lambert-smith",
+        "playerName": "KeAndre Lambert-Smith",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 54.5,
+        "line": 48.5,
         "side": "OVER",
         "confidence": "54/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Tre Harris priced accurately near 54.5 receiving yards against Los Angeles Rams. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has KeAndre Lambert-Smith priced accurately near 48.5 receiving yards against Los Angeles Rams. Sit this prop out.",
         "pOver": 0.54,
         "pUnder": 0.46
       },
@@ -1962,9 +1962,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PASS"
         },
         {
-          "description": "P.Nacua Receiving Yards",
+          "description": "Puka Nacua Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "P.Nacua OVER 80.5",
+          "selection": "Puka Nacua OVER 80.5",
           "line": 80.5,
           "confidence": "55/100",
           "expectedClv": 0.0,
@@ -1980,25 +1980,25 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "P.Nacua",
+          "player": "Puka Nacua",
           "position": "WR",
           "salary": 10200,
           "leverageNote": "Primary red-zone and third-down receiver for Los Angeles Rams averaging 12.4 targets per game."
         },
         {
-          "player": "Tre Harris",
+          "player": "KeAndre Lambert-Smith",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Los Angeles Chargers averaging 5.0 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for Los Angeles Chargers averaging 9.0 targets per game when playing from behind."
         }
       ],
       "cashCore": [
         {
-          "player": "M.Stafford",
+          "player": "Matthew Stafford",
           "position": "QB",
           "salary": 6600,
           "projection": 19.4,
-          "floorNote": "Steady pocket passer averaging 272.3 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 284.1 passing yards per game."
         },
         {
           "player": "Omarion Hampton",
@@ -2011,15 +2011,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "M.Stafford",
+            "qb": "Matthew Stafford",
             "passCatchers": [
-              "P.Nacua",
-              "D.Adams"
+              "Puka Nacua",
+              "Tyler Higbee"
             ]
           },
-          "bringBack": "Tre Harris",
-          "valueFiller": "Oronde Gadsden II",
-          "correlationTheme": "Pair M.Stafford with D.Adams and bring it back with Tre Harris, then add a two-player mini-stack from a second game."
+          "bringBack": "KeAndre Lambert-Smith",
+          "valueFiller": "Theo Wease",
+          "correlationTheme": "Pair Matthew Stafford with Tyler Higbee and bring it back with KeAndre Lambert-Smith, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -2057,7 +2057,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Denver's altitude and top-tier pass defense keep divisional games tight at Mile High, even though the Broncos have struggled with fifty-six missed tackles in the open field. This AFC West battle is priced right on the number, so sit this one out.",
       "blitzRateVsPressureToSack": "Denver Broncos wins the pass-rush battle up front and forces hurried throws when Kansas City Chiefs falls behind the chains.",
-      "personnelTendencies": "Denver Broncos features Jaylen Waddle and J.K. Dobbins on early downs, while Kansas City Chiefs leans on Xavier Worthy and Kenneth Walker.",
+      "personnelTendencies": "Denver Broncos features Jaylen Waddle and Jonah Coleman on early downs, while Kansas City Chiefs leans on Travis Kelce and Kenneth Walker III.",
       "coachingEdge": "Denver Broncos has protected the football and tackled cleanly over the last three weeks compared to Kansas City Chiefs.",
       "notes": "Fair Line: DEN +3.4 (Posted KC -1.5) \u2022 Fair Total: 42.1 (Posted 40.5)."
     },
@@ -2088,22 +2088,22 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.45
       },
       {
-        "playerId": "xavier-worthy",
-        "playerName": "Xavier Worthy",
+        "playerId": "travis-kelce",
+        "playerName": "Travis Kelce",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 49.5,
+        "line": 60.5,
         "side": "OVER",
         "confidence": "54/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Xavier Worthy priced accurately near 49.5 receiving yards against Denver Broncos. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Travis Kelce priced accurately near 60.5 receiving yards against Denver Broncos. Sit this prop out.",
         "pOver": 0.54,
         "pUnder": 0.46
       },
       {
-        "playerId": "kenneth-walker",
-        "playerName": "Kenneth Walker",
+        "playerId": "kenneth-walker-iii",
+        "playerName": "Kenneth Walker III",
         "propType": "Rushing Yards",
         "market": "rush_yds",
         "line": 81.5,
@@ -2111,7 +2111,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "53/100",
         "expectedClv": 0.0062,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Kenneth Walker priced accurately near 81.5 rushing yards against Denver Broncos. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Kenneth Walker III priced accurately near 81.5 rushing yards against Denver Broncos. Sit this prop out.",
         "pOver": 0.53,
         "pUnder": 0.47
       }
@@ -2157,10 +2157,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Jaylen Waddle",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Denver Broncos averaging 6.6 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Denver Broncos averaging 6.4 targets per game."
         },
         {
-          "player": "Xavier Worthy",
+          "player": "Travis Kelce",
           "position": "WR",
           "salary": 9600,
           "leverageNote": "Go-to receiver for Kansas City Chiefs averaging 5.8 targets per game when playing from behind."
@@ -2172,10 +2172,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.8,
-          "floorNote": "Steady pocket passer averaging 175.7 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 181.6 passing yards per game."
         },
         {
-          "player": "Kenneth Walker",
+          "player": "Kenneth Walker III",
           "position": "RB",
           "salary": 6200,
           "projection": 21.8,
@@ -2191,9 +2191,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Courtland Sutton"
             ]
           },
-          "bringBack": "Xavier Worthy",
-          "valueFiller": "Kenneth Walker",
-          "correlationTheme": "Pair Bo Nix with Courtland Sutton and bring it back with Xavier Worthy, then add a two-player mini-stack from a second game."
+          "bringBack": "Travis Kelce",
+          "valueFiller": "Noah Gray",
+          "correlationTheme": "Pair Bo Nix with Courtland Sutton and bring it back with Travis Kelce, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -2231,7 +2231,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Miami's defense has invited opposing quarterbacks to throw early and often all season, but laying a full touchdown on the road with New England asks too much of a young offense. Pass on both the spread and total here.",
       "blitzRateVsPressureToSack": "Miami Dolphins wins the pass-rush battle up front and forces hurried throws when New England Patriots falls behind the chains.",
-      "personnelTendencies": "Miami Dolphins features Malik Washington and Ollie Gordon on early downs, while New England Patriots leans on DeMario Douglas and Rhamondre Stevenson.",
+      "personnelTendencies": "Miami Dolphins features Caleb Douglas and Ollie Gordon on early downs, while New England Patriots leans on Hunter Henry and Rhamondre Stevenson.",
       "coachingEdge": "Miami Dolphins has protected the football and tackled cleanly over the last three weeks compared to New England Patriots.",
       "notes": "Fair Line: MIA +6.3 (Posted NE -7) \u2022 Fair Total: 40.4 (Posted 43.5)."
     },
@@ -2248,30 +2248,30 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "malik-washington",
-        "playerName": "Malik Washington",
+        "playerId": "caleb-douglas",
+        "playerName": "Caleb Douglas",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 55.5,
+        "line": 62.5,
         "side": "OVER",
         "confidence": "55/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Malik Washington priced accurately near 55.5 receiving yards against New England Patriots. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Caleb Douglas priced accurately near 62.5 receiving yards against New England Patriots. Sit this prop out.",
         "pOver": 0.55,
         "pUnder": 0.45
       },
       {
-        "playerId": "demario-douglas",
-        "playerName": "DeMario Douglas",
+        "playerId": "hunter-henry",
+        "playerName": "Hunter Henry",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 50.5,
+        "line": 52.5,
         "side": "OVER",
         "confidence": "54/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has DeMario Douglas priced accurately near 50.5 receiving yards against Miami Dolphins. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Hunter Henry priced accurately near 52.5 receiving yards against Miami Dolphins. Sit this prop out.",
         "pOver": 0.54,
         "pUnder": 0.46
       },
@@ -2280,12 +2280,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "playerName": "Rhamondre Stevenson",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 50.5,
+        "line": 53.5,
         "side": "OVER",
         "confidence": "53/100",
         "expectedClv": 0.0062,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Rhamondre Stevenson priced accurately near 50.5 rushing yards against Miami Dolphins. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Rhamondre Stevenson priced accurately near 53.5 rushing yards against Miami Dolphins. Sit this prop out.",
         "pOver": 0.53,
         "pUnder": 0.47
       }
@@ -2310,10 +2310,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PASS"
         },
         {
-          "description": "Malik Washington Receiving Yards",
+          "description": "Caleb Douglas Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Malik Washington OVER 55.5",
-          "line": 55.5,
+          "selection": "Caleb Douglas OVER 62.5",
+          "line": 62.5,
           "confidence": "55/100",
           "expectedClv": 0.0,
           "decision": "PASS"
@@ -2328,16 +2328,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Malik Washington",
+          "player": "Caleb Douglas",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Miami Dolphins averaging 6.5 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Miami Dolphins averaging 4.3 targets per game."
         },
         {
-          "player": "DeMario Douglas",
+          "player": "Hunter Henry",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for New England Patriots averaging 4.9 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for New England Patriots averaging 4.4 targets per game when playing from behind."
         }
       ],
       "cashCore": [
@@ -2346,13 +2346,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.6,
-          "floorNote": "Steady pocket passer averaging 162.3 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 176.2 passing yards per game."
         },
         {
           "player": "Rhamondre Stevenson",
           "position": "RB",
           "salary": 6200,
-          "projection": 17.2,
+          "projection": 17.6,
           "floorNote": "Three-down workhorse handling 11.0 carries per game."
         }
       ],
@@ -2361,13 +2361,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Malik Willis",
             "passCatchers": [
-              "Malik Washington",
-              "Greg Dulcich"
+              "Caleb Douglas",
+              "Malik Washington"
             ]
           },
-          "bringBack": "DeMario Douglas",
-          "valueFiller": "Rhamondre Stevenson",
-          "correlationTheme": "Pair Malik Willis with Greg Dulcich and bring it back with DeMario Douglas, then add a two-player mini-stack from a second game."
+          "bringBack": "Hunter Henry",
+          "valueFiller": "DeMario Douglas",
+          "correlationTheme": "Pair Malik Willis with Malik Washington and bring it back with Hunter Henry, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -2405,7 +2405,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Washington's quick-rhythm passing game tests an Eagles defense that has missed forty-nine tackles this season, while Philadelphia's offensive line keeps them dangerous on the ground. The six-point spread is sharp, so pass on this Sunday night division game.",
       "blitzRateVsPressureToSack": "Washington Commanders wins the pass-rush battle up front and forces hurried throws when Philadelphia Eagles falls behind the chains.",
-      "personnelTendencies": "Washington Commanders features Stefon Diggs and Jacory Croskey-Merritt on early downs, while Philadelphia Eagles leans on DeVonta Smith and Saquon Barkley.",
+      "personnelTendencies": "Washington Commanders features Chig Okonkwo and Rachaad White on early downs, while Philadelphia Eagles leans on DeVonta Smith and Dameon Pierce.",
       "coachingEdge": "Washington Commanders has protected the football and tackled cleanly over the last three weeks compared to Philadelphia Eagles.",
       "notes": "Fair Line: WSH -6.8 (Posted WSH -6) \u2022 Fair Total: 41.7 (Posted 40.5)."
     },
@@ -2422,16 +2422,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "topProps": [
       {
-        "playerId": "stefon-diggs",
-        "playerName": "Stefon Diggs",
+        "playerId": "chig-okonkwo",
+        "playerName": "Chig Okonkwo",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 53.5,
+        "line": 50.5,
         "side": "OVER",
         "confidence": "55/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Stefon Diggs priced accurately near 53.5 receiving yards against Philadelphia Eagles. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Chig Okonkwo priced accurately near 50.5 receiving yards against Philadelphia Eagles. Sit this prop out.",
         "pOver": 0.55,
         "pUnder": 0.45
       },
@@ -2450,16 +2450,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.46
       },
       {
-        "playerId": "saquon-barkley",
-        "playerName": "Saquon Barkley",
+        "playerId": "dameon-pierce",
+        "playerName": "Dameon Pierce",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 54.5,
+        "line": 53.5,
         "side": "OVER",
         "confidence": "53/100",
         "expectedClv": 0.0062,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Saquon Barkley priced accurately near 54.5 rushing yards against Washington Commanders. Sit this prop out.",
+        "nEffTargetNotes": "Vegas has Dameon Pierce priced accurately near 53.5 rushing yards against Washington Commanders. Sit this prop out.",
         "pOver": 0.53,
         "pUnder": 0.47
       }
@@ -2484,10 +2484,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PASS"
         },
         {
-          "description": "Stefon Diggs Receiving Yards",
+          "description": "Chig Okonkwo Receiving Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Stefon Diggs OVER 53.5",
-          "line": 53.5,
+          "selection": "Chig Okonkwo OVER 50.5",
+          "line": 50.5,
           "confidence": "55/100",
           "expectedClv": 0.0,
           "decision": "PASS"
@@ -2502,10 +2502,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Stefon Diggs",
+          "player": "Chig Okonkwo",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Washington Commanders averaging 7.6 targets per game."
+          "leverageNote": "Primary red-zone and third-down receiver for Washington Commanders averaging 5.0 targets per game."
         },
         {
           "player": "DeVonta Smith",
@@ -2520,14 +2520,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 18.3,
-          "floorNote": "Steady pocket passer averaging 174.5 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 189.8 passing yards per game."
         },
         {
-          "player": "Saquon Barkley",
+          "player": "Dameon Pierce",
           "position": "RB",
           "salary": 6200,
-          "projection": 17.7,
-          "floorNote": "Three-down workhorse handling 8.6 carries per game."
+          "projection": 17.6,
+          "floorNote": "Three-down workhorse handling 12.3 carries per game."
         }
       ],
       "gppStacks": [
@@ -2535,13 +2535,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Jayden Daniels",
             "passCatchers": [
-              "Stefon Diggs",
-              "Terry McLaurin"
+              "Chig Okonkwo",
+              "Stefon Diggs"
             ]
           },
           "bringBack": "DeVonta Smith",
           "valueFiller": "Dontayvion Wicks",
-          "correlationTheme": "Pair Jayden Daniels with Terry McLaurin and bring it back with DeVonta Smith, then add a two-player mini-stack from a second game."
+          "correlationTheme": "Pair Jayden Daniels with Stefon Diggs and bring it back with DeVonta Smith, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -2579,7 +2579,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Chicago's defense has forced turnovers and limited big plays over the last month, giving the Bears the toughness to hang inside a field goal in Seattle on Monday night. Take the Bears plus three points and pass on the total.",
       "blitzRateVsPressureToSack": "Seattle Seahawks wins the pass-rush battle up front and forces hurried throws when Chicago Bears falls behind the chains.",
-      "personnelTendencies": "Seattle Seahawks features Jaxon Smith-Njigba and Emanuel Wilson on early downs, while Chicago Bears leans on Luther Burden and D'Andre Swift.",
+      "personnelTendencies": "Seattle Seahawks features Jaxon Smith-Njigba and Emanuel Wilson on early downs, while Chicago Bears leans on Rome Odunze and D'Andre Swift.",
       "coachingEdge": "Seattle Seahawks has protected the football and tackled cleanly over the last three weeks compared to Chicago Bears.",
       "notes": "Fair Line: SEA -2.6 (Posted SEA -3) \u2022 Fair Total: 46.6 (Posted 46.5)."
     },
@@ -2610,16 +2610,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.41
       },
       {
-        "playerId": "luther-burden",
-        "playerName": "Luther Burden",
+        "playerId": "rome-odunze",
+        "playerName": "Rome Odunze",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 66.5,
+        "line": 58.5,
         "side": "OVER",
         "confidence": "58/100",
         "expectedClv": 0.0562,
         "decision": "PLAY",
-        "nEffTargetNotes": "Luther Burden catches clean passes against the Seattle Seahawks defense as a primary option for Chicago Bears. Take OVER 66.5 receiving yards.",
+        "nEffTargetNotes": "Rome Odunze catches clean passes against the Seattle Seahawks defense as a primary option for Chicago Bears. Take OVER 58.5 receiving yards.",
         "pOver": 0.58,
         "pUnder": 0.42
       },
@@ -2682,10 +2682,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "leverageNote": "Primary red-zone and third-down receiver for Seattle Seahawks averaging 11.1 targets per game."
         },
         {
-          "player": "Luther Burden",
+          "player": "Rome Odunze",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Chicago Bears averaging 6.7 targets per game when playing from behind."
+          "leverageNote": "Go-to receiver for Chicago Bears averaging 5.4 targets per game when playing from behind."
         }
       ],
       "cashCore": [
@@ -2694,7 +2694,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.7,
-          "floorNote": "Steady pocket passer averaging 199.3 passing yards per game."
+          "floorNote": "Steady pocket passer averaging 255.4 passing yards per game."
         },
         {
           "player": "D'Andre Swift",
@@ -2710,12 +2710,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
             "qb": "Sam Darnold",
             "passCatchers": [
               "Jaxon Smith-Njigba",
-              "Rashid Shaheed"
+              "AJ Barner"
             ]
           },
-          "bringBack": "Luther Burden",
-          "valueFiller": "Rome Odunze",
-          "correlationTheme": "Pair Sam Darnold with Rashid Shaheed and bring it back with Luther Burden, then add a two-player mini-stack from a second game."
+          "bringBack": "Rome Odunze",
+          "valueFiller": "Kalif Raymond",
+          "correlationTheme": "Pair Sam Darnold with AJ Barner and bring it back with Rome Odunze, then add a two-player mini-stack from a second game."
         }
       ]
     },

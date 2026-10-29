@@ -1,0 +1,569 @@
+{
+  "generated_at": "2026-10-29T18:24:00Z",
+  "discovered_count": 10,
+  "discover_credits_cost": 0,
+  "capabilities": [
+    {
+      "provider": "startwho-com",
+      "capability": "fantasy-sports-rankings/injury_report",
+      "description": "Who is hurt before setting a lineup."
+    },
+    {
+      "provider": "nfl-com",
+      "capability": "sports-league-data/injury_report",
+      "description": "The user wants the official practice participation or injury designations for a week (e.g. '2026 Week 3 injury report', 'Falcons practice report'). Defaults to the current league week."
+    },
+    {
+      "provider": "fantasydata-com",
+      "capability": "fantasy-sports-rankings/rankings",
+      "description": "This week's start/sit order or projected points for a position from FantasyData, for example half-PPR running backs or the kicker ranking."
+    },
+    {
+      "provider": "fantasyfootballcalculator-com",
+      "capability": "fantasy-sports-rankings/rankings",
+      "description": "This week's start/sit order and projected points for a position in standard, PPR, half-PPR or 2-QB scoring, or long-term dynasty and rookie rankings."
+    },
+    {
+      "provider": "draftsharks-com",
+      "capability": "fantasy-sports-rankings/weekly_rankings",
+      "description": "Weekly start/sit rankings and point projections for a position, for example week 4 half-PPR quarterbacks. Omit week for the current week."
+    },
+    {
+      "provider": "fftoday-com",
+      "capability": "fantasy-sports-rankings/weekly_rankings",
+      "description": "Weekly start/sit order for a position."
+    },
+    {
+      "provider": "draftsharks-com",
+      "capability": "fantasy-sports-rankings/ros_rankings",
+      "description": "Rest-of-season trade and waiver value for a position."
+    },
+    {
+      "provider": "nfl-com",
+      "capability": "sports-league-data/team_roster",
+      "description": "The user asks for a team's roster, depth or who plays a position for a club."
+    },
+    {
+      "provider": "football-fantasysports-yahoo-com",
+      "capability": "fantasy-football-players/player_rankings",
+      "description": "Compare players by Yahoo's projected vs actual rank windows in a public league. Sort with PR_W, PR_N4W, PR_S (projected) or AR_LW, AR_L4W, AR_S (actual); page with offset."
+    },
+    {
+      "provider": "nfl-com",
+      "capability": "sports-league-data/standings",
+      "description": "The user asks who leads a division, a club's record, or playoff clinches for a given week."
+    }
+  ],
+  "week8_active_roster_prop_audit": {
+    "total_props_checked": 45,
+    "verified_active_count": 45,
+    "flagged_inactive_or_injured_count": 0,
+    "flagged_players": [],
+    "verified_players": [
+      {
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "playerName": "Josh Jacobs",
+        "propType": "Rushing Yards",
+        "line": 62.5,
+        "side": "OVER",
+        "confidence": "60/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.52,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "playerName": "Jordan Love",
+        "propType": "Passing Yards",
+        "line": 236.5,
+        "side": "OVER",
+        "confidence": "58/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 1.0,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "playerName": "Chuba Hubbard",
+        "propType": "Rushing Yards",
+        "line": 58.5,
+        "side": "OVER",
+        "confidence": "65/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.61,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "playerName": "Tetairoa McMillan",
+        "propType": "Receiving Yards",
+        "line": 54.5,
+        "side": "UNDER",
+        "confidence": "62/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.68,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "playerName": "Tucker Kraft",
+        "propType": "Receiving Yards",
+        "line": 38.5,
+        "side": "OVER",
+        "confidence": "60/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.88,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "playerName": "Josh Jacobs",
+        "propType": "Receiving Yards",
+        "line": 15.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.52,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Baltimore Ravens @ Buffalo Bills",
+        "playerName": "Keon Coleman",
+        "propType": "Receiving Yards",
+        "line": 55.5,
+        "side": "OVER",
+        "confidence": "59/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.85,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Baltimore Ravens @ Buffalo Bills",
+        "playerName": "Zay Flowers",
+        "propType": "Receiving Yards",
+        "line": 81.5,
+        "side": "OVER",
+        "confidence": "58/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.85,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Baltimore Ravens @ Buffalo Bills",
+        "playerName": "Derrick Henry",
+        "propType": "Rushing Yards",
+        "line": 71.5,
+        "side": "OVER",
+        "confidence": "57/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.51,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Tennessee Titans @ Cincinnati Bengals",
+        "playerName": "Tee Higgins",
+        "propType": "Receiving Yards",
+        "line": 79.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.87,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Tennessee Titans @ Cincinnati Bengals",
+        "playerName": "Carnell Tate",
+        "propType": "Receiving Yards",
+        "line": 61.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.89,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Tennessee Titans @ Cincinnati Bengals",
+        "playerName": "Tony Pollard",
+        "propType": "Rushing Yards",
+        "line": 64.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.75,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Arizona Cardinals @ Dallas Cowboys",
+        "playerName": "CeeDee Lamb",
+        "propType": "Receiving Yards",
+        "line": 78.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.88,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Arizona Cardinals @ Dallas Cowboys",
+        "playerName": "Trey McBride",
+        "propType": "Receiving Yards",
+        "line": 65.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.93,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Arizona Cardinals @ Dallas Cowboys",
+        "playerName": "Zonovan Knight",
+        "propType": "Rushing Yards",
+        "line": 56.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.53,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Minnesota Vikings @ Detroit Lions",
+        "playerName": "Amon-Ra St. Brown",
+        "propType": "Receiving Yards",
+        "line": 75.5,
+        "side": "OVER",
+        "confidence": "59/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.78,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Minnesota Vikings @ Detroit Lions",
+        "playerName": "Justin Jefferson",
+        "propType": "Receiving Yards",
+        "line": 61.5,
+        "side": "OVER",
+        "confidence": "58/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.93,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Minnesota Vikings @ Detroit Lions",
+        "playerName": "Jordan Mason",
+        "propType": "Rushing Yards",
+        "line": 62.5,
+        "side": "UNDER",
+        "confidence": "57/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.64,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Las Vegas Raiders @ New York Jets",
+        "playerName": "Garrett Wilson",
+        "propType": "Receiving Yards",
+        "line": 63.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.85,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Las Vegas Raiders @ New York Jets",
+        "playerName": "Brock Bowers",
+        "propType": "Receiving Yards",
+        "line": 77.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.84,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Las Vegas Raiders @ New York Jets",
+        "playerName": "Ashton Jeanty",
+        "propType": "Rushing Yards",
+        "line": 53.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.72,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+        "playerName": "Germie Bernard",
+        "propType": "Receiving Yards",
+        "line": 52.5,
+        "side": "OVER",
+        "confidence": "59/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.91,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+        "playerName": "Denzel Boston",
+        "propType": "Receiving Yards",
+        "line": 58.5,
+        "side": "OVER",
+        "confidence": "58/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.87,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+        "playerName": "Quinshon Judkins",
+        "propType": "Rushing Yards",
+        "line": 56.5,
+        "side": "OVER",
+        "confidence": "57/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.53,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+        "playerName": "Chris Godwin",
+        "propType": "Receiving Yards",
+        "line": 50.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.73,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+        "playerName": "Drake London",
+        "propType": "Receiving Yards",
+        "line": 75.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.81,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+        "playerName": "Bijan Robinson",
+        "propType": "Rushing Yards",
+        "line": 80.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.81,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+        "playerName": "Parker Washington",
+        "propType": "Receiving Yards",
+        "line": 66.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.73,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+        "playerName": "Josh Downs",
+        "propType": "Receiving Yards",
+        "line": 53.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.85,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+        "playerName": "Jonathan Taylor",
+        "propType": "Rushing Yards",
+        "line": 72.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.67,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Los Angeles Chargers @ Los Angeles Rams",
+        "playerName": "Puka Nacua",
+        "propType": "Receiving Yards",
+        "line": 80.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.85,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Los Angeles Chargers @ Los Angeles Rams",
+        "playerName": "KeAndre Lambert-Smith",
+        "propType": "Receiving Yards",
+        "line": 48.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.87,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Los Angeles Chargers @ Los Angeles Rams",
+        "playerName": "Omarion Hampton",
+        "propType": "Rushing Yards",
+        "line": 54.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.5,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Kansas City Chiefs @ Denver Broncos",
+        "playerName": "Jaylen Waddle",
+        "propType": "Receiving Yards",
+        "line": 51.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.56,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Kansas City Chiefs @ Denver Broncos",
+        "playerName": "Travis Kelce",
+        "propType": "Receiving Yards",
+        "line": 60.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.83,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Kansas City Chiefs @ Denver Broncos",
+        "playerName": "Kenneth Walker III",
+        "propType": "Rushing Yards",
+        "line": 81.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.74,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "New England Patriots @ Miami Dolphins",
+        "playerName": "Caleb Douglas",
+        "propType": "Receiving Yards",
+        "line": 62.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.68,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "New England Patriots @ Miami Dolphins",
+        "playerName": "Hunter Henry",
+        "propType": "Receiving Yards",
+        "line": 52.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.76,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "New England Patriots @ Miami Dolphins",
+        "playerName": "Rhamondre Stevenson",
+        "propType": "Rushing Yards",
+        "line": 53.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.69,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Philadelphia Eagles @ Washington Commanders",
+        "playerName": "Chig Okonkwo",
+        "propType": "Receiving Yards",
+        "line": 50.5,
+        "side": "OVER",
+        "confidence": "55/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.76,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Philadelphia Eagles @ Washington Commanders",
+        "playerName": "DeVonta Smith",
+        "propType": "Receiving Yards",
+        "line": 70.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.66,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Philadelphia Eagles @ Washington Commanders",
+        "playerName": "Dameon Pierce",
+        "propType": "Rushing Yards",
+        "line": 53.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "mostRecentActiveWeek": 6,
+        "mostRecentSnapPct": 0.95,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Chicago Bears @ Seattle Seahawks",
+        "playerName": "Jaxon Smith-Njigba",
+        "propType": "Receiving Yards",
+        "line": 81.5,
+        "side": "OVER",
+        "confidence": "59/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.77,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Chicago Bears @ Seattle Seahawks",
+        "playerName": "Rome Odunze",
+        "propType": "Receiving Yards",
+        "line": 58.5,
+        "side": "OVER",
+        "confidence": "58/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.94,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      },
+      {
+        "matchup": "Chicago Bears @ Seattle Seahawks",
+        "playerName": "D'Andre Swift",
+        "propType": "Rushing Yards",
+        "line": 64.5,
+        "side": "UNDER",
+        "confidence": "57/100",
+        "mostRecentActiveWeek": 7,
+        "mostRecentSnapPct": 0.86,
+        "week8InjuryStatus": "ACTIVE_CLEAN"
+      }
+    ]
+  },
+  "session_total_credits_spent": 0,
+  "call_ledger": [
+    {
+      "action": "discover",
+      "query": "nfl rankings injuries depth chart",
+      "capabilities_found": 10,
+      "credits_cost": 0
+    }
+  ]
+}

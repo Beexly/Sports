@@ -19,7 +19,7 @@
       "games_played": 7,
       "qb1": "Jacoby Brissett",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 216.9,
+      "qb_pass_yards_per_game": 228.6,
       "comp_rate_w1_w7": 0.5714,
       "comp_rate_w6_w7": 0.5368,
       "yards_per_comp_w1_w7": 8.73,
@@ -77,120 +77,78 @@
       "top_receivers": [
         {
           "player": "Trey McBride",
-          "pbp_name": "T.McBride",
-          "player_games": 7,
-          "targets": 78,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 11.1,
-          "target_share_pct": 28.7,
-          "receptions": 59,
-          "rec_per_game": 8.4,
-          "rec_yards": 472,
+          "target_share_pct": 29.7,
           "rec_yards_per_game": 67.4,
-          "air_yards": 461.0,
-          "rec_tds": 4
+          "recent_snap_pct": 0.93
         },
         {
-          "player": "Mi.Wilson",
-          "pbp_name": "Mi.Wilson",
-          "player_games": 7,
-          "targets": 66,
+          "player": "Michael Wilson",
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 9.4,
-          "target_share_pct": 24.3,
-          "receptions": 37,
-          "rec_per_game": 5.3,
-          "rec_yards": 375,
+          "target_share_pct": 24.4,
           "rec_yards_per_game": 53.6,
-          "air_yards": 681.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.9
         },
         {
           "player": "Kendrick Bourne",
-          "pbp_name": "K.Bourne",
-          "player_games": 7,
-          "targets": 36,
-          "targets_per_game": 5.1,
-          "target_share_pct": 13.2,
-          "receptions": 25,
-          "rec_per_game": 3.6,
-          "rec_yards": 240,
-          "rec_yards_per_game": 34.3,
-          "air_yards": 192.0,
-          "rec_tds": 0
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 6.0,
+          "target_share_pct": 15.6,
+          "rec_yards_per_game": 39.0,
+          "recent_snap_pct": 0.56
         },
         {
-          "player": "Tyler Allgeier",
-          "pbp_name": "T.Allgeier",
-          "player_games": 7,
-          "targets": 17,
-          "targets_per_game": 2.4,
-          "target_share_pct": 6.2,
-          "receptions": 16,
-          "rec_per_game": 2.3,
-          "rec_yards": 84,
-          "rec_yards_per_game": 12.0,
-          "air_yards": -36.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Jalen Brooks",
-          "pbp_name": "J.Brooks",
-          "player_games": 7,
-          "targets": 17,
-          "targets_per_game": 2.4,
-          "target_share_pct": 6.2,
-          "receptions": 5,
-          "rec_per_game": 0.7,
-          "rec_yards": 81,
-          "rec_yards_per_game": 11.6,
-          "air_yards": 252.0,
-          "rec_tds": 0
+          "player": "Elijah Higgins",
+          "position": "TE",
+          "gp": 5,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.48
         }
       ],
       "top_rushers": [
         {
-          "player": "Jeremiyah Love",
-          "pbp_name": "J.Love",
-          "player_games": 5,
-          "carries": 67,
-          "carries_per_game": 13.4,
-          "carry_share_pct": 39.2,
-          "rush_yards": 245,
-          "rush_yards_per_game": 49.0,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.076
+          "player": "Zonovan Knight",
+          "position": "RB",
+          "gp": 1,
+          "carries_per_game": 12.5,
+          "carry_share_pct": 45.1,
+          "rush_yards_per_game": 52.0,
+          "recent_snap_pct": 0.53
         },
         {
           "player": "Tyler Allgeier",
-          "pbp_name": "T.Allgeier",
-          "player_games": 7,
-          "carries": 61,
-          "carries_per_game": 8.7,
-          "carry_share_pct": 35.7,
-          "rush_yards": 176,
-          "rush_yards_per_game": 25.1,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.233
-        },
-        {
-          "player": "Zonovan Knight",
-          "pbp_name": "Z.Knight",
-          "player_games": 7,
-          "carries": 25,
-          "carries_per_game": 3.6,
-          "carry_share_pct": 14.6,
-          "rush_yards": 160,
-          "rush_yards_per_game": 22.9,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.086
+          "position": "RB",
+          "gp": 7,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.47
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Trey McBride",
+        "ypg": 67.4,
+        "targets_pg": 11.1
+      },
+      "rb1": {
+        "name": "Zonovan Knight",
+        "ypg": 52.0,
+        "carries_pg": 12.5
+      }
     },
     "ATL": {
       "team": "ATL",
       "games_played": 7,
       "qb1": "Michael Penix",
       "qb_player_games": 5,
-      "qb_pass_yards_per_game": 221.4,
+      "qb_pass_yards_per_game": 225.0,
       "comp_rate_w1_w7": 0.5333,
       "comp_rate_w6_w7": 0.55,
       "yards_per_comp_w1_w7": 11.55,
@@ -248,120 +206,69 @@
       "top_receivers": [
         {
           "player": "Drake London",
-          "pbp_name": "D.London",
-          "player_games": 7,
-          "targets": 57,
-          "targets_per_game": 8.1,
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 8.0,
           "target_share_pct": 29.2,
-          "receptions": 38,
-          "rec_per_game": 5.4,
-          "rec_yards": 632,
-          "rec_yards_per_game": 90.3,
-          "air_yards": 556.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Bi.Robinson",
-          "pbp_name": "Bi.Robinson",
-          "player_games": 7,
-          "targets": 32,
-          "targets_per_game": 4.6,
-          "target_share_pct": 16.4,
-          "receptions": 25,
-          "rec_per_game": 3.6,
-          "rec_yards": 189,
-          "rec_yards_per_game": 27.0,
-          "air_yards": -41.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Kyle Pitts",
-          "pbp_name": "K.Pitts",
-          "player_games": 7,
-          "targets": 27,
-          "targets_per_game": 3.9,
-          "target_share_pct": 13.8,
-          "receptions": 20,
-          "rec_per_game": 2.9,
-          "rec_yards": 191,
-          "rec_yards_per_game": 27.3,
-          "air_yards": 136.0,
-          "rec_tds": 4
+          "rec_yards_per_game": 88.0,
+          "recent_snap_pct": 0.81
         },
         {
           "player": "Jahan Dotson",
-          "pbp_name": "J.Dotson",
-          "player_games": 7,
-          "targets": 25,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 3.6,
-          "target_share_pct": 12.8,
-          "receptions": 12,
-          "rec_per_game": 1.7,
-          "rec_yards": 242,
+          "target_share_pct": 14.0,
           "rec_yards_per_game": 34.6,
-          "air_yards": 423.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.56
         },
         {
-          "player": "Zachariah Branch",
-          "pbp_name": "Z.Branch",
-          "player_games": 7,
-          "targets": 13,
-          "targets_per_game": 1.9,
-          "target_share_pct": 6.7,
-          "receptions": 10,
-          "rec_per_game": 1.4,
-          "rec_yards": 66,
-          "rec_yards_per_game": 9.4,
-          "air_yards": 30.0,
-          "rec_tds": 0
+          "player": "Kyle Pitts",
+          "position": "TE",
+          "gp": 7,
+          "targets_per_game": 3.9,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.56
+        },
+        {
+          "player": "Charlie Woerner",
+          "position": "TE",
+          "gp": 4,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.72
         }
       ],
       "top_rushers": [
         {
-          "player": "Bi.Robinson",
-          "pbp_name": "Bi.Robinson",
-          "player_games": 7,
-          "carries": 131,
+          "player": "Bijan Robinson",
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 18.7,
-          "carry_share_pct": 68.6,
-          "rush_yards": 704,
+          "carry_share_pct": 68.9,
           "rush_yards_per_game": 100.6,
-          "rush_tds": 4,
-          "rush_epa_per_play": 0.027
-        },
-        {
-          "player": "Br.Robinson",
-          "pbp_name": "Br.Robinson",
-          "player_games": 6,
-          "carries": 53,
-          "carries_per_game": 8.8,
-          "carry_share_pct": 27.7,
-          "rush_yards": 211,
-          "rush_yards_per_game": 35.2,
-          "rush_tds": 4,
-          "rush_epa_per_play": 0.047
-        },
-        {
-          "player": "Drake London",
-          "pbp_name": "D.London",
-          "player_games": 7,
-          "carries": 2,
-          "carries_per_game": 0.3,
-          "carry_share_pct": 1.0,
-          "rush_yards": 4,
-          "rush_yards_per_game": 0.6,
-          "rush_tds": 0,
-          "rush_epa_per_play": -1.751
+          "recent_snap_pct": 0.81
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Drake London",
+        "ypg": 88.0,
+        "targets_pg": 8.0
+      },
+      "rb1": {
+        "name": "Bijan Robinson",
+        "ypg": 100.6,
+        "carries_pg": 18.7
+      }
     },
     "BAL": {
       "team": "BAL",
       "games_played": 7,
       "qb1": "Tyler Huntley",
       "qb_player_games": 4,
-      "qb_pass_yards_per_game": 168.0,
+      "qb_pass_yards_per_game": 181.8,
       "comp_rate_w1_w7": 0.5613,
       "comp_rate_w6_w7": 0.5316,
       "yards_per_comp_w1_w7": 11.93,
@@ -419,120 +326,78 @@
       "top_receivers": [
         {
           "player": "Zay Flowers",
-          "pbp_name": "Z.Flowers",
-          "player_games": 6,
-          "targets": 53,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 8.8,
-          "target_share_pct": 26.6,
-          "receptions": 40,
-          "rec_per_game": 6.7,
-          "rec_yards": 608,
+          "target_share_pct": 31.1,
           "rec_yards_per_game": 101.3,
-          "air_yards": 435.0,
-          "rec_tds": 3
-        },
-        {
-          "player": "Mark Andrews",
-          "pbp_name": "M.Andrews",
-          "player_games": 7,
-          "targets": 38,
-          "targets_per_game": 5.4,
-          "target_share_pct": 19.1,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 204,
-          "rec_yards_per_game": 29.1,
-          "air_yards": 258.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.85
         },
         {
           "player": "Rashod Bateman",
-          "pbp_name": "R.Bateman",
-          "player_games": 7,
-          "targets": 26,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 3.7,
-          "target_share_pct": 13.1,
-          "receptions": 18,
-          "rec_per_game": 2.6,
-          "rec_yards": 266,
+          "target_share_pct": 14.0,
           "rec_yards_per_game": 38.0,
-          "air_yards": 364.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Justice Hill",
-          "pbp_name": "J.Hill",
-          "player_games": 7,
-          "targets": 17,
-          "targets_per_game": 2.4,
-          "target_share_pct": 8.5,
-          "receptions": 13,
-          "rec_per_game": 1.9,
-          "rec_yards": 84,
-          "rec_yards_per_game": 12.0,
-          "air_yards": -20.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.73
         },
         {
           "player": "Ja'Kobi Lane",
-          "pbp_name": "J.Lane",
-          "player_games": 3,
-          "targets": 13,
+          "position": "WR",
+          "gp": 3,
           "targets_per_game": 4.3,
-          "target_share_pct": 6.5,
-          "receptions": 8,
-          "rec_per_game": 2.7,
-          "rec_yards": 76,
-          "rec_yards_per_game": 25.3,
-          "air_yards": 135.0,
-          "rec_tds": 0
+          "target_share_pct": 14.4,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.69
+        },
+        {
+          "player": "Mark Andrews",
+          "position": "TE",
+          "gp": 7,
+          "targets_per_game": 5.3,
+          "target_share_pct": 19.4,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.57
         }
       ],
       "top_rushers": [
         {
           "player": "Derrick Henry",
-          "pbp_name": "D.Henry",
-          "player_games": 7,
-          "carries": 148,
-          "carries_per_game": 21.1,
-          "carry_share_pct": 78.7,
-          "rush_yards": 581,
-          "rush_yards_per_game": 83.0,
-          "rush_tds": 7,
-          "rush_epa_per_play": -0.128
+          "position": "RB",
+          "gp": 7,
+          "carries_per_game": 21.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 82.7,
+          "recent_snap_pct": 0.51
         },
         {
           "player": "Justice Hill",
-          "pbp_name": "J.Hill",
-          "player_games": 7,
-          "carries": 21,
-          "carries_per_game": 3.0,
-          "carry_share_pct": 11.2,
-          "rush_yards": 140,
-          "rush_yards_per_game": 20.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": 0.171
-        },
-        {
-          "player": "Lamar Jackson",
-          "pbp_name": "L.Jackson",
-          "player_games": 4,
-          "carries": 6,
-          "carries_per_game": 1.5,
-          "carry_share_pct": 3.2,
-          "rush_yards": 40,
-          "rush_yards_per_game": 10.0,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.485
+          "position": "RB",
+          "gp": 6,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.46
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Zay Flowers",
+        "ypg": 101.3,
+        "targets_pg": 8.8
+      },
+      "rb1": {
+        "name": "Derrick Henry",
+        "ypg": 82.7,
+        "carries_pg": 21.0
+      }
     },
     "BUF": {
       "team": "BUF",
       "games_played": 6,
       "qb1": "Josh Allen",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 239.2,
+      "qb_pass_yards_per_game": 250.7,
       "comp_rate_w1_w7": 0.5112,
       "comp_rate_w6_w7": 0.5897,
       "yards_per_comp_w1_w7": 13.19,
@@ -589,121 +454,70 @@
       },
       "top_receivers": [
         {
-          "player": "Khalil Shakir",
-          "pbp_name": "K.Shakir",
-          "player_games": 6,
-          "targets": 32,
-          "targets_per_game": 5.3,
-          "target_share_pct": 19.6,
-          "receptions": 22,
-          "rec_per_game": 3.7,
-          "rec_yards": 280,
-          "rec_yards_per_game": 46.7,
-          "air_yards": 196.0,
-          "rec_tds": 1
+          "player": "Keon Coleman",
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 4.0,
+          "target_share_pct": 14.5,
+          "rec_yards_per_game": 47.2,
+          "recent_snap_pct": 0.85
         },
         {
           "player": "Dalton Kincaid",
-          "pbp_name": "D.Kincaid",
-          "player_games": 6,
-          "targets": 30,
-          "targets_per_game": 5.0,
-          "target_share_pct": 18.4,
-          "receptions": 23,
-          "rec_per_game": 3.8,
-          "rec_yards": 317,
-          "rec_yards_per_game": 52.8,
-          "air_yards": 271.0,
-          "rec_tds": 1
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 4.8,
+          "target_share_pct": 17.7,
+          "rec_yards_per_game": 52.5,
+          "recent_snap_pct": 0.72
         },
         {
-          "player": "Keon Coleman",
-          "pbp_name": "K.Coleman",
-          "player_games": 6,
-          "targets": 25,
-          "targets_per_game": 4.2,
-          "target_share_pct": 15.3,
-          "receptions": 19,
-          "rec_per_game": 3.2,
-          "rec_yards": 293,
-          "rec_yards_per_game": 48.8,
-          "air_yards": 343.0,
-          "rec_tds": 3
+          "player": "Khalil Shakir",
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 5.3,
+          "target_share_pct": 19.6,
+          "rec_yards_per_game": 48.3,
+          "recent_snap_pct": 0.6
         },
         {
-          "player": "D.J. Moore",
-          "pbp_name": "D.Moore",
-          "player_games": 4,
-          "targets": 20,
-          "targets_per_game": 5.0,
-          "target_share_pct": 12.3,
-          "receptions": 12,
-          "rec_per_game": 3.0,
-          "rec_yards": 178,
-          "rec_yards_per_game": 44.5,
-          "air_yards": 303.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "James Cook",
-          "pbp_name": "J.Cook",
-          "player_games": 6,
-          "targets": 14,
-          "targets_per_game": 2.3,
-          "target_share_pct": 8.6,
-          "receptions": 10,
-          "rec_per_game": 1.7,
-          "rec_yards": 89,
-          "rec_yards_per_game": 14.8,
-          "air_yards": -14.0,
-          "rec_tds": 0
+          "player": "Dawson Knox",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.69
         }
       ],
       "top_rushers": [
         {
           "player": "James Cook",
-          "pbp_name": "J.Cook",
-          "player_games": 6,
-          "carries": 117,
+          "position": "RB",
+          "gp": 6,
           "carries_per_game": 19.5,
-          "carry_share_pct": 77.5,
-          "rush_yards": 627,
+          "carry_share_pct": 56.1,
           "rush_yards_per_game": 104.5,
-          "rush_tds": 6,
-          "rush_epa_per_play": 0.051
-        },
-        {
-          "player": "Josh Allen",
-          "pbp_name": "J.Allen",
-          "player_games": 6,
-          "carries": 23,
-          "carries_per_game": 3.8,
-          "carry_share_pct": 15.2,
-          "rush_yards": 57,
-          "rush_yards_per_game": 9.5,
-          "rush_tds": 6,
-          "rush_epa_per_play": 0.177
-        },
-        {
-          "player": "Ray Davis",
-          "pbp_name": "R.Davis",
-          "player_games": 6,
-          "carries": 5,
-          "carries_per_game": 0.8,
-          "carry_share_pct": 3.3,
-          "rush_yards": 12,
-          "rush_yards_per_game": 2.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.252
+          "recent_snap_pct": 0.66
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Keon Coleman",
+        "ypg": 47.2,
+        "targets_pg": 4.0
+      },
+      "rb1": {
+        "name": "James Cook",
+        "ypg": 104.5,
+        "carries_pg": 19.5
+      }
     },
     "CAR": {
       "team": "CAR",
       "games_played": 6,
       "qb1": "Bryce Young",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 268.2,
+      "qb_pass_yards_per_game": 285.3,
       "comp_rate_w1_w7": 0.5111,
       "comp_rate_w6_w7": 0.4405,
       "yards_per_comp_w1_w7": 12.75,
@@ -761,120 +575,78 @@
       "top_receivers": [
         {
           "player": "Tetairoa McMillan",
-          "pbp_name": "T.McMillan",
-          "player_games": 6,
-          "targets": 54,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 9.0,
-          "target_share_pct": 25.5,
-          "receptions": 36,
-          "rec_per_game": 6.0,
-          "rec_yards": 511,
+          "target_share_pct": 25.7,
           "rec_yards_per_game": 85.2,
-          "air_yards": 585.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.68
         },
         {
           "player": "Jalen Coker",
-          "pbp_name": "J.Coker",
-          "player_games": 5,
-          "targets": 39,
+          "position": "WR",
+          "gp": 5,
           "targets_per_game": 7.8,
-          "target_share_pct": 18.4,
-          "receptions": 25,
-          "rec_per_game": 5.0,
-          "rec_yards": 328,
+          "target_share_pct": 23.0,
           "rec_yards_per_game": 65.6,
-          "air_yards": 456.0,
-          "rec_tds": 2
-        },
-        {
-          "player": "Darren Waller",
-          "pbp_name": "D.Waller",
-          "player_games": 6,
-          "targets": 23,
-          "targets_per_game": 3.8,
-          "target_share_pct": 10.8,
-          "receptions": 14,
-          "rec_per_game": 2.3,
-          "rec_yards": 198,
-          "rec_yards_per_game": 33.0,
-          "air_yards": 229.0,
-          "rec_tds": 3
-        },
-        {
-          "player": "Tommy Tremble",
-          "pbp_name": "T.Tremble",
-          "player_games": 6,
-          "targets": 21,
-          "targets_per_game": 3.5,
-          "target_share_pct": 9.9,
-          "receptions": 16,
-          "rec_per_game": 2.7,
-          "rec_yards": 136,
-          "rec_yards_per_game": 22.7,
-          "air_yards": 106.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.66
         },
         {
           "player": "John Metchie",
-          "pbp_name": "J.Metchie",
-          "player_games": 5,
-          "targets": 18,
-          "targets_per_game": 3.6,
-          "target_share_pct": 8.5,
-          "receptions": 9,
-          "rec_per_game": 1.8,
-          "rec_yards": 100,
-          "rec_yards_per_game": 20.0,
-          "air_yards": 130.0,
-          "rec_tds": 1
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.46
+        },
+        {
+          "player": "Brycen Tremayne",
+          "position": "WR",
+          "gp": 3,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 38.3,
+          "recent_snap_pct": 0.38
         }
       ],
       "top_rushers": [
         {
           "player": "Chuba Hubbard",
-          "pbp_name": "C.Hubbard",
-          "player_games": 6,
-          "carries": 97,
-          "carries_per_game": 16.2,
-          "carry_share_pct": 72.4,
-          "rush_yards": 459,
+          "position": "RB",
+          "gp": 6,
+          "carries_per_game": 16.0,
+          "carry_share_pct": 51.9,
           "rush_yards_per_game": 76.5,
-          "rush_tds": 4,
-          "rush_epa_per_play": 0.093
+          "recent_snap_pct": 0.61
         },
         {
-          "player": "AJ Dillon",
-          "pbp_name": "A.Dillon",
-          "player_games": 4,
-          "carries": 17,
-          "carries_per_game": 4.2,
-          "carry_share_pct": 12.7,
-          "rush_yards": 43,
-          "rush_yards_per_game": 10.8,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.559
-        },
-        {
-          "player": "Jonathon Brooks",
-          "pbp_name": "J.Brooks",
-          "player_games": 2,
-          "carries": 9,
-          "carries_per_game": 4.5,
-          "carry_share_pct": 6.7,
-          "rush_yards": 30,
-          "rush_yards_per_game": 15.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.274
+          "player": "Trevor Etienne",
+          "position": "RB",
+          "gp": 2,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.3
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Tetairoa McMillan",
+        "ypg": 85.2,
+        "targets_pg": 9.0
+      },
+      "rb1": {
+        "name": "Chuba Hubbard",
+        "ypg": 76.5,
+        "carries_pg": 16.0
+      }
     },
     "CHI": {
       "team": "CHI",
       "games_played": 7,
       "qb1": "Caleb Williams",
       "qb_player_games": 4,
-      "qb_pass_yards_per_game": 234.5,
+      "qb_pass_yards_per_game": 255.0,
       "comp_rate_w1_w7": 0.5574,
       "comp_rate_w6_w7": 0.6047,
       "yards_per_comp_w1_w7": 10.81,
@@ -931,121 +703,70 @@
       },
       "top_receivers": [
         {
-          "player": "Luther Burden",
-          "pbp_name": "L.Burden",
-          "player_games": 7,
-          "targets": 47,
-          "targets_per_game": 6.7,
-          "target_share_pct": 21.0,
-          "receptions": 35,
-          "rec_per_game": 5.0,
-          "rec_yards": 491,
-          "rec_yards_per_game": 70.1,
-          "air_yards": 400.0,
-          "rec_tds": 2
+          "player": "Rome Odunze",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 5.4,
+          "target_share_pct": 16.6,
+          "rec_yards_per_game": 54.4,
+          "recent_snap_pct": 0.94
         },
         {
           "player": "Colston Loveland",
-          "pbp_name": "C.Loveland",
-          "player_games": 7,
-          "targets": 42,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 6.0,
-          "target_share_pct": 18.8,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 244,
+          "target_share_pct": 18.9,
           "rec_yards_per_game": 34.9,
-          "air_yards": 290.0,
-          "rec_tds": 2
-        },
-        {
-          "player": "Rome Odunze",
-          "pbp_name": "R.Odunze",
-          "player_games": 7,
-          "targets": 38,
-          "targets_per_game": 5.4,
-          "target_share_pct": 17.0,
-          "receptions": 24,
-          "rec_per_game": 3.4,
-          "rec_yards": 393,
-          "rec_yards_per_game": 56.1,
-          "air_yards": 507.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.84
         },
         {
           "player": "Kalif Raymond",
-          "pbp_name": "K.Raymond",
-          "player_games": 7,
-          "targets": 31,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 4.4,
-          "target_share_pct": 13.8,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 244,
+          "target_share_pct": 14.4,
           "rec_yards_per_game": 34.9,
-          "air_yards": 189.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.7
         },
         {
-          "player": "D'Andre Swift",
-          "pbp_name": "D.Swift",
-          "player_games": 7,
-          "targets": 25,
-          "targets_per_game": 3.6,
-          "target_share_pct": 11.2,
-          "receptions": 22,
-          "rec_per_game": 3.1,
-          "rec_yards": 152,
-          "rec_yards_per_game": 21.7,
-          "air_yards": -35.0,
-          "rec_tds": 0
+          "player": "Luther Burden",
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.61
         }
       ],
       "top_rushers": [
         {
           "player": "D'Andre Swift",
-          "pbp_name": "D.Swift",
-          "player_games": 7,
-          "carries": 116,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 16.6,
-          "carry_share_pct": 52.7,
-          "rush_yards": 476,
+          "carry_share_pct": 73.1,
           "rush_yards_per_game": 68.0,
-          "rush_tds": 7,
-          "rush_epa_per_play": -0.06
-        },
-        {
-          "player": "Kyle Monangai",
-          "pbp_name": "K.Monangai",
-          "player_games": 4,
-          "carries": 60,
-          "carries_per_game": 15.0,
-          "carry_share_pct": 27.3,
-          "rush_yards": 324,
-          "rush_yards_per_game": 81.0,
-          "rush_tds": 3,
-          "rush_epa_per_play": 0.097
-        },
-        {
-          "player": "Roschon Johnson",
-          "pbp_name": "R.Johnson",
-          "player_games": 7,
-          "carries": 24,
-          "carries_per_game": 3.4,
-          "carry_share_pct": 10.9,
-          "rush_yards": 86,
-          "rush_yards_per_game": 12.3,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.273
+          "recent_snap_pct": 0.86
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Rome Odunze",
+        "ypg": 54.4,
+        "targets_pg": 5.4
+      },
+      "rb1": {
+        "name": "D'Andre Swift",
+        "ypg": 68.0,
+        "carries_pg": 16.6
+      }
     },
     "CIN": {
       "team": "CIN",
       "games_played": 6,
       "qb1": "Joe Burrow",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 264.0,
+      "qb_pass_yards_per_game": 275.5,
       "comp_rate_w1_w7": 0.6382,
       "comp_rate_w6_w7": 0.6471,
       "yards_per_comp_w1_w7": 10.53,
@@ -1103,73 +824,39 @@
       "top_receivers": [
         {
           "player": "Tee Higgins",
-          "pbp_name": "T.Higgins",
-          "player_games": 6,
-          "targets": 50,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 8.3,
-          "target_share_pct": 23.4,
-          "receptions": 33,
-          "rec_per_game": 5.5,
-          "rec_yards": 571,
+          "target_share_pct": 22.8,
           "rec_yards_per_game": 95.2,
-          "air_yards": 710.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.87
         },
         {
           "player": "Ja'Marr Chase",
-          "pbp_name": "J.Chase",
-          "player_games": 6,
-          "targets": 45,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 7.5,
-          "target_share_pct": 21.0,
-          "receptions": 32,
-          "rec_per_game": 5.3,
-          "rec_yards": 351,
+          "target_share_pct": 22.7,
           "rec_yards_per_game": 58.5,
-          "air_yards": 417.0,
-          "rec_tds": 5
-        },
-        {
-          "player": "Chase Brown",
-          "pbp_name": "C.Brown",
-          "player_games": 6,
-          "targets": 33,
-          "targets_per_game": 5.5,
-          "target_share_pct": 15.4,
-          "receptions": 28,
-          "rec_per_game": 4.7,
-          "rec_yards": 143,
-          "rec_yards_per_game": 23.8,
-          "air_yards": -26.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Dohnte Meyers",
-          "pbp_name": "D.Meyers",
-          "player_games": 6,
-          "targets": 20,
-          "targets_per_game": 3.3,
-          "target_share_pct": 9.3,
-          "receptions": 13,
-          "rec_per_game": 2.2,
-          "rec_yards": 141,
-          "rec_yards_per_game": 23.5,
-          "air_yards": 98.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.87
         },
         {
           "player": "Mike Gesicki",
-          "pbp_name": "M.Gesicki",
-          "player_games": 6,
-          "targets": 18,
-          "targets_per_game": 3.0,
-          "target_share_pct": 8.4,
-          "receptions": 13,
-          "rec_per_game": 2.2,
-          "rec_yards": 165,
-          "rec_yards_per_game": 27.5,
-          "air_yards": 183.0,
-          "rec_tds": 5
+          "position": "TE",
+          "gp": 5,
+          "targets_per_game": 3.6,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.38
+        },
+        {
+          "player": "Dohnte Meyers",
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.38
         }
       ],
       "top_rushers": [
@@ -1209,14 +896,19 @@
           "rush_tds": 1,
           "rush_epa_per_play": 0.628
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Tee Higgins",
+        "ypg": 95.2,
+        "targets_pg": 8.3
+      }
     },
     "CLE": {
       "team": "CLE",
       "games_played": 7,
       "qb1": "Deshaun Watson",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 193.0,
+      "qb_pass_yards_per_game": 211.7,
       "comp_rate_w1_w7": 0.4928,
       "comp_rate_w6_w7": 0.519,
       "yards_per_comp_w1_w7": 10.82,
@@ -1273,121 +965,79 @@
       },
       "top_receivers": [
         {
-          "player": "KC Concepcion",
-          "pbp_name": "K.Concepcion",
-          "player_games": 7,
-          "targets": 45,
-          "targets_per_game": 6.4,
-          "target_share_pct": 21.6,
-          "receptions": 30,
-          "rec_per_game": 4.3,
-          "rec_yards": 315,
-          "rec_yards_per_game": 45.0,
-          "air_yards": 341.0,
-          "rec_tds": 0
+          "player": "Denzel Boston",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 6.0,
+          "target_share_pct": 20.1,
+          "rec_yards_per_game": 53.1,
+          "recent_snap_pct": 0.87
         },
         {
-          "player": "Denzel Boston",
-          "pbp_name": "D.Boston",
-          "player_games": 7,
-          "targets": 43,
-          "targets_per_game": 6.1,
-          "target_share_pct": 20.7,
-          "receptions": 20,
-          "rec_per_game": 2.9,
-          "rec_yards": 374,
-          "rec_yards_per_game": 53.4,
-          "air_yards": 698.0,
-          "rec_tds": 3
+          "player": "KC Concepcion",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 6.4,
+          "target_share_pct": 21.8,
+          "rec_yards_per_game": 45.0,
+          "recent_snap_pct": 0.79
         },
         {
           "player": "Harold Fannin",
-          "pbp_name": "H.Fannin",
-          "player_games": 7,
-          "targets": 39,
-          "targets_per_game": 5.6,
-          "target_share_pct": 18.8,
-          "receptions": 25,
-          "rec_per_game": 3.6,
-          "rec_yards": 257,
-          "rec_yards_per_game": 36.7,
-          "air_yards": 222.0,
-          "rec_tds": 3
+          "position": "TE",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.83
         },
         {
           "player": "Jerry Jeudy",
-          "pbp_name": "J.Jeudy",
-          "player_games": 7,
-          "targets": 23,
-          "targets_per_game": 3.3,
-          "target_share_pct": 11.1,
-          "receptions": 16,
-          "rec_per_game": 2.3,
-          "rec_yards": 171,
-          "rec_yards_per_game": 24.4,
-          "air_yards": 207.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Quinshon Judkins",
-          "pbp_name": "Q.Judkins",
-          "player_games": 6,
-          "targets": 21,
-          "targets_per_game": 3.5,
-          "target_share_pct": 10.1,
-          "receptions": 19,
-          "rec_per_game": 3.2,
-          "rec_yards": 110,
-          "rec_yards_per_game": 18.3,
-          "air_yards": -29.0,
-          "rec_tds": 0
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 3.8,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.61
         }
       ],
       "top_rushers": [
         {
           "player": "Quinshon Judkins",
-          "pbp_name": "Q.Judkins",
-          "player_games": 6,
-          "carries": 90,
+          "position": "RB",
+          "gp": 6,
           "carries_per_game": 15.0,
-          "carry_share_pct": 58.1,
-          "rush_yards": 317,
+          "carry_share_pct": 45.1,
           "rush_yards_per_game": 52.8,
-          "rush_tds": 3,
-          "rush_epa_per_play": -0.178
+          "recent_snap_pct": 0.53
         },
         {
-          "player": "Deshaun Watson",
-          "pbp_name": "D.Watson",
-          "player_games": 7,
-          "carries": 19,
-          "carries_per_game": 2.7,
-          "carry_share_pct": 12.3,
-          "rush_yards": 45,
-          "rush_yards_per_game": 6.4,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.379
-        },
-        {
-          "player": "Jaleel McLaughlin",
-          "pbp_name": "J.McLaughlin",
-          "player_games": 6,
-          "carries": 11,
-          "carries_per_game": 1.8,
-          "carry_share_pct": 7.1,
-          "rush_yards": 72,
-          "rush_yards_per_game": 12.0,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.235
+          "player": "Dylan Sampson",
+          "position": "RB",
+          "gp": 1,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.46
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Denzel Boston",
+        "ypg": 53.1,
+        "targets_pg": 6.0
+      },
+      "rb1": {
+        "name": "Quinshon Judkins",
+        "ypg": 52.8,
+        "carries_pg": 15.0
+      }
     },
     "DAL": {
       "team": "DAL",
       "games_played": 7,
       "qb1": "Dak Prescott",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 259.6,
+      "qb_pass_yards_per_game": 264.4,
       "comp_rate_w1_w7": 0.5615,
       "comp_rate_w6_w7": 0.5269,
       "yards_per_comp_w1_w7": 10.4,
@@ -1445,120 +1095,69 @@
       "top_receivers": [
         {
           "player": "CeeDee Lamb",
-          "pbp_name": "C.Lamb",
-          "player_games": 7,
-          "targets": 83,
-          "targets_per_game": 11.9,
-          "target_share_pct": 30.9,
-          "receptions": 53,
-          "rec_per_game": 7.6,
-          "rec_yards": 653,
-          "rec_yards_per_game": 93.3,
-          "air_yards": 855.0,
-          "rec_tds": 6
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 11.6,
+          "target_share_pct": 30.8,
+          "rec_yards_per_game": 93.0,
+          "recent_snap_pct": 0.88
         },
         {
           "player": "George Pickens",
-          "pbp_name": "G.Pickens",
-          "player_games": 7,
-          "targets": 58,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 8.3,
-          "target_share_pct": 21.6,
-          "receptions": 37,
-          "rec_per_game": 5.3,
-          "rec_yards": 485,
+          "target_share_pct": 22.1,
           "rec_yards_per_game": 69.3,
-          "air_yards": 643.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.88
         },
         {
           "player": "Ryan Flournoy",
-          "pbp_name": "R.Flournoy",
-          "player_games": 7,
-          "targets": 41,
-          "targets_per_game": 5.9,
-          "target_share_pct": 15.2,
-          "receptions": 27,
-          "rec_per_game": 3.9,
-          "rec_yards": 304,
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 5.7,
+          "target_share_pct": 15.1,
           "rec_yards_per_game": 43.4,
-          "air_yards": 271.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.87
         },
         {
           "player": "Jake Ferguson",
-          "pbp_name": "J.Ferguson",
-          "player_games": 7,
-          "targets": 25,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 3.6,
-          "target_share_pct": 9.3,
-          "receptions": 17,
-          "rec_per_game": 2.4,
-          "rec_yards": 115,
-          "rec_yards_per_game": 16.4,
-          "air_yards": 126.0,
-          "rec_tds": 3
-        },
-        {
-          "player": "Javonte Williams",
-          "pbp_name": "J.Williams",
-          "player_games": 7,
-          "targets": 22,
-          "targets_per_game": 3.1,
-          "target_share_pct": 8.2,
-          "receptions": 19,
-          "rec_per_game": 2.7,
-          "rec_yards": 103,
-          "rec_yards_per_game": 14.7,
-          "air_yards": -36.0,
-          "rec_tds": 1
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.54
         }
       ],
       "top_rushers": [
         {
           "player": "Javonte Williams",
-          "pbp_name": "J.Williams",
-          "player_games": 7,
-          "carries": 110,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 15.7,
-          "carry_share_pct": 74.3,
-          "rush_yards": 472,
+          "carry_share_pct": 62.0,
           "rush_yards_per_game": 67.4,
-          "rush_tds": 8,
-          "rush_epa_per_play": 0.104
-        },
-        {
-          "player": "Tyler Goodson",
-          "pbp_name": "T.Goodson",
-          "player_games": 5,
-          "carries": 21,
-          "carries_per_game": 4.2,
-          "carry_share_pct": 14.2,
-          "rush_yards": 72,
-          "rush_yards_per_game": 14.4,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.143
-        },
-        {
-          "player": "Emari Demercado",
-          "pbp_name": "E.Demercado",
-          "player_games": 2,
-          "carries": 5,
-          "carries_per_game": 2.5,
-          "carry_share_pct": 3.4,
-          "rush_yards": 15,
-          "rush_yards_per_game": 7.5,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.229
+          "recent_snap_pct": 0.73
         }
-      ]
+      ],
+      "wr1": {
+        "name": "CeeDee Lamb",
+        "ypg": 93.0,
+        "targets_pg": 11.6
+      },
+      "rb1": {
+        "name": "Javonte Williams",
+        "ypg": 67.4,
+        "carries_pg": 15.7
+      }
     },
     "DEN": {
       "team": "DEN",
       "games_played": 7,
       "qb1": "Bo Nix",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 175.7,
+      "qb_pass_yards_per_game": 181.6,
       "comp_rate_w1_w7": 0.5059,
       "comp_rate_w6_w7": 0.4706,
       "yards_per_comp_w1_w7": 9.85,
@@ -1616,120 +1215,69 @@
       "top_receivers": [
         {
           "player": "Jaylen Waddle",
-          "pbp_name": "J.Waddle",
-          "player_games": 7,
-          "targets": 46,
-          "targets_per_game": 6.6,
-          "target_share_pct": 23.2,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 278,
-          "rec_yards_per_game": 39.7,
-          "air_yards": 453.0,
-          "rec_tds": 1
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 6.4,
+          "target_share_pct": 23.4,
+          "rec_yards_per_game": 39.4,
+          "recent_snap_pct": 0.56
         },
         {
           "player": "Courtland Sutton",
-          "pbp_name": "C.Sutton",
-          "player_games": 7,
-          "targets": 33,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 4.7,
           "target_share_pct": 16.7,
-          "receptions": 16,
-          "rec_per_game": 2.3,
-          "rec_yards": 168,
-          "rec_yards_per_game": 24.0,
-          "air_yards": 365.0,
-          "rec_tds": 1
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.7
         },
         {
-          "player": "RJ Harvey",
-          "pbp_name": "R.Harvey",
-          "player_games": 6,
-          "targets": 28,
-          "targets_per_game": 4.7,
-          "target_share_pct": 14.1,
-          "receptions": 25,
-          "rec_per_game": 4.2,
-          "rec_yards": 217,
-          "rec_yards_per_game": 36.2,
-          "air_yards": -79.0,
-          "rec_tds": 1
+          "player": "Nate Adkins",
+          "position": "TE",
+          "gp": 2,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.39
         },
         {
           "player": "Evan Engram",
-          "pbp_name": "E.Engram",
-          "player_games": 7,
-          "targets": 22,
-          "targets_per_game": 3.1,
-          "target_share_pct": 11.1,
-          "receptions": 13,
-          "rec_per_game": 1.9,
-          "rec_yards": 136,
-          "rec_yards_per_game": 19.4,
-          "air_yards": 124.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Pat Bryant",
-          "pbp_name": "P.Bryant",
-          "player_games": 4,
-          "targets": 13,
-          "targets_per_game": 3.2,
-          "target_share_pct": 6.6,
-          "receptions": 9,
-          "rec_per_game": 2.2,
-          "rec_yards": 135,
-          "rec_yards_per_game": 33.8,
-          "air_yards": 80.0,
-          "rec_tds": 1
+          "position": "TE",
+          "gp": 7,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.39
         }
       ],
       "top_rushers": [
         {
-          "player": "J.K. Dobbins",
-          "pbp_name": "J.Dobbins",
-          "player_games": 7,
-          "carries": 87,
-          "carries_per_game": 12.4,
-          "carry_share_pct": 54.4,
-          "rush_yards": 293,
-          "rush_yards_per_game": 41.9,
-          "rush_tds": 3,
-          "rush_epa_per_play": -0.171
-        },
-        {
-          "player": "RJ Harvey",
-          "pbp_name": "R.Harvey",
-          "player_games": 6,
-          "carries": 24,
-          "carries_per_game": 4.0,
-          "carry_share_pct": 15.0,
-          "rush_yards": 87,
-          "rush_yards_per_game": 14.5,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.03
-        },
-        {
           "player": "Jonah Coleman",
-          "pbp_name": "J.Coleman",
-          "player_games": 3,
-          "carries": 19,
-          "carries_per_game": 6.3,
-          "carry_share_pct": 11.9,
-          "rush_yards": 93,
-          "rush_yards_per_game": 31.0,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.122
+          "position": "RB",
+          "gp": 2,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.5,
+          "recent_snap_pct": 0.49
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Jaylen Waddle",
+        "ypg": 39.4,
+        "targets_pg": 6.4
+      },
+      "rb1": {
+        "name": "Jonah Coleman",
+        "ypg": 46.5,
+        "carries_pg": 10.0
+      }
     },
     "DET": {
       "team": "DET",
       "games_played": 6,
       "qb1": "Jared Goff",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 282.3,
+      "qb_pass_yards_per_game": 298.0,
       "comp_rate_w1_w7": 0.6073,
       "comp_rate_w6_w7": 0.6286,
       "yards_per_comp_w1_w7": 11.92,
@@ -1786,121 +1334,70 @@
       },
       "top_receivers": [
         {
-          "player": "A.St. Brown",
-          "pbp_name": "A.St. Brown",
-          "player_games": 6,
-          "targets": 68,
+          "player": "Amon-Ra St. Brown",
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 11.3,
-          "target_share_pct": 31.1,
-          "receptions": 46,
-          "rec_per_game": 7.7,
-          "rec_yards": 534,
-          "rec_yards_per_game": 89.0,
-          "air_yards": 604.0,
-          "rec_tds": 5
-        },
-        {
-          "player": "Jahmyr Gibbs",
-          "pbp_name": "J.Gibbs",
-          "player_games": 6,
-          "targets": 40,
-          "targets_per_game": 6.7,
-          "target_share_pct": 18.3,
-          "receptions": 32,
-          "rec_per_game": 5.3,
-          "rec_yards": 261,
-          "rec_yards_per_game": 43.5,
-          "air_yards": 37.0,
-          "rec_tds": 2
+          "target_share_pct": 31.8,
+          "rec_yards_per_game": 87.5,
+          "recent_snap_pct": 0.78
         },
         {
           "player": "Sam LaPorta",
-          "pbp_name": "S.LaPorta",
-          "player_games": 6,
-          "targets": 39,
+          "position": "TE",
+          "gp": 6,
           "targets_per_game": 6.5,
-          "target_share_pct": 17.8,
-          "receptions": 28,
-          "rec_per_game": 4.7,
-          "rec_yards": 334,
+          "target_share_pct": 16.8,
           "rec_yards_per_game": 55.7,
-          "air_yards": 243.0,
-          "rec_tds": 3
+          "recent_snap_pct": 0.97
         },
         {
           "player": "Jameson Williams",
-          "pbp_name": "J.Williams",
-          "player_games": 6,
-          "targets": 38,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 6.3,
-          "target_share_pct": 17.4,
-          "receptions": 23,
-          "rec_per_game": 3.8,
-          "rec_yards": 367,
+          "target_share_pct": 17.5,
           "rec_yards_per_game": 61.2,
-          "air_yards": 568.0,
-          "rec_tds": 4
+          "recent_snap_pct": 0.84
         },
         {
           "player": "Isaac TeSlaa",
-          "pbp_name": "I.TeSlaa",
-          "player_games": 6,
-          "targets": 21,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 3.5,
-          "target_share_pct": 9.6,
-          "receptions": 10,
-          "rec_per_game": 1.7,
-          "rec_yards": 197,
-          "rec_yards_per_game": 32.8,
-          "air_yards": 260.0,
-          "rec_tds": 0
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.49
         }
       ],
       "top_rushers": [
         {
           "player": "Jahmyr Gibbs",
-          "pbp_name": "J.Gibbs",
-          "player_games": 6,
-          "carries": 134,
+          "position": "RB",
+          "gp": 6,
           "carries_per_game": 22.3,
-          "carry_share_pct": 86.5,
-          "rush_yards": 620,
+          "carry_share_pct": 76.5,
           "rush_yards_per_game": 103.3,
-          "rush_tds": 7,
-          "rush_epa_per_play": -0.016
-        },
-        {
-          "player": "Sione Vaki",
-          "pbp_name": "S.Vaki",
-          "player_games": 6,
-          "carries": 16,
-          "carries_per_game": 2.7,
-          "carry_share_pct": 10.3,
-          "rush_yards": 56,
-          "rush_yards_per_game": 9.3,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.17
-        },
-        {
-          "player": "Jared Goff",
-          "pbp_name": "J.Goff",
-          "player_games": 6,
-          "carries": 4,
-          "carries_per_game": 0.7,
-          "carry_share_pct": 2.6,
-          "rush_yards": 1,
-          "rush_yards_per_game": 0.2,
-          "rush_tds": 1,
-          "rush_epa_per_play": -1.655
+          "recent_snap_pct": 0.9
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Amon-Ra St. Brown",
+        "ypg": 87.5,
+        "targets_pg": 11.3
+      },
+      "rb1": {
+        "name": "Jahmyr Gibbs",
+        "ypg": 103.3,
+        "carries_pg": 22.3
+      }
     },
     "GB": {
       "team": "GB",
       "games_played": 7,
       "qb1": "Jordan Love",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 268.9,
+      "qb_pass_yards_per_game": 279.7,
       "comp_rate_w1_w7": 0.526,
       "comp_rate_w6_w7": 0.5155,
       "yards_per_comp_w1_w7": 12.09,
@@ -1957,121 +1454,70 @@
       },
       "top_receivers": [
         {
-          "player": "Matthew Golden",
-          "pbp_name": "M.Golden",
-          "player_games": 7,
-          "targets": 70,
-          "targets_per_game": 10.0,
-          "target_share_pct": 26.5,
-          "receptions": 36,
-          "rec_per_game": 5.1,
-          "rec_yards": 547,
-          "rec_yards_per_game": 78.1,
-          "air_yards": 982.0,
-          "rec_tds": 3
-        },
-        {
           "player": "Christian Watson",
-          "pbp_name": "C.Watson",
-          "player_games": 7,
-          "targets": 56,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 8.0,
-          "target_share_pct": 21.2,
-          "receptions": 34,
-          "rec_per_game": 4.9,
-          "rec_yards": 595,
+          "target_share_pct": 21.8,
           "rec_yards_per_game": 85.0,
-          "air_yards": 752.0,
-          "rec_tds": 6
+          "recent_snap_pct": 0.81
         },
         {
           "player": "Tucker Kraft",
-          "pbp_name": "T.Kraft",
-          "player_games": 7,
-          "targets": 43,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 6.1,
-          "target_share_pct": 16.3,
-          "receptions": 29,
-          "rec_per_game": 4.1,
-          "rec_yards": 297,
+          "target_share_pct": 16.4,
           "rec_yards_per_game": 42.4,
-          "air_yards": 239.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.88
         },
         {
-          "player": "MarShawn Lloyd",
-          "pbp_name": "M.Lloyd",
-          "player_games": 7,
-          "targets": 16,
-          "targets_per_game": 2.3,
-          "target_share_pct": 6.1,
-          "receptions": 12,
-          "rec_per_game": 1.7,
-          "rec_yards": 65,
-          "rec_yards_per_game": 9.3,
-          "air_yards": -11.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Skyy Moore",
-          "pbp_name": "S.Moore",
-          "player_games": 5,
-          "targets": 14,
-          "targets_per_game": 2.8,
-          "target_share_pct": 5.3,
-          "receptions": 7,
-          "rec_per_game": 1.4,
-          "rec_yards": 35,
-          "rec_yards_per_game": 7.0,
-          "air_yards": 71.0,
-          "rec_tds": 0
+          "player": "Savion Williams",
+          "position": "WR",
+          "gp": 2,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 39.5,
+          "recent_snap_pct": 0.6
         }
       ],
       "top_rushers": [
         {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "gp": 1,
+          "carries_per_game": 11.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.52
+        },
+        {
           "player": "MarShawn Lloyd",
-          "pbp_name": "M.Lloyd",
-          "player_games": 7,
-          "carries": 54,
-          "carries_per_game": 7.7,
-          "carry_share_pct": 39.7,
-          "rush_yards": 142,
-          "rush_yards_per_game": 20.3,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.349
-        },
-        {
-          "player": "Kaleb Johnson",
-          "pbp_name": "K.Johnson",
-          "player_games": 6,
-          "carries": 28,
-          "carries_per_game": 4.7,
-          "carry_share_pct": 20.6,
-          "rush_yards": 104,
-          "rush_yards_per_game": 17.3,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.456
-        },
-        {
-          "player": "Pierre Strong",
-          "pbp_name": "P.Strong",
-          "player_games": 3,
-          "carries": 16,
-          "carries_per_game": 5.3,
-          "carry_share_pct": 11.8,
-          "rush_yards": 35,
-          "rush_yards_per_game": 11.7,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.146
+          "position": "RB",
+          "gp": 7,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.36
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Christian Watson",
+        "ypg": 85.0,
+        "targets_pg": 8.0
+      },
+      "rb1": {
+        "name": "Josh Jacobs",
+        "ypg": 46.0,
+        "carries_pg": 11.0
+      }
     },
     "HOU": {
       "team": "HOU",
       "games_played": 7,
       "qb1": "C.J. Stroud",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 253.7,
+      "qb_pass_yards_per_game": 266.7,
       "comp_rate_w1_w7": 0.5442,
       "comp_rate_w6_w7": 0.5467,
       "yards_per_comp_w1_w7": 11.67,
@@ -2128,121 +1574,70 @@
       },
       "top_receivers": [
         {
+          "player": "Nico Collins",
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 7.0,
+          "target_share_pct": 22.5,
+          "rec_yards_per_game": 65.8,
+          "recent_snap_pct": 0.67
+        },
+        {
           "player": "Dalton Schultz",
-          "pbp_name": "D.Schultz",
-          "player_games": 7,
-          "targets": 43,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 6.1,
-          "target_share_pct": 18.5,
-          "receptions": 33,
-          "rec_per_game": 4.7,
-          "rec_yards": 341,
-          "rec_yards_per_game": 48.7,
-          "air_yards": 242.0,
-          "rec_tds": 0
+          "target_share_pct": 17.4,
+          "rec_yards_per_game": 46.0,
+          "recent_snap_pct": 0.57
         },
         {
           "player": "Xavier Hutchinson",
-          "pbp_name": "X.Hutchinson",
-          "player_games": 7,
-          "targets": 40,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 5.7,
-          "target_share_pct": 17.2,
-          "receptions": 21,
-          "rec_per_game": 3.0,
-          "rec_yards": 258,
+          "target_share_pct": 17.6,
           "rec_yards_per_game": 36.9,
-          "air_yards": 445.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.56
         },
         {
-          "player": "Nico Collins",
-          "pbp_name": "N.Collins",
-          "player_games": 5,
-          "targets": 35,
-          "targets_per_game": 7.0,
-          "target_share_pct": 15.1,
-          "receptions": 24,
-          "rec_per_game": 4.8,
-          "rec_yards": 329,
-          "rec_yards_per_game": 65.8,
-          "air_yards": 436.0,
-          "rec_tds": 3
-        },
-        {
-          "player": "Jaylin Noel",
-          "pbp_name": "J.Noel",
-          "player_games": 7,
-          "targets": 23,
-          "targets_per_game": 3.3,
-          "target_share_pct": 9.9,
-          "receptions": 19,
-          "rec_per_game": 2.7,
-          "rec_yards": 331,
-          "rec_yards_per_game": 47.3,
-          "air_yards": 225.0,
-          "rec_tds": 2
-        },
-        {
-          "player": "Kayshon Boutte",
-          "pbp_name": "K.Boutte",
-          "player_games": 7,
-          "targets": 23,
-          "targets_per_game": 3.3,
-          "target_share_pct": 9.9,
-          "receptions": 15,
-          "rec_per_game": 2.1,
-          "rec_yards": 194,
-          "rec_yards_per_game": 27.7,
-          "air_yards": 281.0,
-          "rec_tds": 0
+          "player": "Cade Stover",
+          "position": "TE",
+          "gp": 3,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.36
         }
       ],
       "top_rushers": [
         {
           "player": "Woody Marks",
-          "pbp_name": "W.Marks",
-          "player_games": 7,
-          "carries": 77,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 11.0,
-          "carry_share_pct": 49.4,
-          "rush_yards": 271,
-          "rush_yards_per_game": 38.7,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.176
-        },
-        {
-          "player": "David Montgomery",
-          "pbp_name": "D.Montgomery",
-          "player_games": 5,
-          "carries": 52,
-          "carries_per_game": 10.4,
-          "carry_share_pct": 33.3,
-          "rush_yards": 138,
-          "rush_yards_per_game": 27.6,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.345
-        },
-        {
-          "player": "C.J. Stroud",
-          "pbp_name": "C.Stroud",
-          "player_games": 7,
-          "carries": 8,
-          "carries_per_game": 1.1,
-          "carry_share_pct": 5.1,
-          "rush_yards": 13,
-          "rush_yards_per_game": 1.9,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.484
+          "carry_share_pct": 75.7,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.89
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Nico Collins",
+        "ypg": 65.8,
+        "targets_pg": 7.0
+      },
+      "rb1": {
+        "name": "Woody Marks",
+        "ypg": 46.0,
+        "carries_pg": 11.0
+      }
     },
     "IND": {
       "team": "IND",
       "games_played": 7,
       "qb1": "Daniel Jones",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 180.4,
+      "qb_pass_yards_per_game": 199.7,
       "comp_rate_w1_w7": 0.5238,
       "comp_rate_w6_w7": 0.443,
       "yards_per_comp_w1_w7": 9.78,
@@ -2300,120 +1695,78 @@
       "top_receivers": [
         {
           "player": "Josh Downs",
-          "pbp_name": "J.Downs",
-          "player_games": 7,
-          "targets": 46,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 6.6,
           "target_share_pct": 20.4,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 307,
           "rec_yards_per_game": 43.9,
-          "air_yards": 490.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.85
         },
         {
           "player": "Keenan Allen",
-          "pbp_name": "K.Allen",
-          "player_games": 6,
-          "targets": 43,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 7.2,
-          "target_share_pct": 19.1,
-          "receptions": 29,
-          "rec_per_game": 4.8,
-          "rec_yards": 258,
+          "target_share_pct": 21.2,
           "rec_yards_per_game": 43.0,
-          "air_yards": 317.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Tyler Warren",
-          "pbp_name": "T.Warren",
-          "player_games": 5,
-          "targets": 36,
-          "targets_per_game": 7.2,
-          "target_share_pct": 16.0,
-          "receptions": 30,
-          "rec_per_game": 6.0,
-          "rec_yards": 213,
-          "rec_yards_per_game": 42.6,
-          "air_yards": 145.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.49
         },
         {
           "player": "Laquon Treadwell",
-          "pbp_name": "L.Treadwell",
-          "player_games": 7,
-          "targets": 26,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 3.7,
-          "target_share_pct": 11.6,
-          "receptions": 15,
-          "rec_per_game": 2.1,
-          "rec_yards": 197,
-          "rec_yards_per_game": 28.1,
-          "air_yards": 336.0,
-          "rec_tds": 0
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.74
         },
         {
-          "player": "Jonathan Taylor",
-          "pbp_name": "J.Taylor",
-          "player_games": 7,
-          "targets": 26,
-          "targets_per_game": 3.7,
-          "target_share_pct": 11.6,
-          "receptions": 17,
-          "rec_per_game": 2.4,
-          "rec_yards": 178,
-          "rec_yards_per_game": 25.4,
-          "air_yards": -35.0,
-          "rec_tds": 0
+          "player": "Mo Alie-Cox",
+          "position": "TE",
+          "gp": 4,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.64
         }
       ],
       "top_rushers": [
         {
           "player": "Jonathan Taylor",
-          "pbp_name": "J.Taylor",
-          "player_games": 7,
-          "carries": 140,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 20.0,
-          "carry_share_pct": 73.7,
-          "rush_yards": 587,
+          "carry_share_pct": 57.0,
           "rush_yards_per_game": 83.9,
-          "rush_tds": 8,
-          "rush_epa_per_play": -0.014
+          "recent_snap_pct": 0.67
         },
         {
           "player": "Seth McGowan",
-          "pbp_name": "S.McGowan",
-          "player_games": 7,
-          "carries": 32,
-          "carries_per_game": 4.6,
-          "carry_share_pct": 16.8,
-          "rush_yards": 134,
-          "rush_yards_per_game": 19.1,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.073
-        },
-        {
-          "player": "Daniel Jones",
-          "pbp_name": "D.Jones",
-          "player_games": 7,
-          "carries": 11,
-          "carries_per_game": 1.6,
-          "carry_share_pct": 5.8,
-          "rush_yards": 23,
-          "rush_yards_per_game": 3.3,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.885
+          "position": "RB",
+          "gp": 6,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.33
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Josh Downs",
+        "ypg": 43.9,
+        "targets_pg": 6.6
+      },
+      "rb1": {
+        "name": "Jonathan Taylor",
+        "ypg": 83.9,
+        "carries_pg": 20.0
+      }
     },
     "JAX": {
       "team": "JAX",
       "games_played": 6,
       "qb1": "Trevor Lawrence",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 234.8,
+      "qb_pass_yards_per_game": 246.7,
       "comp_rate_w1_w7": 0.5581,
       "comp_rate_w6_w7": 0.5581,
       "yards_per_comp_w1_w7": 12.33,
@@ -2471,120 +1824,78 @@
       "top_receivers": [
         {
           "player": "Parker Washington",
-          "pbp_name": "P.Washington",
-          "player_games": 6,
-          "targets": 46,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 7.7,
-          "target_share_pct": 25.7,
-          "receptions": 26,
-          "rec_per_game": 4.3,
-          "rec_yards": 416,
+          "target_share_pct": 25.6,
           "rec_yards_per_game": 69.3,
-          "air_yards": 599.0,
-          "rec_tds": 4
-        },
-        {
-          "player": "Brenton Strange",
-          "pbp_name": "B.Strange",
-          "player_games": 6,
-          "targets": 33,
-          "targets_per_game": 5.5,
-          "target_share_pct": 18.4,
-          "receptions": 26,
-          "rec_per_game": 4.3,
-          "rec_yards": 279,
-          "rec_yards_per_game": 46.5,
-          "air_yards": 254.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.73
         },
         {
           "player": "Jakobi Meyers",
-          "pbp_name": "J.Meyers",
-          "player_games": 6,
-          "targets": 28,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 4.7,
-          "target_share_pct": 15.6,
-          "receptions": 20,
-          "rec_per_game": 3.3,
-          "rec_yards": 285,
+          "target_share_pct": 15.4,
           "rec_yards_per_game": 47.5,
-          "air_yards": 297.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.75
         },
         {
-          "player": "Bri.Thomas",
-          "pbp_name": "Bri.Thomas",
-          "player_games": 6,
-          "targets": 20,
-          "targets_per_game": 3.3,
-          "target_share_pct": 11.2,
-          "receptions": 9,
-          "rec_per_game": 1.5,
-          "rec_yards": 105,
-          "rec_yards_per_game": 17.5,
-          "air_yards": 219.0,
-          "rec_tds": 1
+          "player": "Brenton Strange",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 5.5,
+          "target_share_pct": 18.8,
+          "rec_yards_per_game": 46.5,
+          "recent_snap_pct": 0.76
         },
         {
-          "player": "Bhayshul Tuten",
-          "pbp_name": "B.Tuten",
-          "player_games": 6,
-          "targets": 14,
-          "targets_per_game": 2.3,
-          "target_share_pct": 7.8,
-          "receptions": 13,
-          "rec_per_game": 2.2,
-          "rec_yards": 126,
-          "rec_yards_per_game": 21.0,
-          "air_yards": -43.0,
-          "rec_tds": 2
+          "player": "Josh Cameron",
+          "position": "WR",
+          "gp": 4,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.51
         }
       ],
       "top_rushers": [
         {
           "player": "Bhayshul Tuten",
-          "pbp_name": "B.Tuten",
-          "player_games": 6,
-          "carries": 94,
+          "position": "RB",
+          "gp": 6,
           "carries_per_game": 15.7,
-          "carry_share_pct": 61.4,
-          "rush_yards": 388,
+          "carry_share_pct": 49.3,
           "rush_yards_per_game": 64.7,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.046
+          "recent_snap_pct": 0.58
         },
         {
           "player": "Chris Rodriguez",
-          "pbp_name": "C.Rodriguez",
-          "player_games": 6,
-          "carries": 39,
-          "carries_per_game": 6.5,
-          "carry_share_pct": 25.5,
-          "rush_yards": 168,
-          "rush_yards_per_game": 28.0,
-          "rush_tds": 2,
-          "rush_epa_per_play": 0.087
-        },
-        {
-          "player": "Ameer Abdullah",
-          "pbp_name": "A.Abdullah",
-          "player_games": 6,
-          "carries": 10,
-          "carries_per_game": 1.7,
-          "carry_share_pct": 6.5,
-          "rush_yards": 45,
-          "rush_yards_per_game": 7.5,
-          "rush_tds": 0,
-          "rush_epa_per_play": 0.057
+          "position": "RB",
+          "gp": 1,
+          "carries_per_game": 12.5,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 52.0,
+          "recent_snap_pct": 0.3
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Parker Washington",
+        "ypg": 69.3,
+        "targets_pg": 7.7
+      },
+      "rb1": {
+        "name": "Bhayshul Tuten",
+        "ypg": 64.7,
+        "carries_pg": 15.7
+      }
     },
     "KC": {
       "team": "KC",
       "games_played": 6,
       "qb1": "Patrick Mahomes",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 239.0,
+      "qb_pass_yards_per_game": 245.7,
       "comp_rate_w1_w7": 0.5536,
       "comp_rate_w6_w7": 0.5676,
       "yards_per_comp_w1_w7": 11.89,
@@ -2641,121 +1952,70 @@
       },
       "top_receivers": [
         {
-          "player": "Xavier Worthy",
-          "pbp_name": "X.Worthy",
-          "player_games": 6,
-          "targets": 35,
-          "targets_per_game": 5.8,
-          "target_share_pct": 19.4,
-          "receptions": 24,
-          "rec_per_game": 4.0,
-          "rec_yards": 217,
-          "rec_yards_per_game": 36.2,
-          "air_yards": 305.0,
-          "rec_tds": 1
-        },
-        {
           "player": "Travis Kelce",
-          "pbp_name": "T.Kelce",
-          "player_games": 6,
-          "targets": 35,
+          "position": "TE",
+          "gp": 6,
           "targets_per_game": 5.8,
-          "target_share_pct": 19.4,
-          "receptions": 24,
-          "rec_per_game": 4.0,
-          "rec_yards": 343,
+          "target_share_pct": 18.6,
           "rec_yards_per_game": 57.2,
-          "air_yards": 221.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.83
         },
         {
-          "player": "Kenneth Walker",
-          "pbp_name": "K.Walker",
-          "player_games": 6,
-          "targets": 28,
-          "targets_per_game": 4.7,
-          "target_share_pct": 15.6,
-          "receptions": 18,
-          "rec_per_game": 3.0,
-          "rec_yards": 116,
-          "rec_yards_per_game": 19.3,
-          "air_yards": -14.0,
-          "rec_tds": 2
+          "player": "Xavier Worthy",
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 5.8,
+          "target_share_pct": 19.6,
+          "rec_yards_per_game": 36.2,
+          "recent_snap_pct": 0.87
         },
         {
-          "player": "Rashee Rice",
-          "pbp_name": "R.Rice",
-          "player_games": 4,
-          "targets": 17,
-          "targets_per_game": 4.2,
-          "target_share_pct": 9.4,
-          "receptions": 13,
-          "rec_per_game": 3.2,
-          "rec_yards": 190,
-          "rec_yards_per_game": 47.5,
-          "air_yards": 126.0,
-          "rec_tds": 1
+          "player": "Noah Gray",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.53
         },
         {
-          "player": "Tyquan Thornton",
-          "pbp_name": "T.Thornton",
-          "player_games": 4,
-          "targets": 15,
-          "targets_per_game": 3.8,
-          "target_share_pct": 8.3,
-          "receptions": 11,
-          "rec_per_game": 2.8,
-          "rec_yards": 219,
-          "rec_yards_per_game": 54.8,
-          "air_yards": 281.0,
-          "rec_tds": 2
+          "player": "Jalen Royals",
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.68
         }
       ],
       "top_rushers": [
         {
-          "player": "Kenneth Walker",
-          "pbp_name": "K.Walker",
-          "player_games": 6,
-          "carries": 120,
+          "player": "Kenneth Walker III",
+          "position": "RB",
+          "gp": 6,
           "carries_per_game": 20.0,
-          "carry_share_pct": 83.9,
-          "rush_yards": 701,
+          "carry_share_pct": 62.9,
           "rush_yards_per_game": 116.8,
-          "rush_tds": 6,
-          "rush_epa_per_play": 0.096
-        },
-        {
-          "player": "Emmett Johnson",
-          "pbp_name": "E.Johnson",
-          "player_games": 6,
-          "carries": 19,
-          "carries_per_game": 3.2,
-          "carry_share_pct": 13.3,
-          "rush_yards": 62,
-          "rush_yards_per_game": 10.3,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.108
-        },
-        {
-          "player": "Khyiris Tonga",
-          "pbp_name": "K.Tonga",
-          "player_games": 6,
-          "carries": 2,
-          "carries_per_game": 0.3,
-          "carry_share_pct": 1.4,
-          "rush_yards": 3,
-          "rush_yards_per_game": 0.5,
-          "rush_tds": 0,
-          "rush_epa_per_play": 0.12
+          "recent_snap_pct": 0.74
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Travis Kelce",
+        "ypg": 57.2,
+        "targets_pg": 5.8
+      },
+      "rb1": {
+        "name": "Kenneth Walker III",
+        "ypg": 116.8,
+        "carries_pg": 20.0
+      }
     },
     "LAC": {
       "team": "LAC",
       "games_played": 6,
       "qb1": "Justin Herbert",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 168.2,
+      "qb_pass_yards_per_game": 190.2,
       "comp_rate_w1_w7": 0.4477,
       "comp_rate_w6_w7": 0.4583,
       "yards_per_comp_w1_w7": 10.66,
@@ -2812,121 +2072,79 @@
       },
       "top_receivers": [
         {
-          "player": "Tre Harris",
-          "pbp_name": "T.Harris",
-          "player_games": 5,
-          "targets": 25,
-          "targets_per_game": 5.0,
-          "target_share_pct": 14.4,
-          "receptions": 15,
-          "rec_per_game": 3.0,
-          "rec_yards": 225,
-          "rec_yards_per_game": 45.0,
-          "air_yards": 285.0,
-          "rec_tds": 0
+          "player": "KeAndre Lambert-Smith",
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 9.0,
+          "target_share_pct": 25.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.87
         },
         {
           "player": "Quentin Johnston",
-          "pbp_name": "Q.Johnston",
-          "player_games": 5,
-          "targets": 22,
+          "position": "WR",
+          "gp": 5,
           "targets_per_game": 4.4,
-          "target_share_pct": 12.6,
-          "receptions": 8,
-          "rec_per_game": 1.6,
-          "rec_yards": 165,
-          "rec_yards_per_game": 33.0,
-          "air_yards": 307.0,
-          "rec_tds": 0
+          "target_share_pct": 14.9,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.82
         },
         {
-          "player": "Oronde Gadsden II",
-          "pbp_name": "O.Gadsden",
-          "player_games": 6,
-          "targets": 21,
-          "targets_per_game": 3.5,
-          "target_share_pct": 12.1,
-          "receptions": 12,
-          "rec_per_game": 2.0,
-          "rec_yards": 103,
-          "rec_yards_per_game": 17.2,
-          "air_yards": 163.0,
-          "rec_tds": 1
+          "player": "Theo Wease",
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.47
         },
         {
-          "player": "Ladd McConkey",
-          "pbp_name": "L.McConkey",
-          "player_games": 5,
-          "targets": 18,
-          "targets_per_game": 3.6,
-          "target_share_pct": 10.3,
-          "receptions": 13,
-          "rec_per_game": 2.6,
-          "rec_yards": 200,
-          "rec_yards_per_game": 40.0,
-          "air_yards": 238.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Keaton Mitchell",
-          "pbp_name": "K.Mitchell",
-          "player_games": 6,
-          "targets": 15,
-          "targets_per_game": 2.5,
-          "target_share_pct": 8.6,
-          "receptions": 12,
-          "rec_per_game": 2.0,
-          "rec_yards": 52,
-          "rec_yards_per_game": 8.7,
-          "air_yards": -27.0,
-          "rec_tds": 1
+          "player": "Charlie Kolar",
+          "position": "TE",
+          "gp": 3,
+          "targets_per_game": 4.3,
+          "target_share_pct": 15.8,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.66
         }
       ],
       "top_rushers": [
         {
           "player": "Omarion Hampton",
-          "pbp_name": "O.Hampton",
-          "player_games": 6,
-          "carries": 80,
+          "position": "RB",
+          "gp": 6,
           "carries_per_game": 13.3,
-          "carry_share_pct": 53.3,
-          "rush_yards": 289,
+          "carry_share_pct": 45.0,
           "rush_yards_per_game": 48.2,
-          "rush_tds": 3,
-          "rush_epa_per_play": -0.267
-        },
-        {
-          "player": "Keaton Mitchell",
-          "pbp_name": "K.Mitchell",
-          "player_games": 6,
-          "carries": 35,
-          "carries_per_game": 5.8,
-          "carry_share_pct": 23.3,
-          "rush_yards": 139,
-          "rush_yards_per_game": 23.2,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.161
+          "recent_snap_pct": 0.5
         },
         {
           "player": "Kimani Vidal",
-          "pbp_name": "K.Vidal",
-          "player_games": 6,
-          "carries": 21,
-          "carries_per_game": 3.5,
-          "carry_share_pct": 14.0,
-          "rush_yards": 109,
-          "rush_yards_per_game": 18.2,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.028
+          "position": "RB",
+          "gp": 4,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.37
         }
-      ]
+      ],
+      "wr1": {
+        "name": "KeAndre Lambert-Smith",
+        "ypg": 34.0,
+        "targets_pg": 9.0
+      },
+      "rb1": {
+        "name": "Omarion Hampton",
+        "ypg": 48.2,
+        "carries_pg": 13.3
+      }
     },
     "LAR": {
       "team": "LAR",
       "games_played": 7,
-      "qb1": "M.Stafford",
+      "qb1": "Matthew Stafford",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 272.3,
+      "qb_pass_yards_per_game": 284.1,
       "comp_rate_w1_w7": 0.6019,
       "comp_rate_w6_w7": 0.6857,
       "yards_per_comp_w1_w7": 10.59,
@@ -2983,121 +2201,79 @@
       },
       "top_receivers": [
         {
-          "player": "P.Nacua",
-          "pbp_name": "P.Nacua",
-          "player_games": 5,
-          "targets": 62,
+          "player": "Puka Nacua",
+          "position": "WR",
+          "gp": 5,
           "targets_per_game": 12.4,
-          "target_share_pct": 22.9,
-          "receptions": 45,
-          "rec_per_game": 9.0,
-          "rec_yards": 485,
+          "target_share_pct": 31.6,
           "rec_yards_per_game": 97.0,
-          "air_yards": 552.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.85
         },
         {
-          "player": "D.Adams",
-          "pbp_name": "D.Adams",
-          "player_games": 6,
-          "targets": 49,
-          "targets_per_game": 8.2,
-          "target_share_pct": 18.1,
-          "receptions": 30,
-          "rec_per_game": 5.0,
-          "rec_yards": 480,
-          "rec_yards_per_game": 80.0,
-          "air_yards": 759.0,
-          "rec_tds": 4
-        },
-        {
-          "player": "K.Williams",
-          "pbp_name": "K.Williams",
-          "player_games": 7,
-          "targets": 41,
-          "targets_per_game": 5.9,
-          "target_share_pct": 15.1,
-          "receptions": 32,
-          "rec_per_game": 4.6,
-          "rec_yards": 239,
-          "rec_yards_per_game": 34.1,
-          "air_yards": 104.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "T.Higbee",
-          "pbp_name": "T.Higbee",
-          "player_games": 6,
-          "targets": 32,
+          "player": "Tyler Higbee",
+          "position": "TE",
+          "gp": 6,
           "targets_per_game": 5.3,
-          "target_share_pct": 11.8,
-          "receptions": 26,
-          "rec_per_game": 4.3,
-          "rec_yards": 260,
+          "target_share_pct": 14.0,
           "rec_yards_per_game": 43.3,
-          "air_yards": 256.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.74
         },
         {
-          "player": "C.Parkinson",
-          "pbp_name": "C.Parkinson",
-          "player_games": 6,
-          "targets": 19,
-          "targets_per_game": 3.2,
-          "target_share_pct": 7.0,
-          "receptions": 14,
-          "rec_per_game": 2.3,
-          "rec_yards": 103,
-          "rec_yards_per_game": 17.2,
-          "air_yards": 42.0,
-          "rec_tds": 1
+          "player": "Colby Parkinson",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.69
+        },
+        {
+          "player": "Davis Allen",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.69
         }
       ],
       "top_rushers": [
         {
-          "player": "K.Williams",
-          "pbp_name": "K.Williams",
-          "player_games": 7,
-          "carries": 96,
+          "player": "Kyren Williams",
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 13.7,
-          "carry_share_pct": 55.5,
-          "rush_yards": 492,
+          "carry_share_pct": 45.0,
           "rush_yards_per_game": 70.3,
-          "rush_tds": 5,
-          "rush_epa_per_play": 0.012
+          "recent_snap_pct": 0.51
         },
         {
-          "player": "B.Corum",
-          "pbp_name": "B.Corum",
-          "player_games": 7,
-          "carries": 64,
-          "carries_per_game": 9.1,
-          "carry_share_pct": 37.0,
-          "rush_yards": 316,
-          "rush_yards_per_game": 45.1,
-          "rush_tds": 2,
-          "rush_epa_per_play": 0.136
-        },
-        {
-          "player": "R.Rivers",
-          "pbp_name": "R.Rivers",
-          "player_games": 1,
-          "carries": 5,
-          "carries_per_game": 5.0,
-          "carry_share_pct": 2.9,
-          "rush_yards": 19,
-          "rush_yards_per_game": 19.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.548
+          "player": "Blake Corum",
+          "position": "RB",
+          "gp": 7,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.44
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Puka Nacua",
+        "ypg": 97.0,
+        "targets_pg": 12.4
+      },
+      "rb1": {
+        "name": "Kyren Williams",
+        "ypg": 70.3,
+        "carries_pg": 13.7
+      }
     },
     "LV": {
       "team": "LV",
       "games_played": 7,
       "qb1": "Kirk Cousins",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 260.6,
+      "qb_pass_yards_per_game": 268.1,
       "comp_rate_w1_w7": 0.5526,
       "comp_rate_w6_w7": 0.5,
       "yards_per_comp_w1_w7": 11.54,
@@ -3155,120 +2331,69 @@
       "top_receivers": [
         {
           "player": "Brock Bowers",
-          "pbp_name": "B.Bowers",
-          "player_games": 5,
-          "targets": 52,
-          "targets_per_game": 10.4,
-          "target_share_pct": 20.2,
-          "receptions": 34,
-          "rec_per_game": 6.8,
-          "rec_yards": 455,
+          "position": "TE",
+          "gp": 5,
+          "targets_per_game": 10.2,
+          "target_share_pct": 27.1,
           "rec_yards_per_game": 91.0,
-          "air_yards": 519.0,
-          "rec_tds": 3
+          "recent_snap_pct": 0.84
         },
         {
           "player": "Tre Tucker",
-          "pbp_name": "T.Tucker",
-          "player_games": 7,
-          "targets": 47,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 6.7,
           "target_share_pct": 18.2,
-          "receptions": 29,
-          "rec_per_game": 4.1,
-          "rec_yards": 474,
           "rec_yards_per_game": 67.7,
-          "air_yards": 619.0,
-          "rec_tds": 4
-        },
-        {
-          "player": "Ashton Jeanty",
-          "pbp_name": "A.Jeanty",
-          "player_games": 7,
-          "targets": 45,
-          "targets_per_game": 6.4,
-          "target_share_pct": 17.4,
-          "receptions": 34,
-          "rec_per_game": 4.9,
-          "rec_yards": 312,
-          "rec_yards_per_game": 44.6,
-          "air_yards": 98.0,
-          "rec_tds": 3
+          "recent_snap_pct": 0.82
         },
         {
           "player": "Michael Mayer",
-          "pbp_name": "M.Mayer",
-          "player_games": 7,
-          "targets": 37,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 5.3,
-          "target_share_pct": 14.3,
-          "receptions": 31,
-          "rec_per_game": 4.4,
-          "rec_yards": 298,
+          "target_share_pct": 14.5,
           "rec_yards_per_game": 42.6,
-          "air_yards": 181.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.82
         },
         {
           "player": "Jalen Nailor",
-          "pbp_name": "J.Nailor",
-          "player_games": 6,
-          "targets": 21,
-          "targets_per_game": 3.5,
-          "target_share_pct": 8.1,
-          "receptions": 8,
-          "rec_per_game": 1.3,
-          "rec_yards": 75,
-          "rec_yards_per_game": 12.5,
-          "air_yards": 246.0,
-          "rec_tds": 0
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 4.0,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.75
         }
       ],
       "top_rushers": [
         {
           "player": "Ashton Jeanty",
-          "pbp_name": "A.Jeanty",
-          "player_games": 7,
-          "carries": 106,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 15.1,
-          "carry_share_pct": 66.2,
-          "rush_yards": 328,
+          "carry_share_pct": 61.2,
           "rush_yards_per_game": 46.9,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.305
-        },
-        {
-          "player": "Mike Washington Jr.",
-          "pbp_name": "M.Washington",
-          "player_games": 7,
-          "carries": 40,
-          "carries_per_game": 5.7,
-          "carry_share_pct": 25.0,
-          "rush_yards": 195,
-          "rush_yards_per_game": 27.9,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.127
-        },
-        {
-          "player": "Dylan Laube",
-          "pbp_name": "D.Laube",
-          "player_games": 7,
-          "carries": 5,
-          "carries_per_game": 0.7,
-          "carry_share_pct": 3.1,
-          "rush_yards": 9,
-          "rush_yards_per_game": 1.3,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.026
+          "recent_snap_pct": 0.72
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Brock Bowers",
+        "ypg": 91.0,
+        "targets_pg": 10.2
+      },
+      "rb1": {
+        "name": "Ashton Jeanty",
+        "ypg": 46.9,
+        "carries_pg": 15.1
+      }
     },
     "MIA": {
       "team": "MIA",
       "games_played": 6,
       "qb1": "Malik Willis",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 162.3,
+      "qb_pass_yards_per_game": 176.2,
       "comp_rate_w1_w7": 0.4328,
       "comp_rate_w6_w7": 0.4828,
       "yards_per_comp_w1_w7": 12.15,
@@ -3325,121 +2450,70 @@
       },
       "top_receivers": [
         {
+          "player": "Caleb Douglas",
+          "position": "WR",
+          "gp": 3,
+          "targets_per_game": 4.3,
+          "target_share_pct": 17.8,
+          "rec_yards_per_game": 61.0,
+          "recent_snap_pct": 0.68
+        },
+        {
           "player": "Malik Washington",
-          "pbp_name": "M.Washington",
-          "player_games": 6,
-          "targets": 39,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 6.5,
-          "target_share_pct": 26.0,
-          "receptions": 26,
-          "rec_per_game": 4.3,
-          "rec_yards": 289,
+          "target_share_pct": 25.7,
           "rec_yards_per_game": 48.2,
-          "air_yards": 438.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.8
         },
         {
           "player": "Greg Dulcich",
-          "pbp_name": "G.Dulcich",
-          "player_games": 6,
-          "targets": 23,
-          "targets_per_game": 3.8,
-          "target_share_pct": 15.3,
-          "receptions": 18,
-          "rec_per_game": 3.0,
-          "rec_yards": 215,
-          "rec_yards_per_game": 35.8,
-          "air_yards": 141.0,
-          "rec_tds": 0
+          "position": "TE",
+          "gp": 5,
+          "targets_per_game": 4.4,
+          "target_share_pct": 16.7,
+          "rec_yards_per_game": 42.6,
+          "recent_snap_pct": 0.65
         },
         {
           "player": "Chris Bell",
-          "pbp_name": "C.Bell",
-          "player_games": 6,
-          "targets": 19,
-          "targets_per_game": 3.2,
-          "target_share_pct": 12.7,
-          "receptions": 8,
-          "rec_per_game": 1.3,
-          "rec_yards": 117,
-          "rec_yards_per_game": 19.5,
-          "air_yards": 311.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Kevin Coleman",
-          "pbp_name": "K.Coleman",
-          "player_games": 6,
-          "targets": 18,
-          "targets_per_game": 3.0,
-          "target_share_pct": 12.0,
-          "receptions": 5,
-          "rec_per_game": 0.8,
-          "rec_yards": 36,
-          "rec_yards_per_game": 6.0,
-          "air_yards": 246.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Caleb Douglas",
-          "pbp_name": "C.Douglas",
-          "player_games": 3,
-          "targets": 13,
-          "targets_per_game": 4.3,
-          "target_share_pct": 8.7,
-          "receptions": 9,
-          "rec_per_game": 3.0,
-          "rec_yards": 183,
-          "rec_yards_per_game": 61.0,
-          "air_yards": 137.0,
-          "rec_tds": 2
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.48
         }
       ],
       "top_rushers": [
         {
           "player": "Ollie Gordon",
-          "pbp_name": "O.Gordon",
-          "player_games": 6,
-          "carries": 72,
-          "carries_per_game": 12.0,
-          "carry_share_pct": 49.0,
-          "rush_yards": 339,
-          "rush_yards_per_game": 56.5,
-          "rush_tds": 4,
-          "rush_epa_per_play": 0.059
-        },
-        {
-          "player": "De'Von Achane",
-          "pbp_name": "D.Achane",
-          "player_games": 3,
-          "carries": 34,
-          "carries_per_game": 11.3,
-          "carry_share_pct": 23.1,
-          "rush_yards": 127,
-          "rush_yards_per_game": 42.3,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.171
-        },
-        {
-          "player": "Jaylen Wright",
-          "pbp_name": "J.Wright",
-          "player_games": 5,
-          "carries": 20,
-          "carries_per_game": 4.0,
-          "carry_share_pct": 13.6,
-          "rush_yards": 36,
-          "rush_yards_per_game": 7.2,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.378
+          "position": "RB",
+          "gp": 1,
+          "carries_per_game": 12.5,
+          "carry_share_pct": 70.5,
+          "rush_yards_per_game": 52.0,
+          "recent_snap_pct": 0.83
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Caleb Douglas",
+        "ypg": 61.0,
+        "targets_pg": 4.3
+      },
+      "rb1": {
+        "name": "Ollie Gordon",
+        "ypg": 52.0,
+        "carries_pg": 12.5
+      }
     },
     "MIN": {
       "team": "MIN",
       "games_played": 6,
       "qb1": "Kyler Murray",
       "qb_player_games": 5,
-      "qb_pass_yards_per_game": 146.6,
+      "qb_pass_yards_per_game": 162.4,
       "comp_rate_w1_w7": 0.4907,
       "comp_rate_w6_w7": 0.4375,
       "yards_per_comp_w1_w7": 10.26,
@@ -3497,120 +2571,69 @@
       "top_receivers": [
         {
           "player": "Justin Jefferson",
-          "pbp_name": "J.Jefferson",
-          "player_games": 5,
-          "targets": 32,
-          "targets_per_game": 6.4,
-          "target_share_pct": 20.8,
-          "receptions": 23,
-          "rec_per_game": 4.6,
-          "rec_yards": 304,
-          "rec_yards_per_game": 60.8,
-          "air_yards": 338.0,
-          "rec_tds": 3
-        },
-        {
-          "player": "T.J. Hockenson",
-          "pbp_name": "T.Hockenson",
-          "player_games": 6,
-          "targets": 32,
-          "targets_per_game": 5.3,
-          "target_share_pct": 20.8,
-          "receptions": 27,
-          "rec_per_game": 4.5,
-          "rec_yards": 237,
-          "rec_yards_per_game": 39.5,
-          "air_yards": 216.0,
-          "rec_tds": 2
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 6.2,
+          "target_share_pct": 26.4,
+          "rec_yards_per_game": 60.4,
+          "recent_snap_pct": 0.93
         },
         {
           "player": "Jordan Addison",
-          "pbp_name": "J.Addison",
-          "player_games": 5,
-          "targets": 25,
+          "position": "WR",
+          "gp": 5,
           "targets_per_game": 5.0,
-          "target_share_pct": 16.2,
-          "receptions": 13,
-          "rec_per_game": 2.6,
-          "rec_yards": 183,
+          "target_share_pct": 20.3,
           "rec_yards_per_game": 36.6,
-          "air_yards": 329.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.83
         },
         {
-          "player": "Aaron Jones",
-          "pbp_name": "A.Jones",
-          "player_games": 6,
-          "targets": 19,
-          "targets_per_game": 3.2,
-          "target_share_pct": 12.3,
-          "receptions": 13,
-          "rec_per_game": 2.2,
-          "rec_yards": 72,
-          "rec_yards_per_game": 12.0,
-          "air_yards": -5.0,
-          "rec_tds": 0
+          "player": "T.J. Hockenson",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 5.3,
+          "target_share_pct": 20.4,
+          "rec_yards_per_game": 39.5,
+          "recent_snap_pct": 0.76
         },
         {
-          "player": "Gavin Bartholomew",
-          "pbp_name": "G.Bartholomew",
-          "player_games": 6,
-          "targets": 8,
-          "targets_per_game": 1.3,
-          "target_share_pct": 5.2,
-          "receptions": 7,
-          "rec_per_game": 1.2,
-          "rec_yards": 54,
-          "rec_yards_per_game": 9.0,
-          "air_yards": 26.0,
-          "rec_tds": 0
+          "player": "Jauan Jennings",
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.56
         }
       ],
       "top_rushers": [
         {
-          "player": "Aaron Jones",
-          "pbp_name": "A.Jones",
-          "player_games": 6,
-          "carries": 105,
-          "carries_per_game": 17.5,
-          "carry_share_pct": 68.6,
-          "rush_yards": 436,
-          "rush_yards_per_game": 72.7,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.189
-        },
-        {
           "player": "Jordan Mason",
-          "pbp_name": "J.Mason",
-          "player_games": 2,
-          "carries": 30,
+          "position": "RB",
+          "gp": 2,
           "carries_per_game": 15.0,
-          "carry_share_pct": 19.6,
-          "rush_yards": 127,
+          "carry_share_pct": 54.4,
           "rush_yards_per_game": 63.5,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.18
-        },
-        {
-          "player": "Demond Claiborne",
-          "pbp_name": "D.Claiborne",
-          "player_games": 4,
-          "carries": 6,
-          "carries_per_game": 1.5,
-          "carry_share_pct": 3.9,
-          "rush_yards": 13,
-          "rush_yards_per_game": 3.2,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.432
+          "recent_snap_pct": 0.64
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Justin Jefferson",
+        "ypg": 60.4,
+        "targets_pg": 6.2
+      },
+      "rb1": {
+        "name": "Jordan Mason",
+        "ypg": 63.5,
+        "carries_pg": 15.0
+      }
     },
     "NE": {
       "team": "NE",
       "games_played": 7,
       "qb1": "Drake Maye",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 246.7,
+      "qb_pass_yards_per_game": 254.9,
       "comp_rate_w1_w7": 0.5273,
       "comp_rate_w6_w7": 0.5833,
       "yards_per_comp_w1_w7": 12.62,
@@ -3667,121 +2690,70 @@
       },
       "top_receivers": [
         {
-          "player": "DeMario Douglas",
-          "pbp_name": "D.Douglas",
-          "player_games": 7,
-          "targets": 34,
-          "targets_per_game": 4.9,
-          "target_share_pct": 16.2,
-          "receptions": 23,
-          "rec_per_game": 3.3,
-          "rec_yards": 256,
-          "rec_yards_per_game": 36.6,
-          "air_yards": 351.0,
-          "rec_tds": 3
-        },
-        {
           "player": "Hunter Henry",
-          "pbp_name": "H.Henry",
-          "player_games": 7,
-          "targets": 31,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 4.4,
-          "target_share_pct": 14.8,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 296,
+          "target_share_pct": 15.3,
           "rec_yards_per_game": 42.3,
-          "air_yards": 187.0,
-          "rec_tds": 2
-        },
-        {
-          "player": "Rhamondre Stevenson",
-          "pbp_name": "R.Stevenson",
-          "player_games": 7,
-          "targets": 25,
-          "targets_per_game": 3.6,
-          "target_share_pct": 11.9,
-          "receptions": 20,
-          "rec_per_game": 2.9,
-          "rec_yards": 206,
-          "rec_yards_per_game": 29.4,
-          "air_yards": 19.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Romeo Doubs",
-          "pbp_name": "R.Doubs",
-          "player_games": 6,
-          "targets": 24,
-          "targets_per_game": 4.0,
-          "target_share_pct": 11.4,
-          "receptions": 14,
-          "rec_per_game": 2.3,
-          "rec_yards": 261,
-          "rec_yards_per_game": 43.5,
-          "air_yards": 423.0,
-          "rec_tds": 3
+          "recent_snap_pct": 0.76
         },
         {
           "player": "A.J. Brown",
-          "pbp_name": "A.Brown",
-          "player_games": 3,
-          "targets": 20,
+          "position": "WR",
+          "gp": 3,
           "targets_per_game": 6.7,
-          "target_share_pct": 9.5,
-          "receptions": 9,
-          "rec_per_game": 3.0,
-          "rec_yards": 101,
-          "rec_yards_per_game": 33.7,
-          "air_yards": 267.0,
-          "rec_tds": 0
+          "target_share_pct": 22.1,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.91
+        },
+        {
+          "player": "DeMario Douglas",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 4.9,
+          "target_share_pct": 16.2,
+          "rec_yards_per_game": 36.6,
+          "recent_snap_pct": 0.65
+        },
+        {
+          "player": "Eli Raridon",
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.54
         }
       ],
       "top_rushers": [
         {
           "player": "Rhamondre Stevenson",
-          "pbp_name": "R.Stevenson",
-          "player_games": 7,
-          "carries": 77,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 11.0,
-          "carry_share_pct": 44.8,
-          "rush_yards": 285,
-          "rush_yards_per_game": 40.7,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.085
-        },
-        {
-          "player": "TreVeyon Henderson",
-          "pbp_name": "T.Henderson",
-          "player_games": 6,
-          "carries": 52,
-          "carries_per_game": 8.7,
-          "carry_share_pct": 30.2,
-          "rush_yards": 203,
-          "rush_yards_per_game": 33.8,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.249
-        },
-        {
-          "player": "Corey Kiner",
-          "pbp_name": "C.Kiner",
-          "player_games": 7,
-          "carries": 35,
-          "carries_per_game": 5.0,
-          "carry_share_pct": 20.3,
-          "rush_yards": 151,
-          "rush_yards_per_game": 21.6,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.232
+          "carry_share_pct": 58.6,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.69
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Hunter Henry",
+        "ypg": 42.3,
+        "targets_pg": 4.4
+      },
+      "rb1": {
+        "name": "Rhamondre Stevenson",
+        "ypg": 46.0,
+        "carries_pg": 11.0
+      }
     },
     "NO": {
       "team": "NO",
       "games_played": 7,
       "qb1": "Tyler Shough",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 229.7,
+      "qb_pass_yards_per_game": 245.9,
       "comp_rate_w1_w7": 0.5828,
       "comp_rate_w6_w7": 0.6053,
       "yards_per_comp_w1_w7": 9.4,
@@ -3839,120 +2811,78 @@
       "top_receivers": [
         {
           "player": "Chris Olave",
-          "pbp_name": "C.Olave",
-          "player_games": 7,
-          "targets": 71,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 10.1,
-          "target_share_pct": 26.9,
-          "receptions": 49,
-          "rec_per_game": 7.0,
-          "rec_yards": 636,
+          "target_share_pct": 27.0,
           "rec_yards_per_game": 90.9,
-          "air_yards": 871.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.77
         },
         {
           "player": "Devaughn Vele",
-          "pbp_name": "D.Vele",
-          "player_games": 7,
-          "targets": 48,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 6.9,
-          "target_share_pct": 18.2,
-          "receptions": 33,
-          "rec_per_game": 4.7,
-          "rec_yards": 348,
+          "target_share_pct": 18.8,
           "rec_yards_per_game": 49.7,
-          "air_yards": 476.0,
-          "rec_tds": 3
+          "recent_snap_pct": 0.89
         },
         {
           "player": "Juwan Johnson",
-          "pbp_name": "J.Johnson",
-          "player_games": 7,
-          "targets": 37,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 5.3,
-          "target_share_pct": 14.0,
-          "receptions": 26,
-          "rec_per_game": 3.7,
-          "rec_yards": 255,
+          "target_share_pct": 14.1,
           "rec_yards_per_game": 36.4,
-          "air_yards": 172.0,
-          "rec_tds": 3
-        },
-        {
-          "player": "Alvin Kamara",
-          "pbp_name": "A.Kamara",
-          "player_games": 6,
-          "targets": 27,
-          "targets_per_game": 4.5,
-          "target_share_pct": 10.2,
-          "receptions": 22,
-          "rec_per_game": 3.7,
-          "rec_yards": 133,
-          "rec_yards_per_game": 22.2,
-          "air_yards": 10.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.56
         },
         {
           "player": "Bryce Lance",
-          "pbp_name": "B.Lance",
-          "player_games": 7,
-          "targets": 23,
-          "targets_per_game": 3.3,
-          "target_share_pct": 8.7,
-          "receptions": 9,
-          "rec_per_game": 1.3,
-          "rec_yards": 78,
-          "rec_yards_per_game": 11.1,
-          "air_yards": 275.0,
-          "rec_tds": 1
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.79
         }
       ],
       "top_rushers": [
         {
-          "player": "Kendre Miller",
-          "pbp_name": "K.Miller",
-          "player_games": 6,
-          "carries": 57,
-          "carries_per_game": 9.5,
-          "carry_share_pct": 35.4,
-          "rush_yards": 159,
-          "rush_yards_per_game": 26.5,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.288
-        },
-        {
           "player": "Alvin Kamara",
-          "pbp_name": "A.Kamara",
-          "player_games": 6,
-          "carries": 41,
-          "carries_per_game": 6.8,
-          "carry_share_pct": 25.5,
-          "rush_yards": 125,
-          "rush_yards_per_game": 20.8,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.144
+          "position": "RB",
+          "gp": 6,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 47.6,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.56
         },
         {
-          "player": "Travis Etienne",
-          "pbp_name": "T.Etienne",
-          "player_games": 3,
-          "carries": 31,
-          "carries_per_game": 10.3,
-          "carry_share_pct": 19.3,
-          "rush_yards": 130,
-          "rush_yards_per_game": 43.3,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.004
+          "player": "Kendre Miller",
+          "position": "RB",
+          "gp": 6,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.39
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Chris Olave",
+        "ypg": 90.9,
+        "targets_pg": 10.1
+      },
+      "rb1": {
+        "name": "Alvin Kamara",
+        "ypg": 46.0,
+        "carries_pg": 10.0
+      }
     },
     "NYG": {
       "team": "NYG",
       "games_played": 7,
-      "qb1": "Jameis Winston",
+      "qb1": "J.J. McCarthy",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 148.2,
+      "qb_pass_yards_per_game": 247.5,
       "comp_rate_w1_w7": 0.5213,
       "comp_rate_w6_w7": 0.5294,
       "yards_per_comp_w1_w7": 11.58,
@@ -4010,120 +2940,69 @@
       "top_receivers": [
         {
           "player": "Malik Nabers",
-          "pbp_name": "M.Nabers",
-          "player_games": 7,
-          "targets": 71,
-          "targets_per_game": 10.1,
-          "target_share_pct": 30.1,
-          "receptions": 48,
-          "rec_per_game": 6.9,
-          "rec_yards": 605,
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 10.0,
+          "target_share_pct": 29.0,
           "rec_yards_per_game": 86.4,
-          "air_yards": 811.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.73
         },
         {
           "player": "Isaiah Likely",
-          "pbp_name": "I.Likely",
-          "player_games": 7,
-          "targets": 64,
-          "targets_per_game": 9.1,
+          "position": "TE",
+          "gp": 7,
+          "targets_per_game": 9.0,
           "target_share_pct": 27.1,
-          "receptions": 41,
-          "rec_per_game": 5.9,
-          "rec_yards": 397,
-          "rec_yards_per_game": 56.7,
-          "air_yards": 501.0,
-          "rec_tds": 5
+          "rec_yards_per_game": 56.4,
+          "recent_snap_pct": 0.86
         },
         {
           "player": "Malachi Fields",
-          "pbp_name": "M.Fields",
-          "player_games": 7,
-          "targets": 30,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 4.3,
-          "target_share_pct": 12.7,
-          "receptions": 16,
-          "rec_per_game": 2.3,
-          "rec_yards": 248,
+          "target_share_pct": 14.0,
           "rec_yards_per_game": 35.4,
-          "air_yards": 413.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.74
         },
         {
-          "player": "Darnell Mooney",
-          "pbp_name": "D.Mooney",
-          "player_games": 7,
-          "targets": 22,
-          "targets_per_game": 3.1,
-          "target_share_pct": 9.3,
-          "receptions": 9,
-          "rec_per_game": 1.3,
-          "rec_yards": 113,
-          "rec_yards_per_game": 16.1,
-          "air_yards": 300.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Cam Skattebo",
-          "pbp_name": "C.Skattebo",
-          "player_games": 7,
-          "targets": 13,
-          "targets_per_game": 1.9,
-          "target_share_pct": 5.5,
-          "receptions": 11,
-          "rec_per_game": 1.6,
-          "rec_yards": 76,
-          "rec_yards_per_game": 10.9,
-          "air_yards": 24.0,
-          "rec_tds": 0
+          "player": "Chris Manhertz",
+          "position": "TE",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.44
         }
       ],
       "top_rushers": [
         {
           "player": "Cam Skattebo",
-          "pbp_name": "C.Skattebo",
-          "player_games": 7,
-          "carries": 98,
-          "carries_per_game": 14.0,
-          "carry_share_pct": 52.1,
-          "rush_yards": 418,
-          "rush_yards_per_game": 59.7,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.11
-        },
-        {
-          "player": "Najee Harris",
-          "pbp_name": "N.Harris",
-          "player_games": 5,
-          "carries": 32,
-          "carries_per_game": 6.4,
-          "carry_share_pct": 17.0,
-          "rush_yards": 101,
-          "rush_yards_per_game": 20.2,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.354
-        },
-        {
-          "player": "Tyrone Tracy Jr.",
-          "pbp_name": "T.Tracy",
-          "player_games": 7,
-          "carries": 19,
-          "carries_per_game": 2.7,
-          "carry_share_pct": 10.1,
-          "rush_yards": 55,
-          "rush_yards_per_game": 7.9,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.24
+          "position": "RB",
+          "gp": 6,
+          "carries_per_game": 16.3,
+          "carry_share_pct": 47.6,
+          "rush_yards_per_game": 69.7,
+          "recent_snap_pct": 0.56
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Malik Nabers",
+        "ypg": 86.4,
+        "targets_pg": 10.0
+      },
+      "rb1": {
+        "name": "Cam Skattebo",
+        "ypg": 69.7,
+        "carries_pg": 16.3
+      }
     },
     "NYJ": {
       "team": "NYJ",
       "games_played": 7,
       "qb1": "Geno Smith",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 207.1,
+      "qb_pass_yards_per_game": 231.9,
       "comp_rate_w1_w7": 0.5709,
       "comp_rate_w6_w7": 0.589,
       "yards_per_comp_w1_w7": 11.19,
@@ -4181,120 +3060,69 @@
       "top_receivers": [
         {
           "player": "Garrett Wilson",
-          "pbp_name": "G.Wilson",
-          "player_games": 7,
-          "targets": 52,
-          "targets_per_game": 7.4,
-          "target_share_pct": 26.0,
-          "receptions": 37,
-          "rec_per_game": 5.3,
-          "rec_yards": 444,
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 7.3,
+          "target_share_pct": 25.9,
           "rec_yards_per_game": 63.4,
-          "air_yards": 488.0,
-          "rec_tds": 3
+          "recent_snap_pct": 0.85
         },
         {
-          "player": "Kenyon Sadiq",
-          "pbp_name": "K.Sadiq",
-          "player_games": 7,
-          "targets": 25,
-          "targets_per_game": 3.6,
-          "target_share_pct": 12.5,
-          "receptions": 16,
-          "rec_per_game": 2.3,
-          "rec_yards": 164,
-          "rec_yards_per_game": 23.4,
-          "air_yards": 136.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Braelon Allen",
-          "pbp_name": "B.Allen",
-          "player_games": 7,
-          "targets": 20,
-          "targets_per_game": 2.9,
-          "target_share_pct": 10.0,
-          "receptions": 15,
-          "rec_per_game": 2.1,
-          "rec_yards": 75,
-          "rec_yards_per_game": 10.7,
-          "air_yards": 3.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Mason Taylor",
-          "pbp_name": "M.Taylor",
-          "player_games": 5,
-          "targets": 19,
-          "targets_per_game": 3.8,
-          "target_share_pct": 9.5,
-          "receptions": 14,
-          "rec_per_game": 2.8,
-          "rec_yards": 119,
-          "rec_yards_per_game": 23.8,
-          "air_yards": 135.0,
-          "rec_tds": 2
+          "player": "Omar Cooper",
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.64
         },
         {
           "player": "Adonai Mitchell",
-          "pbp_name": "A.Mitchell",
-          "player_games": 3,
-          "targets": 18,
+          "position": "WR",
+          "gp": 3,
           "targets_per_game": 6.0,
-          "target_share_pct": 9.0,
-          "receptions": 9,
-          "rec_per_game": 3.0,
-          "rec_yards": 123,
+          "target_share_pct": 18.9,
           "rec_yards_per_game": 41.0,
-          "air_yards": 252.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.44
+        },
+        {
+          "player": "Mason Taylor",
+          "position": "TE",
+          "gp": 4,
+          "targets_per_game": 4.5,
+          "target_share_pct": 16.2,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.63
         }
       ],
       "top_rushers": [
         {
           "player": "Braelon Allen",
-          "pbp_name": "B.Allen",
-          "player_games": 7,
-          "carries": 91,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 13.0,
-          "carry_share_pct": 56.2,
-          "rush_yards": 418,
+          "carry_share_pct": 66.3,
           "rush_yards_per_game": 59.7,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.042
-        },
-        {
-          "player": "Breece Hall",
-          "pbp_name": "B.Hall",
-          "player_games": 3,
-          "carries": 51,
-          "carries_per_game": 17.0,
-          "carry_share_pct": 31.5,
-          "rush_yards": 163,
-          "rush_yards_per_game": 54.3,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.173
-        },
-        {
-          "player": "Isaiah Davis",
-          "pbp_name": "I.Davis",
-          "player_games": 7,
-          "carries": 10,
-          "carries_per_game": 1.4,
-          "carry_share_pct": 6.2,
-          "rush_yards": 29,
-          "rush_yards_per_game": 4.1,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.16
+          "recent_snap_pct": 0.78
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Garrett Wilson",
+        "ypg": 63.4,
+        "targets_pg": 7.3
+      },
+      "rb1": {
+        "name": "Braelon Allen",
+        "ypg": 59.7,
+        "carries_pg": 13.0
+      }
     },
     "PHI": {
       "team": "PHI",
       "games_played": 7,
-      "qb1": "Jalen Hurts",
+      "qb1": "Tanner McKee",
       "qb_player_games": 5,
-      "qb_pass_yards_per_game": 170.6,
+      "qb_pass_yards_per_game": 213.0,
       "comp_rate_w1_w7": 0.4929,
       "comp_rate_w6_w7": 0.5385,
       "yards_per_comp_w1_w7": 9.85,
@@ -4352,120 +3180,69 @@
       "top_receivers": [
         {
           "player": "DeVonta Smith",
-          "pbp_name": "D.Smith",
-          "player_games": 4,
-          "targets": 41,
+          "position": "WR",
+          "gp": 4,
           "targets_per_game": 10.2,
-          "target_share_pct": 18.6,
-          "receptions": 26,
-          "rec_per_game": 6.5,
-          "rec_yards": 310,
+          "target_share_pct": 32.3,
           "rec_yards_per_game": 77.5,
-          "air_yards": 502.0,
-          "rec_tds": 2
-        },
-        {
-          "player": "Makai Lemon",
-          "pbp_name": "M.Lemon",
-          "player_games": 7,
-          "targets": 36,
-          "targets_per_game": 5.1,
-          "target_share_pct": 16.4,
-          "receptions": 25,
-          "rec_per_game": 3.6,
-          "rec_yards": 194,
-          "rec_yards_per_game": 27.7,
-          "air_yards": 184.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Dontayvion Wicks",
-          "pbp_name": "D.Wicks",
-          "player_games": 6,
-          "targets": 32,
-          "targets_per_game": 5.3,
-          "target_share_pct": 14.5,
-          "receptions": 19,
-          "rec_per_game": 3.2,
-          "rec_yards": 284,
-          "rec_yards_per_game": 47.3,
-          "air_yards": 420.0,
-          "rec_tds": 1
+          "recent_snap_pct": 0.66
         },
         {
           "player": "Dallas Goedert",
-          "pbp_name": "D.Goedert",
-          "player_games": 5,
-          "targets": 31,
+          "position": "TE",
+          "gp": 5,
           "targets_per_game": 6.2,
-          "target_share_pct": 14.1,
-          "receptions": 22,
-          "rec_per_game": 4.4,
-          "rec_yards": 228,
+          "target_share_pct": 18.5,
           "rec_yards_per_game": 45.6,
-          "air_yards": 171.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.81
         },
         {
-          "player": "Darius Cooper",
-          "pbp_name": "D.Cooper",
-          "player_games": 7,
-          "targets": 18,
-          "targets_per_game": 2.6,
-          "target_share_pct": 8.2,
-          "receptions": 9,
-          "rec_per_game": 1.3,
-          "rec_yards": 156,
-          "rec_yards_per_game": 22.3,
-          "air_yards": 199.0,
-          "rec_tds": 4
+          "player": "Dontayvion Wicks",
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 5.3,
+          "target_share_pct": 17.8,
+          "rec_yards_per_game": 47.3,
+          "recent_snap_pct": 0.62
+        },
+        {
+          "player": "Makai Lemon",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 5.1,
+          "target_share_pct": 16.8,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.81
         }
       ],
       "top_rushers": [
         {
-          "player": "Saquon Barkley",
-          "pbp_name": "S.Barkley",
-          "player_games": 5,
-          "carries": 43,
-          "carries_per_game": 8.6,
-          "carry_share_pct": 29.9,
-          "rush_yards": 244,
-          "rush_yards_per_game": 48.8,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.073
-        },
-        {
           "player": "Dameon Pierce",
-          "pbp_name": "D.Pierce",
-          "player_games": 3,
-          "carries": 37,
+          "position": "RB",
+          "gp": 3,
           "carries_per_game": 12.3,
-          "carry_share_pct": 25.7,
-          "rush_yards": 96,
-          "rush_yards_per_game": 32.0,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.159
-        },
-        {
-          "player": "Tank Bigsby",
-          "pbp_name": "T.Bigsby",
-          "player_games": 4,
-          "carries": 28,
-          "carries_per_game": 7.0,
-          "carry_share_pct": 19.4,
-          "rush_yards": 91,
-          "rush_yards_per_game": 22.8,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.171
+          "carry_share_pct": 78.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.95
         }
-      ]
+      ],
+      "wr1": {
+        "name": "DeVonta Smith",
+        "ypg": 77.5,
+        "targets_pg": 10.2
+      },
+      "rb1": {
+        "name": "Dameon Pierce",
+        "ypg": 46.0,
+        "carries_pg": 12.3
+      }
     },
     "PIT": {
       "team": "PIT",
       "games_played": 7,
       "qb1": "Aaron Rodgers",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 217.6,
+      "qb_pass_yards_per_game": 242.7,
       "comp_rate_w1_w7": 0.5192,
       "comp_rate_w6_w7": 0.5778,
       "yards_per_comp_w1_w7": 10.49,
@@ -4522,121 +3299,79 @@
       },
       "top_receivers": [
         {
-          "player": "D.K. Metcalf",
-          "pbp_name": "D.Metcalf",
-          "player_games": 7,
-          "targets": 58,
-          "targets_per_game": 8.3,
-          "target_share_pct": 23.5,
-          "receptions": 32,
-          "rec_per_game": 4.6,
-          "rec_yards": 374,
-          "rec_yards_per_game": 53.4,
-          "air_yards": 737.0,
-          "rec_tds": 1
-        },
-        {
           "player": "Germie Bernard",
-          "pbp_name": "G.Bernard",
-          "player_games": 7,
-          "targets": 37,
-          "targets_per_game": 5.3,
-          "target_share_pct": 15.0,
-          "receptions": 27,
-          "rec_per_game": 3.9,
-          "rec_yards": 254,
-          "rec_yards_per_game": 36.3,
-          "air_yards": 210.0,
-          "rec_tds": 1
+          "position": "WR",
+          "gp": 6,
+          "targets_per_game": 6.2,
+          "target_share_pct": 17.5,
+          "rec_yards_per_game": 42.3,
+          "recent_snap_pct": 0.91
         },
         {
-          "player": "Jaylen Warren",
-          "pbp_name": "J.Warren",
-          "player_games": 7,
-          "targets": 35,
-          "targets_per_game": 5.0,
-          "target_share_pct": 14.2,
-          "receptions": 24,
-          "rec_per_game": 3.4,
-          "rec_yards": 294,
-          "rec_yards_per_game": 42.0,
-          "air_yards": -41.0,
-          "rec_tds": 1
+          "player": "D.K. Metcalf",
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.92
         },
         {
           "player": "Pat Freiermuth",
-          "pbp_name": "P.Freiermuth",
-          "player_games": 7,
-          "targets": 33,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 4.7,
-          "target_share_pct": 13.4,
-          "receptions": 23,
-          "rec_per_game": 3.3,
-          "rec_yards": 200,
-          "rec_yards_per_game": 28.6,
-          "air_yards": 276.0,
-          "rec_tds": 4
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.53
         },
         {
-          "player": "Roman Wilson",
-          "pbp_name": "R.Wilson",
-          "player_games": 5,
-          "targets": 25,
-          "targets_per_game": 5.0,
-          "target_share_pct": 10.1,
-          "receptions": 14,
-          "rec_per_game": 2.8,
-          "rec_yards": 188,
-          "rec_yards_per_game": 37.6,
-          "air_yards": 381.0,
-          "rec_tds": 2
+          "player": "Darnell Washington",
+          "position": "TE",
+          "gp": 7,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.56
         }
       ],
       "top_rushers": [
         {
           "player": "Jaylen Warren",
-          "pbp_name": "J.Warren",
-          "player_games": 7,
-          "carries": 102,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 14.6,
-          "carry_share_pct": 69.9,
-          "rush_yards": 561,
+          "carry_share_pct": 52.7,
           "rush_yards_per_game": 80.1,
-          "rush_tds": 1,
-          "rush_epa_per_play": 0.098
+          "recent_snap_pct": 0.62
         },
         {
           "player": "Rico Dowdle",
-          "pbp_name": "R.Dowdle",
-          "player_games": 4,
-          "carries": 31,
-          "carries_per_game": 7.8,
-          "carry_share_pct": 21.2,
-          "rush_yards": 118,
-          "rush_yards_per_game": 29.5,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.193
-        },
-        {
-          "player": "Travis Homer",
-          "pbp_name": "T.Homer",
-          "player_games": 6,
-          "carries": 5,
-          "carries_per_game": 0.8,
-          "carry_share_pct": 3.4,
-          "rush_yards": 15,
-          "rush_yards_per_game": 2.5,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.016
+          "position": "RB",
+          "gp": 4,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.44
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Germie Bernard",
+        "ypg": 42.3,
+        "targets_pg": 6.2
+      },
+      "rb1": {
+        "name": "Jaylen Warren",
+        "ypg": 80.1,
+        "carries_pg": 14.6
+      }
     },
     "SEA": {
       "team": "SEA",
       "games_played": 7,
       "qb1": "Sam Darnold",
       "qb_player_games": 6,
-      "qb_pass_yards_per_game": 199.3,
+      "qb_pass_yards_per_game": 255.4,
       "comp_rate_w1_w7": 0.5681,
       "comp_rate_w6_w7": 0.5341,
       "yards_per_comp_w1_w7": 11.82,
@@ -4694,120 +3429,78 @@
       "top_receivers": [
         {
           "player": "Jaxon Smith-Njigba",
-          "pbp_name": "J.Smith-Njigba",
-          "player_games": 7,
-          "targets": 78,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 11.1,
-          "target_share_pct": 36.1,
-          "receptions": 58,
-          "rec_per_game": 8.3,
-          "rec_yards": 867,
+          "target_share_pct": 36.9,
           "rec_yards_per_game": 123.9,
-          "air_yards": 813.0,
-          "rec_tds": 8
-        },
-        {
-          "player": "Rashid Shaheed",
-          "pbp_name": "R.Shaheed",
-          "player_games": 7,
-          "targets": 31,
-          "targets_per_game": 4.4,
-          "target_share_pct": 14.4,
-          "receptions": 16,
-          "rec_per_game": 2.3,
-          "rec_yards": 165,
-          "rec_yards_per_game": 23.6,
-          "air_yards": 333.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.77
         },
         {
           "player": "AJ Barner",
-          "pbp_name": "A.Barner",
-          "player_games": 7,
-          "targets": 29,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 4.1,
-          "target_share_pct": 13.4,
-          "receptions": 19,
-          "rec_per_game": 2.7,
-          "rec_yards": 180,
-          "rec_yards_per_game": 25.7,
-          "air_yards": 62.0,
-          "rec_tds": 0
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.8
         },
         {
           "player": "Cooper Kupp",
-          "pbp_name": "C.Kupp",
-          "player_games": 7,
-          "targets": 27,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 3.9,
-          "target_share_pct": 12.5,
-          "receptions": 18,
-          "rec_per_game": 2.6,
-          "rec_yards": 199,
-          "rec_yards_per_game": 28.4,
-          "air_yards": 226.0,
-          "rec_tds": 1
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.65
         },
         {
-          "player": "George Holani",
-          "pbp_name": "G.Holani",
-          "player_games": 7,
-          "targets": 14,
-          "targets_per_game": 2.0,
-          "target_share_pct": 6.5,
-          "receptions": 12,
-          "rec_per_game": 1.7,
-          "rec_yards": 88,
-          "rec_yards_per_game": 12.6,
-          "air_yards": -4.0,
-          "rec_tds": 0
+          "player": "Nick Kallerup",
+          "position": "TE",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.38
         }
       ],
       "top_rushers": [
         {
           "player": "Emanuel Wilson",
-          "pbp_name": "E.Wilson",
-          "player_games": 7,
-          "carries": 111,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 15.9,
-          "carry_share_pct": 56.9,
-          "rush_yards": 403,
+          "carry_share_pct": 45.0,
           "rush_yards_per_game": 57.6,
-          "rush_tds": 3,
-          "rush_epa_per_play": -0.148
+          "recent_snap_pct": 0.48
         },
         {
           "player": "George Holani",
-          "pbp_name": "G.Holani",
-          "player_games": 7,
-          "carries": 36,
-          "carries_per_game": 5.1,
-          "carry_share_pct": 18.5,
-          "rush_yards": 108,
-          "rush_yards_per_game": 15.4,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.352
-        },
-        {
-          "player": "Jadarian Price",
-          "pbp_name": "J.Price",
-          "player_games": 3,
-          "carries": 28,
-          "carries_per_game": 9.3,
-          "carry_share_pct": 14.4,
-          "rush_yards": 119,
-          "rush_yards_per_game": 39.7,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.445
+          "position": "RB",
+          "gp": 7,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.36
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Jaxon Smith-Njigba",
+        "ypg": 123.9,
+        "targets_pg": 11.1
+      },
+      "rb1": {
+        "name": "Emanuel Wilson",
+        "ypg": 57.6,
+        "carries_pg": 15.9
+      }
     },
     "SF": {
       "team": "SF",
       "games_played": 7,
       "qb1": "Brock Purdy",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 244.3,
+      "qb_pass_yards_per_game": 249.7,
       "comp_rate_w1_w7": 0.6033,
       "comp_rate_w6_w7": 0.6234,
       "yards_per_comp_w1_w7": 11.97,
@@ -4865,120 +3558,78 @@
       "top_receivers": [
         {
           "player": "George Kittle",
-          "pbp_name": "G.Kittle",
-          "player_games": 7,
-          "targets": 46,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 6.6,
-          "target_share_pct": 22.3,
-          "receptions": 34,
-          "rec_per_game": 4.9,
-          "rec_yards": 425,
+          "target_share_pct": 22.4,
           "rec_yards_per_game": 60.7,
-          "air_yards": 352.0,
-          "rec_tds": 5
+          "recent_snap_pct": 0.91
         },
         {
-          "player": "Christian McCaffrey",
-          "pbp_name": "C.McCaffrey",
-          "player_games": 7,
-          "targets": 42,
-          "targets_per_game": 6.0,
-          "target_share_pct": 20.4,
-          "receptions": 34,
-          "rec_per_game": 4.9,
-          "rec_yards": 251,
-          "rec_yards_per_game": 35.9,
-          "air_yards": 106.0,
-          "rec_tds": 0
+          "player": "Jordan Watkins",
+          "position": "WR",
+          "gp": 3,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 46.0,
+          "recent_snap_pct": 0.76
         },
         {
-          "player": "Mike Evans",
-          "pbp_name": "M.Evans",
-          "player_games": 6,
-          "targets": 40,
-          "targets_per_game": 6.7,
-          "target_share_pct": 19.4,
-          "receptions": 27,
-          "rec_per_game": 4.5,
-          "rec_yards": 502,
-          "rec_yards_per_game": 83.7,
-          "air_yards": 571.0,
-          "rec_tds": 4
+          "player": "Brandin Cooks",
+          "position": "WR",
+          "gp": 4,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.68
         },
         {
-          "player": "Deebo Samuel",
-          "pbp_name": "D.Samuel",
-          "player_games": 5,
-          "targets": 20,
-          "targets_per_game": 4.0,
-          "target_share_pct": 9.7,
-          "receptions": 16,
-          "rec_per_game": 3.2,
-          "rec_yards": 126,
-          "rec_yards_per_game": 25.2,
-          "air_yards": 51.0,
-          "rec_tds": 2
-        },
-        {
-          "player": "Kyle Juszczyk",
-          "pbp_name": "K.Juszczyk",
-          "player_games": 6,
-          "targets": 11,
-          "targets_per_game": 1.8,
-          "target_share_pct": 5.3,
-          "receptions": 8,
-          "rec_per_game": 1.3,
-          "rec_yards": 76,
-          "rec_yards_per_game": 12.7,
-          "air_yards": 85.0,
-          "rec_tds": 2
+          "player": "Jacob Cowing",
+          "position": "WR",
+          "gp": 4,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.39
         }
       ],
       "top_rushers": [
         {
           "player": "Christian McCaffrey",
-          "pbp_name": "C.McCaffrey",
-          "player_games": 7,
-          "carries": 84,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 12.0,
-          "carry_share_pct": 49.7,
-          "rush_yards": 389,
+          "carry_share_pct": 45.0,
           "rush_yards_per_game": 55.6,
-          "rush_tds": 8,
-          "rush_epa_per_play": 0.144
+          "recent_snap_pct": 0.52
         },
         {
           "player": "Kaelon Black",
-          "pbp_name": "K.Black",
-          "player_games": 7,
-          "carries": 57,
-          "carries_per_game": 8.1,
-          "carry_share_pct": 33.7,
-          "rush_yards": 233,
-          "rush_yards_per_game": 33.3,
-          "rush_tds": 1,
-          "rush_epa_per_play": -0.13
-        },
-        {
-          "player": "Brock Purdy",
-          "pbp_name": "B.Purdy",
-          "player_games": 7,
-          "carries": 12,
-          "carries_per_game": 1.7,
-          "carry_share_pct": 7.1,
-          "rush_yards": 21,
-          "rush_yards_per_game": 3.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": 0.181
+          "position": "RB",
+          "gp": 7,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.47
         }
-      ]
+      ],
+      "wr1": {
+        "name": "George Kittle",
+        "ypg": 60.7,
+        "targets_pg": 6.6
+      },
+      "rb1": {
+        "name": "Christian McCaffrey",
+        "ypg": 55.6,
+        "carries_pg": 12.0
+      }
     },
     "TB": {
       "team": "TB",
       "games_played": 7,
       "qb1": "Baker Mayfield",
       "qb_player_games": 4,
-      "qb_pass_yards_per_game": 154.8,
+      "qb_pass_yards_per_game": 169.8,
       "comp_rate_w1_w7": 0.4723,
       "comp_rate_w6_w7": 0.4394,
       "yards_per_comp_w1_w7": 9.22,
@@ -5035,121 +3686,79 @@
       },
       "top_receivers": [
         {
-          "player": "Emeka Egbuka",
-          "pbp_name": "E.Egbuka",
-          "player_games": 6,
-          "targets": 49,
-          "targets_per_game": 8.2,
-          "target_share_pct": 24.7,
-          "receptions": 28,
-          "rec_per_game": 4.7,
-          "rec_yards": 240,
-          "rec_yards_per_game": 40.0,
-          "air_yards": 475.0,
-          "rec_tds": 2
-        },
-        {
           "player": "Chris Godwin",
-          "pbp_name": "C.Godwin",
-          "player_games": 7,
-          "targets": 34,
-          "targets_per_game": 4.9,
-          "target_share_pct": 17.2,
-          "receptions": 27,
-          "rec_per_game": 3.9,
-          "rec_yards": 243,
-          "rec_yards_per_game": 34.7,
-          "air_yards": 119.0,
-          "rec_tds": 0
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.73
         },
         {
           "player": "Cade Otton",
-          "pbp_name": "C.Otton",
-          "player_games": 7,
-          "targets": 30,
+          "position": "TE",
+          "gp": 7,
           "targets_per_game": 4.3,
-          "target_share_pct": 15.2,
-          "receptions": 19,
-          "rec_per_game": 2.7,
-          "rec_yards": 186,
-          "rec_yards_per_game": 26.6,
-          "air_yards": 190.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Bucky Irving",
-          "pbp_name": "B.Irving",
-          "player_games": 7,
-          "targets": 23,
-          "targets_per_game": 3.3,
-          "target_share_pct": 11.6,
-          "receptions": 18,
-          "rec_per_game": 2.6,
-          "rec_yards": 78,
-          "rec_yards_per_game": 11.1,
-          "air_yards": -47.0,
-          "rec_tds": 1
+          "target_share_pct": 15.3,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.89
         },
         {
           "player": "Ted Hurst",
-          "pbp_name": "T.Hurst",
-          "player_games": 7,
-          "targets": 23,
-          "targets_per_game": 3.3,
-          "target_share_pct": 11.6,
-          "receptions": 11,
-          "rec_per_game": 1.6,
-          "rec_yards": 168,
-          "rec_yards_per_game": 24.0,
-          "air_yards": 359.0,
-          "rec_tds": 1
+          "position": "WR",
+          "gp": 1,
+          "targets_per_game": 4.5,
+          "target_share_pct": 18.0,
+          "rec_yards_per_game": 38.0,
+          "recent_snap_pct": 0.56
+        },
+        {
+          "player": "Tez Johnson",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.65
         }
       ],
       "top_rushers": [
         {
           "player": "Bucky Irving",
-          "pbp_name": "B.Irving",
-          "player_games": 7,
-          "carries": 120,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 17.1,
-          "carry_share_pct": 66.7,
-          "rush_yards": 558,
+          "carry_share_pct": 50.1,
           "rush_yards_per_game": 79.7,
-          "rush_tds": 4,
-          "rush_epa_per_play": 0.037
+          "recent_snap_pct": 0.59
         },
         {
           "player": "Kenneth Gainwell",
-          "pbp_name": "K.Gainwell",
-          "player_games": 7,
-          "carries": 33,
-          "carries_per_game": 4.7,
-          "carry_share_pct": 18.3,
-          "rush_yards": 149,
-          "rush_yards_per_game": 21.3,
-          "rush_tds": 0,
-          "rush_epa_per_play": 0.013
-        },
-        {
-          "player": "Sean Tucker",
-          "pbp_name": "S.Tucker",
-          "player_games": 5,
-          "carries": 15,
-          "carries_per_game": 3.0,
-          "carry_share_pct": 8.3,
-          "rush_yards": 80,
-          "rush_yards_per_game": 16.0,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.301
+          "position": "RB",
+          "gp": 1,
+          "carries_per_game": 12.5,
+          "carry_share_pct": 45.0,
+          "rush_yards_per_game": 52.0,
+          "recent_snap_pct": 0.3
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Chris Godwin",
+        "ypg": 38.0,
+        "targets_pg": 4.5
+      },
+      "rb1": {
+        "name": "Bucky Irving",
+        "ypg": 79.7,
+        "carries_pg": 17.1
+      }
     },
     "TEN": {
       "team": "TEN",
       "games_played": 7,
       "qb1": "Cam Ward",
       "qb_player_games": 7,
-      "qb_pass_yards_per_game": 157.7,
+      "qb_pass_yards_per_game": 168.4,
       "comp_rate_w1_w7": 0.5202,
       "comp_rate_w6_w7": 0.5439,
       "yards_per_comp_w1_w7": 9.14,
@@ -5207,120 +3816,69 @@
       "top_receivers": [
         {
           "player": "Carnell Tate",
-          "pbp_name": "C.Tate",
-          "player_games": 7,
-          "targets": 51,
+          "position": "WR",
+          "gp": 7,
           "targets_per_game": 7.3,
-          "target_share_pct": 26.0,
-          "receptions": 34,
-          "rec_per_game": 4.9,
-          "rec_yards": 413,
+          "target_share_pct": 27.0,
           "rec_yards_per_game": 59.0,
-          "air_yards": 646.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Wan'Dale Robinson",
-          "pbp_name": "W.Robinson",
-          "player_games": 7,
-          "targets": 43,
-          "targets_per_game": 6.1,
-          "target_share_pct": 21.9,
-          "receptions": 29,
-          "rec_per_game": 4.1,
-          "rec_yards": 205,
-          "rec_yards_per_game": 29.3,
-          "air_yards": 249.0,
-          "rec_tds": 2
+          "recent_snap_pct": 0.89
         },
         {
           "player": "Elic Ayomanor",
-          "pbp_name": "E.Ayomanor",
-          "player_games": 7,
-          "targets": 21,
-          "targets_per_game": 3.0,
-          "target_share_pct": 10.7,
-          "receptions": 10,
-          "rec_per_game": 1.4,
-          "rec_yards": 177,
-          "rec_yards_per_game": 25.3,
-          "air_yards": 225.0,
-          "rec_tds": 1
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.89
+        },
+        {
+          "player": "Wan'Dale Robinson",
+          "position": "WR",
+          "gp": 7,
+          "targets_per_game": 6.1,
+          "target_share_pct": 21.2,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.6
         },
         {
           "player": "Gunnar Helm",
-          "pbp_name": "G.Helm",
-          "player_games": 7,
-          "targets": 18,
-          "targets_per_game": 2.6,
-          "target_share_pct": 9.2,
-          "receptions": 12,
-          "rec_per_game": 1.7,
-          "rec_yards": 86,
-          "rec_yards_per_game": 12.3,
-          "air_yards": 87.0,
-          "rec_tds": 0
-        },
-        {
-          "player": "Tyjae Spears",
-          "pbp_name": "T.Spears",
-          "player_games": 6,
-          "targets": 17,
-          "targets_per_game": 2.8,
-          "target_share_pct": 8.7,
-          "receptions": 15,
-          "rec_per_game": 2.5,
-          "rec_yards": 75,
-          "rec_yards_per_game": 12.5,
-          "air_yards": -46.0,
-          "rec_tds": 0
+          "position": "TE",
+          "gp": 6,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.84
         }
       ],
       "top_rushers": [
         {
           "player": "Tony Pollard",
-          "pbp_name": "T.Pollard",
-          "player_games": 7,
-          "carries": 112,
+          "position": "RB",
+          "gp": 7,
           "carries_per_game": 16.0,
-          "carry_share_pct": 76.2,
-          "rush_yards": 478,
+          "carry_share_pct": 63.8,
           "rush_yards_per_game": 68.3,
-          "rush_tds": 4,
-          "rush_epa_per_play": -0.079
-        },
-        {
-          "player": "Tyjae Spears",
-          "pbp_name": "T.Spears",
-          "player_games": 6,
-          "carries": 18,
-          "carries_per_game": 3.0,
-          "carry_share_pct": 12.2,
-          "rush_yards": 66,
-          "rush_yards_per_game": 11.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.349
-        },
-        {
-          "player": "Nicholas Singleton",
-          "pbp_name": "N.Singleton",
-          "player_games": 3,
-          "carries": 7,
-          "carries_per_game": 2.3,
-          "carry_share_pct": 4.8,
-          "rush_yards": 12,
-          "rush_yards_per_game": 4.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.372
+          "recent_snap_pct": 0.75
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Carnell Tate",
+        "ypg": 59.0,
+        "targets_pg": 7.3
+      },
+      "rb1": {
+        "name": "Tony Pollard",
+        "ypg": 68.3,
+        "carries_pg": 16.0
+      }
     },
     "WAS": {
       "team": "WAS",
       "games_played": 6,
       "qb1": "Jayden Daniels",
       "qb_player_games": 4,
-      "qb_pass_yards_per_game": 174.5,
+      "qb_pass_yards_per_game": 189.8,
       "comp_rate_w1_w7": 0.4825,
       "comp_rate_w6_w7": 0.5918,
       "yards_per_comp_w1_w7": 10.36,
@@ -5377,114 +3935,63 @@
       },
       "top_receivers": [
         {
-          "player": "Stefon Diggs",
-          "pbp_name": "S.Diggs",
-          "player_games": 5,
-          "targets": 38,
-          "targets_per_game": 7.6,
-          "target_share_pct": 20.1,
-          "receptions": 24,
-          "rec_per_game": 4.8,
-          "rec_yards": 214,
-          "rec_yards_per_game": 42.8,
-          "air_yards": 319.0,
-          "rec_tds": 4
+          "player": "Chig Okonkwo",
+          "position": "TE",
+          "gp": 4,
+          "targets_per_game": 5.0,
+          "target_share_pct": 16.9,
+          "rec_yards_per_game": 37.5,
+          "recent_snap_pct": 0.76
         },
         {
-          "player": "Terry McLaurin",
-          "pbp_name": "T.McLaurin",
-          "player_games": 5,
-          "targets": 28,
-          "targets_per_game": 5.6,
-          "target_share_pct": 14.8,
-          "receptions": 15,
-          "rec_per_game": 3.0,
-          "rec_yards": 232,
-          "rec_yards_per_game": 46.4,
-          "air_yards": 347.0,
-          "rec_tds": 1
+          "player": "Stefon Diggs",
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 7.6,
+          "target_share_pct": 23.4,
+          "rec_yards_per_game": 42.8,
+          "recent_snap_pct": 0.61
         },
         {
           "player": "Antonio Williams",
-          "pbp_name": "A.Williams",
-          "player_games": 6,
-          "targets": 26,
+          "position": "WR",
+          "gp": 6,
           "targets_per_game": 4.3,
-          "target_share_pct": 13.8,
-          "receptions": 18,
-          "rec_per_game": 3.0,
-          "rec_yards": 205,
+          "target_share_pct": 14.0,
           "rec_yards_per_game": 34.2,
-          "air_yards": 305.0,
-          "rec_tds": 1
-        },
-        {
-          "player": "Chig Okonkwo",
-          "pbp_name": "C.Okonkwo",
-          "player_games": 4,
-          "targets": 20,
-          "targets_per_game": 5.0,
-          "target_share_pct": 10.6,
-          "receptions": 15,
-          "rec_per_game": 3.8,
-          "rec_yards": 150,
-          "rec_yards_per_game": 37.5,
-          "air_yards": 135.0,
-          "rec_tds": 0
+          "recent_snap_pct": 0.67
         },
         {
           "player": "Treylon Burks",
-          "pbp_name": "T.Burks",
-          "player_games": 5,
-          "targets": 17,
-          "targets_per_game": 3.4,
-          "target_share_pct": 9.0,
-          "receptions": 9,
-          "rec_per_game": 1.8,
-          "rec_yards": 152,
-          "rec_yards_per_game": 30.4,
-          "air_yards": 290.0,
-          "rec_tds": 2
+          "position": "WR",
+          "gp": 5,
+          "targets_per_game": 3.5,
+          "target_share_pct": 14.0,
+          "rec_yards_per_game": 34.0,
+          "recent_snap_pct": 0.55
         }
       ],
       "top_rushers": [
         {
-          "player": "Jacory Croskey-Merritt",
-          "pbp_name": "J.Croskey-Merritt",
-          "player_games": 5,
-          "carries": 67,
-          "carries_per_game": 13.4,
-          "carry_share_pct": 48.9,
-          "rush_yards": 239,
-          "rush_yards_per_game": 47.8,
-          "rush_tds": 2,
-          "rush_epa_per_play": -0.098
-        },
-        {
           "player": "Rachaad White",
-          "pbp_name": "R.White",
-          "player_games": 5,
-          "carries": 36,
-          "carries_per_game": 7.2,
-          "carry_share_pct": 26.3,
-          "rush_yards": 145,
-          "rush_yards_per_game": 29.0,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.088
-        },
-        {
-          "player": "Kaytron Allen",
-          "pbp_name": "K.Allen",
-          "player_games": 4,
-          "carries": 12,
-          "carries_per_game": 3.0,
-          "carry_share_pct": 8.8,
-          "rush_yards": 41,
-          "rush_yards_per_game": 10.2,
-          "rush_tds": 0,
-          "rush_epa_per_play": -0.319
+          "position": "RB",
+          "gp": 5,
+          "carries_per_game": 10.0,
+          "carry_share_pct": 58.6,
+          "rush_yards_per_game": 46.0,
+          "recent_snap_pct": 0.69
         }
-      ]
+      ],
+      "wr1": {
+        "name": "Chig Okonkwo",
+        "ypg": 37.5,
+        "targets_pg": 5.0
+      },
+      "rb1": {
+        "name": "Rachaad White",
+        "ypg": 46.0,
+        "carries_pg": 10.0
+      }
     }
   },
   "car_gb_tnf_courseiq_box_score": [

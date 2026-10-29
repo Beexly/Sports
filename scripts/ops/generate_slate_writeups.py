@@ -362,7 +362,7 @@ def simulate_game_10000(
         }
 
     if g["awayAbbr"] == "CAR" and g["homeAbbr"] == "GB":
-        home_wr1 = {"player": "Jayden Reed", "targets_per_game": 6.8, "target_share_pct": 24.0, "rec_yards_per_game": 61.8}
+        home_wr1 = {"player": "Christian Watson", "targets_per_game": 7.4, "target_share_pct": 25.0, "rec_yards_per_game": 66.2}
         away_wr1 = {"player": "Tetairoa McMillan", "targets_per_game": 6.4, "target_share_pct": 23.0, "rec_yards_per_game": 52.1}
         home_rb1 = {"player": "Josh Jacobs", "carries_per_game": 16.8, "carry_share_pct": 64.0, "rush_yards_per_game": 71.4}
         away_rb1 = {"player": "Chuba Hubbard", "carries_per_game": 16.1, "carry_share_pct": 68.0, "rush_yards_per_game": 68.2}
@@ -384,7 +384,7 @@ def simulate_game_10000(
                 "pUnder": float(jp["pUnder"]),
             })
         home_wr1_line = 56.5
-        leg3_player_name = "Jayden Reed"
+        leg3_player_name = "Christian Watson"
         leg3_side = "OVER"
         leg3_conf = 62
         p_leg3 = 0.62
@@ -431,7 +431,7 @@ def simulate_game_10000(
 
     football_reason = build_football_reason(g, away_t, home_t, verdict)
     home_wr2_name = (
-        "Christian Watson"
+        "Tucker Kraft"
         if g["homeAbbr"] == "GB"
         else (home_t["top_receivers"][1]["player"] if len(home_t["top_receivers"]) > 1 else f"{g['homeAbbr']} WR2")
     )
