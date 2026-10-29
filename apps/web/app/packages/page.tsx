@@ -3,7 +3,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
-  LIVE_WEEK8_2026_BOARD,
+  LIVE_SLATE_COACH_WRITEUPS,
   getRedactedTeasersForWindowSlot,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
@@ -57,19 +57,23 @@ export default function PackagesPage(): JSX.Element {
             <span className="text-xs font-mono text-plasma">T-48h Live Feed</span>
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {LIVE_WEEK8_2026_BOARD.slice(0, 4).map((writeup) => (
+            {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((writeup) => (
               <div key={writeup.id} className="border border-mineral/40 bg-carbon/60 p-3.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono uppercase text-plasma">{writeup.windowSlot}</span>
-                  <span className="text-[10px] font-mono text-ion-2">posted {writeup.postedDetails}</span>
+                  <span className="text-[10px] font-mono text-ion-2">
+                    {(writeup.paceOfPlay.noHuddleRate * 100).toFixed(1)}% no-huddle
+                  </span>
                 </div>
                 <h3 className="mt-1 text-sm font-medium text-ion-white">{writeup.matchup}</h3>
                 <p className="mt-2 text-xs text-ion-1 line-clamp-2">
-                  PASS. Total posted {writeup.postedTotal}. No packaged side.
+                  {writeup.schemeMatchup.coverageShell}
                 </p>
                 <div className="mt-3 flex items-center justify-between text-[11px] border-t border-mineral/30 pt-2 text-ion-2">
-                  <span>Pace not recorded</span>
-                  <span className="text-plasma">No packaged play</span>
+                  <span>{writeup.paceOfPlay.neutralSecPerSnap}s / snap</span>
+                  <span className="text-plasma">
+                    🔒 {writeup.sideTotalCall.sideConfidence} Side + {writeup.topProps.length} Props
+                  </span>
                 </div>
               </div>
             ))}

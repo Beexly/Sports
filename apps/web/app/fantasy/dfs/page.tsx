@@ -6,7 +6,7 @@ import { loadCurrentDfsSlate } from "@/lib/fantasy/dfs-current-slate";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { getPackageBySlug } from "@/lib/packages/catalog";
 import {
-  LIVE_WEEK8_2026_BOARD,
+  LIVE_SLATE_COACH_WRITEUPS,
   getRedactedTeasersForWindowSlot,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
@@ -202,17 +202,17 @@ export default async function DfsSuitePage() {
             </h2>
           </div>
           <span className="border border-plasma/40 bg-plasma/10 px-3 py-1 font-mono text-xs text-plasma">
-            Board only · no packaged lineup
+            10,000-Sim Environment Read · W1–W7 (18,738 Plays)
           </span>
         </div>
 
         <div className="mt-6 space-y-6">
-          {LIVE_WEEK8_2026_BOARD.map((w) => (
+          {LIVE_SLATE_COACH_WRITEUPS.map((w) => (
             <div key={w.id} className="border border-mineral/70 bg-carbon p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral/50 pb-3">
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-wider text-plasma">
-                    {w.windowSlot} · ESPN {w.espnEventId}
+                    {w.windowSlot} · {w.kickoff}
                   </span>
                   <h3 className="mt-0.5 font-display text-xl font-semibold text-ion-white">
                     {w.matchup}
@@ -220,19 +220,37 @@ export default async function DfsSuitePage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Posted: <strong className="text-ion-white">{w.postedDetails}</strong>
+                    Pace: <strong className="text-ion-white">{w.paceOfPlay.neutralSecPerSnap}s/snap</strong>
                   </span>
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Total: <strong className="text-ion-white">{w.postedTotal}</strong>
+                    No-Huddle: <strong className="text-ion-white">{(w.paceOfPlay.noHuddleRate * 100).toFixed(1)}%</strong>
                   </span>
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Gate: <strong className="text-plasma">PASS</strong>
+                    Pass EPA: <strong className="text-ion-white">{w.paceOfPlay.passEpaPlay}</strong>
+                  </span>
+                  <span className="border border-plasma/40 bg-plasma/10 px-2.5 py-1 text-plasma">
+                    Conviction: <strong>{w.sideTotalCall.sideConfidence}</strong>
                   </span>
                 </div>
               </div>
-              <p className="mt-4 text-xs leading-5 text-ion-1">{w.passReason}</p>
-              <div className="mt-4 border-t border-mineral/40 pt-3 font-mono text-xs text-ion-2">
-                No captain, cash core, or stack. Salary comparison was not run.
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                <div>
+                  <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
+                    Pace &amp; No-Huddle Environment (2026 W1–W7)
+                  </div>
+                  <p className="mt-1 text-xs leading-5 text-ion-1">{w.paceOfPlay.notes}</p>
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
+                    Coverage Shell &amp; Trench Leverage
+                  </div>
+                  <p className="mt-1 text-xs leading-5 text-ion-1">
+                    {w.schemeMatchup.coverageShell}. {w.schemeMatchup.blitzRateVsPressureToSack} {w.schemeMatchup.notes}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4 border-t border-mineral/40 pt-3 font-mono text-xs text-plasma">
+                🔒 Constructed 9-Man Lineup Shell, Showdown 1.5x Captain Leverage, Cash Core &amp; 20-Max Stack Unlocks in Vault Below
               </div>
             </div>
           ))}

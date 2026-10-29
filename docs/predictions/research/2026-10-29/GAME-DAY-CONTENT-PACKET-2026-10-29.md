@@ -1,6 +1,6 @@
 # 2026 NFL WEEK 8 — COMPLETE 10,000-SIMULATION & WEEKS 1–7 DATA-DRIVEN SLATE PACKET
 
-- **Generated:** `2026-10-29T06:47:05Z`
+- **Generated:** `2026-10-29T07:00:16Z`
 - **Data Provenance:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) + `18,019` 2026 Weeks 1–7 FTN charted plays (`ftn_charting_2026.parquet`) + `9,981` snap count rows (`snap_counts_2026.parquet`) + `55` Week 7 X-Intel CSVs + `10,000` Monte Carlo simulations (`seed=20261029`).
 
 ## 1. Tonight's TNF Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)

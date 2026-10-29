@@ -1,0 +1,1409 @@
+{
+  "generated_at": "2026-10-29T06:58:40Z",
+  "season": 2026,
+  "weeks_evaluated": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "pbp_rows_evaluated": 18738,
+  "ftn_rows_evaluated": 18019,
+  "equations_catalog": [
+    {
+      "id": "EQ-01-SINKHORN-OT",
+      "name": "Sinkhorn-Knopp Entropic Optimal Transport Target Reallocation",
+      "latex": "\\Pi^* = \\arg\\min_{\\Pi \\in U(r,c)} \\langle C, \\Pi \\rangle - \\varepsilon H(\\Pi), \\quad K_{ij} = \\exp(-C_{ij}/\\varepsilon)",
+      "source_engines": [
+        "ARXIV",
+        "OPENALEX",
+        "HUGGINGFACE"
+      ],
+      "wired_in": [
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "scripts/ops/quad_engine_live_edge_researcher.py"
+      ]
+    },
+    {
+      "id": "EQ-02-DAVIES-NEFF",
+      "name": "Davies Effective Competitors & Non-Linear Injury Load Multiplier",
+      "latex": "N_{\\text{eff}} = \\left(\\sum_{i=1}^k s_i^2\\right)^{-1}, \\quad M_{\\text{load}} = \\operatorname{clip}\\!\\left(\\sqrt{N_{\\text{eff,league}} / N_{\\text{eff,team}}}, 0.55, 1.60\\right)",
+      "source_engines": [
+        "OPENALEX",
+        "DOCX_OMML"
+      ],
+      "wired_in": [
+        "scripts/ops/load_scaling.py",
+        "scripts/ops/generate_slate_writeups.py"
+      ]
+    },
+    {
+      "id": "EQ-03-EMPIRICAL-BAYES-BTL",
+      "name": "Empirical Bayes / James-Stein Shrinkage on Small-Sample Team EPA",
+      "latex": "\\hat{\\theta}_{\\text{EB}} = w_n \\bar{y}_{\\text{W1..W7}} + (1 - w_n)\\mu_0, \\quad w_n = \\frac{\\tau^2}{\\tau^2 + \\sigma^2/n}",
+      "source_engines": [
+        "ARXIV",
+        "OPENALEX"
+      ],
+      "wired_in": [
+        "scripts/ops/quad_engine_live_edge_researcher.py",
+        "scripts/ops/generate_slate_writeups.py"
+      ]
+    },
+    {
+      "id": "EQ-04-QUANTAL-MDP",
+      "name": "Quantal Response Inverse-MDP Coaching Policy (tau = 0.42)",
+      "latex": "\\pi_\\tau(a \\mid s) = \\frac{\\exp(Q^*(s,a)/\\tau)}{\\sum_{a'} \\exp(Q^*(s,a')/\\tau)}, \\quad \\tau = 0.42",
+      "source_engines": [
+        "ARXIV",
+        "OPENALEX"
+      ],
+      "wired_in": [
+        "scripts/ops/gse_coach_mind_simulator.py"
+      ]
+    },
+    {
+      "id": "EQ-05-CAUSAL-FTN-SCHEME",
+      "name": "Causal FTN Charting Scheme Treatment Effect Estimator",
+      "latex": "\\hat{\\Delta}_{\\text{scheme}}(g) = \\sum_{f \\in \\mathcal{F}} (p_{\\text{off},f} - \\bar{p}_f)\\left(\\mathbb{E}[\\text{EPA}\\mid f=1] - \\mathbb{E}[\\text{EPA}\\mid f=0]\\right)",
+      "source_engines": [
+        "OPENALEX",
+        "KAGGLE"
+      ],
+      "wired_in": [
+        "scripts/ops/scheme_effects.py",
+        "scripts/ops/quad_engine_live_edge_researcher.py"
+      ]
+    },
+    {
+      "id": "EQ-06-TRENCH-HAZARD-FAULT",
+      "name": "Trench Blitz-to-Sack Hazard & QB-Fault vs OL Sack Attribution",
+      "latex": "h_{\\text{sack}}(t) = h_0(t)\\exp(\\beta_1 \\text{Blitz}_{\\text{def}} + \\beta_2 \\text{SackAllowed}_{\\text{OL}} - \\beta_3 \\text{QuickThrow}_{\\text{QB}})",
+      "source_engines": [
+        "KAGGLE",
+        "ARXIV"
+      ],
+      "wired_in": [
+        "scripts/ops/quad_engine_live_edge_researcher.py",
+        "scripts/ops/generate_slate_writeups.py"
+      ]
+    },
+    {
+      "id": "EQ-07-PINHOLE-JACOBIAN-STRAIN",
+      "name": "Anisotropic Pinhole-Jacobian Spatial Covariance & Cumulative Trench STRAIN",
+      "latex": "R_{\\text{field}}(u,v) = J(u,v)\\operatorname{diag}(r_u^2, r_v^2)J(u,v)^\\top + 10^{-6}I_2, \\quad \\text{STRAIN}(t) = \\sum_{j \\in \\text{DL}} \\frac{v_{\\text{close},j}(t)}{d_j(t)^2}",
+      "source_engines": [
+        "KAGGLE",
+        "ARXIV"
+      ],
+      "wired_in": [
+        "intelligence/vision/pinhole_jacobian.py",
+        "intelligence/vision/skeletrack_v2.py"
+      ]
+    },
+    {
+      "id": "EQ-08-HAWKES-TEMPO",
+      "name": "Hawkes Self-Exciting Tempo & No-Huddle Drive Acceleration",
+      "latex": "\\lambda(t) = \\mu_0 + \\sum_{t_i < t} \\alpha \\exp(-\\beta(t - t_i)), \\quad \\eta = \\alpha/\\beta",
+      "source_engines": [
+        "ARXIV",
+        "OPENALEX"
+      ],
+      "wired_in": [
+        "scripts/ops/quad_engine_live_edge_researcher.py"
+      ]
+    },
+    {
+      "id": "EQ-09-SHIN-DEVIG",
+      "name": "Shin (1993) Insider-Trading Market De-Vigging Solver",
+      "latex": "p_i^{\\text{Shin}} = \\frac{\\sqrt{z^2 + 4(1-z)\\pi_i^2 / \\sum_j \\pi_j} - z}{2(1-z)}",
+      "source_engines": [
+        "OPENALEX",
+        "ARXIV"
+      ],
+      "wired_in": [
+        "scripts/ops/quad_engine_live_edge_researcher.py"
+      ]
+    },
+    {
+      "id": "EQ-10-STUDENT-T-VINE-COPULA",
+      "name": "Student-t Vine Copula Correlated 3-Leg SGP Joint Pricing",
+      "latex": "C_{\\Sigma,\\nu}(u_1,u_2,u_3) = t_{\\Sigma,\\nu}\\!\\left(t_\\nu^{-1}(u_1), t_\\nu^{-1}(u_2), t_\\nu^{-1}(u_3)\\right)",
+      "source_engines": [
+        "ARXIV",
+        "DOCX_OMML"
+      ],
+      "wired_in": [
+        "scripts/ops/generate_slate_writeups.py"
+      ]
+    },
+    {
+      "id": "EQ-11-SPLIT-CONFORMAL",
+      "name": "Split-Conformal Calibrated Win-Probability Prediction Set",
+      "latex": "\\mathcal{C}_{1-\\alpha}(x) = \\left[\\hat{p}(x) - \\hat{q}_{1-\\alpha}, \\; \\hat{p}(x) + \\hat{q}_{1-\\alpha}\\right]",
+      "source_engines": [
+        "ARXIV",
+        "HUGGINGFACE"
+      ],
+      "wired_in": [
+        "packages/prediction-engine/src/conformal/"
+      ]
+    },
+    {
+      "id": "EQ-12-DIRICHLET-GPP-PORTFOLIO",
+      "name": "Dirichlet-Multinomial Field Ownership & 20-Max GPP Tail-Maximization",
+      "latex": "\\max_{|\\mathcal{L}|=20} \\mathbb{E}_{w \\sim \\text{Sim}_{10\\text{k}}}\\!\\left[\\max_{\\ell \\in \\mathcal{L}} \\sigma\\!\\left(\\frac{\\text{Score}(\\ell,w) - Q_{0.99}(\\text{Field},w)}{\\tau_{\\text{GPP}}}\\right)\\right]",
+      "source_engines": [
+        "ARXIV",
+        "KAGGLE",
+        "HUGGINGFACE"
+      ],
+      "wired_in": [
+        "scripts/ops/generate_slate_writeups.py",
+        "apps/web/app/fantasy/dfs/page.tsx"
+      ]
+    }
+  ],
+  "live_harvest_counts": {
+    "OPENALEX": 19,
+    "ARXIV": 4,
+    "HUGGINGFACE": 14,
+    "KAGGLE": 3
+  },
+  "live_harvest_samples": {
+    "openalex": [
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W2926606382",
+        "title": "The Olympic \u201cRevolt\u201d of 1968 and its Lessons for Contemporary African American Athletic Activism",
+        "publication_year": 2019,
+        "cited_by_count": 18,
+        "query": "NFL Big Data Bowl player tracking separation pass rush",
+        "abstract_snippet": "This overview of the 1968 African American Olympic protest movement provides historical context and a comparative touchstone for understanding the current wave of Black athletic activism in the United States. At a basic level, the exercise reminds us that sport-based activism is not unprecedented and, when it emerges, tends to be connected with the larger so"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W3183523428",
+        "title": "Simulating Defensive Trajectories in American Football for Predicting League Average Defensive Movements",
+        "publication_year": 2021,
+        "cited_by_count": 17,
+        "query": "NFL Big Data Bowl player tracking separation pass rush",
+        "abstract_snippet": "American football is an appealing field of research for the use of information technology. While much effort is made to analyze the offensive team in recent years, reasoning about defensive behavior is an emergent topic. As defensive performance and positioning largely contribute to the overall success of the whole team, this study introduces a method to sim"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W2617621954",
+        "title": "The future of television : advertising, technology and the pursuit of audiences",
+        "publication_year": 2008,
+        "cited_by_count": 17,
+        "query": "NFL Big Data Bowl player tracking separation pass rush",
+        "abstract_snippet": "La televisi\u00f3 est\u00e0 en crisi. Les noves tecnologies i els dispositius han fragmentat les audi\u00e8ncies de televisi\u00f3 en segments m\u00e9s petits. En aquest informe, Marissa Gluck i Meritxell Roca Sales examinen l'explosi\u00f3 dels mitjans de comunicaci\u00f3 que han impulsat aquesta fragmentaci\u00f3."
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W2115593474",
+        "title": "Practicing Work, Perfecting Play: League of Legends and the Sentimental Education of E-Sports",
+        "publication_year": 2022,
+        "cited_by_count": 8,
+        "query": "NFL Big Data Bowl player tracking separation pass rush",
+        "abstract_snippet": "A growing force in the culture of digital games fandom, e-sports represents the profes-sionalization of digital games play. This thesis examines League of Legends, a prominent game in e-sports, to understand the relationship between e-sports and the ideology of neoliberal economics. Using Clifford Geertz?s descriptions of sentimental education as a model, th"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W133582637",
+        "title": "Forecasting Success in the National Hockey League Using In-Game Statistics and Textual Data",
+        "publication_year": 2014,
+        "cited_by_count": 7,
+        "query": "NFL Big Data Bowl player tracking separation pass rush",
+        "abstract_snippet": "In this thesis, we look at a number of methods to forecast success (winners and losers), both of single games and playoff series (best-of-seven games) in the sport of ice hockey, more specifically within the National Hockey League (NHL). Our findings indicate that there exists a theoretical upper bound, which seems to hold true for all sports, that makes pre"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W2121229866",
+        "title": "Transformational Developments at the Interface of Race, Sport, and the Collegiate Athletic Arms Race in the Age of Globalization",
+        "publication_year": 2011,
+        "cited_by_count": 6,
+        "query": "NFL Big Data Bowl player tracking separation pass rush",
+        "abstract_snippet": "This essay includes a survey and analysis of social, cultural and political factors and forces contouring and configuring the state and trajectory of African-American Sports involvement as we enter the second decade of the 21st Century. These factors include the circumstances and conditions of the traditional Black community; Black educational challenges; th"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W265896103",
+        "title": "Statistical Fraud Detection: A Review",
+        "publication_year": 2002,
+        "cited_by_count": 1472,
+        "query": "Markov decision process American football fourth down play calling",
+        "abstract_snippet": "Fraud is increasing dramatically with the expansion of modern technology and the global superhighways of communication, resulting in the loss of billions of dollars worldwide each year. Although prevention technologies are the best way to reduce fraud, fraudsters are adaptive and, given time, will usually find ways to circumvent such measures. Methodologies "
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W2026559010",
+        "title": "Paying Not to Go to the Gym",
+        "publication_year": 2006,
+        "cited_by_count": 1188,
+        "query": "Markov decision process American football fourth down play calling",
+        "abstract_snippet": "How do consumers choose from a menu of contracts? We analyze a novel dataset from three U.S. health clubs with information on both the contractual choice and the day-to-day attendance decisions of 7,752 members over three years. The observed consumer behavior is difficult to reconcile with standard preferences and beliefs. First, members who choose a contrac"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W4379259169",
+        "title": "ChatGPT: Jack of all trades, master of none",
+        "publication_year": 2023,
+        "cited_by_count": 758,
+        "query": "Markov decision process American football fourth down play calling",
+        "abstract_snippet": "OpenAI has released the Chat Generative Pre-trained Transformer (ChatGPT) and revolutionized the approach in artificial intelligence to human-model interaction. The first contact with the chatbot reveals its ability to provide detailed and precise answers in various areas. Several publications on ChatGPT evaluation test its effectiveness on well-known natura"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W1986353013",
+        "title": "Toponym resolution in text",
+        "publication_year": 2007,
+        "cited_by_count": 167,
+        "query": "Markov decision process American football fourth down play calling",
+        "abstract_snippet": "In Information Extraction (IE), processing of named entities in text has traditionally been seen as a two-step process comprising a flat text span recognition sub-task and an atomic classification sub-task; relating the text span to a model of the world has been ignored by evaluations such as DARPA/NIST's MUC or ACE. However, spatial and temporal expressions"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W12684916",
+        "title": "Sports Data Mining Technology Used in Basketball Outcome Prediction",
+        "publication_year": 2012,
+        "cited_by_count": 50,
+        "query": "Markov decision process American football fourth down play calling",
+        "abstract_snippet": "Driven by the increasing comprehensive data in sports datasets and data mining technique successfully used in different area, sports data mining technique emerges and enables us to find hidden knowledge to impact the sport industry. In many instances, predicting the outcomes of sporting events has always been a challenging and attractive work and is therefor"
+      },
+      {
+        "engine": "OPENALEX",
+        "id": "OPENALEX:W4376141713",
+        "title": "Big ideas in sports analytics and statistical tools for their investigation",
+        "publication_year": 2023,
+        "cited_by_count": 46,
+        "query": "Markov decision process American football fourth down play calling",
+        "abstract_snippet": "Abstract Sports analytics\u2014broadly defined as the pursuit of improvement in athletic performance through the analysis of data\u2014has expanded its footprint both in the professional sports industry and in academia over the past 30 years. In this article, we connect four big ideas that are common across multiple sports: the expected value of a game state, win prob"
+      }
+    ],
+    "arxiv": [
+      {
+        "engine": "ARXIV",
+        "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
+        "status": "cached_fallback (HTTPError)"
+      },
+      {
+        "engine": "ARXIV",
+        "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
+        "status": "cached_fallback (HTTPError)"
+      },
+      {
+        "engine": "ARXIV",
+        "query": "all:conformal AND all:calibration AND all:probability",
+        "status": "cached_fallback (HTTPError)"
+      },
+      {
+        "engine": "ARXIV",
+        "query": "all:Hawkes AND all:point AND all:process AND all:sports",
+        "status": "cached_fallback (HTTPError)"
+      }
+    ],
+    "huggingface": [
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:dismalnow/nfl-stats-2021-2025",
+        "downloads": 436,
+        "likes": 0,
+        "query": "nfl"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:nfL6/yahoo_answers_qa",
+        "downloads": 357,
+        "likes": 28,
+        "query": "nfl"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:minmaxxxer/nfl-odds-2026",
+        "downloads": 305,
+        "likes": 0,
+        "query": "nfl"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:minmaxxxer/nfl-closing-lines-ats-2025",
+        "downloads": 284,
+        "likes": 0,
+        "query": "nfl"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:nfliu/decontextualization",
+        "downloads": 238,
+        "likes": 0,
+        "query": "nfl"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:oliviersportsdata/NFL-Multi-Market-Timestamped-Odds-Team-Stats",
+        "downloads": 203,
+        "likes": 0,
+        "query": "nfl"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:resfunny717/sports-betting-bundle",
+        "downloads": 2051,
+        "likes": 0,
+        "query": "sports betting"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:emailmarketingdataset/usa-sports-betting-dataset",
+        "downloads": 7,
+        "likes": 0,
+        "query": "sports betting"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:t4tiana/store-sales-time-series-forecasting",
+        "downloads": 3373,
+        "likes": 18,
+        "query": "time series forecasting"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:Y123-wed/Multimodal-Dataset-Image_Text_Table_TimeSeries-for-Financial-Time-Series-Forecasting",
+        "downloads": 2418,
+        "likes": 0,
+        "query": "time series forecasting"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:Wenyan0110/Multimodal-Dataset-Image_Text_Table_TimeSeries-for-Financial-Time-Series-Forecasting",
+        "downloads": 1575,
+        "likes": 23,
+        "query": "time series forecasting"
+      },
+      {
+        "engine": "HUGGINGFACE",
+        "id": "HF:Duyu/Time-Series-Forecasting-Benchmark-Datasets",
+        "downloads": 946,
+        "likes": 11,
+        "query": "time series forecasting"
+      }
+    ],
+    "kaggle": [
+      {
+        "engine": "KAGGLE",
+        "query": "nfl big data bowl",
+        "status": "cached_fallback (HTTPError)"
+      },
+      {
+        "engine": "KAGGLE",
+        "query": "nfl play by play",
+        "status": "cached_fallback (HTTPError)"
+      },
+      {
+        "engine": "KAGGLE",
+        "query": "nfl betting odds",
+        "status": "cached_fallback (HTTPError)"
+      }
+    ]
+  },
+  "league_scheme_effects_w1_w7": {
+    "play_action": {
+      "flag": "Play Action on Dropbacks",
+      "n_on": 1820,
+      "n_off": 6134,
+      "epa_on": 0.0911,
+      "epa_off": 0.0543,
+      "delta_epa": 0.0368
+    },
+    "pre_snap_motion": {
+      "flag": "Pre-Snap Motion",
+      "n_on": 7654,
+      "n_off": 5397,
+      "epa_on": -0.001,
+      "epa_off": 0.018,
+      "delta_epa": -0.0191
+    },
+    "rpo": {
+      "flag": "Run-Pass Option (RPO)",
+      "n_on": 624,
+      "n_off": 12427,
+      "epa_on": -0.085,
+      "epa_off": 0.0115,
+      "delta_epa": -0.0964
+    },
+    "screen_pass": {
+      "flag": "Screen Pass",
+      "n_on": 669,
+      "n_off": 7285,
+      "epa_on": -0.0999,
+      "epa_off": 0.0776,
+      "delta_epa": -0.1775
+    },
+    "no_huddle": {
+      "flag": "No-Huddle Tempo",
+      "n_on": 826,
+      "n_off": 12225,
+      "epa_on": 0.0795,
+      "epa_off": 0.002,
+      "delta_epa": 0.0775
+    },
+    "qb_out_of_pocket": {
+      "flag": "QB Out of Pocket",
+      "n_on": 1605,
+      "n_off": 6349,
+      "epa_on": 0.0417,
+      "epa_off": 0.068,
+      "delta_epa": -0.0263
+    },
+    "box_8plus_vs_light_6minus_run": {
+      "flag": "Stacked Box (8+) vs Light Box (<=6) on Runs",
+      "n_on": 471,
+      "n_off": 2524,
+      "epa_on": -0.0276,
+      "epa_off": -0.0176,
+      "delta_epa": -0.01
+    },
+    "blitz_5plus_vs_4man_rush": {
+      "flag": "Blitz (5+ Rushers) vs Standard 4-Man Rush",
+      "n_on": 2524,
+      "n_off": 5200,
+      "epa_on": 0.0001,
+      "epa_off": 0.0973,
+      "delta_epa": -0.0972
+    }
+  },
+  "team_math_profiles_w1_w7": {
+    "ARI": {
+      "team": "ARI",
+      "n_plays": 474,
+      "raw_off_epa": -0.0337,
+      "eb_shrunk_off_epa": -0.0205,
+      "raw_def_epa": 0.0951,
+      "eb_shrunk_def_epa": 0.0679,
+      "eb_shrinkage_weight": 0.6863,
+      "pa_epa": 0.0853,
+      "motion_epa": -0.0751,
+      "vs_blitz_epa": -0.2462,
+      "def_blitz_epa_allowed": 0.36,
+      "light_box_rush_epa": -0.0226,
+      "def_light_box_rate_pct": 44.7,
+      "int_worthy_throw_rate_pct": 2.31,
+      "catchable_ball_rate_pct": 67.7,
+      "qb_fault_sack_rate_pct": 0.66,
+      "target_hhi": 0.1751,
+      "n_eff_receivers": 5.71,
+      "davies_load_multiplier": 1.139,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3645,
+        0.3084,
+        0.1682,
+        0.0794,
+        0.0794
+      ],
+      "hawkes_tempo_branching_ratio": 0.2791
+    },
+    "ATL": {
+      "team": "ATL",
+      "n_plays": 418,
+      "raw_off_epa": -0.0418,
+      "eb_shrunk_off_epa": -0.0247,
+      "raw_def_epa": -0.0177,
+      "eb_shrunk_def_epa": -0.0088,
+      "eb_shrinkage_weight": 0.6586,
+      "pa_epa": 0.0957,
+      "motion_epa": -0.0029,
+      "vs_blitz_epa": -0.007,
+      "def_blitz_epa_allowed": -0.088,
+      "light_box_rush_epa": -0.0234,
+      "def_light_box_rate_pct": 51.0,
+      "int_worthy_throw_rate_pct": 3.96,
+      "catchable_ball_rate_pct": 62.1,
+      "qb_fault_sack_rate_pct": 1.76,
+      "target_hhi": 0.1607,
+      "n_eff_receivers": 6.224,
+      "davies_load_multiplier": 1.0909,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3701,
+        0.2078,
+        0.1753,
+        0.1623,
+        0.0844
+      ],
+      "hawkes_tempo_branching_ratio": 0.1859
+    },
+    "BAL": {
+      "team": "BAL",
+      "n_plays": 426,
+      "raw_off_epa": 0.0814,
+      "eb_shrunk_off_epa": 0.0568,
+      "raw_def_epa": 0.0109,
+      "eb_shrunk_def_epa": 0.0101,
+      "eb_shrinkage_weight": 0.6628,
+      "pa_epa": 0.3364,
+      "motion_epa": 0.0795,
+      "vs_blitz_epa": 0.3396,
+      "def_blitz_epa_allowed": 0.0315,
+      "light_box_rush_epa": -0.0267,
+      "def_light_box_rate_pct": 60.7,
+      "int_worthy_throw_rate_pct": 2.94,
+      "catchable_ball_rate_pct": 64.7,
+      "qb_fault_sack_rate_pct": 1.26,
+      "target_hhi": 0.1471,
+      "n_eff_receivers": 6.796,
+      "davies_load_multiplier": 1.044,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3605,
+        0.2585,
+        0.1769,
+        0.1156,
+        0.0884
+      ],
+      "hawkes_tempo_branching_ratio": 0.1745
+    },
+    "BUF": {
+      "team": "BUF",
+      "n_plays": 354,
+      "raw_off_epa": 0.2037,
+      "eb_shrunk_off_epa": 0.1295,
+      "raw_def_epa": 0.1281,
+      "eb_shrunk_def_epa": 0.0826,
+      "eb_shrinkage_weight": 0.6203,
+      "pa_epa": 0.3265,
+      "motion_epa": 0.1895,
+      "vs_blitz_epa": 0.3469,
+      "def_blitz_epa_allowed": 0.2637,
+      "light_box_rush_epa": 0.1147,
+      "def_light_box_rate_pct": 35.3,
+      "int_worthy_throw_rate_pct": 3.45,
+      "catchable_ball_rate_pct": 61.1,
+      "qb_fault_sack_rate_pct": 1.97,
+      "target_hhi": 0.1337,
+      "n_eff_receivers": 7.478,
+      "davies_load_multiplier": 0.9953,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2645,
+        0.2479,
+        0.2066,
+        0.1653,
+        0.1157
+      ],
+      "hawkes_tempo_branching_ratio": 0.1773
+    },
+    "CAR": {
+      "team": "CAR",
+      "n_plays": 392,
+      "raw_off_epa": 0.0631,
+      "eb_shrunk_off_epa": 0.0436,
+      "raw_def_epa": 0.0243,
+      "eb_shrunk_def_epa": 0.0186,
+      "eb_shrinkage_weight": 0.644,
+      "pa_epa": 0.1255,
+      "motion_epa": 0.1448,
+      "vs_blitz_epa": -0.0096,
+      "def_blitz_epa_allowed": -0.0672,
+      "light_box_rush_epa": -0.004,
+      "def_light_box_rate_pct": 49.4,
+      "int_worthy_throw_rate_pct": 1.55,
+      "catchable_ball_rate_pct": 56.6,
+      "qb_fault_sack_rate_pct": 0.0,
+      "target_hhi": 0.1408,
+      "n_eff_receivers": 7.105,
+      "davies_load_multiplier": 1.0211,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3484,
+        0.2516,
+        0.1484,
+        0.1355,
+        0.1161
+      ],
+      "hawkes_tempo_branching_ratio": 0.2125
+    },
+    "CHI": {
+      "team": "CHI",
+      "n_plays": 497,
+      "raw_off_epa": 0.0473,
+      "eb_shrunk_off_epa": 0.0355,
+      "raw_def_epa": -0.0017,
+      "eb_shrunk_def_epa": 0.0013,
+      "eb_shrinkage_weight": 0.6964,
+      "pa_epa": 0.103,
+      "motion_epa": 0.0543,
+      "vs_blitz_epa": 0.2136,
+      "def_blitz_epa_allowed": -0.0224,
+      "light_box_rush_epa": 0.1,
+      "def_light_box_rate_pct": 36.8,
+      "int_worthy_throw_rate_pct": 2.17,
+      "catchable_ball_rate_pct": 62.8,
+      "qb_fault_sack_rate_pct": 0.36,
+      "target_hhi": 0.147,
+      "n_eff_receivers": 6.801,
+      "davies_load_multiplier": 1.0436,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2568,
+        0.2295,
+        0.2077,
+        0.1694,
+        0.1366
+      ],
+      "hawkes_tempo_branching_ratio": 0.1871
+    },
+    "CIN": {
+      "team": "CIN",
+      "n_plays": 359,
+      "raw_off_epa": 0.109,
+      "eb_shrunk_off_epa": 0.0711,
+      "raw_def_epa": -0.041,
+      "eb_shrunk_def_epa": -0.0225,
+      "eb_shrinkage_weight": 0.6236,
+      "pa_epa": 0.074,
+      "motion_epa": 0.0362,
+      "vs_blitz_epa": 0.0401,
+      "def_blitz_epa_allowed": -0.2538,
+      "light_box_rush_epa": 0.0873,
+      "def_light_box_rate_pct": 54.9,
+      "int_worthy_throw_rate_pct": 1.27,
+      "catchable_ball_rate_pct": 71.2,
+      "qb_fault_sack_rate_pct": 0.85,
+      "target_hhi": 0.1467,
+      "n_eff_receivers": 6.819,
+      "davies_load_multiplier": 1.0423,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3012,
+        0.2711,
+        0.1988,
+        0.1205,
+        0.1084
+      ],
+      "hawkes_tempo_branching_ratio": 0.1927
+    },
+    "CLE": {
+      "team": "CLE",
+      "n_plays": 415,
+      "raw_off_epa": -0.0496,
+      "eb_shrunk_off_epa": -0.0297,
+      "raw_def_epa": -0.0369,
+      "eb_shrunk_def_epa": -0.0214,
+      "eb_shrinkage_weight": 0.657,
+      "pa_epa": -0.1401,
+      "motion_epa": 0.0422,
+      "vs_blitz_epa": -0.0742,
+      "def_blitz_epa_allowed": -0.1199,
+      "light_box_rush_epa": -0.0351,
+      "def_light_box_rate_pct": 69.6,
+      "int_worthy_throw_rate_pct": 2.31,
+      "catchable_ball_rate_pct": 58.1,
+      "qb_fault_sack_rate_pct": 2.31,
+      "target_hhi": 0.1538,
+      "n_eff_receivers": 6.5,
+      "davies_load_multiplier": 1.0675,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2632,
+        0.2515,
+        0.2281,
+        0.1345,
+        0.1228
+      ],
+      "hawkes_tempo_branching_ratio": 0.1654
+    },
+    "DAL": {
+      "team": "DAL",
+      "n_plays": 444,
+      "raw_off_epa": 0.114,
+      "eb_shrunk_off_epa": 0.0793,
+      "raw_def_epa": 0.1384,
+      "eb_shrunk_def_epa": 0.0957,
+      "eb_shrinkage_weight": 0.672,
+      "pa_epa": 0.0928,
+      "motion_epa": 0.0455,
+      "vs_blitz_epa": 0.0212,
+      "def_blitz_epa_allowed": 0.0728,
+      "light_box_rush_epa": 0.0366,
+      "def_light_box_rate_pct": 37.3,
+      "int_worthy_throw_rate_pct": 2.24,
+      "catchable_ball_rate_pct": 69.8,
+      "qb_fault_sack_rate_pct": 1.87,
+      "target_hhi": 0.1848,
+      "n_eff_receivers": 5.41,
+      "davies_load_multiplier": 1.1701,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3624,
+        0.2533,
+        0.179,
+        0.1092,
+        0.0961
+      ],
+      "hawkes_tempo_branching_ratio": 0.2734
+    },
+    "DEN": {
+      "team": "DEN",
+      "n_plays": 396,
+      "raw_off_epa": -0.0408,
+      "eb_shrunk_off_epa": -0.0234,
+      "raw_def_epa": -0.0494,
+      "eb_shrunk_def_epa": -0.029,
+      "eb_shrinkage_weight": 0.6463,
+      "pa_epa": -0.0522,
+      "motion_epa": -0.0634,
+      "vs_blitz_epa": -0.1868,
+      "def_blitz_epa_allowed": -0.0913,
+      "light_box_rush_epa": -0.1473,
+      "def_light_box_rate_pct": 43.7,
+      "int_worthy_throw_rate_pct": 3.39,
+      "catchable_ball_rate_pct": 60.6,
+      "qb_fault_sack_rate_pct": 0.85,
+      "target_hhi": 0.1292,
+      "n_eff_receivers": 7.739,
+      "davies_load_multiplier": 0.9783,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3239,
+        0.2324,
+        0.1972,
+        0.1549,
+        0.0915
+      ],
+      "hawkes_tempo_branching_ratio": 0.1932
+    },
+    "DET": {
+      "team": "DET",
+      "n_plays": 395,
+      "raw_off_epa": 0.1402,
+      "eb_shrunk_off_epa": 0.0935,
+      "raw_def_epa": 0.1339,
+      "eb_shrunk_def_epa": 0.0894,
+      "eb_shrinkage_weight": 0.6458,
+      "pa_epa": 0.2988,
+      "motion_epa": 0.0863,
+      "vs_blitz_epa": 0.3786,
+      "def_blitz_epa_allowed": 0.0944,
+      "light_box_rush_epa": 0.0381,
+      "def_light_box_rate_pct": 29.3,
+      "int_worthy_throw_rate_pct": 1.25,
+      "catchable_ball_rate_pct": 67.5,
+      "qb_fault_sack_rate_pct": 1.67,
+      "target_hhi": 0.2021,
+      "n_eff_receivers": 4.948,
+      "davies_load_multiplier": 1.2235,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3301,
+        0.1942,
+        0.1893,
+        0.1845,
+        0.1019
+      ],
+      "hawkes_tempo_branching_ratio": 0.2008
+    },
+    "GB": {
+      "team": "GB",
+      "n_plays": 423,
+      "raw_off_epa": -0.003,
+      "eb_shrunk_off_epa": 0.0008,
+      "raw_def_epa": -0.0566,
+      "eb_shrunk_def_epa": -0.0346,
+      "eb_shrinkage_weight": 0.6613,
+      "pa_epa": 0.1884,
+      "motion_epa": 0.018,
+      "vs_blitz_epa": -0.0732,
+      "def_blitz_epa_allowed": 0.0015,
+      "light_box_rush_epa": -0.3417,
+      "def_light_box_rate_pct": 47.7,
+      "int_worthy_throw_rate_pct": 3.48,
+      "catchable_ball_rate_pct": 66.6,
+      "qb_fault_sack_rate_pct": 2.09,
+      "target_hhi": 0.1553,
+      "n_eff_receivers": 6.44,
+      "davies_load_multiplier": 1.0725,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3518,
+        0.2814,
+        0.2161,
+        0.0804,
+        0.0704
+      ],
+      "hawkes_tempo_branching_ratio": 0.2365
+    },
+    "HOU": {
+      "team": "HOU",
+      "n_plays": 425,
+      "raw_off_epa": 0.0267,
+      "eb_shrunk_off_epa": 0.0205,
+      "raw_def_epa": 0.0311,
+      "eb_shrunk_def_epa": 0.0234,
+      "eb_shrinkage_weight": 0.6623,
+      "pa_epa": 0.2847,
+      "motion_epa": 0.0424,
+      "vs_blitz_epa": 0.2912,
+      "def_blitz_epa_allowed": 0.0741,
+      "light_box_rush_epa": 0.0336,
+      "def_light_box_rate_pct": 38.6,
+      "int_worthy_throw_rate_pct": 1.12,
+      "catchable_ball_rate_pct": 63.9,
+      "qb_fault_sack_rate_pct": 0.37,
+      "target_hhi": 0.1207,
+      "n_eff_receivers": 8.283,
+      "davies_load_multiplier": 0.9457,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2622,
+        0.2439,
+        0.2134,
+        0.1402,
+        0.1402
+      ],
+      "hawkes_tempo_branching_ratio": 0.1916
+    },
+    "IND": {
+      "team": "IND",
+      "n_plays": 456,
+      "raw_off_epa": -0.0681,
+      "eb_shrunk_off_epa": -0.0435,
+      "raw_def_epa": 0.0475,
+      "eb_shrunk_def_epa": 0.0349,
+      "eb_shrinkage_weight": 0.6779,
+      "pa_epa": -0.1301,
+      "motion_epa": -0.0271,
+      "vs_blitz_epa": -0.1216,
+      "def_blitz_epa_allowed": 0.1595,
+      "light_box_rush_epa": 0.0007,
+      "def_light_box_rate_pct": 34.3,
+      "int_worthy_throw_rate_pct": 5.64,
+      "catchable_ball_rate_pct": 61.7,
+      "qb_fault_sack_rate_pct": 0.75,
+      "target_hhi": 0.1369,
+      "n_eff_receivers": 7.306,
+      "davies_load_multiplier": 1.0069,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2599,
+        0.2429,
+        0.2034,
+        0.1469,
+        0.1469
+      ],
+      "hawkes_tempo_branching_ratio": 0.1645
+    },
+    "JAX": {
+      "team": "JAX",
+      "n_plays": 355,
+      "raw_off_epa": 0.1553,
+      "eb_shrunk_off_epa": 0.0996,
+      "raw_def_epa": -0.0358,
+      "eb_shrunk_def_epa": -0.0191,
+      "eb_shrinkage_weight": 0.621,
+      "pa_epa": 0.3509,
+      "motion_epa": 0.1614,
+      "vs_blitz_epa": 0.1404,
+      "def_blitz_epa_allowed": -0.2633,
+      "light_box_rush_epa": -0.0438,
+      "def_light_box_rate_pct": 44.3,
+      "int_worthy_throw_rate_pct": 2.99,
+      "catchable_ball_rate_pct": 67.7,
+      "qb_fault_sack_rate_pct": 1.49,
+      "target_hhi": 0.152,
+      "n_eff_receivers": 6.578,
+      "davies_load_multiplier": 1.0612,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3262,
+        0.234,
+        0.1986,
+        0.1418,
+        0.0993
+      ],
+      "hawkes_tempo_branching_ratio": 0.169
+    },
+    "KC": {
+      "team": "KC",
+      "n_plays": 354,
+      "raw_off_epa": 0.1184,
+      "eb_shrunk_off_epa": 0.0766,
+      "raw_def_epa": -0.0557,
+      "eb_shrunk_def_epa": -0.0314,
+      "eb_shrinkage_weight": 0.6203,
+      "pa_epa": 0.3022,
+      "motion_epa": 0.0211,
+      "vs_blitz_epa": 0.1934,
+      "def_blitz_epa_allowed": 0.2097,
+      "light_box_rush_epa": 0.1443,
+      "def_light_box_rate_pct": 42.8,
+      "int_worthy_throw_rate_pct": 2.37,
+      "catchable_ball_rate_pct": 64.5,
+      "qb_fault_sack_rate_pct": 0.47,
+      "target_hhi": 0.131,
+      "n_eff_receivers": 7.634,
+      "davies_load_multiplier": 0.985,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2692,
+        0.2692,
+        0.2154,
+        0.1308,
+        0.1154
+      ],
+      "hawkes_tempo_branching_ratio": 0.1241
+    },
+    "LA": {
+      "team": "LA",
+      "n_plays": 469,
+      "raw_off_epa": 0.0591,
+      "eb_shrunk_off_epa": 0.0431,
+      "raw_def_epa": -0.0566,
+      "eb_shrunk_def_epa": -0.0361,
+      "eb_shrinkage_weight": 0.684,
+      "pa_epa": 0.0921,
+      "motion_epa": 0.0189,
+      "vs_blitz_epa": -0.0462,
+      "def_blitz_epa_allowed": -0.1394,
+      "light_box_rush_epa": 0.1257,
+      "def_light_box_rate_pct": 45.8,
+      "int_worthy_throw_rate_pct": 4.05,
+      "catchable_ball_rate_pct": 68.2,
+      "qb_fault_sack_rate_pct": 0.68,
+      "target_hhi": 0.1394,
+      "n_eff_receivers": 7.175,
+      "davies_load_multiplier": 1.0161,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3054,
+        0.2414,
+        0.202,
+        0.1576,
+        0.0936
+      ],
+      "hawkes_tempo_branching_ratio": 0.2653
+    },
+    "LAC": {
+      "team": "LAC",
+      "n_plays": 370,
+      "raw_off_epa": -0.2248,
+      "eb_shrunk_off_epa": -0.1387,
+      "raw_def_epa": -0.036,
+      "eb_shrunk_def_epa": -0.0196,
+      "eb_shrinkage_weight": 0.6307,
+      "pa_epa": -0.1937,
+      "motion_epa": -0.2862,
+      "vs_blitz_epa": -0.2814,
+      "def_blitz_epa_allowed": -0.2298,
+      "light_box_rush_epa": -0.2219,
+      "def_light_box_rate_pct": 53.4,
+      "int_worthy_throw_rate_pct": 5.0,
+      "catchable_ball_rate_pct": 55.5,
+      "qb_fault_sack_rate_pct": 1.82,
+      "target_hhi": 0.0903,
+      "n_eff_receivers": 11.074,
+      "davies_load_multiplier": 0.8179,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2475,
+        0.2178,
+        0.2079,
+        0.1782,
+        0.1485
+      ],
+      "hawkes_tempo_branching_ratio": 0.2023
+    },
+    "LV": {
+      "team": "LV",
+      "n_plays": 444,
+      "raw_off_epa": -0.0083,
+      "eb_shrunk_off_epa": -0.0028,
+      "raw_def_epa": 0.0541,
+      "eb_shrunk_def_epa": 0.0391,
+      "eb_shrinkage_weight": 0.672,
+      "pa_epa": 0.2538,
+      "motion_epa": -0.0226,
+      "vs_blitz_epa": -0.008,
+      "def_blitz_epa_allowed": -0.0244,
+      "light_box_rush_epa": -0.2417,
+      "def_light_box_rate_pct": 56.8,
+      "int_worthy_throw_rate_pct": 2.46,
+      "catchable_ball_rate_pct": 65.8,
+      "qb_fault_sack_rate_pct": 1.41,
+      "target_hhi": 0.1406,
+      "n_eff_receivers": 7.115,
+      "davies_load_multiplier": 1.0203,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2574,
+        0.2327,
+        0.2228,
+        0.1832,
+        0.104
+      ],
+      "hawkes_tempo_branching_ratio": 0.2408
+    },
+    "MIA": {
+      "team": "MIA",
+      "n_plays": 336,
+      "raw_off_epa": -0.0419,
+      "eb_shrunk_off_epa": -0.0222,
+      "raw_def_epa": 0.1333,
+      "eb_shrunk_def_epa": 0.0843,
+      "eb_shrinkage_weight": 0.6079,
+      "pa_epa": 0.0011,
+      "motion_epa": -0.0674,
+      "vs_blitz_epa": -0.0266,
+      "def_blitz_epa_allowed": 0.5722,
+      "light_box_rush_epa": 0.1651,
+      "def_light_box_rate_pct": 39.1,
+      "int_worthy_throw_rate_pct": 2.65,
+      "catchable_ball_rate_pct": 50.8,
+      "qb_fault_sack_rate_pct": 2.12,
+      "target_hhi": 0.1415,
+      "n_eff_receivers": 7.067,
+      "davies_load_multiplier": 1.0238,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3482,
+        0.2054,
+        0.1696,
+        0.1607,
+        0.1161
+      ],
+      "hawkes_tempo_branching_ratio": 0.1502
+    },
+    "MIN": {
+      "team": "MIN",
+      "n_plays": 352,
+      "raw_off_epa": -0.0963,
+      "eb_shrunk_off_epa": -0.0564,
+      "raw_def_epa": -0.1927,
+      "eb_shrunk_def_epa": -0.1161,
+      "eb_shrinkage_weight": 0.619,
+      "pa_epa": 0.071,
+      "motion_epa": -0.0773,
+      "vs_blitz_epa": -0.1702,
+      "def_blitz_epa_allowed": -0.1964,
+      "light_box_rush_epa": -0.1722,
+      "def_light_box_rate_pct": 38.3,
+      "int_worthy_throw_rate_pct": 2.01,
+      "catchable_ball_rate_pct": 59.8,
+      "qb_fault_sack_rate_pct": 2.01,
+      "target_hhi": 0.1397,
+      "n_eff_receivers": 7.161,
+      "davies_load_multiplier": 1.0171,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2759,
+        0.2759,
+        0.2155,
+        0.1638,
+        0.069
+      ],
+      "hawkes_tempo_branching_ratio": 0.2024
+    },
+    "NE": {
+      "team": "NE",
+      "n_plays": 429,
+      "raw_off_epa": 0.0565,
+      "eb_shrunk_off_epa": 0.0403,
+      "raw_def_epa": 0.0195,
+      "eb_shrunk_def_epa": 0.0158,
+      "eb_shrinkage_weight": 0.6644,
+      "pa_epa": -0.0903,
+      "motion_epa": 0.0182,
+      "vs_blitz_epa": 0.1795,
+      "def_blitz_epa_allowed": -0.0197,
+      "light_box_rush_epa": 0.0119,
+      "def_light_box_rate_pct": 43.7,
+      "int_worthy_throw_rate_pct": 3.5,
+      "catchable_ball_rate_pct": 60.7,
+      "qb_fault_sack_rate_pct": 0.78,
+      "target_hhi": 0.1089,
+      "n_eff_receivers": 9.18,
+      "davies_load_multiplier": 0.8983,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2537,
+        0.2313,
+        0.1866,
+        0.1791,
+        0.1493
+      ],
+      "hawkes_tempo_branching_ratio": 0.1268
+    },
+    "NO": {
+      "team": "NO",
+      "n_plays": 458,
+      "raw_off_epa": -0.0365,
+      "eb_shrunk_off_epa": -0.0221,
+      "raw_def_epa": 0.0751,
+      "eb_shrunk_def_epa": 0.0536,
+      "eb_shrinkage_weight": 0.6788,
+      "pa_epa": 0.3,
+      "motion_epa": -0.0286,
+      "vs_blitz_epa": -0.071,
+      "def_blitz_epa_allowed": 0.0464,
+      "light_box_rush_epa": -0.1624,
+      "def_light_box_rate_pct": 48.2,
+      "int_worthy_throw_rate_pct": 3.03,
+      "catchable_ball_rate_pct": 67.7,
+      "qb_fault_sack_rate_pct": 1.35,
+      "target_hhi": 0.1526,
+      "n_eff_receivers": 6.553,
+      "davies_load_multiplier": 1.0632,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3447,
+        0.233,
+        0.1796,
+        0.1311,
+        0.1117
+      ],
+      "hawkes_tempo_branching_ratio": 0.329
+    },
+    "NYG": {
+      "team": "NYG",
+      "n_plays": 456,
+      "raw_off_epa": 0.013,
+      "eb_shrunk_off_epa": 0.0115,
+      "raw_def_epa": 0.011,
+      "eb_shrunk_def_epa": 0.0102,
+      "eb_shrinkage_weight": 0.6779,
+      "pa_epa": 0.061,
+      "motion_epa": 0.0701,
+      "vs_blitz_epa": -0.1804,
+      "def_blitz_epa_allowed": -0.1253,
+      "light_box_rush_epa": 0.0096,
+      "def_light_box_rate_pct": 40.3,
+      "int_worthy_throw_rate_pct": 3.73,
+      "catchable_ball_rate_pct": 61.6,
+      "qb_fault_sack_rate_pct": 3.36,
+      "target_hhi": 0.1961,
+      "n_eff_receivers": 5.098,
+      "davies_load_multiplier": 1.2054,
+      "sinkhorn_top5_reallocated_shares": [
+        0.355,
+        0.32,
+        0.15,
+        0.11,
+        0.065
+      ],
+      "hawkes_tempo_branching_ratio": 0.2313
+    },
+    "NYJ": {
+      "team": "NYJ",
+      "n_plays": 402,
+      "raw_off_epa": 0.0127,
+      "eb_shrunk_off_epa": 0.0112,
+      "raw_def_epa": -0.0022,
+      "eb_shrunk_def_epa": 0.0015,
+      "eb_shrinkage_weight": 0.6498,
+      "pa_epa": 0.2462,
+      "motion_epa": -0.0864,
+      "vs_blitz_epa": 0.0731,
+      "def_blitz_epa_allowed": 0.1701,
+      "light_box_rush_epa": -0.2279,
+      "def_light_box_rate_pct": 42.1,
+      "int_worthy_throw_rate_pct": 2.08,
+      "catchable_ball_rate_pct": 68.8,
+      "qb_fault_sack_rate_pct": 0.0,
+      "target_hhi": 0.1263,
+      "n_eff_receivers": 7.921,
+      "davies_load_multiplier": 0.967,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3881,
+        0.1866,
+        0.1493,
+        0.1418,
+        0.1343
+      ],
+      "hawkes_tempo_branching_ratio": 0.1741
+    },
+    "PHI": {
+      "team": "PHI",
+      "n_plays": 410,
+      "raw_off_epa": -0.1164,
+      "eb_shrunk_off_epa": -0.0733,
+      "raw_def_epa": 0.112,
+      "eb_shrunk_def_epa": 0.0761,
+      "eb_shrinkage_weight": 0.6542,
+      "pa_epa": -0.3326,
+      "motion_epa": -0.1321,
+      "vs_blitz_epa": -0.2701,
+      "def_blitz_epa_allowed": 0.2797,
+      "light_box_rush_epa": -0.1086,
+      "def_light_box_rate_pct": 49.3,
+      "int_worthy_throw_rate_pct": 2.19,
+      "catchable_ball_rate_pct": 54.4,
+      "qb_fault_sack_rate_pct": 3.51,
+      "target_hhi": 0.1184,
+      "n_eff_receivers": 8.447,
+      "davies_load_multiplier": 0.9364,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2595,
+        0.2278,
+        0.2025,
+        0.1962,
+        0.1139
+      ],
+      "hawkes_tempo_branching_ratio": 0.3408
+    },
+    "PIT": {
+      "team": "PIT",
+      "n_plays": 436,
+      "raw_off_epa": -0.0479,
+      "eb_shrunk_off_epa": -0.0293,
+      "raw_def_epa": -0.0441,
+      "eb_shrunk_def_epa": -0.0267,
+      "eb_shrinkage_weight": 0.668,
+      "pa_epa": 0.2293,
+      "motion_epa": -0.0896,
+      "vs_blitz_epa": -0.3002,
+      "def_blitz_epa_allowed": 0.295,
+      "light_box_rush_epa": 0.0259,
+      "def_light_box_rate_pct": 42.8,
+      "int_worthy_throw_rate_pct": 1.72,
+      "catchable_ball_rate_pct": 63.8,
+      "qb_fault_sack_rate_pct": 3.1,
+      "target_hhi": 0.1419,
+      "n_eff_receivers": 7.049,
+      "davies_load_multiplier": 1.0251,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3085,
+        0.1968,
+        0.1862,
+        0.1755,
+        0.133
+      ],
+      "hawkes_tempo_branching_ratio": 0.2364
+    },
+    "SEA": {
+      "team": "SEA",
+      "n_plays": 444,
+      "raw_off_epa": -0.0398,
+      "eb_shrunk_off_epa": -0.024,
+      "raw_def_epa": -0.1311,
+      "eb_shrunk_def_epa": -0.0854,
+      "eb_shrinkage_weight": 0.672,
+      "pa_epa": 0.1883,
+      "motion_epa": -0.0778,
+      "vs_blitz_epa": 0.1318,
+      "def_blitz_epa_allowed": -0.3501,
+      "light_box_rush_epa": 0.0312,
+      "def_light_box_rate_pct": 53.1,
+      "int_worthy_throw_rate_pct": 3.61,
+      "catchable_ball_rate_pct": 67.1,
+      "qb_fault_sack_rate_pct": 3.21,
+      "target_hhi": 0.1946,
+      "n_eff_receivers": 5.138,
+      "davies_load_multiplier": 1.2007,
+      "sinkhorn_top5_reallocated_shares": [
+        0.4358,
+        0.1732,
+        0.162,
+        0.1508,
+        0.0782
+      ],
+      "hawkes_tempo_branching_ratio": 0.1592
+    },
+    "SF": {
+      "team": "SF",
+      "n_plays": 401,
+      "raw_off_epa": 0.1774,
+      "eb_shrunk_off_epa": 0.1181,
+      "raw_def_epa": -0.0426,
+      "eb_shrunk_def_epa": -0.0248,
+      "eb_shrinkage_weight": 0.6492,
+      "pa_epa": 0.1056,
+      "motion_epa": 0.1539,
+      "vs_blitz_epa": 0.307,
+      "def_blitz_epa_allowed": -0.1109,
+      "light_box_rush_epa": 0.1015,
+      "def_light_box_rate_pct": 40.6,
+      "int_worthy_throw_rate_pct": 2.59,
+      "catchable_ball_rate_pct": 68.1,
+      "qb_fault_sack_rate_pct": 1.29,
+      "target_hhi": 0.1495,
+      "n_eff_receivers": 6.687,
+      "davies_load_multiplier": 1.0525,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2893,
+        0.2642,
+        0.2516,
+        0.1258,
+        0.0692
+      ],
+      "hawkes_tempo_branching_ratio": 0.1489
+    },
+    "TB": {
+      "team": "TB",
+      "n_plays": 432,
+      "raw_off_epa": -0.084,
+      "eb_shrunk_off_epa": -0.0531,
+      "raw_def_epa": -0.1108,
+      "eb_shrunk_def_epa": -0.071,
+      "eb_shrinkage_weight": 0.666,
+      "pa_epa": -0.3214,
+      "motion_epa": -0.0008,
+      "vs_blitz_epa": -0.1771,
+      "def_blitz_epa_allowed": -0.3199,
+      "light_box_rush_epa": 0.0645,
+      "def_light_box_rate_pct": 40.3,
+      "int_worthy_throw_rate_pct": 3.17,
+      "catchable_ball_rate_pct": 56.3,
+      "qb_fault_sack_rate_pct": 2.78,
+      "target_hhi": 0.1541,
+      "n_eff_receivers": 6.491,
+      "davies_load_multiplier": 1.0683,
+      "sinkhorn_top5_reallocated_shares": [
+        0.3082,
+        0.2138,
+        0.1887,
+        0.1447,
+        0.1447
+      ],
+      "hawkes_tempo_branching_ratio": 0.2341
+    },
+    "TEN": {
+      "team": "TEN",
+      "n_plays": 380,
+      "raw_off_epa": -0.1345,
+      "eb_shrunk_off_epa": -0.0826,
+      "raw_def_epa": 0.0571,
+      "eb_shrunk_def_epa": 0.0394,
+      "eb_shrinkage_weight": 0.6368,
+      "pa_epa": -0.4565,
+      "motion_epa": -0.2747,
+      "vs_blitz_epa": -0.0159,
+      "def_blitz_epa_allowed": 0.3007,
+      "light_box_rush_epa": 0.0555,
+      "def_light_box_rate_pct": 50.9,
+      "int_worthy_throw_rate_pct": 2.15,
+      "catchable_ball_rate_pct": 62.2,
+      "qb_fault_sack_rate_pct": 1.72,
+      "target_hhi": 0.157,
+      "n_eff_receivers": 6.369,
+      "davies_load_multiplier": 1.0784,
+      "sinkhorn_top5_reallocated_shares": [
+        0.34,
+        0.2867,
+        0.14,
+        0.12,
+        0.1133
+      ],
+      "hawkes_tempo_branching_ratio": 0.3528
+    },
+    "WAS": {
+      "team": "WAS",
+      "n_plays": 377,
+      "raw_off_epa": -0.014,
+      "eb_shrunk_off_epa": -0.0058,
+      "raw_def_epa": 0.0672,
+      "eb_shrunk_def_epa": 0.0457,
+      "eb_shrinkage_weight": 0.635,
+      "pa_epa": 0.174,
+      "motion_epa": 0.0572,
+      "vs_blitz_epa": -0.1312,
+      "def_blitz_epa_allowed": -0.0252,
+      "light_box_rush_epa": 0.0135,
+      "def_light_box_rate_pct": 39.0,
+      "int_worthy_throw_rate_pct": 0.83,
+      "catchable_ball_rate_pct": 58.8,
+      "qb_fault_sack_rate_pct": 1.25,
+      "target_hhi": 0.1182,
+      "n_eff_receivers": 8.459,
+      "davies_load_multiplier": 0.9358,
+      "sinkhorn_top5_reallocated_shares": [
+        0.2946,
+        0.2171,
+        0.2016,
+        0.155,
+        0.1318
+      ],
+      "hawkes_tempo_branching_ratio": 0.2315
+    }
+  }
+}

@@ -1,0 +1,422 @@
+{
+  "report_type": "WEEKLY_CADENCE_TICK",
+  "game_slot": "ALL",
+  "phase": "T_MINUS_48H_EARLY_SIM",
+  "version": "v3.0",
+  "cadence_window": {
+    "day": "Fri",
+    "ct_time": "04:00"
+  },
+  "metadata": {
+    "season": 2026,
+    "week": 8,
+    "timestamp_utc": "2026-10-29T07:00:16.634979+00:00",
+    "simulations_run": 10000,
+    "w1_w7_pbp_rows": 18738,
+    "w1_w7_ftn_rows": 18019,
+    "w1_w7_snap_rows": 9981
+  },
+  "outputs": [
+    "TOTALS_SPREADS",
+    "PLAYER_PROPS",
+    "CORRELATED_SGP",
+    "DFS_WRITEUPS",
+    "CONTENT_OS_PACKET"
+  ],
+  "simulation_summary": {
+    "iterations": 10000,
+    "engine": "GSE-CoachMind-v5.3.0-W1W7-10kSim",
+    "source_data": {},
+    "convergence_standard_error": 0.01,
+    "simulated_games": [
+      {
+        "game_id": "401873023",
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "window_slot": "TNF",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread GB -2.9 (Posted GB -3.5) \u2022 Fair Total 48.5 (Posted 47.5).",
+        "side_selection": "Carolina Panthers +3.5",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0167,
+        "total_selection": "OVER 47.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0224,
+        "edge_pct": 1.67,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873026",
+        "matchup": "Baltimore Ravens @ Buffalo Bills",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread BUF -2.8 (Posted BUF -3) \u2022 Fair Total 52.1 (Posted 54.5).",
+        "side_selection": "Baltimore Ravens +3",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0094,
+        "total_selection": "UNDER 54.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0671,
+        "edge_pct": 0.94,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873031",
+        "matchup": "Tennessee Titans @ Cincinnati Bengals",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread CIN -7.3 (Posted CIN -10) \u2022 Fair Total 43.7 (Posted 46.5).",
+        "side_selection": "Tennessee Titans +10",
+        "side_confidence": "59/100",
+        "side_expected_clv": 0.0879,
+        "total_selection": "UNDER 46.5",
+        "total_confidence": "58/100",
+        "total_expected_clv": 0.0802,
+        "edge_pct": 8.79,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873024",
+        "matchup": "Arizona Cardinals @ Dallas Cowboys",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread DAL -3.4 (Posted DAL -7) \u2022 Fair Total 54.0 (Posted 54.5).",
+        "side_selection": "Arizona Cardinals +7",
+        "side_confidence": "61/100",
+        "side_expected_clv": 0.1136,
+        "total_selection": "UNDER 54.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0175,
+        "edge_pct": 11.36,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873030",
+        "matchup": "Minnesota Vikings @ Detroit Lions",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread DET +0.6 (Posted DET -3) \u2022 Fair Total 45.5 (Posted 46.5).",
+        "side_selection": "Minnesota Vikings +3",
+        "side_confidence": "62/100",
+        "side_expected_clv": 0.1233,
+        "total_selection": "UNDER 46.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0349,
+        "edge_pct": 12.33,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873029",
+        "matchup": "Las Vegas Raiders @ New York Jets",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread NYJ -3.0 (Posted NYJ -1.5) \u2022 Fair Total 48.7 (Posted 45.5).",
+        "side_selection": "New York Jets -1.5",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0515,
+        "total_selection": "OVER 45.5",
+        "total_confidence": "58/100",
+        "total_expected_clv": 0.0835,
+        "edge_pct": 5.15,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873027",
+        "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread PIT -1.5 (Posted PIT -3.5) \u2022 Fair Total 44.0 (Posted 39.5).",
+        "side_selection": "Cleveland Browns +3.5",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0712,
+        "total_selection": "OVER 39.5",
+        "total_confidence": "62/100",
+        "total_expected_clv": 0.1207,
+        "edge_pct": 7.12,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873025",
+        "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread TB -3.1 (Posted TB -2.5) \u2022 Fair Total 42.3 (Posted 44.5).",
+        "side_selection": "Tampa Bay Buccaneers -2.5",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0231,
+        "total_selection": "UNDER 44.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0655,
+        "edge_pct": 2.31,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873028",
+        "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+        "window_slot": "SUN_EARLY",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread JAX -3.2 (Posted JAX -10) \u2022 Fair Total 48.7 (Posted 46.5).",
+        "side_selection": "Indianapolis Colts +10",
+        "side_confidence": "72/100",
+        "side_expected_clv": 0.2166,
+        "total_selection": "OVER 46.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0573,
+        "edge_pct": 21.66,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873032",
+        "matchup": "Los Angeles Chargers @ Los Angeles Rams",
+        "window_slot": "SUN_LATE",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread LAR -6.4 (Posted LAR -6.5) \u2022 Fair Total 45.9 (Posted 45.5).",
+        "side_selection": "Los Angeles Rams -6.5",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.008,
+        "total_selection": "OVER 45.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.008,
+        "edge_pct": 0.8,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873033",
+        "matchup": "Kansas City Chiefs @ Denver Broncos",
+        "window_slot": "SUN_LATE",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread DEN -0.7 (Posted KC -1.5) \u2022 Fair Total 43.1 (Posted 40.5).",
+        "side_selection": "Denver Broncos +1.5",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0748,
+        "total_selection": "OVER 40.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0648,
+        "edge_pct": 7.48,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873034",
+        "matchup": "New England Patriots @ Miami Dolphins",
+        "window_slot": "SUN_LATE",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread MIA +0.4 (Posted NE -7) \u2022 Fair Total 50.4 (Posted 43.5).",
+        "side_selection": "Miami Dolphins +7",
+        "side_confidence": "71/100",
+        "side_expected_clv": 0.2055,
+        "total_selection": "OVER 43.5",
+        "total_confidence": "68/100",
+        "total_expected_clv": 0.1815,
+        "edge_pct": 20.55,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873035",
+        "matchup": "Philadelphia Eagles @ Washington Commanders",
+        "window_slot": "SNF",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread WSH -3.1 (Posted WSH -6) \u2022 Fair Total 49.2 (Posted 40.5).",
+        "side_selection": "Philadelphia Eagles +6",
+        "side_confidence": "60/100",
+        "side_expected_clv": 0.0979,
+        "total_selection": "OVER 40.5",
+        "total_confidence": "72/100",
+        "total_expected_clv": 0.2226,
+        "edge_pct": 9.79,
+        "decision": "PLAY"
+      },
+      {
+        "game_id": "401873036",
+        "matchup": "Chicago Bears @ Seattle Seahawks",
+        "window_slot": "MNF",
+        "scheme_notes": "10,000-Sim Independent Projection: Fair Spread SEA -1.7 (Posted SEA -3) \u2022 Fair Total 49.1 (Posted 46.5).",
+        "side_selection": "Chicago Bears +3",
+        "side_confidence": "58/100",
+        "side_expected_clv": 0.0435,
+        "total_selection": "OVER 46.5",
+        "total_confidence": "57/100",
+        "total_expected_clv": 0.0706,
+        "edge_pct": 4.35,
+        "decision": "PLAY"
+      }
+    ],
+    "published_tickets_count": 14,
+    "published_tickets": [
+      {
+        "ticket_id": "TICK-2026-W8-401873023",
+        "game_id": "401873023",
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "selection": "Carolina Panthers +3.5",
+        "total_selection": "OVER 47.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 1.67,
+        "kelly_stake_pct": 0.0083
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873026",
+        "game_id": "401873026",
+        "matchup": "Baltimore Ravens @ Buffalo Bills",
+        "selection": "Baltimore Ravens +3",
+        "total_selection": "UNDER 54.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 0.94,
+        "kelly_stake_pct": 0.005
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873031",
+        "game_id": "401873031",
+        "matchup": "Tennessee Titans @ Cincinnati Bengals",
+        "selection": "Tennessee Titans +10",
+        "total_selection": "UNDER 46.5",
+        "market": "spread",
+        "confidence_score": "59/100",
+        "edge_pct": 8.79,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873024",
+        "game_id": "401873024",
+        "matchup": "Arizona Cardinals @ Dallas Cowboys",
+        "selection": "Arizona Cardinals +7",
+        "total_selection": "UNDER 54.5",
+        "market": "spread",
+        "confidence_score": "61/100",
+        "edge_pct": 11.36,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873030",
+        "game_id": "401873030",
+        "matchup": "Minnesota Vikings @ Detroit Lions",
+        "selection": "Minnesota Vikings +3",
+        "total_selection": "UNDER 46.5",
+        "market": "spread",
+        "confidence_score": "62/100",
+        "edge_pct": 12.33,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873029",
+        "game_id": "401873029",
+        "matchup": "Las Vegas Raiders @ New York Jets",
+        "selection": "New York Jets -1.5",
+        "total_selection": "OVER 45.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 5.15,
+        "kelly_stake_pct": 0.0258
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873027",
+        "game_id": "401873027",
+        "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+        "selection": "Cleveland Browns +3.5",
+        "total_selection": "OVER 39.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 7.12,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873025",
+        "game_id": "401873025",
+        "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+        "selection": "Tampa Bay Buccaneers -2.5",
+        "total_selection": "UNDER 44.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 2.31,
+        "kelly_stake_pct": 0.0115
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873028",
+        "game_id": "401873028",
+        "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+        "selection": "Indianapolis Colts +10",
+        "total_selection": "OVER 46.5",
+        "market": "spread",
+        "confidence_score": "72/100",
+        "edge_pct": 21.66,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873032",
+        "game_id": "401873032",
+        "matchup": "Los Angeles Chargers @ Los Angeles Rams",
+        "selection": "Los Angeles Rams -6.5",
+        "total_selection": "OVER 45.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 0.8,
+        "kelly_stake_pct": 0.005
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873033",
+        "game_id": "401873033",
+        "matchup": "Kansas City Chiefs @ Denver Broncos",
+        "selection": "Denver Broncos +1.5",
+        "total_selection": "OVER 40.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 7.48,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873034",
+        "game_id": "401873034",
+        "matchup": "New England Patriots @ Miami Dolphins",
+        "selection": "Miami Dolphins +7",
+        "total_selection": "OVER 43.5",
+        "market": "spread",
+        "confidence_score": "71/100",
+        "edge_pct": 20.55,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873035",
+        "game_id": "401873035",
+        "matchup": "Philadelphia Eagles @ Washington Commanders",
+        "selection": "Philadelphia Eagles +6",
+        "total_selection": "OVER 40.5",
+        "market": "spread",
+        "confidence_score": "60/100",
+        "edge_pct": 9.79,
+        "kelly_stake_pct": 0.03
+      },
+      {
+        "ticket_id": "TICK-2026-W8-401873036",
+        "game_id": "401873036",
+        "matchup": "Chicago Bears @ Seattle Seahawks",
+        "selection": "Chicago Bears +3",
+        "total_selection": "OVER 46.5",
+        "market": "spread",
+        "confidence_score": "58/100",
+        "edge_pct": 4.35,
+        "kelly_stake_pct": 0.0217
+      }
+    ]
+  },
+  "publish_gate": {
+    "passes": true,
+    "reason": "14 of 14 games cleared book-last edge gate (max edge +21.66% from 10,000-sim W1-W7 engine)",
+    "checks": [
+      {
+        "name": "min_edge_pct",
+        "threshold": 1.2,
+        "observed": 21.66,
+        "pass": true
+      },
+      {
+        "name": "w1_w7_pbp_ftn_snaps_bound",
+        "rows_bound": 18738,
+        "agreement": "STRONG",
+        "pass": true
+      },
+      {
+        "name": "adverse_edge_suppression",
+        "status": "CLEAR",
+        "pass": true
+      }
+    ]
+  },
+  "ticket": {
+    "ticket_id": "TICK-2026-W8-401873023",
+    "game_id": "401873023",
+    "matchup": "Carolina Panthers @ Green Bay Packers",
+    "selection": "Carolina Panthers +3.5",
+    "total_selection": "OVER 47.5",
+    "market": "spread",
+    "confidence_score": "58/100",
+    "edge_pct": 1.67,
+    "kelly_stake_pct": 0.0083
+  },
+  "sha256_merkle": "737f4370844832f3da64e175ce8483552733f7d784bd95609ff08417f8ea20cf"
+}

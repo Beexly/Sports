@@ -18,8 +18,8 @@
       "Hermes Multi-Agent Gateway"
     ],
     "description": "Coach & Vision Mind First, Book Last: 10Hz Physical State-Estimator (SkeleTrack v2 + ByteTrack + Hartley-DLT Homography), Perception & Film Features, nfl-farm + 55 W7 X-Intel CSVs, 3,742-Node Quad-Engine, and 10,000-Run Simulator.",
-    "analyzedAt": "2026-10-29T06:12:18Z",
-    "gitCommitHash": "fe7210bb47162d81f5dde57ce2a8876afb595e4f"
+    "analyzedAt": "2026-10-29T07:00:17Z",
+    "gitCommitHash": "c8638358a9edd137625747375bcf0031ab46c5c2"
   },
   "nodes": [
     {
@@ -13625,6 +13625,65 @@
       "complexity": "moderate"
     },
     {
+      "id": "file:scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "type": "file",
+      "name": "build_w1_w7_usage_route_trench_trends.py",
+      "filePath": "scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "lineRange": [
+        1,
+        321
+      ],
+      "summary": "Builds the complete 2026 Weeks 1\u20137 & Week 7 32-Team Usage, Route, Trench, Pace,",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "func:scripts/ops/build_w1_w7_usage_route_trench_trends.py:norm_team",
+      "type": "function",
+      "name": "norm_team()",
+      "filePath": "scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "lineRange": [
+        46,
+        50
+      ],
+      "summary": "Function norm_team in scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/build_w1_w7_usage_route_trench_trends.py:main",
+      "type": "function",
+      "name": "main()",
+      "filePath": "scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "lineRange": [
+        53,
+        317
+      ],
+      "summary": "Function main in scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
       "id": "file:scripts/ops/check_live_picks.ts",
       "type": "file",
       "name": "check_live_picks.ts",
@@ -14381,9 +14440,9 @@
       "filePath": "scripts/ops/generate_slate_writeups.py",
       "lineRange": [
         1,
-        605
+        594
       ],
-      "summary": "generate_slate_writeups.py",
+      "summary": "GSE 2026 Week 8 Real 10,000-Run Monte Carlo Simulation & Coach Writeup Engine",
       "tags": [
         "ops",
         "quad-engine",
@@ -14394,13 +14453,93 @@
       "complexity": "complex"
     },
     {
+      "id": "func:scripts/ops/generate_slate_writeups.py:prob_to_american",
+      "type": "function",
+      "name": "prob_to_american()",
+      "filePath": "scripts/ops/generate_slate_writeups.py",
+      "lineRange": [
+        55,
+        61
+      ],
+      "summary": "Function prob_to_american in scripts/ops/generate_slate_writeups.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/generate_slate_writeups.py:simulate_game_10000",
+      "type": "function",
+      "name": "simulate_game_10000()",
+      "filePath": "scripts/ops/generate_slate_writeups.py",
+      "lineRange": [
+        64,
+        407
+      ],
+      "summary": "Vectorized 10,000-world play/drive/player simulator driven by real 2026 Weeks 1-7",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/generate_slate_writeups.py:write_ts_files",
+      "type": "function",
+      "name": "write_ts_files()",
+      "filePath": "scripts/ops/generate_slate_writeups.py",
+      "lineRange": [
+        410,
+        514
+      ],
+      "summary": "Function write_ts_files in scripts/ops/generate_slate_writeups.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/generate_slate_writeups.py:write_game_day_packet",
+      "type": "function",
+      "name": "write_game_day_packet()",
+      "filePath": "scripts/ops/generate_slate_writeups.py",
+      "lineRange": [
+        517,
+        550
+      ],
+      "summary": "Function write_game_day_packet in scripts/ops/generate_slate_writeups.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
       "id": "func:scripts/ops/generate_slate_writeups.py:main",
       "type": "function",
       "name": "main()",
       "filePath": "scripts/ops/generate_slate_writeups.py",
       "lineRange": [
-        597,
-        602
+        553,
+        590
       ],
       "summary": "Function main in scripts/ops/generate_slate_writeups.py",
       "tags": [
@@ -18184,6 +18323,185 @@
       "complexity": "moderate"
     },
     {
+      "id": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "type": "file",
+      "name": "quad_engine_live_edge_researcher.py",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        1,
+        651
+      ],
+      "summary": "Quad-Engine Live Scientific Edge Researcher & Mathematical Formula Synthesizer",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:reconstruct_openalex_abstract",
+      "type": "function",
+      "name": "reconstruct_openalex_abstract()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        45,
+        56
+      ],
+      "summary": "Function reconstruct_openalex_abstract in scripts/ops/quad_engine_live_edge_researcher.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_openalex_live",
+      "type": "function",
+      "name": "query_openalex_live()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        59,
+        90
+      ],
+      "summary": "Function query_openalex_live in scripts/ops/quad_engine_live_edge_researcher.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_arxiv_live",
+      "type": "function",
+      "name": "query_arxiv_live()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        93,
+        127
+      ],
+      "summary": "Function query_arxiv_live in scripts/ops/quad_engine_live_edge_researcher.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_huggingface_live",
+      "type": "function",
+      "name": "query_huggingface_live()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        130,
+        156
+      ],
+      "summary": "Function query_huggingface_live in scripts/ops/quad_engine_live_edge_researcher.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_kaggle_live",
+      "type": "function",
+      "name": "query_kaggle_live()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        159,
+        186
+      ],
+      "summary": "Function query_kaggle_live in scripts/ops/quad_engine_live_edge_researcher.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:shin_devig",
+      "type": "function",
+      "name": "shin_devig()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        189,
+        212
+      ],
+      "summary": "Shin (1993) insider-trading devigging solver.",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:sinkhorn_knopp_target_reallocation",
+      "type": "function",
+      "name": "sinkhorn_knopp_target_reallocation()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        215,
+        233
+      ],
+      "summary": "Sinkhorn-Knopp entropic optimal transport target reallocation under injury/scheme shift.",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:scripts/ops/quad_engine_live_edge_researcher.py:compute_w1_w7_mathematical_scheme_and_participation_metrics",
+      "type": "function",
+      "name": "compute_w1_w7_mathematical_scheme_and_participation_metrics()",
+      "filePath": "scripts/ops/quad_engine_live_edge_researcher.py",
+      "lineRange": [
+        236,
+        442
+      ],
+      "summary": "Join play_by_play_2026.parquet (18,738 rows), ftn_charting_2026.parquet (18,019 rows),",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
       "id": "file:scripts/ops/ranking-basis-census.ts",
       "type": "file",
       "name": "ranking-basis-census.ts",
@@ -18466,9 +18784,9 @@
       "filePath": "scripts/ops/run_weekly_cadence_tick.py",
       "lineRange": [
         1,
-        203
+        259
       ],
-      "summary": "Weekly Cadence Tick Orchestrator Runner.",
+      "summary": "Weekly Cadence Tick Orchestrator Runner (Real 10,000-Run Simulation Engine).",
       "tags": [
         "ops",
         "quad-engine",
@@ -18479,13 +18797,33 @@
       "complexity": "moderate"
     },
     {
+      "id": "func:scripts/ops/run_weekly_cadence_tick.py:ensure_real_simulation_outputs",
+      "type": "function",
+      "name": "ensure_real_simulation_outputs()",
+      "filePath": "scripts/ops/run_weekly_cadence_tick.py",
+      "lineRange": [
+        45,
+        64
+      ],
+      "summary": "Function ensure_real_simulation_outputs in scripts/ops/run_weekly_cadence_tick.py",
+      "tags": [
+        "ops",
+        "quad-engine",
+        "simulation",
+        "cadence",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
       "id": "func:scripts/ops/run_weekly_cadence_tick.py:execute_cadence_tick",
       "type": "function",
       "name": "execute_cadence_tick()",
       "filePath": "scripts/ops/run_weekly_cadence_tick.py",
       "lineRange": [
-        44,
-        137
+        67,
+        191
       ],
       "summary": "Function execute_cadence_tick in scripts/ops/run_weekly_cadence_tick.py",
       "tags": [
@@ -18504,8 +18842,8 @@
       "name": "main()",
       "filePath": "scripts/ops/run_weekly_cadence_tick.py",
       "lineRange": [
-        140,
-        199
+        194,
+        255
       ],
       "summary": "Function main in scripts/ops/run_weekly_cadence_tick.py",
       "tags": [
@@ -19940,7 +20278,7 @@
       "filePath": "apps/web/lib/writeups/coach-writeup-engine.ts",
       "lineRange": [
         1,
-        299
+        2595
       ],
       "summary": "Coach Writeup Engine \u2014 High-Fidelity Tactical Game & Slate Breakdowns",
       "tags": [
@@ -19998,8 +20336,8 @@
       "name": "getWriteupsForWindowSlot()",
       "filePath": "apps/web/lib/writeups/coach-writeup-engine.ts",
       "lineRange": [
-        249,
-        274
+        2560,
+        2585
       ],
       "summary": "Exported function getWriteupsForWindowSlot in apps/web/lib/writeups/coach-writeup-engine.ts",
       "tags": [
@@ -20018,8 +20356,8 @@
       "name": "getRedactedTeasersForWindowSlot()",
       "filePath": "apps/web/lib/writeups/coach-writeup-engine.ts",
       "lineRange": [
-        259,
-        284
+        2570,
+        2595
       ],
       "summary": "Exported function getRedactedTeasersForWindowSlot in apps/web/lib/writeups/coach-writeup-engine.ts",
       "tags": [
@@ -20159,9 +20497,9 @@
       "filePath": "apps/web/lib/writeups/week8-2026-board.ts",
       "lineRange": [
         1,
-        253
+        249
       ],
-      "summary": "2026 NFL Week 8 board.",
+      "summary": "2026 NFL Week 8 board \u2014 Bound to 18,738 2026 W1\u2013W7 plays + 10,000-Run Simulator.",
       "tags": [
         "writeups",
         "coach-mind",
@@ -20177,8 +20515,8 @@
       "name": "Week8WindowSlot",
       "filePath": "apps/web/lib/writeups/week8-2026-board.ts",
       "lineRange": [
-        9,
-        39
+        5,
+        35
       ],
       "summary": "Exported symbol Week8WindowSlot in apps/web/lib/writeups/week8-2026-board.ts",
       "tags": [
@@ -20197,8 +20535,8 @@
       "name": "Week8BoardCard",
       "filePath": "apps/web/lib/writeups/week8-2026-board.ts",
       "lineRange": [
-        11,
-        41
+        7,
+        37
       ],
       "summary": "Exported symbol Week8BoardCard in apps/web/lib/writeups/week8-2026-board.ts",
       "tags": [
@@ -24148,9 +24486,9 @@
       "filePath": "apps/web/app/packages/page.tsx",
       "lineRange": [
         1,
-        104
+        107
       ],
-      "summary": "TypeScript module apps/web/app/packages/page.tsx (104 lines)",
+      "summary": "TypeScript module apps/web/app/packages/page.tsx (107 lines)",
       "tags": [
         "storefront",
         "paywall",
@@ -24257,9 +24595,9 @@
       "filePath": "apps/web/app/fantasy/dfs/page.tsx",
       "lineRange": [
         1,
-        329
+        347
       ],
-      "summary": "TypeScript module apps/web/app/fantasy/dfs/page.tsx (329 lines)",
+      "summary": "TypeScript module apps/web/app/fantasy/dfs/page.tsx (347 lines)",
       "tags": [
         "dfs",
         "pillar-4",
@@ -25257,9 +25595,9 @@
       "filePath": "apps/web/app/cockpit/workflows/page.tsx",
       "lineRange": [
         1,
-        627
+        635
       ],
-      "summary": "TypeScript module apps/web/app/cockpit/workflows/page.tsx (627 lines)",
+      "summary": "TypeScript module apps/web/app/cockpit/workflows/page.tsx (635 lines)",
       "tags": [
         "cockpit",
         "film-room",
@@ -29807,6 +30145,22 @@
       "weight": 0.9
     },
     {
+      "source": "file:scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "target": "func:scripts/ops/build_w1_w7_usage_route_trench_trends.py:norm_team",
+      "type": "contains",
+      "direction": "forward",
+      "description": "build_w1_w7_usage_route_trench_trends.py defines norm_team()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+      "target": "func:scripts/ops/build_w1_w7_usage_route_trench_trends.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "description": "build_w1_w7_usage_route_trench_trends.py defines main()",
+      "weight": 0.9
+    },
+    {
       "source": "file:scripts/ops/collect_circa.py",
       "target": "func:scripts/ops/collect_circa.py:init_db",
       "type": "contains",
@@ -30028,6 +30382,38 @@
       "type": "contains",
       "direction": "forward",
       "description": "game-merge-score-fill.ts defines MergeScoreRow",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/generate_slate_writeups.py",
+      "target": "func:scripts/ops/generate_slate_writeups.py:prob_to_american",
+      "type": "contains",
+      "direction": "forward",
+      "description": "generate_slate_writeups.py defines prob_to_american()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/generate_slate_writeups.py",
+      "target": "func:scripts/ops/generate_slate_writeups.py:simulate_game_10000",
+      "type": "contains",
+      "direction": "forward",
+      "description": "generate_slate_writeups.py defines simulate_game_10000()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/generate_slate_writeups.py",
+      "target": "func:scripts/ops/generate_slate_writeups.py:write_ts_files",
+      "type": "contains",
+      "direction": "forward",
+      "description": "generate_slate_writeups.py defines write_ts_files()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/generate_slate_writeups.py",
+      "target": "func:scripts/ops/generate_slate_writeups.py:write_game_day_packet",
+      "type": "contains",
+      "direction": "forward",
+      "description": "generate_slate_writeups.py defines write_game_day_packet()",
       "weight": 0.9
     },
     {
@@ -31319,6 +31705,70 @@
       "weight": 0.9
     },
     {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:reconstruct_openalex_abstract",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines reconstruct_openalex_abstract()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_openalex_live",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines query_openalex_live()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_arxiv_live",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines query_arxiv_live()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_huggingface_live",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines query_huggingface_live()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:query_kaggle_live",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines query_kaggle_live()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:shin_devig",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines shin_devig()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:sinkhorn_knopp_target_reallocation",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines sinkhorn_knopp_target_reallocation()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/quad_engine_live_edge_researcher.py",
+      "target": "func:scripts/ops/quad_engine_live_edge_researcher.py:compute_w1_w7_mathematical_scheme_and_participation_metrics",
+      "type": "contains",
+      "direction": "forward",
+      "description": "quad_engine_live_edge_researcher.py defines compute_w1_w7_mathematical_scheme_and_participation_metrics()",
+      "weight": 0.9
+    },
+    {
       "source": "file:scripts/ops/reconcile_all_downloads_and_workspaces.py",
       "target": "func:scripts/ops/reconcile_all_downloads_and_workspaces.py:resolve_canonical_bucket",
       "type": "contains",
@@ -31396,6 +31846,14 @@
       "type": "contains",
       "direction": "forward",
       "description": "run_telegram_bot_daemon.py defines build_response()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:scripts/ops/run_weekly_cadence_tick.py",
+      "target": "func:scripts/ops/run_weekly_cadence_tick.py:ensure_real_simulation_outputs",
+      "type": "contains",
+      "direction": "forward",
+      "description": "run_weekly_cadence_tick.py defines ensure_real_simulation_outputs()",
       "weight": 0.9
     },
     {
@@ -34095,14 +34553,6 @@
       "weight": 0.8
     },
     {
-      "source": "file:apps/web/app/cockpit/workflows/page.tsx",
-      "target": "file:apps/web/lib/packages/catalog.ts",
-      "type": "imports",
-      "direction": "forward",
-      "description": "Imports @/lib/packages/catalog",
-      "weight": 0.8
-    },
-    {
       "source": "file:apps/web/app/intelligence/metrics/page.tsx",
       "target": "file:apps/web/lib/intelligence/metric-methodology.ts",
       "type": "imports",
@@ -35096,6 +35546,9 @@
         "file:scripts/ops/build_full_system_telemetry_graph.py",
         "func:scripts/ops/build_full_system_telemetry_graph.py:count_files",
         "func:scripts/ops/build_full_system_telemetry_graph.py:build_telemetry",
+        "file:scripts/ops/build_w1_w7_usage_route_trench_trends.py",
+        "func:scripts/ops/build_w1_w7_usage_route_trench_trends.py:norm_team",
+        "func:scripts/ops/build_w1_w7_usage_route_trench_trends.py:main",
         "file:scripts/ops/check_live_picks.ts",
         "file:scripts/ops/collect_circa.py",
         "func:scripts/ops/collect_circa.py:init_db",
@@ -35135,6 +35588,10 @@
         "class:scripts/ops/game-merge-score-fill.ts:MergeScoreRow",
         "file:scripts/ops/generate_arxiv_reasoning_synthesis.py",
         "file:scripts/ops/generate_slate_writeups.py",
+        "func:scripts/ops/generate_slate_writeups.py:prob_to_american",
+        "func:scripts/ops/generate_slate_writeups.py:simulate_game_10000",
+        "func:scripts/ops/generate_slate_writeups.py:write_ts_files",
+        "func:scripts/ops/generate_slate_writeups.py:write_game_day_packet",
         "func:scripts/ops/generate_slate_writeups.py:main",
         "file:scripts/ops/generate_understand_anything_graph.py",
         "func:scripts/ops/generate_understand_anything_graph.py:get_git_head",
@@ -35326,6 +35783,15 @@
         "func:scripts/ops/pull_ngs_statboard.py:make_session",
         "func:scripts/ops/pull_ngs_statboard.py:get_json",
         "func:scripts/ops/pull_ngs_statboard.py:main",
+        "file:scripts/ops/quad_engine_live_edge_researcher.py",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:reconstruct_openalex_abstract",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:query_openalex_live",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:query_arxiv_live",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:query_huggingface_live",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:query_kaggle_live",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:shin_devig",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:sinkhorn_knopp_target_reallocation",
+        "func:scripts/ops/quad_engine_live_edge_researcher.py:compute_w1_w7_mathematical_scheme_and_participation_metrics",
         "file:scripts/ops/ranking-basis-census.ts",
         "file:scripts/ops/reconcile_all_downloads_and_workspaces.py",
         "func:scripts/ops/reconcile_all_downloads_and_workspaces.py:resolve_canonical_bucket",
@@ -35341,6 +35807,7 @@
         "func:scripts/ops/run_telegram_bot_daemon.py:main_keyboard",
         "func:scripts/ops/run_telegram_bot_daemon.py:build_response",
         "file:scripts/ops/run_weekly_cadence_tick.py",
+        "func:scripts/ops/run_weekly_cadence_tick.py:ensure_real_simulation_outputs",
         "func:scripts/ops/run_weekly_cadence_tick.py:execute_cadence_tick",
         "func:scripts/ops/run_weekly_cadence_tick.py:main",
         "file:scripts/ops/sample_ngs_aws_heads.ts",

@@ -24,7 +24,7 @@ import { publishedTickerLine, heldTickerLine } from "@/lib/board/market-label";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
-  LIVE_WEEK8_2026_BOARD,
+  LIVE_SLATE_COACH_WRITEUPS,
   getRedactedTeasersForWindowSlot,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
@@ -368,7 +368,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               {/* Free Pace-of-Play & Scheme Matchup Teasers (with Strict Lock Redaction) */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {LIVE_WEEK8_2026_BOARD.slice(0, 4).map((w) => (
+                {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((w) => (
                   <Link
                     key={w.id}
                     href="/packages"
@@ -376,16 +376,18 @@ export default async function HomePage(): Promise<JSX.Element> {
                   >
                     <div className="flex items-center justify-between text-[10px] font-mono">
                       <span className="text-plasma uppercase">{w.windowSlot}</span>
-                      <span className="text-ion-2">posted {w.postedDetails} · {w.postedTotal}</span>
+                      <span className="text-ion-2">
+                        {w.paceOfPlay.neutralSecPerSnap}s/snap · {(w.paceOfPlay.noHuddleRate * 100).toFixed(1)}% no-huddle
+                      </span>
                     </div>
                     <div className="mt-1.5 text-sm font-semibold text-ion-white group-hover:text-plasma">
                       {w.matchup}
                     </div>
                     <p className="mt-1.5 text-xs text-ion-1 line-clamp-2">
-                      PASS. No packaged side or total. Pace and shell are not recorded.
+                      {w.schemeMatchup.coverageShell}
                     </p>
                     <div className="mt-3 border-t border-mineral/40 pt-2 font-mono text-[10px] text-plasma">
-                      No packaged side · no props · no parlay
+                      🔒 {w.sideTotalCall.sideConfidence} Side + {w.topProps.length} Props + 3-Leg SGP Inside
                     </div>
                   </Link>
                 ))}
