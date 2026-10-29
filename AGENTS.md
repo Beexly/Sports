@@ -64,6 +64,25 @@ NEVER post a pick, play, prop, SGP, or game dossier that has not gone through EV
 4. **Stage 4 — Master Situational Reasoning Overlay & Cholesky Whitening:** Run `packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts` (`runMasterSituationalReasoningOverlay`, `orthogonalizeAndShrink`, `emitMindFeedRecord`) + `x-situational-80-rules.ts` (`validateFeatureAgainstMisleadingStats`) across all 6 situational families (`pressure`, `weather`, `restFatigue`, `coveragePersonnel`, `qbSkillScript`, `marketMicrostructure`).
 5. **Stage 5 — Class B Market De-Vig & Conjunction Gate (`PASS` Discipline):** Compare post-reasoning probabilities **LAST** against the de-vigged market line (`calibration-map.ts` `signCallSheetTickets`, `sgp-copula.ts`, `no-bet-gate.ts`). Any side, total, prop, or SGP that does not clear the conjunction gate is marked **`PASS` (`publishAllowed: false`)**. Fake CLV floors (`max(0.008, ...)`) are strictly banned.
 
+### 360-DEGREE FULL-BOARD MARKET REVIEW & OFFICIAL `16-5` NEW ENGINE LEDGER DOCTRINE (Garrett, 2026-10-29 — HARD, EVERY TIME GOING FORWARD)
+1. **Every Single Market Must Be Reviewed Every Time (`1Q–4Q`, `1H/2H`, `Kicking`, `Defense/IDP`, `INTs`, `TDs`, `Props`):**
+   - Never stop at main game lines and basic yardage props. Every game review MUST fetch all pages (`page=1..N`) of live DraftKings `propBets` (~1,800+ items / 77+ market types per game) and evaluate:
+     - **Quarters & Halves (`1Q`, `2Q`, `3Q`, `4Q`, `1H`, `2H`):** Spreads, Totals, Moneylines, Team Totals (`1H` & Full-Game), Team Total TDs, and Overtime.
+     - **`1st Quarter` & `1st Half` Player Props:** Passing, Rushing, Receiving Yards, Receptions, and `1Q`/`1H` TD Scorers (e.g., `Tucker Kraft OVER 6.5 1Q Rec Yds`).
+     - **QB Full-Game Suite:** Passing Yards, Passing TDs, Interceptions (`INTs`), Pass Attempts, Completions, Pass+Rush Yards, QB Rushing Yards, Longest Completion, Longest Rush.
+     - **Skill Player Full-Game & Longest Suite:** Rushing Yards, Carries, Receiving Yards, Receptions, Rush+Rec Yards, Longest Rush, Longest Reception.
+     - **Kicking Suite:** Total Field Goals Made (`O/U 1.5`), Total Kicking Points (`O/U 6.5 / 7.5`), Extra Points Made (`PATs`), FG/Kicking Milestones.
+     - **Defense / IDP Suite:** Individual Sacks (`O/U 0.25` where half-sack `0.5+` clears, plus `1+`/`2+` Sack Milestones), Total Tackles + Assists, Solo Tackles, Assisted Tackles, and Team D/ST.
+     - **Touchdown Scorer Suite:** `Anytime TD`, `First TD`, `First Team TD`, `1Q TD`, `1H TD`, `2+ TDs`, and `Anytime D/ST TD`.
+2. **Mandatory External Charting & Matchup Cross-Verification:**
+   - Every evaluation MUST explicitly incorporate and acknowledge:
+     - `statrankings` / `MAGICSPORTSBREAKDOWN+`: `PROE+` (season & L3), `Neutral pace (sec/play)`, `1st-half pass %`, `Pass rate when leading/trailing 8+`, 11-layer Matchup Ranks (`Scoring`, `EPA`, `Pressure`, `Sack`, `Tackling`, `Red zone`, `Kicking`, `QB`, `RB`, `WR`, `TE`), Receiver `YPRR vs Man` & `YPRR vs Zone` against opponent `Man/Zone %` & Primary CB `FP/rt allowed`, and `Season FP vs Season xFP`.
+     - `@SamHoppen` (`nflfastR` / `SumerSports`): YTD & L4 Weeks `EPA/Play`, `Success Rate`, `EPA/Drive`, `Early Down EPA`, `Explosive Pass/Rush %`, `CPOE`, `Pressure %`, `11-Personnel / Multi-TE %`, `Motion % / Motion at Snap %`, `Zone Rush %`, `Clock-Drain %`, `Nickel/Dime %`, `Man/Zone %`, `Light/Heavy Box %`, `Blitz %`, and `Stunt %`.
+     - `@FantasyPtsData` (`SEP SCORE & 1READ %`), `@PattonAnalytics` (`Pressure Over Expectation vs Pressure-to-Sack Survival Curve`), `@KoalatyStats` (`XFP/G` & `FPPG - XFPPG`), and `@WideLeft` (`Cover-1 Rate by Defense`).
+3. **Official New Engine Verified Record & Units Tracker (`16-5` · `76.2%` · `+10.45u` — THAT'S IT!):**
+   - Never cite old legacy DB bucket numbers (`57.0% / 66.0% / 67.8%` or `11-6`).
+   - Only track and publish the **Official New Engine Record (`16-5`, `76.2%`, `+10.45 Units` entering Oct 29, 2026)** stored in `data/engine/new_engine_official_ledger_2026.json` and `docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md`, updating Total Wins, Losses, Pushes, and Net Units after every single game.
+
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to

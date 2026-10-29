@@ -39,24 +39,68 @@ def get_athlete_info(ref_url: str) -> dict:
 
 
 def fetch_event_props(ev_id: str) -> list[dict]:
-    url = f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{ev_id}/competitions/{ev_id}/odds/100/propBets?limit=600"
-    try:
-        data = fetch_json(url, timeout=15)
-    except Exception as e:
-        print(f"  [WARN] No DK propBets for {ev_id}: {e}")
-        return []
+    raw_items = []
+    page = 1
+    while True:
+        url = f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{ev_id}/competitions/{ev_id}/odds/100/propBets?limit=1000&page={page}"
+        try:
+            data = fetch_json(url, timeout=15)
+        except Exception as e:
+            if page == 1:
+                print(f"  [WARN] No DK propBets for {ev_id}: {e}")
+            break
+        items = data.get("items", [])
+        raw_items.extend(items)
+        if page >= data.get("pageCount", 1) or not items:
+            break
+        page += 1
 
-    raw_items = data.get("items", [])
     wanted_markets = (
+        # Full-Game Skill & QB
         "Total Passing Yards (incl. overtime)",
         "Total Pass Completions (incl. overtime)",
+        "Total Passing Attempts (incl. overtime)",
         "Total Pass Attempts (incl. overtime)",
         "Total Passing Touchdowns (incl. overtime)",
+        "Total Passing Interceptions (incl. overtime)",
+        "Total Passing Plus Rushing Yards (incl. overtime)",
+        "Longest Passing Completion (incl. overtime)",
         "Total Rushing Yards (incl. overtime)",
         "Total Carries (incl. overtime)",
+        "Longest Rush (incl. overtime)",
         "Total Receiving Yards (incl. overtime)",
         "Total Receptions (incl. overtime)",
         "Total Rushing Plus Receiving Yards (incl. overtime)",
+        "Longest Reception (incl. overtime)",
+        # 1st Quarter & 1st Half Player Props
+        "1st Quarter Total Passing Yards",
+        "1st Quarter Total Rushing Yards",
+        "1st Quarter Total Receiving Yards",
+        "1st Half Total Passing Yards",
+        "1st Half Total Rushing Yards",
+        "1st Half Total Receiving Yards",
+        # Quarters & Halves Game Lines
+        "1st Quarter Spread",
+        "1st Quarter Total",
+        "2nd Quarter Spread",
+        "2nd Quarter Total",
+        "3rd Quarter Spread",
+        "3rd Quarter Total",
+        "4th Quarter Spread",
+        "4th Quarter Total",
+        "1st Half Spread",
+        "1st Half Total",
+        "Team 1st Half Total Points",
+        "Team Total Touchdowns",
+        # Kicking
+        "Total Field Goals Made (incl. overtime)",
+        "Total Kicking Points (incl. overtime)",
+        "Total Extra Points Made (incl. overtime)",
+        # Defense / IDP
+        "Total Sacks (incl. overtime)",
+        "Total Tackles Plus Assists (incl. overtime)",
+        "Total Tackles (incl. overtime)",
+        "Total Assists (incl. overtime)",
     )
 
     by_key = {}

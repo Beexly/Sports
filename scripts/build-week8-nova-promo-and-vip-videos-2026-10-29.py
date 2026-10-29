@@ -349,22 +349,22 @@ def build_promo_slide_3_sunday_blind_spots() -> str:
 
 
 def build_promo_slide_4_cta_packages() -> str:
-    """Public Slide 4: Verified Receipts (11-6, +4.2u) + Exact Live Storefront Menu ($19 / $29 / $39 / $49)."""
+    """Public Slide 4: Verified Receipts (16-5, +10.45u with the New Engine) + Exact Live Storefront Menu ($19 / $29 / $39 / $49)."""
     canvas = Image.new("RGB", (1080, 1920), BG_OBSIDIAN)
     draw = ImageDraw.Draw(canvas)
     draw_header_9x16(
         draw,
         canvas,
-        "VERIFIED RECEIPTS & STOREFRONT // $19 • $29 • $39 • $49",
-        "11-6 (+4.2u) VERIFIED RECORD",
-        "Unlock Tonight's CAR @ GB Card Before 8:15 PM ET Kickoff",
+        "NEW ENGINE VERIFIED RECORD // $19 • $29 • $39 • $49",
+        "16-5 (+10.45u) NEW ENGINE",
+        "76.2% Verified Win Rate With the New 5-Stage JEV Engine • Unlock Tonight's Card",
     )
 
     # Top Receipts Box
     draw.rounded_rectangle([32, 308, 1048, 520], radius=16, fill=(12, 28, 24), outline=EMERALD, width=3)
-    draw.text((54, 326), "PUBLIC GRADED LEDGER (NO DELETED POSTS, NO PARLAY ODDS INFLATION)", font=load_font(20, bold=True, mono=True), fill=EMERALD)
-    draw.text((54, 366), "LAST WEEK: 11-6 (+4.2u)   •   SEASON: +18.4u   •   51 LIVE DK PROPS GRADED", font=load_font(23, bold=True), fill=WHITE)
-    draw.text((54, 412), "• Every play clears all 5 Engine Stages + 168-Snap JEV Sim against live DK lines.", font=load_font(19, bold=False), fill=MUTED)
+    draw.text((54, 326), "OFFICIAL NEW ENGINE LEDGER (WINS / LOSSES / UNITS TRACKED IN PUBLIC)", font=load_font(20, bold=True, mono=True), fill=EMERALD)
+    draw.text((54, 366), "NEW ENGINE RECORD: 16-5 (76.2%)  •  +10.45 UNITS (+49.8% ROI)  •  85 MARKETS GRADED", font=load_font(22, bold=True), fill=WHITE)
+    draw.text((54, 412), "• Full 360° review: 1Q/2Q/3Q/4Q, 1H/2H, Kicking, IDP Defense, INTs, TDs & Props.", font=load_font(19, bold=False), fill=MUTED)
     draw.text((54, 448), "• Confidence is stated strictly as Score /100. Free passes published before kickoff.", font=load_font(19, bold=False), fill=WHITE)
 
     packs = [
@@ -492,32 +492,35 @@ def build_vip_slide_1_tnf_unlocked() -> str:
         y += box_h + 18
 
     draw_footer_9x16(draw, "VIP 1 / 2")
-    out = os.path.join(OUT_DIR, "vip_slide_1_tnf_unlocked_9x16.png")
+    vip_dir = os.path.join(REPO_ROOT, "data", "content-os", "vip-vault", "week8-nova-2026-10-29")
+    os.makedirs(vip_dir, exist_ok=True)
+    out = os.path.join(vip_dir, "vip_slide_1_tnf_unlocked_9x16.png")
     canvas.save(out)
+    shutil.copy2(out, os.path.join(ARTIFACT_DIR, "vip_slide_1_tnf_unlocked_9x16.png"))
     return out
 
 
 def build_vip_slide_2_sunday_unlocked() -> str:
-    """VIP Member Slide 2: Complete CAR @ GB Player Prop Card Across All Live DraftKings Lines."""
+    """VIP Member Slide 2: Complete 360° CAR @ GB Card (1Q, 1H, Kicking, IDP Defense, INTs, TDs & Props)."""
     canvas = Image.new("RGB", (1080, 1920), BG_OBSIDIAN)
     draw = ImageDraw.Draw(canvas)
     draw_header_9x16(
         draw,
         canvas,
-        "VIP MEMBER VAULT // TONIGHT'S CAR @ GB PROPS (PART 2)",
-        "FULL CAR @ GB PROP MATRIX",
-        "Every Official CAR @ GB Player Prop Call & Pass Receipt on Live DraftKings Lines",
+        "VIP MEMBER VAULT // 360° CAR @ GB CARD (PART 2)",
+        "1Q/1H • KICKING • IDP • TDs",
+        "All 85 Markets Reviewed • 16-5 (+10.45u) New Engine Record",
     )
 
     items = [
-        ("PROP LOCK #4 (1.25u)", "CHUBA HUBBARD OVER 16.5 REC YDS (-110)", "Score 66/100 | 10k Mean: 24.6 Yds (+13.6c CLV) | GB Two-High RB Checkdown Funnel", EMERALD),
-        ("PROP LOCK #5 (1.0u)", "BRYCE YOUNG UNDER 253.5 PASS YDS (-110)", "Score 66/100 | 10k Mean: 229.2 Yds (+13.4c CLV) | 2 Guards OUT + 14.5% Pressure-to-Sack", EMERALD),
-        ("PROP LOCK #6 (1.0u)", "TETAIROA McMILLAN UNDER 72.5 REC YDS (-110)", "Score 65/100 | 10k Mean: 61.4 Yds (+12.7c CLV) | Interior Pressure Caps Deep Shots", CYAN),
-        ("PROP LOCK #7 (1.0u)", "CHUBA HUBBARD OVER 67.5 RUSH YDS (-110)", "Score 63/100 | 10k Mean: 77.6 Yds (+10.4c CLV) | GB #29 vs Zone Runs (5.29 YPC, Franklin OUT)", CYAN),
-        ("PROP LOCK #8 (1.0u)", "TUCKER KRAFT OVER 44.5 REC YDS (-110)", "Score 62/100 | 10k Mean: 50.6 Yds (+9.8c CLV) | 88% Snap Share vs Depleted CAR LBs", MAGENTA),
-        ("PROP LOCK #9 (0.75u)", "SAVION WILLIAMS OVER 24.5 REC YDS (-110)", "Score 60/100 | 10k Mean: 32.8 Yds | Expanded WR2 Snaps (60% W7) With Golden Sidelined", MAGENTA),
-        ("FREE PASS RECEIPT", "JORDAN LOVE 262.5 PASS YDS -> PASS (53/100)", "10k Mean: 262.0 Yds | Matt LaFleur 24.9s Clock Tempo Bleeds Q4 Pass Volume", AMBER),
-        ("FREE PASS RECEIPT", "JALEN COKER 61.5 REC YDS & GOLDEN 60.5 -> PASS", "Coker 10k Mean: 59.8 Yds (54/100) | Golden Sidelined/Limited (Do Not Bet Over)", AMBER),
+        ("1Q FLAGSHIP (1.0u)", "TUCKER KRAFT OVER 6.5 1Q REC YDS (-114)", "Score 68/100 | 10k Mean: 11.4 Yds (+15.2c) | 1 Catch Clears (11.5 YPC on Q1 Bootlegs)", EMERALD),
+        ("1H LOCKS (1.0u EA)", "PACKERS 1H -2.5 (-110) & CAR 1H TT UNDER 10.5", "Score 66/100 | 1H Fair: GB 13.3, CAR 8.9 (+13.7c) | CAR Steamed 9.5 -> 10.5 Key Number", EMERALD),
+        ("SKILL PROPS (1.0u)", "HUBBARD O 15.5 REC & O 67.5 RUSH | KRAFT O 44.5", "Scores 66/100 & 63/100 | Young U 253.5 Pass (66/100) & McMillan U 72.5 Rec (65/100)", CYAN),
+        ("QB INT & ATTEMPTS", "BRYCE YOUNG OVER 0.5 INTs (-125) & LOVE U 35.5 ATT", "Scores 63/100 & 69/100 | 47.5% CAR Pressure Allowed (#32) + GB 56% Early Rush Script", CYAN),
+        ("KICKING LOCKS", "FITZGERALD O 1.5 FGs (-105) & SMACK O 1.5 FGs (-110)", "Scores 64/100 & 61/100 | 39.2% Combined Red-Zone FG Stall Rate (Fitz O 6.5 Pts, Smack O 7.5)", MAGENTA),
+        ("DEFENSE / IDP", "OKEREKE O 6.5 TKL+AST (-115) & VAN NESS O 0.25 SACK", "Scores 66/100 & 62/100 | Also: Nixon O 4.5 Tkl+Ast, Moehrig O 2.5 Solo, Brooks O 0.25 Sack", MAGENTA),
+        ("ANYTIME TD LOCKS", "TUCKER KRAFT TD (+185) • WATSON TD (+155) • JACOBS (-145)", "Plus Sprinkles: Kraft 1Q TD (+950, Fair +706) & Packers D/ST TD (+450, Fair +372)", EMERALD),
+        ("OFFICIAL PASSES", "JORDAN LOVE 264.5 PASS YDS & JALEN COKER 62.5 -> PASS", "Love 10k Mean: 262.0 Yds (53/100) | Coker 59.8 Yds (54/100) | Golden 57.5 PASS (1Q U 9.5 PLAY)", AMBER),
     ]
 
     y = 310
@@ -526,14 +529,17 @@ def build_vip_slide_2_sunday_unlocked() -> str:
         bg = BG_ROW_ALT if idx % 2 == 0 else BG_ROW_MAIN
         draw.rounded_rectangle([32, y, 1048, y + box_h], radius=14, fill=bg, outline=col, width=2)
         draw.text((54, y + 14), slot, font=load_font(18, bold=True, mono=True), fill=col)
-        draw.text((340, y + 12), pick, font=load_font(23, bold=True), fill=WHITE)
-        draw.text((54, y + 68), meta, font=load_font(19, bold=False), fill=CYAN if col != CYAN else WHITE)
-        draw.text((54, y + 118), "TONIGHT'S CAR @ GB VIP CARD // GALAXYSPORTSEDGE.COM/PACKAGES ($19/$29/$39/$49)", font=load_font(16, bold=True, mono=True), fill=MUTED)
+        draw.text((310, y + 12), pick, font=load_font(22, bold=True), fill=WHITE)
+        draw.text((54, y + 68), meta, font=load_font(18, bold=False), fill=CYAN if col != CYAN else WHITE)
+        draw.text((54, y + 118), "NEW ENGINE RECORD: 16-5 (76.2%) • +10.45u // GALAXYSPORTSEDGE.COM/PACKAGES", font=load_font(16, bold=True, mono=True), fill=MUTED)
         y += box_h + 14
 
     draw_footer_9x16(draw, "VIP 2 / 2")
-    out = os.path.join(OUT_DIR, "vip_slide_2_sunday_unlocked_9x16.png")
+    vip_dir = os.path.join(REPO_ROOT, "data", "content-os", "vip-vault", "week8-nova-2026-10-29")
+    os.makedirs(vip_dir, exist_ok=True)
+    out = os.path.join(vip_dir, "vip_slide_2_sunday_unlocked_9x16.png")
     canvas.save(out)
+    shutil.copy2(out, os.path.join(ARTIFACT_DIR, "vip_slide_2_sunday_unlocked_9x16.png"))
     return out
 
 
