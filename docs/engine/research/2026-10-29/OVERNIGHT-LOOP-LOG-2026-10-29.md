@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 9`
+- **CYCLE_ROUND:** `Round 10`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -144,6 +144,18 @@ Box-count rush EPA joined. Cards not changed. Main was behind and is now caught 
 - Not promoted. Stacked samples are 10 plays. Green Bay's light-box rush number is the counter-note, not a new side.
 - Push: `1cf3f5623` was on the baseline branch only. `git push origin HEAD:main` fast-forwarded main `71dc74539..1cf3f5623`. Both remotes were then at `1cf3f5623`.
 - Production build of `71dc745` compiled 248/248 pages and reached `Build Completed` / `Deploying outputs`. Status was still Building at inspect. `/packages` is in that build's route table.
+
+## Round 10 — 2026-10-29 02:20 CT
+
+Motion and play-action EPA, joined on `old_game_id` + `play_id`. Pass plays only. Cards not changed.
+
+- Carolina motion: 135 plays, 0.1551 EPA per play. No motion: 115 plays, 0.0073. Gap +0.1478.
+- Green Bay motion: 165 plays, 0.1764. No motion: 121 plays, 0.0446. Gap +0.1318.
+- Carolina play-action: 69 plays, 0.1255. No play-action: 181 plays, 0.0725. Weeks 6–7 no play-action: 56 plays, -0.2595.
+- Green Bay late play-action: 15 plays, -0.6565. Not promoted. Sample is too small.
+- Motion gap is the first scheme split with more than 100 plays on both sides of the cut. It is a covariate, not a new side.
+- Deploy: `sports-mm8nmsmlc` cloned `e4c7d61`, compiled 248/248, then errored at `Deploying outputs` with no error string. Duration 46 minutes. Live `https://www.galaxysportsedge.com/fantasy/dfs` is HTTP 200 and does not contain `Carolina Panthers`. The card is not on the alias.
+
 
 
 
