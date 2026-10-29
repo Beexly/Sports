@@ -9,8 +9,10 @@ import {
   headIsMerge,
 } from "./vercel-skip-build.mjs";
 
-test("builds on a trunk branch regardless of changed files", () => {
-  assert.equal(shouldBuild({ branch: "main", changedFiles: ["README.md"] }), true);
+test("docs-only main commits skip; deploy-relevant main commits still build", () => {
+  assert.equal(shouldBuild({ branch: "main", changedFiles: ["README.md"] }), false);
+  assert.equal(shouldBuild({ branch: "main", changedFiles: ["docs/a.md"] }), false);
+  assert.equal(shouldBuild({ branch: "main", changedFiles: ["apps/web/app/page.tsx"] }), true);
   assert.equal(
     shouldBuild({ branch: "claude/x", changedFiles: ["docs/x.md"], trunkBranches: ["main", "claude/x"] }),
     true,

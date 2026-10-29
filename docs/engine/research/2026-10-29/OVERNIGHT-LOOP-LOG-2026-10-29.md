@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 10`
+- **CYCLE_ROUND:** `Round 11`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -155,6 +155,19 @@ Motion and play-action EPA, joined on `old_game_id` + `play_id`. Pass plays only
 - Green Bay late play-action: 15 plays, -0.6565. Not promoted. Sample is too small.
 - Motion gap is the first scheme split with more than 100 plays on both sides of the cut. It is a covariate, not a new side.
 - Deploy: `sports-mm8nmsmlc` cloned `e4c7d61`, compiled 248/248, then errored at `Deploying outputs` with no error string. Duration 46 minutes. Live `https://www.galaxysportsedge.com/fantasy/dfs` is HTTP 200 and does not contain `Carolina Panthers`. The card is not on the alias.
+
+## Round 11 — 2026-10-29 02:28 CT
+
+Motion-by-blitz interaction, pass plays, joined on `old_game_id` + `play_id`. Blitz means `n_blitzers >= 1`. Participation has no `defense_coverage_type`. Cards not changed.
+
+Formula tested: motion effect under a blitz minus motion effect with no blitz. Early window is weeks 1–5. Late window is weeks 6–7.
+
+- Carolina early: motion given blitz +0.0749 (21 vs 21). Motion given no blitz +0.1479 (70 vs 60). Interaction -0.0730.
+- Carolina late: interaction +0.2209. The no-motion blitz cell is 10 plays. Not a holdout pass.
+- Green Bay early: motion given blitz +0.5211 (53 vs 25). Motion given no blitz +0.3001 (63 vs 55). Interaction +0.2210.
+- Green Bay late: interaction -0.8091 and the sign flips. Motion-plus-blitz cell is 9 plays.
+- Not promoted. The interaction does not survive the late window.
+- Deploy gate: `shouldBuild` no longer force-builds every `main` commit. Docs-only main commits skip. A commit that touches `apps/web/` or `packages/` still builds. This stops the overnight log from queueing another 46-minute output failure.
 
 
 

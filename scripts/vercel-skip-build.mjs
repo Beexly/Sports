@@ -6,10 +6,11 @@
  *   exit 1 → PROCEED with the build
  *   exit 0 → SKIP (cancel) the build
  *
- * We BUILD only when the git ref is a trunk we deploy (production `main` + the
- * active development trunk) OR the commit touches deploy-relevant paths. Docs-only
- * pushes and inactive agent branches are skipped — which kills the ~20-builds-in-3hrs
- * preview waste (and the per-preview Neon wake) the cost audit found.
+ * We BUILD when the commit touches deploy-relevant paths, or when the ref is an
+ * active development trunk. Production `main` is path-gated: a docs-only main
+ * commit skips. Force-building every main commit queued a deploy per overnight
+ * log and those builds died at "Deploying outputs" after 46 minutes, which kept
+ * the card off the live alias. Inactive agent branches stay skipped.
  *
  * The pure `shouldBuild()` is exported + unit-tested; the script wires env + git to it.
  */
@@ -56,10 +57,14 @@ const BUILD_PATH_EXACT = [
  * @returns {boolean}
  */
 export function shouldBuild({ branch, changedFiles, trunkBranches = TRUNK_BRANCHES }) {
-  if (branch && trunkBranches.includes(branch)) return true;
-  return (changedFiles ?? []).some(
+  const relevant = (changedFiles ?? []).some(
     (f) => BUILD_PATH_PREFIXES.some((p) => f.startsWith(p)) || BUILD_PATH_EXACT.includes(f),
   );
+  if (relevant) return true;
+  // main is path-gated. Other trunks still force-build.
+  if (branch === "main") return false;
+  if (branch && trunkBranches.includes(branch)) return true;
+  return false;
 }
 
 /**
