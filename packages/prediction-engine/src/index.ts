@@ -5798,3 +5798,31 @@ export type {
   BelichickMetricInputs,
   BelichickMetricBundle,
 } from "./nfl/belichick-ten-metrics.js";
+
+// ── All-In-One 2026 Human-Charted Analytics, Funnels, Equilibrium & LineOfEvidence ──
+export {
+  computeCatchableBallProfile,
+  evaluateTargetFunnelMultiplier,
+  solveMinimaxPlayCallEquilibrium,
+  computeFloresVarianceRegimeMultiplier,
+  computeFourManTrenchDominanceDelta,
+  computeGoalLineCarveoutTdProb,
+  buildLineOfEvidenceThreeFaultLines,
+} from "./nfl/all-in-one-research-signals.js";
+export type {
+  ChartedPassPlayInput,
+  QbCatchableBallProfile,
+  TargetFunnelEvaluationInput,
+  TargetFunnelEvaluationResult,
+  MinimaxPayoffMatrix,
+  MinimaxNashEquilibrium,
+  FloresVarianceInput,
+  FloresVarianceResult,
+  FourManTrenchInput,
+  FourManTrenchResult,
+  GoalLineTdShareInput,
+  GoalLineTdShareResult,
+  LineOfEvidenceFaultLine,
+  LineOfEvidenceMatchupCard,
+} from "./nfl/all-in-one-research-signals.js";
+

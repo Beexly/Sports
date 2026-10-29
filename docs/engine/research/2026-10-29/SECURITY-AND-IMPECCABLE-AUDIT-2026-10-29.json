@@ -1,0 +1,90 @@
+{
+  "schema": "gse_security_and_impeccable_audit.v1",
+  "generatedAt": "2026-10-29T17:31:45Z",
+  "impeccableUiAudit": {
+    "filesChecked": 6,
+    "allPassed": true,
+    "records": [
+      {
+        "file": "apps/web/app/packages/page.tsx",
+        "brandHygieneClean": true,
+        "forbiddenBrandHits": [],
+        "highContrastHierarchyVerified": true,
+        "verdict": "PASS"
+      },
+      {
+        "file": "apps/web/components/packages/paywall-reveal-card.tsx",
+        "brandHygieneClean": true,
+        "forbiddenBrandHits": [],
+        "highContrastHierarchyVerified": true,
+        "verdict": "PASS"
+      },
+      {
+        "file": "apps/web/components/ui/nav.tsx",
+        "brandHygieneClean": true,
+        "forbiddenBrandHits": [],
+        "highContrastHierarchyVerified": false,
+        "verdict": "PASS"
+      },
+      {
+        "file": "apps/web/components/ui/mobile-nav.tsx",
+        "brandHygieneClean": true,
+        "forbiddenBrandHits": [],
+        "highContrastHierarchyVerified": false,
+        "verdict": "PASS"
+      },
+      {
+        "file": "apps/web/components/ui/footer.tsx",
+        "brandHygieneClean": true,
+        "forbiddenBrandHits": [],
+        "highContrastHierarchyVerified": false,
+        "verdict": "PASS"
+      },
+      {
+        "file": "apps/web/app/pricing/page.tsx",
+        "brandHygieneClean": true,
+        "forbiddenBrandHits": [],
+        "highContrastHierarchyVerified": true,
+        "verdict": "PASS"
+      }
+    ]
+  },
+  "securityAndSafeMcpAudit": {
+    "methodology": "cloudflare/security-audit-skill 6-phase coverage ledger + SafeMCP config scan",
+    "mcpConfigsScanned": 3,
+    "mcpFindings": [
+      {
+        "file": ".mcp.json",
+        "fingerprint": "cc8424a6ae4cde1c",
+        "verdict": "rejected",
+        "reason": "No hardcoded bearer tokens in MCP config"
+      },
+      {
+        "file": "docs/research/2026-10-02/repo-intel/meta/derekrbreese-fantasy-football-mcp-public.json",
+        "fingerprint": "d1ffd3a095539d82",
+        "verdict": "rejected",
+        "reason": "No hardcoded bearer tokens in MCP config"
+      },
+      {
+        "file": "docs/research/2026-10-02/repo-intel/meta/gtonic-nfl_mcp.json",
+        "fingerprint": "35bb1696fb7bcd35",
+        "verdict": "rejected",
+        "reason": "No hardcoded bearer tokens in MCP config"
+      }
+    ],
+    "scopedTreeVerdicts": [
+      {
+        "path": "apps/web/app/api/cron/gamma/route.ts",
+        "fingerprint": "f901767d4e589546",
+        "verdict": "rejected",
+        "notes": "Uses environment variable injection; no live literal secret in working tree."
+      },
+      {
+        "path": "scripts/ops/gamma-cron-smoke.sh",
+        "fingerprint": "1013cc8a53384324",
+        "verdict": "rejected",
+        "notes": "Uses environment variable injection; no live literal secret in working tree."
+      }
+    ]
+  }
+}

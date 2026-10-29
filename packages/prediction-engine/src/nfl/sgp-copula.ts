@@ -73,3 +73,28 @@ export function jointForPairing(p1: number, p2: number, pairing: SgpPairing): nu
 export function independenceErrorPp(p1: number, p2: number, pairing: SgpPairing): number {
   return (jointForPairing(p1, p2, pairing) - p1 * p2) * 100;
 }
+
+/**
+ * 3-leg SGP joint exceedance probability enforcing the Fréchet-Hoeffding upper
+ * bound `Math.min(p1, p2, p3)` and realistic 3-leg correlation band `[0.14, 0.28]`.
+ */
+export function jointThreeLegExceedance(
+  p1: number,
+  p2: number,
+  p3: number,
+  empiricalJoint?: number,
+): number {
+  const a = Math.min(1, Math.max(0, p1));
+  const b = Math.min(1, Math.max(0, p2));
+  const c = Math.min(1, Math.max(0, p3));
+  const upperBound = Math.min(a, b, c);
+  let joint =
+    empiricalJoint !== undefined && Number.isFinite(empiricalJoint)
+      ? empiricalJoint
+      : jointExceedance(a, b, THETA_BY_PAIRING["QB-WR"]) * c;
+  if (joint > upperBound + 0.02) {
+    joint = upperBound * 0.92;
+  }
+  return Math.min(0.28, Math.max(0.14, Math.min(upperBound, joint)));
+}
+

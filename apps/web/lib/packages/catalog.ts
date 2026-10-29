@@ -37,7 +37,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Tonight's Thursday Night Football Pack (Panthers @ Packers)",
     subtitle: "Best Spread Bet, Total Bet, Player Props & Showdown Lineups",
     description:
-      "Everything you need to bet tonight's Carolina at Green Bay game. See our exact Spread pick, Over/Under pick, top Player Props, and why our 10,000-game simulation loves this matchup.",
+      "Everything you need to bet tonight's Carolina at Green Bay game. See our exact Spread pick, Over/Under pick, top Player Props, and plain-English breakdown of why this matchup favors our side.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     guaranteedPriceCents: null,
@@ -58,7 +58,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Sunday NFL Best Bets Pack (11 Games)",
     subtitle: "Every Sunday 1:00 PM & 4:25 PM ET Spread & Over/Under Pick",
     description:
-      "Our complete Sunday NFL betting card. We simulate every Sunday game 10,000 times to show you which Spreads and Totals have a real edge — and which trap games to skip.",
+      "Our complete Sunday NFL betting card. Every Sunday game broken down play-by-play to show you which Spreads and Totals have a real edge — and which trap games to skip.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2900,
     guaranteedPriceCents: null,
@@ -86,7 +86,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     highlights: [
       "Best Receiver & Running Back Yardage Props Across Sunday",
       "3-Leg Same-Game Parlays Built Around How the Game Plays Out",
-      "No Forced Longshots — Only Plays Backed by 10,000 Simulations",
+      "No Forced Longshots — Only Plays That Fit the Same Game Script",
     ],
     badge: "PROPS & PARLAYS",
     includesProps: true,

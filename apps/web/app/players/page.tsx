@@ -1,198 +1,54 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { PlayerLabTable } from "@/components/players/player-lab-table";
-import { Attribution } from "@/components/ui/attribution";
-import { Footer } from "@/components/ui/footer";
-import { isPagePublic } from "@/lib/launch/internal-surface-fence";
-import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
-import { PageHero } from "@/components/ui/page-hero";
-import { SourceError } from "@/components/ui/source-error";
-import { PlayerLensRail } from "@/components/players/player-lens-rail";
-import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
-import { PlayerCard } from "@/components/cards/player-card";
-import { STAT_PLACEHOLDER } from "@/lib/format/stat";
-import type { PlayerSeasonLine } from "@/lib/nflverse/player-lab";
+import { Footer } from "@/components/ui/footer";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60; // heavy nflverse loads need headroom
 
 export const metadata: Metadata = {
-  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): no NGS data,
-  // metric names, or brand mentions on any public surface — including SEO
-  // metadata. The Next Gen / edge views were removed; the copy follows.
-  title: "Player Lab: Production, Snaps & Market in One Surface",
+  title: "Player Lab Under Construction | Galaxy Sports Edge",
   description:
-    "One tabbed Player Lab over the engine's live intake layer: season production & last-5 form, snap share, receiving/rushing opportunity, pressure & coverage, combine, QBR, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states, never fabricated.",
+    "This section is currently under construction while we focus 100% on GALAXY PICKS (PAID) and DFS.",
   alternates: { canonical: "/players" },
-  openGraph: {
-    title: "Player Lab: Production, Snaps & Market in One Surface",
-    description:
-      "One tabbed Player Lab over the engine's live intake layer: production, snaps, pressure/coverage, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states.",
-    url: "/players",
-  },
 };
 
-const PATHNAME = "/players";
-
-/**
- * Per-view "rows + freshness" stamp (POLISH_BACKLOG #2). Every Player Lab view
- * declares its source window, how many real rows sit behind the tables, and
- * when those rows were loaded — so a reader can judge staleness at a glance
- * instead of trusting an unlabeled table.
- */
-function ViewFreshnessStamp({ result }: { result: ViewResult }) {
-  const rowCount = result.sections.reduce((sum, s) => sum + s.rows.length, 0);
-  const refreshed = result.generatedAt
-    ? new Date(result.generatedAt).toISOString().replace("T", " ").slice(0, 16) + " UTC"
-    : null;
-  const parts = [
-    result.windowLabel ? `Source window · ${result.windowLabel}` : null,
-    `${new Intl.NumberFormat("en-US").format(rowCount)} rows`,
-    refreshed ? `refreshed ${refreshed}` : null,
-  ].filter(Boolean);
-  if (parts.length === 0) return null;
+export default function PlayersPage(): JSX.Element {
   return (
-    <p
-      data-testid="player-view-freshness"
-      className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2 tabular-nums"
-    >
-      {parts.join(" · ")}
-    </p>
-  );
-}
-
-/**
- * Production spotlight — the first-ever "scored" shareable player card, fed by
- * the real #1 season leader on the Production view (settled nflverse data). It
- * only renders when that view loaded real rows; never fabricated.
- */
-function ProductionSpotlight({ result, season }: { result: ViewResult; season?: string }) {
-  const leaders = result.sections.find((s) => s.kind === "production-leaders");
-  const top = leaders?.rows?.[0] as PlayerSeasonLine | undefined;
-  if (!top) return null;
-  const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(1) : STAT_PLACEHOLDER);
-  return (
-    <div className="flex flex-col gap-4 rounded-ds-lg border border-mineral bg-eclipse/40 p-5 lg:flex-row lg:items-center lg:justify-between">
-      <div className="max-w-md">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
-          Spotlight · season leader
-        </p>
-        <h2 className="mt-2 font-display text-xl font-semibold text-ion-white">
-          The shareable, scored player card
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-ion-1">
-          Built from settled facts, not a projection. Every number on the card
-          traces back to real nflverse rows. Screenshot it, share it, check it.
-        </p>
-      </div>
-      <PlayerCard
-        rank={1}
-        name={top.playerName}
-        team={top.team}
-        position={top.position}
-        headlineValue={fmt(top.pprPerGame)}
-        headlineLabel="PPR / game"
-        stats={[
-          { label: "Last 5", value: fmt(top.last5PprPerGame), tone: "cyan" },
-          // Signed + toned like the table's Δ column: cyan up, alert down.
-          // (Plasma is earned emphasis and never marks a negative.)
-          { label: "Form Δ", value: `${top.last5PprDelta >= 0 ? "+" : ""}${fmt(top.last5PprDelta)}`, tone: top.last5PprDelta >= 0 ? "cyan" : "alert" },
-          { label: "Boom%", value: `${Math.round(top.boomRate * 100)}`, tone: "uv" },
-          { label: "Games", value: String(top.games), tone: "ion" },
-        ]}
-        footnote={season ? `${season} · settled nflverse` : "Settled nflverse"}
-        className="lg:w-80"
-      />
-    </div>
-  );
-}
-
-interface PlayersPageProps {
-  searchParams?: { view?: string };
-}
-
-export default async function PlayersPage({ searchParams }: PlayersPageProps): Promise<JSX.Element> {
-  // Public/private surface doctrine: the MetricExplainer rail and PlayerLab
-  // tables put metric decompositions behind each player row. Projections are
-  // allowed; the decomposition is not.
-  if (!isPagePublic("/players")) notFound();
-
-  const requested = searchParams?.view;
-  const view = resolvePlayerView(requested);
-
-  // Load only the active view's data — the lab is one view at a time.
-  let result: ViewResult | null = null;
-  let loadError: string | null = null;
-  try {
-    result = await view.load();
-  } catch (error) {
-    loadError = error instanceof Error ? error.message : "UNKNOWN";
-  }
-
-  return (
-    <div className="relative isolate min-h-screen bg-carbon text-ion-white">
-      <GeneratedPlate assetId="players-constellation" className="-z-10 opacity-20" />
+    <div className="relative min-h-screen w-full bg-slate-950 text-white">
       <Nav />
-      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <PageHero
-          eyebrow={view.eyebrow}
-          title={view.title}
-          description={view.description}
-          variant="dark"
-          actions={
+      <main id="main-content" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
+        <div
+          data-testid="under-construction-notice"
+          className="rounded-2xl border-2 border-amber-400/50 bg-slate-900 p-8 sm:p-12 text-center shadow-2xl"
+        >
+          <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-300">
+            🚧 Under Construction — Galaxy Picks &amp; DFS Only
+          </span>
+          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            Focused on Galaxy Picks &amp; DFS Right Now
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
+            This section is currently under construction while we focus 100% on{" "}
+            <strong className="text-white">GALAXY PICKS (PAID)</strong> and our{" "}
+            <strong className="text-white">DFS</strong> lineup optimizer. Get our top NFL Player Props inside
+            Galaxy Picks or open the DFS Optimizer below.
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href={view.jsonHref}
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
-              title="The raw rows behind this table, as machine-readable JSON"
+              href="/packages"
+              className="rounded-xl bg-emerald-500 hover:bg-emerald-400 px-7 py-4 text-base font-extrabold text-black shadow-lg transition-colors"
             >
-              Raw data (JSON)
+              Open GALAXY PICKS (PAID) →
             </Link>
-          }
-          aside={
-            view.explainer && view.explainer.length > 0 ? (
-              <MetricExplainer terms={view.explainer} variant="dark" />
-            ) : undefined
-          }
-        />
-
-        <PlayerLensRail
-          active={view.slug}
-          pathname={PATHNAME}
-          currentParams={searchParams}
-          lenses={PLAYER_VIEWS.map((v) => ({
-            slug: v.slug,
-            label: v.label,
-            tooltip: v.tabTooltip,
-          }))}
-        />
-
-        {loadError || !result || result.status === "source-error" ? (
-          <SourceError
-            variant="dark"
-            reason={
-              loadError
-                ? `This view could not load. ${loadError}`
-                : (result?.error ?? "UNKNOWN")
-            }
-          />
-        ) : (
-          <>
-            <ViewFreshnessStamp result={result} />
-
-            {view.slug === "production" && (
-              <ProductionSpotlight result={result} season={result.windowLabel} />
-            )}
-
-            <PlayerLabTable sections={result.sections} variant="dark" />
-
-            {result.sourceIds.length > 0 ? (
-              <Attribution sourceIds={result.sourceIds} />
-            ) : null}
-          </>
-        )}
+            <Link
+              href="/fantasy/dfs"
+              className="rounded-xl border-2 border-slate-700 bg-slate-800 hover:border-emerald-400 px-7 py-4 text-base font-bold text-white transition-colors"
+            >
+              Open DFS Lineup Optimizer →
+            </Link>
+          </div>
+        </div>
       </main>
       <Footer />
     </div>

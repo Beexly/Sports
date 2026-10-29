@@ -7,14 +7,17 @@ import {
   LIVE_SLATE_COACH_WRITEUPS,
   getRedactedTeasersForWindowSlot,
 } from "@/lib/writeups/coach-writeup-engine";
-import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
+import {
+  PaywallRevealCard,
+  sanitizePlainFootballText,
+} from "@/components/packages/paywall-reveal-card";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "NFL Betting Packs | Galaxy Sports Edge",
   description:
-    "Plain-English NFL Spread, Over/Under, and Player Prop betting packs backed by 10,000 full-game simulations.",
+    "Plain-English NFL Picks, Player Props & Parlays — Written so you know exactly what to bet and why in 30 seconds.",
 };
 
 export default function PackagesPage(): JSX.Element {
@@ -30,12 +33,10 @@ export default function PackagesPage(): JSX.Element {
                 GALAXY PICKS · PAY-PER-SLATE STOREFRONT
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-                This Week&apos;s NFL Betting Packs
+                Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know exactly what to bet and why in 30 seconds.
               </h1>
-              <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-200">
-                No monthly subscription required and zero confusing math jargon. We simulate every NFL game{" "}
-                <strong className="text-white font-semibold">10,000 times snap-by-snap</strong> to find where the
-                Vegas line is off — then explain in plain English{" "}
+              <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-100">
+                No monthly subscription required and zero confusing math jargon. We break down every NFL game snap-by-snap to find where the Vegas line is off — then explain in plain English{" "}
                 <strong className="text-amber-300 font-semibold">what to bet and why</strong>.
               </p>
             </div>
@@ -55,14 +56,14 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Free Game Previews: Why Our Simulation Likes These Matchups
+                Free Football Matchup Previews: Why We Like These Games
               </h2>
-              <p className="mt-1 text-sm text-slate-300">
+              <p className="mt-1 text-sm md:text-base text-slate-200">
                 Read our plain-English game breakdown below, then unlock a pack to see the exact team and number to bet.
               </p>
             </div>
             <span className="rounded-md bg-emerald-500/20 border border-emerald-400/40 px-3 py-1 text-xs font-bold text-emerald-300">
-              10,000 Full-Game Simulations Run
+              Plain-English Football Breakdowns
             </span>
           </div>
 
@@ -82,11 +83,11 @@ export default function PackagesPage(): JSX.Element {
                     </span>
                   </div>
                   <h3 className="mt-3 text-lg font-bold text-white">{writeup.matchup}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-200">
-                    {writeup.schemeMatchup.coverageShell}
+                  <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
+                    {sanitizePlainFootballText(writeup.schemeMatchup.coverageShell)}
                   </p>
-                  <p className="mt-2 text-xs font-medium text-amber-300">
-                    {writeup.schemeMatchup.notes}
+                  <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
+                    {sanitizePlainFootballText(writeup.paceOfPlay.notes)}
                   </p>
                 </div>
 
@@ -110,7 +111,7 @@ export default function PackagesPage(): JSX.Element {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
                 Choose Your Betting Pack
               </h2>
-              <p className="mt-1 text-base text-slate-300">
+              <p className="mt-1 text-base text-slate-200">
                 One-time purchase. Your picks unlock immediately right inside the card below.
               </p>
             </div>

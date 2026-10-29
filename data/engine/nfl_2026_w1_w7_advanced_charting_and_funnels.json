@@ -1,0 +1,3681 @@
+{
+  "schema": "gse_all_in_one_2026_charting_funnels_equilibrium.v1",
+  "generatedAt": "2026-10-29T17:27:30Z",
+  "season": 2026,
+  "weeksCovered": "1-7",
+  "pbpRows": 18738,
+  "ftnChartedRows": 18019,
+  "chartedPassAttempts": 7522,
+  "leagueAnytimeTdSplits": {
+    "totalRushingTdsW1W7": 205,
+    "totalPassingTdsW1W7": 338,
+    "rushingTdsInside10Pct": 78.5,
+    "rushingTdsInside5Pct": 67.8,
+    "rushingTdsFrom1YardLinePct": 32.2,
+    "passingTdsInside5Pct": 29.3
+  },
+  "dfsCrackingTheCodeRules": {
+    "sampleSizeTop100Lineups": 34856,
+    "totalTournamentLineupsAnalyzed": 232000,
+    "qbStackRatePct": 87.0,
+    "nonWr1PartnerShareOfWinningStacksPct": 45.0,
+    "secondaryCorrelatedGamePairRatePct": 70.0,
+    "minTwoSub10PctOwnedSkillPlayersRatePct": 94.0,
+    "gameTotalUnder48SharePct": 70.0,
+    "rbOrSecondTeFlexSharePct": 69.0
+  },
+  "qbBallPlacementAndPressureProfiles": {
+    "ARI:J.Brissett": {
+      "team": "ARI",
+      "qb": "J.Brissett",
+      "chartedPassAttempts": 295,
+      "aimedPassAttempts": 286,
+      "throwaways": 9,
+      "catchableBallRateRawPct": 69.2,
+      "catchableBallRateAimedPct": 71.3,
+      "openTargetRatePct": 72.7,
+      "contestedTargetRatePct": 27.3,
+      "pickablePassRatePct": 2.37,
+      "receiverDropRatePct": 4.9,
+      "createdReceptionRatePct": 4.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 11.2,
+      "inPocketCatchablePct": 71.0,
+      "outOfPocketCatchablePct": 54.5,
+      "sackRatePct": 5.1,
+      "pressureToSackRatePct": 12.4,
+      "qbFaultSackSharePct": 13.3,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "ATL:C.Rush": {
+      "team": "ATL",
+      "qb": "C.Rush",
+      "chartedPassAttempts": 44,
+      "aimedPassAttempts": 44,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 52.3,
+      "catchableBallRateAimedPct": 52.3,
+      "openTargetRatePct": 95.5,
+      "contestedTargetRatePct": 4.5,
+      "pickablePassRatePct": 11.36,
+      "receiverDropRatePct": 0.0,
+      "createdReceptionRatePct": 0.0,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 4.5,
+      "inPocketCatchablePct": 54.8,
+      "outOfPocketCatchablePct": 0.0,
+      "sackRatePct": 11.4,
+      "pressureToSackRatePct": 31.2,
+      "qbFaultSackSharePct": 20.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "ATL:M.Penix": {
+      "team": "ATL",
+      "qb": "M.Penix",
+      "chartedPassAttempts": 152,
+      "aimedPassAttempts": 146,
+      "throwaways": 6,
+      "catchableBallRateRawPct": 67.8,
+      "catchableBallRateAimedPct": 70.5,
+      "openTargetRatePct": 91.1,
+      "contestedTargetRatePct": 8.9,
+      "pickablePassRatePct": 1.97,
+      "receiverDropRatePct": 7.8,
+      "createdReceptionRatePct": 2.1,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 9.2,
+      "inPocketCatchablePct": 68.8,
+      "outOfPocketCatchablePct": 57.1,
+      "sackRatePct": 5.9,
+      "pressureToSackRatePct": 11.7,
+      "qbFaultSackSharePct": 33.3,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "BAL:L.Jackson": {
+      "team": "BAL",
+      "qb": "L.Jackson",
+      "chartedPassAttempts": 101,
+      "aimedPassAttempts": 97,
+      "throwaways": 4,
+      "catchableBallRateRawPct": 72.3,
+      "catchableBallRateAimedPct": 75.3,
+      "openTargetRatePct": 86.6,
+      "contestedTargetRatePct": 13.4,
+      "pickablePassRatePct": 2.97,
+      "receiverDropRatePct": 5.5,
+      "createdReceptionRatePct": 4.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 20.8,
+      "inPocketCatchablePct": 73.8,
+      "outOfPocketCatchablePct": 66.7,
+      "sackRatePct": 6.9,
+      "pressureToSackRatePct": 13.5,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "BAL:T.Huntley": {
+      "team": "BAL",
+      "qb": "T.Huntley",
+      "chartedPassAttempts": 116,
+      "aimedPassAttempts": 116,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 69.0,
+      "catchableBallRateAimedPct": 69.0,
+      "openTargetRatePct": 94.8,
+      "contestedTargetRatePct": 5.2,
+      "pickablePassRatePct": 3.45,
+      "receiverDropRatePct": 6.2,
+      "createdReceptionRatePct": 0.0,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 20.7,
+      "inPocketCatchablePct": 71.7,
+      "outOfPocketCatchablePct": 58.3,
+      "sackRatePct": 8.6,
+      "pressureToSackRatePct": 17.5,
+      "qbFaultSackSharePct": 30.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "BUF:J.Allen": {
+      "team": "BUF",
+      "qb": "J.Allen",
+      "chartedPassAttempts": 183,
+      "aimedPassAttempts": 169,
+      "throwaways": 14,
+      "catchableBallRateRawPct": 67.2,
+      "catchableBallRateAimedPct": 72.8,
+      "openTargetRatePct": 90.5,
+      "contestedTargetRatePct": 9.5,
+      "pickablePassRatePct": 3.83,
+      "receiverDropRatePct": 4.9,
+      "createdReceptionRatePct": 1.8,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 23.5,
+      "inPocketCatchablePct": 70.7,
+      "outOfPocketCatchablePct": 55.8,
+      "sackRatePct": 6.6,
+      "pressureToSackRatePct": 12.2,
+      "qbFaultSackSharePct": 33.3,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "CAR:B.Young": {
+      "team": "CAR",
+      "qb": "B.Young",
+      "chartedPassAttempts": 244,
+      "aimedPassAttempts": 218,
+      "throwaways": 26,
+      "catchableBallRateRawPct": 58.6,
+      "catchableBallRateAimedPct": 65.6,
+      "openTargetRatePct": 90.4,
+      "contestedTargetRatePct": 9.6,
+      "pickablePassRatePct": 1.64,
+      "receiverDropRatePct": 4.9,
+      "createdReceptionRatePct": 5.2,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 16.0,
+      "inPocketCatchablePct": 62.0,
+      "outOfPocketCatchablePct": 41.0,
+      "sackRatePct": 7.0,
+      "pressureToSackRatePct": 14.5,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "CHI:C.Keenum": {
+      "team": "CHI",
+      "qb": "C.Keenum",
+      "chartedPassAttempts": 55,
+      "aimedPassAttempts": 55,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 67.3,
+      "catchableBallRateAimedPct": 67.3,
+      "openTargetRatePct": 92.7,
+      "contestedTargetRatePct": 7.3,
+      "pickablePassRatePct": 1.82,
+      "receiverDropRatePct": 2.7,
+      "createdReceptionRatePct": 0.0,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 10.9,
+      "inPocketCatchablePct": 65.3,
+      "outOfPocketCatchablePct": 83.3,
+      "sackRatePct": 3.6,
+      "pressureToSackRatePct": 10.0,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "CHI:C.Williams": {
+      "team": "CHI",
+      "qb": "C.Williams",
+      "chartedPassAttempts": 136,
+      "aimedPassAttempts": 123,
+      "throwaways": 13,
+      "catchableBallRateRawPct": 69.9,
+      "catchableBallRateAimedPct": 77.2,
+      "openTargetRatePct": 91.1,
+      "contestedTargetRatePct": 8.9,
+      "pickablePassRatePct": 0.74,
+      "receiverDropRatePct": 6.3,
+      "createdReceptionRatePct": 3.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 25.0,
+      "inPocketCatchablePct": 76.5,
+      "outOfPocketCatchablePct": 50.0,
+      "sackRatePct": 8.8,
+      "pressureToSackRatePct": 14.0,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "CHI:T.Bagent": {
+      "team": "CHI",
+      "qb": "T.Bagent",
+      "chartedPassAttempts": 67,
+      "aimedPassAttempts": 63,
+      "throwaways": 4,
+      "catchableBallRateRawPct": 62.7,
+      "catchableBallRateAimedPct": 66.7,
+      "openTargetRatePct": 74.6,
+      "contestedTargetRatePct": 25.4,
+      "pickablePassRatePct": 5.97,
+      "receiverDropRatePct": 0.0,
+      "createdReceptionRatePct": 2.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 10.4,
+      "inPocketCatchablePct": 63.3,
+      "outOfPocketCatchablePct": 57.1,
+      "sackRatePct": 6.0,
+      "pressureToSackRatePct": 11.8,
+      "qbFaultSackSharePct": 25.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "CIN:J.Burrow": {
+      "team": "CIN",
+      "qb": "J.Burrow",
+      "chartedPassAttempts": 229,
+      "aimedPassAttempts": 225,
+      "throwaways": 4,
+      "catchableBallRateRawPct": 73.4,
+      "catchableBallRateAimedPct": 74.7,
+      "openTargetRatePct": 84.4,
+      "contestedTargetRatePct": 15.6,
+      "pickablePassRatePct": 1.31,
+      "receiverDropRatePct": 3.6,
+      "createdReceptionRatePct": 6.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 7.4,
+      "inPocketCatchablePct": 73.6,
+      "outOfPocketCatchablePct": 70.6,
+      "sackRatePct": 4.4,
+      "pressureToSackRatePct": 10.5,
+      "qbFaultSackSharePct": 20.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "CLE:D.Watson": {
+      "team": "CLE",
+      "qb": "D.Watson",
+      "chartedPassAttempts": 235,
+      "aimedPassAttempts": 229,
+      "throwaways": 6,
+      "catchableBallRateRawPct": 63.4,
+      "catchableBallRateAimedPct": 65.1,
+      "openTargetRatePct": 88.2,
+      "contestedTargetRatePct": 11.8,
+      "pickablePassRatePct": 2.55,
+      "receiverDropRatePct": 7.4,
+      "createdReceptionRatePct": 2.2,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 19.6,
+      "inPocketCatchablePct": 66.7,
+      "outOfPocketCatchablePct": 50.0,
+      "sackRatePct": 10.6,
+      "pressureToSackRatePct": 19.5,
+      "qbFaultSackSharePct": 20.0,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "DAL:D.Prescott": {
+      "team": "DAL",
+      "qb": "D.Prescott",
+      "chartedPassAttempts": 253,
+      "aimedPassAttempts": 245,
+      "throwaways": 8,
+      "catchableBallRateRawPct": 73.5,
+      "catchableBallRateAimedPct": 75.9,
+      "openTargetRatePct": 80.0,
+      "contestedTargetRatePct": 20.0,
+      "pickablePassRatePct": 2.37,
+      "receiverDropRatePct": 9.1,
+      "createdReceptionRatePct": 4.9,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 17.8,
+      "inPocketCatchablePct": 78.4,
+      "outOfPocketCatchablePct": 51.1,
+      "sackRatePct": 2.5,
+      "pressureToSackRatePct": 5.3,
+      "qbFaultSackSharePct": 71.4,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "DEN:B.Nix": {
+      "team": "DEN",
+      "qb": "B.Nix",
+      "chartedPassAttempts": 227,
+      "aimedPassAttempts": 206,
+      "throwaways": 21,
+      "catchableBallRateRawPct": 62.1,
+      "catchableBallRateAimedPct": 68.4,
+      "openTargetRatePct": 85.0,
+      "contestedTargetRatePct": 15.0,
+      "pickablePassRatePct": 3.52,
+      "receiverDropRatePct": 2.8,
+      "createdReceptionRatePct": 2.3,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 26.0,
+      "inPocketCatchablePct": 67.9,
+      "outOfPocketCatchablePct": 45.8,
+      "sackRatePct": 4.0,
+      "pressureToSackRatePct": 7.0,
+      "qbFaultSackSharePct": 22.2,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "DET:J.Goff": {
+      "team": "DET",
+      "qb": "J.Goff",
+      "chartedPassAttempts": 235,
+      "aimedPassAttempts": 230,
+      "throwaways": 5,
+      "catchableBallRateRawPct": 68.9,
+      "catchableBallRateAimedPct": 70.4,
+      "openTargetRatePct": 81.7,
+      "contestedTargetRatePct": 18.3,
+      "pickablePassRatePct": 1.28,
+      "receiverDropRatePct": 4.3,
+      "createdReceptionRatePct": 4.0,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 8.5,
+      "inPocketCatchablePct": 70.7,
+      "outOfPocketCatchablePct": 50.0,
+      "sackRatePct": 5.1,
+      "pressureToSackRatePct": 11.2,
+      "qbFaultSackSharePct": 33.3,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "GB:J.Love": {
+      "team": "GB",
+      "qb": "J.Love",
+      "chartedPassAttempts": 285,
+      "aimedPassAttempts": 278,
+      "throwaways": 7,
+      "catchableBallRateRawPct": 66.7,
+      "catchableBallRateAimedPct": 68.3,
+      "openTargetRatePct": 78.8,
+      "contestedTargetRatePct": 21.2,
+      "pickablePassRatePct": 3.51,
+      "receiverDropRatePct": 10.5,
+      "createdReceptionRatePct": 2.5,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 14.0,
+      "inPocketCatchablePct": 68.6,
+      "outOfPocketCatchablePct": 55.0,
+      "sackRatePct": 4.9,
+      "pressureToSackRatePct": 9.6,
+      "qbFaultSackSharePct": 42.9,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "HOU:C.Stroud": {
+      "team": "HOU",
+      "qb": "C.Stroud",
+      "chartedPassAttempts": 258,
+      "aimedPassAttempts": 247,
+      "throwaways": 11,
+      "catchableBallRateRawPct": 66.3,
+      "catchableBallRateAimedPct": 69.2,
+      "openTargetRatePct": 78.5,
+      "contestedTargetRatePct": 21.5,
+      "pickablePassRatePct": 1.16,
+      "receiverDropRatePct": 2.3,
+      "createdReceptionRatePct": 6.9,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 19.4,
+      "inPocketCatchablePct": 69.7,
+      "outOfPocketCatchablePct": 52.0,
+      "sackRatePct": 5.8,
+      "pressureToSackRatePct": 12.6,
+      "qbFaultSackSharePct": 6.7,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "IND:D.Jones": {
+      "team": "IND",
+      "qb": "D.Jones",
+      "chartedPassAttempts": 258,
+      "aimedPassAttempts": 248,
+      "throwaways": 10,
+      "catchableBallRateRawPct": 63.6,
+      "catchableBallRateAimedPct": 66.1,
+      "openTargetRatePct": 76.2,
+      "contestedTargetRatePct": 23.8,
+      "pickablePassRatePct": 5.81,
+      "receiverDropRatePct": 6.1,
+      "createdReceptionRatePct": 1.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 10.5,
+      "inPocketCatchablePct": 65.8,
+      "outOfPocketCatchablePct": 44.4,
+      "sackRatePct": 7.4,
+      "pressureToSackRatePct": 15.2,
+      "qbFaultSackSharePct": 10.5,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "JAX:T.Lawrence": {
+      "team": "JAX",
+      "qb": "T.Lawrence",
+      "chartedPassAttempts": 193,
+      "aimedPassAttempts": 187,
+      "throwaways": 6,
+      "catchableBallRateRawPct": 70.5,
+      "catchableBallRateAimedPct": 72.7,
+      "openTargetRatePct": 89.3,
+      "contestedTargetRatePct": 10.7,
+      "pickablePassRatePct": 3.11,
+      "receiverDropRatePct": 8.1,
+      "createdReceptionRatePct": 5.0,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 11.9,
+      "inPocketCatchablePct": 71.8,
+      "outOfPocketCatchablePct": 60.9,
+      "sackRatePct": 5.2,
+      "pressureToSackRatePct": 10.4,
+      "qbFaultSackSharePct": 30.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "KC:P.Mahomes": {
+      "team": "KC",
+      "qb": "P.Mahomes",
+      "chartedPassAttempts": 198,
+      "aimedPassAttempts": 185,
+      "throwaways": 13,
+      "catchableBallRateRawPct": 68.7,
+      "catchableBallRateAimedPct": 73.5,
+      "openTargetRatePct": 91.9,
+      "contestedTargetRatePct": 8.1,
+      "pickablePassRatePct": 2.53,
+      "receiverDropRatePct": 4.4,
+      "createdReceptionRatePct": 1.6,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 27.8,
+      "inPocketCatchablePct": 71.3,
+      "outOfPocketCatchablePct": 61.8,
+      "sackRatePct": 3.5,
+      "pressureToSackRatePct": 6.8,
+      "qbFaultSackSharePct": 14.3,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "LA:M.Stafford": {
+      "team": "LA",
+      "qb": "M.Stafford",
+      "chartedPassAttempts": 286,
+      "aimedPassAttempts": 280,
+      "throwaways": 6,
+      "catchableBallRateRawPct": 70.3,
+      "catchableBallRateAimedPct": 71.8,
+      "openTargetRatePct": 85.4,
+      "contestedTargetRatePct": 14.6,
+      "pickablePassRatePct": 4.2,
+      "receiverDropRatePct": 7.0,
+      "createdReceptionRatePct": 4.3,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 12.6,
+      "inPocketCatchablePct": 72.0,
+      "outOfPocketCatchablePct": 58.3,
+      "sackRatePct": 3.8,
+      "pressureToSackRatePct": 8.8,
+      "qbFaultSackSharePct": 9.1,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "LAC:J.Herbert": {
+      "team": "LAC",
+      "qb": "J.Herbert",
+      "chartedPassAttempts": 200,
+      "aimedPassAttempts": 193,
+      "throwaways": 7,
+      "catchableBallRateRawPct": 61.0,
+      "catchableBallRateAimedPct": 63.2,
+      "openTargetRatePct": 89.6,
+      "contestedTargetRatePct": 10.4,
+      "pickablePassRatePct": 5.5,
+      "receiverDropRatePct": 8.2,
+      "createdReceptionRatePct": 2.8,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 26.0,
+      "inPocketCatchablePct": 62.2,
+      "outOfPocketCatchablePct": 57.7,
+      "sackRatePct": 10.5,
+      "pressureToSackRatePct": 20.2,
+      "qbFaultSackSharePct": 19.0,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "LV:K.Cousins": {
+      "team": "LV",
+      "qb": "K.Cousins",
+      "chartedPassAttempts": 264,
+      "aimedPassAttempts": 256,
+      "throwaways": 8,
+      "catchableBallRateRawPct": 67.4,
+      "catchableBallRateAimedPct": 69.5,
+      "openTargetRatePct": 82.0,
+      "contestedTargetRatePct": 18.0,
+      "pickablePassRatePct": 2.65,
+      "receiverDropRatePct": 6.7,
+      "createdReceptionRatePct": 4.3,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 9.5,
+      "inPocketCatchablePct": 68.2,
+      "outOfPocketCatchablePct": 60.0,
+      "sackRatePct": 3.8,
+      "pressureToSackRatePct": 7.9,
+      "qbFaultSackSharePct": 40.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "MIA:M.Willis": {
+      "team": "MIA",
+      "qb": "M.Willis",
+      "chartedPassAttempts": 166,
+      "aimedPassAttempts": 166,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 57.2,
+      "catchableBallRateAimedPct": 57.2,
+      "openTargetRatePct": 80.1,
+      "contestedTargetRatePct": 19.9,
+      "pickablePassRatePct": 3.01,
+      "receiverDropRatePct": 2.1,
+      "createdReceptionRatePct": 3.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 22.3,
+      "inPocketCatchablePct": 61.2,
+      "outOfPocketCatchablePct": 43.2,
+      "sackRatePct": 9.6,
+      "pressureToSackRatePct": 17.6,
+      "qbFaultSackSharePct": 25.0,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "MIN:C.Wentz": {
+      "team": "MIN",
+      "qb": "C.Wentz",
+      "chartedPassAttempts": 45,
+      "aimedPassAttempts": 45,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 51.1,
+      "catchableBallRateAimedPct": 51.1,
+      "openTargetRatePct": 95.6,
+      "contestedTargetRatePct": 4.4,
+      "pickablePassRatePct": 2.22,
+      "receiverDropRatePct": 0.0,
+      "createdReceptionRatePct": 8.7,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 6.7,
+      "inPocketCatchablePct": 54.8,
+      "outOfPocketCatchablePct": 0.0,
+      "sackRatePct": 13.3,
+      "pressureToSackRatePct": 24.0,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "MIN:K.Murray": {
+      "team": "MIN",
+      "qb": "K.Murray",
+      "chartedPassAttempts": 136,
+      "aimedPassAttempts": 126,
+      "throwaways": 10,
+      "catchableBallRateRawPct": 69.9,
+      "catchableBallRateAimedPct": 75.4,
+      "openTargetRatePct": 88.9,
+      "contestedTargetRatePct": 11.1,
+      "pickablePassRatePct": 2.21,
+      "receiverDropRatePct": 7.4,
+      "createdReceptionRatePct": 6.0,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 17.6,
+      "inPocketCatchablePct": 74.1,
+      "outOfPocketCatchablePct": 50.0,
+      "sackRatePct": 8.8,
+      "pressureToSackRatePct": 17.4,
+      "qbFaultSackSharePct": 33.3,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "NE:D.Maye": {
+      "team": "NE",
+      "qb": "D.Maye",
+      "chartedPassAttempts": 226,
+      "aimedPassAttempts": 217,
+      "throwaways": 9,
+      "catchableBallRateRawPct": 66.8,
+      "catchableBallRateAimedPct": 69.6,
+      "openTargetRatePct": 86.6,
+      "contestedTargetRatePct": 13.4,
+      "pickablePassRatePct": 3.98,
+      "receiverDropRatePct": 3.3,
+      "createdReceptionRatePct": 2.8,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 19.5,
+      "inPocketCatchablePct": 68.7,
+      "outOfPocketCatchablePct": 59.1,
+      "sackRatePct": 5.8,
+      "pressureToSackRatePct": 10.9,
+      "qbFaultSackSharePct": 15.4,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "NO:T.Shough": {
+      "team": "NO",
+      "qb": "T.Shough",
+      "chartedPassAttempts": 287,
+      "aimedPassAttempts": 276,
+      "throwaways": 11,
+      "catchableBallRateRawPct": 70.0,
+      "catchableBallRateAimedPct": 72.8,
+      "openTargetRatePct": 85.1,
+      "contestedTargetRatePct": 14.9,
+      "pickablePassRatePct": 3.14,
+      "receiverDropRatePct": 5.0,
+      "createdReceptionRatePct": 7.1,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 12.2,
+      "inPocketCatchablePct": 72.6,
+      "outOfPocketCatchablePct": 51.4,
+      "sackRatePct": 5.2,
+      "pressureToSackRatePct": 10.6,
+      "qbFaultSackSharePct": 26.7,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "NYG:J.Dart": {
+      "team": "NYG",
+      "qb": "J.Dart",
+      "chartedPassAttempts": 36,
+      "aimedPassAttempts": 36,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 69.4,
+      "catchableBallRateAimedPct": 69.4,
+      "openTargetRatePct": 97.2,
+      "contestedTargetRatePct": 2.8,
+      "pickablePassRatePct": 2.78,
+      "receiverDropRatePct": 0.0,
+      "createdReceptionRatePct": 3.8,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 11.1,
+      "inPocketCatchablePct": 68.8,
+      "outOfPocketCatchablePct": 75.0,
+      "sackRatePct": 5.6,
+      "pressureToSackRatePct": 11.8,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "NYG:J.McCarthy": {
+      "team": "NYG",
+      "qb": "J.McCarthy",
+      "chartedPassAttempts": 48,
+      "aimedPassAttempts": 47,
+      "throwaways": 1,
+      "catchableBallRateRawPct": 70.8,
+      "catchableBallRateAimedPct": 72.3,
+      "openTargetRatePct": 78.7,
+      "contestedTargetRatePct": 21.3,
+      "pickablePassRatePct": 6.25,
+      "receiverDropRatePct": 0.0,
+      "createdReceptionRatePct": 9.7,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 16.7,
+      "inPocketCatchablePct": 67.5,
+      "outOfPocketCatchablePct": 87.5,
+      "sackRatePct": 8.3,
+      "pressureToSackRatePct": 16.7,
+      "qbFaultSackSharePct": 75.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "NYG:J.Winston": {
+      "team": "NYG",
+      "qb": "J.Winston",
+      "chartedPassAttempts": 173,
+      "aimedPassAttempts": 171,
+      "throwaways": 2,
+      "catchableBallRateRawPct": 60.7,
+      "catchableBallRateAimedPct": 61.4,
+      "openTargetRatePct": 83.0,
+      "contestedTargetRatePct": 17.0,
+      "pickablePassRatePct": 3.47,
+      "receiverDropRatePct": 5.7,
+      "createdReceptionRatePct": 2.2,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 13.9,
+      "inPocketCatchablePct": 63.1,
+      "outOfPocketCatchablePct": 45.8,
+      "sackRatePct": 8.7,
+      "pressureToSackRatePct": 16.9,
+      "qbFaultSackSharePct": 40.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "NYJ:G.Smith": {
+      "team": "NYJ",
+      "qb": "G.Smith",
+      "chartedPassAttempts": 227,
+      "aimedPassAttempts": 220,
+      "throwaways": 7,
+      "catchableBallRateRawPct": 71.8,
+      "catchableBallRateAimedPct": 74.1,
+      "openTargetRatePct": 80.9,
+      "contestedTargetRatePct": 19.1,
+      "pickablePassRatePct": 2.2,
+      "receiverDropRatePct": 7.4,
+      "createdReceptionRatePct": 7.6,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 10.1,
+      "inPocketCatchablePct": 73.5,
+      "outOfPocketCatchablePct": 56.5,
+      "sackRatePct": 9.3,
+      "pressureToSackRatePct": 20.6,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "PHI:J.Hurts": {
+      "team": "PHI",
+      "qb": "J.Hurts",
+      "chartedPassAttempts": 167,
+      "aimedPassAttempts": 153,
+      "throwaways": 14,
+      "catchableBallRateRawPct": 56.9,
+      "catchableBallRateAimedPct": 62.1,
+      "openTargetRatePct": 88.9,
+      "contestedTargetRatePct": 11.1,
+      "pickablePassRatePct": 2.4,
+      "receiverDropRatePct": 2.1,
+      "createdReceptionRatePct": 5.6,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 19.8,
+      "inPocketCatchablePct": 65.7,
+      "outOfPocketCatchablePct": 21.2,
+      "sackRatePct": 7.8,
+      "pressureToSackRatePct": 13.8,
+      "qbFaultSackSharePct": 61.5,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "PHI:T.McKee": {
+      "team": "PHI",
+      "qb": "T.McKee",
+      "chartedPassAttempts": 48,
+      "aimedPassAttempts": 46,
+      "throwaways": 2,
+      "catchableBallRateRawPct": 60.4,
+      "catchableBallRateAimedPct": 63.0,
+      "openTargetRatePct": 80.4,
+      "contestedTargetRatePct": 19.6,
+      "pickablePassRatePct": 0.0,
+      "receiverDropRatePct": 10.3,
+      "createdReceptionRatePct": 7.7,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 8.3,
+      "inPocketCatchablePct": 63.6,
+      "outOfPocketCatchablePct": 25.0,
+      "sackRatePct": 5.9,
+      "pressureToSackRatePct": 18.5,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "PIT:A.Rodgers": {
+      "team": "PIT",
+      "qb": "A.Rodgers",
+      "chartedPassAttempts": 282,
+      "aimedPassAttempts": 268,
+      "throwaways": 14,
+      "catchableBallRateRawPct": 64.9,
+      "catchableBallRateAimedPct": 68.3,
+      "openTargetRatePct": 88.1,
+      "contestedTargetRatePct": 11.9,
+      "pickablePassRatePct": 1.77,
+      "receiverDropRatePct": 6.6,
+      "createdReceptionRatePct": 3.1,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 17.4,
+      "inPocketCatchablePct": 69.1,
+      "outOfPocketCatchablePct": 44.9,
+      "sackRatePct": 7.8,
+      "pressureToSackRatePct": 14.9,
+      "qbFaultSackSharePct": 40.9,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "SEA:D.Lock": {
+      "team": "SEA",
+      "qb": "D.Lock",
+      "chartedPassAttempts": 50,
+      "aimedPassAttempts": 50,
+      "throwaways": 0,
+      "catchableBallRateRawPct": 74.0,
+      "catchableBallRateAimedPct": 74.0,
+      "openTargetRatePct": 90.0,
+      "contestedTargetRatePct": 10.0,
+      "pickablePassRatePct": 2.0,
+      "receiverDropRatePct": 5.4,
+      "createdReceptionRatePct": 2.9,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 16.0,
+      "inPocketCatchablePct": 73.8,
+      "outOfPocketCatchablePct": 75.0,
+      "sackRatePct": 4.0,
+      "pressureToSackRatePct": 8.0,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "SEA:S.Darnold": {
+      "team": "SEA",
+      "qb": "S.Darnold",
+      "chartedPassAttempts": 189,
+      "aimedPassAttempts": 177,
+      "throwaways": 12,
+      "catchableBallRateRawPct": 67.7,
+      "catchableBallRateAimedPct": 72.3,
+      "openTargetRatePct": 84.2,
+      "contestedTargetRatePct": 15.8,
+      "pickablePassRatePct": 4.23,
+      "receiverDropRatePct": 7.0,
+      "createdReceptionRatePct": 1.8,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 21.2,
+      "inPocketCatchablePct": 72.5,
+      "outOfPocketCatchablePct": 50.0,
+      "sackRatePct": 7.4,
+      "pressureToSackRatePct": 13.1,
+      "qbFaultSackSharePct": 57.1,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "SF:B.Purdy": {
+      "team": "SF",
+      "qb": "B.Purdy",
+      "chartedPassAttempts": 216,
+      "aimedPassAttempts": 210,
+      "throwaways": 6,
+      "catchableBallRateRawPct": 72.7,
+      "catchableBallRateAimedPct": 74.8,
+      "openTargetRatePct": 84.3,
+      "contestedTargetRatePct": 15.7,
+      "pickablePassRatePct": 2.78,
+      "receiverDropRatePct": 3.2,
+      "createdReceptionRatePct": 3.4,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 16.7,
+      "inPocketCatchablePct": 74.4,
+      "outOfPocketCatchablePct": 63.9,
+      "sackRatePct": 3.2,
+      "pressureToSackRatePct": 7.4,
+      "qbFaultSackSharePct": 42.9,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "TB:B.Mayfield": {
+      "team": "TB",
+      "qb": "B.Mayfield",
+      "chartedPassAttempts": 120,
+      "aimedPassAttempts": 116,
+      "throwaways": 4,
+      "catchableBallRateRawPct": 63.3,
+      "catchableBallRateAimedPct": 65.5,
+      "openTargetRatePct": 93.1,
+      "contestedTargetRatePct": 6.9,
+      "pickablePassRatePct": 1.67,
+      "receiverDropRatePct": 7.9,
+      "createdReceptionRatePct": 2.9,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 17.5,
+      "inPocketCatchablePct": 67.7,
+      "outOfPocketCatchablePct": 42.9,
+      "sackRatePct": 10.8,
+      "pressureToSackRatePct": 21.0,
+      "qbFaultSackSharePct": 38.5,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "TB:J.Daniels": {
+      "team": "TB",
+      "qb": "J.Daniels",
+      "chartedPassAttempts": 107,
+      "aimedPassAttempts": 103,
+      "throwaways": 4,
+      "catchableBallRateRawPct": 61.7,
+      "catchableBallRateAimedPct": 64.1,
+      "openTargetRatePct": 88.3,
+      "contestedTargetRatePct": 11.7,
+      "pickablePassRatePct": 5.61,
+      "receiverDropRatePct": 4.5,
+      "createdReceptionRatePct": 1.7,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 15.0,
+      "inPocketCatchablePct": 65.9,
+      "outOfPocketCatchablePct": 37.5,
+      "sackRatePct": 8.4,
+      "pressureToSackRatePct": 20.0,
+      "qbFaultSackSharePct": 22.2,
+      "pressureSurvivalArchetype": "STRUCTURED_POCKET_PASSER"
+    },
+    "TEN:C.Ward": {
+      "team": "TEN",
+      "qb": "C.Ward",
+      "chartedPassAttempts": 219,
+      "aimedPassAttempts": 205,
+      "throwaways": 14,
+      "catchableBallRateRawPct": 65.8,
+      "catchableBallRateAimedPct": 70.2,
+      "openTargetRatePct": 90.2,
+      "contestedTargetRatePct": 9.8,
+      "pickablePassRatePct": 2.28,
+      "receiverDropRatePct": 6.9,
+      "createdReceptionRatePct": 4.7,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 18.3,
+      "inPocketCatchablePct": 70.4,
+      "outOfPocketCatchablePct": 45.0,
+      "sackRatePct": 5.0,
+      "pressureToSackRatePct": 11.7,
+      "qbFaultSackSharePct": 36.4,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    },
+    "WAS:J.Daniels": {
+      "team": "WAS",
+      "qb": "J.Daniels",
+      "chartedPassAttempts": 124,
+      "aimedPassAttempts": 113,
+      "throwaways": 11,
+      "catchableBallRateRawPct": 64.5,
+      "catchableBallRateAimedPct": 70.8,
+      "openTargetRatePct": 87.6,
+      "contestedTargetRatePct": 12.4,
+      "pickablePassRatePct": 0.0,
+      "receiverDropRatePct": 2.5,
+      "createdReceptionRatePct": 5.3,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 20.2,
+      "inPocketCatchablePct": 69.7,
+      "outOfPocketCatchablePct": 44.0,
+      "sackRatePct": 8.1,
+      "pressureToSackRatePct": 14.3,
+      "qbFaultSackSharePct": 30.0,
+      "pressureSurvivalArchetype": "SCRAMBLE_CREATOR"
+    },
+    "WAS:M.Mariota": {
+      "team": "WAS",
+      "qb": "M.Mariota",
+      "chartedPassAttempts": 54,
+      "aimedPassAttempts": 52,
+      "throwaways": 2,
+      "catchableBallRateRawPct": 72.2,
+      "catchableBallRateAimedPct": 75.0,
+      "openTargetRatePct": 76.9,
+      "contestedTargetRatePct": 23.1,
+      "pickablePassRatePct": 1.85,
+      "receiverDropRatePct": 7.7,
+      "createdReceptionRatePct": 6.1,
+      "firstReadThrowSharePct": 0.0,
+      "outOfPocketPassSharePct": 16.7,
+      "inPocketCatchablePct": 77.8,
+      "outOfPocketCatchablePct": 44.4,
+      "sackRatePct": 5.6,
+      "pressureToSackRatePct": 13.6,
+      "qbFaultSackSharePct": 0.0,
+      "pressureSurvivalArchetype": "IN_POCKET_MANIPULATOR"
+    }
+  },
+  "receiverCatchableAndContestedProfiles": [
+    {
+      "team": "ARI",
+      "player": "T.McBride",
+      "targets": 78,
+      "catchableTargets": 64,
+      "catchableTargetRatePct": 82.1,
+      "openTargetRatePct": 62.8,
+      "contestedCatchRatePct": 51.7,
+      "dropRatePct": 3.1,
+      "createdReceptions": 3
+    },
+    {
+      "team": "SEA",
+      "player": "J.Smith-Njigba",
+      "targets": 78,
+      "catchableTargets": 64,
+      "catchableTargetRatePct": 82.1,
+      "openTargetRatePct": 82.1,
+      "contestedCatchRatePct": 42.9,
+      "dropRatePct": 4.7,
+      "createdReceptions": 1
+    },
+    {
+      "team": "NO",
+      "player": "C.Olave",
+      "targets": 71,
+      "catchableTargets": 54,
+      "catchableTargetRatePct": 76.1,
+      "openTargetRatePct": 83.1,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 7.4,
+      "createdReceptions": 3
+    },
+    {
+      "team": "DAL",
+      "player": "C.Lamb",
+      "targets": 69,
+      "catchableTargets": 54,
+      "catchableTargetRatePct": 78.3,
+      "openTargetRatePct": 75.4,
+      "contestedCatchRatePct": 52.9,
+      "dropRatePct": 5.6,
+      "createdReceptions": 2
+    },
+    {
+      "team": "NYG",
+      "player": "M.Nabers",
+      "targets": 70,
+      "catchableTargets": 52,
+      "catchableTargetRatePct": 74.3,
+      "openTargetRatePct": 80.0,
+      "contestedCatchRatePct": 42.9,
+      "dropRatePct": 1.9,
+      "createdReceptions": 2
+    },
+    {
+      "team": "DET",
+      "player": "A.St. Brown",
+      "targets": 68,
+      "catchableTargets": 48,
+      "catchableTargetRatePct": 70.6,
+      "openTargetRatePct": 70.6,
+      "contestedCatchRatePct": 25.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 2
+    },
+    {
+      "team": "LA",
+      "player": "P.Nacua",
+      "targets": 62,
+      "catchableTargets": 47,
+      "catchableTargetRatePct": 75.8,
+      "openTargetRatePct": 90.3,
+      "contestedCatchRatePct": 66.7,
+      "dropRatePct": 4.3,
+      "createdReceptions": 1
+    },
+    {
+      "team": "NYG",
+      "player": "I.Likely",
+      "targets": 63,
+      "catchableTargets": 45,
+      "catchableTargetRatePct": 71.4,
+      "openTargetRatePct": 82.5,
+      "contestedCatchRatePct": 27.3,
+      "dropRatePct": 2.2,
+      "createdReceptions": 1
+    },
+    {
+      "team": "GB",
+      "player": "M.Golden",
+      "targets": 69,
+      "catchableTargets": 44,
+      "catchableTargetRatePct": 63.8,
+      "openTargetRatePct": 69.6,
+      "contestedCatchRatePct": 19.0,
+      "dropRatePct": 15.9,
+      "createdReceptions": 2
+    },
+    {
+      "team": "BAL",
+      "player": "Z.Flowers",
+      "targets": 53,
+      "catchableTargets": 43,
+      "catchableTargetRatePct": 81.1,
+      "openTargetRatePct": 92.5,
+      "contestedCatchRatePct": 100.0,
+      "dropRatePct": 7.0,
+      "createdReceptions": 1
+    },
+    {
+      "team": "ARI",
+      "player": "Mi.Wilson",
+      "targets": 66,
+      "catchableTargets": 42,
+      "catchableTargetRatePct": 63.6,
+      "openTargetRatePct": 65.2,
+      "contestedCatchRatePct": 21.7,
+      "dropRatePct": 2.4,
+      "createdReceptions": 3
+    },
+    {
+      "team": "NYJ",
+      "player": "G.Wilson",
+      "targets": 51,
+      "catchableTargets": 41,
+      "catchableTargetRatePct": 80.4,
+      "openTargetRatePct": 64.7,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 4.9,
+      "createdReceptions": 2
+    },
+    {
+      "team": "LV",
+      "player": "A.Jeanty",
+      "targets": 44,
+      "catchableTargets": 41,
+      "catchableTargetRatePct": 93.2,
+      "openTargetRatePct": 95.5,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 12.2,
+      "createdReceptions": 1
+    },
+    {
+      "team": "ATL",
+      "player": "D.London",
+      "targets": 56,
+      "catchableTargets": 39,
+      "catchableTargetRatePct": 69.6,
+      "openTargetRatePct": 91.1,
+      "contestedCatchRatePct": 60.0,
+      "dropRatePct": 2.6,
+      "createdReceptions": 0
+    },
+    {
+      "team": "GB",
+      "player": "C.Watson",
+      "targets": 56,
+      "catchableTargets": 39,
+      "catchableTargetRatePct": 69.6,
+      "openTargetRatePct": 69.6,
+      "contestedCatchRatePct": 23.5,
+      "dropRatePct": 7.7,
+      "createdReceptions": 2
+    },
+    {
+      "team": "PIT",
+      "player": "D.Metcalf",
+      "targets": 58,
+      "catchableTargets": 38,
+      "catchableTargetRatePct": 65.5,
+      "openTargetRatePct": 72.4,
+      "contestedCatchRatePct": 31.2,
+      "dropRatePct": 10.5,
+      "createdReceptions": 2
+    },
+    {
+      "team": "DAL",
+      "player": "G.Pickens",
+      "targets": 52,
+      "catchableTargets": 37,
+      "catchableTargetRatePct": 71.2,
+      "openTargetRatePct": 78.8,
+      "contestedCatchRatePct": 45.5,
+      "dropRatePct": 10.8,
+      "createdReceptions": 2
+    },
+    {
+      "team": "CIN",
+      "player": "T.Higgins",
+      "targets": 50,
+      "catchableTargets": 37,
+      "catchableTargetRatePct": 74.0,
+      "openTargetRatePct": 74.0,
+      "contestedCatchRatePct": 53.8,
+      "dropRatePct": 5.4,
+      "createdReceptions": 4
+    },
+    {
+      "team": "NO",
+      "player": "D.Vele",
+      "targets": 48,
+      "catchableTargets": 37,
+      "catchableTargetRatePct": 77.1,
+      "openTargetRatePct": 77.1,
+      "contestedCatchRatePct": 45.5,
+      "dropRatePct": 5.4,
+      "createdReceptions": 6
+    },
+    {
+      "team": "GB",
+      "player": "T.Kraft",
+      "targets": 43,
+      "catchableTargets": 37,
+      "catchableTargetRatePct": 86.0,
+      "openTargetRatePct": 83.7,
+      "contestedCatchRatePct": 42.9,
+      "dropRatePct": 10.8,
+      "createdReceptions": 0
+    },
+    {
+      "team": "SF",
+      "player": "C.McCaffrey",
+      "targets": 42,
+      "catchableTargets": 37,
+      "catchableTargetRatePct": 88.1,
+      "openTargetRatePct": 92.9,
+      "contestedCatchRatePct": 100.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "CAR",
+      "player": "T.McMillan",
+      "targets": 54,
+      "catchableTargets": 36,
+      "catchableTargetRatePct": 66.7,
+      "openTargetRatePct": 88.9,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 2.8,
+      "createdReceptions": 3
+    },
+    {
+      "team": "TEN",
+      "player": "C.Tate",
+      "targets": 51,
+      "catchableTargets": 36,
+      "catchableTargetRatePct": 70.6,
+      "openTargetRatePct": 84.3,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 8.3,
+      "createdReceptions": 5
+    },
+    {
+      "team": "LA",
+      "player": "K.Williams",
+      "targets": 41,
+      "catchableTargets": 36,
+      "catchableTargetRatePct": 87.8,
+      "openTargetRatePct": 97.6,
+      "contestedCatchRatePct": 100.0,
+      "dropRatePct": 8.3,
+      "createdReceptions": 2
+    },
+    {
+      "team": "LV",
+      "player": "B.Bowers",
+      "targets": 51,
+      "catchableTargets": 35,
+      "catchableTargetRatePct": 68.6,
+      "openTargetRatePct": 66.7,
+      "contestedCatchRatePct": 35.3,
+      "dropRatePct": 2.9,
+      "createdReceptions": 4
+    },
+    {
+      "team": "CHI",
+      "player": "L.Burden",
+      "targets": 47,
+      "catchableTargets": 35,
+      "catchableTargetRatePct": 74.5,
+      "openTargetRatePct": 83.0,
+      "contestedCatchRatePct": 25.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "SF",
+      "player": "G.Kittle",
+      "targets": 46,
+      "catchableTargets": 35,
+      "catchableTargetRatePct": 76.1,
+      "openTargetRatePct": 82.6,
+      "contestedCatchRatePct": 37.5,
+      "dropRatePct": 2.9,
+      "createdReceptions": 0
+    },
+    {
+      "team": "HOU",
+      "player": "D.Schultz",
+      "targets": 43,
+      "catchableTargets": 35,
+      "catchableTargetRatePct": 81.4,
+      "openTargetRatePct": 88.4,
+      "contestedCatchRatePct": 80.0,
+      "dropRatePct": 5.7,
+      "createdReceptions": 1
+    },
+    {
+      "team": "IND",
+      "player": "T.Warren",
+      "targets": 36,
+      "catchableTargets": 35,
+      "catchableTargetRatePct": 97.2,
+      "openTargetRatePct": 86.1,
+      "contestedCatchRatePct": 40.0,
+      "dropRatePct": 8.6,
+      "createdReceptions": 0
+    },
+    {
+      "team": "CIN",
+      "player": "J.Chase",
+      "targets": 45,
+      "catchableTargets": 34,
+      "catchableTargetRatePct": 75.6,
+      "openTargetRatePct": 80.0,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 0.0,
+      "createdReceptions": 2
+    },
+    {
+      "team": "IND",
+      "player": "K.Allen",
+      "targets": 43,
+      "catchableTargets": 34,
+      "catchableTargetRatePct": 79.1,
+      "openTargetRatePct": 65.1,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 2.9,
+      "createdReceptions": 0
+    },
+    {
+      "team": "DET",
+      "player": "J.Gibbs",
+      "targets": 40,
+      "catchableTargets": 34,
+      "catchableTargetRatePct": 85.0,
+      "openTargetRatePct": 92.5,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 5.9,
+      "createdReceptions": 0
+    },
+    {
+      "team": "CLE",
+      "player": "K.Concepcion",
+      "targets": 45,
+      "catchableTargets": 33,
+      "catchableTargetRatePct": 73.3,
+      "openTargetRatePct": 86.7,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 3.0,
+      "createdReceptions": 1
+    },
+    {
+      "team": "TEN",
+      "player": "W.Robinson",
+      "targets": 43,
+      "catchableTargets": 33,
+      "catchableTargetRatePct": 76.7,
+      "openTargetRatePct": 90.7,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 3.0,
+      "createdReceptions": 1
+    },
+    {
+      "team": "LA",
+      "player": "D.Adams",
+      "targets": 49,
+      "catchableTargets": 32,
+      "catchableTargetRatePct": 65.3,
+      "openTargetRatePct": 79.6,
+      "contestedCatchRatePct": 60.0,
+      "dropRatePct": 6.2,
+      "createdReceptions": 2
+    },
+    {
+      "team": "LV",
+      "player": "M.Mayer",
+      "targets": 37,
+      "catchableTargets": 32,
+      "catchableTargetRatePct": 86.5,
+      "openTargetRatePct": 91.9,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "TB",
+      "player": "E.Egbuka",
+      "targets": 49,
+      "catchableTargets": 31,
+      "catchableTargetRatePct": 63.3,
+      "openTargetRatePct": 87.8,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 3.2,
+      "createdReceptions": 0
+    },
+    {
+      "team": "LV",
+      "player": "T.Tucker",
+      "targets": 47,
+      "catchableTargets": 31,
+      "catchableTargetRatePct": 66.0,
+      "openTargetRatePct": 78.7,
+      "contestedCatchRatePct": 20.0,
+      "dropRatePct": 6.5,
+      "createdReceptions": 1
+    },
+    {
+      "team": "DEN",
+      "player": "J.Waddle",
+      "targets": 45,
+      "catchableTargets": 31,
+      "catchableTargetRatePct": 68.9,
+      "openTargetRatePct": 75.6,
+      "contestedCatchRatePct": 27.3,
+      "dropRatePct": 9.7,
+      "createdReceptions": 2
+    },
+    {
+      "team": "PIT",
+      "player": "G.Bernard",
+      "targets": 37,
+      "catchableTargets": 31,
+      "catchableTargetRatePct": 83.8,
+      "openTargetRatePct": 91.9,
+      "contestedCatchRatePct": 66.7,
+      "dropRatePct": 6.5,
+      "createdReceptions": 1
+    },
+    {
+      "team": "JAX",
+      "player": "P.Washington",
+      "targets": 46,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 63.0,
+      "openTargetRatePct": 84.8,
+      "contestedCatchRatePct": 42.9,
+      "dropRatePct": 3.4,
+      "createdReceptions": 3
+    },
+    {
+      "team": "DET",
+      "player": "S.LaPorta",
+      "targets": 39,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 74.4,
+      "openTargetRatePct": 79.5,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 1
+    },
+    {
+      "team": "SF",
+      "player": "M.Evans",
+      "targets": 39,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 74.4,
+      "openTargetRatePct": 71.8,
+      "contestedCatchRatePct": 63.6,
+      "dropRatePct": 3.4,
+      "createdReceptions": 5
+    },
+    {
+      "team": "BAL",
+      "player": "M.Andrews",
+      "targets": 37,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 78.4,
+      "openTargetRatePct": 91.9,
+      "contestedCatchRatePct": 66.7,
+      "dropRatePct": 10.3,
+      "createdReceptions": 1
+    },
+    {
+      "team": "NO",
+      "player": "J.Johnson",
+      "targets": 37,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 78.4,
+      "openTargetRatePct": 83.8,
+      "contestedCatchRatePct": 16.7,
+      "dropRatePct": 0.0,
+      "createdReceptions": 2
+    },
+    {
+      "team": "TB",
+      "player": "C.Godwin",
+      "targets": 34,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 85.3,
+      "openTargetRatePct": 97.1,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 6.9,
+      "createdReceptions": 0
+    },
+    {
+      "team": "JAX",
+      "player": "B.Strange",
+      "targets": 33,
+      "catchableTargets": 29,
+      "catchableTargetRatePct": 87.9,
+      "openTargetRatePct": 90.9,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 6.9,
+      "createdReceptions": 1
+    },
+    {
+      "team": "CHI",
+      "player": "C.Loveland",
+      "targets": 42,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 66.7,
+      "openTargetRatePct": 78.6,
+      "contestedCatchRatePct": 22.2,
+      "dropRatePct": 7.1,
+      "createdReceptions": 1
+    },
+    {
+      "team": "MIA",
+      "player": "M.Washington",
+      "targets": 39,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 71.8,
+      "openTargetRatePct": 89.7,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "DET",
+      "player": "J.Williams",
+      "targets": 38,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 73.7,
+      "openTargetRatePct": 78.9,
+      "contestedCatchRatePct": 37.5,
+      "dropRatePct": 14.3,
+      "createdReceptions": 2
+    },
+    {
+      "team": "ARI",
+      "player": "K.Bourne",
+      "targets": 36,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 77.8,
+      "openTargetRatePct": 83.3,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 7.1,
+      "createdReceptions": 0
+    },
+    {
+      "team": "DAL",
+      "player": "R.Flournoy",
+      "targets": 36,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 77.8,
+      "openTargetRatePct": 80.6,
+      "contestedCatchRatePct": 57.1,
+      "dropRatePct": 10.7,
+      "createdReceptions": 2
+    },
+    {
+      "team": "CIN",
+      "player": "C.Brown",
+      "targets": 33,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 84.8,
+      "openTargetRatePct": 100.0,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "CHI",
+      "player": "K.Raymond",
+      "targets": 31,
+      "catchableTargets": 28,
+      "catchableTargetRatePct": 90.3,
+      "openTargetRatePct": 96.8,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 3.6,
+      "createdReceptions": 0
+    },
+    {
+      "team": "IND",
+      "player": "J.Downs",
+      "targets": 46,
+      "catchableTargets": 27,
+      "catchableTargetRatePct": 58.7,
+      "openTargetRatePct": 67.4,
+      "contestedCatchRatePct": 26.7,
+      "dropRatePct": 3.7,
+      "createdReceptions": 1
+    },
+    {
+      "team": "CAR",
+      "player": "J.Coker",
+      "targets": 39,
+      "catchableTargets": 27,
+      "catchableTargetRatePct": 69.2,
+      "openTargetRatePct": 92.3,
+      "contestedCatchRatePct": 66.7,
+      "dropRatePct": 3.7,
+      "createdReceptions": 1
+    },
+    {
+      "team": "WAS",
+      "player": "S.Diggs",
+      "targets": 38,
+      "catchableTargets": 27,
+      "catchableTargetRatePct": 71.1,
+      "openTargetRatePct": 81.6,
+      "contestedCatchRatePct": 42.9,
+      "dropRatePct": 3.7,
+      "createdReceptions": 3
+    },
+    {
+      "team": "KC",
+      "player": "X.Worthy",
+      "targets": 35,
+      "catchableTargets": 27,
+      "catchableTargetRatePct": 77.1,
+      "openTargetRatePct": 88.6,
+      "contestedCatchRatePct": 25.0,
+      "dropRatePct": 3.7,
+      "createdReceptions": 0
+    },
+    {
+      "team": "NE",
+      "player": "H.Henry",
+      "targets": 31,
+      "catchableTargets": 27,
+      "catchableTargetRatePct": 87.1,
+      "openTargetRatePct": 87.1,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 3.7,
+      "createdReceptions": 0
+    },
+    {
+      "team": "PHI",
+      "player": "D.Smith",
+      "targets": 41,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 63.4,
+      "openTargetRatePct": 80.5,
+      "contestedCatchRatePct": 62.5,
+      "dropRatePct": 0.0,
+      "createdReceptions": 5
+    },
+    {
+      "team": "CLE",
+      "player": "H.Fannin",
+      "targets": 39,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 66.7,
+      "openTargetRatePct": 94.9,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 11.5,
+      "createdReceptions": 0
+    },
+    {
+      "team": "CHI",
+      "player": "R.Odunze",
+      "targets": 38,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 68.4,
+      "openTargetRatePct": 76.3,
+      "contestedCatchRatePct": 44.4,
+      "dropRatePct": 7.7,
+      "createdReceptions": 2
+    },
+    {
+      "team": "KC",
+      "player": "T.Kelce",
+      "targets": 35,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 74.3,
+      "openTargetRatePct": 97.1,
+      "contestedCatchRatePct": 100.0,
+      "dropRatePct": 3.8,
+      "createdReceptions": 1
+    },
+    {
+      "team": "PIT",
+      "player": "J.Warren",
+      "targets": 34,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 76.5,
+      "openTargetRatePct": 97.1,
+      "contestedCatchRatePct": 100.0,
+      "dropRatePct": 3.8,
+      "createdReceptions": 0
+    },
+    {
+      "team": "PIT",
+      "player": "P.Freiermuth",
+      "targets": 33,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 78.8,
+      "openTargetRatePct": 87.9,
+      "contestedCatchRatePct": 25.0,
+      "dropRatePct": 3.8,
+      "createdReceptions": 1
+    },
+    {
+      "team": "ATL",
+      "player": "Bi.Robinson",
+      "targets": 32,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 81.2,
+      "openTargetRatePct": 96.9,
+      "contestedCatchRatePct": 100.0,
+      "dropRatePct": 3.8,
+      "createdReceptions": 0
+    },
+    {
+      "team": "MIN",
+      "player": "T.Hockenson",
+      "targets": 32,
+      "catchableTargets": 26,
+      "catchableTargetRatePct": 81.2,
+      "openTargetRatePct": 87.5,
+      "contestedCatchRatePct": 75.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 1
+    },
+    {
+      "team": "HOU",
+      "player": "N.Collins",
+      "targets": 35,
+      "catchableTargets": 25,
+      "catchableTargetRatePct": 71.4,
+      "openTargetRatePct": 57.1,
+      "contestedCatchRatePct": 66.7,
+      "dropRatePct": 0.0,
+      "createdReceptions": 3
+    },
+    {
+      "team": "NE",
+      "player": "D.Douglas",
+      "targets": 34,
+      "catchableTargets": 25,
+      "catchableTargetRatePct": 73.5,
+      "openTargetRatePct": 94.1,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "MIN",
+      "player": "J.Jefferson",
+      "targets": 31,
+      "catchableTargets": 25,
+      "catchableTargetRatePct": 80.6,
+      "openTargetRatePct": 80.6,
+      "contestedCatchRatePct": 83.3,
+      "dropRatePct": 0.0,
+      "createdReceptions": 4
+    },
+    {
+      "team": "DEN",
+      "player": "R.Harvey",
+      "targets": 28,
+      "catchableTargets": 25,
+      "catchableTargetRatePct": 89.3,
+      "openTargetRatePct": 96.4,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    },
+    {
+      "team": "CLE",
+      "player": "D.Boston",
+      "targets": 42,
+      "catchableTargets": 24,
+      "catchableTargetRatePct": 57.1,
+      "openTargetRatePct": 66.7,
+      "contestedCatchRatePct": 28.6,
+      "dropRatePct": 8.3,
+      "createdReceptions": 1
+    },
+    {
+      "team": "HOU",
+      "player": "X.Hutchinson",
+      "targets": 40,
+      "catchableTargets": 24,
+      "catchableTargetRatePct": 60.0,
+      "openTargetRatePct": 75.0,
+      "contestedCatchRatePct": 20.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 1
+    },
+    {
+      "team": "BUF",
+      "player": "K.Shakir",
+      "targets": 32,
+      "catchableTargets": 24,
+      "catchableTargetRatePct": 75.0,
+      "openTargetRatePct": 93.8,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 8.3,
+      "createdReceptions": 0
+    },
+    {
+      "team": "LA",
+      "player": "T.Higbee",
+      "targets": 32,
+      "catchableTargets": 24,
+      "catchableTargetRatePct": 75.0,
+      "openTargetRatePct": 75.0,
+      "contestedCatchRatePct": 75.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 2
+    },
+    {
+      "team": "SEA",
+      "player": "A.Barner",
+      "targets": 29,
+      "catchableTargets": 24,
+      "catchableTargetRatePct": 82.8,
+      "openTargetRatePct": 79.3,
+      "contestedCatchRatePct": 33.3,
+      "dropRatePct": 12.5,
+      "createdReceptions": 0
+    },
+    {
+      "team": "BUF",
+      "player": "D.Kincaid",
+      "targets": 29,
+      "catchableTargets": 23,
+      "catchableTargetRatePct": 79.3,
+      "openTargetRatePct": 82.8,
+      "contestedCatchRatePct": 40.0,
+      "dropRatePct": 4.3,
+      "createdReceptions": 1
+    },
+    {
+      "team": "NO",
+      "player": "A.Kamara",
+      "targets": 27,
+      "catchableTargets": 23,
+      "catchableTargetRatePct": 85.2,
+      "openTargetRatePct": 92.6,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 4.3,
+      "createdReceptions": 0
+    },
+    {
+      "team": "SEA",
+      "player": "C.Kupp",
+      "targets": 27,
+      "catchableTargets": 22,
+      "catchableTargetRatePct": 81.5,
+      "openTargetRatePct": 88.9,
+      "contestedCatchRatePct": 0.0,
+      "dropRatePct": 9.1,
+      "createdReceptions": 1
+    },
+    {
+      "team": "CHI",
+      "player": "D.Swift",
+      "targets": 25,
+      "catchableTargets": 22,
+      "catchableTargetRatePct": 88.0,
+      "openTargetRatePct": 92.0,
+      "contestedCatchRatePct": 50.0,
+      "dropRatePct": 0.0,
+      "createdReceptions": 0
+    }
+  ],
+  "teams": {
+    "ARI": {
+      "team": "ARI",
+      "targetFunnel": {
+        "passAttemptsFaced": 216,
+        "wrTargetShareAllowedPct": 57.2,
+        "teTargetShareAllowedPct": 24.7,
+        "rbTargetShareAllowedPct": 18.0,
+        "proeAllowedPct": 30.1,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 11.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 35,
+        "offYacPerCompletion": 3.82,
+        "defYacAllowedPerCompletion": 5.79
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 51.7,
+        "equilibriumIndifferenceGapPp": -2.71,
+        "secondAndLongRunAfterIncompletePct": 30.4,
+        "lag1PlayTypeAutocorrelation": -0.018,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 27,
+        "defSuccessRateRank": 17,
+        "epaVsSuccessRankDivergence": -10,
+        "runEpaRank": 13,
+        "runSuccessRateRank": 17,
+        "runEpaVsSuccessDivergence": 4,
+        "simulatedPressureDropOutRatePct": 17.4,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 5.77,
+        "unblitzedFourManDisruptionRatePct": 10.9
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 32.0,
+        "rushingTdsInside5SharePct": 66.7,
+        "rushingTdsAt1YardLineSharePct": 33.3,
+        "passingTdsInside5SharePct": 63.6
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.218,
+        "multiBackSnifferFormationEpa": -0.122
+      }
+    },
+    "ATL": {
+      "team": "ATL",
+      "targetFunnel": {
+        "passAttemptsFaced": 302,
+        "wrTargetShareAllowedPct": 56.7,
+        "teTargetShareAllowedPct": 22.2,
+        "rbTargetShareAllowedPct": 21.1,
+        "proeAllowedPct": 27.3,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 8.9
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 42,
+        "offYacPerCompletion": 6.49,
+        "defYacAllowedPerCompletion": 4.52
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 43.8,
+        "equilibriumIndifferenceGapPp": -10.65,
+        "secondAndLongRunAfterIncompletePct": 50.0,
+        "lag1PlayTypeAutocorrelation": -0.029,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 14,
+        "defSuccessRateRank": 19,
+        "epaVsSuccessRankDivergence": 5,
+        "runEpaRank": 5,
+        "runSuccessRateRank": 13,
+        "runEpaVsSuccessDivergence": 8,
+        "simulatedPressureDropOutRatePct": 16.6,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.9,
+        "unblitzedFourManDisruptionRatePct": 14.7
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 44.4,
+        "rushingTdsInside5SharePct": 50.0,
+        "rushingTdsAt1YardLineSharePct": 0.0,
+        "passingTdsInside5SharePct": 41.7
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.264,
+        "multiBackSnifferFormationEpa": 0.157
+      }
+    },
+    "BAL": {
+      "team": "BAL",
+      "targetFunnel": {
+        "passAttemptsFaced": 243,
+        "wrTargetShareAllowedPct": 63.4,
+        "teTargetShareAllowedPct": 17.6,
+        "rbTargetShareAllowedPct": 19.0,
+        "proeAllowedPct": 27.8,
+        "funnelClassification": "WR_PERIMETER_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 6.9
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 26,
+        "offYacPerCompletion": 6.24,
+        "defYacAllowedPerCompletion": 4.55
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 45.1,
+        "equilibriumIndifferenceGapPp": -9.26,
+        "secondAndLongRunAfterIncompletePct": 20.0,
+        "lag1PlayTypeAutocorrelation": -0.013,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 17,
+        "defSuccessRateRank": 15,
+        "epaVsSuccessRankDivergence": -2,
+        "runEpaRank": 8,
+        "runSuccessRateRank": 9,
+        "runEpaVsSuccessDivergence": 1,
+        "simulatedPressureDropOutRatePct": 7.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 4.42,
+        "unblitzedFourManDisruptionRatePct": 14.9
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 70.4,
+        "rushingTdsInside5SharePct": 88.9,
+        "rushingTdsAt1YardLineSharePct": 22.2,
+        "passingTdsInside5SharePct": 36.4
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.177,
+        "multiBackSnifferFormationEpa": 0.054
+      }
+    },
+    "BUF": {
+      "team": "BUF",
+      "targetFunnel": {
+        "passAttemptsFaced": 253,
+        "wrTargetShareAllowedPct": 57.8,
+        "teTargetShareAllowedPct": 22.8,
+        "rbTargetShareAllowedPct": 19.4,
+        "proeAllowedPct": 27.1,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 6.8
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 34,
+        "offYacPerCompletion": 6.94,
+        "defYacAllowedPerCompletion": 4.93
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 50.3,
+        "equilibriumIndifferenceGapPp": -4.1,
+        "secondAndLongRunAfterIncompletePct": 36.4,
+        "lag1PlayTypeAutocorrelation": -0.005,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 29,
+        "defSuccessRateRank": 28,
+        "epaVsSuccessRankDivergence": -1,
+        "runEpaRank": 23,
+        "runSuccessRateRank": 18,
+        "runEpaVsSuccessDivergence": -5,
+        "simulatedPressureDropOutRatePct": 17.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.55,
+        "unblitzedFourManDisruptionRatePct": 14.8
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 68.2,
+        "rushingTdsInside5SharePct": 78.6,
+        "rushingTdsAt1YardLineSharePct": 42.9,
+        "passingTdsInside5SharePct": 11.1
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.252,
+        "multiBackSnifferFormationEpa": 0.098
+      }
+    },
+    "CAR": {
+      "team": "CAR",
+      "targetFunnel": {
+        "passAttemptsFaced": 211,
+        "wrTargetShareAllowedPct": 52.3,
+        "teTargetShareAllowedPct": 24.4,
+        "rbTargetShareAllowedPct": 23.3,
+        "proeAllowedPct": 25.3,
+        "funnelClassification": "RB_CHECKDOWN_FUNNEL",
+        "funnelPrimaryCause": "PRESSURE_FORCED_CHECKDOWNS",
+        "screenCheckdownRateAllowedPct": 9.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 23,
+        "offYacPerCompletion": 5.26,
+        "defYacAllowedPerCompletion": 4.0
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 63.1,
+        "equilibriumIndifferenceGapPp": 8.7,
+        "secondAndLongRunAfterIncompletePct": 12.9,
+        "lag1PlayTypeAutocorrelation": -0.039,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 20,
+        "defSuccessRateRank": 21,
+        "epaVsSuccessRankDivergence": 1,
+        "runEpaRank": 29,
+        "runSuccessRateRank": 28,
+        "runEpaVsSuccessDivergence": -1,
+        "simulatedPressureDropOutRatePct": 6.6,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 2.8,
+        "unblitzedFourManDisruptionRatePct": 8.4
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 29.4,
+        "rushingTdsInside5SharePct": 50.0,
+        "rushingTdsAt1YardLineSharePct": 16.7,
+        "passingTdsInside5SharePct": 15.4
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.304,
+        "multiBackSnifferFormationEpa": 0.306
+      }
+    },
+    "CHI": {
+      "team": "CHI",
+      "targetFunnel": {
+        "passAttemptsFaced": 212,
+        "wrTargetShareAllowedPct": 59.9,
+        "teTargetShareAllowedPct": 23.5,
+        "rbTargetShareAllowedPct": 16.6,
+        "proeAllowedPct": 26.9,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 8.6
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 30,
+        "offYacPerCompletion": 5.59,
+        "defYacAllowedPerCompletion": 5.87
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 49.7,
+        "equilibriumIndifferenceGapPp": -4.66,
+        "secondAndLongRunAfterIncompletePct": 52.4,
+        "lag1PlayTypeAutocorrelation": 0.083,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 16,
+        "defSuccessRateRank": 8,
+        "epaVsSuccessRankDivergence": -8,
+        "runEpaRank": 19,
+        "runSuccessRateRank": 12,
+        "runEpaVsSuccessDivergence": -7,
+        "simulatedPressureDropOutRatePct": 20.5,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 8.33,
+        "unblitzedFourManDisruptionRatePct": 14.4
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 71.4,
+        "rushingTdsInside5SharePct": 71.4,
+        "rushingTdsAt1YardLineSharePct": 35.7,
+        "passingTdsInside5SharePct": 14.3
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.018,
+        "multiBackSnifferFormationEpa": -0.002
+      }
+    },
+    "CIN": {
+      "team": "CIN",
+      "targetFunnel": {
+        "passAttemptsFaced": 219,
+        "wrTargetShareAllowedPct": 56.5,
+        "teTargetShareAllowedPct": 28.3,
+        "rbTargetShareAllowedPct": 15.2,
+        "proeAllowedPct": 26.2,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 8.4
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 38,
+        "offYacPerCompletion": 4.1,
+        "defYacAllowedPerCompletion": 6.66
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 63.4,
+        "equilibriumIndifferenceGapPp": 9.05,
+        "secondAndLongRunAfterIncompletePct": 27.3,
+        "lag1PlayTypeAutocorrelation": -0.03,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 10,
+        "defSuccessRateRank": 12,
+        "epaVsSuccessRankDivergence": 2,
+        "runEpaRank": 16,
+        "runSuccessRateRank": 7,
+        "runEpaVsSuccessDivergence": -9,
+        "simulatedPressureDropOutRatePct": 18.5,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 7.22,
+        "unblitzedFourManDisruptionRatePct": 14.9
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 40.0,
+        "rushingTdsInside5SharePct": 100.0,
+        "rushingTdsAt1YardLineSharePct": 66.7,
+        "passingTdsInside5SharePct": 31.2
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.032,
+        "multiBackSnifferFormationEpa": 0.18
+      }
+    },
+    "CLE": {
+      "team": "CLE",
+      "targetFunnel": {
+        "passAttemptsFaced": 256,
+        "wrTargetShareAllowedPct": 58.2,
+        "teTargetShareAllowedPct": 24.0,
+        "rbTargetShareAllowedPct": 17.8,
+        "proeAllowedPct": 26.1,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 9.8
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 51,
+        "offYacPerCompletion": 6.04,
+        "defYacAllowedPerCompletion": 4.8
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 50.3,
+        "equilibriumIndifferenceGapPp": -4.1,
+        "secondAndLongRunAfterIncompletePct": 22.7,
+        "lag1PlayTypeAutocorrelation": -0.025,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 11,
+        "defSuccessRateRank": 7,
+        "epaVsSuccessRankDivergence": -4,
+        "runEpaRank": 17,
+        "runSuccessRateRank": 19,
+        "runEpaVsSuccessDivergence": 2,
+        "simulatedPressureDropOutRatePct": 20.4,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 4.95,
+        "unblitzedFourManDisruptionRatePct": 13.9
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 60.0,
+        "rushingTdsInside5SharePct": 50.0,
+        "rushingTdsAt1YardLineSharePct": 0.0,
+        "passingTdsInside5SharePct": 28.6
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.005,
+        "multiBackSnifferFormationEpa": -0.072
+      }
+    },
+    "DAL": {
+      "team": "DAL",
+      "targetFunnel": {
+        "passAttemptsFaced": 224,
+        "wrTargetShareAllowedPct": 60.9,
+        "teTargetShareAllowedPct": 21.3,
+        "rbTargetShareAllowedPct": 17.9,
+        "proeAllowedPct": 28.1,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 6.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 45,
+        "offYacPerCompletion": 3.87,
+        "defYacAllowedPerCompletion": 5.43
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 54.0,
+        "equilibriumIndifferenceGapPp": -0.36,
+        "secondAndLongRunAfterIncompletePct": 13.3,
+        "lag1PlayTypeAutocorrelation": 0.061,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 32,
+        "defSuccessRateRank": 30,
+        "epaVsSuccessRankDivergence": -2,
+        "runEpaRank": 25,
+        "runSuccessRateRank": 23,
+        "runEpaVsSuccessDivergence": -2,
+        "simulatedPressureDropOutRatePct": 14.8,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.76,
+        "unblitzedFourManDisruptionRatePct": 8.6
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 61.3,
+        "rushingTdsInside5SharePct": 77.8,
+        "rushingTdsAt1YardLineSharePct": 44.4,
+        "passingTdsInside5SharePct": 15.4
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.167,
+        "multiBackSnifferFormationEpa": 0.069
+      }
+    },
+    "DEN": {
+      "team": "DEN",
+      "targetFunnel": {
+        "passAttemptsFaced": 279,
+        "wrTargetShareAllowedPct": 56.6,
+        "teTargetShareAllowedPct": 24.4,
+        "rbTargetShareAllowedPct": 19.0,
+        "proeAllowedPct": 25.0,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 8.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 56,
+        "offYacPerCompletion": 6.09,
+        "defYacAllowedPerCompletion": 4.75
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 55.4,
+        "equilibriumIndifferenceGapPp": 0.96,
+        "secondAndLongRunAfterIncompletePct": 22.2,
+        "lag1PlayTypeAutocorrelation": 0.066,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 7,
+        "defSuccessRateRank": 3,
+        "epaVsSuccessRankDivergence": -4,
+        "runEpaRank": 27,
+        "runSuccessRateRank": 8,
+        "runEpaVsSuccessDivergence": -19,
+        "simulatedPressureDropOutRatePct": 12.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 5.79,
+        "unblitzedFourManDisruptionRatePct": 20.0
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 63.6,
+        "rushingTdsInside5SharePct": 85.7,
+        "rushingTdsAt1YardLineSharePct": 42.9,
+        "passingTdsInside5SharePct": 28.6
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.031,
+        "multiBackSnifferFormationEpa": -0.095
+      }
+    },
+    "DET": {
+      "team": "DET",
+      "targetFunnel": {
+        "passAttemptsFaced": 277,
+        "wrTargetShareAllowedPct": 52.7,
+        "teTargetShareAllowedPct": 29.6,
+        "rbTargetShareAllowedPct": 17.7,
+        "proeAllowedPct": 29.3,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 3.7
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 12,
+        "offYacPerCompletion": 4.95,
+        "defYacAllowedPerCompletion": 3.67
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 53.2,
+        "equilibriumIndifferenceGapPp": -1.15,
+        "secondAndLongRunAfterIncompletePct": 40.7,
+        "lag1PlayTypeAutocorrelation": 0.072,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 31,
+        "defSuccessRateRank": 25,
+        "epaVsSuccessRankDivergence": -6,
+        "runEpaRank": 24,
+        "runSuccessRateRank": 11,
+        "runEpaVsSuccessDivergence": -13,
+        "simulatedPressureDropOutRatePct": 18.4,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 5.74,
+        "unblitzedFourManDisruptionRatePct": 15.3
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 63.6,
+        "rushingTdsInside5SharePct": 87.5,
+        "rushingTdsAt1YardLineSharePct": 75.0,
+        "passingTdsInside5SharePct": 28.6
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.364,
+        "multiBackSnifferFormationEpa": 0.06
+      }
+    },
+    "GB": {
+      "team": "GB",
+      "targetFunnel": {
+        "passAttemptsFaced": 258,
+        "wrTargetShareAllowedPct": 60.5,
+        "teTargetShareAllowedPct": 18.0,
+        "rbTargetShareAllowedPct": 21.5,
+        "proeAllowedPct": 26.6,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "PRESSURE_FORCED_CHECKDOWNS",
+        "screenCheckdownRateAllowedPct": 13.7
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 29,
+        "offYacPerCompletion": 5.44,
+        "defYacAllowedPerCompletion": 5.2
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 56.1,
+        "equilibriumIndifferenceGapPp": 1.65,
+        "secondAndLongRunAfterIncompletePct": 19.4,
+        "lag1PlayTypeAutocorrelation": -0.027,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 4,
+        "defSuccessRateRank": 23,
+        "epaVsSuccessRankDivergence": 19,
+        "runEpaRank": 11,
+        "runSuccessRateRank": 24,
+        "runEpaVsSuccessDivergence": 13,
+        "simulatedPressureDropOutRatePct": 19.3,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 4.4,
+        "unblitzedFourManDisruptionRatePct": 9.9
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 50.0,
+        "rushingTdsInside5SharePct": 66.7,
+        "rushingTdsAt1YardLineSharePct": 33.3,
+        "passingTdsInside5SharePct": 38.5
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.291,
+        "multiBackSnifferFormationEpa": -0.074
+      }
+    },
+    "HOU": {
+      "team": "HOU",
+      "targetFunnel": {
+        "passAttemptsFaced": 266,
+        "wrTargetShareAllowedPct": 63.3,
+        "teTargetShareAllowedPct": 18.3,
+        "rbTargetShareAllowedPct": 18.3,
+        "proeAllowedPct": 28.7,
+        "funnelClassification": "WR_PERIMETER_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 10.8
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 31,
+        "offYacPerCompletion": 4.31,
+        "defYacAllowedPerCompletion": 4.78
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 57.4,
+        "equilibriumIndifferenceGapPp": 2.95,
+        "secondAndLongRunAfterIncompletePct": 44.4,
+        "lag1PlayTypeAutocorrelation": -0.038,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 21,
+        "defSuccessRateRank": 6,
+        "epaVsSuccessRankDivergence": -15,
+        "runEpaRank": 22,
+        "runSuccessRateRank": 20,
+        "runEpaVsSuccessDivergence": -2,
+        "simulatedPressureDropOutRatePct": 19.0,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 6.9,
+        "unblitzedFourManDisruptionRatePct": 15.8
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 53.3,
+        "rushingTdsInside5SharePct": 50.0,
+        "rushingTdsAt1YardLineSharePct": 33.3,
+        "passingTdsInside5SharePct": 27.3
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.313,
+        "multiBackSnifferFormationEpa": -0.066
+      }
+    },
+    "IND": {
+      "team": "IND",
+      "targetFunnel": {
+        "passAttemptsFaced": 225,
+        "wrTargetShareAllowedPct": 58.3,
+        "teTargetShareAllowedPct": 24.5,
+        "rbTargetShareAllowedPct": 17.2,
+        "proeAllowedPct": 28.8,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 9.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 39,
+        "offYacPerCompletion": 4.66,
+        "defYacAllowedPerCompletion": 5.9
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 54.9,
+        "equilibriumIndifferenceGapPp": 0.5,
+        "secondAndLongRunAfterIncompletePct": 12.5,
+        "lag1PlayTypeAutocorrelation": 0.151,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 22,
+        "defSuccessRateRank": 13,
+        "epaVsSuccessRankDivergence": -9,
+        "runEpaRank": 28,
+        "runSuccessRateRank": 26,
+        "runEpaVsSuccessDivergence": -2,
+        "simulatedPressureDropOutRatePct": 19.8,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 5.38,
+        "unblitzedFourManDisruptionRatePct": 13.4
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 84.2,
+        "rushingTdsInside5SharePct": 80.0,
+        "rushingTdsAt1YardLineSharePct": 20.0,
+        "passingTdsInside5SharePct": 50.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.195,
+        "multiBackSnifferFormationEpa": 0.26
+      }
+    },
+    "JAX": {
+      "team": "JAX",
+      "targetFunnel": {
+        "passAttemptsFaced": 223,
+        "wrTargetShareAllowedPct": 67.5,
+        "teTargetShareAllowedPct": 18.2,
+        "rbTargetShareAllowedPct": 14.3,
+        "proeAllowedPct": 26.3,
+        "funnelClassification": "WR_PERIMETER_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 9.4
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 47,
+        "offYacPerCompletion": 5.35,
+        "defYacAllowedPerCompletion": 4.63
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 55.6,
+        "equilibriumIndifferenceGapPp": 1.23,
+        "secondAndLongRunAfterIncompletePct": 42.1,
+        "lag1PlayTypeAutocorrelation": -0.009,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 13,
+        "defSuccessRateRank": 11,
+        "epaVsSuccessRankDivergence": -2,
+        "runEpaRank": 2,
+        "runSuccessRateRank": 3,
+        "runEpaVsSuccessDivergence": 1,
+        "simulatedPressureDropOutRatePct": 17.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.11,
+        "unblitzedFourManDisruptionRatePct": 11.8
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 38.9,
+        "rushingTdsInside5SharePct": 75.0,
+        "rushingTdsAt1YardLineSharePct": 50.0,
+        "passingTdsInside5SharePct": 21.4
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.404,
+        "multiBackSnifferFormationEpa": 0.202
+      }
+    },
+    "KC": {
+      "team": "KC",
+      "targetFunnel": {
+        "passAttemptsFaced": 217,
+        "wrTargetShareAllowedPct": 52.2,
+        "teTargetShareAllowedPct": 28.6,
+        "rbTargetShareAllowedPct": 19.2,
+        "proeAllowedPct": 23.0,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 13.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 27,
+        "offYacPerCompletion": 7.46,
+        "defYacAllowedPerCompletion": 5.21
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 55.4,
+        "equilibriumIndifferenceGapPp": 1.02,
+        "secondAndLongRunAfterIncompletePct": 28.6,
+        "lag1PlayTypeAutocorrelation": 0.004,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 6,
+        "defSuccessRateRank": 4,
+        "epaVsSuccessRankDivergence": -2,
+        "runEpaRank": 7,
+        "runSuccessRateRank": 2,
+        "runEpaVsSuccessDivergence": -5,
+        "simulatedPressureDropOutRatePct": 17.3,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.55,
+        "unblitzedFourManDisruptionRatePct": 13.0
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 50.0,
+        "rushingTdsInside5SharePct": 28.6,
+        "rushingTdsAt1YardLineSharePct": 0.0,
+        "passingTdsInside5SharePct": 55.6
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.576,
+        "multiBackSnifferFormationEpa": 0.003
+      }
+    },
+    "LA": {
+      "team": "LA",
+      "targetFunnel": {
+        "passAttemptsFaced": 236,
+        "wrTargetShareAllowedPct": 49.3,
+        "teTargetShareAllowedPct": 24.9,
+        "rbTargetShareAllowedPct": 25.8,
+        "proeAllowedPct": 27.3,
+        "funnelClassification": "RB_CHECKDOWN_FUNNEL",
+        "funnelPrimaryCause": "PRESSURE_FORCED_CHECKDOWNS",
+        "screenCheckdownRateAllowedPct": 15.2
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 34,
+        "offYacPerCompletion": 5.02,
+        "defYacAllowedPerCompletion": 6.21
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 60.2,
+        "equilibriumIndifferenceGapPp": 5.82,
+        "secondAndLongRunAfterIncompletePct": 21.4,
+        "lag1PlayTypeAutocorrelation": 0.052,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 5,
+        "defSuccessRateRank": 10,
+        "epaVsSuccessRankDivergence": 5,
+        "runEpaRank": 18,
+        "runSuccessRateRank": 15,
+        "runEpaVsSuccessDivergence": -3,
+        "simulatedPressureDropOutRatePct": 14.5,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 4.55,
+        "unblitzedFourManDisruptionRatePct": 10.8
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 50.0,
+        "rushingTdsInside5SharePct": 75.0,
+        "rushingTdsAt1YardLineSharePct": 37.5,
+        "passingTdsInside5SharePct": 46.7
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.042,
+        "multiBackSnifferFormationEpa": -0.115
+      }
+    },
+    "LAC": {
+      "team": "LAC",
+      "targetFunnel": {
+        "passAttemptsFaced": 182,
+        "wrTargetShareAllowedPct": 55.8,
+        "teTargetShareAllowedPct": 23.3,
+        "rbTargetShareAllowedPct": 20.9,
+        "proeAllowedPct": 31.7,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 9.2
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 28,
+        "offYacPerCompletion": 4.43,
+        "defYacAllowedPerCompletion": 5.25
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 36.1,
+        "equilibriumIndifferenceGapPp": -18.26,
+        "secondAndLongRunAfterIncompletePct": 46.7,
+        "lag1PlayTypeAutocorrelation": 0.055,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 12,
+        "defSuccessRateRank": 16,
+        "epaVsSuccessRankDivergence": 4,
+        "runEpaRank": 9,
+        "runSuccessRateRank": 16,
+        "runEpaVsSuccessDivergence": 7,
+        "simulatedPressureDropOutRatePct": 12.7,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 4.35,
+        "unblitzedFourManDisruptionRatePct": 16.7
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 75.0,
+        "rushingTdsInside5SharePct": 50.0,
+        "rushingTdsAt1YardLineSharePct": 25.0,
+        "passingTdsInside5SharePct": 20.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.34,
+        "multiBackSnifferFormationEpa": -0.144
+      }
+    },
+    "LV": {
+      "team": "LV",
+      "targetFunnel": {
+        "passAttemptsFaced": 238,
+        "wrTargetShareAllowedPct": 58.1,
+        "teTargetShareAllowedPct": 28.6,
+        "rbTargetShareAllowedPct": 13.3,
+        "proeAllowedPct": 29.6,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 10.0
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 46,
+        "offYacPerCompletion": 4.91,
+        "defYacAllowedPerCompletion": 6.05
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 54.3,
+        "equilibriumIndifferenceGapPp": -0.05,
+        "secondAndLongRunAfterIncompletePct": 37.5,
+        "lag1PlayTypeAutocorrelation": 0.011,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 23,
+        "defSuccessRateRank": 27,
+        "epaVsSuccessRankDivergence": 4,
+        "runEpaRank": 20,
+        "runSuccessRateRank": 25,
+        "runEpaVsSuccessDivergence": 5,
+        "simulatedPressureDropOutRatePct": 19.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.31,
+        "unblitzedFourManDisruptionRatePct": 16.0
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 55.0,
+        "rushingTdsInside5SharePct": 66.7,
+        "rushingTdsAt1YardLineSharePct": 33.3,
+        "passingTdsInside5SharePct": 18.8
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.212,
+        "multiBackSnifferFormationEpa": -0.021
+      }
+    },
+    "MIA": {
+      "team": "MIA",
+      "targetFunnel": {
+        "passAttemptsFaced": 181,
+        "wrTargetShareAllowedPct": 50.0,
+        "teTargetShareAllowedPct": 28.9,
+        "rbTargetShareAllowedPct": 21.1,
+        "proeAllowedPct": 34.7,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 12.7
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 40,
+        "offYacPerCompletion": 6.31,
+        "defYacAllowedPerCompletion": 5.11
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 44.1,
+        "equilibriumIndifferenceGapPp": -10.34,
+        "secondAndLongRunAfterIncompletePct": 50.0,
+        "lag1PlayTypeAutocorrelation": 0.093,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 30,
+        "defSuccessRateRank": 32,
+        "epaVsSuccessRankDivergence": 2,
+        "runEpaRank": 12,
+        "runSuccessRateRank": 27,
+        "runEpaVsSuccessDivergence": 15,
+        "simulatedPressureDropOutRatePct": 21.6,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 3.55,
+        "unblitzedFourManDisruptionRatePct": 14.2
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 82.4,
+        "rushingTdsInside5SharePct": 71.4,
+        "rushingTdsAt1YardLineSharePct": 42.9,
+        "passingTdsInside5SharePct": 25.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.041,
+        "multiBackSnifferFormationEpa": -0.14
+      }
+    },
+    "MIN": {
+      "team": "MIN",
+      "targetFunnel": {
+        "passAttemptsFaced": 198,
+        "wrTargetShareAllowedPct": 58.1,
+        "teTargetShareAllowedPct": 22.8,
+        "rbTargetShareAllowedPct": 19.2,
+        "proeAllowedPct": 20.9,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 3.6
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 18,
+        "offYacPerCompletion": 4.69,
+        "defYacAllowedPerCompletion": 5.8
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 44.3,
+        "equilibriumIndifferenceGapPp": -10.15,
+        "secondAndLongRunAfterIncompletePct": 62.5,
+        "lag1PlayTypeAutocorrelation": -0.044,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 1,
+        "defSuccessRateRank": 1,
+        "epaVsSuccessRankDivergence": 0,
+        "runEpaRank": 4,
+        "runSuccessRateRank": 4,
+        "runEpaVsSuccessDivergence": 0,
+        "simulatedPressureDropOutRatePct": 11.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 8.47,
+        "unblitzedFourManDisruptionRatePct": 20.3
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 50.0,
+        "rushingTdsInside5SharePct": 66.7,
+        "rushingTdsAt1YardLineSharePct": 33.3,
+        "passingTdsInside5SharePct": 14.3
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.176,
+        "multiBackSnifferFormationEpa": -0.006
+      }
+    },
+    "NE": {
+      "team": "NE",
+      "targetFunnel": {
+        "passAttemptsFaced": 241,
+        "wrTargetShareAllowedPct": 56.3,
+        "teTargetShareAllowedPct": 26.3,
+        "rbTargetShareAllowedPct": 17.4,
+        "proeAllowedPct": 27.6,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 10.8
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 43,
+        "offYacPerCompletion": 5.02,
+        "defYacAllowedPerCompletion": 5.64
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 45.8,
+        "equilibriumIndifferenceGapPp": -8.62,
+        "secondAndLongRunAfterIncompletePct": 37.5,
+        "lag1PlayTypeAutocorrelation": 0.063,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 19,
+        "defSuccessRateRank": 18,
+        "epaVsSuccessRankDivergence": -1,
+        "runEpaRank": 15,
+        "runSuccessRateRank": 10,
+        "runEpaVsSuccessDivergence": -5,
+        "simulatedPressureDropOutRatePct": 19.5,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 4.58,
+        "unblitzedFourManDisruptionRatePct": 10.5
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 54.5,
+        "rushingTdsInside5SharePct": 60.0,
+        "rushingTdsAt1YardLineSharePct": 20.0,
+        "passingTdsInside5SharePct": 15.4
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.052,
+        "multiBackSnifferFormationEpa": -0.2
+      }
+    },
+    "NO": {
+      "team": "NO",
+      "targetFunnel": {
+        "passAttemptsFaced": 242,
+        "wrTargetShareAllowedPct": 50.0,
+        "teTargetShareAllowedPct": 28.4,
+        "rbTargetShareAllowedPct": 21.6,
+        "proeAllowedPct": 28.8,
+        "funnelClassification": "TE_MIDDLE_SEAM_FUNNEL",
+        "funnelPrimaryCause": "PRESSURE_FORCED_CHECKDOWNS",
+        "screenCheckdownRateAllowedPct": 10.1
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 36,
+        "offYacPerCompletion": 3.98,
+        "defYacAllowedPerCompletion": 5.16
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 53.0,
+        "equilibriumIndifferenceGapPp": -1.43,
+        "secondAndLongRunAfterIncompletePct": 32.1,
+        "lag1PlayTypeAutocorrelation": -0.008,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 26,
+        "defSuccessRateRank": 31,
+        "epaVsSuccessRankDivergence": 5,
+        "runEpaRank": 32,
+        "runSuccessRateRank": 31,
+        "runEpaVsSuccessDivergence": -1,
+        "simulatedPressureDropOutRatePct": 14.0,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 5.95,
+        "unblitzedFourManDisruptionRatePct": 11.3
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 64.0,
+        "rushingTdsInside5SharePct": 83.3,
+        "rushingTdsAt1YardLineSharePct": 33.3,
+        "passingTdsInside5SharePct": 53.8
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.426,
+        "multiBackSnifferFormationEpa": -0.062
+      }
+    },
+    "NYG": {
+      "team": "NYG",
+      "targetFunnel": {
+        "passAttemptsFaced": 227,
+        "wrTargetShareAllowedPct": 62.1,
+        "teTargetShareAllowedPct": 27.0,
+        "rbTargetShareAllowedPct": 10.9,
+        "proeAllowedPct": 23.9,
+        "funnelClassification": "WR_PERIMETER_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 7.6
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 44,
+        "offYacPerCompletion": 4.29,
+        "defYacAllowedPerCompletion": 4.6
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 46.9,
+        "equilibriumIndifferenceGapPp": -7.51,
+        "secondAndLongRunAfterIncompletePct": 45.2,
+        "lag1PlayTypeAutocorrelation": 0.031,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 18,
+        "defSuccessRateRank": 14,
+        "epaVsSuccessRankDivergence": -4,
+        "runEpaRank": 26,
+        "runSuccessRateRank": 22,
+        "runEpaVsSuccessDivergence": -4,
+        "simulatedPressureDropOutRatePct": 14.5,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 0.71,
+        "unblitzedFourManDisruptionRatePct": 7.8
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 58.8,
+        "rushingTdsInside5SharePct": 66.7,
+        "rushingTdsAt1YardLineSharePct": 16.7,
+        "passingTdsInside5SharePct": 18.2
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.198,
+        "multiBackSnifferFormationEpa": -0.044
+      }
+    },
+    "NYJ": {
+      "team": "NYJ",
+      "targetFunnel": {
+        "passAttemptsFaced": 232,
+        "wrTargetShareAllowedPct": 57.9,
+        "teTargetShareAllowedPct": 22.8,
+        "rbTargetShareAllowedPct": 19.3,
+        "proeAllowedPct": 29.1,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 11.4
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 35,
+        "offYacPerCompletion": 5.32,
+        "defYacAllowedPerCompletion": 5.2
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 51.0,
+        "equilibriumIndifferenceGapPp": -3.36,
+        "secondAndLongRunAfterIncompletePct": 22.2,
+        "lag1PlayTypeAutocorrelation": 0.149,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 15,
+        "defSuccessRateRank": 22,
+        "epaVsSuccessRankDivergence": 7,
+        "runEpaRank": 10,
+        "runSuccessRateRank": 29,
+        "runEpaVsSuccessDivergence": 19,
+        "simulatedPressureDropOutRatePct": 11.2,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 7.14,
+        "unblitzedFourManDisruptionRatePct": 13.6
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 53.3,
+        "rushingTdsInside5SharePct": 75.0,
+        "rushingTdsAt1YardLineSharePct": 0.0,
+        "passingTdsInside5SharePct": 30.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.054,
+        "multiBackSnifferFormationEpa": -0.148
+      }
+    },
+    "PHI": {
+      "team": "PHI",
+      "targetFunnel": {
+        "passAttemptsFaced": 252,
+        "wrTargetShareAllowedPct": 73.4,
+        "teTargetShareAllowedPct": 18.3,
+        "rbTargetShareAllowedPct": 8.3,
+        "proeAllowedPct": 30.6,
+        "funnelClassification": "WR_PERIMETER_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 6.6
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 49,
+        "offYacPerCompletion": 4.07,
+        "defYacAllowedPerCompletion": 5.01
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 52.2,
+        "equilibriumIndifferenceGapPp": -2.25,
+        "secondAndLongRunAfterIncompletePct": 22.7,
+        "lag1PlayTypeAutocorrelation": 0.142,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 28,
+        "defSuccessRateRank": 26,
+        "epaVsSuccessRankDivergence": -2,
+        "runEpaRank": 31,
+        "runSuccessRateRank": 30,
+        "runEpaVsSuccessDivergence": -1,
+        "simulatedPressureDropOutRatePct": 8.3,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 2.91,
+        "unblitzedFourManDisruptionRatePct": 8.3
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 68.8,
+        "rushingTdsInside5SharePct": 83.3,
+        "rushingTdsAt1YardLineSharePct": 16.7,
+        "passingTdsInside5SharePct": 20.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.232,
+        "multiBackSnifferFormationEpa": -0.435
+      }
+    },
+    "PIT": {
+      "team": "PIT",
+      "targetFunnel": {
+        "passAttemptsFaced": 257,
+        "wrTargetShareAllowedPct": 56.9,
+        "teTargetShareAllowedPct": 17.2,
+        "rbTargetShareAllowedPct": 25.9,
+        "proeAllowedPct": 28.1,
+        "funnelClassification": "RB_CHECKDOWN_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 6.9
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 31,
+        "offYacPerCompletion": 6.22,
+        "defYacAllowedPerCompletion": 5.05
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 60.8,
+        "equilibriumIndifferenceGapPp": 6.42,
+        "secondAndLongRunAfterIncompletePct": 33.3,
+        "lag1PlayTypeAutocorrelation": -0.001,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 8,
+        "defSuccessRateRank": 9,
+        "epaVsSuccessRankDivergence": 1,
+        "runEpaRank": 14,
+        "runSuccessRateRank": 6,
+        "runEpaVsSuccessDivergence": -8,
+        "simulatedPressureDropOutRatePct": 26.5,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 6.63,
+        "unblitzedFourManDisruptionRatePct": 13.3
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 18.2,
+        "rushingTdsInside5SharePct": 0.0,
+        "rushingTdsAt1YardLineSharePct": 0.0,
+        "passingTdsInside5SharePct": 28.6
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.566,
+        "multiBackSnifferFormationEpa": 0.268
+      }
+    },
+    "SEA": {
+      "team": "SEA",
+      "targetFunnel": {
+        "passAttemptsFaced": 230,
+        "wrTargetShareAllowedPct": 57.7,
+        "teTargetShareAllowedPct": 18.9,
+        "rbTargetShareAllowedPct": 23.4,
+        "proeAllowedPct": 28.1,
+        "funnelClassification": "RB_CHECKDOWN_FUNNEL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 13.4
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 32,
+        "offYacPerCompletion": 5.68,
+        "defYacAllowedPerCompletion": 4.49
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 43.6,
+        "equilibriumIndifferenceGapPp": -10.75,
+        "secondAndLongRunAfterIncompletePct": 35.0,
+        "lag1PlayTypeAutocorrelation": 0.081,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 2,
+        "defSuccessRateRank": 2,
+        "epaVsSuccessRankDivergence": 0,
+        "runEpaRank": 3,
+        "runSuccessRateRank": 1,
+        "runEpaVsSuccessDivergence": -2,
+        "simulatedPressureDropOutRatePct": 20.9,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 6.7,
+        "unblitzedFourManDisruptionRatePct": 20.1
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 70.0,
+        "rushingTdsInside5SharePct": 42.9,
+        "rushingTdsAt1YardLineSharePct": 28.6,
+        "passingTdsInside5SharePct": 7.7
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.212,
+        "multiBackSnifferFormationEpa": -0.125
+      }
+    },
+    "SF": {
+      "team": "SF",
+      "targetFunnel": {
+        "passAttemptsFaced": 259,
+        "wrTargetShareAllowedPct": 52.2,
+        "teTargetShareAllowedPct": 23.7,
+        "rbTargetShareAllowedPct": 24.1,
+        "proeAllowedPct": 25.0,
+        "funnelClassification": "RB_CHECKDOWN_FUNNEL",
+        "funnelPrimaryCause": "PRESSURE_FORCED_CHECKDOWNS",
+        "screenCheckdownRateAllowedPct": 10.3
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 33,
+        "offYacPerCompletion": 4.89,
+        "defYacAllowedPerCompletion": 5.08
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 51.2,
+        "equilibriumIndifferenceGapPp": -3.15,
+        "secondAndLongRunAfterIncompletePct": 50.0,
+        "lag1PlayTypeAutocorrelation": 0.018,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 9,
+        "defSuccessRateRank": 20,
+        "epaVsSuccessRankDivergence": 11,
+        "runEpaRank": 1,
+        "runSuccessRateRank": 21,
+        "runEpaVsSuccessDivergence": 20,
+        "simulatedPressureDropOutRatePct": 15.3,
+        "isBoomVarianceDefense": true
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 6.01,
+        "unblitzedFourManDisruptionRatePct": 13.1
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 68.0,
+        "rushingTdsInside5SharePct": 80.0,
+        "rushingTdsAt1YardLineSharePct": 70.0,
+        "passingTdsInside5SharePct": 26.7
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.199,
+        "multiBackSnifferFormationEpa": 0.162
+      }
+    },
+    "TB": {
+      "team": "TB",
+      "targetFunnel": {
+        "passAttemptsFaced": 260,
+        "wrTargetShareAllowedPct": 59.4,
+        "teTargetShareAllowedPct": 23.5,
+        "rbTargetShareAllowedPct": 17.1,
+        "proeAllowedPct": 29.8,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 13.7
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 37,
+        "offYacPerCompletion": 5.75,
+        "defYacAllowedPerCompletion": 5.81
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 44.3,
+        "equilibriumIndifferenceGapPp": -10.15,
+        "secondAndLongRunAfterIncompletePct": 38.9,
+        "lag1PlayTypeAutocorrelation": 0.125,
+        "sequencePredictabilityFlag": true
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 3,
+        "defSuccessRateRank": 5,
+        "epaVsSuccessRankDivergence": 2,
+        "runEpaRank": 6,
+        "runSuccessRateRank": 5,
+        "runEpaVsSuccessDivergence": -1,
+        "simulatedPressureDropOutRatePct": 23.5,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 6.96,
+        "unblitzedFourManDisruptionRatePct": 13.3
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 61.5,
+        "rushingTdsInside5SharePct": 50.0,
+        "rushingTdsAt1YardLineSharePct": 25.0,
+        "passingTdsInside5SharePct": 42.9
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.345,
+        "multiBackSnifferFormationEpa": -0.086
+      }
+    },
+    "TEN": {
+      "team": "TEN",
+      "targetFunnel": {
+        "passAttemptsFaced": 240,
+        "wrTargetShareAllowedPct": 57.7,
+        "teTargetShareAllowedPct": 23.0,
+        "rbTargetShareAllowedPct": 19.2,
+        "proeAllowedPct": 26.6,
+        "funnelClassification": "BALANCED_SHELL",
+        "funnelPrimaryCause": "COVERAGE_SHELL_DESIGN",
+        "screenCheckdownRateAllowedPct": 9.4
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 23,
+        "offYacPerCompletion": 4.74,
+        "defYacAllowedPerCompletion": 5.11
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 47.7,
+        "equilibriumIndifferenceGapPp": -6.71,
+        "secondAndLongRunAfterIncompletePct": 31.2,
+        "lag1PlayTypeAutocorrelation": 0.079,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 24,
+        "defSuccessRateRank": 24,
+        "epaVsSuccessRankDivergence": 0,
+        "runEpaRank": 21,
+        "runSuccessRateRank": 14,
+        "runEpaVsSuccessDivergence": -7,
+        "simulatedPressureDropOutRatePct": 20.3,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 5.73,
+        "unblitzedFourManDisruptionRatePct": 14.1
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 68.4,
+        "rushingTdsInside5SharePct": 66.7,
+        "rushingTdsAt1YardLineSharePct": 50.0,
+        "passingTdsInside5SharePct": 50.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": -0.928,
+        "multiBackSnifferFormationEpa": -0.422
+      }
+    },
+    "WAS": {
+      "team": "WAS",
+      "targetFunnel": {
+        "passAttemptsFaced": 230,
+        "wrTargetShareAllowedPct": 56.2,
+        "teTargetShareAllowedPct": 22.1,
+        "rbTargetShareAllowedPct": 21.6,
+        "proeAllowedPct": 30.2,
+        "funnelClassification": "RB_CHECKDOWN_FUNNEL",
+        "funnelPrimaryCause": "PRESSURE_FORCED_CHECKDOWNS",
+        "screenCheckdownRateAllowedPct": 10.6
+      },
+      "tacklingAndYac": {
+        "pfrTeamMissedTacklesW1W7": 41,
+        "offYacPerCompletion": 4.23,
+        "defYacAllowedPerCompletion": 4.74
+      },
+      "minimaxPlayCallEquilibrium": {
+        "neutralPassRatePct": 46.6,
+        "equilibriumIndifferenceGapPp": -7.82,
+        "secondAndLongRunAfterIncompletePct": 27.8,
+        "lag1PlayTypeAutocorrelation": 0.016,
+        "sequencePredictabilityFlag": false
+      },
+      "floresVarianceAndSimPressure": {
+        "defEpaRank": 25,
+        "defSuccessRateRank": 29,
+        "epaVsSuccessRankDivergence": 4,
+        "runEpaRank": 30,
+        "runSuccessRateRank": 32,
+        "runEpaVsSuccessDivergence": 2,
+        "simulatedPressureDropOutRatePct": 12.2,
+        "isBoomVarianceDefense": false
+      },
+      "trueOneOnOneTrench": {
+        "unblitzedFourManSackRatePct": 2.24,
+        "unblitzedFourManDisruptionRatePct": 9.0
+      },
+      "goalLineAnytimeTdProfile": {
+        "inside5RushPlaySharePct": 28.6,
+        "rushingTdsInside5SharePct": 25.0,
+        "rushingTdsAt1YardLineSharePct": 25.0,
+        "passingTdsInside5SharePct": 30.0
+      },
+      "schemeBeaterDeclaration": {
+        "motionPlusPlayActionEpa": 0.185,
+        "multiBackSnifferFormationEpa": -0.002
+      }
+    }
+  },
+  "week8MatchupFaultLines": {
+    "CAR@GB": {
+      "matchup": "CAR @ GB",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.184,
+        "homeEarlyDownCleanEpa": 0.033,
+        "advantage": "CAR"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.055,
+        "homeTurnoverEpaPerPlay": -0.086
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "RB_CHECKDOWN_FUNNEL",
+        "homeDefFunnel": "BALANCED_SHELL",
+        "awayMissedTackles": 23,
+        "homeMissedTackles": 29
+      }
+    },
+    "BAL@BUF": {
+      "matchup": "BAL @ BUF",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.18,
+        "homeEarlyDownCleanEpa": 0.235,
+        "advantage": "BUF"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.061,
+        "homeTurnoverEpaPerPlay": -0.078
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "WR_PERIMETER_FUNNEL",
+        "homeDefFunnel": "BALANCED_SHELL",
+        "awayMissedTackles": 26,
+        "homeMissedTackles": 34
+      }
+    },
+    "TEN@CIN": {
+      "matchup": "TEN @ CIN",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": -0.035,
+        "homeEarlyDownCleanEpa": 0.122,
+        "advantage": "CIN"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.091,
+        "homeTurnoverEpaPerPlay": -0.079
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "TE_MIDDLE_SEAM_FUNNEL",
+        "awayMissedTackles": 23,
+        "homeMissedTackles": 38
+      }
+    },
+    "ARI@DAL": {
+      "matchup": "ARI @ DAL",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.032,
+        "homeEarlyDownCleanEpa": 0.152,
+        "advantage": "DAL"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.05,
+        "homeTurnoverEpaPerPlay": -0.056
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "BALANCED_SHELL",
+        "awayMissedTackles": 35,
+        "homeMissedTackles": 45
+      }
+    },
+    "MIN@DET": {
+      "matchup": "MIN @ DET",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": -0.085,
+        "homeEarlyDownCleanEpa": 0.199,
+        "advantage": "DET"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.074,
+        "homeTurnoverEpaPerPlay": -0.04
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "TE_MIDDLE_SEAM_FUNNEL",
+        "awayMissedTackles": 18,
+        "homeMissedTackles": 12
+      }
+    },
+    "LV@NYJ": {
+      "matchup": "LV @ NYJ",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.037,
+        "homeEarlyDownCleanEpa": 0.063,
+        "advantage": "NYJ"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.048,
+        "homeTurnoverEpaPerPlay": -0.056
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "TE_MIDDLE_SEAM_FUNNEL",
+        "homeDefFunnel": "BALANCED_SHELL",
+        "awayMissedTackles": 46,
+        "homeMissedTackles": 35
+      }
+    },
+    "CLE@PIT": {
+      "matchup": "CLE @ PIT",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.065,
+        "homeEarlyDownCleanEpa": 0.073,
+        "advantage": "PIT"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.084,
+        "homeTurnoverEpaPerPlay": -0.067
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "RB_CHECKDOWN_FUNNEL",
+        "awayMissedTackles": 51,
+        "homeMissedTackles": 31
+      }
+    },
+    "ATL@TB": {
+      "matchup": "ATL @ TB",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.102,
+        "homeEarlyDownCleanEpa": 0.045,
+        "advantage": "ATL"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.124,
+        "homeTurnoverEpaPerPlay": -0.11
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "BALANCED_SHELL",
+        "awayMissedTackles": 42,
+        "homeMissedTackles": 37
+      }
+    },
+    "IND@JAX": {
+      "matchup": "IND @ JAX",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.027,
+        "homeEarlyDownCleanEpa": 0.174,
+        "advantage": "JAX"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.123,
+        "homeTurnoverEpaPerPlay": -0.044
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "WR_PERIMETER_FUNNEL",
+        "awayMissedTackles": 39,
+        "homeMissedTackles": 47
+      }
+    },
+    "LAC@LA": {
+      "matchup": "LAC @ LA",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": -0.059,
+        "homeEarlyDownCleanEpa": 0.192,
+        "advantage": "LA"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.18,
+        "homeTurnoverEpaPerPlay": -0.108
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "RB_CHECKDOWN_FUNNEL",
+        "awayMissedTackles": 28,
+        "homeMissedTackles": 34
+      }
+    },
+    "KC@DEN": {
+      "matchup": "KC @ DEN",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.133,
+        "homeEarlyDownCleanEpa": 0.056,
+        "advantage": "KC"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.054,
+        "homeTurnoverEpaPerPlay": -0.055
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "TE_MIDDLE_SEAM_FUNNEL",
+        "homeDefFunnel": "BALANCED_SHELL",
+        "awayMissedTackles": 27,
+        "homeMissedTackles": 56
+      }
+    },
+    "NE@MIA": {
+      "matchup": "NE @ MIA",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.187,
+        "homeEarlyDownCleanEpa": -0.01,
+        "advantage": "NE"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.141,
+        "homeTurnoverEpaPerPlay": -0.083
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "TE_MIDDLE_SEAM_FUNNEL",
+        "homeDefFunnel": "TE_MIDDLE_SEAM_FUNNEL",
+        "awayMissedTackles": 43,
+        "homeMissedTackles": 40
+      }
+    },
+    "PHI@WAS": {
+      "matchup": "PHI @ WAS",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": -0.078,
+        "homeEarlyDownCleanEpa": 0.064,
+        "advantage": "WAS"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.069,
+        "homeTurnoverEpaPerPlay": -0.025
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "WR_PERIMETER_FUNNEL",
+        "homeDefFunnel": "RB_CHECKDOWN_FUNNEL",
+        "awayMissedTackles": 49,
+        "homeMissedTackles": 41
+      }
+    },
+    "CHI@SEA": {
+      "matchup": "CHI @ SEA",
+      "faultLine1_earlyDownNonTurnoverEpa": {
+        "awayEarlyDownCleanEpa": 0.113,
+        "homeEarlyDownCleanEpa": 0.1,
+        "advantage": "CHI"
+      },
+      "faultLine2_turnoverLuckVsIntWorthy": {
+        "awayTurnoverEpaPerPlay": -0.094,
+        "homeTurnoverEpaPerPlay": -0.151
+      },
+      "faultLine3_targetFunnelAndTacklingMismatch": {
+        "awayDefFunnel": "BALANCED_SHELL",
+        "homeDefFunnel": "RB_CHECKDOWN_FUNNEL",
+        "awayMissedTackles": 30,
+        "homeMissedTackles": 32
+      }
+    }
+  }
+}

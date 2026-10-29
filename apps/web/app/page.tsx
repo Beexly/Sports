@@ -6,100 +6,31 @@ import { SignalDecode } from "@/components/motion/signal-decode";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { FieldCinematicIntro } from "@/components/landing/field-cinematic-intro";
 import { FieldHeroCanvas } from "@/components/landing/field-hero-canvas";
-import { FieldBoardTicker } from "@/components/landing/field-board-ticker";
-import { FieldRecordPanel } from "@/components/landing/field-record-panel";
-import { DoorCard } from "@/components/landing/door-card";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
-import { WorldSection } from "@/components/world/world-section";
-import { NoBetGateChapter } from "@/components/world/no-bet-gate";
-import { loadBoardState } from "@/lib/board/state";
-import { publishedTickerLine, heldTickerLine } from "@/lib/board/market-label";
-import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
-import {
-  LIVE_SLATE_COACH_WRITEUPS,
-  getRedactedTeasersForWindowSlot,
-} from "@/lib/writeups/coach-writeup-engine";
+import { getRedactedTeasersForWindowSlot } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const dynamic = "force-dynamic";
 
-// The description names only always-on free surfaces. It used to promise
-// "paper contests" (Contest Bay); that surface has since been removed from
-// the site entirely, so the description must not advertise it at all.
-// Pinned by apps/web/__tests__/free-tier-gate-coupling.test.ts.
 export const metadata: Metadata = {
-  // FE-13: the layout's title template appends the brand, and this title is
-  // already the brand, so it must be absolute.
   title: { absolute: "Galaxy Sports Edge" },
   description:
-    "A scored board, a public record, and the guts to show what we passed on. We detect. You decide.",  alternates: { canonical: "/" },
+    "Plain-English NFL Picks, Player Props & Parlays — Written so you know exactly what to bet and why in 30 seconds.",
+  alternates: { canonical: "/" },
 };
 
 export default async function HomePage(): Promise<JSX.Element> {
-  // P16-01: loadNflverseUsagePulse() (a full-archive fetch) is deliberately
-  // NOT in this Promise.all. It is loaded inside the Suspense-bounded
-  // NflverseLabDoor component below so the page shell streams immediately
-  // instead of blocking on the nflverse archive.
-  const [stateResult, calibrationResult] = await Promise.all([
-    loadBoardState(),
-    loadPublicCalibrationReport(),
-  ]);
-  const state = stateResult.data;
-  const calibration = calibrationResult.data;
-
-  const cleared = state.publishedToday.length;
-  const gated = state.gatedTodayRows.length;
-  const scoring = state.scoringNow.length;
-  const settled = calibration.sampleSize;
-
-  // Honest degraded states. The loaders zero their counts on infra failure, a
-  // shape byte-identical to a genuinely quiet board. Read the loader meta so an
-  // outage is never dressed up as calm live truth ("Gate holding", "0 cleared",
-  // "Intake warming up"). When unavailable, say so plainly instead.
-  //
-  // "Unavailable" covers TWO board states that both zero the counts without a
-  // genuinely quiet slate: a hard DB outage (meta.dataError), AND an intentional
-  // suppression (the stale-data kill switch parking a failed-freshness slate, or
-  // demo rows held off the public board) that the loader flags via degradation
-  // codes but NOT dataError. /board reads the same codes; mirror it here so a
-  // suppressed slate never renders as a healthy "0 cleared · 0 gated".
-  const boardSuppressed = stateResult.meta.degradations.some(
-    (degradation) =>
-      degradation.code === "STALE_DATA_SUPPRESSED" ||
-      degradation.code === "DEMO_DATA_SUPPRESSED",
-  );
-  const boardUnavailable =
-    stateResult.meta.dataError === "DB_UNREACHABLE" || boardSuppressed;
-
-  // The market slot is redacted to a sentinel for non-premium viewers, and it
-  // was being printed raw: "we're on ALL_MARKETS". A held row also said "we
-  // passed", which on the fallback path is a judgement nobody made. Both now go
-  // through lib/board/market-label.ts.
-  const tickerItems = [
-    ...state.publishedToday.slice(0, 8).map(
-      (p) => publishedTickerLine(p.matchup, p.market),
-    ),
-    ...state.gatedTodayRows.slice(0, 6).map(
-      (row) => heldTickerLine(row.matchup, row.gateReason),
-    ),
-  ];
-
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
-      {/* Site front door: ONE cinematic cold-open over the Field ground,
-          climaxing on the brand mark. Self-gating (localStorage) so it plays
-          once per session, skippable, reduced-motion safe. The slow doctrine
-          intro was retired. */}
       <FieldCinematicIntro />
       <Nav />
       <main id="main-content">
-        {/* HERO. The thesis, the graphic, two ways in. */}
+        {/* HERO */}
         <section
           className="relative isolate overflow-hidden border-b border-mineral"
-          style={{ background: "#08090C", minHeight: "min(92vh, 820px)" }}
+          style={{ background: "#08090C", minHeight: "min(82vh, 720px)" }}
         >
           <FieldHeroCanvas />
           <div
@@ -114,7 +45,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 "radial-gradient(ellipse 55% 40% at 70% 18%, rgba(255,77,46,0.09), transparent 58%), linear-gradient(180deg, #08090Cdd 0%, #08090C88 42%, #08090C 100%)",
             }}
           />
-          <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-28 sm:px-6 lg:px-8">
+          <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
             <Reveal>
               <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 text-[11px] uppercase tracking-wider text-ion-2">
                 <span
@@ -122,7 +53,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   className="h-1.5 w-1.5 rounded-full bg-plasma"
                   style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }}
                 />
-                Live now
+                Live now · GALAXY PICKS &amp; DFS
               </p>
             </Reveal>
             <Reveal delay={60}>
@@ -136,15 +67,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               </h1>
             </Reveal>
             <Reveal delay={120}>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-ion-1">
-                Every Sunday the takes pile up. We score every game, publish what
-                we&apos;re on, and show what we passed on, with the reason.
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
+                Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know
+                exactly what to bet and why in 30 seconds.
               </p>
             </Reveal>
             <Reveal delay={180}>
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
-                {/* F-28 (founder-delegated 2026-09-08, via orchestrator):
-                    primary CTA to /picks, secondary to /pricing. */}
                 <Link href="/packages" className="btn-primary min-h-12 px-7 py-3 text-base">
                   GALAXY PICKS (PAID) — Unlock TNF &amp; Week 8
                 </Link>
@@ -161,29 +90,8 @@ export default async function HomePage(): Promise<JSX.Element> {
                 <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
               </p>
             </Reveal>
-            <Reveal delay={280}>
-              <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-px border border-mineral bg-mineral sm:grid-cols-4">
-                {[
-                  { k: "Today's picks", v: boardUnavailable ? "n/a" : String(cleared) },
-                  { k: "We passed on", v: boardUnavailable ? "n/a" : String(gated) },
-                  { k: "Graded picks", v: settled > 0 ? String(settled) : "building" },
-                  { k: "Anyone can check", v: "yes" },
-                ].map((cell) => (
-                  <div key={cell.k} className="bg-eclipse px-4 py-3">
-                    <dt className="text-[11px] uppercase tracking-wider text-ion-2">
-                      {cell.k}
-                    </dt>
-                    <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-ion-white">
-                      {cell.v}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </Reveal>
           </div>
         </section>
-
-        <FieldBoardTicker items={tickerItems} />
 
         {/* GALAXY PICKS & DFS STOREFRONT SECTION */}
         <section
@@ -199,7 +107,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     Galaxy Picks (Pay-Per-Slate Packs) · DFS Optimizer
                   </p>
                   <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                    Plain-English Football Picks Backed by 10,000 Game Simulations
+                    Plain-English NFL Picks, Player Props &amp; Parlays
                   </h2>
                 </div>
                 <Link
@@ -289,7 +197,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <div className="flex items-center justify-between font-mono text-xs">
                     <span className="text-plasma">04</span>
                     <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      10,000 SIMS
+                      DAILY FANTASY
                     </span>
                   </div>
                   <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
@@ -366,214 +274,6 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* SIGNAL MAP. Four ways in, one decision each. */}
-        <section
-          id="doors"
-          className="border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
-        >
-          <div className="mx-auto max-w-7xl">
-            <Reveal>
-              <p className="text-[11px] uppercase tracking-wider text-plasma">
-                Where to start
-              </p>
-              <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                What are you here to decide?
-              </h2>
-            </Reveal>
-            <div className="mt-10 grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
-              <DoorCard
-                index={1}
-                label="Board · GALAXY PICKS (PAID)"
-                decides="Every game we scored today, and what we decided."
-                stat={
-                  boardUnavailable
-                    ? "Board temporarily unavailable"
-                    : cleared > 0 || gated > 0
-                      ? `${cleared} picks · ${gated} passes`
-                      : "Gate holding · Quiet slate."
-                }
-                action="Open Galaxy Picks"
-                href="/packages"
-                bar={boardUnavailable ? undefined : { a: cleared, b: gated }}
-              />
-              <DoorCard
-                index={2}
-                label="Week 8 Slate Dossiers"
-                decides="Full-game tactical writeups, pace telemetry, and correlated SGPs."
-                stat={
-                  LIVE_SLATE_COACH_WRITEUPS.length > 0
-                    ? `${LIVE_SLATE_COACH_WRITEUPS.length} Week 8 game dossiers`
-                    : "Intake warming up"
-                }
-                action="Open Slate Dossiers"
-                href="/packages#slate-dossiers"
-              />
-              <DoorCard
-                index={3}
-                label="Fantasy & Daily · DFS"
-                decides="Coach-mind-first DFS game writeups and 10,000-sim lineups."
-                stat={`${scoring > 0 ? `${scoring} scoring now · ` : ""}DFS Optimizer & Stacks`}
-                action="Open DFS Writeups"
-                href="/fantasy/dfs"
-              />
-              <DoorCard
-                index={4}
-                label="Intelligence & Pricing"
-                decides="Why the engine reads a game the way it does, and how to unlock it."
-                stat={
-                  settled > 0
-                    ? `Graded on ${settled} settled picks`
-                    : "Calibration sample building"
-                }
-                action="See Pricing"
-                href="/pricing"
-                accent
-              />
-            </div>
-            {/* The live-counts line is a real operational readout. During a
-                board outage/suppression its cleared/gated counts are zeroed, so
-                we withhold the numbers rather than caption unverifiable zeros as
-                "Live counts". The player-rows metric lives in the
-                Suspense-bounded NflverseLabDoor above (P16-01): nflverse errors
-                surface there, not here. */}
-            <p className="mt-8 text-center text-sm text-ion-2">
-              {boardUnavailable ? (
-                <>Board counts are temporarily unavailable.</>
-              ) : (
-                <>
-                  Right now: <span className="text-ion-white">{cleared} picks</span> on the board,{" "}
-                  <span className="text-ion-white">{gated} we passed on</span>.
-                </>
-              )}
-              {settled > 0 ? (
-                <>  Graded on {settled} settled picks.</>
-              ) : (
-                <>  Building our graded sample.</>
-              )}
-            </p>
-          </div>
-        </section>
-
-        {/* NO-BET. Restraint is a first-class output. */}
-        <WorldSection
-          index="01"
-          id="gate"
-          className="neb-band"
-          eyebrow="The hold"
-          title={
-            <>
-              A pass is not a blank. It is{" "}
-              <span className="text-plasma">the finding</span>.
-            </>
-          }
-          lede="Knowing what not to trust is the product. Four checks keep weak games off the board, and every pass is logged in public, same as a published pick."
-          tone="deep"
-        >
-          <NoBetGateChapter />
-        </WorldSection>
-
-        {/* PROOF STRIP. One band, routes to the proof itself. */}
-        <section className="neb-band border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                The proof
-              </p>
-              <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                Trust is an architecture, not a tagline.
-              </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-                Picks publish with tamper-evident receipts, frozen before kickoff:
-                hashed, committed, impossible to edit after the game. No fabricated
-                picks, no invented stats, no silent edits. And you don&apos;t have to
-                take our word for it. Check a receipt yourself.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link href="/proof" className="btn-primary whitespace-nowrap">
-                See the sealed record
-              </Link>
-              <Link
-                href="/engine"
-                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
-              >
-                Open the sealed engine
-              </Link>
-              <Link
-                href="/verify"
-                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
-              >
-                Check a receipt →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* RECORD. Calm, live, sample-aware. */}
-        <section
-          className="border-b border-mineral px-4 py-14 sm:px-6 lg:px-8"
-          style={{ background: "#0A0C10" }}
-        >
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                Record
-              </p>
-              <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                Every number ships with its sample.
-              </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">
-                Receipts freeze before kickoff. Hits print with period, sample size,
-                model version, and the definition used. Thin samples stay dark with the
-                gap named. Recompute any seal yourself.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/calibration" className="btn-primary min-h-11 px-5 py-2.5">
-                  Full record
-                </Link>
-                <Link
-                  href="/verify"
-                  className="inline-flex min-h-11 items-center border border-mineral px-5 py-2.5 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
-                >
-                  Verify a receipt
-                </Link>
-              </div>
-            </div>
-            <FieldRecordPanel
-              sampleSize={calibration.sampleSize}
-              gated={calibrationResult.meta.gated}
-              publicMessage={calibration.publicMessage}
-              buckets={(calibration.buckets ?? []).map((b) => ({
-                label: b.label,
-                expectedWinRate: b.expectedWinRate,
-                observedWinRate: b.observedWinRate,
-                sampleSize: b.sampleSize,
-                sufficientSample: b.sampleSize >= 30,
-              }))}
-            />
-          </div>
-        </section>
-
-        {/* The live-counts ledger band is a real operational readout. During a
-            board outage/suppression its cleared/gated counts are zeroed, so we
-            withhold the whole band rather than caption unverifiable zeros as
-            "Live counts". The player-rows metric moved to the Suspense-bounded
-            NflverseLabDoor above (P16-01): nflverse errors surface there, not
-            here. The methodology cards below stay; they explain method, not
-            live numbers. */}
-        <MethodologySection
-          metrics={
-            boardUnavailable
-              ? undefined
-              : {
-                  settled,
-                  cleared,
-                  gated,
-                  lastRefresh: state.lastRefresh,
-                }
-          }
-        />
-
         <section
           data-testid="homepage-responsible-close"
           className="gw-nebula px-4 py-14 sm:px-6 lg:px-8"
@@ -590,8 +290,6 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
       </main>
-      {/* FE-17: restricted to the home hero, not mounted globally.
-          See app/layout.tsx. */}
       <GalaxyCursor />
       <Footer />
     </div>

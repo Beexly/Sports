@@ -1,84 +1,54 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { SgpProjectionTable } from "@/components/sgp/sgp-projection-table";
-import { loadSgpProjections } from "@/lib/sgp/load-sgp-projections";
-
-export const metadata: Metadata = {
-  title: "SGP Projections",
-  description: "Our projection for each same-game market.",
-  alternates: { canonical: "/sgp-projections" },
-  openGraph: {
-    title: "SGP Projections",
-    description: "Our projection for each same-game market.",
-  },
-};
 
 export const dynamic = "force-dynamic";
 
+export const metadata: Metadata = {
+  title: "SGP Projections Under Construction | Galaxy Sports Edge",
+  description:
+    "This section is currently under construction while we focus 100% on GALAXY PICKS (PAID) and DFS.",
+  alternates: { canonical: "/sgp-projections" },
+};
+
 export default function SgpProjectionsPage(): JSX.Element {
-  const result = loadSgpProjections();
-  const hasRows = result.rows.length > 0;
-
   return (
-    <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-obsidian text-ion-white">
+    <div className="relative min-h-screen w-full bg-slate-950 text-white">
       <Nav />
-      <main
-        id="main-content"
-        className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8"
-      >
-        <section aria-labelledby="sgp-projections-title">
-          <p className="font-mono text-xs uppercase tracking-[0.28em] text-plasma">
-            SGP projections
-          </p>
-          <h1
-            id="sgp-projections-title"
-            className="mt-5 max-w-4xl font-display text-balance text-ion-white"
-            style={{
-              fontSize: "clamp(2.5rem, 8vw, 5.5rem)",
-              lineHeight: 0.94,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            SGP Projections
+      <main id="main-content" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
+        <div
+          data-testid="under-construction-notice"
+          className="rounded-2xl border-2 border-amber-400/50 bg-slate-900 p-8 sm:p-12 text-center shadow-2xl"
+        >
+          <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-300">
+            🚧 Under Construction — Galaxy Picks &amp; DFS Only
+          </span>
+          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            Same-Game Parlays Live in Galaxy Picks
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-            Our number for each same-game market.
+          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
+            This section is currently under construction while we focus 100% on{" "}
+            <strong className="text-white">GALAXY PICKS (PAID)</strong> and our{" "}
+            <strong className="text-white">DFS</strong> lineup optimizer. Every NFL betting pack includes our
+            correlated 3-leg Same-Game Parlay tickets with instant on-screen reveal.
           </p>
-        </section>
 
-        {!hasRows && (
-          <div
-            data-testid="sgp-projections-empty"
-            className="flex flex-col gap-2 border border-orbital-cyan/30 bg-orbital-cyan/[0.06] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
-          >
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
-              No projections yet
-            </span>
-            <span className="break-words sm:ml-3">
-              No projections are available right now.
-            </span>
-          </div>
-        )}
-
-        {hasRows &&
-          result.games.map((game, gameIndex) => (
-            <section
-              key={`${game.game}-${game.commenceTime ?? "no-time"}-${gameIndex}`}
-              aria-label={game.game}
-              className="border border-mineral bg-carbon p-5"
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/packages"
+              className="rounded-xl bg-emerald-500 hover:bg-emerald-400 px-7 py-4 text-base font-extrabold text-black shadow-lg transition-colors"
             >
-              <h2 className="font-display text-xl font-semibold text-ion-white">
-                {game.game}
-              </h2>
-              <div className="mt-4">
-                <SgpProjectionTable rows={game.rows} />
-              </div>
-            </section>
-          ))}
-
-        <RiskDisclosure variant="compact" className="text-center" />
+              Open GALAXY PICKS (PAID) →
+            </Link>
+            <Link
+              href="/fantasy/dfs"
+              className="rounded-xl border-2 border-slate-700 bg-slate-800 hover:border-emerald-400 px-7 py-4 text-base font-bold text-white transition-colors"
+            >
+              Open DFS Lineup Optimizer →
+            </Link>
+          </div>
+        </div>
       </main>
       <Footer />
     </div>

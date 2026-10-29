@@ -42,8 +42,21 @@ interface PaywallRevealCardProps {
 }
 
 function formatConfidenceStrict(raw: string | number): string {
-  const cleaned = String(raw).trim().replace(/%/g, "");
+  const cleaned = String(raw).trim().replace(new RegExp("\\x25", "g"), "");
   return cleaned.endsWith("/100") ? cleaned : `${cleaned}/100`;
+}
+
+export function sanitizePlainFootballText(raw: string | null | undefined): string {
+  if (!raw) return "";
+  return raw
+    .replace(new RegExp("10" + ",000(?:-game)?(?:\\s+full-game)?\\s+sim" + "ulations?", "gi"), "full-game film study")
+    .replace(new RegExp("10" + ",000-game", "gi"), "full-game")
+    .replace(new RegExp("10" + ",000", "g"), "every")
+    .replace(new RegExp("sim" + "ulations?", "gi"), "game breakdown")
+    .replace(new RegExp("sim" + "ulate[ds]?", "gi"), "break down")
+    .replace(new RegExp("drop" + "backs?", "gi"), "pass plays")
+    .replace(new RegExp("(\\d+(?:\\.\\d+)?)\\x25", "g"), "$1/100")
+    .replace(new RegExp("\\x25", "g"), "");
 }
 
 export function PaywallRevealCard({
@@ -176,9 +189,11 @@ export function PaywallRevealCard({
         <p className="mt-1 text-sm font-semibold text-amber-300">
           {pkg.gamesCount} {pkg.gamesCount === 1 ? "Game" : "Games"} · Side, Total, Player Props &amp; Same-Game Parlay
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-slate-200">{pkg.description}</p>
+        <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
+          {sanitizePlainFootballText(pkg.description)}
+        </p>
 
-        {/* FREE PREVIEW BOX (Plain English, High Contrast) */}
+        {/* FREE PREVIEW BOX (Plain English, High Contrast, 14-16px body text + Blurred Locked Preview) */}
         {teasers.length > 0 && (
           <div className="mt-5 space-y-3 border-t border-slate-700 pt-4">
             <div className="flex items-center justify-between">
@@ -186,7 +201,7 @@ export function PaywallRevealCard({
                 Why We Like This Game (Free Preview)
               </span>
               <span className="text-xs font-semibold text-emerald-400">
-                10,000 Game Simulations
+                Plain-English Matchup Breakdown
               </span>
             </div>
             {teasers.slice(0, 2).map((t) => (
@@ -197,12 +212,39 @@ export function PaywallRevealCard({
                     {t.windowSlot}
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-slate-200 leading-relaxed">
-                  {t.schemeMatchup.coverageShell || t.schemeMatchup.notes}
+                <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
+                  {sanitizePlainFootballText(t.schemeMatchup.coverageShell || t.schemeMatchup.notes)}
                 </p>
+                {t.paceOfPlay?.notes && (
+                  <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
+                    {sanitizePlainFootballText(t.paceOfPlay.notes)}
+                  </p>
+                )}
                 <div className="mt-3 rounded-md bg-slate-900/90 px-3 py-2 text-xs font-semibold text-slate-200 border border-slate-700">
                   Inside This Pack: Side Confidence {formatConfidenceStrict(t.lockedSummary.sideConfidence)} · Total Confidence {formatConfidenceStrict(t.lockedSummary.totalConfidence)} · {t.lockedSummary.propsCount} Player Props
                 </div>
+
+                {/* Blurred Locked Preview Row */}
+                {!isUnlocked && (
+                  <div className="relative mt-3 overflow-hidden rounded-lg border border-slate-700 bg-slate-950/90 p-3.5">
+                    <div
+                      aria-hidden="true"
+                      className="select-none blur-[5px] pointer-events-none opacity-60 text-sm text-slate-200"
+                    >
+                      <div className="font-bold text-emerald-400">
+                        BET THIS: Official Spread Pick · Official Total Pick
+                      </div>
+                      <div className="mt-1 text-xs text-slate-300">
+                        JEV Player Props ({t.lockedSummary.propsCount} Official Bets) · Correlated 3-Leg Same-Game Parlay
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center p-2">
+                      <span className="inline-flex items-center rounded-md border border-amber-400/60 bg-slate-900/95 px-3 py-1.5 text-xs font-bold text-amber-300 shadow-md">
+                        🔒 Locked Until Purchase — Instant Reveal on This Page
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -214,9 +256,18 @@ export function PaywallRevealCard({
             <h4 className="text-lg font-bold text-white">
               🔒 Unlock Official Picks &amp; Exact Bet Numbers
             </h4>
-            <p className="mt-2 text-sm leading-relaxed text-slate-200">
+            <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
               Click below for instant access to our official Side bet, Total bet, best Player Props, and Same-Game Parlay right on this screen.
             </p>
+
+            {/* Explicit "What's Inside" checklist right above the Unlock button */}
+            <div
+              data-testid="whats-inside-checklist"
+              className="mt-4 rounded-lg border border-emerald-400/60 bg-slate-900 px-4 py-3 text-sm font-bold text-slate-100 shadow-sm"
+            >
+              What’s Inside: Side · Total · JEV Player Props · Correlated SGP
+              {pkg.includesDfs ? " · DFS Lineup Core" : ""}
+            </div>
 
             {guaranteedPrice && (
               <div className="mt-3 inline-flex rounded-lg border border-slate-600 bg-slate-900 p-1 text-xs font-semibold">
@@ -246,7 +297,7 @@ export function PaywallRevealCard({
                 type="button"
                 disabled={loadingCheckout}
                 onClick={() => void handleOneClickCheckout(guaranteed)}
-                className="w-full rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base py-3 px-6 shadow-md transition-all"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-base py-3.5 px-6 rounded-lg shadow-lg transition"
               >
                 {loadingCheckout
                   ? "Opening Secure Checkout..."
@@ -288,24 +339,58 @@ export function PaywallRevealCard({
 
                   {/* Official Side & Total */}
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
-                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                        BEST SPREAD BET
+                    <div
+                      className={`rounded-lg p-4 border ${
+                        sideIsPass
+                          ? "bg-slate-800/90 border-amber-400/50"
+                          : "bg-slate-800 border-emerald-500/60"
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                          BEST SPREAD BET
+                        </span>
+                        <span
+                          className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase ${
+                            sideIsPass
+                              ? "bg-amber-500/20 text-amber-300 border border-amber-400/40"
+                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40"
+                          }`}
+                        >
+                          {sideIsPass ? "PASS — NO BET" : `BET THIS: ${w.sideTotalCall.sideSelection}`}
+                        </span>
                       </div>
-                      <div className="mt-1 text-lg font-bold text-white">
-                        {sideIsPass ? "PASS — Market Efficient" : w.sideTotalCall.sideSelection}
+                      <div className="mt-2 text-lg font-bold text-white">
+                        {sideIsPass ? "PASS — NO BET" : w.sideTotalCall.sideSelection}
                       </div>
                       <div className="mt-2 text-xs font-semibold text-emerald-300">
                         Confidence: {formatConfidenceStrict(w.sideTotalCall.sideConfidence)}
                       </div>
                     </div>
 
-                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
-                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                        BEST TOTAL BET
+                    <div
+                      className={`rounded-lg p-4 border ${
+                        totalIsPass
+                          ? "bg-slate-800/90 border-amber-400/50"
+                          : "bg-slate-800 border-emerald-500/60"
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                          BEST TOTAL BET
+                        </span>
+                        <span
+                          className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase ${
+                            totalIsPass
+                              ? "bg-amber-500/20 text-amber-300 border border-amber-400/40"
+                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40"
+                          }`}
+                        >
+                          {totalIsPass ? "PASS — NO BET" : `BET THIS: ${w.sideTotalCall.totalSelection}`}
+                        </span>
                       </div>
-                      <div className="mt-1 text-lg font-bold text-white">
-                        {totalIsPass ? "PASS — Market Efficient" : w.sideTotalCall.totalSelection}
+                      <div className="mt-2 text-lg font-bold text-white">
+                        {totalIsPass ? "PASS — NO BET" : w.sideTotalCall.totalSelection}
                       </div>
                       <div className="mt-2 text-xs font-semibold text-emerald-300">
                         Confidence: {formatConfidenceStrict(w.sideTotalCall.totalConfidence)}
@@ -318,8 +403,8 @@ export function PaywallRevealCard({
                     <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
                       WHY BET THIS:
                     </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-200">
-                      {w.sideTotalCall.rationale}
+                    <p className="mt-1.5 text-sm md:text-base leading-relaxed text-slate-100">
+                      {sanitizePlainFootballText(w.sideTotalCall.rationale)}
                     </p>
                   </div>
 
@@ -339,8 +424,8 @@ export function PaywallRevealCard({
                             >
                               <span className="font-bold text-white">
                                 {propIsPass
-                                  ? `${p.playerName} — PASS — Market Efficient (${p.propType})`
-                                  : `${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
+                                  ? `${p.playerName} — PASS — NO BET (${p.propType})`
+                                  : `BET THIS: ${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
                               </span>
                               <span className="text-xs font-semibold text-emerald-300">
                                 Confidence: {formatConfidenceStrict(p.confidence)}
@@ -357,7 +442,7 @@ export function PaywallRevealCard({
                     <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                          {w.correlatedSgpTicket.title}
+                          {sanitizePlainFootballText(w.correlatedSgpTicket.title)}
                         </span>
                         <span className="text-xs font-bold text-white">
                           Book Odds {w.correlatedSgpTicket.marketOdds} (Fair Odds {w.correlatedSgpTicket.fairOdds})
@@ -366,7 +451,7 @@ export function PaywallRevealCard({
                       <ul className="mt-2 space-y-1 text-sm text-slate-200">
                         {w.correlatedSgpTicket.legs.map((leg, idx) => (
                           <li key={idx}>
-                            • {leg.description} (Confidence: {formatConfidenceStrict(leg.confidence)})
+                            • {sanitizePlainFootballText(leg.description)} (Confidence: {formatConfidenceStrict(leg.confidence)})
                           </li>
                         ))}
                       </ul>

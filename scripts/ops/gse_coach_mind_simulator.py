@@ -294,6 +294,158 @@ def load_week8_injuries_from_csv(repo_root: str | None = None) -> dict[str, list
     return team_roles
 
 
+DOWN_BUCKETS = ("1st", "2nd", "3rd_short", "3rd_long")
+FIELD_ZONES = ("own_20", "mid", "opp_20", "redzone")
+SCORE_SCRIPTS = ("trailing_7+", "close", "leading_7+")
+
+POSITIONAL_MARKET_PRIORS = {
+    "rec_yds": 64.5,
+    "WR1": 64.5,
+    "WR2": 46.5,
+    "WR3": 34.5,
+    "TE1": 41.5,
+    "rush_yds": 62.0,
+    "RB1": 64.5,
+    "rb_rec_yds": 16.5,
+    "pass_yds": 232.5,
+    "QB1": 232.5,
+}
+
+
+def empirical_bayes_line(player_gp: int, sample_mean: float, market: str = "rec_yds") -> float:
+    """Empirical-Bayes shrinkage of noisy early-season/simulated player mean toward positional prior."""
+    gp = max(1, int(player_gp))
+    prior = float(POSITIONAL_MARKET_PRIORS.get(market, 58.5))
+    w = min(0.55, max(0.25, gp / (gp + 7.0)))
+    shrunk = w * float(sample_mean) + (1.0 - w) * prior
+    if market in ("pass_yds", "QB1"):
+        return float(np.clip(shrunk, 172.5, 278.5))
+    if market == "rb_rec_yds":
+        return float(np.clip(shrunk, 10.5, 32.5))
+    return float(np.clip(shrunk, 38.5, 82.5))
+
+
+def sample_lognormal(
+    shrunk_mean: float,
+    n_sims: int,
+    rng: np.random.Generator,
+    cv: float = 0.42,
+) -> np.ndarray:
+    """Sample realistic right-skewed NFL yardage distribution with coefficient of variation cv=0.42."""
+    m = max(1.0, float(shrunk_mean))
+    sigma2 = math.log(1.0 + cv * cv)
+    sigma = math.sqrt(sigma2)
+    mu = math.log(m) - 0.5 * sigma2
+    return rng.lognormal(mean=mu, sigma=sigma, size=n_sims)
+
+
+def _classify_down_bucket(down: int, ydstogo: int) -> str:
+    if down == 1:
+        return "1st"
+    if down == 2:
+        return "2nd"
+    if down >= 3 and ydstogo <= 3:
+        return "3rd_short"
+    return "3rd_long"
+
+
+def _classify_field_zone(yardline_100: int) -> str:
+    if yardline_100 >= 80:
+        return "own_20"
+    if yardline_100 >= 40:
+        return "mid"
+    if yardline_100 > 20:
+        return "opp_20"
+    return "redzone"
+
+
+def _classify_score_script(score_diff: float) -> str:
+    if score_diff <= -7:
+        return "trailing_7+"
+    if score_diff >= 7:
+        return "leading_7+"
+    return "close"
+
+
+def build_jev_state_tensor(spine_game: dict | None) -> dict:
+    """
+    Aggregate the 166 snap responses from `spine_game["snap_by_snap_log"]` into a
+    48-state transition tensor keyed by `(offense_abbr, down_bucket, field_zone, score_script)`.
+    """
+    if not spine_game or not isinstance(spine_game, dict):
+        return {"by_state": {}, "by_team": {}, "total_snaps_ingested": 0}
+    snaps = spine_game.get("snap_by_snap_log") or []
+    if not snaps:
+        return {"by_state": {}, "by_team": {}, "total_snaps_ingested": 0}
+
+    buckets: dict[tuple[str, str, str, str], list[tuple[float, float, float, float, float]]] = {}
+    team_buckets: dict[str, list[tuple[float, float, float, float, float]]] = {}
+
+    for s in snaps:
+        off = str(s.get("offense", "")).strip()
+        dfn = str(s.get("defense", "")).strip()
+        if not off:
+            continue
+        down = int(s.get("down", 1))
+        ydstogo = int(s.get("ydstogo", 10))
+        yl100 = int(s.get("yardline_100", 75))
+        sc_before = s.get("score_before") or {}
+        s_diff = float(sc_before.get(off, 0)) - float(sc_before.get(dfn, 0))
+
+        db = _classify_down_bucket(down, ydstogo)
+        fz = _classify_field_zone(yl100)
+        ss = _classify_score_script(s_diff)
+
+        jev = s.get("jev_decisions") or {}
+        off_p = (jev.get("off_play_call") or {}).get("probabilities") or {}
+        pass_p = (
+            float(off_p.get("quick_game_rpo", 0.0))
+            + float(off_p.get("play_action_intermediate", 0.0))
+            + float(off_p.get("deep_shot_pass", 0.0))
+            + float(off_p.get("go_for_it_pass", 0.0))
+            + 0.5 * float(off_p.get("screen_or_draw", 0.0))
+        )
+        press_noul = float(jev.get("pressure_disruption_noul", 0.32))
+        tgt_p = (jev.get("target_carrier") or {}).get("probabilities") or {}
+        rb1_p = float(tgt_p.get("RB1", 0.50))
+        wr1_p = float(tgt_p.get("WR1", 0.24))
+
+        res_play = s.get("resolved_play") or {}
+        cal_out = res_play.get("calibrated_outcome_probs") or (jev.get("snap_outcome") or {}).get("probabilities") or {}
+        pos_gain_p = (
+            float(cal_out.get("short_gain_1_4", 0.25))
+            + float(cal_out.get("chain_mover_5_11", 0.22))
+            + float(cal_out.get("explosive_12_24", 0.08))
+            + float(cal_out.get("breakaway_25_plus", 0.02))
+        )
+
+        rec = (pass_p, press_noul, rb1_p, wr1_p, pos_gain_p)
+        buckets.setdefault((off, db, fz, ss), []).append(rec)
+        team_buckets.setdefault(off, []).append(rec)
+
+    def _summarize(rows: list[tuple[float, float, float, float, float]]) -> dict:
+        arr = np.asarray(rows, dtype=np.float64)
+        return {
+            "count": len(rows),
+            "pass_prob": round(float(np.mean(arr[:, 0])), 4),
+            "pressure_disruption_noul": round(float(np.mean(arr[:, 1])), 4),
+            "rb1_target_prob": round(float(np.mean(arr[:, 2])), 4),
+            "wr1_target_prob": round(float(np.mean(arr[:, 3])), 4),
+            "pos_gain_prob": round(float(np.mean(arr[:, 4])), 4),
+        }
+
+    by_state = {
+        f"{k[0]}|{k[1]}|{k[2]}|{k[3]}": _summarize(v)
+        for k, v in buckets.items()
+    }
+    by_team = {tm: _summarize(v) for tm, v in team_buckets.items()}
+    return {
+        "by_state": by_state,
+        "by_team": by_team,
+        "total_snaps_ingested": len(snaps),
+    }
+
+
 def simulate_matchup_pbp(
     away: str,
     home: str,
@@ -305,6 +457,9 @@ def simulate_matchup_pbp(
     seed: int = 42,
     w1_w7_override: dict | None = None,
     return_vectors: bool = False,
+    jev_state_tensor: dict | None = None,
+    posted_home_spread: float | None = None,
+    posted_total: float | None = None,
 ) -> dict:
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
     rng = np.random.default_rng(seed)
@@ -321,6 +476,12 @@ def simulate_matchup_pbp(
     home_rb1_share_emp = 0.62
 
     if w1_w7_override is not None:
+        if jev_state_tensor is None:
+            jev_state_tensor = w1_w7_override.get("jev_state_tensor")
+        if posted_home_spread is None and w1_w7_override.get("posted_home_spread") is not None:
+            posted_home_spread = float(w1_w7_override["posted_home_spread"])
+        if posted_total is None and w1_w7_override.get("posted_total") is not None:
+            posted_total = float(w1_w7_override["posted_total"])
         aw_ov = w1_w7_override.get("away") or {}
         hm_ov = w1_w7_override.get("home") or {}
         if aw_ov:
@@ -377,6 +538,22 @@ def simulate_matchup_pbp(
     away_pass_delta = (1.0 - r_shrink) * (tr_away["early_pass_rate"] - 0.54)
     home_pass_delta = (1.0 - r_shrink) * (tr_home["early_pass_rate"] - 0.54)
 
+    has_jev_tensor = bool(jev_state_tensor and jev_state_tensor.get("total_snaps_ingested", 0) > 0)
+    jev_pass_arr = np.zeros((2, 4, 4, 3), dtype=np.float64)
+    jev_press_arr = np.zeros((2, 4, 4, 3), dtype=np.float64)
+    if has_jev_tensor:
+        by_st = jev_state_tensor.get("by_state") or {}
+        by_tm = jev_state_tensor.get("by_team") or {}
+        for tm_i, tm_abbr in enumerate((away, home)):
+            tm_def_p = float((by_tm.get(tm_abbr) or {}).get("pass_prob", 0.54))
+            tm_def_pr = float((by_tm.get(tm_abbr) or {}).get("pressure_disruption_noul", 0.32))
+            for db_i, db_k in enumerate(DOWN_BUCKETS):
+                for fz_i, fz_k in enumerate(FIELD_ZONES):
+                    for ss_i, ss_k in enumerate(SCORE_SCRIPTS):
+                        st_node = by_st.get(f"{tm_abbr}|{db_k}|{fz_k}|{ss_k}") or {}
+                        jev_pass_arr[tm_i, db_i, fz_i, ss_i] = float(st_node.get("pass_prob", tm_def_p))
+                        jev_press_arr[tm_i, db_i, fz_i, ss_i] = float(st_node.get("pressure_disruption_noul", tm_def_pr))
+
     clock_sec = np.full(n_sims, 3600.0, dtype=np.float64)
     away_score = np.zeros(n_sims, dtype=np.float64)
     home_score = np.zeros(n_sims, dtype=np.float64)
@@ -401,6 +578,12 @@ def simulate_matchup_pbp(
         pass_delta_vec = np.where(poss == 1, home_pass_delta, away_pass_delta)
         panic_vec = np.where(poss == 1, tr_home["panic_pp"], tr_away["panic_pp"])
         score_diff = np.where(poss == 1, home_score - away_score, away_score - home_score)
+        # Game-script tempo elasticity (Vector 1): leading slows +2.8s, trailing accelerates -3.0s
+        pace_base_vec = np.where(
+            score_diff >= 7.0,
+            pace_base_vec + 2.8,
+            np.where(score_diff <= -7.0, pace_base_vec - 3.0, pace_base_vec),
+        )
         qtr = np.clip(4 - (clock_sec // 900).astype(np.int32), 1, 4)
         is_4th = active & (down == 4)
         is_1to3 = active & (down < 4)
@@ -448,15 +631,31 @@ def simulate_matchup_pbp(
         if np.any(is_1to3):
             idx_13 = np.where(is_1to3)[0]
             dn_v, ne_v, sd_v, qt_v = down[idx_13], net_epa_vec[idx_13], score_diff[idx_13], qtr[idx_13]
+            yd_v, yl_v, ps_v = ydstogo[idx_13], yardline_100[idx_13], poss[idx_13]
             base_p = np.where(dn_v == 1, 0.48, np.where(dn_v == 2, 0.56, 0.74))
-            trail_mod = np.where((qt_v == 4) & (sd_v <= -7), 0.08 + panic_vec[idx_13], 0.0)
-            p_pass = np.clip(base_p + pass_delta_vec[idx_13] + trail_mod, 0.15, 0.90)
+            # Game-script pass rate elasticity (Vector 1): leading >= 7 reduces pass -0.08, trailing <= -7 increases +0.09
+            script_pass_mod = np.where(
+                sd_v >= 7.0,
+                -0.08,
+                np.where(sd_v <= -7.0, 0.09 + np.where(qt_v == 4, panic_vec[idx_13], 0.0), 0.0),
+            )
+            p_pass = np.clip(base_p + pass_delta_vec[idx_13] + script_pass_mod, 0.15, 0.90)
+            comp_base_v = np.where(ps_v == 1, home_comp_base, away_comp_base)
+            sack_prob_v = np.where(ps_v == 1, home_sack_prob, away_sack_prob)
+
+            if has_jev_tensor:
+                db_idx = np.where(dn_v == 1, 0, np.where(dn_v == 2, 1, np.where(yd_v <= 3, 2, 3)))
+                fz_idx = np.where(yl_v >= 80, 0, np.where(yl_v >= 40, 1, np.where(yl_v > 20, 2, 3)))
+                ss_idx = np.where(sd_v <= -7.0, 0, np.where(sd_v >= 7.0, 2, 1))
+                jev_p_pass = jev_pass_arr[ps_v, db_idx, fz_idx, ss_idx]
+                jev_p_press = jev_press_arr[ps_v, db_idx, fz_idx, ss_idx]
+                p_pass = np.clip(0.65 * p_pass + 0.35 * jev_p_pass, 0.15, 0.90)
+                sack_prob_v = np.clip(0.70 * sack_prob_v + 0.30 * (jev_p_press * 0.18), 0.030, 0.125)
+
             is_pass = rng.random(len(idx_13)) < p_pass
             u_out = rng.random(len(idx_13))
             to_prob = np.clip(np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v, 0.003, 0.045)
             is_to = u_out < to_prob
-            comp_base_v = np.where(poss[idx_13] == 1, home_comp_base, away_comp_base)
-            sack_prob_v = np.where(poss[idx_13] == 1, home_sack_prob, away_sack_prob)
             pass_comp = np.clip(comp_base_v + 0.38 * ne_v, 0.48, 0.78)
             pass_yds = np.where(
                 u_out < (to_prob + sack_prob_v), -rng.integers(5, 9, size=len(idx_13)),
@@ -465,13 +664,23 @@ def simulate_matchup_pbp(
             run_yds = np.round(rng.normal(4.4 + 9.5 * ne_v, 4.2, size=len(idx_13))).astype(np.int32)
             yds = np.where(is_pass, pass_yds, run_yds)
 
+            # Soft blowout/shootout regression cap before Q4 (Vector 1)
+            cap_mask = (qt_v < 4) & (
+                (np.abs(home_score[idx_13] - away_score[idx_13]) > 21.0)
+                | ((home_score[idx_13] + away_score[idx_13]) > 62.0)
+            )
+            if np.any(cap_mask):
+                yds = np.where(cap_mask, np.round(yds * 0.75).astype(np.int32), yds)
+                pass_yds = np.where(cap_mask & is_pass, yds, pass_yds)
+                run_yds = np.where(cap_mask & (~is_pass), yds, run_yds)
+
             # Accumulate real simulated passing & rushing yardage per world
             pos_pass_yds = np.maximum(0, pass_yds)
             pos_run_yds = np.maximum(-3, run_yds)
-            hm_pass_mask = (~is_to) & is_pass & (poss[idx_13] == 1)
-            aw_pass_mask = (~is_to) & is_pass & (poss[idx_13] == 0)
-            hm_run_mask = (~is_to) & (~is_pass) & (poss[idx_13] == 1)
-            aw_run_mask = (~is_to) & (~is_pass) & (poss[idx_13] == 0)
+            hm_pass_mask = (~is_to) & is_pass & (ps_v == 1)
+            aw_pass_mask = (~is_to) & is_pass & (ps_v == 0)
+            hm_run_mask = (~is_to) & (~is_pass) & (ps_v == 1)
+            aw_run_mask = (~is_to) & (~is_pass) & (ps_v == 0)
             if np.any(hm_pass_mask):
                 home_pass_yds_tot[idx_13[hm_pass_mask]] += pos_pass_yds[hm_pass_mask]
             if np.any(aw_pass_mask):
@@ -511,8 +720,50 @@ def simulate_matchup_pbp(
         clock_sec[active] -= np.clip(rng.normal(pace_base_vec[active], 3.2, size=n_act), 8.0, 40.0)
 
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
-    tot = home_score + away_score
-    sprd = home_score - away_score
+
+    # Stage 2 Layer-1 Market-Anchor James-Stein Shrinkage & Variance Calibration (Vector 1)
+    raw_margin_vec = home_score - away_score
+    raw_total_vec = home_score + away_score
+    raw_margin = float(np.mean(raw_margin_vec))
+    raw_total = float(np.mean(raw_total_vec))
+
+    if posted_home_spread is not None and posted_total is not None:
+        market_margin = -float(posted_home_spread)
+        market_total = float(posted_total)
+        lambda_margin = 0.70
+        lambda_total = 0.65
+        shrunk_margin = float(
+            np.clip(
+                market_margin + (1.0 - lambda_margin) * (raw_margin - market_margin),
+                market_margin - 6.0,
+                market_margin + 6.0,
+            )
+        )
+        shrunk_total = float(
+            np.clip(
+                market_total + (1.0 - lambda_total) * (raw_total - market_total),
+                market_total - 5.5,
+                market_total + 5.5,
+            )
+        )
+    else:
+        shrunk_margin = float(np.clip(0.35 * raw_margin, -11.5, 11.5))
+        shrunk_total = float(np.clip(45.5 + 0.35 * (raw_total - 45.5), 37.5, 53.5))
+
+    sigma_margin = 13.5
+    sigma_total = 13.0
+    std_m = max(1e-6, float(np.std(raw_margin_vec)))
+    std_t = max(1e-6, float(np.std(raw_total_vec)))
+    scale_m = sigma_margin / std_m
+    scale_t = sigma_total / std_t
+
+    home_margin_out = shrunk_margin + (raw_margin_vec - raw_margin) * scale_m
+    total_pts_out = np.maximum(10.0, shrunk_total + (raw_total_vec - raw_total) * scale_t)
+    home_score = 0.5 * (total_pts_out + home_margin_out)
+    away_score = 0.5 * (total_pts_out - home_margin_out)
+
+    tot = total_pts_out
+    sprd = home_margin_out
     pace = 3600.0 / np.maximum(total_plays, 100)
     out = {
         "matchup": f"{away} @ {home}",
@@ -532,18 +783,32 @@ def simulate_matchup_pbp(
         hm_wr1_eff_share = 0.50 * float(home_sh[0]) + 0.50 * home_wr1_share_emp
         aw_rb1_eff_share = 0.35 * (float(away_sh[4]) / 0.16 * 0.62) + 0.65 * away_rb1_share_emp
         hm_rb1_eff_share = 0.35 * (float(home_sh[4]) / 0.16 * 0.62) + 0.65 * home_rb1_share_emp
+
+        hm_wr1_raw_mean = float(np.mean(home_pass_yds_tot * hm_wr1_eff_share))
+        aw_wr1_raw_mean = float(np.mean(away_pass_yds_tot * aw_wr1_eff_share))
+        hm_rb1_raw_mean = float(np.mean(home_rush_yds_tot * hm_rb1_eff_share))
+        aw_rb1_raw_mean = float(np.mean(away_rush_yds_tot * aw_rb1_eff_share))
+
+        hm_wr1_shrunk = empirical_bayes_line(7, hm_wr1_raw_mean, "rec_yds")
+        aw_wr1_shrunk = empirical_bayes_line(7, aw_wr1_raw_mean, "rec_yds")
+        hm_rb1_shrunk = empirical_bayes_line(7, hm_rb1_raw_mean, "rush_yds")
+        aw_rb1_shrunk = empirical_bayes_line(7, aw_rb1_raw_mean, "rush_yds")
+
         out["vectors"] = {
             "home_score": home_score,
             "away_score": away_score,
+            "home_margin_out": home_margin_out,
+            "total_pts_out": total_pts_out,
             "total_plays": total_plays,
             "home_pass_yds": home_pass_yds_tot,
             "away_pass_yds": away_pass_yds_tot,
             "home_rush_yds": home_rush_yds_tot,
             "away_rush_yds": away_rush_yds_tot,
-            "home_wr1_yds": home_pass_yds_tot * hm_wr1_eff_share,
-            "away_wr1_yds": away_pass_yds_tot * aw_wr1_eff_share,
-            "home_rb1_yds": home_rush_yds_tot * hm_rb1_eff_share,
-            "away_rb1_yds": away_rush_yds_tot * aw_rb1_eff_share,
+            "home_wr1_yds": sample_lognormal(hm_wr1_shrunk, n_sims, rng, cv=0.42),
+            "away_wr1_yds": sample_lognormal(aw_wr1_shrunk, n_sims, rng, cv=0.42),
+            "home_rb1_yds": sample_lognormal(hm_rb1_shrunk, n_sims, rng, cv=0.42),
+            "away_rb1_yds": sample_lognormal(aw_rb1_shrunk, n_sims, rng, cv=0.42),
+            "jev_state_tensor_active": has_jev_tensor,
         }
         out["away_injuries_applied"] = list(away_inj)
         out["home_injuries_applied"] = list(home_inj)

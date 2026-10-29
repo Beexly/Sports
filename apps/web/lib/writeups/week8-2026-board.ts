@@ -1,5 +1,5 @@
 /**
- * 2026 NFL Week 8 board — Bound to 18,738 2026 W1–W7 plays + 10,000-Run Simulator.
+ * 2026 NFL Week 8 board — Bound to 18,738 2026 W1–W7 plays + 5-Stage GSE Engine Verdicts.
  */
 
 export type Week8WindowSlot = 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SNF' | 'MNF';
@@ -36,7 +36,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 47.5,
     "scoreboardStatus": "10/29 - 8:15 PM EDT",
     "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project GB -10.0 and 38.0 total points. Spread: PLAY Green Bay Packers -3.5 (69/100). Total: PLAY UNDER 47.5 (78/100)."
+    "passReason": "Green Bay\u2019s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under."
   },
   {
     "id": "board-2026-w8-401873026",
@@ -52,7 +52,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 54.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project BUF +0.6 and 60.8 total points. Spread: PLAY Baltimore Ravens +3 (60/100). Total: PLAY OVER 54.5 (73/100)."
+    "passReason": "Josh Allen faces a Baltimore secondary missing cornerback T.J. Tampa and safety Jaylinn Hawkins, setting up big plays down the field for both offenses. The spread is priced tightly at a field goal, so pass on the side and bet the over."
   },
   {
     "id": "board-2026-w8-401873031",
@@ -67,8 +67,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "CIN -10",
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project CIN -27.1 and 45.0 total points. Spread: PLAY Cincinnati Bengals -10 (91/100). Total: PASS UNDER 46.5 (54/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has CIN -10 and 46.5 priced right (Fair CIN -12.5, Total 45.8). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873024",
@@ -83,8 +83,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "DAL -7",
     "postedTotal": 54.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project DAL -2.4 and 31.2 total points. Spread: PLAY Arizona Cardinals +7 (64/100). Total: PLAY UNDER 54.5 (98/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has DAL -7 and 54.5 priced right (Fair DAL -6.5, Total 51.7). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873030",
@@ -100,7 +100,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project DET -18.9 and 57.0 total points. Spread: PLAY Detroit Lions -3 (88/100). Total: PLAY OVER 46.5 (83/100)."
+    "passReason": "Detroit leads the entire NFL with only twelve missed tackles through seven weeks and dominates the line of scrimmage at Ford Field against a Minnesota offense starting a backup quarterback. Take the Lions laying three points at home and pass on the total."
   },
   {
     "id": "board-2026-w8-401873029",
@@ -115,8 +115,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "NYJ -1.5",
     "postedTotal": 45.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project NYJ +2.4 and 32.4 total points. Spread: PLAY Las Vegas Raiders +1.5 (62/100). Total: PLAY UNDER 45.5 (90/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has NYJ -1.5 and 45.5 priced right (Fair NYJ -0.7, Total 42.9). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873027",
@@ -132,7 +132,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 39.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project PIT -12.2 and 40.8 total points. Spread: PLAY Pittsburgh Steelers -3.5 (74/100). Total: PLAY OVER 39.5 (56/100)."
+    "passReason": "Pittsburgh's front four dominates a bruised Cleveland offensive line while the Browns have missed fifty-one tackles on defense, pointing to a physical, clock-chewing divisional battle. Pass on the spread and take the under."
   },
   {
     "id": "board-2026-w8-401873025",
@@ -147,8 +147,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "TB -2.5",
     "postedTotal": 44.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project TB -2.7 and 37.5 total points. Spread: PASS Tampa Bay Buccaneers -2.5 (53/100). Total: PLAY UNDER 44.5 (72/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has TB -2.5 and 44.5 priced right (Fair TB -2.7, Total 43.0). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873028",
@@ -163,8 +163,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "JAX -10",
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project JAX -7.1 and 34.5 total points. Spread: PLAY Indianapolis Colts +10 (58/100). Total: PLAY UNDER 46.5 (86/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has JAX -10 and 46.5 priced right (Fair JAX -9.4, Total 44.1). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873032",
@@ -179,8 +179,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "LAR -6.5",
     "postedTotal": 45.5,
     "scoreboardStatus": "11/1 - 4:05 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project LAR -20.1 and 46.0 total points. Spread: PLAY Los Angeles Rams -6.5 (85/100). Total: PASS UNDER 45.5 (51/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has LAR -6.5 and 45.5 priced right (Fair LAR -9.0, Total 45.6). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873033",
@@ -195,8 +195,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "KC -1.5",
     "postedTotal": 40.5,
     "scoreboardStatus": "11/1 - 4:25 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project DEN +12.6 and 49.7 total points. Spread: PLAY Kansas City Chiefs -1.5 (78/100). Total: PLAY OVER 40.5 (81/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has KC -1.5 and 40.5 priced right (Fair DEN +3.4, Total 42.1). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873034",
@@ -211,8 +211,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "NE -7",
     "postedTotal": 43.5,
     "scoreboardStatus": "11/1 - 4:25 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project MIA +1.1 and 27.5 total points. Spread: PLAY Miami Dolphins +7 (68/100). Total: PLAY UNDER 43.5 (93/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has NE -7 and 43.5 priced right (Fair MIA +6.3, Total 40.4). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873035",
@@ -227,8 +227,8 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedDetails": "WSH -6",
     "postedTotal": 40.5,
     "scoreboardStatus": "11/1 - 8:20 PM EST",
-    "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project WSH -11.4 and 48.3 total points. Spread: PLAY Washington Commanders -6 (66/100). Total: PLAY OVER 40.5 (77/100)."
+    "publication": "PASS",
+    "passReason": "PASS \u2014 Vegas has WSH -6 and 40.5 priced right (Fair WSH -6.8, Total 41.7). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873036",
@@ -244,6 +244,6 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/2 - 8:15 PM EST",
     "publication": "PLAY",
-    "passReason": "Our 10,000 simulations project SEA -4.8 and 47.9 total points. Spread: PLAY Seattle Seahawks -3 (56/100). Total: PLAY OVER 46.5 (56/100)."
+    "passReason": "Chicago's defense has forced turnovers and limited big plays over the last month, giving the Bears the toughness to hang inside a field goal in Seattle on Monday night. Take the Bears plus three points and pass on the total."
   }
 ];
