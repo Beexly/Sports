@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 12`
+- **CYCLE_ROUND:** `Round 13`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -180,6 +180,19 @@ Formula: sack rate in each rusher bucket, weeks 1–5 versus weeks 6–7. QB-fau
 - Green Bay early: 6/118 (0.0508) versus 4/78 (0.0513). Flat. Late: 2/69 (0.0290) versus 2/21 (0.0952). Late five-plus is 2 sacks. Not promoted.
 - Green Bay quarterback-fault share: 3/10 early, 3/4 late. The late cell is 4 sacks, so an offensive-line story would over-claim.
 - Quad harvest this round: none. Live page fetch timed out, so the alias was not re-claimed. `vercel ls` still showed Building, newest about 1 minute old. No Ready row in the first page.
+
+## Round 13 — 2026-10-29 02:40 CT
+
+Empirical Bayes shrinkage of weeks 1–5 offense EPA per play, tested against weeks 6–7. Pass and run plays with non-null EPA. 32 teams. 9,693 early plays, 3,486 late plays. Cards not changed.
+
+Formula: `theta = (1 - B) * early_mean + B * grand_mean`, with `B = (sigma2 / n) / (sigma2 / n + tau2)`. Play-level residual variance `sigma2 = 1.846565`. Between-team variance `tau2 = 0.005953`. Grand mean `0.0082`.
+
+- Mean absolute error versus the late mean: raw early mean 0.0959, shrunk mean 0.0844. Improvement 0.0114 per play. The shrink helps on average.
+- Carolina: early raw 0.1151 on 265 plays, shrunk 0.0575 (`B = 0.539`), late actual -0.0455 on 127 plays. Shrinkage moves toward the late number and still misses the collapse. Not a side.
+- Green Bay: early raw -0.0206 on 290 plays, shrunk -0.0057 (`B = 0.517`), late actual 0.0353 on 133 plays.
+- Not promoted into a spread. `tau2` is small, so most of the early team-mean spread is noise.
+- Deploy: first page still has no Ready row. `sports-n3zlsyt5j` errored at 46 minutes. Newest build was about 2 minutes old. No cancel command in this Vercel CLI. Quad harvest: none.
+
 
 
 

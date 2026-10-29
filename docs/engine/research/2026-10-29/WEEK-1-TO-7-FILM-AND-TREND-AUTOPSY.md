@@ -39,3 +39,12 @@
 | **TB** | B.Mayfield | `-0.081` | `-0.056` (`+0.037`) | `-0.108` | `74/166` (44.6%) | 68.5% | 21.4% | 40.6% | 6.68 | 34.5% | 59.3% | `6.49` | E.Egbuka (7.0/g, 24.7%) | B.Irving (17.1/g, 79.7 yd/g) |
 | **TEN** | C.Ward | `-0.121` | `-0.083` (`+0.053`) | `+0.045` | `79/152` (52.0%) | 48.6% | 21.4% | 23.2% | 6.25 | 48.4% | 44.5% | `6.37` | C.Tate (7.3/g, 26.0%) | T.Pollard (16.0/g, 68.3 yd/g) |
 | **WAS** | J.Daniels | `-0.007` | `-0.001` (`+0.007`) | `+0.067` | `71/149` (47.7%) | 51.4% | 21.8% | 45.1% | 6.48 | 52.3% | 30.0% | `8.46` | S.Diggs (6.3/g, 20.1%) | J.Croskey-Merritt (11.2/g, 39.8 yd/g) |
+
+## 2. Empirical Bayes holdout — 2026-10-29 02:40 CT
+
+Measured on pass and run plays with non-null EPA. This does not replace the table above and it is not a spread.
+
+`theta = (1 - B) * early_mean + B * 0.0082`, `B = (1.846565 / n) / (1.846565 / n + 0.005953)`.
+
+Across 32 teams, shrinking the weeks 1–5 mean cuts late-window absolute error from 0.0959 to 0.0844. Carolina's shrunk early mean is 0.0575 against a late mean of -0.0455. The shrink does not see that collapse, so it is not a reason to back Carolina.
+
