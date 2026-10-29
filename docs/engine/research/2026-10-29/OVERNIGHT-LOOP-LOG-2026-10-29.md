@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 11`
+- **CYCLE_ROUND:** `Round 12`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -168,6 +168,19 @@ Formula tested: motion effect under a blitz minus motion effect with no blitz. E
 - Green Bay late: interaction -0.8091 and the sign flips. Motion-plus-blitz cell is 9 plays.
 - Not promoted. The interaction does not survive the late window.
 - Deploy gate: `shouldBuild` no longer force-builds every `main` commit. Docs-only main commits skip. A commit that touches `apps/web/` or `packages/` still builds. This stops the overnight log from queueing another 46-minute output failure.
+
+## Round 12 — 2026-10-29 02:34 CT
+
+Sack hazard by pass-rusher count, joined on `game_id` + `play_id` from the charting file to the play file. Dropback means a pass attempt or a sack. Four rushers means `n_pass_rushers <= 4`. Five-plus means `>= 5`. Cards not changed.
+
+Formula: sack rate in each rusher bucket, weeks 1–5 versus weeks 6–7. QB-fault share is `is_qb_fault_sack` among charted sacks.
+
+- Carolina early: 9/131 at four rushers (0.0687), 1/42 at five-plus (0.0238). Late: 6/51 (0.1176) and 1/27 (0.0370). Extra rushers do not raise the sack rate. Five-plus sacks are 2 plays total. Not promoted.
+- Carolina sacks charted as quarterback fault: 0/17. Those sacks are charted as the line, not the quarterback.
+- Green Bay early: 6/118 (0.0508) versus 4/78 (0.0513). Flat. Late: 2/69 (0.0290) versus 2/21 (0.0952). Late five-plus is 2 sacks. Not promoted.
+- Green Bay quarterback-fault share: 3/10 early, 3/4 late. The late cell is 4 sacks, so an offensive-line story would over-claim.
+- Quad harvest this round: none. Live page fetch timed out, so the alias was not re-claimed. `vercel ls` still showed Building, newest about 1 minute old. No Ready row in the first page.
+
 
 
 
