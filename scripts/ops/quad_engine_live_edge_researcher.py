@@ -592,6 +592,12 @@ def main() -> None:
             "HUGGINGFACE": len(hf_hits),
             "KAGGLE": len(kaggle_hits),
         },
+        "live_harvest_fallbacks": {
+            "OPENALEX": sum(1 for r in openalex_hits if "status" in r),
+            "ARXIV": sum(1 for r in arxiv_hits if "status" in r),
+            "HUGGINGFACE": sum(1 for r in hf_hits if "status" in r),
+            "KAGGLE": sum(1 for r in kaggle_hits if "status" in r),
+        },
         "live_harvest_samples": {
             "openalex": openalex_hits[:12],
             "arxiv": arxiv_hits[:12],
@@ -670,15 +676,21 @@ def main() -> None:
             "|---|---:|---:|",
         ]
     )
+    fallback_counts = payload.get("live_harvest_fallbacks", {})
+    total_items = 0
+    total_fallbacks = 0
     for engine_key, engine_label in (
-        ("openalex", "OpenAlex"),
-        ("arxiv", "arXiv"),
-        ("huggingface", "Hugging Face"),
-        ("kaggle", "Kaggle"),
+        ("OPENALEX", "OpenAlex"),
+        ("ARXIV", "arXiv"),
+        ("HUGGINGFACE", "Hugging Face"),
+        ("KAGGLE", "Kaggle"),
     ):
-        rows = payload["live_harvest_samples"].get(engine_key) or []
-        fallbacks = sum(1 for r in rows if isinstance(r, dict) and "status" in r)
-        md.append(f"| {engine_label} | {len(rows)} | {fallbacks} |")
+        items = payload["live_harvest_counts"].get(engine_key, 0)
+        fallbacks = fallback_counts.get(engine_key, 0)
+        total_items += items
+        total_fallbacks += fallbacks
+        md.append(f"| {engine_label} | {items} | {fallbacks} |")
+    md.append(f"| **Total** | **{total_items}** | **{total_fallbacks}** |")
     md.extend(["", "### Live titles returned this run", ""])
     for engine_key, engine_label in (
         ("arxiv", "arXiv"),

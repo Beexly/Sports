@@ -1,6 +1,6 @@
 # QUAD-ENGINE MATHEMATICAL EDGE & FORMULA SYNTHESIS DOSSIER — 2026-10-29
 
-- **Generated At:** `2026-10-29T09:36:30Z`
+- **Generated At:** `2026-10-29T09:42:21Z`
 - **Quad-Engine Live Sources Queried:** `OpenAlex API` + `arXiv Atom API` + `Hugging Face Hub API` + `Kaggle API/BDB2027`
 - **Empirical Validation Dataset:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) joined with `18,019` FTN charting plays (`ftn_charting_2026.parquet`) and `18,738` participation rows (`pbp_participation_2026_reconstructed.parquet`)
 
@@ -145,3 +145,48 @@ $$
 | **TB** | `-0.0531` | `-0.0710` | `-0.321` | `-0.001` | `-0.177` | `+0.065` | 3.17% | 2.78% | **6.49** | `1.068x` | `0.234` |
 | **TEN** | `-0.0826` | `+0.0394` | `-0.457` | `-0.275` | `-0.016` | `+0.056` | 2.15% | 1.72% | **6.37** | `1.078x` | `0.353` |
 | **WAS** | `-0.0058` | `+0.0457` | `+0.174` | `+0.057` | `-0.131` | `+0.013` | 0.83% | 1.25% | **8.46** | `0.936x` | `0.232` |
+
+---
+
+## 4. Live Four-Engine Harvest (same run as the tables above)
+
+A `cached_fallback` row means the engine answered with an error and returned nothing. Treat it as a defect to chase, not a result.
+
+| Engine | Items | Fallbacks |
+|---|---:|---:|
+| OpenAlex | 19 | 0 |
+| arXiv | 18 | 0 |
+| Hugging Face | 14 | 0 |
+| Kaggle | 23 | 0 |
+| **Total** | **74** | **0** |
+
+### Live titles returned this run
+
+**arXiv**
+- `ARXIV:2011.06014v1` — Football tracking networks: Beyond event-based connectivity (2020)
+- `ARXIV:2202.00804v3` — Automatic event detection in football using tracking data (2022)
+- `ARXIV:2511.09455v1` — Hand Held Multi-Object Tracking Dataset in American Football (2025)
+- `ARXIV:2512.08467v1` — Team-Aware Football Player Tracking with SAM: An Appearance-Based Approach to Occlusion Recovery (2025)
+- `ARXIV:1906.01760v3` — Going Deep: Models for Continuous-Time Within-Play Valuation of Game Outcomes in American Football with Tracking Data (2019)
+
+**OpenAlex**
+- `OPENALEX:W2926606382` — The Olympic “Revolt” of 1968 and its Lessons for Contemporary African American Athletic Activism (2019)
+- `OPENALEX:W3183523428` — Simulating Defensive Trajectories in American Football for Predicting League Average Defensive Movements (2021)
+- `OPENALEX:W2617621954` — The future of television : advertising, technology and the pursuit of audiences (2008)
+- `OPENALEX:W2115593474` — Practicing Work, Perfecting Play: League of Legends and the Sentimental Education of E-Sports (2022)
+- `OPENALEX:W133582637` — Forecasting Success in the National Hockey League Using In-Game Statistics and Textual Data (2014)
+
+**Kaggle**
+- `KAGGLE:tombliss/nfl-big-data-bowl-2021-bonus` — Nfl Big Data Bowl 2021 Bonus
+- `KAGGLE:aryashah2k/beginners-sports-analytics-nfl-dataset` — Beginners Sports Analytics NFL Dataset
+- `KAGGLE:mathurinache/nflbigdatabowl2021-feather-files` — nfl-big-data-bowl-2021 Feather files
+- `KAGGLE:dott1718/nfl-big-data-bowl-expected-yards` — NFL Big Data Bowl + expected Yards
+- `KAGGLE:jpmiller/nfl-competition-data` — 🏈 NFL Stats for BDB 2024 and Fantasy Football
+
+**Hugging Face**
+- `HF:dismalnow/nfl-stats-2021-2025` — HF:dismalnow/nfl-stats-2021-2025
+- `HF:nfL6/yahoo_answers_qa` — HF:nfL6/yahoo_answers_qa
+- `HF:minmaxxxer/nfl-odds-2026` — HF:minmaxxxer/nfl-odds-2026
+- `HF:minmaxxxer/nfl-closing-lines-ats-2025` — HF:minmaxxxer/nfl-closing-lines-ats-2025
+- `HF:nfliu/decontextualization` — HF:nfliu/decontextualization
+
