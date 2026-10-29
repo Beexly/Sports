@@ -23,11 +23,22 @@ import argparse
 import datetime as dt
 import json
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
 
 REPO = Path(r"C:\Users\Garrett\Sports")
+if str(REPO / "scripts" / "ops") not in sys.path:
+    sys.path.insert(0, str(REPO / "scripts" / "ops"))
+
+from gse_coach_mind_simulator import (
+    load_sealed_object_readonly,
+    simulate_matchup_pbp,
+)
+
+SEALED_OBJ, SEALED_DIGEST = load_sealed_object_readonly()
+ABBR_MAP_JEV = {"LAR": "LA", "WSH": "WAS"}
 TRENDS_JSON = REPO / "data" / "engine" / "nfl_2026_w1_w7_trends_and_usage.json"
 ESPN_JSON = REPO / "docs" / "engine" / "research" / "2026-10-29" / "espn-scoreboard-week8-2026-10-29.json"
 OUT_WRITEUPS = REPO / "data" / "writeups" / "latest_slate_writeups.json"
@@ -84,10 +95,29 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
     combined_plays = (away_t["plays_per_game"] + home_t["plays_per_game"]) / 2.0
     pace_factor = combined_plays / 61.5
 
-    # Expected points from 2026 W1-7 efficiency + HFA (1.6 pts)
+    # Run 10,000-world JEV 175-snap clock-driven play-by-play simulation (gse_coach_mind_simulator.py, tau=0.42, Sinkhorn-Knopp OT)
+    jev_away = ABBR_MAP_JEV.get(g["awayAbbr"], g["awayAbbr"])
+    jev_home = ABBR_MAP_JEV.get(g["homeAbbr"], g["homeAbbr"])
+    jev_res = simulate_matchup_pbp(
+        jev_away,
+        jev_home,
+        [],
+        [],
+        SEALED_OBJ,
+        SEALED_DIGEST,
+        n_sims=n_sims,
+        seed=int(g["espnEventId"][-4:]),
+    )
+
+    # Expected points blending 2026 W1-7 efficiency (18,738 plays) + 10,000-sim JEV PBP state machine
     base_pts = 22.2 * pace_factor
-    away_mu = max(13.5, min(33.5, base_pts + away_matchup_epa * 31.0 - away_trench_pen - 0.8))
-    home_mu = max(13.5, min(34.5, base_pts + home_matchup_epa * 31.0 - home_trench_pen + 0.8))
+    w17_away_mu = max(13.5, min(33.5, base_pts + away_matchup_epa * 31.0 - away_trench_pen - 0.8))
+    w17_home_mu = max(13.5, min(34.5, base_pts + home_matchup_epa * 31.0 - home_trench_pen + 0.8))
+    jev_home_mu = 0.5 * (jev_res["median_total"] + jev_res["median_spread_home"])
+    jev_away_mu = 0.5 * (jev_res["median_total"] - jev_res["median_spread_home"])
+
+    away_mu = 0.65 * w17_away_mu + 0.35 * jev_away_mu
+    home_mu = 0.65 * w17_home_mu + 0.35 * jev_home_mu
 
     # Correlated bivariate normal game-script shock + team-specific variance
     env_shock = rng.normal(0.0, 4.2, size=n_sims)

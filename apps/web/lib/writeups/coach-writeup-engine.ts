@@ -265,18 +265,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "GB blitzes 33.2% (sack rate 5.44%) vs CAR OL 6.3% sack allowed; CAR blitzes 36.2% (sack rate 4.53%) vs GB OL 4.56% sack allowed.",
       "personnelTendencies": "CAR N_eff=7.1 (avg box faced 6.35) \u2022 GB N_eff=6.44 (avg box faced 6.5)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: CAR +0.041 (W6\u20137 -0.053, \u0394 -0.139) vs GB +0.001 (W6\u20137 +0.033, \u0394 +0.046); Def EPA/p: CAR +0.025 vs GB -0.027.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread GB -2.9 (Posted GB -3.5) \u2022 Fair Total 48.5 (Posted 47.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread GB -5.4 (Posted GB -3.5) \u2022 Fair Total 44.9 (Posted 47.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "Carolina Panthers +3.5",
+      "sideSelection": "Green Bay Packers -3.5",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0167,
+      "sideExpectedClv": 0.0702,
       "sideDecision": "PLAY",
-      "totalSelection": "OVER 47.5",
+      "totalSelection": "UNDER 47.5",
       "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0224,
+      "totalExpectedClv": 0.0724,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is GB -2.9 and fair total is 48.5 vs posted GB -3.5 / 47.5. GB W6\u2013W7 offensive EPA (+0.033) and defensive EPA (-0.027) vs CAR W6\u2013W7 offensive EPA (-0.053) and defensive EPA (+0.025) drive +1.7% side CLV and +2.2% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is GB -5.4 and fair total is 44.9 vs posted GB -3.5 / 47.5. GB W6\u2013W7 offensive EPA (+0.033) and defensive EPA (-0.027) vs CAR W6\u2013W7 offensive EPA (-0.053) and defensive EPA (+0.025) drive +7.0% side CLV and +7.2% total CLV."
     },
     "topProps": [
       {
@@ -286,7 +286,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 73.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0699,
+        "expectedClv": 0.0705,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 10.0 tgt/g (26.5% target share, 78.1 yd/g) in GB N_eff=6.44 target tree vs CAR 57.7% 1-High / 34.9% 2-High shells."
       },
@@ -297,7 +297,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 80.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0777,
+        "expectedClv": 0.0786,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 9.0 tgt/g (25.5% target share, 85.2 yd/g) in CAR N_eff=7.1 target tree vs GB 56.1% 2-High shells."
       },
@@ -308,7 +308,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 72.5,
         "side": "OVER",
         "confidence": "58/100",
-        "expectedClv": 0.0738,
+        "expectedClv": 0.0757,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 16.2 carries/g (68.0% team rush share, 76.5 rush yd/g) vs GB 6.49-man average box."
       }
@@ -317,19 +317,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "CAR @ GB 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Carolina Panthers +3.5 (Fair GB -2.9)",
+          "description": "Green Bay Packers -3.5 (Fair GB -5.4)",
           "pickType": "SPREAD",
-          "selection": "Carolina Panthers +3.5",
+          "selection": "Green Bay Packers -3.5",
           "confidence": "58/100",
-          "expectedClv": 0.0167,
+          "expectedClv": 0.0702,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 47.5 (Fair Total 48.5)",
+          "description": "UNDER 47.5 (Fair Total 44.9)",
           "pickType": "TOTAL",
-          "selection": "OVER 47.5",
+          "selection": "UNDER 47.5",
           "confidence": "57/100",
-          "expectedClv": 0.0224,
+          "expectedClv": 0.0724,
           "decision": "PLAY"
         },
         {
@@ -338,15 +338,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "M.Golden OVER 73.5 Rec Yds",
           "line": 73.5,
           "confidence": "60/100",
-          "expectedClv": 0.0699,
+          "expectedClv": 0.0705,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1886,
-      "fairOdds": "+430",
-      "marketOdds": "+611",
-      "edgeScore": 0.0339,
-      "correlationRationale": "Joint probability (18.9%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Carolina Panthers +3.5, OVER 47.5, and M.Golden target volume (10.0 tgt/g)."
+      "jointWinProb": 0.16,
+      "fairOdds": "+525",
+      "marketOdds": "+793",
+      "edgeScore": 0.0288,
+      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Green Bay Packers -3.5, UNDER 47.5, and M.Golden target volume (10.0 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -430,18 +430,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "BUF blitzes 35.0% (sack rate 3.85%) vs BAL OL 7.11% sack allowed; BAL blitzes 30.9% (sack rate 5.78%) vs BUF OL 5.38% sack allowed.",
       "personnelTendencies": "BAL N_eff=6.8 (avg box faced 6.44) \u2022 BUF N_eff=7.48 (avg box faced 6.49)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: BAL +0.071 (W6\u20137 -0.087, \u0394 -0.219) vs BUF +0.206 (W6\u20137 +0.185, \u0394 -0.025); Def EPA/p: BAL +0.026 vs BUF +0.148.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread BUF -2.8 (Posted BUF -3) \u2022 Fair Total 52.1 (Posted 54.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread BUF -1.8 (Posted BUF -3) \u2022 Fair Total 59.2 (Posted 54.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Baltimore Ravens +3",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0094,
+      "sideExpectedClv": 0.0407,
       "sideDecision": "PLAY",
-      "totalSelection": "UNDER 54.5",
-      "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0671,
+      "totalSelection": "OVER 54.5",
+      "totalConfidence": "62/100",
+      "totalExpectedClv": 0.1245,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is BUF -2.8 and fair total is 52.1 vs posted BUF -3 / 54.5. BUF W6\u2013W7 offensive EPA (+0.185) and defensive EPA (+0.148) vs BAL W6\u2013W7 offensive EPA (-0.087) and defensive EPA (+0.026) drive +0.9% side CLV and +6.7% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is BUF -1.8 and fair total is 59.2 vs posted BUF -3 / 54.5. BUF W6\u2013W7 offensive EPA (+0.185) and defensive EPA (+0.148) vs BAL W6\u2013W7 offensive EPA (-0.087) and defensive EPA (+0.026) drive +4.1% side CLV and +12.4% total CLV."
     },
     "topProps": [
       {
@@ -451,7 +451,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 42.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0598,
+        "expectedClv": 0.0596,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 5.3 tgt/g (19.6% target share, 46.7 yd/g) in BUF N_eff=7.48 target tree vs BAL 37.6% 1-High / 51.3% 2-High shells."
       },
@@ -473,7 +473,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 78.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0914,
+        "expectedClv": 0.0912,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 21.1 carries/g (78.7% team rush share, 83.0 rush yd/g) vs BUF 6.48-man average box."
       }
@@ -482,19 +482,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "BAL @ BUF 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Baltimore Ravens +3 (Fair BUF -2.8)",
+          "description": "Baltimore Ravens +3 (Fair BUF -1.8)",
           "pickType": "SPREAD",
           "selection": "Baltimore Ravens +3",
           "confidence": "58/100",
-          "expectedClv": 0.0094,
+          "expectedClv": 0.0407,
           "decision": "PLAY"
         },
         {
-          "description": "UNDER 54.5 (Fair Total 52.1)",
+          "description": "OVER 54.5 (Fair Total 59.2)",
           "pickType": "TOTAL",
-          "selection": "UNDER 54.5",
-          "confidence": "57/100",
-          "expectedClv": 0.0671,
+          "selection": "OVER 54.5",
+          "confidence": "62/100",
+          "expectedClv": 0.1245,
           "decision": "PLAY"
         },
         {
@@ -503,15 +503,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "K.Shakir OVER 42.5 Rec Yds",
           "line": 42.5,
           "confidence": "60/100",
-          "expectedClv": 0.0598,
+          "expectedClv": 0.0596,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.16,
-      "fairOdds": "+525",
-      "marketOdds": "+793",
-      "edgeScore": 0.0288,
-      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Baltimore Ravens +3, UNDER 54.5, and K.Shakir target volume (5.3 tgt/g)."
+      "jointWinProb": 0.2223,
+      "fairOdds": "+350",
+      "marketOdds": "+474",
+      "edgeScore": 0.04,
+      "correlationRationale": "Joint probability (22.2%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Baltimore Ravens +3, OVER 54.5, and K.Shakir target volume (5.3 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -595,18 +595,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "CIN blitzes 16.8% (sack rate 8.43%) vs TEN OL 4.45% sack allowed; TEN blitzes 23.2% (sack rate 6.46%) vs CIN OL 4.07% sack allowed.",
       "personnelTendencies": "TEN N_eff=6.37 (avg box faced 6.27) \u2022 CIN N_eff=6.82 (avg box faced 6.26)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: TEN -0.121 (W6\u20137 -0.083, \u0394 +0.053) vs CIN +0.108 (W6\u20137 +0.349, \u0394 +0.281); Def EPA/p: TEN +0.045 vs CIN -0.033.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread CIN -7.3 (Posted CIN -10) \u2022 Fair Total 43.7 (Posted 46.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread CIN -11.8 (Posted CIN -10) \u2022 Fair Total 45.2 (Posted 46.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "Tennessee Titans +10",
-      "sideConfidence": "59/100",
-      "sideExpectedClv": 0.0879,
+      "sideSelection": "Cincinnati Bengals -10",
+      "sideConfidence": "58/100",
+      "sideExpectedClv": 0.0664,
       "sideDecision": "PLAY",
       "totalSelection": "UNDER 46.5",
-      "totalConfidence": "58/100",
-      "totalExpectedClv": 0.0802,
+      "totalConfidence": "57/100",
+      "totalExpectedClv": 0.0384,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is CIN -7.3 and fair total is 43.7 vs posted CIN -10 / 46.5. CIN W6\u2013W7 offensive EPA (+0.349) and defensive EPA (-0.033) vs TEN W6\u2013W7 offensive EPA (-0.083) and defensive EPA (+0.045) drive +8.8% side CLV and +8.0% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is CIN -11.8 and fair total is 45.2 vs posted CIN -10 / 46.5. CIN W6\u2013W7 offensive EPA (+0.349) and defensive EPA (-0.033) vs TEN W6\u2013W7 offensive EPA (-0.083) and defensive EPA (+0.045) drive +6.6% side CLV and +3.8% total CLV."
     },
     "topProps": [
       {
@@ -616,7 +616,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 90.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0722,
+        "expectedClv": 0.0725,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 8.3 tgt/g (23.4% target share, 95.2 yd/g) in CIN N_eff=6.82 target tree vs TEN 44.5% 1-High / 48.4% 2-High shells."
       },
@@ -627,7 +627,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 54.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.066,
+        "expectedClv": 0.0673,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 7.3 tgt/g (26.0% target share, 59.0 yd/g) in TEN N_eff=6.37 target tree vs CIN 38.0% 2-High shells."
       },
@@ -637,8 +637,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "propType": "Rushing Yards",
         "line": 64.5,
         "side": "OVER",
-        "confidence": "58/100",
-        "expectedClv": 0.082,
+        "confidence": "59/100",
+        "expectedClv": 0.0853,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 16.0 carries/g (76.2% team rush share, 68.3 rush yd/g) vs CIN 6.31-man average box."
       }
@@ -647,19 +647,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "TEN @ CIN 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Tennessee Titans +10 (Fair CIN -7.3)",
+          "description": "Cincinnati Bengals -10 (Fair CIN -11.8)",
           "pickType": "SPREAD",
-          "selection": "Tennessee Titans +10",
-          "confidence": "59/100",
-          "expectedClv": 0.0879,
+          "selection": "Cincinnati Bengals -10",
+          "confidence": "58/100",
+          "expectedClv": 0.0664,
           "decision": "PLAY"
         },
         {
-          "description": "UNDER 46.5 (Fair Total 43.7)",
+          "description": "UNDER 46.5 (Fair Total 45.2)",
           "pickType": "TOTAL",
           "selection": "UNDER 46.5",
-          "confidence": "58/100",
-          "expectedClv": 0.0802,
+          "confidence": "57/100",
+          "expectedClv": 0.0384,
           "decision": "PLAY"
         },
         {
@@ -668,7 +668,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "T.Higgins OVER 90.5 Rec Yds",
           "line": 90.5,
           "confidence": "60/100",
-          "expectedClv": 0.0722,
+          "expectedClv": 0.0725,
           "decision": "PLAY"
         }
       ],
@@ -676,7 +676,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+525",
       "marketOdds": "+793",
       "edgeScore": 0.0288,
-      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Tennessee Titans +10, UNDER 46.5, and T.Higgins target volume (8.3 tgt/g)."
+      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Cincinnati Bengals -10, UNDER 46.5, and T.Higgins target volume (8.3 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -760,18 +760,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "DAL blitzes 24.7% (sack rate 3.75%) vs ARI OL 4.66% sack allowed; ARI blitzes 30.9% (sack rate 6.2%) vs DAL OL 2.22% sack allowed.",
       "personnelTendencies": "ARI N_eff=5.71 (avg box faced 6.32) \u2022 DAL N_eff=5.41 (avg box faced 6.48)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: ARI -0.024 (W6\u20137 -0.048, \u0394 -0.036) vs DAL +0.141 (W6\u20137 +0.106, \u0394 -0.051); Def EPA/p: ARI +0.102 vs DAL +0.140.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread DAL -3.4 (Posted DAL -7) \u2022 Fair Total 54.0 (Posted 54.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread DAL -3.2 (Posted DAL -7) \u2022 Fair Total 48.4 (Posted 54.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Arizona Cardinals +7",
-      "sideConfidence": "61/100",
-      "sideExpectedClv": 0.1136,
+      "sideConfidence": "62/100",
+      "sideExpectedClv": 0.1195,
       "sideDecision": "PLAY",
       "totalSelection": "UNDER 54.5",
-      "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0175,
+      "totalConfidence": "67/100",
+      "totalExpectedClv": 0.1672,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DAL -3.4 and fair total is 54.0 vs posted DAL -7 / 54.5. DAL W6\u2013W7 offensive EPA (+0.106) and defensive EPA (+0.140) vs ARI W6\u2013W7 offensive EPA (-0.048) and defensive EPA (+0.102) drive +11.4% side CLV and +1.8% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DAL -3.2 and fair total is 48.4 vs posted DAL -7 / 54.5. DAL W6\u2013W7 offensive EPA (+0.106) and defensive EPA (+0.140) vs ARI W6\u2013W7 offensive EPA (-0.048) and defensive EPA (+0.102) drive +11.9% side CLV and +16.7% total CLV."
     },
     "topProps": [
       {
@@ -781,7 +781,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 89.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.053,
+        "expectedClv": 0.0533,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 11.9 tgt/g (30.9% target share, 93.3 yd/g) in DAL N_eff=5.41 target tree vs ARI 29.4% 1-High / 59.8% 2-High shells."
       },
@@ -792,7 +792,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 63.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0561,
+        "expectedClv": 0.057,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 11.1 tgt/g (28.7% target share, 67.4 yd/g) in ARI N_eff=5.71 target tree vs DAL 31.7% 2-High shells."
       },
@@ -812,19 +812,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "ARI @ DAL 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Arizona Cardinals +7 (Fair DAL -3.4)",
+          "description": "Arizona Cardinals +7 (Fair DAL -3.2)",
           "pickType": "SPREAD",
           "selection": "Arizona Cardinals +7",
-          "confidence": "61/100",
-          "expectedClv": 0.1136,
+          "confidence": "62/100",
+          "expectedClv": 0.1195,
           "decision": "PLAY"
         },
         {
-          "description": "UNDER 54.5 (Fair Total 54.0)",
+          "description": "UNDER 54.5 (Fair Total 48.4)",
           "pickType": "TOTAL",
           "selection": "UNDER 54.5",
-          "confidence": "57/100",
-          "expectedClv": 0.0175,
+          "confidence": "67/100",
+          "expectedClv": 0.1672,
           "decision": "PLAY"
         },
         {
@@ -833,7 +833,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "C.Lamb OVER 89.5 Rec Yds",
           "line": 89.5,
           "confidence": "60/100",
-          "expectedClv": 0.053,
+          "expectedClv": 0.0533,
           "decision": "PLAY"
         }
       ],
@@ -925,18 +925,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "DET blitzes 28.0% (sack rate 6.84%) vs MIN OL 8.33% sack allowed; MIN blitzes 71.0% (sack rate 9.86%) vs DET OL 4.86% sack allowed.",
       "personnelTendencies": "MIN N_eff=7.16 (avg box faced 6.47) \u2022 DET N_eff=4.95 (avg box faced 6.36)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: MIN -0.096 (W6\u20137 -0.072, \u0394 +0.028) vs DET +0.144 (W6\u20137 -0.021, \u0394 -0.197); Def EPA/p: MIN -0.220 vs DET +0.146.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread DET +0.6 (Posted DET -3) \u2022 Fair Total 45.5 (Posted 46.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread DET -3.4 (Posted DET -3) \u2022 Fair Total 53.5 (Posted 46.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "Minnesota Vikings +3",
-      "sideConfidence": "62/100",
-      "sideExpectedClv": 0.1233,
+      "sideSelection": "Detroit Lions -3",
+      "sideConfidence": "58/100",
+      "sideExpectedClv": 0.0091,
       "sideDecision": "PLAY",
-      "totalSelection": "UNDER 46.5",
-      "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0349,
+      "totalSelection": "OVER 46.5",
+      "totalConfidence": "68/100",
+      "totalExpectedClv": 0.1824,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DET +0.6 and fair total is 45.5 vs posted DET -3 / 46.5. DET W6\u2013W7 offensive EPA (-0.021) and defensive EPA (+0.146) vs MIN W6\u2013W7 offensive EPA (-0.072) and defensive EPA (-0.220) drive +12.3% side CLV and +3.5% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DET -3.4 and fair total is 53.5 vs posted DET -3 / 46.5. DET W6\u2013W7 offensive EPA (-0.021) and defensive EPA (+0.146) vs MIN W6\u2013W7 offensive EPA (-0.072) and defensive EPA (-0.220) drive +0.9% side CLV and +18.2% total CLV."
     },
     "topProps": [
       {
@@ -946,7 +946,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 84.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0649,
+        "expectedClv": 0.0644,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 11.3 tgt/g (31.1% target share, 89.0 yd/g) in DET N_eff=4.95 target tree vs MIN 35.7% 1-High / 53.1% 2-High shells."
       },
@@ -957,7 +957,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 46.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0586,
+        "expectedClv": 0.0579,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 5.3 tgt/g (20.8% target share, 50.7 yd/g) in MIN N_eff=7.16 target tree vs DET 32.7% 2-High shells."
       },
@@ -968,7 +968,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 68.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0856,
+        "expectedClv": 0.0852,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 17.5 carries/g (68.6% team rush share, 72.7 rush yd/g) vs DET 6.45-man average box."
       }
@@ -977,19 +977,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "MIN @ DET 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Minnesota Vikings +3 (Fair DET +0.6)",
+          "description": "Detroit Lions -3 (Fair DET -3.4)",
           "pickType": "SPREAD",
-          "selection": "Minnesota Vikings +3",
-          "confidence": "62/100",
-          "expectedClv": 0.1233,
+          "selection": "Detroit Lions -3",
+          "confidence": "58/100",
+          "expectedClv": 0.0091,
           "decision": "PLAY"
         },
         {
-          "description": "UNDER 46.5 (Fair Total 45.5)",
+          "description": "OVER 46.5 (Fair Total 53.5)",
           "pickType": "TOTAL",
-          "selection": "UNDER 46.5",
-          "confidence": "57/100",
-          "expectedClv": 0.0349,
+          "selection": "OVER 46.5",
+          "confidence": "68/100",
+          "expectedClv": 0.1824,
           "decision": "PLAY"
         },
         {
@@ -998,15 +998,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "A.St. Brown OVER 84.5 Rec Yds",
           "line": 84.5,
           "confidence": "60/100",
-          "expectedClv": 0.0649,
+          "expectedClv": 0.0644,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.16,
-      "fairOdds": "+525",
-      "marketOdds": "+793",
-      "edgeScore": 0.0288,
-      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Minnesota Vikings +3, UNDER 46.5, and A.St. Brown target volume (11.3 tgt/g)."
+      "jointWinProb": 0.2757,
+      "fairOdds": "+263",
+      "marketOdds": "+339",
+      "edgeScore": 0.0496,
+      "correlationRationale": "Joint probability (27.6%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Detroit Lions -3, OVER 46.5, and A.St. Brown target volume (11.3 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1090,18 +1090,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "NYJ blitzes 37.5% (sack rate 7.14%) vs LV OL 3.29% sack allowed; LV blitzes 26.7% (sack rate 5.86%) vs NYJ OL 8.27% sack allowed.",
       "personnelTendencies": "LV N_eff=7.11 (avg box faced 6.39) \u2022 NYJ N_eff=7.92 (avg box faced 6.47)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: LV +0.013 (W6\u20137 -0.002, \u0394 -0.020) vs NYJ +0.014 (W6\u20137 +0.112, \u0394 +0.136); Def EPA/p: LV +0.038 vs NYJ +0.016.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread NYJ -3.0 (Posted NYJ -1.5) \u2022 Fair Total 48.7 (Posted 45.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread NYJ -0.3 (Posted NYJ -1.5) \u2022 Fair Total 44.8 (Posted 45.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "New York Jets -1.5",
+      "sideSelection": "Las Vegas Raiders +1.5",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0515,
+      "sideExpectedClv": 0.0416,
       "sideDecision": "PLAY",
-      "totalSelection": "OVER 45.5",
-      "totalConfidence": "58/100",
-      "totalExpectedClv": 0.0835,
+      "totalSelection": "UNDER 45.5",
+      "totalConfidence": "57/100",
+      "totalExpectedClv": 0.0244,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is NYJ -3.0 and fair total is 48.7 vs posted NYJ -1.5 / 45.5. NYJ W6\u2013W7 offensive EPA (+0.112) and defensive EPA (+0.016) vs LV W6\u2013W7 offensive EPA (-0.002) and defensive EPA (+0.038) drive +5.1% side CLV and +8.3% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is NYJ -0.3 and fair total is 44.8 vs posted NYJ -1.5 / 45.5. NYJ W6\u2013W7 offensive EPA (+0.112) and defensive EPA (+0.016) vs LV W6\u2013W7 offensive EPA (-0.002) and defensive EPA (+0.038) drive +4.2% side CLV and +2.4% total CLV."
     },
     "topProps": [
       {
@@ -1111,7 +1111,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 59.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0611,
+        "expectedClv": 0.0615,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 7.4 tgt/g (26.0% target share, 63.4 yd/g) in NYJ N_eff=7.92 target tree vs LV 47.6% 1-High / 36.4% 2-High shells."
       },
@@ -1122,7 +1122,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 60.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0556,
+        "expectedClv": 0.056,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 7.4 tgt/g (20.2% target share, 65.0 yd/g) in LV N_eff=7.11 target tree vs NYJ 44.0% 2-High shells."
       },
@@ -1133,7 +1133,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 42.5,
         "side": "OVER",
         "confidence": "58/100",
-        "expectedClv": 0.0802,
+        "expectedClv": 0.0797,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 15.1 carries/g (66.2% team rush share, 46.9 rush yd/g) vs NYJ 6.45-man average box."
       }
@@ -1142,19 +1142,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "LV @ NYJ 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "New York Jets -1.5 (Fair NYJ -3.0)",
+          "description": "Las Vegas Raiders +1.5 (Fair NYJ -0.3)",
           "pickType": "SPREAD",
-          "selection": "New York Jets -1.5",
+          "selection": "Las Vegas Raiders +1.5",
           "confidence": "58/100",
-          "expectedClv": 0.0515,
+          "expectedClv": 0.0416,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 45.5 (Fair Total 48.7)",
+          "description": "UNDER 45.5 (Fair Total 44.8)",
           "pickType": "TOTAL",
-          "selection": "OVER 45.5",
-          "confidence": "58/100",
-          "expectedClv": 0.0835,
+          "selection": "UNDER 45.5",
+          "confidence": "57/100",
+          "expectedClv": 0.0244,
           "decision": "PLAY"
         },
         {
@@ -1163,15 +1163,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "G.Wilson OVER 59.5 Rec Yds",
           "line": 59.5,
           "confidence": "60/100",
-          "expectedClv": 0.0611,
+          "expectedClv": 0.0615,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.263,
-      "fairOdds": "+280",
-      "marketOdds": "+365",
-      "edgeScore": 0.0473,
-      "correlationRationale": "Joint probability (26.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling New York Jets -1.5, OVER 45.5, and G.Wilson target volume (7.4 tgt/g)."
+      "jointWinProb": 0.16,
+      "fairOdds": "+525",
+      "marketOdds": "+793",
+      "edgeScore": 0.0288,
+      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Las Vegas Raiders +1.5, UNDER 45.5, and G.Wilson target volume (7.4 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1255,18 +1255,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "PIT blitzes 27.0% (sack rate 6.47%) vs CLE OL 8.99% sack allowed; CLE blitzes 24.1% (sack rate 7.19%) vs PIT OL 7.07% sack allowed.",
       "personnelTendencies": "CLE N_eff=6.5 (avg box faced 6.27) \u2022 PIT N_eff=7.05 (avg box faced 6.35)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: CLE -0.037 (W6\u20137 +0.023, \u0394 +0.087) vs PIT -0.029 (W6\u20137 -0.041, \u0394 -0.018); Def EPA/p: CLE -0.039 vs PIT -0.041.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread PIT -1.5 (Posted PIT -3.5) \u2022 Fair Total 44.0 (Posted 39.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread PIT -4.4 (Posted PIT -3.5) \u2022 Fair Total 46.7 (Posted 39.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "Cleveland Browns +3.5",
+      "sideSelection": "Pittsburgh Steelers -3.5",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0712,
+      "sideExpectedClv": 0.0241,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 39.5",
-      "totalConfidence": "62/100",
-      "totalExpectedClv": 0.1207,
+      "totalConfidence": "68/100",
+      "totalExpectedClv": 0.1815,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is PIT -1.5 and fair total is 44.0 vs posted PIT -3.5 / 39.5. PIT W6\u2013W7 offensive EPA (-0.041) and defensive EPA (-0.041) vs CLE W6\u2013W7 offensive EPA (+0.023) and defensive EPA (-0.039) drive +7.1% side CLV and +12.1% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is PIT -4.4 and fair total is 46.7 vs posted PIT -3.5 / 39.5. PIT W6\u2013W7 offensive EPA (-0.041) and defensive EPA (-0.041) vs CLE W6\u2013W7 offensive EPA (+0.023) and defensive EPA (-0.039) drive +2.4% side CLV and +18.1% total CLV."
     },
     "topProps": [
       {
@@ -1276,7 +1276,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 49.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0695,
+        "expectedClv": 0.0693,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 8.3 tgt/g (23.5% target share, 53.4 yd/g) in PIT N_eff=7.05 target tree vs CLE 74.8% 1-High / 21.0% 2-High shells."
       },
@@ -1287,7 +1287,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 40.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0682,
+        "expectedClv": 0.0677,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 6.4 tgt/g (21.6% target share, 45.0 yd/g) in CLE N_eff=6.5 target tree vs PIT 47.2% 2-High shells."
       },
@@ -1298,7 +1298,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 41.5,
         "side": "OVER",
         "confidence": "58/100",
-        "expectedClv": 0.0676,
+        "expectedClv": 0.0684,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 12.9 carries/g (58.1% team rush share, 45.3 rush yd/g) vs PIT 6.51-man average box."
       }
@@ -1307,19 +1307,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "CLE @ PIT 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Cleveland Browns +3.5 (Fair PIT -1.5)",
+          "description": "Pittsburgh Steelers -3.5 (Fair PIT -4.4)",
           "pickType": "SPREAD",
-          "selection": "Cleveland Browns +3.5",
+          "selection": "Pittsburgh Steelers -3.5",
           "confidence": "58/100",
-          "expectedClv": 0.0712,
+          "expectedClv": 0.0241,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 39.5 (Fair Total 44.0)",
+          "description": "OVER 39.5 (Fair Total 46.7)",
           "pickType": "TOTAL",
           "selection": "OVER 39.5",
-          "confidence": "62/100",
-          "expectedClv": 0.1207,
+          "confidence": "68/100",
+          "expectedClv": 0.1815,
           "decision": "PLAY"
         },
         {
@@ -1328,15 +1328,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "D.Metcalf OVER 49.5 Rec Yds",
           "line": 49.5,
           "confidence": "60/100",
-          "expectedClv": 0.0695,
+          "expectedClv": 0.0693,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2372,
-      "fairOdds": "+322",
-      "marketOdds": "+429",
-      "edgeScore": 0.0427,
-      "correlationRationale": "Joint probability (23.7%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Cleveland Browns +3.5, OVER 39.5, and D.Metcalf target volume (8.3 tgt/g)."
+      "jointWinProb": 0.2856,
+      "fairOdds": "+250",
+      "marketOdds": "+321",
+      "edgeScore": 0.0514,
+      "correlationRationale": "Joint probability (28.6%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Pittsburgh Steelers -3.5, OVER 39.5, and D.Metcalf target volume (8.3 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1420,18 +1420,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "TB blitzes 40.6% (sack rate 5.65%) vs ATL OL 6.67% sack allowed; ATL blitzes 24.7% (sack rate 5.18%) vs TB OL 8.12% sack allowed.",
       "personnelTendencies": "ATL N_eff=6.22 (avg box faced 6.53) \u2022 TB N_eff=6.49 (avg box faced 6.39)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: ATL -0.030 (W6\u20137 -0.046, \u0394 -0.022) vs TB -0.081 (W6\u20137 -0.056, \u0394 +0.037); Def EPA/p: ATL -0.022 vs TB -0.108.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread TB -3.1 (Posted TB -2.5) \u2022 Fair Total 42.3 (Posted 44.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread TB -4.4 (Posted TB -2.5) \u2022 Fair Total 45.2 (Posted 44.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Tampa Bay Buccaneers -2.5",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0231,
+      "sideExpectedClv": 0.0665,
       "sideDecision": "PLAY",
-      "totalSelection": "UNDER 44.5",
+      "totalSelection": "OVER 44.5",
       "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0655,
+      "totalExpectedClv": 0.013,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is TB -3.1 and fair total is 42.3 vs posted TB -2.5 / 44.5. TB W6\u2013W7 offensive EPA (-0.056) and defensive EPA (-0.108) vs ATL W6\u2013W7 offensive EPA (-0.046) and defensive EPA (-0.022) drive +2.3% side CLV and +6.6% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is TB -4.4 and fair total is 45.2 vs posted TB -2.5 / 44.5. TB W6\u2013W7 offensive EPA (-0.056) and defensive EPA (-0.108) vs ATL W6\u2013W7 offensive EPA (-0.046) and defensive EPA (-0.022) drive +6.7% side CLV and +1.3% total CLV."
     },
     "topProps": [
       {
@@ -1452,7 +1452,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 86.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0624,
+        "expectedClv": 0.0616,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 8.1 tgt/g (29.2% target share, 90.3 yd/g) in ATL N_eff=6.22 target tree vs TB 34.5% 2-High shells."
       },
@@ -1463,7 +1463,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 96.5,
         "side": "OVER",
         "confidence": "58/100",
-        "expectedClv": 0.0832,
+        "expectedClv": 0.0828,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 18.7 carries/g (68.6% team rush share, 100.6 rush yd/g) vs TB 6.68-man average box."
       }
@@ -1472,19 +1472,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "ATL @ TB 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Tampa Bay Buccaneers -2.5 (Fair TB -3.1)",
+          "description": "Tampa Bay Buccaneers -2.5 (Fair TB -4.4)",
           "pickType": "SPREAD",
           "selection": "Tampa Bay Buccaneers -2.5",
           "confidence": "58/100",
-          "expectedClv": 0.0231,
+          "expectedClv": 0.0665,
           "decision": "PLAY"
         },
         {
-          "description": "UNDER 44.5 (Fair Total 42.3)",
+          "description": "OVER 44.5 (Fair Total 45.2)",
           "pickType": "TOTAL",
-          "selection": "UNDER 44.5",
+          "selection": "OVER 44.5",
           "confidence": "57/100",
-          "expectedClv": 0.0655,
+          "expectedClv": 0.013,
           "decision": "PLAY"
         },
         {
@@ -1497,11 +1497,11 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.16,
-      "fairOdds": "+525",
-      "marketOdds": "+793",
-      "edgeScore": 0.0288,
-      "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Tampa Bay Buccaneers -2.5, UNDER 44.5, and E.Egbuka target volume (7.0 tgt/g)."
+      "jointWinProb": 0.2128,
+      "fairOdds": "+370",
+      "marketOdds": "+507",
+      "edgeScore": 0.0383,
+      "correlationRationale": "Joint probability (21.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Tampa Bay Buccaneers -2.5, OVER 44.5, and E.Egbuka target volume (7.0 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1585,18 +1585,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "JAX blitzes 30.6% (sack rate 4.37%) vs IND OL 6.96% sack allowed; IND blitzes 22.0% (sack rate 5.12%) vs JAX OL 4.65% sack allowed.",
       "personnelTendencies": "IND N_eff=7.31 (avg box faced 6.4) \u2022 JAX N_eff=6.58 (avg box faced 6.38)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: IND -0.063 (W6\u20137 -0.121, \u0394 -0.084) vs JAX +0.114 (W6\u20137 +0.155, \u0394 +0.050); Def EPA/p: IND +0.032 vs JAX -0.016.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread JAX -3.2 (Posted JAX -10) \u2022 Fair Total 48.7 (Posted 46.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread JAX -3.4 (Posted JAX -10) \u2022 Fair Total 47.4 (Posted 46.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Indianapolis Colts +10",
-      "sideConfidence": "72/100",
-      "sideExpectedClv": 0.2166,
+      "sideConfidence": "71/100",
+      "sideExpectedClv": 0.211,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 46.5",
       "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0573,
+      "totalExpectedClv": 0.0208,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is JAX -3.2 and fair total is 48.7 vs posted JAX -10 / 46.5. JAX W6\u2013W7 offensive EPA (+0.155) and defensive EPA (-0.016) vs IND W6\u2013W7 offensive EPA (-0.121) and defensive EPA (+0.032) drive +21.7% side CLV and +5.7% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is JAX -3.4 and fair total is 47.4 vs posted JAX -10 / 46.5. JAX W6\u2013W7 offensive EPA (+0.155) and defensive EPA (-0.016) vs IND W6\u2013W7 offensive EPA (-0.121) and defensive EPA (+0.032) drive +21.1% side CLV and +2.1% total CLV."
     },
     "topProps": [
       {
@@ -1628,7 +1628,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 79.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0895,
+        "expectedClv": 0.0897,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 20.0 carries/g (73.7% team rush share, 83.9 rush yd/g) vs JAX 6.34-man average box."
       }
@@ -1637,19 +1637,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "IND @ JAX 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Indianapolis Colts +10 (Fair JAX -3.2)",
+          "description": "Indianapolis Colts +10 (Fair JAX -3.4)",
           "pickType": "SPREAD",
           "selection": "Indianapolis Colts +10",
-          "confidence": "72/100",
-          "expectedClv": 0.2166,
+          "confidence": "71/100",
+          "expectedClv": 0.211,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 46.5 (Fair Total 48.7)",
+          "description": "OVER 46.5 (Fair Total 47.4)",
           "pickType": "TOTAL",
           "selection": "OVER 46.5",
           "confidence": "57/100",
-          "expectedClv": 0.0573,
+          "expectedClv": 0.0208,
           "decision": "PLAY"
         },
         {
@@ -1662,11 +1662,11 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2877,
-      "fairOdds": "+248",
-      "marketOdds": "+317",
-      "edgeScore": 0.0518,
-      "correlationRationale": "Joint probability (28.8%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Indianapolis Colts +10, OVER 46.5, and P.Washington target volume (7.7 tgt/g)."
+      "jointWinProb": 0.2731,
+      "fairOdds": "+266",
+      "marketOdds": "+344",
+      "edgeScore": 0.0492,
+      "correlationRationale": "Joint probability (27.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Indianapolis Colts +10, OVER 46.5, and P.Washington target volume (7.7 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1750,18 +1750,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "LAR blitzes 29.6% (sack rate 3.7%) vs LAC OL 8.82% sack allowed; LAC blitzes 27.5% (sack rate 5.39%) vs LAR OL 3.5% sack allowed.",
       "personnelTendencies": "LAC N_eff=11.07 (avg box faced 6.34) \u2022 LAR N_eff=7.18 (avg box faced 6.41)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: LAC -0.209 (W6\u20137 -0.292, \u0394 -0.100) vs LAR +0.055 (W6\u20137 +0.025, \u0394 -0.040); Def EPA/p: LAC -0.034 vs LAR -0.039.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread LAR -6.4 (Posted LAR -6.5) \u2022 Fair Total 45.9 (Posted 45.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread LAR -7.9 (Posted LAR -6.5) \u2022 Fair Total 47.9 (Posted 45.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Los Angeles Rams -6.5",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.008,
+      "sideExpectedClv": 0.0508,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 45.5",
       "totalConfidence": "57/100",
-      "totalExpectedClv": 0.008,
+      "totalExpectedClv": 0.0662,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is LAR -6.4 and fair total is 45.9 vs posted LAR -6.5 / 45.5. LAR W6\u2013W7 offensive EPA (+0.025) and defensive EPA (-0.039) vs LAC W6\u2013W7 offensive EPA (-0.292) and defensive EPA (-0.034) drive +0.8% side CLV and +0.8% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is LAR -7.9 and fair total is 47.9 vs posted LAR -6.5 / 45.5. LAR W6\u2013W7 offensive EPA (+0.025) and defensive EPA (-0.039) vs LAC W6\u2013W7 offensive EPA (-0.292) and defensive EPA (-0.034) drive +5.1% side CLV and +6.6% total CLV."
     },
     "topProps": [
       {
@@ -1771,7 +1771,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 65.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0547,
+        "expectedClv": 0.0545,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 8.9 tgt/g (22.9% target share, 69.3 yd/g) in LAR N_eff=7.18 target tree vs LAC 41.8% 1-High / 47.1% 2-High shells."
       },
@@ -1793,7 +1793,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 43.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.1018,
+        "expectedClv": 0.1015,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 13.3 carries/g (53.3% team rush share, 48.2 rush yd/g) vs LAR 6.38-man average box."
       }
@@ -1802,19 +1802,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "LAC @ LAR 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Los Angeles Rams -6.5 (Fair LAR -6.4)",
+          "description": "Los Angeles Rams -6.5 (Fair LAR -7.9)",
           "pickType": "SPREAD",
           "selection": "Los Angeles Rams -6.5",
           "confidence": "58/100",
-          "expectedClv": 0.008,
+          "expectedClv": 0.0508,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 45.5 (Fair Total 45.9)",
+          "description": "OVER 45.5 (Fair Total 47.9)",
           "pickType": "TOTAL",
           "selection": "OVER 45.5",
           "confidence": "57/100",
-          "expectedClv": 0.008,
+          "expectedClv": 0.0662,
           "decision": "PLAY"
         },
         {
@@ -1823,15 +1823,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "P.Nacua OVER 65.5 Rec Yds",
           "line": 65.5,
           "confidence": "60/100",
-          "expectedClv": 0.0547,
+          "expectedClv": 0.0545,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2206,
-      "fairOdds": "+353",
-      "marketOdds": "+479",
-      "edgeScore": 0.0397,
-      "correlationRationale": "Joint probability (22.1%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Los Angeles Rams -6.5, OVER 45.5, and P.Nacua target volume (8.9 tgt/g)."
+      "jointWinProb": 0.2615,
+      "fairOdds": "+282",
+      "marketOdds": "+368",
+      "edgeScore": 0.0471,
+      "correlationRationale": "Joint probability (26.2%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Los Angeles Rams -6.5, OVER 45.5, and P.Nacua target volume (8.9 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1915,18 +1915,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "DEN blitzes 35.7% (sack rate 6.69%) vs KC OL 3.14% sack allowed; KC blitzes 26.1% (sack rate 3.23%) vs DEN OL 3.53% sack allowed.",
       "personnelTendencies": "KC N_eff=7.63 (avg box faced 6.4) \u2022 DEN N_eff=7.74 (avg box faced 6.32)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: KC +0.101 (W6\u20137 -0.027, \u0394 -0.183) vs DEN -0.032 (W6\u20137 +0.027, \u0394 +0.081); Def EPA/p: KC -0.043 vs DEN -0.049.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread DEN -0.7 (Posted KC -1.5) \u2022 Fair Total 43.1 (Posted 40.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread DEN +3.0 (Posted KC -1.5) \u2022 Fair Total 49.5 (Posted 40.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "Denver Broncos +1.5",
+      "sideSelection": "Kansas City Chiefs -1.5",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0748,
+      "sideExpectedClv": 0.0553,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 40.5",
-      "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0648,
+      "totalConfidence": "73/100",
+      "totalExpectedClv": 0.229,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DEN -0.7 and fair total is 43.1 vs posted KC -1.5 / 40.5. DEN W6\u2013W7 offensive EPA (+0.027) and defensive EPA (-0.049) vs KC W6\u2013W7 offensive EPA (-0.027) and defensive EPA (-0.043) drive +7.5% side CLV and +6.5% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DEN +3.0 and fair total is 49.5 vs posted KC -1.5 / 40.5. DEN W6\u2013W7 offensive EPA (+0.027) and defensive EPA (-0.049) vs KC W6\u2013W7 offensive EPA (-0.027) and defensive EPA (-0.043) drive +5.5% side CLV and +22.9% total CLV."
     },
     "topProps": [
       {
@@ -1936,7 +1936,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 38.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0201,
+        "expectedClv": 0.0191,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 6.6 tgt/g (23.2% target share, 39.7 yd/g) in DEN N_eff=7.74 target tree vs KC 43.6% 1-High / 38.8% 2-High shells."
       },
@@ -1958,7 +1958,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 112.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0925,
+        "expectedClv": 0.0906,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 20.0 carries/g (83.9% team rush share, 116.8 rush yd/g) vs DEN 6.41-man average box."
       }
@@ -1967,19 +1967,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "KC @ DEN 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Denver Broncos +1.5 (Fair DEN -0.7)",
+          "description": "Kansas City Chiefs -1.5 (Fair DEN +3.0)",
           "pickType": "SPREAD",
-          "selection": "Denver Broncos +1.5",
+          "selection": "Kansas City Chiefs -1.5",
           "confidence": "58/100",
-          "expectedClv": 0.0748,
+          "expectedClv": 0.0553,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 40.5 (Fair Total 43.1)",
+          "description": "OVER 40.5 (Fair Total 49.5)",
           "pickType": "TOTAL",
           "selection": "OVER 40.5",
-          "confidence": "57/100",
-          "expectedClv": 0.0648,
+          "confidence": "73/100",
+          "expectedClv": 0.229,
           "decision": "PLAY"
         },
         {
@@ -1988,15 +1988,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "J.Waddle OVER 38.5 Rec Yds",
           "line": 38.5,
           "confidence": "60/100",
-          "expectedClv": 0.0201,
+          "expectedClv": 0.0191,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2533,
-      "fairOdds": "+295",
-      "marketOdds": "+387",
-      "edgeScore": 0.0456,
-      "correlationRationale": "Joint probability (25.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Denver Broncos +1.5, OVER 40.5, and J.Waddle target volume (6.6 tgt/g)."
+      "jointWinProb": 0.2253,
+      "fairOdds": "+344",
+      "marketOdds": "+464",
+      "edgeScore": 0.0406,
+      "correlationRationale": "Joint probability (22.5%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Kansas City Chiefs -1.5, OVER 40.5, and J.Waddle target volume (6.6 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2080,18 +2080,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "MIA blitzes 26.7% (sack rate 2.91%) vs NE OL 4.73% sack allowed; NE blitzes 39.8% (sack rate 6.39%) vs MIA OL 7.96% sack allowed.",
       "personnelTendencies": "NE N_eff=9.18 (avg box faced 6.48) \u2022 MIA N_eff=7.07 (avg box faced 6.49)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: NE +0.054 (W6\u20137 +0.071, \u0394 +0.023) vs MIA -0.046 (W6\u20137 +0.285, \u0394 +0.402); Def EPA/p: NE +0.015 vs MIA +0.129.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread MIA +0.4 (Posted NE -7) \u2022 Fair Total 50.4 (Posted 43.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread MIA -0.8 (Posted NE -7) \u2022 Fair Total 45.8 (Posted 43.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Miami Dolphins +7",
-      "sideConfidence": "71/100",
-      "sideExpectedClv": 0.2055,
+      "sideConfidence": "74/100",
+      "sideExpectedClv": 0.2398,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 43.5",
-      "totalConfidence": "68/100",
-      "totalExpectedClv": 0.1815,
+      "totalConfidence": "57/100",
+      "totalExpectedClv": 0.0593,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is MIA +0.4 and fair total is 50.4 vs posted NE -7 / 43.5. MIA W6\u2013W7 offensive EPA (+0.285) and defensive EPA (+0.129) vs NE W6\u2013W7 offensive EPA (+0.071) and defensive EPA (+0.015) drive +20.5% side CLV and +18.1% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is MIA -0.8 and fair total is 45.8 vs posted NE -7 / 43.5. MIA W6\u2013W7 offensive EPA (+0.285) and defensive EPA (+0.129) vs NE W6\u2013W7 offensive EPA (+0.071) and defensive EPA (+0.015) drive +24.0% side CLV and +5.9% total CLV."
     },
     "topProps": [
       {
@@ -2101,7 +2101,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 43.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0762,
+        "expectedClv": 0.0769,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 6.5 tgt/g (26.0% target share, 48.2 yd/g) in MIA N_eff=7.07 target tree vs NE 53.2% 1-High / 34.2% 2-High shells."
       },
@@ -2123,7 +2123,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 36.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0896,
+        "expectedClv": 0.0903,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 11.0 carries/g (44.8% team rush share, 40.7 rush yd/g) vs MIA 6.51-man average box."
       }
@@ -2132,19 +2132,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "NE @ MIA 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Miami Dolphins +7 (Fair MIA +0.4)",
+          "description": "Miami Dolphins +7 (Fair MIA -0.8)",
           "pickType": "SPREAD",
           "selection": "Miami Dolphins +7",
-          "confidence": "71/100",
-          "expectedClv": 0.2055,
+          "confidence": "74/100",
+          "expectedClv": 0.2398,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 43.5 (Fair Total 50.4)",
+          "description": "OVER 43.5 (Fair Total 45.8)",
           "pickType": "TOTAL",
           "selection": "OVER 43.5",
-          "confidence": "68/100",
-          "expectedClv": 0.1815,
+          "confidence": "57/100",
+          "expectedClv": 0.0593,
           "decision": "PLAY"
         },
         {
@@ -2153,15 +2153,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "M.Washington OVER 43.5 Rec Yds",
           "line": 43.5,
           "confidence": "60/100",
-          "expectedClv": 0.0762,
+          "expectedClv": 0.0769,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.3786,
-      "fairOdds": "+164",
-      "marketOdds": "+202",
-      "edgeScore": 0.0681,
-      "correlationRationale": "Joint probability (37.9%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Miami Dolphins +7, OVER 43.5, and M.Washington target volume (6.5 tgt/g)."
+      "jointWinProb": 0.3415,
+      "fairOdds": "+193",
+      "marketOdds": "+241",
+      "edgeScore": 0.0615,
+      "correlationRationale": "Joint probability (34.2%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Miami Dolphins +7, OVER 43.5, and M.Washington target volume (6.5 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2245,18 +2245,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "WSH blitzes 45.1% (sack rate 4.28%) vs PHI OL 6.45% sack allowed; PHI blitzes 23.2% (sack rate 2.82%) vs WSH OL 5.45% sack allowed.",
       "personnelTendencies": "PHI N_eff=8.45 (avg box faced 6.29) \u2022 WSH N_eff=8.46 (avg box faced 6.26)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: PHI -0.086 (W6\u20137 -0.030, \u0394 +0.080) vs WSH -0.007 (W6\u20137 -0.001, \u0394 +0.007); Def EPA/p: PHI +0.102 vs WSH +0.067.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread WSH -3.1 (Posted WSH -6) \u2022 Fair Total 49.2 (Posted 40.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread WSH -5.4 (Posted WSH -6) \u2022 Fair Total 53.2 (Posted 40.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Philadelphia Eagles +6",
-      "sideConfidence": "60/100",
-      "sideExpectedClv": 0.0979,
+      "sideConfidence": "58/100",
+      "sideExpectedClv": 0.0179,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 40.5",
-      "totalConfidence": "72/100",
-      "totalExpectedClv": 0.2226,
+      "totalConfidence": "81/100",
+      "totalExpectedClv": 0.3078,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is WSH -3.1 and fair total is 49.2 vs posted WSH -6 / 40.5. WSH W6\u2013W7 offensive EPA (-0.001) and defensive EPA (+0.067) vs PHI W6\u2013W7 offensive EPA (-0.030) and defensive EPA (+0.102) drive +9.8% side CLV and +22.3% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is WSH -5.4 and fair total is 53.2 vs posted WSH -6 / 40.5. WSH W6\u2013W7 offensive EPA (-0.001) and defensive EPA (+0.067) vs PHI W6\u2013W7 offensive EPA (-0.030) and defensive EPA (+0.102) drive +1.8% side CLV and +30.8% total CLV."
     },
     "topProps": [
       {
@@ -2277,7 +2277,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 40.5,
         "side": "OVER",
         "confidence": "59/100",
-        "expectedClv": 0.0609,
+        "expectedClv": 0.0608,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 5.9 tgt/g (18.6% target share, 44.3 yd/g) in PHI N_eff=8.45 target tree vs WSH 52.3% 2-High shells."
       },
@@ -2297,19 +2297,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "PHI @ WSH 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Philadelphia Eagles +6 (Fair WSH -3.1)",
+          "description": "Philadelphia Eagles +6 (Fair WSH -5.4)",
           "pickType": "SPREAD",
           "selection": "Philadelphia Eagles +6",
-          "confidence": "60/100",
-          "expectedClv": 0.0979,
+          "confidence": "58/100",
+          "expectedClv": 0.0179,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 40.5 (Fair Total 49.2)",
+          "description": "OVER 40.5 (Fair Total 53.2)",
           "pickType": "TOTAL",
           "selection": "OVER 40.5",
-          "confidence": "72/100",
-          "expectedClv": 0.2226,
+          "confidence": "81/100",
+          "expectedClv": 0.3078,
           "decision": "PLAY"
         },
         {
@@ -2322,11 +2322,11 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2164,
-      "fairOdds": "+362",
-      "marketOdds": "+494",
-      "edgeScore": 0.039,
-      "correlationRationale": "Joint probability (21.6%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Philadelphia Eagles +6, OVER 40.5, and S.Diggs target volume (6.3 tgt/g)."
+      "jointWinProb": 0.1884,
+      "fairOdds": "+431",
+      "marketOdds": "+612",
+      "edgeScore": 0.0339,
+      "correlationRationale": "Joint probability (18.8%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Philadelphia Eagles +6, OVER 40.5, and S.Diggs target volume (6.3 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2410,18 +2410,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "blitzRateVsPressureToSack": "SEA blitzes 21.7% (sack rate 6.39%) vs CHI OL 6.1% sack allowed; CHI blitzes 40.8% (sack rate 7.95%) vs SEA OL 6.25% sack allowed.",
       "personnelTendencies": "CHI N_eff=6.8 (avg box faced 6.42) \u2022 SEA N_eff=5.14 (avg box faced 6.53)",
       "coachingEdge": "W1\u2013W7 Off EPA/p: CHI +0.052 (W6\u20137 +0.089, \u0394 +0.051) vs SEA -0.039 (W6\u20137 +0.022, \u0394 +0.092); Def EPA/p: CHI -0.009 vs SEA -0.115.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread SEA -1.7 (Posted SEA -3) \u2022 Fair Total 49.1 (Posted 46.5)."
+      "notes": "10,000-Sim Independent Projection: Fair Spread SEA -3.5 (Posted SEA -3) \u2022 Fair Total 51.3 (Posted 46.5)."
     },
     "sideTotalCall": {
-      "sideSelection": "Chicago Bears +3",
+      "sideSelection": "Seattle Seahawks -3",
       "sideConfidence": "58/100",
-      "sideExpectedClv": 0.0435,
+      "sideExpectedClv": 0.0157,
       "sideDecision": "PLAY",
       "totalSelection": "OVER 46.5",
-      "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0706,
+      "totalConfidence": "63/100",
+      "totalExpectedClv": 0.1275,
       "totalDecision": "PLAY",
-      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is SEA -1.7 and fair total is 49.1 vs posted SEA -3 / 46.5. SEA W6\u2013W7 offensive EPA (+0.022) and defensive EPA (-0.115) vs CHI W6\u2013W7 offensive EPA (+0.089) and defensive EPA (-0.009) drive +4.3% side CLV and +7.1% total CLV."
+      "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is SEA -3.5 and fair total is 51.3 vs posted SEA -3 / 46.5. SEA W6\u2013W7 offensive EPA (+0.022) and defensive EPA (-0.115) vs CHI W6\u2013W7 offensive EPA (+0.089) and defensive EPA (-0.009) drive +1.6% side CLV and +12.8% total CLV."
     },
     "topProps": [
       {
@@ -2431,7 +2431,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "line": 119.5,
         "side": "OVER",
         "confidence": "60/100",
-        "expectedClv": 0.0678,
+        "expectedClv": 0.0677,
         "decision": "PLAY",
         "nEffTargetNotes": "2026 W1\u2013W7: 11.1 tgt/g (36.1% target share, 123.9 yd/g) in SEA N_eff=5.14 target tree vs CHI 53.8% 1-High / 34.7% 2-High shells."
       },
@@ -2462,19 +2462,19 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "title": "CHI @ SEA 10,000-Sim Sigma_game Correlated SGP",
       "legs": [
         {
-          "description": "Chicago Bears +3 (Fair SEA -1.7)",
+          "description": "Seattle Seahawks -3 (Fair SEA -3.5)",
           "pickType": "SPREAD",
-          "selection": "Chicago Bears +3",
+          "selection": "Seattle Seahawks -3",
           "confidence": "58/100",
-          "expectedClv": 0.0435,
+          "expectedClv": 0.0157,
           "decision": "PLAY"
         },
         {
-          "description": "OVER 46.5 (Fair Total 49.1)",
+          "description": "OVER 46.5 (Fair Total 51.3)",
           "pickType": "TOTAL",
           "selection": "OVER 46.5",
-          "confidence": "57/100",
-          "expectedClv": 0.0706,
+          "confidence": "63/100",
+          "expectedClv": 0.1275,
           "decision": "PLAY"
         },
         {
@@ -2483,15 +2483,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "J.Smith-Njigba OVER 119.5 Rec Yds",
           "line": 119.5,
           "confidence": "60/100",
-          "expectedClv": 0.0678,
+          "expectedClv": 0.0677,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+367",
-      "marketOdds": "+502",
-      "edgeScore": 0.0385,
-      "correlationRationale": "Joint probability (21.4%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Chicago Bears +3, OVER 46.5, and J.Smith-Njigba target volume (11.1 tgt/g)."
+      "jointWinProb": 0.2632,
+      "fairOdds": "+280",
+      "marketOdds": "+365",
+      "edgeScore": 0.0474,
+      "correlationRationale": "Joint probability (26.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Seattle Seahawks -3, OVER 46.5, and J.Smith-Njigba target volume (11.1 tgt/g)."
     },
     "dfsStacks": {
       "captainPicks": [
