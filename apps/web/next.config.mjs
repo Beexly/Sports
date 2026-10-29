@@ -34,6 +34,19 @@ const nextConfig = {
     // `../../data` globs resolve; includes cover every route whose server code
     // calls the StatKing loaders (lib/statking/product.ts).
     outputFileTracingRoot: repoRoot,
+    outputFileTracingExcludes: {
+      "*": [
+        "../../.git/**",
+        "../../docs/research/**",
+        "../../docs/arxiv-program/**",
+        "../../data/nflverse/**",
+        "../../data/market/**",
+        "../../intelligence/**",
+        "../../brain/**",
+        "../../node_modules/@swc/core-linux-x64-musl/**",
+        "../../node_modules/@next/swc-linux-x64-musl/**",
+      ],
+    },
     outputFileTracingIncludes: {
       "/sgp-projections": ["./data/sgp-projections.json"],
       "/stats/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
