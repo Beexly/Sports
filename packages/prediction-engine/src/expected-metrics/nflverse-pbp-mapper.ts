@@ -28,6 +28,8 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type AdjustedScramblePlay } from "./adjusted-scramble-epa.js";
+
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -62,6 +64,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "fixed_drive", "fixed_drive_result",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
+  "week", "passer_player_id", "qb_scramble", "sack",
+
 ] as const;
 
 /** One projected pbp row record, exactly as `parseCsv` emits it. */
@@ -105,6 +109,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly adjustedScramblePlays: readonly AdjustedScramblePlay[];
+
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +386,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const adjustedScramblePlays: AdjustedScramblePlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -487,6 +494,21 @@ export function mapNflversePbpToExpectedMetrics(
       //     NaN / out-of-range downs pass through untouched; isSuccessfulPlay
       //     returns null for them (unratable, never a silent failure).
       const playType = row["play_type"];
+      const passerPlayerId = row["passer_player_id"] ?? "";
+      if (playType === "pass" && passerPlayerId !== "") {
+          adjustedScramblePlays.push({
+            playId,
+            gameId: row["game_id"] ?? "",
+            week: num(row["week"]),
+            posteam: row["posteam"] ?? "",
+            passerPlayerId,
+            rusherPlayerId: row["rusher_player_id"] ?? "",
+            qbScramble: bin(row["qb_scramble"]),
+            sack: bin(row["sack"]),
+            epa: null, // attachOwnEpa later
+          });
+      }
+
       if ((playType === "pass" || playType === "run") && (row["posteam"] ?? "") !== "") {
         successPlays.push({
           playId,
@@ -611,6 +633,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    adjustedScramblePlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,

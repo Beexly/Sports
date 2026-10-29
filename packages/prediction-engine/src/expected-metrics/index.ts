@@ -159,3 +159,14 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Adjusted Scramble EPA (scrambles + sacks)
+export {
+  computeAdjustedScrambleEpa,
+  ADJUSTED_SCRAMBLE_EPA_MODEL_VERSION,
+  ADJUSTED_SCRAMBLE_EPA_MIN_OPPORTUNITIES,
+  ADJUSTED_SCRAMBLE_EPA_PROVENANCE,
+  type AdjustedScramblePlay,
+  type QbAdjustedScrambleEpa,
+  type AdjustedScrambleEpaResult,
+} from "./adjusted-scramble-epa.js";
