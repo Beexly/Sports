@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 7`
+- **CYCLE_ROUND:** `Round 8`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -121,6 +121,18 @@ Cards were not wiped. Out-of-sample EPA split was measured and not promoted.
 - `generate_slate_writeups.py` still floors prop expected CLV with `max(0.015, p - 0.50)`, `max(0.014, ...)`, and `max(0.012, ...)`. That clamp was not removed this round.
 - Production: six `sports-web` deploys still listed Building, newest `sports-7yt7b1tgi` at 3 minutes. No Ready alias confirmed. Live routes were not re-fetched this round.
 - Quad-engine harvest this round: none. New equation coded: none. Test suite this round: not run.
+
+## Round 8 — 2026-10-29 02:10 CT
+
+No-huddle EPA gap measured. Cards not changed. Weight not promoted.
+
+- Equation: no-huddle EPA minus huddle EPA, on `play_type` in (pass, run) with non-null `epa`, `posteam` in (CAR, GB). `no_huddle` in (1, true) is the treatment.
+- Carolina: no-huddle 25 plays, 0.2015 per play. Huddle 367 plays, 0.0537. Gap +0.1478. Weeks 6-7 no-huddle is only 9 plays (0.1317) against 118 huddle plays (-0.0590). Too small to promote.
+- Green Bay: no-huddle 34 plays, -0.0257. Huddle 389 plays, -0.0010. Gap -0.0247. Weeks 6-7 no-huddle is 9 plays.
+- Sack count on plays where `sack` is true, over plays that are a pass or a sack: Carolina 17 of 251 (0.0677). Green Bay 14 of 286 (0.0490).
+- Not wired into the simulator. No Brier test. Quad-engine API harvest: none. Vitest: not run.
+- Production still listed Building. Newest at check: `sports-movr6b8x5`, 3 minutes old. No Ready alias. Live routes not re-fetched.
+
 
 
 
