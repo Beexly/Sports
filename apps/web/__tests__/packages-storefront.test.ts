@@ -14,15 +14,23 @@ describe("Galaxy Picks storefront catalog", () => {
     const tnf = getPackageBySlug("tnf-all-in-pack");
     expect(tnf?.standardPriceCents).toBe(1900);
     expect(tnf?.guaranteedPriceCents).toBeNull();
+    expect(tnf?.stripeProductId).toBe("prod_VX406TulqtZwJJ");
+    expect(tnf?.stripePriceId).toBe("price_1UVzsdQ2wPZMxx60lqO3TLbQ");
 
     const sun = getPackageBySlug("sunday-nfl-5pct-slate");
-    expect(sun?.standardPriceCents).toBe(2900);
+    expect(sun?.standardPriceCents).toBe(3900);
+    expect(sun?.stripeProductId).toBe("prod_VX400OaIktCGLb");
+    expect(sun?.stripePriceId).toBe("price_1UVzsfQ2wPZMxx606fYPjKEJ");
 
     const sgp = getPackageBySlug("sgp-correlation-basket");
-    expect(sgp?.standardPriceCents).toBe(1900);
+    expect(sgp?.standardPriceCents).toBe(2900);
+    expect(sgp?.stripeProductId).toBe("prod_VX40XMRjV4FiJl");
+    expect(sgp?.stripePriceId).toBe("price_1UVzseQ2wPZMxx60VqAfAyNe");
 
     const all = getPackageBySlug("week8-all-access");
-    expect(all?.standardPriceCents).toBe(3900);
+    expect(all?.standardPriceCents).toBe(4900);
+    expect(all?.stripeProductId).toBe("prod_VX40T4RNpoNNIp");
+    expect(all?.stripePriceId).toBe("price_1UVzsfQ2wPZMxx60ozEJ1P3n");
     expect(all?.includesDfs).toBe(true);
   });
 

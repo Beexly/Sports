@@ -36,8 +36,6 @@ export const metadata: Metadata = {
 
 // The gate decides the status copy below; never statically frozen, so a
 // founder flip is reflected without a redeploy of this page.
-export const dynamic = "force-dynamic";
-
 export default function SlateOpeningExplainerPage(): JSX.Element {
   const revealEnabled = process.env["SLATE_OPENING_REVEAL_ENABLED"] === "true";
 

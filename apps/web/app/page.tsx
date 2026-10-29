@@ -17,8 +17,6 @@ import {
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: { absolute: "Galaxy Sports Edge" },
   description:

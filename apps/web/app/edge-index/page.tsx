@@ -13,8 +13,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/edge-index" },
 };
 
-export const dynamic = "force-dynamic";
-
 const EXAMPLE_ID = "example-game-id";
 
 export default function EdgeIndexMarketingPage(): JSX.Element {

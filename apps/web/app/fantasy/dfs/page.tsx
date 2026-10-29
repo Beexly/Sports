@@ -21,8 +21,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function DfsSuitePage() {
   const [dfs, viewer, slate] = await Promise.all([
     loadDfsSalaries().catch(() => null),

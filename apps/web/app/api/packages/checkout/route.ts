@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     let packageSlug: string | undefined;
     let guaranteed = false;
     let email: string | undefined;
+    let returnToStorefront = false;
 
     if (isFormSubmit) {
       const formData = await req.formData().catch(() => null);
@@ -22,6 +23,8 @@ export async function POST(req: Request) {
         packageSlug = String(formData.get("packageSlug") || "");
         const gVal = String(formData.get("guaranteed") || "false");
         guaranteed = gVal === "true" || gVal === "1";
+        const rVal = String(formData.get("returnToStorefront") || "false");
+        returnToStorefront = rVal === "true" || rVal === "1";
         const eVal = formData.get("email");
         email = typeof eVal === "string" && eVal.trim() ? eVal.trim() : undefined;
       }
@@ -29,6 +32,7 @@ export async function POST(req: Request) {
       const body = await req.json().catch(() => ({}));
       packageSlug = body.packageSlug;
       guaranteed = Boolean(body.guaranteed);
+      returnToStorefront = Boolean(body.returnToStorefront);
       email = typeof body.email === "string" ? body.email : undefined;
     }
 
@@ -56,6 +60,7 @@ export async function POST(req: Request) {
       Boolean(guaranteed),
       typeof email === "string" ? email : undefined,
       origin,
+      returnToStorefront,
     );
 
     const stripeKey = process.env.STRIPE_SECRET_KEY;
@@ -70,13 +75,17 @@ export async function POST(req: Request) {
       }
       // In offline / test / dev mode without live Stripe credentials, generate deterministic mock session
       const mockSessionId = `cs_test_mock_${pkg.slug}_${Date.now()}`;
-      const mockUrl = `${origin}/packages/${pkg.slug}?session_id=${mockSessionId}`;
+      const mockUrl = returnToStorefront
+        ? `${origin}/packages?unlocked=1&package=${pkg.slug}&session_id=${mockSessionId}#${pkg.slug}`
+        : `${origin}/packages/${pkg.slug}?session_id=${mockSessionId}`;
       if (isFormSubmit) {
         return NextResponse.redirect(mockUrl, 303);
       }
       return NextResponse.json({
         sessionId: mockSessionId,
         url: mockUrl,
+        stripeProductId: pkg.stripeProductId,
+        stripePriceId: pkg.stripePriceId,
         mode: "mock",
         payload,
       });
@@ -86,8 +95,29 @@ export async function POST(req: Request) {
       const stripe = new Stripe(stripeKey, {
         apiVersion: "2024-06-20" as any,
       });
-      const session = await stripe.checkout.sessions.create(payload as any);
-      const targetUrl = session.url || `${origin}/packages/${pkg.slug}?session_id=${session.id}`;
+
+      // Use the live pre-created Stripe Price ID (price_1UVzs...) in Stripe Checkout
+      const stripeSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
+        mode: "payment",
+        line_items:
+          pkg.stripePriceId && !guaranteed
+            ? [{ price: pkg.stripePriceId, quantity: 1 }]
+            : payload.line_items.map((li) => ({
+                price_data: li.price_data,
+                quantity: li.quantity,
+              })),
+        metadata: payload.metadata,
+        success_url: payload.success_url,
+        cancel_url: payload.cancel_url,
+        ...(payload.customer_email ? { customer_email: payload.customer_email } : {}),
+      };
+
+      const session = await stripe.checkout.sessions.create(stripeSessionCreateParams);
+      const targetUrl =
+        session.url ||
+        (returnToStorefront
+          ? `${origin}/packages?unlocked=1&package=${pkg.slug}&session_id=${session.id}#${pkg.slug}`
+          : `${origin}/packages/${pkg.slug}?session_id=${session.id}`);
 
       if (isFormSubmit) {
         return NextResponse.redirect(targetUrl, 303);
@@ -95,17 +125,23 @@ export async function POST(req: Request) {
       return NextResponse.json({
         sessionId: session.id,
         url: targetUrl,
+        stripeProductId: pkg.stripeProductId,
+        stripePriceId: pkg.stripePriceId,
       });
     } catch (stripeErr: any) {
       if (!isProd && (stripeKey.includes("test") || stripeKey.includes("dummy") || !process.env.CI)) {
         const fallbackSessionId = `cs_test_mock_${pkg.slug}_${Date.now()}`;
-        const fallbackUrl = `${origin}/packages/${pkg.slug}?session_id=${fallbackSessionId}`;
+        const fallbackUrl = returnToStorefront
+          ? `${origin}/packages?unlocked=1&package=${pkg.slug}&session_id=${fallbackSessionId}#${pkg.slug}`
+          : `${origin}/packages/${pkg.slug}?session_id=${fallbackSessionId}`;
         if (isFormSubmit) {
           return NextResponse.redirect(fallbackUrl, 303);
         }
         return NextResponse.json({
           sessionId: fallbackSessionId,
           url: fallbackUrl,
+          stripeProductId: pkg.stripeProductId,
+          stripePriceId: pkg.stripePriceId,
           fallback: true,
           error: stripeErr.message,
         });

@@ -75,20 +75,29 @@ export function PaywallRevealCard({
     : null;
   const activePrice = guaranteed && guaranteedPrice ? guaranteedPrice : standardPrice;
 
-  // Check if user already unlocked this package or an all-access pass in localStorage
+  // Check if user returned from Stripe Checkout with ?session_id=cs_... or already unlocked in localStorage
   useEffect(() => {
     if (isUnlocked) return;
     try {
-      const savedToken =
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlSessionId = searchParams.get("session_id") || searchParams.get("whop_token");
+      const urlPackage = searchParams.get("package");
+      const matchesThisCard =
+        !urlPackage || urlPackage === pkg.slug || urlPackage === "week8-all-access";
+
+      const candidateToken =
+        initialSessionId ||
+        (urlSessionId && matchesThisCard ? urlSessionId : null) ||
         window.localStorage.getItem(`gse_unlock_${pkg.slug}`) ||
         window.localStorage.getItem("gse_unlock_global");
-      if (savedToken) {
-        void handleInlineVerify(savedToken, true);
+
+      if (candidateToken) {
+        void handleInlineVerify(candidateToken, true);
       }
     } catch {
       // ignore storage errors
     }
-  }, [pkg.slug, isUnlocked]);
+  }, [pkg.slug, isUnlocked, initialSessionId]);
 
   async function handleInlineVerify(overrideToken?: string, silent = false) {
     const token = (overrideToken ?? tokenInput).trim();
@@ -125,12 +134,15 @@ export function PaywallRevealCard({
     setLoadingCheckout(true);
     setErrorMsg(null);
     try {
+      const returnToStorefront =
+        typeof window !== "undefined" && window.location.pathname === "/packages";
       const res = await fetch("/api/packages/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           packageSlug: pkg.slug,
           guaranteed: useGuaranteed,
+          returnToStorefront,
         }),
       });
       const data = await res.json();

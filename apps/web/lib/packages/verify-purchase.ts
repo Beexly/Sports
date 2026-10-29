@@ -48,10 +48,12 @@ export async function verifyPackagePurchase(params: {
             status?: string;
             metadata?: { packageSlug?: string };
           };
+          const purchasedSlug = data.metadata?.packageSlug;
           const slugMatches =
             !params.slug ||
-            !data.metadata?.packageSlug ||
-            data.metadata.packageSlug === params.slug;
+            !purchasedSlug ||
+            purchasedSlug === params.slug ||
+            purchasedSlug === "week8-all-access";
           if (data.payment_status === "paid" && slugMatches) {
             return { authorized: true, authSource: "stripe" };
           }

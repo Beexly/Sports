@@ -42,10 +42,10 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
     const hrefs = FIVE_REVENUE_PILLARS.map((p) => p.href);
     const expectedRoutes = [
       "/packages",
-      "/packages#slate-dossiers",
+      "/packages#tnf-all-in-pack",
+      "/packages#sunday-nfl-5pct-slate",
       "/fantasy/dfs",
-      "/pricing",
-      "https://t.me/GalaxySportsEdge_bot",
+      "/packages#week8-all-access",
     ];
 
     expect(hrefs).toEqual(expectedRoutes);
@@ -65,8 +65,10 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
 
     for (const route of [
       "/packages",
+      "/packages#tnf-all-in-pack",
+      "/packages#sunday-nfl-5pct-slate",
       "/fantasy/dfs",
-      "/pricing",
+      "/packages#week8-all-access",
     ]) {
       expect(renderedHrefs).toContain(route);
     }

@@ -10,8 +10,6 @@ import {
   validateNbaLineup,
 } from "@/lib/fantasy/nba-slate";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Fictional NBA DFS Slate: Validator Demo",
   description:

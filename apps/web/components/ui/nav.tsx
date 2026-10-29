@@ -1,6 +1,6 @@
-import React, { Suspense, type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
-import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
+import { NavAuthFallback } from "@/components/ui/nav-auth";
 
 /**
  * Field IA — one door per job. Board is THE board.
@@ -79,17 +79,14 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
 
 /**
  * Nav — the Galaxy Sports Edge global navigation bar.
+ *
+ * CORRECTION (next@14.2.35 without PPR): calling cookies()/auth() inside a
+ * Suspense child still marks the parent route dynamic (ƒ) and forces a Lambda
+ * per page. Rendering NavAuthFallback directly keeps all storefront and
+ * marketing pages 100% static CDN routes with zero SSR cookie/session faults.
  */
 export function Nav() {
-  return (
-    <NavChrome
-      right={
-        <Suspense fallback={<NavAuthFallback />}>
-          <NavAuth />
-        </Suspense>
-      }
-    />
-  );
+  return <NavChrome right={<NavAuthFallback />} />;
 }
 
 /**

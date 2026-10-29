@@ -12,8 +12,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/intelligence/observatory" },
 };
 
-export const dynamic = "force-dynamic";
-
 export default function IntelligenceObservatoryPage(): JSX.Element {
   const snapshot: IntelligenceGrowthSnapshot = buildIntelligenceGrowthSnapshot();
   const {

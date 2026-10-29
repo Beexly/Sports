@@ -6,8 +6,6 @@ import { CipherTerminal } from "@/components/cipher/cipher-terminal";
 import { getCipherStatus, toChapterView } from "@/lib/cipher/cipher";
 import { Atmosphere } from "@/components/ui/atmosphere";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "The Glass Box Cipher: A Weekly Hunt",
   description:

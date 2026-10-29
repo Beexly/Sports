@@ -13,9 +13,9 @@ describe("Galaxy Picks Storefront & Instant Checkout Suite", () => {
 
     const expectedPackages = [
       { slug: "tnf-all-in-pack", price: 1900, windowSlot: "TNF", includesDfs: true },
-      { slug: "sunday-nfl-5pct-slate", price: 2900, windowSlot: "SUN_MAIN", includesDfs: false },
-      { slug: "sgp-correlation-basket", price: 1900, windowSlot: "SUN_MAIN", includesDfs: false },
-      { slug: "week8-all-access", price: 3900, windowSlot: "WEEKLY_PASS", includesDfs: true },
+      { slug: "sunday-nfl-5pct-slate", price: 3900, windowSlot: "SUN_MAIN", includesDfs: false },
+      { slug: "sgp-correlation-basket", price: 2900, windowSlot: "SUN_MAIN", includesDfs: false },
+      { slug: "week8-all-access", price: 4900, windowSlot: "WEEKLY_PASS", includesDfs: true },
     ];
 
     const forbiddenBrands = /\b(WagerTalk|OnlyFans|FTN|Circa|Pinnacle)\b/i;

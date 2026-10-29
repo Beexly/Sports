@@ -2,11 +2,11 @@
  * Pick Package Catalog & Stripe Instant Checkout Builder
  *
  * Galaxy Picks (paid) storefront. One-time Stripe checkout, no subscription required.
- * Four Week 8 offerings. Guaranteed credit-back is not offered on these packs.
- * - Specific window cards (TNF, Sunday Main, Weekend Pass, Weekly Pass)
- * - Standard vs. Guaranteed Credit-Back pricing
- * - Stripe one-time payment payload generation (mode: "payment") using inline price_data
- * - Zero pre-created Stripe Price IDs required
+ * Wired to live Stripe Products and one-time Prices on Galaxy Sports Network:
+ * - tnf-all-in-pack ($19): prod_VX406TulqtZwJJ / price_1UVzsdQ2wPZMxx60lqO3TLbQ
+ * - sgp-correlation-basket ($29): prod_VX40XMRjV4FiJl / price_1UVzseQ2wPZMxx60VqAfAyNe
+ * - sunday-nfl-5pct-slate ($39): prod_VX400OaIktCGLb / price_1UVzsfQ2wPZMxx606fYPjKEJ
+ * - week8-all-access ($49): prod_VX40T4RNpoNNIp / price_1UVzsfQ2wPZMxx60ozEJ1P3n
  *
  * DOCTRINE & GUARDRAILS:
  * - NEVER render confidence as a % (always XX/100).
@@ -21,6 +21,9 @@ export interface PickPackageOffering {
   windowSlot: 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SUN_MAIN' | 'SNF' | 'MNF' | 'WEEKEND_PASS' | 'WEEKLY_PASS';
   standardPriceCents: number;
   guaranteedPriceCents: number | null;
+  stripeProductId: string;
+  stripePriceId: string;
+  stripeLookupKey: string;
   gamesCount: number;
   highlights: string[];
   badge?: string;
@@ -41,6 +44,9 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     windowSlot: "TNF",
     standardPriceCents: 1900,
     guaranteedPriceCents: null,
+    stripeProductId: "prod_VX406TulqtZwJJ",
+    stripePriceId: "price_1UVzsdQ2wPZMxx60lqO3TLbQ",
+    stripeLookupKey: "gse-pack-tnf-all-in",
     gamesCount: 1,
     highlights: [
       "Official Packers vs. Panthers Spread & Over/Under Calls",
@@ -58,17 +64,20 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Sunday NFL Best Bets Pack (Main Slate)",
     subtitle: "Every Sunday 1:00 PM & 4:25 PM ET Spread & Over/Under Pick",
     description:
-      "Our complete Sunday NFL betting card. Every Sunday afternoon game broken down in plain English to show you which spreads and totals have a real edge — and which trap games to skip.",
+      "Our complete Sunday NFL day card. Every Sunday afternoon game broken down in plain English to show you which spreads and totals have a real edge — and which trap games to skip.",
     windowSlot: "SUN_MAIN",
-    standardPriceCents: 2900,
+    standardPriceCents: 3900,
     guaranteedPriceCents: null,
+    stripeProductId: "prod_VX400OaIktCGLb",
+    stripePriceId: "price_1UVzsfQ2wPZMxx606fYPjKEJ",
+    stripeLookupKey: "gse-pack-sunday-nfl-5pct-slate",
     gamesCount: 11,
     highlights: [
       "All Sunday Early (1:00 PM) & Late (4:25 PM) NFL Games",
       "Clear Bet or Pass Verdict on Every Single Game",
       "Plain-English Reasons Behind Every Official Call",
     ],
-    badge: "SUNDAY MAIN SLATE",
+    badge: "SUNDAY DAY CARD",
     includesProps: true,
     includesSgp: false,
     includesDfs: false,
@@ -80,8 +89,11 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     description:
       "Want player props and parlays that actually fit the same game story? Unlock our top receiver and running back yardage props plus 3-leg Same-Game Parlays built around how each matchup plays out.",
     windowSlot: "SUN_MAIN",
-    standardPriceCents: 1900,
+    standardPriceCents: 2900,
     guaranteedPriceCents: null,
+    stripeProductId: "prod_VX40XMRjV4FiJl",
+    stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
+    stripeLookupKey: "gse-pack-sgp-correlation-basket",
     gamesCount: 11,
     highlights: [
       "Best Receiver & Running Back Yardage Props Across Sunday",
@@ -100,15 +112,18 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     description:
       "Unlock every single NFL game pack across the entire slate — Sunday Early, Sunday Afternoon, Sunday Night, and Monday Night Football — plus our complete Daily Fantasy (DFS) cash and tournament stacks in one click.",
     windowSlot: "WEEKLY_PASS",
-    standardPriceCents: 3900,
+    standardPriceCents: 4900,
     guaranteedPriceCents: null,
+    stripeProductId: "prod_VX40T4RNpoNNIp",
+    stripePriceId: "price_1UVzsfQ2wPZMxx60ozEJ1P3n",
+    stripeLookupKey: "gse-pack-week8-all-access",
     gamesCount: 14,
     highlights: [
       "All 14 NFL Games Across the Full Weekly Slate (Sunday, SNF & MNF)",
       "Every Official Spread Call, Over/Under Call, Player Prop & Parlay",
       "Full Daily Fantasy (DFS) Core Plays & Tournament Stacks",
     ],
-    badge: "BEST VALUE · ALL 14 GAMES",
+    badge: "WEEKEND BUNDLE · ALL 14 GAMES",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,
@@ -122,6 +137,7 @@ export function getPackageBySlug(slug: string): PickPackageOffering | undefined 
 export interface StripeCheckoutPayload {
   mode: 'payment';
   line_items: Array<{
+    price?: string;
     price_data: {
       currency: string;
       unit_amount: number;
@@ -134,6 +150,8 @@ export interface StripeCheckoutPayload {
   }>;
   metadata: {
     packageSlug: string;
+    stripeProductId: string;
+    stripePriceId: string;
     guaranteedCreditBack: string;
     windowSlot: string;
   };
@@ -144,13 +162,14 @@ export interface StripeCheckoutPayload {
 
 /**
  * Builds the Stripe Checkout Session payload for instant one-time payment.
- * Uses inline price_data so no pre-created Stripe Price IDs are required.
+ * References the live Stripe Product & Price IDs created on Galaxy Sports Network.
  */
 export function buildStripePackageCheckoutPayload(
   pkg: PickPackageOffering,
   guaranteed: boolean,
   buyerEmail?: string,
   origin?: string,
+  returnToStorefront?: boolean,
 ): StripeCheckoutPayload {
   let unitAmount = pkg.standardPriceCents;
   let productName = pkg.title;
@@ -164,11 +183,15 @@ export function buildStripePackageCheckoutPayload(
   }
 
   const baseOrigin = origin ? origin.replace(/\/+$/, "") : "https://www.galaxysportsedge.com";
+  const successUrl = returnToStorefront
+    ? `${baseOrigin}/packages?unlocked=1&package=${pkg.slug}&session_id={CHECKOUT_SESSION_ID}#${pkg.slug}`
+    : `${baseOrigin}/packages/${pkg.slug}?unlocked=1&session_id={CHECKOUT_SESSION_ID}`;
 
   return {
     mode: "payment",
     line_items: [
       {
+        price: pkg.stripePriceId,
         price_data: {
           currency: "usd",
           unit_amount: unitAmount,
@@ -182,10 +205,12 @@ export function buildStripePackageCheckoutPayload(
     ],
     metadata: {
       packageSlug: pkg.slug,
+      stripeProductId: pkg.stripeProductId,
+      stripePriceId: pkg.stripePriceId,
       guaranteedCreditBack: String(guaranteed),
       windowSlot: pkg.windowSlot,
     },
-    success_url: `${baseOrigin}/packages/${pkg.slug}?unlocked=1&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: successUrl,
     cancel_url: `${baseOrigin}/packages`,
     customer_email: buyerEmail && buyerEmail.trim().length > 0 ? buyerEmail.trim() : undefined,
   };

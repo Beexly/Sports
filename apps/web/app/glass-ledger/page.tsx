@@ -70,8 +70,6 @@ import {
 } from "@/lib/ledger/format";
 import { NUMERIC_TEXT_CLASS, formatCount } from "@/lib/format/stat";
 
-export const dynamic = "force-dynamic";
-
 const UNPUBLISHED_HEADLINE = "The Glass Ledger is sealed — nothing is published until the founder flips PUBLISH_LEDGER.";
 
 const ALL_PICKS_SENTENCE =

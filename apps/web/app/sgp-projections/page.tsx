@@ -3,8 +3,6 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "SGP Projections Under Construction | Galaxy Sports Edge",
   description:

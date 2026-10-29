@@ -9,8 +9,6 @@ import {
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "DFS Lineup Optimizer & Stacks | Galaxy Sports Edge",
   description:
