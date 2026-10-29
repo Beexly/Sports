@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 25`
+- **CYCLE_ROUND:** `Round 26`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -327,6 +327,17 @@ Formula: second-half mean minus first-half mean. Early is weeks 1–5. Late is w
 - Carolina: early gap -0.0508. Late first half -0.1788 on 49 plays. Late second half 0.0383 on 78. The sign flips. Not a second-half fade. Not promoted.
 - Green Bay: early gap -0.1628 (first half 0.0630 on 130, second half -0.0998 on 156). Late gap -0.2728 (first half 0.1502 on 77, second half -0.1226 on 56). The sign holds. Both late cells are above 50 plays. It is a covariate, not a side.
 - Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
+## Round 26 — 2026-10-29 03:53 CT
+
+Turnover rates. Interceptions per pass attempt. Fumbles lost per pass or run play. Cards not changed. The alias was not re-fetched this round.
+
+- League interceptions: 109/5,593 early (0.0195), 37/2,034 late (0.0182). Flat.
+- League fumbles lost: 79/9,693 early (0.0082), 19/3,486 late (0.0055). Slightly down. Not a weight.
+- Carolina interceptions: 2/172 early, 2/78 late. Fumbles lost: 1 and 1. The rate moves because the count does not. Not promoted.
+- Green Bay interceptions: 3/196 early, 2/90 late. Fumbles lost: 3 early, 0 late on 133 plays. Counts are too small for a side.
+- Quad harvest: none.
+
 
 
 
