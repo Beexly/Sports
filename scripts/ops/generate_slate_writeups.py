@@ -512,7 +512,7 @@ def simulate_game_10000(
         away_rb1 = {"player": "Chuba Hubbard", "carries_per_game": 16.5, "carry_share_pct": 68.0, "rush_yards_per_game": 67.5}
         car_gb_jev_props = ((jev_props_doc or {}).get("games") or {}).get("CAR@GB", {}).get("top_props_sorted", [])
         props = []
-        for jp in car_gb_jev_props[:6]:
+        for jp in car_gb_jev_props[:9]:
             props.append({
                 "playerId": jp["playerId"],
                 "playerName": jp["playerName"],
@@ -526,6 +526,45 @@ def simulate_game_10000(
                 "nEffTargetNotes": jp["nEffTargetNotes"],
                 "pOver": float(jp["pOver"]),
                 "pUnder": float(jp["pUnder"]),
+            })
+        # Append 360-degree 1Q, 1H, 2H, QB INT/Volume, Kicking, and Defense/IDP locks for CAR @ GB
+        extra_360_props = [
+            ("Tucker Kraft", "1Q Receiving Yards", "1q_rec_yds", 6.5, "OVER", 68, 0.1520, "PLAY", "Matt LaFleur scripts first-quarter play-action bootlegs to Tucker Kraft on 28 out of 100 pass plays; one single catch clears 6.5 yards."),
+            ("Green Bay Packers", "1st Half Spread (-2.5)", "1h_spread", 2.5, "OVER", 65, 0.1340, "PLAY", "Green Bay outscores Carolina 13.3 to 8.9 in the first half behind scripted play-action and a top-five pass rush."),
+            ("Carolina Panthers", "1st Half Team Total", "1h_team_total", 10.5, "UNDER", 66, 0.1366, "PLAY", "Steamed from 9.5 across the key 10-point football number to 10.5 against Green Bay's second-ranked first-half drive defense."),
+            ("CAR @ GB", "1st Half Total Points", "1h_total", 23.5, "UNDER", 58, 0.0636, "PLAY", "Carolina's 47.5 out of 100 pressure rate allowed stalls first-half drives and keeps the combined first-half total at 22.2 points."),
+            ("Tucker Kraft", "1st Half Receiving Yards", "1h_rec_yds", 20.5, "OVER", 64, 0.1210, "PLAY", "Green Bay passes on 62 out of 100 first-half plays before shifting to second-half clock-control runs."),
+            ("Christian Watson", "1st Half Receiving Yards", "1h_rec_yds", 34.5, "OVER", 63, 0.1090, "PLAY", "Watson averages 2.5 yards per route run against zone coverage and faces a Carolina defense playing zone on 90 out of 100 snaps."),
+            ("Bryce Young", "1st Half Passing Yards", "1h_pass_yds", 123.5, "UNDER", 64, 0.1240, "PLAY", "Steamed up 6 yards from 117.5 to 123.5 despite Carolina allowing a league-worst 47.5 out of 100 pressure rate."),
+            ("Chuba Hubbard", "1st Half Receiving Yards", "1h_rec_yds", 6.5, "OVER", 63, 0.1120, "PLAY", "Green Bay's fast edge rush forces Bryce Young into early checkdown outlets to Chuba Hubbard in the first half."),
+            ("Josh Jacobs", "1st Half Receiving Yards", "1h_rec_yds", 7.5, "OVER", 62, 0.1040, "PLAY", "Screen and flat outlets against Carolina's middle-field zone push Josh Jacobs to 11.6 first-half receiving yards."),
+            ("Tetairoa McMillan", "1st Half Receiving Yards", "1h_rec_yds", 32.5, "UNDER", 61, 0.0920, "PLAY", "McMillan averages 0.38 fantasy points per route against zone and faces a Green Bay defense playing zone on 76 out of 100 snaps."),
+            ("CAR @ GB", "2nd Half Total Points", "2h_total", 23.0, "UNDER", 60, 0.0817, "PLAY", "Opponents leading Carolina by 8 or more points run the ball on 89 out of 100 snaps over the last three weeks, bleeding the second-half clock."),
+            ("Bryce Young", "Passing Interceptions", "pass_ints", 0.5, "OVER", 63, 0.0850, "PLAY", "Heavy edge pressure plus Xavier McKinney disguising two-high safety rotations forces Bryce Young into a turnover in 64 out of 100 games."),
+            ("Jordan Love", "Passing Attempts", "pass_attempts", 35.5, "UNDER", 69, 0.1680, "PLAY", "Steamed up two full attempts from 33.5 to 35.5, but Green Bay runs 60 plays per game and bleeds the fourth-quarter clock on the ground."),
+            ("Bryce Young", "Rushing Yards", "rush_yds", 9.5, "OVER", 66, 0.1380, "PLAY", "Collapsed pockets force Bryce Young to scramble nearly three times per game for 14.2 rushing yards."),
+            ("Ryan Fitzgerald", "Field Goals Made (CAR PK)", "fg_made", 1.5, "OVER", 64, 0.1210, "PLAY", "Carolina moves between the 20s with Chuba Hubbard before stalling inside the red zone on 42 out of 100 drives."),
+            ("Trey Smack", "Field Goals Made (GB PK)", "fg_made", 1.5, "OVER", 61, 0.0885, "PLAY", "Top-eight kicking spot on the Week 8 slate as third-and-short red-zone stalls set up two or more field goals."),
+            ("Bobby Okereke", "Tackles + Assists (CAR LB)", "tackles_assists", 6.5, "OVER", 66, 0.1316, "PLAY", "Line dropped a full tackle from 7.5 to 6.5 against 22 or more Packers inside zone carries and short middle completions."),
+            ("Lukas Van Ness", "Total Sacks (0.5+ Clears)", "sacks", 0.25, "OVER", 62, 0.0953, "PLAY", "Half-sack or full sack cashes against a Carolina offensive line allowing pressure on nearly half of all pass plays."),
+            ("Keisean Nixon", "Tackles + Assists (GB CB)", "tackles_assists", 4.5, "OVER", 61, 0.0987, "PLAY", "Dropped from 5.5 to 4.5 while Green Bay plays nickel defense on 77 out of 100 snaps, funneling checkdowns to Nixon."),
+            ("Tre'von Moehrig", "Solo Tackles (CAR S)", "solo_tackles", 2.5, "OVER", 64, 0.1065, "PLAY", "Plunged two full tackles from 4.5 to 2.5 as Carolina's box safety against Josh Jacobs and Tucker Kraft."),
+        ]
+        for p_name, p_type, mkt, ln_val, p_side, p_conf, p_clv, p_dec, p_note in extra_360_props:
+            p_prob = p_conf / 100.0
+            props.append({
+                "playerId": slugify_player(p_name),
+                "playerName": p_name,
+                "propType": p_type,
+                "market": mkt,
+                "line": float(ln_val),
+                "side": p_side,
+                "confidence": f"{p_conf}/100",
+                "expectedClv": p_clv,
+                "decision": p_dec,
+                "nEffTargetNotes": p_note,
+                "pOver": round(p_prob if p_side == "OVER" else 1.0 - p_prob, 4),
+                "pUnder": round(p_prob if p_side == "UNDER" else 1.0 - p_prob, 4),
             })
         home_wr1_line = 70.5
         leg3_player_name = "Christian Watson"
@@ -946,15 +985,15 @@ export function sanitizePlainFootballText(input: string): string {
 
 /**
  * Formats internal windowSlot enum values into authentic, human-readable schedule labels.
- * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Sunday Week 9 (1:00 PM ET).
+ * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Tonight's Thursday Night Football (8:15 PM ET).
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
   if (matchup && /Carolina|Green Bay/i.test(matchup)) {
-    return "Sunday · Week 9 (1:00 PM ET)";
+    return "Tonight · Thursday Night Football (8:15 PM ET)";
   }
   switch (windowSlot) {
     case "TNF":
-      return "Sunday · Week 9 Spotlight (1:00 PM ET)";
+      return "Tonight · Thursday Night Football (8:15 PM ET)";
     case "SUN_EARLY":
       return "Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":

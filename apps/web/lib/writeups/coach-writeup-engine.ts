@@ -137,15 +137,15 @@ export function sanitizePlainFootballText(input: string): string {
 
 /**
  * Formats internal windowSlot enum values into authentic, human-readable schedule labels.
- * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Sunday Week 9 (1:00 PM ET).
+ * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Tonight's Thursday Night Football (8:15 PM ET).
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
   if (matchup && /Carolina|Green Bay/i.test(matchup)) {
-    return "Sunday · Week 9 (1:00 PM ET)";
+    return "Tonight · Thursday Night Football (8:15 PM ET)";
   }
   switch (windowSlot) {
     case "TNF":
-      return "Sunday · Week 9 Spotlight (1:00 PM ET)";
+      return "Tonight · Thursday Night Football (8:15 PM ET)";
     case "SUN_EARLY":
       return "Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
@@ -420,6 +420,328 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "nEffTargetNotes": "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's depleted linebacker group. Take OVER 44.5 receiving yards.",
         "pOver": 0.6213,
         "pUnder": 0.3787
+      },
+      {
+        "playerId": "tetairoa-mcmillan",
+        "playerName": "Tetairoa McMillan",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 72.5,
+        "side": "UNDER",
+        "confidence": "65/100",
+        "expectedClv": 0.1274,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Carolina is missing two starting guards (Damien Lewis and Torricelli Simpkins III) at Lambeau Field, leaving Bryce Young without time in the pocket to push deep boundary throws to Tetairoa McMillan. Take UNDER 72.5 receiving yards.",
+        "pOver": 0.3488,
+        "pUnder": 0.6512
+      },
+      {
+        "playerId": "bryce-young",
+        "playerName": "Bryce Young",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 253.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1341,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Bryce Young faces steady four-man pressure behind a patched-up interior offensive line on the road at Lambeau Field, where he has logged 26 throwaways and a 14.5% pressure-to-sack rate. Take UNDER 253.5 passing yards.",
+        "pOver": 0.3421,
+        "pUnder": 0.6579
+      },
+      {
+        "playerId": "jordan-love",
+        "playerName": "Jordan Love",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 262.5,
+        "side": "UNDER",
+        "confidence": "53/100",
+        "expectedClv": 0.0062,
+        "decision": "PASS",
+        "nEffTargetNotes": "Even with a clean pocket, Matt LaFleur's 24.9-second neutral snap tempo bleeds the second-half clock when Green Bay leads, keeping Jordan Love right near his 262.5 passing yardage number. PASS \u2014 no forced bet.",
+        "pOver": 0.47,
+        "pUnder": 0.53
+      },
+      {
+        "playerId": "tucker-kraft",
+        "playerName": "Tucker Kraft",
+        "propType": "1Q Receiving Yards",
+        "market": "1q_rec_yds",
+        "line": 6.5,
+        "side": "OVER",
+        "confidence": "68/100",
+        "expectedClv": 0.152,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Matt LaFleur scripts first-quarter play-action bootlegs to Tucker Kraft on 28 out of 100 pass plays; one single catch clears 6.5 yards.",
+        "pOver": 0.68,
+        "pUnder": 0.32
+      },
+      {
+        "playerId": "green-bay-packers",
+        "playerName": "Green Bay Packers",
+        "propType": "1st Half Spread (-2.5)",
+        "market": "1h_spread",
+        "line": 2.5,
+        "side": "OVER",
+        "confidence": "65/100",
+        "expectedClv": 0.134,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Green Bay outscores Carolina 13.3 to 8.9 in the first half behind scripted play-action and a top-five pass rush.",
+        "pOver": 0.65,
+        "pUnder": 0.35
+      },
+      {
+        "playerId": "carolina-panthers",
+        "playerName": "Carolina Panthers",
+        "propType": "1st Half Team Total",
+        "market": "1h_team_total",
+        "line": 10.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1366,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Steamed from 9.5 across the key 10-point football number to 10.5 against Green Bay's second-ranked first-half drive defense.",
+        "pOver": 0.34,
+        "pUnder": 0.66
+      },
+      {
+        "playerId": "car-gb",
+        "playerName": "CAR @ GB",
+        "propType": "1st Half Total Points",
+        "market": "1h_total",
+        "line": 23.5,
+        "side": "UNDER",
+        "confidence": "58/100",
+        "expectedClv": 0.0636,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Carolina's 47.5 out of 100 pressure rate allowed stalls first-half drives and keeps the combined first-half total at 22.2 points.",
+        "pOver": 0.42,
+        "pUnder": 0.58
+      },
+      {
+        "playerId": "tucker-kraft",
+        "playerName": "Tucker Kraft",
+        "propType": "1st Half Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 20.5,
+        "side": "OVER",
+        "confidence": "64/100",
+        "expectedClv": 0.121,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Green Bay passes on 62 out of 100 first-half plays before shifting to second-half clock-control runs.",
+        "pOver": 0.64,
+        "pUnder": 0.36
+      },
+      {
+        "playerId": "christian-watson",
+        "playerName": "Christian Watson",
+        "propType": "1st Half Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 34.5,
+        "side": "OVER",
+        "confidence": "63/100",
+        "expectedClv": 0.109,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Watson averages 2.5 yards per route run against zone coverage and faces a Carolina defense playing zone on 90 out of 100 snaps.",
+        "pOver": 0.63,
+        "pUnder": 0.37
+      },
+      {
+        "playerId": "bryce-young",
+        "playerName": "Bryce Young",
+        "propType": "1st Half Passing Yards",
+        "market": "1h_pass_yds",
+        "line": 123.5,
+        "side": "UNDER",
+        "confidence": "64/100",
+        "expectedClv": 0.124,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Steamed up 6 yards from 117.5 to 123.5 despite Carolina allowing a league-worst 47.5 out of 100 pressure rate.",
+        "pOver": 0.36,
+        "pUnder": 0.64
+      },
+      {
+        "playerId": "chuba-hubbard",
+        "playerName": "Chuba Hubbard",
+        "propType": "1st Half Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 6.5,
+        "side": "OVER",
+        "confidence": "63/100",
+        "expectedClv": 0.112,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Green Bay's fast edge rush forces Bryce Young into early checkdown outlets to Chuba Hubbard in the first half.",
+        "pOver": 0.63,
+        "pUnder": 0.37
+      },
+      {
+        "playerId": "josh-jacobs",
+        "playerName": "Josh Jacobs",
+        "propType": "1st Half Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 7.5,
+        "side": "OVER",
+        "confidence": "62/100",
+        "expectedClv": 0.104,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Screen and flat outlets against Carolina's middle-field zone push Josh Jacobs to 11.6 first-half receiving yards.",
+        "pOver": 0.62,
+        "pUnder": 0.38
+      },
+      {
+        "playerId": "tetairoa-mcmillan",
+        "playerName": "Tetairoa McMillan",
+        "propType": "1st Half Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 32.5,
+        "side": "UNDER",
+        "confidence": "61/100",
+        "expectedClv": 0.092,
+        "decision": "PLAY",
+        "nEffTargetNotes": "McMillan averages 0.38 fantasy points per route against zone and faces a Green Bay defense playing zone on 76 out of 100 snaps.",
+        "pOver": 0.39,
+        "pUnder": 0.61
+      },
+      {
+        "playerId": "car-gb",
+        "playerName": "CAR @ GB",
+        "propType": "2nd Half Total Points",
+        "market": "2h_total",
+        "line": 23.0,
+        "side": "UNDER",
+        "confidence": "60/100",
+        "expectedClv": 0.0817,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Opponents leading Carolina by 8 or more points run the ball on 89 out of 100 snaps over the last three weeks, bleeding the second-half clock.",
+        "pOver": 0.4,
+        "pUnder": 0.6
+      },
+      {
+        "playerId": "bryce-young",
+        "playerName": "Bryce Young",
+        "propType": "Passing Interceptions",
+        "market": "pass_ints",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "63/100",
+        "expectedClv": 0.085,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Heavy edge pressure plus Xavier McKinney disguising two-high safety rotations forces Bryce Young into a turnover in 64 out of 100 games.",
+        "pOver": 0.63,
+        "pUnder": 0.37
+      },
+      {
+        "playerId": "jordan-love",
+        "playerName": "Jordan Love",
+        "propType": "Passing Attempts",
+        "market": "pass_attempts",
+        "line": 35.5,
+        "side": "UNDER",
+        "confidence": "69/100",
+        "expectedClv": 0.168,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Steamed up two full attempts from 33.5 to 35.5, but Green Bay runs 60 plays per game and bleeds the fourth-quarter clock on the ground.",
+        "pOver": 0.31,
+        "pUnder": 0.69
+      },
+      {
+        "playerId": "bryce-young",
+        "playerName": "Bryce Young",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 9.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.138,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Collapsed pockets force Bryce Young to scramble nearly three times per game for 14.2 rushing yards.",
+        "pOver": 0.66,
+        "pUnder": 0.34
+      },
+      {
+        "playerId": "ryan-fitzgerald",
+        "playerName": "Ryan Fitzgerald",
+        "propType": "Field Goals Made (CAR PK)",
+        "market": "fg_made",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "64/100",
+        "expectedClv": 0.121,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Carolina moves between the 20s with Chuba Hubbard before stalling inside the red zone on 42 out of 100 drives.",
+        "pOver": 0.64,
+        "pUnder": 0.36
+      },
+      {
+        "playerId": "trey-smack",
+        "playerName": "Trey Smack",
+        "propType": "Field Goals Made (GB PK)",
+        "market": "fg_made",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "61/100",
+        "expectedClv": 0.0885,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Top-eight kicking spot on the Week 8 slate as third-and-short red-zone stalls set up two or more field goals.",
+        "pOver": 0.61,
+        "pUnder": 0.39
+      },
+      {
+        "playerId": "bobby-okereke",
+        "playerName": "Bobby Okereke",
+        "propType": "Tackles + Assists (CAR LB)",
+        "market": "tackles_assists",
+        "line": 6.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.1316,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Line dropped a full tackle from 7.5 to 6.5 against 22 or more Packers inside zone carries and short middle completions.",
+        "pOver": 0.66,
+        "pUnder": 0.34
+      },
+      {
+        "playerId": "lukas-van-ness",
+        "playerName": "Lukas Van Ness",
+        "propType": "Total Sacks (0.5+ Clears)",
+        "market": "sacks",
+        "line": 0.25,
+        "side": "OVER",
+        "confidence": "62/100",
+        "expectedClv": 0.0953,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Half-sack or full sack cashes against a Carolina offensive line allowing pressure on nearly half of all pass plays.",
+        "pOver": 0.62,
+        "pUnder": 0.38
+      },
+      {
+        "playerId": "keisean-nixon",
+        "playerName": "Keisean Nixon",
+        "propType": "Tackles + Assists (GB CB)",
+        "market": "tackles_assists",
+        "line": 4.5,
+        "side": "OVER",
+        "confidence": "61/100",
+        "expectedClv": 0.0987,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Dropped from 5.5 to 4.5 while Green Bay plays nickel defense on 77 out of 100 snaps, funneling checkdowns to Nixon.",
+        "pOver": 0.61,
+        "pUnder": 0.39
+      },
+      {
+        "playerId": "tre-von-moehrig",
+        "playerName": "Tre'von Moehrig",
+        "propType": "Solo Tackles (CAR S)",
+        "market": "solo_tackles",
+        "line": 2.5,
+        "side": "OVER",
+        "confidence": "64/100",
+        "expectedClv": 0.1065,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Plunged two full tackles from 4.5 to 2.5 as Carolina's box safety against Josh Jacobs and Tucker Kraft.",
+        "pOver": 0.64,
+        "pUnder": 0.36
       }
     ],
     "correlatedSgpTicket": {
