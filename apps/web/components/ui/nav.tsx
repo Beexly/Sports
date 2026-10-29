@@ -1,6 +1,5 @@
 import React, { Suspense, type ReactNode } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
-import { NavMenu } from "@/components/ui/nav-menu";
 import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
 
 /**
@@ -24,97 +23,14 @@ export interface RevenuePillar {
  * Exact routes representing core commercial and tactical value streams.
  */
 export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
-  { label: "Picks", href: "/picks", desc: "Today's top side and total signals" },
-  { label: "Player Props", href: "/fantasy/props", desc: "Underdog & PrizePicks N_eff edges" },
-  { label: "SGP Projections", href: "/sgp-projections", desc: "Correlated parlay mispricing" },
-  { label: "DFS Writeups", href: "/fantasy/dfs", desc: "10,000-sim slate writeups & constructed lineups" },
-  { label: "Pick Packages", href: "/packages", desc: "A-la-carte slate dossiers & writeups" },
+  { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "Paid Week 8 dossiers" },
+  { label: "Game Dossiers", href: "/packages#slate-dossiers", desc: "TNF and Sunday game cards" },
+  { label: "DFS", href: "/fantasy/dfs", desc: "Optimizer and stacks" },
+  { label: "Pricing", href: "/pricing", desc: "All-access pricing" },
+  { label: "VIP Telegram", href: "https://t.me/GalaxySportsEdge_bot", desc: "Unlock channel" },
 ];
 
-const BOARD_MENU: readonly NavGroup[] = [
-  {
-    items: [
-      {
-        label: "The board",
-        href: "/board",
-        desc: "Every game we scored today",
-      },
-      {
-        label: "League slates",
-        href: "/slate",
-        desc: "NFL · NCAAF · NBA · NCAAB · MLB · NHL · MLS",
-      },
-      {
-        label: "Today's picks",
-        href: "/picks",
-        desc: "What we're on, with the reason",
-      },
-      {
-        label: "Our record",
-        href: "/calibration",
-        desc: "How we've done, graded in public",
-      },
-      {
-        label: "Bankroll",
-        href: "/bankroll",
-        desc: "Every settled result, counted",
-      },
-      {
-        label: "SGP projections",
-        href: "/sgp-projections",
-        desc: "Our number for each same-game market",
-      },
-      {
-        label: "Pick packages",
-        href: "/packages",
-        desc: "A-la-carte slate packages",
-      },
-    ],
-  },
-];
-
-const PLAYERS_MENU: readonly NavGroup[] = [
-  {
-    items: [
-      { label: "Player lab", href: "/players", desc: "Every player, every signal" },
-      { label: "The NFL house", href: "/house", desc: "The NFL hub" },
-    ],
-  },
-];
-
-const FANTASY_MENU: readonly NavGroup[] = [
-  {
-    heading: "Fantasy",
-    items: [
-      { label: "Start-Sit", href: "/fantasy/lineup", desc: "Floor vs ceiling, explained" },
-      { label: "Waivers", href: "/fantasy/waivers", desc: "Who to add and what to bid" },
-      { label: "Draft", href: "/fantasy/draft", desc: "Tiers and live pick guidance" },
-      { label: "Trade", href: "/fantasy/trade", desc: "Is the trade fair?" },
-    ],
-  },
-  {
-    heading: "Daily",
-    items: [
-      { label: "DFS", href: "/fantasy/dfs", desc: "Cash and tournament builders" },
-      { label: "Pick'em", href: "/fantasy/props", desc: "Underdog & PrizePicks edges" },
-      { label: "Best ball", href: "/fantasy/bestball", desc: "Season-long drafts, solved" },
-      { label: "NBA slate", href: "/fantasy/nba", desc: "The hoops board" },
-      { label: "Touchdowns", href: "/fantasy/touchdowns", desc: "Anytime TD, glass-box" },
-      { label: "Showdown", href: "/fantasy/showdown", desc: "Single game, 1.5x captain" },
-      { label: "Optimizer", href: "/optimizer", desc: "Every lineup, one workspace" },
-      { label: "Connect league", href: "/fantasy/connect", desc: "Sync your real roster" },
-    ],
-  },
-];
-
-const GSN_MENU: readonly NavGroup[] = [
-  {
-    heading: "GSN",
-    items: [
-      { label: "The Beat", href: "/the-beat", desc: "Cinematic broadcast" },
-    ],
-  },
-];
+export const COMMERCIAL_REVENUE_PILLARS = FIVE_REVENUE_PILLARS;
 
 /**
  * NavChrome — the shared static shell of the global bar: brand lockup and
@@ -129,10 +45,11 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
           <BrandLockup />
 
           <nav className="nav-links" aria-label="Primary">
-            <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
-            <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
-            <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
+            <a href="/packages">GALAXY PICKS (PAID)</a>
+            <a href="/packages#slate-dossiers">Game Dossiers</a>
+            <a href="/fantasy/dfs">DFS</a>
+            <a href="/pricing">Pricing</a>
+            <a href="https://t.me/GalaxySportsEdge_bot">VIP Telegram</a>
           </nav>
         </div>
 

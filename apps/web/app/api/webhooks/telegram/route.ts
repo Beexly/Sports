@@ -42,7 +42,7 @@ export async function POST(req: Request) {
           `• \`/props\` — N_eff Target Concentration Teaser (VIP: Exact Prop Lines & Directions)`,
           `• \`/parlays\` — Correlated SGP Edge Summary (VIP: Full Multi-Leg Tickets)`,
           `• \`/dfs\` — Slate Ownership & Stack Thesis (VIP: Captain, Cash Core & GPP Stacks)`,
-          `• \`/packages\` — Purchase Instant A-La-Carte Slate Packages`,
+          `• \`/packages\` — Purchase Galaxy Picks`,
           `• \`/unlock <sessionId | whopToken>\` — Verify purchase & unlock VIP picks in this chat`,
           ``,
           `Status: ${vipUnlocked ? "🔓 *VIP UNLOCKED*" : "🔒 *FREE TEASER TIER (Use /packages or /unlock)*"}`,
@@ -130,7 +130,7 @@ export async function POST(req: Request) {
         }).join("\n\n");
 
         reply = [
-          `📦 *Available A-La-Carte Pick Packages:*`,
+          `📦 *Available Galaxy Picks:*`,
           ``,
           packageList,
         ].join("\n");

@@ -150,13 +150,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
                 {/* F-28 (founder-delegated 2026-09-08, via orchestrator):
                     primary CTA to /picks, secondary to /pricing. */}
-                <Link href="/picks" className="btn-primary min-h-12 px-7 py-3 text-base">
-                  See today&apos;s picks
+                <Link href="/packages" className="btn-primary min-h-12 px-7 py-3 text-base">
+                  GALAXY PICKS (PAID) — Unlock TNF &amp; Week 8
                 </Link>
-                <Link
-                  href="/pricing"
-                  className="inline-flex min-h-12 items-center justify-center border border-mineral px-7 py-3 text-base font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
-                >
+                <Link href="/fantasy/dfs" className="btn-secondary min-h-12 px-7 py-3 text-base">
+                  DFS Optimizer &amp; Stacks
+                </Link>
+                <Link href="/pricing" className="inline-flex min-h-12 items-center justify-center border border-mineral px-7 py-3 text-base font-semibold text-ion-1">
                   See pricing
                 </Link>
               </div>
@@ -324,7 +324,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     Instant Packages
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    WagerTalk-style a-la-carte slate packages with instant Stripe checkout &amp; Telegram delivery.
+                    Galaxy Picks with instant Stripe checkout and Telegram delivery.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
@@ -338,7 +338,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-                    A-La-Carte Storefront · T-48h 04:00 CT 10,000-Run Simulations
+                    Galaxy Picks · Week 8 dossiers
                   </p>
                   <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white">
                     Live Slate Packages &amp; Guaranteed Cards
@@ -393,7 +393,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 ))}
               </div>
 
-              {/* 5 OnlyFans / WagerTalk-Style Paywall Reveal Cards with In-Place Unlock */}
+              {/* Galaxy Picks paywall cards */}
               <div className="mt-6 grid gap-6 lg:grid-cols-3">
                 {LIVE_PACKAGE_CATALOG.map((pkg) => (
                   <PaywallRevealCard

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T07:06:28Z",
+  "generatedAt": "2026-10-29T16:31:57Z",
   "season": 2026,
   "week": 8,
   "simulationRuns": 10000,
@@ -27,132 +27,158 @@
         "blitzRateVsPressureToSack": "GB blitzes 33.2% (sack rate 5.44%) vs CAR OL 6.3% sack allowed; CAR blitzes 36.2% (sack rate 4.53%) vs GB OL 4.56% sack allowed.",
         "personnelTendencies": "CAR N_eff=7.1 (avg box faced 6.35) \u2022 GB N_eff=6.44 (avg box faced 6.5)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: CAR +0.041 (W6\u20137 -0.053, \u0394 -0.139) vs GB +0.001 (W6\u20137 +0.033, \u0394 +0.046); Def EPA/p: CAR +0.025 vs GB -0.027.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread GB -5.4 (Posted GB -3.5) \u2022 Fair Total 44.9 (Posted 47.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread GB -8.5 (Posted GB -3.5) \u2022 Fair Total 29.3 (Posted 47.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Green Bay Packers -3.5",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0702,
+        "sideConfidence": "65/100",
+        "sideExpectedClv": 0.1311,
         "sideDecision": "PLAY",
         "totalSelection": "UNDER 47.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.0724,
+        "totalConfidence": "95/100",
+        "totalExpectedClv": 0.4236,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is GB -5.4 and fair total is 44.9 vs posted GB -3.5 / 47.5. GB W6\u2013W7 offensive EPA (+0.033) and defensive EPA (-0.027) vs CAR W6\u2013W7 offensive EPA (-0.053) and defensive EPA (+0.025) drive +7.0% side CLV and +7.2% total CLV."
+        "rationale": "Green Bay Packers -3.5 p=0.655 CLV=+0.1311. UNDER 47.5 p=0.947 CLV=+0.4236. Fair GB -8.5 / total 29.3 vs posted GB -3.5 / 47.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "gb-wr1",
-          "playerName": "M.Golden",
-          "propType": "Receiving Yards",
-          "line": 73.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0705,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 10.0 tgt/g (26.5% target share, 78.1 yd/g) in GB N_eff=6.44 target tree vs CAR 57.7% 1-High / 34.9% 2-High shells."
+          "playerName": "Matthew Golden",
+          "market": "rec_yds",
+          "line": 78.0,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0242,
+          "decision": "PASS",
+          "pOver": 0.4941,
+          "pUnder": 0.4996
         },
         {
-          "playerId": "car-wr1",
-          "playerName": "T.McMillan",
-          "propType": "Receiving Yards",
-          "line": 80.5,
+          "playerName": "Christian Watson",
+          "market": "rec_yds",
+          "line": 67.0,
+          "side": "UNDER",
+          "confidence": "92/100",
+          "expectedClv": 0.3994,
+          "decision": "PLAY",
+          "pOver": 0.0768,
+          "pUnder": 0.9232
+        },
+        {
+          "playerName": "Tetairoa McMillan",
+          "market": "rec_yds",
+          "line": 74.0,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0257,
+          "decision": "PASS",
+          "pOver": 0.4923,
+          "pUnder": 0.4981
+        },
+        {
+          "playerName": "Jalen Coker",
+          "market": "rec_yds",
+          "line": 60.0,
+          "side": "UNDER",
+          "confidence": "99/100",
+          "expectedClv": 0.4641,
+          "decision": "PLAY",
+          "pOver": 0.0121,
+          "pUnder": 0.9879
+        },
+        {
+          "playerName": "Chuba Hubbard",
+          "market": "rush_yds",
+          "line": 84.0,
+          "side": "UNDER",
+          "confidence": "49/100",
+          "expectedClv": -0.0297,
+          "decision": "PASS",
+          "pOver": 0.4899,
+          "pUnder": 0.4941
+        },
+        {
+          "playerName": "Josh Jacobs",
+          "market": "rush_yds",
+          "line": 52.0,
           "side": "OVER",
           "confidence": "59/100",
-          "expectedClv": 0.0786,
+          "expectedClv": 0.0657,
           "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 9.0 tgt/g (25.5% target share, 85.2 yd/g) in CAR N_eff=7.1 target tree vs GB 56.1% 2-High shells."
-        },
-        {
-          "playerId": "car-rb1",
-          "playerName": "Chuba Hubbard",
-          "propType": "Rushing Yards",
-          "line": 72.5,
-          "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.0757,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 16.2 carries/g (68.0% team rush share, 76.5 rush yd/g) vs GB 6.49-man average box."
+          "pOver": 0.5895,
+          "pUnder": 0.4105
         }
       ],
       "correlatedSgpTicket": {
-        "title": "CAR @ GB 10,000-Sim Sigma_game Correlated SGP",
+        "title": "CAR @ GB 10,000-world copula",
         "legs": [
           {
-            "description": "Green Bay Packers -3.5 (Fair GB -5.4)",
-            "pickType": "SPREAD",
             "selection": "Green Bay Packers -3.5",
-            "confidence": "58/100",
-            "expectedClv": 0.0702,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.1311,
+            "pickType": "SPREAD"
           },
           {
-            "description": "UNDER 47.5 (Fair Total 44.9)",
-            "pickType": "TOTAL",
             "selection": "UNDER 47.5",
-            "confidence": "57/100",
-            "expectedClv": 0.0724,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.4236,
+            "pickType": "TOTAL"
           },
           {
-            "description": "M.Golden OVER 73.5 Rec Yds (26.5% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "M.Golden OVER 73.5 Rec Yds",
-            "line": 73.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0705,
-            "decision": "PLAY"
+            "selection": "Matthew Golden line 78.0",
+            "decision": "PASS",
+            "expectedClv": -0.447,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.16,
-        "fairOdds": "+525",
-        "marketOdds": "+793",
-        "edgeScore": 0.0288,
-        "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Green Bay Packers -3.5, UNDER 47.5, and M.Golden target volume (10.0 tgt/g)."
+        "jointWinProb": 0.0596,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.0119,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "M.Golden",
+            "player": "Matthew Golden",
             "position": "WR",
             "salary": 10200,
-            "leverageNote": "1.5x Captain leverage: 10.0 tgt/g (26.5% share) in N_eff=6.44 offense."
+            "leverageNote": "1.5x Captain leverage: n/a tgt/g (26.5% share) in N_eff=6.44 offense."
           },
           {
-            "player": "T.McMillan",
+            "player": "Tetairoa McMillan",
             "position": "WR",
             "salary": 9600,
-            "leverageNote": "Bring-back Captain: 9.0 tgt/g (25.5% share) vs GB 56.1% 2-High."
+            "leverageNote": "Bring-back Captain: n/a tgt/g (25.5% share) vs GB 56.1% 2-High."
           }
         ],
         "cashCore": [
           {
-            "player": "J.Love",
+            "player": "Jordan Love",
             "position": "QB",
             "salary": 6600,
             "projection": 18.4,
-            "floorNote": "80th-pct cash floor backed by 269.7 pass yd/g & 62.4% motion rate."
+            "floorNote": "80th-pct cash floor backed by 268.9 pass yd/g & 62.4% motion rate."
           },
           {
             "player": "Chuba Hubbard",
             "position": "RB",
             "salary": 6200,
-            "projection": 19.4,
-            "floorNote": "16.2 carries/g (68.0% rush share) workload anchor."
+            "projection": 18.4,
+            "floorNote": "n/a carries/g (n/a% rush share) workload anchor."
           }
         ],
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "J.Love",
+              "qb": "Jordan Love",
               "passCatchers": [
-                "M.Golden",
-                "C.Watson"
+                "Matthew Golden",
+                "Christian Watson"
               ]
             },
-            "bringBack": "T.McMillan",
-            "valueFiller": "D.Waller",
-            "correlationTheme": "20-Max GPP Double Stack: J.Love + top 2 pass catchers correlated with T.McMillan catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Tetairoa McMillan",
+            "valueFiller": "Darren Waller",
+            "correlationTheme": "20-Max GPP Double Stack: Jordan Love + top 2 pass catchers correlated with Tetairoa McMillan catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -192,114 +218,107 @@
         "blitzRateVsPressureToSack": "BUF blitzes 35.0% (sack rate 3.85%) vs BAL OL 7.11% sack allowed; BAL blitzes 30.9% (sack rate 5.78%) vs BUF OL 5.38% sack allowed.",
         "personnelTendencies": "BAL N_eff=6.8 (avg box faced 6.44) \u2022 BUF N_eff=7.48 (avg box faced 6.49)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: BAL +0.071 (W6\u20137 -0.087, \u0394 -0.219) vs BUF +0.206 (W6\u20137 +0.185, \u0394 -0.025); Def EPA/p: BAL +0.026 vs BUF +0.148.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread BUF -1.8 (Posted BUF -3) \u2022 Fair Total 59.2 (Posted 54.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread BUF +0.6 (Posted BUF -3) \u2022 Fair Total 60.8 (Posted 54.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Baltimore Ravens +3",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0407,
+        "sideConfidence": "60/100",
+        "sideExpectedClv": 0.0752,
         "sideDecision": "PLAY",
         "totalSelection": "OVER 54.5",
-        "totalConfidence": "62/100",
-        "totalExpectedClv": 0.1245,
+        "totalConfidence": "73/100",
+        "totalExpectedClv": 0.2086,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is BUF -1.8 and fair total is 59.2 vs posted BUF -3 / 54.5. BUF W6\u2013W7 offensive EPA (+0.185) and defensive EPA (+0.148) vs BAL W6\u2013W7 offensive EPA (-0.087) and defensive EPA (+0.026) drive +4.1% side CLV and +12.4% total CLV."
+        "rationale": "Baltimore Ravens +3 p=0.599 CLV=+0.0752. OVER 54.5 p=0.732 CLV=+0.2086. Fair BUF +0.6 / total 60.8 vs posted BUF -3 / 54.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "buf-wr1",
-          "playerName": "K.Shakir",
-          "propType": "Receiving Yards",
-          "line": 42.5,
+          "playerName": "Khalil Shakir",
+          "market": "rec_yds",
+          "line": 60.648,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0596,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 5.3 tgt/g (19.6% target share, 46.7 yd/g) in BUF N_eff=7.48 target tree vs BAL 37.6% 1-High / 51.3% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0258,
+          "decision": "PASS",
+          "pOver": 0.498,
+          "pUnder": 0.4962
         },
         {
-          "playerId": "bal-wr1",
-          "playerName": "Z.Flowers",
-          "propType": "Receiving Yards",
-          "line": 82.5,
+          "playerName": "Zay Flowers",
+          "market": "rec_yds",
+          "line": 71.799,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0602,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 7.6 tgt/g (26.6% target share, 86.9 yd/g) in BAL N_eff=6.8 target tree vs BUF 45.1% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0269,
+          "decision": "PASS",
+          "pOver": 0.4969,
+          "pUnder": 0.4967
         },
         {
-          "playerId": "bal-rb1",
-          "playerName": "D.Henry",
-          "propType": "Rushing Yards",
-          "line": 78.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0912,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 21.1 carries/g (78.7% team rush share, 83.0 rush yd/g) vs BUF 6.48-man average box."
+          "playerName": "Derrick Henry",
+          "market": "rush_yds",
+          "line": 130.41045,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.027,
+          "decision": "PASS",
+          "pOver": 0.4938,
+          "pUnder": 0.4968
         }
       ],
       "correlatedSgpTicket": {
-        "title": "BAL @ BUF 10,000-Sim Sigma_game Correlated SGP",
+        "title": "BAL @ BUF 10,000-world copula",
         "legs": [
           {
-            "description": "Baltimore Ravens +3 (Fair BUF -1.8)",
-            "pickType": "SPREAD",
             "selection": "Baltimore Ravens +3",
-            "confidence": "58/100",
-            "expectedClv": 0.0407,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.0752,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 54.5 (Fair Total 59.2)",
-            "pickType": "TOTAL",
             "selection": "OVER 54.5",
-            "confidence": "62/100",
-            "expectedClv": 0.1245,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.2086,
+            "pickType": "TOTAL"
           },
           {
-            "description": "K.Shakir OVER 42.5 Rec Yds (19.6% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "K.Shakir OVER 42.5 Rec Yds",
-            "line": 42.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0596,
-            "decision": "PLAY"
+            "selection": "Khalil Shakir line 60.648",
+            "decision": "PASS",
+            "expectedClv": -0.0258,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2223,
-        "fairOdds": "+350",
-        "marketOdds": "+474",
-        "edgeScore": 0.04,
-        "correlationRationale": "Joint probability (22.2%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Baltimore Ravens +3, OVER 54.5, and K.Shakir target volume (5.3 tgt/g)."
+        "jointWinProb": 0.1772,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0413,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "K.Shakir",
+            "player": "Khalil Shakir",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 5.3 tgt/g (19.6% share) in N_eff=7.48 offense."
           },
           {
-            "player": "Z.Flowers",
+            "player": "Zay Flowers",
             "position": "WR",
             "salary": 9600,
-            "leverageNote": "Bring-back Captain: 7.6 tgt/g (26.6% share) vs BUF 45.1% 2-High."
+            "leverageNote": "Bring-back Captain: 8.8 tgt/g (26.6% share) vs BUF 45.1% 2-High."
           }
         ],
         "cashCore": [
           {
-            "player": "J.Allen",
+            "player": "Josh Allen",
             "position": "QB",
             "salary": 6600,
             "projection": 22.1,
-            "floorNote": "80th-pct cash floor backed by 271.0 pass yd/g & 64.4% motion rate."
+            "floorNote": "80th-pct cash floor backed by 239.2 pass yd/g & 64.4% motion rate."
           },
           {
-            "player": "D.Henry",
+            "player": "Derrick Henry",
             "position": "RB",
             "salary": 6200,
             "projection": 19.8,
@@ -309,15 +328,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "J.Allen",
+              "qb": "Josh Allen",
               "passCatchers": [
-                "K.Shakir",
-                "D.Kincaid"
+                "Khalil Shakir",
+                "Dalton Kincaid"
               ]
             },
-            "bringBack": "Z.Flowers",
-            "valueFiller": "R.Bateman",
-            "correlationTheme": "20-Max GPP Double Stack: J.Allen + top 2 pass catchers correlated with Z.Flowers catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Zay Flowers",
+            "valueFiller": "Rashod Bateman",
+            "correlationTheme": "20-Max GPP Double Stack: Josh Allen + top 2 pass catchers correlated with Zay Flowers catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -357,99 +376,92 @@
         "blitzRateVsPressureToSack": "CIN blitzes 16.8% (sack rate 8.43%) vs TEN OL 4.45% sack allowed; TEN blitzes 23.2% (sack rate 6.46%) vs CIN OL 4.07% sack allowed.",
         "personnelTendencies": "TEN N_eff=6.37 (avg box faced 6.27) \u2022 CIN N_eff=6.82 (avg box faced 6.26)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: TEN -0.121 (W6\u20137 -0.083, \u0394 +0.053) vs CIN +0.108 (W6\u20137 +0.349, \u0394 +0.281); Def EPA/p: TEN +0.045 vs CIN -0.033.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread CIN -11.8 (Posted CIN -10) \u2022 Fair Total 45.2 (Posted 46.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread CIN -27.1 (Posted CIN -10) \u2022 Fair Total 45.1 (Posted 46.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Cincinnati Bengals -10",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0664,
+        "sideConfidence": "91/100",
+        "sideExpectedClv": 0.3832,
         "sideDecision": "PLAY",
         "totalSelection": "UNDER 46.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.0384,
-        "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is CIN -11.8 and fair total is 45.2 vs posted CIN -10 / 46.5. CIN W6\u2013W7 offensive EPA (+0.349) and defensive EPA (-0.033) vs TEN W6\u2013W7 offensive EPA (-0.083) and defensive EPA (+0.045) drive +6.6% side CLV and +3.8% total CLV."
+        "totalConfidence": "54/100",
+        "totalExpectedClv": 0.0205,
+        "totalDecision": "PASS",
+        "rationale": "Cincinnati Bengals -10 p=0.907 CLV=+0.3832. PASS \u2014 Market Efficient; no forced bet. Fair CIN -27.1 / total 45.1 vs posted CIN -10 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "cin-wr1",
-          "playerName": "T.Higgins",
-          "propType": "Receiving Yards",
-          "line": 90.5,
+          "playerName": "Tee Higgins",
+          "market": "rec_yds",
+          "line": 85.956,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0725,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 8.3 tgt/g (23.4% target share, 95.2 yd/g) in CIN N_eff=6.82 target tree vs TEN 44.5% 1-High / 48.4% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0245,
+          "decision": "PASS",
+          "pOver": 0.4993,
+          "pUnder": 0.4948
         },
         {
-          "playerId": "ten-wr1",
-          "playerName": "C.Tate",
-          "propType": "Receiving Yards",
-          "line": 54.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0673,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 7.3 tgt/g (26.0% target share, 59.0 yd/g) in TEN N_eff=6.37 target tree vs CIN 38.0% 2-High shells."
+          "playerName": "Carnell Tate",
+          "market": "rec_yds",
+          "line": 39.52,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0251,
+          "decision": "PASS",
+          "pOver": 0.4929,
+          "pUnder": 0.4987
         },
         {
-          "playerId": "ten-rb1",
-          "playerName": "T.Pollard",
-          "propType": "Rushing Yards",
-          "line": 64.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0853,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 16.0 carries/g (76.2% team rush share, 68.3 rush yd/g) vs CIN 6.31-man average box."
+          "playerName": "Tony Pollard",
+          "market": "rush_yds",
+          "line": 55.559400000000004,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0279,
+          "decision": "PASS",
+          "pOver": 0.4875,
+          "pUnder": 0.4959
         }
       ],
       "correlatedSgpTicket": {
-        "title": "TEN @ CIN 10,000-Sim Sigma_game Correlated SGP",
+        "title": "TEN @ CIN 10,000-world copula",
         "legs": [
           {
-            "description": "Cincinnati Bengals -10 (Fair CIN -11.8)",
-            "pickType": "SPREAD",
             "selection": "Cincinnati Bengals -10",
-            "confidence": "58/100",
-            "expectedClv": 0.0664,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.3832,
+            "pickType": "SPREAD"
           },
           {
-            "description": "UNDER 46.5 (Fair Total 45.2)",
-            "pickType": "TOTAL",
             "selection": "UNDER 46.5",
-            "confidence": "57/100",
-            "expectedClv": 0.0384,
-            "decision": "PLAY"
+            "decision": "PASS",
+            "expectedClv": 0.0205,
+            "pickType": "TOTAL"
           },
           {
-            "description": "T.Higgins OVER 90.5 Rec Yds (23.4% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "T.Higgins OVER 90.5 Rec Yds",
-            "line": 90.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0725,
-            "decision": "PLAY"
+            "selection": "Tee Higgins line 85.956",
+            "decision": "PASS",
+            "expectedClv": -0.0245,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.16,
-        "fairOdds": "+525",
-        "marketOdds": "+793",
-        "edgeScore": 0.0288,
-        "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Cincinnati Bengals -10, UNDER 46.5, and T.Higgins target volume (8.3 tgt/g)."
+        "jointWinProb": 0.1784,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0681,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "T.Higgins",
+            "player": "Tee Higgins",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 8.3 tgt/g (23.4% share) in N_eff=6.82 offense."
           },
           {
-            "player": "C.Tate",
+            "player": "Carnell Tate",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 7.3 tgt/g (26.0% share) vs CIN 38.0% 2-High."
@@ -457,14 +469,14 @@
         ],
         "cashCore": [
           {
-            "player": "J.Burrow",
+            "player": "Joe Burrow",
             "position": "QB",
             "salary": 6600,
             "projection": 20.3,
-            "floorNote": "80th-pct cash floor backed by 271.3 pass yd/g & 51.6% motion rate."
+            "floorNote": "80th-pct cash floor backed by 264.0 pass yd/g & 51.6% motion rate."
           },
           {
-            "player": "T.Pollard",
+            "player": "Tony Pollard",
             "position": "RB",
             "salary": 6200,
             "projection": 18.9,
@@ -474,15 +486,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "J.Burrow",
+              "qb": "Joe Burrow",
               "passCatchers": [
-                "T.Higgins",
-                "J.Chase"
+                "Tee Higgins",
+                "Ja'Marr Chase"
               ]
             },
-            "bringBack": "C.Tate",
-            "valueFiller": "E.Ayomanor",
-            "correlationTheme": "20-Max GPP Double Stack: J.Burrow + top 2 pass catchers correlated with C.Tate catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Carnell Tate",
+            "valueFiller": "Elic Ayomanor",
+            "correlationTheme": "20-Max GPP Double Stack: Joe Burrow + top 2 pass catchers correlated with Carnell Tate catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -522,99 +534,92 @@
         "blitzRateVsPressureToSack": "DAL blitzes 24.7% (sack rate 3.75%) vs ARI OL 4.66% sack allowed; ARI blitzes 30.9% (sack rate 6.2%) vs DAL OL 2.22% sack allowed.",
         "personnelTendencies": "ARI N_eff=5.71 (avg box faced 6.32) \u2022 DAL N_eff=5.41 (avg box faced 6.48)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: ARI -0.024 (W6\u20137 -0.048, \u0394 -0.036) vs DAL +0.141 (W6\u20137 +0.106, \u0394 -0.051); Def EPA/p: ARI +0.102 vs DAL +0.140.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread DAL -3.2 (Posted DAL -7) \u2022 Fair Total 48.4 (Posted 54.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread DAL -2.4 (Posted DAL -7) \u2022 Fair Total 31.2 (Posted 54.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Arizona Cardinals +7",
-        "sideConfidence": "62/100",
-        "sideExpectedClv": 0.1195,
+        "sideConfidence": "64/100",
+        "sideExpectedClv": 0.1183,
         "sideDecision": "PLAY",
         "totalSelection": "UNDER 54.5",
-        "totalConfidence": "67/100",
-        "totalExpectedClv": 0.1672,
+        "totalConfidence": "98/100",
+        "totalExpectedClv": 0.4563,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DAL -3.2 and fair total is 48.4 vs posted DAL -7 / 54.5. DAL W6\u2013W7 offensive EPA (+0.106) and defensive EPA (+0.140) vs ARI W6\u2013W7 offensive EPA (-0.048) and defensive EPA (+0.102) drive +11.9% side CLV and +16.7% total CLV."
+        "rationale": "Arizona Cardinals +7 p=0.642 CLV=+0.1183. UNDER 54.5 p=0.980 CLV=+0.4563. Fair DAL -2.4 / total 31.2 vs posted DAL -7 / 54.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "dal-wr1",
-          "playerName": "C.Lamb",
-          "propType": "Receiving Yards",
-          "line": 89.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0533,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 11.9 tgt/g (30.9% target share, 93.3 yd/g) in DAL N_eff=5.41 target tree vs ARI 29.4% 1-High / 59.8% 2-High shells."
+          "playerName": "CeeDee Lamb",
+          "market": "rec_yds",
+          "line": 60.31399999999999,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0254,
+          "decision": "PASS",
+          "pOver": 0.4948,
+          "pUnder": 0.4984
         },
         {
-          "playerId": "ari-wr1",
-          "playerName": "T.McBride",
-          "propType": "Receiving Yards",
-          "line": 63.5,
+          "playerName": "Trey McBride",
+          "market": "rec_yds",
+          "line": 51.964999999999996,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.057,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 11.1 tgt/g (28.7% target share, 67.4 yd/g) in ARI N_eff=5.71 target tree vs DAL 31.7% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0274,
+          "decision": "PASS",
+          "pOver": 0.4964,
+          "pUnder": 0.4964
         },
         {
-          "playerId": "ari-rb1",
-          "playerName": "J.Love",
-          "propType": "Rushing Yards",
-          "line": 36.5,
+          "playerName": "Jeremiyah Love",
+          "market": "rush_yds",
+          "line": 45.76460000000001,
           "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.012,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 9.6 carries/g (39.2% team rush share, 35.0 rush yd/g) vs DAL 6.39-man average box."
+          "confidence": "50/100",
+          "expectedClv": -0.0263,
+          "decision": "PASS",
+          "pOver": 0.4975,
+          "pUnder": 0.4878
         }
       ],
       "correlatedSgpTicket": {
-        "title": "ARI @ DAL 10,000-Sim Sigma_game Correlated SGP",
+        "title": "ARI @ DAL 10,000-world copula",
         "legs": [
           {
-            "description": "Arizona Cardinals +7 (Fair DAL -3.2)",
-            "pickType": "SPREAD",
             "selection": "Arizona Cardinals +7",
-            "confidence": "62/100",
-            "expectedClv": 0.1195,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.1183,
+            "pickType": "SPREAD"
           },
           {
-            "description": "UNDER 54.5 (Fair Total 48.4)",
-            "pickType": "TOTAL",
             "selection": "UNDER 54.5",
-            "confidence": "67/100",
-            "expectedClv": 0.1672,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.4563,
+            "pickType": "TOTAL"
           },
           {
-            "description": "C.Lamb OVER 89.5 Rec Yds (30.9% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "C.Lamb OVER 89.5 Rec Yds",
-            "line": 89.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0533,
-            "decision": "PLAY"
+            "selection": "CeeDee Lamb line 60.31399999999999",
+            "decision": "PASS",
+            "expectedClv": -0.029,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.16,
-        "fairOdds": "+525",
-        "marketOdds": "+793",
-        "edgeScore": 0.0288,
-        "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Arizona Cardinals +7, UNDER 54.5, and C.Lamb target volume (11.9 tgt/g)."
+        "jointWinProb": 0.2337,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0777,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "C.Lamb",
+            "player": "CeeDee Lamb",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 11.9 tgt/g (30.9% share) in N_eff=5.41 offense."
           },
           {
-            "player": "T.McBride",
+            "player": "Trey McBride",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 11.1 tgt/g (28.7% share) vs DAL 31.7% 2-High."
@@ -622,32 +627,32 @@
         ],
         "cashCore": [
           {
-            "player": "D.Prescott",
+            "player": "Dak Prescott",
             "position": "QB",
             "salary": 6600,
             "projection": 20.9,
-            "floorNote": "80th-pct cash floor backed by 270.4 pass yd/g & 47.4% motion rate."
+            "floorNote": "80th-pct cash floor backed by 259.6 pass yd/g & 47.4% motion rate."
           },
           {
-            "player": "J.Love",
+            "player": "Jeremiyah Love",
             "position": "RB",
             "salary": 6200,
-            "projection": 16.9,
-            "floorNote": "9.6 carries/g (39.2% rush share) workload anchor."
+            "projection": 17.7,
+            "floorNote": "13.4 carries/g (39.2% rush share) workload anchor."
           }
         ],
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "D.Prescott",
+              "qb": "Dak Prescott",
               "passCatchers": [
-                "C.Lamb",
-                "G.Pickens"
+                "CeeDee Lamb",
+                "George Pickens"
               ]
             },
-            "bringBack": "T.McBride",
-            "valueFiller": "K.Bourne",
-            "correlationTheme": "20-Max GPP Double Stack: D.Prescott + top 2 pass catchers correlated with T.McBride catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Trey McBride",
+            "valueFiller": "Kendrick Bourne",
+            "correlationTheme": "20-Max GPP Double Stack: Dak Prescott + top 2 pass catchers correlated with Trey McBride catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -687,88 +692,81 @@
         "blitzRateVsPressureToSack": "DET blitzes 28.0% (sack rate 6.84%) vs MIN OL 8.33% sack allowed; MIN blitzes 71.0% (sack rate 9.86%) vs DET OL 4.86% sack allowed.",
         "personnelTendencies": "MIN N_eff=7.16 (avg box faced 6.47) \u2022 DET N_eff=4.95 (avg box faced 6.36)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: MIN -0.096 (W6\u20137 -0.072, \u0394 +0.028) vs DET +0.144 (W6\u20137 -0.021, \u0394 -0.197); Def EPA/p: MIN -0.220 vs DET +0.146.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread DET -3.4 (Posted DET -3) \u2022 Fair Total 53.5 (Posted 46.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread DET -18.9 (Posted DET -3) \u2022 Fair Total 57.1 (Posted 46.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Detroit Lions -3",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0091,
+        "sideConfidence": "88/100",
+        "sideExpectedClv": 0.3516,
         "sideDecision": "PLAY",
         "totalSelection": "OVER 46.5",
-        "totalConfidence": "68/100",
-        "totalExpectedClv": 0.1824,
+        "totalConfidence": "83/100",
+        "totalExpectedClv": 0.303,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DET -3.4 and fair total is 53.5 vs posted DET -3 / 46.5. DET W6\u2013W7 offensive EPA (-0.021) and defensive EPA (+0.146) vs MIN W6\u2013W7 offensive EPA (-0.072) and defensive EPA (-0.220) drive +0.9% side CLV and +18.2% total CLV."
+        "rationale": "Detroit Lions -3 p=0.875 CLV=+0.3516. OVER 46.5 p=0.827 CLV=+0.3030. Fair DET -18.9 / total 57.1 vs posted DET -3 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "det-wr1",
           "playerName": "A.St. Brown",
-          "propType": "Receiving Yards",
-          "line": 84.5,
+          "market": "rec_yds",
+          "line": 96.499,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0644,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 11.3 tgt/g (31.1% target share, 89.0 yd/g) in DET N_eff=4.95 target tree vs MIN 35.7% 1-High / 53.1% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0242,
+          "decision": "PASS",
+          "pOver": 0.4996,
+          "pUnder": 0.4955
         },
         {
-          "playerId": "min-wr1",
-          "playerName": "J.Jefferson",
-          "propType": "Receiving Yards",
-          "line": 46.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0579,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 5.3 tgt/g (20.8% target share, 50.7 yd/g) in MIN N_eff=7.16 target tree vs DET 32.7% 2-High shells."
+          "playerName": "Justin Jefferson",
+          "market": "rec_yds",
+          "line": 48.906000000000006,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0263,
+          "decision": "PASS",
+          "pOver": 0.4963,
+          "pUnder": 0.4975
         },
         {
-          "playerId": "min-rb1",
-          "playerName": "A.Jones",
-          "propType": "Rushing Yards",
-          "line": 68.5,
+          "playerName": "Aaron Jones",
+          "market": "rush_yds",
+          "line": 91.14875,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0852,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 17.5 carries/g (68.6% team rush share, 72.7 rush yd/g) vs DET 6.45-man average box."
+          "confidence": "50/100",
+          "expectedClv": -0.0238,
+          "decision": "PASS",
+          "pOver": 0.5,
+          "pUnder": 0.5
         }
       ],
       "correlatedSgpTicket": {
-        "title": "MIN @ DET 10,000-Sim Sigma_game Correlated SGP",
+        "title": "MIN @ DET 10,000-world copula",
         "legs": [
           {
-            "description": "Detroit Lions -3 (Fair DET -3.4)",
-            "pickType": "SPREAD",
             "selection": "Detroit Lions -3",
-            "confidence": "58/100",
-            "expectedClv": 0.0091,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.3516,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 46.5 (Fair Total 53.5)",
-            "pickType": "TOTAL",
             "selection": "OVER 46.5",
-            "confidence": "68/100",
-            "expectedClv": 0.1824,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.303,
+            "pickType": "TOTAL"
           },
           {
-            "description": "A.St. Brown OVER 84.5 Rec Yds (31.1% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "A.St. Brown OVER 84.5 Rec Yds",
-            "line": 84.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0644,
-            "decision": "PLAY"
+            "selection": "A.St. Brown line 96.499",
+            "decision": "PASS",
+            "expectedClv": -0.0242,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2757,
-        "fairOdds": "+263",
-        "marketOdds": "+339",
-        "edgeScore": 0.0496,
-        "correlationRationale": "Joint probability (27.6%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Detroit Lions -3, OVER 46.5, and A.St. Brown target volume (11.3 tgt/g)."
+        "jointWinProb": 0.4429,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.0813,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
@@ -779,22 +777,22 @@
             "leverageNote": "1.5x Captain leverage: 11.3 tgt/g (31.1% share) in N_eff=4.95 offense."
           },
           {
-            "player": "J.Jefferson",
+            "player": "Justin Jefferson",
             "position": "WR",
             "salary": 9600,
-            "leverageNote": "Bring-back Captain: 5.3 tgt/g (20.8% share) vs DET 32.7% 2-High."
+            "leverageNote": "Bring-back Captain: 6.4 tgt/g (20.8% share) vs DET 32.7% 2-High."
           }
         ],
         "cashCore": [
           {
-            "player": "J.Goff",
+            "player": "Jared Goff",
             "position": "QB",
             "salary": 6600,
             "projection": 21.0,
-            "floorNote": "80th-pct cash floor backed by 285.2 pass yd/g & 54.5% motion rate."
+            "floorNote": "80th-pct cash floor backed by 282.3 pass yd/g & 54.5% motion rate."
           },
           {
-            "player": "A.Jones",
+            "player": "Aaron Jones",
             "position": "RB",
             "salary": 6200,
             "projection": 19.2,
@@ -804,15 +802,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "J.Goff",
+              "qb": "Jared Goff",
               "passCatchers": [
                 "A.St. Brown",
-                "J.Gibbs"
+                "Jahmyr Gibbs"
               ]
             },
-            "bringBack": "J.Jefferson",
-            "valueFiller": "J.Addison",
-            "correlationTheme": "20-Max GPP Double Stack: J.Goff + top 2 pass catchers correlated with J.Jefferson catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Justin Jefferson",
+            "valueFiller": "Jordan Addison",
+            "correlationTheme": "20-Max GPP Double Stack: Jared Goff + top 2 pass catchers correlated with Justin Jefferson catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -852,114 +850,107 @@
         "blitzRateVsPressureToSack": "NYJ blitzes 37.5% (sack rate 7.14%) vs LV OL 3.29% sack allowed; LV blitzes 26.7% (sack rate 5.86%) vs NYJ OL 8.27% sack allowed.",
         "personnelTendencies": "LV N_eff=7.11 (avg box faced 6.39) \u2022 NYJ N_eff=7.92 (avg box faced 6.47)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: LV +0.013 (W6\u20137 -0.002, \u0394 -0.020) vs NYJ +0.014 (W6\u20137 +0.112, \u0394 +0.136); Def EPA/p: LV +0.038 vs NYJ +0.016.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread NYJ -0.3 (Posted NYJ -1.5) \u2022 Fair Total 44.8 (Posted 45.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread NYJ +2.3 (Posted NYJ -1.5) \u2022 Fair Total 32.4 (Posted 45.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Las Vegas Raiders +1.5",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0416,
+        "sideConfidence": "62/100",
+        "sideExpectedClv": 0.0956,
         "sideDecision": "PLAY",
         "totalSelection": "UNDER 45.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.0244,
+        "totalConfidence": "90/100",
+        "totalExpectedClv": 0.3776,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is NYJ -0.3 and fair total is 44.8 vs posted NYJ -1.5 / 45.5. NYJ W6\u2013W7 offensive EPA (+0.112) and defensive EPA (+0.016) vs LV W6\u2013W7 offensive EPA (-0.002) and defensive EPA (+0.038) drive +4.2% side CLV and +2.4% total CLV."
+        "rationale": "Las Vegas Raiders +1.5 p=0.619 CLV=+0.0956. UNDER 45.5 p=0.901 CLV=+0.3776. Fair NYJ +2.3 / total 32.4 vs posted NYJ -1.5 / 45.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "nyj-wr1",
-          "playerName": "G.Wilson",
-          "propType": "Receiving Yards",
-          "line": 59.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0615,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 7.4 tgt/g (26.0% target share, 63.4 yd/g) in NYJ N_eff=7.92 target tree vs LV 47.6% 1-High / 36.4% 2-High shells."
+          "playerName": "Garrett Wilson",
+          "market": "rec_yds",
+          "line": 51.22,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0241,
+          "decision": "PASS",
+          "pOver": 0.4943,
+          "pUnder": 0.4997
         },
         {
-          "playerId": "lv-wr1",
-          "playerName": "B.Bowers",
-          "propType": "Receiving Yards",
-          "line": 60.5,
+          "playerName": "Brock Bowers",
+          "market": "rec_yds",
+          "line": 48.51,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.056,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 7.4 tgt/g (20.2% target share, 65.0 yd/g) in LV N_eff=7.11 target tree vs NYJ 44.0% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0257,
+          "decision": "PASS",
+          "pOver": 0.4981,
+          "pUnder": 0.4945
         },
         {
-          "playerId": "lv-rb1",
-          "playerName": "A.Jeanty",
-          "propType": "Rushing Yards",
-          "line": 42.5,
+          "playerName": "Ashton Jeanty",
+          "market": "rush_yds",
+          "line": 64.73,
           "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.0797,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 15.1 carries/g (66.2% team rush share, 46.9 rush yd/g) vs NYJ 6.45-man average box."
+          "confidence": "50/100",
+          "expectedClv": -0.0246,
+          "decision": "PASS",
+          "pOver": 0.4992,
+          "pUnder": 0.49
         }
       ],
       "correlatedSgpTicket": {
-        "title": "LV @ NYJ 10,000-Sim Sigma_game Correlated SGP",
+        "title": "LV @ NYJ 10,000-world copula",
         "legs": [
           {
-            "description": "Las Vegas Raiders +1.5 (Fair NYJ -0.3)",
-            "pickType": "SPREAD",
             "selection": "Las Vegas Raiders +1.5",
-            "confidence": "58/100",
-            "expectedClv": 0.0416,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.0956,
+            "pickType": "SPREAD"
           },
           {
-            "description": "UNDER 45.5 (Fair Total 44.8)",
-            "pickType": "TOTAL",
             "selection": "UNDER 45.5",
-            "confidence": "57/100",
-            "expectedClv": 0.0244,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.3776,
+            "pickType": "TOTAL"
           },
           {
-            "description": "G.Wilson OVER 59.5 Rec Yds (26.0% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "G.Wilson OVER 59.5 Rec Yds",
-            "line": 59.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0615,
-            "decision": "PLAY"
+            "selection": "Garrett Wilson line 51.22",
+            "decision": "PASS",
+            "expectedClv": -0.0295,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.16,
-        "fairOdds": "+525",
-        "marketOdds": "+793",
-        "edgeScore": 0.0288,
-        "correlationRationale": "Joint probability (16.0%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Las Vegas Raiders +1.5, UNDER 45.5, and G.Wilson target volume (7.4 tgt/g)."
+        "jointWinProb": 0.1856,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0904,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "G.Wilson",
+            "player": "Garrett Wilson",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 7.4 tgt/g (26.0% share) in N_eff=7.92 offense."
           },
           {
-            "player": "B.Bowers",
+            "player": "Brock Bowers",
             "position": "WR",
             "salary": 9600,
-            "leverageNote": "Bring-back Captain: 7.4 tgt/g (20.2% share) vs NYJ 44.0% 2-High."
+            "leverageNote": "Bring-back Captain: 10.4 tgt/g (20.2% share) vs NYJ 44.0% 2-High."
           }
         ],
         "cashCore": [
           {
-            "player": "G.Smith",
+            "player": "Geno Smith",
             "position": "QB",
             "salary": 6600,
             "projection": 18.7,
-            "floorNote": "80th-pct cash floor backed by 213.6 pass yd/g & 48.3% motion rate."
+            "floorNote": "80th-pct cash floor backed by 207.1 pass yd/g & 48.3% motion rate."
           },
           {
-            "player": "A.Jeanty",
+            "player": "Ashton Jeanty",
             "position": "RB",
             "salary": 6200,
             "projection": 17.6,
@@ -969,15 +960,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "G.Smith",
+              "qb": "Geno Smith",
               "passCatchers": [
-                "G.Wilson",
-                "K.Sadiq"
+                "Garrett Wilson",
+                "Kenyon Sadiq"
               ]
             },
-            "bringBack": "B.Bowers",
-            "valueFiller": "A.Jeanty",
-            "correlationTheme": "20-Max GPP Double Stack: G.Smith + top 2 pass catchers correlated with B.Bowers catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Brock Bowers",
+            "valueFiller": "Ashton Jeanty",
+            "correlationTheme": "20-Max GPP Double Stack: Geno Smith + top 2 pass catchers correlated with Brock Bowers catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -1017,99 +1008,92 @@
         "blitzRateVsPressureToSack": "PIT blitzes 27.0% (sack rate 6.47%) vs CLE OL 8.99% sack allowed; CLE blitzes 24.1% (sack rate 7.19%) vs PIT OL 7.07% sack allowed.",
         "personnelTendencies": "CLE N_eff=6.5 (avg box faced 6.27) \u2022 PIT N_eff=7.05 (avg box faced 6.35)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: CLE -0.037 (W6\u20137 +0.023, \u0394 +0.087) vs PIT -0.029 (W6\u20137 -0.041, \u0394 -0.018); Def EPA/p: CLE -0.039 vs PIT -0.041.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread PIT -4.4 (Posted PIT -3.5) \u2022 Fair Total 46.7 (Posted 39.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread PIT -12.2 (Posted PIT -3.5) \u2022 Fair Total 40.8 (Posted 39.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Pittsburgh Steelers -3.5",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0241,
+        "sideConfidence": "74/100",
+        "sideExpectedClv": 0.2162,
         "sideDecision": "PLAY",
         "totalSelection": "OVER 39.5",
-        "totalConfidence": "68/100",
-        "totalExpectedClv": 0.1815,
+        "totalConfidence": "56/100",
+        "totalExpectedClv": 0.0323,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is PIT -4.4 and fair total is 46.7 vs posted PIT -3.5 / 39.5. PIT W6\u2013W7 offensive EPA (-0.041) and defensive EPA (-0.041) vs CLE W6\u2013W7 offensive EPA (+0.023) and defensive EPA (-0.039) drive +2.4% side CLV and +18.1% total CLV."
+        "rationale": "Pittsburgh Steelers -3.5 p=0.740 CLV=+0.2162. OVER 39.5 p=0.556 CLV=+0.0323. Fair PIT -12.2 / total 40.8 vs posted PIT -3.5 / 39.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "pit-wr1",
-          "playerName": "D.Metcalf",
-          "propType": "Receiving Yards",
-          "line": 49.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0693,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 8.3 tgt/g (23.5% target share, 53.4 yd/g) in PIT N_eff=7.05 target tree vs CLE 74.8% 1-High / 21.0% 2-High shells."
+          "playerName": "D.K. Metcalf",
+          "market": "rec_yds",
+          "line": 66.0825,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0257,
+          "decision": "PASS",
+          "pOver": 0.4953,
+          "pUnder": 0.4981
         },
         {
-          "playerId": "cle-wr1",
-          "playerName": "K.Concepcion",
-          "propType": "Receiving Yards",
-          "line": 40.5,
+          "playerName": "KC Concepcion",
+          "market": "rec_yds",
+          "line": 44.744,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0677,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.4 tgt/g (21.6% target share, 45.0 yd/g) in CLE N_eff=6.5 target tree vs PIT 47.2% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0254,
+          "decision": "PASS",
+          "pOver": 0.4984,
+          "pUnder": 0.4951
         },
         {
-          "playerId": "cle-rb1",
-          "playerName": "Q.Judkins",
-          "propType": "Rushing Yards",
-          "line": 41.5,
+          "playerName": "Quinshon Judkins",
+          "market": "rush_yds",
+          "line": 60.6543,
           "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.0684,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 12.9 carries/g (58.1% team rush share, 45.3 rush yd/g) vs PIT 6.51-man average box."
+          "confidence": "50/100",
+          "expectedClv": -0.0285,
+          "decision": "PASS",
+          "pOver": 0.4953,
+          "pUnder": 0.4925
         }
       ],
       "correlatedSgpTicket": {
-        "title": "CLE @ PIT 10,000-Sim Sigma_game Correlated SGP",
+        "title": "CLE @ PIT 10,000-world copula",
         "legs": [
           {
-            "description": "Pittsburgh Steelers -3.5 (Fair PIT -4.4)",
-            "pickType": "SPREAD",
             "selection": "Pittsburgh Steelers -3.5",
-            "confidence": "58/100",
-            "expectedClv": 0.0241,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.2162,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 39.5 (Fair Total 46.7)",
-            "pickType": "TOTAL",
             "selection": "OVER 39.5",
-            "confidence": "68/100",
-            "expectedClv": 0.1815,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.0323,
+            "pickType": "TOTAL"
           },
           {
-            "description": "D.Metcalf OVER 49.5 Rec Yds (23.5% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "D.Metcalf OVER 49.5 Rec Yds",
-            "line": 49.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0693,
-            "decision": "PLAY"
+            "selection": "D.K. Metcalf line 66.0825",
+            "decision": "PASS",
+            "expectedClv": -0.0285,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2856,
-        "fairOdds": "+250",
-        "marketOdds": "+321",
-        "edgeScore": 0.0514,
-        "correlationRationale": "Joint probability (28.6%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Pittsburgh Steelers -3.5, OVER 39.5, and D.Metcalf target volume (8.3 tgt/g)."
+        "jointWinProb": 0.3135,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.1097,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "D.Metcalf",
+            "player": "D.K. Metcalf",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 8.3 tgt/g (23.5% share) in N_eff=7.05 offense."
           },
           {
-            "player": "K.Concepcion",
+            "player": "KC Concepcion",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 6.4 tgt/g (21.6% share) vs PIT 47.2% 2-High."
@@ -1117,32 +1101,32 @@
         ],
         "cashCore": [
           {
-            "player": "A.Rodgers",
+            "player": "Aaron Rodgers",
             "position": "QB",
             "salary": 6600,
             "projection": 17.9,
-            "floorNote": "80th-pct cash floor backed by 222.4 pass yd/g & 48.6% motion rate."
+            "floorNote": "80th-pct cash floor backed by 217.6 pass yd/g & 48.6% motion rate."
           },
           {
-            "player": "Q.Judkins",
+            "player": "Quinshon Judkins",
             "position": "RB",
             "salary": 6200,
-            "projection": 17.5,
-            "floorNote": "12.9 carries/g (58.1% rush share) workload anchor."
+            "projection": 18.0,
+            "floorNote": "15.0 carries/g (58.1% rush share) workload anchor."
           }
         ],
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "A.Rodgers",
+              "qb": "Aaron Rodgers",
               "passCatchers": [
-                "D.Metcalf",
-                "G.Bernard"
+                "D.K. Metcalf",
+                "Germie Bernard"
               ]
             },
-            "bringBack": "K.Concepcion",
-            "valueFiller": "H.Fannin",
-            "correlationTheme": "20-Max GPP Double Stack: A.Rodgers + top 2 pass catchers correlated with K.Concepcion catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "KC Concepcion",
+            "valueFiller": "Harold Fannin",
+            "correlationTheme": "20-Max GPP Double Stack: Aaron Rodgers + top 2 pass catchers correlated with KC Concepcion catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -1182,99 +1166,92 @@
         "blitzRateVsPressureToSack": "TB blitzes 40.6% (sack rate 5.65%) vs ATL OL 6.67% sack allowed; ATL blitzes 24.7% (sack rate 5.18%) vs TB OL 8.12% sack allowed.",
         "personnelTendencies": "ATL N_eff=6.22 (avg box faced 6.53) \u2022 TB N_eff=6.49 (avg box faced 6.39)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: ATL -0.030 (W6\u20137 -0.046, \u0394 -0.022) vs TB -0.081 (W6\u20137 -0.056, \u0394 +0.037); Def EPA/p: ATL -0.022 vs TB -0.108.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread TB -4.4 (Posted TB -2.5) \u2022 Fair Total 45.2 (Posted 44.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread TB -2.7 (Posted TB -2.5) \u2022 Fair Total 37.5 (Posted 44.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Tampa Bay Buccaneers -2.5",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0665,
-        "sideDecision": "PLAY",
-        "totalSelection": "OVER 44.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.013,
+        "sideConfidence": "53/100",
+        "sideExpectedClv": 0.0033,
+        "sideDecision": "PASS",
+        "totalSelection": "UNDER 44.5",
+        "totalConfidence": "72/100",
+        "totalExpectedClv": 0.1989,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is TB -4.4 and fair total is 45.2 vs posted TB -2.5 / 44.5. TB W6\u2013W7 offensive EPA (-0.056) and defensive EPA (-0.108) vs ATL W6\u2013W7 offensive EPA (-0.046) and defensive EPA (-0.022) drive +6.7% side CLV and +1.3% total CLV."
+        "rationale": "PASS \u2014 Market Efficient; no forced bet. UNDER 44.5 p=0.723 CLV=+0.1989. Fair TB -2.7 / total 37.5 vs posted TB -2.5 / 44.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "tb-wr1",
-          "playerName": "E.Egbuka",
-          "propType": "Receiving Yards",
-          "line": 38.5,
+          "playerName": "Emeka Egbuka",
+          "market": "rec_yds",
+          "line": 52.4745,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.015,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 7.0 tgt/g (24.7% target share, 34.3 yd/g) in TB N_eff=6.49 target tree vs ATL 58.5% 1-High / 34.4% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0258,
+          "decision": "PASS",
+          "pOver": 0.498,
+          "pUnder": 0.4947
         },
         {
-          "playerId": "atl-wr1",
-          "playerName": "D.London",
-          "propType": "Receiving Yards",
-          "line": 86.5,
+          "playerName": "Drake London",
+          "market": "rec_yds",
+          "line": 54.37200000000001,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0616,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 8.1 tgt/g (29.2% target share, 90.3 yd/g) in ATL N_eff=6.22 target tree vs TB 34.5% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0269,
+          "decision": "PASS",
+          "pOver": 0.4969,
+          "pUnder": 0.4961
         },
         {
-          "playerId": "atl-rb1",
           "playerName": "Bi.Robinson",
-          "propType": "Rushing Yards",
-          "line": 96.5,
-          "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.0828,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 18.7 carries/g (68.6% team rush share, 100.6 rush yd/g) vs TB 6.68-man average box."
+          "market": "rush_yds",
+          "line": 82.86250000000001,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0248,
+          "decision": "PASS",
+          "pOver": 0.4904,
+          "pUnder": 0.499
         }
       ],
       "correlatedSgpTicket": {
-        "title": "ATL @ TB 10,000-Sim Sigma_game Correlated SGP",
+        "title": "ATL @ TB 10,000-world copula",
         "legs": [
           {
-            "description": "Tampa Bay Buccaneers -2.5 (Fair TB -4.4)",
-            "pickType": "SPREAD",
             "selection": "Tampa Bay Buccaneers -2.5",
-            "confidence": "58/100",
-            "expectedClv": 0.0665,
-            "decision": "PLAY"
+            "decision": "PASS",
+            "expectedClv": 0.0033,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 44.5 (Fair Total 45.2)",
-            "pickType": "TOTAL",
-            "selection": "OVER 44.5",
-            "confidence": "57/100",
-            "expectedClv": 0.013,
-            "decision": "PLAY"
+            "selection": "UNDER 44.5",
+            "decision": "PLAY",
+            "expectedClv": 0.1989,
+            "pickType": "TOTAL"
           },
           {
-            "description": "E.Egbuka OVER 38.5 Rec Yds (24.7% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "E.Egbuka OVER 38.5 Rec Yds",
-            "line": 38.5,
-            "confidence": "60/100",
-            "expectedClv": 0.015,
-            "decision": "PLAY"
+            "selection": "Emeka Egbuka line 52.4745",
+            "decision": "PASS",
+            "expectedClv": -0.0258,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2128,
-        "fairOdds": "+370",
-        "marketOdds": "+507",
-        "edgeScore": 0.0383,
-        "correlationRationale": "Joint probability (21.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Tampa Bay Buccaneers -2.5, OVER 44.5, and E.Egbuka target volume (7.0 tgt/g)."
+        "jointWinProb": 0.2176,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.0279,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "E.Egbuka",
+            "player": "Emeka Egbuka",
             "position": "WR",
             "salary": 10200,
-            "leverageNote": "1.5x Captain leverage: 7.0 tgt/g (24.7% share) in N_eff=6.49 offense."
+            "leverageNote": "1.5x Captain leverage: 8.2 tgt/g (24.7% share) in N_eff=6.49 offense."
           },
           {
-            "player": "D.London",
+            "player": "Drake London",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 8.1 tgt/g (29.2% share) vs TB 34.5% 2-High."
@@ -1282,11 +1259,11 @@
         ],
         "cashCore": [
           {
-            "player": "B.Mayfield",
+            "player": "Baker Mayfield",
             "position": "QB",
             "salary": 6600,
             "projection": 16.9,
-            "floorNote": "80th-pct cash floor backed by 176.4 pass yd/g & 68.5% motion rate."
+            "floorNote": "80th-pct cash floor backed by 154.8 pass yd/g & 68.5% motion rate."
           },
           {
             "player": "Bi.Robinson",
@@ -1299,15 +1276,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "B.Mayfield",
+              "qb": "Baker Mayfield",
               "passCatchers": [
-                "E.Egbuka",
-                "C.Godwin"
+                "Emeka Egbuka",
+                "Chris Godwin"
               ]
             },
-            "bringBack": "D.London",
-            "valueFiller": "K.Pitts",
-            "correlationTheme": "20-Max GPP Double Stack: B.Mayfield + top 2 pass catchers correlated with D.London catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Drake London",
+            "valueFiller": "Kyle Pitts",
+            "correlationTheme": "20-Max GPP Double Stack: Baker Mayfield + top 2 pass catchers correlated with Drake London catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -1347,99 +1324,92 @@
         "blitzRateVsPressureToSack": "JAX blitzes 30.6% (sack rate 4.37%) vs IND OL 6.96% sack allowed; IND blitzes 22.0% (sack rate 5.12%) vs JAX OL 4.65% sack allowed.",
         "personnelTendencies": "IND N_eff=7.31 (avg box faced 6.4) \u2022 JAX N_eff=6.58 (avg box faced 6.38)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: IND -0.063 (W6\u20137 -0.121, \u0394 -0.084) vs JAX +0.114 (W6\u20137 +0.155, \u0394 +0.050); Def EPA/p: IND +0.032 vs JAX -0.016.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread JAX -3.4 (Posted JAX -10) \u2022 Fair Total 47.4 (Posted 46.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread JAX -7.1 (Posted JAX -10) \u2022 Fair Total 34.5 (Posted 46.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Indianapolis Colts +10",
-        "sideConfidence": "71/100",
-        "sideExpectedClv": 0.211,
+        "sideConfidence": "58/100",
+        "sideExpectedClv": 0.0565,
         "sideDecision": "PLAY",
-        "totalSelection": "OVER 46.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.0208,
+        "totalSelection": "UNDER 46.5",
+        "totalConfidence": "86/100",
+        "totalExpectedClv": 0.3327,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is JAX -3.4 and fair total is 47.4 vs posted JAX -10 / 46.5. JAX W6\u2013W7 offensive EPA (+0.155) and defensive EPA (-0.016) vs IND W6\u2013W7 offensive EPA (-0.121) and defensive EPA (+0.032) drive +21.1% side CLV and +2.1% total CLV."
+        "rationale": "Indianapolis Colts +10 p=0.580 CLV=+0.0565. UNDER 46.5 p=0.857 CLV=+0.3327. Fair JAX -7.1 / total 34.5 vs posted JAX -10 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "jax-wr1",
-          "playerName": "P.Washington",
-          "propType": "Receiving Yards",
-          "line": 65.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.06,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 7.7 tgt/g (25.7% target share, 69.3 yd/g) in JAX N_eff=6.58 target tree vs IND 51.3% 1-High / 32.0% 2-High shells."
+          "playerName": "Parker Washington",
+          "market": "rec_yds",
+          "line": 57.904,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0272,
+          "decision": "PASS",
+          "pOver": 0.4962,
+          "pUnder": 0.4966
         },
         {
-          "playerId": "ind-wr1",
-          "playerName": "J.Downs",
-          "propType": "Receiving Yards",
-          "line": 39.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0665,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.6 tgt/g (20.4% target share, 43.9 yd/g) in IND N_eff=7.31 target tree vs JAX 45.9% 2-High shells."
+          "playerName": "Josh Downs",
+          "market": "rec_yds",
+          "line": 39.44,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0252,
+          "decision": "PASS",
+          "pOver": 0.4936,
+          "pUnder": 0.4986
         },
         {
-          "playerId": "ind-rb1",
-          "playerName": "J.Taylor",
-          "propType": "Rushing Yards",
-          "line": 79.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0897,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 20.0 carries/g (73.7% team rush share, 83.9 rush yd/g) vs JAX 6.34-man average box."
+          "playerName": "Jonathan Taylor",
+          "market": "rush_yds",
+          "line": 76.5655,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0248,
+          "decision": "PASS",
+          "pOver": 0.4877,
+          "pUnder": 0.499
         }
       ],
       "correlatedSgpTicket": {
-        "title": "IND @ JAX 10,000-Sim Sigma_game Correlated SGP",
+        "title": "IND @ JAX 10,000-world copula",
         "legs": [
           {
-            "description": "Indianapolis Colts +10 (Fair JAX -3.4)",
-            "pickType": "SPREAD",
             "selection": "Indianapolis Colts +10",
-            "confidence": "71/100",
-            "expectedClv": 0.211,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.0565,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 46.5 (Fair Total 47.4)",
-            "pickType": "TOTAL",
-            "selection": "OVER 46.5",
-            "confidence": "57/100",
-            "expectedClv": 0.0208,
-            "decision": "PLAY"
+            "selection": "UNDER 46.5",
+            "decision": "PLAY",
+            "expectedClv": 0.3327,
+            "pickType": "TOTAL"
           },
           {
-            "description": "P.Washington OVER 65.5 Rec Yds (25.7% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "P.Washington OVER 65.5 Rec Yds",
-            "line": 65.5,
-            "confidence": "60/100",
-            "expectedClv": 0.06,
-            "decision": "PLAY"
+            "selection": "Parker Washington line 57.904",
+            "decision": "PASS",
+            "expectedClv": -0.0276,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2731,
-        "fairOdds": "+266",
-        "marketOdds": "+344",
-        "edgeScore": 0.0492,
-        "correlationRationale": "Joint probability (27.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Indianapolis Colts +10, OVER 46.5, and P.Washington target volume (7.7 tgt/g)."
+        "jointWinProb": 0.1631,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0835,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "P.Washington",
+            "player": "Parker Washington",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 7.7 tgt/g (25.7% share) in N_eff=6.58 offense."
           },
           {
-            "player": "J.Downs",
+            "player": "Josh Downs",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 6.6 tgt/g (20.4% share) vs JAX 45.9% 2-High."
@@ -1447,14 +1417,14 @@
         ],
         "cashCore": [
           {
-            "player": "T.Lawrence",
+            "player": "Trevor Lawrence",
             "position": "QB",
             "salary": 6600,
             "projection": 20.5,
-            "floorNote": "80th-pct cash floor backed by 242.7 pass yd/g & 64.0% motion rate."
+            "floorNote": "80th-pct cash floor backed by 234.8 pass yd/g & 64.0% motion rate."
           },
           {
-            "player": "J.Taylor",
+            "player": "Jonathan Taylor",
             "position": "RB",
             "salary": 6200,
             "projection": 19.8,
@@ -1464,15 +1434,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "T.Lawrence",
+              "qb": "Trevor Lawrence",
               "passCatchers": [
-                "P.Washington",
-                "B.Strange"
+                "Parker Washington",
+                "Brenton Strange"
               ]
             },
-            "bringBack": "J.Downs",
-            "valueFiller": "T.Warren",
-            "correlationTheme": "20-Max GPP Double Stack: T.Lawrence + top 2 pass catchers correlated with J.Downs catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Josh Downs",
+            "valueFiller": "Tyler Warren",
+            "correlationTheme": "20-Max GPP Double Stack: Trevor Lawrence + top 2 pass catchers correlated with Josh Downs catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -1512,88 +1482,81 @@
         "blitzRateVsPressureToSack": "LAR blitzes 29.6% (sack rate 3.7%) vs LAC OL 8.82% sack allowed; LAC blitzes 27.5% (sack rate 5.39%) vs LAR OL 3.5% sack allowed.",
         "personnelTendencies": "LAC N_eff=11.07 (avg box faced 6.34) \u2022 LAR N_eff=7.18 (avg box faced 6.41)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: LAC -0.209 (W6\u20137 -0.292, \u0394 -0.100) vs LAR +0.055 (W6\u20137 +0.025, \u0394 -0.040); Def EPA/p: LAC -0.034 vs LAR -0.039.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread LAR -7.9 (Posted LAR -6.5) \u2022 Fair Total 47.9 (Posted 45.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread LAR -20.1 (Posted LAR -6.5) \u2022 Fair Total 46.0 (Posted 45.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Los Angeles Rams -6.5",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0508,
+        "sideConfidence": "85/100",
+        "sideExpectedClv": 0.3246,
         "sideDecision": "PLAY",
-        "totalSelection": "OVER 45.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.0662,
-        "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is LAR -7.9 and fair total is 47.9 vs posted LAR -6.5 / 45.5. LAR W6\u2013W7 offensive EPA (+0.025) and defensive EPA (-0.039) vs LAC W6\u2013W7 offensive EPA (-0.292) and defensive EPA (-0.034) drive +5.1% side CLV and +6.6% total CLV."
+        "totalSelection": "UNDER 45.5",
+        "totalConfidence": "51/100",
+        "totalExpectedClv": -0.0135,
+        "totalDecision": "PASS",
+        "rationale": "Los Angeles Rams -6.5 p=0.848 CLV=+0.3246. PASS \u2014 Market Efficient; no forced bet. Fair LAR -20.1 / total 46.0 vs posted LAR -6.5 / 45.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "lar-wr1",
           "playerName": "P.Nacua",
-          "propType": "Receiving Yards",
-          "line": 65.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0545,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 8.9 tgt/g (22.9% target share, 69.3 yd/g) in LAR N_eff=7.18 target tree vs LAC 41.8% 1-High / 47.1% 2-High shells."
+          "market": "rec_yds",
+          "line": 76.28399999999999,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0259,
+          "decision": "PASS",
+          "pOver": 0.4972,
+          "pUnder": 0.4979
         },
         {
-          "playerId": "lac-wr1",
-          "playerName": "T.Harris",
-          "propType": "Receiving Yards",
-          "line": 38.5,
+          "playerName": "Tre Harris",
+          "market": "rec_yds",
+          "line": 32.32,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.014,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 4.2 tgt/g (14.4% target share, 37.5 yd/g) in LAC N_eff=11.07 target tree vs LAR 49.8% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0245,
+          "decision": "PASS",
+          "pOver": 0.4993,
+          "pUnder": 0.4925
         },
         {
-          "playerId": "lac-rb1",
-          "playerName": "O.Hampton",
-          "propType": "Rushing Yards",
-          "line": 43.5,
+          "playerName": "Omarion Hampton",
+          "market": "rush_yds",
+          "line": 62.54295,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.1015,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 13.3 carries/g (53.3% team rush share, 48.2 rush yd/g) vs LAR 6.38-man average box."
+          "confidence": "50/100",
+          "expectedClv": -0.0254,
+          "decision": "PASS",
+          "pOver": 0.4984,
+          "pUnder": 0.4903
         }
       ],
       "correlatedSgpTicket": {
-        "title": "LAC @ LAR 10,000-Sim Sigma_game Correlated SGP",
+        "title": "LAC @ LAR 10,000-world copula",
         "legs": [
           {
-            "description": "Los Angeles Rams -6.5 (Fair LAR -7.9)",
-            "pickType": "SPREAD",
             "selection": "Los Angeles Rams -6.5",
-            "confidence": "58/100",
-            "expectedClv": 0.0508,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.3246,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 45.5 (Fair Total 47.9)",
-            "pickType": "TOTAL",
-            "selection": "OVER 45.5",
-            "confidence": "57/100",
-            "expectedClv": 0.0662,
-            "decision": "PLAY"
+            "selection": "UNDER 45.5",
+            "decision": "PASS",
+            "expectedClv": -0.0135,
+            "pickType": "TOTAL"
           },
           {
-            "description": "P.Nacua OVER 65.5 Rec Yds (22.9% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "P.Nacua OVER 65.5 Rec Yds",
-            "line": 65.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0545,
-            "decision": "PLAY"
+            "selection": "P.Nacua line 76.28399999999999",
+            "decision": "PASS",
+            "expectedClv": -0.0266,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2615,
-        "fairOdds": "+282",
-        "marketOdds": "+368",
-        "edgeScore": 0.0471,
-        "correlationRationale": "Joint probability (26.2%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Los Angeles Rams -6.5, OVER 45.5, and P.Nacua target volume (8.9 tgt/g)."
+        "jointWinProb": 0.165,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0503,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
@@ -1601,13 +1564,13 @@
             "player": "P.Nacua",
             "position": "WR",
             "salary": 10200,
-            "leverageNote": "1.5x Captain leverage: 8.9 tgt/g (22.9% share) in N_eff=7.18 offense."
+            "leverageNote": "1.5x Captain leverage: 12.4 tgt/g (22.9% share) in N_eff=7.18 offense."
           },
           {
-            "player": "T.Harris",
+            "player": "Tre Harris",
             "position": "WR",
             "salary": 9600,
-            "leverageNote": "Bring-back Captain: 4.2 tgt/g (14.4% share) vs LAR 49.8% 2-High."
+            "leverageNote": "Bring-back Captain: 5.0 tgt/g (14.4% share) vs LAR 49.8% 2-High."
           }
         ],
         "cashCore": [
@@ -1616,10 +1579,10 @@
             "position": "QB",
             "salary": 6600,
             "projection": 19.4,
-            "floorNote": "80th-pct cash floor backed by 278.7 pass yd/g & 67.2% motion rate."
+            "floorNote": "80th-pct cash floor backed by 272.3 pass yd/g & 67.2% motion rate."
           },
           {
-            "player": "O.Hampton",
+            "player": "Omarion Hampton",
             "position": "RB",
             "salary": 6200,
             "projection": 17.7,
@@ -1635,9 +1598,9 @@
                 "D.Adams"
               ]
             },
-            "bringBack": "T.Harris",
-            "valueFiller": "O.Gadsden",
-            "correlationTheme": "20-Max GPP Double Stack: M.Stafford + top 2 pass catchers correlated with T.Harris catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Tre Harris",
+            "valueFiller": "Oronde Gadsden II",
+            "correlationTheme": "20-Max GPP Double Stack: M.Stafford + top 2 pass catchers correlated with Tre Harris catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -1677,99 +1640,92 @@
         "blitzRateVsPressureToSack": "DEN blitzes 35.7% (sack rate 6.69%) vs KC OL 3.14% sack allowed; KC blitzes 26.1% (sack rate 3.23%) vs DEN OL 3.53% sack allowed.",
         "personnelTendencies": "KC N_eff=7.63 (avg box faced 6.4) \u2022 DEN N_eff=7.74 (avg box faced 6.32)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: KC +0.101 (W6\u20137 -0.027, \u0394 -0.183) vs DEN -0.032 (W6\u20137 +0.027, \u0394 +0.081); Def EPA/p: KC -0.043 vs DEN -0.049.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread DEN +3.0 (Posted KC -1.5) \u2022 Fair Total 49.5 (Posted 40.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread DEN +12.6 (Posted KC -1.5) \u2022 Fair Total 49.7 (Posted 40.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Kansas City Chiefs -1.5",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0553,
+        "sideConfidence": "78/100",
+        "sideExpectedClv": 0.2513,
         "sideDecision": "PLAY",
         "totalSelection": "OVER 40.5",
-        "totalConfidence": "73/100",
-        "totalExpectedClv": 0.229,
+        "totalConfidence": "81/100",
+        "totalExpectedClv": 0.2898,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is DEN +3.0 and fair total is 49.5 vs posted KC -1.5 / 40.5. DEN W6\u2013W7 offensive EPA (+0.027) and defensive EPA (-0.049) vs KC W6\u2013W7 offensive EPA (-0.027) and defensive EPA (-0.043) drive +5.5% side CLV and +22.9% total CLV."
+        "rationale": "Kansas City Chiefs -1.5 p=0.775 CLV=+0.2513. OVER 40.5 p=0.814 CLV=+0.2898. Fair DEN +12.6 / total 49.7 vs posted KC -1.5 / 40.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "den-wr1",
-          "playerName": "J.Waddle",
-          "propType": "Receiving Yards",
-          "line": 38.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0191,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.6 tgt/g (23.2% target share, 39.7 yd/g) in DEN N_eff=7.74 target tree vs KC 43.6% 1-High / 38.8% 2-High shells."
+          "playerName": "Jaylen Waddle",
+          "market": "rec_yds",
+          "line": 49.938,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.024,
+          "decision": "PASS",
+          "pOver": 0.4947,
+          "pUnder": 0.4998
         },
         {
-          "playerId": "kc-wr1",
-          "playerName": "X.Worthy",
-          "propType": "Receiving Yards",
-          "line": 38.5,
+          "playerName": "Xavier Worthy",
+          "market": "rec_yds",
+          "line": 65.83,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.014,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 5.8 tgt/g (19.4% target share, 36.2 yd/g) in KC N_eff=7.63 target tree vs DEN 37.2% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0264,
+          "decision": "PASS",
+          "pOver": 0.4974,
+          "pUnder": 0.4959
         },
         {
-          "playerId": "kc-rb1",
-          "playerName": "K.Walker",
-          "propType": "Rushing Yards",
-          "line": 112.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0906,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 20.0 carries/g (83.9% team rush share, 116.8 rush yd/g) vs DEN 6.41-man average box."
+          "playerName": "Kenneth Walker",
+          "market": "rush_yds",
+          "line": 119.68895000000002,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0268,
+          "decision": "PASS",
+          "pOver": 0.4932,
+          "pUnder": 0.497
         }
       ],
       "correlatedSgpTicket": {
-        "title": "KC @ DEN 10,000-Sim Sigma_game Correlated SGP",
+        "title": "KC @ DEN 10,000-world copula",
         "legs": [
           {
-            "description": "Kansas City Chiefs -1.5 (Fair DEN +3.0)",
-            "pickType": "SPREAD",
             "selection": "Kansas City Chiefs -1.5",
-            "confidence": "58/100",
-            "expectedClv": 0.0553,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.2513,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 40.5 (Fair Total 49.5)",
-            "pickType": "TOTAL",
             "selection": "OVER 40.5",
-            "confidence": "73/100",
-            "expectedClv": 0.229,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.2898,
+            "pickType": "TOTAL"
           },
           {
-            "description": "J.Waddle OVER 38.5 Rec Yds (23.2% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "J.Waddle OVER 38.5 Rec Yds",
-            "line": 38.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0191,
-            "decision": "PLAY"
+            "selection": "Jaylen Waddle line 49.938",
+            "decision": "PASS",
+            "expectedClv": -0.0291,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2253,
-        "fairOdds": "+344",
-        "marketOdds": "+464",
-        "edgeScore": 0.0406,
-        "correlationRationale": "Joint probability (22.5%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Kansas City Chiefs -1.5, OVER 40.5, and J.Waddle target volume (6.6 tgt/g)."
+        "jointWinProb": 0.2938,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": -0.0182,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "J.Waddle",
+            "player": "Jaylen Waddle",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 6.6 tgt/g (23.2% share) in N_eff=7.74 offense."
           },
           {
-            "player": "X.Worthy",
+            "player": "Xavier Worthy",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 5.8 tgt/g (19.4% share) vs DEN 37.2% 2-High."
@@ -1777,14 +1733,14 @@
         ],
         "cashCore": [
           {
-            "player": "B.Nix",
+            "player": "Bo Nix",
             "position": "QB",
             "salary": 6600,
             "projection": 17.8,
-            "floorNote": "80th-pct cash floor backed by 188.1 pass yd/g & 61.0% motion rate."
+            "floorNote": "80th-pct cash floor backed by 175.7 pass yd/g & 61.0% motion rate."
           },
           {
-            "player": "K.Walker",
+            "player": "Kenneth Walker",
             "position": "RB",
             "salary": 6200,
             "projection": 21.8,
@@ -1794,15 +1750,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "B.Nix",
+              "qb": "Bo Nix",
               "passCatchers": [
-                "J.Waddle",
-                "C.Sutton"
+                "Jaylen Waddle",
+                "Courtland Sutton"
               ]
             },
-            "bringBack": "X.Worthy",
-            "valueFiller": "K.Walker",
-            "correlationTheme": "20-Max GPP Double Stack: B.Nix + top 2 pass catchers correlated with X.Worthy catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Xavier Worthy",
+            "valueFiller": "Kenneth Walker",
+            "correlationTheme": "20-Max GPP Double Stack: Bo Nix + top 2 pass catchers correlated with Xavier Worthy catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -1842,99 +1798,92 @@
         "blitzRateVsPressureToSack": "MIA blitzes 26.7% (sack rate 2.91%) vs NE OL 4.73% sack allowed; NE blitzes 39.8% (sack rate 6.39%) vs MIA OL 7.96% sack allowed.",
         "personnelTendencies": "NE N_eff=9.18 (avg box faced 6.48) \u2022 MIA N_eff=7.07 (avg box faced 6.49)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: NE +0.054 (W6\u20137 +0.071, \u0394 +0.023) vs MIA -0.046 (W6\u20137 +0.285, \u0394 +0.402); Def EPA/p: NE +0.015 vs MIA +0.129.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread MIA -0.8 (Posted NE -7) \u2022 Fair Total 45.8 (Posted 43.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread MIA +1.0 (Posted NE -7) \u2022 Fair Total 27.5 (Posted 43.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Miami Dolphins +7",
-        "sideConfidence": "74/100",
-        "sideExpectedClv": 0.2398,
+        "sideConfidence": "68/100",
+        "sideExpectedClv": 0.1608,
         "sideDecision": "PLAY",
-        "totalSelection": "OVER 43.5",
-        "totalConfidence": "57/100",
-        "totalExpectedClv": 0.0593,
+        "totalSelection": "UNDER 43.5",
+        "totalConfidence": "93/100",
+        "totalExpectedClv": 0.406,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is MIA -0.8 and fair total is 45.8 vs posted NE -7 / 43.5. MIA W6\u2013W7 offensive EPA (+0.285) and defensive EPA (+0.129) vs NE W6\u2013W7 offensive EPA (+0.071) and defensive EPA (+0.015) drive +24.0% side CLV and +5.9% total CLV."
+        "rationale": "Miami Dolphins +7 p=0.685 CLV=+0.1608. UNDER 43.5 p=0.930 CLV=+0.4060. Fair MIA +1.0 / total 27.5 vs posted NE -7 / 43.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "mia-wr1",
-          "playerName": "M.Washington",
-          "propType": "Receiving Yards",
-          "line": 43.5,
-          "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0769,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.5 tgt/g (26.0% target share, 48.2 yd/g) in MIA N_eff=7.07 target tree vs NE 53.2% 1-High / 34.2% 2-High shells."
+          "playerName": "Malik Washington",
+          "market": "rec_yds",
+          "line": 43.940000000000005,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.026,
+          "decision": "PASS",
+          "pOver": 0.4959,
+          "pUnder": 0.4978
         },
         {
-          "playerId": "ne-wr1",
-          "playerName": "D.Douglas",
-          "propType": "Receiving Yards",
-          "line": 38.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.014,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 4.9 tgt/g (16.2% target share, 36.6 yd/g) in NE N_eff=9.18 target tree vs MIA 43.6% 2-High shells."
+          "playerName": "DeMario Douglas",
+          "market": "rec_yds",
+          "line": 38.402,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0257,
+          "decision": "PASS",
+          "pOver": 0.4932,
+          "pUnder": 0.4981
         },
         {
-          "playerId": "ne-rb1",
-          "playerName": "R.Stevenson",
-          "propType": "Rushing Yards",
-          "line": 36.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0903,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 11.0 carries/g (44.8% team rush share, 40.7 rush yd/g) vs MIA 6.51-man average box."
+          "playerName": "Rhamondre Stevenson",
+          "market": "rush_yds",
+          "line": 50.3118,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0263,
+          "decision": "PASS",
+          "pOver": 0.4898,
+          "pUnder": 0.4975
         }
       ],
       "correlatedSgpTicket": {
-        "title": "NE @ MIA 10,000-Sim Sigma_game Correlated SGP",
+        "title": "NE @ MIA 10,000-world copula",
         "legs": [
           {
-            "description": "Miami Dolphins +7 (Fair MIA -0.8)",
-            "pickType": "SPREAD",
             "selection": "Miami Dolphins +7",
-            "confidence": "74/100",
-            "expectedClv": 0.2398,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.1608,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 43.5 (Fair Total 45.8)",
-            "pickType": "TOTAL",
-            "selection": "OVER 43.5",
-            "confidence": "57/100",
-            "expectedClv": 0.0593,
-            "decision": "PLAY"
+            "selection": "UNDER 43.5",
+            "decision": "PLAY",
+            "expectedClv": 0.406,
+            "pickType": "TOTAL"
           },
           {
-            "description": "M.Washington OVER 43.5 Rec Yds (26.0% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "M.Washington OVER 43.5 Rec Yds",
-            "line": 43.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0769,
-            "decision": "PLAY"
+            "selection": "Malik Washington line 43.940000000000005",
+            "decision": "PASS",
+            "expectedClv": -0.0279,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.3415,
-        "fairOdds": "+193",
-        "marketOdds": "+241",
-        "edgeScore": 0.0615,
-        "correlationRationale": "Joint probability (34.2%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Miami Dolphins +7, OVER 43.5, and M.Washington target volume (6.5 tgt/g)."
+        "jointWinProb": 0.3798,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.0641,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "M.Washington",
+            "player": "Malik Washington",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 6.5 tgt/g (26.0% share) in N_eff=7.07 offense."
           },
           {
-            "player": "D.Douglas",
+            "player": "DeMario Douglas",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 4.9 tgt/g (16.2% share) vs MIA 43.6% 2-High."
@@ -1942,14 +1891,14 @@
         ],
         "cashCore": [
           {
-            "player": "M.Willis",
+            "player": "Malik Willis",
             "position": "QB",
             "salary": 6600,
             "projection": 17.6,
-            "floorNote": "80th-pct cash floor backed by 196.3 pass yd/g & 74.1% motion rate."
+            "floorNote": "80th-pct cash floor backed by 162.3 pass yd/g & 74.1% motion rate."
           },
           {
-            "player": "R.Stevenson",
+            "player": "Rhamondre Stevenson",
             "position": "RB",
             "salary": 6200,
             "projection": 17.2,
@@ -1959,15 +1908,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "M.Willis",
+              "qb": "Malik Willis",
               "passCatchers": [
-                "M.Washington",
-                "G.Dulcich"
+                "Malik Washington",
+                "Greg Dulcich"
               ]
             },
-            "bringBack": "D.Douglas",
-            "valueFiller": "R.Stevenson",
-            "correlationTheme": "20-Max GPP Double Stack: M.Willis + top 2 pass catchers correlated with D.Douglas catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "DeMario Douglas",
+            "valueFiller": "Rhamondre Stevenson",
+            "correlationTheme": "20-Max GPP Double Stack: Malik Willis + top 2 pass catchers correlated with DeMario Douglas catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -2007,132 +1956,125 @@
         "blitzRateVsPressureToSack": "WSH blitzes 45.1% (sack rate 4.28%) vs PHI OL 6.45% sack allowed; PHI blitzes 23.2% (sack rate 2.82%) vs WSH OL 5.45% sack allowed.",
         "personnelTendencies": "PHI N_eff=8.45 (avg box faced 6.29) \u2022 WSH N_eff=8.46 (avg box faced 6.26)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: PHI -0.086 (W6\u20137 -0.030, \u0394 +0.080) vs WSH -0.007 (W6\u20137 -0.001, \u0394 +0.007); Def EPA/p: PHI +0.102 vs WSH +0.067.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread WSH -5.4 (Posted WSH -6) \u2022 Fair Total 53.2 (Posted 40.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread WSH -11.5 (Posted WSH -6) \u2022 Fair Total 48.3 (Posted 40.5)."
       },
       "sideTotalCall": {
-        "sideSelection": "Philadelphia Eagles +6",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0179,
+        "sideSelection": "Washington Commanders -6",
+        "sideConfidence": "66/100",
+        "sideExpectedClv": 0.1385,
         "sideDecision": "PLAY",
         "totalSelection": "OVER 40.5",
-        "totalConfidence": "81/100",
-        "totalExpectedClv": 0.3078,
+        "totalConfidence": "77/100",
+        "totalExpectedClv": 0.2475,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is WSH -5.4 and fair total is 53.2 vs posted WSH -6 / 40.5. WSH W6\u2013W7 offensive EPA (-0.001) and defensive EPA (+0.067) vs PHI W6\u2013W7 offensive EPA (-0.030) and defensive EPA (+0.102) drive +1.8% side CLV and +30.8% total CLV."
+        "rationale": "Washington Commanders -6 p=0.662 CLV=+0.1385. OVER 40.5 p=0.771 CLV=+0.2475. Fair WSH -11.5 / total 48.3 vs posted WSH -6 / 40.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "wsh-wr1",
-          "playerName": "S.Diggs",
-          "propType": "Receiving Yards",
-          "line": 38.5,
+          "playerName": "Stefon Diggs",
+          "market": "rec_yds",
+          "line": 61.774,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.015,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.3 tgt/g (20.1% target share, 35.7 yd/g) in WSH N_eff=8.46 target tree vs PHI 49.8% 1-High / 36.6% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0249,
+          "decision": "PASS",
+          "pOver": 0.4989,
+          "pUnder": 0.4957
         },
         {
-          "playerId": "phi-wr1",
-          "playerName": "D.Smith",
-          "propType": "Receiving Yards",
-          "line": 40.5,
-          "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0608,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 5.9 tgt/g (18.6% target share, 44.3 yd/g) in PHI N_eff=8.45 target tree vs WSH 52.3% 2-High shells."
+          "playerName": "DeVonta Smith",
+          "market": "rec_yds",
+          "line": 47.053000000000004,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.0249,
+          "decision": "PASS",
+          "pOver": 0.4946,
+          "pUnder": 0.4989
         },
         {
-          "playerId": "phi-rb1",
-          "playerName": "S.Barkley",
-          "propType": "Rushing Yards",
-          "line": 36.5,
-          "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.012,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.1 carries/g (29.9% team rush share, 34.9 rush yd/g) vs WSH 6.48-man average box."
+          "playerName": "Saquon Barkley",
+          "market": "rush_yds",
+          "line": 56.4515,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.024,
+          "decision": "PASS",
+          "pOver": 0.4879,
+          "pUnder": 0.4998
         }
       ],
       "correlatedSgpTicket": {
-        "title": "PHI @ WSH 10,000-Sim Sigma_game Correlated SGP",
+        "title": "PHI @ WSH 10,000-world copula",
         "legs": [
           {
-            "description": "Philadelphia Eagles +6 (Fair WSH -5.4)",
-            "pickType": "SPREAD",
-            "selection": "Philadelphia Eagles +6",
-            "confidence": "58/100",
-            "expectedClv": 0.0179,
-            "decision": "PLAY"
+            "selection": "Washington Commanders -6",
+            "decision": "PLAY",
+            "expectedClv": 0.1385,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 40.5 (Fair Total 53.2)",
-            "pickType": "TOTAL",
             "selection": "OVER 40.5",
-            "confidence": "81/100",
-            "expectedClv": 0.3078,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.2475,
+            "pickType": "TOTAL"
           },
           {
-            "description": "S.Diggs OVER 38.5 Rec Yds (20.1% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "S.Diggs OVER 38.5 Rec Yds",
-            "line": 38.5,
-            "confidence": "60/100",
-            "expectedClv": 0.015,
-            "decision": "PLAY"
+            "selection": "Stefon Diggs line 61.774",
+            "decision": "PASS",
+            "expectedClv": -0.0249,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.1884,
-        "fairOdds": "+431",
-        "marketOdds": "+612",
-        "edgeScore": 0.0339,
-        "correlationRationale": "Joint probability (18.8%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Philadelphia Eagles +6, OVER 40.5, and S.Diggs target volume (6.3 tgt/g)."
+        "jointWinProb": 0.3664,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.1115,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "S.Diggs",
+            "player": "Stefon Diggs",
             "position": "WR",
             "salary": 10200,
-            "leverageNote": "1.5x Captain leverage: 6.3 tgt/g (20.1% share) in N_eff=8.46 offense."
+            "leverageNote": "1.5x Captain leverage: 7.6 tgt/g (20.1% share) in N_eff=8.46 offense."
           },
           {
-            "player": "D.Smith",
+            "player": "DeVonta Smith",
             "position": "WR",
             "salary": 9600,
-            "leverageNote": "Bring-back Captain: 5.9 tgt/g (18.6% share) vs WSH 52.3% 2-High."
+            "leverageNote": "Bring-back Captain: 10.2 tgt/g (18.6% share) vs WSH 52.3% 2-High."
           }
         ],
         "cashCore": [
           {
-            "player": "J.Daniels",
+            "player": "Jayden Daniels",
             "position": "QB",
             "salary": 6600,
             "projection": 18.3,
-            "floorNote": "80th-pct cash floor backed by 239.7 pass yd/g & 51.4% motion rate."
+            "floorNote": "80th-pct cash floor backed by 174.5 pass yd/g & 51.4% motion rate."
           },
           {
-            "player": "S.Barkley",
+            "player": "Saquon Barkley",
             "position": "RB",
             "salary": 6200,
-            "projection": 16.9,
-            "floorNote": "6.1 carries/g (29.9% rush share) workload anchor."
+            "projection": 17.7,
+            "floorNote": "8.6 carries/g (29.9% rush share) workload anchor."
           }
         ],
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "J.Daniels",
+              "qb": "Jayden Daniels",
               "passCatchers": [
-                "S.Diggs",
-                "T.McLaurin"
+                "Stefon Diggs",
+                "Terry McLaurin"
               ]
             },
-            "bringBack": "D.Smith",
-            "valueFiller": "D.Wicks",
-            "correlationTheme": "20-Max GPP Double Stack: J.Daniels + top 2 pass catchers correlated with D.Smith catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "DeVonta Smith",
+            "valueFiller": "Dontayvion Wicks",
+            "correlationTheme": "20-Max GPP Double Stack: Jayden Daniels + top 2 pass catchers correlated with DeVonta Smith catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },
@@ -2172,99 +2114,92 @@
         "blitzRateVsPressureToSack": "SEA blitzes 21.7% (sack rate 6.39%) vs CHI OL 6.1% sack allowed; CHI blitzes 40.8% (sack rate 7.95%) vs SEA OL 6.25% sack allowed.",
         "personnelTendencies": "CHI N_eff=6.8 (avg box faced 6.42) \u2022 SEA N_eff=5.14 (avg box faced 6.53)",
         "coachingEdge": "W1\u2013W7 Off EPA/p: CHI +0.052 (W6\u20137 +0.089, \u0394 +0.051) vs SEA -0.039 (W6\u20137 +0.022, \u0394 +0.092); Def EPA/p: CHI -0.009 vs SEA -0.115.",
-        "notes": "10,000-Sim Independent Projection: Fair Spread SEA -3.5 (Posted SEA -3) \u2022 Fair Total 51.3 (Posted 46.5)."
+        "notes": "10,000-Sim Independent Projection: Fair Spread SEA -4.8 (Posted SEA -3) \u2022 Fair Total 47.9 (Posted 46.5)."
       },
       "sideTotalCall": {
         "sideSelection": "Seattle Seahawks -3",
-        "sideConfidence": "58/100",
-        "sideExpectedClv": 0.0157,
+        "sideConfidence": "56/100",
+        "sideExpectedClv": 0.0397,
         "sideDecision": "PLAY",
         "totalSelection": "OVER 46.5",
-        "totalConfidence": "63/100",
-        "totalExpectedClv": 0.1275,
+        "totalConfidence": "56/100",
+        "totalExpectedClv": 0.0316,
         "totalDecision": "PLAY",
-        "rationale": "Across 10,000 correlated simulations anchored on 18,738 2026 W1\u2013W7 plays, independent fair line is SEA -3.5 and fair total is 51.3 vs posted SEA -3 / 46.5. SEA W6\u2013W7 offensive EPA (+0.022) and defensive EPA (-0.115) vs CHI W6\u2013W7 offensive EPA (+0.089) and defensive EPA (-0.009) drive +1.6% side CLV and +12.8% total CLV."
+        "rationale": "Seattle Seahawks -3 p=0.563 CLV=+0.0397. OVER 46.5 p=0.555 CLV=+0.0316. Fair SEA -4.8 / total 47.9 vs posted SEA -3 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
       },
       "topProps": [
         {
-          "playerId": "sea-wr1",
-          "playerName": "J.Smith-Njigba",
-          "propType": "Receiving Yards",
-          "line": 119.5,
+          "playerName": "Jaxon Smith-Njigba",
+          "market": "rec_yds",
+          "line": 79.1775,
           "side": "OVER",
-          "confidence": "60/100",
-          "expectedClv": 0.0677,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 11.1 tgt/g (36.1% target share, 123.9 yd/g) in SEA N_eff=5.14 target tree vs CHI 53.8% 1-High / 34.7% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0239,
+          "decision": "PASS",
+          "pOver": 0.4999,
+          "pUnder": 0.4918
         },
         {
-          "playerId": "chi-wr1",
-          "playerName": "L.Burden",
-          "propType": "Receiving Yards",
-          "line": 65.5,
+          "playerName": "Luther Burden",
+          "market": "rec_yds",
+          "line": 57.105,
           "side": "OVER",
-          "confidence": "59/100",
-          "expectedClv": 0.0685,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 6.7 tgt/g (21.0% target share, 70.1 yd/g) in CHI N_eff=6.8 target tree vs SEA 58.2% 2-High shells."
+          "confidence": "50/100",
+          "expectedClv": -0.0244,
+          "decision": "PASS",
+          "pOver": 0.4994,
+          "pUnder": 0.4942
         },
         {
-          "playerId": "chi-rb1",
-          "playerName": "D.Swift",
-          "propType": "Rushing Yards",
-          "line": 63.5,
-          "side": "OVER",
-          "confidence": "58/100",
-          "expectedClv": 0.083,
-          "decision": "PLAY",
-          "nEffTargetNotes": "2026 W1\u2013W7: 16.6 carries/g (52.7% team rush share, 68.0 rush yd/g) vs SEA 6.34-man average box."
+          "playerName": "D'Andre Swift",
+          "market": "rush_yds",
+          "line": 69.38419999999999,
+          "side": "UNDER",
+          "confidence": "50/100",
+          "expectedClv": -0.024,
+          "decision": "PASS",
+          "pOver": 0.4911,
+          "pUnder": 0.4998
         }
       ],
       "correlatedSgpTicket": {
-        "title": "CHI @ SEA 10,000-Sim Sigma_game Correlated SGP",
+        "title": "CHI @ SEA 10,000-world copula",
         "legs": [
           {
-            "description": "Seattle Seahawks -3 (Fair SEA -3.5)",
-            "pickType": "SPREAD",
             "selection": "Seattle Seahawks -3",
-            "confidence": "58/100",
-            "expectedClv": 0.0157,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.0397,
+            "pickType": "SPREAD"
           },
           {
-            "description": "OVER 46.5 (Fair Total 51.3)",
-            "pickType": "TOTAL",
             "selection": "OVER 46.5",
-            "confidence": "63/100",
-            "expectedClv": 0.1275,
-            "decision": "PLAY"
+            "decision": "PLAY",
+            "expectedClv": 0.0316,
+            "pickType": "TOTAL"
           },
           {
-            "description": "J.Smith-Njigba OVER 119.5 Rec Yds (36.1% W1\u2013W7 share)",
-            "pickType": "PLAYER_PROP",
-            "selection": "J.Smith-Njigba OVER 119.5 Rec Yds",
-            "line": 119.5,
-            "confidence": "60/100",
-            "expectedClv": 0.0677,
-            "decision": "PLAY"
+            "selection": "Jaxon Smith-Njigba line 79.1775",
+            "decision": "PASS",
+            "expectedClv": -0.0239,
+            "pickType": "PLAYER_PROP"
           }
         ],
-        "jointWinProb": 0.2632,
-        "fairOdds": "+280",
-        "marketOdds": "+365",
-        "edgeScore": 0.0474,
-        "correlationRationale": "Joint probability (26.3%) measured directly across 10,000 simulated game worlds (Sigma_game copula) coupling Seattle Seahawks -3, OVER 46.5, and J.Smith-Njigba target volume (11.1 tgt/g)."
+        "jointWinProb": 0.247,
+        "fairOdds": "n/a",
+        "marketOdds": "n/a",
+        "edgeScore": 0.0906,
+        "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
       },
       "dfsStacks": {
         "captainPicks": [
           {
-            "player": "J.Smith-Njigba",
+            "player": "Jaxon Smith-Njigba",
             "position": "WR",
             "salary": 10200,
             "leverageNote": "1.5x Captain leverage: 11.1 tgt/g (36.1% share) in N_eff=5.14 offense."
           },
           {
-            "player": "L.Burden",
+            "player": "Luther Burden",
             "position": "WR",
             "salary": 9600,
             "leverageNote": "Bring-back Captain: 6.7 tgt/g (21.0% share) vs SEA 58.2% 2-High."
@@ -2272,14 +2207,14 @@
         ],
         "cashCore": [
           {
-            "player": "S.Darnold",
+            "player": "Sam Darnold",
             "position": "QB",
             "salary": 6600,
             "projection": 17.7,
-            "floorNote": "80th-pct cash floor backed by 239.6 pass yd/g & 53.4% motion rate."
+            "floorNote": "80th-pct cash floor backed by 199.3 pass yd/g & 53.4% motion rate."
           },
           {
-            "player": "D.Swift",
+            "player": "D'Andre Swift",
             "position": "RB",
             "salary": 6200,
             "projection": 18.9,
@@ -2289,15 +2224,15 @@
         "gppStacks": [
           {
             "primaryStack": {
-              "qb": "S.Darnold",
+              "qb": "Sam Darnold",
               "passCatchers": [
-                "J.Smith-Njigba",
-                "R.Shaheed"
+                "Jaxon Smith-Njigba",
+                "Rashid Shaheed"
               ]
             },
-            "bringBack": "L.Burden",
-            "valueFiller": "R.Odunze",
-            "correlationTheme": "20-Max GPP Double Stack: S.Darnold + top 2 pass catchers correlated with L.Burden catch-up volume across 10,000 simulated game scripts."
+            "bringBack": "Luther Burden",
+            "valueFiller": "Rome Odunze",
+            "correlationTheme": "20-Max GPP Double Stack: Sam Darnold + top 2 pass catchers correlated with Luther Burden catch-up volume across 10,000 simulated game scripts."
           }
         ]
       },

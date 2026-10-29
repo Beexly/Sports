@@ -11,11 +11,13 @@ import { join } from "node:path";
 describe("F-28: home hero CTAs and board door copy", () => {
   const src = readFileSync(join(process.cwd(), "app/page.tsx"), "utf8");
 
-  it("primary hero CTA links to /picks", () => {
-    expect(src).toMatch(/href="\/picks" className="btn-primary/);
+  it("primary hero CTA links to /packages", () => {
+    expect(src).toMatch(/href="\/packages" className="btn-primary/);
   });
 
-  it("secondary hero CTA links to /pricing", () => {
+  it("secondary hero CTA links to DFS and pricing remains available", () => {
+    expect(src).toMatch(/href="\/fantasy\/dfs"/);
+    expect(src).toMatch(/DFS Optimizer/);
     expect(src).toMatch(/href="\/pricing"/);
     expect(src).toMatch(/See pricing/);
   });

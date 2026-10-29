@@ -36,7 +36,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 47.5,
     "scoreboardStatus": "10/29 - 8:15 PM EDT",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair GB -5.4 / Total 44.9 -> Green Bay Packers -3.5 (58/100, +7.0% CLV) & UNDER 47.5 (57/100, +7.2% CLV)."
+    "passReason": "Fair GB -8.5 / Total 29.3. Side PLAY CLV +0.1311. Total PLAY CLV +0.4236."
   },
   {
     "id": "board-2026-w8-401873026",
@@ -52,7 +52,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 54.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair BUF -1.8 / Total 59.2 -> Baltimore Ravens +3 (58/100, +4.1% CLV) & OVER 54.5 (62/100, +12.4% CLV)."
+    "passReason": "Fair BUF +0.6 / Total 60.8. Side PLAY CLV +0.0752. Total PLAY CLV +0.2086."
   },
   {
     "id": "board-2026-w8-401873031",
@@ -68,7 +68,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair CIN -11.8 / Total 45.2 -> Cincinnati Bengals -10 (58/100, +6.6% CLV) & UNDER 46.5 (57/100, +3.8% CLV)."
+    "passReason": "Fair CIN -27.1 / Total 45.0. Side PLAY CLV +0.3832. Total PASS CLV +0.0205."
   },
   {
     "id": "board-2026-w8-401873024",
@@ -84,7 +84,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 54.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair DAL -3.2 / Total 48.4 -> Arizona Cardinals +7 (62/100, +11.9% CLV) & UNDER 54.5 (67/100, +16.7% CLV)."
+    "passReason": "Fair DAL -2.4 / Total 31.2. Side PLAY CLV +0.1183. Total PLAY CLV +0.4563."
   },
   {
     "id": "board-2026-w8-401873030",
@@ -100,7 +100,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair DET -3.4 / Total 53.5 -> Detroit Lions -3 (58/100, +0.9% CLV) & OVER 46.5 (68/100, +18.2% CLV)."
+    "passReason": "Fair DET -18.9 / Total 57.0. Side PLAY CLV +0.3516. Total PLAY CLV +0.3030."
   },
   {
     "id": "board-2026-w8-401873029",
@@ -116,7 +116,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 45.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair NYJ -0.3 / Total 44.8 -> Las Vegas Raiders +1.5 (58/100, +4.2% CLV) & UNDER 45.5 (57/100, +2.4% CLV)."
+    "passReason": "Fair NYJ +2.4 / Total 32.4. Side PLAY CLV +0.0956. Total PLAY CLV +0.3776."
   },
   {
     "id": "board-2026-w8-401873027",
@@ -132,7 +132,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 39.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair PIT -4.4 / Total 46.7 -> Pittsburgh Steelers -3.5 (58/100, +2.4% CLV) & OVER 39.5 (68/100, +18.1% CLV)."
+    "passReason": "Fair PIT -12.2 / Total 40.8. Side PLAY CLV +0.2162. Total PLAY CLV +0.0323."
   },
   {
     "id": "board-2026-w8-401873025",
@@ -148,7 +148,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 44.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair TB -4.4 / Total 45.2 -> Tampa Bay Buccaneers -2.5 (58/100, +6.7% CLV) & OVER 44.5 (57/100, +1.3% CLV)."
+    "passReason": "Fair TB -2.7 / Total 37.5. Side PASS CLV +0.0033. Total PLAY CLV +0.1989."
   },
   {
     "id": "board-2026-w8-401873028",
@@ -164,7 +164,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair JAX -3.4 / Total 47.4 -> Indianapolis Colts +10 (71/100, +21.1% CLV) & OVER 46.5 (57/100, +2.1% CLV)."
+    "passReason": "Fair JAX -7.1 / Total 34.5. Side PLAY CLV +0.0565. Total PLAY CLV +0.3327."
   },
   {
     "id": "board-2026-w8-401873032",
@@ -180,7 +180,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 45.5,
     "scoreboardStatus": "11/1 - 4:05 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair LAR -7.9 / Total 48.0 -> Los Angeles Rams -6.5 (58/100, +5.1% CLV) & OVER 45.5 (57/100, +6.6% CLV)."
+    "passReason": "Fair LAR -20.1 / Total 46.0. Side PLAY CLV +0.3246. Total PASS CLV -0.0135."
   },
   {
     "id": "board-2026-w8-401873033",
@@ -196,7 +196,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 40.5,
     "scoreboardStatus": "11/1 - 4:25 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair DEN +3.0 / Total 49.5 -> Kansas City Chiefs -1.5 (58/100, +5.5% CLV) & OVER 40.5 (73/100, +22.9% CLV)."
+    "passReason": "Fair DEN +12.6 / Total 49.7. Side PLAY CLV +0.2513. Total PLAY CLV +0.2898."
   },
   {
     "id": "board-2026-w8-401873034",
@@ -212,7 +212,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 43.5,
     "scoreboardStatus": "11/1 - 4:25 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair MIA -0.8 / Total 45.8 -> Miami Dolphins +7 (74/100, +24.0% CLV) & OVER 43.5 (57/100, +5.9% CLV)."
+    "passReason": "Fair MIA +1.1 / Total 27.5. Side PLAY CLV +0.1608. Total PLAY CLV +0.4060."
   },
   {
     "id": "board-2026-w8-401873035",
@@ -228,7 +228,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 40.5,
     "scoreboardStatus": "11/1 - 8:20 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair WSH -5.4 / Total 53.2 -> Philadelphia Eagles +6 (58/100, +1.8% CLV) & OVER 40.5 (81/100, +30.8% CLV)."
+    "passReason": "Fair WSH -11.4 / Total 48.3. Side PLAY CLV +0.1385. Total PLAY CLV +0.2475."
   },
   {
     "id": "board-2026-w8-401873036",
@@ -244,6 +244,6 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/2 - 8:15 PM EST",
     "publication": "PLAY",
-    "passReason": "10,000-Sim W1\u2013W7 Bind: Fair SEA -3.5 / Total 51.3 -> Seattle Seahawks -3 (58/100, +1.6% CLV) & OVER 46.5 (63/100, +12.8% CLV)."
+    "passReason": "Fair SEA -4.8 / Total 47.9. Side PLAY CLV +0.0397. Total PLAY CLV +0.0316."
   }
 ];

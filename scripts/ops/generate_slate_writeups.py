@@ -34,6 +34,7 @@ if str(REPO / "scripts" / "ops") not in sys.path:
 
 from gse_coach_mind_simulator import (
     load_sealed_object_readonly,
+    load_week8_injuries_from_csv,
     simulate_matchup_pbp,
 )
 
@@ -72,12 +73,13 @@ def prob_to_american(p: float) -> str:
     return f"+{odds}"
 
 
-def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: np.random.Generator) -> dict:
+def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: np.random.Generator, away_inj: list | None = None, home_inj: list | None = None) -> dict:
     """
     Vectorized 10,000-world play/drive/player simulator driven by real 2026 Weeks 1-7
     EPA/play, W6-W7 trend delta, neutral pace, motion/PA rates, trench pressure, and N_eff.
     """
-    # Blended offensive & defensive EPA/play (65% full W1-7, 35% recent W6-7 form)
+    away_inj = away_inj or []
+    home_inj = home_inj or []
     away_off_epa = 0.65 * away_t["off_epa_per_play"] + 0.35 * away_t["off_epa_w6_w7"]
     home_off_epa = 0.65 * home_t["off_epa_per_play"] + 0.35 * home_t["off_epa_w6_w7"]
     away_def_epa = 0.65 * away_t["def_epa_per_play"] + 0.35 * away_t["def_epa_w6_w7"]
@@ -95,34 +97,53 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
     combined_plays = (away_t["plays_per_game"] + home_t["plays_per_game"]) / 2.0
     pace_factor = combined_plays / 61.5
 
-    # Run 10,000-world JEV 175-snap clock-driven play-by-play simulation (gse_coach_mind_simulator.py, tau=0.42, Sinkhorn-Knopp OT)
+    # Expected points from the 175-snap state machine. No Gaussian wrapper.
     jev_away = ABBR_MAP_JEV.get(g["awayAbbr"], g["awayAbbr"])
     jev_home = ABBR_MAP_JEV.get(g["homeAbbr"], g["homeAbbr"])
+    if jev_away == "WSH":
+        jev_away = "WAS"
+    if jev_home == "WSH":
+        jev_home = "WAS"
+    override = {
+        "away": {
+            "comp_rate_w1_w7": away_t.get("comp_rate_w1_w7"),
+            "comp_rate_w6_w7": away_t.get("comp_rate_w6_w7"),
+            "early_down_pass_rate": away_t.get("early_down_pass_rate"),
+            "sack_rate_allowed": away_t.get("sack_rate_allowed_pct"),
+            "def_pressure_rate": away_t.get("def_blitz_rate_pct"),
+            "wr1_target_share": away_t.get("wr1_target_share"),
+            "rb1_carry_share": away_t.get("rb1_carry_share"),
+            "yards_per_comp_w1_w7": away_t.get("yards_per_comp_w1_w7"),
+            "yards_per_rush_w1_w7": away_t.get("yards_per_rush_w1_w7"),
+        },
+        "home": {
+            "comp_rate_w1_w7": home_t.get("comp_rate_w1_w7"),
+            "comp_rate_w6_w7": home_t.get("comp_rate_w6_w7"),
+            "early_down_pass_rate": home_t.get("early_down_pass_rate"),
+            "sack_rate_allowed": home_t.get("sack_rate_allowed_pct"),
+            "def_pressure_rate": home_t.get("def_blitz_rate_pct"),
+            "wr1_target_share": home_t.get("wr1_target_share"),
+            "rb1_carry_share": home_t.get("rb1_carry_share"),
+            "yards_per_comp_w1_w7": home_t.get("yards_per_comp_w1_w7"),
+            "yards_per_rush_w1_w7": home_t.get("yards_per_rush_w1_w7"),
+        },
+        "source": "measured-w1-w7-rates",
+    }
     jev_res = simulate_matchup_pbp(
         jev_away,
         jev_home,
-        [],
-        [],
+        away_inj,
+        home_inj,
         SEALED_OBJ,
         SEALED_DIGEST,
         n_sims=n_sims,
         seed=int(g["espnEventId"][-4:]),
+        w1_w7_override=override,
+        return_vectors=True,
     )
-
-    # Expected points blending 2026 W1-7 efficiency (18,738 plays) + 10,000-sim JEV PBP state machine
-    base_pts = 22.2 * pace_factor
-    w17_away_mu = max(13.5, min(33.5, base_pts + away_matchup_epa * 31.0 - away_trench_pen - 0.8))
-    w17_home_mu = max(13.5, min(34.5, base_pts + home_matchup_epa * 31.0 - home_trench_pen + 0.8))
-    jev_home_mu = 0.5 * (jev_res["median_total"] + jev_res["median_spread_home"])
-    jev_away_mu = 0.5 * (jev_res["median_total"] - jev_res["median_spread_home"])
-
-    away_mu = 0.65 * w17_away_mu + 0.35 * jev_away_mu
-    home_mu = 0.65 * w17_home_mu + 0.35 * jev_home_mu
-
-    # Correlated bivariate normal game-script shock + team-specific variance
-    env_shock = rng.normal(0.0, 4.2, size=n_sims)
-    away_pts = np.clip(away_mu + env_shock + rng.normal(0.0, 8.6, size=n_sims), 3.0, 54.0)
-    home_pts = np.clip(home_mu + env_shock + rng.normal(0.0, 8.6, size=n_sims), 3.0, 54.0)
+    vec = jev_res["vectors"]
+    away_pts = np.asarray(vec["away_score"], dtype=np.float64)
+    home_pts = np.asarray(vec["home_score"], dtype=np.float64)
 
     home_margin = home_pts - away_pts  # positive = home wins by X
     total_pts = home_pts + away_pts
@@ -161,8 +182,10 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
         side_sel = f"{g['awayTeam']} {spread_str}"
         side_mask = away_cover_mask
 
-    side_clv = round(max(0.008, side_prob - 0.50), 4)
-    side_conf = min(84, max(58, int(round(side_prob * 100))))
+    DEVIG = 0.5238
+    side_clv = round(side_prob - DEVIG, 4)
+    side_decision = "PLAY" if side_prob >= 0.545 else "PASS"
+    side_conf = int(round(side_prob * 100))
 
     if p_over >= p_under:
         tot_prob = p_over
@@ -173,8 +196,19 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
         tot_sel = f"UNDER {posted_total}"
         tot_mask = ~over_mask
 
-    tot_clv = round(max(0.008, tot_prob - 0.50), 4)
-    tot_conf = min(82, max(57, int(round(tot_prob * 100))))
+    tot_clv = round(tot_prob - DEVIG, 4)
+    tot_decision = "PLAY" if tot_prob >= 0.545 else "PASS"
+    tot_conf = int(round(tot_prob * 100))
+    side_note = (
+        f"{side_sel} p={side_prob:.3f} CLV={side_clv:+.4f}"
+        if side_decision == "PLAY"
+        else "PASS — Market Efficient; no forced bet"
+    )
+    tot_note = (
+        f"{tot_sel} p={tot_prob:.3f} CLV={tot_clv:+.4f}"
+        if tot_decision == "PLAY"
+        else "PASS — Market Efficient; no forced bet"
+    )
 
     # Player prop & SGP simulation from real 2026 W1-7 top receivers/rushers
     home_wr1 = home_t["top_receivers"][0] if home_t["top_receivers"] else {"player": f"{g['homeAbbr']} WR1", "rec_yards_per_game": 64.0, "targets_per_game": 7.5, "target_share_pct": 24.0}
@@ -187,40 +221,80 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
         home_rb1 = {"player": "Josh Jacobs", "rush_yards_per_game": 64.5, "carries_per_game": 16.4, "carry_share_pct": 64.0}
         away_rb1 = {"player": "Chuba Hubbard", "rush_yards_per_game": 76.5, "carries_per_game": 16.2, "carry_share_pct": 68.0}
 
-    # Simulate WR1 and RB1 yards correlated with team points & game script
-    home_wr1_sim = np.clip(
-        home_wr1["rec_yards_per_game"] + (home_pts - home_mu) * 1.65 + (away_pts - away_mu) * 0.55 + rng.normal(0.0, 18.0, size=n_sims),
-        8.0, 185.0,
-    )
-    away_wr1_sim = np.clip(
-        away_wr1["rec_yards_per_game"] + (away_pts - away_mu) * 1.65 + (home_pts - home_mu) * 0.65 + rng.normal(0.0, 18.0, size=n_sims),
-        8.0, 185.0,
-    )
-    away_rb1_sim = np.clip(
-        away_rb1["rush_yards_per_game"] + (away_pts - away_mu) * 1.25 - (home_pts - home_mu) * 0.45 + rng.normal(0.0, 16.0, size=n_sims),
-        10.0, 165.0,
-    )
+    home_wr1_sim = np.asarray(vec["home_wr1_yds"], dtype=np.float64)
+    away_wr1_sim = np.asarray(vec["away_wr1_yds"], dtype=np.float64)
+    home_rb1_sim = np.asarray(vec["home_rb1_yds"], dtype=np.float64)
+    away_rb1_sim = np.asarray(vec["away_rb1_yds"], dtype=np.float64)
 
-    home_wr1_line = round(max(38.5, home_wr1["rec_yards_per_game"] - 4.5) * 2.0) / 2.0
-    if home_wr1_line == int(home_wr1_line):
-        home_wr1_line += 0.5
-    away_wr1_line = round(max(38.5, away_wr1["rec_yards_per_game"] - 4.5) * 2.0) / 2.0
-    if away_wr1_line == int(away_wr1_line):
-        away_wr1_line += 0.5
-    away_rb1_line = round(max(36.5, away_rb1["rush_yards_per_game"] - 4.5) * 2.0) / 2.0
-    if away_rb1_line == int(away_rb1_line):
-        away_rb1_line += 0.5
+    COURSIQ_TNF = {
+        "Matthew Golden": ("rec", 78.0),
+        "Christian Watson": ("rec", 67.0),
+        "Tetairoa McMillan": ("rec", 74.0),
+        "Jalen Coker": ("rec", 60.0),
+        "Chuba Hubbard": ("rush", 84.0),
+        "Josh Jacobs": ("rush", 52.0),
+    }
 
-    p_hwr = float(np.mean(home_wr1_sim > home_wr1_line))
-    p_awr = float(np.mean(away_wr1_sim > away_wr1_line))
-    p_arb = float(np.mean(away_rb1_sim > away_rb1_line))
+    def prop_from_vector(player: str, line: float, market: str, worlds: np.ndarray) -> dict:
+        p_over_p = float(np.mean(worlds > line))
+        p_under_p = float(np.mean(worlds < line))
+        if p_over_p >= p_under_p:
+            side, p_prop = "OVER", p_over_p
+        else:
+            side, p_prop = "UNDER", p_under_p
+        return {
+            "playerName": player,
+            "market": market,
+            "line": line,
+            "side": side,
+            "confidence": f"{int(round(p_prop * 100))}/100",
+            "expectedClv": round(p_prop - 0.5238, 4),
+            "decision": "PLAY" if p_prop >= 0.55 else "PASS",
+            "pOver": round(p_over_p, 4),
+            "pUnder": round(p_under_p, 4),
+        }
 
-    # Joint 3-leg SGP probability measured directly from the 10,000 simulated worlds
-    leg3_mask = home_wr1_sim > home_wr1_line
+    if g["awayAbbr"] == "CAR" and g["homeAbbr"] == "GB":
+        props = [
+            prop_from_vector("Matthew Golden", 78.0, "rec_yds", home_wr1_sim * (78.0 / max(1.0, float(np.median(home_wr1_sim))))),
+            prop_from_vector("Christian Watson", 67.0, "rec_yds", home_wr1_sim * (67.0 / 78.0)),
+            prop_from_vector("Tetairoa McMillan", 74.0, "rec_yds", away_wr1_sim * (74.0 / max(1.0, float(np.median(away_wr1_sim))))),
+            prop_from_vector("Jalen Coker", 60.0, "rec_yds", away_wr1_sim * (60.0 / 74.0)),
+            prop_from_vector("Chuba Hubbard", 84.0, "rush_yds", away_rb1_sim * (84.0 / max(1.0, float(np.median(away_rb1_sim))))),
+            prop_from_vector("Josh Jacobs", 52.0, "rush_yds", home_rb1_sim),
+        ]
+        home_wr1 = {"player": "Matthew Golden", "target_share_pct": home_wr1.get("target_share_pct", 24.0)}
+        away_wr1 = {"player": "Tetairoa McMillan", "target_share_pct": away_wr1.get("target_share_pct", 23.0)}
+        home_rb1 = {"player": "Josh Jacobs"}
+        away_rb1 = {"player": "Chuba Hubbard"}
+        home_wr1_line = 78.0
+        away_wr1_line = 74.0
+        away_rb1_line = 84.0
+        home_wr1_sim_gate = props[0]
+        leg3_mask = home_wr1_sim > 78.0
+    else:
+        home_wr1_line = float(np.median(home_wr1_sim))
+        away_wr1_line = float(np.median(away_wr1_sim))
+        away_rb1_line = float(np.median(away_rb1_sim))
+        props = [
+            prop_from_vector(home_wr1["player"], home_wr1_line, "rec_yds", home_wr1_sim),
+            prop_from_vector(away_wr1["player"], away_wr1_line, "rec_yds", away_wr1_sim),
+            prop_from_vector(away_rb1["player"], away_rb1_line, "rush_yds", away_rb1_sim),
+        ]
+        leg3_mask = home_wr1_sim > home_wr1_line
+
+    p_leg3 = float(np.mean(leg3_mask))
     joint_prob = float(np.mean(side_mask & tot_mask & leg3_mask))
-    joint_prob = max(0.16, min(0.42, joint_prob))
-    fair_sgp_odds = prob_to_american(joint_prob)
-    market_sgp_odds = prob_to_american(max(0.11, joint_prob - 0.048))
+    indep = side_prob * tot_prob * max(p_leg3, 1e-6)
+    lift = joint_prob - indep
+    sgp_ok = side_prob >= 0.54 and tot_prob >= 0.54 and p_leg3 >= 0.54 and lift > 0
+    fair_sgp_odds = prob_to_american(joint_prob) if sgp_ok else "n/a"
+    market_sgp_odds = "n/a"
+    sgp_note = (
+        f"copula lift {lift:+.4f}; joint {joint_prob:.4f} > product {indep:.4f}"
+        if sgp_ok
+        else "PASS — no 3-leg combo cleared p>=0.54 with positive copula lift"
+    )
 
     home_cov = home_t.get("coverage_shells_w1_w7", {})
     away_cov = away_t.get("coverage_shells_w1_w7", {})
@@ -280,99 +354,26 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
             "sideSelection": side_sel,
             "sideConfidence": f"{side_conf}/100",
             "sideExpectedClv": side_clv,
-            "sideDecision": "PLAY",
+            "sideDecision": side_decision,
             "totalSelection": tot_sel,
             "totalConfidence": f"{tot_conf}/100",
             "totalExpectedClv": tot_clv,
-            "totalDecision": "PLAY",
-            "rationale": (
-                f"Across 10,000 correlated simulations anchored on 18,738 2026 W1–W7 plays, independent fair line is "
-                f"{g['homeAbbr']} {fair_home_spread:+.1f} and fair total is {fair_total:.1f} vs posted {g['postedDetails']} / {posted_total}. "
-                f"{g['homeAbbr']} W6–W7 offensive EPA ({home_t['off_epa_w6_w7']:+.3f}) and defensive EPA ({home_t['def_epa_per_play']:+.3f}) vs "
-                f"{g['awayAbbr']} W6–W7 offensive EPA ({away_t['off_epa_w6_w7']:+.3f}) and defensive EPA ({away_t['def_epa_per_play']:+.3f}) drive +{side_clv*100:.1f}% side CLV and +{tot_clv*100:.1f}% total CLV."
-            ),
+            "totalDecision": tot_decision,
+            "rationale": f"{side_note}. {tot_note}. Fair {g['homeAbbr']} {fair_home_spread:+.1f} / total {fair_total:.1f} vs posted {g['postedDetails']} / {posted_total}. Source: measured W1-W7 rates, not a live Jev spine.",
         },
-        "topProps": [
-            {
-                "playerId": f"{g['homeAbbr'].lower()}-wr1",
-                "playerName": home_wr1["player"],
-                "propType": "Receiving Yards",
-                "line": home_wr1_line,
-                "side": "OVER",
-                "confidence": f"{min(82, max(60, int(round(p_hwr * 100))))}/100",
-                "expectedClv": round(max(0.015, p_hwr - 0.50), 4),
-                "decision": "PLAY",
-                "nEffTargetNotes": (
-                    f"2026 W1–W7: {home_wr1['targets_per_game']} tgt/g ({home_wr1['target_share_pct']}% target share, {home_wr1['rec_yards_per_game']} yd/g) "
-                    f"in {g['homeAbbr']} N_eff={home_t['n_eff_receivers']} target tree vs {g['awayAbbr']} {away_cov.get('single_high_shell_pct', 45.0)}% 1-High / {away_cov.get('two_high_shell_pct', 45.0)}% 2-High shells."
-                ),
-            },
-            {
-                "playerId": f"{g['awayAbbr'].lower()}-wr1",
-                "playerName": away_wr1["player"],
-                "propType": "Receiving Yards",
-                "line": away_wr1_line,
-                "side": "OVER",
-                "confidence": f"{min(81, max(59, int(round(p_awr * 100))))}/100",
-                "expectedClv": round(max(0.014, p_awr - 0.50), 4),
-                "decision": "PLAY",
-                "nEffTargetNotes": (
-                    f"2026 W1–W7: {away_wr1['targets_per_game']} tgt/g ({away_wr1['target_share_pct']}% target share, {away_wr1['rec_yards_per_game']} yd/g) "
-                    f"in {g['awayAbbr']} N_eff={away_t['n_eff_receivers']} target tree vs {g['homeAbbr']} {home_cov.get('two_high_shell_pct', 45.0)}% 2-High shells."
-                ),
-            },
-            {
-                "playerId": f"{g['awayAbbr'].lower()}-rb1",
-                "playerName": away_rb1["player"],
-                "propType": "Rushing Yards",
-                "line": away_rb1_line,
-                "side": "OVER",
-                "confidence": f"{min(79, max(58, int(round(p_arb * 100))))}/100",
-                "expectedClv": round(max(0.012, p_arb - 0.50), 4),
-                "decision": "PLAY",
-                "nEffTargetNotes": (
-                    f"2026 W1–W7: {away_rb1['carries_per_game']} carries/g ({away_rb1['carry_share_pct']}% team rush share, {away_rb1['rush_yards_per_game']} rush yd/g) "
-                    f"vs {g['homeAbbr']} {home_t['def_avg_box_defenders']}-man average box."
-                ),
-            },
-        ],
+        "topProps": props,
         "correlatedSgpTicket": {
-            "title": f"{g['awayAbbr']} @ {g['homeAbbr']} 10,000-Sim Sigma_game Correlated SGP",
+            "title": f"{g['awayAbbr']} @ {g['homeAbbr']} 10,000-world copula",
             "legs": [
-                {
-                    "description": f"{side_sel} (Fair {g['homeAbbr']} {fair_home_spread:+.1f})",
-                    "pickType": "SPREAD",
-                    "selection": side_sel,
-                    "confidence": f"{side_conf}/100",
-                    "expectedClv": side_clv,
-                    "decision": "PLAY",
-                },
-                {
-                    "description": f"{tot_sel} (Fair Total {fair_total:.1f})",
-                    "pickType": "TOTAL",
-                    "selection": tot_sel,
-                    "confidence": f"{tot_conf}/100",
-                    "expectedClv": tot_clv,
-                    "decision": "PLAY",
-                },
-                {
-                    "description": f"{home_wr1['player']} OVER {home_wr1_line} Rec Yds ({home_wr1['target_share_pct']}% W1–W7 share)",
-                    "pickType": "PLAYER_PROP",
-                    "selection": f"{home_wr1['player']} OVER {home_wr1_line} Rec Yds",
-                    "line": home_wr1_line,
-                    "confidence": f"{min(82, max(60, int(round(p_hwr * 100))))}/100",
-                    "expectedClv": round(max(0.015, p_hwr - 0.50), 4),
-                    "decision": "PLAY",
-                },
+                {"selection": side_sel, "decision": side_decision, "expectedClv": side_clv, "pickType": "SPREAD"},
+                {"selection": tot_sel, "decision": tot_decision, "expectedClv": tot_clv, "pickType": "TOTAL"},
+                {"selection": f"{home_wr1['player']} line {home_wr1_line}", "decision": "PLAY" if sgp_ok else "PASS", "expectedClv": round(p_leg3 - 0.5238, 4), "pickType": "PLAYER_PROP"},
             ],
             "jointWinProb": round(joint_prob, 4),
             "fairOdds": fair_sgp_odds,
             "marketOdds": market_sgp_odds,
-            "edgeScore": round(joint_prob * 0.18, 4),
-            "correlationRationale": (
-                f"Joint probability ({joint_prob*100:.1f}%) measured directly across 10,000 simulated game worlds (Sigma_game copula) "
-                f"coupling {side_sel}, {tot_sel}, and {home_wr1['player']} target volume ({home_wr1['targets_per_game']} tgt/g)."
-            ),
+            "edgeScore": round(lift, 4),
+            "correlationRationale": sgp_note,
         },
         "dfsStacks": {
             "captainPicks": [
@@ -380,13 +381,13 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
                     "player": home_wr1["player"],
                     "position": "WR",
                     "salary": 10200,
-                    "leverageNote": f"1.5x Captain leverage: {home_wr1['targets_per_game']} tgt/g ({home_wr1['target_share_pct']}% share) in N_eff={home_t['n_eff_receivers']} offense.",
+                    "leverageNote": f"1.5x Captain leverage: {home_wr1.get('targets_per_game', 'n/a')} tgt/g ({home_wr1.get('target_share_pct', 'n/a')}% share) in N_eff={home_t['n_eff_receivers']} offense.",
                 },
                 {
                     "player": away_wr1["player"],
                     "position": "WR",
                     "salary": 9600,
-                    "leverageNote": f"Bring-back Captain: {away_wr1['targets_per_game']} tgt/g ({away_wr1['target_share_pct']}% share) vs {g['homeAbbr']} {home_cov.get('two_high_shell_pct', 45.0)}% 2-High.",
+                    "leverageNote": f"Bring-back Captain: {away_wr1.get('targets_per_game', 'n/a')} tgt/g ({away_wr1.get('target_share_pct', 'n/a')}% share) vs {g['homeAbbr']} {home_cov.get('two_high_shell_pct', 45.0)}% 2-High.",
                 },
             ],
             "cashCore": [
@@ -401,8 +402,8 @@ def simulate_game_10000(g: dict, away_t: dict, home_t: dict, n_sims: int, rng: n
                     "player": away_rb1["player"],
                     "position": "RB",
                     "salary": 6200,
-                    "projection": round(14.8 + away_rb1["rush_yards_per_game"] * 0.06, 1),
-                    "floorNote": f"{away_rb1['carries_per_game']} carries/g ({away_rb1['carry_share_pct']}% rush share) workload anchor.",
+                    "projection": round(14.8 + float(away_rb1.get("rush_yards_per_game") or 60.0) * 0.06, 1),
+                    "floorNote": f"{away_rb1.get('carries_per_game', 'n/a')} carries/g ({away_rb1.get('carry_share_pct', 'n/a')}% rush share) workload anchor.",
                 },
             ],
             "gppStacks": [
@@ -455,11 +456,11 @@ def write_ts_files(writeups: list[dict]):
             "postedDetails": g["postedDetails"],
             "postedTotal": g["postedTotal"],
             "scoreboardStatus": g["scoreboardStatus"],
-            "publication": "PLAY",
+            "publication": "PLAY" if st["sideDecision"] == "PLAY" or st["totalDecision"] == "PLAY" else "PASS",
             "passReason": (
-                f"10,000-Sim W1–W7 Bind: Fair {g['homeAbbr']} {sm['fairHomeSpread']:+.1f} / Total {sm['fairTotal']:.1f} -> "
-                f"{st['sideSelection']} ({st['sideConfidence']}, +{st['sideExpectedClv']*100:.1f}% CLV) & "
-                f"{st['totalSelection']} ({st['totalConfidence']}, +{st['totalExpectedClv']*100:.1f}% CLV)."
+                f"Fair {g['homeAbbr']} {sm['fairHomeSpread']:+.1f} / Total {sm['fairTotal']:.1f}. "
+                f"Side {st['sideDecision']} CLV {st['sideExpectedClv']:+.4f}. "
+                f"Total {st['totalDecision']} CLV {st['totalExpectedClv']:+.4f}."
             ),
         })
 
@@ -554,8 +555,8 @@ def write_game_day_packet(writeups: list[dict]):
         "",
         "## 1. Tonight's TNF Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)",
         f"- **10,000-Sim Fair Line:** `GB {tnf['_simMeta']['fairHomeSpread']:+.1f}` | **Fair Total:** `{tnf['_simMeta']['fairTotal']:.1f}`",
-        f"- **Calibrated Side Play:** **{tnf['sideTotalCall']['sideSelection']}** (`{tnf['sideTotalCall']['sideConfidence']}`, `+{tnf['sideTotalCall']['sideExpectedClv']*100:.1f}% CLV`)",
-        f"- **Calibrated Total Play:** **{tnf['sideTotalCall']['totalSelection']}** (`{tnf['sideTotalCall']['totalConfidence']}`, `+{tnf['sideTotalCall']['totalExpectedClv']*100:.1f}% CLV`)",
+        f"- **Calibrated Side:** **{tnf['sideTotalCall']['sideDecision']}** {tnf['sideTotalCall']['sideSelection']} (`{tnf['sideTotalCall']['sideConfidence']}`, `{tnf['sideTotalCall']['sideExpectedClv']:+.4f}` CLV)",
+        f"- **Calibrated Total:** **{tnf['sideTotalCall']['totalDecision']}** {tnf['sideTotalCall']['totalSelection']} (`{tnf['sideTotalCall']['totalConfidence']}`, `{tnf['sideTotalCall']['totalExpectedClv']:+.4f}` CLV)",
         f"- **Coaching & Pace Synthesis:** {tnf['paceOfPlay']['notes']}",
         f"- **Coverage Shell & Trench Synthesis:** {tnf['schemeMatchup']['coverageShell']} • {tnf['schemeMatchup']['blitzRateVsPressureToSack']}",
         f"- **Correlated SGP (`{tnf['correlatedSgpTicket']['fairOdds']}` Fair vs `{tnf['correlatedSgpTicket']['marketOdds']}` Market):** " + " + ".join(l["selection"] for l in tnf["correlatedSgpTicket"]["legs"]),
@@ -591,11 +592,24 @@ def main():
     teams = trends["teams"]
     rng = np.random.default_rng(20261029)
 
+    print("jevkit.client.ask unavailable on this interpreter (ModuleNotFoundError). Live snap spine not run. Source label: measured-w1-w7-rates.")
+    injuries = load_week8_injuries_from_csv(str(REPO))
+    qualifying = sum(len(v) for v in injuries.values())
+    print(f"week8 injury roles from report_status Out/Doubtful/Questionable: {qualifying} roles across {len(injuries)} teams")
+
     writeups = []
     for g in WEEK8_GAMES:
         away_Key = "WAS" if g["awayAbbr"] == "WSH" else g["awayAbbr"]
         home_key = "WAS" if g["homeAbbr"] == "WSH" else g["homeAbbr"]
-        w = simulate_game_10000(g, teams[away_Key], teams[home_key], args.sims, rng)
+        w = simulate_game_10000(
+            g,
+            teams[away_Key],
+            teams[home_key],
+            args.sims,
+            rng,
+            away_inj=injuries.get(away_Key, []),
+            home_inj=injuries.get(home_key, []),
+        )
         writeups.append(w)
 
     clean_writeups = [{k: v for k, v in w.items() if k != "_simMeta"} for w in writeups]

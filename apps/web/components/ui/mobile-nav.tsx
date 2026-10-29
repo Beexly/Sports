@@ -14,55 +14,20 @@ type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<Na
 // Internal surfaces (Studio, Airwave) are not linked.
 const SECTIONS: readonly Section[] = [
   {
-    heading: "Board",
-    collapsible: true,
+    heading: "GALAXY PICKS (PAID)",
     links: [
-      { label: "The board", href: "/board" },
-      { label: "League slates", href: "/slate" },
-      { label: "Today's picks", href: "/picks" },
-      { label: "Our record", href: "/calibration" },
-      { label: "Bankroll", href: "/bankroll" },
-      { label: "SGP projections", href: "/sgp-projections" },
-      { label: "NFL hub", href: "/house" },
+      { label: "Galaxy Picks Storefront", href: "/packages" },
+      { label: "Week 8 Game Dossiers", href: "/packages#slate-dossiers" },
     ],
   },
   {
-    heading: "Players",
-    links: [{ label: "Player Lab", href: "/players" }],
+    heading: "DFS",
+    links: [{ label: "DFS Optimizer & Stacks", href: "/fantasy/dfs" }],
   },
   {
-    heading: "Fantasy & Daily",
-    collapsible: true,
+    heading: "Account & Access",
     links: [
-      { label: "All tools", href: "/fantasy" },
-      { label: "Draft Assistant", href: "/fantasy/draft" },
-      { label: "Start-Sit", href: "/fantasy/lineup" },
-      { label: "Waivers", href: "/fantasy/waivers" },
-      { label: "Trades", href: "/fantasy/trade" },
-      { label: "DFS Optimizer", href: "/fantasy/dfs" },
-      { label: "Pick'em", href: "/fantasy/props" },
-      { label: "Best ball", href: "/fantasy/bestball" },
-      { label: "NBA slate", href: "/fantasy/nba" },
-      { label: "Touchdowns", href: "/fantasy/touchdowns" },
-      { label: "Showdown", href: "/fantasy/showdown" },
-      { label: "Optimizer", href: "/optimizer" },
-      { label: "Connect league", href: "/fantasy/connect" },
-    ],
-  },
-  {
-    heading: "GSN",
-    collapsible: true,
-    links: [
-      { label: "The Beat", href: "/the-beat" },
-    ],
-  },
-  {
-    heading: "More",
-    links: [
-      { label: "Verify a receipt", href: "/verify" },
-      { label: "Plans", href: "/pricing" },
-      { label: "Free tools", href: "/tools" },
-      { label: "How we make money", href: "/how-we-make-money" },
+      { label: "All-Access Pricing", href: "/pricing" },
       { label: "Sign in", href: "/auth/signin" },
     ],
   },

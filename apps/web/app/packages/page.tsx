@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Pick Packages & Slate Dossiers | Galaxy Sports Edge",
   description:
-    "A-la-carte game packages, high-conviction cards, and DFS blueprints. Calibrated tactical writeups with instant Telegram delivery.",
+    "Galaxy Picks. Calibrated writeups with instant Telegram delivery.",
 };
 
 export default function PackagesPage(): JSX.Element {
@@ -26,7 +26,7 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="font-mono text-xs uppercase tracking-widest text-plasma">
-                Storefront · A-La-Carte Pick Packages
+                Storefront · Galaxy Picks
               </p>
               <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-ion-white sm:text-5xl">
                 Slate Packages & Coach Breakdowns
@@ -80,7 +80,7 @@ export default function PackagesPage(): JSX.Element {
           </div>
         </section>
 
-        {/* Storefront Bricks Grid (OnlyFans / WagerTalk In-Place Paywall Reveal Cards) */}
+        {/* Galaxy Picks paywall cards */}
         <section className="mt-10">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-xl font-display font-semibold text-ion-white">

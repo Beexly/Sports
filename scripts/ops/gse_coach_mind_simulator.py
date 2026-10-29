@@ -223,11 +223,143 @@ def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: floa
     return feasible_shares, mass_moved
 
 
-def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, sealed_state, expected_hash: str, n_sims: int = 5000, seed: int = 42) -> dict:
+def load_week8_injuries_from_csv(repo_root: str | None = None) -> dict[str, list[str]]:
+    """Read data/nflverse/injuries_2026.csv (Week 8 practice_status + Week 7 report_status)
+    and map active injuries to epaDropoffTable & Sinkhorn role keys."""
+    import csv
+
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parents[2]
+    csv_path = root / "data" / "nflverse" / "injuries_2026.csv"
+    if not csv_path.is_file():
+        return {}
+
+    team_roles: dict[str, list[str]] = {}
+    pos_counts: dict[tuple[str, str], int] = {}
+
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = [r for r in reader if str(r.get("week", "")) == "8"]
+
+    # Prioritize Week 8 rows where available, supplement with Week 7 Out/Doubtful
+    rows.sort(key=lambda r: int(r.get("week", 0)), reverse=True)
+    seen_players: set[tuple[str, str]] = set()
+
+    for r in rows:
+        team = str(r.get("team", "")).strip()
+        if team == "LA":
+            team = "LAR"
+        full_name = str(r.get("full_name", "")).strip()
+        if not team or not full_name or (team, full_name) in seen_players:
+            continue
+        seen_players.add((team, full_name))
+
+        pos = str(r.get("position", "")).strip().upper()
+        rep_status = str(r.get("report_status", "")).strip()
+        prac_status = str(r.get("practice_status", "")).strip()
+        wk = int(r.get("week", 0))
+
+        # report_status only. Week 8 practice rows are not a game designation.
+        # Do not promote a blank report, a DNP, or "position == QB" into Out/Questionable.
+        _ = prac_status, wk
+        is_out_or_dnp = rep_status in ("Out", "Doubtful")
+        is_quest_or_lp = rep_status == "Questionable"
+
+        if not (is_out_or_dnp or is_quest_or_lp):
+            continue
+
+        roles = team_roles.setdefault(team, [])
+        idx = pos_counts.get((team, pos), 0) + 1
+        pos_counts[(team, pos)] = idx
+
+        if pos == "QB":
+            role = "QB1" if (is_out_or_dnp and idx == 1) else "QB_QUESTIONABLE"
+        elif pos in ("T", "OT", "LT", "G", "C", "OL"):
+            role = "LT" if idx == 1 else ""
+        elif pos in ("CB", "DB"):
+            role = "CB1" if idx == 1 else ""
+        elif pos in ("DE", "EDGE", "LB", "OLB"):
+            role = "EDGE1" if idx == 1 else ""
+        elif pos == "WR":
+            role = "WR1" if idx == 1 else ("WR2" if idx == 2 else "WR3")
+        elif pos == "RB":
+            role = "RB1" if idx == 1 else ""
+        elif pos == "TE":
+            role = "TE1" if idx == 1 else ""
+        else:
+            role = ""
+
+        if role and role not in roles:
+            roles.append(role)
+
+    return team_roles
+
+
+def simulate_matchup_pbp(
+    away: str,
+    home: str,
+    away_inj: list,
+    home_inj: list,
+    sealed_state,
+    expected_hash: str,
+    n_sims: int = 5000,
+    seed: int = 42,
+    w1_w7_override: dict | None = None,
+    return_vectors: bool = False,
+) -> dict:
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
     rng = np.random.default_rng(seed)
-    tr_away = sealed_state["teamRatings"].get(away) or ALL_32_TEAM_RATINGS[away]
-    tr_home = sealed_state["teamRatings"].get(home) or ALL_32_TEAM_RATINGS[home]
+    tr_away = dict(sealed_state["teamRatings"].get(away) or ALL_32_TEAM_RATINGS[away])
+    tr_home = dict(sealed_state["teamRatings"].get(home) or ALL_32_TEAM_RATINGS[home])
+
+    away_sack_prob = 0.062
+    home_sack_prob = 0.062
+    away_comp_base = 0.645
+    home_comp_base = 0.645
+    away_wr1_share_emp = 0.26
+    home_wr1_share_emp = 0.26
+    away_rb1_share_emp = 0.62
+    home_rb1_share_emp = 0.62
+
+    if w1_w7_override is not None:
+        aw_ov = w1_w7_override.get("away") or {}
+        hm_ov = w1_w7_override.get("home") or {}
+        if aw_ov:
+            tr_away["early_pass_rate"] = 0.50 * float(tr_away["early_pass_rate"]) + 0.50 * float(
+                aw_ov.get("early_down_pass_rate", tr_away["early_pass_rate"])
+            )
+            c_w17 = float(aw_ov.get("comp_rate_w1_w7", 0.645))
+            c_w67 = float(aw_ov.get("comp_rate_w6_w7", c_w17))
+            if c_w17 > 1.5:
+                c_w17 /= 100.0
+            if c_w67 > 1.5:
+                c_w67 /= 100.0
+            away_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
+            ol_sack = float(aw_ov.get("sack_rate_allowed", 6.2)) / 100.0
+            def_press = float(hm_ov.get("def_pressure_rate", 21.5)) / 100.0
+            away_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
+            if aw_ov.get("wr1_target_share"):
+                away_wr1_share_emp = float(np.clip(float(aw_ov["wr1_target_share"]) / 100.0, 0.14, 0.42))
+            if aw_ov.get("rb1_carry_share"):
+                away_rb1_share_emp = float(np.clip(float(aw_ov["rb1_carry_share"]) / 100.0, 0.35, 0.88))
+        if hm_ov:
+            tr_home["early_pass_rate"] = 0.50 * float(tr_home["early_pass_rate"]) + 0.50 * float(
+                hm_ov.get("early_down_pass_rate", tr_home["early_pass_rate"])
+            )
+            c_w17 = float(hm_ov.get("comp_rate_w1_w7", 0.645))
+            c_w67 = float(hm_ov.get("comp_rate_w6_w7", c_w17))
+            if c_w17 > 1.5:
+                c_w17 /= 100.0
+            if c_w67 > 1.5:
+                c_w67 /= 100.0
+            home_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
+            ol_sack = float(hm_ov.get("sack_rate_allowed", 6.2)) / 100.0
+            def_press = float(aw_ov.get("def_pressure_rate", 21.5)) / 100.0
+            home_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
+            if hm_ov.get("wr1_target_share"):
+                home_wr1_share_emp = float(np.clip(float(hm_ov["wr1_target_share"]) / 100.0, 0.14, 0.42))
+            if hm_ov.get("rb1_carry_share"):
+                home_rb1_share_emp = float(np.clip(float(hm_ov["rb1_carry_share"]) / 100.0, 0.35, 0.88))
+
     epa_table = sealed_state["epaDropoffTable"]
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
     away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
@@ -248,6 +380,10 @@ def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, s
     clock_sec = np.full(n_sims, 3600.0, dtype=np.float64)
     away_score = np.zeros(n_sims, dtype=np.float64)
     home_score = np.zeros(n_sims, dtype=np.float64)
+    away_pass_yds_tot = np.zeros(n_sims, dtype=np.float64)
+    home_pass_yds_tot = np.zeros(n_sims, dtype=np.float64)
+    away_rush_yds_tot = np.zeros(n_sims, dtype=np.float64)
+    home_rush_yds_tot = np.zeros(n_sims, dtype=np.float64)
     total_plays = np.zeros(n_sims, dtype=np.int32)
     poss = rng.integers(0, 2, size=n_sims)
     down = np.ones(n_sims, dtype=np.int32)
@@ -319,13 +455,32 @@ def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, s
             u_out = rng.random(len(idx_13))
             to_prob = np.clip(np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v, 0.003, 0.045)
             is_to = u_out < to_prob
-            pass_comp = np.clip(0.645 + 0.38 * ne_v, 0.48, 0.78)
+            comp_base_v = np.where(poss[idx_13] == 1, home_comp_base, away_comp_base)
+            sack_prob_v = np.where(poss[idx_13] == 1, home_sack_prob, away_sack_prob)
+            pass_comp = np.clip(comp_base_v + 0.38 * ne_v, 0.48, 0.78)
             pass_yds = np.where(
-                u_out < (to_prob + 0.062), -rng.integers(5, 9, size=len(idx_13)),
-                np.where(u_out < (to_prob + 0.062 + pass_comp), np.round(rng.normal(11.4 + 14.5 * ne_v, 7.5, size=len(idx_13))).astype(np.int32), 0)
+                u_out < (to_prob + sack_prob_v), -rng.integers(5, 9, size=len(idx_13)),
+                np.where(u_out < (to_prob + sack_prob_v + pass_comp), np.round(rng.normal(11.4 + 14.5 * ne_v, 7.5, size=len(idx_13))).astype(np.int32), 0)
             )
             run_yds = np.round(rng.normal(4.4 + 9.5 * ne_v, 4.2, size=len(idx_13))).astype(np.int32)
             yds = np.where(is_pass, pass_yds, run_yds)
+
+            # Accumulate real simulated passing & rushing yardage per world
+            pos_pass_yds = np.maximum(0, pass_yds)
+            pos_run_yds = np.maximum(-3, run_yds)
+            hm_pass_mask = (~is_to) & is_pass & (poss[idx_13] == 1)
+            aw_pass_mask = (~is_to) & is_pass & (poss[idx_13] == 0)
+            hm_run_mask = (~is_to) & (~is_pass) & (poss[idx_13] == 1)
+            aw_run_mask = (~is_to) & (~is_pass) & (poss[idx_13] == 0)
+            if np.any(hm_pass_mask):
+                home_pass_yds_tot[idx_13[hm_pass_mask]] += pos_pass_yds[hm_pass_mask]
+            if np.any(aw_pass_mask):
+                away_pass_yds_tot[idx_13[aw_pass_mask]] += pos_pass_yds[aw_pass_mask]
+            if np.any(hm_run_mask):
+                home_rush_yds_tot[idx_13[hm_run_mask]] += pos_run_yds[hm_run_mask]
+            if np.any(aw_run_mask):
+                away_rush_yds_tot[idx_13[aw_run_mask]] += pos_run_yds[aw_run_mask]
+
             if np.any(is_to):
                 t_i = idx_13[is_to]
                 poss[t_i] = 1 - poss[t_i]
@@ -359,7 +514,7 @@ def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, s
     tot = home_score + away_score
     sprd = home_score - away_score
     pace = 3600.0 / np.maximum(total_plays, 100)
-    return {
+    out = {
         "matchup": f"{away} @ {home}",
         "median_total": round(float(np.median(tot)), 2),
         "median_spread_home": round(float(np.median(sprd)), 2),
@@ -371,6 +526,28 @@ def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, s
         "one_score_prob_le7": round(float(np.mean(np.abs(sprd) <= 7.0)), 4),
         "coachMindsetHash": expected_hash,
     }
+    if return_vectors:
+        # Combine Sinkhorn-reallocated WR1/RB1 weight with empirical W1-W7 target/carry share
+        aw_wr1_eff_share = 0.50 * float(away_sh[0]) + 0.50 * away_wr1_share_emp
+        hm_wr1_eff_share = 0.50 * float(home_sh[0]) + 0.50 * home_wr1_share_emp
+        aw_rb1_eff_share = 0.35 * (float(away_sh[4]) / 0.16 * 0.62) + 0.65 * away_rb1_share_emp
+        hm_rb1_eff_share = 0.35 * (float(home_sh[4]) / 0.16 * 0.62) + 0.65 * home_rb1_share_emp
+        out["vectors"] = {
+            "home_score": home_score,
+            "away_score": away_score,
+            "total_plays": total_plays,
+            "home_pass_yds": home_pass_yds_tot,
+            "away_pass_yds": away_pass_yds_tot,
+            "home_rush_yds": home_rush_yds_tot,
+            "away_rush_yds": away_rush_yds_tot,
+            "home_wr1_yds": home_pass_yds_tot * hm_wr1_eff_share,
+            "away_wr1_yds": away_pass_yds_tot * aw_wr1_eff_share,
+            "home_rb1_yds": home_rush_yds_tot * hm_rb1_eff_share,
+            "away_rb1_yds": away_rush_yds_tot * aw_rb1_eff_share,
+        }
+        out["away_injuries_applied"] = list(away_inj)
+        out["home_injuries_applied"] = list(home_inj)
+    return out
 
 
 def main():

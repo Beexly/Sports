@@ -41,11 +41,11 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
 
     const hrefs = FIVE_REVENUE_PILLARS.map((p) => p.href);
     const expectedRoutes = [
-      "/picks",
-      "/fantasy/props",
-      "/sgp-projections",
-      "/fantasy/dfs",
       "/packages",
+      "/packages#slate-dossiers",
+      "/fantasy/dfs",
+      "/pricing",
+      "https://t.me/GalaxySportsEdge_bot",
     ];
 
     expect(hrefs).toEqual(expectedRoutes);
@@ -64,20 +64,16 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
       .filter(Boolean);
 
     for (const route of [
-      "/picks",
-      "/fantasy/props",
-      "/sgp-projections",
-      "/fantasy/dfs",
       "/packages",
+      "/fantasy/dfs",
+      "/pricing",
     ]) {
       expect(renderedHrefs).toContain(route);
     }
 
-    // Still preserves core top-bar doors
-    expect(renderedHrefs).toContain("/board");
-    expect(renderedHrefs).toContain("/players");
-    expect(renderedHrefs).toContain("/fantasy");
-    expect(renderedHrefs).toContain("/the-beat");
+    expect(renderedHrefs).not.toContain("/board");
+    expect(renderedHrefs).not.toContain("/players");
+    expect(renderedHrefs).not.toContain("/the-beat");
   });
 
   it("app/page.tsx links directly to all 5 revenue pillars in its commercial callout section", () => {
@@ -86,19 +82,9 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
       "utf8",
     );
 
-    // Assert 5-pillar revenue section exists
-    expect(homeSrc).toContain("five-pillar-revenue-section");
-    expect(homeSrc).toContain("5-Pillar Architecture");
-
-    // Assert direct links to all 5 routes
-    expect(homeSrc).toMatch(/href="\/picks"/);
-    expect(homeSrc).toMatch(/href="\/fantasy\/props"/);
-    expect(homeSrc).toMatch(/href="\/sgp-projections"/);
+    expect(homeSrc).toContain("GALAXY PICKS (PAID)");
+    expect(homeSrc).toMatch(/href="\/packages" className="btn-primary/);
     expect(homeSrc).toMatch(/href="\/fantasy\/dfs"/);
-    expect(homeSrc).toMatch(/href="\/packages"/);
-
-    // Assert primary hero CTAs remain intact (F-28 doctrine)
-    expect(homeSrc).toMatch(/href="\/picks" className="btn-primary min-h-12 px-7 py-3 text-base"/);
     expect(homeSrc).toMatch(/href="\/pricing"/);
   });
 });

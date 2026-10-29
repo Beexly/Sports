@@ -42,6 +42,60 @@ NICKNAME_TO_ABBR = {
 
 ABBR_ALIAS = {"WSH": "WAS", "LA": "LAR"}
 
+# Colliding initial.Last forms. Snap counts use full names; PBP uses initials.
+FORCED_FULL_NAMES = {
+    ("GB", "J.Love"): "Jordan Love",
+    ("ARI", "J.Love"): "Jeremiyah Love",
+    ("DEN", "J.Waddle"): "Jaylen Waddle",
+    ("KC", "K.Walker"): "Kenneth Walker",
+}
+
+
+def _initial_key(full_name: str) -> str:
+    parts = str(full_name).replace(".", " ").split()
+    suffixes = {"II", "III", "IV", "JR", "SR", "JR."}
+    if len(parts) >= 3 and parts[-1].upper().rstrip(".") in suffixes:
+        parts = parts[:-1]
+    if len(parts) < 2 or not parts[0]:
+        return str(full_name)
+    return f"{parts[0][0].upper()}.{parts[-1]}"
+
+
+def build_name_index(snaps: pd.DataFrame) -> dict:
+    index: dict[tuple[str, str], set[str]] = {}
+    for team, player in snaps[["team", "player"]].drop_duplicates().itertuples(index=False):
+        index.setdefault((str(team), _initial_key(player)), set()).add(str(player))
+    return index
+
+
+def display_name(team: str, initial: str, index: dict) -> str:
+    forced = FORCED_FULL_NAMES.get((team, initial))
+    if forced:
+        return forced
+    cands = index.get((team, initial), set())
+    if len(cands) == 1:
+        name = next(iter(cands))
+        if name == "Kenneth Walker III":
+            return "Kenneth Walker"
+        return name
+    return initial
+
+
+def player_games(team: str, shown_name: str, player_rows: pd.DataFrame, snaps: pd.DataFrame) -> int:
+    pbp_gp = max(1, int(player_rows["game_id"].nunique())) if len(player_rows) else 1
+    snap_rows = snaps[(snaps["team"] == team) & (snaps["player"] == shown_name)]
+    if len(snap_rows) == 0 and shown_name == "Kenneth Walker":
+        snap_rows = snaps[(snaps["team"] == team) & snaps["player"].astype(str).str.startswith("Kenneth Walker")]
+    if len(snap_rows):
+        return max(1, int(snap_rows["game_id"].nunique()))
+    return pbp_gp
+
+
+def _safe_rate(num: float, den: float):
+    if not den:
+        return None
+    return round(float(num) / float(den), 4)
+
 
 def norm_team(t: str) -> str:
     if not isinstance(t, str):
@@ -102,6 +156,9 @@ def main():
 
     teams_out = {}
     all_teams = sorted(set(NICKNAME_TO_ABBR.values()))
+    name_index = build_name_index(snaps)
+    snaps = snaps.copy()
+    snaps["team"] = snaps["team"].astype(str).map(norm_team)
 
     for team in all_teams:
         off = scrim[scrim["posteam"] == team]
@@ -174,15 +231,21 @@ def main():
 
         top_receivers = []
         for _, rr in rec_grp.head(5).iterrows():
+            raw_name = str(rr["receiver_player_name"])
+            shown = display_name(team, raw_name, name_index)
+            player_rows = pass_targets[pass_targets["receiver_player_name"] == raw_name]
+            pgp = player_games(team, shown, player_rows, snaps)
             top_receivers.append({
-                "player": str(rr["receiver_player_name"]),
+                "player": shown,
+                "pbp_name": raw_name,
+                "player_games": pgp,
                 "targets": int(rr["targets"]),
-                "targets_per_game": round(float(rr["targets"]) / games_played, 1),
+                "targets_per_game": round(float(rr["targets"]) / pgp, 1),
                 "target_share_pct": round(float(rr["target_share"]) * 100.0, 1),
                 "receptions": int(rr["receptions"]),
-                "rec_per_game": round(float(rr["receptions"]) / games_played, 1),
+                "rec_per_game": round(float(rr["receptions"]) / pgp, 1),
                 "rec_yards": int(rr["rec_yards"]),
-                "rec_yards_per_game": round(float(rr["rec_yards"]) / games_played, 1),
+                "rec_yards_per_game": round(float(rr["rec_yards"]) / pgp, 1),
                 "air_yards": round(float(rr["air_yards"]), 1),
                 "rec_tds": int(rr["rec_tds"]),
             })
@@ -202,33 +265,89 @@ def main():
         )
         top_rushers = []
         for _, rur in rush_grp.head(3).iterrows():
+            raw_name = str(rur["rusher_player_name"])
+            shown = display_name(team, raw_name, name_index)
+            player_rows = rushes[rushes["rusher_player_name"] == raw_name]
+            pgp = player_games(team, shown, player_rows, snaps)
             top_rushers.append({
-                "player": str(rur["rusher_player_name"]),
+                "player": shown,
+                "pbp_name": raw_name,
+                "player_games": pgp,
                 "carries": int(rur["carries"]),
-                "carries_per_game": round(float(rur["carries"]) / games_played, 1),
+                "carries_per_game": round(float(rur["carries"]) / pgp, 1),
                 "carry_share_pct": round(100.0 * float(rur["carries"]) / total_rushes, 1),
                 "rush_yards": int(rur["rush_yards"]),
-                "rush_yards_per_game": round(float(rur["rush_yards"]) / games_played, 1),
+                "rush_yards_per_game": round(float(rur["rush_yards"]) / pgp, 1),
                 "rush_tds": int(rur["rush_tds"]),
                 "rush_epa_per_play": round(float(rur["epa_mean"]), 3),
             })
 
         # Primary Passer
         passers = off[(off["pass"] == 1) & off["passer_player_name"].notna()]
-        qb_name = (
+        qb_raw = (
             str(passers["passer_player_name"].value_counts().index[0])
             if len(passers)
             else f"{team} QB1"
         )
+        qb_name = display_name(team, qb_raw, name_index)
+        qb_rows = passers[passers["passer_player_name"] == qb_raw] if len(passers) else passers
+        qb_gp = player_games(team, qb_name, qb_rows, snaps) if len(passers) else games_played
         qb_pass_yds_pg = round(
-            float(off[off["pass"] == 1]["yards_gained"].sum()) / games_played, 1
-        )
+            float(qb_rows["yards_gained"].sum()) / qb_gp, 1
+        ) if len(qb_rows) else 0.0
+
+        def _comp_ypc(frame):
+            passes = frame[frame["pass"] == 1]
+            if "complete_pass" in passes.columns:
+                comps = passes[passes["complete_pass"] == 1]
+            else:
+                comps = passes.iloc[0:0]
+            rushes_f = frame[frame["rush"] == 1]
+            return (
+                _safe_rate(len(comps), len(passes)),
+                round(float(comps["yards_gained"].mean()), 2) if len(comps) else None,
+                round(float(rushes_f["yards_gained"].mean()), 2) if len(rushes_f) else None,
+            )
+
+        comp_w17, ypc_w17, ypr_w17 = _comp_ypc(off)
+        comp_w67, ypc_w67, ypr_w67 = _comp_ypc(off_w67)
+        to_num = 0
+        if "interception" in off.columns:
+            to_num += int(off["interception"].fillna(0).sum())
+        if "fumble_lost" in off.columns:
+            to_num += int(off["fumble_lost"].fillna(0).sum())
+        to_rate = _safe_rate(to_num, len(off))
+        rz = off[off["yardline_100"] <= 20] if "yardline_100" in off.columns else off.iloc[0:0]
+        rz_td = int(rz["touchdown"].fillna(0).sum()) if len(rz) and "touchdown" in rz.columns else 0
+        rz_td_pct = _safe_rate(rz_td, len(rz))
+        td3 = off_w67[(off_w67["down"] == 3)] if "down" in off_w67.columns else off_w67.iloc[0:0]
+        if "third_down_converted" in td3.columns and len(td3):
+            conv = int(td3["third_down_converted"].fillna(0).sum())
+            fail = int(td3["third_down_failed"].fillna(0).sum()) if "third_down_failed" in td3.columns else 0
+            third_w67 = _safe_rate(conv, conv + fail)
+        else:
+            third_w67 = None
+        wr1_share = float(top_receivers[0]["target_share_pct"]) if top_receivers else None
+        rb1_share = float(top_rushers[0]["carry_share_pct"]) if top_rushers else None
 
         teams_out[team] = {
             "team": team,
             "games_played": games_played,
             "qb1": qb_name,
+            "qb_player_games": qb_gp,
             "qb_pass_yards_per_game": qb_pass_yds_pg,
+            "comp_rate_w1_w7": comp_w17,
+            "comp_rate_w6_w7": comp_w67,
+            "yards_per_comp_w1_w7": ypc_w17,
+            "yards_per_comp_w6_w7": ypc_w67,
+            "yards_per_rush_w1_w7": ypr_w17,
+            "yards_per_rush_w6_w7": ypr_w67,
+            "turnover_rate_per_play": to_rate,
+            "redzone_td_pct": rz_td_pct,
+            "third_down_conv_w6_w7": third_w67,
+            "wr1_target_share": wr1_share,
+            "rb1_carry_share": rb1_share,
+            "early_down_pass_rate": round(first10_pass_pct / 100.0, 4) if first10_pass_pct else None,
             "plays_per_game": plays_per_game,
             "neutral_sec_per_snap": sec_per_snap,
             "neutral_pass_rate_pct": round(pass_rate_neutral, 1),

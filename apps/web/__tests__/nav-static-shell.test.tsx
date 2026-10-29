@@ -68,10 +68,11 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     expect(mocks.auth).not.toHaveBeenCalled();
 
     // The static nav links render from the static nav-left, not from auth.
-    expect(container.querySelector('a[href="/board"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/players"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/fantasy"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/the-beat"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/packages"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/fantasy/dfs"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/board"]')).toBeNull();
+    expect(container.querySelector('a[href="/players"]')).toBeNull();
+    expect(container.querySelector('a[href="/the-beat"]')).toBeNull();
   });
 
   it("Nav() renders Board / Players / Fantasy / GSN as static top-bar doors", () => {
@@ -90,11 +91,11 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     // The bar is four doors since 2026-09-12. This list previously required
     // "/intelligence/engines" and "/calibration", both of which AGENTS.md now
     // forbids in the top bar, so the assertion guarded AGAINST doctrine.
-    expect(hrefs).toContain("/board");
-    expect(hrefs).toContain("/players");
-    expect(hrefs).toContain("/fantasy");
-    expect(hrefs).toContain("/the-beat");
-    // And the doctrine half, so a regression is caught rather than tolerated.
+    expect(hrefs).toContain("/packages");
+    expect(hrefs).toContain("/fantasy/dfs");
+    expect(hrefs).not.toContain("/board");
+    expect(hrefs).not.toContain("/players");
+    expect(hrefs).not.toContain("/the-beat");
     expect(hrefs).not.toContain("/intelligence/engines");
 
     // auth() was NOT called during static shell render.

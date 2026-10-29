@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 const LIVE_APPS = [
   { name: "Live Production Site (galaxysportsedge.com)", url: "https://www.galaxysportsedge.com", path: "https://www.galaxysportsedge.com", status: "PROD" },
   { name: "Local Dev Mirror (5 Revenue Pillars + Paywall)", url: "http://localhost:3000", path: "/", status: "ONLINE" },
-  { name: "OnlyFans/WagerTalk Paywall Storefront", url: "https://www.galaxysportsedge.com/packages", path: "/packages", status: "ONLINE" },
+  { name: "Galaxy Picks Storefront", url: "https://www.galaxysportsedge.com/packages", path: "/packages", status: "ONLINE" },
   { name: "1. Game Picks Board (Coach Mind First)", url: "https://www.galaxysportsedge.com/picks", path: "/picks", status: "ONLINE" },
   { name: "2. Player Props & N_eff Target Shares", url: "https://www.galaxysportsedge.com/fantasy/props", path: "/fantasy/props", status: "ONLINE" },
   { name: "3. Correlated SGP Matrix (Sigma_game)", url: "https://www.galaxysportsedge.com/sgp-projections", path: "/sgp-projections", status: "ONLINE" },
@@ -191,14 +191,14 @@ const ENGINE_PROCESSING_BY_ITEM = [
       "Compares LAST against DFS salaries and Dirichlet-Multinomial field ownership (arxiv-2603.24989) to output: (1) 80th-Pct Floor Cash Core, (2) 1.5x Showdown Captain Leverage, and (3) 20-Max GPP Stacks (QB + 2 Pass Catchers + Opposing Bring-Back + Sub-$4.5k Value Filler).",
   },
   {
-    item: "5. OnlyFans/WagerTalk In-Place Paywall Vault & Telegram VIP",
+    item: "5. Galaxy Picks vault and Telegram VIP",
     route: "/packages",
     stage1CoachMind:
       "Publishes the Free Pace-of-Play, Neutral Tempo & Coaching Scheme Matchup Teaser above the fold so every visitor sees our football intelligence immediately.",
     stage2DataAndMath:
       "Zero-DOM-Leak Server Redaction (`getRedactedTeasersForWindowSlot` + `verifyPackagePurchase`) ensures locked HTML never contains secret pick sides, prop players, SGP legs, or DFS lineups.",
     stage3Simulation:
-      "5 A-La-Carte Packages ($25/$38 TNF, $35/$53 Sunday 5% Card, $29 Sunday DFS 20-Max Pack, $69 Weekend 3-Day, $99 Weekly 7-Day) backed by sealed SHA-256 simulation receipts.",
+      "Galaxy Picks for TNF, Sunday, SGP, and the Week 8 all-access pass.",
     stage4BookLast:
       "1-Click Stripe Instant Checkout or inline Receipt/Whop Key unlocks picks in-place on the card AND unlocks `/picks`, `/props`, `/parlays`, and `/dfs` inside `@GalaxySportsEdge_bot`.",
   },
@@ -427,7 +427,7 @@ export default function CockpitWorkflowsHubPage() {
               <text x="918" y="461" fill="#94a3b8" fontSize="9" fontFamily="monospace">galaxysportsedge.com/cockpit/film-room</text>
 
               <rect x="905" y="488" width="275" height="108" rx="8" fill="#0f172a" stroke="#f59e0b" strokeWidth="2" />
-              <text x="918" y="509" fill="#fbbf24" fontSize="11" fontWeight="bold">Pillar 5: OnlyFans/WagerTalk Paywall Vault</text>
+              <text x="918" y="509" fill="#fbbf24" fontSize="11" fontWeight="bold">Pillar 5: Galaxy Picks</text>
               <text x="918" y="525" fill="#cbd5e1" fontSize="10">• Free Pace &amp; Scheme Teaser Above Fold</text>
               <text x="918" y="540" fill="#cbd5e1" fontSize="10">• Frosted Vault Unlocks In-Place on Payment</text>
               <text x="918" y="555" fill="#cbd5e1" fontSize="10">• $25/$38 TNF · $35/$53 Sun · $29 DFS · $69/$99</text>
