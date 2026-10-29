@@ -227,6 +227,7 @@ Formula: mean EPA of the next play after an explosive, minus mean EPA of the nex
 - Carolina: early gap -0.0053. Late gap +0.4384 on 19 plays. Sign flips. Not used.
 - Green Bay: early gap -0.3199 on 47 plays. Late gap -0.2796 on 22 plays. The sign holds, and it is mean-reversion, not a tempo boost. The late cell is 22 plays. Not promoted.
 - Deploy at check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` was Building on `sports-web`, commit `71dc74539`, URL `sports-deej11ou1`. It was not canceled. Quad harvest: none.
+- Deploy after the push: that same deployment is Ready, target production, alias assigned, including `www.galaxysportsedge.com`. Live `/fantasy/dfs` is HTTP 200 and contains `Carolina Panthers`, `Green Bay Packers`, and `GB -3.5`. `No packaged` is not on that page.
 
 
 
