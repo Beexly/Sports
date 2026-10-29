@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 22`
+- **CYCLE_ROUND:** `Round 23`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -294,6 +294,18 @@ Formula: pass mean minus run mean. Early is weeks 1–5. Late is weeks 6–7.
 - Carolina: early gap +0.2650 (pass 0.2081 on 172, run -0.0569 on 93). Late gap -0.3480 (pass -0.1797 on 78, run 0.1683 on 49). The sign flips. The early pass lean does not hold. Not promoted.
 - Green Bay: early gap +0.4019 (pass 0.1097 on 196, run -0.2922 on 94). Late gap +0.3375 (pass 0.1445 on 90, run -0.1930 on 43). The sign holds. Both late cells are above 40 plays. It is a covariate, not a side.
 - Quad harvest: none.
+
+## Round 23 — 2026-10-29 03:38 CT
+
+Defense EPA allowed. This is the offense's EPA on plays where the team is `defteam`. Lower is a better defense. Pass and run, non-null EPA. Cards not changed.
+
+Formula: late mean minus early mean.
+
+- League: early 0.0079 on 9,693 plays. Late 0.0096 on 3,486. Change +0.0017. Flat.
+- Carolina defense: early 0.0283 on 267 plays. Late 0.0155 on 119. Change -0.0128. Slightly better, not a swing.
+- Green Bay defense: early -0.0388 on 324 plays. Late -0.0992 on 136. Change -0.0605. They allowed less late. Both cells are large. It is a covariate, not a side.
+- Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
 
 
 
