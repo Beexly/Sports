@@ -41,12 +41,12 @@ export interface SchemeMatchup {
 export interface SideTotalCall {
   sideSelection: string;
   sideConfidence: string; // strictly "XX/100", never "%"
-  sideExpectedClv: number; // strictly > 0
-  sideDecision: 'PLAY'; // strictly "PLAY"
+  sideExpectedClv: number;
+  sideDecision: 'PLAY' | 'PASS';
   totalSelection: string;
   totalConfidence: string; // strictly "XX/100", never "%"
-  totalExpectedClv: number; // strictly > 0
-  totalDecision: 'PLAY'; // strictly "PLAY"
+  totalExpectedClv: number;
+  totalDecision: 'PLAY' | 'PASS';
   rationale: string;
 }
 
@@ -54,12 +54,15 @@ export interface PropCall {
   playerId: string;
   playerName: string;
   propType: string;
+  market?: string;
   line: number;
   side: 'OVER' | 'UNDER';
   confidence: string; // strictly "XX/100"
-  expectedClv: number; // strictly > 0
-  decision: 'PLAY'; // strictly "PLAY"
+  expectedClv: number;
+  decision: 'PLAY' | 'PASS';
   nEffTargetNotes: string;
+  pOver?: number;
+  pUnder?: number;
 }
 
 export interface CorrelatedSgpTicket {
@@ -70,8 +73,8 @@ export interface CorrelatedSgpTicket {
     selection: string;
     line?: number;
     confidence: string; // strictly "XX/100"
-    expectedClv: number; // strictly > 0
-    decision: 'PLAY';
+    expectedClv: number;
+    decision: 'PLAY' | 'PASS';
   }>;
   jointWinProb: number;
   fairOdds: string;
@@ -258,121 +261,146 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.122,
       "rushEpaPlay": -0.188,
       "noHuddleRate": 0.076,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): CAR runs 69.2 plays/g (1st&10 pass 92/162 = 56.8%, motion 56.6%, PA 26.3%) vs GB 64.3 plays/g (1st&10 pass 84/160 = 52.5%, motion 62.4%, PA 19.5%)."
+      "notes": "Game Tempo: Carolina Panthers runs 69 plays per game (throwing on 57% of first downs), while Green Bay Packers runs 64 plays per game (throwing on 52% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "GB Def 2-High 56.1% / 1-High 33.0% (Cov3 23.2%, Cov4 24.3%) vs CAR Def 2-High 34.9% / 1-High 57.7% (Cov3 47.6%, Cov4 12.8%)",
-      "blitzRateVsPressureToSack": "GB blitzes 33.2% (sack rate 5.44%) vs CAR OL 6.3% sack allowed; CAR blitzes 36.2% (sack rate 4.53%) vs GB OL 4.56% sack allowed.",
-      "personnelTendencies": "CAR N_eff=7.1 (avg box faced 6.35) \u2022 GB N_eff=6.44 (avg box faced 6.5)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: CAR +0.041 (W6\u20137 -0.053, \u0394 -0.139) vs GB +0.001 (W6\u20137 +0.033, \u0394 +0.046); Def EPA/p: CAR +0.025 vs GB -0.027.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread GB -8.5 (Posted GB -3.5) \u2022 Fair Total 29.3 (Posted 47.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Green Bay Packers a 10.0-point favorite (Vegas line is GB -3.5) and projects 38 total points (Vegas total is 47.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Green Bay Packers pressures the quarterback on 33% of dropbacks (getting sacks 5.4% of the time), while Carolina Panthers pressures on 36% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Green Bay Packers leans on Matthew Golden and Josh Jacobs, while Carolina Panthers attacks with Tetairoa McMillan and Chuba Hubbard.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Green Bay Packers is averaging 64 plays per game and Carolina Panthers is averaging 69 plays per game.",
+      "notes": "Our Projection: GB -10.0 (Posted GB -3.5) \u2022 Projected Total 38.0 (Posted 47.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Green Bay Packers -3.5",
-      "sideConfidence": "65/100",
-      "sideExpectedClv": 0.1311,
+      "sideConfidence": "69/100",
+      "sideExpectedClv": 0.1662,
       "sideDecision": "PLAY",
       "totalSelection": "UNDER 47.5",
-      "totalConfidence": "95/100",
-      "totalExpectedClv": 0.4236,
+      "totalConfidence": "78/100",
+      "totalExpectedClv": 0.2538,
       "totalDecision": "PLAY",
-      "rationale": "Green Bay Packers -3.5 p=0.655 CLV=+0.1311. UNDER 47.5 p=0.947 CLV=+0.4236. Fair GB -8.5 / total 29.3 vs posted GB -3.5 / 47.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Green Bay Packers -3.5 (69/100 confidence) and BET UNDER 47.5 (78/100 confidence). Our 10,000-game simulation projects a final score near GB 24 - CAR 14."
     },
     "topProps": [
       {
+        "playerId": "matthew-golden",
         "playerName": "Matthew Golden",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 78.0,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0242,
-        "decision": "PASS",
-        "pOver": 0.4941,
-        "pUnder": 0.4996
-      },
-      {
-        "playerName": "Christian Watson",
-        "market": "rec_yds",
-        "line": 67.0,
-        "side": "UNDER",
-        "confidence": "92/100",
-        "expectedClv": 0.3994,
-        "decision": "PLAY",
-        "pOver": 0.0768,
-        "pUnder": 0.9232
-      },
-      {
-        "playerName": "Tetairoa McMillan",
-        "market": "rec_yds",
-        "line": 74.0,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0257,
-        "decision": "PASS",
-        "pOver": 0.4923,
-        "pUnder": 0.4981
-      },
-      {
-        "playerName": "Jalen Coker",
-        "market": "rec_yds",
-        "line": 60.0,
-        "side": "UNDER",
-        "confidence": "99/100",
-        "expectedClv": 0.4641,
-        "decision": "PLAY",
-        "pOver": 0.0121,
-        "pUnder": 0.9879
-      },
-      {
-        "playerName": "Chuba Hubbard",
-        "market": "rush_yds",
-        "line": 84.0,
-        "side": "UNDER",
-        "confidence": "49/100",
-        "expectedClv": -0.0297,
-        "decision": "PASS",
-        "pOver": 0.4899,
-        "pUnder": 0.4941
-      },
-      {
-        "playerName": "Josh Jacobs",
-        "market": "rush_yds",
-        "line": 52.0,
+        "line": 52.5,
         "side": "OVER",
-        "confidence": "59/100",
-        "expectedClv": 0.0657,
+        "confidence": "87/100",
+        "expectedClv": 0.3446,
         "decision": "PLAY",
-        "pOver": 0.5895,
-        "pUnder": 0.4105
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Matthew Golden above 52.5 yards in 87 out of 100 games (projected average: 70.9 yards).",
+        "pOver": 0.8684,
+        "pUnder": 0.1316
+      },
+      {
+        "playerId": "christian-watson",
+        "playerName": "Christian Watson",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 44.5,
+        "side": "OVER",
+        "confidence": "79/100",
+        "expectedClv": 0.2686,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Christian Watson above 44.5 yards in 79 out of 100 games (projected average: 55.3 yards).",
+        "pOver": 0.7924,
+        "pUnder": 0.2076
+      },
+      {
+        "playerId": "tetairoa-mcmillan",
+        "playerName": "Tetairoa McMillan",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 56.5,
+        "side": "UNDER",
+        "confidence": "77/100",
+        "expectedClv": 0.2443,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Tetairoa McMillan below 56.5 yards in 77 out of 100 games (projected average: 46.9 yards).",
+        "pOver": 0.2319,
+        "pUnder": 0.7681
+      },
+      {
+        "playerId": "jalen-coker",
+        "playerName": "Jalen Coker",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 39.5,
+        "side": "UNDER",
+        "confidence": "73/100",
+        "expectedClv": 0.2078,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Jalen Coker below 39.5 yards in 73 out of 100 games (projected average: 33.8 yards).",
+        "pOver": 0.2684,
+        "pUnder": 0.7316
+      },
+      {
+        "playerId": "chuba-hubbard",
+        "playerName": "Chuba Hubbard",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 64.5,
+        "side": "UNDER",
+        "confidence": "57/100",
+        "expectedClv": 0.0504,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Chuba Hubbard below 64.5 yards in 57 out of 100 games (projected average: 61.9 yards).",
+        "pOver": 0.4258,
+        "pUnder": 0.5742
+      },
+      {
+        "playerId": "josh-jacobs",
+        "playerName": "Josh Jacobs",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 61.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "expectedClv": 0.0042,
+        "decision": "PASS",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Josh Jacobs above 61.5 yards in 53 out of 100 games (projected average: 63.8 yards).",
+        "pOver": 0.528,
+        "pUnder": 0.472
       }
     ],
     "correlatedSgpTicket": {
       "title": "CAR @ GB 10,000-world copula",
       "legs": [
         {
+          "description": "CAR @ GB Spread",
+          "pickType": "SPREAD",
           "selection": "Green Bay Packers -3.5",
-          "decision": "PLAY",
-          "expectedClv": 0.1311,
-          "pickType": "SPREAD"
+          "confidence": "69/100",
+          "expectedClv": 0.1662,
+          "decision": "PLAY"
         },
         {
+          "description": "CAR @ GB Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 47.5",
-          "decision": "PLAY",
-          "expectedClv": 0.4236,
-          "pickType": "TOTAL"
+          "confidence": "78/100",
+          "expectedClv": 0.2538,
+          "decision": "PLAY"
         },
         {
-          "selection": "Matthew Golden line 78.0",
-          "decision": "PASS",
-          "expectedClv": -0.447,
-          "pickType": "PLAYER_PROP"
+          "description": "Matthew Golden Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Matthew Golden OVER 52.5",
+          "line": 52.5,
+          "confidence": "87/100",
+          "expectedClv": 0.3446,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.0596,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.4806,
+      "fairOdds": "+108",
       "marketOdds": "n/a",
-      "edgeScore": 0.0119,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0147,
+      "correlationRationale": "Why This Parlay Works: When Green Bay Packers -3.5 and UNDER 47.5 hit together in our 10,000 simulations, Matthew Golden OVER 52.5 yards also cashes at a boosted rate (48.1% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -380,13 +408,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Matthew Golden",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: n/a tgt/g (26.5% share) in N_eff=6.44 offense."
+          "leverageNote": "Top Captain Pick: Matthew Golden averages 10.0 targets per game (26.5% of team throws) as the go-to receiver."
         },
         {
           "player": "Tetairoa McMillan",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: n/a tgt/g (25.5% share) vs GB 56.1% 2-High."
+          "leverageNote": "Bring-Back Captain: Tetairoa McMillan averages 9.0 targets per game (25.5% of team throws) and stays busy if Carolina Panthers is trailing."
         }
       ],
       "cashCore": [
@@ -395,14 +423,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 18.4,
-          "floorNote": "80th-pct cash floor backed by 268.9 pass yd/g & 62.4% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 268.9 passing yards per game."
         },
         {
           "player": "Chuba Hubbard",
           "position": "RB",
           "salary": 6200,
-          "projection": 18.4,
-          "floorNote": "n/a carries/g (n/a% rush share) workload anchor."
+          "projection": 19.4,
+          "floorNote": "Reliable Workhorse Back: 16.2 carries per game (68.0% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -416,7 +444,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Tetairoa McMillan",
           "valueFiller": "Darren Waller",
-          "correlationTheme": "20-Max GPP Double Stack: Jordan Love + top 2 pass catchers correlated with Tetairoa McMillan catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Jordan Love with his top two receivers and bring it back with Tetairoa McMillan in case of a high-scoring shootout."
         }
       ]
     },
@@ -449,14 +477,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.256,
       "rushEpaPlay": -0.021,
       "noHuddleRate": 0.041,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): BAL runs 63.7 plays/g (1st&10 pass 75/164 = 45.7%, motion 64.8%, PA 26.5%) vs BUF 63.2 plays/g (1st&10 pass 62/155 = 40.0%, motion 64.4%, PA 26.9%)."
+      "notes": "Game Tempo: Baltimore Ravens runs 64 plays per game (throwing on 46% of first downs), while Buffalo Bills runs 63 plays per game (throwing on 40% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "BUF Def 2-High 45.1% / 1-High 45.1% (Cov3 34.4%, Cov4 26.0%) vs BAL Def 2-High 51.3% / 1-High 37.6% (Cov3 28.1%, Cov4 23.2%)",
-      "blitzRateVsPressureToSack": "BUF blitzes 35.0% (sack rate 3.85%) vs BAL OL 7.11% sack allowed; BAL blitzes 30.9% (sack rate 5.78%) vs BUF OL 5.38% sack allowed.",
-      "personnelTendencies": "BAL N_eff=6.8 (avg box faced 6.44) \u2022 BUF N_eff=7.48 (avg box faced 6.49)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: BAL +0.071 (W6\u20137 -0.087, \u0394 -0.219) vs BUF +0.206 (W6\u20137 +0.185, \u0394 -0.025); Def EPA/p: BAL +0.026 vs BUF +0.148.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread BUF +0.6 (Posted BUF -3) \u2022 Fair Total 60.8 (Posted 54.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Baltimore Ravens a 0.6-point favorite (Vegas line is BUF -3) and projects 61 total points (Vegas total is 54.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Buffalo Bills pressures the quarterback on 35% of dropbacks (getting sacks 3.9% of the time), while Baltimore Ravens pressures on 31% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Buffalo Bills leans on Khalil Shakir and James Cook, while Baltimore Ravens attacks with Zay Flowers and Derrick Henry.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Buffalo Bills is averaging 63 plays per game and Baltimore Ravens is averaging 64 plays per game.",
+      "notes": "Our Projection: BUF +0.6 (Posted BUF -3) \u2022 Projected Total 60.8 (Posted 54.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Baltimore Ravens +3",
@@ -467,70 +495,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "73/100",
       "totalExpectedClv": 0.2086,
       "totalDecision": "PLAY",
-      "rationale": "Baltimore Ravens +3 p=0.599 CLV=+0.0752. OVER 54.5 p=0.732 CLV=+0.2086. Fair BUF +0.6 / total 60.8 vs posted BUF -3 / 54.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Baltimore Ravens +3 (60/100 confidence) and BET OVER 54.5 (73/100 confidence). Our 10,000-game simulation projects a final score near BUF 30 - BAL 31."
     },
     "topProps": [
       {
+        "playerId": "khalil-shakir",
         "playerName": "Khalil Shakir",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 60.648,
+        "line": 46.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0258,
-        "decision": "PASS",
-        "pOver": 0.498,
-        "pUnder": 0.4962
+        "confidence": "85/100",
+        "expectedClv": 0.3234,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Khalil Shakir above 46.5 yards in 85 out of 100 games (projected average: 61.3 yards).",
+        "pOver": 0.8472,
+        "pUnder": 0.1528
       },
       {
+        "playerId": "zay-flowers",
         "playerName": "Zay Flowers",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 71.799,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0269,
-        "decision": "PASS",
-        "pOver": 0.4969,
-        "pUnder": 0.4967
+        "line": 100.5,
+        "side": "UNDER",
+        "confidence": "95/100",
+        "expectedClv": 0.4306,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Zay Flowers below 100.5 yards in 95 out of 100 games (projected average: 72.3 yards).",
+        "pOver": 0.0456,
+        "pUnder": 0.9544
       },
       {
+        "playerId": "derrick-henry",
         "playerName": "Derrick Henry",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 130.41045,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.027,
-        "decision": "PASS",
-        "pOver": 0.4938,
-        "pUnder": 0.4968
+        "line": 82.5,
+        "side": "OVER",
+        "confidence": "95/100",
+        "expectedClv": 0.424,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Derrick Henry above 82.5 yards in 95 out of 100 games (projected average: 131.3 yards).",
+        "pOver": 0.9478,
+        "pUnder": 0.0522
       }
     ],
     "correlatedSgpTicket": {
       "title": "BAL @ BUF 10,000-world copula",
       "legs": [
         {
+          "description": "BAL @ BUF Spread",
+          "pickType": "SPREAD",
           "selection": "Baltimore Ravens +3",
-          "decision": "PLAY",
+          "confidence": "60/100",
           "expectedClv": 0.0752,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "BAL @ BUF Total",
+          "pickType": "TOTAL",
           "selection": "OVER 54.5",
-          "decision": "PLAY",
+          "confidence": "73/100",
           "expectedClv": 0.2086,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Khalil Shakir line 60.648",
-          "decision": "PASS",
-          "expectedClv": -0.0258,
-          "pickType": "PLAYER_PROP"
+          "description": "Khalil Shakir Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Khalil Shakir OVER 46.5",
+          "line": 46.5,
+          "confidence": "85/100",
+          "expectedClv": 0.3234,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.1772,
+      "jointWinProb": 0.3579,
       "fairOdds": "n/a",
       "marketOdds": "n/a",
-      "edgeScore": -0.0413,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": -0.0138,
+      "correlationRationale": "PASS \u2014 We recommend passing on a 3-leg parlay for this game and sticking to the straight bets above."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -538,13 +582,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Khalil Shakir",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 5.3 tgt/g (19.6% share) in N_eff=7.48 offense."
+          "leverageNote": "Top Captain Pick: Khalil Shakir averages 5.3 targets per game (19.6% of team throws) as the go-to receiver."
         },
         {
           "player": "Zay Flowers",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 8.8 tgt/g (26.6% share) vs BUF 45.1% 2-High."
+          "leverageNote": "Bring-Back Captain: Zay Flowers averages 8.8 targets per game (26.6% of team throws) and stays busy if Baltimore Ravens is trailing."
         }
       ],
       "cashCore": [
@@ -553,14 +597,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 22.1,
-          "floorNote": "80th-pct cash floor backed by 239.2 pass yd/g & 64.4% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 239.2 passing yards per game."
         },
         {
           "player": "Derrick Henry",
           "position": "RB",
           "salary": 6200,
           "projection": 19.8,
-          "floorNote": "21.1 carries/g (78.7% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 21.1 carries per game (78.7% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -574,7 +618,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Zay Flowers",
           "valueFiller": "Rashod Bateman",
-          "correlationTheme": "20-Max GPP Double Stack: Josh Allen + top 2 pass catchers correlated with Zay Flowers catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Josh Allen with his top two receivers and bring it back with Zay Flowers in case of a high-scoring shootout."
         }
       ]
     },
@@ -607,14 +651,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.043,
       "rushEpaPlay": -0.106,
       "noHuddleRate": 0.106,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): TEN runs 56.7 plays/g (1st&10 pass 79/152 = 52.0%, motion 48.6%, PA 21.4%) vs CIN 61.7 plays/g (1st&10 pass 91/150 = 60.7%, motion 51.6%, PA 16.3%)."
+      "notes": "Game Tempo: Tennessee Titans runs 57 plays per game (throwing on 52% of first downs), while Cincinnati Bengals runs 62 plays per game (throwing on 61% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "CIN Def 2-High 38.0% / 1-High 50.2% (Cov3 24.5%, Cov4 5.5%) vs TEN Def 2-High 48.4% / 1-High 44.5% (Cov3 30.2%, Cov4 23.4%)",
-      "blitzRateVsPressureToSack": "CIN blitzes 16.8% (sack rate 8.43%) vs TEN OL 4.45% sack allowed; TEN blitzes 23.2% (sack rate 6.46%) vs CIN OL 4.07% sack allowed.",
-      "personnelTendencies": "TEN N_eff=6.37 (avg box faced 6.27) \u2022 CIN N_eff=6.82 (avg box faced 6.26)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: TEN -0.121 (W6\u20137 -0.083, \u0394 +0.053) vs CIN +0.108 (W6\u20137 +0.349, \u0394 +0.281); Def EPA/p: TEN +0.045 vs CIN -0.033.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread CIN -27.1 (Posted CIN -10) \u2022 Fair Total 45.1 (Posted 46.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Cincinnati Bengals a 27.1-point favorite (Vegas line is CIN -10) and projects 45 total points (Vegas total is 46.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Cincinnati Bengals pressures the quarterback on 17% of dropbacks (getting sacks 8.4% of the time), while Tennessee Titans pressures on 23% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Cincinnati Bengals leans on Tee Higgins and Chase Brown, while Tennessee Titans attacks with Carnell Tate and Tony Pollard.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Cincinnati Bengals is averaging 62 plays per game and Tennessee Titans is averaging 57 plays per game.",
+      "notes": "Our Projection: CIN -27.1 (Posted CIN -10) \u2022 Projected Total 45.1 (Posted 46.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Cincinnati Bengals -10",
@@ -625,70 +669,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "54/100",
       "totalExpectedClv": 0.0205,
       "totalDecision": "PASS",
-      "rationale": "Cincinnati Bengals -10 p=0.907 CLV=+0.3832. PASS \u2014 Market Efficient; no forced bet. Fair CIN -27.1 / total 45.1 vs posted CIN -10 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Cincinnati Bengals -10 (91/100 confidence) and PASS on the total. Our 10,000-game simulation projects a final score near CIN 36 - TEN 10."
     },
     "topProps": [
       {
+        "playerId": "tee-higgins",
         "playerName": "Tee Higgins",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 85.956,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0245,
-        "decision": "PASS",
-        "pOver": 0.4993,
-        "pUnder": 0.4948
+        "line": 94.5,
+        "side": "UNDER",
+        "confidence": "68/100",
+        "expectedClv": 0.1576,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Tee Higgins below 94.5 yards in 68 out of 100 games (projected average: 86.2 yards).",
+        "pOver": 0.3186,
+        "pUnder": 0.6814
       },
       {
+        "playerId": "carnell-tate",
         "playerName": "Carnell Tate",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 39.52,
+        "line": 58.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0251,
-        "decision": "PASS",
-        "pOver": 0.4929,
-        "pUnder": 0.4987
+        "confidence": "91/100",
+        "expectedClv": 0.3865,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Carnell Tate below 58.5 yards in 91 out of 100 games (projected average: 40.1 yards).",
+        "pOver": 0.0881,
+        "pUnder": 0.9103
       },
       {
+        "playerId": "tony-pollard",
         "playerName": "Tony Pollard",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 55.559400000000004,
+        "line": 67.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0279,
-        "decision": "PASS",
-        "pOver": 0.4875,
-        "pUnder": 0.4959
+        "confidence": "72/100",
+        "expectedClv": 0.1984,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Tony Pollard below 67.5 yards in 72 out of 100 games (projected average: 56.7 yards).",
+        "pOver": 0.2778,
+        "pUnder": 0.7222
       }
     ],
     "correlatedSgpTicket": {
       "title": "TEN @ CIN 10,000-world copula",
       "legs": [
         {
+          "description": "TEN @ CIN Spread",
+          "pickType": "SPREAD",
           "selection": "Cincinnati Bengals -10",
-          "decision": "PLAY",
+          "confidence": "91/100",
           "expectedClv": 0.3832,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "TEN @ CIN Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 46.5",
-          "decision": "PASS",
+          "confidence": "54/100",
           "expectedClv": 0.0205,
-          "pickType": "TOTAL"
+          "decision": "PASS"
         },
         {
-          "selection": "Tee Higgins line 85.956",
-          "decision": "PASS",
-          "expectedClv": -0.0245,
-          "pickType": "PLAYER_PROP"
+          "description": "Tee Higgins Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Tee Higgins UNDER 94.5",
+          "line": 94.5,
+          "confidence": "68/100",
+          "expectedClv": 0.1576,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1784,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.3748,
+      "fairOdds": "+167",
       "marketOdds": "n/a",
-      "edgeScore": -0.0681,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0384,
+      "correlationRationale": "Why This Parlay Works: When Cincinnati Bengals -10 and UNDER 46.5 hit together in our 10,000 simulations, Tee Higgins UNDER 94.5 yards also cashes at a boosted rate (37.5% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -696,13 +756,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Tee Higgins",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 8.3 tgt/g (23.4% share) in N_eff=6.82 offense."
+          "leverageNote": "Top Captain Pick: Tee Higgins averages 8.3 targets per game (23.4% of team throws) as the go-to receiver."
         },
         {
           "player": "Carnell Tate",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 7.3 tgt/g (26.0% share) vs CIN 38.0% 2-High."
+          "leverageNote": "Bring-Back Captain: Carnell Tate averages 7.3 targets per game (26.0% of team throws) and stays busy if Tennessee Titans is trailing."
         }
       ],
       "cashCore": [
@@ -711,14 +771,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 20.3,
-          "floorNote": "80th-pct cash floor backed by 264.0 pass yd/g & 51.6% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 264.0 passing yards per game."
         },
         {
           "player": "Tony Pollard",
           "position": "RB",
           "salary": 6200,
           "projection": 18.9,
-          "floorNote": "16.0 carries/g (76.2% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 16.0 carries per game (76.2% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -732,7 +792,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Carnell Tate",
           "valueFiller": "Elic Ayomanor",
-          "correlationTheme": "20-Max GPP Double Stack: Joe Burrow + top 2 pass catchers correlated with Carnell Tate catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Joe Burrow with his top two receivers and bring it back with Carnell Tate in case of a high-scoring shootout."
         }
       ]
     },
@@ -765,14 +825,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.11,
       "rushEpaPlay": -0.04,
       "noHuddleRate": 0.102,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): ARI runs 71.1 plays/g (1st&10 pass 93/177 = 52.5%, motion 61.6%, PA 18.6%) vs DAL 67.3 plays/g (1st&10 pass 108/184 = 58.7%, motion 47.4%, PA 20.2%)."
+      "notes": "Game Tempo: Arizona Cardinals runs 71 plays per game (throwing on 52% of first downs), while Dallas Cowboys runs 67 plays per game (throwing on 59% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "DAL Def 2-High 31.7% / 1-High 59.3% (Cov3 39.4%, Cov4 17.9%) vs ARI Def 2-High 59.8% / 1-High 29.4% (Cov3 22.3%, Cov4 22.3%)",
-      "blitzRateVsPressureToSack": "DAL blitzes 24.7% (sack rate 3.75%) vs ARI OL 4.66% sack allowed; ARI blitzes 30.9% (sack rate 6.2%) vs DAL OL 2.22% sack allowed.",
-      "personnelTendencies": "ARI N_eff=5.71 (avg box faced 6.32) \u2022 DAL N_eff=5.41 (avg box faced 6.48)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: ARI -0.024 (W6\u20137 -0.048, \u0394 -0.036) vs DAL +0.141 (W6\u20137 +0.106, \u0394 -0.051); Def EPA/p: ARI +0.102 vs DAL +0.140.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread DAL -2.4 (Posted DAL -7) \u2022 Fair Total 31.2 (Posted 54.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Dallas Cowboys a 2.4-point favorite (Vegas line is DAL -7) and projects 31 total points (Vegas total is 54.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Dallas Cowboys pressures the quarterback on 25% of dropbacks (getting sacks 3.8% of the time), while Arizona Cardinals pressures on 31% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Dallas Cowboys leans on CeeDee Lamb and Javonte Williams, while Arizona Cardinals attacks with Trey McBride and Jeremiyah Love.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Dallas Cowboys is averaging 67 plays per game and Arizona Cardinals is averaging 71 plays per game.",
+      "notes": "Our Projection: DAL -2.4 (Posted DAL -7) \u2022 Projected Total 31.2 (Posted 54.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Arizona Cardinals +7",
@@ -783,70 +843,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "98/100",
       "totalExpectedClv": 0.4563,
       "totalDecision": "PLAY",
-      "rationale": "Arizona Cardinals +7 p=0.642 CLV=+0.1183. UNDER 54.5 p=0.980 CLV=+0.4563. Fair DAL -2.4 / total 31.2 vs posted DAL -7 / 54.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Arizona Cardinals +7 (64/100 confidence) and BET UNDER 54.5 (98/100 confidence). Our 10,000-game simulation projects a final score near DAL 17 - ARI 14."
     },
     "topProps": [
       {
+        "playerId": "ceedee-lamb",
         "playerName": "CeeDee Lamb",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 60.31399999999999,
+        "line": 92.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0254,
-        "decision": "PASS",
-        "pOver": 0.4948,
-        "pUnder": 0.4984
+        "confidence": "96/100",
+        "expectedClv": 0.4396,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project CeeDee Lamb below 92.5 yards in 96 out of 100 games (projected average: 61.1 yards).",
+        "pOver": 0.0366,
+        "pUnder": 0.9634
       },
       {
+        "playerId": "trey-mcbride",
         "playerName": "Trey McBride",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 51.964999999999996,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0274,
-        "decision": "PASS",
-        "pOver": 0.4964,
-        "pUnder": 0.4964
+        "line": 66.5,
+        "side": "UNDER",
+        "confidence": "83/100",
+        "expectedClv": 0.3054,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Trey McBride below 66.5 yards in 83 out of 100 games (projected average: 52.4 yards).",
+        "pOver": 0.1708,
+        "pUnder": 0.8292
       },
       {
+        "playerId": "jeremiyah-love",
         "playerName": "Jeremiyah Love",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 45.76460000000001,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0263,
-        "decision": "PASS",
-        "pOver": 0.4975,
-        "pUnder": 0.4878
+        "line": 48.5,
+        "side": "UNDER",
+        "confidence": "56/100",
+        "expectedClv": 0.0394,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Jeremiyah Love below 48.5 yards in 56 out of 100 games (projected average: 46.8 yards).",
+        "pOver": 0.4368,
+        "pUnder": 0.5632
       }
     ],
     "correlatedSgpTicket": {
       "title": "ARI @ DAL 10,000-world copula",
       "legs": [
         {
+          "description": "ARI @ DAL Spread",
+          "pickType": "SPREAD",
           "selection": "Arizona Cardinals +7",
-          "decision": "PLAY",
+          "confidence": "64/100",
           "expectedClv": 0.1183,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "ARI @ DAL Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 54.5",
-          "decision": "PLAY",
+          "confidence": "98/100",
           "expectedClv": 0.4563,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "CeeDee Lamb line 60.31399999999999",
-          "decision": "PASS",
-          "expectedClv": -0.029,
-          "pickType": "PLAYER_PROP"
+          "description": "CeeDee Lamb Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "CeeDee Lamb UNDER 92.5",
+          "line": 92.5,
+          "confidence": "96/100",
+          "expectedClv": 0.4396,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2337,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.6471,
+      "fairOdds": "-183",
       "marketOdds": "n/a",
-      "edgeScore": -0.0777,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0408,
+      "correlationRationale": "Why This Parlay Works: When Arizona Cardinals +7 and UNDER 54.5 hit together in our 10,000 simulations, CeeDee Lamb UNDER 92.5 yards also cashes at a boosted rate (64.7% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -854,13 +930,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "CeeDee Lamb",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 11.9 tgt/g (30.9% share) in N_eff=5.41 offense."
+          "leverageNote": "Top Captain Pick: CeeDee Lamb averages 11.9 targets per game (30.9% of team throws) as the go-to receiver."
         },
         {
           "player": "Trey McBride",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 11.1 tgt/g (28.7% share) vs DAL 31.7% 2-High."
+          "leverageNote": "Bring-Back Captain: Trey McBride averages 11.1 targets per game (28.7% of team throws) and stays busy if Arizona Cardinals is trailing."
         }
       ],
       "cashCore": [
@@ -869,14 +945,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 20.9,
-          "floorNote": "80th-pct cash floor backed by 259.6 pass yd/g & 47.4% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 259.6 passing yards per game."
         },
         {
           "player": "Jeremiyah Love",
           "position": "RB",
           "salary": 6200,
           "projection": 17.7,
-          "floorNote": "13.4 carries/g (39.2% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 13.4 carries per game (39.2% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -890,7 +966,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Trey McBride",
           "valueFiller": "Kendrick Bourne",
-          "correlationTheme": "20-Max GPP Double Stack: Dak Prescott + top 2 pass catchers correlated with Trey McBride catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Dak Prescott with his top two receivers and bring it back with Trey McBride in case of a high-scoring shootout."
         }
       ]
     },
@@ -923,14 +999,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.142,
       "rushEpaPlay": -0.151,
       "noHuddleRate": 0.058,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): MIN runs 62.0 plays/g (1st&10 pass 59/137 = 43.1%, motion 54.6%, PA 31.5%) vs DET 68.2 plays/g (1st&10 pass 92/169 = 54.4%, motion 54.5%, PA 30.8%)."
+      "notes": "Game Tempo: Minnesota Vikings runs 62 plays per game (throwing on 43% of first downs), while Detroit Lions runs 68 plays per game (throwing on 54% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "DET Def 2-High 32.7% / 1-High 55.9% (Cov3 36.6%, Cov4 12.4%) vs MIN Def 2-High 53.1% / 1-High 35.7% (Cov3 30.9%, Cov4 22.2%)",
-      "blitzRateVsPressureToSack": "DET blitzes 28.0% (sack rate 6.84%) vs MIN OL 8.33% sack allowed; MIN blitzes 71.0% (sack rate 9.86%) vs DET OL 4.86% sack allowed.",
-      "personnelTendencies": "MIN N_eff=7.16 (avg box faced 6.47) \u2022 DET N_eff=4.95 (avg box faced 6.36)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: MIN -0.096 (W6\u20137 -0.072, \u0394 +0.028) vs DET +0.144 (W6\u20137 -0.021, \u0394 -0.197); Def EPA/p: MIN -0.220 vs DET +0.146.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread DET -18.9 (Posted DET -3) \u2022 Fair Total 57.1 (Posted 46.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Detroit Lions a 18.9-point favorite (Vegas line is DET -3) and projects 57 total points (Vegas total is 46.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Detroit Lions pressures the quarterback on 28% of dropbacks (getting sacks 6.8% of the time), while Minnesota Vikings pressures on 71% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Detroit Lions leans on A.St. Brown and Jahmyr Gibbs, while Minnesota Vikings attacks with Justin Jefferson and Aaron Jones.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Detroit Lions is averaging 68 plays per game and Minnesota Vikings is averaging 62 plays per game.",
+      "notes": "Our Projection: DET -18.9 (Posted DET -3) \u2022 Projected Total 57.1 (Posted 46.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Detroit Lions -3",
@@ -941,70 +1017,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "83/100",
       "totalExpectedClv": 0.303,
       "totalDecision": "PLAY",
-      "rationale": "Detroit Lions -3 p=0.875 CLV=+0.3516. OVER 46.5 p=0.827 CLV=+0.3030. Fair DET -18.9 / total 57.1 vs posted DET -3 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Detroit Lions -3 (88/100 confidence) and BET OVER 46.5 (83/100 confidence). Our 10,000-game simulation projects a final score near DET 38 - MIN 19."
     },
     "topProps": [
       {
+        "playerId": "a-st-brown",
         "playerName": "A.St. Brown",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 96.499,
+        "line": 88.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0242,
-        "decision": "PASS",
-        "pOver": 0.4996,
-        "pUnder": 0.4955
+        "confidence": "66/100",
+        "expectedClv": 0.1328,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project A.St. Brown above 88.5 yards in 66 out of 100 games (projected average: 96.7 yards).",
+        "pOver": 0.6566,
+        "pUnder": 0.3434
       },
       {
+        "playerId": "justin-jefferson",
         "playerName": "Justin Jefferson",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 48.906000000000006,
+        "line": 60.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0263,
-        "decision": "PASS",
-        "pOver": 0.4963,
-        "pUnder": 0.4975
+        "confidence": "80/100",
+        "expectedClv": 0.272,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Justin Jefferson below 60.5 yards in 80 out of 100 games (projected average: 49.4 yards).",
+        "pOver": 0.2042,
+        "pUnder": 0.7958
       },
       {
+        "playerId": "aaron-jones",
         "playerName": "Aaron Jones",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 91.14875,
+        "line": 72.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0238,
-        "decision": "PASS",
-        "pOver": 0.5,
-        "pUnder": 0.5
+        "confidence": "78/100",
+        "expectedClv": 0.2566,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Aaron Jones above 72.5 yards in 78 out of 100 games (projected average: 92.2 yards).",
+        "pOver": 0.7804,
+        "pUnder": 0.2196
       }
     ],
     "correlatedSgpTicket": {
       "title": "MIN @ DET 10,000-world copula",
       "legs": [
         {
+          "description": "MIN @ DET Spread",
+          "pickType": "SPREAD",
           "selection": "Detroit Lions -3",
-          "decision": "PLAY",
+          "confidence": "88/100",
           "expectedClv": 0.3516,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "MIN @ DET Total",
+          "pickType": "TOTAL",
           "selection": "OVER 46.5",
-          "decision": "PLAY",
+          "confidence": "83/100",
           "expectedClv": 0.303,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "A.St. Brown line 96.499",
-          "decision": "PASS",
-          "expectedClv": -0.0242,
-          "pickType": "PLAYER_PROP"
+          "description": "A.St. Brown Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "A.St. Brown OVER 88.5",
+          "line": 88.5,
+          "confidence": "66/100",
+          "expectedClv": 0.1328,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.4429,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.5562,
+      "fairOdds": "-125",
       "marketOdds": "n/a",
-      "edgeScore": 0.0813,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0809,
+      "correlationRationale": "Why This Parlay Works: When Detroit Lions -3 and OVER 46.5 hit together in our 10,000 simulations, A.St. Brown OVER 88.5 yards also cashes at a boosted rate (55.6% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1012,13 +1104,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "A.St. Brown",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 11.3 tgt/g (31.1% share) in N_eff=4.95 offense."
+          "leverageNote": "Top Captain Pick: A.St. Brown averages 11.3 targets per game (31.1% of team throws) as the go-to receiver."
         },
         {
           "player": "Justin Jefferson",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 6.4 tgt/g (20.8% share) vs DET 32.7% 2-High."
+          "leverageNote": "Bring-Back Captain: Justin Jefferson averages 6.4 targets per game (20.8% of team throws) and stays busy if Minnesota Vikings is trailing."
         }
       ],
       "cashCore": [
@@ -1027,14 +1119,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 21.0,
-          "floorNote": "80th-pct cash floor backed by 282.3 pass yd/g & 54.5% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 282.3 passing yards per game."
         },
         {
           "player": "Aaron Jones",
           "position": "RB",
           "salary": 6200,
           "projection": 19.2,
-          "floorNote": "17.5 carries/g (68.6% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 17.5 carries per game (68.6% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1048,7 +1140,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Justin Jefferson",
           "valueFiller": "Jordan Addison",
-          "correlationTheme": "20-Max GPP Double Stack: Jared Goff + top 2 pass catchers correlated with Justin Jefferson catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Jared Goff with his top two receivers and bring it back with Justin Jefferson in case of a high-scoring shootout."
         }
       ]
     },
@@ -1081,14 +1173,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.139,
       "rushEpaPlay": -0.2,
       "noHuddleRate": 0.064,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): LV runs 67.0 plays/g (1st&10 pass 118/189 = 62.4%, motion 61.4%, PA 23.0%) vs NYJ 60.3 plays/g (1st&10 pass 89/168 = 53.0%, motion 48.3%, PA 19.7%)."
+      "notes": "Game Tempo: Las Vegas Raiders runs 67 plays per game (throwing on 62% of first downs), while New York Jets runs 60 plays per game (throwing on 53% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "NYJ Def 2-High 44.0% / 1-High 44.8% (Cov3 23.6%, Cov4 7.2%) vs LV Def 2-High 36.4% / 1-High 47.6% (Cov3 33.2%, Cov4 12.0%)",
-      "blitzRateVsPressureToSack": "NYJ blitzes 37.5% (sack rate 7.14%) vs LV OL 3.29% sack allowed; LV blitzes 26.7% (sack rate 5.86%) vs NYJ OL 8.27% sack allowed.",
-      "personnelTendencies": "LV N_eff=7.11 (avg box faced 6.39) \u2022 NYJ N_eff=7.92 (avg box faced 6.47)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: LV +0.013 (W6\u20137 -0.002, \u0394 -0.020) vs NYJ +0.014 (W6\u20137 +0.112, \u0394 +0.136); Def EPA/p: LV +0.038 vs NYJ +0.016.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread NYJ +2.3 (Posted NYJ -1.5) \u2022 Fair Total 32.4 (Posted 45.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Las Vegas Raiders a 2.3-point favorite (Vegas line is NYJ -1.5) and projects 32 total points (Vegas total is 45.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: New York Jets pressures the quarterback on 38% of dropbacks (getting sacks 7.1% of the time), while Las Vegas Raiders pressures on 27% of dropbacks.",
+      "personnelTendencies": "Key Weapons: New York Jets leans on Garrett Wilson and Braelon Allen, while Las Vegas Raiders attacks with Brock Bowers and Ashton Jeanty.",
+      "coachingEdge": "Recent Form: Over the last two weeks, New York Jets is averaging 60 plays per game and Las Vegas Raiders is averaging 67 plays per game.",
+      "notes": "Our Projection: NYJ +2.3 (Posted NYJ -1.5) \u2022 Projected Total 32.4 (Posted 45.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Las Vegas Raiders +1.5",
@@ -1099,70 +1191,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "90/100",
       "totalExpectedClv": 0.3776,
       "totalDecision": "PLAY",
-      "rationale": "Las Vegas Raiders +1.5 p=0.619 CLV=+0.0956. UNDER 45.5 p=0.901 CLV=+0.3776. Fair NYJ +2.3 / total 32.4 vs posted NYJ -1.5 / 45.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Las Vegas Raiders +1.5 (62/100 confidence) and BET UNDER 45.5 (90/100 confidence). Our 10,000-game simulation projects a final score near NYJ 15 - LV 17."
     },
     "topProps": [
       {
+        "playerId": "garrett-wilson",
         "playerName": "Garrett Wilson",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 51.22,
+        "line": 62.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0241,
-        "decision": "PASS",
-        "pOver": 0.4943,
-        "pUnder": 0.4997
+        "confidence": "77/100",
+        "expectedClv": 0.251,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Garrett Wilson below 62.5 yards in 77 out of 100 games (projected average: 51.8 yards).",
+        "pOver": 0.2252,
+        "pUnder": 0.7748
       },
       {
+        "playerId": "brock-bowers",
         "playerName": "Brock Bowers",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 48.51,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0257,
-        "decision": "PASS",
-        "pOver": 0.4981,
-        "pUnder": 0.4945
+        "line": 90.5,
+        "side": "UNDER",
+        "confidence": "100/100",
+        "expectedClv": 0.4723,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Brock Bowers below 90.5 yards in 100 out of 100 games (projected average: 49.3 yards).",
+        "pOver": 0.0039,
+        "pUnder": 0.9961
       },
       {
+        "playerId": "ashton-jeanty",
         "playerName": "Ashton Jeanty",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 64.73,
+        "line": 46.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0246,
-        "decision": "PASS",
-        "pOver": 0.4992,
-        "pUnder": 0.49
+        "confidence": "84/100",
+        "expectedClv": 0.3158,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Ashton Jeanty above 46.5 yards in 84 out of 100 games (projected average: 66.4 yards).",
+        "pOver": 0.8396,
+        "pUnder": 0.1604
       }
     ],
     "correlatedSgpTicket": {
       "title": "LV @ NYJ 10,000-world copula",
       "legs": [
         {
+          "description": "LV @ NYJ Spread",
+          "pickType": "SPREAD",
           "selection": "Las Vegas Raiders +1.5",
-          "decision": "PLAY",
+          "confidence": "62/100",
           "expectedClv": 0.0956,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "LV @ NYJ Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 45.5",
-          "decision": "PLAY",
+          "confidence": "90/100",
           "expectedClv": 0.3776,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Garrett Wilson line 51.22",
-          "decision": "PASS",
-          "expectedClv": -0.0295,
-          "pickType": "PLAYER_PROP"
+          "description": "Garrett Wilson Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Garrett Wilson UNDER 62.5",
+          "line": 62.5,
+          "confidence": "77/100",
+          "expectedClv": 0.251,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1856,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.506,
+      "fairOdds": "-102",
       "marketOdds": "n/a",
-      "edgeScore": -0.0904,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0734,
+      "correlationRationale": "Why This Parlay Works: When Las Vegas Raiders +1.5 and UNDER 45.5 hit together in our 10,000 simulations, Garrett Wilson UNDER 62.5 yards also cashes at a boosted rate (50.6% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1170,13 +1278,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Garrett Wilson",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 7.4 tgt/g (26.0% share) in N_eff=7.92 offense."
+          "leverageNote": "Top Captain Pick: Garrett Wilson averages 7.4 targets per game (26.0% of team throws) as the go-to receiver."
         },
         {
           "player": "Brock Bowers",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 10.4 tgt/g (20.2% share) vs NYJ 44.0% 2-High."
+          "leverageNote": "Bring-Back Captain: Brock Bowers averages 10.4 targets per game (20.2% of team throws) and stays busy if Las Vegas Raiders is trailing."
         }
       ],
       "cashCore": [
@@ -1185,14 +1293,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 18.7,
-          "floorNote": "80th-pct cash floor backed by 207.1 pass yd/g & 48.3% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 207.1 passing yards per game."
         },
         {
           "player": "Ashton Jeanty",
           "position": "RB",
           "salary": 6200,
           "projection": 17.6,
-          "floorNote": "15.1 carries/g (66.2% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 15.1 carries per game (66.2% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1206,7 +1314,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Brock Bowers",
           "valueFiller": "Ashton Jeanty",
-          "correlationTheme": "20-Max GPP Double Stack: Geno Smith + top 2 pass catchers correlated with Brock Bowers catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Geno Smith with his top two receivers and bring it back with Brock Bowers in case of a high-scoring shootout."
         }
       ]
     },
@@ -1239,14 +1347,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": -0.012,
       "rushEpaPlay": -0.062,
       "noHuddleRate": 0.057,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): CLE runs 62.7 plays/g (1st&10 pass 94/173 = 54.3%, motion 54.4%, PA 18.7%) vs PIT 65.9 plays/g (1st&10 pass 109/178 = 61.2%, motion 48.6%, PA 16.0%)."
+      "notes": "Game Tempo: Cleveland Browns runs 63 plays per game (throwing on 54% of first downs), while Pittsburgh Steelers runs 66 plays per game (throwing on 61% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "PIT Def 2-High 47.2% / 1-High 43.8% (Cov3 33.7%, Cov4 23.2%) vs CLE Def 2-High 21.0% / 1-High 74.8% (Cov3 31.2%, Cov4 7.1%)",
-      "blitzRateVsPressureToSack": "PIT blitzes 27.0% (sack rate 6.47%) vs CLE OL 8.99% sack allowed; CLE blitzes 24.1% (sack rate 7.19%) vs PIT OL 7.07% sack allowed.",
-      "personnelTendencies": "CLE N_eff=6.5 (avg box faced 6.27) \u2022 PIT N_eff=7.05 (avg box faced 6.35)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: CLE -0.037 (W6\u20137 +0.023, \u0394 +0.087) vs PIT -0.029 (W6\u20137 -0.041, \u0394 -0.018); Def EPA/p: CLE -0.039 vs PIT -0.041.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread PIT -12.2 (Posted PIT -3.5) \u2022 Fair Total 40.8 (Posted 39.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Pittsburgh Steelers a 12.2-point favorite (Vegas line is PIT -3.5) and projects 41 total points (Vegas total is 39.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Pittsburgh Steelers pressures the quarterback on 27% of dropbacks (getting sacks 6.5% of the time), while Cleveland Browns pressures on 24% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Pittsburgh Steelers leans on D.K. Metcalf and Jaylen Warren, while Cleveland Browns attacks with KC Concepcion and Quinshon Judkins.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Pittsburgh Steelers is averaging 66 plays per game and Cleveland Browns is averaging 63 plays per game.",
+      "notes": "Our Projection: PIT -12.2 (Posted PIT -3.5) \u2022 Projected Total 40.8 (Posted 39.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Pittsburgh Steelers -3.5",
@@ -1257,70 +1365,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "56/100",
       "totalExpectedClv": 0.0323,
       "totalDecision": "PLAY",
-      "rationale": "Pittsburgh Steelers -3.5 p=0.740 CLV=+0.2162. OVER 39.5 p=0.556 CLV=+0.0323. Fair PIT -12.2 / total 40.8 vs posted PIT -3.5 / 39.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Pittsburgh Steelers -3.5 (74/100 confidence) and BET OVER 39.5 (56/100 confidence). Our 10,000-game simulation projects a final score near PIT 27 - CLE 14."
     },
     "topProps": [
       {
+        "playerId": "d-k-metcalf",
         "playerName": "D.K. Metcalf",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 66.0825,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0257,
-        "decision": "PASS",
-        "pOver": 0.4953,
-        "pUnder": 0.4981
+        "line": 52.5,
+        "side": "OVER",
+        "confidence": "80/100",
+        "expectedClv": 0.277,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project D.K. Metcalf above 52.5 yards in 80 out of 100 games (projected average: 66.4 yards).",
+        "pOver": 0.8008,
+        "pUnder": 0.1992
       },
       {
+        "playerId": "kc-concepcion",
         "playerName": "KC Concepcion",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 44.744,
+        "line": 44.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0254,
+        "confidence": "51/100",
+        "expectedClv": -0.0121,
         "decision": "PASS",
-        "pOver": 0.4984,
-        "pUnder": 0.4951
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project KC Concepcion above 44.5 yards in 51 out of 100 games (projected average: 45.4 yards).",
+        "pOver": 0.5117,
+        "pUnder": 0.4883
       },
       {
+        "playerId": "quinshon-judkins",
         "playerName": "Quinshon Judkins",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 60.6543,
+        "line": 52.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0285,
-        "decision": "PASS",
-        "pOver": 0.4953,
-        "pUnder": 0.4925
+        "confidence": "67/100",
+        "expectedClv": 0.1436,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Quinshon Judkins above 52.5 yards in 67 out of 100 games (projected average: 62.0 yards).",
+        "pOver": 0.6674,
+        "pUnder": 0.3326
       }
     ],
     "correlatedSgpTicket": {
       "title": "CLE @ PIT 10,000-world copula",
       "legs": [
         {
+          "description": "CLE @ PIT Spread",
+          "pickType": "SPREAD",
           "selection": "Pittsburgh Steelers -3.5",
-          "decision": "PLAY",
+          "confidence": "74/100",
           "expectedClv": 0.2162,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "CLE @ PIT Total",
+          "pickType": "TOTAL",
           "selection": "OVER 39.5",
-          "decision": "PLAY",
+          "confidence": "56/100",
           "expectedClv": 0.0323,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "D.K. Metcalf line 66.0825",
-          "decision": "PASS",
-          "expectedClv": -0.0285,
-          "pickType": "PLAYER_PROP"
+          "description": "D.K. Metcalf Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "D.K. Metcalf OVER 52.5",
+          "line": 52.5,
+          "confidence": "80/100",
+          "expectedClv": 0.277,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.3135,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.4042,
+      "fairOdds": "+147",
       "marketOdds": "n/a",
-      "edgeScore": 0.1097,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0747,
+      "correlationRationale": "Why This Parlay Works: When Pittsburgh Steelers -3.5 and OVER 39.5 hit together in our 10,000 simulations, D.K. Metcalf OVER 52.5 yards also cashes at a boosted rate (40.4% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1328,13 +1452,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "D.K. Metcalf",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 8.3 tgt/g (23.5% share) in N_eff=7.05 offense."
+          "leverageNote": "Top Captain Pick: D.K. Metcalf averages 8.3 targets per game (23.5% of team throws) as the go-to receiver."
         },
         {
           "player": "KC Concepcion",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 6.4 tgt/g (21.6% share) vs PIT 47.2% 2-High."
+          "leverageNote": "Bring-Back Captain: KC Concepcion averages 6.4 targets per game (21.6% of team throws) and stays busy if Cleveland Browns is trailing."
         }
       ],
       "cashCore": [
@@ -1343,14 +1467,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.9,
-          "floorNote": "80th-pct cash floor backed by 217.6 pass yd/g & 48.6% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 217.6 passing yards per game."
         },
         {
           "player": "Quinshon Judkins",
           "position": "RB",
           "salary": 6200,
           "projection": 18.0,
-          "floorNote": "15.0 carries/g (58.1% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 15.0 carries per game (58.1% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1364,7 +1488,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "KC Concepcion",
           "valueFiller": "Harold Fannin",
-          "correlationTheme": "20-Max GPP Double Stack: Aaron Rodgers + top 2 pass catchers correlated with KC Concepcion catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Aaron Rodgers with his top two receivers and bring it back with KC Concepcion in case of a high-scoring shootout."
         }
       ]
     },
@@ -1397,14 +1521,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": -0.092,
       "rushEpaPlay": -0.005,
       "noHuddleRate": 0.059,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): ATL runs 62.1 plays/g (1st&10 pass 75/176 = 42.6%, motion 58.4%, PA 21.7%) vs TB 65.3 plays/g (1st&10 pass 74/166 = 44.6%, motion 68.5%, PA 21.4%)."
+      "notes": "Game Tempo: Atlanta Falcons runs 62 plays per game (throwing on 43% of first downs), while Tampa Bay Buccaneers runs 65 plays per game (throwing on 45% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "TB Def 2-High 34.5% / 1-High 59.3% (Cov3 48.9%, Cov4 18.9%) vs ATL Def 2-High 34.4% / 1-High 58.5% (Cov3 35.4%, Cov4 22.4%)",
-      "blitzRateVsPressureToSack": "TB blitzes 40.6% (sack rate 5.65%) vs ATL OL 6.67% sack allowed; ATL blitzes 24.7% (sack rate 5.18%) vs TB OL 8.12% sack allowed.",
-      "personnelTendencies": "ATL N_eff=6.22 (avg box faced 6.53) \u2022 TB N_eff=6.49 (avg box faced 6.39)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: ATL -0.030 (W6\u20137 -0.046, \u0394 -0.022) vs TB -0.081 (W6\u20137 -0.056, \u0394 +0.037); Def EPA/p: ATL -0.022 vs TB -0.108.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread TB -2.7 (Posted TB -2.5) \u2022 Fair Total 37.5 (Posted 44.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Tampa Bay Buccaneers a 2.7-point favorite (Vegas line is TB -2.5) and projects 37 total points (Vegas total is 44.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Tampa Bay Buccaneers pressures the quarterback on 41% of dropbacks (getting sacks 5.7% of the time), while Atlanta Falcons pressures on 25% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Tampa Bay Buccaneers leans on Emeka Egbuka and Bucky Irving, while Atlanta Falcons attacks with Drake London and Bi.Robinson.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Tampa Bay Buccaneers is averaging 65 plays per game and Atlanta Falcons is averaging 62 plays per game.",
+      "notes": "Our Projection: TB -2.7 (Posted TB -2.5) \u2022 Projected Total 37.5 (Posted 44.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Tampa Bay Buccaneers -2.5",
@@ -1415,70 +1539,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "72/100",
       "totalExpectedClv": 0.1989,
       "totalDecision": "PLAY",
-      "rationale": "PASS \u2014 Market Efficient; no forced bet. UNDER 44.5 p=0.723 CLV=+0.1989. Fair TB -2.7 / total 37.5 vs posted TB -2.5 / 44.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: PASS on the spread (Vegas line is sharp) and BET UNDER 44.5 (72/100 confidence). Our 10,000-game simulation projects a final score near TB 20 - ATL 17."
     },
     "topProps": [
       {
+        "playerId": "emeka-egbuka",
         "playerName": "Emeka Egbuka",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 52.4745,
+        "line": 39.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0258,
-        "decision": "PASS",
-        "pOver": 0.498,
-        "pUnder": 0.4947
+        "confidence": "82/100",
+        "expectedClv": 0.2962,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Emeka Egbuka above 39.5 yards in 82 out of 100 games (projected average: 53.0 yards).",
+        "pOver": 0.82,
+        "pUnder": 0.18
       },
       {
+        "playerId": "drake-london",
         "playerName": "Drake London",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 54.37200000000001,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0269,
-        "decision": "PASS",
-        "pOver": 0.4969,
-        "pUnder": 0.4961
+        "line": 89.5,
+        "side": "UNDER",
+        "confidence": "98/100",
+        "expectedClv": 0.4567,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Drake London below 89.5 yards in 98 out of 100 games (projected average: 55.1 yards).",
+        "pOver": 0.0195,
+        "pUnder": 0.9805
       },
       {
+        "playerId": "bi-robinson",
         "playerName": "Bi.Robinson",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 82.86250000000001,
+        "line": 100.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0248,
-        "decision": "PASS",
-        "pOver": 0.4904,
-        "pUnder": 0.499
+        "confidence": "78/100",
+        "expectedClv": 0.2523,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Bi.Robinson below 100.5 yards in 78 out of 100 games (projected average: 83.7 yards).",
+        "pOver": 0.2239,
+        "pUnder": 0.7761
       }
     ],
     "correlatedSgpTicket": {
       "title": "ATL @ TB 10,000-world copula",
       "legs": [
         {
+          "description": "ATL @ TB Spread",
+          "pickType": "SPREAD",
           "selection": "Tampa Bay Buccaneers -2.5",
-          "decision": "PASS",
+          "confidence": "53/100",
           "expectedClv": 0.0033,
-          "pickType": "SPREAD"
+          "decision": "PASS"
         },
         {
+          "description": "ATL @ TB Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 44.5",
-          "decision": "PLAY",
+          "confidence": "72/100",
           "expectedClv": 0.1989,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Emeka Egbuka line 52.4745",
-          "decision": "PASS",
-          "expectedClv": -0.0258,
-          "pickType": "PLAYER_PROP"
+          "description": "Emeka Egbuka Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Emeka Egbuka OVER 39.5",
+          "line": 39.5,
+          "confidence": "82/100",
+          "expectedClv": 0.2962,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.2176,
+      "jointWinProb": 0.3345,
       "fairOdds": "n/a",
       "marketOdds": "n/a",
-      "edgeScore": 0.0279,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0221,
+      "correlationRationale": "PASS \u2014 We recommend passing on a 3-leg parlay for this game and sticking to the straight bets above."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1486,13 +1626,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Emeka Egbuka",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 8.2 tgt/g (24.7% share) in N_eff=6.49 offense."
+          "leverageNote": "Top Captain Pick: Emeka Egbuka averages 8.2 targets per game (24.7% of team throws) as the go-to receiver."
         },
         {
           "player": "Drake London",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 8.1 tgt/g (29.2% share) vs TB 34.5% 2-High."
+          "leverageNote": "Bring-Back Captain: Drake London averages 8.1 targets per game (29.2% of team throws) and stays busy if Atlanta Falcons is trailing."
         }
       ],
       "cashCore": [
@@ -1501,14 +1641,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 16.9,
-          "floorNote": "80th-pct cash floor backed by 154.8 pass yd/g & 68.5% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 154.8 passing yards per game."
         },
         {
           "player": "Bi.Robinson",
           "position": "RB",
           "salary": 6200,
           "projection": 20.8,
-          "floorNote": "18.7 carries/g (68.6% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 18.7 carries per game (68.6% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1522,7 +1662,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Drake London",
           "valueFiller": "Kyle Pitts",
-          "correlationTheme": "20-Max GPP Double Stack: Baker Mayfield + top 2 pass catchers correlated with Drake London catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Baker Mayfield with his top two receivers and bring it back with Drake London in case of a high-scoring shootout."
         }
       ]
     },
@@ -1555,14 +1695,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.045,
       "rushEpaPlay": 0.0,
       "noHuddleRate": 0.031,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): IND runs 66.9 plays/g (1st&10 pass 84/181 = 46.4%, motion 62.4%, PA 28.9%) vs JAX 62.5 plays/g (1st&10 pass 69/145 = 47.6%, motion 64.0%, PA 23.3%)."
+      "notes": "Game Tempo: Indianapolis Colts runs 67 plays per game (throwing on 46% of first downs), while Jacksonville Jaguars runs 62 plays per game (throwing on 48% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "JAX Def 2-High 45.9% / 1-High 46.0% (Cov3 27.5%, Cov4 22.7%) vs IND Def 2-High 32.0% / 1-High 51.3% (Cov3 33.2%, Cov4 7.6%)",
-      "blitzRateVsPressureToSack": "JAX blitzes 30.6% (sack rate 4.37%) vs IND OL 6.96% sack allowed; IND blitzes 22.0% (sack rate 5.12%) vs JAX OL 4.65% sack allowed.",
-      "personnelTendencies": "IND N_eff=7.31 (avg box faced 6.4) \u2022 JAX N_eff=6.58 (avg box faced 6.38)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: IND -0.063 (W6\u20137 -0.121, \u0394 -0.084) vs JAX +0.114 (W6\u20137 +0.155, \u0394 +0.050); Def EPA/p: IND +0.032 vs JAX -0.016.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread JAX -7.1 (Posted JAX -10) \u2022 Fair Total 34.5 (Posted 46.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Jacksonville Jaguars a 7.1-point favorite (Vegas line is JAX -10) and projects 34 total points (Vegas total is 46.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Jacksonville Jaguars pressures the quarterback on 31% of dropbacks (getting sacks 4.4% of the time), while Indianapolis Colts pressures on 22% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Jacksonville Jaguars leans on Parker Washington and Bhayshul Tuten, while Indianapolis Colts attacks with Josh Downs and Jonathan Taylor.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Jacksonville Jaguars is averaging 62 plays per game and Indianapolis Colts is averaging 67 plays per game.",
+      "notes": "Our Projection: JAX -7.1 (Posted JAX -10) \u2022 Projected Total 34.5 (Posted 46.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Indianapolis Colts +10",
@@ -1573,70 +1713,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "86/100",
       "totalExpectedClv": 0.3327,
       "totalDecision": "PLAY",
-      "rationale": "Indianapolis Colts +10 p=0.580 CLV=+0.0565. UNDER 46.5 p=0.857 CLV=+0.3327. Fair JAX -7.1 / total 34.5 vs posted JAX -10 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Indianapolis Colts +10 (58/100 confidence) and BET UNDER 46.5 (86/100 confidence). Our 10,000-game simulation projects a final score near JAX 21 - IND 14."
     },
     "topProps": [
       {
+        "playerId": "parker-washington",
         "playerName": "Parker Washington",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 57.904,
+        "line": 68.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0272,
-        "decision": "PASS",
-        "pOver": 0.4962,
-        "pUnder": 0.4966
+        "confidence": "74/100",
+        "expectedClv": 0.2174,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Parker Washington below 68.5 yards in 74 out of 100 games (projected average: 58.6 yards).",
+        "pOver": 0.2588,
+        "pUnder": 0.7412
       },
       {
+        "playerId": "josh-downs",
         "playerName": "Josh Downs",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 39.44,
+        "line": 43.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0252,
-        "decision": "PASS",
-        "pOver": 0.4936,
-        "pUnder": 0.4986
+        "confidence": "63/100",
+        "expectedClv": 0.1095,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Josh Downs below 43.5 yards in 63 out of 100 games (projected average: 39.9 yards).",
+        "pOver": 0.3667,
+        "pUnder": 0.6333
       },
       {
+        "playerId": "jonathan-taylor",
         "playerName": "Jonathan Taylor",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 76.5655,
+        "line": 83.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0248,
-        "decision": "PASS",
-        "pOver": 0.4877,
-        "pUnder": 0.499
+        "confidence": "61/100",
+        "expectedClv": 0.0851,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Jonathan Taylor below 83.5 yards in 61 out of 100 games (projected average: 77.5 yards).",
+        "pOver": 0.3911,
+        "pUnder": 0.6089
       }
     ],
     "correlatedSgpTicket": {
       "title": "IND @ JAX 10,000-world copula",
       "legs": [
         {
+          "description": "IND @ JAX Spread",
+          "pickType": "SPREAD",
           "selection": "Indianapolis Colts +10",
-          "decision": "PLAY",
+          "confidence": "58/100",
           "expectedClv": 0.0565,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "IND @ JAX Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 46.5",
-          "decision": "PLAY",
+          "confidence": "86/100",
           "expectedClv": 0.3327,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Parker Washington line 57.904",
-          "decision": "PASS",
-          "expectedClv": -0.0276,
-          "pickType": "PLAYER_PROP"
+          "description": "Parker Washington Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Parker Washington UNDER 68.5",
+          "line": 68.5,
+          "confidence": "74/100",
+          "expectedClv": 0.2174,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1631,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.4751,
+      "fairOdds": "+110",
       "marketOdds": "n/a",
-      "edgeScore": -0.0835,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.1067,
+      "correlationRationale": "Why This Parlay Works: When Indianapolis Colts +10 and UNDER 46.5 hit together in our 10,000 simulations, Parker Washington UNDER 68.5 yards also cashes at a boosted rate (47.5% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1644,13 +1800,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Parker Washington",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 7.7 tgt/g (25.7% share) in N_eff=6.58 offense."
+          "leverageNote": "Top Captain Pick: Parker Washington averages 7.7 targets per game (25.7% of team throws) as the go-to receiver."
         },
         {
           "player": "Josh Downs",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 6.6 tgt/g (20.4% share) vs JAX 45.9% 2-High."
+          "leverageNote": "Bring-Back Captain: Josh Downs averages 6.6 targets per game (20.4% of team throws) and stays busy if Indianapolis Colts is trailing."
         }
       ],
       "cashCore": [
@@ -1659,14 +1815,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 20.5,
-          "floorNote": "80th-pct cash floor backed by 234.8 pass yd/g & 64.0% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 234.8 passing yards per game."
         },
         {
           "player": "Jonathan Taylor",
           "position": "RB",
           "salary": 6200,
           "projection": 19.8,
-          "floorNote": "20.0 carries/g (73.7% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 20.0 carries per game (73.7% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1680,7 +1836,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Josh Downs",
           "valueFiller": "Tyler Warren",
-          "correlationTheme": "20-Max GPP Double Stack: Trevor Lawrence + top 2 pass catchers correlated with Josh Downs catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Trevor Lawrence with his top two receivers and bring it back with Josh Downs in case of a high-scoring shootout."
         }
       ]
     },
@@ -1713,14 +1869,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": -0.041,
       "rushEpaPlay": -0.138,
       "noHuddleRate": 0.08,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): LAC runs 66.0 plays/g (1st&10 pass 64/146 = 43.8%, motion 73.7%, PA 26.4%) vs LAR 70.6 plays/g (1st&10 pass 110/196 = 56.1%, motion 67.2%, PA 26.1%)."
+      "notes": "Game Tempo: Los Angeles Chargers runs 66 plays per game (throwing on 44% of first downs), while Los Angeles Rams runs 71 plays per game (throwing on 56% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "LAR Def 2-High 49.8% / 1-High 39.4% (Cov3 15.3%, Cov4 23.3%) vs LAC Def 2-High 47.1% / 1-High 41.8% (Cov3 29.6%, Cov4 23.3%)",
-      "blitzRateVsPressureToSack": "LAR blitzes 29.6% (sack rate 3.7%) vs LAC OL 8.82% sack allowed; LAC blitzes 27.5% (sack rate 5.39%) vs LAR OL 3.5% sack allowed.",
-      "personnelTendencies": "LAC N_eff=11.07 (avg box faced 6.34) \u2022 LAR N_eff=7.18 (avg box faced 6.41)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: LAC -0.209 (W6\u20137 -0.292, \u0394 -0.100) vs LAR +0.055 (W6\u20137 +0.025, \u0394 -0.040); Def EPA/p: LAC -0.034 vs LAR -0.039.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread LAR -20.1 (Posted LAR -6.5) \u2022 Fair Total 46.0 (Posted 45.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Los Angeles Rams a 20.1-point favorite (Vegas line is LAR -6.5) and projects 46 total points (Vegas total is 45.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Los Angeles Rams pressures the quarterback on 30% of dropbacks (getting sacks 3.7% of the time), while Los Angeles Chargers pressures on 28% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Los Angeles Rams leans on P.Nacua and K.Williams, while Los Angeles Chargers attacks with Tre Harris and Omarion Hampton.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Los Angeles Rams is averaging 71 plays per game and Los Angeles Chargers is averaging 66 plays per game.",
+      "notes": "Our Projection: LAR -20.1 (Posted LAR -6.5) \u2022 Projected Total 46.0 (Posted 45.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Los Angeles Rams -6.5",
@@ -1731,70 +1887,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "51/100",
       "totalExpectedClv": -0.0135,
       "totalDecision": "PASS",
-      "rationale": "Los Angeles Rams -6.5 p=0.848 CLV=+0.3246. PASS \u2014 Market Efficient; no forced bet. Fair LAR -20.1 / total 46.0 vs posted LAR -6.5 / 45.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Los Angeles Rams -6.5 (85/100 confidence) and PASS on the total. Our 10,000-game simulation projects a final score near LAR 33 - LAC 13."
     },
     "topProps": [
       {
+        "playerId": "p-nacua",
         "playerName": "P.Nacua",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 76.28399999999999,
+        "line": 96.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0259,
-        "decision": "PASS",
-        "pOver": 0.4972,
-        "pUnder": 0.4979
+        "confidence": "88/100",
+        "expectedClv": 0.3523,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project P.Nacua below 96.5 yards in 88 out of 100 games (projected average: 77.0 yards).",
+        "pOver": 0.1239,
+        "pUnder": 0.8761
       },
       {
+        "playerId": "tre-harris",
         "playerName": "Tre Harris",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 32.32,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0245,
-        "decision": "PASS",
-        "pOver": 0.4993,
-        "pUnder": 0.4925
+        "line": 44.5,
+        "side": "UNDER",
+        "confidence": "86/100",
+        "expectedClv": 0.3393,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Tre Harris below 44.5 yards in 86 out of 100 games (projected average: 32.9 yards).",
+        "pOver": 0.1369,
+        "pUnder": 0.8631
       },
       {
+        "playerId": "omarion-hampton",
         "playerName": "Omarion Hampton",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 62.54295,
+        "line": 47.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0254,
-        "decision": "PASS",
-        "pOver": 0.4984,
-        "pUnder": 0.4903
+        "confidence": "80/100",
+        "expectedClv": 0.2799,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Omarion Hampton above 47.5 yards in 80 out of 100 games (projected average: 64.0 yards).",
+        "pOver": 0.8037,
+        "pUnder": 0.1963
       }
     ],
     "correlatedSgpTicket": {
       "title": "LAC @ LAR 10,000-world copula",
       "legs": [
         {
+          "description": "LAC @ LAR Spread",
+          "pickType": "SPREAD",
           "selection": "Los Angeles Rams -6.5",
-          "decision": "PLAY",
+          "confidence": "85/100",
           "expectedClv": 0.3246,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "LAC @ LAR Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 45.5",
-          "decision": "PASS",
+          "confidence": "51/100",
           "expectedClv": -0.0135,
-          "pickType": "TOTAL"
+          "decision": "PASS"
         },
         {
-          "selection": "P.Nacua line 76.28399999999999",
-          "decision": "PASS",
-          "expectedClv": -0.0266,
-          "pickType": "PLAYER_PROP"
+          "description": "P.Nacua Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "P.Nacua UNDER 96.5",
+          "line": 96.5,
+          "confidence": "88/100",
+          "expectedClv": 0.3523,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.165,
+      "jointWinProb": 0.3891,
       "fairOdds": "n/a",
       "marketOdds": "n/a",
-      "edgeScore": -0.0503,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0098,
+      "correlationRationale": "PASS \u2014 We recommend passing on a 3-leg parlay for this game and sticking to the straight bets above."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1802,13 +1974,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "P.Nacua",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 12.4 tgt/g (22.9% share) in N_eff=7.18 offense."
+          "leverageNote": "Top Captain Pick: P.Nacua averages 12.4 targets per game (22.9% of team throws) as the go-to receiver."
         },
         {
           "player": "Tre Harris",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 5.0 tgt/g (14.4% share) vs LAR 49.8% 2-High."
+          "leverageNote": "Bring-Back Captain: Tre Harris averages 5.0 targets per game (14.4% of team throws) and stays busy if Los Angeles Chargers is trailing."
         }
       ],
       "cashCore": [
@@ -1817,14 +1989,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 19.4,
-          "floorNote": "80th-pct cash floor backed by 272.3 pass yd/g & 67.2% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 272.3 passing yards per game."
         },
         {
           "player": "Omarion Hampton",
           "position": "RB",
           "salary": 6200,
           "projection": 17.7,
-          "floorNote": "13.3 carries/g (53.3% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 13.3 carries per game (53.3% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1838,7 +2010,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Tre Harris",
           "valueFiller": "Oronde Gadsden II",
-          "correlationTheme": "20-Max GPP Double Stack: M.Stafford + top 2 pass catchers correlated with Tre Harris catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair M.Stafford with his top two receivers and bring it back with Tre Harris in case of a high-scoring shootout."
         }
       ]
     },
@@ -1871,14 +2043,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.061,
       "rushEpaPlay": -0.005,
       "noHuddleRate": 0.025,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): KC runs 61.7 plays/g (1st&10 pass 73/144 = 50.7%, motion 58.9%, PA 30.8%) vs DEN 60.4 plays/g (1st&10 pass 70/154 = 45.5%, motion 61.0%, PA 23.9%)."
+      "notes": "Game Tempo: Kansas City Chiefs runs 62 plays per game (throwing on 51% of first downs), while Denver Broncos runs 60 plays per game (throwing on 46% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "DEN Def 2-High 37.2% / 1-High 48.5% (Cov3 30.2%, Cov4 11.6%) vs KC Def 2-High 38.8% / 1-High 43.6% (Cov3 29.9%, Cov4 22.2%)",
-      "blitzRateVsPressureToSack": "DEN blitzes 35.7% (sack rate 6.69%) vs KC OL 3.14% sack allowed; KC blitzes 26.1% (sack rate 3.23%) vs DEN OL 3.53% sack allowed.",
-      "personnelTendencies": "KC N_eff=7.63 (avg box faced 6.4) \u2022 DEN N_eff=7.74 (avg box faced 6.32)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: KC +0.101 (W6\u20137 -0.027, \u0394 -0.183) vs DEN -0.032 (W6\u20137 +0.027, \u0394 +0.081); Def EPA/p: KC -0.043 vs DEN -0.049.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread DEN +12.6 (Posted KC -1.5) \u2022 Fair Total 49.7 (Posted 40.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Kansas City Chiefs a 12.6-point favorite (Vegas line is KC -1.5) and projects 50 total points (Vegas total is 40.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Denver Broncos pressures the quarterback on 36% of dropbacks (getting sacks 6.7% of the time), while Kansas City Chiefs pressures on 26% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Denver Broncos leans on Jaylen Waddle and J.K. Dobbins, while Kansas City Chiefs attacks with Xavier Worthy and Kenneth Walker.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Denver Broncos is averaging 60 plays per game and Kansas City Chiefs is averaging 62 plays per game.",
+      "notes": "Our Projection: DEN +12.6 (Posted KC -1.5) \u2022 Projected Total 49.7 (Posted 40.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Kansas City Chiefs -1.5",
@@ -1889,70 +2061,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "81/100",
       "totalExpectedClv": 0.2898,
       "totalDecision": "PLAY",
-      "rationale": "Kansas City Chiefs -1.5 p=0.775 CLV=+0.2513. OVER 40.5 p=0.814 CLV=+0.2898. Fair DEN +12.6 / total 49.7 vs posted KC -1.5 / 40.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Kansas City Chiefs -1.5 (78/100 confidence) and BET OVER 40.5 (81/100 confidence). Our 10,000-game simulation projects a final score near DEN 19 - KC 31."
     },
     "topProps": [
       {
+        "playerId": "jaylen-waddle",
         "playerName": "Jaylen Waddle",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 49.938,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.024,
-        "decision": "PASS",
-        "pOver": 0.4947,
-        "pUnder": 0.4998
-      },
-      {
-        "playerName": "Xavier Worthy",
-        "market": "rec_yds",
-        "line": 65.83,
+        "line": 39.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0264,
-        "decision": "PASS",
-        "pOver": 0.4974,
-        "pUnder": 0.4959
+        "confidence": "77/100",
+        "expectedClv": 0.251,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Jaylen Waddle above 39.5 yards in 77 out of 100 games (projected average: 50.3 yards).",
+        "pOver": 0.7748,
+        "pUnder": 0.2252
       },
       {
+        "playerId": "xavier-worthy",
+        "playerName": "Xavier Worthy",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 35.5,
+        "side": "OVER",
+        "confidence": "98/100",
+        "expectedClv": 0.4611,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Xavier Worthy above 35.5 yards in 98 out of 100 games (projected average: 66.4 yards).",
+        "pOver": 0.9849,
+        "pUnder": 0.0151
+      },
+      {
+        "playerId": "kenneth-walker",
         "playerName": "Kenneth Walker",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 119.68895000000002,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0268,
+        "line": 116.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "expectedClv": 0.0203,
         "decision": "PASS",
-        "pOver": 0.4932,
-        "pUnder": 0.497
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Kenneth Walker above 116.5 yards in 54 out of 100 games (projected average: 120.9 yards).",
+        "pOver": 0.5441,
+        "pUnder": 0.4559
       }
     ],
     "correlatedSgpTicket": {
       "title": "KC @ DEN 10,000-world copula",
       "legs": [
         {
+          "description": "KC @ DEN Spread",
+          "pickType": "SPREAD",
           "selection": "Kansas City Chiefs -1.5",
-          "decision": "PLAY",
+          "confidence": "78/100",
           "expectedClv": 0.2513,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "KC @ DEN Total",
+          "pickType": "TOTAL",
           "selection": "OVER 40.5",
-          "decision": "PLAY",
+          "confidence": "81/100",
           "expectedClv": 0.2898,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Jaylen Waddle line 49.938",
-          "decision": "PASS",
-          "expectedClv": -0.0291,
-          "pickType": "PLAYER_PROP"
+          "description": "Jaylen Waddle Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Jaylen Waddle OVER 39.5",
+          "line": 39.5,
+          "confidence": "77/100",
+          "expectedClv": 0.251,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.2938,
+      "jointWinProb": 0.4863,
       "fairOdds": "n/a",
       "marketOdds": "n/a",
-      "edgeScore": -0.0182,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": -0.0023,
+      "correlationRationale": "PASS \u2014 We recommend passing on a 3-leg parlay for this game and sticking to the straight bets above."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1960,13 +2148,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Jaylen Waddle",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 6.6 tgt/g (23.2% share) in N_eff=7.74 offense."
+          "leverageNote": "Top Captain Pick: Jaylen Waddle averages 6.6 targets per game (23.2% of team throws) as the go-to receiver."
         },
         {
           "player": "Xavier Worthy",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 5.8 tgt/g (19.4% share) vs DEN 37.2% 2-High."
+          "leverageNote": "Bring-Back Captain: Xavier Worthy averages 5.8 targets per game (19.4% of team throws) and stays busy if Kansas City Chiefs is trailing."
         }
       ],
       "cashCore": [
@@ -1975,14 +2163,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.8,
-          "floorNote": "80th-pct cash floor backed by 175.7 pass yd/g & 61.0% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 175.7 passing yards per game."
         },
         {
           "player": "Kenneth Walker",
           "position": "RB",
           "salary": 6200,
           "projection": 21.8,
-          "floorNote": "20.0 carries/g (83.9% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 20.0 carries per game (83.9% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -1996,7 +2184,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Xavier Worthy",
           "valueFiller": "Kenneth Walker",
-          "correlationTheme": "20-Max GPP Double Stack: Bo Nix + top 2 pass catchers correlated with Xavier Worthy catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Bo Nix with his top two receivers and bring it back with Xavier Worthy in case of a high-scoring shootout."
         }
       ]
     },
@@ -2029,14 +2217,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.109,
       "rushEpaPlay": -0.153,
       "noHuddleRate": 0.013,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): NE runs 64.6 plays/g (1st&10 pass 89/180 = 49.4%, motion 55.1%, PA 20.7%) vs MIA 59.2 plays/g (1st&10 pass 63/125 = 50.4%, motion 74.1%, PA 24.4%)."
+      "notes": "Game Tempo: New England Patriots runs 65 plays per game (throwing on 49% of first downs), while Miami Dolphins runs 59 plays per game (throwing on 50% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "MIA Def 2-High 43.6% / 1-High 46.4% (Cov3 31.1%, Cov4 14.2%) vs NE Def 2-High 34.2% / 1-High 53.2% (Cov3 27.8%, Cov4 16.3%)",
-      "blitzRateVsPressureToSack": "MIA blitzes 26.7% (sack rate 2.91%) vs NE OL 4.73% sack allowed; NE blitzes 39.8% (sack rate 6.39%) vs MIA OL 7.96% sack allowed.",
-      "personnelTendencies": "NE N_eff=9.18 (avg box faced 6.48) \u2022 MIA N_eff=7.07 (avg box faced 6.49)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: NE +0.054 (W6\u20137 +0.071, \u0394 +0.023) vs MIA -0.046 (W6\u20137 +0.285, \u0394 +0.402); Def EPA/p: NE +0.015 vs MIA +0.129.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread MIA +1.0 (Posted NE -7) \u2022 Fair Total 27.5 (Posted 43.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes New England Patriots a 1.0-point favorite (Vegas line is NE -7) and projects 27 total points (Vegas total is 43.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Miami Dolphins pressures the quarterback on 27% of dropbacks (getting sacks 2.9% of the time), while New England Patriots pressures on 40% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Miami Dolphins leans on Malik Washington and Ollie Gordon, while New England Patriots attacks with DeMario Douglas and Rhamondre Stevenson.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Miami Dolphins is averaging 59 plays per game and New England Patriots is averaging 65 plays per game.",
+      "notes": "Our Projection: MIA +1.0 (Posted NE -7) \u2022 Projected Total 27.5 (Posted 43.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Miami Dolphins +7",
@@ -2047,70 +2235,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "93/100",
       "totalExpectedClv": 0.406,
       "totalDecision": "PLAY",
-      "rationale": "Miami Dolphins +7 p=0.685 CLV=+0.1608. UNDER 43.5 p=0.930 CLV=+0.4060. Fair MIA +1.0 / total 27.5 vs posted NE -7 / 43.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Miami Dolphins +7 (68/100 confidence) and BET UNDER 43.5 (93/100 confidence). Our 10,000-game simulation projects a final score near MIA 13 - NE 14."
     },
     "topProps": [
       {
+        "playerId": "malik-washington",
         "playerName": "Malik Washington",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 43.940000000000005,
+        "line": 47.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.026,
-        "decision": "PASS",
-        "pOver": 0.4959,
-        "pUnder": 0.4978
+        "confidence": "60/100",
+        "expectedClv": 0.0774,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Malik Washington below 47.5 yards in 60 out of 100 games (projected average: 44.7 yards).",
+        "pOver": 0.3988,
+        "pUnder": 0.6012
       },
       {
+        "playerId": "demario-douglas",
         "playerName": "DeMario Douglas",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 38.402,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0257,
-        "decision": "PASS",
-        "pOver": 0.4932,
-        "pUnder": 0.4981
+        "line": 36.5,
+        "side": "OVER",
+        "confidence": "57/100",
+        "expectedClv": 0.0417,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project DeMario Douglas above 36.5 yards in 57 out of 100 games (projected average: 38.7 yards).",
+        "pOver": 0.5655,
+        "pUnder": 0.4345
       },
       {
+        "playerId": "rhamondre-stevenson",
         "playerName": "Rhamondre Stevenson",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 50.3118,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0263,
-        "decision": "PASS",
-        "pOver": 0.4898,
-        "pUnder": 0.4975
+        "line": 40.5,
+        "side": "OVER",
+        "confidence": "73/100",
+        "expectedClv": 0.2103,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Rhamondre Stevenson above 40.5 yards in 73 out of 100 games (projected average: 51.0 yards).",
+        "pOver": 0.7341,
+        "pUnder": 0.2659
       }
     ],
     "correlatedSgpTicket": {
       "title": "NE @ MIA 10,000-world copula",
       "legs": [
         {
+          "description": "NE @ MIA Spread",
+          "pickType": "SPREAD",
           "selection": "Miami Dolphins +7",
-          "decision": "PLAY",
+          "confidence": "68/100",
           "expectedClv": 0.1608,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "NE @ MIA Total",
+          "pickType": "TOTAL",
           "selection": "UNDER 43.5",
-          "decision": "PLAY",
+          "confidence": "93/100",
           "expectedClv": 0.406,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Malik Washington line 43.940000000000005",
-          "decision": "PASS",
-          "expectedClv": -0.0279,
-          "pickType": "PLAYER_PROP"
+          "description": "Malik Washington Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Malik Washington UNDER 47.5",
+          "line": 47.5,
+          "confidence": "60/100",
+          "expectedClv": 0.0774,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.3798,
+      "jointWinProb": 0.3503,
       "fairOdds": "n/a",
       "marketOdds": "n/a",
-      "edgeScore": 0.0641,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": -0.0324,
+      "correlationRationale": "PASS \u2014 We recommend passing on a 3-leg parlay for this game and sticking to the straight bets above."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2118,13 +2322,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Malik Washington",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 6.5 tgt/g (26.0% share) in N_eff=7.07 offense."
+          "leverageNote": "Top Captain Pick: Malik Washington averages 6.5 targets per game (26.0% of team throws) as the go-to receiver."
         },
         {
           "player": "DeMario Douglas",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 4.9 tgt/g (16.2% share) vs MIA 43.6% 2-High."
+          "leverageNote": "Bring-Back Captain: DeMario Douglas averages 4.9 targets per game (16.2% of team throws) and stays busy if New England Patriots is trailing."
         }
       ],
       "cashCore": [
@@ -2133,14 +2337,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.6,
-          "floorNote": "80th-pct cash floor backed by 162.3 pass yd/g & 74.1% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 162.3 passing yards per game."
         },
         {
           "player": "Rhamondre Stevenson",
           "position": "RB",
           "salary": 6200,
           "projection": 17.2,
-          "floorNote": "11.0 carries/g (44.8% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 11.0 carries per game (44.8% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -2154,7 +2358,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "DeMario Douglas",
           "valueFiller": "Rhamondre Stevenson",
-          "correlationTheme": "20-Max GPP Double Stack: Malik Willis + top 2 pass catchers correlated with DeMario Douglas catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Malik Willis with his top two receivers and bring it back with DeMario Douglas in case of a high-scoring shootout."
         }
       ]
     },
@@ -2187,14 +2391,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.007,
       "rushEpaPlay": -0.146,
       "noHuddleRate": 0.117,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): PHI runs 61.7 plays/g (1st&10 pass 72/152 = 47.4%, motion 58.2%, PA 17.9%) vs WSH 66.2 plays/g (1st&10 pass 71/149 = 47.7%, motion 51.4%, PA 21.8%)."
+      "notes": "Game Tempo: Philadelphia Eagles runs 62 plays per game (throwing on 47% of first downs), while Washington Commanders runs 66 plays per game (throwing on 48% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "WSH Def 2-High 52.3% / 1-High 30.0% (Cov3 21.9%, Cov4 21.5%) vs PHI Def 2-High 36.6% / 1-High 49.8% (Cov3 38.1%, Cov4 13.2%)",
-      "blitzRateVsPressureToSack": "WSH blitzes 45.1% (sack rate 4.28%) vs PHI OL 6.45% sack allowed; PHI blitzes 23.2% (sack rate 2.82%) vs WSH OL 5.45% sack allowed.",
-      "personnelTendencies": "PHI N_eff=8.45 (avg box faced 6.29) \u2022 WSH N_eff=8.46 (avg box faced 6.26)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: PHI -0.086 (W6\u20137 -0.030, \u0394 +0.080) vs WSH -0.007 (W6\u20137 -0.001, \u0394 +0.007); Def EPA/p: PHI +0.102 vs WSH +0.067.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread WSH -11.5 (Posted WSH -6) \u2022 Fair Total 48.3 (Posted 40.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Washington Commanders a 11.5-point favorite (Vegas line is WSH -6) and projects 48 total points (Vegas total is 40.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Washington Commanders pressures the quarterback on 45% of dropbacks (getting sacks 4.3% of the time), while Philadelphia Eagles pressures on 23% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Washington Commanders leans on Stefon Diggs and Jacory Croskey-Merritt, while Philadelphia Eagles attacks with DeVonta Smith and Saquon Barkley.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Washington Commanders is averaging 66 plays per game and Philadelphia Eagles is averaging 62 plays per game.",
+      "notes": "Our Projection: WSH -11.5 (Posted WSH -6) \u2022 Projected Total 48.3 (Posted 40.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Washington Commanders -6",
@@ -2205,70 +2409,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "77/100",
       "totalExpectedClv": 0.2475,
       "totalDecision": "PLAY",
-      "rationale": "Washington Commanders -6 p=0.662 CLV=+0.1385. OVER 40.5 p=0.771 CLV=+0.2475. Fair WSH -11.5 / total 48.3 vs posted WSH -6 / 40.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Washington Commanders -6 (66/100 confidence) and BET OVER 40.5 (77/100 confidence). Our 10,000-game simulation projects a final score near WSH 30 - PHI 18."
     },
     "topProps": [
       {
+        "playerId": "stefon-diggs",
         "playerName": "Stefon Diggs",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 61.774,
+        "line": 42.5,
         "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0249,
-        "decision": "PASS",
-        "pOver": 0.4989,
-        "pUnder": 0.4957
+        "confidence": "91/100",
+        "expectedClv": 0.3851,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Stefon Diggs above 42.5 yards in 91 out of 100 games (projected average: 62.4 yards).",
+        "pOver": 0.9089,
+        "pUnder": 0.0911
       },
       {
+        "playerId": "devonta-smith",
         "playerName": "DeVonta Smith",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 47.053000000000004,
+        "line": 77.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.0249,
-        "decision": "PASS",
-        "pOver": 0.4946,
-        "pUnder": 0.4989
+        "confidence": "99/100",
+        "expectedClv": 0.4631,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project DeVonta Smith below 77.5 yards in 99 out of 100 games (projected average: 47.5 yards).",
+        "pOver": 0.0131,
+        "pUnder": 0.9869
       },
       {
+        "playerId": "saquon-barkley",
         "playerName": "Saquon Barkley",
+        "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 56.4515,
-        "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.024,
-        "decision": "PASS",
-        "pOver": 0.4879,
-        "pUnder": 0.4998
+        "line": 48.5,
+        "side": "OVER",
+        "confidence": "68/100",
+        "expectedClv": 0.1535,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project Saquon Barkley above 48.5 yards in 68 out of 100 games (projected average: 57.1 yards).",
+        "pOver": 0.6773,
+        "pUnder": 0.3227
       }
     ],
     "correlatedSgpTicket": {
       "title": "PHI @ WSH 10,000-world copula",
       "legs": [
         {
+          "description": "PHI @ WSH Spread",
+          "pickType": "SPREAD",
           "selection": "Washington Commanders -6",
-          "decision": "PLAY",
+          "confidence": "66/100",
           "expectedClv": 0.1385,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "PHI @ WSH Total",
+          "pickType": "TOTAL",
           "selection": "OVER 40.5",
-          "decision": "PLAY",
+          "confidence": "77/100",
           "expectedClv": 0.2475,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Stefon Diggs line 61.774",
-          "decision": "PASS",
-          "expectedClv": -0.0249,
-          "pickType": "PLAYER_PROP"
+          "description": "Stefon Diggs Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Stefon Diggs OVER 42.5",
+          "line": 42.5,
+          "confidence": "91/100",
+          "expectedClv": 0.3851,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.3664,
-      "fairOdds": "n/a",
+      "jointWinProb": 0.5146,
+      "fairOdds": "-106",
       "marketOdds": "n/a",
-      "edgeScore": 0.1115,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": 0.0503,
+      "correlationRationale": "Why This Parlay Works: When Washington Commanders -6 and OVER 40.5 hit together in our 10,000 simulations, Stefon Diggs OVER 42.5 yards also cashes at a boosted rate (51.5% combined hit rate)."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2276,13 +2496,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Stefon Diggs",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 7.6 tgt/g (20.1% share) in N_eff=8.46 offense."
+          "leverageNote": "Top Captain Pick: Stefon Diggs averages 7.6 targets per game (20.1% of team throws) as the go-to receiver."
         },
         {
           "player": "DeVonta Smith",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 10.2 tgt/g (18.6% share) vs WSH 52.3% 2-High."
+          "leverageNote": "Bring-Back Captain: DeVonta Smith averages 10.2 targets per game (18.6% of team throws) and stays busy if Philadelphia Eagles is trailing."
         }
       ],
       "cashCore": [
@@ -2291,14 +2511,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 18.3,
-          "floorNote": "80th-pct cash floor backed by 174.5 pass yd/g & 51.4% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 174.5 passing yards per game."
         },
         {
           "player": "Saquon Barkley",
           "position": "RB",
           "salary": 6200,
           "projection": 17.7,
-          "floorNote": "8.6 carries/g (29.9% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 8.6 carries per game (29.9% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -2312,7 +2532,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "DeVonta Smith",
           "valueFiller": "Dontayvion Wicks",
-          "correlationTheme": "20-Max GPP Double Stack: Jayden Daniels + top 2 pass catchers correlated with DeVonta Smith catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Jayden Daniels with his top two receivers and bring it back with DeVonta Smith in case of a high-scoring shootout."
         }
       ]
     },
@@ -2345,14 +2565,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "passEpaPlay": 0.131,
       "rushEpaPlay": -0.153,
       "noHuddleRate": 0.035,
-      "notes": "2026 W1\u2013W7 PBP (18,738 plays): CHI runs 74.4 plays/g (1st&10 pass 103/192 = 53.6%, motion 53.7%, PA 32.1%) vs SEA 65.6 plays/g (1st&10 pass 83/183 = 45.4%, motion 53.4%, PA 26.8%)."
+      "notes": "Game Tempo: Chicago Bears runs 74 plays per game (throwing on 54% of first downs), while Seattle Seahawks runs 66 plays per game (throwing on 45% of first downs)."
     },
     "schemeMatchup": {
-      "coverageShell": "SEA Def 2-High 58.2% / 1-High 39.7% (Cov3 31.7%, Cov4 16.5%) vs CHI Def 2-High 34.7% / 1-High 53.8% (Cov3 29.8%, Cov4 15.1%)",
-      "blitzRateVsPressureToSack": "SEA blitzes 21.7% (sack rate 6.39%) vs CHI OL 6.1% sack allowed; CHI blitzes 40.8% (sack rate 7.95%) vs SEA OL 6.25% sack allowed.",
-      "personnelTendencies": "CHI N_eff=6.8 (avg box faced 6.42) \u2022 SEA N_eff=5.14 (avg box faced 6.53)",
-      "coachingEdge": "W1\u2013W7 Off EPA/p: CHI +0.052 (W6\u20137 +0.089, \u0394 +0.051) vs SEA -0.039 (W6\u20137 +0.022, \u0394 +0.092); Def EPA/p: CHI -0.009 vs SEA -0.115.",
-      "notes": "10,000-Sim Independent Projection: Fair Spread SEA -4.8 (Posted SEA -3) \u2022 Fair Total 47.9 (Posted 46.5)."
+      "coverageShell": "Why We Like This Game: Our 10,000-game simulation makes Seattle Seahawks a 4.8-point favorite (Vegas line is SEA -3) and projects 48 total points (Vegas total is 46.5).",
+      "blitzRateVsPressureToSack": "Trench Matchup: Seattle Seahawks pressures the quarterback on 22% of dropbacks (getting sacks 6.4% of the time), while Chicago Bears pressures on 41% of dropbacks.",
+      "personnelTendencies": "Key Weapons: Seattle Seahawks leans on Jaxon Smith-Njigba and Emanuel Wilson, while Chicago Bears attacks with Luther Burden and D'Andre Swift.",
+      "coachingEdge": "Recent Form: Over the last two weeks, Seattle Seahawks is averaging 66 plays per game and Chicago Bears is averaging 74 plays per game.",
+      "notes": "Our Projection: SEA -4.8 (Posted SEA -3) \u2022 Projected Total 47.9 (Posted 46.5)."
     },
     "sideTotalCall": {
       "sideSelection": "Seattle Seahawks -3",
@@ -2363,70 +2583,86 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "totalConfidence": "56/100",
       "totalExpectedClv": 0.0316,
       "totalDecision": "PLAY",
-      "rationale": "Seattle Seahawks -3 p=0.563 CLV=+0.0397. OVER 46.5 p=0.555 CLV=+0.0316. Fair SEA -4.8 / total 47.9 vs posted SEA -3 / 46.5. Source: measured W1-W7 rates, not a live Jev spine."
+      "rationale": "THE CALL: BET Seattle Seahawks -3 (56/100 confidence) and BET OVER 46.5 (56/100 confidence). Our 10,000-game simulation projects a final score near SEA 26 - CHI 22."
     },
     "topProps": [
       {
+        "playerId": "jaxon-smith-njigba",
         "playerName": "Jaxon Smith-Njigba",
+        "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 79.1775,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0239,
-        "decision": "PASS",
-        "pOver": 0.4999,
-        "pUnder": 0.4918
-      },
-      {
-        "playerName": "Luther Burden",
-        "market": "rec_yds",
-        "line": 57.105,
-        "side": "OVER",
-        "confidence": "50/100",
-        "expectedClv": -0.0244,
-        "decision": "PASS",
-        "pOver": 0.4994,
-        "pUnder": 0.4942
-      },
-      {
-        "playerName": "D'Andre Swift",
-        "market": "rush_yds",
-        "line": 69.38419999999999,
+        "line": 123.5,
         "side": "UNDER",
-        "confidence": "50/100",
-        "expectedClv": -0.024,
+        "confidence": "98/100",
+        "expectedClv": 0.4583,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Jaxon Smith-Njigba below 123.5 yards in 98 out of 100 games (projected average: 80.2 yards).",
+        "pOver": 0.0179,
+        "pUnder": 0.9821
+      },
+      {
+        "playerId": "luther-burden",
+        "playerName": "Luther Burden",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 69.5,
+        "side": "UNDER",
+        "confidence": "80/100",
+        "expectedClv": 0.2723,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Why Bet UNDER: Our 10,000 simulations project Luther Burden below 69.5 yards in 80 out of 100 games (projected average: 57.7 yards).",
+        "pOver": 0.2039,
+        "pUnder": 0.7961
+      },
+      {
+        "playerId": "d-andre-swift",
+        "playerName": "D'Andre Swift",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 67.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "expectedClv": 0.0124,
         "decision": "PASS",
-        "pOver": 0.4911,
-        "pUnder": 0.4998
+        "nEffTargetNotes": "Why Bet OVER: Our 10,000 simulations project D'Andre Swift above 67.5 yards in 54 out of 100 games (projected average: 70.6 yards).",
+        "pOver": 0.5362,
+        "pUnder": 0.4638
       }
     ],
     "correlatedSgpTicket": {
       "title": "CHI @ SEA 10,000-world copula",
       "legs": [
         {
+          "description": "CHI @ SEA Spread",
+          "pickType": "SPREAD",
           "selection": "Seattle Seahawks -3",
-          "decision": "PLAY",
+          "confidence": "56/100",
           "expectedClv": 0.0397,
-          "pickType": "SPREAD"
+          "decision": "PLAY"
         },
         {
+          "description": "CHI @ SEA Total",
+          "pickType": "TOTAL",
           "selection": "OVER 46.5",
-          "decision": "PLAY",
+          "confidence": "56/100",
           "expectedClv": 0.0316,
-          "pickType": "TOTAL"
+          "decision": "PLAY"
         },
         {
-          "selection": "Jaxon Smith-Njigba line 79.1775",
-          "decision": "PASS",
-          "expectedClv": -0.0239,
-          "pickType": "PLAYER_PROP"
+          "description": "Jaxon Smith-Njigba Receiving Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Jaxon Smith-Njigba UNDER 123.5",
+          "line": 123.5,
+          "confidence": "98/100",
+          "expectedClv": 0.4583,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.247,
+      "jointWinProb": 0.3016,
       "fairOdds": "n/a",
       "marketOdds": "n/a",
-      "edgeScore": 0.0906,
-      "correlationRationale": "PASS \u2014 no 3-leg combo cleared p>=0.54 with positive copula lift"
+      "edgeScore": -0.0058,
+      "correlationRationale": "PASS \u2014 We recommend passing on a 3-leg parlay for this game and sticking to the straight bets above."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2434,13 +2670,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Jaxon Smith-Njigba",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "1.5x Captain leverage: 11.1 tgt/g (36.1% share) in N_eff=5.14 offense."
+          "leverageNote": "Top Captain Pick: Jaxon Smith-Njigba averages 11.1 targets per game (36.1% of team throws) as the go-to receiver."
         },
         {
           "player": "Luther Burden",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Bring-back Captain: 6.7 tgt/g (21.0% share) vs SEA 58.2% 2-High."
+          "leverageNote": "Bring-Back Captain: Luther Burden averages 6.7 targets per game (21.0% of team throws) and stays busy if Chicago Bears is trailing."
         }
       ],
       "cashCore": [
@@ -2449,14 +2685,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "position": "QB",
           "salary": 6600,
           "projection": 17.7,
-          "floorNote": "80th-pct cash floor backed by 199.3 pass yd/g & 53.4% motion rate."
+          "floorNote": "Safe Cash Game Quarterback: Averaging 199.3 passing yards per game."
         },
         {
           "player": "D'Andre Swift",
           "position": "RB",
           "salary": 6200,
           "projection": 18.9,
-          "floorNote": "16.6 carries/g (52.7% rush share) workload anchor."
+          "floorNote": "Reliable Workhorse Back: 16.6 carries per game (52.7% of team rushes)."
         }
       ],
       "gppStacks": [
@@ -2470,7 +2706,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           },
           "bringBack": "Luther Burden",
           "valueFiller": "Rome Odunze",
-          "correlationTheme": "20-Max GPP Double Stack: Sam Darnold + top 2 pass catchers correlated with Luther Burden catch-up volume across 10,000 simulated game scripts."
+          "correlationTheme": "Tournament Lineup Idea: Pair Sam Darnold with his top two receivers and bring it back with Luther Burden in case of a high-scoring shootout."
         }
       ]
     },

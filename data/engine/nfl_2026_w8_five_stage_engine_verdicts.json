@@ -1,0 +1,5142 @@
+{
+  "schema": "gse_five_stage_engine_verdicts.v1",
+  "generated_at": "2026-10-29T16:30:00Z",
+  "season": 2026,
+  "week": 8,
+  "total_games": 14,
+  "stages_verified": [
+    "Stage 1: Real 2026 W1-W7 Coaching & Film Tendencies + Active Week 8 Injuries (injuries_2026.csv)",
+    "Stage 2: Full-Game Snap-by-Snap JEV Decision Spine (166 live snaps on CAR@GB) + 10,000-World Coach Drive Simulator + CUDA Entropy Probe",
+    "Stage 3: 4-Stage Cognitive Router (288-bit Context Mask -> Stage C Spectral Cluster Orthogonalization -> Stage D Jacobian Coupling & James-Stein Shrinkage)",
+    "Stage 4: Master Situational Reasoning Overlay + Cholesky Whitening + 80-Rule Misleading-Stat Firewall",
+    "Stage 5: Class B Shin De-Vig + Isotonic Calibration Map + Contradiction Gate + Clayton SGP Copula"
+  ],
+  "games": {
+    "car-gb-tnf": {
+      "slug": "car-gb-tnf",
+      "matchup_key": "CAR@GB",
+      "matchup": "CAR @ GB",
+      "away": "CAR",
+      "home": "GB",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.LaFleur",
+        "away_coach": "D.Canales",
+        "home_aggression": 0.81,
+        "away_aggression": 0.64,
+        "home_active_injuries": [
+          {
+            "playerId": "GB-zaire-franklin",
+            "playerName": "Zaire Franklin",
+            "team": "GB",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-aaron-banks",
+            "playerName": "Aaron Banks",
+            "team": "GB",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-devonte-wyatt",
+            "playerName": "Devonte Wyatt",
+            "team": "GB",
+            "position": "DL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-sean-rhyan",
+            "playerName": "Sean Rhyan",
+            "team": "GB",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-brenton-cox-jr.",
+            "playerName": "Brenton Cox Jr.",
+            "team": "GB",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-travis-glover",
+            "playerName": "Travis Glover",
+            "team": "GB",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "CAR-damien-lewis",
+            "playerName": "Damien Lewis",
+            "team": "CAR",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-jaelan-phillips",
+            "playerName": "Jaelan Phillips",
+            "team": "CAR",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-akayleb-evans",
+            "playerName": "Akayleb Evans",
+            "team": "CAR",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-torricelli-simpkins-iii",
+            "playerName": "Torricelli Simpkins III",
+            "team": "CAR",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-thomas-incoom",
+            "playerName": "Thomas Incoom",
+            "team": "CAR",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-bam-martin-scott",
+            "playerName": "Bam Martin-Scott",
+            "team": "CAR",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 166,
+        "jev_final_score_spine": {
+          "CAR": 10,
+          "GB": 28
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.4531,
+            "comp_rate_w1_w7": 63.29,
+            "comp_rate_w6_w7": 63.29,
+            "sack_rate_allowed": 7.15,
+            "def_pressure_rate": 21.5,
+            "wr1_target_share": 21.6,
+            "rb1_carry_share": 67.7,
+            "jev_mean_pressure_disruption_noul": 0.39,
+            "jev_mean_coaching_edge_noul": 0.4463,
+            "jev_mean_pass_call_prob": 0.4321
+          },
+          "home": {
+            "early_down_pass_rate": 0.7005,
+            "comp_rate_w1_w7": 63.6,
+            "comp_rate_w6_w7": 63.6,
+            "sack_rate_allowed": 6.55,
+            "def_pressure_rate": 21.5,
+            "wr1_target_share": 24.56,
+            "rb1_carry_share": 59.56,
+            "jev_mean_pressure_disruption_noul": 0.322,
+            "jev_mean_coaching_edge_noul": 0.5261,
+            "jev_mean_pass_call_prob": 0.8527
+          }
+        },
+        "coach_sim_10k_win_prob_home": 0.5383,
+        "coach_sim_10k_fourth_down_wp": 0.0338,
+        "scheme_fit_expected_home_pts": 27.91,
+        "scheme_fit_expected_away_pts": 15.27,
+        "scheme_fit_margin_home": 12.64,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -0.26,
+        "thursday_coach_mindset_hash": "e6363267c62bbc04c9ccaa6aa7f830e8f963a549beb57b02191dde6d70b189e9"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0007,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0285,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.5383,
+        "posterior_prob_home": 0.5418,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0139
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 1.67,
+        "total_points_adjustment": -1.28,
+        "cholesky_whitened_prob_delta": 0.0086,
+        "raw_unshrunk_prob_delta": 0.0657,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 1.2,
+        "post_reasoning_total_delta": -1.28
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "CAR@GB": {
+      "slug": "car-gb-tnf",
+      "matchup_key": "CAR@GB",
+      "matchup": "CAR @ GB",
+      "away": "CAR",
+      "home": "GB",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.LaFleur",
+        "away_coach": "D.Canales",
+        "home_aggression": 0.81,
+        "away_aggression": 0.64,
+        "home_active_injuries": [
+          {
+            "playerId": "GB-zaire-franklin",
+            "playerName": "Zaire Franklin",
+            "team": "GB",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-aaron-banks",
+            "playerName": "Aaron Banks",
+            "team": "GB",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-devonte-wyatt",
+            "playerName": "Devonte Wyatt",
+            "team": "GB",
+            "position": "DL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-sean-rhyan",
+            "playerName": "Sean Rhyan",
+            "team": "GB",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-brenton-cox-jr.",
+            "playerName": "Brenton Cox Jr.",
+            "team": "GB",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "GB-travis-glover",
+            "playerName": "Travis Glover",
+            "team": "GB",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "CAR-damien-lewis",
+            "playerName": "Damien Lewis",
+            "team": "CAR",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-jaelan-phillips",
+            "playerName": "Jaelan Phillips",
+            "team": "CAR",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-akayleb-evans",
+            "playerName": "Akayleb Evans",
+            "team": "CAR",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-torricelli-simpkins-iii",
+            "playerName": "Torricelli Simpkins III",
+            "team": "CAR",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-thomas-incoom",
+            "playerName": "Thomas Incoom",
+            "team": "CAR",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CAR-bam-martin-scott",
+            "playerName": "Bam Martin-Scott",
+            "team": "CAR",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 166,
+        "jev_final_score_spine": {
+          "CAR": 10,
+          "GB": 28
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.4531,
+            "comp_rate_w1_w7": 63.29,
+            "comp_rate_w6_w7": 63.29,
+            "sack_rate_allowed": 7.15,
+            "def_pressure_rate": 21.5,
+            "wr1_target_share": 21.6,
+            "rb1_carry_share": 67.7,
+            "jev_mean_pressure_disruption_noul": 0.39,
+            "jev_mean_coaching_edge_noul": 0.4463,
+            "jev_mean_pass_call_prob": 0.4321
+          },
+          "home": {
+            "early_down_pass_rate": 0.7005,
+            "comp_rate_w1_w7": 63.6,
+            "comp_rate_w6_w7": 63.6,
+            "sack_rate_allowed": 6.55,
+            "def_pressure_rate": 21.5,
+            "wr1_target_share": 24.56,
+            "rb1_carry_share": 59.56,
+            "jev_mean_pressure_disruption_noul": 0.322,
+            "jev_mean_coaching_edge_noul": 0.5261,
+            "jev_mean_pass_call_prob": 0.8527
+          }
+        },
+        "coach_sim_10k_win_prob_home": 0.5383,
+        "coach_sim_10k_fourth_down_wp": 0.0338,
+        "scheme_fit_expected_home_pts": 27.91,
+        "scheme_fit_expected_away_pts": 15.27,
+        "scheme_fit_margin_home": 12.64,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -0.26,
+        "thursday_coach_mindset_hash": "e6363267c62bbc04c9ccaa6aa7f830e8f963a549beb57b02191dde6d70b189e9"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0007,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0285,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.5383,
+        "posterior_prob_home": 0.5418,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0139
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 1.67,
+        "total_points_adjustment": -1.28,
+        "cholesky_whitened_prob_delta": 0.0086,
+        "raw_unshrunk_prob_delta": 0.0657,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 1.2,
+        "post_reasoning_total_delta": -1.28
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "bal-buf": {
+      "slug": "bal-buf",
+      "matchup_key": "BAL@BUF",
+      "matchup": "BAL @ BUF",
+      "away": "BAL",
+      "home": "BUF",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "S.McDermott",
+        "away_coach": "J.Harbaugh",
+        "home_aggression": 0.84,
+        "away_aggression": 0.86,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "BAL-lamar-jackson",
+            "playerName": "Lamar Jackson",
+            "team": "BAL",
+            "position": "QB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          },
+          {
+            "playerId": "BAL-broderick-washington",
+            "playerName": "Broderick Washington",
+            "team": "BAL",
+            "position": "EDGE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "BAL-jaylinn-hawkins",
+            "playerName": "Jaylinn Hawkins",
+            "team": "BAL",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "BAL-tavius-robinson",
+            "playerName": "Tavius Robinson",
+            "team": "BAL",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "BAL-t.j.-tampa",
+            "playerName": "T.J. Tampa",
+            "team": "BAL",
+            "position": "CB1",
+            "status": "DOUBTFUL",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4554,
+        "coach_sim_10k_fourth_down_wp": 0.0496,
+        "scheme_fit_expected_home_pts": 26.4,
+        "scheme_fit_expected_away_pts": 22.37,
+        "scheme_fit_margin_home": 4.03,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -4.93,
+        "thursday_coach_mindset_hash": "4a209844ec3bfa963e2e2e243877f96b48c977263d6934e4c83345f866dddfa3"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0005,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0387,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4554,
+        "posterior_prob_home": 0.4597,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0175
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": -0.01,
+        "total_points_adjustment": -1.35,
+        "cholesky_whitened_prob_delta": -0.0003,
+        "raw_unshrunk_prob_delta": -0.009,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.02,
+        "post_reasoning_total_delta": -1.35
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "BAL@BUF": {
+      "slug": "bal-buf",
+      "matchup_key": "BAL@BUF",
+      "matchup": "BAL @ BUF",
+      "away": "BAL",
+      "home": "BUF",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "S.McDermott",
+        "away_coach": "J.Harbaugh",
+        "home_aggression": 0.84,
+        "away_aggression": 0.86,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "BAL-lamar-jackson",
+            "playerName": "Lamar Jackson",
+            "team": "BAL",
+            "position": "QB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          },
+          {
+            "playerId": "BAL-broderick-washington",
+            "playerName": "Broderick Washington",
+            "team": "BAL",
+            "position": "EDGE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "BAL-jaylinn-hawkins",
+            "playerName": "Jaylinn Hawkins",
+            "team": "BAL",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "BAL-tavius-robinson",
+            "playerName": "Tavius Robinson",
+            "team": "BAL",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "BAL-t.j.-tampa",
+            "playerName": "T.J. Tampa",
+            "team": "BAL",
+            "position": "CB1",
+            "status": "DOUBTFUL",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4554,
+        "coach_sim_10k_fourth_down_wp": 0.0496,
+        "scheme_fit_expected_home_pts": 26.4,
+        "scheme_fit_expected_away_pts": 22.37,
+        "scheme_fit_margin_home": 4.03,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -4.93,
+        "thursday_coach_mindset_hash": "4a209844ec3bfa963e2e2e243877f96b48c977263d6934e4c83345f866dddfa3"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0005,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0387,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4554,
+        "posterior_prob_home": 0.4597,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0175
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": -0.01,
+        "total_points_adjustment": -1.35,
+        "cholesky_whitened_prob_delta": -0.0003,
+        "raw_unshrunk_prob_delta": -0.009,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.02,
+        "post_reasoning_total_delta": -1.35
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "ten-cin": {
+      "slug": "ten-cin",
+      "matchup_key": "TEN@CIN",
+      "matchup": "TEN @ CIN",
+      "away": "TEN",
+      "home": "CIN",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "Z.Taylor",
+        "away_coach": "B.Callahan",
+        "home_aggression": 0.51,
+        "away_aggression": 0.62,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "TEN-calvin-ridley",
+            "playerName": "Calvin Ridley",
+            "team": "TEN",
+            "position": "WR1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-tony-adams",
+            "playerName": "Tony Adams",
+            "team": "TEN",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-tyjae-spears",
+            "playerName": "Tyjae Spears",
+            "team": "TEN",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-kevin-winston-jr.",
+            "playerName": "Kevin Winston Jr.",
+            "team": "TEN",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-dorian-mausi",
+            "playerName": "Dorian Mausi",
+            "team": "TEN",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4357,
+        "coach_sim_10k_fourth_down_wp": 0.0171,
+        "scheme_fit_expected_home_pts": 24.07,
+        "scheme_fit_expected_away_pts": 18.2,
+        "scheme_fit_margin_home": 5.87,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Attack CIN slot funnel (+24% vulnerability)",
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -2.34,
+        "thursday_coach_mindset_hash": "75dfcef6e193a5d80681f074154e404aa089064cba3739391906811537b323e4"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0009,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.03,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4357,
+        "posterior_prob_home": 0.4303,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0221
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": -0.01,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": -0.0002,
+        "raw_unshrunk_prob_delta": 0.0042,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": -0.03,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "TEN@CIN": {
+      "slug": "ten-cin",
+      "matchup_key": "TEN@CIN",
+      "matchup": "TEN @ CIN",
+      "away": "TEN",
+      "home": "CIN",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "Z.Taylor",
+        "away_coach": "B.Callahan",
+        "home_aggression": 0.51,
+        "away_aggression": 0.62,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "TEN-calvin-ridley",
+            "playerName": "Calvin Ridley",
+            "team": "TEN",
+            "position": "WR1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-tony-adams",
+            "playerName": "Tony Adams",
+            "team": "TEN",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-tyjae-spears",
+            "playerName": "Tyjae Spears",
+            "team": "TEN",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-kevin-winston-jr.",
+            "playerName": "Kevin Winston Jr.",
+            "team": "TEN",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TEN-dorian-mausi",
+            "playerName": "Dorian Mausi",
+            "team": "TEN",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4357,
+        "coach_sim_10k_fourth_down_wp": 0.0171,
+        "scheme_fit_expected_home_pts": 24.07,
+        "scheme_fit_expected_away_pts": 18.2,
+        "scheme_fit_margin_home": 5.87,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Attack CIN slot funnel (+24% vulnerability)",
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -2.34,
+        "thursday_coach_mindset_hash": "75dfcef6e193a5d80681f074154e404aa089064cba3739391906811537b323e4"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0009,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.03,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4357,
+        "posterior_prob_home": 0.4303,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0221
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": -0.01,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": -0.0002,
+        "raw_unshrunk_prob_delta": 0.0042,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": -0.03,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "ari-dal": {
+      "slug": "ari-dal",
+      "matchup_key": "ARI@DAL",
+      "matchup": "ARI @ DAL",
+      "away": "ARI",
+      "home": "DAL",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.McCarthy",
+        "away_coach": "J.Gannon",
+        "home_aggression": 0.7,
+        "away_aggression": 0.73,
+        "home_active_injuries": [
+          {
+            "playerId": "DAL-p.j.-locke",
+            "playerName": "P.J. Locke",
+            "team": "DAL",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-kavontae-turpin",
+            "playerName": "KaVontae Turpin",
+            "team": "DAL",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-dee-winters",
+            "playerName": "Dee Winters",
+            "team": "DAL",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-marist-liufau",
+            "playerName": "Marist Liufau",
+            "team": "DAL",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-drew-shelton",
+            "playerName": "Drew Shelton",
+            "team": "DAL",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "ARI-budda-baker",
+            "playerName": "Budda Baker",
+            "team": "ARI",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-andrew-wingard",
+            "playerName": "Andrew Wingard",
+            "team": "ARI",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-jon-gaines-ii",
+            "playerName": "Jon Gaines II",
+            "team": "ARI",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-max-melton",
+            "playerName": "Max Melton",
+            "team": "ARI",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-darius-robinson",
+            "playerName": "Darius Robinson",
+            "team": "ARI",
+            "position": "DL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-walter-nolen",
+            "playerName": "Walter Nolen",
+            "team": "ARI",
+            "position": "DL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.3095,
+        "coach_sim_10k_fourth_down_wp": 0.0337,
+        "scheme_fit_expected_home_pts": 23.47,
+        "scheme_fit_expected_away_pts": 21.22,
+        "scheme_fit_margin_home": 2.25,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -0.2,
+        "thursday_coach_mindset_hash": "a1ce4f50abd60ca41394c51bd5614d650db871151cbd61e46d6fbf28e9bc51dc"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0001,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.025,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.3095,
+        "posterior_prob_home": 0.3097,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0007
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.01,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0005,
+        "raw_unshrunk_prob_delta": 0.0204,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.01,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "ARI@DAL": {
+      "slug": "ari-dal",
+      "matchup_key": "ARI@DAL",
+      "matchup": "ARI @ DAL",
+      "away": "ARI",
+      "home": "DAL",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.McCarthy",
+        "away_coach": "J.Gannon",
+        "home_aggression": 0.7,
+        "away_aggression": 0.73,
+        "home_active_injuries": [
+          {
+            "playerId": "DAL-p.j.-locke",
+            "playerName": "P.J. Locke",
+            "team": "DAL",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-kavontae-turpin",
+            "playerName": "KaVontae Turpin",
+            "team": "DAL",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-dee-winters",
+            "playerName": "Dee Winters",
+            "team": "DAL",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-marist-liufau",
+            "playerName": "Marist Liufau",
+            "team": "DAL",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DAL-drew-shelton",
+            "playerName": "Drew Shelton",
+            "team": "DAL",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "ARI-budda-baker",
+            "playerName": "Budda Baker",
+            "team": "ARI",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-andrew-wingard",
+            "playerName": "Andrew Wingard",
+            "team": "ARI",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-jon-gaines-ii",
+            "playerName": "Jon Gaines II",
+            "team": "ARI",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-max-melton",
+            "playerName": "Max Melton",
+            "team": "ARI",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-darius-robinson",
+            "playerName": "Darius Robinson",
+            "team": "ARI",
+            "position": "DL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ARI-walter-nolen",
+            "playerName": "Walter Nolen",
+            "team": "ARI",
+            "position": "DL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.3095,
+        "coach_sim_10k_fourth_down_wp": 0.0337,
+        "scheme_fit_expected_home_pts": 23.47,
+        "scheme_fit_expected_away_pts": 21.22,
+        "scheme_fit_margin_home": 2.25,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -0.2,
+        "thursday_coach_mindset_hash": "a1ce4f50abd60ca41394c51bd5614d650db871151cbd61e46d6fbf28e9bc51dc"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0001,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.025,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.3095,
+        "posterior_prob_home": 0.3097,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0007
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.01,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0005,
+        "raw_unshrunk_prob_delta": 0.0204,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.01,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "min-det": {
+      "slug": "min-det",
+      "matchup_key": "MIN@DET",
+      "matchup": "MIN @ DET",
+      "away": "MIN",
+      "home": "DET",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "D.Campbell",
+        "away_coach": "K.O'Connell",
+        "home_aggression": 0.91,
+        "away_aggression": 0.78,
+        "home_active_injuries": [
+          {
+            "playerId": "DET-cade-mays",
+            "playerName": "Cade Mays",
+            "team": "DET",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DET-brian-branch",
+            "playerName": "Brian Branch",
+            "team": "DET",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "MIN-jordan-mason",
+            "playerName": "Jordan Mason",
+            "team": "MIN",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4316,
+        "coach_sim_10k_fourth_down_wp": 0.0491,
+        "scheme_fit_expected_home_pts": 26.67,
+        "scheme_fit_expected_away_pts": 22.73,
+        "scheme_fit_margin_home": 3.94,
+        "belichick_counter_install_home": [
+          "Install hot-sight / RB-checkdown answers vs MIN heavy blitz (42.0% blitz rate)"
+        ],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 0.5,
+        "thursday_coach_mindset_hash": "7d142584573345aebb1badb57e958511b361eb22701f6d023ae42082cc128ecd"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0017,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0183,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4316,
+        "posterior_prob_home": 0.438,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0259
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.05,
+        "total_points_adjustment": 0.47,
+        "cholesky_whitened_prob_delta": 0.0019,
+        "raw_unshrunk_prob_delta": 0.0182,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.05,
+        "post_reasoning_total_delta": 0.47
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "MIN@DET": {
+      "slug": "min-det",
+      "matchup_key": "MIN@DET",
+      "matchup": "MIN @ DET",
+      "away": "MIN",
+      "home": "DET",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "D.Campbell",
+        "away_coach": "K.O'Connell",
+        "home_aggression": 0.91,
+        "away_aggression": 0.78,
+        "home_active_injuries": [
+          {
+            "playerId": "DET-cade-mays",
+            "playerName": "Cade Mays",
+            "team": "DET",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DET-brian-branch",
+            "playerName": "Brian Branch",
+            "team": "DET",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "MIN-jordan-mason",
+            "playerName": "Jordan Mason",
+            "team": "MIN",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4316,
+        "coach_sim_10k_fourth_down_wp": 0.0491,
+        "scheme_fit_expected_home_pts": 26.67,
+        "scheme_fit_expected_away_pts": 22.73,
+        "scheme_fit_margin_home": 3.94,
+        "belichick_counter_install_home": [
+          "Install hot-sight / RB-checkdown answers vs MIN heavy blitz (42.0% blitz rate)"
+        ],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 0.5,
+        "thursday_coach_mindset_hash": "7d142584573345aebb1badb57e958511b361eb22701f6d023ae42082cc128ecd"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0017,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0183,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4316,
+        "posterior_prob_home": 0.438,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0259
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.05,
+        "total_points_adjustment": 0.47,
+        "cholesky_whitened_prob_delta": 0.0019,
+        "raw_unshrunk_prob_delta": 0.0182,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.05,
+        "post_reasoning_total_delta": 0.47
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "lv-nyj": {
+      "slug": "lv-nyj",
+      "matchup_key": "LV@NYJ",
+      "matchup": "LV @ NYJ",
+      "away": "LV",
+      "home": "NYJ",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "J.Ulbrich",
+        "away_coach": "A.Pierce",
+        "home_aggression": 0.64,
+        "away_aggression": 0.56,
+        "home_active_injuries": [
+          {
+            "playerId": "NYJ-kene-nwangwu",
+            "playerName": "Kene Nwangwu",
+            "team": "NYJ",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-joseph-ossai",
+            "playerName": "Joseph Ossai",
+            "team": "NYJ",
+            "position": "EDGE",
+            "status": "OUT",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-dylan-parham",
+            "playerName": "Dylan Parham",
+            "team": "NYJ",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-max-mitchell",
+            "playerName": "Max Mitchell",
+            "team": "NYJ",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-breece-hall",
+            "playerName": "Breece Hall",
+            "team": "NYJ",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-francisco-mauigoa",
+            "playerName": "Francisco Mauigoa",
+            "team": "NYJ",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "LV-quay-walker",
+            "playerName": "Quay Walker",
+            "team": "LV",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LV-carter-runyon",
+            "playerName": "Carter Runyon",
+            "team": "LV",
+            "position": "TE",
+            "status": "OUT",
+            "epaReplacementDelta": 0.024,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LV-dont'e-thornton-jr.",
+            "playerName": "Dont'e Thornton Jr.",
+            "team": "LV",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LV-mike-washington-jr.",
+            "playerName": "Mike Washington Jr.",
+            "team": "LV",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4372,
+        "coach_sim_10k_fourth_down_wp": 0.0162,
+        "scheme_fit_expected_home_pts": 20.9,
+        "scheme_fit_expected_away_pts": 15.26,
+        "scheme_fit_margin_home": 5.64,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 1.3,
+        "thursday_coach_mindset_hash": "2dc4fc250d2380769c36e93f9016fb3525484ae91e76f14a4708f83ca6286f13"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0008,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0324,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4372,
+        "posterior_prob_home": 0.4356,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0065
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.05,
+        "total_points_adjustment": -1.34,
+        "cholesky_whitened_prob_delta": 0.0017,
+        "raw_unshrunk_prob_delta": 0.0031,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.01,
+        "post_reasoning_total_delta": -1.34
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "LV@NYJ": {
+      "slug": "lv-nyj",
+      "matchup_key": "LV@NYJ",
+      "matchup": "LV @ NYJ",
+      "away": "LV",
+      "home": "NYJ",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "J.Ulbrich",
+        "away_coach": "A.Pierce",
+        "home_aggression": 0.64,
+        "away_aggression": 0.56,
+        "home_active_injuries": [
+          {
+            "playerId": "NYJ-kene-nwangwu",
+            "playerName": "Kene Nwangwu",
+            "team": "NYJ",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-joseph-ossai",
+            "playerName": "Joseph Ossai",
+            "team": "NYJ",
+            "position": "EDGE",
+            "status": "OUT",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-dylan-parham",
+            "playerName": "Dylan Parham",
+            "team": "NYJ",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-max-mitchell",
+            "playerName": "Max Mitchell",
+            "team": "NYJ",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-breece-hall",
+            "playerName": "Breece Hall",
+            "team": "NYJ",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NYJ-francisco-mauigoa",
+            "playerName": "Francisco Mauigoa",
+            "team": "NYJ",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "LV-quay-walker",
+            "playerName": "Quay Walker",
+            "team": "LV",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LV-carter-runyon",
+            "playerName": "Carter Runyon",
+            "team": "LV",
+            "position": "TE",
+            "status": "OUT",
+            "epaReplacementDelta": 0.024,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LV-dont'e-thornton-jr.",
+            "playerName": "Dont'e Thornton Jr.",
+            "team": "LV",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LV-mike-washington-jr.",
+            "playerName": "Mike Washington Jr.",
+            "team": "LV",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4372,
+        "coach_sim_10k_fourth_down_wp": 0.0162,
+        "scheme_fit_expected_home_pts": 20.9,
+        "scheme_fit_expected_away_pts": 15.26,
+        "scheme_fit_margin_home": 5.64,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 1.3,
+        "thursday_coach_mindset_hash": "2dc4fc250d2380769c36e93f9016fb3525484ae91e76f14a4708f83ca6286f13"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0008,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0324,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4372,
+        "posterior_prob_home": 0.4356,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0065
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.05,
+        "total_points_adjustment": -1.34,
+        "cholesky_whitened_prob_delta": 0.0017,
+        "raw_unshrunk_prob_delta": 0.0031,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.01,
+        "post_reasoning_total_delta": -1.34
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "cle-pit": {
+      "slug": "cle-pit",
+      "matchup_key": "CLE@PIT",
+      "matchup": "CLE @ PIT",
+      "away": "CLE",
+      "home": "PIT",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.Tomlin",
+        "away_coach": "K.Stefanski",
+        "home_aggression": 0.55,
+        "away_aggression": 0.65,
+        "home_active_injuries": [
+          {
+            "playerId": "PIT-deshon-elliott",
+            "playerName": "DeShon Elliott",
+            "team": "PIT",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PIT-rico-dowdle",
+            "playerName": "Rico Dowdle",
+            "team": "PIT",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PIT-brandin-echols",
+            "playerName": "Brandin Echols",
+            "team": "PIT",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PIT-ben-skowronek",
+            "playerName": "Ben Skowronek",
+            "team": "PIT",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "CLE-denzel-ward",
+            "playerName": "Denzel Ward",
+            "team": "CLE",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-quincy-williams",
+            "playerName": "Quincy Williams",
+            "team": "CLE",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-teven-jenkins",
+            "playerName": "Teven Jenkins",
+            "team": "CLE",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-kalia-davis",
+            "playerName": "Kalia Davis",
+            "team": "CLE",
+            "position": "DL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-mike-hall-jr.",
+            "playerName": "Mike Hall Jr.",
+            "team": "CLE",
+            "position": "DL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-dillon-gabriel",
+            "playerName": "Dillon Gabriel",
+            "team": "CLE",
+            "position": "QB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4536,
+        "coach_sim_10k_fourth_down_wp": 0.0175,
+        "scheme_fit_expected_home_pts": 19.58,
+        "scheme_fit_expected_away_pts": 12.88,
+        "scheme_fit_margin_home": 6.7,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -2.86,
+        "thursday_coach_mindset_hash": "3a5f88413b1901e1882adbd0d9ccdd076f905c5d45b434da386fb4bba70818bd"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0005,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0352,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4536,
+        "posterior_prob_home": 0.4493,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0173
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0,
+        "total_points_adjustment": -1.35,
+        "cholesky_whitened_prob_delta": 0.0001,
+        "raw_unshrunk_prob_delta": 0.0043,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": -0.02,
+        "post_reasoning_total_delta": -1.35
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "CLE@PIT": {
+      "slug": "cle-pit",
+      "matchup_key": "CLE@PIT",
+      "matchup": "CLE @ PIT",
+      "away": "CLE",
+      "home": "PIT",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.Tomlin",
+        "away_coach": "K.Stefanski",
+        "home_aggression": 0.55,
+        "away_aggression": 0.65,
+        "home_active_injuries": [
+          {
+            "playerId": "PIT-deshon-elliott",
+            "playerName": "DeShon Elliott",
+            "team": "PIT",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PIT-rico-dowdle",
+            "playerName": "Rico Dowdle",
+            "team": "PIT",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PIT-brandin-echols",
+            "playerName": "Brandin Echols",
+            "team": "PIT",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PIT-ben-skowronek",
+            "playerName": "Ben Skowronek",
+            "team": "PIT",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "CLE-denzel-ward",
+            "playerName": "Denzel Ward",
+            "team": "CLE",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-quincy-williams",
+            "playerName": "Quincy Williams",
+            "team": "CLE",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-teven-jenkins",
+            "playerName": "Teven Jenkins",
+            "team": "CLE",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-kalia-davis",
+            "playerName": "Kalia Davis",
+            "team": "CLE",
+            "position": "DL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-mike-hall-jr.",
+            "playerName": "Mike Hall Jr.",
+            "team": "CLE",
+            "position": "DL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.025,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CLE-dillon-gabriel",
+            "playerName": "Dillon Gabriel",
+            "team": "CLE",
+            "position": "QB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4536,
+        "coach_sim_10k_fourth_down_wp": 0.0175,
+        "scheme_fit_expected_home_pts": 19.58,
+        "scheme_fit_expected_away_pts": 12.88,
+        "scheme_fit_margin_home": 6.7,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -2.86,
+        "thursday_coach_mindset_hash": "3a5f88413b1901e1882adbd0d9ccdd076f905c5d45b434da386fb4bba70818bd"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0005,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0352,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4536,
+        "posterior_prob_home": 0.4493,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0173
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0,
+        "total_points_adjustment": -1.35,
+        "cholesky_whitened_prob_delta": 0.0001,
+        "raw_unshrunk_prob_delta": 0.0043,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": -0.02,
+        "post_reasoning_total_delta": -1.35
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "atl-tb": {
+      "slug": "atl-tb",
+      "matchup_key": "ATL@TB",
+      "matchup": "ATL @ TB",
+      "away": "ATL",
+      "home": "TB",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "T.Bowles",
+        "away_coach": "R.Morris",
+        "home_aggression": 0.74,
+        "away_aggression": 0.72,
+        "home_active_injuries": [
+          {
+            "playerId": "TB-baker-mayfield",
+            "playerName": "Baker Mayfield",
+            "team": "TB",
+            "position": "QB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          },
+          {
+            "playerId": "TB-antoine-winfield-jr.",
+            "playerName": "Antoine Winfield Jr.",
+            "team": "TB",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TB-luke-goedeke",
+            "playerName": "Luke Goedeke",
+            "team": "TB",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TB-emeka-egbuka",
+            "playerName": "Emeka Egbuka",
+            "team": "TB",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "ATL-za'darius-smith",
+            "playerName": "Za'Darius Smith",
+            "team": "ATL",
+            "position": "EDGE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-samson-ebukam",
+            "playerName": "Samson Ebukam",
+            "team": "ATL",
+            "position": "EDGE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-olamide-zaccheaus",
+            "playerName": "Olamide Zaccheaus",
+            "team": "ATL",
+            "position": "WR1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-c.j.-henderson",
+            "playerName": "C.J. Henderson",
+            "team": "ATL",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-a.j.-terrell",
+            "playerName": "A.J. Terrell",
+            "team": "ATL",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-divine-deablo",
+            "playerName": "Divine Deablo",
+            "team": "ATL",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4298,
+        "coach_sim_10k_fourth_down_wp": 0.0476,
+        "scheme_fit_expected_home_pts": 23.47,
+        "scheme_fit_expected_away_pts": 21.58,
+        "scheme_fit_margin_home": 1.89,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 0.42,
+        "thursday_coach_mindset_hash": "7242538e6c35849d98161876486ccec3542098e5a7f94b1d8df291981d098ed0"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.001,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.031,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4298,
+        "posterior_prob_home": 0.4312,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0055
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.03,
+        "total_points_adjustment": 0.46,
+        "cholesky_whitened_prob_delta": 0.0013,
+        "raw_unshrunk_prob_delta": 0.0136,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.02,
+        "post_reasoning_total_delta": 0.46
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "ATL@TB": {
+      "slug": "atl-tb",
+      "matchup_key": "ATL@TB",
+      "matchup": "ATL @ TB",
+      "away": "ATL",
+      "home": "TB",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "T.Bowles",
+        "away_coach": "R.Morris",
+        "home_aggression": 0.74,
+        "away_aggression": 0.72,
+        "home_active_injuries": [
+          {
+            "playerId": "TB-baker-mayfield",
+            "playerName": "Baker Mayfield",
+            "team": "TB",
+            "position": "QB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          },
+          {
+            "playerId": "TB-antoine-winfield-jr.",
+            "playerName": "Antoine Winfield Jr.",
+            "team": "TB",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TB-luke-goedeke",
+            "playerName": "Luke Goedeke",
+            "team": "TB",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "TB-emeka-egbuka",
+            "playerName": "Emeka Egbuka",
+            "team": "TB",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "ATL-za'darius-smith",
+            "playerName": "Za'Darius Smith",
+            "team": "ATL",
+            "position": "EDGE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-samson-ebukam",
+            "playerName": "Samson Ebukam",
+            "team": "ATL",
+            "position": "EDGE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-olamide-zaccheaus",
+            "playerName": "Olamide Zaccheaus",
+            "team": "ATL",
+            "position": "WR1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-c.j.-henderson",
+            "playerName": "C.J. Henderson",
+            "team": "ATL",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-a.j.-terrell",
+            "playerName": "A.J. Terrell",
+            "team": "ATL",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "ATL-divine-deablo",
+            "playerName": "Divine Deablo",
+            "team": "ATL",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4298,
+        "coach_sim_10k_fourth_down_wp": 0.0476,
+        "scheme_fit_expected_home_pts": 23.47,
+        "scheme_fit_expected_away_pts": 21.58,
+        "scheme_fit_margin_home": 1.89,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 0.42,
+        "thursday_coach_mindset_hash": "7242538e6c35849d98161876486ccec3542098e5a7f94b1d8df291981d098ed0"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.001,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.031,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4298,
+        "posterior_prob_home": 0.4312,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0055
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.03,
+        "total_points_adjustment": 0.46,
+        "cholesky_whitened_prob_delta": 0.0013,
+        "raw_unshrunk_prob_delta": 0.0136,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.02,
+        "post_reasoning_total_delta": 0.46
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "ind-jax": {
+      "slug": "ind-jax",
+      "matchup_key": "IND@JAX",
+      "matchup": "IND @ JAX",
+      "away": "IND",
+      "home": "JAX",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "D.Pederson",
+        "away_coach": "S.Steichen",
+        "home_aggression": 0.66,
+        "away_aggression": 0.73,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "IND-sauce-gardner",
+            "playerName": "Sauce Gardner",
+            "team": "IND",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-anthony-gould",
+            "playerName": "Anthony Gould",
+            "team": "IND",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-tyler-warren",
+            "playerName": "Tyler Warren",
+            "team": "IND",
+            "position": "TE",
+            "status": "OUT",
+            "epaReplacementDelta": 0.024,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-justin-walley",
+            "playerName": "Justin Walley",
+            "team": "IND",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-cj-allen",
+            "playerName": "CJ Allen",
+            "team": "IND",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-bryce-boettcher",
+            "playerName": "Bryce Boettcher",
+            "team": "IND",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.286,
+        "coach_sim_10k_fourth_down_wp": 0.0326,
+        "scheme_fit_expected_home_pts": 23.25,
+        "scheme_fit_expected_away_pts": 21.46,
+        "scheme_fit_margin_home": 1.79,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -3.6,
+        "thursday_coach_mindset_hash": "8ccb1f3ebc55baa4bf8a05598411ec96c7fa977598f80eb0ca5a98cf53224944"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.001,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0285,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.286,
+        "posterior_prob_home": 0.2852,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0041
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.01,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0005,
+        "raw_unshrunk_prob_delta": 0.0087,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "IND@JAX": {
+      "slug": "ind-jax",
+      "matchup_key": "IND@JAX",
+      "matchup": "IND @ JAX",
+      "away": "IND",
+      "home": "JAX",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "D.Pederson",
+        "away_coach": "S.Steichen",
+        "home_aggression": 0.66,
+        "away_aggression": 0.73,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "IND-sauce-gardner",
+            "playerName": "Sauce Gardner",
+            "team": "IND",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-anthony-gould",
+            "playerName": "Anthony Gould",
+            "team": "IND",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-tyler-warren",
+            "playerName": "Tyler Warren",
+            "team": "IND",
+            "position": "TE",
+            "status": "OUT",
+            "epaReplacementDelta": 0.024,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-justin-walley",
+            "playerName": "Justin Walley",
+            "team": "IND",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-cj-allen",
+            "playerName": "CJ Allen",
+            "team": "IND",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "IND-bryce-boettcher",
+            "playerName": "Bryce Boettcher",
+            "team": "IND",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.286,
+        "coach_sim_10k_fourth_down_wp": 0.0326,
+        "scheme_fit_expected_home_pts": 23.25,
+        "scheme_fit_expected_away_pts": 21.46,
+        "scheme_fit_margin_home": 1.79,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -3.6,
+        "thursday_coach_mindset_hash": "8ccb1f3ebc55baa4bf8a05598411ec96c7fa977598f80eb0ca5a98cf53224944"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.001,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0285,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.286,
+        "posterior_prob_home": 0.2852,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0041
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.01,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0005,
+        "raw_unshrunk_prob_delta": 0.0087,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "lac-lar": {
+      "slug": "lac-lar",
+      "matchup_key": "LAC@LAR",
+      "matchup": "LAC @ LAR",
+      "away": "LAC",
+      "home": "LAR",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.LaFleur",
+        "away_coach": "J.Harbaugh",
+        "home_aggression": 0.81,
+        "away_aggression": 0.76,
+        "home_active_injuries": [
+          {
+            "playerId": "LAR-trent-mcduffie",
+            "playerName": "Trent McDuffie",
+            "team": "LAR",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LAR-nate-landman",
+            "playerName": "Nate Landman",
+            "team": "LAR",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LAR-puka-nacua",
+            "playerName": "Puka Nacua",
+            "team": "LAR",
+            "position": "WR1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4503,
+        "coach_sim_10k_fourth_down_wp": 0.0488,
+        "scheme_fit_expected_home_pts": 20.68,
+        "scheme_fit_expected_away_pts": 22.82,
+        "scheme_fit_margin_home": -2.14,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 1.96,
+        "thursday_coach_mindset_hash": "4b7986766de2d7bb47f62f9e5fb7f2fc43bb10b939e194d7f9ef08566d79d7b6"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.002,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0261,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4503,
+        "posterior_prob_home": 0.4537,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0139
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.07,
+        "total_points_adjustment": 0.47,
+        "cholesky_whitened_prob_delta": 0.0028,
+        "raw_unshrunk_prob_delta": 0.0245,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.05,
+        "post_reasoning_total_delta": 0.47
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "LAC@LAR": {
+      "slug": "lac-lar",
+      "matchup_key": "LAC@LAR",
+      "matchup": "LAC @ LAR",
+      "away": "LAC",
+      "home": "LAR",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.LaFleur",
+        "away_coach": "J.Harbaugh",
+        "home_aggression": 0.81,
+        "away_aggression": 0.76,
+        "home_active_injuries": [
+          {
+            "playerId": "LAR-trent-mcduffie",
+            "playerName": "Trent McDuffie",
+            "team": "LAR",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LAR-nate-landman",
+            "playerName": "Nate Landman",
+            "team": "LAR",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "LAR-puka-nacua",
+            "playerName": "Puka Nacua",
+            "team": "LAR",
+            "position": "WR1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4503,
+        "coach_sim_10k_fourth_down_wp": 0.0488,
+        "scheme_fit_expected_home_pts": 20.68,
+        "scheme_fit_expected_away_pts": 22.82,
+        "scheme_fit_margin_home": -2.14,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 1.96,
+        "thursday_coach_mindset_hash": "4b7986766de2d7bb47f62f9e5fb7f2fc43bb10b939e194d7f9ef08566d79d7b6"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.002,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0261,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4503,
+        "posterior_prob_home": 0.4537,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0139
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.07,
+        "total_points_adjustment": 0.47,
+        "cholesky_whitened_prob_delta": 0.0028,
+        "raw_unshrunk_prob_delta": 0.0245,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.05,
+        "post_reasoning_total_delta": 0.47
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "kc-den": {
+      "slug": "kc-den",
+      "matchup_key": "KC@DEN",
+      "matchup": "KC @ DEN",
+      "away": "KC",
+      "home": "DEN",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "S.Payton",
+        "away_coach": "A.Reid",
+        "home_aggression": 0.74,
+        "away_aggression": 0.79,
+        "home_active_injuries": [
+          {
+            "playerId": "DEN-talanoa-hufanga",
+            "playerName": "Talanoa Hufanga",
+            "team": "DEN",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-pat-surtain-ii",
+            "playerName": "Pat Surtain II",
+            "team": "DEN",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-tyler-badie",
+            "playerName": "Tyler Badie",
+            "team": "DEN",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-jonah-elliss",
+            "playerName": "Jonah Elliss",
+            "team": "DEN",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-jonah-coleman",
+            "playerName": "Jonah Coleman",
+            "team": "DEN",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "KC-l'jarius-sneed",
+            "playerName": "L'Jarius Sneed",
+            "team": "KC",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-jaylon-moore",
+            "playerName": "Jaylon Moore",
+            "team": "KC",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-rashee-rice",
+            "playerName": "Rashee Rice",
+            "team": "KC",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-brashard-smith",
+            "playerName": "Brashard Smith",
+            "team": "KC",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-cooper-mcdonald",
+            "playerName": "Cooper McDonald",
+            "team": "KC",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4066,
+        "coach_sim_10k_fourth_down_wp": 0.0486,
+        "scheme_fit_expected_home_pts": 19.7,
+        "scheme_fit_expected_away_pts": 21.75,
+        "scheme_fit_margin_home": -2.05,
+        "belichick_counter_install_home": [
+          "Install hot-sight / RB-checkdown answers vs KC heavy blitz (34.0% blitz rate)"
+        ],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -0.83,
+        "thursday_coach_mindset_hash": "ee80b6a5314fcd487ac88f014cffe49ca9cca0853b2000ac56c3162e1f128f11"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0009,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0263,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4066,
+        "posterior_prob_home": 0.4079,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0055
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 1.16,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0005,
+        "raw_unshrunk_prob_delta": 0.0342,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.53,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "KC@DEN": {
+      "slug": "kc-den",
+      "matchup_key": "KC@DEN",
+      "matchup": "KC @ DEN",
+      "away": "KC",
+      "home": "DEN",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "S.Payton",
+        "away_coach": "A.Reid",
+        "home_aggression": 0.74,
+        "away_aggression": 0.79,
+        "home_active_injuries": [
+          {
+            "playerId": "DEN-talanoa-hufanga",
+            "playerName": "Talanoa Hufanga",
+            "team": "DEN",
+            "position": "S",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-pat-surtain-ii",
+            "playerName": "Pat Surtain II",
+            "team": "DEN",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-tyler-badie",
+            "playerName": "Tyler Badie",
+            "team": "DEN",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-jonah-elliss",
+            "playerName": "Jonah Elliss",
+            "team": "DEN",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "DEN-jonah-coleman",
+            "playerName": "Jonah Coleman",
+            "team": "DEN",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "KC-l'jarius-sneed",
+            "playerName": "L'Jarius Sneed",
+            "team": "KC",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-jaylon-moore",
+            "playerName": "Jaylon Moore",
+            "team": "KC",
+            "position": "LT",
+            "status": "OUT",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-rashee-rice",
+            "playerName": "Rashee Rice",
+            "team": "KC",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-brashard-smith",
+            "playerName": "Brashard Smith",
+            "team": "KC",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "KC-cooper-mcdonald",
+            "playerName": "Cooper McDonald",
+            "team": "KC",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4066,
+        "coach_sim_10k_fourth_down_wp": 0.0486,
+        "scheme_fit_expected_home_pts": 19.7,
+        "scheme_fit_expected_away_pts": 21.75,
+        "scheme_fit_margin_home": -2.05,
+        "belichick_counter_install_home": [
+          "Install hot-sight / RB-checkdown answers vs KC heavy blitz (34.0% blitz rate)"
+        ],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -0.83,
+        "thursday_coach_mindset_hash": "ee80b6a5314fcd487ac88f014cffe49ca9cca0853b2000ac56c3162e1f128f11"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0009,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0263,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4066,
+        "posterior_prob_home": 0.4079,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0055
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 1.16,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0005,
+        "raw_unshrunk_prob_delta": 0.0342,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.53,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "ne-mia": {
+      "slug": "ne-mia",
+      "matchup_key": "NE@MIA",
+      "matchup": "NE @ MIA",
+      "away": "NE",
+      "home": "MIA",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.McDaniel",
+        "away_coach": "J.Mayo",
+        "home_aggression": 0.71,
+        "away_aggression": 0.6,
+        "home_active_injuries": [
+          {
+            "playerId": "MIA-willie-gay-jr.",
+            "playerName": "Willie Gay Jr.",
+            "team": "MIA",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "MIA-reese-taylor",
+            "playerName": "Reese Taylor",
+            "team": "MIA",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "MIA-rob-beal-jr.",
+            "playerName": "Rob Beal Jr.",
+            "team": "MIA",
+            "position": "EDGE",
+            "status": "DOUBTFUL",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "MIA-kyle-louis",
+            "playerName": "Kyle Louis",
+            "team": "MIA",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "NE-morgan-moses",
+            "playerName": "Morgan Moses",
+            "team": "NE",
+            "position": "LT",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-kevin-byard",
+            "playerName": "Kevin Byard",
+            "team": "NE",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-carlton-davis-iii",
+            "playerName": "Carlton Davis III",
+            "team": "NE",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-christian-elliss",
+            "playerName": "Christian Elliss",
+            "team": "NE",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-alijah-vera-tucker",
+            "playerName": "Alijah Vera-Tucker",
+            "team": "NE",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-ben-brown",
+            "playerName": "Ben Brown",
+            "team": "NE",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.5799,
+        "coach_sim_10k_fourth_down_wp": 0.0333,
+        "scheme_fit_expected_home_pts": 24.59,
+        "scheme_fit_expected_away_pts": 16.35,
+        "scheme_fit_margin_home": 8.24,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -1.15,
+        "thursday_coach_mindset_hash": "d1cbe25471027a9fe8d256f0eb31d7214b7ca5b747113520782237ecd32b285d"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0009,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0435,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.5799,
+        "posterior_prob_home": 0.5804,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0019
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.13,
+        "total_points_adjustment": 0.49,
+        "cholesky_whitened_prob_delta": 0.0052,
+        "raw_unshrunk_prob_delta": 0.056,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.06,
+        "post_reasoning_total_delta": 0.49
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "NE@MIA": {
+      "slug": "ne-mia",
+      "matchup_key": "NE@MIA",
+      "matchup": "NE @ MIA",
+      "away": "NE",
+      "home": "MIA",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.McDaniel",
+        "away_coach": "J.Mayo",
+        "home_aggression": 0.71,
+        "away_aggression": 0.6,
+        "home_active_injuries": [
+          {
+            "playerId": "MIA-willie-gay-jr.",
+            "playerName": "Willie Gay Jr.",
+            "team": "MIA",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "MIA-reese-taylor",
+            "playerName": "Reese Taylor",
+            "team": "MIA",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "MIA-rob-beal-jr.",
+            "playerName": "Rob Beal Jr.",
+            "team": "MIA",
+            "position": "EDGE",
+            "status": "DOUBTFUL",
+            "epaReplacementDelta": 0.04,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "MIA-kyle-louis",
+            "playerName": "Kyle Louis",
+            "team": "MIA",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "NE-morgan-moses",
+            "playerName": "Morgan Moses",
+            "team": "NE",
+            "position": "LT",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.048,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-kevin-byard",
+            "playerName": "Kevin Byard",
+            "team": "NE",
+            "position": "S",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-carlton-davis-iii",
+            "playerName": "Carlton Davis III",
+            "team": "NE",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-christian-elliss",
+            "playerName": "Christian Elliss",
+            "team": "NE",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-alijah-vera-tucker",
+            "playerName": "Alijah Vera-Tucker",
+            "team": "NE",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "NE-ben-brown",
+            "playerName": "Ben Brown",
+            "team": "NE",
+            "position": "OL",
+            "status": "OUT",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.5799,
+        "coach_sim_10k_fourth_down_wp": 0.0333,
+        "scheme_fit_expected_home_pts": 24.59,
+        "scheme_fit_expected_away_pts": 16.35,
+        "scheme_fit_margin_home": 8.24,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 13,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -1.15,
+        "thursday_coach_mindset_hash": "d1cbe25471027a9fe8d256f0eb31d7214b7ca5b747113520782237ecd32b285d"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0009,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0435,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.5799,
+        "posterior_prob_home": 0.5804,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0019
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.13,
+        "total_points_adjustment": 0.49,
+        "cholesky_whitened_prob_delta": 0.0052,
+        "raw_unshrunk_prob_delta": 0.056,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.06,
+        "post_reasoning_total_delta": 0.49
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "phi-wsh": {
+      "slug": "phi-wsh",
+      "matchup_key": "PHI@WAS",
+      "matchup": "PHI @ WAS",
+      "away": "PHI",
+      "home": "WAS",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "D.Quinn",
+        "away_coach": "N.Sirianni",
+        "home_aggression": 0.87,
+        "away_aggression": 0.94,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "PHI-saquon-barkley",
+            "playerName": "Saquon Barkley",
+            "team": "PHI",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-jonathan-greenard",
+            "playerName": "Jonathan Greenard",
+            "team": "PHI",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-michael-carter-ii",
+            "playerName": "Michael Carter II",
+            "team": "PHI",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-devonta-smith",
+            "playerName": "DeVonta Smith",
+            "team": "PHI",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-landon-dickerson",
+            "playerName": "Landon Dickerson",
+            "team": "PHI",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-grant-calcaterra",
+            "playerName": "Grant Calcaterra",
+            "team": "PHI",
+            "position": "TE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.024,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4334,
+        "coach_sim_10k_fourth_down_wp": 0.0493,
+        "scheme_fit_expected_home_pts": 26.99,
+        "scheme_fit_expected_away_pts": 25.88,
+        "scheme_fit_margin_home": 1.11,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -3.29,
+        "thursday_coach_mindset_hash": "b2975bfcdcabbcf8169285c70c8851e7b88e2a8c4c8475030f5b50edb44e9087"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0005,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.025,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4334,
+        "posterior_prob_home": 0.4386,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0211
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0002,
+        "raw_unshrunk_prob_delta": 0.0189,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.03,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "PHI@WAS": {
+      "slug": "phi-wsh",
+      "matchup_key": "PHI@WAS",
+      "matchup": "PHI @ WAS",
+      "away": "PHI",
+      "home": "WAS",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "D.Quinn",
+        "away_coach": "N.Sirianni",
+        "home_aggression": 0.87,
+        "away_aggression": 0.94,
+        "home_active_injuries": [],
+        "away_active_injuries": [
+          {
+            "playerId": "PHI-saquon-barkley",
+            "playerName": "Saquon Barkley",
+            "team": "PHI",
+            "position": "RB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-jonathan-greenard",
+            "playerName": "Jonathan Greenard",
+            "team": "PHI",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-michael-carter-ii",
+            "playerName": "Michael Carter II",
+            "team": "PHI",
+            "position": "CB1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-devonta-smith",
+            "playerName": "DeVonta Smith",
+            "team": "PHI",
+            "position": "WR1",
+            "status": "OUT",
+            "epaReplacementDelta": 0.042,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-landon-dickerson",
+            "playerName": "Landon Dickerson",
+            "team": "PHI",
+            "position": "OL",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.028,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "PHI-grant-calcaterra",
+            "playerName": "Grant Calcaterra",
+            "team": "PHI",
+            "position": "TE",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.024,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.4334,
+        "coach_sim_10k_fourth_down_wp": 0.0493,
+        "scheme_fit_expected_home_pts": 26.99,
+        "scheme_fit_expected_away_pts": 25.88,
+        "scheme_fit_margin_home": 1.11,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": -3.29,
+        "thursday_coach_mindset_hash": "b2975bfcdcabbcf8169285c70c8851e7b88e2a8c4c8475030f5b50edb44e9087"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": 0.0005,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.025,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.4334,
+        "posterior_prob_home": 0.4386,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": 0.0211
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0,
+        "total_points_adjustment": 0.45,
+        "cholesky_whitened_prob_delta": 0.0002,
+        "raw_unshrunk_prob_delta": 0.0189,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.03,
+        "post_reasoning_total_delta": 0.45
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "chi-sea": {
+      "slug": "chi-sea",
+      "matchup_key": "CHI@SEA",
+      "matchup": "CHI @ SEA",
+      "away": "CHI",
+      "home": "SEA",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.Macdonald",
+        "away_coach": "M.Eberflus",
+        "home_aggression": 0.68,
+        "away_aggression": 0.67,
+        "home_active_injuries": [
+          {
+            "playerId": "SEA-demarcus-lawrence",
+            "playerName": "DeMarcus Lawrence",
+            "team": "SEA",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-uchenna-nwosu",
+            "playerName": "Uchenna Nwosu",
+            "team": "SEA",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-drew-lock",
+            "playerName": "Drew Lock",
+            "team": "SEA",
+            "position": "QB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          },
+          {
+            "playerId": "SEA-chazz-surratt",
+            "playerName": "Chazz Surratt",
+            "team": "SEA",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-drake-thomas",
+            "playerName": "Drake Thomas",
+            "team": "SEA",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-zach-charbonnet",
+            "playerName": "Zach Charbonnet",
+            "team": "SEA",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "CHI-t.j.-edwards",
+            "playerName": "T.J. Edwards",
+            "team": "CHI",
+            "position": "LB",
+            "status": "DOUBTFUL",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CHI-jack-sanborn",
+            "playerName": "Jack Sanborn",
+            "team": "CHI",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CHI-tyrique-stevenson",
+            "playerName": "Tyrique Stevenson",
+            "team": "CHI",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CHI-kyle-monangai",
+            "playerName": "Kyle Monangai",
+            "team": "CHI",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.3937,
+        "coach_sim_10k_fourth_down_wp": 0.0162,
+        "scheme_fit_expected_home_pts": 20.11,
+        "scheme_fit_expected_away_pts": 19.38,
+        "scheme_fit_margin_home": 0.73,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 2.59,
+        "thursday_coach_mindset_hash": "f77fe01a4732bd90bd1e944a3168912adf03056155e1d6526c966ad6d7e492f4"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0006,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0351,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.3937,
+        "posterior_prob_home": 0.3933,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0017
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.02,
+        "total_points_adjustment": -1.34,
+        "cholesky_whitened_prob_delta": 0.0008,
+        "raw_unshrunk_prob_delta": -0.0025,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.01,
+        "post_reasoning_total_delta": -1.34
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    },
+    "CHI@SEA": {
+      "slug": "chi-sea",
+      "matchup_key": "CHI@SEA",
+      "matchup": "CHI @ SEA",
+      "away": "CHI",
+      "home": "SEA",
+      "stage1_coaching_and_injuries": {
+        "home_coach": "M.Macdonald",
+        "away_coach": "M.Eberflus",
+        "home_aggression": 0.68,
+        "away_aggression": 0.67,
+        "home_active_injuries": [
+          {
+            "playerId": "SEA-demarcus-lawrence",
+            "playerName": "DeMarcus Lawrence",
+            "team": "SEA",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-uchenna-nwosu",
+            "playerName": "Uchenna Nwosu",
+            "team": "SEA",
+            "position": "LB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-drew-lock",
+            "playerName": "Drew Lock",
+            "team": "SEA",
+            "position": "QB",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.145,
+            "snapShare": 1
+          },
+          {
+            "playerId": "SEA-chazz-surratt",
+            "playerName": "Chazz Surratt",
+            "team": "SEA",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-drake-thomas",
+            "playerName": "Drake Thomas",
+            "team": "SEA",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "SEA-zach-charbonnet",
+            "playerName": "Zach Charbonnet",
+            "team": "SEA",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "away_active_injuries": [
+          {
+            "playerId": "CHI-t.j.-edwards",
+            "playerName": "T.J. Edwards",
+            "team": "CHI",
+            "position": "LB",
+            "status": "DOUBTFUL",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CHI-jack-sanborn",
+            "playerName": "Jack Sanborn",
+            "team": "CHI",
+            "position": "LB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CHI-tyrique-stevenson",
+            "playerName": "Tyrique Stevenson",
+            "team": "CHI",
+            "position": "CB1",
+            "status": "QUESTIONABLE",
+            "epaReplacementDelta": 0.045,
+            "snapShare": 0.72
+          },
+          {
+            "playerId": "CHI-kyle-monangai",
+            "playerName": "Kyle Monangai",
+            "team": "CHI",
+            "position": "RB",
+            "status": "OUT",
+            "epaReplacementDelta": 0.022,
+            "snapShare": 0.72
+          }
+        ],
+        "misleading_stat_firewall": {
+          "raw_ypg_defense_rejected": true,
+          "pass_epa_per_dropback_verified": true
+        }
+      },
+      "stage2_jev_spine_and_10k_coach_sim": {
+        "jev_full_game_spine_executed": false,
+        "jev_total_snaps": 0,
+        "jev_final_score_spine": null,
+        "jev_posterior_overrides": null,
+        "coach_sim_10k_win_prob_home": 0.3937,
+        "coach_sim_10k_fourth_down_wp": 0.0162,
+        "scheme_fit_expected_home_pts": 20.11,
+        "scheme_fit_expected_away_pts": 19.38,
+        "scheme_fit_margin_home": 0.73,
+        "belichick_counter_install_home": [],
+        "belichick_counter_install_away": [
+          "Manage WR/RB high-angle cut volume on grass->turf switch (hazard 1.28x, FSM=HIGH_KINEMATIC_RISK)"
+        ],
+        "cuda_weighted_entropy_probe": {
+          "partitionIndexM": 10,
+          "weightedEntropyScore": 3.592896,
+          "pure13ExactResolutionCount": 2,
+          "prefersImmediateResolutionSingleton": true,
+          "diagnosticInformationGainEpaBonus": 0.0327
+        },
+        "cuda_evolved_weights_mutation_rate": 0.07,
+        "thursday_cadence_injury_delta_pts": 2.59,
+        "thursday_coach_mindset_hash": "f77fe01a4732bd90bd1e944a3168912adf03056155e1d6526c966ad6d7e492f4"
+      },
+      "stage3_cognitive_router": {
+        "context_mask_hex": "0x000010000000100001000000000000000000004000000000000002000000000000000000",
+        "orthogonal_clusters": [
+          {
+            "id": "EQ-PURE-EPA-MARGIN-DIFFERENTIAL",
+            "premise": "Pure-football offensive/defensive EPA differential with GAP 4-way venue rating",
+            "cluster": "pure_epa",
+            "similarity": 0.93,
+            "jacobianSensitivity": 0.92,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.93
+          },
+          {
+            "id": "EQ-TRENCH-PRESSURE-HAZARD",
+            "premise": "Unblitzed 4-man pressure vs interior OL continuity hazard",
+            "cluster": "trench_pressure",
+            "similarity": 0.91,
+            "jacobianSensitivity": 0.94,
+            "rawLogOddsDelta": 0,
+            "clusterRank": 0,
+            "spectralScore": 0.91
+          },
+          {
+            "id": "EQ-RECENT-W6-W7-COMPLETION-REGIME",
+            "premise": "Weeks 6-7 completion regime shift vs season baseline",
+            "cluster": "qb_efficiency",
+            "similarity": 0.87,
+            "jacobianSensitivity": 0.88,
+            "rawLogOddsDelta": -0.0006,
+            "clusterRank": 0,
+            "spectralScore": 0.87
+          },
+          {
+            "id": "EQ-SCHEME-MOTION-ATTENTION",
+            "premise": "Pre-snap motion scaled-dot-product attention vs coverage shell",
+            "cluster": "coverage_shell",
+            "similarity": 0.85,
+            "jacobianSensitivity": 0.86,
+            "rawLogOddsDelta": 0.0351,
+            "clusterRank": 0,
+            "spectralScore": 0.85
+          }
+        ],
+        "base_prior_prob_home": 0.3937,
+        "posterior_prob_home": 0.3933,
+        "james_stein_shrinkage_factor": 0,
+        "total_delta_log_odds": -0.0017
+      },
+      "stage4_situational_reasoning_overlay": {
+        "total_spread_adjustment_pts_home": 0.02,
+        "total_points_adjustment": -1.34,
+        "cholesky_whitened_prob_delta": 0.0008,
+        "raw_unshrunk_prob_delta": -0.0025,
+        "cap_applied": false,
+        "publish_allowed": false,
+        "post_reasoning_spread_delta_home": 0.01,
+        "post_reasoning_total_delta": -1.34
+      },
+      "stage5_calibration_and_copula_gate": {
+        "isotonic_calibrated_sample_prob": 0.563,
+        "sgp_clayton_qb_wr_joint_at_56_55": 0.3825,
+        "sgp_copula_lift_pp": 7.45,
+        "contradiction_gate_verified": true
+      }
+    }
+  }
+}

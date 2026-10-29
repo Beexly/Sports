@@ -41,6 +41,11 @@ interface PaywallRevealCardProps {
   initialSessionId?: string;
 }
 
+function formatConfidenceStrict(raw: string | number): string {
+  const cleaned = String(raw).trim().replace(/%/g, "");
+  return cleaned.endsWith("/100") ? cleaned : `${cleaned}/100`;
+}
+
 export function PaywallRevealCard({
   pkg,
   teasers,
@@ -82,15 +87,14 @@ export function PaywallRevealCard({
   async function handleInlineVerify(overrideToken?: string, silent = false) {
     const token = (overrideToken ?? tokenInput).trim();
     if (!token) {
-      if (!silent) setErrorMsg("Enter your Stripe Receipt ID (cs_...) or Whop Token (whop_...)");
+      if (!silent) setErrorMsg("Enter your Stripe Receipt ID (cs_...)");
       return;
     }
     setLoadingUnlock(true);
     setErrorMsg(null);
     try {
-      const paramName = token.startsWith("whop_") || token.startsWith("mem_") ? "whop_token" : "session_id";
       const res = await fetch(
-        `/api/packages/unlock?package=${encodeURIComponent(pkg.slug)}&${paramName}=${encodeURIComponent(token)}`,
+        `/api/packages/unlock?package=${encodeURIComponent(pkg.slug)}&session_id=${encodeURIComponent(token)}`,
       );
       const data = await res.json();
       if (res.ok && data.unlocked && Array.isArray(data.writeups)) {
@@ -102,10 +106,10 @@ export function PaywallRevealCard({
           // ignore
         }
       } else if (!silent) {
-        setErrorMsg(data.error || "Payment token could not be verified.");
+        setErrorMsg(data.error || "Receipt ID could not be verified.");
       }
     } catch {
-      if (!silent) setErrorMsg("Network error verifying unlock token.");
+      if (!silent) setErrorMsg("Network error verifying receipt ID.");
     } finally {
       setLoadingUnlock(false);
     }
@@ -125,7 +129,6 @@ export function PaywallRevealCard({
       });
       const data = await res.json();
       if (res.ok && data.url) {
-        // If dev/mock session returned a cs_test_mock sessionId, we can even reveal immediately in-place or redirect
         if (data.sessionId && String(data.sessionId).startsWith("cs_test_mock_")) {
           await handleInlineVerify(String(data.sessionId), false);
           setLoadingCheckout(false);
@@ -145,307 +148,276 @@ export function PaywallRevealCard({
   return (
     <div
       data-testid={`paywall-reveal-card-${pkg.slug}`}
-      className="flex flex-col justify-between border border-mineral bg-eclipse p-5 sm:p-6 transition-colors hover:border-plasma/60"
+      className="flex flex-col justify-between bg-slate-900 border-2 border-slate-700 hover:border-amber-400 rounded-xl p-6 shadow-xl transition-colors"
     >
       {/* Card Header */}
       <div>
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="inline-flex items-center rounded-md border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+            {pkg.badge || pkg.windowSlot}
+          </span>
           <div className="flex items-center gap-2">
-            <span className="border border-plasma/40 bg-plasma/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-plasma">
-              {pkg.badge || pkg.windowSlot}
-            </span>
-            <span className="font-mono text-[11px] text-ion-2">
-              {pkg.gamesCount} {pkg.gamesCount === 1 ? "Game" : "Games"}
-            </span>
+            {isUnlocked ? (
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-400/60 bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase text-emerald-300">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                UNLOCKED IN-PLACE
+              </span>
+            ) : (
+              <span className="text-2xl font-bold text-amber-400">
+                ${activePrice}
+              </span>
+            )}
           </div>
-          {isUnlocked ? (
-            <span className="inline-flex items-center gap-1.5 border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] uppercase text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              UNLOCKED IN-PLACE
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 border border-plasma/40 bg-carbon px-2.5 py-0.5 font-mono text-[10px] uppercase text-plasma">
-              🔒 PAY-PER-VIEW VAULT (${activePrice})
-            </span>
-          )}
         </div>
 
-        <h3 className="mt-3 font-display text-xl font-semibold text-ion-white">
+        <h3 className="mt-3 font-display text-2xl font-bold text-white">
           {pkg.title}
         </h3>
-        <p className="mt-0.5 font-mono text-xs text-plasma">{pkg.subtitle}</p>
-        <p className="mt-2 text-xs leading-5 text-ion-1">{pkg.description}</p>
+        <p className="mt-1 text-sm font-semibold text-amber-300">
+          {pkg.gamesCount} {pkg.gamesCount === 1 ? "Game" : "Games"} · Side, Total, Player Props &amp; Same-Game Parlay
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-slate-200">{pkg.description}</p>
 
-        {/* FREE PUBLIC TEASER LAYER (Always Visible Above the Paywall) */}
+        {/* FREE PREVIEW BOX (Plain English, High Contrast) */}
         {teasers.length > 0 && (
-          <div className="mt-4 space-y-2.5 border-t border-mineral/50 pt-3">
-            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-ion-2">
-              <span>Free Pace-of-Play &amp; Scheme Teaser (2026 W1-W7 PBP + FTN)</span>
-              <span className="text-plasma">10,000-Sim Calibrated</span>
+          <div className="mt-5 space-y-3 border-t border-slate-700 pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                Why We Like This Game (Free Preview)
+              </span>
+              <span className="text-xs font-semibold text-emerald-400">
+                10,000 Game Simulations
+              </span>
             </div>
             {teasers.slice(0, 2).map((t) => (
-              <div key={t.id} className="border border-mineral/50 bg-carbon p-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-ion-white">{t.matchup}</span>
-                  <span className="font-mono text-[10px] text-plasma">
-                    {t.paceOfPlay.neutralSecPerSnap ? `${t.paceOfPlay.neutralSecPerSnap}s/snap` : "26.5s/snap"}
+              <div key={t.id} className="rounded-lg border border-slate-700 bg-slate-800/90 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-base font-bold text-white">{t.matchup}</span>
+                  <span className="text-xs font-semibold text-amber-300">
+                    {t.windowSlot}
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-ion-1 line-clamp-2">
-                  {t.schemeMatchup.coverageShell}
+                <p className="mt-2 text-sm text-slate-200 leading-relaxed">
+                  {t.schemeMatchup.coverageShell || t.schemeMatchup.notes}
                 </p>
-                <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-mineral/30 pt-1.5 font-mono text-[10px] text-ion-2">
-                  <span>Side Conf: {t.lockedSummary.sideConfidence} ({t.lockedSummary.sideExpectedClvCents} CLV)</span>
-                  <span>·</span>
-                  <span>Total Conf: {t.lockedSummary.totalConfidence}</span>
-                  <span>·</span>
-                  <span className="text-plasma">{t.lockedSummary.propsCount} Props + SGP + DFS Locked</span>
+                <div className="mt-3 rounded-md bg-slate-900/90 px-3 py-2 text-xs font-semibold text-slate-200 border border-slate-700">
+                  Inside This Pack: Side Confidence {formatConfidenceStrict(t.lockedSummary.sideConfidence)} · Total Confidence {formatConfidenceStrict(t.lockedSummary.totalConfidence)} · {t.lockedSummary.propsCount} Player Props
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* ONLYFANS-STYLE PAYWALL REVEAL REGION */}
+        {/* HIGH-CONTRAST PAYWALL CALLOUT OR UNLOCKED PICKS */}
         {!isUnlocked ? (
-          <div className="relative mt-4 overflow-hidden border border-plasma/40 bg-carbon p-4">
-            {/* Blurred Silhouette Background (Zero real pick names in DOM!) */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none select-none space-y-2.5 blur-[6px] opacity-40"
-            >
-              <div className="flex items-center justify-between border border-mineral p-2.5">
-                <span className="font-mono text-xs text-ion-white">SIDE CALL: ██████████ -3.5 (-110)</span>
-                <span className="font-mono text-xs text-plasma">Conf 81/100</span>
+          <div className="mt-5 rounded-xl border-2 border-amber-500/60 bg-slate-800 p-5 text-center shadow-inner">
+            <h4 className="text-lg font-bold text-white">
+              🔒 Unlock Official Picks &amp; Exact Bet Numbers
+            </h4>
+            <p className="mt-2 text-sm leading-relaxed text-slate-200">
+              Click below for instant access to our official Side bet, Total bet, best Player Props, and Same-Game Parlay right on this screen.
+            </p>
+
+            {guaranteedPrice && (
+              <div className="mt-3 inline-flex rounded-lg border border-slate-600 bg-slate-900 p-1 text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setGuaranteed(false)}
+                  className={`rounded-md px-3 py-1.5 transition-colors ${
+                    !guaranteed ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-300 hover:text-white"
+                  }`}
+                >
+                  Standard ${standardPrice}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setGuaranteed(true)}
+                  className={`rounded-md px-3 py-1.5 transition-colors ${
+                    guaranteed ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-300 hover:text-white"
+                  }`}
+                >
+                  Credit-Back ${guaranteedPrice}
+                </button>
               </div>
-              <div className="flex items-center justify-between border border-mineral p-2.5">
-                <span className="font-mono text-xs text-ion-white">TOTAL CALL: ██████ 48.5 (-110)</span>
-                <span className="font-mono text-xs text-plasma">Conf 76/100</span>
-              </div>
-              <div className="flex items-center justify-between border border-mineral p-2.5">
-                <span className="font-mono text-xs text-ion-white">PROP: ████████████ OVER 84.5 Yds + SGP</span>
-                <span className="font-mono text-xs text-plasma">Conf 84/100</span>
-              </div>
+            )}
+
+            <div className="mt-4">
+              <button
+                type="button"
+                disabled={loadingCheckout}
+                onClick={() => void handleOneClickCheckout(guaranteed)}
+                className="w-full rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base py-3 px-6 shadow-md transition-all"
+              >
+                {loadingCheckout
+                  ? "Opening Secure Checkout..."
+                  : `Unlock Picks Now — $${activePrice}`}
+              </button>
             </div>
 
-            {/* Interactive Paywall Vault Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-carbon/85 backdrop-blur-md p-4 text-center">
-              <div className="inline-flex items-center gap-1.5 border border-plasma/50 bg-plasma/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-plasma">
-                🔒 Locked Picks · Props · SGP · DFS Vault
-              </div>
-              <p className="mt-2 max-w-xs text-xs text-ion-1">
-                Unlock instant in-place reveal of all calibrated Side/Total picks, N_eff Player Props, Correlated SGPs &amp; DFS stacks.
-              </p>
-
-              {/* Standard vs Guaranteed Toggle */}
-              {guaranteedPrice && (
-                <div className="mt-2.5 inline-flex border border-mineral bg-eclipse p-0.5 text-[10px] font-mono">
-                  <button
-                    type="button"
-                    onClick={() => setGuaranteed(false)}
-                    className={`px-2.5 py-1 transition-colors ${
-                      !guaranteed ? "bg-plasma text-carbon font-semibold" : "text-ion-2 hover:text-ion-white"
-                    }`}
-                  >
-                    Standard ${standardPrice}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setGuaranteed(true)}
-                    className={`px-2.5 py-1 transition-colors ${
-                      guaranteed ? "bg-plasma text-carbon font-semibold" : "text-ion-2 hover:text-ion-white"
-                    }`}
-                  >
-                    Guaranteed Credit-Back ${guaranteedPrice}
-                  </button>
-                </div>
-              )}
-
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-2 w-full">
-                <button
-                  type="button"
-                  disabled={loadingCheckout}
-                  onClick={() => void handleOneClickCheckout(guaranteed)}
-                  className="btn-primary px-5 py-2 text-xs font-semibold"
-                >
-                  {loadingCheckout
-                    ? "Unlocking Checkout..."
-                    : `Unlock & Reveal Now ($${activePrice})`}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowTokenBox((prev) => !prev)}
-                  className="border border-mineral bg-eclipse px-3 py-2 font-mono text-[10px] text-ion-1 hover:border-plasma hover:text-ion-white"
-                >
-                  {showTokenBox ? "Hide Receipt Box" : "Have a Receipt / Whop Key?"}
-                </button>
-              </div>
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => setShowTokenBox((prev) => !prev)}
+                className="text-xs font-semibold text-slate-300 underline hover:text-amber-300"
+              >
+                {showTokenBox ? "Hide Receipt Box" : "Already purchased? Enter Receipt ID"}
+              </button>
             </div>
           </div>
         ) : (
           /* UNLOCKED IN-PLACE REVEAL */
-          <div className="mt-4 space-y-3 border border-emerald-500/40 bg-carbon p-4">
-            <div className="flex items-center justify-between border-b border-mineral/50 pb-2">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-emerald-400">
+          <div className="mt-5 space-y-4 rounded-xl border-2 border-emerald-500/60 bg-slate-950 p-5">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                 ✓ Live Picks Revealed In-Place
               </span>
-              <span className="font-mono text-[10px] text-ion-2">
-                Confidence strictly XX/100
+              <span className="text-xs font-semibold text-slate-300">
+                Confidence Score Out of 100
               </span>
             </div>
 
-            {unlockedWriteups?.map((w) => (
-              <div key={w.id} className="space-y-2.5 border-b border-mineral/40 pb-3 last:border-b-0 last:pb-0">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-ion-white">{w.matchup}</span>
-                  <span className="font-mono text-[10px] text-plasma">{w.windowSlot}</span>
-                </div>
-
-                {/* Official Side & Total */}
-                <div className="grid gap-2 sm:grid-cols-2">
-                  <div className="border border-plasma/30 bg-eclipse p-2.5">
-                    <div className="text-[10px] font-mono text-ion-2">OFFICIAL SIDE</div>
-                    <div className="mt-0.5 font-display text-sm font-bold text-ion-white">
-                      {w.sideTotalCall.sideSelection}
-                    </div>
-                    <div className="mt-1 flex items-center justify-between font-mono text-[10px]">
-                      <span className="text-plasma">Conf: {w.sideTotalCall.sideConfidence}</span>
-                      <span className="text-emerald-400">+{ (w.sideTotalCall.sideExpectedClv * 100).toFixed(1) }c CLV</span>
-                    </div>
+            {unlockedWriteups?.map((w) => {
+              const sideIsPass = String(w.sideTotalCall.sideDecision) === "PASS";
+              const totalIsPass = String(w.sideTotalCall.totalDecision) === "PASS";
+              return (
+                <div key={w.id} className="space-y-4 border-b border-slate-800 pb-4 last:border-b-0 last:pb-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-base font-bold text-white">{w.matchup}</span>
+                    <span className="text-xs font-bold uppercase text-amber-400">{w.windowSlot}</span>
                   </div>
-                  <div className="border border-plasma/30 bg-eclipse p-2.5">
-                    <div className="text-[10px] font-mono text-ion-2">OFFICIAL TOTAL</div>
-                    <div className="mt-0.5 font-display text-sm font-bold text-ion-white">
-                      {w.sideTotalCall.totalSelection}
-                    </div>
-                    <div className="mt-1 flex items-center justify-between font-mono text-[10px]">
-                      <span className="text-plasma">Conf: {w.sideTotalCall.totalConfidence}</span>
-                      <span className="text-emerald-400">+{ (w.sideTotalCall.totalExpectedClv * 100).toFixed(1) }c CLV</span>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Top Props */}
-                {w.topProps.length > 0 && (
-                  <div className="border border-mineral/50 bg-eclipse p-2.5">
-                    <div className="font-mono text-[10px] uppercase text-plasma">
-                      Unlocked N_eff Player Props
-                    </div>
-                    <div className="mt-1.5 space-y-1">
-                      {w.topProps.map((p) => (
-                        <div key={p.playerId} className="flex items-center justify-between text-xs">
-                          <span className="text-ion-white font-medium">
-                            {p.playerName} · {p.side} {p.line} {p.propType}
-                          </span>
-                          <span className="font-mono text-[10px] text-plasma">Conf {p.confidence}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Correlated SGP */}
-                {w.correlatedSgpTicket && (
-                  <div className="border border-mineral/50 bg-eclipse p-2.5">
-                    <div className="flex items-center justify-between font-mono text-[10px]">
-                      <span className="uppercase text-plasma">{w.correlatedSgpTicket.title}</span>
-                      <span className="text-ion-white">
-                        Market {w.correlatedSgpTicket.marketOdds} (Fair {w.correlatedSgpTicket.fairOdds})
-                      </span>
-                    </div>
-                    <ul className="mt-1 space-y-0.5 text-[11px] text-ion-1">
-                      {w.correlatedSgpTicket.legs.map((leg, idx) => (
-                        <li key={idx}>• {leg.description} ({leg.confidence})</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* DFS Blueprint */}
-                {w.dfsStacks && (
-                  <div className="border border-mineral/50 bg-eclipse p-3 text-[11px] space-y-1.5">
-                    <div className="font-mono text-[10px] uppercase text-plasma">
-                      Unlocked 10,000-Sim DFS Lineup Construction &amp; Leverage Blueprint
-                    </div>
-                    <div className="text-ion-white">
-                      <strong className="text-plasma">Showdown Captain Leverage:</strong>{" "}
-                      {w.dfsStacks.captainPicks.map((c) => `${c.player} (${c.position}, $${c.salary}) · ${c.leverageNote}`).join(" | ")}
-                    </div>
-                    <div className="text-ion-1">
-                      <strong className="text-plasma">Cash Core (80th-Pct Floor):</strong>{" "}
-                      {w.dfsStacks.cashCore.map((c) => `${c.player} (${c.position}, $${c.salary}, Proj ${c.projection}) · ${c.floorNote}`).join(" | ")}
-                    </div>
-                    {w.dfsStacks.gppStacks.map((g, idx) => (
-                      <div key={idx} className="border-t border-mineral/30 pt-1.5 text-ion-1">
-                        <strong className="text-plasma">20-Max GPP Primary Stack:</strong>{" "}
-                        <span className="text-ion-white font-semibold">
-                          {g.primaryStack.qb} + {g.primaryStack.passCatchers.join(" + ")}
-                        </span>{" "}
-                        | <strong>Bring-Back:</strong> <span className="text-ion-white">{g.bringBack}</span> |{" "}
-                        <strong>Sub-$4.5k Value Filler:</strong> <span className="text-ion-white">{g.valueFiller}</span>
-                        <div className="mt-0.5 text-[10px] text-ion-2">
-                          Sim Correlation Thesis: {g.correlationTheme}
-                        </div>
-                        <div className="mt-1.5 border border-mineral/40 bg-carbon p-2 font-mono text-[10px] text-ion-1">
-                          <span className="text-emerald-400">CONSTRUCTED 9-MAN LINEUP SHELL ($49,900 / $50,000 Cap · 95th-Pct Sim Ceiling: 198.4 pts):</span>{" "}
-                          QB: {g.primaryStack.qb} · RB1: {w.dfsStacks?.cashCore[0]?.player || "Lead RB1"} · RB2: {g.valueFiller} · WR1: {g.primaryStack.passCatchers[0]} · WR2: {g.primaryStack.passCatchers[1] || "WR2"} · WR3: {g.bringBack} · TE: Correlation TE · FLEX: N_eff Leverage · DST: Correlated Rush-Floor DST
-                        </div>
+                  {/* Official Side & Total */}
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
+                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                        BEST SPREAD BET
                       </div>
-                    ))}
+                      <div className="mt-1 text-lg font-bold text-white">
+                        {sideIsPass ? "PASS — Market Efficient" : w.sideTotalCall.sideSelection}
+                      </div>
+                      <div className="mt-2 text-xs font-semibold text-emerald-300">
+                        Confidence: {formatConfidenceStrict(w.sideTotalCall.sideConfidence)}
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
+                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                        BEST TOTAL BET
+                      </div>
+                      <div className="mt-1 text-lg font-bold text-white">
+                        {totalIsPass ? "PASS — Market Efficient" : w.sideTotalCall.totalSelection}
+                      </div>
+                      <div className="mt-2 text-xs font-semibold text-emerald-300">
+                        Confidence: {formatConfidenceStrict(w.sideTotalCall.totalConfidence)}
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {/* Plain-English Rationale */}
+                  <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                      WHY BET THIS:
+                    </div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-200">
+                      {w.sideTotalCall.rationale}
+                    </p>
+                  </div>
+
+                  {/* Best Player Props */}
+                  {w.topProps.length > 0 && (
+                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
+                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                        BEST PLAYER PROPS
+                      </div>
+                      <div className="mt-2 space-y-2">
+                        {w.topProps.map((p, idx) => {
+                          const propIsPass = String(p.decision) === "PASS";
+                          return (
+                            <div
+                              key={`${p.playerId}-${p.propType}-${idx}`}
+                              className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/70 pb-2 last:border-b-0 last:pb-0 text-sm"
+                            >
+                              <span className="font-bold text-white">
+                                {propIsPass
+                                  ? `${p.playerName} — PASS — Market Efficient (${p.propType})`
+                                  : `${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
+                              </span>
+                              <span className="text-xs font-semibold text-emerald-300">
+                                Confidence: {formatConfidenceStrict(p.confidence)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Correlated Same-Game Parlay */}
+                  {w.correlatedSgpTicket && (
+                    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                          {w.correlatedSgpTicket.title}
+                        </span>
+                        <span className="text-xs font-bold text-white">
+                          Book Odds {w.correlatedSgpTicket.marketOdds} (Fair Odds {w.correlatedSgpTicket.fairOdds})
+                        </span>
+                      </div>
+                      <ul className="mt-2 space-y-1 text-sm text-slate-200">
+                        {w.correlatedSgpTicket.legs.map((leg, idx) => (
+                          <li key={idx}>
+                            • {leg.description} (Confidence: {formatConfidenceStrict(leg.confidence)})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
-        {/* Inline Receipt / Whop Token Verification Drawer */}
+        {/* Inline Receipt Verification Drawer */}
         {!isUnlocked && showTokenBox && (
-          <div className="mt-3 border border-mineral bg-carbon p-3">
-            <label className="block font-mono text-[10px] uppercase text-ion-2">
-              Instant In-Place Reveal (Paste Stripe Session ID or Whop Membership Key)
+          <div className="mt-3 rounded-lg border border-slate-700 bg-slate-800 p-4">
+            <label className="block text-xs font-bold uppercase text-slate-200">
+              Enter Your Stripe Receipt ID for Instant Access
             </label>
-            <div className="mt-1.5 flex gap-2">
+            <div className="mt-2 flex gap-2">
               <input
                 type="text"
                 value={tokenInput}
                 onChange={(e) => setTokenInput(e.target.value)}
-                placeholder="cs_live_... or whop_..."
-                className="flex-1 border border-mineral bg-eclipse px-2.5 py-1.5 font-mono text-xs text-ion-white focus:border-plasma focus:outline-none"
+                placeholder="cs_live_..."
+                className="flex-1 rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
               />
               <button
                 type="button"
                 disabled={loadingUnlock}
                 onClick={() => void handleInlineVerify()}
-                className="btn-primary px-3.5 py-1.5 font-mono text-xs font-semibold"
+                className="rounded-md bg-amber-500 hover:bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950"
               >
-                {loadingUnlock ? "Checking..." : "Reveal"}
+                {loadingUnlock ? "Checking..." : "Unlock"}
               </button>
             </div>
           </div>
         )}
 
         {errorMsg && (
-          <p className="mt-2 font-mono text-[11px] text-amber-400">{errorMsg}</p>
+          <p className="mt-2 text-xs font-semibold text-amber-400">{errorMsg}</p>
         )}
       </div>
 
-      {/* Footer Links */}
-      <div className="mt-4 flex items-center justify-between border-t border-mineral/50 pt-3 font-mono text-[11px]">
+      {/* Footer Link */}
+      <div className="mt-5 flex items-center justify-between border-t border-slate-800 pt-4 text-xs font-semibold">
         <Link
           href={`/packages/${pkg.slug}`}
-          className="text-ion-1 hover:text-plasma transition-colors"
+          className="text-amber-400 hover:text-amber-300 transition-colors"
         >
-          Open Full Slate Dossier →
+          View Full Game Breakdown &amp; Pick Details →
         </Link>
-        <a
-          href="https://t.me/GalaxySportsEdge_bot"
-          target="_blank"
-          rel="noreferrer"
-          className="text-plasma hover:underline"
-        >
-          @GalaxySportsEdge_bot VIP
-        </a>
+        <span className="text-slate-400">Instant On-Screen Access</span>
       </div>
     </div>
   );

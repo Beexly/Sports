@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -10,10 +9,6 @@ import { FieldHeroCanvas } from "@/components/landing/field-hero-canvas";
 import { FieldBoardTicker } from "@/components/landing/field-board-ticker";
 import { FieldRecordPanel } from "@/components/landing/field-record-panel";
 import { DoorCard } from "@/components/landing/door-card";
-import {
-  NflverseLabDoor,
-  NflverseLabDoorPlaceholder,
-} from "@/components/landing/nflverse-lab-door";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
@@ -190,7 +185,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <FieldBoardTicker items={tickerItems} />
 
-        {/* 5-PILLAR REVENUE & T-48H PROJECTIONS SECTION */}
+        {/* GALAXY PICKS & DFS STOREFRONT SECTION */}
         <section
           id="revenue-pillars"
           data-testid="five-pillar-revenue-section"
@@ -201,10 +196,10 @@ export default async function HomePage(): Promise<JSX.Element> {
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mineral pb-6">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-                    5-Pillar Architecture · T-48h Intelligence
+                    Galaxy Picks (Pay-Per-Slate Packs) · DFS Optimizer
                   </p>
                   <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                    Five Ways In. Zero Noise. Calibrated Commercial Value.
+                    Plain-English Football Picks Backed by 10,000 Game Simulations
                   </h2>
                 </div>
                 <Link
@@ -218,71 +213,71 @@ export default async function HomePage(): Promise<JSX.Element> {
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <Link
-                href="/picks"
+                href="/packages"
                 className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
                     <span className="text-plasma">01</span>
                     <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      LIVE PICKS
+                      GALAXY PICKS
                     </span>
                   </div>
                   <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    Today&apos;s Picks
+                    GALAXY PICKS (PAID)
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    Calibrated side &amp; total signals with strictly positive CLV and verified receipts.
+                    Our highest-confidence spread and total bets with plain-English explanations and verified receipts.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
-                  Open Picks →
+                  Open Galaxy Picks →
                 </span>
               </Link>
 
               <Link
-                href="/fantasy/props"
+                href="/packages#slate-dossiers"
                 className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
                     <span className="text-plasma">02</span>
                     <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      N_EFF PROPS
+                      SLATE DOSSIERS
                     </span>
                   </div>
                   <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    Player Props Lab
+                    Week 8 Game Dossiers
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    N_eff usage volume models, first-read metrics, and Underdog / PrizePicks edges.
+                    Simple, clear game-by-game breakdowns showing why each matchup favors our side, total, and player props.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
-                  Open Props →
+                  Open Game Dossiers →
                 </span>
               </Link>
 
               <Link
-                href="/sgp-projections"
+                href="/packages"
                 className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
                     <span className="text-plasma">03</span>
                     <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      CORRELATION
+                      SAME-GAME PARLAYS
                     </span>
                   </div>
                   <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    SGP Projections
+                    Correlated SGP Packs
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    Joint distribution modeling exposing bookmakers&apos; 15-30% same-game parlay hold.
+                    3-leg Same-Game Parlays built from plays that naturally help each other hit in the same game script.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
-                  Open SGP →
+                  Open SGP Packs →
                 </span>
               </Link>
 
@@ -301,7 +296,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     DFS Writeups &amp; Lineups
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    Coach-mind-first game environment writeups, tactical scheme funnels, N_eff usage scaling, and 10,000-sim constructed cash &amp; 20-max GPP lineups.
+                    Plain-English game environment writeups and ready-to-play cash and tournament DFS lineups.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
@@ -324,7 +319,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     Instant Packages
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    Galaxy Picks with instant Stripe checkout and Telegram delivery.
+                    Buy individual slates with no subscription required and unlock every pick immediately on your screen.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
@@ -333,68 +328,32 @@ export default async function HomePage(): Promise<JSX.Element> {
               </Link>
             </div>
 
-            {/* WAGERTALK-STYLE A-LA-CARTE SLATE PACKAGES & INSTANT CHECKOUT BRICKS ON HOMEPAGE */}
+            {/* A-LA-CARTE SLATE PACKAGES & INSTANT CHECKOUT BRICKS ON HOMEPAGE */}
             <div className="mt-12 border-t border-mineral pt-10" data-testid="homepage-wagertalk-storefront">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-                    Galaxy Picks · Week 8 dossiers
+                    Galaxy Picks · Pay-Per-Slate Packs
                   </p>
                   <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white">
-                    Live Slate Packages &amp; Guaranteed Cards
+                    Pick Your Slate. See Why We Like the Bet. Unlock Instantly.
                   </h3>
-                  <p className="mt-1 text-xs text-ion-1">
-                    Buy individual slates with zero subscription. Free Pace-of-Play &amp; Scheme Teasers below: Official Sides, Totals, N_eff Props, Correlated SGPs &amp; 20-Max DFS Lineups unlock immediately upon Stripe or Whop checkout + @GalaxySportsEdge_bot VIP delivery.
+                  <p className="mt-1 text-sm text-ion-1">
+                    Read our free game preview on every card below. When you unlock a pack, your official spread bet, total bet, player props, and Same-Game Parlay appear right on this screen.
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <a
-                    href="https://t.me/GalaxySportsEdge_bot"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 border border-plasma/40 bg-plasma/10 px-3.5 py-2 text-xs font-mono text-plasma hover:bg-plasma/20 transition-colors"
-                  >
-                    <span className="h-2 w-2 rounded-full bg-plasma animate-pulse" />
-                    @GalaxySportsEdge_bot VIP
-                  </a>
                   <Link
                     href="/packages"
-                    className="inline-flex items-center border border-mineral bg-carbon px-3.5 py-2 text-xs font-mono text-ion-1 hover:border-plasma hover:text-ion-white"
+                    className="inline-flex items-center border border-mineral bg-carbon px-4 py-2 text-xs font-mono text-ion-1 hover:border-plasma hover:text-ion-white"
                   >
-                    Full Storefront ({LIVE_PACKAGE_CATALOG.length} Packs) →
+                    View All {LIVE_PACKAGE_CATALOG.length} Slate Packs →
                   </Link>
                 </div>
               </div>
 
-              {/* Free Pace-of-Play & Scheme Matchup Teasers (with Strict Lock Redaction) */}
-              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((w) => (
-                  <Link
-                    key={w.id}
-                    href="/packages"
-                    className="group border border-mineral/60 bg-carbon/90 p-4 transition-colors hover:border-plasma"
-                  >
-                    <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-plasma uppercase">{w.windowSlot}</span>
-                      <span className="text-ion-2">
-                        {w.paceOfPlay.neutralSecPerSnap}s/snap · {(w.paceOfPlay.noHuddleRate * 100).toFixed(1)}% no-huddle
-                      </span>
-                    </div>
-                    <div className="mt-1.5 text-sm font-semibold text-ion-white group-hover:text-plasma">
-                      {w.matchup}
-                    </div>
-                    <p className="mt-1.5 text-xs text-ion-1 line-clamp-2">
-                      {w.schemeMatchup.coverageShell}
-                    </p>
-                    <div className="mt-3 border-t border-mineral/40 pt-2 font-mono text-[10px] text-plasma">
-                      🔒 {w.sideTotalCall.sideConfidence} Side + {w.topProps.length} Props + 3-Leg SGP Inside
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
               {/* Galaxy Picks paywall cards */}
-              <div className="mt-6 grid gap-6 lg:grid-cols-3">
+              <div className="mt-6 grid gap-6 lg:grid-cols-2">
                 {LIVE_PACKAGE_CATALOG.map((pkg) => (
                   <PaywallRevealCard
                     key={pkg.slug}
@@ -424,42 +383,51 @@ export default async function HomePage(): Promise<JSX.Element> {
             <div className="mt-10 grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
               <DoorCard
                 index={1}
-                label="Board"
+                label="Board · GALAXY PICKS (PAID)"
                 decides="Every game we scored today, and what we decided."
                 stat={
                   boardUnavailable
                     ? "Board temporarily unavailable"
                     : cleared > 0 || gated > 0
                       ? `${cleared} picks · ${gated} passes`
-                      : "Quiet slate. Nothing forced."
+                      : "Gate holding · Quiet slate."
                 }
-                action="Open the board"
-                href="/board"
+                action="Open Galaxy Picks"
+                href="/packages"
                 bar={boardUnavailable ? undefined : { a: cleared, b: gated }}
               />
-              <Suspense fallback={<NflverseLabDoorPlaceholder />}>
-                <NflverseLabDoor />
-              </Suspense>
+              <DoorCard
+                index={2}
+                label="Week 8 Slate Dossiers"
+                decides="Full-game tactical writeups, pace telemetry, and correlated SGPs."
+                stat={
+                  LIVE_SLATE_COACH_WRITEUPS.length > 0
+                    ? `${LIVE_SLATE_COACH_WRITEUPS.length} Week 8 game dossiers`
+                    : "Intake warming up"
+                }
+                action="Open Slate Dossiers"
+                href="/packages#slate-dossiers"
+              />
               <DoorCard
                 index={3}
-                label="Intelligence"
-                decides="Why the engine reads a game the way it does."
+                label="Fantasy & Daily · DFS"
+                decides="Coach-mind-first DFS game writeups and 10,000-sim lineups."
+                stat={`${scoring > 0 ? `${scoring} scoring now · ` : ""}DFS Optimizer & Stacks`}
+                action="Open DFS Writeups"
+                href="/fantasy/dfs"
+              />
+              <DoorCard
+                index={4}
+                label="Intelligence & Pricing"
+                decides="Why the engine reads a game the way it does, and how to unlock it."
                 stat={
                   settled > 0
                     ? `Graded on ${settled} settled picks`
                     : "Calibration sample building"
                 }
-                action="Open the engines"
-                href="/intelligence/engines"
+                action="See Pricing"
+                href="/pricing"
                 accent
-              />
-              <DoorCard
-                index={4}
-                label="Fantasy & Daily"
-                decides="Start-sit, waivers, trades and DFS, in one read."
-                stat={`${scoring > 0 ? `${scoring} scoring now · ` : ""}Season + daily tools`}
-                action="Open the tools"
-                href="/fantasy"
               />
             </div>
             {/* The live-counts line is a real operational readout. During a

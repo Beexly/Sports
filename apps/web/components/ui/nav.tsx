@@ -23,19 +23,18 @@ export interface RevenuePillar {
  * Exact routes representing core commercial and tactical value streams.
  */
 export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
-  { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "Paid Week 8 dossiers" },
-  { label: "Game Dossiers", href: "/packages#slate-dossiers", desc: "TNF and Sunday game cards" },
-  { label: "DFS", href: "/fantasy/dfs", desc: "Optimizer and stacks" },
-  { label: "Pricing", href: "/pricing", desc: "All-access pricing" },
-  { label: "VIP Telegram", href: "https://t.me/GalaxySportsEdge_bot", desc: "Unlock channel" },
+  { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "This Week's Football Betting Packs" },
+  { label: "Tonight's TNF Pack", href: "/packages#tnf-all-in-pack", desc: "Carolina @ Green Bay Full Pack" },
+  { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday Best Bets Pack" },
+  { label: "DFS", href: "/fantasy/dfs", desc: "Daily Fantasy Lineup Optimizer" },
+  { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Week 8 All-Access Pass" },
 ];
 
 export const COMMERCIAL_REVENUE_PILLARS = FIVE_REVENUE_PILLARS;
 
 /**
  * NavChrome — the shared static shell of the global bar: brand lockup and
- * the four top-bar doors on the left, the caller's right rail in the slot,
- * and the prominent 5-Pillar live revenue bar.
+ * the top-bar doors on the left, the caller's right rail in the slot.
  */
 function NavChrome({ right }: { readonly right: ReactNode }) {
   return (
@@ -46,32 +45,29 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
 
           <nav className="nav-links" aria-label="Primary">
             <a href="/packages">GALAXY PICKS (PAID)</a>
-            <a href="/packages#slate-dossiers">Game Dossiers</a>
             <a href="/fantasy/dfs">DFS</a>
-            <a href="/pricing">Pricing</a>
-            <a href="https://t.me/GalaxySportsEdge_bot">VIP Telegram</a>
           </nav>
         </div>
 
         {right}
       </div>
 
-      {/* 5-Pillar Live Revenue Sub-Bar */}
+      {/* Live Quick-Jump Bar */}
       <div
-        className="nav-pillars-bar border-t border-mineral/30 bg-carbon/95 py-1.5"
+        className="nav-pillars-bar border-t border-slate-800 bg-slate-950 py-2"
         data-testid="five-revenue-pillars-bar"
       >
         <div className="container flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 font-mono text-[11px] text-plasma uppercase tracking-wider">
-            <span className="h-1.5 w-1.5 rounded-full bg-plasma animate-pulse" />
-            <span className="hidden sm:inline">5 Pillars:</span>
+          <div className="flex items-center gap-2 font-mono text-xs font-semibold text-amber-400 uppercase tracking-wider">
+            <span className="h-2 w-2 rounded-full bg-amber-400" />
+            <span className="hidden sm:inline">Quick Jump:</span>
           </div>
-          <nav className="flex items-center gap-3 sm:gap-6 font-mono text-[11px]" aria-label="Five Revenue Pillars">
+          <nav className="flex items-center gap-4 sm:gap-6 font-sans text-xs font-medium" aria-label="Five Revenue Pillars">
             {FIVE_REVENUE_PILLARS.map((pillar) => (
               <a
                 key={pillar.href}
                 href={pillar.href}
-                className="text-ion-1 hover:text-plasma transition-colors"
+                className="text-slate-200 hover:text-amber-400 transition-colors"
                 title={pillar.desc}
               >
                 {pillar.label}

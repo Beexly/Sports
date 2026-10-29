@@ -1,14 +1,20 @@
 /**
- * FantasyShell — the shared cinematic wrapper for every Galaxy Fantasy tool page.
- * Nav + Atmosphere + a branded hero + the tool + an illustrative-data note + Footer.
+ * FantasyShell — the shared cinematic wrapper for the public DFS & Galaxy Picks surface.
+ * Exposes only DFS Optimizer & Writeups (/fantasy/dfs) and GALAXY PICKS (PAID) (/packages).
  */
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { ProjectionsBadge, type ProjectionsPool } from "@/components/integrations/projections-badge";
+
+export const FANTASY_SHELL_TABS = [
+  { label: "DFS Optimizer & Writeups", href: "/fantasy/dfs" },
+  { label: "GALAXY PICKS (PAID)", href: "/packages" },
+] as const;
 
 /**
  * Semantic accent names → design-token classes/vars (styles/design-tokens.css).
@@ -82,6 +88,23 @@ export function FantasyShell({
                 </div>
               </Reveal>
             )}
+            <Reveal delay={260}>
+              <nav
+                aria-label="DFS and Galaxy Picks Navigation"
+                data-testid="fantasy-shell-nav"
+                className="mt-6 flex flex-wrap items-center gap-2 border-t border-mineral/60 pt-4"
+              >
+                {FANTASY_SHELL_TABS.map((tab) => (
+                  <Link
+                    key={tab.href}
+                    href={tab.href}
+                    className="inline-flex items-center border border-mineral bg-eclipse px-4 py-2 font-mono text-xs font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
+                  >
+                    {tab.label}
+                  </Link>
+                ))}
+              </nav>
+            </Reveal>
           </div>
         </section>
 

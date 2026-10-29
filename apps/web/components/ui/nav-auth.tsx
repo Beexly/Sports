@@ -35,21 +35,13 @@ export function shouldShowLiveBoardChip(): boolean {
 export async function NavAuth() {
   const session = await auth().catch(() => null);
   const user = session?.user ?? null;
-  const showLiveBoard = shouldShowLiveBoardChip();
 
   return (
     <div className="nav-right">
-      {showLiveBoard ? (
-        <span className="live-chip" data-testid="nav-live-chip">
-          <span className="dot" />
-          Live Board
-        </span>
-      ) : null}
-
       <div className="desktop-auth">
         {user ? (
           <Link
-            href="/dashboard"
+            href="/packages"
             className="btn btn-ghost btn-sm"
             style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
           >
@@ -95,8 +87,8 @@ export async function NavAuth() {
             <Link href="/auth/signin" className="btn btn-ghost btn-sm">
               Sign in
             </Link>
-            <Link href="/pricing" className="btn btn-primary btn-sm">
-              See plans
+            <Link href="/packages" className="btn btn-primary btn-sm">
+              Get Today&apos;s Picks
             </Link>
           </>
         )}
@@ -109,30 +101,17 @@ export async function NavAuth() {
 
 /**
  * NavAuthFallback — shown by Suspense while NavAuth resolves auth().
- *
- * Mirrors the anonymous state (sign-in / pricing links) so a static page
- * never renders an empty nav-right while auth() is in flight. The
- * mobile-nav trigger is always present regardless of auth state.
  */
 export function NavAuthFallback() {
-  const showLiveBoard = shouldShowLiveBoardChip();
-
   return (
     <div className="nav-right">
-      {showLiveBoard ? (
-        <span className="live-chip" data-testid="nav-live-chip">
-          <span className="dot" />
-          Live Board
-        </span>
-      ) : null}
-
       <div className="desktop-auth">
         <>
           <Link href="/auth/signin" className="btn btn-ghost btn-sm">
             Sign in
           </Link>
-          <Link href="/pricing" className="btn btn-primary btn-sm">
-            See plans
+          <Link href="/packages" className="btn btn-primary btn-sm">
+            Get Today&apos;s Picks
           </Link>
         </>
       </div>
