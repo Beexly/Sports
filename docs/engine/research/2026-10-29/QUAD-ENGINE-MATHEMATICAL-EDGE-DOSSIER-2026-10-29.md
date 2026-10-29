@@ -1,6 +1,6 @@
 # QUAD-ENGINE MATHEMATICAL EDGE & FORMULA SYNTHESIS DOSSIER — 2026-10-29
 
-- **Generated At:** `2026-10-29T06:58:40Z`
+- **Generated At:** `2026-10-29T09:36:30Z`
 - **Quad-Engine Live Sources Queried:** `OpenAlex API` + `arXiv Atom API` + `Hugging Face Hub API` + `Kaggle API/BDB2027`
 - **Empirical Validation Dataset:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) joined with `18,019` FTN charting plays (`ftn_charting_2026.parquet`) and `18,738` participation rows (`pbp_participation_2026_reconstructed.parquet`)
 

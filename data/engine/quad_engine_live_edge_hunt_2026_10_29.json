@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T06:58:40Z",
+  "generated_at": "2026-10-29T09:36:30Z",
   "season": 2026,
   "weeks_evaluated": [
     1,
@@ -169,9 +169,9 @@
   ],
   "live_harvest_counts": {
     "OPENALEX": 19,
-    "ARXIV": 4,
+    "ARXIV": 18,
     "HUGGINGFACE": 14,
-    "KAGGLE": 3
+    "KAGGLE": 23
   },
   "live_harvest_samples": {
     "openalex": [
@@ -287,23 +287,99 @@
     "arxiv": [
       {
         "engine": "ARXIV",
+        "id": "ARXIV:2011.06014v1",
+        "title": "Football tracking networks: Beyond event-based connectivity",
+        "published": "2020-11-11T19:04:32Z",
         "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
-        "status": "cached_fallback (HTTPError)"
+        "abstract_snippet": "We propose using Network Science as a complementary tool to analyze player and team behavior during a football match. Specifically, we introduce four kinds of networks based on different ways of interaction between players. Our approach's main novelty is to use tracking datasets to create football tracking networks, instead of constructing and analyzing the "
       },
       {
         "engine": "ARXIV",
+        "id": "ARXIV:2202.00804v3",
+        "title": "Automatic event detection in football using tracking data",
+        "published": "2022-02-01T23:20:40Z",
+        "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
+        "abstract_snippet": "One of the main shortcomings of event data in football, which has been extensively used for analytics in the recent years, is that it still requires manual collection, thus limiting its availability to a reduced number of tournaments. In this work, we propose a deterministic decision tree-based algorithm to automatically extract football events using trackin"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2511.09455v1",
+        "title": "Hand Held Multi-Object Tracking Dataset in American Football",
+        "published": "2025-11-12T16:15:18Z",
+        "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
+        "abstract_snippet": "Multi-Object Tracking (MOT) plays a critical role in analyzing player behavior from videos, enabling performance evaluation. Current MOT methods are often evaluated using publicly available datasets. However, most of these focus on everyday scenarios such as pedestrian tracking or are tailored to specific sports, including soccer and basketball. Despite the "
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2512.08467v1",
+        "title": "Team-Aware Football Player Tracking with SAM: An Appearance-Based Approach to Occlusion Recovery",
+        "published": "2025-12-09T10:40:17Z",
+        "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
+        "abstract_snippet": "Football player tracking is challenged by frequent occlusions, similar appearances, and rapid motion in crowded scenes. This paper presents a lightweight SAM-based tracking method combining the Segment Anything Model (SAM) with CSRT trackers and jersey color-based appearance models. We propose a team-aware tracking system that uses SAM for precise initializa"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:1906.01760v3",
+        "title": "Going Deep: Models for Continuous-Time Within-Play Valuation of Game Outcomes in American Football with Tracking Data",
+        "published": "2019-06-05T00:21:48Z",
+        "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
+        "abstract_snippet": "Continuous-time assessments of game outcomes in sports have become increasingly common in the last decade. In American football, only discrete-time estimates of play value were possible, since the most advanced public football datasets were recorded at the play-by-play level. While measures such as expected points and win probability are useful for evaluatin"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2311.14642v1",
+        "title": "Continuous football player tracking from discrete broadcast data",
+        "published": "2023-11-24T18:16:28Z",
+        "query": "all:football AND (all:tracking OR all:Markov OR all:Kalman)",
+        "abstract_snippet": "Player tracking data remains out of reach for many professional football teams as their video feeds are not sufficiently high quality for computer vision technologies to be used. To help bridge this gap, we present a method that can estimate continuous full-pitch tracking data from discrete data made from broadcast footage. Such data could be collected by cl"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2504.12266v1",
+        "title": "Semiparametric Dynamic Copula Models for Portfolio Optimization",
+        "published": "2025-04-16T17:27:52Z",
         "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
-        "status": "cached_fallback (HTTPError)"
+        "abstract_snippet": "The mean-variance portfolio model, based on the risk-return trade-off for optimal asset allocation, remains foundational in portfolio optimization. However, its reliance on restrictive assumptions about asset return distributions limits its applicability to real-world data. Parametric copula structures provide a novel way to overcome these limitations by acc"
       },
       {
         "engine": "ARXIV",
-        "query": "all:conformal AND all:calibration AND all:probability",
-        "status": "cached_fallback (HTTPError)"
+        "id": "ARXIV:2504.00138v2",
+        "title": "Bayesian nonparametric copulas with tail dependence",
+        "published": "2025-03-31T18:45:45Z",
+        "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
+        "abstract_snippet": "We introduce a novel bivariate copula model able to capture both the central and tail dependence of the joint probability distribution. Model that can capture the dependence structure within the joint tail have important implications in many application areas where the focus is risk management (e.g. macroeconomics and finance). We use a Bayesian nonparametri"
       },
       {
         "engine": "ARXIV",
-        "query": "all:Hawkes AND all:point AND all:process AND all:sports",
-        "status": "cached_fallback (HTTPError)"
+        "id": "ARXIV:2501.00634v2",
+        "title": "Copula Central Asymmetry of Equity Portfolios",
+        "published": "2024-12-31T20:18:21Z",
+        "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
+        "abstract_snippet": "Financial crises are usually associated with increased cross-sectional dependence between asset returns, causing asymmetry between the lower and upper tail of return distribution. The detection of asymmetric dependence is now understood to be essential for market supervision, risk management, and portfolio allocation. I propose a non-parametric test procedur"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2604.23087v1",
+        "title": "Beyond Picking Winners: Correlation-Driven Tail Risk in Venture Capital Portfolio Construction",
+        "published": "2026-04-25T00:45:40Z",
+        "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
+        "abstract_snippet": "We propose a Gaussian-copula-based framework that learns deal-level dependence directly from observed joint success frequencies across founder, geography, and market attributes. Holding marginal deal success probabilities fixed, deal-level correlation preserves expected portfolio outcomes but shifts the portfolio distribution toward heavier right tails and h"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2411.06640v1",
+        "title": "Portfolio credit risk with Archimedean copulas: asymptotic analysis and efficient simulation",
+        "published": "2024-11-11T00:37:12Z",
+        "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
+        "abstract_snippet": "In this paper, we study large losses arising from defaults of a credit portfolio. We assume that the portfolio dependence structure is modelled by the Archimedean copula family as opposed to the widely used Gaussian copula. The resulting model is new, and it has the capability of capturing extremal dependence among obligors. We first derive sharp asymptotics"
+      },
+      {
+        "engine": "ARXIV",
+        "id": "ARXIV:2610.08799v1",
+        "title": "Explicit Finite-Sum Tail Risk Measures for Hierarchical Market--Credit Copula Aggregation",
+        "published": "2026-07-15T12:06:06Z",
+        "query": "all:copula AND all:tail AND all:dependence AND all:portfolio",
+        "abstract_snippet": "Hierarchical copula models are widely used for aggregating market and credit risks across multi-level portfolio structures. Existing approaches often rely on Monte Carlo simulation, recursive sample reordering, or high-dimensional numerical procedures. This paper develops an analytical framework for hierarchical copula aggregation based on explicit finite-su"
       }
     ],
     "huggingface": [
@@ -395,18 +471,99 @@
     "kaggle": [
       {
         "engine": "KAGGLE",
-        "query": "nfl big data bowl",
-        "status": "cached_fallback (HTTPError)"
+        "id": "KAGGLE:tombliss/nfl-big-data-bowl-2021-bonus",
+        "title": "Nfl Big Data Bowl 2021 Bonus",
+        "downloadCount": 646,
+        "voteCount": 11,
+        "query": "nfl big data bowl"
       },
       {
         "engine": "KAGGLE",
-        "query": "nfl play by play",
-        "status": "cached_fallback (HTTPError)"
+        "id": "KAGGLE:aryashah2k/beginners-sports-analytics-nfl-dataset",
+        "title": "Beginners Sports Analytics NFL Dataset",
+        "downloadCount": 4277,
+        "voteCount": 30,
+        "query": "nfl big data bowl"
       },
       {
         "engine": "KAGGLE",
-        "query": "nfl betting odds",
-        "status": "cached_fallback (HTTPError)"
+        "id": "KAGGLE:mathurinache/nflbigdatabowl2021-feather-files",
+        "title": "nfl-big-data-bowl-2021 Feather files",
+        "downloadCount": 496,
+        "voteCount": 10,
+        "query": "nfl big data bowl"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:dott1718/nfl-big-data-bowl-expected-yards",
+        "title": "NFL Big Data Bowl + expected Yards",
+        "downloadCount": 137,
+        "voteCount": 11,
+        "query": "nfl big data bowl"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:jpmiller/nfl-competition-data",
+        "title": "\ud83c\udfc8 NFL Stats for BDB 2024 and Fantasy Football",
+        "downloadCount": 2477,
+        "voteCount": 24,
+        "query": "nfl big data bowl"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:ryanadamsai/weaponxnfl",
+        "title": "NFL Big Data Bowl 2026 - Weapon X",
+        "downloadCount": 28,
+        "voteCount": 2,
+        "query": "nfl big data bowl"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:robikscube/nfl-big-data-bowl-2021-pp",
+        "title": "nfl big data bowl 2021 pp",
+        "downloadCount": 86,
+        "voteCount": 8,
+        "query": "nfl big data bowl"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:charliezimmerman/nfl-play-data-2010-2020",
+        "title": "NFL Play Data 2010 - 2020",
+        "downloadCount": 262,
+        "voteCount": 6,
+        "query": "nfl big data bowl"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:maxhorowitz/nflplaybyplay2009to2016",
+        "title": "Detailed NFL Play-by-Play Data 2009-2018",
+        "downloadCount": 58292,
+        "voteCount": 773,
+        "query": "nfl play by play"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:maxhorowitz/nflplaybyplay2015",
+        "title": "Detailed NFL Play-by-Play Data 2015",
+        "downloadCount": 4424,
+        "voteCount": 77,
+        "query": "nfl play by play"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:toddsteussie/nfl-play-statistics-dataset-2004-to-present",
+        "title": "NFL Play Statistics dataset (primary)",
+        "downloadCount": 5370,
+        "voteCount": 90,
+        "query": "nfl play by play"
+      },
+      {
+        "engine": "KAGGLE",
+        "id": "KAGGLE:benbaldwin/nflfastr",
+        "title": "nflfastr",
+        "downloadCount": 450,
+        "voteCount": 7,
+        "query": "nfl play by play"
       }
     ]
   },

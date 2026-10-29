@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 33`
+- **CYCLE_ROUND:** `Round 34`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -402,35 +402,25 @@ Rush yards per carry and yards per pass attempt. Pass attempts include incomplet
 - Green Bay rush: 3.362 on 94 early, 2.767 on 43 late. Change -0.595. Yards per attempt: 6.923 on 196 to 5.833 on 90. Change -1.090. Both fell. Not a side.
 - Quad harvest: none.
 
+## Round 34 — 2026-10-29 04:38 CT
+
+Touchdown rate on pass and run plays. A score is `pass_touchdown` or `rush_touchdown`. Field goals are not in this rate. Cards not changed.
+
+- League: 399/9,693 early (0.0412), 132/3,486 late (0.0379). Slightly down. Not a weight.
+- Carolina: 13/265 early (0.0491), 5/127 late (0.0394). Five late touchdowns. The rate dipped. The count is too small for a total. Not a side.
+- Green Bay: 12/290 early (0.0414), 4/133 late (0.0301). Four late touchdowns. Not a side.
+- Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
 
 
+## Harvest fix — 2026-10-29 04:38 CT
 
+Harvester defect found and fixed. The four-engine live harvest was failing silently on two of its four engines. Cards not changed. No side promoted.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- What the rounds reported: "Quad harvest: none" in every round since the 01:58 CT harvest. That line was stale, not true.
+- What the 01:58 CT JSON actually held: 19 OpenAlex, 14 HuggingFace, but arXiv 4/4 and Kaggle 3/3 were `cached_fallback (HTTPError)` records, not results. The harvester caught the exception and kept going, so the run looked healthy.
+- Root cause: `sortBy=Relevance`. The arXiv Atom API accepts only the lowercase enum value. Probed directly at 04:30 CT: no `sortBy` -> HTTP 200; `sortBy=Relevance` -> HTTP 400 Bad Request; `sortBy=relevance` -> HTTP 200. Every arXiv query since the script was written returned 400 and fell back to cache.
+- Second defect: the fallback label kept only the exception class name, so a 400, a 429 and a timeout all rendered as the identical string "cached_fallback (HTTPError)". That is why 30 rounds could not tell a dead engine from a throttled one.
+- Fix: one word in `scripts/ops/quad_engine_live_edge_researcher.py` (`sortBy=relevance`) plus a `harvest_error_label()` helper that keeps the HTTP status code in the fallback record. Four call sites updated. Compile check passed.
+- Verification: reran the harvester at 09:36:30Z. Counts: OpenAlex 19, arXiv 18, HuggingFace 14, Kaggle 23 = 74 items, 0 fallbacks. arXiv now returns live papers ("Football tracking networks: Beyond event-based connectivity", "Team-Aware Football Player Tracking with SAM"). The earlier Kaggle HTTPError was transient; the same module call now returns 23 datasets live.
+- Quad harvest: 74 live items, up from 40 with 8 cached fallbacks. The "none" reading in rounds 1-30 should not be repeated.
+- Next action: run the harvester at the head of a round instead of quoting the previous count, and treat any `cached_fallback` record as a defect to chase, not a result.

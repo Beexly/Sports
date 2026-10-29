@@ -42,6 +42,20 @@ HEADERS = {
 }
 
 
+
+def harvest_error_label(e: Exception) -> str:
+    """Return a labelled error so a silent engine failure stays visible in the JSON.
+
+    A bare exception class name hides the reason: arXiv answers HTTP 400 when
+    sortBy is not lowercase and Kaggle answers 429 when throttled. Both used to
+    surface as the identical string "cached_fallback (HTTPError)", which is why
+    30 loop rounds reported "Quad harvest: none" while every arXiv query was in
+    fact failing. Keep the status code in the label.
+    """
+    if isinstance(e, urllib.error.HTTPError):
+        return f"HTTPError {e.code} {e.reason}"
+    return type(e).__name__
+
 def reconstruct_openalex_abstract(inv_idx: Dict[str, List[int]] | None) -> str:
     if not inv_idx or not isinstance(inv_idx, dict):
         return ""
@@ -86,7 +100,7 @@ def query_openalex_live(queries: List[str], per_query: int = 8) -> List[Dict[str
                         }
                     )
         except Exception as e:
-            discovered.append({"engine": "OPENALEX", "query": q, "status": f"cached_fallback ({type(e).__name__})"})
+            discovered.append({"engine": "OPENALEX", "query": q, "status": f"cached_fallback ({harvest_error_label(e)})"})
     return discovered
 
 
@@ -97,7 +111,7 @@ def query_arxiv_live(queries: List[str], max_results: int = 8) -> List[Dict[str,
     for q in queries:
         url = (
             f"http://export.arxiv.org/api/query?search_query={urllib.parse.quote(q)}"
-            f"&start=0&max_results={max_results}&sortBy=Relevance&sortOrder=descending"
+            f"&start=0&max_results={max_results}&sortBy=relevance&sortOrder=descending"
         )
         try:
             req = urllib.request.Request(url, headers=HEADERS)
@@ -123,7 +137,7 @@ def query_arxiv_live(queries: List[str], max_results: int = 8) -> List[Dict[str,
                         }
                     )
         except Exception as e:
-            discovered.append({"engine": "ARXIV", "query": q, "status": f"cached_fallback ({type(e).__name__})"})
+            discovered.append({"engine": "ARXIV", "query": q, "status": f"cached_fallback ({harvest_error_label(e)})"})
     return discovered
 
 
@@ -152,7 +166,7 @@ def query_huggingface_live(queries: List[str], limit: int = 8) -> List[Dict[str,
                             }
                         )
         except Exception as e:
-            discovered.append({"engine": "HUGGINGFACE", "query": q, "status": f"cached_fallback ({type(e).__name__})"})
+            discovered.append({"engine": "HUGGINGFACE", "query": q, "status": f"cached_fallback ({harvest_error_label(e)})"})
     return discovered
 
 
@@ -182,7 +196,7 @@ def query_kaggle_live(queries: List[str], page: int = 1) -> List[Dict[str, Any]]
                             }
                         )
         except Exception as e:
-            discovered.append({"engine": "KAGGLE", "query": q, "status": f"cached_fallback ({type(e).__name__})"})
+            discovered.append({"engine": "KAGGLE", "query": q, "status": f"cached_fallback ({harvest_error_label(e)})"})
     return discovered
 
 
@@ -641,6 +655,51 @@ def main() -> None:
             f"{p['qb_fault_sack_rate_pct']:.2f}% | **{p['n_eff_receivers']:.2f}** | "
             f"`{p['davies_load_multiplier']:.3f}x` | `{p['hawkes_tempo_branching_ratio']:.3f}` |"
         )
+
+    md.extend(
+        [
+            "",
+            "---",
+            "",
+            "## 4. Live Four-Engine Harvest (same run as the tables above)",
+            "",
+            "A `cached_fallback` row means the engine answered with an error and returned nothing. "
+            "Treat it as a defect to chase, not a result.",
+            "",
+            "| Engine | Items | Fallbacks |",
+            "|---|---:|---:|",
+        ]
+    )
+    for engine_key, engine_label in (
+        ("openalex", "OpenAlex"),
+        ("arxiv", "arXiv"),
+        ("huggingface", "Hugging Face"),
+        ("kaggle", "Kaggle"),
+    ):
+        rows = payload["live_harvest_samples"].get(engine_key) or []
+        fallbacks = sum(1 for r in rows if isinstance(r, dict) and "status" in r)
+        md.append(f"| {engine_label} | {len(rows)} | {fallbacks} |")
+    md.extend(["", "### Live titles returned this run", ""])
+    for engine_key, engine_label in (
+        ("arxiv", "arXiv"),
+        ("openalex", "OpenAlex"),
+        ("kaggle", "Kaggle"),
+        ("huggingface", "Hugging Face"),
+    ):
+        rows = [
+            r
+            for r in (payload["live_harvest_samples"].get(engine_key) or [])
+            if isinstance(r, dict) and "status" not in r
+        ]
+        if not rows:
+            continue
+        md.append(f"**{engine_label}**")
+        for r in rows[:5]:
+            title = " ".join(str(r.get("title") or r.get("id") or "").split())
+            ident = r.get("id") or ""
+            year = r.get("publication_year") or (str(r.get("published") or "")[:4]) or ""
+            md.append(f"- `{ident}` — {title}" + (f" ({year})" if year else ""))
+        md.append("")
 
     OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(md) + "\n", encoding="utf-8")
