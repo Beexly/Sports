@@ -1,6 +1,6 @@
 # 2026 NFL WEEK 8/9 — COMPLETE 5-STAGE ENGINE & JEV SNAP-BY-SNAP SLATE PACKET
 
-- **Generated:** `2026-10-29T19:47:44Z`
+- **Generated:** `2026-10-29T21:39:49Z`
 - **Data Provenance:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) + `18,019` charted play tendencies + `166` live JEV snaps (`typesafe/jev-1.14`) + `5-Stage GSE Engine Verdicts` (`nfl_2026_w8_five_stage_engine_verdicts.json`).
 
 ## 1. Sunday Week 9 Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)

@@ -1,0 +1,95 @@
+{
+  "report_type": "WEEKLY_CADENCE_TICK",
+  "game_slot": "TNF",
+  "phase": "INJURY_WEATHER_OVERLAY",
+  "version": "v2.5",
+  "cadence_window": {
+    "day": "Thu",
+    "ct_time": "16:30"
+  },
+  "metadata": {
+    "season": 2026,
+    "week": 8,
+    "timestamp_utc": "2026-10-29T21:39:27.697879+00:00",
+    "simulations_run": 10000,
+    "w1_w7_pbp_rows": 18738,
+    "w1_w7_ftn_rows": 18019,
+    "w1_w7_snap_rows": 9981
+  },
+  "outputs": [
+    "TOTALS_SPREADS",
+    "PLAYER_PROPS",
+    "CORRELATED_SGP"
+  ],
+  "simulation_summary": {
+    "iterations": 10000,
+    "engine": "GSE-CoachMind-v5.3.0-W1W7-10kSim",
+    "source_data": {},
+    "convergence_standard_error": 0.01,
+    "simulated_games": [
+      {
+        "game_id": "401873023",
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "window_slot": "TNF",
+        "scheme_notes": "Posted Line: GB -3.5 \u00b7 O/U 47.5 \u00b7 Sunday 1:00 PM ET \u00b7 Week 9 Spotlight \u2014 Official spread call, total call, and player prop picks are locked inside the pack.",
+        "side_selection": "Green Bay Packers -3.5",
+        "side_confidence": "61/100",
+        "side_expected_clv": 0.0862,
+        "total_selection": "UNDER 47.5",
+        "total_confidence": "58/100",
+        "total_expected_clv": 0.0562,
+        "edge_pct": 8.62,
+        "decision": "PLAY"
+      }
+    ],
+    "published_tickets_count": 1,
+    "published_tickets": [
+      {
+        "ticket_id": "TICK-2026-W8-401873023",
+        "game_id": "401873023",
+        "matchup": "Carolina Panthers @ Green Bay Packers",
+        "selection": "Green Bay Packers -3.5",
+        "total_selection": "UNDER 47.5",
+        "market": "spread",
+        "confidence_score": "61/100",
+        "edge_pct": 8.62,
+        "kelly_stake_pct": 0.03
+      }
+    ]
+  },
+  "publish_gate": {
+    "passes": true,
+    "reason": "1 of 1 games cleared book-last edge gate (max edge +8.62% from 10,000-sim W1-W7 engine)",
+    "checks": [
+      {
+        "name": "min_edge_pct",
+        "threshold": 1.2,
+        "observed": 8.62,
+        "pass": true
+      },
+      {
+        "name": "w1_w7_pbp_ftn_snaps_bound",
+        "rows_bound": 18738,
+        "agreement": "STRONG",
+        "pass": true
+      },
+      {
+        "name": "adverse_edge_suppression",
+        "status": "CLEAR",
+        "pass": true
+      }
+    ]
+  },
+  "ticket": {
+    "ticket_id": "TICK-2026-W8-401873023",
+    "game_id": "401873023",
+    "matchup": "Carolina Panthers @ Green Bay Packers",
+    "selection": "Green Bay Packers -3.5",
+    "total_selection": "UNDER 47.5",
+    "market": "spread",
+    "confidence_score": "61/100",
+    "edge_pct": 8.62,
+    "kelly_stake_pct": 0.03
+  },
+  "sha256_merkle": "aa5e06b5d797e2bee52575b23001883bb9ef7e87ff139bd65efe1520fd7a17f2"
+}
