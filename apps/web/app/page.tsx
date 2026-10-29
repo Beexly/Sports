@@ -301,7 +301,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     DFS Writeups &amp; Lineups
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    Full game-environment writeups, FTN scheme funnels, N_eff usage scaling, and constructed cash &amp; 20-max GPP lineups.
+                    Coach-mind-first game environment writeups, tactical scheme funnels, N_eff usage scaling, and 10,000-sim constructed cash &amp; 20-max GPP lineups.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">

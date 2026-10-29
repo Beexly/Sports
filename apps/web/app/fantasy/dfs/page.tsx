@@ -14,7 +14,7 @@ import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 export const metadata: Metadata = {
   title: "DFS Slate Writeup & 10,000-Sim Lineup Construction | Galaxy Sports Edge",
   description:
-    "Deep DFS slate writeups powered by 10,000 Monte Carlo game simulations, FTN scheme matchups, N_eff target concentration, pace-of-play telemetry, and correlated cash/GPP lineup construction.",
+    "Coach & Reasoning Mind First, Book Last. Deep DFS slate writeups powered by full-spectrum football intelligence, tactical scheme matchups, N_eff target concentration, pace-of-play telemetry, and 10,000-simulation cash and 20-max GPP lineup construction.",
   alternates: { canonical: "/fantasy/dfs" },
   robots: { index: false, follow: true },
 };
@@ -54,8 +54,8 @@ export default async function DfsSuitePage() {
     ? `NFL · ${slate.slateGames} game${slate.slateGames === 1 ? "" : "s"} in the window · measured through Week ${slate.measuredThroughWeek}`
     : "T-48h 04:00 CT Simulation Slate Active";
   const measuredCopy = slate && engineRows.length > 0
-    ? `${slateLabel}. Projections are anchored to our 10,000-run joint distribution simulations, N_eff load scaling, and FTN scheme matchups.`
-    : "No NFL licensed salary feed is resolved right now; our T-48h 10,000-run simulation dossier and game-environment writeups below govern lineup construction.";
+    ? `${slateLabel}. Projections are built Coach & Reasoning Mind First across 10,000 correlated play-by-play simulations, N_eff load scaling, and tactical scheme matchups — then compared against salaries and ownership last.`
+    : "No NFL licensed salary feed is resolved right now; our Coach & Reasoning Mind First T-48h 10,000-run simulation dossier and game-environment writeups below govern lineup construction.";
   const note = feedDown
     ? `No licensed salary feed is connected. ${measuredCopy}`
     : measuredCopy;
@@ -65,22 +65,22 @@ export default async function DfsSuitePage() {
 
   return (
     <FantasyShell
-      eyebrow="DFS Intelligence Dossier · 10,000-Run Simulation Writeup"
+      eyebrow="DFS Intelligence Dossier · Coach & Reasoning Mind First · Book Last"
       accent="cyan"
       projectionsBadge={false}
       title={
         <>
-          We killed the generic optimizer.{" "}
+          Coach &amp; Reasoning Mind First.{" "}
           <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
-            Here is the actual DFS intelligence writeup.
+            Salaries &amp; Ownership Last.
           </span>
         </>
       }
-      intro="Public linear optimizers fail because football is non-linear and heavily correlated. Below is the complete breakdown of the data, equations, coaching schemes, pace-of-play environments, N_eff usage concentration, and 10,000-simulation combinatorial lineup constructions that isolate the right games, the right players, and the winning 20-max tournament and cash structures."
+      intro="We retired the generic linear optimizer because football is never played on a spreadsheet. Our engine reasons like a coaching staff first — synthesizing film autopsy residuals, play-caller DNA, defensive shell rotations, trench win rates, injury cascades, situational/emotional spots, neutral pace, and N_eff usage concentration — then simulates every possible player and lineup construction 10,000 times before ever comparing against the salary cap or field ownership."
       note={note}
       wide
     >
-      {/* ── SECTION 1: ALL DATA, ENGINE EQUATIONS & SIMULATION METHODOLOGY ── */}
+      {/* ── SECTION 1: COACH/REASONING MIND FIRST → ALL DATA → 10,000 SIMS → BOOK LAST ── */}
       <section
         id="dfs-methodology-writeup"
         data-testid="dfs-writeup-dossier"
@@ -88,18 +88,19 @@ export default async function DfsSuitePage() {
       >
         <div className="border-b border-mineral pb-5">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-            The Quad-Engine DFS Spine · 3,742 Canonical Research Nodes → 10,000 Correlated Sims
+            The GSE Doctrine · Coach &amp; Reasoning Mind First → 3,742 Research Nodes → 10,000 Play-by-Play Sims → Salary Cap Last
           </p>
           <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-            How the Engine Finds the Right Games, Schemes, Players &amp; Lineup Constructions
+            Every Layer of Data, Football Reasoning &amp; Simulation Behind Our DFS Writeups
           </h2>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-ion-1">
-            Every Tuesday at <span className="font-mono text-ion-white">04:00 CT</span> (TNF), Friday at{" "}
-            <span className="font-mono text-ion-white">04:00 CT</span> (Sunday Main Slate), and Saturday at{" "}
-            <span className="font-mono text-ion-white">04:00 CT</span> (MNF), the GSE engine ingests post-game film
-            autopsy residuals, sharp market anchors, FTN charting, and injury replacements to simulate the entire
-            player pool across 10,000 correlated game scripts before publishing this writeup by{" "}
-            <span className="font-mono text-ion-white">06:00 CT</span>.
+            Immediately after Sunday&apos;s <span className="font-mono text-ion-white">16:00 CT</span>,{" "}
+            <span className="font-mono text-ion-white">19:30 CT</span>, and{" "}
+            <span className="font-mono text-ion-white">22:45 CT</span> windows (plus Thursday and Monday night), our
+            post-game film autopsy grades every pre-play expectation against actual snap telemetry. Then at{" "}
+            <span className="font-mono text-ion-white">04:00 CT</span> (48 hours prior to each slate), the reasoning
+            mind runs 10,000 full-game simulations across the entire player pool before comparing our independent truth
+            against the salaries and market numbers at the very end.
           </p>
         </div>
 
@@ -107,78 +108,83 @@ export default async function DfsSuitePage() {
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
               <span className="text-plasma">STAGE 01</span>
-              <span className="text-ion-2">GAME ENVIRONMENT</span>
+              <span className="text-ion-2">COACH &amp; REASONING MIND</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              Pace of Play, PROE &amp; Shootout Totals
+              Tactical Schemes, Trench Leverage &amp; Situational Spots
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              We never start with individual player averages. We start with{" "}
-              <strong className="text-ion-white">Neutral-Script Seconds/Snap</strong>,{" "}
-              <strong className="text-ion-white">No-Huddle Acceleration</strong>,{" "}
-              <strong className="text-ion-white">Pass Rate Over Expectation (PROE)</strong>, and de-vigged{" "}
-              <strong className="text-ion-white">Circa / Pinnacle Opening-to-Current Total Trajectories</strong>.
-              Across 10,000 Monte Carlo game runs, we compute each game&apos;s exact{" "}
-              <span className="font-mono text-plasma">P(Combined Points &ge; 52)</span> and combined play-volume ceiling
-              to identify which games can support a 4-man double stack vs. a single RB+DST clock-bleed correlation.
+              Before looking at a single salary or betting line, the mind reads the football matchup:{" "}
+              <strong className="text-ion-white">Coordinator Play-Call DNA</strong> by down/distance/score-state,{" "}
+              <strong className="text-ion-white">Defensive Coverage Shell Rotations</strong> (
+              <span className="font-mono">Cover-0 Simulated Blitz</span>, <span className="font-mono">Cover-1 Man</span>,{" "}
+              <span className="font-mono">Tampa-2</span>, <span className="font-mono">Cover-3 Seams</span>,{" "}
+              <span className="font-mono">Split-Safety Quarters</span>),{" "}
+              <strong className="text-ion-white">Pre-Snap Motion Response</strong>,{" "}
+              <strong className="text-ion-white">11/12/21 Personnel Grouping Wars</strong>,{" "}
+              <strong className="text-ion-white">OL vs. DL Pass-Block &amp; Run-Block Trench Win Rates</strong>,{" "}
+              <strong className="text-ion-white">QB Time-to-Throw vs. Pressure-to-Sack Conversion</strong>, receiver
+              route-tree separation, Tuesday-to-Sunday coach-speak/beat signals, weather/wind vectors, travel disruption,
+              and referee crew tendencies.
             </p>
           </div>
 
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
               <span className="text-plasma">STAGE 02</span>
-              <span className="text-ion-2">FTN SCHEME MATRIX</span>
+              <span className="text-ion-2">PACE, TOTALS &amp; N_EFF</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              Coverage Shells, Blitz Rates &amp; Trenches
+              Tempo, Injury Cascades &amp; Non-Linear Load (N_eff = 1 / HHI)
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              Every offensive skill player is scored against the opposing coordinator&apos;s exact{" "}
-              <strong className="text-ion-white">Coverage Shell Distribution</strong> (
-              <span className="font-mono">Cover-0 Blitz</span>, <span className="font-mono">Cover-1 Man</span>,{" "}
-              <span className="font-mono">Tampa-2</span>, <span className="font-mono">Cover-3</span>,{" "}
-              <span className="font-mono">Quarters/Split-Safety</span>). We cross-reference{" "}
-              <strong className="text-ion-white">Blitz Rate vs. QB Pressure-to-Sack Conversion</strong>, pre-snap
-              motion rates, slot vs. perimeter target funnels, and OL/DL pass-block and run-block win rates to find
-              structural mismatches the salary algorithm missed.
+              Next, the engine models how the game environment and active roster shape total play volume and usage
+              concentration: <strong className="text-ion-white">Neutral-Script Seconds/Snap</strong>,{" "}
+              <strong className="text-ion-white">No-Huddle Acceleration</strong>,{" "}
+              <strong className="text-ion-white">Pass Rate Over Expectation (PROE)</strong>, drive-sustain EPA, and{" "}
+              <strong className="text-ion-white">Red-Zone / Inside-the-5 Play Scripts</strong>. When an injury hits an
+              offensive tackle, boundary corner, or pass-catcher, our{" "}
+              <strong className="text-ion-white">Injury Cascade v2 &amp; Herfindahl-Hirschman Index (N_eff = 1 / HHI)</strong>{" "}
+              re-computes how protection slides and first-read target shares condense non-linearly — creating massive
+              ceiling spikes that linear averages never see.
             </p>
           </div>
 
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
               <span className="text-plasma">STAGE 03</span>
-              <span className="text-ion-2">N_EFF LOAD SCALING</span>
+              <span className="text-ion-2">10,000 PLAY-BY-PLAY SIMS</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              Effective Target Concentration (N_eff = 1 / HHI)
+              All Possible Players &amp; Correlated Game Environments
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              Standard projections divide team volume linearly. Our engine computes the{" "}
-              <strong className="text-ion-white">Herfindahl-Hirschman Index (HHI = &Sigma; s_i&sup2;)</strong> and{" "}
-              <strong className="text-ion-white">Effective Receivers (N_eff = 1 / HHI)</strong> combined
-              with our <strong className="text-ion-white">Injury Cascade v2 Overlay</strong>. When an offense condenses
-              its first-read share or loses a starter, target share, air yards, and red-zone touch equity scale
-              non-linearly — exposing massive 95th-percentile ceiling outcomes at mid-tier salaries.
+              With our coaching and situational priors locked, we simulate every game on the slate{" "}
+              <strong className="text-ion-white">10,000 times play-by-play</strong>. In every simulated world, we score{" "}
+              <strong className="text-ion-white">every possible QB, RB, WR, TE, and DST</strong> simultaneously,
+              capturing true within-game covariance (&Sigma;_game): how a shootout script lifts a QB + 2 pass-catchers
+              and forces the opposing WR1 into 12+ catch-up targets, or how a front-seven pass-rush advantage correlates
+              an RB1 clock-bleed workload with DST sacks and turnovers.
             </p>
           </div>
 
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
               <span className="text-plasma">STAGE 04</span>
-              <span className="text-ion-2">COMBINATORIAL SIMS</span>
+              <span className="text-ion-2">BOOK &amp; SALARY LAST</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              All Possible Players &amp; Lineup Constructions
+              Combinatorial Lineup Construction &amp; Ownership Leverage
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              In each of the 10,000 simulated slate worlds, we score{" "}
-              <strong className="text-ion-white">every active QB, RB, WR, TE, and DST</strong> simultaneously, preserving
-              within-game covariance (&Sigma;_game). We then simulate tournament field duplication using a{" "}
-              <strong className="text-ion-white">Dirichlet-Multinomial Ownership Model</strong> (
-              <span className="font-mono">arxiv-2603.24989</span>) to construct: (1){" "}
-              <strong className="text-ion-white">Cash Cores</strong> maximizing 80th-percentile floor, (2){" "}
-              <strong className="text-ion-white">Showdown Captains</strong> maximizing 1.5x leverage, and (3){" "}
-              <strong className="text-ion-white">20-Max GPP Stacks</strong> maximizing Top-0.1% first-place equity.
+              <strong className="text-ion-white">Only at the very end</strong> do we introduce DFS salaries, market
+              lines, and simulated field ownership (<strong className="text-ion-white">Dirichlet-Multinomial field model</strong>).
+              We evaluate millions of salary-legal lineup combinations across the 10,000 simulated worlds to isolate where
+              our football mind disagrees with public pricing and chalk ownership — outputting{" "}
+              <strong className="text-ion-white">80th-Pct Floor Cash Cores</strong>,{" "}
+              <strong className="text-ion-white">Showdown 1.5x Captain Leverage</strong>, and{" "}
+              <strong className="text-ion-white">20-Max GPP Lineup Portfolios</strong> (QB + 2 Pass Catchers + Opposing
+              Bring-Back + Sub-$4.5k Value Pivot).
             </p>
           </div>
         </div>
@@ -189,14 +195,14 @@ export default async function DfsSuitePage() {
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mineral pb-4">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-              Game-by-Game DFS Environment &amp; Matchup Autopsy
+              Game-by-Game Coaching &amp; Environment Autopsy (Free Public Layer)
             </p>
             <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white">
               Every Slate Game Scored: Pace, Totals, Scheme Funnels &amp; Stack Thesis
             </h2>
           </div>
           <span className="border border-plasma/40 bg-plasma/10 px-3 py-1 font-mono text-xs text-plasma">
-            10,000 Correlated Simulations Complete
+            Coach Mind First · 10,000 Correlated Sims Complete
           </span>
         </div>
 
@@ -231,14 +237,14 @@ export default async function DfsSuitePage() {
               <div className="mt-4 grid gap-4 md:grid-cols-3">
                 <div className="border border-mineral/40 bg-eclipse p-4">
                   <div className="font-mono text-[10px] uppercase text-plasma">
-                    1. Pace &amp; Play-Volume Environment
+                    1. Pace, Play-Volume &amp; Game Environment
                   </div>
                   <p className="mt-1.5 text-xs leading-5 text-ion-1">{w.paceOfPlay.notes}</p>
                 </div>
 
                 <div className="border border-mineral/40 bg-eclipse p-4">
                   <div className="font-mono text-[10px] uppercase text-plasma">
-                    2. Coaching Scheme &amp; Coverage Funnel
+                    2. Coaching Scheme &amp; Coverage Shell Funnel
                   </div>
                   <p className="mt-1.5 text-xs leading-5 text-ion-1">{w.schemeMatchup.coverageShell}</p>
                   <p className="mt-1.5 text-[11px] text-ion-2">{w.schemeMatchup.blitzRateVsPressureToSack}</p>
@@ -246,7 +252,7 @@ export default async function DfsSuitePage() {
 
                 <div className="border border-mineral/40 bg-eclipse p-4">
                   <div className="font-mono text-[10px] uppercase text-plasma">
-                    3. Trench &amp; Concentration Edge (N_eff)
+                    3. Trench Leverage &amp; Load Scaling (N_eff)
                   </div>
                   <p className="mt-1.5 text-xs leading-5 text-ion-1">{w.schemeMatchup.coachingEdge}</p>
                   <p className="mt-1.5 text-[11px] text-ion-2">{w.schemeMatchup.notes}</p>
@@ -260,7 +266,7 @@ export default async function DfsSuitePage() {
                   <strong className="text-ion-white">{w.dfsStacks?.gppStacks.length ?? 1} Primary GPP Stack Blueprints</strong>
                 </span>
                 <span className="text-plasma">
-                  🔒 Exact Player Names, Salaries, Ownership Leverage &amp; Constructed Lineups in Vault Below ↓
+                  🔒 Exact Player Names, Salaries, Ownership Leverage &amp; Constructed Lineups in Paywall Vault Below ↓
                 </span>
               </div>
             </div>
