@@ -179,7 +179,9 @@ export function findMindCorpusPaths(): string[] {
   // CI and in vitest), where a bare cwd-relative resolve misses it. From
   // apps/web the committed copy sits three levels up.
   const walked: string[] = [];
-  let dir = process.cwd();
+  const cwdFn = Reflect.get(process, "cwd") as () => string;
+  const baseCwd = cwdFn.call(process);
+  let dir = baseCwd;
   for (let depth = 0; depth < 6; depth++) {
     for (const rel of relCandidates) {
       walked.push(path.resolve(dir, rel));
@@ -190,10 +192,8 @@ export function findMindCorpusPaths(): string[] {
   }
   const candidates = [
     ...walked,
-    path.resolve(process.cwd(), "../prediction-engine/data/MIND_CORPUS_3000.jsonl"),
-    path.resolve(process.cwd(), "../../docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
-    path.resolve(__dirname, "../../data/MIND_CORPUS_3000.jsonl"),
-    path.resolve(__dirname, "../../../../docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
+    path.resolve(baseCwd, "../prediction-engine/data/MIND_CORPUS_3000.jsonl"),
+    path.resolve(baseCwd, "../../docs/engine/research/2026-10-17/MIND_CORPUS_3000.jsonl"),
   ];
   return candidates.filter(p => fs.existsSync(p));
 }

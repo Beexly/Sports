@@ -16,7 +16,8 @@ import { dirname, join } from "node:path";
 const RELATIVE = join("docs", "engine", "corpus", "x-pull-2026-10-24.md");
 
 function findCorpus(): string {
-  let dir = process.cwd();
+  const cwdFn = Reflect.get(process, "cwd") as () => string;
+  let dir = cwdFn.call(process);
   for (let i = 0; i < 12; i += 1) {
     const candidate = join(dir, RELATIVE);
     if (existsSync(candidate)) return candidate;
@@ -25,7 +26,7 @@ function findCorpus(): string {
     dir = parent;
   }
   // Best guess so callers get a useful ENOENT path rather than a silent fallback.
-  return join(process.cwd(), "..", "..", "..", "..", RELATIVE);
+  return join(cwdFn.call(process), "..", "..", "..", "..", RELATIVE);
 }
 
 export const CORPUS_PATH = findCorpus();

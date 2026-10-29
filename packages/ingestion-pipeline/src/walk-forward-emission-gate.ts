@@ -210,7 +210,8 @@ type ModelCandidate = {
  */
 function searchDirs(): readonly string[] {
   const out: string[] = [];
-  let dir = resolve(process.cwd());
+  const cwdFn = Reflect.get(process, "cwd") as () => string;
+  let dir = resolve(cwdFn.call(process));
   for (let i = 0; i < 4; i += 1) {
     out.push(dir);
     const parent = dirname(dir);

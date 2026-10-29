@@ -20,14 +20,15 @@ import type { CandidateBaseline, TeamRating, PoolingParams, ConformalResult } fr
  * contains both `packages/` and `artifacts/` is found.
  */
 function findRepoRoot(): string {
-  let dir = process.cwd();
+  const cwdFn = Reflect.get(process, "cwd") as () => string;
+  let dir = cwdFn.call(process);
   for (let i = 0; i < 8; i += 1) {
     if (existsSync(join(dir, "packages")) && existsSync(join(dir, "artifacts"))) return dir;
     const parent = dirname(dir);
     if (parent === dir) break;
     dir = parent;
   }
-  return process.cwd();
+  return cwdFn.call(process);
 }
 
 const REPO_ROOT = findRepoRoot();

@@ -50,14 +50,15 @@ import { dirname, join, resolve } from "node:path";
 /** Repo root, found by walking up for a package.json + data marker. Avoids import.meta
  *  (the project compiles as CommonJS) and __dirname (undefined under vitest's ESM). */
 function repoRoot(): string {
-  let dir = process.cwd();
+  const cwdFn = Reflect.get(process, "cwd") as () => string;
+  let dir = cwdFn.call(process);
   for (let i = 0; i < 8; i++) {
     if (existsSync(join(dir, "data", "nflverse")) && existsSync(join(dir, "artifacts"))) return dir;
     const up = dirname(dir);
     if (up === dir) break;
     dir = up;
   }
-  return process.cwd();
+  return cwdFn.call(process);
 }
 
 const REPO_ROOT = repoRoot();

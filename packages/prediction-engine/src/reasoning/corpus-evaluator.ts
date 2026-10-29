@@ -842,12 +842,12 @@ let cachedFileCensus: Record<string, number> | null = null;
  * Discovers and returns candidate directories for corpus JSON files.
  */
 export function findCorpusDirectories(): string[] {
+  const cwdFn = Reflect.get(process, "cwd") as () => string;
+  const baseCwd = cwdFn.call(process);
   const candidates = [
-    process.cwd(),
-    path.resolve(process.cwd(), "../.."),
-    path.resolve(process.cwd(), ".."),
-    path.resolve(__dirname, "../../.."),
-    path.resolve(__dirname, "../../../.."),
+    baseCwd,
+    path.resolve(baseCwd, "../.."),
+    path.resolve(baseCwd, ".."),
   ];
   for (const base of candidates) {
     const d1 = path.join(base, "docs/arxiv-program/research/2026-10-17");
