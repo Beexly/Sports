@@ -184,6 +184,151 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <FieldBoardTicker items={tickerItems} />
 
+        {/* 5-PILLAR REVENUE & T-48H PROJECTIONS SECTION */}
+        <section
+          id="revenue-pillars"
+          data-testid="five-pillar-revenue-section"
+          className="border-b border-mineral bg-eclipse/40 px-4 py-12 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto max-w-7xl">
+            <Reveal>
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mineral pb-6">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
+                    5-Pillar Architecture · T-48h Intelligence
+                  </p>
+                  <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+                    Five Ways In. Zero Noise. Calibrated Commercial Value.
+                  </h2>
+                </div>
+                <Link
+                  href="/packages"
+                  className="btn-primary min-h-10 px-5 py-2 text-sm font-semibold whitespace-nowrap"
+                >
+                  Explore Slate Packages →
+                </Link>
+              </div>
+            </Reveal>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <Link
+                href="/picks"
+                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+              >
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-plasma">01</span>
+                    <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
+                      LIVE PICKS
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
+                    Today&apos;s Picks
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-ion-1">
+                    Calibrated side &amp; total signals with strictly positive CLV and verified receipts.
+                  </p>
+                </div>
+                <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
+                  Open Picks →
+                </span>
+              </Link>
+
+              <Link
+                href="/fantasy/props"
+                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+              >
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-plasma">02</span>
+                    <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
+                      N_EFF PROPS
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
+                    Player Props Lab
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-ion-1">
+                    N_eff usage volume models, first-read metrics, and Underdog / PrizePicks edges.
+                  </p>
+                </div>
+                <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
+                  Open Props →
+                </span>
+              </Link>
+
+              <Link
+                href="/sgp-projections"
+                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+              >
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-plasma">03</span>
+                    <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
+                      CORRELATION
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
+                    SGP Projections
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-ion-1">
+                    Joint distribution modeling exposing bookmakers&apos; 15-30% same-game parlay hold.
+                  </p>
+                </div>
+                <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
+                  Open SGP →
+                </span>
+              </Link>
+
+              <Link
+                href="/fantasy/dfs"
+                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+              >
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-plasma">04</span>
+                    <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
+                      DFS BUILDER
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
+                    DFS Optimizer
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-ion-1">
+                    Single-game Showdown Captain leverage, cash baselines, and 20-max tournament stacks.
+                  </p>
+                </div>
+                <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
+                  Open DFS →
+                </span>
+              </Link>
+
+              <Link
+                href="/packages"
+                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+              >
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-plasma">05</span>
+                    <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
+                      STOREFRONT
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
+                    Instant Packages
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-ion-1">
+                    WagerTalk-style a-la-carte slate packages with instant Stripe checkout &amp; Telegram delivery.
+                  </p>
+                </div>
+                <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
+                  Open Packages →
+                </span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* SIGNAL MAP. Four ways in, one decision each. */}
         <section
           id="doors"

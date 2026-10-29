@@ -330,3 +330,16 @@ export async function routeFullFourStage(
   });
   return stageD(stageCResults, { tauHatCoach: opts.tauHatCoach });
 }
+
+// ============================================================================
+// QUAD-ENGINE CROSSWALK INTEGRATION (Task 1 & 2)
+// ============================================================================
+
+export {
+  QuadEngineSource,
+  QuadEngineCrosswalkNode,
+  buildQuadEngineCrosswalk,
+  queryQuadEngineByContext,
+  loadLiveQuadEngineCrosswalk,
+} from "./quad-engine-crosswalk.js";
+

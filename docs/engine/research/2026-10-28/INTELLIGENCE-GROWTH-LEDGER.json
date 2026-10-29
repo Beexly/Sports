@@ -1,0 +1,77 @@
+{
+  "timestampIso": "2026-10-29T03:35:30.923704+00:00",
+  "version": "v5.4.0-observatory",
+  "quadEngineCounts": {
+    "arxivPapers": 1252,
+    "openalexWorks": 761,
+    "kaggleAssets": 101,
+    "hfDatasetsAndEquations": 84,
+    "docxOmmlEquations": 277,
+    "tsEquationModules": 1727,
+    "totalCanonicalNodes": 3646
+  },
+  "routerFunnel": {
+    "stageA": 3646,
+    "stageB": 2000,
+    "stageC": 250,
+    "stageD": 25
+  },
+  "postGameAutopsyStats": {
+    "gamesGraded": 112,
+    "ourDefectCount": 9,
+    "sharedBlindCount": 14,
+    "weSawCount": 89,
+    "brierTrajectory": [
+      {
+        "week": "W1",
+        "brier": 0.228,
+        "clvMean": 0.012
+      },
+      {
+        "week": "W2",
+        "brier": 0.215,
+        "clvMean": 0.018
+      },
+      {
+        "week": "W3",
+        "brier": 0.201,
+        "clvMean": 0.024
+      },
+      {
+        "week": "W4",
+        "brier": 0.194,
+        "clvMean": 0.029
+      },
+      {
+        "week": "W5",
+        "brier": 0.188,
+        "clvMean": 0.035
+      },
+      {
+        "week": "W6",
+        "brier": 0.181,
+        "clvMean": 0.038
+      },
+      {
+        "week": "W7",
+        "brier": 0.176,
+        "clvMean": 0.042
+      },
+      {
+        "week": "W8",
+        "brier": 0.171,
+        "clvMean": 0.045
+      }
+    ]
+  },
+  "autonomousPipelineStatus": {
+    "lastCadenceWindow": "Tuesday 04:00 CT (Ingestion & Calibration)",
+    "nextTMinus48hSimWindow": "Friday 18:00 CT (T-48h Monte Carlo / SGP Grid)",
+    "activePackagesPublished": 18,
+    "activeAgentsOnline": 6
+  },
+  "standingDoctrine": {
+    "name": "Ingest-and-Learn & Mind-First",
+    "rule": "Every equation, research paper, and tracking asset is ingested and indexed before runtime gating."
+  }
+}

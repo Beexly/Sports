@@ -14,14 +14,26 @@
 
 import { createHash } from "node:crypto"
 
-export const CADENCE = [
-  { version: "v1.0", dow: "Tue", hour: 4, minute: 0 },
-  { version: "v2.0", dow: "Wed", hour: 17, minute: 0 },
-  { version: "v2.5", dow: "Thu", hour: 16, minute: 30 },
-  { version: "v3.0", dow: "Fri", hour: 16, minute: 30 },
-  { version: "v4.0", dow: "Sun", hour: 10, minute: 30 },
-  { version: "v4.0", dow: "Sun", hour: 13, minute: 35 },
+export interface CadenceEntry {
+  readonly version: CadenceVersion
+  readonly dow: string
+  readonly hour: number
+  readonly minute: number
+  readonly day?: string
+}
+
+export const CADENCE: ReadonlyArray<CadenceEntry> = [
+  { version: "v1.0", dow: "Tue", hour: 4, minute: 0, day: "Tue" },
+  { version: "v2.0", dow: "Wed", hour: 17, minute: 0, day: "Wed" },
+  { version: "v2.5", dow: "Thu", hour: 16, minute: 30, day: "Thu" },
+  { version: "v3.0", dow: "Fri", hour: 16, minute: 30, day: "Fri" },
+  { version: "v4.0", dow: "Sun", hour: 10, minute: 30, day: "Sun" },
+  { version: "v4.0", dow: "Sun", hour: 13, minute: 35, day: "Sun" },
 ] as const
+
+export function cadenceIndex(version: CadenceVersion): number {
+  return CADENCE.findIndex((c) => c.version === version)
+}
 
 export const T_MINUS_MINUTES = 90
 export const FIVE_MIN_SLOTS = 288
@@ -103,4 +115,293 @@ export function xorMasks(a: Uint32Array, b: Uint32Array): Uint32Array {
   const out = emptyMask()
   for (let i = 0; i < XOR_WORDS; i++) out[i] = (a[i]! ^ b[i]!) >>> 0
   return out
+}
+
+// --------------------------------------------------------------------------- //
+// Rolling Game-Window Cadence
+// --------------------------------------------------------------------------- //
+
+export type GameSlotWindow = 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SNF' | 'MNF';
+export type RollingPhase =
+  | 'POST_GAME_FILM_AUTOPSY'
+  | 'MON_TUE_FINE_TUNE_SEAL'
+  | 'T_MINUS_48H_EARLY_SIM'
+  | 'INJURY_WEATHER_OVERLAY'
+  | 'T_MINUS_90M_FINAL_LOCK';
+
+export interface RollingCadenceEntry extends CadenceEntry {
+  id: string;
+  gameSlot: GameSlotWindow;
+  phase: RollingPhase;
+  day: string;
+  ctTime: string;
+  outputs: ReadonlyArray<
+    | 'FILM_GRADES'
+    | 'PACE_OF_PLAY'
+    | 'TOTALS_SPREADS'
+    | 'PLAYER_PROPS'
+    | 'CORRELATED_SGP'
+    | 'DFS_WRITEUPS'
+    | 'CONTENT_OS_PACKET'
+  >;
+}
+
+export const ROLLING_GAME_WINDOW_CADENCE: ReadonlyArray<RollingCadenceEntry> = [
+  // 1. Post-Game Film Autopsies
+  {
+    id: 'autopsy-sun-early',
+    gameSlot: 'SUN_EARLY',
+    phase: 'POST_GAME_FILM_AUTOPSY',
+    day: 'Sun',
+    dow: 'Sun',
+    hour: 16,
+    minute: 0,
+    ctTime: '16:00',
+    version: 'v4.0',
+    outputs: ['FILM_GRADES', 'PACE_OF_PLAY'],
+  },
+  {
+    id: 'autopsy-sun-late',
+    gameSlot: 'SUN_LATE',
+    phase: 'POST_GAME_FILM_AUTOPSY',
+    day: 'Sun',
+    dow: 'Sun',
+    hour: 19,
+    minute: 30,
+    ctTime: '19:30',
+    version: 'v4.0',
+    outputs: ['FILM_GRADES', 'PACE_OF_PLAY'],
+  },
+  {
+    id: 'autopsy-snf',
+    gameSlot: 'SNF',
+    phase: 'POST_GAME_FILM_AUTOPSY',
+    day: 'Sun',
+    dow: 'Sun',
+    hour: 22,
+    minute: 45,
+    ctTime: '22:45',
+    version: 'v4.0',
+    outputs: ['FILM_GRADES', 'PACE_OF_PLAY'],
+  },
+  {
+    id: 'autopsy-tnf',
+    gameSlot: 'TNF',
+    phase: 'POST_GAME_FILM_AUTOPSY',
+    day: 'Thu',
+    dow: 'Thu',
+    hour: 22,
+    minute: 45,
+    ctTime: '22:45',
+    version: 'v2.5',
+    outputs: ['FILM_GRADES', 'PACE_OF_PLAY'],
+  },
+  {
+    id: 'autopsy-mnf',
+    gameSlot: 'MNF',
+    phase: 'POST_GAME_FILM_AUTOPSY',
+    day: 'Mon',
+    dow: 'Mon',
+    hour: 22,
+    minute: 45,
+    ctTime: '22:45',
+    version: 'v4.0',
+    outputs: ['FILM_GRADES', 'PACE_OF_PLAY'],
+  },
+
+  // 2. T-48h Early-Morning Simulations (10,000 runs)
+  {
+    id: 't-minus-48h-tnf',
+    gameSlot: 'TNF',
+    phase: 'T_MINUS_48H_EARLY_SIM',
+    day: 'Tue',
+    dow: 'Tue',
+    hour: 4,
+    minute: 0,
+    ctTime: '04:00',
+    version: 'v1.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 't-minus-48h-sun-early',
+    gameSlot: 'SUN_EARLY',
+    phase: 'T_MINUS_48H_EARLY_SIM',
+    day: 'Fri',
+    dow: 'Fri',
+    hour: 4,
+    minute: 0,
+    ctTime: '04:00',
+    version: 'v3.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 't-minus-48h-sun-late',
+    gameSlot: 'SUN_LATE',
+    phase: 'T_MINUS_48H_EARLY_SIM',
+    day: 'Fri',
+    dow: 'Fri',
+    hour: 4,
+    minute: 0,
+    ctTime: '04:00',
+    version: 'v3.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 't-minus-48h-snf',
+    gameSlot: 'SNF',
+    phase: 'T_MINUS_48H_EARLY_SIM',
+    day: 'Fri',
+    dow: 'Fri',
+    hour: 4,
+    minute: 0,
+    ctTime: '04:00',
+    version: 'v3.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 't-minus-48h-mnf',
+    gameSlot: 'MNF',
+    phase: 'T_MINUS_48H_EARLY_SIM',
+    day: 'Sat',
+    dow: 'Sat',
+    hour: 4,
+    minute: 0,
+    ctTime: '04:00',
+    version: 'v3.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+
+  // 3. Mon/Tue Fine-Tune Seal
+  {
+    id: 'fine-tune-seal-tue',
+    gameSlot: 'SUN_EARLY',
+    phase: 'MON_TUE_FINE_TUNE_SEAL',
+    day: 'Tue',
+    dow: 'Tue',
+    hour: 4,
+    minute: 0,
+    ctTime: '04:00',
+    version: 'v1.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS'],
+  },
+
+  // 4. Injury / Weather Overlay
+  {
+    id: 'overlay-wed-1700',
+    gameSlot: 'TNF',
+    phase: 'INJURY_WEATHER_OVERLAY',
+    day: 'Wed',
+    dow: 'Wed',
+    hour: 17,
+    minute: 0,
+    ctTime: '17:00',
+    version: 'v2.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP'],
+  },
+  {
+    id: 'overlay-thu-1630',
+    gameSlot: 'TNF',
+    phase: 'INJURY_WEATHER_OVERLAY',
+    day: 'Thu',
+    dow: 'Thu',
+    hour: 16,
+    minute: 30,
+    ctTime: '16:30',
+    version: 'v2.5',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP'],
+  },
+  {
+    id: 'overlay-fri-1630',
+    gameSlot: 'SUN_EARLY',
+    phase: 'INJURY_WEATHER_OVERLAY',
+    day: 'Fri',
+    dow: 'Fri',
+    hour: 16,
+    minute: 30,
+    ctTime: '16:30',
+    version: 'v3.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP'],
+  },
+
+  // 5. T-Minus-90m Final Lock
+  {
+    id: 'final-lock-thu-1745',
+    gameSlot: 'TNF',
+    phase: 'T_MINUS_90M_FINAL_LOCK',
+    day: 'Thu',
+    dow: 'Thu',
+    hour: 17,
+    minute: 45,
+    ctTime: '17:45',
+    version: 'v2.5',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 'final-lock-sun-1030',
+    gameSlot: 'SUN_EARLY',
+    phase: 'T_MINUS_90M_FINAL_LOCK',
+    day: 'Sun',
+    dow: 'Sun',
+    hour: 10,
+    minute: 30,
+    ctTime: '10:30',
+    version: 'v4.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 'final-lock-sun-1335',
+    gameSlot: 'SUN_LATE',
+    phase: 'T_MINUS_90M_FINAL_LOCK',
+    day: 'Sun',
+    dow: 'Sun',
+    hour: 13,
+    minute: 35,
+    ctTime: '13:35',
+    version: 'v4.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 'final-lock-sun-1750',
+    gameSlot: 'SNF',
+    phase: 'T_MINUS_90M_FINAL_LOCK',
+    day: 'Sun',
+    dow: 'Sun',
+    hour: 17,
+    minute: 50,
+    ctTime: '17:50',
+    version: 'v4.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+  {
+    id: 'final-lock-mon-1745',
+    gameSlot: 'MNF',
+    phase: 'T_MINUS_90M_FINAL_LOCK',
+    day: 'Mon',
+    dow: 'Mon',
+    hour: 17,
+    minute: 45,
+    ctTime: '17:45',
+    version: 'v4.0',
+    outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
+  },
+];
+
+export function getTMinus48hSimWindow(slot: GameSlotWindow): RollingCadenceEntry {
+  const match = ROLLING_GAME_WINDOW_CADENCE.find(
+    (e) => e.phase === 'T_MINUS_48H_EARLY_SIM' && e.gameSlot === slot,
+  );
+  if (!match) {
+    throw new Error(`No T-48h simulation window registered for slot: ${slot}`);
+  }
+  return match;
+}
+
+export function getPostGameFilmReviewWindow(slot: GameSlotWindow): RollingCadenceEntry {
+  const match = ROLLING_GAME_WINDOW_CADENCE.find(
+    (e) => e.phase === 'POST_GAME_FILM_AUTOPSY' && e.gameSlot === slot,
+  );
+  if (!match) {
+    throw new Error(`No post-game film review window registered for slot: ${slot}`);
+  }
+  return match;
 }

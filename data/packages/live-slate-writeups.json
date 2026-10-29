@@ -1,0 +1,623 @@
+[
+  {
+    "id": "writeup-tnf-min-lar",
+    "gameId": "gse-nfl-2024-w8-min-lar",
+    "matchup": "Minnesota Vikings @ Los Angeles Rams",
+    "awayTeam": "Minnesota Vikings",
+    "homeTeam": "Los Angeles Rams",
+    "kickoff": "2024-10-24T20:15:00Z",
+    "windowSlot": "TNF",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 25.9,
+      "passEpaPlay": 0.14,
+      "rushEpaPlay": 0.01,
+      "noHuddleRate": 0.09,
+      "notes": "Both O'Connell and McVay operate top-10 neutral-situation pace; Rams run tempo after explosive plays."
+    },
+    "schemeMatchup": {
+      "coverageShell": "Flores exotic simulated blitz / Cover-0 disguises vs Rams condensed 11-personnel bunch formations",
+      "blitzRateVsPressureToSack": "Vikings 42.4% blitz rate (1st in NFL) vs Matthew Stafford 11.2% pressure-to-sack rate",
+      "personnelTendencies": "Rams 78% 11-personnel; Vikings rotate 3-safety sub-packages on 72% of snaps",
+      "coachingEdge": "Flores creates free runners from A-gap; McVay counters with pre-snap motion to identify man vs zone coverage",
+      "notes": "Cooper Kupp return compresses coverage inward, freeing intermediate crossers against zone seams."
+    },
+    "sideTotalCall": {
+      "sideSelection": "MIN -2.5",
+      "sideConfidence": "76/100",
+      "sideExpectedClv": 0.046,
+      "sideDecision": "PLAY",
+      "totalSelection": "OVER 47.5",
+      "totalConfidence": "71/100",
+      "totalExpectedClv": 0.038,
+      "totalDecision": "PLAY",
+      "rationale": "Vikings pass rush generates disruptive havoc while Rams get Cooper Kupp back to stress intermediate zone coverage."
+    },
+    "topProps": [
+      {
+        "playerId": "p-justin-jefferson",
+        "playerName": "Justin Jefferson",
+        "propType": "Receiving Yards",
+        "line": 82.5,
+        "side": "OVER",
+        "confidence": "82/100",
+        "expectedClv": 0.054,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=9.6 weighted target share; 34.2% first-read rate vs soft Cover-3 corners."
+      },
+      {
+        "playerId": "p-kyren-williams",
+        "playerName": "Kyren Williams",
+        "propType": "Rushing Yards",
+        "line": 74.5,
+        "side": "OVER",
+        "confidence": "73/100",
+        "expectedClv": 0.033,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=18.4 projected touches; 84% goal-line running back snap share."
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "TNF Prime Correlated Over & Air Attack Ticket",
+      "legs": [
+        {
+          "description": "Minnesota Vikings Moneyline",
+          "pickType": "MONEYLINE",
+          "selection": "Minnesota Vikings",
+          "confidence": "76/100",
+          "expectedClv": 0.046,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Justin Jefferson Over 82.5 Rec Yds",
+          "pickType": "PROP",
+          "selection": "Justin Jefferson OVER 82.5 Rec Yds",
+          "line": 82.5,
+          "confidence": "82/100",
+          "expectedClv": 0.054,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Game Total OVER 47.5",
+          "pickType": "TOTAL",
+          "selection": "OVER 47.5",
+          "line": 47.5,
+          "confidence": "71/100",
+          "expectedClv": 0.038,
+          "decision": "PLAY"
+        }
+      ],
+      "jointWinProb": 0.274,
+      "fairOdds": "+265",
+      "marketOdds": "+375",
+      "edgeScore": 0.101,
+      "correlationRationale": "When Vikings score efficiently through Jefferson, Rams are forced into pass-heavy negative game scripts."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Justin Jefferson",
+          "position": "WR",
+          "salary": 11800,
+          "leverageNote": "Highest ceiling on single-game slate with 35% target share."
+        },
+        {
+          "player": "Cooper Kupp",
+          "position": "WR",
+          "salary": 10400,
+          "leverageNote": "Massive volume return candidate projected for double-digit targets."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Sam Darnold",
+          "position": "QB",
+          "salary": 9400,
+          "projection": 18.9,
+          "floorNote": "High pass volume in dome environment guarantees safe baseline."
+        },
+        {
+          "player": "Kyren Williams",
+          "position": "RB",
+          "salary": 10800,
+          "projection": 19.6,
+          "floorNote": "Dominant touch share protects high cash-game floor."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Sam Darnold",
+            "passCatchers": [
+              "Justin Jefferson",
+              "Jordan Addison"
+            ]
+          },
+          "bringBack": "Cooper Kupp",
+          "valueFiller": "Demarcus Robinson",
+          "correlationTheme": "Pass-heavy shootout exceeding 54 combined points with explosive downfield connections."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2305.18290",
+        "arxiv:2401.03462"
+      ],
+      "openalex": [
+        "openalex:W4285718290",
+        "openalex:W3128945671"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2024",
+        "kaggle:dataset/nflverse-pbp"
+      ],
+      "hf": [
+        "hf:models/gse-nfl-xgboost-v5",
+        "hf:datasets/nfl-ngs-tracking"
+      ]
+    }
+  },
+  {
+    "id": "writeup-sun-early-phi-cin",
+    "gameId": "gse-nfl-2024-w8-phi-cin",
+    "matchup": "Philadelphia Eagles @ Cincinnati Bengals",
+    "awayTeam": "Philadelphia Eagles",
+    "homeTeam": "Cincinnati Bengals",
+    "kickoff": "2024-10-27T17:00:00Z",
+    "windowSlot": "SUN_EARLY",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 27.2,
+      "passEpaPlay": 0.16,
+      "rushEpaPlay": 0.05,
+      "noHuddleRate": 0.07,
+      "notes": "Bengals rank 4th in pass-rate over expectation; Eagles run-heavy pace accelerates in 2nd half."
+    },
+    "schemeMatchup": {
+      "coverageShell": "Bengals Lou Anarumo hybrid split-field vs Eagles explosive RPO vertical attack",
+      "blitzRateVsPressureToSack": "Eagles 22.1% blitz rate with 4-man organic rush vs Burrow quick release (2.42s)",
+      "personnelTendencies": "Eagles 12-personnel heavy package (31%) testing Bengals light nickel front",
+      "coachingEdge": "Vic Fangio two-high shell limits deep shots to Ja'Marr Chase, funneling targets underneath",
+      "notes": "Saquon Barkley yards after contact matchup against Bengals missed-tackle rate (13.8%)."
+    },
+    "sideTotalCall": {
+      "sideSelection": "PHI +2.5",
+      "sideConfidence": "73/100",
+      "sideExpectedClv": 0.039,
+      "sideDecision": "PLAY",
+      "totalSelection": "OVER 47.5",
+      "totalConfidence": "70/100",
+      "totalExpectedClv": 0.034,
+      "totalDecision": "PLAY",
+      "rationale": "Eagles offensive line commands rushing EPA advantage while Burrow pushes tempo to stay competitive."
+    },
+    "topProps": [
+      {
+        "playerId": "p-saquon-barkley",
+        "playerName": "Saquon Barkley",
+        "propType": "Rushing Yards",
+        "line": 78.5,
+        "side": "OVER",
+        "confidence": "80/100",
+        "expectedClv": 0.048,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=19.2 expected carries against 28th-ranked rush defensive success rate."
+      },
+      {
+        "playerId": "p-jamarr-chase",
+        "playerName": "Ja'Marr Chase",
+        "propType": "Receptions",
+        "line": 6.5,
+        "side": "OVER",
+        "confidence": "78/100",
+        "expectedClv": 0.042,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=10.4 targets; Burrow targets Chase on 38% of 3rd downs."
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "Barkley Ground Domination & Burrow Air Correlated SGP",
+      "legs": [
+        {
+          "description": "Philadelphia Eagles +2.5",
+          "pickType": "SPREAD",
+          "selection": "Philadelphia Eagles +2.5",
+          "line": 2.5,
+          "confidence": "73/100",
+          "expectedClv": 0.039,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Saquon Barkley Over 78.5 Rush Yds",
+          "pickType": "PROP",
+          "selection": "Saquon Barkley OVER 78.5 Rush Yds",
+          "line": 78.5,
+          "confidence": "80/100",
+          "expectedClv": 0.048,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Ja'Marr Chase Over 6.5 Receptions",
+          "pickType": "PROP",
+          "selection": "Ja'Marr Chase OVER 6.5 Receptions",
+          "line": 6.5,
+          "confidence": "78/100",
+          "expectedClv": 0.042,
+          "decision": "PLAY"
+        }
+      ],
+      "jointWinProb": 0.285,
+      "fairOdds": "+251",
+      "marketOdds": "+345",
+      "edgeScore": 0.094,
+      "correlationRationale": "Eagles ball-control leads on the ground while Bengals play catch-up targeting Chase."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Saquon Barkley",
+          "position": "RB",
+          "salary": 11200,
+          "leverageNote": "Elite rushing workload in 12-personnel smash spot."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Jalen Hurts",
+          "position": "QB",
+          "salary": 9200,
+          "projection": 22.8,
+          "floorNote": "Tush-push rushing touchdowns provide unbeatable cash floor."
+        },
+        {
+          "player": "Ja'Marr Chase",
+          "position": "WR",
+          "salary": 9000,
+          "projection": 20.4,
+          "floorNote": "Double-digit target floor in negative game script."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Joe Burrow",
+            "passCatchers": [
+              "Ja'Marr Chase",
+              "Tee Higgins"
+            ]
+          },
+          "bringBack": "A.J. Brown",
+          "valueFiller": "Grant Calcaterra",
+          "correlationTheme": "Elite aerial shootout where neither secondary can contain premier boundary receivers."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2305.18290",
+        "arxiv:2401.03462"
+      ],
+      "openalex": [
+        "openalex:W4285718290"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2024"
+      ],
+      "hf": [
+        "hf:models/gse-nfl-xgboost-v5"
+      ]
+    }
+  },
+  {
+    "id": "writeup-snf-dal-sf",
+    "gameId": "gse-nfl-2024-w8-dal-sf",
+    "matchup": "Dallas Cowboys @ San Francisco 49ers",
+    "awayTeam": "Dallas Cowboys",
+    "homeTeam": "San Francisco 49ers",
+    "kickoff": "2024-10-27T23:20:00Z",
+    "windowSlot": "SNF",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 27.8,
+      "passEpaPlay": 0.15,
+      "rushEpaPlay": 0.03,
+      "noHuddleRate": 0.08,
+      "notes": "49ers rank 2nd in yards per play; Cowboys pass-rate over expectation rises to +9.2% when trailing."
+    },
+    "schemeMatchup": {
+      "coverageShell": "Nick Sorensen / Shanahan Cover-3 & Quarters vs Mike McCarthy vertical timing west coast system",
+      "blitzRateVsPressureToSack": "Cowboys 25.4% blitz rate with Micah Parsons pressure vs Brock Purdy quick-read ability",
+      "personnelTendencies": "49ers positionless 21-personnel (Deebo, Kittle, Mason) creating perimeter blocking mismatches",
+      "coachingEdge": "Kyle Shanahan motion rate (79%) exposes Dallas linebackers in space after injuries",
+      "notes": "Dak Prescott forced into 40+ pass attempts against resilient San Francisco pass rush."
+    },
+    "sideTotalCall": {
+      "sideSelection": "SF -4.5",
+      "sideConfidence": "79/100",
+      "sideExpectedClv": 0.051,
+      "sideDecision": "PLAY",
+      "totalSelection": "OVER 47.0",
+      "totalConfidence": "71/100",
+      "totalExpectedClv": 0.035,
+      "totalDecision": "PLAY",
+      "rationale": "49ers offensive scheme exploits depleted Dallas defensive interior while CeeDee Lamb keeps Dallas scoring."
+    },
+    "topProps": [
+      {
+        "playerId": "p-george-kittle",
+        "playerName": "George Kittle",
+        "propType": "Receiving Yards",
+        "line": 58.5,
+        "side": "OVER",
+        "confidence": "83/100",
+        "expectedClv": 0.057,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=8.6 targets; highest target share against Dallas zone coverage seams."
+      },
+      {
+        "playerId": "p-ceedee-lamb",
+        "playerName": "CeeDee Lamb",
+        "propType": "Receptions",
+        "line": 7.5,
+        "side": "OVER",
+        "confidence": "80/100",
+        "expectedClv": 0.049,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=11.8 targets; Dak locks onto Lamb on 36% of passing downs."
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "SNF Prime Rivalry Aerial Showcase SGP",
+      "legs": [
+        {
+          "description": "San Francisco 49ers -4.5",
+          "pickType": "SPREAD",
+          "selection": "San Francisco 49ers -4.5",
+          "line": 4.5,
+          "confidence": "79/100",
+          "expectedClv": 0.051,
+          "decision": "PLAY"
+        },
+        {
+          "description": "George Kittle Over 58.5 Rec Yds",
+          "pickType": "PROP",
+          "selection": "George Kittle OVER 58.5 Rec Yds",
+          "line": 58.5,
+          "confidence": "83/100",
+          "expectedClv": 0.057,
+          "decision": "PLAY"
+        },
+        {
+          "description": "CeeDee Lamb Over 7.5 Receptions",
+          "pickType": "PROP",
+          "selection": "CeeDee Lamb OVER 7.5 Receptions",
+          "line": 7.5,
+          "confidence": "80/100",
+          "expectedClv": 0.049,
+          "decision": "PLAY"
+        }
+      ],
+      "jointWinProb": 0.282,
+      "fairOdds": "+255",
+      "marketOdds": "+360",
+      "edgeScore": 0.105,
+      "correlationRationale": "49ers control game through Kittle intermediate seams while Cowboys respond with heavy Lamb targets."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "George Kittle",
+          "position": "TE",
+          "salary": 10200,
+          "leverageNote": "Unmatched red-zone equity with Brandon Aiyuk sidelined."
+        },
+        {
+          "player": "CeeDee Lamb",
+          "position": "WR",
+          "salary": 11400,
+          "leverageNote": "Sole reliable volume generator in Dallas offense."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Brock Purdy",
+          "position": "QB",
+          "salary": 9800,
+          "projection": 20.8,
+          "floorNote": "High yards-per-attempt floor in Shanahan offensive system."
+        },
+        {
+          "player": "Jordan Mason",
+          "position": "RB",
+          "salary": 9200,
+          "projection": 17.5,
+          "floorNote": "High touch volume in goal line opportunities."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Brock Purdy",
+            "passCatchers": [
+              "George Kittle",
+              "Deebo Samuel"
+            ]
+          },
+          "bringBack": "CeeDee Lamb",
+          "valueFiller": "Jalen Tolbert",
+          "correlationTheme": "Fast-scoring rivalry game where Dak and Purdy trade explosive passing plays."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2305.18290",
+        "arxiv:2401.03462"
+      ],
+      "openalex": [
+        "openalex:W4285718290",
+        "openalex:W3128945671"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2024"
+      ],
+      "hf": [
+        "hf:models/gse-nfl-xgboost-v5"
+      ]
+    }
+  },
+  {
+    "id": "writeup-mnf-nyg-pit",
+    "gameId": "gse-nfl-2024-w8-nyg-pit",
+    "matchup": "New York Giants @ Pittsburgh Steelers",
+    "awayTeam": "New York Giants",
+    "homeTeam": "Pittsburgh Steelers",
+    "kickoff": "2024-10-28T23:15:00Z",
+    "windowSlot": "MNF",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 28.9,
+      "passEpaPlay": -0.04,
+      "rushEpaPlay": 0.01,
+      "noHuddleRate": 0.03,
+      "notes": "Steelers enforce physical slow-tempo ground script; Giants pass protection under extreme pressure."
+    },
+    "schemeMatchup": {
+      "coverageShell": "Teryl Austin / Tomlin Cover-3 & fire-zone blitz vs Brian Daboll empty-backfield spread",
+      "blitzRateVsPressureToSack": "Steelers T.J. Watt & Alex Highsmith create 41.2% pressure rate vs Daniel Jones 23.5% sack rate",
+      "personnelTendencies": "Steelers multiple tight-end sets (12 & 13 personnel) establishing Najee Harris downhill rushing",
+      "coachingEdge": "Mike Tomlin prime-time home defense historical dominance against young quarterbacks",
+      "notes": "Malik Nabers target share (34%) is the sole path for Giants explosive offensive play generation."
+    },
+    "sideTotalCall": {
+      "sideSelection": "PIT -6.0",
+      "sideConfidence": "81/100",
+      "sideExpectedClv": 0.055,
+      "sideDecision": "PLAY",
+      "totalSelection": "UNDER 36.5",
+      "totalConfidence": "74/100",
+      "totalExpectedClv": 0.042,
+      "totalDecision": "PLAY",
+      "rationale": "Steelers front-seven completely overwhelms Giants offensive line, leading to defensive points and clock bleed."
+    },
+    "topProps": [
+      {
+        "playerId": "p-najee-harris",
+        "playerName": "Najee Harris",
+        "propType": "Rushing Yards",
+        "line": 63.5,
+        "side": "OVER",
+        "confidence": "82/100",
+        "expectedClv": 0.053,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=19.4 projected carries; 100+ yards in back-to-back weeks as offensive focal point."
+      },
+      {
+        "playerId": "p-malik-nabers",
+        "playerName": "Malik Nabers",
+        "propType": "Receptions",
+        "line": 6.5,
+        "side": "OVER",
+        "confidence": "78/100",
+        "expectedClv": 0.044,
+        "decision": "PLAY",
+        "nEffTargetNotes": "N_eff=11.2 targets; unmatched 34% team target share."
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "Steelers Prime-Time Defensive Hammer SGP",
+      "legs": [
+        {
+          "description": "Pittsburgh Steelers -6.0",
+          "pickType": "SPREAD",
+          "selection": "Pittsburgh Steelers -6.0",
+          "line": 6.0,
+          "confidence": "81/100",
+          "expectedClv": 0.055,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Game Total UNDER 36.5",
+          "pickType": "TOTAL",
+          "selection": "UNDER 36.5",
+          "line": 36.5,
+          "confidence": "74/100",
+          "expectedClv": 0.042,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Najee Harris Over 63.5 Rush Yds",
+          "pickType": "PROP",
+          "selection": "Najee Harris OVER 63.5 Rush Yds",
+          "line": 63.5,
+          "confidence": "82/100",
+          "expectedClv": 0.053,
+          "decision": "PLAY"
+        }
+      ],
+      "jointWinProb": 0.334,
+      "fairOdds": "+199",
+      "marketOdds": "+280",
+      "edgeScore": 0.081,
+      "correlationRationale": "Steelers defense dominates Giants passing game while Harris runs clock down in low-scoring win."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Pittsburgh Defense",
+          "position": "DST",
+          "salary": 9000,
+          "leverageNote": "Massive sack and turnover upside against Daniel Jones under pressure."
+        },
+        {
+          "player": "Najee Harris",
+          "position": "RB",
+          "salary": 10600,
+          "leverageNote": "Bellcow workload in decisive favorite home spot."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Najee Harris",
+          "position": "RB",
+          "salary": 10600,
+          "projection": 16.8,
+          "floorNote": "Guaranteed 18-22 touches with goal-line work."
+        },
+        {
+          "player": "Malik Nabers",
+          "position": "WR",
+          "salary": 11000,
+          "projection": 17.2,
+          "floorNote": "Giant volume funnel regardless of score."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Russell Wilson",
+            "passCatchers": [
+              "George Pickens",
+              "Pat Freiermuth"
+            ]
+          },
+          "bringBack": "Malik Nabers",
+          "valueFiller": "Van Jefferson",
+          "correlationTheme": "Wilson moon-ball efficiency to Pickens breaks slate while Nabers piles up PPR catches."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2305.18290",
+        "arxiv:2401.03462"
+      ],
+      "openalex": [
+        "openalex:W4285718290"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2024"
+      ],
+      "hf": [
+        "hf:models/gse-nfl-xgboost-v5"
+      ]
+    }
+  }
+]

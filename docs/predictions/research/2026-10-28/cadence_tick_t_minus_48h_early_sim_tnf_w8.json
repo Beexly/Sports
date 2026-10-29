@@ -1,0 +1,74 @@
+{
+  "report_type": "WEEKLY_CADENCE_TICK",
+  "game_slot": "TNF",
+  "phase": "T_MINUS_48H_EARLY_SIM",
+  "version": "v1.0",
+  "cadence_window": {
+    "day": "Tue",
+    "ct_time": "04:00"
+  },
+  "metadata": {
+    "season": 2026,
+    "week": 8,
+    "timestamp_utc": "2026-10-29T03:42:22.923133+00:00",
+    "simulations_run": 10000
+  },
+  "outputs": [
+    "TOTALS_SPREADS",
+    "PLAYER_PROPS",
+    "CORRELATED_SGP",
+    "DFS_WRITEUPS",
+    "CONTENT_OS_PACKET"
+  ],
+  "simulation_summary": {
+    "iterations": 10000,
+    "engine": "GSE-MonteCarlo-v5.3.0",
+    "convergence_standard_error": 0.01,
+    "simulated_games": [
+      {
+        "game_id": "2026_W8_TNF_MATCHUP",
+        "model_projected_spread": -3.85,
+        "model_projected_total": 48.75,
+        "market_spread": -2.5,
+        "market_total": 47.0,
+        "edge_spread_pts": 1.35,
+        "edge_total_pts": 1.75,
+        "model_cover_prob": 0.548,
+        "market_implied_prob": 0.512,
+        "edge_pct": 3.6
+      }
+    ]
+  },
+  "publish_gate": {
+    "passes": true,
+    "reason": "Edge +3.6% clears min 2.0% gate, independent blend agrees",
+    "checks": [
+      {
+        "name": "min_edge_pct",
+        "threshold": 2.0,
+        "observed": 3.6,
+        "pass": true
+      },
+      {
+        "name": "conjunction_consensus",
+        "sources": 3,
+        "agreement": "STRONG",
+        "pass": true
+      },
+      {
+        "name": "adverse_edge_suppression",
+        "status": "CLEAR",
+        "pass": true
+      }
+    ]
+  },
+  "ticket": {
+    "ticket_id": "TICK-2026-W8-TNF",
+    "selection": "HOME -2.5",
+    "market": "spread",
+    "american_odds": -110,
+    "edge_pct": 3.6,
+    "kelly_stake_pct": 0.018
+  },
+  "sha256_merkle": "0c7731fe4ad449ac6694b3b81ac514654782c3e541487cdb4084903b80f96e56"
+}

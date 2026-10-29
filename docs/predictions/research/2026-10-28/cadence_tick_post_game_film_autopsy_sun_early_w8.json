@@ -1,0 +1,53 @@
+{
+  "report_type": "WEEKLY_CADENCE_TICK",
+  "game_slot": "SUN_EARLY",
+  "phase": "POST_GAME_FILM_AUTOPSY",
+  "version": "v4.0",
+  "cadence_window": {
+    "day": "Sun",
+    "ct_time": "16:00"
+  },
+  "metadata": {
+    "season": 2026,
+    "week": 8,
+    "timestamp_utc": "2026-10-29T03:42:23.070657+00:00",
+    "simulations_run": 0
+  },
+  "outputs": [
+    "FILM_GRADES",
+    "PACE_OF_PLAY"
+  ],
+  "simulation_summary": {},
+  "publish_gate": {
+    "passes": true,
+    "reason": "Edge +3.6% clears min 2.0% gate, independent blend agrees",
+    "checks": [
+      {
+        "name": "min_edge_pct",
+        "threshold": 2.0,
+        "observed": 3.6,
+        "pass": true
+      },
+      {
+        "name": "conjunction_consensus",
+        "sources": 3,
+        "agreement": "STRONG",
+        "pass": true
+      },
+      {
+        "name": "adverse_edge_suppression",
+        "status": "CLEAR",
+        "pass": true
+      }
+    ]
+  },
+  "ticket": {
+    "ticket_id": "TICK-2026-W8-SUN_EARLY",
+    "selection": "HOME -2.5",
+    "market": "spread",
+    "american_odds": -110,
+    "edge_pct": 3.6,
+    "kelly_stake_pct": 0.018
+  },
+  "sha256_merkle": "002cfe0f719f15b0d37bdf6558dcea31a3901c03b076d249f1030c6d03427568"
+}

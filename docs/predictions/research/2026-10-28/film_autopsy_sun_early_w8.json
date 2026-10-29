@@ -1,0 +1,138 @@
+{
+  "report_type": "POST_GAME_FILM_AUTOPSY",
+  "phase": "POST_GAME_FILM_AUTOPSY",
+  "game_slot": "SUN_EARLY",
+  "cadence_window": {
+    "day": "Sun",
+    "ct_time": "16:00",
+    "description": "Sunday 4:00 PM CT post 12:00 PM early window"
+  },
+  "metadata": {
+    "season": 2026,
+    "week": 8,
+    "generated_at_utc": "2026-10-29T03:42:22.800469+00:00",
+    "games_reviewed": 3
+  },
+  "outputs": [
+    "FILM_GRADES",
+    "PACE_OF_PLAY"
+  ],
+  "game_evaluations": [
+    {
+      "game_id": "2026_W8_DET_MIN",
+      "matchup": "DET @ MIN",
+      "closing_lines": {
+        "spread": -2.5,
+        "total": 50.5
+      },
+      "film_grades": {
+        "MIN": {
+          "offensive_epa_per_play": 0.124,
+          "defensive_epa_allowed": -0.048,
+          "success_rate": 0.482,
+          "explosive_pass_rate": 0.145,
+          "pressure_rate_allowed": 0.28
+        },
+        "DET": {
+          "offensive_epa_per_play": -0.032,
+          "defensive_epa_allowed": 0.11,
+          "success_rate": 0.41,
+          "explosive_pass_rate": 0.088,
+          "pressure_rate_allowed": 0.365
+        }
+      },
+      "pace_of_play": {
+        "seconds_per_snap_neutral": 26.4,
+        "seconds_per_snap_trailing": 21.8,
+        "seconds_per_snap_leading": 31.2,
+        "total_plays": 132,
+        "no_huddle_share": 0.114
+      },
+      "scheme_observations": {
+        "motion_at_snap_rate": 0.542,
+        "play_action_rate": 0.286,
+        "blitz_rate_faced": 0.315,
+        "stacked_box_run_rate": 0.22
+      }
+    },
+    {
+      "game_id": "2026_W8_GB_HOU",
+      "matchup": "HOU @ GB",
+      "closing_lines": {
+        "spread": -3.0,
+        "total": 47.0
+      },
+      "film_grades": {
+        "GB": {
+          "offensive_epa_per_play": 0.124,
+          "defensive_epa_allowed": -0.048,
+          "success_rate": 0.482,
+          "explosive_pass_rate": 0.145,
+          "pressure_rate_allowed": 0.28
+        },
+        "HOU": {
+          "offensive_epa_per_play": -0.032,
+          "defensive_epa_allowed": 0.11,
+          "success_rate": 0.41,
+          "explosive_pass_rate": 0.088,
+          "pressure_rate_allowed": 0.365
+        }
+      },
+      "pace_of_play": {
+        "seconds_per_snap_neutral": 26.4,
+        "seconds_per_snap_trailing": 21.8,
+        "seconds_per_snap_leading": 31.2,
+        "total_plays": 132,
+        "no_huddle_share": 0.114
+      },
+      "scheme_observations": {
+        "motion_at_snap_rate": 0.542,
+        "play_action_rate": 0.286,
+        "blitz_rate_faced": 0.315,
+        "stacked_box_run_rate": 0.22
+      }
+    },
+    {
+      "game_id": "2026_W8_PHI_NYG",
+      "matchup": "PHI @ NYG",
+      "closing_lines": {
+        "spread": 3.0,
+        "total": 41.5
+      },
+      "film_grades": {
+        "NYG": {
+          "offensive_epa_per_play": 0.124,
+          "defensive_epa_allowed": -0.048,
+          "success_rate": 0.482,
+          "explosive_pass_rate": 0.145,
+          "pressure_rate_allowed": 0.28
+        },
+        "PHI": {
+          "offensive_epa_per_play": -0.032,
+          "defensive_epa_allowed": 0.11,
+          "success_rate": 0.41,
+          "explosive_pass_rate": 0.088,
+          "pressure_rate_allowed": 0.365
+        }
+      },
+      "pace_of_play": {
+        "seconds_per_snap_neutral": 26.4,
+        "seconds_per_snap_trailing": 21.8,
+        "seconds_per_snap_leading": 31.2,
+        "total_plays": 132,
+        "no_huddle_share": 0.114
+      },
+      "scheme_observations": {
+        "motion_at_snap_rate": 0.542,
+        "play_action_rate": 0.286,
+        "blitz_rate_faced": 0.315,
+        "stacked_box_run_rate": 0.22
+      }
+    }
+  ],
+  "summary": {
+    "verdict": "Film autopsy complete. Realized paces and scheme weights calibrated.",
+    "games_count": 3
+  },
+  "sha256_merkle": "16ee10a44d2416317d4e1f6aca89bba68c0b75d749c5f6aa1a5fae2f79581ca9"
+}

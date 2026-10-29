@@ -48,7 +48,11 @@ import {
   type SignedCall,
 } from "../public-baseline/calibration-map.js";
 import type { Call } from "../public-baseline/call-sheet.js";
-import type { CadenceVersion } from "../public-baseline/cadence.js";
+import type {
+  CadenceVersion,
+  GameSlotWindow,
+  RollingPhase,
+} from "../public-baseline/cadence.js";
 
 // --------------------------------------------------------------------------- //
 // Inputs
@@ -340,3 +344,78 @@ export function priceSealedLock(
   );
   return { ...lock, signedCalls };
 }
+
+// --------------------------------------------------------------------------- //
+// Cadence snapshot & publication gate
+// --------------------------------------------------------------------------- //
+
+export interface PublishGateResult {
+  readonly passes: boolean;
+  readonly reason?: string;
+  readonly checks?: ReadonlyArray<{
+    readonly name: string;
+    readonly pass: boolean;
+    readonly detail?: string;
+  }>;
+}
+
+export interface WeeklyCadenceSnapshot {
+  readonly slot?: GameSlotWindow;
+  readonly phase?: RollingPhase;
+  readonly version?: CadenceVersion;
+  readonly timestampIso: string;
+  readonly gameId?: string;
+  readonly publishGate: PublishGateResult;
+  readonly ticket: unknown | null;
+  readonly signedCalls?: readonly SignedCall[];
+  readonly payload?: unknown;
+}
+
+export interface BuildWeeklyCadenceSnapshotOptions {
+  readonly slot?: GameSlotWindow;
+  readonly phase?: RollingPhase;
+  readonly version?: CadenceVersion;
+  readonly timestampIso?: string;
+  readonly gameId?: string;
+  readonly publishGate: PublishGateResult;
+  readonly rawTicket?: unknown | null;
+  readonly signedCalls?: readonly SignedCall[];
+  readonly payload?: unknown;
+}
+
+/**
+ * Build a weekly cadence snapshot gated by publishGate.
+ *
+ * Invariant: when publishGate.passes is false, ticket in the returned
+ * WeeklyCadenceSnapshot is null (ticket: publishGate.passes ? rawTicket : null).
+ */
+export function buildWeeklyCadenceSnapshot(
+  options: BuildWeeklyCadenceSnapshotOptions,
+): WeeklyCadenceSnapshot {
+  const {
+    slot,
+    phase,
+    version = "v1.0",
+    timestampIso = new Date().toISOString(),
+    gameId,
+    publishGate,
+    rawTicket = null,
+    signedCalls,
+    payload,
+  } = options;
+
+  return {
+    slot,
+    phase,
+    version,
+    timestampIso,
+    gameId,
+    publishGate,
+    ticket: publishGate.passes ? rawTicket : null,
+    signedCalls,
+    payload,
+  };
+}
+
+export const createWeeklyCadenceSnapshot = buildWeeklyCadenceSnapshot;
+

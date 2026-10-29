@@ -123,3 +123,5 @@ Do not re-litigate these. If a decision needs reversing, say so explicitly.
    before you write.
 3. Check whether another session is mid-turn on the same file. If it is, read-only until it lands.
 4. Pick up from §4, not from whatever a chat scrollback suggests.
+
+- **2026-10-28 (Session `2bdfb4e9` — Priority #1 Quad-Engine Crosswalk, T-48h/Sun-4PM Rolling Cadence, & Instant Storefront):** Wired `3,742` canonical nodes across **Kaggle + arXiv + OpenAlex + Hugging Face + DOCX OMML** (`packages/mcp-equations-server/src/quad-engine-crosswalk.ts`), added `ROLLING_GAME_WINDOW_CADENCE` to `packages/prediction-engine/src/public-baseline/cadence.ts` (`Sun 16:00 CT` Post-Game Film Review + `Tue/Fri/Sat 04:00 CT` T-48h Early-Morning Simulations while preserving the 6 legacy `CADENCE` rows), wired `circa_observations.db` / `load_scaling.py` ($N_{\text{eff}} = 1/\text{HHI}$) / `scheme_effects.py` / `gse_injury_overlay_v2.py`, and shipped `/packages` WagerTalk-style a-la-carte storefront + `/intelligence/observatory` (`108/108` tests passing).
