@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 16`
+- **CYCLE_ROUND:** `Round 17`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -228,6 +228,18 @@ Formula: mean EPA of the next play after an explosive, minus mean EPA of the nex
 - Green Bay: early gap -0.3199 on 47 plays. Late gap -0.2796 on 22 plays. The sign holds, and it is mean-reversion, not a tempo boost. The late cell is 22 plays. Not promoted.
 - Deploy at check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` was Building on `sports-web`, commit `71dc74539`, URL `sports-deej11ou1`. It was not canceled. Quad harvest: none.
 - Deploy after the push: that same deployment is Ready, target production, alias assigned, including `www.galaxysportsedge.com`. Live `/fantasy/dfs` is HTTP 200 and contains `Carolina Panthers`, `Green Bay Packers`, and `GB -3.5`. `No packaged` is not on that page.
+
+## Round 17 — 2026-10-29 03:08 CT
+
+Shotgun versus not, from the play file `shotgun` column. Pass and run plays with non-null EPA. The participation formation field is single letters (`S`, `U`, `0`, `P`) with no codebook on disk, so it was not used. Cards not changed. The Ready alias was not canceled.
+
+Formula: mean EPA in shotgun minus mean EPA out of shotgun. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap +0.0354 (5,867 versus 3,826). Late gap +0.0606 (2,192 versus 1,294). The sign holds. It is a league covariate, not a side.
+- Carolina: early gap +0.1491 (174 versus 91). Late gap -0.4060 (73 versus 54). The sign flips. The early shotgun advantage did not hold. Not promoted.
+- Green Bay: early gap -0.0402 (192 versus 98). Late gap +0.3984 (101 versus 32). The sign flips. Not promoted.
+- Alias at check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready on `71dc74539`. Quad harvest: none.
+
 
 
 
