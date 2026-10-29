@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 24`
+- **CYCLE_ROUND:** `Round 25`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -316,6 +316,18 @@ Formula: trailing mean minus leading mean. Early is weeks 1–5. Late is weeks 6
 - Carolina late trailing is 54 plays at -0.2677, and every one of those plays is `2026_07_TB_CAR`, at home. That is the same cell as the late home number from Round 21. It is not a second finding. Not promoted.
 - Green Bay: early trailing -0.2800 on 75 plays, leading 0.1250 on 119, gap -0.4050. Late trailing 0.0505 on 53, leading -0.0815 on 54, gap +0.1320. The sign flips. The early trailing slump does not hold. Not a side.
 - Quad harvest: none.
+
+## Round 25 — 2026-10-29 03:48 CT
+
+First half versus second half. Quarters 1–2 versus 3–4. Overtime plays skipped: 141. Pass and run, non-null EPA. Cards not changed.
+
+Formula: second-half mean minus first-half mean. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap +0.0258. Late gap -0.0730. The sign flips. Not a weight.
+- Carolina: early gap -0.0508. Late first half -0.1788 on 49 plays. Late second half 0.0383 on 78. The sign flips. Not a second-half fade. Not promoted.
+- Green Bay: early gap -0.1628 (first half 0.0630 on 130, second half -0.0998 on 156). Late gap -0.2728 (first half 0.1502 on 77, second half -0.1226 on 56). The sign holds. Both late cells are above 50 plays. It is a covariate, not a side.
+- Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
 
 
 
