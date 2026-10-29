@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 20`
+- **CYCLE_ROUND:** `Round 21`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -272,6 +272,18 @@ Formula: late mean minus early mean, on EPA and on conversion rate.
 - Green Bay: early EPA -0.2263, conversion 0.2807, 57 plays. Late EPA 0.3738, conversion 0.4848, 33 plays. The early "bad on third down" reading does not hold. Not promoted into a side.
 - Third-and-short and third-and-long cells are 9 to 15 plays. Not used.
 - Quad harvest: none.
+
+## Round 21 — 2026-10-29 03:28 CT
+
+Home versus road EPA. A play is home when `posteam` equals `home_team`. Pass and run, non-null EPA. Cards not changed. Tonight Carolina is the road team and Green Bay is home.
+
+Formula: home mean minus road mean. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap -0.0024. Late gap -0.0833. There is no home-field boost in this file. Not a weight.
+- Carolina: early home 0.2387 on 132 plays, early road -0.0075 on 133. Late home -0.2677 on 54. Late road 0.1189 on 73. The sign flips. The late drop is at home. Tonight they are on the road. Not promoted into a side.
+- Green Bay: early home 0.1314 on 121, early road -0.1294 on 169, gap +0.2609. Late home 0.0338 on 68, late road 0.0369 on 65, gap -0.0031. The early home boost does not hold. Not a side.
+- Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
 
 
 
