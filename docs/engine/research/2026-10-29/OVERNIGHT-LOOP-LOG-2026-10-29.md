@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 29`
+- **CYCLE_ROUND:** `Round 30`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -365,6 +365,16 @@ Success rate and bust rate. Success means EPA above 0. A bust means EPA of -1.0 
 - Carolina success: 117/265 early (0.4415), 54/127 late (0.4252). Bust: 34/265 (0.1283), 18/127 (0.1417). The mean drop is not a success-rate collapse and not a bust-rate spike. Not promoted.
 - Green Bay success: 118/290 early (0.4069), 48/133 late (0.3609). Bust: 0.1552 early, 0.1504 late. Success dipped. Busts did not rise. Not a side.
 - Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
+## Round 30 — 2026-10-29 04:17 CT
+
+Yards per play. Pass and run plays with non-null `yards_gained`. Cards not changed. The alias was not re-fetched this round.
+
+- League: 5.433 early on 9,693 plays, 5.375 late on 3,486. Change -0.058. Flat.
+- Carolina: 6.155 early on 265 plays, 5.252 late on 127. Change -0.903. The yards fell. Success rate and explosive rate did not. Not a side.
+- Green Bay: 5.769 early on 290 plays, 4.842 late on 133. Change -0.927. Yards fell about the same amount. Late EPA did not collapse with them. Not a side.
+- Quad harvest: none.
+
 
 
 
