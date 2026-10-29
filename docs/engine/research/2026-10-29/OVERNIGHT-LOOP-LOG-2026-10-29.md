@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 21`
+- **CYCLE_ROUND:** `Round 22`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -283,6 +283,18 @@ Formula: home mean minus road mean. Early is weeks 1–5. Late is weeks 6–7.
 - Carolina: early home 0.2387 on 132 plays, early road -0.0075 on 133. Late home -0.2677 on 54. Late road 0.1189 on 73. The sign flips. The late drop is at home. Tonight they are on the road. Not promoted into a side.
 - Green Bay: early home 0.1314 on 121, early road -0.1294 on 169, gap +0.2609. Late home 0.0338 on 68, late road 0.0369 on 65, gap -0.0031. The early home boost does not hold. Not a side.
 - Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`. Quad harvest: none.
+
+## Round 22 — 2026-10-29 03:33 CT
+
+Pass EPA minus run EPA. Pass and run plays with non-null EPA. Cards not changed. The alias was not re-fetched this round.
+
+Formula: pass mean minus run mean. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap +0.0843 (5,593 pass versus 4,100 run). Late gap +0.0708 (2,034 versus 1,452). The sign holds. It is a league covariate, not a side.
+- Carolina: early gap +0.2650 (pass 0.2081 on 172, run -0.0569 on 93). Late gap -0.3480 (pass -0.1797 on 78, run 0.1683 on 49). The sign flips. The early pass lean does not hold. Not promoted.
+- Green Bay: early gap +0.4019 (pass 0.1097 on 196, run -0.2922 on 94). Late gap +0.3375 (pass 0.1445 on 90, run -0.1930 on 43). The sign holds. Both late cells are above 40 plays. It is a covariate, not a side.
+- Quad harvest: none.
+
 
 
 
