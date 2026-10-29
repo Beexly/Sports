@@ -6,7 +6,6 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { isRealInstant } from "@/lib/time/local-time";
 import { formatCentralTime } from "@/lib/time/central";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { boardMarketLabel } from "@/lib/board/market-label";

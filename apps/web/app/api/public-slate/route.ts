@@ -3,7 +3,6 @@ import {
   parseEspnScoreboard,
   parseScores365,
   fixturesUrl,
-  SCORES365_ORIGIN,
   ESPN_NFL_SCOREBOARD,
   homeVsAway,
   homeAwayScore,
@@ -54,7 +53,7 @@ export async function GET() {
     byKey.set(k, slot)
   }
 
-  const slate: SlateRow[] = [...byKey.entries()].map(([key, slot]) => {
+  const slate: SlateRow[] = [...byKey.entries()].map(([, slot]) => {
     const espnHome = slot.espn?.home.abbr ?? null
     const s365Home = slot.s365?.home.abbr ?? null
     return {

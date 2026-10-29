@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 1`
+- **CYCLE_ROUND:** `Round 2`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **Disk Status:** `56.06 GB` free on `C:\` (reclaimed; all live workspaces `Sports`, `nfl-farm`, `_research`, `repo-scout` kept local).
@@ -28,4 +28,16 @@ Known defect fixed. Did not invent a play.
 - Gate: side, total, props, SGP, DFS captain all PASS. Reason: no book-last comparison was computed. A PASS is not a lean.
 
 Next round must bind measured Weeks 1-7 tables before any PLAY. Do not stamp the cadence tick. Do not restore the 2024 fixture.
+
+## Round 2 — 2026-10-29 01:21 CT
+
+Did not build pre-week-8 kinematic artifacts. The inputs on disk are not 2026 week 7.
+
+- `intelligence/vision/data/tracking_week_1.csv`, `tracking_week_7.csv`, and `tracking_week_8.csv` exist (971MB, 824MB, 903MB). Header is the Big Data Bowl tracking schema. First 20,000 data rows of each file are one game: `2022091200`, `2022102400`, `2022103100`. Year prefix `2022`. First week-7 row is Robert Quinn, CHI, time `2022-10-25`. These files were not scanned to the end. They are not a 2026 week-7 source.
+- `family_features_week1.parquet` (813 rows, 16 games), `family_features_week7.parquet` (709 rows, 14 games), and `family_features_week8.parquet` (720 rows, 15 games) have gameId year prefix `2022` only. Full column read.
+- `derived_metrics_pre_week6_2026.parquet` has 528 rows and no week column. `metrics_summary.json` says scope `REG season weeks 1-5, 2026`. That claim was not recomputed. No pre-week-8 parquet was written.
+- Production: `vercel ls` shows `sports-web` production deployments in Error, including `https://sports-7oiaqwggj-pick-pilot-s-projects.vercel.app` (about 3 minutes old at inspect time). `vercel inspect --logs` exit 1. Build failed at lint: unused `Link` in `app/packages/page.tsx`, unused `SCORES365_ORIGIN` and `key` in `app/api/public-slate/route.ts`, unused `isRealInstant` in `app/board/page.tsx`, unused `LIVE_PACKAGE_CATALOG` in `app/cockpit/workflows/page.tsx` and `app/packages/[slug]/page.tsx`. Those five unused bindings were removed in this round. Deploy result of that fix is not known yet.
+- Live fetch: `/` status 200, 142404 bytes, no `Carolina Panthers` and no `Minnesota Vikings`. `/packages` HTTP 404. `/fantasy/dfs` status 200, 877939 bytes, same absence. The week-8 board is not on the live HTML.
+- Gate unchanged: PASS. No PLAY. Telegram daemon not started. Sonar 0 of 4.
+
 

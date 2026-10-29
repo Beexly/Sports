@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { getPackageBySlug, LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
+import { getPackageBySlug } from "@/lib/packages/catalog";
 import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
 import {
   LIVE_SLATE_COACH_WRITEUPS,

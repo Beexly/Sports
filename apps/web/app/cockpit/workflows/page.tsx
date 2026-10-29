@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { buildIntelligenceGrowthSnapshot } from "@/lib/intelligence/growth-observatory";
-import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 
 export const dynamic = "force-dynamic";
 
