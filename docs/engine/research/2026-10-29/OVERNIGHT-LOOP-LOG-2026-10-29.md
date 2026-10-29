@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 17`
+- **CYCLE_ROUND:** `Round 18`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -239,6 +239,18 @@ Formula: mean EPA in shotgun minus mean EPA out of shotgun. Early is weeks 1–5
 - Carolina: early gap +0.1491 (174 versus 91). Late gap -0.4060 (73 versus 54). The sign flips. The early shotgun advantage did not hold. Not promoted.
 - Green Bay: early gap -0.0402 (192 versus 98). Late gap +0.3984 (101 versus 32). The sign flips. Not promoted.
 - Alias at check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready on `71dc74539`. Quad harvest: none.
+
+## Round 18 — 2026-10-29 03:13 CT
+
+Red zone versus open field. Red zone means `yardline_100` of 20 or less. Pass and run plays with non-null EPA. Cards not changed. The Ready alias was still assigned and was not canceled.
+
+Formula: mean EPA inside the 20 minus mean EPA outside it. Early is weeks 1–5. Late is weeks 6–7.
+
+- League: early gap +0.0493 (1,553 versus 8,140). Late gap -0.0119 (591 versus 2,895). The sign flips. Not a league weight.
+- Carolina: early gap +0.0419 (47 versus 218). Late red zone is 17 plays at 0.1793. Late open field is 110 plays at -0.0802. The collapse is in the open field, not the red zone. The 17-play cell was not promoted.
+- Green Bay: early red zone -0.2393 on 53 plays, open field 0.0283 on 237. Late red zone -0.3022 on 24 plays. The sign holds. The late cell is 24 plays, so it was not promoted into a side.
+- Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready, production, `www.galaxysportsedge.com` assigned. Quad harvest: none.
+
 
 
 
