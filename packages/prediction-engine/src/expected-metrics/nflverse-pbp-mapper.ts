@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type ManageableThirdDownPlay } from "./manageable-third-down.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -42,7 +43,7 @@ import { type DrivePlay, type DriveResult } from "./drives.js";
  */
 export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   // identity / grain
-  "game_id", "play_id", "season", "season_type",
+  "game_id", "play_id", "season", "season_type", "week",
   "home_team", "away_team", "posteam", "defteam",
   // ordering / clock
   "game_half", "half_seconds_remaining", "game_seconds_remaining",
@@ -56,7 +57,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "score_differential", "posteam_timeouts_remaining", "defteam_timeouts_remaining",
   "spread_line", "result",
   // success rate
-  "play_type", "yards_gained", "interception", "fumble_lost",
+  "play_type", "yards_gained", "interception", "fumble_lost", "qb_kneel", "qb_spike",
   "rusher_player_id", "receiver_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
@@ -105,6 +106,7 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly manageableThirdDownPlays: readonly ManageableThirdDownPlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +382,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const manageableThirdDownPlays: ManageableThirdDownPlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -498,6 +501,20 @@ export function mapNflversePbpToExpectedMetrics(
           touchdown: bin(row["touchdown"]),
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
+
+        manageableThirdDownPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          week: num(row["week"]),
+          posteam: row["posteam"] ?? "",
+          defteam: row["defteam"] ?? "",
+          down,
+          ydstogo,
+          playType: row["play_type"] ?? "",
+          qbKneel: bin(row["qb_kneel"]),
+          qbSpike: bin(row["qb_spike"]),
+          fixedDrive: Number.isFinite(num(row["fixed_drive"])) ? num(row["fixed_drive"]) : null,
+        });
       }
     }
 
@@ -611,6 +628,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    manageableThirdDownPlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
