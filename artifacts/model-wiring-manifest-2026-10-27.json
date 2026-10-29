@@ -1,0 +1,2007 @@
+{
+  "generated": "2026-10-27",
+  "branch": "engine/public-baseline-2026-10-24",
+  "source": "packages/prediction-engine/src",
+  "rule": "KEEP = has at least one production importer other than index.ts. ARCHIVE = reachable only via the barrel and/or its own tests.",
+  "totals": {
+    "modules": 196,
+    "keep": 12,
+    "archive": 184,
+    "keep_with_gate": 0,
+    "keep_without_gate": 12,
+    "archive_with_gate": 5,
+    "with_test": 192
+  },
+  "modules": [
+    {
+      "module": "1807-09236-empirical-bayes-btl.ts",
+      "basename": "1807-09236-empirical-bayes-btl",
+      "lines": 125,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2408-09178v1-mambatrack-a-simple-baseline-for.ts",
+      "basename": "2408-09178v1-mambatrack-a-simple-baseline-for",
+      "lines": 88,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2408-14837v2-diffusion-models-are-realtime-game.ts",
+      "basename": "2408-14837v2-diffusion-models-are-realtime-game",
+      "lines": 69,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2411-17900v1-pretrained-llm-adapted-with-lora.ts",
+      "basename": "2411-17900v1-pretrained-llm-adapted-with-lora",
+      "lines": 48,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2412-19215v1-optimizing-fantasy-sports-team-selection.ts",
+      "basename": "2412-19215v1-optimizing-fantasy-sports-team-selection",
+      "lines": 74,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2502-16313-snap-timing-multilevel.ts",
+      "basename": "2502-16313-snap-timing-multilevel",
+      "lines": 69,
+      "has_gate": true,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2503-12107v1-chronosx-adapting-pretrained-time-series.ts",
+      "basename": "2503-12107v1-chronosx-adapting-pretrained-time-series",
+      "lines": 63,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2504-08747v1-gridmind-a-multiagent-nlp-framework.ts",
+      "basename": "2504-08747v1-gridmind-a-multiagent-nlp-framework",
+      "lines": 61,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2504-10936v1-can-llms-leverage-observational-data.ts",
+      "basename": "2504-10936v1-can-llms-leverage-observational-data",
+      "lines": 72,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2506-04282v1-drsr-llm-based-scientific-equation.ts",
+      "basename": "2506-04282v1-drsr-llm-based-scientific-equation",
+      "lines": 55,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2508-14065v1-personalized-contest-recommendation-in-fantasy.ts",
+      "basename": "2508-14065v1-personalized-contest-recommendation-in-fantasy",
+      "lines": 64,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2511-14186v1-fewshot-precise-event-spotting-via.ts",
+      "basename": "2511-14186v1-fewshot-precise-event-spotting-via",
+      "lines": 103,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2604-17065v1-baskethar-a-multimodal-dataset-for.ts",
+      "basename": "2604-17065v1-baskethar-a-multimodal-dataset-for",
+      "lines": 68,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2605-30209v1-betting-against-integrity-identifying-matchfixing.ts",
+      "basename": "2605-30209v1-betting-against-integrity-identifying-matchfixing",
+      "lines": 64,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2606-18512-causal-panel-forecasting.ts",
+      "basename": "2606-18512-causal-panel-forecasting",
+      "lines": 53,
+      "has_gate": true,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2609-22641v1-consistworld-evidence-routing-for-consistent.ts",
+      "basename": "2609-22641v1-consistworld-evidence-routing-for-consistent",
+      "lines": 63,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "2609-33664-hmm-pass-blocking.ts",
+      "basename": "2609-33664-hmm-pass-blocking",
+      "lines": 90,
+      "has_gate": true,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "automl/2003-06505v1-autogluon-tabular-search.ts",
+      "basename": "2003-06505v1-autogluon-tabular-search",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "automl/2003-10865v2-async-hpo-service.ts",
+      "basename": "2003-10865v2-async-hpo-service",
+      "lines": 168,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/1503-07642-ordinal-structure-select.ts",
+      "basename": "1503-07642-ordinal-structure-select",
+      "lines": 314,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/1812-05170-hierarchical-ar1-shrinkage.ts",
+      "basename": "1812-05170-hierarchical-ar1-shrinkage",
+      "lines": 101,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/dispersion-bayesian-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "bayesian/1908-05745-nmf-target-archetypes.ts",
+      "basename": "1908-05745-nmf-target-archetypes",
+      "lines": 114,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/1911-08138-sparse-form-hmm.ts",
+      "basename": "1911-08138-sparse-form-hmm",
+      "lines": 194,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/1911-08791-three-module-score-factorization.ts",
+      "basename": "1911-08791-three-module-score-factorization",
+      "lines": 165,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2002-01193-copula-hmm-momentum.ts",
+      "basename": "2002-01193-copula-hmm-momentum",
+      "lines": 184,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/dispersion-bayesian-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "bayesian/2004-03019-dshdp-hmm-regimes.ts",
+      "basename": "2004-03019-dshdp-hmm-regimes",
+      "lines": 129,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2005-09024v1-workload-availability-model.ts",
+      "basename": "2005-09024v1-workload-availability-model",
+      "lines": 213,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2012-14949-bivariate-poisson-home-advantage.ts",
+      "basename": "2012-14949-bivariate-poisson-home-advantage",
+      "lines": 64,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2104-07537-dynamic-probit-vb.ts",
+      "basename": "2104-07537-dynamic-probit-vb",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2203-10706-dfs-monte-carlo-gamma.ts",
+      "basename": "2203-10706-dfs-monte-carlo-gamma",
+      "lines": 148,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2207-05114-wp-blender-beta-prior.ts",
+      "basename": "2207-05114-wp-blender-beta-prior",
+      "lines": 73,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2210-11010-efficient-vb-statespace.ts",
+      "basename": "2210-11010-efficient-vb-statespace",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2303-12401v2-hierarchical-live-probit.ts",
+      "basename": "2303-12401v2-hierarchical-live-probit",
+      "lines": 140,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "bayesian/2304-01538-doubly-self-exciting-scores.ts",
+      "basename": "2304-01538-doubly-self-exciting-scores",
+      "lines": 177,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "calibration/1905-07886-conformal-ncp-intervals.ts",
+      "basename": "1905-07886-conformal-ncp-intervals",
+      "lines": 73,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "causal/1803-01422v2-notears-dag.ts",
+      "basename": "1803-01422v2-notears-dag",
+      "lines": 184,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "causal/2001-04197v4-rcd-quarantine-layer.ts",
+      "basename": "2001-04197v4-rcd-quarantine-layer",
+      "lines": 147,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "causal/2003-03685v2-pcmci-team-panel.ts",
+      "basename": "2003-03685v2-pcmci-team-panel",
+      "lines": 167,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "causal/fci-pag.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "causal/2007-00267v1-regime-dependent-causal-discovery.ts",
+      "basename": "2007-00267v1-regime-dependent-causal-discovery",
+      "lines": 268,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "causal/2110-00637v4-ml4c-supervised-orienter.ts",
+      "basename": "2110-00637v4-ml4c-supervised-orienter",
+      "lines": 220,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "causal/causal-graph-builder.ts",
+      "basename": "causal-graph-builder",
+      "lines": 1243,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "causal/fci-pag.ts",
+      "basename": "fci-pag",
+      "lines": 2409,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 2,
+      "consumers": [
+        "causal/causal-discovery-pipeline.ts",
+        "causal/causal-graph-builder.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "causal/periodic-timeseries-id.ts",
+      "basename": "periodic-timeseries-id",
+      "lines": 923,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "continual/1612-00796v2-ewc-feature-anchoring.ts",
+      "basename": "1612-00796v2-ewc-feature-anchoring",
+      "lines": 94,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "continual/1904-10644v1-certainty-weighted-continual-updates.ts",
+      "basename": "1904-10644v1-certainty-weighted-continual-updates",
+      "lines": 143,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "continual/2304-01239v1-teacher-student-continual.ts",
+      "basename": "2304-01239v1-teacher-student-continual",
+      "lines": 93,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/0903-2910v1-ou-line-mean-reversion-sizing.ts",
+      "basename": "0903-2910v1-ou-line-mean-reversion-sizing",
+      "lines": 146,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1011-3177v3-data-replication-abstention.ts",
+      "basename": "1011-3177v3-data-replication-abstention",
+      "lines": 161,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1710-01787-kelly-saturation-hardening.ts",
+      "basename": "1710-01787-kelly-saturation-hardening",
+      "lines": 180,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/decision-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "decision/1710-04818-drawdown-risk-frontier.ts",
+      "basename": "1710-04818-drawdown-risk-frontier",
+      "lines": 182,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/decision-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "decision/1801-06737-bet-cadence-policy.ts",
+      "basename": "1801-06737-bet-cadence-policy",
+      "lines": 120,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/decision-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "decision/1803-08355v2-structured-leg-abstention.ts",
+      "basename": "1803-08355v2-structured-leg-abstention",
+      "lines": 179,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1806-05293-multivariate-slate-sizer.ts",
+      "basename": "1806-05293-multivariate-slate-sizer",
+      "lines": 274,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1807-05265-dominance-screen.ts",
+      "basename": "1807-05265-dominance-screen",
+      "lines": 170,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/decision-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "decision/1812-10371-robust-kelly-uncertainty-set.ts",
+      "basename": "1812-10371-robust-kelly-uncertainty-set",
+      "lines": 149,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "engine/decision-adapters.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "decision/1901-09192v4-selectivenet-selection-head.ts",
+      "basename": "1901-09192v4-selectivenet-selection-head",
+      "lines": 141,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1905-10964v2-dac-abstention-cleaning.ts",
+      "basename": "1905-10964v2-dac-abstention-cleaning",
+      "lines": 134,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1907-00208v2-gambler-reservation-filter.ts",
+      "basename": "1907-00208v2-gambler-reservation-filter",
+      "lines": 116,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/1911-11253v1-hostile-market-abstain.ts",
+      "basename": "1911-11253v1-hostile-market-abstain",
+      "lines": 127,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2001-09097v1-gap-stat-ratings.ts",
+      "basename": "2001-09097v1-gap-stat-ratings",
+      "lines": 139,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2002-03448v1-levy-kelly-staking.ts",
+      "basename": "2002-03448v1-levy-kelly-staking",
+      "lines": 134,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2003-02743-temporal-correlation-kelly.ts",
+      "basename": "2003-02743-temporal-correlation-kelly",
+      "lines": 162,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2004-12099-kelly-kkt-certificate.ts",
+      "basename": "2004-12099-kelly-kkt-certificate",
+      "lines": 154,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2005-11698-fluctuation-frontier.ts",
+      "basename": "2005-11698-fluctuation-frontier",
+      "lines": 129,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2006-01862-expert-deferral-router.ts",
+      "basename": "2006-01862-expert-deferral-router",
+      "lines": 135,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2101-12523-sele-loss-gate.ts",
+      "basename": "2101-12523-sele-loss-gate",
+      "lines": 173,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2104-08236v1-totals-abstention-sigma.ts",
+      "basename": "2104-08236v1-totals-abstention-sigma",
+      "lines": 140,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2104-08281v1-cover-abstention-head.ts",
+      "basename": "2104-08281v1-cover-abstention-head",
+      "lines": 130,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2107-03090-risan-instance-abstention.ts",
+      "basename": "2107-03090-risan-instance-abstention",
+      "lines": 127,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2109-10814v1-variance-budgeted-kelly.ts",
+      "basename": "2109-10814v1-variance-budgeted-kelly",
+      "lines": 156,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2205-13532-training-disagreement-gate.ts",
+      "basename": "2205-13532-training-disagreement-gate",
+      "lines": 136,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2409-18645v1-mc-dropout-cer.ts",
+      "basename": "2409-18645v1-mc-dropout-cer",
+      "lines": 146,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2411-18374-analytic-drawdown-pricer.ts",
+      "basename": "2411-18374-analytic-drawdown-pricer",
+      "lines": 350,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2502-07255v2-dual-threshold-conformal.ts",
+      "basename": "2502-07255v2-dual-threshold-conformal",
+      "lines": 153,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2503-07498-two-knob-sizer.ts",
+      "basename": "2503-07498-two-knob-sizer",
+      "lines": 180,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2503-23782v1-regime-conditional-reject.ts",
+      "basename": "2503-23782v1-regime-conditional-reject",
+      "lines": 174,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2505-00724-crra-stake-dp.ts",
+      "basename": "2505-00724-crra-stake-dp",
+      "lines": 124,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2505-22422v2-star-bets-ci.ts",
+      "basename": "2505-22422v2-star-bets-ci",
+      "lines": 224,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2505-23437v2-baltor-selection.ts",
+      "basename": "2505-23437v2-baltor-selection",
+      "lines": 120,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2507-05994v1-kpup-allocation.ts",
+      "basename": "2507-05994v1-kpup-allocation",
+      "lines": 115,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2508-07556v2-instability-gate.ts",
+      "basename": "2508-07556v2-instability-gate",
+      "lines": 139,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2510-19672-committee-lcb.ts",
+      "basename": "2510-19672-committee-lcb",
+      "lines": 124,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2601-20452v1-whale-distortion.ts",
+      "basename": "2601-20452v1-whale-distortion",
+      "lines": 109,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2601-22570v1-memory-abstention.ts",
+      "basename": "2601-22570v1-memory-abstention",
+      "lines": 119,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2603-24704-evalue-screening.ts",
+      "basename": "2603-24704-evalue-screening",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2604-24723v2-multivariate-kelly.ts",
+      "basename": "2604-24723v2-multivariate-kelly",
+      "lines": 192,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2605-02611-lipschitz-forcing.ts",
+      "basename": "2605-02611-lipschitz-forcing",
+      "lines": 120,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2607-24875v1-hybrid-uncertainty.ts",
+      "basename": "2607-24875v1-hybrid-uncertainty",
+      "lines": 120,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2608-23393-kellyboost.ts",
+      "basename": "2608-23393-kellyboost",
+      "lines": 153,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/2609-22632-perclass-gates.ts",
+      "basename": "2609-22632-perclass-gates",
+      "lines": 117,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "decision/physics-0607166-kelly-backtest.ts",
+      "basename": "physics-0607166-kelly-backtest",
+      "lines": 114,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/1803-01984-bps-outcome-pools.ts",
+      "basename": "1803-01984-bps-outcome-pools",
+      "lines": 127,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2010-10435v1-time-varying-forecast-combination.ts",
+      "basename": "2010-10435v1-time-varying-forecast-combination",
+      "lines": 125,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2011-02077-factor-graphical-ensemble.ts",
+      "basename": "2011-02077-factor-graphical-ensemble",
+      "lines": 141,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2012-01643-diversity-weighted-combiner.ts",
+      "basename": "2012-01643-diversity-weighted-combiner",
+      "lines": 118,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2101-08954-hierarchical-stacking.ts",
+      "basename": "2101-08954-hierarchical-stacking",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2104-04918v2-weighted-quantile-combination.ts",
+      "basename": "2104-04918v2-weighted-quantile-combination",
+      "lines": 87,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2107-06268-smoothed-boa-ensemble.ts",
+      "basename": "2107-06268-smoothed-boa-ensemble",
+      "lines": 81,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2108-02082v3-regime-blender-febama.ts",
+      "basename": "2108-02082v3-regime-blender-febama",
+      "lines": 196,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2111-15365-weekly-boa-consensus.ts",
+      "basename": "2111-15365-weekly-boa-consensus",
+      "lines": 81,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2202-11834-beta-linear-pool.ts",
+      "basename": "2202-11834-beta-linear-pool",
+      "lines": 81,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2203-03279v3-fforma-fusion.ts",
+      "basename": "2203-03279v3-fforma-fusion",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2209-01697-regime-factor-glasso.ts",
+      "basename": "2209-01697-regime-factor-glasso",
+      "lines": 141,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2406-15760-icm-drift-monitor.ts",
+      "basename": "2406-15760-icm-drift-monitor",
+      "lines": 73,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "ensemble/2408-00785v4-kairosis-forecast-aggregation.ts",
+      "basename": "2408-00785v4-kairosis-forecast-aggregation",
+      "lines": 100,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/1601-04302v6-footballonomics-bootstrap.ts",
+      "basename": "1601-04302v6-footballonomics-bootstrap",
+      "lines": 134,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/1708-02715v1-order-flow-resiliency.ts",
+      "basename": "1708-02715v1-order-flow-resiliency",
+      "lines": 178,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/1804-04226v1-cfov-decomposition.ts",
+      "basename": "1804-04226v1-cfov-decomposition",
+      "lines": 135,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/1805-01271v1-its-break-harness.ts",
+      "basename": "1805-01271v1-its-break-harness",
+      "lines": 154,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/1811-03931v1-riskneutral-inplay-pricer.ts",
+      "basename": "1811-03931v1-riskneutral-inplay-pricer",
+      "lines": 121,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/1905-03628v1-nested-poisson-totals.ts",
+      "basename": "1905-03628v1-nested-poisson-totals",
+      "lines": 124,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2006-04551v4-mimic-model-tree.ts",
+      "basename": "2006-04551v4-mimic-model-tree",
+      "lines": 66,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2101-10385v1-bandit-model-selector.ts",
+      "basename": "2101-10385v1-bandit-model-selector",
+      "lines": 80,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2103-04349v1-irl-situational-decisions.ts",
+      "basename": "2103-04349v1-irl-situational-decisions",
+      "lines": 55,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2106-05174v1-nested-zigp-simulation.ts",
+      "basename": "2106-05174v1-nested-zigp-simulation",
+      "lines": 220,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2108-00821v2-news-reaction-ssm.ts",
+      "basename": "2108-00821v2-news-reaction-ssm",
+      "lines": 159,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2109-06625v1-off-policy-coach-rl.ts",
+      "basename": "2109-06625v1-off-policy-coach-rl",
+      "lines": 80,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2206-01038v1-video-action-recognition-menu.ts",
+      "basename": "2206-01038v1-video-action-recognition-menu",
+      "lines": 63,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2206-09654v1-season-total-lstm-ensemble.ts",
+      "basename": "2206-09654v1-season-total-lstm-ensemble",
+      "lines": 96,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2206-11578v1-doubly-online-changepoint.ts",
+      "basename": "2206-11578v1-doubly-online-changepoint",
+      "lines": 125,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2209-07274v5-convexity-grid-war.ts",
+      "basename": "2209-07274v5-convexity-grid-war",
+      "lines": 134,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2211-04459v3-flexbart-tabular-learner.ts",
+      "basename": "2211-04459v3-flexbart-tabular-learner",
+      "lines": 115,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2308-02414v3-bivariate-ssm-skill-rating.ts",
+      "basename": "2308-02414v3-bivariate-ssm-skill-rating",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "experimental/2402-01914v1-glmf-matchup-matrices.ts",
+      "basename": "2402-01914v1-glmf-matchup-matrices",
+      "lines": 143,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 1,
+      "consumers": [
+        "experimental/glmf-shrinkage-law.guard.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "index.ts",
+      "basename": "index",
+      "lines": 5801,
+      "has_gate": false,
+      "has_test": false,
+      "real_consumers": 9,
+      "consumers": [
+        "nfl-epa-fair-value.ts",
+        "engine/coach-projection.ts",
+        "metrics/core/index.ts",
+        "metrics/core/metric-historical-distribution-adapter.ts",
+        "metrics/core/metric-historical-validation-adapter.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "injuries/1705-03918-two-version-causal.ts",
+      "basename": "1705-03918-two-version-causal",
+      "lines": 185,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/1710-08749v1-ppta-causal.ts",
+      "basename": "1710-08749v1-ppta-causal",
+      "lines": 309,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/1801-07104-hot-hand-repetition.ts",
+      "basename": "1801-07104-hot-hand-repetition",
+      "lines": 119,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/2009-06750-icing-causal-dag.ts",
+      "basename": "2009-06750-icing-causal-dag",
+      "lines": 102,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/2011-11691-fourth-down-att-matching.ts",
+      "basename": "2011-11691-fourth-down-att-matching",
+      "lines": 162,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/2108-08797-synthetic-pretraining-detector.ts",
+      "basename": "2108-08797-synthetic-pretraining-detector",
+      "lines": 66,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/2202-08500-recurrent-competing-events.ts",
+      "basename": "2202-08500-recurrent-competing-events",
+      "lines": 84,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/2205-07193v2-division-pair-hfa-causal.ts",
+      "basename": "2205-07193v2-division-pair-hfa-causal",
+      "lines": 162,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "injuries/2305-14612-acl-risk-video-scoring.ts",
+      "basename": "2305-14612-acl-risk-video-scoring",
+      "lines": 63,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "inplay/2103-04647-marked-point-process-live.ts",
+      "basename": "2103-04647-marked-point-process-live",
+      "lines": 77,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "literature/literature-causal.ts",
+      "basename": "literature-causal",
+      "lines": 323,
+      "has_gate": false,
+      "has_test": false,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/1106-4509-ml-market-pooling.ts",
+      "basename": "1106-4509-ml-market-pooling",
+      "lines": 126,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/1310-6998v1-twitter-volume-momentum.ts",
+      "basename": "1310-6998v1-twitter-volume-momentum",
+      "lines": 105,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/1802-08848v1-odds-history-fusion.ts",
+      "basename": "1802-08848v1-odds-history-fusion",
+      "lines": 77,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/1910-08858v2-spread-win-probability-table.ts",
+      "basename": "1910-08858v2-spread-win-probability-table",
+      "lines": 134,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/2003-09384v2-static-theta-threshold-policy.ts",
+      "basename": "2003-09384v2-static-theta-threshold-policy",
+      "lines": 172,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/2010-12508v1-decorrelation-penalty-loss.ts",
+      "basename": "2010-12508v1-decorrelation-penalty-loss",
+      "lines": 250,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/2106-05799v1-hybrid-ability-xgboost.ts",
+      "basename": "2106-05799v1-hybrid-ability-xgboost",
+      "lines": 269,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 2,
+      "consumers": [
+        "bayesian/2002-01193-copula-hmm-momentum.ts",
+        "experimental/2106-05174v1-nested-zigp-simulation.ts"
+      ],
+      "verdict": "KEEP"
+    },
+    {
+      "module": "markets/2107-08827v1-fractional-kelly-sizing.ts",
+      "basename": "2107-08827v1-fractional-kelly-sizing",
+      "lines": 62,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/2112-13001v3-dcp-prop-framework.ts",
+      "basename": "2112-13001v3-dcp-prop-framework",
+      "lines": 165,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "markets/2401-06086v1-imitation-inplay-betting.ts",
+      "basename": "2401-06086v1-imitation-inplay-betting",
+      "lines": 80,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "metalearning/1703-03400v3-maml-rookie-adapter.ts",
+      "basename": "1703-03400v3-maml-rookie-adapter",
+      "lines": 119,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "metalearning/1807-08912v2-alpaca-online-regression.ts",
+      "basename": "1807-08912v2-alpaca-online-regression",
+      "lines": 123,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "metalearning/1901-09890v1-meta-metric-librarian.ts",
+      "basename": "1901-09890v1-meta-metric-librarian",
+      "lines": 126,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "metalearning/2006-06707v2-metavrf-kernel-learning.ts",
+      "basename": "2006-06707v2-metavrf-kernel-learning",
+      "lines": 128,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "metalearning/2009-03228v3-gp-vib-meta-learning.ts",
+      "basename": "2009-03228v3-gp-vib-meta-learning",
+      "lines": 128,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "metalearning/2208-08135v1-uncertainty-weighted-metalearning.ts",
+      "basename": "2208-08135v1-uncertainty-weighted-metalearning",
+      "lines": 185,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "mlb-independent-model.ts",
+      "basename": "mlb-independent-model",
+      "lines": 127,
+      "has_gate": true,
+      "has_test": false,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "nlp/2010-00526v1-liveqa-nfl-benchmark.ts",
+      "basename": "2010-00526v1-liveqa-nfl-benchmark",
+      "lines": 82,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "nlp/2211-04534v1-goal-nfl-retrieval.ts",
+      "basename": "2211-04534v1-goal-nfl-retrieval",
+      "lines": 121,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "nlp/2401-01505v5-afa-tracking-qa.ts",
+      "basename": "2401-01505v5-afa-tracking-qa",
+      "lines": 121,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/1505-01147v2-local-matrix-completion.ts",
+      "basename": "1505-01147v2-local-matrix-completion",
+      "lines": 209,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/1909-12938v1-ts-forecast-dfs-optimizer.ts",
+      "basename": "1909-12938v1-ts-forecast-dfs-optimizer",
+      "lines": 64,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/1912-10417v1-regime-switching-synergy-network.ts",
+      "basename": "1912-10417v1-regime-switching-synergy-network",
+      "lines": 158,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2003-01712v1-joi-stack-metric.ts",
+      "basename": "2003-01712v1-joi-stack-metric",
+      "lines": 53,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2004-08428v1-era-adjusted-features.ts",
+      "basename": "2004-08428v1-era-adjusted-features",
+      "lines": 79,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2005-07742-seam-matchup-shrinkage.ts",
+      "basename": "2005-07742-seam-matchup-shrinkage",
+      "lines": 73,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2006-07513-bayesian-shot-archetypes.ts",
+      "basename": "2006-07513-bayesian-shot-archetypes",
+      "lines": 154,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2009-01206v1-chalk-meter-contrarian.ts",
+      "basename": "2009-01206v1-chalk-meter-contrarian",
+      "lines": 66,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2112-07002-emax-duel-optimizer.ts",
+      "basename": "2112-07002-emax-duel-optimizer",
+      "lines": 99,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2212-11041v1-future-value-models.ts",
+      "basename": "2212-11041v1-future-value-models",
+      "lines": 89,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2302-13386-player2vec-embeddings.ts",
+      "basename": "2302-13386-player2vec-embeddings",
+      "lines": 58,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2303-04963v1-elite-lineup-order-stats.ts",
+      "basename": "2303-04963v1-elite-lineup-order-stats",
+      "lines": 53,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2407-13438-ems-gpp-portfolio.ts",
+      "basename": "2407-13438-ems-gpp-portfolio",
+      "lines": 128,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "props-dfs/2407-17832-group-lasso-plus-minus.ts",
+      "basename": "2407-17832-group-lasso-plus-minus",
+      "lines": 99,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/1707-06887v1-distributional-slate-rl.ts",
+      "basename": "1707-06887v1-distributional-slate-rl",
+      "lines": 131,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/1806-06923v2-iqn-critic.ts",
+      "basename": "1806-06923v2-iqn-critic",
+      "lines": 93,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/1902-08102v2-expectile-critic.ts",
+      "basename": "1902-08102v2-expectile-critic",
+      "lines": 80,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/2006-04779v2-cql-stake-policy.ts",
+      "basename": "2006-04779v2-cql-stake-policy",
+      "lines": 80,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/2105-08877v2-c51-optimal-stopping.ts",
+      "basename": "2105-08877v2-c51-optimal-stopping",
+      "lines": 103,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/2202-00769v1-sinkhorn-drl-staking.ts",
+      "basename": "2202-00769v1-sinkhorn-drl-staking",
+      "lines": 59,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "rl/2203-03003v1-offline-cql-staking.ts",
+      "basename": "2203-03003v1-offline-cql-staking",
+      "lines": 80,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "shadow-calibration-eprocess.ts",
+      "basename": "shadow-calibration-eprocess",
+      "lines": 337,
+      "has_gate": true,
+      "has_test": false,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "simulators/2306-00840v1-muzero-planning-audit.ts",
+      "basename": "2306-00840v1-muzero-planning-audit",
+      "lines": 59,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "sizing/0803-1364v2-generalized-kelly-solver.ts",
+      "basename": "0803-1364v2-generalized-kelly-solver",
+      "lines": 249,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "symreg/2006-10782v2-aifeynman-pareto-pruning.ts",
+      "basename": "2006-10782v2-aifeynman-pareto-pruning",
+      "lines": 77,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "symreg/2312-11955v1-vertical-symbolic-regression.ts",
+      "basename": "2312-11955v1-vertical-symbolic-regression",
+      "lines": 77,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "symreg/2401-00282v1-dgsr-lite-refinement.ts",
+      "basename": "2401-00282v1-dgsr-lite-refinement",
+      "lines": 73,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "team-ratings/1109-2825v2-scoring-random-walk.ts",
+      "basename": "1109-2825v2-scoring-random-walk",
+      "lines": 181,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "team-ratings/1403-7642-college-ranking-sensitivity.ts",
+      "basename": "1403-7642-college-ranking-sensitivity",
+      "lines": 111,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "team-ratings/1609-01176v1-player-kernel-gp.ts",
+      "basename": "1609-01176v1-player-kernel-gp",
+      "lines": 100,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "team-ratings/2010-11187-g-elo-margin-model.ts",
+      "basename": "2010-11187-g-elo-margin-model",
+      "lines": 134,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "team-ratings/2207-12147v1-sparse-tvp-team-ratings.ts",
+      "basename": "2207-12147v1-sparse-tvp-team-ratings",
+      "lines": 141,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "tracking/2012-11717v3-social-nce-trajectories.ts",
+      "basename": "2012-11717v3-social-nce-trajectories",
+      "lines": 75,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "tracking/2305-02968v1-masked-trajectory-models.ts",
+      "basename": "2305-02968v1-masked-trajectory-models",
+      "lines": 77,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "tracking/2407-20028v1-atscc-route-primitives.ts",
+      "basename": "2407-20028v1-atscc-route-primitives",
+      "lines": 75,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "weather/2106-00175-stacked-live-wp-bakeoff.ts",
+      "basename": "2106-00175-stacked-live-wp-bakeoff",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "weather/2109-09287-stadium-factor-decomposition.ts",
+      "basename": "2109-09287-stadium-factor-decomposition",
+      "lines": 180,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "win-spread-total/1908-07372-sde-inplay-win-probability.ts",
+      "basename": "1908-07372-sde-inplay-win-probability",
+      "lines": 86,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "win-spread-total/2008-13005-budescu-chen-aggregation.ts",
+      "basename": "2008-13005-budescu-chen-aggregation",
+      "lines": 63,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    },
+    {
+      "module": "win-spread-total/2207-13191-gcn-win-prediction.ts",
+      "basename": "2207-13191-gcn-win-prediction",
+      "lines": 95,
+      "has_gate": false,
+      "has_test": true,
+      "real_consumers": 0,
+      "consumers": [],
+      "verdict": "ARCHIVE"
+    }
+  ]
+}

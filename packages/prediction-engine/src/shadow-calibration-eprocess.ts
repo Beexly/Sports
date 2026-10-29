@@ -5,7 +5,23 @@ import {
   type ForecastSkillFoldState,
 } from "./forecast-skill-eprocess.js";
 
+/**
+ * ACCEPTANCE_GATE (SHADOW DIAGNOSTIC ONLY — VILLE'S INEQUALITY GATE):
+ * Implements sequentially valid forecast calibration e-processes (e_t)_{t >= 0} per
+ * Arnold, Henzi, & Ziegel (2023, Ann. Appl. Stat. 17(3):1909-1935, arXiv:2109.11761) and
+ * Ramdas et al. (arXiv:2402.09698): P(e_\tau >= 1/\alpha) <= \alpha at any stopping time \tau.
+ * Remains SHADOW_EPROCESS_ENABLED = false (gateAction: 'none') until PIT beta_e / grenander_e
+ * calibrators are validated across n >= 100 settled picks under lag-h modified stopping rules.
+ */
 export const SHADOW_EPROCESS_ENABLED = false as const;
+export const SHADOW_EPROCESS_ACCEPTANCE_GATE = {
+  status: "UNEVALUATED_SEQUENTIAL_CALIBRATION_GATE",
+  paperId: "arXiv:2109.11761",
+  alphaLevel: 0.05,
+  villeRejectionThreshold: 20.0,
+  minSettledPicks: 100,
+  gateActionWhenDisabled: "none",
+} as const;
 export const SHADOW_PUBLISHABLE_M = 20 as const;
 export const SHADOW_CLAIM_ELIGIBLE_M = 100 as const;
 export const SHADOW_MIN_PICKS = 30 as const;

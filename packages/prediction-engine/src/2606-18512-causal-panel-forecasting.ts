@@ -2,11 +2,22 @@
  * arXiv:2606.18512 — Causal panel forecasting for mid-week starter exit.
  * Synthetic-control + latent factor counterfactual.
  *
- * Layers on top of Sinkhorn target reallocation.
- * ENABLED = false until the Tuesday seal and injury pipeline are wired.
- * Human call required before activation — flipping this changes production predictions.
+ * ACCEPTANCE_GATE (HUMAN_CALL_REQUIRED — SHADOW SEAL REQUIRED):
+ * Module implements prospective out-of-panel causal factor forecasting of Shen (2026, arXiv:2606.18512)
+ * for single-team regime shifts (coach firing, mid-season trade, scheme overhaul).
+ * Refusal / Gate Criteria before flipping CAUSAL_PANEL_FORECASTING_ENABLED / ENABLED to true:
+ *   1. Placebo-in-time backtest across 31-team donor pool must beat pre-intervention RMSE floor.
+ *   2. One clean Tuesday 04:00 CT shadow-seal diff must be signed off by the founder.
  */
 export const ENABLED = false;
+export const CAUSAL_PANEL_FORECASTING_ENABLED = false as const;
+export const CAUSAL_PANEL_FORECASTING_ACCEPTANCE_GATE = {
+  status: "UNEVALUATED_SHADOW_SEAL_GATE",
+  paperId: "arXiv:2606.18512",
+  requiresPlaceboInTimeValidation: true,
+  requiresShadowSealDiff: true,
+  sealBoundary: "PRE_SEAL_TUESDAY_0400_CT_ONLY",
+} as const;
 
 export type UnitObservation = {
   team: string;

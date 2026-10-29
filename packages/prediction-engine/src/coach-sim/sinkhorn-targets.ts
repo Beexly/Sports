@@ -55,6 +55,15 @@ export {
   type SinkhornScaling,
 } from "./sinkhorn.js";
 
+export {
+  LEAGUE_HHI as LEAGUE_TARGET_HHI,
+  LOAD_FLOOR,
+  LOAD_CEIL,
+  effectiveN,
+  loadMultiplier as hhiLoadMultiplier,
+  scaleDropoff,
+} from "./load-scaling.js";
+
 export interface EligibleTarget {
   playerId: string;
   role: "WR1" | "WR2" | "SLOT" | "TE" | "RB";

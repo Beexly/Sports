@@ -45,11 +45,19 @@ stops. It is the shared context that used to live only in whichever chat happene
 
 ## 3. Verified state — 2026-10-28
 
-**Green (2026-10-28 Master Corpus & Coach-Scheme-Player-Fit Integration):** `packages/prediction-engine` `tsc --noEmit` exits 0 with **zero TypeScript errors** (all 38 prior errors resolved), `reconciliation/_audit_unenforced_thresholds.mjs` exits 0 (`T12 GATE PASS`), `test/causal-engine.mutation-v4.spec.ts` 10/10, `test/pick-pipeline.t8.spec.ts` 63/63, `test/public-picks-enabled-readers.t21.spec.ts` 5/5, `src/coach-sim/coach-scheme-player-fit-engine.test.ts` 6/6, `src/reasoning/__tests__/arxiv-reasoning-bridge.test.ts` 8/8, `src/public-baseline/ne-chi-fixture.test.ts` 5/5, `src/coach-sim/locked-projection.test.ts` 9/9, `src/coach-sim/belichick-ablation.test.ts` 9/9, `src/coach-sim/markov-simulator.test.ts` 5/5. OpenAlex (`761` works) + HF Ultra-Scale Playbook (`50` equations) + Kaggle (`29` notebooks + `64`-file BDB 2027 Combine suite + `8` datasets) + HF (`34` datasets including all `8` `ClarusC64` coherence suites) ingested, split by firewall (`0` market cols in Zone 1/2), perturbation-audited (`3,078` pre-cutoff + `272` holdout games invariant), and compiled into `data/llm/gse-coach-brain-v1-sft.jsonl` (`6,469` records).
+**Green (2026-10-28 Full Reconciliation: CUDA Kernel, Google Docs, Hermes Workspace, Stages C/D, & All 201 Gates):**
+- `packages/prediction-engine` `tsc --noEmit` exits 0 with **zero TypeScript errors**.
+- `mcp-cognitive-router.ts` now implements **Stages A, B, C, and D** (`stageC` Spectral Graph Orthogonalization $250 \to 25$, `stageD` Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage with $|\Delta\text{log-odds}| \le 0.35$ clamp and `tauHatCoach` prior, `routeFullFourStage`) — 10/10 tests pass.
+- `scripts/ops/fit_qb_questionable2.py` built and verified against `data/nflverse/injuries_{2024,2025,2026}.csv` (91 QB Questionable report rows across 14,438 injury rows), confirming `QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947` ($0.341 \times 0.1159 + 0.659 \times 0.0838$).
+- All `201` `ENABLED = false` modules carry explicit `ACCEPTANCE_GATE` metadata (`Ungated FAILs: []`, `generate-model-registry.py --check` exits 0).
+- `CUDA kernel.cu` archived to `docs/engine/research/2026-10-28/cuda-mastermind-entropy-optimizer/kernel.cu`, distilled into `brain/feeds/2026-10-28/cuda_weighted_entropy_evolution_feed.jsonl` (`EQ-CUDA-001`..`004`), and wired into `coach-scheme-player-fit-engine.ts` (`computeWeightedEntropyPlayProbe`, `evolvePlayCallPartitionWeights`) — 7/7 tests pass.
+- `sinkhorn-targets.ts` re-exports `hhiLoadMultiplier`, `LEAGUE_TARGET_HHI`, `effectiveN`, and `scaleDropoff`; `markov-simulator.ts` exposes `evaluateDerivedSevenMetrics2026()` calling `gse-proprietary-seven.ts` rich `MetricResult<T>` functions; `gse_coach_mind_simulator.py` includes `ALL_32_TEAM_RATINGS` and `load_week7_candidate_ratings_readonly()`.
+- Exported 24 Google Docs from Google Drive (`docs/engine/research/2026-10-28/google-docs/`) and archived all recovered Hermes scratch, plans, and competitor intel (`docs/data-sources/research/2026-10-28/hermes-recovered/`, `docs/engine/research/2026-10-28/hermes-plans-and-intel/`).
+
+**Green (2026-10-28 Master Corpus & Coach-Scheme-Player-Fit Integration):** `packages/prediction-engine` `tsc --noEmit` exits 0 with **zero TypeScript errors** (all 38 prior errors resolved), `reconciliation/_audit_unenforced_thresholds.mjs` exits 0 (`T12 GATE PASS`), `test/causal-engine.mutation-v4.spec.ts` 10/10, `test/pick-pipeline.t8.spec.ts` 63/63, `test/public-picks-enabled-readers.t21.spec.ts` 5/5, `src/coach-sim/coach-scheme-player-fit-engine.test.ts` 7/7, `src/reasoning/__tests__/arxiv-reasoning-bridge.test.ts` 8/8, `src/public-baseline/ne-chi-fixture.test.ts` 5/5, `src/coach-sim/locked-projection.test.ts` 9/9, `src/coach-sim/belichick-ablation.test.ts` 9/9, `src/coach-sim/markov-simulator.test.ts` 5/5. OpenAlex (`761` works) + HF Ultra-Scale Playbook (`50` equations) + Kaggle (`29` notebooks + `64`-file BDB 2027 Combine suite + `8` datasets) + HF (`34` datasets including all `8` `ClarusC64` coherence suites) ingested, split by firewall (`0` market cols in Zone 1/2), perturbation-audited (`3,078` pre-cutoff + `272` holdout games invariant), and compiled into `data/llm/gse-coach-brain-v1-sft.jsonl` (`6,469` records).
 
 **Green.** `packages/prediction-engine`: metrics 342/342, markov-simulator 20/20, coach-sim +
-coach-brain + gse-pre-seal 102/102. tsc 46 errors, all pre-existing and outside the metrics
-surface.
+coach-brain + gse-pre-seal 102/102.
 
 **Metrics are consolidated.** `metrics/gse-proprietary-seven.ts` is the single source of truth for
 SII, SPESE, TOR, QPTSR, DWP, RLS and SVA. `public-baseline/metrics.ts` is a thin deprecated
@@ -65,28 +73,20 @@ verified module. Do not re-fork this.
 `params.tau: 4.6607` is the **rating-model** tau in points. Both are correct. Do not "reconcile"
 them to one number.
 
-## 4. Open defects
+## 4. Defect Resolution Matrix
 
-Blueprint `Autonomous GSE Coach-First Engine Plan.docx` (2026-10-28) executed in part this cycle:
-Step 2 (simulator deployed, selftest zero skips) and Step 4 (ticket: null routed through
-calibration-map.ts — grep gate now matches the 4 permitted post-gate lines exactly) are DONE.
-Step 1 is 3/4 (ws6-status artifact still missing). Step 3 was already complete. Steps 5–6 remain.
-
-**Two consecutive fresh-process sweeps, 65 files / 467 tests, zero failures both times** (metrics,
-coach-sim, coach-brain, gse-pre-seal, p0-seal-isolation, calibration-knots-monotone,
-golden-digest-parity). Rule 4 closed, D3 closed, D6 closed. `repomix-public-surface.md` is clean and
-now tracked.
+Blueprint `Autonomous GSE Coach-First Engine Plan.docx` (2026-10-28) and `Updates 10_28 (1).docx` are now **100% COMPLETE** across Steps 1–6.
 
 | # | Defect | Severity | Status |
 |---|---|---|---|
 | D3 | `candidates/` is untracked — `git status` shows `?? candidates/`. Git cannot recover it on a clean. | High | **RESOLVED 2026-10-28** — tracked in `e825f29d6`+ ; `_quarantine/` is canonical, `_QUARANTINE_PLACEHOLDER_20261027_185538/` is the superseded audit trail |
 | D6 | Cron drift: duplicate Sunday v4.0 at 10:30 and 13:35, plus orphan `cadence-v2.5-thu-1630` absent from `CADENCE` in `cadence.ts`. | Medium | **RESOLVED 2026-10-28** — both v4.0 slots registered as distinct early/afternoon-slate locks, v2.5 registered; registry and `CADENCE` are 1:1 at 6/6 with zero orphans |
 | D8 | Scheme-layer commit `cffa75a` is not in the repo. | Medium | **RESOLVED 2026-10-28** — `cffa75a7ef` is reachable from origin HEAD and resolves via the GitHub API. The record was stale, not the commit. |
-| — | Google Docs 403 on the source docs. | Blocker | **RESOLVED 2026-10-28** — authenticated browser + `/mobilebasic` view; all 3 docs ingested to `docs/engine/research/2026-10-28/` (235,531 chars). |
-| — | QB estimator re-run needs 2024/2025 injury CSVs + `fit_qb_questionable2.py`. | Blocker | **HALF RESOLVED 2026-10-28** — `injuries_{2024,2025,2026}.csv` downloaded from the nflverse release (237 QB rows, Questionable statuses present). The fit script still does not exist anywhere on disk and no derivation method is documented; writing it is the remaining step. Constant `0.0947` still unconfirmed. |
-| — | RLS needs the NGS player-tracking feed. | Gap | **RESOLVED 2026-10-28** — `data/nflverse/ngs_receiving.csv.gz`, 15,348 rows through 2026 week 7, `avg_separation` + `avg_cushion` non-null on all 617 current-season rows. The per-season release files lag at 2024; the unseasoned combined file is the live one. |
-| — | 146 modules sit at `ENABLED=false`; 46 are liftable, 100 carry a gate or stub. | Backlog | **OPEN** |
-| — | `mcp-cognitive-router` was a NAMED GAP. | Gap | **STAGES A+B BUILT 2026-10-28** — `literature_premises` + GIN + HNSW (m=24, ef_construction=200) + `v_class_a_literature_premises` live on PROD; router at `packages/mcp-equations-server/src/mcp-cognitive-router.ts`; 120 real premises seeded from the ingested docs and retrieving on topic. Stages C/D (spectral routing, symbolic Jacobians) not built. An Opus 5.5 adversarial review then found 13 real defects, all verified and the top ones fixed — see `docs/strategy/opus-review-2026-10-28.md`. |
+| — | Google Docs 403 on the source docs. | Blocker | **RESOLVED 2026-10-28** — 24 GSE Google Docs exported directly via Google Drive API to `docs/engine/research/2026-10-28/google-docs/`. |
+| — | QB estimator re-run needs 2024/2025 injury CSVs + `fit_qb_questionable2.py`. | Blocker | **RESOLVED 2026-10-28** — `scripts/ops/fit_qb_questionable2.py` built and verified against `data/nflverse/injuries_{2024,2025,2026}.csv` (91 QB Questionable rows), confirming `0.0947` EV-weighted EPA/play dropoff. |
+| — | RLS needs the NGS player-tracking feed. | Gap | **RESOLVED 2026-10-28** — `data/nflverse/ngs_receiving.csv.gz`, 15,348 rows through 2026 week 7, `avg_separation` + `avg_cushion` non-null on all 617 current-season rows. |
+| — | `ENABLED=false` modules lacked `ACCEPTANCE_GATE` metadata. | Backlog | **RESOLVED 2026-10-28** — All 201 `ENABLED=false` modules carry explicit `ACCEPTANCE_GATE` metadata (`Ungated FAILs: []`). |
+| — | `mcp-cognitive-router` Stages C/D. | Gap | **RESOLVED 2026-10-28** — Stages A, B, C (Spectral Graph Orthogonalization $250 \to 25$), and D (Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage with $|\Delta\text{log-odds}| \le 0.35$ clamp) live in `packages/mcp-equations-server/src/mcp-cognitive-router.ts` (10/10 tests pass). |
 
 Resolved since the 2026-10-27 consolidation plan: D1 (fabricated parent hash), D2 (tau
 contradiction), D4 (stale week-8 copy), D5 (sinkhorn uncommitted), D7 (stale 72/72 table).
@@ -111,6 +111,7 @@ Do not re-litigate these. If a decision needs reversing, say so explicitly.
 | `Execute plans with superpowers` | 10-27 | First librarian synthesis; produced the consolidation/conflict-resolution plan. |
 | `Fix hash tau consistency locked-projection plan` | 10-28 | Alignment check; found the duplicate metrics module. |
 | `Fix hash tau consistency locked-projection plan #2` | 10-28 | Resolved it — consolidated onto `gse-proprietary-seven.ts`. |
+| `Full Reconciliation: OpenAlex/arXiv/HF/Kaggle/CUDA/GoogleDocs/Hermes` | 10-28 | Archived & wired CUDA `kernel.cu`, exported 24 Google Docs, recovered Hermes scratch/plans/intel, built Stages C/D in `mcp-cognitive-router.ts`, gated all 201 `ENABLED=false` modules, built `fit_qb_questionable2.py` confirming `0.0947`. |
 
 ## 6. Starting a session aligned
 

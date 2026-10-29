@@ -52,7 +52,7 @@ def canon(x):
         return "{" + ",".join(json.dumps(k, ensure_ascii=False) + ":" + canon(x[k]) for k in sorted(x.keys())) + "}"
     raise TypeError(type(x).__name__)
 
-print(hashlib.sha256(canon(json.loads(sys.stdin.read())).encode("utf-8")).hexdigest())
+print(hashlib.sha256(canon(json.loads(sys.stdin.buffer.read().decode("utf-8"))).encode("utf-8")).hexdigest())
 `;
 
 /** Hash a Python *expression* — needed for values JSON cannot carry (NaN, Infinity). */
@@ -63,7 +63,7 @@ function pythonDigestExpr(expr: string): string {
 }
 
 const PYTHON_EXPR = PYTHON.replace(
-  'print(hashlib.sha256(canon(json.loads(sys.stdin.read())).encode("utf-8")).hexdigest())',
+  'print(hashlib.sha256(canon(json.loads(sys.stdin.buffer.read().decode("utf-8"))).encode("utf-8")).hexdigest())',
   'print(hashlib.sha256(canon(__EXPR__).encode("utf-8")).hexdigest())',
 );
 

@@ -1,4 +1,19 @@
+/**
+ * ACCEPTANCE_GATE (UNEVALUATED — QUARANTINED UNTIL CALIBRATION FLOOR MET):
+ * Per the GSE Launch Readiness Audit (Score: 25/100 on MLB Pipeline), MLB_INDEPENDENT_MODEL_ENABLED
+ * is locked to false because SPREAD 10+ is anti-predictive, run-line consensusPct = 1.0 is a
+ * structural tautology, and MLB SPEAK 40% is inverted (n = 90) despite moneyline ECE = 0.0501.
+ * Promotion requires: (a) walk-forward run-line Brier <= 0.22 and de-biased ECE <= 0.05 over n >= 100
+ * settled fixtures, (b) removal of consensusPct = 1.0 tautology, and (c) 3 consecutive green runs.
+ */
 export const MLB_INDEPENDENT_MODEL_ENABLED = false as const;
+export const MLB_INDEPENDENT_MODEL_ACCEPTANCE_GATE = {
+  status: "UNEVALUATED_CALIBRATION_FLOOR",
+  minSettledFixtures: 100,
+  maxBrierScore: 0.22,
+  maxDebiasedEce: 0.05,
+  requiredConsecutiveGreenRuns: 3,
+} as const;
 export const MLB_INDEPENDENT_MODEL_MODE = "shadow" as const;
 export const MLB_INDEPENDENT_MODEL_VERSION = "mlb-independent-shadow-v0" as const;
 

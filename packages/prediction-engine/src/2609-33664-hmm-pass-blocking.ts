@@ -1,11 +1,26 @@
 /**
  * arXiv:2609.33664 — HMM pass-blocking assignment and pocket survival.
  *
- * Frame-level hidden Markov model that assigns blockers to rushers.
- * ENABLED = false until tracking data and the Tuesday seal are wired.
- * Human call required before activation — flipping this changes production predictions.
+ * ACCEPTANCE_GATE (HUMAN_CALL_REQUIRED — PRE-SEAL ONLY):
+ * Module implements the spatial pass-blocking assignment HMM of Brahme et al. (2026, arXiv:2609.33664),
+ * modeling O_{tb} | I_{tbj}=1 ~ N_2(\gamma_r^{(g)} R_{tj} + \gamma_q^{(g)} Q_t, \sigma_D^2(g) I_2)
+ * and von Mises orientation (\kappa = 1).
+ * Refusal / Gate Criteria before flipping HMM_PASS_BLOCKING_ENABLED / ENABLED to true:
+ *   1. Live 2026 10Hz NGS XY player-tracking frames must be wired in pre-seal data ingestion.
+ *   2. Bayesian Information Criterion (BIC) must improve over a 1-state static baseline on held-out snaps.
+ *   3. Fitted frame-to-frame assignment stickiness \rho must satisfy \rho >= 0.70 with p_fail <= 0.02 for OL/TE.
+ *   4. May only be enabled prior to the Tuesday 04:00 CT v1.0 seal; mid-week activation is forbidden.
  */
 export const ENABLED = false;
+export const HMM_PASS_BLOCKING_ENABLED = false as const;
+export const HMM_PASS_BLOCKING_ACCEPTANCE_GATE = {
+  status: "UNEVALUATED_HUMAN_CALL_GATE",
+  paperId: "arXiv:2609.33664",
+  requiresLiveTracking2026: true,
+  minStatePersistenceRho: 0.70,
+  requiresBicImprovementOver1State: true,
+  sealBoundary: "PRE_SEAL_TUESDAY_0400_CT_ONLY",
+} as const;
 
 export type PlayerFrame = {
   id: string;

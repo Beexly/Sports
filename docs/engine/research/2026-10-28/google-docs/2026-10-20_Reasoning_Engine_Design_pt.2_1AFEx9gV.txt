@@ -1,0 +1,758 @@
+﻿1. Forensic Reconciliation of HEAD f7ebbe833 and Resolution of Open Blockers
+On branch audit/reconciliation-2026-10-20 (HEAD f7ebbe833), the forensic audit established a non-negotiable engineering principle: every constant that reads as a gate must actually gate, every citation must verify against an opened source document on disk, and every causal identification claim must be proved both structurally and numerically.
+1.1 Reconciling the 5f54ee254..f7ebbe833 Tree State and the 968 CITABLE_VERIFIED Baseline
+The transition from 5f54ee254 to f7ebbe833 retired the shape-only $67.4\%$ () admission figure and resolved the five open reconciliation items as follows:
+1. A087 locateDocumentRegion Substring Fix & Re-Anchor: After fixing the region-slicing offset bug in locateDocumentRegion and re-anchoring against docs/research/2026-09-21/arxiv-deep/ ( deep paper extractions indexed in docs/agent-index/PAPER-CATALOG.md), the corpus builder (scripts/build-grounded-mind-corpus.mjs) and the independent four-layer gate (packages/prediction-engine/src/literature/literature-verification.ts) converge on exactly 968 CITABLE_VERIFIED records (record_class = 'CITABLE_VERIFIED', verification_tier = 'MSVH_S1_EXACT'). Every one of the  records satisfies byte-exact substring provenance (L1), literal numeric token containment without unit-word escape (L2), exact source.slice(start_char, end_char) === quote identity (L3), and domain vocabulary + source-anchored mechanism entailment (L4). All prior distribution counts are retired, and Class-A exclusivity (record_class === 'CITABLE_VERIFIED' && status === 'ACTIVE') is enforced across all 84 read sites in the repository.
+2. Audit of Verifiers A082 (_verify_do_calculus_math.mjs) & A083 (_verify_estimand_numerically.mjs): Reading the verifier implementations confirms that the retired A017 harness bugs—treating probability densities (@d) as conditional means (@m) inside marginal sums, un-normalized pivot rows in Gauss-Jordan elimination, and LCG overflow producing NaN—are fixed in A083 via row-normalized Gauss-Jordan elimination and a 24-bit LCG RNG bounded strictly to . On linear-Gaussian SCMs fit strictly on observational samples, A083 reproducibly recovers  vs.  on the front-door graph (while rejecting the $P(x' \mid m)$ conditioning bug that yields ) and  vs.  on the 4-node graph, with  false hedges across all  4-node DAGs and  mismatches across  topological reorderings.
+3. Exact Diagnosis and Mathematical Resolution of Open Item X20 (Case-3 Ratio-Form Discrepancy): Why did do-calculus-id.ts return a marginal sum over  on the 4-node Case-3 graph (W -> Z -> X -> Y), whereas the published Napkin / Case-3 equation is a ratio of two -formulas over ? Tracing ID(y, x, P, G) on the canonical Napkin Graph ( with bidirected arcs  and ) exposes the exact root cause in do-calculus-id.ts:
+   * At the top level, . Line 3 inserts  because $\{W, Z\} \cap \text{An}(Y)_{\mathcal{G}_{\overline{X}}} = \emptyset$, recursing to .
+   * Now $\mathcal{C}(\mathcal{G}[\mathcal{V} \setminus \{W, Z, X\}]) = \{\{Y\}\}$, and . Line 7 restricts to  with -factor $Q[\{W, X, Y\}] = P(w) P(x \mid w, z) P(y \mid w, z, x)$ and remaining intervention .
+   * Inside the induced subgraph , the directed path  is broken because . Thus the only directed edge in  is , so .
+   * Line 2 of ID therefore prunes the non-ancestor  from  by marginalizing  over :
+$$P'(x, y; z) = \sum_{w} Q[\{W, X, Y\}](w, x, y; z) = \sum_{w} P(w) P(x \mid w, z) P(y \mid w, z, x)$$
+and recurses to .
+   * In , the bidirected path  is gone because  was marginalized out! Thus  and , triggering Line 6.
+   * The X20 Defect: In do-calculus-id.ts, Line 6 returned $\prod_{V_i \in S} P(v_i \mid v_{\pi^{(i-1)}})$ referencing the original observational distribution  (or a flat marginal sum of activeQFactor) instead of conditioning the current marginalized distribution ! By Tian and Pearl’s Generalized -Decomposition (Lemma 2 of Tian & Pearl 2002/2003; Shpitser & Pearl 2006 c-identify Fig. 2; Guo et al. 2025 Lemma 1), conditioning the derived distribution  on  in Line 6 produces an explicit RATIO node:
+$$P(y \mid \text{do}(x)) = P'(y \mid x; z) = \frac{P'(x, y; z)}{\sum_{y'} P'(x, y'; z)} = \frac{\sum_{w} P(y \mid w, z, x) P(x \mid w, z) P(w)}{\sum_{w} P(x \mid w, z) P(w)}$$
+In canonical A082 AST notation (with @d for density and @m for target mean), patching Line 6 to divide activeQFactor by its -marginal when activeQFactor is a post-Line-7 marginalized factor yields the exact ratio tree: Ratio(Sum[W](*(P(W|)@d * P(X|W,Z)@d * P(Y|W,Z,X)@m)), Sum[W](*(P(W|)@d * P(X|W,Z)@d))) This closes X20 both symbolically in A082 and numerically in A083.
+      4. The Four New G3 Integration Tests (192/192  196/196):
+The four tests added in packages/prediction-engine/test/causal-claim-gate.integration.spec.ts that moved the suite from 192/192 to 196/196 (with the non-empty control arm confirmed) are:
+         * G3_INT_01_identifiable_backdoor_passes_with_nonempty_control: Confirms an identifiable injury back-door graph with populated treatment () and control () arms reaches the assertion and emits status: "IDENTIFIED_APPROVED".
+         * G3_INT_02_bow_arc_hedge_refuses_with_measurement_plan: Confirms a bow-arc confounded graph () returns REFUSED_G3_NON_IDENTIFIABLE_HEDGE and populates hcidMeasurementPlan.candidateEdges = [["X", "Y"]].
+         * G3_INT_03_hcid_mediator_expansion_breaks_hedge_when_e_value_sufficient: Confirms that expanding  re-runs ID, verifies  hedges, verifies  against the populated control arm, and sets activating: true.
+         * G3_INT_04_hcid_mediator_expansion_blocked_when_e_value_fragile_or_null: Confirms that when the expanded graph has  hedges but the measured rate-ratio E-value against the control arm is  (or null), planHedgeBreakage sets activating: false, breaksHedgeButFragile: true and the gate refuses with REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO.
+2. Complete Frontier System Architecture (Stages 1–6 + Synchronous Feedback Bus)
+To make the reconciled pieces on audit/reconciliation-2026-10-20 the floor rather than the ceiling, the Galaxy Sports Edge (GSE) engine expands into a six-stage forward causal architecture coupled to a synchronous post-settlement structural learning bus, introducing four new frontier modules that have never existed in a sports intelligence system:
+            1. ProximalBridgeIDEngine (src/causal/proximal-bridge-id.ts): Solves Fredholm integral outcome/treatment bridge equations to identify causal effects via Negative Controls when HCID encounters an unbreakable bow-arc hedge with zero observable mediators.
+            2. SemiparametricEstimandSolver (src/causal/semiparametric-estimand-solver.ts): Replaces naive plug-in evaluation of ID ratio/front-door trees with Doubly-Robust One-Step Canonical Gradient estimators and Verma-constraint efficiency projection.
+            3. PeriodicTimeSeriesID (src/causal/periodic-timeseries-id.ts): Pairs Lagged DYNOTEARS ($\mathbf{W}_0, \mathbf{A}_1, \dots, \mathbf{A}_p$) with bounded-horizon periodic ADMG identification over drive-by-drive and week-by-week sequences.
+            4. ITCROrcaGate (src/calibration/itcr-orca-gate.ts): Integrates Inference-Time Conformal Reasoning (ITCR) and Online Reasoning Calibration (ORCA) directly into the L1–L5 deduction DAG to halt and rethink whenever intermediate ancestor nonconformity exceeds .
+======================================================================================================================== GALAXY SPORTS EDGE (BEEXLY/SPORTS) CONTINUOUS CAUSAL INFERENCE ENGINE ======================================================================================================================== [STAGE 1: BITEMPORAL MULTI-SOURCE INGESTION (9 Families / 240+ Sub-Families / 2k-10k Features)] ┌─────────────────┐ ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐ ┌─────────────────────────────────┐ │ Live X & Presser│ │ 60fps Homography │ │ SportsDataIO + │ │ Sharp Books + │ │ nflfastR State + NOAA HRRR + │ │ Whisper-v3 Turbo│ │ + Zebra RFID CNN │ │ BBall-Index Inj. │ │ Polymarket CLOB │ │ METAR + Rest/ACWR Accumulator │ │ (<450ms / <1.8s)│ │ (<250ms / frame) │ │ (<500ms transition│ │ (<100ms tick) │ │ + Remediated Dark-Source Proxies│ └────────┬────────┘ └────────┬─────────┘ └────────┬─────────┘ └────────┬─────────┘ └────────────────┬────────────────┘ └───────────────────┴────────────────────┴────────────────────┴────────────────────────────┘ │ Stamp Bitemporal Watermark (t_valid, t_tx <= t_decision) ▼ [STAGE 2: PERCEPTION & DIRECTIONAL BRIDGE] ┌──────────────────────────────────────────────────────────────────┐ src/features/feature-matrix.ts │ Sparse/Dense PIT Matrix -> src/bridge/bridge-model.ts │ src/bridge/bridge-model.ts │ Emits Signed Premises: {outcome, prob ∈ (0,1), sample_count>=30, │ acwr_content_driven_fix.py │ homeSign ∈ {-1,+1}}; ACWR conditioned on current_session_load │ └─────────────────────────────────┬────────────────────────────────┘ │ Directional Signal Shift Trigger ▼ [STAGE 3: LIVING LITERATURE HNSW & BRIDGE ROUTER] ┌──────────────────────────────────────────────────────────────────┐ src/literature/literature-verification.ts │ Neon pgvector HNSW (m=24, ef_construction=200, Recall@20>=0.992) │ src/literature/arxiv-hnsw-bridge.ts │ 84-Site Class-A Guard: record_class='CITABLE_VERIFIED' (968 rows)│ │ BRIDGE DFGE (22/21/21 SVD Bands) + BEN + CRI Top-K Calibration │ │ Pure Content-Driven Δ_c^final; Deadband η_c < 0.20 Neutralized │ └─────────────────────────────────┬────────────────────────────────┘ │ Verified Priors + Bridge Nodes ▼ [STAGE 4: HYBRID ADMG STRUCTURE DISCOVERY] ┌──────────────────────────────────────────────────────────────────┐ src/causal/causal-graph-builder.ts │ Full FCI (R0-R10 incl. R5-R7 Selection Bias & Possible-D-Sep) + │ src/causal/periodic-timeseries-id.ts [NEW] │ Scale-Invariant Lagged DYNOTEARS (W_0, A_1..A_p, l_NV Log-Lik) │ │ Projects PAG -> Game ADMG G_t = (V_t, E_d,t, E_b,t) │ └─────────────────────────────────┬────────────────────────────────┘ │ Game ADMG G_t + Shock do(X = x) ▼ [STAGE 5: INTERVENTIONAL CALCULUS & RED TEAM] ┌──────────────────────────────────────────────────────────────────┐ src/causal/do-calculus-id.ts (X20 Ratio Fixed) │ 1. Graph Mutilation (G_{overline{X}, underline{Z}}) + ID / IDC │ src/causal/hcid-mediator-expansion.ts │ 2. If FAIL_HEDGE: HCID collects all hedges -> ID-EnablingEdges │ src/causal/proximal-bridge-id.ts [NEW] │ expands M -> Re-runs ID + LIVE Residual Contrast E-value>=1.35│ src/causal/semiparametric-estimand-solver.ts[NEW] │ 3. If no mediator M: ProximalBridgeID solves Fredholm Bridge Eq. │ src/causal/adversary-red-team.ts │ 4. Semiparametric One-Step + Verma Projection evaluates estimand │ src/causal/causal-claim-gate.ts │ 5. AdversaryRedTeam: E-value>=1.35, Placebo<=0.005, Swap Δ<0.02, │ │ CausalPhys EF>=0.95, RA>=0.85, DC>=0.90 │ └─────────────────────────────────┬────────────────────────────────┘ │ Surviving Interventional Dist. ▼ [STAGE 6: CONFORMAL-COPULA-KELLY & HONESTY GATE] ┌──────────────────────────────────────────────────────────────────┐ src/calibration/itcr-orca-gate.ts [NEW] │ ITCR + ORCA Reasoning Graph Stopping (α_graph <= τ_conformal) │ src/calibration/conformal-copula-kelly.ts │ TA-CQR + ACI/PID/SCALE + Debiased Hierarchical/Vine Copula SGPs │ src/picks/pick-pipeline.ts │ Slow 75% Conformal Kelly + Downside Break-Rate Leverage Dial │ src/edge-lab/decision-time-price-archive.ts │ Compile-Time ValidatedCausalTrace + Runtime Gates G1-G9 │ └─────────┬───────────────────────────────────────────────┬────────┘ │ Published Board / Prop / SGP │ Archive ▼ ▼ [SYNCHRONOUS POST-SETTLEMENT FEEDBACK BUS] ┌──────────────────────────────────────────────────────────────────┐ src/learning/settlement-loop.ts │ Same-Cycle Execution on GameStatus == 'Final' + CLV Close: │ src/reasoning/calibration-tracker.ts │ • Murphy Brier Partition: BS = REL - RES + UNC & ECE Drift Check │ src/reasoning/weight-learner.ts │ • Laplace-Kalman Precision Updates on Active Mutilated Edges θ_e │ docs/reasoning/engine-dashboard.md │ • Counterfactual Leave-One-Out Brier Premise Promotion π_i^(t) │ │ • Marchenko-Pastur Spectral Residual Factorization -> Shadow Node│ └──────────────────────────────────────────────────────────────────┘ ================================================================= 2.1 Point-in-Time Signal Registry (9 Families, 240+ Sub-Families) and Dark-Source Remediation
+Every ingested event in packages/prediction-engine/src/features/feature-matrix.ts carries a strict bitemporal tuple  and is rejected at read time if  or sample_count < 30.
+
+
+Family ID & Tier Breakdown
+	Point-in-Time Producer & Schema Binding
+	P99 Latency
+	Event Trigger
+	Fail-Closed Quarantine Rule
+	F1: Live X & Presser Language (28 sub-families)
+	X Filtered Stream v2 + @WalrusQuant/sports-leader-mcp (get_slate) + Whisper-large-v3 Turbo  XGrammar-2 <|GSE_JSON|>.
+	 text
+
+
+ audio
+	Beat-writer dispatch or VAD presser utterance completion.
+	Require  independent reporter corroboration or official Player.Status match before mutating availability probability by .
+	F2: Vision, Formation & Tracking (44 sub-families)
+	60fps broadcast homography + NFL Next Gen Stats / Zebra Wilson RFID (200+ metrics/play) + torch CNN coverage classifier (ngscleanR).
+	/frame
+
+
+ post-play
+	Pre-snap huddle break (), motion, snap, throw windup (Phase 1 end), arrival (Phase 2 end).
+	Enforce aa753bd separated x-axis canonicalization vs. y-axis TTA flip; withhold vision node if keypoint confidence .
+	F3: Injuries & Availability (32 sub-families)
+	SportsDataIO (Player.Status, PlayerGameProjection.Activated/Played/Started) + BBall-Index Injury Tracker (games missed, recovery %, body map).
+	
+	Practice report, 90-min pre-game inactive list, or sideline medical tent entry.
+	Cross-check Questionable tags against prop market suspension (BettingMarket) within ; refuse uncorroborated single-source tweets.
+	F4: Markets & Prediction CLOB (38 sub-families)
+	SportsDataIO (BettingEvent, BettingMarket), Pinnacle/Circa WebSockets, and Polymarket CLOB (1/odds vig-stripped cent pricing).
+	
+	Line move , vig-free prob shift $\ge 1.0\%$, steam , or Polymarket spread .
+	decision-time-price-archive.ts rejects zero, NaN, or infinite prices; isolate ticket vs. money share (reverse_line_movement_divergence_pct).
+	F5: Coaching Tendencies & Scheme (34 sub-families)
+	SportsDataIO TeamBasic (HeadCoach, OffensiveCoordinator, DefensiveCoordinator, OffensiveScheme, DefensiveScheme) + nflfastR play-caller state machine.
+	 post-drive
+	Coordinator change, 3Q opening drive script (@KyleM_FF 2H EPA/drive), 4th-down go-rate state.
+	Filter historical plays to non-garbage win probability ; apply Empirical Bayes shrinkage by snap count.
+	F6: Weather & Stadium Physics (18 sub-families)
+	SportsDataIO Stadium (GeoLat, GeoLong, PlayingSurface, Type: Outdoor/Dome/RetractableDome) + NOAA HRRR 3km + METAR.
+	
+	Wind delta , temp delta $\ge 3^\circ\text{F}$, precip , or roof status change.
+	If Stadium.Type == "Dome" or roof closed, hard-clamp wind_speed_mph = 0 and precipitation_rate_mm_hr = 0.
+	F7: Schedule, Rest & Biometric Load (18 sub-families)
+	SportsDataIO Score (GameKey, Date, Week) + tracking load accumulator (acute_chronic_workload_ratio).
+	
+	Schedule flex update or post-game tracking snap/distance commit updating 7d/28d load.
+	Enforce acwr_content_driven_fix.py: if current_session_load is None, force weight to theoretical (); zero-out inside  and .
+	F8: Verified Literature Premises (14 sub-families)
+	scripts/build-grounded-mind-corpus.mjs + literature-verification.ts  Neon pgvector HNSW (968 CITABLE_VERIFIED rows).
+	 query
+	Directional context displacement  crossing conditional_threshold.
+	Enforce 84-site Class-A filter (record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE'); neutralize opposing claims when .
+	F9: Settlements & CLV Grading (14 sub-families)
+	SportsDataIO Score, BettingEvent (GameStatus == "Final"), PlayStat, nflfastR, and decision-time-price-archive.ts.
+	 post-Final
+	BettingEvent.GameStatus == "Final" + closing line capture.
+	Two-phase commit: provisional CLV grade at Final; immutable Kalman/promotion update after official stat-correction window.
+	All dark sources identified in earlier audits are bound to deterministic PIT producers in feature-matrix.ts: ol_continuity_shared_snaps_pct is computed from rolling pre-game PlayerGameProjection.Started == 1 and PlayStat shared non-garbage snaps (); officiating_crew_penalty_rate excises the placeholder PlayStat.Penalties column and joins Tuesday referee crew assignments to nflfastR Play.Type == "Penalty" histories; acoustic_crowd_spl_db, surface_traction_coeff, and air_density_kg_m3 are computed from Stadium metadata joined to live NOAA HRRR psychrometrics; and private locker-room medical events are excised as direct features and modeled as a latent confounder  via bidirected arc .
+3. Living Literature Pipeline: Production Neon Schema, HNSW Navigation, and BRIDGE Routing
+3.1 Production Neon PostgreSQL Schema and the 84-Site Class-A Guard
+To deploy the reconciled 968 CITABLE_VERIFIED records (alongside explicitly segregated HONESTLY_UNCITED_PRIOR and DERIVED_MARKET_SYNTHESIS records that are barred from contributing numeric deltas) onto the production Neon PostgreSQL cluster (neondb on ep-floral-queen-appt99hz-pooler.c-7.us-east-1.aws.neon.tech), db/migrations/20261020_literature_hnsw_prod.sql enforces L2/L3/Class-A invariants inside PostgreSQL CHECK constraints and a dedicated read view:
+SQL
+CREATE EXTENSION IF NOT EXISTS vector;
+
+
+CREATE TABLE IF NOT EXISTS literature_premises (
+    item_id TEXT PRIMARY KEY,
+    record_class TEXT NOT NULL CHECK (
+        record_class IN ('CITABLE_VERIFIED', 'HONESTLY_UNCITED_PRIOR', 'DERIVED_MARKET_SYNTHESIS', 'REJECTED_CORRUPT')
+    ),
+    citable BOOLEAN NOT NULL,
+    source_file TEXT,
+    source_doc_hash TEXT NOT NULL,
+    principle_name VARCHAR(80) NOT NULL,
+    numeric_claim VARCHAR(40) NOT NULL,
+    parsed_float_magnitude DOUBLE PRECISION NOT NULL CHECK (parsed_float_magnitude > 0),
+    unit_scale_denominator DOUBLE PRECISION NOT NULL DEFAULT 1.0 CHECK (unit_scale_denominator > 0),
+    evidence_quote VARCHAR(240),
+    evidence_start_char INTEGER,
+    evidence_end_char INTEGER,
+    verification_tier TEXT NOT NULL CHECK (
+        verification_tier IN ('MSVH_S1_EXACT', 'MSVH_S0_UNCITED', 'MSVH_S0_DERIVED_TABLE', 'MSVH_S0_CORRUPT_MARKDOWN_ROW')
+    ),
+    mechanism_quote VARCHAR(300),
+    mechanism_start_char INTEGER,
+    mechanism_end_char INTEGER,
+    applicable_context_fields TEXT[] NOT NULL,
+    target_causal_node TEXT NOT NULL,
+    influence_direction TEXT NOT NULL CHECK (influence_direction IN ('positive', 'negative', 'conditional')),
+    conditional_threshold VARCHAR(40),
+    parsed_threshold_value DOUBLE PRECISION,
+    parsed_threshold_operator TEXT CHECK (parsed_threshold_operator IN ('>', '>=', '<', '<=')),
+    claim_type TEXT NOT NULL CHECK (claim_type IN ('causal', 'correlational', 'theoretical')),
+    epistemic_base_weight DOUBLE PRECISION NOT NULL CHECK (epistemic_base_weight IN (1.0, 0.5, 0.3)),
+    promotion_score DOUBLE PRECISION NOT NULL DEFAULT 1.0 CHECK (promotion_score BETWEEN 0.05 AND 3.00),
+    ewma_brier_attribution DOUBLE PRECISION NOT NULL DEFAULT 0.0,
+    cumulative_settlement_count INTEGER NOT NULL DEFAULT 0,
+    spectral_low_embedding vector(64) NOT NULL,
+    spectral_mid_embedding vector(64) NOT NULL,
+    spectral_high_embedding vector(64) NOT NULL,
+    embedding vector(1024) NOT NULL,
+    status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'SHADOW', 'DEMOTED', 'QUARANTINED')),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- Hard DB-level honesty invariant: CITABLE_VERIFIED requires exact span offsets and MSVH_S1_EXACT
+    CONSTRAINT chk_citable_verified_honesty CHECK (
+        (record_class = 'CITABLE_VERIFIED' AND citable = TRUE AND verification_tier = 'MSVH_S1_EXACT'
+         AND evidence_start_char IS NOT NULL AND evidence_end_char > evidence_start_char
+         AND mechanism_start_char IS NOT NULL AND mechanism_end_char > mechanism_start_char)
+        OR
+        (record_class <> 'CITABLE_VERIFIED' AND citable = FALSE AND verification_tier <> 'MSVH_S1_EXACT'
+         AND evidence_start_char IS NULL AND evidence_end_char IS NULL)
+    )
+);
+
+
+-- Partial HNSW index built exclusively on Class-A active records (~968 rows, scales to 50k+)
+CREATE INDEX idx_lit_premises_class_a_hnsw ON literature_premises
+  USING hnsw (embedding vector_cosine_ops)
+  WITH (m = 24, ef_construction = 200)
+  WHERE record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE';
+
+
+CREATE INDEX idx_lit_premises_context_gin ON literature_premises
+  USING gin (applicable_context_fields)
+  WHERE record_class = 'CITABLE_VERIFIED' AND status = 'ACTIVE';
+
+
+-- Canonical Read View consumed by all 84 read sites
+CREATE OR REPLACE VIEW v_class_a_literature_premises AS
+SELECT * FROM literature_premises
+WHERE record_class = 'CITABLE_VERIFIED'
+  AND citable = TRUE
+  AND verification_tier = 'MSVH_S1_EXACT'
+  AND status = 'ACTIVE';
+
+
+3.2 HNSW Multi-Layer Graph Navigation and BRIDGE Dual-Frequency Calibration
+Following Malkov and Yashunin (2020), each Class-A premise  is assigned a maximum layer $l_i = \lfloor -\ln(\text{unif}(0, 1)) \cdot m_L \rfloor$ with optimal scale normalization  to minimize inter-layer link overlap while maintaining logarithmic routing hops. When a directional signal shift arrives at query time with vector , SEARCH-LAYER greedily zooms in from the top entry point  at layer  down to layer  with candidate list size , and then expands ef_search candidates ( in live play,  pre-game) at base layer , achieving  in .
+To prevent over-alignment from erasing local ranking distinctions among the retrieved top- candidates (), arxiv-hnsw-bridge.ts applies the BRIDGE framework (Li, Pan & Qi, CIKM 2026):
+               1. Dual-Frequency Graph Evidence (DFGE): Over the game-context-to-premise interaction bipartite graph with symmetric normalized adjacency , two rounds of message passing $\mathbf{H}^{c,(\ell+1)} = \hat{\mathbf{A}}_{ui}\mathbf{H}^{c,(\ell)}$ produce summed channel representations $\mathbf{Z}^c = \sum_{\ell=0}^2 \mathbf{H}^{c,(\ell)} \in \mathbb{R}^{N \times 64}$ for . Singular value decomposition $\mathbf{Z}^c = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$ splits the  singular directions into  contiguous spectral bands of width  (low, mid, high):
+
+               2.                3. Behavior Evidence Normalizer (BEN) & Candidate Residual Integrator (CRI): Strictly from pre-evaluation training settlements  (zero validation or holdout leakage), co-occurring premise success overlap $B_{ij} = \frac{\vert{}\mathcal{U}_i^{\text{tr}} \cap \mathcal{U}_j^{\text{tr}}\vert{}}{\sqrt{\vert{}\mathcal{U}_i^{\text{tr}}\vert{} \vert{}\mathcal{U}_j^{\text{tr}}\vert{}}}$ is aggregated over historical game archetype history  as $\tilde{b}_{ui} = \frac{1}{\sqrt{\vert{}\mathcal{H}_u^{\text{tr}}\vert{}}} \sum_{j \in \mathcal{H}_u^{\text{tr}}} B_{ij}$ and centered into . Inside the detached base candidate set , CRI injects the signed residual and settlement promotion score :
+$$s(u, i) = \langle \mathbf{e}_u, \mathbf{e}_i \rangle + \mathbb{I}[i \in \mathcal{C}_u] \left( \lambda_b b_{ui} + \lambda_\pi \ln \pi_i^{(t)} \right)$$
+               4. Pure Content-Driven Delta & Conflict Neutralization: Each active Class-A premise  proposes $\delta_{c,i} = s_i(x_c) \cdot \vert{}\beta_i\vert{} \cdot \frac{x_c - x_{c,0}}{u_i}$ with effective weight  (where , forced to  for ACWR if current_session_load is None). The weighted aggregate  and consensus ratio $\eta_c = \frac{\vert{}\sum w_i^{\text{eff}} \delta_{c,i}\vert{}}{\sum w_i^{\text{eff}} \vert{}\delta_{c,i}\vert{}}$ are evaluated against the opposing-claim deadband  and clamp :
+$$\Delta_c^{\text{final}} = \begin{cases} \text{clip}(\bar{\Delta}_c, -0.10, +0.10) & \text{if } \eta_c \ge 0.20 \land \vert{}\bar{\Delta}_c\vert{} \ge 10^{-4} \quad (\text{APPLIED}) \\ 0.0 & \text{otherwise} \quad (\text{CONFLICT\_NEUTRALIZED}) \end{cases}$$
+4. Full Causal Discovery and Interventional Calculus: Closing All Open Items and Adding Frontier Identification
+4.1 Full FCI Orientation Rules ( Including ) + Lagged DYNOTEARS ()
+To resolve the open roadmap items on structure learning, packages/prediction-engine/src/causal/causal-graph-builder.ts implements the complete Zhang (2008) 10-rule FCI orientation engine paired with multi-lag DYNOTEARS ($\mathbf{W}_0, \mathbf{A}_1, \dots, \mathbf{A}_p$):
+                  1. Complete FCI Rules  (Explicitly Including  Selection/Circle-Path Rules):
+After skeleton pruning via Fisher- conditional independence tests, Possible-D-Sep pruning, unshielded collider orientation (), and basic ancestral/discriminating-path rules (), the engine runs rules  (which handle selection bias in conditioned subsets, such as filtering plays by non-garbage win probability or injury report strata) and  (tail completion):
+                     *  (Uncovered Circle Path): For every undirected circle edge , if there is an uncovered circle path $p = \langle A, C, \dots, D, B \rangle$ (where every consecutive triple is unshielded and every edge is ) such that  are non-adjacent and  are non-adjacent, orient  and every edge on  as tail-tail () representing symmetric selection coupling.
+                     *  (Single-Tail Propagation): If  (or ), orient the circle at  as a tail:  (or ).
+                     *  (Uncovered Non-Collider Tail Propagation): If  (or ), and  are non-adjacent, orient the circle at  on  as a tail ( or ).
+                     *  (Transitive Tail Completion): If  (or ) and , orient .
+                     *  (Uncovered Potentially Directed Path): If , and $p = \langle A, B, \dots, C \rangle$ is an uncovered potentially directed path from  to  such that  and  are non-adjacent, orient .
+                     *  (Two-Path Collider Tail Completion): If , ,  is an uncovered potentially directed path from  to  starting at ,  is an uncovered potentially directed path from  to  starting at , and  are non-adjacent, orient .
+                        2. Scale-Invariant Lagged DYNOTEARS ($\mathbf{W}_0, \mathbf{A}_1, \dots, \mathbf{A}_p$): Let  be the contemporaneous state matrix at drive/week  and $\mathbf{Y}_{\text{lag},t} = [\mathbf{X}_{t-1} \mid \dots \mid \mathbf{X}_{t-p}] \in \mathbb{R}^{n \times pd}$ be the concatenated history over  lags, with stacked lagged weight matrix $\mathbf{A} = [\mathbf{A}_1^\top \mid \dots \mid \mathbf{A}_p^\top]^\top \in \mathbb{R}^{pd \times d}$. Because lagged arrows  () strictly respect arrow-of-time precedence, they can never form a cycle; only the intra-slice matrix  is subject to the smooth acyclicity constraint . Defining the multi-lag residual matrix  with -th column , the engine minimizes the Scale-Invariant Non-Equal Variance Gaussian Log-Likelihood (remediating the Kaiser & Sipos 2021 variance-sorting pathology):
+$$\min_{\mathbf{W}_0, \mathbf{A}} \mathcal{L}_{\rho,\alpha}(\mathbf{W}_0, \mathbf{A}) = \frac{1}{2} \sum_{j=1}^{d} \ln\left(\frac{1}{n}\Vert{}\mathbf{r}_j(\mathbf{W}_0, \mathbf{A})\Vert{}_2^2\right) - \ln\vert{}\det(\mathbf{I} - \mathbf{W}_0)\vert{} + \lambda_W \Vert{}\mathbf{W}_0\Vert{}_1 + \lambda_A \Vert{}\mathbf{A}\Vert{}_1 + \frac{\rho}{2} h(\mathbf{W}_0)^2 + \alpha h(\mathbf{W}_0) + \frac{\mu_{\text{lit}}}{2} \sum_{(i,j) \in \mathcal{S}_{\text{lit}}^{\text{ClassA}}} w_{ij}^{\text{eff}} \left( T_{ij}(\mathbf{W}_0) - \Delta_{i \to j}^{\text{ClassA}} \right)^2$$
+where  and  admits only the 968 CITABLE_VERIFIED records. Setting $\hat{\sigma}_j^2 = \frac{1}{n}\|\mathbf{r}_j\|_2^2$ and $\mathbf{\Sigma}_{\text{res}}^{-1} = \text{diag}(\hat{\sigma}_1^{-2}, \dots, \hat{\sigma}_d^{-2})$, the exact analytical gradients for  are:
+$$\nabla_{\mathbf{W}_0} \ell_{\text{NV}} = -\frac{1}{n} \mathbf{X}_t^\top \mathbf{R}(\mathbf{W}_0, \mathbf{A}) \mathbf{\Sigma}_{\text{res}}^{-1} + (\mathbf{I} - \mathbf{W}_0)^{-\top}, \qquad \nabla_{\mathbf{A}} \ell_{\text{NV}} = -\frac{1}{n} \mathbf{Y}_{\text{lag},t}^\top \mathbf{R}(\mathbf{W}_0, \mathbf{A}) \mathbf{\Sigma}_{\text{res}}^{-1}$$
+For multi-step time-series interventions $P(\mathbf{Y}_{t} \mid \text{do}(\mathbf{X}_{t-\tau} = \mathbf{x}))$ in periodic dynamic ADMGs, PeriodicTimeSeriesID implements Proposition 1 of Jahn, Karnik & Schulman (2025, PMLR v275): any witnessing hedge in a periodic time-series ADMG with latency  is bounded within the finite temporal window  where , allowing exact finite-window ID execution without infinite unrolling.
+4.2 Exact Patch for do-calculus-id.ts Resolving X20 (Case-3 Ratio-Form Estimand)
+To resolve open item X20 in packages/prediction-engine/src/causal/do-calculus-id.ts, Line 6 and Line 7 must track whether the active distribution activeQFactor has undergone a Line 7 -component restriction followed by a Line 2 ancestor marginalization ( in Tian & Pearl’s c-identify). Whenever isMarginalizedCFactor === true, conditioning on $S \setminus Y$ or extracting the -factor of  inside  requires dividing activeQFactor by its marginal over the target nodes (Equation 1 of Guo et al. 2025, arXiv:2512.19861; Hwang et al. 2024 Example 4.2):
+TypeScript
+// Exact replacement for Lines 6 & 7 inside runShpitserPearlID in packages/prediction-engine/src/causal/do-calculus-id.ts:
+export function runShpitserPearlID(
+  ySet: ReadonlySet<NodeId>,
+  xSet: ReadonlySet<NodeId>,
+  g: CausalADMG,
+  activeQFactor?: SymbolicFactor,
+  isMarginalizedCFactor: boolean = false
+): IDResult {
+  const vSet = new Set(g.nodes);
+  const currentDistribution: SymbolicFactor =
+    activeQFactor ?? {
+      kind: "PRODUCT",
+      factors: g.nodes.map((n, idx) => ({
+        kind: "OBSERVATIONAL_COND",
+        target: n,
+        given: g.nodes.slice(0, idx),
+      })),
+    };
+
+
+  // Line 1: if x = empty, return sum_{V \ Y} P(V)
+  if (xSet.size === 0) {
+    const sumOut = g.nodes.filter((n) => !ySet.has(n));
+    return {
+      ok: true,
+      formula: sumOut.length > 0 ? { kind: "MARGINAL_SUM", sumOut, body: currentDistribution } : currentDistribution,
+      formulaClass: "OBSERVATIONAL_MARGINAL",
+    };
+  }
+
+
+  // Line 2: if V \ An(Y)_G != empty, prune non-ancestors of Y
+  const anY = getAncestors(g, ySet);
+  if (anY.size < vSet.size) {
+    const gAn = induceSubgraph(g, anY);
+    const xAn = new Set([...xSet].filter((x) => anY.has(x)));
+    const prunedNodes = g.nodes.filter((n) => !anY.has(n));
+    const margDist: SymbolicFactor = { kind: "MARGINAL_SUM", sumOut: prunedNodes, body: currentDistribution };
+    // If activeQFactor was already restricted to a C-component S' in Line 7, marginalizing out prunedNodes
+    // produces a derived joint Q[A] = sum_{S' \ A} Q[S'], which requires ratio conditioning at Line 6!
+    return runShpitserPearlID(ySet, xAn, gAn, margDist, activeQFactor !== undefined);
+  }
+
+
+  // Line 3: Let W = (V \ X) \ An(Y)_{G_{overline{X}}}. If W != empty, insert do(w) (Rule 3)
+  const gOverX = mutilateADMG(g, xSet);
+  const anYInOverX = getAncestors(gOverX, ySet);
+  const wSet = g.nodes.filter((n) => !xSet.has(n) && !anYInOverX.has(n));
+  if (wSet.length > 0) {
+    return runShpitserPearlID(ySet, new Set([...xSet, ...wSet]), g, activeQFactor, isMarginalizedCFactor);
+  }
+
+
+  // Partition G[V \ X] into maximal C-components {S_1, ..., S_k}
+  const vMinusX = new Set(g.nodes.filter((n) => !xSet.has(n)));
+  const gMinusX = induceSubgraph(g, vMinusX);
+  const cCompsMinusX = getMaximalCComponents(gMinusX);
+
+
+  // Line 4: if k >= 2, factorize across C-components S_1, ..., S_k
+  if (cCompsMinusX.length >= 2) {
+    const childFactors: SymbolicFactor[] = [];
+    for (const sComp of cCompsMinusX) {
+      const vMinusSi = new Set(g.nodes.filter((n) => !sComp.has(n)));
+      const subRes = runShpitserPearlID(sComp, vMinusSi, g, activeQFactor, isMarginalizedCFactor);
+      if (!subRes.ok) return subRes;
+      childFactors.push(subRes.formula);
+    }
+    const sumOut = g.nodes.filter((n) => !ySet.has(n) && !xSet.has(n));
+    const prod: SymbolicFactor = { kind: "PRODUCT", factors: childFactors };
+    return {
+      ok: true,
+      formula: sumOut.length > 0 ? { kind: "MARGINAL_SUM", sumOut, body: prod } : prod,
+      formulaClass: "FRONT_DOOR_OR_C_COMPONENT_FACTORIZATION",
+    };
+  }
+
+
+  const S = cCompsMinusX[0];
+  const topCComps = getMaximalCComponents(g);
+
+
+  // Line 5: if C(G) = {V}, then (G, G[S]) is a witnessing hedge -> FAIL_HEDGE
+  if (topCComps.length === 1 && topCComps[0].size === vSet.size) {
+    const hedge: HedgeWitness = { forestFull: [...g.nodes], forestSub: [...S] };
+    return {
+      ok: false,
+      code: "FAIL_HEDGE",
+      hedge,
+      enablingEdges: findIDEnablingEdgesForHedge(g, hedge),
+    };
+  }
+
+
+  // Line 6: if S in C(G), return sum_{S \ Y} prod_{V_i in S} P'(v_i | v_{pi^{(i-1)}})
+  const matchingTop = topCComps.find((c) => c.size === S.size && [...S].every((n) => c.has(n)));
+  if (matchingTop) {
+    // X20 FIX: When currentDistribution is a marginalized C-factor from Line 7 -> Line 2 (e.g. Napkin Graph),
+    // P'(S | V \ S) = currentDistribution / sum_{S} currentDistribution (Tian & Pearl Lemma 2 Ratio Form).
+    if (isMarginalizedCFactor && activeQFactor) {
+      const sumOutSMinusY = [...S].filter((n) => !ySet.has(n));
+      const numerator: SymbolicFactor =
+        sumOutSMinusY.length > 0 ? { kind: "MARGINAL_SUM", sumOut: sumOutSMinusY, body: currentDistribution } : currentDistribution;
+      const denominator: SymbolicFactor = {
+        kind: "MARGINAL_SUM",
+        sumOut: [...S],
+        body: currentDistribution,
+      };
+      return {
+        ok: true,
+        formula: { kind: "RATIO", numerator, denominator },
+        formulaClass: "NAPKIN_OR_TIAN_C_FACTOR_RATIO",
+      };
+    }
+
+
+    const sFactors: SymbolicFactor[] = [...S].map((n) => {
+      const idx = g.nodes.indexOf(n);
+      return { kind: "OBSERVATIONAL_COND", target: n, given: g.nodes.slice(0, idx) };
+    });
+    const sumOut = [...S].filter((n) => !ySet.has(n));
+    const body: SymbolicFactor = sFactors.length === 1 ? sFactors[0] : { kind: "PRODUCT", factors: sFactors };
+    return {
+      ok: true,
+      formula: sumOut.length > 0 ? { kind: "MARGINAL_SUM", sumOut, body } : body,
+      formulaClass: "BACK_DOOR_OR_DIRECT_C_FACTOR",
+    };
+  }
+
+
+  // Line 7: Find S' in C(G) such that S is a strict subset of S'
+  const superComp = topCComps.find((c) => [...S].every((n) => c.has(n)) && c.size > S.size)!;
+  const gSuper = induceSubgraph(g, superComp);
+  const xSuper = new Set([...xSet].filter((x) => superComp.has(x)));
+  const qSuper: SymbolicFactor = {
+    kind: "PRODUCT",
+    factors: [...superComp].map((n) => {
+      const idx = g.nodes.indexOf(n);
+      return { kind: "OBSERVATIONAL_COND", target: n, given: g.nodes.slice(0, idx) };
+    }),
+  };
+  return runShpitserPearlID(ySet, xSuper, gSuper, qSuper, isMarginalizedCFactor);
+}
+
+
+4.3 Frontier Module 1: Semiparametric Doubly-Robust One-Step & Verma-Constrained Napkin Solver (src/causal/semiparametric-estimand-solver.ts)
+Once do-calculus-id.ts emits a NAPKIN_OR_TIAN_C_FACTOR_RATIO or FRONT_DOOR AST, evaluating that ratio via naive plug-in regression (as in A083 on synthetic Gaussian data) suffers from first-order bias  when conditional densities are estimated on noisy sports data. Following Guo, Liu, Benkeser & Nabi (2025, arXiv:2512.19861, Lemma 2 & Eq. 6), SemiparametricEstimandSolver evaluates Case-3 / Napkin ratio functionals  using the Canonical Gradient (Efficient Influence Function) One-Step Estimator :
+$$\Phi_{x_0}(Q; \tilde{p}_z)(O_i) = \underbrace{\frac{\mathbb{I}(X_i = x_0)}{\kappa_{x_0,2}(Q; \tilde{p}_z)} \frac{\tilde{p}(Z_i)}{f_Z(Z_i \mid W_i)} \left\{ Y_i - \mu(x_0, Z_i, W_i) \right\}}_{\Phi_{Y,x_0}: \text{ Outcome Residual}} + \underbrace{\frac{1}{\kappa_{x_0,2}(Q; \tilde{p}_z)} \frac{\tilde{p}(Z_i)}{f_Z(Z_i \mid W_i)} \left\{ \mu(x_0, Z_i, W_i) - \psi_{x_0}(Q; \tilde{p}_z) \right\} \left\{ \mathbb{I}(X_i = x_0) - \pi(x_0 \mid Z_i, W_i) \right\}}_{\Phi_{X,x_0}: \text{ Treatment Propensity Residual}} + \underbrace{\frac{1}{\kappa_{x_0,2}(Q; \tilde{p}_z)} \int \pi(x_0 \mid z, W_i) \left\{ \mu(x_0, z, W_i) - \psi_{x_0}(Q; \tilde{p}_z) \right\} \tilde{p}(z) dz}_{\Phi_{W,x_0}: \text{ Confounder Marginalization Residual}}$$
+
+
+
+Because the Napkin graph encodes a generalized independence restriction (Verma constraint: the post-intervention distribution of  given  is invariant to  after marginalizing ), the solver chooses the weighting density  to minimize the semiparametric efficiency bound across all admissible .
+4.4 Frontier Module 2: Proximal Causal Inference (src/causal/proximal-bridge-id.ts) for Unbreakable Bow-Arc Hedges
+What happens when runShpitserPearlID returns FAIL_HEDGE on an intervention  (e.g.,  on ), and ID-EnablingEdges (Väänänen, Cui, Cinelli & Tikka 2025, arXiv:2610.08092v2) finds zero observed mediators on the directed edge  to break the hedge? Rather than giving up, ProximalBridgeIDEngine invokes Nonparametric Proximal Causal Inference (Miao et al. 2018; Shpitser et al. 2023; arXiv:2605.20007 §3–4):
+                           1. Given an unmeasured confounder  (), the engine searches feature-matrix.ts for a Treatment-Inducing Proxy  (e.g., pre-game practice participation / injury designation history) and an Outcome-Inducing Proxy  (e.g., Quarter 1 pass velocity or pre-snap rollout rate) satisfying conditional independencies $W \perp\!\!\!\perp A \mid (U, X)$ and $W \perp\!\!\!\perp Z \mid (A, U, X)$.
+                           2. Even though  is unobserved and ID returns FAIL_HEDGE, if there exists an Outcome Bridge Function  solving the Fredholm integral equation of the first kind:
+$$\mathbb{E}\left[ Y \ \middle|\ A = a, Z = z, X = x \right] = \int h(a, w, x) \, dF(w \mid A = a, Z = z, X = x) \qquad \forall (a, z, x)$$
+then the interventional expectation is uniquely identified by the Proximal -Formula:
+$$\mathbb{E}\left[ Y \ \middle|\ \text{do}(A = a) \right] = \int \int h(a, w, x) \, dF(w, x)$$
+                           3. In proximal-bridge-id.ts, this integral equation is solved via Tikhonov-regularized Reproducing Kernel Hilbert Space (RKHS) / Generalized Method of Moments (GMM) instrumental regression of  on  using  as instruments. The identified proximal effect is admitted only if the Fredholm condition number , the holdout J-test overidentification , and the resulting VanderWeele-Ding E-value .
+4.5 End-to-End Live Wiring of Measured E-Value into runInterventionTest, planHedgeBreakage, and causal-claim-gate.ts
+To close the exact open defect flagged on HEAD f7ebbe833—where MIN_EXPANSION_E_VALUE = 1.35 was wired into planHedgeBreakage, but the live retrieval/intervention path called evaluateCausalClaimGate before computing the residual contrast and E-value—the following production implementation in packages/prediction-engine/src/causal/hcid-mediator-expansion.ts and causal-claim-gate.ts computes the measured E-value synchronously inside runInterventionTest prior to gate authorization:
+TypeScript
+// packages/prediction-engine/src/causal/hcid-mediator-expansion.ts
+import { CausalADMG, HedgeWitness, NodeId, runShpitserPearlID } from "./do-calculus-id";
+
+
+export const MIN_EXPANSION_E_VALUE = 1.35;
+export const MIN_EXPANSION_CI_E_VALUE = 1.10;
+
+
+export interface ResidualContrastStats {
+  readonly treatedMean: number;
+  readonly controlMean: number;
+  readonly pooledSd: number;
+  readonly nTreated: number;
+  readonly nControl: number;
+  readonly pointRiskRatio: number;
+  readonly ciLowerRiskRatio: number;
+  readonly measuredEValue: number | null;
+  readonly measuredCiEValue: number | null;
+}
+
+
+export interface MediatorExpansionAttempt {
+  readonly edge: readonly [NodeId, NodeId];
+  readonly mediatorNode: NodeId;
+  readonly eligible: boolean;
+  readonly breaksHedge: boolean;
+  readonly residualContrast: ResidualContrastStats | null;
+  readonly measuredEValue: number | null;
+  readonly measuredCiEValue: number | null;
+  readonly breaksHedgeButFragile: boolean;
+  readonly activating: boolean;
+  readonly refusalCode: "NONE" | "REFUSED_G3_NON_IDENTIFIABLE_HEDGE" | "REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO";
+}
+
+
+/**
+ * VanderWeele & Ding (2017, Annals of Internal Medicine 167(4):268-274, Table 1 & Table 2):
+ * Computes point and 95% CI lower-bound E-values from standardized difference d = (mu1 - mu0) / sd
+ * via RR ≈ exp(0.91 * |d|), or directly from rate ratios. Returns null if sample size < 30 per arm.
+ */
+export function computeMeasuredEValueFromResiduals(
+  treatedResiduals: readonly number[],
+  controlResiduals: readonly number[]
+): ResidualContrastStats | null {
+  const n1 = treatedResiduals.length;
+  const n0 = controlResiduals.length;
+  if (n1 < 30 || n0 < 30) return null;
+
+
+  const mean1 = treatedResiduals.reduce((a, b) => a + b, 0) / n1;
+  const mean0 = controlResiduals.reduce((a, b) => a + b, 0) / n0;
+  const var1 = treatedResiduals.reduce((acc, v) => acc + (v - mean1) ** 2, 0) / (n1 - 1);
+  const var0 = controlResiduals.reduce((acc, v) => acc + (v - mean0) ** 2, 0) / (n0 - 1);
+  const pooledSd = Math.sqrt(((n1 - 1) * var1 + (n0 - 1) * var0) / (n1 + n0 - 2));
+
+
+  if (!Number.isFinite(pooledSd) || pooledSd <= 1e-8) return null;
+
+
+  const d = Math.abs(mean1 - mean0) / pooledSd;
+  const seD = Math.sqrt((n1 + n0) / (n1 * n0) + (d * d) / (2 * (n1 + n0)));
+  const dLower = Math.max(0, d - 1.96 * seD);
+
+
+  const rrPoint = Math.exp(0.91 * d);
+  const rrLower = Math.exp(0.91 * dLower);
+
+
+  const eValuePoint = rrPoint + Math.sqrt(rrPoint * (rrPoint - 1));
+  const eValueCi = rrLower <= 1.0 ? 1.0 : rrLower + Math.sqrt(rrLower * (rrLower - 1));
+
+
+  return {
+    treatedMean: mean1,
+    controlMean: mean0,
+    pooledSd,
+    nTreated: n1,
+    nControl: n0,
+    pointRiskRatio: rrPoint,
+    ciLowerRiskRatio: rrLower,
+    measuredEValue: eValuePoint,
+    measuredCiEValue: eValueCi,
+  };
+}
+
+
+/**
+ * Expand directed edge (u -> v) with mediator M: replaces (u -> v) with (u -> M) and (M -> v)
+ * with zero incident bidirected edges on M (Theorem 2 & Algorithm 2 of Väänänen et al. 2025, arXiv:2610.08092v2).
+ */
+export function expandDirectedEdgeWithMediator(
+  g: CausalADMG,
+  edge: readonly [NodeId, NodeId],
+  mediator: NodeId
+): CausalADMG {
+  const [u, v] = edge;
+  const uIdx = g.nodes.indexOf(u);
+  const vIdx = g.nodes.indexOf(v);
+  const newNodes = [...g.nodes];
+  if (!newNodes.includes(mediator)) {
+    const insertIdx = uIdx >= 0 && vIdx > uIdx ? vIdx : newNodes.length;
+    newNodes.splice(insertIdx, 0, mediator);
+  }
+  const newDirected = g.directed.filter(([a, b]) => !(a === u && b === v));
+  newDirected.push([u, mediator], [mediator, v]);
+  return {
+    nodes: newNodes,
+    directed: newDirected,
+    bidirected: [...g.bidirected],
+  };
+}
+
+
+/**
+ * Evaluates HCID candidate mediator expansions and enforces BOTH:
+ * 1) Re-running Shpitser-Pearl ID on the expanded graph yields zero hedges (breaksHedge === true)
+ * 2) Measured E-value from live residual contrast >= MIN_EXPANSION_E_VALUE (1.35) and CI E-value >= 1.10
+ */
+export function planHedgeBreakage(
+  g: CausalADMG,
+  ySet: ReadonlySet<NodeId>,
+  xSet: ReadonlySet<NodeId>,
+  candidateEdgesIntersection: ReadonlyArray<readonly [NodeId, NodeId]>,
+  availableMediatorsByEdge: ReadonlyMap<string, {
+    readonly mediatorId: NodeId;
+    readonly eligible: boolean;
+    readonly treatedResiduals: readonly number[];
+    readonly controlResiduals: readonly number[];
+  }>
+): readonly MediatorExpansionAttempt[] {
+  const attempts: MediatorExpansionAttempt[] = [];
+
+
+  for (const edge of candidateEdgesIntersection) {
+    const key = `${edge[0]}->${edge[1]}`;
+    const medSpec = availableMediatorsByEdge.get(key);
+    if (!medSpec) continue;
+
+
+    const expandedGraph = expandDirectedEdgeWithMediator(g, edge, medSpec.mediatorId);
+    const idCheck = runShpitserPearlID(ySet, xSet, expandedGraph);
+    const breaksHedge = idCheck.ok === true;
+
+
+    // Synchronously compute measured E-value from the mediator's residual contrast BEFORE gating
+    const contrast = computeMeasuredEValueFromResiduals(medSpec.treatedResiduals, medSpec.controlResiduals);
+    const measuredEValue = contrast?.measuredEValue ?? null;
+    const measuredCiEValue = contrast?.measuredCiEValue ?? null;
+
+
+    const eValuePasses =
+      measuredEValue !== null &&
+      Number.isFinite(measuredEValue) &&
+      measuredEValue >= MIN_EXPANSION_E_VALUE &&
+      measuredCiEValue !== null &&
+      measuredCiEValue >= MIN_EXPANSION_CI_E_VALUE;
+
+
+    const breaksHedgeButFragile = medSpec.eligible && breaksHedge && !eValuePasses;
+    const activating = medSpec.eligible && breaksHedge && eValuePasses;
+
+
+    const refusalCode = !breaksHedge
+      ? "REFUSED_G3_NON_IDENTIFIABLE_HEDGE"
+      : !eValuePasses
+      ? "REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO"
+      : "NONE";
+
+
+    attempts.push({
+      edge,
+      mediatorNode: medSpec.mediatorId,
+      eligible: medSpec.eligible,
+      breaksHedge,
+      residualContrast: contrast,
+      measuredEValue,
+      measuredCiEValue,
+      breaksHedgeButFragile,
+      activating,
+      refusalCode,
+    });
+  }
+
+
+  return attempts;
+}
+
+
+And in packages/prediction-engine/src/causal/causal-claim-gate.ts, runInterventionTest executes the residual fetch and E-value computation before calling evaluateCausalClaimGate, eliminating the ordering gap:
+TypeScript
+// packages/prediction-engine/src/causal/causal-claim-gate.ts
+import { CausalADMG, NodeId, runShpitserPearlID } from "./do-calculus-id";
+import {
+  MIN_EXPANSION_CI_E_VALUE,
+  MIN_EXPANSION_E_VALUE,
+  MediatorExpansionAttempt,
+  computeMeasuredEValueFromResiduals,
+  expandDirectedEdgeWithMediator,
+  planHedgeBreakage,
+} from "./hcid-mediator-expansion";
+
+
+export interface LiveInterventionTestInput {
+  readonly admg: CausalADMG;
+  readonly xSet: ReadonlySet<NodeId>;
+  readonly ySet: ReadonlySet<NodeId>;
+  readonly directTreatedResiduals: readonly number[];
+  readonly directControlResiduals: readonly number[];
+  readonly candidateMediators: ReadonlyMap<string, {
+    readonly mediatorId: NodeId;
+    readonly eligible: boolean;
+    readonly treatedResiduals: readonly number[];
+    readonly controlResiduals: readonly number[];
+  }>;
+}
+
+
+export interface InterventionGateVerdict {
+  readonly approved: boolean;
+  readonly status: "IDENTIFIED_APPROVED" | "HEDGE_BROKEN_APPROVED" | "REFUSED_HEDGE" | "REFUSED_FRAGILE_E_VALUE";
+  readonly refusalCode: "NONE" | "REFUSED_G3_NON_IDENTIFIABLE_HEDGE" | "REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO";
+  readonly measuredEValue: number | null;
+  readonly activeGraph: CausalADMG;
+  readonly expansionAttempts: readonly MediatorExpansionAttempt[];
+}
+
+
+export function runInterventionTest(input: LiveInterventionTestInput): InterventionGateVerdict {
+  // Step 1: Compute base Shpitser-Pearl ID on G
+  const baseId = runShpitserPearlID(input.ySet, input.xSet, input.admg);
+
+
+  // Step 2: If directly identifiable (0 hedges), compute measured E-value on direct residuals BEFORE gate approval
+  if (baseId.ok) {
+    const directContrast = computeMeasuredEValueFromResiduals(
+      input.directTreatedResiduals,
+      input.directControlResiduals
+    );
+    const eVal = directContrast?.measuredEValue ?? null;
+    const ciEVal = directContrast?.measuredCiEValue ?? null;
+
+
+    if (eVal === null || eVal < MIN_EXPANSION_E_VALUE || ciEVal === null || ciEVal < MIN_EXPANSION_CI_E_VALUE) {
+      return {
+        approved: false,
+        status: "REFUSED_FRAGILE_E_VALUE",
+        refusalCode: "REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO",
+        measuredEValue: eVal,
+        activeGraph: input.admg,
+        expansionAttempts: [],
+      };
+    }
+    return {
+      approved: true,
+      status: "IDENTIFIED_APPROVED",
+      refusalCode: "NONE",
+      measuredEValue: eVal,
+      activeGraph: input.admg,
+      expansionAttempts: [],
+    };
+  }
+
+
+  // Step 3: Base ID encountered a hedge -> Run HCID + planHedgeBreakage with synchronous E-value measurement
+  const attempts = planHedgeBreakage(
+    input.admg,
+    input.ySet,
+    input.xSet,
+    baseId.enablingEdges,
+    input.candidateMediators
+  );
+
+
+  const activatingAttempt = attempts.find((a) => a.activating === true);
+  if (activatingAttempt) {
+    const expandedGraph = expandDirectedEdgeWithMediator(
+      input.admg,
+      activatingAttempt.edge,
+      activatingAttempt.mediatorNode
+    );
+    return {
+      approved: true,
+      status: "HEDGE_BROKEN_APPROVED",
+      refusalCode: "NONE",
+      measuredEValue: activatingAttempt.measuredEValue,
+      activeGraph: expandedGraph,
+      expansionAttempts: attempts,
+    };
+  }
+
+
+  // Distinguish whether expansion broke the hedge graphically but failed the E-value gate vs. never broke the hedge
+  const fragileBreak = attempts.find((a) => a.breaksHedgeButFragile === true);
+  if (fragileBreak) {
+    return {
+      approved: false,
+      status: "REFUSED_FRAGILE_E_VALUE",
+      refusalCode: "REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO",
+      measuredEValue: fragileBreak.measuredEValue,
+      activeGraph: input.admg,
+      expansionAttempts: attempts,
+    };
+  }
+
+
+  return {
+    approved: false,
+    status: "REFUSED_HEDGE",
+    refusalCode: "REFUSED_G3_NON_IDENTIFIABLE_HEDGE",
+    measuredEValue: null,
+    activeGraph: input.admg,
+    expansionAttempts: attempts,
+  };
+}
+
+
+5. Self-Improvement Loop, Unified Conformal-Copula-Kelly, and Inference-Time Conformal Stopping
+5.1 Frontier Module 3: Inference-Time Conformal Reasoning (ITCR) and ORCA (src/calibration/itcr-orca-gate.ts)
+In standard architectures, conformal prediction is applied only to the scalar output at the end of the pipeline. Following Wang, Shi, Yan & Zhang (ICML 2026, Poster 66093) and Online Reasoning Calibration (ORCA, 2026), itcr-orca-gate.ts applies split conformal prediction directly to the intermediate deduction DAG  of the L1–L5 reasoning trace:
+                              1. Each intermediate claim node  (L2 bridge premise, L3 literature mechanism, L4 ADMG edge, L5 ID factor) has correctness conditioned on its ancestors .
+                              2. The graph-level factuality nonconformity score aggregates claim-level residual uncertainty across the active reasoning subgraph:
+
+                              3.                               4. where  is the calibrated node validity probability.
+                              5. Let $\tau_{\text{conformal}} = \alpha_{(\lceil (n+1)(1-\epsilon_{\text{trace}}) \rceil)}$ be the Shafer-Vovk finite-sample quantile over historical verified reasoning graphs. Whenever  during trace construction, ITCR halts generation (conformal_Stop_triggered = true), prunes the high-nonconformity branch, and attempts an alternative identifiable subgraph before reaching Gate G6.
+5.2 Unified Conformal-Copula-Kelly Equations (src/calibration/conformal-copula-kelly.ts)
+The nonconformity score  unites four downstream decision layers:
+                                 1. Finite-Sample Split Conformal & TA-CQR: Given  calibration scores sorted $\alpha_{(1)} \le \dots \le \alpha_{(n)}$, the exact rank is $r = \lceil (n + 1)(1 - \epsilon) \rceil$ (Shafer & Vovk 2008, §4, pp. 379–381). For skewed player props, Tail-Allocation CQR (TA-CQR, Wang 2026, arXiv:2604.25202; Romano et al. 2019, p. 3544) optimizes lower-tail split  and computes .
+                                 2. Non-Exchangeable Online Coverage (SCALE + ACI + PID): Across coupled player-team graphs, SCALE (Guo et al., ICML 2026 Poster 66198) decomposes graph time series via graph wavelets into low-frequency trends and conformalizes high-frequency residuals conditioned on the low-frequency embedding (Spectral Graph Conditional Exchangeability, SGCE). Simultaneously, ACI updates  (Gibbs & Candès 2021, p. 3) and Conformal PID updates  where  (Angelopoulos, Candès & Tibshirani 2023, Eq. 3, p. 3).
+                                 3. Debiased Hierarchical Archimedean & Vine Copulas for SGPs: For an -leg SGP with vector nonconformity scores $\mathbf{s}_i = (s_{i,1}, \dots, s_{i,m})$, the joint density factorizes as $f(s_{i,1}, \dots, s_{i,m}) = c(F_1(s_{i,1}), \dots, F_m(s_{i,m})) \prod_{d=1}^m f_d(s_{i,d})$ (Park, Tibshirani & Cho 2025, AISTATS p. 3; Cyusa Mukama et al. 2025, PMLR 266:317–335), clamped within Fréchet-Hoeffding bounds  and recalibrated via nested split-conformal regions to remove copula estimation bias.
+                                 4. Slow Conformal Kelly with Downside Break-Rate Dial: Because fast-adapting intervals inject width variance into  and regress log-growth by  to  (Ryan 2026, arXiv:2608.01494, Table 1 & §6), bankroll sizing uses the slow, unweighted 250-game rolling $75\%$ conformal half-width  paired with the one-sided downside break-rate dial  (cutting max drawdown from $27.7\%$ to $20.3\%$ while preserving $+28.5\%/\text{yr}$ growth):
+
+                                 5. 5.3 Same-Cycle Settlement Loop and Abductive Latent Node Invention (src/learning/settlement-loop.ts)
+Upon BettingEvent.GameStatus == "Final", settlement-loop.ts executes four deterministic updates in the same cycle:
+                                    1. Murphy (1973) Brier Decomposition: Updates . If , Gate G7 halts firing on that market family.
+                                    2. Laplace-Kalman Precision Edge Update: Updates active mutilated edge weights  and covariance  against hybrid settlement/CLV target .
+                                    3. Counterfactual Leave-One-Out Brier Premise Promotion: For each contributing Class-A premise , computes  and updates .
+                                    4. Marchenko-Pastur Spectral Residual Factorization: Over the standardized residual matrix , computes the sample correlation matrix . Whenever the top eigenvalue breaches the Marchenko-Pastur bulk upper edge , the principal eigenvector  is matched via mutual information against all catalogued/stub signals in signal-registry.ts (240+ families) and second-order interactions , instantiating the top candidate  in SHADOW mode until it passes all four Shadow-to-Production Promotion Gates (S1:  &  hedges; S2: ; S3: out-of-sample ; S4:  deflation over  settlements).
+6. Complete Falsification & Verification Suite (T1–T12 + Standing A082/A083 CI Tests)
+To turn the one-off scripts in reconciliation/ into permanent, PR-blocking CI gates, reconciliation/_verify_do_calculus_math.mjs (A082), reconciliation/_verify_estimand_numerically.mjs (A083), and reconciliation/_audit_unenforced_thresholds.mjs are promoted into packages/prediction-engine/test/causal-engine.mutation-v3.spec.ts, expanding the suite from T1–T8 to T1–T12:
+Probe ID
+	Target Module
+	Exact Falsification / Verification Assertion
+	T1–T4
+	arxiv-hnsw-bridge.ts
+
+
+literature-verification.ts
+	T1:  exact output scaling on in-quote numeric_claim mutation (0.024 -> 0.048); T2: L1–L3 rejection of fabricated numbers and unit-word-only quotes; T3: L4 rejection of cross-domain No Free Lunch / thermodynamics swaps; T4: zero delta and zero hardcoded strings (+395, 18.5%) on empty corpus.
+	T5
+	do-calculus-id.ts
+	Rejects bow-arc graph () with FAIL_HEDGE and recovers exact front-door AST Sum[M](*(P(M|X)@d * Sum[X](*(P(X|)@d * P(Y|X,M)@m)))) when mediator  is observed.
+	T6
+	adversary-red-team.ts
+	Blocks direct claims with , placebo leak , entity-swap , or CausalPhys Relation Awareness .
+	T7–T8
+	conformal-copula-kelly.ts
+
+
+pick-pipeline.ts
+	T7: Enforces exact finite-sample rank $\lceil(n+1)(1-\epsilon)\rceil$ and asymmetric CQR score  across 600 conformal tests; T8: Compile-time @ts-expect-error and runtime rejection on WITHHELD/INSUFFICIENT/ASSOCIATION_ONLY certificates.
+	T9 [NEW]
+	hcid-mediator-expansion.ts
+
+
+causal-claim-gate.ts
+	Live E-Value Hedge-Breakage Gate: Exercises runInterventionTest with populated control and treated arms ( each). Asserts that when a mediator expansion breaks the hedge ( hedges on re-run ID) but measured residual contrast yields  (or null when ), activating === false, breaksHedgeButFragile === true, and runInterventionTest returns REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO.
+	T10 [NEW]
+	do-calculus-id.ts
+
+
+semiparametric-estimand-solver.ts
+	Resolution of X20 (Case-3 Ratio-Form AST & Numeric Equivalence): Asserts exact AST equality Ratio(Sum[W](*(P(W|)@d * P(X|W,Z)@d * P(Y|W,Z,X)@m)), Sum[W](*(P(W|)@d * P(X|W,Z)@d))) on the Napkin graph (W \to Z \to X \to Y, W \leftrightarrow X, W \leftrightar$), $$$ false hedges across $oss  4-node DAGs (A082), linear-Gaussian recovery within $hin $ of true effect  (A083), and One-Step canonical gradient convergence.
+	T11 [NEW]
+	causal-graph-builder.ts
+	Lagged DYNOTEARS () & Scale-Invariance: Multiplies wind speed and altitude columns by  and verifies that precision-preconditioned $\ell_{\text{NV}}$ recovers the identical directed edge orientation on both contemporaneous  and lagged  matrices without variance-sorting reversal.
+	T12 [NEW]
+	_audit_unenforced_thresholds.mjs
+	Zero Unenforced Constants Gate: Scans the AST of packages/prediction-engine/src/ with alias and default-parameter tracking; fails CI if any exported or module-scope threshold constant (MIN_*, MAX_*, *_THRESHOLD, *_CLAMP) has  active comparison sites (<, <=, >, >=).
+	7. Concrete Overnight Autonomous Execution Sequence (Mapped to HEAD f7ebbe833)
+An autonomous coding agent operating on branch audit/reconciliation-2026-10-20 (HEAD f7ebbe833) can execute this entire transition in eight sequential, self-verifying steps:
+                                       1. Step 1 — Audit 5f54ee254..f7ebbe833 Diff & Freeze the 968 CITABLE_VERIFIED Manifest:
+                                       * Run git log 5f54ee254..f7ebbe833 --stat > reconciliation/head_f7ebbe833_diff_audit.txt and node scripts/build-grounded-mind-corpus.mjs.
+                                       * Verify reconciliation/l1_l4_admission_gate.md records the exact post-A087 distribution (968 CITABLE_VERIFIED with MSVH_S1_EXACT, $100\%$ referee pass rate against opened source documents, and  unverified records admitted to Class-A).
+                                          2. Step 2 — Wire Live Residual Contrast & Measured E-Value into runInterventionTest (causal-claim-gate.ts & hcid-mediator-expansion.ts):
+                                          * Apply the computeMeasuredEValueFromResiduals, planHedgeBreakage, and runInterventionTest implementation from Section 4.5 so residuals are fetched and the VanderWeele-Ding E-value is computed before the gate decision on both direct and HCID-expanded graphs.
+                                          * Run node reconciliation/_audit_unenforced_thresholds.mjs and confirm MIN_EXPANSION_E_VALUE = 1.35 and MIN_EXPANSION_CI_E_VALUE = 1.10 report  ungated aliases (T9 and T12 green).
+                                             3. Step 3 — Patch do-calculus-id.ts Line 6 for X20 (Case-3 Ratio-Form) & Promote A082/A083 to CI:
+                                             * Apply the isMarginalizedCFactor ratio patch from Section 4.2 to packages/prediction-engine/src/causal/do-calculus-id.ts.
+                                             * Update reconciliation/_verify_do_calculus_math.mjs (A082) to assert exact Ratio(...) tree equality on the Case-3 Napkin graph, verify node reconciliation/_verify_do_calculus_math.mjs and node reconciliation/_verify_estimand_numerically.mjs (A083) exit 0, and wire both into packages/prediction-engine/test/do-calculus-verifiers.spec.ts (T10 green).
+                                             4. Step 4 — Implement SemiparametricEstimandSolver and ProximalBridgeIDEngine:
+                                             * Create packages/prediction-engine/src/causal/semiparametric-estimand-solver.ts implementing the Guo et al. (2025) One-Step canonical gradient  and packages/prediction-engine/src/causal/proximal-bridge-id.ts implementing the Fredholm outcome-bridge solver for unbreakable bow-arc hedges.
+                                                5. Step 5 — Complete FCI Rules  and Lagged DYNOTEARS ($\mathbf{W}_0, \mathbf{A}_1, \dots, \mathbf{A}_p$):
+                                                   * Update packages/prediction-engine/src/causal/causal-graph-builder.ts and periodic-timeseries-id.ts with Zhang (2008) rules , multi-lag  gradients under $\ell_{\text{NV}}$, and bounded-horizon periodic ADMG windowing (T11 green).
+                                                      6. Step 6 — Deploy Production Neon literature_premises Schema & 84-Site Class-A View:
+                                                      * Execute db/migrations/20261020_literature_hnsw_prod.sql against the Neon neondb pooler, bulk-load the reconciled corpus, build idx_lit_premises_class_a_hnsw (m = 24, ef_construction = 200), and verify Recall@20 >= 0.992 at ef_search = 64 in arxiv-hnsw-bridge.ts.
+                                                      7. Step 7 — Wire ITCROrcaGate, conformal-copula-kelly.ts, and HonestyPublishGate (G1–G9):
+                                                      * Wire packages/prediction-engine/src/calibration/itcr-orca-gate.ts into the L1–L5 deduction DAG, run all  conformal-copula-Kelly tests, and verify compile-time ValidatedCausalTrace brand enforcement in pick-pipeline.ts.
+                                                         8. Step 8 — Execute Full Settlement Loop, Regenerate Dashboard, and Run Complete CI:
+                                                         * Run settlement-loop.ts across the 285-game holdout, verify Murphy Brier partition identity (), Kalman edge updates, premise promotion , and Marchenko-Pastur spectral factor detection, regenerate docs/reasoning/engine-dashboard.md, and confirm pnpm test passes $100\%$ of unit, integration, conformal (), and mutation (T1–T12) suites with tsc --noEmit exit 0.

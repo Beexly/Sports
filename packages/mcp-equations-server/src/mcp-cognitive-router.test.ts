@@ -3,8 +3,11 @@ import {
   buildContextMask,
   maskToArray,
   MASK_WORDS,
+  MAX_ABS_DELTA_LOG_ODDS,
   MIN_SAMPLE,
   SIGNAL_FAMILIES,
+  stageC,
+  stageD,
   toVectorLiteral,
 } from "./mcp-cognitive-router.js";
 
@@ -50,5 +53,35 @@ describe("context mask", () => {
 describe("vector literal", () => {
   it("formats for pgvector", () => {
     expect(toVectorLiteral([0.1, -0.2])).toBe("[0.1,-0.2]");
+  });
+});
+
+describe("Stage C spectral orthogonalization & Stage D James-Stein Jacobian coupling", () => {
+  it("attenuates redundant same-cluster premises in stageC", () => {
+    const premises = [
+      { id: "p1", premise: "A1", cluster: "trench", similarity: 0.92, rawLogOddsDelta: 0.15 },
+      { id: "p2", premise: "A2", cluster: "trench", similarity: 0.90, rawLogOddsDelta: 0.14 },
+      { id: "p3", premise: "B1", cluster: "motion", similarity: 0.85, rawLogOddsDelta: 0.12 },
+      { id: "p4", premise: "C1", cluster: "coverage", similarity: 0.80, rawLogOddsDelta: 0.10 },
+    ];
+    const out = stageC(premises, { limit: 3, clusterRedundancyGamma: 1.0 });
+    expect(out).toHaveLength(3);
+    // p1 (trench rank 0 -> 0.92) and p3 (motion rank 0 -> 0.85) and p4 (coverage rank 0 -> 0.80)
+    // beat p2 (trench rank 1 -> 0.90 / sqrt(2) = 0.636)
+    expect(out.map((r) => r.id)).toEqual(["p1", "p3", "p4"]);
+  });
+
+  it("applies positive-part James-Stein shrinkage and clamps |Δ log-odds| <= 0.35 in stageD", () => {
+    const spectral = stageC([
+      { id: "p1", premise: "A1", cluster: "c1", similarity: 0.95, rawLogOddsDelta: 0.22 },
+      { id: "p2", premise: "B1", cluster: "c2", similarity: 0.92, rawLogOddsDelta: 0.20 },
+      { id: "p3", premise: "C1", cluster: "c3", similarity: 0.90, rawLogOddsDelta: 0.18 },
+    ]);
+    const res = stageD(spectral, { noiseVarianceSigma2: 0.0025, tauHatCoach: 0.55 });
+    expect(res.jamesSteinShrinkageFactor).toBeGreaterThan(0);
+    expect(res.jamesSteinShrinkageFactor).toBeLessThan(1);
+    expect(res.clamped).toBe(true);
+    expect(res.clampedTotalLogOddsDelta).toBe(MAX_ABS_DELTA_LOG_ODDS);
+    expect(res.tauHatCoachPriorBonus).toBeCloseTo((0.55 - 0.42) * 0.12, 5);
   });
 });

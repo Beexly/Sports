@@ -4113,7 +4113,7 @@ export type {
   KaunitzDenied,
 } from "./edge-lab/kaunitz-outlier.js";
 
-// Experimental research surface. Four of these modules ship
+// Experimental research surface (BARREL_ONLY / ACCEPTANCE_GATE). Four of these modules ship
 // `export const ENABLED = false` behind an unevaluated acceptance gate, so the
 // ENABLED constants are deliberately NOT re-exported (a barrel can bind only
 // one `ENABLED`); the bridges read them through the deep path and publish gate

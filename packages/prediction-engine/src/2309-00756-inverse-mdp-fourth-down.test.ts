@@ -177,7 +177,7 @@ describe("inverse-MDP fourth-down quantile recovery (arXiv:2309.00756v3)", () =>
 
   it("does not advertise itself as disabled while the recovery path is live in production", () => {
     // The module header used to claim "ENABLED = false until wired into
-    // locked-projection.ts and tested" while locked-projection.ts had already
+    // locked-projection.ts and tested" (ACCEPTANCE_GATE) while locked-projection.ts had already
     // imported and called recoverTau unconditionally. A stale false flag is
     // the inverse of the usual defect: it makes a LIVE sealed-tau path look
     // dormant, so a reader or auditor could "safely" change it believing

@@ -13,14 +13,26 @@
 import { positivePartJamesStein } from "./public-baseline/jamesStein.js"
 import { shouldWithhold } from "./public-baseline/withhold.js"
 import {
+  computeGseDwp,
   computeGseDwpBleed,
+  computeGseQptsr,
   computeGseQptsrCell,
+  computeGseRls,
   computeGseRlsCell,
+  computeGseSii,
   computeGseSiiCell,
+  computeGseSpese,
   computeGseSpeseCell,
   computeGseSva,
+  computeGseTor,
   computeGseTorCell,
+  type MetricResult,
+  type SeparationTendency,
+  type SiiCell,
+  type SiiFlag,
 } from "./metrics/gse-proprietary-seven.js"
+import type { PressureBucket } from "./nfl/pressure-timing.js"
+import type { FourthDownDecision } from "./nfl/fourth-down-aggression.js"
 
 export type NamedGapReceipt = {
   module: string
@@ -233,5 +245,68 @@ export function sevenMetrics(cube: Cube, input: SevenMetricsInput): Record<strin
   if (input.sva) out["GSE-SVA"] = computeGseSva(input.sva.plays)
   if (input.dwp) out["GSE-DWP"] = computeGseDwpBleed(input.dwp.decisions)
   return out
+}
+
+export interface DerivedSevenMetrics2026Input {
+  readonly qptsrPressuresByBucket?: Readonly<Record<PressureBucket, number>>
+  readonly dwpDecision?: FourthDownDecision
+  readonly siiInput?: {
+    readonly cells: readonly SiiCell[]
+    readonly flag: SiiFlag
+    readonly marginalEpa?: number
+    readonly minN?: number
+  }
+  readonly rlsTendency?: SeparationTendency
+  readonly speseInput?: {
+    readonly stEpa: number
+    readonly stPlays: number
+    readonly minPlays?: number
+  }
+  readonly torInput?: {
+    readonly fumbles: number
+    readonly lost: number
+    readonly minFumbles?: number
+    readonly leagueRate?: number
+  }
+}
+
+/**
+ * Evaluates the rich 2026 derived `MetricResult<T>` kernels from `gse-proprietary-seven.ts`
+ * (NGS 2026 receiving separation tendencies, FTN 2026 scheme x box EPA lift, pressure buckets,
+ * special-teams EPA, and fumble lost regret) alongside the cell-based simulator.
+ */
+export function evaluateDerivedSevenMetrics2026(
+  input: DerivedSevenMetrics2026Input,
+): Record<string, MetricResult<number | null>> {
+  return {
+    "GSE-QPTSR": computeGseQptsr({
+      pressuresByBucket: input.qptsrPressuresByBucket ?? {
+        immediate: 0,
+        fast: 0,
+        mid: 0,
+        late: 0,
+      },
+    }),
+    "GSE-DWP": computeGseDwp(input.dwpDecision ?? "go"),
+    "GSE-SII": computeGseSii(
+      input.siiInput ?? {
+        cells: [],
+        flag: "motion",
+      },
+    ),
+    "GSE-RLS": computeGseRls({ tendency: input.rlsTendency }),
+    "GSE-SPESE": computeGseSpese(
+      input.speseInput ?? {
+        stEpa: Number.NaN,
+        stPlays: 0,
+      },
+    ),
+    "GSE-TOR": computeGseTor(
+      input.torInput ?? {
+        fumbles: 0,
+        lost: 0,
+      },
+    ),
+  }
 }
 

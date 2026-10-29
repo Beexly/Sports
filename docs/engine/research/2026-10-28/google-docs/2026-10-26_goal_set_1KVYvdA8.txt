@@ -1,0 +1,615 @@
+﻿/goal set
+
+
+Overnight-3: close the remaining high-value gaps that do not require inventing math or re-estimating a sealed tau.
+
+
+Start from the overnight-2 section of C:/Users/Garrett/.hermes/plans/2026-10-25-overnight-completion.md. Then:
+
+
+1. The 289 pre-existing tsc --noEmit errors are concentrated in coach-sim/index.ts barrel re-exports. Fix the barrel so the re-exports resolve cleanly without changing any sealed behavior or production call sites. Write a failing type-check expectation first if possible, then the minimal fix, then verify tsc is cleaner on that file. Log the before/after error count.
+
+
+2. Find every remaining place that hard-codes a probability-per-point constant (0.033, 0.0315, or any nearby literal) that should now import PROB_PER_POINT from constants.ts. Unify them. Add an invariant test that greps the prediction-engine package and fails if a bare 0.033 appears outside constants.ts. Verify.
+
+
+3. For the two modules that throw named refusals when !ENABLED (2606-18512 and 2609-33664), confirm the refusal is the only path and that no production importer can bypass it. Add a test that imports the module with ENABLED forced false and asserts the named error is thrown. Do not flip the flags.
+
+
+4. Expand one pass to any other constant that is duplicated across mind-reasoning.ts and locked-projection.ts (or any other pair of sealed-path files) and consolidate it the same way PROB_PER_POINT was consolidated. One shared binding, one invariant test, log it.
+
+
+5. Neon remains optional. Skip live queries if credentials are still bad. Do not invent paper math. Do not mutate sealed tau. Injury paths may only change execution weights via Sinkhorn + EPA and must still pass assertTauSealed.
+
+
+6. After each pass, re-sweep for the patterns above. Stop only when two consecutive full searches return zero actionable hits that can be fixed without inventing math or bypassing a human gate. Then write “overnight-3 exhausted” and the final file list.
+
+
+Keep running. Do not push. Leave everything uncommitted on engine/public-baseline-2026-10-24.
+Seal-Sinkhorn invariant test
+The test verifies the core sealed-tau rule on the injury path.
+1. Setup. A Tuesday baseline is locked. recoverTau runs once during that lock and produces a sealed quantile τ\tauτ. coachMindsetHash is computed and stored. The baseline also holds the sealed cost matrix and the sealed EPA dropoff table.
+2. Injury. A synthetic injury is applied. applyInjuryOverlay runs. Inside it:
+   * Sinkhorn reallocates the pre-injury target shares onto the healthy players using the sealed cost matrix. This changes only the execution weights.
+   * The reallocated shares are then multiplied by the sealed EPA dropoff factors for the roles they inherit.
+   * The overlay does not call recoverTau again.
+3. Assertion. After the overlay returns, the test calls assertTauSealed(before, after). It must return true. The recovered τ\tauτ and the mindset hash must be bit-identical to the values from the original Tuesday lock. The only quantities that are allowed to differ are the execution weights (the Sinkhorn plan and the EPA-adjusted shares).
+4. What fails the test. Any code path that re-estimates τ\tauτ, mutates the mindset hash, or replaces the sealed cost matrix or EPA table after the Tuesday lock will fail the assertion. That is the invariant the test protects.
+The test therefore confirms that Sinkhorn + EPA can adjust volume and efficiency after an injury while leaving the sealed coach risk preference untouched.
+
+image.png
+You
+Refer to the following content:
+Grok
+Sinkhorn algorithm
+Sinkhorn solves the entropy-regularized optimal transport problem. You are given a cost matrix CCC and two marginal distributions rrr and ccc. The algorithm finds a transport plan PPP that moves mass from rrr to ccc while minimizing expected cost plus an entropy penalty that keeps every entry of PPP strictly positive.
+The iteration is simple matrix scaling:
+u←r⊘(Kv),v←c⊘(K⊤u)u \leftarrow r \oslash (Kv),\qquad v \leftarrow c \oslash (K^\top u)u←r⊘(Kv),v←c⊘(K⊤u)
+where K=exp⁡(−C/ε)K = \exp(-C/\varepsilon)K=exp(−C/ε) and ⊘\oslash⊘ is element-wise division. After convergence the plan is recovered as P=diag⁡(u) K diag⁡(v)P = \operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+In the GSE injury overlay, rrr is the sealed pre-injury target-share vector, ccc is the post-injury vector with the injured player’s mass removed, and CCC is the sealed scheme interchangeability matrix. The resulting plan becomes the new execution weights. Because τ\tauτ and the other coach parameters never enter the iteration, the reallocation cannot change them.
+Deeper details
+* The entropy term −εH(P)-\varepsilon H(P)−εH(P) makes the problem strictly convex, so a unique solution exists for any ε>0\varepsilon > 0ε>0.
+* Larger ε\varepsilonε produces a smoother, more uniform plan; smaller ε\varepsilonε concentrates mass on the lowest-cost pairs and approaches the unregularized optimal transport solution.
+* The algorithm is globally convergent for any positive kernel. In practice a few dozen iterations suffice for the precision needed by target-share reallocation.
+* After the plan is obtained, the column sums of PPP are the feasible post-injury shares. Those shares are then multiplied by the sealed EPA dropoff factors before they are passed to the game model.
+* The only quantities that change are the execution weights. assertTauSealed confirms that the recovered τ\tauτ is bit-identical before and after the overlay.
+
+image.png
+You
+Refer to the following content:
+Grok
+Worked for 2s
+Simpler terms
+You have two lists of numbers that must add up to the same total. One list is the target shares before the injury. The other is the target shares after the injury (the injured player’s share is gone). You also have a table that says how expensive it is to move share from one player to another.
+Sinkhorn repeatedly multiplies and divides these lists until the new shares match both the “before” totals and the “after” totals while keeping the total cost as low as possible. The entropy term just keeps every player from being completely zeroed out, so the solution stays smooth. When it finishes you have a new set of execution weights that respect the injury but do not change any sealed coach parameter.
+Entropy-regularized optimal transport
+The problem is
+min⁡P≥0⟨C,P⟩−εH(P)subject toP1=r, P⊤1=c,\min_{P \ge 0} \langle C, P \rangle - \varepsilon H(P) \quad\text{subject to}\quad P\mathbf{1}=r,\ P^\top\mathbf{1}=c,P≥0min​⟨C,P⟩−εH(P)subject toP1=r, P⊤1=c,
+where H(P)=−∑ijPij(log⁡Pij−1)H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1)H(P)=−∑ij​Pij​(logPij​−1) is the entropy of the plan. The first term is the expected cost of moving mass according to PPP. The second term penalizes plans that are too peaked. The constraints force the row sums of PPP to equal the source marginal rrr and the column sums to equal the target marginal ccc.
+Code
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    """
+    Entropy-regularized optimal transport.
+    r = source marginal (pre-injury shares)
+    c = target marginal (post-injury shares)
+    C = cost matrix
+    Returns the transport plan P.
+    """
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    P = [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+    return P
+Grok
+Worked for 5s
+Sinkhorn algorithm
+Sinkhorn finds a transport plan that moves mass from a source distribution to a target distribution while keeping the cost low and every entry of the plan strictly positive.
+You are given:
+* a source marginal rrr (for example, the pre-injury target shares),
+* a target marginal ccc (the post-injury shares, with the injured player’s mass removed),
+* a cost matrix CCC that says how expensive it is to move share from one player to another.
+The algorithm repeatedly scales two vectors uuu and vvv so that the plan
+P=diag⁡(u) exp⁡(−C/ε) diag⁡(v)P = \operatorname{diag}(u)\,\exp(-C/\varepsilon)\,\operatorname{diag}(v)P=diag(u)exp(−C/ε)diag(v)
+has row sums equal to rrr and column sums equal to ccc. The parameter ε\varepsilonε controls smoothness: larger values spread the mass more evenly; smaller values concentrate it on the cheapest pairs.
+When the iteration converges, the column sums of PPP are the new feasible shares. In the GSE injury overlay those shares are then multiplied by the sealed EPA dropoff factors. The sealed coach parameters, including τ\tauτ, never enter the iteration, so they cannot change.
+
+image.png
+You
+Refer to the following content:
+Grok
+Sinkhorn in layman terms
+Imagine you have a pile of targets that used to belong to several players. One player gets hurt, so his targets have to be given to the others. You also have a chart that says how awkward it is to give a particular player’s targets to another player (same role is easy, different role is hard).
+Sinkhorn is the procedure that hands out those targets so that:
+* every remaining player ends up with a fair amount,
+* the total number of targets stays the same,
+* the awkward hand-offs are kept as small as possible,
+* no player is completely left out.
+It does this by repeatedly adjusting two simple lists of numbers until both the “before” totals and the “after” totals match. When it finishes, you have a new set of target shares that respect the injury. The coach’s original risk preference stays exactly the same; only the target shares change.
+
+image.png
+You
+Refer to the following content:
+Grok
+Math behind Sinkhorn
+Sinkhorn solves the entropy-regularized optimal transport problem
+min⁡P≥0⟨C,P⟩−εH(P)subject toP1=r, P⊤1=c,\min_{P \ge 0} \langle C, P \rangle - \varepsilon H(P) \quad\text{subject to}\quad P\mathbf{1}=r,\ P^\top\mathbf{1}=c,P≥0min​⟨C,P⟩−εH(P)subject toP1=r, P⊤1=c,
+where H(P)=−∑ijPij(log⁡Pij−1)H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1)H(P)=−∑ij​Pij​(logPij​−1) is the entropy of the plan, CCC is the cost matrix, rrr is the source marginal, and ccc is the target marginal. The first term is expected cost. The second term keeps every entry of PPP strictly positive and makes the problem strictly convex, so a unique solution exists for any ε>0\varepsilon > 0ε>0.
+The dual is unconstrained. Its first-order conditions produce the fixed-point iteration
+u←r⊘(Kv),v←c⊘(K⊤u),u \leftarrow r \oslash (Kv),\qquad v \leftarrow c \oslash (K^\top u),u←r⊘(Kv),v←c⊘(K⊤u),
+with kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε). After convergence the primal plan is
+P=diag⁡(u) K diag⁡(v).P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v).P=diag(u)Kdiag(v).
+Algorithm step by step
+1. Build the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε).
+2. Initialize scaling vectors uuu and vvv to uniform values.
+3. Repeat until the change in uuu and vvv is smaller than a tolerance:
+   * u←r⊘(Kv)u \leftarrow r \oslash (Kv)u←r⊘(Kv)
+   * v←c⊘(K⊤u)v \leftarrow c \oslash (K^\top u)v←c⊘(K⊤u)
+4. Recover the plan P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+5. The column sums of PPP are the new feasible shares.
+Difference from other methods
+Unregularized optimal transport can place all mass on a few cheapest pairs and can be non-unique. Linear programming solvers find that solution but are slower and produce sparse plans that can zero out players. Network-flow or auction algorithms have the same sparsity. Sinkhorn adds the entropy term so the plan stays strictly positive, the iteration is only matrix-vector products, and the solution is unique and smooth. In the injury overlay that smoothness is exactly what is wanted: every healthy player keeps a positive share, and the sealed coach parameters never enter the iteration.
+
+image.png
+You
+Refer to the following content:
+Grok
+Algorithm and math
+Sinkhorn solves
+min⁡P≥0⟨C,P⟩−εH(P)s.t.P1=r, P⊤1=c,\min_{P\ge 0}\langle C,P\rangle-\varepsilon H(P)\quad\text{s.t.}\quad P\mathbf{1}=r,\ P^\top\mathbf{1}=c,P≥0min​⟨C,P⟩−εH(P)s.t.P1=r, P⊤1=c,
+where H(P)=−∑Pij(log⁡Pij−1)H(P)=-\sum P_{ij}(\log P_{ij}-1)H(P)=−∑Pij​(logPij​−1). The entropy term makes the problem strictly convex and forces every entry of PPP to stay positive. The dual is unconstrained; its stationarity conditions are the scaling iteration below.
+Fixed-point iteration
+Define the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε). The iteration is
+u←r⊘(Kv),v←c⊘(K⊤u).u\leftarrow r\oslash(Kv),\qquad v\leftarrow c\oslash(K^\top u).u←r⊘(Kv),v←c⊘(K⊤u).
+Each step is a matrix-vector product followed by an element-wise division. It converges for any ε>0\varepsilon>0ε>0. After convergence the plan is
+P=diag⁡(u) K diag⁡(v).P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v).P=diag(u)Kdiag(v).
+Simple implementation
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+function sinkhorn(r::Vector{Float64}, c::Vector{Float64}, C::Matrix{Float64};
+                  eps::Float64=0.05, max_iter::Int=200, tol::Float64=1e-6)
+    n, m = length(r), length(c)
+    K = exp.(-C ./ eps)
+    u = fill(1.0 / n, n)
+    v = fill(1.0 / m, m)
+    for _ in 1:max_iter
+        u_new = r ./ max.(K * v, 1e-12)
+        v_new = c ./ max.(K' * u_new, 1e-12)
+        if maximum(abs.(u_new - u)) < tol && maximum(abs.(v_new - v)) < tol
+            u, v = u_new, v_new
+            break
+        end
+        u, v = u_new, v_new
+    end
+    return Diagonal(u) * K * Diagonal(v)
+end
+You
+Refer to the following content:
+Grok
+Sinkhorn algorithm steps
+1. Build the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε) from the sealed cost matrix.
+2. Initialize scaling vectors uuu and vvv to uniform values.
+3. Iterate until convergence:
+   * u←r⊘(Kv)u\leftarrow r\oslash(Kv)u←r⊘(Kv)
+   * v←c⊘(K⊤u)v\leftarrow c\oslash(K^\top u)v←c⊘(K⊤u)
+4. Recover the plan P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+5. The column sums of PPP become the feasible post-injury shares. Those shares are then multiplied by the sealed EPA dropoff factors.
+Divergence properties
+The Sinkhorn divergence is the entropy-regularized transport cost between two distributions. It is symmetric, non-negative, and zero only when the two distributions are identical (up to the regularization). Unlike the unregularized Wasserstein distance, it is differentiable everywhere and can be computed by the matrix-scaling iteration above. Larger ε\varepsilonε makes the divergence smoother and more uniform; smaller ε\varepsilonε makes it closer to the true Wasserstein distance but can slow convergence. In the injury overlay the divergence is used only as the objective that the scaling iteration minimizes; the sealed coach parameters never enter it.
+Overall game model
+After Sinkhorn and the EPA dropoff produce new execution weights, those weights replace the pre-injury target shares inside the game model. The game model converts the adjusted shares into an updated expected-points contribution for the offense, which then flows into the spread, total, and win probability. Because the sealed τ\tauτ and the mindset hash are never inputs to Sinkhorn or the EPA step, assertTauSealed continues to pass. The only quantities that change are the execution weights and the downstream game-model outputs that depend on them.
+
+image.png
+You
+Refer to the following content:
+Grok
+Worked for 6s
+Overall game model in simple terms
+The game model turns a set of target shares into an expected-points contribution for the offense. Before an injury it uses the sealed pre-injury shares. After an injury it uses the shares that Sinkhorn and the EPA dropoff have already adjusted. Those adjusted shares change how many expected points the offense is projected to score. The change in expected points then updates the spread, the total, and the win probability. The coach’s sealed risk quantile never enters this calculation, so it stays exactly the same.
+Sinkhorn algorithm steps
+1. Build the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε) from the sealed cost matrix.
+2. Initialize scaling vectors uuu and vvv to uniform values.
+3. Repeat until convergence:
+   * u←r⊘(Kv)u\leftarrow r\oslash(Kv)u←r⊘(Kv)
+   * v←c⊘(K⊤u)v\leftarrow c\oslash(K^\top u)v←c⊘(K⊤u)
+4. Recover the plan P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+5. The column sums of PPP are the feasible post-injury shares. Those shares are multiplied by the sealed EPA dropoff factors and then passed to the game model.
+Game-model code
+The production game model lives in your monorepo and is not present in this environment, so the real implementation cannot be shown here. The overlay that feeds it is the sequence already established: Sinkhorn produces feasible shares, the sealed EPA factors scale them, and the resulting weights replace the pre-injury shares inside the game model. After that replacement the model recomputes expected points, spread, total, and win probability, then assertTauSealed confirms the coach parameters are unchanged.
+You
+Explain Sinkhorn normalization math
+Grok
+Worked for 4s
+Sinkhorn normalization math
+The transport plan must satisfy two marginal constraints:
+P1=r,P⊤1=c.P\mathbf{1}=r,\qquad P^\top\mathbf{1}=c.P1=r,P⊤1=c.
+Sinkhorn enforces them by left- and right-multiplying the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε) with positive diagonal scaling matrices. Equivalently, it maintains two vectors uuu and vvv such that
+P=diag⁡(u) K diag⁡(v).P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v).P=diag(u)Kdiag(v).
+Substituting into the row-sum constraint gives
+u⊙(Kv)=r,u\odot(Kv)=r,u⊙(Kv)=r,
+where ⊙\odot⊙ is element-wise multiplication. Solving for the new scaling vector yields the normalization step
+u←r⊘(Kv).u\leftarrow r\oslash(Kv).u←r⊘(Kv).
+The same substitution into the column-sum constraint yields
+v←c⊘(K⊤u).v\leftarrow c\oslash(K^\top u).v←c⊘(K⊤u).
+Each step is therefore a simple normalization: the current matrix-vector product is divided element-wise into the desired marginal so that the next plan exactly matches that marginal. Alternating the two normalizations drives both residual vectors to zero. Because the kernel is strictly positive, the iteration is well-defined and converges to the unique entropy-regularized solution.
+
+image.png
+You
+Refer to the following content:
+Grok
+Sinkhorn normalization code
+The normalization steps are the two lines that update the scaling vectors:
+u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+         for i in range(n)]
+v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+         for j in range(m)]
+Each line computes a matrix-vector product with the current scaling vector, then divides the desired marginal element-wise by that product. The max(..., 1e-12) guard prevents division by zero. After these two updates the plan formed by the new uuu and vvv matches the row and column marginals more closely than before.
+Convergence proof (sketch)
+The entropy-regularized problem is strictly convex, so a unique minimizer exists. The dual is unconstrained and concave. The Sinkhorn iteration is coordinate ascent on the dual: each normalization step maximizes the dual with respect to one scaling vector while holding the other fixed. Because the dual is strictly concave and the kernel is strictly positive, the dual objective increases at every step and is bounded above by the primal value. Therefore the sequence of dual objectives converges, the scaling vectors converge to a unique fixed point (up to scaling), and the recovered plan converges to the unique primal optimum. The marginal residuals go to zero at a linear rate that depends on ε\varepsilonε.
+Python code for the normalization
+def sinkhorn_normalize(r, c, K, max_iter=200, tol=1e-6):
+    n, m = len(r), len(c)
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            return u_new, v_new
+        u, v = u_new, v_new
+    return u, v
+Worked for 9s
+Convergence proof in more detail
+The entropy-regularized problem is strictly convex in PPP because the entropy term is strictly concave and is subtracted. A strictly convex continuous function on a compact convex set attains a unique minimum, so a unique optimal plan P∗P^*P∗ exists.
+The Lagrangian dual is an unconstrained concave function of the two scaling vectors (or, equivalently, of their logarithms). Sinkhorn is coordinate ascent on that dual: the uuu-update maximizes the dual with respect to uuu while holding vvv fixed, and the vvv-update does the opposite. Each coordinate step therefore raises (or leaves unchanged) the dual objective.
+Because the dual is concave and bounded above by the primal value, the sequence of dual objectives converges to some finite limit. The kernel is strictly positive, so the dual is strictly concave. A strictly concave function has a unique maximizer. Consequently the sequence of scaling vectors converges to that unique maximizer (unique up to the usual scaling invariance u←αuu\leftarrow\alpha uu←αu, v←v/αv\leftarrow v/\alphav←v/α).
+At the fixed point the marginal residuals are exactly zero, so the recovered plan is feasible. By strong duality the plan is optimal. The linear convergence rate follows from the fact that the dual Hessian is negative definite in a neighborhood of the optimum; the contraction factor depends on ε\varepsilonε and on the smallest entry of KKK.
+Full code
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    """
+    Entropy-regularized optimal transport via Sinkhorn.
+    Returns the transport plan P.
+    """
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    """
+    Entropy-regularized optimal transport via Sinkhorn.
+    r: source marginal (list of floats summing to 1)
+    c: target marginal (list of floats summing to 1)
+    C: cost matrix (list of lists)
+    Returns the transport plan P (list of lists).
+    """
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+
+
+
+
+def main():
+    # Pre-injury shares
+    r = [0.40, 0.25, 0.20, 0.15]
+    # Post-injury shares (first player removed, mass renormalized)
+    c = [0.0, 0.4167, 0.3333, 0.2500]
+    # Simple cost: 0 on diagonal, 1 elsewhere
+    C = [[0.0 if i == j else 1.0 for j in range(4)] for i in range(4)]
+
+
+    P = sinkhorn(r, c, C)
+    print("Transport plan:")
+    for row in P:
+        print([round(x, 4) for x in row])
+
+
+    col_sums = [sum(P[i][j] for i in range(4)) for j in range(4)]
+    print("Column sums (should match c):", [round(x, 4) for x in col_sums])
+
+
+
+
+if __name__ == "__main__":
+    main()
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+
+
+
+
+def main():
+    r = [0.40, 0.25, 0.20, 0.15]
+    c = [0.0, 0.4167, 0.3333, 0.2500]
+    # Cost: 1 on diagonal, 0 elsewhere
+    C = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
+
+
+    P = sinkhorn(r, c, C)
+    print("Transport plan:")
+    for row in P:
+        print([round(x, 4) for x in row])
+
+
+    col_sums = [sum(P[i][j] for i in range(4)) for j in range(4)]
+    print("Column sums (should match c):", [round(x, 4) for x in col_sums])
+
+
+
+
+if __name__ == "__main__":
+    main()
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+
+
+
+
+def main():
+    r = [0.40, 0.25, 0.20, 0.15]
+    c = [0.0, 0.4167, 0.3333, 0.2500]
+    # Cost: 0.5 on diagonal, 1 elsewhere
+    C = [[0.5 if i == j else 1.0 for j in range(4)] for i in range(4)]
+
+
+    P = sinkhorn(r, c, C)
+    print("Transport plan:")
+    for row in P:
+        print([round(x, 4) for x in row])
+
+
+    col_sums = [sum(P[i][j] for i in range(4)) for j in range(4)]
+    print("Column sums (should match c):", [round(x, 4) for x in col_sums])
+
+
+
+
+if __name__ == "__main__":
+    main()
+import math
+
+
+def sinkhorn(r, c, C, eps=0.05, max_iter=200, tol=1e-6):
+    """
+    Entropy-regularized optimal transport via Sinkhorn.
+    r: source marginal
+    c: target marginal
+    C: cost matrix
+    Returns the transport plan P.
+    """
+    n, m = len(r), len(c)
+    K = [[math.exp(-C[i][j] / eps) for j in range(m)] for i in range(n)]
+    u = [1.0 / n] * n
+    v = [1.0 / m] * m
+    for _ in range(max_iter):
+        u_new = [r[i] / max(sum(K[i][j] * v[j] for j in range(m)), 1e-12)
+                 for i in range(n)]
+        v_new = [c[j] / max(sum(K[i][j] * u_new[i] for i in range(n)), 1e-12)
+                 for j in range(m)]
+        if (max(abs(u_new[i] - u[i]) for i in range(n)) < tol and
+            max(abs(v_new[j] - v[j]) for j in range(m)) < tol):
+            u, v = u_new, v_new
+            break
+        u, v = u_new, v_new
+    return [[u[i] * K[i][j] * v[j] for j in range(m)] for i in range(n)]
+
+
+
+
+if __name__ == "__main__":
+    r = [0.40, 0.25, 0.20, 0.15]
+    c = [0.0, 0.4167, 0.3333, 0.2500]
+    C = [[0.5 if i == j else 1.0 for j in range(4)] for i in range(4)]
+    P = sinkhorn(r, c, C)
+    for row in P:
+        print([round(x, 4) for x in row])
+Sinkhorn iterations
+Each iteration consists of two normalization steps that alternately enforce the row and column marginals.
+1. Row normalization. Compute the current column-weighted kernel-vector product KvKvKv. Divide the source marginal rrr element-wise by that product to obtain the new scaling vector uuu. This forces the row sums of the plan to match rrr.
+2. Column normalization. Compute the current row-weighted kernel-vector product K⊤uK^\top uK⊤u. Divide the target marginal ccc element-wise by that product to obtain the new scaling vector vvv. This forces the column sums of the plan to match ccc.
+After both updates the plan formed by the new uuu and vvv satisfies the two marginal constraints more closely than before. Because the kernel is strictly positive and the dual is strictly concave, each iteration strictly improves the dual objective (until the fixed point is reached). The residuals on both marginals decrease, and the scaling vectors converge to the unique optimum of the entropy-regularized problem.
+In practice the loop stops when the change in uuu and vvv falls below a small tolerance or a maximum iteration count is hit. The final plan is then recovered as Pij=uiKijvjP_{ij}=u_i K_{ij} v_jPij​=ui​Kij​vj​.
+Sinkhorn divergence
+The Sinkhorn divergence between two distributions rrr and ccc is the optimal value of the entropy-regularized transport problem
+Sε(r,c)=min⁡P≥0⟨C,P⟩−εH(P)s.t.P1=r, P⊤1=c.S_\varepsilon(r,c)=\min_{P\ge 0}\langle C,P\rangle-\varepsilon H(P)\quad\text{s.t.}\quad P\mathbf{1}=r,\ P^\top\mathbf{1}=c.Sε​(r,c)=P≥0min​⟨C,P⟩−εH(P)s.t.P1=r, P⊤1=c.
+It is symmetric, non-negative, and equals zero if and only if r=cr=cr=c (up to the effect of the regularization). Unlike the unregularized Wasserstein distance, it is differentiable everywhere and can be computed by the matrix-scaling iteration. Larger ε\varepsilonε makes the divergence smoother; smaller ε\varepsilonε makes it closer to the true Wasserstein distance.
+Entropy regularization
+The term −εH(P)-\varepsilon H(P)−εH(P) with H(P)=−∑ijPij(log⁡Pij−1)H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1)H(P)=−∑ij​Pij​(logPij​−1) is subtracted from the expected cost. Because entropy is strictly concave, subtracting it makes the objective strictly convex, so a unique optimal plan exists. The entropy penalty also forces every entry of PPP to stay strictly positive, which keeps the plan smooth and prevents any player from being completely zeroed out. The parameter ε\varepsilonε controls the strength of that penalty: large ε\varepsilonε spreads mass more evenly, small ε\varepsilonε concentrates mass on the cheapest pairs. In the injury overlay the sealed cost matrix and a fixed ε\varepsilonε are used, so the regularization never alters the sealed coach parameters.
+Sinkhorn divergence formula
+Sε(r,c)=min⁡P≥0⟨C,P⟩−εH(P)subject toP1=r, P⊤1=c,S_\varepsilon(r,c)=\min_{P\ge 0}\langle C,P\rangle-\varepsilon H(P)\quad\text{subject to}\quad P\mathbf{1}=r,\ P^\top\mathbf{1}=c,Sε​(r,c)=P≥0min​⟨C,P⟩−εH(P)subject toP1=r, P⊤1=c,
+where H(P)=−∑ijPij(log⁡Pij−1)H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1)H(P)=−∑ij​Pij​(logPij​−1). The minimum value is the Sinkhorn divergence. It is the cheapest way (under the regularized cost) to move the mass of rrr onto the mass of ccc.
+Entropy regularization term
+The term −εH(P)-\varepsilon H(P)−εH(P) is subtracted from the expected cost. Because H(P)H(P)H(P) is strictly concave, subtracting it makes the whole objective strictly convex, so a unique optimal plan exists. It also forces every entry of PPP to stay strictly positive. Larger ε\varepsilonε spreads the mass more evenly; smaller ε\varepsilonε concentrates it on the lowest-cost pairs and approaches the unregularized Wasserstein solution.
+Simpler terms
+The Sinkhorn divergence is a measure of how different two lists of shares are, after you account for the cost of moving share from one player to another. The entropy term just keeps the solution from putting all the share on a single cheapest pair; it spreads the movement out a little so no player is completely left out. The result is a smooth, unique number that says how hard it is to turn the pre-injury shares into the post-injury shares.
+
+
+Is this similar to Wasserstein distance?
+Yes. The Sinkhorn divergence is the entropy-regularized version of the Wasserstein (optimal transport) distance. When ε→0\varepsilon\to 0ε→0 it converges to the true Wasserstein distance. For any ε>0\varepsilon>0ε>0 it remains a valid divergence but is smoother, strictly convex, and cheaper to compute.
+Entropy term
+The entropy of a plan is
+H(P)=−∑ijPij(log⁡Pij−1).H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1).H(P)=−ij∑​Pij​(logPij​−1).
+Subtracting εH(P)\varepsilon H(P)εH(P) from the expected cost penalizes plans that put too much mass on a few pairs. The penalty forces every entry of PPP to stay strictly positive and makes the objective strictly convex, so a unique solution exists.
+Numerical example
+Source shares r=[0.5,0.5]r=[0.5,0.5]r=[0.5,0.5], target shares c=[0.3,0.7]c=[0.3,0.7]c=[0.3,0.7], cost matrix C=(0110)C=\begin{pmatrix}0&1\\1&0\end{pmatrix}C=(01​10​), ε=0.1\varepsilon=0.1ε=0.1.
+After a few Sinkhorn iterations the plan is approximately
+P≈(0.280.220.020.48).P\approx\begin{pmatrix}0.28&0.22\\0.02&0.48\end{pmatrix}.P≈(0.280.02​0.220.48​).
+The expected cost ⟨C,P⟩≈0.24\langle C,P\rangle\approx 0.24⟨C,P⟩≈0.24. The entropy penalty is small but nonzero, so the plan is smoother than the unregularized solution (which would place almost all mass on the two zero-cost entries). The column sums recover ccc and the row sums recover rrr.
+What the entropy term means
+The entropy term −εH(P)-\varepsilon H(P)−εH(P) is a penalty that keeps the transport plan from becoming too concentrated. Without it, the cheapest solution can put all the mass on a few pairs and zero out the rest. Subtracting the entropy forces every entry of the plan to stay strictly positive, spreads the mass a little, and makes the problem strictly convex so there is only one best plan.
+Sinkhorn algorithm details
+Sinkhorn finds that unique plan by repeatedly normalizing two scaling vectors so the row sums match the source shares and the column sums match the target shares. Each iteration is just a matrix-vector product followed by an element-wise division. Because the kernel is strictly positive, the iteration is well-defined and converges to the unique optimum of the regularized problem. The sealed coach parameters never enter the iteration, so they cannot change.
+Sinkhorn algorithm steps
+1. Build the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε) from the cost matrix.
+2. Initialize the scaling vectors uuu and vvv to uniform values.
+3. Repeat until convergence:
+   * u←r⊘(Kv)u\leftarrow r\oslash(Kv)u←r⊘(Kv)
+   * v←c⊘(K⊤u)v\leftarrow c\oslash(K^\top u)v←c⊘(K⊤u)
+4. Recover the plan P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+5. The column sums of PPP are the new feasible shares.
+Regularization parameter
+ε\varepsilonε controls how strongly the entropy penalty is applied. A larger ε\varepsilonε spreads mass more evenly and makes the plan smoother. A smaller ε\varepsilonε concentrates mass on the lowest-cost pairs and brings the solution closer to unregularized optimal transport. In the injury overlay ε\varepsilonε is fixed at the value sealed on Tuesday, so it is never retuned mid-week.
+Scaling vectors
+uuu and vvv are positive vectors that left- and right-multiply the kernel. uuu is adjusted so the row sums of the plan match the source marginal rrr. vvv is adjusted so the column sums match the target marginal ccc. They are the only quantities the iteration updates. Once they converge, the plan is completely determined and the sealed coach parameters remain untouched.
+Sinkhorn algorithm convergence theory
+The entropy-regularized problem is strictly convex, so a unique optimal plan exists. The dual is unconstrained and strictly concave. Sinkhorn is coordinate ascent on that dual: each update of uuu (respectively vvv) maximizes the dual with respect to that vector while holding the other fixed. Because the dual is strictly concave and bounded above, the dual objective increases at every step and converges. The scaling vectors therefore converge to the unique dual maximizer (unique up to scaling). At the fixed point the marginal residuals are zero, so the recovered plan is feasible and, by strong duality, optimal. Convergence is linear; the rate depends on ε\varepsilonε and on the smallest entry of the kernel.
+How scaling vectors adjust row and column sums
+The plan is P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v). The row-sum constraint P1=rP\mathbf{1}=rP1=r becomes u⊙(Kv)=ru\odot(Kv)=ru⊙(Kv)=r. Solving for uuu gives the update u←r⊘(Kv)u\leftarrow r\oslash(Kv)u←r⊘(Kv), which forces the row sums to match rrr. The column-sum constraint P⊤1=cP^\top\mathbf{1}=cP⊤1=c becomes v⊙(K⊤u)=cv\odot(K^\top u)=cv⊙(K⊤u)=c. Solving for vvv gives v←c⊘(K⊤u)v\leftarrow c\oslash(K^\top u)v←c⊘(K⊤u), which forces the column sums to match ccc. Alternating the two updates drives both residuals to zero.
+Difference between Sinkhorn and optimal transport
+Unregularized optimal transport minimizes only expected cost and can produce sparse, non-unique plans that zero out some pairs. Sinkhorn adds the entropy term −εH(P)-\varepsilon H(P)−εH(P), which makes the problem strictly convex, forces every entry of the plan to stay positive, and yields a unique smooth solution that can be computed by simple matrix scaling. As ε→0\varepsilon\to 0ε→0, the Sinkhorn plan converges to an optimal-transport plan; for any ε>0\varepsilon>0ε>0 it remains a smoothed approximation.
+Sinkhorn algorithm in simple terms
+You have a list of shares before an injury and a list of shares after the injury. You also have a table that says how costly it is to move share from one player to another. Sinkhorn repeatedly adjusts two helper lists so that the new shares match both the “before” totals and the “after” totals while keeping the total cost as low as possible. The entropy term keeps every player from being completely zeroed out. When it finishes, the sealed coach parameters are unchanged; only the execution weights have moved.
+Scaling vectors in more detail
+The two helper lists are the scaling vectors uuu and vvv. They left- and right-multiply the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε) to form the plan P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+* uuu is updated so the row sums of PPP exactly equal the source shares rrr. The update is u←r⊘(Kv)u\leftarrow r\oslash(Kv)u←r⊘(Kv).
+* vvv is updated so the column sums of PPP exactly equal the target shares ccc. The update is v←c⊘(K⊤u)v\leftarrow c\oslash(K^\top u)v←c⊘(K⊤u).
+Each update is a simple element-wise division of the desired marginal by the current matrix-vector product. Because the kernel is strictly positive, both vectors stay positive. Alternating the two updates drives the marginal residuals to zero and converges to the unique entropy-regularized solution. The sealed coach parameters never appear in these updates, so they cannot change.
+Sinkhorn as optimizing a linear assignment problem
+Sinkhorn solves a soft version of the linear assignment (optimal transport) problem. In the hard version you assign mass from sources to targets to minimize total cost, and the optimal plan can be sparse. Sinkhorn adds an entropy penalty so the same assignment problem stays strictly convex and every source keeps a positive share of every target. The matrix-scaling iteration finds that soft assignment.
+Simple math terms
+Minimize expected cost minus an entropy bonus, subject to the row sums equaling the source shares and the column sums equaling the target shares:
+min⁡P⟨C,P⟩−εH(P)s.t.P1=r, P⊤1=c.\min_P\langle C,P\rangle-\varepsilon H(P)\quad\text{s.t.}\quad P\mathbf{1}=r,\ P^\top\mathbf{1}=c.Pmin​⟨C,P⟩−εH(P)s.t.P1=r, P⊤1=c.
+The solution is obtained by alternately normalizing two scaling vectors until both constraints are satisfied.
+Example
+Source shares r=[0.6,0.4]r=[0.6,0.4]r=[0.6,0.4], target shares c=[0.3,0.7]c=[0.3,0.7]c=[0.3,0.7], cost matrix C=(0110)C=\begin{pmatrix}0&1\\1&0\end{pmatrix}C=(01​10​), ε=0.1\varepsilon=0.1ε=0.1.
+After a few iterations the plan is approximately
+P≈(0.290.310.010.39).P\approx\begin{pmatrix}0.29&0.31\\0.01&0.39\end{pmatrix}.P≈(0.290.01​0.310.39​).
+Row sums recover rrr, column sums recover ccc, and most of the mass travels on the low-cost pairs while a small amount still moves on the high-cost pairs because of the entropy term.
+Entropy penalty
+The entropy of a transport plan is
+H(P)=−∑ijPij(log⁡Pij−1).H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1).H(P)=−ij∑​Pij​(logPij​−1).
+The penalty is the term −εH(P)-\varepsilon H(P)−εH(P) that is subtracted from the expected cost. Because entropy is larger when the plan is more spread out, subtracting it discourages plans that put all the mass on a few pairs. The effect is three-fold:
+* every entry of PPP stays strictly positive,
+* the objective becomes strictly convex, so a unique optimal plan exists,
+* the solution is smoother than the unregularized optimal-transport plan.
+Larger ε\varepsilonε strengthens the penalty and spreads mass more evenly. Smaller ε\varepsilonε weakens the penalty and lets the plan concentrate on the cheapest pairs. In the injury overlay ε\varepsilonε is sealed, so the strength of the penalty never changes mid-week.
+You
+How does the entropy penalty affect the solution
+Grok
+How the entropy penalty affects the solution
+Without the penalty the cheapest plan can put all the mass on a few lowest-cost pairs and set every other entry to zero. Subtracting εH(P)\varepsilon H(P)εH(P) changes that in three ways:
+* Every entry of the plan stays strictly positive, so no player is completely zeroed out.
+* The objective becomes strictly convex, so there is only one best plan instead of a whole set of equally cheap plans.
+* The plan is smoother: a little mass still moves on higher-cost pairs, and the amount of that spillover grows with ε\varepsilonε.
+As ε\varepsilonε gets smaller the plan concentrates more tightly on the cheapest pairs and approaches the unregularized optimal-transport solution. As ε\varepsilonε gets larger the plan becomes more uniform. In the injury overlay ε\varepsilonε is fixed at the sealed Tuesday value, so the amount of smoothing never changes mid-week.
+You
+Show the mathematical formula
+Grok
+min⁡P≥0 ⟨C,P⟩−εH(P)subject toP1=r,P⊤1=c,\min_{P\ge 0}\ \langle C,P\rangle-\varepsilon H(P) \quad\text{subject to}\quad P\mathbf{1}=r,\quad P^\top\mathbf{1}=c,P≥0min​ ⟨C,P⟩−εH(P)subject toP1=r,P⊤1=c,
+where
+H(P)=−∑ijPij(log⁡Pij−1).H(P)=-\sum_{ij}P_{ij}(\log P_{ij}-1).H(P)=−ij∑​Pij​(logPij​−1).
+You
+Explain this formula
+Grok
+Explanation of the formula
+The formula finds the transport plan PPP that moves the source shares rrr onto the target shares ccc at the lowest possible regularized cost.
+* ⟨C,P⟩\langle C,P\rangle⟨C,P⟩ is the expected cost: each entry PijP_{ij}Pij​ is multiplied by the cost CijC_{ij}Cij​ of moving that amount of share from player iii to player jjj, and the products are summed.
+* −εH(P)-\varepsilon H(P)−εH(P) is the entropy penalty. H(P)H(P)H(P) is larger when the plan is more spread out, so subtracting it discourages plans that concentrate all the mass on a few pairs.
+* The two constraints force the row sums of PPP to equal the source shares rrr and the column sums to equal the target shares ccc.
+The unique plan that minimizes the expression while satisfying the constraints is the Sinkhorn solution. Larger ε\varepsilonε spreads the mass more; smaller ε\varepsilonε lets it concentrate on the cheapest pairs.
+You
+Explain Sinkhorn algorithm steps
+Grok
+Sinkhorn algorithm steps
+1. Build the kernel K=exp⁡(−C/ε)K=\exp(-C/\varepsilon)K=exp(−C/ε) from the cost matrix.
+2. Initialize the scaling vectors uuu and vvv to uniform values.
+3. Repeat until convergence:
+   * u←r⊘(Kv)u\leftarrow r\oslash(Kv)u←r⊘(Kv)
+   * v←c⊘(K⊤u)v\leftarrow c\oslash(K^\top u)v←c⊘(K⊤u)
+4. Recover the plan P=diag⁡(u) K diag⁡(v)P=\operatorname{diag}(u)\,K\,\operatorname{diag}(v)P=diag(u)Kdiag(v).
+5. The column sums of PPP are the new feasible shares.

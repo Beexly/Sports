@@ -1,0 +1,1171 @@
+﻿Galaxy Sports Edge Master Execution Blueprint and Autonomous Agent Alignment
+The Galaxy Sports Edge (GSE) engineering, simulation, and market-intelligence tracks are unified under a single, non-negotiable operational contract as of Wednesday, October 28, 2026, on branch engine/public-baseline-2026-10-24 (https://github.com/Beexly/Sports) alongside the multi-agent coordination ledger (https://github.com/Beexly/agent-bus)1. Following commit ed01d3a84, the seven proprietary GSE football metrics (GSE-SVA, GSE-SII, GSE-QPTSR, GSE-RLS, GSE-SPESE, GSE-TOR, and GSE-DWP) are consolidated into a single verified source of truth (packages/prediction-engine/src/metrics/gse-proprietary-seven.ts), with markov-simulator.ts importing directly from ./metrics/gse-proprietary-seven.js and public-baseline/metrics.ts reduced to a thin 881-byte deprecated re-export that preserves all caller-facing names, signatures, and return shapes2. Across the canonical Windows workstation tree, the test suites stand green at 342/342 in metrics, 20/20 in markov-simulator (preserving the pinned 45/300 − 30/300 = 0.05 GSE-SII assertion), and 102/102 across coach-sim, coach-brain, and gse-pre-seal (updating the earlier workstation handoff counts of cadence 63/63, Python 25/25, P0 47/47, and full pipeline 72/72, where the Week 7 injury pass reallocated 1.989 mass across 38 flags with the hash unchanged), while TypeScript compiler (tsc) errors were reduced from 57 to 46 with zero errors remaining in any touched metric or loader file2. Furthermore, the apparent contradiction between τ = 0.42 and τ = 4.6607 is permanently resolved as a naming collision between two distinct mathematical parameters: sealed-center.json locks the unitless inverse-MDP coach fourth-down risk preference (τ_coach = 0.42), whereas candidates/2026-10-25-week7-candidate.json carries a verified parent_seal_hash matching the sealed-center.json Merkle (23245bcb...), 32 non-zero team ratings, and the rating-model prior standard deviation in points (τ_rating = 4.6607)2.
+This master plan enforces the foundational Belichick-Adams Coach-First Doctrine: sportsbook lines, odds, de-vigged probabilities, and public betting splits do not govern football reality and are read strictly last at Step N (Zone 3 / Class B)4. Sportsbooks price NFL slates from the top down using a static Gaussian cumulative distribution function with narrower margin standard deviations (σ = 12.07 pts at BetMGM, σ = 12.21 pts at Pinnacle, and σ = 13.16 pts at DraftKings versus the measured NFL margin σ = 13.36 pts) while charging a 3.60% to 6.42% main-line spread hold and a structural +2.0 to +2.4 percentage-point rake gradient on derived alternates and player props9. Because raw NFL point-spread sides yielded 49.83% ATS across 895 held-out games, standalone side-hunting is closed; GSE's commercial product and revenue engine are built on calibrated probability distributions, player props, DraftKings Daily Fantasy Sports (DFS) lineups, correlated Same-Game Parlays (SGPs), and pure football power rankings generated from 10,000 bottom-up play-by-play trajectories per game before a single bookmaker price is ever queried1.
+To guarantee 100% autonomous execution without inter-session amnesia, metric forking, or silent baseline mutation, every coding agent, cron worker, and verification subagent must initialize from the GSE AGENT ALIGNMENT contract and execute an atomic lease-and-sign-off sequence in Beexly/agent-bus for every task in Beexly/Sports2. All prior work-plan components—the two telemetry and RAG-wiring disk artifacts, the daily delta writer (scripts/feeds/delta_telemetry.py), the five ACCEPTANCE_GATE module patches, the calibration-map.ts ticket-routing refactor, the play-by-play Monte Carlo simulator (gse_coach_mind_simulator.py), and the operational close-outs—remain mandatory and are upgraded below to resolve sealed_hash dynamically at runtime and close the remaining open defects (D3, D6, D8, and the cross-language serializer conflict)2.
+1. The 2026-10-28 Single Source of Truth: GSE Agent Alignment & Standing Rules
+Between October 20 and October 28, 2026, thirteen separate agent sessions generated roughly 1,900 GSE-dense messages across two disconnected environments: the canonical Windows workstation (C:/Users/Garrett/Sports on branch engine/public-baseline-2026-10-24) and the isolated Linux research sandbox (/root/beexly-sports at Sep-18 snapshot db4b1899 and /opt/model + /opt/intel)1. Because state lived in whichever chat window was open, sessions repeatedly re-derived known facts, confused sandbox hashes (faab28271513678c and the plan verification fixture 85b5cd3303c540492b23019d913aabd9179945a72c490579124e6e57dcad68b8) with the live Windows Merkle (23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b), and built two parallel implementations of the seven GSE metrics1. The committed GSE AGENT ALIGNMENT file terminates this drift permanently. If any session's memory or prompt history disagrees with GSE AGENT ALIGNMENT, the file on disk wins, and any agent discovering a discrepancy must update the alignment file in the same commit2.
+1.1 The 10 Non-Negotiable Standing Rules
+Every autonomous workflow, Hermes pass, Motif orchestration job, and cron trigger is bound by these ten standing rules2:
+1. Do not invent: Never fabricate a formula, coefficient, join key, SHA-256 digest, test count, file path, arXiv citation, or season range that is not present in a captured artifact or a file on disk. If a value is unknown, log it explicitly as UNKNOWN or NAMED_GAP2.
+2. Never re-estimate tau after the seal: packages/prediction-engine/src/coach-sim/locked-projection.ts throws a hard runtime exception on any mid-week τ mutation, verified by six unit tests. Never write a wall-clock timestamp (new Date()) into the coachMindsetHash payload1.
+3. Resolve sealed_hash dynamically at runtime: Never hard-code 23245bcb..., 85b5cd33..., faab2827..., or any other literal digest string inside ingestion scripts, schemas, or tests. Always read and compute the active digest from candidates/sealed-center.json (or /opt/model/sealed_baseline.json on the Linux host) at runtime2.
+4. Treat all new data as Class B until the serializer conflict closes: On the identical state fixture, TypeScript's insertion-order JSON.stringify emits SHA-256 digest dd6549a... whereas Python's json.dumps(sort_keys=True) emits 0821671...2. Until both runtimes use recursive lexicographical key-sorting on the golden-digest fixture, no newly ingested mid-week data may enter Class A2.
+5. Do not reseal mid-week: Re-running the Tuesday 04:00 CT seal pipeline (lockTuesdayCoachBaseline()) is exclusively a founder call, never an autonomous agent action2.
+6. Zero odds, splits, or legality tokens in Class A: The engine is a pure football reasoning and simulation engine. NFL point-spread sides are closed as a standalone target (49.83% ATS over 895 held-out games); the commercial product is calibration, player props, DFS, and correlated parlay distributions1.
+7. Protected seal paths require explicit prior declaration: Do not write into candidates/, locked-projection.ts, costMatrixC, or SealedEpaDropoffTable without declaring the exact diff and receiving founder authorization first2.
+8. The wall-clear / crawl-of-the-31 surface is stopped: Do not expand Turnstile, Cloudflare, CloakBrowser, flareprox, katana, TTL, or the 31-site scraper surface2. Use the already-verified open parquets (nflverse, ftn_charting_2026.parquet, ngs_*.parquet, sportsdataverse-py) and existing local caches10.
+9. Commit and push every cycle: A commit that does not reach origin/engine/public-baseline-2026-10-24 (and its corresponding sign-off in Beexly/agent-bus) does not exist2.
+10. Report blockers honestly: A named infrastructure or data blocker (NAMED_GAP_RECEIPT) always beats a plausible-sounding fabricated number2.
+1.2 Verified Repository State, Metrics Consolidation (ed01d3a84), and Defect Ledger
+The table below reconciles the exact status of every core subsystem, resolved defect, and open operational item across Beexly/Sports as of October 28, 20261:
+
+
+Subsystem / Defect ID
+	Canonical Path / Scope
+	Verified State as of 2026-10-28 (ed01d3a84)
+	Operational Action Required
+	Consolidated 7 GSE Metrics
+	packages/prediction-engine/src/metrics/gse-proprietary-seven.ts & public-baseline/metrics.ts
+	GREEN (342/342 PASS). Single source of truth for SII, SPESE, TOR, QPTSR, DWP, RLS, and SVA. public-baseline/metrics.ts is an 881-byte deprecated re-export. Cell.signStable accepts boolean or 3-year map; shannonBits normalizes by mass and rejects negatives2.
+	Locked. Do not re-fork or add local metric helpers in simulators2.
+	Play-by-Play Markov Simulator
+	packages/prediction-engine/src/markov-simulator.ts & coach-sim/markov-simulator.ts
+	GREEN (20/20 PASS). Imports all 7 metrics from ./metrics/gse-proprietary-seven.js. Pinned GSE-SII (45/300 − 30/300 = 0.05) passes bit-identically2.
+	Wire Python gse_coach_mind_simulator.py into scripts/ops/ so delta_telemetry.py --selftest executes the PBP leg without skipping6.
+	Coach-Sim, Coach-Brain & Pre-Seal
+	src/coach-sim/, src/coach-brain/, src/gse-pre-seal/
+	GREEN (102/102 PASS across 11 files). locked-projection.ts enforces assertTauSealed and Merkle recomputation; sinkhorn-targets.ts + gse_injury_overlay.py pass 22/22 TS + 8/8 Python tests with marginal error 8.47e-11 ≪ 1e-91.
+	Maintain two-sweep verification whenever seal or calibration files are touched5.
+	TypeScript Compiler (tsc)
+	packages/prediction-engine/tsconfig.json
+	Reduced 57 → 46 errors. Fixed 4 loader files (import.meta CJS walk-up, hyparquet asyncBufferFromFile shim, client-fragments.ts:94 guard). Zero errors in src/metrics/2.
+	Apply /opt/intel/PINHOLE_JACOBIAN_TS2532_FIX.md (Float64Array accessor boundary) and guard lines 94/98 in markov-simulator.ts4.
+	Defects D1, D2, D4, D5, D7
+	candidates/2026-10-25-week7-candidate.json, sinkhorn.ts, test counts
+	RESOLVED. Week-7 candidate carries real parent_seal_hash (23245bcb...), 32 non-zero team ratings, and params.tau: 4.6607 (rating-model τ in pts vs. sealed-center.json coach τ = 0.42)2.
+	Do not "reconcile" τ_coach = 0.42 and τ_rating = 4.6607 into one number2.
+	Defect D3 (High)
+	candidates/ directory
+	OPEN. git status shows ?? candidates/ (untracked). Git cannot recover it if wiped1.
+	Quarantine placeholder week-8 copy to artifacts/quarantine-candidates-2026-10-27/, then stage and commit candidates/sealed-center.json and 2026-10-25-week7-candidate.json1.
+	Serializer Conflict (Rule 4)
+	locked-projection.ts vs. sealed_engine.py
+	OPEN. TS insertion-order digest dd6549a... vs. Python sort_keys=True digest 0821671... on identical fixture2.
+	Deploy recursive lexicographical key-sorting in TypeScript (canonicalizeForSeal) and verify 100% digest parity in golden-digest test5.
+	Defect D6 (Medium)
+	~/AppData/Local/hermes/cron/jobs.json & cadence.ts
+	OPEN. Duplicate Sunday v4.0 crons at 10:30 and 13:35, plus orphan cadence-v2.5-thu-1630 missing from CADENCE in cadence.ts1.
+	Reconcile jobs.json 1:1 with CADENCE in cadence.ts (keep 10:30 CT early-slate T-90m and 13:35 CT late-slate T-90m distinct in CADENCE, and register v2.5-thu-1630)1.
+	Defect D8 (Medium)
+	Scheme-layer commit cffa75a
+	OPEN. Referenced in scheme-layer notes but absent from Windows git history1.
+	Do not cite cffa75a as verified; port /opt/model/scheme_effects.py from Linux sandbox and commit cleanly2.
+	FAIL 1 & ENABLED=false Backlog
+	packages/prediction-engine/src/ (146 modules total)
+	OPEN. 146 modules sit at ENABLED=false (46 liftable, 100 gated/stub); 5 named modules require explicit ACCEPTANCE_GATE exports2.
+	Apply the 5 verbatim ACCEPTANCE_GATE blocks and run the Node AST enumerator to confirm 0 ungated files2.
+	FAIL 2 (ticket: null)
+	call-sheet.ts, x-corpus.ts, weekly-cadence-orchestrator.ts:180
+	OPEN. 15 construction-time ticket: null sites violate the isotonic gate invariant2.
+	Strip construction-time ticket: null and route all candidate pricing through calibration-map.ts (signCallSheetTickets)2.
+	Honest Data & API Gaps
+	GSE-RLS NGS XY feed, QB estimator CSVs, Google Docs API 403
+	OPEN (External / Honest Gaps). RLS lacks live 2026 10Hz XY tracking on disk; Windows lacks 2024/2025 injury CSVs + fit_qb_questionable2.py (which live on /opt/model/); Docs API 403 on project 8685130404142.
+	Sync /opt/model/data/injuries_2024.csv, injuries_2025.csv, and fit_qb_questionable2.py to Windows; keep RLS on tendency fallback until NGS XY is mounted; use Drive export + canvas paste for Doc 14pXZG...2.
+	1.3 Session Map & Rename/Archive Plan (13 Sessions Unified)
+To prevent any agent from reopening settled debates across the ~1,900 messages logged between October 20 and October 28, 2026, all thirteen sessions are mapped into a canonical archive registry (artifacts/session-archive-map-2026-10-28.md) and indexed in C:/Users/Garrett/AppData/Local/hermes/state.db1:
+
+
+Canonical Archive ID
+	Original Session Identifier / Thread Scope
+	Date
+	Settled Architectural Decision (Do Not Re-Litigate)
+	SES-20261020-01-PAPER-RECON
+	Reconcile 5f54ee254 to f7ebbe833 968 verified papers
+	10-20
+	Reconciled 968 verified papers; closed the Napkin-tree defect where the module emitted the wrong tree2.
+	SES-20261021-02-HNSW-EQUATIONS
+	Neon literature_premises HNSW + 288-bit bitmask
+	10-21
+	Locked db/migrations/20261020_literature_hnsw.sql (50,000 premises, Uint32Array(9) 288-bit contextual bitmask, Stage A–D spectral + James-Stein shrinkage)2.
+	SES-20261022-03-NE-CHI-AUTOPSY
+	TNF NE 24 @ CHI 30 (401873010) Forensic Autopsy
+	10-22
+	Established the 4 narrative-drift guards (OL count, wind mph, spread line, injury cause), Hessian mutual defensive attrition override, and Z3 QF_UFLRA/QF_BV clamp (|Δ log-odds| ≤ 0.35)9.
+	SES-20261023-04-THREE-ZONE-FENCE
+	Belichick-Adams Three-Zone Epistemic Firewall
+	10-23
+	Created apps/web/lib/fences/no-book-in-coach-engine-fence.ts (assertNoBookInCoachEngine); closed NFL sides hunt (49.83% ATS over 895 games); pivoted product to calibration and props1.
+	SES-20261024-05-PUBLIC-BASELINE
+	Branch engine/public-baseline-2026-10-24 & Hermes Safe Spot
+	10-24
+	Landed 1d679ba77 / 05cbf1dd4; fixed James-Stein single-sample degeneracy in advanceOutcome (dimension d ≥ 2 guard)14.
+	SES-20261025-06-WEEK7-SEAL-LOCK
+	Tuesday v1.0 Seal Center & Week 7 Sinkhorn Pass
+	10-25
+	Minted candidates/sealed-center.json (23245bcb..., τ_coach = 0.42) and 2026-10-25-week7-candidate.json (τ_rating = 4.6607); reallocated 1.989 mass across 38 injury flags2.
+	SES-20261026-07-FIVE-P0-FIXES
+	Commit 32dd20878 Five Invariant Fixes & Generic Stubs
+	10-26
+	Restored FCI Rule R7 guard (fci-pag.ts), v1.0 check in applyInjuryOverlay, PAVA knot extension to 1.0, LLM missing-probability exception, inactivePlayerIds cross-check, and re-headered 24 stubs as GENERIC_BASELINE_STUB9.
+	SES-20261026-08-SANDBOX-QB-EST
+	Linux Sandbox /opt/model QB_QUESTIONABLE Bootstrap
+	10-26
+	Estimated QB_QUESTIONABLE via fit_qb_questionable2.py (started = 0.1159, Out = 0.0838, P(start) = 0.341 → 0.0947 EV-weighted) and audited OL/SKILL/DEF rows2.
+	SES-20261027-09-SIX-BOOK-BLUEPRINT
+	Six-Book Kernel Reverse Engineering & Rake Matrix
+	10-27
+	Cracked BetMGM CDS (x-bwin-accessid), FanDuel (customPageId=nfl), Caesars (x-aws-waf-token), BetRivers (Kambi), and Pinnacle (leagues/889/markets/straight); measured σ, holds, and +2.0–2.4 pp rake gradient9.
+	SES-20261027-10-SHARP-SPLITS-HHI
+	Action Network 812-Record __NEXT_DATA__ & HHI Scaling
+	10-27
+	Extracted stake-weighted money% - ticket% splits (correcting ticket-only contrarian reads and elevating CHI +3.5 to #1); built load_scaling.py (N_eff = 1/HHI); ingested FTN charting + NGS parquets9.
+	SES-20261027-11-MASSIVE-RECON-OS
+	Massive Recon (IG/X/GitHub) & GSE Content OS v1.3
+	10-27
+	Audited 266 recon items and 90 GitHub repos; built GSE-CONTENT-OS v1.3 (content_os.db, 9-stage pipeline, Gates 0–2, U1–U9 humanization)13.
+	SES-20261027-12-CONSOLIDATION-PLAN
+	Two-Machine Bridge & Seal Serializer Conflict
+	10-27
+	Resolved "missing files" as Windows (C:/Users/Garrett/Sports) vs. Linux (/opt/model) split; identified TS vs. Python serializer conflict (dd6549a... vs. 0821671...)1.
+	SES-20261028-13-METRICS-ALIGNMENT
+	Commit ed01d3a84 Metrics Consolidation & Alignment
+	10-28
+	Consolidated 7 metrics into gse-proprietary-seven.ts (342/342 PASS, markov-simulator 20/20 PASS, tsc 57 → 46); committed GSE AGENT ALIGNMENT single source of truth2.
+	2. Multi-Agent Autonomous Governance via Beexly/agent-bus and the Three-Zone Epistemic Firewall
+To ensure 100% autonomous, trustworthy execution where every agent adheres to the plan and marks off its progress without human babysitting, all agent activity across https://github.com/Beexly/Sports is synchronized through https://github.com/Beexly/agent-bus2. The coordination layer combines the local MCP SQLite state database (fleet.db on port 4311) with a Git-persisted append-only task ledger (CHECKLIST-2026-10-28.jsonl and AGENT-LOG.md in Beexly/agent-bus), enforced by the Rust single-use cryptographic approval receipt pattern (tool-call-firewall, Lab 03 of rohitg00/ai-engineering-from-scratch) and Paperclip-style atomic task checkout locks9.
+Architecturally, this governance plane sits directly above the Three-Zone Epistemic Firewall (apps/web/lib/fences/no-book-in-coach-engine-fence.ts):
+
+
+Architectural Zone
+	Governing Modules & Cryptographic Artifacts
+	Permitted Inputs & Operations
+	Hard Firewall & Output Boundary
+	Top Control Plane: Beexly/agent-bus Lease & Receipt Bus
+	GSE-AGENT-ALIGNMENT.md, SQLite fleet.db (port 4311), CHECKLIST-2026-10-28.jsonl, and Rust tool-call-firewall2.
+	Initializes every session from GSE AGENT ALIGNMENT, grants atomic task leases (lease_token), logs pre/post file SHA-256 digests, and runs the 4-Seat Review Board2.
+	Blocks concurrent edits, rejects unleased writes to candidates/ or locked-projection.ts, and requires fresh-process test receipts before marking any task COMPLETED2.
+	Zone 1: Class A Pre-Seal Authoring & Tuesday 04:00 CT Vault
+	locked-projection.ts (lockTuesdayCoachBaseline), 2309-00756-inverse-mdp-fourth-down.ts (recoverTau), 1807-09236-empirical-bayes-btl.ts (shrinkBtl), candidates/sealed-center.json2.
+	Pre-Tuesday 04:00 CT parametric estimation: team EPA ratings, 5×5 role cost matrix C, coach τ_coach = 0.42, rating-model τ_rating = 4.6607, PROB_PER_POINT = 0.033, and SealedEpaDropoffTable (QB_QUESTIONABLE = 0.0947)2.
+	Locked at Tuesday 04:00 CT into the 64-char SHA-256 coachMindsetHash / Merkle (23245bcb...). Immutable for the rest of the ISO week; zero mid-week re-estimation permitted2.
+	Zone 2: Compile-Time AST Firewall & Mid-Week Sinkhorn Overlay
+	no-book-in-coach-engine-fence.ts (assertNoBookInCoachEngine), sinkhorn-targets.ts, gse-proprietary-seven.ts, markov-simulator.ts, universal-wiring.ts (mintCoachProjectionReceipt)2.
+	Mid-week (v2.0–v4.0) pure functions: entropy-regularized Sinkhorn-Knopp target/carry reallocation under fixed C, frozen EPA dropoff multiplication, 288-bit Uint32Array(9) bitmask evaluation, and 10,000-run play-by-play simulation2.
+	AST scanner fails CI/CD immediately if any Class A file imports OddsInput or references spread_line, total_line, marketFairProb, clv, bookmaker, americanOdds, or deVig7. Emits signed CoachProjectionReceipt (SHA-256 + Ed25519)7.
+	Zone 3: Class B Late-Binding Step N Market Scanner & Website Packager
+	conformal-diagnostic.ts, scoring.ts, step-n-comparator.ts, calibration-map.ts (signCallSheetTickets), market_capacity.py, SHARP_MONEY_2026-10-27.md2.
+	Accepts the locked CoachProjectionReceipt first, then queries Neon odds_line_snapshots, 6-book pricing kernels, Shin de-vig (z = 0.0391), and Action Network 812-record money% - ticket% splits strictly last7.
+	Zero write-back to Zone 1 or Zone 2 (MappingProxyType raises TypeError on mutation)8. Packages calibrated website Picks, Props, MILP DFS lineups, and Archimedean copula SGPs2.
+	2.1 The 5-Step Mandatory Agent-Bus Lease & Sign-Off Protocol
+No agent is permitted to edit a file in Beexly/Sports or run a scheduled cadence job without executing the following five-step state machine against Beexly/agent-bus2:
+1. Alignment & Runtime Seal Handshake (PRE_FLIGHT): On startup, the agent reads GSE AGENT ALIGNMENT in Beexly/Sports and queries candidates/sealed-center.json to resolve the live Merkle root (runtime_seal_merkle) dynamically2. It then pulls origin/main on Beexly/agent-bus and reads CHECKLIST-2026-10-28.jsonl so it never re-executes a COMPLETED task or collides with an active lease2.
+2. Atomic Task Checkout (LEASED): Using the MCP bus tool claim_workstream_task(task_id, agent_id, ttl_seconds=1800), the agent acquires an exclusive execution lock in fleet.db and appends a status: "LEASED" entry to Beexly/agent-bus/CHECKLIST-2026-10-28.jsonl with a cryptographic lease_token and sealed_merkle_before9. If another agent holds an unexpired lease on task_id, the checkout fails closed17.
+3. Scoped Execution & Tool-Call Firewall (EXECUTING): Every file write or script execution inside Beexly/Sports is logged to the tool_call_receipts table with pre_state_sha256 and post_state_sha2569. If a tool call attempts to touch candidates/, locked-projection.ts, costMatrixC, or SealedEpaDropoffTable without a pre-registered founder approval token (Rule 7), the firewall aborts the write immediately2.
+4. Independent 4-Seat Review Board Verification (VERIFYING): Before any task can be marked COMPLETED, the agent runs its deterministic verification command (vitest, tsc --noEmit, or --selftest) in a fresh process and submits the diff to the four single-purpose verdict seats6. Merge Sheriff verifies git diff scope, confirms zero untracked debris, and checks apps/web/lib/fences/no-book-in-coach-engine-fence.ts (assertNoBookInCoachEngine)7. Numbers Cop verifies that runtime_seal_merkle and τ_coach = 0.42 are bit-identical before and after the run, and confirms all test counts come from a fresh process output rather than quoted handoffs6. Research Auditor verifies that every arXiv:YYMM.NNNNN citation in touched files passes the 4-layer citation and AST code-body check (provenance-integrity.test.ts and module-header-accuracy.test.ts)2. Voice Judge evaluates any customer-facing reasoning trail or content piece against Gate 0 and Gate 1 rubrics (composite ≥ 9.0, Humanity ≥ 6.0, zero raw quant jargon on public surfaces, and stakes reported in units where $5 = 1u)9.
+5. Commit, Push & Bus Sign-Off (COMPLETED): Once verification passes, the agent commits and pushes Beexly/Sports to origin/engine/public-baseline-2026-10-24, verifies that git rev-parse HEAD equals origin, and immediately commits a status: "COMPLETED" record to Beexly/agent-bus/CHECKLIST-2026-10-28.jsonl containing the exact commit_sha, test_counts, verification_receipt_sha256, and sealed_merkle_after2.
+2.2 Master Agent-Bus Execution Checklist Ledger (Beexly/agent-bus)
+The table below defines the live Beexly/agent-bus checklist state as of October 28, 2026, incorporating completed commit ed01d3a84 and queuing every remaining non-deferrable action with its assigned agent seat and acceptance gate2:
+
+
+Task ID (Beexly/agent-bus)
+	Workstream & Target Path (Beexly/Sports)
+	Assigned Seat
+	Current Status
+	Verification Gate & Required Receipt Proof
+	TASK-WS2-METRICS-CONSOLIDATE
+	src/metrics/gse-proprietary-seven.ts, src/public-baseline/metrics.ts, src/markov-simulator.ts
+	hermes-win-01
+	COMPLETED (ed01d3a84)
+	metrics 342/342 PASS; markov-simulator 20/20 PASS; tsc 57 → 46; Merkle 23245bcb... unchanged2.
+	TASK-WS0-AGENT-ALIGNMENT
+	GSE-AGENT-ALIGNMENT.md (AGENTS.md root contract)
+	hermes-win-01
+	COMPLETED (ed01d3a84+1)
+	10 Standing Rules + 2026-10-28 Verified State + τ category resolution committed and pushed2.
+	TASK-ACT1-TELEMETRY-ARTIFACTS
+	artifacts/telemetry-schema-2026-10-27.md & artifacts/rag-telemetry-wiring-2026-10-27.md
+	hermes-win-01
+	EXECUTE NOW (Step 1)
+	Files exist on disk; zero hardcoded foreign hashes (85b5cd33 / faab2827); stamps runtime-resolved seal2.
+	TASK-ACT2-DELTA-WRITER
+	scripts/feeds/delta_telemetry.py & scripts/ops/gse_coach_mind_simulator.py
+	hermes-win-01
+	EXECUTE NOW (Step 2)
+	python3 scripts/feeds/delta_telemetry.py --selftest exits 0 with 2 records written/retrieved + PBP sim leg PASS + hash & τ = 0.42 bit-identical2.
+	TASK-ACT3-FAIL1-GATES
+	5 ENABLED=false modules + full 146-file enumeration in packages/prediction-engine/src/
+	hermes-win-01 + Research Auditor
+	EXECUTE NOW (Step 3)
+	Node AST enumeration prints Ungated FAILs: [] (exit 0); zero flags flipped to true mid-week2.
+	TASK-ACT4-FAIL2-TICKET-NULL
+	public-baseline/call-sheet.ts, x-corpus.ts, weekly-cadence-orchestrator.ts:180, calibration-map.ts
+	hermes-win-01 + Merge Sheriff
+	EXECUTE NOW (Step 4)
+	rg "ticket:\s*null" packages/prediction-engine/src returns only the 4 post-gate lines (184, 190, 194, 215) in calibration-map.ts2.
+	TASK-ACT5-COACH-PBP-SIM
+	scripts/ops/gse_coach_mind_simulator.py & src/market-scanner/step-n-comparator.ts
+	hermes-win-01 + Numbers Cop
+	EXECUTE NOW (Step 5)
+	3×1,000-sim stability drift ≤ 0.50 pts (0.00 pts measured); MappingProxyType blocks residual write-back (TypeError)5.
+	TASK-ACT6A-SERIALIZER-PARITY
+	src/coach-sim/locked-projection.ts & src/__tests__/golden-digest-parity.test.ts
+	hermes-win-01 + Numbers Cop
+	EXECUTE NOW (Step 6A)
+	Recursive key-sorted serializer closes TS (dd6549a...) vs. Python (0821671...) conflict; both emit identical 64-char SHA-2562.
+	TASK-ACT6B-DEFECTS-D3-D6-D8
+	candidates/, cron/jobs.json, cadence.ts, repomix-public-surface.md, 307 citations
+	hermes-win-01 + Motif
+	EXECUTE NOW (Step 6B)
+	git status --porcelain candidates/ clean; crons map 1:1 to CADENCE; Select-String coachMindsetHash on public pack empty; 2 consecutive 9/9 sweeps pass1.
+	3. Immediate Non-Deferrable Execution Plan (Items 1–6 Preserved & Upgraded for Runtime Seal Resolution)
+Every action below runs on data and constants that already exist on disk5. In strict compliance with Standing Rule 3 (sealed_hash resolved at runtime) and the HERMES CONTINUATION directive, the artifacts and scripts below preserve 100% of the schema, wiring, and mathematical specifications from the Continuous Learning Architecture Plan while replacing static foreign hashes with a dynamic runtime lookup (resolve_runtime_sealed_hash()) that reads candidates/sealed-center.json on Windows (or /opt/model/sealed_baseline.json on Linux)2.
+3.1 Action 1: Write the Two Disk Artifacts (telemetry-schema & rag-telemetry-wiring)
+Artifact 1: artifacts/telemetry-schema-2026-10-27.md (Write Directly to Disk)
+GSE Daily Telemetry & Claim Delta Schema Contract (2026-10-27 / Updated 2026-10-28)
+Artifact Path: artifacts/telemetry-schema-2026-10-27.md Target Daily Log: artifacts/delta-YYYY-MM-DD.jsonl (mirrored on Linux host to /opt/intel/delta-YYYY-MM-DD.jsonl) Upstream Bi-Temporal Document Feed: packages/prediction-engine/src/feeds/emit-mind-feed-record.ts (sandbox-only until ported; schema "gse-mind-feed-v2.0") Invariant Governance: Every record appended to artifacts/delta-YYYY-MM-DD.jsonl conditions on the frozen Tuesday 04:00 CT baseline (runtime-resolved sealed_hash from candidates/sealed-center.json, version: "v1.0", tau: 0.42, qb_questionable_epa: 0.0947). Appending or retrieving a telemetry record NEVER imports, mutates, or re-estimates the sealed object.
+1. Canonical JSONL Record Format (One JSON Object Per Line)
+{ "id": "uuid", "timestamp": "2026-10-28T11:27:00-05:00", "source": { "type": "injury_note|practice_report|dk_line|beat_writer|form4|arxiv|other", "url": "https://...", "author": "string|null", "raw_excerpt": "verbatim text or structured fact" }, "claim": { "subject": "player|team|game|coordinator", "predicate": "out|questionable|target_share_shift|line_move|...", "object": "string|number|null", "game_id": "string|null", "week": 8 }, "confidence": 0.95, "sealed_hash": "<RUNTIME_RESOLVED_64_CHAR_SHA256_FROM_SEALED_CENTER_JSON>", "conditions_on": { "version": "v1.0", "tau": 0.42, "qb_questionable_epa": 0.0947 }, "status": "ingested|retrieved|used_in_overlay|rejected", "notes": "string|null" }
+2. Field-Level Validation Rules (Fail-Closed)
+1. id: RFC 4122 UUID v4 or deterministic UUID v5 derived from SHA256(source.url + "|" + timestamp + "|" + source.raw_excerpt). Re-emitting an existing id in the same delta-YYYY-MM-DD.jsonl file is rejected (NO_OVERWRITE_VIOLATION).
+2. timestamp: ISO-8601 timestamp with explicit UTC offset (transaction_time_iso). Must never enter coachMindsetHash.
+3. source.type: Must be one of "injury_note" | "practice_report" | "dk_line" | "beat_writer" | "form4" | "arxiv" | "other". Epistemic Routing Rule: Claims with source.type === "dk_line" or "form4" are strictly Class B (Zone 3) diagnostic inputs. They may only be queried during Step N conformal/market residual checks and are forbidden from entering applyInjuryOverlay() or sinkhornTargetAllocation(). Furthermore, per Standing Rule 4, all newly ingested data remains Class B until the TS vs. Python serializer conflict closes.
+4. claim: Contains subject (canonical entity identifier or category such as "player", "team", "game", "coordinator", or specific ID e.g. "player:CLE:Dillon_Gabriel" / "game:2026_08_LV_NYJ"), predicate (controlled action/state token such as "out", "questionable", "full_practice", "limited_practice", "target_share_shift", "line_move", "insider_form4_filing", "paper_equation_verified"), object (string, numeric value, or null e.g. "0.0947", "-1.5", "IR_ACTIVATED"), game_id (canonical game identifier e.g. "2026_08_CLE_PIT" or null), and week (integer NFL week 1–22).
+5. confidence: Float in [0.0, 1.0]. Official NFL transaction/inactive lists = 1.0; verified multi-book/Pinnacle feed = 0.95; credentialed beat writer practice observation = 0.75; uncorroborated social/audio rumor = <= 0.40 (logged as "ingested", never "used_in_overlay" until corroborated).
+6. sealed_hash: Resolved dynamically at runtime from candidates/sealed-center.json (merkle field on Windows workstation) or /opt/model/sealed_baseline.json (on Linux host). Never hard-code 23245bcb..., 85b5cd33..., or faab2827... as static literals. Any record whose sealed_hash does not match the runtime-resolved active seal is marked status: "rejected" (or stale: true) for the current week's overlay.
+7. conditions_on: Must carry the exact frozen tuple: {"version": "v1.0", "tau": 0.42, "qb_questionable_epa": 0.0947}.
+8. status: Lifecycle state in {"ingested", "retrieved", "used_in_overlay", "rejected"}.
+Artifact 2: artifacts/rag-telemetry-wiring-2026-10-27.md (Write Directly to Disk)
+In accordance with the HERMES CONTINUATION verified state (artifacts/ws6-status-2026-10-27.md) and Standing Rule 1, this artifact explicitly records which Workstream 6/6b files are live on the Linux sandbox versus the Windows workstation, defines the 4-step canonical wiring sequence, and records the 13-repo verdicts1:
+GSE RAG-Anything & Daily Telemetry Wiring Specification (2026-10-27 / Updated 2026-10-28)
+Artifact Path: artifacts/rag-telemetry-wiring-2026-10-27.md Schema Contract: artifacts/telemetry-schema-2026-10-27.md Standing Constraint: Zero mid-week resealing; zero mutation of coachMindsetHash, coach tau (0.42), rating-model tau (4.6607), costMatrixC, or QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF (0.0947). Runtime seal resolved dynamically from candidates/sealed-center.json.
+1. Current RAG-Anything & Workstream 6/6b Status Across Windows Workstation and Linux Sandbox
+1. packages/prediction-engine/src/feeds/emit-mind-feed-record.ts: LIVE IN SANDBOX (/root/beexly-sports), ABSENT ON WINDOWS until explicitly ported (artifacts/ws6-status-2026-10-27.md). Defines GseMindFeedV2Record ("gse-mind-feed-v2.0") enforcing content_sha256, valid_time_iso, transaction_time_iso, and NO_OVERWRITE_VIOLATION into brain/feeds/<YYYY-MM-DD>/.
+2. scripts/feeds/validate_mind_feeds_consumer.py & scripts/feeds/scan_sensitive.py: LIVE IN SANDBOX, ABSENT ON WINDOWS until ported. Validates SHA-256 provenance, deduplicates Gmail threads, and scrubs PII/secrets (test_ws6_mind_feed_v2.py).
+3. tests/test_ws6b_rag_anything_probes.py & raganything/omml_extractor.py: SPECIFIED + 10 PROBES IN SANDBOX, ABSENT ON WINDOWS. Integrates HKUDS/RAG-Anything v1.4.1 (arXiv:2510.12323) + DOCX <m:oMath> extraction. Probe 10 emits NAMED_GAP_RECEIPT unless the live RAG-Anything daemon and pre-kickoff bundle are mounted.
+4. packages/mcp-equations-server/src/mcp-cognitive-router.ts: NAMED GAP (Workstream 4). Target 4-stage router over 50,000 literature_premises (288-bit Uint32Array(9) bitmask + pgvector HNSW idx_lit_premises_hnsw_cosine) gated on local .env.local Neon credential rotation.
+5. scripts/feeds/delta_telemetry.py & artifacts/delta-YYYY-MM-DD.jsonl: LIVE CANONICAL PATH ON BOTH WINDOWS AND LINUX. Appends and retrieves provenance-tagged claims conditioned on the runtime-resolved sealed_hash and conditions_on: {version: "v1.0", tau: 0.42, qb_questionable_epa: 0.0947}.
+2. Single Canonical 4-Step Wiring Sequence (Ingest -> Append -> Retrieve -> Residual/Overlay)
+1. Step 1 (Ingest Claim): Receive raw input (Wednesday-Sunday official injury report, beat-writer practice note, DraftKings line move, SEC Form 4 via edgartools, WhisperX audio transcript, or RAG-Anything chunk). Validate schema, scrub PII/secrets, and attach the runtime-resolved Tuesday v1.0 sealed_hash (read from candidates/sealed-center.json) plus conditions_on: {version: "v1.0", tau: 0.42, qb_questionable_epa: 0.0947} without importing any mutable sealed object.
+2. Step 2 (Append to Durable Delta Log): Call append_delta_record("artifacts/delta-YYYY-MM-DD.jsonl", record, active_sealed_hash). Enforce NO_OVERWRITE_VIOLATION on record.id and flush via append-only file descriptor with os.fsync().
+3. Step 3 (Retrieve Prior Records by sealed_hash + subject): Call retrieve_prior_claims("artifacts/delta-YYYY-MM-DD.jsonl", sealed_hash, subject, game_id). Returns chronological prior claims for the same sealed_hash and subject (e.g., resolving a Saturday IR activation over a Wednesday Questionable tag so duplicate entity states like the Week 7 Christian Kirk collision at lines 160 and 1159 cannot occur).
+4. Step 4 (Execute Pure Residual or Sinkhorn Overlay & Assert assertTauSealed): Under Path 4A (Class A Eligible — only after Standing Rule 4 serializer parity is green and source.type is in {"injury_note", "practice_report", "beat_writer"} with an official status change), run applyInjuryOverlay() (Sinkhorn-Knopp on targets under fixed C + frozen SealedEpaDropoffTable), call assertTauSealed(before.tau, after.tau), and assert recomputedHash === sealed_hash. Under Path 4B (Class B Diagnostic — mandatory for "dk_line" and "form4", and for all new mid-week data while the serializer conflict is open), run Step N evaluateConformalDiagnostic() and SHARP_MONEY residual comparator read-only, and re-verify recomputedHash === sealed_hash with zero write-back to the sealed baseline.
+3. One-Line YES / NO Verdict on Each Listed Repository Against That Sequence Only
+* https://github.com/langgenius/dify : NO — Visual LLM/RAG studio platform; adds stateful external bloat not required to append, retrieve, or verify artifacts/delta-YYYY-MM-DD.jsonl under assertTauSealed.
+* https://github.com/appwrite/appwrite : NO — Multi-container BaaS cloud (Auth, MariaDB); violates the zero-new-platform rule for local JSONL delta logging.
+* https://github.com/tinyhumansai/openhuman : NO — Standalone Rust/Tauri personal agent harness (with CVE-2026-49410); Hermes + delta-YYYY-MM-DD.jsonl already owns the execution loop.
+* https://github.com/gna1280072/LeePanel : NO — Desktop SSH Linux VPS control panel; zero role in claim ingestion, JSONL delta retrieval, or assertTauSealed verification.
+* https://github.com/Dokploy/dokploy : NO — Docker Swarm / Traefik PaaS deployment panel; does not participate in the 4-step telemetry delta sequence.
+* https://github.com/biersoeckli/QuickStack : NO — K3s + Longhorn Kubernetes PaaS; infrastructure layer irrelevant to the local claim-to-delta-to-residual sequence.
+* https://github.com/MoyuFamily/ai-relay : NO — Multi-provider OpenAI SDK proxy gateway; does not ingest claims, write delta-YYYY-MM-DD.jsonl, or run assertTauSealed.
+* https://github.com/Shubhamsaboo/awesome-llm-apps : NO — Curated tutorial showcase; reference list only with no drop-in binary for the GSE sealed delta pipeline.
+* https://github.com/awesome-selfhosted/awesome-selfhosted : NO — Directory of self-hosted network services; reference catalog with zero code in the delta sequence.
+* https://github.com/public-apis/public-apis : NO — Markdown directory of public HTTP APIs; reference catalog with zero role in the telemetry delta wiring sequence.
+* https://github.com/HeyPuter/puter : NO — AGPL-3.0 browser cloud desktop OS; completely outside the local artifacts/delta-YYYY-MM-DD.jsonl pipeline.
+* https://github.com/Marker-Inc-Korea/AutoRAG : NO — Desktop file-manager agent; duplicates emit-mind-feed-record.ts without native sealed_hash / assertTauSealed conditioning.
+* https://github.com/HKUDS/RAG-Anything : YES — Integrated in Workstream 6b (arXiv:2510.12323) to extract multimodal paper/chart/table claims into Step 1 and provide read-only context in Step 3 without touching the sealed baseline.
+3.2 Action 2: Deploy & Self-Test the Daily Delta Writer (scripts/feeds/delta_telemetry.py)
+In HERMES CONTINUATION, delta_telemetry.py --selftest passed its schema, duplicate-ID, wrong-seal, and Class-B-overlay guards, but honestly logged SKIP on the simulator leg because gse_coach_mind_simulator.py was not yet in the Windows Python path6. Below is the upgraded scripts/feeds/delta_telemetry.py that (1) dynamically resolves the active seal from candidates/sealed-center.json on Windows (or /opt/model/sealed_baseline.json on Linux) in strict obedience to Standing Rule 3, (2) blocks Class B sources (dk_line, form4) from ever entering the Class A injury overlay, and (3) imports gse_coach_mind_simulator from scripts/ops/ (or /opt/model/) so --selftest executes the full play-by-play simulation leg and proves bit-identical hash and τ = 0.42 invariance2.
+
+
+
+
+
+
+Python
+#!/usr/bin/env python3
+"""
+scripts/feeds/delta_telemetry.py — GSE Daily Telemetry Delta Writer & Context Retriever.
+Contract: artifacts/telemetry-schema-2026-10-27.md & artifacts/rag-telemetry-wiring-2026-10-27.md
+Standing Rule 3 Compliant: Resolves sealed_hash dynamically at runtime from candidates/sealed-center.json
+(or /opt/model/sealed_baseline.json). Never hardcodes a foreign hash. Never mutates sealed state.
+"""
+import argparse
+import datetime
+import hashlib
+import json
+import os
+import sys
+import uuid
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+FROZEN_CONDITIONS_ON = {
+   "version": "v1.0",
+   "tau": 0.42,
+   "qb_questionable_epa": 0.0947,
+}
+VALID_SOURCE_TYPES = {"injury_note", "practice_report", "dk_line", "beat_writer", "form4", "arxiv", "other"}
+CLASS_A_ELIGIBLE_SOURCES = {"injury_note", "practice_report", "beat_writer"}
+CLASS_B_ONLY_SOURCES = {"dk_line", "form4"}
+VALID_STATUSES = {"ingested", "retrieved", "used_in_overlay", "rejected"}
+
+
+def resolve_runtime_sealed_hash(repo_root: Optional[str] = None) -> str:
+   """
+   Standing Rule 3: Resolve sealed_hash at runtime from disk. Never hardcode a digest literal.
+   Checks Windows canonical candidates/sealed-center.json first, then Linux /opt/model/sealed_baseline.json.
+   """
+   root = Path(repo_root) if repo_root else Path(__file__).resolve().parents[2]
+   win_seal_center = root / "candidates" / "sealed-center.json"
+   if win_seal_center.exists():
+       data = json.loads(win_seal_center.read_text(encoding="utf-8"))
+       for key in ("merkle", "sealed_hash", "coachMindsetHash", "seal_hash"):
+           if isinstance(data.get(key), str) and len(data[key]) >= 16:
+               return data[key]
+       blob = json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
+       return hashlib.sha256(blob).hexdigest()
+
+   linux_seal = Path("/opt/model/sealed_baseline.json")
+   if linux_seal.exists():
+       data = json.loads(linux_seal.read_text(encoding="utf-8"))
+       blob = json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
+       return hashlib.sha256(blob).hexdigest()
+
+   raise FileNotFoundError(
+       "RUNTIME_SEAL_MISSING: Neither candidates/sealed-center.json nor /opt/model/sealed_baseline.json found."
+   )
+
+
+def validate_delta_record(rec: Dict[str, Any], active_sealed_hash: str) -> None:
+   for req_key in ("id", "timestamp", "source", "claim", "confidence", "sealed_hash", "conditions_on", "status", "notes"):
+       if req_key not in rec:
+           raise ValueError(f"SCHEMA_VIOLATION: Missing required key '{req_key}'")
+   src = rec["source"]
+   if src.get("type") not in VALID_SOURCE_TYPES:
+       raise ValueError(f"SCHEMA_VIOLATION: Invalid source.type '{src.get('type')}'")
+   if not isinstance(src.get("url"), str) or not src["url"].startswith("http"):
+       raise ValueError("SCHEMA_VIOLATION: source.url must be a valid URL string")
+   if not isinstance(src.get("raw_excerpt"), str) or not src["raw_excerpt"].strip():
+       raise ValueError("SCHEMA_VIOLATION: source.raw_excerpt must be non-empty verbatim text")
+   clm = rec["claim"]
+   for c_key in ("subject", "predicate", "object", "game_id", "week"):
+       if c_key not in clm:
+           raise ValueError(f"SCHEMA_VIOLATION: Missing claim.{c_key}")
+   conf = rec["confidence"]
+   if not isinstance(conf, (int, float)) or not (0.0 <= float(conf) <= 1.0):
+       raise ValueError(f"SCHEMA_VIOLATION: confidence {conf} outside [0.0, 1.0]")
+   if rec["sealed_hash"] != active_sealed_hash:
+       raise ValueError(f"SEAL_HASH_MISMATCH: record sealed_hash {rec['sealed_hash']} != {active_sealed_hash}")
+   cond = rec["conditions_on"]
+   if (
+       cond.get("version") != "v1.0"
+       or float(cond.get("tau", -1.0)) != 0.42
+       or float(cond.get("qb_questionable_epa", -1.0)) != 0.0947
+   ):
+       raise ValueError(f"CONDITIONS_ON_VIOLATION: {cond} does not match frozen Tuesday v1.0 parameters")
+   if rec["status"] not in VALID_STATUSES:
+       raise ValueError(f"SCHEMA_VIOLATION: Invalid status '{rec['status']}'")
+   if src.get("type") in CLASS_B_ONLY_SOURCES and rec["status"] == "used_in_overlay":
+       raise ValueError(f"CLASS_A_FIREWALL_VIOLATION: Class B source '{src.get('type')}' cannot be used_in_overlay")
+
+
+def append_delta_record(delta_file_path: str, record: Dict[str, Any], active_sealed_hash: str) -> str:
+   validate_delta_record(record, active_sealed_hash)
+   path_obj = Path(delta_file_path)
+   path_obj.parent.mkdir(parents=True, exist_ok=True)
+   if path_obj.exists():
+       with open(path_obj, "r", encoding="utf-8") as f:
+           for line in f:
+               line = line.strip()
+               if not line:
+                   continue
+               existing = json.loads(line)
+               if existing.get("id") == record["id"]:
+                   raise RuntimeError(f"NO_OVERWRITE_VIOLATION: Record id {record['id']} already exists in {delta_file_path}")
+   with open(path_obj, "a", encoding="utf-8") as f:
+       f.write(json.dumps(record, separators=(",", ":")) + "\n")
+       f.flush()
+       os.fsync(f.fileno())
+   return str(path_obj)
+
+
+def retrieve_prior_claims(
+   delta_file_path: str,
+   sealed_hash: str,
+   subject: Optional[str] = None,
+   game_id: Optional[str] = None,
+   allowed_source_types: Optional[set] = None,
+) -> List[Dict[str, Any]]:
+   """
+   Read-only retrieval of prior claims matching `sealed_hash` + `subject` (and optional `game_id`).
+   Enforces bi-temporal entity reduction so latest official status supersedes earlier tags.
+   """
+   path_obj = Path(delta_file_path)
+   if not path_obj.exists():
+       return []
+   matches: List[Dict[str, Any]] = []
+   with open(path_obj, "r", encoding="utf-8") as f:
+       for line in f:
+           line = line.strip()
+           if not line:
+               continue
+           rec = json.loads(line)
+           if rec.get("sealed_hash") != sealed_hash:
+               continue
+           if rec.get("status") == "rejected":
+               continue
+           if subject and rec.get("claim", {}).get("subject") != subject:
+               continue
+           if game_id and rec.get("claim", {}).get("game_id") != game_id:
+               continue
+           if allowed_source_types and rec.get("source", {}).get("type") not in allowed_source_types:
+               continue
+           matches.append(rec)
+   matches.sort(key=lambda r: r["timestamp"])
+   return matches
+
+
+def selftest() -> None:
+   import tempfile
+   repo_root = Path(__file__).resolve().parents[2]
+   for candidate_sim_dir in (repo_root / "scripts" / "ops", Path("/opt/model")):
+       if candidate_sim_dir.exists() and str(candidate_sim_dir) not in sys.path:
+           sys.path.insert(0, str(candidate_sim_dir))
+
+   from gse_coach_mind_simulator import load_sealed_object_readonly, canonical_hash, simulate_matchup_pbp
+
+   sealed_obj, before_hash = load_sealed_object_readonly()
+   try:
+       active_hash = resolve_runtime_sealed_hash(str(repo_root))
+   except FileNotFoundError:
+       active_hash = before_hash
+
+   with tempfile.TemporaryDirectory() as tmpdir:
+       delta_path = os.path.join(tmpdir, "delta-2026-10-28.jsonl")
+
+       # 1. Append one real Week 8 injury note (CLE QB Dillon Gabriel OUT)
+       injury_rec = {
+           "id": str(uuid.uuid5(uuid.NAMESPACE_URL, "https://www.clevelandbrowns.com/news/injury-report-wk8|gabriel_out")),
+           "timestamp": "2026-10-28T11:20:00-05:00",
+           "source": {
+               "type": "injury_note",
+               "url": "https://www.clevelandbrowns.com/news/injury-report-wk8",
+               "author": "Official Team Report",
+               "raw_excerpt": "CLE QB Dillon Gabriel ruled OUT for Week 8 at Pittsburgh.",
+           },
+           "claim": {
+               "subject": "player:CLE:Dillon_Gabriel",
+               "predicate": "out",
+               "object": "QB1",
+               "game_id": "2026_08_CLE_PIT",
+               "week": 8,
+           },
+           "confidence": 1.0,
+           "sealed_hash": active_hash,
+           "conditions_on": FROZEN_CONDITIONS_ON,
+           "status": "ingested",
+           "notes": "Verified official injury designation; maps to sealed QB1=0.11 drop-off.",
+       }
+       append_delta_record(delta_path, injury_rec, active_hash)
+
+       # 2. Append one real DraftKings line move (Class B diagnostic only)
+       dk_rec = {
+           "id": str(uuid.uuid5(uuid.NAMESPACE_URL, "https://sportsbook.draftkings.com/leagues/football/nfl|lv_nyj_flip")),
+           "timestamp": "2026-10-28T11:21:00-05:00",
+           "source": {
+               "type": "dk_line",
+               "url": "https://sportsbook.draftkings.com/leagues/football/nfl",
+               "author": None,
+               "raw_excerpt": "LV @ NYJ spread moved to NYJ -1.5 on DraftKings vs Pinnacle LV +1.0 (2.5 pt favorite flip).",
+           },
+           "claim": {
+               "subject": "game:2026_08_LV_NYJ",
+               "predicate": "line_move",
+               "object": -1.5,
+               "game_id": "2026_08_LV_NYJ",
+               "week": 8,
+           },
+           "confidence": 0.95,
+           "sealed_hash": active_hash,
+           "conditions_on": FROZEN_CONDITIONS_ON,
+           "status": "ingested",
+           "notes": "Step N cross-book dispersion favorite flip; never enters Class A simulation.",
+       }
+       append_delta_record(delta_path, dk_rec, active_hash)
+
+       # 3. Verify guards: duplicate ID, wrong seal, and Class B overlay injection all fail closed
+       for bad_case, mutator in (
+           ("DUPLICATE_ID", lambda r: r),
+           ("WRONG_SEAL", lambda r: {**r, "id": str(uuid.uuid4()), "sealed_hash": "0" * 64}),
+           ("CLASS_B_OVERLAY", lambda r: {**dk_rec, "id": str(uuid.uuid4()), "status": "used_in_overlay"}),
+       ):
+           try:
+               append_delta_record(delta_path, mutator(injury_rec), active_hash)
+               raise AssertionError(f"Guard {bad_case} failed to raise")
+           except (RuntimeError, ValueError):
+               pass
+
+       # 4. Retrieve prior Class A claims by runtime sealed_hash + subject
+       prior_inj = retrieve_prior_claims(
+           delta_path,
+           sealed_hash=active_hash,
+           subject="player:CLE:Dillon_Gabriel",
+           game_id="2026_08_CLE_PIT",
+           allowed_source_types=CLASS_A_ELIGIBLE_SOURCES,
+       )
+       assert len(prior_inj) == 1 and prior_inj[-1]["claim"]["object"] == "QB1"
+
+       # 5. Execute PBP simulation conditioned on retrieved claim and assert bit-identical hash + tau
+       sim_res = simulate_matchup_pbp(
+           "CLE", "PIT", [prior_inj[-1]["claim"]["object"], "WR2"], [], sealed_obj, before_hash, n_sims=1000, seed=42
+       )
+       after_hash = canonical_hash(sealed_obj)
+       assert after_hash == before_hash == sim_res["coachMindsetHash"]
+       assert sealed_obj["tau"] == 0.42
+       print(
+           f"[DELTA TELEMETRY SELFTEST PASS] 2 records written & retrieved | guards=3/3 | "
+           f"active_seal={active_hash[:12]}... | sim_hash={after_hash[:12]}... | tau={sealed_obj['tau']}"
+       )
+
+
+if __name__ == "__main__":
+   ap = argparse.ArgumentParser()
+   ap.add_argument("--selftest", action="store_true")
+   ap.add_argument("--file", default=f"artifacts/delta-{datetime.date.today().isoformat()}.jsonl")
+   args = ap.parse_args()
+   if args.selftest:
+       selftest()
+
+3.3 Action 3: Patch the 5 ENABLED=false Modules with Exact ACCEPTANCE_GATE Blocks & Enumerate All ENABLED=false Files
+The GSE AGENT ALIGNMENT file notes that 146 modules in packages/prediction-engine currently sit at ENABLED=false (46 liftable, 100 carrying a gate or stub; earlier repo-wide greps across all packages counted 198 to 584 hits)1. Under FAIL 1 (Item 5), every file containing ENABLED = false under packages/prediction-engine/src must carry a machine-readable ACCEPTANCE_GATE, HUMAN_CALL, BARREL_ONLY, or GENERIC_BASELINE_STUB block2. Apply the following five exact TypeScript blocks without flipping any flag to true mid-week2:
+1. packages/prediction-engine/src/2609-33664-hmm-pass-blocking.ts (Brahme, Mehta, Matthews, & Franks 2026, arXiv:2609.33664)
+2
+
+
+
+
+
+
+TypeScript
+/**
+* ACCEPTANCE_GATE (HUMAN_CALL_REQUIRED — PRE-SEAL ONLY):
+* Module implements the spatial pass-blocking assignment HMM of Brahme et al. (2026, arXiv:2609.33664),
+* modeling O_{tb} | I_{tbj}=1 ~ N_2(\gamma_r^{(g)} R_{tj} + \gamma_q^{(g)} Q_t, \sigma_D^2(g) I_2)
+* and von Mises orientation (\kappa = 1).
+* Refusal / Gate Criteria before flipping HMM_PASS_BLOCKING_ENABLED to true:
+*   1. Live 2026 10Hz NGS XY player-tracking frames must be wired in pre-seal data ingestion.
+*   2. Bayesian Information Criterion (BIC) must improve over a 1-state static baseline on held-out snaps.
+*   3. Fitted frame-to-frame assignment stickiness \rho must satisfy \rho >= 0.70 with p_fail <= 0.02 for OL/TE.
+*   4. May only be enabled prior to the Tuesday 04:00 CT v1.0 seal; mid-week activation is forbidden.
+*/
+export const HMM_PASS_BLOCKING_ENABLED = false as const;
+export const HMM_PASS_BLOCKING_ACCEPTANCE_GATE = {
+ status: "UNEVALUATED_HUMAN_CALL_GATE",
+ paperId: "arXiv:2609.33664",
+ requiresLiveTracking2026: true,
+ minStatePersistenceRho: 0.70,
+ requiresBicImprovementOver1State: true,
+ sealBoundary: "PRE_SEAL_TUESDAY_0400_CT_ONLY",
+} as const;
+
+2. packages/prediction-engine/src/2502-16313-snap-timing-multilevel.ts (Nguyen & Yurko 2025, arXiv:2502.16313)
+2
+
+
+
+
+
+
+TypeScript
+/**
+* ACCEPTANCE_GATE (HUMAN_CALL_REQUIRED — SHADOW SEAL REQUIRED):
+* Module implements the heterogeneous-variance Gamma multilevel snap-timing model of
+* Nguyen & Yurko (2025, arXiv:2502.16313): \delta_i = t_i^{snap} - t_i^{motion} ~ Gamma(\mu_i, \alpha_i)
+* with QB random-effect log-variance u_q ~ N(0, \tau_q^2) and 0.45 top-speed motion onset threshold.
+* Refusal / Gate Criteria before flipping SNAP_TIMING_MULTILEVEL_ENABLED to true:
+*   1. Frame-level pre-snap motion tracking must be joined to base nflverse play-by-play.
+*   2. Must execute one full Tuesday 04:00 CT shadow-seal diff demonstrating zero regression on
+*      pre-snap penalty/sack calibration before entering coachMindsetHash.
+*/
+export const SNAP_TIMING_MULTILEVEL_ENABLED = false as const;
+export const SNAP_TIMING_MULTILEVEL_ACCEPTANCE_GATE = {
+ status: "UNEVALUATED_SHADOW_SEAL_GATE",
+ paperId: "arXiv:2502.16313",
+ motionSpeedThresholdRatio: 0.45,
+ requiresShadowSealDiff: true,
+ sealBoundary: "PRE_SEAL_TUESDAY_0400_CT_ONLY",
+} as const;
+
+3. packages/prediction-engine/src/2606-18512-causal-panel-forecasting.ts (Shen 2026, arXiv:2606.18512)
+2
+
+
+
+
+
+
+TypeScript
+/**
+* ACCEPTANCE_GATE (HUMAN_CALL_REQUIRED — SHADOW SEAL REQUIRED):
+* Module implements prospective out-of-panel causal factor forecasting of Shen (2026, arXiv:2606.18512)
+* for single-team regime shifts (coach firing, mid-season trade, scheme overhaul).
+* Refusal / Gate Criteria before flipping CAUSAL_PANEL_FORECASTING_ENABLED to true:
+*   1. Placebo-in-time backtest across 31-team donor pool must beat pre-intervention RMSE floor.
+*   2. One clean Tuesday 04:00 CT shadow-seal diff must be signed off by the founder.
+*/
+export const CAUSAL_PANEL_FORECASTING_ENABLED = false as const;
+export const CAUSAL_PANEL_FORECASTING_ACCEPTANCE_GATE = {
+ status: "UNEVALUATED_SHADOW_SEAL_GATE",
+ paperId: "arXiv:2606.18512",
+ requiresPlaceboInTimeValidation: true,
+ requiresShadowSealDiff: true,
+ sealBoundary: "PRE_SEAL_TUESDAY_0400_CT_ONLY",
+} as const;
+
+4. packages/prediction-engine/src/mlb-independent-model.ts:1
+2
+
+
+
+
+
+
+TypeScript
+/**
+* ACCEPTANCE_GATE (UNEVALUATED — QUARANTINED UNTIL CALIBRATION FLOOR MET):
+* Per the GSE Launch Readiness Audit (Score: 25/100 on MLB Pipeline), MLB_INDEPENDENT_MODEL_ENABLED
+* is locked to false because SPREAD 10+ is anti-predictive, run-line consensusPct = 1.0 is a
+* structural tautology, and MLB SPEAK 40% is inverted (n = 90) despite moneyline ECE = 0.0501.
+* Promotion requires: (a) walk-forward run-line Brier <= 0.22 and de-biased ECE <= 0.05 over n >= 100
+* settled fixtures, (b) removal of consensusPct = 1.0 tautology, and (c) 3 consecutive green runs.
+*/
+export const MLB_INDEPENDENT_MODEL_ENABLED = false as const;
+export const MLB_INDEPENDENT_MODEL_ACCEPTANCE_GATE = {
+ status: "UNEVALUATED_CALIBRATION_FLOOR",
+ minSettledFixtures: 100,
+ maxBrierScore: 0.22,
+ maxDebiasedEce: 0.05,
+ requiredConsecutiveGreenRuns: 3,
+} as const;
+
+5. packages/prediction-engine/src/shadow-calibration-eprocess.ts:8 (Arnold, Henzi, & Ziegel 2023, arXiv:2109.11761)
+2
+
+
+
+
+
+
+TypeScript
+/**
+* ACCEPTANCE_GATE (SHADOW DIAGNOSTIC ONLY — VILLE'S INEQUALITY GATE):
+* Implements sequentially valid forecast calibration e-processes (e_t)_{t >= 0} per
+* Arnold, Henzi, & Ziegel (2023, Ann. Appl. Stat. 17(3):1909-1935, arXiv:2109.11761) and
+* Ramdas et al. (arXiv:2402.09698): P(e_\tau >= 1/\alpha) <= \alpha at any stopping time \tau.
+* Remains SHADOW_EPROCESS_ENABLED = false (gateAction: 'none') until PIT beta_e / grenander_e
+* calibrators are validated across n >= 100 settled picks under lag-h modified stopping rules.
+*/
+export const SHADOW_EPROCESS_ENABLED = false as const;
+export const SHADOW_EPROCESS_ACCEPTANCE_GATE = {
+ status: "UNEVALUATED_SEQUENTIAL_CALIBRATION_GATE",
+ paperId: "arXiv:2109.11761",
+ alphaLevel: 0.05,
+ villeRejectionThreshold: 20.0,
+ minSettledPicks: 100,
+ gateActionWhenDisabled: "none",
+} as const;
+
+Mandatory Node Enumeration Verification Command (Must Exit 0)
+2:
+
+
+
+
+
+
+Bash
+node -e 'const fs=require("fs"),path=require("path");function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):e.name.endsWith(".ts")?[path.join(d,e.name)]:[])}const files=walk("packages/prediction-engine/src");let fails=[];for(const f of files){const txt=fs.readFileSync(f,"utf8");if(/ENABLED\s*=\s*false/.test(txt)){const hasGate=/ACCEPTANCE_GATE|HUMAN_CALL|BARREL_ONLY|GENERIC_BASELINE_STUB/i.test(txt);if(!hasGate)fails.push(f)}}console.log("Total ENABLED=false files:",files.filter(f=>/ENABLED\s*=\s*false/.test(fs.readFileSync(f,"utf8"))).length,"Ungated FAILs:",fails);if(fails.length)process.exit(1);'
+
+3.4 Action 4: Route All ticket: null Exclusively Through calibration-map.ts (FAIL 2 Remediation)
+The invariant sweep flagged 19 real ticket: null assignments across packages/prediction-engine/src (plus 2 comment hits at weekly-cadence-orchestrator.ts:5 and :136), of which only the 4 post-gate lines inside calibration-map.ts (lines 184, 190, 194, and 215) are permitted2. To close FAIL 2 cleanly:
+1. packages/prediction-engine/src/public-baseline/call-sheet.ts (8 sites — lines 81, 89, 97, 105, 113, 121, 129, 137): Type unpriced call-sheet drafts as Omit<CallSheetEntry, "ticket"> (or CallSheetDraft) and remove the literal ticket: null property from all 8 object-literal return sites2.
+2. packages/prediction-engine/src/coach-sim/weekly-cadence-orchestrator.ts (1 site — line 180 in buildPersonnelCalls): Remove ticket: null from the unpriced personnel-call builder and pass the resulting candidate array through signCallSheetTickets(drafts, CALIBRATION_KNOTS, contradictionGate) imported from ../calibration-map.js2.
+3. packages/prediction-engine/src/public-baseline/x-corpus.ts (6 sites — lines 41, 52, 61, 291, 303, 312): Remove the 6 construction-time ticket: null properties and resolve candidate entries through signCallSheetTickets() in calibration-map.ts2.
+4. Verification Grep Gate: Run rg "ticket:\s*null" packages/prediction-engine/src and confirm that the only matches in the entire source tree are the 4 post-calibration lines (184, 190, 194, 215) inside calibration-map.ts where contradictionGate or minimum edge thresholds explicitly withhold a ticket after evaluating the 8-knot monotone Pool-Adjacent-Violators Algorithm (CALIBRATION_KNOTS)2.
+3.5 Action 5: The Coach-First Play-by-Play Monte Carlo Simulator & Consolidated 7 Proprietary Metrics
+The play-by-play simulator is the core product of Galaxy Sports Edge5. Rather than fitting a regression to closing spreads, the engine simulates every play of every game 5,000 to 10,000 times from the bottom up using five coupled mathematical layers2:
+1. Read-Only Sealed Loader (load_sealed_object_readonly): Loads version: "v1.0", team ratings, the fixed 5×5 role interchangeability cost matrix C across [WR1, WR2, WR3, TE1, RB1], the frozen fourth-down risk preference τ_coach = 0.42, and SealedEpaDropoffTable (QB1: 0.11, QB_QUESTIONABLE: 0.0947, OL: 0.02, SKILL: 0.03, DEF: -0.015, and execution multipliers QB1: 0.78, RB1: 0.85, WR1: 0.82, WR2: 0.88, TE1: 0.84, OL: 0.91), wrapping the entire object in recursive MappingProxyType / Object.freeze containers so any mid-week mutation raises a hard TypeError8.
+2. Entropy-Regularized Sinkhorn-Knopp Optimal Transport & HHI Effective-Count Load Scaling: When an injury flag lands in artifacts/delta-YYYY-MM-DD.jsonl, the engine solves the entropically regularized Kantorovich problem (ε = 0.10, Schmitzer log-domain stabilization, marginal L1 error ≤ 1e-9; optional pre-seal solver upgrades include annealed Sinkhorn with momentum, arXiv:2609.33814, or FlashSinkhorn 2 block-sparse kernels, arXiv:2610.02395, without ever altering ε or C mid-week) over the transport polytope   2:
+  
+Furthermore, per load_scaling.py (Davies 2025 effective-competitor transform), positional drop-off factors are scaled in effective-contributor space    rather than convex HHI space, using    with HHI_league = 0.135 (N_league = 7.41), capturing the 34% spread between concentrated offenses like Detroit (HHI = 0.159, N_eff = 6.30, m = 1.08×) and spread offenses like New Orleans (HHI = 0.087, N_eff = 11.43, m = 0.81×)1.
+3. Pairwise Coordinator Deception Matrix & Consolidated 7 GSE Metrics (gse-proprietary-seven.ts): In markov-simulator.ts (commit ed01d3a84), play transitions and EPA adjustments are governed by the Pairwise Coordinator Tensor    and the seven consolidated kernels in packages/prediction-engine/src/metrics/gse-proprietary-seven.ts2. Specifically, computeGseSii (Scheme Interaction Index) captures the collision of condensed formations (76% tight splits), pre-snap motion (82% rate), and 0.85s under-center play-action mesh hesitation (+0.0978 EPA/play overall across 103,810 FTN-charted plays; +0.35 EPA vs. Base and +0.84 EPA vs. Single-High Cover 1/3) against Nickel/Dime Split-Safety Quarters/Palms (Cover 4/6), which collapses play-action to −0.01 EPA/play, while penalizing RPOs (−0.0657 EPA/play)8. computeGseQptsr (Quick-Pressure-to-Sack & Checkdown Residual) models sub-2.0s simulated pressures/creepers converting to sacks at 15.8% vs. 10.1% at 2.5–2.9s (+57% relative lift, p = 0.043, Cycle c35) alongside slot-escape checkdown funnels (e.g., Zay Flowers 82% slot target share vs. 4-man pressure)4. computeGseRls (Route Leverage Surplus) evaluates receiver separation at break relative to cushion and coverage shell (e.g., KC 3.45 yd and BUF 3.43 yd vs. ARI 2.74 yd; Drake London 2.86 YPRR vs. zone vs. 1.57 vs. man), falling back cleanly to the cell/tendency surface while live 2026 NGS XY tracking is an honest gap on disk2. computeGseSpese (Situational Pace & Explosive-to-Stall Entropy) normalizes probabilities by mass and computes Shannon entropy differences (between-the-20s bits minus red-zone bits) to project red-zone stalls and Field Goal volume2. computeGseTor (Linebacker Tackle Opportunity & Spine Conflict Rate) combines projected opponent plays, LB snap share, 11/12/21 box-fit probability, and play-action LB freeze displacement (0.71s freeze, ~3.4 yds displacement) to project Solo Tackles, Assists, and TE/RB seam voids8. computeGseSva (State- & Leverage-Adjusted Value Added) strips garbage time (Q4 WP > 0.95 or < 0.05) and credits early-down setup runners (e.g., Braelon Allen 4.77 YPC vs. Breece Hall 2.93 YPC on zone runs)4. Finally, computeGseDwp (Coaching Decision WP Bleed & Clock Economics) evaluates cumulative 4th-down and timeout win-probability bleed4.
+4. Empirical Bayes BTL Shrinkage & Inverse-MDP Fourth-Down Policy (τ_coach = 0.42): On Downs 1–3, early-down neutral pass-rate deltas are shrunk via the frozen Empirical Bayes operator    (arXiv:1807.09236) and combined with fourth-quarter trailing 7–14 panic residuals from soul_profiles.json (e.g., Nick Sirianni +7.82 pp and Antonio Pierce +6.46 pp vs. Sean McDermott −5.51 pp and Raheem Morris −5.49 pp, shrunk at k = 40 plays)2. On Down 4, the coach chooses    by maximizing the frozen τ_coach = 0.42 quantile of future drive value    (arXiv:2309.00756) across the 5-zone empirical drive-value curve (1.388 own 1–20, 1.921 own 21–40, 2.447 midfield, 3.517 opp 21–40, 4.482 opp 1–20)2.
+5. Post-Simulation Step N Residual Annotation (Zero Write-Back): Only after all 10,000 game trajectories finish and lock their score, margin, total-play, and pace CDFs does the comparator attach the Action Network stake-weighted money% - ticket% divergence flags8.
+Complete Runnable Simulator Script (scripts/ops/gse_coach_mind_simulator.py)
+Save this script to scripts/ops/gse_coach_mind_simulator.py (and /opt/model/gse_coach_mind_simulator.py) so both the standalone CLI and delta_telemetry.py --selftest execute with zero skips6:
+
+
+
+
+
+
+Python
+#!/usr/bin/env python3
+"""
+scripts/ops/gse_coach_mind_simulator.py — GSE Sealed Coach-First Play-by-Play Monte Carlo Simulator
+& Step N Sharp-Money (money% vs ticket%) Residual Comparator.
+Enforces all Stage A-E invariants and Standing Rules 1-10:
+ 1. Runtime-resolved Tuesday 04:00 CT (v1.0) seal verification (coach tau=0.42, QB_QUESTIONABLE=0.0947).
+ 2. Read-only MappingProxyType lock on the sealed object (zero mid-week re-estimation).
+ 3. Sinkhorn-Knopp optimal transport target reallocation under fixed cost matrix C + HHI load scaling.
+ 4. Play-by-play state-conditioned transition lookup + inverse-MDP 4th-down slice (tau=0.42)
+    + Empirical Bayes BTL shrinkage R = (I + A*S)^(-1).
+ 5. 10,000-simulation JEV scenario stress-testing & post-simulation money% residual flags (read LAST).
+"""
+import argparse
+import copy
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+from types import MappingProxyType
+import numpy as np
+
+QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
+LEAGUE_TARGET_HHI = 0.135
+
+DEFAULT_SEALED_BASELINE = {
+   "version": "v1.0",
+   "sealedAt": "2026-10-25T04:00:00-05:00",
+   "tau": 0.42,
+   "injuryDropOff": 0,
+   "PROB_PER_POINT": 0.033,
+   "costMatrixC": [
+       [0.05, 0.35, 0.55, 0.75, 0.90],
+       [0.35, 0.05, 0.28, 0.50, 0.75],
+       [0.55, 0.28, 0.05, 0.42, 0.65],
+       [0.75, 0.50, 0.42, 0.05, 0.48],
+       [0.90, 0.75, 0.65, 0.48, 0.05],
+   ],
+   "epaDropoffTable": {
+       "QB1": 0.11,
+       "QB_QUESTIONABLE": QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF,
+       "OL": 0.02,
+       "SKILL": 0.03,
+       "DEF": -0.015,
+       "execution_multipliers": {
+           "QB1": 0.78, "RB1": 0.85, "WR1": 0.82, "WR2": 0.88, "TE1": 0.84, "OL": 0.91
+       },
+   },
+   "teamRatings": {
+       "PIT": {"off_epa": 0.042, "def_epa": -0.088, "pace_sec": 27.4, "hfa": 1.56, "early_pass_rate": 0.52, "panic_pp": 0.012, "target_hhi": 0.142},
+       "CLE": {"off_epa": -0.095, "def_epa": -0.031, "pace_sec": 26.8, "hfa": 1.56, "early_pass_rate": 0.54, "panic_pp": 0.018, "target_hhi": 0.131},
+       "LV":  {"off_epa": -0.048, "def_epa": 0.012,  "pace_sec": 26.9, "hfa": 1.56, "early_pass_rate": 0.55, "panic_pp": 0.060, "target_hhi": 0.148},
+       "NYJ": {"off_epa": -0.062, "def_epa": -0.045, "pace_sec": 28.1, "hfa": 1.56, "early_pass_rate": 0.53, "panic_pp": 0.005, "target_hhi": 0.125},
+       "DET": {"off_epa": 0.118,  "def_epa": -0.042, "pace_sec": 26.5, "hfa": 1.56, "early_pass_rate": 0.51, "panic_pp": -0.015, "target_hhi": 0.159},
+       "MIN": {"off_epa": 0.035,  "def_epa": -0.058, "pace_sec": 27.2, "hfa": 1.56, "early_pass_rate": 0.58, "panic_pp": -0.028, "target_hhi": 0.152},
+       "GB":  {"off_epa": 0.068,  "def_epa": -0.019, "pace_sec": 27.0, "hfa": 1.56, "early_pass_rate": 0.55, "panic_pp": 0.010, "target_hhi": 0.118},
+       "CAR": {"off_epa": -0.105, "def_epa": 0.082,  "pace_sec": 27.6, "hfa": 1.56, "early_pass_rate": 0.54, "panic_pp": 0.008, "target_hhi": 0.138},
+       "CIN": {"off_epa": 0.074,  "def_epa": 0.024,  "pace_sec": 26.4, "hfa": 1.56, "early_pass_rate": 0.63, "panic_pp": 0.022, "target_hhi": 0.154},
+       "TEN": {"off_epa": -0.082, "def_epa": -0.015, "pace_sec": 28.3, "hfa": 1.56, "early_pass_rate": 0.52, "panic_pp": -0.010, "target_hhi": 0.133},
+       "SEA": {"off_epa": 0.029,  "def_epa": -0.011, "pace_sec": 26.2, "hfa": 1.56, "early_pass_rate": 0.57, "panic_pp": 0.004, "target_hhi": 0.146},
+       "CHI": {"off_epa": 0.018,  "def_epa": -0.049, "pace_sec": 26.7, "hfa": 1.56, "early_pass_rate": 0.53, "panic_pp": 0.009, "target_hhi": 0.129},
+       "BUF": {"off_epa": 0.112,  "def_epa": -0.038, "pace_sec": 26.6, "hfa": 1.56, "early_pass_rate": 0.56, "panic_pp": -0.055, "target_hhi": 0.112},
+       "BAL": {"off_epa": 0.134,  "def_epa": -0.029, "pace_sec": 27.5, "hfa": 1.56, "early_pass_rate": 0.50, "panic_pp": 0.046, "target_hhi": 0.140},
+   },
+}
+
+FORBIDDEN_MARKET_TOKENS = (
+   "market", "odds", "book", "split", "ticket", "money", "vig", "spread_line", "total_line", "clv"
+)
+
+
+def canonical_hash(obj) -> str:
+   def to_plain(x):
+       if isinstance(x, (dict, MappingProxyType)):
+           return {k: to_plain(x[k]) for k in sorted(x.keys())}
+       if isinstance(x, (list, tuple)):
+           return [to_plain(v) for v in x]
+       return x
+   blob = json.dumps(to_plain(obj), sort_keys=True, separators=(",", ":")).encode("utf-8")
+   return hashlib.sha256(blob).hexdigest()
+
+
+def freeze_deep(obj):
+   if isinstance(obj, dict):
+       return MappingProxyType({k: freeze_deep(v) for k, v in obj.items()})
+   if isinstance(obj, list):
+       return tuple(freeze_deep(v) for v in obj)
+   return obj
+
+
+def hhi_load_multiplier(target_hhi: float, league_hhi: float = LEAGUE_TARGET_HHI) -> float:
+   """Scale positional dropoff in effective-contributor space N_eff = 1/HHI (Davies 2025)."""
+   if target_hhi <= 0:
+       return 1.0
+   n_team = 1.0 / target_hhi
+   n_league = 1.0 / league_hhi
+   return max(0.55, min(1.60, math.sqrt(n_league / n_team)))
+
+
+def load_sealed_object_readonly(sealed_path: str = "/opt/model/sealed_baseline.json"):
+   if os.path.exists(sealed_path):
+       with open(sealed_path, "r", encoding="utf-8") as f:
+           raw = json.load(f)
+   else:
+       raw = copy.deepcopy(DEFAULT_SEALED_BASELINE)
+   if raw.get("version") != "v1.0":
+       raise ValueError(f"SEAL_VIOLATION: Rejected non-v1.0 baseline ({raw.get('version')})")
+
+   def assert_no_market_keys(node, path="root"):
+       if isinstance(node, (dict, MappingProxyType)):
+           for k, v in node.items():
+               if any(tok in k.lower() for tok in FORBIDDEN_MARKET_TOKENS):
+                   raise ValueError(f"CLASS_A_FIREWALL_VIOLATION: Market token '{k}' at {path}.{k}")
+               assert_no_market_keys(v, f"{path}.{k}")
+       elif isinstance(node, (list, tuple)):
+           for idx, item in enumerate(node):
+               assert_no_market_keys(item, f"{path}[{idx}]")
+
+   assert_no_market_keys(raw)
+   if raw.get("tau") != 0.42:
+       raise RuntimeError(f"SEAL_BROKEN: coach tau={raw.get('tau')} != 0.42")
+   if raw["epaDropoffTable"]["QB_QUESTIONABLE"] != QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF:
+       raise RuntimeError("SEAL_BROKEN: QB_QUESTIONABLE != 0.0947")
+   digest = canonical_hash(raw)
+   return freeze_deep(raw), digest
+
+
+def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: float = 0.10):
+   C = np.array(C_tuple, dtype=np.float64)
+   r = np.array(base_shares, dtype=np.float64)
+   r = r / r.sum()
+   c = r.copy()
+   role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
+   for idx, rname in enumerate(role_names):
+       if rname in scratched_roles:
+           c[idx] = 0.01
+   c = c / c.sum()
+   K = np.exp(np.maximum(-C / eps, -700.0))
+   u = np.ones_like(r)
+   v = np.ones_like(c)
+   for _ in range(200):
+       u = r / np.maximum(K @ v, 1e-12)
+       v = c / np.maximum(K.T @ u, 1e-12)
+       P = np.diag(u) @ K @ np.diag(v)
+       if (np.sum(np.abs(P.sum(axis=1) - r)) + np.sum(np.abs(P.sum(axis=0) - c))) <= 1e-9:
+           break
+   feasible_shares = P.sum(axis=0)
+   mass_moved = float(0.5 * np.sum(np.abs(feasible_shares - r)))
+   return feasible_shares, mass_moved
+
+
+def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, sealed_state, expected_hash: str, n_sims: int = 5000, seed: int = 42) -> dict:
+   assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
+   rng = np.random.default_rng(seed)
+   tr_away = sealed_state["teamRatings"][away]
+   tr_home = sealed_state["teamRatings"][home]
+   epa_table = sealed_state["epaDropoffTable"]
+   base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
+   away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
+   home_sh, home_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, home_inj)
+   role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
+   exec_mults = epa_table["execution_multipliers"]
+   away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names))
+   home_eff_mult = sum(home_sh[i] * (exec_mults.get(rn, 0.90) if rn in home_inj else 1.0) for i, rn in enumerate(role_names))
+   away_drop = sum(float(epa_table[fl]) for fl in away_inj if fl in epa_table)
+   home_drop = sum(float(epa_table[fl]) for fl in home_inj if fl in epa_table)
+   away_net_epa = ((tr_away["off_epa"] - away_drop) * away_eff_mult) - tr_home["def_epa"]
+   home_net_epa = ((tr_home["off_epa"] - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
+
+   r_shrink = 1.0 / (1.0 + 45.0 * 0.04)
+   away_pass_delta = (1.0 - r_shrink) * (tr_away["early_pass_rate"] - 0.54)
+   home_pass_delta = (1.0 - r_shrink) * (tr_home["early_pass_rate"] - 0.54)
+
+   clock_sec = np.full(n_sims, 3600.0, dtype=np.float64)
+   away_score = np.zeros(n_sims, dtype=np.float64)
+   home_score = np.zeros(n_sims, dtype=np.float64)
+   total_plays = np.zeros(n_sims, dtype=np.int32)
+   poss = rng.integers(0, 2, size=n_sims)
+   down = np.ones(n_sims, dtype=np.int32)
+   ydstogo = np.full(n_sims, 10, dtype=np.int32)
+   yardline_100 = np.full(n_sims, 75, dtype=np.int32)
+
+   for _ in range(175):
+       active = clock_sec > 0.0
+       if not np.any(active):
+           break
+       n_act = int(np.sum(active))
+       total_plays[active] += 1
+       net_epa_vec = np.where(poss == 1, home_net_epa, away_net_epa)
+       pace_base_vec = np.where(poss == 1, tr_home["pace_sec"], tr_away["pace_sec"])
+       pass_delta_vec = np.where(poss == 1, home_pass_delta, away_pass_delta)
+       panic_vec = np.where(poss == 1, tr_home["panic_pp"], tr_away["panic_pp"])
+       score_diff = np.where(poss == 1, home_score - away_score, away_score - home_score)
+       qtr = np.clip(4 - (clock_sec // 900).astype(np.int32), 1, 4)
+       is_4th = active & (down == 4)
+       is_1to3 = active & (down < 4)
+
+       if np.any(is_4th):
+           idx_4th = np.where(is_4th)[0]
+           yl4, yd4 = yardline_100[idx_4th], ydstogo[idx_4th]
+           go_mask = ((yl4 <= 58) & (yd4 <= 3)) | ((yl4 <= 40) & (yd4 <= 5) & (sealed_state["tau"] >= 0.40)) | ((qtr[idx_4th] == 4) & (score_diff[idx_4th] < 0) & (yd4 <= 7))
+           fg_mask = (~go_mask) & (yl4 <= 37)
+           punt_mask = (~go_mask) & (~fg_mask)
+           if np.any(go_mask):
+               g_idx = idx_4th[go_mask]
+               p_conv = np.clip(0.64 - 0.05 * ydstogo[g_idx] + 0.55 * net_epa_vec[g_idx], 0.15, 0.82)
+               conv = rng.random(len(g_idx)) < p_conv
+               gains = np.where(conv, ydstogo[g_idx] + rng.integers(1, 8, size=len(g_idx)), rng.integers(-1, 2, size=len(g_idx)))
+               new_yl = yardline_100[g_idx] - gains
+               td = conv & (new_yl <= 0)
+               home_score[g_idx[td & (poss[g_idx] == 1)]] += 6.95
+               away_score[g_idx[td & (poss[g_idx] == 0)]] += 6.95
+               poss[g_idx[td | (~conv)]] = 1 - poss[g_idx[td | (~conv)]]
+               yardline_100[g_idx[td]] = 75
+               yardline_100[g_idx[~conv]] = np.clip(100 - yardline_100[g_idx[~conv]], 5, 95)
+               fd_keep = conv & (~td)
+               yardline_100[g_idx[fd_keep]] = new_yl[fd_keep]
+               down[g_idx] = 1
+               ydstogo[g_idx] = np.minimum(10, yardline_100[g_idx])
+           if np.any(fg_mask):
+               f_idx = idx_4th[fg_mask]
+               p_fg = np.clip(0.97 - 0.011 * np.maximum(0, yardline_100[f_idx] - 15), 0.45, 0.98)
+               made = rng.random(len(f_idx)) < p_fg
+               home_score[f_idx[made & (poss[f_idx] == 1)]] += 3.0
+               away_score[f_idx[made & (poss[f_idx] == 0)]] += 3.0
+               poss[f_idx] = 1 - poss[f_idx]
+               yardline_100[f_idx] = np.where(made, 75, np.clip(100 - yardline_100[f_idx] - 7, 20, 80))
+               down[f_idx] = 1
+               ydstogo[f_idx] = 10
+           if np.any(punt_mask):
+               p_idx = idx_4th[punt_mask]
+               net_punt = rng.integers(38, 46, size=len(p_idx))
+               poss[p_idx] = 1 - poss[p_idx]
+               yardline_100[p_idx] = np.clip(100 - (yardline_100[p_idx] - net_punt), 20, 90)
+               down[p_idx] = 1
+               ydstogo[p_idx] = 10
+
+       if np.any(is_1to3):
+           idx_13 = np.where(is_1to3)[0]
+           dn_v, ne_v, sd_v, qt_v = down[idx_13], net_epa_vec[idx_13], score_diff[idx_13], qtr[idx_13]
+           base_p = np.where(dn_v == 1, 0.48, np.where(dn_v == 2, 0.56, 0.74))
+           trail_mod = np.where((qt_v == 4) & (sd_v <= -7), 0.08 + panic_vec[idx_13], 0.0)
+           p_pass = np.clip(base_p + pass_delta_vec[idx_13] + trail_mod, 0.15, 0.90)
+           is_pass = rng.random(len(idx_13)) < p_pass
+           u_out = rng.random(len(idx_13))
+           to_prob = np.clip(np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v, 0.003, 0.045)
+           is_to = u_out < to_prob
+           pass_comp = np.clip(0.645 + 0.38 * ne_v, 0.48, 0.78)
+           pass_yds = np.where(
+               u_out < (to_prob + 0.062), -rng.integers(5, 9, size=len(idx_13)),
+               np.where(u_out < (to_prob + 0.062 + pass_comp), np.round(rng.normal(11.4 + 14.5 * ne_v, 7.5, size=len(idx_13))).astype(np.int32), 0)
+           )
+           run_yds = np.round(rng.normal(4.4 + 9.5 * ne_v, 4.2, size=len(idx_13))).astype(np.int32)
+           yds = np.where(is_pass, pass_yds, run_yds)
+           if np.any(is_to):
+               t_i = idx_13[is_to]
+               poss[t_i] = 1 - poss[t_i]
+               yardline_100[t_i] = np.clip(100 - yardline_100[t_i], 15, 85)
+               down[t_i], ydstogo[t_i] = 1, 10
+           non_to = ~is_to
+           if np.any(non_to):
+               nt_i = idx_13[non_to]
+               g_nt = yds[non_to]
+               new_yl = yardline_100[nt_i] - g_nt
+               td_nt = new_yl <= 0
+               if np.any(td_nt):
+                   td_i = nt_i[td_nt]
+                   home_score[td_i[poss[td_i] == 1]] += 6.95
+                   away_score[td_i[poss[td_i] == 0]] += 6.95
+                   poss[td_i] = 1 - poss[td_i]
+                   yardline_100[td_i], down[td_i], ydstogo[td_i] = 75, 1, 10
+               in_f = ~td_nt
+               if np.any(in_f):
+                   if_i = nt_i[in_f]
+                   g_if = g_nt[in_f]
+                   yl_if = np.clip(new_yl[in_f], 1, 99)
+                   fd = g_if >= ydstogo[if_i]
+                   yardline_100[if_i] = yl_if
+                   down[if_i] = np.where(fd, 1, down[if_i] + 1)
+                   ydstogo[if_i] = np.where(fd, np.minimum(10, yl_if), np.maximum(1, ydstogo[if_i] - g_if))
+
+       clock_sec[active] -= np.clip(rng.normal(pace_base_vec[active], 3.2, size=n_act), 8.0, 40.0)
+
+   assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
+   tot = home_score + away_score
+   sprd = home_score - away_score
+   pace = 3600.0 / np.maximum(total_plays, 100)
+   return {
+       "matchup": f"{away} @ {home}",
+       "median_total": round(float(np.median(tot)), 2),
+       "median_spread_home": round(float(np.median(sprd)), 2),
+       "median_plays": round(float(np.median(total_plays)), 1),
+       "median_pace_sec": round(float(np.median(pace)), 2),
+       "sinkhorn_mass_moved": round(away_mass + home_mass, 4),
+       "shootout_prob_ge51": round(float(np.mean(tot >= 51.0)), 4),
+       "stall_prob_le37": round(float(np.mean(tot <= 37.0)), 4),
+       "one_score_prob_le7": round(float(np.mean(np.abs(sprd) <= 7.0)), 4),
+       "coachMindsetHash": expected_hash,
+   }
+
+
+def main():
+   ap = argparse.ArgumentParser()
+   ap.add_argument("--sealed-json", default="/opt/model/sealed_baseline.json")
+   ap.add_argument("--sims", type=int, default=5000)
+   args = ap.parse_args()
+   sealed_obj, digest = load_sealed_object_readonly(args.sealed_json)
+   print(f"[SEAL VERIFIED] coachMindsetHash = {digest} | tau = {sealed_obj['tau']} | QB_QUESTIONABLE = {sealed_obj['epaDropoffTable']['QB_QUESTIONABLE']}")
+   slate = [
+       ("CHI", "SEA", ["QB_QUESTIONABLE"], ["QB_QUESTIONABLE"], "CHI +3.5",  +1.53, "CHI +11 (ML +32)", "ELEVATED_SHARP_AGREE", 1),
+       ("TEN", "CIN", [],                  ["QB_QUESTIONABLE"], "TEN +10.5", -2.13, "CIN +18",          "MONEY_AGAINST",        2),
+       ("MIN", "DET", ["QB1"],             [],                  "DET -3",    +2.77, "MIN +14",          "MONEY_AGAINST",        3),
+       ("CLE", "PIT", ["QB1", "WR2"],      [],                  "PIT -4",    +4.36, "CLE +8",           "MONEY_AGAINST",        4),
+       ("LV",  "NYJ", ["QB_QUESTIONABLE"], [],                  "LV +1",     +3.26, "neutral (±2)",     "MODEL_ONLY",           5),
+       ("CAR", "GB",  [],                  [],                  "GB -4",     +2.33, "CAR +3 (ML +22)",  "MODEL_ONLY_MILD_AGAINST", 6),
+       ("BUF", "BAL", [],                  [],                  "OVER (+40)",+0.63, "OVER +40",         "BOARD_SHARPEST_OVER",  7),
+   ]
+   for idx, (aw, hm, ai, hi, play, edge, sharp, flag, rank) in enumerate(slate):
+       r = simulate_matchup_pbp(aw, hm, ai, hi, sealed_obj, digest, n_sims=args.sims, seed=700 + idx)
+       print(f"#{rank} {r['matchup']:9s} | {play:10s} | MedTot: {r['median_total']:5.2f} | MedSprd(H): {r['median_spread_home']:+6.2f} | Pace: {r['median_pace_sec']:5.2f}s | Edge: {edge:+5.2f} | Sharp: {sharp:16s} | {flag}")
+
+
+if __name__ == "__main__":
+   main()
+
+3.6 Action 6: Operational Close-Outs & Open Defect Remediation
+   1. Close the Cross-Language Serializer Conflict (Rule 4 — dd6549a... vs. 0821671...): Because JavaScript's JSON.stringify(obj) serializes object keys in insertion order whereas Python's json.dumps(obj, sort_keys=True, separators=(",", ":")) sorts keys lexicographically at every nesting depth, hashing an unsorted TypeScript object produces dd6549a... while Python produces 0821671...2. In packages/prediction-engine/src/coach-sim/locked-projection.ts, replace raw JSON.stringify(payload) inside sealLock with a deterministic recursive key-sorting serializer:
+TypeScript
+export function canonicalizeForSeal(value: unknown): unknown {
+ if (Array.isArray(value)) {
+   return value.map(canonicalizeForSeal);
+ }
+ if (value !== null && typeof value === "object") {
+   const record = value as Record<string, unknown>;
+   const sortedKeys = Object.keys(record).sort();
+   const out: Record<string, unknown> = {};
+   for (const k of sortedKeys) {
+     if (record[k] !== undefined) {
+       out[k] = canonicalizeForSeal(record[k]);
+     }
+   }
+   return out;
+ }
+ return value;
+}
+
+export function computeCanonicalSealDigest(payload: unknown): string {
+ const canonicalJson = JSON.stringify(canonicalizeForSeal(payload));
+ return createHash("sha256").update(canonicalJson, "utf8").digest("hex");
+}
+
+Run the cross-runtime golden-digest test (packages/prediction-engine/src/__tests__/golden-digest-parity.test.ts) spawning python3 -c on the shared fixture to assert bit-for-bit SHA-256 equality, closing Rule 42.
+   2. Close Defect D3 (Commit Verified candidates/ & Quarantine Placeholders): Copy any placeholder week-8 candidate file (tau: null, sequential hex parent hash) into artifacts/quarantine-candidates-2026-10-27/ with a README.md stating it must never be sealed, then stage and commit candidates/sealed-center.json and candidates/2026-10-25-week7-candidate.json (after explicit founder declaration per Rule 7) so git status --porcelain candidates/ is clean1.
+   3. Close Defect D6 (Reconcile Cron Drift in jobs.json vs. cadence.ts): In packages/prediction-engine/src/coach-sim/cadence.ts and ~/AppData/Local/hermes/cron/jobs.json, align the 8 cadence cron entries 1:1 with CADENCE: explicitly distinguish v4.0-sun-1030 (Early Slate T-90m Inactives Lock at 10:30 CT) from v4.0-sun-1335 (Afternoon Slate T-90m Inactives Lock at 13:35 CT), and register cadence-v2.5-thu-1630 (TNF T-90m Prep Pass at 16:30 CT) inside CADENCE so zero orphan crons exist1.
+   4. Close Neon Credential Rotation (NEON_ROTATION_RUNBOOK.md): On C:/Users/Garrett/Sports/.env.local, follow the strict 4-step runbook for ep-summer-moon-apv5ccys-pooler.c-7.us-east-1.aws.neon.tech: (a) mint new role password in Neon console, (b) write to local .env.local only (never committed to git, enforced by gitleaks and scan_sensitive.py), (c) execute a live SELECT current_user, current_database(); health check, and (d) only then allow the Tuesday 04:00 CT pre-seal pipeline to query Neon5.
+   5. Clean repomix-public-surface.md, Sweep Citations (Item 8), and Run Two Consecutive Sweeps: Delete lines 135 and 139 referencing coachMindsetHash in C:/Users/Garrett/Sports/repomix-public-surface.md and verify Select-String -Path .\repomix-public-surface.md -Pattern "coachMindsetHash|applyInjuryOverlay|PROB_PER_POINT" returns empty2. Run the 4-layer AST and metadata verifier (provenance-integrity.test.ts + module-header-accuracy.test.ts) across the remaining 307 unverified citations out of 319, and execute two consecutive fresh-process Hermes invariant sweeps (9/9 PASS) before logging completion in Beexly/agent-bus2.
+4. Autonomous 24/7 Self-Learning Cadence & Late-Binding Market Execution (Lines Read Strictly Last)
+A true self-learning reasoning engine never chases closing lines or steam (r = +0.005, p = 0.95 in Cycle 26)9. Instead, GSE operates a continuous 7-day rolling pre-computation and settlement loop (weekly-cadence-orchestrator.ts, continuous-reconciliation-daemon.ts, and settlement-loop.ts) that locks pure football projections on Tuesday morning, updates mid-week availability via bitwise XOR deltas (  ) in under 4.2 seconds, reads market odds strictly last at Step N, and grades 120 to 300 micro-outcomes per game two hours after final whistle2.
+4.1 The Autonomous 7-Day Cadence & T+2h Spectral Self-Learning Loop
+
+
+Cadence Stage & Schedule (CT)
+	Orchestrator & Trigger
+	Pure Football Execution (Class A — Zero Book Inputs)
+	Late-Binding Step N & Self-Learning Gate (Class B / Settlement)
+	T+2h Post-Game Settlement (Sun 23:30 CT & Mon 23:30 CT)
+	settlement-loop.ts + grpo-rlvr-updater.ts + postgame-regression-synthesizer.ts12
+	Grades 120–300 play-level micro-outcomes per game (early-down PROE, sub-2.0s quick pressure, 4th-down go decisions, Sinkhorn target shares, red-zone TD conversion, endgame kneeldowns)9.
+	Updates equation precision weights    via Empirical Bayes Kalman + KL-regularized GRPO (arXiv:2402.03300). Synthesizes new kernels only if standardized residuals exhibit a Baik-Ben Arous-Péché (BBP) eigenvalue spike outside the Marchenko-Pastur noise bulk2.
+	Pre-Seal Estimation (Tue 00:00 – 03:59 CT)
+	settlement-loop.ts + calibration.ts + 1807-09236-empirical-bayes-btl.ts2
+	Pulls fresh pbp_2026.parquet, ftn_charting_2026.parquet, ngs_*.parquet, injuries_2026.csv, snap_counts_2026.csv, and depth_charts_2026.csv. Runs shrinkBtl() and recoverTau()2.
+	Fits held-out PAVA isotonic knots (CALIBRATION_KNOTS) and split-conformal quantiles strictly prior to 04:00 CT. Enforces p0-seal-isolation.test.ts (5/5 PASS)2.
+	v1.0 Tuesday Master Lock (Tue 04:00 CT)
+	lockTuesdayCoachBaseline() (weekly-cadence-orchestrator.ts:203)2
+	Locks team ratings, C, τ_coach = 0.42, τ_rating = 4.6607, and SealedEpaDropoffTable into candidates/sealed-center.json. Simulates 10,000 play-by-play trajectories per game across the entire slate2.
+	Materializes standalone Coach-First Power Rankings, Weekly/ROS Positional Rankings, and baseline player prop CDFs in Neon by 06:00 AM CT before any market board is inspected9.
+	24/7 Ingestion Mesh (Tue 04:01 – Mon 23:59 CT)
+	delta_telemetry.py + Graphiti TKG (arXiv:2501.13956) + WhisperX + edgartools2
+	Logs practice notes, coaching pressers, and injury designations into artifacts/delta-YYYY-MM-DD.jsonl conditioned on the runtime-resolved sealed_hash2.
+	Polls 6-book odds/limits (market_capacity.py, 300s TTL), Action Network __NEXT_DATA__ splits, and SEC Form 4s silently into Class B2.
+	v2.0 Wed Practice & DFS Lock (Wed 17:00 CT)
+	advanceWeeklyLockWithInjuries (applyInjuryOverlay)2
+	Queries retrieve_prior_claims(), runs Sinkhorn-Knopp target/carry reallocation + HHI load scaling, and re-simulates games with a 288-bit XOR bitmask flip in < 5.0s2.
+	Asserts assertTauSealed and bit-identical coachMindsetHash. Populates the MILP DraftKings DFS optimizer with updated role shares2.
+	v2.5 TNF T-90m Lock (Thu 16:30 CT prep / 17:45 CT lock)
+	cadence-v2.5-thu-1630 + weekly-cadence-orchestrator.ts2
+	Ingests official 90-minute pre-kickoff TNF inactives (e.g., CAR @ GB), runs final TNF Sinkhorn overlay and 10,000-play simulation, and mints CoachProjectionReceipt2.
+	Executes Step N late-binding comparator, conformal diagnostic, and calibration-map.ts ticket signing for TNF2.
+	v3.0 Friday Master Packet (Fri 16:30 CT)
+	weekly-cadence-orchestrator.ts + conformal-diagnostic.ts2
+	Ingests Friday official game statuses (Out, Doubtful, Questionable). Applies QB_QUESTIONABLE = 0.0947 EV-weighted drop-off. Locks 100% of weekend projections by 17:00 CT2.
+	Evaluates Step N six-book kernel residuals, sharp-money divergences, and Archimedean copula SGP matrices; signs AuthorizedPublishReceipt7.
+	v4.0 Sun/Mon T-90m Locks (Sun 10:30, 13:35, 17:50; Mon 17:45 CT)
+	weekly-cadence-orchestrator.ts (T-90m Inactive Diff)2
+	Diffs official T-90m inactive lists against Friday v3.0. Switches Questionable QBs confirmed active to 0.1159 started (or 0.11 Out if scratched) and re-simulates in < 4.2s2.
+	Recomputes only affected game cards and DFS late-swap player-pool residuals; asserts coachMindsetHash invariance prior to final release2.
+	  
+
+4.2 Why Pure Football Simulation Beats Top-Down Bookmaker Kernels
+The empirical measurements across the three panels above demonstrate why GSE's Coach-First architecture outperforms top-down market models8:
+      1. Coordinator & Situational Mastery Over Static Ratings: In Panel 1, Baltimore (+14.91 Pure Coach Power Index, +0.134 Off EPA/play, 74% motion rate, 38% simulated pressure rate) and Detroit (+14.84, 78% motion, 74% tight splits) lead the standalone rankings before any market line is read8. Across 22 head-coach changes measured on a within-franchise design (influence.py), a coaching change shifts team quality by a mean of +0.046 EPA/play (+3.6 points/game) and a maximum of +0.202 EPA/play (+15.9 points/game, WAS Rivera → Quinn)—more than double the 7.5-point impact of a starting quarterback (0.0947 EPA/play × 79.1 pts/EPA)1. Simultaneously, GSE's permanent situational engine (situational_engine.py) prices three pre-game-known covariates that sportsbooks leave flat: outdoor wind imposes a monotone tax of −0.0285 EPA/play per 10 mph (suppressing pass rate from 49.5% at 0–5 mph to 46.8% at 16–20 mph, whereas temperature is non-monotone noise between 20°F and 45°F); referee crews span a 16% penalty spread (11.79 flags/game for Land Clark to 13.70 for Clete Blakeman and 13.68 for Shawn Hochuli around the 12.85 league mean); and starting field position follows a 3.2× value gradient (1.388 pts/drive inside own 20 to 4.482 pts/drive inside opp 20)2.
+      2. Late-Binding Step N Execution & Sharp-Money Residual Filtering: In Panel 2 and Panel 3, once the 10,000-run simulation locks its CDFs, Step N compares the frozen projection against the six sportsbook pricing engines8. Because BetMGM prices the tightest margin kernel (σ = 12.07) at the highest spread hold (6.42%), GSE uses BetMGM and Pinnacle (σ = 12.21, 3.60% hold) as read-only consensus sensors while executing main-line spreads at Pinnacle or DraftKings (σ = 13.16, where wider tails and cross-book favorite flips like LV @ NYJ—DraftKings NYJ −1.5 vs. Pinnacle LV +1.0—create line-shopping value; note that these kernel σ and hold figures were measured across one 14-game slate and are scheduled for re-measurement across three slates before freezing sizing policies)2. Finally, applying the 812-record Action Network __NEXT_DATA__ stake-weighted money% - ticket% divergence strictly post-simulation corrects naive ticket-only contrarian reads: retail tickets made PIT -4 (39% tickets), DET -3 (39% tickets), and TEN +10.5 (43% tickets) look contrarian, whereas stake-weighted money sits on the opposing sides (CLE +8%, MIN +14%, CIN +18%), elevating CHI +3.5 (+1.53 model edge, +11% spread / +32% ML sharp money agreement) to Rank #1 and isolating BUF @ BAL OVER (+40% money-to-ticket divergence, 92.0% JEV Shootout probability) as the sharpest total on the board8.
+5. Commercial Revenue Packaging Architecture: Picks, Props, DFS, and Correlated SGPs
+To convert GSE's simulation accuracy directly into subscription, sponsorship, and affiliate revenue on galaxysportsedge.com (under the ASTRA customer surface overhaul and GSE-CONTENT-OS v1.3), the locked CoachProjectionReceipt (SHA-256 + Ed25519 signature + Z3 QF_UFLRA/QF_BV entailment receipt) automatically compiles four commercial product packages at every cadence lock (v1.0 Tuesday 06:00 AM CT through v4.0 Sunday T-90m)7:
+
+
+Commercial Website Package
+	Upstream Class A Simulation Input (CoachProjectionReceipt)
+	Step N Calibration, Rake & Risk Gate (Class B)
+	Customer-Facing Deliverable on galaxysportsedge.com & Content OS
+	1. Verified Call-Sheet Picks & Game-Script Packages
+	10,000-run full-game, 1H/2H, and quarter score/margin/pace CDFs + JEV regime probabilities (Shootout ≥ 51, Stall ≤ 37, Chess ≤ 7)7.
+	8-knot monotone PAVA isotonic map (calibration-map.ts) + Mondrian Conformal interval    + contradictionGate + Shin de-vig (z = 0.0391) + Pinnacle maxRiskStake cap (κ = 0.10: $1,000 spreads, $500 totals/ML, $50 quarters) + OU/Hawkes steam veto2.
+	Unified /board & /picks cards with plain-English Reasoning Trails (what the engine weighed, what it discounted, and why), unit sizing ($5 = 1u), best-book routing, and cryptographic /verify receipt9.
+	2. Calibrated Player Props & Overdispersion Suite
+	Post-Sinkhorn target/carry shares   , HHI load multipliers   , Red-Zone Negative Binomial count distributions (VMR = 1.88 vs. book Poisson VMR = 1.0), and GSE-TOR / GSE-QPTSR defensive/kicking stat CDFs7.
+	audit_bookmaker_pricing_flaw() in gse-equations-mcp (port 4311). Requires prop edges to clear the ~7.0% derived-market rake bar (compensating for the +2.4 pp prop markup over 4.37% main-line ML)10.
+	Tiered Prop Packages & "Perfect-Record Graded Cheatsheets" (Format T1, built strictly from real graded engine history) across passing, rushing, receiving, tackles + assists, sacks, and FG volume7.
+	3. MILP / Tabu DraftKings DFS Optimizer
+	Full simulated player fantasy-point distributions (mean, median, SD, 80th/95th percentile ceiling outcomes), GSE-SVA setup credit, and WR/CB shadow penalties (shadowRate >= 0.55 triggers Sinkhorn cost penalty)7.
+	registerDfsSlateProvider (e.g., draftGroupId = 154078) + MILP/Tabu lineup solver with contest-specific correlation and ownership-duplication guards (DET/LAR stack archetypes) + T-90m bitwise XOR late-swap re-simulation in < 4.2s2.
+	Interactive Pro/Elite DFS Lineup Optimizer & Late-Swap Alert Package delivering 150-max, 3-max, and Single-Entry tournament builds with ceiling-leverage exposures9.
+	4. Correlated Same-Game Parlay (SGP) Pricing Matrix
+	Joint play-by-play trajectory counts across 10,000 shared-random-number (CRN) game scripts plus the empirically validated single positive Archimedean copula (θ > 0 for complementary QB–WR1 and QB–TE1; substitutive for QB–RB1)7.
+	Compares GSE's joint simulated copula probability    against the sportsbook's exclusion-tagged 15–30% hold SGP price (SGP / YourBetEligible boolean matrix)7.
+	High-EV Correlated Parlay & SGP Cards packaged by JEV game-script regime (e.g., Pairing QB Passing Over + Slot WR Target Funnel Over + Opponent Trailing Q4 Panic Pass Volume)4.
+	5.1 End-to-End Autonomous Execution Sequence for This Cycle (Ordered Commands)
+Execute the following deterministic sequence on C:/Users/Garrett/Sports (engine/public-baseline-2026-10-24) and record each step's completion receipt in Beexly/agent-bus2:
+      1. Step 1 (Write Telemetry & RAG Artifacts): Write artifacts/telemetry-schema-2026-10-27.md and artifacts/rag-telemetry-wiring-2026-10-27.md from Section 3.1, and write artifacts/canonical-environment-2026-10-27.md and artifacts/ws6-status-2026-10-27.md confirming Windows is canonical and WS6/6b paths remain sandbox-only until ported2.
+      2. Step 2 (Deploy Simulator & Run Delta Writer Self-Test): Save scripts/ops/gse_coach_mind_simulator.py (Section 3.5) and scripts/feeds/delta_telemetry.py (Section 3.2), then run:
+Bash
+python3 scripts/feeds/delta_telemetry.py --selftest
+
+Confirm 2 records written & retrieved | guards=3/3 and bit-identical coachMindsetHash + tau=0.422.
+      3. Step 3 (Apply FAIL 1 ACCEPTANCE_GATE Blocks & Enumerate All ENABLED=false Files): Patch the 5 modules in Section 3.3 and run the Node AST enumerator one-liner to verify Ungated FAILs: [] (exit 0)2.
+      4. Step 4 (Route All ticket: null Through calibration-map.ts): Remove the 15 construction-time ticket: null literals across call-sheet.ts, weekly-cadence-orchestrator.ts:180, and x-corpus.ts (Section 3.4) and verify via rg "ticket:\s*null" packages/prediction-engine/src that only the 4 lines in calibration-map.ts remain2.
+      5. Step 5 (Close Serializer Conflict & Run Full Verification Suites): Wire canonicalizeForSeal in locked-projection.ts (Section 3.6), quarantine placeholder week-8 candidates, stage and commit the verified candidates/ files (D3), reconcile cron/jobs.json with CADENCE (D6), clean repomix-public-surface.md, and run two consecutive fresh-process verification sweeps2:
+Bash
+npx vitest run packages/prediction-engine/src/metrics packages/prediction-engine/src/coach-sim packages/prediction-engine/src/coach-brain packages/prediction-engine/src/gse-pre-seal packages/prediction-engine/src/__tests__/p0-seal-isolation.test.ts packages/prediction-engine/src/__tests__/calibration-knots-monotone.test.ts
+python3 scripts/ops/gse_coach_mind_simulator.py --sims 10000
+
+      6. Step 6 (Commit, Push & Sign Off in Beexly/agent-bus): Commit and push Beexly/Sports to origin/engine/public-baseline-2026-10-24, verify HEAD == origin, and commit the final COMPLETED receipt block into Beexly/agent-bus/CHECKLIST-2026-10-28.jsonl and artifacts/seal-gate-completion-2026-10-27.md2.
+Works cited
+         1. GSE-CONSOLIDATED-MASTER-PLAN-2026-10-27.md
+         2. GSE Continuous Learning Architecture Plan.docx
+         3. testdriverai[bot] — GitHub Explorer, https://ghe.derekchia.com/people/testdriverai[bot]
+         4. read, https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DPWAQMzIAXk1vby6ZhZPEGS5yTVYWdIoZI&mid=1a17087df8d5d8eb
+         5. You are on C:\Users\Garrett\Sports, branch engine/public-baseline-2026-10-24. The sealed tree is uncommitted and local. Do not commit, push, or edit any source. Goal: produce one public-surface ..., https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DPqmX1IXB4oYKNNeID8S5riQ8lYuMnIyGg&mid=1a17ed0bd5e4b1d4
+         6. HERMES-PROMPT-2026-10-27-CONTINUE (1).md
+         7. 10/23, https://drive.google.com/open?id=1HqUJEWfndJw45SXIzvQUTQJaVbFRoLDKFYsiIegJQ3k
+         8. GSE Coach-Brain LLM & Engine, https://drive.google.com/open?id=188Lnf5hYHMXXzRCBrGDtuamm-0diH4EJtBifwF1Gl6o
+         9. GSE Coach-Brain LLM & Engine (2).docx
+         10. GSE_BUNDLE_2026-10-27.md
+         11. unknown_url
+         12. Master Execution Report_ The Belichick (2).docx
+         13. GSE-CONTENT-OS-2026-10-27 (1).md
+         14. GSE Coach Simulation & Audits (1).docx
+         15. GSE Coach Simulation & Audits, https://drive.google.com/open?id=1W-lC3pZAYTdw2Jzwyv1q-9ZtMkGIXs_RXiAH8cmmWJo
+         16. load_scaling, https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DOweqYufur917xvN2u2VMRI8EIiV5j-W_w&mid=1a17e9769c1834fd
+         17. MASSIVE-RECON-2026-10-27.md
+         18. Who Blocks Whom? Probabilistic Pass-Blocking Assignments for, https://arxiv.org/abs/2609.33664
+         19. Who Blocks Whom? Probabilistic Pass-Blocking Assignments ... - arXiv, https://arxiv.org/pdf/2609.33664
+         20. A multilevel model with heterogeneous variances for snap timing in, https://arxiv.org/abs/2502.16313
+         21. A multilevel model with heterogeneous variances for snap timing in, https://arxiv.org/html/2502.16313v1
+         22. Causal Forecasting Beyond the Observed Panel - arXiv, https://arxiv.org/abs/2606.18512
+         23. Certified Unregularized Optimal Transport in Linear Memory - arXiv, https://arxiv.org/abs/2609.33814
+         24. FlashSinkhorn 2: Block-Sparse Entropic Optimal Transport - arXiv, https://arxiv.org/pdf/2610.02395

@@ -93,6 +93,12 @@ export {
   evaluateClarusCoherenceRiskSuites,
   computeSurfaceInjuryAndTrajectoryOverlay,
   evaluateCoachSchemePlayerFitMatchup,
+  computeWeightedEntropyPlayProbe,
+  evolvePlayCallPartitionWeights,
+  CUDA_PARTITION_BUCKET_COUNT,
+  CUDA_WEIGHT_MIN,
+  CUDA_WEIGHT_MAX,
+  CUDA_MUTATION_RATE_CAP,
 } from "./coach-scheme-player-fit-engine.js";
 export type {
   NmfCoachingArchetypeWeights,

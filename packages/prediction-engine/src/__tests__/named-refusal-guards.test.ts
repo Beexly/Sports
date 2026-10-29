@@ -21,7 +21,7 @@ import {
  * can bypass it. Add a test that imports the module with ENABLED forced false
  * and asserts the named error is thrown. Do not flip the flags."
  *
- * Both modules export ENABLED = false. The failure mode being guarded against is
+ * Both modules export ENABLED = false (ACCEPTANCE_GATE / HUMAN_CALL). The failure mode being guarded against is
  * a disabled module quietly returning 0 or a uniform placeholder instead of
  * refusing — a fabricated "measured zero" is indistinguishable from a real
  * estimate downstream, which is exactly the hallucination class this codebase

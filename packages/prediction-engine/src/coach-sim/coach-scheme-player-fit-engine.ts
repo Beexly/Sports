@@ -1056,3 +1056,163 @@ export function evaluateCoachSchemePlayerFitMatchup(
     ),
   };
 }
+
+// ============================================================================
+// KERNEL H: CUDA Weighted-Entropy Disguised-Coverage Play Probe &
+// Stagnation-Adaptive Evolutionary Weight Solver (docs/engine/research/2026-10-28/cuda-mastermind-entropy-optimizer/kernel.cu)
+// ============================================================================
+
+export const CUDA_PARTITION_BUCKET_COUNT = 14 as const;
+export const CUDA_WEIGHT_MIN = -1.0 as const;
+export const CUDA_WEIGHT_MAX = 3.0 as const;
+export const CUDA_MUTATION_RATE_CAP = 0.20 as const;
+
+export interface WeightedEntropyPlayProbeResult {
+  readonly partitionIndexM: number;
+  readonly weightedEntropyScore: number;
+  readonly pure13ExactResolutionCount: number;
+  readonly prefersImmediateResolutionSingleton: boolean;
+  readonly diagnosticInformationGainEpaBonus: number;
+}
+
+/**
+ * Maps a 4-track play alignment tuple (exactMatches p in 0..4, partialDisplacementMatches q in 0..4-p)
+ * into a 14-bucket discrete partition index m = floor(-0.5 * p^2 + 5.5 * p + q),
+ * and evaluates the 14-bucket weighted Shannon partition entropy:
+ *   J(k; w) = sum_{j=0..13} w_j * (-p_j * (log2(c_j) - log2(n))),  p_j = c_j / n
+ * with pure13 singleton resolution tie-breaking (|Delta J| < 1e-5 && c_13 > 0).
+ */
+export function computeWeightedEntropyPlayProbe(input: {
+  readonly exactLeverageMatchesP: number;
+  readonly partialDisplacementMatchesQ: number;
+  readonly bucketCounts14: readonly number[];
+  readonly bucketWeights14?: readonly number[];
+}): WeightedEntropyPlayProbeResult {
+  const p = Math.max(0, Math.min(4, Math.floor(input.exactLeverageMatchesP)));
+  const q = Math.max(0, Math.min(4 - p, Math.floor(input.partialDisplacementMatchesQ)));
+  // In kernel.cu, p=4 maps to bucket 13 (4-of-4 exact terminal resolution)
+  const rawM = Math.floor(-0.5 * p * p + 5.5 * p + q);
+  const partitionIndexM = p === 4 ? 13 : Math.max(0, Math.min(13, rawM));
+
+  const counts = input.bucketCounts14.slice(0, CUDA_PARTITION_BUCKET_COUNT);
+  while (counts.length < CUDA_PARTITION_BUCKET_COUNT) counts.push(0);
+
+  const validStatesCount = counts.reduce((acc, c) => acc + Math.max(0, c), 0);
+  const pure13Count = Math.max(0, counts[13] ?? 0);
+
+  if (validStatesCount <= 0) {
+    return {
+      partitionIndexM,
+      weightedEntropyScore: 0,
+      pure13ExactResolutionCount: 0,
+      prefersImmediateResolutionSingleton: false,
+      diagnosticInformationGainEpaBonus: 0,
+    };
+  }
+
+  if (validStatesCount === 1 && pure13Count === 1) {
+    return {
+      partitionIndexM: 13,
+      weightedEntropyScore: Number.MAX_SAFE_INTEGER,
+      pure13ExactResolutionCount: 1,
+      prefersImmediateResolutionSingleton: true,
+      diagnosticInformationGainEpaBonus: 0.035,
+    };
+  }
+
+  const logValidCount = Math.log2(validStatesCount);
+  let weightedEntropy = 0;
+  for (let j = 0; j < CUDA_PARTITION_BUCKET_COUNT; j++) {
+    const cj = Math.max(0, counts[j] ?? 0);
+    if (cj > 0) {
+      const pj = cj / validStatesCount;
+      const wj = Math.max(
+        CUDA_WEIGHT_MIN,
+        Math.min(CUDA_WEIGHT_MAX, input.bucketWeights14?.[j] ?? 1.0),
+      );
+      weightedEntropy += wj * (-pj * (Math.log2(cj) - logValidCount));
+    }
+  }
+
+  const normalizedGain = Math.min(3.8, Math.max(0, weightedEntropy));
+  const diagnosticBonus = Number(
+    Math.min(0.035, normalizedGain * 0.008 + (pure13Count > 0 ? 0.004 : 0)).toFixed(4),
+  );
+
+  return {
+    partitionIndexM,
+    weightedEntropyScore: Number(weightedEntropy.toFixed(6)),
+    pure13ExactResolutionCount: pure13Count,
+    prefersImmediateResolutionSingleton: pure13Count > 0,
+    diagnosticInformationGainEpaBonus: diagnosticBonus,
+  };
+}
+
+/**
+ * Stagnation-adaptive elitist evolutionary update from `reproduceAndMutateKernel` in `kernel.cu`:
+ * - Top 6.25% (`numParents / 4` where `numParents = P / 4`) pass unchanged (elitism).
+ * - Remaining candidates perform single-point crossover at `crossoverPoint in 0..13`.
+ * - Linear mutation decay from `initialMutationRate` to `finalMutationRate` over `maxGenerations`,
+ *   boosted by x1.2 if `stagnantGenerations > 50` and an additional x1.5 if `> 100`, capped at 0.20.
+ */
+export function evolvePlayCallPartitionWeights(input: {
+  readonly parentAWeights14: readonly number[];
+  readonly parentBWeights14: readonly number[];
+  readonly crossoverPoint: number;
+  readonly generation: number;
+  readonly maxGenerations: number;
+  readonly stagnantGenerations: number;
+  readonly initialMutationRate?: number;
+  readonly finalMutationRate?: number;
+  readonly mutationStrength?: number;
+  readonly isEliteTop625Pct?: boolean;
+  readonly standardNormalPerturbations14?: readonly number[];
+  readonly uniformDraws14?: readonly number[];
+}): {
+  readonly evolvedWeights14: readonly number[];
+  readonly effectiveMutationRate: number;
+} {
+  const initRate = input.initialMutationRate ?? 0.12;
+  const finalRate = input.finalMutationRate ?? 0.02;
+  const maxGen = Math.max(1, input.maxGenerations);
+  const progress = Math.max(0, Math.min(1, input.generation / maxGen));
+  let currentMutationRate = initRate - (initRate - finalRate) * progress;
+  if (input.stagnantGenerations > 50) currentMutationRate *= 1.2;
+  if (input.stagnantGenerations > 100) currentMutationRate *= 1.5;
+  currentMutationRate = Math.min(CUDA_MUTATION_RATE_CAP, Math.max(0, currentMutationRate));
+
+  if (input.isEliteTop625Pct) {
+    const elite = Array.from({ length: CUDA_PARTITION_BUCKET_COUNT }, (_, j) =>
+      Number(
+        Math.max(
+          CUDA_WEIGHT_MIN,
+          Math.min(CUDA_WEIGHT_MAX, input.parentAWeights14[j] ?? 1.0),
+        ).toFixed(4),
+      ),
+    );
+    return {
+      evolvedWeights14: elite,
+      effectiveMutationRate: Number(currentMutationRate.toFixed(4)),
+    };
+  }
+
+  const cut = Math.max(0, Math.min(CUDA_PARTITION_BUCKET_COUNT - 1, Math.floor(input.crossoverPoint)));
+  const sigma = input.mutationStrength ?? 0.25;
+  const evolved: number[] = [];
+
+  for (let j = 0; j < CUDA_PARTITION_BUCKET_COUNT; j++) {
+    let w = j < cut ? (input.parentAWeights14[j] ?? 1.0) : (input.parentBWeights14[j] ?? 1.0);
+    const u = input.uniformDraws14?.[j] ?? 1.0;
+    if (u < currentMutationRate) {
+      const z = input.standardNormalPerturbations14?.[j] ?? 0;
+      w += z * sigma;
+    }
+    w = Math.max(CUDA_WEIGHT_MIN, Math.min(CUDA_WEIGHT_MAX, w));
+    evolved.push(Number(w.toFixed(4)));
+  }
+
+  return {
+    evolvedWeights14: evolved,
+    effectiveMutationRate: Number(currentMutationRate.toFixed(4)),
+  };
+}

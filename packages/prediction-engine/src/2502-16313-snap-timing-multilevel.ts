@@ -2,10 +2,24 @@
  * arXiv:2502.16313 — Bayesian multilevel location-scale model for
  * QB pre-snap motion snap-timing variance.
  *
- * ENABLED = false until tracking and scheme priors are wired.
- * Human call required before activation — flipping this changes production predictions.
+ * ACCEPTANCE_GATE (HUMAN_CALL_REQUIRED — SHADOW SEAL REQUIRED):
+ * Module implements the heterogeneous-variance Gamma multilevel snap-timing model of
+ * Nguyen & Yurko (2025, arXiv:2502.16313): \delta_i = t_i^{snap} - t_i^{motion} ~ Gamma(\mu_i, \alpha_i)
+ * with QB random-effect log-variance u_q ~ N(0, \tau_q^2) and 0.45 top-speed motion onset threshold.
+ * Refusal / Gate Criteria before flipping SNAP_TIMING_MULTILEVEL_ENABLED / ENABLED to true:
+ *   1. Frame-level pre-snap motion tracking must be joined to base nflverse play-by-play.
+ *   2. Must execute one full Tuesday 04:00 CT shadow-seal diff demonstrating zero regression on
+ *      pre-snap penalty/sack calibration before entering coachMindsetHash.
  */
 export const ENABLED = false;
+export const SNAP_TIMING_MULTILEVEL_ENABLED = false as const;
+export const SNAP_TIMING_MULTILEVEL_ACCEPTANCE_GATE = {
+  status: "UNEVALUATED_SHADOW_SEAL_GATE",
+  paperId: "arXiv:2502.16313",
+  motionSpeedThresholdRatio: 0.45,
+  requiresShadowSealDiff: true,
+  sealBoundary: "PRE_SEAL_TUESDAY_0400_CT_ONLY",
+} as const;
 
 export type MotionFrame = {
   playerId: string;

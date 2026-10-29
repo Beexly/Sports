@@ -1,0 +1,2686 @@
+[
+  {
+    "module": "1807-09236-empirical-bayes-btl.ts",
+    "lines": 125,
+    "n_exports": 1,
+    "exports": [
+      "shrinkBtl"
+    ],
+    "n_types": 0,
+    "first_params": "gammaMle: number[],\n  A: number[][],\n  S: number[][] | number,\n  u: number[]\n",
+    "has_test": true
+  },
+  {
+    "module": "2408-09178v1-mambatrack-a-simple-baseline-for.ts",
+    "lines": 88,
+    "n_exports": 3,
+    "exports": [
+      "ssmPredict",
+      "kalmanPredict",
+      "meanDisplacementError"
+    ],
+    "n_types": 2,
+    "first_params": "history: readonly TrackPoint[],\n  horizonS: number,\n  role: RoleParams,\n  oppone",
+    "has_test": true
+  },
+  {
+    "module": "2408-14837v2-diffusion-models-are-realtime-game.ts",
+    "lines": 69,
+    "n_exports": 3,
+    "exports": [
+      "augmentConditioning",
+      "divergenceCurve",
+      "divergenceImprovement"
+    ],
+    "n_types": 1,
+    "first_params": "state: SimState,\n  noiseScale: number,\n  rand: (",
+    "has_test": true
+  },
+  {
+    "module": "2411-17900v1-pretrained-llm-adapted-with-lora.ts",
+    "lines": 48,
+    "n_exports": 2,
+    "exports": [
+      "encodeTrajectory",
+      "returnsToGo"
+    ],
+    "n_types": 1,
+    "first_params": "steps: readonly TrajectoryStep[]",
+    "has_test": true
+  },
+  {
+    "module": "2412-19215v1-optimizing-fantasy-sports-team-selection.ts",
+    "lines": 74,
+    "n_exports": 3,
+    "exports": [
+      "ppoSurrogate",
+      "gae",
+      "twoHeadObjective"
+    ],
+    "n_types": 1,
+    "first_params": "steps: readonly PpoStep[], eps: number",
+    "has_test": true
+  },
+  {
+    "module": "2502-16313-snap-timing-multilevel.ts",
+    "lines": 69,
+    "n_exports": 1,
+    "exports": [
+      "snapTimingVariance"
+    ],
+    "n_types": 1,
+    "first_params": "frames: MotionFrame[], scheme: string",
+    "has_test": true
+  },
+  {
+    "module": "2503-12107v1-chronosx-adapting-pretrained-time-series.ts",
+    "lines": 63,
+    "n_exports": 2,
+    "exports": [
+      "adapterForecast",
+      "lateNewsUpdate"
+    ],
+    "n_types": 2,
+    "first_params": "backbone: BackboneForecast,\n  adapter: AdapterBlock,\n  history: readonly number[",
+    "has_test": true
+  },
+  {
+    "module": "2504-08747v1-gridmind-a-multiagent-nlp-framework.ts",
+    "lines": 61,
+    "n_exports": 3,
+    "exports": [
+      "planLevels",
+      "executedQueryScore",
+      "cacheKey"
+    ],
+    "n_types": 1,
+    "first_params": "tasks: readonly SubTask[]",
+    "has_test": true
+  },
+  {
+    "module": "2504-10936v1-can-llms-leverage-observational-data.ts",
+    "lines": 72,
+    "n_exports": 3,
+    "exports": [
+      "partialCorrelation",
+      "pcTestPValue",
+      "probeEdge"
+    ],
+    "n_types": 0,
+    "first_params": "x: readonly number[],\n  y: readonly number[],\n  z: readonly number[],\n",
+    "has_test": true
+  },
+  {
+    "module": "2506-04282v1-drsr-llm-based-scientific-equation.ts",
+    "lines": 55,
+    "n_exports": 3,
+    "exports": [
+      "ideaWorkingSet",
+      "auditLine",
+      "auditWorthy"
+    ],
+    "n_types": 2,
+    "first_params": "experience: readonly ExperienceEntry[],\n  k: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "2508-14065v1-personalized-contest-recommendation-in-fantasy.ts",
+    "lines": 64,
+    "n_exports": 4,
+    "exports": [
+      "towerScore",
+      "pairwiseHingeLoss",
+      "interactionScore",
+      "rankScore"
+    ],
+    "n_types": 0,
+    "first_params": "user: readonly number[], item: readonly number[]",
+    "has_test": true
+  },
+  {
+    "module": "2511-14186v1-fewshot-precise-event-spotting-via.ts",
+    "lines": 103,
+    "n_exports": 5,
+    "exports": [
+      "buildEntityGraph",
+      "cosineSim",
+      "prototypeScore",
+      "f1Event"
+    ],
+    "n_types": 1,
+    "first_params": "nPlayers: number, nLandmarks: number",
+    "has_test": true
+  },
+  {
+    "module": "2604-17065v1-baskethar-a-multimodal-dataset-for.ts",
+    "lines": 68,
+    "n_exports": 4,
+    "exports": [
+      "cosSim",
+      "infoNCELoss",
+      "leaveOneChunkOut",
+      "macroF1"
+    ],
+    "n_types": 0,
+    "first_params": "a: readonly number[], b: readonly number[]",
+    "has_test": true
+  },
+  {
+    "module": "2605-30209v1-betting-against-integrity-identifying-matchfixing.ts",
+    "lines": 64,
+    "n_exports": 2,
+    "exports": [
+      "arxStateUpdate",
+      "standardizedResidual"
+    ],
+    "n_types": 2,
+    "first_params": "p: HurdleSsmParams,\n  prevState: number,\n  cell: OddsCell,\n",
+    "has_test": true
+  },
+  {
+    "module": "2606-18512-causal-panel-forecasting.ts",
+    "lines": 53,
+    "n_exports": 1,
+    "exports": [
+      "counterfactualEfficiency"
+    ],
+    "n_types": 1,
+    "first_params": "history: UnitObservation[],\n  team: string,\n  week: number\n",
+    "has_test": true
+  },
+  {
+    "module": "2609-22641v1-consistworld-evidence-routing-for-consistent.ts",
+    "lines": 63,
+    "n_exports": 2,
+    "exports": [
+      "fuseViews",
+      "crossViewDisagreement"
+    ],
+    "n_types": 1,
+    "first_params": "chunks: readonly ViewChunk[]",
+    "has_test": true
+  },
+  {
+    "module": "2609-33664-hmm-pass-blocking.ts",
+    "lines": 90,
+    "n_exports": 3,
+    "exports": [
+      "gammaIt",
+      "adjustedPlusMinus",
+      "pocketSurvival"
+    ],
+    "n_types": 2,
+    "first_params": "frames: Frame[]",
+    "has_test": true
+  },
+  {
+    "module": "acceptance-gate.ts",
+    "lines": 70,
+    "n_exports": 1,
+    "exports": [
+      "acceptanceGate"
+    ],
+    "n_types": 2,
+    "first_params": "spec: Pick<AcceptanceGate, \"status\"> & Partial<Omit<AcceptanceGate, \"status\">>,\n",
+    "has_test": false
+  },
+  {
+    "module": "mlb-independent-model.ts",
+    "lines": 127,
+    "n_exports": 1,
+    "exports": [
+      "getMlbIndependentModelProb"
+    ],
+    "n_types": 11,
+    "first_params": "input: MlbIndependentModelInput,\n",
+    "has_test": false
+  },
+  {
+    "module": "shadow-calibration-eprocess.ts",
+    "lines": 337,
+    "n_exports": 2,
+    "exports": [
+      "groupKeyFor",
+      "scoreWouldHavePublishedShadowEProcess"
+    ],
+    "n_types": 8,
+    "first_params": "sport: string, market: string",
+    "has_test": false
+  },
+  {
+    "module": "automl/2003-06505v1-autogluon-tabular-search.ts",
+    "lines": 86,
+    "n_exports": 3,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "automl/2003-10865v2-async-hpo-service.ts",
+    "lines": 168,
+    "n_exports": 9,
+    "exports": [
+      "successiveHalving",
+      "bracketSampleProb",
+      "fantasizePending",
+      "asyncSpeedup"
+    ],
+    "n_types": 0,
+    "first_params": "losses: number[][], eta = 3",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/1503-07642-ordinal-structure-select.ts",
+    "lines": 314,
+    "n_exports": 6,
+    "exports": [
+      "fitCumulativeLogit",
+      "fitNonPO",
+      "predictProbs",
+      "heldOutLogLoss"
+    ],
+    "n_types": 3,
+    "first_params": "X: number[][],\n  y: number[],\n  nClasses: number,\n  iters = 2500,\n",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/1812-05170-hierarchical-ar1-shrinkage.ts",
+    "lines": 101,
+    "n_exports": 6,
+    "exports": [
+      "shrinkEstimate",
+      "fitVarianceComponents",
+      "ar1Update",
+      "ar1Forecast"
+    ],
+    "n_types": 2,
+    "first_params": "x: number,\n  groupMean: number,\n  varWithin: number,\n  varBetween: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/1908-05745-nmf-target-archetypes.ts",
+    "lines": 114,
+    "n_exports": 3,
+    "exports": [
+      "nmfFrobenius",
+      "nmfArchetypeAssign",
+      "adjustedRandIndex"
+    ],
+    "n_types": 0,
+    "first_params": "V: number[][],\n  k: number,\n  iters: number,\n  rand: (",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/1911-08138-sparse-form-hmm.ts",
+    "lines": 194,
+    "n_exports": 8,
+    "exports": [
+      "hmmForwardLogLik",
+      "viterbi",
+      "hmmStationary",
+      "hamiltonFilter"
+    ],
+    "n_types": 0,
+    "first_params": "pi: number[],\n  A: number[][],\n  logEmit: number[][],\n",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/1911-08791-three-module-score-factorization.ts",
+    "lines": 165,
+    "n_exports": 12,
+    "exports": [
+      "poissonPmf",
+      "poissonLogLik",
+      "poissonMle",
+      "poissonSample"
+    ],
+    "n_types": 0,
+    "first_params": "k: number, lambda: number",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2002-01193-copula-hmm-momentum.ts",
+    "lines": 184,
+    "n_exports": 8,
+    "exports": [
+      "hmmForwardLogLik",
+      "viterbi",
+      "hmmStationary",
+      "hamiltonFilter"
+    ],
+    "n_types": 0,
+    "first_params": "pi: number[],\n  A: number[][],\n  logEmit: number[][],\n",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2004-03019-dshdp-hmm-regimes.ts",
+    "lines": 129,
+    "n_exports": 4,
+    "exports": [
+      "hmmForwardLogLik",
+      "viterbi",
+      "hmmStationary",
+      "hamiltonFilter"
+    ],
+    "n_types": 0,
+    "first_params": "pi: number[],\n  A: number[][],\n  logEmit: number[][],\n",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2005-09024v1-workload-availability-model.ts",
+    "lines": 213,
+    "n_exports": 9,
+    "exports": [
+      "solveLinear",
+      "ridgeFit",
+      "ridgePredict",
+      "arxFit"
+    ],
+    "n_types": 0,
+    "first_params": "A: number[][], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2012-14949-bivariate-poisson-home-advantage.ts",
+    "lines": 64,
+    "n_exports": 3,
+    "exports": [
+      "bivPoissonPmf",
+      "bivPoissonSample",
+      "dixonColesTau"
+    ],
+    "n_types": 0,
+    "first_params": "x: number, y: number, l1: number, l2: number, l3: number",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2104-07537-dynamic-probit-vb.ts",
+    "lines": 86,
+    "n_exports": 5,
+    "exports": [
+      "ar1Update",
+      "ar1Forecast",
+      "ouForecast",
+      "ouWinProb"
+    ],
+    "n_types": 1,
+    "first_params": "s: AR1State,\n  obs: number,\n  phi: number,\n  stateVar: number,\n  obsVar: number,",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2203-10706-dfs-monte-carlo-gamma.ts",
+    "lines": 148,
+    "n_exports": 8,
+    "exports": [
+      "betaUpdate",
+      "betaMean",
+      "betaVar",
+      "wpBlendCell"
+    ],
+    "n_types": 0,
+    "first_params": "a: number, b: number, s: number, f: number",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2207-05114-wp-blender-beta-prior.ts",
+    "lines": 73,
+    "n_exports": 6,
+    "exports": [
+      "betaUpdate",
+      "betaMean",
+      "betaVar",
+      "wpBlendCell"
+    ],
+    "n_types": 0,
+    "first_params": "a: number, b: number, s: number, f: number",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2210-11010-efficient-vb-statespace.ts",
+    "lines": 86,
+    "n_exports": 5,
+    "exports": [
+      "ar1Update",
+      "ar1Forecast",
+      "ouForecast",
+      "ouWinProb"
+    ],
+    "n_types": 1,
+    "first_params": "s: AR1State,\n  obs: number,\n  phi: number,\n  stateVar: number,\n  obsVar: number,",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2303-12401v2-hierarchical-live-probit.ts",
+    "lines": 140,
+    "n_exports": 4,
+    "exports": [
+      "logistic",
+      "irlsFit",
+      "logisticLogLoss",
+      "stadiumFactorFit"
+    ],
+    "n_types": 0,
+    "first_params": "x: number",
+    "has_test": true
+  },
+  {
+    "module": "bayesian/2304-01538-doubly-self-exciting-scores.ts",
+    "lines": 177,
+    "n_exports": 11,
+    "exports": [
+      "poissonPmf",
+      "poissonLogLik",
+      "poissonMle",
+      "poissonSample"
+    ],
+    "n_types": 0,
+    "first_params": "k: number, lambda: number",
+    "has_test": true
+  },
+  {
+    "module": "calibration/1905-07886-conformal-ncp-intervals.ts",
+    "lines": 73,
+    "n_exports": 6,
+    "exports": [
+      "conformalQuantile",
+      "conformalInterval",
+      "normalizedInterval",
+      "rollingCoverage"
+    ],
+    "n_types": 0,
+    "first_params": "scores: readonly number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "causal/1803-01422v2-notears-dag.ts",
+    "lines": 184,
+    "n_exports": 6,
+    "exports": [
+      "matExp",
+      "acyclicity",
+      "thresholdEdges",
+      "jaccardEdges"
+    ],
+    "n_types": 1,
+    "first_params": "A: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "causal/2001-04197v4-rcd-quarantine-layer.ts",
+    "lines": 147,
+    "n_exports": 5,
+    "exports": [
+      "residualizeOnAncestors",
+      "corMatrix",
+      "markBidirected",
+      "quarantinePairs"
+    ],
+    "n_types": 0,
+    "first_params": "X: number[][], ancestors: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "causal/2003-03685v2-pcmci-team-panel.ts",
+    "lines": 167,
+    "n_exports": 4,
+    "exports": [
+      "pearson",
+      "partialCorr",
+      "pcorPvalue",
+      "pcmciSkeletonS1"
+    ],
+    "n_types": 0,
+    "first_params": "xs: number[], ys: number[]",
+    "has_test": true
+  },
+  {
+    "module": "causal/2007-00267v1-regime-dependent-causal-discovery.ts",
+    "lines": 268,
+    "n_exports": 6,
+    "exports": [
+      "pearson",
+      "partialCorr",
+      "pcorPvalue",
+      "pcmciSkeletonS1"
+    ],
+    "n_types": 0,
+    "first_params": "xs: number[], ys: number[]",
+    "has_test": true
+  },
+  {
+    "module": "causal/2110-00637v4-ml4c-supervised-orienter.ts",
+    "lines": 220,
+    "n_exports": 9,
+    "exports": [
+      "pearson",
+      "partialCorr",
+      "pcorPvalue",
+      "pcmciSkeletonS1"
+    ],
+    "n_types": 1,
+    "first_params": "xs: number[], ys: number[]",
+    "has_test": true
+  },
+  {
+    "module": "causal/causal-graph-builder.ts",
+    "lines": 1243,
+    "n_exports": 6,
+    "exports": [
+      "isAcyclicSupport",
+      "thresholdedSupport",
+      "buildLaggedDesign",
+      "laggedSmoothObjective"
+    ],
+    "n_types": 6,
+    "first_params": "W: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "causal/fci-pag.ts",
+    "lines": 2409,
+    "n_exports": 13,
+    "exports": [
+      "matExpScaleSquaring",
+      "acyclicityExact",
+      "possibleDSep",
+      "orientPag"
+    ],
+    "n_types": 11,
+    "first_params": "A: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "causal/periodic-timeseries-id.ts",
+    "lines": 923,
+    "n_exports": 9,
+    "exports": [
+      "horizonBoundCBigInt",
+      "horizonBoundC",
+      "nodeIdOf",
+      "refKeyOf"
+    ],
+    "n_types": 8,
+    "first_params": "width: number, latency: number",
+    "has_test": true
+  },
+  {
+    "module": "continual/1612-00796v2-ewc-feature-anchoring.ts",
+    "lines": 94,
+    "n_exports": 5,
+    "exports": [
+      "ewcPenalty",
+      "ewcGradient",
+      "anchoredStep",
+      "importanceOverlap"
+    ],
+    "n_types": 1,
+    "first_params": "current: number[],\n  reference: number[],\n  importance: number[],\n  lambda: numb",
+    "has_test": true
+  },
+  {
+    "module": "continual/1904-10644v1-certainty-weighted-continual-updates.ts",
+    "lines": 143,
+    "n_exports": 5,
+    "exports": [
+      "naturalGradLogistic",
+      "logLossLogistic",
+      "rbfKernel",
+      "steinCoresetGreedy"
+    ],
+    "n_types": 0,
+    "first_params": "X: number[][],\n  y: number[],\n  theta: number[],\n  damp: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "continual/2304-01239v1-teacher-student-continual.ts",
+    "lines": 93,
+    "n_exports": 6,
+    "exports": [
+      "teacherEmaUpdate",
+      "consistencyLoss",
+      "multiCropAgreement",
+      "diagFisher"
+    ],
+    "n_types": 0,
+    "first_params": "teacher: number[],\n  student: number[],\n  momentum: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/0903-2910v1-ou-line-mean-reversion-sizing.ts",
+    "lines": 146,
+    "n_exports": 5,
+    "exports": [
+      "fitOuProcess",
+      "ouAdjustedStake",
+      "capClusterStakes",
+      "ouStabilityRejectRate"
+    ],
+    "n_types": 1,
+    "first_params": "deviations: number[], dt: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/1011-3177v3-data-replication-abstention.ts",
+    "lines": 161,
+    "n_exports": 7,
+    "exports": [
+      "buildRejectFeatures",
+      "replicationLabels",
+      "replicateSample",
+      "replicaDecision"
+    ],
+    "n_types": 4,
+    "first_params": "f: RejectFeatures",
+    "has_test": true
+  },
+  {
+    "module": "decision/1710-01787-kelly-saturation-hardening.ts",
+    "lines": 180,
+    "n_exports": 8,
+    "exports": [
+      "expectedLogGrowth",
+      "taylorKellyShortcut",
+      "muSigmaSqKelly",
+      "exactKellyFraction"
+    ],
+    "n_types": 1,
+    "first_params": "f: number, dist: ReturnAtom[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/1710-04818-drawdown-risk-frontier.ts",
+    "lines": 182,
+    "n_exports": 5,
+    "exports": [
+      "currentDrawdownRisk",
+      "expectedLogTwr",
+      "solveDrawdownConstrainedAllocation",
+      "perCategoryKellyCaps"
+    ],
+    "n_types": 2,
+    "first_params": "phi: number[],\n  T: TradeReturnMatrix,\n  nPaths: number,\n  seed = 12345,\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/1801-06737-bet-cadence-policy.ts",
+    "lines": 120,
+    "n_exports": 4,
+    "exports": [
+      "sufficientAttractiveness",
+      "netGrowthAtCadence",
+      "chooseCadence",
+      "cadenceGatePasses"
+    ],
+    "n_types": 2,
+    "first_params": "edgeMean: number, edgeVar: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/1803-08355v2-structured-leg-abstention.ts",
+    "lines": 179,
+    "n_exports": 7,
+    "exports": [
+      "greedyLegAbstention",
+      "rejectHeadVoids",
+      "tuneAbstentionCosts",
+      "injuryNodeAbstention"
+    ],
+    "n_types": 3,
+    "first_params": "legs: ParlayLeg[],\n  costs: LegAbstentionCosts,\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/1806-05293-multivariate-slate-sizer.ts",
+    "lines": 274,
+    "n_exports": 8,
+    "exports": [
+      "pickReturn",
+      "sampleCorrelatedOutcomes",
+      "approximateWarmStart",
+      "solveMultivariateKellyOnScenarios"
+    ],
+    "n_types": 1,
+    "first_params": "pick: SlatePick, win: boolean",
+    "has_test": true
+  },
+  {
+    "module": "decision/1807-05265-dominance-screen.ts",
+    "lines": 170,
+    "n_exports": 4,
+    "exports": [
+      "expectedRatioDominated",
+      "dominanceScreen",
+      "capAtFractionalCeiling",
+      "dominanceGatePasses"
+    ],
+    "n_types": 4,
+    "first_params": "returnsI: number[],\n  returnsJ: number[],\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/1812-10371-robust-kelly-uncertainty-set.ts",
+    "lines": 149,
+    "n_exports": 6,
+    "exports": [
+      "boxUncertaintySet",
+      "radiusFromResiduals",
+      "nominalKellyFraction",
+      "robustKellyFraction"
+    ],
+    "n_types": 1,
+    "first_params": "pHat: number, radius: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/1901-09192v4-selectivenet-selection-head.ts",
+    "lines": 141,
+    "n_exports": 4,
+    "exports": [
+      "selectiveNetLoss",
+      "selectiveNetPublishMask",
+      "coveredSetRoi",
+      "selectiveNetGatePasses"
+    ],
+    "n_types": 1,
+    "first_params": "perPickLoss: number[],\n  gateScores: number[],\n  auxiliaryLoss: number[],\n  targ",
+    "has_test": true
+  },
+  {
+    "module": "decision/1905-10964v2-dac-abstention-cleaning.ts",
+    "lines": 134,
+    "n_exports": 6,
+    "exports": [
+      "dacLoss",
+      "dacAbstain",
+      "dacCleanDataset",
+      "brierScore"
+    ],
+    "n_types": 2,
+    "first_params": "pTrue: number, pAbstain: number, alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/1907-00208v2-gambler-reservation-filter.ts",
+    "lines": 116,
+    "n_exports": 5,
+    "exports": [
+      "gamblerLoss",
+      "gamblerWithhold",
+      "gamblerFilterSlates",
+      "sweepReward"
+    ],
+    "n_types": 1,
+    "first_params": "pTrue: number, pReserve: number, reward: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/1911-11253v1-hostile-market-abstain.ts",
+    "lines": 127,
+    "n_exports": 4,
+    "exports": [
+      "hostileMarketScore",
+      "hostileNoBet",
+      "tuneLambdaToRate",
+      "hostileGatePasses"
+    ],
+    "n_types": 2,
+    "first_params": "f: HostileMarketFeatures, w: NoBetHeadWeights",
+    "has_test": true
+  },
+  {
+    "module": "decision/2001-09097v1-gap-stat-ratings.ts",
+    "lines": 139,
+    "n_exports": 6,
+    "exports": [
+      "createGapTable",
+      "updateGapTable",
+      "predictStatDifferential",
+      "logisticProb"
+    ],
+    "n_types": 6,
+    "first_params": "teams: string[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2002-03448v1-levy-kelly-staking.ts",
+    "lines": 134,
+    "n_exports": 8,
+    "exports": [
+      "edgeGate",
+      "fullKellyFraction",
+      "numericKellyMaximizer",
+      "deployFraction"
+    ],
+    "n_types": 0,
+    "first_params": "expectedReturn: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2003-02743-temporal-correlation-kelly.ts",
+    "lines": 162,
+    "n_exports": 7,
+    "exports": [
+      "lag1Autocorrelation",
+      "autocorrSignificant95",
+      "testLag1",
+      "fitMemoryOne"
+    ],
+    "n_types": 1,
+    "first_params": "series: number[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2004-12099-kelly-kkt-certificate.ts",
+    "lines": 154,
+    "n_exports": 4,
+    "exports": [
+      "kktCertificate",
+      "slidingWindowDominanceRatio",
+      "walkForwardRedundancyScreen",
+      "cappedReallocate"
+    ],
+    "n_types": 0,
+    "first_params": "fractions: number[],\n  scenarios: number[][],\n  tol = 0.02,\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/2005-11698-fluctuation-frontier.ts",
+    "lines": 129,
+    "n_exports": 5,
+    "exports": [
+      "growthFluctuationFrontier",
+      "frontierFractionChoice",
+      "turInvariantHolds",
+      "frontierSlope"
+    ],
+    "n_types": 1,
+    "first_params": "edgeReturns: number[],\n  fractions: number[],\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/2006-01862-expert-deferral-router.ts",
+    "lines": 135,
+    "n_exports": 5,
+    "exports": [
+      "gceDeferralSurrogate",
+      "routerDecision",
+      "routedSystemUnits",
+      "deferralBiasAudit"
+    ],
+    "n_types": 3,
+    "first_params": "triple: DeferralTriple,\n  route: Route,\n  deferCostUnits = 0.02,\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/2101-12523-sele-loss-gate.ts",
+    "lines": 173,
+    "n_exports": 7,
+    "exports": [
+      "ridgeFit",
+      "regGateWeights",
+      "selePairwiseLoss",
+      "areaUnderRiskCoverage"
+    ],
+    "n_types": 1,
+    "first_params": "X: number[][], y: number[], C: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2104-08236v1-totals-abstention-sigma.ts",
+    "lines": 140,
+    "n_exports": 8,
+    "exports": [
+      "gaussianNll",
+      "abstentionNllLoss",
+      "kappaFromSigma",
+      "pidAbstentionStep"
+    ],
+    "n_types": 1,
+    "first_params": "y: number, mu: number, sigma: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2104-08281v1-cover-abstention-head.ts",
+    "lines": 130,
+    "n_exports": 7,
+    "exports": [
+      "notWrongLoss",
+      "coverPublishRule",
+      "coverPrediction",
+      "calibrateAbstainTau"
+    ],
+    "n_types": 1,
+    "first_params": "pCorrect: number, pAbstain: number, alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2107-03090-risan-instance-abstention.ts",
+    "lines": 127,
+    "n_exports": 7,
+    "exports": [
+      "doubleSigmoidUnitLoss",
+      "marketConditionedRho",
+      "risanPublish",
+      "risanAcceptedHitRate"
+    ],
+    "n_types": 1,
+    "first_params": "margin: number, // y * f(x",
+    "has_test": true
+  },
+  {
+    "module": "decision/2109-10814v1-variance-budgeted-kelly.ts",
+    "lines": 156,
+    "n_exports": 6,
+    "exports": [
+      "estimateSlateVariance",
+      "varianceBudgetedAlpha",
+      "varianceBudgetedStakes",
+      "fixedAlphaStakes"
+    ],
+    "n_types": 1,
+    "first_params": "slate: SlateEdge[],\n  nSims: number,\n  seed = 555,\n",
+    "has_test": true
+  },
+  {
+    "module": "decision/2205-13532-training-disagreement-gate.ts",
+    "lines": 136,
+    "n_exports": 6,
+    "exports": [
+      "lateWeightedDisagreement",
+      "flipLineInteraction",
+      "nntdAbstain",
+      "aurcForScores"
+    ],
+    "n_types": 1,
+    "first_params": "snap: SnapshotPick",
+    "has_test": true
+  },
+  {
+    "module": "decision/2409-18645v1-mc-dropout-cer.ts",
+    "lines": 146,
+    "n_exports": 7,
+    "exports": [
+      "mcDropoutStats",
+      "cerReject",
+      "fitGammaPerMarket",
+      "cerSelect"
+    ],
+    "n_types": 2,
+    "first_params": "passProbs: number[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2411-18374-analytic-drawdown-pricer.ts",
+    "lines": 350,
+    "n_exports": 9,
+    "exports": [
+      "phi",
+      "drawdownExceedanceProb",
+      "analyticDrawdownCdf",
+      "drawupExceedanceProb"
+    ],
+    "n_types": 1,
+    "first_params": "x: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2502-07255v2-dual-threshold-conformal.ts",
+    "lines": 153,
+    "n_exports": 7,
+    "exports": [
+      "calibrateConformalThreshold",
+      "rocTuneAbstentionThreshold",
+      "fitThresholdsByRegime",
+      "dualThresholdPublish"
+    ],
+    "n_types": 4,
+    "first_params": "scores: number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2503-07498-two-knob-sizer.ts",
+    "lines": 180,
+    "n_exports": 9,
+    "exports": [
+      "compoundCovariance",
+      "expUtilityWeights",
+      "normalizeWeights",
+      "gmvObjective"
+    ],
+    "n_types": 3,
+    "first_params": "statCov: Matrix, nonstatCov: Matrix",
+    "has_test": true
+  },
+  {
+    "module": "decision/2503-23782v1-regime-conditional-reject.ts",
+    "lines": 174,
+    "n_exports": 8,
+    "exports": [
+      "crpsEntropy",
+      "gaussianCrps",
+      "calibrateLambda",
+      "entropyReject"
+    ],
+    "n_types": 3,
+    "first_params": "sigma: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2505-00724-crra-stake-dp.ts",
+    "lines": 124,
+    "n_exports": 7,
+    "exports": [
+      "crraUtility",
+      "crraInverseUtility",
+      "solveStakeDP",
+      "distillLinearRule"
+    ],
+    "n_types": 1,
+    "first_params": "wealth: number, gamma: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2505-22422v2-star-bets-ci.ts",
+    "lines": 224,
+    "n_exports": 10,
+    "exports": [
+      "binomUpperTail",
+      "binomLowerTail",
+      "clopperPearsonCI",
+      "normalApproxCI"
+    ],
+    "n_types": 0,
+    "first_params": "k: number, n: number, p: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2505-23437v2-baltor-selection.ts",
+    "lines": 120,
+    "n_exports": 6,
+    "exports": [
+      "conformalQuantile",
+      "mondrianThreshold",
+      "baltorSelect",
+      "empiricalCoverage"
+    ],
+    "n_types": 4,
+    "first_params": "scores: number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2507-05994v1-kpup-allocation.ts",
+    "lines": 115,
+    "n_exports": 6,
+    "exports": [
+      "bucketIndex",
+      "pupUpdate",
+      "bankrollMultiple",
+      "maxDrawdown"
+    ],
+    "n_types": 1,
+    "first_params": "t: number, k: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2508-07556v2-instability-gate.ts",
+    "lines": 139,
+    "n_exports": 7,
+    "exports": [
+      "instabilityScore",
+      "instabilitySelect",
+      "confidenceSelect",
+      "hitRate"
+    ],
+    "n_types": 2,
+    "first_params": "seedProbs: number[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2510-19672-committee-lcb.ts",
+    "lines": 124,
+    "n_exports": 8,
+    "exports": [
+      "committeePostFraction",
+      "committeeDisagreement",
+      "disagreementPostDecision",
+      "abstentionRate"
+    ],
+    "n_types": 1,
+    "first_params": "ruleVotes: boolean[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2601-20452v1-whale-distortion.ts",
+    "lines": 109,
+    "n_exports": 5,
+    "exports": [
+      "impliedWhaleShare",
+      "flagWhaleMove",
+      "reversalLift",
+      "paperProfitAfterVig"
+    ],
+    "n_types": 2,
+    "first_params": "lineMovePoints: number,\n  typicalMovePerUnitVolume: number,\n  observedVolume: nu",
+    "has_test": true
+  },
+  {
+    "module": "decision/2601-22570v1-memory-abstention.ts",
+    "lines": 119,
+    "n_exports": 6,
+    "exports": [
+      "embeddingDistance",
+      "nearestNeighbors",
+      "correctedConfidence",
+      "downStakeFactor"
+    ],
+    "n_types": 2,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2603-24704-evalue-screening.ts",
+    "lines": 86,
+    "n_exports": 5,
+    "exports": [
+      "eValue",
+      "eValueThreshold",
+      "eValueSelect",
+      "realizedAverageLoss"
+    ],
+    "n_types": 2,
+    "first_params": "selectionScore: number, calibrationMean: number, scale: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/2604-24723v2-multivariate-kelly.ts",
+    "lines": 192,
+    "n_exports": 7,
+    "exports": [
+      "kellyObjective",
+      "kellyGradient",
+      "kellyHessianVec",
+      "conjugateGradient"
+    ],
+    "n_types": 1,
+    "first_params": "f: number[], scenarios: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2605-02611-lipschitz-forcing.ts",
+    "lines": 120,
+    "n_exports": 5,
+    "exports": [
+      "euclid",
+      "lipschitzEnvelope",
+      "forcedLabel",
+      "localLipschitz"
+    ],
+    "n_types": 2,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2607-24875v1-hybrid-uncertainty.ts",
+    "lines": 120,
+    "n_exports": 4,
+    "exports": [
+      "hybridUncertainty",
+      "uncertaintyPostDecision",
+      "selectiveHitRate",
+      "hybridGatePasses"
+    ],
+    "n_types": 3,
+    "first_params": "c: UncertaintyComponents, w: UncertaintyWeights",
+    "has_test": true
+  },
+  {
+    "module": "decision/2608-23393-kellyboost.ts",
+    "lines": 153,
+    "n_exports": 9,
+    "exports": [
+      "softmaxAllocation",
+      "logGrowthLoss",
+      "applyCrraDial",
+      "looEnsemble"
+    ],
+    "n_types": 1,
+    "first_params": "logits: number[]",
+    "has_test": true
+  },
+  {
+    "module": "decision/2609-22632-perclass-gates.ts",
+    "lines": 117,
+    "n_exports": 5,
+    "exports": [
+      "mulberry32",
+      "classGateDecision",
+      "classErrorRate",
+      "classAbstentionRate"
+    ],
+    "n_types": 3,
+    "first_params": "seed: number",
+    "has_test": true
+  },
+  {
+    "module": "decision/physics-0607166-kelly-backtest.ts",
+    "lines": 114,
+    "n_exports": 5,
+    "exports": [
+      "kellyFraction",
+      "probEdge",
+      "halfKellyBacktest",
+      "flatBacktest"
+    ],
+    "n_types": 3,
+    "first_params": "p: number, b: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/1803-01984-bps-outcome-pools.ts",
+    "lines": 127,
+    "n_exports": 6,
+    "exports": [
+      "marginRegime",
+      "synthesize",
+      "logScore",
+      "fitBPS"
+    ],
+    "n_types": 2,
+    "first_params": "margin: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2010-10435v1-time-varying-forecast-combination.ts",
+    "lines": 125,
+    "n_exports": 7,
+    "exports": [
+      "ewaUpdate",
+      "boaUpdate",
+      "simplexProject",
+      "smoothWeights"
+    ],
+    "n_types": 0,
+    "first_params": "w: number[], losses: number[], eta: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2011-02077-factor-graphical-ensemble.ts",
+    "lines": 141,
+    "n_exports": 6,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights",
+      "softThreshold"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2012-01643-diversity-weighted-combiner.ts",
+    "lines": 118,
+    "n_exports": 6,
+    "exports": [
+      "diversityMatrix",
+      "diversityContribution",
+      "diversityWeights",
+      "stackNNLS"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2101-08954-hierarchical-stacking.ts",
+    "lines": 86,
+    "n_exports": 3,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2104-04918v2-weighted-quantile-combination.ts",
+    "lines": 87,
+    "n_exports": 5,
+    "exports": [
+      "pinballLoss",
+      "meanPinball",
+      "violationRate",
+      "quantileCombine"
+    ],
+    "n_types": 0,
+    "first_params": "y: number, q: number, alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2107-06268-smoothed-boa-ensemble.ts",
+    "lines": 81,
+    "n_exports": 4,
+    "exports": [
+      "ewaUpdate",
+      "boaUpdate",
+      "simplexProject",
+      "smoothWeights"
+    ],
+    "n_types": 0,
+    "first_params": "w: number[], losses: number[], eta: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2108-02082v3-regime-blender-febama.ts",
+    "lines": 196,
+    "n_exports": 12,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights",
+      "brierScore"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2111-15365-weekly-boa-consensus.ts",
+    "lines": 81,
+    "n_exports": 4,
+    "exports": [
+      "ewaUpdate",
+      "boaUpdate",
+      "simplexProject",
+      "smoothWeights"
+    ],
+    "n_types": 0,
+    "first_params": "w: number[], losses: number[], eta: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2202-11834-beta-linear-pool.ts",
+    "lines": 81,
+    "n_exports": 4,
+    "exports": [
+      "regIncBeta",
+      "blpApply",
+      "blpFit",
+      "pitValues"
+    ],
+    "n_types": 0,
+    "first_params": "x: number, a: number, b: number, steps = 400",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2203-03279v3-fforma-fusion.ts",
+    "lines": 86,
+    "n_exports": 3,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2209-01697-regime-factor-glasso.ts",
+    "lines": 141,
+    "n_exports": 6,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights",
+      "softThreshold"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2406-15760-icm-drift-monitor.ts",
+    "lines": 73,
+    "n_exports": 6,
+    "exports": [
+      "conformalQuantile",
+      "conformalInterval",
+      "normalizedInterval",
+      "rollingCoverage"
+    ],
+    "n_types": 0,
+    "first_params": "scores: readonly number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "ensemble/2408-00785v4-kairosis-forecast-aggregation.ts",
+    "lines": 100,
+    "n_exports": 3,
+    "exports": [
+      "kairosisTimeWeights",
+      "recentChangeProb",
+      "inverseCovIntersection"
+    ],
+    "n_types": 0,
+    "first_params": "losses: number[][],\n  hazard: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "experimental/1601-04302v6-footballonomics-bootstrap.ts",
+    "lines": 134,
+    "n_exports": 3,
+    "exports": [
+      "fpmBootstrap",
+      "quantizedBinCalibration",
+      "kellyByLowerBound"
+    ],
+    "n_types": 2,
+    "first_params": "teamA: number[][],\n  teamB: number[][],\n  winProb: (a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "experimental/1708-02715v1-order-flow-resiliency.ts",
+    "lines": 178,
+    "n_exports": 4,
+    "exports": [
+      "volumeBuckets",
+      "resiliencyRegression",
+      "steamSignal",
+      "scarceLiquidityFlag"
+    ],
+    "n_types": 3,
+    "first_params": "trades: Trade[], contractsPerBucket: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/1804-04226v1-cfov-decomposition.ts",
+    "lines": 135,
+    "n_exports": 6,
+    "exports": [
+      "cfovFeatures",
+      "sigmoid",
+      "fitLogistic",
+      "predictLogistic"
+    ],
+    "n_types": 3,
+    "first_params": "games: PlayerGame[],\n  playerId: string,\n  gameIdx: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "experimental/1805-01271v1-its-break-harness.ts",
+    "lines": 154,
+    "n_exports": 4,
+    "exports": [
+      "normalCdf",
+      "fitITSPoisson",
+      "scanBreaks",
+      "itsGate"
+    ],
+    "n_types": 2,
+    "first_params": "x: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/1811-03931v1-riskneutral-inplay-pricer.ts",
+    "lines": 121,
+    "n_exports": 8,
+    "exports": [
+      "normalCdf",
+      "expectedPointsPerDrive",
+      "expectedSquaredPointsPerDrive",
+      "fairLiveTotal"
+    ],
+    "n_types": 3,
+    "first_params": "x: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/1905-03628v1-nested-poisson-totals.ts",
+    "lines": 124,
+    "n_exports": 8,
+    "exports": [
+      "poissonPmf",
+      "poissonLogLik",
+      "poissonMle",
+      "poissonSample"
+    ],
+    "n_types": 0,
+    "first_params": "k: number, lambda: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2006-04551v4-mimic-model-tree.ts",
+    "lines": 66,
+    "n_exports": 4,
+    "exports": [
+      "temperatureSoftmax",
+      "softCrossEntropy",
+      "distillLoss",
+      "regimeOODScore"
+    ],
+    "n_types": 0,
+    "first_params": "logits: number[], T: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2101-10385v1-bandit-model-selector.ts",
+    "lines": 80,
+    "n_exports": 5,
+    "exports": [
+      "epsilonGreedyStep",
+      "ucb1Step",
+      "gammaSample",
+      "thompsonBetaStep"
+    ],
+    "n_types": 0,
+    "first_params": "q: number[], eps: number, rand: (",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2103-04349v1-irl-situational-decisions.ts",
+    "lines": 55,
+    "n_exports": 4,
+    "exports": [
+      "featureExpectations",
+      "maxEntIrlStep",
+      "irlMargin",
+      "softPolicy"
+    ],
+    "n_types": 0,
+    "first_params": "trajs: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2106-05174v1-nested-zigp-simulation.ts",
+    "lines": 220,
+    "n_exports": 16,
+    "exports": [
+      "poissonPmf",
+      "poissonLogLik",
+      "poissonMle",
+      "poissonSample"
+    ],
+    "n_types": 0,
+    "first_params": "k: number, lambda: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2108-00821v2-news-reaction-ssm.ts",
+    "lines": 159,
+    "n_exports": 10,
+    "exports": [
+      "solveLinear",
+      "ridgeFit",
+      "ridgePredict",
+      "arxFit"
+    ],
+    "n_types": 1,
+    "first_params": "A: number[][], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2109-06625v1-off-policy-coach-rl.ts",
+    "lines": 80,
+    "n_exports": 6,
+    "exports": [
+      "cqlPenalty",
+      "bellmanMse",
+      "opeSelfNormalized",
+      "ess"
+    ],
+    "n_types": 0,
+    "first_params": "qData: number[], qRandom: number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2206-01038v1-video-action-recognition-menu.ts",
+    "lines": 63,
+    "n_exports": 3,
+    "exports": [
+      "attentionRow",
+      "trajectoryAttention",
+      "smoothAttention"
+    ],
+    "n_types": 0,
+    "first_params": "q: number[], K: number[][], V: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2206-09654v1-season-total-lstm-ensemble.ts",
+    "lines": 96,
+    "n_exports": 4,
+    "exports": [
+      "lstmCellForward",
+      "lstmInitWeights",
+      "lstmSequence",
+      "asymmetricMse"
+    ],
+    "n_types": 1,
+    "first_params": "x: number[],\n  hPrev: number[],\n  cPrev: number[],\n  W: LSTMWeights,\n",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2206-11578v1-doubly-online-changepoint.ts",
+    "lines": 125,
+    "n_exports": 2,
+    "exports": [
+      "cusumDetect",
+      "bocpdLite"
+    ],
+    "n_types": 0,
+    "first_params": "xs: number[], k: number, h: number",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2209-07274v5-convexity-grid-war.ts",
+    "lines": 134,
+    "n_exports": 9,
+    "exports": [
+      "brierScore",
+      "logLoss",
+      "rankedProbScore",
+      "eceProbs"
+    ],
+    "n_types": 0,
+    "first_params": "ps: readonly number[], ys: readonly number[]",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2211-04459v3-flexbart-tabular-learner.ts",
+    "lines": 115,
+    "n_exports": 4,
+    "exports": [
+      "bartStumpGibbs",
+      "gaussBart",
+      "coClusterMatrix",
+      "intervalCoverage"
+    ],
+    "n_types": 1,
+    "first_params": "X: number[][],\n  y: number[],\n  iters: number,\n  rand: (",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2308-02414v3-bivariate-ssm-skill-rating.ts",
+    "lines": 86,
+    "n_exports": 5,
+    "exports": [
+      "ar1Update",
+      "ar1Forecast",
+      "ouForecast",
+      "ouWinProb"
+    ],
+    "n_types": 1,
+    "first_params": "s: AR1State,\n  obs: number,\n  phi: number,\n  stateVar: number,\n  obsVar: number,",
+    "has_test": true
+  },
+  {
+    "module": "experimental/2402-01914v1-glmf-matchup-matrices.ts",
+    "lines": 143,
+    "n_exports": 3,
+    "exports": [
+      "alsFactorize",
+      "glmfPredict",
+      "glmfRmse"
+    ],
+    "n_types": 0,
+    "first_params": "ratings: { u: number; i: number; r: number }[],\n  nU: number,\n  nI: number,\n  k:",
+    "has_test": true
+  },
+  {
+    "module": "injuries/1705-03918-two-version-causal.ts",
+    "lines": 185,
+    "n_exports": 5,
+    "exports": [
+      "matchAsIfRandom",
+      "attEstimate",
+      "randomizationInference",
+      "icIvIntervals"
+    ],
+    "n_types": 3,
+    "first_params": "games: SituGame[]",
+    "has_test": true
+  },
+  {
+    "module": "injuries/1710-08749v1-ppta-causal.ts",
+    "lines": 309,
+    "n_exports": 4,
+    "exports": [
+      "fitPropensityLogistic",
+      "inclusionProbabilities",
+      "iptwATE",
+      "pptaATE"
+    ],
+    "n_types": 2,
+    "first_params": "X: number[][], T: number[], iters = 2500",
+    "has_test": true
+  },
+  {
+    "module": "injuries/1801-07104-hot-hand-repetition.ts",
+    "lines": 119,
+    "n_exports": 3,
+    "exports": [
+      "repetitionContrast",
+      "interruptionContrast",
+      "hotHandGate"
+    ],
+    "n_types": 2,
+    "first_params": "touches: Touch[]",
+    "has_test": true
+  },
+  {
+    "module": "injuries/2009-06750-icing-causal-dag.ts",
+    "lines": 102,
+    "n_exports": 4,
+    "exports": [
+      "stratifiedATT",
+      "permutationP",
+      "rosenbaumGammaBound",
+      "maxAbsSmd"
+    ],
+    "n_types": 0,
+    "first_params": "y: number[], t: number[], strata: number[]",
+    "has_test": true
+  },
+  {
+    "module": "injuries/2011-11691-fourth-down-att-matching.ts",
+    "lines": 162,
+    "n_exports": 10,
+    "exports": [
+      "stratifiedATT",
+      "permutationP",
+      "rosenbaumGammaBound",
+      "maxAbsSmd"
+    ],
+    "n_types": 0,
+    "first_params": "y: number[], t: number[], strata: number[]",
+    "has_test": true
+  },
+  {
+    "module": "injuries/2108-08797-synthetic-pretraining-detector.ts",
+    "lines": 66,
+    "n_exports": 4,
+    "exports": [
+      "temperatureSoftmax",
+      "softCrossEntropy",
+      "distillLoss",
+      "regimeOODScore"
+    ],
+    "n_types": 0,
+    "first_params": "logits: number[], T: number",
+    "has_test": true
+  },
+  {
+    "module": "injuries/2202-08500-recurrent-competing-events.ts",
+    "lines": 84,
+    "n_exports": 6,
+    "exports": [
+      "truncateWeights",
+      "overlapCheck",
+      "ipwATE",
+      "ipwATT"
+    ],
+    "n_types": 0,
+    "first_params": "w: number[], lo: number, hi: number",
+    "has_test": true
+  },
+  {
+    "module": "injuries/2205-07193v2-division-pair-hfa-causal.ts",
+    "lines": 162,
+    "n_exports": 10,
+    "exports": [
+      "stratifiedATT",
+      "permutationP",
+      "rosenbaumGammaBound",
+      "maxAbsSmd"
+    ],
+    "n_types": 0,
+    "first_params": "y: number[], t: number[], strata: number[]",
+    "has_test": true
+  },
+  {
+    "module": "injuries/2305-14612-acl-risk-video-scoring.ts",
+    "lines": 63,
+    "n_exports": 3,
+    "exports": [
+      "attentionRow",
+      "trajectoryAttention",
+      "smoothAttention"
+    ],
+    "n_types": 0,
+    "first_params": "q: number[], K: number[][], V: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "inplay/2103-04647-marked-point-process-live.ts",
+    "lines": 77,
+    "n_exports": 3,
+    "exports": [
+      "hawkesIntensity",
+      "hawkesLogLik",
+      "hawkesGridFit"
+    ],
+    "n_types": 0,
+    "first_params": "t: number,\n  events: readonly number[],\n  mu: number,\n  alpha: number,\n  beta: n",
+    "has_test": true
+  },
+  {
+    "module": "literature/literature-causal.ts",
+    "lines": 323,
+    "n_exports": 4,
+    "exports": [
+      "listPromotedEdges",
+      "runCausalPromotionSweep",
+      "retireFailedEdges",
+      "markTestsOfRetiredEdges"
+    ],
+    "n_types": 3,
+    "first_params": "db: SqlClient,\n  limit = 500,\n",
+    "has_test": false
+  },
+  {
+    "module": "markets/1106-4509-ml-market-pooling.ts",
+    "lines": 126,
+    "n_exports": 6,
+    "exports": [
+      "mixturePool",
+      "productPool",
+      "interpolatedPool",
+      "updateWealth"
+    ],
+    "n_types": 2,
+    "first_params": "members: ProbVector[], weights: number[]",
+    "has_test": true
+  },
+  {
+    "module": "markets/1310-6998v1-twitter-volume-momentum.ts",
+    "lines": 105,
+    "n_exports": 4,
+    "exports": [
+      "ewma",
+      "volumeMomentumFeature",
+      "beatWriterSentiment",
+      "totalsModelFeatures"
+    ],
+    "n_types": 1,
+    "first_params": "values: number[], theta = 0.2",
+    "has_test": true
+  },
+  {
+    "module": "markets/1802-08848v1-odds-history-fusion.ts",
+    "lines": 77,
+    "n_exports": 5,
+    "exports": [
+      "devig",
+      "convexFuse",
+      "logLoss",
+      "fitFusionWeight"
+    ],
+    "n_types": 1,
+    "first_params": "rawImplied: number[]",
+    "has_test": true
+  },
+  {
+    "module": "markets/1910-08858v2-spread-win-probability-table.ts",
+    "lines": 134,
+    "n_exports": 9,
+    "exports": [
+      "brierScore",
+      "logLoss",
+      "rankedProbScore",
+      "eceProbs"
+    ],
+    "n_types": 0,
+    "first_params": "ps: readonly number[], ys: readonly number[]",
+    "has_test": true
+  },
+  {
+    "module": "markets/2003-09384v2-static-theta-threshold-policy.ts",
+    "lines": 172,
+    "n_exports": 13,
+    "exports": [
+      "brierScore",
+      "logLoss",
+      "rankedProbScore",
+      "eceProbs"
+    ],
+    "n_types": 0,
+    "first_params": "ps: readonly number[], ys: readonly number[]",
+    "has_test": true
+  },
+  {
+    "module": "markets/2010-12508v1-decorrelation-penalty-loss.ts",
+    "lines": 250,
+    "n_exports": 13,
+    "exports": [
+      "logistic",
+      "irlsFit",
+      "logisticLogLoss",
+      "stadiumFactorFit"
+    ],
+    "n_types": 0,
+    "first_params": "x: number",
+    "has_test": true
+  },
+  {
+    "module": "markets/2106-05799v1-hybrid-ability-xgboost.ts",
+    "lines": 269,
+    "n_exports": 13,
+    "exports": [
+      "solveLinear",
+      "ridgeFit",
+      "ridgePredict",
+      "arxFit"
+    ],
+    "n_types": 0,
+    "first_params": "A: number[][], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "markets/2107-08827v1-fractional-kelly-sizing.ts",
+    "lines": 62,
+    "n_exports": 4,
+    "exports": [
+      "kellyBinary",
+      "kellySized",
+      "drawdownGate",
+      "kellyGrowthRate"
+    ],
+    "n_types": 0,
+    "first_params": "p: number, b: number",
+    "has_test": true
+  },
+  {
+    "module": "markets/2112-13001v3-dcp-prop-framework.ts",
+    "lines": 165,
+    "n_exports": 12,
+    "exports": [
+      "poissonPmf",
+      "poissonLogLik",
+      "poissonMle",
+      "poissonSample"
+    ],
+    "n_types": 0,
+    "first_params": "k: number, lambda: number",
+    "has_test": true
+  },
+  {
+    "module": "markets/2401-06086v1-imitation-inplay-betting.ts",
+    "lines": 80,
+    "n_exports": 5,
+    "exports": [
+      "epsilonGreedyStep",
+      "ucb1Step",
+      "gammaSample",
+      "thompsonBetaStep"
+    ],
+    "n_types": 0,
+    "first_params": "q: number[], eps: number, rand: (",
+    "has_test": true
+  },
+  {
+    "module": "metalearning/1703-03400v3-maml-rookie-adapter.ts",
+    "lines": 119,
+    "n_exports": 5,
+    "exports": [
+      "innerAdapt",
+      "queryLoss",
+      "mamlMetaLoss",
+      "foMetaGradient"
+    ],
+    "n_types": 1,
+    "first_params": "theta: number[], task: FewShotTask, alpha: number, steps: number",
+    "has_test": true
+  },
+  {
+    "module": "metalearning/1807-08912v2-alpaca-online-regression.ts",
+    "lines": 123,
+    "n_exports": 7,
+    "exports": [
+      "blrInit",
+      "blrUpdate",
+      "blrPredictive",
+      "blrNLL"
+    ],
+    "n_types": 1,
+    "first_params": "dim: number, priorVar: number",
+    "has_test": true
+  },
+  {
+    "module": "metalearning/1901-09890v1-meta-metric-librarian.ts",
+    "lines": 126,
+    "n_exports": 7,
+    "exports": [
+      "cosineSim",
+      "retrieveTopS",
+      "learnMetricScales",
+      "scaledDistance"
+    ],
+    "n_types": 1,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "metalearning/2006-06707v2-metavrf-kernel-learning.ts",
+    "lines": 128,
+    "n_exports": 5,
+    "exports": [
+      "rbfKernelGp",
+      "gpPosterior1d",
+      "rffFeatures",
+      "krrFit"
+    ],
+    "n_types": 0,
+    "first_params": "x: number[], y: number[], l: number",
+    "has_test": true
+  },
+  {
+    "module": "metalearning/2009-03228v3-gp-vib-meta-learning.ts",
+    "lines": 128,
+    "n_exports": 5,
+    "exports": [
+      "rbfKernelGp",
+      "gpPosterior1d",
+      "rffFeatures",
+      "krrFit"
+    ],
+    "n_types": 0,
+    "first_params": "x: number[], y: number[], l: number",
+    "has_test": true
+  },
+  {
+    "module": "metalearning/2208-08135v1-uncertainty-weighted-metalearning.ts",
+    "lines": 185,
+    "n_exports": 9,
+    "exports": [
+      "rbfKernelGp",
+      "gpPosterior1d",
+      "rffFeatures",
+      "krrFit"
+    ],
+    "n_types": 0,
+    "first_params": "x: number[], y: number[], l: number",
+    "has_test": true
+  },
+  {
+    "module": "nlp/2010-00526v1-liveqa-nfl-benchmark.ts",
+    "lines": 82,
+    "n_exports": 5,
+    "exports": [
+      "cosineSimNlp",
+      "rankClips",
+      "recallAtK",
+      "qaTypeAccuracy"
+    ],
+    "n_types": 0,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "nlp/2211-04534v1-goal-nfl-retrieval.ts",
+    "lines": 121,
+    "n_exports": 8,
+    "exports": [
+      "attentionRow",
+      "trajectoryAttention",
+      "smoothAttention",
+      "cosineSimNlp"
+    ],
+    "n_types": 0,
+    "first_params": "q: number[], K: number[][], V: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "nlp/2401-01505v5-afa-tracking-qa.ts",
+    "lines": 121,
+    "n_exports": 8,
+    "exports": [
+      "attentionRow",
+      "trajectoryAttention",
+      "smoothAttention",
+      "cosineSimNlp"
+    ],
+    "n_types": 0,
+    "first_params": "q: number[], K: number[][], V: number[][]",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/1505-01147v2-local-matrix-completion.ts",
+    "lines": 209,
+    "n_exports": 3,
+    "exports": [
+      "completeMatrix",
+      "specializationEmbedding",
+      "imputationRmse"
+    ],
+    "n_types": 0,
+    "first_params": "M: (number | null",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/1909-12938v1-ts-forecast-dfs-optimizer.ts",
+    "lines": 64,
+    "n_exports": 5,
+    "exports": [
+      "sesForecast",
+      "trailingMean",
+      "rollingOriginMae",
+      "availabilityProb"
+    ],
+    "n_types": 0,
+    "first_params": "xs: number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/1912-10417v1-regime-switching-synergy-network.ts",
+    "lines": 158,
+    "n_exports": 7,
+    "exports": [
+      "hmmForwardLogLik",
+      "viterbi",
+      "hmmStationary",
+      "hamiltonFilter"
+    ],
+    "n_types": 1,
+    "first_params": "pi: number[],\n  A: number[][],\n  logEmit: number[][],\n",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2003-01712v1-joi-stack-metric.ts",
+    "lines": 53,
+    "n_exports": 3,
+    "exports": [
+      "joiPerDropback",
+      "synergyEdge",
+      "rankStackPairs"
+    ],
+    "n_types": 1,
+    "first_params": "jointEpa: number, dropbacksTogether: number",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2004-08428v1-era-adjusted-features.ts",
+    "lines": 79,
+    "n_exports": 3,
+    "exports": [
+      "softThreshold",
+      "istaLasso",
+      "tvDenoise1d"
+    ],
+    "n_types": 0,
+    "first_params": "x: number, lam: number",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2005-07742-seam-matchup-shrinkage.ts",
+    "lines": 73,
+    "n_exports": 6,
+    "exports": [
+      "betaUpdate",
+      "betaMean",
+      "betaVar",
+      "wpBlendCell"
+    ],
+    "n_types": 0,
+    "first_params": "a: number, b: number, s: number, f: number",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2006-07513-bayesian-shot-archetypes.ts",
+    "lines": 154,
+    "n_exports": 5,
+    "exports": [
+      "nmfFrobenius",
+      "nmfArchetypeAssign",
+      "adjustedRandIndex",
+      "emGaussianMixture1d"
+    ],
+    "n_types": 0,
+    "first_params": "V: number[][],\n  k: number,\n  iters: number,\n  rand: (",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2009-01206v1-chalk-meter-contrarian.ts",
+    "lines": 66,
+    "n_exports": 3,
+    "exports": [
+      "lineupJaccard",
+      "chalkIndex",
+      "contrarianFilter"
+    ],
+    "n_types": 0,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2112-07002-emax-duel-optimizer.ts",
+    "lines": 99,
+    "n_exports": 2,
+    "exports": [
+      "expectedMax2",
+      "emaxPortfolioGreedy"
+    ],
+    "n_types": 0,
+    "first_params": "mu1: number,\n  mu2: number,\n  s1: number,\n  s2: number,\n  rho: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2212-11041v1-future-value-models.ts",
+    "lines": 89,
+    "n_exports": 4,
+    "exports": [
+      "softThreshold",
+      "lassoCoordDescent",
+      "bicScore",
+      "lassoBicSelect"
+    ],
+    "n_types": 0,
+    "first_params": "z: number, t: number",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2302-13386-player2vec-embeddings.ts",
+    "lines": 58,
+    "n_exports": 2,
+    "exports": [
+      "mfSgd",
+      "mfPredict"
+    ],
+    "n_types": 0,
+    "first_params": "obs: { u: number; i: number; r: number }[],\n  nU: number,\n  nI: number,\n  k: num",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2303-04963v1-elite-lineup-order-stats.ts",
+    "lines": 53,
+    "n_exports": 4,
+    "exports": [
+      "orderStatFeatures",
+      "unanimityShortlist",
+      "agreementThreshold",
+      "shortlistPrecision"
+    ],
+    "n_types": 0,
+    "first_params": "lineup: number[]",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2407-13438-ems-gpp-portfolio.ts",
+    "lines": 128,
+    "n_exports": 6,
+    "exports": [
+      "expectedMax2",
+      "emaxPortfolioGreedy",
+      "orderStatFeatures",
+      "unanimityShortlist"
+    ],
+    "n_types": 0,
+    "first_params": "mu1: number,\n  mu2: number,\n  s1: number,\n  s2: number,\n  rho: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "props-dfs/2407-17832-group-lasso-plus-minus.ts",
+    "lines": 99,
+    "n_exports": 2,
+    "exports": [
+      "groupSoftThreshold",
+      "groupLassoFit"
+    ],
+    "n_types": 0,
+    "first_params": "beta: number[], t: number",
+    "has_test": true
+  },
+  {
+    "module": "rl/1707-06887v1-distributional-slate-rl.ts",
+    "lines": 131,
+    "n_exports": 7,
+    "exports": [
+      "atomSupport",
+      "projectBellman",
+      "categoricalCrossEntropy",
+      "distMean"
+    ],
+    "n_types": 1,
+    "first_params": "vMin: number, vMax: number, n = N_ATOMS",
+    "has_test": true
+  },
+  {
+    "module": "rl/1806-06923v2-iqn-critic.ts",
+    "lines": 93,
+    "n_exports": 6,
+    "exports": [
+      "cosineTauEmbedding",
+      "quantileHuberLoss",
+      "iqnCvar",
+      "cvarGreedy"
+    ],
+    "n_types": 0,
+    "first_params": "taus: number[], dim: number",
+    "has_test": true
+  },
+  {
+    "module": "rl/1902-08102v2-expectile-critic.ts",
+    "lines": 80,
+    "n_exports": 6,
+    "exports": [
+      "expectileLoss",
+      "expectileOf",
+      "distributionalTarget",
+      "meanConsistencyGap"
+    ],
+    "n_types": 0,
+    "first_params": "errors: number[], tau: number",
+    "has_test": true
+  },
+  {
+    "module": "rl/2006-04779v2-cql-stake-policy.ts",
+    "lines": 80,
+    "n_exports": 6,
+    "exports": [
+      "cqlPenalty",
+      "bellmanMse",
+      "opeSelfNormalized",
+      "ess"
+    ],
+    "n_types": 0,
+    "first_params": "qData: number[], qRandom: number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "rl/2105-08877v2-c51-optimal-stopping.ts",
+    "lines": 103,
+    "n_exports": 4,
+    "exports": [
+      "stoppingBackwardInduction",
+      "c51Project",
+      "cvar",
+      "clvRegret"
+    ],
+    "n_types": 1,
+    "first_params": "immediateReward: number[],\n  waitValue: number[],\n  discount: number,\n",
+    "has_test": true
+  },
+  {
+    "module": "rl/2202-00769v1-sinkhorn-drl-staking.ts",
+    "lines": 59,
+    "n_exports": 4,
+    "exports": [
+      "wasserstein1d",
+      "entropicTransportCost",
+      "scalarizeReturn",
+      "riskPriceUpdate"
+    ],
+    "n_types": 0,
+    "first_params": "xs: number[], ys: number[]",
+    "has_test": true
+  },
+  {
+    "module": "rl/2203-03003v1-offline-cql-staking.ts",
+    "lines": 80,
+    "n_exports": 6,
+    "exports": [
+      "cqlPenalty",
+      "bellmanMse",
+      "opeSelfNormalized",
+      "ess"
+    ],
+    "n_types": 0,
+    "first_params": "qData: number[], qRandom: number[], alpha: number",
+    "has_test": true
+  },
+  {
+    "module": "simulators/2306-00840v1-muzero-planning-audit.ts",
+    "lines": 59,
+    "n_exports": 4,
+    "exports": [
+      "emaUpdate",
+      "cosineMomentum",
+      "latentTransition",
+      "noveltyScore"
+    ],
+    "n_types": 0,
+    "first_params": "prev: number[], next: number[], momentum: number",
+    "has_test": true
+  },
+  {
+    "module": "sizing/0803-1364v2-generalized-kelly-solver.ts",
+    "lines": 249,
+    "n_exports": 9,
+    "exports": [
+      "laplaceSmoothed",
+      "kellyGrowthRate",
+      "lMinGatePasses",
+      "solveLinear"
+    ],
+    "n_types": 2,
+    "first_params": "wins: number, trials: number",
+    "has_test": true
+  },
+  {
+    "module": "symreg/2006-10782v2-aifeynman-pareto-pruning.ts",
+    "lines": 77,
+    "n_exports": 5,
+    "exports": [
+      "paretoFrontier",
+      "skeletonJaccard",
+      "pairedPvalue",
+      "hypothesisReject"
+    ],
+    "n_types": 1,
+    "first_params": "points: ParetoPoint[]",
+    "has_test": true
+  },
+  {
+    "module": "symreg/2312-11955v1-vertical-symbolic-regression.ts",
+    "lines": 77,
+    "n_exports": 5,
+    "exports": [
+      "paretoFrontier",
+      "skeletonJaccard",
+      "pairedPvalue",
+      "hypothesisReject"
+    ],
+    "n_types": 1,
+    "first_params": "points: ParetoPoint[]",
+    "has_test": true
+  },
+  {
+    "module": "symreg/2401-00282v1-dgsr-lite-refinement.ts",
+    "lines": 73,
+    "n_exports": 3,
+    "exports": [
+      "nmse",
+      "hillClimbRefine",
+      "stagedRefine"
+    ],
+    "n_types": 0,
+    "first_params": "y: number[], pred: number[]",
+    "has_test": true
+  },
+  {
+    "module": "team-ratings/1109-2825v2-scoring-random-walk.ts",
+    "lines": 181,
+    "n_exports": 4,
+    "exports": [
+      "estimateAntipersistence",
+      "fitRestoringForce",
+      "nextScoreProbA",
+      "simulateRestOfGame"
+    ],
+    "n_types": 4,
+    "first_params": "events: Scorer[]",
+    "has_test": true
+  },
+  {
+    "module": "team-ratings/1403-7642-college-ranking-sensitivity.ts",
+    "lines": 111,
+    "n_exports": 6,
+    "exports": [
+      "predictionInterval",
+      "intervalOverlap",
+      "flagTies",
+      "sosDial"
+    ],
+    "n_types": 2,
+    "first_params": "r: TeamRating, z = 1.96",
+    "has_test": true
+  },
+  {
+    "module": "team-ratings/1609-01176v1-player-kernel-gp.ts",
+    "lines": 100,
+    "n_exports": 2,
+    "exports": [
+      "playerKernel",
+      "gpPredict"
+    ],
+    "n_types": 2,
+    "first_params": "a: { z: number[]; daysAgo: number },\n  b: { z: number[]; daysAgo: number },\n  si",
+    "has_test": true
+  },
+  {
+    "module": "team-ratings/2010-11187-g-elo-margin-model.ts",
+    "lines": 134,
+    "n_exports": 9,
+    "exports": [
+      "brierScore",
+      "logLoss",
+      "rankedProbScore",
+      "eceProbs"
+    ],
+    "n_types": 0,
+    "first_params": "ps: readonly number[], ys: readonly number[]",
+    "has_test": true
+  },
+  {
+    "module": "team-ratings/2207-12147v1-sparse-tvp-team-ratings.ts",
+    "lines": 141,
+    "n_exports": 8,
+    "exports": [
+      "softThreshold",
+      "istaLasso",
+      "tvDenoise1d",
+      "ar1Update"
+    ],
+    "n_types": 1,
+    "first_params": "x: number, lam: number",
+    "has_test": true
+  },
+  {
+    "module": "tracking/2012-11717v3-social-nce-trajectories.ts",
+    "lines": 75,
+    "n_exports": 4,
+    "exports": [
+      "cosineSim",
+      "infoNCELoss",
+      "angularNegatives",
+      "socialNCELoss"
+    ],
+    "n_types": 0,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "tracking/2305-02968v1-masked-trajectory-models.ts",
+    "lines": 77,
+    "n_exports": 4,
+    "exports": [
+      "randomMask",
+      "maskedReconError",
+      "heteromodalLoss",
+      "focalPool"
+    ],
+    "n_types": 0,
+    "first_params": "n: number, p: number, rand: (",
+    "has_test": true
+  },
+  {
+    "module": "tracking/2407-20028v1-atscc-route-primitives.ts",
+    "lines": 75,
+    "n_exports": 4,
+    "exports": [
+      "cosineSim",
+      "infoNCELoss",
+      "angularNegatives",
+      "socialNCELoss"
+    ],
+    "n_types": 0,
+    "first_params": "a: number[], b: number[]",
+    "has_test": true
+  },
+  {
+    "module": "weather/2106-00175-stacked-live-wp-bakeoff.ts",
+    "lines": 86,
+    "n_exports": 3,
+    "exports": [
+      "stackNNLS",
+      "logScoreStacking",
+      "regimeStackWeights"
+    ],
+    "n_types": 0,
+    "first_params": "F: number[][], y: number[], iters = 500, lr = 0.05",
+    "has_test": true
+  },
+  {
+    "module": "weather/2109-09287-stadium-factor-decomposition.ts",
+    "lines": 180,
+    "n_exports": 8,
+    "exports": [
+      "windChill",
+      "heatIndex",
+      "passWeatherImpact",
+      "fgWeatherAdj"
+    ],
+    "n_types": 0,
+    "first_params": "tempF: number, windMph: number",
+    "has_test": true
+  },
+  {
+    "module": "win-spread-total/1908-07372-sde-inplay-win-probability.ts",
+    "lines": 86,
+    "n_exports": 5,
+    "exports": [
+      "ar1Update",
+      "ar1Forecast",
+      "ouForecast",
+      "ouWinProb"
+    ],
+    "n_types": 1,
+    "first_params": "s: AR1State,\n  obs: number,\n  phi: number,\n  stateVar: number,\n  obsVar: number,",
+    "has_test": true
+  },
+  {
+    "module": "win-spread-total/2008-13005-budescu-chen-aggregation.ts",
+    "lines": 63,
+    "n_exports": 4,
+    "exports": [
+      "looGains",
+      "budescuChenWeights",
+      "assertiveness",
+      "shrinkTowardBase"
+    ],
+    "n_types": 0,
+    "first_params": "P: number[][], y: number[]",
+    "has_test": true
+  },
+  {
+    "module": "win-spread-total/2207-13191-gcn-win-prediction.ts",
+    "lines": 95,
+    "n_exports": 4,
+    "exports": [
+      "normalizeAdj",
+      "gcnLayer",
+      "gcnForward2",
+      "buildLeagueGraph"
+    ],
+    "n_types": 0,
+    "first_params": "A: number[][]",
+    "has_test": true
+  }
+]

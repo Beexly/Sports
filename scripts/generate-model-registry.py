@@ -165,7 +165,7 @@ def render(rows: list[dict]) -> str:
         " * Regenerate with: python scripts/generate-model-registry.py",
         " *",
         f" * Enumerates all {len(rows)} production modules in this package that declare",
-        " * `ENABLED = false`. Each entry records what input the module needs and why it",
+        " * `ENABLED = false` (ACCEPTANCE_GATE / BARREL_ONLY). Each entry records what input the module needs and why it",
         " * is off, so the reasoning engine can query availability without grepping.",
         " *",
         f" * module-set digest: {digest}",

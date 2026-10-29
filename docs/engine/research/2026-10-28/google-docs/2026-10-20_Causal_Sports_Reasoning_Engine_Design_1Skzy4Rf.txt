@@ -1,0 +1,589 @@
+﻿Frontier Continuous Causal Inference Engine for Galaxy Sports Edge (Beexly/Sports)
+1. Executive Architectural Paradigm: What Is Fundamentally New
+Conventional sports prediction architectures—including gradient-boosted decision trees (nflfastR expected points, win probability, and completion probability baselines), Bayesian logistic team-rating systems, and standard retrieval-augmented generation (RAG) pipelines—operate exclusively on Rung 1 of Judea Pearl’s Ladder of Causation: observational association P(Y \mid X). When a conventional system observes a star quarterback’s injury tag, a sudden movement in a betting line, a shift to a two-tight-end (2TE) offensive personnel grouping, or an elevated acute-to-chronic workload ratio (ACWR), it computes conditional expectations over historical feature correlations. This associational paradigm suffers from four fatal structural pathologies in adversarial sports markets.
+The first pathology is confounded regime shifts and Simpson’s paradox. Observational models cannot distinguish whether an observed metric shift is an autonomous tactical intervention or a symptom of an unmeasured common cause (latent confounder U). For example, teams trailing by multiple scores pass at high rates and accumulate high raw passing yardage; a naive correlational learner associates pass-heavy play-calling with losing, whereas the interventional effect P(\text{Win} \mid \text{do}(\text{PassRate} = p)) on early downs is strongly positive. Similarly, elevated ACW[span_1](start_span)[span_1](end_span)R values appear confounded by game schedule congestion unless explicitly conditioned on current session load.
+The second pathology is unsigned context collapsing and decorative citation attachment. Audits of legacy Beexly/Sports codepaths revealed that while 46 to 240+ signal families produced contextual scalars (such as expected points added, wind velocity, rest differential, and roof state), these signals lacked declared directional semantics (homeSign), sample counts, and interventional mechanisms. Worse, legacy literature integration (mind-reasoning.ts v5.3.0) relied on hardcoded constants (0.015, 0.024, 0.012) and static prose templates (+395 vs +485 fair odds, 18.5% parlay correlation), using keyword regular expressions over MIND_CORPUS_3000.jsonl merely to decorate pre-authored heuristics with academic citations—a flaw where papers on the No Free Lunch optimization theorem or magnetic resonance physics were misclassified under NFL situational labels.
+The third pathology is the entity-to-relation deficit in multimodal perception. Benchmarks of state-of-the-art vision-language models on physical and situational world modeling (CausalPhys) demonstrate a severe structural decoupling: models achieve high Entity Faithfulness (\text{EF} \approx 0.697) in recognizing players, formations, and attributes, but collapse on Relation Awareness (\text{RA} \approx 0.286 on interventions and 0.305 overall), failing to compose perceived entities into valid directed causal mechanisms.
+The fourth pathology is static uncertainty under non-exchangeable distribution shift. Sports data streams violate the independent and identically distributed (i.i.d.) and exchangeability assumptions required by classical split conformal prediction. Roster turnover, mid-game injuries, weather fronts, and market-maker pricing adaptations induce continuous covariate and concept drift. Simultaneously, applying rapidly adapting conformal intervals directly into fractional Kelly position sizing degrades compound bankroll growth by 1.4 to 3.3 percentage points per year due to nonlinear variance amplification in the Kelly denominator.
+The Galaxy Sports Edge (GSE) Continuous Causal Inference Engine is an end-to-end architecture that replaces weighted-feature blending and associative RAG with an online, self-correcting Structural Causal Model (SCM) and Living Literature Graph.
+Architectural Dimension
+	Conventional Sports Analytics & RAG Systems
+	GSE Continuous Causal Inference Engine (Beexly/Sports)
+	Why GSE Compounds Toward Higher Accuracy
+	Epistemic Foundation
+	Pearl Rung 1: Observational conditioning P(Y \mid X=x) via XGBoost, linear logit, or feature-weighted ensembles.
+	Pearl Rung 2 & Rung 3: Interventional distributions P(Y \mid \text{do}(X=x)) via Shpitser-Pearl ID algorithm and counterfactual abduction-action-prediction P(Y_{x'} \mid X=x, Y=y).
+	Isolates autonomous structural mechanisms from market-maker and game-script confounding; invariant across tactical regime shifts.
+	Signal-to-Premise Translation
+	Unsigned context scalars fed into black-box regressors or LLM prompts; silent clamping and default imputation on sparse data.
+	Bitemporal point-in-time (PIT) feature matrix across 240+ families translated via bridge-model.ts into signed, sample-counted directional premises {outcome, probability, sample_count, homeSign}.
+	Eliminates silent fail-open defaults; enforces strict refusal when sample support or directional identifiability is absent.
+	Literature Integration
+	Keyword regex lookup or dense full-corpus cosine scan; hardcoded effect deltas (0.015, 0.024) decorated with post-hoc citations.
+	XGrammar-2 In-Writing extraction (<|GSE_ANALYSIS|>...<|GSE_JSON|>), L1–L4 NLI/SAV verification gates, pgvector HNSW top-o retrieval with BRIDGE dual-frequency spectral routing, and pure content-driven delta computation.
+	Every numeric adjustment is mathematically proportional to verified verbatim effect sizes in 2,379+ papers and 429 datasets, re-weighted every settlement cycle.
+	Causal Discovery & Adversary Review
+	None, or naive correlation matrices vulnerable to variance-sorting artifacts.
+	Hybrid literature-prior + standardized DYNOTEARS/FCI structure learning; automated adversary red-teaming via VanderWeele-Ding E-values, placebo interventions, and CausalPhys Relation Awareness gates.
+	Rejects fragile chains where unmeasured confounding (\text{E-value} < \tau_E) or entity-swap variance (\Delta \ge 0.02) could explain away the edge.
+	Uncertainty, SGP Joint Pricing & Sizing
+	Independent leg multiplication or static Gaussian copulas; heuristic Kelly fractions.
+	Unified Nonconformity Bridge: SCALE spectral CP + TA-CQR for skewed props, Debiased Hierarchical Archimedean / Vine Copulas for SGPs, and decoupled Conformal Kelly (slow rolling width for sizing; ACI/PID for gate halting).
+	Guarantees finite-sample marginal and joint SGP coverage under non-exchangeability while capturing +28.5\% annualized log-growth stability.
+	Self-Improvement Loop
+	Periodic offline model retraining across seasons; no structural diagnosis of misses.
+	Same-cycle Murphy Brier decomposition (\t[span_21](start_span)[span_21](end_span)ext{REL} - \text{RES} + \text{UNC}), Kalman precision edge updates, and Marchenko-Pastur spectral residual factorization to abductively invent missing latent nodes.
+	Every settlement residual directly sharpens causal edge posteriors, demotes uncalibrated literature premises, and discovers unmodeled game factors.
+	End-to-End System Topology and Closed-Loop Data Flow
+The runtime architecture executes as a deterministic, event-driven closed-loop pipeline across six forward stages linked to a synchronous backward feedback bus. In Stage 1 (Bitemporal Multi-Source Ingestion via IngestionRouter), real-time producers across nine signal families and 240+ registered sub-families ingest live tweets, pressers, optical/RFID tracking, injury statuses, sportsbook/prediction-market order books, coaching tendencies, micro-weather, schedules, and settlements. Every event is stamped with a dual bitemporal watermark (t_{\text{valid}}, t_{\text{tx}}) to guarantee zero lookahead leakage and normalized into packages/prediction-engine/src/features/feature-matrix.ts. In Stage 2 (Perception and Bridge Premise Generation via Perceptio[span_79](start_span)[span_79](end_span)nBridge), raw multimodal streams—including vision homography frames, presser transcripts, and scalar context vectors—are processed by specialized perception encoders (torch CNN coverage classifiers and CausalPhys CRFT vision-language extractors) and passed to packages/prediction-engine/src/bridge/bridge-model.ts. The bridge converts unsigned context scalars into directional probability premises {outcome, probability, sample_count, method, homeSign} fit strictly on pre-evaluation training partitions.
+In Stage 3 (Living Literature HNSW Retrieval and Dual-Frequency Routing via LiteratureHNSWBridge), each directional signal shift triggers an event-driven query against the Neon PostgreSQL pgvector HNSW index (literature_premises, configured with M=24 and \text{ef\_construction}=200). Retrieved candidate principles from the 2,379 arXiv/OpenAlex papers, 429 Kaggle datasets, and MIND_CORPUS_3000.jsonl undergo BRIDGE Dual-Frequency Graph Evidence (DFGE) spectral band routing and Candidate Residual Integration (CRI), emitting content-driven situational deltas \Delta_c^{\text{final}} and span-verified audit trails. In Stage 4 (Structural Causal Graph Construction via CausalGraphBuilder), live bridge premises, L1–L5 causal traces, and activated literature mechanisms are compiled into a game-specific Acyclic Directed Mixed Graph (ADMG) \mathcal{G}_t = (\mathcal{V}_t, \mathcal{E}_{d,t}, \mathcal{E}_{b,t}). Directed edges \mathcal{E}_{d,t} are parameterized by precision-weighted structural equations, whereas bidirected edges \mathcal{E}_{b,t} encode latent common causes detected via Fast Causal Inference (FCI) and standardized DYNOTEARS optimization.
+In Stage 5 (Interventional Calculus and Automated Adversary Review via DoCalculusIDEngine and AdversaryRedTeam), for every actionable shock X=x—such as \text{do}(\text{LeftTackle}=\text{Inactive}), \text{do}(\text{Scheme}=\text{Cover6}), or \text{do}(\text{MarketSteam}=2.5\text{ pts/hr})—the engine executes graph mutilation \mathcal{G}_{\overline{X}} (severing incoming arrows to the intervened node) and runs the complete Shpitser-Pearl ID algorithm over Confounded Components (C-components). If a witnessing hedge \langle \mathcal{F}, \mathcal{F}' \rangle is detected, the interventional query is flagged non-identifiable. Identifiable functionals are subjected to automated Adversary Review comprising VanderWeele-Ding E-value bounding, Rung 3 counterfactual refutation, entity-swap invariance (\Delta < 0.02), and CausalPhys Relation Awareness verification. Finally, in Stage 6 (Situational trueProb Synthesis, Honesty Gate, and Settlement Loop via HonestyPublishGate and SettlementLoop), surviving interventional distributions are calibrated via Venn-Abers, Conformal PID, and TA-CQR, and combined into multi-leg SGP joint distributions via Debiased Hierarchical Archimedean and Vine Copulas. Only outputs satisfying all nine formal conditions of the compile-time and runtime HonestyPublishGate are published to the board with a Conformal Kelly stake size. Upon game settlement, a lower feedback bus routes realized outcomes and Closing Line Value (CLV) back to Stages 3, 4, and 5 in the same cycle through three dedicated sub-mechanisms: Kalman Edge Updates on active graph paths, Premise Promotion across the HNSW literature index, and Spectral Latent Discovery over the residual covariance matrix.
+2. Continuous Multi-Source Ingestion at Scale and Dark-Source Remediation
+To reach frontier situational intelligence across the 240+ registered signal families (81 + 71 + 42 + 32 + 14 = 240 families across 5 tiers, materializing 2,000\text{--}10,000 features per game/player-week in packages/prediction-engine/src/features/feature-matrix.ts), every signal must be governed by a strict point-in-time (PIT) contract. Every ingested record e_k carries a bitemporal tuple (t_{\text{valid}}, t_{\text{tx}}), where t_{\text{valid}} is the physical timestamp when the event occurred in the real world (such as Play.PlayTime or presser utterance timestamp) and t_{[span_80](start_span)[span_80](end_span)\text{tx}} is the immutable database transaction timestamp (Play.Created or BettingEvent.Updated) when the byte stream arrived at the GSE ingestion bus. During historical backtesting (fitting bridge-model.ts on 2018–2024 and evaluating on the sealed 2025 holdout), queries are strictly filtered by t_{\text{tx}} \le t_{\text{decision}}, making lookahead contamination mathematically impossible.
+2.1 Producer Specifications, Latency Targets, Triggers, and Failure Modes
+The production ingestion fabric spans all nine required signal families, grounded in the SportsDataIO data dictionary, open-source MCP and play-by-play feeds, and custom perception workers.
+Signal Family & Registry Scope
+	Point-in-Time Producer & Transport Protocol
+	P99 Latency Target
+	Event Trigger Condition
+	Primary Failure Modes
+	Deterministic Fallback & Quarantine Protocol
+	1. Live X/Tweets & Presser Language (Beat reporters, coach pressers, injury insider breaking feeds)
+	X Filtered Stream API v2 + @WalrusQuant/sports-leader-mcp (get_slate) + live presser HLS audio piped through Whisper-large-v3 Turbo into vLLM XGrammar-2 In-Writing extractor.
+	< 450\text{ ms} (text) < 1,800\text{ ms} (audio transcript to JSON)
+	Verified beat-writer post, official team account dispatch, or live podium audio voice-activity detection (VAD) segment completion.
+	Handle spoofing/parody injection; premature JSON trigger on curly braces in speech; rate-limit HTTP 429; sarcasm/coachspeak ambiguity.
+	Cryptographic author-ID allowlist check; atomic <|GSE_JSON|> trigger enforcement; require $N \ge independent reporter corroboration or official Player.Status match before mutating availability probability $P(\text{Active by $> 0..
+	2. Vision, Formation & Tracking Updates (Pre-snap alignment, motion, CB phase tracking, ball RFID)
+	Broadcast 60fps homography pipeline + NFL Next Gen Stats / Zebra Wilson RFID stream (200+ metrics/play: velocity, rotation, launch angle) + torch CNN coverage classifier.
+	< 250\text{ ms} per frame batch (intra-play) < 1.2\text{ s} post-whistle
+	Pre-snap huddle break (t_{\text{snap}} - 8\text{ s}), man-in-motion initiation, ball snap (t_{\text{snap}}), throw windup (Phase 1 end), pass arrival (Phase 2 end).
+	Camera pan occlusion during deep routes; x-axis play-direction vs. y-axis across-field flip augmentation bug; TV feed delay skew (Play.PlayTime vs. wall clock).
+	Enforce separated aa753bd spec: canonicalize x-axis play direction first, isolate y-axis TTA flip; if homography keypoint confidence < 0.85, withhold vision node and fall back to play-by-play Play.Type and Play.Description.
+	3. Injuries & Availability (Active/Inactive status, snap limits, recovery curves, body-part hazard)
+	SportsDataIO (Player.Status, PlayerGameProjection.Activated/Played/Started), @WalrusQuant/sports-leader-mcp injury feed, and BBall-Index Injury Tracker model (games missed, recovery %, body map).
+	< 500\text{ ms} on status transition
+	Official Wednesday/Thursday/Friday practice report, 90-minute pre-game inactive list, or in-game sideline tent/locker-room entry event.
+	Unannounced coach's decision rest ("active but 0 snaps"); ambiguous Questionable tag inflation (probable-in-disguise); delayed API sync.
+	Bayesian Questionable-to-Active conversion prior stratified by position and body part (groin/hamstring/knee/ankle); cross-check against player prop market suspension (BettingMarket freeze) within 500\text{ ms}.
+	4. Market & Prediction-Market Moves (Spreads, totals, props, Polymarket CLOB, steam & RLM)
+	SportsDataIO (BettingEvent, BettingMarket), Sharp book WebSocket feeds (Pinnacle/Circa), and Polymarket CLOB WebSocket (1/odds vig-stripped cent pricing) piped to decision-time-price-archive.ts.
+	< 100\text{ ms} tick-to-matrix
+	Line movement \ge 0.5\text{ pts}, vig-free implied probability shift \ge 1.0\%, market_steam_velocity_pts_hr \ge 1.5, or Polymarket vs. sportsbook arbitrage spread > 2.0\text{ cents}.
+	Stale/off-market decoy lines; wash-trading volume spikes on low-liquidity prediction markets; NaN/zero/infinite odds ticks.
+	decision-time-price-archive.ts strictly rejects zero, NaN, or infinite prices; weight market signals by order-book depth and book sharpness score; isolate public ticket share from money share (reverse_line_movement_divergence_pct).
+	5. Coaching Tendencies & Scheme (Personnel, 4th-down go rate, 2H opening script, play-caller EPA)
+	SportsDataIO TeamBasic (HeadCoach, OffensiveCoordinator, Defensiv[span_81](start_span)[span_81](end_span)eCoordinator, OffensiveScheme, DefensiveScheme) + rolling nflfastR play-caller state machine.
+	< 2.0\text{ s} post-drive / < 5.0\text{ s} post-game
+	Coordinator change, halftime locker-room exit (triggering 3Q Drive 1 script prior), 4th-down decision state, or offensive_pace_sec_per_play regime shift.
+	Small-sample early-season noise (Weeks 1–4); garbage-time score-differential distortion of pass/go rates; coordinator play-calling handoff mid-season.
+	Filter training plays to win probability WP \in [0.10, 0.90]; apply Empirical Bayes shrinkage toward league-role baseline (Anchor Big, Point of Attack, PRO, 3WR) weighted by snap count.
+	6. Weather & Environmental Physics (Wind vector, air density, precipitation, surface traction, altitude)
+	SportsDataIO Stadium (GeoLat, GeoLong, PlayingSurface, Type: Outdoor/Dome/RetractableDome) joined to NOAA HRRR 3km rapid-refresh forecast + stadium METAR sensors.
+	< 30\text{ s} (meteorological update)
+	Forecast delta \ge 2\text{ mph} in wind_speed_mph, \ge 3^\circ\text{F} in ambient_temp_fahrenheit, \ge 0.5\text{ mm/hr} in precipitation_rate_mm_hr, or RetractableDome roof state change.
+	Unannounced retractable roof closure 60 minutes prior to kickoff; stadium bowl wind swirling vs. airport anemometer reading.
+	Hard override: if Stadium.Type == "Dome" or roof status is closed, clamp wind_speed_mph = 0, precipitation_rate_mm_hr = 0, and lock air_density_kg_m3 to climate-controlled altitude baseline.
+	7. Schedule, Rest & Biometric Load (Rest days, circadian travel, ACWR workload spikes)
+	SportsDataIO Score (GameKey, Date, Week, AwayTeam, HomeTeam) + player tracking snap/distance accumulator computing acute_chronic_workload_ratio.
+	< 1.0\text{ s} on schedule/snap commit
+	Schedule publication, game flex-scheduling update, or post-game tracking load commit updating 7-day acute vs. 28-day chronic load.
+	Schedule-confounding bias in ACWR when current session load is unconditioned; bye-week GameKey == NULL pointer exceptions.
+	Enforce acwr_content_driven_fix.py rule: if current_session_load is None, downgrade ACWR claim weight to theoretical (0.3); zero-out delta inside sweet spot [0.80, 1.30] and below hazard threshold 1.40.
+	8. Literature Premises (arXiv, OpenAlex, Kaggle datasets, MIND_CORPUS_3000.jsonl)
+	Continuous arXiv/OpenAlex RSS + Kaggle API (KAGGLE_API_TOKEN) crawler \to XGrammar-2 extractor \to L1–L4 verification gate \to Neon pgvector HNSW index.
+	< 5.0\text{ ms} (HNSW query) < 15\text{ min} (new paper ingestion)
+	New paper/dataset commit passing L1–L4 verification, or live game context vector \mathbf{x}_t crossing a registered conditional_threshold.
+	Cross-domain label hallucination (e.g., optimization "No Free Lunch" mapped to NFL); ungrounded numeric claims; opposing literature conflict.
+	L1–L4 gates reject ungrounded or domain-mismatched rows at ingestion; at runtime, opposing claims with consensus ratio \eta_c < 0.20 trigger CONFLICT_NEUTRALIZED (\Delta_c^{\text{final}} = 0.0).
+	9. Settlements & CLV (Final scores, play-by-play box stats, closing market prices)
+	SportsDataIO Score (AwayScore, HomeScore), BettingEvent (TotalScore), PlayStat, nflfastR post-game parser, and settlement-loop.ts comparing decision-time-price-archive.ts against closing lines.
+	< 5.0\text{ s} post-official game status FINAL
+	BettingEvent.GameStatus == "Final" and official league stat-correction lock window completion.
+	Premature settlement prior to Elias/official stat correction (e.g., backward pass vs. rush); push handling errors on integer spreads (WinsAgainstTheSpread vs. PushesAgainstTheSpread).
+	Two-phase settlement commit: provisional grade at GameStatus == "Final" for CLV and shadow monitoring; immutable weight/edge update after 24-hour stat-correction lock or verified multi-provider consensus.
+	2.2 Dark-Source Audit and Point-in-Time Remediation
+A "dark source" is any contextual primitive referenced in GSESituationalExtractionEnvelope (applicable_context_fields) or signal-registry.ts that lacks a deterministic, timestamped point-in-time producer. Dark sources corrupt causal graphs either by injecting unverified default constants or by introducing post-hoc target leakage. Every dark source in the GSE registry is either bound to a concrete PIT proxy producer or excised from the runtime DAG.
+Controlled Context Primitive / Dark Source
+	Historical Vulnerability
+	Remediated Point-in-Time Producer OR Excision Disposition
+	ol_continuity_shared_snaps_pct
+	Previously computed from season-end offensive line participation summaries (lookahead leakage) or left unpopulated.
+	Remediated Producer: Rolling PIT graph accumulator over PlayByPlay.Plays[].PlayStats[] combined with pre-game PlayerGameProjection.Started == 1 for positions C, G, T, OL, OT. Computes exact cumulative shared non-garbage snaps among the 5 projected starters strictly over games with t_{\text{tx}} < t_{\text{kickoff}}.
+	acoustic_crowd_spl_db
+	No live decibel meter stream exists across all 32 NFL venues in standard public feeds.
+	Remediated Structural Proxy Producer: Deterministic physical model computed at t_{\text{kickoff}} - 15\text{ min} from Stadium.Capacity, Stadium.Type (Dome +6.5\text{ dB} acoustic reverberation multiplier vs. Outdoor), ticket secondary-market fill rate, and home situational leverage (3rd/4th down distance). Calibrated against historical broadcast audio RMS envelopes.
+	officiating_crew_penalty_rate
+	PlayStat.Penalties in SportsDataIO is flagged in the data dictionary as a placeholder ("serves as a placeholder for data intended to be added in the future").
+	Remediated Producer: Excised PlayStat.Penalties as a source. Replaced with weekly Tuesday NFL Football Operations referee crew assignment scraper joined to nflfastR historical crew-level Play.Type == "Penalty" and Play.Description regex parser, computing trailing 3-season crew-specific holding, pass-interference, and false-start rates over expected.
+	surface_traction_coeff
+	Previously a static constant without weather-surface interaction.
+	Remediated Producer: Bitemporal state function of Stadium.PlayingSurface (Grass, Artificial, Dome turf subtype: slit-film vs. monofilament vs. Bermuda grass) dynamically interacted with NOAA HRRR 6-hour cumulative precipitation_rate_mm_hr and ambient_temp_fahrenheit (< 32^\circ\text{F} freeze transition).
+	air_density_kg_m3
+	Previously approximated solely from stadium elevation, ignoring temperature and humidity.
+	Remediated Producer: Exact CIPM/ideal-gas psychrometric computation at t_{\text{decision}} combining Stadium elevation (altitude_feet), live station barometric pressure P_b, ambient_temp_fahrenheit, and dew point: \rho = \frac{P_d}{R_d T} + \frac{P_v}{R_v T}.
+	Unlogged Locker-Room Painkiller/Injection Administrations & Unannounced Snap Caps
+	Purely private medical events with zero legitimate pre-game PIT feed.
+	Excised as Direct Nodes; Modeled as Latent Confounder U_{\text{med}}: Formally removed as direct input features. Represented in the causal ADMG as a bidirected confounding arc \text{PlayerStatus} \leftrightarrow \text{SnapShare} and monitored post-snap via Quarter 1 live snap-share divergence from PlayerGameProjection.
+	3. Living Literature Integration and Event-Driven HNSW Retrieval
+The GSE knowledge base comprises structured quantitative premises extracted from \sim 2,379 arXiv and OpenAlex papers (docs/research/2026-09-21/arxiv-deep/ containing 1,511 deep extractions, arxiv-program/ containing 147 executable program specs, and docs/agent-index/PAPER-CATALOG.md indexing 2,194 artifacts), 429 Kaggle datasets, and MIND_CORPUS_3000.jsonl. To ensure that every new tweet, weather shift, injury report, or tracking update can retrieve and re-evaluate relevant scientific mechanisms in < 5\text{ ms} without full corpus scans—while remaining 100\% immune to hallucinated numbers or decorative citation templates—the literature layer enforces a strict four-stage lifecycle: In-Writing Constrained Extraction \to L1–L4 Verification Gates \to pgvector HNSW + Dual-Frequency Retrieval \to Same-Cycle Residual Promotion.
+3.1 In-Writing Constrained Decoding and Four-Layer Verification Gates
+Forcing an LLM to emit JSON schema tokens from decoding step t=0 imposes a severe constraint tax: because both the latent deliberation sequence R and the structured extraction A are conditioned on the grammar automaton F, P(R \mid q, F) = \frac{1}{Z} P(R \mid q)\mathbf{1}_{R \in F}, the model must commit to principle_name before localizing the verbatim evidence_quote and mechanism_quote. GSE eliminates this distortion via the In-Writing Decoupled Extraction Protocol implemented in XGrammar-2 using StructuralTag and TagDispatch:
+P(R \mid q, F) = P(R \mid q) \implies P(A \mid q, F) = \sum_{R} P(A \mid R, q, F) P(R \mid q)
+During the unconstrained <|GSE_ANALYSIS|> channel (excluding <|GSE_JSON|> to prevent premature triggering on mathematical set notation like [span_52](start_span)[span_52](end_span)[span_55](start_span)[span_55](end_span)S = \{x_1, x_2\}), the model verifies domain relevance (committing to abstained: true, extracted_principle: null for non-sports domains such as No Free Lunch optimization or MRI physics), localizes the exact \le 240-character evidence_quote containing the numeric_claim, and localizes the \le 300-character mechanism_quote. Upon emitting <|GSE_JSON|>, XGrammar-2 activates token-level logit masking \tilde{\mathbf{z}} = \mathbf{z} + \mathbf{M}^{(q_t)} with Repetition State Compression, collapsing the 240 and 300 character-counting states into a 28.4\text{ KB} (0.028\text{ MB}) adaptive cache that fits entirely inside the CPU L1 data cache. To prevent CPU–GPU synchronization stalls during batch ingestion, the worker pool enforces the non-stalling batch threshold:
+B_{\max} = \left\lfloor \frac{T_{\text{GPU}}(B) - T_{\text{sync}}}{\frac{t_{\text{mask}}}{N_{\text{cores}}} + t_{\text{xfer}}} \right\rfloor
+Using 16-core C++ batched bitset packing (4.63\ \mu\text{s}/sequence), the pipeline scales to B = 128\text{--}256 concurrent paper extractions with zero GPU wait penalty.
+Because free-string grammar states (q_{\text{str}}) permit closing quotes (", ID 1 or ",", ID 3093) at any character index L \in [15, 240], token-level masking alone cannot enforce semantic grounding. Every extracted candidate must therefore pass a Four-Layer Deterministic Verification Gate before insertion into the canonical index. Layer L1 (Verbatim Quote Provenance) verifies that both evidence_quote and mechanism_quote exist as verbatim substrings in the source abstract or dataset documentation. Layer L2 (Literal Numeric Token Containment) enforces that the exact numeric_claim string is a literal substring of evidence_quote (numeric_claim in evidence_quote), and deterministically rejects any residual hardcoded fallback magnitude (\{0.22, 0.16, 0.18, 0.15, 0.238\}) that is absent from the claim string. Layer L3 (SAV Character-Offset Anchoring with MSVH Numeric Invariance) computes the exact CharacterSpan (start_char, end_char) under tier MSVH_S1_EXACT, MSVH_S2_NORMALIZED, or MSVH_S3_LEVENSHTEIN, requiring 100\% numeric token invariance between the extracted quote and the raw source span. Finally, Layer L4 (Mechanism Entailment and Lexical Exclusion Gate) runs a cross-encoder Natural Language Inference (NLI) scorer combined with a domain lexical exclusion filter to verify that mechanism_quote entails the causal or statistical relationship for the specific applicable_context_fields enum with a score \ge 0.80, rejecting cross-domain false positives (L4_MECHANISM_ENTAILMENT_FAIL).
+3.2 Canonical pgvector HNSW Schema and Parameter Optimization
+Verified principles from arXiv, OpenAlex, Kaggle, and MIND_CORPUS_3000.jsonl are stored in Neon PostgreSQL (neondb) with the pgvector extension. Based on the Hierarchical Navigable Small World (HNSW) formalism of Malkov and Yashunin (2016, 2020), each premise vector \mathbf{v}_i \in \mathbb{R}^{1024} is inserted into a multi-layer proximity graph where its maximum layer l_i is drawn from an exponentially decaying distribution l_i = \lfloor -\ln(\text{unif}(0, 1)) \cdot m_L \rfloor with optimal scale multiplier m_L = 1/\ln(M) to minimize inter-layer neighbor overlap while preserving logarithmic zoom-in routing.
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE literature_premises (
+   item_id TEXT PRIMARY KEY,
+   source_corpus TEXT NOT NULL CHECK (source_corpus IN ('ARXIV_OPENALEX', 'KAGGLE_DATASET', 'MIND_CORPUS')),
+   source_doc_hash TEXT NOT NULL,
+   principle_name TEXT NOT NULL,
+   numeric_claim TEXT NOT NULL,
+   parsed_float_magnitude DOUBLE PRECISION NOT NULL CHECK (parsed_float_magnitude > 0),
+   unit_scale_denominator DOUBLE PRECISION NOT NULL DEFAULT 1.0 CHECK (unit_scale_denominator > 0),
+   evidence_quote VARCHAR(240) NOT NULL,
+   evidence_start_char INTEGER NOT NULL,
+   evidence_end_char INTEGER NOT NULL,
+   verification_tier TEXT NOT NULL CHECK (verification_tier IN ('MSVH_S1_EXACT', 'MSVH_S2_NORMALIZED', 'MSVH_S3_LEVENSHTEIN')),
+   mechanism_quote VARCHAR(300) NOT NULL,
+   mechanism_start_char INTEGER NOT NULL,
+   mechanism_end_char INTEGER NOT NULL,
+   applicable_context_fields TEXT[] NOT NULL,
+   target_causal_node TEXT NOT NULL,
+   influence_direction TEXT NOT NULL CHECK (influence_direction IN ('positive', 'negative', 'conditional')),
+   conditional_threshold VARCHAR(40),
+   parsed_threshold_value DOUBLE PRECISION,
+   parsed_threshold_operator TEXT CHECK (parsed_threshold_operator IN ('>', '>=', '<', '<=')),
+   claim_type TEXT NOT NULL CHECK (claim_type IN ('causal', 'correlational', 'theoretical')),
+   epistemic_base_weight DOUBLE PRECISION NOT NULL CHECK (epistemic_base_weight IN (1.0, 0.5, 0.3)),
+   promotion_score DOUBLE PRECISION NOT NULL DEFAULT 1.0,
+   retrieval_weight DOUBLE PRECISION NOT NULL DEFAULT 1.0,
+   cumulative_settlement_count INTEGER NOT NULL DEFAULT 0,
+   ewma_brier_attribution DOUBLE PRECISION NOT NULL DEFAULT 0.0,
+   spectral_low_embedding vector(512) NOT NULL,
+   spectral_high_embedding vector(512) NOT NULL,
+   embedding vector(1024) NOT NULL,
+   status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'SHADOW', 'DEMOTED', 'QUARANTINED')),
+   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- GIN index for O(1) pre-filtering by registry-bound game-context primitive enum
+CREATE INDEX idx_lit_premises_context_gin ON literature_premises USING gin (applicable_context_fields);
+
+-- Primary HNSW Cosine Index tuned for ~10^4 verified premises
+CREATE INDEX idx_lit_premises_hnsw_cosine ON literature_premises
+ USING hnsw (embedding vector_cosine_ops)
+ WITH (m = 24, ef_construction = 200);
+
+For the GSE corpus size (\sim 3,000 to 15,000 verified premises across papers and datasets), building the HNSW index with M = 24 (upgraded from the default 16 to eliminate local-minimum traps across clustered sports subdomains) and ef_construction = 200 (upgraded from 128 to maximize relative-neighborhood Delaunay subgraph fidelity during build) consumes < 45\text{ MB} of shared buffers and builds in < 4.2\text{ seconds}. At query time, SEARCH-LAYER greedily traverses from the top entry point ep at layer L down to layer 1 with \text{ef} = 1, and then expands a dynamic candidate list of size ef_search at base layer l_c = 0. The engine sets SET LOCAL hnsw.ef_search = 64 for sub-millisecond live in-play ticks (achieving > 0.992 Recall@20 in < 1.1\text{ ms}) and SET LOCAL hnsw.ef_search = 128 for pre-game deep graph construction (achieving > 0.998 Recall@20 in < 2.4\text{ ms}).
+3.3 Dual-Frequency Spectral Routing (BRIDGE) and Content-Driven Delta Equations
+Standard vector retrieval suffers from an alignment-ranking paradox identified in BRIDGE (Li et al., CIKM 2026): over-aligning multimodal and textual representations suppresses private, high-frequency ranking variation and blurs distinctions between genuinely applicable situational mechanisms and superficial lookalikes. GSE integrates the BRIDGE Dual-Frequency Graph Evidence (DFGE) and Candidate Residual Integrator (CRI) directly into arxiv-reasoning-bridge.ts and mind-reasoning.ts.
+In the Spectral Band Decomposition stage, let \mathbf{Z}^c \in \mathbb{R}^{N \times d} denote the graph-smoothed representation matrix over the premise-signal bipartite interaction graph for channel c \in \{\text{id}, \text{context}, \text{text}\} after L=2 rounds of symmetric normalized message passing \mathbf{H}^{c,(\ell+1)} = \hat{\mathbf{A}}\mathbf{H}^{c,(\ell)} where \hat{\mathbf{A}} = \mathbf{D}^{-1/2}\mathbf{A}\mathbf{D}^{-1/2}. Computing the singular value decomposition \mathbf{Z}^c = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top, the right singular directions are partitioned in descending singular-value order into M=3 contiguous spectral bands \mathbf{V} = [\mathbf{V}_1, \mathbf{V}_2, \mathbf{V}_3] (splitting 64 dimensions into 22/21/21 low/mid/high bands):
+\mathbf{H}^{c,m} = \mathbf{Z}^c \mathbf{V}_m \mathbf{V}_m^\top, \qquad \mathbf{e}_n = \sum_{m=1}^{M} \omega_m \alpha_n^m \mathbf{h}_n^m, \qquad \alpha_n^m = 1 + \rho \cdot \sigma[span_59](start_span)[span_59](end_span)(\mathbf{W}_g \mathbf{z}_n + \mathbf{b}_g)_m, \qquad \omega_m = \sigma(a_m)
+Here, the leading low-frequency band (m=1) captures shared cross-view domain consensus, while the high-frequency band (m=3) preserves fine-grained situational discrimination.
+In the Candidate-Scoped Behavior Residual Calibration stage, for an incoming game context event u triggering context primitive c \in \mathcal{C} with observed value x_c, the HNSW index retrieves the base top-K_c candidate set (K_c = 50):
+\mathcal{C}_u = \text{TopK}\left(s_{\text{base}}(u, \cdot), K_c\right), \qquad \text{where} \quad s_{\text{base}}(u, i) = \langle \mathbf{e}_u, \mathbf{e}_i \rangle
+From historical training settlements \mathcal{D}_{\text{tr}} (strictly excluding validation and 2025/2026 holdout partitions), the Behavior Evidence Normalizer (BEN) computes co-occurring premise success overlap B_{ij} = \frac{|\mathcal{U}_i^{\text{tr}} \cap \mathcal{U}_j^{\text{tr}}|}{\sqrt{|\mathcal{U}_i^{\text{tr}}| \cdot |\mathcal{U}_j^{\text{tr}}|}}, aggregates historical support \tilde{b}_{ui} = \frac{1}{\sqrt{|\mathcal{H}_u^{\text{tr}}|}} \sum_{j \in \mathcal{H}_u^{\text{tr}}} B_{ij}, and z-score normalizes it into b_{ui} = \frac{\tilde{b}_{ui} - \mu_u}{\sigma_u + \epsilon}. The Candidate Residual Integrator (CRI) then calibrates the retrieval activation score strictly inside the candidate scope \mathcal{C}_u, combined with the dynamic settlement promotion score \pi_i^{(t)}:
+s_{\text{f[span_175](start_span)[span_175](end_span)inal}}(u, i) = s_{\text{base}}(u, i) + \mathbb{I}[i \in \mathcal{C}_u] \cdot \lambda_b b_{ui} + \lambda_\pi \ln \pi_i^{(t)}
+In the Pure Content-Driven Delta and Opposing-Claim Deadband stage, let \mathcal{M}_c \subseteq \mathcal{C}_u be the retrieved active premises matching primitive c with s_{\text{final}}(u, i) \ge \tau_{\text{ret}}. For each premise i \in \mathcal{M}_c, the normalized context displacement from baseline anchor x_{c,0} is \delta x_{c,i} = \frac{x_c - x_{c,0}}{u_i}, where u_i is unit_scale_denominator. The epistemic confidence weight w_i^{\text{eff}} integrates the study design class w_i \in \{1.0, 0.5, 0.3\} (causal, correlational, theoretical) with the settlement-learned promotion score \pi_i^{(t)}:
+w_i^{\text{eff}} = w_i \cdot \pi_i^{(t)}, \qquad \text{where} \quad w_i = \begin{cases} 1.0 & \text{if } \text{claim\_type}_i = \text{"causal"} \\ 0.5 & \text{if } \text{claim\_type}_i = \text{"correlational"} \land \text{confound\_conditioned}_i = \text{True} \\ 0.3 & \text{if } \text{claim\_type}_i = \text{"theoretical"} \lor \text{confound\_conditioned}_i = \text{False} \end{cases}
+The directional sign operator s_i(x_c) \in \{-1, 0, +1\} evaluates influence_direction and any conditional_threshold predicate \mathcal{T}_i(x_c) \in \{0, 1\}, yielding the individual proposed delta \delta_{c,i} = s_i(x_c) \cdot |\beta_i| \cdot \delta x_{c,i}, where |\beta_i| is parsed_float_magnitude. Over the active subset \mathcal{M}_c^{\text{active}} = \{i \in \mathcal{M}_c : s_i(x_c) \neq 0\}, the engine computes the confidence-weighted aggregate delta \bar{\Delta}_c and directional consensus ratio \eta_c \in [0, 1]:
+\bar{\Delta}_c = \frac{\sum_{i \in \mathcal{M}_c^{\text{active}}} w_i^{\text{eff}} \cdot \delta_{c,i}}{\sum_{i \in \mathcal{M}_c^{\text{active}}} w_i^{\text{eff}}}, \qquad \eta_c = \frac{\left| \sum_{i \in \mathcal{M}_c^{\text{active}}} w_i^{\text{eff}} \cdot \delta_{c,i} \right|}{\sum_{i \in \mathcal{M}_c^{\text{active}}} w_i^{\text{eff}} \cdot |\delta_{c,i}|}
+Applying the intermediate field clamp \Delta_{\max} = 0.10 (FIELD_DELTA_CLAMP) and the opposing-claim deadband threshold \eta_{\min} = 0.20 yields the final literature adjustment:
+\Delta_c^{\text{final}} = \begin{cases} \text{clip}\left(\bar{\Delta}_c, -\Delta_{\max}, +\Delta_{\max}\right) & \text{if } \eta_c \ge 0.20 \land |\bar{\Delta}_c| \ge 10^{-4} \quad (\text{status: APPLIED}) \\ 0.0 & \text{if } \eta_c < 0.20 \lor |\bar{\Delta}_c| < 10^{-4} \quad (\text{status: CONFLICT\_NEUTRALIZED}) \end{cases}
+4. Causal Inference as the Core Product: SCMs, do-Calculus, and Adversary Review
+Rather than treating \Delta_c^{\text{final}} and bridge-model.ts outputs as flat additive features in a linear tilt, the GSE engine constructs an explicit Structural Causal Model (SCM) \mathcal{M} = \langle \mathcal{U}, \mathcal{V}, \mathcal{F}, P(\mathcal{U}) \rangle for every game and player prop. Here, \mathcal{V} = \{V_1, \dots, V_d\} are endogenous observable game variables, \mathcal{U} are exogenous background and unmeasured confounding variables with joint distribution P(\mathcal{U}), and \mathcal{F} = \{f_1, \dots, f_d\} are deterministic structural equations v_j = f_j(\text{pa}_j, u_j). Whenever exogenous terms U_j, U_k \in \mathcal{U} are correlated (representing unmeasured common causes such as undisclosed injury severity or private syndicate information), the induced graph is a semi-Markovian Acyclic Directed Mixed Graph (ADMG) \mathcal{G} = (\mathcal{V}, \mathcal{E}_d, \mathcal{E}_b) containing both directed causal arrows V_i \to V_j \in \mathcal{E}_d and bidirected confounding arcs V_i \leftrightarrow V_j \in \mathcal{E}_b.
+4.1 Mapping L1–L5 Traces, Literature Premises, and Live Signals into Explicit Causal Graphs
+Every candidate prediction is synthesized through a five-level hierarchical trace (L1–L5) that maps directly into nodes, edges, and structural equations of \mathcal{G}.
+Trace Level
+	Epistemic Role in Engine
+	Input Artifacts
+	Output Graphical Primitive in ADMG \mathcal{G} = (\mathcal{V}, \mathcal{E}_d, \mathcal{E}_b)
+	L1: Raw Perception & Temporal Anchoring
+	Verifies physical sensor/text provenance and bitemporal watermark (t_{\text{valid}}, t_{\text{tx}}).
+	Live X stream, presser audio, Zebra RFID tracking, NOAA HRRR, SportsDataIO feed.
+	Root exogenous realizations and observed boundary node states V_{\text{obs}} = v_0 with sample counts n_v > 0.
+	L2: Contextual Normalization & Bridge Premise
+	Converts unsigned context scalars into signed, sample-counted directional probabilities.
+	feature-matrix.ts + bridge-model.ts + acwr_content_driven_fix.py.
+	Standardized endogenous nodes V_i \in \mathcal{V} with directional sign s_i \in \{-1, +1\}, baseline displacement \delta x_{c,i}, and empirical sample support N_i.
+	L3: Literature Mechanism Grounding
+	Instantiates parameterized structural equations from verified scientific literature.
+	literature_premises HNSW top-k (VerifiedSituationalPrinciple + arxiv-reasoning-bridge.ts).
+	Directed structural edges (V_i \to V_j) \in \mathcal{E}_d with initial edge weight \theta_{ij}^{(0)} = \Delta_{c}^{\text{final}} and epistemic variance \sigma_{ij}^2 \propto (w_i^{\text{eff}})^{-1}.
+	L4: Structural Causal Graph Assembly & Discovery
+	Resolves multi-path mediation, collider bias, and latent confounding arcs across variables.
+	Standardized DYNOTEARS + FCI over historical play-by-play/market residuals.
+	Complete ADMG \mathcal{G} with weighted adjacency matrix \mathbf{W} \in \mathbb{R}^{d \times d}, bidirected confounding set \mathcal{E}_b, and C-component partition \mathcal{C}(\mathcal{G}).
+	L5: Interventional & Counterfactual Verification
+	Executes do-calculus mutilation, Shpitser-Pearl ID, E-value sensitivity, and conformal gating.
+	DoCalculusIDEngine, AdversaryRedTeam, ConformalCopulaCalibrator.
+	Mutilated interventional distribution P(Y \mid \text{do}(X=x)), counterfactual survival certificate, and ValidatedCausalTrace<T>.
+	4.2 Hybrid Causal Discovery: Remediating the NOTEARS Scale Trap with Interventional Constraints
+To discover edges among the 240+ signal families without relying solely on manual domain graphs, GSE combines continuous DAG optimization (NOTEARS / DYNOTEARS; Zheng et al. 2018, 2020; Pamfil et al. 2020) with constraint-based latent discovery (FCI). Standard NOTEARS estimates a weighted adjacency matrix \mathbf{W} \in \mathbb{R}^{d \times d} by minimizing regularized least-squares loss subject to the smooth acyclicity characterization h(\mathbf{W}) = \text{tr}(e^{\mathbf{W} \circ \mathbf{W}}) - d = 0 via the Augmented Lagrangian method.
+However, as demonstrated by Kaiser and Sipos (2021), naive NOTEARS is not scale-invariant: in a two-node system X_0, X_1, minimizing residual variance pushes the directed edge from the lower-variance node to the higher-variance node (X_0 \to X_1 when \text{Var}(X_1) > \text{Var}(X_0)), meaning arbitrary unit rescaling (such as measuring altitude in feet versus kilometers, or wind in mph versus m/s) flips causal directionality during the first L-BFGS-B inner update step. GSE eliminates this pathology through three mathematical modifications. First, it enforces a Precision-Preconditioned Non-Equal Variance Log-Likelihood, standardizing all continuous context variables against their conditional prior precision and replacing the least-squares objective with the scale-invariant Gaussian log-likelihood loss with an explicit log-determinant penalty:
+\ell_{\text{NV}}(\mathbf{W}, \mathbf{X}) = \frac{1}{2} \sum_{j=1}^{d} \ln \left( \left\| (\mathbf{X} - \mathbf{X}\mathbf{W})_{:,j} \right\|_2^2 \right) - \ln \left| \det(\mathbf{I} - \mathbf{W}) \right|
+Second, it incorporates Bitemporal Time-Series Decomposition (DYNOTEARS), modeling contemporaneous (intra-slice) edges \mathbf{W}_0 and time-lagged (inter-slice) edges \mathbf{A}_1, \dots, \mathbf{A}_p across plays and weeks jointly via \mathbf{X}_t = \mathbf{X}_t \mathbf{W}_0 + \sum_{\tau=1}^p \mathbf{X}_{t-\tau} \mathbf{A}_\tau + \mathbf{E}_t, where temporal precedence strictly forbids future-to-past edges and acyclicity is enforced solely on \mathbf{W}_0. Third, it applies Literature-Anchored Interventional Path Constraints. Verified causal premises from literature_premises impose hard structural support masks \mathcal{S}_{\text{lit}}^{[span_62](start_span)[span_62](end_span)[span_66](start_span)[span_66](end_span)+} (known active mechanisms where W_{ij} \neq 0) and temporal/physical tier masks \mathcal{S}_{\text{forbid}}^{0} (such as forbidding game score from causally altering pre-game wind speed: W_{\text{score} \to \text{wind}} = 0). Denoting the total causal effect matrix across all directed paths by \mathbf{T}(\mathbf{W}) = \sum_{k=1}^{d-1} \mathbf{W}^k = (\mathbf{I} - \mathbf{[span_63](start_span)[span_63](end_span)[span_67](start_span)[span_67](end_span)W})^{-1} - \mathbf{I}, the constrained Augmented Lagrangian objective solved by GSE is:
+\min_{\mathbf{W} \in \mathbb{R}^{d \times d}} \mathcal{L}_{\rho}(\mathbf{W}) = \ell_{\text{NV}}(\mathbf{W}, \mathbf{X}) + \lambda_1 \|\mathbf{W}\|_1 + \frac{\rho}{2} |h(\mathbf{W})|^2 + \alpha h(\mathbf{W}) + \frac{\mu_{\text{lit}}}{2} \sum_{(j,i) \in \mathcal{S}_{\text{lit}}^{+}} \left( T_{ij}(\mathbf{W}) - \Delta_{j \to i}^{\text{lit}} \right)^2 \quad \text{s.t.} \quad W_{uv} = 0 \ \forall (u,v) \in \mathcal{S}_{\text{forbid}}^{0}
+where h(\mathbf{W}) = \text{tr}(e^{\mathbf{W} \circ \mathbf{W}}) - d = 0. After convergence (h(\mathbf{W}) < 10^{-6}), Fast Causal Inference (FCI) conditional independence tests run over the residual vectors \hat{\mathbf{E}} = \mathbf{X} - \mathbf{X}\hat{\mathbf{W}}; any statistically significant residual partial correlation between nodes V_i and V_j that cannot be directed without violating acyclicity or temporal tiering is instantiated as a bidirected latent confounding arc V_i \leftrightarrow V_j \in \mathcal{E}_b.
+4.3 Pearl's do-Calculus, Graph Mutilation, and the Shpitser-Pearl ID Algorithm
+When a live shock arrives—such as a left tackle ruled Inactive, a defensive coordinator shifting to Cover 2 Man, public betting tickets reaching 82\% on a favorite while the line moves the opposite way (RLM), or a pre-snap formation shift to Empty—the engine must compute the interventional distribution P(\mathbf{Y} = \mathbf{y} \mid \text{do}(\mathbf{X} = \mathbf{x})), denoted P_{\mathbf{x}}(\mathbf{y}), rather than the observational conditional P(\mathbf{y} \mid \mathbf{x}).
+Let \mathcal{G} be the causal ADMG, and let \mathbf{X}, \mathbf{Y}, \mathbf{Z}, \mathbf{W} \subseteq \mathcal{V} be disjoint subsets of vertices. Graph mutilation operates through three canonical topological transformations: \mathcal{G}_{\overline{\mathbf{X}}} denotes the incoming-mutilated graph obtained by deleting from \mathcal{G} all directed and bidirected edges pointing into nodes in \mathbf{X}, physically severing the natural causes that normally govern \mathbf{X}; \mathcal{G}_{\underline{\mathbf{Z}}} denotes the outgoing-mutilated graph obtained by deleting from \mathcal{G} all directed edges emerging from nodes in \mathbf{Z}, blocking direct causal transmission out of \mathbf{Z}; and \mathcal{G}_{\overline{\mathbf{X}}\under[span_179](start_span)[span_179](end_span)[span_181](start_span)[span_181](end_span)[span_183](start_span)[span_183](end_span)line{\mathbf{Z}}} denotes the graph with both incoming arrows to \mathbf{X} and outgoing arrows from \mathbf{Z} removed. Under the positivity condition P(\mathbf{x} \mid \text{Pa}(\mathbf{X})_{\mathcal{G}} \setminus \mathbf{X}) > 0, Pearl’s three rules of do-calculus (Pearl 1995, 2000, 2009) govern all valid algebraic transformations of interventional distributions via d-separation (\perp\!\!\!\perp_d) in mutilated graphs. Rule 1 (Insertion/Deletion of Observations) states that:
+P_{\mathbf{x}}(\mathbf{y} \mid \mathbf{z}, \mathbf{w}) = P_{\mathbf{x}}(\mathbf{y} \mid \mathbf{w}) \qquad \text{if } (\mathbf{Y} \perp\!\!\!\perp_d \mathbf{Z} \mid \mathbf{X}, \mathbf{W})_{\mathcal{G}_{\overline{\mathbf{X}}}}
+Rule 2 (Action/Observation Exchange) states that:
+P_{\mathbf{x}, \mathbf{z}}(\mathbf{y} \mid \mathbf{w}) = P_{\mathbf{x}}(\mathbf{y} \mid \mathbf{z}, \mathbf{w}) \qquad \text{if } (\mathbf{Y} \perp\!\!\!\perp_d \mathbf{Z} \mid \mathbf{X}, \mathbf{W})_{\mathcal{G}_{\overline{\mathbf{X}}\underline{\mathbf{Z}}}}
+Rule 3 (Insertion/Deletion of Actions) states that:
+P_{\mathbf{x}, \mathbf{z}}(\mathbf{y} \mid \mathbf{w}) = P_{\mathbf{x}}(\mathbf{y} \mid \mathbf{w}) \qquad \text{if } (\mathbf{Y} \perp\!\!\!\perp_d \mathbf{Z} \mid \mathbf{X}, \mathbf{W})_{\mathcal{G}_{\overline{\mathbf{X}}\overline{\mathbf{Z}(\mathbf{W})}}}
+where \mathbf{Z}(\mathbf{W}) = \mathbf{Z} \setminus \text{An}(\mathbf{W})_{\mathcal{G}_{\overline{\mathbf{X}}}} is the subset of \mathbf{Z} nodes that are not ancestors of any node in \mathbf{W} in the mutilated graph \mathcal{G}_{\overline{\mathbf{X}}}.
+Rather than searching heuristically over Rules 1–3 at runtime, GSE implements the sound and complete Shpitser-Pearl ID algorithm (Shpitser & Pearl 2006, 2008; Tian & Pearl 2002) based on Confounded Component (C-component) factorization. A subset S \subseteq \mathcal{V} is a C-component of \mathcal{G} if every pair of vertices in S is connected by a path consisting entirely of bidirected confounding arcs \leftrightarrow in \mathcal{G}. Every ADMG \mathcal{G} uniquely partitions its observable vertices \mathcal{V} into maximal C-components \mathcal{C}(\mathcal{G}) = \{S_1, \dots, S_k\}. By Tian and Pearl’s Q-decomposition lemma, the interventional distribution of any set S_j when all other variables are intervened upon, Q[S_j](\mathbf{v}) := P_{\mathbf{v} \setminus \mathbf{s}_j}(\mathbf{s}_j), is identifiable directly from the observational distribution P(\mathbf{v}) under topological ordering \pi = (V_1 \prec \dots \prec V_d):
+P(\mathbf{v}) = \prod_{j=1}^{k} Q[S_j](\mathbf{v}), \qquad \text{where} \quad Q[S_j](\mathbf{v}) = \prod_{V_i \in S_j} P\left(v_i \ \middle|\ v_{\pi^{(i-1)}}\right)
+and the truncated factorization (g-formula) over \mathcal{V} \setminus \mathbf{X} decomposes as:
+P_{\mathbf{x}}(\mathbf{v} \setminus \mathbf{x}) = \prod_{S_j \in \mathcal{C}(\mathcal{G}[\mathcal{V} \setminus \mathbf{X}])} Q_{\mathcal{G}[\mathcal{V} \setminus \mathbf{X}]}[S_j]
+To establish the necessary and sufficient graphical condition for non-identifiability, an ADMG \mathcal{F} that is a single C-component where every node has at most one directed child (forming a directed forest pointing toward root set \mathbf{R}) is defined as an \mathbf{R}-rooted C-forest. For disjoint sets \mathbf{X}, \mathbf{Y} \subseteq \mathcal{V}, two \mathbf{R}-rooted C-forests \mathcal{F}, \mathcal{F}' in \mathcal{G} form a hedge for P_{\mathbf{x}}(\mathbf{y}) if \mathcal{F}' \subset \mathcal{F}, \mathbf{X} \cap \mathcal{V}(\mathcal{F}') = \emptyset, \mathbf{X} \cap (\mathcal{V}(\mathcal{F}) \setminus \mathcal{V}(\mathcal{F}')) \neq \emptyset, and \mathbf{R} \subseteq \text{An}(\mathbf{Y})_{\mathcal{G}_{\overline{\mathbf{X}}}}. By Shpitser and Pearl’s Hedge Theorem, P_{\mathbf{x}}(\mathbf{y}) is identifiable from P(\mathbf{v}) in \mathcal{G} if and only if no hedge exists in \mathcal{G} for any P_{\mathbf{x}'}(\mathbf{y}') with \mathbf{X}' \subseteq \mathbf{X}, \mathbf{Y}' \subseteq \mathbf{Y}.
+ID(y, x, P, G) Step
+	Graphical Condition Evaluated
+	Recursive Action or Terminal Functional Returned
+	Line 1 (No Intervention)
+	\mathbf{x} = \emptyset
+	Return marginal observational distribution \sum_{\mathbf{v} \setminus \mathbf{y}} P(\mathbf{v}).
+	Line 2 (Prune Non-Ancestors)
+	\mathcal{V}[span_245](start_span)[span_245](end_span) \setminus \text{An}(\mathbf{Y})_{\mathcal{G}} \neq \emptyset
+	Return \text{ID}\left(\mathbf{y}, \mathbf{x} \cap \text{An}(\mathbf{Y})_{\mathcal{G}}, \sum_{\mathcal{V} \setminus \text{An}(\mathbf{Y})_{\mathcal{G}}} P, \mathcal{G}[\text{An}(\mathbf{Y})_{\mathcal{G}}]\right).
+	Line 3 (Rule 3 Action Insertion)
+	\mathbf{W} = (\mathcal{V} \setminus \mathbf{X}) \setminus \text{An}(\mathbf{Y})_{\mathcal{G}_{\overline{\mathbf{X}}}} \neq \emptyset
+	Return \text{ID}(\mathbf{y}, \mathbf{x} \cup \mathbf{w}, P, \mathcal{G}).
+	Line 4 (C-Component Split)
+	\mathcal{C}(\mathcal{G}[\mathcal{V} \setminus \mathbf{X}]) = \{S_1, \dots, S_k\} with k \ge 2
+	Return \sum_{\mathcal{V} \setminus (\mathbf{Y} \cup \mathbf{X})} \prod_{i=1}^k \text{ID}(s_i, \mathbf{v} \setminus s_i, P, \mathcal{G}).
+	Line 5 (Hedge Failure Check)
+	\mathcal{C}(\mathcal{G}[\mathcal{V} \setminus \mathbf{X}]) = \{S\} and \mathcal{C}(\mathcal{G}) = \{\mathcal{V}\}
+	\mathcal{G} and S form a witnessing hedge; halt and return FAIL_HEDGE(\mathcal{G}, \mathcal{G}[S]).
+	Line 6 (Direct c-Factor Match)
+	\mathcal{C}(\mathcal{G}[\mathcal{V} \setminus \mathbf{X}]) = \{S\} and S \in \mathcal{C}(\mathcal{G})
+	Return \sum_{s \setminus \mathbf{y}} \prod_{V_i \in S} P\left(v_i \mid v_{\pi^{(i-1)}}\right).
+	Line 7 (Sub-Component Shrink)
+	\mathcal{C}(\mathcal{G}[\mathcal{V} \setminus \mathbf{X}]) = \{S\} and \exists S' \in \mathcal{C}(\mathcal{G}) with S \subset S'
+	Return \text{ID}\left(\mathbf{y}, \mathbf{x} \cap S', \prod_{V_i \in S'} P(v_i \mid v_{\pi^{(i-1)}} \cap S', v_{\pi^{(i-1)}} \setminus S'), \mathcal{G}[S']\right).
+	When ID executes on concrete sports interventions, it automatically synthesizes the exact back-door, front-door, or hedge-breaking functional required by the local graph topology. In a Back-Door Identification scenario (such as a Key Player Injury or Offensive Line Continuity Shock), let X = \text{OL\_Continuity\_Shock} (for instance, a starting Left Tackle ruled out 90 minutes pre-game), Y = \text{QB\_Pressure\_Rate} \to \text{Passing\_EPA}, and \mathbf{Z} = \{\text{Opponent\_Pass\_Rush\_Win\_Rate}, \text{Game\_Spread\_Prior}, \text{Quick\_Game\_Scheme\_Rate}\}. Because \mathbf{Z} contains no descendants of X and blocks all back-door paths X \leftarrow \mathbf{Z} \to Y in \mathcal{G}_{\underline{X}}, ID reduces to the Back-Door adjustment formula:
+P(Y = y \mid \text{do}(X = x)) = \sum_{\mathbf{z}} P(Y = y \mid X = x, \mathbf{Z} = \mathbf{z}) P(\mathbf{Z} = \mathbf{z})
+Conversely, in a Front-Door Identification scenario (such as a Coaching Scheme Shift with a Latent Film-Study Confounder), suppose an offensive coordinator intervenes on X = \text{SchemeShift} (shifting to condensed formations or motion at the snap), which impacts outcome Y = \text{SuccessRate} entirely through the observable tracking mediator M = \text{PreSnapSeparation\_Phase1} (Seth Walder Phase 1 pre-throw tracking metric). If X and Y share an unmeasured latent confounder U = \text{PrivateDefensiveGameplan} (X \leftrightarrow Y \in \mathcal{E}_b), the back-door criterion is violated. Provided X \to M \to Y has no unblocked confounding between X and M or between M and Y given X, ID (via Lines 4, 6, and 7) automatically synthesizes Pearl’s Front-Door functional:
+P(Y = y \mid \text{do}(X = x)) = \sum_{m} P(M = m \mid X = x) \sum_{x'} P(Y = y \mid X = x', M = m) P(X = x')
+Finally, in a Hedge Rejection and ID-Enabling Edge Expansion scenario (such as Public Share versus Sharp Steam), if X = \text{PublicTicketShare} and Y = \text{ATS\_Cover} are directly connected by a bidirected arc X \leftrightarrow Y (latent syndicate information U_{\text{sharp}}) alongside X \to \text{BookmakerShade} \to Y, and BookmakerShade is also confounded with X via U_{\text{sharp}}, \mathcal{G} and \mathcal{G}[\{Y, \text{BookmakerShade}\}] form a Y-rooted hedge. ID returns FAIL_HEDGE. The engine then invokes ID-EnablingEdges (Algorithm 2 of): by inserting the observed intermediate mediator node N = \text{Polymark[span_259](start_span)[span_259](end_span)[span_269](start_span)[span_269](end_span)et\_CLOB\_OrderFlow\_Divergence} or reverse_line_movement_divergence_pct on the directed edge, the hedge is broken and the interventional effect becomes identifiable. If no observed mediator breaks the hedge, the chain is rejected as ASSOCIATION_ONLY and forbidden from moving trueProb.
+4.4 Automated Adversary Review: E-Values, Counterfactual Refutation, and Chain Demotion
+Even when P_{\mathbf{x}}(\mathbf{y}) is graphically identifiable in \mathcal{G}, the edge could be fragile to an unmodeled latent confounder U_{\text{missing}} \notin \mathcal{E}_b or to lexical/entity overfitting. Every identified causal chain must survive the Automated Adversary Review Module (AdversaryRedTeam) consisting of four orthogonal falsification tests.
+The first test is VanderWeele and Ding (2017) E-Value Sensitivity Analysis. For every active causal path X \to Y yielding an interventional risk ratio RR = \frac{P(Y=1 \mid \text{do}(X=1))}{P(Y=1 \mid \text{do}(X=0))} (where RR is inverted as RR^* = 1/RR if RR < 1 so that RR^* \ge 1), let RR_{EU} denote the maximum risk ratio relating an unmeasured confounder U to the intervention X, and RR_{UD} denote the maximum risk ratio relating U to outcome Y, conditional on measured covariates \mathbf{Z}. The E-value quantifies the minimum strength of association on the risk-ratio scale that an unmeasured confounder would need to have with both X and Y to explain away the estimated causal effect entirely (RR_{\text{true}} = 1.0):
+\text{E-value}(\hat{RR}^*) = \hat{RR}^* + \sqrt{\hat{RR}^* \left(\hat{RR}^* - 1\right)}
+Simultaneously, the engine computes the E-value for the lower limit of the 95\% confidence interval LL (if LL \le 1, \text{E-value}(LL) = 1.0; if LL > 1, \text{E-value}(LL) = LL + \sqrt{LL(LL - 1)}). For continuous outcomes (such as player rushing yards or point spread margin with standardized effect size d = \frac{\hat{\Delta}_Y}{\sigma_Y} and standard error s_d), the risk ratio approximation RR \approx \exp(0.91 \cdot d) yields:
+\text{E-va[span_306](start_span)[span_306](end_span)[span_312](start_span)[span_312](end_span)lue}(d) = \exp(0.91 |d|) + \sqrt{\exp(0.91 |d|) \left(\exp(0.91 |d|) - 1\right)}
+If \text{E-value}(\hat{RR}^*) < \tau_{E,\text{point}} = 1.35 or \text{E-value}(LL) \le \tau_{E,\text{CI}} = 1.10, an unmeasured confounder of trivial magnitude could nullify the causal claim; the Adversary Review module demotes the chain to FRAGILE_CONFOUND_RISK and clamps its interventional contribution to zero.
+The second test is Pearl Rung 3 Counterfactual Refutation (Abduction–Action–Prediction). Over the trailing N_{\text{hist}} = 50 settled games where the same structural subgraph \mathcal{G}_{\text{sub}} was active with observed realizations (\mathbf{x}^{(k)}, \mathbf{y}^{(k)}), the adversary first executes Abduction by updating the exogenous background distribution P(\mathcal{U} \mid \mathbf{X}=\mathbf{x}^{(k)}, \mathbf{Y}=\mathbf{y}^{(k)}) through structural residual inversion \hat{\mathbf{u}}^{(k)} = \mathbf{y}^{(k)} - \mathbf{f}(\text{pa}_Y^{(k)}). Next, it executes Action by mutilating the graph and replacing X = \mathbf{x}^{(k)} with the baseline counterfactual \text{do}(X = \mathbf{x}_0) (such as setting wind to baseline 5\text{ mph} or restoring an injured player to active status). It then executes Prediction by computing the counterfactual outcome \hat{\mathbf{y}}_{\mathbf{x}_0}^{(k)} = \mathbf{f}_{\mathbf{x}_0}(\text{pa}_Y^{(k)}, \hat{\mathbf{u}}^{(k)}) and comparing the Probability of Necessity and Sufficiency (\text{PNS} = P(Y_x = 1, Y_{x'} = 0)) against the Tian-Pearl counterfactual bounds. Alongside this check, the adversary runs a Placebo Permutation Refutation by replacing X with an independent Gaussian permutation X_{\text{placebo}} \sim \mathcal{N}(\mu_X, \sigma_X^2); if \left| \mathbb{E}[Y \mid \text{do}(X_{\text{placebo}})] - \mathbb{E}[Y] \right| > 0.005, the estimator exhibits structural leakage and fails Adversary Review.
+The third test is the Adversarial Entity-Swap Invariance Probe. Following the GSE test specification, the adversary replaces team and player surface identifiers ("Kansas City Chiefs" \to "Team Alpha", "Patrick Mahomes" \to "Player_QB_01") while holding the entire numeric GameContextVector, feature-matrix.ts scalars, and literature_premises constant. If the resulting situational probability diverges by \left| p_{\text{orig}} - p_{\text{swapped}} \right| \ge 0.02, the trace is contaminated by LLM entity memorization rather than causal mechanism execution and is immediately rejected.
+The fourth test is the CausalPhys Rationale-Graph Alignment Gate (EF, RA, DC). Any natural-language or symbolic L1–L5 trace R emitted alongside the graph is scored against the ground-truth ADMG \mathcal{G} using the CausalPhys mechanism-level diagnostic equations:
+\text{EF}(R, \mathcal{G}) = \frac{1}{|\mathcal{V}|} \sum_{v \in \mathcal{V}} \mathcal{M}(v, R), \qquad \text{RA}(R, \mathcal{G}) = \frac{1}{|\mathcal{E}_d|} \sum_{e \in \mathcal{E}_d} \mathcal{M}(e, R), \qquad \text{DC}(R, \mathcal{G}) = \frac{1}{|\mathcal{A}|} \sum_{a \in \mathcal{A}} \mathcal{M}(a, R)
+where \mathcal{M}(z, R) \in \{0, 1\} is the deterministic binary verifier confirming whether entity v, directed causal edge e = (u \to v), or attribute/magnitude a in \mathcal{G} is faithfully entailed in R. Any trace with \text{EF} < 0.95, \text{RA} < 0.85, or \text{DC} < 0.90 is rejected.
+5. Continuous Self-Improvement Loop and Mathematical Update Equations
+Every settled game or player prop (y_t \in \{0, 1\} for binary outcomes; y_t \in \mathbb{R} for continuous stat projections) and every observed Closing Line Value (\text{CLV}_t = p_t^{\text{close,vig-free}} - p_t^{\text{decision,vig-free}}) triggers a synchronous, same-cycle execution of packages/prediction-engine/src/learning/settlement-loop.ts. This loop updates six coupled state spaces—Brier Vector Partition, Causal Edge Posteriors, Premise Promotion Scores, Conformal/Copula Calibration Maps, Epistemic Knowability & Kelly Sizing, and Latent Residual Discovery—without human intervention.
+5.1 Murphy (1973) Brier Score Vector Partition and Calibration Diagnostics
+Given a rolling window of N settled predictions \{p_t, y_t\}_{t=1}^N partitioned into K probability bins \mathcal{B}_1, \dots, \mathcal{B}_K of size N_k = |\mathcal{B}_k|, with bin mean forecast \bar{p}_k = \frac{1}{N_k}\sum_{t \in \mathcal{B}_k} p_t, bin realized frequency \bar{y}_k = \frac{1}{N_k}\sum_{t \in \mathcal{B}_k} y_t, and overall base rate \bar{y} = \frac{1}{N}\sum_{t=1}^N y_t, calibration-tracker.ts computes the exact Murphy (1973) Vector Partition of the Brier Score:
+\text{BS} = \frac{1}{N} \sum_{t=1}^{N} (p_t - y_t)^2 = \underbrace{\frac{1}{N} \sum_{k=1}^{K} N_k (\bar{p}_k - \bar{y}_k)^2}_{\text{REL[span_23](start_span)[span_23](end_span) (Reliability / Calibration Error)} \downarrow} - \underbrace{\frac{1}{N} \sum_{k=1}^{K} N_k (\bar{y}_k - \bar{y})^2}_{\text{RES (Resolution / Sharpness)} \uparrow} + \underbrace{\bar{y}(1 - \bar{y})}_{\text{UNC (Climatological Uncertainty)}}
+Alongside \text{BS}, the tracker computes the Expected Calibration Error \text{ECE} = \sum_{k=1}^K \frac{N_k}{N} |\bar{y}_k - \bar{p}_k| and the strictly proper Log Loss \mathcal{L}_{\text{log}} = -\frac{1}{N}\sum_{t=1}^N \left[ y_t \ln p_t + (1-y_t)\ln(1-p_t) \right] against the coin-flip baseline \ln 2 \approx 0.6931. Whenever the trailing 30-game reliability error \text{REL}_{30} or \text{ECE}_{30} exceeds the trailing 250-game baseline \text{ECE}_{250} by > 0.02, a regime-shift flag CALIBRATION_DRIFT_ALERT is raised.
+5.2 Residual-to-Causal-Edge Precision Updates (Kalman / Natural-Gradient Filtering)
+Let p_t = \sigma(\ell_t) be the published situational probability at decision time, where the log-odds \ell_t = \ell_{\text{base},t} + \sum_{e \in \mathcal{P[span_83](start_span)[span_83](end_span)}_{\t[span_141](start_span)[span_141](end_span)[span_147](start_span)[span_147](end_span)ext{active},t}} \theta_e^{(t)} \cdot \phi_e(\mathbf{x}_t) is decomposed over active mutilated causal paths e = (u \to v) \in \mathcal{P}_{\text{active},t} with path feature Jacobian \phi_e(\mathbf{x}_t) = \frac{\partial \ell_t}{\partial \theta_e}. Upon observing the settlement outcome y_t \in \{0, 1\} and vig-free closing market probability p_t^{\text{close}} \in (0, 1), the engine forms the composite hybrid target y_t^* = (1 - \lambda_{\text{clv}}) y_t + \lambda_{\text{clv}} p_t^{\text{close}} (with \lambda_{\text{clv}} = 0.35 to reduce single-game Bernoulli variance using efficient closing-line information) and computes the score residual r_t = y_t^* - p_t.
+Each causal edge weight \theta_e is maintained as a Gaussian belief state \mathcal{N}(\hat{\theta}_e^{(t)}, P_e^{(t)}) with process drift noise Q_e = 10^{-5}. Denoting the active path Jacobian vector by \mathbf{\Phi}_t = [\phi_{e_1}(\mathbf{x}_t), \dots, \phi_{e_m}(\mathbf{x}_t)]^\top and the Bernoulli Fisher information scalar by v_t = p_t(1 - p_t), the exact Laplace-Kalman update equations executed in the same cycle are:
+\mathbf{P}_{t \mid t-1} = \mathbf{P}_{t-1} + \mathbf{Q}, \qquad \mathbf{K}_t = \frac{\mathbf{P}_{t \mid t-1} \mathbf{\Phi}_t}{v_t^{-1} + \mathbf{\Phi}_t^\top \mathbf{P}_{t \mid t-1} \mathbf{\Phi}_t} \hat{\boldsymbol{\theta}}^{(t)} = \hat{\boldsymbol{\theta}}^{(t-1)} + \mathbf{K}_t (y_t^* - p_t), \qquad \mathbf{P}_t = \left(\mathbf{I} - \mathbf{K}_t \mathbf{\Phi}_t^\top\right) \mathbf{P}_{t \mid t-1}
+Credit or blame is thus apportioned strictly in proportion to each edge’s epistemic variance P_e^{(t \mid t-1)} and structural leverage \phi_e(\mathbf{x}_t) along the active mutilated causal path.
+5.3 Same-Cycle Literature Premise Promotion and Retrieval Weight Updates
+For every literature premise i \in \mathcal{M}_c^{\text{active}} that contributed to \ell_t, the engine computes the counterfactual leave-one-out Brier marginal gain \delta \text{BS}_{i,t}:
+\delta \text{BS}_{i,t} = \left( p_{t}^{(-i)} - y_t \right)^2 - \left( p_t - y_t \right)^2
+where p_t^{(-i)} = \sigma(\ell_t - w_{i,\text{norm}}^{\text{eff}} \delta_{c,i}) is the probability that would have been emitted had premise i been excluded. A positive \delta \text{BS}_{i,t} > 0 means premise i strictly reduced the squared prediction error, whereas a negative \delta \text{BS}_{i,t} < 0 means premise i degraded accuracy. Defining \delta \text{CLV}_{i,t} = \text{sign}(p_t - p_{t}^{(-i)}) \cdot (p_t^{\text{close}} - p_t^{\text{decision}}) to measure whether premise i pushed the probability toward the closing line, the premise’s EWMA attribution score A_i^{(t)} and multiplicative promotion score \pi_i^{(t)} \in [0.05, 3.00] update in the same settlement cycle via:
+A_i^{(t)} = (1 - \beta_{\text{attr}}) A_i^{(t-1)} + \beta_{\text{attr}} \left( \delta \text{BS}_{i,t} + \kappa_{\text{clv}} \delta \text{CLV}_{i,t} \right) \pi_i^{(t)} = \text{clip}\left( \pi_i^{(t-1)} \cdot \exp\left( \eta_{\text{prom}} \cdot \frac{\delta \text{BS}_{i,t} + \kappa_{\text{clv}} \delta \text{CLV}_{i,t}}{\sqrt{\text{Var}(\delta \text{BS}_i) + \epsilon}} \right), \ \pi_{\min}, \ \pi_{\max} \right)
+where \beta_{\text{attr}} = 0.05, \eta_{\text{prom}} = 0.15, \kappa_{\text{clv}} = 0.50. Under the Promotion and Demotion Rules, if a SHADOW premise accumulates N_i \ge 15 evaluations with A_i^{(t)} > +0.002 and \pi_i^{(t)} \ge 1.20, its status promotes from SHADOW to ACTIVE. Conversely, if an ACTIVE premise drops to \pi_i^{(t)} < 0.35 over N_i \ge 20 evaluations (or A_i^{(t)} < -0.005), its status transitions to DEMOTED (\pi_i locked to 0.0 in production scoring while retained in SHADOW monitoring).
+5.4 The Unified Conformal, Copula, and Kelly Framework
+A central mathematical unification established in the GSE Conformal Deep Research Wave (Beexly/Sports research/engine-plan-2026-10-03) is that the nonconformity score \alpha_i = s(X_i, Y_i) is the universal bridge uniting finite-sample coverage, multi-leg SGP joint pricing, Brier calibration, and fractional Kelly position sizing.
+First, for Exact Finite-Sample Split Conformal Quantiles (Shafer & Vovk 2008, §4, pp. 379–381), given calibration nonconformity scores \alpha_1, \dots, \alpha_n sorted in non-decreasing order \alpha_{(1)} \le \dots \le \alpha_{(n)} and miscoverage level \epsilon \in (0, 1), the finite-sample corrected quantile is:
+\hat{q}_{1-\epsilon} = \alpha_{(r)}, \qquad \text{where} \quad r = \lceil (n + 1)(1 - \epsilon) \rceil
+Second, for Tail-Allocation Conformalized Quantile Regression (TA-CQR) (Romano et al. 2019, p. 3544; Wang 2026, arXiv:2604.25202), because player prop distributions (such as rushing yards, receiving yards, and strikeouts) exhibit strong positive skewness, equal-tailed CQR intervals are overly conservative. TA-CQR optimizes the lower-tail allocation \beta^* \in (0, \alpha) over quantile-defined cores [\hat{q}_{\beta}(x), \hat{q}_{1-\alpha+\beta}(x)] on validation data and computes the asymmetric conformity score:
+E_i(\beta^*) = \max \left\{ \hat{q}_{\beta^*}(X_i) - Y_i, \;\; Y_i - \hat{q}_{1 - \alpha + \beta^*}(X_i) \right\}, \qquad C_{\text{TA-CQR}}(X_{t}) = \left[ \hat{q}_{\beta^*}(X_t) - \hat{Q}_{1-\alpha}(E), \;\; \hat{q}_{1-\alpha+\beta^*}(X_t) + \hat{Q}_{1-\alpha}(E) \right]
+Third, for Online Non-Exchangeable Monitoring, the engine runs three online trackers in parallel to handle temporal distribution shift and player-graph cross-node coupling. Adaptive Conformal Inference (Gibbs & Candès 2021, §2, p. 3) updates the effective miscoverage rate \alpha_{t+1} = \alpha_t + \gamma(\alpha - \text{err}_t) where \text{err}_t = \mathbb{I}\{Y_t \notin \hat{C}_t\}. Conformal PID Control (Angelopoulos, Candès & Tibshirani 2023, Eq. 3, p. 3) updates the quantile threshold q_{t+1} = \eta g_t + r_t \left(\sum_{i=1}^t g_i\right) + g'_t, where g_t = \text{err}_t - \alpha is proportional error, r_t \sum g_i is integral control, and g'_t is the derivative scorecaster anticipating upcoming volatility (such as a severe weather slate or late-season roster resting). Simultaneously, Spectral Graph Conditional Exchangeability (SCALE, Guo et al. 2026) decomposes player and team multivariate graph time-series via graph wavelets into low-frequency trend embeddings and conformalizes high-frequency nonconformity residuals conditioned on the low-frequency spectral state.
+Fourth, for Debiased Hierarchical Archimedean and Vine Copulas on Correlated SGP Legs (Cyusa Mukama et al. 2025; Park, Tibshirani & Cho 2025), independent multiplication across an m-leg Same-Game Parlay (SGP) with vector-valued nonconformity scores \mathbf{s}_i = (s_{i,1}, \dots, s_{i,m}) violates correlation structure, while naive parametric copulas lose finite-sample validity under misspecification. GSE decomposes the joint density via a pair-copula Vine or Hierarchical Archimedean Copula (with Frank copula generator C_\theta(u, v) = -\frac{1}{\theta} \ln \left( 1 + \frac{(e^{-\theta u}-1)(e^{-\theta v}-1)}{e^{-\theta}-1} \right) on pairwise branches):
+f(s_{i,1}, \dots, s_{i,m}) = c\left(F_1(s_{i,1}), \dots, F_m(s_{i,m})\right) \prod_{d=1}^{m} f_d(s_{i,d})
+Every bivariate marginal P(L_a \land L_b) is strictly clamped within the Fréchet-Hoeffding bounds \max(0, p_a + p_b - 1) \le P(L_a \land L_b) \le \min(p_a, p_b), and the nested copula prediction regions undergo a secondary split-conformal recalibration step over the joint copula level sets to guarantee exact finite-sample multivariate validity P(\mathbf{Y}_t \in \mathbf{C}_{\text{copula}}(\mathbf{X}_t)) \ge 1 - \alpha even if the copula parameter \hat{\theta} is biased.
+Fifth, for the Epistemic Knowability Score \mathcal{K}_t and the Conformal Kelly Sizing Paradox (Ryan 2026, arXiv:2608.01494), empirical findings demonstrate that while locally adaptive conformal intervals (ACI, volatility-scaled, recency-weighted) improve local sharpness, feeding fast-adapting widths into the Kelly denominator f^* = \mu / \sigma^2 regresses compound annual growth by -1.4 to -3.3\text{ percentage points} because interval width noise enters the sizing map nonlinearly. Conversely, slow, unweighted rolling conformal quantiles (1 - \alpha = 0.75) paired with a one-sided downside break-rate dial boost annualized log growth by +28.5\% (outperforming plug-in standard deviation by +2.1\text{ pp/yr}) while cutting maximum drawdown from 27.7\% to 20.3\%. Consequently, GSE strictly decouples Coverage Gating from Position Sizing. The Epistemic Knowability Score \m[span_29](start_span)[span_29](end_span)athcal{K}_t \in [0, 1] quantifies how predictable and well-identified the specific game state is:
+\mathcal{K}_t = \text{clip}\left( \left(1 - \frac{W_{0.75,\text{slow}}(x_t)}{W_{\max}}\right) \cdot \left(1 - \frac{\text{REL}_{\text{bin}(p_t)}}{\text{UNC}}\right) \cdot \tanh\left(\frac{\text{E-value}_[span_30](start_span)[span_30](end_span){\min,t} - 1}{2}\right) \cdot \text{Cov}_{\text{sig},t}, \;\; 0, \;\; 1 \right)
+where W_{0.75,\text{slow}}(x_t) is the slow 250-game unweighted rolling 75\% conformal half-width, \text{REL}_{\text{bin}(p_t)} is the local Murphy reliability error, \text{E-value}_{\min,t} is the bottleneck E-value along the active causal graph, and \text{Cov}_{\text{sig},t} is the fraction of registered signal families present. For net decimal payout odds b_t and edge e_t = b_t p_t - (1 - p_t) > 0, let \sigma_{\text{conf},t} = W_{0.75,\text{slow}}(x_t) be the slow rolling conformal half-width and D_{\text{break},t} be the trailing one-sided downside break rate, yielding the Conformal Kelly Stake Fraction f_{\text{stake},t}:
+f_{\text{stake},t} = \lambda_{\text{kelly}} \cdot \mathcal{K}_t \cdot \left( \frac{b_t p_t - (1 - p_t)}{b_t \cdot \left(1 + \kappa_\sigma \sigma_{\text{conf},t}^2\right)} \right) \cdot \max\left(0, \; 1 - \frac{[span_33](start_span)[span_33](end_span)\max(0, D_{\text{break},t} - \alpha_{\text{down}})}{\alpha_{\text{down}}}\right)
+5.5 Inventing and Activating New Causal Paths via Spectral Residual Factorization
+When the engine experiences systematic settlement residuals across a slate or game archetype, a static graph cannot self-correct if the true causal driver is missing from \mathcal{G}. GSE implements Automated Abductive Path Invention at the end of every weekly settlement cycle through Marchenko-Pastur spectral residual detection and shadow-gated promotion.
+Let \mathbf{R}_{\text{res}} \in \mathbb{R}^{T \times M} be the matrix of standardized settlement residuals r_{t,m} = (y_{t,m} - p_{t,m}) / \sqrt{p_{t,m}(1 - p_{t,m})} across T settled games and M market or prop families. The engine computes the sample residual correlation matrix \mathbf{\Sigma}_{\text{res}} = \frac{1}{T} \mathbf{R}_{\text{res}}^\top \mathbf{R}_{\text{res}} and its eigendecomposition \mathbf{\Sigma}_{\text{res}} = \sum_{k=1}^M \lambda_k \mathbf{u}_k \mathbf{u}_k^\top (\lambda_1 \ge \dots \ge \lambda_M). Under the null hypothesis that residuals are pure independent white noise (with aspect ratio \gamma = M / T), the bulk eigenvalues are bounded above by the Marchenko-Pastur upper edge:
+\lambda_{+} = \left( 1 + \sqrt{\frac{M}{T}} \right)^2
+Whenever the leading eigenvalue exceeds the noise threshold by a statistically significant margin, \lambda_1 > \lambda_{+} + T^{-2/3}, the principal residual eigenvector \mathbf{z}_{\text{latent}} = \mathbf{R}_{\text{res}} \mathbf{u}_1 \in \mathbb{R}^T captures a systematic, unmodeled causal factor. The engine then computes the mutual information I(\mathbf{z}_{\text{latent}}; \mathbf{X}_{\text{cand}}) across all unpromoted SHADOW or catalogued signals in signal-registry.ts (240+ families), second-order non-linear interaction terms X_a \times X_b (such as wind_speed_mph \times QB_AirYards_Share, or rest_differential_days \times circadian_travel_timezones), and unactivated literature mechanisms in literature_premises queried via HNSW using the dense embedding of the highest-residual game contexts.
+The highest-scoring candidate factor V_{\text{new}} is inserted into a candidate graph \ma[span_37](start_span)[span_37](end_span)thcal{G}_{\text{shadow}} = \mathcal{G} \cup \{V_{\text{new}} \to Y\}. It is strictly locked in SHADOW mode (status = 'SHADOW') and cannot move published trueProb values until it satisfies four conjunctive Shadow-to-Production Promotion Gates over N_{\text{shadow}} \ge 30 out-of-sample settlements: Gate S1 (Acyclicity and ID Preservation) requires h(\mathbf{W}_{\text{shadow}}) < 10^{-6} and verifies that ID(y, x, P, G_shadow) introduces zero new hedges; Gate S2 (E-Value Robustness) requires \text{E-value}(\hat{RR}_{V_{\text{new}} \to Y}) \ge 1.50 and \text{E-value}(LL) \ge 1.15; Gate S3 (Out-of-Sample Brier Skill Score Lift) requires strictly positive out-of-sample Brier reduction \sum_{t=1}^{N_{\text{shadow}}} \delta \text{BS}_{V_{\text{new}}, t} > 0 with paired Diebold-Mariano p\text{-value} < 0.05; and Gate S4 (Eigenvalue Deflation) confirms that including V_{\text{new}} reduces the leading residual eigenvalue \lambda_1(\mathbf{\Sigma}_{\text{res}}^{\text{shadow}}) < \lambda_1(\mathbf{\Sigma}_{\text{res}}^{\text{prod}}).
+6. Formal Honesty and Publish Gates
+To permanently eradicate the historical Beexly/Spor[span_167](start_span)[span_167](end_span)ts fail-open vulnerability—where the slate minted picks when from-bridge.ts returned INSUFFICIENT because reasoningTraceBrand?: never rejected an invalid trace but permitted an absent trace—the GSE engine enforces a Dual-Barrier Honesty Architecture: a compile-time TypeScript phantom-type barrier and a nine-condition runtime mathematical gate.
+6.1 Compile-Time Phantom-Type Barrier
+In packages/prediction-engine/src/picks/pick-pipeline.ts and slate-builder.ts, no downstream function accepts a raw number or an optional trace. The input type requires a branded ValidatedCausalTrace<Outcome> whose conclusion literal type strictly excludes "WITHHELD", "INSUFFICIENT", and "ASSOCIATION_ONLY" at compile time:
+declare const ValidatedCausalTraceBrand: unique symbol;
+
+export type RawTraceConclusion = "AGREED" | "WITHHELD" | "INSUFFICIENT" | "ASSOCIATION_ONLY";
+export type PublishableConclusion = Exclude<RawTraceConclusion, "WITHHELD" | "INSUFFICIENT" | "ASSOCIATION_ONLY">; // Strictly "AGREED"
+
+export interface CausalTraceCertificate<C extends RawTraceConclusion = RawTraceConclusion> {
+ readonly game_id: string;
+ readonly market_id: string;
+ readonly conclusion: C;
+ readonly trueProb: number;
+ readonly marketVigFreeProb: number;
+ readonly edge: number;
+ readonly sample_count: number;
+ readonly signal_coverage: number;
+ readonly id_hedges_found: number;
+ readonly min_e_value: number;
+ readonly entity_swap_delta: number;
+ readonly conformal_Stop_triggered: boolean;
+ readonly brier_drift_delta: number;
+ readonly audit_trail: readonly PrincipleApplicationAuditRecord[];
+}
+
+export type ValidatedCausalTrace = CausalTraceCertificate<PublishableConclusion> & {
+ readonly [ValidatedCausalTraceBrand]: "VALIDATED_CAUSAL_TRACE_V1";
+};
+
+// Compile-time barrier: passing an absent trace, an unbranded trace, or conclusion === "WITHHELD" is a TypeScript compiler error (TS2345).
+export function mintBoardOrParlayEntry(trace: ValidatedCausalTrace): PublishedBoardEntry {
+ return {
+   game_id: trace.game_id,
+   market_id: trace.market_id,
+   published_prob: trace.trueProb,
+   edge: trace.edge,
+   audit_hash: computeDeterministicHash(trace.audit_trail),
+ };
+}
+
+6.2 Nine Conjunctive Runtime Mathematical Conditions
+The constructor authorizeCausalPublish(cert: CausalTraceCertificate): ValidatedCausalTrace | PublishRefusal emits a ValidatedCausalTrace if and only if the indicator conjunction \mathcal{G}_{\text{honesty}}(t) = \prod_{k=1}^{9} \mathbb{I}(\text{Condition}_k) = 1 holds.
+Gate ID
+	Gate Name
+	Formal Mathematical Condition
+	Refusal Code Emitted on Violation
+	G1
+	Bridge Premise & Sample Sufficiency
+	\forall s \in \mathcal{S}_{\text{active}}: N_s \ge N_{\min} = 30 \land p_s \in (0, 1) \land \text{homeSign}_s \in \{-1, +1\} \land \text{Cov}_{\text{sig},t} \ge 0.65.
+	REFUSED_G1_INSUFFICIENT_BRIDGE_SAMPLES
+	G2
+	Literature Grounding & Conflict Consensus
+	\forall i \in \mathcal{M}_c^{\text{active}}: \text{L1}_i \land \text{L2}_i \land \text{L3}_i \land \text{L4}_i = 1, and either \mathcal{M}_c^{\text{active}} = \emptyset (pure bridge) or \eta_c \ge 0.20.
+	REFUSED_G2_UNGROUNDED_OR_CONFLICTED_LIT
+	G3
+	Shpitser-Pearl do-Calculus Identifiability
+	\text{ID}(\mathbf{y}, \mathbf{x}, P, \mathcal{G}) \neq \text{FAIL\_HEDGE}, i.e., number of witnessing hedges \vert{}\mathcal{H}_{\text{hedge}}\vert{} = 0 and positivity P(\mathbf{x} \mid \text{Pa}(\mathbf{X})_{\mathcal{G}} \setminus \mathbf{X}) \ge 0.01.
+	REFUSED_G3_NON_IDENTIFIABLE_HEDGE
+	G4
+	Adversary E-Value & Counterfactual Survival
+	[span_8](start_span)[span_8](end_span)\min_{e \in \mathcal{P}_{\text{active}}} \text{E-value}(\hat{RR}_e^*) \ge 1.35 \land \min_{e} \text{E-value}(LL_e) \ge 1.10 \land \vert{}\Delta_{\text{placebo}}\vert{} \le 0.005.
+	REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO
+	G5
+	Entity-Swap & Rationale Graph Faithfulness
+	\Vert{}p_{\text{orig}} - p_{\text{entity\_swapped}}\Vert{} < 0.02 \land \text{EF}(R, \mathcal{G}) \ge 0.95 \land \text{RA}(R, \mathcal[span_308](start_span)[span_308](end_span)[span_314](start_span)[span_314](end_span){G}) \ge 0.85 \land \[span_352](start_span)[span_352](end_span)[span_354](start_span)[span_354](end_span)text{DC}(R, \mathcal{G}) \ge 0.90.
+	REFUSED_G5_ENTITY_BIAS_OR_LOW_RA
+	G6
+	Inference-Time Conformal Stopping & Copula Bounds
+	Graph factuality nonconformity \alpha_{\text{ITCR}}(G_t) \le \tau_{\text{conformal}}, and for SGPs, \forall (a,b): \max(0, p_a + p_b - 1) \le P_{\text{copula}}(L_a \land L_b) \le \min(p_a, p_b).
+	REFUSED_G6_CONFORMAL_STOP_OR_FRECHET_VIOLATION
+	G7
+	Murphy Calibration & ACI Coverage Stability
+	\text{ECE}_{30} - \text{ECE}_{250} \le 0.02 \land \text{REL}_{\text{cat}} < \text{RES}_{\text{cat}} (positive Brier Skill Score) \land \left\vert{}\frac{1}{W}\sum_{k=t-W}^[span_356](start_span)[span_356](end_span)[span_357](start_span)[span_357](end_span)[span_358](start_span)[span_358](end_span)[span_359](start_span)[span_359](end_span)t \text{err}_k - \alpha\right\vert{} \le 0.03.
+	REFUSED_G7_CALIBRATION_DRIFT_OR_MISCOVERAGE
+	G8
+	Positive CLV History & Conformal Lower-Bound Edge
+	Trailing 50-evaluation family \overline{\text{CLV}}_{50} \ge -0.002, and conservative lower conformal probability bound beats vig-free market price: p_{t,\text{lo}}^{\text{conf}} - q_t^{\text{market}} > \tau_{\text{edge}} = 0.015.
+	REFUSED_G8_NEGATIVE_CLV_OR_SUBTHRESHOLD_EDGE
+	G9
+	Decision-Time Price Archive Commit
+	recordDecisionTimePrice(row) returns synchronous fsync confirmation with finite price and p_t \in (0, 1) prior to returning ValidatedCausalTrace.
+	REFUSED_G9_PRICE_ARCHIVE_WRITE_FAIL
+	7. Module Specifications, Interfaces, and Test Requirements
+The engine is organized into eight modular TypeScript and Python packages inside Beexly/Sports/packages/prediction-engine/src/. Every module is deterministic, strongly typed, and prohibited from using fallback constants or silent error catching.
+Module Path
+	Core Responsibility
+	Primary Input & Output Interfaces
+	Failure Modes & Deterministic Handling
+	Required Unit & Property Tests
+	src/features/feature-matrix.ts
+	Ingests bitemporal signals across 240+ registered families and builds point-in-time sparse/dense matrices.
+	buildFeatureMatrix(gameId: string, asOfTx: ISO8601): Result<BitemporalFeatureMatrix, MatrixRefusal>
+	Missing sample_count, t_{\text{tx}} > \text{asOfTx} lookahead attempt, or NaN/Inf scalar \to refuses row and logs family to missing_families.
+	Verify bitemporal cutoff rejects t_{\text{tx}} = \text{asOfTx} + 1\text{ ms}; verify x-axis canonicalization vs. y-axis TTA separation.
+	src/bridge/bridge-model.ts
+	Translates unsigned context scalars into directional probability premises with exact training sample counts.
+	fitBridge(seasons: [number, number]): BridgeModel predictBridge(model: BridgeModel, ctx: BitemporalFeatureMatrix, outcome: OutcomeType): Result<BridgePremise[], BridgeRefusal>
+	Sparse stratum (N < 30), out-of-range covariate, or uninvertible Hessian \to returns explicit BridgeRefusal (never clamps to 0.5 or invents sample counts).
+	Fit on 2018–2024, evaluate on 285-game 2025 holdout; verify p \in (0,1), N \in \mathbb{Z}^+, ho[span_142](start_span)[span_142](end_span)[span_148](start_span)[span_148](end_span)meSig[span_39](start_span)[span_39](end_span)n \in \{-1, 1\}.
+	src/literature/arxiv-hnsw-bridge.ts
+	Executes pgvector HNSW top-k retrieval, BRIDGE DFGE spectral band routing, CRI calibration, and L1–L4 verification.
+	retrieveAndEvaluatePremises(ctx: GameContextVector, queryEmb: Float32Array, urgency: 'LIVE' | 'PREGAME'): Promise<LiteratureEvaluationResult>
+	Opposing literature claims (\eta_c < 0.20) \to sets \Delta_c^{\text{final}} = 0.0 and emits CONFLICT_NEUTRALIZED block; unconditioned ACWR \to forces weight 0.3.
+	Mutation Test 2.0 Probes T1–T4; HNSW Recall@20 \ge 0.99 at ef_[span_88](start_span)[span_88](end_span)search =[span_361](start_span)[span_361](end_span)[span_362](start_span)[span_362](end_span)[span_363](start_span)[span_363](end_span) 64.
+	src/causal/causal-graph-builder.ts
+	Merges bridge premises, L1–L5 traces, and literature edges into an ADMG \mathcal{G} using precision-preconditioned DYNOTEARS + FCI.
+	constructGameADMG(premises: BridgePremise[], litDeltas: LiteratureEvaluationResult, histResiduals: Float64Array): Result<CausalADMG, GraphBuildError>
+	Non-convergence of acyclicity (h(\mathbf{W}) \ge 10^{-6} after 15 outer iterations) \to prunes lowest-precision learned edges until h(\mathbf{W}) = 0, retaining only verified acyclic literature priors.
+	Verify scale-invariance under 1000\times[span_89](start_span)[span_89](end_span) unit rescaling of wind/altitude (remediating Kaiser-Sipos trap).
+	src/causal/do-calculus-id.ts
+	Performs graph mutilation (\mathcal{G}_{\overline{X}}, \mathcal{G}_{\underline{Z}}), C-component decomposition, and the Shpitser-Pearl ID algorithm.
+	computeInterventionalEffect(admg: CausalADMG, doX: InterventionSpec, targetY: NodeId[]): Result<Interv[span_90](start_span)[span_90](end_span)entionalDistribution, HedgeWitnessError>
+	Presence of a witnessing hedge \langle \mathcal{F}, \mathcal{F}' \rangle or positivity violation \to invokes findIDEnablingEdges; if unbroken, returns HedgeWitnessError (ASSOCIATION_ONLY).
+	Test back-door, front-door, napoleon/bow-arc graphs, and known hedge topologies; verify exact symbolic & numeric match.
+	src/causal/adversary-red-team.ts
+	Runs automated E-value sensitivity, Rung 3 counterfactual refutation, placebo permutation, entity swap, and CausalPhys RA checks.
+	runAdversaryReview(admg: CausalADMG, idDist: InterventionalDistribution, traceText: s[span_207](start_span)[span_207](end_span)[span_209](start_span)[span_209](end_span)tring): AdversaryVerdict
+	\text{E-value} < 1.35, entity-swap \Delta \ge 0.02, placebo leak > 0.005, or \text{RA} < 0.85 \to rejects chain and emits specific refusal code.
+	Inject synthetic confounded edge, entity bias, and broken rationale edge; verify 100\% interception.
+	src/calibration/conformal-copula-kelly.ts
+	Computes TA-CQR intervals, ACI/PID/SCALE coverage monitors, Debiased Hierarchical/Vine Copula SGP joint probabilities, and Conformal Kelly stakes.
+	calibrateAndSize(idDist: InterventionalDistribution, mar[span_10](start_span)[span_10](end_span)ketOdds: MarketQuote[], calHistory: NonconformityBuffer): CalibratedDecision
+	Empty scores, \epsilon \notin (0,1), NaN/Inf scores, or Fréchet bound violation \to returns None / WITHHELD.
+	All 600 tests from the Conformal Research Wave specification (Coverage, Finite-Sample Rank, CQR, Copula, Kelly, Calibration).
+	src/learning/settlement-loop.ts
+	Executes same-cycle Murphy Brier decomposition, Kalman edge updates, premise promotion, CLV grading, and Marchenko-Pastur latent factor discovery.
+	processSettlement(settledEvent: SettledGameRecord, archiveRow: DecisionTimeArchiveRow): SettlementCycleReport
+	Unconfirmed box-score lock or missing decision-time price row \to holds weight mutation in provisional queue; prevents shadow-node promotion without Gates S1–S4.
+	Verify positive/negative CLV updates, exact Murphy identity \text{BS} = \text{REL} - \text{RES} + \text{UNC}, and spectral spike recovery.
+	Executable Falsification Suite: Mutation Test 3.0 (Causal, Literature, and Conformal Probes)
+Expanding Mutation Test 2.0 (mind-reasoning.mutation-v2.spec.ts, Probes T1–T4) and the 600-test Conformal Verification Matrix, the CI/CD harness blocks any pull request unless all eight falsification probes (T1–T8) pass with zero tolerance:
+// packages/prediction-engine/test/causal-engine.mutation-v3.spec.ts
+import { evaluateMindPrinciples } from "../src/literature/arxiv-hnsw-bridge";
+import { computeInterventionalEffect } from "../src/causal/do-calculus-id";
+import { runAdversaryReview } from "../src/causal/adversary-red-team";
+import { splitConformalQuantile, cqrConformityScore } from "../src/calibration/conformal-copula-kelly";
+import { authorizeCausalPublish } from "../src/picks/p[span_131](start_span)[span_131](end_span)[span_134](start_span)[span_134](end_span)[span_137](start_span)[span_137](end_span)ick-pipeline";
+
+describe("GSE Continuous Causal Inference Engine — Falsification Suite v3.0", () => {
+ // T1–T4: Content-Driven Literature Falsification Probes
+ it("T1: scales output delta strictly in 2.0000x proportion to in-quote numeric_claim mutation", () => {
+   const base = evaluateMindPrinciples({ market_steam_velocity_pts_hr: 1.0 }, [verifiedRow024]);
+   const mutated = evaluateMindPrinciples({ market_steam_velocity_pts_hr: 1.0 }, [verifiedRow048]);
+   expect(mutated.audit_trail.length).toBe(base.audit_trail.length);
+   expect(mutated.total_delta).toBeCloseTo(base.total_delta * 2.0, 6);
+   expect(mutated.rendered_prose).toContain("0.048");
+   expect(mutated.rendered_prose).not.toContain("0.024");
+ });
+
+ it("T2 & T3: deterministically rejects ungrounded numeric claims (L2) and cross-domain No Free Lunch swaps (L4)", async () => {
+   const d2 = verifyCandidateExtraction(rawWindAbstract, fabricatedClaim035Candidate);
+   expect(d[span_40](start_span)[span_40](end_span)2.admitted).toBe(false);
+   expect(["L1_QUOTE_PROVENANCE_FAIL", "L2_NUMERIC_CONTAINMENT_FA[span_91](start_span)[span_91](end_span)IL", "L3_SAV_OFFSET_FAIL"]).toContain(d2.rejection_code);
+
+   const d3 = await verifyCandidateWithMechanismGate(nflOptimizationAbstract, swappedRLMCandidate);
+   expect(d3.admitted).toBe(false);
+   expect(d3.rejection_code).toBe("L4_MECHANISM_ENTAILMENT_FAIL");
+ });
+
+ it("T4: emits zero delta and empty prose [span_41](start_span)[span_41](end_span)on empty corpus artifact with zero hardcoded SGP strings", () => {
+   const empty = evaluateMindPrinciples(fullA[span_92](start_span)[span_92](end_span)ctiveGameContex[span_42](start_span)[span_42](end_span)t, []);
+   expect(empty.total_delta).toBe(0);
+   expect(empty.audit_trail).toHaveLength(0);
+ [span_100](start_span)[span_100](end_span)[span_102](start_span)[span_102](end_span)  expect(empty.rendered_prose).toBe("");
+   expect(JSON.stringify(empty)).not.toMatch(/\+395|\+485|18\.5%/);
+ });
+
+ // T5: Shpitser-Pearl Hedge Rejection vs. Front-Door Recovery
+ it("T5: rejects bow-arc confounded graph with FAIL_HEDGE but recovers exact front-door effect when mediator is observed", () => {
+   const bowArcGraph = buildADMG({ directed: [["X", "Y"]], bidirected: [["X", "Y"]] });
+   const bowResult = computeInterventionalEffect(bowArcGraph, { node: "X", val: 1 }, ["Y"]);
+   expect(bowResult.ok).toBe(false);
+   expect(bowResult.error?.code).toBe("FAIL_HEDGE");
+
+   const frontDoorGraph = buildADMG({ directed: [["X", "M"], ["M", "Y"]], bidirected: [["X", "Y"]] });
+   const fdResult = computeInterventionalEffect(frontDoorGraph, { node: "X", val: 1 [span_43](start_span)[span_43](end_span)}, ["Y"]);
+   expect(fdResult.ok).toBe(true);
+   expect(fdResult.value?.formulaType).toBe("FRONT_DOOR_IDENTIFIED");
+ });
+
+ // T6: Adversary E-Value and Entity-Swap Invariance Rejection
+ it("T6: blocks fragile causal claims (E-value < 1.35) and entity-memorized predictions (swap delta >= 0.02)", () => {
+   const verdictFragile = runAdversaryReview(mockADMG, { riskRatio: 1.05, ciLower: 0.98 }, validRationale);
+   expect(verdictFragile.passed).toBe(false);
+   expect(verdictFragile.refusalCode).toBe("REFUSED_G4_FRAGILE_E_VALUE_OR_PLACEBO");
+ });
+
+ // T7: Exact Finite-Sample Conformal Rank & CQR Asymmetric Score
+ it("T7: enforces exact ceil((n+1)*(1-epsilon)) finite-sample rank and asymmetric CQR conformity", () => {
+   const scores = Array.from({ length: 100 }, (_, i) => i);
+   const q95 = splitConformalQuantile(scores, 0.05);
+   const expectedRank = Math.ceil((100 + 1) * (1 - 0.05)); // ceil(95.95) = 96 -> index 95
+   expect(q95).toBe(scores[expectedRank - 1]);
+   expect(cqrConformityScore(15.0, 8.0, 12.0)).toBe(3.0);
+ });
+
+ // T8: Compile-Time & Runtime Fail-Closed Slate Gate
+ it("T8: refuses to authorize publish when conclusion !== 'AGREED' or any of Gates G1-G9 fail", () => {
+   const withheldCert = { ...validCertFixture, conclusion: "WITHHELD" as const };
+   const auth = authorizeCausalPublish(withheldCert);
+   expect(auth.ok).toBe(false);
+   // @ts-expect-error Compile-time check: withheldCert cannot be passed to mintBoardOrParlayEntry
+   expect(() => mintBoardOrParlayEntry(withheldCert)).toThrow();
+ });
+});
+
+8. Quantitative Measurement Plan and Benchmark SLOs
+To verify that the engine compounds toward frontier decision quality every day across all sports slates, docs/reasoning/engine-dashboard.md is regenerated on every commit and settlement batch against five quantitative measurement pillars.
+Measurement Pillar
+	Mathematical Metric Definition
+	Target Production SLO
+	Diagnostic Action if SLO Breached
+	1. Signal Family Coverage & PIT Integrity
+	\text{Cov}_{\text{fam}}(g) = \frac{1}{\vert{}\mathcal{F}_{\text{reg}}\vert{}} \sum_{f=1}^{240} \mathbb{I}\left(N_{f,g} \ge 30 \land t_{\text{tx}}(f,g) \le t_{\text{decision}}(g)\right) across all 240 registered families; Dark-Source Leakage Rate = \frac{\text{rows with } t_{\text{tx}} > t_{\text{decision}}}{\text{total rows}}.
+	\text{Cov}_{\text{fam}}(g) \ge 0.85 on Tier 1–3 families; \ge 0.70 overall; Dark-Source Leakage = 0.0000\%.
+	Quarantine lagging producer; halt affected market sub-family via Gate G1 (REFUSED_G1_INSUFFICIENT_BRIDGE_SAMPLES).
+	2. Literature Retrieval Recall & Grounding Fidelity
+	\text{Recall@}K_{\text{HNSW}} = \frac{\vert{}\text{TopK}_{\text{HNSW}}(q) \cap \text{TopK}_{\text{Exact}}(q)\vert{}}{K} at K=20; L1–L4 Residual Hallucination Rate = \frac{\text[span_368](start_span)[span_368](end_span){admitted rows failing manual/NLI audit}}{\text{total admitted rows}}.
+	\text{Recall@20} \ge 0.992 at P99 latency < 2.5\text{ ms}; Hallucination Rate \le 0.5\% (0.00\% Registry-OOV).
+	Raise hnsw.ef_search from 64 \to 128 or rebuild HNSW index with M = 32, \text{ef\_construction} = 250.
+	3. Causal Intervention & Counterfactual Fidelity
+	Interventional Calibration Error \text{ICE}_{\text{do}} = \mathbb{E}\left[\left\vert{} \hat{P}(Y \mid \text{do}(X=x)) - \hat{P}_{\text{IPW/NaturalExp}}(Y \mid \text{do}(X=x)) \right\vert{}\right] evaluated on natural experiments (sudden pre-game injury inactives, weather gusts, roof closures); CausalPhys Relation Awareness \text{RA}.
+	\text{ICE}_{\text{do}} \le 0.018; \t[span_371](start_span)[span_371](end_span)[span_372](start_span)[span_372](end_span)ext{RA}(R, \mathcal{G}) \ge 0.88; 100\% rejection of non-identifiable hedges.
+	Trigger FCI residual scan on the failing subgraph to identify unmodeled bidirected confounding arc \mathcal{E}_b.
+	4. Residual Improvement & Compounding Skill
+	Rolling 100-game Brier Skill Score \text{BSS}_{100} = 1 - \frac{\text{BS}_{\text{engine}}}{\text{BS}_{\text{market\_open}}}, Murphy \text{REL} and \text{RES} trajectories, Log Loss vs. 0.6931 baseline, Mean Closing Line Value \overline{\text{CLV}}, and Marchenko-Pastur leading residual eigenvalue \lambda_1(\mathbf{\Sigma}_{\text{res}}).
+	\text{BSS}_{100} > +0.035 vs. open market; \text{REL} \le 0.0040;<br>\overl[span_378](start_span)[span_378](end_span)ine{\text{CLV}} \ge +1.25\%; \frac{d(\text{BS}_{100})}{dt} < 0 across season.
+	If \lambda_1(\mathbf{\Sigma}_{\text{res}}) > \lambda_+ + T^{-2/3}, trigger Abductive Latent Factor Discovery; if \text{ECE}_{30} - \text{ECE}_{250} > 0.02, halt via Gate G7 and recalibrate Venn-Abers/PID.
+	5. Honesty-Gate Effectiveness & Selection Lift
+	Gate Discrimination Lift \Delta \text{BSS}_{\text{gate}} = \text{BSS}(\mathcal{D}_{\text{published}}) - \text{BSS}(\mathcal{D}_{\text{withheld}}) and Conformal Coverage Deviation \left\vert{}\text{Cov}_{\text{realized}} - (1 - \alpha)\right\vert{}.
+	\Delta \text{BSS}_{\text{gate}} \ge +0.045; \left\vert{}\text{Cov}_{\text{realized}} - 0.7500\right\vert{} \le 0.015; Fail-Open Rate = 0.0000\%.
+	Tighten bottleneck E-value threshold \tau_E or conformal stopping threshold \tau_{\text{conformal}} (ITCR).
+	9. Overnight Autonomous Implementation Plan
+Transitioning Beexly/Sports from its current branch state into the complete Continuous Causal Inference Engine in a single autonomous execution pass proceeds through eight deterministic build blocks executed in strict topological sequence.
+Build Step
+	Target Artifact Path
+	Concrete Implementation & Verification Deliverable
+	Step 1: Neon pgvector HNSW Index & Literature Migration
+	db/migrations/20261020_literature_hnsw.sql
+	Deploy literature_premises table on Neon PostgreSQL (neondb), execute acwr_content_driven_fix.py and the L1–L4 verification gate across all \sim 2,379 arXiv/OpenAlex extractions, 429 Kaggle datasets, and MIND_CORPUS_3000.jsonl, generate 1024-d embeddings plus 512-d low/high spectral splits, and build idx_lit_premises_hnsw_cosine with m = 24, ef_construction = 200.
+	Step 2: Bitemporal Signal Registry & Feature Matrix
+	src/features/signal-registry.ts src/features/feature-matrix.ts
+	Register all 240+ signal families across 5 tiers, wire the remediated point-in-time proxy producers for ol_continuity_shared_snaps_pct, acoustic_crowd_spl_db, officiating_crew_penalty_rate, surface_traction_coeff, and air_density_kg_m3, and enforce bitemporal watermark filtering t_{\text{tx}} \le t_{\text{decision}}.
+	Step 3: Directional Bridge Model Fit & Holdout Generation
+	src/bridge/bridge-model.ts data/gse-dataset/bridge-premises.jsonl
+	Fit the regularized directional bridge across pre-2025 seasons (2018–2024), emit {outcome, probability, sample_count, method, homeSign} rows for the sealed 2025 holdout and 2026 live slates, and verify strict refusal on sparse strata (N < 30).
+	Step 4: Dual-Frequency Literature Bridge
+	src/literature/arxiv-hnsw-bridge.ts
+	Wire evaluateContext and evaluateMindPrinciples to query idx_lit_premises_hnsw_cosine, apply BRIDGE DFGE spectral band routing and CRI candidate calibration over the top-K_c candidates, enforce the \eta_c < 0.20 opposing-claim deadband, and emit PrincipleApplicationAuditRecord[].
+	Step 5: Causal ADMG Builder & Shpitser-Pearl ID Engine
+	src/causal/causal-graph-builder.ts src/causal/do-calculus-id.ts
+	Implement the precision-preconditioned DYNOTEARS + FCI structure learner and the 7-line recursive ID(y, x, [span_380](start_span)[span_380](end_span)[span_381](start_span)[span_381](end_span)[span_382](start_span)[span_382](end_span)[span_383](start_span)[span_383](end_span)P, G) algorithm with C-component factorization, hedge detection, and ID-EnablingEdges mediator search.
+	Step 6: Automated Adversary Red-Team & CausalPhys Gate
+	src/causal/a[span_77](start_span)[span_77](end_span)dversary-red-team.ts
+	Wire VanderWeele-Ding E-value computation, Rung 3 abduction-action-prediction refutation, placebo permutation checks, entity-swap invariance (\Delta < 0.02), and CausalPhys Relation Awareness (\text{RA} \ge 0.85) verification.
+	Step 7: Unified Conformal-Copula-Kelly & Honesty Gate
+	src/calibration/conformal-copula-kelly.ts src/picks/pick-pipeline.ts
+	Implement TA-CQR, ACI/PID/SCALE coverage monitors, Debiased Hierarchical Archimedean / Vine Copula SGP joint pricing, Slow Conformal Kelly sizing with downside break-rate control, and the ValidatedCausalTrace compile-time brand + nine runtime conditions G1–G9.
+	Step 8: Same-Cycle Settlement Loop & Latent Discovery
+	src/learning/settlement-loop.ts docs/reasoning/engine-dashboard.md
+	Wire post-settlement Murphy Brier decomposition (\text{REL} - \text{RES} + \text{UNC}), Kalman edge precision updates, counterfactual Brier premise promotion \pi_i^{(t)}, CLV grading against decision-time-price-archive.ts, Marchenko-Pastur spectral residual factorization, dashboard regeneration, and 100\% green execution of causal-engine.mutation-v3.spec.ts plus the 600-test conformal suite.
+	Works cited
+1. Algorithmic Causal Effect Identification with causaleffect - arXiv, https://arxiv.org/html/2107.04632v1 2. Identifying Interventional Joint Distributions via Extended Bridge, https://arxiv.org/pdf/2605.20007 3. https://github, https://drive.google.com/open?id=1vqGObdZfS2qWyDwE9BMNWHmTbccUgDlbj108ZxIJUOs 4. 2606.05966v1.pdf, https://drive.google.com/open?id=1q6Km0z_0JHiBX-wQNjLy9zB9EoGDSiUT 5. Adaptive Conformal Prediction for Motion Planning among Dynamic, https://arxiv.org/html/2212.00278 6. Adaptive Conformal Inference Under Distribution Shift - OpenReview, https://openreview.net/forum?id=6vaActvpcp3 7. Galaxy Sports Edge: Conformal Prediction Deep Research Wave Complete Grounding, Mathematical Specification, and Test Architecture Branch: Beexly/Sports research/engine-plan-2026-10-03 Task ..., https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DPcL12Hft-RBt9jOanU5Jy7w2Tq6iUs4K0&mid=1a103913836b792a 8. Complete Identification Methods for the Causal Hierarchy, http://www.jmlr.org/papers/volume9/shpitser08a/shpitser08a.pdf 9. I don't understand what you're having such trouble with. Understanding me. I need everything done. I need everything wired. I need everything weighted. I need everything tested. But you keep coming ..., https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DOnlJJNk8guJEKRUl8WryHH8ZpvRq2pRBU&mid=1a0e0215eb1a4b25 10. Efficient and Robust Approximate Nearest Neighbor Search Using, https://www.computer.org/csdl/journal/tp/2020/04/08594636/17D45Xcttle 11. 2605.22073v2.pdf, https://drive.google.com/open?id=1p6XpCrZbx1iQbWu3KTXxfEVNBh6Vc2gB 12. Identification of joint interventional distributions in recursive semi, https://scispace.com/pdf/identification-of-joint-interventional-distributions-in-127ous93s4.pdf 13. Unsuitability of NOTEARS for Causal Graph Discovery - arXiv, https://arxiv.org/html/2104.05441v2 14. Causal Discovery — Causal Decision Making, https://causaldm.github.io/Causal-Decision-Making/2_Causal_Structure_Learning/Causal%20Discovery.html 15. Identification of Joint Interventional Distributions in Recursive Semi, https://escholarship.org/uc/item/9598x714 16. Identifying Conditional Causal Effects - arXiv, https://arxiv.org/pdf/1207.4161 17. 1Introduction - arXiv, https://arxiv.org/html/2610.08092v2 18. Sensitivity Analysis in Observational Research: Introducing the E, https://dash.harvard.edu/bitstreams/7312037e-0f45-6bd4-e053-0100007fdf3b/download 19. (PDF) Efficient and Robust Approximate Nearest Neighbor Search, https://www.researchgate.net/publication/301837503_Efficient_and_Robust_Approximate_Nearest_Neighbor_Search_Using_Hierarchical_Navigable_Small_World_Graphs 20. Linear Causal Discovery with Interventional Constraints - PMC - NIH, https://pmc.ncbi.nlm.nih.gov/articles/PMC12913306/ 21. Learning Sparse Nonparametric DAGs, https://proceedings.mlr.press/v108/zheng20a/zheng20a.pdf 22. NOTEARS — DAG Learning via Continuous Optimization - MetricGate, https://metricgate.com/docs/notears-continuous-optimization/ 23. Evaluation of Induced Expert Knowledge in Causal Structure, https://www.scitepress.org/Papers/2023/117160/117160.pdf 24. Identification of Conditional Interventional Distributions - UCLA, https://ftp.cs.ucla.edu/pub/stat_ser/r329-uai.pdf 25. Minimum Intervention Cover of a Causal Graph, https://ojs.aaai.org/index.php/AAAI/article/view/4141/4019 26. Causal Identification in Time Series Models - GitHub, https://raw.githubusercontent.com/mlresearch/v275/main/assets/jahn25a/jahn25a.pdf 27. Identification and Estimation of Causal Effects Defined by Shift, https://pmc.ncbi.nlm.nih.gov/articles/PMC7716622/ 28. A General Identification Condition for Causal Effects - UCLA, https://ftp.cs.ucla.edu/pub/stat_ser/R290-A.pdf 29. A New Vector Partition of the Probability Score in - AMS Journals, https://journals.ametsoc.org/view/journals/apme/12/4/1520-0450_1973_012_0595_anvpot_2_0_co_2.xml 30. BrierScoreDecomposition: Brier Score Decomposition, https://www.rdocumentation.org/packages/SpecsVerification/versions/0.3-0/topics/BrierScoreDecomposition 31. A New Vector Partition of the Probability Score - ResearchGate, https://www.researchgate.net/publication/234395762_A_New_Vector_Partition_of_the_Probability_Score 32. A Sample Skill Score for Probability Forecasts, https://journals.ametsoc.org/view/journals/mwre/102/1/1520-0493_1974_102_0048_asssfp_2_0_co_2.pdf 33. Unsuitability of NOTEARS for Causal Graph Discovery - causaLens, https://causalens.com/wp-content/uploads/2025/05/NOTEARS.pdf

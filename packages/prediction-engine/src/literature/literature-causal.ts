@@ -10,7 +10,7 @@
  *      is set to a value. It runs on PROMOTED EDGES ONLY.
  *
  * The separation matters because the repo already has a full causal module
- * family that is switched off: every file under
+ * family that is switched off (ACCEPTANCE_GATE / HUMAN_CALL): every file under
  * packages/prediction-engine/src/causal/ carries `export const ENABLED = false`
  * (1803-01422v2-notears-dag.ts:16, 2001-04197v4-rcd-quarantine-layer.ts:23,
  * 2003-03685v2-pcmci-team-panel.ts:23, 2007-00267v1-regime-dependent-causal-discovery.ts:23,

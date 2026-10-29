@@ -1,13 +1,13 @@
 /**
- * mcp-cognitive-router — Stage A/B coarse-to-fine retrieval over literature premises.
+ * mcp-cognitive-router — Stage A/B/C/D coarse-to-fine retrieval over literature premises.
  *
  * Spec: docs/engine/research/2026-10-21/downloads-2026-10-21/GSE-OMNI-COGNITIVE-WORLD-MODEL-ARCHITECTURE.md
  *
  * The problem it solves: 50,000 premise schemas do not fit in a context window, and pasting
  * them degrades selection accuracy. Stage A cuts 50,000 → ~2,500 on a 288-bit context mask
- * via a GIN overlap test. Stage B cuts those → 250 on pgvector HNSW cosine. Stages C/D
- * (spectral routing, symbolic Jacobians) rank on top of what this returns and are not built
- * here.
+ * via a GIN overlap test. Stage B cuts those → 250 on pgvector HNSW cosine. Stage C applies
+ * spectral cluster orthogonalization (250 → 25), and Stage D applies cross-equation Jacobian
+ * coupling and positive-part James-Stein shrinkage capped at |Δ log-odds| <= 0.35.
  *
  * The mask is 288 bits as Uint32Array(9) — 279 signal families plus headroom, matching the
  * column type. A bit is set when that family has non-zero displacement and N >= 30.
@@ -24,6 +24,8 @@ export const EF_SEARCH_PRE_GAME = 128;
 
 export const STAGE_A_LIMIT = 2500;
 export const STAGE_B_LIMIT = 250;
+export const STAGE_C_LIMIT = 25;
+export const MAX_ABS_DELTA_LOG_ODDS = 0.35;
 
 export type Signal = { family: number; displacement: number; n: number };
 
@@ -188,4 +190,143 @@ export async function route(
   const mask = buildContextMask(signals);
   const candidates = await stageA(db, mask, opts.stageALimit ?? STAGE_A_LIMIT);
   return stageB(db, embedding, candidates, opts);
+}
+
+// ============================================================================
+// STAGE C: Spectral Graph Orthogonalization (250 → 25)
+// Down-weights redundant intra-cluster premises via degree-normalized spectral
+// attenuation: w_i^spec = sim_i / sqrt(1 + gamma * (rankInCluster_i))
+// ============================================================================
+
+export interface SpectralPremise extends Premise {
+  readonly clusterRank: number;
+  readonly spectralScore: number;
+  readonly jacobianSensitivity?: number;
+  readonly rawLogOddsDelta?: number;
+}
+
+export function stageC(
+  premises: readonly (Premise & {
+    readonly jacobianSensitivity?: number;
+    readonly rawLogOddsDelta?: number;
+  })[],
+  opts: { readonly limit?: number; readonly clusterRedundancyGamma?: number } = {},
+): SpectralPremise[] {
+  const limit = opts.limit ?? STAGE_C_LIMIT;
+  const gamma = opts.clusterRedundancyGamma ?? 0.85;
+
+  // Sort by similarity descending first so the strongest representative in each cluster gets rank 0
+  const sortedBySim = [...premises].sort((a, b) => b.similarity - a.similarity);
+  const clusterCounts = new Map<string, number>();
+
+  const scored: SpectralPremise[] = sortedBySim.map((p) => {
+    const rank = clusterCounts.get(p.cluster) ?? 0;
+    clusterCounts.set(p.cluster, rank + 1);
+    const attenuation = Math.sqrt(1 + gamma * rank);
+    const spectralScore = Number((p.similarity / attenuation).toFixed(6));
+    return {
+      ...p,
+      clusterRank: rank,
+      spectralScore,
+    };
+  });
+
+  return scored.sort((a, b) => b.spectralScore - a.spectralScore).slice(0, limit);
+}
+
+// ============================================================================
+// STAGE D: Cross-Equation Jacobian Coupling & Positive-Part James-Stein
+// Shrinkage with |Δ log-odds| <= 0.35 Hard Clamp + tau_hat Prior Integration
+// ============================================================================
+
+export interface StageDCoupledResult {
+  readonly selectedPremises: readonly (SpectralPremise & {
+    readonly shrunkLogOddsDelta: number;
+  })[];
+  readonly jamesSteinShrinkageFactor: number;
+  readonly unClampedTotalLogOddsDelta: number;
+  readonly clampedTotalLogOddsDelta: number;
+  readonly clamped: boolean;
+  readonly tauHatCoachPriorBonus: number;
+}
+
+/**
+ * Applies positive-part James-Stein shrinkage (Baranchik 1964 / Stein 1956, guarded for d >= 3)
+ * across the Stage C orthogonalized premises, weights by symbolic Jacobian sensitivity,
+ * integrates the coach inverse-MDP risk preference prior (tau_hat vs 0.42 baseline),
+ * and enforces the Z3 QF_UFLRA hard clamp |Δ log-odds| <= 0.35.
+ */
+export function stageD(
+  spectralPremises: readonly SpectralPremise[],
+  opts: {
+    readonly noiseVarianceSigma2?: number;
+    readonly tauHatCoach?: number;
+    readonly baselineTau?: number;
+    readonly maxAbsLogOddsDelta?: number;
+  } = {},
+): StageDCoupledResult {
+  const sigma2 = opts.noiseVarianceSigma2 ?? 0.0025;
+  const maxAbs = opts.maxAbsLogOddsDelta ?? MAX_ABS_DELTA_LOG_ODDS;
+  const tauHat = opts.tauHatCoach ?? 0.42;
+  const baseTau = opts.baselineTau ?? 0.42;
+
+  const d = spectralPremises.length;
+  const rawDeltas = spectralPremises.map((p) => {
+    const jac = p.jacobianSensitivity ?? 1.0;
+    const raw = p.rawLogOddsDelta ?? 0;
+    return raw * jac * Math.max(0, p.spectralScore);
+  });
+
+  const sumSq = rawDeltas.reduce((acc, v) => acc + v * v, 0);
+  // Positive-part James-Stein factor: max(0, 1 - (d - 2) * sigma^2 / ||theta||^2) for d >= 3
+  const jsFactor =
+    d >= 3 && sumSq > 1e-12
+      ? Math.max(0, 1 - ((d - 2) * sigma2) / sumSq)
+      : 1.0;
+
+  const selectedPremises = spectralPremises.map((p, idx) => ({
+    ...p,
+    shrunkLogOddsDelta: Number((rawDeltas[idx]! * jsFactor).toFixed(6)),
+  }));
+
+  // Integrate coach inverse-MDP risk preference deviation (tau_hat - 0.42)
+  const tauHatCoachPriorBonus = Number(((tauHat - baseTau) * 0.12).toFixed(6));
+  const unClampedTotalLogOddsDelta = Number(
+    (
+      selectedPremises.reduce((acc, p) => acc + p.shrunkLogOddsDelta, 0) +
+      tauHatCoachPriorBonus
+    ).toFixed(6),
+  );
+
+  const clampedTotalLogOddsDelta = Number(
+    Math.max(-maxAbs, Math.min(maxAbs, unClampedTotalLogOddsDelta)).toFixed(6),
+  );
+
+  return {
+    selectedPremises,
+    jamesSteinShrinkageFactor: Number(jsFactor.toFixed(6)),
+    unClampedTotalLogOddsDelta,
+    clampedTotalLogOddsDelta,
+    clamped: Math.abs(unClampedTotalLogOddsDelta) > maxAbs,
+    tauHatCoachPriorBonus,
+  };
+}
+
+/** Full 4-Stage Cognitive Router (A -> B -> C -> D). */
+export async function routeFullFourStage(
+  db: Queryable,
+  signals: readonly Signal[],
+  embedding: readonly number[],
+  opts: RouteOptions & {
+    readonly stageCLimit?: number;
+    readonly clusterRedundancyGamma?: number;
+    readonly tauHatCoach?: number;
+  } = {},
+): Promise<StageDCoupledResult> {
+  const stageBResults = await route(db, signals, embedding, opts);
+  const stageCResults = stageC(stageBResults, {
+    limit: opts.stageCLimit,
+    clusterRedundancyGamma: opts.clusterRedundancyGamma,
+  });
+  return stageD(stageCResults, { tauHatCoach: opts.tauHatCoach });
 }

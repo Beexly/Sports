@@ -5,9 +5,11 @@ import {
   computeRbSchemeMatchupFit,
   computeSurfaceInjuryAndTrajectoryOverlay,
   computeTrenchPressureDecisionFit,
+  computeWeightedEntropyPlayProbe,
   computeWrDbKinematicLeverageFit,
   evaluateClarusCoherenceRiskSuites,
   evaluateCoachSchemePlayerFitMatchup,
+  evolvePlayCallPartitionWeights,
   getCoachStaffProfile,
 } from "./coach-scheme-player-fit-engine.js";
 import { assertCoachInputs } from "../public-baseline/fence.js";
@@ -148,5 +150,44 @@ describe("GSE Coach, Play-Call, Scheme & Player-Fit Reasoning Engine", () => {
     expect(synthesis.pureFootballExpectedMarginHome).toBeGreaterThan(0);
     expect(synthesis.belichickCounterInstallHome.length).toBeGreaterThan(0);
     expect(() => assertCoachInputs(synthesis as unknown as Record<string, unknown>)).not.toThrow();
+  });
+
+  it("evaluates CUDA weighted-entropy play-call coverage probing and stagnation-adaptive evolutionary weights (kernel.cu)", () => {
+    const probe = computeWeightedEntropyPlayProbe({
+      exactLeverageMatchesP: 2,
+      partialDisplacementMatchesQ: 1,
+      bucketCounts14: [12, 18, 25, 30, 22, 16, 14, 10, 8, 6, 4, 3, 2, 1],
+    });
+    // m(2, 1) = floor(-0.5*4 + 5.5*2 + 1) = floor(-2 + 11 + 1) = 10
+    expect(probe.partitionIndexM).toBe(10);
+    expect(probe.weightedEntropyScore).toBeGreaterThan(3.0);
+    expect(probe.prefersImmediateResolutionSingleton).toBe(true);
+    expect(probe.diagnosticInformationGainEpaBonus).toBeGreaterThan(0.02);
+
+    const singleton = computeWeightedEntropyPlayProbe({
+      exactLeverageMatchesP: 4,
+      partialDisplacementMatchesQ: 0,
+      bucketCounts14: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    });
+    expect(singleton.partitionIndexM).toBe(13);
+    expect(singleton.weightedEntropyScore).toBe(Number.MAX_SAFE_INTEGER);
+
+    const evolved = evolvePlayCallPartitionWeights({
+      parentAWeights14: Array(14).fill(1.0),
+      parentBWeights14: Array(14).fill(2.0),
+      crossoverPoint: 7,
+      generation: 50,
+      maxGenerations: 200,
+      stagnantGenerations: 110,
+      initialMutationRate: 0.12,
+      finalMutationRate: 0.02,
+      mutationStrength: 0.5,
+      uniformDraws14: Array(14).fill(0.05),
+      standardNormalPerturbations14: Array(14).fill(1.0),
+    });
+    // Stagnation > 100 boosts by 1.2 * 1.5 = 1.8x, capped at 0.20
+    expect(evolved.effectiveMutationRate).toBeCloseTo(Math.min(0.20, 0.095 * 1.8), 3);
+    expect(evolved.evolvedWeights14[0]).toBeCloseTo(1.5, 4);
+    expect(evolved.evolvedWeights14[10]).toBeCloseTo(2.5, 4);
   });
 });

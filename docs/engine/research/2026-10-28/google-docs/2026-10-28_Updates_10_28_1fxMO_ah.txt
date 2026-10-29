@@ -1,0 +1,133 @@
+﻿1. Where We Are At With the Plan (Verified Execution Ledger Through f2befa9e3)
+Hermes executed Steps 1 through 6 of the blueprint, ran two consecutive fresh-process verification sweeps (65 files / 467 tests, 0 failures, plus 96/96 on the post-review router and seal suite), resolved all four "unreachable" data/auth blockers, built the live Stage A/B Cognitive Router on PROD Neon (pgvector 0.8.0), and pushed the sign-off receipt to Beexly/agent-bus (e391a391).
+Blueprint Pillar / Defect
+	Pre-Execution Status
+	Current Verified Status (origin/engine/public-baseline-2026-10-24)
+	Key Technical Breakthrough / Empirical Reality Check
+	7 Proprietary GSE Metrics Consolidation
+	Split across public-baseline/metrics.ts and gse-proprietary-seven.ts.
+	DONE (ed01d3a84). 342/342 metrics + 20/20 markov-simulator PASS; tsc errors cut .
+	public-baseline/metrics.ts is an 881-byte deprecated re-export; Cell.signStable accepts both boolean and the 3-year map; shannonBits normalizes by mass.
+	Rule 4: Cross-Runtime Serializer Conflict
+	TS insertion-order (dd6549a…) vs. Python sort_keys (0821671…).
+	DONE (1d1e44e65 + C1 Patch). 6/6 golden-digest-parity.test.ts PASS; Class B quarantine lifted.
+	Two deeper bugs caught: (1) Python emitted 27.0 where JS emitted 27 (fixed by narrowing integral floats in Python); (2) JS Object.keys().sort() still reordered integer-like keys ("2" before "10") on object rebuild and dropped __proto__ (fixed by rewriting canonicalizeForSeal as a direct string builder).
+	Steps 1 & 2: Telemetry Artifacts & Delta Writer
+	Missing on Windows; --selftest skipped PBP simulator leg.
+	DONE (1d1e44e65). --selftest PASS with zero skips; 10,000-sim stress test completes.
+	artifacts/ws6-status-2026-10-27.md and scripts/ops/gse_coach_mind_simulator.py deployed and tracked in Git (scripts/feeds/delta_telemetry.py was previously untracked).
+	Steps 3 & 4: FAIL 1 (ENABLED=false) & FAIL 2 (ticket: null)
+	5 ungated modules; construction-time ticket: null literals.
+	DONE. 0 ungated ENABLED=false files; rg "ticket:\s*null" matches only the 4 lines in calibration-map.ts.
+	Disk truth corrected: Actual ENABLED=false count in prediction-engine is 202 modules (not 146); ticket: null removals were 9 in call-sheet.ts, 5 in x-corpus.ts, and 0 in weekly-cadence-orchestrator.ts (both hits there were comments).
+	Step 5: Defects D3 (candidates/) & D6 (Cron Drift)
+	candidates/ untracked (??); Sunday v4.0 & Thursday v2.5 cron mismatch.
+	DONE (e825f29d6 / 734da2d02). 10 files tracked in candidates/; CADENCE and jobs.json 1:1 at 6/6.
+	sealed-center.json (23245bcb…, ) and 2026-10-25-week7-candidate.json () tracked; placeholder week-8 copy quarantined.
+	Blocker 1: NGS Feed (GSE-RLS Separation)
+	Flagged as HONEST GAP (per-season files stopped at 2024).
+	SOLVED (d9c682346). data/nflverse/ngs_receiving.csv.gz committed.
+	Per-season files lagged at 2024, but the unseasoned combined ngs_receiving.csv.gz holds 15,348 rows including 617 rows for 2026 Weeks 0–7 with 100% non-null avg_separation and avg_cushion.
+	Blocker 2: Google Docs 403 (868513040414)
+	403/401 blocked reading the 3 core Drive architecture docs.
+	SOLVED (d9c682346). All 3 docs (235,531 chars) extracted and committed.
+	Automation Chrome on port 9222 + /mobilebasic cleanly extracted gse-coach-brain-llm-engine.txt (95 KB), gse-coach-simulation-audits.txt (81 KB), and gse-10-23.txt (65 KB) into docs/engine/research/2026-10-28/.
+	Blocker 3: Defect D8 (cffa75a) & QB CSVs
+	cffa75a reported missing; 2024–2025 injury CSVs missing on Windows.
+	D8 SOLVED; QB CSVs DOWNLOADED (d9c682346).
+	cffa75a7ef is reachable from origin HEAD; injuries_{2024,2025,2026}.csv (6,264 / 6,069 / 2,156 lines; 237 QB rows in 2025) are now committed in data/nflverse/.
+	Workstream 4: Live Neon Cognitive Router
+	Flagged as NAMED_GAP (mcp-cognitive-router.ts absent).
+	STAGE A+B LIVE (f2befa9e3 + Opus Patch). 120 premises embedded; 8/8 unit tests PASS.
+	Live on PROD Neon (pgvector 0.8.0) using qwen3-embedding-0-6b (1024 dims). Opus 5.5 review caught SET LOCAL being a no-op outside a transaction and empty-array NULL exclusion—both fixed in code and DB constraints.
+	2. What Is Missing (And Must Be Closed Immediately for 100% Reliability)
+Reviewing the terminal trace line-by-line exposes eight concrete gaps that still stand between the current state and a 100% airtight, autonomous system:
+1. Uncommitted Final Patch From the Opus 5.5 Review (Immediate Git Risk):
+At 1:29 PM CDT, Hermes patched packages/mcp-equations-server/src/mcp-cognitive-router.ts (merging Stage A+B to fix the SET LOCAL hnsw.ef_search no-op), packages/prediction-engine/src/coach-sim/locked-projection.ts (rewriting canonicalizeForSeal as a direct string builder to fix C1 integer-key sorting and C7 __proto__), golden-digest-parity.test.ts (6/6 PASS), and db/migrations/2026-10-28_literature_hnsw.sql (fixing ADD CONSTRAINT IF NOT EXISTS). The log ended right before git commit and git push. Action: Commit and push those 4 files to origin/engine/public-baseline-2026-10-24 immediately.
+2. Split-Brain Working Tree on Windows (C:\Users\Garrett\Sports vs. Worktree): Hermes discovered that your main directory (C:\Users\Garrett\Sports) is sitting behind origin on an older commit (64ff37e46) with 245 dirty tracked files from another session, while Hermes committed f2befa9e3 from a separate git worktree. Any cron job, PM2 daemon, or manual command run inside C:\Users\Garrett\Sports is executing against stale code where candidates/ shows 0 tracked! Action: Run /opt/gsetools/worktree-archive.sh (or git stash push -u -m "pre-sync-245-dirty-2026-10-28") on C:\Users\Garrett\Sports and git pull --ff-only origin engine/public-baseline-2026-10-24 so the main checkout matches origin bit-for-bit.
+3. Three Remaining Cross-Runtime Serializer Traps (Opus Findings C2, C3, C5):
+While key order (C1) and integral floats (27.0  27) are fixed, three edge cases will still break Python-vs-TypeScript hash parity on future sealed payloads:
+   * C2 (ensure_ascii): Python json.dumps defaults to ensure_ascii=True (escaping non-ASCII like τ to \u03c4), whereas JS JSON.stringify emits literal UTF-8. Fix: pass ensure_ascii=False in Python canonical_hash.
+   * C3 (Scientific Notation Threshold): Python formats floats < 1e-4 in scientific notation (0.00001  "1e-05"), whereas JS stays fixed-point down to 1e-6 ("0.00001"). Fix: normalize floats in both canonicalizers with a fixed 8-decimal trimmer (f"{x:.8f}".rstrip("0").rstrip(".") for non-integers) or store small weights as scaled integers.
+   * C5 (NaN / Infinity): Python json.dumps outputs "NaN" by default while JS outputs "null". Fix: pass allow_nan=False in Python and throw on !Number.isFinite(val) in TypeScript.
+      4. Bridging gse_coach_mind_simulator.py to Read candidates/sealed-center.json + week7-candidate.json: In 2026-10-28-hermes-coach-first-steps1-5.md, Hermes noted that delta_telemetry.py --selftest saw two different hashes (23245bcb… from candidates/sealed-center.json vs. a293ee26… from DEFAULT_SEALED_BASELINE) because the Python simulator still loads its embedded 14-team DEFAULT_SEALED_BASELINE dictionary when /opt/model/sealed_baseline.json is absent. Action: Point load_sealed_object_readonly() in scripts/ops/gse_coach_mind_simulator.py to read candidates/sealed-center.json + candidates/2026-10-25-week7-candidate.json (all 32 teams) so the Python simulator and TypeScript engine share one identical 32-team sealed state.
+      5. Connecting scoring.ts to simulateCoachGame (markov-simulator.ts): As uncovered in the newly extracted gse-10-23.txt (10/23), markov-simulator.ts accepts coachSupport: number to shift simulated totals and margins, and scoring.ts computes coachSupportPts (lines ~860, ~1316, ~1639), but scoring.ts does not yet invoke simulateCoachGame(input). Action: Wire simulateCoachGame directly into scoring.ts so the published projection CDF and the confidence composite move from the exact same coachTrail.
+      6. Writing scripts/ops/fit_qb_questionable2.py on Windows: The 2024, 2025, and 2026 injury CSVs are now in data/nflverse/, and the exact bootstrap specification is in GSE_BUNDLE_2026-10-27.md (within-team opponent-adjusted offensive EPA/play comparison against healthy-QB1 games, 4,000× team-season bootstrap, recovering 0.1159 started, 0.0838 Out, $P(\text{start}) = 15/44 = 0.341 \implies 0.0947$). Action: Save scripts/ops/fit_qb_questionable2.py into the repo and run it against data/nflverse/injuries_{2024,2025,2026}.csv + pbp so the 0.0947 constant is 100% self-reproducible on Windows.
+      7. Building Stages C & D of mcp-cognitive-router.ts and Seeding All 5,303 Premises: Currently, literature_premises on Neon has 120 rows and runs Stages A & B. We still need to batch-embed the 5,303 grounded premises from MIND_CORPUS_3000.jsonl and wire Stage C (Spectral Graph Routing) and Stage D (Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage, $|\Delta\text{log-odds}| \le 0.35$).
+      8. Offline Fixture for ne-chi-fixture.test.ts & Fixing pinhole-jacobian.ts (TS2532): ne-chi-fixture.test.ts fails because it makes a live HTTP request to webws.365scores.com. Mock/pin that payload to a local JSON fixture, and apply the Float64Array accessor guard to packages/prediction-engine/src/tracking/pinhole-jacobian.ts (and lines 94/98 of markov-simulator.ts) to drive the 46 tsc errors to zero.
+3. Strategic Diagnostic: Under-Leveraged, Under-Valued, Overlooked, and Over-Valued
+A. What Is UNDER-LEVERAGED (High-Power Assets Sitting Idle on Disk)
+Under-Leveraged Asset
+	Current State on Disk
+	Why It Is a Massive Multiplier for 100% Accuracy & Autonomy
+	Concrete Action to Leverage It Now
+	1. tau_hat (+6.77 Pt Held-Out Edge, )
+	Verified in GAP-REPORT-2026-10-27.md & GSE-CONTENT-OS U2 #2; zero consumer wired.
+	Largest single measured empirical effect in the entire GSE warehouse across 3,988 held-out games, currently contributing 0 points to live projections.
+	Wire tau_hat into the pre-seal team-rating prior and the Stage D cognitive router before Tuesday 04:00 CT.
+	2. Newly Unlocked 2026 ngs_receiving.csv.gz (617 Rows) + ftn_charting_2026.parquet (18,019 Plays)
+	Downloaded in d9c682346 (data/nflverse/ngs_receiving.csv.gz), but markov-simulator.ts still calls the 2-cell compatibility wrappers (computeGseRlsCell, etc.).
+	gse-proprietary-seven.ts has rich derived kernels (computeGseRls, computeGseQptsr, computeGseSii), but markov-simulator.ts is only feeding them 2-cell EPA deltas to preserve legacy signatures!
+	Build the adapter that feeds live 2026 NGS avg_separation / avg_cushion and FTN is_play_action / n_defense_box / is_catchable_ball directly into the rich gse-proprietary-seven.ts kernels.
+	3. Target Concentration Load Scaling (load_scaling.py, )
+	Proven in Python (DET  vs. NO , a 34% spread on injury drop-offs), but not wired into TypeScript sinkhorn-targets.ts.
+	A WR1 or QB injury on a hyper-concentrated offense (DET ) hurts 34% more than on a spread offense (NE  / NO ).
+	Port load_multiplier(hhi) ($\operatorname{clamp}(\sqrt{N_{\text{league}}/N_{\text{team}}}, 0.55, 1.60)$) into sinkhorn-targets.ts and locked-projection.ts.
+	4. $50 Neon AI Gateway Credits (qwen3-embedding-0-6b + claude-opus-5-5 + claude-haiku-5-5)
+	Wired in .env.local (lines 51–52); used so far for 120 test premises and 1 Opus review.
+	Buys 2.5 billion embedding tokens ($0.02/M), 500M Haiku triage tokens ($0.10/M), or ~80 Opus 5.5 adversarial code audits. Opus 5.5 immediately caught 4 severe bugs Hermes missed!
+	(1) Embed all 5,303 MIND_CORPUS_3000.jsonl premises for ~0.11; (3) wire an automated Opus 5.5 Red-Team Diff Gate on every seal/simulator PR.
+	5. Kaggle GPU Space (~/.kaggle Auth Verified) & Big Data Bowl 2027 Derived Tables
+	Credentials verified; mrtechtraveller/nfl-big-data-bowl-2027 identified (speed_at_snap, strongest_decel).
+	Offloads heavy Bayesian MCMC / bootstrap compute from the local workstation and supplies the deceleration-to-acceleration asymmetry () required by computeGseRls.
+	Push a Kaggle GPU kernel to run fit_qb_questionable2.py (4,000× bootstrap), the 70,304-rep pass-rush BTL model (arXiv:2604.01491), and BDB 2027 receiver deceleration tables.
+	B. What Is UNDER-VALUED (The True Sources of Pure Football Alpha)
+      1. Head Coach & Coordinator Regime Shifts (+3.6 Pts Mean / +15.9 Pts Max, influence.py): Measured on a within-franchise design across 22 coaching changes (2023–2026), replacing a head coach shifts team quality by a mean of +0.046 EPA/play (+3.6 pts/game) and up to +0.202 EPA/play (+15.9 pts/game, WAS Rivera  Quinn; NE Mayo  Vrabel +13.7 pts; LV Carroll  Kubiak +12.6 pts)—more than double the 7.5-point impact of a starting quarterback (0.0947 EPA ). Yet the betting market obsesses over QBs and treats coaching changes as narrative fluff.
+      2. State-Conditioned Coordinator Behavioral Fingerprints (soul_profiles.json): In the exact same game state (Q4 trailing by 7–14 points), Nick Sirianni increases pass rate over expected by +7.82 pp while Sean McDermott drops by −5.51 pp (a 13.3 pp spread across  plays each, shrunk at ), and Washington runs 44.8% no-huddle / 94.4% shotgun (2.5× the next closest team). That directly governs Q4 play volume, sack exposure, reception props, and clock bleed.
+      3. Pre-Game Known Officiating Crew Assignments (16% Flag Spread) & Outdoor Wind Slope (−0.0285 EPA / 10 mph): Referee crews span 1.9 flags/game (16% spread: Clete Blakeman 13.70 and Shawn Hochuli 13.68 vs. Land Clark 11.79) with home bias from −0.24 to +0.47 flags, while outdoor wind taxes offense by −0.0285 EPA/play per 10 mph. Both are known days before kickoff and directly drive totals, drive-stall field goal props (GSE-SPESE), and penalty/passing unders.
+      4. QB Interception-Worthy Throw Rate + Catchable Ball Rate (FTN Charting) Over Raw INT Counts: Raw interceptions are noisy touchdown-luck artifacts, whereas FTN-charted is_interception_worthy spans a 2.7× spread (DET 1.64% vs. IND 4.47% and CLE 4.10%) alongside is_catchable_ball (57.0% to 68.9%). Feeding those two columns into the simulator's turnover and completion probabilities (to_prob and pass_comp in gse_coach_mind_simulator.py) sharply upgrades QB/WR prop accuracy.
+      5. Derived-Stat Overdispersion ( vs. Book Poisson ) & Correlated SGP Copulas: Sportsbooks price player touchdowns and props with Poisson assumptions () and price Same-Game Parlays via crude boolean exclusion tags (SGP / YourBetEligible) rather than joint game-script modeling. Because GSE simulates 10,000 shared-random-number (CRN) play-by-play trajectories and pairs legs with the validated Archimedean copula ( for QB–WR1 / QB–TE1; substitutive for QB–RB1), GSE sees the exact tail fatness () and multi-leg correlation that books misprice.
+C. What Is OVERLOOKED (Silent Systemic Vulnerabilities That Will Bite Later)
+         1. The Compatibility-Wrapper Illusion in markov-simulator.ts: Look closely at how Hermes completed Option 2 (ed01d3a84): because markov-simulator.ts passed CubeCell pairs ({ n, epaSum, signStable }) expecting number | null, while the verified kernels in gse-proprietary-seven.ts expected structured objects and returned MetricResult<T>, Hermes added computeGseSiiCell, computeGseQptsrCell, computeGseRlsCell, computeGseTorCell, computeGseSpeseCell, and computeGseDwpBleed to gse-proprietary-seven.ts. That satisfied the consolidation rule and kept tests green, but it means markov-simulator.ts is still computing simple two-cell EPA subtraction (left - right) for SII, QPTSR, RLS, and TOR instead of running the full physics kernels (sub-2.0s pressure bucket arrays, 3D separation asymmetry , and LB box-fit conflict rates)! Now that 2026 NGS and FTN parquets are on disk, we must wire markov-simulator.ts to call the primary MetricResult<T> kernels in gse-proprietary-seven.ts.
+         2. Unfiltered Vector Search (stageB Only) Still Hits the ef_search = 40 Ceiling on Neon PgBouncer: When buildContextMask(signals) returns all zeros (no signal family has  and non-zero displacement), route() falls back to stageB(). On Neon's pooled connection string (-pooler.c-7.us-east-1.aws.neon.tech), SET LOCAL hnsw.ef_search = 128 is a no-op unless executed inside an explicit BEGIN; ... COMMIT; transaction block on a single pinned PoolClient.
+         3. 202 ENABLED = false Modules Sitting Dark Without a Promotion Schedule: Hermes proved there are 202 ENABLED = false modules in packages/prediction-engine (not 146). While they now pass the ACCEPTANCE_GATE grep check, the ~46 liftable modules that already have real math and local data (especially now that 2026 NGS receiving and 2024–2026 injuries are on disk) need a scheduled Monday Night Pre-Seal Shadow-Diff Runner so validated modules graduate into the Tuesday 04:00 CT seal instead of staying false forever.
+         4. Website Package Materialization Bridge (CoachProjectionReceipt  /board & /picks & content_os.db): You made it clear: you don't care about generic public site hosting—you care about your Picks, Plays, Props, DFS Lineups, and Parlays packaged on your website to make money. Right now, pick-pipeline.ts and master-situational-reasoning-aggregator.ts are still listed in artifacts/audit/ws0-gap-manifest.json as NAMED_GAPs! Closing that bridge is what turns CoachProjectionReceipt + Step N into live commercial packages on galaxysportsedge.com.
+D. What Is OVER-VALUED (What We Must Stop Giving Weight or Compute To)
+Over-Valued Element
+	Empirical Proof From Your Own Data
+	Mandatory System Rule Moving Forward
+	1. Standalone NFL Point-Spread Sides
+	49.83% ATS across 895 held-out games; Pinnacle prices spreads at 3.60% hold () vs. 4.93% on totals.
+	Closed as a primary product. Use spread simulations strictly to anchor game-script regimes (Shootout, Stall, Chess) that feed Player Props, Totals, MILP DFS stacks, and Correlated SGPs.
+	2. Raw Line Movement / Steam & Ticket-Only Splits
+	Steam correlation with outcomes is  (, Cycle 26); 100% of 25-min DK movers were $50-cap Q1 lines; ticket-only splits got PIT, DET, and TEN backwards vs. money%.
+	Read strictly last at Step N. Never let line movement alter a rating or projection; only use full-game Hawkes + Trending OU ($
+	3. Sportsbook trueOdds Fields & Unconditional RPO / Motion Narratives
+	trueOdds carries 4.58% hold on DK and 4.83% on FanDuel (not de-vigged); RPOs average −0.0657 EPA/play; raw motion without play-action adds +0.0016 EPA/play; 8+ box vs. run adds +0.009 EPA/play.
+	Ignore trueOdds (always apply shin_devig with ); penalize RPO-heavy game plans; only credit motion and box counts when paired with play-action vs. Single-High shells (GSE-SII).
+	4. Practice Participation Sub-Tiers (Full vs. Limited) for Questionable QBs
+	Within-team bootstrap () proved Full practice (0.117 EPA drop) = Limited practice (0.117 EPA drop).
+	Do not over-fit mid-week beat-writer practice hype. Lock QB_QUESTIONABLE = 0.0947 through Friday v3.0, and switch to 0.1159 (active) or 0.11 (scratched) only at the T-90m official inactive lock (v4.0).
+	5. Unconstrained LLM "Review Everything" Calls & Broken Neon Jev Endpoints
+	typesafeai-jev-1-14-0 and openjev-qwen35-4b 404 on every Neon Gateway path; unpaginated Opus chats burn $0.60/call and hallucinate repo facts they can't see.
+	Keep Jev on OpenRouter (/api/alpha/decisions); use Neon AI Gateway strictly for qwen3-embedding-0-6b, Haiku 5.5 batch triage, and file-grounded Opus 5.5 diff audits.
+	4. Immediate Autonomous Action Plan (Next Execution Pass for Hermes)
+Give Hermes this exact, ordered 6-step execution block to close every gap identified above and lock in 100% alignment:
+            1. Step 1 — Commit the Opus Review Patch & Unify the Split Working Tree (C:\Users\Garrett\Sports):
+            * Commit and push the 4 post-review files (mcp-cognitive-router.ts, locked-projection.ts, golden-digest-parity.test.ts, 2026-10-28_literature_hnsw.sql) from the active worktree to origin/engine/public-baseline-2026-10-24.
+            * In C:\Users\Garrett\Sports, stash the 245 dirty files into a labeled archive branch/stash (git stash push -u -m "archive-dirty-session-2026-10-28") and fast-forward C:\Users\Garrett\Sports to origin/engine/public-baseline-2026-10-24 so the main tree, worktree, and origin are 100% identical.
+            2. Step 2 — Close Serializer Edge Cases C2, C3, and C5 (locked-projection.ts & gse_coach_mind_simulator.py):
+            * In Python canonical_hash(), set ensure_ascii=False, allow_nan=False and normalize non-integral floats via deterministic decimal formatting so < 1e-4 values (0.00001) never diverge between Python ("1e-05") and JS ("0.00001").
+            * In TypeScript canonicalizeForSeal(), throw on !Number.isFinite(val) and normalize scientific-notation floats < 1e-6, adding C2 ("τ"), C3 (0.00001), and C5 (NaN rejection) tests to golden-digest-parity.test.ts (bringing it to 9/9 PASS).
+            3. Step 3 — Wire Full 32-Team Candidate Ratings, HHI Load Scaling, and Rich 2026 NGS/FTN Kernels Into the Simulator:
+            * Update load_sealed_object_readonly() in scripts/ops/gse_coach_mind_simulator.py to load all 32 team ratings from candidates/2026-10-25-week7-candidate.json + candidates/sealed-center.json.
+            * Port load_scaling.py (, $m = \operatorname{clamp}(\sqrt{N_{\text{league}}/N_{\text{team}}}, 0.55, 1.60)$) into packages/prediction-engine/src/coach-sim/sinkhorn-targets.ts.
+            * Wire data/nflverse/ngs_receiving.csv.gz (617 2026 rows) and ftn_charting_2026.parquet into markov-simulator.ts so the simulator invokes the rich MetricResult<T> functions in gse-proprietary-seven.ts (including live 2026 GSE-RLS, GSE-QPTSR, and GSE-SII) and connect scoring.ts to call simulateCoachGame().
+               4. Step 4 — Write scripts/ops/fit_qb_questionable2.py & Pin ne-chi-fixture.test.ts Offline:
+               * Write scripts/ops/fit_qb_questionable2.py using data/nflverse/injuries_{2024,2025,2026}.csv and pbp to reproduce QB_QUESTIONABLE = 0.0947 (0.341 * 0.1159 + 0.659 * 0.0838) locally on Windows.
+               * Replace the live webws.365scores.com fetch in ne-chi-fixture.test.ts with a pinned local JSON fixture and apply the Float64Array bounds fix to pinhole-jacobian.ts (tsc ).
+                  5. Step 5 — Scale the Neon Cognitive Router to Full Corpus (5,303 Premises) + Stages C & D + Haiku Citation Sweep:
+                  * Wrap the fallback stageB HNSW query in mcp-cognitive-router.ts inside an explicit BEGIN; SET LOCAL hnsw.ef_search = ...; SELECT ...; COMMIT; transaction block, and add Stage C (spectral graph orthogonalization) and Stage D (positive-part James-Stein shrinkage with $|\Delta\text{log-odds}| \le 0.35$).
+                  * Run seed_literature_premises.ts across all 5,303 premises in MIND_CORPUS_3000.jsonl using qwen3-embedding-0-6b (~$0.01 of the $50 Neon credit) and run a batch script using claude-haiku-5-5 (~$0.11) + AST inspection to verify all 307 remaining citations.
+                  6. Step 6 — Materialize the Website Commercial Package Pipeline (pick-pipeline.ts):
+                  * Wire packages/prediction-engine/src/pipeline/pick-pipeline.ts to consume locked CoachProjectionReceipt artifacts first, run Step N (calibration-map.ts 8-knot PAVA + shin_devig + 6-book kernel/rake filter + SHARP_MONEY money% - ticket% divergence + market_capacity.py limits) strictly last, and write the finalized Website Call-Sheet Picks, Tiered Player Props, MILP DraftKings DFS Lineups, and Correlated SGP Packages directly to Neon for galaxysportsedge.com and content_os.db, signing off every task in Beexly/agent-bus/CHECKLIST-2026-10-28.jsonl.

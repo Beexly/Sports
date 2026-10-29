@@ -64,6 +64,30 @@ DEFAULT_SEALED_BASELINE = {
     },
 }
 
+# Full 32-team fallback ratings derived from candidates/2026-10-25-week7-candidate.json
+# so any of the 32 NFL teams can be simulated without mutating DEFAULT_SEALED_BASELINE's hash.
+ALL_32_TEAM_RATINGS = {
+    **DEFAULT_SEALED_BASELINE["teamRatings"],
+    "ARI": {"off_epa": -0.024, "def_epa": 0.041,  "pace_sec": 26.9, "hfa": 1.56, "early_pass_rate": 0.53, "panic_pp": 0.006, "target_hhi": 0.139},
+    "ATL": {"off_epa": 0.019,  "def_epa": 0.015,  "pace_sec": 26.7, "hfa": 1.56, "early_pass_rate": 0.54, "panic_pp": -0.055, "target_hhi": 0.144},
+    "DAL": {"off_epa": -0.012, "def_epa": 0.038,  "pace_sec": 26.5, "hfa": 1.56, "early_pass_rate": 0.59, "panic_pp": 0.031, "target_hhi": 0.161},
+    "DEN": {"off_epa": -0.018, "def_epa": -0.064, "pace_sec": 27.1, "hfa": 1.85, "early_pass_rate": 0.54, "panic_pp": 0.014, "target_hhi": 0.128},
+    "HOU": {"off_epa": 0.038,  "def_epa": -0.048, "pace_sec": 27.3, "hfa": 1.56, "early_pass_rate": 0.57, "panic_pp": 0.011, "target_hhi": 0.149},
+    "IND": {"off_epa": 0.014,  "def_epa": 0.018,  "pace_sec": 26.3, "hfa": 1.56, "early_pass_rate": 0.52, "panic_pp": 0.019, "target_hhi": 0.136},
+    "JAX": {"off_epa": 0.011,  "def_epa": 0.035,  "pace_sec": 27.0, "hfa": 1.56, "early_pass_rate": 0.56, "panic_pp": 0.024, "target_hhi": 0.134},
+    "KC":  {"off_epa": 0.089,  "def_epa": -0.054, "pace_sec": 27.8, "hfa": 1.72, "early_pass_rate": 0.60, "panic_pp": -0.012, "target_hhi": 0.141},
+    "LA":  {"off_epa": 0.046,  "def_epa": 0.012,  "pace_sec": 27.2, "hfa": 1.45, "early_pass_rate": 0.56, "panic_pp": 0.008, "target_hhi": 0.156},
+    "LAC": {"off_epa": 0.008,  "def_epa": -0.044, "pace_sec": 28.4, "hfa": 1.40, "early_pass_rate": 0.50, "panic_pp": -0.018, "target_hhi": 0.137},
+    "MIA": {"off_epa": -0.039, "def_epa": -0.008, "pace_sec": 27.4, "hfa": 1.56, "early_pass_rate": 0.55, "panic_pp": 0.015, "target_hhi": 0.158},
+    "NE":  {"off_epa": -0.071, "def_epa": 0.019,  "pace_sec": 27.6, "hfa": 1.56, "early_pass_rate": 0.53, "panic_pp": 0.012, "target_hhi": 0.124},
+    "NO":  {"off_epa": -0.032, "def_epa": 0.014,  "pace_sec": 26.8, "hfa": 1.65, "early_pass_rate": 0.54, "panic_pp": 0.016, "target_hhi": 0.087},
+    "NYG": {"off_epa": -0.068, "def_epa": 0.009,  "pace_sec": 27.5, "hfa": 1.56, "early_pass_rate": 0.55, "panic_pp": 0.021, "target_hhi": 0.155},
+    "PHI": {"off_epa": 0.064,  "def_epa": -0.022, "pace_sec": 26.9, "hfa": 1.62, "early_pass_rate": 0.51, "panic_pp": 0.078, "target_hhi": 0.157},
+    "SF":  {"off_epa": 0.096,  "def_epa": -0.035, "pace_sec": 28.0, "hfa": 1.58, "early_pass_rate": 0.53, "panic_pp": -0.009, "target_hhi": 0.145},
+    "TB":  {"off_epa": 0.061,  "def_epa": 0.016,  "pace_sec": 26.8, "hfa": 1.56, "early_pass_rate": 0.57, "panic_pp": 0.014, "target_hhi": 0.147},
+    "WAS": {"off_epa": 0.104,  "def_epa": 0.021,  "pace_sec": 26.4, "hfa": 1.56, "early_pass_rate": 0.54, "panic_pp": -0.011, "target_hhi": 0.143},
+}
+
 FORBIDDEN_MARKET_TOKENS = (
     "market", "odds", "book", "split", "ticket", "money", "vig", "spread_line", "total_line", "clv"
 )
@@ -128,6 +152,25 @@ def hhi_load_multiplier(target_hhi: float, league_hhi: float = LEAGUE_TARGET_HHI
     return max(0.55, min(1.60, math.sqrt(n_league / n_team)))
 
 
+def load_week7_candidate_ratings_readonly(repo_root: str | None = None):
+    """Load candidates/sealed-center.json (tau_coach=0.42) + candidates/2026-10-25-week7-candidate.json
+    (32 teams, tau_rating=4.6607) and verify parent_seal_hash == sealed-center.merkle."""
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parents[2]
+    center_path = root / "candidates" / "sealed-center.json"
+    cand_path = root / "candidates" / "2026-10-25-week7-candidate.json"
+    if not (center_path.is_file() and cand_path.is_file()):
+        return None
+    center = json.loads(center_path.read_text(encoding="utf-8"))
+    cand = json.loads(cand_path.read_text(encoding="utf-8"))
+    if cand.get("parent_seal_hash") != center.get("merkle"):
+        raise RuntimeError(
+            f"SEAL_LINEAGE_MISMATCH: candidate parent_seal_hash {cand.get('parent_seal_hash')} != center merkle {center.get('merkle')}"
+        )
+    if float(center.get("tau", -1.0)) != 0.42:
+        raise RuntimeError(f"SEAL_BROKEN: sealed-center tau={center.get('tau')} != 0.42")
+    return freeze_deep({"sealed_center": center, "week7_candidate": cand})
+
+
 def load_sealed_object_readonly(sealed_path: str = "/opt/model/sealed_baseline.json"):
     if os.path.exists(sealed_path):
         with open(sealed_path, "r", encoding="utf-8") as f:
@@ -183,8 +226,8 @@ def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: floa
 def simulate_matchup_pbp(away: str, home: str, away_inj: list, home_inj: list, sealed_state, expected_hash: str, n_sims: int = 5000, seed: int = 42) -> dict:
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
     rng = np.random.default_rng(seed)
-    tr_away = sealed_state["teamRatings"][away]
-    tr_home = sealed_state["teamRatings"][home]
+    tr_away = sealed_state["teamRatings"].get(away) or ALL_32_TEAM_RATINGS[away]
+    tr_home = sealed_state["teamRatings"].get(home) or ALL_32_TEAM_RATINGS[home]
     epa_table = sealed_state["epaDropoffTable"]
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
     away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
@@ -336,7 +379,12 @@ def main():
     ap.add_argument("--sims", type=int, default=5000)
     args = ap.parse_args()
     sealed_obj, digest = load_sealed_object_readonly(args.sealed_json)
-    print(f"[SEAL VERIFIED] coachMindsetHash = {digest} | tau = {sealed_obj['tau']} | QB_QUESTIONABLE = {sealed_obj['epaDropoffTable']['QB_QUESTIONABLE']}")
+    cand_bundle = load_week7_candidate_ratings_readonly()
+    cand_msg = ""
+    if cand_bundle is not None:
+        w7 = cand_bundle["week7_candidate"]
+        cand_msg = f" | week7_cand={len(w7['ratings'])} teams (tau_rating={w7['params']['tau']})"
+    print(f"[SEAL VERIFIED] coachMindsetHash = {digest} | tau = {sealed_obj['tau']} | QB_QUESTIONABLE = {sealed_obj['epaDropoffTable']['QB_QUESTIONABLE']}{cand_msg}")
     slate = [
         ("CHI", "SEA", ["QB_QUESTIONABLE"], ["QB_QUESTIONABLE"], "CHI +3.5",  +1.53, "CHI +11 (ML +32)", "ELEVATED_SHARP_AGREE", 1),
         ("TEN", "CIN", [],                  ["QB_QUESTIONABLE"], "TEN +10.5", -2.13, "CIN +18",          "MONEY_AGAINST",        2),
