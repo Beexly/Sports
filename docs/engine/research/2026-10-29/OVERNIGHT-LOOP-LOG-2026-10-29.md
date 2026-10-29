@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 13`
+- **CYCLE_ROUND:** `Round 14`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -192,6 +192,19 @@ Formula: `theta = (1 - B) * early_mean + B * grand_mean`, with `B = (sigma2 / n)
 - Green Bay: early raw -0.0206 on 290 plays, shrunk -0.0057 (`B = 0.517`), late actual 0.0353 on 133 plays.
 - Not promoted into a spread. `tau2` is small, so most of the early team-mean spread is noise.
 - Deploy: first page still has no Ready row. `sports-n3zlsyt5j` errored at 46 minutes. Newest build was about 2 minutes old. No cancel command in this Vercel CLI. Quad harvest: none.
+
+## Round 14 — 2026-10-29 02:46 CT
+
+Brier test of the same shrinkage, on play success (`epa > 0`) rather than on the mean. Late plays only, 3,486. Cards not changed.
+
+Formula: same `B = (sigma2 / n) / (sigma2 / n + tau2)`, now on the early success rate. `sigma2 = 0.2441`. `tau2 = 0.001022`. League success rate `0.4356`.
+
+- Brier, raw early rate: 0.24494. Shrunk rate: 0.24489. League rate: 0.24572. Shrinkage beats the raw rate by 0.00005. That is not a promotion.
+- The 0.0114 mean-absolute-error gain from Round 13 does not survive a play-level proper score. The weight stays off the card.
+- Carolina early success 0.4415, shrunk 0.4387. Green Bay early 0.4069, shrunk 0.4198.
+- Fourth-and-2-or-shorter go rate: Carolina 2/4 early, 2/5 late. Green Bay 7/10 early, 1/2 late. Too small to promote.
+- Deploy: first page still Building. Newest about 2 minutes old. No Ready row in the first six. Quad harvest: none.
+
 
 
 
