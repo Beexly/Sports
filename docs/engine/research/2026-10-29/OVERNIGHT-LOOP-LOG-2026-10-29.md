@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 6`
+- **CYCLE_ROUND:** `Round 7`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -104,6 +104,21 @@ Lint-fix deploy compiled. It is not the live alias yet.
   - Restored `LIVE_SLATE_COACH_WRITEUPS` rendering on `/`, `/packages`, `/fantasy/dfs`, `paywall-reveal-card.tsx`, and `/api/webhooks/telegram/route.ts`.
   - Verified Vitest (`__tests__/coach-writeup-engine.test.ts`, `__tests__/whop-telegram-integrations.test.ts`, `__tests__/packages-storefront.test.ts`, `__tests__/dfs-page-entitlement.test.tsx`: **4 test files, 24/24 tests passed**).
 - **Next Action for Round 7:** Do NOT revert `LIVE_SLATE_COACH_WRITEUPS` or set games to `PASS`. Enrich `build_w1_w7_usage_route_trench_trends.py` with `pbp_participation_2026_reconstructed.parquet` (`18,738` rows, personnel groupings & box counts) and `injuries_2026.parquet`, run `nvidia/nemotron-3.5-super-vl:free` on the 9 `@SumerSports` `PARTIAL` charts, and verify the latest Vercel production alias.
+
+## Round 7 — 2026-10-29 02:04 CT
+
+Cards were not wiped. Out-of-sample EPA split was measured and not promoted.
+
+- Source: `play_by_play_2026.parquet`, `play_type` in (pass, run), non-null `epa`. Split is weeks 1-5 versus weeks 6-7.
+- Carolina offense: weeks 1-5, 265 plays, 0.1151 per play. Weeks 6-7, 127 plays, -0.0455 per play. Late minus early = -0.1606.
+- Green Bay offense: weeks 1-5, 290 plays, -0.0206 per play. Weeks 6-7, 133 plays, 0.0353 per play. Late minus early = +0.0559.
+- Carolina defense (opponent EPA): weeks 1-5, 267 plays, 0.0283. Weeks 6-7, 119 plays, 0.0155. Late minus early = -0.0128.
+- Green Bay defense (opponent EPA): weeks 1-5, 324 plays, -0.0388. Weeks 6-7, 136 plays, -0.0992. Late minus early = -0.0605.
+- Counter-thesis, not a card change: Carolina's late offense is worse than its early offense. The published TNF side was left as written in `c7604464b`. This residual was not promoted into `generate_slate_writeups.py` because no Brier or log-loss test was run.
+- `generate_slate_writeups.py` still floors prop expected CLV with `max(0.015, p - 0.50)`, `max(0.014, ...)`, and `max(0.012, ...)`. That clamp was not removed this round.
+- Production: six `sports-web` deploys still listed Building, newest `sports-7yt7b1tgi` at 3 minutes. No Ready alias confirmed. Live routes were not re-fetched this round.
+- Quad-engine harvest this round: none. New equation coded: none. Test suite this round: not run.
+
 
 
 
