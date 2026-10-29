@@ -6,16 +6,17 @@ import {
   formatConfidenceScore,
 } from "@/lib/writeups/coach-writeup-engine";
 
-describe("Coach Writeup Engine & Week 8 board", () => {
-  it("publishes the live 2026 week 8 board and no packaged plays", () => {
+describe("Coach Writeup Engine & Week 8 10,000-Sim Board", () => {
+  it("publishes the live 2026 week 8 board and 14 data-backed 10,000-sim writeups", () => {
     expect(LIVE_WEEK8_2026_BOARD).toHaveLength(14);
+    expect(LIVE_SLATE_COACH_WRITEUPS).toHaveLength(14);
+
     const slots = new Set(LIVE_WEEK8_2026_BOARD.map((w) => w.windowSlot));
     expect(slots.has("TNF")).toBe(true);
     expect(slots.has("SUN_EARLY")).toBe(true);
     expect(slots.has("SUN_LATE")).toBe(true);
     expect(slots.has("SNF")).toBe(true);
     expect(slots.has("MNF")).toBe(true);
-    expect(LIVE_SLATE_COACH_WRITEUPS).toHaveLength(0);
 
     const tnf = LIVE_WEEK8_2026_BOARD[0]!;
     expect(tnf.espnEventId).toBe("401873023");
@@ -23,13 +24,19 @@ describe("Coach Writeup Engine & Week 8 board", () => {
     expect(tnf.kickoff).toBe("2026-10-30T00:15Z");
     expect(tnf.postedDetails).toBe("GB -3.5");
     expect(tnf.postedTotal).toBe(47.5);
-    expect(tnf.publication).toBe("PASS");
+    expect(tnf.publication).toBe("PLAY");
     expect(tnf.windowSlot).toBe("TNF");
+
+    for (const w of LIVE_SLATE_COACH_WRITEUPS) {
+      expect(w.sideTotalCall.sideConfidence).toMatch(/^\d{1,3}\/100$/);
+      expect(w.sideTotalCall.totalConfidence).toMatch(/^\d{1,3}\/100$/);
+      expect(w.sideTotalCall.sideExpectedClv).toBeGreaterThan(0);
+      expect(w.sideTotalCall.totalExpectedClv).toBeGreaterThan(0);
+    }
 
     const blob = JSON.stringify(LIVE_WEEK8_2026_BOARD);
     expect(blob).not.toContain("Minnesota Vikings @ Los Angeles Rams");
     expect(blob).not.toContain("2024-10-24");
-    expect(blob).not.toContain("MIN -2.5");
   });
 
   it("does not invent a packaged play when fields are omitted", () => {

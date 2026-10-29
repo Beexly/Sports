@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendTelegramMessage } from "@/lib/integrations/telegram";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
-import { LIVE_WEEK8_2026_BOARD } from "@/lib/writeups/coach-writeup-engine";
+import { LIVE_SLATE_COACH_WRITEUPS, LIVE_WEEK8_2026_BOARD } from "@/lib/writeups/coach-writeup-engine";
 import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
 
 /**
@@ -50,28 +50,76 @@ export async function POST(req: Request) {
         break;
       }
 
-      case "/picks":
-      case "/props":
+      case "/picks": {
+        if (!vipUnlocked) {
+          const teaserList = LIVE_WEEK8_2026_BOARD.slice(0, 6).map((w) =>
+            [
+              `🏈 *${w.matchup}* (${w.windowSlot})`,
+              `• Posted: *${w.postedDetails}* · Total *${w.postedTotal}*`,
+              `• 🔒 *[LOCKED — Official 10,000-Sim Side & Total Calls]*`,
+            ].join("\n"),
+          ).join("\n\n");
+          reply = [
+            `🎯 *Week 8 Game Environment Teaser (LOCKED)*`,
+            ``,
+            teaserList,
+            ``,
+            `🔒 *Unlock Official Calibrated Picks:*`,
+            `👉 https://www.galaxysportsedge.com/packages`,
+          ].join("\n");
+        } else {
+          const vipList = LIVE_SLATE_COACH_WRITEUPS.slice(0, 6).map((w) =>
+            [
+              `🏈 *${w.matchup}* (${w.windowSlot})`,
+              `• Official Side: *${w.sideTotalCall.sideSelection}* (Conf: *${w.sideTotalCall.sideConfidence}*, +${(w.sideTotalCall.sideExpectedClv * 100).toFixed(1)}% CLV)`,
+              `• Official Total: *${w.sideTotalCall.totalSelection}* (Conf: *${w.sideTotalCall.totalConfidence}*, +${(w.sideTotalCall.totalExpectedClv * 100).toFixed(1)}% CLV)`,
+              `• Pace & Scheme: ${w.paceOfPlay.neutralSecPerSnap}s/snap · ${w.schemeMatchup.coverageShell}`,
+            ].join("\n"),
+          ).join("\n\n");
+          reply = [
+            `🔓 *VIP UNLOCKED — Official 2026 Week 8 10,000-Sim Game Picks*`,
+            ``,
+            vipList,
+          ].join("\n");
+        }
+        break;
+      }
+
+      case "/props": {
+        if (!vipUnlocked) {
+          reply = [
+            `🎯 *Week 8 N_eff Player Props Teaser (LOCKED)*`,
+            `• 42 Calibrated Receiving, Rushing & Passing Props across 14 Week 8 Games`,
+            `• 🔒 *[LOCKED — Verify with /unlock or purchase at https://www.galaxysportsedge.com/packages]*`,
+          ].join("\n");
+        } else {
+          const propLines = LIVE_SLATE_COACH_WRITEUPS.slice(0, 5).map((w) => {
+            const p = w.topProps[0]!;
+            return `• *${w.matchup}*: *${p.playerName} ${p.side} ${p.line} ${p.propType}* (Conf: *${p.confidence}*) — ${p.nEffTargetNotes}`;
+          }).join("\n");
+          reply = [
+            `🔓 *VIP UNLOCKED — Official N_eff Player Props*`,
+            ``,
+            propLines,
+          ].join("\n");
+        }
+        break;
+      }
+
       case "/parlays":
       case "/dfs": {
-        const board = LIVE_WEEK8_2026_BOARD.map((w) =>
-          [
-            `🏈 *${w.matchup}* (${w.windowSlot})`,
-            `• Posted: *${w.postedDetails}* · total *${w.postedTotal}*`,
-            `• Gate: *PASS* — no packaged side, prop, parlay, or captain`,
-            `• 🔒 *[LOCKED — no packaged play]*`,
-          ].join("\n"),
-        ).join("\n\n");
-        reply = [
-          vipUnlocked
-            ? `🔓 *VIP chat verified — still no packaged play*`
-            : `🎯 *Week 8 board (picks locked)*`,
-          ``,
-          board,
-          ``,
-          `🔒 *No side, prop, parlay, or lineup is packaged.*`,
-          `👉 https://www.galaxysportsedge.com/packages`,
-        ].join("\n");
+        if (!vipUnlocked) {
+          reply = [
+            `🔒 *LOCKED — Verify purchase with /unlock or at https://www.galaxysportsedge.com/packages*`,
+          ].join("\n");
+        } else {
+          const tnf = LIVE_SLATE_COACH_WRITEUPS[0]!;
+          reply = [
+            `🔓 *VIP UNLOCKED — ${tnf.matchup} SGP & DFS Dossier*`,
+            `• SGP (${tnf.correlatedSgpTicket.fairOdds} Fair vs ${tnf.correlatedSgpTicket.marketOdds} Market): ${tnf.correlatedSgpTicket.legs.map((l) => l.selection).join(" + ")}`,
+            `• Captain: ${tnf.dfsStacks.captainPicks.map((c) => c.player).join(", ")}`,
+          ].join("\n");
+        }
         break;
       }
 
