@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getPackageBySlug, LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
+import { getPackageBySlug } from "@/lib/packages/catalog";
 import { LIVE_SLATE_COACH_WRITEUPS, type CoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
-import { verifyWhopMembership } from "@/lib/integrations/whop";
+import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
 
 export async function GET(req: Request) {
   try {
@@ -9,7 +9,6 @@ export async function GET(req: Request) {
     const slug = searchParams.get("package") || searchParams.get("slug");
     const sessionId = searchParams.get("session_id");
     const whopToken = searchParams.get("whop_token") || searchParams.get("token");
-    const isUnlockedDemo = searchParams.get("unlocked") === "1";
 
     if (!slug) {
       return NextResponse.json(
@@ -26,35 +25,17 @@ export async function GET(req: Request) {
       );
     }
 
-    let isAuthorized = false;
-    let authSource = "none";
+    const verification = await verifyPackagePurchase({
+      sessionId,
+      whopToken,
+      slug: pkg.slug,
+    });
 
-    // 1. Verify Stripe Checkout Session
-    if (sessionId && sessionId.startsWith("cs_")) {
-      isAuthorized = true;
-      authSource = "stripe";
-    }
-
-    // 2. Verify Whop Membership Token
-    if (!isAuthorized && whopToken) {
-      const whopCheck = await verifyWhopMembership(whopToken);
-      if (whopCheck.valid) {
-        isAuthorized = true;
-        authSource = "whop";
-      }
-    }
-
-    // 3. Demo unlocked mode for preview / QA
-    if (!isAuthorized && isUnlockedDemo) {
-      isAuthorized = true;
-      authSource = "demo";
-    }
-
-    if (!isAuthorized) {
+    if (!verification.authorized) {
       return NextResponse.json(
         {
           unlocked: false,
-          error: "Unauthorized. A valid Stripe session_id or active Whop token is required.",
+          error: "Unauthorized. A verified paid Stripe session_id or active Whop membership token is required.",
         },
         { status: 401 },
       );
@@ -73,7 +54,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       unlocked: true,
-      authSource,
+      authSource: verification.authSource,
       package: pkg,
       writeups,
     });

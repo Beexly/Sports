@@ -22,6 +22,12 @@ import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
 import { publishedTickerLine, heldTickerLine } from "@/lib/board/market-label";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
+import {
+  LIVE_SLATE_COACH_WRITEUPS,
+  getRedactedTeasersForWindowSlot,
+} from "@/lib/writeups/coach-writeup-engine";
+import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const dynamic = "force-dynamic";
 
@@ -288,18 +294,18 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <div className="flex items-center justify-between font-mono text-xs">
                     <span className="text-plasma">04</span>
                     <span className="border border-mineral px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      DFS BUILDER
+                      10,000 SIMS
                     </span>
                   </div>
                   <h3 className="mt-3 font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    DFS Optimizer
+                    DFS Writeups &amp; Lineups
                   </h3>
                   <p className="mt-2 text-xs leading-5 text-ion-1">
-                    Single-game Showdown Captain leverage, cash baselines, and 20-max tournament stacks.
+                    Full game-environment writeups, FTN scheme funnels, N_eff usage scaling, and constructed cash &amp; 20-max GPP lineups.
                   </p>
                 </div>
                 <span className="mt-4 font-mono text-[11px] text-ion-2 group-hover:text-ion-white">
-                  Open DFS →
+                  Open DFS Writeup →
                 </span>
               </Link>
 
@@ -325,6 +331,76 @@ export default async function HomePage(): Promise<JSX.Element> {
                   Open Packages →
                 </span>
               </Link>
+            </div>
+
+            {/* WAGERTALK-STYLE A-LA-CARTE SLATE PACKAGES & INSTANT CHECKOUT BRICKS ON HOMEPAGE */}
+            <div className="mt-12 border-t border-mineral pt-10" data-testid="homepage-wagertalk-storefront">
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
+                    A-La-Carte Storefront · T-48h 04:00 CT 10,000-Run Simulations
+                  </p>
+                  <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white">
+                    Live Slate Packages &amp; Guaranteed Cards
+                  </h3>
+                  <p className="mt-1 text-xs text-ion-1">
+                    Buy individual slates with zero subscription. Free Pace-of-Play &amp; Scheme Teasers below — Official Sides, Totals, N_eff Props, Correlated SGPs &amp; 20-Max DFS Lineups unlock immediately upon Stripe or Whop checkout + @GalaxySportsEdge_bot VIP delivery.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://t.me/GalaxySportsEdge_bot"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 border border-plasma/40 bg-plasma/10 px-3.5 py-2 text-xs font-mono text-plasma hover:bg-plasma/20 transition-colors"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-plasma animate-pulse" />
+                    @GalaxySportsEdge_bot VIP
+                  </a>
+                  <Link
+                    href="/packages"
+                    className="inline-flex items-center border border-mineral bg-carbon px-3.5 py-2 text-xs font-mono text-ion-1 hover:border-plasma hover:text-ion-white"
+                  >
+                    Full Storefront ({LIVE_PACKAGE_CATALOG.length} Packs) →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Free Pace-of-Play & Scheme Matchup Teasers (with Strict Lock Redaction) */}
+              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((w) => (
+                  <Link
+                    key={w.id}
+                    href="/packages"
+                    className="group border border-mineral/60 bg-carbon/90 p-4 transition-colors hover:border-plasma"
+                  >
+                    <div className="flex items-center justify-between text-[10px] font-mono">
+                      <span className="text-plasma uppercase">{w.windowSlot}</span>
+                      <span className="text-ion-2">{w.paceOfPlay.neutralSecPerSnap}s / snap · {Math.round(w.paceOfPlay.noHuddleRate * 100)}% No-Huddle</span>
+                    </div>
+                    <div className="mt-1.5 text-sm font-semibold text-ion-white group-hover:text-plasma">
+                      {w.matchup}
+                    </div>
+                    <p className="mt-1.5 text-xs text-ion-1 line-clamp-2">
+                      {w.schemeMatchup.coverageShell}
+                    </p>
+                    <div className="mt-3 border-t border-mineral/40 pt-2 font-mono text-[10px] text-plasma">
+                      🔒 Side ({w.sideTotalCall.sideConfidence}) · Total ({w.sideTotalCall.totalConfidence}) · {w.topProps.length} Props · SGP Locked
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* 5 OnlyFans / WagerTalk-Style Paywall Reveal Cards with In-Place Unlock */}
+              <div className="mt-6 grid gap-6 lg:grid-cols-3">
+                {LIVE_PACKAGE_CATALOG.map((pkg) => (
+                  <PaywallRevealCard
+                    key={pkg.slug}
+                    pkg={pkg}
+                    teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </section>

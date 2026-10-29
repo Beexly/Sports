@@ -1136,3 +1136,44 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
   }),
 ];
+
+export function getWriteupsForWindowSlot(windowSlot: string): CoachGameWriteup[] {
+  return LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+    if (windowSlot === "WEEKEND_PASS" || windowSlot === "WEEKLY_PASS") return true;
+    if (windowSlot === "SUN_MAIN") {
+      return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
+    }
+    return w.windowSlot === windowSlot;
+  });
+}
+
+export function getRedactedTeasersForWindowSlot(windowSlot: string) {
+  return getWriteupsForWindowSlot(windowSlot).map((w) => ({
+    id: w.id,
+    gameId: w.gameId,
+    windowSlot: w.windowSlot,
+    matchup: w.matchup,
+    kickoff: w.kickoff,
+    paceOfPlay: {
+      neutralSecPerSnap: w.paceOfPlay.neutralSecPerSnap,
+      noHuddleRate: w.paceOfPlay.noHuddleRate,
+      passEpaPlay: w.paceOfPlay.passEpaPlay,
+      notes: w.paceOfPlay.notes,
+    },
+    schemeMatchup: {
+      coverageShell: w.schemeMatchup.coverageShell,
+      blitzRateVsPressureToSack: w.schemeMatchup.blitzRateVsPressureToSack,
+      notes: w.schemeMatchup.notes,
+    },
+    lockedSummary: {
+      sideConfidence: w.sideTotalCall.sideConfidence,
+      sideExpectedClvCents: (w.sideTotalCall.sideExpectedClv * 100).toFixed(1),
+      totalConfidence: w.sideTotalCall.totalConfidence,
+      totalExpectedClvCents: (w.sideTotalCall.totalExpectedClv * 100).toFixed(1),
+      propsCount: w.topProps.length,
+      hasSgp: Boolean(w.correlatedSgpTicket),
+      sgpMarketOdds: w.correlatedSgpTicket?.marketOdds ?? null,
+      hasDfs: Boolean(w.dfsStacks),
+    },
+  }));
+}

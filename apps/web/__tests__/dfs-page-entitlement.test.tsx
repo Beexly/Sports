@@ -179,10 +179,10 @@ describe("/fantasy/dfs — server-side paywall (licensed DraftKings salaries)", 
     expectNoLicensedRows(container.innerHTML);
   });
 
-  it("ANONYMOUS + LIVE feed: still a real page — optimizer plus an upsell, not a blank", async () => {
+  it("ANONYMOUS + LIVE feed: still a real page — DFS writeup dossier plus an upsell, not a blank", async () => {
     const { container, getByTestId } = await renderPage();
-    // The free tool is untouched: the optimizer still renders.
-    expect(getByTestId("dfs-optimizer")).toBeInTheDocument();
+    // The DFS intelligence writeup dossier renders in place of the retired optimizer.
+    expect(getByTestId("dfs-writeup-dossier")).toBeInTheDocument();
     // And the viewer is told what is behind the gate, with a way to unlock it.
     expect(container.querySelector('a[href="/pricing"]')).not.toBeNull();
     expect(container.innerHTML.length).toBeGreaterThan(400);

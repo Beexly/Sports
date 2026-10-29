@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { LIVE_PACKAGE_CATALOG, type PickPackageOffering } from "@/lib/packages/catalog";
-import { LIVE_SLATE_COACH_WRITEUPS } from "@/lib/writeups/coach-writeup-engine";
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
+import {
+  LIVE_SLATE_COACH_WRITEUPS,
+  getRedactedTeasersForWindowSlot,
+} from "@/lib/writeups/coach-writeup-engine";
+import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const dynamic = "force-dynamic";
 
@@ -73,101 +77,24 @@ export default function PackagesPage(): JSX.Element {
           </div>
         </section>
 
-        {/* Storefront Bricks Grid */}
+        {/* Storefront Bricks Grid (OnlyFans / WagerTalk In-Place Paywall Reveal Cards) */}
         <section className="mt-10">
-          <h2 className="text-xl font-display font-semibold text-ion-white">
-            Available Slate Cards & Passes
-          </h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-xl font-display font-semibold text-ion-white">
+              Available Slate Cards &amp; In-Place Paywall Vaults
+            </h2>
+            <span className="font-mono text-xs text-plasma">
+              🔒 Zero DOM Leak · Instant In-Place Reveal on Payment or Receipt Key
+            </span>
+          </div>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {LIVE_PACKAGE_CATALOG.map((pkg) => {
-              const standardPrice = (pkg.standardPriceCents / 100).toFixed(2);
-              const guaranteedPrice = pkg.guaranteedPriceCents
-                ? (pkg.guaranteedPriceCents / 100).toFixed(2)
-                : null;
-
-              return (
-                <div
-                  key={pkg.slug}
-                  className="flex flex-col justify-between border border-mineral bg-eclipse p-6 transition-colors hover:border-mineral-hover"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      {pkg.badge && (
-                        <span className="border border-plasma/30 bg-plasma/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-plasma">
-                          {pkg.badge}
-                        </span>
-                      )}
-                      <span className="text-xs font-mono text-ion-2">
-                        {pkg.gamesCount} {pkg.gamesCount === 1 ? "Game" : "Games"}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-3 text-lg font-semibold text-ion-white">
-                      {pkg.title}
-                    </h3>
-                    <p className="mt-1 text-xs font-mono text-plasma">
-                      {pkg.subtitle}
-                    </p>
-                    <p className="mt-3 text-sm text-ion-1">
-                      {pkg.description}
-                    </p>
-
-                    <div className="mt-5 space-y-2 border-t border-mineral/40 pt-4">
-                      {pkg.highlights.map((highlight, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-xs text-ion-1">
-                          <span className="text-plasma">✓</span>
-                          <span>{highlight}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-6 border-t border-mineral/50 pt-5">
-                    {/* Pricing Display */}
-                    <div className="mb-4">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-xs text-ion-2">Standard Price:</span>
-                        <span className="font-display text-2xl font-bold text-ion-white">
-                          ${standardPrice}
-                        </span>
-                      </div>
-                      {guaranteedPrice && (
-                        <div className="mt-1 flex items-baseline justify-between text-xs text-ion-1">
-                          <span>Guaranteed Credit-Back:</span>
-                          <span className="font-mono text-plasma font-semibold">
-                            ${guaranteedPrice}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="space-y-2">
-                      <Link
-                        href={`/packages/${pkg.slug}`}
-                        className="btn-primary block w-full text-center py-2.5 text-sm font-semibold"
-                      >
-                        View Slate & Buy (${standardPrice})
-                      </Link>
-
-                      {guaranteedPrice && (
-                        <Link
-                          href={`/packages/${pkg.slug}?guaranteed=1`}
-                          className="block w-full border border-plasma/40 bg-plasma/5 py-2 text-center text-xs font-semibold text-plasma hover:bg-plasma/10 transition-colors"
-                        >
-                          Buy with Credit-Back Guarantee (${guaranteedPrice})
-                        </Link>
-                      )}
-
-                      <div className="flex items-center justify-between pt-2 text-[11px] text-ion-2">
-                        <span>Instant Stripe Checkout</span>
-                        <span className="text-ion-1">Telegram Delivery</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {LIVE_PACKAGE_CATALOG.map((pkg) => (
+              <PaywallRevealCard
+                key={pkg.slug}
+                pkg={pkg}
+                teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
+              />
+            ))}
           </div>
         </section>
       </main>

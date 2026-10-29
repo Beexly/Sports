@@ -138,13 +138,12 @@ describe("WagerTalk-Style Storefront Catalog & Checkout Builder", () => {
     expect(stripeData.writeups.length).toBeGreaterThanOrEqual(1);
     expect(stripeData.writeups[0]?.windowSlot).toBe("TNF");
 
-    // Authorized with demo query ?unlocked=1
-    const resUnlockedDemo = await unlockRoute(
+    // REJECTS unverified URL query ?unlocked=1 (strict payment gating)
+    const resUnlockedBypassAttempt = await unlockRoute(
       new Request("http://localhost/api/packages/unlock?package=sunday-nfl-5pct-slate-card&unlocked=1"),
     );
-    expect(resUnlockedDemo.status).toBe(200);
-    const demoData = await resUnlockedDemo.json();
-    expect(demoData.unlocked).toBe(true);
-    expect(demoData.writeups.length).toBeGreaterThanOrEqual(2);
+    expect(resUnlockedBypassAttempt.status).toBe(401);
+    const bypassData = await resUnlockedBypassAttempt.json();
+    expect(bypassData.unlocked).toBe(false);
   });
 });

@@ -4,7 +4,13 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { getPackageBySlug, LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
-import { LIVE_SLATE_COACH_WRITEUPS, type CoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
+import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
+import {
+  LIVE_SLATE_COACH_WRITEUPS,
+  getRedactedTeasersForWindowSlot,
+  type CoachGameWriteup,
+} from "@/lib/writeups/coach-writeup-engine";
+import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 interface PackagePageProps {
   params: { slug: string };
@@ -27,13 +33,18 @@ export async function generateMetadata({ params }: PackagePageProps): Promise<Me
   };
 }
 
-export default function PackageDetailPage({ params, searchParams }: PackagePageProps): JSX.Element {
+export default async function PackageDetailPage({ params, searchParams }: PackagePageProps): Promise<JSX.Element> {
   const pkg = getPackageBySlug(params.slug);
   if (!pkg) {
     notFound();
   }
 
-  const isUnlocked = searchParams.unlocked === "1" || Boolean(searchParams.session_id) || Boolean(searchParams.whop_token);
+  const verification = await verifyPackagePurchase({
+    sessionId: searchParams.session_id,
+    whopToken: searchParams.whop_token,
+    slug: pkg.slug,
+  });
+  const isUnlocked = verification.authorized;
   const isGuaranteedSelected = searchParams.guaranteed === "1";
 
   // Filter writeups relevant to package window
@@ -109,9 +120,16 @@ export default function PackageDetailPage({ params, searchParams }: PackagePageP
           </p>
         </div>
 
-        {/* LOCKED STATE — Buy Checkout Box & Teaser */}
+        {/* LOCKED STATE — OnlyFans-Style In-Place Paywall Vault + Teaser */}
         {!isUnlocked && (
           <div className="mt-8 space-y-8">
+            <PaywallRevealCard
+              pkg={pkg}
+              teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
+              initialUnlockedWriteups={null}
+              initialSessionId={searchParams.session_id || searchParams.whop_token}
+            />
+
             {/* Purchase CTA Card */}
             <div className="border border-plasma/40 bg-eclipse p-6 text-center sm:text-left sm:flex sm:items-center sm:justify-between sm:gap-6">
               <div>

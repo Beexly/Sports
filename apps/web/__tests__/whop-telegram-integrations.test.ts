@@ -135,48 +135,58 @@ describe("Whop & Telegram Integrations Suite", () => {
       expect(res.messageId).toBeDefined();
     });
 
-    it("POST /api/webhooks/telegram handles bot commands (/start, /picks, /props, /parlays, /packages, /unlock)", async () => {
+    it("POST /api/webhooks/telegram strictly gates /picks, /props, /parlays, /dfs until /unlock is verified", async () => {
+      const chatId = 987654321;
+
       // /start
       const resStart = await telegramWebhookRoute(
         new Request("http://localhost/api/webhooks/telegram", {
           method: "POST",
           body: JSON.stringify({
             update_id: 1,
-            message: { chat: { id: 12345 }, text: "/start" },
+            message: { chat: { id: chatId }, text: "/start" },
           }),
         }),
       );
       expect(resStart.status).toBe(200);
       const dataStart = await resStart.json();
       expect(dataStart.command).toBe("/start");
+      expect(dataStart.vipUnlocked).toBe(false);
 
-      // /picks
-      const resPicks = await telegramWebhookRoute(
+      // /picks BEFORE unlock -> MUST BE LOCKED (no sideSelection leaked)
+      const resPicksLocked = await telegramWebhookRoute(
         new Request("http://localhost/api/webhooks/telegram", {
           method: "POST",
           body: JSON.stringify({
             update_id: 2,
-            message: { chat: { id: 12345 }, text: "/picks" },
+            message: { chat: { id: chatId }, text: "/picks" },
           }),
         }),
       );
-      expect(resPicks.status).toBe(200);
-      const dataPicks = await resPicks.json();
-      expect(dataPicks.command).toBe("/picks");
+      expect(resPicksLocked.status).toBe(200);
+      const dataPicksLocked = await resPicksLocked.json();
+      expect(dataPicksLocked.command).toBe("/picks");
+      expect(dataPicksLocked.vipUnlocked).toBe(false);
+      expect(dataPicksLocked.previewReply).toContain("LOCKED");
+      expect(dataPicksLocked.previewReply).toContain("https://www.galaxysportsedge.com/packages");
+      expect(dataPicksLocked.previewReply).not.toContain(writeup.sideTotalCall.sideSelection);
 
-      // /props
-      const resProps = await telegramWebhookRoute(
+      // /props BEFORE unlock -> MUST BE LOCKED (no playerName leaked)
+      const resPropsLocked = await telegramWebhookRoute(
         new Request("http://localhost/api/webhooks/telegram", {
           method: "POST",
           body: JSON.stringify({
             update_id: 3,
-            message: { chat: { id: 12345 }, text: "/props" },
+            message: { chat: { id: chatId }, text: "/props" },
           }),
         }),
       );
-      expect(resProps.status).toBe(200);
-      const dataProps = await resProps.json();
-      expect(dataProps.command).toBe("/props");
+      expect(resPropsLocked.status).toBe(200);
+      const dataPropsLocked = await resPropsLocked.json();
+      expect(dataPropsLocked.command).toBe("/props");
+      expect(dataPropsLocked.vipUnlocked).toBe(false);
+      expect(dataPropsLocked.previewReply).toContain("LOCKED");
+      expect(dataPropsLocked.previewReply).not.toContain(writeup.topProps[0]!.playerName);
 
       // /packages
       const resPackages = await telegramWebhookRoute(
@@ -184,27 +194,57 @@ describe("Whop & Telegram Integrations Suite", () => {
           method: "POST",
           body: JSON.stringify({
             update_id: 4,
-            message: { chat: { id: 12345 }, text: "/packages" },
+            message: { chat: { id: chatId }, text: "/packages" },
           }),
         }),
       );
       expect(resPackages.status).toBe(200);
       const dataPackages = await resPackages.json();
       expect(dataPackages.command).toBe("/packages");
+      expect(dataPackages.previewReply).toContain("https://www.galaxysportsedge.com/packages");
 
-      // /unlock
-      const resUnlock = await telegramWebhookRoute(
+      // /unlock with invalid token -> REJECTED
+      const resUnlockBad = await telegramWebhookRoute(
         new Request("http://localhost/api/webhooks/telegram", {
           method: "POST",
           body: JSON.stringify({
             update_id: 5,
-            message: { chat: { id: 12345 }, text: "/unlock cs_test_mock_123" },
+            message: { chat: { id: chatId }, text: "/unlock fake_token_999" },
+          }),
+        }),
+      );
+      expect(resUnlockBad.status).toBe(200);
+      const dataUnlockBad = await resUnlockBad.json();
+      expect(dataUnlockBad.vipUnlocked).toBe(false);
+
+      // /unlock with verified token -> UNLOCKS VIP
+      const resUnlock = await telegramWebhookRoute(
+        new Request("http://localhost/api/webhooks/telegram", {
+          method: "POST",
+          body: JSON.stringify({
+            update_id: 6,
+            message: { chat: { id: chatId }, text: "/unlock cs_test_mock_123" },
           }),
         }),
       );
       expect(resUnlock.status).toBe(200);
       const dataUnlock = await resUnlock.json();
       expect(dataUnlock.command).toBe("/unlock");
+      expect(dataUnlock.vipUnlocked).toBe(true);
+
+      // /picks AFTER unlock -> UNLOCKED
+      const resPicksUnlocked = await telegramWebhookRoute(
+        new Request("http://localhost/api/webhooks/telegram", {
+          method: "POST",
+          body: JSON.stringify({
+            update_id: 7,
+            message: { chat: { id: chatId }, text: "/picks" },
+          }),
+        }),
+      );
+      const dataPicksUnlocked = await resPicksUnlocked.json();
+      expect(dataPicksUnlocked.vipUnlocked).toBe(true);
+      expect(dataPicksUnlocked.previewReply).toContain(writeup.sideTotalCall.sideSelection);
     });
   });
 });

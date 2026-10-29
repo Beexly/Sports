@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
 import { sendTelegramMessage } from "@/lib/integrations/telegram";
-import { LIVE_PACKAGE_CATALOG, getPackageBySlug } from "@/lib/packages/catalog";
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import { LIVE_SLATE_COACH_WRITEUPS } from "@/lib/writeups/coach-writeup-engine";
-import { verifyWhopMembership } from "@/lib/integrations/whop";
+import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
+
+/**
+ * Server-side verified Telegram buyer chat ledger.
+ * A chatId is ONLY added here after passing `verifyPackagePurchase` via `/unlock <token>`.
+ */
+const VERIFIED_VIP_CHAT_IDS = new Set<string>();
+
+export function isTelegramChatUnlocked(chatId: string): boolean {
+  return VERIFIED_VIP_CHAT_IDS.has(String(chatId));
+}
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +27,7 @@ export async function POST(req: Request) {
     const text = message.text.trim();
     const [command, ...args] = text.split(/\s+/);
     const cleanCmd = (command || "").toLowerCase();
+    const vipUnlocked = isTelegramChatUnlocked(chatId);
 
     let reply = "";
 
@@ -27,92 +38,172 @@ export async function POST(req: Request) {
           `Calibrated tactical edge with zero subscription lock-in. Tamper-evident receipts sealed before kickoff.`,
           ``,
           `*Available Commands:*`,
-          `• \`/picks\` — Official side & total calls (calibrated XX/100 confidence)`,
-          `• \`/props\` — Top player props with N_eff target volume notes`,
-          `• \`/parlays\` — Correlated Same Game Parlay (SGP) tickets`,
-          `• \`/dfs\` — DFS Captain, cash core, and tournament stacks`,
-          `• \`/packages\` — View live a-la-carte slate packages`,
-          `• \`/unlock <sessionId | whopToken>\` — Unlock your purchased slate card`,
+          `• \`/picks\` — Game Environment & Pace Teaser (VIP: Official Side & Total Calls)`,
+          `• \`/props\` — N_eff Target Concentration Teaser (VIP: Exact Prop Lines & Directions)`,
+          `• \`/parlays\` — Correlated SGP Edge Summary (VIP: Full Multi-Leg Tickets)`,
+          `• \`/dfs\` — Slate Ownership & Stack Thesis (VIP: Captain, Cash Core & GPP Stacks)`,
+          `• \`/packages\` — Purchase Instant A-La-Carte Slate Packages`,
+          `• \`/unlock <sessionId | whopToken>\` — Verify purchase & unlock VIP picks in this chat`,
           ``,
-          `_We detect. You decide._`,
+          `Status: ${vipUnlocked ? "🔓 *VIP UNLOCKED*" : "🔒 *FREE TEASER TIER (Use /packages or /unlock)*"}`,
         ].join("\n");
         break;
       }
 
       case "/picks": {
-        const picksList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-          return [
-            `🏈 *${w.matchup}* (${w.windowSlot})`,
-            `• Side: *${w.sideTotalCall.sideSelection}* (Conf: *${w.sideTotalCall.sideConfidence}* · +${(w.sideTotalCall.sideExpectedClv * 100).toFixed(1)}c)`,
-            `• Total: *${w.sideTotalCall.totalSelection}* (Conf: *${w.sideTotalCall.totalConfidence}* · +${(w.sideTotalCall.totalExpectedClv * 100).toFixed(1)}c)`,
-          ].join("\n");
-        }).join("\n\n");
+        if (!vipUnlocked) {
+          const teaserList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
+            return [
+              `🏈 *${w.matchup}* (${w.windowSlot})`,
+              `• Neutral Pace: *${w.paceOfPlay.neutralSecPerSnap}s/snap* · Pass EPA: *${w.paceOfPlay.passEpaPlay > 0 ? `+${w.paceOfPlay.passEpaPlay}` : w.paceOfPlay.passEpaPlay}*`,
+              `• Scheme Read: _${w.schemeMatchup.coverageShell}_`,
+              `• Side Call: 🔒 *[LOCKED — Conf ${w.sideTotalCall.sideConfidence} · +${(w.sideTotalCall.sideExpectedClv * 100).toFixed(1)}c CLV]*`,
+              `• Total Call: 🔒 *[LOCKED — Conf ${w.sideTotalCall.totalConfidence} · +${(w.sideTotalCall.totalExpectedClv * 100).toFixed(1)}c CLV]*`,
+            ].join("\n");
+          }).join("\n\n");
 
-        reply = [
-          `🎯 *GSE Active Slate Picks (Positive CLV Cleared)*`,
-          ``,
-          picksList,
-          ``,
-          `_Full breakdowns at https://www.galaxysportsedge.com/picks_`,
-        ].join("\n");
+          reply = [
+            `🎯 *GSE Slate Environment & Pace Teaser (Picks Locked)*`,
+            ``,
+            teaserList,
+            ``,
+            `🔒 *Official Side & Total selections are gated to package buyers.*`,
+            `👉 *Unlock Instant Package ($25–$35):* https://www.galaxysportsedge.com/packages`,
+            `🔑 _Already purchased? Reply_ \`/unlock <your_stripe_session_id>\``,
+          ].join("\n");
+        } else {
+          const picksList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
+            return [
+              `🏈 *${w.matchup}* (${w.windowSlot})`,
+              `• Side: *${w.sideTotalCall.sideSelection}* (Conf: *${w.sideTotalCall.sideConfidence}* · +${(w.sideTotalCall.sideExpectedClv * 100).toFixed(1)}c)`,
+              `• Total: *${w.sideTotalCall.totalSelection}* (Conf: *${w.sideTotalCall.totalConfidence}* · +${(w.sideTotalCall.totalExpectedClv * 100).toFixed(1)}c)`,
+            ].join("\n");
+          }).join("\n\n");
+
+          reply = [
+            `🔓 *VIP UNLOCKED — GSE Official Slate Picks*`,
+            ``,
+            picksList,
+          ].join("\n");
+        }
         break;
       }
 
       case "/props": {
-        const propsList = LIVE_SLATE_COACH_WRITEUPS.flatMap((w) => w.topProps)
-          .slice(0, 5)
-          .map(
-            (p) =>
-              `• *${p.playerName}* ${p.side} ${p.line} ${p.propType}\n  Confidence: *${p.confidence}* · CLV: +${(p.expectedClv * 100).toFixed(1)}c\n  _${p.nEffTargetNotes}_`,
-          )
-          .join("\n\n");
+        if (!vipUnlocked) {
+          const propTeasers = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
+            return [
+              `📊 *${w.matchup}* (${w.windowSlot}) — *${w.topProps.length} Cleared Positive-CLV Props*`,
+              ...w.topProps.map(
+                (p, idx) =>
+                  `  • Prop #${idx + 1} (${p.propType}): 🔒 *[PLAYER, DIRECTION & LINE LOCKED — Conf ${p.confidence} · +${(p.expectedClv * 100).toFixed(1)}c CLV]*`,
+              ),
+            ].join("\n");
+          }).join("\n\n");
 
-        reply = [
-          `📊 *Top Player Props · N_eff Volume Usages:*`,
-          ``,
-          propsList,
-          ``,
-          `_Explore props lab at https://www.galaxysportsedge.com/fantasy/props_`,
-        ].join("\n");
+          reply = [
+            `📊 *GSE Player Prop N_eff Target Concentration Teaser (Locked)*`,
+            ``,
+            propTeasers,
+            ``,
+            `🔒 *Player names, Over/Under directions, and lines require package unlock.*`,
+            `👉 *Unlock Now:* https://www.galaxysportsedge.com/packages`,
+            `🔑 _Reply_ \`/unlock <your_stripe_session_id>\` _after checkout._`,
+          ].join("\n");
+        } else {
+          const propsList = LIVE_SLATE_COACH_WRITEUPS.flatMap((w) => w.topProps)
+            .slice(0, 5)
+            .map(
+              (p) =>
+                `• *${p.playerName}* ${p.side} ${p.line} ${p.propType}\n  Confidence: *${p.confidence}* · CLV: +${(p.expectedClv * 100).toFixed(1)}c\n  _${p.nEffTargetNotes}_`,
+            )
+            .join("\n\n");
+
+          reply = [
+            `🔓 *VIP UNLOCKED — Top Player Props · N_eff Volume Edges:*`,
+            ``,
+            propsList,
+          ].join("\n");
+        }
         break;
       }
 
       case "/parlays": {
-        const parlayList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
-          const ticket = w.correlatedSgpTicket;
-          const legs = ticket.legs.map((l) => `  - ${l.description} (Conf: *${l.confidence}*)`).join("\n");
-          return [
-            `🔥 *${ticket.title}*`,
-            legs,
-            `Odds: Fair *${ticket.fairOdds}* vs Market *${ticket.marketOdds}* (Edge: +${(ticket.edgeScore * 100).toFixed(1)}%)`,
-            `_${ticket.correlationRationale}_`,
-          ].join("\n");
-        }).join("\n\n");
+        if (!vipUnlocked) {
+          const sgpTeasers = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
+            const ticket = w.correlatedSgpTicket;
+            return [
+              `🔥 *${w.matchup} — Correlated SGP Structure*`,
+              `• Legs: 🔒 *[${ticket.legs.length} Correlated Legs LOCKED]*`,
+              `• Pricing Edge: Fair *${ticket.fairOdds}* vs Market *${ticket.marketOdds}* (+${(ticket.edgeScore * 100).toFixed(1)}% Copula Edge)`,
+            ].join("\n");
+          }).join("\n\n");
 
-        reply = [
-          `🎲 *Correlated Same Game Parlays (SGP):*`,
-          ``,
-          parlayList,
-        ].join("\n");
+          reply = [
+            `🎲 *Correlated Same Game Parlay (SGP) Edge Preview (Locked)*`,
+            ``,
+            sgpTeasers,
+            ``,
+            `🔒 *Exact SGP legs are gated to package buyers.*`,
+            `👉 *Unlock Now:* https://www.galaxysportsedge.com/packages`,
+          ].join("\n");
+        } else {
+          const parlayList = LIVE_SLATE_COACH_WRITEUPS.map((w) => {
+            const ticket = w.correlatedSgpTicket;
+            const legs = ticket.legs.map((l) => `  - ${l.description} (Conf: *${l.confidence}*)`).join("\n");
+            return [
+              `🔥 *${ticket.title}*`,
+              legs,
+              `Odds: Fair *${ticket.fairOdds}* vs Market *${ticket.marketOdds}* (Edge: +${(ticket.edgeScore * 100).toFixed(1)}%)`,
+              `_${ticket.correlationRationale}_`,
+            ].join("\n");
+          }).join("\n\n");
+
+          reply = [
+            `🔓 *VIP UNLOCKED — Correlated Same Game Parlays (SGP):*`,
+            ``,
+            parlayList,
+          ].join("\n");
+        }
         break;
       }
 
       case "/dfs": {
-        const dfsItems = LIVE_SLATE_COACH_WRITEUPS.slice(0, 3).map((w) => {
-          const cap = w.dfsStacks.captainPicks[0];
-          const gpp = w.dfsStacks.gppStacks[0];
-          return [
-            `⚡ *${w.matchup} DFS Blueprint:*`,
-            `• Captain: *${cap?.player}* (${cap?.position}) — ${cap?.leverageNote}`,
-            `• GPP: *${gpp?.primaryStack.qb}* + ${gpp?.primaryStack.passCatchers.join(", ")} (Bring: *${gpp?.bringBack}*)`,
-          ].join("\n");
-        }).join("\n\n");
+        if (!vipUnlocked) {
+          const dfsTeasers = LIVE_SLATE_COACH_WRITEUPS.slice(0, 3).map((w) => {
+            return [
+              `⚡ *${w.matchup} (${w.windowSlot}) DFS Architecture:*`,
+              `• Captain (1.5x): 🔒 *[LOCKED]*`,
+              `• Cash Core (${w.dfsStacks.cashCore.length} Players): 🔒 *[LOCKED]*`,
+              `• GPP Leverage Stack: 🔒 *[QB + Pass Catchers + Bring-Back LOCKED]*`,
+            ].join("\n");
+          }).join("\n\n");
 
-        reply = [
-          `💼 *DFS Pro Lineup Recommendations:*`,
-          ``,
-          dfsItems,
-        ].join("\n");
+          reply = [
+            `💼 *GSE DFS Pro Lineup & Leverage Preview (Locked)*`,
+            ``,
+            dfsTeasers,
+            ``,
+            `🔒 *Unlock the Sunday DFS Pro 20-Max Pack ($29) or All-In Package:*`,
+            `👉 https://www.galaxysportsedge.com/packages`,
+          ].join("\n");
+        } else {
+          const dfsItems = LIVE_SLATE_COACH_WRITEUPS.slice(0, 3).map((w) => {
+            const cap = w.dfsStacks.captainPicks[0];
+            const gpp = w.dfsStacks.gppStacks[0];
+            return [
+              `⚡ *${w.matchup} DFS Blueprint:*`,
+              `• Captain: *${cap?.player}* (${cap?.position}) — ${cap?.leverageNote}`,
+              `• GPP: *${gpp?.primaryStack.qb}* + ${gpp?.primaryStack.passCatchers.join(", ")} (Bring: *${gpp?.bringBack}*)`,
+            ].join("\n");
+          }).join("\n\n");
+
+          reply = [
+            `🔓 *VIP UNLOCKED — DFS Pro Lineup Recommendations:*`,
+            ``,
+            dfsItems,
+          ].join("\n");
+        }
         break;
       }
 
@@ -133,26 +224,24 @@ export async function POST(req: Request) {
       case "/unlock": {
         const token = args[0];
         if (!token) {
-          reply = `⚠️ Please provide a Stripe Session ID or Whop Token:\nUsage: \`/unlock <token_or_session_id>\``;
+          reply = `⚠️ Please provide a paid Stripe Session ID or Whop Token:\nUsage: \`/unlock <stripe_session_id_or_whop_token>\``;
           break;
         }
 
-        let isUnlocked = token.startsWith("cs_") || token.startsWith("whop_test");
-        if (!isUnlocked) {
-          const whop = await verifyWhopMembership(token);
-          isUnlocked = whop.valid;
-        }
+        const check = await verifyPackagePurchase({
+          sessionId: token.startsWith("cs_") ? token : null,
+          whopToken: !token.startsWith("cs_") ? token : null,
+        });
 
-        if (isUnlocked) {
+        if (check.authorized) {
+          VERIFIED_VIP_CHAT_IDS.add(chatId);
           reply = [
-            `🔓 *VIP Access Granted!*`,
-            `Your slate dossier is now unlocked. Access all active writeups, props, and correlated tickets:`,
-            `👉 https://www.galaxysportsedge.com/packages/tnf-all-in-prime-pack?unlocked=1&session_id=${encodeURIComponent(token)}`,
-            ``,
-            `Type \`/picks\` or \`/parlays\` to see unlocked plays directly in this chat!`,
+            `🔓 *VIP Access Verified (${check.authSource.toUpperCase()})!*`,
+            `Your chat is now unlocked. Type \`/picks\`, \`/props\`, \`/parlays\`, or \`/dfs\` to view all unlocked plays directly in this chat, or open on web:`,
+            `👉 https://www.galaxysportsedge.com/packages/tnf-all-in-prime-pack?session_id=${encodeURIComponent(token)}`,
           ].join("\n");
         } else {
-          reply = `❌ Token or Session ID could not be verified. Please check your purchase confirmation.`;
+          reply = `❌ Token or Session ID could not be verified as paid. Complete checkout at https://www.galaxysportsedge.com/packages first.`;
         }
         break;
       }
@@ -168,8 +257,10 @@ export async function POST(req: Request) {
     return NextResponse.json({
       ok: true,
       command: cleanCmd,
+      vipUnlocked: isTelegramChatUnlocked(chatId),
       delivered: result.ok,
       messageId: result.messageId,
+      previewReply: reply,
     });
   } catch (error: any) {
     return NextResponse.json(

@@ -27,7 +27,7 @@ export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
   { label: "Picks", href: "/picks", desc: "Today's top side and total signals" },
   { label: "Player Props", href: "/fantasy/props", desc: "Underdog & PrizePicks N_eff edges" },
   { label: "SGP Projections", href: "/sgp-projections", desc: "Correlated parlay mispricing" },
-  { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash and tournament builders" },
+  { label: "DFS Writeups", href: "/fantasy/dfs", desc: "10,000-sim slate writeups & constructed lineups" },
   { label: "Pick Packages", href: "/packages", desc: "A-la-carte slate dossiers & writeups" },
 ];
 
