@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "SGP Projections Under Construction | Galaxy Sports Edge",
   description:
-    "This section is currently under construction while we focus 100% on GALAXY PICKS (PAID) and DFS.",
+    "This section is currently under construction while we focus full-time on GALAXY PICKS (PAID) and DFS.",
   alternates: { canonical: "/sgp-projections" },
 };
 
@@ -28,7 +28,7 @@ export default function SgpProjectionsPage(): JSX.Element {
             Same-Game Parlays Live in Galaxy Picks
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
-            This section is currently under construction while we focus 100% on{" "}
+            This section is currently under construction while we focus full-time on{" "}
             <strong className="text-white">GALAXY PICKS (PAID)</strong> and our{" "}
             <strong className="text-white">DFS</strong> lineup optimizer. Every NFL betting pack includes our
             correlated 3-leg Same-Game Parlay tickets with instant on-screen reveal.

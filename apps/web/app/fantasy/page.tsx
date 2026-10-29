@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Fantasy Tools Under Construction | Galaxy Sports Edge",
   description:
-    "Season-long fantasy tools are currently under construction while we focus 100% on GALAXY PICKS (PAID) and DFS.",
+    "Season-long fantasy tools are currently under construction while we focus full-time on GALAXY PICKS (PAID) and DFS.",
   alternates: { canonical: "/fantasy" },
 };
 
@@ -28,7 +28,7 @@ export default function FantasyHubPage(): JSX.Element {
             Focused on Galaxy Picks &amp; Daily Fantasy (DFS)
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
-            Season-long fantasy tools are currently under construction while we focus 100% on{" "}
+            Season-long fantasy tools are currently under construction while we focus full-time on{" "}
             <strong className="text-white">GALAXY PICKS (PAID)</strong> and our{" "}
             <strong className="text-white">DFS</strong> lineup optimizer. Open the live DFS Optimizer or grab
             this week&apos;s NFL betting packs below.

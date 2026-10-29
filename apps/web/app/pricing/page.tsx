@@ -24,7 +24,7 @@ export default function PricingPage(): JSX.Element {
             No Monthly Subscription Needed Right Now
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-200">
-            Our monthly membership tiers are currently under construction while we focus 100% on{" "}
+            Our monthly membership tiers are currently under construction while we focus full-time on{" "}
             <strong className="text-white">this week&apos;s NFL Betting Packs</strong> and our{" "}
             <strong className="text-white">Daily Fantasy (DFS) Lineup Optimizer</strong>. You can grab any individual
             game pack below with a simple one-time checkout.

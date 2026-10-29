@@ -20,6 +20,7 @@ import SgpProjectionsPage from "@/app/sgp-projections/page";
 import IntelligenceEnginesPage from "@/app/intelligence/engines/page";
 import CalibrationProofRoomPage from "@/app/calibration/page";
 import FantasyHubPage from "@/app/fantasy/page";
+import PackagesPage from "@/app/packages/page";
 
 vi.mock("@/components/ui/nav", () => ({
   Nav: () => <nav data-testid="mock-nav" />,
@@ -66,13 +67,15 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     expect(container.textContent).toContain("$19");
     expect(container.textContent).toContain("Unlock Picks Now — $19");
     expect(container.textContent).toContain(
-      "What’s Inside: Side · Total · JEV Player Props · Correlated SGP · DFS Lineup Core",
+      "What’s Inside: Spread Call · Over/Under Call · Player Props · Same-Game Parlay · DFS Lineup Core",
     );
     expect(container.textContent).toContain(
       "🔒 Locked Until Purchase — Instant Reveal on This Page",
     );
     expect(container.textContent).not.toMatch(/Telegram/i);
     expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
+    // Locked preview must NEVER leak confidence numbers, side picks, or over/under picks
+    expect(container.textContent).not.toMatch(/Side Confidence|Total Confidence|61\/100|58\/100|Take Green Bay|and the under/i);
     // Guaranteed toggle must not render when guaranteedPriceCents is null
     expect(container.textContent).not.toContain("Guaranteed Credit-Back");
 
@@ -161,11 +164,21 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     const packagesSrc = readFileSync(
       resolve(__dirname, "..", "app", "packages", "page.tsx"),
-      "utf8",
+    "utf8",
     );
     expect(packagesSrc).toContain(
       "Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know exactly what to bet and why in 30 seconds.",
     );
     expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks|%/i);
+
+    const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
+    const pkgText = pkgPageDom.textContent ?? "";
+    expect(pkgText).toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
+    expect(pkgText).toContain("Sunday · Week 9 (1:00 PM ET)");
+    expect(pkgText).not.toMatch(/TONIGHT\s*·\s*TNF/i);
+    expect(pkgText).not.toMatch(
+      /Take Green Bay|and the under|Side Confidence|Total Confidence|61\/100|58\/100|Green Bay Packers -3\.5|UNDER 47\.5|OVER 54\.5|Detroit Lions -3|Chicago Bears \+3/i,
+    );
+    unmountPkgPage();
   });
 });

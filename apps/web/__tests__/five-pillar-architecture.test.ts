@@ -12,10 +12,10 @@ describe("Five-Pillar Storefront & Honest PASS Gate Architecture", () => {
   it("exposes exact 5 commercial pillars centered on GALAXY PICKS (PAID) and DFS with zero Telegram", () => {
     expect(FIVE_REVENUE_PILLARS).toEqual([
       { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "This Week's Football Betting Packs" },
-      { label: "Tonight's TNF Pack", href: "/packages#tnf-all-in-pack", desc: "Carolina @ Green Bay Full Pack" },
+      { label: "Panthers @ Packers Pack", href: "/packages#tnf-all-in-pack", desc: "Carolina @ Green Bay Sunday Pack" },
       { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday Best Bets Pack" },
       { label: "DFS", href: "/fantasy/dfs", desc: "Daily Fantasy Lineup Optimizer" },
-      { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Week 8 All-Access Pass" },
+      { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Weekly All-Access Pass" },
     ]);
     expect(COMMERCIAL_REVENUE_PILLARS).toEqual(FIVE_REVENUE_PILLARS);
   });

@@ -1,215 +1,210 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { getUserEntitlements } from "@/lib/entitlements";
+import { notFound } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { Reveal } from "@/components/motion/reveal";
-import { loadBoardState } from "@/lib/board/state";
-import { loadGameDetail } from "@/lib/games/game-detail";
-import type { BestPrice } from "@/lib/market/best-line";
+import {
+  LIVE_SLATE_COACH_WRITEUPS,
+  formatWindowSlotLabel,
+  sanitizePlainFootballText,
+  type CoachGameWriteup,
+} from "@/lib/writeups/coach-writeup-engine";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Game reading",
-  description: "Our readings for one game: lines, edge, confidence, and held reasons.",
-};
-
-function fmtPrice(p: number): string {
-  return p > 0 ? `+${p}` : String(p);
+interface GameDetailPageProps {
+  params: { gameId: string };
 }
 
-function LineCell({ label, price }: { label: string; price: BestPrice | null }) {
-  if (!price) return null;
+function resolveGameWriteup(gameId: string): CoachGameWriteup | undefined {
+  const clean = gameId.toLowerCase().replace(/[^a-z0-9]/g, "");
   return (
-    <div className="border-t border-mineral-hi pt-3">
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</p>
-      <p className="mt-1 font-display text-3xl font-semibold tabular-nums text-ion-white">
-        {fmtPrice(price.price)}
-        {price.line !== undefined && (
-          <span className="ml-2 text-lg text-ion-1">({price.line > 0 ? `+${price.line}` : price.line})</span>
-        )}
-      </p>
-      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ion-2">
-        {price.bookmaker}
-      </p>
-    </div>
+    LIVE_SLATE_COACH_WRITEUPS.find((w) => {
+      if (w.gameId.toLowerCase() === gameId.toLowerCase()) return true;
+      if (w.id.toLowerCase() === gameId.toLowerCase()) return true;
+      const matchClean = w.matchup.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (matchClean.includes(clean) || clean.includes(matchClean)) return true;
+      const awayClean = w.awayTeam.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const homeClean = w.homeTeam.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (clean.includes(awayClean) && clean.includes(homeClean)) return true;
+      return false;
+    }) || LIVE_SLATE_COACH_WRITEUPS[0]
   );
 }
 
-export default async function GamePage({
-  params,
-}: {
-  params: { gameId: string };
-}): Promise<JSX.Element> {
-  const session = await auth();
-  const viewerEntitlements = session?.user?.id
-    ? await getUserEntitlements(session.user.id)
-    : undefined;
-  const stateResult = await loadBoardState(new Date(), viewerEntitlements);
-  const state = stateResult.data;
-  const allRows = [...state.scoringNow, ...state.publishedToday, ...state.gatedTodayRows];
-  const detail = await loadGameDetail(params.gameId, allRows);
-  const game = detail?.game ?? null;
+export async function generateMetadata({ params }: GameDetailPageProps): Promise<Metadata> {
+  const writeup = resolveGameWriteup(params.gameId);
+  if (!writeup) return { title: "Game Matchup Preview | Galaxy Sports Edge" };
+  return {
+    title: `${writeup.matchup} Matchup Preview | Galaxy Sports Edge`,
+    description: `Plain-English football matchup preview, offensive and defensive line notes, and locked official picks for ${writeup.matchup}.`,
+  };
+}
+
+export default function GamePage({ params }: GameDetailPageProps): JSX.Element {
+  const writeup = resolveGameWriteup(params.gameId);
+  if (!writeup) {
+    notFound();
+  }
+
+  const slotLabel = formatWindowSlotLabel(writeup.windowSlot, writeup.matchup);
 
   return (
-    <div className="relative min-h-screen w-full bg-carbon text-ion">
+    <div className="relative min-h-screen w-full bg-slate-950 text-white">
       <Nav />
-      <main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        {!detail ? (
-          <Reveal>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-              <Link href="/slate" className="link-underline mr-3 text-ion-2">
-                Slate
-              </Link>
-              Unknown game
-            </p>
-            <h1 className="mt-4 max-w-3xl font-display text-4xl font-semibold text-ion-white sm:text-5xl">
-              This game is not on a covered slate.
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
-              Either the id is wrong, the game fell outside a covered league, or the
-              board cannot be read right now.{" "}
-              <Link href="/board" className="link-underline text-ion-white">
-                Back to the board
-              </Link>
-              .
-            </p>
-          </Reveal>
-        ) : (
-          <>
-            <Reveal>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-                <Link
-                  href={`/slate/${detail.sport.toLowerCase()}`}
-                  className="link-underline mr-3 text-ion-2"
-                >
-                  {detail.sport}
-                </Link>
-                {detail.status}
-                {detail.homeScore !== null && detail.awayScore !== null
-                  ? ` · ${detail.awayScore}–${detail.homeScore}`
-                  : ""}
-              </p>
-              <h1 className="mt-4 max-w-5xl font-display font-semibold leading-[0.95] tracking-tight text-ion-white"
-                style={{ fontSize: "clamp(2.75rem, 7vw, 5.5rem)" }}
-              >
-                {detail.matchup}
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
-                Our readings below are the engine&apos;s, per market. Edge is a ranking
-                score, not a probability. Held readings show their reason.
-              </p>
-            </Reveal>
+      <main id="main-content" className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-center gap-2 text-xs font-mono text-slate-300">
+          <Link href="/packages" className="text-amber-400 hover:text-amber-300 transition-colors">
+            ← Back to Football Packs
+          </Link>
+          <span>/</span>
+          <span className="text-slate-100">{writeup.matchup}</span>
+        </div>
 
-            <Reveal delay={80}>
-              <h2 className="mt-14 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
-                Best captured lines
-                {detail.best?.freshestFetchedAt
-                  ? ` · as of ${new Date(detail.best.freshestFetchedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}`
-                  : ""}
-              </h2>
-              {detail.best ? (
-                <div className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-3">
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-plasma">Moneyline</p>
-                    <div className="mt-2 grid grid-cols-2 gap-6">
-                      <LineCell label="Home" price={detail.best.moneyline.home} />
-                      <LineCell label="Away" price={detail.best.moneyline.away} />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-plasma">Spread</p>
-                    <div className="mt-2 grid grid-cols-2 gap-6">
-                      <LineCell label="Home" price={detail.best.spread.home} />
-                      <LineCell label="Away" price={detail.best.spread.away} />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-plasma">Total</p>
-                    <div className="mt-2 grid grid-cols-2 gap-6">
-                      <LineCell label="Over" price={detail.best.total.over} />
-                      <LineCell label="Under" price={detail.best.total.under} />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <p className="mt-6 border border-mineral bg-eclipse p-6 text-sm leading-6 text-ion-1">
-                  No multi-book line captured for this game. Lines appear once at least
-                  two books quote it; until then there is nothing to shop.
-                </p>
-              )}
-            </Reveal>
+        {/* Hero Matchup Header */}
+        <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 p-6 sm:p-8 shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+              {slotLabel}
+            </span>
+            <span className="font-mono text-xs sm:text-sm font-semibold text-slate-300">
+              Kickoff:{" "}
+              {new Date(writeup.kickoff).toLocaleString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                timeZoneName: "short",
+              })}
+            </span>
+          </div>
 
-            <Reveal delay={120}>
-              <h2 className="mt-14 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
-                Our readings · {game?.readings.length ?? 0}
+          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            {writeup.matchup}
+          </h1>
+
+          <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+            {sanitizePlainFootballText(writeup.schemeMatchup.coverageShell)}
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/packages"
+              className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition-colors shadow-md"
+            >
+              Unlock Official Picks in Galaxy Picks →
+            </Link>
+            <Link
+              href="/fantasy/dfs"
+              className="inline-flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 hover:border-amber-400 px-5 py-2.5 text-sm font-bold text-white transition-colors"
+            >
+              DFS Lineup Blueprint →
+            </Link>
+          </div>
+        </div>
+
+        {/* Free Football Storylines & Trench Matchup */}
+        <section className="mt-8 rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-8">
+          <div className="border-b border-slate-800 pb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">
+              What Matters on the Field
+            </h2>
+            <p className="mt-1 text-sm sm:text-base text-slate-200">
+              How the offensive and defensive lines, pass rush, and tempo shape this game.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-amber-300">
+                Line of Scrimmage &amp; Pass Protection
+              </h3>
+              <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                {sanitizePlainFootballText(writeup.schemeMatchup.blitzRateVsPressureToSack)}
+              </p>
+              <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                {sanitizePlainFootballText(writeup.schemeMatchup.coachingEdge)}
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-amber-300">
+                Pace, Clock Control &amp; Key Playmakers
+              </h3>
+              <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                {sanitizePlainFootballText(writeup.paceOfPlay.notes)}
+              </p>
+              <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                {sanitizePlainFootballText(writeup.schemeMatchup.personnelTendencies)}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950 p-5">
+            <p className="font-mono text-xs sm:text-sm text-slate-200">
+              {sanitizePlainFootballText(writeup.schemeMatchup.notes)}
+            </p>
+          </div>
+        </section>
+
+        {/* Locked Official Picks Card — ZERO leaked picks, sides, totals, or confidence numbers */}
+        <section className="mt-8 rounded-2xl border-2 border-amber-500/40 bg-slate-900 p-6 sm:p-8 shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+                🔒 Official Picks Locked
+              </span>
+              <h2 className="mt-3 text-xl sm:text-2xl font-bold text-white">
+                Unlock Our Official {writeup.matchup} Card
               </h2>
-              {!game || game.readings.length === 0 ? (
-                <p className="mt-6 border border-mineral bg-eclipse p-6 text-sm leading-6 text-ion-1">
-                  No readings posted for this game. The engine evaluated nothing here,
-                  cleared or held.
-                </p>
-              ) : (
-                <div className="mt-6 overflow-hidden border border-mineral">
-                  {game.readings.map((r) => (
-                    <div
-                      key={r.id}
-                      className="grid gap-3 border-b border-mineral bg-eclipse p-5 last:border-b-0 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6"
-                    >
-                      <div>
-                        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">
-                          {r.market} · {r.status === "GATED_TODAY" ? "held" : r.status === "SCORING_NOW" ? "scoring" : "cleared"}
-                        </p>
-                        <p className="mt-2 text-sm leading-6 text-ion-1">
-                          {r.gateReason ? (
-                            <>
-                              <span className="font-semibold text-plasma">Held. </span>
-                              {r.gateReason}
-                            </>
-                          ) : (
-                            "Cleared the gates with its reasoning attached."
-                          )}
-                        </p>
-                        {r.rankingSource && (
-                          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ion-2">
-                            {r.rankingSource}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex gap-8 sm:text-right">
-                        <div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Edge</p>
-                          <p className="font-display text-2xl font-semibold tabular-nums text-ion-white">
-                            {r.edgeIndex ?? "n/a"}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Conf</p>
-                          <p className="font-display text-2xl font-semibold tabular-nums text-ion-white">
-                            {r.confidence ?? (r.rankingP !== null ? r.rankingP.toFixed(2) : "n/a")}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-                <Link href="/verify" className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white">
-                  Check a receipt
-                </Link>
-                <Link href="/calibration" className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white">
-                  Full record
-                </Link>
-                <Link href="/fantasy/props" className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white">
-                  Player props desk
-                </Link>
+            </div>
+            <Link
+              href="/packages"
+              className="inline-flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 text-sm font-extrabold text-slate-950 transition-colors shadow-lg"
+            >
+              Unlock in Galaxy Picks →
+            </Link>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                Official Spread Call
               </div>
-            </Reveal>
-          </>
-        )}
+              <div className="mt-2 font-mono text-base font-bold text-amber-300">
+                🔒 Locked Until Purchase
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                Exact side recommendation or disciplined pass call revealed immediately after unlock.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                Official Over/Under Call
+              </div>
+              <div className="mt-2 font-mono text-base font-bold text-amber-300">
+                🔒 Locked Until Purchase
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                Full total verdict and plain-English explanation revealed inside the pack.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-5">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                Player Props &amp; Same-Game Parlay
+              </div>
+              <div className="mt-2 font-mono text-base font-bold text-amber-300">
+                🔒 {writeup.topProps.length} Prop Reads Locked
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                Receiving and rushing yardage props plus our 3-leg same-game parlay ticket.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

@@ -1,16 +1,17 @@
-# 2026 NFL WEEK 8 — COMPLETE 5-STAGE ENGINE & JEV SNAP-BY-SNAP SLATE PACKET
+# 2026 NFL WEEK 8/9 — COMPLETE 5-STAGE ENGINE & JEV SNAP-BY-SNAP SLATE PACKET
 
-- **Generated:** `2026-10-29T18:44:37Z`
+- **Generated:** `2026-10-29T19:47:44Z`
 - **Data Provenance:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) + `18,019` charted play tendencies + `166` live JEV snaps (`typesafe/jev-1.14`) + `5-Stage GSE Engine Verdicts` (`nfl_2026_w8_five_stage_engine_verdicts.json`).
 
-## 1. Tonight's TNF Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)
+## 1. Sunday Week 9 Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)
 - **Fair Line:** `GB -5.3` | **Fair Total:** `43.4`
 - **Calibrated Side:** **PLAY** Green Bay Packers -3.5 (`61/100`, `+0.0862` CLV)
 - **Calibrated Total:** **PLAY** UNDER 47.5 (`58/100`, `+0.0562` CLV)
-- **Why We Like It:** Green Bay’s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under.
+- **Why We Like It (Paid Unlock):** Green Bay’s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under.
+- **Free Storyline Teaser:** Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup — our official spread call, over/under call, and player prop card are locked inside the pack.
 - **Correlated SGP (`+275` Fair vs `+380` Market):** Green Bay Packers -3.5 + UNDER 47.5 + Christian Watson OVER 56.5
 
-## 2. Full 14-Game 2026 Week 8 Calibrated Board (Selectivity Gate: 6 Total PLAYs)
+## 2. Full 14-Game Calibrated Board (Selectivity Gate: 6 Total PLAYs)
 
 | Window | Matchup | Posted Line | Fair Line | Side Call (Decision, Conf) | Total Call (Decision, Conf) | Top Prop | SGP (Fair vs Market) |
 |---|---|---|---|---|---|---|---|

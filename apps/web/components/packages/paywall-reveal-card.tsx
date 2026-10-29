@@ -3,7 +3,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type { PickPackageOffering } from "@/lib/packages/catalog";
-import type { CoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
+import {
+  formatWindowSlotLabel,
+  sanitizePlainFootballText,
+  type CoachGameWriteup,
+} from "@/lib/writeups/coach-writeup-engine";
+
+export { sanitizePlainFootballText };
 
 export interface RedactedWriteupTeaser {
   id: string;
@@ -44,19 +50,6 @@ interface PaywallRevealCardProps {
 function formatConfidenceStrict(raw: string | number): string {
   const cleaned = String(raw).trim().replace(new RegExp("\\x25", "g"), "");
   return cleaned.endsWith("/100") ? cleaned : `${cleaned}/100`;
-}
-
-export function sanitizePlainFootballText(raw: string | null | undefined): string {
-  if (!raw) return "";
-  return raw
-    .replace(new RegExp("10" + ",000(?:-game)?(?:\\s+full-game)?\\s+sim" + "ulations?", "gi"), "full-game film study")
-    .replace(new RegExp("10" + ",000-game", "gi"), "full-game")
-    .replace(new RegExp("10" + ",000", "g"), "every")
-    .replace(new RegExp("sim" + "ulations?", "gi"), "game breakdown")
-    .replace(new RegExp("sim" + "ulate[ds]?", "gi"), "break down")
-    .replace(new RegExp("drop" + "backs?", "gi"), "pass plays")
-    .replace(new RegExp("(\\d+(?:\\.\\d+)?)\\x25", "g"), "$1/100")
-    .replace(new RegExp("\\x25", "g"), "");
 }
 
 export function PaywallRevealCard({
@@ -193,12 +186,12 @@ export function PaywallRevealCard({
           {sanitizePlainFootballText(pkg.description)}
         </p>
 
-        {/* FREE PREVIEW BOX (Plain English, High Contrast, 14-16px body text + Blurred Locked Preview) */}
+        {/* FREE PREVIEW BOX (Teases Matchup & Storylines Only — ZERO Leaked Picks or Confidence Numbers) */}
         {teasers.length > 0 && (
           <div className="mt-5 space-y-3 border-t border-slate-700 pt-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                Why We Like This Game (Free Preview)
+                Matchup Storyline &amp; Film Preview (Free)
               </span>
               <span className="text-xs font-semibold text-emerald-400">
                 Plain-English Matchup Breakdown
@@ -206,10 +199,10 @@ export function PaywallRevealCard({
             </div>
             {teasers.slice(0, 2).map((t) => (
               <div key={t.id} className="rounded-lg border border-slate-700 bg-slate-800/90 p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-base font-bold text-white">{t.matchup}</span>
                   <span className="text-xs font-semibold text-amber-300">
-                    {t.windowSlot}
+                    {formatWindowSlotLabel(t.windowSlot, t.matchup)}
                   </span>
                 </div>
                 <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
@@ -221,7 +214,7 @@ export function PaywallRevealCard({
                   </p>
                 )}
                 <div className="mt-3 rounded-md bg-slate-900/90 px-3 py-2 text-xs font-semibold text-slate-200 border border-slate-700">
-                  Inside This Pack: Side Confidence {formatConfidenceStrict(t.lockedSummary.sideConfidence)} · Total Confidence {formatConfidenceStrict(t.lockedSummary.totalConfidence)} · {t.lockedSummary.propsCount} Player Props
+                  Locked Inside This Pack: Official Spread Call · Official Over/Under Call · {t.lockedSummary.propsCount} Player Prop Bets · 3-Leg Same-Game Parlay
                 </div>
 
                 {/* Blurred Locked Preview Row */}
@@ -232,10 +225,10 @@ export function PaywallRevealCard({
                       className="select-none blur-[5px] pointer-events-none opacity-60 text-sm text-slate-200"
                     >
                       <div className="font-bold text-emerald-400">
-                        BET THIS: Official Spread Pick · Official Total Pick
+                        Official Spread Verdict · Official Over/Under Verdict
                       </div>
                       <div className="mt-1 text-xs text-slate-300">
-                        JEV Player Props ({t.lockedSummary.propsCount} Official Bets) · Correlated 3-Leg Same-Game Parlay
+                        Player Yardage Props ({t.lockedSummary.propsCount} Official Reads) · 3-Leg Same-Game Parlay
                       </div>
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center p-2">
@@ -265,7 +258,7 @@ export function PaywallRevealCard({
               data-testid="whats-inside-checklist"
               className="mt-4 rounded-lg border border-emerald-400/60 bg-slate-900 px-4 py-3 text-sm font-bold text-slate-100 shadow-sm"
             >
-              What’s Inside: Side · Total · JEV Player Props · Correlated SGP
+              What’s Inside: Spread Call · Over/Under Call · Player Props · Same-Game Parlay
               {pkg.includesDfs ? " · DFS Lineup Core" : ""}
             </div>
 
@@ -334,7 +327,9 @@ export function PaywallRevealCard({
                 <div key={w.id} className="space-y-4 border-b border-slate-800 pb-4 last:border-b-0 last:pb-0">
                   <div className="flex items-center justify-between">
                     <span className="text-base font-bold text-white">{w.matchup}</span>
-                    <span className="text-xs font-bold uppercase text-amber-400">{w.windowSlot}</span>
+                    <span className="text-xs font-bold uppercase text-amber-400">
+                      {formatWindowSlotLabel(w.windowSlot, w.matchup)}
+                    </span>
                   </div>
 
                   {/* Official Side & Total */}

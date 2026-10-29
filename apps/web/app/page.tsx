@@ -11,12 +11,11 @@ import { Reveal } from "@/components/motion/reveal";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
+  formatWindowSlotLabel,
   getRedactedTeasersForWindowSlot,
-} from "@/lib/writeups/coach-writeup-engine";
-import {
-  PaywallRevealCard,
   sanitizePlainFootballText,
-} from "@/components/packages/paywall-reveal-card";
+} from "@/lib/writeups/coach-writeup-engine";
+import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const dynamic = "force-dynamic";
 
@@ -81,7 +80,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             <Reveal delay={180}>
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
                 <Link href="/packages" className="btn-primary min-h-12 px-7 py-3 text-base font-bold">
-                  GALAXY PICKS (PAID) — Unlock TNF &amp; Week 8
+                  GALAXY PICKS (PAID) — Unlock This Week&apos;s Packs
                 </Link>
                 <Link href="/fantasy/dfs" className="btn-secondary min-h-12 px-7 py-3 text-base font-bold">
                   DFS Optimizer &amp; Stacks
@@ -266,79 +265,65 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 {LIVE_SLATE_COACH_WRITEUPS.slice(0, 2).map((w) => {
-                  const sidePlay = w.sideTotalCall.sideDecision === "PLAY";
-                  const totalPlay = w.sideTotalCall.totalDecision === "PLAY";
                   return (
                     <div
                       key={w.id}
                       className="flex flex-col justify-between border-2 border-slate-800 bg-slate-900/90 p-6 rounded-xl shadow-lg"
                     >
                       <div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
-                            {w.windowSlot}
+                            {formatWindowSlotLabel(w.windowSlot, w.matchup)}
                           </span>
                           <span className="font-mono text-xs font-semibold text-slate-300">
-                            Kickoff: {new Date(w.kickoff).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            {w.topProps.length} Player Prop Reads Locked
                           </span>
                         </div>
                         <h4 className="mt-3 text-xl font-bold text-white">{w.matchup}</h4>
 
-                        {/* Dossier Body Copy */}
+                        {/* Storyline Teaser Copy (Zero Leaked Picks) */}
                         <div className="mt-3 space-y-2">
                           <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                             {sanitizePlainFootballText(w.schemeMatchup.coverageShell)}
                           </p>
-                          <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                          <p className="text-sm sm:text-base leading-relaxed text-slate-300">
                             {sanitizePlainFootballText(w.paceOfPlay.notes)}
                           </p>
                         </div>
 
-                        {/* Action Badges & Tabular Numerals */}
+                        {/* Locked Official Pick Badges — Never Reveal Side, Total, or Confidence Free */}
                         <div className="mt-5 grid gap-3 sm:grid-cols-2 border-t border-slate-800 pt-4">
                           <div className="rounded-lg bg-slate-950 p-3.5 border border-slate-800">
                             <div className="flex items-center justify-between gap-2">
                               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                                SPREAD CALL
+                                OFFICIAL SPREAD CALL
                               </span>
-                              {sidePlay ? (
-                                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold tracking-wide shadow-sm px-2 py-0.5 rounded text-xs">
-                                  PLAY
-                                </span>
-                              ) : (
-                                <span className="bg-amber-500/20 text-amber-200 border border-amber-400/50 font-semibold tracking-wide px-2 py-0.5 rounded text-xs">
-                                  PASS — NO BET
-                                </span>
-                              )}
+                              <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2 py-0.5 rounded text-xs">
+                                🔒 LOCKED
+                              </span>
                             </div>
-                            <div className="mt-2 font-mono text-base sm:text-lg font-bold text-white tabular-nums">
-                              {sidePlay ? w.sideTotalCall.sideSelection : "No Edge — Market Fair"}
+                            <div className="mt-2 text-sm font-semibold text-white">
+                              Side Verdict &amp; Rating Inside Pack
                             </div>
-                            <div className="mt-1 text-xs text-slate-300 font-mono">
-                              Rating: <span className="font-mono text-base font-bold text-white tabular-nums">{w.sideTotalCall.sideConfidence}</span>
+                            <div className="mt-1 text-xs text-slate-400">
+                              Unlock below to reveal exact spread call
                             </div>
                           </div>
 
                           <div className="rounded-lg bg-slate-950 p-3.5 border border-slate-800">
                             <div className="flex items-center justify-between gap-2">
                               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                                TOTAL CALL
+                                OFFICIAL TOTAL CALL
                               </span>
-                              {totalPlay ? (
-                                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold tracking-wide shadow-sm px-2 py-0.5 rounded text-xs">
-                                  PLAY
-                                </span>
-                              ) : (
-                                <span className="bg-amber-500/20 text-amber-200 border border-amber-400/50 font-semibold tracking-wide px-2 py-0.5 rounded text-xs">
-                                  PASS — NO BET
-                                </span>
-                              )}
+                              <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2 py-0.5 rounded text-xs">
+                                🔒 LOCKED
+                              </span>
                             </div>
-                            <div className="mt-2 font-mono text-base sm:text-lg font-bold text-white tabular-nums">
-                              {totalPlay ? w.sideTotalCall.totalSelection : "No Edge — Market Fair"}
+                            <div className="mt-2 text-sm font-semibold text-white">
+                              Over/Under Verdict Inside Pack
                             </div>
-                            <div className="mt-1 text-xs text-slate-300 font-mono">
-                              Rating: <span className="font-mono text-base font-bold text-white tabular-nums">{w.sideTotalCall.totalConfidence}</span>
+                            <div className="mt-1 text-xs text-slate-400">
+                              Includes {w.topProps.length} player props &amp; parlay ticket
                             </div>
                           </div>
                         </div>
@@ -349,11 +334,14 @@ export default async function HomePage(): Promise<JSX.Element> {
                           href={`/games/${w.gameId}`}
                           className="text-sm font-bold text-amber-300 hover:text-amber-200"
                         >
-                          View Full Game Dossier →
+                          Read Matchup Preview →
                         </Link>
-                        <span className="text-xs font-semibold text-slate-300">
-                          {w.topProps.length} Player Props Analyzed
-                        </span>
+                        <Link
+                          href="/packages"
+                          className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                        >
+                          Unlock Official Picks →
+                        </Link>
                       </div>
                     </div>
                   );

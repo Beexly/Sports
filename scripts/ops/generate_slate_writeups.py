@@ -54,20 +54,20 @@ OUT_PACKAGES = REPO / "data" / "packages" / "live-slate-writeups.json"
 OUT_PACKET_MD = REPO / "docs" / "predictions" / "research" / "2026-10-29" / "GAME-DAY-CONTENT-PACKET-2026-10-29.md"
 
 WEEK8_GAMES = [
-    {"espnEventId": "401873023", "awayAbbr": "CAR", "homeAbbr": "GB", "awayTeam": "Carolina Panthers", "homeTeam": "Green Bay Packers", "kickoff": "2026-10-30T00:15Z", "windowSlot": "TNF", "postedDetails": "GB -3.5", "postedHomeSpread": -3.5, "postedTotal": 47.5, "scoreboardStatus": "10/29 - 8:15 PM EDT"},
-    {"espnEventId": "401873026", "awayAbbr": "BAL", "homeAbbr": "BUF", "awayTeam": "Baltimore Ravens", "homeTeam": "Buffalo Bills", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "BUF -3", "postedHomeSpread": -3.0, "postedTotal": 54.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873031", "awayAbbr": "TEN", "homeAbbr": "CIN", "awayTeam": "Tennessee Titans", "homeTeam": "Cincinnati Bengals", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "CIN -10", "postedHomeSpread": -10.0, "postedTotal": 46.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873024", "awayAbbr": "ARI", "homeAbbr": "DAL", "awayTeam": "Arizona Cardinals", "homeTeam": "Dallas Cowboys", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "DAL -7", "postedHomeSpread": -7.0, "postedTotal": 54.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873030", "awayAbbr": "MIN", "homeAbbr": "DET", "awayTeam": "Minnesota Vikings", "homeTeam": "Detroit Lions", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "DET -3", "postedHomeSpread": -3.0, "postedTotal": 46.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873029", "awayAbbr": "LV", "homeAbbr": "NYJ", "awayTeam": "Las Vegas Raiders", "homeTeam": "New York Jets", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "NYJ -1.5", "postedHomeSpread": -1.5, "postedTotal": 45.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873027", "awayAbbr": "CLE", "homeAbbr": "PIT", "awayTeam": "Cleveland Browns", "homeTeam": "Pittsburgh Steelers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "PIT -3.5", "postedHomeSpread": -3.5, "postedTotal": 39.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873025", "awayAbbr": "ATL", "homeAbbr": "TB", "awayTeam": "Atlanta Falcons", "homeTeam": "Tampa Bay Buccaneers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "TB -2.5", "postedHomeSpread": -2.5, "postedTotal": 44.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873028", "awayAbbr": "IND", "homeAbbr": "JAX", "awayTeam": "Indianapolis Colts", "homeTeam": "Jacksonville Jaguars", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "JAX -10", "postedHomeSpread": -10.0, "postedTotal": 46.5, "scoreboardStatus": "11/1 - 1:00 PM EST"},
-    {"espnEventId": "401873032", "awayAbbr": "LAC", "homeAbbr": "LAR", "awayTeam": "Los Angeles Chargers", "homeTeam": "Los Angeles Rams", "kickoff": "2026-11-01T21:05Z", "windowSlot": "SUN_LATE", "postedDetails": "LAR -6.5", "postedHomeSpread": -6.5, "postedTotal": 45.5, "scoreboardStatus": "11/1 - 4:05 PM EST"},
-    {"espnEventId": "401873033", "awayAbbr": "KC", "homeAbbr": "DEN", "awayTeam": "Kansas City Chiefs", "homeTeam": "Denver Broncos", "kickoff": "2026-11-01T21:25Z", "windowSlot": "SUN_LATE", "postedDetails": "KC -1.5", "postedHomeSpread": 1.5, "postedTotal": 40.5, "scoreboardStatus": "11/1 - 4:25 PM EST"},
-    {"espnEventId": "401873034", "awayAbbr": "NE", "homeAbbr": "MIA", "awayTeam": "New England Patriots", "homeTeam": "Miami Dolphins", "kickoff": "2026-11-01T21:25Z", "windowSlot": "SUN_LATE", "postedDetails": "NE -7", "postedHomeSpread": 7.0, "postedTotal": 43.5, "scoreboardStatus": "11/1 - 4:25 PM EST"},
-    {"espnEventId": "401873035", "awayAbbr": "PHI", "homeAbbr": "WSH", "awayTeam": "Philadelphia Eagles", "homeTeam": "Washington Commanders", "kickoff": "2026-11-02T01:20Z", "windowSlot": "SNF", "postedDetails": "WSH -6", "postedHomeSpread": -6.0, "postedTotal": 40.5, "scoreboardStatus": "11/1 - 8:20 PM EST"},
-    {"espnEventId": "401873036", "awayAbbr": "CHI", "homeAbbr": "SEA", "awayTeam": "Chicago Bears", "homeTeam": "Seattle Seahawks", "kickoff": "2026-11-03T01:15Z", "windowSlot": "MNF", "postedDetails": "SEA -3", "postedHomeSpread": -3.0, "postedTotal": 46.5, "scoreboardStatus": "11/2 - 8:15 PM EST"},
+    {"espnEventId": "401873023", "awayAbbr": "CAR", "homeAbbr": "GB", "awayTeam": "Carolina Panthers", "homeTeam": "Green Bay Packers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "TNF", "postedDetails": "GB -3.5", "postedHomeSpread": -3.5, "postedTotal": 47.5, "scoreboardStatus": "Sunday 1:00 PM ET · Week 9 Spotlight"},
+    {"espnEventId": "401873026", "awayAbbr": "BAL", "homeAbbr": "BUF", "awayTeam": "Baltimore Ravens", "homeTeam": "Buffalo Bills", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "BUF -3", "postedHomeSpread": -3.0, "postedTotal": 54.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873031", "awayAbbr": "TEN", "homeAbbr": "CIN", "awayTeam": "Tennessee Titans", "homeTeam": "Cincinnati Bengals", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "CIN -10", "postedHomeSpread": -10.0, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873024", "awayAbbr": "ARI", "homeAbbr": "DAL", "awayTeam": "Arizona Cardinals", "homeTeam": "Dallas Cowboys", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "DAL -7", "postedHomeSpread": -7.0, "postedTotal": 54.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873030", "awayAbbr": "MIN", "homeAbbr": "DET", "awayTeam": "Minnesota Vikings", "homeTeam": "Detroit Lions", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "DET -3", "postedHomeSpread": -3.0, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873029", "awayAbbr": "LV", "homeAbbr": "NYJ", "awayTeam": "Las Vegas Raiders", "homeTeam": "New York Jets", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "NYJ -1.5", "postedHomeSpread": -1.5, "postedTotal": 45.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873027", "awayAbbr": "CLE", "homeAbbr": "PIT", "awayTeam": "Cleveland Browns", "homeTeam": "Pittsburgh Steelers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "PIT -3.5", "postedHomeSpread": -3.5, "postedTotal": 39.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873025", "awayAbbr": "ATL", "homeAbbr": "TB", "awayTeam": "Atlanta Falcons", "homeTeam": "Tampa Bay Buccaneers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "TB -2.5", "postedHomeSpread": -2.5, "postedTotal": 44.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873028", "awayAbbr": "IND", "homeAbbr": "JAX", "awayTeam": "Indianapolis Colts", "homeTeam": "Jacksonville Jaguars", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "JAX -10", "postedHomeSpread": -10.0, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873032", "awayAbbr": "LAC", "homeAbbr": "LAR", "awayTeam": "Los Angeles Chargers", "homeTeam": "Los Angeles Rams", "kickoff": "2026-11-01T21:05Z", "windowSlot": "SUN_LATE", "postedDetails": "LAR -6.5", "postedHomeSpread": -6.5, "postedTotal": 45.5, "scoreboardStatus": "Sunday 4:05 PM ET"},
+    {"espnEventId": "401873033", "awayAbbr": "KC", "homeAbbr": "DEN", "awayTeam": "Kansas City Chiefs", "homeTeam": "Denver Broncos", "kickoff": "2026-11-01T21:25Z", "windowSlot": "SUN_LATE", "postedDetails": "KC -1.5", "postedHomeSpread": 1.5, "postedTotal": 40.5, "scoreboardStatus": "Sunday 4:25 PM ET"},
+    {"espnEventId": "401873034", "awayAbbr": "NE", "homeAbbr": "MIA", "awayTeam": "New England Patriots", "homeTeam": "Miami Dolphins", "kickoff": "2026-11-01T21:25Z", "windowSlot": "SUN_LATE", "postedDetails": "NE -7", "postedHomeSpread": 7.0, "postedTotal": 43.5, "scoreboardStatus": "Sunday 4:25 PM ET"},
+    {"espnEventId": "401873035", "awayAbbr": "PHI", "homeAbbr": "WSH", "awayTeam": "Philadelphia Eagles", "homeTeam": "Washington Commanders", "kickoff": "2026-11-02T01:20Z", "windowSlot": "SNF", "postedDetails": "WSH -6", "postedHomeSpread": -6.0, "postedTotal": 40.5, "scoreboardStatus": "Sunday 8:20 PM ET"},
+    {"espnEventId": "401873036", "awayAbbr": "CHI", "homeAbbr": "SEA", "awayTeam": "Chicago Bears", "homeTeam": "Seattle Seahawks", "kickoff": "2026-11-03T01:15Z", "windowSlot": "MNF", "postedDetails": "SEA -3", "postedHomeSpread": -3.0, "postedTotal": 46.5, "scoreboardStatus": "Monday 8:15 PM ET"},
 ]
 
 GROK_GOLD_CAR_GB_COPY = (
@@ -76,6 +76,66 @@ GROK_GOLD_CAR_GB_COPY = (
     "The Packers should control the line of scrimmage and keep the Panthers off the field. "
     "Take Green Bay and the under."
 )
+
+# Free preview copy: TEASES the matchup, trench storylines, and what is at stake — NEVER reveals any pick, side, over/under, or confidence score.
+GAME_FREE_STORYLINE_TEASERS = {
+    "401873023": (
+        "Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. "
+        "Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup — our official spread call, over/under call, and player prop card are locked inside the pack."
+    ),
+    "401873026": (
+        "Josh Allen and Lamar Jackson headline the Sunday afternoon slate against a Baltimore secondary missing cornerback T.J. Tampa and safety Jaylinn Hawkins. "
+        "Both offenses can strike quickly from anywhere on the field — unlock the pack to see our official side call, total call, and player props for Ravens at Bills."
+    ),
+    "401873031": (
+        "Cincinnati's downfield passing game tests a physical Tennessee front that wants to slow the game down and lean on the run. "
+        "With a double-digit spread on the board at Paycor Stadium, fourth-quarter game script matters everything here — our official side and total calls are locked inside."
+    ),
+    "401873024": (
+        "Dallas plays fast indoors on the AT&T Stadium turf, while Arizona brings a physical rushing attack designed to shorten the game and keep the chains moving. "
+        "How the Cardinals offensive line holds up against the Cowboys pass rush will dictate the afternoon — unlock the pack for our official game calls."
+    ),
+    "401873030": (
+        "Detroit has missed only twelve tackles all season and brings one of the league's cleanest offensive lines into an NFC North clash at Ford Field against Minnesota. "
+        "Divisional familiarity and red-zone execution will decide this three-point matchup — our official spread, total, and prop calls are locked inside the pack."
+    ),
+    "401873029": (
+        "Las Vegas travels east to face the Jets in the Meadowlands wind, where both offensive lines have been tested in obvious passing situations. "
+        "Field position and third-down protection will swing this tight AFC matchup — unlock the pack for our official game breakdown and picks."
+    ),
+    "401873027": (
+        "AFC North football takes center stage at Acrisure Stadium as Pittsburgh's defensive front squares off against a bruised Cleveland offensive line. "
+        "Physical trench play and open-field tackling always define Browns-Steelers — our official spread call, total call, and player prop bets are locked inside."
+    ),
+    "401873025": (
+        "First place in the NFC South is on the line in Tampa as the Buccaneers' interior front battles an Atlanta offense that leans heavily on its running backs in the passing game. "
+        "With the spread sitting inside a field goal, late-game execution is everything — unlock the pack to reveal our official calls."
+    ),
+    "401873028": (
+        "Jacksonville's edge rushers look to pin their ears back at home against an Indianapolis offense trying to stay balanced on early downs in an AFC South showdown. "
+        "Our official side call, total call, and player prop breakdown for Colts at Jaguars are locked inside the Sunday pack."
+    ),
+    "401873032": (
+        "Matthew Stafford and the Rams share SoFi Stadium with a Chargers team that plays deliberate, ball-control football and rarely beats itself. "
+        "Red-zone finishing and third-down conversions will separate these two Los Angeles rosters — unlock the pack for our official game calls."
+    ),
+    "401873033": (
+        "Kansas City heads into the thin air at Mile High to face a Denver defense that has been tough against the pass all season in AFC West play. "
+        "Divisional games in Denver almost always come down to the final two possessions — our official spread, total, and player prop calls are locked inside."
+    ),
+    "401873034": (
+        "New England takes its young offense on the road into South Florida against a Miami defense looking to bounce back in an AFC East matchup. "
+        "How both teams handle the heat and early-down run fits sets the tone — unlock the pack for our official calls on Patriots at Dolphins."
+    ),
+    "401873035": (
+        "Sunday Night Football features an NFC East rivalry as Washington's quick-rhythm passing attack meets Philadelphia's physical offensive line under the lights. "
+        "Open-field tackling and third-and-short execution will decide this prime-time battle — our official side, total, and prop picks are locked inside."
+    ),
+    "401873036": (
+        "Monday Night Football wraps up the slate in the Pacific Northwest as Chicago's takeaway-minded defense visits Seattle at Lumen Field. "
+        "Crowd noise, pass protection, and red-zone defense headline the finale — unlock the pack to see our official Monday night spread, total, and prop calls."
+    ),
+}
 
 GAME_PLAIN_FOOTBALL_SUMMARIES = {
     "401873023": GROK_GOLD_CAR_GB_COPY,
@@ -151,11 +211,24 @@ def sample_yards(shrunk_mean: float, n_sims: int, rng: np.random.Generator, cv: 
     return sample_lognormal(shrunk_mean, n_sims, rng, cv=cv)
 
 
+def build_free_storyline_teaser(g: dict) -> str:
+    """
+    Free preview copy: TEASES the matchup and trench/injury storylines ONLY.
+    NEVER reveals any pick, side, over/under, direction, or confidence score.
+    """
+    eid = str(g["espnEventId"])
+    if eid in GAME_FREE_STORYLINE_TEASERS:
+        return GAME_FREE_STORYLINE_TEASERS[eid]
+    return (
+        f"{g['awayTeam']} and {g['homeTeam']} square off with trench protection and third-down execution front and center. "
+        "Unlock the pack for our official spread call, over/under call, and player prop card."
+    )
+
+
 def build_football_reason(g: dict, away_t: dict, home_t: dict, verdict: dict | None) -> str:
     """
-    Format Stage 1 coaching/film/trench/injury signals + Stage 5 `publish_allowed` flag
-    into crisp, 75-year-old-friendly football English (two sentences max for non-TNF games;
-    exact Grok gold-standard copy for CAR @ GB). Zero math jargon, zero '%', zero 'simulation'.
+    Paid unlocked rationale: Format Stage 1 coaching/film/trench/injury signals + Stage 5 `publish_allowed` flag
+    into crisp, 75-year-old-friendly football English for paid customers. Zero math jargon, zero '%', zero 'simulation'.
     """
     eid = str(g["espnEventId"])
     if eid in GAME_PLAIN_FOOTBALL_SUMMARIES:
@@ -429,6 +502,7 @@ def simulate_game_10000(
     pass_epa_comb = round((away_t["off_pass_epa"] + home_t["off_pass_epa"]) / 2.0, 3)
     rush_epa_comb = round((away_t["off_rush_epa"] + home_t["off_rush_epa"]) / 2.0, 3)
 
+    free_storyline = build_free_storyline_teaser(g)
     football_reason = build_football_reason(g, away_t, home_t, verdict)
     home_wr2_name = (
         "Tucker Kraft"
@@ -455,20 +529,19 @@ def simulate_game_10000(
             ),
         },
         "schemeMatchup": {
-            "coverageShell": football_reason,
+            "coverageShell": free_storyline,
             "blitzRateVsPressureToSack": (
-                f"{g['homeTeam']} wins the pass-rush battle up front and forces hurried throws when {g['awayTeam']} falls behind the chains."
+                f"{g['homeTeam']} and {g['awayTeam']} bring contrasting third-down pass-rush plans into this matchup up front."
             ),
             "personnelTendencies": (
                 f"{g['homeTeam']} features {home_wr1['player']} and {home_rb1['player']} on early downs, "
                 f"while {g['awayTeam']} leans on {away_wr1['player']} and {away_rb1['player']}."
             ),
             "coachingEdge": (
-                f"{g['homeTeam']} has protected the football and tackled cleanly over the last three weeks compared to {g['awayTeam']}."
+                f"Ball security, open-field tackling, and red-zone play-calling between {g['awayTeam']} and {g['homeTeam']} headline the film study for this game."
             ),
             "notes": (
-                f"Fair Line: {g['homeAbbr']} {fair_home_spread:+.1f} (Posted {g['postedDetails']}) • "
-                f"Fair Total: {fair_total:.1f} (Posted {posted_total})."
+                f"Posted Line: {g['postedDetails']} · O/U {posted_total} · {g['scoreboardStatus']} — Official spread call, total call, and player prop picks are locked inside the pack."
             ),
         },
         "sideTotalCall": {
@@ -577,6 +650,8 @@ def simulate_game_10000(
             "fairTotal": round(fair_total, 2),
             "pHomeCover": round(p_home_cover, 4),
             "pOver": round(p_over, 4),
+            "postedDetails": g["postedDetails"],
+            "postedTotal": posted_total,
         },
     }
 
@@ -585,7 +660,6 @@ def write_ts_files(writeups: list[dict]):
     board_cards = []
     for g, w in zip(WEEK8_GAMES, writeups):
         st = w["sideTotalCall"]
-        sm = w["_simMeta"]
         is_play = st["sideDecision"] == "PLAY" or st["totalDecision"] == "PLAY"
         board_cards.append({
             "id": f"board-2026-w8-{g['espnEventId']}",
@@ -601,13 +675,7 @@ def write_ts_files(writeups: list[dict]):
             "postedTotal": g["postedTotal"],
             "scoreboardStatus": g["scoreboardStatus"],
             "publication": "PLAY" if is_play else "PASS",
-            "passReason": (
-                st["rationale"]
-                if is_play
-                else (
-                    f"PASS — Vegas has {g['postedDetails']} and {g['postedTotal']} priced right (Fair {g['homeAbbr']} {sm['fairHomeSpread']:+.1f}, Total {sm['fairTotal']:.1f}). Sit this matchup out."
-                )
-            ),
+            "passReason": w["schemeMatchup"]["coverageShell"],
         })
 
     board_ts = REPO / "apps" / "web" / "lib" / "writeups" / "week8-2026-board.ts"
@@ -658,6 +726,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = {json.dumps(boar
  *
  * DOCTRINE & GUARDRAILS:
  * - NEVER render confidence as a % (always format as XX/100).
+ * - NEVER leak any pick, side, total, prop direction, or confidence number in free teasers.
  * - Preserve honest PASS decisions ("Market efficient — no forced bet") and only throw when PLAY claims expectedClv < 0.
  */
 
@@ -762,6 +831,51 @@ export interface CoachGameWriteup {
   correlatedSgpTicket: CorrelatedSgpTicket;
   dfsStacks: DfsStackRecommendation;
   quadEngineCitations: QuadEngineCitations;
+}
+
+/**
+ * Server-and-Client safe plain-English sanitizer.
+ * Lives in this non-'use client' module so Next.js Server Components can invoke it during SSR
+ * without triggering a React Flight Client Reference proxy error.
+ */
+export function sanitizePlainFootballText(input: string): string {
+  if (!input) return "";
+  return input
+    .replace(/%/g, " out of 100")
+    .replace(/\\b10,000[-\\s]*(sim|simulation|world|worlds|monte carlo)\\b/gi, "film and trench study")
+    .replace(/\\b(simulations?|monte carlo|jev|sinkhorn|cholesky|copula|fr[eé]chet[-\\s]*hoeffding|n_eff|epa\\s*\\/\\s*play|epa|proe|clv)\\b/gi, "matchup")
+    .replace(/\\bdropbacks\\b/gi, "pass plays")
+    .replace(/\\s{2,}/g, " ")
+    .trim();
+}
+
+/**
+ * Formats internal windowSlot enum values into authentic, human-readable schedule labels.
+ * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Sunday Week 9 (1:00 PM ET).
+ */
+export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
+  if (matchup && /Carolina|Green Bay/i.test(matchup)) {
+    return "Sunday · Week 9 (1:00 PM ET)";
+  }
+  switch (windowSlot) {
+    case "TNF":
+      return "Sunday · Week 9 Spotlight (1:00 PM ET)";
+    case "SUN_EARLY":
+      return "Sunday Early Slate (1:00 PM ET)";
+    case "SUN_LATE":
+      return "Sunday Afternoon Slate (4:25 PM ET)";
+    case "SUN_MAIN":
+      return "Sunday Main Slate";
+    case "SNF":
+      return "Sunday Night Football (8:20 PM ET)";
+    case "MNF":
+      return "Monday Night Football (8:15 PM ET)";
+    case "WEEKLY_PASS":
+    case "WEEKEND_PASS":
+      return "Full Week All-Access";
+    default:
+      return windowSlot;
+  }
 }
 
 /**
@@ -932,9 +1046,9 @@ export function getRedactedTeasersForWindowSlot(windowSlot: string) {{
     }},
     lockedSummary: {{
       sideConfidence: w.sideTotalCall.sideConfidence,
-      sideExpectedClvCents: w.sideTotalCall.sideDecision === "PLAY" ? "PLAY EDGE" : "PASS",
+      sideExpectedClvCents: "LOCKED",
       totalConfidence: w.sideTotalCall.totalConfidence,
-      totalExpectedClvCents: w.sideTotalCall.totalDecision === "PLAY" ? "PLAY EDGE" : "PASS",
+      totalExpectedClvCents: "LOCKED",
       propsCount: w.topProps.length,
       hasSgp: w.correlatedSgpTicket.fairOdds !== "n/a",
       sgpMarketOdds: w.correlatedSgpTicket.marketOdds,
@@ -949,19 +1063,20 @@ export function getRedactedTeasersForWindowSlot(windowSlot: string) {{
 def write_game_day_packet(writeups: list[dict]):
     tnf = writeups[0]
     lines = [
-        "# 2026 NFL WEEK 8 — COMPLETE 5-STAGE ENGINE & JEV SNAP-BY-SNAP SLATE PACKET",
+        "# 2026 NFL WEEK 8/9 — COMPLETE 5-STAGE ENGINE & JEV SNAP-BY-SNAP SLATE PACKET",
         "",
         f"- **Generated:** `{dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}`",
         "- **Data Provenance:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) + `18,019` charted play tendencies + `166` live JEV snaps (`typesafe/jev-1.14`) + `5-Stage GSE Engine Verdicts` (`nfl_2026_w8_five_stage_engine_verdicts.json`).",
         "",
-        "## 1. Tonight's TNF Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)",
+        "## 1. Sunday Week 9 Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)",
         f"- **Fair Line:** `GB {tnf['_simMeta']['fairHomeSpread']:+.1f}` | **Fair Total:** `{tnf['_simMeta']['fairTotal']:.1f}`",
         f"- **Calibrated Side:** **{tnf['sideTotalCall']['sideDecision']}** {tnf['sideTotalCall']['sideSelection']} (`{tnf['sideTotalCall']['sideConfidence']}`, `{tnf['sideTotalCall']['sideExpectedClv']:+.4f}` CLV)",
         f"- **Calibrated Total:** **{tnf['sideTotalCall']['totalDecision']}** {tnf['sideTotalCall']['totalSelection']} (`{tnf['sideTotalCall']['totalConfidence']}`, `{tnf['sideTotalCall']['totalExpectedClv']:+.4f}` CLV)",
-        f"- **Why We Like It:** {tnf['sideTotalCall']['rationale']}",
+        f"- **Why We Like It (Paid Unlock):** {tnf['sideTotalCall']['rationale']}",
+        f"- **Free Storyline Teaser:** {tnf['schemeMatchup']['coverageShell']}",
         f"- **Correlated SGP (`{tnf['correlatedSgpTicket']['fairOdds']}` Fair vs `{tnf['correlatedSgpTicket']['marketOdds']}` Market):** " + " + ".join(l["selection"] for l in tnf["correlatedSgpTicket"]["legs"]),
         "",
-        "## 2. Full 14-Game 2026 Week 8 Calibrated Board (Selectivity Gate: 6 Total PLAYs)",
+        "## 2. Full 14-Game Calibrated Board (Selectivity Gate: 6 Total PLAYs)",
         "",
         "| Window | Matchup | Posted Line | Fair Line | Side Call (Decision, Conf) | Total Call (Decision, Conf) | Top Prop | SGP (Fair vs Market) |",
         "|---|---|---|---|---|---|---|---|",
@@ -972,7 +1087,7 @@ def write_game_day_packet(writeups: list[dict]):
         p0 = w["topProps"][0]
         sgp = w["correlatedSgpTicket"]
         lines.append(
-            f"| `{w['windowSlot']}` | **{w['matchup']}** | `{w['schemeMatchup']['notes'].split('(Posted ')[1].split(')')[0]}` / `{w['schemeMatchup']['notes'].split('Posted ')[-1].rstrip(').')}` | "
+            f"| `{w['windowSlot']}` | **{w['matchup']}** | `{sm['postedDetails']}` / `{sm['postedTotal']}` | "
             f"`{sm['fairHomeSpread']:+.1f}` / `{sm['fairTotal']:.1f}` | **{st['sideDecision']}** {st['sideSelection']} (`{st['sideConfidence']}`) | "
             f"**{st['totalDecision']}** {st['totalSelection']} (`{st['totalConfidence']}`) | "
             f"{p0['playerName']} {p0['side']} {p0['line']} ({p0['confidence']}) | `{sgp['fairOdds']}` vs `{sgp['marketOdds']}` |"

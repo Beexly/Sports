@@ -4,17 +4,19 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
 import { loadCurrentDfsSlate } from "@/lib/fantasy/dfs-current-slate";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
-import { getPackageBySlug } from "@/lib/packages/catalog";
+import { LIVE_PACKAGE_CATALOG, getPackageBySlug } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
+  formatWindowSlotLabel,
   getRedactedTeasersForWindowSlot,
+  sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const metadata: Metadata = {
-  title: "DFS Slate Writeup & 10,000-Sim Lineup Construction | Galaxy Sports Edge",
+  title: "DFS Slate Breakdown & Lineup Builder | Galaxy Sports Edge",
   description:
-    "Coach & Reasoning Mind First, Book Last. Deep DFS slate writeups powered by full-spectrum football intelligence, tactical scheme matchups, N_eff target concentration, pace-of-play telemetry, and 10,000-simulation cash and 20-max GPP lineup construction.",
+    "Plain-English NFL DFS game-environment breakdowns, target volume notes, cash cores, and tournament stack blueprints.",
   alternates: { canonical: "/fantasy/dfs" },
   robots: { index: false, follow: true },
 };
@@ -32,9 +34,6 @@ export default async function DfsSuitePage() {
   const feedDown = dfs === null || dfs.status !== "live" || dfs.rows.length === 0;
 
   const engineRows = slate?.players ?? [];
-  // PAYWALL: the licensed feed's rows are entitlement-gated, not merely
-  // availability-gated. feedConnected says the feed is live; only
-  // viewer.canUseFantasyFull says THIS viewer may read its prices.
   const topRows = salaryIsReal && dfs
     ? dfs.rows.slice(0, 24).map((r) => ({
         name: r.name,
@@ -52,35 +51,35 @@ export default async function DfsSuitePage() {
   const boardCount = salaryIsReal && dfs ? dfs.rows.length : engineRows.length;
   const slateLabel = slate
     ? `NFL · ${slate.slateGames} game${slate.slateGames === 1 ? "" : "s"} in the window · measured through Week ${slate.measuredThroughWeek}`
-    : "T-48h 04:00 CT Simulation Slate Active";
+    : "Weekly NFL DFS Slate Active";
   const measuredCopy = slate && engineRows.length > 0
-    ? `${slateLabel}. Projections are built Coach & Reasoning Mind First across 10,000 correlated play-by-play simulations, N_eff load scaling, and tactical scheme matchups, then compared against salaries and ownership last.`
-    : "No NFL licensed salary feed is resolved right now; our Coach & Reasoning Mind First T-48h 10,000-run simulation dossier and game-environment writeups below govern lineup construction.";
+    ? `${slateLabel}. Lineup builds start with offensive and defensive line matchups, injury reports, and target roles before comparing against salaries last.`
+    : "Our plain-English game-environment breakdowns and DFS lineup packs below cover every game on the slate.";
   const note = feedDown
-    ? `No licensed salary feed is connected. ${measuredCopy}`
+    ? `Live salary feed is currently offline. ${measuredCopy}`
     : measuredCopy;
 
-  const dfsPackage = getPackageBySlug("sunday-dfs-pro-20max-pack")!;
-  const tnfPackage = getPackageBySlug("tnf-all-in-prime-pack")!;
+  const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[3]!;
+  const tnfPackage = getPackageBySlug("tnf-all-in-pack") ?? LIVE_PACKAGE_CATALOG[0]!;
 
   return (
     <FantasyShell
-      eyebrow="DFS Intelligence Dossier · Coach & Reasoning Mind First · Book Last"
+      eyebrow="Daily Fantasy Football · Game Environments & Lineup Blueprints"
       accent="cyan"
       projectionsBadge={false}
       title={
         <>
-          Coach &amp; Reasoning Mind First.{" "}
+          Real Football Matchups First.{" "}
           <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
             Salaries &amp; Ownership Last.
           </span>
         </>
       }
-      intro="We retired the generic linear optimizer because football is never played on a spreadsheet. Our engine reasons like a coaching staff first: synthesizing film autopsy residuals, play-caller DNA, defensive shell rotations, trench win rates, injury cascades, situational/emotional spots, neutral pace, and N_eff usage concentration, then simulates every possible player and lineup construction 10,000 times before ever comparing against the salary cap or field ownership."
+      intro="Football is never played on a spreadsheet. We start with how each game will actually be played on the field — offensive line health, defensive coverage tendencies, injury replacements, and pace of play — before building cash-game cores and tournament stacks."
       note={note}
       wide
     >
-      {/* ── SECTION 1: COACH/REASONING MIND FIRST → ALL DATA → 10,000 SIMS → BOOK LAST ── */}
+      {/* ── SECTION 1: HOW WE BUILD DFS LINEUPS ── */}
       <section
         id="dfs-methodology-writeup"
         data-testid="dfs-writeup-dossier"
@@ -88,121 +87,84 @@ export default async function DfsSuitePage() {
       >
         <div className="border-b border-mineral pb-5">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-            The GSE Doctrine · Coach &amp; Reasoning Mind First → 3,742 Research Nodes → 10,000 Play-by-Play Sims → Salary Cap Last
+            How We Build Rosters · Film &amp; Trench Matchups → Target Roles → Salary Cap Last
           </p>
           <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-            Every Layer of Data, Football Reasoning &amp; Simulation Behind Our DFS Writeups
+            How We Break Down the Slate for Cash Games &amp; Tournaments
           </h2>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-ion-1">
-            Immediately after Sunday&apos;s <span className="font-mono text-ion-white">16:00 CT</span>,{" "}
-            <span className="font-mono text-ion-white">19:30 CT</span>, and{" "}
-            <span className="font-mono text-ion-white">22:45 CT</span> windows (plus Thursday and Monday night), our
-            post-game film autopsy grades every pre-play expectation against actual snap telemetry. Then at{" "}
-            <span className="font-mono text-ion-white">04:00 CT</span> (48 hours prior to each slate), the reasoning
-            mind runs 10,000 full-game simulations across the entire player pool before comparing our independent truth
-            against the salaries and market numbers at the very end.
+            Every week we grade how coordinators called the previous game, how injuries change the offensive line and target tree, and which matchups set up for back-and-forth scoring before comparing against DraftKings and FanDuel salaries.
           </p>
         </div>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-plasma">STAGE 01</span>
-              <span className="text-ion-2">COACH &amp; REASONING MIND</span>
+              <span className="text-plasma">STEP 01</span>
+              <span className="text-ion-2">TRENCHES &amp; COVERAGE</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              Tactical Schemes, Trench Leverage &amp; Situational Spots
+              Offensive Line Protection &amp; Secondary Matchups
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              Before looking at a single salary or betting line, the mind reads the football matchup:{" "}
-              <strong className="text-ion-white">Coordinator Play-Call DNA</strong> by down/distance/score-state,{" "}
-              <strong className="text-ion-white">Defensive Coverage Shell Rotations</strong> (
-              <span className="font-mono">Cover-0 Simulated Blitz</span>, <span className="font-mono">Cover-1 Man</span>,{" "}
-              <span className="font-mono">Tampa-2</span>, <span className="font-mono">Cover-3 Seams</span>,{" "}
-              <span className="font-mono">Split-Safety Quarters</span>),{" "}
-              <strong className="text-ion-white">Pre-Snap Motion Response</strong>,{" "}
-              <strong className="text-ion-white">11/12/21 Personnel Grouping Wars</strong>,{" "}
-              <strong className="text-ion-white">OL vs. DL Pass-Block &amp; Run-Block Trench Win Rates</strong>,{" "}
-              <strong className="text-ion-white">QB Time-to-Throw vs. Pressure-to-Sack Conversion</strong>, receiver
-              route-tree separation, Tuesday-to-Sunday coach-speak/beat signals, weather/wind vectors, travel disruption,
-              and referee crew tendencies.
+              Before looking at a single salary, we look at which quarterbacks will have a clean pocket and which secondaries are missing starters on the outside or over the middle.
             </p>
           </div>
 
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-plasma">STAGE 02</span>
-              <span className="text-ion-2">PACE, TOTALS &amp; N_EFF</span>
+              <span className="text-plasma">STEP 02</span>
+              <span className="text-ion-2">PACE &amp; TARGET ROLES</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              Tempo, Injury Cascades &amp; Non-Linear Load (N_eff = 1 / HHI)
+              Tempo, Injury Replacements &amp; Red-Zone Usage
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              Next, the engine models how the game environment and active roster shape total play volume and usage
-              concentration: <strong className="text-ion-white">Neutral-Script Seconds/Snap</strong>,{" "}
-              <strong className="text-ion-white">No-Huddle Acceleration</strong>,{" "}
-              <strong className="text-ion-white">Pass Rate Over Expectation (PROE)</strong>, drive-sustain EPA, and{" "}
-              <strong className="text-ion-white">Red-Zone / Inside-the-5 Play Scripts</strong>. When an injury hits an
-              offensive tackle, boundary corner, or pass-catcher, our{" "}
-              <strong className="text-ion-white">Injury Cascade v2 &amp; Herfindahl-Hirschman Index (N_eff = 1 / HHI)</strong>{" "}
-              re-computes how protection slides and first-read target shares condense non-linearly, creating massive
-              ceiling spikes that linear averages never see.
+              When a starting receiver, tight end, or lineman is ruled out, targets and carries condense fast. We track who stays on the field in two-minute drills and inside the ten-yard line.
             </p>
           </div>
 
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-plasma">STAGE 03</span>
-              <span className="text-ion-2">10,000 PLAY-BY-PLAY SIMS</span>
+              <span className="text-plasma">STEP 03</span>
+              <span className="text-ion-2">GAME ENVIRONMENTS</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              All Possible Players &amp; Correlated Game Environments
+              Stacking Games That Push the Pace
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              With our coaching and situational priors locked, we simulate every game on the slate{" "}
-              <strong className="text-ion-white">10,000 times play-by-play</strong>. In every simulated world, we score{" "}
-              <strong className="text-ion-white">every possible QB, RB, WR, TE, and DST</strong> simultaneously,
-              capturing true within-game covariance (&Sigma;_game): how a shootout script lifts a QB + 2 pass-catchers
-              and forces the opposing WR1 into 12+ catch-up targets, or how a front-seven pass-rush advantage correlates
-              an RB1 clock-bleed workload with DST sacks and turnovers.
+              Tournament-winning lineups come from games where both offenses push each other to keep throwing in the fourth quarter, lifting the quarterback, his top two pass-catchers, and an opposing bring-back.
             </p>
           </div>
 
           <div className="border border-mineral/70 bg-carbon p-5">
             <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-plasma">STAGE 04</span>
-              <span className="text-ion-2">BOOK &amp; SALARY LAST</span>
+              <span className="text-plasma">STEP 04</span>
+              <span className="text-ion-2">SALARY &amp; OWNERSHIP LAST</span>
             </div>
             <h3 className="mt-2 font-semibold text-ion-white">
-              Combinatorial Lineup Construction &amp; Ownership Leverage
+              Cash Cores, Showdown Captains &amp; Tournament Stacks
             </h3>
             <p className="mt-2 text-xs leading-5 text-ion-1">
-              <strong className="text-ion-white">Only at the very end</strong> do we introduce DFS salaries, market
-              lines, and simulated field ownership (<strong className="text-ion-white">Dirichlet-Multinomial field model</strong>).
-              We evaluate millions of salary-legal lineup combinations across the 10,000 simulated worlds to isolate where
-              our football mind disagrees with public pricing and chalk ownership, outputting{" "}
-              <strong className="text-ion-white">80th-Pct Floor Cash Cores</strong>,{" "}
-              <strong className="text-ion-white">Showdown 1.5x Captain Leverage</strong>, and{" "}
-              <strong className="text-ion-white">20-Max GPP Lineup Portfolios</strong> (QB + 2 Pass Catchers + Opposing
-              Bring-Back + Sub-$4.5k Value Pivot).
+              Only at the end do we compare our football reads against the salary cap to build steady cash-game cores, Showdown Captain picks, and tournament stacks.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 2: GAME-BY-GAME DFS ENVIRONMENT, PACE, SCHEME & MATCHUP WRITEUPS ── */}
+      {/* ── SECTION 2: GAME-BY-GAME DFS ENVIRONMENT PREVIEWS (FREE STORYLINES ONLY) ── */}
       <section className="surface-card mb-8 border border-mineral bg-eclipse p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mineral pb-4">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-              Game-by-Game Coaching &amp; Environment Autopsy (Free Public Layer)
+              Game-by-Game Matchup &amp; Pace Preview (Free)
             </p>
             <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white">
-              Every Slate Game Scored: Pace, Totals, Scheme Funnels &amp; Stack Thesis
+              Every Slate Game Previewed: Tempo, Trench Notes &amp; Stack Setup
             </h2>
           </div>
           <span className="border border-plasma/40 bg-plasma/10 px-3 py-1 font-mono text-xs text-plasma">
-            10,000-Sim Environment Read · W1-W7 (18,738 Plays)
+            Official Picks &amp; Full Lineups Locked in Packs Below
           </span>
         </div>
 
@@ -212,7 +174,7 @@ export default async function DfsSuitePage() {
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral/50 pb-3">
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-wider text-plasma">
-                    {w.windowSlot} · {w.kickoff}
+                    {formatWindowSlotLabel(w.windowSlot, w.matchup)}
                   </span>
                   <h3 className="mt-0.5 font-display text-xl font-semibold text-ion-white">
                     {w.matchup}
@@ -220,56 +182,52 @@ export default async function DfsSuitePage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
                   <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Pace: <strong className="text-ion-white">{w.paceOfPlay.neutralSecPerSnap}s/snap</strong>
-                  </span>
-                  <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    No-Huddle: <strong className="text-ion-white">{(w.paceOfPlay.noHuddleRate * 100).toFixed(1)}%</strong>
-                  </span>
-                  <span className="border border-mineral bg-eclipse px-2.5 py-1 text-ion-1">
-                    Pass EPA: <strong className="text-ion-white">{w.paceOfPlay.passEpaPlay}</strong>
+                    Pace: <strong className="text-ion-white">{w.paceOfPlay.neutralSecPerSnap}s / snap</strong>
                   </span>
                   <span className="border border-plasma/40 bg-plasma/10 px-2.5 py-1 text-plasma">
-                    Conviction: <strong>{w.sideTotalCall.sideConfidence}</strong>
+                    🔒 Official Spread, Total &amp; DFS Stack Locked
                   </span>
                 </div>
               </div>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 <div>
                   <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
-                    Pace &amp; No-Huddle Environment (2026 W1-W7)
+                    Pace &amp; Clock Control
                   </div>
-                  <p className="mt-1 text-xs leading-5 text-ion-1">{w.paceOfPlay.notes}</p>
+                  <p className="mt-1 text-xs leading-5 text-ion-1">
+                    {sanitizePlainFootballText(w.paceOfPlay.notes)}
+                  </p>
                 </div>
                 <div>
                   <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
-                    Coverage Shell &amp; Trench Leverage
+                    Line of Scrimmage &amp; Matchup Storyline
                   </div>
                   <p className="mt-1 text-xs leading-5 text-ion-1">
-                    {w.schemeMatchup.coverageShell}. {w.schemeMatchup.blitzRateVsPressureToSack} {w.schemeMatchup.notes}
+                    {sanitizePlainFootballText(w.schemeMatchup.coverageShell)}
                   </p>
                 </div>
               </div>
               <div className="mt-4 border-t border-mineral/40 pt-3 font-mono text-xs text-plasma">
-                🔒 Constructed 9-Man Lineup Shell, Showdown 1.5x Captain Leverage, Cash Core &amp; 20-Max Stack Unlocks in Vault Below
+                🔒 Showdown Captain Picks, Cash Core, Tournament Stack &amp; Official Game Calls Unlock Below
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── SECTION 3: ONLYFANS-STYLE IN-PLACE PAYWALL VAULT FOR CONSTRUCTED DFS LINEUPS & PLAYER POOL ── */}
+      {/* ── SECTION 3: IN-PLACE PAYWALL REVEAL CARDS FOR DFS & ALL-ACCESS PACKS ── */}
       <section className="mb-8">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-              In-Place Paywall Reveal · Unlock Constructed Lineups, Cash Core &amp; 20-Max Stacks
+              Instant On-Screen Unlock · Cash Cores, Showdown Captains &amp; Tournament Stacks
             </p>
             <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white">
-              Unlock the Complete DFS Player Pool &amp; Constructed Lineup Portfolio
+              Unlock Full DFS Lineup Cores &amp; Official Game Picks
             </h2>
           </div>
-          <Link href="/pricing" className="font-mono text-xs text-orbital-cyan underline">
-            Compare All-Access Plans →
+          <Link href="/packages" className="font-mono text-xs text-orbital-cyan underline">
+            View All Football Packs →
           </Link>
         </div>
 
@@ -289,24 +247,24 @@ export default async function DfsSuitePage() {
       <section id="salary-board" className="surface-card p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="font-display text-xl font-semibold text-ion-white">
-            Simulated Player Pool &amp; Salary Feed Status
+            Player Pool &amp; Salary Board Status
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-widest text-orbital-cyan">
             {salaryIsReal
               ? `Licensed DFS feed · ${boardCount} priced rows`
-              : `${boardCount} measured players · salaries gated`}
+              : `${boardCount} active players · salaries gated`}
           </span>
         </div>
 
         <p className="mt-1 text-sm text-ion-1">
           {salaryIsReal
-            ? "Salaries come from the connected licensed DFS feed, reconciled across providers and scored across 10,000 correlated simulations."
-            : "No licensed salary feed is connected or your viewer tier is unentitled. Unlock the DFS Pro 20-Max Pack above or upgrade your plan to reveal full priced player pools and constructed lineups."}
+            ? "Salaries come from the connected licensed DFS feed."
+            : "Unlock the All-Access Pass above to reveal our full DFS cash cores, Showdown Captain picks, and tournament stacks."}
         </p>
         {feedConnected && !viewer.canUseFantasyFull && (
           <p className="mt-2 text-sm text-ion-1">
             The licensed salary feed is live. Full pricing unlocks with a{" "}
-            <a href="/pricing" className="text-orbital-cyan underline">paid plan</a>.
+            <a href="/packages" className="text-orbital-cyan underline">pack purchase</a>.
           </p>
         )}
         {slate && (
@@ -334,7 +292,7 @@ export default async function DfsSuitePage() {
               {topRows.length === 0 && (
                 <tr className="border-t border-mineral/60">
                   <td className="py-3 text-ion-2" colSpan={4}>
-                    No licensed player salaries exposed to unentitled viewers. Unlock the DFS Writeup Vault above to reveal constructed lineups.
+                    Unlock a DFS-enabled pack above to reveal our Showdown Captains, cash cores, and tournament stacks.
                   </td>
                 </tr>
               )}

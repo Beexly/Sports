@@ -5,8 +5,9 @@ import { Footer } from "@/components/ui/footer";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
+  formatWindowSlotLabel,
+  sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
-import { sanitizePlainFootballText } from "@/components/packages/paywall-reveal-card";
 
 export const dynamic = "force-dynamic";
 
@@ -126,7 +127,7 @@ export default function DfsPage(): JSX.Element {
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
                   <div>
                     <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
-                      {writeup.windowSlot}
+                      {formatWindowSlotLabel(writeup.windowSlot, writeup.matchup)}
                     </span>
                     <h3 className="mt-2 text-2xl font-bold text-white">{writeup.matchup}</h3>
                   </div>
@@ -204,11 +205,14 @@ export default function DfsPage(): JSX.Element {
                     href={`/games/${writeup.gameId}`}
                     className="text-sm font-bold text-amber-300 hover:text-amber-200"
                   >
-                    View Complete Game Dossier &amp; Prop Breakdown →
+                    Read Matchup Storyline &amp; Preview →
                   </Link>
-                  <span className="text-xs font-semibold text-slate-300">
-                    Confidence Rating: <span className="font-mono text-base font-bold text-white tabular-nums">{writeup.sideTotalCall.sideConfidence}</span>
-                  </span>
+                  <Link
+                    href="/packages"
+                    className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                  >
+                    🔒 Official Spread, Total &amp; Prop Picks Locked in Pack →
+                  </Link>
                 </div>
               </div>
             ))}

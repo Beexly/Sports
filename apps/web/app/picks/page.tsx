@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Picks Under Construction | Galaxy Sports Edge",
   description:
-    "This section is currently under construction while we focus 100% on GALAXY PICKS (PAID) and DFS.",
+    "This section is currently under construction while we focus full-time on GALAXY PICKS (PAID) and DFS.",
   alternates: { canonical: "/picks" },
 };
 
@@ -28,7 +28,7 @@ export default function PicksPage(): JSX.Element {
             All Official NFL Picks Live in Galaxy Picks
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
-            This section is currently under construction while we focus 100% on{" "}
+            This section is currently under construction while we focus full-time on{" "}
             <strong className="text-white">GALAXY PICKS (PAID)</strong> and our{" "}
             <strong className="text-white">DFS</strong> lineup optimizer. Unlock this week&apos;s plain-English NFL
             Spread, Total, Player Prop, and Parlay packs right on the storefront below.
