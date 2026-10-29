@@ -61,5 +61,17 @@ Already on the branch from `0223a3870`. Rechecked, not reinvented.
   6. Plus 2026 10Hz NGS highlight tracking in `intelligence/vision/data/ngs_highlight_tracking_2026.parquet` + `intelligence/vision/ngs_highlight_tracking_loader.py` and `intelligence/vision/data/*_pre_week6_2026.parquet`.
 - **Action for Round 3:** Bind `intelligence/coaching/data/{play_by_play_2026,pbp_participation_2026_reconstructed,ftn_charting_2026,snap_counts_2026}.parquet` (Weeks 1–7) + `docs/research/2026-10-28/full-tables/*.csv` to compute real 2026 Weeks 1–7 team/player metrics for `CAR @ GB` TNF and the Week 8 board.
 
+## Round 3 — 2026-10-29 01:34 CT
+
+Pointer checked. Coaching parquets are 2026 weeks 1-7. Vision tracking CSVs were not used.
+
+- `play_by_play_2026.parquet`: 18,738 rows, season [2026], weeks [1, 2, 3, 4, 5, 6, 7]. CAR/GB games: 13. Week 7 game ids `2026_07_TB_CAR` and `2026_07_GB_DET`.
+- Offense filter `play_type` in (pass, run). CAR: 392 plays, 25 no-huddle, first-and-10 pass 89/155. GB: 423 plays, 34 no-huddle, first-and-10 pass 74/145. Written to `docs/predictions/research/2026-10-29/WEEK-1-TO-7-FILM-AND-TREND-AUTOPSY.md`.
+- Coaching charting parquet: 18,019 rows, season [2026], weeks 1-7. The nfl-farm copy is still weeks 1-6, 15,904 rows. Not merged.
+- `ngs_highlight_tracking_2026.parquet`: 7,345,682 rows, season [2026], weeks [0, 1, 2, 3, 4, 5]. Not weeks 1-7. Not used as a week-7 tracking source.
+- Simulated TNF box-score CSV was not used as a line. Coverage chart rows were not turned into a shell call.
+- Production deploy `sports-mm8nmsmlc` was still Building at inspect time (created 01:33 CT). Result not known. Gate remains PASS.
+
+
 
 
