@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T09:42:21Z",
+  "generated_at": "2026-10-29T18:38:57Z",
   "season": 2026,
   "weeks_evaluated": [
     1,
@@ -171,13 +171,13 @@
     "OPENALEX": 19,
     "ARXIV": 18,
     "HUGGINGFACE": 14,
-    "KAGGLE": 23
+    "KAGGLE": 3
   },
   "live_harvest_fallbacks": {
     "OPENALEX": 0,
     "ARXIV": 0,
     "HUGGINGFACE": 0,
-    "KAGGLE": 0
+    "KAGGLE": 3
   },
   "live_harvest_samples": {
     "openalex": [
@@ -240,7 +240,7 @@
         "id": "OPENALEX:W265896103",
         "title": "Statistical Fraud Detection: A Review",
         "publication_year": 2002,
-        "cited_by_count": 1472,
+        "cited_by_count": 1473,
         "query": "Markov decision process American football fourth down play calling",
         "abstract_snippet": "Fraud is increasing dramatically with the expansion of modern technology and the global superhighways of communication, resulting in the loss of billions of dollars worldwide each year. Although prevention technologies are the best way to reduce fraud, fraudsters are adaptive and, given time, will usually find ways to circumvent such measures. Methodologies "
       },
@@ -392,84 +392,84 @@
       {
         "engine": "HUGGINGFACE",
         "id": "HF:dismalnow/nfl-stats-2021-2025",
-        "downloads": 436,
+        "downloads": 408,
         "likes": 0,
         "query": "nfl"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:nfL6/yahoo_answers_qa",
-        "downloads": 357,
+        "downloads": 356,
         "likes": 28,
         "query": "nfl"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:minmaxxxer/nfl-odds-2026",
-        "downloads": 305,
+        "downloads": 327,
         "likes": 0,
         "query": "nfl"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:minmaxxxer/nfl-closing-lines-ats-2025",
-        "downloads": 284,
+        "downloads": 300,
         "likes": 0,
         "query": "nfl"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:nfliu/decontextualization",
-        "downloads": 238,
+        "downloads": 236,
         "likes": 0,
         "query": "nfl"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:oliviersportsdata/NFL-Multi-Market-Timestamped-Odds-Team-Stats",
-        "downloads": 203,
+        "downloads": 209,
         "likes": 0,
         "query": "nfl"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:resfunny717/sports-betting-bundle",
-        "downloads": 2051,
+        "downloads": 2350,
         "likes": 0,
         "query": "sports betting"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:emailmarketingdataset/usa-sports-betting-dataset",
-        "downloads": 7,
+        "downloads": 9,
         "likes": 0,
         "query": "sports betting"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:t4tiana/store-sales-time-series-forecasting",
-        "downloads": 3373,
+        "downloads": 3439,
         "likes": 18,
         "query": "time series forecasting"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:Y123-wed/Multimodal-Dataset-Image_Text_Table_TimeSeries-for-Financial-Time-Series-Forecasting",
-        "downloads": 2418,
+        "downloads": 2416,
         "likes": 0,
         "query": "time series forecasting"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:Wenyan0110/Multimodal-Dataset-Image_Text_Table_TimeSeries-for-Financial-Time-Series-Forecasting",
-        "downloads": 1575,
+        "downloads": 1410,
         "likes": 23,
         "query": "time series forecasting"
       },
       {
         "engine": "HUGGINGFACE",
         "id": "HF:Duyu/Time-Series-Forecasting-Benchmark-Datasets",
-        "downloads": 946,
+        "downloads": 952,
         "likes": 11,
         "query": "time series forecasting"
       }
@@ -477,99 +477,18 @@
     "kaggle": [
       {
         "engine": "KAGGLE",
-        "id": "KAGGLE:tombliss/nfl-big-data-bowl-2021-bonus",
-        "title": "Nfl Big Data Bowl 2021 Bonus",
-        "downloadCount": 646,
-        "voteCount": 11,
-        "query": "nfl big data bowl"
+        "query": "nfl big data bowl",
+        "status": "cached_fallback (HTTPError 404 Not Found)"
       },
       {
         "engine": "KAGGLE",
-        "id": "KAGGLE:aryashah2k/beginners-sports-analytics-nfl-dataset",
-        "title": "Beginners Sports Analytics NFL Dataset",
-        "downloadCount": 4277,
-        "voteCount": 30,
-        "query": "nfl big data bowl"
+        "query": "nfl play by play",
+        "status": "cached_fallback (HTTPError 404 Not Found)"
       },
       {
         "engine": "KAGGLE",
-        "id": "KAGGLE:mathurinache/nflbigdatabowl2021-feather-files",
-        "title": "nfl-big-data-bowl-2021 Feather files",
-        "downloadCount": 496,
-        "voteCount": 10,
-        "query": "nfl big data bowl"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:dott1718/nfl-big-data-bowl-expected-yards",
-        "title": "NFL Big Data Bowl + expected Yards",
-        "downloadCount": 137,
-        "voteCount": 11,
-        "query": "nfl big data bowl"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:jpmiller/nfl-competition-data",
-        "title": "\ud83c\udfc8 NFL Stats for BDB 2024 and Fantasy Football",
-        "downloadCount": 2477,
-        "voteCount": 24,
-        "query": "nfl big data bowl"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:ryanadamsai/weaponxnfl",
-        "title": "NFL Big Data Bowl 2026 - Weapon X",
-        "downloadCount": 28,
-        "voteCount": 2,
-        "query": "nfl big data bowl"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:robikscube/nfl-big-data-bowl-2021-pp",
-        "title": "nfl big data bowl 2021 pp",
-        "downloadCount": 86,
-        "voteCount": 8,
-        "query": "nfl big data bowl"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:charliezimmerman/nfl-play-data-2010-2020",
-        "title": "NFL Play Data 2010 - 2020",
-        "downloadCount": 262,
-        "voteCount": 6,
-        "query": "nfl big data bowl"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:maxhorowitz/nflplaybyplay2009to2016",
-        "title": "Detailed NFL Play-by-Play Data 2009-2018",
-        "downloadCount": 58292,
-        "voteCount": 773,
-        "query": "nfl play by play"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:maxhorowitz/nflplaybyplay2015",
-        "title": "Detailed NFL Play-by-Play Data 2015",
-        "downloadCount": 4424,
-        "voteCount": 77,
-        "query": "nfl play by play"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:toddsteussie/nfl-play-statistics-dataset-2004-to-present",
-        "title": "NFL Play Statistics dataset (primary)",
-        "downloadCount": 5370,
-        "voteCount": 90,
-        "query": "nfl play by play"
-      },
-      {
-        "engine": "KAGGLE",
-        "id": "KAGGLE:benbaldwin/nflfastr",
-        "title": "nflfastr",
-        "downloadCount": 450,
-        "voteCount": 7,
-        "query": "nfl play by play"
+        "query": "nfl betting odds",
+        "status": "cached_fallback (HTTPError 404 Not Found)"
       }
     ]
   },

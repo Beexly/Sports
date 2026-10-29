@@ -71,6 +71,7 @@ import {
   applyAltitudeSplitHalfReliabilityShrinkage,
   evaluateTacklePropAndInHouseRefereeCrewMix,
   computeFirstQuarterScriptStopMath,
+  evaluateSiriusXmRadioReactionSignals,
 } from "../../packages/prediction-engine/src/nfl/x-consolidated-sweep-signals.js";
 import {
   evaluateConformalSelectiveAbstention,
@@ -1221,6 +1222,10 @@ function main() {
       homeFirstDriveStopRatePct: 61.5,
       awayFirstDriveStopRatePct: 57.0,
     });
+    const siriusXmRadioEval = evaluateSiriusXmRadioReactionSignals({
+      away: g.away,
+      home: g.home,
+    });
 
     // Run 4 IG Consolidated Conformal, Borghesi/Rosen, Kats CUSUM & Laya Gate Signals
     const conformalEval = evaluateConformalSelectiveAbstention({
@@ -1315,6 +1320,7 @@ function main() {
           altitude_reliability_shrinkage: altitudeReliabilityEval,
           tackle_prop_and_referee_crew: tackleAndRefMixEval,
           first_quarter_script_stop_math: firstQuarterMathEval,
+          siriusxm_radio_reaction_signals: siriusXmRadioEval,
         },
       },
       stage2_jev_spine_and_10k_coach_sim: {

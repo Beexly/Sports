@@ -1,10 +1,10 @@
 # 2026 NFL WEEK 8 — COMPLETE 5-STAGE ENGINE & JEV SNAP-BY-SNAP SLATE PACKET
 
-- **Generated:** `2026-10-29T18:26:10Z`
+- **Generated:** `2026-10-29T18:44:37Z`
 - **Data Provenance:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) + `18,019` charted play tendencies + `166` live JEV snaps (`typesafe/jev-1.14`) + `5-Stage GSE Engine Verdicts` (`nfl_2026_w8_five_stage_engine_verdicts.json`).
 
 ## 1. Tonight's TNF Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)
-- **Fair Line:** `GB -5.7` | **Fair Total:** `44.7`
+- **Fair Line:** `GB -5.3` | **Fair Total:** `43.4`
 - **Calibrated Side:** **PLAY** Green Bay Packers -3.5 (`61/100`, `+0.0862` CLV)
 - **Calibrated Total:** **PLAY** UNDER 47.5 (`58/100`, `+0.0562` CLV)
 - **Why We Like It:** Green Bay’s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under.
@@ -14,17 +14,17 @@
 
 | Window | Matchup | Posted Line | Fair Line | Side Call (Decision, Conf) | Total Call (Decision, Conf) | Top Prop | SGP (Fair vs Market) |
 |---|---|---|---|---|---|---|---|
-| `TNF` | **Carolina Panthers @ Green Bay Packers** | `GB -3.5` / `47.5` | `-5.7` / `44.7` | **PLAY** Green Bay Packers -3.5 (`61/100`) | **PLAY** UNDER 47.5 (`58/100`) | Josh Jacobs OVER 62.5 (60/100) | `+275` vs `+380` |
-| `SUN_EARLY` | **Baltimore Ravens @ Buffalo Bills** | `BUF -3` / `54.5` | `-2.6` / `56.7` | **PASS** Buffalo Bills -3 (`54/100`) | **PLAY** OVER 54.5 (`60/100`) | Keon Coleman OVER 55.5 (59/100) | `+333` vs `+410` |
-| `SUN_EARLY` | **Tennessee Titans @ Cincinnati Bengals** | `CIN -10` / `46.5` | `-12.5` / `45.8` | **PASS** Tennessee Titans +10 (`52/100`) | **PASS** UNDER 46.5 (`52/100`) | Tee Higgins OVER 79.5 (55/100) | `n/a` vs `n/a` |
+| `TNF` | **Carolina Panthers @ Green Bay Packers** | `GB -3.5` / `47.5` | `-5.3` / `43.4` | **PLAY** Green Bay Packers -3.5 (`61/100`) | **PLAY** UNDER 47.5 (`58/100`) | Josh Jacobs OVER 62.5 (59/100) | `+275` vs `+380` |
+| `SUN_EARLY` | **Baltimore Ravens @ Buffalo Bills** | `BUF -3` / `54.5` | `-2.8` / `56.6` | **PASS** Buffalo Bills -3 (`54/100`) | **PLAY** OVER 54.5 (`60/100`) | Keon Coleman OVER 55.5 (59/100) | `+333` vs `+410` |
+| `SUN_EARLY` | **Tennessee Titans @ Cincinnati Bengals** | `CIN -10` / `46.5` | `-12.6` / `46.2` | **PASS** Tennessee Titans +10 (`52/100`) | **PASS** UNDER 46.5 (`52/100`) | Tee Higgins OVER 79.5 (55/100) | `n/a` vs `n/a` |
 | `SUN_EARLY` | **Arizona Cardinals @ Dallas Cowboys** | `DAL -7` / `54.5` | `-6.5` / `51.7` | **PASS** Dallas Cowboys -7 (`53/100`) | **PASS** OVER 54.5 (`53/100`) | CeeDee Lamb OVER 78.5 (55/100) | `n/a` vs `n/a` |
-| `SUN_EARLY` | **Minnesota Vikings @ Detroit Lions** | `DET -3` / `46.5` | `-6.5` / `48.7` | **PLAY** Detroit Lions -3 (`59/100`) | **PASS** OVER 46.5 (`53/100`) | Amon-Ra St. Brown OVER 75.5 (59/100) | `+338` vs `+390` |
-| `SUN_EARLY` | **Las Vegas Raiders @ New York Jets** | `NYJ -1.5` / `45.5` | `-0.7` / `42.9` | **PASS** Las Vegas Raiders +1.5 (`51/100`) | **PASS** UNDER 45.5 (`51/100`) | Garrett Wilson OVER 63.5 (55/100) | `n/a` vs `n/a` |
-| `SUN_EARLY` | **Cleveland Browns @ Pittsburgh Steelers** | `PIT -3.5` / `39.5` | `-5.2` / `38.8` | **PASS** Pittsburgh Steelers -3.5 (`55/100`) | **PLAY** UNDER 39.5 (`57/100`) | Germie Bernard OVER 52.5 (59/100) | `+352` vs `+425` |
-| `SUN_EARLY` | **Atlanta Falcons @ Tampa Bay Buccaneers** | `TB -2.5` / `44.5` | `-2.7` / `43.0` | **PASS** Tampa Bay Buccaneers -2.5 (`53/100`) | **PASS** UNDER 44.5 (`52/100`) | Chris Godwin OVER 50.5 (55/100) | `n/a` vs `n/a` |
-| `SUN_EARLY` | **Indianapolis Colts @ Jacksonville Jaguars** | `JAX -10` / `46.5` | `-9.4` / `44.1` | **PASS** Indianapolis Colts +10 (`52/100`) | **PASS** UNDER 46.5 (`51/100`) | Parker Washington OVER 66.5 (55/100) | `n/a` vs `n/a` |
-| `SUN_LATE` | **Los Angeles Chargers @ Los Angeles Rams** | `LAR -6.5` / `45.5` | `-9.0` / `45.6` | **PASS** Los Angeles Rams -6.5 (`54/100`) | **PASS** OVER 45.5 (`53/100`) | Puka Nacua OVER 80.5 (55/100) | `n/a` vs `n/a` |
-| `SUN_LATE` | **Kansas City Chiefs @ Denver Broncos** | `KC -1.5` / `40.5` | `+3.4` / `42.1` | **PASS** Kansas City Chiefs -1.5 (`51/100`) | **PASS** UNDER 40.5 (`52/100`) | Jaylen Waddle OVER 51.5 (55/100) | `n/a` vs `n/a` |
-| `SUN_LATE` | **New England Patriots @ Miami Dolphins** | `NE -7` / `43.5` | `+6.3` / `40.4` | **PASS** New England Patriots -7 (`53/100`) | **PASS** UNDER 43.5 (`51/100`) | Caleb Douglas OVER 62.5 (55/100) | `n/a` vs `n/a` |
-| `SNF` | **Philadelphia Eagles @ Washington Commanders** | `WSH -6` / `40.5` | `-6.8` / `41.7` | **PASS** Philadelphia Eagles +6 (`52/100`) | **PASS** UNDER 40.5 (`53/100`) | Chig Okonkwo OVER 50.5 (55/100) | `n/a` vs `n/a` |
-| `MNF` | **Chicago Bears @ Seattle Seahawks** | `SEA -3` / `46.5` | `-2.6` / `46.6` | **PLAY** Chicago Bears +3 (`56/100`) | **PASS** UNDER 46.5 (`52/100`) | Jaxon Smith-Njigba OVER 81.5 (59/100) | `+373` vs `+420` |
+| `SUN_EARLY` | **Minnesota Vikings @ Detroit Lions** | `DET -3` / `46.5` | `-6.6` / `48.6` | **PLAY** Detroit Lions -3 (`59/100`) | **PASS** OVER 46.5 (`53/100`) | Amon-Ra St. Brown OVER 75.5 (59/100) | `+338` vs `+390` |
+| `SUN_EARLY` | **Las Vegas Raiders @ New York Jets** | `NYJ -1.5` / `45.5` | `-0.8` / `42.8` | **PASS** Las Vegas Raiders +1.5 (`51/100`) | **PASS** UNDER 45.5 (`51/100`) | Garrett Wilson OVER 63.5 (55/100) | `n/a` vs `n/a` |
+| `SUN_EARLY` | **Cleveland Browns @ Pittsburgh Steelers** | `PIT -3.5` / `39.5` | `-5.4` / `38.8` | **PASS** Pittsburgh Steelers -3.5 (`55/100`) | **PLAY** UNDER 39.5 (`57/100`) | Germie Bernard OVER 52.5 (59/100) | `+352` vs `+425` |
+| `SUN_EARLY` | **Atlanta Falcons @ Tampa Bay Buccaneers** | `TB -2.5` / `44.5` | `-2.5` / `43.0` | **PASS** Tampa Bay Buccaneers -2.5 (`53/100`) | **PASS** UNDER 44.5 (`52/100`) | Chris Godwin OVER 50.5 (55/100) | `n/a` vs `n/a` |
+| `SUN_EARLY` | **Indianapolis Colts @ Jacksonville Jaguars** | `JAX -10` / `46.5` | `-9.3` / `44.0` | **PASS** Indianapolis Colts +10 (`52/100`) | **PASS** UNDER 46.5 (`51/100`) | Parker Washington OVER 66.5 (55/100) | `n/a` vs `n/a` |
+| `SUN_LATE` | **Los Angeles Chargers @ Los Angeles Rams** | `LAR -6.5` / `45.5` | `-8.9` / `45.6` | **PASS** Los Angeles Rams -6.5 (`54/100`) | **PASS** OVER 45.5 (`53/100`) | Puka Nacua OVER 80.5 (55/100) | `n/a` vs `n/a` |
+| `SUN_LATE` | **Kansas City Chiefs @ Denver Broncos** | `KC -1.5` / `40.5` | `+3.6` / `42.2` | **PASS** Kansas City Chiefs -1.5 (`51/100`) | **PASS** UNDER 40.5 (`52/100`) | Jaylen Waddle OVER 51.5 (55/100) | `n/a` vs `n/a` |
+| `SUN_LATE` | **New England Patriots @ Miami Dolphins** | `NE -7` / `43.5` | `+6.2` / `40.4` | **PASS** New England Patriots -7 (`53/100`) | **PASS** UNDER 43.5 (`51/100`) | Caleb Douglas OVER 62.5 (55/100) | `n/a` vs `n/a` |
+| `SNF` | **Philadelphia Eagles @ Washington Commanders** | `WSH -6` / `40.5` | `-6.7` / `41.6` | **PASS** Philadelphia Eagles +6 (`52/100`) | **PASS** UNDER 40.5 (`53/100`) | Chig Okonkwo OVER 50.5 (55/100) | `n/a` vs `n/a` |
+| `MNF` | **Chicago Bears @ Seattle Seahawks** | `SEA -3` / `46.5` | `-2.5` / `46.8` | **PLAY** Chicago Bears +3 (`56/100`) | **PASS** UNDER 46.5 (`52/100`) | Jaxon Smith-Njigba OVER 81.5 (59/100) | `+373` vs `+420` |

@@ -1,6 +1,6 @@
 # QUAD-ENGINE MATHEMATICAL EDGE & FORMULA SYNTHESIS DOSSIER — 2026-10-29
 
-- **Generated At:** `2026-10-29T09:42:21Z`
+- **Generated At:** `2026-10-29T18:38:57Z`
 - **Quad-Engine Live Sources Queried:** `OpenAlex API` + `arXiv Atom API` + `Hugging Face Hub API` + `Kaggle API/BDB2027`
 - **Empirical Validation Dataset:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) joined with `18,019` FTN charting plays (`ftn_charting_2026.parquet`) and `18,738` participation rows (`pbp_participation_2026_reconstructed.parquet`)
 
@@ -157,8 +157,8 @@ A `cached_fallback` row means the engine answered with an error and returned not
 | OpenAlex | 19 | 0 |
 | arXiv | 18 | 0 |
 | Hugging Face | 14 | 0 |
-| Kaggle | 23 | 0 |
-| **Total** | **74** | **0** |
+| Kaggle | 3 | 3 |
+| **Total** | **54** | **3** |
 
 ### Live titles returned this run
 
@@ -175,13 +175,6 @@ A `cached_fallback` row means the engine answered with an error and returned not
 - `OPENALEX:W2617621954` — The future of television : advertising, technology and the pursuit of audiences (2008)
 - `OPENALEX:W2115593474` — Practicing Work, Perfecting Play: League of Legends and the Sentimental Education of E-Sports (2022)
 - `OPENALEX:W133582637` — Forecasting Success in the National Hockey League Using In-Game Statistics and Textual Data (2014)
-
-**Kaggle**
-- `KAGGLE:tombliss/nfl-big-data-bowl-2021-bonus` — Nfl Big Data Bowl 2021 Bonus
-- `KAGGLE:aryashah2k/beginners-sports-analytics-nfl-dataset` — Beginners Sports Analytics NFL Dataset
-- `KAGGLE:mathurinache/nflbigdatabowl2021-feather-files` — nfl-big-data-bowl-2021 Feather files
-- `KAGGLE:dott1718/nfl-big-data-bowl-expected-yards` — NFL Big Data Bowl + expected Yards
-- `KAGGLE:jpmiller/nfl-competition-data` — 🏈 NFL Stats for BDB 2024 and Fantasy Football
 
 **Hugging Face**
 - `HF:dismalnow/nfl-stats-2021-2025` — HF:dismalnow/nfl-stats-2021-2025

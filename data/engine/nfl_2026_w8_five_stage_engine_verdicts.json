@@ -261,7 +261,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.73,
+            "receivingYardsAdjustment": 1.17,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -279,7 +279,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 88.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -295,40 +295,48 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.65,
+            "spreadHomeDelta": -0.15,
+            "processFadeFlag": "Josh Jacobs raw YPC box-score chase (pass-game checkdowns carried W7 fantasy line)",
+            "usageFloorBoostPlayer": "Christian Watson (WR1 81% W7 snaps) & Tucker Kraft (TE1 88% W7 snaps)",
+            "injuryBackfieldNote": "Jayden Reed (IR since W2) & Matthew Golden (W8 DNP - Shoulder) out; LaFleur/Campbell W7 20-17 mutual-conservative script reinforces UNDER 47.5.",
+            "radioTakeawaySummary": "GB-DET W7 produced 37 total points as LaFleur bypassed high-variance plays and leaned on controlled clock + pass-catching backfield touches."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
         "jev_full_game_spine_executed": true,
-        "jev_total_snaps": 166,
+        "jev_total_snaps": 168,
         "jev_final_score_spine": {
-          "CAR": 10,
-          "GB": 28
+          "CAR": 20,
+          "GB": 23
         },
         "jev_posterior_overrides": {
           "away": {
-            "early_down_pass_rate": 0.4531,
-            "comp_rate_w1_w7": 63.29,
-            "comp_rate_w6_w7": 63.29,
-            "sack_rate_allowed": 7.15,
-            "def_pressure_rate": 21.5,
-            "wr1_target_share": 21.6,
-            "rb1_carry_share": 67.7,
-            "jev_mean_pressure_disruption_noul": 0.39,
-            "jev_mean_coaching_edge_noul": 0.4463,
-            "jev_mean_pass_call_prob": 0.4321
+            "early_down_pass_rate": 0.6206,
+            "comp_rate_w1_w7": 51.05,
+            "comp_rate_w6_w7": 43.99,
+            "sack_rate_allowed": 7.57,
+            "def_pressure_rate": 36.2,
+            "wr1_target_share": 22.5,
+            "rb1_carry_share": 74.96,
+            "jev_mean_pressure_disruption_noul": 0.431,
+            "jev_mean_coaching_edge_noul": 0.4861,
+            "jev_mean_pass_call_prob": 0.6958
           },
           "home": {
-            "early_down_pass_rate": 0.7005,
-            "comp_rate_w1_w7": 63.6,
-            "comp_rate_w6_w7": 63.6,
-            "sack_rate_allowed": 6.55,
-            "def_pressure_rate": 21.5,
-            "wr1_target_share": 24.56,
-            "rb1_carry_share": 59.56,
-            "jev_mean_pressure_disruption_noul": 0.322,
-            "jev_mean_coaching_edge_noul": 0.5261,
-            "jev_mean_pass_call_prob": 0.8527
+            "early_down_pass_rate": 0.7038,
+            "comp_rate_w1_w7": 52.55,
+            "comp_rate_w6_w7": 51.5,
+            "sack_rate_allowed": 6.28,
+            "def_pressure_rate": 33.2,
+            "wr1_target_share": 30.3,
+            "rb1_carry_share": 41.55,
+            "jev_mean_pressure_disruption_noul": 0.4028,
+            "jev_mean_coaching_edge_noul": 0.4876,
+            "jev_mean_pass_call_prob": 0.9072
           }
         },
         "coach_sim_10k_win_prob_home": 0.5383,
@@ -689,7 +697,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.565,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 7.83,
+            "receivingYardsAdjustment": 13.79,
             "alignmentFunnelTag": "SLOT_BLEED"
           },
           "sneak_and_base_defense_trap": {
@@ -707,7 +715,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 96.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -723,14 +731,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "ARI": 9,
+          "DAL": 9
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.531,
+            "comp_rate_w1_w7": 57.08,
+            "comp_rate_w6_w7": 53.62,
+            "sack_rate_allowed": 5.84,
+            "def_pressure_rate": 30.9,
+            "wr1_target_share": 31.62,
+            "rb1_carry_share": 41.23,
+            "jev_mean_pressure_disruption_noul": 0.3456,
+            "jev_mean_coaching_edge_noul": 0.484,
+            "jev_mean_pass_call_prob": 0.5773
+          },
+          "home": {
+            "early_down_pass_rate": 0.7499,
+            "comp_rate_w1_w7": 56.42,
+            "comp_rate_w6_w7": 52.96,
+            "sack_rate_allowed": 4.46,
+            "def_pressure_rate": 24.7,
+            "wr1_target_share": 32.94,
+            "rb1_carry_share": 64.05,
+            "jev_mean_pressure_disruption_noul": 0.3556,
+            "jev_mean_coaching_edge_noul": 0.5676,
+            "jev_mean_pass_call_prob": 0.8947
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.3095,
         "coach_sim_10k_fourth_down_wp": 0.0337,
         "scheme_fit_expected_home_pts": 23.47,
@@ -1082,7 +1126,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -1100,7 +1144,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -1116,14 +1160,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 167,
+        "jev_final_score_spine": {
+          "ATL": 33,
+          "TB": 3
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.387,
+            "comp_rate_w1_w7": 53.37,
+            "comp_rate_w6_w7": 55.04,
+            "sack_rate_allowed": 7.53,
+            "def_pressure_rate": 24.7,
+            "wr1_target_share": 28.01,
+            "rb1_carry_share": 69.13,
+            "jev_mean_pressure_disruption_noul": 0.4006,
+            "jev_mean_coaching_edge_noul": 0.5095,
+            "jev_mean_pass_call_prob": 0.433
+          },
+          "home": {
+            "early_down_pass_rate": 0.6456,
+            "comp_rate_w1_w7": 47.05,
+            "comp_rate_w6_w7": 43.76,
+            "sack_rate_allowed": 8.45,
+            "def_pressure_rate": 40.6,
+            "wr1_target_share": 29.22,
+            "rb1_carry_share": 59.11,
+            "jev_mean_pressure_disruption_noul": 0.4065,
+            "jev_mean_coaching_edge_noul": 0.4545,
+            "jev_mean_pass_call_prob": 0.883
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4298,
         "coach_sim_10k_fourth_down_wp": 0.0476,
         "scheme_fit_expected_home_pts": 23.47,
@@ -1427,7 +1507,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.45,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -1445,7 +1525,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 50.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -1461,14 +1541,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.45,
+            "spreadHomeDelta": -0.3,
+            "processFadeFlag": "Uncapped Baltimore offensive ceiling on Lamar Jackson's first game back from 3-week high-ankle sprain",
+            "usageFloorBoostPlayer": "Derrick Henry & James Cook",
+            "injuryBackfieldNote": "Lamar Jackson missed 3 consecutive games (high ankle sprain; CIN 35-13 whitewash over Tyler Huntley in W7) and returns at Highmark Stadium.",
+            "radioTakeawaySummary": "Baltimore was routed 35-13 in W7 without Lamar Jackson; even with Jackson returning in W8, post-ankle-sprain mobility warrants pass discipline on the full-game spread."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 161,
+        "jev_final_score_spine": {
+          "BAL": 27,
+          "BUF": 34
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5043,
+            "comp_rate_w1_w7": 56.07,
+            "comp_rate_w6_w7": 53.1,
+            "sack_rate_allowed": 7.31,
+            "def_pressure_rate": 30.9,
+            "wr1_target_share": 29.17,
+            "rb1_carry_share": 73.22,
+            "jev_mean_pressure_disruption_noul": 0.3455,
+            "jev_mean_coaching_edge_noul": 0.4841,
+            "jev_mean_pass_call_prob": 0.5914
+          },
+          "home": {
+            "early_down_pass_rate": 0.3463,
+            "comp_rate_w1_w7": 51.14,
+            "comp_rate_w6_w7": 58.99,
+            "sack_rate_allowed": 6.46,
+            "def_pressure_rate": 35,
+            "wr1_target_share": 18.96,
+            "rb1_carry_share": 75.58,
+            "jev_mean_pressure_disruption_noul": 0.367,
+            "jev_mean_coaching_edge_noul": 0.506,
+            "jev_mean_pass_call_prob": 0.348
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4554,
         "coach_sim_10k_fourth_down_wp": 0.0496,
         "scheme_fit_expected_home_pts": 26.4,
@@ -1820,7 +1936,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.41,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -1838,7 +1954,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 45.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -1854,14 +1970,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "CLE": 20,
+          "PIT": 24
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6838,
+            "comp_rate_w1_w7": 49.25,
+            "comp_rate_w6_w7": 51.87,
+            "sack_rate_allowed": 8.42,
+            "def_pressure_rate": 24.1,
+            "wr1_target_share": 22.52,
+            "rb1_carry_share": 57.03,
+            "jev_mean_pressure_disruption_noul": 0.3437,
+            "jev_mean_coaching_edge_noul": 0.4936,
+            "jev_mean_pass_call_prob": 0.8464
+          },
+          "home": {
+            "early_down_pass_rate": 0.4698,
+            "comp_rate_w1_w7": 52.03,
+            "comp_rate_w6_w7": 57.89,
+            "sack_rate_allowed": 7.73,
+            "def_pressure_rate": 27,
+            "wr1_target_share": 28.5,
+            "rb1_carry_share": 64.12,
+            "jev_mean_pressure_disruption_noul": 0.3963,
+            "jev_mean_coaching_edge_noul": 0.5275,
+            "jev_mean_pass_call_prob": 0.3675
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4536,
         "coach_sim_10k_fourth_down_wp": 0.0175,
         "scheme_fit_expected_home_pts": 19.58,
@@ -2174,7 +2326,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1.6,
-            "receivingYardsAdjustment": 9.52,
+            "receivingYardsAdjustment": 12.42,
             "alignmentFunnelTag": "PERIMETER_BLEED"
           },
           "sneak_and_base_defense_trap": {
@@ -2192,7 +2344,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 72.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -2208,14 +2360,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 166,
+        "jev_final_score_spine": {
+          "IND": 3,
+          "JAX": 41
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5312,
+            "comp_rate_w1_w7": 52.14,
+            "comp_rate_w6_w7": 44.06,
+            "sack_rate_allowed": 7.69,
+            "def_pressure_rate": 22,
+            "wr1_target_share": 19.44,
+            "rb1_carry_share": 68.37,
+            "jev_mean_pressure_disruption_noul": 0.3992,
+            "jev_mean_coaching_edge_noul": 0.4408,
+            "jev_mean_pass_call_prob": 0.65
+          },
+          "home": {
+            "early_down_pass_rate": 0.3615,
+            "comp_rate_w1_w7": 55.99,
+            "comp_rate_w6_w7": 55.99,
+            "sack_rate_allowed": 5.27,
+            "def_pressure_rate": 30.6,
+            "wr1_target_share": 29.82,
+            "rb1_carry_share": 55.66,
+            "jev_mean_pressure_disruption_noul": 0.2817,
+            "jev_mean_coaching_edge_noul": 0.5449,
+            "jev_mean_pass_call_prob": 0.2791
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.286,
         "coach_sim_10k_fourth_down_wp": 0.0326,
         "scheme_fit_expected_home_pts": 23.25,
@@ -2565,7 +2753,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.61,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -2583,7 +2771,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 66.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -2599,14 +2787,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.35,
+            "spreadHomeDelta": 0.15,
+            "processFadeFlag": "Raiders downfield pocket attack (immobile pocket limiting rushing lanes)",
+            "usageFloorBoostPlayer": "Ashton Jeanty (8 rush / 15 yds + 8 rec / 61 yds / 1 TD = 21.6 PPR in W7)",
+            "injuryBackfieldNote": "Ashton Jeanty 8-target receiving funnel insulates his yardage floor regardless of rushing YPC.",
+            "radioTakeawaySummary": "Ashton Jeanty's elite receiving involvement (8 catches, 61 rec yds in W7) provides a high-floor checkdown outlet against NYJ's 4-man pass rush."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 155,
+        "jev_final_score_spine": {
+          "LV": 7,
+          "NYJ": 59
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6753,
+            "comp_rate_w1_w7": 55.23,
+            "comp_rate_w6_w7": 49.97,
+            "sack_rate_allowed": 5.78,
+            "def_pressure_rate": 26.7,
+            "wr1_target_share": 26.52,
+            "rb1_carry_share": 58.78,
+            "jev_mean_pressure_disruption_noul": 0.4328,
+            "jev_mean_coaching_edge_noul": 0.4914,
+            "jev_mean_pass_call_prob": 0.7247
+          },
+          "home": {
+            "early_down_pass_rate": 0.4534,
+            "comp_rate_w1_w7": 57.14,
+            "comp_rate_w6_w7": 58.95,
+            "sack_rate_allowed": 7.72,
+            "def_pressure_rate": 37.5,
+            "wr1_target_share": 30,
+            "rb1_carry_share": 52.28,
+            "jev_mean_pressure_disruption_noul": 0.3135,
+            "jev_mean_coaching_edge_noul": 0.5115,
+            "jev_mean_pass_call_prob": 0.4326
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4372,
         "coach_sim_10k_fourth_down_wp": 0.0162,
         "scheme_fit_expected_home_pts": 20.9,
@@ -2895,7 +3119,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.86,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -2913,7 +3137,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 91.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -2929,14 +3153,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.85,
+            "spreadHomeDelta": -0.25,
+            "processFadeFlag": "Vikings 6-0 offensive box-score perception (offense 4th-fewest yards, 150 pass yds in W7)",
+            "usageFloorBoostPlayer": "Jordan Mason (MIN RB1, 55% W7 snaps, 15 carries / 68 yds)",
+            "injuryBackfieldNote": "Aaron Jones aggravated prior MCL in W7 (left early, 28% snaps, DNP early W8); Jordan Mason is the primary early-down carrier.",
+            "radioTakeawaySummary": "Minnesota's 6-0 record is driven by Brian Flores' championship-caliber defense (16-10 W7 win) while the offense remains stagnant; DET-GB W7 also stayed under (20-17)."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "MIN": 12,
+          "DET": 10
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6185,
+            "comp_rate_w1_w7": 49.18,
+            "comp_rate_w6_w7": 43.86,
+            "sack_rate_allowed": 8.5,
+            "def_pressure_rate": 71,
+            "wr1_target_share": 26.88,
+            "rb1_carry_share": 60.38,
+            "jev_mean_pressure_disruption_noul": 0.3982,
+            "jev_mean_coaching_edge_noul": 0.5278,
+            "jev_mean_pass_call_prob": 0.8409
+          },
+          "home": {
+            "early_down_pass_rate": 0.465,
+            "comp_rate_w1_w7": 60.44,
+            "comp_rate_w6_w7": 62.57,
+            "sack_rate_allowed": 7.92,
+            "def_pressure_rate": 28,
+            "wr1_target_share": 31.3,
+            "rb1_carry_share": 77.3,
+            "jev_mean_pressure_disruption_noul": 0.5689,
+            "jev_mean_coaching_edge_noul": 0.4274,
+            "jev_mean_pass_call_prob": 0.4311
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4316,
         "coach_sim_10k_fourth_down_wp": 0.0491,
         "scheme_fit_expected_home_pts": 26.67,
@@ -3242,7 +3502,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.92,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -3260,7 +3520,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 98.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -3276,14 +3536,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.2,
+            "spreadHomeDelta": -0.2,
+            "processFadeFlag": "Tony Pollard W7 3-TD box-score mirage (25 carries, 129 yds, 3 TDs at 35% DFS ownership vs CLE)",
+            "usageFloorBoostPlayer": "Chase Brown & Ja'Marr Chase (CIN positive script)",
+            "injuryBackfieldNote": "Fade public recency bias chasing Tony Pollard's 3-TD Week 7 outlier in a +10.0 road underdog script at Cincinnati.",
+            "radioTakeawaySummary": "Tony Pollard's 3-TD Week 7 explosion was flagged as textbook bad-process box-score chasing; do not pay a recency tax on TEN rushing in a double-digit road dog script."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "TEN": 13,
+          "CIN": 34
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6914,
+            "comp_rate_w1_w7": 51.75,
+            "comp_rate_w6_w7": 54.12,
+            "sack_rate_allowed": 5.02,
+            "def_pressure_rate": 23.2,
+            "wr1_target_share": 30,
+            "rb1_carry_share": 65.28,
+            "jev_mean_pressure_disruption_noul": 0.2673,
+            "jev_mean_coaching_edge_noul": 0.4332,
+            "jev_mean_pass_call_prob": 0.8633
+          },
+          "home": {
+            "early_down_pass_rate": 0.7369,
+            "comp_rate_w1_w7": 63.98,
+            "comp_rate_w6_w7": 64.87,
+            "sack_rate_allowed": 5.25,
+            "def_pressure_rate": 16.8,
+            "wr1_target_share": 28.44,
+            "rb1_carry_share": 59.11,
+            "jev_mean_pressure_disruption_noul": 0.3192,
+            "jev_mean_coaching_edge_noul": 0.5412,
+            "jev_mean_pass_call_prob": 0.886
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4357,
         "coach_sim_10k_fourth_down_wp": 0.0171,
         "scheme_fit_expected_home_pts": 24.07,
@@ -3572,7 +3868,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.94,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -3590,7 +3886,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 100.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -3606,14 +3902,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "LAC": 3,
+          "LAR": 58
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.4784,
+            "comp_rate_w1_w7": 44.65,
+            "comp_rate_w6_w7": 45.71,
+            "sack_rate_allowed": 8.74,
+            "def_pressure_rate": 27.5,
+            "wr1_target_share": 21.09,
+            "rb1_carry_share": 57.34,
+            "jev_mean_pressure_disruption_noul": 0.3921,
+            "jev_mean_coaching_edge_noul": 0.47,
+            "jev_mean_pass_call_prob": 0.5488
+          },
+          "home": {
+            "early_down_pass_rate": 0.5308,
+            "comp_rate_w1_w7": 60.38,
+            "comp_rate_w6_w7": 68.76,
+            "sack_rate_allowed": 4.74,
+            "def_pressure_rate": 29.6,
+            "wr1_target_share": 28.14,
+            "rb1_carry_share": 51.83,
+            "jev_mean_pressure_disruption_noul": 0.2999,
+            "jev_mean_coaching_edge_noul": 0.5473,
+            "jev_mean_pass_call_prob": 0.5468
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4503,
         "coach_sim_10k_fourth_down_wp": 0.0488,
         "scheme_fit_expected_home_pts": 20.68,
@@ -3963,7 +4295,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.38,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -3981,7 +4313,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 42.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -3997,14 +4329,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0.25,
+            "spreadHomeDelta": 0.2,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": "Bo Nix (62-yard W7 scramble + first-play seam to Courtland Sutton)",
+            "injuryBackfieldNote": "Bo Nix unlocked designed/scramble rushing equity in W7, giving Denver live backdoor/dog resilience at altitude.",
+            "radioTakeawaySummary": "Bo Nix finally activated his rushing legs (62-yard run in W7) alongside early vertical shots to Courtland Sutton."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "KC": 44,
+          "DEN": 10
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6585,
+            "comp_rate_w1_w7": 55.69,
+            "comp_rate_w6_w7": 57.09,
+            "sack_rate_allowed": 5.49,
+            "def_pressure_rate": 26.1,
+            "wr1_target_share": 26.04,
+            "rb1_carry_share": 70.28,
+            "jev_mean_pressure_disruption_noul": 0.4102,
+            "jev_mean_coaching_edge_noul": 0.5823,
+            "jev_mean_pass_call_prob": 0.8298
+          },
+          "home": {
+            "early_down_pass_rate": 0.5991,
+            "comp_rate_w1_w7": 50.32,
+            "comp_rate_w6_w7": 46.79,
+            "sack_rate_allowed": 5.48,
+            "def_pressure_rate": 35.7,
+            "wr1_target_share": 27.89,
+            "rb1_carry_share": 51.11,
+            "jev_mean_pressure_disruption_noul": 0.382,
+            "jev_mean_coaching_edge_noul": 0.4331,
+            "jev_mean_pass_call_prob": 0.7748
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4066,
         "coach_sim_10k_fourth_down_wp": 0.0486,
         "scheme_fit_expected_home_pts": 19.7,
@@ -4356,7 +4724,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.59,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -4374,7 +4742,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 64.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -4390,14 +4758,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "NE": 9,
+          "MIA": 13
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5983,
+            "comp_rate_w1_w7": 52.61,
+            "comp_rate_w6_w7": 58.21,
+            "sack_rate_allowed": 5.83,
+            "def_pressure_rate": 39.8,
+            "wr1_target_share": 18.78,
+            "rb1_carry_share": 44.87,
+            "jev_mean_pressure_disruption_noul": 0.3394,
+            "jev_mean_coaching_edge_noul": 0.469,
+            "jev_mean_pass_call_prob": 0.7194
+          },
+          "home": {
+            "early_down_pass_rate": 0.4844,
+            "comp_rate_w1_w7": 43.43,
+            "comp_rate_w6_w7": 48.43,
+            "sack_rate_allowed": 8.26,
+            "def_pressure_rate": 26.7,
+            "wr1_target_share": 22.8,
+            "rb1_carry_share": 50.75,
+            "jev_mean_pressure_disruption_noul": 0.3958,
+            "jev_mean_coaching_edge_noul": 0.5366,
+            "jev_mean_pass_call_prob": 0.5225
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.5799,
         "coach_sim_10k_fourth_down_wp": 0.0333,
         "scheme_fit_expected_home_pts": 24.59,
@@ -4710,7 +5114,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -4728,7 +5132,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -4744,6 +5148,14 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
@@ -5101,7 +5513,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 1.21,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -5119,7 +5531,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 127.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -5135,14 +5547,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0.3,
+            "spreadHomeDelta": 0.25,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": "Caleb Williams & Rome Odunze / D'Andre Swift",
+            "injuryBackfieldNote": "Caleb Williams graded as legitimate top-5 trajectory under Ben Johnson's motion/play-action crossers.",
+            "radioTakeawaySummary": "Caleb Williams continues his ascent into top-tier pocket + play-action efficiency, keeping Chicago live inside the number at Seattle."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "CHI": 23,
+          "SEA": 13
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6015,
+            "comp_rate_w1_w7": 55.77,
+            "comp_rate_w6_w7": 60.5,
+            "sack_rate_allowed": 6.34,
+            "def_pressure_rate": 40.8,
+            "wr1_target_share": 25,
+            "rb1_carry_share": 52.47,
+            "jev_mean_pressure_disruption_noul": 0.3041,
+            "jev_mean_coaching_edge_noul": 0.5083,
+            "jev_mean_pass_call_prob": 0.6998
+          },
+          "home": {
+            "early_down_pass_rate": 0.6626,
+            "comp_rate_w1_w7": 56.79,
+            "comp_rate_w6_w7": 53.39,
+            "sack_rate_allowed": 7.48,
+            "def_pressure_rate": 21.7,
+            "wr1_target_share": 36.06,
+            "rb1_carry_share": 52.73,
+            "jev_mean_pressure_disruption_noul": 0.4235,
+            "jev_mean_coaching_edge_noul": 0.4954,
+            "jev_mean_pass_call_prob": 0.9145
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.3937,
         "coach_sim_10k_fourth_down_wp": 0.0162,
         "scheme_fit_expected_home_pts": 20.11,
@@ -5512,7 +5960,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.73,
+            "receivingYardsAdjustment": 1.17,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -5530,7 +5978,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 88.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -5546,40 +5994,48 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.65,
+            "spreadHomeDelta": -0.15,
+            "processFadeFlag": "Josh Jacobs raw YPC box-score chase (pass-game checkdowns carried W7 fantasy line)",
+            "usageFloorBoostPlayer": "Christian Watson (WR1 81% W7 snaps) & Tucker Kraft (TE1 88% W7 snaps)",
+            "injuryBackfieldNote": "Jayden Reed (IR since W2) & Matthew Golden (W8 DNP - Shoulder) out; LaFleur/Campbell W7 20-17 mutual-conservative script reinforces UNDER 47.5.",
+            "radioTakeawaySummary": "GB-DET W7 produced 37 total points as LaFleur bypassed high-variance plays and leaned on controlled clock + pass-catching backfield touches."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
         "jev_full_game_spine_executed": true,
-        "jev_total_snaps": 166,
+        "jev_total_snaps": 168,
         "jev_final_score_spine": {
-          "CAR": 10,
-          "GB": 28
+          "CAR": 20,
+          "GB": 23
         },
         "jev_posterior_overrides": {
           "away": {
-            "early_down_pass_rate": 0.4531,
-            "comp_rate_w1_w7": 63.29,
-            "comp_rate_w6_w7": 63.29,
-            "sack_rate_allowed": 7.15,
-            "def_pressure_rate": 21.5,
-            "wr1_target_share": 21.6,
-            "rb1_carry_share": 67.7,
-            "jev_mean_pressure_disruption_noul": 0.39,
-            "jev_mean_coaching_edge_noul": 0.4463,
-            "jev_mean_pass_call_prob": 0.4321
+            "early_down_pass_rate": 0.6206,
+            "comp_rate_w1_w7": 51.05,
+            "comp_rate_w6_w7": 43.99,
+            "sack_rate_allowed": 7.57,
+            "def_pressure_rate": 36.2,
+            "wr1_target_share": 22.5,
+            "rb1_carry_share": 74.96,
+            "jev_mean_pressure_disruption_noul": 0.431,
+            "jev_mean_coaching_edge_noul": 0.4861,
+            "jev_mean_pass_call_prob": 0.6958
           },
           "home": {
-            "early_down_pass_rate": 0.7005,
-            "comp_rate_w1_w7": 63.6,
-            "comp_rate_w6_w7": 63.6,
-            "sack_rate_allowed": 6.55,
-            "def_pressure_rate": 21.5,
-            "wr1_target_share": 24.56,
-            "rb1_carry_share": 59.56,
-            "jev_mean_pressure_disruption_noul": 0.322,
-            "jev_mean_coaching_edge_noul": 0.5261,
-            "jev_mean_pass_call_prob": 0.8527
+            "early_down_pass_rate": 0.7038,
+            "comp_rate_w1_w7": 52.55,
+            "comp_rate_w6_w7": 51.5,
+            "sack_rate_allowed": 6.28,
+            "def_pressure_rate": 33.2,
+            "wr1_target_share": 30.3,
+            "rb1_carry_share": 41.55,
+            "jev_mean_pressure_disruption_noul": 0.4028,
+            "jev_mean_coaching_edge_noul": 0.4876,
+            "jev_mean_pass_call_prob": 0.9072
           }
         },
         "coach_sim_10k_win_prob_home": 0.5383,
@@ -5949,7 +6405,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.73,
+            "receivingYardsAdjustment": 1.17,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -5967,7 +6423,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 88.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -5983,40 +6439,48 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.65,
+            "spreadHomeDelta": -0.15,
+            "processFadeFlag": "Josh Jacobs raw YPC box-score chase (pass-game checkdowns carried W7 fantasy line)",
+            "usageFloorBoostPlayer": "Christian Watson (WR1 81% W7 snaps) & Tucker Kraft (TE1 88% W7 snaps)",
+            "injuryBackfieldNote": "Jayden Reed (IR since W2) & Matthew Golden (W8 DNP - Shoulder) out; LaFleur/Campbell W7 20-17 mutual-conservative script reinforces UNDER 47.5.",
+            "radioTakeawaySummary": "GB-DET W7 produced 37 total points as LaFleur bypassed high-variance plays and leaned on controlled clock + pass-catching backfield touches."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
         "jev_full_game_spine_executed": true,
-        "jev_total_snaps": 166,
+        "jev_total_snaps": 168,
         "jev_final_score_spine": {
-          "CAR": 10,
-          "GB": 28
+          "CAR": 20,
+          "GB": 23
         },
         "jev_posterior_overrides": {
           "away": {
-            "early_down_pass_rate": 0.4531,
-            "comp_rate_w1_w7": 63.29,
-            "comp_rate_w6_w7": 63.29,
-            "sack_rate_allowed": 7.15,
-            "def_pressure_rate": 21.5,
-            "wr1_target_share": 21.6,
-            "rb1_carry_share": 67.7,
-            "jev_mean_pressure_disruption_noul": 0.39,
-            "jev_mean_coaching_edge_noul": 0.4463,
-            "jev_mean_pass_call_prob": 0.4321
+            "early_down_pass_rate": 0.6206,
+            "comp_rate_w1_w7": 51.05,
+            "comp_rate_w6_w7": 43.99,
+            "sack_rate_allowed": 7.57,
+            "def_pressure_rate": 36.2,
+            "wr1_target_share": 22.5,
+            "rb1_carry_share": 74.96,
+            "jev_mean_pressure_disruption_noul": 0.431,
+            "jev_mean_coaching_edge_noul": 0.4861,
+            "jev_mean_pass_call_prob": 0.6958
           },
           "home": {
-            "early_down_pass_rate": 0.7005,
-            "comp_rate_w1_w7": 63.6,
-            "comp_rate_w6_w7": 63.6,
-            "sack_rate_allowed": 6.55,
-            "def_pressure_rate": 21.5,
-            "wr1_target_share": 24.56,
-            "rb1_carry_share": 59.56,
-            "jev_mean_pressure_disruption_noul": 0.322,
-            "jev_mean_coaching_edge_noul": 0.5261,
-            "jev_mean_pass_call_prob": 0.8527
+            "early_down_pass_rate": 0.7038,
+            "comp_rate_w1_w7": 52.55,
+            "comp_rate_w6_w7": 51.5,
+            "sack_rate_allowed": 6.28,
+            "def_pressure_rate": 33.2,
+            "wr1_target_share": 30.3,
+            "rb1_carry_share": 41.55,
+            "jev_mean_pressure_disruption_noul": 0.4028,
+            "jev_mean_coaching_edge_noul": 0.4876,
+            "jev_mean_pass_call_prob": 0.9072
           }
         },
         "coach_sim_10k_win_prob_home": 0.5383,
@@ -6322,7 +6786,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.45,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -6340,7 +6804,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 50.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -6356,14 +6820,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.45,
+            "spreadHomeDelta": -0.3,
+            "processFadeFlag": "Uncapped Baltimore offensive ceiling on Lamar Jackson's first game back from 3-week high-ankle sprain",
+            "usageFloorBoostPlayer": "Derrick Henry & James Cook",
+            "injuryBackfieldNote": "Lamar Jackson missed 3 consecutive games (high ankle sprain; CIN 35-13 whitewash over Tyler Huntley in W7) and returns at Highmark Stadium.",
+            "radioTakeawaySummary": "Baltimore was routed 35-13 in W7 without Lamar Jackson; even with Jackson returning in W8, post-ankle-sprain mobility warrants pass discipline on the full-game spread."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 161,
+        "jev_final_score_spine": {
+          "BAL": 27,
+          "BUF": 34
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5043,
+            "comp_rate_w1_w7": 56.07,
+            "comp_rate_w6_w7": 53.1,
+            "sack_rate_allowed": 7.31,
+            "def_pressure_rate": 30.9,
+            "wr1_target_share": 29.17,
+            "rb1_carry_share": 73.22,
+            "jev_mean_pressure_disruption_noul": 0.3455,
+            "jev_mean_coaching_edge_noul": 0.4841,
+            "jev_mean_pass_call_prob": 0.5914
+          },
+          "home": {
+            "early_down_pass_rate": 0.3463,
+            "comp_rate_w1_w7": 51.14,
+            "comp_rate_w6_w7": 58.99,
+            "sack_rate_allowed": 6.46,
+            "def_pressure_rate": 35,
+            "wr1_target_share": 18.96,
+            "rb1_carry_share": 75.58,
+            "jev_mean_pressure_disruption_noul": 0.367,
+            "jev_mean_coaching_edge_noul": 0.506,
+            "jev_mean_pass_call_prob": 0.348
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4554,
         "coach_sim_10k_fourth_down_wp": 0.0496,
         "scheme_fit_expected_home_pts": 26.4,
@@ -6669,7 +7169,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.45,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -6687,7 +7187,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 50.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -6703,14 +7203,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.45,
+            "spreadHomeDelta": -0.3,
+            "processFadeFlag": "Uncapped Baltimore offensive ceiling on Lamar Jackson's first game back from 3-week high-ankle sprain",
+            "usageFloorBoostPlayer": "Derrick Henry & James Cook",
+            "injuryBackfieldNote": "Lamar Jackson missed 3 consecutive games (high ankle sprain; CIN 35-13 whitewash over Tyler Huntley in W7) and returns at Highmark Stadium.",
+            "radioTakeawaySummary": "Baltimore was routed 35-13 in W7 without Lamar Jackson; even with Jackson returning in W8, post-ankle-sprain mobility warrants pass discipline on the full-game spread."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 161,
+        "jev_final_score_spine": {
+          "BAL": 27,
+          "BUF": 34
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5043,
+            "comp_rate_w1_w7": 56.07,
+            "comp_rate_w6_w7": 53.1,
+            "sack_rate_allowed": 7.31,
+            "def_pressure_rate": 30.9,
+            "wr1_target_share": 29.17,
+            "rb1_carry_share": 73.22,
+            "jev_mean_pressure_disruption_noul": 0.3455,
+            "jev_mean_coaching_edge_noul": 0.4841,
+            "jev_mean_pass_call_prob": 0.5914
+          },
+          "home": {
+            "early_down_pass_rate": 0.3463,
+            "comp_rate_w1_w7": 51.14,
+            "comp_rate_w6_w7": 58.99,
+            "sack_rate_allowed": 6.46,
+            "def_pressure_rate": 35,
+            "wr1_target_share": 18.96,
+            "rb1_carry_share": 75.58,
+            "jev_mean_pressure_disruption_noul": 0.367,
+            "jev_mean_coaching_edge_noul": 0.506,
+            "jev_mean_pass_call_prob": 0.348
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4554,
         "coach_sim_10k_fourth_down_wp": 0.0496,
         "scheme_fit_expected_home_pts": 26.4,
@@ -7016,7 +7552,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.92,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -7034,7 +7570,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 98.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -7050,14 +7586,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.2,
+            "spreadHomeDelta": -0.2,
+            "processFadeFlag": "Tony Pollard W7 3-TD box-score mirage (25 carries, 129 yds, 3 TDs at 35% DFS ownership vs CLE)",
+            "usageFloorBoostPlayer": "Chase Brown & Ja'Marr Chase (CIN positive script)",
+            "injuryBackfieldNote": "Fade public recency bias chasing Tony Pollard's 3-TD Week 7 outlier in a +10.0 road underdog script at Cincinnati.",
+            "radioTakeawaySummary": "Tony Pollard's 3-TD Week 7 explosion was flagged as textbook bad-process box-score chasing; do not pay a recency tax on TEN rushing in a double-digit road dog script."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "TEN": 13,
+          "CIN": 34
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6914,
+            "comp_rate_w1_w7": 51.75,
+            "comp_rate_w6_w7": 54.12,
+            "sack_rate_allowed": 5.02,
+            "def_pressure_rate": 23.2,
+            "wr1_target_share": 30,
+            "rb1_carry_share": 65.28,
+            "jev_mean_pressure_disruption_noul": 0.2673,
+            "jev_mean_coaching_edge_noul": 0.4332,
+            "jev_mean_pass_call_prob": 0.8633
+          },
+          "home": {
+            "early_down_pass_rate": 0.7369,
+            "comp_rate_w1_w7": 63.98,
+            "comp_rate_w6_w7": 64.87,
+            "sack_rate_allowed": 5.25,
+            "def_pressure_rate": 16.8,
+            "wr1_target_share": 28.44,
+            "rb1_carry_share": 59.11,
+            "jev_mean_pressure_disruption_noul": 0.3192,
+            "jev_mean_coaching_edge_noul": 0.5412,
+            "jev_mean_pass_call_prob": 0.886
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4357,
         "coach_sim_10k_fourth_down_wp": 0.0171,
         "scheme_fit_expected_home_pts": 24.07,
@@ -7364,7 +7936,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.92,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -7382,7 +7954,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 98.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -7398,14 +7970,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.2,
+            "spreadHomeDelta": -0.2,
+            "processFadeFlag": "Tony Pollard W7 3-TD box-score mirage (25 carries, 129 yds, 3 TDs at 35% DFS ownership vs CLE)",
+            "usageFloorBoostPlayer": "Chase Brown & Ja'Marr Chase (CIN positive script)",
+            "injuryBackfieldNote": "Fade public recency bias chasing Tony Pollard's 3-TD Week 7 outlier in a +10.0 road underdog script at Cincinnati.",
+            "radioTakeawaySummary": "Tony Pollard's 3-TD Week 7 explosion was flagged as textbook bad-process box-score chasing; do not pay a recency tax on TEN rushing in a double-digit road dog script."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "TEN": 13,
+          "CIN": 34
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6914,
+            "comp_rate_w1_w7": 51.75,
+            "comp_rate_w6_w7": 54.12,
+            "sack_rate_allowed": 5.02,
+            "def_pressure_rate": 23.2,
+            "wr1_target_share": 30,
+            "rb1_carry_share": 65.28,
+            "jev_mean_pressure_disruption_noul": 0.2673,
+            "jev_mean_coaching_edge_noul": 0.4332,
+            "jev_mean_pass_call_prob": 0.8633
+          },
+          "home": {
+            "early_down_pass_rate": 0.7369,
+            "comp_rate_w1_w7": 63.98,
+            "comp_rate_w6_w7": 64.87,
+            "sack_rate_allowed": 5.25,
+            "def_pressure_rate": 16.8,
+            "wr1_target_share": 28.44,
+            "rb1_carry_share": 59.11,
+            "jev_mean_pressure_disruption_noul": 0.3192,
+            "jev_mean_coaching_edge_noul": 0.5412,
+            "jev_mean_pass_call_prob": 0.886
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4357,
         "coach_sim_10k_fourth_down_wp": 0.0171,
         "scheme_fit_expected_home_pts": 24.07,
@@ -7767,7 +8375,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.565,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 7.83,
+            "receivingYardsAdjustment": 13.79,
             "alignmentFunnelTag": "SLOT_BLEED"
           },
           "sneak_and_base_defense_trap": {
@@ -7785,7 +8393,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 96.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -7801,14 +8409,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "ARI": 9,
+          "DAL": 9
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.531,
+            "comp_rate_w1_w7": 57.08,
+            "comp_rate_w6_w7": 53.62,
+            "sack_rate_allowed": 5.84,
+            "def_pressure_rate": 30.9,
+            "wr1_target_share": 31.62,
+            "rb1_carry_share": 41.23,
+            "jev_mean_pressure_disruption_noul": 0.3456,
+            "jev_mean_coaching_edge_noul": 0.484,
+            "jev_mean_pass_call_prob": 0.5773
+          },
+          "home": {
+            "early_down_pass_rate": 0.7499,
+            "comp_rate_w1_w7": 56.42,
+            "comp_rate_w6_w7": 52.96,
+            "sack_rate_allowed": 4.46,
+            "def_pressure_rate": 24.7,
+            "wr1_target_share": 32.94,
+            "rb1_carry_share": 64.05,
+            "jev_mean_pressure_disruption_noul": 0.3556,
+            "jev_mean_coaching_edge_noul": 0.5676,
+            "jev_mean_pass_call_prob": 0.8947
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.3095,
         "coach_sim_10k_fourth_down_wp": 0.0337,
         "scheme_fit_expected_home_pts": 23.47,
@@ -8169,7 +8813,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.565,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 7.83,
+            "receivingYardsAdjustment": 13.79,
             "alignmentFunnelTag": "SLOT_BLEED"
           },
           "sneak_and_base_defense_trap": {
@@ -8187,7 +8831,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 96.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -8203,14 +8847,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "ARI": 9,
+          "DAL": 9
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.531,
+            "comp_rate_w1_w7": 57.08,
+            "comp_rate_w6_w7": 53.62,
+            "sack_rate_allowed": 5.84,
+            "def_pressure_rate": 30.9,
+            "wr1_target_share": 31.62,
+            "rb1_carry_share": 41.23,
+            "jev_mean_pressure_disruption_noul": 0.3456,
+            "jev_mean_coaching_edge_noul": 0.484,
+            "jev_mean_pass_call_prob": 0.5773
+          },
+          "home": {
+            "early_down_pass_rate": 0.7499,
+            "comp_rate_w1_w7": 56.42,
+            "comp_rate_w6_w7": 52.96,
+            "sack_rate_allowed": 4.46,
+            "def_pressure_rate": 24.7,
+            "wr1_target_share": 32.94,
+            "rb1_carry_share": 64.05,
+            "jev_mean_pressure_disruption_noul": 0.3556,
+            "jev_mean_coaching_edge_noul": 0.5676,
+            "jev_mean_pass_call_prob": 0.8947
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.3095,
         "coach_sim_10k_fourth_down_wp": 0.0337,
         "scheme_fit_expected_home_pts": 23.47,
@@ -8499,7 +9179,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.86,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -8517,7 +9197,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 91.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -8533,14 +9213,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.85,
+            "spreadHomeDelta": -0.25,
+            "processFadeFlag": "Vikings 6-0 offensive box-score perception (offense 4th-fewest yards, 150 pass yds in W7)",
+            "usageFloorBoostPlayer": "Jordan Mason (MIN RB1, 55% W7 snaps, 15 carries / 68 yds)",
+            "injuryBackfieldNote": "Aaron Jones aggravated prior MCL in W7 (left early, 28% snaps, DNP early W8); Jordan Mason is the primary early-down carrier.",
+            "radioTakeawaySummary": "Minnesota's 6-0 record is driven by Brian Flores' championship-caliber defense (16-10 W7 win) while the offense remains stagnant; DET-GB W7 also stayed under (20-17)."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "MIN": 12,
+          "DET": 10
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6185,
+            "comp_rate_w1_w7": 49.18,
+            "comp_rate_w6_w7": 43.86,
+            "sack_rate_allowed": 8.5,
+            "def_pressure_rate": 71,
+            "wr1_target_share": 26.88,
+            "rb1_carry_share": 60.38,
+            "jev_mean_pressure_disruption_noul": 0.3982,
+            "jev_mean_coaching_edge_noul": 0.5278,
+            "jev_mean_pass_call_prob": 0.8409
+          },
+          "home": {
+            "early_down_pass_rate": 0.465,
+            "comp_rate_w1_w7": 60.44,
+            "comp_rate_w6_w7": 62.57,
+            "sack_rate_allowed": 7.92,
+            "def_pressure_rate": 28,
+            "wr1_target_share": 31.3,
+            "rb1_carry_share": 77.3,
+            "jev_mean_pressure_disruption_noul": 0.5689,
+            "jev_mean_coaching_edge_noul": 0.4274,
+            "jev_mean_pass_call_prob": 0.4311
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4316,
         "coach_sim_10k_fourth_down_wp": 0.0491,
         "scheme_fit_expected_home_pts": 26.67,
@@ -8829,7 +9545,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.86,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -8847,7 +9563,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 91.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -8863,14 +9579,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.85,
+            "spreadHomeDelta": -0.25,
+            "processFadeFlag": "Vikings 6-0 offensive box-score perception (offense 4th-fewest yards, 150 pass yds in W7)",
+            "usageFloorBoostPlayer": "Jordan Mason (MIN RB1, 55% W7 snaps, 15 carries / 68 yds)",
+            "injuryBackfieldNote": "Aaron Jones aggravated prior MCL in W7 (left early, 28% snaps, DNP early W8); Jordan Mason is the primary early-down carrier.",
+            "radioTakeawaySummary": "Minnesota's 6-0 record is driven by Brian Flores' championship-caliber defense (16-10 W7 win) while the offense remains stagnant; DET-GB W7 also stayed under (20-17)."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "MIN": 12,
+          "DET": 10
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6185,
+            "comp_rate_w1_w7": 49.18,
+            "comp_rate_w6_w7": 43.86,
+            "sack_rate_allowed": 8.5,
+            "def_pressure_rate": 71,
+            "wr1_target_share": 26.88,
+            "rb1_carry_share": 60.38,
+            "jev_mean_pressure_disruption_noul": 0.3982,
+            "jev_mean_coaching_edge_noul": 0.5278,
+            "jev_mean_pass_call_prob": 0.8409
+          },
+          "home": {
+            "early_down_pass_rate": 0.465,
+            "comp_rate_w1_w7": 60.44,
+            "comp_rate_w6_w7": 62.57,
+            "sack_rate_allowed": 7.92,
+            "def_pressure_rate": 28,
+            "wr1_target_share": 31.3,
+            "rb1_carry_share": 77.3,
+            "jev_mean_pressure_disruption_noul": 0.5689,
+            "jev_mean_coaching_edge_noul": 0.4274,
+            "jev_mean_pass_call_prob": 0.4311
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4316,
         "coach_sim_10k_fourth_down_wp": 0.0491,
         "scheme_fit_expected_home_pts": 26.67,
@@ -9222,7 +9974,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.61,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -9240,7 +9992,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 66.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -9256,14 +10008,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.35,
+            "spreadHomeDelta": 0.15,
+            "processFadeFlag": "Raiders downfield pocket attack (immobile pocket limiting rushing lanes)",
+            "usageFloorBoostPlayer": "Ashton Jeanty (8 rush / 15 yds + 8 rec / 61 yds / 1 TD = 21.6 PPR in W7)",
+            "injuryBackfieldNote": "Ashton Jeanty 8-target receiving funnel insulates his yardage floor regardless of rushing YPC.",
+            "radioTakeawaySummary": "Ashton Jeanty's elite receiving involvement (8 catches, 61 rec yds in W7) provides a high-floor checkdown outlet against NYJ's 4-man pass rush."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 155,
+        "jev_final_score_spine": {
+          "LV": 7,
+          "NYJ": 59
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6753,
+            "comp_rate_w1_w7": 55.23,
+            "comp_rate_w6_w7": 49.97,
+            "sack_rate_allowed": 5.78,
+            "def_pressure_rate": 26.7,
+            "wr1_target_share": 26.52,
+            "rb1_carry_share": 58.78,
+            "jev_mean_pressure_disruption_noul": 0.4328,
+            "jev_mean_coaching_edge_noul": 0.4914,
+            "jev_mean_pass_call_prob": 0.7247
+          },
+          "home": {
+            "early_down_pass_rate": 0.4534,
+            "comp_rate_w1_w7": 57.14,
+            "comp_rate_w6_w7": 58.95,
+            "sack_rate_allowed": 7.72,
+            "def_pressure_rate": 37.5,
+            "wr1_target_share": 30,
+            "rb1_carry_share": 52.28,
+            "jev_mean_pressure_disruption_noul": 0.3135,
+            "jev_mean_coaching_edge_noul": 0.5115,
+            "jev_mean_pass_call_prob": 0.4326
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4372,
         "coach_sim_10k_fourth_down_wp": 0.0162,
         "scheme_fit_expected_home_pts": 20.9,
@@ -9615,7 +10403,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.61,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -9633,7 +10421,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 66.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -9649,14 +10437,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": -0.35,
+            "spreadHomeDelta": 0.15,
+            "processFadeFlag": "Raiders downfield pocket attack (immobile pocket limiting rushing lanes)",
+            "usageFloorBoostPlayer": "Ashton Jeanty (8 rush / 15 yds + 8 rec / 61 yds / 1 TD = 21.6 PPR in W7)",
+            "injuryBackfieldNote": "Ashton Jeanty 8-target receiving funnel insulates his yardage floor regardless of rushing YPC.",
+            "radioTakeawaySummary": "Ashton Jeanty's elite receiving involvement (8 catches, 61 rec yds in W7) provides a high-floor checkdown outlet against NYJ's 4-man pass rush."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 155,
+        "jev_final_score_spine": {
+          "LV": 7,
+          "NYJ": 59
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6753,
+            "comp_rate_w1_w7": 55.23,
+            "comp_rate_w6_w7": 49.97,
+            "sack_rate_allowed": 5.78,
+            "def_pressure_rate": 26.7,
+            "wr1_target_share": 26.52,
+            "rb1_carry_share": 58.78,
+            "jev_mean_pressure_disruption_noul": 0.4328,
+            "jev_mean_coaching_edge_noul": 0.4914,
+            "jev_mean_pass_call_prob": 0.7247
+          },
+          "home": {
+            "early_down_pass_rate": 0.4534,
+            "comp_rate_w1_w7": 57.14,
+            "comp_rate_w6_w7": 58.95,
+            "sack_rate_allowed": 7.72,
+            "def_pressure_rate": 37.5,
+            "wr1_target_share": 30,
+            "rb1_carry_share": 52.28,
+            "jev_mean_pressure_disruption_noul": 0.3135,
+            "jev_mean_coaching_edge_noul": 0.5115,
+            "jev_mean_pass_call_prob": 0.4326
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4372,
         "coach_sim_10k_fourth_down_wp": 0.0162,
         "scheme_fit_expected_home_pts": 20.9,
@@ -10008,7 +10832,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.41,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -10026,7 +10850,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 45.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -10042,14 +10866,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "CLE": 20,
+          "PIT": 24
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6838,
+            "comp_rate_w1_w7": 49.25,
+            "comp_rate_w6_w7": 51.87,
+            "sack_rate_allowed": 8.42,
+            "def_pressure_rate": 24.1,
+            "wr1_target_share": 22.52,
+            "rb1_carry_share": 57.03,
+            "jev_mean_pressure_disruption_noul": 0.3437,
+            "jev_mean_coaching_edge_noul": 0.4936,
+            "jev_mean_pass_call_prob": 0.8464
+          },
+          "home": {
+            "early_down_pass_rate": 0.4698,
+            "comp_rate_w1_w7": 52.03,
+            "comp_rate_w6_w7": 57.89,
+            "sack_rate_allowed": 7.73,
+            "def_pressure_rate": 27,
+            "wr1_target_share": 28.5,
+            "rb1_carry_share": 64.12,
+            "jev_mean_pressure_disruption_noul": 0.3963,
+            "jev_mean_coaching_edge_noul": 0.5275,
+            "jev_mean_pass_call_prob": 0.3675
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4536,
         "coach_sim_10k_fourth_down_wp": 0.0175,
         "scheme_fit_expected_home_pts": 19.58,
@@ -10399,7 +11259,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.41,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -10417,7 +11277,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 45.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -10433,14 +11293,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "CLE": 20,
+          "PIT": 24
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6838,
+            "comp_rate_w1_w7": 49.25,
+            "comp_rate_w6_w7": 51.87,
+            "sack_rate_allowed": 8.42,
+            "def_pressure_rate": 24.1,
+            "wr1_target_share": 22.52,
+            "rb1_carry_share": 57.03,
+            "jev_mean_pressure_disruption_noul": 0.3437,
+            "jev_mean_coaching_edge_noul": 0.4936,
+            "jev_mean_pass_call_prob": 0.8464
+          },
+          "home": {
+            "early_down_pass_rate": 0.4698,
+            "comp_rate_w1_w7": 52.03,
+            "comp_rate_w6_w7": 57.89,
+            "sack_rate_allowed": 7.73,
+            "def_pressure_rate": 27,
+            "wr1_target_share": 28.5,
+            "rb1_carry_share": 64.12,
+            "jev_mean_pressure_disruption_noul": 0.3963,
+            "jev_mean_coaching_edge_noul": 0.5275,
+            "jev_mean_pass_call_prob": 0.3675
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4536,
         "coach_sim_10k_fourth_down_wp": 0.0175,
         "scheme_fit_expected_home_pts": 19.58,
@@ -10790,7 +11686,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -10808,7 +11704,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -10824,14 +11720,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 167,
+        "jev_final_score_spine": {
+          "ATL": 33,
+          "TB": 3
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.387,
+            "comp_rate_w1_w7": 53.37,
+            "comp_rate_w6_w7": 55.04,
+            "sack_rate_allowed": 7.53,
+            "def_pressure_rate": 24.7,
+            "wr1_target_share": 28.01,
+            "rb1_carry_share": 69.13,
+            "jev_mean_pressure_disruption_noul": 0.4006,
+            "jev_mean_coaching_edge_noul": 0.5095,
+            "jev_mean_pass_call_prob": 0.433
+          },
+          "home": {
+            "early_down_pass_rate": 0.6456,
+            "comp_rate_w1_w7": 47.05,
+            "comp_rate_w6_w7": 43.76,
+            "sack_rate_allowed": 8.45,
+            "def_pressure_rate": 40.6,
+            "wr1_target_share": 29.22,
+            "rb1_carry_share": 59.11,
+            "jev_mean_pressure_disruption_noul": 0.4065,
+            "jev_mean_coaching_edge_noul": 0.4545,
+            "jev_mean_pass_call_prob": 0.883
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4298,
         "coach_sim_10k_fourth_down_wp": 0.0476,
         "scheme_fit_expected_home_pts": 23.47,
@@ -11181,7 +12113,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -11199,7 +12131,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -11215,14 +12147,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 167,
+        "jev_final_score_spine": {
+          "ATL": 33,
+          "TB": 3
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.387,
+            "comp_rate_w1_w7": 53.37,
+            "comp_rate_w6_w7": 55.04,
+            "sack_rate_allowed": 7.53,
+            "def_pressure_rate": 24.7,
+            "wr1_target_share": 28.01,
+            "rb1_carry_share": 69.13,
+            "jev_mean_pressure_disruption_noul": 0.4006,
+            "jev_mean_coaching_edge_noul": 0.5095,
+            "jev_mean_pass_call_prob": 0.433
+          },
+          "home": {
+            "early_down_pass_rate": 0.6456,
+            "comp_rate_w1_w7": 47.05,
+            "comp_rate_w6_w7": 43.76,
+            "sack_rate_allowed": 8.45,
+            "def_pressure_rate": 40.6,
+            "wr1_target_share": 29.22,
+            "rb1_carry_share": 59.11,
+            "jev_mean_pressure_disruption_noul": 0.4065,
+            "jev_mean_coaching_edge_noul": 0.4545,
+            "jev_mean_pass_call_prob": 0.883
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4298,
         "coach_sim_10k_fourth_down_wp": 0.0476,
         "scheme_fit_expected_home_pts": 23.47,
@@ -11535,7 +12503,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1.6,
-            "receivingYardsAdjustment": 9.52,
+            "receivingYardsAdjustment": 12.42,
             "alignmentFunnelTag": "PERIMETER_BLEED"
           },
           "sneak_and_base_defense_trap": {
@@ -11553,7 +12521,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 72.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -11569,14 +12537,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 166,
+        "jev_final_score_spine": {
+          "IND": 3,
+          "JAX": 41
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5312,
+            "comp_rate_w1_w7": 52.14,
+            "comp_rate_w6_w7": 44.06,
+            "sack_rate_allowed": 7.69,
+            "def_pressure_rate": 22,
+            "wr1_target_share": 19.44,
+            "rb1_carry_share": 68.37,
+            "jev_mean_pressure_disruption_noul": 0.3992,
+            "jev_mean_coaching_edge_noul": 0.4408,
+            "jev_mean_pass_call_prob": 0.65
+          },
+          "home": {
+            "early_down_pass_rate": 0.3615,
+            "comp_rate_w1_w7": 55.99,
+            "comp_rate_w6_w7": 55.99,
+            "sack_rate_allowed": 5.27,
+            "def_pressure_rate": 30.6,
+            "wr1_target_share": 29.82,
+            "rb1_carry_share": 55.66,
+            "jev_mean_pressure_disruption_noul": 0.2817,
+            "jev_mean_coaching_edge_noul": 0.5449,
+            "jev_mean_pass_call_prob": 0.2791
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.286,
         "coach_sim_10k_fourth_down_wp": 0.0326,
         "scheme_fit_expected_home_pts": 23.25,
@@ -11889,7 +12893,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1.6,
-            "receivingYardsAdjustment": 9.52,
+            "receivingYardsAdjustment": 12.42,
             "alignmentFunnelTag": "PERIMETER_BLEED"
           },
           "sneak_and_base_defense_trap": {
@@ -11907,7 +12911,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 72.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -11923,14 +12927,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 166,
+        "jev_final_score_spine": {
+          "IND": 3,
+          "JAX": 41
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5312,
+            "comp_rate_w1_w7": 52.14,
+            "comp_rate_w6_w7": 44.06,
+            "sack_rate_allowed": 7.69,
+            "def_pressure_rate": 22,
+            "wr1_target_share": 19.44,
+            "rb1_carry_share": 68.37,
+            "jev_mean_pressure_disruption_noul": 0.3992,
+            "jev_mean_coaching_edge_noul": 0.4408,
+            "jev_mean_pass_call_prob": 0.65
+          },
+          "home": {
+            "early_down_pass_rate": 0.3615,
+            "comp_rate_w1_w7": 55.99,
+            "comp_rate_w6_w7": 55.99,
+            "sack_rate_allowed": 5.27,
+            "def_pressure_rate": 30.6,
+            "wr1_target_share": 29.82,
+            "rb1_carry_share": 55.66,
+            "jev_mean_pressure_disruption_noul": 0.2817,
+            "jev_mean_coaching_edge_noul": 0.5449,
+            "jev_mean_pass_call_prob": 0.2791
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.286,
         "coach_sim_10k_fourth_down_wp": 0.0326,
         "scheme_fit_expected_home_pts": 23.25,
@@ -12216,7 +13256,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.94,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -12234,7 +13274,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 100.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -12250,14 +13290,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "LAC": 3,
+          "LAR": 58
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.4784,
+            "comp_rate_w1_w7": 44.65,
+            "comp_rate_w6_w7": 45.71,
+            "sack_rate_allowed": 8.74,
+            "def_pressure_rate": 27.5,
+            "wr1_target_share": 21.09,
+            "rb1_carry_share": 57.34,
+            "jev_mean_pressure_disruption_noul": 0.3921,
+            "jev_mean_coaching_edge_noul": 0.47,
+            "jev_mean_pass_call_prob": 0.5488
+          },
+          "home": {
+            "early_down_pass_rate": 0.5308,
+            "comp_rate_w1_w7": 60.38,
+            "comp_rate_w6_w7": 68.76,
+            "sack_rate_allowed": 4.74,
+            "def_pressure_rate": 29.6,
+            "wr1_target_share": 28.14,
+            "rb1_carry_share": 51.83,
+            "jev_mean_pressure_disruption_noul": 0.2999,
+            "jev_mean_coaching_edge_noul": 0.5473,
+            "jev_mean_pass_call_prob": 0.5468
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4503,
         "coach_sim_10k_fourth_down_wp": 0.0488,
         "scheme_fit_expected_home_pts": 20.68,
@@ -12543,7 +13619,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.94,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -12561,7 +13637,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 100.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -12577,14 +13653,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "LAC": 3,
+          "LAR": 58
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.4784,
+            "comp_rate_w1_w7": 44.65,
+            "comp_rate_w6_w7": 45.71,
+            "sack_rate_allowed": 8.74,
+            "def_pressure_rate": 27.5,
+            "wr1_target_share": 21.09,
+            "rb1_carry_share": 57.34,
+            "jev_mean_pressure_disruption_noul": 0.3921,
+            "jev_mean_coaching_edge_noul": 0.47,
+            "jev_mean_pass_call_prob": 0.5488
+          },
+          "home": {
+            "early_down_pass_rate": 0.5308,
+            "comp_rate_w1_w7": 60.38,
+            "comp_rate_w6_w7": 68.76,
+            "sack_rate_allowed": 4.74,
+            "def_pressure_rate": 29.6,
+            "wr1_target_share": 28.14,
+            "rb1_carry_share": 51.83,
+            "jev_mean_pressure_disruption_noul": 0.2999,
+            "jev_mean_coaching_edge_noul": 0.5473,
+            "jev_mean_pass_call_prob": 0.5468
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4503,
         "coach_sim_10k_fourth_down_wp": 0.0488,
         "scheme_fit_expected_home_pts": 20.68,
@@ -12934,7 +14046,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.38,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -12952,7 +14064,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 42.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -12968,14 +14080,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0.25,
+            "spreadHomeDelta": 0.2,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": "Bo Nix (62-yard W7 scramble + first-play seam to Courtland Sutton)",
+            "injuryBackfieldNote": "Bo Nix unlocked designed/scramble rushing equity in W7, giving Denver live backdoor/dog resilience at altitude.",
+            "radioTakeawaySummary": "Bo Nix finally activated his rushing legs (62-yard run in W7) alongside early vertical shots to Courtland Sutton."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "KC": 44,
+          "DEN": 10
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6585,
+            "comp_rate_w1_w7": 55.69,
+            "comp_rate_w6_w7": 57.09,
+            "sack_rate_allowed": 5.49,
+            "def_pressure_rate": 26.1,
+            "wr1_target_share": 26.04,
+            "rb1_carry_share": 70.28,
+            "jev_mean_pressure_disruption_noul": 0.4102,
+            "jev_mean_coaching_edge_noul": 0.5823,
+            "jev_mean_pass_call_prob": 0.8298
+          },
+          "home": {
+            "early_down_pass_rate": 0.5991,
+            "comp_rate_w1_w7": 50.32,
+            "comp_rate_w6_w7": 46.79,
+            "sack_rate_allowed": 5.48,
+            "def_pressure_rate": 35.7,
+            "wr1_target_share": 27.89,
+            "rb1_carry_share": 51.11,
+            "jev_mean_pressure_disruption_noul": 0.382,
+            "jev_mean_coaching_edge_noul": 0.4331,
+            "jev_mean_pass_call_prob": 0.7748
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4066,
         "coach_sim_10k_fourth_down_wp": 0.0486,
         "scheme_fit_expected_home_pts": 19.7,
@@ -13327,7 +14475,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.38,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -13345,7 +14493,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 42.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -13361,14 +14509,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0.25,
+            "spreadHomeDelta": 0.2,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": "Bo Nix (62-yard W7 scramble + first-play seam to Courtland Sutton)",
+            "injuryBackfieldNote": "Bo Nix unlocked designed/scramble rushing equity in W7, giving Denver live backdoor/dog resilience at altitude.",
+            "radioTakeawaySummary": "Bo Nix finally activated his rushing legs (62-yard run in W7) alongside early vertical shots to Courtland Sutton."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "KC": 44,
+          "DEN": 10
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6585,
+            "comp_rate_w1_w7": 55.69,
+            "comp_rate_w6_w7": 57.09,
+            "sack_rate_allowed": 5.49,
+            "def_pressure_rate": 26.1,
+            "wr1_target_share": 26.04,
+            "rb1_carry_share": 70.28,
+            "jev_mean_pressure_disruption_noul": 0.4102,
+            "jev_mean_coaching_edge_noul": 0.5823,
+            "jev_mean_pass_call_prob": 0.8298
+          },
+          "home": {
+            "early_down_pass_rate": 0.5991,
+            "comp_rate_w1_w7": 50.32,
+            "comp_rate_w6_w7": 46.79,
+            "sack_rate_allowed": 5.48,
+            "def_pressure_rate": 35.7,
+            "wr1_target_share": 27.89,
+            "rb1_carry_share": 51.11,
+            "jev_mean_pressure_disruption_noul": 0.382,
+            "jev_mean_coaching_edge_noul": 0.4331,
+            "jev_mean_pass_call_prob": 0.7748
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.4066,
         "coach_sim_10k_fourth_down_wp": 0.0486,
         "scheme_fit_expected_home_pts": 19.7,
@@ -13720,7 +14904,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.59,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -13738,7 +14922,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 64.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -13754,14 +14938,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "NE": 9,
+          "MIA": 13
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5983,
+            "comp_rate_w1_w7": 52.61,
+            "comp_rate_w6_w7": 58.21,
+            "sack_rate_allowed": 5.83,
+            "def_pressure_rate": 39.8,
+            "wr1_target_share": 18.78,
+            "rb1_carry_share": 44.87,
+            "jev_mean_pressure_disruption_noul": 0.3394,
+            "jev_mean_coaching_edge_noul": 0.469,
+            "jev_mean_pass_call_prob": 0.7194
+          },
+          "home": {
+            "early_down_pass_rate": 0.4844,
+            "comp_rate_w1_w7": 43.43,
+            "comp_rate_w6_w7": 48.43,
+            "sack_rate_allowed": 8.26,
+            "def_pressure_rate": 26.7,
+            "wr1_target_share": 22.8,
+            "rb1_carry_share": 50.75,
+            "jev_mean_pressure_disruption_noul": 0.3958,
+            "jev_mean_coaching_edge_noul": 0.5366,
+            "jev_mean_pass_call_prob": 0.5225
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.5799,
         "coach_sim_10k_fourth_down_wp": 0.0333,
         "scheme_fit_expected_home_pts": 24.59,
@@ -14111,7 +15331,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.59,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -14129,7 +15349,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 64.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -14145,14 +15365,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "NE": 9,
+          "MIA": 13
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.5983,
+            "comp_rate_w1_w7": 52.61,
+            "comp_rate_w6_w7": 58.21,
+            "sack_rate_allowed": 5.83,
+            "def_pressure_rate": 39.8,
+            "wr1_target_share": 18.78,
+            "rb1_carry_share": 44.87,
+            "jev_mean_pressure_disruption_noul": 0.3394,
+            "jev_mean_coaching_edge_noul": 0.469,
+            "jev_mean_pass_call_prob": 0.7194
+          },
+          "home": {
+            "early_down_pass_rate": 0.4844,
+            "comp_rate_w1_w7": 43.43,
+            "comp_rate_w6_w7": 48.43,
+            "sack_rate_allowed": 8.26,
+            "def_pressure_rate": 26.7,
+            "wr1_target_share": 22.8,
+            "rb1_carry_share": 50.75,
+            "jev_mean_pressure_disruption_noul": 0.3958,
+            "jev_mean_coaching_edge_noul": 0.5366,
+            "jev_mean_pass_call_prob": 0.5225
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.5799,
         "coach_sim_10k_fourth_down_wp": 0.0333,
         "scheme_fit_expected_home_pts": 24.59,
@@ -14465,7 +15721,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -14483,7 +15739,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -14499,6 +15755,14 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
@@ -14819,7 +16083,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -14837,7 +16101,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -14853,6 +16117,14 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
@@ -15173,7 +16445,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 0.37,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -15191,7 +16463,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 41.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -15207,6 +16479,14 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0,
+            "spreadHomeDelta": 0,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": null,
+            "injuryBackfieldNote": null,
+            "radioTakeawaySummary": "Process-over-results discipline enforced across Week 8."
           }
         }
       },
@@ -15564,7 +16844,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 1.21,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -15582,7 +16862,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 127.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -15598,14 +16878,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0.3,
+            "spreadHomeDelta": 0.25,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": "Caleb Williams & Rome Odunze / D'Andre Swift",
+            "injuryBackfieldNote": "Caleb Williams graded as legitimate top-5 trajectory under Ben Johnson's motion/play-action crossers.",
+            "radioTakeawaySummary": "Caleb Williams continues his ascent into top-tier pocket + play-action efficiency, keeping Chicago live inside the number at Seattle."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "CHI": 23,
+          "SEA": 13
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6015,
+            "comp_rate_w1_w7": 55.77,
+            "comp_rate_w6_w7": 60.5,
+            "sack_rate_allowed": 6.34,
+            "def_pressure_rate": 40.8,
+            "wr1_target_share": 25,
+            "rb1_carry_share": 52.47,
+            "jev_mean_pressure_disruption_noul": 0.3041,
+            "jev_mean_coaching_edge_noul": 0.5083,
+            "jev_mean_pass_call_prob": 0.6998
+          },
+          "home": {
+            "early_down_pass_rate": 0.6626,
+            "comp_rate_w1_w7": 56.79,
+            "comp_rate_w6_w7": 53.39,
+            "sack_rate_allowed": 7.48,
+            "def_pressure_rate": 21.7,
+            "wr1_target_share": 36.06,
+            "rb1_carry_share": 52.73,
+            "jev_mean_pressure_disruption_noul": 0.4235,
+            "jev_mean_coaching_edge_noul": 0.4954,
+            "jev_mean_pass_call_prob": 0.9145
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.3937,
         "coach_sim_10k_fourth_down_wp": 0.0162,
         "scheme_fit_expected_home_pts": 20.11,
@@ -15957,7 +17273,7 @@
           "wr_alignment_slot_outside": {
             "slotRatio": 1.037,
             "outsideRatio": 1,
-            "receivingYardsAdjustment": 0.51,
+            "receivingYardsAdjustment": 1.21,
             "alignmentFunnelTag": "BALANCED"
           },
           "sneak_and_base_defense_trap": {
@@ -15975,7 +17291,7 @@
           "altitude_reliability_shrinkage": {
             "position": "WR",
             "reliabilityWeight": 0.356,
-            "shrunkMetric": 56.772,
+            "shrunkMetric": 127.772,
             "xFpOpportunityScore": 16.68
           },
           "tackle_prop_and_referee_crew": {
@@ -15991,14 +17307,50 @@
             "scriptEdgePtsHome": 0.28,
             "stopSuppressionPts": 0.06,
             "scriptStopVerdict": "PASS"
+          },
+          "siriusxm_radio_reaction_signals": {
+            "totalPointsDelta": 0.3,
+            "spreadHomeDelta": 0.25,
+            "processFadeFlag": null,
+            "usageFloorBoostPlayer": "Caleb Williams & Rome Odunze / D'Andre Swift",
+            "injuryBackfieldNote": "Caleb Williams graded as legitimate top-5 trajectory under Ben Johnson's motion/play-action crossers.",
+            "radioTakeawaySummary": "Caleb Williams continues his ascent into top-tier pocket + play-action efficiency, keeping Chicago live inside the number at Seattle."
           }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
-        "jev_full_game_spine_executed": false,
-        "jev_total_snaps": 0,
-        "jev_final_score_spine": null,
-        "jev_posterior_overrides": null,
+        "jev_full_game_spine_executed": true,
+        "jev_total_snaps": 168,
+        "jev_final_score_spine": {
+          "CHI": 23,
+          "SEA": 13
+        },
+        "jev_posterior_overrides": {
+          "away": {
+            "early_down_pass_rate": 0.6015,
+            "comp_rate_w1_w7": 55.77,
+            "comp_rate_w6_w7": 60.5,
+            "sack_rate_allowed": 6.34,
+            "def_pressure_rate": 40.8,
+            "wr1_target_share": 25,
+            "rb1_carry_share": 52.47,
+            "jev_mean_pressure_disruption_noul": 0.3041,
+            "jev_mean_coaching_edge_noul": 0.5083,
+            "jev_mean_pass_call_prob": 0.6998
+          },
+          "home": {
+            "early_down_pass_rate": 0.6626,
+            "comp_rate_w1_w7": 56.79,
+            "comp_rate_w6_w7": 53.39,
+            "sack_rate_allowed": 7.48,
+            "def_pressure_rate": 21.7,
+            "wr1_target_share": 36.06,
+            "rb1_carry_share": 52.73,
+            "jev_mean_pressure_disruption_noul": 0.4235,
+            "jev_mean_coaching_edge_noul": 0.4954,
+            "jev_mean_pass_call_prob": 0.9145
+          }
+        },
         "coach_sim_10k_win_prob_home": 0.3937,
         "coach_sim_10k_fourth_down_wp": 0.0162,
         "scheme_fit_expected_home_pts": 20.11,

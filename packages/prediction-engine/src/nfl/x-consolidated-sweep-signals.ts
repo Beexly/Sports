@@ -430,3 +430,108 @@ export function computeFirstQuarterScriptStopMath(
     scriptStopVerdict,
   };
 }
+
+// ============================================================================
+// 8. SiriusXM Week 7 Reaction Monday (Jeff Mans / Elite Sports) Process & Injury Overlay
+// ============================================================================
+
+export interface SiriusXmRadioReactionInput {
+  readonly away: string;
+  readonly home: string;
+}
+
+export interface SiriusXmRadioReactionResult {
+  readonly totalPointsDelta: number;
+  readonly spreadHomeDelta: number;
+  readonly processFadeFlag: string | null;
+  readonly usageFloorBoostPlayer: string | null;
+  readonly injuryBackfieldNote: string | null;
+  readonly radioTakeawaySummary: string;
+}
+
+export function evaluateSiriusXmRadioReactionSignals(
+  input: SiriusXmRadioReactionInput,
+): SiriusXmRadioReactionResult {
+  const pair = `${input.away}@${input.home}`;
+  switch (pair) {
+    case "CAR@GB":
+      return {
+        totalPointsDelta: -0.65,
+        spreadHomeDelta: -0.15,
+        processFadeFlag: "Josh Jacobs raw YPC box-score chase (pass-game checkdowns carried W7 fantasy line)",
+        usageFloorBoostPlayer: "Christian Watson (WR1 81% W7 snaps) & Tucker Kraft (TE1 88% W7 snaps)",
+        injuryBackfieldNote: "Jayden Reed (IR since W2) & Matthew Golden (W8 DNP - Shoulder) out; LaFleur/Campbell W7 20-17 mutual-conservative script reinforces UNDER 47.5.",
+        radioTakeawaySummary:
+          "GB-DET W7 produced 37 total points as LaFleur bypassed high-variance plays and leaned on controlled clock + pass-catching backfield touches.",
+      };
+    case "MIN@DET":
+      return {
+        totalPointsDelta: -0.85,
+        spreadHomeDelta: -0.25,
+        processFadeFlag: "Vikings 6-0 offensive box-score perception (offense 4th-fewest yards, 150 pass yds in W7)",
+        usageFloorBoostPlayer: "Jordan Mason (MIN RB1, 55% W7 snaps, 15 carries / 68 yds)",
+        injuryBackfieldNote: "Aaron Jones aggravated prior MCL in W7 (left early, 28% snaps, DNP early W8); Jordan Mason is the primary early-down carrier.",
+        radioTakeawaySummary:
+          "Minnesota's 6-0 record is driven by Brian Flores' championship-caliber defense (16-10 W7 win) while the offense remains stagnant; DET-GB W7 also stayed under (20-17).",
+      };
+    case "LV@NYJ":
+      return {
+        totalPointsDelta: -0.35,
+        spreadHomeDelta: 0.15,
+        processFadeFlag: "Raiders downfield pocket attack (immobile pocket limiting rushing lanes)",
+        usageFloorBoostPlayer: "Ashton Jeanty (8 rush / 15 yds + 8 rec / 61 yds / 1 TD = 21.6 PPR in W7)",
+        injuryBackfieldNote: "Ashton Jeanty 8-target receiving funnel insulates his yardage floor regardless of rushing YPC.",
+        radioTakeawaySummary:
+          "Ashton Jeanty's elite receiving involvement (8 catches, 61 rec yds in W7) provides a high-floor checkdown outlet against NYJ's 4-man pass rush.",
+      };
+    case "TEN@CIN":
+      return {
+        totalPointsDelta: -0.2,
+        spreadHomeDelta: -0.2,
+        processFadeFlag: "Tony Pollard W7 3-TD box-score mirage (25 carries, 129 yds, 3 TDs at 35% DFS ownership vs CLE)",
+        usageFloorBoostPlayer: "Chase Brown & Ja'Marr Chase (CIN positive script)",
+        injuryBackfieldNote: "Fade public recency bias chasing Tony Pollard's 3-TD Week 7 outlier in a +10.0 road underdog script at Cincinnati.",
+        radioTakeawaySummary:
+          "Tony Pollard's 3-TD Week 7 explosion was flagged as textbook bad-process box-score chasing; do not pay a recency tax on TEN rushing in a double-digit road dog script.",
+      };
+    case "BAL@BUF":
+      return {
+        totalPointsDelta: -0.45,
+        spreadHomeDelta: -0.3,
+        processFadeFlag: "Uncapped Baltimore offensive ceiling on Lamar Jackson's first game back from 3-week high-ankle sprain",
+        usageFloorBoostPlayer: "Derrick Henry & James Cook",
+        injuryBackfieldNote: "Lamar Jackson missed 3 consecutive games (high ankle sprain; CIN 35-13 whitewash over Tyler Huntley in W7) and returns at Highmark Stadium.",
+        radioTakeawaySummary:
+          "Baltimore was routed 35-13 in W7 without Lamar Jackson; even with Jackson returning in W8, post-ankle-sprain mobility warrants pass discipline on the full-game spread.",
+      };
+    case "KC@DEN":
+      return {
+        totalPointsDelta: 0.25,
+        spreadHomeDelta: 0.2,
+        processFadeFlag: null,
+        usageFloorBoostPlayer: "Bo Nix (62-yard W7 scramble + first-play seam to Courtland Sutton)",
+        injuryBackfieldNote: "Bo Nix unlocked designed/scramble rushing equity in W7, giving Denver live backdoor/dog resilience at altitude.",
+        radioTakeawaySummary:
+          "Bo Nix finally activated his rushing legs (62-yard run in W7) alongside early vertical shots to Courtland Sutton.",
+      };
+    case "CHI@SEA":
+      return {
+        totalPointsDelta: 0.3,
+        spreadHomeDelta: 0.25,
+        processFadeFlag: null,
+        usageFloorBoostPlayer: "Caleb Williams & Rome Odunze / D'Andre Swift",
+        injuryBackfieldNote: "Caleb Williams graded as legitimate top-5 trajectory under Ben Johnson's motion/play-action crossers.",
+        radioTakeawaySummary:
+          "Caleb Williams continues his ascent into top-tier pocket + play-action efficiency, keeping Chicago live inside the number at Seattle.",
+      };
+    default:
+      return {
+        totalPointsDelta: 0.0,
+        spreadHomeDelta: 0.0,
+        processFadeFlag: null,
+        usageFloorBoostPlayer: null,
+        injuryBackfieldNote: null,
+        radioTakeawaySummary: "Process-over-results discipline enforced across Week 8.",
+      };
+  }
+}

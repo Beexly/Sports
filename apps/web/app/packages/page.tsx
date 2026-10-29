@@ -35,8 +35,8 @@ export default function PackagesPage(): JSX.Element {
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                 Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know exactly what to bet and why in 30 seconds.
               </h1>
-              <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-100">
-                No monthly subscription required and zero confusing math jargon. We break down every NFL game snap-by-snap to find where the Vegas line is off — then explain in plain English{" "}
+              <p className="mt-4 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                No monthly subscription required and zero confusing math jargon. We break down every NFL game play-by-play to find where the Vegas line is off — then explain in plain English{" "}
                 <strong className="text-amber-300 font-semibold">what to bet and why</strong>.
               </p>
             </div>
@@ -58,7 +58,7 @@ export default function PackagesPage(): JSX.Element {
               <h2 className="text-xl sm:text-2xl font-bold text-white">
                 Free Football Matchup Previews: Why We Like These Games
               </h2>
-              <p className="mt-1 text-sm md:text-base text-slate-200">
+              <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                 Read our plain-English game breakdown below, then unlock a pack to see the exact team and number to bet.
               </p>
             </div>
@@ -67,40 +67,102 @@ export default function PackagesPage(): JSX.Element {
             </span>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((writeup) => (
-              <div
-                key={writeup.id}
-                className="flex flex-col justify-between rounded-xl border-2 border-slate-700/80 bg-slate-950 p-5 shadow-md"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
-                      {writeup.windowSlot === "TNF" ? "TONIGHT · TNF" : "SUNDAY SLATE"}
-                    </span>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((writeup) => {
+              const sidePlay = writeup.sideTotalCall.sideDecision === "PLAY";
+              const totalPlay = writeup.sideTotalCall.totalDecision === "PLAY";
+
+              return (
+                <div
+                  key={writeup.id}
+                  className="flex flex-col justify-between rounded-xl border-2 border-slate-700/80 bg-slate-950 p-6 shadow-md"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
+                        {writeup.windowSlot === "TNF" ? "TONIGHT · TNF" : "SUNDAY SLATE"}
+                      </span>
+                      <span className="text-xs font-semibold text-slate-300">
+                        {writeup.topProps.length} Player Props Ready
+                      </span>
+                    </div>
+
+                    <h3 className="mt-3 text-xl font-bold text-white">{writeup.matchup}</h3>
+
+                    {/* Dossier Body Copy */}
+                    <div className="mt-3 space-y-2">
+                      <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                        {sanitizePlainFootballText(writeup.schemeMatchup.coverageShell)}
+                      </p>
+                      <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                        {sanitizePlainFootballText(writeup.paceOfPlay.notes)}
+                      </p>
+                    </div>
+
+                    {/* High-Contrast Action Badges & Tabular Numerals */}
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2 border-t border-slate-800 pt-4">
+                      <div className="rounded-lg bg-slate-900 p-3.5 border border-slate-800">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                            SPREAD CALL
+                          </span>
+                          {sidePlay ? (
+                            <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold tracking-wide shadow-sm px-2.5 py-0.5 rounded text-xs">
+                              PLAY
+                            </span>
+                          ) : (
+                            <span className="bg-amber-500/20 text-amber-200 border border-amber-400/50 font-semibold tracking-wide px-2.5 py-0.5 rounded text-xs">
+                              PASS — NO BET
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-2 font-mono text-base sm:text-lg font-bold text-white tabular-nums">
+                          {sidePlay ? writeup.sideTotalCall.sideSelection : "No Edge — Market Fair"}
+                        </div>
+                        <div className="mt-1 text-xs text-slate-300 font-mono">
+                          Confidence: <span className="font-mono text-base font-bold text-white tabular-nums">{writeup.sideTotalCall.sideConfidence}</span>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg bg-slate-900 p-3.5 border border-slate-800">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                            TOTAL CALL
+                          </span>
+                          {totalPlay ? (
+                            <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold tracking-wide shadow-sm px-2.5 py-0.5 rounded text-xs">
+                              PLAY
+                            </span>
+                          ) : (
+                            <span className="bg-amber-500/20 text-amber-200 border border-amber-400/50 font-semibold tracking-wide px-2.5 py-0.5 rounded text-xs">
+                              PASS — NO BET
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-2 font-mono text-base sm:text-lg font-bold text-white tabular-nums">
+                          {totalPlay ? writeup.sideTotalCall.totalSelection : "No Edge — Market Fair"}
+                        </div>
+                        <div className="mt-1 text-xs text-slate-300 font-mono">
+                          Confidence: <span className="font-mono text-base font-bold text-white tabular-nums">{writeup.sideTotalCall.totalConfidence}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 border-t border-slate-800 pt-3 flex items-center justify-between">
+                    <Link
+                      href={`/games/${writeup.gameId}`}
+                      className="text-sm font-bold text-amber-300 hover:text-amber-200"
+                    >
+                      Read Full Game Dossier →
+                    </Link>
                     <span className="text-xs font-semibold text-slate-300">
-                      {writeup.topProps.length} Player Props Ready
+                      Kickoff: {new Date(writeup.kickoff).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   </div>
-                  <h3 className="mt-3 text-lg font-bold text-white">{writeup.matchup}</h3>
-                  <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
-                    {sanitizePlainFootballText(writeup.schemeMatchup.coverageShell)}
-                  </p>
-                  <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
-                    {sanitizePlainFootballText(writeup.paceOfPlay.notes)}
-                  </p>
                 </div>
-
-                <div className="mt-4 border-t border-slate-800 pt-3 flex items-center justify-between text-xs font-bold">
-                  <span className="text-emerald-400">
-                    Spread Rating: {writeup.sideTotalCall.sideConfidence}
-                  </span>
-                  <span className="text-amber-300">
-                    Total Rating: {writeup.sideTotalCall.totalConfidence}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -111,7 +173,7 @@ export default function PackagesPage(): JSX.Element {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
                 Choose Your Betting Pack
               </h2>
-              <p className="mt-1 text-base text-slate-200">
+              <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                 One-time purchase. Your picks unlock immediately right inside the card below.
               </p>
             </div>

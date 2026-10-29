@@ -1,6 +1,6 @@
 # GSE MASTER SYSTEM, CV/KINEMATICS & DATASET TELEMETRY MAP
 
-- **Generated:** `2026-10-29T06:04:58Z`
+- **Generated:** `2026-10-29T18:41:14Z`
 - **Purpose:** Single source of truth for every vision, tracking, perception, film-feature, data-farm, simulation, and commercial subsystem so nothing is ever lost or overlooked.
 
 ## 1. Full Subsystem & Codebase Inventory

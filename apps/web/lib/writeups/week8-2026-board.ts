@@ -68,7 +68,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has CIN -10 and 46.5 priced right (Fair CIN -12.5, Total 45.8). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has CIN -10 and 46.5 priced right (Fair CIN -12.6, Total 46.2). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873024",
@@ -116,7 +116,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 45.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has NYJ -1.5 and 45.5 priced right (Fair NYJ -0.7, Total 42.9). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has NYJ -1.5 and 45.5 priced right (Fair NYJ -0.8, Total 42.8). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873027",
@@ -148,7 +148,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 44.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has TB -2.5 and 44.5 priced right (Fair TB -2.7, Total 43.0). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has TB -2.5 and 44.5 priced right (Fair TB -2.5, Total 43.0). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873028",
@@ -164,7 +164,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 46.5,
     "scoreboardStatus": "11/1 - 1:00 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has JAX -10 and 46.5 priced right (Fair JAX -9.4, Total 44.1). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has JAX -10 and 46.5 priced right (Fair JAX -9.3, Total 44.0). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873032",
@@ -180,7 +180,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 45.5,
     "scoreboardStatus": "11/1 - 4:05 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has LAR -6.5 and 45.5 priced right (Fair LAR -9.0, Total 45.6). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has LAR -6.5 and 45.5 priced right (Fair LAR -8.9, Total 45.6). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873033",
@@ -196,7 +196,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 40.5,
     "scoreboardStatus": "11/1 - 4:25 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has KC -1.5 and 40.5 priced right (Fair DEN +3.4, Total 42.1). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has KC -1.5 and 40.5 priced right (Fair DEN +3.6, Total 42.2). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873034",
@@ -212,7 +212,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 43.5,
     "scoreboardStatus": "11/1 - 4:25 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has NE -7 and 43.5 priced right (Fair MIA +6.3, Total 40.4). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has NE -7 and 43.5 priced right (Fair MIA +6.2, Total 40.4). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873035",
@@ -228,7 +228,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 40.5,
     "scoreboardStatus": "11/1 - 8:20 PM EST",
     "publication": "PASS",
-    "passReason": "PASS \u2014 Vegas has WSH -6 and 40.5 priced right (Fair WSH -6.8, Total 41.7). Sit this matchup out."
+    "passReason": "PASS \u2014 Vegas has WSH -6 and 40.5 priced right (Fair WSH -6.7, Total 41.6). Sit this matchup out."
   },
   {
     "id": "board-2026-w8-401873036",

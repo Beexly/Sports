@@ -167,7 +167,7 @@ COACH_ARCHETYPES: dict[str, dict[str, str]] = {
         "dc": "Anthony Weaver (Baltimore-style simulated pressures + 2-high quarters shell)",
     },
     "PHI": {
-        "hc_oc": "Nick Sirianni / Kevin Patullo (Inside zone/RPO + Saquon Barkley gap rush + AJ Brown/DeVonta isolation)",
+        "hc_oc": "Nick Sirianni / Kevin Patullo (Inside zone/RPO + Tank Bigsby gap rush + AJ Brown/DeVonta isolation)",
         "dc": "Vic Fangio (Two-high Cover-4/Cover-6 match quarters + light box 4-man rush)",
     },
     "WSH": {
@@ -766,11 +766,19 @@ def simulate_full_game_with_jev(
 
         questions = build_snap_questions(off_team, def_team, down, ydstogo, yardline_100, off_tend)
 
-        # Call Jev (`~typesafe/jev-latest` fallback to `typesafe/jev-1.14`)
-        try:
-            jev_res = jev_client.ask(state_payload, questions, model=model, timeout=12.0, retries=3)
-        except Exception:
-            jev_res = jev_client.ask(state_payload, questions, model="typesafe/jev-1.14", timeout=12.0, retries=3)
+        # Call Jev (`~typesafe/jev-latest` fallback to `typesafe/jev-1.14` with retry nonce for argmax ties)
+        jev_res = None
+        last_err = None
+        for attempt in range(6):
+            payload_try = state_payload if attempt == 0 else {**state_payload, "eval_pass": attempt}
+            try_model = model if attempt % 2 == 0 else "typesafe/jev-1.14"
+            try:
+                jev_res = jev_client.ask(payload_try, questions, model=try_model, timeout=12.0, retries=2)
+                break
+            except Exception as err:
+                last_err = err
+        if jev_res is None:
+            raise RuntimeError(f"Jev ask failed after 6 attempts: {last_err}")
         if jev_res.get("model"):
             resolved_model = str(jev_res["model"])
 

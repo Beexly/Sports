@@ -207,6 +207,93 @@ def main() -> None:
     rec_profiles.sort(key=lambda x: (-x["catchableTargets"], -x["targets"]))
 
     # =========================================================================
+    # SYSTEM 1B: Week 8 Active Roster Filtering & Annotation
+    # Annotate each receiver in rec_profiles with activeWeek8: true/false based on
+    # nfl_2026_w1_w7_trends_and_usage.json (top_receivers / top_rushers) and
+    # strictly exclude confirmed Out/Doubtful/IR receivers.
+    # =========================================================================
+    trends_path = REPO / "data" / "engine" / "nfl_2026_w1_w7_trends_and_usage.json"
+    trends_data: dict = {}
+    if trends_path.exists():
+        trends_data = json.loads(trends_path.read_text(encoding="utf-8"))
+
+    team_norm_map = {"LA": "LAR", "WSH": "WAS"}
+
+    def _initial_key(full_name: str) -> str:
+        parts = str(full_name).replace(".", " ").split()
+        suffixes = {"II", "III", "IV", "JR", "SR", "JR."}
+        if len(parts) >= 3 and parts[-1].upper().rstrip(".") in suffixes:
+            parts = parts[:-1]
+        if len(parts) < 2 or not parts[0]:
+            return str(full_name)
+        return f"{parts[0][0].upper()}.{parts[-1]}"
+
+    excluded_week8_injuries = {
+        "Jayden Reed", "Matthew Golden", "Saquon Barkley", "Xavier Legette",
+        "Mike Evans", "Nico Collins", "Brandon Aiyuk", "Ricky Pearsall",
+        "Puka Nacua", "Malik Nabers", "Tyreek Hill"
+    }
+    excluded_initials = {_initial_key(x) for x in excluded_week8_injuries}
+    excluded_initials.update({
+        "M.Nabers", "P.Nacua", "M.Golden", "M.Evans", "N.Collins",
+        "J.Reed", "B.Aiyuk", "R.Pearsall", "S.Barkley", "X.Legette", "T.Hill"
+    })
+
+    special_name_map = {
+        ("DET", "A.St. Brown"): "Amon-Ra St. Brown",
+        ("ARI", "Mi.Wilson"): "Michael Wilson",
+        ("ATL", "Bi.Robinson"): "Bijan Robinson",
+        ("WAS", "C.Okonkwo"): "Chig Okonkwo",
+    }
+
+    snap_map: dict[tuple[str, str], set[str]] = {}
+    if "player" in snaps.columns and "team" in snaps.columns:
+        for t, p in snaps[["team", "player"]].drop_duplicates().itertuples(index=False):
+            t_norm = team_norm_map.get(str(t), str(t))
+            snap_map.setdefault((t_norm, _initial_key(p)), set()).add(str(p))
+
+    active_by_team: dict[str, set[str]] = {}
+    for t_code, t_data in trends_data.get("teams", {}).items():
+        recs = [r.get("player") for r in t_data.get("top_receivers", []) if r.get("player")]
+        rush = [r.get("player") for r in t_data.get("top_rushers", []) if r.get("player")]
+        active_by_team[t_code] = set(recs + rush)
+
+    for r in rec_profiles:
+        tm = r["team"]
+        tm_norm = team_norm_map.get(tm, tm)
+        p_name = r["player"]
+        team_active = active_by_team.get(tm_norm, set())
+
+        is_active = False
+        if p_name not in excluded_initials:
+            resolved = special_name_map.get((tm_norm, p_name))
+            if not resolved:
+                cands = snap_map.get((tm_norm, p_name), set())
+                if len(cands) == 1:
+                    resolved = list(cands)[0]
+                else:
+                    for act in team_active:
+                        if _initial_key(act) == p_name or p_name in act:
+                            resolved = act
+                            break
+
+            if resolved and resolved in excluded_week8_injuries:
+                is_active = False
+            elif resolved and resolved in team_active:
+                is_active = True
+            else:
+                is_active = any(
+                    (_initial_key(act) == p_name or p_name in act) and act not in excluded_week8_injuries
+                    for act in team_active
+                )
+
+        r["activeWeek8"] = bool(is_active)
+
+    # Filter rec_profiles so inactive/IR players are excluded from the active Week 8 receiver leaderboard
+    all_rec_profiles = list(rec_profiles)
+    active_rec_profiles = [r for r in rec_profiles if r["activeWeek8"]]
+
+    # =========================================================================
     # SYSTEM 3, 4, 5, 6, 7, 8, 9: 32-Team Defensive Funnels, Missed Tackles,
     # Minimax Serial Correlation, Flores Variance/Sim-Pressure, 1v1 Trench,
     # Goal-Line Anytime-TD Splits, and Motion/PA Beater Efficiency
@@ -476,7 +563,8 @@ def main() -> None:
             "rbOrSecondTeFlexSharePct": 69.0,
         },
         "qbBallPlacementAndPressureProfiles": qb_profiles,
-        "receiverCatchableAndContestedProfiles": rec_profiles[:80],
+        "receiverCatchableAndContestedProfiles": active_rec_profiles[:80],
+        "allReceiverProfiles": all_rec_profiles,
         "teams": team_analytics,
         "week8MatchupFaultLines": week8_fault_lines,
     }
@@ -503,12 +591,31 @@ def main() -> None:
             f"{q['catchableBallRateRawPct']}% | {q['openTargetRatePct']}% | {q['pickablePassRatePct']}% | "
             f"{q['receiverDropRatePct']}% | `{q['pressureSurvivalArchetype']}` |"
         )
+
+    md_lines.extend([
+        "",
+        "## 2. Active Week 8 Receiver Human-Charted Ball Placement & Catchable Target Board",
+        "",
+        "> [!IMPORTANT]",
+        "> Filtered for Week 8 active players (present in team's active `top_receivers` / `top_rushers` in `nfl_2026_w1_w7_trends_and_usage.json` and excluding confirmed Out/IR players: Malik Nabers, Puka Nacua, Matthew Golden, Mike Evans, Nico Collins, Jayden Reed, Saquon Barkley, Xavier Legette, Brandon Aiyuk, Ricky Pearsall, Tyreek Hill).",
+        "",
+        "| Team | Receiver | Targets | Catchable Tgts | Catchable Rate% | Open Target% | Contested Catch% | Drop Rate% | Created Rec |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for r in active_rec_profiles[:25]:
+        md_lines.append(
+            f"| `{r['team']}` | **{r['player']}** | {r['targets']} | **{r['catchableTargets']}** | "
+            f"**{r['catchableTargetRatePct']}%** | {r['openTargetRatePct']}% | {r['contestedCatchRatePct']}% | "
+            f"{r['dropRatePct']}% | {r['createdReceptions']} |"
+        )
+
     OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(md_lines) + "\n", encoding="utf-8")
 
     print(
         f"[ALL-IN-ONE 2026 ENGINE] Built {len(qb_profiles)} QB ball-placement profiles, "
-        f"{len(rec_profiles)} receiver profiles, 32 team funnels/equilibrium/Flores profiles -> {OUT_JSON}"
+        f"{len(active_rec_profiles)} active receiver profiles ({len(all_rec_profiles)} total), "
+        f"32 team funnels/equilibrium/Flores profiles -> {OUT_JSON}"
     )
 
 

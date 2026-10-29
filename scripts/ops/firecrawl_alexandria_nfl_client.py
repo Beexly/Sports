@@ -160,11 +160,18 @@ class FirecrawlAlexandriaClient:
             },
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            body = json.loads(resp.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as he:
+            err_body = he.read().decode("utf-8", errors="ignore")
+            try:
+                body = json.loads(err_body)
+            except Exception:
+                body = {"error": f"HTTP {he.code}: {he.reason}", "raw": err_body, "statusCode": he.code}
 
         credits_cost = int(
-            body.get("creditsCost", body.get("creditsUsed", 0))
+            body.get("creditsCost", body.get("creditsUsed", 0)) or 0
         )
         self.total_credits_spent += credits_cost
         self.call_ledger.append(
@@ -173,6 +180,7 @@ class FirecrawlAlexandriaClient:
                 "address": addr,
                 "options": options or {},
                 "credits_cost": credits_cost,
+                "status": "error" if "error" in body else "success",
             }
         )
         print(
@@ -271,6 +279,107 @@ def audit_all_week8_slate_players() -> dict[str, Any]:
     }
 
 
+def audit_week8_prop_rosters() -> dict[str, Any]:
+    """Alias for audit_all_week8_slate_players()."""
+    return audit_all_week8_slate_players()
+
+
+def fetch_live_week8_alexandria_snapshot(
+    client: FirecrawlAlexandriaClient | None = None,
+    out_path: Path | None = None,
+) -> dict[str, Any]:
+    """
+    Executes live Alexandria Week 8 verification:
+      1. discover() (0 credits)
+      2. retrieve() draftsharks-com ROS rankings (5 credits)
+         options: {"limit": 25, "position": "FLX", "scoring": "PPR", "superflex": False}
+      3. retrieve() espn-com injuries (5 credits)
+         options: {"sport": "football", "league": "nfl"}
+      4. Gracefully records response or credit/status metadata to data/engine/firecrawl_alexandria_live_w8_feed.json
+      5. Runs audit_week8_prop_rosters()
+    """
+    import datetime as dt
+
+    if client is None:
+        client = FirecrawlAlexandriaClient()
+
+    out_file = out_path or (REPO_ROOT / "data" / "engine" / "firecrawl_alexandria_live_w8_feed.json")
+
+    print("[Alexandria Live Week 8] Discovering capabilities (0 credits)...")
+    tools = client.discover("nfl rankings injuries depth chart", limit=30)
+
+    # 1. Draft Sharks ROS Rankings
+    print("[Alexandria Live Week 8] Retrieving draftsharks-com ROS rankings (FLX, PPR, limit=25, 5 credits)...")
+    try:
+        ds_res = client.retrieve(
+            provider="draftsharks-com",
+            capability="fantasy-sports-rankings/ros_rankings",
+            options={
+                "limit": 25,
+                "position": "FLX",
+                "scoring": "PPR",
+                "superflex": False,
+            },
+        )
+    except Exception as e:
+        print(f"[Alexandria Live Week 8] Draft Sharks retrieve notice/error: {e}")
+        ds_res = {
+            "status": "error",
+            "provider": "draftsharks-com",
+            "capability": "fantasy-sports-rankings/ros_rankings",
+            "error": str(e),
+        }
+
+    # 2. ESPN NFL Injuries
+    print("[Alexandria Live Week 8] Retrieving espn-com sports-data/injuries (nfl, 5 credits)...")
+    try:
+        espn_res = client.retrieve(
+            provider="espn-com",
+            capability="sports-data/injuries",
+            options={
+                "sport": "football",
+                "league": "nfl",
+            },
+        )
+    except Exception as e:
+        print(f"[Alexandria Live Week 8] ESPN injuries retrieve notice/error: {e}")
+        espn_res = {
+            "status": "error",
+            "provider": "espn-com",
+            "capability": "sports-data/injuries",
+            "error": str(e),
+        }
+
+    payload: dict[str, Any] = {
+        "schema": "firecrawl_alexandria_live_w8_feed.v1",
+        "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "discovered_capabilities_count": len(tools),
+        "draftsharks_ros_rankings": ds_res,
+        "espn_nfl_injuries": espn_res,
+        "session_total_credits_spent": client.total_credits_spent,
+        "call_ledger": client.call_ledger,
+    }
+
+    # 3. Run Week 8 prop roster audit
+    print("[Alexandria Live Week 8] Running audit_week8_prop_rosters()...")
+    audit_res = audit_week8_prop_rosters()
+    payload["week8_active_roster_prop_audit"] = audit_res
+
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    out_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print(
+        f"[Alexandria Live Week 8] Saved snapshot -> {out_file}\n"
+        f"  Total Credits Spent: {client.total_credits_spent}\n"
+        f"  Props Checked: {audit_res['total_props_checked']}\n"
+        f"  Active Verified: {audit_res['verified_active_count']}\n"
+        f"  Flagged: {audit_res['flagged_inactive_or_injured_count']}"
+    )
+    if audit_res["flagged_inactive_or_injured_count"] > 0:
+        raise SystemExit(f"ACTIVE ROSTER GATE FAILED: {audit_res['flagged_players']}")
+
+    return payload
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="GSE Firecrawl Alexandria NFL Client & Active Roster Gate"
@@ -279,6 +388,11 @@ def main() -> None:
         "--discover",
         default="nfl rankings injuries depth chart",
         help="Run free (0-credit) Alexandria capability discovery query",
+    )
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Fetch live Week 8 Alexandria snapshot (Draft Sharks + ESPN) and audit rosters",
     )
     parser.add_argument(
         "--fetch-draftsharks-te",
@@ -294,6 +408,11 @@ def main() -> None:
     args = parser.parse_args()
 
     client = FirecrawlAlexandriaClient()
+
+    if args.live:
+        fetch_live_week8_alexandria_snapshot(client=client)
+        return
+
     tools = client.discover(args.discover, limit=30)
 
     out_catalog_path = (

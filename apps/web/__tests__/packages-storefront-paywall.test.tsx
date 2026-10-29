@@ -105,8 +105,8 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     expect(container.textContent).toContain("Live Picks Revealed In-Place");
     expect(container.textContent).toContain("Green Bay Packers -3.5");
     expect(container.textContent).toContain("BET THIS:");
-    expect(container.textContent).toContain("Confidence: 61/100");
-    expect(container.textContent).toContain("Confidence: 63/100");
+    expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.sideConfidence}`);
+    expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.totalConfidence}`);
     expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
 
     // Verify all 14 writeups use XX/100 confidence and honest PLAY/PASS gating
