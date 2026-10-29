@@ -205,7 +205,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
         {isUnlocked && (
           <div className="mt-8 space-y-8">
             <div className="border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs font-mono text-emerald-300 flex items-center justify-between">
-              <span>✓ UNLOCKED DOSSIER — Full Tactical Writeups & Calibrated Picks</span>
+              <span>✓ UNLOCKED DOSSIER: Full Tactical Writeups &amp; Calibrated Picks</span>
               <span>Session Verified</span>
             </div>
 

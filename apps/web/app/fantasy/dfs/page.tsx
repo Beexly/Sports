@@ -54,7 +54,7 @@ export default async function DfsSuitePage() {
     ? `NFL · ${slate.slateGames} game${slate.slateGames === 1 ? "" : "s"} in the window · measured through Week ${slate.measuredThroughWeek}`
     : "T-48h 04:00 CT Simulation Slate Active";
   const measuredCopy = slate && engineRows.length > 0
-    ? `${slateLabel}. Projections are built Coach & Reasoning Mind First across 10,000 correlated play-by-play simulations, N_eff load scaling, and tactical scheme matchups — then compared against salaries and ownership last.`
+    ? `${slateLabel}. Projections are built Coach & Reasoning Mind First across 10,000 correlated play-by-play simulations, N_eff load scaling, and tactical scheme matchups, then compared against salaries and ownership last.`
     : "No NFL licensed salary feed is resolved right now; our Coach & Reasoning Mind First T-48h 10,000-run simulation dossier and game-environment writeups below govern lineup construction.";
   const note = feedDown
     ? `No licensed salary feed is connected. ${measuredCopy}`
@@ -76,7 +76,7 @@ export default async function DfsSuitePage() {
           </span>
         </>
       }
-      intro="We retired the generic linear optimizer because football is never played on a spreadsheet. Our engine reasons like a coaching staff first — synthesizing film autopsy residuals, play-caller DNA, defensive shell rotations, trench win rates, injury cascades, situational/emotional spots, neutral pace, and N_eff usage concentration — then simulates every possible player and lineup construction 10,000 times before ever comparing against the salary cap or field ownership."
+      intro="We retired the generic linear optimizer because football is never played on a spreadsheet. Our engine reasons like a coaching staff first: synthesizing film autopsy residuals, play-caller DNA, defensive shell rotations, trench win rates, injury cascades, situational/emotional spots, neutral pace, and N_eff usage concentration, then simulates every possible player and lineup construction 10,000 times before ever comparing against the salary cap or field ownership."
       note={note}
       wide
     >
@@ -145,7 +145,7 @@ export default async function DfsSuitePage() {
               <strong className="text-ion-white">Red-Zone / Inside-the-5 Play Scripts</strong>. When an injury hits an
               offensive tackle, boundary corner, or pass-catcher, our{" "}
               <strong className="text-ion-white">Injury Cascade v2 &amp; Herfindahl-Hirschman Index (N_eff = 1 / HHI)</strong>{" "}
-              re-computes how protection slides and first-read target shares condense non-linearly — creating massive
+              re-computes how protection slides and first-read target shares condense non-linearly, creating massive
               ceiling spikes that linear averages never see.
             </p>
           </div>
@@ -180,7 +180,7 @@ export default async function DfsSuitePage() {
               <strong className="text-ion-white">Only at the very end</strong> do we introduce DFS salaries, market
               lines, and simulated field ownership (<strong className="text-ion-white">Dirichlet-Multinomial field model</strong>).
               We evaluate millions of salary-legal lineup combinations across the 10,000 simulated worlds to isolate where
-              our football mind disagrees with public pricing and chalk ownership — outputting{" "}
+              our football mind disagrees with public pricing and chalk ownership, outputting{" "}
               <strong className="text-ion-white">80th-Pct Floor Cash Cores</strong>,{" "}
               <strong className="text-ion-white">Showdown 1.5x Captain Leverage</strong>, and{" "}
               <strong className="text-ion-white">20-Max GPP Lineup Portfolios</strong> (QB + 2 Pass Catchers + Opposing
@@ -202,7 +202,7 @@ export default async function DfsSuitePage() {
             </h2>
           </div>
           <span className="border border-plasma/40 bg-plasma/10 px-3 py-1 font-mono text-xs text-plasma">
-            10,000-Sim Environment Read · W1–W7 (18,738 Plays)
+            10,000-Sim Environment Read · W1-W7 (18,738 Plays)
           </span>
         </div>
 
@@ -236,7 +236,7 @@ export default async function DfsSuitePage() {
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 <div>
                   <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
-                    Pace &amp; No-Huddle Environment (2026 W1–W7)
+                    Pace &amp; No-Huddle Environment (2026 W1-W7)
                   </div>
                   <p className="mt-1 text-xs leading-5 text-ion-1">{w.paceOfPlay.notes}</p>
                 </div>

@@ -125,7 +125,9 @@ export function PropsEdge({
             live ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
           }`}
         >
-          {live ? "Source: live" : "Source: 2026 NFL Active Slate"}
+          {live
+            ? "Source: live"
+            : "Source: fictional sample (2026 NFL Active Slate)"}
         </span>
       </div>
 

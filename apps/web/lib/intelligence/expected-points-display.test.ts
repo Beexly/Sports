@@ -4,8 +4,12 @@ import {
   loadExpectedPointsForDisplay,
   rightsGatedExpectedPoints,
 } from "./expected-points-display";
-import { getEngine } from "@/app/intelligence/engines/registry";
-import type { ExpectedPoints } from "./expected-points";
+// The "public engines board wiring" block that used to live here imported
+// `@/app/intelligence/engines/registry`. That module was deliberately removed
+// with the public /intelligence methodology pages (89ec7c528, Garrett-ordered),
+// so the wiring it asserted no longer exists and nothing else imports it.
+// Removed 2026-10-29 with the display boundary below left intact: the rights
+// gate itself is still enforced and still pinned by the tests that remain.
 
 /**
  * The customer-display boundary for the CC-BY-SA ff_opportunity xFP data.
@@ -43,17 +47,3 @@ describe("expected-points display boundary (fail-closed rights gate)", () => {
   });
 });
 
-describe("public engines board wiring (registry.tsx)", () => {
-  it("the expected-points engine attributes ffverse-ffopportunity, not nflverse", () => {
-    const engine = getEngine("expected-points");
-    expect(engine.sourceIds).toEqual(["ffverse-ffopportunity"]);
-  });
-
-  it("the engine's loader is the display-gated path: it resolves to the rights-gated payload", async () => {
-    const engine = getEngine("expected-points");
-    const data = (await engine.load()) as ExpectedPoints;
-    expect(data.status).toBe("source-error");
-    expect(data.rightsGated).toBe(true);
-    expect(data.rows).toEqual([]);
-  });
-});

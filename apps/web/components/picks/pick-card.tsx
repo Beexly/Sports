@@ -332,7 +332,7 @@ function CoachLockStrip({ breakdown }: { breakdown: FactorBreakdown }) {
       </p>
       <p className="mt-1 font-mono text-xs text-ion-white">
         Home margin {margin.toFixed(1)}
-        {p10 !== null && p90 !== null ? ` · total ${p10.toFixed(1)}–${p90.toFixed(1)}` : ""}
+        {p10 !== null && p90 !== null ? ` · total ${p10.toFixed(1)}-${p90.toFixed(1)}` : ""}
       </p>
       <p className="mt-1 text-[10px] leading-relaxed text-ion-2">
         Price check: {action}
@@ -432,7 +432,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           <p className="font-mono text-xs text-ion-white">
             {(breakdown.rankingP * 100).toFixed(1)}%
             <span className="ml-2 text-[10px] font-normal text-ion-3">
-              model ranking key — not verified ROI
+              model ranking key, not verified ROI
             </span>
           </p>
           {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
@@ -459,7 +459,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
               Independent edge
             </span>
             <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
-              {breakdown.independentEdge.sources.join(", ") || "—"}
+              {breakdown.independentEdge.sources.join(", ") || "unattributed"}
               {" · "}
               {typeof breakdown.rankingP === "number" &&
               Number.isFinite(breakdown.rankingP) &&
@@ -733,7 +733,7 @@ function LockedValue({ label }: { label: string }) {
     <Link
       href="/pricing"
       aria-label={`${label} unlocks with Pro. See pricing`}
-      title={`${label} unlocks with Pro — tap to see pricing`}
+      title={`${label} unlocks with Pro, tap to see pricing`}
       className="inline-flex min-h-11 items-center gap-1 py-2 text-xs text-ion-1 transition-colors hover:text-plasma"
     >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

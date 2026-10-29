@@ -47,7 +47,14 @@ export const NFL_TEAMS: readonly string[] = [
 export const TEAM_BEATS: readonly TeamBeat[] = NFL_TEAMS.map((team) => ({ team, market: team, slots: 3 }));
 
 /**
- * Curated 2026 NFL Wire Signals: real NFL transactions, injuries, and weather reports.
+ * Sample wire items for scoring demonstration. These are NOT current 2026
+ * reporting: they are assembled from real historical NFL transactions and
+ * injuries (the Hutchinson tibia IR, the Adams/Rodgers Jets package, the
+ * McCaffrey Achilles ramp-up) and re-dated with `minutesAgo` so the ranking
+ * model has fresh-looking inputs. The file header above calls this sample
+ * FICTIONAL; that is the honest reading. The Beat renders it only behind its
+ * sample-source marker and never as attributed live reporting. C-416 deletes
+ * this export once the stored wire replaces it; until then it is sample data.
  * Explicit per-item `tier` drives scoring and source weighting.
  */
 export const DEMO_WIRE: readonly NewsItem[] = [

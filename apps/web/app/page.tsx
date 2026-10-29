@@ -344,7 +344,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     Live Slate Packages &amp; Guaranteed Cards
                   </h3>
                   <p className="mt-1 text-xs text-ion-1">
-                    Buy individual slates with zero subscription. Free Pace-of-Play &amp; Scheme Teasers below — Official Sides, Totals, N_eff Props, Correlated SGPs &amp; 20-Max DFS Lineups unlock immediately upon Stripe or Whop checkout + @GalaxySportsEdge_bot VIP delivery.
+                    Buy individual slates with zero subscription. Free Pace-of-Play &amp; Scheme Teasers below: Official Sides, Totals, N_eff Props, Correlated SGPs &amp; 20-Max DFS Lineups unlock immediately upon Stripe or Whop checkout + @GalaxySportsEdge_bot VIP delivery.
                   </p>
                 </div>
                 <div className="flex items-center gap-3">

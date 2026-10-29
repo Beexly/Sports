@@ -180,7 +180,7 @@ export function PaywallRevealCard({
         {teasers.length > 0 && (
           <div className="mt-4 space-y-2.5 border-t border-mineral/50 pt-3">
             <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-ion-2">
-              <span>Free Pace-of-Play &amp; Scheme Teaser (2026 W1–W7 PBP + FTN)</span>
+              <span>Free Pace-of-Play &amp; Scheme Teaser (2026 W1-W7 PBP + FTN)</span>
               <span className="text-plasma">10,000-Sim Calibrated</span>
             </div>
             {teasers.slice(0, 2).map((t) => (
@@ -335,7 +335,7 @@ export function PaywallRevealCard({
                       {w.topProps.map((p) => (
                         <div key={p.playerId} className="flex items-center justify-between text-xs">
                           <span className="text-ion-white font-medium">
-                            {p.playerName} — {p.side} {p.line} {p.propType}
+                            {p.playerName} · {p.side} {p.line} {p.propType}
                           </span>
                           <span className="font-mono text-[10px] text-plasma">Conf {p.confidence}</span>
                         </div>
@@ -369,11 +369,11 @@ export function PaywallRevealCard({
                     </div>
                     <div className="text-ion-white">
                       <strong className="text-plasma">Showdown Captain Leverage:</strong>{" "}
-                      {w.dfsStacks.captainPicks.map((c) => `${c.player} (${c.position}, $${c.salary}) — ${c.leverageNote}`).join(" | ")}
+                      {w.dfsStacks.captainPicks.map((c) => `${c.player} (${c.position}, $${c.salary}) · ${c.leverageNote}`).join(" | ")}
                     </div>
                     <div className="text-ion-1">
                       <strong className="text-plasma">Cash Core (80th-Pct Floor):</strong>{" "}
-                      {w.dfsStacks.cashCore.map((c) => `${c.player} (${c.position}, $${c.salary}, Proj ${c.projection}) — ${c.floorNote}`).join(" | ")}
+                      {w.dfsStacks.cashCore.map((c) => `${c.player} (${c.position}, $${c.salary}, Proj ${c.projection}) · ${c.floorNote}`).join(" | ")}
                     </div>
                     {w.dfsStacks.gppStacks.map((g, idx) => (
                       <div key={idx} className="border-t border-mineral/30 pt-1.5 text-ion-1">
