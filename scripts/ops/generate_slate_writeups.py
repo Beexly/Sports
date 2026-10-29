@@ -54,9 +54,9 @@ OUT_PACKAGES = REPO / "data" / "packages" / "live-slate-writeups.json"
 OUT_PACKET_MD = REPO / "docs" / "predictions" / "research" / "2026-10-29" / "GAME-DAY-CONTENT-PACKET-2026-10-29.md"
 
 WEEK8_GAMES = [
-    {"espnEventId": "401873023", "awayAbbr": "CAR", "homeAbbr": "GB", "awayTeam": "Carolina Panthers", "homeTeam": "Green Bay Packers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "TNF", "postedDetails": "GB -3.5", "postedHomeSpread": -3.5, "postedTotal": 47.5, "scoreboardStatus": "Sunday 1:00 PM ET · Week 9 Spotlight"},
+    {"espnEventId": "401873023", "awayAbbr": "CAR", "homeAbbr": "GB", "awayTeam": "Carolina Panthers", "homeTeam": "Green Bay Packers", "kickoff": "2026-11-01T18:00Z", "windowSlot": "TNF", "postedDetails": "GB -3.5", "postedHomeSpread": -3.5, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET · Week 9 Spotlight"},
     {"espnEventId": "401873026", "awayAbbr": "BAL", "homeAbbr": "BUF", "awayTeam": "Baltimore Ravens", "homeTeam": "Buffalo Bills", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "BUF -3", "postedHomeSpread": -3.0, "postedTotal": 54.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
-    {"espnEventId": "401873031", "awayAbbr": "TEN", "homeAbbr": "CIN", "awayTeam": "Tennessee Titans", "homeTeam": "Cincinnati Bengals", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "CIN -10", "postedHomeSpread": -10.0, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
+    {"espnEventId": "401873031", "awayAbbr": "TEN", "homeAbbr": "CIN", "awayTeam": "Tennessee Titans", "homeTeam": "Cincinnati Bengals", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "CIN -11.5", "postedHomeSpread": -11.5, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
     {"espnEventId": "401873024", "awayAbbr": "ARI", "homeAbbr": "DAL", "awayTeam": "Arizona Cardinals", "homeTeam": "Dallas Cowboys", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "DAL -7", "postedHomeSpread": -7.0, "postedTotal": 54.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
     {"espnEventId": "401873030", "awayAbbr": "MIN", "homeAbbr": "DET", "awayTeam": "Minnesota Vikings", "homeTeam": "Detroit Lions", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "DET -3", "postedHomeSpread": -3.0, "postedTotal": 46.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
     {"espnEventId": "401873029", "awayAbbr": "LV", "homeAbbr": "NYJ", "awayTeam": "Las Vegas Raiders", "homeTeam": "New York Jets", "kickoff": "2026-11-01T18:00Z", "windowSlot": "SUN_EARLY", "postedDetails": "NYJ -1.5", "postedHomeSpread": -1.5, "postedTotal": 45.5, "scoreboardStatus": "Sunday 1:00 PM ET"},
@@ -69,6 +69,77 @@ WEEK8_GAMES = [
     {"espnEventId": "401873035", "awayAbbr": "PHI", "homeAbbr": "WSH", "awayTeam": "Philadelphia Eagles", "homeTeam": "Washington Commanders", "kickoff": "2026-11-02T01:20Z", "windowSlot": "SNF", "postedDetails": "WSH -6", "postedHomeSpread": -6.0, "postedTotal": 40.5, "scoreboardStatus": "Sunday 8:20 PM ET"},
     {"espnEventId": "401873036", "awayAbbr": "CHI", "homeAbbr": "SEA", "awayTeam": "Chicago Bears", "homeTeam": "Seattle Seahawks", "kickoff": "2026-11-03T01:15Z", "windowSlot": "MNF", "postedDetails": "SEA -3", "postedHomeSpread": -3.0, "postedTotal": 46.5, "scoreboardStatus": "Monday 8:15 PM ET"},
 ]
+
+# Exact live DraftKings (Provider 100) player prop lines refreshed 2026-10-29
+LIVE_DK_GAME_PROPS = {
+    "401873026": [  # BAL @ BUF (BUF -3, O/U 54.5)
+        ("Zay Flowers", "Receiving Yards", "rec_yds", 82.5, "OVER", 60, "PLAY", "Zay Flowers operates as Lamar Jackson's primary target against a depleted secondary in a high-tempo shootout. Take OVER 82.5 receiving yards."),
+        ("Josh Allen", "Passing Yards", "pass_yds", 252.5, "OVER", 59, "PLAY", "Josh Allen attacks a Baltimore secondary missing cornerback T.J. Tampa and safety Jaylinn Hawkins. Take OVER 252.5 passing yards."),
+        ("Dalton Kincaid", "Receiving Yards", "rec_yds", 46.5, "OVER", 58, "PLAY", "Dalton Kincaid exploits middle-of-the-field zone voids against Baltimore's linebackers. Take OVER 46.5 receiving yards."),
+        ("Derrick Henry", "Rushing Yards", "rush_yds", 79.5, "OVER", 54, "PASS", "Vegas has Derrick Henry priced right near 79.5 rushing yards in a high-total game script. Sit this prop out."),
+    ],
+    "401873031": [  # TEN @ CIN (CIN -11.5, O/U 46.5)
+        ("Tony Pollard", "Rushing Yards", "rush_yds", 64.5, "UNDER", 54, "PASS", "Tony Pollard's three touchdowns last week came with Tyjae Spears taking two-minute snaps, and Tennessee is an 11.5-point road underdog. Fade the box-score mirage — PASS."),
+        ("Ja'Marr Chase", "Receiving Yards", "rec_yds", 80.5, "OVER", 54, "PASS", "Vegas has Ja'Marr Chase priced efficiently at 80.5 receiving yards with blowout fourth-quarter script risk. Sit this prop out."),
+        ("Tee Higgins", "Receiving Yards", "rec_yds", 67.5, "OVER", 53, "PASS", "Vegas has Tee Higgins priced accurately near 67.5 receiving yards. Sit this prop out."),
+    ],
+    "401873024": [  # ARI @ DAL (DAL -7, O/U 54.5)
+        ("CeeDee Lamb", "Receiving Yards", "rec_yds", 82.5, "OVER", 54, "PASS", "Vegas has CeeDee Lamb priced accurately at 82.5 receiving yards indoors at AT&T Stadium. Sit this prop out."),
+        ("Trey McBride", "Receiving Yards", "rec_yds", 73.5, "OVER", 54, "PASS", "Vegas has Trey McBride priced tightly at 73.5 receiving yards. Sit this prop out."),
+        ("Javonte Williams", "Rushing Yards", "rush_yds", 77.5, "UNDER", 53, "PASS", "Vegas has Javonte Williams priced efficiently at 77.5 rushing yards. Sit this prop out."),
+    ],
+    "401873030": [  # MIN @ DET (DET -3, O/U 46.5)
+        ("Amon-Ra St. Brown", "Receiving Yards", "rec_yds", 77.5, "OVER", 61, "PLAY", "Amon-Ra St. Brown commands elite third-down and slot target volume indoors at Ford Field against Minnesota's blitz looks. Take OVER 77.5 receiving yards."),
+        ("Jahmyr Gibbs", "Rushing Yards", "rush_yds", 86.5, "OVER", 60, "PLAY", "Detroit's offensive line controls the trenches at home while Jahmyr Gibbs gets explosive outside-zone volume. Take OVER 86.5 rushing yards."),
+        ("Jahmyr Gibbs", "Receiving Yards", "rec_yds", 33.5, "OVER", 59, "PLAY", "Jahmyr Gibbs punishes Minnesota's blitzes on hot-route checkdowns and screens in space. Take OVER 33.5 receiving yards."),
+        ("Justin Jefferson", "Receiving Yards", "rec_yds", 77.5, "UNDER", 54, "PASS", "Vegas has Justin Jefferson priced efficiently at 77.5 receiving yards against Detroit's physical secondary. Sit this prop out."),
+    ],
+    "401873029": [  # LV @ NYJ (NYJ -1.5, O/U 45.5)
+        ("Brock Bowers", "Receiving Yards", "rec_yds", 69.5, "OVER", 54, "PASS", "Vegas has Brock Bowers priced accurately at 69.5 receiving yards in the Meadowlands. Sit this prop out."),
+        ("Garrett Wilson", "Receiving Yards", "rec_yds", 63.5, "OVER", 54, "PASS", "Vegas has Garrett Wilson priced tightly at 63.5 receiving yards. Sit this prop out."),
+        ("Ashton Jeanty", "Rushing Yards", "rush_yds", 48.5, "OVER", 53, "PASS", "Vegas has Ashton Jeanty priced right near 48.5 rushing yards. Sit this prop out."),
+    ],
+    "401873027": [  # CLE @ PIT (PIT -3.5, O/U 39.5)
+        ("Jaylen Warren", "Rushing Yards", "rush_yds", 65.5, "OVER", 59, "PLAY", "Cleveland's defense has missed 51 tackles this season, giving Jaylen Warren hidden yards after contact in a clock-bleeding divisional script. Take OVER 65.5 rushing yards."),
+        ("DK Metcalf", "Receiving Yards", "rec_yds", 56.5, "UNDER", 58, "PLAY", "In a low-total (39.5) AFC North trench slugfest outdoors at Acrisure Stadium, downfield perimeter volume is suppressed. Take UNDER 56.5 receiving yards."),
+        ("Quinshon Judkins", "Rushing Yards", "rush_yds", 48.5, "UNDER", 58, "PLAY", "Pittsburgh's defensive front dominates a bruised Cleveland offensive line on early downs. Take UNDER 48.5 rushing yards."),
+    ],
+    "401873025": [  # ATL @ TB (TB -2.5, O/U 44.5)
+        ("Drake London", "Receiving Yards", "rec_yds", 78.5, "OVER", 54, "PASS", "Vegas has Drake London priced efficiently at 78.5 receiving yards. Sit this prop out."),
+        ("Bijan Robinson", "Rushing Yards", "rush_yds", 78.5, "UNDER", 54, "PASS", "Vegas has Bijan Robinson priced accurately at 78.5 rushing yards against Tampa Bay's interior front. Sit this prop out."),
+        ("Bucky Irving", "Rushing Yards", "rush_yds", 70.5, "OVER", 53, "PASS", "Vegas has Bucky Irving priced right near 70.5 rushing yards. Sit this prop out."),
+    ],
+    "401873028": [  # IND @ JAX (JAX -10, O/U 46.5)
+        ("Parker Washington", "Receiving Yards", "rec_yds", 68.5, "OVER", 54, "PASS", "Vegas has Parker Washington priced accurately at 68.5 receiving yards. Sit this prop out."),
+        ("Tyler Warren", "Receiving Yards", "rec_yds", 40.5, "OVER", 54, "PASS", "Vegas has Tyler Warren priced tightly at 40.5 receiving yards. Sit this prop out."),
+        ("Jonathan Taylor", "Rushing Yards", "rush_yds", 60.5, "UNDER", 53, "PASS", "Vegas has Jonathan Taylor priced efficiently at 60.5 rushing yards as a 10-point underdog. Sit this prop out."),
+    ],
+    "401873032": [  # LAC @ LAR (LAR -6.5, O/U 45.5)
+        ("Puka Nacua", "Receiving Yards", "rec_yds", 92.5, "OVER", 54, "PASS", "DraftKings has already steamed Puka Nacua up to 92.5 receiving yards (opened 90.5). At 92.5, the edge is gone — PASS."),
+        ("Kyren Williams", "Rushing Yards", "rush_yds", 58.5, "OVER", 54, "PASS", "Vegas has Kyren Williams priced accurately at 58.5 rushing yards. Sit this prop out."),
+        ("Ladd McConkey", "Receiving Yards", "rec_yds", 45.5, "OVER", 53, "PASS", "Vegas has Ladd McConkey priced right near 45.5 receiving yards. Sit this prop out."),
+    ],
+    "401873033": [  # KC @ DEN (KC -1.5, O/U 40.5)
+        ("Travis Kelce", "Receiving Yards", "rec_yds", 46.5, "OVER", 54, "PASS", "Vegas has Travis Kelce priced accurately at 46.5 receiving yards at Mile High. Sit this prop out."),
+        ("Patrick Mahomes", "Passing Yards", "pass_yds", 225.5, "UNDER", 54, "PASS", "Vegas has Patrick Mahomes priced tightly at 225.5 passing yards against Denver's secondary. Sit this prop out."),
+        ("Bo Nix", "Passing Yards", "pass_yds", 204.5, "UNDER", 53, "PASS", "Vegas has Bo Nix priced right near 204.5 passing yards. Sit this prop out."),
+    ],
+    "401873034": [  # NE @ MIA (NE -7, O/U 43.5)
+        ("Drake Maye", "Passing Yards", "pass_yds", 233.5, "OVER", 54, "PASS", "Vegas has Drake Maye priced accurately at 233.5 passing yards in Miami. Sit this prop out."),
+        ("Hunter Henry", "Receiving Yards", "rec_yds", 38.5, "OVER", 54, "PASS", "Vegas has Hunter Henry priced tightly at 38.5 receiving yards. Sit this prop out."),
+        ("Rhamondre Stevenson", "Rushing Yards", "rush_yds", 52.5, "OVER", 53, "PASS", "Vegas has Rhamondre Stevenson priced efficiently at 52.5 rushing yards. Sit this prop out."),
+    ],
+    "401873035": [  # PHI @ WSH (WSH -6, O/U 40.5)
+        ("Jayden Daniels", "Passing Yards", "pass_yds", 202.5, "OVER", 54, "PASS", "Vegas has Jayden Daniels priced accurately at 202.5 passing yards on Sunday Night Football. Sit this prop out."),
+        ("Stefon Diggs", "Receiving Yards", "rec_yds", 43.5, "OVER", 54, "PASS", "Vegas has Stefon Diggs priced tightly at 43.5 receiving yards. Sit this prop out."),
+        ("Rachaad White", "Rushing Yards", "rush_yds", 46.5, "OVER", 53, "PASS", "Vegas has Rachaad White priced right near 46.5 rushing yards. Sit this prop out."),
+    ],
+    "401873036": [  # CHI @ SEA (SEA -3, O/U 46.5)
+        ("Jaxon Smith-Njigba", "Receiving Yards", "rec_yds", 98.5, "UNDER", 59, "PLAY", "DraftKings has steamed Jaxon Smith-Njigba all the way to 98.5 receiving yards, but Chicago's takeaway-minded secondary rallies to the ball and caps explosive perimeter gains. Take UNDER 98.5 receiving yards."),
+        ("Luther Burden III", "Receiving Yards", "rec_yds", 51.5, "OVER", 58, "PLAY", "Luther Burden III gets manufactured touches and intermediate targets for Chicago on Monday Night Football. Take OVER 51.5 receiving yards."),
+        ("Rome Odunze", "Receiving Yards", "rec_yds", 41.5, "OVER", 58, "PLAY", "With Seattle focusing bracket coverage elsewhere, Rome Odunze faces single coverage on vertical intermediate routes. Take OVER 41.5 receiving yards."),
+    ],
+}
 
 GROK_GOLD_CAR_GB_COPY = (
     "Green Bay’s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. "
@@ -435,10 +506,10 @@ def simulate_game_10000(
         }
 
     if g["awayAbbr"] == "CAR" and g["homeAbbr"] == "GB":
-        home_wr1 = {"player": "Christian Watson", "targets_per_game": 7.4, "target_share_pct": 25.0, "rec_yards_per_game": 66.2}
-        away_wr1 = {"player": "Tetairoa McMillan", "targets_per_game": 6.4, "target_share_pct": 23.0, "rec_yards_per_game": 52.1}
-        home_rb1 = {"player": "Josh Jacobs", "carries_per_game": 16.8, "carry_share_pct": 64.0, "rush_yards_per_game": 71.4}
-        away_rb1 = {"player": "Chuba Hubbard", "carries_per_game": 16.1, "carry_share_pct": 68.0, "rush_yards_per_game": 68.2}
+        home_wr1 = {"player": "Christian Watson", "targets_per_game": 7.4, "target_share_pct": 25.0, "rec_yards_per_game": 72.5}
+        away_wr1 = {"player": "Tetairoa McMillan", "targets_per_game": 6.4, "target_share_pct": 23.0, "rec_yards_per_game": 72.5}
+        home_rb1 = {"player": "Josh Jacobs", "carries_per_game": 16.8, "carry_share_pct": 64.0, "rush_yards_per_game": 60.5}
+        away_rb1 = {"player": "Chuba Hubbard", "carries_per_game": 16.5, "carry_share_pct": 68.0, "rush_yards_per_game": 67.5}
         car_gb_jev_props = ((jev_props_doc or {}).get("games") or {}).get("CAR@GB", {}).get("top_props_sorted", [])
         props = []
         for jp in car_gb_jev_props[:6]:
@@ -456,11 +527,35 @@ def simulate_game_10000(
                 "pOver": float(jp["pOver"]),
                 "pUnder": float(jp["pUnder"]),
             })
-        home_wr1_line = 56.5
+        home_wr1_line = 70.5
         leg3_player_name = "Christian Watson"
         leg3_side = "OVER"
-        leg3_conf = 62
-        p_leg3 = 0.62
+        leg3_conf = 63
+        p_leg3 = 0.63
+    elif g["espnEventId"] in LIVE_DK_GAME_PROPS:
+        props = []
+        for p_name, p_type, mkt, ln_val, p_side, p_conf, p_dec, p_note in LIVE_DK_GAME_PROPS[g["espnEventId"]]:
+            p_prob = p_conf / 100.0
+            p_clv = round(p_prob - DEVIG, 4) if p_dec == "PLAY" else round(min(0.015, p_prob - DEVIG), 4)
+            props.append({
+                "playerId": slugify_player(p_name),
+                "playerName": p_name,
+                "propType": p_type,
+                "market": mkt,
+                "line": float(ln_val),
+                "side": p_side,
+                "confidence": f"{p_conf}/100",
+                "expectedClv": p_clv,
+                "decision": p_dec,
+                "nEffTargetNotes": p_note,
+                "pOver": round(p_prob if p_side == "OVER" else 1.0 - p_prob, 4),
+                "pUnder": round(p_prob if p_side == "UNDER" else 1.0 - p_prob, 4),
+            })
+        home_wr1_line = props[0]["line"]
+        leg3_player_name = props[0]["playerName"]
+        leg3_side = props[0]["side"]
+        leg3_conf = int(props[0]["confidence"].split("/")[0])
+        p_leg3 = leg3_conf / 100.0
     else:
         hm_wr1_raw = float(home_wr1.get("rec_yards_per_game") or 60.0)
         aw_wr1_raw = float(away_wr1.get("rec_yards_per_game") or 56.0)
@@ -1068,7 +1163,7 @@ def write_game_day_packet(writeups: list[dict]):
         f"- **Generated:** `{dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}`",
         "- **Data Provenance:** `18,738` 2026 Weeks 1–7 plays (`play_by_play_2026.parquet`) + `18,019` charted play tendencies + `166` live JEV snaps (`typesafe/jev-1.14`) + `5-Stage GSE Engine Verdicts` (`nfl_2026_w8_five_stage_engine_verdicts.json`).",
         "",
-        "## 1. Sunday Week 9 Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 47.5`)",
+        "## 1. Sunday Week 9 Spotlight: Carolina Panthers @ Green Bay Packers (`GB -3.5, O/U 46.5`)",
         f"- **Fair Line:** `GB {tnf['_simMeta']['fairHomeSpread']:+.1f}` | **Fair Total:** `{tnf['_simMeta']['fairTotal']:.1f}`",
         f"- **Calibrated Side:** **{tnf['sideTotalCall']['sideDecision']}** {tnf['sideTotalCall']['sideSelection']} (`{tnf['sideTotalCall']['sideConfidence']}`, `{tnf['sideTotalCall']['sideExpectedClv']:+.4f}` CLV)",
         f"- **Calibrated Total:** **{tnf['sideTotalCall']['totalDecision']}** {tnf['sideTotalCall']['totalSelection']} (`{tnf['sideTotalCall']['totalConfidence']}`, `{tnf['sideTotalCall']['totalExpectedClv']:+.4f}` CLV)",

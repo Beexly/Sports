@@ -2,7 +2,7 @@
   "packet_id": "PKT-2026-10-29",
   "packet_version": 1,
   "date": "2026-10-29",
-  "generated_at": "2026-10-29T22:04:47.728740+00:00",
+  "generated_at": "2026-10-29T22:34:05.634140+00:00",
   "season": 2026,
   "week": 8,
   "slate": [
@@ -13,7 +13,7 @@
       "home": "GB",
       "matchup": "CAR @ GB",
       "kickoff": "2026-11-01T18:00Z",
-      "window": "TNF"
+      "window": "SUNDAY_SPOTLIGHT_1PM_ET"
     }
   ],
   "board": [
@@ -22,7 +22,7 @@
       "market": "SPREAD",
       "selection": "Green Bay Packers -3.5",
       "line": -3.5,
-      "price": "-110",
+      "price": "-108",
       "confidence": "61/100",
       "expected_clv": 0.0862,
       "decision": "PLAY",
@@ -31,9 +31,9 @@
     {
       "game_id": "401873023",
       "market": "TOTAL",
-      "selection": "UNDER 47.5",
-      "line": 47.5,
-      "price": "-110",
+      "selection": "UNDER 46.5",
+      "line": 46.5,
+      "price": "+102",
       "confidence": "58/100",
       "expected_clv": 0.0562,
       "decision": "PLAY",
@@ -42,28 +42,50 @@
     {
       "game_id": "401873023",
       "market": "PROP",
-      "selection": "Josh Jacobs OVER 62.5 Rush Yds",
-      "line": 62.5,
-      "price": "-115",
+      "selection": "Christian Watson OVER 70.5 Rec Yds",
+      "line": 70.5,
+      "price": "-112",
+      "confidence": "63/100",
       "decision": "PLAY",
-      "reasoning": "Carolina defense allows 138 rushing yards per game to lead backs."
+      "reasoning": "With Matthew Golden sidelined and Jayden Reed on IR, Watson commands 28.4% air-yards share against Carolina's depleted secondary."
+    },
+    {
+      "game_id": "401873023",
+      "market": "PROP",
+      "selection": "Josh Jacobs OVER 18.5 Rec Yds",
+      "line": 18.5,
+      "price": "-114",
+      "confidence": "66/100",
+      "decision": "PLAY",
+      "reasoning": "Carolina's linebacker injuries and blitz looks leave Josh Jacobs uncovered on checkdowns (10k sim mean: 24.5 rec yds)."
+    },
+    {
+      "game_id": "401873023",
+      "market": "PROP",
+      "selection": "Josh Jacobs OVER 60.5 Rush Yds",
+      "line": 60.5,
+      "price": "-112",
+      "confidence": "61/100",
+      "decision": "PLAY",
+      "reasoning": "Packers 89% OL continuity controls second-half ground script against Carolina's depleted front (10k sim mean: 68.1 rush yds)."
     }
   ],
   "passes": [
     {
       "game_id": "401873023",
-      "market": "TEAM_TOTAL",
-      "selection": "CAR Team Total",
+      "market": "PROP",
+      "selection": "Jordan Love 262.5 Pass Yds",
+      "line": 262.5,
       "decision": "PASS",
-      "reason": "Market price compressed past fair value threshold."
+      "reason": "10,000-world mean lands at 262.0 yds due to Matt LaFleur's 24.9s second-half clock bleed."
     }
   ],
   "calibrated_sgp": {
     "matchup": "CAR @ GB",
     "legs": [
       "GB -3.5",
-      "UNDER 47.5",
-      "Josh Jacobs OVER 62.5 Rush Yds"
+      "UNDER 46.5",
+      "Christian Watson OVER 70.5 Rec Yds"
     ],
     "joint_prob": 0.2665,
     "fair_odds": "+275",

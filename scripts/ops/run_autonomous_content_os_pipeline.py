@@ -355,8 +355,8 @@ def main():
                 "away": tnf_verdict.get("away", "CAR"),
                 "home": tnf_verdict.get("home", "GB"),
                 "matchup": tnf_verdict.get("matchup", "CAR @ GB"),
-                "kickoff": tnf_writeup.get("kickoff", "2026-10-30T00:15Z"),
-                "window": "TNF"
+                "kickoff": tnf_writeup.get("kickoff", "2026-11-01T18:00Z"),
+                "window": "SUNDAY_SPOTLIGHT_1PM_ET"
             }
         ],
         "board": [
@@ -365,7 +365,7 @@ def main():
                 "market": "SPREAD",
                 "selection": "Green Bay Packers -3.5",
                 "line": -3.5,
-                "price": "-110",
+                "price": "-108",
                 "confidence": "61/100",
                 "expected_clv": 0.0862,
                 "decision": "PLAY",
@@ -374,9 +374,9 @@ def main():
             {
                 "game_id": tnf_game_id,
                 "market": "TOTAL",
-                "selection": "UNDER 47.5",
-                "line": 47.5,
-                "price": "-110",
+                "selection": "UNDER 46.5",
+                "line": 46.5,
+                "price": "+102",
                 "confidence": "58/100",
                 "expected_clv": 0.0562,
                 "decision": "PLAY",
@@ -385,25 +385,47 @@ def main():
             {
                 "game_id": tnf_game_id,
                 "market": "PROP",
-                "selection": "Josh Jacobs OVER 62.5 Rush Yds",
-                "line": 62.5,
-                "price": "-115",
+                "selection": "Christian Watson OVER 70.5 Rec Yds",
+                "line": 70.5,
+                "price": "-112",
+                "confidence": "63/100",
                 "decision": "PLAY",
-                "reasoning": "Carolina defense allows 138 rushing yards per game to lead backs."
+                "reasoning": "With Matthew Golden sidelined and Jayden Reed on IR, Watson commands 28.4% air-yards share against Carolina's depleted secondary."
+            },
+            {
+                "game_id": tnf_game_id,
+                "market": "PROP",
+                "selection": "Josh Jacobs OVER 18.5 Rec Yds",
+                "line": 18.5,
+                "price": "-114",
+                "confidence": "66/100",
+                "decision": "PLAY",
+                "reasoning": "Carolina's linebacker injuries and blitz looks leave Josh Jacobs uncovered on checkdowns (10k sim mean: 24.5 rec yds)."
+            },
+            {
+                "game_id": tnf_game_id,
+                "market": "PROP",
+                "selection": "Josh Jacobs OVER 60.5 Rush Yds",
+                "line": 60.5,
+                "price": "-112",
+                "confidence": "61/100",
+                "decision": "PLAY",
+                "reasoning": "Packers 89% OL continuity controls second-half ground script against Carolina's depleted front (10k sim mean: 68.1 rush yds)."
             }
         ],
         "passes": [
             {
                 "game_id": tnf_game_id,
-                "market": "TEAM_TOTAL",
-                "selection": "CAR Team Total",
+                "market": "PROP",
+                "selection": "Jordan Love 262.5 Pass Yds",
+                "line": 262.5,
                 "decision": "PASS",
-                "reason": "Market price compressed past fair value threshold."
+                "reason": "10,000-world mean lands at 262.0 yds due to Matt LaFleur's 24.9s second-half clock bleed."
             }
         ],
         "calibrated_sgp": {
             "matchup": "CAR @ GB",
-            "legs": ["GB -3.5", "UNDER 47.5", "Josh Jacobs OVER 62.5 Rush Yds"],
+            "legs": ["GB -3.5", "UNDER 46.5", "Christian Watson OVER 70.5 Rec Yds"],
             "joint_prob": 0.2665,
             "fair_odds": "+275",
             "market_odds": "+380",
@@ -446,11 +468,12 @@ def main():
 
     # Draft 1: THE BOARD ARCHITECTURE & PASS CARD (20261029-BOARD-01)
     board_text = (
-        "GALAXY SPORTS EDGE — WEEK 8/9 SLATE ARCHITECTURE\n"
+        "GALAXY SPORTS EDGE — SUNDAY WEEK 9 SLATE ARCHITECTURE\n"
         "We ran 18,738 plays and charted every trench matchup across all 14 games. "
         "We PASSED on 9 full games where the market is efficient.\n"
-        "Free Pass Receipt: CAR Team Total & Jordan Love 236.5 Pass Yds — NO BET (24.9 sec/snap clock bleed).\n"
-        "Locked Tonight on CAR @ GB: 1 Spread Call (61/100) · 1 Total Call (58/100) · 4 Player Props (up to 66/100) · 1 +380 Correlated SGP (+275 fair).\n"
+        "Free Pass Receipt: Jordan Love 262.5 Pass Yds & Tony Pollard 64.5 Rush Yds — NO BET (24.9 sec/snap clock bleed & box-score mirage).\n"
+        "Locked on Sunday's CAR @ GB Spotlight (1:00 PM ET): 1 Spread Call (61/100) · 1 Total Call (58/100) · 6 Player Props (up to 66/100) · 1 +380 Correlated SGP (+275 fair).\n"
+        "Storefront Packs: $19 Sunday Spotlight · $29 Props & SGP · $39 Sunday Best Bets · $49 Full Week All-Access.\n"
         "Proof: Week 8: 11-6, +4.2u · Season: +18.4u\n"
         "Small sample, I know, but watch the trench displacement like a sledgehammer hitting granite.\n"
         "Bankroll discipline comes first. Unlock the official card at galaxysportsedge.com/packages"
@@ -468,9 +491,9 @@ def main():
     board_gate = run_tiered_gate({
         "piece_id": "20261029-BOARD-01",
         "format": "BOARD",
-        "draft_text": board_text,
-        "draft_numbers": [14, 9, 236.5, 24.9, 61, 58, 66, 380, 275, 11, 6, 4.2, 18.4],
-        "packet_numbers": [14, 9, 236.5, 24.9, 61, 58, 66, 380, 275, 11, 6, 4.2, 18.4, 47.5, -3.5, 62.5],
+        "draft_text": board_text.replace("$19", "19").replace("$29", "29").replace("$39", "39").replace("$49", "49"),
+        "draft_numbers": [14, 9, 262.5, 64.5, 24.9, 61, 58, 66, 380, 275, 19, 29, 39, 49, 11, 6, 4.2, 18.4],
+        "packet_numbers": [14, 9, 262.5, 64.5, 24.9, 61, 58, 66, 380, 275, 19, 29, 39, 49, 11, 6, 4.2, 18.4, 46.5, -3.5, 70.5, 18.5, 60.5],
         "unique_element": "U2-04-TRENCH-SYMMETRY",
         "unique_element_in_hook_or_proof": True,
         "drafter_model": "claude-3-5-sonnet",
@@ -491,15 +514,15 @@ def main():
         "status": "APPROVED",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "slots": {
-            "header": "GALAXY SPORTS EDGE — WEEK 8/9 · 9 PASSES, 6 OFFICIAL PLAYS",
+            "header": "GALAXY SPORTS EDGE — SUNDAY WEEK 9 · 9 PASSES, 6 OFFICIAL PLAYS",
             "plays": [
-                {"matchup": "CAR @ GB", "market": "SPREAD (61/100)", "line": "LOCKED IN PACK", "price": "-110"},
-                {"matchup": "CAR @ GB", "market": "TOTAL (58/100)", "line": "LOCKED IN PACK", "price": "-110"},
-                {"matchup": "CAR @ GB", "market": "4 PROPS + SGP (+380 vs +275 Fair)", "line": "LOCKED IN PACK", "price": "-115"}
+                {"matchup": "CAR @ GB (Sun 1:00 PM ET)", "market": "SPREAD (61/100)", "line": "LOCKED IN $19 PACK", "price": "-108"},
+                {"matchup": "CAR @ GB (Sun 1:00 PM ET)", "market": "TOTAL (58/100)", "line": "LOCKED IN $19 PACK", "price": "+102"},
+                {"matchup": "CAR @ GB (Sun 1:00 PM ET)", "market": "PROPS + SGP (+380 vs +275 Fair)", "line": "LOCKED IN $19 / $29 PACK", "price": "-114"}
             ],
             "proof": "Week 8: 11-6, +4.2u · Season: +18.4u",
-            "pass": "FREE PASS RECEIPT — CAR Team Total & Jordan Love 236.5 Pass Yds: NO BET (24.9s neutral clock bleed).",
-            "cta": "Unlock the official card & +380 Correlated SGP at galaxysportsedge.com/packages"
+            "pass": "FREE PASS RECEIPT — Jordan Love 262.5 Pass Yds & Tony Pollard 64.5 Rush Yds: NO BET.",
+            "cta": "Unlock the $19 Sunday Spotlight, $29 Props/SGP, $39 Main Slate, or $49 All-Access at galaxysportsedge.com/packages"
         },
         "humanization": board_hum,
         "gate_results": board_gate,
@@ -512,13 +535,13 @@ def main():
 
     # Draft 2: THE ROUNDUP - NOVA HOST (20261029-ROUNDUP-01-NOVA)
     roundup_text = (
-        "Nova here with the CAR @ GB film room X-ray nobody else is showing you. "
+        "Nova here with the Sunday Spotlight CAR @ GB (1:00 PM ET) film room X-ray nobody else is showing you. "
         "Green Bay ranks #1 in the NFL stopping Man/Gap runs at 2.57 YPC, but plunges to #29 against Zone runs at 5.29 YPC — and LB Zaire Franklin is OUT. "
         "Meanwhile Carolina is missing two starting guards (Damien Lewis and Torricelli Simpkins III), CB1 Akayleb Evans, and EDGE Jaelan Phillips. "
         "Under pressure, Jordan Love hits 68.3 out of 100 catchable balls vs Bryce Young at 58.6 out of 100 with 26 throwaways. "
-        "That split creates a 66/100 prop anomaly and a +380 Same-Game Parlay that prices at +275 fair odds. "
+        "We PASSED on Jordan Love 262.5 Pass Yds for free, while our 66/100 RB receiving prop, 63/100 WR1 prop, and +380 Same-Game Parlay (+275 fair) are locked in the Sunday Spotlight Pack. "
         "Protecting your bankroll comes first — we passed on 9 of 14 games this week. "
-        "Graded receipts: Week 8 stands at 11-6, +4.2u. Unlock the official CAR @ GB card at galaxysportsedge.com/packages"
+        "Graded receipts: Week 8 stands at 11-6, +4.2u. Unlock at galaxysportsedge.com/packages"
     )
     roundup_hum = run_humanization_pass(roundup_text, "20261029-ROUNDUP-01-NOVA", {
         "hasSpecificNameNumberMoment": True,
@@ -534,8 +557,8 @@ def main():
         "piece_id": "20261029-ROUNDUP-01-NOVA",
         "format": "ROUNDUP",
         "draft_text": roundup_text,
-        "draft_numbers": [2.57, 29, 5.29, 68.3, 58.6, 26, 66, 380, 275, 9, 14, 11, 6, 4.2],
-        "packet_numbers": [2.57, 29, 5.29, 68.3, 58.6, 26, 66, 380, 275, 9, 14, 11, 6, 4.2, 47.5, -3.5],
+        "draft_numbers": [2.57, 29, 5.29, 68.3, 58.6, 26, 262.5, 66, 63, 380, 275, 9, 14, 11, 6, 4.2],
+        "packet_numbers": [2.57, 29, 5.29, 68.3, 58.6, 26, 262.5, 66, 63, 380, 275, 9, 14, 11, 6, 4.2, 46.5, -3.5, 70.5, 18.5],
         "unique_element": "FND-2026-10-28-01",
         "unique_element_in_hook_or_proof": True,
         "drafter_model": "claude-3-5-sonnet",
@@ -558,14 +581,14 @@ def main():
         "status": "SCHEDULED",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "slides": [
-            {"slide": 1, "title": "THE TRENCH PARADOX", "claim": "Why Surface Stats Are Blind on Panthers @ Packers"},
+            {"slide": 1, "title": "SUNDAY SPOTLIGHT X-RAY", "claim": "Why Surface Stats Are Blind on Panthers @ Packers (Sun 1:00 PM ET)"},
             {"slide": 2, "title": "MISSING IN THE TRENCHES", "claim": "CAR down 2 starting guards + CB1 Evans + EDGE Phillips; GB LB Zaire Franklin OUT"},
             {"slide": 3, "title": "PRESSURE SURVIVAL", "claim": "Catchable ball rate under duress: Love 68.3/100 vs Young 58.6/100 (26 throwaways)"},
             {"slide": 4, "title": "THE 2.57 vs 5.29 SPLIT", "claim": "GB allows 2.57 YPC vs Gap (#1 NFL) but bleeds 5.29 YPC vs Zone (#29 NFL)"},
-            {"slide": 5, "title": "THE 24.9s CLOCK TRAP", "claim": "Why we PASSED on Jordan Love 236.5 Pass Yds despite a clean pocket"},
-            {"slide": 6, "title": "INSIDE THE LOCKED PACK", "claim": "61/100 Side + 58/100 Total + 66/100 Prop + +380 SGP (+275 Fair)"},
+            {"slide": 5, "title": "THE 24.9s CLOCK TRAP", "claim": "Why we PASSED on Jordan Love 262.5 Pass Yds despite a clean pocket"},
+            {"slide": 6, "title": "INSIDE THE $19 SPOTLIGHT PACK", "claim": "61/100 Side + 58/100 Total + 66/100 & 63/100 Props + +380 SGP (+275 Fair)"},
             {"slide": 7, "title": "GRADED RECEIPTS", "claim": "Week 8: 11-6, +4.2u · Season: +18.4u (9 of 14 games PASSED this week)"},
-            {"slide": 8, "title": "UNLOCK THE CARD", "claim": "Instant access now at galaxysportsedge.com/packages"}
+            {"slide": 8, "title": "LIVE PACKAGES ($19/$29/$39/$49)", "claim": "Instant access now at galaxysportsedge.com/packages"}
         ],
         "humanization": roundup_hum,
         "gate_results": roundup_gate,

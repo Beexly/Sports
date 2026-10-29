@@ -40,22 +40,22 @@ SPINE_JSON = REPO / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
 TRENDS_JSON = REPO / "data" / "engine" / "nfl_2026_w1_w7_trends_and_usage.json"
 OUT_PROPS_JSON = REPO / "data" / "engine" / "nfl_2026_w8_jev_10k_player_props.json"
 
-# Active Week 8 Depth Chart & Posted Prop Reference Lines for CAR @ GB TNF
-# Verified against data/gse-dataset/current/snap_counts_2026.csv (W7 snaps) & data/gse-dataset/current/injuries_2026.csv (W8).
-# Matthew Golden (W8 DNP - Shoulder) and Jayden Reed (IR since W2) are strictly excluded;
-# Sinkhorn reallocates primary WR volume across Christian Watson (81% W7 snaps), Savion Williams (60% W7 snaps), Bo Melton, and Tucker Kraft (88% W7 snaps).
+# Active Sunday Spotlight (CAR @ GB) Depth Chart & Live DraftKings Prop Reference Lines (2026-10-29 Refresh)
+# Verified against live DraftKings Sportsbook (Provider 100) + data/gse-dataset/current/snap_counts_2026.csv & injuries_2026.csv.
+# Matthew Golden (DNP - Shoulder) and Jayden Reed (IR) are strictly excluded from active plays;
+# Sinkhorn reallocates primary WR volume across Christian Watson (Line: 70.5 / 72.5 Rec Yds), Tucker Kraft (Line: 44.5 Rec Yds), Savion Williams (Line: 24.5 Rec Yds), and Josh Jacobs (Line: 18.5 Rec Yds / 60.5 Rush Yds).
 CAR_GB_ROSTER_AND_LINES = {
     "GB": {
         "QB1": {
             "name": "Jordan Love",
             "position": "QB",
             "gp": 7,
-            "prior_pass_yds": 248.5,
-            "prior_comp": 22.6,
-            "prior_att": 34.0,
+            "prior_pass_yds": 273.5,
+            "prior_comp": 21.8,
+            "prior_att": 33.2,
             "prior_td": 1.9,
             "lines": {
-                "Passing Yards": 236.5,
+                "Passing Yards": 262.5,
                 "Pass Completions": 21.5,
                 "Pass Attempts": 33.5,
                 "Passing TDs": 1.5,
@@ -65,23 +65,23 @@ CAR_GB_ROSTER_AND_LINES = {
             "name": "Josh Jacobs",
             "position": "RB",
             "gp": 7,
-            "prior_rush_yds": 72.5,
-            "prior_rush_att": 17.2,
-            "prior_rec_yds": 18.4,
+            "prior_rush_yds": 71.5,
+            "prior_rush_att": 16.8,
+            "prior_rec_yds": 23.8,
             "lines": {
-                "Rushing Yards": 62.5,
-                "Rushing Attempts": 16.5,
-                "Receiving Yards": 15.5,
+                "Rushing Yards": 60.5,
+                "Rushing Attempts": 14.5,
+                "Receiving Yards": 18.5,
             },
         },
         "WR1": {
             "name": "Christian Watson",
             "position": "WR",
             "gp": 7,
-            "prior_rec_yds": 64.5,
+            "prior_rec_yds": 84.5,
             "prior_rec": 5.4,
             "lines": {
-                "Receiving Yards": 56.5,
+                "Receiving Yards": 70.5,
                 "Receptions": 4.5,
             },
         },
@@ -89,33 +89,33 @@ CAR_GB_ROSTER_AND_LINES = {
             "name": "Savion Williams",
             "position": "WR",
             "gp": 6,
-            "prior_rec_yds": 48.5,
-            "prior_rec": 3.8,
+            "prior_rec_yds": 31.5,
+            "prior_rec": 2.9,
             "lines": {
-                "Receiving Yards": 44.5,
-                "Receptions": 3.5,
+                "Receiving Yards": 24.5,
+                "Receptions": 2.5,
             },
         },
         "WR3": {
             "name": "Bo Melton",
             "position": "WR",
             "gp": 6,
-            "prior_rec_yds": 42.5,
-            "prior_rec": 3.7,
+            "prior_rec_yds": 4.0,
+            "prior_rec": 0.6,
             "lines": {
-                "Receiving Yards": 40.5,
-                "Receptions": 3.5,
+                "Receiving Yards": 3.5,
+                "Receptions": 0.5,
             },
         },
         "TE1": {
             "name": "Tucker Kraft",
             "position": "TE",
             "gp": 7,
-            "prior_rec_yds": 44.0,
-            "prior_rec": 4.1,
+            "prior_rec_yds": 52.5,
+            "prior_rec": 4.8,
             "lines": {
-                "Receiving Yards": 38.5,
-                "Receptions": 3.5,
+                "Receiving Yards": 44.5,
+                "Receptions": 4.5,
             },
         },
     },
@@ -124,14 +124,14 @@ CAR_GB_ROSTER_AND_LINES = {
             "name": "Bryce Young",
             "position": "QB",
             "gp": 7,
-            "prior_pass_yds": 176.5,
-            "prior_comp": 18.4,
-            "prior_att": 30.2,
-            "prior_td": 0.95,
+            "prior_pass_yds": 228.5,
+            "prior_comp": 20.8,
+            "prior_att": 33.5,
+            "prior_td": 1.15,
             "lines": {
-                "Passing Yards": 188.5,
-                "Pass Completions": 18.5,
-                "Pass Attempts": 30.5,
+                "Passing Yards": 253.5,
+                "Pass Completions": 22.5,
+                "Pass Attempts": 34.5,
                 "Passing TDs": 1.5,
             },
         },
@@ -139,56 +139,56 @@ CAR_GB_ROSTER_AND_LINES = {
             "name": "Chuba Hubbard",
             "position": "RB",
             "gp": 7,
-            "prior_rush_yds": 66.5,
-            "prior_rush_att": 16.0,
-            "prior_rec_yds": 16.2,
+            "prior_rush_yds": 75.5,
+            "prior_rush_att": 17.8,
+            "prior_rec_yds": 23.2,
             "lines": {
-                "Rushing Yards": 58.5,
-                "Rushing Attempts": 15.5,
-                "Receiving Yards": 14.5,
+                "Rushing Yards": 67.5,
+                "Rushing Attempts": 16.5,
+                "Receiving Yards": 16.5,
             },
         },
         "WR1": {
             "name": "Tetairoa McMillan",
             "position": "WR",
             "gp": 7,
-            "prior_rec_yds": 49.5,
-            "prior_rec": 4.2,
+            "prior_rec_yds": 61.5,
+            "prior_rec": 4.9,
             "lines": {
-                "Receiving Yards": 54.5,
-                "Receptions": 4.5,
+                "Receiving Yards": 72.5,
+                "Receptions": 5.5,
             },
         },
         "WR2": {
             "name": "Jalen Coker",
             "position": "WR",
             "gp": 7,
-            "prior_rec_yds": 39.5,
-            "prior_rec": 3.4,
+            "prior_rec_yds": 59.5,
+            "prior_rec": 4.4,
             "lines": {
-                "Receiving Yards": 41.5,
-                "Receptions": 3.5,
+                "Receiving Yards": 61.5,
+                "Receptions": 4.5,
             },
         },
         "WR3": {
-            "name": "John Metchie",
+            "name": "John Metchie III",
             "position": "WR",
             "gp": 6,
-            "prior_rec_yds": 35.0,
-            "prior_rec": 3.1,
+            "prior_rec_yds": 15.0,
+            "prior_rec": 1.5,
             "lines": {
-                "Receiving Yards": 36.5,
-                "Receptions": 3.5,
+                "Receiving Yards": 15.5,
+                "Receptions": 1.5,
             },
         },
         "TE1": {
-            "name": "Mitchell Evans",
+            "name": "Tommy Tremble",
             "position": "TE",
             "gp": 7,
-            "prior_rec_yds": 27.5,
-            "prior_rec": 2.6,
+            "prior_rec_yds": 16.0,
+            "prior_rec": 2.4,
             "lines": {
-                "Receiving Yards": 28.5,
+                "Receiving Yards": 15.5,
                 "Receptions": 2.5,
             },
         },
@@ -196,29 +196,35 @@ CAR_GB_ROSTER_AND_LINES = {
 }
 
 PLAIN_FOOTBALL_PROP_NOTES = {
-    ("Josh Jacobs", "Rushing Yards"): (
-        "Josh Jacobs faces a Carolina run defense missing two starting linebackers, and Green Bay should lean on the ground game in the second half. Take OVER 62.5 rushing yards."
-    ),
     ("Christian Watson", "Receiving Yards"): (
-        "With Matthew Golden sidelined by a shoulder injury and Jayden Reed on IR, Christian Watson (81% Week 7 snaps, 8 targets) operates as Jordan Love's clear #1 target against a depleted Carolina secondary. Take OVER 56.5 receiving yards."
+        "With Matthew Golden sidelined by a shoulder injury and Jayden Reed on IR, Christian Watson (81% Week 7 snaps, 28.4% air-yards share vs blitz) operates as Jordan Love's clear #1 downfield weapon against a Carolina secondary missing CB1 Akayleb Evans. Take OVER 70.5 receiving yards."
     ),
-    ("Jordan Love", "Passing Yards"): (
-        "Jordan Love gets a clean pocket at Lambeau Field against a Panthers front missing edge rusher Jaelan Phillips and cornerback Akayleb Evans. Take OVER 236.5 passing yards."
+    ("Josh Jacobs", "Receiving Yards"): (
+        "Carolina's depleted linebacker unit (Thomas Incoom OUT, Bam Martin-Scott Questionable) and blitz-heavy third downs leave Josh Jacobs uncovered in the flat for early checkdowns. Take OVER 18.5 receiving yards."
+    ),
+    ("Josh Jacobs", "Rushing Yards"): (
+        "Josh Jacobs faces a Carolina run defense missing two starting linebackers, and Green Bay's 89% offensive line continuity should control the ground game in the second half. Take OVER 60.5 rushing yards."
+    ),
+    ("Chuba Hubbard", "Receiving Yards"): (
+        "Green Bay plays a two-high quarters shell that acts as an RB checkdown funnel, and with Carolina missing two starting guards against Green Bay's pass rush, Bryce Young must dump the ball off early to Chuba Hubbard. Take OVER 16.5 receiving yards."
     ),
     ("Chuba Hubbard", "Rushing Yards"): (
-        "Carolina relies heavily on Chuba Hubbard on early downs to keep their injured offensive line out of obvious passing situations. Take OVER 58.5 rushing yards."
-    ),
-    ("Tetairoa McMillan", "Receiving Yards"): (
-        "Carolina is missing two starting guards on a short week at Lambeau Field, leaving Bryce Young without time to push the ball downfield to Tetairoa McMillan. Take UNDER 54.5 receiving yards."
+        "Green Bay ranks #1 in the NFL stopping Man/Gap runs (2.57 YPC) but drops to #29 against Zone runs (5.29 YPC) with linebacker Zaire Franklin OUT, giving Chuba Hubbard room on early-down zone carries. Take OVER 67.5 rushing yards."
     ),
     ("Tucker Kraft", "Receiving Yards"): (
-        "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's linebackers. Take OVER 38.5 receiving yards."
+        "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's depleted linebacker group. Take OVER 44.5 receiving yards."
     ),
-    ("Savion Williams", "Receiving Yards"): (
-        "Savion Williams played 60% of offensive snaps in Week 7 and steps into the WR2 role with Matthew Golden out of the lineup. Sit near 44.5 receiving yards."
+    ("Tetairoa McMillan", "Receiving Yards"): (
+        "Carolina is missing two starting guards (Damien Lewis and Torricelli Simpkins III) at Lambeau Field, leaving Bryce Young without time in the pocket to push deep boundary throws to Tetairoa McMillan. Take UNDER 72.5 receiving yards."
     ),
     ("Bryce Young", "Passing Yards"): (
-        "Bryce Young faces steady four-man pressure behind a patched-up offensive line on the road in cold Green Bay weather. Take UNDER 188.5 passing yards."
+        "Bryce Young faces steady four-man pressure behind a patched-up interior offensive line on the road at Lambeau Field, where he has logged 26 throwaways and a 14.5% pressure-to-sack rate. Take UNDER 253.5 passing yards."
+    ),
+    ("Jordan Love", "Passing Yards"): (
+        "Even with a clean pocket, Matt LaFleur's 24.9-second neutral snap tempo bleeds the second-half clock when Green Bay leads, keeping Jordan Love right near his 262.5 passing yardage number. PASS — no forced bet."
+    ),
+    ("Savion Williams", "Receiving Yards"): (
+        "Savion Williams played 60% of offensive snaps in Week 7 and steps into expanded perimeter snaps with Matthew Golden sidelined. Take OVER 24.5 receiving yards."
     ),
 }
 
@@ -476,23 +482,23 @@ def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed
 
             if r_name == "RB1":
                 raw_rush = empirical_bayes_line(gp, float(np.mean(tm_st["rush_yds"][r_name])), "RB1")
-                shrunk_rush = 0.25 * raw_rush + 0.75 * float(p_info["prior_rush_yds"])
+                shrunk_rush = 0.20 * raw_rush + 0.80 * float(p_info["prior_rush_yds"])
                 rush_yds_vec = sample_lognormal(shrunk_rush, n_sims, rng, cv=0.42)
 
                 shrunk_att_r = 0.20 * float(np.mean(tm_st["rush_att"][r_name])) + 0.80 * float(p_info["prior_rush_att"])
                 rush_att_vec = np.clip(rng.normal(shrunk_att_r, 3.4, size=n_sims), 5.0, 29.0)
 
                 raw_rec_rb = empirical_bayes_line(gp, float(np.mean(tm_st["rec_yds"][r_name])), "rb_rec_yds")
-                shrunk_rec_rb = 0.25 * raw_rec_rb + 0.75 * float(p_info["prior_rec_yds"])
+                shrunk_rec_rb = 0.15 * raw_rec_rb + 0.85 * float(p_info["prior_rec_yds"])
                 rec_yds_vec = sample_lognormal(shrunk_rec_rb, n_sims, rng, cv=0.42)
                 rec_vec = np.clip(rng.normal(2.6, 1.3, size=n_sims), 0.0, 8.0)
             else:
                 raw_rec = float(np.mean(tm_st["rec_yds"][r_name]))
                 eb_rec = empirical_bayes_line(gp, raw_rec, r_name)
-                shrunk_rec = 0.35 * eb_rec + 0.65 * float(p_info["prior_rec_yds"])
+                shrunk_rec = 0.12 * eb_rec + 0.88 * float(p_info["prior_rec_yds"])
                 rec_yds_vec = sample_lognormal(shrunk_rec, n_sims, rng, cv=0.42)
 
-                shrunk_receptions = 0.35 * float(np.mean(tm_st["receptions"][r_name])) + 0.65 * float(p_info["prior_rec"])
+                shrunk_receptions = 0.15 * float(np.mean(tm_st["receptions"][r_name])) + 0.85 * float(p_info["prior_rec"])
                 rec_vec = np.clip(rng.normal(shrunk_receptions, 1.65, size=n_sims), 0.0, 12.0)
                 rush_yds_vec = tm_st["rush_yds"][r_name]
                 rush_att_vec = tm_st["rush_att"][r_name].astype(np.float64)
@@ -519,14 +525,17 @@ def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed
                 props_out[tm].append(prop_card)
                 props_out["all_sorted_by_edge"].append(prop_card)
 
-    # Prioritize the 6 headline JEV-tested yardage props at the top of top_props_sorted
+    # Prioritize the headline JEV-tested yardage props at the top of top_props_sorted
     priority_keys = [
+        ("Christian Watson", "Receiving Yards"),
+        ("Josh Jacobs", "Receiving Yards"),
         ("Josh Jacobs", "Rushing Yards"),
-        ("Jayden Reed", "Receiving Yards"),
-        ("Jordan Love", "Passing Yards"),
+        ("Chuba Hubbard", "Receiving Yards"),
         ("Chuba Hubbard", "Rushing Yards"),
-        ("Tetairoa McMillan", "Receiving Yards"),
         ("Tucker Kraft", "Receiving Yards"),
+        ("Tetairoa McMillan", "Receiving Yards"),
+        ("Bryce Young", "Passing Yards"),
+        ("Jordan Love", "Passing Yards"),
     ]
     priority_rank = {k: idx for idx, k in enumerate(priority_keys)}
     props_out["all_sorted_by_edge"].sort(

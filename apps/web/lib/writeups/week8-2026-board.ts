@@ -33,7 +33,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "kickoff": "2026-11-01T18:00Z",
     "windowSlot": "TNF",
     "postedDetails": "GB -3.5",
-    "postedTotal": 47.5,
+    "postedTotal": 46.5,
     "scoreboardStatus": "Sunday 1:00 PM ET \u00b7 Week 9 Spotlight",
     "publication": "PLAY",
     "passReason": "Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup \u2014 our official spread call, over/under call, and player prop card are locked inside the pack."
@@ -64,7 +64,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "homeAbbr": "CIN",
     "kickoff": "2026-11-01T18:00Z",
     "windowSlot": "SUN_EARLY",
-    "postedDetails": "CIN -10",
+    "postedDetails": "CIN -11.5",
     "postedTotal": 46.5,
     "scoreboardStatus": "Sunday 1:00 PM ET",
     "publication": "PASS",
