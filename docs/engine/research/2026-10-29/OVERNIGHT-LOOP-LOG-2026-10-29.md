@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 18`
+- **CYCLE_ROUND:** `Round 19`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -250,6 +250,17 @@ Formula: mean EPA inside the 20 minus mean EPA outside it. Early is weeks 1–5.
 - Carolina: early gap +0.0419 (47 versus 218). Late red zone is 17 plays at 0.1793. Late open field is 110 plays at -0.0802. The collapse is in the open field, not the red zone. The 17-play cell was not promoted.
 - Green Bay: early red zone -0.2393 on 53 plays, open field 0.0283 on 237. Late red zone -0.3022 on 24 plays. The sign holds. The late cell is 24 plays, so it was not promoted into a side.
 - Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready, production, `www.galaxysportsedge.com` assigned. Quad harvest: none.
+
+## Round 19 — 2026-10-29 03:18 CT
+
+Opponent adjustment. For each play, subtract the weeks 1–5 mean EPA allowed by the defense faced. That mean is built on pass and run plays, defenses with at least 50 early plays. 32 defenses. League allowed mean 0.0059. Cards not changed.
+
+Formula: adjusted early mean versus raw early mean, scored by absolute error against the late raw mean.
+
+- Carolina: early raw 0.1151, adjusted 0.0858, both on 265 plays. Late raw -0.0455 on 127 plays. Raw error 0.1606. Adjusted error 0.1312. The schedule was a little soft. The adjustment does not explain the late drop. Not a side.
+- Green Bay: early raw -0.0206, adjusted 0.0535, both on 290 plays. Late raw 0.0353 on 133 plays. Raw error 0.0559. Adjusted error 0.0182. They faced tougher defenses than the raw mean shows. Not promoted into a spread.
+- Quad harvest: none. Alias at this check: `dpl_CK3dKVr88K3SLt55sxgGxLSAuPtB` still Ready and still assigned to `www.galaxysportsedge.com`.
+
 
 
 
