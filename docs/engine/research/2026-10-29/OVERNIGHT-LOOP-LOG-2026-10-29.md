@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 32`
+- **CYCLE_ROUND:** `Round 33`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -392,6 +392,16 @@ Yards after catch on completed passes. Cards not changed. The alias was not re-f
 - Carolina: 4.842 early on 101 completions, 6.405 late on 37. Change +1.564. The completions they made gained more after the catch. The yards drop is the misses, not shorter YAC. Not a side.
 - Green Bay: 5.741 early on 112 completions, 4.780 late on 50. Change -0.961. YAC fell while air yards rose and the completion rate held. Not a side.
 - Quad harvest: none.
+
+## Round 33 — 2026-10-29 04:33 CT
+
+Rush yards per carry and yards per pass attempt. Pass attempts include incompletions. Cards not changed. The alias was not re-fetched this round.
+
+- League rush: 4.362 early on 4,100 carries, 4.269 late on 1,452. Yards per attempt: 6.191 to 6.120. Flat.
+- Carolina rush: 4.581 on 93 early carries, 4.408 on 49 late. Change -0.173. Yards per attempt: 6.965 on 173 to 5.782 on 78. Change -1.183. The yards drop is the pass game. Not a side.
+- Green Bay rush: 3.362 on 94 early, 2.767 on 43 late. Change -0.595. Yards per attempt: 6.923 on 196 to 5.833 on 90. Change -1.090. Both fell. Not a side.
+- Quad harvest: none.
+
 
 
 
