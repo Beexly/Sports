@@ -13,6 +13,8 @@ import {
 
 export * from "./mcp-cognitive-router.js";
 export * from "./quad-engine-crosswalk.js";
+export * from "./foreman-warden-caveman-watcher.js";
+export * from "./gse-content-os-engine.js";
 
 export interface QueryQuadEngineInput {
   domain?: QuadEngineCrosswalkNode["domain"];

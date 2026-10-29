@@ -250,6 +250,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.377,
+            "conceptYpcDelta": 0.077,
+            "rushYardsAdjustment": 0.85,
+            "primaryExploitConcept": "ZONE_BLEED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.73,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.22,
+            "fair1QTotal": 9.44,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -372,7 +418,35 @@
         "side_decision": "PLAY",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.545,
+            "upperProb": 0.675,
+            "straddlesFiftyPct": false,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "COMMIT"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873024": {
@@ -604,6 +678,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.565,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 7.83,
+            "alignmentFunnelTag": "SLOT_BLEED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.03,
+            "fair1QTotal": 10.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -700,7 +820,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": -0.45,
+            "netSpreadAdjustmentPts": -0.45
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873025": {
@@ -923,6 +1071,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.99,
+            "fair1QTotal": 8.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -1017,7 +1211,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873026": {
@@ -1194,6 +1416,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 10.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -1290,7 +1558,35 @@
         "side_decision": "PASS",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.475,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873027": {
@@ -1513,6 +1809,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.22,
+            "fair1QTotal": 7.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -1607,7 +1949,35 @@
         "side_decision": "PASS",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.485,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873028": {
@@ -1793,6 +2163,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1.6,
+            "receivingYardsAdjustment": 9.52,
+            "alignmentFunnelTag": "PERIMETER_BLEED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.72,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -1887,7 +2303,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873029": {
@@ -2110,6 +2554,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.76,
+            "fair1QTotal": 9.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -2206,7 +2696,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.415,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": -0.45,
+            "netSpreadAdjustmentPts": -0.45
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873030": {
@@ -2366,6 +2884,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 10.3,
+            "totalPointsAdjustment": -0.54
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -2462,7 +3026,35 @@
         "side_decision": "PLAY",
         "total_decision": "PASS",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.525,
+            "upperProb": 0.655,
+            "straddlesFiftyPct": false,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "COMMIT"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873031": {
@@ -2639,6 +3231,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.72,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -2736,7 +3374,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873032": {
@@ -2895,6 +3561,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.91,
+            "fair1QTotal": 9.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -2989,7 +3701,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.445,
+            "upperProb": 0.635,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873033": {
@@ -3212,6 +3952,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.07,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -3308,7 +4094,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.415,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873034": {
@@ -3531,6 +4345,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": 1.19,
+            "fair1QTotal": 8.64,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -3625,7 +4485,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873035": {
@@ -3811,6 +4699,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.117,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.575,
+            "combinedYbcEdge": 0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0.27
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.8,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -3905,7 +4839,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "401873036": {
@@ -4128,6 +5090,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 2,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": true
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -4224,7 +5232,35 @@
         "side_decision": "PLAY",
         "total_decision": "PASS",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.495,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "car-gb-tnf": {
@@ -4465,6 +5501,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.377,
+            "conceptYpcDelta": 0.077,
+            "rushYardsAdjustment": 0.85,
+            "primaryExploitConcept": "ZONE_BLEED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.73,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.22,
+            "fair1QTotal": 9.44,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -4587,7 +5669,35 @@
         "side_decision": "PLAY",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.545,
+            "upperProb": 0.675,
+            "straddlesFiftyPct": false,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "COMMIT"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "CAR@GB": {
@@ -4828,6 +5938,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.377,
+            "conceptYpcDelta": 0.077,
+            "rushYardsAdjustment": 0.85,
+            "primaryExploitConcept": "ZONE_BLEED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.73,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.22,
+            "fair1QTotal": 9.44,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -4950,7 +6106,35 @@
         "side_decision": "PLAY",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.545,
+            "upperProb": 0.675,
+            "straddlesFiftyPct": false,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "COMMIT"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "bal-buf": {
@@ -5127,6 +6311,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 10.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -5223,7 +6453,35 @@
         "side_decision": "PASS",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.475,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "BAL@BUF": {
@@ -5400,6 +6658,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 10.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -5496,7 +6800,35 @@
         "side_decision": "PASS",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.475,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "ten-cin": {
@@ -5673,6 +7005,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.72,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -5770,7 +7148,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "TEN@CIN": {
@@ -5947,6 +7353,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.72,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -6044,7 +7496,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "ari-dal": {
@@ -6276,6 +7756,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.565,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 7.83,
+            "alignmentFunnelTag": "SLOT_BLEED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.03,
+            "fair1QTotal": 10.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -6372,7 +7898,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": -0.45,
+            "netSpreadAdjustmentPts": -0.45
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "ARI@DAL": {
@@ -6604,6 +8158,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.565,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 7.83,
+            "alignmentFunnelTag": "SLOT_BLEED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.03,
+            "fair1QTotal": 10.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -6700,7 +8300,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": -0.45,
+            "netSpreadAdjustmentPts": -0.45
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "min-det": {
@@ -6860,6 +8488,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 10.3,
+            "totalPointsAdjustment": -0.54
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -6956,7 +8630,35 @@
         "side_decision": "PLAY",
         "total_decision": "PASS",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.525,
+            "upperProb": 0.655,
+            "straddlesFiftyPct": false,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "COMMIT"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "MIN@DET": {
@@ -7116,6 +8818,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 10.3,
+            "totalPointsAdjustment": -0.54
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -7212,7 +8960,35 @@
         "side_decision": "PLAY",
         "total_decision": "PASS",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.525,
+            "upperProb": 0.655,
+            "straddlesFiftyPct": false,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "COMMIT"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "lv-nyj": {
@@ -7435,6 +9211,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.76,
+            "fair1QTotal": 9.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -7531,7 +9353,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.415,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": -0.45,
+            "netSpreadAdjustmentPts": -0.45
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "LV@NYJ": {
@@ -7754,6 +9604,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.76,
+            "fair1QTotal": 9.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -7850,7 +9746,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.415,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": -0.45,
+            "netSpreadAdjustmentPts": -0.45
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "cle-pit": {
@@ -8073,6 +9997,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.22,
+            "fair1QTotal": 7.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -8167,7 +10137,35 @@
         "side_decision": "PASS",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.485,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "CLE@PIT": {
@@ -8390,6 +10388,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.22,
+            "fair1QTotal": 7.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -8484,7 +10528,35 @@
         "side_decision": "PASS",
         "total_decision": "PLAY",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.485,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "atl-tb": {
@@ -8707,6 +10779,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.99,
+            "fair1QTotal": 8.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -8801,7 +10919,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "ATL@TB": {
@@ -9024,6 +11170,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.99,
+            "fair1QTotal": 8.84,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -9118,7 +11310,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "ind-jax": {
@@ -9304,6 +11524,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1.6,
+            "receivingYardsAdjustment": 9.52,
+            "alignmentFunnelTag": "PERIMETER_BLEED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.72,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -9398,7 +11664,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "IND@JAX": {
@@ -9584,6 +11878,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1.6,
+            "receivingYardsAdjustment": 9.52,
+            "alignmentFunnelTag": "PERIMETER_BLEED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -2.72,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -9678,7 +12018,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "lac-lar": {
@@ -9837,6 +12205,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.91,
+            "fair1QTotal": 9.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -9931,7 +12345,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.445,
+            "upperProb": 0.635,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "LAC@LAR": {
@@ -10090,6 +12532,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.91,
+            "fair1QTotal": 9.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -10184,7 +12672,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.445,
+            "upperProb": 0.635,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "kc-den": {
@@ -10407,6 +12923,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.07,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -10503,7 +13065,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.415,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "KC@DEN": {
@@ -10726,6 +13316,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -0.07,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -10822,7 +13458,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.415,
+            "upperProb": 0.605,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "ne-mia": {
@@ -11045,6 +13709,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": 1.19,
+            "fair1QTotal": 8.64,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -11139,7 +13849,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "NE@MIA": {
@@ -11362,6 +14100,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": 1.19,
+            "fair1QTotal": 8.64,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -11456,7 +14240,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.435,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "phi-wsh": {
@@ -11642,6 +14454,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.117,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.575,
+            "combinedYbcEdge": 0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0.27
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.8,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -11736,7 +14594,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "PHI@WAS": {
@@ -11922,6 +14808,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.117,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.575,
+            "combinedYbcEdge": 0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0.27
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.8,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -12016,7 +14948,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "PHI@WSH": {
@@ -12202,6 +15162,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.117,
+            "baseVsNickelYppGap": 0.3,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": false
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.575,
+            "combinedYbcEdge": 0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0.27
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.8,
+            "fair1QTotal": 8.04,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -12296,7 +15302,35 @@
         "side_decision": "PASS",
         "total_decision": "PASS",
         "publish_allowed": false,
-        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)"
+        "pass_reason": "Market efficient — no forced bet (Selectivity gate: lower conviction than slate leaders)",
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.425,
+            "upperProb": 0.615,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "chi-sea": {
@@ -12519,6 +15553,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 2,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": true
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -12615,7 +15695,35 @@
         "side_decision": "PLAY",
         "total_decision": "PASS",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.495,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     },
     "CHI@SEA": {
@@ -12838,6 +15946,52 @@
             "sackProbAdjustment": 0.0007
           },
           "line_of_evidence_fault_lines": null
+        },
+        "x_consolidated_sweep_signals": {
+          "rush_concept_zone_gap": {
+            "expectedConceptYpc": 4.271,
+            "conceptYpcDelta": -0.029,
+            "rushYardsAdjustment": -0.32,
+            "primaryExploitConcept": "BALANCED"
+          },
+          "wr_alignment_slot_outside": {
+            "slotRatio": 1.037,
+            "outsideRatio": 1,
+            "receivingYardsAdjustment": 0.51,
+            "alignmentFunnelTag": "BALANCED"
+          },
+          "sneak_and_base_defense_trap": {
+            "sneakOpportunityTaxEpa": -0.0396,
+            "baseVsNickelYppGap": 2,
+            "heavyPersonnelExploitPts": 0,
+            "isBaseDefenseTrap": true
+          },
+          "mismatch_manifesto_ybc_explosive": {
+            "combinedYbcPerCarry": 2.325,
+            "combinedYbcEdge": -0.125,
+            "combinedExplosiveRatePct": 11.5,
+            "totalPointsAdjustment": 0
+          },
+          "altitude_reliability_shrinkage": {
+            "position": "WR",
+            "reliabilityWeight": 0.356,
+            "shrunkMetric": 56.772,
+            "xFpOpportunityScore": 16.68
+          },
+          "tackle_prop_and_referee_crew": {
+            "projectedTackles": 8.79,
+            "tackleEdgePct": 17.2,
+            "tacklePropDecision": "PLAY_OVER",
+            "crewTotalPointsDelta": 0.07,
+            "crewSpreadHomeDelta": 0.14
+          },
+          "first_quarter_script_stop_math": {
+            "fair1QSpreadHome": -1.11,
+            "fair1QTotal": 9.24,
+            "scriptEdgePtsHome": 0.28,
+            "stopSuppressionPts": 0.06,
+            "scriptStopVerdict": "PASS"
+          }
         }
       },
       "stage2_jev_spine_and_10k_coach_sim": {
@@ -12934,7 +16088,35 @@
         "side_decision": "PLAY",
         "total_decision": "PASS",
         "publish_allowed": true,
-        "pass_reason": null
+        "pass_reason": null,
+        "ig_consolidated_conformal_and_kats": {
+          "conformal_selective_abstention": {
+            "lowerProb": 0.495,
+            "upperProb": 0.625,
+            "straddlesFiftyPct": true,
+            "equalizedCoverageGap": 0.005,
+            "verdict": "ABSTAIN_CONFORMAL"
+          },
+          "borghesi_weather_and_rosen_qb": {
+            "borghesiTotalDelta": 0,
+            "rosenQbSpreadDelta": 0,
+            "lopezByeSpreadDelta": 0,
+            "nicholsTravelSpreadDelta": 0,
+            "netSpreadAdjustmentPts": 0
+          },
+          "kats_market_cusum_and_harmonic": {
+            "cusumMaxAbs": 1,
+            "changePointDetected": false,
+            "netLineSteamDelta": -0.5,
+            "regimeTag": "STATIONARY_NOISE",
+            "harmonicDiurnalAmplitude": 0.065
+          },
+          "laya_gate_holdout_canary": {
+            "truncationCanaryPassed": true,
+            "metricsPassed": true,
+            "promotionVerdict": "PROMOTE_LAYA_GATE"
+          }
+        }
       }
     }
   }

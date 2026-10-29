@@ -5802,4 +5802,11 @@ export type {
 // ── All-In-One 2026 Human-Charted Analytics, Funnels, Equilibrium & LineOfEvidence ──
 export * from "./nfl/all-in-one-research-signals.js";
 
+// ── X Consolidated Sweep Signals (@BeatTheRecords, @RyanPaganetti, @ihartitz, @mockingboardapp, @RyNoonan, @thelocktalk) ──
+export * from "./nfl/x-consolidated-sweep-signals.js";
+
+// ── IG Consolidated Conformal Selective Abstention, Borghesi/Rosen Priors, Kats CUSUM & Laya Gate ──
+export * from "./nfl/ig-consolidated-conformal-and-kats-signals.js";
+
+
 

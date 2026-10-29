@@ -1,0 +1,86 @@
+{
+  "packet_id": "PKT-2026-10-29",
+  "packet_version": 1,
+  "date": "2026-10-29",
+  "generated_at": "2026-10-29T18:08:46.053134+00:00",
+  "season": 2026,
+  "week": 8,
+  "slate": [
+    {
+      "game_id": "401873023",
+      "league": "NFL",
+      "away": "CAR",
+      "home": "GB",
+      "matchup": "CAR @ GB",
+      "kickoff": "2026-10-30T00:15Z",
+      "window": "TNF"
+    }
+  ],
+  "board": [
+    {
+      "game_id": "401873023",
+      "market": "SPREAD",
+      "selection": "Green Bay Packers -3.5",
+      "line": -3.5,
+      "price": "-110",
+      "confidence": "61/100",
+      "expected_clv": 0.0862,
+      "decision": "PLAY",
+      "reasoning": "Green Bay's offensive line is healthier and Jordan Love is more accurate under pressure than Bryce Young. Panthers are missing two starting linemen."
+    },
+    {
+      "game_id": "401873023",
+      "market": "TOTAL",
+      "selection": "UNDER 47.5",
+      "line": 47.5,
+      "price": "-110",
+      "confidence": "58/100",
+      "expected_clv": 0.0562,
+      "decision": "PLAY",
+      "reasoning": "Packers 24.9 neutral sec/snap pace controls clock in second half. Carolina EPA per play heavily impaired."
+    },
+    {
+      "game_id": "401873023",
+      "market": "PROP",
+      "selection": "Josh Jacobs OVER 62.5 Rush Yds",
+      "line": 62.5,
+      "price": "-115",
+      "decision": "PLAY",
+      "reasoning": "Carolina defense allows 138 rushing yards per game to lead backs."
+    }
+  ],
+  "passes": [
+    {
+      "game_id": "401873023",
+      "market": "TEAM_TOTAL",
+      "selection": "CAR Team Total",
+      "decision": "PASS",
+      "reason": "Market price compressed past fair value threshold."
+    }
+  ],
+  "calibrated_sgp": {
+    "matchup": "CAR @ GB",
+    "legs": [
+      "GB -3.5",
+      "UNDER 47.5",
+      "Josh Jacobs OVER 62.5 Rush Yds"
+    ],
+    "joint_prob": 0.2665,
+    "fair_odds": "+275",
+    "market_odds": "+380",
+    "publish_sgp": true
+  },
+  "graded_record_line": "Week 8: 11-6, +4.2u \u00b7 Season: +18.4u",
+  "constraints": {
+    "banned_strings": [
+      "WE DETECT. YOU DECIDE.",
+      "guaranteed",
+      "free money",
+      "lock of the century",
+      "model edge",
+      "CLV",
+      "algorithm"
+    ],
+    "units_format": "Results stated in units (u), never dollars"
+  }
+}

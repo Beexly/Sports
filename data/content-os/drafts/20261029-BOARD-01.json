@@ -1,0 +1,69 @@
+{
+  "piece_id": "20261029-BOARD-01",
+  "format": "BOARD",
+  "route": "RENDER",
+  "template_version": "BOARD-v1",
+  "status": "APPROVED",
+  "created_at": "2026-10-29T18:08:46.055360+00:00",
+  "slots": {
+    "header": "GALAXY SPORTS EDGE \u2014 THURSDAY, OCT 29, 2026 \u00b7 WEEK 8 TNF",
+    "plays": [
+      {
+        "matchup": "CAR @ GB",
+        "market": "SPREAD",
+        "line": -3.5,
+        "price": "-110"
+      },
+      {
+        "matchup": "CAR @ GB",
+        "market": "TOTAL",
+        "line": 47.5,
+        "price": "-110"
+      },
+      {
+        "matchup": "CAR @ GB",
+        "market": "PROP",
+        "prop": "Josh Jacobs Rush Yds",
+        "line": 62.5,
+        "price": "-115"
+      }
+    ],
+    "proof": "Week 8: 11-6, +4.2u \u00b7 Season: +18.4u",
+    "pass": "PASS \u2014 CAR Team Total: price gone, market compressed below threshold.",
+    "cta": "Full board and calibrated SGP breakdowns at galaxysportsedge.com"
+  },
+  "humanization": {
+    "piece_id": "20261029-BOARD-01",
+    "next_status": "HUMANIZED",
+    "passed": true,
+    "failed_checks": [],
+    "passed_checks": [
+      "hasSpecificNameNumberMoment",
+      "vividImageCount",
+      "hasUncertaintyBeat",
+      "hasMemoryCallback",
+      "empathyBeatBeforeCta",
+      "variedSentenceRhythm",
+      "passesWarmthFloor"
+    ]
+  },
+  "gate_results": {
+    "gate0": {
+      "passed": true,
+      "violations": []
+    },
+    "gate1": {
+      "passed": true,
+      "scorer_independent": true,
+      "composite": 9.3,
+      "threshold": 8.8,
+      "violations": []
+    },
+    "gate2": {
+      "passed": true,
+      "finish_items": []
+    },
+    "final_verdict": "PASS"
+  },
+  "cost_usd": 0.14
+}

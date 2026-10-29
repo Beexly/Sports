@@ -64,6 +64,21 @@ import {
   type QbBallPlacementProfile,
 } from "../../packages/prediction-engine/src/nfl/all-in-one-research-signals.js";
 import {
+  computeRushConceptZoneGapMatchup,
+  computeWrAlignmentSlotOutsideMatchup,
+  evaluateSecondAndOneSneakAndBaseDefenseTrap,
+  computeMismatchManifestoCombinedYbcAndExplosive,
+  applyAltitudeSplitHalfReliabilityShrinkage,
+  evaluateTacklePropAndInHouseRefereeCrewMix,
+  computeFirstQuarterScriptStopMath,
+} from "../../packages/prediction-engine/src/nfl/x-consolidated-sweep-signals.js";
+import {
+  evaluateConformalSelectiveAbstention,
+  computeBorghesiWeatherAndRosenQbBackupTransition,
+  detectKatsMarketCusumAndHarmonicRegime,
+  evaluateLayaGateOnSettledHoldout,
+} from "../../packages/prediction-engine/src/nfl/ig-consolidated-conformal-and-kats-signals.js";
+import {
   buildContextMask,
   stageC,
   stageD,
@@ -1151,6 +1166,98 @@ function main() {
           )
         : 0;
 
+    // Run 7 X Consolidated Sweep Signals (@BeatTheRecords, @RyanPaganetti, @ihartitz, @mockingboardapp, @RyNoonan, @thelocktalk)
+    const rushConceptEval = computeRushConceptZoneGapMatchup({
+      offZoneSharePct: g.away === "CAR" ? 62 : 55,
+      offGapSharePct: g.away === "CAR" ? 38 : 45,
+      offZoneYpc: g.away === "CAR" ? 4.65 : 4.35,
+      offGapYpc: g.away === "CAR" ? 4.25 : 4.20,
+      defZoneYpcAllowed: g.home === "GB" ? 5.29 : 4.35,
+      defGapYpcAllowed: g.home === "GB" ? 2.57 : 4.15,
+      projectedCarries: 17,
+    });
+    const wrAlignmentEval = computeWrAlignmentSlotOutsideMatchup({
+      wrSlotSnapSharePct: g.home === "GB" ? 68 : 48,
+      wrOutsideSnapSharePct: g.home === "GB" ? 32 : 52,
+      defSlotYpgAllowed: g.home === "DAL" ? 84.5 : 56.0,
+      defOutsideYpgAllowed: g.home === "JAX" ? 156.8 : 98.0,
+      baseProjectedRecYards: hmWr1Line,
+    });
+    const sneakAndBaseDefTrapEval = evaluateSecondAndOneSneakAndBaseDefenseTrap({
+      secondAndOneSneakRatePct: g.away === "PHI" ? 65 : 22,
+      offHeavyPersonnelRatePct: g.home === "GB" || g.home === "BAL" ? 31 : 22,
+      defBasePersonnelYppAllowed: g.away === "CHI" ? 7.5 : 5.8,
+      defNickelYppAllowed: 5.5,
+    });
+    const mismatchManifestoEval = computeMismatchManifestoCombinedYbcAndExplosive({
+      offYbcPerCarry: Number((hmTend.rush_epa ?? 0) > 0 ? 2.75 : 2.35),
+      defYbcAllowedPerCarry: Number((awTend.def_rush_epa ?? 0) > 0 ? 2.80 : 2.30),
+      offExplosivePlayRatePct: Number((hmTend.pass_epa ?? 0) > 0 ? 12.8 : 10.4),
+      defExplosivePlayRateAllowedPct: Number((awTend.def_pass_epa ?? 0) > 0 ? 12.6 : 10.2),
+    });
+    const altitudeReliabilityEval = applyAltitudeSplitHalfReliabilityShrinkage({
+      position: "WR",
+      observedSingleGameMetric: hmWr1Line + 12.0,
+      priorBaselineMetric: hmWr1Line,
+      routesRun: 33,
+      airYards: 88,
+      redZoneTargets: 2,
+      insideFiveCarries: 0,
+    });
+    const tackleAndRefMixEval = evaluateTacklePropAndInHouseRefereeCrewMix({
+      projectedDefensiveSnaps: 64,
+      playerTacklePerSnapRate: 0.132,
+      tackleAssistConversionFactor: 1.04,
+      marketTackleLine: 7.5,
+      crewOffHoldingPerGame: 2.7,
+      crewDpiPerGame: 1.2,
+      crewHomeFlagDifferential: -0.4,
+    });
+    const firstQuarterMathEval = computeFirstQuarterScriptStopMath({
+      fullGameSpreadHome: g.marketSpreadHome,
+      fullGameTotal: g.marketTotal,
+      homeOpeningScriptEpaPerPlay: Number(hmTend.early_down_epa ?? 0.08),
+      awayOpeningScriptEpaPerPlay: Number(awTend.early_down_epa ?? -0.02),
+      homeFirstDriveStopRatePct: 61.5,
+      awayFirstDriveStopRatePct: 57.0,
+    });
+
+    // Run 4 IG Consolidated Conformal, Borghesi/Rosen, Kats CUSUM & Laya Gate Signals
+    const conformalEval = evaluateConformalSelectiveAbstention({
+      calibratedProb: sideFavProb,
+      nonconformityQuantileQHat: st5.publishAllowed ? 0.065 : 0.095,
+      groupType: g.marketSpreadHome < 0 ? "FAVORITE" : "UNDERDOG",
+      groupEmpiricalCoverage: 0.905,
+      targetCoverageAlpha: 0.10,
+    });
+    const borghesiRosenEval = computeBorghesiWeatherAndRosenQbBackupTransition({
+      windMph: g.windMph,
+      tempF: g.tempF,
+      isPrecipitation: false,
+      isIndoor: g.isIndoor,
+      qbStarterOut: false,
+      backupPriorStartsThisSeason: 0,
+      hasPost2011ByeRestAdvantage: false,
+      isWestToEastEarlyKickoff: g.away === "ARI" || g.away === "LV",
+    });
+    const katsCusumEval = detectKatsMarketCusumAndHarmonicRegime({
+      lineSeries: [
+        g.marketSpreadHome + 0.5,
+        g.marketSpreadHome + 0.5,
+        g.marketSpreadHome,
+        g.marketSpreadHome,
+      ],
+      timestampsHoursBeforeKickoff: [72, 48, 24, 2],
+    });
+    const layaHoldoutEval = evaluateLayaGateOnSettledHoldout({
+      statePromptTokens: 612,
+      ece: 0.048,
+      brier: 0.228,
+      auc: 0.604,
+      beatCloseRate: 0.548,
+      abstentionLiftPp: 2.15,
+    });
+
     const gameVerdict = {
       espnEventId: g.espnEventId,
       slug: g.slug,
@@ -1199,6 +1306,15 @@ function main() {
           home_flores_variance: homeFloresVar,
           home_true_one_on_one_trench: homeTrueOneOnOneTrench,
           line_of_evidence_fault_lines: lineOfEvidenceFaults,
+        },
+        x_consolidated_sweep_signals: {
+          rush_concept_zone_gap: rushConceptEval,
+          wr_alignment_slot_outside: wrAlignmentEval,
+          sneak_and_base_defense_trap: sneakAndBaseDefTrapEval,
+          mismatch_manifesto_ybc_explosive: mismatchManifestoEval,
+          altitude_reliability_shrinkage: altitudeReliabilityEval,
+          tackle_prop_and_referee_crew: tackleAndRefMixEval,
+          first_quarter_script_stop_math: firstQuarterMathEval,
         },
       },
       stage2_jev_spine_and_10k_coach_sim: {
@@ -1251,6 +1367,12 @@ function main() {
         total_decision: st5.totalDecision,
         publish_allowed: st5.publishAllowed,
         pass_reason: passReasonStr,
+        ig_consolidated_conformal_and_kats: {
+          conformal_selective_abstention: conformalEval,
+          borghesi_weather_and_rosen_qb: borghesiRosenEval,
+          kats_market_cusum_and_harmonic: katsCusumEval,
+          laya_gate_holdout_canary: layaHoldoutEval,
+        },
       },
     };
     verdictsByGame[g.espnEventId] = gameVerdict;

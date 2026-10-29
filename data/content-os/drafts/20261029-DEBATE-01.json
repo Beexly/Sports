@@ -1,0 +1,46 @@
+{
+  "piece_id": "20261029-DEBATE-01",
+  "format": "DEBATE",
+  "route": "TEXT",
+  "template_version": "DEBATE-v1",
+  "status": "PRODUCED",
+  "created_at": "2026-10-29T18:08:46.056572+00:00",
+  "bull_case": "Packers offensive line continuity and pressure advantage creates 2.2-point model edge over posted -3.5.",
+  "bear_case": "Potential backdoor variance if Carolina goes pass-heavy in trailing game script.",
+  "engine_verdict": "Green Bay Packers -3.5 (61/100 confidence, +0.0862 expected CLV).",
+  "proof_line": "Week 8: 11-6, +4.2u \u00b7 Season: +18.4u",
+  "humanization": {
+    "piece_id": "20261029-DEBATE-01",
+    "next_status": "HUMANIZED",
+    "passed": true,
+    "failed_checks": [],
+    "passed_checks": [
+      "hasSpecificNameNumberMoment",
+      "vividImageCount",
+      "hasUncertaintyBeat",
+      "hasMemoryCallback",
+      "empathyBeatBeforeCta",
+      "variedSentenceRhythm",
+      "passesWarmthFloor"
+    ]
+  },
+  "gate_results": {
+    "gate0": {
+      "passed": true,
+      "violations": []
+    },
+    "gate1": {
+      "passed": true,
+      "scorer_independent": true,
+      "composite": 9.2,
+      "threshold": 8.8,
+      "violations": []
+    },
+    "gate2": {
+      "passed": true,
+      "finish_items": []
+    },
+    "final_verdict": "PASS"
+  },
+  "cost_usd": 0.16
+}
