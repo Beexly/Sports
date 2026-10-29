@@ -1,6 +1,6 @@
 # OVERNIGHT AUTONOMOUS LOOP LOG — 2026-10-29
 
-- **CYCLE_ROUND:** `Round 14`
+- **CYCLE_ROUND:** `Round 15`
 - **Window:** `2026-10-29 00:50 CT -> 08:00+ CT (Game Day)`
 - **Active Branch Authorization (Founder Override):** Pushing to `origin/engine/public-baseline-2026-10-24` AND `origin/main` is explicitly authorized and required after each verified cycle tonight.
 - **HARD FOUNDER DIRECTIVE (2026-10-29 01:55 CT — DO NOT VIOLATE):**
@@ -204,6 +204,19 @@ Formula: same `B = (sigma2 / n) / (sigma2 / n + tau2)`, now on the early success
 - Carolina early success 0.4415, shrunk 0.4387. Green Bay early 0.4069, shrunk 0.4198.
 - Fourth-and-2-or-shorter go rate: Carolina 2/4 early, 2/5 late. Green Bay 7/10 early, 1/2 late. Too small to promote.
 - Deploy: first page still Building. Newest about 2 minutes old. No Ready row in the first six. Quad harvest: none.
+
+## Round 15 — 2026-10-29 02:51 CT
+
+Screen and RPO EPA on pass plays, joined on `game_id` + `play_id`. Cards not changed.
+
+Formula: mean EPA on the flagged play minus mean EPA on the unflagged play. Early is weeks 1–5. Late is weeks 6–7.
+
+- League screens: early 478 plays at -0.1188 versus 5,115 at 0.0587, gap -0.1774. Late 191 at -0.0526 versus 1,779 at 0.0454, gap -0.0980. The sign holds. Not a side.
+- Carolina screens: early 8 plays, late 4 plays. The late gap flips sign. Not used.
+- Green Bay late screens: 7 plays. Not used.
+- League RPO: early gap -0.1848 on 106 plays. Late gap -0.2939 on 42 plays. Sign holds. Carolina flips. Green Bay has 0 late RPO plays. Not promoted.
+- Deploy: canceled 7 newer Building deployments so they would stop competing at output upload. Kept `dpl_9uWSSBu7MRgftZgLBgxESWRa1vwU` (`71dc7453`), the build that had already compiled 248 pages. Quad harvest: none.
+
 
 
 
