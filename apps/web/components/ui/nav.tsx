@@ -9,9 +9,6 @@ import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
  * Keep them in step: a door added or removed here is added or removed there
  * in the same change.
  */
-type NavItem = { label: string; href: string; desc: string };
-type NavGroup = { heading?: string; items: readonly NavItem[] };
-
 export interface RevenuePillar {
   label: string;
   href: string;

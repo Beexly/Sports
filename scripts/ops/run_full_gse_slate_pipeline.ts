@@ -55,6 +55,15 @@ import {
   jointThreeLegExceedance,
 } from "../../packages/prediction-engine/src/nfl/sgp-copula.js";
 import {
+  computeCatchableBallAndPlacementEdge,
+  evaluateTargetFunnelMatchup,
+  computeMissedTackleYacAdjustment,
+  computeMinimaxSequencePenalty,
+  computeFloresVarianceAndSimPressureIndex,
+  computeTrueOneOnOneTrenchIsolation,
+  type QbBallPlacementProfile,
+} from "../../packages/prediction-engine/src/nfl/all-in-one-research-signals.js";
+import {
   buildContextMask,
   stageC,
   stageD,
@@ -63,6 +72,10 @@ import {
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const TRENDS_PATH = path.join(REPO_ROOT, "data/engine/nfl_2026_w1_w7_trends_and_usage.json");
+const ADVANCED_CHARTING_PATH = path.join(
+  REPO_ROOT,
+  "data/engine/nfl_2026_w1_w7_advanced_charting_and_funnels.json",
+);
 const JEV_SPINE_PATH = path.join(REPO_ROOT, "data/engine/nfl_2026_w8_jev_full_game_spine.json");
 const INJURIES_CSV_PATH = path.join(REPO_ROOT, "data/nflverse/injuries_2026.csv");
 const OUT_PATH = path.join(REPO_ROOT, "data/engine/nfl_2026_w8_five_stage_engine_verdicts.json");
@@ -475,6 +488,15 @@ function main() {
   const trendsRaw = JSON.parse(fs.readFileSync(TRENDS_PATH, "utf-8"));
   const trendsTeams: Record<string, any> = trendsRaw.teams ?? {};
 
+  const advChartingRaw = fs.existsSync(ADVANCED_CHARTING_PATH)
+    ? JSON.parse(fs.readFileSync(ADVANCED_CHARTING_PATH, "utf-8"))
+    : { qbBallPlacementAndPressureProfiles: {}, teams: {}, week8LineOfEvidenceFaultLines: {} };
+  const qbProfilesMap: Record<string, QbBallPlacementProfile> =
+    advChartingRaw.qbBallPlacementAndPressureProfiles ?? {};
+  const advTeamsMap: Record<string, any> = advChartingRaw.teams ?? {};
+  const advFaultLinesMap: Record<string, any> =
+    advChartingRaw.week8LineOfEvidenceFaultLines ?? {};
+
   const jevSpineRaw = fs.existsSync(JEV_SPINE_PATH)
     ? JSON.parse(fs.readFileSync(JEV_SPINE_PATH, "utf-8"))
     : { games: {} };
@@ -612,17 +634,122 @@ function main() {
     });
 
     // -------------------------------------------------------------------------
+    // STAGE 1B: In-House FTN Human-Charted Ball Placement (CTBL%, OPENTGT%, PKP%, DROP%),
+    //           Coverage-Shell Target Funnels, Minimax Equilibrium, & Trench Isolation
+    // -------------------------------------------------------------------------
+    const mapTeamKey = (abbr: string) => (abbr === "LAR" ? "LA" : abbr === "WSH" ? "WAS" : abbr);
+    const hmAdvKey = mapTeamKey(g.home);
+    const awAdvKey = mapTeamKey(g.away);
+    const hmAdvTeam = advTeamsMap[hmAdvKey] ?? {};
+    const awAdvTeam = advTeamsMap[awAdvKey] ?? {};
+
+    const findPrimaryQbProfile = (teamKey: string): QbBallPlacementProfile => {
+      const candidates = Object.values(qbProfilesMap).filter((q) => q.team === teamKey);
+      candidates.sort((a, b) => b.chartedPassAttempts - a.chartedPassAttempts);
+      return (
+        candidates[0] ?? {
+          team: teamKey,
+          qb: `${teamKey}_QB1`,
+          chartedPassAttempts: 180,
+          aimedPassAttempts: 170,
+          catchableBallRateRawPct: 67.5,
+          catchableBallRateAimedPct: 70.0,
+          openTargetRatePct: 82.0,
+          pickablePassRatePct: 3.1,
+          receiverDropRatePct: 5.2,
+          inPocketCatchablePct: 69.5,
+          outOfPocketCatchablePct: 56.0,
+          pressureToSackRatePct: 18.5,
+          qbFaultSackSharePct: 16.0,
+          outOfPocketPassSharePct: 14.0,
+        }
+      );
+    };
+
+    const homeQbProfile = findPrimaryQbProfile(hmAdvKey);
+    const awayQbProfile = findPrimaryQbProfile(awAdvKey);
+    const catchableBallMatchup = computeCatchableBallAndPlacementEdge(homeQbProfile, awayQbProfile);
+
+    const homeDefFunnelEval = evaluateTargetFunnelMatchup({
+      wrTargetShareAllowedPct: Number(hmAdvTeam.targetFunnel?.wrTargetShareAllowedPct ?? 58.0),
+      teTargetShareAllowedPct: Number(hmAdvTeam.targetFunnel?.teTargetShareAllowedPct ?? 21.0),
+      rbTargetShareAllowedPct: Number(hmAdvTeam.targetFunnel?.rbTargetShareAllowedPct ?? 19.0),
+      proeAllowedPct: Number(hmAdvTeam.targetFunnel?.proeAllowedPct ?? 0.0),
+      defBlitzRatePct: Number(hmAdvTeam.floresVarianceAndSimPressure?.defBlitzRatePct ?? 25.0),
+    });
+    const awayDefFunnelEval = evaluateTargetFunnelMatchup({
+      wrTargetShareAllowedPct: Number(awAdvTeam.targetFunnel?.wrTargetShareAllowedPct ?? 58.0),
+      teTargetShareAllowedPct: Number(awAdvTeam.targetFunnel?.teTargetShareAllowedPct ?? 21.0),
+      rbTargetShareAllowedPct: Number(awAdvTeam.targetFunnel?.rbTargetShareAllowedPct ?? 19.0),
+      proeAllowedPct: Number(awAdvTeam.targetFunnel?.proeAllowedPct ?? 0.0),
+      defBlitzRatePct: Number(awAdvTeam.floresVarianceAndSimPressure?.defBlitzRatePct ?? 25.0),
+    });
+
+    const homeOffYacVsAwayTackling = computeMissedTackleYacAdjustment(
+      Number(awAdvTeam.tacklingAndYac?.pfrTeamMissedTacklesW1W7 ?? 35),
+    );
+    const awayOffYacVsHomeTackling = computeMissedTackleYacAdjustment(
+      Number(hmAdvTeam.tacklingAndYac?.pfrTeamMissedTacklesW1W7 ?? 35),
+    );
+
+    const homeMinimaxSeq = computeMinimaxSequencePenalty({
+      neutralPassRatePct: Number(
+        hmAdvTeam.minimaxPlayCallEquilibrium?.observedNeutralPassRatePct ?? 54.4,
+      ),
+      secondAndLongRunAfterIncompletePct: Number(
+        hmAdvTeam.minimaxPlayCallEquilibrium?.secondAndLongRunAfter1stDownIncompletePct ?? 40.0,
+      ),
+      lag1PlayTypeAutocorrelation: Number(
+        hmAdvTeam.minimaxPlayCallEquilibrium?.lag1PlayTypeAutocorrelation ?? 0.0,
+      ),
+    });
+    const awayMinimaxSeq = computeMinimaxSequencePenalty({
+      neutralPassRatePct: Number(
+        awAdvTeam.minimaxPlayCallEquilibrium?.observedNeutralPassRatePct ?? 54.4,
+      ),
+      secondAndLongRunAfterIncompletePct: Number(
+        awAdvTeam.minimaxPlayCallEquilibrium?.secondAndLongRunAfter1stDownIncompletePct ?? 40.0,
+      ),
+      lag1PlayTypeAutocorrelation: Number(
+        awAdvTeam.minimaxPlayCallEquilibrium?.lag1PlayTypeAutocorrelation ?? 0.0,
+      ),
+    });
+
+    const homeFloresVar = computeFloresVarianceAndSimPressureIndex({
+      defEpaRank: 12,
+      defSuccessRateRank: 16,
+      simulatedPressureDropOutRatePct: Number(
+        hmAdvTeam.floresVarianceAndSimPressure?.simulatedPressureDropOutRatePct ?? 12.0,
+      ),
+    });
+    const homeTrueOneOnOneTrench = computeTrueOneOnOneTrenchIsolation({
+      defUnblitzedFourManDisruptionRatePct: Number(
+        hmAdvTeam.trueOneOnOneTrench?.defUnblitzedFourManDisruptionRatePct ?? 16.0,
+      ),
+      offOlPassBlockSackAllowedPct: Number(
+        awAdvTeam.trueOneOnOneTrench?.offOlPassBlockSackAllowedPct ?? 6.5,
+      ),
+    });
+    const lineOfEvidenceFaults =
+      advFaultLinesMap[`${awAdvKey}@${hmAdvKey}`] ??
+      advFaultLinesMap[`${g.away}@${g.home}`] ??
+      null;
+
+    // -------------------------------------------------------------------------
     // STAGE 3: 4-Stage Cognitive Router (`buildContextMask` -> `stageC` -> `stageD`)
     // -------------------------------------------------------------------------
     const trenchAdvHome =
       (Number(awTend.sack_rate_allowed ?? 6.2) - Number(hmTend.sack_rate_allowed ?? 6.2)) * 0.018 +
-      (Number(hmTend.def_pressure_rate ?? 21.5) - Number(awTend.def_pressure_rate ?? 21.5)) * 0.008;
+      (Number(hmTend.def_pressure_rate ?? 21.5) - Number(awTend.def_pressure_rate ?? 21.5)) * 0.008 +
+      homeTrueOneOnOneTrench.sackProbAdjustment;
     const recentCompAdvHome =
-      (Number(hmTend.comp_rate_w6_w7 ?? 64.0) - Number(awTend.comp_rate_w6_w7 ?? 64.0)) * 0.009;
+      (Number(hmTend.comp_rate_w6_w7 ?? 64.0) - Number(awTend.comp_rate_w6_w7 ?? 64.0)) * 0.009 +
+      catchableBallMatchup.netSpreadAdjustmentPtsHome * 0.03;
     const epaAdvHome =
       Number(hmTend.epa_per_play ?? 0) -
       Number(awTend.epa_per_play ?? 0) -
-      (Number(hmTend.def_epa_allowed ?? 0) - Number(awTend.def_epa_allowed ?? 0));
+      (Number(hmTend.def_epa_allowed ?? 0) - Number(awTend.def_epa_allowed ?? 0)) +
+      (homeMinimaxSeq.epaPerPlayPenalty - awayMinimaxSeq.epaPerPlayPenalty);
 
     const routerSignals: Signal[] = [
       { family: 12, displacement: trenchAdvHome || 0.04, n: 185 },
@@ -1058,6 +1185,20 @@ function main() {
         misleading_stat_firewall: {
           raw_ypg_defense_rejected: !rawBoxYpgGuard.accepted,
           pass_epa_per_dropback_verified: verifiedEpaGuard.accepted,
+        },
+        advanced_charting_and_funnels: {
+          home_qb_ball_placement: homeQbProfile,
+          away_qb_ball_placement: awayQbProfile,
+          catchable_ball_matchup: catchableBallMatchup,
+          home_def_target_funnel: homeDefFunnelEval,
+          away_def_target_funnel: awayDefFunnelEval,
+          home_off_yac_vs_away_tackling: homeOffYacVsAwayTackling,
+          away_off_yac_vs_home_tackling: awayOffYacVsHomeTackling,
+          home_minimax_sequence: homeMinimaxSeq,
+          away_minimax_sequence: awayMinimaxSeq,
+          home_flores_variance: homeFloresVar,
+          home_true_one_on_one_trench: homeTrueOneOnOneTrench,
+          line_of_evidence_fault_lines: lineOfEvidenceFaults,
         },
       },
       stage2_jev_spine_and_10k_coach_sim: {
