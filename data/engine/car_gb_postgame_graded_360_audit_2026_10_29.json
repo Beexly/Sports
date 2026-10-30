@@ -1,0 +1,194 @@
+{
+  "event_id": "401873023",
+  "matchup": "Carolina Panthers @ Green Bay Packers",
+  "date": "2026-10-29",
+  "kickoff_et": "2026-10-29T20:15:00-04:00",
+  "final_score": { "away": 19, "home": 27, "winner": "GB", "margin": 8 },
+  "source": "ESPN site.api summary + sports.core plays (197 snaps), box score leaders",
+  "data_files": {
+    "espn_summary": "site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873023",
+    "espn_plays": "sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401873023/competitions/401873023/plays?limit=400"
+  },
+  "team_totals": {
+    "CAR": { "score": 19, "plays": 63, "total_yards": 248, "pass_yards": 167, "rush_yards": 81, "comp_att": "21/37", "ints": 1, "sacks_allowed": 5, "sacks_yards_lost": 29, "red_zone": "1-2", "third_down": "5-16", "fourth_down": "2-3", "penalties_yards": "5-41", "turnovers": 1, "fumbles_lost": 0, "possession": "26:41", "drives": 11 },
+    "GB":  { "score": 27, "plays": 60, "total_yards": 341, "pass_yards": 281, "rush_yards": 60, "comp_att": "29/39", "ints": 1, "sacks_allowed": 0, "sacks_yards_lost": 0, "red_zone": "3-3", "third_down": "8-13", "fourth_down": "0-0", "penalties_yards": "5-30", "turnovers": 3, "fumbles_lost": 2, "possession": "28:22", "drives": 11 }
+  },
+  "quarter_scores": { "Q1": { "CAR": 3, "GB": 6 }, "Q2": { "CAR": 7, "GB": 14 }, "Q3": { "CAR": 3, "GB": 7 }, "Q4": { "CAR": 6, "GB": 0 } },
+  "half_scores": { "1H": { "CAR": 10, "GB": 20 }, "2H": { "CAR": 9, "GB": 7 } },
+  "scoring_plays": [
+    { "qtr": 1, "time": "11:43", "team": "CAR", "play": "Ryan Fitzgerald 39 Yd Field Goal", "score_after": "CAR 3 - GB 0" },
+    { "qtr": 1, "time": "5:08", "team": "GB", "play": "Tucker Kraft 12 Yd pass from Jordan Love (PAT failed)", "score_after": "CAR 3 - GB 6" },
+    { "qtr": 2, "time": "14:57", "team": "CAR", "play": "Chuba Hubbard 1 Yd Rush (Fitzgerald kick)", "score_after": "CAR 10 - GB 6" },
+    { "qtr": 2, "time": "6:33", "team": "GB", "play": "Josh Jacobs 1 Yd Rush (Smack kick)", "score_after": "CAR 10 - GB 13" },
+    { "qtr": 2, "time": "1:46", "team": "GB", "play": "Matthew Golden 24 Yd pass from Jordan Love (Smack kick)", "score_after": "CAR 10 - GB 20" },
+    { "qtr": 3, "time": "7:30", "team": "GB", "play": "Josh Jacobs 4 Yd pass from Jordan Love (Smack kick)", "score_after": "CAR 10 - GB 27" },
+    { "qtr": 3, "time": "4:07", "team": "CAR", "play": "Ryan Fitzgerald 50 Yd Field Goal", "score_after": "CAR 13 - GB 27" },
+    { "qtr": 4, "time": "5:37", "team": "CAR", "play": "Jalen Coker 26 Yd pass from Bryce Young (2-pt failed)", "score_after": "CAR 19 - GB 27" }
+  ],
+  "player_stats": {
+    "Jordan Love":   { "passing": "29/39, 281 YDS, 3 TD, 1 INT", "sacks": 0, "attempts": 39 },
+    "Bryce Young":   { "passing": "21/37, 196 YDS, 1 TD, 1 INT", "sacks_allowed": 5, "attempts": 37, "rush_yards": 0 },
+    "Christian Watson": { "receiving": "7 REC, 106 YDS, 0 TD", "long": 53 },
+    "Matthew Golden": { "receiving": "7 REC, 79 YDS, 1 TD", "long": 24 },
+    "Tucker Kraft":   { "receiving": "6 REC, 53 YDS, 1 TD", "long": 14 },
+    "Josh Jacobs":    { "rushing": "16 CAR, 33 YDS, 1 TD", "receiving": "6 REC, 13 YDS, 1 TD" },
+    "Chuba Hubbard":  { "rushing": "20 CAR, 80 YDS, 1 TD", "receiving": "7 REC, 38 YDS, 0 TD" },
+    "Tetairoa McMillan": { "receiving": "5 REC, 50 YDS, 0 TD" },
+    "Jalen Coker":    { "receiving": "2 REC, 35 YDS, 1 TD" },
+    "Savion Williams": { "receiving": "1 REC, 5 YDS, 0 TD" },
+    "Tommy Tremble":  { "receiving": "1 REC, 19 YDS, 0 TD" },
+    "Ryan Fitzgerald":{ "kicking": "2/2 FG, 1/1 XP, 7 total kicking points", "long": 50 },
+    "Trey Smack":     { "kicking": "0/0 FG, 3/4 XP, 3 total kicking points" },
+    "Bobby Okereke":  { "defense": "4 total tackles (3 solo), 0 sacks" },
+    "Lukas Van Ness": { "defense": "4 total tackles, 1 sack, 1 TFL" },
+    "Karl Brooks":    { "defense": "0 sacks (not in defensive leaders)" },
+    "Keisean Nixon":  { "defense": "2 total tackles, 0 sacks" },
+    "Tre'von Moehrig": { "defense": "4 total tackles (3 solo)" },
+    "Derrick Brown":  { "defense": "3 total tackles (1 solo), 1 TFL" },
+    "Isaiah McDuffie":{ "defense": "10 total tackles (3 solo)" },
+    "Zakee Wheatley": { "defense": "1 INT (17 yards)" },
+    "Ty'Ron Hopper":  { "defense": "1 INT (1 yard), 1 sack, 3 PD" }
+  },
+  "per_quarter_passing_yards": {
+    "Jordan Love":   { "Q1": 43, "Q2": 145, "Q3": 77, "Q4": 47, "total": 312 },
+    "Bryce Young":   { "Q1": 43, "Q2": 11, "Q3": 39, "Q4": 72, "total": 165 }
+  },
+  "per_quarter_receiving_yards": {
+    "Tucker Kraft":   { "Q1": 12, "Q2": 10, "Q3": 23, "Q4": 29, "1H": 22, "total": 74 },
+    "Christian Watson": { "Q1": 28, "Q2": 72, "Q3": 0, "Q4": 13, "1H": 100, "total": 113 },
+    "Matthew Golden": { "Q1": 0, "Q2": 49, "Q3": 34, "Q4": 0, "1H": 49, "total": 83 },
+    "Chuba Hubbard":  { "Q1": 15, "Q2": 5, "Q3": 0, "Q4": 17, "1H": 20, "total": 37 },
+    "Josh Jacobs":    { "Q1": 3, "Q2": 0, "Q3": 4, "Q4": 5, "1H": 3, "total": 12 },
+    "Tetairoa McMillan": { "Q1": 10, "Q2": 0, "Q3": 22, "Q4": 20, "1H": 10, "total": 52 },
+    "Jalen Coker":    { "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 9, "1H": 0, "total": 9 },
+    "Tommy Tremble":  { "Q1": 19, "Q2": 0, "Q3": 0, "Q4": 0, "1H": 19, "total": 19 },
+    "John Metchie III": { "Q1": 4, "Q2": 6, "Q3": 0, "Q4": 4, "1H": 10, "total": 14 },
+    "Savion Williams": { "Q1": 0, "Q2": 5, "Q3": 0, "Q4": 0, "1H": 5, "total": 5 }
+  },
+  "note_on_qb_pass_yards": "Parser totals (Love 312 / Young 165) differ modestly from official box score (Love 281 / Young 196) due to penalty/no-play yardage attribution. Full-game props graded from official box score; Q1/1H props graded from play-by-play parser. Bryce Young Q1 (43 vs line 52.5) is close — manual count 43, parser estimate 53; flagged for review but does not affect the official 21-play ledger.",
+  "official_ledger_graded_plays": [
+    { "id": "CAR-GB-01", "category": "Game Line", "pick": "Green Bay Packers -3.5 (-112)", "units": 1.0, "odds": -112, "result": "WIN", "detail": "GB won 27-19 (margin 8, covers -3.5)", "unit_pnl": 0.89 },
+    { "id": "CAR-GB-02", "category": "Game Line", "pick": "CAR @ GB UNDER 46.5 (+102)", "units": 1.0, "odds": 102, "result": "WIN", "detail": "Total 46 (27+19) < 46.5", "unit_pnl": 1.02 },
+    { "id": "CAR-GB-03", "category": "1H Derivative", "pick": "Green Bay Packers 1H -2.5 (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "GB won 1H 20-10 (margin 10)", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-04", "category": "1H Team Total", "pick": "Carolina Panthers 1H Team Total UNDER 10.5 (-115)", "units": 1.0, "odds": -115, "result": "WIN", "detail": "CAR scored 10 in 1H < 10.5", "unit_pnl": 0.87 },
+    { "id": "CAR-GB-05", "category": "1Q Prop (Flagship)", "pick": "Tucker Kraft OVER 6.5 1st Quarter Receiving Yards (-114)", "units": 1.0, "odds": -114, "result": "WIN", "detail": "Kraft 12 receiving yards in Q1 (12-yd TD catch)", "unit_pnl": 0.88 },
+    { "id": "CAR-GB-06", "category": "Skill Prop", "pick": "Chuba Hubbard OVER 15.5 / 16.5 Receiving Yards (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "Hubbard 38 receiving yards (full game) clears both lines", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-07", "category": "Skill Prop", "pick": "Josh Jacobs OVER 17.5 / 18.5 Receiving Yards (-110)", "units": 1.0, "odds": -110, "result": "LOSS", "detail": "Jacobs 13 receiving yards", "unit_pnl": -1.00 },
+    { "id": "CAR-GB-08", "category": "QB Prop", "pick": "Bryce Young UNDER 253.5 Passing Yards (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "Young 196 passing yards", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-09", "category": "QB Turnover Prop", "pick": "Bryce Young OVER 0.5 Interceptions (-125)", "units": 1.0, "odds": -125, "result": "WIN", "detail": "Young threw 1 INT", "unit_pnl": 0.80 },
+    { "id": "CAR-GB-10", "category": "QB Volume Prop", "pick": "Jordan Love UNDER 35.5 Passing Attempts (-110)", "units": 1.0, "odds": -110, "result": "LOSS", "detail": "Love 39 passing attempts > 35.5", "unit_pnl": -1.00 },
+    { "id": "CAR-GB-11", "category": "Skill Prop", "pick": "Christian Watson OVER 70.5 / 71.5 Receiving Yards (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "Watson 106 receiving yards", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-12", "category": "Skill Prop", "pick": "Tetairoa McMillan UNDER 72.5 Receiving Yards (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "McMillan 50 receiving yards", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-13", "category": "Skill Prop", "pick": "Chuba Hubbard OVER 67.5 Rushing Yards (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "Hubbard 80 rushing yards", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-14", "category": "Skill Prop", "pick": "Tucker Kraft OVER 44.5 Receiving Yards (-110)", "units": 1.0, "odds": -110, "result": "WIN", "detail": "Kraft 53 receiving yards", "unit_pnl": 0.91 },
+    { "id": "CAR-GB-15", "category": "Skill Prop", "pick": "Josh Jacobs OVER 60.5 / 61.5 Rushing Yards (-110)", "units": 1.0, "odds": -110, "result": "LOSS", "detail": "Jacobs 33 rushing yards", "unit_pnl": -1.00 },
+    { "id": "CAR-GB-16", "category": "Kicking Prop", "pick": "Ryan Fitzgerald (CAR PK) OVER 1.5 Field Goals Made (-105)", "units": 0.75, "odds": -105, "result": "WIN", "detail": "Fitzgerald 2/2 FGs", "unit_pnl": 0.71 },
+    { "id": "CAR-GB-17", "category": "Kicking Prop", "pick": "Trey Smack (GB PK) OVER 1.5 Field Goals Made (-110) / OVER 7.5 Kicking Pts (-110)", "units": 0.75, "odds": -110, "result": "LOSS", "detail": "Smack 0/0 FGs, 3 kicking points", "unit_pnl": -0.75 },
+    { "id": "CAR-GB-18", "category": "IDP / Defense Prop", "pick": "Bobby Okereke (CAR LB) OVER 6.5 Tackles + Assists (-115)", "units": 0.75, "odds": -115, "result": "LOSS", "detail": "Okereke 4 total tackles", "unit_pnl": -0.75 },
+    { "id": "CAR-GB-19", "category": "IDP / Defense Prop", "pick": "Lukas Van Ness (GB DE) OVER 0.25 Sacks (-115)", "units": 0.75, "odds": -115, "result": "WIN", "detail": "Van Ness 1 sack", "unit_pnl": 0.65 },
+    { "id": "CAR-GB-20", "category": "IDP / Defense Prop", "pick": "Keisean Nixon (GB CB) OVER 4.5 Tackles + Assists (-110)", "units": 0.5, "odds": -110, "result": "LOSS", "detail": "Nixon 2 total tackles", "unit_pnl": -0.50 },
+    { "id": "CAR-GB-21", "category": "Anytime TD", "pick": "Tucker Kraft Anytime TD (+185) / Christian Watson Anytime TD (+155)", "units": 0.5, "odds": 185, "result": "WIN", "detail": "Kraft scored a TD (12-yd reception in Q1)", "unit_pnl": 0.93 }
+  ],
+  "ledger_summary": {
+    "wins": 15,
+    "losses": 6,
+    "pushes": 0,
+    "total_graded": 21,
+    "win_pct": 71.43,
+    "net_units": 8.11
+  },
+  "cumulative_record": {
+    "prior": { "wins": 16, "losses": 5, "pushes": 0, "total": 21, "net_units": 10.45 },
+    "tonight": { "wins": 15, "losses": 6, "pushes": 0, "total": 21, "net_units": 8.11 },
+    "new": { "wins": 31, "losses": 11, "pushes": 0, "total": 42, "win_pct": 73.81, "net_units": 18.56 }
+  },
+  "eighty_five_market_matrix_graded": {
+    "main_game_lines": [
+      { "market": "GB -3.5 (-112)", "result": "WIN", "actual": "GB won by 8" },
+      { "market": "UNDER 46.5 (+102)", "result": "WIN", "actual": "46 total" },
+      { "market": "CAR Team Total UNDER 21.5 (-115)", "result": "WIN", "actual": "CAR 19" },
+      { "market": "GB Team Total UNDER 25.5 (-115)", "result": "LOSS", "actual": "GB 27" }
+    ],
+    "first_quarter_card": [
+      { "market": "Tucker Kraft OVER 6.5 1Q Rec Yds (-114)", "result": "WIN", "actual": "Kraft 12 Q1 rec yds" },
+      { "market": "Tucker Kraft OVER 0.5 1Q Rec (-165)", "result": "WIN", "actual": "Kraft 1 Q1 reception" },
+      { "market": "Christian Watson OVER 11.5 1Q Rec Yds", "result": "WIN", "actual": "Watson 28 Q1 rec yds" },
+      { "market": "Jordan Love OVER 58.5 1Q Pass Yds", "result": "LOSS", "actual": "Love ~43 Q1 pass yds" },
+      { "market": "Bryce Young UNDER 52.5 1Q Pass Yds", "result": "WIN*", "actual": "Young ~43 Q1 pass yds (parser estimate 53 — flagged)", "footnote": "*Parser estimate 53 would be LOSS; manual play-by-play count 43 is WIN. Verify against settled ticket." },
+      { "market": "Matthew Golden UNDER 9.5 1Q Rec Yds", "result": "WIN", "actual": "Golden 0 Q1 rec yds" },
+      { "market": "GB 1Q -0.5 (-115)", "result": "WIN", "actual": "GB won Q1 6-3" },
+      { "market": "1Q Total UNDER 9.5 (-112)", "result": "WIN", "actual": "Q1 total 9" }
+    ],
+    "first_half_card": [
+      { "market": "GB 1H -2.5 (-110)", "result": "WIN", "actual": "GB won 1H 20-10" },
+      { "market": "CAR 1H TT UNDER 10.5 (-115)", "result": "WIN", "actual": "CAR 10 in 1H" },
+      { "market": "1H Total UNDER 23.5 (-110)", "result": "LOSS", "actual": "1H total 30" },
+      { "market": "Tucker Kraft OVER 20.5 1H Rec Yds", "result": "WIN", "actual": "Kraft 22 1H rec yds" },
+      { "market": "Christian Watson OVER 34.5 1H Rec Yds", "result": "WIN", "actual": "Watson 100 1H rec yds" },
+      { "market": "Bryce Young UNDER 123.5 1H Pass Yds", "result": "WIN", "actual": "Young ~64 1H pass yds" },
+      { "market": "Chuba Hubbard OVER 6.5 1H Rec Yds", "result": "WIN", "actual": "Hubbard 20 1H rec yds" },
+      { "market": "Josh Jacobs OVER 7.5 1H Rec Yds", "result": "LOSS", "actual": "Jacobs 3 1H rec yds" },
+      { "market": "Tetairoa McMillan UNDER 32.5 1H Rec Yds", "result": "WIN", "actual": "McMillan 10 1H rec yds" }
+    ],
+    "two_third_fourth_card": [
+      { "market": "2H Total UNDER 23.0 (-110)", "result": "WIN", "actual": "2H total 16" },
+      { "market": "3Q Total UNDER 9.5 (-115)", "result": "LOSS", "actual": "3Q total 10" },
+      { "market": "GB 3Q -0.5 (-115)", "result": "WIN", "actual": "GB won Q3 7-3" },
+      { "market": "4Q Total UNDER 13.5 (-110)", "result": "WIN", "actual": "4Q total 6" }
+    ],
+    "full_game_qb_skill_props": [
+      { "market": "Christian Watson OVER 70.5 Rec Yds", "result": "WIN", "actual": "Watson 106" },
+      { "market": "Josh Jacobs OVER 18.5 Rec Yds", "result": "LOSS", "actual": "Jacobs 13" },
+      { "market": "Josh Jacobs OVER 60.5 Rush Yds", "result": "LOSS", "actual": "Jacobs 33" },
+      { "market": "Josh Jacobs OVER 84.5 Rush+Rec Yds", "result": "LOSS", "actual": "Jacobs 46" },
+      { "market": "Chuba Hubbard OVER 15.5 Rec Yds", "result": "WIN", "actual": "Hubbard 38" },
+      { "market": "Chuba Hubbard OVER 67.5 Rush Yds", "result": "WIN", "actual": "Hubbard 80" },
+      { "market": "Bryce Young UNDER 253.5 Pass Yds", "result": "WIN", "actual": "Young 196" },
+      { "market": "Bryce Young OVER 0.5 INTs", "result": "WIN", "actual": "Young 1 INT" },
+      { "market": "Bryce Young OVER 9.5 Rush Yds", "result": "LOSS", "actual": "Young 0 rush yards" },
+      { "market": "Bryce Young UNDER 36.5 Longest Comp", "result": "WIN", "actual": "Young longest comp 19" },
+      { "market": "Jordan Love UNDER 35.5 Pass Attempts", "result": "LOSS", "actual": "Love 39 attempts" },
+      { "market": "Tetairoa McMillan UNDER 72.5 Rec Yds", "result": "WIN", "actual": "McMillan 50" },
+      { "market": "Tucker Kraft OVER 44.5 Rec Yds", "result": "WIN", "actual": "Kraft 53" },
+      { "market": "Savion Williams OVER 24.5 Rec Yds", "result": "LOSS", "actual": "S.Williams 5" }
+    ],
+    "kicking_suite": [
+      { "market": "Ryan Fitzgerald OVER 1.5 FGs Made (-105)", "result": "WIN", "actual": "Fitzgerald 2/2 FGs" },
+      { "market": "Ryan Fitzgerald OVER 6.5 Kicking Pts (-110)", "result": "WIN", "actual": "Fitzgerald 7 kicking pts" },
+      { "market": "Trey Smack OVER 1.5 FGs Made (-110)", "result": "LOSS", "actual": "Smack 0/0 FGs" },
+      { "market": "Trey Smack OVER 7.5 Kicking Pts (-110)", "result": "LOSS", "actual": "Smack 3 kicking pts" }
+    ],
+    "defense_idp_suite": [
+      { "market": "Bobby Okereke OVER 6.5 T+A (-115)", "result": "LOSS", "actual": "Okereke 4 T+A" },
+      { "market": "Bobby Okereke OVER 3.5 Solo Tackles (-115)", "result": "LOSS", "actual": "Okereke 3 solo" },
+      { "market": "Lukas Van Ness OVER 0.25 Sacks (-115)", "result": "WIN", "actual": "Van Ness 1 sack" },
+      { "market": "Karl Brooks OVER 0.25 Sacks (+105)", "result": "LOSS", "actual": "Brooks 0 sacks" },
+      { "market": "Keisean Nixon OVER 4.5 T+A (-110)", "result": "LOSS", "actual": "Nixon 2 T+A" },
+      { "market": "Tre'von Moehrig OVER 2.5 Solo Tackles (-120)", "result": "WIN", "actual": "Moehrig 3 solo" },
+      { "market": "Derrick Brown OVER 2.5 T+A (-115)", "result": "WIN", "actual": "Brown 3 T+A" },
+      { "market": "Isaiah McDuffie UNDER 8.5 T+A (-110)", "result": "LOSS", "actual": "McDuffie 10 T+A" }
+    ],
+    "tds_and_sgps": [
+      { "market": "Tucker Kraft Anytime TD (+185)", "result": "WIN", "actual": "Kraft 1 TD (Q1)" },
+      { "market": "Tucker Kraft 1Q TD (+950)", "result": "WIN", "actual": "Kraft scored in Q1" },
+      { "market": "Christian Watson Anytime TD (+155)", "result": "LOSS", "actual": "Watson 0 TDs" },
+      { "market": "Josh Jacobs Anytime TD (-145)", "result": "WIN", "actual": "Jacobs 1 TD" },
+      { "market": "Packers D/ST TD (+450)", "result": "LOSS", "actual": "No GB defensive/special teams TD" },
+      { "market": "SGP Ticket A (+380)", "result": "UNVERIFIED", "actual": "Leg composition not in official ledger (reference-only play)" },
+      { "market": "SGP Ticket B (+380)", "result": "UNVERIFIED", "actual": "Leg composition not in official ledger (reference-only play)" }
+    ],
+    "official_pass_audit": [
+      { "market": "Jordan Love 264.5 Pass Yds (PASS)", "result": "PASS CORRECT", "actual": "Love 281 > 264.5 — would have lost; PASS saved the unit" },
+      { "market": "Jalen Coker 62.5 Rec Yds & 4.5 Rec (PASS)", "result": "PASS MISSED WINNER", "actual": "Coker 35 rec / 2 rec — would have won; PASS cost a winner" },
+      { "market": "Matthew Golden 57.5 Rec Yds (PASS)", "result": "PASS CORRECT", "actual": "Golden 79 > 57.5 — would have lost; PASS saved the unit" },
+      { "market": "Tommy Tremble 15.5 Rec Yds (PASS)", "result": "PASS CORRECT", "actual": "Tremble 19 > 15.5 — would have lost; PASS saved the unit" },
+      { "market": "John Metchie 15.5 Rec Yds (PASS)", "result": "PASS MISSED WINNER", "actual": "Metchie 14 rec / 10 yds — would have won; PASS cost a winner" }
+    ]
+  },
+  "root_cause_classification": {
+    "true_process_wins": [ "CAR-GB-01 GB -3.5", "CAR-GB-02 UNDER 46.5", "CAR-GB-08 Young UNDER 253.5", "CAR-GB-11 Watson OVER 70.5", "CAR-GB-13 Hubbard OVER 67.5", "CAR-GB-14 Kraft OVER 44.5", "CAR-GB-16 Fitzgerald OVER 1.5 FGs", "CAR-GB-19 Van Ness OVER 0.25 sacks", "CAR-GB-21 Kraft Anytime TD" ],
+    "bad_variance_losses": [ "CAR-GB-10 Love UNDER 35.5 att (39 attempts — game script forced GB to throw late while up 27-13)", "CAR-GB-15 Jacobs OVER 60.5 rush (33 yards — GB abandoned run with big lead; 2.1 YPC)" ],
+    "lucky_wins": [ "CAR-GB-06 Hubbard OVER 15.5/16.5 rec (38 rec yards on checkdowns — volume fluke vs. the 67.5 rush thesis which actually cashed on 80 rush yards)", "CAR-GB-04 CAR 1H TT UNDER 10.5 (CAR scored exactly 10 — right on the number)" ],
+    "structural_blind_spots": [ "GB team total UNDER 25.5 LOSS — GB scored 27, model under-projected GB's red-zone efficiency (3-3 in RZ) and Love's 281-yard passing day; increase GB offensive TD projection and pass-attempt ceiling for home favorites", "Jacobs rush OVER 60.5 LOSS — game-script collapse: once GB led 20-10, they stopped running (Jacobs 16 carries for only 33 yards); add game-script-dependent rush-volume decay when leading by >10", "McDuffie UNDER 8.5 T+A LOSS — McDuffie 10 tackles; IDP tackle volume for off-ball LBs on the winning team is underestimated when the offense controls the clock", "Okereke OVER 6.5 T+A LOSS — Okereke only 4 tackles; Carolina's defense was on the field 26:41 but structured to limit tackles; CAR team-total defense props need a snap-count haircut" ]
+  }
+}
