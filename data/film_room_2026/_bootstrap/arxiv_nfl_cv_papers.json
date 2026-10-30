@@ -1,0 +1,796 @@
+{
+ "generated_at": "2026-10-30T00:00:00Z",
+ "source": "arXiv API",
+ "total_papers": 57,
+ "queries": [
+  "all:football AND all:computer vision",
+  "all:\"sports video understanding\"",
+  "all:\"temporal action localization\" AND all:sports",
+  "all:\"player tracking\" AND all:sports",
+  "all:\"vision-language\" AND all:sports",
+  "all:football AND all:formation"
+ ],
+ "papers": [
+  {
+   "id": "2610.38308v1",
+   "title": "Does 3D Pose Improve Action Valuation in Football? An Empirical Study of Pose Representations and Learning Objectives",
+   "authors": [
+    "Rikuhei Umemoto",
+    "Kenjiro Ide",
+    "Soham Majumder",
+    "Ulf Brefeld",
+    "Keisuke Fujii"
+   ],
+   "abstract": "Football action valuation estimates players' contributions to future scoring. Existing multi-agent deep reinforcement learning (MADRL) models use 2D positions and velocities, omitting posture information relevant to imminent actions. We investigate whether adding 3D pose to a SARSA-based model improves observed-action values relative to attack returns: goals, conceded goals or final expected possession value. Using UEFA Champions League 2022/23 event, tracking and 3D pose data, we compare six representations (no pose, raw joints, torso and head orientation, and spatial-temporal graph convolutional network (ST-GCN) embeddings) across five learning settings and three seeds. The settings vary temporal-difference targets and action-prediction loss, with Monte Carlo return regression as a reference. Across 50 on-ball and off-ball comparisons, pose robustly improved return prediction in only three, all using torso and head orientation, while worsening it in twelve, mostly with ST-GCN. Training choices had greater effects: removing the action-prediction loss raised on-ball skill of position-only values from 0.003 to 0.040 and their correlation with expected goals from 0.23 to 0.60; the improvement in return prediction persisted at matched training length. Separately, pose improved prediction of the on-ball action 0.2 s ahead (macro AUC 0.914 to 0.934 with raw joints), while the passer's pose during execution improved pass-success prediction (AUC 0.844 to 0.856). Within this training protocol, pose informed imminent actions but rarely improved observed-action values.",
+   "published": "2026-10-28T05:46:46Z"
+  },
+  {
+   "id": "2610.20095v1",
+   "title": "Uncovering higher-order interactions from memory in observed dynamics",
+   "authors": [
+    "Arthur Rondeau",
+    "Alain Barrat",
+    "Roland Bouffanais"
+   ],
+   "abstract": "Many complex systems involve group interactions, which can readily be represented by higher-order structures such as hypergraphs. However, when observing a system's dynamical evolution, establishing whether that evolution actually results from higher-order interactions, or whether pairwise interactions suffice to explain the data, remains a challenge. Even in the simple case of a temporal sequence of nodes visited during a diffusion process, such a task is intricate. Indeed, group interactions leave their traces as memory on the observed nodes, while path dependence in a purely pairwise process can mimic that same footprint without any group structure. To resolve this, we propose an inference pipeline based on a hidden Markov model (HMM) that tests, directly from an observed sequence of nodes carrying no group labels, whether higher-order interactions are required to describe the dynamics. The HMM latent states represent higher-order interactions, seen as hyperedges of an unobserved hypergraph, so that their detection becomes a model selection problem between the HMM class and a class of null models without higher-order interactions. We first validate this approach on synthetic node sequences generated from random walks on graphs and hypergraphs, showing that it recovers both the number and the composition of the underlying hyperedges, while correctly rejecting them when the generating process is pairwise. As a second step, we consider a validation based on empirical data, namely empirical trajectories of ball possession in football matches. This application shows that the pipeline goes beyond providing statistical evidence of the presence of higher-order interactions, and yields interpretable underlying structures: the recovered hyperedges map directly onto recognizable tactical team formations.",
+   "published": "2026-10-14T12:34:03Z"
+  },
+  {
+   "id": "2610.14933v1",
+   "title": "The 2026 World Cup, Anime Edition: Production, Engagement, and Circulation of Generative Memetic Sports Content",
+   "authors": [
+    "Azneef Chowdhury",
+    "Ho-Chun Herbert Chang"
+   ],
+   "abstract": "Generative AI gives audiences new ways to portray real sporting figures through familiar fictional worlds. Expanded opportunities to create, however, need not broaden cultural representation or distribute attention evenly. We examine this tension through the supply, demand, and circulation of anime style football videos on Instagram. Using 2,021 posts and associated video and account data, we combine caption entity extraction, human-reviewed visual identity clustering, engagement analysis, and content-reuse networks. Representation is uneven across athletes, while Blue Lock, Naruto, and One Piece account for 60.1% of explicit franchise mentions. Among posts referencing generative tools, rankings by total engagement differ from rankings by average engagement per video, distinguishing aggregate visibility from response to individual posts. Reuse is extensive: 772 of 1,548 evaluated videos belong to 124 detected groups, including 71 spanning multiple known accounts. Shared material connects a large account component alongside smaller groups, and later observed uploads receive lower median normalized engagement than first observed appearances. These findings characterize generative cultural crossover as a practice organized around concentrated cultural resources, uneven attention, and extensive recirculation. More broadly, they distinguish opportunities for visual authorship from the processes through which particular representations become widely visible.",
+   "published": "2026-10-10T14:06:19Z"
+  },
+  {
+   "id": "2610.05961v2",
+   "title": "Strategic Multi-Agent Learning for Interpretable Action Valuation of All Players in Football",
+   "authors": [
+    "Kenjiro Ide",
+    "Taiga Someya",
+    "Kohei Kawaguchi",
+    "Keisuke Fujii"
+   ],
+   "abstract": "Valuing player actions in football, a complex multi-agent system, requires accounting for strategic interactions among 22 players, including off-ball movements and defensive positioning. Existing reinforcement-learning-based valuation methods commonly incorporate other players through the observed state while retaining independent-agent value formulations. To our knowledge, we introduce the first Markov perfect equilibrium (MPE)-inspired framework for valuing the actions of all 22 players using real football tracking and event data, formulating each possession as a finite-horizon multi-agent dynamic game. To improve interpretability, the framework uses Expandable Decision-Making States (EDMS) and decomposes each Q-value into a successor-feature basis and a linear reward-weight vector. The value basis is estimated through a two-stage procedure combining linear temporal-difference initialization with nonlinear iterative refinement from observed state-action transitions. Using tracking and event data from 95 J1 League matches, we compare the proposed formulation with an independent reinforcement learning baseline under both Position and Velocity States (PVS) and EDMS representations. With EDMS held fixed, the independent baseline assigns the highest value to forward movement in 99.21% of evaluated off-ball states, whereas the most frequent direction under the proposed formulation accounts for 17.63%. Qualitative analyses illustrate context-dependent off-ball valuations and highlight limitations of the current state representation for defensive positioning. Overall, the framework provides an MPE-inspired approach to interpretable action valuation in football, enabling analysis under alternative tactical reward weights.",
+   "published": "2026-10-05T08:13:42Z"
+  },
+  {
+   "id": "2609.35562v1",
+   "title": "Revisiting Risky Tackle Detection with Vision Transformers",
+   "authors": [
+    "Syed Ahsan Masud Zaidi",
+    "Lior Shamir",
+    "Scott Dietrich"
+   ],
+   "abstract": "This paper is a Track 2 reproducibility companion to an ICPR 2026 study on risky tackle detection in American football prac- tice videos. The original work fine-tuned a Video Vision Transformer (ViViT) on 733 clips labeled with the SATT-3 rubric. It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation. It reported risky- class recall of 0.67 and risky-class F1 of 0.59. This companion documents the released artifact and traces those numbers to specific scripts, fold out- puts, and aggregation files. The reproduced headline is run_15. It com- bines Gaussian noise with static brightness decrease and uses no rotation and no flip. Its fold-mean risky recall is 0.667 and its fold-mean risky F1 is 0.588. These values match the published headline after rounding. The ablation shows that brightness is the dominant factor. Its risky-recall main-effect range is 0.055, which is larger than the ranges for rotation, flip, and noise. Without augmentation, ViViT reaches risky recall of 0.545 and does not exceed the C3D baseline of 0.583. The raw clips show iden- tifiable student athletes, so they cannot be redistributed. The artifact provides a public sample for pipeline checks and a controlled route for full-data review.",
+   "published": "2026-09-28T16:28:59Z"
+  },
+  {
+   "id": "2609.34710v1",
+   "title": "FromPitch2Board: Benchmarking LLM Agents in Long-Horizon Football Management",
+   "authors": [
+    "Peiyu Zang"
+   ],
+   "abstract": "Long-horizon agent benchmarks typically report how far an agent progresses, but do not identify whether its performance comes from the foundation model, scaffold, responsibility scope, match-control granularity, or horizon. We introduce FromPitch2Board, a deterministic football-management benchmark that studies five configurable factors through controlled comparisons on a single simulator, using paired seeds and a frozen calibration. We evaluate four foundation models and four agent scaffolds. In the Model Track, Coach points Z-scores span 0.19, while Manager points Z-scores span 0.68, with GPT-5.6 showing a sharp rise in passivity under responsibility expansion. Its responsibility ladder rises from 46.1 to 58.1 points with recruitment, then falls to 46.8 under full management, localizing the regression to the final responsibility boundary. Across that boundary, its skipped-decision rate rises from 1.1% to 57.9%. Within the Flash-Pro pair crossed across every scaffold, scaffold choice changes Manager points Z-scores by up to 0.48 relative to the fixed stateless scaffold. The 3Y cohort shows a directional reversal in mean ranking between years one and three, while a selected Claude Code+Pro configuration peaks in year three and remains below that peak, showing that responsibility scope and horizon expose behavior changes that a single headline score conceals.",
+   "published": "2026-09-28T09:22:33Z"
+  },
+  {
+   "id": "2609.24025v1",
+   "title": "Synthesizing Reactive Character Behaviors for Continuous Games via Programmatic Policy Search",
+   "authors": [
+    "Maxim Gumin",
+    "Hsueh-Ti Derek Liu",
+    "Victor Zordan",
+    "Daniel Ritchie"
+   ],
+   "abstract": "We present a method for synthesizing reactive character behaviors for continuous games as compact, human-readable programs. Game AI practice still relies heavily on manually authored behavior trees, state machines, and scripts, while academic reinforcement learning typically produces opaque neural controllers that are expensive to train and difficult to edit. Our approach bridges this gap by searching directly over a domain-specific language for continuous-space game policies. The language is designed around reactive geometric decisions and includes higher-order constructs such as direction maximization. These constructs help discretize a continuous behavior space into enumerable program structures. To make program search practical, we introduce a large set of synthesis antipatterns that remove redundant program forms while preserving behavioral coverage. We further combine bottom-up symbolic enumeration with top-down guidance from a coding agent. Our resulting method, agentic sketching, has the agent propose high-level policy structure and call an enumerator to complete local program slots. We evaluate the method on a benchmark of 14 continuous games, ranging from classic control tasks to multi-agent football. We find that pure enumeration is often more efficient than using a coding agent alone, while the combined method substantially outperforms both. Our results suggest that programmatic policy search can be a practical authoring tool for game AI: designers specify reward functions, and the system discovers editable behaviors that are effective, portable, and often surprising.",
+   "published": "2026-09-21T02:47:59Z"
+  },
+  {
+   "id": "2609.12468v1",
+   "title": "Gibbs Sampling for Bayesian Generalized Poisson Matrix Factorization",
+   "authors": [
+    "Fumitake Sakaori",
+    "Hiroyasu Abe"
+   ],
+   "abstract": "Generalized Poisson matrix factorization (GPMF) is a matrix factorization method for count data with overdispersion based on the generalized Poisson distribution. While GPMF provides point estimates of the model parameters through maximum likelihood estimation, it does not quantify estimation uncertainty. In this paper, we propose a Bayesian extension of GPMF, referred to as Bayesian GPMF, and develop a Gibbs sampler for posterior inference. The proposed method is based on a compound Poisson representation of the generalized Poisson distribution, which introduces latent variables and yields closed-form full conditional posterior distributions for all model parameters. To efficiently sample the overdispersion parameter, we derive an infinite mixture representation of the exponentially tilted beta (EBeta) distribution and develop a finite approximation based on this representation. Simulation studies demonstrate that the proposed Bayesian GPMF achieves smaller mean squared errors than the conventional GPMF while providing credible intervals with empirical coverage probabilities close to the nominal level. Furthermore, the proposed finite approximation attains estimation accuracy comparable to Sampling/Importance Resampling (SIR) while requiring less computation. An application to football event data further illustrates the usefulness of Bayesian GPMF for extracting interpretable latent structures and quantifying estimation uncertainty. These results demonstrate that the proposed framework provides an effective Bayesian approach to generalized Poisson matrix factorization.",
+   "published": "2026-09-11T06:04:45Z"
+  },
+  {
+   "id": "2609.04803v1",
+   "title": "Hierarchical Possession-Aware Graph Pointer Network for Pass Receiver Selection",
+   "authors": [
+    "Jingyi Wang",
+    "Da Li",
+    "Kaixin Wang",
+    "Zhangqin Huang"
+   ],
+   "abstract": "Pass receiver selection is a fundamental task in football analytics, aiming to predict the intended receiver under a given game state. This task is challenging with event-centered freeze-frame observations, a broadcast-like setting that provides only partial and variable player visibility without complete trajectories or stable player identities. The model must therefore reason over anonymous visible candidates, opponent pressure, and recent context under partial observation. To address this setting, we propose a Hierarchical Possession-aware Graph Pointer Network (HPGPN), which formulates pass receiver selection as variable-size candidate prediction over visible teammates. HPGPN jointly models current player interactions, local event context, and possession-level temporal dynamics. It represents the current pass situation with a graph, incorporates fixed event context, and uses dynamic possession history to capture how the attacking sequence evolves. Candidate representations are refined hierarchically by integrating spatial, contextual, and historical evidence, and a glimpse pointer head scores the receiver candidates. Experiments on public football event and freeze-frame data show that HPGPN improves pass receiver selection performance. Ablation studies demonstrate the effectiveness of graph-based interaction modeling, fixed event context, and dual-branch dynamic possession-history modeling.",
+   "published": "2026-09-04T07:00:51Z"
+  },
+  {
+   "id": "2609.03790v2",
+   "title": "When Minute-Resolution Monitoring Meets Session-Level Injury Labels: Landmark-Based Discrimination in Elite Women's Football",
+   "authors": [
+    "Evangelos Chatzidimitriou",
+    "Konstantinos Tserpes"
+   ],
+   "abstract": "Minute-resolution athlete monitoring is increasingly common, while injury annotation may exist only at the athlete-session level and omit within-session onset time. Replicating a positive session label across every recorded minute would therefore create unsupported minute-level supervision. We address this label-resolution mismatch using fixed elapsed-time landmarks at 10, 20, 30, 40, 50, and 60 min, constructing one representation per athlete-session from information available up to each landmark while keeping the target as a same-day injury-associated session indicator. Using 2020 SoccerMon data from elite women's football, the modelling cohort contains 2,259 Team A athlete-sessions from 27 athletes, including all 22 positive sessions from five athletes. Evaluation is athlete-disjoint. We compare contextual, cumulative, and dynamic representations; Logistic Regression, Random Forest, XGBoost, and TabPFN; and training-only NONE, SMOTE, and CTGAN conditions. Robustness is assessed using athlete-cluster bootstrap, a fixed common cohort, alternative fold allocations, leave-one-positive-athlete-out analysis, and equal-athlete weighting. Discrimination is landmark-dependent and non-monotonic. TabPFN improves later-landmark discrimination relative to Logistic Regression but does not consistently outperform Random Forest. Synthetic augmentation provides condition-specific rather than universal benefit. The contribution is a unit-aligned framework for using minute-resolution predictors with session-level supervision, not minute-specific injury prediction.",
+   "published": "2026-09-03T13:00:23Z"
+  },
+  {
+   "id": "2609.28049v1",
+   "title": "Prompt, Probe, Train, or Annotate? Single-camera sports video understanding in amateur settings",
+   "authors": [
+    "Sai Varun Kodathala",
+    "Prashanth Pollishetty",
+    "Jaylen Cargill"
+   ],
+   "abstract": "Video understanding is usually benchmarked on curated, single-actor, or professionally filmed clips, and a strong score there is routinely read as evidence a model is robust enough for deployment. Amateur team sport is a useful, largely untested place to check that assumption: over eight million students played a school sport in the United States in 2024-25 alone, almost none of it filmed by more than a single fixed camera, with several candidate actors crowded into frame and no operator or second angle to fall back on. Using volleyball as a test case, we ask whether strong performance on general video and world-model benchmarks translates into reliable, per-player attribution once footage is this chaotic, turning footage into statistics through a chain of tasks from finding play boundaries to naming who did what. We evaluate four approaches (prompting and agentic reasoning over frontier vision-language models, classical computer vision with small trained specialists, self-supervised video world models, and manual annotation) at every stage, on 66 amateur matches with 46,648 human-labelled contacts, filmed under conditions no published benchmark uses. No single paradigm wins every stage, and static, single-frame computer vision is not competitive at any stage involving motion or identity. A prompted model segments matches well, yet a far smaller trained model beats it at spotting contacts for a fraction of the cost, and the sport's own rules recover rally outcomes the pixels cannot. Identity is where every automated approach struggles: a jersey number is a static fact temporal reasoning cannot recover if never visible, unlike sporting action, a repeated motor pattern a temporal model can exploit, which is why holistic reasoning improves event detection while identity stays unchanged. We close with where each approach earns its cost, and what transfers beyond volleyball to amateur sport.",
+   "published": "2026-09-23T13:05:24Z"
+  },
+  {
+   "id": "2608.19646v1",
+   "title": "PL-NBA: A Possession-level Universal Basketball Video Dataset Supporting Multiple Visual Understanding Tasks",
+   "authors": [
+    "Yunhao Zhao",
+    "Haoying Sun",
+    "Jiarui Li",
+    "Zhuming Wang",
+    "Ya Jing",
+    "Xiangbo Shu",
+    "Lifang Wu",
+    "Changwen Chen"
+   ],
+   "abstract": "Visual understanding in sports has emerged as a hot topic in computer vision in recent years. Most existing basketball video datasets adopt single action or activity as sample, which can neither preserve the temporal continuity of game events nor support complex tasks such as action anticipation. To address this issue, this paper constructs the first possession-level basketball video dataset (PL-NBA), in which each sample is composed of a complete NBA offensive possession. Collected from 60 NBA games, PL-NBA contains 11,000 valid offensive possession clips and 31,567 annotated events with player names, captions, event types and timestamps. Each video clip includes multiple events and preserves the continuity of events, which is helpful for analysis of tactic. Experiment is conducted on multiple visual understanding tasks, including event recognition, video captioning, temporal action localization and action anticipation. Experimental results show that existing methods achieve limited performance on above four tasks, demonstrating that PL-NBA is a challenging benchmark for sports video understanding.",
+   "published": "2026-08-20T05:29:05Z"
+  },
+  {
+   "id": "2608.12920v1",
+   "title": "TennisVAR: A Stroke-Evidence-Grounded Multimodal Large Language Model for Tactical Reasoning in Tennis Videos",
+   "authors": [
+    "Yifan Mei",
+    "Qingling Shi",
+    "Changli Wu",
+    "Jiayuan Rao",
+    "Jiayi Ji",
+    "Liujuan Cao"
+   ],
+   "abstract": "Sports-video understanding is moving beyond event recognition toward explaining how actions collectively shape match progression, however, existing tennis-video methods either perceive individual strokes without modeling their tactical dependencies or generate high-level analyses without grounding them in the underlying events. To bridge this perception-to-understanding gap, we formulate stroke-evidence-grounded tactical reasoning, a new rally-level task that requires models to jointly predict an open-ended answer, a hierarchical tactic label, an ordered sequence of supporting strokes, and decisive key actions, with each evidence stroke anchored to its racket-ball contact frame. We further introduce TRACE (Tactical Reasoning with Action-Chain Evidence in Tennis), a large-scale expert-annotated benchmark containing 11,189 rally videos, 41,485 stroke events, 25,429 tactical units, and 11,189 question-answer pairs, which unifies fine-grained stroke attributes, cross-stroke tactical relations, hierarchical tactic annotations, and evidence-grounded questions across factual perception, tactical understanding, and decision reasoning. Building on TRACE, we propose TennisVAR (Tennis Video Action-chain Reasoner), an evidence-grounded multimodal large language model that follows an \"event-relation-evidence-tactic\" reasoning paradigm, where an Event Parsing Module converts continuous rallies into explicit stroke-event sequences while a Tactical Graph-Guided Temporal Reasoner jointly models rally progression and same-player decision dependencies to identify question-relevant evidence and decisive actions.",
+   "published": "2026-08-13T08:01:22Z"
+  },
+  {
+   "id": "2608.09200v3",
+   "title": "NBA_Streaming: A Large-Scale Benchmark for Fine-Grained Basketball Commentary Generation in Continuous Streams",
+   "authors": [
+    "Lifang Wu",
+    "Yuyang Wu",
+    "Yangdong Gao",
+    "Fengyu Liu",
+    "Ya Jing",
+    "Liang Wang"
+   ],
+   "abstract": "Live basketball commentary generation requires determining when an event is sufficiently observable and describing it before subsequent events unfold. However, existing methods are primarily designed for pre-segmented clips or complete videos, making them unsuitable for continuous streams. Existing datasets also provide limited supervision for player identities, fine-grained actions, event attributes, and coherent event chains, restricting the factual richness of generated commentary. To address these limitations, we introduce NBA_Streaming, a large-scale benchmark for online fine-grained basketball commentary generation. It contains 307.5 hours of basketball broadcasts and approximately 35K temporally aligned events, with annotations of event boundaries, player identities, fine-grained actions, event chains, and natural-language commentary. By moving from isolated clips to continuous streams, NBA_Streaming enables unified evaluation of event localization, response reliability, factual grounding, and commentary quality under causal constraints. We further propose a causal two-stage framework that combines completion-first localization with ball-centric semantic grounding, enabling the system to identify complete events from observed streams and organize scene, event, identity, and action cues for commentary generation. Extensive experiments reveal the difficulty of NBA_Streaming, where existing baselines struggle with online timing, factual grounding, and fine-grained description. Our framework consistently improves over strong alternatives, while the remaining gap highlights NBA_Streaming as a valuable benchmark for streaming sports video understanding and generation. The dataset is publicly available at https://github.com/wyy-081/NBA_Streaming.",
+   "published": "2026-08-10T07:15:09Z"
+  },
+  {
+   "id": "2607.21267v1",
+   "title": "BasketEvent: Understanding Who Did What and When in Basketball Videos",
+   "authors": [
+    "Yu Zhang",
+    "Jiayuan Rao",
+    "Haoning Wu",
+    "Weidi Xie"
+   ],
+   "abstract": "Comprehensive basketball video understanding requires resolving not only what event occurs, but also who is responsible and when the key evidence appears. However, exist- ing methods typically treat spatial perception and semantic recognition as isolated tasks, failing to ground events to individual players or pinpoint their temporal boundaries within complex collective dynamics. To bridge this gap, we introduce BasketEvent, a player- centric basketball event understanding dataset curated from real NBA broadcasts. In BasketEvent, event labels are grounded to the responsible players, and a manually an- notated subset of 1,000 samples with precise event intervals is provided to evaluate tem- poral evidence localization. Based on this data, we propose PlayNet, a player-centric reasoning framework that maps basketball videos to player-level event predictions with temporal evidence. Concretely, PlayNet tracks key entities, associates player identities, and reasons about events by modeling player-player, player-ball, and global court inter- actions, while aggregating sparse temporal evidence via gated pooling. Extensive experi- ments demonstrate that PlayNet significantly outperforms representative video-level and crop-based baselines, proving the superiority of player-centric modeling for fine-grained sports video understanding. Our data, code, and models will be made publicly available.",
+   "published": "2026-07-23T12:39:56Z"
+  },
+  {
+   "id": "2607.11844v2",
+   "title": "Beyond the Single Camera: Agentic Multi-View Reasoning in Sports Video Understanding",
+   "authors": [
+    "Kerui Chen",
+    "Jinglu Wang",
+    "Xiaoyi Zhang",
+    "Yan Lu"
+   ],
+   "abstract": "Recent Multimodal Large Language Models (MLLMs) achieve strong performance on single-view video understanding benchmarks. However, sports videos involve dense occlusion, rapid motion, and complex interactions that are difficult to resolve from a single viewpoint. In practice, sports events are recorded from multiple camera angles, providing complementary evidence used by referees. Yet, no existing benchmark evaluates MLLMs on multi-view sports video understanding. To address this gap, we introduce SportMV-Bench, a comprehensive benchmark built from official match recordings, through a dedicated pipeline combining LLM-based generation, MLLM-based verification, and human filtering to ensure quality and consistency. SportMV-Bench containing 1022 multi-view video bundles and 3015 question-answer pairs spanning 10 sports across three categories: Perception-Aware Recognition (PAR), Rule-aware Event Interpretation (REI), and Adjudicative Decision Reasoning (ADR). Our analysis shows that current MLLMs fail to effectively exploit multi-view information, with the bottlenecks lying in fine-grained visual perception and view selection rather than logical reasoning or domain knowledge. We propose SportMV-Agent, an agentic framework that orchestrates an iterative loop of active view selection, perception tool execution, and evidence-grounded reasoning, achieving a significant 15.61% relative improvement over the strongest MLLM baseline.",
+   "published": "2026-07-13T17:34:36Z"
+  },
+  {
+   "id": "2607.07320v1",
+   "title": "SoccerNet 2026 Challenges Results",
+   "authors": [
+    "Anthony Cioppa",
+    "Silvio Giancola",
+    "H\u00e5kan Ard\u00f6",
+    "Mohamad Dalal",
+    "Jan Held",
+    "J\u00e9r\u00e9mie Ochin",
+    "Jiayuan Rao",
+    "Karen Sanchez",
+    "Renaud Vandeghen",
+    "Artur Xarles",
+    "Olivier Barnich",
+    "Albert Clap\u00e9s",
+    "Mathieu Delvaux",
+    "Sergio Escalera",
+    "Bernard Ghanem",
+    "C\u00e9dric Hons",
+    "Antoine Houet",
+    "Sotiris Manitsaris",
+    "Tom Michel",
+    "Pierre Miralles",
+    "Thomas B. Moeslund",
+    "Mikael Nilsson",
+    "Bogdan Stanciulescu",
+    "Marc Van Droogenbroeck",
+    "Yanfeng Wang",
+    "Weidi Xie",
+    "Faisal Altawijri",
+    "Mohamed Atef",
+    "Semen Budennyy",
+    "Vasiliy Chelpanov",
+    "Puhua Chen",
+    "Yixin Chen",
+    "Lechao Cheng",
+    "Jianling Chu",
+    "Ju-Seong Do",
+    "Oleg Durygin",
+    "Omar Fetouh",
+    "Mirco Fuchs",
+    "Youssef Ghallab",
+    "Falguni Ghosh",
+    "Wonjun Heo",
+    "Yufeng Hu",
+    "Weixuan Huang",
+    "Phuong-Linh Huynh-Ha",
+    "Matvey Isupov",
+    "Yangguang Ji",
+    "Siyuan Jiang",
+    "Zhenxiang Jiang",
+    "Wonyong Jo",
+    "Ho-Young Jung",
+    "SeongHeon Kang",
+    "MinJae Kim",
+    "Youngseon Kim",
+    "Jakub Komosa",
+    "Artem Konshin",
+    "Trung-Hoang Le",
+    "Jongmin Lee",
+    "Lingling Li",
+    "Litao Li",
+    "Vadim Linkov",
+    "Fang Liu",
+    "Haoxuan Ma",
+    "Shun Makino",
+    "Ismail Mathkour",
+    "Konstantin Mitin",
+    "Mikhail Moiseev",
+    "Takumi Nagaya",
+    "Yuki Nakamura",
+    "Thanh-Khoi Nguyen",
+    "Hoang-Phuc Nguyen",
+    "Trong-Thuan Nguyen",
+    "Christian Orduz",
+    "Kwanyong Park",
+    "Fabian Perez",
+    "Parthsarthi Rawat",
+    "SuHyun Rim",
+    "Hoover Rueda-Chac\u00f3n",
+    "Atom Scott",
+    "Minori Sugimura",
+    "Yuyang Sun",
+    "Shengeng Tang",
+    "Minh-Triet Tran",
+    "Ikuma Uchida",
+    "Juan Vanegas",
+    "Thanh-Nhan Vo",
+    "Jiangtao Wang",
+    "Yaxiong Wang",
+    "Xiaogang Wang",
+    "Ruifeng Wang",
+    "Rio Watanabe",
+    "Jiali Wen",
+    "Yongliang Wu",
+    "Di Yang",
+    "Xu Yang",
+    "Zhuo Yang",
+    "Xinyu Ye",
+    "Yibo Yu",
+    "Zihan Zhai",
+    "Yu Zhang",
+    "Zhenyu Zhao",
+    "Zhun Zhong",
+    "Yixi Zhou",
+    "Xingyu Zhu",
+    "Wenbo Zhu",
+    "Julian Ziegler"
+   ],
+   "abstract": "The SoccerNet 2026 Challenges constitute the sixth annual edition of the SoccerNet open benchmarking effort, dedicated to advancing computer vision research in sports video understanding. This year's challenges span five vision-based tasks: (1) Ball Action Anticipation, predicting the timing and class of ball-related actions within a short future window from a preceding observation window; (2) Player-Centric Ball Action Spotting, temporally localizing and classifying ball-related actions while assigning each action to the acting player through team affiliation and jersey number; (3) Novel View Synthesis, rendering images from unobserved camera poses in multi-view football scenes; (4) Spiideo SoccerNet Synloc, localizing athletes in real-world pitch coordinates from a single calibrated static-camera image; and (5) Visual Question Answering, answering multiple-choice questions about football broadcasts across text, image, and video inputs. For each task, participants were provided with annotated data, a unified evaluation protocol, and a public baseline. This edition saw broad participation, with 427 teams submitting 1,129 entries across the five tasks and 28 teams contributing reviewed technical reports. This paper describes each task and its evaluation protocol, presents the challenge leaderboards, and summarizes the leading submissions, with the aim of documenting the current state of each task as measured on held-out challenge data.",
+   "published": "2026-07-08T12:06:48Z"
+  },
+  {
+   "id": "2604.22226v2",
+   "title": "Towards Temporal Compositional Reasoning in Long-Form Sports Videos",
+   "authors": [
+    "Siyu Cao",
+    "Lu Zhang",
+    "Ruizhe Zeng",
+    "Zhi-yong Liu"
+   ],
+   "abstract": "Sports videos are a challenging domain for multimodal understanding because they involve complex and dynamic human activities. Despite rapid progress in Multimodal Large Language Models (MLLMs), long-horizon reasoning in sports videos remains difficult, as answering questions requires both locating temporally sparse evidence and integrating it into reasoning. We attribute this limitation to two closely coupled factors: insufficient supervision over temporally dispersed evidence, and the lack of methods that require models to identify, localize, and justify temporal evidence. To address these gaps, we introduce SportsTime, a large-scale benchmark for long-form sports video understanding, comprising 14K+ open-ended QA pairs and 50K+ step-wise temporal evidence annotations. Building on SportsTime, we propose Chain-of-Time Reasoning (CoTR), which treats reasoning as a process of temporally grounded evidence composition. Specifically, during training, CoTR introduces a temporal-reward GRPO to encourage temporally grounded reasoning. During inference, it employs an anchor-observe-infer evidence-seeking loop to iteratively localize, verify, and compose temporal evidence before producing the final answer. Experiments demonstrate the usefulness of SportsTime as a benchmark and the effectiveness of CoTR, which consistently improves temporal compositional reasoning and step-wise grounding quality over strong MLLM baselines.",
+   "published": "2026-04-24T05:02:03Z"
+  },
+  {
+   "id": "2603.13397v2",
+   "title": "TennisExpert: Towards Expert-Level Analytical Sports Video Understanding",
+   "authors": [
+    "Zhaoyu Liu",
+    "Xi Weng",
+    "Lianyu Hu",
+    "Zhe Hou",
+    "Kan Jiang",
+    "Jin Song Dong",
+    "Yang Liu"
+   ],
+   "abstract": "Tennis is one of the most widely followed sports, generating extensive broadcast footage with strong potential for professional analysis, automated coaching, and real-time commentary. However, automatic tennis understanding remains underexplored due to two key challenges: (1) the lack of large-scale benchmarks with fine-grained annotations and expert-level commentary, and (2) the difficulty of building accurate yet efficient multimodal systems suitable for real-time deployment. To address these challenges, we introduce TennisVL, a large-scale tennis benchmark comprising over 200 professional matches (471.9 hours) and 40,000+ rally-level clips. Unlike existing commentary datasets that focus on descriptive play-by-play narration, TennisVL emphasizes expert analytical commentary capturing tactical reasoning, player decisions, and match momentum. Furthermore, we propose TennisExpert, a multimodal tennis understanding framework that integrates a video semantic parser with a memory-augmented model built on Qwen3-VL-8B. The parser extracts key match elements (e.g., scores, shot sequences, ball bounces, and player locations), while hierarchical memory modules capture both short- and long-term temporal context. Experiments show that TennisExpert consistently outperforms strong proprietary baselines, including GPT-5, Gemini, and Claude, and demonstrates improved ability to capture tactical context and match dynamics. Our dataset and code are publicly available at https://github.com/LZYAndy/TennisExpert.",
+   "published": "2026-03-11T15:12:10Z"
+  },
+  {
+   "id": "2512.01853v2",
+   "title": "COACH: Collaborative Agents for Contextual Highlighting -- A Multi-Agent Framework for Sports Video Analysis",
+   "authors": [
+    "Tsz-To Wong",
+    "Ching-Chun Huang",
+    "Hong-Han Shuai"
+   ],
+   "abstract": "Intelligent sports video analysis demands a comprehensive understanding of temporal context, from micro-level actions to macro-level game strategies. Existing end-to-end models often struggle with this temporal hierarchy, offering solutions that lack generalization, incur high development costs for new tasks, and suffer from poor interpretability. To overcome these limitations, we propose a reconfigurable Multi-Agent System (MAS) as a foundational framework for sports video understanding. In our system, each agent functions as a distinct \"cognitive tool\" specializing in a specific aspect of analysis. The system's architecture is not confined to a single temporal dimension or task. By leveraging iterative invocation and flexible composition of these agents, our framework can construct adaptive pipelines for both short-term analytic reasoning (e.g., Rally QA) and long-term generative summarization (e.g., match summaries). We demonstrate the adaptability of this framework using two representative tasks in badminton analysis, showcasing its ability to bridge fine-grained event detection and global semantic organization. This work presents a paradigm shift towards a flexible, scalable, and interpretable system for robust, cross-task sports video intelligence. The project homepage is available at https://aiden1020.github.io/COACH-project-page",
+   "published": "2025-12-01T16:38:07Z"
+  },
+  {
+   "id": "2605.23355v1",
+   "title": "Decoupling Spatio-Temporal Adapter for Fine-Grained Badminton Action Localization",
+   "authors": [
+    "Tianyu Wang",
+    "Junjie Wu",
+    "Jingquan Gao",
+    "Shishuo Li"
+   ],
+   "abstract": "Temporal Action Localization (TAL) has been extensively studied in generic video understanding, while fine-grained sports scenarios, such as professional badminton, remain underexplored due to their complex and subtle spatio-temporal dynamics. In this paper, we focus on fine-grained TAL in professional badminton videos and introduce a new benchmark dataset, Fine-Badminton, which consists of 31 matches with 29 fine-grained stroke categories, covering 2104 rallies and 27597 annotated actions. To effectively capture the intricate motion patterns in such scenarios, we propose a Decoupling Spatio-Temporal Adapter (DSTA), which enables efficient modeling of spatio-temporal features within a parameter-efficient framework. Specifically, DSTA decomposes motion representation into three parallel branches, capturing temporal dynamics as well as vertical and horizontal spatial variations. The design allows the model to better distinguish subtle differences among fine-grained actions. Extensive experiments on both the Fine-Badminton dataset and the ShuttleSet benchmark demonstrate that the proposed method achieves state-of-the-art performance while introducing only a marginal increase in computational and parameter cost. These results validate the effectiveness and efficiency of the proposed approach for fine-grained temporal action localization.",
+   "published": "2026-05-22T08:21:26Z"
+  },
+  {
+   "id": "2511.16183v1",
+   "title": "FOOTPASS: A Multi-Modal Multi-Agent Tactical Context Dataset for Play-by-Play Action Spotting in Soccer Broadcast Videos",
+   "authors": [
+    "Jeremie Ochin",
+    "Raphael Chekroun",
+    "Bogdan Stanciulescu",
+    "Sotiris Manitsaris"
+   ],
+   "abstract": "Soccer video understanding has motivated the creation of datasets for tasks such as temporal action localization, spatiotemporal action detection (STAD), or multiobject tracking (MOT). The annotation of structured sequences of events (who does what, when, and where) used for soccer analytics requires a holistic approach that integrates both STAD and MOT. However, current action recognition methods remain insufficient for constructing reliable play-by-play data and are typically used to assist rather than fully automate annotation. Parallel research has advanced tactical modeling, trajectory forecasting, and performance analysis, all grounded in game-state and play-by-play data. This motivates leveraging tactical knowledge as a prior to support computer-vision-based predictions, enabling more automated and reliable extraction of play-by-play data. We introduce Footovision Play-by-Play Action Spotting in Soccer Dataset (FOOTPASS), the first benchmark for play-by-play action spotting over entire soccer matches in a multi-modal, multi-agent tactical context. It enables the development of methods for player-centric action spotting that exploit both outputs from computer-vision tasks (e.g., tracking, identification) and prior knowledge of soccer, including its tactical regularities over long time horizons, to generate reliable play-by-play data streams. These streams form an essential input for data-driven sports analytics.",
+   "published": "2025-11-20T09:42:28Z"
+  },
+  {
+   "id": "2508.19647v1",
+   "title": "UTAL-GNN: Unsupervised Temporal Action Localization using Graph Neural Networks",
+   "authors": [
+    "Bikash Kumar Badatya",
+    "Vipul Baghel",
+    "Ravi Hegde"
+   ],
+   "abstract": "Fine-grained action localization in untrimmed sports videos presents a significant challenge due to rapid and subtle motion transitions over short durations. Existing supervised and weakly supervised solutions often rely on extensive annotated datasets and high-capacity models, making them computationally intensive and less adaptable to real-world scenarios. In this work, we introduce a lightweight and unsupervised skeleton-based action localization pipeline that leverages spatio-temporal graph neural representations. Our approach pre-trains an Attention-based Spatio-Temporal Graph Convolutional Network (ASTGCN) on a pose-sequence denoising task with blockwise partitions, enabling it to learn intrinsic motion dynamics without any manual labeling. At inference, we define a novel Action Dynamics Metric (ADM), computed directly from low-dimensional ASTGCN embeddings, which detects motion boundaries by identifying inflection points in its curvature profile. Our method achieves a mean Average Precision (mAP) of 82.66% and average localization latency of 29.09 ms on the DSV Diving dataset, matching state-of-the-art supervised performance while maintaining computational efficiency. Furthermore, it generalizes robustly to unseen, in-the-wild diving footage without retraining, demonstrating its practical applicability for lightweight, real-time action analysis systems in embedded or dynamic environments.",
+   "published": "2025-08-27T07:51:02Z"
+  },
+  {
+   "id": "2505.03991v3",
+   "title": "Deep Learning for Sports Video Event Detection: Tasks, Datasets, Methods, and Challenges",
+   "authors": [
+    "Hao Xu",
+    "Arbind Agrahari Baniya",
+    "Sam Well",
+    "Mohamed Reda Bouadjenek",
+    "Richard Dazeley",
+    "Sunil Aryal"
+   ],
+   "abstract": "Video event detection has become a cornerstone of modern sports analytics, powering automated performance evaluation, content generation, and tactical decision-making. Recent advances in deep learning have driven progress in related tasks such as Temporal Action Localization (TAL), which detects extended action segments; Action Spotting (AS), which identifies a representative timestamp; and Precise Event Spotting (PES), which pinpoints the exact frame of an event. Although closely connected, their subtle differences often blur the boundaries between them, leading to confusion in both research and practical applications. Furthermore, prior surveys either address generic video event detection or broader sports video tasks, but largely overlook the unique temporal granularity and domain-specific challenges of event spotting. In addition, most existing sports video surveys focus on elite-level competitions while neglecting the wider community of everyday practitioners. This survey addresses these gaps by: (i) clearly delineating TAL, AS, and PES and their respective use cases; (ii) introducing a structured taxonomy of state of the art approaches including temporal modeling strategies, multimodal frameworks, and data-efficient pipelines tailored for AS and PES; and (iii) critically assessing benchmark datasets and evaluation protocols, highlighting limitations such as reliance on broadcast quality footage and metrics that over reward permissive multilabel predictions. By synthesizing current research and exposing open challenges, this work provides a comprehensive foundation for developing temporally precise, generalizable, and practically deployable sports event detection systems for both the research and industry communities.",
+   "published": "2025-05-06T22:02:30Z"
+  },
+  {
+   "id": "2304.05088v4",
+   "title": "WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition",
+   "authors": [
+    "Marius Bock",
+    "Hilde Kuehne",
+    "Kristof Van Laerhoven",
+    "Michael Moeller"
+   ],
+   "abstract": "Research has shown the complementarity of camera- and inertial-based data for modeling human activities, yet datasets with both egocentric video and inertial-based sensor data remain scarce. In this paper, we introduce WEAR, an outdoor sports dataset for both vision- and inertial-based human activity recognition (HAR). Data from 22 participants performing a total of 18 different workout activities was collected with synchronized inertial (acceleration) and camera (egocentric video) data recorded at 11 different outside locations. WEAR provides a challenging prediction scenario in changing outdoor environments using a sensor placement, in line with recent trends in real-world applications. Benchmark results show that through our sensor placement, each modality interestingly offers complementary strengths and weaknesses in their prediction performance. Further, in light of the recent success of single-stage Temporal Action Localization (TAL) models, we demonstrate their versatility of not only being trained using visual data, but also using raw inertial data and being capable to fuse both modalities by means of simple concatenation. The dataset and code to reproduce experiments is publicly available via: mariusbock.github.io/wear/.",
+   "published": "2023-04-11T09:31:07Z"
+  },
+  {
+   "id": "2010.09211v1",
+   "title": "Unsupervised Domain Adaptation for Spatio-Temporal Action Localization",
+   "authors": [
+    "Nakul Agarwal",
+    "Yi-Ting Chen",
+    "Behzad Dariush",
+    "Ming-Hsuan Yang"
+   ],
+   "abstract": "Spatio-temporal action localization is an important problem in computer vision that involves detecting where and when activities occur, and therefore requires modeling of both spatial and temporal features. This problem is typically formulated in the context of supervised learning, where the learned classifiers operate on the premise that both training and test data are sampled from the same underlying distribution. However, this assumption does not hold when there is a significant domain shift, leading to poor generalization performance on the test data. To address this, we focus on the hard and novel task of generalizing training models to test samples without access to any labels from the latter for spatio-temporal action localization by proposing an end-to-end unsupervised domain adaptation algorithm. We extend the state-of-the-art object detection framework to localize and classify actions. In order to minimize the domain shift, three domain adaptation modules at image level (temporal and spatial) and instance level (temporal) are designed and integrated. We design a new experimental setup and evaluate the proposed method and different adaptation modules on the UCF-Sports, UCF-101 and JHMDB benchmark datasets. We show that significant performance gain can be achieved when spatial and temporal features are adapted separately, or jointly for the most effective results.",
+   "published": "2020-10-19T04:25:10Z"
+  },
+  {
+   "id": "1912.04465v4",
+   "title": "SoccerDB: A Large-Scale Database for Comprehensive Video Understanding",
+   "authors": [
+    "Yudong Jiang",
+    "Kaixu Cui",
+    "Leilei Chen",
+    "Canjin Wang",
+    "Changliang Xu"
+   ],
+   "abstract": "Soccer videos can serve as a perfect research object for video understanding because soccer games are played under well-defined rules while complex and intriguing enough for researchers to study. In this paper, we propose a new soccer video database named SoccerDB, comprising 171,191 video segments from 346 high-quality soccer games. The database contains 702,096 bounding boxes, 37,709 essential event labels with time boundary and 17,115 highlight annotations for object detection, action recognition, temporal action localization, and highlight detection tasks. To our knowledge, it is the largest database for comprehensive sports video understanding on various aspects. We further survey a collection of strong baselines on SoccerDB, which have demonstrated state-of-the-art performances on independent tasks. Our evaluation suggests that we can benefit significantly when jointly considering the inner correlations among those tasks. We believe the release of SoccerDB will tremendously advance researches around comprehensive video understanding. {\\itshape Our dataset and code published on https://github.com/newsdata/SoccerDB.}",
+   "published": "2019-12-10T02:57:28Z"
+  },
+  {
+   "id": "1905.02171v1",
+   "title": "Spatio-Temporal Action Localization in a Weakly Supervised Setting",
+   "authors": [
+    "Kurt Degiorgio",
+    "Fabio Cuzzolin"
+   ],
+   "abstract": "Enabling computational systems with the ability to localize actions in video-based content has manifold applications. Traditionally, such a problem is approached in a fully-supervised setting where video-clips with complete frame-by-frame annotations around the actions of interest are provided for training. However, the data requirements needed to achieve adequate generalization in this setting is prohibitive. In this work, we circumvent this issue by casting the problem in a weakly supervised setting, i.e., by considering videos as labelled `sets' of unlabelled video segments. Firstly, we apply unsupervised segmentation to take advantage of the elementary structure of each video. Subsequently, a convolutional neural network is used to extract RGB features from the resulting video segments. Finally, Multiple Instance Learning (MIL) is employed to predict labels at the video segment level, thus inherently performing spatio-temporal action detection. In contrast to previous work, we make use of a different MIL formulation in which the label of each video segment is continuous rather then discrete, making the resulting optimization function tractable. Additionally, we utilize a set splitting technique for regularization. Experimental results considering multiple performance indicators on the UCF-Sports data-set support the effectiveness of our approach.",
+   "published": "2019-05-06T17:39:09Z"
+  },
+  {
+   "id": "1506.01929v2",
+   "title": "Learning to track for spatio-temporal action localization",
+   "authors": [
+    "Philippe Weinzaepfel",
+    "Zaid Harchaoui",
+    "Cordelia Schmid"
+   ],
+   "abstract": "We propose an effective approach for spatio-temporal action localization in realistic videos. The approach first detects proposals at the frame-level and scores them with a combination of static and motion CNN features. It then tracks high-scoring proposals throughout the video using a tracking-by-detection approach. Our tracker relies simultaneously on instance-level and class-level detectors. The tracks are scored using a spatio-temporal motion histogram, a descriptor at the track level, in combination with the CNN features. Finally, we perform temporal localization of the action using a sliding-window approach at the track level. We present experimental results for spatio-temporal localization on the UCF-Sports, J-HMDB and UCF-101 action localization datasets, where our approach outperforms the state of the art with a margin of 15%, 7% and 12% respectively in mAP.",
+   "published": "2015-06-05T14:48:46Z"
+  },
+  {
+   "id": "2603.17866v3",
+   "title": "NFL step-and-turn: A generative framework for evaluating player movement in American football",
+   "authors": [
+    "Quang Nguyen",
+    "Ronald Yurko"
+   ],
+   "abstract": "In sports analytics, player tracking data have driven significant advancements in the task of player evaluation. We present a novel generative framework for evaluating the observed frame-by-frame player positioning against a distribution of hypothetical alternatives. We illustrate our approach by modeling the within-play movement of an individual ball carrier in the National Football League (NFL). Specifically, we develop Bayesian multilevel models for frame-level player movement based on two components: step length (distance between successive locations) and turn angle (change in direction between successive steps). Using the step-and-turn models, we perform posterior predictive simulation to generate hypothetical ball carrier steps at each frame during a play. This enables comparison of the observed player movement with a distribution of simulated alternatives using common valuation measures in American football. We apply our framework to tracking data from the first nine weeks of the 2022 NFL season and derive novel player performance metrics based on hypothetical evaluation.",
+   "published": "2026-03-18T15:54:28Z"
+  },
+  {
+   "id": "2511.12606v3",
+   "title": "Pixels or Positions? Benchmarking Modalities in Group Activity Recognition",
+   "authors": [
+    "Drishya Karki",
+    "Merey Ramazanova",
+    "Anthony Cioppa",
+    "Silvio Giancola",
+    "Bernard Ghanem"
+   ],
+   "abstract": "Group Activity Recognition (GAR) is well studied on the video modality for surveillance and indoor team sports (e.g., volleyball, basketball). Yet, other modalities such as agent positions and trajectories over time, i.e. tracking, remain comparatively under-explored despite being compact, agent-centric signals that explicitly encode spatial interactions. Understanding whether pixel (video) or position (tracking) modalities leads to better group activity recognition is therefore important to drive further research on the topic. However, no standardized benchmark currently exists that aligns broadcast video and tracking data for the same group activities, leading to a lack of apples-to-apples comparison between these modalities for GAR. In this work, we introduce SoccerNet-GAR, a multimodal dataset built from the $64$ matches of the football World Cup 2022. Specifically, the broadcast videos and player tracking modalities for $87{,}939$ group activities are synchronized and annotated with $10$ categories. Furthermore, we define a unified evaluation protocol to benchmark two strong unimodal approaches: (i) competitive video-based classifiers and (ii) tracking-based classifiers leveraging graph neural networks. In particular, our novel role-aware graph architecture for tracking-based GAR directly encodes tactical structure through positional edges connecting players by their on-pitch roles. Our tracking model achieves $77.8\\%$ balanced accuracy compared to $60.9\\%$ for the best video baseline, while training with $7 \\times$ less GPU hours and $479 \\times$ fewer parameters ($180K$ vs. $86.3M$). This study provides new insights into the relative strengths of pixels and positions for group activity recognition in sports.",
+   "published": "2025-11-16T14:04:12Z"
+  },
+  {
+   "id": "2508.15299v1",
+   "title": "BasketLiDAR: The First LiDAR-Camera Multimodal Dataset for Professional Basketball MOT",
+   "authors": [
+    "Ryunosuke Hayashi",
+    "Kohei Torimi",
+    "Rokuto Nagata",
+    "Kazuma Ikeda",
+    "Ozora Sako",
+    "Taichi Nakamura",
+    "Masaki Tani",
+    "Yoshimitsu Aoki",
+    "Kentaro Yoshioka"
+   ],
+   "abstract": "Real-time 3D trajectory player tracking in sports plays a crucial role in tactical analysis, performance evaluation, and enhancing spectator experience. Traditional systems rely on multi-camera setups, but are constrained by the inherently two-dimensional nature of video data and the need for complex 3D reconstruction processing, making real-time analysis challenging. Basketball, in particular, represents one of the most difficult scenarios in the MOT field, as ten players move rapidly and complexly within a confined court space, with frequent occlusions caused by intense physical contact. To address these challenges, this paper constructs BasketLiDAR, the first multimodal dataset in the sports MOT field that combines LiDAR point clouds with synchronized multi-view camera footage in a professional basketball environment, and proposes a novel MOT framework that simultaneously achieves improved tracking accuracy and reduced computational cost. The BasketLiDAR dataset contains a total of 4,445 frames and 3,105 player IDs, with fully synchronized IDs between three LiDAR sensors and three multi-view cameras. We recorded 5-on-5 and 3-on-3 game data from actual professional basketball players, providing complete 3D positional information and ID annotations for each player. Based on this dataset, we developed a novel MOT algorithm that leverages LiDAR's high-precision 3D spatial information. The proposed method consists of a real-time tracking pipeline using LiDAR alone and a multimodal tracking pipeline that fuses LiDAR and camera data. Experimental results demonstrate that our approach achieves real-time operation, which was difficult with conventional camera-only methods, while achieving superior tracking performance even under occlusion conditions. The dataset is available upon request at: https://sites.google.com/keio.jp/keio-csg/projects/basket-lidar",
+   "published": "2025-08-21T06:40:51Z"
+  },
+  {
+   "id": "2504.16572v1",
+   "title": "Bridging Data Gaps and Building Knowledge Networks in Indian Football Analytics",
+   "authors": [
+    "Sneha Nanavati",
+    "Nimmi Rangaswamy"
+   ],
+   "abstract": "The global rise of football analytics has rapidly transformed how clubs make strategic decisions. However, in India, the adoption of analytics remains constrained by institutional resistance, infrastructural limitations, and cultural barriers -- challenges that grassroots innovation and low-cost data solutions have the potential to overcome. Despite the growing popularity of the Indian Super League, resource scarcity and fragmented governance continue to hinder the widespread adoption and impact of analytics. This mixed-methods study explores how informal, decentralised analytics communities -- comprising amateur analysts and Twitter-based \"data sleuths\" -- navigate these constraints through peer mentorship and grassroots innovation. Drawing on extensive digital ethnography, participant observation, and interviews, the study illustrates how these informal networks mitigate data scarcity, limited digital infrastructure, and institutional indifference while fostering skill development and professional growth. Building on these insights, the paper proposes HCI interventions such as decentralised knowledge platforms to facilitate structured, cross-border peer mentorship and low-cost data solutions -- including AI-assisted player tracking and mobile analytics dashboards -- rooted in principles of frugal innovation. These interventions aim to bridge the data divide, support inclusive technical engagement in sport, and enhance analytics-driven decision-making in resource-constrained environments. This paper contributes to HCIxB's focus on cross-border collaboration by highlighting how community-driven technological adaptation in the Global South can foster meaningful participation, skill-building, and long-term sustainability through informal learning networks and scalable, context-sensitive tools.",
+   "published": "2025-04-23T09:48:23Z"
+  },
+  {
+   "id": "2503.18282v2",
+   "title": "TrackID3x3: A Dataset and Algorithm for Multi-Player Tracking with Identification and Pose Estimation in 3x3 Basketball Full-court Videos",
+   "authors": [
+    "Kazuhiro Yamada",
+    "Li Yin",
+    "Qingrui Hu",
+    "Ning Ding",
+    "Shunsuke Iwashita",
+    "Jun Ichikawa",
+    "Kiwamu Kotani",
+    "Calvin Yeung",
+    "Keisuke Fujii"
+   ],
+   "abstract": "Multi-object tracking, player identification, and pose estimation are fundamental components of sports analytics, essential for analyzing player movements, performance, and tactical strategies. However, existing datasets and methodologies primarily target mainstream team sports such as soccer and conventional 5-on-5 basketball, often overlooking scenarios involving fixed-camera setups commonly used at amateur levels, less mainstream sports, or datasets that explicitly incorporate pose annotations. In this paper, we propose the TrackID3x3 dataset, the first publicly available comprehensive dataset specifically designed for multi-player tracking, player identification, and pose estimation in 3x3 basketball scenarios. The dataset comprises three distinct subsets (Indoor fixed-camera, Outdoor fixed-camera, and Drone camera footage), capturing diverse full-court camera perspectives and environments. We also introduce the Track-ID task, a simplified variant of the game state reconstruction task that excludes field detection and focuses exclusively on fixed-camera scenarios. To evaluate performance, we propose a baseline algorithm called Track-ID algorithm, tailored to assess tracking and identification quality. Furthermore, our benchmark experiments, utilizing recent multi-object tracking algorithms (e.g., BoT-SORT-ReID) and top-down pose estimation methods (HRNet, RTMPose, and SwinPose), demonstrate robust results and highlight remaining challenges. Our dataset and evaluation benchmarks provide a solid foundation for advancing automated analytics in 3x3 basketball. Dataset and code will be available at https://github.com/open-starlab/TrackID3x3.",
+   "published": "2025-03-24T01:55:46Z"
+  },
+  {
+   "id": "2502.21242v1",
+   "title": "Towards long-term player tracking with graph hierarchies and domain-specific features",
+   "authors": [
+    "Maria Koshkina",
+    "James H. Elder"
+   ],
+   "abstract": "In team sports analytics, long-term player tracking remains a challenging task due to player appearance similarity, occlusion, and dynamic motion patterns. Accurately re-identifying players and reconnecting tracklets after extended absences from the field of view or prolonged occlusions is crucial for robust analysis. We introduce SportsSUSHI, a hierarchical graph-based approach that leverages domain-specific features, including jersey numbers, team IDs, and field coordinates, to enhance tracking accuracy. SportsSUSHI achieves high performance on the SoccerNet dataset and a newly proposed hockey tracking dataset. Our hockey dataset, recorded using a stationary camera capturing the entire playing surface, contains long sequences and annotations for team IDs and jersey numbers, making it well-suited for evaluating long-term tracking capabilities. The inclusion of domain-specific features in our approach significantly improves association accuracy, as demonstrated in our experiments. The dataset and code are available at https://github.com/mkoshkina/sports-SUSHI.",
+   "published": "2025-02-28T17:12:40Z"
+  },
+  {
+   "id": "2502.08621v2",
+   "title": "SportsBuddy: Designing and Evaluating an AI-Powered Sports Video Storytelling Tool Through Real-World Deployment",
+   "authors": [
+    "Tica Lin",
+    "Ruxun Xiang",
+    "Gardenia Liu",
+    "Divyanshu Tiwari",
+    "Meng-Chia Chiang",
+    "Chenjiayi Ye",
+    "Hanspeter Pfister",
+    "Chen Zhu-Tian"
+   ],
+   "abstract": "Video storytelling is essential for sports performance analysis and fan engagement, enabling sports professionals and fans to effectively communicate and interpret the spatial and temporal dynamics of gameplay. Traditional methods rely on manual annotation and verbal explanations, placing significant demands on creators for video editing skills and on viewers for cognitive focus. However, these approaches are time-consuming and often struggle to accommodate individual needs. SportsBuddy addresses this gap with an intuitive, interactive video authoring tool. It combines player tracking, embedded interaction design, and timeline visualizations to seamlessly integrate narratives and visual cues within game contexts. This empowers users to effortlessly create context-driven video stories. Since its launch, over 150 sports users, including coaches, athletes, content creators, parents and fans, have utilized SportsBuddy to produce compelling game highlights for diverse use cases. User feedback highlights its accessibility and ease of use, making video storytelling and insight communication more attainable for diverse audiences. Case studies with collegiate teams and sports creators further demonstrate SportsBuddy's impact on enhancing coaching communication, game analysis, and fan engagement.",
+   "published": "2025-02-12T18:16:11Z"
+  },
+  {
+   "id": "2411.08216v1",
+   "title": "GTA: Global Tracklet Association for Multi-Object Tracking in Sports",
+   "authors": [
+    "Jiacheng Sun",
+    "Hsiang-Wei Huang",
+    "Cheng-Yen Yang",
+    "Zhongyu Jiang",
+    "Jenq-Neng Hwang"
+   ],
+   "abstract": "Multi-object tracking in sports scenarios has become one of the focal points in computer vision, experiencing significant advancements through the integration of deep learning techniques. Despite these breakthroughs, challenges remain, such as accurately re-identifying players upon re-entry into the scene and minimizing ID switches. In this paper, we propose an appearance-based global tracklet association algorithm designed to enhance tracking performance by splitting tracklets containing multiple identities and connecting tracklets seemingly from the same identity. This method can serve as a plug-and-play refinement tool for any multi-object tracker to further boost their performance. The proposed method achieved a new state-of-the-art performance on the SportsMOT dataset with HOTA score of 81.04%. Similarly, on the SoccerNet dataset, our method enhanced multiple trackers' performance, consistently increasing the HOTA score from 79.41% to 83.11%. These significant and consistent improvements across different trackers and datasets underscore our proposed method's potential impact on the application of sports player tracking. We open-source our project codebase at https://github.com/sjc042/gta-link.git.",
+   "published": "2024-11-12T22:16:50Z"
+  },
+  {
+   "id": "2410.07401v1",
+   "title": "Enhancing Soccer Camera Calibration Through Keypoint Exploitation",
+   "authors": [
+    "Nikolay S. Falaleev",
+    "Ruilong Chen"
+   ],
+   "abstract": "Accurate camera calibration is essential for transforming 2D images from camera sensors into 3D world coordinates, enabling precise scene geometry interpretation and supporting sports analytics tasks such as player tracking, offside detection, and performance analysis. However, obtaining a sufficient number of high-quality point pairs remains a significant challenge for both traditional and deep learning-based calibration methods. This paper introduces a multi-stage pipeline that addresses this challenge by leveraging the structural features of the football pitch. Our approach significantly increases the number of usable points for calibration by exploiting line-line and line-conic intersections, points on the conics, and other geometric features. To mitigate the impact of imperfect annotations, we employ data fitting techniques. Our pipeline utilizes deep learning for keypoint and line detection and incorporates geometric constraints based on real-world pitch dimensions. A voter algorithm iteratively selects the most reliable keypoints, further enhancing calibration accuracy. We evaluated our approach on the largest football broadcast camera calibration dataset available, and secured the top position in the SoccerNet Camera Calibration Challenge 2023 [arXiv:2309.06006], which demonstrates the effectiveness of our method in real-world scenarios. The project code is available at https://github.com/NikolasEnt/soccernet-calibration-sportlight .",
+   "published": "2024-10-09T20:01:14Z"
+  },
+  {
+   "id": "2407.16076v1",
+   "title": "PLayerTV: Advanced Player Tracking and Identification for Automatic Soccer Highlight Clips",
+   "authors": [
+    "H\u00e5kon Maric Solberg",
+    "Mehdi Houshmand Sarkhoosh",
+    "Sushant Gautam",
+    "Saeed Shafiee Sabet",
+    "P\u00e5l Halvorsen",
+    "Cise Midoglu"
+   ],
+   "abstract": "In the rapidly evolving field of sports analytics, the automation of targeted video processing is a pivotal advancement. We propose PlayerTV, an innovative framework which harnesses state-of-the-art AI technologies for automatic player tracking and identification in soccer videos. By integrating object detection and tracking, Optical Character Recognition (OCR), and color analysis, PlayerTV facilitates the generation of player-specific highlight clips from extensive game footage, significantly reducing the manual labor traditionally associated with such tasks. Preliminary results from the evaluation of our core pipeline, tested on a dataset from the Norwegian Eliteserien league, indicate that PlayerTV can accurately and efficiently identify teams and players, and our interactive Graphical User Interface (GUI) serves as a user-friendly application wrapping this functionality for streamlined use.",
+   "published": "2024-07-22T22:27:57Z"
+  },
+  {
+   "id": "2610.37619v1",
+   "title": "Perceiving and Predicting Dynamic Sports: Spatiotemporal Intelligence in Vision Models for Egocentric Tennis Video",
+   "authors": [
+    "Tudor Braicu",
+    "Joseph DelPreto",
+    "Jared Boyer",
+    "M\u00f3nika Farsang",
+    "Maximilian St\u00f6lzle",
+    "Tim Niklas Seyde",
+    "Daniela Rus"
+   ],
+   "abstract": "Agile robots require spatiotemporal intelligence to interpret scenes, reason about interactions, and anticipate future events. Yet it remains unclear how well foundation vision models support these capabilities, particularly from a moving egocentric camera, which is a natural view for robots. To investigate this, we collect an annotated tennis dataset and train a suite of vision models on spatiotemporal tasks. Our dataset contains egocentric video synchronized with five allocentric videos, estimated global positions, labeled contact times, and annotated stroke types. We then evaluate seven prediction tasks from egocentric images: 2D ego player and 3D ball localization, future player and ball trajectories, forehand or backhand stroke anticipation, time to the next ego player ball contact, and 3D ball position at that contact. We compare image encoders, video encoders, and vision-language models with jointly trained prediction heads. The best performing models achieve mean current-frame localization errors of 0.14 m for the ego player and 0.54 m for the ball, future forecasting errors of 0.34 m for the ego player and 0.91 m for the ball over 1.1 s, and a mean contact-time prediction error of 0.14 s. Auxiliary depth information substantially improves 3D ball localization, suggesting that inferring metric depth remains a challenge. Longer image histories do not improve ball forecasting, indicating that representations exploit scene context rather than rely solely on inter-frame motion. Finally, we propose a conditional diffusion model to generate whole-body kinematic tennis motion from vision encoder predictions on egocentric video at real-time rates, adapting movements as predictions are refined. These results move towards a deeper understanding of how foundation vision models can support real-time dynamic robots using egocentric video.",
+   "published": "2026-10-27T17:47:14Z"
+  },
+  {
+   "id": "2610.13259v1",
+   "title": "Beyond a Single Crop: Contextualized Embeddings for Player Re-Identification",
+   "authors": [
+    "Ge Luo",
+    "Changhuo Yang",
+    "Weisi Fan",
+    "Rui Yang",
+    "Shaokai Wang"
+   ],
+   "abstract": "Person re-identification is typically addressed by learning identity-discriminative embeddings from individual person crops. However, player re-identification in broadcast sports videos presents a unique challenge: players from the same team often share similar appearances, while video sequences provide repeated observations of the same players under different viewpoints and surrounding contexts. Existing crop-based approaches largely ignore this contextual information, which can be critical for resolving visually similar identities. Here, we propose ContextReID, a contextualized embedding framework that represents a player by jointly considering other players in the same frame and observations from different frames of the broadcast sequence. By incorporating both co-occurring players and cross-frame observations, the model learns identity features relative to the surrounding visual context rather than relying only on isolated appearance cues. We implement this framework with a vision-language model that takes sets of player crops as input and generates context-aware embeddings for individual players. A combined contextual learning and retrieval objective encourages the model to capture cross-frame identity relationships while maintaining discriminative embeddings for player matching. Experiments across three multi-object tracking benchmarks show that ContextReID improves player retrieval over conventional single-crop embedding approaches in both Rank-1 and mAP. These results highlight the utility of spatial and temporal context for reliable player identification in broadcast sports videos.",
+   "published": "2026-10-09T09:07:45Z"
+  },
+  {
+   "id": "2609.33450v1",
+   "title": "Native Association: Confidence-Aware Human Perception in the Wild with a Foundation VLM",
+   "authors": [
+    "Igal Dmitriev",
+    "Ofir Liba"
+   ],
+   "abstract": "Extracting who is where, on which team, wearing which number from a broadcast frame is typically done by stitching a detector, an OCR engine, and classifiers together -- and the stitching step swaps identities under occlusion. We make association native instead: a 0.77B vision-language model (Florence-2) is fine-tuned to emit all per-person attributes as one grammar-constrained sequence, with each attribute generated inside its owner's block. Output is therefore schema-valid on every frame by construction, and no post-hoc binding step exists to attach a correctly read number to the wrong player: residual misassociation is pure perception error, $\\approx4\\times$ rarer than zero-shot-prompted frontier APIs' (0.057 vs. 0.21-0.24). On a frozen multi-sport test set, this single pass reaches 0.95 detection F1 (APIs: 0.65-0.75). A single extra forward pass yields a per-field confidence that supports a reject option (jersey precision $0.71\\rightarrow0.96$ at half coverage) and routes a training-free zoom-and-re-read for small players. Surprisingly, once the grammar is learned, further parameter-efficient tuning yields no measurable gain under the adaptation configurations we test; the identical recipe on WIDER-Attribute reaches 93.1 mAP given-box, yields the first detection-coupled end-to-end results under its standard test protocol (84.5 mAP), and reproduces the same tuning result. In this regime, the gains live in the structure, not in added weights.",
+   "published": "2026-09-27T11:00:02Z"
+  },
+  {
+   "id": "2609.19354v1",
+   "title": "Can Vision-Language Models Judge Olympic Diving? From Reasoning to Scores in Zero-Shot Action Quality Assessment",
+   "authors": [
+    "Henry O. Velesaca",
+    "David Freire-Obregon",
+    "Luigi Miranda",
+    "Abel Reyes-Angulo"
+   ],
+   "abstract": "Automated action quality assessment (AQA) in Olympic sports remains a challenging task due to the complexity of human motion and the subjectivity inherent in expert judging. This work evaluates the capability of open-source Vision-Language Models (VLMs) to perform zero-shot action quality assessment on Olympic diving videos using the AQA-7 benchmark dataset. In this regard, a regression-based framework is pro-posed to leverage both the semantic reasoning and phase-level sub-scores generated by the VLMs, combining TF-IDF vectorization, dimensionality reduction, and ensemble learning to predict final competition scores. Experimental results show that standalone VLMs achieve moderate Spearman correlations below 0.32, while the proposed ensemble regression framework substantially improves performance in the reported evaluation, reaching a Spearman correlation of 0.67 with a four-model configuration. Textual reasoning features con-sistently outperformed raw numerical sub-scores, highlighting the richness of VLM-generated explanations for action quality analysis. These findings suggest that VLMs hold strong potential as assistive tools for explainable and semi-automated sports performance evaluation. The code is publicly available on GitHub https://github.com/hvelesaca/olympic diving judge vlm",
+   "published": "2026-09-16T19:28:43Z"
+  },
+  {
+   "id": "2609.26056v1",
+   "title": "CricRAG: Retrieval Augmented Vision-Language Models for Personalized Cricket Coaching",
+   "authors": [
+    "Agamdeep Singh",
+    "Sujit PB",
+    "Mayank Vatsa"
+   ],
+   "abstract": "Vision-Language Models (VLMs) offer promising capabilities for automated sports coaching but face a fundamental limitation: they implicitly compare against professional standards, making their feedback impractical for developing players. We present CricRAG, a retrieval-augmented framework that aligns VLMs with skill-appropriate benchmarks for personalized cricket coaching. Our key insight is that by retrieving similar-but-better techniques as reference points, we can guide VLMs to provide developmentally appropriate feedback that mirrors human coaching practices. We contribute: (1) a labelled dataset of 288 cricket technique videos spanning multiple skill levels, (2) an efficient motion retrieval pipeline using contrastive learning that achieves 78% top-3 retrieval accuracy, (3) a frame sampling technique that reduces inference costs, and (4) a retrieval-augmented approach that significantly improves feedback alignment with coaching principles, achieving up to 94% agreement with professional assessments compared to 67% without retrieval context.",
+   "published": "2026-08-08T02:29:26Z"
+  },
+  {
+   "id": "2607.24611v1",
+   "title": "Test-Time Adaptation via Dual Distillation for Videos Under Severe Distribution Shifts",
+   "authors": [
+    "Andr\u00e9 Sacilotti",
+    "Samuel Felipe dos Santos",
+    "Jurandy Almeida"
+   ],
+   "abstract": "Deep learning models have achieved state-of-the-art performance in several computer vision tasks. However, they experience severe performance degradation when applied to real-world scenarios due to unanticipated distribution shifts. Test-Time Adaptation (TTA) attempts to solve this problem by using unlabeled data from the target domain to dynamically adapt to the test distribution at inference time, without access to the source data. However, TTA remains a challenging problem when adapting to continuous, temporally correlated data, such as videos, and in scenarios where the target domain contains severe domain shifts. For this reason, few works in the literature explore TTA for videos under such extreme conditions. To overcome these limitations, we propose Test-time Adaptation via Dual Distillation (TADD), an online adaptation framework that relies on a lightweight projection adapter to bridge the domain gap. The adapter module is pre-trained on the source domain and then adapted to the target using our proposed complementary losses: (i) zero-shot distillation, which encourages alignment with the domain-agnostic features from a pre-trained vision-language model (VLM); and (ii) target distillation, which retains the source domain discriminative knowledge encoded in the pre-trained adapter. Built upon a frozen CLIP backbone, our method introduces this lightweight projection adapter as the sole updatable component during inference. We conducted extensive evaluations on three well-known video action recognition benchmarks: UCF-HMDB, Daily-DA, and Sports-DA. Our experiments in the closed-set scenario demonstrate that our method consistently outperforms state-of-the-art TTA baselines. Notably, our TTA approach improves upon previous methods by up to +3.81% on UCF-HMDB, +2.63% on Daily-DA, and +3.03% on Sports-DA.",
+   "published": "2026-07-27T16:12:11Z"
+  },
+  {
+   "id": "2607.02269v2",
+   "title": "AnyGroundBench: A Multi-Domain Adaptation Benchmark for Video Grounding in VLMs",
+   "authors": [
+    "Rintaro Otsubo",
+    "Ryo Fujii",
+    "Reina Ishikawa",
+    "Taiki Kanaya",
+    "Kanta Sawafuji",
+    "Hiroki Kajita",
+    "Shigeki Sakai",
+    "Hideo Saito",
+    "Ryo Hachiuma"
+   ],
+   "abstract": "Vision-Language Models (VLMs) have shown strong performance in Spatio-Temporal Video Grounding (STVG), yet they are still evaluated mostly in a zero-shot manner on general-purpose benchmarks of everyday scenes. This creates a critical disconnect from real-world applications in specialized domains, where models inevitably encounter rare visual or textual concepts. Since exhaustive pre-training across infinite data distributions is infeasible, the ability to adapt to novel domains with limited data is essential. To bridge this gap, we introduce AnyGroundBench, a domain-adaptation benchmark designed to shift the STVG evaluation paradigm from static zero-shot testing to rigorous domain adaptation. Targeting five specialized domains (animal, industry, sports, surgery, and public security), AnyGroundBench pairs newly captured, expert-annotated videos with established datasets, unifying them through dense, high-fidelity spatio-temporal annotations. Crucially, the benchmark provides dedicated limited training subsets, enabling systematic evaluation of domain adaptability under limited training data. We benchmark 23 state-of-the-art VLMs in the zero-shot setting and further evaluate five adaptation strategies, spanning training-free and fine-tuning-based approaches, on representative models, assessing their zero-shot generalization and adaptation capacity. Our results show that current VLMs remain far from practical performance in the zero-shot setting, that training-free adaptation produces highly variable effects depending on the model and domain, and that fine-tuning-based adaptation, though more effective, still falls short of real-world requirements, with gains varying markedly across domains. These findings expose fundamental limitations in current VLMs' spatio-temporal reasoning, pointing to concrete directions for future research.",
+   "published": "2026-07-02T14:52:45Z"
+  },
+  {
+   "id": "2606.28570v1",
+   "title": "Digitizing Coaching Intelligence: An Agentic Framework for Holistic Athlete Profiling using VLM and RAG",
+   "authors": [
+    "Deep Ghosal",
+    "Ishani Sen",
+    "Wazib Ansar",
+    "Amlan Chakrabarti"
+   ],
+   "abstract": "Athlete assessment is a critical process for tracking physical progress and identifying elite talent. However, during mass recruitment drives, traditional methods rely on manual observation, which is inherently subjective and unscalable, or basic computer vision (CV) systems limited to quantitative repetition counting. These standard approaches lack the \"coaching intelligence\" required to evaluate qualitative physiological markers such as form degradation, spinal articulation, and fatigue. This paper presents a novel, LLM-based hybrid agentic framework for automated, holistic athlete profiling that strictly aligns with the Sports Authority of India (SAI) assessment protocols. Orchestrated via LangGraph, our dual-pipeline architecture synthesizes the geometric precision of CV (MediaPipe) for kinematic tracking with the semantic reasoning of Vision-Language Models (Llama-4-scout). To overcome the latency and token constraints associated with multimodal video processing, we introduce a 3 X 3 \"Smart Grid\" temporal chunking strategy, reducing computational overhead by over 88% while preserving critical temporal continuity. To ensure data integrity and mitigate hallucination, the framework pioneers an autonomous \"LLM-as-a-Judge\" self-correction loop that cross-references quantitative and qualitative metrics before persistence. Finally, we implement a dual-persistence Retrieval-Augmented Generation (RAG) pipeline utilizing a vector search engine (ChromaDB). This enables coaches to bypass rigid SQL databases and perform complex semantic queries (e.g., \"Identify athletes with high endurance but poor core rigidity\") using natural language. Experimental results demonstrate that this multi-agent approach significantly bridges the gap between raw biometric tracking and actionable coaching insights, offering a scalable, objective solution for national talent identification.",
+   "published": "2026-06-26T19:53:26Z"
+  },
+  {
+   "id": "2605.16405v1",
+   "title": "Concepts Worth Having: Refining VLM-Guided Concept Bottleneck Models with Minimal Annotations",
+   "authors": [
+    "Nicola Debole",
+    "Andrea Passerini",
+    "Stefano Teso",
+    "Andrea Pugnana",
+    "Emanuele Marconato"
+   ],
+   "abstract": "Concept-bottleneck models (CBMs) are neural classifiers that compute predictions from high-level concepts extracted from the input. CBMs ensure stakeholders can understand the concepts -- and the predictions they entail -- by learning these from concept-level annotations, which are however seldom available. Recent CBM architectures work around this issue by obtaining annotations from Vision-Language Models (VLMs). While greatly broadening applicability, doing so can yield lower quality concepts and therefore less interpretable models. We strike for a middle ground by introducing Vision-plus-Human-guided CBM (VH-CBM), a hybrid approach that exploits both VLMs and a small amount of dense annotations. VH-CBM employs a Gaussian Process in the VLM's embedding space, which captures useful global information about the target domain, to propagate the expert's supervision to any target data point. Our empirical evaluation shows how VH-CBM predicts more accurate concepts than VLM-guided CBMs even when annotating as little as 1% of the data, while sporting better concept calibration and supporting active learning.",
+   "published": "2026-05-13T10:07:11Z"
+  },
+  {
+   "id": "2610.21296v1",
+   "title": "On the fairness of single round-robin tournaments: Evidence from European football",
+   "authors": [
+    "L\u00e1szl\u00f3 Csat\u00f3",
+    "Di\u00e1na Ivett F\u0171r\u00e9sz",
+    "Zsolt Havran"
+   ],
+   "abstract": "Single round-robin tournaments are widely regarded as unfair because of their home-away imbalance: some competitors play more home games than the others. Therefore, most sports leagues are played in a double round-robin format. However, some European football leagues contain a single round-robin (sub)tournament. To test whether empirical data can validate their unfairness, we construct a unique database and develop a strength of schedule metric based on Elo ratings with favourable theoretical properties. In contrast to the robust impact of relative team strength, the strength of schedule is found to have no significant effect on the number of points scored under the assumption of a league-specific home advantage. Consequently, the theoretical unfairness is not a serious issue in practice, or the standard approach of modelling home advantage in Elo ratings might need to be reconsidered.",
+   "published": "2026-10-15T05:42:08Z"
+  },
+  {
+   "id": "2609.15541v1",
+   "title": "The life and death of football team runs: survival of collective modes shapes L\u00e9vy-like transport",
+   "authors": [
+    "Guillermo Herrera S\u00e1nchez",
+    "Daniel Gradeci",
+    "Daniele Ramsay",
+    "Safe Khan"
+   ],
+   "abstract": "Broad run-length distributions and short-lag superdiffusion have recently been reported in football players and team centroids, prompting a collective-foraging interpretation. The mechanism linking these player- and team-level signatures remains unclear. Using SoccerMon GPS data from 66 tracked team-match records across 62 fixtures in the Norwegian women's top-flight Toppserien, we asked whether player transport is inherited from a translating team mode and what controls the lifetime of that mode. We decomposed player displacement into centroid translation and motion within the formation, then modelled the switching and termination of directional centroid runs. At longer lags, centroid translation carried an increasing share of player displacement. Run lifetimes were broad but finite: termination was highest near onset, declined with age and rose modestly later. After accounting for speed and directional persistence, collective order added only limited predictive information. At the population level, an age-dependent switching-and-termination model predicted, on held-out match dates, the early enrichment and later depletion of high-order states among surviving runs. These results link player- and team-level L\u00e9vy-like movement through a finite-lived collective mode whose age and internal state shape its survival. Long displacements need not be selected in advance; they can emerge when transient collective modes persist, reorganise and selectively survive. More broadly, trajectory statistics may record which dynamical histories survive, not only the rules by which agents move.",
+   "published": "2026-09-14T13:27:01Z"
+  },
+  {
+   "id": "2606.17503v1",
+   "title": "What Prediction Markets Can See: Market Formation, Settlement Legibility, and the Geography of Tradable Uncertainty in Africa and Latin America",
+   "authors": [
+    "Ade Adegbenro"
+   ],
+   "abstract": "Prediction markets are usually evaluated after their contracts exist, by asking how well prices forecast outcomes. We study the prior institutional margin of market formation, asking which uncertainties become tradable contracts at all. Using an audited dataset of 6,047 Africa-topic and Latin America-topic contracts listed on Polymarket and Kalshi, we construct a coded measure of settlement legibility, the degree to which an uncertainty can be worded, sourced, and credibly resolved by third parties, and validate it on 451 units under a frozen codebook, where independent double scoring reaches ordinal reliabilities of 0.92 and 0.96 on the primary dimensions and blind human benchmarks reach 0.97 and 0.92. Using this measure, we find that formation is selective in ways that public importance does not explain, with African inventory concentrated overwhelmingly in football while salient civic events produce little or no inventory, and Latin American inventory deeper but dominated by Venezuela, where attention to prospective United States military action sustains the largest civic cluster in the data. Legibility orders the inventory steeply, with sports and elections near the top of the scale and conflict at the bottom. In a formation test against an externally assembled frame of 131 civic events, legibility predicts listing in the expected direction but falls short of pre-specified acceptance criteria, while among listed contracts the relation between legibility and trading value is negative, as a model of selective listing implies and as we predicted before estimation. Prediction-market inventories therefore measure what platforms can settle as much as what traders believe, and reading them as maps of public interest conflates the two.",
+   "published": "2026-06-13T01:05:41Z"
+  },
+  {
+   "id": "2604.02447v1",
+   "title": "PlayGen-MoG: Framework for Diverse Multi-Agent Play Generation via Mixture-of-Gaussians Trajectory Prediction",
+   "authors": [
+    "Kevin Song"
+   ],
+   "abstract": "Multi-agent trajectory generation in team sports requires models that capture both the diversity of possible plays and realistic spatial coordination between players on plays. Standard generative approaches such as Conditional Variational Autoencoders (CVAE) and diffusion models struggle with this task, exhibiting posterior collapse or convergence to the dataset mean. Moreover, most trajectory prediction methods operate in a forecasting regime that requires multiple frames of observed history, limiting their use for play design where only the initial formation is available. We present PlayGen-MoG, an extensible framework for formation-conditioned play generation that addresses these challenges through three design choices: 1/ a Mixture-of-Gaussians (MoG) output head with shared mixture weights across all agents, where a single set of weights selects a play scenario that couples all players' trajectories, 2/ relative spatial attention that encodes pairwise player positions and distances as learned attention biases, and 3/ non-autoregressive prediction of absolute displacements from the initial formation, eliminating cumulative error drift and removing the dependence on observed trajectory history, enabling realistic play generation from a single static formation alone. On American football tracking data, PlayGen-MoG achieves 1.68 yard ADE and 3.98 yard FDE while maintaining full utilization of all 8 mixture components with entropy of 2.06 out of 2.08, and qualitatively confirming diverse generation without mode collapse.",
+   "published": "2026-04-02T18:18:53Z"
+  },
+  {
+   "id": "2603.23722v2",
+   "title": "Dual-Gated Epistemic Time-Dilation: Autonomous Compute Modulation in Asynchronous MARL",
+   "authors": [
+    "Igor Jankowski"
+   ],
+   "abstract": "While Multi-Agent Reinforcement Learning (MARL) algorithms achieve unprecedented successes across complex continuous domains, their standard deployment strictly adheres to a synchronous operational paradigm. Under this paradigm, agents are universally forced to execute deep neural network inferences at every micro-frame, regardless of immediate necessity. This dense throughput acts as a fundamental barrier to physical deployment on edge-devices where thermal and metabolic budgets are highly constrained. We propose Epistemic Time-Dilation MAPPO (ETD-MAPPO), augmented with a Dual-Gated Epistemic Trigger. Instead of depending on rigid frame-skipping (macro-actions), agents autonomously modulate their execution frequency by interpreting aleatoric uncertainty (via Shannon entropy of their policy) and epistemic uncertainty (via state-value divergence in a Twin-Critic architecture). To format this, we structure the environment as a Semi-Markov Decision Process (SMDP) and build the SMDP-Aligned Asynchronous Gradient Masking Critic to ensure proper credit assignment. Empirical findings demonstrate massive improvements (> 60% relative baseline acquisition leaps) over current temporal models. By assessing LBF, MPE, and the 115-dimensional state space of Google Research Football (GRF), ETD correctly prevented premature policy collapse. Remarkably, this unconstrained approach leads to emergent Temporal Role Specialization, reducing computational overhead by a statistically dominant 73.6% entirely during off-ball execution without deteriorating centralized task dominance.",
+   "published": "2026-03-24T21:19:06Z"
+  },
+  {
+   "id": "2602.16830v1",
+   "title": "The Impact of Formations on Football Matches Using Double Machine Learning. Is it worth parking the bus?",
+   "authors": [
+    "Gen\u00eds Ruiz-Men\u00e1rguez",
+    "Lloren\u00e7 Badiella"
+   ],
+   "abstract": "This study addresses a central tactical dilemma for football coaches: whether to employ a defensive strategy, colloquially known as \"parking the bus\", or a more offensive one. Using an advanced Double Machine Learning (DML) framework, this project provides a robust and interpretable tool to estimate the causal impact of different formations on key match outcomes such as goal difference, possession, corners, and disciplinary actions. Leveraging a dataset of over 22,000 matches from top European leagues, formations were categorized into six representative types based on tactical structure and expert consultation. A major methodological contribution lies in the adaptation of DML to handle categorical treatments, specifically formation combinations, through a novel matrix-based residualization process, allowing for a detailed estimation of formation-versus-formation effects that can inform a coach's tactical decision-making. Results show that while offensive formations like 4-3-3 and 4-2-3-1 offer modest statistical advantages in possession and corners, their impact on goals is limited. Furthermore, no evidence supports the idea that defensive formations, commonly associated with parking the bus, increase a team's winning potential. Additionally, red cards appear unaffected by formation choice, suggesting other behavioral factors dominate. Although this approach does not fully capture all aspects of playing style or team strength, it provides a valuable framework for coaches to analyze tactical efficiency and sets a precedent for future research in sports analytics.",
+   "published": "2026-02-18T19:51:42Z"
+  },
+  {
+   "id": "2509.13141v2",
+   "title": "Encouraging offensive play: A hidden benefit of incomplete round-robin tournaments",
+   "authors": [
+    "L\u00e1szl\u00f3 Csat\u00f3",
+    "David Winkelmann"
+   ],
+   "abstract": "The Union of European Football Associations (UEFA) fundamentally reformed its club competitions from the 2024/25 season onward. The traditional group stage has been replaced by an incomplete round-robin league phase, in which all teams are ranked in a single table based on matches played against a subset of the other teams. Early evidence from the first two seasons of the UEFA Champions League in the new format indicates a marked decline in the proportion of drawn matches compared to the old format. Inspired by this observation, our paper examines how tournament design shapes the incentives to play offensively. We develop a simulation framework to compare the marginal gain from scoring a goal and loss from conceding a goal in terms of the probability of reaching critical ranking thresholds, using the initial scoreline of 0-0 as the reference point. We find robustly stronger incentives for offensive play in the new Champions League design. Roughly half of the increase is attributable to the modified thresholds, but the other half stems directly from replacing the group stage with an incomplete round-robin league. Our study is the first demonstration in the literature that the tournament format can materially affect team behaviour on the field.",
+   "published": "2025-09-16T14:56:09Z"
+  },
+  {
+   "id": "2508.20075v5",
+   "title": "Predicting Qualification Thresholds in the UEFA Champions League and Europa League under the New League Phase Format",
+   "authors": [
+    "David Winkelmann",
+    "Rouven Michels",
+    "Christian Deutscher"
+   ],
+   "abstract": "For the 2024/25 season, the Union of European Football Associations (UEFA) introduced an incomplete round-robin format in the Champions League and Europa League, replacing the traditional group stage with a single league table of all 36 teams. Under this structure, the top eight teams advance directly to the Round of 16, while teams ranked 9th-24th qualify for a play-off round. Simulation-based analyses, such as those by commercial data analyst Opta, provided indicative point thresholds for qualification but reveal deviations when compared with actual outcomes in the first season. To address these discrepancies, we employ a bivariate Dixon--Coles model that accounts for the lower frequency of draws observed in the 2024/25 and 2025/26 seasons, particularly in the Champions League, potentially driven by reduced incentives for teams to play for a draw. We proxy team strengths by Elo ratings and fit the model to different settings. This enables us to simulate match outcomes and to estimate qualification thresholds for both direct advancement and play-off participation. Our results provide scientific guidance for clubs and managers, supporting strategic decision-making under uncertainty regarding their progression prospects in the new format of UEFA club competitions.",
+   "published": "2025-08-27T17:41:01Z"
+  },
+  {
+   "id": "2506.23843v1",
+   "title": "EFPI: Elastic Formation and Position Identification in Football (Soccer) using Template Matching and Linear Assignment",
+   "authors": [
+    "Joris Bekkers"
+   ],
+   "abstract": "Understanding team formations and player positioning is crucial for tactical analysis in football (soccer). This paper presents a flexible method for formation recognition and player position assignment in football using predefined static formation templates and cost minimization from spatiotemporal tracking data, called EFPI. Our approach employs linear sum assignment to optimally match players to positions within a set of template formations by minimizing the total distance between actual player locations and template positions, subsequently selecting the formation with the lowest assignment cost. To improve accuracy, we scale actual player positions to match the dimensions of these formation templates in both width and length. While the method functions effectively on individual frames, it extends naturally to larger game segments such as complete periods, possession sequences or specific intervals (e.g. 10 second intervals, 5 minute intervals etc.). Additionally, we incorporate an optional stability parameter that prevents unnecessary formation changes when assignment costs differ only marginally between time segments. EFPI is available as open-source code through the unravelsports Python package.",
+   "published": "2025-06-30T13:33:37Z"
+  }
+ ]
+}
