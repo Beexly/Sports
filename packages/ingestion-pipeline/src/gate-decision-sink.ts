@@ -84,14 +84,14 @@ export async function persistGateDecisions(
     });
 
     return {
-      attempted: decisions.length,
+      attempted: deduplicated.length,
       persisted: result.count,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`[gate-decision-sink] Warning: Failed to persist gate decisions: ${message}`);
     return {
-      attempted: decisions.length,
+      attempted: deduplicated.length,
       persisted: 0,
       error: message,
     };

@@ -82,8 +82,10 @@ describe("gate-decision-sink", () => {
 
     const res = await persistGateDecisions(input);
 
-    expect(res.attempted).toBe(3);
+    // attempted is the count of deduplicated rows, not raw input length
+    expect(res.attempted).toBe(2);
     expect(res.persisted).toBe(2);
+    expect(res.error).toBeUndefined();
     expect(mockCreateMany).toHaveBeenCalledTimes(1);
 
     const rows = persistedRows(mockCreateMany);

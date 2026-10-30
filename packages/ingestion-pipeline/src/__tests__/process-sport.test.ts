@@ -914,7 +914,7 @@ describe("processSport", () => {
       });
       // The fresh mint publishes: no isPublished in the create payload, so
       // the schema default (true) applies.
-      expect("isPublished" in created.data).toBe(true);
+      expect("isPublished" in created.data).toBe(false);
     });
 
     it("mints nothing when the supersede loses the race (row left PENDING+unpublished before the void)", async () => {
