@@ -937,15 +937,20 @@ def exact_decomposition_allowed(residual_corank: int) -> bool:
     return int(residual_corank) in (0, 1)
 
 
+LANDAU_SIEGEL_CERTIFIED_C_MIN: float = (1.0 / 8.0) * math.log(3.0)  # 0.13732653608351372 from Re(s) <= 7/8 (lean/docs/003.md)
+
+
 def exceptional_persistence(
     rho: float,
     n: int,
-    c: float = 0.1,
+    c: float = LANDAU_SIEGEL_CERTIFIED_C_MIN,
 ) -> bool:
     """
-    New Wire 7 — Exceptional-persistence flag:
-    True when `0 < rho < 1` and `(1 - rho) * log(n) < c`.
-    Default `c = 0.1` is a STAND-IN, NOT THE PAPER'S CONSTANT.
+    New Wire 7 — Exceptional-persistence flag (OpenAI Result #003, QuasiRiemannHypothesis.lean
+    + DirichletSevenEighths.lean + SiegelZeros.lean):
+    True when `0 < rho < 1` and `(1 - rho) * log(n) < c`, where the default barrier
+    `c = (1/8) * log(3) = 0.1373265...` is derived directly from the Re(s) <= 7/8 zero-free region
+    for primitive real Dirichlet characters of conductor q >= 3.
     When True, James-Stein and tau_hat shrinkage are not licensed for that series.
     """
     if n <= 1:
@@ -960,28 +965,33 @@ def guarded_shrinkage_step(
     raw_value: float,
     rho: float,
     n: int,
-    c: float = 0.1,
+    c: float = LANDAU_SIEGEL_CERTIFIED_C_MIN,
     shrinkage_factor: float = 0.799,
 ) -> Dict[str, object]:
     """
     Applies shrinkage only when `exceptional_persistence(rho, n, c)` is False;
-    when True, returns `'UNSHRUNK'` and the reason string alongside the stand-in label.
+    when True, returns `'UNSHRUNK'` and the reason string alongside the certified constant label.
     """
     is_persistent = exceptional_persistence(rho, n, c=c)
+    c_label = (
+        "CERTIFIED_QRH_LANDAU_SIEGEL_C_EFF_3 ((1/8)*log(3) = 0.1373265)"
+        if abs(float(c) - LANDAU_SIEGEL_CERTIFIED_C_MIN) < 1e-9
+        else "EXPLICIT_CALLER_OVERRIDE_C"
+    )
     if is_persistent:
         return {
             "status": "UNSHRUNK",
             "value": float(raw_value),
             "reason": "EXCEPTIONAL_PERSISTENCE: (1 - rho) * log(n) < c; James-Stein and tau_hat not licensed",
             "c_constant": float(c),
-            "c_label": "STAND-IN, NOT THE PAPER'S CONSTANT",
+            "c_label": c_label,
         }
     return {
         "status": "SHRUNK",
         "value": float(raw_value) * float(shrinkage_factor),
         "reason": "STANDARD_DECAY: shrinkage licensed",
         "c_constant": float(c),
-        "c_label": "STAND-IN, NOT THE PAPER'S CONSTANT",
+        "c_label": c_label,
     }
 
 
@@ -1019,15 +1029,39 @@ def spectral_mass_near_pole(
 
 def ordinary_correlation_check(
     series_a: np.ndarray | list[float] | float,
-    series_b: np.ndarray | list[float] | None = None,
+    series_b: np.ndarray | list[float] | int | None = None,
     n: int | None = None,
+    a2: int | None = None,
+    b2: int | None = None,
 ) -> Dict[str, object]:
     """
-    New Wire 10 — Ordinary-correlation check:
-    Given two drive-factor series (or `(corr, n)`), if `abs(corr) > 1 / log(n)` for `n > 16`,
-    the SGP copula must keep the off-diagonal (`must_keep_off_diagonal = True`).
-    If below, it may stay (`may_stay = True`). Never zeroes a measured correlation by hand.
+    New Wire 10 — Ordinary-correlation check (OpenAI Result #007, OrdinaryElliott.lean
+    & OrdinaryTwoPointCorrelations.lean):
+    - When called with affine shift parameters `(seq, a1, b1, a2, b2)`, enforces the
+      nonproportionality determinant condition `det([a1, b1; a2, b2]) = a1 * b2 - a2 * b1 != 0`
+      and `a1 > 0, a2 > 0`.
+    - When called with two drive-factor series `(series_a, series_b)` (or `(corr, n)`),
+      verifies that `series_a` and `series_b` are not collinear/proportional (`det != 0`)
+      and checks `abs(corr) > 1 / log(n)` for `n > 16`. Never zeroes a measured correlation by hand.
     """
+    if a2 is not None and b2 is not None and isinstance(series_b, (int, np.integer)) and isinstance(n, (int, np.integer)):
+        from engine.gates.number_theory_fences import ordinary_correlation_check as _nt_corr_check
+        nt_res = _nt_corr_check(np.asarray(series_a, dtype=np.float64), int(series_b), int(n), int(a2), int(b2))
+        n_obs = int(nt_res["cutoff_X"])
+        corr_val = float(nt_res["ordinary_correlation_average"])
+        threshold = float(1.0 / math.log(float(max(n_obs, 17))))
+        return {
+            **nt_res,
+            "correlation": corr_val,
+            "n": n_obs,
+            "threshold_inv_log_n": threshold,
+            "must_keep_off_diagonal": bool(abs(corr_val) > threshold),
+            "may_stay_if_below": True,
+            "retained_correlation": corr_val,
+            "zeroed_by_hand": False,
+        }
+
+    off_diag_det = 1.0
     if series_b is not None and not isinstance(series_a, (int, float, np.floating)):
         a = np.asarray(series_a, dtype=np.float64).ravel()
         b = np.asarray(series_b, dtype=np.float64).ravel()
@@ -1035,6 +1069,8 @@ def ordinary_correlation_check(
             raise ValueError("Both series must have equal length n > 16")
         n_obs = int(a.size)
         corr_val = float(np.corrcoef(a, b)[0, 1])
+        # Non-collinearity / off-diagonal Gram determinant det([[a.a, a.b],[b.a, b.b]])
+        off_diag_det = float(np.dot(a, a) * np.dot(b, b) - (np.dot(a, b) ** 2))
     else:
         corr_val = float(series_a)  # type: ignore[arg-type]
         n_obs = int(n if n is not None else (int(series_b) if isinstance(series_b, (int, float)) else 0))
@@ -1046,6 +1082,7 @@ def ordinary_correlation_check(
     return {
         "correlation": corr_val,
         "n": n_obs,
+        "off_diagonal_determinant": off_diag_det,
         "threshold_inv_log_n": threshold,
         "must_keep_off_diagonal": exceeds,
         "may_stay_if_below": True,

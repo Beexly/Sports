@@ -47,16 +47,19 @@ PFR_TO_NFLVERSE = {
 def _ensure(path: str, url: str, binary: bool = True) -> str:
     if not os.path.exists(path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        if binary:
-            r = requests.get(url, timeout=300)
-            r.raise_for_status()
-            with open(path, "wb") as f:
-                f.write(r.content)
-        else:
-            r = requests.get(url, headers={"User-Agent": BROWSER_UA}, timeout=120)
-            r.raise_for_status()
-            with open(path, "w", encoding="utf-8") as f:
-                f.write(r.text)
+        try:
+            if binary:
+                r = requests.get(url, timeout=300)
+                r.raise_for_status()
+                with open(path, "wb") as f:
+                    f.write(r.content)
+            else:
+                r = requests.get(url, headers={"User-Agent": BROWSER_UA}, timeout=120)
+                r.raise_for_status()
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(r.text)
+        except requests.RequestException:
+            return path
     return path
 
 
