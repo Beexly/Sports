@@ -269,3 +269,197 @@ def test_stage_d_overlay_cap_and_prop_projection_no_saturation() -> None:
     assert abs(p1["model_p"] - 0.5866) > 0.002
 
 
+def test_consume_oct30_signal_pack_real_data() -> None:
+    from engine.kernels.consolidated_sweep_kernels import consume_oct30_signal_pack
+
+    kc_vs_den = consume_oct30_signal_pack(
+        off_team="KC",
+        def_team="DEN",
+        qb_name="Patrick Mahomes",
+        rb_name="K.Walker",
+    )
+    assert abs(sum(kc_vs_den["s1_rz_xtd_share"].values()) - 1.0) <= 0.01
+    assert abs(kc_vs_den["s1_rz_xtd_share"]["TE"] - 0.290) <= 0.005
+    assert kc_vs_den["s2_def_missed_tackles"]["mtkl"] == 56.0
+    assert kc_vs_den["s2_def_missed_tackles"]["rank_fewest"] == 32
+    assert kc_vs_den["s2_def_missed_tackles"]["yac_hidden_yards_mult"] > 1.04
+
+    det_def = consume_oct30_signal_pack(
+        off_team="GB",
+        def_team="DET",
+        qb_name="Jordan Love",
+        rb_name="J.Jacobs",
+    )
+    assert det_def["s2_def_missed_tackles"]["mtkl"] == 12.0
+    assert det_def["s2_def_missed_tackles"]["rank_fewest"] == 1
+    assert det_def["s2_def_missed_tackles"]["yac_hidden_yards_mult"] < 0.96
+
+    den_vs_kc = consume_oct30_signal_pack(
+        off_team="DEN",
+        def_team="KC",
+        qb_name="Bo Nix",
+        rb_name="J.Dobbins",
+    )
+    assert abs(den_vs_kc["s3_qb_throwaway"]["thawy_per_dropback"] - 0.0969) <= 0.001
+    assert abs(kc_vs_den["s4_rb_rushing_epa"]["epa_per_att"] - 0.096) <= 0.002
+    assert kc_vs_den["s5_off_quadrant"]["quadrant"].startswith("Q1:")
+    assert den_vs_kc["s5_off_quadrant"]["quadrant"].startswith("Q4:")
+    assert abs(kc_vs_den["s6_def_quarter_epa"]["q1_epa_allowed"] - (-0.123)) <= 0.002
+    assert kc_vs_den["s7_paired_flip_guard"]["paired_flip_enforced"] is True
+    assert 1.30 <= kc_vs_den["s7_paired_flip_guard"]["contender_inflation_ratio"] <= 1.60
+
+
+def test_compute_tau_hat_4th_down_coach_tax_simulation_consumer() -> None:
+    import pytest
+    from engine.kernels.consolidated_sweep_kernels import compute_tau_hat_4th_down_coach_tax
+
+    res = compute_tau_hat_4th_down_coach_tax(
+        team="BAL",
+        season=2026,
+        yardline_100=38,
+        ydstogo=3,
+        score_differential=-3,
+        game_seconds_remaining=900,
+        qtr=3,
+        wp=0.45,
+    )
+    assert 0.20 <= res["tau_hat"] <= 0.80
+    assert res["fallback_level"] in ("unit", "pooled", "league", "league_region")
+    assert "walk-forward" in res["fit_stamp"]
+    assert res["action_predicted"] in ("GO", "FGA", "PUNT")
+    assert res["action_optimal"] in ("GO", "FGA", "PUNT")
+    assert res["wp_gap"] >= -1e-9
+    assert abs((res["wp_optimal"] - res["wp_behavior"]) - res["wp_gap"]) <= 1e-6
+    if res["action_predicted"] == res["action_optimal"]:
+        assert res["wp_gap"] == 0.0
+
+    with pytest.raises(ValueError):
+        compute_tau_hat_4th_down_coach_tax(
+            team="BAL",
+            season=2026,
+            yardline_100=38,
+            ydstogo=3,
+            score_differential=-3,
+            game_seconds_remaining=900,
+            qtr=3,
+            wp=0.50,
+            is_stand_in_wp=True,
+        )
+
+
+def test_b4_hierarchical_fg_and_eq_physics_001_altitude_kernel() -> None:
+    from engine.kernels.consolidated_sweep_kernels import (
+        compute_b4_hierarchical_fg_make_prob,
+        compute_eq_physics_001_ball_flight_modifier,
+    )
+
+    p30 = compute_b4_hierarchical_fg_make_prob(kick_distance_yds=30.0, elevation_ft=0.0, wind_mph=5.0, temp_f=65.0, is_dome=False)
+    p45 = compute_b4_hierarchical_fg_make_prob(kick_distance_yds=45.0, elevation_ft=0.0, wind_mph=5.0, temp_f=65.0, is_dome=False)
+    p55_sea = compute_b4_hierarchical_fg_make_prob(kick_distance_yds=55.0, elevation_ft=0.0, wind_mph=5.0, temp_f=65.0, is_dome=False)
+    p55_den = compute_b4_hierarchical_fg_make_prob(kick_distance_yds=55.0, elevation_ft=5280.0, wind_mph=5.0, temp_f=65.0, is_dome=False)
+    p55_wind = compute_b4_hierarchical_fg_make_prob(kick_distance_yds=55.0, elevation_ft=0.0, wind_mph=22.0, temp_f=38.0, is_dome=False)
+
+    assert 0.94 <= p30 <= 0.99
+    assert 0.76 <= p45 <= 0.84
+    assert 0.56 <= p55_sea <= 0.66
+    assert p55_den > p55_sea + 0.03
+    assert p55_wind < p55_sea - 0.05
+
+    phys_den = compute_eq_physics_001_ball_flight_modifier(elevation_ft=5280.0, temp_f=58.0, wind_mph=6.0, is_dome=False, qb_spin_rpm=620.0)
+    phys_wind = compute_eq_physics_001_ball_flight_modifier(elevation_ft=100.0, temp_f=40.0, wind_mph=20.0, is_dome=False, qb_spin_rpm=510.0)
+    assert phys_den["air_density_ratio"] < 0.86
+    assert phys_den["fg_range_bonus_yds"] > 2.0
+    assert phys_wind["deep_pass_completion_mult"] < phys_den["deep_pass_completion_mult"]
+
+
+def test_b6_b9_ol_qb_pressure_sack_survival_attribution() -> None:
+    from engine.kernels.consolidated_sweep_kernels import compute_b6_b9_ol_qb_pressure_sack_survival
+
+    nix = compute_b6_b9_ol_qb_pressure_sack_survival(
+        ol_pbwr=0.61,
+        def_prwr=0.44,
+        qb_time_to_throw_sec=2.78,
+        qb_sack_per_dropback=9.0 / 227.0,
+        qb_throwaway_per_dropback=0.0969,
+    )
+    watson = compute_b6_b9_ol_qb_pressure_sack_survival(
+        ol_pbwr=0.55,
+        def_prwr=0.44,
+        qb_time_to_throw_sec=3.05,
+        qb_sack_per_dropback=25.0 / 235.0,
+        qb_throwaway_per_dropback=0.0128,
+    )
+    assert nix["throwaway_escape_prob_given_pressure"] > watson["throwaway_escape_prob_given_pressure"]
+    assert watson["qb_sack_fault_share"] > nix["qb_sack_fault_share"]
+    assert 0.02 <= nix["expected_sack_prob_per_dropback"] < watson["expected_sack_prob_per_dropback"]
+
+
+def test_adaptive_conformal_interval_aci_and_nguyen_yurko_snap_timing() -> None:
+    import numpy as np
+    from engine.kernels.consolidated_sweep_kernels import (
+        compute_adaptive_conformal_interval_aci,
+        compute_nguyen_yurko_snap_timing_variance,
+    )
+
+    rng = np.random.default_rng(7)
+    samples = rng.normal(24.0, 6.0, size=5000)
+    aci_calm = compute_adaptive_conformal_interval_aci(
+        sim_samples=samples,
+        target_alpha=0.10,
+        gamma_step=0.02,
+        recent_errors=[0, 0, 0, 0, 0],
+        dependence_slack=0.01,
+    )
+    aci_shock = compute_adaptive_conformal_interval_aci(
+        sim_samples=samples,
+        target_alpha=0.10,
+        gamma_step=0.02,
+        recent_errors=[1, 1, 1, 1, 1],
+        dependence_slack=0.03,
+    )
+    assert aci_shock["width"] > aci_calm["width"]
+    assert aci_shock["alpha_adapted"] < aci_calm["alpha_adapted"]
+
+    timing = compute_nguyen_yurko_snap_timing_variance(
+        motion_rate=0.68,
+        neutral_pace_sec=26.2,
+        qb_cadence_entropy=0.74,
+    )
+    assert timing["snap_timing_variance_mult"] > 1.0
+    assert timing["def_pass_rush_jump_penalty"] < 0.0
+
+
+def test_simulate_matchup_pbp_consumes_oct30_signal_pack_and_tau_hat() -> None:
+    from scripts.ops.gse_coach_mind_simulator import (
+        DEFAULT_SEALED_BASELINE,
+        canonical_hash,
+        freeze_deep,
+        simulate_matchup_pbp,
+    )
+
+    sealed = freeze_deep(DEFAULT_SEALED_BASELINE)
+    res = simulate_matchup_pbp(
+        sealed_state=sealed,
+        expected_hash=canonical_hash(sealed),
+        away="KC",
+        home="DEN",
+        away_inj=[],
+        home_inj=[],
+        n_sims=400,
+        seed=42,
+    )
+    csk = res["consolidated_sweep_kernels"]
+    assert "oct30_signal_pack_away" in csk
+    assert "oct30_signal_pack_home" in csk
+    assert csk["oct30_signal_pack_away"]["s2_def_missed_tackles"]["mtkl"] == 56.0
+    assert "tau_hat_4th_down_away" in csk
+    assert "tau_hat_4th_down_home" in csk
+    assert "walk-forward" in csk["tau_hat_4th_down_away"]["fit_stamp"]
+    assert csk["physics_ball_flight"]["fg_range_bonus_yds"] > 2.0
+    assert "b6_b9_survival_away" in csk
+    assert "aci_conformal_margin" in csk
+    assert csk["aci_conformal_margin"]["width"] > 0.0
+
+
+
+

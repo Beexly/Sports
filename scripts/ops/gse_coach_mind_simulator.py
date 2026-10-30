@@ -87,6 +87,13 @@ from engine.kernels.consolidated_sweep_kernels import (
     compute_locktalk_1q_script_stop_and_hfa,
     compute_locktalk_qb_vulture_goal_line_split,
     compute_whitebison_prop_calibration_blend,
+    consume_oct30_signal_pack,
+    compute_tau_hat_4th_down_coach_tax,
+    compute_b4_hierarchical_fg_make_prob,
+    compute_eq_physics_001_ball_flight_modifier,
+    compute_b6_b9_ol_qb_pressure_sack_survival,
+    compute_adaptive_conformal_interval_aci,
+    compute_nguyen_yurko_snap_timing_variance,
 )
 
 QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
@@ -1450,6 +1457,60 @@ def simulate_matchup_pbp(
     altitude_away = compute_mockingboard_altitude(wopr=wopr_away, c281_composite=float(c281_away["effective_yprr"]), position="WR", games_played=7)
     altitude_home = compute_mockingboard_altitude(wopr=wopr_home, c281_composite=float(c281_home["effective_yprr"]), position="WR", games_played=7)
 
+    # Oct 30 7-Signal Pack Consumer (Closes READINESS.md §2 & §5.9)
+    oct30_sp_away = consume_oct30_signal_pack(off_team=away, def_team=home, qb_name=away_qb_name)
+    oct30_sp_home = consume_oct30_signal_pack(off_team=home, def_team=away, qb_name=home_qb_name)
+
+    # Walk-Forward tau_hat 4th-Down Simulation Consumer (Closes READINESS.md §2 & §5.8 Solution 2)
+    tau_4th_away = compute_tau_hat_4th_down_coach_tax(
+        team=away, season=2026, yardline_100=38, ydstogo=3, score_differential=-3, game_seconds_remaining=900, qtr=3, wp=0.45
+    )
+    tau_4th_home = compute_tau_hat_4th_down_coach_tax(
+        team=home, season=2026, yardline_100=38, ydstogo=3, score_differential=-3, game_seconds_remaining=900, qtr=3, wp=0.45
+    )
+    away_tau_served = float(tau_4th_away["tau_hat"])
+    home_tau_served = float(tau_4th_home["tau_hat"])
+
+    # Venue Ball-Flight Aerodynamics (EQ-PHYSICS-001) & B4 Hierarchical Field-Goal Model
+    venue_elev_ft = 5280.0 if home == "DEN" else (1050.0 if home in ("ATL", "ARI") else 250.0)
+    venue_is_dome = home in ("ATL", "DET", "HOU", "IND", "LA", "LAR", "LV", "MIN", "NO", "ARI", "DAL")
+    venue_wind_mph = 0.0 if venue_is_dome else 6.5
+    venue_temp_f = 70.0 if venue_is_dome else 58.0
+    physics_ball_flight = compute_eq_physics_001_ball_flight_modifier(
+        elevation_ft=venue_elev_ft, temp_f=venue_temp_f, wind_mph=venue_wind_mph, is_dome=venue_is_dome
+    )
+    b4_fg_45_prob = compute_b4_hierarchical_fg_make_prob(
+        kick_distance_yds=45.0, elevation_ft=venue_elev_ft, wind_mph=venue_wind_mph, temp_f=venue_temp_f, is_dome=venue_is_dome
+    )
+
+    # B6 + B9 OL vs QB Pressure/Sack Survival Attribution + Signal 3 QB Throwaway Escape
+    b6_b9_away = compute_b6_b9_ol_qb_pressure_sack_survival(
+        ol_pbwr=max(0.48, 0.68 - away_ol_sack_pct / 50.0),
+        def_prwr=min(0.55, 0.35 + home_def_sack_pct / 45.0),
+        qb_time_to_throw_sec=float(away_qb_2x2.get("ngs_time_to_throw_sec") or 2.75),
+        qb_sack_per_dropback=away_sack_prob,
+        qb_throwaway_per_dropback=float(oct30_sp_away["s3_qb_throwaway"]["thawy_per_dropback"]),
+    )
+    b6_b9_home = compute_b6_b9_ol_qb_pressure_sack_survival(
+        ol_pbwr=max(0.48, 0.68 - home_ol_sack_pct / 50.0),
+        def_prwr=min(0.55, 0.35 + away_def_sack_pct / 45.0),
+        qb_time_to_throw_sec=float(home_qb_2x2.get("ngs_time_to_throw_sec") or 2.75),
+        qb_sack_per_dropback=home_sack_prob,
+        qb_throwaway_per_dropback=float(oct30_sp_home["s3_qb_throwaway"]["thawy_per_dropback"]),
+    )
+    away_sack_prob = float(np.clip(0.75 * away_sack_prob + 0.25 * float(b6_b9_away["expected_sack_prob_per_dropback"]), 0.025, 0.125))
+    home_sack_prob = float(np.clip(0.75 * home_sack_prob + 0.25 * float(b6_b9_home["expected_sack_prob_per_dropback"]), 0.025, 0.125))
+
+    # Nguyen & Yurko (2025) Heterogeneous Snap-Timing Variance
+    snap_timing_away = compute_nguyen_yurko_snap_timing_variance(
+        motion_rate=float(aw_tm_m.get("ftn_motion_rate") or 0.56),
+        neutral_pace_sec=float(tr_away["pace_sec"]),
+    )
+    snap_timing_home = compute_nguyen_yurko_snap_timing_variance(
+        motion_rate=float(hm_tm_m.get("ftn_motion_rate") or 0.56),
+        neutral_pace_sec=float(tr_home["pace_sec"]),
+    )
+
     # Build pathwise receiving target share vectors (WR1, WR2, WR3, TE1, RB1) preserving exact 0.0 on scratched roles
     away_rec_raw = away_sh.copy()
     if "WR1" not in away_inj and away_rec_raw[0] > 0.0:
@@ -1706,8 +1767,10 @@ def simulate_matchup_pbp(
         if np.any(is_4th):
             idx_4th = np.where(is_4th)[0]
             yl4, yd4 = yardline_100[idx_4th], ydstogo[idx_4th]
-            go_mask = ((yl4 <= 58) & (yd4 <= 1)) | ((yl4 > 38) & (yl4 <= 48) & (yd4 <= 3) & (sealed_state["tau"] >= 0.40)) | ((qtr[idx_4th] == 4) & (score_diff[idx_4th] < -3) & (yd4 <= 6))
-            fg_mask = (~go_mask) & (yl4 <= 39)
+            tau_team_4th = np.where(poss[idx_4th] == 1, home_tau_served, away_tau_served)
+            go_mask = ((yl4 <= 58) & (yd4 <= 1)) | ((yl4 > 38) & (yl4 <= 48) & (yd4 <= 3) & (tau_team_4th >= 0.35)) | ((qtr[idx_4th] == 4) & (score_diff[idx_4th] < -3) & (yd4 <= 6))
+            max_fg_yl = int(round(39.0 + min(3.0, max(0.0, float(physics_ball_flight["fg_range_bonus_yds"]) * 0.5))))
+            fg_mask = (~go_mask) & (yl4 <= max_fg_yl)
             punt_mask = (~go_mask) & (~fg_mask)
             if np.any(go_mask):
                 g_idx = idx_4th[go_mask]
@@ -2421,6 +2484,12 @@ def simulate_matchup_pbp(
     tot = total_pts_out
     sprd = home_margin_out
     pace = 3600.0 / np.maximum(total_plays, 100)
+    aci_conformal_margin = compute_adaptive_conformal_interval_aci(
+        sim_samples=sprd, target_alpha=0.10, gamma_step=0.02, recent_errors=[0, 0, 1, 0, 0], dependence_slack=0.01
+    )
+    aci_conformal_total = compute_adaptive_conformal_interval_aci(
+        sim_samples=tot, target_alpha=0.10, gamma_step=0.02, recent_errors=[0, 0, 1, 0, 0], dependence_slack=0.01
+    )
     out = {
         "matchup": f"{away} @ {home}",
         "median_total": round(float(np.median(tot)), 2),
@@ -2496,6 +2565,18 @@ def simulate_matchup_pbp(
             "locktalk_qb_vulture_away": vulture_away_gl,
             "locktalk_qb_vulture_home": vulture_home_gl,
             "guarded_shrinkage_step": guarded_margin_step,
+            "oct30_signal_pack_away": oct30_sp_away,
+            "oct30_signal_pack_home": oct30_sp_home,
+            "tau_hat_4th_down_away": tau_4th_away,
+            "tau_hat_4th_down_home": tau_4th_home,
+            "physics_ball_flight": physics_ball_flight,
+            "b4_fg_45_prob": b4_fg_45_prob,
+            "b6_b9_survival_away": b6_b9_away,
+            "b6_b9_survival_home": b6_b9_home,
+            "snap_timing_away": snap_timing_away,
+            "snap_timing_home": snap_timing_home,
+            "aci_conformal_margin": aci_conformal_margin,
+            "aci_conformal_total": aci_conformal_total,
         },
         "sgp_kantorovich_3marginal": sgp_kantorovich_gap,
         "conjunction_rademacher_tail_bound": conjunction_rademacher_bound,

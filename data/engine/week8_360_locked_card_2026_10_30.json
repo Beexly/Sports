@@ -2,7 +2,7 @@
   "generated_at": "2026-10-30",
   "seal_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
   "total_candidates_evaluated": 581,
-  "total_priced_survivors": 149,
+  "total_priced_survivors": 147,
   "total_unpriced_abstain_projections": 94,
   "max_pathwise_conservation_residual": 0.0,
   "max_sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -13,12 +13,12 @@
       "selection": "LA ML (-270)",
       "market_line": -270.0,
       "has_live_price": true,
-      "raw_prob": 0.7819,
+      "raw_prob": 0.7763,
       "model_p": 0.7682,
       "market_p": 0.7001620745542949,
       "edge": 0.06803792544570508,
       "model_median": 76.82,
-      "rationale": "Pathwise win prob 78.2% (Stage D 76.8%) vs de-vigged market 70.0%",
+      "rationale": "Pathwise win prob 77.6% (Stage D 76.8%) vs de-vigged market 70.0%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -27,7 +27,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.826792544570509
@@ -38,12 +43,12 @@
       "selection": "DET ML (-170)",
       "market_line": -170.0,
       "has_live_price": true,
-      "raw_prob": 0.7166,
+      "raw_prob": 0.716,
       "model_p": 0.6838,
       "market_p": 0.6037569709421778,
       "edge": 0.08004302905782212,
       "model_median": 68.38,
-      "rationale": "Pathwise win prob 71.7% (Stage D 68.4%) vs de-vigged market 60.4%",
+      "rationale": "Pathwise win prob 71.6% (Stage D 68.4%) vs de-vigged market 60.4%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -52,7 +57,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.761302905782212
@@ -63,12 +73,12 @@
       "selection": "DET -3.0",
       "market_line": -3.0,
       "has_live_price": true,
-      "raw_prob": 0.6313,
+      "raw_prob": 0.6338,
       "model_p": 0.6075,
       "market_p": 0.5217391304347826,
       "edge": 0.08576086956521745,
-      "model_median": -8.082641030278644,
-      "rationale": "Pathwise median DET -8.08 vs DK -3.0 (Murray +0.003 / Goff +0.151)",
+      "model_median": -8.0275139505831,
+      "rationale": "Pathwise median DET -8.03 vs DK -3.0 (Murray +0.003 / Goff +0.151)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -77,7 +87,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.188586956521746
@@ -88,12 +103,12 @@
       "selection": "LA -6.5",
       "market_line": -6.5,
       "has_live_price": true,
-      "raw_prob": 0.6266,
+      "raw_prob": 0.6237,
       "model_p": 0.6034,
       "market_p": 0.5173641257162701,
       "edge": 0.08603587428372994,
-      "model_median": -11.438582349580388,
-      "rationale": "Pathwise median LA -11.44 vs DK -6.5 (Herbert -0.013 / Stafford -0.002)",
+      "model_median": -11.456324564863298,
+      "rationale": "Pathwise median LA -11.46 vs DK -6.5 (Herbert -0.013 / Stafford -0.002)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -102,7 +117,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.154587428372993
@@ -113,12 +133,12 @@
       "selection": "KC ML (-118)",
       "market_line": -118.0,
       "has_live_price": true,
-      "raw_prob": 0.6845,
+      "raw_prob": 0.6798,
       "model_p": 0.6034,
       "market_p": 0.5173641257162701,
       "edge": 0.08603587428372994,
       "model_median": 60.34,
-      "rationale": "Pathwise win prob 68.5% (Stage D 60.3%) vs de-vigged market 51.7%",
+      "rationale": "Pathwise win prob 68.0% (Stage D 60.3%) vs de-vigged market 51.7%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -127,7 +147,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "PUBLISH",
       "composite_score": 10.154587428372993
@@ -138,12 +163,12 @@
       "selection": "KC@DEN OVER 40.5",
       "market_line": 40.5,
       "has_live_price": true,
-      "raw_prob": 0.6474,
+      "raw_prob": 0.662,
       "model_p": 0.5908,
       "market_p": 0.5043297540699688,
       "edge": 0.08647024593003116,
-      "model_median": 45.66,
-      "rationale": "Pathwise median total 45.66 vs DK 40.5 (pace 27.27s)",
+      "model_median": 46.15,
+      "rationale": "Pathwise median total 46.15 vs DK 40.5 (pace 27.27s)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -152,7 +177,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "PUBLISH",
       "composite_score": 10.009024593003117
@@ -163,12 +193,12 @@
       "selection": "BAL@BUF OVER 54.5",
       "market_line": 54.5,
       "has_live_price": true,
-      "raw_prob": 0.6678,
+      "raw_prob": 0.6695,
       "model_p": 0.5866,
       "market_p": 0.5,
       "edge": 0.08660000000000001,
-      "model_median": 60.35,
-      "rationale": "Pathwise median total 60.35 vs DK 54.5 (pace 26.28s)",
+      "model_median": 60.49,
+      "rationale": "Pathwise median total 60.49 vs DK 54.5 (pace 26.28s)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -177,7 +207,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.464243163156596,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 9.959
@@ -188,12 +223,12 @@
       "selection": "PHI@WAS OVER 40.5",
       "market_line": 40.5,
       "has_live_price": true,
-      "raw_prob": 0.6396,
+      "raw_prob": 0.6707,
       "model_p": 0.5866,
       "market_p": 0.5,
       "edge": 0.08660000000000001,
-      "model_median": 45.9,
-      "rationale": "Pathwise median total 45.90 vs DK 40.5 (pace 26.09s)",
+      "model_median": 44.93,
+      "rationale": "Pathwise median total 44.93 vs DK 40.5 (pace 26.09s)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -202,7 +237,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.80067661350206,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 9.959
@@ -213,12 +253,12 @@
       "selection": "CIN -11.5",
       "market_line": -11.5,
       "has_live_price": true,
-      "raw_prob": 0.6144,
+      "raw_prob": 0.6156,
       "model_p": 0.5824,
       "market_p": 0.4956702459300312,
       "edge": 0.08672975406996886,
-      "model_median": -15.26395176314167,
-      "rationale": "Pathwise median CIN -15.26 vs DK -11.5 (Ward -0.004 / Burrow -0.008)",
+      "model_median": -15.271522535958901,
+      "rationale": "Pathwise median CIN -15.27 vs DK -11.5 (Ward -0.004 / Burrow -0.008)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -227,7 +267,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.8,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.27457498336365,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 9.908975406996886
@@ -238,12 +283,12 @@
       "selection": "CLE@PIT OVER 39.5",
       "market_line": 39.5,
       "has_live_price": true,
-      "raw_prob": 0.5935,
+      "raw_prob": 0.5902,
       "model_p": 0.5761,
       "market_p": 0.4891657638136511,
       "edge": 0.08693423618634882,
-      "model_median": 42.81,
-      "rationale": "Pathwise median total 42.81 vs DK 39.5 (pace 26.67s)",
+      "model_median": 42.88,
+      "rationale": "Pathwise median total 42.88 vs DK 39.5 (pace 26.67s)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -252,7 +297,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 9.834923618634882
@@ -265,12 +315,12 @@
       "selection": "LA 1H Winner (-200)",
       "market_line": -200.0,
       "has_live_price": true,
-      "raw_prob": 0.7616,
+      "raw_prob": 0.7539,
       "model_p": 0.7143,
       "market_p": 0.6379585326953748,
       "edge": 0.07634146730462521,
-      "model_median": 5.348547267586376,
-      "rationale": "Scores24 LAC lost 1H in 8/9 \u2014 Pathwise win prob 76.2% (Stage D 71.4%) vs de-vig 63.8%",
+      "model_median": 5.179327395359676,
+      "rationale": "Scores24 LAC lost 1H in 8/9 \u2014 Pathwise win prob 75.4% (Stage D 71.4%) vs de-vig 63.8%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -279,7 +329,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.848646730462521
@@ -290,12 +345,12 @@
       "selection": "PIT 1H Winner (-149)",
       "market_line": -149.0,
       "has_live_price": true,
-      "raw_prob": 0.6782,
+      "raw_prob": 0.6724,
       "model_p": 0.6553,
       "market_p": 0.572625429949463,
       "edge": 0.08267457005053702,
-      "model_median": 3.264837355077838,
-      "rationale": "Scores24 PIT 1H 5/5 home vs CLE \u2014 Pathwise win prob 67.8% (Stage D 65.5%) vs de-vig 57.3%",
+      "model_median": 3.3358186644890897,
+      "rationale": "Scores24 PIT 1H 5/5 home vs CLE \u2014 Pathwise win prob 67.2% (Stage D 65.5%) vs de-vig 57.3%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -304,7 +359,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 10.596957005053701
@@ -315,12 +375,12 @@
       "selection": "JAX 2Q Winner (-149)",
       "market_line": -149.0,
       "has_live_price": true,
-      "raw_prob": 0.6976,
+      "raw_prob": 0.7069,
       "model_p": 0.6553,
       "market_p": 0.572625429949463,
       "edge": 0.08267457005053702,
-      "model_median": 2.753223106991715,
-      "rationale": "Scores24 JAX 2Q 10/10 home vs IND \u2014 Pathwise win prob 69.8% (Stage D 65.5%) vs de-vig 57.3%",
+      "model_median": 2.8429734332438867,
+      "rationale": "Scores24 JAX 2Q 10/10 home vs IND \u2014 Pathwise win prob 70.7% (Stage D 65.5%) vs de-vig 57.3%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -329,7 +389,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.256955316283396,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 10.596957005053701
@@ -340,12 +405,12 @@
       "selection": "PIT 2H Winner (-127)",
       "market_line": -127.0,
       "has_live_price": true,
-      "raw_prob": 0.6746,
+      "raw_prob": 0.6776,
       "model_p": 0.6205,
       "market_p": 0.5353792972619776,
       "edge": 0.08512070273802241,
-      "model_median": 3.604987252209331,
-      "rationale": "Scores24 PIT 2H 9/9 home vs CLE \u2014 Pathwise win prob 67.5% (Stage D 62.1%) vs de-vig 53.5%",
+      "model_median": 3.6455752874510305,
+      "rationale": "Scores24 PIT 2H 9/9 home vs CLE \u2014 Pathwise win prob 67.8% (Stage D 62.1%) vs de-vig 53.5%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -354,7 +419,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 10.319570273802242
@@ -365,12 +435,12 @@
       "selection": "DET Team Total OVER 24.5 (-120)",
       "market_line": -120.0,
       "has_live_price": true,
-      "raw_prob": 0.7097,
+      "raw_prob": 0.7116,
       "model_p": 0.6078,
       "market_p": 0.5219660722053067,
       "edge": 0.08583392779469334,
-      "model_median": 29.770318348331344,
-      "rationale": "Scores24 DET TT >24.5 in 6/7 vs MIN \u2014 Pathwise win prob 71.0% (Stage D 60.8%) vs de-vig 52.2%",
+      "model_median": 29.94770503009422,
+      "rationale": "Scores24 DET TT >24.5 in 6/7 vs MIN \u2014 Pathwise win prob 71.2% (Stage D 60.8%) vs de-vig 52.2%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -379,7 +449,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.200392779469336
@@ -390,12 +465,12 @@
       "selection": "LA 2Q Winner (-118)",
       "market_line": -118.0,
       "has_live_price": true,
-      "raw_prob": 0.7252,
+      "raw_prob": 0.719,
       "model_p": 0.6039,
       "market_p": 0.5179755059040428,
       "edge": 0.08592449409595715,
-      "model_median": 3.2040292026525004,
-      "rationale": "Scores24 LAC lost 2Q in 7/8 \u2014 Pathwise win prob 72.5% (Stage D 60.4%) vs de-vig 51.8%",
+      "model_median": 3.170137681876929,
+      "rationale": "Scores24 LAC lost 2Q in 7/8 \u2014 Pathwise win prob 71.9% (Stage D 60.4%) vs de-vig 51.8%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -404,7 +479,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 10.150949409595716
@@ -415,12 +495,12 @@
       "selection": "BUF 2Q Winner (-103)",
       "market_line": -103.0,
       "has_live_price": true,
-      "raw_prob": 0.5791,
+      "raw_prob": 0.5733,
       "model_p": 0.5725,
       "market_p": 0.48553986847997743,
       "edge": 0.08696013152002258,
-      "model_median": 0.9277872037981298,
-      "rationale": "Scores24 BUF 2Q 7/8 streak \u2014 Pathwise win prob 57.9% (Stage D 57.2%) vs de-vig 48.6%",
+      "model_median": 0.8905129872297675,
+      "rationale": "Scores24 BUF 2Q 7/8 streak \u2014 Pathwise win prob 57.3% (Stage D 57.2%) vs de-vig 48.6%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -429,7 +509,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.464243163156596,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 9.783513152002259
@@ -440,12 +525,12 @@
       "selection": "DAL Team Total UNDER 33.5 (-169)",
       "market_line": -169.0,
       "has_live_price": true,
-      "raw_prob": 0.664,
-      "model_p": 0.664,
+      "raw_prob": 0.6577,
+      "model_p": 0.6577,
       "market_p": 0.6011988402909946,
-      "edge": 0.06280115970900546,
-      "model_median": 29.432746884821547,
-      "rationale": "Scores24 DAL TT <33.5 in 14/15 vs ARI \u2014 Pathwise win prob 66.4% (Stage D 66.4%) vs de-vig 60.1%",
+      "edge": 0.05650115970900538,
+      "model_median": 29.536167609619937,
+      "rationale": "Scores24 DAL TT <33.5 in 14/15 vs ARI \u2014 Pathwise win prob 65.8% (Stage D 65.8%) vs de-vig 60.1%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -454,10 +539,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.34251499811117,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
-      "composite_score": 8.740115970900547
+      "composite_score": 8.015615970900537
     }
   ],
   "top_player_props": [
@@ -471,8 +561,8 @@
       "model_p": 0.6933,
       "market_p": 0.5,
       "edge": 0.1933,
-      "model_median": 286.64,
-      "rationale": "DET QB (GP=6, 2026Avg=298.0, QB2x2=+0.151): Layer-1 mean 287.4 (median 286.6) vs DK 262.5",
+      "model_median": 286.8,
+      "rationale": "DET QB (GP=6, 2026Avg=298.0, QB2x2=+0.151): Layer-1 mean 287.4 (median 286.8) vs DK 262.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -481,7 +571,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 22.229499999999998
@@ -506,7 +601,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 21.240499999999997
@@ -521,7 +621,7 @@
       "model_p": 0.6648,
       "market_p": 0.5,
       "edge": 0.1648,
-      "model_median": 8.88,
+      "model_median": 8.91,
       "rationale": "DEN RB (GP=7, 2026Avg=12.4): Layer-1 mean 8.9 (median 8.9) vs DK 7.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -531,7 +631,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "PUBLISH",
       "composite_score": 18.951999999999998
@@ -546,8 +651,8 @@
       "model_p": 0.664,
       "market_p": 0.5,
       "edge": 0.164,
-      "model_median": 177.67,
-      "rationale": "TEN QB (GP=7, 2026Avg=168.4, QB2x2=-0.004): Layer-1 mean 178.1 (median 177.7) vs DK 197.5",
+      "model_median": 177.36,
+      "rationale": "TEN QB (GP=7, 2026Avg=168.4, QB2x2=-0.004): Layer-1 mean 178.1 (median 177.4) vs DK 197.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -556,7 +661,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.8,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.27457498336365,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 18.860000000000003
@@ -567,12 +677,12 @@
       "selection": "Jaylen Warren (PIT) Receiving Yards OVER 23.5",
       "market_line": 23.5,
       "has_live_price": true,
-      "raw_prob": 0.6698,
-      "model_p": 0.6621,
+      "raw_prob": 0.6694,
+      "model_p": 0.6617,
       "market_p": 0.5,
-      "edge": 0.1621,
-      "model_median": 31.16,
-      "rationale": "PIT RB (GP=7, 2026Avg=42.0, WOPR=0.21, C281=2.06): Layer-1 mean 31.4 (median 31.2) vs DK 23.5",
+      "edge": 0.1617,
+      "model_median": 31.28,
+      "rationale": "PIT RB (GP=7, 2026Avg=42.0, WOPR=0.21, C281=2.06): Layer-1 mean 31.4 (median 31.3) vs DK 23.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -581,10 +691,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
-      "composite_score": 18.6415
+      "composite_score": 18.5955
     },
     {
       "matchup": "KC@DEN",
@@ -592,12 +707,12 @@
       "selection": "J.K. Dobbins (DEN) Rushing Yards OVER 21.5",
       "market_line": 21.5,
       "has_live_price": true,
-      "raw_prob": 0.6641,
-      "model_p": 0.662,
+      "raw_prob": 0.6619,
+      "model_p": 0.6598,
       "market_p": 0.5,
-      "edge": 0.162,
-      "model_median": 27.86,
-      "rationale": "DEN RB (GP=7, 2026Avg=41.9, C285=-0.010): Layer-1 mean 28.5 (median 27.9) vs DK 21.5",
+      "edge": 0.1598,
+      "model_median": 27.89,
+      "rationale": "DEN RB (GP=7, 2026Avg=41.9, C285=-0.010): Layer-1 mean 28.4 (median 27.9) vs DK 21.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -606,10 +721,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "PUBLISH",
-      "composite_score": 18.63
+      "composite_score": 18.377000000000002
     },
     {
       "matchup": "IND@JAX",
@@ -631,7 +751,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.256955316283396,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 17.802
@@ -642,12 +767,12 @@
       "selection": "Matthew Stafford (LA) Passing Yards OVER 249.5",
       "market_line": 249.5,
       "has_live_price": true,
-      "raw_prob": 0.6567,
-      "model_p": 0.6523,
+      "raw_prob": 0.6556,
+      "model_p": 0.6513,
       "market_p": 0.5,
-      "edge": 0.1523,
-      "model_median": 273.17,
-      "rationale": "LA QB (GP=7, 2026Avg=284.1, QB2x2=-0.002): Layer-1 mean 273.7 (median 273.2) vs DK 249.5",
+      "edge": 0.1513,
+      "model_median": 272.77,
+      "rationale": "LA QB (GP=7, 2026Avg=284.1, QB2x2=-0.002): Layer-1 mean 273.5 (median 272.8) vs DK 249.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -656,10 +781,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
-      "composite_score": 17.514499999999998
+      "composite_score": 17.3995
     },
     {
       "matchup": "LV@NYJ",
@@ -667,12 +797,12 @@
       "selection": "Ashton Jeanty (LV) Receiving Yards OVER 27.5",
       "market_line": 27.5,
       "has_live_price": true,
-      "raw_prob": 0.6623,
-      "model_p": 0.6519,
+      "raw_prob": 0.661,
+      "model_p": 0.6507,
       "market_p": 0.5,
-      "edge": 0.1519,
-      "model_median": 34.89,
-      "rationale": "LV RB (GP=7, 2026Avg=44.6, WOPR=0.29, C281=1.69): Layer-1 mean 35.0 (median 34.9) vs DK 27.5",
+      "edge": 0.1507,
+      "model_median": 34.82,
+      "rationale": "LV RB (GP=7, 2026Avg=44.6, WOPR=0.29, C281=1.69): Layer-1 mean 35.0 (median 34.8) vs DK 27.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -681,10 +811,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.8,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.751679440837414,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
-      "composite_score": 17.468500000000002
+      "composite_score": 17.3305
     },
     {
       "matchup": "LV@NYJ",
@@ -692,12 +827,12 @@
       "selection": "Michael Mayer (LV) Receiving Yards OVER 25.5",
       "market_line": 25.5,
       "has_live_price": true,
-      "raw_prob": 0.661,
-      "model_p": 0.6459,
+      "raw_prob": 0.6598,
+      "model_p": 0.6447,
       "market_p": 0.5,
-      "edge": 0.1459,
-      "model_median": 32.83,
-      "rationale": "LV TE (GP=7, 2026Avg=42.6, WOPR=0.27, C281=1.92): Layer-1 mean 33.0 (median 32.8) vs DK 25.5",
+      "edge": 0.1447,
+      "model_median": 32.77,
+      "rationale": "LV TE (GP=7, 2026Avg=42.6, WOPR=0.27, C281=1.92): Layer-1 mean 32.9 (median 32.8) vs DK 25.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -706,10 +841,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.8,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.751679440837414,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
-      "composite_score": 16.7785
+      "composite_score": 16.6405
     },
     {
       "matchup": "BAL@BUF",
@@ -721,8 +861,8 @@
       "model_p": 0.6406,
       "market_p": 0.5,
       "edge": 0.1406,
-      "model_median": 22.47,
-      "rationale": "BUF RB (GP=4, 2026Avg=38.8, WOPR=0.19, C281=3.08): Layer-1 mean 22.7 (median 22.5) vs DK 15.5",
+      "model_median": 22.57,
+      "rationale": "BUF RB (GP=4, 2026Avg=38.8, WOPR=0.19, C281=3.08): Layer-1 mean 22.7 (median 22.6) vs DK 15.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -731,7 +871,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.464243163156596,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 16.169
@@ -746,8 +891,8 @@
       "model_p": 0.6309,
       "market_p": 0.5,
       "edge": 0.1309,
-      "model_median": 80.52,
-      "rationale": "CIN WR (GP=6, 2026Avg=95.2, WOPR=0.66, C281=2.72): Layer-1 mean 80.7 (median 80.5) vs DK 67.5",
+      "model_median": 80.67,
+      "rationale": "CIN WR (GP=6, 2026Avg=95.2, WOPR=0.66, C281=2.72): Layer-1 mean 80.7 (median 80.7) vs DK 67.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -756,7 +901,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.8,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.27457498336365,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 15.053499999999998
@@ -771,8 +921,8 @@
       "model_p": 0.6307,
       "market_p": 0.5,
       "edge": 0.1307,
-      "model_median": 39.15,
-      "rationale": "BUF WR (GP=6, 2026Avg=47.2, WOPR=0.40, C281=2.81): Layer-1 mean 39.4 (median 39.1) vs DK 32.5",
+      "model_median": 39.26,
+      "rationale": "BUF WR (GP=6, 2026Avg=47.2, WOPR=0.40, C281=2.81): Layer-1 mean 39.4 (median 39.3) vs DK 32.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -781,7 +931,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.464243163156596,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 15.0305
@@ -796,8 +951,8 @@
       "model_p": 0.6292,
       "market_p": 0.5,
       "edge": 0.1292,
-      "model_median": 190.87,
-      "rationale": "LAC QB (GP=6, 2026Avg=190.2, QB2x2=-0.013): Layer-1 mean 191.7 (median 190.9) vs DK 206.5",
+      "model_median": 191.01,
+      "rationale": "LAC QB (GP=6, 2026Avg=190.2, QB2x2=-0.013): Layer-1 mean 191.7 (median 191.0) vs DK 206.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -806,7 +961,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 14.858
@@ -821,8 +981,8 @@
       "model_p": 0.6269,
       "market_p": 0.5,
       "edge": 0.1269,
-      "model_median": 109.25,
-      "rationale": "PIT RB (GP=7, 2026Avg=122.1): Layer-1 mean 109.1 (median 109.2) vs DK 93.5",
+      "model_median": 108.94,
+      "rationale": "PIT RB (GP=7, 2026Avg=122.1): Layer-1 mean 109.1 (median 108.9) vs DK 93.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -831,7 +991,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 14.593500000000002
@@ -846,8 +1011,8 @@
       "model_p": 0.6263,
       "market_p": 0.5,
       "edge": 0.1263,
-      "model_median": 112.75,
-      "rationale": "SEA WR (GP=7, 2026Avg=123.9, WOPR=0.93, C281=2.65): Layer-1 mean 113.0 (median 112.8) vs DK 98.5",
+      "model_median": 113.07,
+      "rationale": "SEA WR (GP=7, 2026Avg=123.9, WOPR=0.93, C281=2.65): Layer-1 mean 113.0 (median 113.1) vs DK 98.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -856,7 +1021,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.4659450784053,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 14.524499999999998
@@ -871,8 +1041,8 @@
       "model_p": 0.6196,
       "market_p": 0.5,
       "edge": 0.1196,
-      "model_median": 60.84,
-      "rationale": "CHI WR (GP=7, 2026Avg=70.1, WOPR=0.50, C281=2.49): Layer-1 mean 61.2 (median 60.8) vs DK 51.5",
+      "model_median": 61.08,
+      "rationale": "CHI WR (GP=7, 2026Avg=70.1, WOPR=0.50, C281=2.49): Layer-1 mean 61.2 (median 61.1) vs DK 51.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -881,7 +1051,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.4659450784053,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "PUBLISH",
       "composite_score": 13.754
@@ -896,7 +1071,7 @@
       "model_p": 0.6113,
       "market_p": 0.5,
       "edge": 0.1113,
-      "model_median": 7.17,
+      "model_median": 7.18,
       "rationale": "DAL WR (GP=7, 2026Avg=7.6, WOPR=0.75): Layer-1 mean 7.2 (median 7.2) vs DK 6.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -906,7 +1081,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.34251499811117,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "PUBLISH",
       "composite_score": 12.799499999999998
@@ -919,14 +1099,14 @@
       "selection": "LV@NYJ 1Q Total UNDER 9.5",
       "market_line": 9.5,
       "has_live_price": false,
-      "raw_prob": 0.6284945610987447,
-      "model_p": 0.6284945610987447,
+      "raw_prob": 0.6244401224885323,
+      "model_p": 0.6244401224885323,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-169",
-      "trigger_odds": "-143",
-      "model_median": 8.145437247059146,
-      "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.1 vs ref 9.5",
+      "fair_odds": "-166",
+      "trigger_odds": "-141",
+      "model_median": 8.177224498377651,
+      "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.2 vs ref 9.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -935,10 +1115,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.8,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.751679440837414,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 62.84945610987447
+      "composite_score": 62.444012248853234
     },
     {
       "matchup": "BAL@BUF",
@@ -946,13 +1131,13 @@
       "selection": "BAL@BUF 1Q Total OVER 10.5",
       "market_line": 10.5,
       "has_live_price": false,
-      "raw_prob": 0.6184564422364334,
-      "model_p": 0.6184564422364334,
+      "raw_prob": 0.620123823927442,
+      "model_p": 0.620123823927442,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-162",
-      "trigger_odds": "-137",
-      "model_median": 11.578351620963208,
+      "fair_odds": "-163",
+      "trigger_odds": "-138",
+      "model_median": 11.58190842146544,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 11.6 vs ref 10.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -962,10 +1147,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.464243163156596,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 61.84564422364333
+      "composite_score": 62.0123823927442
     },
     {
       "matchup": "LAC@LA",
@@ -973,13 +1163,13 @@
       "selection": "LAC@LA 1Q Total UNDER 9.5",
       "market_line": 9.5,
       "has_live_price": false,
-      "raw_prob": 0.6052141623613247,
-      "model_p": 0.6052141623613247,
+      "raw_prob": 0.6099403108308918,
+      "model_p": 0.6099403108308918,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-153",
-      "trigger_odds": "-130",
-      "model_median": 8.325530776945127,
+      "fair_odds": "-156",
+      "trigger_odds": "-133",
+      "model_median": 8.293029735592274,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.3 vs ref 9.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -989,10 +1179,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 60.521416236132474
+      "composite_score": 60.99403108308918
     },
     {
       "matchup": "CLE@PIT",
@@ -1000,13 +1195,13 @@
       "selection": "CLE@PIT 1Q Total OVER 7.5",
       "market_line": 7.5,
       "has_live_price": false,
-      "raw_prob": 0.5795715428712326,
-      "model_p": 0.5795715428712326,
+      "raw_prob": 0.5787815388606667,
+      "model_p": 0.5787815388606667,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-138",
+      "fair_odds": "-137",
       "trigger_odds": "-117",
-      "model_median": 8.08061030968624,
+      "model_median": 8.099366142476779,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.1 vs ref 7.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1016,10 +1211,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 57.95715428712326
+      "composite_score": 57.87815388606668
     },
     {
       "matchup": "IND@JAX",
@@ -1027,13 +1227,13 @@
       "selection": "IND@JAX 1Q Total UNDER 9.5",
       "market_line": 9.5,
       "has_live_price": false,
-      "raw_prob": 0.5744217959480575,
-      "model_p": 0.5744217959480575,
+      "raw_prob": 0.5704892879918044,
+      "model_p": 0.5704892879918044,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-135",
-      "trigger_odds": "-115",
-      "model_median": 8.687021940101513,
+      "fair_odds": "-133",
+      "trigger_odds": "-113",
+      "model_median": 8.738535248911809,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.7 vs ref 9.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1043,10 +1243,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.256955316283396,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 57.44217959480575
+      "composite_score": 57.048928799180445
     },
     {
       "matchup": "NE@MIA",
@@ -1054,13 +1259,13 @@
       "selection": "NE@MIA 1Q Total UNDER 8.5",
       "market_line": 8.5,
       "has_live_price": false,
-      "raw_prob": 0.5666107357179523,
-      "model_p": 0.5666107357179523,
+      "raw_prob": 0.5691108878401301,
+      "model_p": 0.5691108878401301,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-131",
-      "trigger_odds": "-111",
-      "model_median": 7.778658218933144,
+      "fair_odds": "-132",
+      "trigger_odds": "-112",
+      "model_median": 7.752699165576734,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 7.8 vs ref 8.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1070,10 +1275,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.829277551514494,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 56.66107357179523
+      "composite_score": 56.91108878401301
     },
     {
       "matchup": "TEN@CIN",
@@ -1081,13 +1291,13 @@
       "selection": "TEN@CIN 1Q Total UNDER 9.5",
       "market_line": 9.5,
       "has_live_price": false,
-      "raw_prob": 0.5471307261208577,
-      "model_p": 0.5471307261208577,
+      "raw_prob": 0.5448693977809412,
+      "model_p": 0.5448693977809412,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-121",
-      "trigger_odds": "-103",
-      "model_median": 8.988535525393685,
+      "fair_odds": "-120",
+      "trigger_odds": "-102",
+      "model_median": 8.969227112253748,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 9.0 vs ref 9.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1097,24 +1307,29 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.8,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.27457498336365,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 54.71307261208577
+      "composite_score": 54.486939778094126
     },
     {
-      "matchup": "PHI@WAS",
+      "matchup": "KC@DEN",
       "category": "1Q_1H_DERIVATIVE",
-      "selection": "PHI@WAS 1Q Total OVER 8.5",
+      "selection": "KC@DEN 1Q Total OVER 8.5",
       "market_line": 8.5,
       "has_live_price": false,
-      "raw_prob": 0.5337823747686206,
-      "model_p": 0.5337823747686206,
+      "raw_prob": 0.5305574636974146,
+      "model_p": 0.5305574636974146,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-114",
+      "fair_odds": "-113",
       "trigger_odds": "-100",
-      "model_median": 8.737973757766394,
+      "model_median": 8.689587027399563,
       "rationale": "@locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.7 vs ref 8.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1124,10 +1339,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "ABSTAIN",
-      "composite_score": 53.378237476862054
+      "composite_score": 53.05574636974146
     }
   ],
   "abstain_watchlist_kicking_suite": [
@@ -1137,14 +1357,14 @@
       "selection": "Harrison Mevis (LA) Field Goals Made UNDER 1.5",
       "market_line": 1.5,
       "has_live_price": false,
-      "raw_prob": 0.6866740371402887,
-      "model_p": 0.6866740371402887,
+      "raw_prob": 0.6900508525526609,
+      "model_p": 0.6900508525526609,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-219",
-      "trigger_odds": "-183",
-      "model_median": 1.1338,
-      "rationale": "Blended FGM lambda=1.13 (2026 Avg=1.00, Sim4thFG=1.47, RZ TD%=52.0%)",
+      "fair_odds": "-223",
+      "trigger_odds": "-186",
+      "model_median": 1.12455,
+      "rationale": "Blended FGM lambda=1.12 (2026 Avg=1.00, Sim4thFG=1.45, RZ TD%=52.0%)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1153,10 +1373,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 68.66740371402888
+      "composite_score": 69.00508525526608
     },
     {
       "matchup": "MIN@DET",
@@ -1171,7 +1396,7 @@
       "fair_odds": "-213",
       "trigger_odds": "-178",
       "model_median": 2.35,
-      "rationale": "Blended FGM lambda=2.35 (2026 Avg=3.00, Sim4thFG=1.40, RZ TD%=19.5%)",
+      "rationale": "Blended FGM lambda=2.35 (2026 Avg=3.00, Sim4thFG=1.39, RZ TD%=19.5%)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1180,7 +1405,12 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
       "composite_score": 68.05133065779087
@@ -1191,14 +1421,14 @@
       "selection": "Spencer Shrader (IND) Field Goals Made OVER 1.5",
       "market_line": 1.5,
       "has_live_price": false,
-      "raw_prob": 0.6771015166464385,
-      "model_p": 0.6771015166464385,
+      "raw_prob": 0.6792433804984299,
+      "model_p": 0.6792433804984299,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-210",
-      "trigger_odds": "-176",
-      "model_median": 2.334842857142857,
-      "rationale": "Blended FGM lambda=2.33 (2026 Avg=2.71, Sim4thFG=1.40, RZ TD%=18.5%)",
+      "fair_odds": "-212",
+      "trigger_odds": "-177",
+      "model_median": 2.3443428571428573,
+      "rationale": "Blended FGM lambda=2.34 (2026 Avg=2.71, Sim4thFG=1.41, RZ TD%=18.5%)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1207,10 +1437,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.256955316283396,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 67.71015166464385
+      "composite_score": 67.92433804984299
     },
     {
       "matchup": "ARI@DAL",
@@ -1218,14 +1453,14 @@
       "selection": "Chad Ryland (ARI) Field Goals Made OVER 1.5",
       "market_line": 1.5,
       "has_live_price": false,
-      "raw_prob": 0.671361720366233,
-      "model_p": 0.671361720366233,
+      "raw_prob": 0.6693960995579,
+      "model_p": 0.6693960995579,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-204",
-      "trigger_odds": "-171",
-      "model_median": 2.3096357142857142,
-      "rationale": "Blended FGM lambda=2.31 (2026 Avg=2.43, Sim4thFG=1.63, RZ TD%=12.6%)",
+      "fair_odds": "-202",
+      "trigger_odds": "-170",
+      "model_median": 2.3010857142857146,
+      "rationale": "Blended FGM lambda=2.30 (2026 Avg=2.43, Sim4thFG=1.61, RZ TD%=12.6%)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1234,10 +1469,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.34251499811117,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 67.1361720366233
+      "composite_score": 66.93960995579
     },
     {
       "matchup": "LV@NYJ",
@@ -1245,14 +1485,14 @@
       "selection": "Matt Gay (LV) Field Goals Made OVER 1.5",
       "market_line": 1.5,
       "has_live_price": false,
-      "raw_prob": 0.6634069375153949,
-      "model_p": 0.6634069375153949,
+      "raw_prob": 0.6638042515444859,
+      "model_p": 0.6638042515444859,
       "market_p": null,
       "edge": null,
       "fair_odds": "-197",
       "trigger_odds": "-166",
-      "model_median": 2.2752857142857144,
-      "rationale": "Blended FGM lambda=2.28 (2026 Avg=2.43, Sim4thFG=1.56, RZ TD%=15.9%)",
+      "model_median": 2.276985714285714,
+      "rationale": "Blended FGM lambda=2.28 (2026 Avg=2.43, Sim4thFG=1.57, RZ TD%=15.9%)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1261,10 +1501,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.8,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.751679440837414,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 66.34069375153949
+      "composite_score": 66.38042515444859
     },
     {
       "matchup": "ATL@TB",
@@ -1272,13 +1517,13 @@
       "selection": "Chase McLaughlin (TB) Field Goals Made OVER 1.5",
       "market_line": 1.5,
       "has_live_price": false,
-      "raw_prob": 0.6551476830357296,
-      "model_p": 0.6551476830357296,
+      "raw_prob": 0.654479571284153,
+      "model_p": 0.654479571284153,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-190",
-      "trigger_odds": "-160",
-      "model_median": 2.2403071428571426,
+      "fair_odds": "-189",
+      "trigger_odds": "-159",
+      "model_median": 2.237507142857143,
       "rationale": "Blended FGM lambda=2.24 (2026 Avg=2.29, Sim4thFG=1.63, RZ TD%=15.8%)",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1288,10 +1533,15 @@
         "talisman_tdr_max": 0.3291139240466772,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.389454,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.91066264949535,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 65.51476830357295
+      "composite_score": 65.4479571284153
     }
   ],
   "abstain_watchlist_idp_suite": [
@@ -1301,14 +1551,14 @@
       "selection": "Alex Singleton (DEN LB) Total Tackles+Ast UNDER 12.5",
       "market_line": 12.5,
       "has_live_price": false,
-      "raw_prob": 0.7711,
-      "model_p": 0.7711,
+      "raw_prob": 0.7682,
+      "model_p": 0.7682,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-337",
-      "trigger_odds": "-272",
-      "model_median": 10.211,
-      "rationale": "C-300 @rynoonan tackle funnel: 55.2 opp plays -> E[Tackles]=10.21 vs ref 12.5",
+      "fair_odds": "-331",
+      "trigger_odds": "-268",
+      "model_median": 10.241,
+      "rationale": "C-300 @rynoonan tackle funnel: 55.4 opp plays -> E[Tackles]=10.24 vs ref 12.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1317,10 +1567,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "ABSTAIN",
-      "composite_score": 77.11
+      "composite_score": 76.82
     },
     {
       "matchup": "TEN@CIN",
@@ -1328,13 +1583,13 @@
       "selection": "Demetrius Knight Jr. (CIN LB) Total Tackles+Ast UNDER 8.5",
       "market_line": 8.5,
       "has_live_price": false,
-      "raw_prob": 0.7433,
-      "model_p": 0.7433,
+      "raw_prob": 0.7435,
+      "model_p": 0.7435,
       "market_p": null,
       "edge": null,
       "fair_odds": "-290",
       "trigger_odds": "-237",
-      "model_median": 6.89,
+      "model_median": 6.888,
       "rationale": "C-300 @rynoonan tackle funnel: 44.4 opp plays -> E[Tackles]=6.89 vs ref 8.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1344,10 +1599,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.8,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.27457498336365,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 74.33
+      "composite_score": 74.35000000000001
     },
     {
       "matchup": "MIN@DET",
@@ -1355,14 +1615,14 @@
       "selection": "Blake Cashman (MIN LB) Total Tackles+Ast OVER 8.5",
       "market_line": 8.5,
       "has_live_price": false,
-      "raw_prob": 0.7155,
-      "model_p": 0.7155,
+      "raw_prob": 0.7161,
+      "model_p": 0.7161,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-251",
-      "trigger_odds": "-208",
-      "model_median": 10.45,
-      "rationale": "C-300 @rynoonan tackle funnel: 63.2 opp plays -> E[Tackles]=10.45 vs ref 8.5",
+      "fair_odds": "-252",
+      "trigger_odds": "-209",
+      "model_median": 10.456,
+      "rationale": "C-300 @rynoonan tackle funnel: 63.2 opp plays -> E[Tackles]=10.46 vs ref 8.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1371,10 +1631,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 71.55
+      "composite_score": 71.61
     },
     {
       "matchup": "LAC@LA",
@@ -1382,14 +1647,14 @@
       "selection": "Nate Landman (LA LB) Total Tackles+Ast UNDER 8.5",
       "market_line": 8.5,
       "has_live_price": false,
-      "raw_prob": 0.7034,
-      "model_p": 0.7034,
+      "raw_prob": 0.701,
+      "model_p": 0.701,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-237",
-      "trigger_odds": "-197",
-      "model_median": 7.195,
-      "rationale": "C-300 @rynoonan tackle funnel: 45.4 opp plays -> E[Tackles]=7.20 vs ref 8.5",
+      "fair_odds": "-234",
+      "trigger_odds": "-195",
+      "model_median": 7.212,
+      "rationale": "C-300 @rynoonan tackle funnel: 45.5 opp plays -> E[Tackles]=7.21 vs ref 8.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1398,10 +1663,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 70.34
+      "composite_score": 70.1
     },
     {
       "matchup": "NE@MIA",
@@ -1409,14 +1679,14 @@
       "selection": "Jacob Rodriguez (MIA LB) Total Tackles+Ast UNDER 10.5",
       "market_line": 10.5,
       "has_live_price": false,
-      "raw_prob": 0.6784,
-      "model_p": 0.6784,
+      "raw_prob": 0.6739,
+      "model_p": 0.6739,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-211",
-      "trigger_odds": "-177",
-      "model_median": 9.23,
-      "rationale": "C-300 @rynoonan tackle funnel: 51.1 opp plays -> E[Tackles]=9.23 vs ref 10.5",
+      "fair_odds": "-207",
+      "trigger_odds": "-173",
+      "model_median": 9.267,
+      "rationale": "C-300 @rynoonan tackle funnel: 51.3 opp plays -> E[Tackles]=9.27 vs ref 10.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1425,10 +1695,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.829277551514494,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 67.84
+      "composite_score": 67.39
     },
     {
       "matchup": "CLE@PIT",
@@ -1436,14 +1711,14 @@
       "selection": "Carson Schwesinger (CLE LB) Total Tackles+Ast OVER 8.5",
       "market_line": 8.5,
       "has_live_price": false,
-      "raw_prob": 0.6721,
-      "model_p": 0.6721,
+      "raw_prob": 0.6707,
+      "model_p": 0.6707,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-205",
-      "trigger_odds": "-172",
-      "model_median": 10.043,
-      "rationale": "C-300 @rynoonan tackle funnel: 60.9 opp plays -> E[Tackles]=10.04 vs ref 8.5",
+      "fair_odds": "-204",
+      "trigger_odds": "-171",
+      "model_median": 10.032,
+      "rationale": "C-300 @rynoonan tackle funnel: 60.8 opp plays -> E[Tackles]=10.03 vs ref 8.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1452,10 +1727,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.1508920484011,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 67.21000000000001
+      "composite_score": 67.07
     },
     {
       "matchup": "BAL@BUF",
@@ -1463,13 +1743,13 @@
       "selection": "Roquan Smith (BAL LB) Total Tackles+Ast OVER 7.5",
       "market_line": 7.5,
       "has_live_price": false,
-      "raw_prob": 0.6661,
-      "model_p": 0.6661,
+      "raw_prob": 0.6652,
+      "model_p": 0.6652,
       "market_p": null,
       "edge": null,
       "fair_odds": "-199",
       "trigger_odds": "-167",
-      "model_median": 8.915,
+      "model_median": 8.908,
       "rationale": "C-300 @rynoonan tackle funnel: 59.2 opp plays -> E[Tackles]=8.91 vs ref 7.5",
       "certs": {
         "pathwise_conservation_residual": 0.0,
@@ -1479,37 +1759,47 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.464243163156596,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 66.61
+      "composite_score": 66.52
     },
     {
-      "matchup": "IND@JAX",
+      "matchup": "ATL@TB",
       "category": "IDP_TACKLES_SACKS",
-      "selection": "Akeem Davis-Gaither (IND LB) Total Tackles+Ast OVER 8.5",
-      "market_line": 8.5,
+      "selection": "Za'Darius Smith (ATL DE) Over 0.25 Sacks (0.5+ Clears)",
+      "market_line": 0.25,
       "has_live_price": false,
-      "raw_prob": 0.6435,
-      "model_p": 0.6435,
+      "raw_prob": 0.64163658877461,
+      "model_p": 0.64163658877461,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-181",
-      "trigger_odds": "-152",
-      "model_median": 9.794,
-      "rationale": "C-300 @rynoonan tackle funnel: 62.4 opp plays -> E[Tackles]=9.79 vs ref 8.5",
+      "fair_odds": "-179",
+      "trigger_odds": "-151",
+      "model_median": 1.0262076923076922,
+      "rationale": "Pathwise team sacks 2.96 x 35% share -> lambda=1.03 sacks",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
         "corank": 0,
         "has_pole": false,
-        "talisman_tdr_max": 0.259999999997,
+        "talisman_tdr_max": 0.3291139240466772,
         "rademacher_bound": 1.1994427819218536,
-        "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "brenier_ratio": 0.389454,
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.91066264949535,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 64.35
+      "composite_score": 64.163658877461
     }
   ],
   "abstain_watchlist_anytime_td_vulture": [
@@ -1519,14 +1809,14 @@
       "selection": "Jahmyr Gibbs (DET) Anytime TD",
       "market_line": 0.5,
       "has_live_price": false,
-      "raw_prob": 0.9299,
-      "model_p": 0.9299,
+      "raw_prob": 0.9289,
+      "model_p": 0.9289,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-1327",
-      "trigger_odds": "-808",
+      "fair_odds": "-1306",
+      "trigger_odds": "-800",
       "model_median": 0.8327,
-      "rationale": "Low QB vulture (16.7%) -> RB1 goal-line share=83.3%, P(1+ TD)=93.0%",
+      "rationale": "Low QB vulture (16.7%) -> RB1 goal-line share=83.3%, P(1+ TD)=92.9%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1535,10 +1825,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.393922513956994,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 92.99
+      "composite_score": 92.89
     },
     {
       "matchup": "KC@DEN",
@@ -1546,14 +1841,14 @@
       "selection": "Kenneth Walker III (KC) Anytime TD",
       "market_line": 0.5,
       "has_live_price": false,
-      "raw_prob": 0.8927,
-      "model_p": 0.8927,
+      "raw_prob": 0.8964,
+      "model_p": 0.8964,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-832",
-      "trigger_odds": "-579",
+      "fair_odds": "-865",
+      "trigger_odds": "-596",
       "model_median": 0.9041,
-      "rationale": "Low QB vulture (9.6%) -> RB1 goal-line share=90.4%, P(1+ TD)=89.3%",
+      "rationale": "Low QB vulture (9.6%) -> RB1 goal-line share=90.4%, P(1+ TD)=89.6%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1562,10 +1857,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.8885785879926,
+        "fg_range_bonus_yds": 3.975366089824882
       },
       "decision": "ABSTAIN",
-      "composite_score": 89.27000000000001
+      "composite_score": 89.64
     },
     {
       "matchup": "LAC@LA",
@@ -1573,14 +1873,14 @@
       "selection": "Kyren Williams (LA) Anytime TD",
       "market_line": 0.5,
       "has_live_price": false,
-      "raw_prob": 0.815,
-      "model_p": 0.815,
+      "raw_prob": 0.8162,
+      "model_p": 0.8162,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-441",
-      "trigger_odds": "-344",
+      "fair_odds": "-444",
+      "trigger_odds": "-347",
       "model_median": 0.9041,
-      "rationale": "Low QB vulture (9.6%) -> RB1 goal-line share=90.4%, P(1+ TD)=81.5%",
+      "rationale": "Low QB vulture (9.6%) -> RB1 goal-line share=90.4%, P(1+ TD)=81.6%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1589,10 +1889,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.74840825431916,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 81.5
+      "composite_score": 81.62
     },
     {
       "matchup": "PHI@WAS",
@@ -1600,14 +1905,14 @@
       "selection": "Jacory Croskey-Merritt (WAS) Anytime TD",
       "market_line": 0.5,
       "has_live_price": false,
-      "raw_prob": 0.8002,
-      "model_p": 0.8002,
+      "raw_prob": 0.8027,
+      "model_p": 0.8027,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-401",
-      "trigger_odds": "-317",
+      "fair_odds": "-407",
+      "trigger_odds": "-321",
       "model_median": 0.8561,
-      "rationale": "Low QB vulture (14.4%) -> RB1 goal-line share=85.6%, P(1+ TD)=80.0%",
+      "rationale": "Low QB vulture (14.4%) -> RB1 goal-line share=85.6%, P(1+ TD)=80.3%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1616,10 +1921,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 46.80067661350206,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 80.02
+      "composite_score": 80.27
     },
     {
       "matchup": "IND@JAX",
@@ -1627,14 +1937,14 @@
       "selection": "Bhayshul Tuten (JAX) Anytime TD",
       "market_line": 0.5,
       "has_live_price": false,
-      "raw_prob": 0.7852,
-      "model_p": 0.7852,
+      "raw_prob": 0.7835,
+      "model_p": 0.7835,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-366",
-      "trigger_odds": "-292",
+      "fair_odds": "-362",
+      "trigger_odds": "-290",
       "model_median": 0.8815,
-      "rationale": "Low QB vulture (11.8%) -> RB1 goal-line share=88.1%, P(1+ TD)=78.5%",
+      "rationale": "Low QB vulture (11.8%) -> RB1 goal-line share=88.1%, P(1+ TD)=78.3%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1643,10 +1953,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 47.256955316283396,
+        "fg_range_bonus_yds": -0.08153868501890382
       },
       "decision": "ABSTAIN",
-      "composite_score": 78.52
+      "composite_score": 78.35
     },
     {
       "matchup": "ARI@DAL",
@@ -1654,14 +1969,14 @@
       "selection": "Javonte Williams (DAL) Anytime TD",
       "market_line": 0.5,
       "has_live_price": false,
-      "raw_prob": 0.7109,
-      "model_p": 0.7109,
+      "raw_prob": 0.7156,
+      "model_p": 0.7156,
       "market_p": null,
       "edge": null,
-      "fair_odds": "-246",
-      "trigger_odds": "-204",
+      "fair_odds": "-252",
+      "trigger_odds": "-208",
       "model_median": 0.9306,
-      "rationale": "Low QB vulture (6.9%) -> RB1 goal-line share=93.1%, P(1+ TD)=71.1%",
+      "rationale": "Low QB vulture (6.9%) -> RB1 goal-line share=93.1%, P(1+ TD)=71.6%",
       "certs": {
         "pathwise_conservation_residual": 0.0,
         "sinkhorn_dual_residual": 9.923534216582652e-12,
@@ -1670,10 +1985,15 @@
         "talisman_tdr_max": 0.259999999997,
         "rademacher_bound": 1.1994427819218536,
         "brenier_ratio": 0.000394,
-        "tau_hat_status": "SHRUNK"
+        "tau_hat_status": "SHRUNK",
+        "tau_hat_away": 0.35,
+        "tau_hat_home": 0.35,
+        "tau_hat_wp_gap_max": 0.0,
+        "aci_margin_width": 48.34251499811117,
+        "fg_range_bonus_yds": 0.4753712102370609
       },
       "decision": "ABSTAIN",
-      "composite_score": 71.09
+      "composite_score": 71.56
     }
   ]
 }

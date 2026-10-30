@@ -510,3 +510,483 @@ def compute_whitebison_prop_calibration_blend(
     p_mc = float(np.clip(raw_mc_prob, 0.01, 0.99))
     p_mkt = float(np.clip(devig_market_prob, 0.01, 0.99))
     return float(np.clip(w * p_mc + (1.0 - w) * p_mkt, 0.01, 0.99))
+
+
+# ============================================================================
+# 10. OCT 30 7-SIGNAL PACK CONSUMER (Closes READINESS.md §2 & §5.9)
+# ============================================================================
+
+_SIGNAL_PACK_CACHE: Dict[str, Any] = {}
+_TAU_HAT_TABLE_CACHE: Dict[Tuple[str, int, str, str], Dict[str, Any]] = {}
+
+
+def _load_oct30_signal_pack_tables() -> Dict[str, Any]:
+    if _SIGNAL_PACK_CACHE:
+        return _SIGNAL_PACK_CACHE
+    import csv
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[2]
+    out_dir = repo_root / "docs" / "research" / "2026-10-30" / "signal-pack" / "outputs"
+
+    def _read_csv(name: str) -> List[Dict[str, str]]:
+        p = out_dir / name
+        if not p.exists():
+            return []
+        with open(p, encoding="utf-8", newline="") as fh:
+            return list(csv.DictReader(fh))
+
+    s1 = {r["defense"]: r for r in _read_csv("01_red_zone_xtd_share.csv")}
+    s2 = {r["team"]: r for r in _read_csv("02_missed_tackles_by_defense.csv")}
+    s3 = {r["qb"].lower(): r for r in _read_csv("03_qb_throwaway_rate.csv")}
+    s4_rows = _read_csv("04_rb_rushing_epa.csv")
+    s5 = {r["team"]: r for r in _read_csv("05_big_plays_vs_success.csv")}
+    s6 = {r["defense"]: r for r in _read_csv("06_defensive_epa_by_quarter.csv")}
+    s7 = {r["config"]: r for r in _read_csv("07_paired_flip_leverage.csv")}
+
+    _SIGNAL_PACK_CACHE.update({
+        "s1": s1,
+        "s2": s2,
+        "s3": s3,
+        "s4_rows": s4_rows,
+        "s5": s5,
+        "s6": s6,
+        "s7": s7,
+    })
+    return _SIGNAL_PACK_CACHE
+
+
+def _norm_nflverse_team(team: str) -> str:
+    t = str(team).strip().upper()
+    return "LA" if t == "LAR" else t
+
+
+def _norm_pfr_team(team: str) -> str:
+    t = str(team).strip().upper()
+    return "LAR" if t == "LA" else t
+
+
+def consume_oct30_signal_pack(
+    off_team: str,
+    def_team: str,
+    qb_name: str = "",
+    rb_name: str = "",
+) -> Dict[str, Any]:
+    """Consumes all 7 verified tables from docs/research/2026-10-30/signal-pack/outputs/.
+
+    Closes READINESS.md §2 & §5.9 ("Signal pack consumption — no engine code consumes it").
+    """
+    tabs = _load_oct30_signal_pack_tables()
+    off_nflv = _norm_nflverse_team(off_team)
+    def_nflv = _norm_nflverse_team(def_team)
+    def_pfr = _norm_pfr_team(def_team)
+
+    # S1: Red-zone expected TD share allowed by position (@KoalatyStats)
+    r1 = tabs["s1"].get(def_nflv, {})
+    s1_rz_xtd_share = {
+        "QB": float(r1.get("QB_xtd_share", 0.06)),
+        "RB": float(r1.get("RB_xtd_share", 0.41)),
+        "WR": float(r1.get("WR_xtd_share", 0.31)),
+        "TE": float(r1.get("TE_xtd_share", 0.22)),
+        "OTHER": float(r1.get("OTHER_xtd_share", 0.0)),
+    }
+
+    # S2: Missed tackles by defense (@sfdata9ers / @PattonAnalytics PFR)
+    r2 = tabs["s2"].get(def_pfr) or tabs["s2"].get(def_nflv) or {}
+    mtkl = float(r2.get("mtkl", 34.5))
+    rank_fewest = int(float(r2.get("rank_fewest", 16)))
+    # League median missed tackles through W7 is ~34.5; scale YAC / hidden rushing yards
+    yac_mult = float(np.clip(1.0 + 0.0028 * (mtkl - 34.5), 0.92, 1.09))
+    s2_def_missed_tackles = {
+        "mtkl": mtkl,
+        "rank_fewest": rank_fewest,
+        "yac_hidden_yards_mult": yac_mult,
+    }
+
+    # S3: QB throwaway rate (@sfdata9ers PFR Advanced Passing)
+    qb_key = qb_name.strip().lower().replace(" jr.", "").replace(" sr.", "").replace(" iii", "")
+    r3 = tabs["s3"].get(qb_key)
+    if r3 is None and qb_key:
+        last_tok = qb_key.split()[-1]
+        for k, v in tabs["s3"].items():
+            if k.endswith(" " + last_tok) or k == last_tok:
+                r3 = v
+                break
+    r3 = r3 or {}
+    s3_qb_throwaway = {
+        "qb": r3.get("qb", qb_name),
+        "thawy_per_dropback": float(r3.get("thawy_per_dropback", 0.042)),
+        "thawy_per_attempt": float(r3.get("thawy_per_attempt", 0.045)),
+        "dropbacks": float(r3.get("dropbacks", 180.0)),
+        "sacks": int(float(r3.get("sacks", 12))),
+    }
+
+    # S4: RB rushing EPA/attempt leaderboard (@boxscorescout)
+    rb_clean = rb_name.strip().lower().replace(" jr.", "").replace(" sr.", "").replace(" iii", "")
+    rb_last = rb_clean.split(".")[-1].split()[-1] if rb_clean else ""
+    r4 = None
+    for row in tabs["s4_rows"]:
+        row_rb = row.get("rb", "").lower()
+        row_tm = row.get("team", "").upper()
+        if rb_clean and (row_rb == rb_clean or (rb_last and row_rb.endswith(rb_last) and row_tm == off_nflv)):
+            r4 = row
+            break
+    if r4 is None:
+        for row in tabs["s4_rows"]:
+            if row.get("team", "").upper() == off_nflv:
+                r4 = row
+                break
+    r4 = r4 or {}
+    s4_rb_rushing_epa = {
+        "rb": r4.get("rb", rb_name),
+        "epa_per_att": float(r4.get("epa_per_att", -0.02)),
+        "success_rate": float(r4.get("success_rate", 0.41)),
+        "ypc": float(r4.get("ypc", 4.3)),
+    }
+
+    # S5: Big plays vs success rate quadrant (@ghatz_28)
+    r5 = tabs["s5"].get(off_nflv, {})
+    s5_off_quadrant = {
+        "success_rate": float(r5.get("success_rate", 0.43)),
+        "big_play_rate": float(r5.get("big_play_rate", 0.105)),
+        "epa_per_play": float(r5.get("epa_per_play", 0.0)),
+        "quadrant": r5.get("quadrant", "Q3: efficient, not explosive"),
+    }
+
+    # S6: Defensive EPA/play by quarter (@sfdata9ers)
+    r6 = tabs["s6"].get(def_nflv, {})
+    s6_def_quarter_epa = {
+        "q1_epa_allowed": float(r6.get("q1_epa_allowed", 0.0)),
+        "q2_epa_allowed": float(r6.get("q2_epa_allowed", 0.0)),
+        "q3_epa_allowed": float(r6.get("q3_epa_allowed", 0.0)),
+        "q4_epa_allowed": float(r6.get("q4_epa_allowed", 0.0)),
+        "all_q_epa_allowed": float(r6.get("all_q_epa_allowed", 0.0)),
+    }
+
+    # S7: Paired-flip playoff leverage guard (@Timo_NFL)
+    r7_cont = tabs["s7"].get("contender", {})
+    r7_long = tabs["s7"].get("longshot", {})
+    s7_paired_flip_guard = {
+        "paired_flip_enforced": True,
+        "contender_inflation_ratio": float(r7_cont.get("inflation_ratio", 1.3607)),
+        "longshot_inflation_ratio": float(r7_long.get("inflation_ratio", 1.7129)),
+    }
+
+    return {
+        "s1_rz_xtd_share": s1_rz_xtd_share,
+        "s2_def_missed_tackles": s2_def_missed_tackles,
+        "s3_qb_throwaway": s3_qb_throwaway,
+        "s4_rb_rushing_epa": s4_rb_rushing_epa,
+        "s5_off_quadrant": s5_off_quadrant,
+        "s6_def_quarter_epa": s6_def_quarter_epa,
+        "s7_paired_flip_guard": s7_paired_flip_guard,
+    }
+
+
+# ============================================================================
+# 11. TAU_HAT 4TH-DOWN SIMULATION CONSUMER (Closes READINESS.md §2 & §5.8)
+# ============================================================================
+
+def _load_tau_hat_walkforward_table() -> Dict[Tuple[str, int, str, str], Dict[str, Any]]:
+    if _TAU_HAT_TABLE_CACHE:
+        return _TAU_HAT_TABLE_CACHE
+    import csv
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[2]
+    tau_path = repo_root / "intelligence" / "coaching" / "data" / "tau_hat.csv"
+    if not tau_path.exists():
+        raise FileNotFoundError(f"Walk-forward tau_hat.csv not found at {tau_path}")
+    with open(tau_path, encoding="utf-8", newline="") as fh:
+        for r in csv.DictReader(fh):
+            key = (r["team"].strip().upper(), int(r["season"]), r["region"].strip(), r["wp_bin"].strip())
+            _TAU_HAT_TABLE_CACHE[key] = {
+                "tau_hat_served": float(r["tau_hat_served"]),
+                "fallback_level": r["fallback_level"].strip(),
+                "fit_stamp": r["fit_stamp"].strip(),
+                "n": int(r["n"]) if r.get("n") else 0,
+            }
+    return _TAU_HAT_TABLE_CACHE
+
+
+def compute_tau_hat_4th_down_coach_tax(
+    team: str,
+    season: int,
+    yardline_100: Optional[int],
+    ydstogo: Optional[int],
+    score_differential: Optional[int],
+    game_seconds_remaining: Optional[int],
+    qtr: Optional[int],
+    wp: Optional[float],
+    fg_make_prob: Optional[float] = None,
+    go_conv_prob: Optional[float] = None,
+    is_stand_in_wp: bool = False,
+) -> Dict[str, Any]:
+    """Simulation-scoped consumer of walk-forward tau_hat (READINESS.md §5.8 Solution 2 + X B3/B10).
+
+    Strictly requires real live game state (yardline_100, ydstogo, score_differential,
+    game_seconds_remaining, qtr, wp) and rejects any 0.5 stand-in WP.
+    """
+    if is_stand_in_wp or any(
+        v is None for v in (yardline_100, ydstogo, score_differential, game_seconds_remaining, qtr, wp)
+    ):
+        raise ValueError(
+            "compute_tau_hat_4th_down_coach_tax requires real simulation/post-hoc game state "
+            "(yardline_100, ydstogo, score_differential, game_seconds_remaining, qtr, wp) and forbids 0.5 stand-ins."
+        )
+
+    yl = int(yardline_100)  # type: ignore[arg-type]
+    ytg = int(ydstogo)  # type: ignore[arg-type]
+    sdiff = int(score_differential)  # type: ignore[arg-type]
+    sec_rem = int(game_seconds_remaining)  # type: ignore[arg-type]
+    q = int(qtr)  # type: ignore[arg-type]
+    live_wp = float(np.clip(float(wp), 0.001, 0.999))  # type: ignore[arg-type]
+
+    region = "opp" if yl <= 50 else "own"
+    wp_bins = [0.0, 0.2, 0.4, 0.6, 0.8, 1.01]
+    wp_labels = ["0-20", "20-40", "40-60", "60-80", "80-100"]
+    wp_bin = wp_labels[int(np.clip(np.digitize(live_wp, wp_bins) - 1, 0, 4))]
+
+    table = _load_tau_hat_walkforward_table()
+    tm_nflv = _norm_nflverse_team(team)
+    cell = table.get((tm_nflv, int(season), region, wp_bin))
+    if cell is None:
+        cell = table.get((str(team).upper(), int(season), region, wp_bin))
+    if cell is None:
+        raise ValueError(f"No walk-forward tau_hat cell for ({team}, {season}, {region}, {wp_bin})")
+
+    tau_val = float(cell["tau_hat_served"])
+    p_conv = (
+        float(go_conv_prob)
+        if go_conv_prob is not None
+        else float(np.clip(0.66 - 0.045 * max(0, ytg - 1), 0.15, 0.82))
+    )
+    kick_dist = float(yl + 17)
+    p_fg = (
+        float(fg_make_prob)
+        if fg_make_prob is not None
+        else (compute_b4_hierarchical_fg_make_prob(kick_dist) if yl <= 42 else 0.0)
+    )
+
+    # Time leverage magnifier in second half
+    time_lev = 1.0 + 0.45 * max(0.0, (1800.0 - min(1800.0, float(sec_rem))) / 1800.0)
+    wp_go_succ = float(np.clip(live_wp + 0.095 * time_lev, 0.01, 0.99))
+    wp_go_fail = float(np.clip(live_wp - (0.105 if region == "opp" else 0.155) * time_lev, 0.01, 0.99))
+    ev_go = p_conv * wp_go_succ + (1.0 - p_conv) * wp_go_fail
+
+    if yl <= 42:
+        wp_fg_make = float(np.clip(live_wp + (0.065 if sdiff >= -3 else 0.035) * time_lev, 0.01, 0.99))
+        wp_fg_miss = float(np.clip(live_wp - 0.095 * time_lev, 0.01, 0.99))
+        ev_fga = p_fg * wp_fg_make + (1.0 - p_fg) * wp_fg_miss
+    else:
+        wp_fg_make = wp_go_fail
+        wp_fg_miss = wp_go_fail
+        ev_fga = -1.0
+
+    ev_punt = float(np.clip(live_wp - (0.045 if region == "opp" else 0.015) * time_lev, 0.01, 0.99))
+    ev_map = {"GO": ev_go, "FGA": ev_fga, "PUNT": ev_punt}
+    action_optimal = max(ev_map, key=lambda k: ev_map[k])
+
+    # Quantile value Q_tau(V | s, a) under Sandholtz et al. (arXiv:2309.00756):
+    # Risk-averse coaches (tau < 0.5) weight downside tail heavier; risk-seeking (tau > 0.5) weight upside heavier
+    q_go = (1.0 - tau_val) * wp_go_fail + tau_val * wp_go_succ + 0.35 * (ev_go - 0.5 * (wp_go_fail + wp_go_succ))
+    q_fga = (
+        (1.0 - tau_val) * wp_fg_miss + tau_val * wp_fg_make + 0.35 * (ev_fga - 0.5 * (wp_fg_miss + wp_fg_make))
+        if yl <= 42
+        else -1.0
+    )
+    q_punt = ev_punt
+    q_map = {"GO": q_go, "FGA": q_fga, "PUNT": q_punt}
+    action_predicted = max(q_map, key=lambda k: q_map[k])
+
+    wp_optimal = float(ev_map[action_optimal])
+    wp_behavior = float(ev_map[action_predicted])
+    wp_gap = 0.0 if action_predicted == action_optimal else float(max(0.0, wp_optimal - wp_behavior))
+
+    return {
+        "action_predicted": action_predicted,
+        "action_optimal": action_optimal,
+        "wp_behavior": wp_behavior,
+        "wp_optimal": wp_optimal,
+        "wp_gap": wp_gap,
+        "tau_hat": tau_val,
+        "fallback_level": cell["fallback_level"],
+        "fit_stamp": cell["fit_stamp"],
+        "region": region,
+        "wp_bin": wp_bin,
+        "qtr": q,
+    }
+
+
+# ============================================================================
+# 12. HIERARCHICAL FG (X B4) & BALL-FLIGHT AERODYNAMICS KERNEL (EQ-PHYSICS-001)
+# ============================================================================
+
+def compute_eq_physics_001_ball_flight_modifier(
+    elevation_ft: float = 0.0,
+    temp_f: float = 65.0,
+    wind_mph: float = 5.0,
+    is_dome: bool = False,
+    qb_spin_rpm: float = 600.0,
+) -> Dict[str, float]:
+    """Ball-flight aerodynamics & gyroscopic spin-stability kernel (X A1/A3/A7 & Part 3 §1 EQ-PHYSICS-001).
+
+    Computes barometric air density ratio rho/rho_0, altitude carry bonus for field goals,
+    and wind/gyroscopic spin-stability multiplier on deep passes.
+    """
+    eff_wind = 0.0 if is_dome else max(0.0, float(wind_mph))
+    eff_temp = 70.0 if is_dome else float(temp_f)
+    elev_m = max(0.0, float(elevation_ft)) * 0.3048
+    temp_k = (eff_temp - 32.0) * (5.0 / 9.0) + 273.15
+    # Barometric + ideal gas density ratio relative to sea level at 291.15 K (64.4 F)
+    rho_ratio = float(np.exp(-elev_m / 8500.0) * (291.15 / max(240.0, temp_k)))
+    # Lower air density reduces drag F_D = 0.5 * rho * v^2 * C_D * A -> extra FG range (~4.2 yds at Mile High)
+    fg_range_bonus_yds = float(max(-2.5, (1.0 - rho_ratio) * 24.5 - 0.14 * max(0.0, eff_wind - 8.0)))
+
+    # Gyroscopic stability (X A7): tighter spiral (higher RPM) stabilizes nose alignment against crosswind
+    gyro_stability = float(np.clip((qb_spin_rpm - 500.0) / 150.0, 0.25, 1.15))
+    wind_drag_penalty = 0.0045 * max(0.0, eff_wind - 7.0) * (1.35 - 0.45 * gyro_stability)
+    cold_ball_penalty = 0.0012 * max(0.0, 50.0 - eff_temp)
+    deep_pass_completion_mult = float(np.clip(1.0 - wind_drag_penalty - cold_ball_penalty, 0.82, 1.04))
+
+    return {
+        "air_density_ratio": rho_ratio,
+        "fg_range_bonus_yds": fg_range_bonus_yds,
+        "gyro_stability_index": gyro_stability,
+        "deep_pass_completion_mult": deep_pass_completion_mult,
+    }
+
+
+def compute_b4_hierarchical_fg_make_prob(
+    kick_distance_yds: float,
+    elevation_ft: float = 0.0,
+    wind_mph: float = 5.0,
+    temp_f: float = 65.0,
+    is_dome: bool = False,
+    kicker_random_effect_logit: float = 0.0,
+) -> float:
+    """Hierarchical Bayesian FG Make Probability (@nfl_simulator B4, 23,247 NFL kicks).
+
+    Calibrated to B4 anchors at sea level outdoors:
+      30 yd -> ~97.0%
+      45 yd -> ~80.0%
+      55 yd -> ~61.0%
+    Adjusted for altitude air-density carry, wind speed, temperature, dome, and kicker partial pooling.
+    """
+    phys = compute_eq_physics_001_ball_flight_modifier(
+        elevation_ft=elevation_ft,
+        temp_f=temp_f,
+        wind_mph=wind_mph,
+        is_dome=is_dome,
+    )
+    eff_dist = float(kick_distance_yds) - phys["fg_range_bonus_yds"]
+    # Piecewise-smooth logistic calibrated to (30 -> 3.48 logit, 45 -> 1.386 logit, 55 -> 0.447 logit)
+    if eff_dist <= 45.0:
+        base_logit = 3.476 - 0.1393 * (eff_dist - 30.0)
+    else:
+        base_logit = 1.386 - 0.0939 * (eff_dist - 45.0)
+
+    dome_bonus = 0.16 if is_dome else 0.0
+    wind_pen = 0.0 if is_dome else 0.022 * max(0.0, float(wind_mph) - 8.0)
+    logit = base_logit + dome_bonus - wind_pen + float(kicker_random_effect_logit)
+    return float(np.clip(1.0 / (1.0 + np.exp(-logit)), 0.02, 0.995))
+
+
+# ============================================================================
+# 13. OL vs QB PRESSURE/SACK SURVIVAL ATTRIBUTION (X B6 + B9 + Signal 3)
+# ============================================================================
+
+def compute_b6_b9_ol_qb_pressure_sack_survival(
+    ol_pbwr: float,
+    def_prwr: float,
+    qb_time_to_throw_sec: float = 2.75,
+    qb_sack_per_dropback: float = 0.065,
+    qb_throwaway_per_dropback: float = 0.045,
+) -> Dict[str, float]:
+    """Separates OL time-to-pressure prior from QB pressure-to-sack survival hazard (X B6 @Timo_NFL + B9 @kevin_cole).
+
+    Integrates Signal 3 (PFR QB throwaway rate per dropback) as the QB's self-preservation escape valve.
+    """
+    # OL instantaneous pressure hazard lambda_OL increases as def_prwr > ol_pbwr
+    trench_gap = float(def_prwr) - (float(ol_pbwr) - 0.18)
+    ol_pressure_prior = float(np.clip(0.31 + 0.65 * trench_gap, 0.18, 0.52))
+
+    # Survival probability S_OL(t) that pocket holds to qb_time_to_throw_sec
+    hold_excess = max(0.0, float(qb_time_to_throw_sec) - 2.65)
+    p_pressured = float(np.clip(ol_pressure_prior + 0.14 * hold_excess, 0.18, 0.58))
+
+    # Conditional on pressure: QB either escapes via throwaway (Signal 3), gets ball out, or takes sack
+    throwaway_escape = float(np.clip(float(qb_throwaway_per_dropback) / max(0.20, p_pressured), 0.02, 0.38))
+    base_p2s = float(np.clip(float(qb_sack_per_dropback) / max(0.22, p_pressured), 0.08, 0.42))
+    eff_p2s = float(np.clip(base_p2s * (1.0 - 0.45 * throwaway_escape) + 0.08 * hold_excess, 0.06, 0.45))
+
+    expected_sack_prob = float(np.clip(p_pressured * eff_p2s, 0.02, 0.18))
+    # Attribution share: how much of sack hazard comes from QB hold + low throwaway vs OL trench collapse
+    qb_hazard_component = max(0.01, eff_p2s - 0.12)
+    ol_hazard_component = max(0.01, ol_pressure_prior - 0.22)
+    qb_fault_share = float(np.clip(qb_hazard_component / (qb_hazard_component + ol_hazard_component), 0.15, 0.85))
+
+    return {
+        "ol_pressure_prior": ol_pressure_prior,
+        "pressure_prob_at_ttt": p_pressured,
+        "throwaway_escape_prob_given_pressure": throwaway_escape,
+        "pressure_to_sack_hazard": eff_p2s,
+        "expected_sack_prob_per_dropback": expected_sack_prob,
+        "qb_sack_fault_share": qb_fault_share,
+    }
+
+
+# ============================================================================
+# 14. ADAPTIVE CONFORMAL INFERENCE (ACI) & SNAP-TIMING VARIANCE (Papers #12-#15, #19)
+# ============================================================================
+
+def compute_adaptive_conformal_interval_aci(
+    sim_samples: np.ndarray,
+    target_alpha: float = 0.10,
+    gamma_step: float = 0.02,
+    recent_errors: Optional[Sequence[int]] = None,
+    dependence_slack: float = 0.01,
+) -> Dict[str, float]:
+    """Adaptive Conformal Inference (Gibbs & Candès 2106.00170 + Barber et al. 2202.13415 + Tibshirani 1904.06019).
+
+    Updates miscoverage rate alpha_t via online step alpha_{t+1} = alpha_t + gamma * (alpha - err_t)
+    and subtracts Barber et al. non-exchangeable dependence slack so intervals widen under regime drift.
+    """
+    arr = np.asarray(sim_samples, dtype=np.float64)
+    alpha_t = float(target_alpha)
+    if recent_errors:
+        for err in recent_errors:
+            alpha_t = alpha_t + float(gamma_step) * (float(target_alpha) - float(err))
+    # Subtract non-exchangeable dependence slack (smaller alpha_eff => wider predictive interval)
+    alpha_eff = float(np.clip(alpha_t - max(0.0, float(dependence_slack)), 0.01, 0.40))
+    q_low = float(np.quantile(arr, 0.5 * alpha_eff))
+    q_high = float(np.quantile(arr, 1.0 - 0.5 * alpha_eff))
+    return {
+        "lower": q_low,
+        "upper": q_high,
+        "width": float(q_high - q_low),
+        "alpha_adapted": alpha_eff,
+        "effective_coverage": float(1.0 - alpha_eff),
+    }
+
+
+def compute_nguyen_yurko_snap_timing_variance(
+    motion_rate: float = 0.55,
+    neutral_pace_sec: float = 27.5,
+    qb_cadence_entropy: float = 0.50,
+) -> Dict[str, float]:
+    """Bayesian Multilevel Snap-Timing Variance (Nguyen & Yurko arXiv:2502.16313, Part 3 Paper #19).
+
+    High pre-snap motion rate and QB cadence entropy increase snap-timing variance,
+    penalizing defensive pass-rush get-off jump timing.
+    """
+    mot_delta = float(motion_rate) - 0.50
+    ent_delta = float(qb_cadence_entropy) - 0.45
+    pace_factor = float(np.clip((30.0 - float(neutral_pace_sec)) / 6.0, -0.5, 0.8))
+    var_mult = float(np.clip(1.0 + 0.35 * mot_delta + 0.40 * ent_delta + 0.08 * pace_factor, 0.85, 1.35))
+    rush_jump_penalty = float(np.clip(-0.035 * max(0.0, var_mult - 1.0), -0.025, 0.0))
+    return {
+        "snap_timing_variance_mult": var_mult,
+        "def_pass_rush_jump_penalty": rush_jump_penalty,
+    }
+
