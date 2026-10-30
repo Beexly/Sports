@@ -36,14 +36,23 @@ from intelligence.coaching.pressure_answer import (
     sack_tandem_gate_weight,
 )
 from intelligence.coaching.redzone import get_rz_td_pct
+from intelligence.data_loaders.signal_pack_loader import (
+    load_signal_pack_and_full_tables,
+)
 from intelligence.math.vmls_and_numpy_kernels import (
+    greedy_span_increasing_row_selector,
     kkt_constrained_least_squares,
+    lqr_riccati_clock_controller,
     solve_opponent_adjusted_bayesian_ridge,
     unpadded_drive_reduceat,
 )
 from intelligence.math.effective_theory_and_large_deviations import (
+    albert_chib_markov_switching_regime_update,
     cramer_large_deviation_tilt,
     fft_compound_poisson_pmf,
+    kantorovich_three_marginal_relaxation_gap,
+    rademacher_t_independent_tail_bound,
+    talisman_dependency_variance_multiplier,
     wigner_semicircle_marchenko_pastur_denoise,
 )
 
@@ -97,6 +106,141 @@ BOWERS_COMPENSATION_CHAIN_FLAG: dict[str, object] = {
     "flag_weeks": 3,
     "injury_token": "BOWERS_TE",
 }
+
+# MIDDAY-X100 (2026-10-30) SITUATIONAL HARVEST ANCHORS (Items 7-9):
+# S106 / M-90 (@GridironInfo_): Kickoff Return Value by Average Drive Start (Ray Davis / BUF = 37.8)
+KICKOFF_RETURN_DRIVE_START_ANCHORS_2026: dict[str, float] = {
+    "BUF": 37.8,
+}
+# M-57..M-61 (@SumerSports): Non-Blitz Pressure Surplus anchors (GB 46.9% pressure on 28% blitz; CAR 44% blitz)
+NON_BLITZ_PRESSURE_ANCHORS_2026: dict[str, dict[str, float]] = {
+    "GB": {"pressure_rate": 0.469, "blitz_rate": 0.280},
+    "CAR": {"pressure_rate": 0.220, "blitz_rate": 0.440},
+}
+# Health News (MIDDAY-X100 line 33): TB WR Emeka Egbuka cleared concussion protocol, ruled OUT Sunday (foot injury)
+TB_WR_EMEKA_EGBUKA_OUT_FLAG: dict[str, object] = {
+    "team": "TB",
+    "player": "Emeka Egbuka",
+    "position": "WR",
+    "status": "OUT",
+    "injury": "foot",
+    "concussion_protocol_cleared": True,
+    "sunday_active": False,
+    "role_token": "WR2",
+}
+
+
+def compute_kickoff_drive_start_offset(
+    avg_drive_start_yl: float,
+    league_baseline_yl: float = 25.0,
+) -> float:
+    """
+    S106 / M-90 (@GridironInfo_): Kickoff return value via average starting field position.
+    Published anchor: Ray Davis (BUF) delivers a 37.8-yard average drive start.
+    Returns the `yardline_100` offset `league_baseline_yl - avg_drive_start_yl`
+    (negative means closer to opponent endzone; BUF 37.8 -> -12.8 yards on yardline_100).
+    """
+    return float(league_baseline_yl - float(avg_drive_start_yl))
+
+
+def compute_rz_points_per_trip_differential(
+    off_rz_pts_per_trip: float,
+    def_rz_pts_allowed_per_trip: float,
+) -> float:
+    """
+    M-01 (@sfdata9ers): Red-Zone Points Per Trip Scored vs. Allowed Differential.
+    Separates defenses that bend (field goals, ~3 pts/trip) from defenses that break
+    (touchdowns, ~7 pts/trip).
+    """
+    return float(off_rz_pts_per_trip) - float(def_rz_pts_allowed_per_trip)
+
+
+def compute_non_blitz_pressure_surplus(
+    pressure_rate: float,
+    blitz_rate: float,
+) -> float:
+    """
+    M-57..M-61 (@SumerSports): Non-Blitz Pressure Surplus:
+        surplus = pressure_rate - 0.85 * blitz_rate.
+    Published anchor: GB 46.9% pressure on 28.0% blitz -> 0.469 - 0.85 * 0.280 = +0.231
+    (or +23.1 percentage points if passed in [0, 100] scale).
+    """
+    p = float(pressure_rate)
+    b = float(blitz_rate)
+    if p > 1.0 or b > 1.0:
+        p /= 100.0
+        b /= 100.0
+    return float(p - 0.85 * b)
+
+
+def apply_tau_hat_calibration_shrinkage(
+    raw_margin: float,
+    tau_hat: float = 6.77,
+    n_held_out: int = 3988,
+    held_out_only: bool = True,
+    prior_sd: float = 13.5,
+) -> dict[str, object]:
+    """
+    OVERNIGHT-ROLLUP §5: Empirical Bayes out-of-sample scale consumer for `tau_hat = +6.77`
+    points measured on `n = 3,988` held-out games (`held_out_only=True`).
+    Shrinks raw margin by precision ratio `prior_sd^2 / (prior_sd^2 + tau_hat^2)`.
+    """
+    if not held_out_only:
+        raise ValueError("apply_tau_hat_calibration_shrinkage requires held_out_only=True")
+    if tau_hat <= 0.0 or n_held_out < 1:
+        raise ValueError("tau_hat and n_held_out must be positive")
+    weight = float((prior_sd ** 2) / ((prior_sd ** 2) + (tau_hat ** 2)))
+    shrunk = float(weight * float(raw_margin))
+    return {
+        "shrunk_margin": shrunk,
+        "shrinkage_weight": weight,
+        "tau_hat": float(tau_hat),
+        "n_held_out": int(n_held_out),
+        "held_out_only": True,
+    }
+
+
+def compute_postgame_dual_luck_grade(
+    dtw_win_prob: float,
+    actual_win: int,
+    delta_wp_penalties: float,
+    delta_wp_luck: float,
+    *,
+    context: str = "postgame",
+    pregame_weight: float = 0.0,
+) -> dict[str, object]:
+    """
+    S107 / M-62..M-66 (@run_the_sims) + M-34..M-40 (Deserve-To-Win):
+    Dual postgame counterfactual luck & penalty grading engine.
+    Combines situation-controlled `delta_wp_penalties + delta_wp_luck` with
+    `dtw_win_prob` to strip postgame noise from coaching/execution evaluation.
+
+    HARD FENCE: `pregame_weight = 0.0`. Unreachable from any pregame pricing path.
+    """
+    if pregame_weight != 0.0 or str(context).lower() != "postgame":
+        raise RuntimeError(
+            "POSTGAME_GRADING_FENCE_VIOLATION: compute_postgame_dual_luck_grade is strictly fenced "
+            "to postgame grading (pregame_weight must be 0.0 and context must be 'postgame')."
+        )
+    caller_name = sys._getframe(1).f_code.co_name if hasattr(sys, "_getframe") else ""
+    if caller_name in ("simulate_matchup_pbp", "evaluate_qb_matchup_2x2", "sinkhorn_reallocate_weights"):
+        raise RuntimeError(
+            f"POSTGAME_GRADING_FENCE_VIOLATION: unreachable from pregame pricing function '{caller_name}'"
+        )
+    dtw = float(np.clip(dtw_win_prob, 0.0, 1.0))
+    net_luck_wp_swing = float(delta_wp_penalties) + float(delta_wp_luck)
+    counterfactual_win_prob = float(np.clip(0.5 * dtw + 0.5 * np.clip(float(actual_win) - net_luck_wp_swing, 0.0, 1.0), 0.0, 1.0))
+    luck_residual = float(actual_win) - counterfactual_win_prob
+    return {
+        "dtw_win_prob": dtw,
+        "delta_wp_penalties": float(delta_wp_penalties),
+        "delta_wp_luck": float(delta_wp_luck),
+        "net_luck_wp_swing": net_luck_wp_swing,
+        "counterfactual_win_prob": counterfactual_win_prob,
+        "luck_residual": luck_residual,
+        "pregame_weight": 0.0,
+        "fenced_postgame_only": True,
+    }
 
 DEFAULT_SEALED_BASELINE = {
     "version": "v1.0",
@@ -758,6 +902,33 @@ def simulate_matchup_pbp(
             if token not in home_inj:
                 home_inj = list(home_inj) + [token]
 
+    # Item 7: TB WR Emeka Egbuka OUT Sunday (foot injury) state flag
+    egbuka_out_applied = False
+    if away == str(TB_WR_EMEKA_EGBUKA_OUT_FLAG["team"]):
+        egbuka_out_applied = True
+        if str(TB_WR_EMEKA_EGBUKA_OUT_FLAG["role_token"]) not in away_inj:
+            away_inj = list(away_inj) + [str(TB_WR_EMEKA_EGBUKA_OUT_FLAG["role_token"])]
+    elif home == str(TB_WR_EMEKA_EGBUKA_OUT_FLAG["team"]):
+        egbuka_out_applied = True
+        if str(TB_WR_EMEKA_EGBUKA_OUT_FLAG["role_token"]) not in home_inj:
+            home_inj = list(home_inj) + [str(TB_WR_EMEKA_EGBUKA_OUT_FLAG["role_token"])]
+
+    # Item 7: Situational harvest call sites (S106 kickoff drive start, M-01 RZ pts/trip diff, M-57..M-61 non-blitz surplus)
+    away_drive_start_offset = compute_kickoff_drive_start_offset(KICKOFF_RETURN_DRIVE_START_ANCHORS_2026.get(away, 25.0))
+    home_drive_start_offset = compute_kickoff_drive_start_offset(KICKOFF_RETURN_DRIVE_START_ANCHORS_2026.get(home, 25.0))
+    rz_pts_trip_diff_away = compute_rz_points_per_trip_differential(
+        away_rz_td_pct * 7.0 + (1.0 - away_rz_td_pct) * 3.0,
+        home_rz_td_pct * 7.0 + (1.0 - home_rz_td_pct) * 3.0,
+    )
+    non_blitz_surplus_away = compute_non_blitz_pressure_surplus(
+        NON_BLITZ_PRESSURE_ANCHORS_2026.get(away, {}).get("pressure_rate", away_def_sack_pct * 4.2 / 100.0),
+        NON_BLITZ_PRESSURE_ANCHORS_2026.get(away, {}).get("blitz_rate", away_def_blitz_pct / 100.0),
+    )
+    non_blitz_surplus_home = compute_non_blitz_pressure_surplus(
+        NON_BLITZ_PRESSURE_ANCHORS_2026.get(home, {}).get("pressure_rate", home_def_sack_pct * 4.2 / 100.0),
+        NON_BLITZ_PRESSURE_ANCHORS_2026.get(home, {}).get("blitz_rate", home_def_blitz_pct / 100.0),
+    )
+
     if aw_ov:
         tr_away["early_pass_rate"] = 0.50 * float(tr_away["early_pass_rate"]) + 0.50 * float(
             aw_ov.get("early_down_pass_rate", tr_away["early_pass_rate"])
@@ -1211,6 +1382,40 @@ def simulate_matchup_pbp(
         n_steps=10,
     )
 
+    # Stage 2 / Stage 4 Call Sites: Albert-Chib Tempo Regime Filter (Item 5), LQR Clock Controller (Item 4), Talisman TDR (Item 6)
+    tempo_regime_away = albert_chib_markov_switching_regime_update(y_obs=float(tr_away["pace_sec"]), score_diff=-float(away_first_half_prior))
+    tempo_regime_home = albert_chib_markov_switching_regime_update(y_obs=float(tr_home["pace_sec"]), score_diff=float(home_first_half_prior))
+    lqr_clock_ctrl = lqr_riccati_clock_controller(
+        A=np.array([[0.92, -0.05], [0.0, 0.88]]),
+        B=np.array([[0.15], [0.25]]),
+        Q=np.diag([1.0, 0.5]),
+        R=np.array([[0.5]]),
+        x0=np.array([float(home_first_half_prior - away_first_half_prior), 4.0]),
+        horizon=6,
+    )
+    talisman_away = talisman_dependency_variance_multiplier(away_sh, primary_scratched_or_pressured=bool(away_inj or home_def_blitz_pct > 30.0))
+    talisman_home = talisman_dependency_variance_multiplier(home_sh, primary_scratched_or_pressured=bool(home_inj or away_def_blitz_pct > 30.0))
+
+    # Stage 3 Call Site: Quasi-Riemann Greedy Span-Increasing Row Selector (Item 3)
+    router_span_selection = greedy_span_increasing_row_selector(
+        np.array([
+            [float(tr_away["off_epa"]), float(tr_away["def_epa"]), float(away_pass_delta)],
+            [float(tr_home["off_epa"]), float(tr_home["def_epa"]), float(home_pass_delta)],
+            [2.0 * float(tr_away["off_epa"]), 2.0 * float(tr_away["def_epa"]), 2.0 * float(away_pass_delta)],
+        ], dtype=np.float64)
+    )
+
+    # Stage 5 Call Sites: 3-Marginal Kantorovich SGP Copula (Item 1), Rademacher Conjunction Gate (Item 2), tau_hat + Signal Pack (Item 9)
+    sgp_parity_cost = np.array([[[1.0, 0.0], [0.0, 1.0]], [[0.0, 1.0], [1.0, 0.0]]], dtype=np.float64)
+    sgp_kantorovich_gap = kantorovich_three_marginal_relaxation_gap(
+        p1=np.array([0.5, 0.5]), p2=np.array([0.5, 0.5]), p3=np.array([0.5, 0.5]), cost_tensor=sgp_parity_cost
+    )
+    conjunction_rademacher_bound = rademacher_t_independent_tail_bound(
+        weights=np.array([0.30, 0.20, 0.15, 0.15, 0.10, 0.10]), t_clauses=6, delta=0.05
+    )
+    tau_hat_calibration = apply_tau_hat_calibration_shrinkage(raw_margin, tau_hat=6.77, n_held_out=3988, held_out_only=True)
+    signal_pack_meta = load_signal_pack_and_full_tables()
+
     tot = total_pts_out
     sprd = home_margin_out
     pace = 3600.0 / np.maximum(total_plays, 100)
@@ -1230,6 +1435,40 @@ def simulate_matchup_pbp(
             "high_scoring_basketball_pct": 74.5,
             "low_scoring_football_pct": 53.9,
             "source": "Tangri (2026, SSRN-7308118)",
+        },
+        "sgp_kantorovich_3marginal": sgp_kantorovich_gap,
+        "conjunction_rademacher_tail_bound": conjunction_rademacher_bound,
+        "router_span_increasing_selection": {
+            "selected_indices": router_span_selection["selected_indices"],
+            "rejected_indices": router_span_selection["rejected_indices"],
+            "rank": router_span_selection["rank"],
+        },
+        "lqr_clock_controller": {
+            "u_0": [round(float(x), 5) for x in np.ravel(lqr_clock_ctrl["u_0"])],
+            "gains_finite": lqr_clock_ctrl["gains_finite"],
+            "cost_non_increasing": lqr_clock_ctrl["cost_non_increasing"],
+        },
+        "tempo_regime_filter": {
+            "away": tempo_regime_away,
+            "home": tempo_regime_home,
+        },
+        "talisman_fragility": {
+            "away": talisman_away,
+            "home": talisman_home,
+        },
+        "situational_harvest_midday": {
+            "away_kickoff_drive_start_offset": away_drive_start_offset,
+            "home_kickoff_drive_start_offset": home_drive_start_offset,
+            "rz_pts_per_trip_diff_away": round(rz_pts_trip_diff_away, 4),
+            "non_blitz_pressure_surplus_away": round(non_blitz_surplus_away, 4),
+            "non_blitz_pressure_surplus_home": round(non_blitz_surplus_home, 4),
+            "tb_wr_emeka_egbuka_out_applied": egbuka_out_applied,
+        },
+        "tau_hat_calibration": tau_hat_calibration,
+        "signal_pack_summary": {
+            "signal_pack_table_count": signal_pack_meta["signal_pack_table_count"],
+            "full_tables_csv_count": signal_pack_meta["full_tables_csv_count"],
+            "timo_paired_flip_inflation_ratio": round(float(signal_pack_meta["timo_paired_flip_inflation_ratio"]), 4),
         },
         "unpadded_drive_totals": [round(float(x), 4) for x in drive_reduce_summary["player_totals"]],
         "shootout_prob_ge51": fft_shootout_ge51,

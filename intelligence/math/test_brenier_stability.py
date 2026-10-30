@@ -10,18 +10,37 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from intelligence.data_loaders.signal_pack_loader import (
+    SFDATA9ERS_COMPOSITE_QB_WEIGHTS,
+    compute_sfdata9ers_composite_qb_score,
+    load_signal_pack_and_full_tables,
+)
 from intelligence.math.vmls_and_numpy_kernels import (
     condition_number_estimate,
+    greedy_span_increasing_row_selector,
     katch_mcardle_rmr,
     least_squares_polynomial_fit,
+    lqr_riccati_clock_controller,
 )
 from intelligence.math.effective_theory_and_large_deviations import (
+    albert_chib_markov_switching_regime_update,
+    kantorovich_three_marginal_relaxation_gap,
     mathworks_disposable_edge_tail_check,
+    rademacher_t_independent_tail_bound,
+    talisman_dependency_variance_multiplier,
     verify_hjo_cone_positive_definiteness,
 )
 from scripts.ops.gse_coach_mind_simulator import (
     DEFAULT_SEALED_BASELINE,
+    KICKOFF_RETURN_DRIVE_START_ANCHORS_2026,
+    NON_BLITZ_PRESSURE_ANCHORS_2026,
+    TB_WR_EMEKA_EGBUKA_OUT_FLAG,
+    apply_tau_hat_calibration_shrinkage,
     brenier_one_third_stability_ratio,
+    compute_kickoff_drive_start_offset,
+    compute_non_blitz_pressure_surplus,
+    compute_postgame_dual_luck_grade,
+    compute_rz_points_per_trip_differential,
     conserve_target_shares_kkt,
     load_sealed_object_readonly,
     load_week8_injuries_from_csv,
@@ -152,6 +171,149 @@ class TestBrenierAndKreyszigAndHJO(unittest.TestCase):
             f"max_zero_sum_err={max_zero_sum_err:.2e}"
         )
         self.assertLess(float(np.max(vals)), 1.0)
+
+    def test_1_kantorovich_three_marginal_relaxation_gap(self):
+        p = np.array([0.5, 0.5], dtype=np.float64)
+        # Cost = 0 on odd-parity triples (i+j+k mod 2 == 1), Cost = 1 on even-parity triples
+        cost = np.array([[[1.0, 0.0], [0.0, 1.0]], [[0.0, 1.0], [1.0, 0.0]]], dtype=np.float64)
+        res = kantorovich_three_marginal_relaxation_gap(p, p, p, cost)
+        self.assertAlmostEqual(res["kantorovich_joint_prob"], 1.0, places=6)
+        self.assertAlmostEqual(res["monge_joint_prob"], 0.5, places=6)
+        self.assertGreater(res["relaxation_gap"], 0.49)
+        print(
+            f"[1. KANTOROVICH 3-MARGINAL] kant_prob={res['kantorovich_joint_prob']:.4f} | "
+            f"monge_prob={res['monge_joint_prob']:.4f} | gap={res['relaxation_gap']:.4f}"
+        )
+
+    def test_2_rademacher_t_independent_tail_bound(self):
+        w = np.array([0.30, 0.20, 0.15, 0.15, 0.10, 0.10], dtype=np.float64)
+        b6 = rademacher_t_independent_tail_bound(w, t_clauses=6, delta=0.05)
+        b20 = rademacher_t_independent_tail_bound(w, t_clauses=20, delta=0.05)
+        self.assertAlmostEqual(b6["whitened_tail_radius"], b20["whitened_tail_radius"], places=12)
+        self.assertLess(b6["whitened_tail_radius"], b6["naive_union_tail_radius"])
+        self.assertAlmostEqual(b6["naive_union_bound_prob"], 0.30, places=9)
+        self.assertAlmostEqual(b20["naive_union_bound_prob"], 1.00, places=9)
+        print(
+            f"[2. RADEMACHER TAIL] whitened_r={b6['whitened_tail_radius']:.4f} (t=6 & t=20) | "
+            f"naive_r(t=20)={b20['naive_union_tail_radius']:.4f}"
+        )
+
+    def test_3_greedy_span_increasing_row_selector(self):
+        M = np.array([
+            [1.0, 0.0, 2.0],
+            [0.0, 1.0, -1.0],
+            [2.5, 0.0, 5.0],   # collinear duplicate of row 0
+            [1.0, 1.0, 1.0],   # linear combination row 0 + row 1
+            [0.0, 0.0, 1.0],   # independent 3rd basis direction
+        ], dtype=np.float64)
+        res = greedy_span_increasing_row_selector(M, eps_tol=1e-8)
+        self.assertEqual(res["selected_indices"], [0, 1, 4])
+        self.assertEqual(res["rejected_indices"], [2, 3])
+        self.assertEqual(res["rank_progression"], [1, 2, 3])
+        self.assertEqual(res["rank"], 3)
+        print(
+            f"[3. GREEDY SPAN SELECTOR] selected={res['selected_indices']} | "
+            f"rejected={res['rejected_indices']} | rank_prog={res['rank_progression']}"
+        )
+
+    def test_4_lqr_riccati_clock_controller(self):
+        A = np.array([[0.92, -0.05], [0.0, 0.88]], dtype=np.float64)
+        B = np.array([[0.15], [0.25]], dtype=np.float64)
+        Q = np.diag([1.0, 0.5])
+        R = np.array([[0.5]], dtype=np.float64)
+        x0 = np.array([7.0, 4.0], dtype=np.float64)
+        res = lqr_riccati_clock_controller(A, B, Q, R, x0, horizon=8)
+        self.assertTrue(res["gains_finite"])
+        self.assertTrue(res["cost_non_increasing"])
+        self.assertEqual(len(res["gains"]), 8)
+        print(
+            f"[4. LQR RICCATI] u_0={float(np.ravel(res['u_0'])[0]):.4f} | "
+            f"cost_0={res['cost_to_go_trajectory'][0]:.4f} -> cost_T={res['cost_to_go_trajectory'][-1]:.4f}"
+        )
+
+    def test_5_albert_chib_markov_switching_regime_update(self):
+        panic = albert_chib_markov_switching_regime_update(y_obs=21.8, score_diff=-10.0)
+        drain = albert_chib_markov_switching_regime_update(y_obs=31.8, score_diff=+10.0)
+        self.assertAlmostEqual(sum(panic["posterior_regime_probs"].values()), 1.0, places=9)
+        self.assertAlmostEqual(sum(drain["posterior_regime_probs"].values()), 1.0, places=9)
+        self.assertGreater(panic["posterior_regime_probs"]["script_panic"], 0.50)
+        self.assertGreater(drain["posterior_regime_probs"]["clock_drain"], 0.50)
+        self.assertGreater(panic["regime_weighted_variance"], 0.0)
+        print(
+            f"[5. ALBERT-CHIB HAMILTON] panic_prob={panic['posterior_regime_probs']['script_panic']:.4f} "
+            f"(mean={panic['regime_weighted_mean']:.2f}s) | "
+            f"drain_prob={drain['posterior_regime_probs']['clock_drain']:.4f} "
+            f"(mean={drain['regime_weighted_mean']:.2f}s)"
+        )
+
+    def test_6_talisman_dependency_variance_multiplier(self):
+        # Concentrated talisman share (0.36 >= 0.30) when pressured -> multiplier > 1
+        high = talisman_dependency_variance_multiplier([0.36, 0.20, 0.16, 0.14, 0.14], primary_scratched_or_pressured=True)
+        self.assertGreaterEqual(high["tdr"], 0.30)
+        self.assertGreater(high["variance_multiplier"], 1.0)
+        self.assertTrue(high["fragile"])
+        # Balanced share (max 0.24 < 0.30) -> multiplier == 1.0
+        bal = talisman_dependency_variance_multiplier([0.24, 0.21, 0.19, 0.18, 0.18], primary_scratched_or_pressured=True)
+        self.assertEqual(bal["variance_multiplier"], 1.0)
+        self.assertFalse(bal["fragile"])
+        print(
+            f"[6. TALISMAN TDR] high_tdr={high['tdr']:.2f}, sdi={high['sdi']:.2f}, mult={high['variance_multiplier']:.4f} | "
+            f"bal_mult={bal['variance_multiplier']:.4f}"
+        )
+
+    def test_7_situational_harvest_midday_x100(self):
+        buf_offset = compute_kickoff_drive_start_offset(KICKOFF_RETURN_DRIVE_START_ANCHORS_2026["BUF"])
+        self.assertAlmostEqual(buf_offset, 25.0 - 37.8, places=6)
+        rz_diff = compute_rz_points_per_trip_differential(5.75, 4.10)
+        self.assertAlmostEqual(rz_diff, 1.65, places=6)
+        gb_anchor = NON_BLITZ_PRESSURE_ANCHORS_2026["GB"]
+        gb_surplus = compute_non_blitz_pressure_surplus(gb_anchor["pressure_rate"], gb_anchor["blitz_rate"])
+        self.assertAlmostEqual(gb_surplus, 0.469 - 0.85 * 0.280, places=6)
+        self.assertEqual(TB_WR_EMEKA_EGBUKA_OUT_FLAG["status"], "OUT")
+        sealed_obj, digest = load_sealed_object_readonly()
+        tb_sim = simulate_matchup_pbp("TB", "NO", [], [], sealed_obj, digest, n_sims=200, seed=901, return_vectors=True)
+        self.assertTrue(tb_sim["situational_harvest_midday"]["tb_wr_emeka_egbuka_out_applied"])
+        self.assertIn("WR2", tb_sim["away_injuries_applied"])
+        print(
+            f"[7. SITUATIONAL HARVEST] BUF_drive_offset={buf_offset:.1f}yd | "
+            f"GB_non_blitz_surplus={gb_surplus:+.4f} | TB_Egbuka_OUT={tb_sim['situational_harvest_midday']['tb_wr_emeka_egbuka_out_applied']}"
+        )
+
+    def test_8_compute_postgame_dual_luck_grade_and_fence(self):
+        grade = compute_postgame_dual_luck_grade(
+            dtw_win_prob=0.68, actual_win=0, delta_wp_penalties=-0.14, delta_wp_luck=-0.22, context="postgame", pregame_weight=0.0
+        )
+        self.assertEqual(grade["pregame_weight"], 0.0)
+        self.assertTrue(grade["fenced_postgame_only"])
+        self.assertGreater(grade["counterfactual_win_prob"], 0.50)
+        with self.assertRaises(RuntimeError):
+            compute_postgame_dual_luck_grade(0.68, 0, -0.14, -0.22, context="pregame", pregame_weight=0.0)
+        with self.assertRaises(RuntimeError):
+            compute_postgame_dual_luck_grade(0.68, 0, -0.14, -0.22, context="postgame", pregame_weight=0.05)
+        print(
+            f"[8. DUAL LUCK GRADER FENCE] cf_win_prob={grade['counterfactual_win_prob']:.4f} | "
+            f"pregame_weight={grade['pregame_weight']} (hard fence verified)"
+        )
+
+    def test_9_standing_overnight_items_signal_pack_and_tau_hat(self):
+        sp = load_signal_pack_and_full_tables()
+        self.assertEqual(sp["signal_pack_table_count"], 7)
+        self.assertGreaterEqual(sp["full_tables_csv_count"], 30)
+        self.assertAlmostEqual(float(sp["timo_paired_flip_inflation_ratio"]), 1.3607067, places=5)
+        self.assertAlmostEqual(sum(SFDATA9ERS_COMPOSITE_QB_WEIGHTS.values()), 1.0, places=9)
+        qb_comp = compute_sfdata9ers_composite_qb_score(80.0, 75.0, 70.0, 72.0, 85.0, 90.0)
+        self.assertGreater(qb_comp, 75.0)
+        tau_cal = apply_tau_hat_calibration_shrinkage(raw_margin=10.0, tau_hat=6.77, n_held_out=3988, held_out_only=True)
+        self.assertEqual(tau_cal["tau_hat"], 6.77)
+        self.assertEqual(tau_cal["n_held_out"], 3988)
+        self.assertTrue(0.0 < tau_cal["shrunk_margin"] < 10.0)
+        with self.assertRaises(ValueError):
+            apply_tau_hat_calibration_shrinkage(10.0, held_out_only=False)
+        print(
+            f"[9. SIGNAL PACK + TAU_HAT] signal_tables={sp['signal_pack_table_count']}, "
+            f"full_tables={sp['full_tables_csv_count']}, timo_ratio={sp['timo_paired_flip_inflation_ratio']:.4f}, "
+            f"tau_hat_shrunk={tau_cal['shrunk_margin']:.4f}"
+        )
 
 
 if __name__ == "__main__":

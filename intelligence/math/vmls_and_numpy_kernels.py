@@ -434,3 +434,134 @@ def katch_mcardle_rmr(ffm_kg: float) -> float:
     return float(370.0 + 21.6 * float(ffm_kg))
 
 
+# ============================================================================
+# 10. Quasi-Riemann Greedy Span-Increasing Row Selector (OpenAI lean/docs/003.md):
+#     Stage 3 Cognitive Router Active-Basis Admission
+# ============================================================================
+
+def greedy_span_increasing_row_selector(
+    M: np.ndarray,
+    eps_tol: float = 1e-8,
+) -> Dict[str, object]:
+    """
+    OpenAI Math Preprint (`lean/docs/003.md`, Quasi-Riemann Hypothesis) —
+    Greedy Span-Increasing Row Selection:
+    Iterates through candidate rows `r_k` of `M` and admits `r_k` into the active
+    basis `V_k` iff its orthogonal projection residual satisfies:
+        ||Proj_{V_{k-1}^perp}(r_k)||_2 > eps_tol.
+    Guarantees strictly increasing subspace rank at every admission step and
+    deterministically rejects collinear/duplicate feature rows.
+    """
+    A = np.asarray(M, dtype=np.float64)
+    if A.ndim != 2:
+        raise ValueError("M must be a 2D array")
+    n_rows, n_cols = A.shape
+    q_basis: list[np.ndarray] = []
+    selected_indices: list[int] = []
+    rejected_indices: list[int] = []
+    residual_norms: list[float] = []
+    rank_progression: list[int] = []
+
+    for k in range(n_rows):
+        r_k = A[k].copy()
+        for q in q_basis:
+            r_k = r_k - float(np.dot(q, r_k)) * q
+        res_norm = float(np.linalg.norm(r_k, ord=2))
+        residual_norms.append(res_norm)
+        if res_norm > eps_tol and len(q_basis) < n_cols:
+            q_basis.append(r_k / res_norm)
+            selected_indices.append(k)
+            rank_progression.append(len(q_basis))
+        else:
+            rejected_indices.append(k)
+
+    selected_mat = A[selected_indices] if selected_indices else np.empty((0, n_cols), dtype=np.float64)
+    return {
+        "selected_indices": selected_indices,
+        "rejected_indices": rejected_indices,
+        "rank": len(q_basis),
+        "rank_progression": rank_progression,
+        "residual_norms": residual_norms,
+        "selected_matrix": selected_mat,
+    }
+
+
+# ============================================================================
+# 11. Finite-Horizon Discrete-Time LQR Riccati Controller (VMLS / Control):
+#     Stage 2 / Stage 4 Clock & Two-Minute Pace Controller
+# ============================================================================
+
+def lqr_riccati_clock_controller(
+    A: np.ndarray,
+    B: np.ndarray,
+    Q: np.ndarray,
+    R: np.ndarray,
+    x0: np.ndarray,
+    horizon: int = 8,
+) -> Dict[str, object]:
+    """
+    Finite-horizon backward discrete-time Riccati recursion:
+        P_t = Q + A^T P_{t+1} A - A^T P_{t+1} B (R + B^T P_{t+1} B)^(-1) B^T P_{t+1} A
+        K_t = (R + B^T P_{t+1} B)^(-1) B^T P_{t+1} A
+        u_t = -K_t x_t.
+    Computes backward Riccati matrices `P_t` and feedback gains `K_t` over `t = horizon-1 .. 0`,
+    and rolls out the closed-loop trajectory `x_{t+1} = (A - B K_t) x_t` to verify finite
+    gains and non-increasing Lyapunov cost-to-go `V_t(x_t) = x_t^T P_t x_t`.
+    """
+    A_m = np.asarray(A, dtype=np.float64)
+    B_m = np.asarray(B, dtype=np.float64)
+    if B_m.ndim == 1:
+        B_m = B_m.reshape(-1, 1)
+    Q_m = np.asarray(Q, dtype=np.float64)
+    R_m = np.asarray(R, dtype=np.float64)
+    if R_m.ndim == 0:
+        R_m = R_m.reshape(1, 1)
+    elif R_m.ndim == 1:
+        R_m = np.diag(R_m)
+    x = np.asarray(x0, dtype=np.float64).ravel()
+    if horizon < 1:
+        raise ValueError("horizon must be >= 1")
+
+    P_list: list[np.ndarray] = [None] * (horizon + 1)  # type: ignore[list-item]
+    K_list: list[np.ndarray] = [None] * horizon  # type: ignore[list-item]
+    P_next = Q_m.copy()
+    P_list[horizon] = P_next.copy()
+
+    for t in range(horizon - 1, -1, -1):
+        bt_p = B_m.T @ P_next
+        inv_term = np.linalg.solve(R_m + bt_p @ B_m, bt_p @ A_m)
+        K_t = inv_term
+        P_t = Q_m + (A_m.T @ P_next @ A_m) - (A_m.T @ P_next @ B_m @ K_t)
+        P_t = 0.5 * (P_t + P_t.T)
+        K_list[t] = K_t
+        P_list[t] = P_t
+        P_next = P_t
+
+    # Forward rollout to verify cost-to-go V_t(x_t) = x_t^T P_t x_t is non-increasing
+    x_curr = x.copy()
+    cost_to_go_traj: list[float] = []
+    controls: list[np.ndarray] = []
+    for t in range(horizon):
+        v_t = float(x_curr.T @ P_list[t] @ x_curr)
+        cost_to_go_traj.append(v_t)
+        u_t = -(K_list[t] @ x_curr)
+        controls.append(u_t)
+        x_curr = (A_m @ x_curr) + (B_m @ u_t)
+    cost_to_go_traj.append(float(x_curr.T @ P_list[horizon] @ x_curr))
+
+    gains_finite = bool(all(np.all(np.isfinite(k)) for k in K_list))
+    cost_non_increasing = bool(
+        all(cost_to_go_traj[i + 1] <= cost_to_go_traj[i] + 1e-9 for i in range(len(cost_to_go_traj) - 1))
+    )
+    return {
+        "u_0": controls[0],
+        "K_0": K_list[0],
+        "P_0": P_list[0],
+        "gains": K_list,
+        "cost_to_go_trajectory": cost_to_go_traj,
+        "gains_finite": gains_finite,
+        "cost_non_increasing": cost_non_increasing,
+    }
+
+
+
