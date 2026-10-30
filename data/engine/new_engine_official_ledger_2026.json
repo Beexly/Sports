@@ -17,7 +17,13 @@
     "roi_pct": "+66.78%",
     "display_banner": "31-11 (73.8%) \u00b7 +18.56 UNITS WITH THE NEW ENGINE",
     "prior_record": "16-5 (76.2%) \u00b7 +10.45u entering TNF CAR@GB",
-    "tonight_result": "15-6 (71.4%) \u00b7 +8.11u"
+    "tonight_result": "15-6 (71.4%) \u00b7 +8.11u",
+    "prior_record_verification": {
+      "status": "OWNER_ATTESTED_UNVERIFIED",
+      "reason": "no per-pick history: neither this JSON nor the ledger MD lists the 21 settled picks behind 16-5; the generator scripts/ops/update_official_16_5_ledger.py writes only the summary block; Neon public.picks has no row set or grouping column that reconciles to 16-5",
+      "verified_on": "2026-10-30",
+      "affects": "16 of the 31 wins and 5 of the 11 losses in verified_record cannot be independently reconstructed"
+    }
   },
   "tonight_pending_card_car_at_gb": [
     {

@@ -1,0 +1,2889 @@
+===== Kaiser @ 204811 =====
+ if x = −∞. Should be the same as x==NumPy.NINF.
+isposinf (x, y=None)
+True if x = +∞. Should be the same as x==NumPy.PINF.
+log2 (x, y=None)
+Compute the logarithm to the base 2 of x. An optional output array may be
+provided.
+5.10 Miscellaneous Functions
+Some miscellaneous functions are available in NumPy which a re included largely
+for compatibility with MLab of the old Numeric package. One n otable diﬀerence,
+however, is that due to a separate implementation of the modi ﬁed Bessel function,
+the kaiser window is available without needing a separate li brary.
+sinc (x)
+Compute the sinc function for x which can be a scalar or array. The sinc is deﬁned
+as y = sinc ( x) = sin(πx )
+πx with the caveat that the limiting value (1.0) of the
+ratio is taken for x = 0.
+121
+===== PAGE 122 =====
+i0 (x)
+Modiﬁed Bessel function of the ﬁrst kind of order 0. Needed to compute the kaiser
+window. The modiﬁed Bessel function is deﬁned as
+I0 (x) = 1
+π
+∫ π
+0
+ex cos θ dθ =
+∞∑
+k=0
+x2k
+4k (k!)2 .
+blackman (M )
+Construc
+
+===== Kaiser @ 205184 =====
+umeric package. One n otable diﬀerence,
+however, is that due to a separate implementation of the modi ﬁed Bessel function,
+the kaiser window is available without needing a separate li brary.
+sinc (x)
+Compute the sinc function for x which can be a scalar or array. The sinc is deﬁned
+as y = sinc ( x) = sin(πx )
+πx with the caveat that the limiting value (1.0) of the
+ratio is taken for x = 0.
+121
+===== PAGE 122 =====
+i0 (x)
+Modiﬁed Bessel function of the ﬁrst kind of order 0. Needed to compute the kaiser
+window. The modiﬁed Bessel function is deﬁned as
+I0 (x) = 1
+π
+∫ π
+0
+ex cos θ dθ =
+∞∑
+k=0
+x2k
+4k (k!)2 .
+blackman (M )
+Construct an M -point Blackman smoothing window which is sequence of lengt h
+M with values given for n = 0 . . . M − 1 by
+w [n] = 0 . 42 − 0. 5 cos
+(
+2π n
+M − 1
+)
++ 0. 08 cos
+(
+4π n
+M − 1
+)
+.
+bartlett (M )
+Construct an M -point Bartlett (triangular) smoothing window as
+w [n] =
+{
+2 n
+M−1 0 ≤ n ≤ M−1
+2 ,
+2 − 2 n
+M−1
+M−1
+2 < n ≤ M − 1.
+hanning (M )
+Construct an M -point Hanning smo
+
+===== Kaiser @ 207303 =====
+t (Figures made with matplotlib).
+data using the convolve function. Figure 5.1 shows the windowing functions
+described so far and their time- and frequency-domain behav ior.
+The trade-oﬀ between main-lobe and side-lobe has been studi ed extensively. So-
+lutions that maximize energy in the main-lobe compared to en ergy in the
+side-lobes can be found by ﬁnding an eigenvector which can be expensive
+to compute for large window sizes. A good approximation to th ese prolate-
+spheroidal windows is the Kaiser window.
+kaiser (M , β )
+Construct an M -point Kaiser smoothing window. The β parameter controls the
+width of the window (and the frequency-domain side-lobe hei ght and main-
+lobe width). The window is deﬁned as
+w [n] = 1
+I0 (β ) I0
+(
+β
+√
+1 − (2n − M − 1)2
+(M − 1)2
+)
+.
+There is an empirical relationship between β and the side-lobe height which
+can be used in FIR ﬁlter design. To achieve a side-lobe height of −α dB, the
+β parameter is
+β =
+
+
+
+
+
+0. 1002 (α − 8. 7) α > 50,
+0. 5842 (α − 21)0. 4 
+
+===== Kaiser @ 207318 =====
+ with matplotlib).
+data using the convolve function. Figure 5.1 shows the windowing functions
+described so far and their time- and frequency-domain behav ior.
+The trade-oﬀ between main-lobe and side-lobe has been studi ed extensively. So-
+lutions that maximize energy in the main-lobe compared to en ergy in the
+side-lobes can be found by ﬁnding an eigenvector which can be expensive
+to compute for large window sizes. A good approximation to th ese prolate-
+spheroidal windows is the Kaiser window.
+kaiser (M , β )
+Construct an M -point Kaiser smoothing window. The β parameter controls the
+width of the window (and the frequency-domain side-lobe hei ght and main-
+lobe width). The window is deﬁned as
+w [n] = 1
+I0 (β ) I0
+(
+β
+√
+1 − (2n − M − 1)2
+(M − 1)2
+)
+.
+There is an empirical relationship between β and the side-lobe height which
+can be used in FIR ﬁlter design. To achieve a side-lobe height of −α dB, the
+β parameter is
+β =
+
+
+
+
+
+0. 1002 (α − 8. 7) α > 50,
+0. 5842 (α − 21)0. 4 + 0. 07886 (α −
+
+===== Kaiser @ 207356 =====
+olve function. Figure 5.1 shows the windowing functions
+described so far and their time- and frequency-domain behav ior.
+The trade-oﬀ between main-lobe and side-lobe has been studi ed extensively. So-
+lutions that maximize energy in the main-lobe compared to en ergy in the
+side-lobes can be found by ﬁnding an eigenvector which can be expensive
+to compute for large window sizes. A good approximation to th ese prolate-
+spheroidal windows is the Kaiser window.
+kaiser (M , β )
+Construct an M -point Kaiser smoothing window. The β parameter controls the
+width of the window (and the frequency-domain side-lobe hei ght and main-
+lobe width). The window is deﬁned as
+w [n] = 1
+I0 (β ) I0
+(
+β
+√
+1 − (2n − M − 1)2
+(M − 1)2
+)
+.
+There is an empirical relationship between β and the side-lobe height which
+can be used in FIR ﬁlter design. To achieve a side-lobe height of −α dB, the
+β parameter is
+β =
+
+
+
+
+
+0. 1002 (α − 8. 7) α > 50,
+0. 5842 (α − 21)0. 4 + 0. 07886 (α − 21) 21 ≤ α ≤ 50,
+0 α < 21.
+123
+===== 
+
+===== Kaiser @ 627852 =====
+greater, 169
+greater equal, 169
+hamming, 122
+hanning, 122
+histogram, 101
+histogram2d, 102
+histogramdd, 102
+hsplit, 98
+hstack, 97
+hypot, 167
+i0, 122
+identity, 89
+imag, 94
+index exp, 115
+indexing, 23, 79– 84, 354
+indices, 88
+inner, 91
+insert, 106
+Instant, 349
+intersect1d, 111
+intersect1d nu, 111
+invert, 169
+iscomplex, 172
+iscomplexobj, 119
+isﬁnite, 172
+isfortran, 86
+isinf, 172
+isnan, 172
+isneginf, 121
+isposinf, 121
+isreal, 172
+isrealobj, 119
+isscalar, 119
+issubclass , 118
+issubdtype, 119
+ix , 112
+kaiser, 123
+kron, 98
+ldexp, 172
+left shift, 169
+less, 169
+less equal, 169
+lexsort, 89
+linalg, 174– 176
+linspace, 103
+load, 88
+loads, 88
+366
+===== PAGE 367 =====
+log, 166
+log10, 166
+log2, 121
+logical and, 170
+logical not, 170
+logical or, 170
+logical xor, 170
+logspace, 102
+masked arrays, 148– 149
+mat, 118
+matrix, 139– 142
+maximum, 170
+mean, 94
+median, 101
+memory maps, 142
+meshgrid, 103
+minimum, 171
+mintypecode, 120
+modf, 172
+msort, 101
+multiply, 164
+nan to num, 119
+nanargmax, 107
+nanargmin, 107
+nanmax, 
+
+===== bessel @ 204790 =====
+ginf (x, y=None)
+True if x = −∞. Should be the same as x==NumPy.NINF.
+isposinf (x, y=None)
+True if x = +∞. Should be the same as x==NumPy.PINF.
+log2 (x, y=None)
+Compute the logarithm to the base 2 of x. An optional output array may be
+provided.
+5.10 Miscellaneous Functions
+Some miscellaneous functions are available in NumPy which a re included largely
+for compatibility with MLab of the old Numeric package. One n otable diﬀerence,
+however, is that due to a separate implementation of the modi ﬁed Bessel function,
+the kaiser window is available without needing a separate li brary.
+sinc (x)
+Compute the sinc function for x which can be a scalar or array. The sinc is deﬁned
+as y = sinc ( x) = sin(πx )
+πx with the caveat that the limiting value (1.0) of the
+ratio is taken for x = 0.
+121
+===== PAGE 122 =====
+i0 (x)
+Modiﬁed Bessel function of the ﬁrst kind of order 0. Needed to compute the kaiser
+window. The modiﬁed Bessel function is deﬁned as
+I0 (x) = 1
+π
+∫ π
+0
+ex cos θ dθ =
+∞∑
+k=0
+x2k
+4k (k!)2 .
+b
+
+===== bessel @ 205117 =====
+hich a re included largely
+for compatibility with MLab of the old Numeric package. One n otable diﬀerence,
+however, is that due to a separate implementation of the modi ﬁed Bessel function,
+the kaiser window is available without needing a separate li brary.
+sinc (x)
+Compute the sinc function for x which can be a scalar or array. The sinc is deﬁned
+as y = sinc ( x) = sin(πx )
+πx with the caveat that the limiting value (1.0) of the
+ratio is taken for x = 0.
+121
+===== PAGE 122 =====
+i0 (x)
+Modiﬁed Bessel function of the ﬁrst kind of order 0. Needed to compute the kaiser
+window. The modiﬁed Bessel function is deﬁned as
+I0 (x) = 1
+π
+∫ π
+0
+ex cos θ dθ =
+∞∑
+k=0
+x2k
+4k (k!)2 .
+blackman (M )
+Construct an M -point Blackman smoothing window which is sequence of lengt h
+M with values given for n = 0 . . . M − 1 by
+w [n] = 0 . 42 − 0. 5 cos
+(
+2π n
+M − 1
+)
++ 0. 08 cos
+(
+4π n
+M − 1
+)
+.
+bartlett (M )
+Construct an M -point Bartlett (triangular) smoothing window as
+w [n] =
+{
+2 n
+M−1 0 ≤ n ≤ M−1
+2 ,
+2 − 2 n
+M−
+
+===== bessel @ 205211 =====
+e diﬀerence,
+however, is that due to a separate implementation of the modi ﬁed Bessel function,
+the kaiser window is available without needing a separate li brary.
+sinc (x)
+Compute the sinc function for x which can be a scalar or array. The sinc is deﬁned
+as y = sinc ( x) = sin(πx )
+πx with the caveat that the limiting value (1.0) of the
+ratio is taken for x = 0.
+121
+===== PAGE 122 =====
+i0 (x)
+Modiﬁed Bessel function of the ﬁrst kind of order 0. Needed to compute the kaiser
+window. The modiﬁed Bessel function is deﬁned as
+I0 (x) = 1
+π
+∫ π
+0
+ex cos θ dθ =
+∞∑
+k=0
+x2k
+4k (k!)2 .
+blackman (M )
+Construct an M -point Blackman smoothing window which is sequence of lengt h
+M with values given for n = 0 . . . M − 1 by
+w [n] = 0 . 42 − 0. 5 cos
+(
+2π n
+M − 1
+)
++ 0. 08 cos
+(
+4π n
+M − 1
+)
+.
+bartlett (M )
+Construct an M -point Bartlett (triangular) smoothing window as
+w [n] =
+{
+2 n
+M−1 0 ≤ n ≤ M−1
+2 ,
+2 − 2 n
+M−1
+M−1
+2 < n ≤ M − 1.
+hanning (M )
+Construct an M -point Hanning smoothing window deﬁned as
+w [
+
+===== bessel @ 306197 =====
+g
+the returned random vector(s) is
+f (x) = 1√
+(2π )N |C|
+exp
+[
+− 1
+2 (x − µ )T C−1 (x − µ )
+]
+.
+noncentral chisquare (ν , λ , size=None)
+186
+===== PAGE 187 =====
+This is the distribution of ∑ ν
+i=1 (Zi + δ i)2 where Zi are independent standard
+normal random numbers and δ i are constants. It is a a generalized Rayleigh-
+Rice distribution:
+f (x; ν, λ ) = e−(λ +x)/ 2 1
+2
+(x
+λ
+) (ν −2)/ 4
+I(ν −2)/ 2
+(√
+λx
+)
+I(0, ∞) (x) ,
+where Iν (z) (a real-number in the subscript, not an interval) is the mod iﬁed
+Bessel Function of the ﬁrst kind.
+noncentral f (ν 1, ν 2, λ , size=None)
+The pdf of this distribution is
+f (x; ν 1, ν 2, λ ) = exp
+[ λ
+2 + λv 1x
+2 (ν 1x + ν 2)
+]
+ν ν 1/ 2
+1 ν ν 2/ 2
+2 xν 1/ 2−1
+× (ν 2 + ν 1x)−(ν 1+ν 2)/ 2
+×
+Γ
+(ν 1
+2
+)
+Γ
+(
+1 + ν 2
+2
+)
+Ln1/ 2−1
+n2/ 2
+(
+− λν 1x
+2(ν 1x+ν 2)
+)
+B
+(ν 1
+2 , ν 2
+2
+)
+Γ
+(ν 1+ν 2
+2
+) .
+normal (loc=0.0, scale=1.0, size=None)
+The normal, or Gaussian, distribution is the limiting distr ibution of independent
+samples from any suﬃciently well-behaved distributions (t 
+
+===== vonmises @ 310278 =====
+mating the mean of normally distributed s amples when
+the sample-size is small. The ﬁrst parameter, ν , is the number of degrees of
+freedom of the distribution.
+f (x; ν ) Γ
+(ν +1
+2
+)
+√πν Γ
+(ν
+2
+)[
+1 + x2
+ν
+] ν +1
+2
+.
+triangular (left, mode, right, size=None)
+Returns random numbers according to a triangularly-shaped density that starts
+at left, peaks at mode, and ends at right.
+uniform (low=0.0, high=1.0, size=None)
+Returns random numbers that are equally probable over the ra nge [ low, high ) .
+vonmises (µ , κ , size=None)
+A continuous distribution that is well suited for circular a ttributes such as angles,
+time of day, day of the year, etc. The mean direction is µ and concentration
+(or dispersion) parameter is κ. For small κ the distribution tends towards a
+189
+===== PAGE 190 =====
+uniform distribution over [ −π, π ] . For large κ , the distribution tends towards
+a normal distribution with mean µ and variance 1 /κ.
+f (x) = eκ cos(x−µ )
+2πI 0 (κ ) I[−π,π ] (x) .
+wald (µ , λ , size=None)
+This 
+
+===== unwrap @ 182222 =====
+n N-d scalar function, f. Uses cen tral diﬀerences on
+the interior and ﬁrst diﬀerences on boundaries to give the sa me shape for
+each component of the gradient. The varargs variable can con tain 0, 1, or N
+scalars corresponding to the sample distances in each direc tion (default 1.0).
+If f is N-d, then N arrays are returned each of the same shape as f, giving the
+derivative of f with respect to each dimension.
+angle (z, deg=0)
+Return the angle of a complex number z (in degrees if deg is Tru e).
+unwrap (p, discont=pi, axis=-1)
+105
+===== PAGE 106 =====
+Unwraps radian phase p by changing absolute jumps greater th an discont to their
+2π complement along the given axis.
+sort complex (x)
+This is syntactic sugar for asarray(x).sort().astype( <cmplx type>) where cm-
+plx type is csingle if x.dtype is integral with fewer bits than in tp, clongﬂoat if
+x.dtype.type is longﬂoat, and cdouble for all other types. T he sorting is done
+by comparing the real part of the array, and then the imaginar y part if 
+
+===== unwrap @ 182279 =====
+ interior and ﬁrst diﬀerences on boundaries to give the sa me shape for
+each component of the gradient. The varargs variable can con tain 0, 1, or N
+scalars corresponding to the sample distances in each direc tion (default 1.0).
+If f is N-d, then N arrays are returned each of the same shape as f, giving the
+derivative of f with respect to each dimension.
+angle (z, deg=0)
+Return the angle of a complex number z (in degrees if deg is Tru e).
+unwrap (p, discont=pi, axis=-1)
+105
+===== PAGE 106 =====
+Unwraps radian phase p by changing absolute jumps greater th an discont to their
+2π complement along the given axis.
+sort complex (x)
+This is syntactic sugar for asarray(x).sort().astype( <cmplx type>) where cm-
+plx type is csingle if x.dtype is integral with fewer bits than in tp, clongﬂoat if
+x.dtype.type is longﬂoat, and cdouble for all other types. T he sorting is done
+by comparing the real part of the array, and then the imaginar y part if the
+real parts are the same.
+disp (mesg, device=None, lin
+
+===== unwrap @ 631597 =====
+e, 29
+subtract, 164
+sum, 94
+swapaxes, 94
+swig, 347
+take, 94
+tan, 167
+tanh, 168
+tensordot, 92
+The, 131
+tile, 99
+trace, 94
+transpose, 94
+trapz, 105
+tri, 117
+tril, 118
+trim zeros, 105
+triu, 118
+true divide, 164
+ufunc, 30, 153– 173, 357– 363
+adding new, 309– 311
+attributes, 157
+C-API, 284– 291
+casting rules, 158
+keyword arguments, 156
+methods, 159– 163
+accumulate, 161, 363
+outer, 163
+reduce, 161, 362
+reduceat, 162, 363
+union1d, 111
+unique, 106
+unique1d, 111
+universal function, 30
+unravel index, 116
+unwrap, 105
+user array, 149
+vander, 116
+var, 94
+vdot, 92
+vectorize, 107
+vsplit, 98
+vstack, 97
+weave, 328– 332
+370
+===== PAGE 371 =====
+where, 89
+zeros, 87
+zeros like, 87
+371
+
+
+===== noncentral @ 305793 =====
+loc=0.0, scale=1.0, size=None)
+f (x) = e−x
+[1 + e−x]2 I[0, ∞) (x)
+multivariate normal (µ , C, size=None)
+Returns a vector of random numbers which are jointly drawn fr om a multivariate
+normal distribution. The last-dimension of the output arra y contains the
+sample vector, which is of length N = len ( mean) . The covariance matrix
+must be N × N . If µ ≡ mean and C = cov, then the joint-pdf representing
+the returned random vector(s) is
+f (x) = 1√
+(2π )N |C|
+exp
+[
+− 1
+2 (x − µ )T C−1 (x − µ )
+]
+.
+noncentral chisquare (ν , λ , size=None)
+186
+===== PAGE 187 =====
+This is the distribution of ∑ ν
+i=1 (Zi + δ i)2 where Zi are independent standard
+normal random numbers and δ i are constants. It is a a generalized Rayleigh-
+Rice distribution:
+f (x; ν, λ ) = e−(λ +x)/ 2 1
+2
+(x
+λ
+) (ν −2)/ 4
+I(ν −2)/ 2
+(√
+λx
+)
+I(0, ∞) (x) ,
+where Iν (z) (a real-number in the subscript, not an interval) is the mod iﬁed
+Bessel Function of the ﬁrst kind.
+noncentral f (ν 1, ν 2, λ , size=None)
+The pdf of this distribution is
+f
+
+===== noncentral @ 306231 =====
+
+f (x) = 1√
+(2π )N |C|
+exp
+[
+− 1
+2 (x − µ )T C−1 (x − µ )
+]
+.
+noncentral chisquare (ν , λ , size=None)
+186
+===== PAGE 187 =====
+This is the distribution of ∑ ν
+i=1 (Zi + δ i)2 where Zi are independent standard
+normal random numbers and δ i are constants. It is a a generalized Rayleigh-
+Rice distribution:
+f (x; ν, λ ) = e−(λ +x)/ 2 1
+2
+(x
+λ
+) (ν −2)/ 4
+I(ν −2)/ 2
+(√
+λx
+)
+I(0, ∞) (x) ,
+where Iν (z) (a real-number in the subscript, not an interval) is the mod iﬁed
+Bessel Function of the ﬁrst kind.
+noncentral f (ν 1, ν 2, λ , size=None)
+The pdf of this distribution is
+f (x; ν 1, ν 2, λ ) = exp
+[ λ
+2 + λv 1x
+2 (ν 1x + ν 2)
+]
+ν ν 1/ 2
+1 ν ν 2/ 2
+2 xν 1/ 2−1
+× (ν 2 + ν 1x)−(ν 1+ν 2)/ 2
+×
+Γ
+(ν 1
+2
+)
+Γ
+(
+1 + ν 2
+2
+)
+Ln1/ 2−1
+n2/ 2
+(
+− λν 1x
+2(ν 1x+ν 2)
+)
+B
+(ν 1
+2 , ν 2
+2
+)
+Γ
+(ν 1+ν 2
+2
+) .
+normal (loc=0.0, scale=1.0, size=None)
+The normal, or Gaussian, distribution is the limiting distr ibution of independent
+samples from any suﬃciently well-behaved distributions (t his is the content
+of the celebrated c
+
+===== gumbel @ 304768 =====
+om the chi-square
+(
+χ 2)
+distribution with ν
+degrees of freedom.
+f (x; ν ) = 1
+2Γ
+(ν
+2
+)
+(x
+2
+) ν/ 2−1
+e−x/ 2I[0, ∞) (x) .
+exponential (scale=1.0, size=None)
+f (x) = e−xI[0, ∞) (x) .
+f (ν 1, ν 2, size=None)
+The distribution of X1/ν 1
+X2/ν 2
+where Xi is chi-squared with ν i degrees of freedom.
+185
+===== PAGE 186 =====
+f (x; ν 1, ν 2) = ν ν 2/ 2
+2 ν ν 1/ 2
+1 xν 1/ 2−1
+(ν 2 + ν 1x)(ν 1+ν 2)/ 2 B
+(ν 1
+2 , ν 2
+2
+) I[0, ∞) (x) .
+gamma (a, scale=1.0, size=None)
+f (x; a) = 1
+Γ ( a) xa−1e−xI[0, ∞) (x) .
+gumbel (loc=0.0, scale=1.0, size=None)
+A right-skewed extreme value distribution.
+f (x) = exp
+[
+−x − e−x]
+.
+laplace (loc=0.0, scale=1.0, size=None)
+f (x) = 1
+2 e−|x|.
+lognormal (µ =0.0, σ =1.0, size=None)
+f (x; µ, σ ) = 1
+σx
+√
+2π exp
+[
+− 1
+2
+(log x − µ
+σ
+) 2]
+I[0, ∞) (x) ,
+The parameters, µ and σ are not the mean and variance of this distribution, but
+the parameters of the underlying normal distribution. Rand om numbers from this
+distribution are generated as eσZ +µ where Z is a standard normal random
+
+===== weibull @ 311158 =====
+normal distribution with mean µ and variance 1 /κ.
+f (x) = eκ cos(x−µ )
+2πI 0 (κ ) I[−π,π ] (x) .
+wald (µ , λ , size=None)
+This distribution is also called the inverse Gaussian distr ibution (and the Wald
+distribution considered as a special case when µ = λ ). It can be generated
+by noticing that if X is a wald random number then λ (X−µ )2
+µ 2X is the square
+of a standard normal random number (i.e. it is chi-square wit h one degree of
+freedom). The pdf is
+f (x) =
+√
+λ
+2πx 3 e− λ (x−µ )2
+2µ 2 x .
+weibull (a, size=None)
+An extreme-value distribution:
+f (x; c) = axa−1 exp (−xa) I(0, ∞) (x) .
+10.3.3 Miscellaneous utilities
+bytes (length)
+Return a string of random bytes of the provided length.
+get
+state ()
+Return an object that holds the state of the random number gen erator (allows
+you to restart simulations where you left oﬀ).
+set state (state)
+Set the state of the random number generator. The argument sh ould be the
+returned object of a previous get state command.
+shuﬄe (sequence)
+Randomly permu
+
+===== hypergeometric @ 299101 =====
+
+k
+)
+= n!
+k! (n − k)!
+where k! = k ·(k − 1) · · · · ·2 ·1.
+binomial (n, p, size=None)
+This random number models the number of successes in n independent trials of a
+random experiment where the probability of success in each e xperiment is p.
+pm (k) =
+(
+n
+k
+)
+pk (1 − p)n−k I[0,n ] (k) .
+geometric (p, size=None)
+This random number models the number of (independent) attem pts required to
+obtain a success where the probability of success on each att empt is p.
+pm (k; p) = (1 − p)k−1 p I[1, ∞) (k) .
+hypergeometric (ngood, nbad, nsample, size=None)
+Imagine a probability theorists favorite urn ﬁlled with ng“good” objects and nb
+“bad” objects. In other words there are two types of objects i n a jar. The
+hypergeometric random number models how many “good” object s will be
+present when N items are taken out of the urn without replacement.
+p (k; ng, n b, N ) =
+(
+ng
+k
+)(
+nb
+N − k
+)
+(
+ng + nb
+N
+) I[N −nb, min(n,N )] (k) .
+182
+===== PAGE 183 =====
+logseries (p, size=None)
+A random number whose pmf with terms prop
+
+===== hypergeometric @ 299306 =====
+of success in each e xperiment is p.
+pm (k) =
+(
+n
+k
+)
+pk (1 − p)n−k I[0,n ] (k) .
+geometric (p, size=None)
+This random number models the number of (independent) attem pts required to
+obtain a success where the probability of success on each att empt is p.
+pm (k; p) = (1 − p)k−1 p I[1, ∞) (k) .
+hypergeometric (ngood, nbad, nsample, size=None)
+Imagine a probability theorists favorite urn ﬁlled with ng“good” objects and nb
+“bad” objects. In other words there are two types of objects i n a jar. The
+hypergeometric random number models how many “good” object s will be
+present when N items are taken out of the urn without replacement.
+p (k; ng, n b, N ) =
+(
+ng
+k
+)(
+nb
+N − k
+)
+(
+ng + nb
+N
+) I[N −nb, min(n,N )] (k) .
+182
+===== PAGE 183 =====
+logseries (p, size=None)
+A random number whose pmf with terms proportional to the Tayl or series expan-
+sion of log (1 − p). It has been used in biological studies to model the species
+abundance distribution.
+pm (k; p) = − pk
+k log (1 − p) I[1, ∞) (k) .
+multinomial (n, p
+
+===== piecewise @ 179030 =====
+ choicelist must be of length N . The elements of
+choicelist can then be represented as [ v0, . . . , v N −1]. The default choice if none
+of the conditions are met is given as the default argument. Th e conditions
+are tested in order and the ﬁrst one satisﬁed is used to select the choice. In
+other words, the elements of the output array are found from t he following
+tree (evaluated on an element-by-element basis)
+103
+===== PAGE 104 =====
+if c0: v0
+elif c1: v1
+...
+elif cN −1: vN −1
+else: default
+piecewise (x, condlist, funclist, *args, **kw)
+Compute a piecewise-deﬁned function. A piecewise deﬁned fu nction is
+f (x) =
+
+
+
+
+
+
+
+
+
+
+
+f1 (x) x ∈ S1,
+f2 (x) x ∈ S2,
+.
+.
+. .
+.
+.
+fn (x) x ∈ Sn.
+where S1 are sets. Thus, the function is deﬁned diﬀerently over diﬀer ent sub-
+domains of the input. Such a function can be computed using select but
+such an implementation means calling each fi over the entire region of x. The
+piecewise call guarantees that each function fi will only be called over those
+
+===== piecewise @ 179087 =====
+ist can then be represented as [ v0, . . . , v N −1]. The default choice if none
+of the conditions are met is given as the default argument. Th e conditions
+are tested in order and the ﬁrst one satisﬁed is used to select the choice. In
+other words, the elements of the output array are found from t he following
+tree (evaluated on an element-by-element basis)
+103
+===== PAGE 104 =====
+if c0: v0
+elif c1: v1
+...
+elif cN −1: vN −1
+else: default
+piecewise (x, condlist, funclist, *args, **kw)
+Compute a piecewise-deﬁned function. A piecewise deﬁned fu nction is
+f (x) =
+
+
+
+
+
+
+
+
+
+
+
+f1 (x) x ∈ S1,
+f2 (x) x ∈ S2,
+.
+.
+. .
+.
+.
+fn (x) x ∈ Sn.
+where S1 are sets. Thus, the function is deﬁned diﬀerently over diﬀer ent sub-
+domains of the input. Such a function can be computed using select but
+such an implementation means calling each fi over the entire region of x. The
+piecewise call guarantees that each function fi will only be called over those
+values of x in Si.
+Arguments: x is the array of values o
+
+===== piecewise @ 179116 =====
+s [ v0, . . . , v N −1]. The default choice if none
+of the conditions are met is given as the default argument. Th e conditions
+are tested in order and the ﬁrst one satisﬁed is used to select the choice. In
+other words, the elements of the output array are found from t he following
+tree (evaluated on an element-by-element basis)
+103
+===== PAGE 104 =====
+if c0: v0
+elif c1: v1
+...
+elif cN −1: vN −1
+else: default
+piecewise (x, condlist, funclist, *args, **kw)
+Compute a piecewise-deﬁned function. A piecewise deﬁned fu nction is
+f (x) =
+
+
+
+
+
+
+
+
+
+
+
+f1 (x) x ∈ S1,
+f2 (x) x ∈ S2,
+.
+.
+. .
+.
+.
+fn (x) x ∈ Sn.
+where S1 are sets. Thus, the function is deﬁned diﬀerently over diﬀer ent sub-
+domains of the input. Such a function can be computed using select but
+such an implementation means calling each fi over the entire region of x. The
+piecewise call guarantees that each function fi will only be called over those
+values of x in Si.
+Arguments: x is the array of values over which to call the func ti
+
+===== piecewise @ 179461 =====
+ 104 =====
+if c0: v0
+elif c1: v1
+...
+elif cN −1: vN −1
+else: default
+piecewise (x, condlist, funclist, *args, **kw)
+Compute a piecewise-deﬁned function. A piecewise deﬁned fu nction is
+f (x) =
+
+
+
+
+
+
+
+
+
+
+
+f1 (x) x ∈ S1,
+f2 (x) x ∈ S2,
+.
+.
+. .
+.
+.
+fn (x) x ∈ Sn.
+where S1 are sets. Thus, the function is deﬁned diﬀerently over diﬀer ent sub-
+domains of the input. Such a function can be computed using select but
+such an implementation means calling each fi over the entire region of x. The
+piecewise call guarantees that each function fi will only be called over those
+values of x in Si.
+Arguments: x is the array of values over which to call the func tion; condlist is a
+sequence of Boolean (indicator) arrays (or a single Boolean array) of the same
+shape as x that deﬁnes the sets (True indicates that element of x is in the set).
+If needed, to match the length of funclist, an “otherwise” se t will be added to
+condlist. This otherwise set is deﬁned as Sn =
+⋃ Si. The argument funclist is
+a list 
+
+===== piecewise @ 180656 =====
+s, and **kw using standa rd Python
+syntax. Each of these functions should return vector output for vector input.
+If the function is a scalar, then it will simply be inserted wh ere appropriate
+into the output. It is the equivalent of a constant function.
+Example: Suppose we want to compute f (x) = x2Π
+(x
+3
+)
++ u (x − 5) where
+Π ( x) = 1 only when |x| ≤ 1 and u (x) = 1 only when x ≥ 0. This could
+be done using the code:
+104
+===== PAGE 105 =====
+>>> f1 = lambda x: x*x
+>>> x = r [-4:6:20j]
+>>> y = piecewise(x,abs(x)<=3,[f1,0])+piecewise(x,x>=0,[1,0])
+>>> set printoptions(precision=4); print y
+[ 0. 0. 8.687 5.8615 3.59 1.8726 0.7091 0.0997
+1.0443 1.5429 2.5956 4.2022 6.3629 9.0776 1. 1. 1.
+1. 1. 1. ]
+trim zeros (ﬁlt, trim=’fb’):
+Trim the leading (’f’ in trim) and trailing (’b’ in trim) zero s from a sequence
+according to the trim keyword.
+trapz (y, x=None, dx=1.0, axis=-1)
+If y contains samples of a function: yi = f (xi) then trapz can be used to approx-
+imate the integral of the function using the
+
+===== piecewise @ 180686 =====
+thon
+syntax. Each of these functions should return vector output for vector input.
+If the function is a scalar, then it will simply be inserted wh ere appropriate
+into the output. It is the equivalent of a constant function.
+Example: Suppose we want to compute f (x) = x2Π
+(x
+3
+)
++ u (x − 5) where
+Π ( x) = 1 only when |x| ≤ 1 and u (x) = 1 only when x ≥ 0. This could
+be done using the code:
+104
+===== PAGE 105 =====
+>>> f1 = lambda x: x*x
+>>> x = r [-4:6:20j]
+>>> y = piecewise(x,abs(x)<=3,[f1,0])+piecewise(x,x>=0,[1,0])
+>>> set printoptions(precision=4); print y
+[ 0. 0. 8.687 5.8615 3.59 1.8726 0.7091 0.0997
+1.0443 1.5429 2.5956 4.2022 6.3629 9.0776 1. 1. 1.
+1. 1. 1. ]
+trim zeros (ﬁlt, trim=’fb’):
+Trim the leading (’f’ in trim) and trailing (’b’ in trim) zero s from a sequence
+according to the trim keyword.
+trapz (y, x=None, dx=1.0, axis=-1)
+If y contains samples of a function: yi = f (xi) then trapz can be used to approx-
+imate the integral of the function using the trapezoidal rul e. If the sam
+
+===== piecewise @ 630026 =====
+ift, 77
+imod, 77
+imul, 77
+init, 73
+int, 78
+invert, 78
+ior, 77
+ipow, 77
+irshift, 77
+isub, 77
+itruediv, 77
+ixor, 77
+le, 73
+len, 74
+long, 78
+lshift, 76
+lt, 73
+mod, 76
+mul, 75
+ne, 73
+neg, 78
+368
+===== PAGE 369 =====
+new, 72
+nonzero, 74
+oct, 78
+or, 76
+pos, 78
+pow, 76
+reduce, 71
+repr, 73
+rshift, 76
+setitem, 75, 79
+setslice, 75, 79
+setstate, 71
+str, 73
+sub, 75
+truediv, 76
+xor, 76
+subtyping, 138– 139, 315– 318
+view, 80
+ndindex, 116
+negative, 165
+newaxis, 79
+nonzero, 94
+not equal, 169
+ones, 87
+outer, 91
+piecewise, 104
+place, 106
+poly, 109
+poly1d, 109
+polyadd, 110
+polyder, 110
+polydiv, 111
+polyﬁt, 111
+polyint, 109
+polymul, 110
+polynomials, 108
+polysub, 110
+polyval, 111
+power, 165
+product, 94
+ptp, 94
+put, 94
+putmask, 89
+PyArray Type, 209
+PyArrayDescr Type, 210
+PyArrayInterface, 225
+PyArrayIter Type, 220
+pyrex, 332– 337
+PyUFunc Type, 218
+r , 113
+random, 181– 190
+continuous, 184– 190
+discrete, 181– 184
+rank, 94
+ravel, 94
+real, 94
+real if close, 119
+record arrays, 144– 148
+reference counting, 297– 298
+remain
+
+===== searchsorted @ 113991 =====
+ lexicographic orde ring so that the ﬁrst
+listed ﬁeld name is compared ﬁrst if that results in equality , the second listed
+ﬁeld name is used for the comparison and so on. If order is None , then arrays
+with ﬁelds use the ﬁrst ﬁeld for comparison.
+>>> b=a.copy(); print b.argsort(0)
+[[0 1 1]
+[1 0 0]]
+>>> b=a.copy(); print b.argsort(1)
+[[0 1 2]
+[1 2 0]]
+i TIP
+Complex valued arrays sort lexicographically by comparing ﬁrst
+the real parts and then the imaginary parts if the real parts a re
+the same.
+searchsorted (values, side=’left’)
+Return an index array (dtype=intp) of the same shape as value s showing the
+index where the value would ﬁt in self. The index is such that s elf[index-1]
+63
+===== PAGE 64 =====
+< value ≤ self[index] when side is ’left’. In this formula self[self. size]=∞ and
+self[-1]=−∞. Therefore, if value is larger than all elements of self, the n index
+is self.size. If value is smaller than all elements of self, t hen index is 0. Self
+must be a sorted 1-d array. If elements of self are 
+
+===== searchsorted @ 114804 =====
+ore, if value is larger than all elements of self, the n index
+is self.size. If value is smaller than all elements of self, t hen index is 0. Self
+must be a sorted 1-d array. If elements of self are repeated, t he index of the
+ﬁrst occurrence is used. If side is ’right’, then the search r ule is switched so
+that the < sign is on the “right” instead of the left in the search rule. I n other
+words, the index returned is such that self[index-1] ≤value < self[index].
+>>> b=a.ravel(); b.sort()
+>>> b.searchsorted([0.0, 1.35, 2.0, 3.0])
+array([0, 3, 5, 6])
+nonzero ()
+Return the n-dimensional indices for elements of the n-dimensional array self that
+are nonzero into an n-tuple of equal-length index arrays. In particular, notice
+that a 0-dimensional array always returns an empty tuple.
+>>> x = arange(15); y=x.reshape(3,5)
+>>> (x>8).nonzero()
+(array([ 9, 10, 11, 12, 13, 14]),)
+>>> (y>8).nonzero()
+(array([1, 2, 2, 2, 2, 2]), array([4, 0, 1, 2, 3, 4]))
+compress (condition=, axis=None, out=None)
+This method ex
+
+===== searchsorted @ 118659 =====
+agonal (oﬀset=0, axis1=0, axis2=1) Return a diagonal from
+self.
+ﬂatten (order=’C’) A 1-d copy of self.
+nonzero () True where self is not
+zero.
+put (indices=, values=, mode=’raise’) Place values at 1-d index
+locations of self.
+ravel (order=’C’) 1-d version of self (no
+data copy if self is C-style
+contiguous).
+repeat (repeats=, axis=None) Repeat elements of self.
+reshape (d1,d2,...,dn, order=’C’) Return reshaped version
+of self.
+resize (d1,d2,...,dn, refcheck=1, order=’Any’) Resize self in-place.
+searchsorted (values) Show where values would
+be placed in self (as-
+sumed sorted).
+sort (axis=None, kind=’quick’) Copy of self sorted along
+axis.
+squeeze () Squeeze out all length-1
+dimensions.
+swapaxes (axis1, axis2) Swap two dimensions of
+self.
+take (indices=, axis=None, out=None,
+mode=’raise’)
+Select elements of self
+along axis according to
+indices.
+transpose (permute <None>) Rearrange shape of self
+according to permute.
+66
+===== PAGE 67 =====
+Return the largest value in self. This is a better way to co
+
+===== searchsorted @ 163619 =====
+ray(a). <function>(*args, **kwds), or are replaceable by attribute ac-
+cess. The following list documents them. It is not recommend ed that these functions
+be used in new programs, but there are no plans for removing th em as in functional
+form they work with arbitrary sequences which is sometimes d esirable. The func-
+tions that mirror methods and attributes are: take, reshape, squeeze, choose,
+repeat, put, swapaxes, transpose, real, imag, sort, argsort, amax, argmax ,
+amin, argmin, ptp, alen, searchsorted, diagonal, trace, ravel, nonzero,
+shape, compress, clip, std, var, mean, sum, cumsum, product, cumprod-
+uct, sometrue (method is .any), alltrue (method is .all), around (method is
+.round), rank (attribute is .ndim), shape, size (.size or .shape[axis]), and copy.
+4.5 Dealing with data types
+dtype (obj, align=0)
+Return a data-type object from any object. See Chapter
+7 for a more detailed
+explanation of what can be interpreted as a data-type object and the meaning
+of the align keyword.
+maximum sct
+
+===== searchsorted @ 432309 =====
+he types.
+The sort is accomplished by sorting the indices ﬁrst using th e ﬁrst sort key
+and then using the second sort key and so forth. This is equivalent to the
+lexsort(sort keys, axis) Python command. Because of the way the merge-sort
+works, be sure to understand the order the sort keys must be in (reversed
+from the order you would use when comparing two elements).
+If these arrays are all collected in a record array, then PyArray Sort(...) can
+also be used to sort the array directly.
+PyArray SearchSorted (PyObject*) ( PyArrayObject* self, PyObject*
+values)
+Equivalent to self.searchsorted(values). Assuming self is a 1-d array in ascend-
+ing order representing bin boundaries then the output is an a rray the same
+shape as values of bin numbers, giving the bin into which each item in values
+would be placed. No checking is done on whether or not self is i n ascending
+order.
+PyArray Diagonal (PyObject*) ( PyArrayObject* self, int oﬀset, int
+axis1, int axis2)
+Equivalent to self.diagonal(oﬀset , axis1,
+
+===== searchsorted @ 432394 =====
+ey
+and then using the second sort key and so forth. This is equivalent to the
+lexsort(sort keys, axis) Python command. Because of the way the merge-sort
+works, be sure to understand the order the sort keys must be in (reversed
+from the order you would use when comparing two elements).
+If these arrays are all collected in a record array, then PyArray Sort(...) can
+also be used to sort the array directly.
+PyArray SearchSorted (PyObject*) ( PyArrayObject* self, PyObject*
+values)
+Equivalent to self.searchsorted(values). Assuming self is a 1-d array in ascend-
+ing order representing bin boundaries then the output is an a rray the same
+shape as values of bin numbers, giving the bin into which each item in values
+would be placed. No checking is done on whether or not self is i n ascending
+order.
+PyArray Diagonal (PyObject*) ( PyArrayObject* self, int oﬀset, int
+axis1, int axis2)
+Equivalent to self.diagonal(oﬀset , axis1, axis2 ). Return the oﬀset diagonals of
+the 2-d arrays deﬁned by axis1 and axis2.
+PyA
+
+===== searchsorted @ 629097 =====
+ized by, 139
+shape, 48
+size, 49
+strides, 48
+T, 50
+C-API, 233– 284
+ﬂags, 47– 48
+memory model, 351
+methods, 54– 69
+all, 69
+any, 69
+argmax, 67
+argmin, 67
+argsort, 63
+astype, 56
+byteswap, 56
+choose, 62
+clip, 67
+compress, 64
+conj, 67
+conjugate, 67
+copy, 56
+cumprod, 69
+cumsum, 68
+diagonal, 65
+dump, 56
+dumps, 56
+ﬁll, 58
+ﬂatten, 61
+getﬁeld, 57
+367
+===== PAGE 368 =====
+item, 55
+itemset, 55
+max, 65
+mean, 68
+min, 67
+nonzero, 64
+prod, 69
+ptp, 67
+put, 61
+ravel, 61
+repeat, 61
+reshape, 59
+resize, 59
+round, 67
+searchsorted, 63
+setﬂags, 57
+sort, 62
+squeeze, 61
+std, 69
+sum, 68
+swapaxes, 60
+take, 61
+toﬁle, 55
+tolist, 54
+tostring, 55
+trace, 67
+transpose, 59
+var, 68
+view, 57
+special methods, 71– 78
+abs, 78
+add, 75
+and, 76
+array, 73
+array wrap, 73
+complex, 78
+contains, 75
+copy, 71
+deepcopy, 71
+div, 76
+divmod, 76
+eq, 73
+ﬂoat, 78
+ﬂoordiv, 76
+ge, 73
+getitem, 75, 79
+getslice, 75, 79
+gt, 73
+hex, 78
+iadd, 77
+iand, 77
+idiv, 77
+iﬂoordiv, 77
+ilshift, 77
+imod, 77
+imul, 77
+init, 73
+int, 78
+invert, 78
+ior, 77
+ipow, 77
+irshift, 77
+
+
+===== searchsorted @ 630710 =====
+ct, 94
+ptp, 94
+put, 94
+putmask, 89
+PyArray Type, 209
+PyArrayDescr Type, 210
+PyArrayInterface, 225
+PyArrayIter Type, 220
+pyrex, 332– 337
+PyUFunc Type, 218
+r , 113
+random, 181– 190
+continuous, 184– 190
+discrete, 181– 184
+rank, 94
+ravel, 94
+real, 94
+real if close, 119
+record arrays, 144– 148
+reference counting, 297– 298
+remainder, 165
+repeat, 94
+require, 86
+reshape, 94
+resize, 98
+right shift, 169
+roll, 96
+rollaxis, 96
+roots, 109
+rot90, 117
+round , 108
+row stack, 97
+s , 115
+369
+===== PAGE 370 =====
+searchsorted, 94
+select, 103
+set operations, 111– 112
+set numeric ops, 124
+set printoptions, 74, 93
+set string function, 94
+setbufsize, 155
+setdiﬀ1d, 112
+seterr, 155
+seterrcall, 156
+setmember1d, 112
+setxor1d, 112
+shape, 94
+signbit, 172
+sin, 167
+sinc, 121
+single-segment, 28
+sinh, 167
+SIP, 348
+size, 94
+sometrue, 94
+sort, 94
+sort complex, 106
+split, 98
+sqrt, 166
+squeeze, 94
+std, 94
+stride, 29
+subtract, 164
+sum, 94
+swapaxes, 94
+swig, 347
+take, 94
+tan, 167
+tanh, 168
+tensordot, 92
+The, 131
+tile, 99
+trace, 94
+tran
+
+===== bincount @ 173957 =====
+ the each column is a random variable wi th observations
+in the rows). The y argument can be used to append additional v ariables to
+x. The ith row and jth column of the correlation coeﬃcient matrix is deﬁned
+as
+ρ ij = Cij√ CiiCjj
+where C is the covariance matrix. The rowvar and bias arguments are p assed
+on to the cov function to estimate C.
+msort (a)
+Return a new array, sorted along the ﬁrst axis. Equivalent to b=a.copy();
+b.sort(0)
+median (m)
+Returns the median of m along its ﬁrst dimension.
+bincount (list=, weights=None)
+The list argument is a 1-d integer array. Let r be the returned 1-d array whose
+length is (list.max()+1). If weights is None, then r[i] is the number of occur-
+rences of i in list. If weight is present, then the ith element is
+r[i] =
+∑
+j:list[j]=i
+weights[j].
+Notice that if weights is None, it is equivalent to a weights a rray of all 1. The
+length of weights must be the same as the length of list.
+digitize (x=,bins=)
+Return an array of integers the same length as x with va
+
+===== bincount @ 625696 =====
+rue, 94
+amax, 94
+amin, 94
+angle, 105
+append, 107
+apply along axis, 98
+apply over axes, 98
+arange, 86
+arccos, 167
+arccosh, 168
+arcsin, 167
+arcsinh, 168
+arctan, 167
+arctan2, 167
+arctanh, 168
+argmax, 94
+argmin, 94
+argsort, 94
+around, 94
+array, 85
+array interface, 52
+array iterator, 149, 305– 309, 352
+array scalars, 20, 126– 130, 354
+array2string, 93
+array split, 97
+asanyarray, 85
+asarray, 85
+asarray chkﬁnite, 107
+asfarray, 120
+atleast 1d, 96
+atleast 2d, 96
+atleast 3d, 96
+average, 100
+bartlett, 122
+bincount, 101
+bitwise and, 168
+bitwise or, 168
+bitwise xor, 168
+blackman, 122
+bmat, 118
+Boost.Python, 348
+broadcasting, 30, 154, 308, 353
+C-API
+array, 233– 284
+ufunc, 284– 291
+c , 115
+cast, 119
+ceil, 173
+character arrays, 143– 144
+choose, 94
+clip, 94
+code generation, 203
+364
+===== PAGE 365 =====
+column stack, 97
+compress, 94
+concatenate, 90
+Conﬁguration, 195
+conj, 165
+conjugate, 165
+container class, 149
+convolve, 91
+copy, 94
+corrcoef, 101
+correlate, 90
+cos, 167
+cosh, 168
+cov, 100
+cross, 92
+ctypes, 53, 8
+
+===== tensorsolve @ 285689 =====
+umpy.dual (both in NumPy and SciPy )
+Family Functions
+Fourier Transforms ﬀt, iﬀt, ﬀt2, iﬀt2, ﬀtn, iﬀtn
+Linear Algebra norm, det, inv, pinv, solve, eig, eigh, eigvals,
+eigvalsh, lstsq, cholesky, svd
+Special Functions i0
+174
+===== PAGE 175 =====
+Return the (matrix) inverse of the 2-d array A. The result, X, is such that
+dot(A,X) is equal to eye(*A.shape) (to within machine preci sion).
+solve (A,b)
+Find the solution to the linear equation Ax = b, where A is a 2-d array and b is
+a 1-d or 2-d array.
+tensorsolve (A, b, axes=None)
+Find the solution, xkl, to the multi-index linear equation
+∑
+kl
+Aijkl xkl = bij.
+The axes argument speciﬁes which dimensions of A are summed over. If it
+is None, then the last A.ndim - b.ndim dimensions are summed o ver. The
+result, therefore, has dimension x.ndim = A.ndim-b.ndim.
+tensorinv (A, ind=2)
+Find the tensor inverse of A, deﬁned to be the tensor such that tensordot (Ainv,
+A) is an identity operator.
+cholesky (A)
+Return, L, the Cholesky decomposition of A. Cholesky dec
+
+===== tensorinv @ 286001 =====
+ch that
+dot(A,X) is equal to eye(*A.shape) (to within machine preci sion).
+solve (A,b)
+Find the solution to the linear equation Ax = b, where A is a 2-d array and b is
+a 1-d or 2-d array.
+tensorsolve (A, b, axes=None)
+Find the solution, xkl, to the multi-index linear equation
+∑
+kl
+Aijkl xkl = bij.
+The axes argument speciﬁes which dimensions of A are summed over. If it
+is None, then the last A.ndim - b.ndim dimensions are summed o ver. The
+result, therefore, has dimension x.ndim = A.ndim-b.ndim.
+tensorinv (A, ind=2)
+Find the tensor inverse of A, deﬁned to be the tensor such that tensordot (Ainv,
+A) is an identity operator.
+cholesky (A)
+Return, L, the Cholesky decomposition of A. Cholesky decomposition is applica-
+ble to a Hermitian, positive deﬁnite matrices. When A = AH and xH Ax ≥ 0
+for all x, then decompositions of A can be found so that A = LLH , where L
+is lower-triangular.
+eigvals (A)
+Return all solutions ( λ ) to the equation Ax = λ x.
+eig (A)
+Return all solutions ( λ, x) to the equation 
+
+===== tensordot @ 159830 =====
+nd J are super indices for a[I, :] and b[J, :, j ] so that j is the index of the
+last dimension of b. Then, the shape of the resulting array is a.shape[:-1] +
+b.shape[:-2] + (b.shape[-1],) with elements.
+r[I, J, j ] =
+∑
+k
+a[I, k ]b[J, k, j ],
+vdot (a, b)
+Computes the dot product between two arrays (ﬂattened into o ne-dimensional
+vectors) after conjugating the ﬁrst vector. This is an inner -product following
+the physicists convention of conjugating the ﬁrst argument .
+r =
+∑
+k
+a.ﬂat[ k]b.ﬂat[ k].
+tensordot (a, b, axes=(-1,0))
+Computes a dot-product between two arrays where the sum is ta ken over the
+axes speciﬁed by the 2-sequence which can have either scalar or sequence
+entries. The axes speciﬁed are summed over and the remaining axes are used
+to construct the result. So, for example, if a is 3 × 4 × 5 and b is 4 × 3 × 2
+then if axes=([1,0],[0,1]) (or axes=([0,1],[1,0])) the re sult will be 5 × 2. Let I
+represent the indices of the un-summed axes in a, let J represent the indices
+of the un-summe
+
+===== tensordot @ 286086 =====
+)
+Find the solution to the linear equation Ax = b, where A is a 2-d array and b is
+a 1-d or 2-d array.
+tensorsolve (A, b, axes=None)
+Find the solution, xkl, to the multi-index linear equation
+∑
+kl
+Aijkl xkl = bij.
+The axes argument speciﬁes which dimensions of A are summed over. If it
+is None, then the last A.ndim - b.ndim dimensions are summed o ver. The
+result, therefore, has dimension x.ndim = A.ndim-b.ndim.
+tensorinv (A, ind=2)
+Find the tensor inverse of A, deﬁned to be the tensor such that tensordot (Ainv,
+A) is an identity operator.
+cholesky (A)
+Return, L, the Cholesky decomposition of A. Cholesky decomposition is applica-
+ble to a Hermitian, positive deﬁnite matrices. When A = AH and xH Ax ≥ 0
+for all x, then decompositions of A can be found so that A = LLH , where L
+is lower-triangular.
+eigvals (A)
+Return all solutions ( λ ) to the equation Ax = λ x.
+eig (A)
+Return all solutions ( λ, x) to the equation Ax = λ x. The ﬁrst element of the
+return tuple contains all the eigenvalues. The seco
+
+===== tensordot @ 631176 =====
+
+s , 115
+369
+===== PAGE 370 =====
+searchsorted, 94
+select, 103
+set operations, 111– 112
+set numeric ops, 124
+set printoptions, 74, 93
+set string function, 94
+setbufsize, 155
+setdiﬀ1d, 112
+seterr, 155
+seterrcall, 156
+setmember1d, 112
+setxor1d, 112
+shape, 94
+signbit, 172
+sin, 167
+sinc, 121
+single-segment, 28
+sinh, 167
+SIP, 348
+size, 94
+sometrue, 94
+sort, 94
+sort complex, 106
+split, 98
+sqrt, 166
+squeeze, 94
+std, 94
+stride, 29
+subtract, 164
+sum, 94
+swapaxes, 94
+swig, 347
+take, 94
+tan, 167
+tanh, 168
+tensordot, 92
+The, 131
+tile, 99
+trace, 94
+transpose, 94
+trapz, 105
+tri, 117
+tril, 118
+trim zeros, 105
+triu, 118
+true divide, 164
+ufunc, 30, 153– 173, 357– 363
+adding new, 309– 311
+attributes, 157
+C-API, 284– 291
+casting rules, 158
+keyword arguments, 156
+methods, 159– 163
+accumulate, 161, 363
+outer, 163
+reduce, 161, 362
+reduceat, 162, 363
+union1d, 111
+unique, 106
+unique1d, 111
+universal function, 30
+unravel index, 116
+unwrap, 105
+user array, 149
+vander, 116
+var, 94
+vdot, 92
+vectorize, 107
+vsplit, 98
+vstac
+
+===== ogrid @ 192540 =====
+g indexing arrays necessary to
+select out the cross-product of N 1-dimensional arrays. Note that the default
+indexing does not do a cross-product (which might be unexpec ted for someone
+coming from other programming environments). The default i ndexing is more
+general purpose. Using the ix constructor can produce the indexing arrays
+necessary to select a cross-product.
+mgrid [index expression]
+This is an instance of a class. It can be used to construct a ﬁll ed “mesh-grid”
+using slicing syntax.
+ogrid [index expression]
+This is similar to mgrid except it returns an open grid, so as t o save space and
+time. The broadcasting rules will ensure that any universal function operating
+on the grid will act as if the ogrid had been the result of mgrid .
+112
+===== PAGE 113 =====
+r [index expression]
+This is a simple way to build up arrays quickly. There are two u se cases. 1) If
+the index expression contains comma separated arrays, then stack them along
+their ﬁrst axis. 2) If the index expression cont
+
+===== ogrid @ 192757 =====
+nvironments). The default i ndexing is more
+general purpose. Using the ix constructor can produce the indexing arrays
+necessary to select a cross-product.
+mgrid [index expression]
+This is an instance of a class. It can be used to construct a ﬁll ed “mesh-grid”
+using slicing syntax.
+ogrid [index expression]
+This is similar to mgrid except it returns an open grid, so as t o save space and
+time. The broadcasting rules will ensure that any universal function operating
+on the grid will act as if the ogrid had been the result of mgrid .
+112
+===== PAGE 113 =====
+r [index expression]
+This is a simple way to build up arrays quickly. There are two u se cases. 1) If
+the index expression contains comma separated arrays, then stack them along
+their ﬁrst axis. 2) If the index expression contains slice no tation or scalars
+then create a 1-d array with a range indicated by the slice not ation. In other-
+words the slice syntax start:stop:step is equivalent to ara nge(start, stop, step)
+inside of the bracket
+
+===== subdtype @ 200510 =====
+e used to alter where the na mes represented
+in the string are found (default is current local and global n amespace).
+>>> A=mat(’1 2; 3 4’); B=mat(’5 6; 7 8’)
+>>> bmat(’A, B; B, A’)
+matrix([[1, 2, 5, 6],
+[3, 4, 7, 8],
+[5, 6, 1, 2],
+[7, 8, 3, 4]])
+5.8 More data type functions
+issubclass
+(arg1, arg2)
+118
+===== PAGE 119 =====
+Returns True if arg1 is a sub-class of arg2, otherwise return s False. Similar to
+the built-in issubclass except it does not raise an error if a rg1 or arg2 are not
+types.
+issubdtype (arg1, arg2)
+Returns True if the type-object of the data-type represente d by arg1 is a sub class
+of the type-object of the data-type represented by arg2.
+iscomplexobj (obj)
+Return a single True or False value depending on whether or no t obj would be
+interpreted as an array with complex-valued data type.
+isrealobj (obj)
+Return a single True or False value depending on whether or no t obj would be
+interpreted as an array with real-valued data type.
+isscalar (obj)
+True if obj is a scalar (an ins
+
+===== subdtype @ 220453 =====
+f an ndarray. If
+ﬁeld names are not speciﬁed in a constructor, they default to ’f0’, ’f2’, ...,
+’f<n-1>’.
+names An ordered list of ﬁeld names. This can be used to walk through all of
+the named ﬁelds in oﬀset order. Notice that the deﬁned ﬁelds d o not have to
+“cover” the record, but the itemsize of the container data-t ype object must
+132
+===== PAGE 133 =====
+always be at least as large as the itemsizes of the data-type o bjects in the
+deﬁned ﬁelds. This attribute is None if there are no ﬁelds.
+subdtype Numarray introduced the concept of a ﬁxed-length record hav ing ﬁelds
+that were themselves arrays of another data-type. This is su pported at a fun-
+damental level in NumPy using this attribute which maintain s the simplicity
+of deﬁning a ﬁeld by another data-type object. It either retu rns None or a
+tuple (base dtype, shape) where shape is a tuple showing the s ize of the C-
+contiguous array and the base dtype object indicates the dat a-type in each
+element of the subarray. If a ﬁeld whose dty
+
+===== subdtype @ 225790 =====
+iﬁer followed by an array-protocol type string. P arenthesis
+are required on the shape if it is greater than 1-d. NumPy allo ws
+a modiﬁcation on the format in that any string that can unique ly
+identify the type can be used to specify the data-type in a ﬁel d.
+This data-type deﬁnes ﬁelds named ’f0’, ’f2’, ..., ’f <N-1>’ where N
+(>1) is the number of comma-separated basic formats in the stri ng.
+If the optional shape speciﬁer is provided, then the data-ty pe for
+the corresponding ﬁeld contains a subdtype attribute provi ding the
+shape.
+Examples: “i4, (2,3)f8, f4”; “a3, 3u8, (3,4)a10”
+4. Any string in NumPy.sctypeDict.keys():
+Examples: ’uint32’, ’Int16’, ’Uint64’, ’Float64’, ’Complex64’
+tuple Three kinds of tuples each of length 2 can be converted into a d ata-type
+object:
+1. (ﬂexible dtype, itemsize): The ﬁrst argument must be an ob ject that
+is converted to a ﬂexible data-type object (one whose elemen t size is
+0), the second argument is an integer providing the desired i temsize.
+Examples: (v
+
+===== subdtype @ 230763 =====
+ it’s ﬁeld data-type object s and any sub-arrays)
+to the corresponding byteorder.
+reduce ()
+setstate (state)
+Data-type objects can be pickled because of these two method s. The reduce ()
+method returns a 3-tuple consisting of (callable object, ar gs, state), where the
+callable object is numpy.core.multiarray.dtype and args i s (typestring, 0, 1)
+unless the data-type inherits from void (or is user-deﬁned) in which case args
+is (typeobj, 0, 1). The state is an 8-tuple with (version, end ian, self.subdtype,
+self.names, self.ﬁelds, self.itemsize, self.alignment, self.ﬂags). The self.itemsize
+and self.alignment entries are both -1 if the data-type obje ct is built-in and
+not ﬂexible (because they are ﬁxed on creation). The setstat e method takes
+the saved state and updates the date-type object.
+137
+===== PAGE 138 =====
+Chapter 8
+Standard Classes
+The ndarray in NumPy is a “new-style” Python built-in-type. Therefore, it can be
+inherited from (in Python or in C) if desired. Therefore, it c an form a f
+
+===== subdtype @ 626645 =====
+ate, 90
+cos, 167
+cosh, 168
+cov, 100
+cross, 92
+ctypes, 53, 86, 337– 347
+ctypeslib, 191
+cumproduct, 94
+cumsum, 94
+delete, 106
+deprecate, 125
+diag, 117
+diagﬂat, 117
+diagonal, 94
+diﬀ, 105
+digitize, 101
+disp, 106
+distutils, 194
+divide, 164
+dot, 92
+dsplit, 98
+dstack, 97
+dtype, 19, 131– 137, 352
+adding new, 312– 315
+attributes, 131– 133
+alignment, 132
+byteorder, 132
+char, 132
+descr, 133
+ﬁelds, 132
+ﬂags, 133
+hasobject, 133
+isbuiltin, 133
+isnative, 133
+itemsize, 132
+kind, 131
+name, 132
+num, 132
+str, 132
+subdtype, 133
+type, 131
+construction, 134– 137
+from dict, 136
+from ﬂoat, 134
+from list, 136
+from None, 134
+from string, 134
+from tuple, 135
+from type, 134
+methods, 137
+reduce , 137
+setstate , 137
+newbyteorder, 137
+Ellipsis, 25
+ellipsis, 79
+empty, 86
+empty like, 87
+equal, 169
+error handling, 155
+exp, 166
+expand dims, 98
+extension module, 292– 303
+365
+===== PAGE 366 =====
+extract, 106
+eye, 116
+f2py, 321– 327
+ﬀt, 177– 181
+ﬁnfo, 120
+ﬁtting, 111
+ﬁx, 121
+ﬂatnonzero, 89
+ﬂiplr, 117
+ﬂipud, 117
+ﬂoor, 173
+ﬂoor div
+
+===== subdtype @ 627829 =====
+, 74, 93
+gradient, 105
+greater, 169
+greater equal, 169
+hamming, 122
+hanning, 122
+histogram, 101
+histogram2d, 102
+histogramdd, 102
+hsplit, 98
+hstack, 97
+hypot, 167
+i0, 122
+identity, 89
+imag, 94
+index exp, 115
+indexing, 23, 79– 84, 354
+indices, 88
+inner, 91
+insert, 106
+Instant, 349
+intersect1d, 111
+intersect1d nu, 111
+invert, 169
+iscomplex, 172
+iscomplexobj, 119
+isﬁnite, 172
+isfortran, 86
+isinf, 172
+isnan, 172
+isneginf, 121
+isposinf, 121
+isreal, 172
+isrealobj, 119
+isscalar, 119
+issubclass , 118
+issubdtype, 119
+ix , 112
+kaiser, 123
+kron, 98
+ldexp, 172
+left shift, 169
+less, 169
+less equal, 169
+lexsort, 89
+linalg, 174– 176
+linspace, 103
+load, 88
+loads, 88
+366
+===== PAGE 367 =====
+log, 166
+log10, 166
+log2, 121
+logical and, 170
+logical not, 170
+logical or, 170
+logical xor, 170
+logspace, 102
+masked arrays, 148– 149
+mat, 118
+matrix, 139– 142
+maximum, 170
+mean, 94
+median, 101
+memory maps, 142
+meshgrid, 103
+minimum, 171
+mintypecode, 120
+modf, 172
+msort, 101
+multiply, 164
+nan to num, 119
+nanargmax, 107
+na
+
+===== getfield @ 104207 =====
+s data at a certain byte oﬀset interpreted a s a given data
+type. The returned array is a reference into self, therefore changes made to
+the returned array will be reﬂected in self. This method is pa rticularly useful
+for record arrays that use a void data type, but it can also be u sed to extract
+the low (high)-order bytes of other array types as well. For e xample, using
+getﬁeld, you could extract ﬁxed-length substrings from an a rray of strings.
+>>> a = array([’Hello’,’World’,’NumPy’])
+>>> a.getfield(’S2’,1)
+array([’el’, ’or’, ’um’],
+dtype=’|S2’)
+setﬂags (write=None, align=None, uic=None)
+57
+===== PAGE 58 =====
+Table 3.2: Array conversion methods
+Method Arguments Description
+astype (dtype {None}) Cast to another data type
+byteswap (inplace {False}) Byteswap array elements
+copy () Copy array
+dump (ﬁle) Pickle to stream or ﬁle
+dumps () Get pickled string
+ﬁll (scalar) Fill an array with scalar value
+getﬁeld (dtype=, oﬀset=0) Return a ﬁeld of the array
+setﬂags (write=None,
+align=None, uic=None)
+
+===== getfield @ 421172 =====
+ted” from the array object itself. This routi ne updates one or
+more of these ﬂags of arr as speciﬁed in ﬂagmask by performing the required
+calculation.
+W ARNING
+It is important to keep the ﬂags updated (using
+PyArray
+UpdateFlags can help) whenever a manipulation
+with an array is performed that might cause them to change.
+Later calculations in NumPy that rely on the state of these ﬂa gs
+do not repeat the calculation to update them.
+13.3.5 Array method alternative API
+13.3.5.1 Conversion
+PyArray
+GetField (PyObject*) ( PyArrayObject* self, PyArray Descr*
+dtype, int oﬀset)
+Equivalent to self.getﬁeld (dtype, oﬀset ). Return a new array of the given dtype
+using the data in the current array at a speciﬁed oﬀset in bytes. The oﬀset
+plus the itemsize of the new array type must be less than self ->descr->elsize
+or an error is raised. The same shape and strides as the origin al array are
+used. Therefore, this function has the eﬀect of returning a ﬁ eld from a record
+256
+===== PAGE 257 =====
+array. But, 
+
+===== expm1 @ 275616 =====
+s the behavior of x1%x2 in old Numeric.
+absolute (x [, y])
+y = |x| . Called to implement abs(x) for arrays.
+rint (x, [, y])
+Round x to the nearest integer. Rounds half-way cases to the nearest even integer.
+sign (x [, y])
+Sets y according to
+sign (x) =
+
+
+
+
+
+1 x :> 0,
+0 x = 0,
+−1 x < 0.
+conj (x [, y])
+conjugate (x [, y])
+y =
+x; in other words, the complex conjugate of x.
+165
+===== PAGE 166 =====
+exp (x [, y])
+y = ex.
+log (x [, y])
+y = log (x). In other words, y is the number so that ey = x.
+expm1 (x, [, y])
+y = ex − 1. Calculated so that it is accurate for small |x| .
+log1p (x, [, y])
+y = log (1 + x) but accurate for small |x| . Returns the number y such that ey −1 =
+x
+log10 (x [, y])
+y = log 10 (x). In other words, y is the number so that 10 y = x.
+sqrt (x [, y])
+y = √x.
+square (x [,y])
+y = x ∗ x
+reciprocal (x [, y])
+y = 1/x
+ones like (x, [, y])
+y = 1 If an output argument is not given the returned data-type i s the same as
+the input data type.
+i TIP
+The optional output arguments can b
+
+===== expm1 @ 377013 =====
+t math functions.
+HA VEINVERSE HYPERBOLIC System has inverse hyperbolic functions:
+asinh, acosh, and atanh.
+HA VEINVERSE HYPERBOLIC FLOA T System has C99 ﬂoat extensions
+to inverse hyperbolic functions: asinhf, acoshf, atanhf
+HA VEINVERSE HYPERBOLIC LONGDOUBLE System has C99 long
+double extensions to inverse hyperbolic functions: asinhl , acoshl, atanhl.
+HA VEISNAN System has an isnan function.
+HA VEISINF System has an isinf function.
+HA VELOG1P System has the log1p function: log ( x + 1).
+HA VEEXPM1 System has the expm1 function: exp ( x) − 1.
+HA VERINT System has the rint function.
+13.2 Array Data Types
+The standard array can have 21 diﬀerent data types (and has so me support for
+adding your own types). These data types all have an enumerat ed type, an enumer-
+ated type-character, and a corresponding array scalar Pyth on type object (placed
+in a hierarchy). There are also standard C typedefs to make it easier to manipulate
+229
+===== PAGE 230 =====
+elements of the given data type. For the 
+
+===== expm1 @ 377034 =====
+VEINVERSE HYPERBOLIC System has inverse hyperbolic functions:
+asinh, acosh, and atanh.
+HA VEINVERSE HYPERBOLIC FLOA T System has C99 ﬂoat extensions
+to inverse hyperbolic functions: asinhf, acoshf, atanhf
+HA VEINVERSE HYPERBOLIC LONGDOUBLE System has C99 long
+double extensions to inverse hyperbolic functions: asinhl , acoshl, atanhl.
+HA VEISNAN System has an isnan function.
+HA VEISINF System has an isinf function.
+HA VELOG1P System has the log1p function: log ( x + 1).
+HA VEEXPM1 System has the expm1 function: exp ( x) − 1.
+HA VERINT System has the rint function.
+13.2 Array Data Types
+The standard array can have 21 diﬀerent data types (and has so me support for
+adding your own types). These data types all have an enumerat ed type, an enumer-
+ated type-character, and a corresponding array scalar Pyth on type object (placed
+in a hierarchy). There are also standard C typedefs to make it easier to manipulate
+229
+===== PAGE 230 =====
+elements of the given data type. For the numeric types, there 
+
+===== log1p @ 275695 =====
+implement abs(x) for arrays.
+rint (x, [, y])
+Round x to the nearest integer. Rounds half-way cases to the nearest even integer.
+sign (x [, y])
+Sets y according to
+sign (x) =
+
+
+
+
+
+1 x :> 0,
+0 x = 0,
+−1 x < 0.
+conj (x [, y])
+conjugate (x [, y])
+y =
+x; in other words, the complex conjugate of x.
+165
+===== PAGE 166 =====
+exp (x [, y])
+y = ex.
+log (x [, y])
+y = log (x). In other words, y is the number so that ey = x.
+expm1 (x, [, y])
+y = ex − 1. Calculated so that it is accurate for small |x| .
+log1p (x, [, y])
+y = log (1 + x) but accurate for small |x| . Returns the number y such that ey −1 =
+x
+log10 (x [, y])
+y = log 10 (x). In other words, y is the number so that 10 y = x.
+sqrt (x [, y])
+y = √x.
+square (x [,y])
+y = x ∗ x
+reciprocal (x [, y])
+y = 1/x
+ones like (x, [, y])
+y = 1 If an output argument is not given the returned data-type i s the same as
+the input data type.
+i TIP
+The optional output arguments can be used to help you save mem -
+ory for large calculations. If your arrays are la
+
+===== log1p @ 376957 =====
+uble math functions.
+HA VEFLOA TFUNCS System has C99 ﬂoat math functions.
+HA VEINVERSE HYPERBOLIC System has inverse hyperbolic functions:
+asinh, acosh, and atanh.
+HA VEINVERSE HYPERBOLIC FLOA T System has C99 ﬂoat extensions
+to inverse hyperbolic functions: asinhf, acoshf, atanhf
+HA VEINVERSE HYPERBOLIC LONGDOUBLE System has C99 long
+double extensions to inverse hyperbolic functions: asinhl , acoshl, atanhl.
+HA VEISNAN System has an isnan function.
+HA VEISINF System has an isinf function.
+HA VELOG1P System has the log1p function: log ( x + 1).
+HA VEEXPM1 System has the expm1 function: exp ( x) − 1.
+HA VERINT System has the rint function.
+13.2 Array Data Types
+The standard array can have 21 diﬀerent data types (and has so me support for
+adding your own types). These data types all have an enumerat ed type, an enumer-
+ated type-character, and a corresponding array scalar Pyth on type object (placed
+in a hierarchy). There are also standard C typedefs to make it easier to manipulate
+229
+===== 
+
+===== log1p @ 376978 =====
+HA VEFLOA TFUNCS System has C99 ﬂoat math functions.
+HA VEINVERSE HYPERBOLIC System has inverse hyperbolic functions:
+asinh, acosh, and atanh.
+HA VEINVERSE HYPERBOLIC FLOA T System has C99 ﬂoat extensions
+to inverse hyperbolic functions: asinhf, acoshf, atanhf
+HA VEINVERSE HYPERBOLIC LONGDOUBLE System has C99 long
+double extensions to inverse hyperbolic functions: asinhl , acoshl, atanhl.
+HA VEISNAN System has an isnan function.
+HA VEISINF System has an isinf function.
+HA VELOG1P System has the log1p function: log ( x + 1).
+HA VEEXPM1 System has the expm1 function: exp ( x) − 1.
+HA VERINT System has the rint function.
+13.2 Array Data Types
+The standard array can have 21 diﬀerent data types (and has so me support for
+adding your own types). These data types all have an enumerat ed type, an enumer-
+ated type-character, and a corresponding array scalar Pyth on type object (placed
+in a hierarchy). There are also standard C typedefs to make it easier to manipulate
+229
+===== PAGE 230 =====
+elemen
+
+===== setbufsize @ 257865 =====
+ata from all the inputs and output s of a ufunc. The de-
+fault size of the buﬀer is 10,000 elements. Whenever buﬀer-b ased calculation would
+be needed, but all input arrays are smaller than the buﬀer siz e, those misbehaved
+or incorrect typed arrays will be copied before the calculat ion proceeds. Adjusting
+the size of the buﬀer may therefore alter the speed at which uf unc calculations of
+various sorts are completed. A simple interface for setting this variable is accessible
+using the function
+setbufsize (size)
+Set the buﬀer size to the given number of elements in the curre nt thread. Return
+the old buﬀer size (so that it can be reset later if desired).
+9.1.4 Error handling
+Universal functions can trip special ﬂoating point status r egisters in your hardware
+(such as divide-by-zero). If available on your platform, th ese registers will be reg-
+ularly checked during calculation. The user can determine w hat should be done if
+errors are encountered. Error handling is controlled on a pe r-thread b
+
+===== setbufsize @ 630834 =====
+x, 332– 337
+PyUFunc Type, 218
+r , 113
+random, 181– 190
+continuous, 184– 190
+discrete, 181– 184
+rank, 94
+ravel, 94
+real, 94
+real if close, 119
+record arrays, 144– 148
+reference counting, 297– 298
+remainder, 165
+repeat, 94
+require, 86
+reshape, 94
+resize, 98
+right shift, 169
+roll, 96
+rollaxis, 96
+roots, 109
+rot90, 117
+round , 108
+row stack, 97
+s , 115
+369
+===== PAGE 370 =====
+searchsorted, 94
+select, 103
+set operations, 111– 112
+set numeric ops, 124
+set printoptions, 74, 93
+set string function, 94
+setbufsize, 155
+setdiﬀ1d, 112
+seterr, 155
+seterrcall, 156
+setmember1d, 112
+setxor1d, 112
+shape, 94
+signbit, 172
+sin, 167
+sinc, 121
+single-segment, 28
+sinh, 167
+SIP, 348
+size, 94
+sometrue, 94
+sort, 94
+sort complex, 106
+split, 98
+sqrt, 166
+squeeze, 94
+std, 94
+stride, 29
+subtract, 164
+sum, 94
+swapaxes, 94
+swig, 347
+take, 94
+tan, 167
+tanh, 168
+tensordot, 92
+The, 131
+tile, 99
+trace, 94
+transpose, 94
+trapz, 105
+tri, 117
+tril, 118
+trim zeros, 105
+triu, 118
+true divide, 164
+ufunc, 30, 153– 173, 357– 363
+adding ne
+
+===== cov @ 60177 =====
+);
+3. there is a true Python scalar type (contained in a hierarch y of types) for every
+data-type an array can have;
+4. data-type objects deﬁne the data-type with support for da ta-type objects with
+ﬁelds and subarrays which allow record arrays with nested re cords;
+5. many more array methods in addition to functional counter parts;
+6. attributes more clearly distinguished from methods (att ributes are intrinsic
+parts of an array so that setting them changes the array itsel f);
+7. array scalars covering all data types which inherit from P ython scalars when
+appropriate;
+8. arrays can be misaligned, swapped, and in Fortran order in memory (facilitates
+memory-mapped arrays);
+9. arrays can be more easily read from text ﬁles and created fr om buﬀers and
+iterators;
+10. arrays can be quickly written to ﬁles in text and/or binar y mode;
+11. arrays support the removal of the 64-bit memory limitati on as long as you
+have Python 2.5 or later;
+12. fancy indexing can be done on arrays using integer s
+
+===== cov @ 172133 =====
+ along the indicated axis. If axis is Non e, average over
+the entire array. Inputs can be integer or ﬂoating types; res ult is type ﬂoat.
+If weights are given, the result is sum(a*weights)/sum(wei ghts). Therefore,
+weights must have shape equal to a.shape or be 1-d with length a.shape[axis].
+Integer weights are converted to ﬂoat. If returned is True, t hen return a tuple
+showing both the result and the sum of the weights (or count of the values).
+The shape of these two results will be the same.
+cov (x, y=None, rowvar=1, bias=0)
+Compute the covariance matrix of data in x. If x is a vector and y is None, then
+this function is equivalent to asarray(x).var(). Otherwis e, x is interpreted as
+observations of several random variables. If rowvar is True (default), then
+the variables are in the rows and the observations of the vari ables are in the
+columns. Otherwise, the variables are in the columns and the observations
+are in the rows. If y is given then it is treated as another vari able or set
+
+===== cov @ 172179 =====
+verage over
+the entire array. Inputs can be integer or ﬂoating types; res ult is type ﬂoat.
+If weights are given, the result is sum(a*weights)/sum(wei ghts). Therefore,
+weights must have shape equal to a.shape or be 1-d with length a.shape[axis].
+Integer weights are converted to ﬂoat. If returned is True, t hen return a tuple
+showing both the result and the sum of the weights (or count of the values).
+The shape of these two results will be the same.
+cov (x, y=None, rowvar=1, bias=0)
+Compute the covariance matrix of data in x. If x is a vector and y is None, then
+this function is equivalent to asarray(x).var(). Otherwis e, x is interpreted as
+observations of several random variables. If rowvar is True (default), then
+the variables are in the rows and the observations of the vari ables are in the
+columns. Otherwise, the variables are in the columns and the observations
+are in the rows. If y is given then it is treated as another vari able or set of
+variables to be added to x. By default, a 
+
+===== cov @ 172718 =====
+ a vector and y is None, then
+this function is equivalent to asarray(x).var(). Otherwis e, x is interpreted as
+observations of several random variables. If rowvar is True (default), then
+the variables are in the rows and the observations of the vari ables are in the
+columns. Otherwise, the variables are in the columns and the observations
+are in the rows. If y is given then it is treated as another vari able or set of
+variables to be added to x. By default, a so-called unbiased e stimate of the
+covariance matrix is made. If bias is non-zero, then a biased normalization
+factor (with better mean-square error performance) is used instead. If X is a
+random vector, then the covariance matrix is deﬁned as
+C = E
+[
+(X − EX) (X − EX)H
+]
+.
+It can be approximated as
+C ≈ 1
+P
+N −1∑
+i=0
+(xi − ¯x) (xi − ¯x)H
+where xi is an observation of X (as a column-vector), N is the number of
+observations made and P = N − 1 for an unbiased estimate or P = N for a
+biased (but lower mean-squared error) estimate.
+100
+=
+
+===== cov @ 172896 =====
+t), then
+the variables are in the rows and the observations of the vari ables are in the
+columns. Otherwise, the variables are in the columns and the observations
+are in the rows. If y is given then it is treated as another vari able or set of
+variables to be added to x. By default, a so-called unbiased e stimate of the
+covariance matrix is made. If bias is non-zero, then a biased normalization
+factor (with better mean-square error performance) is used instead. If X is a
+random vector, then the covariance matrix is deﬁned as
+C = E
+[
+(X − EX) (X − EX)H
+]
+.
+It can be approximated as
+C ≈ 1
+P
+N −1∑
+i=0
+(xi − ¯x) (xi − ¯x)H
+where xi is an observation of X (as a column-vector), N is the number of
+observations made and P = N − 1 for an unbiased estimate or P = N for a
+biased (but lower mean-squared error) estimate.
+100
+===== PAGE 101 =====
+corrcoef (x, y=None, rowvar=1, bias=0)
+Estimate the correlation coeﬃcient of x. By default, each ro w of x contains a
+random variable with observations of the
+
+===== cov @ 173703 =====
+r) estimate.
+100
+===== PAGE 101 =====
+corrcoef (x, y=None, rowvar=1, bias=0)
+Estimate the correlation coeﬃcient of x. By default, each ro w of x contains a
+random variable with observations of the random variable in the columns of
+x. (If rowvar is False, the each column is a random variable wi th observations
+in the rows). The y argument can be used to append additional v ariables to
+x. The ith row and jth column of the correlation coeﬃcient matrix is deﬁned
+as
+ρ ij = Cij√ CiiCjj
+where C is the covariance matrix. The rowvar and bias arguments are p assed
+on to the cov function to estimate C.
+msort (a)
+Return a new array, sorted along the ﬁrst axis. Equivalent to b=a.copy();
+b.sort(0)
+median (m)
+Returns the median of m along its ﬁrst dimension.
+bincount (list=, weights=None)
+The list argument is a 1-d integer array. Let r be the returned 1-d array whose
+length is (list.max()+1). If weights is None, then r[i] is the number of occur-
+rences of i in list. If weight is present, then the ith el
+
+===== cov @ 173774 =====
+as=0)
+Estimate the correlation coeﬃcient of x. By default, each ro w of x contains a
+random variable with observations of the random variable in the columns of
+x. (If rowvar is False, the each column is a random variable wi th observations
+in the rows). The y argument can be used to append additional v ariables to
+x. The ith row and jth column of the correlation coeﬃcient matrix is deﬁned
+as
+ρ ij = Cij√ CiiCjj
+where C is the covariance matrix. The rowvar and bias arguments are p assed
+on to the cov function to estimate C.
+msort (a)
+Return a new array, sorted along the ﬁrst axis. Equivalent to b=a.copy();
+b.sort(0)
+median (m)
+Returns the median of m along its ﬁrst dimension.
+bincount (list=, weights=None)
+The list argument is a 1-d integer array. Let r be the returned 1-d array whose
+length is (list.max()+1). If weights is None, then r[i] is the number of occur-
+rences of i in list. If weight is present, then the ith element is
+r[i] =
+∑
+j:list[j]=i
+weights[j].
+Notice that if weights is Non
+
+===== cov @ 220214 =====
+t (if it is string
+or unicode then it will also be a key in the ﬁelds dictionary, o therwise it’s
+meta-data). Notice also, that the ﬁrst two elements of the tu ple can be passed
+directly as arguments to the getﬁeld and setﬁeld attributes of an ndarray. If
+ﬁeld names are not speciﬁed in a constructor, they default to ’f0’, ’f2’, ...,
+’f<n-1>’.
+names An ordered list of ﬁeld names. This can be used to walk through all of
+the named ﬁelds in oﬀset order. Notice that the deﬁned ﬁelds d o not have to
+“cover” the record, but the itemsize of the container data-t ype object must
+132
+===== PAGE 133 =====
+always be at least as large as the itemsizes of the data-type o bjects in the
+deﬁned ﬁelds. This attribute is None if there are no ﬁelds.
+subdtype Numarray introduced the concept of a ﬁxed-length record hav ing ﬁelds
+that were themselves arrays of another data-type. This is su pported at a fun-
+damental level in NumPy using this attribute which maintain s the simplicity
+of deﬁning a ﬁeld by another 
+
+===== cov @ 273078 =====
+s a.ndim + b.ndim dimensions.
+Equivalent Python code is
+>>> a.shape += (1,)*b.ndim
+>>> <op>(a,b)
+>>> a = a.squeeze()
+Among many other uses, arithmetic tables can be convenientl y built using outer:
+>>> multiply.outer([1,7,9,12],arange(5,12))
+array([[ 5, 6, 7, 8, 9, 10, 11],
+[ 35, 42, 49, 56, 63, 70, 77],
+[ 45, 54, 63, 72, 81, 90, 99],
+[ 60, 72, 84, 96, 108, 120, 132]])
+163
+===== PAGE 164 =====
+9.5 Available ufuncs
+There are currently more than 60 universal functions deﬁned on one or more types,
+covering a wide variety of operations. Some of these ufuncs a re called automatically
+on arrays when the relevant inﬁx notation is used (i.e. add(a ,b) is called internally
+when a + b is written and a or b is an ndarray). Nonetheless, you may still want
+to use the ufunc call in order to use the optional output argum ent(s) to place the
+output(s) in an object (or in objects) of your choice.
+Recall that each ufunc operates element-by-element. There fore, each ufunc will
+be described as if acting on a
+
+===== cov @ 305608 =====
+ribution, but
+the parameters of the underlying normal distribution. Rand om numbers from this
+distribution are generated as eσZ +µ where Z is a standard normal random number.
+logistic (loc=0.0, scale=1.0, size=None)
+f (x) = e−x
+[1 + e−x]2 I[0, ∞) (x)
+multivariate normal (µ , C, size=None)
+Returns a vector of random numbers which are jointly drawn fr om a multivariate
+normal distribution. The last-dimension of the output arra y contains the
+sample vector, which is of length N = len ( mean) . The covariance matrix
+must be N × N . If µ ≡ mean and C = cov, then the joint-pdf representing
+the returned random vector(s) is
+f (x) = 1√
+(2π )N |C|
+exp
+[
+− 1
+2 (x − µ )T C−1 (x − µ )
+]
+.
+noncentral chisquare (ν , λ , size=None)
+186
+===== PAGE 187 =====
+This is the distribution of ∑ ν
+i=1 (Zi + δ i)2 where Zi are independent standard
+normal random numbers and δ i are constants. It is a a generalized Rayleigh-
+Rice distribution:
+f (x; ν, λ ) = e−(λ +x)/ 2 1
+2
+(x
+λ
+) (ν −2)/ 4
+I(ν −2)/ 2
+(√
+λx
+)
+I(0, ∞)
+
+===== cov @ 305662 =====
+distribution. Rand om numbers from this
+distribution are generated as eσZ +µ where Z is a standard normal random number.
+logistic (loc=0.0, scale=1.0, size=None)
+f (x) = e−x
+[1 + e−x]2 I[0, ∞) (x)
+multivariate normal (µ , C, size=None)
+Returns a vector of random numbers which are jointly drawn fr om a multivariate
+normal distribution. The last-dimension of the output arra y contains the
+sample vector, which is of length N = len ( mean) . The covariance matrix
+must be N × N . If µ ≡ mean and C = cov, then the joint-pdf representing
+the returned random vector(s) is
+f (x) = 1√
+(2π )N |C|
+exp
+[
+− 1
+2 (x − µ )T C−1 (x − µ )
+]
+.
+noncentral chisquare (ν , λ , size=None)
+186
+===== PAGE 187 =====
+This is the distribution of ∑ ν
+i=1 (Zi + δ i)2 where Zi are independent standard
+normal random numbers and δ i are constants. It is a a generalized Rayleigh-
+Rice distribution:
+f (x; ν, λ ) = e−(λ +x)/ 2 1
+2
+(x
+λ
+) (ν −2)/ 4
+I(ν −2)/ 2
+(√
+λx
+)
+I(0, ∞) (x) ,
+where Iν (z) (a real-number in the subscript, n
+
+===== cov @ 470434 =====
+ b. If ( a) or ( b) are expressions they are evaluated
+twice.
+PyArray MIN (a,b)
+Returns the minimum of a and b. If ( a) or ( b) are expressions they are evaluated
+twice.
+PyArray REFCOUNT (PyObject* op)
+Returns the reference count of any Python object.
+PyArray XDECREF ERR (PyObject *obj)
+DECREF’s an array object which may have the NPY UPDATEIFCOPY ﬂag set
+without causing the contents to be copied back into the origi nal array. Resets
+the NPY WRITEABLE ﬂag on the base object. This is useful for recovering
+from an error condition when NPY UPDATEIFCOPY is used.
+283
+===== PAGE 284 =====
+13.3.12.9 Enumerated Types
+NPY
+SORTKIND A special variable-type which can take on the values
+NPY <KIND> where <KIND> is
+QUICKSORT, HEAPSORT, MERGESORT
+NPY NSORTS is deﬁned to be the number of sorts.
+NPY SCALARKIND A special variable type indicating the number of “kinds”
+of scalars distinguished in determining scalar-coercion r ules. This variable can
+take on the values NPY <KIND> where <KIND> can be
+NOSCALAR, B
+
+===== cov @ 486933 =====
+
+and constants you desire, this subroutine must also contain calls to import
+array()
+and/or import ufunc() depending on which C-API is needed. Forgetting to pl ace
+these commands will show itself as an ugly segmentation faul t (crash) as soon as
+any C-API subroutine is actually called. It is actually poss ible to have multiple
+init<name> functions in a single ﬁle in which case multiple modules will be deﬁned
+by that ﬁle. However, there are some tricks to get that to work correctly and it is
+not covered here.
+A minimal init <name> method looks like
+PyMODINIT FUNC
+init<name>(void)
+{
+(void)Py
+InitModule(’’<name>’’, mymethods);
+import array();
+}
+The mymethods must be an array (usually statically declared ) of PyMethodDef
+structures which contain method names, actual C-functions , a variable indicating
+whether the method uses keyword arguments or not, and docstr ings. These are
+explained in the next section. If you want to add constants to the module, then you
+store the returned value from Py 
+
+===== cov @ 498964 =====
+a pointer to its actual data.
+3. Pass the data and shape information on to a subroutine or ot her section of
+code that actually performs the computation.
+4. If you are writing the algorithm, then I recommend that you use the stride
+information contained in the array to access the elements of the array (the
+PyArray
+GETPTR macros make this painless). Then, you can relax your
+requirements so as not to force a single-segment array and th e data-copying
+that might result.
+Each of these sub-topics is covered in the following sub-sec tions.
+298
+===== PAGE 299 =====
+14.4.1 Converting an arbitrary sequence object
+The main routine for obtaining an array from any Python objec t that can be
+converted to an array is PyArray
+FromAny. This function is very ﬂexible with
+many input arguments. Several macros make it easier to use th e basic function.
+PyArray FROM OTF is arguably the most useful of these macros for the most com-
+mon uses. It allows you to convert an arbitrary Python object to an array of a
+
+
+===== cov @ 523840 =====
+BLE,
+NPY LONGDOUBLE, NPY LONGDOUBLE
+NPY OBJECT, NPY OBJECT,
+NPY OBJECT};
+...
+/* in the module initialization code */
+PyObject *f, *dict, *module;
+...
+311
+===== PAGE 312 =====
+dict = PyModule GetDict(module);
+...
+f = PyUFunc
+FromFuncAndData(atan2 functions,
+atan2 data, atan2 signatures, 4, 2, 1,
+PyUFunc None, "arctan2",
+"a safe and correct arctan(x1/x2)", 0);
+PyDict SetItemString(dict, "arctan2", f);
+Py DECREF(f);
+...
+15.3 User-deﬁned data-types
+NumPy comes with 21 builtin data-types. While this covers a l arge majority of pos-
+sible use cases, it is conceivable that a user may have a need f or an additional data-
+type. There is some support for adding an additional data-ty pe into the NumPy
+system. This additional data-type will behave much like a re gular data-type except
+ufuncs must have 1-d loops registered to handle it separatel y. Also checking for
+whether or not other data-types can be cast “safely” to and fr om this new type
+or not will always return “can cast” unless you also regi
+
+===== cov @ 543700 =====
+yo u have to write, debug,
+and maintain C-code, although most of it can be adapted using the time-honored
+technique of “cutting-pasting-and-modifying” from other extension modules. Be-
+cause, the procedure of calling out to additional C-code is f airly regimented, code-
+generation procedures have been developed to make this proc ess easier. One of these
+code-generation techniques is distributed with NumPy and a llows easy integration
+with Fortran and (simple) C code. This package, f2py, will be covered brieﬂy in the
+next session.
+16.3 f2py
+F2py allows you to automatically construct an extension mod ule that interfaces to
+routines in Fortran 77/90/95 code. It has the ability to pars e Fortran 77/90/95 code
+and automatically generate Python signatures for the subro utines it encounters,
+or you can guide how the subroutine interfaces with Python by constructing an
+interface-deﬁntion-ﬁle (or modifying the f2py-produced o ne).
+16.3.1 Creating source for a basic extension module
+Probably the ea
+
+===== cov @ 546619 =====
+nd the i nteger argument
+should be an integer. The interface will attempt to convert a ll arguments to their
+required types (and shapes) and issue an error if unsuccessf ul. However, because it
+knows nothing about the semantics of the arguments (such tha t C is an output and
+n should really match the array sizes), it is possible to abus e this function in ways
+that can cause Python to crash. For example
+>>> add.zadd([1,2,3],[1,2],[3,4],1000)
+will cause a program crash on most systems. Under the covers, the lists are being
+converted to proper arrays but then the underlying add loop i s told to cycle way
+beyond the borders of the allocated memory.
+In order to improve the interface, directives should be prov ided. This is accom-
+plished by constructing an interface deﬁnition ﬁle. It is us ually best to start from
+the interface ﬁle that f2py can produce (where it gets its def ault behavior from).
+To get f2py to generate the interface ﬁle use the -h option:
+f2py -h add.pyf -m add add.f
+This co
+
+===== cov @ 626172 =====
+rage, 100
+bartlett, 122
+bincount, 101
+bitwise and, 168
+bitwise or, 168
+bitwise xor, 168
+blackman, 122
+bmat, 118
+Boost.Python, 348
+broadcasting, 30, 154, 308, 353
+C-API
+array, 233– 284
+ufunc, 284– 291
+c , 115
+cast, 119
+ceil, 173
+character arrays, 143– 144
+choose, 94
+clip, 94
+code generation, 203
+364
+===== PAGE 365 =====
+column stack, 97
+compress, 94
+concatenate, 90
+Conﬁguration, 195
+conj, 165
+conjugate, 165
+container class, 149
+convolve, 91
+copy, 94
+corrcoef, 101
+correlate, 90
+cos, 167
+cosh, 168
+cov, 100
+cross, 92
+ctypes, 53, 86, 337– 347
+ctypeslib, 191
+cumproduct, 94
+cumsum, 94
+delete, 106
+deprecate, 125
+diag, 117
+diagﬂat, 117
+diagonal, 94
+diﬀ, 105
+digitize, 101
+disp, 106
+distutils, 194
+divide, 164
+dot, 92
+dsplit, 98
+dstack, 97
+dtype, 19, 131– 137, 352
+adding new, 312– 315
+attributes, 131– 133
+alignment, 132
+byteorder, 132
+char, 132
+descr, 133
+ﬁelds, 132
+ﬂags, 133
+hasobject, 133
+isbuiltin, 133
+isnative, 133
+itemsize, 132
+kind, 131
+name, 132
+num, 132
+str, 132
+subdtype, 133
+type, 131
+constr
+

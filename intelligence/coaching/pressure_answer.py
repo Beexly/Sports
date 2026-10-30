@@ -35,18 +35,6 @@ TANDEM_DEF_SACK = 4.5   # Sketch 4 def_sack_rate_pct threshold
 TANDEM_OFF_SACK = 5.5   # Sketch 4 off_sack_rate_allowed_pct threshold
 
 
-def idp_tackle_funnel_adjustment(def_blitz_rate_pct: float) -> float:
-    """Sketch 3: Add +0.15 expected tackles for off-ball LB when defense blitzes > 30%."""
-    if float(def_blitz_rate_pct) > 30.0:
-        return 0.15
-    return 0.0
-
-
-def sack_tandem_gate_weight(def_sack_rate_pct: float, off_sack_rate_allowed_pct: float) -> float:
-    """Sketch 4: Boost defensive pressure weight from 0.25 to 0.40 when both rush & OL gates trigger."""
-    if float(def_sack_rate_pct) > TANDEM_DEF_SACK and float(off_sack_rate_allowed_pct) > TANDEM_OFF_SACK:
-        return 0.40
-    return 0.25
 
 
 def stage1_qb_pressure_disguise_overlay(

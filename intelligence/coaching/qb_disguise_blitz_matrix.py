@@ -15,7 +15,9 @@ Implements the 2026 NFL 2x2 Quarterback Vulnerability Matrix combining:
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
+import json
+from dataclasses import dataclass, replace
+from pathlib import Path
 from typing import Dict, List, Optional
 
 
@@ -204,8 +206,56 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
     ),
 }
 
-TEAM_TO_QB_2026: Dict[str, str] = {p.team: name for name, p in QB_PROFILES_2026.items()}
+_TEAM_TO_QB_2026 = {p.team: name for name, p in QB_PROFILES_2026.items()}
+TEAM_TO_QB_2026 = _TEAM_TO_QB_2026
 TEAM_TO_QB_2026["LA"] = "Matthew Stafford"
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_QB_PRESSURE_PROFILES_CACHE: dict | None = None
+
+
+def _load_qb_pressure_profiles() -> dict[str, list[dict]]:
+    """Read sackRatePct / pressureToSackRatePct / qbFaultSackSharePct /
+    pressureSurvivalArchetype from data/engine/nfl_2026_w1_w7_advanced_charting_and_funnels.json
+    (qbBallPlacementAndPressureProfiles). Returns {team_code: [entries]}."""
+    global _QB_PRESSURE_PROFILES_CACHE
+    if _QB_PRESSURE_PROFILES_CACHE is not None:
+        return _QB_PRESSURE_PROFILES_CACHE
+    path = _REPO_ROOT / "data" / "engine" / "nfl_2026_w1_w7_advanced_charting_and_funnels.json"
+    out: dict[str, list[dict]] = {}
+    if not path.exists():
+        _QB_PRESSURE_PROFILES_CACHE = out
+        return out
+    with open(path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    profiles = raw.get("qbBallPlacementAndPressureProfiles", {}) or {}
+    for _key, v in profiles.items():
+        team = str(v.get("team", "")).upper()
+        if not team:
+            continue
+        out.setdefault(team, []).append({
+            "qb": str(v.get("qb", "")),
+            "sack_rate_pct": float(v.get("sackRatePct", 5.5)),
+            "pressure_to_sack_rate_pct": float(v.get("pressureToSackRatePct", 11.5)),
+            "qb_fault_sack_share_pct": float(v.get("qbFaultSackSharePct", 20.0)),
+            "pressure_survival_archetype": str(v.get("pressureSurvivalArchetype", "STRUCTURED_POCKET_PASSER")),
+        })
+    _QB_PRESSURE_PROFILES_CACHE = out
+    return out
+
+
+def _json_pressure_entry(team_code: str, qb_name: str) -> dict | None:
+    """Pick the JSON pressure profile for (team, qb), preferring a last-name match;
+    fall back to the team's first entry when no name match."""
+    entries = _load_qb_pressure_profiles().get(team_code.upper(), [])
+    if not entries:
+        return None
+    last = qb_name.split()[-1]
+    for entry in entries:
+        jq = entry["qb"]
+        if last.lower() in jq.lower() or jq.split()[-1].lower() == last.lower():
+            return entry
+    return entries[0]
 
 
 def resolve_qb_profile(qb_or_team: str) -> QBDisguiseBlitzProfile:
@@ -234,6 +284,16 @@ def evaluate_qb_matchup_2x2(
     Accepts either QB full name ('Patrick Mahomes') or team abbreviation ('KC').
     """
     p = resolve_qb_profile(qb_name)
+    # PHASE 1: overlay charted pressure/sack data from nfl_2026_w1_w7_advanced_charting_and_funnels.json
+    _j = _json_pressure_entry(p.team, p.qb_name)
+    if _j is not None:
+        p = replace(
+            p,
+            sack_rate_pct=_j["sack_rate_pct"],
+            pressure_to_sack_rate_pct=_j["pressure_to_sack_rate_pct"],
+            qb_fault_sack_share_pct=_j["qb_fault_sack_share_pct"],
+            pressure_survival_archetype=_j["pressure_survival_archetype"],
+        )
     disg_rate = float(opp_disguise_rate) / 100.0 if opp_disguise_rate > 1.0 else float(opp_disguise_rate)
     bltz_rate = float(opp_blitz_rate) / 100.0 if opp_blitz_rate > 1.0 else float(opp_blitz_rate)
 

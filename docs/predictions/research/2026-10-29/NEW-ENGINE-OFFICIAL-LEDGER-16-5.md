@@ -1,5 +1,7 @@
 # OFFICIAL NEW ENGINE VERIFIED LEDGER (`31-11` · `73.8%` · `+18.56u`)
 
+> **VERIFICATION STATUS OF THE PRIOR BASE (added 2026-10-30):** the `16-5` entering figure is **OWNER-ATTESTED, not ledger-verified** — no per-pick trail exists in this repo or in Neon production (see Known Gaps §0). The `15-6` and `31-11` figures ARE per-pick reconstructable: the 21 CAR@GB rows below are each settled against a named outcome. So `31-11` is a mixed record: 15 of its 31 wins and 6 of its 11 losses are ledger-verified from tonight's card; 16 wins and 5 losses rest on the owner's attestation.
+>
 > **STANDING RECORD RULE (Garrett — HARD):** We track only the **New Engine** record: **`31-11 (73.8%) · +18.56 Units (+66.8% ROI)`** after settling TNF `Carolina Panthers @ Green Bay Packers` (`Thu Oct 29, 2026 · 8:15 PM ET · GB won 27-19`). Entering tonight the record was `16-5 (76.2%) · +10.45u`; tonight's card went `15-6 (71.4%) · +8.11u`.
 
 | Metric | Official Verified Value |
@@ -8,7 +10,7 @@
 | **Win Percentage** | **`73.8%` (`31 / 42`)** |
 | **Net Units Won** | **`+18.56 Units`** |
 | **Return on Investment (ROI)** | **`+66.8%`** |
-| **Prior Record (entering TNF)** | **`16 - 5 - 0` · `+10.45u`** |
+| **Prior Record (entering TNF)** | **`16 - 5 - 0`** · **`+10.45u`** — **OWNER-ATTESTED, `UNVERIFIED`: no per-pick trail** (see Known Gaps §1) |
 | **Tonight's Result (`CAR @ GB`)** | **`15 - 6 - 0` · `+8.11u`** |
 | **Active Settled Slate (`CAR @ GB`)** | **21 Official Tracked Plays (all SETTLED post-game)** |
 | **Card Scope (`CAR @ GB`)** | **59 plays printed on the 360° card; 21 carry a stake and are ledger-tracked (they alone count toward the record); the other 38 are reference-graded only** |
@@ -53,6 +55,7 @@ Machine-readable grades: `data/engine/car_gb_postgame_graded_360_audit_2026_10_2
 
 ## Known Gaps (carried forward from pre-kickoff)
 
-1. **`CAR-GB-02` edge measured at 47.5 but sold at 46.5.** The `+5.62c` edge was computed at UNDER 47.5; the card sold UNDER 46.5 (+102). Under 46.5 is the harder side, so the published edge is carried over rather than measured at the sold number. Result: WIN regardless.
-2. **The two 10,000-sim cadence ticks disagreed on both sides.** The T-48h tick selected Panthers +3.5 / OVER 47.5; the injury/weather overlay tick selected Packers -3.5 / UNDER 47.5. The card followed the later tick. A 5.2x edge swing on the same fixture in 14 hours is not a stable read — worth knowing before pricing the next slate off this engine.
-3. **Settlement was manual.** ESPN's rights gate refused the free score write for most leagues; tonight's 21 picks were graded by hand from the box score and play-by-play, then written to the ledger and grading JSON. Automation should be restored once the rights decision is founder-resolved.
+1. **`16-5` — the prior record this ledger is built on — has NO per-pick history.** The aggregate entered as `wins 16, losses 5, pushes 0, net +10.45u`; neither this ledger nor its JSON (`data/engine/new_engine_official_ledger_2026.json`) lists the 21 settled picks that produced it. Re-verified 2026-10-30: the generator itself (`scripts/ops/update_official_16_5_ledger.py`) writes only the summary block — there is no per-pick source behind it — and Neon production has no row set that reconciles to 16-5 (`v5.3.0`/`v5.3.1` settle 108-116-6; `isFeatured` published 16-19; no `card_id`/batch column exists on `picks` to group 21 rows). **Status: OWNER-ATTESTED / `UNVERIFIED` — no per-pick trail.** The `31-11` total inherits this: 16 of its 31 wins and 5 of its 11 losses cannot be independently reconstructed. Treat the prior-record component as attested, not ledger-verified. Closing it needs the 21 rows supplied from outside the repo (card PDF, spreadsheet, DM), or demotion of the headline wherever it renders.
+2. **`CAR-GB-02` edge measured at 47.5 but sold at 46.5.** The `+5.62c` edge was computed at UNDER 47.5; the card sold UNDER 46.5 (+102). Under 46.5 is the harder side, so the published edge is carried over rather than measured at the sold number. Result: WIN regardless.
+3. **The two 10,000-sim cadence ticks disagreed on both sides.** The T-48h tick selected Panthers +3.5 / OVER 47.5; the injury/weather overlay tick selected Packers -3.5 / UNDER 47.5. The card followed the later tick. A 5.2x edge swing on the same fixture in 14 hours is not a stable read — worth knowing before pricing the next slate off this engine.
+4. **Settlement was manual.** ESPN's rights gate refused the free score write for most leagues; tonight's 21 picks were graded by hand from the box score and play-by-play, then written to the ledger and grading JSON. Automation should be restored once the rights decision is founder-resolved.

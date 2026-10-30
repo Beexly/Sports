@@ -90,6 +90,27 @@ class TestTop5(unittest.TestCase):
             self.assertIsNone(pa.faced_top5_rush(2024, 9, "BAL"))
 
 
+class TestIDPFunnelAndSackTandem(unittest.TestCase):
+    def test_idp_tackle_funnel_above_threshold(self):
+        self.assertEqual(pa.idp_tackle_funnel_adjustment(36.2), 0.15)
+
+    def test_idp_tackle_funnel_below_threshold(self):
+        self.assertEqual(pa.idp_tackle_funnel_adjustment(20.0), 0.0)
+
+    def test_idp_tackle_funnel_none(self):
+        self.assertEqual(pa.idp_tackle_funnel_adjustment(None), 0.0)
+
+    def test_sack_tandem_gate_both_trigger(self):
+        self.assertEqual(pa.sack_tandem_gate_weight(4.53, 6.3), 0.40)
+
+    def test_sack_tandem_gate_one_misses(self):
+        self.assertEqual(pa.sack_tandem_gate_weight(4.0, 6.3), 0.25)
+        self.assertEqual(pa.sack_tandem_gate_weight(5.0, 4.0), 0.25)
+
+    def test_sack_tandem_gate_none(self):
+        self.assertEqual(pa.sack_tandem_gate_weight(None, 6.3), 0.25)
+
+
 class TestProfile(unittest.TestCase):
     def test_profile_shape(self):
         with _stub_tables():
