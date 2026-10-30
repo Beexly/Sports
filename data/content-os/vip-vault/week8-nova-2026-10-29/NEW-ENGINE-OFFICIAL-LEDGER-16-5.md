@@ -1,10 +1,10 @@
 # NEW ENGINE OFFICIAL LEDGER — updated after CAR @ GB, Thu Oct 29, 2026
 
-**Official New Engine record after Thu Oct 29, 2026: 55 Wins – 27 Losses – 0 Pushes (67.1%) · +25.44 Units (+32.0% ROI)**
-*(Season totals exclude the 1 UNSETTLED play below; they update again if it settles.)*
+**Official New Engine record after Thu Oct 29, 2026: 47 Wins – 16 Losses – 0 Pushes (74.6%) · +29.01 Units**
+*(OFFICIAL FINAL per Garrett, stated 2026-10-29 23:27 CT — tonight 31-11 (73.81%), +18.56 units. This supersedes the auto-grade totals below; the auto-grade of the 62-row vault package (39-22, +14.99u) is retained as a working grade only.)*
 
 - Record entering tonight: **16-5 · +10.45 units (+49.8% ROI)**.
-- Tonight (CAR @ GB, final: Packers 27, Panthers 19): **39 Wins – 22 Losses – 0 Pushes – 1 Unsettled · +14.99 units** on 58.50 units risked across the 61 settled plays.
+- Tonight (CAR @ GB, final: Packers 27, Panthers 19): **OFFICIAL 31 Wins – 11 Losses – 0 Pushes · +18.56 units** (Garrett's final). Auto-grade working line: 39 Wins – 22 Losses – 0 Pushes – 1 Unsettled · +14.99 units on 58.50 units risked across the 61 settled package rows.
 - Machine-readable ledger with every play graded (result + settling stat): `new_engine_official_ledger_2026.json` (this folder).
 - Full card graded: `FULL-360-CARD-CAR-GB-2026-10-29.md` / `FIRST-HALF-CARD-CAR-GB-2026-10-29.md` in this folder.
 
