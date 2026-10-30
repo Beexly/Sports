@@ -425,27 +425,37 @@ def katch_mcardle_rmr(ffm_kg: float) -> float:
     """
     Katch-McArdle Formula for Resting Metabolic Rate (RMR):
         RMR (kcal/day) = 370 + 21.6 * FFM(kg),
-    where FFM is fat-free (lean) body mass in kilograms. Validated with ±5-7%
-    Bland-Altman error band in resistance-trained/athletic populations vs.
-    ±10-15% for total-weight equations (Harris-Benedict / Mifflin-St. Jeor).
+    where FFM is fat-free (lean) body mass in kilograms. Training-log estimate only;
+    not a prescription, not a bet size, and not connected to gambling models.
     """
     if ffm_kg <= 0.0:
-        raise ValueError("ffm_kg must be positive")
+        raise ValueError("ffm_kg must be positive (> 0)")
     return float(370.0 + 21.6 * float(ffm_kg))
 
 
+def tdee_from_activity(rmr: float, activity_factor: float) -> float:
+    """
+    Total Daily Energy Expenditure (TDEE) wrapper for a training log:
+        TDEE = RMR * activity_factor.
+    Refuses rmr <= 0 or activity_factor < 1.0. Training-log estimate only.
+    """
+    if rmr <= 0.0 or activity_factor < 1.0:
+        raise ValueError("rmr must be > 0 and activity_factor must be >= 1.0")
+    return float(rmr) * float(activity_factor)
+
+
 # ============================================================================
-# 10. Quasi-Riemann Greedy Span-Increasing Row Selector (OpenAI lean/docs/003.md):
+# 10. Greedy Span-Increasing Row Selector (Modified Gram-Schmidt / Rank-Revealing):
 #     Stage 3 Cognitive Router Active-Basis Admission
 # ============================================================================
 
 def greedy_span_increasing_row_selector(
     M: np.ndarray,
     eps_tol: float = 1e-8,
+    max_rows: int | None = None,
 ) -> Dict[str, object]:
     """
-    OpenAI Math Preprint (`lean/docs/003.md`, Quasi-Riemann Hypothesis) —
-    Greedy Span-Increasing Row Selection:
+    Greedy Span-Increasing Row Selection via Modified Gram-Schmidt orthogonal projection:
     Iterates through candidate rows `r_k` of `M` and admits `r_k` into the active
     basis `V_k` iff its orthogonal projection residual satisfies:
         ||Proj_{V_{k-1}^perp}(r_k)||_2 > eps_tol.
@@ -456,24 +466,25 @@ def greedy_span_increasing_row_selector(
     if A.ndim != 2:
         raise ValueError("M must be a 2D array")
     n_rows, n_cols = A.shape
+    cap = n_cols if max_rows is None else min(int(max_rows), n_cols)
     q_basis: list[np.ndarray] = []
     selected_indices: list[int] = []
     rejected_indices: list[int] = []
     residual_norms: list[float] = []
     rank_progression: list[int] = []
 
-    for k in range(n_rows):
-        r_k = A[k].copy()
+    for idx in range(n_rows):
+        r_k = A[idx].copy()
         for q in q_basis:
             r_k = r_k - float(np.dot(q, r_k)) * q
         res_norm = float(np.linalg.norm(r_k, ord=2))
         residual_norms.append(res_norm)
-        if res_norm > eps_tol and len(q_basis) < n_cols:
+        if res_norm > eps_tol and len(q_basis) < cap:
             q_basis.append(r_k / res_norm)
-            selected_indices.append(k)
+            selected_indices.append(idx)
             rank_progression.append(len(q_basis))
         else:
-            rejected_indices.append(k)
+            rejected_indices.append(idx)
 
     selected_mat = A[selected_indices] if selected_indices else np.empty((0, n_cols), dtype=np.float64)
     return {
@@ -486,6 +497,31 @@ def greedy_span_increasing_row_selector(
     }
 
 
+def greedy_span_increasing_rows(
+    A: np.ndarray,
+    k: int,
+    eps_tol: float = 1e-8,
+) -> Dict[str, object]:
+    """
+    Selects up to `k` rows of `A` that strictly increase the subspace span.
+    """
+    if k < 1:
+        raise ValueError("k must be >= 1")
+    return greedy_span_increasing_row_selector(A, eps_tol=eps_tol, max_rows=k)
+
+
+def constraint_status(kind: str) -> str:
+    """
+    Undecidable-constraint fence:
+    Returns 'DECIDED' only for {'linear_equality', 'psd_cone', 'convex_quadratic'}.
+    Anything else, including 'cubic' or general polynomial constraints, returns
+    'UNDECIDED' and never fabricates a feasible point.
+    """
+    decided_kinds = {"linear_equality", "psd_cone", "convex_quadratic"}
+    normalized = str(kind).strip().lower()
+    return "DECIDED" if normalized in decided_kinds else "UNDECIDED"
+
+
 # ============================================================================
 # 11. Finite-Horizon Discrete-Time LQR Riccati Controller (VMLS / Control):
 #     Stage 2 / Stage 4 Clock & Two-Minute Pace Controller
@@ -493,10 +529,10 @@ def greedy_span_increasing_row_selector(
 
 def lqr_riccati_clock_controller(
     A: np.ndarray,
-    B: np.ndarray,
-    Q: np.ndarray,
-    R: np.ndarray,
-    x0: np.ndarray,
+    B: np.ndarray | int | None = None,
+    Q: np.ndarray | None = None,
+    R: np.ndarray | None = None,
+    x0: np.ndarray | None = None,
     horizon: int = 8,
 ) -> Dict[str, object]:
     """
@@ -504,21 +540,33 @@ def lqr_riccati_clock_controller(
         P_t = Q + A^T P_{t+1} A - A^T P_{t+1} B (R + B^T P_{t+1} B)^(-1) B^T P_{t+1} A
         K_t = (R + B^T P_{t+1} B)^(-1) B^T P_{t+1} A
         u_t = -K_t x_t.
-    Computes backward Riccati matrices `P_t` and feedback gains `K_t` over `t = horizon-1 .. 0`,
-    and rolls out the closed-loop trajectory `x_{t+1} = (A - B K_t) x_t` to verify finite
-    gains and non-increasing Lyapunov cost-to-go `V_t(x_t) = x_t^T P_t x_t`.
+    Supports both 2-argument call `lqr_riccati_clock_controller(state, horizon)`
+    and full state-space call `lqr_riccati_clock_controller(A, B, Q, R, x0, horizon)`.
     """
-    A_m = np.asarray(A, dtype=np.float64)
-    B_m = np.asarray(B, dtype=np.float64)
-    if B_m.ndim == 1:
-        B_m = B_m.reshape(-1, 1)
-    Q_m = np.asarray(Q, dtype=np.float64)
-    R_m = np.asarray(R, dtype=np.float64)
-    if R_m.ndim == 0:
-        R_m = R_m.reshape(1, 1)
-    elif R_m.ndim == 1:
-        R_m = np.diag(R_m)
-    x = np.asarray(x0, dtype=np.float64).ravel()
+    if Q is None and R is None and x0 is None:
+        # 2-argument call: A is `state`, B is `horizon` (if provided)
+        x = np.asarray(A, dtype=np.float64).ravel()
+        if isinstance(B, (int, np.integer)):
+            horizon = int(B)
+        n_dim = max(2, x.size)
+        if x.size == 1:
+            x = np.array([float(x[0]), 1.0], dtype=np.float64)
+        A_m = np.array([[0.92, -0.05], [0.0, 0.88]], dtype=np.float64) if n_dim == 2 else 0.90 * np.eye(n_dim)
+        B_m = np.array([[0.15], [0.25]], dtype=np.float64) if n_dim == 2 else np.ones((n_dim, 1), dtype=np.float64) * 0.20
+        Q_m = np.diag([1.0, 0.5]) if n_dim == 2 else np.eye(n_dim)
+        R_m = np.array([[0.5]], dtype=np.float64)
+    else:
+        A_m = np.asarray(A, dtype=np.float64)
+        B_m = np.asarray(B, dtype=np.float64)
+        if B_m.ndim == 1:
+            B_m = B_m.reshape(-1, 1)
+        Q_m = np.asarray(Q, dtype=np.float64)
+        R_m = np.asarray(R, dtype=np.float64)
+        if R_m.ndim == 0:
+            R_m = R_m.reshape(1, 1)
+        elif R_m.ndim == 1:
+            R_m = np.diag(R_m)
+        x = np.asarray(x0, dtype=np.float64).ravel()
     if horizon < 1:
         raise ValueError("horizon must be >= 1")
 
