@@ -298,6 +298,33 @@ def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: floa
     return feasible_shares, mass_moved
 
 
+def brenier_one_third_stability_ratio(
+    mu: np.ndarray | list[float],
+    nu: np.ndarray | list[float],
+    realized_weights: np.ndarray | list[float],
+) -> float:
+    """
+    Sharp 1/3-Holder stability check for optimal transport reallocation
+    (OpenAI math preprint `Sharp-One-Third-Stability-of-Brenier-Maps` / `lean/docs/374.md`):
+        ||T_mu - T_nu||_{L2(rho)} <= C * W_2(mu, nu)^{1/3}.
+    The 1/3 exponent is sharp in the general case (unlike 2/3, which requires stronger
+    dual/convexity assumptions). This helper computes a simple 2-Wasserstein proxy on
+    the pre-perturbation (mu) and post-perturbation (nu) target vectors and returns
+    realized_L2_change / (W2_proxy ** (1/3) + 1e-8). Values systematically >> 1
+    indicate excess sensitivity in the Sinkhorn reallocation step.
+    """
+    mu_arr = np.asarray(mu, dtype=np.float64)
+    nu_arr = np.asarray(nu, dtype=np.float64)
+    w_arr = np.asarray(realized_weights, dtype=np.float64)
+    mu_arr = mu_arr / np.sum(mu_arr)
+    nu_arr = nu_arr / np.sum(nu_arr)
+    w_arr = w_arr / np.sum(w_arr)
+    w2_proxy = float(np.sqrt(np.sum((mu_arr - nu_arr) ** 2)))
+    realized_l2_change = float(np.linalg.norm(w_arr - mu_arr, ord=2))
+    return float(realized_l2_change / ((w2_proxy ** (1.0 / 3.0)) + 1e-8))
+
+
+
 def conserve_target_shares_kkt(raw_shares: list[float] | np.ndarray) -> np.ndarray:
     """Enforce exact zero-sum target/carry share conservation sum(s_i) == 1.0 via VMLS Ch. 16 KKT solver."""
     b_vec = np.asarray(raw_shares, dtype=np.float64)
