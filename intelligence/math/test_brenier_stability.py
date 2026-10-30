@@ -63,10 +63,10 @@ class TestBrenierAndKreyszigAndHJO(unittest.TestCase):
         self.assertLess(ratio_scratch, 2.0)
 
     def test_condition_number_kreyszig_20_4(self):
-        # Kreyszig §20.4 Example 1: near-parallel lines, kappa ≈ 200001
+        # Kreyszig §20.4 Example 1: near-parallel lines, 2-norm kappa = 20000.00005 (1-norm/inf-norm = 40000)
         A_ill = np.array([[0.9999, -1.0001], [1.0000, -1.0000]], dtype=np.float64)
         kappa_ill = condition_number_estimate(A_ill, norm="2")
-        self.assertGreater(kappa_ill, 100_000.0)
+        self.assertGreater(kappa_ill, 19_999.0)
 
         # Kreyszig §20.4 Example 5: well-conditioned matrix, kappa ≈ 3.75
         A_well = np.array([[5.0, 1.0, 1.0], [1.0, 4.0, 2.0], [1.0, 2.0, 4.0]], dtype=np.float64)
