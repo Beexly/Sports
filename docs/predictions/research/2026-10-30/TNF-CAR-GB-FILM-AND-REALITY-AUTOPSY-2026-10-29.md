@@ -84,7 +84,7 @@
 
 ### Q1 — GB establishes the trench, Young pressured early
 - CAR opened with Fitzgerald 39-yd FG (3-0, 11:43). GB answered with a 12-yd Love→Kraft TD (PAT missed) — GB up 6-3.
-- **Young:** 6 comps, 43 yards in Q1. Pressured repeatedly — sacked once (Devonte Wyatt), hit on several others. Longest comp 19 (Tremble).
+- **Young:** 6 comps, 53 completion yards in Q1, 1 sack (-6 yards) = 47 net Q1 pass yards. Pressured repeatedly — sacked once (Devonte Wyatt), hit on several others. Longest comp 19 (Tremble).
 - **Love:** 4 comps, 43 yards, 1 TD. Clean pocket — zero sacks allowed in Q1.
 - **Hubbard:** 20 Q1 rush + 15 Q1 receiving yards on early checkdowns.
 - **Watson:** 28 Q1 receiving yards (2 catches), showing up immediately downfield.

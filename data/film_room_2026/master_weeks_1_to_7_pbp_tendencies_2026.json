@@ -1,0 +1,3613 @@
+{
+ "generated_at": "2026-10-30T04:45:55.117467Z",
+ "season": 2026,
+ "weeks_covered": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "source": "data/engine/nfl_2026_w1_w7_trends_and_usage.json (W1-W7 trends + usage build)",
+ "note": "Covers all 32 teams = every Week 8 Sunday opponent. CAR and GB played TNF; the remaining 26 teams across 13 Sunday games are included here. Zone/gap rush split is NOT in the source trends (only aggregate yards_per_rush) \u2014 flagged as data limitation.",
+ "teams": {
+  "ARI": {
+   "team": "ARI",
+   "games_played": 7,
+   "qb1": "Jacoby Brissett",
+   "qb_pass_yards_per_game": 228.6,
+   "early_down_pass_rate": 0.525,
+   "first_and_10_pass_pct": 52.5,
+   "neutral_pass_rate_pct": 60.0,
+   "play_action_pct": 18.6,
+   "rpo_pct": 0.8,
+   "screen_pct": 5.9,
+   "no_huddle_pct": 11.0,
+   "motion_pct": 61.6,
+   "def_sack_rate_pct": 6.2,
+   "def_blitz_rate_pct": 30.9,
+   "qb_hit_rate_allowed_pct": 16.15,
+   "sack_rate_allowed_pct": 4.66,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 3.1,
+    "cov1_pct": 7.1,
+    "cov2_pct": 11.6,
+    "cov3_pct": 22.3,
+    "cov4_pct": 22.3,
+    "cov6_pct": 25.9,
+    "two_high_shell_pct": 59.8,
+    "single_high_shell_pct": 29.4,
+    "epa_per_db_allowed": 0.29
+   },
+   "yards_per_rush_w1_w7": 3.52,
+   "yards_per_rush_w6_w7": 3.48,
+   "rb1_carry_share": 39.2,
+   "off_rush_epa": -0.105,
+   "def_rush_epa": -0.133,
+   "redzone_td_pct": 0.1262,
+   "neutral_sec_per_snap": 23.8,
+   "plays_per_game": 71.1,
+   "off_epa_per_play": -0.024,
+   "off_epa_w1_w5": -0.013,
+   "off_epa_w6_w7": -0.048,
+   "off_trend_delta_w67_vs_w15": -0.036,
+   "wr1_target_share": 28.7,
+   "hhi_target_concentration": 0.175,
+   "n_eff_receivers": 5.71,
+   "top_receivers": [
+    {
+     "player": "Trey McBride",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 11.1,
+     "target_share_pct": 29.7,
+     "rec_yards_per_game": 67.4,
+     "recent_snap_pct": 0.93
+    },
+    {
+     "player": "Michael Wilson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 9.4,
+     "target_share_pct": 24.4,
+     "rec_yards_per_game": 53.6,
+     "recent_snap_pct": 0.9
+    },
+    {
+     "player": "Kendrick Bourne",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 6.0,
+     "target_share_pct": 15.6,
+     "rec_yards_per_game": 39.0,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Elijah Higgins",
+     "position": "TE",
+     "gp": 5,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.48
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Zonovan Knight",
+     "position": "RB",
+     "gp": 1,
+     "carries_per_game": 12.5,
+     "carry_share_pct": 45.1,
+     "rush_yards_per_game": 52.0,
+     "recent_snap_pct": 0.53
+    },
+    {
+     "player": "Tyler Allgeier",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.47
+    }
+   ],
+   "rb1": {
+    "name": "Zonovan Knight",
+    "ypg": 52.0,
+    "carries_pg": 12.5
+   },
+   "wr1": {
+    "name": "Trey McBride",
+    "ypg": 67.4,
+    "targets_pg": 11.1
+   },
+   "turnover_rate_per_play": 0.012,
+   "third_down_conv_w6_w7": 0.3125,
+   "proe_pct": -0.24,
+   "def_epa_per_play": 0.102,
+   "def_epa_w6_w7": 0.021
+  },
+  "ATL": {
+   "team": "ATL",
+   "games_played": 7,
+   "qb1": "Michael Penix",
+   "qb_pass_yards_per_game": 225.0,
+   "early_down_pass_rate": 0.426,
+   "first_and_10_pass_pct": 42.6,
+   "neutral_pass_rate_pct": 49.8,
+   "play_action_pct": 21.7,
+   "rpo_pct": 2.5,
+   "screen_pct": 12.9,
+   "no_huddle_pct": 4.4,
+   "motion_pct": 58.4,
+   "def_sack_rate_pct": 5.18,
+   "def_blitz_rate_pct": 24.7,
+   "qb_hit_rate_allowed_pct": 10.0,
+   "sack_rate_allowed_pct": 6.67,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 1.3,
+    "cov1_pct": 23.1,
+    "cov2_pct": 5.2,
+    "cov3_pct": 35.4,
+    "cov4_pct": 22.4,
+    "cov6_pct": 6.8,
+    "two_high_shell_pct": 34.4,
+    "single_high_shell_pct": 58.5,
+    "epa_per_db_allowed": 0.03
+   },
+   "yards_per_rush_w1_w7": 4.82,
+   "yards_per_rush_w6_w7": 3.82,
+   "rb1_carry_share": 68.6,
+   "off_rush_epa": 0.001,
+   "def_rush_epa": -0.115,
+   "redzone_td_pct": 0.2258,
+   "neutral_sec_per_snap": 26.9,
+   "plays_per_game": 62.1,
+   "off_epa_per_play": -0.03,
+   "off_epa_w1_w5": -0.024,
+   "off_epa_w6_w7": -0.046,
+   "off_trend_delta_w67_vs_w15": -0.022,
+   "wr1_target_share": 29.2,
+   "hhi_target_concentration": 0.161,
+   "n_eff_receivers": 6.22,
+   "top_receivers": [
+    {
+     "player": "Drake London",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 8.0,
+     "target_share_pct": 29.2,
+     "rec_yards_per_game": 88.0,
+     "recent_snap_pct": 0.81
+    },
+    {
+     "player": "Jahan Dotson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.6,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.6,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Kyle Pitts",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 3.9,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Charlie Woerner",
+     "position": "TE",
+     "gp": 4,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.72
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Bijan Robinson",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 18.7,
+     "carry_share_pct": 68.9,
+     "rush_yards_per_game": 100.6,
+     "recent_snap_pct": 0.81
+    }
+   ],
+   "rb1": {
+    "name": "Bijan Robinson",
+    "ypg": 100.6,
+    "carries_pg": 18.7
+   },
+   "wr1": {
+    "name": "Drake London",
+    "ypg": 88.0,
+    "targets_pg": 8.0
+   },
+   "turnover_rate_per_play": 0.023,
+   "third_down_conv_w6_w7": 0.3043,
+   "proe_pct": -6.47,
+   "def_epa_per_play": -0.022,
+   "def_epa_w6_w7": 0.01
+  },
+  "BAL": {
+   "team": "BAL",
+   "games_played": 7,
+   "qb1": "Tyler Huntley",
+   "qb_pass_yards_per_game": 181.8,
+   "early_down_pass_rate": 0.457,
+   "first_and_10_pass_pct": 45.7,
+   "neutral_pass_rate_pct": 58.2,
+   "play_action_pct": 26.5,
+   "rpo_pct": 4.0,
+   "screen_pct": 7.1,
+   "no_huddle_pct": 3.6,
+   "motion_pct": 64.8,
+   "def_sack_rate_pct": 5.78,
+   "def_blitz_rate_pct": 30.9,
+   "qb_hit_rate_allowed_pct": 13.83,
+   "sack_rate_allowed_pct": 7.11,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 6.8,
+    "cov1_pct": 9.5,
+    "cov2_pct": 19.4,
+    "cov3_pct": 28.1,
+    "cov4_pct": 23.2,
+    "cov6_pct": 8.7,
+    "two_high_shell_pct": 51.3,
+    "single_high_shell_pct": 37.6,
+    "epa_per_db_allowed": 0.08
+   },
+   "yards_per_rush_w1_w7": 4.36,
+   "yards_per_rush_w6_w7": 2.89,
+   "rb1_carry_share": 78.7,
+   "off_rush_epa": -0.074,
+   "def_rush_epa": -0.076,
+   "redzone_td_pct": 0.1948,
+   "neutral_sec_per_snap": 26.2,
+   "plays_per_game": 63.7,
+   "off_epa_per_play": 0.071,
+   "off_epa_w1_w5": 0.132,
+   "off_epa_w6_w7": -0.087,
+   "off_trend_delta_w67_vs_w15": -0.219,
+   "wr1_target_share": 26.6,
+   "hhi_target_concentration": 0.147,
+   "n_eff_receivers": 6.8,
+   "top_receivers": [
+    {
+     "player": "Zay Flowers",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 8.8,
+     "target_share_pct": 31.1,
+     "rec_yards_per_game": 101.3,
+     "recent_snap_pct": 0.85
+    },
+    {
+     "player": "Rashod Bateman",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.7,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.73
+    },
+    {
+     "player": "Ja'Kobi Lane",
+     "position": "WR",
+     "gp": 3,
+     "targets_per_game": 4.3,
+     "target_share_pct": 14.4,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.69
+    },
+    {
+     "player": "Mark Andrews",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 5.3,
+     "target_share_pct": 19.4,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.57
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Derrick Henry",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 21.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 82.7,
+     "recent_snap_pct": 0.51
+    },
+    {
+     "player": "Justice Hill",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.46
+    }
+   ],
+   "rb1": {
+    "name": "Derrick Henry",
+    "ypg": 82.7,
+    "carries_pg": 21.0
+   },
+   "wr1": {
+    "name": "Zay Flowers",
+    "ypg": 101.3,
+    "targets_pg": 8.8
+   },
+   "turnover_rate_per_play": 0.0112,
+   "third_down_conv_w6_w7": 0.4688,
+   "proe_pct": -3.06,
+   "def_epa_per_play": 0.026,
+   "def_epa_w6_w7": 0.092
+  },
+  "BUF": {
+   "team": "BUF",
+   "games_played": 6,
+   "qb1": "Josh Allen",
+   "qb_pass_yards_per_game": 250.7,
+   "early_down_pass_rate": 0.4,
+   "first_and_10_pass_pct": 40.0,
+   "neutral_pass_rate_pct": 60.8,
+   "play_action_pct": 26.9,
+   "rpo_pct": 5.8,
+   "screen_pct": 9.4,
+   "no_huddle_pct": 4.5,
+   "motion_pct": 64.4,
+   "def_sack_rate_pct": 3.85,
+   "def_blitz_rate_pct": 35.0,
+   "qb_hit_rate_allowed_pct": 12.56,
+   "sack_rate_allowed_pct": 5.38,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 2.3,
+    "cov1_pct": 10.7,
+    "cov2_pct": 10.7,
+    "cov3_pct": 34.4,
+    "cov4_pct": 26.0,
+    "cov6_pct": 8.4,
+    "two_high_shell_pct": 45.1,
+    "single_high_shell_pct": 45.1,
+    "epa_per_db_allowed": 0.27
+   },
+   "yards_per_rush_w1_w7": 4.55,
+   "yards_per_rush_w6_w7": 4.0,
+   "rb1_carry_share": 77.5,
+   "off_rush_epa": 0.031,
+   "def_rush_epa": -0.076,
+   "redzone_td_pct": 0.2308,
+   "neutral_sec_per_snap": 26.4,
+   "plays_per_game": 63.2,
+   "off_epa_per_play": 0.206,
+   "off_epa_w1_w5": 0.211,
+   "off_epa_w6_w7": 0.185,
+   "off_trend_delta_w67_vs_w15": -0.025,
+   "wr1_target_share": 19.6,
+   "hhi_target_concentration": 0.134,
+   "n_eff_receivers": 7.48,
+   "top_receivers": [
+    {
+     "player": "Keon Coleman",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 4.0,
+     "target_share_pct": 14.5,
+     "rec_yards_per_game": 47.2,
+     "recent_snap_pct": 0.85
+    },
+    {
+     "player": "Dalton Kincaid",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 4.8,
+     "target_share_pct": 17.7,
+     "rec_yards_per_game": 52.5,
+     "recent_snap_pct": 0.72
+    },
+    {
+     "player": "Khalil Shakir",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 5.3,
+     "target_share_pct": 19.6,
+     "rec_yards_per_game": 48.3,
+     "recent_snap_pct": 0.6
+    },
+    {
+     "player": "Dawson Knox",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.69
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "James Cook",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 19.5,
+     "carry_share_pct": 56.1,
+     "rush_yards_per_game": 104.5,
+     "recent_snap_pct": 0.66
+    }
+   ],
+   "rb1": {
+    "name": "James Cook",
+    "ypg": 104.5,
+    "carries_pg": 19.5
+   },
+   "wr1": {
+    "name": "Keon Coleman",
+    "ypg": 47.2,
+    "targets_pg": 4.0
+   },
+   "turnover_rate_per_play": 0.0237,
+   "third_down_conv_w6_w7": 0.4,
+   "proe_pct": -0.75,
+   "def_epa_per_play": 0.148,
+   "def_epa_w6_w7": 0.127
+  },
+  "CAR": {
+   "team": "CAR",
+   "games_played": 6,
+   "qb1": "Bryce Young",
+   "qb_pass_yards_per_game": 285.3,
+   "early_down_pass_rate": 0.568,
+   "first_and_10_pass_pct": 56.8,
+   "neutral_pass_rate_pct": 67.5,
+   "play_action_pct": 26.3,
+   "rpo_pct": 11.8,
+   "screen_pct": 4.4,
+   "no_huddle_pct": 6.3,
+   "motion_pct": 56.6,
+   "def_sack_rate_pct": 4.53,
+   "def_blitz_rate_pct": 36.2,
+   "qb_hit_rate_allowed_pct": 14.81,
+   "sack_rate_allowed_pct": 6.3,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.0,
+    "cov1_pct": 10.1,
+    "cov2_pct": 9.3,
+    "cov3_pct": 47.6,
+    "cov4_pct": 12.8,
+    "cov6_pct": 12.8,
+    "two_high_shell_pct": 34.9,
+    "single_high_shell_pct": 57.7,
+    "epa_per_db_allowed": 0.06
+   },
+   "yards_per_rush_w1_w7": 3.88,
+   "yards_per_rush_w6_w7": 3.76,
+   "rb1_carry_share": 72.4,
+   "off_rush_epa": -0.084,
+   "def_rush_epa": -0.039,
+   "redzone_td_pct": 0.2143,
+   "neutral_sec_per_snap": 23.9,
+   "plays_per_game": 69.2,
+   "off_epa_per_play": 0.041,
+   "off_epa_w1_w5": 0.086,
+   "off_epa_w6_w7": -0.053,
+   "off_trend_delta_w67_vs_w15": -0.139,
+   "wr1_target_share": 25.5,
+   "hhi_target_concentration": 0.141,
+   "n_eff_receivers": 7.1,
+   "top_receivers": [
+    {
+     "player": "Tetairoa McMillan",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 9.0,
+     "target_share_pct": 25.7,
+     "rec_yards_per_game": 85.2,
+     "recent_snap_pct": 0.68
+    },
+    {
+     "player": "Jalen Coker",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 7.8,
+     "target_share_pct": 23.0,
+     "rec_yards_per_game": 65.6,
+     "recent_snap_pct": 0.66
+    },
+    {
+     "player": "John Metchie",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.46
+    },
+    {
+     "player": "Brycen Tremayne",
+     "position": "WR",
+     "gp": 3,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 38.3,
+     "recent_snap_pct": 0.38
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Chuba Hubbard",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 16.0,
+     "carry_share_pct": 51.9,
+     "rush_yards_per_game": 76.5,
+     "recent_snap_pct": 0.61
+    },
+    {
+     "player": "Trevor Etienne",
+     "position": "RB",
+     "gp": 2,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.3
+    }
+   ],
+   "rb1": {
+    "name": "Chuba Hubbard",
+    "ypg": 76.5,
+    "carries_pg": 16.0
+   },
+   "wr1": {
+    "name": "Tetairoa McMillan",
+    "ypg": 85.2,
+    "targets_pg": 9.0
+   },
+   "turnover_rate_per_play": 0.0145,
+   "third_down_conv_w6_w7": 0.4643,
+   "proe_pct": 3.95,
+   "def_epa_per_play": 0.025,
+   "def_epa_w6_w7": 0.044
+  },
+  "CHI": {
+   "team": "CHI",
+   "games_played": 7,
+   "qb1": "Caleb Williams",
+   "qb_pass_yards_per_game": 255.0,
+   "early_down_pass_rate": 0.536,
+   "first_and_10_pass_pct": 53.6,
+   "neutral_pass_rate_pct": 58.7,
+   "play_action_pct": 32.1,
+   "rpo_pct": 3.8,
+   "screen_pct": 9.5,
+   "no_huddle_pct": 4.4,
+   "motion_pct": 53.7,
+   "def_sack_rate_pct": 7.95,
+   "def_blitz_rate_pct": 40.8,
+   "qb_hit_rate_allowed_pct": 13.56,
+   "sack_rate_allowed_pct": 6.1,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 5.3,
+    "cov1_pct": 24.0,
+    "cov2_pct": 17.8,
+    "cov3_pct": 29.8,
+    "cov4_pct": 15.1,
+    "cov6_pct": 1.8,
+    "two_high_shell_pct": 34.7,
+    "single_high_shell_pct": 53.8,
+    "epa_per_db_allowed": 0.02
+   },
+   "yards_per_rush_w1_w7": 4.24,
+   "yards_per_rush_w6_w7": 3.36,
+   "rb1_carry_share": 52.7,
+   "off_rush_epa": -0.082,
+   "def_rush_epa": -0.097,
+   "redzone_td_pct": 0.1316,
+   "neutral_sec_per_snap": 23.8,
+   "plays_per_game": 74.4,
+   "off_epa_per_play": 0.052,
+   "off_epa_w1_w5": 0.038,
+   "off_epa_w6_w7": 0.089,
+   "off_trend_delta_w67_vs_w15": 0.051,
+   "wr1_target_share": 21.0,
+   "hhi_target_concentration": 0.147,
+   "n_eff_receivers": 6.8,
+   "top_receivers": [
+    {
+     "player": "Rome Odunze",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 5.4,
+     "target_share_pct": 16.6,
+     "rec_yards_per_game": 54.4,
+     "recent_snap_pct": 0.94
+    },
+    {
+     "player": "Colston Loveland",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 6.0,
+     "target_share_pct": 18.9,
+     "rec_yards_per_game": 34.9,
+     "recent_snap_pct": 0.84
+    },
+    {
+     "player": "Kalif Raymond",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 4.4,
+     "target_share_pct": 14.4,
+     "rec_yards_per_game": 34.9,
+     "recent_snap_pct": 0.7
+    },
+    {
+     "player": "Luther Burden",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.61
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "D'Andre Swift",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 16.6,
+     "carry_share_pct": 73.1,
+     "rush_yards_per_game": 68.0,
+     "recent_snap_pct": 0.86
+    }
+   ],
+   "rb1": {
+    "name": "D'Andre Swift",
+    "ypg": 68.0,
+    "carries_pg": 16.6
+   },
+   "wr1": {
+    "name": "Rome Odunze",
+    "ypg": 54.4,
+    "targets_pg": 5.4
+   },
+   "turnover_rate_per_play": 0.0211,
+   "third_down_conv_w6_w7": 0.4483,
+   "proe_pct": -0.05,
+   "def_epa_per_play": -0.009,
+   "def_epa_w6_w7": -0.043
+  },
+  "CIN": {
+   "team": "CIN",
+   "games_played": 6,
+   "qb1": "Joe Burrow",
+   "qb_pass_yards_per_game": 275.5,
+   "early_down_pass_rate": 0.607,
+   "first_and_10_pass_pct": 60.7,
+   "neutral_pass_rate_pct": 69.2,
+   "play_action_pct": 16.3,
+   "rpo_pct": 8.9,
+   "screen_pct": 7.3,
+   "no_huddle_pct": 5.1,
+   "motion_pct": 51.6,
+   "def_sack_rate_pct": 8.43,
+   "def_blitz_rate_pct": 16.8,
+   "qb_hit_rate_allowed_pct": 17.07,
+   "sack_rate_allowed_pct": 4.07,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 3.8,
+    "cov1_pct": 25.7,
+    "cov2_pct": 17.3,
+    "cov3_pct": 24.5,
+    "cov4_pct": 5.5,
+    "cov6_pct": 15.2,
+    "two_high_shell_pct": 38.0,
+    "single_high_shell_pct": 50.2,
+    "epa_per_db_allowed": 0.0
+   },
+   "yards_per_rush_w1_w7": 3.6,
+   "yards_per_rush_w6_w7": 3.37,
+   "rb1_carry_share": 66.7,
+   "off_rush_epa": -0.087,
+   "def_rush_epa": -0.094,
+   "redzone_td_pct": 0.2258,
+   "neutral_sec_per_snap": 27.1,
+   "plays_per_game": 61.7,
+   "off_epa_per_play": 0.108,
+   "off_epa_w1_w5": 0.068,
+   "off_epa_w6_w7": 0.349,
+   "off_trend_delta_w67_vs_w15": 0.281,
+   "wr1_target_share": 23.4,
+   "hhi_target_concentration": 0.147,
+   "n_eff_receivers": 6.82,
+   "top_receivers": [
+    {
+     "player": "Tee Higgins",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 8.3,
+     "target_share_pct": 22.8,
+     "rec_yards_per_game": 95.2,
+     "recent_snap_pct": 0.87
+    },
+    {
+     "player": "Ja'Marr Chase",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 7.5,
+     "target_share_pct": 22.7,
+     "rec_yards_per_game": 58.5,
+     "recent_snap_pct": 0.87
+    },
+    {
+     "player": "Mike Gesicki",
+     "position": "TE",
+     "gp": 5,
+     "targets_per_game": 3.6,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.38
+    },
+    {
+     "player": "Dohnte Meyers",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.38
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Chase Brown",
+     "pbp_name": "C.Brown",
+     "player_games": 6,
+     "carries": 82,
+     "carries_per_game": 13.7,
+     "carry_share_pct": 66.7,
+     "rush_yards": 285,
+     "rush_yards_per_game": 47.5,
+     "rush_tds": 1,
+     "rush_epa_per_play": -0.118
+    },
+    {
+     "player": "Samaje Perine",
+     "pbp_name": "S.Perine",
+     "player_games": 6,
+     "carries": 31,
+     "carries_per_game": 5.2,
+     "carry_share_pct": 25.2,
+     "rush_yards": 126,
+     "rush_yards_per_game": 21.0,
+     "rush_tds": 1,
+     "rush_epa_per_play": -0.072
+    },
+    {
+     "player": "Joe Burrow",
+     "pbp_name": "J.Burrow",
+     "player_games": 6,
+     "carries": 6,
+     "carries_per_game": 1.0,
+     "carry_share_pct": 4.9,
+     "rush_yards": 20,
+     "rush_yards_per_game": 3.3,
+     "rush_tds": 1,
+     "rush_epa_per_play": 0.628
+    }
+   ],
+   "rb1": null,
+   "wr1": {
+    "name": "Tee Higgins",
+    "ypg": 95.2,
+    "targets_pg": 8.3
+   },
+   "turnover_rate_per_play": 0.0135,
+   "third_down_conv_w6_w7": 0.5455,
+   "proe_pct": 6.7,
+   "def_epa_per_play": -0.033,
+   "def_epa_w6_w7": -0.081
+  },
+  "CLE": {
+   "team": "CLE",
+   "games_played": 7,
+   "qb1": "Deshaun Watson",
+   "qb_pass_yards_per_game": 211.7,
+   "early_down_pass_rate": 0.543,
+   "first_and_10_pass_pct": 54.3,
+   "neutral_pass_rate_pct": 60.5,
+   "play_action_pct": 18.7,
+   "rpo_pct": 6.6,
+   "screen_pct": 10.1,
+   "no_huddle_pct": 3.4,
+   "motion_pct": 54.4,
+   "def_sack_rate_pct": 7.19,
+   "def_blitz_rate_pct": 24.1,
+   "qb_hit_rate_allowed_pct": 18.35,
+   "sack_rate_allowed_pct": 8.99,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 1.9,
+    "cov1_pct": 43.6,
+    "cov2_pct": 7.9,
+    "cov3_pct": 31.2,
+    "cov4_pct": 7.1,
+    "cov6_pct": 6.0,
+    "two_high_shell_pct": 21.0,
+    "single_high_shell_pct": 74.8,
+    "epa_per_db_allowed": 0.01
+   },
+   "yards_per_rush_w1_w7": 3.61,
+   "yards_per_rush_w6_w7": 4.5,
+   "rb1_carry_share": 58.1,
+   "off_rush_epa": -0.175,
+   "def_rush_epa": -0.104,
+   "redzone_td_pct": 0.18,
+   "neutral_sec_per_snap": 26.6,
+   "plays_per_game": 62.7,
+   "off_epa_per_play": -0.037,
+   "off_epa_w1_w5": -0.063,
+   "off_epa_w6_w7": 0.023,
+   "off_trend_delta_w67_vs_w15": 0.087,
+   "wr1_target_share": 21.6,
+   "hhi_target_concentration": 0.154,
+   "n_eff_receivers": 6.5,
+   "top_receivers": [
+    {
+     "player": "Denzel Boston",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.0,
+     "target_share_pct": 20.1,
+     "rec_yards_per_game": 53.1,
+     "recent_snap_pct": 0.87
+    },
+    {
+     "player": "KC Concepcion",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.4,
+     "target_share_pct": 21.8,
+     "rec_yards_per_game": 45.0,
+     "recent_snap_pct": 0.79
+    },
+    {
+     "player": "Harold Fannin",
+     "position": "TE",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.83
+    },
+    {
+     "player": "Jerry Jeudy",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 3.8,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.61
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Quinshon Judkins",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 15.0,
+     "carry_share_pct": 45.1,
+     "rush_yards_per_game": 52.8,
+     "recent_snap_pct": 0.53
+    },
+    {
+     "player": "Dylan Sampson",
+     "position": "RB",
+     "gp": 1,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.46
+    }
+   ],
+   "rb1": {
+    "name": "Quinshon Judkins",
+    "ypg": 52.8,
+    "carries_pg": 15.0
+   },
+   "wr1": {
+    "name": "Denzel Boston",
+    "ypg": 53.1,
+    "targets_pg": 6.0
+   },
+   "turnover_rate_per_play": 0.0182,
+   "third_down_conv_w6_w7": 0.3704,
+   "proe_pct": -0.37,
+   "def_epa_per_play": -0.039,
+   "def_epa_w6_w7": -0.086
+  },
+  "DAL": {
+   "team": "DAL",
+   "games_played": 7,
+   "qb1": "Dak Prescott",
+   "qb_pass_yards_per_game": 264.4,
+   "early_down_pass_rate": 0.587,
+   "first_and_10_pass_pct": 58.7,
+   "neutral_pass_rate_pct": 63.3,
+   "play_action_pct": 20.2,
+   "rpo_pct": 3.7,
+   "screen_pct": 5.6,
+   "no_huddle_pct": 9.3,
+   "motion_pct": 47.4,
+   "def_sack_rate_pct": 3.75,
+   "def_blitz_rate_pct": 24.7,
+   "qb_hit_rate_allowed_pct": 11.71,
+   "sack_rate_allowed_pct": 2.22,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 2.8,
+    "cov1_pct": 19.9,
+    "cov2_pct": 2.4,
+    "cov3_pct": 39.4,
+    "cov4_pct": 17.9,
+    "cov6_pct": 11.4,
+    "two_high_shell_pct": 31.7,
+    "single_high_shell_pct": 59.3,
+    "epa_per_db_allowed": 0.27
+   },
+   "yards_per_rush_w1_w7": 3.81,
+   "yards_per_rush_w6_w7": 4.55,
+   "rb1_carry_share": 74.3,
+   "off_rush_epa": 0.024,
+   "def_rush_epa": -0.043,
+   "redzone_td_pct": 0.2041,
+   "neutral_sec_per_snap": 24.6,
+   "plays_per_game": 67.3,
+   "off_epa_per_play": 0.141,
+   "off_epa_w1_w5": 0.157,
+   "off_epa_w6_w7": 0.106,
+   "off_trend_delta_w67_vs_w15": -0.051,
+   "wr1_target_share": 30.9,
+   "hhi_target_concentration": 0.185,
+   "n_eff_receivers": 5.41,
+   "top_receivers": [
+    {
+     "player": "CeeDee Lamb",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 11.6,
+     "target_share_pct": 30.8,
+     "rec_yards_per_game": 93.0,
+     "recent_snap_pct": 0.88
+    },
+    {
+     "player": "George Pickens",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 8.3,
+     "target_share_pct": 22.1,
+     "rec_yards_per_game": 69.3,
+     "recent_snap_pct": 0.88
+    },
+    {
+     "player": "Ryan Flournoy",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 5.7,
+     "target_share_pct": 15.1,
+     "rec_yards_per_game": 43.4,
+     "recent_snap_pct": 0.87
+    },
+    {
+     "player": "Jake Ferguson",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 3.6,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.54
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Javonte Williams",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 15.7,
+     "carry_share_pct": 62.0,
+     "rush_yards_per_game": 67.4,
+     "recent_snap_pct": 0.73
+    }
+   ],
+   "rb1": {
+    "name": "Javonte Williams",
+    "ypg": 67.4,
+    "carries_pg": 15.7
+   },
+   "wr1": {
+    "name": "CeeDee Lamb",
+    "ypg": 93.0,
+    "targets_pg": 11.6
+   },
+   "turnover_rate_per_play": 0.0127,
+   "third_down_conv_w6_w7": 0.5,
+   "proe_pct": 1.83,
+   "def_epa_per_play": 0.14,
+   "def_epa_w6_w7": 0.042
+  },
+  "DEN": {
+   "team": "DEN",
+   "games_played": 7,
+   "qb1": "Bo Nix",
+   "qb_pass_yards_per_game": 181.6,
+   "early_down_pass_rate": 0.455,
+   "first_and_10_pass_pct": 45.5,
+   "neutral_pass_rate_pct": 61.6,
+   "play_action_pct": 23.9,
+   "rpo_pct": 6.4,
+   "screen_pct": 10.2,
+   "no_huddle_pct": 4.7,
+   "motion_pct": 61.0,
+   "def_sack_rate_pct": 6.69,
+   "def_blitz_rate_pct": 35.7,
+   "qb_hit_rate_allowed_pct": 8.24,
+   "sack_rate_allowed_pct": 3.53,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.0,
+    "cov1_pct": 18.3,
+    "cov2_pct": 11.0,
+    "cov3_pct": 30.2,
+    "cov4_pct": 11.6,
+    "cov6_pct": 14.6,
+    "two_high_shell_pct": 37.2,
+    "single_high_shell_pct": 48.5,
+    "epa_per_db_allowed": -0.05
+   },
+   "yards_per_rush_w1_w7": 3.49,
+   "yards_per_rush_w6_w7": 3.26,
+   "rb1_carry_share": 54.4,
+   "off_rush_epa": -0.086,
+   "def_rush_epa": -0.053,
+   "redzone_td_pct": 0.2034,
+   "neutral_sec_per_snap": 27.7,
+   "plays_per_game": 60.4,
+   "off_epa_per_play": -0.032,
+   "off_epa_w1_w5": -0.054,
+   "off_epa_w6_w7": 0.027,
+   "off_trend_delta_w67_vs_w15": 0.081,
+   "wr1_target_share": 23.2,
+   "hhi_target_concentration": 0.129,
+   "n_eff_receivers": 7.74,
+   "top_receivers": [
+    {
+     "player": "Jaylen Waddle",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.4,
+     "target_share_pct": 23.4,
+     "rec_yards_per_game": 39.4,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Courtland Sutton",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 4.7,
+     "target_share_pct": 16.7,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.7
+    },
+    {
+     "player": "Nate Adkins",
+     "position": "TE",
+     "gp": 2,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.39
+    },
+    {
+     "player": "Evan Engram",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.39
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Jonah Coleman",
+     "position": "RB",
+     "gp": 2,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.5,
+     "recent_snap_pct": 0.49
+    }
+   ],
+   "rb1": {
+    "name": "Jonah Coleman",
+    "ypg": 46.5,
+    "carries_pg": 10.0
+   },
+   "wr1": {
+    "name": "Jaylen Waddle",
+    "ypg": 39.4,
+    "targets_pg": 6.4
+   },
+   "turnover_rate_per_play": 0.0118,
+   "third_down_conv_w6_w7": 0.24,
+   "proe_pct": -1.26,
+   "def_epa_per_play": -0.049,
+   "def_epa_w6_w7": -0.078
+  },
+  "DET": {
+   "team": "DET",
+   "games_played": 6,
+   "qb1": "Jared Goff",
+   "qb_pass_yards_per_game": 298.0,
+   "early_down_pass_rate": 0.544,
+   "first_and_10_pass_pct": 54.4,
+   "neutral_pass_rate_pct": 58.8,
+   "play_action_pct": 30.8,
+   "rpo_pct": 2.0,
+   "screen_pct": 7.3,
+   "no_huddle_pct": 5.4,
+   "motion_pct": 54.5,
+   "def_sack_rate_pct": 6.84,
+   "def_blitz_rate_pct": 28.0,
+   "qb_hit_rate_allowed_pct": 12.96,
+   "sack_rate_allowed_pct": 4.86,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.8,
+    "cov1_pct": 19.3,
+    "cov2_pct": 11.7,
+    "cov3_pct": 36.6,
+    "cov4_pct": 12.4,
+    "cov6_pct": 8.6,
+    "two_high_shell_pct": 32.7,
+    "single_high_shell_pct": 55.9,
+    "epa_per_db_allowed": 0.24
+   },
+   "yards_per_rush_w1_w7": 4.17,
+   "yards_per_rush_w6_w7": 3.75,
+   "rb1_carry_share": 86.5,
+   "off_rush_epa": -0.108,
+   "def_rush_epa": -0.068,
+   "redzone_td_pct": 0.2043,
+   "neutral_sec_per_snap": 24.3,
+   "plays_per_game": 68.2,
+   "off_epa_per_play": 0.144,
+   "off_epa_w1_w5": 0.176,
+   "off_epa_w6_w7": -0.021,
+   "off_trend_delta_w67_vs_w15": -0.197,
+   "wr1_target_share": 31.1,
+   "hhi_target_concentration": 0.202,
+   "n_eff_receivers": 4.95,
+   "top_receivers": [
+    {
+     "player": "Amon-Ra St. Brown",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 11.3,
+     "target_share_pct": 31.8,
+     "rec_yards_per_game": 87.5,
+     "recent_snap_pct": 0.78
+    },
+    {
+     "player": "Sam LaPorta",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 6.5,
+     "target_share_pct": 16.8,
+     "rec_yards_per_game": 55.7,
+     "recent_snap_pct": 0.97
+    },
+    {
+     "player": "Jameson Williams",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 6.3,
+     "target_share_pct": 17.5,
+     "rec_yards_per_game": 61.2,
+     "recent_snap_pct": 0.84
+    },
+    {
+     "player": "Isaac TeSlaa",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.49
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Jahmyr Gibbs",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 22.3,
+     "carry_share_pct": 76.5,
+     "rush_yards_per_game": 103.3,
+     "recent_snap_pct": 0.9
+    }
+   ],
+   "rb1": {
+    "name": "Jahmyr Gibbs",
+    "ypg": 103.3,
+    "carries_pg": 22.3
+   },
+   "wr1": {
+    "name": "Amon-Ra St. Brown",
+    "ypg": 87.5,
+    "targets_pg": 11.3
+   },
+   "turnover_rate_per_play": 0.0073,
+   "third_down_conv_w6_w7": 0.5,
+   "proe_pct": -0.68,
+   "def_epa_per_play": 0.146,
+   "def_epa_w6_w7": 0.034
+  },
+  "GB": {
+   "team": "GB",
+   "games_played": 7,
+   "qb1": "Jordan Love",
+   "qb_pass_yards_per_game": 279.7,
+   "early_down_pass_rate": 0.525,
+   "first_and_10_pass_pct": 52.5,
+   "neutral_pass_rate_pct": 64.4,
+   "play_action_pct": 19.5,
+   "rpo_pct": 6.0,
+   "screen_pct": 9.1,
+   "no_huddle_pct": 8.9,
+   "motion_pct": 62.4,
+   "def_sack_rate_pct": 5.44,
+   "def_blitz_rate_pct": 33.2,
+   "qb_hit_rate_allowed_pct": 16.94,
+   "sack_rate_allowed_pct": 4.56,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 5.1,
+    "cov1_pct": 9.8,
+    "cov2_pct": 21.7,
+    "cov3_pct": 23.2,
+    "cov4_pct": 24.3,
+    "cov6_pct": 10.1,
+    "two_high_shell_pct": 56.1,
+    "single_high_shell_pct": 33.0,
+    "epa_per_db_allowed": 0.02
+   },
+   "yards_per_rush_w1_w7": 3.02,
+   "yards_per_rush_w6_w7": 2.77,
+   "rb1_carry_share": 39.7,
+   "off_rush_epa": -0.291,
+   "def_rush_epa": -0.106,
+   "redzone_td_pct": 0.1481,
+   "neutral_sec_per_snap": 25.9,
+   "plays_per_game": 64.3,
+   "off_epa_per_play": 0.001,
+   "off_epa_w1_w5": -0.013,
+   "off_epa_w6_w7": 0.033,
+   "off_trend_delta_w67_vs_w15": 0.046,
+   "wr1_target_share": 26.5,
+   "hhi_target_concentration": 0.155,
+   "n_eff_receivers": 6.44,
+   "top_receivers": [
+    {
+     "player": "Christian Watson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 8.0,
+     "target_share_pct": 21.8,
+     "rec_yards_per_game": 85.0,
+     "recent_snap_pct": 0.81
+    },
+    {
+     "player": "Tucker Kraft",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 6.1,
+     "target_share_pct": 16.4,
+     "rec_yards_per_game": 42.4,
+     "recent_snap_pct": 0.88
+    },
+    {
+     "player": "Savion Williams",
+     "position": "WR",
+     "gp": 2,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 39.5,
+     "recent_snap_pct": 0.6
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Josh Jacobs",
+     "position": "RB",
+     "gp": 1,
+     "carries_per_game": 11.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.52
+    },
+    {
+     "player": "MarShawn Lloyd",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.36
+    }
+   ],
+   "rb1": {
+    "name": "Josh Jacobs",
+    "ypg": 46.0,
+    "carries_pg": 11.0
+   },
+   "wr1": {
+    "name": "Christian Watson",
+    "ypg": 85.0,
+    "targets_pg": 8.0
+   },
+   "turnover_rate_per_play": 0.0178,
+   "third_down_conv_w6_w7": 0.4848,
+   "proe_pct": 4.23,
+   "def_epa_per_play": -0.027,
+   "def_epa_w6_w7": -0.068
+  },
+  "HOU": {
+   "team": "HOU",
+   "games_played": 7,
+   "qb1": "C.J. Stroud",
+   "qb_pass_yards_per_game": 266.7,
+   "early_down_pass_rate": 0.542,
+   "first_and_10_pass_pct": 54.2,
+   "neutral_pass_rate_pct": 63.2,
+   "play_action_pct": 21.8,
+   "rpo_pct": 4.0,
+   "screen_pct": 5.4,
+   "no_huddle_pct": 4.9,
+   "motion_pct": 56.1,
+   "def_sack_rate_pct": 7.32,
+   "def_blitz_rate_pct": 25.1,
+   "qb_hit_rate_allowed_pct": 11.22,
+   "sack_rate_allowed_pct": 5.1,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 1.1,
+    "cov1_pct": 18.6,
+    "cov2_pct": 9.5,
+    "cov3_pct": 40.1,
+    "cov4_pct": 18.2,
+    "cov6_pct": 10.2,
+    "two_high_shell_pct": 37.9,
+    "single_high_shell_pct": 58.7,
+    "epa_per_db_allowed": 0.11
+   },
+   "yards_per_rush_w1_w7": 3.3,
+   "yards_per_rush_w6_w7": 3.9,
+   "rb1_carry_share": 49.4,
+   "off_rush_epa": -0.167,
+   "def_rush_epa": -0.045,
+   "redzone_td_pct": 0.2113,
+   "neutral_sec_per_snap": 25.7,
+   "plays_per_game": 64.7,
+   "off_epa_per_play": 0.033,
+   "off_epa_w1_w5": 0.003,
+   "off_epa_w6_w7": 0.114,
+   "off_trend_delta_w67_vs_w15": 0.111,
+   "wr1_target_share": 18.5,
+   "hhi_target_concentration": 0.121,
+   "n_eff_receivers": 8.28,
+   "top_receivers": [
+    {
+     "player": "Nico Collins",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 7.0,
+     "target_share_pct": 22.5,
+     "rec_yards_per_game": 65.8,
+     "recent_snap_pct": 0.67
+    },
+    {
+     "player": "Dalton Schultz",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 6.1,
+     "target_share_pct": 17.4,
+     "rec_yards_per_game": 46.0,
+     "recent_snap_pct": 0.57
+    },
+    {
+     "player": "Xavier Hutchinson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 5.7,
+     "target_share_pct": 17.6,
+     "rec_yards_per_game": 36.9,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Cade Stover",
+     "position": "TE",
+     "gp": 3,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.36
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Woody Marks",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 11.0,
+     "carry_share_pct": 75.7,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.89
+    }
+   ],
+   "rb1": {
+    "name": "Woody Marks",
+    "ypg": 46.0,
+    "carries_pg": 11.0
+   },
+   "wr1": {
+    "name": "Nico Collins",
+    "ypg": 65.8,
+    "targets_pg": 7.0
+   },
+   "turnover_rate_per_play": 0.0066,
+   "third_down_conv_w6_w7": 0.3478,
+   "proe_pct": -0.62,
+   "def_epa_per_play": 0.047,
+   "def_epa_w6_w7": 0.201
+  },
+  "IND": {
+   "team": "IND",
+   "games_played": 7,
+   "qb1": "Daniel Jones",
+   "qb_pass_yards_per_game": 199.7,
+   "early_down_pass_rate": 0.464,
+   "first_and_10_pass_pct": 46.4,
+   "neutral_pass_rate_pct": 56.8,
+   "play_action_pct": 28.9,
+   "rpo_pct": 3.8,
+   "screen_pct": 7.0,
+   "no_huddle_pct": 3.0,
+   "motion_pct": 62.4,
+   "def_sack_rate_pct": 5.12,
+   "def_blitz_rate_pct": 22.0,
+   "qb_hit_rate_allowed_pct": 16.85,
+   "sack_rate_allowed_pct": 6.96,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 6.7,
+    "cov1_pct": 18.1,
+    "cov2_pct": 14.3,
+    "cov3_pct": 33.2,
+    "cov4_pct": 7.6,
+    "cov6_pct": 10.1,
+    "two_high_shell_pct": 32.0,
+    "single_high_shell_pct": 51.3,
+    "epa_per_db_allowed": 0.08
+   },
+   "yards_per_rush_w1_w7": 3.99,
+   "yards_per_rush_w6_w7": 4.42,
+   "rb1_carry_share": 73.7,
+   "off_rush_epa": 0.03,
+   "def_rush_epa": -0.046,
+   "redzone_td_pct": 0.1846,
+   "neutral_sec_per_snap": 24.8,
+   "plays_per_game": 66.9,
+   "off_epa_per_play": -0.063,
+   "off_epa_w1_w5": -0.038,
+   "off_epa_w6_w7": -0.121,
+   "off_trend_delta_w67_vs_w15": -0.084,
+   "wr1_target_share": 20.4,
+   "hhi_target_concentration": 0.137,
+   "n_eff_receivers": 7.31,
+   "top_receivers": [
+    {
+     "player": "Josh Downs",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.6,
+     "target_share_pct": 20.4,
+     "rec_yards_per_game": 43.9,
+     "recent_snap_pct": 0.85
+    },
+    {
+     "player": "Keenan Allen",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 7.2,
+     "target_share_pct": 21.2,
+     "rec_yards_per_game": 43.0,
+     "recent_snap_pct": 0.49
+    },
+    {
+     "player": "Laquon Treadwell",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.7,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.74
+    },
+    {
+     "player": "Mo Alie-Cox",
+     "position": "TE",
+     "gp": 4,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.64
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Jonathan Taylor",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 20.0,
+     "carry_share_pct": 57.0,
+     "rush_yards_per_game": 83.9,
+     "recent_snap_pct": 0.67
+    },
+    {
+     "player": "Seth McGowan",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.33
+    }
+   ],
+   "rb1": {
+    "name": "Jonathan Taylor",
+    "ypg": 83.9,
+    "carries_pg": 20.0
+   },
+   "wr1": {
+    "name": "Josh Downs",
+    "ypg": 43.9,
+    "targets_pg": 6.6
+   },
+   "turnover_rate_per_play": 0.0256,
+   "third_down_conv_w6_w7": 0.5,
+   "proe_pct": -4.94,
+   "def_epa_per_play": 0.032,
+   "def_epa_w6_w7": -0.078
+  },
+  "JAX": {
+   "team": "JAX",
+   "games_played": 6,
+   "qb1": "Trevor Lawrence",
+   "qb_pass_yards_per_game": 246.7,
+   "early_down_pass_rate": 0.476,
+   "first_and_10_pass_pct": 47.6,
+   "neutral_pass_rate_pct": 61.3,
+   "play_action_pct": 23.3,
+   "rpo_pct": 0.8,
+   "screen_pct": 8.8,
+   "no_huddle_pct": 3.2,
+   "motion_pct": 64.0,
+   "def_sack_rate_pct": 4.37,
+   "def_blitz_rate_pct": 30.6,
+   "qb_hit_rate_allowed_pct": 13.95,
+   "sack_rate_allowed_pct": 4.65,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.7,
+    "cov1_pct": 18.5,
+    "cov2_pct": 8.2,
+    "cov3_pct": 27.5,
+    "cov4_pct": 22.7,
+    "cov6_pct": 15.0,
+    "two_high_shell_pct": 45.9,
+    "single_high_shell_pct": 46.0,
+    "epa_per_db_allowed": 0.06
+   },
+   "yards_per_rush_w1_w7": 3.98,
+   "yards_per_rush_w6_w7": 3.65,
+   "rb1_carry_share": 61.4,
+   "off_rush_epa": -0.03,
+   "def_rush_epa": -0.181,
+   "redzone_td_pct": 0.1739,
+   "neutral_sec_per_snap": 26.7,
+   "plays_per_game": 62.5,
+   "off_epa_per_play": 0.114,
+   "off_epa_w1_w5": 0.105,
+   "off_epa_w6_w7": 0.155,
+   "off_trend_delta_w67_vs_w15": 0.05,
+   "wr1_target_share": 25.7,
+   "hhi_target_concentration": 0.152,
+   "n_eff_receivers": 6.58,
+   "top_receivers": [
+    {
+     "player": "Parker Washington",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 7.7,
+     "target_share_pct": 25.6,
+     "rec_yards_per_game": 69.3,
+     "recent_snap_pct": 0.73
+    },
+    {
+     "player": "Jakobi Meyers",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 4.7,
+     "target_share_pct": 15.4,
+     "rec_yards_per_game": 47.5,
+     "recent_snap_pct": 0.75
+    },
+    {
+     "player": "Brenton Strange",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 5.5,
+     "target_share_pct": 18.8,
+     "rec_yards_per_game": 46.5,
+     "recent_snap_pct": 0.76
+    },
+    {
+     "player": "Josh Cameron",
+     "position": "WR",
+     "gp": 4,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.51
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Bhayshul Tuten",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 15.7,
+     "carry_share_pct": 49.3,
+     "rush_yards_per_game": 64.7,
+     "recent_snap_pct": 0.58
+    },
+    {
+     "player": "Chris Rodriguez",
+     "position": "RB",
+     "gp": 1,
+     "carries_per_game": 12.5,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 52.0,
+     "recent_snap_pct": 0.3
+    }
+   ],
+   "rb1": {
+    "name": "Bhayshul Tuten",
+    "ypg": 64.7,
+    "carries_pg": 15.7
+   },
+   "wr1": {
+    "name": "Parker Washington",
+    "ypg": 69.3,
+    "targets_pg": 7.7
+   },
+   "turnover_rate_per_play": 0.0107,
+   "third_down_conv_w6_w7": 0.5833,
+   "proe_pct": -2.5,
+   "def_epa_per_play": -0.016,
+   "def_epa_w6_w7": 0.265
+  },
+  "KC": {
+   "team": "KC",
+   "games_played": 6,
+   "qb1": "Patrick Mahomes",
+   "qb_pass_yards_per_game": 245.7,
+   "early_down_pass_rate": 0.507,
+   "first_and_10_pass_pct": 50.7,
+   "neutral_pass_rate_pct": 60.7,
+   "play_action_pct": 30.8,
+   "rpo_pct": 9.7,
+   "screen_pct": 16.5,
+   "no_huddle_pct": 0.3,
+   "motion_pct": 58.9,
+   "def_sack_rate_pct": 3.23,
+   "def_blitz_rate_pct": 26.1,
+   "qb_hit_rate_allowed_pct": 13.9,
+   "sack_rate_allowed_pct": 3.14,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 6.8,
+    "cov1_pct": 13.7,
+    "cov2_pct": 8.1,
+    "cov3_pct": 29.9,
+    "cov4_pct": 22.2,
+    "cov6_pct": 8.5,
+    "two_high_shell_pct": 38.8,
+    "single_high_shell_pct": 43.6,
+    "epa_per_db_allowed": 0.02
+   },
+   "yards_per_rush_w1_w7": 5.4,
+   "yards_per_rush_w6_w7": 4.74,
+   "rb1_carry_share": 83.9,
+   "off_rush_epa": 0.075,
+   "def_rush_epa": -0.158,
+   "redzone_td_pct": 0.1912,
+   "neutral_sec_per_snap": 27.1,
+   "plays_per_game": 61.7,
+   "off_epa_per_play": 0.101,
+   "off_epa_w1_w5": 0.157,
+   "off_epa_w6_w7": -0.027,
+   "off_trend_delta_w67_vs_w15": -0.183,
+   "wr1_target_share": 19.4,
+   "hhi_target_concentration": 0.131,
+   "n_eff_receivers": 7.63,
+   "top_receivers": [
+    {
+     "player": "Travis Kelce",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 5.8,
+     "target_share_pct": 18.6,
+     "rec_yards_per_game": 57.2,
+     "recent_snap_pct": 0.83
+    },
+    {
+     "player": "Xavier Worthy",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 5.8,
+     "target_share_pct": 19.6,
+     "rec_yards_per_game": 36.2,
+     "recent_snap_pct": 0.87
+    },
+    {
+     "player": "Noah Gray",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.53
+    },
+    {
+     "player": "Jalen Royals",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.68
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Kenneth Walker III",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 20.0,
+     "carry_share_pct": 62.9,
+     "rush_yards_per_game": 116.8,
+     "recent_snap_pct": 0.74
+    }
+   ],
+   "rb1": {
+    "name": "Kenneth Walker III",
+    "ypg": 116.8,
+    "carries_pg": 20.0
+   },
+   "wr1": {
+    "name": "Travis Kelce",
+    "ypg": 57.2,
+    "targets_pg": 5.8
+   },
+   "turnover_rate_per_play": 0.0108,
+   "third_down_conv_w6_w7": 0.2857,
+   "proe_pct": 3.54,
+   "def_epa_per_play": -0.043,
+   "def_epa_w6_w7": -0.066
+  },
+  "LAC": {
+   "team": "LAC",
+   "games_played": 6,
+   "qb1": "Justin Herbert",
+   "qb_pass_yards_per_game": 190.2,
+   "early_down_pass_rate": 0.438,
+   "first_and_10_pass_pct": 43.8,
+   "neutral_pass_rate_pct": 50.6,
+   "play_action_pct": 26.4,
+   "rpo_pct": 3.5,
+   "screen_pct": 9.6,
+   "no_huddle_pct": 5.3,
+   "motion_pct": 73.7,
+   "def_sack_rate_pct": 5.39,
+   "def_blitz_rate_pct": 27.5,
+   "qb_hit_rate_allowed_pct": 18.49,
+   "sack_rate_allowed_pct": 8.82,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.2,
+    "cov1_pct": 12.2,
+    "cov2_pct": 11.1,
+    "cov3_pct": 29.6,
+    "cov4_pct": 23.3,
+    "cov6_pct": 12.7,
+    "two_high_shell_pct": 47.1,
+    "single_high_shell_pct": 41.8,
+    "epa_per_db_allowed": 0.01
+   },
+   "yards_per_rush_w1_w7": 3.75,
+   "yards_per_rush_w6_w7": 2.7,
+   "rb1_carry_share": 53.3,
+   "off_rush_epa": -0.235,
+   "def_rush_epa": -0.09,
+   "redzone_td_pct": 0.1538,
+   "neutral_sec_per_snap": 25.2,
+   "plays_per_game": 66.0,
+   "off_epa_per_play": -0.209,
+   "off_epa_w1_w5": -0.192,
+   "off_epa_w6_w7": -0.292,
+   "off_trend_delta_w67_vs_w15": -0.1,
+   "wr1_target_share": 14.4,
+   "hhi_target_concentration": 0.09,
+   "n_eff_receivers": 11.07,
+   "top_receivers": [
+    {
+     "player": "KeAndre Lambert-Smith",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 9.0,
+     "target_share_pct": 25.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.87
+    },
+    {
+     "player": "Quentin Johnston",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 4.4,
+     "target_share_pct": 14.9,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.82
+    },
+    {
+     "player": "Theo Wease",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.47
+    },
+    {
+     "player": "Charlie Kolar",
+     "position": "TE",
+     "gp": 3,
+     "targets_per_game": 4.3,
+     "target_share_pct": 15.8,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.66
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Omarion Hampton",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 13.3,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 48.2,
+     "recent_snap_pct": 0.5
+    },
+    {
+     "player": "Kimani Vidal",
+     "position": "RB",
+     "gp": 4,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.37
+    }
+   ],
+   "rb1": {
+    "name": "Omarion Hampton",
+    "ypg": 48.2,
+    "carries_pg": 13.3
+   },
+   "wr1": {
+    "name": "KeAndre Lambert-Smith",
+    "ypg": 34.0,
+    "targets_pg": 9.0
+   },
+   "turnover_rate_per_play": 0.0354,
+   "third_down_conv_w6_w7": 0.3125,
+   "proe_pct": -9.2,
+   "def_epa_per_play": -0.034,
+   "def_epa_w6_w7": 0.066
+  },
+  "LAR": {
+   "team": "LAR",
+   "games_played": 7,
+   "qb1": "Matthew Stafford",
+   "qb_pass_yards_per_game": 284.1,
+   "early_down_pass_rate": 0.561,
+   "first_and_10_pass_pct": 56.1,
+   "neutral_pass_rate_pct": 64.3,
+   "play_action_pct": 26.1,
+   "rpo_pct": 0.6,
+   "screen_pct": 6.7,
+   "no_huddle_pct": 10.7,
+   "motion_pct": 67.2,
+   "def_sack_rate_pct": 3.7,
+   "def_blitz_rate_pct": 29.6,
+   "qb_hit_rate_allowed_pct": 13.69,
+   "sack_rate_allowed_pct": 3.5,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 3.2,
+    "cov1_pct": 24.1,
+    "cov2_pct": 8.4,
+    "cov3_pct": 15.3,
+    "cov4_pct": 23.3,
+    "cov6_pct": 18.1,
+    "two_high_shell_pct": 49.8,
+    "single_high_shell_pct": 39.4,
+    "epa_per_db_allowed": 0.02
+   },
+   "yards_per_rush_w1_w7": 4.73,
+   "yards_per_rush_w6_w7": 5.16,
+   "rb1_carry_share": 55.5,
+   "off_rush_epa": -0.042,
+   "def_rush_epa": -0.13,
+   "redzone_td_pct": 0.2299,
+   "neutral_sec_per_snap": 23.8,
+   "plays_per_game": 70.6,
+   "off_epa_per_play": 0.055,
+   "off_epa_w1_w5": 0.065,
+   "off_epa_w6_w7": 0.025,
+   "off_trend_delta_w67_vs_w15": -0.04,
+   "wr1_target_share": 22.9,
+   "hhi_target_concentration": 0.139,
+   "n_eff_receivers": 7.18,
+   "top_receivers": [
+    {
+     "player": "Puka Nacua",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 12.4,
+     "target_share_pct": 31.6,
+     "rec_yards_per_game": 97.0,
+     "recent_snap_pct": 0.85
+    },
+    {
+     "player": "Tyler Higbee",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 5.3,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 43.3,
+     "recent_snap_pct": 0.74
+    },
+    {
+     "player": "Colby Parkinson",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.69
+    },
+    {
+     "player": "Davis Allen",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.69
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Kyren Williams",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 13.7,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 70.3,
+     "recent_snap_pct": 0.51
+    },
+    {
+     "player": "Blake Corum",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.44
+    }
+   ],
+   "rb1": {
+    "name": "Kyren Williams",
+    "ypg": 70.3,
+    "carries_pg": 13.7
+   },
+   "wr1": {
+    "name": "Puka Nacua",
+    "ypg": 97.0,
+    "targets_pg": 12.4
+   },
+   "turnover_rate_per_play": 0.0223,
+   "third_down_conv_w6_w7": 0.4737,
+   "proe_pct": 0.8,
+   "def_epa_per_play": -0.039,
+   "def_epa_w6_w7": -0.075
+  },
+  "LV": {
+   "team": "LV",
+   "games_played": 7,
+   "qb1": "Kirk Cousins",
+   "qb_pass_yards_per_game": 268.1,
+   "early_down_pass_rate": 0.624,
+   "first_and_10_pass_pct": 62.4,
+   "neutral_pass_rate_pct": 62.4,
+   "play_action_pct": 23.0,
+   "rpo_pct": 2.8,
+   "screen_pct": 8.6,
+   "no_huddle_pct": 8.5,
+   "motion_pct": 61.4,
+   "def_sack_rate_pct": 5.86,
+   "def_blitz_rate_pct": 26.7,
+   "qb_hit_rate_allowed_pct": 14.47,
+   "sack_rate_allowed_pct": 3.29,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 8.0,
+    "cov1_pct": 14.4,
+    "cov2_pct": 12.0,
+    "cov3_pct": 33.2,
+    "cov4_pct": 12.0,
+    "cov6_pct": 12.4,
+    "two_high_shell_pct": 36.4,
+    "single_high_shell_pct": 47.6,
+    "epa_per_db_allowed": 0.14
+   },
+   "yards_per_rush_w1_w7": 3.12,
+   "yards_per_rush_w6_w7": 3.11,
+   "rb1_carry_share": 66.2,
+   "off_rush_epa": -0.252,
+   "def_rush_epa": -0.105,
+   "redzone_td_pct": 0.1591,
+   "neutral_sec_per_snap": 24.8,
+   "plays_per_game": 67.0,
+   "off_epa_per_play": 0.013,
+   "off_epa_w1_w5": 0.019,
+   "off_epa_w6_w7": -0.002,
+   "off_trend_delta_w67_vs_w15": -0.02,
+   "wr1_target_share": 20.2,
+   "hhi_target_concentration": 0.141,
+   "n_eff_receivers": 7.11,
+   "top_receivers": [
+    {
+     "player": "Brock Bowers",
+     "position": "TE",
+     "gp": 5,
+     "targets_per_game": 10.2,
+     "target_share_pct": 27.1,
+     "rec_yards_per_game": 91.0,
+     "recent_snap_pct": 0.84
+    },
+    {
+     "player": "Tre Tucker",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.7,
+     "target_share_pct": 18.2,
+     "rec_yards_per_game": 67.7,
+     "recent_snap_pct": 0.82
+    },
+    {
+     "player": "Michael Mayer",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 5.3,
+     "target_share_pct": 14.5,
+     "rec_yards_per_game": 42.6,
+     "recent_snap_pct": 0.82
+    },
+    {
+     "player": "Jalen Nailor",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 4.0,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.75
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Ashton Jeanty",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 15.1,
+     "carry_share_pct": 61.2,
+     "rush_yards_per_game": 46.9,
+     "recent_snap_pct": 0.72
+    }
+   ],
+   "rb1": {
+    "name": "Ashton Jeanty",
+    "ypg": 46.9,
+    "carries_pg": 15.1
+   },
+   "wr1": {
+    "name": "Brock Bowers",
+    "ypg": 91.0,
+    "targets_pg": 10.2
+   },
+   "turnover_rate_per_play": 0.0128,
+   "third_down_conv_w6_w7": 0.3846,
+   "proe_pct": -1.65,
+   "def_epa_per_play": 0.038,
+   "def_epa_w6_w7": 0.168
+  },
+  "MIA": {
+   "team": "MIA",
+   "games_played": 6,
+   "qb1": "Malik Willis",
+   "qb_pass_yards_per_game": 176.2,
+   "early_down_pass_rate": 0.504,
+   "first_and_10_pass_pct": 50.4,
+   "neutral_pass_rate_pct": 52.2,
+   "play_action_pct": 24.4,
+   "rpo_pct": 3.9,
+   "screen_pct": 10.0,
+   "no_huddle_pct": 2.3,
+   "motion_pct": 74.1,
+   "def_sack_rate_pct": 2.91,
+   "def_blitz_rate_pct": 26.7,
+   "qb_hit_rate_allowed_pct": 11.44,
+   "sack_rate_allowed_pct": 7.96,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 2.1,
+    "cov1_pct": 15.3,
+    "cov2_pct": 10.5,
+    "cov3_pct": 31.1,
+    "cov4_pct": 14.2,
+    "cov6_pct": 18.9,
+    "two_high_shell_pct": 43.6,
+    "single_high_shell_pct": 46.4,
+    "epa_per_db_allowed": 0.3
+   },
+   "yards_per_rush_w1_w7": 3.81,
+   "yards_per_rush_w6_w7": 3.56,
+   "rb1_carry_share": 49.0,
+   "off_rush_epa": -0.106,
+   "def_rush_epa": -0.095,
+   "redzone_td_pct": 0.15,
+   "neutral_sec_per_snap": 28.3,
+   "plays_per_game": 59.2,
+   "off_epa_per_play": -0.046,
+   "off_epa_w1_w5": -0.118,
+   "off_epa_w6_w7": 0.285,
+   "off_trend_delta_w67_vs_w15": 0.402,
+   "wr1_target_share": 26.0,
+   "hhi_target_concentration": 0.142,
+   "n_eff_receivers": 7.07,
+   "top_receivers": [
+    {
+     "player": "Caleb Douglas",
+     "position": "WR",
+     "gp": 3,
+     "targets_per_game": 4.3,
+     "target_share_pct": 17.8,
+     "rec_yards_per_game": 61.0,
+     "recent_snap_pct": 0.68
+    },
+    {
+     "player": "Malik Washington",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 6.5,
+     "target_share_pct": 25.7,
+     "rec_yards_per_game": 48.2,
+     "recent_snap_pct": 0.8
+    },
+    {
+     "player": "Greg Dulcich",
+     "position": "TE",
+     "gp": 5,
+     "targets_per_game": 4.4,
+     "target_share_pct": 16.7,
+     "rec_yards_per_game": 42.6,
+     "recent_snap_pct": 0.65
+    },
+    {
+     "player": "Chris Bell",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.48
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Ollie Gordon",
+     "position": "RB",
+     "gp": 1,
+     "carries_per_game": 12.5,
+     "carry_share_pct": 70.5,
+     "rush_yards_per_game": 52.0,
+     "recent_snap_pct": 0.83
+    }
+   ],
+   "rb1": {
+    "name": "Ollie Gordon",
+    "ypg": 52.0,
+    "carries_pg": 12.5
+   },
+   "wr1": {
+    "name": "Caleb Douglas",
+    "ypg": 61.0,
+    "targets_pg": 4.3
+   },
+   "turnover_rate_per_play": 0.0225,
+   "third_down_conv_w6_w7": 0.4167,
+   "proe_pct": -11.07,
+   "def_epa_per_play": 0.129,
+   "def_epa_w6_w7": 0.252
+  },
+  "MIN": {
+   "team": "MIN",
+   "games_played": 6,
+   "qb1": "Kyler Murray",
+   "qb_pass_yards_per_game": 162.4,
+   "early_down_pass_rate": 0.431,
+   "first_and_10_pass_pct": 43.1,
+   "neutral_pass_rate_pct": 59.3,
+   "play_action_pct": 31.5,
+   "rpo_pct": 5.1,
+   "screen_pct": 9.7,
+   "no_huddle_pct": 6.2,
+   "motion_pct": 54.6,
+   "def_sack_rate_pct": 9.86,
+   "def_blitz_rate_pct": 71.0,
+   "qb_hit_rate_allowed_pct": 12.96,
+   "sack_rate_allowed_pct": 8.33,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 2.4,
+    "cov1_pct": 4.8,
+    "cov2_pct": 17.4,
+    "cov3_pct": 30.9,
+    "cov4_pct": 22.2,
+    "cov6_pct": 13.5,
+    "two_high_shell_pct": 53.1,
+    "single_high_shell_pct": 35.7,
+    "epa_per_db_allowed": -0.23
+   },
+   "yards_per_rush_w1_w7": 3.78,
+   "yards_per_rush_w6_w7": 3.92,
+   "rb1_carry_share": 68.6,
+   "off_rush_epa": -0.195,
+   "def_rush_epa": -0.212,
+   "redzone_td_pct": 0.1951,
+   "neutral_sec_per_snap": 26.9,
+   "plays_per_game": 62.0,
+   "off_epa_per_play": -0.096,
+   "off_epa_w1_w5": -0.1,
+   "off_epa_w6_w7": -0.072,
+   "off_trend_delta_w67_vs_w15": 0.028,
+   "wr1_target_share": 20.8,
+   "hhi_target_concentration": 0.14,
+   "n_eff_receivers": 7.16,
+   "top_receivers": [
+    {
+     "player": "Justin Jefferson",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 6.2,
+     "target_share_pct": 26.4,
+     "rec_yards_per_game": 60.4,
+     "recent_snap_pct": 0.93
+    },
+    {
+     "player": "Jordan Addison",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 5.0,
+     "target_share_pct": 20.3,
+     "rec_yards_per_game": 36.6,
+     "recent_snap_pct": 0.83
+    },
+    {
+     "player": "T.J. Hockenson",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 5.3,
+     "target_share_pct": 20.4,
+     "rec_yards_per_game": 39.5,
+     "recent_snap_pct": 0.76
+    },
+    {
+     "player": "Jauan Jennings",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.56
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Jordan Mason",
+     "position": "RB",
+     "gp": 2,
+     "carries_per_game": 15.0,
+     "carry_share_pct": 54.4,
+     "rush_yards_per_game": 63.5,
+     "recent_snap_pct": 0.64
+    }
+   ],
+   "rb1": {
+    "name": "Jordan Mason",
+    "ypg": 63.5,
+    "carries_pg": 15.0
+   },
+   "wr1": {
+    "name": "Justin Jefferson",
+    "ypg": 60.4,
+    "targets_pg": 6.2
+   },
+   "turnover_rate_per_play": 0.0108,
+   "third_down_conv_w6_w7": 0.2727,
+   "proe_pct": -2.11,
+   "def_epa_per_play": -0.22,
+   "def_epa_w6_w7": -0.151
+  },
+  "NE": {
+   "team": "NE",
+   "games_played": 7,
+   "qb1": "Drake Maye",
+   "qb_pass_yards_per_game": 254.9,
+   "early_down_pass_rate": 0.494,
+   "first_and_10_pass_pct": 49.4,
+   "neutral_pass_rate_pct": 60.7,
+   "play_action_pct": 20.7,
+   "rpo_pct": 2.2,
+   "screen_pct": 8.0,
+   "no_huddle_pct": 0.4,
+   "motion_pct": 55.1,
+   "def_sack_rate_pct": 6.39,
+   "def_blitz_rate_pct": 39.8,
+   "qb_hit_rate_allowed_pct": 12.36,
+   "sack_rate_allowed_pct": 4.73,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 6.3,
+    "cov1_pct": 25.4,
+    "cov2_pct": 17.1,
+    "cov3_pct": 27.8,
+    "cov4_pct": 16.3,
+    "cov6_pct": 0.8,
+    "two_high_shell_pct": 34.2,
+    "single_high_shell_pct": 53.2,
+    "epa_per_db_allowed": 0.08
+   },
+   "yards_per_rush_w1_w7": 3.67,
+   "yards_per_rush_w6_w7": 3.57,
+   "rb1_carry_share": 44.8,
+   "off_rush_epa": -0.2,
+   "def_rush_epa": -0.081,
+   "redzone_td_pct": 0.1803,
+   "neutral_sec_per_snap": 25.8,
+   "plays_per_game": 64.6,
+   "off_epa_per_play": 0.054,
+   "off_epa_w1_w5": 0.048,
+   "off_epa_w6_w7": 0.071,
+   "off_trend_delta_w67_vs_w15": 0.023,
+   "wr1_target_share": 16.2,
+   "hhi_target_concentration": 0.109,
+   "n_eff_receivers": 9.18,
+   "top_receivers": [
+    {
+     "player": "Hunter Henry",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 4.4,
+     "target_share_pct": 15.3,
+     "rec_yards_per_game": 42.3,
+     "recent_snap_pct": 0.76
+    },
+    {
+     "player": "A.J. Brown",
+     "position": "WR",
+     "gp": 3,
+     "targets_per_game": 6.7,
+     "target_share_pct": 22.1,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.91
+    },
+    {
+     "player": "DeMario Douglas",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 4.9,
+     "target_share_pct": 16.2,
+     "rec_yards_per_game": 36.6,
+     "recent_snap_pct": 0.65
+    },
+    {
+     "player": "Eli Raridon",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.54
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Rhamondre Stevenson",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 11.0,
+     "carry_share_pct": 58.6,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.69
+    }
+   ],
+   "rb1": {
+    "name": "Rhamondre Stevenson",
+    "ypg": 46.0,
+    "carries_pg": 11.0
+   },
+   "wr1": {
+    "name": "Hunter Henry",
+    "ypg": 42.3,
+    "targets_pg": 4.4
+   },
+   "turnover_rate_per_play": 0.031,
+   "third_down_conv_w6_w7": 0.4545,
+   "proe_pct": 0.78,
+   "def_epa_per_play": 0.015,
+   "def_epa_w6_w7": 0.085
+  },
+  "NO": {
+   "team": "NO",
+   "games_played": 7,
+   "qb1": "Tyler Shough",
+   "qb_pass_yards_per_game": 245.9,
+   "early_down_pass_rate": 0.582,
+   "first_and_10_pass_pct": 58.2,
+   "neutral_pass_rate_pct": 62.5,
+   "play_action_pct": 15.9,
+   "rpo_pct": 3.4,
+   "screen_pct": 3.5,
+   "no_huddle_pct": 14.3,
+   "motion_pct": 62.3,
+   "def_sack_rate_pct": 6.57,
+   "def_blitz_rate_pct": 34.2,
+   "qb_hit_rate_allowed_pct": 13.38,
+   "sack_rate_allowed_pct": 4.78,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 1.5,
+    "cov1_pct": 14.8,
+    "cov2_pct": 2.7,
+    "cov3_pct": 50.2,
+    "cov4_pct": 9.1,
+    "cov6_pct": 15.2,
+    "two_high_shell_pct": 27.0,
+    "single_high_shell_pct": 65.0,
+    "epa_per_db_allowed": 0.12
+   },
+   "yards_per_rush_w1_w7": 3.13,
+   "yards_per_rush_w6_w7": 2.96,
+   "rb1_carry_share": 35.4,
+   "off_rush_epa": -0.162,
+   "def_rush_epa": 0.019,
+   "redzone_td_pct": 0.2208,
+   "neutral_sec_per_snap": 24.3,
+   "plays_per_game": 68.1,
+   "off_epa_per_play": -0.03,
+   "off_epa_w1_w5": -0.04,
+   "off_epa_w6_w7": -0.005,
+   "off_trend_delta_w67_vs_w15": 0.035,
+   "wr1_target_share": 26.9,
+   "hhi_target_concentration": 0.153,
+   "n_eff_receivers": 6.55,
+   "top_receivers": [
+    {
+     "player": "Chris Olave",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 10.1,
+     "target_share_pct": 27.0,
+     "rec_yards_per_game": 90.9,
+     "recent_snap_pct": 0.77
+    },
+    {
+     "player": "Devaughn Vele",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.9,
+     "target_share_pct": 18.8,
+     "rec_yards_per_game": 49.7,
+     "recent_snap_pct": 0.89
+    },
+    {
+     "player": "Juwan Johnson",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 5.3,
+     "target_share_pct": 14.1,
+     "rec_yards_per_game": 36.4,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Bryce Lance",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.79
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Alvin Kamara",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 47.6,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Kendre Miller",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.39
+    }
+   ],
+   "rb1": {
+    "name": "Alvin Kamara",
+    "ypg": 46.0,
+    "carries_pg": 10.0
+   },
+   "wr1": {
+    "name": "Chris Olave",
+    "ypg": 90.9,
+    "targets_pg": 10.1
+   },
+   "turnover_rate_per_play": 0.0252,
+   "third_down_conv_w6_w7": 0.3704,
+   "proe_pct": 0.2,
+   "def_epa_per_play": 0.076,
+   "def_epa_w6_w7": 0.045
+  },
+  "NYG": {
+   "team": "NYG",
+   "games_played": 7,
+   "qb1": "J.J. McCarthy",
+   "qb_pass_yards_per_game": 247.5,
+   "early_down_pass_rate": 0.526,
+   "first_and_10_pass_pct": 52.6,
+   "neutral_pass_rate_pct": 54.5,
+   "play_action_pct": 20.6,
+   "rpo_pct": 3.1,
+   "screen_pct": 6.0,
+   "no_huddle_pct": 7.3,
+   "motion_pct": 47.0,
+   "def_sack_rate_pct": 3.41,
+   "def_blitz_rate_pct": 40.2,
+   "qb_hit_rate_allowed_pct": 16.01,
+   "sack_rate_allowed_pct": 7.47,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 10.7,
+    "cov1_pct": 20.2,
+    "cov2_pct": 9.9,
+    "cov3_pct": 28.4,
+    "cov4_pct": 19.8,
+    "cov6_pct": 7.0,
+    "two_high_shell_pct": 36.7,
+    "single_high_shell_pct": 48.6,
+    "epa_per_db_allowed": 0.08
+   },
+   "yards_per_rush_w1_w7": 3.79,
+   "yards_per_rush_w6_w7": 4.71,
+   "rb1_carry_share": 52.1,
+   "off_rush_epa": -0.096,
+   "def_rush_epa": -0.092,
+   "redzone_td_pct": 0.2295,
+   "neutral_sec_per_snap": 24.2,
+   "plays_per_game": 68.4,
+   "off_epa_per_play": 0.028,
+   "off_epa_w1_w5": -0.007,
+   "off_epa_w6_w7": 0.115,
+   "off_trend_delta_w67_vs_w15": 0.122,
+   "wr1_target_share": 30.1,
+   "hhi_target_concentration": 0.196,
+   "n_eff_receivers": 5.1,
+   "top_receivers": [
+    {
+     "player": "Malik Nabers",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 10.0,
+     "target_share_pct": 29.0,
+     "rec_yards_per_game": 86.4,
+     "recent_snap_pct": 0.73
+    },
+    {
+     "player": "Isaiah Likely",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 9.0,
+     "target_share_pct": 27.1,
+     "rec_yards_per_game": 56.4,
+     "recent_snap_pct": 0.86
+    },
+    {
+     "player": "Malachi Fields",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 4.3,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 35.4,
+     "recent_snap_pct": 0.74
+    },
+    {
+     "player": "Chris Manhertz",
+     "position": "TE",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.44
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Cam Skattebo",
+     "position": "RB",
+     "gp": 6,
+     "carries_per_game": 16.3,
+     "carry_share_pct": 47.6,
+     "rush_yards_per_game": 69.7,
+     "recent_snap_pct": 0.56
+    }
+   ],
+   "rb1": {
+    "name": "Cam Skattebo",
+    "ypg": 69.7,
+    "carries_pg": 16.3
+   },
+   "wr1": {
+    "name": "Malik Nabers",
+    "ypg": 86.4,
+    "targets_pg": 10.0
+   },
+   "turnover_rate_per_play": 0.0209,
+   "third_down_conv_w6_w7": 0.375,
+   "proe_pct": -5.3,
+   "def_epa_per_play": 0.018,
+   "def_epa_w6_w7": -0.05
+  },
+  "NYJ": {
+   "team": "NYJ",
+   "games_played": 7,
+   "qb1": "Geno Smith",
+   "qb_pass_yards_per_game": 231.9,
+   "early_down_pass_rate": 0.53,
+   "first_and_10_pass_pct": 53.0,
+   "neutral_pass_rate_pct": 57.6,
+   "play_action_pct": 19.7,
+   "rpo_pct": 3.8,
+   "screen_pct": 8.7,
+   "no_huddle_pct": 4.3,
+   "motion_pct": 48.3,
+   "def_sack_rate_pct": 7.14,
+   "def_blitz_rate_pct": 37.5,
+   "qb_hit_rate_allowed_pct": 16.54,
+   "sack_rate_allowed_pct": 8.27,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 3.6,
+    "cov1_pct": 21.2,
+    "cov2_pct": 23.6,
+    "cov3_pct": 23.6,
+    "cov4_pct": 7.2,
+    "cov6_pct": 13.2,
+    "two_high_shell_pct": 44.0,
+    "single_high_shell_pct": 44.8,
+    "epa_per_db_allowed": 0.14
+   },
+   "yards_per_rush_w1_w7": 3.79,
+   "yards_per_rush_w6_w7": 4.48,
+   "rb1_carry_share": 56.2,
+   "off_rush_epa": -0.148,
+   "def_rush_epa": -0.157,
+   "redzone_td_pct": 0.1333,
+   "neutral_sec_per_snap": 27.8,
+   "plays_per_game": 60.3,
+   "off_epa_per_play": 0.014,
+   "off_epa_w1_w5": -0.024,
+   "off_epa_w6_w7": 0.112,
+   "off_trend_delta_w67_vs_w15": 0.136,
+   "wr1_target_share": 26.0,
+   "hhi_target_concentration": 0.126,
+   "n_eff_receivers": 7.92,
+   "top_receivers": [
+    {
+     "player": "Garrett Wilson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 7.3,
+     "target_share_pct": 25.9,
+     "rec_yards_per_game": 63.4,
+     "recent_snap_pct": 0.85
+    },
+    {
+     "player": "Omar Cooper",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.64
+    },
+    {
+     "player": "Adonai Mitchell",
+     "position": "WR",
+     "gp": 3,
+     "targets_per_game": 6.0,
+     "target_share_pct": 18.9,
+     "rec_yards_per_game": 41.0,
+     "recent_snap_pct": 0.44
+    },
+    {
+     "player": "Mason Taylor",
+     "position": "TE",
+     "gp": 4,
+     "targets_per_game": 4.5,
+     "target_share_pct": 16.2,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.63
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Braelon Allen",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 13.0,
+     "carry_share_pct": 66.3,
+     "rush_yards_per_game": 59.7,
+     "recent_snap_pct": 0.78
+    }
+   ],
+   "rb1": {
+    "name": "Braelon Allen",
+    "ypg": 59.7,
+    "carries_pg": 13.0
+   },
+   "wr1": {
+    "name": "Garrett Wilson",
+    "ypg": 63.4,
+    "targets_pg": 7.3
+   },
+   "turnover_rate_per_play": 0.0118,
+   "third_down_conv_w6_w7": 0.4348,
+   "proe_pct": -2.64,
+   "def_epa_per_play": 0.016,
+   "def_epa_w6_w7": 0.144
+  },
+  "PHI": {
+   "team": "PHI",
+   "games_played": 7,
+   "qb1": "Tanner McKee",
+   "qb_pass_yards_per_game": 213.0,
+   "early_down_pass_rate": 0.474,
+   "first_and_10_pass_pct": 47.4,
+   "neutral_pass_rate_pct": 61.8,
+   "play_action_pct": 17.9,
+   "rpo_pct": 6.3,
+   "screen_pct": 5.4,
+   "no_huddle_pct": 15.3,
+   "motion_pct": 58.2,
+   "def_sack_rate_pct": 2.82,
+   "def_blitz_rate_pct": 23.2,
+   "qb_hit_rate_allowed_pct": 13.98,
+   "sack_rate_allowed_pct": 6.45,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 6.4,
+    "cov1_pct": 11.7,
+    "cov2_pct": 7.2,
+    "cov3_pct": 38.1,
+    "cov4_pct": 13.2,
+    "cov6_pct": 16.2,
+    "two_high_shell_pct": 36.6,
+    "single_high_shell_pct": 49.8,
+    "epa_per_db_allowed": 0.17
+   },
+   "yards_per_rush_w1_w7": 3.39,
+   "yards_per_rush_w6_w7": 3.97,
+   "rb1_carry_share": 29.9,
+   "off_rush_epa": -0.144,
+   "def_rush_epa": 0.013,
+   "redzone_td_pct": 0.2167,
+   "neutral_sec_per_snap": 27.1,
+   "plays_per_game": 61.7,
+   "off_epa_per_play": -0.086,
+   "off_epa_w1_w5": -0.111,
+   "off_epa_w6_w7": -0.03,
+   "off_trend_delta_w67_vs_w15": 0.08,
+   "wr1_target_share": 18.6,
+   "hhi_target_concentration": 0.118,
+   "n_eff_receivers": 8.45,
+   "top_receivers": [
+    {
+     "player": "DeVonta Smith",
+     "position": "WR",
+     "gp": 4,
+     "targets_per_game": 10.2,
+     "target_share_pct": 32.3,
+     "rec_yards_per_game": 77.5,
+     "recent_snap_pct": 0.66
+    },
+    {
+     "player": "Dallas Goedert",
+     "position": "TE",
+     "gp": 5,
+     "targets_per_game": 6.2,
+     "target_share_pct": 18.5,
+     "rec_yards_per_game": 45.6,
+     "recent_snap_pct": 0.81
+    },
+    {
+     "player": "Dontayvion Wicks",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 5.3,
+     "target_share_pct": 17.8,
+     "rec_yards_per_game": 47.3,
+     "recent_snap_pct": 0.62
+    },
+    {
+     "player": "Makai Lemon",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 5.1,
+     "target_share_pct": 16.8,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.81
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Dameon Pierce",
+     "position": "RB",
+     "gp": 3,
+     "carries_per_game": 12.3,
+     "carry_share_pct": 78.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.95
+    }
+   ],
+   "rb1": {
+    "name": "Dameon Pierce",
+    "ypg": 46.0,
+    "carries_pg": 12.3
+   },
+   "wr1": {
+    "name": "DeVonta Smith",
+    "ypg": 77.5,
+    "targets_pg": 10.2
+   },
+   "turnover_rate_per_play": 0.0139,
+   "third_down_conv_w6_w7": 0.4074,
+   "proe_pct": -2.08,
+   "def_epa_per_play": 0.102,
+   "def_epa_w6_w7": 0.229
+  },
+  "PIT": {
+   "team": "PIT",
+   "games_played": 7,
+   "qb1": "Aaron Rodgers",
+   "qb_pass_yards_per_game": 242.7,
+   "early_down_pass_rate": 0.612,
+   "first_and_10_pass_pct": 61.2,
+   "neutral_pass_rate_pct": 68.0,
+   "play_action_pct": 16.0,
+   "rpo_pct": 10.4,
+   "screen_pct": 12.5,
+   "no_huddle_pct": 8.0,
+   "motion_pct": 48.6,
+   "def_sack_rate_pct": 6.47,
+   "def_blitz_rate_pct": 27.0,
+   "qb_hit_rate_allowed_pct": 15.11,
+   "sack_rate_allowed_pct": 7.07,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.9,
+    "cov1_pct": 10.1,
+    "cov2_pct": 15.0,
+    "cov3_pct": 33.7,
+    "cov4_pct": 23.2,
+    "cov6_pct": 9.0,
+    "two_high_shell_pct": 47.2,
+    "single_high_shell_pct": 43.8,
+    "epa_per_db_allowed": 0.01
+   },
+   "yards_per_rush_w1_w7": 4.84,
+   "yards_per_rush_w6_w7": 4.83,
+   "rb1_carry_share": 69.9,
+   "off_rush_epa": 0.05,
+   "def_rush_epa": -0.137,
+   "redzone_td_pct": 0.1475,
+   "neutral_sec_per_snap": 25.2,
+   "plays_per_game": 65.9,
+   "off_epa_per_play": -0.029,
+   "off_epa_w1_w5": -0.023,
+   "off_epa_w6_w7": -0.041,
+   "off_trend_delta_w67_vs_w15": -0.018,
+   "wr1_target_share": 23.5,
+   "hhi_target_concentration": 0.142,
+   "n_eff_receivers": 7.05,
+   "top_receivers": [
+    {
+     "player": "Germie Bernard",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 6.2,
+     "target_share_pct": 17.5,
+     "rec_yards_per_game": 42.3,
+     "recent_snap_pct": 0.91
+    },
+    {
+     "player": "D.K. Metcalf",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.92
+    },
+    {
+     "player": "Pat Freiermuth",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 4.7,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.53
+    },
+    {
+     "player": "Darnell Washington",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.56
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Jaylen Warren",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 14.6,
+     "carry_share_pct": 52.7,
+     "rush_yards_per_game": 80.1,
+     "recent_snap_pct": 0.62
+    },
+    {
+     "player": "Rico Dowdle",
+     "position": "RB",
+     "gp": 4,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.44
+    }
+   ],
+   "rb1": {
+    "name": "Jaylen Warren",
+    "ypg": 80.1,
+    "carries_pg": 14.6
+   },
+   "wr1": {
+    "name": "Germie Bernard",
+    "ypg": 42.3,
+    "targets_pg": 6.2
+   },
+   "turnover_rate_per_play": 0.0152,
+   "third_down_conv_w6_w7": 0.4839,
+   "proe_pct": 3.61,
+   "def_epa_per_play": -0.041,
+   "def_epa_w6_w7": -0.129
+  },
+  "SEA": {
+   "team": "SEA",
+   "games_played": 7,
+   "qb1": "Sam Darnold",
+   "qb_pass_yards_per_game": 255.4,
+   "early_down_pass_rate": 0.454,
+   "first_and_10_pass_pct": 45.4,
+   "neutral_pass_rate_pct": 54.2,
+   "play_action_pct": 26.8,
+   "rpo_pct": 4.8,
+   "screen_pct": 10.9,
+   "no_huddle_pct": 2.6,
+   "motion_pct": 53.4,
+   "def_sack_rate_pct": 6.39,
+   "def_blitz_rate_pct": 21.7,
+   "qb_hit_rate_allowed_pct": 18.75,
+   "sack_rate_allowed_pct": 6.25,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 0.0,
+    "cov1_pct": 8.0,
+    "cov2_pct": 11.6,
+    "cov3_pct": 31.7,
+    "cov4_pct": 16.5,
+    "cov6_pct": 30.1,
+    "two_high_shell_pct": 58.2,
+    "single_high_shell_pct": 39.7,
+    "epa_per_db_allowed": -0.07
+   },
+   "yards_per_rush_w1_w7": 3.64,
+   "yards_per_rush_w6_w7": 3.59,
+   "rb1_carry_share": 56.9,
+   "off_rush_epa": -0.225,
+   "def_rush_epa": -0.196,
+   "redzone_td_pct": 0.1714,
+   "neutral_sec_per_snap": 25.3,
+   "plays_per_game": 65.6,
+   "off_epa_per_play": -0.039,
+   "off_epa_w1_w5": -0.07,
+   "off_epa_w6_w7": 0.022,
+   "off_trend_delta_w67_vs_w15": 0.092,
+   "wr1_target_share": 36.1,
+   "hhi_target_concentration": 0.195,
+   "n_eff_receivers": 5.14,
+   "top_receivers": [
+    {
+     "player": "Jaxon Smith-Njigba",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 11.1,
+     "target_share_pct": 36.9,
+     "rec_yards_per_game": 123.9,
+     "recent_snap_pct": 0.77
+    },
+    {
+     "player": "AJ Barner",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 4.1,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.8
+    },
+    {
+     "player": "Cooper Kupp",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.9,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.65
+    },
+    {
+     "player": "Nick Kallerup",
+     "position": "TE",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.38
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Emanuel Wilson",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 15.9,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 57.6,
+     "recent_snap_pct": 0.48
+    },
+    {
+     "player": "George Holani",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.36
+    }
+   ],
+   "rb1": {
+    "name": "Emanuel Wilson",
+    "ypg": 57.6,
+    "carries_pg": 15.9
+   },
+   "wr1": {
+    "name": "Jaxon Smith-Njigba",
+    "ypg": 123.9,
+    "targets_pg": 11.1
+   },
+   "turnover_rate_per_play": 0.0283,
+   "third_down_conv_w6_w7": 0.5455,
+   "proe_pct": -5.36,
+   "def_epa_per_play": -0.115,
+   "def_epa_w6_w7": -0.121
+  },
+  "SF": {
+   "team": "SF",
+   "games_played": 7,
+   "qb1": "Brock Purdy",
+   "qb_pass_yards_per_game": 249.7,
+   "early_down_pass_rate": 0.529,
+   "first_and_10_pass_pct": 52.9,
+   "neutral_pass_rate_pct": 58.0,
+   "play_action_pct": 21.1,
+   "rpo_pct": 1.0,
+   "screen_pct": 9.5,
+   "no_huddle_pct": 1.9,
+   "motion_pct": 76.0,
+   "def_sack_rate_pct": 5.26,
+   "def_blitz_rate_pct": 32.3,
+   "qb_hit_rate_allowed_pct": 10.74,
+   "sack_rate_allowed_pct": 2.89,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 1.5,
+    "cov1_pct": 14.3,
+    "cov2_pct": 7.4,
+    "cov3_pct": 41.2,
+    "cov4_pct": 12.5,
+    "cov6_pct": 18.8,
+    "two_high_shell_pct": 38.7,
+    "single_high_shell_pct": 55.5,
+    "epa_per_db_allowed": 0.07
+   },
+   "yards_per_rush_w1_w7": 4.33,
+   "yards_per_rush_w6_w7": 4.5,
+   "rb1_carry_share": 49.7,
+   "off_rush_epa": -0.001,
+   "def_rush_epa": -0.205,
+   "redzone_td_pct": 0.2564,
+   "neutral_sec_per_snap": 28.2,
+   "plays_per_game": 59.4,
+   "off_epa_per_play": 0.156,
+   "off_epa_w1_w5": 0.187,
+   "off_epa_w6_w7": 0.083,
+   "off_trend_delta_w67_vs_w15": -0.104,
+   "wr1_target_share": 22.3,
+   "hhi_target_concentration": 0.15,
+   "n_eff_receivers": 6.69,
+   "top_receivers": [
+    {
+     "player": "George Kittle",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 6.6,
+     "target_share_pct": 22.4,
+     "rec_yards_per_game": 60.7,
+     "recent_snap_pct": 0.91
+    },
+    {
+     "player": "Jordan Watkins",
+     "position": "WR",
+     "gp": 3,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 46.0,
+     "recent_snap_pct": 0.76
+    },
+    {
+     "player": "Brandin Cooks",
+     "position": "WR",
+     "gp": 4,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.68
+    },
+    {
+     "player": "Jacob Cowing",
+     "position": "WR",
+     "gp": 4,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.39
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Christian McCaffrey",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 12.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 55.6,
+     "recent_snap_pct": 0.52
+    },
+    {
+     "player": "Kaelon Black",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.47
+    }
+   ],
+   "rb1": {
+    "name": "Christian McCaffrey",
+    "ypg": 55.6,
+    "carries_pg": 12.0
+   },
+   "wr1": {
+    "name": "George Kittle",
+    "ypg": 60.7,
+    "targets_pg": 6.6
+   },
+   "turnover_rate_per_play": 0.0192,
+   "third_down_conv_w6_w7": 0.4583,
+   "proe_pct": 1.77,
+   "def_epa_per_play": -0.038,
+   "def_epa_w6_w7": 0.053
+  },
+  "TB": {
+   "team": "TB",
+   "games_played": 7,
+   "qb1": "Baker Mayfield",
+   "qb_pass_yards_per_game": 169.8,
+   "early_down_pass_rate": 0.446,
+   "first_and_10_pass_pct": 44.6,
+   "neutral_pass_rate_pct": 58.6,
+   "play_action_pct": 21.4,
+   "rpo_pct": 6.1,
+   "screen_pct": 8.5,
+   "no_huddle_pct": 7.4,
+   "motion_pct": 68.5,
+   "def_sack_rate_pct": 5.65,
+   "def_blitz_rate_pct": 40.6,
+   "qb_hit_rate_allowed_pct": 14.02,
+   "sack_rate_allowed_pct": 8.12,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 4.1,
+    "cov1_pct": 10.4,
+    "cov2_pct": 13.7,
+    "cov3_pct": 48.9,
+    "cov4_pct": 18.9,
+    "cov6_pct": 1.9,
+    "two_high_shell_pct": 34.5,
+    "single_high_shell_pct": 59.3,
+    "epa_per_db_allowed": -0.08
+   },
+   "yards_per_rush_w1_w7": 4.56,
+   "yards_per_rush_w6_w7": 4.7,
+   "rb1_carry_share": 66.7,
+   "off_rush_epa": -0.011,
+   "def_rush_epa": -0.16,
+   "redzone_td_pct": 0.1579,
+   "neutral_sec_per_snap": 25.5,
+   "plays_per_game": 65.3,
+   "off_epa_per_play": -0.081,
+   "off_epa_w1_w5": -0.092,
+   "off_epa_w6_w7": -0.056,
+   "off_trend_delta_w67_vs_w15": 0.037,
+   "wr1_target_share": 24.7,
+   "hhi_target_concentration": 0.154,
+   "n_eff_receivers": 6.49,
+   "top_receivers": [
+    {
+     "player": "Chris Godwin",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.73
+    },
+    {
+     "player": "Cade Otton",
+     "position": "TE",
+     "gp": 7,
+     "targets_per_game": 4.3,
+     "target_share_pct": 15.3,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.89
+    },
+    {
+     "player": "Ted Hurst",
+     "position": "WR",
+     "gp": 1,
+     "targets_per_game": 4.5,
+     "target_share_pct": 18.0,
+     "rec_yards_per_game": 38.0,
+     "recent_snap_pct": 0.56
+    },
+    {
+     "player": "Tez Johnson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.65
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Bucky Irving",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 17.1,
+     "carry_share_pct": 50.1,
+     "rush_yards_per_game": 79.7,
+     "recent_snap_pct": 0.59
+    },
+    {
+     "player": "Kenneth Gainwell",
+     "position": "RB",
+     "gp": 1,
+     "carries_per_game": 12.5,
+     "carry_share_pct": 45.0,
+     "rush_yards_per_game": 52.0,
+     "recent_snap_pct": 0.3
+    }
+   ],
+   "rb1": {
+    "name": "Bucky Irving",
+    "ypg": 79.7,
+    "carries_pg": 17.1
+   },
+   "wr1": {
+    "name": "Chris Godwin",
+    "ypg": 38.0,
+    "targets_pg": 4.5
+   },
+   "turnover_rate_per_play": 0.0241,
+   "third_down_conv_w6_w7": 0.4194,
+   "proe_pct": -4.89,
+   "def_epa_per_play": -0.108,
+   "def_epa_w6_w7": -0.217
+  },
+  "TEN": {
+   "team": "TEN",
+   "games_played": 7,
+   "qb1": "Cam Ward",
+   "qb_pass_yards_per_game": 168.4,
+   "early_down_pass_rate": 0.52,
+   "first_and_10_pass_pct": 52.0,
+   "neutral_pass_rate_pct": 55.8,
+   "play_action_pct": 21.4,
+   "rpo_pct": 9.1,
+   "screen_pct": 7.3,
+   "no_huddle_pct": 16.1,
+   "motion_pct": 48.6,
+   "def_sack_rate_pct": 6.46,
+   "def_blitz_rate_pct": 23.2,
+   "qb_hit_rate_allowed_pct": 11.34,
+   "sack_rate_allowed_pct": 4.45,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 2.8,
+    "cov1_pct": 14.3,
+    "cov2_pct": 6.3,
+    "cov3_pct": 30.2,
+    "cov4_pct": 23.4,
+    "cov6_pct": 18.7,
+    "two_high_shell_pct": 48.4,
+    "single_high_shell_pct": 44.5,
+    "epa_per_db_allowed": 0.14
+   },
+   "yards_per_rush_w1_w7": 3.85,
+   "yards_per_rush_w6_w7": 4.24,
+   "rb1_carry_share": 76.2,
+   "off_rush_epa": -0.126,
+   "def_rush_epa": -0.069,
+   "redzone_td_pct": 0.1324,
+   "neutral_sec_per_snap": 29.6,
+   "plays_per_game": 56.7,
+   "off_epa_per_play": -0.121,
+   "off_epa_w1_w5": -0.136,
+   "off_epa_w6_w7": -0.083,
+   "off_trend_delta_w67_vs_w15": 0.053,
+   "wr1_target_share": 26.0,
+   "hhi_target_concentration": 0.157,
+   "n_eff_receivers": 6.37,
+   "top_receivers": [
+    {
+     "player": "Carnell Tate",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 7.3,
+     "target_share_pct": 27.0,
+     "rec_yards_per_game": 59.0,
+     "recent_snap_pct": 0.89
+    },
+    {
+     "player": "Elic Ayomanor",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.89
+    },
+    {
+     "player": "Wan'Dale Robinson",
+     "position": "WR",
+     "gp": 7,
+     "targets_per_game": 6.1,
+     "target_share_pct": 21.2,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.6
+    },
+    {
+     "player": "Gunnar Helm",
+     "position": "TE",
+     "gp": 6,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.84
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Tony Pollard",
+     "position": "RB",
+     "gp": 7,
+     "carries_per_game": 16.0,
+     "carry_share_pct": 63.8,
+     "rush_yards_per_game": 68.3,
+     "recent_snap_pct": 0.75
+    }
+   ],
+   "rb1": {
+    "name": "Tony Pollard",
+    "ypg": 68.3,
+    "carries_pg": 16.0
+   },
+   "wr1": {
+    "name": "Carnell Tate",
+    "ypg": 59.0,
+    "targets_pg": 7.3
+   },
+   "turnover_rate_per_play": 0.0202,
+   "third_down_conv_w6_w7": 0.3478,
+   "proe_pct": -5.73,
+   "def_epa_per_play": 0.045,
+   "def_epa_w6_w7": 0.018
+  },
+  "WAS": {
+   "team": "WAS",
+   "games_played": 6,
+   "qb1": "Jayden Daniels",
+   "qb_pass_yards_per_game": 189.8,
+   "early_down_pass_rate": 0.477,
+   "first_and_10_pass_pct": 47.7,
+   "neutral_pass_rate_pct": 62.4,
+   "play_action_pct": 21.8,
+   "rpo_pct": 6.0,
+   "screen_pct": 4.3,
+   "no_huddle_pct": 8.1,
+   "motion_pct": 51.4,
+   "def_sack_rate_pct": 4.28,
+   "def_blitz_rate_pct": 45.1,
+   "qb_hit_rate_allowed_pct": 16.73,
+   "sack_rate_allowed_pct": 5.45,
+   "coverage_shells_w1_w7": {
+    "cov0_pct": 7.3,
+    "cov1_pct": 8.1,
+    "cov2_pct": 22.3,
+    "cov3_pct": 21.9,
+    "cov4_pct": 21.5,
+    "cov6_pct": 8.5,
+    "two_high_shell_pct": 52.3,
+    "single_high_shell_pct": 30.0,
+    "epa_per_db_allowed": 0.14
+   },
+   "yards_per_rush_w1_w7": 3.71,
+   "yards_per_rush_w6_w7": 2.87,
+   "rb1_carry_share": 48.9,
+   "off_rush_epa": -0.148,
+   "def_rush_epa": -0.085,
+   "redzone_td_pct": 0.1607,
+   "neutral_sec_per_snap": 25.1,
+   "plays_per_game": 66.2,
+   "off_epa_per_play": -0.007,
+   "off_epa_w1_w5": -0.008,
+   "off_epa_w6_w7": -0.001,
+   "off_trend_delta_w67_vs_w15": 0.007,
+   "wr1_target_share": 20.1,
+   "hhi_target_concentration": 0.118,
+   "n_eff_receivers": 8.46,
+   "top_receivers": [
+    {
+     "player": "Chig Okonkwo",
+     "position": "TE",
+     "gp": 4,
+     "targets_per_game": 5.0,
+     "target_share_pct": 16.9,
+     "rec_yards_per_game": 37.5,
+     "recent_snap_pct": 0.76
+    },
+    {
+     "player": "Stefon Diggs",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 7.6,
+     "target_share_pct": 23.4,
+     "rec_yards_per_game": 42.8,
+     "recent_snap_pct": 0.61
+    },
+    {
+     "player": "Antonio Williams",
+     "position": "WR",
+     "gp": 6,
+     "targets_per_game": 4.3,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.2,
+     "recent_snap_pct": 0.67
+    },
+    {
+     "player": "Treylon Burks",
+     "position": "WR",
+     "gp": 5,
+     "targets_per_game": 3.5,
+     "target_share_pct": 14.0,
+     "rec_yards_per_game": 34.0,
+     "recent_snap_pct": 0.55
+    }
+   ],
+   "top_rushers": [
+    {
+     "player": "Rachaad White",
+     "position": "RB",
+     "gp": 5,
+     "carries_per_game": 10.0,
+     "carry_share_pct": 58.6,
+     "rush_yards_per_game": 46.0,
+     "recent_snap_pct": 0.69
+    }
+   ],
+   "rb1": {
+    "name": "Rachaad White",
+    "ypg": 46.0,
+    "carries_pg": 10.0
+   },
+   "wr1": {
+    "name": "Chig Okonkwo",
+    "ypg": 37.5,
+    "targets_pg": 5.0
+   },
+   "turnover_rate_per_play": 0.005,
+   "third_down_conv_w6_w7": 0.25,
+   "proe_pct": -0.98,
+   "def_epa_per_play": 0.067,
+   "def_epa_w6_w7": 0.155
+  }
+ }
+}
