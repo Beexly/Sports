@@ -4,7 +4,7 @@
 
 Official New Engine record entering tonight: **16-5 (76.2%) · +10.45 units (+49.8% ROI)**
 Canonical ledger: NEW-ENGINE-OFFICIAL-LEDGER-16-5.md · new_engine_official_ledger_2026.json
-All plays below are logged PENDING in the ledger and graded immediately after the game.
+**SCOPE — read before betting:** 59 plays appear on this 360° card. **21 of them are the official unit-staked slate** and are logged PENDING in the ledger above; those 21 alone count toward the 16-5 record. The other **38 are card-level 360° reads with no assigned stake** — they are graded for reference only and do NOT count toward the record.
 Lines: DraftKings live at the 6:15 PM CT refresh. Ratings = engine score /100. Edge = CLV edge in cents.
 
 ---
@@ -142,7 +142,7 @@ Refresh note: Hubbard Rec Yds ticked 16.5 → 15.5 and Jacobs Rec Yds 18.5 → 1
 | Savion Williams (GB WR) | Receiving Yards | 23.5 / 24.5 (-110) (21.5) | 32.8 yds | **PLAY: OVER 23.5 / 24.5** | 60 | +7.62c |
 | Jalen Coker / M. Golden | Receiving Yards | 62.5 / 57.5 | 59.8 / 54.2 | PASS (full-game; Golden 1Q under instead) | 54 | +1.10c |
 
-Plus the official game card from the Spotlight pack: GB -3.5 spread (61/100), Under 46.5 total (58/100), correlated SGP (+380) — graded in the same ledger.
+Plus the official game card from the Spotlight pack: GB -3.5 spread (61/100) and Under 46.5 total (58/100) are ledger-tracked and count toward the record; the correlated SGP (+380) is graded for reference only.
 
 ---
 *Source: COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29.md (AGY/Grok lane, relayed by Garrett 2026-10-29 18:24 CT) + car_gb_360_full_market_evaluation_2026_10_29.json. Packaged into the member vault by Motif 2026-10-29. Lines are DraftKings as of the 6:15 PM CT refresh — re-verify at bet time.*

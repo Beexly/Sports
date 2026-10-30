@@ -57,3 +57,33 @@ start from the matchup instead of the constants 3 and 46.5.
 **Not proven:** that the roles are adopted. That is a habit, not a file.
 
 **Next role (any):** take one role, not two. Hand off with all four fields.
+
+## 2026-10-30 (UTC) — Member card scope disclosure + ledger gaps
+
+**Changed:** `data/content-os/vip-vault/week8-nova-2026-10-29/FULL-360-CARD-CAR-GB-2026-10-29.md`,
+`.../FIRST-HALF-CARD-CAR-GB-2026-10-29.md`, `data/engine/new_engine_official_ledger_2026.json`,
+`docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md`.
+
+**What was wrong:** the TNF card told members "All plays below are logged PENDING in the ledger and
+graded immediately after the game." It prints 59 PLAY rows; the canonical ledger carries 21. The
+38 remaining plays were sold with no stake and no grading, so the `16-5` record would only ever
+describe a third of what a member received. Both card headers and the ledger now state the split:
+21 unit-staked plays count toward the record, 38 are reference-graded only. A `card_scope` block
+in the ledger JSON carries the same counts in machine-readable form. No pick, line, rating or
+stake was changed, and no gate or env flag was touched.
+
+**Also recorded, not fixed:** the `16-5` aggregate has no per-pick history in either the doc or
+the JSON, so it cannot be reconstructed from its own canonical source; `CAR-GB-02` sells
+`UNDER 46.5` while displaying the `+5.62c` edge the sim measured at 47.5, so its edge at the sold
+line is unmeasured; and the two 10,000-sim cadence ticks for this fixture picked opposite sides on
+both spread and total within 14 hours (edge 1.67% vs 8.62%).
+
+**Proven:** the JSON parses and carries the new key; the counts are parsed from the card itself
+(59 PLAY rows via literal `**PLAY` count, 21 ledger entries); the vault path is not under
+`apps/web/public`, so nothing was exposed publicly.
+
+**Not proven:** that 21 is the right subset to record-count — that is a product decision, and it is
+the owner's. Nothing was graded tonight; the card went to members before kickoff.
+
+**Next role (Owner):** decide whether the record should track 21 staked plays or all 59, and write
+down the 21 settled picks behind `16-5` so the aggregate stops being an attestation.

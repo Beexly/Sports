@@ -1,7 +1,7 @@
 # VIP VAULT — FIRST-HALF CARD: Carolina Panthers @ Green Bay Packers
 **TNF · Week 8 · Thu Oct 29, 2026 · Kickoff 7:15 PM CT · MEMBER-ONLY**
 **Release window: live NOW through halftime. Every play below settles by the end of the 2nd quarter (1Q TD sprinkle settles in Q1).**
-Official New Engine record entering tonight: **16-5 · +10.45 units**. All plays logged PENDING in new_engine_official_ledger_2026.json.
+Official New Engine record entering tonight: **16-5 · +10.45 units**. The unit-staked plays on this card are logged PENDING in new_engine_official_ledger_2026.json and count toward that record; plays without an assigned stake are graded for reference only and do NOT count toward it.
 
 ## 1Q PLAYER PROPS
 | Player | Market | DK Line | Call | Rating | Edge |

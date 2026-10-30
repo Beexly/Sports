@@ -9,6 +9,7 @@
 | **Net Units Won** | **`+10.45 Units`** |
 | **Return on Investment (ROI)** | **`+49.8%`** |
 | **Active Pending Slate (`CAR @ GB`)** | **21 Official Tracked Plays (Graded Post-Game Tonight)** |
+| **Card Scope (`CAR @ GB`)** | **59 plays printed on the 360° card; 21 carry a stake and are ledger-tracked (they alone count toward the record); the other 38 are reference-graded only** |
 
 ## Tonight's Official Tracked Card (`CAR @ GB` — Thu Oct 29, 2026)
 
@@ -35,3 +36,9 @@
 | `CAR-GB-19` | IDP / Defense Prop | **Lukas Van Ness (GB DE) OVER 0.25 Sacks (-115)** | `0.75u` | **`62/100`** | `+9.53c` | `PENDING` |
 | `CAR-GB-20` | IDP / Defense Prop | **Keisean Nixon (GB CB) OVER 4.5 Tackles + Assists (-110)** | `0.50u` | **`61/100`** | `+9.87c` | `PENDING` |
 | `CAR-GB-21` | Anytime TD | **Tucker Kraft Anytime TD (+185) / Christian Watson Anytime TD (+155)** | `0.50u` | **`64/100`** | `+4.75c` | `PENDING` |
+
+## Known Gaps In This Ledger (recorded 2026-10-29 19:05 CT, before kickoff)
+
+1. **The `16-5` aggregate has no per-pick history in this ledger or its JSON.** Both files carry the summary counts only (`wins 16, losses 5, pushes 0, net +10.45u`); no file in this repository lists the 21 settled picks that produced them. The record cannot be independently reconstructed from its own canonical source, which is what `verified` is supposed to mean. Until the 21 graded rows are written down here, treat `16-5` as an owner-attested figure, not a ledger-verified one.
+2. **`CAR-GB-02` is priced at a line the sim did not measure.** The cadence tick `cadence_tick_injury_weather_overlay_tnf_w8.json` selected `UNDER 47.5` with `total_expected_clv 0.0562`; the card sells `UNDER 46.5 (+102)` while still displaying the `+5.62c` edge computed at 47.5. Under 46.5 is the harder side, so the published edge is carried over rather than measured at the sold number. The edge at 46.5 is UNMEASURED.
+3. **The two 10,000-sim cadence ticks for this game disagree on both sides.** The T-48h tick (`cadence_tick_t_minus_48h_early_sim_tnf_w8.json`, 02:00) selected `Panthers +3.5` and `OVER 47.5` at edge 1.67%. The injury/weather overlay tick (16:52) selected `Packers -3.5` and `UNDER 47.5` at edge 8.62%. The card follows the later tick. A 5.2x edge swing on the same fixture in 14 hours is not a stable read and is worth knowing before the next slate is priced off this engine.
