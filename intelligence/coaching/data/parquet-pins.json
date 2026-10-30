@@ -1,6 +1,6 @@
 {
   "comment": "Pin the nflverse pbp inputs by URL and sha256. The parquet bytes for 2022-2025 are not committed. Re-fetch and check the hash. A mismatch means tau_hat.csv is not this table.",
-  "measured_at": "2026-10-02T17:33:31Z",
+  "measured_at": "2026-10-30T23:22:45Z",
   "sources": [
     {
       "season": 2022,
@@ -46,11 +46,11 @@
       "season": 2026,
       "filename": "play_by_play_2026.parquet",
       "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet",
-      "sha256": "ad20b9292686d0bbc899020062789f3b42b5c8542b9a3d9c1dc3ce317d2d248d",
-      "bytes": 3723133,
-      "upstream_updated_at": "2026-10-02T15:46:33Z",
+      "sha256": "6a6097066474da7ca867d954d6b04b84905c5e242d13917391237b8334f362fe",
+      "bytes": 8068642,
+      "upstream_updated_at": "2026-10-30T23:22:45Z",
       "committed": true,
-      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+      "note": "Refreshed 2026-10-30 (new vintage, see vintage-2026-10-30.json): weeks 1-8, 18,926 rows, 108 games. Schema identical to the 2026-10-02 vintage (372 columns). Supersedes sha ad20b929 (weeks 1-4)."
     }
   ]
 }
