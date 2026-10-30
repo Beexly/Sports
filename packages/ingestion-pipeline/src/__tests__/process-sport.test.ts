@@ -84,6 +84,12 @@ const mocks = vi.hoisted(() => ({
   confirmBatch: vi.fn<(sportKey: string, probes: readonly FixtureProbe[]) => Promise<unknown>>(),
   // Recorder only: the real buildIndependentFairValues still runs (see the passthrough mock below).
   independentsInput: vi.fn<(input: unknown) => void>(),
+  // gate decisions
+  persistGateDecisions: vi.fn<() => Promise<{ attempted: number; persisted: number; error?: string }>>().mockResolvedValue({ attempted: 0, persisted: 0 }),
+}));
+
+vi.mock("../gate-decision-sink.js", () => ({
+  persistGateDecisions: mocks.persistGateDecisions,
 }));
 
 vi.mock("@sports/db", () => ({
@@ -344,6 +350,7 @@ describe("processSport", () => {
   beforeEach(() => {
     for (const mock of Object.values(mocks)) mock.mockReset();
 
+    mocks.persistGateDecisions.mockResolvedValue({ attempted: 0, persisted: 0 });
     mocks.ingestionRunCreate.mockResolvedValue({ id: "run-1" });
     mocks.ingestionRunUpdate.mockResolvedValue({});
     mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 400 });
@@ -2366,6 +2373,7 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
     // from earlier tests and `mock.calls[0]` reads someone else's write.
     for (const mock of Object.values(mocks)) mock.mockReset();
 
+    mocks.persistGateDecisions.mockResolvedValue({ attempted: 0, persisted: 0 });
     mocks.ingestionRunCreate.mockResolvedValue({ id: "run-1" });
     mocks.ingestionRunUpdate.mockResolvedValue({});
     mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 400 });
@@ -2394,6 +2402,7 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
     mocks.confirmBatch.mockImplementation(confirmAll);
     mocks.circuitState.mockReturnValue("closed");
     mocks.gameFindMany.mockResolvedValue([]);
+    mocks.persistGateDecisions.mockResolvedValue({ attempted: 1, persisted: 1 });
     // The identity resolver matches the bare gameFindUnique row and routes
     // through the twin branch, whose record IS the gameUpdate result: it
     // must carry the id (and names), exactly as the main describe stubs it,
@@ -2438,6 +2447,27 @@ describe("published bet terms are write-once (Finding 2 — display must equal t
     // Genuinely live fields still refresh — freezing the bet is not freezing the row.
     expect(upd.data).toHaveProperty("confidence");
     expect(upd.data).toHaveProperty("bookmakerCount");
+  });
+
+  it("adds gate_decisions_lost to IngestionRun errorMessage but preserves SUCCESS status if persist fails", async () => {
+    // Force a partial persist
+    mocks.persistGateDecisions.mockResolvedValue({ attempted: 5, persisted: 2, error: "Database timeout" });
+    mocks.scoreGames.mockReturnValue([scoredPick({ selection: "Chiefs -4.5", line: -4.5 })]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+
+    const result = await processSport(SPORT, "key", gates());
+    expect(result.status).toBe("success"); // The run itself must still succeed (note lower case 'success' as returned by processSport wrapper)
+
+    // Look for the DB update to the run row
+    const dbUpdates = vi.mocked(mocks.ingestionRunUpdate).mock.calls;
+    // Find the update call for "SUCCESS"
+    const successUpdate = dbUpdates.find((call) => (call[0] as any).data.status === "SUCCESS");
+    expect(successUpdate).toBeDefined();
+
+    const data = (successUpdate![0] as any).data;
+    expect(data).toHaveProperty("errorMessage");
+    expect(data.errorMessage).toContain("gate_decisions_lost=3/5: Database timeout");
   });
 
   it("mints display, lock and graded line as ONE value at creation", async () => {
