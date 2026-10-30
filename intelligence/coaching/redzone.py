@@ -43,3 +43,25 @@ def second_and_short(season: int, team: str, situation: str = "2n1") -> Optional
     out["publishable"] = C.publishable(row["n_plays"] or 0)
     out["filter"] = "all scrimmage plays (no 'normal situations' filter — unrecoverable)"
     return out
+
+
+def get_rz_td_pct(season: int, team: str) -> Optional[float]:
+    """Sketch 2: Return team redzone_td_pct from master_weeks_1_to_7_pbp_tendencies_2026.json (or rz_mix fallback)."""
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    master_path = root / "data" / "film_room_2026" / "master_weeks_1_to_7_pbp_tendencies_2026.json"
+    if master_path.is_file() and int(season) == 2026:
+        try:
+            data = json.loads(master_path.read_text(encoding="utf-8"))
+            teams = data.get("teams", data)
+            t_node = teams.get(team.upper())
+            if t_node and t_node.get("redzone_td_pct") is not None:
+                return float(t_node["redzone_td_pct"])
+        except Exception:
+            pass
+    row = get_rz_mix(season, team)
+    if row and row.get("rz_td_rate") is not None:
+        return float(row["rz_td_rate"])
+    return None

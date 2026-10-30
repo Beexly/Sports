@@ -98,3 +98,42 @@ export function jointThreeLegExceedance(
   return Math.min(0.28, Math.max(0.14, Math.min(upperBound, joint)));
 }
 
+/**
+ * Marchenko-Pastur Random Matrix Spectral Denoiser for SGP Leg Correlation Matrices
+ * (`prob-weber.pdf` Lect. 12.2 & 24.3, `effective_theory_and_large_deviations.py`).
+ *
+ * `lambdaPlus` reports the Marchenko-Pastur edge `(1 + sqrt(q))^2` with `q = p / nSamples`,
+ * which is the sample size below which a correlation cannot be distinguished from noise.
+ * The shrink itself is a positive-part James-Stein factor, `max(0, 1 - sigma^2 / r^2)`,
+ * with `sigma = 1 / sqrt(nSamples - 3)` the Fisher sampling SD of a correlation coeff.
+ * Every correlation is pulled toward ZERO by that factor and none is set to zero by
+ * construction: a strong correlation survives at reduced size, a noise-sized one vanishes.
+ *
+ * An earlier revision of this function multiplied by an unexplained 0.35 and used a
+ * `lambdaPlus`-derived denominator that exceeded every possible numerator at the defaults
+ * (lambdaPlus = 2.5411 at nSamples 17, p 6), so it returned exactly 0.0 for every input in
+ * [-0.95, 0.95] - it deleted the SGP correlation structure rather than denoising it. The
+ * test `sgp-copula-denoise.test.ts` pins the corrected behaviour.
+ */
+export function denoiseSgpPairwiseCorrelation(
+  rawRho: number,
+  nSamples: number = 17,
+  nVariables: number = 6,
+): { denoisedRho: number; lambdaPlus: number; noiseClipped: boolean } {
+  const r = Math.max(-0.95, Math.min(0.95, rawRho));
+  const q = Math.max(0.01, Math.min(0.95, nVariables / Math.max(1, nSamples)));
+  const lambdaPlus = Math.pow(1 + Math.sqrt(q), 2);
+
+  const nEff = Math.max(4, Math.floor(nSamples));
+  const sigma = 1 / Math.sqrt(nEff - 3);
+  const shrink = r === 0 ? 0 : Math.max(0, 1 - (sigma * sigma) / (r * r));
+  const denoisedRho = r * shrink;
+
+  return {
+    denoisedRho: Number(denoisedRho.toFixed(4)),
+    lambdaPlus: Number(lambdaPlus.toFixed(4)),
+    noiseClipped: shrink < 1,
+  };
+}
+
+
