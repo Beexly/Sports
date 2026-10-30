@@ -98,3 +98,40 @@ export function jointThreeLegExceedance(
   return Math.min(0.28, Math.max(0.14, Math.min(upperBound, joint)));
 }
 
+/**
+ * Marchenko-Pastur Random Matrix Spectral Denoiser for SGP Leg Correlation Matrices
+ * (`prob-weber.pdf` Lect. 12.2 & 24.3, `effective_theory_and_large_deviations.py`).
+ *
+ * Given an empirical correlation matrix `corr` estimated over `nSamples` games/weeks,
+ * any eigenvalue inside the Marchenko-Pastur bulk `[(1 - sqrt(q))^2, (1 + sqrt(q))^2]`
+ * (`q = p / nSamples`) is random sample noise and is shrunk to the bulk mean,
+ * preventing spurious small-sample correlations from inflating SGP joint probabilities.
+ */
+export function denoiseSgpPairwiseCorrelation(
+  rawRho: number,
+  nSamples: number = 17,
+  nVariables: number = 6,
+): { denoisedRho: number; lambdaPlus: number; noiseClipped: boolean } {
+  const r = Math.max(-0.95, Math.min(0.95, rawRho));
+  const q = Math.max(0.01, Math.min(0.95, nVariables / Math.max(1, nSamples)));
+  const lambdaPlus = Math.pow(1 + Math.sqrt(q), 2);
+  // For a 2x2 sub-block with correlation r, eigenvalues are (1 + |r|) and (1 - |r|).
+  // If (1 + |r|) <= lambdaPlus, the correlation is indistinguishable from Marchenko-Pastur noise.
+  const maxEig = 1 + Math.abs(r);
+  if (maxEig <= lambdaPlus) {
+    // Shrink small-sample noise correlation toward 0 by positive-part James-Stein factor
+    const shrinkFactor = Math.max(0, 1 - (lambdaPlus - 1) / Math.max(0.15, Math.abs(r) + 0.15));
+    return {
+      denoisedRho: Number((r * shrinkFactor * 0.35).toFixed(4)),
+      lambdaPlus: Number(lambdaPlus.toFixed(4)),
+      noiseClipped: true,
+    };
+  }
+  return {
+    denoisedRho: Number(r.toFixed(4)),
+    lambdaPlus: Number(lambdaPlus.toFixed(4)),
+    noiseClipped: false,
+  };
+}
+
+
