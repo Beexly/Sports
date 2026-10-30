@@ -867,6 +867,23 @@ def simulate_matchup_pbp(
     away_sh = conserve_target_shares_kkt(away_sh_raw)
     home_sh = conserve_target_shares_kkt(home_sh_raw)
     role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
+    base_arr = np.asarray(base_shares, dtype=np.float64)
+    base_arr = base_arr / np.sum(base_arr)
+    # Solenoidal zero-sum conservation invariant: |sum(w_post - w_pre)| < 1e-12
+    away_zero_sum_err = abs(float(np.sum(away_sh - base_arr)))
+    home_zero_sum_err = abs(float(np.sum(home_sh - base_arr)))
+    assert away_zero_sum_err < 1e-12, f"Solenoidal conservation violated (away): {away_zero_sum_err}"
+    assert home_zero_sum_err < 1e-12, f"Solenoidal conservation violated (home): {home_zero_sum_err}"
+    # Target post-perturbation vectors for Brenier 1/3 stability ratio logging
+    away_nu = base_arr.copy()
+    home_nu = base_arr.copy()
+    for _idx, _rn in enumerate(role_names):
+        if _rn in away_inj:
+            away_nu[_idx] = 0.01
+        if _rn in home_inj:
+            home_nu[_idx] = 0.01
+    brenier_ratio_away = brenier_one_third_stability_ratio(base_arr, away_nu, away_sh)
+    brenier_ratio_home = brenier_one_third_stability_ratio(base_arr, home_nu, home_sh)
     exec_mults = epa_table["execution_multipliers"]
     away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names))
     home_eff_mult = sum(home_sh[i] * (exec_mults.get(rn, 0.90) if rn in home_inj else 1.0) for i, rn in enumerate(role_names))
@@ -1206,6 +1223,9 @@ def simulate_matchup_pbp(
         "sinkhorn_mass_moved": round(away_mass + home_mass, 4),
         "kkt_share_sum_away": round(float(np.sum(away_sh)), 10),
         "kkt_share_sum_home": round(float(np.sum(home_sh)), 10),
+        "brenier_stability_ratio_away": round(float(brenier_ratio_away), 6),
+        "brenier_stability_ratio_home": round(float(brenier_ratio_home), 6),
+        "solenoidal_zero_sum_error_max": float(max(away_zero_sum_err, home_zero_sum_err)),
         "unpadded_drive_totals": [round(float(x), 4) for x in drive_reduce_summary["player_totals"]],
         "shootout_prob_ge51": fft_shootout_ge51,
         "stall_prob_le37": fft_stall_le37,

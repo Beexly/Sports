@@ -338,3 +338,85 @@ def verify_kalman_lyapunov_stability(
         "closed_loop_eigenvalues": eigvals,
         "max_eigenvalue_modulus": spectral_radius,
     }
+
+
+# ============================================================================
+# 8. Kreyszig Advanced Engineering Mathematics (10th ed., §20.4 & §20.5):
+#    Condition Number Diagnostic & QR Polynomial Least Squares
+# ============================================================================
+
+def condition_number_estimate(A: np.ndarray, norm: str = "2") -> float:
+    """
+    Estimate the condition number kappa(A) = ||A|| * ||A^-1|| without forming the inverse.
+
+    Kreyszig Advanced Engineering Mathematics (10th ed.), §20.4:
+    A large condition number indicates an ill-conditioned linear system.
+    Small residual does not imply small error when kappa(A) is large:
+        ||x - x_tilde|| / ||x|| <= kappa(A) * ||r|| / ||b||.
+
+    Supports both square matrices and rectangular full-column-rank matrices (e.g.,
+    Vandermonde matrices) in the 2-norm via singular values s_max / s_min.
+    """
+    A = np.asarray(A, dtype=np.float64)
+    if A.ndim != 2:
+        raise ValueError("A must be 2-dimensional")
+    if A.size == 0:
+        return 1.0
+
+    if norm == "2":
+        try:
+            s = np.linalg.svd(A, compute_uv=False)
+            s_max = s[0]
+            s_min = s[-1]
+            if s_min <= 0.0 or not np.isfinite(s_min):
+                return np.inf
+            return float(s_max / s_min)
+        except np.linalg.LinAlgError:
+            return np.inf
+
+    if A.shape[0] != A.shape[1]:
+        raise ValueError("Non-2 norms require a square matrix")
+    try:
+        return float(np.linalg.cond(A, p=norm))
+    except (np.linalg.LinAlgError, ValueError):
+        return np.inf
+
+
+def least_squares_polynomial_fit(
+    x: np.ndarray,
+    y: np.ndarray,
+    degree: int,
+    kappa_max: float = 1e6,
+) -> Dict[str, object]:
+    """
+    Kreyszig Advanced Engineering Mathematics (10th ed.), §20.5 Least Squares Method:
+    Fits p(x) = c_0 + c_1 x + ... + c_d x^d by building the Vandermonde matrix V
+    and solving directly via Householder/MGS QR (`qr_least_squares`), NEVER forming
+    the normal equations V^T V (which squares the condition number kappa(V)^2).
+    Logs kappa(V) via `condition_number_estimate`; if kappa(V) > kappa_max, falls back
+    to Tikhonov/SVD damping.
+    """
+    x_arr = np.asarray(x, dtype=np.float64).ravel()
+    y_arr = np.asarray(y, dtype=np.float64).ravel()
+    if x_arr.size != y_arr.size:
+        raise ValueError("x and y must have the same length")
+    if degree < 0 or x_arr.size <= degree:
+        raise ValueError("degree must be >= 0 and < len(x)")
+
+    V = np.vander(x_arr, N=degree + 1, increasing=True)
+    kappa = condition_number_estimate(V, norm="2")
+    ill_conditioned = bool(kappa > kappa_max)
+
+    if not ill_conditioned:
+        coeffs = qr_least_squares(V, y_arr)
+    else:
+        coeffs, _, _, _ = np.linalg.lstsq(V, y_arr, rcond=1e-10)
+
+    residual = y_arr - (V @ coeffs)
+    return {
+        "coefficients": coeffs,
+        "condition_number_kappa": kappa,
+        "ill_conditioned_flag": ill_conditioned,
+        "residual_l2": float(np.linalg.norm(residual, ord=2)),
+    }
+

@@ -412,3 +412,41 @@ def optimizing_vs_satisficing_gate(
         "fire_bet": fire_bet,
         "gate_reason": "PASS" if fire_bet else "FAIL",
     }
+
+
+# ============================================================================
+# 6. Huang, Lau, Ono (arXiv:2609.20567v2 + Lean 4 Certificate HJO.lean):
+#    HJO Cone Positive-Definiteness Check (AUDIT-DOMAIN-10)
+# ============================================================================
+
+def verify_hjo_cone_positive_definiteness(
+    q_matrix: np.ndarray,
+    cone_vectors: np.ndarray,
+    delta: float = 1.0,
+    tol: float = 1e-12,
+) -> Dict[str, object]:
+    """
+    arXiv:2609.20567v2 (Huang-Lau-Ono) — Positive-definiteness bound on the HJO cone C:
+        Q(n) = n^T Q n >= n_f^2 / delta   for all n in C,
+    where n_f = n[-1] is the final coordinate (or max coordinate norm on the cone).
+    Returns a dictionary containing `cone_positive_definite` (bool) and minimum margin.
+    """
+    Q = np.asarray(q_matrix, dtype=np.float64)
+    V = np.asarray(cone_vectors, dtype=np.float64)
+    if V.ndim == 1:
+        V = V.reshape(1, -1)
+    if delta <= 0.0:
+        raise ValueError("delta must be positive")
+
+    quad_vals = np.einsum("ij,jk,ik->i", V, Q, V)
+    n_f_sq = V[:, -1] ** 2
+    rhs_bounds = n_f_sq / float(delta)
+    margins = quad_vals - rhs_bounds
+    passed = bool(np.all(margins >= -tol))
+    return {
+        "cone_positive_definite": passed,
+        "min_margin": float(np.min(margins)) if margins.size > 0 else 0.0,
+        "quadratic_values": quad_vals,
+        "lower_bounds": rhs_bounds,
+    }
+
