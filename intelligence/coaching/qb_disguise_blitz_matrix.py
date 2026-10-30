@@ -40,6 +40,33 @@ class QBDisguiseBlitzProfile:
     pressure_to_sack_rate_pct: float = 11.5
     qb_fault_sack_share_pct: float = 20.0
     pressure_survival_archetype: str = "STRUCTURED_POCKET_PASSER"
+    ngs_time_to_throw_sec: float | None = None  # PHASE 6: NGS average time-to-throw (AM (1).md #3)
+    poe: float | None = None  # PHASE 6: pressure over expectation (Patton/StatRankings, ON3 #5)
+
+
+# PHASE 6: NGS average time-to-throw (seconds, snap to release) — @GridironInfo_ / NGS via AM (1).md #3
+# Values cited from the chart; QBs not listed have no NGS TTT on file (None).
+NGS_TIME_TO_THROW_2026: Dict[str, float] = {
+    "Caleb Williams": 3.22,
+    "Malik Willis": 3.13,
+    "Drake Maye": 3.11,
+    "Jordan Love": 2.60,
+    "Jacoby Brissett": 2.63,
+    "Jameis Winston": 2.64,
+    "Joe Burrow": 2.64,
+}
+
+# PHASE 6: Patton/StatRankings POE x pressure-to-sack — ON3 (1).md #5
+# pressure_to_sack_rate_pct = % of pressured dropbacks converted to sacks; poe = pressure over expectation.
+PATTON_POE_P2S_2026: Dict[str, dict[str, object]] = {
+    "Dak Prescott": {"pressure_to_sack_rate_pct": 11.0, "poe": -0.01},
+    "Patrick Mahomes": {"pressure_to_sack_rate_pct": 15.0},
+    "Matthew Stafford": {"pressure_to_sack_rate_pct": 16.0},
+    "Brock Purdy": {"pressure_to_sack_rate_pct": 17.0},
+    "Geno Smith": {"pressure_to_sack_rate_pct": 41.0, "poe": -0.145},
+    "Kyler Murray": {"pressure_to_sack_rate_pct": 36.0},
+    "Daniel Jones": {"pressure_to_sack_rate_pct": 30.0},
+}
 
 
 # Verified 2026 Season Data from @FantasyPtsData, @ghatz_28, and nfl_2026_w1_w7_advanced_charting_and_funnels.json
@@ -294,6 +321,18 @@ def evaluate_qb_matchup_2x2(
             qb_fault_sack_share_pct=_j["qb_fault_sack_share_pct"],
             pressure_survival_archetype=_j["pressure_survival_archetype"],
         )
+    # PHASE 6: Patton POE x P2S overlay (takes precedence over JSON for charted QBs) + NGS time-to-throw
+    _patton = PATTON_POE_P2S_2026.get(p.qb_name)
+    if _patton is not None:
+        p = replace(
+            p,
+            pressure_to_sack_rate_pct=float(_patton.get("pressure_to_sack_rate_pct", p.pressure_to_sack_rate_pct)),
+            poe=float(_patton["poe"]) if _patton.get("poe") is not None else p.poe,
+        )
+    p = replace(
+        p,
+        ngs_time_to_throw_sec=NGS_TIME_TO_THROW_2026.get(p.qb_name, p.ngs_time_to_throw_sec),
+    )
     disg_rate = float(opp_disguise_rate) / 100.0 if opp_disguise_rate > 1.0 else float(opp_disguise_rate)
     bltz_rate = float(opp_blitz_rate) / 100.0 if opp_blitz_rate > 1.0 else float(opp_blitz_rate)
 
@@ -326,6 +365,8 @@ def evaluate_qb_matchup_2x2(
         "sack_rate_pct": p.sack_rate_pct,
         "pressure_to_sack_rate_pct": p.pressure_to_sack_rate_pct,
         "qb_fault_sack_share_pct": p.qb_fault_sack_share_pct,
+        "poe": p.poe,
+        "ngs_time_to_throw_sec": p.ngs_time_to_throw_sec,
         "baseline_epa_db": round(base_epa, 4),
         "matchup_expected_epa_db": round(expected_epa_db, 4),
         "epa_shift_vs_baseline": round(epa_edge_vs_baseline, 4),
@@ -335,6 +376,41 @@ def evaluate_qb_matchup_2x2(
         "blitz_cpoe": p.blitz_cpoe,
         "int_prob_multiplier": round(int_mult, 4),
         "sack_prob_multiplier": round(sack_mult, 4),
+    }
+
+
+def compute_two_clocks_pressure_collision(
+    qb_ttt_sec: float,
+    def_time_to_pressure_sec: float,
+    early_down_run_blitz_confounder: bool = False,
+) -> Dict[str, object]:
+    """
+    PHASE 6: Two-clocks pressure collision (AM (1).md #3 + ON3 #3).
+
+    Compares the QB's average time-to-throw against the defense's time-to-pressure.
+    When pressure arrives before the release (def_t2p < qb_ttt), the defense wins the
+    collision and sack/pressure probability rises. The Big Nickel 37% early-down
+    run-blitz (ON3 #3) acts as an insurance confounder: a defense run-blitzing early
+    downs collapses the pocket ~0.25s faster, shrinking the QB's decision window.
+
+    Returns a dict with the effective time-to-pressure, the pressure advantage in
+    seconds (negative = pressure beats the release), and a collision flag.
+    """
+    qb_ttt = float(qb_ttt_sec)
+    def_t2p = float(def_time_to_pressure_sec)
+    # Big Nickel 37% early-down run-blitz: run-fit pressure reaches the QB ~0.25s faster
+    run_blitz_adj_sec = 0.25 if bool(early_down_run_blitz_confounder) else 0.0
+    effective_t2p = def_t2p - run_blitz_adj_sec
+    pressure_advantage_sec = effective_t2p - qb_ttt
+    collision = pressure_advantage_sec < 0.0
+    return {
+        "qb_ttt_sec": round(qb_ttt, 3),
+        "def_t2p_sec": round(def_t2p, 3),
+        "run_blitz_adj_sec": round(run_blitz_adj_sec, 3),
+        "effective_t2p_sec": round(effective_t2p, 3),
+        "pressure_advantage_sec": round(pressure_advantage_sec, 3),
+        "pressure_before_release": bool(collision),
+        "big_nickel_run_blitz_37pct": bool(early_down_run_blitz_confounder),
     }
 
 

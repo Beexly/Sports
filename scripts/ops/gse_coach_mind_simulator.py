@@ -56,6 +56,47 @@ RZ_TD_CUTOFF = 0.25
 TANDEM_DEF_SACK = 4.5
 TANDEM_OFF_SACK = 5.5
 
+# PHASE 6: Midday priors & matchup overlays (2026-10-30 AM sweep + ON3 overnight)
+# FIRST_HALF_DIFF_PRIORS_2026 — @GridironInfo_ 1H scoring differential tiers through W7 (AM (1).md #5)
+FIRST_HALF_DIFF_PRIORS_2026: dict[str, float] = {
+    "IND": +10.0,
+    "SEA": +8.7,
+    "KC": +7.9,
+    "GB": +3.1,
+    "NYJ": -10.6,
+    "TEN": -9.1,
+    "CIN": -8.6,
+}
+# NET_POINTS_OFF_TURNOVERS_2026 — turnover-fragility ledger (ON3 (1).md #11)
+# net_pts = points off turnovers for minus against; [off_pts/def_pts] where available.
+NET_POINTS_OFF_TURNOVERS_2026: dict[str, dict[str, float]] = {
+    "GB": {"net_pts": +35.0, "off_pts": 45.0, "def_pts": 10.0},
+    "NYJ": {"net_pts": +22.0, "off_pts": 22.0, "def_pts": 0.0},
+    "SEA": {"net_pts": +4.0, "off_pts": 51.0, "def_pts": 47.0},
+    "NO": {"net_pts": -15.0, "off_pts": 37.0, "def_pts": 52.0},
+}
+# EVERO_DEF_TENURE_FLOOR — CAR defense 2nd-worst since 1999: 46.2% SR allowed, +0.08 EPA/play allowed (AM (1).md #1)
+EVERO_DEF_TENURE_FLOOR: dict[str, dict[str, float]] = {
+    "CAR": {"success_rate_allowed_pct": 46.2, "epa_per_play_allowed": +0.08},
+}
+# CHASE_BROWN_XFP_SURGE — CIN RB1 13.5 xFP/G vs 10.1 PPG facing TEN without Jeffery Simmons (ON3 #1)
+CHASE_BROWN_XFP_SURGE: dict[str, object] = {
+    "team": "CIN",
+    "opponent": "TEN",
+    "xfp_per_game": 13.5,
+    "pts_per_game": 10.1,
+    "rb1_carry_share_boost": 0.08,
+}
+# BOWERS_COMPENSATION_CHAIN_FLAG — LV @ NYJ, TE Bowers knee -> hamstring -> calf, 3-week flag (AM (1).md news)
+BOWERS_COMPENSATION_CHAIN_FLAG: dict[str, object] = {
+    "matchup": ("LV", "NYJ"),
+    "player": "Bowers",
+    "position": "TE",
+    "chain": "knee -> hamstring -> calf",
+    "flag_weeks": 3,
+    "injury_token": "BOWERS_TE",
+}
+
 DEFAULT_SEALED_BASELINE = {
     "version": "v1.0",
     "sealedAt": "2026-10-25T04:00:00-05:00",
@@ -630,6 +671,41 @@ def simulate_matchup_pbp(
     away_ol_sack_pct = float(aw_ov.get("sack_rate_allowed_pct", aw_ov.get("sack_rate_allowed", 6.2)))
     home_ol_sack_pct = float(hm_ov.get("sack_rate_allowed_pct", hm_ov.get("sack_rate_allowed", 6.2)))
 
+    # PHASE 6: Midday priors & matchup overlays
+    away_first_half_prior = float(FIRST_HALF_DIFF_PRIORS_2026.get(away, 0.0))
+    home_first_half_prior = float(FIRST_HALF_DIFF_PRIORS_2026.get(home, 0.0))
+    away_net_pts_to = float(NET_POINTS_OFF_TURNOVERS_2026.get(away, {}).get("net_pts", 0.0))
+    home_net_pts_to = float(NET_POINTS_OFF_TURNOVERS_2026.get(home, {}).get("net_pts", 0.0))
+
+    # EVERO_DEF_TENURE_FLOOR: CAR defense 2nd-worst since 1999 (+0.08 EPA/play allowed) -> worsen CAR def_epa
+    evero_epa_penalty = float(EVERO_DEF_TENURE_FLOOR.get("CAR", {}).get("epa_per_play_allowed", 0.0))
+    if away == "CAR":
+        tr_away["def_epa"] = float(tr_away.get("def_epa", 0.0)) + evero_epa_penalty
+    if home == "CAR":
+        tr_home["def_epa"] = float(tr_home.get("def_epa", 0.0)) + evero_epa_penalty
+
+    # CHASE_BROWN_XFP_SURGE: CIN RB1 +3.4 xFP-over-PPG gap facing TEN without Jeffery Simmons -> nudge CIN rb1 carry share
+    cb = CHASE_BROWN_XFP_SURGE
+    cb_active = (
+        (away == str(cb["team"]) and home == str(cb["opponent"]))
+        or (home == str(cb["team"]) and away == str(cb["opponent"]))
+    )
+    cb_boost = float(cb.get("rb1_carry_share_boost", 0.0)) if cb_active else 0.0
+
+    # BOWERS_COMPENSATION_CHAIN_FLAG: LV @ NYJ, Bowers knee->hamstring->calf 3-week flag -> LV TE injury
+    bm = BOWERS_COMPENSATION_CHAIN_FLAG
+    bm_active = (
+        {away, home} == set(bm["matchup"])
+    )
+    if bm_active:
+        token = str(bm["injury_token"])
+        if away == str(bm["matchup"][0]):
+            if token not in away_inj:
+                away_inj = list(away_inj) + [token]
+        else:
+            if token not in home_inj:
+                home_inj = list(home_inj) + [token]
+
     if aw_ov:
         tr_away["early_pass_rate"] = 0.50 * float(tr_away["early_pass_rate"]) + 0.50 * float(
             aw_ov.get("early_down_pass_rate", tr_away["early_pass_rate"])
@@ -680,6 +756,13 @@ def simulate_matchup_pbp(
         away_rb1_share_emp = float(np.clip(away_rb1_share_emp - 0.08, 0.35, 0.88))
     if home_off_rush_epa < RUSH_DECAY_THRESHOLD:
         home_rb1_share_emp = float(np.clip(home_rb1_share_emp - 0.08, 0.35, 0.88))
+
+    # PHASE 6: CHASE_BROWN_XFP_SURGE home-side carry-share nudge (CIN facing TEN without Simmons)
+    if cb_active:
+        if away == str(cb["team"]):
+            away_rb1_share_emp = float(np.clip(away_rb1_share_emp + cb_boost, 0.35, 0.88))
+        elif home == str(cb["team"]):
+            home_rb1_share_emp = float(np.clip(home_rb1_share_emp + cb_boost, 0.35, 0.88))
 
     # Stage 1 / Stage 4: 2x2 QB Disguise x Blitz Matrix + MNAR Missingness Encoding
     hm_shells = hm_ov.get("coverage_shells_w1_w7") or {}
@@ -968,12 +1051,19 @@ def simulate_matchup_pbp(
 
     sigma_margin = 13.5
     sigma_total = 13.0
+    # PHASE 6: NET_POINTS_OFF_TURNOVERS_2026 turnover-fragility variance modifier
+    # ball-secure teams (high net pts off TO) compress variance; fragile/negative-net teams inflate it
+    to_volatility_adj = -0.12 * (away_net_pts_to + home_net_pts_to) / 2.0 / 35.0
+    sigma_margin = max(6.0, 13.5 + to_volatility_adj)
+    sigma_total = max(6.0, 13.0 + to_volatility_adj)
     std_m = max(1e-6, float(np.std(raw_margin_vec)))
     std_t = max(1e-6, float(np.std(raw_total_vec)))
     scale_m = sigma_margin / std_m
     scale_t = sigma_total / std_t
 
-    home_margin_out = shrunk_margin + (raw_margin_vec - raw_margin) * scale_m
+    # PHASE 6: FIRST_HALF_DIFF_PRIORS_2026 spread shift (faster-starting team edges the margin)
+    first_half_margin_shift = 0.10 * (home_first_half_prior - away_first_half_prior)
+    home_margin_out = shrunk_margin + (raw_margin_vec - raw_margin) * scale_m + first_half_margin_shift
     total_pts_out = np.maximum(10.0, shrunk_total + (raw_total_vec - raw_total) * scale_t)
     home_score = 0.5 * (total_pts_out + home_margin_out)
     away_score = 0.5 * (total_pts_out - home_margin_out)
@@ -1058,6 +1148,16 @@ def simulate_matchup_pbp(
             "away_lb_tackle_funnel_boost": idp_tackle_funnel_adjustment(away_def_blitz_pct),
             "home_lb_tackle_funnel_boost": idp_tackle_funnel_adjustment(home_def_blitz_pct),
         },
+        # PHASE 6: Midday priors & matchup overlays
+        "first_half_diff_prior_away": round(away_first_half_prior, 2),
+        "first_half_diff_prior_home": round(home_first_half_prior, 2),
+        "first_half_margin_shift": round(first_half_margin_shift, 3),
+        "net_points_off_turnovers_away": round(away_net_pts_to, 1),
+        "net_points_off_turnovers_home": round(home_net_pts_to, 1),
+        "turnover_volatility_adj": round(to_volatility_adj, 4),
+        "evero_def_tenure_floor_applied": bool(away == "CAR" or home == "CAR"),
+        "chase_brown_xfp_surge_applied": bool(cb_active),
+        "bowers_compensation_chain_applied": bool(bm_active),
         "coachMindsetHash": expected_hash,
     }
     if return_vectors:
