@@ -8,6 +8,7 @@ import { LIVE_PACKAGE_CATALOG, getPackageBySlug } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
+  getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
@@ -167,7 +168,7 @@ export default async function DfsSuitePage() {
         </div>
 
         <div className="mt-6 space-y-6">
-          {LIVE_SLATE_COACH_WRITEUPS.map((w) => (
+          {getActiveUpcomingWriteups().map((w) => (
             <div key={w.id} className="border border-mineral/70 bg-carbon p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral/50 pb-3">
                 <div>

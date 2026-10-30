@@ -13,10 +13,14 @@ import re
 import subprocess
 from pathlib import Path
 
-REPO_ROOT = Path(r"C:\Users\Garrett\Sports")
+REPO_ROOT = Path(__file__).resolve().parents[2]
 UA_DIR = REPO_ROOT / ".ua"
 
 SCAN_DIRS = [
+    ("intelligence/math", "layer:mind-textbooks-and-math-kernels", ["math", "vmls", "numpybook", "fft-pmf", "cramer-tilt", "rmt-marchenko-pastur", "kkt"]),
+    ("intelligence/coaching", "layer:coaching-film-and-2x2-qb-matrix", ["coaching", "2x2-qb-matrix", "disguise", "blitz", "proe", "redzone", "mnar-injuries"]),
+    ("packages/mcp-equations-server/src", "layer:cognitive-router-and-80-rules", ["cognitive-router", "288-bit-mask", "spectral-ortho", "james-stein", "33-equations"]),
+    ("packages/prediction-engine/src/nfl", "layer:cognitive-router-and-80-rules", ["situational-overlay", "80-rules", "cholesky", "sgp-copula", "no-bet-gate"]),
     ("intelligence/vision", "layer:cv-physical-state-estimator", ["vision", "10hz-kinematics", "kalman", "skeletrack"]),
     ("packages/prediction-engine/src/tracking", "layer:broadcast-cv-homography", ["tracking", "homography", "ransac", "bytetrack"]),
     ("packages/prediction-engine/src/perception", "layer:visual-perception-routes", ["perception", "formation", "route-tree", "coverage-shell"]),
@@ -117,6 +121,9 @@ def build_graphs():
     nodes = []
     edges = []
     layer_Buckets: dict[str, list[str]] = {
+        "layer:mind-textbooks-and-math-kernels": [],
+        "layer:coaching-film-and-2x2-qb-matrix": [],
+        "layer:cognitive-router-and-80-rules": [],
         "layer:data-farm-and-hermes-intel": [],
         "layer:cv-physical-state-estimator": [],
         "layer:broadcast-cv-homography": [],
@@ -381,6 +388,24 @@ def build_graphs():
         add_edge(s, t, et, desc, 0.92)
 
     layers = [
+        {
+            "id": "layer:mind-textbooks-and-math-kernels",
+            "name": "Layer 0: Mind Corpus, Textbook Kernels & Non-Gaussian Pricing (intelligence/math/)",
+            "description": "VMLS & NumPyBook kernels (KKT target conservation err=5.55e-17, unpadded drive reduceat, Bayesian Ridge SOS power ratings, Levenberg-Marquardt) + Roberts & Yaida / Weber (Exact FFT Compound-Poisson PMF on key numbers, Cramer large-deviation tail tilt, Marchenko-Pastur RMT SGP denoiser, 1/N ensemble debias, Levy arcsine law) + MIND_RECORDS_WEEK8_2026_10_30.jsonl.",
+            "nodeIds": layer_Buckets.get("layer:mind-textbooks-and-math-kernels", []),
+        },
+        {
+            "id": "layer:coaching-film-and-2x2-qb-matrix",
+            "name": "Stage 1: Coaching Tendencies, 2x2 QB Disguise/Blitz Matrix & MNAR Injuries (intelligence/coaching/)",
+            "description": "32-QB 2x2 Disguise x Blitz Matrix (Mahomes -0.234 vs Vance Joseph disguise; Nix -0.27 vs Spags blitz; Geno 41% P2S; Love +0.56 1H blitz), NGS Time-to-Throw x Time-to-Pressure, Big Nickel 37% Run-Blitz confounder, PROE+, Red-Zone TD haircut, Script Elasticity, and MNAR per-player GP injury encoding.",
+            "nodeIds": layer_Buckets.get("layer:coaching-film-and-2x2-qb-matrix", []),
+        },
+        {
+            "id": "layer:cognitive-router-and-80-rules",
+            "name": "Stages 3-5: 288-Bit Cognitive Router, 80 Situational Rules, Cholesky Overlay & Conjunction Gate",
+            "description": "mcp-cognitive-router.ts (288-bit context mask -> Spectral Cluster Orthogonalization -> Jacobian Coupling & James-Stein Shrinkage |dLogOdds|<=0.35), master-situational-reasoning-aggregator.ts (6 families + Cholesky whitening), x-situational-80-rules.ts (80 misleading-stat guards), sgp-copula.ts (RMT denoised Gaussian/Student-t copula), and no-bet-gate.ts (Class B de-vig + PASS discipline).",
+            "nodeIds": layer_Buckets.get("layer:cognitive-router-and-80-rules", []),
+        },
         {
             "id": "layer:data-farm-and-hermes-intel",
             "name": "Layer 1A: NFL Data Farm (nfl-farm) & Hermes 24/7 X-Intel Fleet",

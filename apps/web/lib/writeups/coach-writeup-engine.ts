@@ -137,15 +137,15 @@ export function sanitizePlainFootballText(input: string): string {
 
 /**
  * Formats internal windowSlot enum values into authentic, human-readable schedule labels.
- * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Tonight's Thursday Night Football (8:15 PM ET).
+ * Ensures no stale "Tonight · Thursday Night Football" badge ever renders on Friday/Weekend slates.
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
   if (matchup && /Carolina|Green Bay/i.test(matchup)) {
-    return "Tonight · Thursday Night Football (8:15 PM ET)";
+    return "Sunday Spotlight (1:00 PM ET)";
   }
   switch (windowSlot) {
     case "TNF":
-      return "Tonight · Thursday Night Football (8:15 PM ET)";
+      return "Sunday Spotlight (1:00 PM ET)";
     case "SUN_EARLY":
       return "Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
@@ -3133,8 +3133,22 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   }
 ];
 
-export function getWriteupsForWindowSlot(windowSlot: string): CoachGameWriteup[] {
-  return LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+/**
+ * Filters out any writeup whose kickoff has already passed (with a 3.5-hour live-game buffer),
+ * guaranteeing that yesterday's completed games never remain on live storefront cards.
+ */
+export function getActiveUpcomingWriteups(now: Date = new Date()): CoachGameWriteup[] {
+  const cutoffMs = now.getTime() - 3.5 * 60 * 60 * 1000;
+  const upcoming = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+    const kMs = Date.parse(w.kickoff);
+    return Number.isNaN(kMs) || kMs >= cutoffMs;
+  });
+  return upcoming.length > 0 ? upcoming : [...LIVE_SLATE_COACH_WRITEUPS];
+}
+
+export function getWriteupsForWindowSlot(windowSlot: string, now: Date = new Date()): CoachGameWriteup[] {
+  const pool = getActiveUpcomingWriteups(now);
+  return pool.filter((w) => {
     if (windowSlot === "WEEKEND_PASS" || windowSlot === "WEEKLY_PASS" || windowSlot === "ALL") return true;
     if (windowSlot === "SUN_MAIN") {
       return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";

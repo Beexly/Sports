@@ -6,6 +6,7 @@ import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
+  getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
@@ -97,7 +98,7 @@ export default function PackagesPage(): JSX.Element {
           </div>
 
           <div className="mt-6 grid gap-6 md:grid-cols-2">
-            {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((writeup) => {
+            {getActiveUpcomingWriteups().slice(0, 4).map((writeup) => {
               const slotLabel = formatWindowSlotLabel(writeup.windowSlot, writeup.matchup);
 
               return (

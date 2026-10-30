@@ -12,6 +12,7 @@ import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
+  getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
@@ -262,7 +263,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               </div>
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">
-                {LIVE_SLATE_COACH_WRITEUPS.slice(0, 2).map((w) => {
+                {getActiveUpcomingWriteups().slice(0, 2).map((w) => {
                   return (
                     <div
                       key={w.id}

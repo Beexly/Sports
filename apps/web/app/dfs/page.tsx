@@ -6,6 +6,7 @@ import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
+  getActiveUpcomingWriteups,
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
 
@@ -117,7 +118,7 @@ export default function DfsPage(): JSX.Element {
           </div>
 
           <div className="space-y-6">
-            {LIVE_SLATE_COACH_WRITEUPS.slice(0, 4).map((writeup) => (
+            {getActiveUpcomingWriteups().slice(0, 4).map((writeup) => (
               <div
                 key={writeup.id}
                 className="rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-8 shadow-xl"
