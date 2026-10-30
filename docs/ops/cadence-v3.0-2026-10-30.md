@@ -1,7 +1,7 @@
 # Cadence v3.0, Friday 16:30 CT, 2026-10-30: final pre-kickoff overlay and sealed ticket minting
 
 Slot: SUN_EARLY, Week 8, 2026 season. Branch `ledger/consolidated-2026-10-30`.
-Run at 16:39 to 17:05 CT. Every number below comes from the run output in this session.
+Runner executed 16:39 to 17:06 CT (four executions while the report shape was finalised, same result each time). Every number below comes from that run output.
 
 Runner: `scripts/ops/run_cadence_v30_sunday_overlay.py` (new, reusable per slot).
 Report: `docs/predictions/research/2026-10-30/cadence_v30_overlay_sun_early_w8.json`.
