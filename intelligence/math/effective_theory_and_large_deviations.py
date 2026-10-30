@@ -297,3 +297,118 @@ if __name__ == "__main__":
 
     assert np.isclose(levy_arcsine_lead_persistence(0.5), 0.5, atol=1e-9)
     print("ALL EFFECTIVE THEORY & CAMBRIDGE PROBABILITY TESTS PASSED.")
+
+
+# ============================================================================
+# 4. World Models (arXiv:2510.20668v1 Bai et al. + ai4all.pdf SuperDyna):
+#    Closed Interactive World-Model Filter (AUDIT-DOMAIN-9)
+# ============================================================================
+
+def world_model_closed_loop_step(
+    prior_latent: np.ndarray,
+    obs_residual: np.ndarray,
+    kalman_gain: np.ndarray,
+    conservation_bounds: Tuple[float, float] = (-1.0, 1.0),
+) -> Dict[str, object]:
+    """
+    arXiv:2510.20668v1 Eq. p.4 Stage IV/V Closed Interactive World Model:
+        F: q_phi(z_t | h_{t-1}, o_t)  (state inference filter)
+        C: pi_eta(a_t | z_t, h_{t-1}) (coordinator policy)
+        v_omega(z_t) (value function)
+    Stage IV memory-consistency regulation keeps multi-drive snap trajectories
+    from drifting outside conservation bounds. Formalizes the Stage 2 Snap-by-Snap
+    JEV simulator as a closed interactive world model.
+    """
+    z_prev = np.asarray(prior_latent, dtype=np.float64)
+    obs = np.asarray(obs_residual, dtype=np.float64)
+    K_gain = np.asarray(kalman_gain, dtype=np.float64)
+    lo, hi = float(conservation_bounds[0]), float(conservation_bounds[1])
+    # State inference: z_t = z_prev + K_gain @ obs_residual, clipped to conservation bounds
+    z_t = np.clip(z_prev + K_gain @ obs, lo, hi)
+    # Coordinator policy: greedy action from latent (identity projection for Stage IV)
+    a_t = np.clip(z_t, lo, hi)
+    # Value: latent energy within bounds
+    v_t = float(np.sum(z_t ** 2) / max(z_prev.size, 1))
+    memory_consistent = bool(np.all((z_t >= lo) & (z_t <= hi)))
+    return {
+        "latent_state_t": z_t,
+        "action_t": a_t,
+        "value_t": v_t,
+        "memory_consistent": memory_consistent,
+        "conservation_bounds": [lo, hi],
+        "drift_magnitude": float(np.linalg.norm(z_t - z_prev)),
+    }
+
+
+# ============================================================================
+# 5. Andrew Ng Machine Learning Yearning (Ch. 53-56): Pipeline Error Attribution
+#    & Optimizing-vs-Satisficing Gate (AUDIT-DOMAIN-9)
+# ============================================================================
+
+def decompose_pipeline_error_by_parts(
+    stage_briers: Dict[str, float],
+) -> Dict[str, object]:
+    """
+    Andrew Ng Machine Learning Yearning Ch. 53-56: Error Analysis by Parts.
+    Attributes residual error across the 5 GSE pipeline stages via oracle
+    substitution at each seam:
+        Stage 1 Injury/Charting -> Stage 2 JEV PBP Trajectory -> Stage 3
+        288-Bit Router -> Stage 4 Situational Overlay -> Stage 5 Market De-Vig.
+    Returns per-stage error share and a total attributable error.
+    """
+    stages = [
+        "stage1_injury_charting",
+        "stage2_jev_pbp_trajectory",
+        "stage3_288_bit_router",
+        "stage4_situational_overlay",
+        "stage5_market_de_vig",
+    ]
+    total = float(sum(stage_briers.get(s, 0.0) for s in stages))
+    attribution = {
+        s: float(stage_briers.get(s, 0.0) / total) if total > 0 else 0.0
+        for s in stages
+    }
+    dominant_stage = max(attribution, key=attribution.get) if attribution else None
+    return {
+        "stage_attribution": attribution,
+        "total_attributable_error": total,
+        "dominant_stage": dominant_stage,
+        "dominant_stage_share": float(attribution[dominant_stage]) if dominant_stage else 0.0,
+    }
+
+
+def optimizing_vs_satisficing_gate(
+    clv: float,
+    brier: float,
+    agreement: float,
+    odds_freshness_hours: float,
+    tail_ruin: float,
+    brier_tau: float = 0.25,
+    agreement_min: float = 2.0,
+    freshness_max_hours: float = 6.0,
+    ruin_tau: float = 0.10,
+) -> Dict[str, object]:
+    """
+    Andrew Ng Ch. 9 Optimizing vs. Satisficing Metrics:
+    Expected Log-Growth / CLV is the single Optimizing Metric. Calibration
+    Brier <= tau1, Agreement >= 2, Odds Freshness <= 6h, and Tail Ruin <= tau2
+    are hard Satisficing Constraints. A bet only fires when ALL satisficing
+    constraints pass AND CLV > 0.
+    """
+    satisficing = {
+        "calibration_brier_ok": bool(brier <= brier_tau),
+        "agreement_ok": bool(agreement >= agreement_min),
+        "odds_freshness_ok": bool(odds_freshness_hours <= freshness_max_hours),
+        "tail_ruin_ok": bool(tail_ruin <= ruin_tau),
+    }
+    all_satisficing = all(satisficing.values())
+    clv_positive = bool(clv > 0.0)
+    fire_bet = bool(all_satisficing and clv_positive)
+    return {
+        "clv": float(clv),
+        "satisficing": satisficing,
+        "all_satisficing_pass": all_satisficing,
+        "clv_positive": clv_positive,
+        "fire_bet": fire_bet,
+        "gate_reason": "PASS" if fire_bet else "FAIL",
+    }

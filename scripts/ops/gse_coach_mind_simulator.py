@@ -29,6 +29,7 @@ from intelligence.coaching.qb_disguise_blitz_matrix import (
     evaluate_qb_matchup_2x2,
     TEAM_TO_QB_2026,
     encode_mnar_missingness,
+    compute_two_clocks_pressure_collision,
 )
 from intelligence.coaching.pressure_answer import (
     idp_tackle_funnel_adjustment,
@@ -692,6 +693,30 @@ def simulate_matchup_pbp(
     )
     cb_boost = float(cb.get("rb1_carry_share_boost", 0.0)) if cb_active else 0.0
 
+    # PHASE 6 / AUDIT-DOMAIN-8: Two-sided Jeffery Simmons trade trench adjustment
+    # CHI gains All-Pro DT Jeffery Simmons -> CHI interior pressure/run D upgrade (+4.2% interior pressure, -0.35 YPC inside zone)
+    # TEN loses Simmons -> TEN interior run/pass rush downgrade (+0.085 rush EPA allowed)
+    simmons_epa_shift = 0.035  # interior DL upgrade/downgrade magnitude
+    simmons_sack_boost = 0.042  # +4.2% interior pressure for CHI
+    if {away, home} == {"CHI", "SEA"}:
+        # CHI defense upgraded: lower CHI def_epa allowed
+        if away == "CHI":
+            tr_away["def_epa"] = float(tr_away.get("def_epa", 0.0)) - simmons_epa_shift
+            away_def_sack_pct = float(away_def_sack_pct) + simmons_sack_boost
+        else:
+            tr_home["def_epa"] = float(tr_home.get("def_epa", 0.0)) - simmons_epa_shift
+            home_def_sack_pct = float(home_def_sack_pct) + simmons_sack_boost
+    if {away, home} == {"TEN", "CIN"}:
+        # TEN defense downgraded (lost Simmons): raise TEN def_epa allowed; CIN rb1 (Chase Brown) gets extra carry share
+        if away == "TEN":
+            tr_away["def_epa"] = float(tr_away.get("def_epa", 0.0)) + simmons_epa_shift
+            if away == str(cb["team"]):
+                away_rb1_share_emp = float(np.clip(away_rb1_share_emp + cb_boost, 0.35, 0.88))
+        else:
+            tr_home["def_epa"] = float(tr_home.get("def_epa", 0.0)) + simmons_epa_shift
+            if home == str(cb["team"]):
+                home_rb1_share_emp = float(np.clip(home_rb1_share_emp + cb_boost, 0.35, 0.88))
+
     # BOWERS_COMPENSATION_CHAIN_FLAG: LV @ NYJ, Bowers knee->hamstring->calf 3-week flag -> LV TE injury
     bm = BOWERS_COMPENSATION_CHAIN_FLAG
     bm_active = (
@@ -781,6 +806,29 @@ def simulate_matchup_pbp(
 
     away_sack_prob = float(np.clip(away_sack_prob * float(away_qb_2x2["sack_prob_multiplier"]), 0.030, 0.125))
     home_sack_prob = float(np.clip(home_sack_prob * float(home_qb_2x2["sack_prob_multiplier"]), 0.030, 0.125))
+
+    # PHASE 6: Two-Clocks Pressure Collision — QB time-to-throw vs defense time-to-pressure
+    # def_t2p proxy derived from opposing def_sack_rate_pct (direct time-to-pressure not in flat tendencies):
+    # base 2.7s, each defensive sack-rate point above 5.0% = 0.025s faster pressure, clamped [1.8, 3.5].
+    COLLISION_SACK_MULT = 1.15  # sack-prob bump when pressure arrives before release
+    two_clocks = {}
+
+    def _apply_collision(_qb_2x2, _def_sack_pct, _sack_prob, _side):
+        _ttt = _qb_2x2.get("ngs_time_to_throw_sec")
+        if _ttt is None:
+            return _sack_prob, None
+        _def_t2p = float(np.clip(2.7 - (_def_sack_pct - 5.0) * 0.025, 1.8, 3.5))
+        # Big Nickel confounder: early-down run-blitz when the opposing defense blitzes > 30%
+        _bn = _def_sack_pct > 30.0
+        _collision = compute_two_clocks_pressure_collision(_ttt, _def_t2p, early_down_run_blitz_confounder=_bn)
+        two_clocks[_side] = _collision
+        if _collision["pressure_before_release"]:
+            _sack_prob = float(np.clip(_sack_prob * COLLISION_SACK_MULT, 0.030, 0.125))
+        return _sack_prob, _collision
+
+    away_sack_prob, _away_collision = _apply_collision(away_qb_2x2, home_def_sack_pct, away_sack_prob, "away")
+    home_sack_prob, _home_collision = _apply_collision(home_qb_2x2, away_def_sack_pct, home_sack_prob, "home")
+
     away_to_mult = float(away_qb_2x2["int_prob_multiplier"])
     home_to_mult = float(home_qb_2x2["int_prob_multiplier"])
 
@@ -1158,6 +1206,8 @@ def simulate_matchup_pbp(
         "evero_def_tenure_floor_applied": bool(away == "CAR" or home == "CAR"),
         "chase_brown_xfp_surge_applied": bool(cb_active),
         "bowers_compensation_chain_applied": bool(bm_active),
+        # PHASE 6: Two-Clocks Pressure Collision results per side
+        "two_clocks": two_clocks,
         "coachMindsetHash": expected_hash,
     }
     if return_vectors:

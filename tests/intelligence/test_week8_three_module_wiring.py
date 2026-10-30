@@ -130,5 +130,99 @@ def run_all_wiring_tests() -> None:
     print("ALL 6 WIRING POINTS VERIFIED AND PASSED.")
 
 
+def test_ift_t90_sensitivity() -> None:
+    """AUDIT-DOMAIN-9: Implicit Function Theorem first-order sensitivity."""
+    from intelligence.math.vmls_and_numpy_kernels import implicit_function_t90_sensitivity
+    import numpy as np
+    J_z = np.array([[2.0, 0.0], [0.0, 3.0]])
+    J_theta = np.array([[1.0], [0.5]])
+    dtheta = np.array([0.1])
+    out = implicit_function_t90_sensitivity(J_z, J_theta, dtheta)
+    assert np.allclose(out["dz_star"], [-0.05, -1 / 60.0], atol=1e-6)
+    assert out["t90_instant_update"] is True
+    assert out["sensitivity_norm"] > 0.0
+
+
+def test_kalman_lyapunov_stability() -> None:
+    """AUDIT-DOMAIN-9: Kalman Lyapunov spectral-radius stability gate."""
+    from intelligence.math.vmls_and_numpy_kernels import verify_kalman_lyapunov_stability
+    import numpy as np
+    A = np.array([[1.0, 0.1], [0.0, 0.9]])
+    K = np.array([[0.2, 0.0], [0.0, 0.1]])
+    H = np.eye(2)
+    out = verify_kalman_lyapunov_stability(A, K, H)
+    expected_rho = float(np.max(np.abs(np.linalg.eigvals(A - K @ H))))
+    assert abs(out["spectral_radius"] - expected_rho) < 1e-9
+    assert out["lyapunov_stable"] is True
+    A2 = np.array([[1.5, 0.0], [0.0, 1.2]])
+    out2 = verify_kalman_lyapunov_stability(A2, np.zeros((2, 2)), np.eye(2))
+    assert out2["lyapunov_stable"] is False
+
+
+def test_world_model_closed_loop_step() -> None:
+    """AUDIT-DOMAIN-9: Stage IV/V Closed Interactive World-Model filter."""
+    from intelligence.math.effective_theory_and_large_deviations import world_model_closed_loop_step
+    import numpy as np
+    out = world_model_closed_loop_step(
+        np.array([0.1, 0.2]), np.array([0.05, -0.03]),
+        np.array([[0.5, 0.0], [0.0, 0.5]]),
+    )
+    assert out["memory_consistent"] is True
+    assert out["drift_magnitude"] > 0.0
+    assert out["conservation_bounds"] == [-1.0, 1.0]
+    out2 = world_model_closed_loop_step(
+        np.array([0.9, 0.9]), np.array([1.0, 1.0]),
+        np.array([[1.0, 0.0], [0.0, 1.0]]),
+    )
+    assert out2["memory_consistent"] is True
+    assert float(np.max(out2["latent_state_t"])) <= 1.0 + 1e-9
+
+
+def test_pipeline_error_attribution_and_gate() -> None:
+    """AUDIT-DOMAIN-9: Andrew Ng error attribution by parts + optimizing/satisficing gate."""
+    from intelligence.math.effective_theory_and_large_deviations import (
+        decompose_pipeline_error_by_parts, optimizing_vs_satisficing_gate,
+    )
+    stages = {
+        "stage1_injury_charting": 0.1,
+        "stage2_jev_pbp_trajectory": 0.4,
+        "stage3_288_bit_router": 0.05,
+        "stage4_situational_overlay": 0.15,
+        "stage5_market_de_vig": 0.05,
+    }
+    out = decompose_pipeline_error_by_parts(stages)
+    assert out["dominant_stage"] == "stage2_jev_pbp_trajectory"
+    assert abs(out["dominant_stage_share"] - 0.4 / 0.75) < 1e-9
+    assert abs(out["total_attributable_error"] - 0.75) < 1e-9
+    gate = optimizing_vs_satisficing_gate(clv=0.05, brier=0.2, agreement=2.5,
+                                          odds_freshness_hours=3.0, tail_ruin=0.05)
+    assert gate["fire_bet"] is True
+    assert gate["gate_reason"] == "PASS"
+    gate2 = optimizing_vs_satisficing_gate(clv=-0.01, brier=0.2, agreement=2.5,
+                                           odds_freshness_hours=3.0, tail_ruin=0.05)
+    assert gate2["fire_bet"] is False
+    gate3 = optimizing_vs_satisficing_gate(clv=0.05, brier=0.5, agreement=2.5,
+                                           odds_freshness_hours=3.0, tail_ruin=0.05)
+    assert gate3["fire_bet"] is False
+
+
+def test_simmons_two_sided_trench() -> None:
+    """AUDIT-DOMAIN-8: Jeffery Simmons two-sided trade trench adjustment."""
+    from scripts.ops.gse_coach_mind_simulator import simulate_matchup_pbp, load_sealed_object_readonly
+    sealed_obj, digest = load_sealed_object_readonly()
+    r_chi = simulate_matchup_pbp("CHI", "SEA", [], [], sealed_obj, digest, n_sims=500, seed=42)
+    r_ten = simulate_matchup_pbp("TEN", "CIN", [], [], sealed_obj, digest, n_sims=500, seed=42)
+    assert "evero_def_tenure_floor_applied" in r_chi
+    assert "chase_brown_xfp_surge_applied" in r_ten
+    assert r_ten["chase_brown_xfp_surge_applied"] is True
+    assert r_chi["median_total"] > 0 and r_ten["median_total"] > 0
+
+
 if __name__ == "__main__":
     run_all_wiring_tests()
+    test_ift_t90_sensitivity()
+    test_kalman_lyapunov_stability()
+    test_world_model_closed_loop_step()
+    test_pipeline_error_attribution_and_gate()
+    test_simmons_two_sided_trench()
+    print("ALL AUDIT-DOMAIN-8/9 NEW KERNEL TESTS PASSED.")

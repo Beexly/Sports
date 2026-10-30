@@ -18,8 +18,8 @@
       "Hermes Multi-Agent Gateway"
     ],
     "description": "Coach & Vision Mind First, Book Last: 10Hz Physical State-Estimator (SkeleTrack v2 + ByteTrack + Hartley-DLT Homography), Perception & Film Features, nfl-farm + 55 W7 X-Intel CSVs, 3,742-Node Quad-Engine, and 10,000-Run Simulator.",
-    "analyzedAt": "2026-10-30T18:05:08Z",
-    "gitCommitHash": "179410b1e49b401b654af85c28009d47b317424c"
+    "analyzedAt": "2026-10-30T18:33:54Z",
+    "gitCommitHash": "642a6a00c9062f0a36c0ae5f09960437162ced0b"
   },
   "nodes": [
     {
@@ -29,7 +29,7 @@
       "filePath": "intelligence/math/effective_theory_and_large_deviations.py",
       "lineRange": [
         1,
-        299
+        414
       ],
       "summary": "effective_theory_and_large_deviations.py",
       "tags": [
@@ -235,7 +235,7 @@
       "filePath": "intelligence/math/vmls_and_numpy_kernels.py",
       "lineRange": [
         1,
-        278
+        340
       ],
       "summary": "vmls_and_numpy_kernels.py",
       "tags": [
@@ -398,6 +398,29 @@
         241
       ],
       "summary": "VMLS Algorithm 18.2 Levenberg-Marquardt nonlinear least squares:",
+      "tags": [
+        "math",
+        "vmls",
+        "numpybook",
+        "fft-pmf",
+        "cramer-tilt",
+        "rmt-marchenko-pastur",
+        "kkt",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "func:intelligence/math/vmls_and_numpy_kernels.py:implicit_function_t90_sensitivity",
+      "type": "function",
+      "name": "implicit_function_t90_sensitivity()",
+      "filePath": "intelligence/math/vmls_and_numpy_kernels.py",
+      "lineRange": [
+        286,
+        309
+      ],
+      "summary": "Loomis & Sternberg Advanced Calculus Ch. 3/5 \u2014 Implicit Function Theorem.",
       "tags": [
         "math",
         "vmls",
@@ -30996,7 +31019,7 @@
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
         1,
-        1250
+        1300
       ],
       "summary": "scripts/ops/gse_coach_mind_simulator.py \u2014 GSE Sealed Coach-First Play-by-Play Monte Carlo Simulator",
       "tags": [
@@ -31014,8 +31037,8 @@
       "name": "_canon()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        170,
-        204
+        171,
+        205
       ],
       "summary": "Canonical JSON, mirroring canonicalizeForSeal in locked-projection.ts.",
       "tags": [
@@ -31034,8 +31057,8 @@
       "name": "canonical_hash()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        207,
-        209
+        208,
+        210
       ],
       "summary": "Function canonical_hash in scripts/ops/gse_coach_mind_simulator.py",
       "tags": [
@@ -31054,8 +31077,8 @@
       "name": "freeze_deep()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        212,
-        217
+        213,
+        218
       ],
       "summary": "Function freeze_deep in scripts/ops/gse_coach_mind_simulator.py",
       "tags": [
@@ -31074,8 +31097,8 @@
       "name": "hhi_load_multiplier()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        220,
-        226
+        221,
+        227
       ],
       "summary": "Scale positional dropoff in effective-contributor space N_eff = 1/HHI (Davies 2025).",
       "tags": [
@@ -31094,8 +31117,8 @@
       "name": "load_week7_candidate_ratings_readonly()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        229,
-        245
+        230,
+        246
       ],
       "summary": "Load candidates/sealed-center.json (tau_coach=0.42) + candidates/2026-10-25-week7-candidate.json",
       "tags": [
@@ -31114,8 +31137,8 @@
       "name": "load_sealed_object_readonly()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        248,
-        273
+        249,
+        274
       ],
       "summary": "Function load_sealed_object_readonly in scripts/ops/gse_coach_mind_simulator.py",
       "tags": [
@@ -31134,8 +31157,8 @@
       "name": "sinkhorn_reallocate_weights()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        276,
-        297
+        277,
+        298
       ],
       "summary": "Function sinkhorn_reallocate_weights in scripts/ops/gse_coach_mind_simulator.py",
       "tags": [
@@ -31154,8 +31177,8 @@
       "name": "conserve_target_shares_kkt()",
       "filePath": "scripts/ops/gse_coach_mind_simulator.py",
       "lineRange": [
-        300,
-        311
+        301,
+        312
       ],
       "summary": "Enforce exact zero-sum target/carry share conservation sum(s_i) == 1.0 via VMLS Ch. 16 KKT solver.",
       "tags": [
@@ -43308,123 +43331,6 @@
         "stripe"
       ],
       "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-1",
-      "type": "concept",
-      "name": "Mind Record: KKT Constrained Least Squares \u2014 Zero-Sum Target/Carry Share Conservation",
-      "filePath": "C:/c/wt-sports/intelligence/math/vmls_and_numpy_kernels.py",
-      "summary": "[share_conservation]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "share_conservation"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-2",
-      "type": "concept",
-      "name": "Mind Record: Unpadded Drive ReduceAt \u2014 Zero-Allocation Ragged Drive Aggregation",
-      "filePath": "C:/c/wt-sports/intelligence/math/vmls_and_numpy_kernels.py",
-      "summary": "[pbp_aggregation]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "pbp_aggregation"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-3",
-      "type": "concept",
-      "name": "Mind Record: FFT Compound Poisson PMF \u2014 Exact NFL Key-Number Pricing",
-      "filePath": "C:/c/wt-sports/intelligence/math/effective_theory_and_large_deviations.py",
-      "summary": "[scoring_distribution]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "scoring_distribution"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-4",
-      "type": "concept",
-      "name": "Mind Record: Cram\u00e9r Large Deviation Tilt \u2014 Tail/Milestone Pricing",
-      "filePath": "C:/c/wt-sports/intelligence/math/effective_theory_and_large_deviations.py",
-      "summary": "[tail_pricing]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "tail_pricing"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-5",
-      "type": "concept",
-      "name": "Mind Record: Marchenko-Pastur Spectral Denoising \u2014 SGP Copula Covariance",
-      "filePath": "C:/c/wt-sports/intelligence/math/effective_theory_and_large_deviations.py",
-      "summary": "[sgp_covariance]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "sgp_covariance"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-6",
-      "type": "concept",
-      "name": "Mind Record: 2x2 QB Vulnerability Matrix \u2014 Static/Disguised x No-Blitz/Blitz",
-      "filePath": "C:/c/wt-sports/intelligence/coaching/qb_disguise_blitz_matrix.py",
-      "summary": "[qb_matchup]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "qb_matchup"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-7",
-      "type": "concept",
-      "name": "Mind Record: IDP Tackle-Funnel Adjustment \u2014 Sketch 3",
-      "filePath": "C:/c/wt-sports/intelligence/coaching/pressure_answer.py",
-      "summary": "[idp_tackling]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "idp_tackling"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-8",
-      "type": "concept",
-      "name": "Mind Record: Sack Tandem Gate Weight \u2014 Sketch 4",
-      "filePath": "C:/c/wt-sports/intelligence/coaching/pressure_answer.py",
-      "summary": "[sack_pressure]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "sack_pressure"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "mind:week8-record-9",
-      "type": "concept",
-      "name": "Mind Record: Red-Zone TD Percentage Lookup",
-      "filePath": "C:/c/wt-sports/intelligence/coaching/redzone.py",
-      "summary": "[redzone]  \u2014 ",
-      "tags": [
-        "mind-jsonl",
-        "MSVH_S0_VERIFIED",
-        "redzone"
-      ],
-      "complexity": "complex"
     }
   ],
   "edges": [
@@ -43546,6 +43452,14 @@
       "type": "contains",
       "direction": "forward",
       "description": "vmls_and_numpy_kernels.py defines levenberg_marquardt()",
+      "weight": 0.9
+    },
+    {
+      "source": "file:intelligence/math/vmls_and_numpy_kernels.py",
+      "target": "func:intelligence/math/vmls_and_numpy_kernels.py:implicit_function_t90_sensitivity",
+      "type": "contains",
+      "direction": "forward",
+      "description": "vmls_and_numpy_kernels.py defines implicit_function_t90_sensitivity()",
       "weight": 0.9
     },
     {
@@ -58147,70 +58061,6 @@
       "direction": "forward",
       "description": "Broadcasts gated VIP picks & writeups to @GalaxySportsEdge_bot",
       "weight": 0.92
-    },
-    {
-      "source": "file:intelligence/math/vmls_and_numpy_kernels.py",
-      "target": "file:scripts/ops/gse_coach_mind_simulator.py",
-      "type": "calls",
-      "direction": "forward",
-      "description": "KKT Target/Carry Conservation (err=5.55e-17) + Unpadded Drive reduceat + Bayesian Ridge SOS Ratings",
-      "weight": 0.96
-    },
-    {
-      "source": "file:intelligence/math/effective_theory_and_large_deviations.py",
-      "target": "file:scripts/ops/gse_coach_mind_simulator.py",
-      "type": "calls",
-      "direction": "forward",
-      "description": "Exact FFT Compound-Poisson Score PMF (key numbers 3,6,7,10,14) + Cramer Tail Tilt + Marchenko-Pastur RMT SGP Denoiser",
-      "weight": 0.96
-    },
-    {
-      "source": "file:intelligence/math/effective_theory_and_large_deviations.py",
-      "target": "file:packages/prediction-engine/src/nfl/sgp-copula.ts",
-      "type": "calls",
-      "direction": "forward",
-      "description": "Clips small-sample noise eigenvalues in 10x10 SGP correlation matrix",
-      "weight": 0.96
-    },
-    {
-      "source": "file:intelligence/coaching/qb_disguise_blitz_matrix.py",
-      "target": "file:intelligence/coaching/pressure_answer.py",
-      "type": "calls",
-      "direction": "forward",
-      "description": "2x2 QB Disguise x Blitz EPA Matrix + POE x P2S Survival + MNAR Injury Encoding",
-      "weight": 0.96
-    },
-    {
-      "source": "file:intelligence/coaching/qb_disguise_blitz_matrix.py",
-      "target": "file:scripts/ops/gse_coach_mind_simulator.py",
-      "type": "calls",
-      "direction": "forward",
-      "description": "Snap-by-snap QB Disguise/Blitz delta + 5 Sunday Week 8 PBP Overlays",
-      "weight": 0.96
-    },
-    {
-      "source": "file:scripts/ops/gse_coach_mind_simulator.py",
-      "target": "file:packages/mcp-equations-server/src/mcp-cognitive-router.ts",
-      "type": "transforms",
-      "direction": "forward",
-      "description": "Feeds 10,000-world PBP trajectories into 288-bit Cognitive Router",
-      "weight": 0.96
-    },
-    {
-      "source": "file:packages/mcp-equations-server/src/mcp-cognitive-router.ts",
-      "target": "file:packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
-      "type": "transforms",
-      "direction": "forward",
-      "description": "Spectral Orthogonalization + James-Stein Shrinkage -> 6 Situational Families & Cholesky Whitening",
-      "weight": 0.96
-    },
-    {
-      "source": "file:packages/prediction-engine/src/nfl/x-situational-80-rules.ts",
-      "target": "file:packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
-      "type": "validates",
-      "direction": "forward",
-      "description": "Enforces 80 Misleading-Stat & Situational Rules (Early-Down Non-TO EPA, Player GP, Sim-Pressure)",
-      "weight": 0.96
     }
   ],
   "layers": [
@@ -58236,15 +58086,7 @@
         "func:intelligence/math/vmls_and_numpy_kernels.py:solve_opponent_adjusted_bayesian_ridge",
         "func:intelligence/math/vmls_and_numpy_kernels.py:kkt_constrained_least_squares",
         "func:intelligence/math/vmls_and_numpy_kernels.py:levenberg_marquardt",
-        "mind:week8-record-1",
-        "mind:week8-record-2",
-        "mind:week8-record-3",
-        "mind:week8-record-4",
-        "mind:week8-record-5",
-        "mind:week8-record-6",
-        "mind:week8-record-7",
-        "mind:week8-record-8",
-        "mind:week8-record-9"
+        "func:intelligence/math/vmls_and_numpy_kernels.py:implicit_function_t90_sensitivity"
       ]
     },
     {
