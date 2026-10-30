@@ -4,6 +4,8 @@ Builds the Official New Engine W-L-P & Units Ledger (16-5, 76.2%, +10.45u)
 and writes the complete 360-degree CAR @ GB Master Bet Card & Market Review.
 """
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 REPO = Path(r"C:\Users\Garrett\Sports")
@@ -114,6 +116,19 @@ def main():
     if "# OFFICIAL NEW ENGINE VERIFIED LEDGER" in cur_text:
         cur_text = cur_text.split("# OFFICIAL NEW ENGINE VERIFIED LEDGER")[0]
     MASTER_MD.write_text(cur_text + "\n".join(sec_lines) + "\n", encoding="utf-8")
+
+    # ---------------------------------------------------------------------
+    # This builder is a PRE-GAME generator: every card row above is written
+    # `PENDING` from a hardcoded list and it never reads a result. Once the
+    # game is settled that is a false statement, so the settlement pass must
+    # run straight after it. Failing here is better than silently republishing
+    # 21 PENDING rows on a settled slate.
+    # ---------------------------------------------------------------------
+    settlement_pass = REPO / "scripts" / "ops" / "settle_car_gb_card_2026_10_29.py"
+    if not settlement_pass.exists():
+        raise SystemExit(f"Settlement pass missing: {settlement_pass}. Refusing to leave the card PENDING.")
+    subprocess.run([sys.executable, str(settlement_pass)], check=True)
+
     print(f"Saved Official 16-5 Ledger to {LEDGER_JSON}, {LEDGER_MD}, and updated {MASTER_MD}")
 
 

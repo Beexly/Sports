@@ -215,5 +215,51 @@
       "edge": "+4.75c",
       "status": "SETTLED"
     }
-  ]
+  ],
+  "settlement_2026-10-29": {
+    "settled_at": "2026-10-30",
+    "card_scope": "21 official tracked plays published in docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md",
+    "record": "14-6, 1 split row",
+    "leg_level_record": "15-7",
+    "units": "not restated \u2014 combined two-leg rows (CAR-GB-17, CAR-GB-21) do not state a per-leg stake",
+    "detail": "data/engine/settlements/car_gb_2026-10-29_settlement.json",
+    "verified_record_scope": "verified_record above is the record ENTERING this game (owner-attested). It is not the current season line; see record_reconciliation."
+  },
+  "record_reconciliation": {
+    "why": "Four counts for the same night exist in the repo. They are published side by side rather than collapsed, because collapsing them would require choosing one without evidence.",
+    "A_entering_record": {
+      "record": "16-5",
+      "units": "+10.45u",
+      "status": "OWNER-ATTESTED / NOT RECONCILABLE IN-REPO (no per-pick rows carry this record)"
+    },
+    "B_this_card_21_tracked": {
+      "record": "14-6 (+1 split)",
+      "units": "not restated (see units_not_restated_reason)",
+      "status": "GRADED \u2014 per-row, from vault settling stats"
+    },
+    "C_vault_package_62_rows": {
+      "record": "39-22-0",
+      "units": "+14.99u",
+      "settled": 61,
+      "unsettled": 1,
+      "status": "MACHINE AUTO-GRADE of the 62-row vault package"
+    },
+    "D_owner_stated_official": {
+      "tonight": "31-11",
+      "tonight_units": "+18.56u",
+      "season_after": "47-16",
+      "season_units": "+29.01u",
+      "status": "OWNER-STATED (Garrett, 2026-10-29 23:27 CT) \u2014 the official line per his directive"
+    },
+    "open_problem": "D's two numbers are self-consistent with each other (16+31 = 47 wins, 5+11 = 16 losses), so the official line reads as entering + tonight = season. What has no backing is the tonight figure itself: 31-11 is 42 plays, and no artifact in this repo contains 42 plays for this game. The repo-tracked card is 21 plays (14-6 as rows, 15-7 as legs); the vault package auto-grade is 61 settled rows (39-22). Neither is 31-11, and neither arithmetic bridge produces 31-11: 16+14 = 30 wins / 5+6 = 11 losses, and 16+15 = 31 wins / 5+7 = 12 losses. So the official tonight number is owner-stated with no in-repo reconciliation, and the 19-to-40 plays that would have to make up the difference are unnamed anywhere. UNRESOLVED \u2014 owner decision required; nothing here substitutes a number."
+  },
+  "merge_resolution_2026-10-30": {
+    "branches": [
+      "ledger/consolidated-2026-10-30",
+      "engine/w1w7-tendencies-2026-10-30"
+    ],
+    "kept": "verified_record 31-11 (+18.56u) from the consolidated branch, matching the owner directive for the settled CAR @ GB card",
+    "preserved": "settlement_2026-10-29 and record_reconciliation from the tendencies branch, verbatim",
+    "note": "Both counts remain visible; nothing was collapsed or deleted."
+  }
 }

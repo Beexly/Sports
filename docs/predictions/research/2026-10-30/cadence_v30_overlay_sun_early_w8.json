@@ -1,0 +1,3125 @@
+{
+  "report_type": "CADENCE_V3_0_PRE_KICKOFF_OVERLAY_AND_TICKET_MINT",
+  "summary": {
+    "games_in_slot": 8,
+    "tickets_minted": 42,
+    "mint_status_counts": {
+      "PLAY": 12,
+      "WITHHELD_PASS": 30
+    },
+    "playable_rows": {
+      "side": 1,
+      "total": 2,
+      "prop": 9
+    },
+    "max_abs_overlay_points_delta": 0.0973,
+    "weather_flagged_games": 1,
+    "espn_designations_applied": 50,
+    "unpriced_designation_counts": {
+      "LT": 7,
+      "CB1": 5,
+      "EDGE1": 7
+    },
+    "findings": [
+      "The nflverse injuries feed carried NO report_status for any of the 16 Sunday teams at mint time (163 Week-8 rows, all blank). Practice status alone is not a game designation and was not promoted, so the ESPN public summary endpoint supplied every designation used here.",
+      "The sealed epaDropoffTable keys are {QB1, QB_QUESTIONABLE, OL, SKILL, DEF}; the designation mapping emits {WR1, WR2, WR3, TE1, RB1, QB1, QB_QUESTIONABLE, LT, CB1, EDGE1}. Only the QB keys intersect, and no QB is designated in this slot, so OL/LT, CB1 and EDGE1 designations carry zero engine weight. This reconfirms the v2.5 finding on 8 games; the fix is a mapping change, which is model behavior and was not made on a game day.",
+      "Because Sinkhorn reallocates rather than deletes target-share mass, and the sealed multipliers apply to the small residual, the measured overlay effect is under 0.1 points on every game in the slot (max |delta| 0.097). The overlay is inert for this card, and the tickets are minted on the sealed calls unchanged.",
+      "Weather is reported as flags only. No points coefficient was applied, by doctrine."
+    ]
+  },
+  "version": "v3.0",
+  "phase": "INJURY_WEATHER_OVERLAY",
+  "slot": "SUN_EARLY",
+  "week": 8,
+  "season": 2026,
+  "cadence_window": {
+    "day": "Fri",
+    "ct_time": "16:30",
+    "label": "final pre-kickoff overlay + sealed ticket minting"
+  },
+  "generated_at_utc": "2026-10-30T21:52:31.523028+00:00",
+  "inputs": {
+    "writeups_path": "data/packages/live-slate-writeups.json",
+    "writeups_generated_at": "2026-10-29T23:30:08Z",
+    "writeups_sha256": "72f32b55a8fe39c2f73886b33253f786feff215a26cdcae2914ff9de355ef32a",
+    "injuries_csv_sha256": "d7b7021b17ef704395172dce1ebca90f8902e72f88dc59f293dbf5703fc94741",
+    "espn_scoreboard_status": 200,
+    "espn_scoreboard_date": "20261101",
+    "sinkhorn_eps_used": 0.1
+  },
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "no_reestimation": {
+    "tau": 0.42,
+    "cost_matrix_reestimated": false,
+    "team_ratings_reestimated": false,
+    "epa_table_reestimated": false,
+    "repaired": false,
+    "resimulated": false,
+    "note": "Sealed inputs read verbatim; overlay applies multipliers only."
+  },
+  "games": [
+    {
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "indoor": false,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "BAL": {
+            "applied": [
+              {
+                "player": "Olaivavega Ioane",
+                "position": "G",
+                "status": "Out",
+                "role_key": "LT",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Jaylinn Hawkins",
+                "position": "S",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "T.J. Tampa",
+                "position": "CB",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Adam Randall",
+                "position": "RB",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Tavius Robinson",
+                "position": "LB",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "BUF": {
+            "applied": [
+              {
+                "player": "Greg Gaines",
+                "position": "DT",
+                "status": "Questionable",
+                "role_key": "",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Dalton Kincaid",
+                "position": "TE",
+                "status": "Questionable",
+                "role_key": "TE1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "DJ Moore",
+                "position": "WR",
+                "status": "Questionable",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Tyrell Shavers",
+                "position": "WR",
+                "status": "Out",
+                "role_key": "WR2",
+                "sealed_table_match": true
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "C.J. Gardner-Johnson",
+                "position": "S",
+                "status": "Suspension"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "BAL": [],
+          "BUF": []
+        },
+        "team_effects": {
+          "BAL": {
+            "team": "BAL",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [
+              "LT"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 1,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": 0.134,
+            "pace_sec_per_play": 27.5,
+            "plays_derived": 65,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "BUF": {
+            "team": "BUF",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0973,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "TE1",
+              "WR1",
+              "WR2"
+            ],
+            "unmapped_role_keys": [],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "TE1",
+                "WR1",
+                "WR2"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.0277777778,
+              "WR2": 0.0277777778,
+              "WR3": 0.4722222222,
+              "TE1": 0.0277777778,
+              "RB1": 0.4444444444
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 0.88,
+              "WR3": 1.0,
+              "TE1": 0.84,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9872222222,
+            "mass_delta": -0.0127777778,
+            "mass_moved": 0.5866666667,
+            "off_epa_per_play": 0.112,
+            "pace_sec_per_play": 26.6,
+            "plays_derived": 68,
+            "points_delta": -0.0973,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": -0.0973,
+        "home_margin_delta": -0.0973,
+        "weather": {
+          "source": "open-meteo",
+          "http_status": 200,
+          "hour_matched": "2026-11-01T18:00",
+          "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+          "wind_mph": 5.1,
+          "gust_mph": 8.2,
+          "precip_prob_pct": 0.0,
+          "temp_f": 63.6,
+          "flags": [],
+          "points_adjustment": 0.0,
+          "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+        }
+      },
+      "away": "BAL",
+      "home": "BUF",
+      "side_call": {
+        "selection": "Buffalo Bills -3",
+        "confidence": "54/100",
+        "expected_clv": -0.015,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.0973,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "OVER 54.5",
+        "confidence": "60/100",
+        "expected_clv": 0.0762,
+        "sealed_decision": "PLAY",
+        "overlay_points_delta": -0.0973,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 4
+    },
+    {
+      "game_id": "401873031",
+      "matchup": "Tennessee Titans @ Cincinnati Bengals",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Paycor Stadium",
+      "indoor": false,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "TEN": {
+            "applied": [
+              {
+                "player": "Tyjae Spears",
+                "position": "RB",
+                "status": "Out",
+                "role_key": "RB1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Carnell Tate",
+                "position": "WR",
+                "status": "Out",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Jaylon Jones",
+                "position": "CB",
+                "status": "Questionable",
+                "role_key": "CB1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Tommy Townsend",
+                "position": "P",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Calvin Ridley",
+                "position": "WR",
+                "status": "Questionable",
+                "role_key": "WR2",
+                "sealed_table_match": true
+              }
+            ],
+            "not_applied": []
+          },
+          "CIN": {
+            "applied": [
+              {
+                "player": "Joe Giles-Harris",
+                "position": "LB",
+                "status": "Questionable",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Kyle Dugger",
+                "position": "S",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Andrei Iosivas",
+                "position": "WR",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Erick All Jr.",
+                "position": "TE",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Tanner Hudson",
+                "position": "TE",
+                "status": "Injured Reserve"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "TEN": [],
+          "CIN": []
+        },
+        "team_effects": {
+          "TEN": {
+            "team": "TEN",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.059,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "RB1",
+              "WR1",
+              "WR2"
+            ],
+            "unmapped_role_keys": [
+              "CB1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "RB1",
+                "WR1",
+                "WR2"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 1,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.025,
+              "WR2": 0.025,
+              "WR3": 0.425,
+              "TE1": 0.5,
+              "RB1": 0.025
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 0.88,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 0.85
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.98875,
+            "mass_delta": -0.01125,
+            "mass_moved": 0.555,
+            "off_epa_per_play": -0.082,
+            "pace_sec_per_play": 28.3,
+            "plays_derived": 64,
+            "points_delta": 0.059,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": "off_epa is negative for this team, so a negative mass delta multiplies to a small positive points figure; the magnitude is inside the noise band either way."
+          },
+          "CIN": {
+            "team": "CIN",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [
+              "EDGE1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 1
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": 0.074,
+            "pace_sec_per_play": 26.4,
+            "plays_derived": 68,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": 0.059,
+        "home_margin_delta": -0.059,
+        "weather": {
+          "source": "open-meteo",
+          "http_status": 200,
+          "hour_matched": "2026-11-01T18:00",
+          "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+          "wind_mph": 6.5,
+          "gust_mph": 17.4,
+          "precip_prob_pct": 8.0,
+          "temp_f": 65.3,
+          "flags": [],
+          "points_adjustment": 0.0,
+          "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+        }
+      },
+      "away": "TEN",
+      "home": "CIN",
+      "side_call": {
+        "selection": "Tennessee Titans +11.5",
+        "confidence": "52/100",
+        "expected_clv": -0.035,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": 0.059,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "UNDER 46.5",
+        "confidence": "52/100",
+        "expected_clv": -0.035,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.059,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 3
+    },
+    {
+      "game_id": "401873024",
+      "matchup": "Arizona Cardinals @ Dallas Cowboys",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "AT&T Stadium",
+      "indoor": true,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "ARI": {
+            "applied": [
+              {
+                "player": "Walter Nolen III",
+                "position": "DT",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Jon Gaines II",
+                "position": "G",
+                "status": "Out",
+                "role_key": "LT",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Hjalte Froholdt",
+                "position": "C",
+                "status": "Questionable",
+                "role_key": "LT",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Andrew Wingard",
+                "position": "S",
+                "status": "Questionable",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Jalen Brooks",
+                "position": "WR",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "DAL": {
+            "applied": [
+              {
+                "player": "George Pickens",
+                "position": "WR",
+                "status": "Questionable",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Dee Winters",
+                "position": "LB",
+                "status": "Out",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "KaVontae Turpin",
+                "position": "WR",
+                "status": "Out",
+                "role_key": "WR2",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Luke Schoonmaker",
+                "position": "TE",
+                "status": "Questionable",
+                "role_key": "TE1",
+                "sealed_table_match": true
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Jonathan Bullard",
+                "position": "DT",
+                "status": "Injured Reserve"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "ARI": [],
+          "DAL": []
+        },
+        "team_effects": {
+          "ARI": {
+            "team": "ARI",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [
+              "LT",
+              "LT"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 2,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": 0.0,
+            "pace_sec_per_play": 27.0,
+            "plays_derived": 67,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "DAL": {
+            "team": "DAL",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "WR1",
+              "WR2",
+              "TE1"
+            ],
+            "unmapped_role_keys": [
+              "EDGE1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "WR1",
+                "WR2",
+                "TE1"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 1
+            },
+            "feasible_shares": {
+              "WR1": 0.0277777778,
+              "WR2": 0.0277777778,
+              "WR3": 0.4722222222,
+              "TE1": 0.0277777778,
+              "RB1": 0.4444444444
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 0.88,
+              "WR3": 1.0,
+              "TE1": 0.84,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9872222222,
+            "mass_delta": -0.0127777778,
+            "mass_moved": 0.5866666667,
+            "off_epa_per_play": 0.0,
+            "pace_sec_per_play": 27.0,
+            "plays_derived": 67,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": 0.0,
+        "home_margin_delta": 0.0,
+        "weather": {
+          "source": "espn-venue",
+          "indoor": true,
+          "points_adjustment": 0.0,
+          "flags": [],
+          "note": "roofed venue; no weather effect modeled"
+        }
+      },
+      "away": "ARI",
+      "home": "DAL",
+      "side_call": {
+        "selection": "Dallas Cowboys -7",
+        "confidence": "53/100",
+        "expected_clv": -0.025,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": 0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "OVER 54.5",
+        "confidence": "53/100",
+        "expected_clv": -0.025,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": 0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 3
+    },
+    {
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "indoor": true,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "MIN": {
+            "applied": [
+              {
+                "player": "Jay Ward",
+                "position": "S",
+                "status": "Questionable",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Donovan Jackson",
+                "position": "G",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Josh Oliver",
+                "position": "TE",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Nick Samac",
+                "position": "C",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Tyler Batty",
+                "position": "LB",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "DET": {
+            "applied": [
+              {
+                "player": "Roger McCreary",
+                "position": "CB",
+                "status": "Questionable",
+                "role_key": "CB1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Kerby Joseph",
+                "position": "S",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Isiah Pacheco",
+                "position": "RB",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Ben Bartch",
+                "position": "G",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Devin White",
+                "position": "LB",
+                "status": "Injured Reserve"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "MIN": [],
+          "DET": []
+        },
+        "team_effects": {
+          "MIN": {
+            "team": "MIN",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": 0.035,
+            "pace_sec_per_play": 27.2,
+            "plays_derived": 66,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "DET": {
+            "team": "DET",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [
+              "CB1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 1,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": 0.118,
+            "pace_sec_per_play": 26.5,
+            "plays_derived": 68,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": 0.0,
+        "home_margin_delta": 0.0,
+        "weather": {
+          "source": "espn-venue",
+          "indoor": true,
+          "points_adjustment": 0.0,
+          "flags": [],
+          "note": "roofed venue; no weather effect modeled"
+        }
+      },
+      "away": "MIN",
+      "home": "DET",
+      "side_call": {
+        "selection": "Detroit Lions -3",
+        "confidence": "59/100",
+        "expected_clv": 0.0662,
+        "sealed_decision": "PLAY",
+        "overlay_points_delta": 0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "OVER 46.5",
+        "confidence": "53/100",
+        "expected_clv": -0.025,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": 0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 4
+    },
+    {
+      "game_id": "401873029",
+      "matchup": "Las Vegas Raiders @ New York Jets",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "MetLife Stadium",
+      "indoor": false,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "LV": {
+            "applied": [
+              {
+                "player": "Patrick Johnson",
+                "position": "DE",
+                "status": "Out",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Jackson Powers-Johnson",
+                "position": "G",
+                "status": "Questionable",
+                "role_key": "LT",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Jack Bech",
+                "position": "WR",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Carter Runyon",
+                "position": "TE",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Keyron Crawford",
+                "position": "DE",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "NYJ": {
+            "applied": [
+              {
+                "player": "T'Vondre Sweat",
+                "position": "DT",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Max Mitchell",
+                "position": "OT",
+                "status": "Out",
+                "role_key": "LT",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Joseph Ossai",
+                "position": "DE",
+                "status": "Out",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "David Bailey",
+                "position": "LB",
+                "status": "Doubtful",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Breece Hall",
+                "position": "RB",
+                "status": "Questionable",
+                "role_key": "RB1",
+                "sealed_table_match": true
+              }
+            ],
+            "not_applied": []
+          }
+        },
+        "nflverse_report_status_rows": {
+          "LV": [],
+          "NYJ": []
+        },
+        "team_effects": {
+          "LV": {
+            "team": "LV",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [
+              "EDGE1",
+              "LT"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 1,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 1
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": -0.048,
+            "pace_sec_per_play": 26.9,
+            "plays_derived": 67,
+            "points_delta": -0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "NYJ": {
+            "team": "NYJ",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": 0.007,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "RB1"
+            ],
+            "unmapped_role_keys": [
+              "LT",
+              "EDGE1",
+              "EDGE1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "RB1"
+              ],
+              "ol_lt_unreachable": 1,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 2
+            },
+            "feasible_shares": {
+              "WR1": 0.3058823529,
+              "WR2": 0.2470588235,
+              "WR3": 0.2,
+              "TE1": 0.2352941176,
+              "RB1": 0.0117647059
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 0.85
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9982352941,
+            "mass_delta": -0.0017647059,
+            "mass_moved": 0.1482352941,
+            "off_epa_per_play": -0.062,
+            "pace_sec_per_play": 28.1,
+            "plays_derived": 64,
+            "points_delta": 0.007,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": "off_epa is negative for this team, so a negative mass delta multiplies to a small positive points figure; the magnitude is inside the noise band either way."
+          }
+        },
+        "total_points_delta": 0.007,
+        "home_margin_delta": 0.007,
+        "weather": {
+          "source": "open-meteo",
+          "http_status": 200,
+          "hour_matched": "2026-11-01T18:00",
+          "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+          "wind_mph": 4.0,
+          "gust_mph": 5.4,
+          "precip_prob_pct": 0.0,
+          "temp_f": 59.4,
+          "flags": [],
+          "points_adjustment": 0.0,
+          "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+        }
+      },
+      "away": "LV",
+      "home": "NYJ",
+      "side_call": {
+        "selection": "Las Vegas Raiders +1.5",
+        "confidence": "51/100",
+        "expected_clv": -0.045,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.007,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "UNDER 45.5",
+        "confidence": "51/100",
+        "expected_clv": -0.045,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.007,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 3
+    },
+    {
+      "game_id": "401873027",
+      "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Acrisure Stadium",
+      "indoor": false,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "CLE": {
+            "applied": [
+              {
+                "player": "Tytus Howard",
+                "position": "OT",
+                "status": "Questionable",
+                "role_key": "LT",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Myles Harden",
+                "position": "CB",
+                "status": "Questionable",
+                "role_key": "CB1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Daniel Thomas",
+                "position": "S",
+                "status": "Questionable",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Kalia Davis",
+                "position": "DT",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Teven Jenkins",
+                "position": "G",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "PIT": {
+            "applied": [
+              {
+                "player": "Ben Skowronek",
+                "position": "WR",
+                "status": "Questionable",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Doneiko Slaughter",
+                "position": "CB",
+                "status": "Out",
+                "role_key": "CB1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Brandin Echols",
+                "position": "CB",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Sebastian Joseph-Day",
+                "position": "DT",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Roman Wilson",
+                "position": "WR",
+                "status": "Injured Reserve"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "CLE": [],
+          "PIT": []
+        },
+        "team_effects": {
+          "CLE": {
+            "team": "CLE",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [],
+            "unmapped_role_keys": [
+              "LT",
+              "CB1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [],
+              "ol_lt_unreachable": 1,
+              "cb1_unreachable": 1,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            },
+            "execution_multipliers": {
+              "WR1": 1.0,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 1.0,
+            "mass_delta": 0.0,
+            "mass_moved": 0.0,
+            "off_epa_per_play": -0.095,
+            "pace_sec_per_play": 26.8,
+            "plays_derived": 67,
+            "points_delta": -0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "PIT": {
+            "team": "PIT",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0067,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "WR1"
+            ],
+            "unmapped_role_keys": [
+              "CB1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "WR1"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 1,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.0133333333,
+              "WR2": 0.28,
+              "WR3": 0.2266666667,
+              "TE1": 0.2666666667,
+              "RB1": 0.2133333333
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9976,
+            "mass_delta": -0.0024,
+            "mass_moved": 0.2466666667,
+            "off_epa_per_play": 0.042,
+            "pace_sec_per_play": 27.4,
+            "plays_derived": 66,
+            "points_delta": -0.0067,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": -0.0067,
+        "home_margin_delta": -0.0067,
+        "weather": {
+          "source": "open-meteo",
+          "http_status": 200,
+          "hour_matched": "2026-11-01T18:00",
+          "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+          "wind_mph": 5.4,
+          "gust_mph": 9.8,
+          "precip_prob_pct": 1.0,
+          "temp_f": 64.4,
+          "flags": [],
+          "points_adjustment": 0.0,
+          "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+        }
+      },
+      "away": "CLE",
+      "home": "PIT",
+      "side_call": {
+        "selection": "Pittsburgh Steelers -3.5",
+        "confidence": "55/100",
+        "expected_clv": -0.005,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.0067,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "UNDER 39.5",
+        "confidence": "57/100",
+        "expected_clv": 0.0462,
+        "sealed_decision": "PLAY",
+        "overlay_points_delta": 0.0067,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 3
+    },
+    {
+      "game_id": "401873025",
+      "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Raymond James Stadium",
+      "indoor": false,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "ATL": {
+            "applied": [
+              {
+                "player": "Divine Deablo",
+                "position": "LB",
+                "status": "Questionable",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Olamide Zaccheaus",
+                "position": "WR",
+                "status": "Questionable",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Brian Robinson Jr.",
+                "position": "RB",
+                "status": "Out",
+                "role_key": "RB1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Charles Snowden",
+                "position": "LB",
+                "status": "Questionable",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Beaux Collins",
+                "position": "WR",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "TB": {
+            "applied": [
+              {
+                "player": "Kenny Gainwell",
+                "position": "RB",
+                "status": "Questionable",
+                "role_key": "RB1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Emeka Egbuka",
+                "position": "WR",
+                "status": "Out",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Luke Goedeke",
+                "position": "OT",
+                "status": "Questionable",
+                "role_key": "LT",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Josh Hayes",
+                "position": "CB",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Christian Rozeboom",
+                "position": "LB",
+                "status": "Injured Reserve"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "ATL": [],
+          "TB": []
+        },
+        "team_effects": {
+          "ATL": {
+            "team": "ATL",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "WR1",
+              "RB1"
+            ],
+            "unmapped_role_keys": [
+              "EDGE1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "WR1",
+                "RB1"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 1
+            },
+            "feasible_shares": {
+              "WR1": 0.0166666667,
+              "WR2": 0.35,
+              "WR3": 0.2833333333,
+              "TE1": 0.3333333333,
+              "RB1": 0.0166666667
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 0.85
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9945,
+            "mass_delta": -0.0055,
+            "mass_moved": 0.3866666667,
+            "off_epa_per_play": 0.0,
+            "pace_sec_per_play": 27.0,
+            "plays_derived": 67,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "TB": {
+            "team": "TB",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "RB1",
+              "WR1"
+            ],
+            "unmapped_role_keys": [
+              "LT"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "RB1",
+                "WR1"
+              ],
+              "ol_lt_unreachable": 1,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.0166666667,
+              "WR2": 0.35,
+              "WR3": 0.2833333333,
+              "TE1": 0.3333333333,
+              "RB1": 0.0166666667
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 0.85
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9945,
+            "mass_delta": -0.0055,
+            "mass_moved": 0.3866666667,
+            "off_epa_per_play": 0.0,
+            "pace_sec_per_play": 27.0,
+            "plays_derived": 67,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": 0.0,
+        "home_margin_delta": 0.0,
+        "weather": {
+          "source": "open-meteo",
+          "http_status": 200,
+          "hour_matched": "2026-11-01T18:00",
+          "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+          "wind_mph": 11.9,
+          "gust_mph": 18.3,
+          "precip_prob_pct": 45.0,
+          "temp_f": 79.4,
+          "flags": [
+            "PRECIP"
+          ],
+          "points_adjustment": 0.0,
+          "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+        }
+      },
+      "away": "ATL",
+      "home": "TB",
+      "side_call": {
+        "selection": "Tampa Bay Buccaneers -2.5",
+        "confidence": "53/100",
+        "expected_clv": -0.025,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": 0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "UNDER 44.5",
+        "confidence": "52/100",
+        "expected_clv": -0.035,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 3
+    },
+    {
+      "game_id": "401873028",
+      "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "EverBank Stadium",
+      "indoor": false,
+      "slot": "SUN_EARLY",
+      "week": 8,
+      "season": 2026,
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "overlay": {
+        "espn_designations": {
+          "IND": {
+            "applied": [
+              {
+                "player": "Justin Walley",
+                "position": "CB",
+                "status": "Out",
+                "role_key": "CB1",
+                "sealed_table_match": false
+              },
+              {
+                "player": "Anthony Gould",
+                "position": "WR",
+                "status": "Out",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Drew Ogletree",
+                "position": "TE",
+                "status": "Questionable",
+                "role_key": "TE1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Bryce Boettcher",
+                "position": "LB",
+                "status": "Questionable",
+                "role_key": "EDGE1",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Cam Taylor-Britt",
+                "position": "CB",
+                "status": "Injured Reserve"
+              }
+            ]
+          },
+          "JAX": {
+            "applied": [
+              {
+                "player": "Jakobi Meyers",
+                "position": "WR",
+                "status": "Questionable",
+                "role_key": "WR1",
+                "sealed_table_match": true
+              },
+              {
+                "player": "Antonio Johnson",
+                "position": "S",
+                "status": "Out",
+                "role_key": "",
+                "sealed_table_match": false
+              }
+            ],
+            "not_applied": [
+              {
+                "player": "Anton Harrison",
+                "position": "OT",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "Caleb Ransaw",
+                "position": "S",
+                "status": "Injured Reserve"
+              },
+              {
+                "player": "B.J. Green II",
+                "position": "DE",
+                "status": "Injured Reserve"
+              }
+            ]
+          }
+        },
+        "nflverse_report_status_rows": {
+          "IND": [],
+          "JAX": []
+        },
+        "team_effects": {
+          "IND": {
+            "team": "IND",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "WR1",
+              "TE1"
+            ],
+            "unmapped_role_keys": [
+              "CB1",
+              "EDGE1"
+            ],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "WR1",
+                "TE1"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 1,
+              "edge1_unreachable": 1
+            },
+            "feasible_shares": {
+              "WR1": 0.0178571429,
+              "WR2": 0.375,
+              "WR3": 0.3035714286,
+              "TE1": 0.0178571429,
+              "RB1": 0.2857142857
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 0.84,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9939285714,
+            "mass_delta": -0.0060714286,
+            "mass_moved": 0.4242857143,
+            "off_epa_per_play": 0.0,
+            "pace_sec_per_play": 27.0,
+            "plays_derived": 67,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          },
+          "JAX": {
+            "team": "JAX",
+            "epa_table_keys_applied": [],
+            "epa_table_drop_per_play": 0.0,
+            "epa_table_unreachable_keys_seen": [],
+            "execution_points_delta": -0.0,
+            "epa_table_points_delta": 0.0,
+            "scratched_skill_roles": [
+              "WR1"
+            ],
+            "unmapped_role_keys": [],
+            "unpriced_designation_counts": {
+              "skill_roles_priced_by_multiplier_only": [
+                "WR1"
+              ],
+              "ol_lt_unreachable": 0,
+              "cb1_unreachable": 0,
+              "edge1_unreachable": 0
+            },
+            "feasible_shares": {
+              "WR1": 0.0133333333,
+              "WR2": 0.28,
+              "WR3": 0.2266666667,
+              "TE1": 0.2666666667,
+              "RB1": 0.2133333333
+            },
+            "execution_multipliers": {
+              "WR1": 0.82,
+              "WR2": 1.0,
+              "WR3": 1.0,
+              "TE1": 1.0,
+              "RB1": 1.0
+            },
+            "total_mass_before": 1.0,
+            "total_mass_after": 0.9976,
+            "mass_delta": -0.0024,
+            "mass_moved": 0.2466666667,
+            "off_epa_per_play": 0.0,
+            "pace_sec_per_play": 27.0,
+            "plays_derived": 67,
+            "points_delta": 0.0,
+            "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+            "sign_note": null
+          }
+        },
+        "total_points_delta": 0.0,
+        "home_margin_delta": 0.0,
+        "weather": {
+          "source": "open-meteo",
+          "http_status": 200,
+          "hour_matched": "2026-11-01T18:00",
+          "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+          "wind_mph": 12.2,
+          "gust_mph": 21.1,
+          "precip_prob_pct": 39.0,
+          "temp_f": 76.5,
+          "flags": [],
+          "points_adjustment": 0.0,
+          "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+        }
+      },
+      "away": "IND",
+      "home": "JAX",
+      "side_call": {
+        "selection": "Indianapolis Colts +10",
+        "confidence": "52/100",
+        "expected_clv": -0.035,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "total_call": {
+        "selection": "UNDER 46.5",
+        "confidence": "51/100",
+        "expected_clv": -0.045,
+        "sealed_decision": "PASS",
+        "overlay_points_delta": -0.0,
+        "disposition": "SEALED_HOLDS"
+      },
+      "props_in_writeup": 3
+    }
+  ],
+  "tickets": [
+    {
+      "ticket_id": "TICK-2026-W8-401873026-SIDE",
+      "kind": "side",
+      "selection": "Buffalo Bills -3",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": -0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.0973,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side -0.10 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873026-TOTAL",
+      "kind": "total",
+      "selection": "OVER 54.5",
+      "sealed_confidence": "60/100",
+      "sealed_expected_clv": 0.0762,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_points_delta": -0.0973,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total -0.10 pts",
+      "repriced": false,
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873026-P01",
+      "kind": "prop",
+      "selection": "Zay Flowers OVER 82.5 Receiving Yards",
+      "sealed_confidence": "60/100",
+      "sealed_expected_clv": 0.0762,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873026-P02",
+      "kind": "prop",
+      "selection": "Josh Allen OVER 252.5 Passing Yards",
+      "sealed_confidence": "59/100",
+      "sealed_expected_clv": 0.0662,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873026-P03",
+      "kind": "prop",
+      "selection": "Dalton Kincaid OVER 46.5 Receiving Yards",
+      "sealed_confidence": "58/100",
+      "sealed_expected_clv": 0.0562,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": -0.0973,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873026-P04",
+      "kind": "prop",
+      "selection": "Derrick Henry OVER 79.5 Rushing Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873026",
+      "matchup": "Baltimore Ravens @ Buffalo Bills",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Highmark Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873031-SIDE",
+      "kind": "side",
+      "selection": "Tennessee Titans +11.5",
+      "sealed_confidence": "52/100",
+      "sealed_expected_clv": -0.035,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.059,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side +0.06 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873031",
+      "matchup": "Tennessee Titans @ Cincinnati Bengals",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Paycor Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873031-TOTAL",
+      "kind": "total",
+      "selection": "UNDER 46.5",
+      "sealed_confidence": "52/100",
+      "sealed_expected_clv": -0.035,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.059,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total -0.06 pts",
+      "repriced": false,
+      "game_id": "401873031",
+      "matchup": "Tennessee Titans @ Cincinnati Bengals",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Paycor Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873031-P01",
+      "kind": "prop",
+      "selection": "Tony Pollard UNDER 64.5 Rushing Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873031",
+      "matchup": "Tennessee Titans @ Cincinnati Bengals",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Paycor Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873031-P02",
+      "kind": "prop",
+      "selection": "Ja'Marr Chase OVER 80.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873031",
+      "matchup": "Tennessee Titans @ Cincinnati Bengals",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Paycor Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873031-P03",
+      "kind": "prop",
+      "selection": "Tee Higgins OVER 67.5 Receiving Yards",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": 0.0062,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873031",
+      "matchup": "Tennessee Titans @ Cincinnati Bengals",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Paycor Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873024-SIDE",
+      "kind": "side",
+      "selection": "Dallas Cowboys -7",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": -0.025,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side +0.00 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873024",
+      "matchup": "Arizona Cardinals @ Dallas Cowboys",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "AT&T Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873024-TOTAL",
+      "kind": "total",
+      "selection": "OVER 54.5",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": -0.025,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total +0.00 pts",
+      "repriced": false,
+      "game_id": "401873024",
+      "matchup": "Arizona Cardinals @ Dallas Cowboys",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "AT&T Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873024-P01",
+      "kind": "prop",
+      "selection": "CeeDee Lamb OVER 82.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873024",
+      "matchup": "Arizona Cardinals @ Dallas Cowboys",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "AT&T Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873024-P02",
+      "kind": "prop",
+      "selection": "Trey McBride OVER 73.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873024",
+      "matchup": "Arizona Cardinals @ Dallas Cowboys",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "AT&T Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873024-P03",
+      "kind": "prop",
+      "selection": "Javonte Williams UNDER 77.5 Rushing Yards",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": 0.0062,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873024",
+      "matchup": "Arizona Cardinals @ Dallas Cowboys",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "AT&T Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873030-SIDE",
+      "kind": "side",
+      "selection": "Detroit Lions -3",
+      "sealed_confidence": "59/100",
+      "sealed_expected_clv": 0.0662,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side +0.00 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873030-TOTAL",
+      "kind": "total",
+      "selection": "OVER 46.5",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": -0.025,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total +0.00 pts",
+      "repriced": false,
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873030-P01",
+      "kind": "prop",
+      "selection": "Amon-Ra St. Brown OVER 77.5 Receiving Yards",
+      "sealed_confidence": "61/100",
+      "sealed_expected_clv": 0.0862,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873030-P02",
+      "kind": "prop",
+      "selection": "Jahmyr Gibbs OVER 86.5 Rushing Yards",
+      "sealed_confidence": "60/100",
+      "sealed_expected_clv": 0.0762,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873030-P03",
+      "kind": "prop",
+      "selection": "Jahmyr Gibbs OVER 33.5 Receiving Yards",
+      "sealed_confidence": "59/100",
+      "sealed_expected_clv": 0.0662,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873030-P04",
+      "kind": "prop",
+      "selection": "Justin Jefferson UNDER 77.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873030",
+      "matchup": "Minnesota Vikings @ Detroit Lions",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Ford Field",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873029-SIDE",
+      "kind": "side",
+      "selection": "Las Vegas Raiders +1.5",
+      "sealed_confidence": "51/100",
+      "sealed_expected_clv": -0.045,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.007,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side -0.01 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873029",
+      "matchup": "Las Vegas Raiders @ New York Jets",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "MetLife Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873029-TOTAL",
+      "kind": "total",
+      "selection": "UNDER 45.5",
+      "sealed_confidence": "51/100",
+      "sealed_expected_clv": -0.045,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.007,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total -0.01 pts",
+      "repriced": false,
+      "game_id": "401873029",
+      "matchup": "Las Vegas Raiders @ New York Jets",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "MetLife Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873029-P01",
+      "kind": "prop",
+      "selection": "Brock Bowers OVER 69.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873029",
+      "matchup": "Las Vegas Raiders @ New York Jets",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "MetLife Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873029-P02",
+      "kind": "prop",
+      "selection": "Garrett Wilson OVER 63.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873029",
+      "matchup": "Las Vegas Raiders @ New York Jets",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "MetLife Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873029-P03",
+      "kind": "prop",
+      "selection": "Ashton Jeanty OVER 48.5 Rushing Yards",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": 0.0062,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873029",
+      "matchup": "Las Vegas Raiders @ New York Jets",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "MetLife Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873027-SIDE",
+      "kind": "side",
+      "selection": "Pittsburgh Steelers -3.5",
+      "sealed_confidence": "55/100",
+      "sealed_expected_clv": -0.005,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.0067,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side -0.01 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873027",
+      "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Acrisure Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873027-TOTAL",
+      "kind": "total",
+      "selection": "UNDER 39.5",
+      "sealed_confidence": "57/100",
+      "sealed_expected_clv": 0.0462,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_points_delta": 0.0067,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total +0.01 pts",
+      "repriced": false,
+      "game_id": "401873027",
+      "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Acrisure Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873027-P01",
+      "kind": "prop",
+      "selection": "Jaylen Warren OVER 65.5 Rushing Yards",
+      "sealed_confidence": "59/100",
+      "sealed_expected_clv": 0.0662,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873027",
+      "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Acrisure Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873027-P02",
+      "kind": "prop",
+      "selection": "DK Metcalf UNDER 56.5 Receiving Yards",
+      "sealed_confidence": "58/100",
+      "sealed_expected_clv": 0.0562,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873027",
+      "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Acrisure Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873027-P03",
+      "kind": "prop",
+      "selection": "Quinshon Judkins UNDER 48.5 Rushing Yards",
+      "sealed_confidence": "58/100",
+      "sealed_expected_clv": 0.0562,
+      "sealed_decision": "PLAY",
+      "mint_status": "PLAY",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873027",
+      "matchup": "Cleveland Browns @ Pittsburgh Steelers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Acrisure Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873025-SIDE",
+      "kind": "side",
+      "selection": "Tampa Bay Buccaneers -2.5",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": -0.025,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": 0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side +0.00 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873025",
+      "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Raymond James Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873025-TOTAL",
+      "kind": "total",
+      "selection": "UNDER 44.5",
+      "sealed_confidence": "52/100",
+      "sealed_expected_clv": -0.035,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total -0.00 pts",
+      "repriced": false,
+      "game_id": "401873025",
+      "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Raymond James Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873025-P01",
+      "kind": "prop",
+      "selection": "Drake London OVER 78.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873025",
+      "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Raymond James Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873025-P02",
+      "kind": "prop",
+      "selection": "Bijan Robinson UNDER 78.5 Rushing Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873025",
+      "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Raymond James Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873025-P03",
+      "kind": "prop",
+      "selection": "Bucky Irving OVER 70.5 Rushing Yards",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": 0.0062,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873025",
+      "matchup": "Atlanta Falcons @ Tampa Bay Buccaneers",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "Raymond James Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873028-SIDE",
+      "kind": "side",
+      "selection": "Indianapolis Colts +10",
+      "sealed_confidence": "52/100",
+      "sealed_expected_clv": -0.035,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves this side -0.00 pts (inside 1.5)",
+      "repriced": false,
+      "game_id": "401873028",
+      "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "EverBank Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873028-TOTAL",
+      "kind": "total",
+      "selection": "UNDER 46.5",
+      "sealed_confidence": "51/100",
+      "sealed_expected_clv": -0.045,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_points_delta": -0.0,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "injury overlay moves game total -0.00 pts",
+      "repriced": false,
+      "game_id": "401873028",
+      "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "EverBank Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873028-P01",
+      "kind": "prop",
+      "selection": "Parker Washington OVER 68.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873028",
+      "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "EverBank Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873028-P02",
+      "kind": "prop",
+      "selection": "Tyler Warren OVER 40.5 Receiving Yards",
+      "sealed_confidence": "54/100",
+      "sealed_expected_clv": 0.015,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873028",
+      "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "EverBank Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    },
+    {
+      "ticket_id": "TICK-2026-W8-401873028-P03",
+      "kind": "prop",
+      "selection": "Jonathan Taylor UNDER 60.5 Rushing Yards",
+      "sealed_confidence": "53/100",
+      "sealed_expected_clv": 0.0062,
+      "sealed_decision": "PASS",
+      "mint_status": "WITHHELD_PASS",
+      "overlay_applicable": false,
+      "overlay_note": "team-level overlay only; a scratched skill role moves the team's target shares but no player-to-role mapping exists in the sealed writeup, so this row is not adjusted and not re-priced.",
+      "overlay_team_points_delta": null,
+      "disposition": "SEALED_HOLDS",
+      "disposition_reason": "overlay not applicable at player level",
+      "repriced": false,
+      "game_id": "401873028",
+      "matchup": "Indianapolis Colts @ Jacksonville Jaguars",
+      "kickoff_utc": "2026-11-01T18:00Z",
+      "venue": "EverBank Stadium",
+      "seal": {
+        "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+        "tau": 0.42,
+        "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+        "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+        "unchanged": true
+      },
+      "sealed_build_generated_at": "2026-10-29T23:30:08Z",
+      "week": 8,
+      "season": 2026,
+      "slot": "SUN_EARLY"
+    }
+  ],
+  "ticket_count": 42,
+  "publication": {
+    "published": false,
+    "reason": "Internal sealed artifacts. Class B conjunction gate (stage 5) not run; nothing here is a publication."
+  },
+  "ticket_set_merkle": "14bb3f96732444f2aefb106fff9acbbd0d631f22981c357bcee92ce420cf6d04",
+  "report_sha256_pre_merkle": null,
+  "sha256_merkle": "094bc1b4aaaf7ac73e3677b180926ae731e4e1ec32bff47b1498ef7eedc014b6"
+}

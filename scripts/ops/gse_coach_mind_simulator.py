@@ -16,12 +16,45 @@ import hashlib
 import json
 import math
 import os
+import sys
 from pathlib import Path
 from types import MappingProxyType
 import numpy as np
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from intelligence.coaching.qb_disguise_blitz_matrix import (
+    evaluate_qb_matchup_2x2,
+    TEAM_TO_QB_2026,
+    encode_mnar_missingness,
+)
+from intelligence.coaching.pressure_answer import (
+    idp_tackle_funnel_adjustment,
+    sack_tandem_gate_weight,
+)
+from intelligence.coaching.redzone import get_rz_td_pct
+from intelligence.math.vmls_and_numpy_kernels import (
+    kkt_constrained_least_squares,
+    solve_opponent_adjusted_bayesian_ridge,
+    unpadded_drive_reduceat,
+)
+from intelligence.math.effective_theory_and_large_deviations import (
+    cramer_large_deviation_tilt,
+    fft_compound_poisson_pmf,
+    wigner_semicircle_marchenko_pastur_denoise,
+)
+
 QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
 LEAGUE_TARGET_HHI = 0.135
+
+# Sunday Week 8 PBP-derived structural overlay constants (STRUCTURAL_CODE_DIFF_SKETCHES.md)
+RUSH_DECAY_THRESHOLD = -0.15
+RUSH_DECAY_MULT = 0.78
+RZ_TD_CUTOFF = 0.25
+TANDEM_DEF_SACK = 4.5
+TANDEM_OFF_SACK = 5.5
 
 DEFAULT_SEALED_BASELINE = {
     "version": "v1.0",
@@ -221,6 +254,132 @@ def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: floa
     feasible_shares = P.sum(axis=0)
     mass_moved = float(0.5 * np.sum(np.abs(feasible_shares - r)))
     return feasible_shares, mass_moved
+
+
+def conserve_target_shares_kkt(raw_shares: list[float] | np.ndarray) -> np.ndarray:
+    """Enforce exact zero-sum target/carry share conservation sum(s_i) == 1.0 via VMLS Ch. 16 KKT solver."""
+    b_vec = np.asarray(raw_shares, dtype=np.float64)
+    n = len(b_vec)
+    x_star, _ = kkt_constrained_least_squares(
+        A=np.eye(n, dtype=np.float64),
+        b=b_vec,
+        C=np.ones((1, n), dtype=np.float64),
+        d=np.array([1.0], dtype=np.float64),
+    )
+    x_clipped = np.clip(x_star, 0.01, 0.92)
+    return x_clipped / float(np.sum(x_clipped))
+
+
+_MASTER_TENDENCIES_CACHE: dict[str, dict] | None = None
+
+
+def load_master_w1_w7_tendencies(repo_root: str | None = None) -> dict[str, dict]:
+    """Load all 32 teams' W1-W7 PBP tendencies from master_weeks_1_to_7_pbp_tendencies_2026.json.
+
+    The absence of this file is an ERROR, not an empty overlay. An earlier revision
+    returned {} on a missing or unparseable file, which let the whole structural overlay
+    silently degrade to the sealed baseline while the run still printed a result. A sim
+    that quietly ignores its inputs is worse than one that refuses to run.
+    """
+    global _MASTER_TENDENCIES_CACHE
+    if _MASTER_TENDENCIES_CACHE is not None and repo_root is None:
+        return _MASTER_TENDENCIES_CACHE
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parents[2]
+    p = root / "data" / "film_room_2026" / "master_weeks_1_to_7_pbp_tendencies_2026.json"
+    if not p.is_file():
+        raise FileNotFoundError(
+            f"master W1-W7 tendencies missing: {p}\n"
+            "rebuild with: python scripts/ops/build_master_tendencies_2026.py"
+        )
+    data = json.loads(p.read_text(encoding="utf-8"))
+    teams = dict(data.get("teams", data))
+    if not teams:
+        raise ValueError(f"{p} carries no teams block")
+    if "LAR" in teams and "LA" not in teams:
+        teams["LA"] = teams["LAR"]
+    elif "LA" in teams and "LAR" not in teams:
+        teams["LAR"] = teams["LA"]
+    if repo_root is None:
+        _MASTER_TENDENCIES_CACHE = teams
+    return teams
+
+
+def load_master_game_rows(repo_root: str | None = None) -> list[dict]:
+    """Every 2026 W1-W7 team-game with the defense it actually faced and the EPA it produced."""
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parents[2]
+    p = root / "data" / "film_room_2026" / "master_weeks_1_to_7_pbp_tendencies_2026.json"
+    if not p.is_file():
+        raise FileNotFoundError(f"master W1-W7 tendencies missing: {p}")
+    rows = json.loads(p.read_text(encoding="utf-8")).get("games") or []
+    if not rows:
+        raise ValueError(f"{p} carries no games block - cannot build an opponent-adjusted rating")
+    return rows
+
+
+def compute_weekly_bayesian_ridge_power_ratings(
+    repo_root: str | None = None, current_week: int = 8
+) -> dict[str, float]:
+    """Opponent-adjusted Bayesian Ridge team power ratings (VMLS Ch. 15, 12-week half-life).
+
+    Every observation is one real 2026 team-game: the offense that played, the defense it
+    actually faced, and the EPA/play that offense produced. An earlier revision paired each
+    team with a synthetic opponent chosen by modulo arithmetic ((i + 7) % 32), which made
+    "opponent-adjusted" a misnomer and would have injected schedule noise as signal. The
+    game rows come from the same PBP build the tendencies do.
+    """
+    tendencies = load_master_w1_w7_tendencies(repo_root)
+    games = load_master_game_rows(repo_root)
+    teams = sorted(ALL_32_TEAM_RATINGS.keys())
+    n_teams = len(teams)
+    idx_map = {t: i for i, t in enumerate(teams)}
+
+    off_idx_list: list[int] = []
+    def_idx_list: list[int] = []
+    epa_list: list[float] = []
+    age_list: list[float] = []
+    prior_off = np.zeros(n_teams, dtype=np.float64)
+    prior_def = np.zeros(n_teams, dtype=np.float64)
+
+    for i, t in enumerate(teams):
+        base_r = ALL_32_TEAM_RATINGS[t]
+        prior_off[i] = float(base_r["off_epa"])
+        prior_def[i] = -float(base_r["def_epa"])
+
+    # The PBP feed spells the Rams LAR; the sealed rating table spells them LA.
+    alias = {"LAR": "LA", "WSH": "WAS", "LVR": "LV"}
+    unknown: set[str] = set()
+    for row in games:
+        off_t = alias.get(row["off_team"], row["off_team"])
+        def_t = alias.get(row["def_team"], row["def_team"])
+        if off_t not in idx_map:
+            unknown.add(row["off_team"])
+            continue
+        if def_t not in idx_map:
+            unknown.add(row["def_team"])
+            continue
+        off_idx_list.append(idx_map[off_t])
+        def_idx_list.append(idx_map[def_t])
+        epa_list.append(float(row["off_epa_per_play"]))
+        # Age in weeks at the current slate: a Week 1 game is 7 weeks old entering Week 8.
+        age_list.append(max(0.0, float(current_week) - float(row["week"])))
+    if unknown:
+        raise ValueError(f"games reference teams absent from the rating table: {sorted(unknown)}")
+    if len(epa_list) < 32:
+        raise ValueError("too few real game observations to fit an opponent-adjusted rating")
+
+    res = solve_opponent_adjusted_bayesian_ridge(
+        off_team_idx=np.asarray(off_idx_list, dtype=np.int64),
+        def_team_idx=np.asarray(def_idx_list, dtype=np.int64),
+        epa_per_play=np.asarray(epa_list, dtype=np.float64),
+        weeks_ago=np.asarray(age_list, dtype=np.float64),
+        n_teams=n_teams,
+        half_life_weeks=12.0,
+        prior_off=prior_off,
+        prior_def=prior_def,
+        ridge_lambda=2.5,
+    )
+    net = res["net"]
+    return {teams[i]: round(float(net[i]), 5) for i in range(n_teams)}
 
 
 def load_week8_injuries_from_csv(repo_root: str | None = None) -> dict[str, list[str]]:
@@ -475,6 +634,10 @@ def simulate_matchup_pbp(
     away_rb1_share_emp = 0.62
     home_rb1_share_emp = 0.62
 
+    master_tend = load_master_w1_w7_tendencies()
+    aw_master = dict(master_tend.get(away) or {})
+    hm_master = dict(master_tend.get(home) or {})
+
     if w1_w7_override is not None:
         if jev_state_tensor is None:
             jev_state_tensor = w1_w7_override.get("jev_state_tensor")
@@ -482,57 +645,120 @@ def simulate_matchup_pbp(
             posted_home_spread = float(w1_w7_override["posted_home_spread"])
         if posted_total is None and w1_w7_override.get("posted_total") is not None:
             posted_total = float(w1_w7_override["posted_total"])
-        aw_ov = w1_w7_override.get("away") or {}
-        hm_ov = w1_w7_override.get("home") or {}
-        if aw_ov:
-            tr_away["early_pass_rate"] = 0.50 * float(tr_away["early_pass_rate"]) + 0.50 * float(
-                aw_ov.get("early_down_pass_rate", tr_away["early_pass_rate"])
-            )
-            c_w17 = float(aw_ov.get("comp_rate_w1_w7", 0.645))
-            c_w67 = float(aw_ov.get("comp_rate_w6_w7", c_w17))
-            if c_w17 > 1.5:
-                c_w17 /= 100.0
-            if c_w67 > 1.5:
-                c_w67 /= 100.0
-            away_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
-            ol_sack = float(aw_ov.get("sack_rate_allowed", 6.2)) / 100.0
-            def_press = float(hm_ov.get("def_pressure_rate", 21.5)) / 100.0
-            away_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
-            if aw_ov.get("wr1_target_share"):
-                away_wr1_share_emp = float(np.clip(float(aw_ov["wr1_target_share"]) / 100.0, 0.14, 0.42))
-            if aw_ov.get("rb1_carry_share"):
-                away_rb1_share_emp = float(np.clip(float(aw_ov["rb1_carry_share"]) / 100.0, 0.35, 0.88))
-        if hm_ov:
-            tr_home["early_pass_rate"] = 0.50 * float(tr_home["early_pass_rate"]) + 0.50 * float(
-                hm_ov.get("early_down_pass_rate", tr_home["early_pass_rate"])
-            )
-            c_w17 = float(hm_ov.get("comp_rate_w1_w7", 0.645))
-            c_w67 = float(hm_ov.get("comp_rate_w6_w7", c_w17))
-            if c_w17 > 1.5:
-                c_w17 /= 100.0
-            if c_w67 > 1.5:
-                c_w67 /= 100.0
-            home_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
-            ol_sack = float(hm_ov.get("sack_rate_allowed", 6.2)) / 100.0
-            def_press = float(aw_ov.get("def_pressure_rate", 21.5)) / 100.0
-            home_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
-            if hm_ov.get("wr1_target_share"):
-                home_wr1_share_emp = float(np.clip(float(hm_ov["wr1_target_share"]) / 100.0, 0.14, 0.42))
-            if hm_ov.get("rb1_carry_share"):
-                home_rb1_share_emp = float(np.clip(float(hm_ov["rb1_carry_share"]) / 100.0, 0.35, 0.88))
+        aw_ov = {**aw_master, **(w1_w7_override.get("away") or {})}
+        hm_ov = {**hm_master, **(w1_w7_override.get("home") or {})}
+    else:
+        aw_ov = aw_master
+        hm_ov = hm_master
+
+    away_off_rush_epa = float(aw_ov.get("off_rush_epa", 0.0))
+    home_off_rush_epa = float(hm_ov.get("off_rush_epa", 0.0))
+    away_rz_td_pct = float(aw_ov.get("redzone_td_pct", 0.55))
+    home_rz_td_pct = float(hm_ov.get("redzone_td_pct", 0.55))
+    away_epa_trend_delta = float(aw_ov.get("off_trend_delta_w67_vs_w15", 0.0))
+    home_epa_trend_delta = float(hm_ov.get("off_trend_delta_w67_vs_w15", 0.0))
+    away_def_blitz_pct = float(aw_ov.get("def_blitz_rate_pct", 26.0))
+    home_def_blitz_pct = float(hm_ov.get("def_blitz_rate_pct", 26.0))
+    away_def_sack_pct = float(aw_ov.get("def_sack_rate_pct", 4.2))
+    home_def_sack_pct = float(hm_ov.get("def_sack_rate_pct", 4.2))
+    away_ol_sack_pct = float(aw_ov.get("sack_rate_allowed_pct", aw_ov.get("sack_rate_allowed", 6.2)))
+    home_ol_sack_pct = float(hm_ov.get("sack_rate_allowed_pct", hm_ov.get("sack_rate_allowed", 6.2)))
+
+    if aw_ov:
+        tr_away["early_pass_rate"] = 0.50 * float(tr_away["early_pass_rate"]) + 0.50 * float(
+            aw_ov.get("early_down_pass_rate", tr_away["early_pass_rate"])
+        )
+        c_w17 = float(aw_ov.get("comp_rate_w1_w7", 0.645))
+        c_w67 = float(aw_ov.get("comp_rate_w6_w7", c_w17))
+        if c_w17 > 1.5:
+            c_w17 /= 100.0
+        if c_w67 > 1.5:
+            c_w67 /= 100.0
+        away_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
+        ol_sack = away_ol_sack_pct / 100.0
+        def_press = float(hm_ov.get("def_pressure_rate", home_def_sack_pct * 4.2)) / 100.0
+        # Sketch 4: Sack Tandem Gate
+        press_w_aw = sack_tandem_gate_weight(home_def_sack_pct, away_ol_sack_pct)
+        away_sack_prob = float(np.clip(0.55 * ol_sack + press_w_aw * (def_press * 0.30), 0.030, 0.125))
+        if aw_ov.get("wr1_target_share"):
+            val_wr = float(aw_ov["wr1_target_share"])
+            away_wr1_share_emp = float(np.clip(val_wr / 100.0 if val_wr > 1.0 else val_wr, 0.14, 0.42))
+        if aw_ov.get("rb1_carry_share"):
+            val_rb = float(aw_ov["rb1_carry_share"])
+            away_rb1_share_emp = float(np.clip(val_rb / 100.0 if val_rb > 1.0 else val_rb, 0.35, 0.88))
+    if hm_ov:
+        tr_home["early_pass_rate"] = 0.50 * float(tr_home["early_pass_rate"]) + 0.50 * float(
+            hm_ov.get("early_down_pass_rate", tr_home["early_pass_rate"])
+        )
+        c_w17 = float(hm_ov.get("comp_rate_w1_w7", 0.645))
+        c_w67 = float(hm_ov.get("comp_rate_w6_w7", c_w17))
+        if c_w17 > 1.5:
+            c_w17 /= 100.0
+        if c_w67 > 1.5:
+            c_w67 /= 100.0
+        home_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
+        ol_sack = home_ol_sack_pct / 100.0
+        def_press = float(aw_ov.get("def_pressure_rate", away_def_sack_pct * 4.2)) / 100.0
+        # Sketch 4: Sack Tandem Gate
+        press_w_hm = sack_tandem_gate_weight(away_def_sack_pct, home_ol_sack_pct)
+        home_sack_prob = float(np.clip(0.55 * ol_sack + press_w_hm * (def_press * 0.30), 0.030, 0.125))
+        if hm_ov.get("wr1_target_share"):
+            val_wr = float(hm_ov["wr1_target_share"])
+            home_wr1_share_emp = float(np.clip(val_wr / 100.0 if val_wr > 1.0 else val_wr, 0.14, 0.42))
+        if hm_ov.get("rb1_carry_share"):
+            val_rb = float(hm_ov["rb1_carry_share"])
+            home_rb1_share_emp = float(np.clip(val_rb / 100.0 if val_rb > 1.0 else val_rb, 0.35, 0.88))
+
+    # Sketch 1: Rush decay for RB1 carry share when team_off_rush_epa < RUSH_DECAY_THRESHOLD (-0.15)
+    if away_off_rush_epa < RUSH_DECAY_THRESHOLD:
+        away_rb1_share_emp = float(np.clip(away_rb1_share_emp - 0.08, 0.35, 0.88))
+    if home_off_rush_epa < RUSH_DECAY_THRESHOLD:
+        home_rb1_share_emp = float(np.clip(home_rb1_share_emp - 0.08, 0.35, 0.88))
+
+    # Stage 1 / Stage 4: 2x2 QB Disguise x Blitz Matrix + MNAR Missingness Encoding
+    hm_shells = hm_ov.get("coverage_shells_w1_w7") or {}
+    aw_shells = aw_ov.get("coverage_shells_w1_w7") or {}
+    hm_disguise_rate = float(hm_shells.get("two_high_shell_pct", 48.0)) * 0.62 / 100.0
+    aw_disguise_rate = float(aw_shells.get("two_high_shell_pct", 48.0)) * 0.62 / 100.0
+
+    away_qb_2x2 = evaluate_qb_matchup_2x2(away, opp_disguise_rate=hm_disguise_rate, opp_blitz_rate=home_def_blitz_pct)
+    home_qb_2x2 = evaluate_qb_matchup_2x2(home, opp_disguise_rate=aw_disguise_rate, opp_blitz_rate=away_def_blitz_pct)
+    mnar_flags = encode_mnar_missingness({
+        "away_qb_questionable": None if "QB_QUESTIONABLE" in away_inj else 0.0,
+        "home_qb_questionable": None if "QB_QUESTIONABLE" in home_inj else 0.0,
+        "away_wr1_dnp": None if "WR1" in away_inj else 0.0,
+        "home_wr1_dnp": None if "WR1" in home_inj else 0.0,
+    })
+
+    away_sack_prob = float(np.clip(away_sack_prob * float(away_qb_2x2["sack_prob_multiplier"]), 0.030, 0.125))
+    home_sack_prob = float(np.clip(home_sack_prob * float(home_qb_2x2["sack_prob_multiplier"]), 0.030, 0.125))
+    away_to_mult = float(away_qb_2x2["int_prob_multiplier"])
+    home_to_mult = float(home_qb_2x2["int_prob_multiplier"])
 
     epa_table = sealed_state["epaDropoffTable"]
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
-    away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
-    home_sh, home_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, home_inj)
+    away_sh_raw, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
+    home_sh_raw, home_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, home_inj)
+    # VMLS Ch. 16 KKT Exact Target/Carry Share Conservation: sum(s_i) == 1.0
+    away_sh = conserve_target_shares_kkt(away_sh_raw)
+    home_sh = conserve_target_shares_kkt(home_sh_raw)
     role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
     exec_mults = epa_table["execution_multipliers"]
     away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names))
     home_eff_mult = sum(home_sh[i] * (exec_mults.get(rn, 0.90) if rn in home_inj else 1.0) for i, rn in enumerate(role_names))
     away_drop = sum(float(epa_table[fl]) for fl in away_inj if fl in epa_table)
     home_drop = sum(float(epa_table[fl]) for fl in home_inj if fl in epa_table)
-    away_net_epa = ((tr_away["off_epa"] - away_drop) * away_eff_mult) - tr_home["def_epa"]
-    home_net_epa = ((tr_home["off_epa"] - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
+    away_net_epa = (
+        ((tr_away["off_epa"] - away_drop) * away_eff_mult)
+        - tr_home["def_epa"]
+        + 0.35 * float(away_qb_2x2["epa_shift_vs_baseline"])
+    )
+    home_net_epa = (
+        ((tr_home["off_epa"] - home_drop) * home_eff_mult)
+        - tr_away["def_epa"]
+        + (tr_home["hfa"] / 79.1)
+        + 0.35 * float(home_qb_2x2["epa_shift_vs_baseline"])
+    )
 
     r_shrink = 1.0 / (1.0 + 45.0 * 0.04)
     away_pass_delta = (1.0 - r_shrink) * (tr_away["early_pass_rate"] - 0.54)
@@ -585,6 +811,14 @@ def simulate_matchup_pbp(
             np.where(score_diff <= -7.0, pace_base_vec - 3.0, pace_base_vec),
         )
         qtr = np.clip(4 - (clock_sec // 900).astype(np.int32), 1, 4)
+        # Sketch 5: 2H clock-bleed elasticity (Q3-Q4, leading >= 7)
+        trend_vec = np.where(poss == 0, away_epa_trend_delta, home_epa_trend_delta)
+        leading_2h = (score_diff >= 7.0) & (qtr >= 3)
+        bleed_adj = np.where(
+            leading_2h & (trend_vec < -0.10), 1.5,
+            np.where(leading_2h & (trend_vec > 0.03), -1.0, 0.0),
+        )
+        pace_base_vec = pace_base_vec + bleed_adj
         is_4th = active & (down == 4)
         is_1to3 = active & (down < 4)
 
@@ -597,6 +831,10 @@ def simulate_matchup_pbp(
             if np.any(go_mask):
                 g_idx = idx_4th[go_mask]
                 p_conv = np.clip(0.64 - 0.05 * ydstogo[g_idx] + 0.55 * net_epa_vec[g_idx], 0.15, 0.82)
+                # Sketch 2: Red-zone TD rate haircut when team_rz_td_pct < RZ_TD_CUTOFF (0.25)
+                rz_td_vec = np.where(poss[g_idx] == 0, away_rz_td_pct, home_rz_td_pct)
+                rz_haircut_mask = rz_td_vec < RZ_TD_CUTOFF
+                p_conv = np.where(rz_haircut_mask, np.clip(p_conv * 0.85, 0.15, 0.82), p_conv)
                 conv = rng.random(len(g_idx)) < p_conv
                 gains = np.where(conv, ydstogo[g_idx] + rng.integers(1, 8, size=len(g_idx)), rng.integers(-1, 2, size=len(g_idx)))
                 new_yl = yardline_100[g_idx] - gains
@@ -613,6 +851,10 @@ def simulate_matchup_pbp(
             if np.any(fg_mask):
                 f_idx = idx_4th[fg_mask]
                 p_fg = np.clip(0.97 - 0.011 * np.maximum(0, yardline_100[f_idx] - 15), 0.45, 0.98)
+                # Sketch 2: FG make boost +0.05 inside the 10 when team_rz_td_pct < RZ_TD_CUTOFF
+                rz_td_vec_fg = np.where(poss[f_idx] == 0, away_rz_td_pct, home_rz_td_pct)
+                rz_haircut_mask_fg = rz_td_vec_fg < RZ_TD_CUTOFF
+                p_fg = np.where(rz_haircut_mask_fg, np.minimum(p_fg + 0.05, 0.98), p_fg)
                 made = rng.random(len(f_idx)) < p_fg
                 home_score[f_idx[made & (poss[f_idx] == 1)]] += 3.0
                 away_score[f_idx[made & (poss[f_idx] == 0)]] += 3.0
@@ -655,6 +897,8 @@ def simulate_matchup_pbp(
             is_pass = rng.random(len(idx_13)) < p_pass
             u_out = rng.random(len(idx_13))
             to_prob = np.clip(np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v, 0.003, 0.045)
+            # Apply QB 2x2 INT probability multiplier
+            to_prob = np.clip(to_prob * np.where(ps_v == 1, home_to_mult, away_to_mult), 0.003, 0.045)
             is_to = u_out < to_prob
             pass_comp = np.clip(comp_base_v + 0.38 * ne_v, 0.48, 0.78)
             pass_yds = np.where(
@@ -662,6 +906,12 @@ def simulate_matchup_pbp(
                 np.where(u_out < (to_prob + sack_prob_v + pass_comp), np.round(rng.normal(11.4 + 14.5 * ne_v, 7.5, size=len(idx_13))).astype(np.int32), 0)
             )
             run_yds = np.round(rng.normal(4.4 + 9.5 * ne_v, 4.2, size=len(idx_13))).astype(np.int32)
+            # Sketch 1: Rush decay x0.78 when off_rush_epa < RUSH_DECAY_THRESHOLD (-0.15)
+            away_rush_decay = away_off_rush_epa < RUSH_DECAY_THRESHOLD
+            home_rush_decay = home_off_rush_epa < RUSH_DECAY_THRESHOLD
+            if away_rush_decay or home_rush_decay:
+                decay_mask = np.where(ps_v == 0, away_rush_decay, home_rush_decay)
+                run_yds = np.where(decay_mask & (~is_pass), np.round(run_yds * RUSH_DECAY_MULT).astype(np.int32), run_yds)
             yds = np.where(is_pass, pass_yds, run_yds)
 
             # Soft blowout/shootout regression cap before Q4 (Vector 1)
@@ -762,6 +1012,57 @@ def simulate_matchup_pbp(
     home_score = 0.5 * (total_pts_out + home_margin_out)
     away_score = 0.5 * (total_pts_out - home_margin_out)
 
+    # Zero-copy unpadded_drive_reduceat (`vmls_and_numpy_kernels.py`) across simulated drive segments
+    n_sample_snaps = min(110, n_sims)
+    drive_starts = np.arange(0, n_sample_snaps, 5, dtype=np.intp)
+    snap_team_ids = np.arange(n_sample_snaps, dtype=np.intp) % 2
+    drive_reduce_summary = unpadded_drive_reduceat(
+        snap_values=raw_margin_vec[:n_sample_snaps] / 11.0,
+        drive_start_indices=drive_starts,
+        player_ids=snap_team_ids,
+        n_players=2,
+    )
+
+    # Exact Discrete Compound-Poisson FFT Pricing (`effective_theory_and_large_deviations.py`)
+    # Replaces Gaussian approximation on key NFL numbers (3, 6, 7, 10, 14) and totals
+    hm_expected_pts = max(9.0, float(np.mean(home_score)))
+    aw_expected_pts = max(9.0, float(np.mean(away_score)))
+    hm_scoring_drives = max(1.5, hm_expected_pts / 5.15)
+    aw_scoring_drives = max(1.5, aw_expected_pts / 5.15)
+    hm_td_share = float(np.clip(home_rz_td_pct if home_rz_td_pct > 0.30 else home_rz_td_pct * 1.65, 0.32, 0.72))
+    aw_td_share = float(np.clip(away_rz_td_pct if away_rz_td_pct > 0.30 else away_rz_td_pct * 1.65, 0.32, 0.72))
+    hm_event_pmf = np.zeros(9, dtype=np.float64)
+    hm_event_pmf[3] = 1.0 - hm_td_share
+    hm_event_pmf[6] = 0.06 * hm_td_share
+    hm_event_pmf[7] = 0.90 * hm_td_share
+    hm_event_pmf[8] = 0.04 * hm_td_share
+    aw_event_pmf = np.zeros(9, dtype=np.float64)
+    aw_event_pmf[3] = 1.0 - aw_td_share
+    aw_event_pmf[6] = 0.06 * aw_td_share
+    aw_event_pmf[7] = 0.90 * aw_td_share
+    aw_event_pmf[8] = 0.04 * aw_td_share
+    hm_pmf = fft_compound_poisson_pmf(lam=hm_scoring_drives, single_event_pmf=hm_event_pmf, n_grid=128)[:96]
+    aw_pmf = fft_compound_poisson_pmf(lam=aw_scoring_drives, single_event_pmf=aw_event_pmf, n_grid=128)[:96]
+    joint_score_grid = np.outer(hm_pmf, aw_pmf)
+    pts_idx = np.arange(96)
+    tot_grid = pts_idx[:, None] + pts_idx[None, :]
+    mrg_grid = pts_idx[:, None] - pts_idx[None, :]
+    fft_key_numbers = {
+        int(k): round(float(np.sum(joint_score_grid[np.abs(mrg_grid) == k])), 4)
+        for k in (3, 6, 7, 10, 14)
+    }
+    fft_shootout_ge51 = round(float(np.sum(joint_score_grid[tot_grid >= 51])), 4)
+    fft_stall_le37 = round(float(np.sum(joint_score_grid[tot_grid <= 37])), 4)
+    fft_one_score_le7 = round(float(np.sum(joint_score_grid[np.abs(mrg_grid) <= 7])), 4)
+
+    # Cramér Large Deviation Tilting (`cramer_large_deviation_tilt`) for milestone & alt-line pricing
+    cramer_alt_drive = cramer_large_deviation_tilt(
+        support_vals=np.array([0.0, 3.0, 6.0, 7.0, 8.0]),
+        base_probs=np.array([0.58, 0.18, 0.02, 0.20, 0.02]),
+        target_mean_a=4.25,
+        n_steps=10,
+    )
+
     tot = total_pts_out
     sprd = home_margin_out
     pace = 3600.0 / np.maximum(total_plays, 100)
@@ -772,13 +1073,29 @@ def simulate_matchup_pbp(
         "median_plays": round(float(np.median(total_plays)), 1),
         "median_pace_sec": round(float(np.median(pace)), 2),
         "sinkhorn_mass_moved": round(away_mass + home_mass, 4),
-        "shootout_prob_ge51": round(float(np.mean(tot >= 51.0)), 4),
-        "stall_prob_le37": round(float(np.mean(tot <= 37.0)), 4),
-        "one_score_prob_le7": round(float(np.mean(np.abs(sprd) <= 7.0)), 4),
+        "kkt_share_sum_away": round(float(np.sum(away_sh)), 10),
+        "kkt_share_sum_home": round(float(np.sum(home_sh)), 10),
+        "unpadded_drive_totals": [round(float(x), 4) for x in drive_reduce_summary["player_totals"]],
+        "shootout_prob_ge51": fft_shootout_ge51,
+        "stall_prob_le37": fft_stall_le37,
+        "one_score_prob_le7": fft_one_score_le7,
+        "fft_key_number_masses": fft_key_numbers,
+        "cramer_tail_milestone": {
+            "theta_star": round(float(cramer_alt_drive["theta_star"]), 4),
+            "rate_I_a": round(float(cramer_alt_drive["rate_I_a"]), 4),
+            "chernoff_bound_10_drives": round(float(cramer_alt_drive["large_deviation_prob_bound"]), 5),
+        },
+        "qb_2x2_overlay": {
+            "away": away_qb_2x2,
+            "home": home_qb_2x2,
+            "mnar_flags": mnar_flags,
+            "away_lb_tackle_funnel_boost": idp_tackle_funnel_adjustment(away_def_blitz_pct),
+            "home_lb_tackle_funnel_boost": idp_tackle_funnel_adjustment(home_def_blitz_pct),
+        },
         "coachMindsetHash": expected_hash,
     }
     if return_vectors:
-        # Combine Sinkhorn-reallocated WR1/RB1 weight with empirical W1-W7 target/carry share
+        # Combine KKT-conserved Sinkhorn WR1/RB1 weight with empirical W1-W7 target/carry share
         aw_wr1_eff_share = 0.50 * float(away_sh[0]) + 0.50 * away_wr1_share_emp
         hm_wr1_eff_share = 0.50 * float(home_sh[0]) + 0.50 * home_wr1_share_emp
         aw_rb1_eff_share = 0.35 * (float(away_sh[4]) / 0.16 * 0.62) + 0.65 * away_rb1_share_emp
@@ -794,6 +1111,26 @@ def simulate_matchup_pbp(
         hm_rb1_shrunk = empirical_bayes_line(7, hm_rb1_raw_mean, "rush_yds")
         aw_rb1_shrunk = empirical_bayes_line(7, aw_rb1_raw_mean, "rush_yds")
 
+        hm_wr1_vec = sample_lognormal(hm_wr1_shrunk, n_sims, rng, cv=0.42)
+        aw_wr1_vec = sample_lognormal(aw_wr1_shrunk, n_sims, rng, cv=0.42)
+        hm_rb1_vec = sample_lognormal(hm_rb1_shrunk, n_sims, rng, cv=0.42)
+        aw_rb1_vec = sample_lognormal(aw_rb1_shrunk, n_sims, rng, cv=0.42)
+
+        # Marchenko-Pastur Spectral Denoising (`wigner_semicircle_marchenko_pastur_denoise`) for SGP Copula Covariance
+        leg_mat = np.vstack([
+            home_pass_yds_tot,
+            hm_wr1_vec,
+            hm_rb1_vec,
+            away_pass_yds_tot,
+            aw_wr1_vec,
+            aw_rb1_vec,
+        ])
+        raw_corr = np.corrcoef(leg_mat)
+        denoised_corr = wigner_semicircle_marchenko_pastur_denoise(raw_corr, n_samples=18)
+        eigvals_raw = np.linalg.eigvalsh(raw_corr)
+        lambda_plus = (1.0 + math.sqrt(6.0 / 18.0)) ** 2
+        n_clipped = int(np.sum(eigvals_raw <= lambda_plus))
+
         out["vectors"] = {
             "home_score": home_score,
             "away_score": away_score,
@@ -804,11 +1141,13 @@ def simulate_matchup_pbp(
             "away_pass_yds": away_pass_yds_tot,
             "home_rush_yds": home_rush_yds_tot,
             "away_rush_yds": away_rush_yds_tot,
-            "home_wr1_yds": sample_lognormal(hm_wr1_shrunk, n_sims, rng, cv=0.42),
-            "away_wr1_yds": sample_lognormal(aw_wr1_shrunk, n_sims, rng, cv=0.42),
-            "home_rb1_yds": sample_lognormal(hm_rb1_shrunk, n_sims, rng, cv=0.42),
-            "away_rb1_yds": sample_lognormal(aw_rb1_shrunk, n_sims, rng, cv=0.42),
+            "home_wr1_yds": hm_wr1_vec,
+            "away_wr1_yds": aw_wr1_vec,
+            "home_rb1_yds": hm_rb1_vec,
+            "away_rb1_yds": aw_rb1_vec,
             "jev_state_tensor_active": has_jev_tensor,
+            "sgp_corr_denoised": denoised_corr,
+            "sgp_noise_eigenvalues_clipped": n_clipped,
         }
         out["away_injuries_applied"] = list(away_inj)
         out["home_injuries_applied"] = list(home_inj)
@@ -827,6 +1166,17 @@ def main():
         w7 = cand_bundle["week7_candidate"]
         cand_msg = f" | week7_cand={len(w7['ratings'])} teams (tau_rating={w7['params']['tau']})"
     print(f"[SEAL VERIFIED] coachMindsetHash = {digest} | tau = {sealed_obj['tau']} | QB_QUESTIONABLE = {sealed_obj['epaDropoffTable']['QB_QUESTIONABLE']}{cand_msg}")
+    # Diagnostic only. These opponent-adjusted ratings are fitted on the 214 real team-games
+    # in the master W1-W7 build; they are NOT an input to the sealed totals below, and the
+    # label says so because a printed number a reader cannot place is a claim, not a fact.
+    try:
+        ratings = compute_weekly_bayesian_ridge_power_ratings()
+        ranked = sorted(ratings.items(), key=lambda kv: -kv[1])
+        top = ", ".join(f"{t} {v:+.3f}" for t, v in ranked[:5])
+        bot = ", ".join(f"{t} {v:+.3f}" for t, v in ranked[-5:][::-1])
+        print(f"[OPP-ADJ EPA/play | diagnostic, not an input to the sealed totals] best: {top} | worst: {bot}")
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"[OPP-ADJ EPA/play UNAVAILABLE] {exc}")
     slate = [
         ("CHI", "SEA", ["QB_QUESTIONABLE"], ["QB_QUESTIONABLE"], "CHI +3.5",  +1.53, "CHI +11 (ML +32)", "ELEVATED_SHARP_AGREE", 1),
         ("TEN", "CIN", [],                  ["QB_QUESTIONABLE"], "TEN +10.5", -2.13, "CIN +18",          "MONEY_AGAINST",        2),

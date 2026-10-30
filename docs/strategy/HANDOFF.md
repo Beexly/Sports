@@ -24,6 +24,31 @@ next role must do. See `ORG.md` for the contract.
 
 ---
 
+## 2026-10-30 (CDT) — CAR @ GB canonical ledger settled; four counts for one night published instead of collapsed
+
+**Changed:**
+- `scripts/ops/settle_car_gb_card_2026_10_29.py` (new) — grades the 21 canonical CAR @ GB rows from the vault auto-grade, asserting a unique match on section + result + a `settling_stat` substring before any write.
+- `scripts/ops/update_official_16_5_ledger.py` — runs the settlement pass after building, so a rebuild cannot republish `PENDING` rows.
+- `data/engine/new_engine_official_ledger_2026.json` — rows flipped to `GRADED` with result + settling stat; additive `settlement_2026-10-29` and `record_reconciliation` blocks. `verified_record` (16-5) left byte-identical and re-scoped as the ENTERING record.
+- `data/engine/settlements/car_gb_2026-10-29_settlement.json` (new) — machine-readable settlement + reconciliation.
+- `docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md` and `COMPLETE-BET-CARD-AND-CONTENT-CREATION-SUITE-2026-10-29.md` — 21 `PENDING` rows settled on both surfaces, plus a Settlement section and a four-count reconciliation table.
+
+**Proven:**
+- The pre-fix state was false, not merely stale: all 21 rows read `PENDING` on three surfaces a day after the game, verified in `origin/main` content.
+- `python scripts/ops/settle_car_gb_card_2026_10_29.py` exits 0 (`14-6`, 1 split row; `15-7` leg-level). The mapping guard rejected a first-pass needle (`10`) that matched two vault rows — the anti-fabrication check fired in practice, not just in theory.
+- Full chain idempotency: `python scripts/ops/update_official_16_5_ledger.py` then `md5sum -c` on the canonical JSON and ledger MD → both `OK`. Regeneration does not drift.
+- `grep -c PENDING` is `0` on both markdown surfaces after the run.
+
+**Not proven:**
+- No units total for the 21-row card. `CAR-GB-17` and `CAR-GB-21` are combined two-leg rows with no stated per-leg stake, so any units figure would rest on an assumption.
+- The record itself is unresolved, and deliberately so: entering `16-5`, this card `14-6` (`15-7` legs), vault package auto-grade `39-22` on 61 settled rows, owner-stated `31-11` tonight / `47-16` season. The owner-stated pair is internally consistent but its 42-play tonight denominator exists in no artifact in this repo, and neither arithmetic bridge reaches `31-11` (`16+14 = 30-11`, `16+15 = 31-12`).
+
+**Next role (Owner / Verifier):**
+- Rule on which denominator is official: the 21 tracked plays, the 62-row vault package, or the 42 plays implied by `31-11`. Until then the four counts render side by side and the `16-5` base stays labelled owner-attested.
+- Supply (or authorise) the 21 prior settled picks behind the `16-5` entering base, and the per-leg stakes for `CAR-GB-17` / `CAR-GB-21`, so units can be restated without assumption.
+
+---
+
 ## 2026-10-28 / 2026-10-29 (UTC) — Master Corpus, Coach-Scheme-Player-Fit Engine & Commercial Package Builder
 
 **Changed:**
