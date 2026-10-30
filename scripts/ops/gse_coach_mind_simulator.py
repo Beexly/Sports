@@ -72,6 +72,22 @@ from intelligence.math.effective_theory_and_large_deviations import (
     talisman_dependency_variance_multiplier,
     wigner_semicircle_marchenko_pastur_denoise,
 )
+from engine.kernels.consolidated_sweep_kernels import (
+    load_consolidated_2026_pbp_metrics,
+    compute_c281_tprr_yprr_composite,
+    compute_c285_iterative_ridge_matchup_delta,
+    compute_c287_wopr,
+    compute_mockingboard_altitude,
+    compute_c297_referee_crew_penalty_kernel,
+    compute_c300_rynoonan_idp_tackles_kernel,
+    compute_c316_havoc_rate_modifier,
+    compute_patton_poe_p2s_mitigation,
+    compute_coach_a_structural_coverage_modifiers,
+    compute_ghatz_situational_epa_modifier,
+    compute_locktalk_1q_script_stop_and_hfa,
+    compute_locktalk_qb_vulture_goal_line_split,
+    compute_whitebison_prop_calibration_blend,
+)
 
 QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
 LEAGUE_TARGET_HHI = 0.135
@@ -788,6 +804,8 @@ def load_week8_injuries_from_csv(repo_root: str | None = None) -> dict[str, list
 
         if role and role not in roles:
             roles.append(role)
+        if team == "LAR":
+            team_roles["LA"] = list(roles)
 
     return team_roles
 
@@ -861,6 +879,17 @@ def _get_cached_signal_pack_tables() -> dict[str, object]:
         "timo_damping": 1.0 / max(1.0, timo_ratio),
     }
     return _SIGNAL_PACK_PARSED_CACHE
+
+
+_CONSOLIDATED_PBP_METRICS_CACHE: dict[str, object] | None = None
+
+
+def _get_cached_consolidated_pbp_metrics() -> dict[str, object]:
+    """Load verified 2026 PBP (18,738 plays) + FTN charting (18,019 rows) consolidated sweep metrics once per process."""
+    global _CONSOLIDATED_PBP_METRICS_CACHE
+    if _CONSOLIDATED_PBP_METRICS_CACHE is None:
+        _CONSOLIDATED_PBP_METRICS_CACHE = load_consolidated_2026_pbp_metrics()
+    return _CONSOLIDATED_PBP_METRICS_CACHE
 
 
 DOWN_BUCKETS = ("1st", "2nd", "3rd_short", "3rd_long")
@@ -1239,26 +1268,25 @@ def simulate_matchup_pbp(
     home_sack_prob = float(np.clip(home_sack_prob * float(home_qb_2x2["sack_prob_multiplier"]), 0.030, 0.125))
 
     # PHASE 6: Two-Clocks Pressure Collision — QB time-to-throw vs defense time-to-pressure
-    # def_t2p proxy derived from opposing def_sack_rate_pct (direct time-to-pressure not in flat tendencies):
-    # base 2.7s, each defensive sack-rate point above 5.0% = 0.025s faster pressure, clamped [1.8, 3.5].
-    COLLISION_SACK_MULT = 1.15  # sack-prob bump when pressure arrives before release
+    # Fixed per Grok 4.7 Agent #1 audit: Big Nickel confounder gates on _def_blitz_pct > 30.0 (not sack rate),
+    # and extra collision sack multiplier is capped at 1.08 so pressure is never triple-counted.
+    COLLISION_SACK_MULT = 1.08
     two_clocks = {}
 
-    def _apply_collision(_qb_2x2, _def_sack_pct, _sack_prob, _side):
+    def _apply_collision(_qb_2x2, _def_sack_pct, _def_blitz_pct, _sack_prob, _side):
         _ttt = _qb_2x2.get("ngs_time_to_throw_sec")
         if _ttt is None:
             return _sack_prob, None
         _def_t2p = float(np.clip(2.7 - (_def_sack_pct - 5.0) * 0.025, 1.8, 3.5))
-        # Big Nickel confounder: early-down run-blitz when the opposing defense blitzes > 30%
-        _bn = _def_sack_pct > 30.0
+        _bn = float(_def_blitz_pct) > 30.0
         _collision = compute_two_clocks_pressure_collision(_ttt, _def_t2p, early_down_run_blitz_confounder=_bn)
         two_clocks[_side] = _collision
         if _collision["pressure_before_release"]:
             _sack_prob = float(np.clip(_sack_prob * COLLISION_SACK_MULT, 0.030, 0.125))
         return _sack_prob, _collision
 
-    away_sack_prob, _away_collision = _apply_collision(away_qb_2x2, home_def_sack_pct, away_sack_prob, "away")
-    home_sack_prob, _home_collision = _apply_collision(home_qb_2x2, away_def_sack_pct, home_sack_prob, "home")
+    away_sack_prob, _away_collision = _apply_collision(away_qb_2x2, home_def_sack_pct, home_def_blitz_pct, away_sack_prob, "away")
+    home_sack_prob, _home_collision = _apply_collision(home_qb_2x2, away_def_sack_pct, away_def_blitz_pct, home_sack_prob, "home")
 
     away_to_mult = float(away_qb_2x2["int_prob_multiplier"])
     home_to_mult = float(home_qb_2x2["int_prob_multiplier"])
@@ -1316,6 +1344,72 @@ def simulate_matchup_pbp(
         + 0.35 * float(home_qb_2x2["epa_shift_vs_baseline"])
     )
 
+    # Consolidated X & IG Sweep Kernels (C-281, C-285, C-287, C-297, C-316, ALTITUDE, Patton POE, Locktalk 1Q/Vulture)
+    pbp_metrics = _get_cached_consolidated_pbp_metrics()
+    c285_away = compute_c285_iterative_ridge_matchup_delta(_aw_key, _hm_key, pbp_metrics, tendency_net_epa=away_net_epa)
+    c285_home = compute_c285_iterative_ridge_matchup_delta(_hm_key, _aw_key, pbp_metrics, tendency_net_epa=home_net_epa)
+    c316_away = compute_c316_havoc_rate_modifier(_aw_key, _hm_key, pbp_metrics)
+    c316_home = compute_c316_havoc_rate_modifier(_hm_key, _aw_key, pbp_metrics)
+    c297_away = compute_c297_referee_crew_penalty_kernel(is_home_offense=False)
+    c297_home = compute_c297_referee_crew_penalty_kernel(is_home_offense=True)
+    aw_tm_m = (pbp_metrics.get("teams") or {}).get(_aw_key) or {}
+    hm_tm_m = (pbp_metrics.get("teams") or {}).get(_hm_key) or {}
+    patton_away = compute_patton_poe_p2s_mitigation(
+        raw_pressure_prob=away_sack_prob * 4.5,
+        qb_fault_sack_share=float(aw_tm_m.get("patton_qb_fault_sack_share") or 0.18),
+        screen_rate=float(aw_tm_m.get("ftn_screen_rate") or 0.10),
+        poe_pct=float(away_qb_2x2.get("poe") or 0.0),
+    )
+    patton_home = compute_patton_poe_p2s_mitigation(
+        raw_pressure_prob=home_sack_prob * 4.5,
+        qb_fault_sack_share=float(hm_tm_m.get("patton_qb_fault_sack_share") or 0.18),
+        screen_rate=float(hm_tm_m.get("ftn_screen_rate") or 0.10),
+        poe_pct=float(home_qb_2x2.get("poe") or 0.0),
+    )
+    coach_a_away = compute_coach_a_structural_coverage_modifiers(
+        def_shell="sim_blitz" if home_def_blitz_pct > 30.0 else "two_high_quarters",
+        off_play="inside_zone",
+        down=1,
+        ydstogo=10,
+    )
+    coach_a_home = compute_coach_a_structural_coverage_modifiers(
+        def_shell="sim_blitz" if away_def_blitz_pct > 30.0 else "two_high_quarters",
+        off_play="inside_zone",
+        down=1,
+        ydstogo=10,
+    )
+    ghatz_away = compute_ghatz_situational_epa_modifier(
+        off_team=_aw_key,
+        def_team=_hm_key,
+        down=3,
+        ydstogo=7,
+        def_shell="sim_blitz" if home_def_blitz_pct > 28.0 else "two_high_quarters",
+        metrics=pbp_metrics,
+    )
+    ghatz_home = compute_ghatz_situational_epa_modifier(
+        off_team=_hm_key,
+        def_team=_aw_key,
+        down=3,
+        ydstogo=7,
+        def_shell="sim_blitz" if away_def_blitz_pct > 28.0 else "two_high_quarters",
+        metrics=pbp_metrics,
+    )
+    # Apply C-285 real-schedule ridge residual (|delta_epa| <= 0.04), C-316 non-sack havoc SR residual, and @ghatz_28 situational modifier
+    away_net_epa += float(c285_away["net_epa_delta"]) + 0.50 * float(c316_away["sr_delta"]) + 0.25 * float(ghatz_away)
+    home_net_epa += float(c285_home["net_epa_delta"]) + 0.50 * float(c316_home["sr_delta"]) + 0.25 * float(ghatz_home)
+    away_sack_prob = float(np.clip(away_sack_prob * (1.0 + 0.15 * (float(patton_away["p2s_conversion_mult"]) - 1.0)), 0.025, 0.125))
+    home_sack_prob = float(np.clip(home_sack_prob * (1.0 + 0.15 * (float(patton_home["p2s_conversion_mult"]) - 1.0)), 0.025, 0.125))
+    away_to_mult = float(np.clip(away_to_mult * float(c316_away["turnover_mult"]), 0.75, 1.35))
+    home_to_mult = float(np.clip(home_to_mult * float(c316_home["turnover_mult"]), 0.75, 1.35))
+    locktalk_1q_away = compute_locktalk_1q_script_stop_and_hfa(_hm_key, _aw_key, _aw_key, qtr=1, drive_num=1, full_game_hfa_pts=float(tr_home["hfa"]), metrics=pbp_metrics)
+    locktalk_1q_home = compute_locktalk_1q_script_stop_and_hfa(_hm_key, _aw_key, _hm_key, qtr=1, drive_num=1, full_game_hfa_pts=float(tr_home["hfa"]), metrics=pbp_metrics)
+    home_qtr_hfa_tilt_arr = np.array([
+        float(compute_locktalk_1q_script_stop_and_hfa(_hm_key, _aw_key, _hm_key, qtr=q, drive_num=1, full_game_hfa_pts=float(tr_home["hfa"]), metrics=pbp_metrics)["per_snap_hfa_tilt_epa"])
+        for q in (1, 2, 3, 4)
+    ], dtype=np.float64)
+    vulture_away_gl = compute_locktalk_qb_vulture_goal_line_split(_aw_key, yardline_100=3, metrics=pbp_metrics)
+    vulture_home_gl = compute_locktalk_qb_vulture_goal_line_split(_hm_key, yardline_100=3, metrics=pbp_metrics)
+
     r_shrink = 1.0 / (1.0 + 45.0 * 0.04)
     away_pass_delta = (1.0 - r_shrink) * (tr_away["early_pass_rate"] - 0.54)
     home_pass_delta = (1.0 - r_shrink) * (tr_home["early_pass_rate"] - 0.54)
@@ -1333,16 +1427,28 @@ def simulate_matchup_pbp(
 
     away_qtr_def_arr = np.asarray(qtr_def_epa_by_def.get(away, np.zeros(4, dtype=np.float64)), dtype=np.float64)
     home_qtr_def_arr = np.asarray(qtr_def_epa_by_def.get(home, np.zeros(4, dtype=np.float64)), dtype=np.float64)
-    away_def_mtkl_mod = float(np.clip((float(mtkl_by_def.get(away, 24.0)) - 24.0) / 140.0, -0.08, 0.14))
-    home_def_mtkl_mod = float(np.clip((float(mtkl_by_def.get(home, 24.0)) - 24.0) / 140.0, -0.08, 0.14))
+    # Fixed per Grok 4.7 Agent #1 §6 U2: recenter missed tackles on 2026 mean (34.0 / 220.0) so DET (12) is not clipped
+    away_def_mtkl_mod = float(np.clip((float(mtkl_by_def.get(away, 34.0)) - 34.0) / 220.0, -0.12, 0.14))
+    home_def_mtkl_mod = float(np.clip((float(mtkl_by_def.get(home, 34.0)) - 34.0) / 220.0, -0.12, 0.14))
     away_qb_name = str(TEAM_TO_QB_2026.get(away, ""))
     home_qb_name = str(TEAM_TO_QB_2026.get(home, ""))
     away_thawy_rate = float(thawy_by_qb.get(away_qb_name, 0.045))
     home_thawy_rate = float(thawy_by_qb.get(home_qb_name, 0.045))
     away_rb_epa_att, _ = rb_epa_by_team.get(away, (away_off_rush_epa, 4.3))
     home_rb_epa_att, _ = rb_epa_by_team.get(home, (home_off_rush_epa, 4.3))
-    away_big_play_rate, _ = big_play_by_off.get(away, (0.10, 0.44))
-    home_big_play_rate, _ = big_play_by_off.get(home, (0.10, 0.44))
+    # Fixed per Grok 4.7 Agent #1 §1 & §3: retain Table 05 success_rate instead of discarding it
+    away_big_play_rate, away_sr_pack = big_play_by_off.get(away, (0.10, 0.44))
+    home_big_play_rate, home_sr_pack = big_play_by_off.get(home, (0.10, 0.44))
+    away_comp_base = float(np.clip(away_comp_base + 0.18 * (float(away_sr_pack) - 0.44), 0.48, 0.76))
+    home_comp_base = float(np.clip(home_comp_base + 0.18 * (float(home_sr_pack) - 0.44), 0.48, 0.76))
+
+    # C-281 (2D TPRR vs YPRR quadrant), C-287 (WOPR diagnostic), and @mockingboardapp ALTITUDE band
+    c281_away = compute_c281_tprr_yprr_composite(tprr=away_wr1_share_emp * 0.88, yprr=1.85 + 3.2 * (away_wr1_share_emp - 0.24))
+    c281_home = compute_c281_tprr_yprr_composite(tprr=home_wr1_share_emp * 0.88, yprr=1.85 + 3.2 * (home_wr1_share_emp - 0.24))
+    wopr_away = compute_c287_wopr(target_share=away_wr1_share_emp, air_yards_share=min(0.48, away_wr1_share_emp * 1.32))
+    wopr_home = compute_c287_wopr(target_share=home_wr1_share_emp, air_yards_share=min(0.48, home_wr1_share_emp * 1.32))
+    altitude_away = compute_mockingboard_altitude(wopr=wopr_away, c281_composite=float(c281_away["effective_yprr"]), position="WR", games_played=7)
+    altitude_home = compute_mockingboard_altitude(wopr=wopr_home, c281_composite=float(c281_home["effective_yprr"]), position="WR", games_played=7)
 
     # Build pathwise receiving target share vectors (WR1, WR2, WR3, TE1, RB1) preserving exact 0.0 on scratched roles
     away_rec_raw = away_sh.copy()
@@ -1402,6 +1508,34 @@ def simulate_matchup_pbp(
     home_rush_cdf = np.cumsum(home_rush_prob)
     away_rush_cdf[-1] = 1.0
     home_rush_cdf[-1] = 1.0
+
+    # @thelocktalk QB Vulture inside-the-5 (yardline_100 <= 5) rushing CDFs (RB1, RB2, QB1, WR1)
+    aw_gl_qb_sh = float(vulture_away_gl["qb_rush_share"]) if "QB1" not in away_inj else 0.0
+    hm_gl_qb_sh = float(vulture_home_gl["qb_rush_share"]) if "QB1" not in home_inj else 0.0
+    away_gl_rush_raw = np.array([
+        max(0.05, float(away_rush_prob[0]) * (1.0 - aw_gl_qb_sh)),
+        max(0.02, float(away_rush_prob[1]) * (1.0 - aw_gl_qb_sh)),
+        aw_gl_qb_sh,
+        0.02 if "WR1" not in away_inj else 0.0,
+    ], dtype=np.float64)
+    home_gl_rush_raw = np.array([
+        max(0.05, float(home_rush_prob[0]) * (1.0 - hm_gl_qb_sh)),
+        max(0.02, float(home_rush_prob[1]) * (1.0 - hm_gl_qb_sh)),
+        hm_gl_qb_sh,
+        0.02 if "WR1" not in home_inj else 0.0,
+    ], dtype=np.float64)
+    for _idx, _rn in enumerate(rush_role_names):
+        if _rn in away_inj:
+            away_gl_rush_raw[_idx] = 0.0
+        if _rn in home_inj:
+            home_gl_rush_raw[_idx] = 0.0
+    away_gl_rush_prob = conserve_target_shares_kkt(away_gl_rush_raw)
+    home_gl_rush_prob = conserve_target_shares_kkt(home_gl_rush_raw)
+    away_gl_rush_cdf = np.cumsum(away_gl_rush_prob)
+    home_gl_rush_cdf = np.cumsum(home_gl_rush_prob)
+    away_gl_rush_cdf[-1] = 1.0
+    home_gl_rush_cdf[-1] = 1.0
+    role_ypr_scale = np.array([1.14, 1.08, 1.02, 0.90, 0.52], dtype=np.float64)
 
     # Precompute causal LQR Riccati feedback gain vectors K_0(H) across horizons H = 1..8
     lqr_A = np.array([[0.92, -0.05], [0.0, 0.88]], dtype=np.float64)
@@ -1523,17 +1657,19 @@ def simulate_matchup_pbp(
         score_diff = np.where(poss == 1, home_cur_score - away_cur_score, away_cur_score - home_cur_score)
 
         # Online non-stationarity shrinkage weight for season-to-date signal-pack modulators
+        # Fixed per Grok 4.7 Agent #1 §2.1: timo_damping (1.36x season-sim leverage ratio) removed from in-game w_stat
         regime_shift_l1 = (
             np.abs(regime_probs[:, 0] - 0.15)
             + np.abs(regime_probs[:, 1] - 0.70)
             + np.abs(regime_probs[:, 2] - 0.15)
         )
         n_inj_vec = np.where(poss == 1, float(len(home_inj)), float(len(away_inj)))
-        w_stat = timo_damping / (1.0 + 0.25 * n_inj_vec + 0.50 * regime_shift_l1)
+        w_stat = 1.0 / (1.0 + 0.25 * n_inj_vec + 0.50 * regime_shift_l1)
 
-        # Signal Pack Table 06: Quarter-specific defensive EPA delta (home offense faces away defense, etc.)
+        # Signal Pack Table 06: Quarter-specific defensive EPA delta + @thelocktalk zero-sum Q1..Q4 HFA concentration
         qtr_def_mod = np.where(poss == 1, away_qtr_def_arr[q_idx], home_qtr_def_arr[q_idx]) * 0.35 * w_stat
-        net_epa_vec = np.where(poss == 1, home_net_epa, away_net_epa) + qtr_def_mod
+        qtr_hfa_mod = np.where(poss == 1, home_qtr_hfa_tilt_arr[q_idx], 0.0)
+        net_epa_vec = np.where(poss == 1, home_net_epa, away_net_epa) + qtr_def_mod + qtr_hfa_mod
         pace_base_vec = np.where(poss == 1, tr_home["pace_sec"], tr_away["pace_sec"])
         pass_delta_vec = np.where(poss == 1, home_pass_delta, away_pass_delta)
         panic_vec = np.where(poss == 1, tr_home["panic_pp"], tr_away["panic_pp"])
@@ -1570,8 +1706,8 @@ def simulate_matchup_pbp(
         if np.any(is_4th):
             idx_4th = np.where(is_4th)[0]
             yl4, yd4 = yardline_100[idx_4th], ydstogo[idx_4th]
-            go_mask = ((yl4 <= 58) & (yd4 <= 3)) | ((yl4 <= 40) & (yd4 <= 5) & (sealed_state["tau"] >= 0.40)) | ((qtr[idx_4th] == 4) & (score_diff[idx_4th] < 0) & (yd4 <= 7))
-            fg_mask = (~go_mask) & (yl4 <= 37)
+            go_mask = ((yl4 <= 58) & (yd4 <= 1)) | ((yl4 > 38) & (yl4 <= 48) & (yd4 <= 3) & (sealed_state["tau"] >= 0.40)) | ((qtr[idx_4th] == 4) & (score_diff[idx_4th] < -3) & (yd4 <= 6))
+            fg_mask = (~go_mask) & (yl4 <= 39)
             punt_mask = (~go_mask) & (~fg_mask)
             if np.any(go_mask):
                 g_idx = idx_4th[go_mask]
@@ -1688,15 +1824,21 @@ def simulate_matchup_pbp(
             # Apply QB 2x2 INT probability multiplier
             to_prob = np.clip(to_prob * np.where(ps_v == 1, home_to_mult, away_to_mult), 0.003, 0.045)
             is_to = u_out < to_prob
-            pass_comp = np.clip(comp_base_v + 0.38 * ne_v - 0.15 * thawy_v, 0.48, 0.78)
+            stop_mult_v = np.where(
+                (qt_v == 1) & (drive_plays[idx_13] <= 3),
+                np.where(ps_v == 1, float(locktalk_1q_home["stop_rate_chain_mult"]), float(locktalk_1q_away["stop_rate_chain_mult"])),
+                1.0,
+            )
+            pass_comp = np.clip((comp_base_v + 0.38 * ne_v - 0.15 * thawy_v) * stop_mult_v, 0.48, 0.78)
             is_sack = (~is_to) & is_pass & (u_out < (to_prob + sack_prob_v))
             is_comp = (~is_to) & is_pass & (u_out >= (to_prob + sack_prob_v)) & (u_out < (to_prob + sack_prob_v + pass_comp))
 
             # Signal Pack Table 02 (missed tackles) & Table 05 (big-play rate) & Table 04 (RB rushing EPA)
             mtkl_mod_v = np.where(ps_v == 1, away_def_mtkl_mod, home_def_mtkl_mod) * w_stat_13
             big_play_v = np.where(ps_v == 1, home_big_play_rate, away_big_play_rate)
+            coach_a_exp_v = np.where(ps_v == 1, float(coach_a_home["explosive_mult"]), float(coach_a_away["explosive_mult"]))
             rb_epa_v = np.where(ps_v == 1, home_rb_epa_att, away_rb_epa_att) * w_stat_13
-            explosive_pass = is_comp & (rng.random(len(idx_13)) < np.clip(big_play_v * 0.55, 0.03, 0.14))
+            explosive_pass = is_comp & (rng.random(len(idx_13)) < np.clip(big_play_v * 0.55 * coach_a_exp_v, 0.03, 0.14))
             pass_gain_draw = np.round(
                 rng.normal(11.4 + 14.5 * ne_v + 6.0 * mtkl_mod_v, 7.5, size=len(idx_13))
                 + np.where(explosive_pass, rng.exponential(8.0, size=len(idx_13)), 0.0)
@@ -1772,7 +1914,7 @@ def simulate_matchup_pbp(
                 )
                 r_hm = np.clip(r_hm, 0, 4)
                 r_tgt_13[hm_comp_m] = r_hm
-                yds_hm = pos_pass_yds[hm_comp_m]
+                yds_hm = np.round(pos_pass_yds[hm_comp_m] * role_ypr_scale[r_hm])
                 home_pass_comp[w_hm] += 1
                 away_def_tackles[w_hm] += 1
                 home_rec_yds_roles[w_hm, r_hm] += yds_hm
@@ -1796,7 +1938,7 @@ def simulate_matchup_pbp(
                 )
                 r_aw = np.clip(r_aw, 0, 4)
                 r_tgt_13[aw_comp_m] = r_aw
-                yds_aw = pos_pass_yds[aw_comp_m]
+                yds_aw = np.round(pos_pass_yds[aw_comp_m] * role_ypr_scale[r_aw])
                 away_pass_comp[w_aw] += 1
                 home_def_tackles[w_aw] += 1
                 away_rec_yds_roles[w_aw, r_aw] += yds_aw
@@ -1809,14 +1951,20 @@ def simulate_matchup_pbp(
                 if np.any(h1_m):
                     away_rec_1h_roles[w_aw[h1_m], r_aw[h1_m]] += yds_aw[h1_m]
 
-            # Pathwise carrier draw on rushing plays (RB1, RB2, QB1, WR1)
+            # Pathwise carrier draw on rushing plays (RB1, RB2, QB1, WR1) with inside-the-5 QB Vulture split
             hm_run_m = (~is_to) & (~is_pass) & (ps_v == 1)
             aw_run_m = (~is_to) & (~is_pass) & (ps_v == 0)
             c_tgt_13 = np.zeros(len(idx_13), dtype=np.int32)
             if np.any(hm_run_m):
                 w_hm = idx_13[hm_run_m]
                 u_car = rng.random(len(w_hm))
-                c_hm = np.clip(np.searchsorted(home_rush_cdf, u_car, side="right"), 0, 3)
+                in_gl_hm = yl_v[hm_run_m] <= 5
+                c_hm = np.where(
+                    in_gl_hm,
+                    np.searchsorted(home_gl_rush_cdf, u_car, side="right"),
+                    np.searchsorted(home_rush_cdf, u_car, side="right"),
+                )
+                c_hm = np.clip(c_hm, 0, 3)
                 c_tgt_13[hm_run_m] = c_hm
                 yds_hm = pos_run_yds[hm_run_m]
                 away_def_tackles[w_hm] += 1
@@ -1833,7 +1981,13 @@ def simulate_matchup_pbp(
             if np.any(aw_run_m):
                 w_aw = idx_13[aw_run_m]
                 u_car = rng.random(len(w_aw))
-                c_aw = np.clip(np.searchsorted(away_rush_cdf, u_car, side="right"), 0, 3)
+                in_gl_aw = yl_v[aw_run_m] <= 5
+                c_aw = np.where(
+                    in_gl_aw,
+                    np.searchsorted(away_gl_rush_cdf, u_car, side="right"),
+                    np.searchsorted(away_rush_cdf, u_car, side="right"),
+                )
+                c_aw = np.clip(c_aw, 0, 3)
                 c_tgt_13[aw_run_m] = c_aw
                 yds_aw = pos_run_yds[aw_run_m]
                 home_def_tackles[w_aw] += 1
@@ -1964,6 +2118,16 @@ def simulate_matchup_pbp(
     raw_margin = float(np.mean(raw_margin_vec))
     raw_total = float(np.mean(raw_total_vec))
 
+    # Execute guarded_shrinkage_step (`effective_theory_and_large_deviations.py`) and tau_hat=6.77 (n=3988)
+    tau_hat_calibration = apply_tau_hat_calibration_shrinkage(raw_margin, tau_hat=6.77, n=3988, held_out_only=True)
+    _rho_persist = float(np.clip(0.55 + 0.35 * abs(float(home_epa_trend_delta) - float(away_epa_trend_delta)), 0.05, 0.99))
+    guarded_margin_step = guarded_shrinkage_step(
+        raw_value=raw_margin,
+        rho=_rho_persist,
+        n=int(max(tr_home.get("n_drives", 72), tr_away.get("n_drives", 72), 18)),
+        shrinkage_factor=float(tau_hat_calibration["shrinkage_weight"]),
+    )
+
     if posted_home_spread is not None and posted_total is not None:
         market_margin = -float(posted_home_spread)
         market_total = float(posted_total)
@@ -1998,19 +2162,35 @@ def simulate_matchup_pbp(
     scale_m = sigma_margin / std_m
     scale_t = sigma_total / std_t
 
-    # PHASE 6: FIRST_HALF_DIFF_PRIORS_2026 spread shift (faster-starting team edges the margin)
-    first_half_margin_shift = 0.10 * (home_first_half_prior - away_first_half_prior)
-    home_margin_out = shrunk_margin + (raw_margin_vec - raw_margin) * scale_m + first_half_margin_shift
+    home_margin_out = shrunk_margin + (raw_margin_vec - raw_margin) * scale_m
     total_pts_out = np.maximum(10.0, shrunk_total + (raw_total_vec - raw_total) * scale_t)
     home_score = 0.5 * (total_pts_out + home_margin_out)
     away_score = 0.5 * (total_pts_out - home_margin_out)
 
-    # Distribute calibration delta across the 4 quarter vectors so Q1+Q2=1H, Q3+Q4=2H, 1H+2H=Full identically
-    q_weights = np.array([0.23, 0.29, 0.22, 0.26], dtype=np.float64)
-    home_delta = home_score - home_score_raw
-    away_delta = away_score - away_score_raw
-    home_qtr_cal = home_qtr_raw + home_delta[:, None] * q_weights[None, :]
-    away_qtr_cal = away_qtr_raw + away_delta[:, None] * q_weights[None, :]
+    # Calibrate quarter scores onto the 2026 empirical regulation scoring simplex
+    # (Q1: 19.26%, Q2: 29.60%, Q3: 21.03%, Q4: 30.11%, sum == 1.0000) while preserving each
+    # world's pathwise quarter-share variation and avoiding negative-delta Q1 inversion.
+    q_weights = np.array([0.1926, 0.2960, 0.2103, 0.3011], dtype=np.float64)
+    hm_raw_denom = np.maximum(home_score_raw[:, None], 1.0)
+    aw_raw_denom = np.maximum(away_score_raw[:, None], 1.0)
+    hm_w_share = np.where(home_score_raw[:, None] > 0.0, home_qtr_raw / hm_raw_denom, q_weights[None, :])
+    aw_w_share = np.where(away_score_raw[:, None] > 0.0, away_qtr_raw / aw_raw_denom, q_weights[None, :])
+    hm_adj_share = np.maximum(0.02, q_weights[None, :] + 0.55 * (hm_w_share - np.mean(hm_w_share, axis=0, keepdims=True)))
+    aw_adj_share = np.maximum(0.02, q_weights[None, :] + 0.55 * (aw_w_share - np.mean(aw_w_share, axis=0, keepdims=True)))
+    hm_adj_share = hm_adj_share / np.sum(hm_adj_share, axis=1, keepdims=True)
+    aw_adj_share = aw_adj_share / np.sum(aw_adj_share, axis=1, keepdims=True)
+    home_qtr_cal = home_score[:, None] * hm_adj_share
+    away_qtr_cal = away_score[:, None] * aw_adj_share
+
+    # PHASE 6: FIRST_HALF_DIFF_PRIORS_2026 booked strictly inside Q1 & Q2 after full-game calibration
+    # (0% clawback into Q3/Q4 and zero change to Q3/Q4 vectors per Agent #2 audit)
+    first_half_margin_shift = 0.10 * (home_first_half_prior - away_first_half_prior)
+    if abs(first_half_margin_shift) > 1e-12:
+        home_qtr_cal[:, 0] += 0.20 * first_half_margin_shift
+        home_qtr_cal[:, 1] += 0.30 * first_half_margin_shift
+        away_qtr_cal[:, 0] -= 0.20 * first_half_margin_shift
+        away_qtr_cal[:, 1] -= 0.30 * first_half_margin_shift
+
     home_q1, home_q2, home_q3, home_q4 = home_qtr_cal[:, 0], home_qtr_cal[:, 1], home_qtr_cal[:, 2], home_qtr_cal[:, 3]
     away_q1, away_q2, away_q3, away_q4 = away_qtr_cal[:, 0], away_qtr_cal[:, 1], away_qtr_cal[:, 2], away_qtr_cal[:, 3]
     home_1h = home_q1 + home_q2
@@ -2019,6 +2199,8 @@ def simulate_matchup_pbp(
     away_2h = away_q3 + away_q4
     home_score = home_1h + home_2h
     away_score = away_1h + away_2h
+    home_margin_out = home_score - away_score
+    total_pts_out = home_score + away_score
 
     # Step 3 & Step 4 Hard Pathwise Conservation & Scratched Injury Residual Assertions (<= 1e-6)
     from argon_drop.live_certs import assert_conservation, load_verified_pbp
@@ -2165,7 +2347,18 @@ def simulate_matchup_pbp(
     conjunction_rademacher_bound = rademacher_tail_bound(
         whitened_features=np.array([0.30, 0.20, 0.15, 0.15, 0.10, 0.10]), t=6, delta=0.05
     )
-    tau_hat_calibration = apply_tau_hat_calibration_shrinkage(raw_margin, tau_hat=6.77, n=3988, held_out_only=True)
+    c300_idp_away = compute_c300_rynoonan_idp_tackles_kernel(
+        opp_rush_att_proj=float(np.mean(np.sum(home_carries_roles, axis=1))),
+        opp_completions_proj=float(np.mean(home_pass_comp)),
+        opp_sacks_proj=float(np.mean(away_def_sacks)),
+        box_alignment_mult=1.0 + 0.08 * (1.0 if away_def_blitz_pct > 30.0 else 0.0),
+    )
+    c300_idp_home = compute_c300_rynoonan_idp_tackles_kernel(
+        opp_rush_att_proj=float(np.mean(np.sum(away_carries_roles, axis=1))),
+        opp_completions_proj=float(np.mean(away_pass_comp)),
+        opp_sacks_proj=float(np.mean(home_def_sacks)),
+        box_alignment_mult=1.0 + 0.08 * (1.0 if home_def_blitz_pct > 30.0 else 0.0),
+    )
 
     # Corank exactness gate (New Wire 6), BSD Low-Selmer Corank (#006), QRH/Landau-Siegel (#003), Hilbert 10th (#004),
     # 4-Marginal OT, Madelung Hydrodynamic Bridge, Tsallis q=1.5 Heavy-Tail OT, and Solenoidal Bus Conservation
@@ -2280,6 +2473,29 @@ def simulate_matchup_pbp(
             "madelung_bridge_max_mass_error": madelung_cert["max_bridge_mass_error"],
             "tsallis_q15_dual_residual": tsallis_cert["dual_residual"],
             "four_marginal_ot_gap": "BLOCKED",
+        },
+        "consolidated_sweep_kernels": {
+            "c281_quadrant_away": c281_away,
+            "c281_quadrant_home": c281_home,
+            "c285_ridge_away": c285_away,
+            "c285_ridge_home": c285_home,
+            "c287_wopr_away": wopr_away,
+            "c287_wopr_home": wopr_home,
+            "c297_ref_crew_away": c297_away,
+            "c297_ref_crew_home": c297_home,
+            "c300_rynoonan_idp_away": c300_idp_away,
+            "c300_rynoonan_idp_home": c300_idp_home,
+            "c316_non_sack_havoc_away": c316_away,
+            "c316_non_sack_havoc_home": c316_home,
+            "mockingboard_altitude_away": altitude_away,
+            "mockingboard_altitude_home": altitude_home,
+            "patton_poe_mitigation_away": patton_away,
+            "patton_poe_mitigation_home": patton_home,
+            "locktalk_1q_away": locktalk_1q_away,
+            "locktalk_1q_home": locktalk_1q_home,
+            "locktalk_qb_vulture_away": vulture_away_gl,
+            "locktalk_qb_vulture_home": vulture_home_gl,
+            "guarded_shrinkage_step": guarded_margin_step,
         },
         "sgp_kantorovich_3marginal": sgp_kantorovich_gap,
         "conjunction_rademacher_tail_bound": conjunction_rademacher_bound,

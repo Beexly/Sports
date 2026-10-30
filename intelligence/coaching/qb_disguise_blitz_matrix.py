@@ -162,7 +162,7 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         pressure_survival_archetype="SCRAMBLE_CREATOR"
     ),
     "Geno Smith": QBDisguiseBlitzProfile(
-        "Geno Smith", "LV", 105, 7.05, 74.0, -0.161, 0.348, 56, 6.72, 85.6, -0.060, 0.08, 9.0,
+        "Geno Smith", "NYJ", 105, 7.05, 74.0, -0.161, 0.348, 56, 6.72, 85.6, -0.060, 0.08, 9.0,
         sack_rate_pct=6.8, pressure_to_sack_rate_pct=13.4, qb_fault_sack_share_pct=26.0,
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
@@ -177,7 +177,7 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
     "Kyler Murray": QBDisguiseBlitzProfile(
-        "Kyler Murray", "ARI", 86, 6.03, 89.2, -0.023, 0.353, 47, 6.02, 80.5, -0.105, -0.49, -3.5,
+        "Kyler Murray", "MIN", 86, 6.03, 89.2, -0.023, 0.353, 47, 6.02, 80.5, -0.105, -0.49, -3.5,
         sack_rate_pct=5.7, pressure_to_sack_rate_pct=11.6, qb_fault_sack_share_pct=31.0,
         pressure_survival_archetype="SCRAMBLE_CREATOR"
     ),
@@ -202,7 +202,7 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
     "Tua Tagovailoa": QBDisguiseBlitzProfile(
-        "Tua Tagovailoa", "MIA", 114, 6.84, 91.5, 0.054, 0.309, 51, 5.88, 69.9, -0.172, -0.11, -9.5,
+        "Tua Tagovailoa", "ATL", 114, 6.84, 91.5, 0.054, 0.309, 51, 5.88, 69.9, -0.172, -0.11, -9.5,
         sack_rate_pct=4.4, pressure_to_sack_rate_pct=9.1, qb_fault_sack_share_pct=15.0,
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
@@ -212,12 +212,12 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         pressure_survival_archetype="SCRAMBLE_CREATOR"
     ),
     "Kirk Cousins": QBDisguiseBlitzProfile(
-        "Kirk Cousins", "ATL", 125, 7.45, 96.8, 0.068, 0.275, 48, 6.88, 88.5, -0.025, -0.08, -2.5,
+        "Kirk Cousins", "LV", 125, 7.45, 96.8, 0.068, 0.275, 48, 6.88, 88.5, -0.025, -0.08, -2.5,
         sack_rate_pct=5.0, pressure_to_sack_rate_pct=10.4, qb_fault_sack_share_pct=22.0,
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
     "J.J. McCarthy": QBDisguiseBlitzProfile(
-        "J.J. McCarthy", "MIN", 98, 7.32, 93.5, 0.042, 0.290, 40, 6.45, 84.2, -0.048, -0.05, -1.8,
+        "J.J. McCarthy", "NYG", 98, 7.32, 93.5, 0.042, 0.290, 40, 6.45, 84.2, -0.048, -0.05, -1.8,
         sack_rate_pct=6.3, pressure_to_sack_rate_pct=12.5, qb_fault_sack_share_pct=25.0,
         pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
     ),
@@ -231,11 +231,85 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         sack_rate_pct=7.9, pressure_to_sack_rate_pct=15.6, qb_fault_sack_share_pct=36.0,
         pressure_survival_archetype="SCRAMBLE_CREATOR"
     ),
+    "Jacoby Brissett": QBDisguiseBlitzProfile(
+        "Jacoby Brissett", "ARI", 142, 6.85, 91.4, 0.035, 0.282, 54, 6.42, 86.2, -0.038, -0.04, -1.5,
+        sack_rate_pct=5.8, pressure_to_sack_rate_pct=11.8, qb_fault_sack_share_pct=21.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
+    "Michael Penix Jr.": QBDisguiseBlitzProfile(
+        "Michael Penix Jr.", "ATL", 104, 7.38, 92.5, 0.052, 0.288, 42, 6.65, 83.4, -0.042, 0.04, 1.2,
+        sack_rate_pct=5.2, pressure_to_sack_rate_pct=10.8, qb_fault_sack_share_pct=19.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
+    "Joe Burrow": QBDisguiseBlitzProfile(
+        "Joe Burrow", "CIN", 148, 7.92, 106.4, 0.175, 0.278, 57, 7.54, 101.2, 0.092, 0.22, 7.4,
+        sack_rate_pct=5.5, pressure_to_sack_rate_pct=11.2, qb_fault_sack_share_pct=18.0,
+        pressure_survival_archetype="IN_POCKET_MANIPULATOR"
+    ),
+    "Malik Willis": QBDisguiseBlitzProfile(
+        "Malik Willis", "MIA", 96, 6.48, 84.5, -0.068, 0.305, 42, 5.82, 74.8, -0.135, -0.14, -6.2,
+        sack_rate_pct=8.4, pressure_to_sack_rate_pct=16.2, qb_fault_sack_share_pct=34.0,
+        pressure_survival_archetype="SCRAMBLE_CREATOR"
+    ),
+    "Tyler Shough": QBDisguiseBlitzProfile(
+        "Tyler Shough", "NO", 138, 6.72, 88.4, -0.018, 0.294, 56, 6.18, 81.2, -0.064, -0.07, -2.4,
+        sack_rate_pct=6.6, pressure_to_sack_rate_pct=13.2, qb_fault_sack_share_pct=25.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
+    "Jameis Winston": QBDisguiseBlitzProfile(
+        "Jameis Winston", "NYG", 112, 7.24, 89.6, 0.028, 0.286, 45, 6.52, 80.4, -0.055, 0.05, 1.8,
+        sack_rate_pct=6.4, pressure_to_sack_rate_pct=12.8, qb_fault_sack_share_pct=24.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
+    "Tanner McKee": QBDisguiseBlitzProfile(
+        "Tanner McKee", "PHI", 64, 7.12, 94.2, 0.048, 0.280, 25, 6.58, 86.0, -0.032, 0.02, 0.5,
+        sack_rate_pct=5.6, pressure_to_sack_rate_pct=11.4, qb_fault_sack_share_pct=20.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
+    "Brock Purdy": QBDisguiseBlitzProfile(
+        "Brock Purdy", "SF", 144, 8.42, 108.6, 0.212, 0.272, 54, 7.86, 101.8, 0.108, 0.19, 6.2,
+        sack_rate_pct=5.1, pressure_to_sack_rate_pct=17.0, qb_fault_sack_share_pct=19.0,
+        pressure_survival_archetype="IN_POCKET_MANIPULATOR"
+    ),
 }
 
-_TEAM_TO_QB_2026 = {p.team: name for name, p in QB_PROFILES_2026.items()}
-TEAM_TO_QB_2026 = _TEAM_TO_QB_2026
-TEAM_TO_QB_2026["LA"] = "Matthew Stafford"
+TEAM_TO_QB_2026: Dict[str, str] = {
+    "ARI": "Jacoby Brissett",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Lamar Jackson",
+    "BUF": "Josh Allen",
+    "CAR": "Bryce Young",
+    "CHI": "Caleb Williams",
+    "CIN": "Joe Burrow",
+    "CLE": "Deshaun Watson",
+    "DAL": "Dak Prescott",
+    "DEN": "Bo Nix",
+    "DET": "Jared Goff",
+    "GB": "Jordan Love",
+    "HOU": "C.J. Stroud",
+    "IND": "Daniel Jones",
+    "JAX": "Trevor Lawrence",
+    "KC": "Patrick Mahomes",
+    "LA": "Matthew Stafford",
+    "LAR": "Matthew Stafford",
+    "LAC": "Justin Herbert",
+    "LV": "Kirk Cousins",
+    "MIA": "Malik Willis",
+    "MIN": "Kyler Murray",
+    "NE": "Drake Maye",
+    "NO": "Tyler Shough",
+    "NYG": "Jameis Winston",
+    "NYJ": "Geno Smith",
+    "PHI": "Tanner McKee",
+    "PIT": "Aaron Rodgers",
+    "SEA": "Sam Darnold",
+    "SF": "Brock Purdy",
+    "TB": "Baker Mayfield",
+    "TEN": "Cam Ward",
+    "WAS": "Jayden Daniels",
+    "WSH": "Jayden Daniels",
+}
+_TEAM_TO_QB_2026 = TEAM_TO_QB_2026
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _QB_PRESSURE_PROFILES_CACHE: dict | None = None

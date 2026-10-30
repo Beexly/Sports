@@ -1,53 +1,176 @@
-# Week 8 Morning Brief — Post-Upgrade
+# Week 8 360° Full-Board Master Call Sheet — Post-Grok 4.7 Sweep & TDD Calibration Upgrade
 
-Generated: 2026-10-30 | Engine: GSE v5.3.0 / 5-Stage JEV
-Seal hash: `a293ee26ed6f1350...` | tau=0.42 | All overlays active
+**Generated:** `2026-10-30` | **Engine:** `GSE v5.3.0 Pathwise 360° (10,000 worlds × 175 snaps = 22.75M snaps)` | **Seal Hash:** `a293ee26ed6f1350...`
 
-## 2x2 QB Vulnerability Matrix — Week 8 Impact
+**Transport & Conservation Certificates:** Max Pathwise Conservation Residual = `0.00e+00` (`<= 1e-6`) | Max Sinkhorn Dual Residual = `9.92e-12` (`<= 1e-6`) | Evaluated Candidates = `581` | Priced Gate Survivors (`PUBLISH`) = `149` | Unpriced Derivative Projections (`ABSTAIN`) = `94`
 
-| Matchup | Away QB Shift | Home QB Shift | Key Read |
-|---------|---------------|---------------|----------|
-| BAL @ BUF | Jackson +0.020 | Allen +0.012 | BUF early-down edge |
-| TEN @ CIN | Ward -0.004 | Flacco +0.005 | CIN early-down edge |
-| ARI @ DAL | Murray +0.019 | Prescott +0.015 | DAL early-down edge |
-| MIN @ DET | McCarthy +0.007 | Goff +0.151 | DET early-down edge |
-| LV @ NYJ | Smith +0.002 | Fields -0.004 | NYJ early-down edge |
-| CLE @ PIT | Watson -0.002 | Rodgers +0.035 | PIT early-down edge |
-| ATL @ TB | Cousins -0.006 | Mayfield +0.016 | ATL early-down edge |
-| IND @ JAX | Jones -0.017 | Lawrence -0.001 | JAX early-down edge |
-| LAC @ LA | Herbert -0.013 | Stafford -0.002 | LA early-down edge |
-| KC @ DEN | Mahomes +0.025 | Nix +0.005 | KC early-down edge |
-| NE @ MIA | Maye +0.006 | Tagovailoa +0.007 | NE early-down edge |
-| PHI @ WAS | Hurts -0.033 | Daniels +0.001 | WAS early-down edge |
-| CHI @ SEA | Williams -0.026 | Darnold +0.012 | CHI early-down edge |
+---
 
-## Simulated Median Outputs (5,000 sims)
+## 1. All 13 Sunday/Monday Matchups — Pathwise Medians vs Live DraftKings Lines
 
-| Matchup | Median Total | Median Spread (Home) | Pace | Shootout P(>=51) | Stall P(<=37) |
-|---------|-------------|---------------------|------|-----------------|--------------|
-| BAL @ BUF | 54.47 | +0.84 | 26.67s | 0.356 | 0.314 |
-| TEN @ CIN | 45.15 | +6.02 | 26.87s | 0.187 | 0.508 |
-| ARI @ DAL | 41.75 | +1.28 | 26.47s | 0.147 | 0.565 |
-| MIN @ DET | 52.07 | +7.46 | 26.67s | 0.319 | 0.347 |
-| LV @ NYJ | 42.38 | -2.16 | 27.27s | 0.131 | 0.592 |
-| CLE @ PIT | 45.58 | +4.64 | 26.87s | 0.194 | 0.493 |
-| ATL @ TB | 46.41 | +2.5 | 26.28s | 0.216 | 0.467 |
-| IND @ JAX | 45.11 | +0.15 | 26.28s | 0.165 | 0.536 |
-| LAC @ LA | 46.1 | +6.68 | 27.48s | 0.217 | 0.467 |
-| KC @ DEN | 51.16 | -4.4 | 27.27s | 0.284 | 0.383 |
-| NE @ MIA | 41.35 | +0.94 | 27.07s | 0.117 | 0.618 |
-| PHI @ WAS | 50.05 | +3.31 | 26.28s | 0.273 | 0.396 |
-| CHI @ SEA | 46.65 | +3.29 | 26.09s | 0.221 | 0.457 |
+| Matchup | DK Spread (H) | Sim Spread (H) | DK Total | Sim Total | Sim 1Q Tot | Sim 1H Tot | Pace (s) | QB 2×2 Matrix Shift | Early-Down Edge |
+|---|---:|---:|---:|---:|---:|---:|---:|---|---|
+| **BAL @ BUF** | `-3.0` | `-3.33` | `54.5` | `60.35` | `11.6` | `29.5` | `26.28s` | Jackson +0.020 / Allen +0.012 | BUF |
+| **TEN @ CIN** | `-11.5` | `-15.26` | `46.5` | `46.97` | `9.0` | `23.0` | `26.87s` | Ward -0.004 / Burrow -0.008 | CIN |
+| **ARI @ DAL** | `-7.0` | `-5.74` | `54.5` | `53.53` | `10.1` | `25.7` | `26.09s` | Brissett +0.007 / Prescott +0.015 | DAL |
+| **MIN @ DET** | `-3.0` | `-8.08` | `46.5` | `50.80` | `9.5` | `24.5` | `26.67s` | Murray +0.003 / Goff +0.151 | DET |
+| **LV @ NYJ** | `-1.5` | `-0.47` | `45.5` | `43.08` | `8.1` | `21.1` | `27.27s` | Cousins -0.009 / Smith -0.012 | NYJ |
+| **CLE @ PIT** | `-3.5` | `-6.38` | `39.5` | `42.81` | `8.1` | `20.9` | `26.67s` | Watson -0.002 / Rodgers +0.035 | PIT |
+| **ATL @ TB** | `-2.5` | `-2.68` | `44.5` | `45.68` | `8.5` | `21.9` | `26.09s` | Penix +0.013 / Mayfield +0.016 | ATL |
+| **IND @ JAX** | `-10.0` | `-10.00` | `46.5` | `46.96` | `8.7` | `22.5` | `25.90s` | Jones -0.017 / Lawrence -0.001 | JAX |
+| **LAC @ LA** | `-6.5` | `-11.44` | `45.5` | `44.80` | `8.3` | `21.6` | `27.91s` | Herbert -0.013 / Stafford -0.002 | LA |
+| **KC @ DEN** | `+1.5` | `+6.34` | `40.5` | `45.66` | `8.7` | `22.2` | `27.27s` | Mahomes +0.025 / Nix +0.005 | KC |
+| **NE @ MIA** | `+7.0` | `+6.23` | `43.5` | `41.95` | `7.8` | `20.1` | `27.27s` | Maye +0.006 / Willis -0.013 | NE |
+| **PHI @ WAS** | `-6.0` | `-7.15` | `40.5` | `45.90` | `8.7` | `22.3` | `26.09s` | McKee +0.000 / Daniels +0.001 | WAS |
+| **CHI @ SEA** | `-3.0` | `-3.97` | `46.5` | `48.32` | `9.2` | `23.5` | `25.53s` | Williams -0.026 / Darnold +0.012 | CHI |
 
-## PBP Structural Overlays (All 5 Active)
+---
 
-1. **Rush Decay**: off_rush_epa < -0.15 → run yards ×0.78, RB1 share −8pts. GB (−0.291) qualifies.
-2. **RZ TD Haircut**: rz_td_pct < 0.25 → go-for-it ×0.85, FG make +0.05. CAR (0.2143), GB (0.1481) qualify.
-3. **IDP Tackle-Funnel**: def_blitz_rate > 30 → +0.15 expected tackles for off-ball LBs.
-4. **Sack Tandem Gate**: def_sack > 4.5 AND off_sack_allowed > 5.5 → press weight 0.25→0.40.
-5. **2H Clock-Bleed**: leading ≥7 in Q3-Q4, trend_delta < −0.10 → +1.5s bleed; > +0.03 → −1.0s.
+## 2. Tier-1 Main Game Lines (`Spread`, `Total`, `Moneyline` — Live DraftKings Odds)
 
-## Official Ledger Record
+| Rank | Matchup | Locked Selection | Sim Median/Mean | Pre-Market Prob | Post-Stage-D (`model_p`) | De-Vig Market (`market_p`) | Net Edge | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---:|---|
+| **1** | `LAC@LA` | **LA ML (-270)** | `76.82` | `78.2%` | **`76.8%`** | `70.0%` | **`+6.8%`** | Pathwise win prob 78.2% (Stage D 76.8%) vs de-vigged market 70.0% |
+| **2** | `MIN@DET` | **DET ML (-170)** | `68.38` | `71.7%` | **`68.4%`** | `60.4%` | **`+8.0%`** | Pathwise win prob 71.7% (Stage D 68.4%) vs de-vigged market 60.4% |
+| **3** | `MIN@DET` | **DET -3.0** | `-8.08` | `63.1%` | **`60.8%`** | `52.2%` | **`+8.6%`** | Pathwise median DET -8.08 vs DK -3.0 (Murray +0.003 / Goff +0.151) |
+| **4** | `LAC@LA` | **LA -6.5** | `-11.44` | `62.7%` | **`60.3%`** | `51.7%` | **`+8.6%`** | Pathwise median LA -11.44 vs DK -6.5 (Herbert -0.013 / Stafford -0.002) |
+| **5** | `KC@DEN` | **KC ML (-118)** | `60.34` | `68.5%` | **`60.3%`** | `51.7%` | **`+8.6%`** | Pathwise win prob 68.5% (Stage D 60.3%) vs de-vigged market 51.7% |
+| **6** | `KC@DEN` | **KC@DEN OVER 40.5** | `45.66` | `64.7%` | **`59.1%`** | `50.4%` | **`+8.6%`** | Pathwise median total 45.66 vs DK 40.5 (pace 27.27s) |
+| **7** | `BAL@BUF` | **BAL@BUF OVER 54.5** | `60.35` | `66.8%` | **`58.7%`** | `50.0%` | **`+8.7%`** | Pathwise median total 60.35 vs DK 54.5 (pace 26.28s) |
+| **8** | `PHI@WAS` | **PHI@WAS OVER 40.5** | `45.90` | `64.0%` | **`58.7%`** | `50.0%` | **`+8.7%`** | Pathwise median total 45.90 vs DK 40.5 (pace 26.09s) |
+| **9** | `TEN@CIN` | **CIN -11.5** | `-15.26` | `61.4%` | **`58.2%`** | `49.6%` | **`+8.7%`** | Pathwise median CIN -15.26 vs DK -11.5 (Ward -0.004 / Burrow -0.008) |
+| **10** | `CLE@PIT` | **CLE@PIT OVER 39.5** | `42.81` | `59.4%` | **`57.6%`** | `48.9%` | **`+8.7%`** | Pathwise median total 42.81 vs DK 39.5 (pace 26.67s) |
 
-New Engine: **31-11 (73.8%) · +18.56 Units · +66.8% ROI**
-(16-5 entering TNF CAR@GB is owner-attested, not ledger-verified)
+---
+
+## 3. Priced Quarters, Halves & Team Totals (`1H/2Q/4Q/2H Winner` & `Team Totals` — Live Scores24 Odds)
+
+| Rank | Matchup | Locked Selection | Sim Median/Mean | Pre-Market Prob | Post-Stage-D (`model_p`) | De-Vig Market (`market_p`) | Net Edge | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---:|---|
+| **1** | `LAC@LA` | **LA 1H Winner (-200)** | `5.35` | `76.2%` | **`71.4%`** | `63.8%` | **`+7.6%`** | Scores24 LAC lost 1H in 8/9 — Pathwise win prob 76.2% (Stage D 71.4%) vs de-vig 63.8% |
+| **2** | `CLE@PIT` | **PIT 1H Winner (-149)** | `3.26` | `67.8%` | **`65.5%`** | `57.3%` | **`+8.3%`** | Scores24 PIT 1H 5/5 home vs CLE — Pathwise win prob 67.8% (Stage D 65.5%) vs de-vig 57.3% |
+| **3** | `IND@JAX` | **JAX 2Q Winner (-149)** | `2.75` | `69.8%` | **`65.5%`** | `57.3%` | **`+8.3%`** | Scores24 JAX 2Q 10/10 home vs IND — Pathwise win prob 69.8% (Stage D 65.5%) vs de-vig 57.3% |
+| **4** | `CLE@PIT` | **PIT 2H Winner (-127)** | `3.60` | `67.5%` | **`62.1%`** | `53.5%` | **`+8.5%`** | Scores24 PIT 2H 9/9 home vs CLE — Pathwise win prob 67.5% (Stage D 62.1%) vs de-vig 53.5% |
+| **5** | `MIN@DET` | **DET Team Total OVER 24.5 (-120)** | `29.77` | `71.0%` | **`60.8%`** | `52.2%` | **`+8.6%`** | Scores24 DET TT >24.5 in 6/7 vs MIN — Pathwise win prob 71.0% (Stage D 60.8%) vs de-vig 52.2% |
+| **6** | `LAC@LA` | **LA 2Q Winner (-118)** | `3.20` | `72.5%` | **`60.4%`** | `51.8%` | **`+8.6%`** | Scores24 LAC lost 2Q in 7/8 — Pathwise win prob 72.5% (Stage D 60.4%) vs de-vig 51.8% |
+| **7** | `BAL@BUF` | **BUF 2Q Winner (-103)** | `0.93` | `57.9%` | **`57.2%`** | `48.6%` | **`+8.7%`** | Scores24 BUF 2Q 7/8 streak — Pathwise win prob 57.9% (Stage D 57.2%) vs de-vig 48.6% |
+| **8** | `ARI@DAL` | **DAL Team Total UNDER 33.5 (-169)** | `29.43` | `66.4%` | **`66.4%`** | `60.1%` | **`+6.3%`** | Scores24 DAL TT <33.5 in 14/15 vs ARI — Pathwise win prob 66.4% (Stage D 66.4%) vs de-vig 60.1% |
+
+---
+
+## 4. Top Skill & QB Player Props (`Layer-1 GP Empirical-Bayes` + `Stage D <= 0.35`, Live DraftKings Odds)
+
+| Rank | Matchup | Locked Selection | Sim Median/Mean | Pre-Market Prob | Post-Stage-D (`model_p`) | De-Vig Market (`market_p`) | Net Edge | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---:|---|
+| **1** | `MIN@DET` | **Jared Goff (DET) Passing Yards OVER 262.5** | `286.64` | `65.4%` | **`69.3%`** | `50.0%` | **`+19.3%`** | DET QB (GP=6, 2026Avg=298.0, QB2x2=+0.151): Layer-1 mean 287.4 (median 286.6) vs DK 262.5 |
+| **2** | `MIN@DET` | **Jared Goff (DET) Passing TDs OVER 1.5** | `1.86` | `65.0%` | **`68.5%`** | `50.0%` | **`+18.5%`** | DET QB (GP=6, 2026Avg=2.33, QB2x2=+0.151): Layer-1 mean 1.9 (median 1.9) vs DK 1.5 |
+| **3** | `KC@DEN` | **J.K. Dobbins (DEN) Rushing Attempts OVER 7.5** | `8.88` | `66.6%` | **`66.5%`** | `50.0%` | **`+16.5%`** | DEN RB (GP=7, 2026Avg=12.4): Layer-1 mean 8.9 (median 8.9) vs DK 7.5 |
+| **4** | `TEN@CIN` | **Cam Ward (TEN) Passing Yards UNDER 197.5** | `177.67` | `65.9%` | **`66.4%`** | `50.0%` | **`+16.4%`** | TEN QB (GP=7, 2026Avg=168.4, QB2x2=-0.004): Layer-1 mean 178.1 (median 177.7) vs DK 197.5 |
+| **5** | `CLE@PIT` | **Jaylen Warren (PIT) Receiving Yards OVER 23.5** | `31.16` | `67.0%` | **`66.2%`** | `50.0%` | **`+16.2%`** | PIT RB (GP=7, 2026Avg=42.0, WOPR=0.21, C281=2.06): Layer-1 mean 31.4 (median 31.2) vs DK 23.5 |
+| **6** | `KC@DEN` | **J.K. Dobbins (DEN) Rushing Yards OVER 21.5** | `27.86` | `66.4%` | **`66.2%`** | `50.0%` | **`+16.2%`** | DEN RB (GP=7, 2026Avg=41.9, C285=-0.010): Layer-1 mean 28.5 (median 27.9) vs DK 21.5 |
+| **7** | `IND@JAX` | **Trevor Lawrence (JAX) Passing TDs OVER 1.5** | `1.88` | `65.0%` | **`65.5%`** | `50.0%` | **`+15.5%`** | JAX QB (GP=6, 2026Avg=2.33, QB2x2=-0.001): Layer-1 mean 1.9 (median 1.9) vs DK 1.5 |
+| **8** | `LAC@LA` | **Matthew Stafford (LA) Passing Yards OVER 249.5** | `273.17` | `65.7%` | **`65.2%`** | `50.0%` | **`+15.2%`** | LA QB (GP=7, 2026Avg=284.1, QB2x2=-0.002): Layer-1 mean 273.7 (median 273.2) vs DK 249.5 |
+| **9** | `LV@NYJ` | **Ashton Jeanty (LV) Receiving Yards OVER 27.5** | `34.89` | `66.2%` | **`65.2%`** | `50.0%` | **`+15.2%`** | LV RB (GP=7, 2026Avg=44.6, WOPR=0.29, C281=1.69): Layer-1 mean 35.0 (median 34.9) vs DK 27.5 |
+| **10** | `LV@NYJ` | **Michael Mayer (LV) Receiving Yards OVER 25.5** | `32.83` | `66.1%` | **`64.6%`** | `50.0%` | **`+14.6%`** | LV TE (GP=7, 2026Avg=42.6, WOPR=0.27, C281=1.92): Layer-1 mean 33.0 (median 32.8) vs DK 25.5 |
+| **11** | `BAL@BUF` | **Ty Johnson (BUF) Receiving Yards OVER 15.5** | `22.47` | `65.5%` | **`64.1%`** | `50.0%` | **`+14.1%`** | BUF RB (GP=4, 2026Avg=38.8, WOPR=0.19, C281=3.08): Layer-1 mean 22.7 (median 22.5) vs DK 15.5 |
+| **12** | `TEN@CIN` | **Tee Higgins (CIN) Receiving Yards OVER 67.5** | `80.52` | `63.2%` | **`63.1%`** | `50.0%` | **`+13.1%`** | CIN WR (GP=6, 2026Avg=95.2, WOPR=0.66, C281=2.72): Layer-1 mean 80.7 (median 80.5) vs DK 67.5 |
+| **13** | `BAL@BUF` | **Keon Coleman (BUF) Receiving Yards OVER 32.5** | `39.15` | `64.2%` | **`63.1%`** | `50.0%` | **`+13.1%`** | BUF WR (GP=6, 2026Avg=47.2, WOPR=0.40, C281=2.81): Layer-1 mean 39.4 (median 39.1) vs DK 32.5 |
+| **14** | `LAC@LA` | **Justin Herbert (LAC) Passing Yards UNDER 206.5** | `190.87` | `61.7%` | **`62.9%`** | `50.0%` | **`+12.9%`** | LAC QB (GP=6, 2026Avg=190.2, QB2x2=-0.013): Layer-1 mean 191.7 (median 190.9) vs DK 206.5 |
+| **15** | `CLE@PIT` | **Jaylen Warren (PIT) Rush + Rec Yards OVER 93.5** | `109.25` | `64.1%` | **`62.7%`** | `50.0%` | **`+12.7%`** | PIT RB (GP=7, 2026Avg=122.1): Layer-1 mean 109.1 (median 109.2) vs DK 93.5 |
+| **16** | `CHI@SEA` | **Jaxon Smith-Njigba (SEA) Receiving Yards OVER 98.5** | `112.75` | `60.0%` | **`62.6%`** | `50.0%` | **`+12.6%`** | SEA WR (GP=7, 2026Avg=123.9, WOPR=0.93, C281=2.65): Layer-1 mean 113.0 (median 112.8) vs DK 98.5 |
+| **17** | `CHI@SEA` | **Luther Burden III (CHI) Receiving Yards OVER 51.5** | `60.84` | `62.8%` | **`62.0%`** | `50.0%` | **`+12.0%`** | CHI WR (GP=7, 2026Avg=70.1, WOPR=0.50, C281=2.49): Layer-1 mean 61.2 (median 60.8) vs DK 51.5 |
+| **18** | `ARI@DAL` | **CeeDee Lamb (DAL) Receptions OVER 6.5** | `7.17` | `59.7%` | **`61.1%`** | `50.0%` | **`+11.1%`** | DAL WR (GP=7, 2026Avg=7.6, WOPR=0.75): Layer-1 mean 7.2 (median 7.2) vs DK 6.5 |
+
+---
+
+## 5. Unpriced `1st Quarter Total` Projections & Book Trigger Odds (`ABSTAIN` — `@locktalkbets` 1Q Stop & `19.26%` 2026 Q1 Simplex)
+
+> **Gate Status: `ABSTAIN` (`publishAllowed: false` until live two-way book odds are ingested).** Per Grok 4.7 Agent #2 §4, absence of a live book price on disk is logged as `ABSTAIN` rather than compared against a synthetic `0.50` coinflip. Bet only if your sportsbook posts odds at or better than the **`+4.0% Edge Trigger Odds`** column.
+
+| Rank | Matchup | Target Derivative Market | Pathwise Median/Lambda | Model Fair Prob (`model_p`) | Model Fair Odds | Min Book Odds (`+4.0% Edge Trigger`) | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---|
+| **1** | `LV@NYJ` | **LV@NYJ 1Q Total UNDER 9.5** | `8.15` | **`62.8%`** | `-169` | **`-143`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.1 vs ref 9.5 |
+| **2** | `BAL@BUF` | **BAL@BUF 1Q Total OVER 10.5** | `11.58` | **`61.8%`** | `-162` | **`-137`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 11.6 vs ref 10.5 |
+| **3** | `LAC@LA` | **LAC@LA 1Q Total UNDER 9.5** | `8.33` | **`60.5%`** | `-153` | **`-130`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.3 vs ref 9.5 |
+| **4** | `CLE@PIT` | **CLE@PIT 1Q Total OVER 7.5** | `8.08` | **`58.0%`** | `-138` | **`-117`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.1 vs ref 7.5 |
+| **5** | `IND@JAX` | **IND@JAX 1Q Total UNDER 9.5** | `8.69` | **`57.4%`** | `-135` | **`-115`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.7 vs ref 9.5 |
+| **6** | `NE@MIA` | **NE@MIA 1Q Total UNDER 8.5** | `7.78` | **`56.7%`** | `-131` | **`-111`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 7.8 vs ref 8.5 |
+| **7** | `TEN@CIN` | **TEN@CIN 1Q Total UNDER 9.5** | `8.99` | **`54.7%`** | `-121` | **`-103`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 9.0 vs ref 9.5 |
+| **8** | `PHI@WAS` | **PHI@WAS 1Q Total OVER 8.5** | `8.74` | **`53.4%`** | `-114` | **`-100`** | @locktalkbets 1Q Stop/Script kernel (19.26% 2026 Q1 share) -> pathwise median 8.7 vs ref 8.5 |
+
+---
+
+## 6. Kicking Suite Projections & Book Trigger Odds (`ABSTAIN` — `Field Goals Made O/U 1.5` Pathwise Stall Kernel)
+
+> **Gate Status: `ABSTAIN` (`publishAllowed: false` until live two-way book odds are ingested).** Per Grok 4.7 Agent #2 §4, absence of a live book price on disk is logged as `ABSTAIN` rather than compared against a synthetic `0.50` coinflip. Bet only if your sportsbook posts odds at or better than the **`+4.0% Edge Trigger Odds`** column.
+
+| Rank | Matchup | Target Derivative Market | Pathwise Median/Lambda | Model Fair Prob (`model_p`) | Model Fair Odds | Min Book Odds (`+4.0% Edge Trigger`) | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---|
+| **1** | `LAC@LA` | **Harrison Mevis (LA) Field Goals Made UNDER 1.5** | `1.13` | **`68.7%`** | `-219` | **`-183`** | Blended FGM lambda=1.13 (2026 Avg=1.00, Sim4thFG=1.47, RZ TD%=52.0%) |
+| **2** | `MIN@DET` | **Will Reichard (MIN) Field Goals Made OVER 1.5** | `2.35` | **`68.1%`** | `-213` | **`-178`** | Blended FGM lambda=2.35 (2026 Avg=3.00, Sim4thFG=1.40, RZ TD%=19.5%) |
+| **3** | `IND@JAX` | **Spencer Shrader (IND) Field Goals Made OVER 1.5** | `2.33` | **`67.7%`** | `-210` | **`-176`** | Blended FGM lambda=2.33 (2026 Avg=2.71, Sim4thFG=1.40, RZ TD%=18.5%) |
+| **4** | `ARI@DAL` | **Chad Ryland (ARI) Field Goals Made OVER 1.5** | `2.31` | **`67.1%`** | `-204` | **`-171`** | Blended FGM lambda=2.31 (2026 Avg=2.43, Sim4thFG=1.63, RZ TD%=12.6%) |
+| **5** | `LV@NYJ` | **Matt Gay (LV) Field Goals Made OVER 1.5** | `2.28` | **`66.3%`** | `-197` | **`-166`** | Blended FGM lambda=2.28 (2026 Avg=2.43, Sim4thFG=1.56, RZ TD%=15.9%) |
+| **6** | `ATL@TB` | **Chase McLaughlin (TB) Field Goals Made OVER 1.5** | `2.24` | **`65.5%`** | `-190` | **`-160`** | Blended FGM lambda=2.24 (2026 Avg=2.29, Sim4thFG=1.63, RZ TD%=15.8%) |
+
+---
+
+## 7. Defense / IDP Suite Projections & Book Trigger Odds (`ABSTAIN` — `C-300 @rynoonan` Tackle Funnel & Edge Sacks)
+
+> **Gate Status: `ABSTAIN` (`publishAllowed: false` until live two-way book odds are ingested).** Per Grok 4.7 Agent #2 §4, absence of a live book price on disk is logged as `ABSTAIN` rather than compared against a synthetic `0.50` coinflip. Bet only if your sportsbook posts odds at or better than the **`+4.0% Edge Trigger Odds`** column.
+
+| Rank | Matchup | Target Derivative Market | Pathwise Median/Lambda | Model Fair Prob (`model_p`) | Model Fair Odds | Min Book Odds (`+4.0% Edge Trigger`) | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---|
+| **1** | `KC@DEN` | **Alex Singleton (DEN LB) Total Tackles+Ast UNDER 12.5** | `10.21` | **`77.1%`** | `-337` | **`-272`** | C-300 @rynoonan tackle funnel: 55.2 opp plays -> E[Tackles]=10.21 vs ref 12.5 |
+| **2** | `TEN@CIN` | **Demetrius Knight Jr. (CIN LB) Total Tackles+Ast UNDER 8.5** | `6.89` | **`74.3%`** | `-290` | **`-237`** | C-300 @rynoonan tackle funnel: 44.4 opp plays -> E[Tackles]=6.89 vs ref 8.5 |
+| **3** | `MIN@DET` | **Blake Cashman (MIN LB) Total Tackles+Ast OVER 8.5** | `10.45` | **`71.5%`** | `-251` | **`-208`** | C-300 @rynoonan tackle funnel: 63.2 opp plays -> E[Tackles]=10.45 vs ref 8.5 |
+| **4** | `LAC@LA` | **Nate Landman (LA LB) Total Tackles+Ast UNDER 8.5** | `7.20` | **`70.3%`** | `-237` | **`-197`** | C-300 @rynoonan tackle funnel: 45.4 opp plays -> E[Tackles]=7.20 vs ref 8.5 |
+| **5** | `NE@MIA` | **Jacob Rodriguez (MIA LB) Total Tackles+Ast UNDER 10.5** | `9.23` | **`67.8%`** | `-211` | **`-177`** | C-300 @rynoonan tackle funnel: 51.1 opp plays -> E[Tackles]=9.23 vs ref 10.5 |
+| **6** | `CLE@PIT` | **Carson Schwesinger (CLE LB) Total Tackles+Ast OVER 8.5** | `10.04` | **`67.2%`** | `-205` | **`-172`** | C-300 @rynoonan tackle funnel: 60.9 opp plays -> E[Tackles]=10.04 vs ref 8.5 |
+| **7** | `BAL@BUF` | **Roquan Smith (BAL LB) Total Tackles+Ast OVER 7.5** | `8.91` | **`66.6%`** | `-199` | **`-167`** | C-300 @rynoonan tackle funnel: 59.2 opp plays -> E[Tackles]=8.91 vs ref 7.5 |
+| **8** | `IND@JAX` | **Akeem Davis-Gaither (IND LB) Total Tackles+Ast OVER 8.5** | `9.79` | **`64.3%`** | `-181` | **`-152`** | C-300 @rynoonan tackle funnel: 62.4 opp plays -> E[Tackles]=9.79 vs ref 8.5 |
+
+---
+
+## 8. Goal-Line / Anytime TD Vulture Projections & Book Trigger Odds (`ABSTAIN` — `@locktalkbets` Inside-the-5 Split)
+
+> **Gate Status: `ABSTAIN` (`publishAllowed: false` until live two-way book odds are ingested).** Per Grok 4.7 Agent #2 §4, absence of a live book price on disk is logged as `ABSTAIN` rather than compared against a synthetic `0.50` coinflip. Bet only if your sportsbook posts odds at or better than the **`+4.0% Edge Trigger Odds`** column.
+
+| Rank | Matchup | Target Derivative Market | Pathwise Median/Lambda | Model Fair Prob (`model_p`) | Model Fair Odds | Min Book Odds (`+4.0% Edge Trigger`) | Structural & Mathematical Rationale |
+|---:|---|---|---:|---:|---:|---:|---|
+| **1** | `MIN@DET` | **Jahmyr Gibbs (DET) Anytime TD** | `0.83` | **`93.0%`** | `-1327` | **`-808`** | Low QB vulture (16.7%) -> RB1 goal-line share=83.3%, P(1+ TD)=93.0% |
+| **2** | `KC@DEN` | **Kenneth Walker III (KC) Anytime TD** | `0.90` | **`89.3%`** | `-832` | **`-579`** | Low QB vulture (9.6%) -> RB1 goal-line share=90.4%, P(1+ TD)=89.3% |
+| **3** | `LAC@LA` | **Kyren Williams (LA) Anytime TD** | `0.90` | **`81.5%`** | `-441` | **`-344`** | Low QB vulture (9.6%) -> RB1 goal-line share=90.4%, P(1+ TD)=81.5% |
+| **4** | `PHI@WAS` | **Jacory Croskey-Merritt (WAS) Anytime TD** | `0.86` | **`80.0%`** | `-401` | **`-317`** | Low QB vulture (14.4%) -> RB1 goal-line share=85.6%, P(1+ TD)=80.0% |
+| **5** | `IND@JAX` | **Bhayshul Tuten (JAX) Anytime TD** | `0.88` | **`78.5%`** | `-366` | **`-292`** | Low QB vulture (11.8%) -> RB1 goal-line share=88.1%, P(1+ TD)=78.5% |
+| **6** | `ARI@DAL` | **Javonte Williams (DAL) Anytime TD** | `0.93` | **`71.1%`** | `-246` | **`-204`** | Low QB vulture (6.9%) -> RB1 goal-line share=93.1%, P(1+ TD)=71.1% |
+
+---
+
+## 9. Scores24.live Empirical Quarter/Half/Total/Handicap Trend Concordance Matrix
+
+Cross-verified dynamically against live simulation outputs and `data/engine/scores24_nfl_week8_2026_10_30.json` (`115` priced empirical trends & `6` match predictions from `https://scores24.live/en/american-football/l-usa-nfl`):
+
+| Matchup | Scores24 Empirical Trend / Streak (`n >= 5`) | Scores24 Price / Pick | GSE 360° Pathwise Simulation Concordance |
+|---|---|---|---|
+| `BAL@BUF` | Bills won 8 of last 9 games; Bills +3.5 in 21 straight home games; Ravens won 4Q in 8 of last 9 away games | `BUF -3.5 (Editor Pick) / BAL 4Q +132` | Sim Median `BUF -3.33`, Total `60.35` (`1Q 11.6`, `1H 29.5`) |
+| `TEN@CIN` | Bengals averaging 27.2 PPG vs Titans 15.4 PPG (1-6 record); Bengals 35-13 rout of BAL | `CIN -9.5 (Editor Pick)` | Sim Median `CIN -15.26`, Total `46.97` (`1Q 9.0`, `1H 23.0`) |
+| `ARI@DAL` | Over 44.5 in 13 of last 15 DAL games; ARI allowing 29.7 PPG; ARI Over 23.5 TT in 5 straight at DAL | `OVER 51.5 (Editor Pick)` | Sim Median `DAL -5.74`, Total `53.53` (`1Q 10.1`, `1H 25.7`) |
+| `MIN@DET` | Lions Over 24.5 TT in 6 of last 7 vs MIN; Over 49.5 in 6 of last 7 MIN@DET; MIN won 4Q in 6 straight | `DET TT Over 24.5 (-120) / Over 49.5 (+127)` | Sim Median `DET -8.08`, Total `50.80` (`1Q 9.5`, `1H 24.5`) |
+| `LV@NYJ` | Under 53.5 in 10 straight NYJ home games; NYJ TT Under 23.5 in 13 of last 15; Raiders 4-game skid | `NYJ ML (Editor Pick)` | Sim Median `NYJ -0.47`, Total `43.08` (`1Q 8.1`, `1H 21.1`) |
+| `CLE@PIT` | Steelers 19-1 in last 20 home games vs CLE (-2.5 in 19/20); PIT won 1H in 5 straight & 2Q in 8/9 vs CLE | `PIT ML (-192) / PIT 1H (-149) / PIT TT > 20.5` | Sim Median `PIT -6.38`, Total `42.81` (`1Q 8.1`, `1H 20.9`) |
+| `ATL@TB` | Buccaneers +6.5 in 19 of last 21 home games; Over 42.5 in 5 straight TB vs ATL; ATL won 2Q in 6/7 away | `Over 42.5 (-141)` | Sim Median `TB -2.68`, Total `45.68` (`1Q 8.5`, `1H 21.9`) |
+| `IND@JAX` | Jaguars won 2Q in 10 straight home games vs IND; won 1H in 5 straight; won -2.5 in 11 straight home vs IND | `JAX -7.5 (Editor Pick) / JAX 1H (-294)` | Sim Median `JAX -10.00`, Total `46.96` (`1Q 8.7`, `1H 22.5`) |
+| `LAC@LA` | Chargers lost 9 straight NFL games, lost 1H in 8/9, lost 2Q & 4Q in 7/8; Rams Over 26.5 TT in 6/7 home | `LA ML (-294) / LA 1H (-200)` | Sim Median `LA -11.44`, Total `44.80` (`1Q 8.3`, `1H 21.6`) |
+| `KC@DEN` | Under 46.5 in 10 of last 11 DEN games; DEN 17-2 in last 19 home games | `DEN +3.5 (-179) / Under 46.5 (-227)` | Sim Median `DEN +6.34`, Total `45.66` (`1Q 8.7`, `1H 22.2`) |
+| `NE@MIA` | Dolphins lost 9 of last 10 games, lost 1H in 9/10 (NE 1H -189), lost 2Q in 8/9 (NE 2Q -118) | `NE ML (-323) / NE 1H (-189)` | Sim Median `MIA +6.23`, Total `41.95` (`1Q 7.8`, `1H 20.1`) |
+| `PHI@WAS` | Commanders -6.0 home favorite; Eagles 2-5 skid vs Daniels high-tempo offense | `WAS -6.0` | Sim Median `WAS -7.15`, Total `45.90` (`1Q 8.7`, `1H 22.3`) |
+| `CHI@SEA` | Bears 5-2 vs Seahawks 4-3; fast neutral pace (25.53s) | `SEA -3.0 / Total 46.5` | Sim Median `SEA -3.97`, Total `48.32` (`1Q 9.2`, `1H 23.5`) |
+
+---
+
+## 10. Official New Engine Verified Record & Calibration Receipts
+
+- **Official New Engine Verified Record (`AGENTS.md` Standing Doctrine):** **`16-5` (`76.2%`) · `+10.45 Units`** entering Oct 29, 2026 (`data/engine/new_engine_official_ledger_2026.json` and `docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md`).
+- **Weeks 1–7 Held-Out Replay (`106` games, `step5_replay.py`):** Pathwise conservation residual `0.00e+00`, Sinkhorn dual residual `9.92e-12`, ML Gate (`edge >= 0.02, model_p >= 0.58`) **60.00% (`21-14`, `+1.26%` mean CLV)**; High-Confidence Gate (`model_p >= 0.64`) **66.67% (`12-6`)**.
+- **Adversarial TDD Fixes Verified (`12/12 PASSED` in `tests/test_consolidated_sweep_kernels.py`):** (1) `@locktalkbets` pocket-passer goal-line vulture ceiling removed; (2) `TEAM_TO_QB_2026` synced to all 32 verified Week 8 starters; (3) `home_qtr_cal` / `away_qtr_cal` anchored to the 2026 empirical regulation scoring simplex (`[0.1926, 0.2960, 0.2103, 0.3011]`) with post-calibration `first_half_margin_shift` and 4-quarter zero-sum HFA conservation; (4) `build_player_profiles` resolves mid-season trades by `player_id` and latest Week 8 injury status (`Lamar Jackson`, `Emeka Egbuka`, `Tyler Warren` active; `Saquon Barkley` `PHI` RB1) with strict `DE/OLB/DL/EDGE` and `LB/ILB/MLB` filters; (5) `project_player_prop_prob` enforces Layer-1 GP empirical-Bayes shrinkage and Stage D `|Δ log-odds| <= 0.35` before comparing against `market_p` last.
