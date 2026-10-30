@@ -1920,7 +1920,13 @@ export async function processSport(
     }
 
     // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
-    await persistGateDecisions(gateDecisionsToPersist);
+    const gateResult = await persistGateDecisions(gateDecisionsToPersist);
+
+    let gateLossMessage: string | undefined;
+    if (gateResult.error || gateResult.persisted < gateResult.attempted) {
+      gateLossMessage = `gate_decisions_lost=${gateResult.attempted - gateResult.persisted}/${gateResult.attempted}: ${gateResult.error || 'partial persist'}`;
+      console.warn(`[run ${run.id}] ${gateLossMessage}`);
+    }
 
     await db.ingestionRun.update({
       where: { id: run.id },
@@ -1929,6 +1935,7 @@ export async function processSport(
         gamesUpserted: Object.keys(gameRecords).length,
         oddsInserted,
         completedAt: new Date(),
+        ...(gateLossMessage ? { errorMessage: gateLossMessage } : {}),
       },
     });
 

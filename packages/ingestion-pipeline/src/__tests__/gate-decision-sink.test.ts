@@ -119,6 +119,32 @@ describe("gate-decision-sink", () => {
     expect(persistedRow?.reasonCode.length).toBe(80);
   });
 
+  it("calls createMany with NO skipDuplicates property", async () => {
+    const mockCreateMany = vi.mocked(db.gateDecision.createMany);
+    mockCreateMany.mockResolvedValue({ count: 1 });
+
+    const now = new Date("2026-09-18T20:00:00.000Z");
+    await persistGateDecisions([
+      {
+        gameId: "game-1",
+        status: "PUBLISHED",
+        reasonCode: "PUBLISHED",
+        reason: "Test",
+        modelVersion: "v5.2.7",
+        isBootstrap: false,
+        evaluatedAt: now,
+      }
+    ]);
+
+    expect(mockCreateMany).toHaveBeenCalledTimes(1);
+    const arg = mockCreateMany.mock.calls[0]![0];
+    expect(arg).toBeDefined();
+    // Verify it doesn't contain skipDuplicates: true
+    expect(arg).not.toHaveProperty("skipDuplicates");
+    // Verify it's an object with just `data`
+    expect(Object.keys(arg!)).toEqual(["data"]);
+  });
+
   it("fails safely when db.gateDecision.createMany throws, returning error without throwing", async () => {
     const mockCreateMany = vi.mocked(db.gateDecision.createMany);
     mockCreateMany.mockRejectedValue(new Error("Database connection timeout"));
