@@ -1,18 +1,18 @@
 # NEW ENGINE OFFICIAL LEDGER — updated after CAR @ GB, Thu Oct 29, 2026
 
-**Official New Engine record after Thu Oct 29, 2026: 55 Wins – 25 Losses – 0 Pushes (68.8%) · +27.44 Units (+35.4% ROI)**
-*(Season totals exclude the 3 UNSETTLED plays below; they update again when those settle.)*
+**Official New Engine record after Thu Oct 29, 2026: 55 Wins – 27 Losses – 0 Pushes (67.1%) · +25.44 Units (+32.0% ROI)**
+*(Season totals exclude the 1 UNSETTLED play below; they update again if it settles.)*
 
 - Record entering tonight: **16-5 · +10.45 units (+49.8% ROI)**.
-- Tonight (CAR @ GB, final: Packers 27, Panthers 19): **39 Wins – 20 Losses – 0 Pushes – 3 Unsettled · +16.99 units** on 56.50 units risked across the 59 settled plays.
+- Tonight (CAR @ GB, final: Packers 27, Panthers 19): **39 Wins – 22 Losses – 0 Pushes – 1 Unsettled · +14.99 units** on 58.50 units risked across the 61 settled plays.
 - Machine-readable ledger with every play graded (result + settling stat): `new_engine_official_ledger_2026.json` (this folder).
 - Full card graded: `FULL-360-CARD-CAR-GB-2026-10-29.md` / `FIRST-HALF-CARD-CAR-GB-2026-10-29.md` in this folder.
 
-**UNSETTLED (3) — not guessed, awaiting the missing stat:**
-1. Tucker Kraft 1H Receiving Yards OVER 20.5 — known 1H catches total 19 yds (12-yd Q1 TD + 7-yd Q2 screen); missing his complete 1H reception log / a published 1H split.
-2. Josh Jacobs 1H Receiving Yards OVER 7.5 — full game 6 catches / 13 yds; missing his complete 1H reception log / a published 1H split.
-3. Correlated SGP (+380) — the SGP's legs were never recorded in the card or ledger, so there is nothing to grade it against.
+**UNSETTLED (1) — not guessed, awaiting the missing stat:**
+1. Correlated SGP (+380) — the SGP's legs were never recorded in the card or ledger, so there is nothing to grade it against.
+
+**Correction note (2026-10-29, same night):** the first graded push of this ledger had three plays wrong or open. The full ESPN/FOX play-by-play then arrived and showed Bryce Young's 1Q passing was 53 yards (not the ~45 reconstructed from recaps), flipping his 1Q Under 52.5 from WIN to LOSS; Tucker Kraft's 1H receiving was 22 yards (Over 20.5 = WIN) and Josh Jacobs's 1H receiving was 4 yards (Over 7.5 = LOSS), settling both from UNSETTLED. The totals above are the corrected ones.
 
 - All old DB legacy calibration numbers are permanently retired from slides and copy.
 - Grading rule: every play graded immediately after the game; results reported in units, never dollars; no deleted plays.
-- Sources: Sportradar full box score (player/IDP/kicking stats), Packers.com official recap, NBC halftime report (1H splits: Love 189 yds, Young 65 yds, Watson 100 rec yds, Hubbard 21 rec yds), USA Today / PackersWire / Milwaukee Journal Sentinel live blogs.
+- Sources: Sportradar full box score (player/IDP/kicking stats), ESPN + FOX Sports full play-by-play (all 1Q/1H splits), Packers.com official recap, NBC halftime report.
