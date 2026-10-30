@@ -420,3 +420,17 @@ def least_squares_polynomial_fit(
         "residual_l2": float(np.linalg.norm(residual, ord=2)),
     }
 
+
+def katch_mcardle_rmr(ffm_kg: float) -> float:
+    """
+    Katch-McArdle Formula for Resting Metabolic Rate (RMR):
+        RMR (kcal/day) = 370 + 21.6 * FFM(kg),
+    where FFM is fat-free (lean) body mass in kilograms. Validated with ±5-7%
+    Bland-Altman error band in resistance-trained/athletic populations vs.
+    ±10-15% for total-weight equations (Harris-Benedict / Mifflin-St. Jeor).
+    """
+    if ffm_kg <= 0.0:
+        raise ValueError("ffm_kg must be positive")
+    return float(370.0 + 21.6 * float(ffm_kg))
+
+

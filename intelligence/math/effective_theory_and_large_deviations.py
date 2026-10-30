@@ -450,3 +450,49 @@ def verify_hjo_cone_positive_definiteness(
         "lower_bounds": rhs_bounds,
     }
 
+
+# ============================================================================
+# 7. MathWorks Modeling Challenge 2026 (Team #19232, 19232.pdf):
+#    Disposable-Edge Tail Risk Diagnostic (AUDIT-DOMAIN-11)
+# ============================================================================
+
+def mathworks_disposable_edge_tail_check(
+    disposable_bankroll: float,
+    wager_per_bet: float,
+    n_bets: int,
+    win_prob: float,
+    payout_odds_net: float = 0.9091,
+    max_loss_fraction_threshold: float = 0.10,
+) -> Dict[str, object]:
+    """
+    MathWorks Challenge #19232 (pp. 11-14): Analytic & normal-approximated 95th-percentile
+    annual drawdown diagnostic for sports wagering:
+        Outcome_i = +w * o  (w.p. p),   -w  (w.p. 1 - p).
+    Flags when the 95th-percentile downside loss exceeds `max_loss_fraction_threshold`
+    (default 10%, matching the paper's 12.4% active-gambler breach benchmark) of
+    disposable bankroll/edge.
+    """
+    if disposable_bankroll <= 0.0 or n_bets <= 0 or wager_per_bet < 0.0:
+        raise ValueError("disposable_bankroll and n_bets must be positive")
+    p = float(np.clip(win_prob, 0.0, 1.0))
+    q = 1.0 - p
+    o = float(payout_odds_net)
+    w = float(wager_per_bet)
+
+    mean_per_bet = w * (p * o - q)
+    var_per_bet = (w ** 2) * p * q * ((o + 1.0) ** 2)
+    expected_net = float(n_bets * mean_per_bet)
+    std_net = float(np.sqrt(n_bets * var_per_bet))
+    # 95th percentile downside loss (positive number representing loss magnitude)
+    loss_95th = float(max(0.0, -(expected_net - 1.6448536 * std_net)))
+    loss_fraction = float(loss_95th / disposable_bankroll)
+    exceeds_threshold = bool(loss_fraction > max_loss_fraction_threshold)
+    return {
+        "expected_net": expected_net,
+        "std_net": std_net,
+        "loss_95th_percentile": loss_95th,
+        "loss_fraction_of_disposable": loss_fraction,
+        "exceeds_10pct_disposable_threshold": exceeds_threshold,
+    }
+
+

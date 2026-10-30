@@ -1226,6 +1226,11 @@ def simulate_matchup_pbp(
         "brenier_stability_ratio_away": round(float(brenier_ratio_away), 6),
         "brenier_stability_ratio_home": round(float(brenier_ratio_home), 6),
         "solenoidal_zero_sum_error_max": float(max(away_zero_sum_err, home_zero_sum_err)),
+        "external_accuracy_anchors": {
+            "high_scoring_basketball_pct": 74.5,
+            "low_scoring_football_pct": 53.9,
+            "source": "Tangri (2026, SSRN-7308118)",
+        },
         "unpadded_drive_totals": [round(float(x), 4) for x in drive_reduce_summary["player_totals"]],
         "shootout_prob_ge51": fft_shootout_ge51,
         "stall_prob_le37": fft_stall_le37,
