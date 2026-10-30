@@ -5,6 +5,25 @@ next role must do. See `ORG.md` for the contract.
 
 ---
 
+## 2026-10-30 — 16-5 prior-record verification gap disclosed (no per-pick trail)
+
+**Changed:**
+- `docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md` — restored the Known Gaps disclosure the settlement commit dropped; marked the prior base OWNER-ATTESTED / UNVERIFIED; added a verification-status blockquote.
+- `data/engine/new_engine_official_ledger_2026.json` — additive `prior_record_verification` key.
+- `data/content-os/vip-vault/week8-nova-2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md` and its JSON — same qualification on the customer-facing copy; corrected the false "graded immediately after the game" claim (ESPN rights gate STORAGE_NOT_ALLOWED).
+
+**Proven:**
+- The 21 settled picks behind 16-5 do not exist in reconstructable form. Canonical ledger + JSON carry summary counts only; `scripts/ops/update_official_16_5_ledger.py` writes only the summary block; Neon `public.picks` has no row set or grouping column that reconciles to 16-5 (`v5.3.0`/`v5.3.1` settle 108-116-6; `isFeatured` published 16-19).
+- Commit `6aa32c026` removed gap #1 from Known Gaps; `b95d66887`/`c5526ac62` carried it verbatim.
+
+**Not proven:**
+- That a matching 21-row set exists outside the repo. It may (card PDF, spreadsheet, DM) — nobody has supplied it.
+
+**Next:**
+- Founder: supply the 21 prior settled picks from outside the repo (stake, settlement, CLV) and they get written with per-pick rows; otherwise demote the 16-5 headline wherever it renders. The 31-11 total inherits 16 unattested wins and 5 unattested losses until this closes.
+
+---
+
 ## 2026-10-28 / 2026-10-29 (UTC) — Master Corpus, Coach-Scheme-Player-Fit Engine & Commercial Package Builder
 
 **Changed:**
