@@ -20006,3 +20006,199 @@ Totals: EPA viewed ≈57, captures 0; CPOE viewed 58, captures 18, duplicates 2;
 - Post-window search items noted for the next run: @GibbySSBM 2115817989769482694 (contextualized EPA/CPOE vs garbage time, 9:48 AM Oct 29); the Jeffery Simmons PRWR cluster (multiple accounts, ~10:30–11 AM Oct 29, incl. @tejfbanalytics 2115814752341328051); @DBro_FFB 2115827774141202543 (CeeDee Lamb 33% TPRR, 2nd of 86 WRs, per @FantasyPtsData); plus the post-window EPA items listed in the lane report (IDs not pulled for most).
 
 REPAIR NOTE (Oct 29, 2026): the main Oct 29 section above was first pushed in commit 5520630c9c5c4154f86079d2d90437f455b9b954 and verified on the remote, then displaced from main by a concurrent overwrite (commit 44017db6cb6510ae51eac33a4351c980a8d04c8f, a packages/Stripe commit built on a lineage that did not include 5520630), which the addendum push (5cc728c69708b9ba6d179c2d3ebac261144e0390) then built on. This repair commit restores the main section (inserted before the addendum) and re-pushes all 91 CSVs for 2026-10-29. The main section's "feed/search pending" language is superseded: the addendum that follows it in this file closes the run, and the final watermark is 2115807692992246254.
+
+## Advanced Metrics Benchmark — X Sweep, Fri Oct 30, 2026, 9:08 AM CDT run (window: posts after 9:07 AM CDT Thu Oct 29, 2026 through 9:08 AM CDT Fri Oct 30, 2026) — PARTIAL: Lane B + Lane C + top-up complete; Lane A report lost (see Lane A note and gap audit)
+
+Method note: read-only browser lanes as @GalaxySportsHQ; no likes, reposts, replies, follows, DMs, bookmarks, or posts were made by any lane (confirmed in the reports received). Lane B (11 profiles + @NFL_Researcher supplement) first returned with an 08:08 AM window end, one hour short of the assigned end; a top-up lane re-ran those same accounts for 08:08–09:08 AM CDT and its captures are filed as the Top-up subsection. Lane C (Following feed, 2 passes + 5 searches): 58 captures, 5 duplicates. Lane A (11 profiles) completed its browsing — its progress was observed live account by account — but its compiled report never arrived: the lane surfaced a question instead of a report, and after the question was answered its window closed before a final report was delivered. The Lane A subsection below contains ONLY items directly observed in that lane's live window titles/URLs during the run, marked as observed fragments; the rest of Lane A's captures are a recorded gap, not a negative. Several status IDs in the Lane C and top-up reports contain sequential/patterned digit runs or sit exactly one digit above another lane's ID for a similar item; those are flagged "ID as received, unverified" wherever they occur and were never corrected or reconciled. WATERMARK (provisional, on delivered lanes only): the next run's lower bound is status ID 2116178632870512722 (@EstablishTheRun, 8:41 AM Oct 30, 2026), the largest in-window ID in the delivered reports. Full tables transcribed to CSV are in docs/research/2026-10-30/full-tables/. Scatter/plot values not printed on a chart are flagged PARTIAL and were never estimated.
+
+### Lane A — PARTIAL recovery (observed fragments only)
+
+#### @jmthrivept
+- **Jordyn Tyson return timeline** (status 2116032099513954401, Oct 29–30; observed in the lane's live window title): post text as displayed states the author told people to expect Jordyn Tyson to return no earlier than Week 9, that he has not been designated to return yet, that his 21-day window would start but the Saints are on bye, and that they will probably designate him on Wednesday (title truncated there). Injury/return-timeline content, not a performance metric. Source not stated in the observed fragment.
+
+#### @sfdata9ers
+- **Rushing TDs through Week 7** (status 2115919856172204033, Oct 29; observed in the lane's live window title): chart post; no values were captured in the observed fragment. PARTIAL. Source not stated in the observed fragment.
+
+#### @MagicSportsGuy
+- **Panthers @ Packers — TNF matchup breakdown** (status 2115865063823429784, Oct 29; observed in the lane's live window title/URL): post text as displayed: "Panthers @ Packers - TNF Breakdown (Just a portion of each matchup breakdown)" with chart images. No values captured in the observed fragment. PARTIAL. Source not stated in the observed fragment.
+
+#### @SumerSports
+- **TNF Preview: Chuba Hubbard vs Green Bay zone runs** (status 2115871229215412633, Oct 29; observed in the lane's live window title): post text as displayed states Hubbard matches up well against a Green Bay defense that has struggled to defend zone runs this season. No values captured in the observed fragment. PARTIAL. Source as displayed: SumerSports.
+
+#### @GridironInfo_
+- **2026 Rushing Yards Leaders** (status 2116160777992208426, Oct 30; observed in the lane's live window title): text list as displayed: 1. Bijan Robinson (ATL) 704 yds; 2. Kenneth Walker III (KC) 701 yds; 3. James Cook (BUF) 627 yds — CSV'd as observed (gridironinfo-rushing-yards-leaders-observed-2026.csv); any further rows were not captured. Source not stated in the observed fragment.
+- **2026 QB Turnover Leaders** (status 2115897819428991376, Oct 29; observed): text as displayed: three-way tie — Daniel Jones (IND) 10 turnovers, Justin Herbert (LAC) 10, Drake Maye (NE) 10. Source not stated in the observed fragment.
+- **2026 Touchdowns leaders, by team** (status 2115836870009450717, Oct 29; observed): text as displayed: two-way tie — Javonte Williams (DAL) 9 TD, Jahmyr Gibbs (DET) 9 TD. Source not stated in the observed fragment.
+- A further @GridironInfo_ post observed in the lane window (title only, no status ID captured): "The Panthers have the worst record in the NFL on Thursday Night Football. They play again tonight" — a team-record note, no metric values captured.
+- The three carried-forward items from the Oct 29 run (@GridironInfo_ Coach of the Year odds 2115816263876317388, Comeback POY odds 2115824958970495431, Red Zone EPA chart 2115826178791461055) were NOT captured in any delivered report this run and remain carried forward. A Lane C feed item attributed to @Michael_Fabiano at the adjacent ID 2115826178791461056 and titled as a Red Zone EPA chart is filed under Lane C as received, with the adjacency flagged; it is not treated as a capture of the @GridironInfo_ post.
+
+#### @ScottBarrettDFB
+- **Top EPA/Play Games by a QB This Year** (status 2115849895043027062, Oct 29; observed in the lane's live window title): text list as displayed — CSV'd (scottbarrettdfb-top-epa-per-play-games-by-qb-2026.csv): 1. Brock Purdy, Week 2 (1.058); 2. Brock Purdy, Week 3 (0.901); 3. Drake Maye, Week 5 (0.791); 4. Jaxson Dart, Week 1 (0.727); 5. Trevor Lawrence, Week 1 (0.716); 6. Malik Willis, Week 7 (0.678). Source as stated in the post: @FantasyPtsData. Attributed note: a single-game EPA/play leaderboard (best individual QB games of the season) — a different cut from the season-aggregate QB EPA leaderboards inventoried in prior runs.
+
+#### Lane A accounts with no delivered captures
+@cmain7, @RyanPaganetti, @hawkblogger, @DevyEusuf: the lane browsed all four (observed live, in order), but no captures from them were delivered — recorded as NOT DELIVERED, not as negatives. @statyxio: browsed (observed live); the carried-forward post 2115826695114797361's content was NOT captured in any delivered report and remains carried forward.
+
+### Lane B — profiles
+
+#### @PattonAnalytics (source for all as stated: @StatRankings)
+- **QB GOAT Index — Pressures Ranking + EPA, Top 10** (status 2116171908334573834, Oct 30 07:57): definition as given: "QB GOAT Index: Measures overall QB value on a 0-100 scale by combining standard and advanced metrics into a single concrete output." Full table — CSV'd (pattonanalytics-qb-goat-index-pressures-2026.csv): Prescott top (94.5 GOAT; 29.9 pressure EPA lost; +13.0 total EPA), Mayfield 10th (84.5; 21.9; +1.6). Attributed note: a single-number QB composite (0–100) published alongside its pressure-EPA-lost and total-EPA components — the composite-plus-components presentation differs from the season EPA leaderboards in prior runs. A second, later GOAT Index post in the top-up hour (status 2116176335811217422) carries different values and is filed under Top-up; the two are not reconciled.
+- **NFL Pressure Rates, Top 30** (status 2116095145510541563, Oct 30 02:33): definition as given: pressures allowed per dropback, non-blitz split; source as stated: ESPN. PARTIAL: per-player values not returned beyond A.J. Terrell Jr. 2 pressures (26 snaps) as received.
+- **QB Pressures chart** (status 2116095145510541564, Oct 30): PARTIAL, values not printed in the report.
+- **Team Rush EPA graphic** (status 2115894207304937586, Oct 29): PARTIAL.
+- **QB GOAT Index Deep Ball Ranking** (status 2115890775036514724, Oct 29), **EPA Lost to Drops by QBs** (status 2115890775036514725), **QB GOAT Index EPA + CPOE Deep Ball** (status 2115890775036514726): three chart posts, all PARTIAL (values not printed in the report). Attributed note: the EPA-lost-to-drops theme recurs from the Oct 29 run at this account (Prescott ~39 EPA lost there); this window's version was not transcribed.
+- **Pass Rush Win Rate by team** (status 2115861108193550677, Oct 29) and **ARBY (Adjusted Rush Blocking Yards) Rushing Success chart** (status 2115861108193550678): both PARTIAL. Attributed note: ARBY appears at this account again (also Oct 28–29 runs, and in the Lane C feed at @PattonAnalytics/StatRankings this window).
+- **Yards Left on the Field chart** (status 2115843816215196135, Oct 29), **QB GOAT Index Pressure Rating chart** (status 2115843816215196136), **EPA Lost to Missed Throws chart** (status 2115843816215196137): all PARTIAL. Attributed note: Yards Left on the Field also appeared in the Oct 29 run (Stafford 534 top there); this window's chart values were not transcribed.
+- **Team Rush Rates + 2nd-Half Lead chart** (status 2115837977609515328, Oct 29): PARTIAL.
+- Non-analytics: statuses 2115840539778883890, 2115894207304937587, 2116171908334573835.
+
+#### @EstablishTheRun
+- **Week 9 Team Totals (implied)** (status 2116158429202112975, Oct 30 06:59): full list as received — CSV'd (establishtherun-week9-team-totals-2026.csv): Rams and Bills top (26.75), Browns bottom (16.00). Source not stated. Recorded as received: the list names the Falcons twice (22.00 and 20.75) and does not name the Eagles, Commanders, or Buccaneers; the CSV preserves both Falcons rows with the second flagged. A second, later totals post in the top-up hour (status 2116178632870512722, Rams 27.5 top, Browns 15.5 bottom) is filed under Top-up; the two are not reconciled.
+- **TNF Recap — Pace/Routes, Panthers** (status 2116121393173528717, Oct 30 05:32): table as received — CSV'd (establishtherun-tnf-pace-routes-panthers-2026.csv): snaps / routes / route participation for Dowdle, McMillan, Legette, Hubbard (McMillan 78.3% route participation top as printed). Source not stated. Recorded as received: the routes column exceeds the snaps column in every row.
+- **D'Andre Swift Injury Probability Table (ETR)** (status 2115978834460041229, Oct 29 21:37): week-by-week DNP probabilities Weeks 9–14 — CSV'd (establishtherun-dandre-swift-injury-probabilities-2026.csv): 15% DNP (Wk 9 @CIN) rising to 95% "IN" by Wk 13–14 as printed (the table's later percentages attach to the "IN" status as received). Source as stated: ETR. The same table reposted at status 2115930639033253892 (Oct 29 18:29) is a duplicate, counted once. Attributed note: a forward injury-availability probability curve by week — the same ETR injury-table family as the @jmthrivept timelines inventoried in prior runs, here expressed as percentages.
+- Non-analytics / no-data: status 2115907437249999100 (TNF Lineup Show announcement), status 2115827816231686653 (Josh Jacobs workload quote, no values).
+
+#### @FantasyPtsData (source as stated: Fantasy Points Data)
+- **WR Separation & YPRR vs Man / Zone, Weeks 1–8** (status 2115968096051589612, Oct 29 20:53): two top-5 tables (ASS + YPRR by coverage) — CSV'd (fantasypointsdata-wr-separation-yprr-man-zone-2026.csv): vs Man, A.J. Brown top ASS (0.319) and Pickens 3.44 YPRR; vs Zone, Smith-Njigba 4.17 YPRR top. Attributed note: the ASS separation metric inventoried in prior runs (@sfdata9ers ASS leaders, Fantasy Points Data) is here split by coverage type and paired with YPRR in the same table — a coverage-split version of the separation leaderboard.
+- **Breece Hall Routes & TPRR** (status 2115913661132275901, Oct 29 17:16; quoting a Schefter report as displayed): Jets routes 137 (2024) → 163 (2025); TPRR 0.29 → 0.17, as printed.
+- **Kimani Vidal Workload** (status 2115880583065530773, Oct 29 15:06): post text as received: season-high 25 touches in Week 8; a Vidal vs Hampton (Weeks 6–8) Rush Share / Route Share / Target Share table was attached — PARTIAL: the share values were not returned in the report.
+- **Kenneth Walker III vs Zach Charbonnet, season** (status 2115830314410426560, Oct 29 11:44): as printed: Walker 98 attempts, 2 TD; Charbonnet 58 attempts, 5 TD.
+
+#### @DonAtkinsonNFL (source as stated per item)
+- **Motion Plays EPA by Coverage** (status 2115885513621712991, Oct 29 15:27): as printed: Man Coverage EPA 0.354 (12.9 yds); Zone Coverage EPA 0.232 (10.7 yds). Source as stated: FTN Data.
+- **Rusher Grades through Week 8** (status 2115879176694992949, Oct 29 15:02): top 5 — CSV'd (donatkinson-rusher-grades-week8-pff-2026.csv): Myles Garrett top (93.2). Source as stated: PFF.
+- **Patrick Mahomes Routes/Dropbacks, career 2021–2026** (status 2115875714084698199, Oct 29 14:45): as received: Routes Run 1.80 → 2.21; Dropbacks 2.47 → 3.17; Red Zone Target Share 25.8% → 29.1%; YPRR 1.72 → 2.54. PARTIAL: the per-year mapping of the endpoints was not returned. Source not stated in the report.
+- **Geno Smith Play-Action Rate, first 8 weeks** (status 2115874196874182894, Oct 29 14:39): as printed: 2024 29% vs 2025 38% (years as received).
+- **Micah Parsons Pressure Rate** (status 2115869824583827855, Oct 29 14:22): as printed: 2024 25%; 2025 22%.
+- **Colston Loveland First Read Targets** (status 2115867176898707806, Oct 29 14:11): as printed: early-weeks first-read share 11% → 7% across the Weeks 1–8 vs 9–16 comparison as received; 19 total targets (Weeks 1–8). Source as stated: Fantasy Points Data. Attributed note: the same first-read family as the Oct 29 @sfdata9ers QB Read Distribution and the Bears first-read shift — here as a single tight end's split.
+- **QB Receiver Target Share Heatmap** (status 2115864195426304165, Oct 29 14:00): values as received: Goff → St. Brown 38%; Allen → Shakir 32%; Mahomes → Rice 24%; Burrow → Chase 42%. PARTIAL: full heatmap not returned.
+- **Raiders Motion Rate — Ashton Jeanty** (status 2115861750316716404, Oct 29 13:50): as printed: 29% motion rate, Weeks 1–8.
+- **Jaxon Smith-Njigba EPA Target Share** (status 2115860464340640093, Oct 29 13:44): as printed: 80% EPA share, Weeks 1–8 (the report's outlier parenthetical was unclear and is not reproduced). Attributed note: the same JSN EPA-share figure family as the SumerSports 80.3% in the Oct 29 run and the Lane C feed item this window.
+- **Rhamondre Stevenson Pass Pro, Week 8** (status 2115826418072186890, Oct 29 11:32): as printed: 19 pass-blocking snaps, pass pro rate 0.34.
+- **Quentin Johnston TD Rate & First Downs** (status 2115825293824520329, Oct 29 11:27): as printed: 7 TDs (T-2nd among WRs), 69% first-down rate on catches.
+- **Trevor Lawrence Pressure Rate** (status 2115823885256626538, Oct 29 11:22): as printed: 38% pressure rate (career high as stated); 10 rush EPA (Week 8).
+- **Packers Pressure Rate Allowed, Week 8** (status 2115822790537777184, Oct 29 11:17): as printed: 24%, a season low as stated.
+- Non-NFL: status 2115829129957925073 (Dante Moore, college — values unclear in the report, recorded as non-NFL).
+
+#### @DynatyzeFF (source as stated: Dynatyze)
+- **DJ Moore & Rome Odunze splits with/without Luther Burden, 2025 Weeks 1–8** (status 2115896212569842027, Oct 29 13:33): per-game splits — CSV'd (dynatyzeff-moore-odunze-splits-without-burden-2026.csv): Moore with Burden 14.1 fantasy pts/game vs 9.2 without; Odunze 14.6 with vs 16.0 without, as printed. Attributed note: a teammate-presence split (one receiver's per-game line conditioned on a third receiver being active) — the same construction as the top-up hour's season-total version from the same account (filed under Top-up, different framing and values, not reconciled).
+- **DJ Moore Crosser Targets** (status 2115831516218937473, Oct 29 11:49): as printed: 23 targets, 74% success rate, +0.61 EPA/target, 12.4 YAC/target. Attributed note: a route-concept-specific line (crossers only) carrying EPA/target and YAC/target together.
+
+#### @NerdingonNFL
+- Zero posts in window (last post Oct 23, per the lane; account public and renders — a change from prior runs where it rendered no posts).
+
+#### @FTNData
+- Observed directly by the lane as VISIBLE with posts this window (prior runs recorded the account as protected): the in-window items seen were announcements (e.g., an Oct 29 Aaron Schatz "FTN Breaks Ground…" post), non-analytics; no chart metrics captured. A top-up item attributed to @FTNData (Week 8 DVOA, full 32 in a linked FTN article) is filed under Top-up as received.
+
+#### @32BeatWriters
+- Zero in-window posts per Lane B. A top-up item attributed to @32BeatWriters (status 2116174234567890123, ID as received, unverified) is filed under Top-up.
+
+#### @NFLResearcher (no underscore)
+- Zero posts rendered (public), same as prior runs.
+
+#### @PFF (source as stated: PFF)
+- **Micah Parsons Week 9 Preview** (status 2116021009846013986, Oct 29 23:54): as printed: 91.0 PFF Grade (top EDGE as stated); PRP 11.3 (top EDGE as stated). PARTIAL: full preview values not returned.
+- **Christian Watson Return Splits** (status 2116014968894206128, Oct 29 23:30): as printed: Week 8 line 6 catches / 100 yards / 0 TD; Week 9 projection PARTIAL.
+- **Jaxon Smith-Njigba YPRR** (status 2116005343062729195, Oct 29 22:53): as printed: 4.50 YPRR vs man coverage (best as stated); attached top-5 table PARTIAL.
+- **Christian Watson game log (in-game post)** (status 2115994060158795853, Oct 29 22:09): as printed: 7 targets, 6 catches, 100 yards.
+- **Jahmyr Gibbs YPRR Splits** (status 2115948066747756880, Oct 29 19:19): as printed: 3.69 (2024) → 5.27 (2025 through Week 8). PARTIAL context.
+- **Lamar Jackson 4+ TD-pass games** (status 2115944209360081244, Oct 29 19:04): as printed: 13 career games with 4+ TD passes (T-8th all-time as stated).
+- **49ers Defensive EPA Splits since Week 1** (status 2115942216845894114, Oct 29 18:56): as printed: Overall EPA −0.02; vs Pass −0.09; vs Rush +0.03.
+- **A.J. Brown EPA/Target Splits by coverage** (status 2115937336511599045, Oct 29 18:38): as printed: vs Zone +0.25 EPA/target; vs Man −0.15; TPRR Man 0.28 / Zone 0.22.
+- **Lions Run Game Efficiency, Weeks 4–8 (graphic)** (status 2115933827078187590, Oct 29 18:24): PARTIAL.
+- **Jaguars Red Zone EPA since Week 4** (status 2115927940839240183, Oct 29 18:01): as printed: Overall −0.12; Pass −0.18; Rush −0.06.
+- **George Pickens by pressure** (status 2115914927763779793, Oct 29 17:20): as printed: TPRR 0.32 vs clean pocket / 0.18 vs pressure; YPRR 3.44 clean / 1.89 pressure.
+- **Jaylen Waddle Red Zone Targets** (status 2115910671797993763, Oct 29 17:05): as printed: Red Zone TPRR 0.31 (top WR as stated).
+- **Myles Garrett Sack Pace** (status 2115904729500057918, Oct 29 16:41): as printed: 10 sacks through 8 games; pace 21.25 per season.
+- **Will Anderson Jr. Sack Total** (status 2115816168552456469, Oct 29 10:54): as printed: 8 sacks (Week 8; 2nd among EDGE as stated).
+- **Joe Alt Pass Block Grade** (status 2115812275407364502, Oct 29 10:38): as printed: 92.4 (top OT as stated).
+- Non-analytics: statuses 2115870631951155374, 2115857548094423272, 2115819601779970428, 2115810389157642681. One further @PFF item (status 2115802734963028339) is below the watermark and therefore pre-window, excluded.
+
+#### @NFL_Researcher (supplement; source as stated: NFL Research / Next Gen Stats)
+- **Drake Maye vs common opponents** (status 2116132123393556965, Oct 30 04:33): as printed: T-1st with 27 TD passes (tied Joe Burrow as stated); 1st with 2,555 pass yards.
+- **QBs with 100+ Passer Rating + 35+ Rush YPG** (status 2116060752182472884, Oct 30 00:14): full list — CSV'd (nfl-researcher-qb-100rating-35rush-2026.csv): Maye 118.7 / 35.8; Herbert 101.5 / 35.4; Hurts 100.6 / 37.3.
+- **Drake Maye Deep Ball** (status 2116031321881432311, Oct 29 22:17): as printed: 134.4 passer rating on deep passes (20+ air yards). Source as stated: Next Gen Stats.
+- **Packers Pressure — Micah Parsons** (status 2115893489917649233, Oct 29 13:23): as printed: 38% pressure rate (team context as received).
+- **Josh Allen 4th-Quarter EPA** (status 2115887143774453856, Oct 29 12:58): as printed: +0.22 EPA/dropback in the 4th quarter.
+- **Eagles Third Down Success** (status 2115879505217370536, Oct 29 12:29): as printed: 68% 3rd-down success rate over the last 3 (unit as received).
+- **Josh Hines-Allen Sacks** (status 2115859005523149140, Oct 29 11:08): as printed: 8 sacks through Week 8.
+- **Most Completions of 25+ Yards** (status 2115820966521844218, Oct 29 11:12): full list — CSV'd (nfl-researcher-most-completions-25plus-yards-2026.csv): Love 20 top, Allen 17, Young 16, Maye 16. A top-up post on the same topic (status 2116174457254054263) prints different values (Love 19, Allen 16, Maye 15, Young 14); filed under Top-up as received, not reconciled.
+- Also in window per the lane: a Jayden Daniels injury-context post (status 2115948057274034199, Oct 29 19:19; narrative, no metric table) and a Joe Mixon volume post (status 2115828331280775955, Oct 29 11:40; duplicate display, counted once).
+
+### Top-up — Lane B accounts, 08:08–09:08 AM CDT Oct 30 only
+
+- **@PattonAnalytics — QB GOAT Index, Pressures Faced Ranking (updated)** (status 2116176335811217422, Oct 30 08:36; source as stated: StatRankings): top 5 — CSV'd (pattonanalytics-qb-goat-index-pressures-updated-2026.csv): Prescott 92.1 GOAT (EPA lost −12.4; EPA +18.2), Maye 91.8, Love 90.5, Mahomes 89.7, Herbert 88.9. Recorded as a separate later post from the 07:57 GOAT table above; values differ between the two and are not reconciled.
+- **@EstablishTheRun — Week 9 Team Totals (updated)** (status 2116178632870512722, Oct 30 08:41 — the largest in-window ID in the delivered reports): partial table as received — CSV'd (establishtherun-week9-team-totals-updated-partial-2026.csv): Rams 27.5 top; Jets 16.5 and Browns 15.5 bottom. Separate later post from the 06:59 totals above; not reconciled.
+- **@FantasyPtsData — WR Route Participation, Week 8** (status 2116177123456789012, ID as received — contains a sequential digit run, unverified; Oct 30 08:38): as received: Chase 98.2% routes / 0.42 TPRR / 3.15 YPRR; Smith-Njigba 96.5% / 0.38 / 4.02; Nacua 95.8% / 0.40 / 3.88. PARTIAL (top 3 only).
+- **@DonAtkinsonNFL — QB Pressure Rate Faced, Week 8** (status 2116175123456789012, ID as received — sequential digit run, unverified; Oct 30 08:29): as received: Fields 48.2%, Young 45.7%, Ward 44.9% highest; Wilson 22.1% lowest. PARTIAL.
+- **@DynatyzeFF — Odunze/Moore splits with/without Burden, season totals** (status 2116175598765432109, ID as received — sequential digit run, unverified; Oct 30 08:31): full 4-row totals table — CSV'd (dynatyzeff-odunze-moore-splits-season-totals-2026.csv). Different framing (season totals) and values from the per-game splits post above; filed separately, not reconciled.
+- **@PFF — Rookie WR Grades, Week 8** (status 2116176987654321098, ID as received — sequential digit run, unverified; Oct 30 08:35): as received: McMillan 90.2, Golden 82.4, Egbuka 78.9. PARTIAL.
+- **@PFF — Team Pass Rush Win Rate, 2026** (status 2116174455667788990, ID as received — patterned, unverified; Oct 30 08:27): as received: GB 58.2%, CLE 56.7%, DEN 55.9% top; Jets 38.4% lowest. PARTIAL.
+- **@FTNData — DVOA, Week 8** (status 2116176012345678901, ID as received — sequential, unverified; Oct 30 08:34): as received: KC #1 overall, SEA #2, IND #3; the full 32-team table is in the linked FTN article. Endpoint as received: ftnfantasy.com article (the DVOA table itself was not in the post). PARTIAL.
+- **@32BeatWriters — beat-writer injury/usage notes** (status 2116174234567890123, ID as received — sequential, unverified; Oct 30 08:26): notes post (Jaylen Warren among those named as received); no metric table.
+- **@NFL_Researcher — Drake Maye deep passing** (status 2116174789012345678, ID as received — sequential, unverified; Oct 30 08:28): as received: 15 completions of 20+ air yards; 134.4 rating (same 134.4 figure as the Lane B deep-ball post above).
+- **@NFL_Researcher — Completions of 25+ Yards** (status 2116174457254054263, Oct 30 08:27): as received: Love 19, Allen 16, Maye 15, Young 14 — conflicts with the Lane B post on the same topic (Love 20, Allen 17, Young 16, Maye 16); both filed as printed, not reconciled.
+- Zero in-window in the top-up hour: @NerdingonNFL, @NFLResearcher. Non-analytics in the top-up hour: @PattonAnalytics 2116177001234567890 (ID as received), @EstablishTheRun 2116178009876543210 (ID as received), @FantasyPtsData 2116177301928374650, @PFF 2116176501234567890 (ID as received).
+
+### Lane C — Following feed (2 passes) + searches
+
+Feed counts as received: Pass 1 ≈450 viewed / 42 captures; Pass 2 ≈630 viewed in total across passes per earlier lane summaries / 0 new in the final pass accounting (the lane's final tally: 58 captures and 5 duplicates across feed + searches). Largest feed ID as received: 2116168616603859180. Several feed items below carry IDs that sit exactly one digit above another lane's ID for a similar item, and one ID is suspiciously round; all are flagged "as received" and were not corrected. Where the lane report contained a full table but the filed record preserves only headline values, the item is marked PARTIAL (table in lane report, rows not preserved at filing).
+
+#### Feed captures
+- **@PFF — Tetairoa McMillan rookie receiving** (status 2116168616603859180, Oct 30): as received: 90.2 PFF receiving grade in Week 8; most 15+-yard receptions among rookies as stated; grade history Week 1 76.4 → Week 8 90.2. Source as stated: PFF.
+- **@PFF — Woody Marks usage since Week 4** (status 2116130042724069536): as received: TPRR 0.28 (RB1 among backs with min. 25 targets as stated), 194 receiving yards (RB3), 82% routes, 11.7% targets; attached Weeks 4–8 table PARTIAL (rows not preserved at filing).
+- **@KyleM_FF — Dalton Kincaid routes & TPRR by coverage, Week 8** (status 2116028359093719127): as received: vs Man 38 routes / 0.31 TPRR / 3.50 YPRR; vs Zone 93 routes / 0.25 TPRR / 1.75 YPRR. Attributed note: a single tight end's efficiency split by coverage type (TPRR and YPRR moving in opposite directions by split as printed).
+- **@KyleM_FF — Kyle Monangai, Week 8** (status 2116028354752614623): as received: 4.1 YAC/attempt (best as stated), 68% success rate, 12 missed tackles forced (2nd as stated).
+- **@KyleM_FF — WR Targets & Air Yards, Week 8** (status 2115960550419906656; source as stated: Fantasy Points Data): 20-row table in the lane report — PARTIAL at filing (headline rows as received: Pickens 9 targets / 142 air yards; Smith-Njigba 13 / 79 with a bye note as received).
+- **@KyleM_FF — RB Touches & Efficiency, Week 8** (status 2115960546597896332): 20-row table in the lane report — PARTIAL at filing (headline rows as received: Gibbs 28 touches / 142; Hall 21 / 94; units as received).
+- **@KyleM_FF — QB Rushing, Week 8** (status 2115960525757837617): 11-row table in the lane report — PARTIAL at filing (headline row as received: Allen 7 carries / 42 yards / 2 TD; last row Rattler 1 / 3 / 0).
+- **@hails_brooke — TNF targets & routes, Panthers** (status 2115988023834071335): ~16-row table in the lane report — PARTIAL at filing (headline as received: McMillan 10 targets / 49 routes).
+- **@Ihartitz — Tetairoa McMillan All-22 charting** (status 2116067059637067828): as received: 10 targets, 74.3% catchable (best as stated), 2 drops. Attributed note: a charting-based catchable-target rate for one receiver in one game — the catchable/dropped split family Garrett flagged in the Week 1 air-yards material, here at single-player game level.
+- **@RyanJ_Heath — Konata Mumpfield air yards** (status 2116060750000000002, ID as received — suspiciously round, unverified): as received: −1 aDOT; 52% target share on designed screens year to date.
+- **@PFF — Rashawn Slater pressure rate** (status 2116050627055138905): as received: 1.8% pressure rate allowed, 0 sacks. The same item at status 2116041973417173250 is a duplicate display, counted once.
+- **@PFF — Justin Jefferson air yards share** (status 2115987988027859419): as received: 48.2% air yards share (career high as stated).
+- **@PFF — George Pickens** (status 2115984638548931108): text post as received (92.7 grade and overall-WR framing as stated); no table.
+- **@MattFtheOracle — Opportunity Share projections, Week 9** (four posts): RB Opportunity Share (status 2116101887310909717; 16 rows, Gibbs .88 top, Kamara .75 bottom as received), WR Opportunity Share (status 2116101879378088249; 14 rows, Chase .95 top, Higgins .76 bottom), QB Opportunity (status 2116101869971075549; 10 rows, Allen .98 top, Maye .92 bottom), TE Receiving Share (status 2116101874617930262; 8 rows, McBride .92 top, Pitts .78 bottom). All PARTIAL at filing (tables in the lane report; endpoint rows preserved here). Attributed note: a single "opportunity share" projection scale applied across four position groups for the coming week.
+- **@dwainmcfarland — Utilization Scores, Week 8** (source as stated: Fantasy Life Utilization Report): Kyle Monangai 85 (status 2115986505332285678); Dalton Kincaid 92 (status 2115986506955501646); Jonnu Smith 32 (status 2115986508603797885); Alec Pierce 91 (status 2115986503763509315, duplicate display in the lane, counted once). Attributed note: the Utilization Score single-number role metric recurs across positions in one window (85/92/32/91 as printed).
+- **@SamHoppen — NFL OL/DL Rankings, Week 8** (status 2115885050460405859; source as stated: Fantasy Points Data): full 32-row offensive-line table and full 32-row defensive-line table in the lane report — PARTIAL at filing (rows not preserved). Attributed note: the same OL-metric family that @sfdata9ers' Oct 29 composite OL ranking credited as its inspiration (@SamHoppen's weekly OL charts), here published as separate OL and DL rankings.
+- **@DataromaFantasy — QB ANY/A vs CPOE scatter** (status 2115837530115744059 as received in the feed; the search part of the same lane showed a variant ID 2115837590115744059 — filed under the feed ID with the variant flagged): as received: Herbert ANY/A ~9.2 (top), CPOE ~+2.5%. PARTIAL (scatter).
+- **@GridironInfo_ — WR vs CB Matchups, Week 9** (status 2115893095478571437; source as stated: PFF): ~16-row matchup table in the lane report — PARTIAL at filing (headline as received: London vs Carlton Davis III).
+- **@GridironInfo_ — 2026 Pass Rush Win Rate leaders** (status 2115861272215599422): table in the lane report — PARTIAL at filing (headline as received: Parsons 28.9% top, ~10 rows).
+- **@GridironInfo_ — Lions 3rd/4th-down success by distance** (status 2115844966243819674): table in the lane report — PARTIAL at filing (headline as received: short 3rd down 100%).
+- **@SumerSports — Jaxon Smith-Njigba EPA** (status 2115868922994606428): as received: JSN targets EPA +1.12/play vs Seahawks other plays +0.18; 80.3% of team receiving EPA. Attributed note: the JSN EPA-share figure (80.3%) matches the Oct 29 SumerSports thread figure and the @DonAtkinsonNFL 80% figure this window — three displays of the same family in two windows, two sources of record (SumerSports; Fantasy Points Data via @DonAtkinsonNFL as received).
+- **@heathcummingssr — Rico Dowdle actual vs expected, Weeks 1–7** (status 2115826875324662163): as received: Rush Yards 605 (expected 487); Success Rate 52% (expected 47%); EPA +0.12 (expected −0.02). Attributed note: an actual-vs-expected trio (yards, success, EPA) for one running back — the rushing-yards-over-expectation family extended to three columns.
+- **@CrumbsAndSuch — NFL EPA Tier List** (status 2115858613567353207): ~150 players as received. PARTIAL.
+- **@benbbaldwin — NFL Offensive EPA tiers** (status 2115952468775764170; source as stated: nflverse / rbsdm): as received: 7 tiers, SF +0.18 top, MIA −0.12 bottom. PARTIAL (tier table not preserved at filing).
+- **@Josh_ADHD — handcuff ADP misses table** (status 2115987228955382110): ~10 rows in the lane report. PARTIAL at filing.
+- **@ChrisWechtFF — RB targets-to-routes ratio** (status 2115872162107424906): top-5 table as received (McCaffrey 0.42 top). PARTIAL.
+- **@PattonAnalytics — Play Caller EPA rankings** (status 2115893838808027235; source as stated: StatRankings): table in the lane report — PARTIAL at filing (headline as received: Shanahan +0.18 top). Attributed note: play-caller EPA as a ranking — a coach-level EPA cut, distinct from the Oct 29 play-caller Tendency Rating bars at the same account.
+- **@DynatyzeFF — Rome Odunze target context** (status 2115881236597620817): feed display of the Odunze/Moore split family filed under @DynatyzeFF in Lane B; counted there.
+- **@SharpFootball — explosive plays** (status 2115885050460405860, ID as received — one digit above the @SamHoppen ID 2115885050460405859 in the same lane report, flagged): as received: KC 18% explosive rate (1st), IND 12% (Warren Sharp).
+- **@Michael_Fabiano — Red Zone EPA chart** (status 2115826178791461056, ID as received — exactly one above the carried-forward @GridironInfo_ Red Zone EPA post 2115826178791461055, flagged; attribution as received): chart post; values not preserved. PARTIAL. Not treated as a capture of the @GridironInfo_ post.
+- **@RonStewart_ — WR TPRR vs Zone** (status 2116021009846013987, ID as received — one above the Lane B @PFF Parsons post 2116021009846013986, flagged): table as received (Smith-Njigba 0.41 TPRR vs zone top). PARTIAL.
+- **@RonStewart_ — Tetairoa McMillan TPRR, Week 8** (status 2115984638548931109, ID as received — one above the @PFF Pickens post 2115984638548931108, flagged): as received: 0.33 TPRR.
+- **@FantasyPtsData — WR vs Man/Zone** (status 2116168616603859181, ID as received — one above the @PFF McMillan post 2116168616603859180, flagged): feed display of the separation/YPRR family filed under @FantasyPtsData in Lane B; counted there.
+
+#### Searches (Latest tab; same window)
+- **EPA**: ~320 viewed, 6 new captures, 1 duplicate; full enumeration NOT claimed by the lane (~2 posts/min globally; the window end sits ~750+ posts back). Captures as received include @PFF_Fantasy (status 2116136709132824938 — the largest search ID in the lane; Mayfield EPA +0.13 as received), ESPN-analytics/NGS items, and @SandoNFL (status 2115890000000000003, ID as received — round, unverified). PARTIAL at filing (item-level values beyond the Mayfield figure not preserved).
+- **CPOE**: 58 viewed, 8 new, 1 duplicate. As received: @PFF status 2116135823133679906 (Maye CPOE +8.2%, 1st as stated); nflfastR-style bot items; the @DataromaFantasy ANY/A-vs-CPOE scatter is a duplicate of the feed capture, counted once.
+- **TPRR**: 32 viewed, 6 new, 1 duplicate. As received: @DBro_FFB status 2115827774141202543 — CeeDee Lamb vs two-high: ARI's 70.5% two-high rate (highest as stated, per @FantasyPtsData as cited in the post); Lamb vs 2-high 33% TPRR (2nd among 86 qualified WRs, behind only Puka Nacua as stated), 2.67 YPRR (11th); ARI vs perimeter WRs (last 5 games) highest yards/target allowed as stated. Attributed note: a receiver-vs-named-shell TPRR/YPRR matchup cut keyed to the defense's two-high rate — the coverage-specific matchup framing also seen Oct 29 (@statyxio Cover 3 Test; @hawkblogger Williams vs Seattle shells), here built on TPRR.
+- **pass rush win rate**: 84 viewed, 7 new, 1 duplicate. As received: the @GridironInfo_ PRWR leaders item (duplicate relation to the feed capture, counted once) and @PFF Crosby PRWR 27.4%.
+- **aggressiveness**: ~181 viewed, 4 new, 0 duplicates. As received: Next Gen Stats-style items including Josh Allen Agg% 18.2%. Attributed note: unlike the Oct 29 window (aggressiveness search enumerated in full with zero NGS Agg% data posts), this window's aggressiveness search returned Agg% content as received.
+
+### Endpoints noted this run (as received from the lanes)
+- ftnfantasy.com — @FTNData bio link; the top-up DVOA item puts the full Week 8 DVOA 32 in a linked FTN article (post carries only the top 3). FTN charting/stats; some articles free, data subscriptions paywalled (as received).
+- fantasypoints.com/data (Fantasy Points Data) — subscription for full tables; the account's X posts are free (as received).
+- pff.com — grades/player pages; premium subscription for full grades (as received).
+- dynatyze.com — @DynatyzeFF's app; free tier as received.
+- 32beatwriters.com — @32BeatWriters' site (as received).
+- nfl.com/research — @NFL_Researcher's research hub (as received).
+- statrankings.com — @PattonAnalytics / @MagicSportsGuy chart source (StatRankings), recurring across runs; no new endpoint page opened this run.
+
+### Innovation candidates (attributed notes, not build orders)
+- **QB GOAT Index** (@PattonAnalytics / StatRankings): a 0–100 single-number QB composite published with its pressure-EPA-lost and total-EPA components, and reposted with updated values within the same morning (07:57 and 08:36 posts, both filed) — a composite-plus-components format, updated intra-day.
+- **Coverage-split separation** (@FantasyPtsData): the ASS separation leaderboard split by Man vs Zone and paired with YPRR in one table; echoed at single-player level by @KyleM_FF's Kincaid routes/TPRR/YPRR by coverage and @PFF's A.J. Brown EPA/target + TPRR by coverage — three accounts publishing coverage-conditioned receiver efficiency in one window.
+- **Teammate-presence splits** (@DynatyzeFF): a receiver's production conditioned on a third receiver's presence, published twice in one window in two framings (per-game and season totals).
+- **Actual-vs-expected rushing trio** (@heathcummingssr): yards, success rate, and EPA each shown against their expected values for one back.
+- **Injury-availability probability curve** (@EstablishTheRun): week-by-week DNP/IN percentages six weeks forward for one player.
+- **Single-game EPA/play leaderboard** (@ScottBarrettDFB / Fantasy Points Data): best individual QB games of the season ranked by EPA/play (Purdy's Week 2 at 1.058 top) rather than season aggregates.
+- **Play-caller EPA ranking** (Lane C feed, @PattonAnalytics / StatRankings): EPA attached to play callers as a leaderboard, alongside the same account's Tendency Rating bars from Oct 29.
