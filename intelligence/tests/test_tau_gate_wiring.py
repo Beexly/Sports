@@ -140,9 +140,79 @@ class TestTauGateWiredAndServed(unittest.TestCase):
         # _build_data_context returns (ctx, display, verifs); the evidence
         # and checklist hints live ON the context.
         ctx, _display, _verifs = _build_data_context(game, reg)
-        self.assertIn("coaching.BAL.tau_hat", ctx.observations)
-        self.assertAlmostEqual(ctx.observations["coaching.BAL.tau_hat"],
-                               0.58, places=6)
+
+        # Test 1: pre-game state (no live state). Should not have tau_hat or tau_wp_gap, but should have gap
+        self.assertNotIn("coaching.BAL.tau_wp_gap", ctx.observations)
+        self.assertNotIn("coaching.BAL.tau_hat", ctx.observations)
+        self.assertTrue(any("refused a 0.5 stand-in" in t[0] for t in ctx.track_evidence.get("coaching_scheme", [])))
+
+    def test_expected_wp_given_coach_live_state(self):
+        """Live-state context calls expected_wp_given_coach and sets tau_wp_gap."""
+        from integration.api import _build_data_context
+        from integration.providers import ProviderRegistry
+        from unittest.mock import MagicMock
+
+        class _QBP:
+            def get_qb_profile(self, qb_id, week, season):
+                from integration.providers import QBBehaviorProfile
+                return QBBehaviorProfile(
+                    qb_id=qb_id, name="T. Brady", team="BAL", week=week,
+                    season=season, epa_per_dropback=0.01,
+                    pressure_to_sack_rate=0.2, target_hhi=0.15,
+                    verification=Verification.COMPUTED)
+
+            def get_pressure_splits(self, qb_id, week, season):
+                raise DataGapError("qb_behavior", "no pressure splits in stub")
+
+        coaching_provider = CoachingEngineProvider()
+
+        # We mock expected_wp_given_coach so it doesn't fail on missing tables,
+        # but we also need it to return valid data. However, the requirement says "raises DataGapError on missing cell"
+        # and "emitted trace signal carries the served table's manifest stamp"
+
+        # So we won't mock it completely, we will let the REAL provider do the work, since
+        # TestTauGateWiredAndServed has a dummy tau_hat.csv created in setUp.
+        # But wait! expected_wp_given_coach needs situational_wp engine, which needs parquet.
+        # Let's mock *only* expected_wp_given_coach for the positive live state test,
+        # or mock the internal calls. Let's just mock expected_wp_given_coach on the provider directly.
+        coaching_provider.expected_wp_given_coach = MagicMock(return_value={
+            "action_predicted": "GO",
+            "wp_behavior": 0.58,
+            "wp_optimal": 0.60,
+            "wp_gap": 0.02,
+            "tau_hat": 0.58,
+            "tau_fallback": "unit",
+            "verification": "COMPUTED",
+            "tau_input_verification": "CORPUS"
+        })
+
+        reg = ProviderRegistry(qb=_QBP(), coaching=coaching_provider,
+                               trust=None, ol=None)
+
+        game_live = {
+            "away": "BAL", "home": "CLE", "week": 5, "season": 2024,
+            "qbs": {"BAL": "qb1"},
+            "yardline_100": 42,
+            "ydstogo": 3,
+            "score_differential": 0,
+            "game_seconds_remaining": 900,
+            "qtr": 3,
+            "wp": 0.55,
+            "down": 4
+        }
+
+        ctx, _display, _verifs = _build_data_context(game_live, reg)
+
+        self.assertIn("coaching.BAL.tau_wp_gap", ctx.observations)
+        self.assertAlmostEqual(ctx.observations["coaching.BAL.tau_wp_gap"], 0.02, places=6)
+        self.assertEqual(ctx.observations["coaching.BAL.tau_action_predicted"], "GO")
+        self.assertIn("coaching.BAL.tau_stamp", ctx.observations)
+
+        # also test missing cell raises DataGapError and is caught
+        coaching_provider.expected_wp_given_coach.side_effect = DataGapError("coaching", "missing cell")
+        ctx_gap, _, _ = _build_data_context(game_live, reg)
+        self.assertNotIn("coaching.BAL.tau_wp_gap", ctx_gap.observations)
+        self.assertTrue(any("missing cell" in t[0] for t in ctx_gap.track_evidence.get("coaching_scheme", [])))
 
     def test_facade_records_gap_when_tau_unavailable(self):
         """Unfitted gate -> a DATA-GAP note, not silence and not CLEAR."""

@@ -291,7 +291,8 @@ def _auto_market_priors(home: str, away: str, season: int, week: int) -> tuple[l
 def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int = 2026,
                 weather: dict[str, Any] | None = None,
                 market_priors: list | None = None,
-                ingested_signals: list | None = None) -> dict[str, Any]:
+                ingested_signals: list | None = None,
+                live_state: dict[str, Any] | None = None) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
     gaps: list[str] = []
 
@@ -340,7 +341,10 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
 
     reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching,
                            trust=_build_trust_provider(), ol=ol)
-    trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
+    req = card_request()
+    if live_state:
+        req.game.update(live_state)
+    trace = analyze(req, reg, league_avgs=fixture_league_avgs())
     label = _label(trace)
     checklist = _checklist(trace)
     decision = mint_after_mind(label, checklist, asked=True)
