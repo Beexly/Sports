@@ -191,12 +191,14 @@ jobs:
   # is deliberate -- a suite that fails on its first appearance should be added here
   # on purpose, after it has been seen green.
   #
-  # MEASURED 2026-10-30 on this tree: 20 of the 21 exit 0. `draft-only.test.mjs`
-  # exits 1 because `scripts/post_week6_x_thread.js` is a tracked script that
-  # uploads media and posts a 6-part thread to @GalaxySportsHQ with credentials
-  # from .env.local -- a real draft-only violation the guardrail is right to flag.
-  # It is left in the matrix red rather than dropped: a guardrail removed to make
-  # CI green is the failure this job exists to prevent.
+  # MEASURED 2026-10-31 on this tree: all 21 exit 0. On 2026-10-30, 20 of the 21
+  # exited 0; `draft-only.test.mjs` exited 1 because `scripts/post_week6_x_thread.js`
+  # (a spent week-6 one-off that loaded .env.local credentials and posted a 6-part
+  # thread to @GalaxySportsHQ) referenced the X transport from `scripts/`. The
+  # guardrail was right, and THE GUARDRAIL WAS NOT TOUCHED: the spent script was
+  # removed, which restores the invariant the workers/twitter-bot exception rests
+  # on (zero importers of the transport outside its own directory). A guardrail
+  # removed to make CI green remains the failure this job exists to prevent.
   node-test-guardrails:
     name: Guardrail suite (${{ matrix.suite }})
     runs-on: ubuntu-latest
@@ -226,9 +228,37 @@ jobs:
           - scripts/ops/cron-matrix-from-vercel.test.mjs
           - scripts/ops/free-auto-settle.test.mjs
           - scripts/__tests__/cv-no-synthetic-rng.test.mjs
+        # PER-LEG HISTORY. Two suites verify against REAL history, and CI's
+        # default depth-1 checkout contains none of it: the runs passed locally
+        # (full clone) and failed only in CI.
+        #
+        #  - scripts/factors/index.test.mjs: buildIndex(gitCheck) requires every
+        #    DEAD/CANDIDATE spec's run_sha to RESOLVE to a real commit, and the
+        #    pre-registration check walks `git log --all` for the spec file. That
+        #    needs commits across all refs. `fetch-depth: "0"` here fetches all
+        #    refs' commits; `filter: blob:none` keeps the download to
+        #    commits+trees (the check resolves SHAs and reads spec text at those
+        #    commits, all lazily fetchable) instead of the repo's ~3.8G of blobs.
+        #    "0" is QUOTED on purpose: an unquoted 0 is falsy in Actions
+        #    expressions, and `matrix.fetch_depth || 1` below would silently
+        #    demote it back to a depth-1 checkout.
+        #  - scripts/nova/multihead-inventory.test.mjs: classifyHeadFreshness
+        #    compares against `git rev-parse HEAD~1`, which a depth-1 checkout
+        #    does not contain. Depth 3 gives HEAD~1 (a merge commit's first
+        #    parent) at a trivial cost.
+        include:
+          - suite: scripts/factors/index.test.mjs
+            fetch_depth: "0"
+            fetch_filter: blob:none
+          - suite: scripts/nova/multihead-inventory.test.mjs
+            fetch_depth: "3"
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Legs without an explicit fetch_depth keep the depth-1 default.
+          fetch-depth: ${{ matrix.fetch_depth || 1 }}
+          filter: ${{ matrix.fetch_filter || '' }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
