@@ -31,8 +31,8 @@ interface RedlineWorldProps {
   initialPanel?: Panel;
 }
 
-const WHEEL_STEP = 0.00085; // ultra-smooth progress gained per pixel of wheel deltaY
-const DRAG_RANGE = 640; // pixels of drag for one full journey
+const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full field walk)
+const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
 
 const SEALED_MAIN_CALLS = [
   { matchup: "LAC @ LAR", selection: "LA Rams ML (-270)", market: "Moneyline", conf: "84/100" },
@@ -110,24 +110,24 @@ function clamp01(value: number): number {
 
 function stageFromProgress(progress: number): Stage {
   const p = clamp01(progress);
-  if (p < 0.33) return 0;
-  if (p < 0.68) return 1;
+  if (p < 0.36) return 0;
+  if (p < 0.74) return 1;
   return 2;
 }
 
-/** Smooth 2.5D dolly transform for the stadium turf plate (no warping rotateX or negative-Z shrink). */
+/** Deep, long-scroll 2.5D dolly transform for the stadium turf plate. */
 function cameraTransformAt(progress: number): string {
   const p = clamp01(progress);
-  const scale = 1.02 + p * 0.22;
-  const y = (0.5 - p) * 38;
+  const scale = 1.0 + p * 0.44;
+  const y = (0.5 - p) * 96;
   return `translate3d(0px, ${y.toFixed(2)}px, 0px) scale(${scale.toFixed(4)})`;
 }
 
-/** Smooth forward walk-out dolly transform for the concrete stadium tunnel layer. */
+/** Long forward walk-out dolly transform through the concrete stadium tunnel. */
 function tunnelTransformAt(progress: number): string {
   const p = clamp01(progress);
-  const scale = 1.0 + p * 0.58;
-  const y = -p * 24;
+  const scale = 1.0 + p * 1.35;
+  const y = -p * 54;
   return `translate3d(0px, ${y.toFixed(2)}px, 0px) scale(${scale.toFixed(4)})`;
 }
 
@@ -219,19 +219,20 @@ export function RedlineWorld({
     return () => media.removeEventListener("change", update);
   }, []);
 
-  // Ultra-smooth 60fps scrub loop with silky damping (0.11 lerp)
+  // Long, silky 60fps scrub loop (0.085 lerp for extended field travel)
   useEffect(() => {
     let frame = 0;
     const step = () => {
       const target = progressRef.current;
       const current = renderedRef.current;
-      const next = current + (target - current) * 0.11;
-      const settled = Math.abs(target - next) < 0.0003;
+      const next = current + (target - current) * 0.085;
+      const settled = Math.abs(target - next) < 0.0002;
       renderedRef.current = settled ? target : next;
       const value = renderedRef.current;
       const transform = cameraTransformAt(value);
       const tunnelTransform = tunnelTransformAt(value);
-      const tunnelOpacity = Math.max(0, Math.min(1, 1 - value * 2.15));
+      // Stay in the tunnel from 0.00 -> 0.24, then smoothly emerge onto the open turf by 0.44
+      const tunnelOpacity = Math.max(0, Math.min(1, (0.44 - value) / 0.20));
       if (rootRef.current) rootRef.current.style.setProperty("--scrub", value.toFixed(4));
       if (cameraRef.current) cameraRef.current.style.transform = transform;
       if (tunnelRef.current) {
@@ -482,21 +483,6 @@ export function RedlineWorld({
           </label>
           <button type="button" className="reset-camera" onClick={() => goProgress(0)}>
             RESET <span>↺</span>
-          </button>
-        </div>
-
-        <div className="world-actions" data-no-camera>
-          <button type="button" onClick={() => setPanel(panel === "packs" ? null : "packs")} className={panel === "packs" ? "chosen" : ""}>
-            PACKS <span>→</span>
-          </button>
-          <button type="button" onClick={() => setPanel(panel === "dfs" ? null : "dfs")} className={panel === "dfs" ? "chosen" : ""}>
-            DFS LINEUPS <span>→</span>
-          </button>
-          <button type="button" onClick={() => setPanel(panel === "slate" ? null : "slate")} className={panel === "slate" ? "chosen" : ""}>
-            SEALED BOARD <span>→</span>
-          </button>
-          <button type="button" onClick={() => setPanel("board")} className={panel === "board" || panel === "detail" ? "chosen" : ""}>
-            MATCHUPS <span>→</span>
           </button>
         </div>
 
