@@ -114,12 +114,8 @@
 .world-caption strong { font:800 46px/.86 var(--f-display);letter-spacing:.01em; }
 .world-caption>span:last-child { color:var(--bone-82);font-size:12px; }
 .world-controls { position:absolute;z-index:12;left:50%;bottom:26px;display:flex;align-items:center;gap:17px;transform:translateX(-50%);padding:11px 14px;border:1px solid var(--bone-28);background:var(--ink); }
-.stage-buttons { display:flex;gap:4px; }
-.stage-buttons button { display:flex;align-items:center;gap:7px;min-height:34px;padding:0 10px;border:0;background:transparent;color:var(--bone-58);font-size:9px;font-weight:700;letter-spacing:.08em;white-space:nowrap; }
-.stage-buttons button span { color:var(--bone-58);font-size:8px; }
-.stage-buttons button.active { background:var(--ember);color:var(--ink); }
-.stage-buttons button.active span { color:var(--ink); }
-.journey-slider input { display:block;width:85px;height:16px;accent-color:var(--ember); }
+.scrub-label { color:var(--bone-58);font-size:9px;font-weight:700;letter-spacing:.14em; }
+.journey-slider input { display:block;width:148px;height:16px;accent-color:var(--ember); }
 .reset-camera { padding:8px;border:0;border-left:1px solid var(--bone-28);background:transparent;color:var(--bone-82);font-size:9px;font-weight:700;letter-spacing:.1em;white-space:nowrap; }
 .reset-camera span { margin-left:5px;color:var(--ember);font-size:16px;vertical-align:-1px; }
 .world-actions { position:absolute;z-index:11;top:98px;right:36px;display:flex;flex-direction:column;gap:7px; }
@@ -233,10 +229,7 @@
   .world-caption strong { font-size:36px; }
   .world-caption>span:last-child { font-size:10px; }
   .world-controls { bottom:17px;width:calc(100% - 26px);justify-content:center;gap:8px;padding:8px 7px; }
-  .stage-buttons { flex:1;justify-content:center;gap:1px; }
-  .stage-buttons button { min-height:34px;gap:4px;padding:0 6px;font-size:7px;letter-spacing:.035em; }
-  .stage-buttons button span { font-size:7px; }
-  .journey-slider input { width:45px;height:20px; }
+  .journey-slider input { width:96px;height:20px; }
   .reset-camera { padding:6px;font-size:7px; }
   .world-hint { display:none; }
   .motion-toggle { left:14px;bottom:75px;padding:7px;font-size:7px; }
@@ -260,10 +253,11 @@
   .world-table th,.world-table td { padding:10px 7px;font-size:10px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .world-camera,.world-panel,.gate,.plate-go::after { transition:none!important;animation:none!important; }
+  .world-camera,.world-panel,.gate,.plate-go::after,
+  .plate-camera,.plate-copy,.overhead-board { transition:none!important;animation:none!important; }
 }
 
-/* The wireframe was the sketch. The plate is the product. */
+/* The wireframe was the sketch. The photographic plate is the product. */
 .world-camera,
 .portal-window,
 .world-vignette,
@@ -274,11 +268,36 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: #08090C center / cover no-repeat;
+  overflow: hidden;
+  background: #08090C;
+  perspective: 900px;
+  perspective-origin: 50% 52%;
 }
-.stage-plate-0 { background-image: url("/brand/redline-stadium.png"); background-position: center 58%; }
-.stage-plate-1 { background-image: url("/brand/redline-stadium.png"); background-position: center 58%; }
-.stage-plate-2 { background-image: url("/brand/redline-stadium.png"); background-position: center 72%; }
+
+/* The camera. One element carries the field photograph; its transform is
+   written every frame from CAMERA_KEYS (interpolated on the 0..1 scrub) and
+   its vertical drift rides --scrub, so the field glides instead of snapping. */
+.plate-camera {
+  position: absolute;
+  inset: -16%;
+  background-image: url("/brand/redline-stadium.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center calc(58% + var(--scrub, 0) * 14%);
+  transform-origin: 50% 56%;
+  will-change: transform;
+}
+
+/* Three copy stations cross-fade on the same 0..1 --scrub: nothing mounts or
+   unmounts mid-journey, so the words move with the camera. */
+.plate-copy, .overhead-board { will-change: opacity; }
+.plate-a { opacity: clamp(0, calc((0.34 - var(--scrub, 0)) / 0.34), 1); }
+.plate-b {
+  opacity: clamp(0, min(calc((var(--scrub, 0) - 0.16) / 0.34), calc((0.84 - var(--scrub, 0)) / 0.34)), 1);
+}
+.plate-c { opacity: clamp(0, calc((var(--scrub, 0) - 0.66) / 0.34), 1); }
+.plate-copy[data-active="false"], .overhead-board[data-active="false"] { pointer-events: none; }
+
 .stage-plate::after {
   content: "";
   position: absolute;
@@ -328,6 +347,8 @@
 }
 .plate-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
 .plate-go, .plate-ghost {
+  display: inline-flex;
+  align-items: center;
   min-height: 52px;
   padding: 0 20px;
   font: 700 14px/1 var(--f-body), sans-serif;
@@ -426,3 +447,12 @@
   .plate-copy { bottom: 88px; padding: 22px 18px 24px; }
   .plate-copy h1 { font-size: 3.2rem; }
 }
+
+/* Reduced motion / static view: hold the field still and keep the buy link. */
+.is-static .plate-camera {
+  transform: none !important;
+  background-position: center 58%;
+}
+.is-static .plate-b,
+.is-static .plate-c { display: none; }
+.is-static .plate-a { opacity: 1; }

@@ -31,7 +31,60 @@ interface RedlineWorldProps {
   initialPanel?: Panel;
 }
 
-const STAGE_NAMES = ["FIELD", "LINE OF SCRIMMAGE", "OVERHEAD"] as const;
+interface CameraKey {
+  at: number;
+  x: number;
+  y: number;
+  z: number;
+  rx: number;
+  scale: number;
+}
+
+// One field camera, scrubbed along a 0..1 journey. Three stations: level
+// field, the push to the line, and the overhead vista. Stations 0 and 1 keep
+// the shipped camera vectors verbatim; station 2 replaces the retired
+// wireframe overhead (translate 0/1800/900, rotateX 90) because a 90-degree
+// tilt rotates the flat photograph edge-on and the field disappears.
+const CAMERA_KEYS: CameraKey[] = [
+  { at: 0, x: 0, y: 0, z: 0, rx: 8, scale: 1.03 },
+  { at: 0.5, x: 0, y: 32, z: -330, rx: 9, scale: 1.12 },
+  { at: 1, x: 0, y: 168, z: -420, rx: 16, scale: 1.28 },
+];
+
+const WHEEL_STEP = 0.0016; // progress gained per pixel of wheel deltaY
+const DRAG_RANGE = 520; // pixels of drag for one full journey
+
+function clamp01(value: number): number {
+  return value < 0 ? 0 : value > 1 ? 1 : value;
+}
+
+function stageFromProgress(progress: number): Stage {
+  return Math.round(clamp01(progress) * 2) as Stage;
+}
+
+/** Interpolate the camera transform across CAMERA_KEYS for any 0..1 progress. */
+function cameraTransformAt(progress: number): string {
+  const p = clamp01(progress);
+  let from: CameraKey = CAMERA_KEYS[0] ?? { at: 0, x: 0, y: 0, z: 0, rx: 8, scale: 1.03 };
+  let to: CameraKey = CAMERA_KEYS[CAMERA_KEYS.length - 1] ?? from;
+  for (let i = 0; i < CAMERA_KEYS.length - 1; i += 1) {
+    const a = CAMERA_KEYS[i];
+    const b = CAMERA_KEYS[i + 1];
+    if (a && b && p >= a.at && p <= b.at) {
+      from = a;
+      to = b;
+      break;
+    }
+  }
+  const span = to.at - from.at || 1;
+  const t = clamp01((p - from.at) / span);
+  const mix = (a: number, b: number) => a + (b - a) * t;
+  return [
+    `translate3d(${mix(from.x, to.x).toFixed(2)}px, ${mix(from.y, to.y).toFixed(2)}px, ${mix(from.z, to.z).toFixed(2)}px)`,
+    `rotateX(${mix(from.rx, to.rx).toFixed(2)}deg)`,
+    `scale(${mix(from.scale, to.scale).toFixed(3)})`,
+  ].join(" ");
+}
 
 function price(pack: PickPackageOffering): string {
   return `$${(pack.standardPriceCents / 100).toFixed(0)}`;
@@ -86,6 +139,7 @@ export function RedlineWorld({
   initialStage = 0,
   initialPanel = null,
 }: RedlineWorldProps): JSX.Element {
+  const initialProgress = clamp01(initialStage / 2);
   const [stage, setStage] = useState<Stage>(initialStage);
   const [panel, setPanel] = useState<Panel>(initialPanel);
   const [selectedSlug, setSelectedSlug] = useState(packs[0]?.slug ?? "");
@@ -95,8 +149,15 @@ export function RedlineWorld({
   const [query, setQuery] = useState("");
   const [slot, setSlot] = useState("all");
   const [sort, setSort] = useState<"kickoff" | "matchup">("kickoff");
-  const pointer = useRef<{ x: number; y: number } | null>(null);
-  const cameraLock = useRef(false);
+  const pointer = useRef<{ x: number; y: number; start: number } | null>(null);
+  const rootRef = useRef<HTMLElement>(null);
+  const cameraRef = useRef<HTMLDivElement>(null);
+  const worldCameraRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLInputElement>(null);
+  const loopRef = useRef<(() => void) | null>(null);
+  const progressRef = useRef(initialProgress); // target
+  const renderedRef = useRef(initialProgress); // eased value that drives the DOM
+  const stageRef = useRef<Stage>(initialStage);
   const staticMode = userStatic || systemReduced;
   const selectedPack = packs.find((pack) => pack.slug === selectedSlug) ?? packs[0];
 
@@ -108,8 +169,53 @@ export function RedlineWorld({
     return () => media.removeEventListener("change", update);
   }, []);
 
-  const goStage = useCallback((value: number) => {
-    setStage(Math.max(0, Math.min(2, value)) as Stage);
+  // The scrub loop. Ease the rendered value toward the target every frame and
+  // write the interpolated camera transform (plus --scrub, which drives the
+  // copy cross-fade) straight to the DOM, so the field glides continuously
+  // instead of snapping between screens.
+  useEffect(() => {
+    let frame = 0;
+    const step = () => {
+      const target = progressRef.current;
+      const current = renderedRef.current;
+      const next = current + (target - current) * 0.16;
+      const settled = Math.abs(target - next) < 0.0004;
+      renderedRef.current = settled ? target : next;
+      const value = renderedRef.current;
+      const transform = cameraTransformAt(value);
+      if (rootRef.current) rootRef.current.style.setProperty("--scrub", value.toFixed(4));
+      if (cameraRef.current) cameraRef.current.style.transform = transform;
+      if (worldCameraRef.current) worldCameraRef.current.style.transform = transform;
+      if (sliderRef.current) sliderRef.current.value = String(value);
+      const nextStage = stageFromProgress(value);
+      if (nextStage !== stageRef.current) {
+        stageRef.current = nextStage;
+        setStage(nextStage);
+      }
+      frame = settled ? 0 : window.requestAnimationFrame(step);
+    };
+    loopRef.current = () => {
+      if (!frame) frame = window.requestAnimationFrame(step);
+    };
+    loopRef.current();
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      loopRef.current = null;
+    };
+  }, []);
+
+  // Eased motion for wheel, drag, and the "scroll the field" affordance.
+  const goProgress = useCallback((value: number) => {
+    progressRef.current = clamp01(value);
+    loopRef.current?.();
+  }, []);
+
+  // 1:1 motion for the scrubber so the thumb tracks the pointer exactly.
+  const setScrub = useCallback((value: number) => {
+    const next = clamp01(value);
+    progressRef.current = next;
+    renderedRef.current = next;
+    loopRef.current?.();
   }, []);
 
   const closePanel = useCallback(() => setPanel(null), []);
@@ -132,32 +238,23 @@ export function RedlineWorld({
   };
   const isCameraTarget = (target: HTMLElement) =>
     target.closest("[data-no-camera],button,input,select,textarea,a,[role=dialog]");
-  const stepCamera = (direction: 1 | -1) => {
-    if (cameraLock.current) return;
-    cameraLock.current = true;
-    goStage(stage + direction);
-    window.setTimeout(() => {
-      cameraLock.current = false;
-    }, 1100);
-  };
   const wheel = (event: WheelEvent<HTMLDivElement>) => {
     if (isCameraTarget(event.target as HTMLElement)) return;
     event.preventDefault();
-    if (Math.abs(event.deltaY) < 12 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-    stepCamera(event.deltaY > 0 ? 1 : -1);
+    if (Math.abs(event.deltaY) < 2 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    goProgress(progressRef.current + event.deltaY * WHEEL_STEP);
   };
   const pointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (isCameraTarget(event.target as HTMLElement)) return;
-    pointer.current = { x: event.clientX, y: event.clientY };
+    pointer.current = { x: event.clientX, y: event.clientY, start: progressRef.current };
     event.currentTarget.setPointerCapture(event.pointerId);
   };
   const pointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!pointer.current) return;
+    // Drag up advances the field, drag down rewinds it, mapped continuously
+    // (one full journey per DRAG_RANGE pixels) instead of a step per gesture.
     const dy = pointer.current.y - event.clientY;
-    if (Math.abs(dy) > 72) {
-      stepCamera(dy > 0 ? 1 : -1);
-      pointer.current = null;
-    }
+    goProgress(pointer.current.start + dy / DRAG_RANGE);
   };
 
   const filteredFixtures = useMemo(() => {
@@ -180,19 +277,15 @@ export function RedlineWorld({
       );
   }, [writeups, query, slot, sort]);
 
-  const cameraTransform = staticMode
-    ? "translate3d(0px, 1800px, 900px) rotateX(90deg)"
-    : [
-        "translate3d(0px, 0px, 0px) rotateX(8deg)",
-        "translate3d(0px, 32px, -330px) rotateX(9deg)",
-        "translate3d(0px, 1800px, 900px) rotateX(90deg)",
-      ][stage];
+  const headline = writeups[0];
 
   return (
     <main
+      ref={rootRef}
       id="main-content"
       data-testid="redline-world"
       className={`gse-world stage-active-${stage}${staticMode ? " is-static" : ""}`}
+      style={{ "--scrub": initialProgress.toFixed(4) } as CSSProperties}
     >
       <span id="revenue-pillars" className="sr-only" />
       <span id="pack-cards" className="sr-only" />
@@ -204,61 +297,56 @@ export function RedlineWorld({
         onPointerMove={pointerMove}
         onPointerUp={() => { pointer.current = null; }}
         onPointerCancel={() => { pointer.current = null; }}
-        aria-label="Interactive three-dimensional football stadium"
+        aria-label="Scroll or drag across the field; the field camera follows your movement."
       >
         <div className="world-photograph" aria-hidden="true" />
-        <section className={`stage-plate stage-plate-${stage}`} aria-label={STAGE_NAMES[stage]}>
-          {stage === 0 && (
-            <div className="plate-copy" data-no-camera>
-              <p className="plate-kicker">Camera 01 · Field</p>
-              <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
-              <p>Plain-English NFL picks, props, and parlays. Three packs. One slate. The official calls stay locked until you buy.</p>
-              <div className="plate-actions">
-                <button type="button" className="plate-go" onClick={() => goStage(1)}>Walk to the line →</button>
-                <button type="button" className="plate-ghost" onClick={() => { goStage(2); setPanel("packs"); }}>See the packs</button>
-              </div>
+        <section className="stage-plate" aria-label="The field">
+          <div className="plate-camera" ref={cameraRef} aria-hidden="true" />
+          <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
+            <p className="plate-kicker">This week · NFL desk</p>
+            <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
+            <p>Plain-English NFL picks, props, and parlays. Three packs. One slate. The official calls stay locked until you buy.</p>
+            <div className="plate-actions">
+              <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Scroll the field →</button>
+              <Link className="plate-ghost" href="/packages">See the packs</Link>
             </div>
-          )}
-          {stage === 1 && (
-            <div className="plate-copy" data-no-camera>
-              <p className="plate-kicker">Camera 02 · Line of scrimmage</p>
-              <h1>{writeups[0]?.matchup ?? "This week's slate"}</h1>
-              <p>{writeups[0] ? sanitizePlainFootballText(writeups[0].schemeMatchup.coverageShell) : "Official spread, total, props, and parlays open inside the pack you buy."}</p>
-              <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
-              <div className="plate-actions">
-                {writeups[0] && <button type="button" className="plate-ghost" onClick={() => openFixture(writeups[0])}>Read the matchup</button>}
-                <button type="button" className="plate-go" onClick={() => goStage(2)}>Choose a gate →</button>
-              </div>
+          </div>
+          <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
+            <p className="plate-kicker">This week's slate</p>
+            <h1>{headline?.matchup ?? "The slate is loading"}</h1>
+            <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official spread, total, props, and parlays open inside the pack you buy."}</p>
+            <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
+            <div className="plate-actions">
+              {headline && <button type="button" className="plate-ghost" onClick={() => openFixture(headline)}>Read the matchup</button>}
+              <Link className="plate-go" href="/packages">Choose a pack →</Link>
             </div>
-          )}
-          {stage === 2 && (
-            <div className="overhead-board" data-no-camera>
-              <p className="plate-kicker">Camera 03 · Overhead</p>
-              <h1>Pick your gate.</h1>
-              <p className="plate-deck">The field is the store. Tap a gate to review the pack and unlock it.</p>
-              <div className="gate-row">
-                {packs.map((pack, index) => (
-                  <button
-                    key={pack.slug}
-                    type="button"
-                    className={`real-gate${selectedSlug === pack.slug ? " selected" : ""}`}
-                    onClick={() => openPurchase(pack)}
-                  >
-                    <small>0{index + 1}</small>
-                    <strong>{pack.title.split("(")[0]?.trim()}</strong>
-                    <b>{price(pack)}</b>
-                  </button>
-                ))}
-              </div>
-              <div className="sideline">
-                {writeups.slice(0, 6).map((fixture) => (
-                  <button key={fixture.id} type="button" onClick={() => openFixture(fixture)}>{fixture.matchup}</button>
-                ))}
-              </div>
+          </div>
+          <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
+            <p className="plate-kicker">Pick your pack</p>
+            <h1>Pick your gate.</h1>
+            <p className="plate-deck">The field is the store. Tap a gate to review the pack and unlock it.</p>
+            <div className="gate-row">
+              {packs.map((pack, index) => (
+                <button
+                  key={pack.slug}
+                  type="button"
+                  className={`real-gate${selectedSlug === pack.slug ? " selected" : ""}`}
+                  onClick={() => openPurchase(pack)}
+                >
+                  <small>0{index + 1}</small>
+                  <strong>{pack.title.split("(")[0]?.trim()}</strong>
+                  <b>{price(pack)}</b>
+                </button>
+              ))}
             </div>
-          )}
+            <div className="sideline">
+              {writeups.slice(0, 6).map((fixture) => (
+                <button key={fixture.id} type="button" onClick={() => openFixture(fixture)}>{fixture.matchup}</button>
+              ))}
+            </div>
+          </div>
         </section>
-        <div className="world-camera" style={{ transform: cameraTransform }}>
+        <div className="world-camera" ref={worldCameraRef} style={{ transform: cameraTransformAt(initialProgress) }}>
           <div className={`world-stage stage-${stage}`}>
             <div className="tunnel-shell" aria-hidden="true">
               <div className="tunnel-floor" />
@@ -365,46 +453,24 @@ export function RedlineWorld({
             <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state"><span className="live-dot" /> THIS WEEK <b>·</b> {packs.length} PACKS</div>
-          <Link className="header-menu" href="/fantasy/dfs">DFS OPTIMIZER <span>→</span></Link>
+          <Link className="header-menu" href="/packages">ALL PACKS <span>→</span></Link>
         </header>
-        <div className="world-caption" aria-live="polite">
-          <span className="caption-index">CAMERA / 0{stage + 1}</span>
-          <strong>{STAGE_NAMES[stage]}</strong>
-          <span>
-            {stage === 0
-              ? "Leave the noise in the tunnel."
-              : stage === 1
-                ? "See the field. Read the decision."
-                : "Select a pack gate or a matchup."}
-          </span>
-        </div>
         <div className="world-controls" data-no-camera>
-          <div className="stage-buttons" role="group" aria-label="Camera stages">
-            {STAGE_NAMES.map((name, index) => (
-              <button
-                type="button"
-                key={name}
-                className={stage === index ? "active" : ""}
-                aria-pressed={stage === index}
-                onClick={() => goStage(index)}
-              >
-                <span>0{index + 1}</span>{name}
-              </button>
-            ))}
-          </div>
+          <span className="scrub-label">FIELD</span>
           <label className="journey-slider">
-            <span className="sr-only">Camera journey position</span>
+            <span className="sr-only">Field camera position</span>
             <input
-              aria-label="Camera journey position"
+              ref={sliderRef}
+              aria-label="Field camera position"
               type="range"
               min="0"
-              max="2"
-              step="1"
-              value={stage}
-              onChange={(event) => goStage(Number(event.target.value))}
+              max="1"
+              step="0.001"
+              defaultValue={initialProgress}
+              onChange={(event) => setScrub(Number(event.target.value))}
             />
           </label>
-          <button type="button" className="reset-camera" onClick={() => goStage(0)}>
+          <button type="button" className="reset-camera" onClick={() => goProgress(0)}>
             RESET <span>↺</span>
           </button>
         </div>
@@ -420,12 +486,12 @@ export function RedlineWorld({
           </button>
         </div>
         <div className="world-hint" aria-hidden="true">
-          {staticMode ? "STATIC FIELD · MOTION REDUCED" : "SCROLL / DRAG TO MOVE THROUGH THE FIELD"}
+          {staticMode ? "FIELD HELD STILL · MOTION REDUCED" : "SCROLL / DRAG TO MOVE THROUGH THE FIELD"}
         </div>
         <div className="touch-controls" data-no-camera>
-          <button type="button" aria-label="Move camera back" onClick={() => goStage(stage - 1)}>−</button>
-          <span>CAMERA</span>
-          <button type="button" aria-label="Move camera forward" onClick={() => goStage(stage + 1)}>+</button>
+          <button type="button" aria-label="Move the field back" onClick={() => goProgress(progressRef.current - 0.5)}>−</button>
+          <span>FIELD</span>
+          <button type="button" aria-label="Move the field forward" onClick={() => goProgress(progressRef.current + 0.5)}>+</button>
         </div>
         <button
           type="button"
