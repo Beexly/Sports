@@ -43,48 +43,48 @@ export const SALARY_CAP = 50000;
 export const DFS_SLOTS: readonly DfsPos[] = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX" as DfsPos, "DST"];
 
 export const DFS_SLATE: readonly DfsPlayer[] = [
-  // QB
-  d("dqb1", "Jalen Hurts", "QB", "PHI", "DAL", 7600, 22.5, 14, 34, 0.18),
-  d("dqb2", "Lamar Jackson", "QB", "BAL", "CIN", 7200, 21.0, 13, 32, 0.15),
-  d("dqb3", "Joe Burrow", "QB", "CIN", "BAL", 7000, 20.5, 12, 31, 0.14),
-  d("dqb4", "Jared Goff", "QB", "DET", "GB", 6400, 19.0, 11, 29, 0.10),
-  d("dqb5", "Geno Smith", "QB", "SEA", "LAR", 5800, 17.5, 9, 28, 0.06),
+  // QB (2026 Week 8 Verified Active Pool — Jalen Hurts is on IR; Tanner McKee active for PHI; Kyler Murray on MIN)
+  d("dqb1", "Dak Prescott", "QB", "DAL", "ARI", 6300, 23.5, 15, 35, 0.16),
+  d("dqb2", "Lamar Jackson", "QB", "BAL", "BUF", 7600, 24.2, 15, 36, 0.15),
+  d("dqb3", "Joe Burrow", "QB", "CIN", "TEN", 6600, 22.8, 14, 34, 0.18),
+  d("dqb4", "Caleb Williams", "QB", "CHI", "SEA", 6100, 18.1, 11, 31, 0.08),
+  d("dqb5", "Kyler Murray", "QB", "MIN", "DET", 5600, 17.5, 10, 28, 0.06),
   // RB
-  d("drb1", "Bijan Robinson", "RB", "ATL", "TB", 8200, 20.0, 12, 30, 0.22),
-  d("drb2", "Jahmyr Gibbs", "RB", "DET", "GB", 7600, 18.5, 11, 28, 0.18),
-  d("drb3", "Saquon Barkley", "RB", "PHI", "DAL", 6800, 16.0, 8, 27, 0.14),
-  d("drb4", "Christian McCaffrey", "RB", "SF", "SEA", 6400, 15.0, 9, 23, 0.12),
-  d("drb5", "Derrick Henry", "RB", "BAL", "CIN", 6000, 14.5, 6, 26, 0.10),
-  d("drb6", "Josh Jacobs", "RB", "GB", "DET", 5200, 11.0, 5, 20, 0.08),
-  d("drb7", "Joe Mixon", "RB", "HOU", "IND", 4600, 9.5, 3, 19, 0.05),
-  d("drb8", "Bucky Irving", "RB", "TB", "ATL", 4200, 7.5, 2, 16, 0.03),
-  d("drb9", "Javonte Williams", "RB", "DEN", "LV", 4000, 6.0, 1, 15, 0.02),
+  d("drb1", "Bijan Robinson", "RB", "ATL", "TB", 8000, 24.4, 14, 34, 0.22),
+  d("drb2", "James Cook III", "RB", "BUF", "BAL", 7900, 26.0, 15, 35, 0.18),
+  d("drb3", "Saquon Barkley", "RB", "PHI", "WAS", 6800, 19.5, 11, 29, 0.14),
+  d("drb4", "Jaylen Warren", "RB", "PIT", "CLE", 6600, 21.1, 12, 30, 0.15),
+  d("drb5", "Kenneth Walker III", "RB", "KC", "DEN", 6400, 17.8, 10, 27, 0.11),
+  d("drb6", "Tony Pollard", "RB", "TEN", "CIN", 5300, 18.5, 10, 27, 0.12),
+  d("drb7", "Jonah Coleman", "RB", "DEN", "KC", 4300, 22.2, 12, 31, 0.19),
+  d("drb8", "Bucky Irving", "RB", "TB", "ATL", 6100, 15.5, 8, 24, 0.09),
+  d("drb9", "Javonte Williams", "RB", "DAL", "ARI", 5800, 15.2, 8, 24, 0.08),
   // WR
-  d("dwr0", "A.J. Brown", "WR", "PHI", "DAL", 6900, 16.5, 8, 28, 0.15), // Jalen Hurts stack
-  d("dwr0b", "Zay Flowers", "WR", "BAL", "CIN", 6300, 15.0, 7, 27, 0.12), // Lamar Jackson stack
-  d("dwr1", "Tyreek Hill", "WR", "MIA", "NYJ", 8000, 19.0, 11, 30, 0.20),
-  d("dwr2", "Ja'Marr Chase", "WR", "CIN", "BAL", 7400, 17.5, 10, 28, 0.17),
-  d("dwr3", "Puka Nacua", "WR", "LAR", "SEA", 6800, 16.0, 7, 29, 0.13),
-  d("dwr4", "Stefon Diggs", "WR", "BUF", "MIA", 6600, 15.5, 9, 25, 0.14),
-  d("dwr5", "DK Metcalf", "WR", "PIT", "CIN", 5800, 13.0, 6, 24, 0.10), // Traded to PIT in 2026 under Aaron Rodgers
-  d("dwr5b", "Germie Bernard", "WR", "PIT", "CIN", 3800, 12.5, 5, 22, 0.08), // 2026 breakout slot technician
-  d("dwr6", "Rashee Rice", "WR", "KC", "DEN", 5400, 12.0, 4, 26, 0.09),
-  d("dwr7", "CeeDee Lamb", "WR", "DAL", "PHI", 5000, 10.5, 5, 20, 0.07),
-  d("dwr8", "Brian Thomas Jr.", "WR", "JAX", "HOU", 4600, 9.0, 4, 18, 0.05),
-  d("dwr9", "Malik Nabers", "WR", "NYG", "WAS", 4200, 7.5, 3, 17, 0.04),
-  d("dwr10", "Jakobi Meyers", "WR", "LV", "DEN", 4000, 6.0, 2, 16, 0.02),
+  d("dwr0", "A.J. Brown", "WR", "PHI", "WAS", 6800, 18.5, 10, 29, 0.14), // Tanner McKee stack (Smith/Wicks OUT, Hurts IR)
+  d("dwr0b", "Zay Flowers", "WR", "BAL", "BUF", 7200, 28.0, 16, 38, 0.16), // Lamar Jackson stack
+  d("dwr1", "Jaxon Smith-Njigba", "WR", "SEA", "CHI", 9100, 25.4, 15, 36, 0.20),
+  d("dwr2", "Ja'Marr Chase", "WR", "CIN", "TEN", 8300, 24.5, 14, 35, 0.19),
+  d("dwr3", "Puka Nacua", "WR", "LAR", "LAC", 8900, 25.8, 15, 36, 0.18),
+  d("dwr4", "Tee Higgins", "WR", "CIN", "TEN", 6700, 25.0, 14, 34, 0.17),
+  d("dwr5", "DK Metcalf", "WR", "PIT", "CLE", 5800, 15.0, 8, 25, 0.10), // PIT WR in 2026
+  d("dwr5b", "Wan'Dale Robinson", "WR", "TEN", "CIN", 5400, 18.4, 10, 28, 0.11), // TEN WR in 2026 (Carnell Tate OUT)
+  d("dwr6", "Chris Godwin Jr.", "WR", "TB", "ATL", 6100, 19.2, 11, 29, 0.13), // Emeka Egbuka OUT
+  d("dwr7", "CeeDee Lamb", "WR", "DAL", "ARI", 8100, 27.8, 16, 38, 0.21),
+  d("dwr8", "Rome Odunze", "WR", "CHI", "SEA", 4600, 10.3, 5, 22, 0.07),
+  d("dwr9", "Kalif Raymond", "WR", "CHI", "SEA", 3600, 7.9, 4, 18, 0.04),
+  d("dwr10", "Jakobi Meyers", "WR", "JAX", "IND", 4900, 13.5, 7, 23, 0.08),
   // TE
-  d("dte1", "Travis Kelce", "TE", "KC", "DEN", 6500, 15.0, 8, 24, 0.18),
-  d("dte2", "Sam LaPorta", "TE", "DET", "GB", 5200, 11.5, 6, 19, 0.12),
-  d("dte3", "Tucker Kraft", "TE", "GB", "DET", 4200, 9.0, 4, 16, 0.08),
-  d("dte4", "Dalton Kincaid", "TE", "BUF", "MIA", 3400, 6.5, 2, 14, 0.04),
-  d("dte5", "Colby Parkinson", "TE", "LAR", "SEA", 3000, 5.0, 1, 13, 0.02),
+  d("dte1", "Travis Kelce", "TE", "KC", "DEN", 5500, 14.5, 8, 24, 0.14),
+  d("dte2", "Dallas Goedert", "TE", "PHI", "WAS", 4700, 25.3, 14, 34, 0.22), // Smith & Wicks OUT (+50 yds Sinkhorn boost)
+  d("dte3", "Jake Ferguson", "TE", "DAL", "ARI", 4800, 13.8, 7, 22, 0.10),
+  d("dte4", "Dalton Kincaid", "TE", "BUF", "BAL", 4400, 11.5, 5, 20, 0.08),
+  d("dte5", "Greg Dulcich", "TE", "MIA", "NE", 3200, 10.2, 4, 19, 0.06),
   // DST
-  d("ddst1", "Ravens DST", "DST", "BAL", "CIN", 3800, 9.0, 3, 18, 0.14),
-  d("ddst2", "Falcons DST", "DST", "ATL", "TB", 3400, 8.0, 2, 16, 0.10),
-  d("ddst3", "Seahawks DST", "DST", "SEA", "LAR", 2800, 6.5, 1, 14, 0.06),
-  d("ddst4", "Texans DST", "DST", "HOU", "IND", 2400, 5.5, 0, 13, 0.04),
-  d("ddst5", "Broncos DST", "DST", "DEN", "LV", 2200, 5.0, 0, 12, 0.03),
+  d("ddst1", "Jets DST", "DST", "NYJ", "LV", 2800, 8.6, 3, 17, 0.14),
+  d("ddst2", "Falcons DST", "DST", "ATL", "TB", 2500, 6.2, 2, 15, 0.10),
+  d("ddst3", "Steelers DST", "DST", "PIT", "CLE", 3400, 8.2, 3, 16, 0.12),
+  d("ddst4", "Rams DST", "DST", "LAR", "LAC", 3100, 7.8, 2, 15, 0.09),
+  d("ddst5", "Broncos DST", "DST", "DEN", "KC", 2700, 6.8, 1, 14, 0.06),
 ];
 
 export const DFS_POS_HEX: Record<DfsPos, string> = {
