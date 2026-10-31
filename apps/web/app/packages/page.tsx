@@ -4,7 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
-  LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
   getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,
