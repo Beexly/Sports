@@ -16,10 +16,11 @@ export function extname(p = "") {
   const idx = b.lastIndexOf(".");
   return idx > 0 ? b.slice(idx) : "";
 }
-export default {
+const emptyPath = {
   resolve,
   join,
   dirname,
   basename,
   extname,
 };
+export default emptyPath;

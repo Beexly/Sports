@@ -128,6 +128,11 @@ export function PaywallRevealCard({
     } catch {
       // ignore storage errors
     }
+    // `handleInlineVerify` is declared below and closes over `tokenInput`, so
+    // listing it here would re-run this on every keystroke in the receipt box.
+    // The intent is "when the card mounts or the session/package changes", and
+    // the mount-time silent verify only needs the token captured at that moment.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pkg.slug, isUnlocked, initialSessionId]);
 
   async function handleInlineVerify(overrideToken?: string, silent = false) {

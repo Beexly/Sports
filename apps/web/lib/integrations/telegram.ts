@@ -161,10 +161,10 @@ export async function sendTelegramMessage(
       ok: true,
       messageId: data?.result?.message_id,
     };
-  } catch (error: any) {
+  } catch (error) {
     return {
       ok: false,
-      error: error?.message || "Network error sending Telegram message",
+      error: error instanceof Error ? error.message : "Network error sending Telegram message",
     };
   }
 }

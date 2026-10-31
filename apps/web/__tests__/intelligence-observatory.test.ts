@@ -3,8 +3,6 @@ import {
   buildIntelligenceGrowthSnapshot,
   CANONICAL_QUAD_ENGINE_DEFAULTS,
   CANONICAL_ROUTER_FUNNEL_DEFAULTS,
-  CANONICAL_AUTOPSY_DEFAULTS,
-  CANONICAL_PIPELINE_DEFAULTS,
 } from "@/lib/intelligence/growth-observatory";
 
 describe("Live Intelligence & Reasoning Growth Observatory", () => {

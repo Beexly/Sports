@@ -178,9 +178,9 @@ export async function POST(req: Request) {
       messageId: result.messageId,
       previewReply: reply,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { ok: false, error: error?.message || "Telegram webhook error" },
+      { ok: false, error: error instanceof Error ? error.message : "Telegram webhook error" },
       { status: 500 },
     );
   }

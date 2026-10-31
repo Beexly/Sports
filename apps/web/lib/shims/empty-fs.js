@@ -64,7 +64,7 @@ export const promises = {
   readdir,
   stat,
 };
-export default {
+const emptyFs = {
   existsSync,
   readdirSync,
   readFileSync,
@@ -87,3 +87,4 @@ export default {
   execSync,
   promises,
 };
+export default emptyFs;
