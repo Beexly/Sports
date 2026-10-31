@@ -1262,13 +1262,26 @@ def simulate_matchup_pbp(
             home_rb1_share_emp = float(np.clip(home_rb1_share_emp + cb_boost, 0.35, 0.88))
 
     # Stage 1 / Stage 4: 2x2 QB Disguise x Blitz Matrix + MNAR Missingness Encoding
+    pbp_metrics = _get_cached_consolidated_pbp_metrics()
+    aw_tm_m = (pbp_metrics.get("teams") or {}).get(_aw_key) or {}
+    hm_tm_m = (pbp_metrics.get("teams") or {}).get(_hm_key) or {}
     hm_shells = hm_ov.get("coverage_shells_w1_w7") or {}
     aw_shells = aw_ov.get("coverage_shells_w1_w7") or {}
     hm_disguise_rate = float(hm_shells.get("two_high_shell_pct", 48.0)) * 0.62 / 100.0
     aw_disguise_rate = float(aw_shells.get("two_high_shell_pct", 48.0)) * 0.62 / 100.0
 
-    away_qb_2x2 = evaluate_qb_matchup_2x2(away, opp_disguise_rate=hm_disguise_rate, opp_blitz_rate=home_def_blitz_pct)
-    home_qb_2x2 = evaluate_qb_matchup_2x2(home, opp_disguise_rate=aw_disguise_rate, opp_blitz_rate=away_def_blitz_pct)
+    away_qb_2x2 = evaluate_qb_matchup_2x2(
+        away,
+        opp_disguise_rate=hm_disguise_rate,
+        opp_blitz_rate=home_def_blitz_pct,
+        opp_blitz_epa_allowed=hm_tm_m.get("ftn_def_blitz_epa"),
+    )
+    home_qb_2x2 = evaluate_qb_matchup_2x2(
+        home,
+        opp_disguise_rate=aw_disguise_rate,
+        opp_blitz_rate=away_def_blitz_pct,
+        opp_blitz_epa_allowed=aw_tm_m.get("ftn_def_blitz_epa"),
+    )
     mnar_flags = encode_mnar_missingness({
         "away_qb_questionable": None if "QB_QUESTIONABLE" in away_inj else 0.0,
         "home_qb_questionable": None if "QB_QUESTIONABLE" in home_inj else 0.0,
@@ -1344,28 +1357,31 @@ def simulate_matchup_pbp(
     home_eff_mult = sum(home_sh[i] * (exec_mults.get(rn, 0.90) if rn in home_inj else 1.0) for i, rn in enumerate(role_names))
     away_drop = sum(float(epa_table[fl]) for fl in away_inj if fl in epa_table)
     home_drop = sum(float(epa_table[fl]) for fl in home_inj if fl in epa_table)
+    # Blend preseason sealed priors with 2026 C-285 schedule-adjusted ridge (e.g., LAC putrid -0.2572 off_epa,
+    # Brian Flores' MIN #1 -0.1614 def_epa allowed) and correct the sign of def_epa_allowed (+ opp_def_epa_allowed).
+    aw_off_blended = 0.55 * float(tr_away["off_epa"]) + 0.45 * float(aw_tm_m.get("c285_off_ridge_epa", tr_away["off_epa"]))
+    hm_off_blended = 0.55 * float(tr_home["off_epa"]) + 0.45 * float(hm_tm_m.get("c285_off_ridge_epa", tr_home["off_epa"]))
+    aw_def_allowed_blended = 0.50 * float(tr_away["def_epa"]) + 0.50 * float(aw_tm_m.get("c285_def_ridge_epa", tr_away["def_epa"]))
+    hm_def_allowed_blended = 0.50 * float(tr_home["def_epa"]) + 0.50 * float(hm_tm_m.get("c285_def_ridge_epa", tr_home["def_epa"]))
     away_net_epa = (
-        ((tr_away["off_epa"] - away_drop) * away_eff_mult)
-        - tr_home["def_epa"]
+        ((aw_off_blended - away_drop) * away_eff_mult)
+        + hm_def_allowed_blended
         + 0.35 * float(away_qb_2x2["epa_shift_vs_baseline"])
     )
     home_net_epa = (
-        ((tr_home["off_epa"] - home_drop) * home_eff_mult)
-        - tr_away["def_epa"]
+        ((hm_off_blended - home_drop) * home_eff_mult)
+        + aw_def_allowed_blended
         + (tr_home["hfa"] / 79.1)
         + 0.35 * float(home_qb_2x2["epa_shift_vs_baseline"])
     )
 
     # Consolidated X & IG Sweep Kernels (C-281, C-285, C-287, C-297, C-316, ALTITUDE, Patton POE, Locktalk 1Q/Vulture)
-    pbp_metrics = _get_cached_consolidated_pbp_metrics()
     c285_away = compute_c285_iterative_ridge_matchup_delta(_aw_key, _hm_key, pbp_metrics, tendency_net_epa=away_net_epa)
     c285_home = compute_c285_iterative_ridge_matchup_delta(_hm_key, _aw_key, pbp_metrics, tendency_net_epa=home_net_epa)
     c316_away = compute_c316_havoc_rate_modifier(_aw_key, _hm_key, pbp_metrics)
     c316_home = compute_c316_havoc_rate_modifier(_hm_key, _aw_key, pbp_metrics)
     c297_away = compute_c297_referee_crew_penalty_kernel(is_home_offense=False)
     c297_home = compute_c297_referee_crew_penalty_kernel(is_home_offense=True)
-    aw_tm_m = (pbp_metrics.get("teams") or {}).get(_aw_key) or {}
-    hm_tm_m = (pbp_metrics.get("teams") or {}).get(_hm_key) or {}
     patton_away = compute_patton_poe_p2s_mitigation(
         raw_pressure_prob=away_sack_prob * 4.5,
         qb_fault_sack_share=float(aw_tm_m.get("patton_qb_fault_sack_share") or 0.18),

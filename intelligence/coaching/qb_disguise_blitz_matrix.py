@@ -377,11 +377,14 @@ def evaluate_qb_matchup_2x2(
     qb_name: str,
     opp_disguise_rate: float,
     opp_blitz_rate: float,
+    opp_blitz_epa_allowed: Optional[float] = None,
 ) -> Dict[str, object]:
     """
     Yule-Simpson stratified QB matchup evaluator (`prob-weber.pdf` Lect. 6.5):
     Computes expected EPA/DB, YPA, INT hazard multiplier, and sack multiplier
-    conditioned on the opponent's disguise rate, blitz rate, and QB pressure survival archetype.
+    conditioned on the opponent's disguise rate, blitz rate, opponent blitz EPA allowed
+    (e.g., Brian Flores' MIN #1 simulated-pressure defense at -0.2144 EPA/play),
+    and QB pressure survival archetype.
     Accepts either QB full name ('Patrick Mahomes') or team abbreviation ('KC').
     """
     p = resolve_qb_profile(qb_name)
@@ -416,8 +419,16 @@ def evaluate_qb_matchup_2x2(
     shell_epa = (1.0 - disg_rate) * p.static_epa_db + disg_rate * p.disguised_epa_db
     shell_ypa = (1.0 - disg_rate) * p.static_ypa + disg_rate * p.disguised_ypa
 
-    # Blitz pressure interaction (weighted by opponent blitz rate above/below 26% NFL avg)
-    blitz_delta = (bltz_rate - 0.26) * p.blitz_epa_play
+    # Blitz pressure interaction: condition on opponent's actual FTN blitz EPA allowed when provided
+    # so Brian Flores' 72.2% simulated-pressure defense (-0.2144 blitz EPA allowed) is never treated as a generic 5-man blitz.
+    if opp_blitz_epa_allowed is not None:
+        eff_blitz_epa = 0.45 * p.blitz_epa_play + 0.55 * float(opp_blitz_epa_allowed)
+        blitz_delta = (bltz_rate - 0.26) * eff_blitz_epa
+        if bltz_rate > 0.50 and float(opp_blitz_epa_allowed) < -0.10:
+            # Exotic simulated-pressure / zero-look disguise penalty (Brian Flores MIN archetype)
+            blitz_delta += 0.45 * float(opp_blitz_epa_allowed)
+    else:
+        blitz_delta = (bltz_rate - 0.26) * p.blitz_epa_play
     expected_epa_db = shell_epa + blitz_delta
     epa_edge_vs_baseline = expected_epa_db - base_epa
 

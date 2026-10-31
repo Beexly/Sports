@@ -275,6 +275,18 @@ def build_player_profiles(pw_df: pd.DataFrame, inj_df: pd.DataFrame) -> Dict[str
         comp_pg = float(grp["completions"].sum()) / gp
         att_pg = float(grp["attempts"].sum()) / gp
 
+        # Detect recent role phase-outs (e.g., DEN phasing out J.K. Dobbins to 6 carries / 0 targets in Week 7
+        # while Jonah Coleman and RJ Harvey take over)
+        is_phased_out = False
+        if pos == "RB" and gp >= 4:
+            prior_carries = float(grp["carries"].iloc[:-1].mean())
+            latest_carries = float(grp["carries"].iloc[-1])
+            latest_targets = float(grp["targets"].iloc[-1])
+            if prior_carries >= 10.0 and latest_carries <= 0.45 * prior_carries and latest_targets == 0.0:
+                is_phased_out = True
+                rush_yds_pg = 0.30 * rush_yds_pg + 0.70 * float(grp["rushing_yards"].iloc[-1])
+                carries_pg = 0.30 * carries_pg + 0.70 * latest_carries
+
         tm_rec_yds_pg = max(float(tt.get("receiving_yards", 1500.0)) / tm_gp, 120.0)
         tm_rec_pg = max(float(tt.get("receptions", 140.0)) / tm_gp, 12.0)
         tm_rush_yds_pg = max(float(tt.get("rushing_yards", 750.0)) / tm_gp, 60.0)
@@ -307,6 +319,7 @@ def build_player_profiles(pw_df: pd.DataFrame, inj_df: pd.DataFrame) -> Dict[str
             "position": pos,
             "player_gp": gp,
             "is_out_w8": (tm, nm) in out_set,
+            "is_phased_out": is_phased_out,
             "rec_yds_pg": rec_yds_pg,
             "rec_pg": rec_pg,
             "tgt_pg": tgt_pg,
@@ -357,7 +370,7 @@ def build_player_profiles(pw_df: pd.DataFrame, inj_df: pd.DataFrame) -> Dict[str
         )
         rbs = sorted(
             [r for r in tm_rows if r["position"] == "RB"],
-            key=lambda x: x["carries_pg"] * x["player_gp"],
+            key=lambda x: x["carries_pg"] * x["player_gp"] * (0.35 if x.get("is_phased_out") else 1.0),
             reverse=True,
         )
         wrs = sorted(
