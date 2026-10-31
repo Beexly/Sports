@@ -283,9 +283,9 @@
 .plate-copy {
   position: absolute;
   left: 0;
-  bottom: 104px;
-  width: min(680px, 94vw);
-  padding: 32px 40px 36px;
+  bottom: 112px;
+  width: min(720px, 94vw);
+  padding: 48px 48px 40px;
   background: #08090C;
   border-top: 3px solid #FF4D2E;
 }
@@ -339,35 +339,53 @@
 
 .overhead-board {
   position: absolute;
-  top: 104px;
-  right: 210px;
-  bottom: 100px;
-  left: 28px;
+  top: 96px;
+  right: 196px;
+  bottom: 108px;
+  left: 36px;
   display: flex;
   flex-direction: column;
-  padding: 28px 28px 18px;
+  gap: 28px;
+  padding: 40px 40px 28px;
   border: 1px solid #EDE8E0;
   border-top: 3px solid #FF4D2E;
-  background: rgba(8, 9, 12, 0.82);
+  background: rgba(8, 9, 12, 0.88);
+  overflow: auto;
 }
-.overhead-board h1 { font-size: clamp(3rem, 6vw, 5.2rem); }
 .gate-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 8px;
+  gap: 20px;
 }
 .real-gate {
   display: flex;
-  min-height: 168px;
+  min-height: 210px;
   flex-direction: column;
   justify-content: space-between;
-  padding: 14px 14px 16px;
+  gap: 18px;
+  padding: 22px 20px 24px;
   border: 1px solid #EDE8E0;
   border-left: 3px solid #FF4D2E;
   background: #08090C;
   color: #EDE8E0;
   text-align: left;
+}
+.sideline {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: 8px;
+  border-top: 1px solid rgba(237, 232, 224, 0.28);
+}
+.sideline button {
+  padding: 22px 8px;
+  border: 0;
+  border-bottom: 1px solid rgba(237, 232, 224, 0.2);
+  background: transparent;
+  color: #EDE8E0;
+  font: 700 22px/1.15 var(--f-display), sans-serif;
+  text-align: left;
+  text-transform: uppercase;
 }
 .real-gate:hover, .real-gate.selected { background: #FF4D2E; color: #1A0703; }
 .real-gate small { font: 700 11px/1 var(--f-body), sans-serif; letter-spacing: 0.12em; }
@@ -376,22 +394,6 @@
   text-transform: uppercase;
 }
 .real-gate b { font: 700 28px/1 var(--f-body), sans-serif; font-variant-numeric: tabular-nums; }
-.sideline {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: auto;
-  border-top: 1px solid rgba(237, 232, 224, 0.28);
-}
-.sideline button {
-  padding: 12px 8px 12px 0;
-  border: 0;
-  border-bottom: 1px solid rgba(237, 232, 224, 0.16);
-  background: transparent;
-  color: #EDE8E0;
-  font: 700 18px/1.05 var(--f-display), sans-serif;
-  text-align: left;
-  text-transform: uppercase;
-}
 .sideline button:hover { color: #FF4D2E; }
 @media (max-width: 900px) {
   .overhead-board { right: 12px; left: 12px; top: 84px; bottom: 92px; padding: 16px; }

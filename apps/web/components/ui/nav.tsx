@@ -20,11 +20,10 @@ export interface RevenuePillar {
  * Exact routes representing core commercial and tactical value streams.
  */
 export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
-  { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "This Week's Football Betting Packs" },
-  { label: "CAR @ GB final", href: "/packages/tnf-all-in-pack", desc: "Finished. Not for sale." },
-  { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday Best Bets Pack" },
-  { label: "DFS", href: "/fantasy/dfs", desc: "Daily Fantasy Lineup Optimizer" },
-  { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Weekly All-Access Pass" },
+  { label: "Picks", href: "/picks", desc: "Locked Week 8 board" },
+  { label: "Props", href: "/props", desc: "Locked props and watchlist" },
+  { label: "Packs", href: "/packages", desc: "Galaxy Picks packages" },
+  { label: "DFS", href: "/fantasy/dfs", desc: "DFS lineup optimizer" },
 ];
 
 export const COMMERCIAL_REVENUE_PILLARS = FIVE_REVENUE_PILLARS;

@@ -4,10 +4,10 @@ import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/bran
 
 /** Condensed footer — five destinations, not a sitemap. */
 const FOOTER_LINKS = [
-  { label: "GALAXY PICKS (PAID)", href: "/packages" },
-  { label: "Game Dossiers", href: "/packages#slate-dossiers" },
+  { label: "Picks", href: "/picks" },
+  { label: "Props", href: "/props" },
+  { label: "Packs", href: "/packages" },
   { label: "DFS", href: "/fantasy/dfs" },
-  { label: "Pricing", href: "/pricing" },
 ] as const;
 
 const SOCIAL_LINKS = [

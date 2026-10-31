@@ -9,6 +9,7 @@ export interface SealedRow {
   edge: number;
   model_median: number;
   rationale: string;
+  confidence_display?: string;
   market_line: number;
   trigger_odds?: number;
   fair_odds?: number;

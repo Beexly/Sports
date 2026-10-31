@@ -354,7 +354,7 @@ export function RedlineWorld({
         <header className="world-header">
           <Link className="brand-lockup" href="/" aria-label="Galaxy Sports Edge home">
             <span className="brand-mark">G<span>/</span></span>
-            <span className="brand-name">GALAXY SPORTS EDGE<small>REDLINE LEDGER · NFL DESK</small></span>
+            <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state"><span className="live-dot" /> THIS WEEK <b>·</b> {packs.length} PACKS</div>
           <Link className="header-menu" href="/fantasy/dfs">DFS OPTIMIZER <span>→</span></Link>
@@ -488,8 +488,7 @@ export function RedlineWorld({
             <p className="fixture-copy mt-4">{sanitizePlainFootballText(selectedFixture.paceOfPlay.notes)}</p>
             <p className="panel-footnote">Official spread, total, props, and parlays stay inside the packs.</p>
             <div className="detail-nav">
-              <button type="button" className="subtle-action" onClick={() => setPanel("board")}>← BACK TO MATCHUPS</button>
-              <Link className="panel-action" href={`/games/${selectedFixture.gameId}`}>FULL PREVIEW →</Link>
+              <button type="button" className="subtle-action" onClick={() => setPanel("board")}>Back to matchups</button>
             </div>
           </PanelFrame>
         )}
