@@ -6,8 +6,8 @@
   },
   {
     "signal": "tau_hat_served",
-    "fitted": false,
-    "reason": "Served table is a point fit. Walk-forward passed and was not swapped. BLOCKED-ON-PRECISION."
+    "fitted": true,
+    "reason": "Served table is the walk-forward table (swapped 2026-10-30): each served season fit only on strictly-prior seasons, point_in_time true. Verified on its own walk-forward protocol at +11.1585pp held-out (n=3,988; gate >=3pp), with the recorded +6.7703pp measurement reproduced exactly as the control in an independent audit. Coverage unchanged in kind (55 unit cells of 1,277): validity fixed, precision still limited - fallback levels are not per-team measurements."
   },
   {
     "signal": "weather_prior",
