@@ -1,0 +1,11 @@
+# Redline Ledger
+
+Redline Ledger treats composition as an editor’s desk after midnight: firm columns, abrupt changes of scale, and the visible trace of a revision. Space is not empty atmosphere; it is the margin where judgment lives. Forms remain rectangular and materially honest, with registration marks, clipped rules, and hard alignment doing the work that decorative effects usually do. Every placement should feel measured by hand, then measured again.
+
+Color behaves like ink, never light. A near-black ground and warm bone stock carry the reading surface, while a single ember impression marks only the decisive correction, selected figure, or active state. There are no luminous halos, translucent panels, spectral fades, or floating objects. Texture comes from grain, contact-print contrast, dry roller gaps, and imperfect paper edges. The palette must feel painstakingly mixed for one press run rather than selected from a software theme.
+
+Scale creates the rhythm. Oversized condensed letterforms sit beside small, disciplined data without turning every label into a caption. Dense rows open into abrupt fields of quiet; a single figure can hold an entire column when the evidence justifies it. Numerals remain aligned and exact, their clarity the result of master-level typesetting rather than stylistic effects. Nothing is stretched, outlined, or made to perform for attention.
+
+Images enter as documentary evidence. Contact-sheet cropping, direct flash, sideline clutter, worn chalk, paper fibers, and human workspaces replace pristine cinematic spectacle. Imperfection is not a filter applied afterward; it is the subject’s material truth. The final work should look labored over by someone at the absolute top of their field: art-directed crops, intentional tonal compression, and no arbitrary generated decoration.
+
+The system rewards sustained viewing. Repeated rules and reference marks establish a recognizable cadence, then one deliberate break reveals the story. Text stays sparse and functional on visual artifacts; meaning lives first in arrangement, scale, and contrast. Every detail must survive the final inspection as a meticulously crafted object, not a template with a different logo.

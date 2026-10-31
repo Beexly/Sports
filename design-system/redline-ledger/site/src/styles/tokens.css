@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ground: #08090c;
+  --color-panel: #12141a;
+  --color-panel-2: #191c23;
+  --color-line: #31353f;
+  --color-bone: #ede8e0;
+  --color-fog: #c4bfb6;
+  --color-mist: #8f8a82;
+  --color-ember: #ff4d2e;
+  --color-ember-ink: #1a0703;
+  --color-paper: #f4f1eb;
+  --color-ink: #101114;
+  --color-paper-line: #d8d0c4;
+  --color-ember-on-paper: #c22e1a;
+  --font-display: "Big Shoulders", sans-serif;
+  --font-data: "IBM Plex Sans", sans-serif;
+}
+
+:root {
+  --ground: #08090c;
+  --panel: #12141a;
+  --panel-2: #191c23;
+  --line: #31353f;
+  --bone: #ede8e0;
+  --fog: #c4bfb6;
+  --mist: #8f8a82;
+  --ember: #ff4d2e;
+  --ember-ink: #1a0703;
+  --paper: #f4f1eb;
+  --ink: #101114;
+  --paper-line: #d8d0c4;
+  --ember-on-paper: #c22e1a;
+  --font-display: "Big Shoulders", sans-serif;
+  --font-data: "IBM Plex Sans", sans-serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+* { box-sizing: border-box; }
+html { background: var(--ground); color-scheme: dark; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--bone);
+  font-family: var(--font-data);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+a { color: inherit; }
+::selection { background: var(--ember); color: var(--ember-ink); }
+:focus-visible { outline: 2px solid var(--ember); outline-offset: 4px; }
+
+.tabular-nums,
+.num,
+.projection,
+.salary,
+.score,
+.edge,
+.ownership,
+.lineup-table td:nth-child(n+3),
+.card .primary-number,
+.card .secondary-stat {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.primary-number {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-weight: 600;
+  font-size: 1.25rem;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 4.5ch;
+}
+
+.num-col {
+  text-align: right;
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .motion-safe-only { transform: none !important; }
+}

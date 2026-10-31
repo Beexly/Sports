@@ -1,0 +1,68 @@
+{
+  "assets": [
+    {
+      "name": "hero-sideline",
+      "reviewed": true,
+      "source": "higgsfield-derivative",
+      "jobId": "3a766422-3dac-442a-b10f-dcd4293d1df0",
+      "model": "text2image_soul_v2",
+      "transformation": "Crop (36,390)-(1960,1088), grayscale contact-print tone; all spheres, borders, pseudo-text and color casts removed",
+      "sha256": "04d48f642ce508f354145eb61c747541fc7915122d6c4a360d1deb8577aeaec2"
+    },
+    {
+      "name": "field-chalk",
+      "reviewed": true,
+      "source": "higgsfield-derivative",
+      "jobId": "3a766422-3dac-442a-b10f-dcd4293d1df0",
+      "model": "text2image_soul_v2",
+      "transformation": "Alternate crop (540,510)-(1740,1088) from approved sideline source, grayscale contact-print tone",
+      "sha256": "1d06f62732bdad1c661fed3b5e59934832b65710d8d6fd4e0828897cddd61b32"
+    },
+    {
+      "name": "contact-sheet-square",
+      "reviewed": true,
+      "source": "higgsfield-derivative",
+      "jobId": "3a766422-3dac-442a-b10f-dcd4293d1df0",
+      "model": "text2image_soul_v2",
+      "transformation": "Square crop from approved sideline source, grayscale contact-print tone",
+      "sha256": "6939a35aba80f6fa40fb3fe7360353f9965de9b3ef0df804a58947610e4e1098"
+    },
+    {
+      "name": "football-seams-portrait",
+      "reviewed": true,
+      "source": "higgsfield-derivative",
+      "jobId": "7470705c-1bb3-4015-9821-ba3d741aa222",
+      "model": "text2image_soul_v2",
+      "transformation": "Laces-only crop (40,1510)-(1080,1880), grayscale tone, recompose on dark portrait stock with one ember rule",
+      "sha256": "28021405d19b47b3301192ee5113029f892b82998668e9c1ee035015acc7262f"
+    },
+    {
+      "name": "stats-desk",
+      "reviewed": true,
+      "source": "designed-fallback",
+      "reason": "Soul job blocked by grace_daily_limit_reached; deterministic desk illustration retained",
+      "sha256": "3dd40a079fdf3dd1fb8bc7d7a3c9f87dfcc4a09490f39c833f609513e0babd9c"
+    },
+    {
+      "name": "empty-grandstand",
+      "reviewed": true,
+      "source": "designed-fallback",
+      "reason": "Soul job blocked by grace_daily_limit_reached; deterministic grandstand texture retained",
+      "sha256": "f466c489461353ab4d9849d27c0299fdf3b29f3ade207a68637cd7b88a61fc98"
+    },
+    {
+      "name": "chain-marker-portrait",
+      "reviewed": true,
+      "source": "designed-fallback",
+      "reason": "Soul job blocked by grace_daily_limit_reached; deterministic field texture retained",
+      "sha256": "feb29ffad0defe5f979e2a2d90464184a09f67ade88437f86b62abb17d8335ab"
+    },
+    {
+      "name": "paper-grain-square",
+      "reviewed": true,
+      "source": "designed-fallback",
+      "reason": "Original Soul texture rejected for pseudo-text and logos; deterministic risograph stock retained",
+      "sha256": "920c42170c880b92778d497ca15cc19185977b5f7e16a94dfe339c69e2a5eff3"
+    }
+  ]
+}

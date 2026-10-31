@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
-import { Inter, Barlow_Condensed, Chakra_Petch } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import {
   BRAND_META,
@@ -38,9 +38,9 @@ import {
 // Retiring Exo 2, JetBrains Mono and Instrument Serif also removes three Google
 // font downloads from every route. Do not re-introduce a second family without
 // re-opening Law 1.
-const brandFont = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const brandFont = localFont({
+  src: "./fonts/inter-latin.woff2",
+  weight: "400 600",
   variable: "--f-body",
   display: "swap",
 });
@@ -50,16 +50,21 @@ const brandFont = Inter({
 // wordmark via --f-word. Body, figures and numerals stay Inter with global
 // tabular figures — Law 1's evidence requirement (claim + sample size at the
 // same optical size) is untouched. next/font, zero added network requests.
-const displayFont = Barlow_Condensed({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const displayFont = localFont({
+  src: [
+    { path: "./fonts/barlow-condensed-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/barlow-condensed-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/barlow-condensed-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--f-cond",
   display: "swap",
 });
 
-const wordmarkFont = Chakra_Petch({
-  subsets: ["latin"],
-  weight: ["600", "700"],
+const wordmarkFont = localFont({
+  src: [
+    { path: "./fonts/chakra-petch-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/chakra-petch-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--f-word",
   display: "swap",
 });
