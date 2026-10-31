@@ -361,55 +361,50 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
-            <p className="plate-kicker">REDZONE · WEEK 8 SEALED NFL DESK</p>
+            <p className="plate-kicker">REDZONE · WEEK 8 NFL DESK</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
             <p>
-              Plain-English NFL picks, player props, correlated Same-Game Parlays, and our standalone $39.99 DFS Pro Pack — all on one unified RedZone board.
+              Plain-English NFL picks, player props, Same-Game Parlays, and Daily Fantasy lineups — all on one unified board.
             </p>
-            <div className="record-pill">
-              <strong>OFFICIAL NEW ENGINE RECORD: 31-11-0 · +18.56u</strong>
-              <span>Prior 16-5-0 (+10.45u) · TNF CAR@GB 15-6-0 (+8.11u) · 42 Official Staked Plays</span>
-            </div>
             <div className="plate-actions">
-              <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Walk onto the field →</button>
-              <button type="button" className="plate-ghost" onClick={() => goProgress(1)}>Choose a pack (4) →</button>
-              <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>Standalone DFS ($39.99)</button>
+              <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Enter the field →</button>
+              <button type="button" className="plate-ghost" onClick={() => goProgress(1)}>View packs</button>
             </div>
           </div>
 
           <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
-            <p className="plate-kicker">LINE OF SCRIMMAGE · 13 WEEK 8 MATCHUPS</p>
+            <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 8</p>
             <h1>{headline?.matchup ?? "Week 8 NFL Slate"}</h1>
-            <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "11 official main-line calls, 18 locked player props, 13 correlated SGPs, and 2 optimal DFS lineups."}</p>
-            <div className="scrimmage-rule"><span>REDZONE SCRIMMAGE · 31-11-0 (+18.56u)</span><b /></div>
+            <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official game calls, player props, Same-Game Parlays, and optimal DFS lineups."}</p>
+            <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
             <div className="plate-actions">
-              {headline && <button type="button" className="plate-ghost" onClick={() => openFixture(headline)}>Read matchup dossier</button>}
-              <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>View sealed calls &amp; props (29)</button>
-              <button type="button" className="plate-go" onClick={() => goProgress(1)}>Pick your gate →</button>
+              {headline && <button type="button" className="plate-ghost" onClick={() => openFixture(headline)}>Read matchup</button>}
+              <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>View sealed board</button>
+              <button type="button" className="plate-go" onClick={() => goProgress(1)}>Choose a pack →</button>
             </div>
           </div>
 
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
             <div className="overhead-header">
               <div>
-                <p className="plate-kicker">REDZONE STOREFRONT · UNIFIED NFL &amp; DFS</p>
+                <p className="plate-kicker">REDZONE STOREFRONT</p>
                 <h1>Pick your gate.</h1>
-                <p className="plate-deck">Four packs on one unified site — including our standalone $39.99 RedZone DFS Pro Pack. Tap any gate to review or unlock.</p>
+                <p className="plate-deck">Select any pack below to review what’s inside and unlock instant access.</p>
               </div>
               <div className="overhead-quick-links">
-                <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>DFS Lineups &amp; 16-Player Pool ($39.99)</button>
-                <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>All 11 Calls, 18 Props &amp; 13 SGPs</button>
+                <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>Preview DFS Lineups &amp; Pool</button>
+                <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>Preview Sealed Calls &amp; Props</button>
               </div>
             </div>
             <div className="gate-row">
-              {packs.map((pack, index) => (
+              {packs.map((pack) => (
                 <button
                   key={pack.slug}
                   type="button"
                   className={`real-gate${selectedSlug === pack.slug ? " selected" : ""}`}
                   onClick={() => openPurchase(pack)}
                 >
-                  <small>GATE / 0{index + 1} · {pack.badge ?? packScope(pack)}</small>
+                  <small>{pack.badge ?? "WEEK 8 PACK"}</small>
                   <strong>{pack.title.split("(")[0]?.trim()}</strong>
                   <span className="gate-sub">{pack.subtitle}</span>
                   <b>{price(pack)}</b>
@@ -442,10 +437,10 @@ export function RedlineWorld({
         <header className="world-header">
           <Link className="brand-lockup" href="/" aria-label="Galaxy Sports Edge home">
             <span className="brand-mark">G<span>/</span></span>
-            <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE LEDGER · NFL DESK</small></span>
+            <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state">
-            <span className="live-dot" /> RECORD: 31-11-0 (+18.56u) <b>·</b> 13 NFL GAMES <b>·</b> {packs.length} PACKS
+            <span className="live-dot" /> VERIFIED RECORD: 31-11 (+18.56u)
           </div>
           <Link className="header-menu" href="/packages">ALL PACKS <span>→</span></Link>
         </header>
@@ -456,21 +451,21 @@ export function RedlineWorld({
             className={`stage-pill${stage === 0 ? " active" : ""}`}
             onClick={() => goProgress(0)}
           >
-            01 TUNNEL
+            TUNNEL
           </button>
           <button
             type="button"
             className={`stage-pill${stage === 1 ? " active" : ""}`}
             onClick={() => goProgress(0.5)}
           >
-            02 SCRIMMAGE
+            SCRIMMAGE
           </button>
           <button
             type="button"
             className={`stage-pill${stage === 2 ? " active" : ""}`}
             onClick={() => goProgress(1)}
           >
-            03 PACK GATES
+            PACKS
           </button>
           <label className="journey-slider">
             <span className="sr-only">Field camera position</span>
@@ -492,19 +487,16 @@ export function RedlineWorld({
 
         <div className="world-actions" data-no-camera>
           <button type="button" onClick={() => setPanel(panel === "packs" ? null : "packs")} className={panel === "packs" ? "chosen" : ""}>
-            PACKS <span>{String(packs.length).padStart(2, "0")}</span>
+            PACKS <span>→</span>
           </button>
           <button type="button" onClick={() => setPanel(panel === "dfs" ? null : "dfs")} className={panel === "dfs" ? "chosen" : ""}>
-            DFS PACK <span>$39.99</span>
+            DFS LINEUPS <span>→</span>
           </button>
           <button type="button" onClick={() => setPanel(panel === "slate" ? null : "slate")} className={panel === "slate" ? "chosen" : ""}>
-            SEALED BOARD <span>29</span>
+            SEALED BOARD <span>→</span>
           </button>
           <button type="button" onClick={() => setPanel("board")} className={panel === "board" || panel === "detail" ? "chosen" : ""}>
-            MATCHUPS <span>{String(writeups.length).padStart(2, "0")}</span>
-          </button>
-          <button type="button" onClick={() => setPanel("compare")} className={panel === "compare" ? "chosen" : ""}>
-            COMPARE <span>→</span>
+            MATCHUPS <span>→</span>
           </button>
         </div>
 
