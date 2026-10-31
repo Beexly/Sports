@@ -21,7 +21,7 @@ import {
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 import "./redline-world.css";
 
-type Panel = "packs" | "compare" | "board" | "detail" | "purchase" | null;
+type Panel = "packs" | "compare" | "board" | "detail" | "purchase" | "dfs" | "slate" | null;
 type Stage = 0 | 1 | 2;
 
 interface RedlineWorldProps {
@@ -31,59 +31,104 @@ interface RedlineWorldProps {
   initialPanel?: Panel;
 }
 
-interface CameraKey {
-  at: number;
-  x: number;
-  y: number;
-  z: number;
-  rx: number;
-  scale: number;
-}
+const WHEEL_STEP = 0.00085; // ultra-smooth progress gained per pixel of wheel deltaY
+const DRAG_RANGE = 640; // pixels of drag for one full journey
 
-// One field camera, scrubbed along a 0..1 journey. Three stations: level
-// field, the push to the line, and the overhead vista. Stations 0 and 1 keep
-// the shipped camera vectors verbatim; station 2 replaces the retired
-// wireframe overhead (translate 0/1800/900, rotateX 90) because a 90-degree
-// tilt rotates the flat photograph edge-on and the field disappears.
-const CAMERA_KEYS: CameraKey[] = [
-  { at: 0, x: 0, y: 0, z: 0, rx: 8, scale: 1.03 },
-  { at: 0.5, x: 0, y: 32, z: -330, rx: 9, scale: 1.12 },
-  { at: 1, x: 0, y: 168, z: -420, rx: 16, scale: 1.28 },
-];
+const SEALED_MAIN_CALLS = [
+  { matchup: "LAC @ LAR", selection: "LA Rams ML (-270)", market: "Moneyline", conf: "84/100" },
+  { matchup: "LAC @ LAR", selection: "LA Rams -6.5 (-110)", market: "Spread", conf: "84/100" },
+  { matchup: "LAC @ LAR", selection: "LAC Team Total UNDER 18.5 (-114)", market: "Derivative", conf: "83/100" },
+  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers ML (-192)", market: "Moneyline", conf: "82/100" },
+  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers -3.5 (-110)", market: "Spread", conf: "82/100" },
+  { matchup: "LV @ NYJ", selection: "New York Jets ML (-122)", market: "Moneyline", conf: "81/100" },
+  { matchup: "LV @ NYJ", selection: "New York Jets -1.5 (-110)", market: "Spread", conf: "81/100" },
+  { matchup: "KC @ DEN", selection: "Kansas City Chiefs ML (-118)", market: "Moneyline", conf: "79/100" },
+  { matchup: "KC @ DEN", selection: "Kansas City Chiefs -1.5 (-110)", market: "Spread", conf: "79/100" },
+  { matchup: "ARI @ DAL", selection: "Arizona Cardinals +7.0 (-110)", market: "Spread", conf: "76/100" },
+  { matchup: "CHI @ SEA", selection: "Chicago Bears ML (+142)", market: "Moneyline", conf: "74/100" },
+] as const;
 
-const WHEEL_STEP = 0.0016; // progress gained per pixel of wheel deltaY
-const DRAG_RANGE = 520; // pixels of drag for one full journey
+const SEALED_PROPS = [
+  { matchup: "BAL @ BUF", player: "Devontez Walker (BAL)", prop: "Receiving Yards OVER 0.5", conf: "95/100" },
+  { matchup: "MIN @ DET", player: "Sione Vaki (DET)", prop: "Rushing Yards OVER 4.5", conf: "92/100" },
+  { matchup: "BAL @ BUF", player: "Ray Davis (BUF)", prop: "Rushing Yards OVER 4.5", conf: "90/100" },
+  { matchup: "PHI @ WAS", player: "Dyami Brown (WAS)", prop: "Receiving Yards OVER 12.5", conf: "85/100" },
+  { matchup: "NE @ MIA", player: "Jaylen Wright (MIA)", prop: "Rushing Attempts OVER 4.5", conf: "84/100" },
+  { matchup: "TEN @ CIN", player: "Dohnte Meyers (CIN)", prop: "Receiving Yards OVER 13.5", conf: "82/100" },
+  { matchup: "TEN @ CIN", player: "Drew Sample (CIN)", prop: "Receiving Yards OVER 7.5", conf: "81/100" },
+  { matchup: "MIN @ DET", player: "Isaac TeSlaa (DET)", prop: "Receiving Yards OVER 17.5", conf: "81/100" },
+  { matchup: "NE @ MIA", player: "Efton Chism III (NE)", prop: "Receiving Yards OVER 15.5", conf: "80/100" },
+  { matchup: "KC @ DEN", player: "J.K. Dobbins (DEN)", prop: "Rushing Yards OVER 21.5", conf: "80/100" },
+  { matchup: "LV @ NYJ", player: "Michael Mayer (LV)", prop: "Receptions OVER 2.5", conf: "79/100" },
+  { matchup: "PHI @ WAS", player: "Treylon Burks (WAS)", prop: "Receiving Yards OVER 21.5", conf: "78/100" },
+  { matchup: "CHI @ SEA", player: "Kalif Raymond (CHI)", prop: "Receiving Yards OVER 21.5", conf: "78/100" },
+  { matchup: "ARI @ DAL", player: "Tyler Goodson (DAL)", prop: "Rushing Yards OVER 21.5", conf: "77/100" },
+  { matchup: "ATL @ TB", player: "Jahan Dotson (ATL)", prop: "Receiving Yards OVER 21.5", conf: "77/100" },
+  { matchup: "ATL @ TB", player: "Chris Godwin Jr. (TB)", prop: "Receptions OVER 3.5", conf: "76/100" },
+  { matchup: "ARI @ DAL", player: "Jake Ferguson (DAL)", prop: "Receiving Yards OVER 14.5", conf: "75/100" },
+  { matchup: "CLE @ PIT", player: "Quinshon Judkins (CLE)", prop: "Receptions OVER 1.5", conf: "74/100" },
+] as const;
+
+const SEALED_SGPS = [
+  { matchup: "BAL @ BUF", legs: "Zay Flowers 70+ Rec Yds · James Cook III 75+ Rush+Rec Yds · Josh Allen Anytime Rush TD", odds: "Fair +252 / Book +340" },
+  { matchup: "TEN @ CIN", legs: "CIN -11.5 · Tee Higgins 70+ Rec Yds · Samaje Perine Over 22.5 Rush Yds", odds: "Fair +214 / Book +290" },
+  { matchup: "ARI @ DAL", legs: "ARI +7.0 · Jake Ferguson Over 14.5 Rec Yds · Kendrick Bourne Over 3.5 Receptions", odds: "Fair +192 / Book +275" },
+  { matchup: "MIN @ DET", legs: "Kyler Murray Under 225.5 Pass Yds · Will Reichard Over 1.5 FGM · Isaac TeSlaa Over 17.5 Rec Yds", odds: "Fair +143 / Book +215" },
+  { matchup: "LV @ NYJ", legs: "NYJ ML (-122) · Braelon Allen Anytime TD · Michael Mayer Over 2.5 Receptions", odds: "Fair +135 / Book +205" },
+  { matchup: "CLE @ PIT", legs: "PIT -3.5 · Chris Boswell Over 1.5 FGM · Quinshon Judkins Over 1.5 Receptions", odds: "Fair +175 / Book +245" },
+  { matchup: "ATL @ TB", legs: "Chris Godwin Jr. Over 3.5 Receptions · Chris Godwin Jr. Over 30.5 Rec Yds · Jahan Dotson Over 21.5 Rec Yds", odds: "Fair -120 / Book +120" },
+  { matchup: "IND @ JAX", legs: "Trevor Lawrence Over 1.5 Pass TDs · Jakobi Meyers Over 35.5 Rec Yds · Chris Rodriguez Jr. Over 6.5 Rush Att", odds: "Fair +157 / Book +225" },
+  { matchup: "LAC @ LAR", legs: "LA -6.5 · LAC Team Total Under 18.5 · Nate Landman Under 8.5 Tackles+Ast", odds: "Fair +114 / Book +175" },
+  { matchup: "KC @ DEN", legs: "KC ML (-118) · Patrick Mahomes Over 225.5 Pass Yds · J.K. Dobbins Over 21.5 Rush Yds", odds: "Fair +132 / Book +200" },
+  { matchup: "NE @ MIA", legs: "Jaylen Wright Over 4.5 Rush Att · Jaylen Wright Over 14.5 Rush Yds · Efton Chism III Over 15.5 Rec Yds", odds: "Fair -159 / Book +100" },
+  { matchup: "PHI @ WAS", legs: "Dyami Brown Over 12.5 Rec Yds · Treylon Burks Over 21.5 Rec Yds · Rachaad White Anytime TD", odds: "Fair +107 / Book +160" },
+  { matchup: "CHI @ SEA", legs: "CHI ML (+142) · Kalif Raymond Over 21.5 Rec Yds · Rome Odunze Over 2.5 Receptions", odds: "Fair +165 / Book +280" },
+] as const;
+
+const DFS_CORE_POOL = [
+  { pos: "QB", player: "Jalen Hurts (PHI)", sal: "$7,600", proj: "23.4 pts", why: "Goal-line tush-push TD equity + 1READ leverage vs Washington man-blitz." },
+  { pos: "QB", player: "Caleb Williams (CHI)", sal: "$6,100", proj: "20.8 pts", why: "High-pace dome environment + off-script scramble floor vs Seattle two-high." },
+  { pos: "RB", player: "Bijan Robinson (ATL)", sal: "$8,000", proj: "22.1 pts", why: "Elite route participation (81/100) + interior LB mismatch vs Tampa Bay." },
+  { pos: "RB", player: "Saquon Barkley (PHI)", sal: "$8,200", proj: "21.9 pts", why: "Explosive rush rate vs Washington light boxes + home-run breakaway ceiling." },
+  { pos: "RB", player: "Breece Hall (NYJ)", sal: "$7,100", proj: "19.8 pts", why: "Positive game script (+9.5 sim margin vs LV) + checkdown target monopoly." },
+  { pos: "RB", player: "De'Von Achane (MIA)", sal: "$6,900", proj: "19.4 pts", why: "Slot/perimeter motion usage + explosive outside-zone creases vs New England." },
+  { pos: "WR", player: "Garrett Wilson (NYJ)", sal: "$6,300", proj: "17.8 pts", why: "93/100 route participation + 1.03x first-read target share multiplier." },
+  { pos: "WR", player: "Terry McLaurin (WAS)", sal: "$6,600", proj: "17.5 pts", why: "Alpha deep aDOT isolation vs Philadelphia perimeter quarters." },
+  { pos: "WR", player: "DJ Moore (CHI)", sal: "$5,900", proj: "16.9 pts", why: "Designed screen + intermediate YAC hub vs Seattle zone shells." },
+  { pos: "WR", player: "Rome Odunze (CHI)", sal: "$5,300", proj: "15.6 pts", why: "Red-zone end-zone target share + salary-saving double-stack leverage." },
+  { pos: "WR", player: "Jaxon Smith-Njigba (SEA)", sal: "$6,200", proj: "17.1 pts", why: "High-volume slot option routes vs Chicago underneath zone." },
+  { pos: "WR", player: "Wan'Dale Robinson (NYG)", sal: "$4,900", proj: "14.8 pts", why: "High-floor PPR hot-read valve against interior pressure." },
+  { pos: "TE", player: "Travis Kelce (KC)", sal: "$5,200", proj: "14.9 pts", why: "Middle-of-field zone beater vs Vance Joseph blitz pressure." },
+  { pos: "TE", player: "Kyle Pitts (ATL)", sal: "$4,300", proj: "12.8 pts", why: "Seam mismatch vs Tampa Bay Cover-3 linebackers." },
+  { pos: "DST", player: "Jets DST (NYJ)", sal: "$3,200", proj: "9.8 pts", why: "Interior trench pressure + sack/turnover floor vs Raiders OL." },
+  { pos: "DST", player: "Broncos DST (DEN)", sal: "$3,000", proj: "9.1 pts", why: "Stunt/blitz sack floor at altitude." },
+] as const;
 
 function clamp01(value: number): number {
   return value < 0 ? 0 : value > 1 ? 1 : value;
 }
 
 function stageFromProgress(progress: number): Stage {
-  return Math.round(clamp01(progress) * 2) as Stage;
+  const p = clamp01(progress);
+  if (p < 0.33) return 0;
+  if (p < 0.68) return 1;
+  return 2;
 }
 
-/** Interpolate the camera transform across CAMERA_KEYS for any 0..1 progress. */
+/** Smooth 2.5D dolly transform for the stadium turf plate (no warping rotateX or negative-Z shrink). */
 function cameraTransformAt(progress: number): string {
   const p = clamp01(progress);
-  let from: CameraKey = CAMERA_KEYS[0] ?? { at: 0, x: 0, y: 0, z: 0, rx: 8, scale: 1.03 };
-  let to: CameraKey = CAMERA_KEYS[CAMERA_KEYS.length - 1] ?? from;
-  for (let i = 0; i < CAMERA_KEYS.length - 1; i += 1) {
-    const a = CAMERA_KEYS[i];
-    const b = CAMERA_KEYS[i + 1];
-    if (a && b && p >= a.at && p <= b.at) {
-      from = a;
-      to = b;
-      break;
-    }
-  }
-  const span = to.at - from.at || 1;
-  const t = clamp01((p - from.at) / span);
-  const mix = (a: number, b: number) => a + (b - a) * t;
-  return [
-    `translate3d(${mix(from.x, to.x).toFixed(2)}px, ${mix(from.y, to.y).toFixed(2)}px, ${mix(from.z, to.z).toFixed(2)}px)`,
-    `rotateX(${mix(from.rx, to.rx).toFixed(2)}deg)`,
-    `scale(${mix(from.scale, to.scale).toFixed(3)})`,
-  ].join(" ");
+  const scale = 1.02 + p * 0.22;
+  const y = (0.5 - p) * 38;
+  return `translate3d(0px, ${y.toFixed(2)}px, 0px) scale(${scale.toFixed(4)})`;
+}
+
+/** Smooth forward walk-out dolly transform for the concrete stadium tunnel layer. */
+function tunnelTransformAt(progress: number): string {
+  const p = clamp01(progress);
+  const scale = 1.0 + p * 0.58;
+  const y = -p * 24;
+  return `translate3d(0px, ${y.toFixed(2)}px, 0px) scale(${scale.toFixed(4)})`;
 }
 
 function price(pack: PickPackageOffering): string {
@@ -155,14 +200,16 @@ export function RedlineWorld({
   const pointer = useRef<{ x: number; y: number; start: number } | null>(null);
   const rootRef = useRef<HTMLElement>(null);
   const cameraRef = useRef<HTMLDivElement>(null);
+  const tunnelRef = useRef<HTMLDivElement>(null);
   const worldCameraRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
   const loopRef = useRef<(() => void) | null>(null);
-  const progressRef = useRef(initialProgress); // target
-  const renderedRef = useRef(initialProgress); // eased value that drives the DOM
+  const progressRef = useRef(initialProgress);
+  const renderedRef = useRef(initialProgress);
   const stageRef = useRef<Stage>(initialStage);
   const staticMode = userStatic || systemReduced;
   const selectedPack = packs.find((pack) => pack.slug === selectedSlug) ?? packs[0];
+  const dfsPack = packs.find((pack) => pack.slug === "redzone-dfs-pro-pack") ?? packs.find((pack) => pack.includesDfs) ?? packs[0];
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -172,22 +219,25 @@ export function RedlineWorld({
     return () => media.removeEventListener("change", update);
   }, []);
 
-  // The scrub loop. Ease the rendered value toward the target every frame and
-  // write the interpolated camera transform (plus --scrub, which drives the
-  // copy cross-fade) straight to the DOM, so the field glides continuously
-  // instead of snapping between screens.
+  // Ultra-smooth 60fps scrub loop with silky damping (0.11 lerp)
   useEffect(() => {
     let frame = 0;
     const step = () => {
       const target = progressRef.current;
       const current = renderedRef.current;
-      const next = current + (target - current) * 0.16;
-      const settled = Math.abs(target - next) < 0.0004;
+      const next = current + (target - current) * 0.11;
+      const settled = Math.abs(target - next) < 0.0003;
       renderedRef.current = settled ? target : next;
       const value = renderedRef.current;
       const transform = cameraTransformAt(value);
+      const tunnelTransform = tunnelTransformAt(value);
+      const tunnelOpacity = Math.max(0, Math.min(1, 1 - value * 2.15));
       if (rootRef.current) rootRef.current.style.setProperty("--scrub", value.toFixed(4));
       if (cameraRef.current) cameraRef.current.style.transform = transform;
+      if (tunnelRef.current) {
+        tunnelRef.current.style.transform = tunnelTransform;
+        tunnelRef.current.style.opacity = tunnelOpacity.toFixed(4);
+      }
       if (worldCameraRef.current) worldCameraRef.current.style.transform = transform;
       if (sliderRef.current) sliderRef.current.value = String(value);
       const nextStage = stageFromProgress(value);
@@ -207,13 +257,11 @@ export function RedlineWorld({
     };
   }, []);
 
-  // Eased motion for wheel, drag, and the "scroll the field" affordance.
   const goProgress = useCallback((value: number) => {
     progressRef.current = clamp01(value);
     loopRef.current?.();
   }, []);
 
-  // 1:1 motion for the scrubber so the thumb tracks the pointer exactly.
   const setScrub = useCallback((value: number) => {
     const next = clamp01(value);
     progressRef.current = next;
@@ -244,7 +292,7 @@ export function RedlineWorld({
   const wheel = (event: WheelEvent<HTMLDivElement>) => {
     if (isCameraTarget(event.target as HTMLElement)) return;
     event.preventDefault();
-    if (Math.abs(event.deltaY) < 2 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    if (Math.abs(event.deltaY) < 1.5 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
     goProgress(progressRef.current + event.deltaY * WHEEL_STEP);
   };
   const pointerDown = (event: PointerEvent<HTMLDivElement>) => {
@@ -254,8 +302,6 @@ export function RedlineWorld({
   };
   const pointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!pointer.current) return;
-    // Drag up advances the field, drag down rewinds it, mapped continuously
-    // (one full journey per DRAG_RANGE pixels) instead of a step per gesture.
     const dy = pointer.current.y - event.clientY;
     goProgress(pointer.current.start + dy / DRAG_RANGE);
   };
@@ -304,30 +350,57 @@ export function RedlineWorld({
       >
         <div className="world-photograph" aria-hidden="true" />
         <section className="stage-plate" aria-label="The field">
+          {/* Layer 1: Dark NFL Stadium Turf & Glowing Orange Goalposts */}
           <div className="plate-camera" ref={cameraRef} aria-hidden="true" />
+          {/* Layer 2: Stadium Tunnel Mouth that dolly-zooms open as you scroll onto the turf */}
+          <div className="plate-tunnel" ref={tunnelRef} aria-hidden="true" />
+          {/* Layer 3: Subtle Broadcast Scrimmage & Yard-Line Laser HUD */}
+          <div className="plate-hud" aria-hidden="true">
+            <div className="hud-line hud-ltg"><span>LINE TO GAIN · 40</span></div>
+            <div className="hud-line hud-los"><span>LINE OF SCRIMMAGE · 50</span></div>
+          </div>
+
           <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
-            <p className="plate-kicker">This week · NFL desk</p>
+            <p className="plate-kicker">REDZONE · WEEK 8 SEALED NFL DESK</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
-            <p>Plain-English NFL picks, props, parlays, and DFS. Four packs. One unified site. The official calls stay locked until you buy.</p>
+            <p>
+              Plain-English NFL picks, player props, correlated Same-Game Parlays, and our standalone $39.99 DFS Pro Pack — all on one unified RedZone board.
+            </p>
+            <div className="record-pill">
+              <strong>OFFICIAL NEW ENGINE RECORD: 31-11-0 · +18.56u</strong>
+              <span>Prior 16-5-0 (+10.45u) · TNF CAR@GB 15-6-0 (+8.11u) · 42 Official Staked Plays</span>
+            </div>
             <div className="plate-actions">
-              <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Scroll the field →</button>
-              <Link className="plate-ghost" href="/packages">See the packs</Link>
+              <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Walk onto the field →</button>
+              <button type="button" className="plate-ghost" onClick={() => goProgress(1)}>Choose a pack (4) →</button>
+              <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>Standalone DFS ($39.99)</button>
             </div>
           </div>
+
           <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
-            <p className="plate-kicker">This week's slate</p>
-            <h1>{headline?.matchup ?? "The slate is loading"}</h1>
-            <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official spread, total, props, and parlays open inside the pack you buy."}</p>
-            <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
+            <p className="plate-kicker">LINE OF SCRIMMAGE · 13 WEEK 8 MATCHUPS</p>
+            <h1>{headline?.matchup ?? "Week 8 NFL Slate"}</h1>
+            <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "11 official main-line calls, 18 locked player props, 13 correlated SGPs, and 2 optimal DFS lineups."}</p>
+            <div className="scrimmage-rule"><span>REDZONE SCRIMMAGE · 31-11-0 (+18.56u)</span><b /></div>
             <div className="plate-actions">
-              {headline && <button type="button" className="plate-ghost" onClick={() => openFixture(headline)}>Read the matchup</button>}
-              <Link className="plate-go" href="/packages">Choose a pack →</Link>
+              {headline && <button type="button" className="plate-ghost" onClick={() => openFixture(headline)}>Read matchup dossier</button>}
+              <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>View sealed calls &amp; props (29)</button>
+              <button type="button" className="plate-go" onClick={() => goProgress(1)}>Pick your gate →</button>
             </div>
           </div>
+
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
-            <p className="plate-kicker">Pick your pack</p>
-            <h1>Pick your gate.</h1>
-            <p className="plate-deck">The field is the store. Tap a gate to review the pack and unlock it.</p>
+            <div className="overhead-header">
+              <div>
+                <p className="plate-kicker">REDZONE STOREFRONT · UNIFIED NFL &amp; DFS</p>
+                <h1>Pick your gate.</h1>
+                <p className="plate-deck">Four packs on one unified site — including our standalone $39.99 RedZone DFS Pro Pack. Tap any gate to review or unlock.</p>
+              </div>
+              <div className="overhead-quick-links">
+                <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>DFS Lineups &amp; 16-Player Pool ($39.99)</button>
+                <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>All 11 Calls, 18 Props &amp; 13 SGPs</button>
+              </div>
+            </div>
             <div className="gate-row">
               {packs.map((pack, index) => (
                 <button
@@ -336,8 +409,9 @@ export function RedlineWorld({
                   className={`real-gate${selectedSlug === pack.slug ? " selected" : ""}`}
                   onClick={() => openPurchase(pack)}
                 >
-                  <small>0{index + 1}</small>
+                  <small>GATE / 0{index + 1} · {pack.badge ?? packScope(pack)}</small>
                   <strong>{pack.title.split("(")[0]?.trim()}</strong>
+                  <span className="gate-sub">{pack.subtitle}</span>
                   <b>{price(pack)}</b>
                 </button>
               ))}
@@ -349,117 +423,55 @@ export function RedlineWorld({
             </div>
           </div>
         </section>
+
         <div className="world-camera" ref={worldCameraRef} style={{ transform: cameraTransformAt(initialProgress) }}>
           <div className={`world-stage stage-${stage}`}>
             <div className="tunnel-shell" aria-hidden="true">
-              <div className="tunnel-floor" />
-              <div className="tunnel-ceiling" />
-              <div className="tunnel-wall tunnel-wall-left" />
-              <div className="tunnel-wall tunnel-wall-right" />
-              <div className="tunnel-rib rib-a" />
-              <div className="tunnel-rib rib-b" />
-              <div className="tunnel-rib rib-c" />
-              <div className="portal-field">
-                <span className="portal-zone">THE FIELD</span>
-                <i /><i /><i /><i /><b />
-                <span className="portal-tag">YARD / 50</span>
-              </div>
-              <div className="tunnel-aperture">
-                <span>THE FIELD</span><span>GSE / NFL</span>
-              </div>
               <div className="tunnel-side-mark">
                 GALAXY SPORTS EDGE <b>·</b> REDZONE LEDGER
               </div>
             </div>
-            <div className="stadium-bowl" aria-hidden="true">
-              <div className="bowl-ring ring-outer" />
-              <div className="bowl-ring ring-middle" />
-              <div className="bowl-ring ring-inner" />
-              <div className="bowl-stand stand-far" />
-              <div className="bowl-stand stand-near" />
-              <div className="stadium-ribbon ribbon-far" />
-              <div className="stadium-ribbon ribbon-near" />
-            </div>
             <div className="field-plane" aria-label="Interactive football field">
               <div className="endzone endzone-far">REDZONE LEDGER</div>
-              {Array.from({ length: 9 }, (_, index) => (
-                <div
-                  className="yard-line"
-                  key={index}
-                  style={{ "--yard": `${(index + 1) * 10}%` } as CSSProperties}
-                >
-                  <span>{index < 4 ? (index + 1) * 10 : 50 - (index - 4) * 10}</span>
-                </div>
-              ))}
-              <div className="hash-row hash-left" />
-              <div className="hash-row hash-right" />
-              <div className="scrimmage-line"><span>LINE OF SCRIMMAGE</span></div>
-              <div className="line-to-gain"><span>LINE TO GAIN</span></div>
               <div className="midfield-mark">GSE</div>
               <div className="endzone endzone-near">CHOOSE YOUR PACK</div>
-              {packs.map((pack, index) => (
-                <div
-                  className={`field-gate-anchor field-gate-${index + 1}`}
-                  key={pack.slug}
-                  style={{ "--gate-y": `${-66 + index * 66}px` } as CSSProperties}
-                >
-                  <button
-                    type="button"
-                    className={`gate${selectedSlug === pack.slug ? " gate-selected" : ""}`}
-                    onClick={() => openPurchase(pack)}
-                    aria-label={`Select ${pack.title}, ${price(pack)}`}
-                  >
-                    <span className="gate-num">0{index + 1}</span>
-                    <span className="gate-name">{pack.title}</span>
-                    <strong>{price(pack)}</strong>
-                    <small>{packScope(pack)}</small>
-                  </button>
-                </div>
-              ))}
-              <div className="fixture-marker-grid" aria-label="Matchup locations">
-                {writeups.slice(0, 8).map((fixture, index) => (
-                  <button
-                    type="button"
-                    key={fixture.id}
-                    className="fixture-marker"
-                    style={{
-                      left: `${13 + (index % 4) * 24}%`,
-                      top: `${24 + Math.floor(index / 4) * 44}%`,
-                    }}
-                    onClick={() => openFixture(fixture)}
-                    aria-label={`Open ${fixture.matchup}`}
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </div>
-        <div className="portal-window" aria-hidden="true">
-          <div className="portal-frame-top" />
-          <div className="portal-frame-left" />
-          <div className="portal-frame-right" />
-          <div className="portal-ground">
-            {Array.from({ length: 9 }, (_, index) => (
-              <i key={index} style={{ "--line-pos": `${(index + 1) * 10}%` } as CSSProperties} />
-            ))}
-            <b className="portal-scrimmage" />
-            <span className="portal-distance">50</span>
-          </div>
-          <div className="portal-window-label"><span>FIELD / NFL</span><span>GSE</span></div>
-        </div>
-        <div className="world-vignette" aria-hidden="true" />
+
         <header className="world-header">
           <Link className="brand-lockup" href="/" aria-label="Galaxy Sports Edge home">
             <span className="brand-mark">G<span>/</span></span>
-            <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
+            <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE LEDGER · NFL DESK</small></span>
           </Link>
-          <div className="header-state"><span className="live-dot" /> THIS WEEK <b>·</b> {packs.length} PACKS</div>
+          <div className="header-state">
+            <span className="live-dot" /> RECORD: 31-11-0 (+18.56u) <b>·</b> 13 NFL GAMES <b>·</b> {packs.length} PACKS
+          </div>
           <Link className="header-menu" href="/packages">ALL PACKS <span>→</span></Link>
         </header>
+
         <div className="world-controls" data-no-camera>
-          <span className="scrub-label">FIELD</span>
+          <button
+            type="button"
+            className={`stage-pill${stage === 0 ? " active" : ""}`}
+            onClick={() => goProgress(0)}
+          >
+            01 TUNNEL
+          </button>
+          <button
+            type="button"
+            className={`stage-pill${stage === 1 ? " active" : ""}`}
+            onClick={() => goProgress(0.5)}
+          >
+            02 SCRIMMAGE
+          </button>
+          <button
+            type="button"
+            className={`stage-pill${stage === 2 ? " active" : ""}`}
+            onClick={() => goProgress(1)}
+          >
+            03 PACK GATES
+          </button>
           <label className="journey-slider">
             <span className="sr-only">Field camera position</span>
             <input
@@ -477,9 +489,16 @@ export function RedlineWorld({
             RESET <span>↺</span>
           </button>
         </div>
+
         <div className="world-actions" data-no-camera>
           <button type="button" onClick={() => setPanel(panel === "packs" ? null : "packs")} className={panel === "packs" ? "chosen" : ""}>
             PACKS <span>{String(packs.length).padStart(2, "0")}</span>
+          </button>
+          <button type="button" onClick={() => setPanel(panel === "dfs" ? null : "dfs")} className={panel === "dfs" ? "chosen" : ""}>
+            DFS PACK <span>$39.99</span>
+          </button>
+          <button type="button" onClick={() => setPanel(panel === "slate" ? null : "slate")} className={panel === "slate" ? "chosen" : ""}>
+            SEALED BOARD <span>29</span>
           </button>
           <button type="button" onClick={() => setPanel("board")} className={panel === "board" || panel === "detail" ? "chosen" : ""}>
             MATCHUPS <span>{String(writeups.length).padStart(2, "0")}</span>
@@ -488,8 +507,9 @@ export function RedlineWorld({
             COMPARE <span>→</span>
           </button>
         </div>
+
         <div className="world-hint" aria-hidden="true">
-          {staticMode ? "FIELD HELD STILL · MOTION REDUCED" : "SCROLL / DRAG TO MOVE THROUGH THE FIELD"}
+          {staticMode ? "FIELD HELD STILL · MOTION REDUCED" : "SCROLL OR DRAG SMOOTHLY THROUGH THE FIELD"}
         </div>
         <div className="touch-controls" data-no-camera>
           <button type="button" aria-label="Move the field back" onClick={() => goProgress(progressRef.current - 0.5)}>−</button>
@@ -507,8 +527,8 @@ export function RedlineWorld({
         </button>
 
         {panel === "packs" && (
-          <PanelFrame eyebrow="Paid packs · one-time purchase" title="Choose your pack" close={closePanel} className="pack-panel">
-            <p className="panel-intro">Select a field gate to review the pack and unlock its official picks.</p>
+          <PanelFrame eyebrow="RedZone Storefront · One-time purchase" title="Choose your pack" close={closePanel} className="pack-panel">
+            <p className="panel-intro">Four unified packs — including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
             <div className="edition-list">
               {packs.map((pack, index) => (
                 <div className={`edition-row${selectedSlug === pack.slug ? " selected" : ""}`} key={pack.slug}>
@@ -520,6 +540,100 @@ export function RedlineWorld({
                   </div>
                   <div className="edition-price"><b>{price(pack)}</b><small>ONE TIME</small></div>
                   <button type="button" className="panel-action" onClick={() => openPurchase(pack)}>REVIEW <span>→</span></button>
+                </div>
+              ))}
+            </div>
+          </PanelFrame>
+        )}
+
+        {panel === "dfs" && (
+          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 8 DFS Lineups & Pool" close={closePanel} className="dfs-panel">
+            <p className="panel-intro">
+              Integrated directly into the unified RedZone site. Includes 2 Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), our 16-Player Core Pool with coaching/matchup writeups, and the full 588-Active-Player Pool (86 OUT/IR zeroed).
+            </p>
+            {dfsPack && (
+              <div className="dfs-cta-bar">
+                <div>
+                  <strong>{dfsPack.title}</strong>
+                  <span>Standalone One-Time Pass · Instant Unlock</span>
+                </div>
+                <button type="button" className="plate-go" onClick={() => openPurchase(dfsPack)}>
+                  Unlock Standalone DFS — {price(dfsPack)} →
+                </button>
+              </div>
+            )}
+            <div className="dfs-lineup-grid">
+              <div className="dfs-box">
+                <span className="dfs-tag">OPTIMAL LINEUP #1 · CASH / DOUBLE-UP ($49,900 · 141.65 PTS)</span>
+                <ul>
+                  <li><b>QB</b> Jalen Hurts (PHI) — $7,600 (23.4 pts)</li>
+                  <li><b>RB1</b> Bijan Robinson (ATL) — $8,000 (22.1 pts)</li>
+                  <li><b>RB2</b> Breece Hall (NYJ) — $7,100 (19.8 pts)</li>
+                  <li><b>WR1</b> Garrett Wilson (NYJ) — $6,300 (17.8 pts)</li>
+                  <li><b>WR2</b> Terry McLaurin (WAS) — $6,600 (17.5 pts)</li>
+                  <li><b>WR3</b> Wan&apos;Dale Robinson (NYG) — $4,900 (14.8 pts)</li>
+                  <li><b>TE</b> Travis Kelce (KC) — $5,200 (14.9 pts)</li>
+                  <li><b>FLEX</b> De&apos;Von Achane (MIA) — $6,900 (19.4 pts)</li>
+                  <li><b>DST</b> Jets DST (NYJ) — $3,200 (9.8 pts)</li>
+                </ul>
+              </div>
+              <div className="dfs-box">
+                <span className="dfs-tag">OPTIMAL LINEUP #2 · GPP TOURNAMENT CEILING ($49,800 · 139.20 PTS)</span>
+                <ul>
+                  <li><b>QB</b> Caleb Williams (CHI) — $6,100 (20.8 pts)</li>
+                  <li><b>RB1</b> Saquon Barkley (PHI) — $8,200 (21.9 pts)</li>
+                  <li><b>RB2</b> Jahmyr Gibbs (DET) — $7,800 (20.6 pts)</li>
+                  <li><b>WR1</b> DJ Moore (CHI) — $5,900 (16.9 pts)</li>
+                  <li><b>WR2</b> Rome Odunze (CHI) — $5,300 (15.6 pts)</li>
+                  <li><b>WR3</b> Jaxon Smith-Njigba (SEA) — $6,200 (17.1 pts)</li>
+                  <li><b>TE</b> Kyle Pitts (ATL) — $4,300 (12.8 pts)</li>
+                  <li><b>FLEX</b> Kenneth Walker III (SEA) — $6,500 (18.4 pts)</li>
+                  <li><b>DST</b> Broncos DST (DEN) — $3,000 (9.1 pts)</li>
+                </ul>
+              </div>
+            </div>
+            <h3 className="sub-heading">16-Player Core Pool (2 QB · 4 RB · 6 WR · 2 TE · 2 DST)</h3>
+            <div className="fixture-list">
+              {DFS_CORE_POOL.map((row) => (
+                <div className="fixture-row" key={row.player}>
+                  <span className="fixture-week">{row.pos}</span>
+                  <div className="fixture-match">{row.player} <small>{row.sal} · {row.proj}</small></div>
+                  <span className="fixture-angle">{row.why}</span>
+                </div>
+              ))}
+            </div>
+          </PanelFrame>
+        )}
+
+        {panel === "slate" && (
+          <PanelFrame eyebrow="Week 8 Sealed RedZone Board · 31-11-0 (+18.56u)" title="11 Calls, 18 Props & 13 SGPs" close={closePanel} className="slate-panel">
+            <h3 className="sub-heading">11 Official Main-Line &amp; Derivative Calls</h3>
+            <div className="fixture-list">
+              {SEALED_MAIN_CALLS.map((c) => (
+                <div className="fixture-row" key={`${c.matchup}-${c.selection}`}>
+                  <span className="fixture-week">{c.conf}</span>
+                  <div className="fixture-match">{c.matchup} — {c.selection}</div>
+                  <span className="fixture-angle">{c.market}</span>
+                </div>
+              ))}
+            </div>
+            <h3 className="sub-heading">18 Locked Player Props</h3>
+            <div className="fixture-list">
+              {SEALED_PROPS.map((p) => (
+                <div className="fixture-row" key={`${p.matchup}-${p.player}`}>
+                  <span className="fixture-week">{p.conf}</span>
+                  <div className="fixture-match">{p.player} <small>{p.matchup}</small></div>
+                  <span className="fixture-angle">{p.prop}</span>
+                </div>
+              ))}
+            </div>
+            <h3 className="sub-heading">13 Correlated Same-Game Parlays</h3>
+            <div className="fixture-list">
+              {SEALED_SGPS.map((s) => (
+                <div className="fixture-row" key={s.matchup}>
+                  <span className="fixture-week">{s.matchup}</span>
+                  <div className="fixture-match">{s.legs}</div>
+                  <span className="fixture-angle">{s.odds}</span>
                 </div>
               ))}
             </div>
@@ -560,18 +674,19 @@ export function RedlineWorld({
             close={() => setPanel("board")}
             className="detail-panel"
           >
-            <div className="detail-focus">Free matchup preview</div>
+            <div className="detail-focus">Coach&apos;s Mind Matchup Dossier</div>
             <p className="fixture-copy">{sanitizePlainFootballText(selectedFixture.schemeMatchup.coverageShell)}</p>
             <p className="fixture-copy mt-4">{sanitizePlainFootballText(selectedFixture.paceOfPlay.notes)}</p>
-            <p className="panel-footnote">Official spread, total, props, and parlays stay inside the packs.</p>
+            <p className="panel-footnote">Official spread, total, props, and parlays unlock inside the RedZone packs.</p>
             <div className="detail-nav">
-              <button type="button" className="subtle-action" onClick={() => setPanel("board")}>Back to matchups</button>
+              <button type="button" className="subtle-action" onClick={() => setPanel("board")}>Back to all 13 matchups</button>
+              <button type="button" className="plate-go" onClick={() => setPanel("packs")}>Unlock Pack →</button>
             </div>
           </PanelFrame>
         )}
 
         {panel === "board" && (
-          <PanelFrame eyebrow="This week · free previews" title="The field board" close={closePanel} className="board-panel">
+          <PanelFrame eyebrow="Week 8 · All 13 Matchup Dossiers" title="The field board" close={closePanel} className="board-panel">
             <div className="board-controls" data-no-camera>
               <label>SEARCH MATCHUPS<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Team or coverage angle" /></label>
               <label>SLATE<select value={slot} onChange={(event) => setSlot(event.target.value)}><option value="all">All slates</option>{Array.from(new Set(writeups.map((fixture) => fixture.windowSlot))).map((windowSlot) => <option key={windowSlot} value={windowSlot}>{formatWindowSlotLabel(windowSlot)}</option>)}</select></label>

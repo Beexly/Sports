@@ -274,18 +274,183 @@
   perspective-origin: 50% 52%;
 }
 
-/* The camera. One element carries the field photograph; its transform is
-   written every frame from CAMERA_KEYS (interpolated on the 0..1 scrub) and
-   its vertical drift rides --scrub, so the field glides instead of snapping. */
+/* The camera. Layer 1 carries the dark stadium turf + orange goalposts;
+   Layer 2 carries the concrete stadium tunnel mouth that dolly-zooms open
+   and cross-fades as you walk out onto the turf. */
 .plate-camera {
   position: absolute;
-  inset: -16%;
+  inset: -12%;
   background-image: url("/brand/redline-stadium.png");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center calc(58% + var(--scrub, 0) * 14%);
-  transform-origin: 50% 56%;
+  background-position: center 54%;
+  transform-origin: 50% 52%;
   will-change: transform;
+  filter: contrast(1.08) brightness(0.96);
+}
+
+.plate-tunnel {
+  position: absolute;
+  inset: -8%;
+  background-image: url("/brand/redline-tunnel.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  transform-origin: 50% 52%;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.plate-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: clamp(0, calc((var(--scrub, 0) - 0.15) * 2.2), 0.78);
+  transition: opacity 0.2s ease-out;
+}
+.hud-line {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.hud-ltg {
+  top: 44%;
+  border-top: 1px dashed rgba(255, 77, 46, 0.72);
+}
+.hud-los {
+  top: 56%;
+  background: rgba(255, 77, 46, 0.85);
+}
+.hud-line span {
+  transform: translateY(-14px);
+  padding: 2px 8px;
+  background: rgba(8, 9, 12, 0.86);
+  border: 1px solid rgba(255, 77, 46, 0.55);
+  color: #FF4D2E;
+  font: 700 9px/1 var(--f-body), sans-serif;
+  letter-spacing: 0.14em;
+}
+
+.record-pill {
+  margin-top: 18px;
+  padding: 12px 16px;
+  border-left: 3px solid #FF4D2E;
+  background: rgba(237, 232, 224, 0.05);
+  display: grid;
+  gap: 4px;
+}
+.record-pill strong {
+  color: #EDE8E0;
+  font: 800 14px/1.1 var(--f-body), sans-serif;
+  letter-spacing: 0.06em;
+}
+.record-pill span {
+  color: rgba(237, 232, 224, 0.72);
+  font: 500 12px/1.3 var(--f-body), sans-serif;
+}
+
+.stage-pill {
+  padding: 7px 11px;
+  border: 1px solid rgba(237, 232, 224, 0.24);
+  background: transparent;
+  color: rgba(237, 232, 224, 0.76);
+  font: 700 9px/1 var(--f-body), sans-serif;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.stage-pill.active,
+.stage-pill:hover {
+  border-color: #FF4D2E;
+  background: #FF4D2E;
+  color: #1A0703;
+}
+
+.overhead-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.overhead-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.gate-sub {
+  color: rgba(237, 232, 224, 0.72);
+  font: 500 12px/1.4 var(--f-body), sans-serif;
+}
+.real-gate:hover .gate-sub,
+.real-gate.selected .gate-sub {
+  color: #1A0703;
+}
+
+.dfs-cta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 18px;
+  padding: 16px;
+  border: 1px solid #FF4D2E;
+  background: rgba(255, 77, 46, 0.08);
+}
+.dfs-cta-bar strong {
+  display: block;
+  font: 800 16px/1.1 var(--f-display), sans-serif;
+  text-transform: uppercase;
+}
+.dfs-cta-bar span {
+  color: rgba(237, 232, 224, 0.72);
+  font-size: 11px;
+}
+.dfs-lineup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.dfs-box {
+  padding: 14px;
+  border: 1px solid rgba(237, 232, 224, 0.28);
+  border-top: 2px solid #FF4D2E;
+  background: rgba(237, 232, 224, 0.03);
+}
+.dfs-tag {
+  display: block;
+  margin-bottom: 10px;
+  color: #FF4D2E;
+  font: 700 9px/1.2 var(--f-body), sans-serif;
+  letter-spacing: 0.12em;
+}
+.dfs-box ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 11px;
+  color: #EDE8E0;
+}
+.dfs-box li b {
+  display: inline-block;
+  min-width: 34px;
+  color: #FF4D2E;
+}
+.sub-heading {
+  margin: 18px 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(237, 232, 224, 0.28);
+  color: #FF4D2E;
+  font: 700 11px/1.2 var(--f-body), sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 /* Three copy stations cross-fade on the same 0..1 --scrub: nothing mounts or
