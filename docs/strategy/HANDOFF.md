@@ -1,9 +1,18 @@
 # HANDOFF
 
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
-next role must do. See `ORG.md` for the contract.
+next role must do. ---
 
----
+## 2026-10-31 — finished Carolina at Green Bay pack taken off sale
+
+**Changed:** apps/web/lib/packages/catalog.ts sets forSale false on tnf-all-in-pack. Checkout throws. The pack page shows the final score and no buy button.
+
+**Proven:** ESPN event 401873023 is final, Green Bay 27, Carolina 19, kickoff 2026-10-30T00:15Z.
+
+**Not proven:** The public URL will not change until this reaches main.
+
+**Next:** Re-fetch https://www.galaxysportsedge.com/packages/tnf-all-in-pack and confirm the buy button is gone.
+
 
 ## 2026-10-28 / 2026-10-29 (UTC) — Master Corpus, Coach-Scheme-Player-Fit Engine & Commercial Package Builder
 
