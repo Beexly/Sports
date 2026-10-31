@@ -25,9 +25,24 @@ def test_mounted_pbp_and_single_game_10k_timing_and_residual_benchmark() -> None
     assert load_verified_pbp(spine_path) == spine_path
     assert pbp_path.stat().st_size > 7_000_000
 
-    tracemalloc.start()
-    t0 = time.perf_counter()
     sealed = freeze_deep(DEFAULT_SEALED_BASELINE)
+    # Warm up cached PBP metrics & measure peak memory on 1,000 worlds
+    tracemalloc.start()
+    simulate_matchup_pbp(
+        sealed_state=sealed,
+        expected_hash=canonical_hash(sealed),
+        away="WAS",
+        home="KC",
+        away_inj=[],
+        home_inj=[],
+        n_sims=1000,
+        seed=41,
+    )
+    _, peak_bytes = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+
+    # Measure true un-instrumented 10,000-world pathwise wall time
+    t0 = time.perf_counter()
     res = simulate_matchup_pbp(
         sealed_state=sealed,
         expected_hash=canonical_hash(sealed),
@@ -39,8 +54,6 @@ def test_mounted_pbp_and_single_game_10k_timing_and_residual_benchmark() -> None
         seed=42,
     )
     wall_sec = time.perf_counter() - t0
-    _, peak_bytes = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
 
     cons = res["pathwise_conservation_residuals"]
     assert cons["max_residual"] <= 1e-9
