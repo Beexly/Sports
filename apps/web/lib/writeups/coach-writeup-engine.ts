@@ -1401,14 +1401,14 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "sideTotalCall": {
       "sideSelection": "Detroit Lions -3",
-      "sideConfidence": "59/100",
-      "sideExpectedClv": 0.0662,
-      "sideDecision": "PLAY",
-      "totalSelection": "OVER 46.5",
-      "totalConfidence": "53/100",
-      "totalExpectedClv": -0.025,
-      "totalDecision": "PASS",
-      "rationale": "Detroit leads the entire NFL with only twelve missed tackles through seven weeks and dominates the line of scrimmage at Ford Field against a Minnesota offense starting a backup quarterback. Take the Lions laying three points at home and pass on the total."
+      "sideConfidence": "52/100",
+      "sideExpectedClv": -0.015,
+      "sideDecision": "PASS",
+      "totalSelection": "UNDER 46.5",
+      "totalConfidence": "61/100",
+      "totalExpectedClv": 0.086,
+      "totalDecision": "PLAY",
+      "rationale": "Brian Flores' Minnesota defense leads the entire NFL at -0.193 EPA/play allowed and sends simulated pressure on 72.2 out of 100 pass plays, holding opposing quarterbacks to -0.214 EPA/play against the blitz and -0.513 EPA/play on obvious passing downs. Pass on laying three points with Detroit into Flores' disguise shells and play UNDER 46.5."
     },
     "topProps": [
       {
@@ -1421,7 +1421,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "61/100",
         "expectedClv": 0.0862,
         "decision": "PLAY",
-        "nEffTargetNotes": "Amon-Ra St. Brown commands elite third-down and slot target volume indoors at Ford Field against Minnesota's blitz looks. Take OVER 77.5 receiving yards.",
+        "nEffTargetNotes": "Amon-Ra St. Brown commands elite third-down and slot target volume indoors at Ford Field as Jared Goff's primary hot-route outlet against Brian Flores' blitz looks. Take OVER 77.5 receiving yards.",
         "pOver": 0.61,
         "pUnder": 0.39
       },
@@ -1435,7 +1435,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "60/100",
         "expectedClv": 0.0762,
         "decision": "PLAY",
-        "nEffTargetNotes": "Detroit's offensive line controls the trenches at home while Jahmyr Gibbs gets explosive outside-zone volume. Take OVER 86.5 rushing yards.",
+        "nEffTargetNotes": "Detroit leans on Jahmyr Gibbs on early downs to stay out of 3rd-and-long against Brian Flores' simulated pressure packages. Take OVER 86.5 rushing yards.",
         "pOver": 0.6,
         "pUnder": 0.4
       },
@@ -1475,17 +1475,17 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "MIN @ DET Spread",
           "pickType": "SPREAD",
           "selection": "Detroit Lions -3",
-          "confidence": "59/100",
-          "expectedClv": 0.0662,
-          "decision": "PLAY"
+          "confidence": "52/100",
+          "expectedClv": -0.015,
+          "decision": "PASS"
         },
         {
           "description": "MIN @ DET Total",
           "pickType": "TOTAL",
-          "selection": "OVER 46.5",
-          "confidence": "53/100",
-          "expectedClv": -0.025,
-          "decision": "PASS"
+          "selection": "UNDER 46.5",
+          "confidence": "61/100",
+          "expectedClv": 0.086,
+          "decision": "PLAY"
         },
         {
           "description": "Amon-Ra St. Brown Receiving Yards",
@@ -1501,7 +1501,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+338",
       "marketOdds": "+390",
       "edgeScore": 0.0376,
-      "correlationRationale": "When Detroit Lions -3 and OVER 46.5 cash together, Amon-Ra St. Brown OVER 77.5 receiving yards fits the exact same game script."
+      "correlationRationale": "When MIN @ DET stays UNDER 46.5 in a defensive battle against Brian Flores' disguise shells, Amon-Ra St. Brown OVER 77.5 receiving yards on short hot-route volume fits the exact same game script."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2285,16 +2285,30 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "sideTotalCall": {
       "sideSelection": "Los Angeles Rams -6.5",
-      "sideConfidence": "54/100",
-      "sideExpectedClv": -0.015,
-      "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
-      "totalConfidence": "53/100",
-      "totalExpectedClv": -0.025,
+      "sideConfidence": "61/100",
+      "sideExpectedClv": 0.086,
+      "sideDecision": "PLAY",
+      "totalSelection": "UNDER 45.5",
+      "totalConfidence": "54/100",
+      "totalExpectedClv": -0.015,
       "totalDecision": "PASS",
-      "rationale": "Matthew Stafford and the Rams offense match up well against the Chargers secondary inside SoFi Stadium, but the Chargers play slow and protect the football to stay in games. Vegas has the number dialed in, so pass on this matchup."
+      "rationale": "The Chargers offense has cratered to -0.257 ridge-adjusted EPA/play (-0.397 EPA/play in Week 5 and -0.311 EPA/play in Week 6), while Matthew Stafford and Sean McVay hold a commanding play-action and red-zone edge inside SoFi Stadium. Lay the 6.5 points with the Rams and pass on the full-game total."
     },
     "topProps": [
+      {
+        "playerId": "justin-herbert",
+        "playerName": "Justin Herbert",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 206.5,
+        "side": "UNDER",
+        "confidence": "63/100",
+        "expectedClv": 0.129,
+        "decision": "PLAY",
+        "nEffTargetNotes": "With the Chargers pass offense posting -0.570 pass EPA/play in Week 5 and -0.407 pass EPA/play in Week 6 behind a collapsing pocket, Justin Herbert's median projection sits at 190.4 passing yards. Take UNDER 206.5 passing yards.",
+        "pOver": 0.37,
+        "pUnder": 0.63
+      },
       {
         "playerId": "puka-nacua",
         "playerName": "Puka Nacua",
@@ -2310,32 +2324,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.46
       },
       {
-        "playerId": "kyren-williams",
-        "playerName": "Kyren Williams",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 58.5,
-        "side": "OVER",
-        "confidence": "54/100",
-        "expectedClv": 0.015,
-        "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Kyren Williams priced accurately at 58.5 rushing yards. Sit this prop out.",
-        "pOver": 0.54,
-        "pUnder": 0.46
-      },
-      {
         "playerId": "ladd-mcconkey",
         "playerName": "Ladd McConkey",
         "propType": "Receiving Yards",
         "market": "rec_yds",
         "line": 45.5,
-        "side": "OVER",
-        "confidence": "53/100",
-        "expectedClv": 0.0062,
+        "side": "UNDER",
+        "confidence": "54/100",
+        "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Ladd McConkey priced right near 45.5 receiving yards. Sit this prop out.",
-        "pOver": 0.53,
-        "pUnder": 0.47
+        "nEffTargetNotes": "Ladd McConkey was held to 1 target and 17 yards in Week 6 as the Chargers passing game stalled out. Sit this prop out at 45.5.",
+        "pOver": 0.46,
+        "pUnder": 0.54
       }
     ],
     "correlatedSgpTicket": {
@@ -2345,33 +2345,33 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "LAC @ LAR Spread",
           "pickType": "SPREAD",
           "selection": "Los Angeles Rams -6.5",
+          "confidence": "61/100",
+          "expectedClv": 0.086,
+          "decision": "PLAY"
+        },
+        {
+          "description": "LAC @ LAR Total",
+          "pickType": "TOTAL",
+          "selection": "UNDER 45.5",
           "confidence": "54/100",
           "expectedClv": -0.015,
           "decision": "PASS"
         },
         {
-          "description": "LAC @ LAR Total",
-          "pickType": "TOTAL",
-          "selection": "OVER 45.5",
-          "confidence": "53/100",
-          "expectedClv": -0.025,
-          "decision": "PASS"
-        },
-        {
-          "description": "Puka Nacua Receiving Yards",
+          "description": "Justin Herbert Passing Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Puka Nacua OVER 92.5",
-          "line": 92.5,
-          "confidence": "54/100",
-          "expectedClv": 0.0,
-          "decision": "PASS"
+          "selection": "Justin Herbert UNDER 206.5",
+          "line": 206.5,
+          "confidence": "63/100",
+          "expectedClv": 0.129,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1977,
-      "fairOdds": "n/a",
-      "marketOdds": "n/a",
+      "jointWinProb": 0.2412,
+      "fairOdds": "+315",
+      "marketOdds": "+365",
       "edgeScore": 0.0432,
-      "correlationRationale": "PASS \u2014 Stick to straight bets in this matchup; parlay payout does not beat the true risk."
+      "correlationRationale": "When Los Angeles Rams -6.5 cashes against a struggling Chargers offense, Justin Herbert UNDER 206.5 passing yards correlates directly with Rams pass-rush control."
     },
     "dfsStacks": {
       "captainPicks": [
