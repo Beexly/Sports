@@ -159,3 +159,14 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// WR depth after leader (Q50)
+export {
+  computeWrDepthAfterLeader,
+  WR_DEPTH_AFTER_LEADER_MODEL_VERSION,
+  type WrDepthTargetPlay,
+  type WrDepthTeamGamePlay,
+  type WrDepthResult,
+  type WrDepthDiagnostics,
+  type WrDepthOutput,
+} from "./wr-depth-after-leader.js";

@@ -20327,3 +20327,6 @@ Window: posts after status ID 2116170306087759894 (9:08 AM CDT Thu 2026-10-30) t
 - NOT enumerated: Lane C's EPA search (~31 viewed of an endless feed) and the unsampled ~10 hours of its aggressiveness search — captures there are a floor, not a census.
 - Endpoint pages still not opened (carried forward): statyx.io blog, 4thanddata.com, nflcoachprofiles.com, sticktothemodel.com. No new data endpoint was identified this run; sources documented per item above are the stated footers/bio links (FantasyPtsData, StatRankings, Next Gen Stats, Kalshi, ESPN, nflreadr, PFF).
 - The six Oct 24 Lane B transcriptions lost to compaction and the Oct 23 @sfdata9ers Turnover-Worthy Throw Rate post remain carried-forward gaps, unchanged.
+
+## 2026-10-31
+- Built Q50: WR depth after the leader (`wr-depth-after-leader.ts`)
