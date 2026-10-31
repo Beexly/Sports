@@ -20327,3 +20327,9 @@ Window: posts after status ID 2116170306087759894 (9:08 AM CDT Thu 2026-10-30) t
 - NOT enumerated: Lane C's EPA search (~31 viewed of an endless feed) and the unsampled ~10 hours of its aggressiveness search — captures there are a floor, not a census.
 - Endpoint pages still not opened (carried forward): statyx.io blog, 4thanddata.com, nflcoachprofiles.com, sticktothemodel.com. No new data endpoint was identified this run; sources documented per item above are the stated footers/bio links (FantasyPtsData, StatRankings, Next Gen Stats, Kalshi, ESPN, nflreadr, PFF).
 - The six Oct 24 Lane B transcriptions lost to compaction and the Oct 23 @sfdata9ers Turnover-Worthy Throw Rate post remain carried-forward gaps, unchanged.
+
+## 2026-10-31: Q49 Toxic Differential
+- Built `toxic-differential.ts` as a new SHADOW expected metric.
+- Computes explosive play margin over turnovers, strictly enforcing point-in-time and rolling window discipline (season-to-date, last-4, last-8).
+- Included strictly additive updates to `nflverse-pbp-mapper.ts` for tracking `week`, `qb_kneel`, and `qb_spike` to properly apply population exclusions.
+- Registered in `metric-birth-certificate-registry.ts`.

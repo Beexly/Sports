@@ -28,6 +28,7 @@ import { deriveNextScore, type EpPlay, type RawScoringContext } from "./expected
 import { type WpPlay } from "./win-probability.js";
 import { isSuccessfulPlay, type SuccessPlay } from "./success-rate.js";
 import { type DrivePlay, type DriveResult } from "./drives.js";
+import { type ToxicPlay } from "./toxic-differential.js";
 
 /**
  * The ONLY pbp columns this wiring reads. 40 of ~372 (OOM defense — pass to
@@ -60,6 +61,8 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "rusher_player_id", "receiver_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
+  // additional mapped core pbp columns (toxic differential)
+  "week", "qb_kneel", "qb_spike",
   // REFEREE ONLY — y-axis of calibration, never a served metric
   "ep", "epa", "wp", "wpa",
 ] as const;
@@ -103,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly wpaPairs: readonly TransitionPair[];
 
   readonly successPlays: readonly SuccessPlay[];
+
+  readonly toxicPlays: readonly ToxicPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
 
@@ -379,6 +384,7 @@ export function mapNflversePbpToExpectedMetrics(
   const wpRef: number[] = [];
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
+  const toxicPlays: ToxicPlay[] = [];
   const drivePlays: DrivePlay[] = [];
 
   for (const gameId of gameIds) {
@@ -498,6 +504,18 @@ export function mapNflversePbpToExpectedMetrics(
           touchdown: bin(row["touchdown"]),
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
+        toxicPlays.push({
+          playId,
+          gameId: row["game_id"] ?? "",
+          week: num(row["week"]),
+          posteam: row["posteam"] ?? "",
+          playType: row["play_type"] ?? "",
+          yardsGained: num(row["yards_gained"]),
+          interception: bin(row["interception"]),
+          fumbleLost: bin(row["fumble_lost"]),
+          qbKneel: bin(row["qb_kneel"]),
+          qbSpike: bin(row["qb_spike"]),
+        });
       }
     }
 
@@ -610,6 +628,7 @@ export function mapNflversePbpToExpectedMetrics(
     wpRef,
     wpaPairs,
     successPlays,
+    toxicPlays,
     drivePlays,
     counts: {
       sourceRows,
