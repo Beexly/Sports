@@ -31,7 +31,7 @@ interface RedlineWorldProps {
   initialPanel?: Panel;
 }
 
-const STAGE_NAMES = ["TUNNEL", "LINE OF SCRIMMAGE", "OVERHEAD"] as const;
+const STAGE_NAMES = ["FIELD", "LINE OF SCRIMMAGE", "OVERHEAD"] as const;
 
 function price(pack: PickPackageOffering): string {
   return `$${(pack.standardPriceCents / 100).toFixed(0)}`;
@@ -210,7 +210,7 @@ export function RedlineWorld({
         <section className={`stage-plate stage-plate-${stage}`} aria-label={STAGE_NAMES[stage]}>
           {stage === 0 && (
             <div className="plate-copy" data-no-camera>
-              <p className="plate-kicker">Camera 01 · Tunnel</p>
+              <p className="plate-kicker">Camera 01 · Field</p>
               <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
               <p>Plain-English NFL picks, props, and parlays. Three packs. One slate. The official calls stay locked until you buy.</p>
               <div className="plate-actions">
