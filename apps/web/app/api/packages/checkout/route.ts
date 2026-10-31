@@ -5,6 +5,42 @@ import {
   buildStripePackageCheckoutPayload,
 } from "@/lib/packages/catalog";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const packageSlug = searchParams.get("packageSlug") || searchParams.get("package") || searchParams.get("slug") || "";
+  const guaranteed = searchParams.get("guaranteed") === "true" || searchParams.get("guaranteed") === "1";
+  const returnToStorefront = searchParams.get("returnToStorefront") === "true" || searchParams.get("returnToStorefront") === "1";
+  const email = searchParams.get("email") || undefined;
+
+  const form = new URLSearchParams();
+  form.set("packageSlug", packageSlug);
+  form.set("guaranteed", String(guaranteed));
+  form.set("returnToStorefront", String(returnToStorefront));
+  if (email) form.set("email", email);
+
+  const postReq = new Request(req.url, {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      host: req.headers.get("host") || "www.galaxysportsedge.com",
+      "x-forwarded-host": req.headers.get("x-forwarded-host") || "www.galaxysportsedge.com",
+      "x-forwarded-proto": req.headers.get("x-forwarded-proto") || "https",
+    },
+    body: form.toString(),
+  });
+  return POST(postReq);
+}
+
 export async function POST(req: Request) {
   try {
     const contentType = req.headers.get("content-type") || "";
@@ -123,12 +159,15 @@ export async function POST(req: Request) {
       if (isFormSubmit) {
         return NextResponse.redirect(targetUrl, 303);
       }
-      return NextResponse.json({
-        sessionId: session.id,
-        url: targetUrl,
-        stripeProductId: pkg.stripeProductId,
-        stripePriceId: pkg.stripePriceId,
-      });
+      return NextResponse.json(
+        {
+          sessionId: session.id,
+          url: targetUrl,
+          stripeProductId: pkg.stripeProductId,
+          stripePriceId: pkg.stripePriceId,
+        },
+        { headers: CORS_HEADERS },
+      );
     } catch (stripeErr) {
       if (!isProd && (stripeKey.includes("test") || stripeKey.includes("dummy") || !process.env.CI)) {
         const fallbackSessionId = `cs_test_mock_${pkg.slug}_${Date.now()}`;
