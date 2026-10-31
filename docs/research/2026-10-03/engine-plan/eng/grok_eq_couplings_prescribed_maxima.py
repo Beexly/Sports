@@ -1,9 +1,7 @@
-"""Guarded couplings-prescribed-maxima measure inequality from Ansari arXiv:2610.30642 printed eq (2).
+"""Couplings with prescribed maxima inequality as printed in Ansari arXiv:2610.30642 eq (2).
 
-G(t) - G(s) <= sum_{i=1}^d (F_i(t) - F_i(s)) for all s < t
-
-Returns the excess: (G_t - G_s) - sum(F_diffs). Negative or zero means inequality holds.
-Fail-closed on invalid inputs: missing, non-finite, s >= t, empty diffs, negative lengths.
+G(t) - G(s) ≤ ∑_i (F_i(t) - F_i(s)) for all s < t.
+Returns the slack ∑ΔF - ΔG, or None on invalid inputs.
 Does not score, mint, or write mind.jsonl.
 """
 from __future__ import annotations
@@ -12,31 +10,30 @@ import math
 from typing import Sequence
 
 
-def couplings_prescribed_maxima_excess(
-    g_t: float | None,
-    g_s: float | None,
-    f_diffs: Sequence[float] | None,
-    s: float | None = None,
-    t: float | None = None,
+def couplings_prescribed_maxima_slack(
+    delta_g: float | None,
+    delta_fs: Sequence[float] | None,
 ) -> float | None:
-    if g_t is None or g_s is None or f_diffs is None:
+    """Return ∑ΔF_i - ΔG. None if missing, negative deltas, non-finite, or empty."""
+    if delta_g is None or delta_fs is None:
         return None
     try:
-        gt = float(g_t)
-        gs = float(g_s)
-        if not (math.isfinite(gt) and math.isfinite(gs)):
+        dg = float(delta_g)
+        if not math.isfinite(dg) or dg < 0.0:
             return None
-        diffs = [float(d) for d in f_diffs]
-        if not diffs or not all(math.isfinite(d) for d in diffs):
+        if len(delta_fs) == 0:
             return None
-        if any(d < 0.0 for d in diffs):
-            return None
-        if s is not None and t is not None:
-            ss = float(s)
-            tt = float(t)
-            if not (math.isfinite(ss) and math.isfinite(tt)) or ss >= tt:
+        total = 0.0
+        for df in delta_fs:
+            if df is None:
                 return None
-        excess = (gt - gs) - sum(diffs)
-        return excess
+            d = float(df)
+            if not math.isfinite(d) or d < 0.0:
+                return None
+            total += d
+        slack = total - dg
+        if not math.isfinite(slack):
+            return None
+        return slack
     except (TypeError, ValueError, OverflowError):
         return None
