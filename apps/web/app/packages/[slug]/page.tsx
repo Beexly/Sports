@@ -40,6 +40,19 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
   if (!pkg) {
     notFound();
   }
+  if (pkg.forSale === false) {
+    return (
+      <div className="relative min-h-screen w-full bg-slate-950 text-white">
+        <Nav />
+        <main id="main-content" className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-extrabold text-white">{pkg.title}</h1>
+          <p className="mt-4 text-lg text-[#F3EFE6]">{pkg.description}</p>
+          <p className="mt-4 text-amber-300">Green Bay 27, Carolina 19. Not for sale.</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const verification = await verifyPackagePurchase({
     sessionId: searchParams.session_id,

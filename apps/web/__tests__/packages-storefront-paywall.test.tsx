@@ -173,8 +173,8 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
     const pkgText = pkgPageDom.textContent ?? "";
-    expect(pkgText).toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
-    expect(pkgText).toContain("Sunday · Week 9 (1:00 PM ET)");
+    expect(pkgText).not.toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
+    expect(pkgText).not.toContain("Tonight");
     expect(pkgText).not.toMatch(/TONIGHT\s*·\s*TNF/i);
     expect(pkgText).not.toMatch(
       /Take Green Bay|and the under|Side Confidence|Total Confidence|61\/100|58\/100|Green Bay Packers -3\.5|UNDER 47\.5|OVER 54\.5|Detroit Lions -3|Chicago Bears \+3/i,
