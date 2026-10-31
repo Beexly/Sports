@@ -339,14 +339,14 @@
 
 .overhead-board {
   position: absolute;
-  top: 96px;
-  right: 196px;
-  bottom: 108px;
-  left: 36px;
+  top: 112px;
+  right: 64px;
+  bottom: 128px;
+  left: 48px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding: 40px 40px 28px;
+  gap: 48px;
+  padding: 48px;
   border: 1px solid #EDE8E0;
   border-top: 3px solid #FF4D2E;
   background: rgba(8, 9, 12, 0.88);
@@ -355,15 +355,15 @@
 .gate-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 32px;
 }
 .real-gate {
   display: flex;
-  min-height: 210px;
+  min-height: 248px;
   flex-direction: column;
   justify-content: space-between;
-  gap: 18px;
-  padding: 22px 20px 24px;
+  gap: 24px;
+  padding: 32px;
   border: 1px solid #EDE8E0;
   border-left: 3px solid #FF4D2E;
   background: #08090C;
@@ -374,11 +374,11 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
-  margin-top: 8px;
+  margin-top: 16px;
   border-top: 1px solid rgba(237, 232, 224, 0.28);
 }
 .sideline button {
-  padding: 22px 8px;
+  padding: 24px 16px;
   border: 0;
   border-bottom: 1px solid rgba(237, 232, 224, 0.2);
   background: transparent;
