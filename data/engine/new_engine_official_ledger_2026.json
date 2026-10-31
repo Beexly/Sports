@@ -1,15 +1,39 @@
 {
   "engine_version": "GSE v5.3.0 / 5-Stage JEV 10k-World Snap-by-Snap Engine",
-  "as_of": "2026-10-29T18:18:00-05:00",
+  "as_of": "2026-10-30T21:40:00-05:00",
+  "card_scope": {
+    "card_play_rows": 59,
+    "ledger_tracked_plays": 21,
+    "reference_only_plays": 38,
+    "note": "Only ledger_tracked_plays carry an assigned stake and count toward verified_record. The remaining card plays are graded for reference and excluded from the record."
+  },
   "verified_record": {
-    "wins": 16,
-    "losses": 5,
+    "wins": 14,
+    "losses": 6,
     "pushes": 0,
-    "total_graded": 21,
-    "win_pct": 76.19,
-    "net_units": "+10.45u",
-    "roi_pct": "+49.76%",
-    "display_banner": "16-5 (76.2%) \u00b7 +10.45 UNITS WITH THE NEW ENGINE"
+    "total_graded": 20,
+    "win_pct": 70.0,
+    "net_units": "+7.19u",
+    "roi_pct": "+38.86%",
+    "display_banner": "TNF official card ESPN-graded 14-6 with 1 split row. Prior 16-5 stays owner-attested and is not added into this banner.",
+    "prior_record": "16-5 (76.2%) \u00b7 +10.45u entering TNF CAR@GB",
+    "tonight_result": "14-6 official card, 1 split, net +7.19u on graded rows only",
+    "prior_record_verification": {
+      "status": "OWNER_ATTESTED_UNVERIFIED",
+      "reason": "no per-pick history: neither this JSON nor the ledger MD lists the 21 settled picks behind 16-5; the generator scripts/ops/update_official_16_5_ledger.py writes only the summary block; Neon public.picks has no row set or grouping column that reconciles to 16-5",
+      "verified_on": "2026-10-30",
+      "affects": "16 of the 31 wins and 5 of the 11 losses in verified_record cannot be independently reconstructed"
+    },
+    "superseded_banner": "31-11 (73.8%) \u00b7 +18.56 UNITS WITH THE NEW ENGINE",
+    "superseded_tonight_result": "15-6 (71.4%) \u00b7 +8.11u",
+    "tnf_official_card_espn": {
+      "wins": 14,
+      "losses": 6,
+      "splits": 1,
+      "net_units": 7.1897
+    },
+    "splits": 1,
+    "scope_note": "These counts are the 20 single-result official TNF rows only. The owner-attested 16-5 is excluded because those 21 picks are not reconstructable. The slash ATD row is a split, not a win."
   },
   "tonight_pending_card_car_at_gb": [
     {
@@ -19,7 +43,10 @@
       "units": 1.0,
       "rating": "61/100",
       "edge": "+8.62c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "GB 27, CAR 19, margin 8. Covered -3.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-02",
@@ -28,7 +55,10 @@
       "units": 1.0,
       "rating": "58/100",
       "edge": "+5.62c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Total 46. UNDER 46.5 wins. Packet line UNDER 44.5 is not this card and would have lost.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-03",
@@ -37,7 +67,10 @@
       "units": 1.0,
       "rating": "65/100",
       "edge": "+13.40c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Halftime GB 20, CAR 10. GB covered 1H -2.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-04",
@@ -46,7 +79,10 @@
       "units": 1.0,
       "rating": "66/100",
       "edge": "+13.66c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "CAR 1H points 10. UNDER 10.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-05",
@@ -55,7 +91,10 @@
       "units": 1.0,
       "rating": "68/100",
       "edge": "+15.20c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Q1 play-by-play: Love to Kraft 12 yards, TD, clock 5:08 Q1. OVER 6.5 1Q rec yds.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-06",
@@ -64,7 +103,10 @@
       "units": 1.0,
       "rating": "66/100",
       "edge": "+13.62c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Hubbard 7 receptions, 38 rec yds.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-07",
@@ -73,7 +115,10 @@
       "units": 1.0,
       "rating": "66/100",
       "edge": "+13.35c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "LOSS",
+      "actual": "Jacobs 6 receptions, 13 rec yds. Missed 17.5 and 18.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-08",
@@ -82,7 +127,10 @@
       "units": 1.0,
       "rating": "66/100",
       "edge": "+13.41c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Young 23/41, 209 pass yds. UNDER 253.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-09",
@@ -91,7 +139,10 @@
       "units": 1.0,
       "rating": "63/100",
       "edge": "+8.50c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Young 1 interception.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-10",
@@ -100,7 +151,10 @@
       "units": 1.0,
       "rating": "69/100",
       "edge": "+16.80c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "LOSS",
+      "actual": "Love 41 pass attempts. Missed UNDER 35.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-11",
@@ -109,7 +163,10 @@
       "units": 1.0,
       "rating": "63/100",
       "edge": "+11.10c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Watson 8 receptions, 113 rec yds, 0 rec TD, 10 targets.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-12",
@@ -118,7 +175,10 @@
       "units": 1.0,
       "rating": "65/100",
       "edge": "+12.74c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "McMillan 6 receptions, 58 rec yds, 11 targets.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-13",
@@ -127,7 +187,10 @@
       "units": 1.0,
       "rating": "63/100",
       "edge": "+10.35c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Hubbard 22 carries, 81 rush yds, 1 rush TD.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-14",
@@ -136,7 +199,10 @@
       "units": 1.0,
       "rating": "62/100",
       "edge": "+9.75c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Kraft 6 receptions, 53 rec yds, 1 rec TD.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-15",
@@ -145,7 +211,10 @@
       "units": 1.0,
       "rating": "61/100",
       "edge": "+8.97c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "LOSS",
+      "actual": "Jacobs 21 carries, 39 rush yds (1.9 YPC), 1 rush TD. Missed 60.5 and 61.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-16",
@@ -154,7 +223,10 @@
       "units": 0.75,
       "rating": "64/100",
       "edge": "+12.10c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Fitzgerald 2/2 FG, 7 kicking points.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-17",
@@ -163,7 +235,10 @@
       "units": 0.75,
       "rating": "61/100",
       "edge": "+8.85c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "LOSS",
+      "actual": "Smack 0/0 FG, 3 kicking points (3/4 XP). Both OVER 1.5 FG and OVER 7.5 kicking points lose.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-18",
@@ -172,7 +247,10 @@
       "units": 0.75,
       "rating": "66/100",
       "edge": "+13.16c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "LOSS",
+      "actual": "Okereke 5 total tackles (3 solo), 0 sacks. Missed OVER 6.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-19",
@@ -181,7 +259,10 @@
       "units": 0.75,
       "rating": "62/100",
       "edge": "+9.53c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "WIN",
+      "actual": "Van Ness 1 sack, 6 total tackles. OVER 0.25 sacks.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-20",
@@ -190,7 +271,10 @@
       "units": 0.5,
       "rating": "61/100",
       "edge": "+9.87c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "LOSS",
+      "actual": "Nixon 2 total tackles, 0 sacks. Missed OVER 4.5.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     },
     {
       "id": "CAR-GB-21",
@@ -199,7 +283,88 @@
       "units": 0.5,
       "rating": "64/100",
       "edge": "+4.75c",
-      "status": "PENDING"
+      "status": "SETTLED",
+      "result": "SPLIT",
+      "actual": "Kraft anytime TD WIN (12-yard Q1 score). Watson anytime TD LOSS (0 rec TD). Combined slash is not a single win.",
+      "grade_source": "ESPN summary+plays event 401873023 fetched 2026-10-30"
     }
-  ]
+  ],
+  "tnf_settlement": {
+    "event_id": "401873023",
+    "final": {
+      "GB": 27,
+      "CAR": 19,
+      "total": 46,
+      "margin_gb": 8
+    },
+    "quarters": {
+      "GB": [
+        6,
+        14,
+        7,
+        0
+      ],
+      "CAR": [
+        3,
+        7,
+        3,
+        6
+      ]
+    },
+    "official_card": {
+      "wins": 14,
+      "losses": 6,
+      "splits": 1,
+      "net_units": 7.19,
+      "units_risked_graded": 18.5
+    },
+    "banner_retraction": "Prior tonight_result 15-6 and verified_record 31-11 are not reconcilable to this box score. They are retained below as superseded, not as the live record.",
+    "packet_claims": {
+      "source": "Friday meat-and-potatoes packet. Not the official 21-row card.",
+      "final_score": "GB 27 CAR 19 total 46 confirmed ESPN",
+      "rows": [
+        {
+          "claim": "Christian Watson OVER 70.5 rec yds",
+          "result": "WIN",
+          "actual": "8-113"
+        },
+        {
+          "claim": "Tucker Kraft OVER 42.5 rec yds",
+          "result": "WIN",
+          "actual": "6-53-1"
+        },
+        {
+          "claim": "Tucker Kraft OVER 6.5 1Q rec yds",
+          "result": "WIN",
+          "actual": "12-yard TD at Q1 5:08"
+        },
+        {
+          "claim": "Jordan Love OVER 244.5 pass yds",
+          "result": "WIN",
+          "actual": "288. Not an official-card row. Official card was Love UNDER 35.5 attempts, which lost (41)."
+        },
+        {
+          "claim": "Josh Jacobs anytime TD",
+          "result": "WIN",
+          "actual": "1 rush TD + 1 rec TD. Not a standalone official-card row. Official rush-yards over lost (39)."
+        },
+        {
+          "claim": "Rashan Gary OVER 0.25 sacks",
+          "result": "NOT_SUPPORTED",
+          "actual": "Sack chart is Hopper, Van Ness, Sorrell, Dennis-Sutton, Cox, Wyatt \u2014 1 each, sum 6. Gary has no sack line on the ESPN box score. Do not book a win."
+        },
+        {
+          "claim": "Mitchell Evans OVER 6.5 rec yds",
+          "result": "WIN",
+          "actual": "2-22. Not an official-card row."
+        },
+        {
+          "claim": "CAR @ GB UNDER 44.5",
+          "result": "LOSS",
+          "actual": "Total 46. Official card was UNDER 46.5, which won."
+        }
+      ]
+    },
+    "engine_note": "Jacobs 21-39 (1.9 YPC) plus 6-13 receiving and 2 TDs. Rushing efficiency was poor; touchdown and receiving volume carried the day. Love 30/41, 288 yards, 3 TD, 1 INT, 0 rush attempts."
+  }
 }

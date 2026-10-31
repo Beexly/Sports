@@ -16,34 +16,43 @@ describe("homepage doctrine hero", () => {
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
-  it("keeps evidence single-family with tabular figures; display faces are headlines-only (NEBULA v7)", () => {
+  it("keeps evidence single-family with tabular figures; display faces are headlines-only (TWO-FAMILY)", () => {
     // Law 1 — evidence sets the rendering. A figure and its sample size must sit
     // at the same optical size at n=10-29, which is unachievable across two
-    // families: a mono figure beside a sans caption reads as machine output
-    // annotated by a human. Inter carries every DATA role, and "tnum" replaces the
-    // half of the mono role that was load-bearing (column alignment).
+    // families: a figure in one face beside a caption in another reads as machine
+    // output annotated by a human. IBM Plex Sans carries every DATA role, and
+    // "tnum" replaces the half of the mono role that was load-bearing (column
+    // alignment).
     //
-    // NEBULA v7 (owner-approved 2026-09-10) narrows — not repeals — this law:
-    // display headlines and the wordmark may use approved display faces
-    // (Barlow Condensed, Chakra Petch), because headlines never carry evidence.
-    // Figures, captions, numerals and body stay Inter. If you are here because
-    // this test failed, the question is "did evidence leave Inter", not
-    // "how do I make it pass".
+    // TWO-FAMILY (owner-approved Redline Ledger) narrows — not repeals — this
+    // law: display headlines and the wordmark may use the one approved display
+    // face (Big Shoulders Display), because headlines never carry evidence.
+    // Figures, captions, numerals and body stay IBM Plex Sans. If you are here
+    // because this test failed, the question is "did evidence leave the body
+    // face", not "how do I make it pass".
     //
-    // Supersedes the previous Exo 2 / JetBrains Mono / Instrument Serif doctrine.
+    // Supersedes NEBULA v7 (Inter + Barlow Condensed + Chakra Petch) and, before
+    // that, the Exo 2 / JetBrains Mono / Instrument Serif doctrine.
 
-    // Inter is fetched exactly once; the only other allowed fetches are the
-    // two approved display faces.
-    expect(layout.match(/Inter\(/g)).toHaveLength(1);
-    for (const retired of ["Exo_2", "JetBrains_Mono", "Instrument_Serif"]) {
-      expect(layout).not.toMatch(new RegExp(retired));
-    }
-    for (const approved of ["Barlow_Condensed", "Chakra_Petch"]) {
-      expect(layout).toContain(approved);
+    // EXACTLY TWO families are fetched, each exactly once: IBM Plex Sans for
+    // body/data and Big Shoulders Display for headlines + the wordmark alias.
+    expect(layout.match(/IBM_Plex_Sans\(/g)).toHaveLength(1);
+    expect(layout.match(/Big_Shoulders_Display\(/g)).toHaveLength(1);
+    for (const retired of [
+      "Inter",
+      "Barlow_Condensed",
+      "Chakra_Petch",
+      "Exo_2",
+      "JetBrains_Mono",
+      "Instrument_Serif",
+    ]) {
+      // Never *called* — the family is not fetched at all. (Matched on the call
+      // form so the retirement note in the file's own comments can't trip it.)
+      expect(layout.match(new RegExp(`${retired}\\(`, "g")) ?? []).toHaveLength(0);
     }
 
-    // next/font binds --f-body, --f-cond and --f-word; every other family derives.
-    for (const bound of ["--f-body", "--f-cond", "--f-word"]) {
+    // next/font binds --f-body and --f-cond; every other family derives.
+    for (const bound of ["--f-body", "--f-cond"]) {
       expect(layout).toContain(`variable: "${bound}"`);
     }
     for (const derived of [
@@ -60,6 +69,15 @@ describe("homepage doctrine hero", () => {
     // --f-display is the single exception: headlines resolve to the condensed
     // display face, never to a data role.
     expect(tokens).toMatch(/--f-display:\s*var\(--f-cond/);
+
+    // --f-word is the same exception and the same face: the wordmark is an
+    // ALIAS to --f-cond, never a third fetched family, and never bound by
+    // next/font (it resolves in the token file).
+    expect(tokens).toMatch(/--f-word:\s*var\(--f-cond/);
+    expect(layout).not.toContain('variable: "--f-word"');
+
+    // The other bound variable is owned by next/font just as strictly.
+    expect(tokens).not.toMatch(/^\s*--f-cond:/m);
 
     // --f-body is owned by next/font and must NOT be redeclared in :root, or the
     // element-level binding and the token file fight over the cascade.

@@ -20,11 +20,10 @@ export interface RevenuePillar {
  * Exact routes representing core commercial and tactical value streams.
  */
 export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
-  { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "This Week's Football Betting Packs" },
-  { label: "CAR @ GB final", href: "/packages/tnf-all-in-pack", desc: "Finished. Not for sale." },
-  { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday Best Bets Pack" },
-  { label: "DFS", href: "/fantasy/dfs", desc: "Daily Fantasy Lineup Optimizer" },
-  { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Weekly All-Access Pass" },
+  { label: "Picks", href: "/picks", desc: "Locked Week 8 board" },
+  { label: "Props", href: "/props", desc: "Locked props and watchlist" },
+  { label: "Packs", href: "/packages", desc: "Galaxy Picks packages" },
+  { label: "DFS", href: "/fantasy/dfs", desc: "DFS lineup optimizer" },
 ];
 
 export const COMMERCIAL_REVENUE_PILLARS = FIVE_REVENUE_PILLARS;
@@ -49,23 +48,25 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
         {right}
       </div>
 
-      {/* Live Quick-Jump Bar */}
+      {/* This week's packs — quiet type row; scrolls sideways on phones. */}
       <div
-        className="nav-pillars-bar border-t border-slate-800 bg-slate-950 py-2"
+        className="nav-pillars-bar border-t border-mineral bg-obsidian"
         data-testid="five-revenue-pillars-bar"
       >
-        <div className="container flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 font-mono text-xs font-semibold text-amber-400 uppercase tracking-wider">
-            <span className="h-2 w-2 rounded-full bg-amber-400" />
-            <span className="hidden sm:inline">Quick Jump:</span>
-          </div>
-          <nav className="flex items-center gap-4 sm:gap-6 font-sans text-xs font-medium" aria-label="Five Revenue Pillars">
+        <div className="container flex items-center gap-6">
+          <span className="hidden shrink-0 text-[11px] font-medium uppercase tracking-[0.14em] text-ion-2 sm:inline">
+            This week
+          </span>
+          <nav
+            className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto whitespace-nowrap py-2.5 text-[13px] sm:gap-8"
+            aria-label="This week’s packs"
+          >
             {FIVE_REVENUE_PILLARS.map((pillar) => (
               <a
                 key={pillar.href}
                 href={pillar.href}
-                className="text-slate-200 hover:text-amber-400 transition-colors"
                 title={pillar.desc}
+                className="shrink-0 text-ion-1 underline-offset-4 transition-colors hover:text-ion-white hover:underline focus-visible:text-ion-white focus-visible:underline"
               >
                 {pillar.label}
               </a>

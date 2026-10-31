@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import type { PickPackageOffering } from "@/lib/packages/catalog";
 import {
@@ -45,6 +45,10 @@ interface PaywallRevealCardProps {
   teasers: RedactedWriteupTeaser[];
   initialUnlockedWriteups?: CoachGameWriteup[] | null;
   initialSessionId?: string;
+  /** Lead band: line-to-gain edge and larger scale. */
+  featured?: boolean;
+  /** "solid" for the one ember action on screen; "line" for the rest. */
+  ctaTone?: "solid" | "line";
 }
 
 function formatConfidenceStrict(raw: string | number): string {
@@ -52,11 +56,31 @@ function formatConfidenceStrict(raw: string | number): string {
   return cleaned.endsWith("/100") ? cleaned : `${cleaned}/100`;
 }
 
+/** What the catalog says this pack contains — never more. */
+function insideList(pkg: PickPackageOffering): string[] {
+  return [
+    "Spread call",
+    "Over/Under call",
+    ...(pkg.includesProps ? ["Player props"] : []),
+    ...(pkg.includesSgp ? ["Same-game parlay"] : []),
+    ...(pkg.includesDfs ? ["DFS lineup core"] : []),
+  ];
+}
+
+/**
+ * PaywallRevealCard — one purchase band.
+ *
+ * Redline Ledger: identity on the left, price and action on the right, picks
+ * revealed in-place below the band after purchase. No nested lock boxes, no
+ * repeated game previews; the dossiers section carries the free storylines.
+ */
 export function PaywallRevealCard({
   pkg,
   teasers,
   initialUnlockedWriteups = null,
   initialSessionId,
+  featured = false,
+  ctaTone = "solid",
 }: PaywallRevealCardProps): JSX.Element {
   const [unlockedWriteups, setUnlockedWriteups] = useState<CoachGameWriteup[] | null>(
     initialUnlockedWriteups,
@@ -67,13 +91,20 @@ export function PaywallRevealCard({
   const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false);
   const [guaranteed, setGuaranteed] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const receiptPanelId = useId();
+  const receiptInputId = useId();
 
   const isUnlocked = Boolean(unlockedWriteups && unlockedWriteups.length > 0);
+  const forSale = pkg.forSale !== false;
   const standardPrice = (pkg.standardPriceCents / 100).toFixed(0);
   const guaranteedPrice = pkg.guaranteedPriceCents
     ? (pkg.guaranteedPriceCents / 100).toFixed(0)
     : null;
   const activePrice = guaranteed && guaranteedPrice ? guaranteedPrice : standardPrice;
+  const inside = insideList(pkg);
+  const propReads = pkg.includesProps
+    ? teasers.reduce((n, t) => n + t.lockedSummary.propsCount, 0)
+    : 0;
 
   // Check if user returned from Stripe Checkout with ?session_id=cs_... or already unlocked in localStorage
   useEffect(() => {
@@ -164,353 +195,268 @@ export function PaywallRevealCard({
   }
 
   return (
-    <div
+    <article
       data-testid={`paywall-reveal-card-${pkg.slug}`}
-      className="flex flex-col justify-between bg-slate-900 border-2 border-slate-700 hover:border-amber-400 rounded-xl p-6 shadow-xl transition-colors"
+      data-od-id={`pack-band-${pkg.slug}`}
+      className={`bg-obsidian ${featured ? "rl-gain-edge" : "border-t border-mineral"}`}
     >
-      {/* Card Header */}
-      <div>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="inline-flex items-center rounded-md border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-            {pkg.badge || pkg.windowSlot}
-          </span>
-          <div className="flex items-center gap-2">
-            {isUnlocked ? (
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-400/60 bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase text-emerald-300">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                UNLOCKED IN-PLACE
-              </span>
-            ) : (
-              <span className="text-2xl font-bold text-amber-400">
-                ${activePrice}
-              </span>
-            )}
+      <div className={`grid gap-10 py-10 sm:py-12 lg:grid-cols-12 lg:gap-12 ${featured ? "lg:py-16" : ""}`}>
+        {/* ── Identity ─────────────────────────────────────────── */}
+        <div className="lg:col-span-7 xl:col-span-8">
+          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+            <span className="rl-eyebrow">{pkg.badge || formatWindowSlotLabel(pkg.windowSlot)}</span>
+            {isUnlocked && <span className="rl-eyebrow text-plasma">UNLOCKED IN-PLACE</span>}
           </div>
+
+          <h3
+            className={`rl-display mt-4 max-w-[18ch] ${
+              featured
+                ? "text-[length:clamp(2.75rem,6vw,4.75rem)]"
+                : "text-[length:clamp(2.25rem,4.4vw,3.25rem)]"
+            }`}
+          >
+            {pkg.title}
+          </h3>
+          <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-ion-1 sm:text-[17px]">
+            {sanitizePlainFootballText(pkg.description)}
+          </p>
+          <p
+            data-testid="whats-inside-checklist"
+            className="mt-6 max-w-[60ch] text-[15px] leading-relaxed text-ion-white"
+          >
+            <span className="rl-eyebrow mr-3">What’s inside</span>
+            {inside.join(" · ")}
+          </p>
+          <Link href={`/packages/${pkg.slug}`} className="rl-link mt-6 inline-block text-sm">
+            Full game breakdown &amp; pick details
+          </Link>
         </div>
 
-        <h3 className="mt-3 font-display text-2xl font-bold text-white">
-          {pkg.title}
-        </h3>
-        <p className="mt-1 text-sm font-semibold text-amber-300">
-          {pkg.gamesCount} {pkg.gamesCount === 1 ? "Game" : "Games"} · Side, Total, Player Props &amp; Same-Game Parlay
-        </p>
-        <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
-          {sanitizePlainFootballText(pkg.description)}
-        </p>
-
-        {/* FREE PREVIEW BOX (Teases Matchup & Storylines Only — ZERO Leaked Picks or Confidence Numbers) */}
-        {teasers.length > 0 && (
-          <div className="mt-5 space-y-3 border-t border-slate-700 pt-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                Matchup Storyline &amp; Film Preview (Free)
-              </span>
-              <span className="text-xs font-semibold text-emerald-400">
-                Plain-English Matchup Breakdown
-              </span>
-            </div>
-            {teasers.slice(0, 2).map((t) => (
-              <div key={t.id} className="rounded-lg border border-slate-700 bg-slate-800/90 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-base font-bold text-white">{t.matchup}</span>
-                  <span className="text-xs font-semibold text-amber-300">
-                    {formatWindowSlotLabel(t.windowSlot, t.matchup)}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
-                  {sanitizePlainFootballText(t.schemeMatchup.coverageShell || t.schemeMatchup.notes)}
-                </p>
-                {t.paceOfPlay?.notes && (
-                  <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
-                    {sanitizePlainFootballText(t.paceOfPlay.notes)}
-                  </p>
-                )}
-                <div className="mt-3 rounded-md bg-slate-900/90 px-3 py-2 text-xs font-semibold text-slate-200 border border-slate-700">
-                  Locked Inside This Pack: Official Spread Call · Official Over/Under Call · {t.lockedSummary.propsCount} Player Prop Bets · 3-Leg Same-Game Parlay
-                </div>
-
-                {/* Blurred Locked Preview Row */}
-                {!isUnlocked && (
-                  <div className="relative mt-3 overflow-hidden rounded-lg border border-slate-700 bg-slate-950/90 p-3.5">
-                    <div
-                      aria-hidden="true"
-                      className="select-none blur-[5px] pointer-events-none opacity-60 text-sm text-slate-200"
-                    >
-                      <div className="font-bold text-emerald-400">
-                        Official Spread Verdict · Official Over/Under Verdict
-                      </div>
-                      <div className="mt-1 text-xs text-slate-300">
-                        Player Yardage Props ({t.lockedSummary.propsCount} Official Reads) · 3-Leg Same-Game Parlay
-                      </div>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center p-2">
-                      <span className="inline-flex items-center rounded-md border border-amber-400/60 bg-slate-900/95 px-3 py-1.5 text-xs font-bold text-amber-300 shadow-md">
-                        🔒 Locked Until Purchase — Instant Reveal on This Page
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* HIGH-CONTRAST PAYWALL CALLOUT OR UNLOCKED PICKS */}
-        {!isUnlocked ? (
-          <div className="mt-5 rounded-xl border-2 border-amber-500/60 bg-slate-800 p-5 text-center shadow-inner">
-            <h4 className="text-lg font-bold text-white">
-              🔒 Unlock Official Picks &amp; Exact Bet Numbers
-            </h4>
-            <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
-              Click below for instant access to our official Side bet, Total bet, best Player Props, and Same-Game Parlay right on this screen.
+        {/* ── Price + action ───────────────────────────────────── */}
+        <div className="lg:col-span-5 xl:col-span-4">
+          {isUnlocked ? (
+            <p className="text-base leading-relaxed text-ion-1">
+              Your picks are open below. Keep your receipt ID to reopen them on another device.
             </p>
-
-            {/* Explicit "What's Inside" checklist right above the Unlock button */}
-            <div
-              data-testid="whats-inside-checklist"
-              className="mt-4 rounded-lg border border-emerald-400/60 bg-slate-900 px-4 py-3 text-sm font-bold text-slate-100 shadow-sm"
-            >
-              What’s Inside: Spread Call · Over/Under Call · Player Props · Same-Game Parlay
-              {pkg.includesDfs ? " · DFS Lineup Core" : ""}
-            </div>
-
-            {guaranteedPrice && (
-              <div className="mt-3 inline-flex rounded-lg border border-slate-600 bg-slate-900 p-1 text-xs font-semibold">
-                <button
-                  type="button"
-                  onClick={() => setGuaranteed(false)}
-                  className={`rounded-md px-3 py-1.5 transition-colors ${
-                    !guaranteed ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-300 hover:text-white"
+          ) : forSale ? (
+            <>
+              <p className="rl-figure flex items-start gap-1 text-ion-white">
+                <span className="mt-[0.4em] text-2xl font-semibold">$</span>
+                <span
+                  className={`font-semibold leading-none tracking-[-0.02em] ${
+                    featured
+                      ? "text-[length:clamp(4rem,8vw,6rem)]"
+                      : "text-[length:clamp(3.25rem,5vw,4rem)]"
                   }`}
                 >
-                  Standard ${standardPrice}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGuaranteed(true)}
-                  className={`rounded-md px-3 py-1.5 transition-colors ${
-                    guaranteed ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-300 hover:text-white"
-                  }`}
-                >
-                  Credit-Back ${guaranteedPrice}
-                </button>
-              </div>
-            )}
+                  {activePrice}
+                </span>
+              </p>
+              <p className="rl-figure mt-3 text-sm leading-relaxed text-ion-1">
+                {pkg.gamesCount} {pkg.gamesCount === 1 ? "game" : "games"}
+                {propReads > 0 ? ` · ${propReads} player prop reads` : ""} · one-time purchase
+              </p>
 
-            <div className="mt-4">
+              {guaranteedPrice && (
+                <div role="group" aria-label="Price option" className="mt-6 inline-flex border border-mineral-hi">
+                  <button
+                    type="button"
+                    aria-pressed={!guaranteed}
+                    onClick={() => setGuaranteed(false)}
+                    className={`rl-figure min-h-[44px] px-4 text-xs font-semibold uppercase tracking-[0.1em] transition-colors ${
+                      !guaranteed ? "bg-ion-white text-obsidian" : "text-ion-1 hover:text-ion-white"
+                    }`}
+                  >
+                    Standard ${standardPrice}
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={guaranteed}
+                    onClick={() => setGuaranteed(true)}
+                    className={`rl-figure min-h-[44px] px-4 text-xs font-semibold uppercase tracking-[0.1em] transition-colors ${
+                      guaranteed ? "bg-ion-white text-obsidian" : "text-ion-1 hover:text-ion-white"
+                    }`}
+                  >
+                    Credit-Back ${guaranteedPrice}
+                  </button>
+                </div>
+              )}
+
               <button
                 type="button"
                 disabled={loadingCheckout}
+                aria-busy={loadingCheckout}
                 onClick={() => void handleOneClickCheckout(guaranteed)}
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-base py-3.5 px-6 rounded-lg shadow-lg transition"
+                className={`rl-btn rl-figure mt-7 w-full ${ctaTone === "solid" ? "rl-btn-solid" : "rl-btn-line"}`}
               >
-                {loadingCheckout
-                  ? "Opening Secure Checkout..."
-                  : `Unlock Picks Now — $${activePrice}`}
+                {loadingCheckout ? "Opening secure checkout…" : `Unlock Picks Now — $${activePrice}`}
               </button>
-            </div>
 
-            <div className="mt-3">
               <button
                 type="button"
+                aria-expanded={showTokenBox}
+                aria-controls={receiptPanelId}
                 onClick={() => setShowTokenBox((prev) => !prev)}
-                className="text-xs font-semibold text-slate-300 underline hover:text-amber-300"
+                className="mt-4 min-h-[44px] text-sm text-ion-1 underline decoration-ion-2 underline-offset-4 transition-colors hover:text-ion-white hover:decoration-plasma"
               >
-                {showTokenBox ? "Hide Receipt Box" : "Already purchased? Enter Receipt ID"}
+                {showTokenBox ? "Hide receipt box" : "Already purchased? Enter Receipt ID"}
               </button>
-            </div>
-          </div>
-        ) : (
-          /* UNLOCKED IN-PLACE REVEAL */
-          <div className="mt-5 space-y-4 rounded-xl border-2 border-emerald-500/60 bg-slate-950 p-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                ✓ Live Picks Revealed In-Place
-              </span>
-              <span className="text-xs font-semibold text-slate-300">
-                Confidence Score Out of 100
-              </span>
-            </div>
 
+              {showTokenBox && (
+                <div id={receiptPanelId} className="mt-3">
+                  <label htmlFor={receiptInputId} className="rl-eyebrow block">
+                    Stripe receipt ID
+                  </label>
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      id={receiptInputId}
+                      type="text"
+                      value={tokenInput}
+                      onChange={(e) => setTokenInput(e.target.value)}
+                      placeholder="cs_live_..."
+                      autoComplete="off"
+                      className="rl-figure min-h-[52px] min-w-0 flex-1 border border-mineral-hi bg-eclipse px-4 text-base text-ion-white placeholder:text-ion-2 focus:border-ion-white focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      disabled={loadingUnlock}
+                      onClick={() => void handleInlineVerify()}
+                      className="rl-btn rl-btn-line px-5"
+                    >
+                      {loadingUnlock ? "Checking…" : "Unlock"}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <p className="rl-eyebrow">Final · not for sale</p>
+          )}
+
+          {errorMsg && (
+            <p role="alert" className="mt-3 text-sm font-semibold text-plasma">
+              {errorMsg}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* ── UNLOCKED IN-PLACE REVEAL ───────────────────────────── */}
+      {isUnlocked && (
+        <div className="border-t border-mineral pb-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 py-6">
+            <span className="rl-eyebrow text-ion-white">Live Picks Revealed In-Place</span>
+            <span className="rl-eyebrow">Confidence score out of 100</span>
+          </div>
+
+          <ol>
             {unlockedWriteups?.map((w) => {
               const sideIsPass = String(w.sideTotalCall.sideDecision) === "PASS";
               const totalIsPass = String(w.sideTotalCall.totalDecision) === "PASS";
               return (
-                <div key={w.id} className="space-y-4 border-b border-slate-800 pb-4 last:border-b-0 last:pb-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-bold text-white">{w.matchup}</span>
-                    <span className="text-xs font-bold uppercase text-amber-400">
-                      {formatWindowSlotLabel(w.windowSlot, w.matchup)}
-                    </span>
+                <li key={w.id} className="grid gap-6 border-t border-mineral py-8 lg:grid-cols-12 lg:gap-12">
+                  <div className="lg:col-span-4">
+                    <h4 className="rl-display text-3xl">{w.matchup}</h4>
+                    <p className="rl-eyebrow rl-figure mt-3">{formatWindowSlotLabel(w.windowSlot, w.matchup)}</p>
                   </div>
 
-                  {/* Official Side & Total */}
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div
-                      className={`rounded-lg p-4 border ${
-                        sideIsPass
-                          ? "bg-slate-800/90 border-amber-400/50"
-                          : "bg-slate-800 border-emerald-500/60"
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                          BEST SPREAD BET
-                        </span>
-                        <span
-                          className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase ${
-                            sideIsPass
-                              ? "bg-amber-500/20 text-amber-300 border border-amber-400/40"
-                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40"
-                          }`}
-                        >
-                          {sideIsPass ? "PASS — NO BET" : `BET THIS: ${w.sideTotalCall.sideSelection}`}
-                        </span>
+                  <div className="lg:col-span-8">
+                    <dl className="grid gap-6 sm:grid-cols-2">
+                      <div className="border-t border-mineral pt-4">
+                        <dt className="rl-eyebrow">Best spread bet</dt>
+                        <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
+                          {sideIsPass ? (
+                            <span className="text-ion-2">PASS — NO BET</span>
+                          ) : (
+                            <>
+                              <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
+                              {w.sideTotalCall.sideSelection}
+                            </>
+                          )}
+                        </dd>
+                        <dd className="rl-figure mt-1 text-sm text-ion-1">
+                          Confidence: {formatConfidenceStrict(w.sideTotalCall.sideConfidence)}
+                        </dd>
                       </div>
-                      <div className="mt-2 text-lg font-bold text-white">
-                        {sideIsPass ? "PASS — NO BET" : w.sideTotalCall.sideSelection}
+                      <div className="border-t border-mineral pt-4">
+                        <dt className="rl-eyebrow">Best total bet</dt>
+                        <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
+                          {totalIsPass ? (
+                            <span className="text-ion-2">PASS — NO BET</span>
+                          ) : (
+                            <>
+                              <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
+                              {w.sideTotalCall.totalSelection}
+                            </>
+                          )}
+                        </dd>
+                        <dd className="rl-figure mt-1 text-sm text-ion-1">
+                          Confidence: {formatConfidenceStrict(w.sideTotalCall.totalConfidence)}
+                        </dd>
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-emerald-300">
-                        Confidence: {formatConfidenceStrict(w.sideTotalCall.sideConfidence)}
-                      </div>
-                    </div>
+                    </dl>
 
-                    <div
-                      className={`rounded-lg p-4 border ${
-                        totalIsPass
-                          ? "bg-slate-800/90 border-amber-400/50"
-                          : "bg-slate-800 border-emerald-500/60"
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                          BEST TOTAL BET
-                        </span>
-                        <span
-                          className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase ${
-                            totalIsPass
-                              ? "bg-amber-500/20 text-amber-300 border border-amber-400/40"
-                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40"
-                          }`}
-                        >
-                          {totalIsPass ? "PASS — NO BET" : `BET THIS: ${w.sideTotalCall.totalSelection}`}
-                        </span>
-                      </div>
-                      <div className="mt-2 text-lg font-bold text-white">
-                        {totalIsPass ? "PASS — NO BET" : w.sideTotalCall.totalSelection}
-                      </div>
-                      <div className="mt-2 text-xs font-semibold text-emerald-300">
-                        Confidence: {formatConfidenceStrict(w.sideTotalCall.totalConfidence)}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Plain-English Rationale */}
-                  <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-                    <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                      WHY BET THIS:
-                    </div>
-                    <p className="mt-1.5 text-sm md:text-base leading-relaxed text-slate-100">
+                    <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-ion-1">
+                      <span className="rl-eyebrow mr-3">Why bet this</span>
                       {sanitizePlainFootballText(w.sideTotalCall.rationale)}
                     </p>
-                  </div>
 
-                  {/* Best Player Props */}
-                  {w.topProps.length > 0 && (
-                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
-                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                        BEST PLAYER PROPS
+                    {w.topProps.length > 0 && (
+                      <div className="mt-6">
+                        <p className="rl-eyebrow">Best player props</p>
+                        <ul className="mt-2">
+                          {w.topProps.map((p, idx) => {
+                            const propIsPass = String(p.decision) === "PASS";
+                            return (
+                              <li
+                                key={`${p.playerId}-${p.propType}-${idx}`}
+                                className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-mineral py-3 text-[15px]"
+                              >
+                                <span className={propIsPass ? "text-ion-2" : "font-semibold text-ion-white"}>
+                                  {propIsPass
+                                    ? `${p.playerName} — PASS — NO BET (${p.propType})`
+                                    : `BET THIS: ${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
+                                </span>
+                                <span className="rl-figure text-sm text-ion-1">
+                                  Confidence: {formatConfidenceStrict(p.confidence)}
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ul>
                       </div>
-                      <div className="mt-2 space-y-2">
-                        {w.topProps.map((p, idx) => {
-                          const propIsPass = String(p.decision) === "PASS";
-                          return (
-                            <div
-                              key={`${p.playerId}-${p.propType}-${idx}`}
-                              className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/70 pb-2 last:border-b-0 last:pb-0 text-sm"
+                    )}
+
+                    {w.correlatedSgpTicket && (
+                      <div className="mt-6">
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                          <p className="rl-eyebrow">{sanitizePlainFootballText(w.correlatedSgpTicket.title)}</p>
+                          <p className="rl-figure text-sm text-ion-1">
+                            Book odds {w.correlatedSgpTicket.marketOdds} · fair odds {w.correlatedSgpTicket.fairOdds}
+                          </p>
+                        </div>
+                        <ol className="mt-2">
+                          {w.correlatedSgpTicket.legs.map((leg, idx) => (
+                            <li
+                              key={idx}
+                              className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-mineral py-3 text-[15px] text-ion-white"
                             >
-                              <span className="font-bold text-white">
-                                {propIsPass
-                                  ? `${p.playerName} — PASS — NO BET (${p.propType})`
-                                  : `BET THIS: ${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
+                              <span>{sanitizePlainFootballText(leg.description)}</span>
+                              <span className="rl-figure text-sm text-ion-1">
+                                Confidence: {formatConfidenceStrict(leg.confidence)}
                               </span>
-                              <span className="text-xs font-semibold text-emerald-300">
-                                Confidence: {formatConfidenceStrict(p.confidence)}
-                              </span>
-                            </div>
-                          );
-                        })}
+                            </li>
+                          ))}
+                        </ol>
                       </div>
-                    </div>
-                  )}
-
-                  {/* Correlated Same-Game Parlay */}
-                  {w.correlatedSgpTicket && (
-                    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                          {sanitizePlainFootballText(w.correlatedSgpTicket.title)}
-                        </span>
-                        <span className="text-xs font-bold text-white">
-                          Book Odds {w.correlatedSgpTicket.marketOdds} (Fair Odds {w.correlatedSgpTicket.fairOdds})
-                        </span>
-                      </div>
-                      <ul className="mt-2 space-y-1 text-sm text-slate-200">
-                        {w.correlatedSgpTicket.legs.map((leg, idx) => (
-                          <li key={idx}>
-                            • {sanitizePlainFootballText(leg.description)} (Confidence: {formatConfidenceStrict(leg.confidence)})
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                </li>
               );
             })}
-          </div>
-        )}
-
-        {/* Inline Receipt Verification Drawer */}
-        {!isUnlocked && showTokenBox && (
-          <div className="mt-3 rounded-lg border border-slate-700 bg-slate-800 p-4">
-            <label className="block text-xs font-bold uppercase text-slate-200">
-              Enter Your Stripe Receipt ID for Instant Access
-            </label>
-            <div className="mt-2 flex gap-2">
-              <input
-                type="text"
-                value={tokenInput}
-                onChange={(e) => setTokenInput(e.target.value)}
-                placeholder="cs_live_..."
-                className="flex-1 rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
-              />
-              <button
-                type="button"
-                disabled={loadingUnlock}
-                onClick={() => void handleInlineVerify()}
-                className="rounded-md bg-amber-500 hover:bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950"
-              >
-                {loadingUnlock ? "Checking..." : "Unlock"}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {errorMsg && (
-          <p className="mt-2 text-xs font-semibold text-amber-400">{errorMsg}</p>
-        )}
-      </div>
-
-      {/* Footer Link */}
-      <div className="mt-5 flex items-center justify-between border-t border-slate-800 pt-4 text-xs font-semibold">
-        <Link
-          href={`/packages/${pkg.slug}`}
-          className="text-amber-400 hover:text-amber-300 transition-colors"
-        >
-          View Full Game Breakdown &amp; Pick Details →
-        </Link>
-        <span className="text-slate-400">Instant On-Screen Access</span>
-      </div>
-    </div>
+          </ol>
+        </div>
+      )}
+    </article>
   );
 }

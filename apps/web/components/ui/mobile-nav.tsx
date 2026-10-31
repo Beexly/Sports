@@ -16,8 +16,9 @@ const SECTIONS: readonly Section[] = [
   {
     heading: "GALAXY PICKS (PAID)",
     links: [
-      { label: "Galaxy Picks Storefront", href: "/packages" },
-      { label: "Week 8 Game Dossiers", href: "/packages#slate-dossiers" },
+      { label: "Locked board", href: "/picks" },
+      { label: "Props", href: "/props" },
+      { label: "Packs", href: "/packages" },
     ],
   },
   {
