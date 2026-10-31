@@ -159,3 +159,12 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// QB Aggressiveness expected
+export {
+  computeQbAggressivenessExpected,
+  QB_AGGRESSIVENESS_MODEL_VERSION,
+  MIN_QUALIFYING_WEEKS,
+  type QbAggressivenessModel,
+  type QbAggressivenessWindow,
+} from "./qb-aggressiveness-expected.js";
