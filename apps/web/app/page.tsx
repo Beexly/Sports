@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { SignalDecode } from "@/components/motion/signal-decode";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { FieldCinematicIntro } from "@/components/landing/field-cinematic-intro";
-import { FieldHeroCanvas } from "@/components/landing/field-hero-canvas";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { Reveal } from "@/components/motion/reveal";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
-  formatWindowSlotLabel,
   getRedactedTeasersForWindowSlot,
-  sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
+import { DossierLedger } from "@/components/packages/dossier-ledger";
+import {
+  isFullSlatePack,
+  lowestPriceDollars,
+  orderPacksForStorefront,
+  upcomingOnly,
+} from "@/components/packages/storefront-order";
 
 export const metadata: Metadata = {
   title: { absolute: "Galaxy Sports Edge" },
@@ -24,373 +27,145 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+// Dossiers are filtered by kickoff at render time; regenerate so a game that
+// has kicked off never stays featured beside an unlock link.
+export const revalidate = 300;
+
 export default async function HomePage(): Promise<JSX.Element> {
+  const packs = orderPacksForStorefront(LIVE_PACKAGE_CATALOG);
+  const fromPrice = lowestPriceDollars(packs);
+  const dossiers = upcomingOnly(LIVE_SLATE_COACH_WRITEUPS);
+
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-obsidian text-ion">
       <FieldCinematicIntro />
       <Nav />
       <main id="main-content">
-        {/* HERO */}
+        {/* ── HERO · stadium plate, thesis in the dark stands ───────── */}
         <section
-          className="relative isolate overflow-hidden border-b border-mineral"
-          style={{ background: "#08090C", minHeight: "min(82vh, 720px)" }}
+          data-od-id="home-hero"
+          aria-labelledby="home-hero-title"
+          className="relative isolate overflow-hidden border-b border-mineral bg-obsidian"
         >
-          <FieldHeroCanvas />
-          <div
-            aria-hidden="true"
-            className="grain-overlay absolute inset-0 -z-10"
-          />
-          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#08090C]" />
-          <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
-            <Reveal>
-              <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 text-xs uppercase tracking-wider text-ion-2">
-                <span
-                  aria-hidden
-                  className="h-1.5 w-1.5 rounded-full bg-plasma"
-                  style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }}
-                />
-                Live now · GALAXY PICKS &amp; DFS
-              </p>
-            </Reveal>
-            <Reveal delay={60}>
-              <h1
-                className="max-w-5xl font-display font-semibold leading-[0.9] tracking-tight text-ion-white"
-                style={{ fontSize: "clamp(3.5rem, 10vw, 7.5rem)" }}
-              >
-                The market is full of <span className="text-plasma">noise</span>.
-                <br />
-                We find the <span className="text-plasma">signal</span>.
+          <div className="relative z-10 mx-auto max-w-[1440px] lg:grid lg:min-h-[calc(100svh-6.5rem)] lg:grid-cols-12">
+            <div className="flex flex-col px-5 pb-10 pt-12 sm:px-8 sm:pt-20 lg:col-span-7 lg:px-12 lg:pb-12 lg:pt-16">
+              <p className="rl-eyebrow">GALAXY PICKS (PAID) · NFL pay-per-slate packs</p>
+              <h1 id="home-hero-title" className="rl-display rl-hero-title mt-6">
+                <span className="block">The market is full of <span className="text-ion-2">noise</span>.</span>
+                <span className="mt-[0.1em] block">We find the <span className="rl-gain">signal</span>.</span>
               </h1>
-            </Reveal>
-            <Reveal delay={120}>
-              <p className="mt-6 max-w-2xl text-lg sm:text-[19px] leading-relaxed text-[#EDE8E0]">
-                Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know
-                exactly what to bet and why in 30 seconds.
+              <p className="mt-7 max-w-[34rem] text-lg leading-relaxed text-ion-1 sm:text-xl">
+                Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know exactly what
+                to bet and why in 30 seconds.
               </p>
-            </Reveal>
-            <Reveal delay={180}>
-              <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
-                <Link href="/packages" className="btn-primary min-h-12 px-7 py-3 text-base font-bold">
-                  GALAXY PICKS (PAID) — Unlock This Week&apos;s Packs
+              <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
+                <Link href="/packages" className="btn-primary rl-btn rl-btn-solid rl-figure w-full sm:w-auto" data-od-id="home-hero-cta">
+                  {fromPrice ? `Unlock this week’s packs — from $${fromPrice}` : "Unlock this week’s packs"}
                 </Link>
-                <Link href="/fantasy/dfs" className="btn-secondary min-h-12 px-7 py-3 text-base font-bold">
-                  DFS Optimizer &amp; Stacks
-                </Link>
-                <Link href="/pricing" className="inline-flex min-h-12 items-center justify-center border border-mineral px-7 py-3 text-base font-semibold text-ion-1 hover:text-white">
-                  See pricing
-                </Link>
-              </div>
-            </Reveal>
-            <Reveal delay={240}>
-              <p className="mt-8 font-mono text-xs uppercase tracking-[0.24em] text-ion-2">
-                <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* GALAXY PICKS & DFS STOREFRONT SECTION */}
-        <section
-          id="revenue-pillars"
-          data-testid="five-pillar-revenue-section"
-          className="border-b border-mineral bg-[#08090C] px-4 py-20 sm:px-6 sm:py-24 lg:px-8"
-        >
-          <div className="mx-auto max-w-7xl">
-            <Reveal>
-              <div className="flex flex-wrap items-center justify-between gap-6 border-b border-mineral pb-8">
-                <div>
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-plasma font-semibold">
-                    Galaxy Picks (Pay-Per-Slate Packs) · DFS Optimizer
-                  </p>
-                  <h2 className="mt-3 max-w-3xl text-balance font-display text-4xl font-semibold leading-[0.95] text-ion-white sm:text-5xl">
-                    Plain-English NFL Picks, Player Props &amp; Parlays
-                  </h2>
-                </div>
-                <Link
-                  href="/packages"
-                  className="btn-primary min-h-10 px-5 py-2 text-sm font-semibold whitespace-nowrap"
-                >
-                  Explore Slate Packages →
-                </Link>
-              </div>
-            </Reveal>
-
-            <div className="mt-12 divide-y divide-mineral border-y border-mineral tabular-nums">
-              <Link
-                href="/packages"
-                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
-              >
-                <div>
-                  <div className="flex items-center justify-between font-mono text-xs">
-                    <span className="text-plasma font-bold">01</span>
-                    <span className="border border-mineral px-2 py-0.5 text-[10px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      GALAXY PICKS
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    GALAXY PICKS (PAID)
-                  </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
-                    Our highest-confidence spread and total bets with plain-English explanations and verified receipts.
-                  </p>
-                </div>
-                <span className="mt-4 font-mono text-xs text-ion-2 group-hover:text-ion-white">
-                  Open Galaxy Picks →
-                </span>
-              </Link>
-
-              <Link
-                href="/packages#slate-dossiers"
-                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
-              >
-                <div>
-                  <div className="flex items-center justify-between font-mono text-xs">
-                    <span className="text-plasma font-bold">02</span>
-                    <span className="border border-mineral px-2 py-0.5 text-[10px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      SLATE DOSSIERS
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    Week 8 Game Dossiers
-                  </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
-                    Simple, clear game-by-game breakdowns showing why each matchup favors our side, total, and player props.
-                  </p>
-                </div>
-                <span className="mt-4 font-mono text-xs text-ion-2 group-hover:text-ion-white">
-                  Open Game Dossiers →
-                </span>
-              </Link>
-
-              <Link
-                href="/packages"
-                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
-              >
-                <div>
-                  <div className="flex items-center justify-between font-mono text-xs">
-                    <span className="text-plasma font-bold">03</span>
-                    <span className="border border-mineral px-2 py-0.5 text-[10px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      SAME-GAME PARLAYS
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    Correlated SGP Packs
-                  </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
-                    3-leg Same-Game Parlays built from plays that naturally help each other hit in the same game script.
-                  </p>
-                </div>
-                <span className="mt-4 font-mono text-xs text-ion-2 group-hover:text-ion-white">
-                  Open SGP Packs →
-                </span>
-              </Link>
-
-              <Link
-                href="/fantasy/dfs"
-                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
-              >
-                <div>
-                  <div className="flex items-center justify-between font-mono text-xs">
-                    <span className="text-plasma font-bold">04</span>
-                    <span className="border border-mineral px-2 py-0.5 text-[10px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      DAILY FANTASY
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    DFS Writeups &amp; Lineups
-                  </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
-                    Plain-English game environment writeups and ready-to-play cash and tournament DFS lineups.
-                  </p>
-                </div>
-                <span className="mt-4 font-mono text-xs text-ion-2 group-hover:text-ion-white">
-                  Open DFS Writeup →
-                </span>
-              </Link>
-
-              <Link
-                href="/packages"
-                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
-              >
-                <div>
-                  <div className="flex items-center justify-between font-mono text-xs">
-                    <span className="text-plasma font-bold">05</span>
-                    <span className="border border-mineral px-2 py-0.5 text-[10px] uppercase tracking-wider text-ion-2 group-hover:border-plasma/40 group-hover:text-plasma">
-                      STOREFRONT
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
-                    Instant Packages
-                  </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
-                    Buy individual slates with no subscription required and unlock every pick immediately on your screen.
-                  </p>
-                </div>
-                <span className="mt-4 font-mono text-xs text-ion-2 group-hover:text-ion-white">
-                  Open Packages →
-                </span>
-              </Link>
-            </div>
-
-            {/* FREE GAME DOSSIER BREAKDOWNS WITH HIGH-CONTRAST ACTION BADGES */}
-            <div id="slate-dossiers" className="mt-12 border-t border-mineral pt-10">
-              <div className="flex flex-wrap items-center justify-between gap-4 pb-4">
-                <div>
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-plasma font-semibold">
-                    Live Football Intelligence · Week 8
-                  </p>
-                  <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                    Coaching Matchups &amp; Free Game Dossiers
-                  </h3>
-                  <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
-                    Every game is broken down from coaching tendencies, trench matchups, and active injuries. Read our plain-English football analysis below.
-                  </p>
-                </div>
-                <Link
-                  href="/packages"
-                  className="inline-flex items-center border border-mineral bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-white"
-                >
-                  View All Packages →
-                </Link>
-              </div>
-
-              <div className="mt-8 divide-y divide-mineral border-y border-mineral tabular-nums">
-                {LIVE_SLATE_COACH_WRITEUPS.slice(0, 2).map((w) => {
-                  return (
-                    <div
-                      key={w.id}
-                      className="flex flex-col justify-between px-4 py-8"
-                    >
-                      <div>
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="bg-plasma/10 px-2.5 py-1 font-mono text-xs font-bold uppercase text-plasma">
-                            {formatWindowSlotLabel(w.windowSlot, w.matchup)}
-                          </span>
-                          <span className="font-mono text-xs font-semibold text-ion-1">
-                            {w.topProps.length} Player Prop Reads Locked
-                          </span>
-                        </div>
-                        <h4 className="mt-4 font-display text-3xl font-semibold text-ion-white">{w.matchup}</h4>
-
-                        {/* Storyline Teaser Copy (Zero Leaked Picks) */}
-                        <div className="mt-3 space-y-2">
-                          <p className="text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
-                            {sanitizePlainFootballText(w.schemeMatchup.coverageShell)}
-                          </p>
-                          <p className="text-sm sm:text-base leading-relaxed text-ion-1">
-                            {sanitizePlainFootballText(w.paceOfPlay.notes)}
-                          </p>
-                        </div>
-
-                        {/* Locked Official Pick Badges — Never Reveal Side, Total, or Confidence Free */}
-                        <div className="mt-6 grid gap-px border-y border-mineral bg-mineral sm:grid-cols-2">
-                          <div className="bg-[#08090C] p-5">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-ion-1">
-                                OFFICIAL SPREAD CALL
-                              </span>
-                              <span className="border border-plasma/50 px-2 py-0.5 font-mono text-xs font-bold text-plasma">
-                                LOCKED
-                              </span>
-                            </div>
-                            <div className="mt-2 text-sm font-semibold text-ion-white">
-                              Side Verdict &amp; Rating Inside Pack
-                            </div>
-                            <div className="mt-1 text-xs text-ion-2">
-                              Unlock below to reveal exact spread call
-                            </div>
-                          </div>
-
-                          <div className="bg-[#08090C] p-5">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-ion-1">
-                                OFFICIAL TOTAL CALL
-                              </span>
-                              <span className="border border-plasma/50 px-2 py-0.5 font-mono text-xs font-bold text-plasma">
-                                LOCKED
-                              </span>
-                            </div>
-                            <div className="mt-2 text-sm font-semibold text-ion-white">
-                              Over/Under Verdict Inside Pack
-                            </div>
-                            <div className="mt-1 text-xs text-ion-2">
-                              Includes {w.topProps.length} player props &amp; parlay ticket
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-5 border-t border-mineral pt-3 flex items-center justify-between">
-                        <Link
-                          href={`/games/${w.gameId}`}
-                          className="text-sm font-bold text-plasma hover:text-ion-white"
-                        >
-                          Read Matchup Preview →
-                        </Link>
-                        <Link
-                          href="/packages"
-                          className="text-xs font-bold text-plasma hover:text-ion-white"
-                        >
-                          Unlock Official Picks →
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* A-LA-CARTE SLATE PACKAGES & INSTANT CHECKOUT BRICKS ON HOMEPAGE */}
-            <div className="mt-12 border-t border-mineral pt-10" data-testid="homepage-wagertalk-storefront">
-              <div className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-plasma font-semibold">
-                    Galaxy Picks · Pay-Per-Slate Packs
-                  </p>
-                  <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                    Pick Your Slate. See Why We Like the Bet. Unlock Instantly.
-                  </h3>
-                  <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
-                    Read our free game preview on every card below. When you unlock a pack, your official spread bet, total bet, player props, and Same-Game Parlay appear right on this screen.
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/packages"
-                    className="inline-flex items-center border border-mineral bg-carbon px-4 py-2 text-xs font-mono text-ion-1 hover:border-plasma hover:text-ion-white"
-                  >
-                    View All {LIVE_PACKAGE_CATALOG.length} Slate Packs →
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+                  <Link href="/fantasy/dfs" className="rl-link">
+                    DFS Optimizer &amp; Stacks
+                  </Link>
+                  <Link href="/pricing" className="rl-link">
+                    See pricing
                   </Link>
                 </div>
               </div>
+              <p className="rl-eyebrow mt-auto hidden pt-12 lg:block">We detect. You decide.</p>
+            </div>
+          </div>
 
-              {/* Galaxy Picks paywall cards */}
-              <div className="mt-6 grid gap-6 lg:grid-cols-2">
-                {LIVE_PACKAGE_CATALOG.filter((pkg) => pkg.forSale !== false).map((pkg) => (
-                  <PaywallRevealCard
-                    key={pkg.slug}
-                    pkg={pkg}
-                    teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
-                  />
-                ))}
+          <div className="relative aspect-[4/3] w-full sm:aspect-[16/9] lg:absolute lg:inset-y-0 lg:right-0 lg:aspect-auto lg:w-[54%]">
+            <Image
+              src="/brand/redline-stadium.png"
+              alt="An empty football stadium at night, field lines and goalposts lit against dark stands"
+              fill
+              priority
+              sizes="(min-width: 1024px) 54vw, 100vw"
+              className="rl-photo rl-photo-hero"
+            />
+          </div>
+          <p className="rl-eyebrow px-5 py-6 sm:px-8 lg:hidden">We detect. You decide.</p>
+        </section>
+
+        {/* ── THE PACKS · three purchase bands, price beside action ─── */}
+        <section
+          id="revenue-pillars"
+          data-testid="five-pillar-revenue-section"
+          data-od-id="home-packs"
+          aria-labelledby="packs-title"
+          className="scroll-mt-28 border-b border-mineral bg-obsidian px-5 py-20 sm:px-8 lg:px-12 lg:py-28"
+        >
+          <div className="mx-auto max-w-[1344px]">
+            <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+              <div className="lg:col-span-7">
+                <p className="rl-eyebrow">Galaxy Picks · pay once per slate</p>
+                <h2 id="packs-title" className="rl-display mt-5 text-[length:clamp(3rem,7vw,5rem)]">
+                  Pay once. Picks open right here.
+                </h2>
               </div>
+              <p className="max-w-[38rem] text-base leading-relaxed text-ion-1 sm:text-[17px] lg:col-span-5">
+                No subscription. Buy a pack and its official calls open inside the band you bought,
+                on this page, the moment checkout clears.
+              </p>
+            </div>
+
+            <div data-testid="homepage-wagertalk-storefront" className="mt-14 border-b border-mineral lg:mt-20">
+              {packs.map((pkg, index) => (
+                <PaywallRevealCard
+                  key={pkg.slug}
+                  pkg={pkg}
+                  teasers={getRedactedTeasersForWindowSlot(pkg.windowSlot)}
+                  featured={index === 0 && isFullSlatePack(pkg)}
+                  ctaTone={index === 0 ? "solid" : "line"}
+                />
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 text-sm">
+              <Link href="/packages" className="rl-link">
+                Compare every pack
+              </Link>
+              <Link href="/fantasy/dfs" className="rl-link">
+                Playing daily fantasy? DFS writeups &amp; lineups
+              </Link>
             </div>
           </div>
         </section>
 
+        {/* ── DOSSIERS · one featured matchup, then quiet entries ────── */}
+        <section
+          id="slate-dossiers"
+          data-od-id="home-dossiers"
+          aria-labelledby="dossiers-title"
+          className="scroll-mt-28 border-b border-mineral bg-obsidian px-5 py-20 sm:px-8 lg:px-12 lg:py-28"
+        >
+          <div className="mx-auto max-w-[1344px]">
+            <p className="rl-eyebrow">Free game dossiers · official picks stay in the packs</p>
+            <h2 id="dossiers-title" className="rl-display mt-5 text-[length:clamp(3rem,7vw,5rem)]">
+              Read the matchup first.
+            </h2>
+            <DossierLedger writeups={dossiers} entries={3} unlockHref="/packages" />
+          </div>
+        </section>
+
+        {/* ── CLOSE · the decision stays with the reader ─────────────── */}
         <section
           data-testid="homepage-responsible-close"
-          className="gw-nebula px-4 py-14 sm:px-6 lg:px-8"
+          data-od-id="home-close"
+          className="bg-obsidian px-5 py-20 sm:px-8 lg:px-12 lg:py-28"
         >
-          <div className="mx-auto max-w-5xl border border-mineral bg-eclipse p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold text-ion-white">
+          <div className="mx-auto grid max-w-[1344px] gap-10 lg:grid-cols-12">
+            <h2 className="rl-display text-[length:clamp(2.75rem,6vw,4.5rem)] lg:col-span-7">
               The math can point. The decision stays yours.
             </h2>
-            <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
-              This product is research, not certainty. We get better by adding settled
-              rows and clearer uncertainty, not by making louder claims.
-            </p>
-            <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
+            <div className="lg:col-span-5 lg:pt-3">
+              <p className="text-base leading-relaxed text-ion-1 sm:text-[17px]">
+                This product is research, not certainty. We get better by adding settled rows and
+                clearer uncertainty, not by making louder claims.
+              </p>
+              <RiskDisclosure variant="compact" includePastPerformance className="mt-6 text-ion-2" />
+            </div>
           </div>
         </section>
       </main>

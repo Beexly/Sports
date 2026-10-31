@@ -49,23 +49,25 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
         {right}
       </div>
 
-      {/* Live Quick-Jump Bar */}
+      {/* This week's packs — quiet type row; scrolls sideways on phones. */}
       <div
-        className="nav-pillars-bar border-t border-mineral bg-[#08090C] py-2"
+        className="nav-pillars-bar border-t border-mineral bg-obsidian"
         data-testid="five-revenue-pillars-bar"
       >
-        <div className="container flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 font-mono text-xs font-semibold text-plasma uppercase tracking-wider">
-            <span className="h-2 w-2 rounded-full bg-plasma" />
-            <span className="hidden sm:inline">Quick Jump:</span>
-          </div>
-          <nav className="flex items-center gap-4 sm:gap-6 font-sans text-xs font-medium" aria-label="Five Revenue Pillars">
+        <div className="container flex items-center gap-6">
+          <span className="hidden shrink-0 text-[11px] font-medium uppercase tracking-[0.14em] text-ion-2 sm:inline">
+            This week
+          </span>
+          <nav
+            className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto whitespace-nowrap py-2.5 text-[13px] sm:gap-8"
+            aria-label="This week’s packs"
+          >
             {FIVE_REVENUE_PILLARS.map((pillar) => (
               <a
                 key={pillar.href}
                 href={pillar.href}
-                className="text-ion-1 hover:text-plasma transition-colors"
                 title={pillar.desc}
+                className="shrink-0 text-ion-1 underline-offset-4 transition-colors hover:text-ion-white hover:underline focus-visible:text-ion-white focus-visible:underline"
               >
                 {pillar.label}
               </a>
