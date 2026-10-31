@@ -1,3 +1,4 @@
+import { type WrDepthTargetPlay, type WrDepthTeamGamePlay } from "./wr-depth-after-leader.js";
 /**
  * nflverse play-by-play → expected-metrics mapper (EP / WP / Success / Drives).
  *
@@ -56,7 +57,7 @@ export const NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS = [
   "score_differential", "posteam_timeouts_remaining", "defteam_timeouts_remaining",
   "spread_line", "result",
   // success rate
-  "play_type", "yards_gained", "interception", "fumble_lost",
+  "play_type", "week", "receiving_yards", "yards_gained", "interception", "fumble_lost",
   "rusher_player_id", "receiver_player_id",
   // drives
   "fixed_drive", "fixed_drive_result",
@@ -105,6 +106,8 @@ export interface MappedExpectedMetricsPlays {
   readonly successPlays: readonly SuccessPlay[];
   /** epa: null on every play (fit-free mapper; attach post-fit via attachOwnEpa). */
   readonly drivePlays: readonly DrivePlay[];
+  readonly wrDepthTargetPlays: readonly WrDepthTargetPlay[];
+  readonly wrDepthTeamGamePlays: readonly WrDepthTeamGamePlay[];
 
   readonly counts: {
     readonly sourceRows: number;
@@ -380,6 +383,8 @@ export function mapNflversePbpToExpectedMetrics(
   const wpaPairs: TransitionPair[] = [];
   const successPlays: SuccessPlay[] = [];
   const drivePlays: DrivePlay[] = [];
+  const wrDepthTargetPlays: WrDepthTargetPlay[] = [];
+  const wrDepthTeamGamePlays: WrDepthTeamGamePlay[] = [];
 
   for (const gameId of gameIds) {
     const rows = [...(byGame.get(gameId) ?? [])].sort(
@@ -499,6 +504,30 @@ export function mapNflversePbpToExpectedMetrics(
           turnover: row["interception"] === "1" || row["fumble_lost"] === "1" ? 1 : 0,
         });
       }
+
+      // (WR Depth series)
+      if (row["season_type"] === "REG") {
+        const posteam = row["posteam"] ?? "";
+        if (posteam !== "") {
+          const playType = row["play_type"];
+          const week = num(row["week"]);
+          if (Number.isFinite(week)) {
+            if (playType === "pass" || playType === "run") {
+              wrDepthTeamGamePlays.push({ gameId: row["game_id"] ?? "", week, posteam });
+            }
+            if (playType === "pass" && (row["receiver_player_id"] ?? "") !== "") {
+              wrDepthTargetPlays.push({
+                playId,
+                gameId: row["game_id"] ?? "",
+                week,
+                posteam,
+                receiverPlayerId: row["receiver_player_id"] ?? "",
+                receivingYards: numOrNull(row["receiving_yards"]),
+              });
+            }
+          }
+        }
+      }
     }
 
     // (d) EPA/WPA transition pairs — after = row j's own emitted play.
@@ -611,6 +640,8 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs,
     successPlays,
     drivePlays,
+    wrDepthTargetPlays,
+    wrDepthTeamGamePlays,
     counts: {
       sourceRows,
       regRows: regCandidates.length,
