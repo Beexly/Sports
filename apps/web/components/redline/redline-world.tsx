@@ -96,6 +96,7 @@ export function RedlineWorld({
   const [slot, setSlot] = useState("all");
   const [sort, setSort] = useState<"kickoff" | "matchup">("kickoff");
   const pointer = useRef<{ x: number; y: number } | null>(null);
+  const cameraLock = useRef(false);
   const staticMode = userStatic || systemReduced;
   const selectedPack = packs.find((pack) => pack.slug === selectedSlug) ?? packs[0];
 
@@ -131,12 +132,19 @@ export function RedlineWorld({
   };
   const isCameraTarget = (target: HTMLElement) =>
     target.closest("[data-no-camera],button,input,select,textarea,a,[role=dialog]");
+  const stepCamera = (direction: 1 | -1) => {
+    if (cameraLock.current) return;
+    cameraLock.current = true;
+    goStage(stage + direction);
+    window.setTimeout(() => {
+      cameraLock.current = false;
+    }, 1100);
+  };
   const wheel = (event: WheelEvent<HTMLDivElement>) => {
     if (isCameraTarget(event.target as HTMLElement)) return;
     event.preventDefault();
-    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-      goStage(stage + (event.deltaY > 0 ? 1 : -1));
-    }
+    if (Math.abs(event.deltaY) < 12 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    stepCamera(event.deltaY > 0 ? 1 : -1);
   };
   const pointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (isCameraTarget(event.target as HTMLElement)) return;
@@ -146,9 +154,9 @@ export function RedlineWorld({
   const pointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!pointer.current) return;
     const dy = pointer.current.y - event.clientY;
-    if (Math.abs(dy) > 42) {
-      goStage(stage + (dy > 0 ? 1 : -1));
-      pointer.current = { x: event.clientX, y: event.clientY };
+    if (Math.abs(dy) > 72) {
+      stepCamera(dy > 0 ? 1 : -1);
+      pointer.current = null;
     }
   };
 
