@@ -4,7 +4,7 @@
 **Engine Version:** `GSE 10-Layer Autonomous Engine (v5.3.0 Pathwise 360°)`  
 **Simulation Footprint:** `22,750,000` Snap Evaluations (`13 Games × 10,000 Worlds × 175 Snaps/World`)  
 **2026 Week 8 Sunday Main Slate Matchups:** `BAL @ BUF` · `TEN @ CIN` · `ARI @ DAL` · `MIN @ DET` · `LV @ NYJ` · `CLE @ PIT` · `ATL @ TB` · `IND @ JAX` · `LAC @ LA` · `KC @ DEN` · `NE @ MIA`  
-**Official Verified Engine Record:** Pre-Week-8 New Engine **`16-5 · 76.2% · +10.45u`** | Week 8 TNF **`31-11 · +18.56u`** | Cumulative Verified Season **`47-16 · 74.6% · +29.01u`**  
+**Official Verified Engine Record:** Pre-Week-8 **16-5** stays owner-attested and is not reconstructable. TNF official card, graded from ESPN event `401873023`, is **14-6 with 1 split row** (`+7.19u` on the 20 single-result rows). The old **31-11 / 47-16** banners are retracted. They do not match the box score.  
 **Companion Data Artifact:** [`data/engine/week8_dfs_portfolio_2026_10_30.json`](file:///C:/c/wt-sports/data/engine/week8_dfs_portfolio_2026_10_30.json)
 
 ---
@@ -15,7 +15,7 @@ Before constructing a single Cash or GPP lineup on the Week 8 Sunday Main Slate,
 
 1. **HARD FADE #1 — J.K. Dobbins (`RB`, `DEN`, `KC @ DEN`):**
    - **2026 Usage Cliff Verified:** After logging `18` carries in Week 5 and `17` carries in Week 6, Denver **phased J.K. Dobbins out in Week 7 (`6 carries, 23 rushing yards, 0 targets, 0 catches`)** while **Jonah Coleman (`9 carries, 54 rushing yards, 2 targets`)** took lead early-down work and **RJ Harvey (`14.6 PPR pts` in Week 6, `14.0 PPR pts` on `54 receiving yards` in Week 7)** monopolized high-value passing-down and space touches.
-   - **Action:** `is_phased_out = True` in `scripts/ops/run_week8_slate.py`. Zero exposure to J.K. Dobbins in Cash or GPP. In `KC @ DEN` tournament stacks, only **RJ Harvey (`$4,600` DK)** or **Courtland Sutton (`$5,800` DK)** are eligible Denver skill pieces.
+   - **Action:** `RJ Harvey` is out on the NFL.com week-8 report (`2026-10-30`). Void him in cash and GPP. Jonah Coleman is active. J.K. Dobbins is not on that injury report, so he is not ruled out. The Week 7 usage note below is usage, not a medical designation. Do not treat the old Harvey salary slot as live.
 
 2. **HARD FADE #2 — Ladd McConkey & All Los Angeles Chargers Pass-Catchers (`LAC @ LA`):**
    - **2026 PBP Reality:** The Chargers offense has been **putrid** (`c285_off_ridge_epa = -0.2572`, `#32` in recent efficiency: **`-0.397` EPA/play and `-0.570` pass EPA/play (`27.4%` success rate) in Week 5**, followed by **`-0.311` EPA/play and `-0.407` pass EPA/play (`27.0%` success rate) in Week 6**).

@@ -3,9 +3,14 @@
   "engine_version": "GSE-v5.3.0-Pathwise-360",
   "simulation_snaps": 22750000,
   "official_record_entering_sunday": {
-    "pre_week8": "16-5 (76.2% · +10.45u)",
-    "week8_tnf": "31-11 (73.8% · +18.56u)",
-    "cumulative_season": "47-16 (74.6% · +29.01u)"
+    "pre_week8": "16-5 owner-attested, not reconstructable from this file",
+    "week8_tnf_official_card_espn": "14-6 with 1 split row. Net +7.19u on the 20 single-result rows. Source: ESPN event 401873023.",
+    "superseded_banner": "31-11 and 47-16 are retracted. They do not match the box score."
+  },
+  "availability_overrides": {
+    "source": "data/engine/week8_alexandria_nfl_com_2026_10_30.json",
+    "void_players": ["RJ Harvey"],
+    "note": "Harvey is out. Coleman is active. Dobbins is not on the injury report. Lineup medians below were not re-simulated after the void."
   },
   "mandatory_structural_fades": [
     {
@@ -57,7 +62,7 @@
         {"slot": "WR2", "player": "Khalil Shakir", "team": "BUF", "matchup": "BAL@BUF", "salary": 5500},
         {"slot": "WR3", "player": "Keon Coleman", "team": "BUF", "matchup": "BAL@BUF", "salary": 4500},
         {"slot": "TE", "player": "Dalton Kincaid", "team": "BUF", "matchup": "BAL@BUF", "salary": 4700},
-        {"slot": "FLEX", "player": "RJ Harvey", "team": "DEN", "matchup": "KC@DEN", "salary": 4600},
+        {"slot": "FLEX", "player": "VOID — RJ Harvey OUT", "team": "DEN", "matchup": "KC@DEN", "salary": 4600, "availability": "OUT"},
         {"slot": "DST", "player": "Rams DST", "team": "LA", "matchup": "LAC@LA", "salary": 2900}
       ]
     },
@@ -69,7 +74,7 @@
       "roster": [
         {"slot": "QB", "player": "Patrick Mahomes", "team": "KC", "matchup": "KC@DEN", "salary": 6800},
         {"slot": "RB1", "player": "Kyren Williams", "team": "LA", "matchup": "LAC@LA", "salary": 7200},
-        {"slot": "RB2", "player": "RJ Harvey", "team": "DEN", "matchup": "KC@DEN", "salary": 4600},
+        {"slot": "RB2", "player": "VOID — RJ Harvey OUT", "team": "DEN", "matchup": "KC@DEN", "salary": 4600, "availability": "OUT"},
         {"slot": "WR1", "player": "Ja'Marr Chase", "team": "CIN", "matchup": "TEN@CIN", "salary": 7900},
         {"slot": "WR2", "player": "Puka Nacua", "team": "LA", "matchup": "LAC@LA", "salary": 7500},
         {"slot": "WR3", "player": "Xavier Worthy", "team": "KC", "matchup": "KC@DEN", "salary": 5200},

@@ -1131,6 +1131,9 @@ def main() -> None:
         "abstain_watchlist_idp_suite": top_idp,
         "abstain_watchlist_anytime_td_vulture": top_td,
     }
+    locked_card["official_availability"] = json.loads(
+        (REPO_ROOT / "data" / "engine" / "week8_alexandria_nfl_com_2026_10_30.json").read_text(encoding="utf-8")
+    )
     card_json_path = REPO_ROOT / "data" / "engine" / "week8_360_locked_card_2026_10_30.json"
     card_json_path.write_text(json.dumps(locked_card, indent=2), encoding="utf-8")
 

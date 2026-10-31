@@ -1047,7 +1047,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Cincinnati's downfield passing game tests a physical Tennessee front that wants to slow the game down and lean on the run. With a double-digit spread on the board at Paycor Stadium, fourth-quarter game script matters everything here \u2014 our official side and total calls are locked inside.",
       "blitzRateVsPressureToSack": "Cincinnati Bengals and Tennessee Titans bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Cincinnati Bengals features Tee Higgins and Chase Brown on early downs, while Tennessee Titans leans on Carnell Tate and Tony Pollard.",
+      "personnelTendencies": "Cincinnati Bengals features Tee Higgins and Chase Brown on early downs, while Tennessee Titans leans on Tony Pollard. Carnell Tate is out. Elic Ayomanor and Wan'Dale Robinson are active and are not listed on the week-8 injury report.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Tennessee Titans and Cincinnati Bengals headline the film study for this game.",
       "notes": "Posted Line: CIN -11.5 \u00b7 O/U 46.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -1150,10 +1150,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "leverageNote": "Primary red-zone and third-down receiver for Cincinnati Bengals averaging 8.3 targets per game."
         },
         {
-          "player": "Carnell Tate",
+          "player": "Elic Ayomanor",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Tennessee Titans averaging 7.3 targets per game when playing from behind."
+          "leverageNote": "Carnell Tate is out on the NFL.com week-8 report. Elic Ayomanor is active and is not on that report. No new target rate is claimed here."
         }
       ],
       "cashCore": [
@@ -1181,9 +1181,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Ja'Marr Chase"
             ]
           },
-          "bringBack": "Carnell Tate",
-          "valueFiller": "Wan'Dale Robinson",
-          "correlationTheme": "Pair Joe Burrow with Ja'Marr Chase and bring it back with Carnell Tate, then add a two-player mini-stack from a second game."
+          "bringBack": "Wan'Dale Robinson",
+          "valueFiller": "Chimere Dike",
+          "correlationTheme": "Pair Joe Burrow with Ja'Marr Chase and bring it back with Wan'Dale Robinson. Carnell Tate is out. Do not stack him."
         }
       ]
     },
@@ -2453,7 +2453,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Kansas City heads into the thin air at Mile High to face a Denver defense that has been tough against the pass all season in AFC West play. Divisional games in Denver almost always come down to the final two possessions \u2014 our official spread, total, and player prop calls are locked inside.",
       "blitzRateVsPressureToSack": "Denver Broncos and Kansas City Chiefs bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Denver Broncos features Jaylen Waddle and Jonah Coleman on early downs, while Kansas City Chiefs leans on Travis Kelce and Kenneth Walker III.",
+      "personnelTendencies": "RJ Harvey is out. Jonah Coleman is active. J.K. Dobbins is active and is not on the week-8 injury report. Jaylen Waddle is questionable after limited practice. Courtland Sutton and Marvin Mims Jr. are full. Kansas City leans on Travis Kelce and Kenneth Walker III, both active.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Kansas City Chiefs and Denver Broncos headline the film study for this game.",
       "notes": "Posted Line: KC -1.5 \u00b7 O/U 40.5 \u00b7 Sunday 4:25 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -2553,7 +2553,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Jaylen Waddle",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Denver Broncos averaging 6.4 targets per game."
+          "leverageNote": "Jaylen Waddle is an active Denver receiver and is questionable after limited practice. Courtland Sutton and Marvin Mims Jr. practiced in full. No new target rate is claimed here."
         },
         {
           "player": "Travis Kelce",
@@ -2801,7 +2801,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Sunday Night Football features an NFC East rivalry as Washington's quick-rhythm passing attack meets Philadelphia's physical offensive line under the lights. Open-field tackling and third-and-short execution will decide this prime-time battle \u2014 our official side, total, and prop picks are locked inside.",
       "blitzRateVsPressureToSack": "Washington Commanders and Philadelphia Eagles bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Washington Commanders features Chig Okonkwo and Rachaad White on early downs, while Philadelphia Eagles leans on DeVonta Smith and Dameon Pierce.",
+      "personnelTendencies": "Washington Commanders features Chig Okonkwo and Rachaad White on early downs. Philadelphia has DeVonta Smith and Dontayvion Wicks out. Makai Lemon and Dallas Goedert are the active pass catchers. Jalen Hurts is on reserve. Tanner McKee is an active quarterback.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Philadelphia Eagles and Washington Commanders headline the film study for this game.",
       "notes": "Posted Line: WSH -6 \u00b7 O/U 40.5 \u00b7 Sunday 8:20 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -2904,10 +2904,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "leverageNote": "Primary red-zone and third-down receiver for Washington Commanders averaging 5.0 targets per game."
         },
         {
-          "player": "DeVonta Smith",
+          "player": "Makai Lemon",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Philadelphia Eagles averaging 10.2 targets per game when playing from behind."
+          "leverageNote": "DeVonta Smith and Dontayvion Wicks are out. Makai Lemon is active and is not on the week-8 injury report. No new target rate is claimed here."
         }
       ],
       "cashCore": [
@@ -2935,9 +2935,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Stefon Diggs"
             ]
           },
-          "bringBack": "DeVonta Smith",
-          "valueFiller": "Dontayvion Wicks",
-          "correlationTheme": "Pair Jayden Daniels with Stefon Diggs and bring it back with DeVonta Smith, then add a two-player mini-stack from a second game."
+          "bringBack": "Dallas Goedert",
+          "valueFiller": "Makai Lemon",
+          "correlationTheme": "Pair Jayden Daniels with Stefon Diggs and bring it back with Dallas Goedert. DeVonta Smith and Dontayvion Wicks are out."
         }
       ]
     },
