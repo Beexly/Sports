@@ -132,12 +132,12 @@ export async function POST(req: Request) {
         apiVersion: "2024-06-20",
       });
 
-      // Use the live pre-created Stripe Price ID (price_1UVzs...) in Stripe Checkout,
-      // except for redzone-dfs-pro-pack which uses inline $39.99 (3999 cents) price_data
+      // Use the live pre-created Stripe Price ID. The DFS pack has its own
+      // 3999-cent price, so it no longer borrows the Sunday $39 price.
       const stripeSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
         mode: "payment",
         line_items:
-          pkg.stripePriceId && !guaranteed && pkg.slug !== "redzone-dfs-pro-pack"
+          pkg.stripePriceId && !guaranteed
             ? [{ price: pkg.stripePriceId, quantity: 1 }]
             : payload.line_items.map((li) => ({
                 price_data: li.price_data,

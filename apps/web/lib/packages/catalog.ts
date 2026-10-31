@@ -6,6 +6,7 @@
  * - tnf-all-in-pack ($19): prod_VX406TulqtZwJJ / price_1UVzsdQ2wPZMxx60lqO3TLbQ
  * - sgp-correlation-basket ($29): prod_VX40XMRjV4FiJl / price_1UVzseQ2wPZMxx60VqAfAyNe
  * - sunday-nfl-5pct-slate ($39): prod_VX400OaIktCGLb / price_1UVzsfQ2wPZMxx606fYPjKEJ
+ * - redzone-dfs-pro-pack ($39.99): prod_VX400OaIktCGLb / price_1UWjT2Q2wPZMxx60OrkMpGvF
  * - week8-all-access ($49): prod_VX40T4RNpoNNIp / price_1UVzsfQ2wPZMxx60ozEJ1P3n
  *
  * DOCTRINE & GUARDRAILS:
@@ -115,7 +116,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     standardPriceCents: 3999,
     guaranteedPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
-    stripePriceId: "price_1UVzsfQ2wPZMxx606fYPjKEJ",
+    stripePriceId: "price_1UWjT2Q2wPZMxx60OrkMpGvF",
     stripeLookupKey: "gse-pack-redzone-dfs-pro-pack",
     gamesCount: 13,
     highlights: [

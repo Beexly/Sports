@@ -29,6 +29,7 @@ describe("Galaxy Picks storefront catalog", () => {
 
     const dfs = getPackageBySlug("redzone-dfs-pro-pack");
     expect(dfs?.standardPriceCents).toBe(3999);
+    expect(dfs?.stripePriceId).toBe("price_1UWjT2Q2wPZMxx60OrkMpGvF");
     expect(dfs?.includesDfs).toBe(true);
 
     const all = getPackageBySlug("week8-all-access");
