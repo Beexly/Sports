@@ -26,12 +26,7 @@
     background: var(--carbon);
     color: var(--ion);
     font-family: var(--f-body);
-    /* FIELD: near-black + one ember crown — never violet, never flat black. */
-    background-image:
-      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,77,46, 0.07), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(25,28,35, 0.55), transparent 60%),
-      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(18,20,26, 0.4), transparent 65%);
-    background-attachment: fixed;
+    /* FIELD redline: FLAT ground #08090C. No gradient crown, no violet, no glow. */
     min-height: 100vh;
   }
 
@@ -66,7 +61,6 @@
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200;
     background: var(--plasma);
     color: var(--plasma-ink);
-    box-shadow: var(--glow-plasma);
   }
   .btn-primary:hover {
     background: var(--plasma-glow);
@@ -74,7 +68,7 @@
   }
   .btn-primary:focus-visible {
     outline: none;
-    box-shadow: var(--glow-plasma), 0 0 0 2px var(--plasma-glow), 0 0 0 4px var(--carbon);
+    box-shadow: 0 0 0 2px var(--plasma-glow), 0 0 0 4px var(--carbon);
   }
 
   .btn-secondary {
@@ -97,23 +91,21 @@
     color: var(--ion-white);
   }
 
-  /* Card surfaces */
+  /* Card surfaces — flat panels. No glass blur, no gradient fill. */
   .surface-card {
-    @apply rounded-2xl backdrop-blur-sm;
+    @apply rounded-2xl;
     border: 1px solid var(--mineral);
-    background: color-mix(in srgb, var(--eclipse) 80%, transparent);
+    background: var(--eclipse);
   }
   .surface-glass {
-    @apply rounded-2xl backdrop-blur-md;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(255, 255, 255, 0.03);
-    box-shadow: var(--shadow-float);
+    @apply rounded-2xl;
+    border: 1px solid var(--mineral);
+    background: var(--eclipse);
   }
   .surface-lifted {
     @apply rounded-2xl;
     border: 1px solid var(--mineral);
-    background: linear-gradient(180deg, var(--titanium), var(--eclipse));
-    box-shadow: var(--shadow-float);
+    background: var(--titanium);
   }
 
   /* Eyebrow label — small uppercase mono. */
@@ -141,24 +133,17 @@
     background: var(--plasma-glow);
   }
 
-  /* Section divider with center-fade hairline. */
+  /* Section divider — flat hairline (no gradient fade). */
   .section-rule {
     height: 1px;
     width: 100%;
-    background: linear-gradient(90deg, transparent, var(--mineral), transparent);
+    background: var(--mineral);
   }
 
-  /* Skeleton loader. */
+  /* Skeleton loader — flat fill (no shimmer gradient). */
   .skeleton {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.03) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.03) 100%
-    );
-    background-size: 200% 100%;
+    background: var(--titanium);
     @apply rounded-md;
-    animation: shimmer 1.6s linear infinite;
   }
 
   /* Legacy aliases — older components reference these directly. */
@@ -243,23 +228,11 @@
 .gse-marquee:hover .gse-marquee-track { animation-play-state: paused; }
 .gse-marquee-reverse .gse-marquee-track { animation-direction: reverse; }
 
-/* Sheen that sweeps across a "flasher" banner word. */
-@keyframes gse-sheen {
-  0%   { background-position: -150% 0; }
-  60%, 100% { background-position: 250% 0; }
-}
+/* Sheen — RETIRED (redline: no chrome gradient). Flat bone text. */
 .gse-sheen {
-  background: linear-gradient(
-    100deg,
-    var(--ion-white) 0%, var(--ion-white) 38%,
-    #cfeaff 48%, #ffffff 52%,
-    var(--ion-white) 62%, var(--ion-white) 100%
-  );
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gse-sheen 5.5s ease-in-out infinite;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--ion-white);
 }
 
 /* Soft attention pulse for the gate's enter ring. */
@@ -418,9 +391,8 @@
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  background:
-    radial-gradient(130% 100% at 50% 38%, transparent 52%, rgba(2, 3, 5, 0.5) 100%),
-    linear-gradient(180deg, rgba(2, 3, 5, 0.35) 0%, transparent 18%);
+  /* RETIRED (redline: no gradients). No-op mount. */
+  background: none;
 }
 
 /* Editorial serif accent — Instrument Serif italic against the geometric
@@ -445,54 +417,31 @@
    explain signal / risk / trust / gravity — never decorate.
    ════════════════════════════════════════════════════════════════════ */
 
-/* Void + field atmosphere — the section canvas. Never flat black.
-   FIELD: quiet near-black, one ember crown. No violet nebula. */
+/* Void + field atmosphere — FLAT near-black ground (redline: no gradients). */
 .gw-nebula {
   position: relative;
-  background:
-    radial-gradient(ellipse 70% 50% at 80% 12%, rgba(255, 77, 46, 0.08), transparent 58%),
-    linear-gradient(180deg, var(--void) 0%, #12141A 50%, var(--void) 100%);
+  background: var(--void);
 }
 .gw-nebula-deep {
   position: relative;
-  background:
-    radial-gradient(ellipse 80% 55% at 70% 20%, rgba(255, 77, 46, 0.10), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(25, 28, 35, 0.9), transparent 65%),
-    var(--void);
+  background: var(--void);
 }
 
-/* Starfield — three drifting dot layers, masked to fade at edges. */
+/* Starfield — RETIRED (redline: no gradient dot field). No-op mount. */
 .gw-starfield {
   position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 12% 22%, rgba(246, 247, 250, 0.55), transparent 50%),
-    radial-gradient(1px 1px at 34% 68%, rgba(246, 247, 250, 0.35), transparent 50%),
-    radial-gradient(1.5px 1.5px at 56% 14%, rgba(255,77,46, 0.45), transparent 50%),
-    radial-gradient(1px 1px at 71% 47%, rgba(246, 247, 250, 0.4), transparent 50%),
-    radial-gradient(1px 1px at 87% 79%, rgba(60,45,110, 0.5), transparent 50%),
-    radial-gradient(1.5px 1.5px at 23% 88%, rgba(246, 247, 250, 0.3), transparent 50%),
-    radial-gradient(1px 1px at 64% 92%, rgba(255,77,46, 0.35), transparent 50%),
-    radial-gradient(1px 1px at 92% 8%, rgba(246, 247, 250, 0.45), transparent 50%);
-  background-size: 520px 520px;
-  mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
-  animation: gw-star-drift 90s linear infinite;
-}
-@keyframes gw-star-drift {
-  from { background-position: 0 0; }
-  to   { background-position: -520px 260px; }
+  background-image: none;
 }
 
-/* Signal beam — fragments resolve INTO this. Vertical cyan column. */
+/* Signal beam — flat ember column (redline: no gradient, no glow). */
 .gw-beam {
   position: relative;
-  background: linear-gradient(180deg, transparent, rgba(255,77,46, 0.75) 18%, rgba(255,77,46, 0.95) 50%, rgba(255,77,46, 0.75) 82%, transparent);
-  box-shadow: 0 0 18px 2px rgba(255,77,46, 0.35);
+  background: var(--plasma);
   animation: gw-beam-breathe 4.5s ease-in-out infinite;
 }
 @keyframes gw-beam-breathe {
   0%, 100% { opacity: 0.85; }
-  50%      { opacity: 1; box-shadow: 0 0 26px 4px rgba(255,77,46, 0.5); }
+  50%      { opacity: 1; }
 }
 
 /* Market-gravity stroke flow — apply to SVG paths (pair with stroke-dasharray). */
@@ -514,12 +463,10 @@
 .gw-orbit-counter { animation: gw-rotate 36s linear infinite reverse; }
 @keyframes gw-rotate { to { transform: rotate(360deg); } }
 
-/* Gate aperture — the No-Bet gate breathing shut. Conic ring with a gap. */
+/* Gate aperture — flat alert ring (redline: no conic gradient). */
 .gw-gate-ring {
   border-radius: 999px;
-  background: conic-gradient(from 210deg, var(--alert) 0deg 300deg, transparent 300deg 360deg);
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+  border: 3px solid var(--alert);
   animation: gw-gate-breathe 5s ease-in-out infinite;
 }
 @keyframes gw-gate-breathe {
@@ -532,34 +479,16 @@
    glow, and solid filled chips with dark ink (higher contrast than dim
    outline tints). Semantics unchanged: cyan = signal, plasma = heat. */
 
-/* Chrome headline fills — NEBULA v7: bone→fog, bone→ember, bone→mist. */
-.gw-chrome-ice {
-  background: linear-gradient(180deg, #EDE8E0 0%, #C9D4CE 55%, #A7B8B2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 24px rgba(201, 212, 206, 0.28));
-}
-.gw-chrome-plasma {
-  background: linear-gradient(180deg, #EDE8E0 0%, #FF7A5C 45%, #FF4D2E 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 26px rgba(255,77,46, 0.38));
-}
-.gw-chrome-violet {
-  background: linear-gradient(180deg, #EDE8E0 0%, #C9D4CE 55%, #A7B8B2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 24px rgba(201, 212, 206, 0.3));
-}
+/* Headline fills — FLAT (redline: no chrome gradient, no drop-shadow glow). */
+.gw-chrome-ice    { color: var(--ion-white); }
+.gw-chrome-plasma { color: var(--plasma); }
+.gw-chrome-violet { color: var(--ion-1); }
 
-/* Saturated text glow — for short accent words only, never prose. */
-.gw-text-glow-cyan   { text-shadow: 0 0 18px rgba(255,77,46, 0.65), 0 0 44px rgba(255,77,46, 0.3); }
-.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255,77,46, 0.6), 0 0 44px rgba(255,77,46, 0.3); }
-.gw-text-glow-alert  { text-shadow: 0 0 18px rgba(255, 100, 112, 0.55), 0 0 40px rgba(255, 100, 112, 0.28); }
-.gw-text-glow-white  { text-shadow: 0 0 22px rgba(237, 232, 224, 0.45); }
+/* Text glow — RETIRED (redline: no glow). No-op so call sites compile. */
+.gw-text-glow-cyan   { text-shadow: none; }
+.gw-text-glow-plasma { text-shadow: none; }
+.gw-text-glow-alert  { text-shadow: none; }
+.gw-text-glow-white  { text-shadow: none; }
 
 /* Filled identity chips — dark ink on ember fill (cyan chip retired). */
 .gw-chip-cyan {
@@ -567,25 +496,23 @@
   border-radius: 999px; padding: 5px 13px;
   font-family: var(--f-mono); font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.18em;
-  background: linear-gradient(110deg, #FF7A5C, #FF4D2E);
+  background: var(--plasma);
   color: var(--plasma-ink);
-  box-shadow: 0 0 26px -4px rgba(255, 77, 46, 0.55);
 }
 .gw-chip-plasma {
   display: inline-flex; align-items: center; gap: 8px;
   border-radius: 999px; padding: 5px 13px;
   font-family: var(--f-mono); font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.18em;
-  background: linear-gradient(110deg, #FF7A5C, #FF4D2E);
+  background: var(--plasma);
   color: var(--plasma-ink);
-  box-shadow: 0 0 26px -4px rgba(255,77,46, 0.55);
 }
 
-/* Glow rings — semantic halo states for nodes and readouts. */
-.gw-ring-signal   { box-shadow: 0 0 0 1px rgba(255,77,46, 0.45), 0 0 24px -4px rgba(255,77,46, 0.5); }
-.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255,77,46, 0.4), 0 0 24px -4px rgba(255,77,46, 0.45); }
-.gw-ring-caution  { box-shadow: 0 0 0 1px rgba(255, 180, 84, 0.45), 0 0 20px -4px rgba(255, 180, 84, 0.4); }
-.gw-ring-gate     { box-shadow: 0 0 0 1px rgba(255, 100, 112, 0.45), 0 0 20px -4px rgba(255, 100, 112, 0.4); }
+/* State rings — flat 1px ring, no glow halo (redline: no glow). */
+.gw-ring-signal   { box-shadow: 0 0 0 1px rgba(255,77,46, 0.45); }
+.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255,77,46, 0.4); }
+.gw-ring-caution  { box-shadow: 0 0 0 1px rgba(255, 180, 84, 0.45); }
+.gw-ring-gate     { box-shadow: 0 0 0 1px rgba(255, 100, 112, 0.45); }
 
 /* Receipt row — canonical truth readout: white text, hairline, timestamp slot. */
 .gw-receipt {
@@ -605,8 +532,7 @@
 }
 .gw-chapter-index::after {
   content: ""; width: 64px; height: 2px; border-radius: 999px;
-  background: linear-gradient(90deg, var(--orbital-cyan), var(--plasma) 70%, transparent);
-  box-shadow: 0 0 12px -2px rgba(255,77,46, 0.5);
+  background: var(--plasma);
 }
 
 /* Mirage degrade — truth layers revealing under a too-good surface. */
@@ -614,7 +540,7 @@
 
 /* Hover depth for world cards — restrained lift, no scale soup. */
 .gw-card-hover { transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
-.gw-card-hover:hover { transform: translateY(-2px); border-color: var(--mineral-hi); box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px -10px rgba(255,77,46, 0.25); }
+.gw-card-hover:hover { transform: translateY(-2px); border-color: var(--mineral-hi); box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.8); }
 
 /* Reduced motion — every gw animation collapses to its readable end state. */
 @media (prefers-reduced-motion: reduce) {
@@ -779,8 +705,8 @@
 
 /* ── Thermal Vision animations ────────────────────────────────────────────────── */
 @keyframes thermal-pulse-hot {
-  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,77,46,0.4); }
-  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,77,46,0.7); }
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
 }
 @keyframes thermal-pulse-cold {
   0%, 100% { opacity: 0.5; transform: scale(1); }
@@ -798,9 +724,9 @@
    atmosphere, broadcast headlines, ember CTA, gate band.
    ═══════════════════════════════════════════════════════════ */
 
-/* Wordmark: Chakra Petch bone, ember rule. Beats the retired gradient. */
+/* Wordmark: Big Shoulders bone, ember rule. No chrome gradient. */
 .brand-wordmark-text {
-  font-family: var(--f-word, "Chakra Petch", var(--f-display)) !important;
+  font-family: var(--f-word, var(--f-display)) !important;
   background: none !important;
   color: #EDE8E0 !important;
   -webkit-text-fill-color: #EDE8E0 !important;
@@ -809,13 +735,13 @@
   background: #FF4D2E !important;
   opacity: 1 !important;
 }
-.brand-emblem { filter: drop-shadow(0 0 14px rgba(255, 77, 46, 0.30)); }
+.brand-emblem { filter: none; }
 
-/* Nav: violet-black glass over the ground. */
+/* Nav: flat ground panel. No violet, no glass blur. */
 .nav {
-  background: rgba(19, 16, 34, 0.82) !important;
-  border-bottom: 1px solid #2A3532 !important;
-  backdrop-filter: blur(14px);
+  background: var(--carbon) !important;
+  border-bottom: 1px solid var(--mineral) !important;
+  backdrop-filter: none !important;
 }
 
 /* Broadcast headlines: condensed caps wherever font-display lands. */
@@ -829,7 +755,7 @@
   background: #FF4D2E !important;
   color: #1A0703 !important;
   border-color: transparent !important;
-  box-shadow: 0 0 48px -8px rgba(255, 77, 46, 0.55);
+  box-shadow: none !important;
 }
 .btn-primary:hover, .gse-btn-primary:hover { background: #FF6A4D !important; }
 
@@ -840,15 +766,15 @@
   background: rgba(255, 77, 46, 0.06);
 }
 
-/* Violet atmosphere panel for proof/board bands. */
+/* Flat panel for proof/board bands. No violet gradient. */
 .neb-band {
-  background: linear-gradient(180deg, rgba(27, 21, 48, 0.9), rgba(19, 16, 34, 0.9));
-  border-top: 1px solid #2A3532;
-  border-bottom: 1px solid #2A3532;
+  background: var(--eclipse);
+  border-top: 1px solid var(--mineral);
+  border-bottom: 1px solid var(--mineral);
 }
 
 /* Thermal pulse keyframes follow ember (were magenta). */
 @keyframes thermal-pulse-hot {
-  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,77,46,0.4); }
-  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,77,46,0.7); }
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
 }

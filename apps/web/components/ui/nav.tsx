@@ -51,12 +51,12 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
 
       {/* Live Quick-Jump Bar */}
       <div
-        className="nav-pillars-bar border-t border-slate-800 bg-slate-950 py-2"
+        className="nav-pillars-bar border-t border-mineral bg-[#08090C] py-2"
         data-testid="five-revenue-pillars-bar"
       >
         <div className="container flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 font-mono text-xs font-semibold text-amber-400 uppercase tracking-wider">
-            <span className="h-2 w-2 rounded-full bg-amber-400" />
+          <div className="flex items-center gap-2 font-mono text-xs font-semibold text-plasma uppercase tracking-wider">
+            <span className="h-2 w-2 rounded-full bg-plasma" />
             <span className="hidden sm:inline">Quick Jump:</span>
           </div>
           <nav className="flex items-center gap-4 sm:gap-6 font-sans text-xs font-medium" aria-label="Five Revenue Pillars">
@@ -64,7 +64,7 @@ function NavChrome({ right }: { readonly right: ReactNode }) {
               <a
                 key={pillar.href}
                 href={pillar.href}
-                className="text-slate-200 hover:text-amber-400 transition-colors"
+                className="text-ion-1 hover:text-plasma transition-colors"
                 title={pillar.desc}
               >
                 {pillar.label}

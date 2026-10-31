@@ -12,13 +12,8 @@ button { font-family: inherit; cursor: pointer; }
 .app {
   min-height: 100vh;
   position: relative;
-  /* Restraint: one subtle cyan ambient + one tight ultraviolet wash.
-     Magenta is reserved for the hero vignette + intentional live-state hits.
-     Reference: Linear / Stripe — 95% neutral, accent hits earn their pixels. */
-  background:
-    radial-gradient(ellipse 55% 38% at 100% 18%, rgba(255,77,46,0.05), transparent 72%),
-    radial-gradient(ellipse 45% 32% at 0% 85%, rgba(25,28,35,0.25), transparent 72%),
-    linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 30%, var(--obsidian) 100%);
+  /* FLAT ground (redline: no gradients, no ambient wash). Ground #08090C. */
+  background: var(--carbon);
 }
 
 .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
@@ -26,8 +21,8 @@ button { font-family: inherit; cursor: pointer; }
 /* ─── NAV ─────────────────────────────────────────── */
 .nav {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(7, 10, 17, 0.78);
-  backdrop-filter: blur(14px) saturate(140%);
+  /* FLAT opaque panel (redline: no glass blur). */
+  background: var(--carbon);
   border-bottom: 1px solid var(--mineral);
 }
 .nav-inner {
@@ -50,7 +45,6 @@ button { font-family: inherit; cursor: pointer; }
   margin: 0 -0.04em;
   transform: translateY(0.05em);
   align-self: center;
-  filter: drop-shadow(0 0 6px rgba(255,45,138,0.5));
 }
 .nav-logo .ret svg { width: 100%; height: 100%; }
 
@@ -69,15 +63,14 @@ button { font-family: inherit; cursor: pointer; }
   content: ""; display: block;
   height: 1px; background: var(--plasma);
   margin-top: 6px;
-  box-shadow: 0 0 6px var(--plasma);
 }
 
 .nav-right { display: flex; align-items: center; gap: 12px; }
 .live-chip {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 12px;
-  background: rgba(255,45,138,0.08);
-  border: 1px solid rgba(255,45,138,0.3);
+  background: var(--titanium);
+  border: 1px solid var(--mineral);
   border-radius: 999px;
   color: var(--plasma);
   font: 500 10px/1 var(--f-mono);
@@ -101,7 +94,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn-primary {
   background: var(--plasma); color: var(--plasma-ink);
-  box-shadow: var(--glow-plasma);
 }
 .btn-primary:hover { background: var(--plasma-glow); }
 .btn-primary:active { transform: scale(0.98); }
@@ -112,13 +104,11 @@ button { font-family: inherit; cursor: pointer; }
 .btn-ghost:hover { background: var(--slate); border-color: var(--mineral-hi); color: var(--ion-white); }
 .btn-deep {
   background: var(--ultraviolet); color: var(--carbon);
-  box-shadow: var(--glow-uv);
 }
 .btn-deep:hover { background: var(--ultraviolet-glow); }
 /* Legacy alias — .btn-amber kept for backward compat, points to UV */
 .btn-amber {
   background: var(--ultraviolet); color: var(--carbon);
-  box-shadow: var(--glow-uv);
 }
 .btn-amber:hover { background: var(--ultraviolet-glow); }
 .btn-sm { padding: 7px 12px; font-size: 12px; }
@@ -304,16 +294,12 @@ button { font-family: inherit; cursor: pointer; }
   overflow: hidden;
   transition:
     border-color .25s var(--ease-out),
-    transform .25s var(--ease-out),
-    box-shadow .25s var(--ease-out);
+    transform .25s var(--ease-out);
   will-change: transform;
 }
 .pick:hover {
   border-color: var(--mineral-hi);
   transform: translateY(-2px);
-  box-shadow:
-    0 12px 32px -16px color-mix(in srgb, var(--ion-blue-glow) 22%, transparent),
-    0 1px 0 0 color-mix(in srgb, var(--ion-white) 5%, transparent) inset;
 }
 .pick:focus-visible {
   outline: 2px solid var(--ion-blue-glow);
@@ -323,21 +309,20 @@ button { font-family: inherit; cursor: pointer; }
   .pick, .pick:hover { transform: none; transition: border-color .2s var(--ease-out); }
 }
 .pick.featured {
-  border-color: rgba(255,45,138,0.4);
-  box-shadow: 0 0 32px -10px rgba(255,45,138,0.25);
+  border-color: var(--plasma);
 }
+/* RETIRED (redline: no gradients). Mount kept so markup is unchanged. */
 .pick.featured::before {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255,45,138,0.08), transparent 70%);
+  background: none;
   pointer-events: none;
 }
 .pick.elite {
-  border-color: rgba(79,168,255,0.4);
-  box-shadow: 0 0 32px -10px rgba(79,168,255,0.22);
+  border-color: var(--mineral-hi);
 }
 .pick.elite::before {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 40% at 100% 0%, rgba(79,168,255,0.08), transparent 70%);
+  background: none;
   pointer-events: none;
 }
 .pick > * { position: relative; z-index: 2; }
@@ -350,9 +335,9 @@ button { font-family: inherit; cursor: pointer; }
   display: inline-flex; align-items: center; gap: 5px;
 }
 .chip-sport { background: var(--titanium); color: var(--ion); border: 1px solid var(--mineral); }
-.chip-grade-elite { background: rgba(255,45,138,0.12); color: var(--plasma); border: 1px solid rgba(255,45,138,0.35); }
-.chip-grade-strong { background: rgba(79,168,255,0.12); color: var(--ion-blue); border: 1px solid rgba(79,168,255,0.35); }
-.chip-grade-solid { background: rgba(155,123,250,0.12); color: var(--ultraviolet); border: 1px solid rgba(155,123,250,0.35); }
+.chip-grade-elite { background: var(--titanium); color: var(--plasma); border: 1px solid var(--plasma); }
+.chip-grade-strong { background: var(--titanium); color: var(--ion-blue); border: 1px solid var(--mineral); }
+.chip-grade-solid { background: var(--titanium); color: var(--ultraviolet); border: 1px solid var(--mineral); }
 
 .pick-match .away, .pick-match .home {
   font: 700 19px/1.15 var(--f-display);
@@ -482,21 +467,20 @@ button { font-family: inherit; cursor: pointer; }
   position: relative; overflow: hidden;
 }
 .tier.featured {
-  border-color: rgba(255,45,138,0.5);
-  box-shadow: var(--glow-plasma);
+  border-color: var(--plasma);
 }
+/* RETIRED (redline: no gradients). Mount kept so markup is unchanged. */
 .tier.featured::before {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255,45,138,0.08), transparent 70%);
+  background: none;
   pointer-events: none;
 }
 .tier.elite-tier {
-  border-color: rgba(155,123,250,0.5);
-  box-shadow: var(--glow-uv);
+  border-color: var(--mineral-hi);
 }
 .tier.elite-tier::before {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(155,123,250,0.10), transparent 70%);
+  background: none;
   pointer-events: none;
 }
 .tier > * { position: relative; z-index: 2; }
@@ -535,8 +519,8 @@ button { font-family: inherit; cursor: pointer; }
   margin-top: 3px;
   position: relative;
 }
-.tier.featured li::before { background: var(--plasma); box-shadow: 0 0 8px var(--plasma); }
-.tier.elite-tier li::before { background: var(--ultraviolet); box-shadow: 0 0 8px var(--ultraviolet); }
+.tier.featured li::before { background: var(--plasma); }
+.tier.elite-tier li::before { background: var(--ultraviolet); }
 .tier li.muted { color: var(--fg-muted); }
 /* Muted bullet dot — decorative background, kept on --mineral so the
    lightened text-grade --ion-3 doesn't brighten this marker. */
@@ -636,7 +620,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-top: 24px;
   border: 1px solid var(--mineral);
   border-left: 2px solid var(--ultraviolet);
-  background: rgba(155,123,250,0.04);
+  background: var(--eclipse);
   border-radius: var(--r-sm);
   padding: 16px 20px;
   display: flex; align-items: start; gap: 14px;
@@ -658,7 +642,7 @@ button { font-family: inherit; cursor: pointer; }
   height: 40px;
   display: inline-flex;
   flex: none;
-  filter: drop-shadow(0 0 14px rgba(255,77,46,0.30));
+  filter: none;
 }
 .brand-emblem-img { width: 100%; height: 100%; object-fit: contain; }
 .brand-wordmark {
@@ -690,8 +674,8 @@ button { font-family: inherit; cursor: pointer; }
 .footer-lockup { margin-bottom: 16px; }
 
 /* ── Kinetic signature ───────────────────────────────────────────────────────
-   A sub-1s arrival sting: the official emblem fades up with a settling chrome
-   glow, then the wordmark resolves left-to-right. Designed so the brand reads
+   A sub-1s arrival sting: the official emblem fades up and scales into place,
+   then the wordmark resolves left-to-right. Designed so the brand reads
    as it lands, not after. Plays once on render (it lives in the persistent
    layout, so it fires on a full load — an arrival sting — not on in-app
    navigation). Fully disabled under prefers-reduced-motion, which snaps
@@ -706,10 +690,12 @@ button { font-family: inherit; cursor: pointer; }
   60%  { opacity: 1; transform: scale(1.25); }
   100% { opacity: 1; transform: scale(1); }
 }
+/* REDLINE: the arrival sting settles on scale + opacity only — no halo.
+   Name kept (shared motion vocabulary + brand-kinetic-logo guard). */
 @keyframes gse-mark-glow {
-  0%   { opacity: 0; transform: scale(0.86); filter: drop-shadow(0 0 2px rgba(255,77,46,0)); }
-  55%  { opacity: 1; transform: scale(1.04); filter: drop-shadow(0 0 22px rgba(255,77,46,0.7)); }
-  100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 14px rgba(255,77,46,0.30)); }
+  0%   { opacity: 0; transform: scale(0.86); }
+  55%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
 }
 @keyframes gse-word-resolve {
   from { opacity: 0; transform: translateX(-6px); clip-path: inset(0 100% 0 0); }
@@ -744,18 +730,15 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ── "How this page works" launcher ──────────────────────────────────────────
    A short, one-time attention pulse draws the eye to the guide, then settles to
-   a calm resting glow. The gradient ring is the signal fade; the pulse only
-   widens the glow so it reads as an invitation, never a flash. Reduced motion
-   holds the resting glow with no pulse. */
+   REDLINE: the attention signal is a transform breath, never a glow. Reduced
+   motion holds the resting state with no pulse. */
 @keyframes explainer-attn {
-  0%, 100% { box-shadow: 0 10px 30px -10px rgba(255,77,46,0.40); }
-  50%      { box-shadow: 0 10px 32px -6px rgba(255,77,46,0.70), 0 0 0 5px rgba(255,77,46,0.10); }
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
 }
 .explainer-launcher {
-  box-shadow: 0 10px 30px -10px rgba(255,77,46,0.40);
   animation: explainer-attn 2.4s ease-in-out 0.6s 3;
 }
-.explainer-launcher:hover { box-shadow: 0 12px 34px -6px rgba(255,77,46,0.65); }
 @media (prefers-reduced-motion: reduce) {
   .explainer-launcher { animation: none !important; }
 }
@@ -769,13 +752,8 @@ button { font-family: inherit; cursor: pointer; }
   to   { background-position: 0 6px; }
 }
 .gsn-scanlines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0.05) 0,
-    rgba(255, 255, 255, 0.05) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+  /* RETIRED (redline: no gradients). Mount kept so markup is unchanged. */
+  background-image: none;
   animation: gsn-scan-drift 0.55s steps(3) infinite;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -792,15 +770,9 @@ button { font-family: inherit; cursor: pointer; }
   content: "";
   position: absolute;
   inset: 0;
-  /* Cinematic vignette: deep obsidian darkening on the left where the H1
-     reads, with one cyan-and-ultraviolet wash on the right to seat the
-     orbital canvas. Magenta hit is a single tight glow at the bottom-right
-     "signal acquired" anchor — used once, not sprayed. */
-  background:
-    linear-gradient(90deg, rgba(5,7,11,0.97) 0%, rgba(5,7,11,0.82) 38%, rgba(5,7,11,0.30) 72%, rgba(5,7,11,0.62) 100%),
-    radial-gradient(circle at 76% 36%, rgba(255,77,46,0.10), transparent 36%),
-    radial-gradient(circle at 64% 80%, rgba(255,77,46,0.08), transparent 28%),
-    radial-gradient(circle at 92% 18%, rgba(25,28,35,0.25), transparent 38%);
+  /* FLAT scrim (redline: no gradients, no colour wash). Ground #08090C at a
+     fixed alpha seats the H1 over the orbital canvas. */
+  background: rgba(8, 9, 12, 0.55);
   z-index: 1;
   pointer-events: none;
 }
@@ -827,10 +799,8 @@ button { font-family: inherit; cursor: pointer; }
   display: grid;
   place-items: center;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255,77,46,0.16), transparent 24%),
-    radial-gradient(circle at 50% 50%, rgba(0,240,255,0.16), transparent 40%),
-    rgba(2,3,10,0.86);
+  /* FLAT scrim (redline: no gradients). Ground at a fixed alpha. */
+  background: rgba(8, 9, 12, 0.86);
   pointer-events: none;
   animation: gse-intro-out 3.2s var(--ease-out) forwards;
 }
@@ -838,9 +808,6 @@ button { font-family: inherit; cursor: pointer; }
   font: 900 96px/0.85 var(--f-arch);
   letter-spacing: 0.08em;
   color: var(--ion-white);
-  text-shadow:
-    0 0 24px rgba(0,240,255,0.52),
-    0 0 46px rgba(255,77,46,0.44);
   animation: gse-intro-scale 3.2s var(--ease-out) forwards;
 }
 .hero-intro-line {
@@ -856,14 +823,13 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   width: min(560px, 80vw);
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--orbital-cyan-glow), var(--plasma), transparent);
-  box-shadow: 0 0 22px rgba(0,240,255,0.8);
+  background: var(--plasma);
   animation: gse-intro-scan 1.5s var(--ease-out) 0.25s both;
 }
 .slate-chip {
   padding: 7px 10px;
   border: 1px solid color-mix(in srgb, var(--ion) 14%, transparent);
-  background: rgba(18,27,49,0.72);
+  background: var(--eclipse);
   border-radius: var(--r-sm);
 }
 
@@ -877,11 +843,8 @@ button { font-family: inherit; cursor: pointer; }
 
 .mission-core,
 .mission-lane {
-  border: 1px solid color-mix(in srgb, var(--ion-blue-glow) 18%, transparent);
-  background: linear-gradient(180deg, rgba(13, 17, 23, 0.94), rgba(5, 6, 8, 0.92));
-  box-shadow:
-    0 30px 80px -45px color-mix(in srgb, var(--ion-blue-glow) 32%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--ion-white) 6%, transparent);
+  border: 1px solid var(--mineral);
+  background: var(--eclipse);
 }
 
 .mission-core {
@@ -898,7 +861,8 @@ button { font-family: inherit; cursor: pointer; }
   width: 240px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--ion-blue-glow) 22%, transparent), transparent 68%);
+  /* RETIRED (redline: no gradients, no glow). */
+  background: none;
   pointer-events: none;
 }
 
@@ -952,7 +916,7 @@ button { font-family: inherit; cursor: pointer; }
 .mission-flow i {
   display: block;
   height: 1px;
-  background: linear-gradient(90deg, var(--ion-blue-glow), transparent);
+  background: var(--mineral);
 }
 
 .mission-verdict {
@@ -1081,7 +1045,7 @@ button { font-family: inherit; cursor: pointer; }
   .mission-flow i {
     width: 1px;
     height: 18px;
-    background: linear-gradient(180deg, var(--ion-blue-glow), transparent);
+    background: var(--mineral);
   }
   .nav-inner { height: 60px; }
   .nav-left { min-width: 0; }
@@ -1097,11 +1061,8 @@ button { font-family: inherit; cursor: pointer; }
     min-height: calc(100svh - 60px);
   }
   .hero-galaxy::before {
-    background:
-      linear-gradient(180deg, rgba(5,7,11,0.86) 0%, rgba(5,7,11,0.78) 42%, rgba(5,7,11,0.96) 100%),
-      radial-gradient(circle at 50% 18%, rgba(255,77,46,0.20), transparent 34%),
-      radial-gradient(circle at 78% 56%, rgba(255,77,46,0.10), transparent 30%),
-      radial-gradient(circle at 22% 70%, rgba(25,28,35,0.25), transparent 34%);
+    /* FLAT scrim (redline: no gradients). */
+    background: rgba(8, 9, 12, 0.72);
   }
   .interactive-galaxy {
     inset: -120px -64% 22% -64%;
@@ -1118,9 +1079,7 @@ button { font-family: inherit; cursor: pointer; }
     letter-spacing: -0.018em;
     max-width: 12ch;
     margin-bottom: 22px;
-    text-shadow:
-      0 1px 0 rgba(255,255,255,0.06),
-      0 18px 40px rgba(0,0,0,0.62);
+    text-shadow: 0 18px 40px rgba(0,0,0,0.62);
   }
   .hero h1 em {
     font-size: 56px;
@@ -1140,12 +1099,9 @@ button { font-family: inherit; cursor: pointer; }
     justify-content: center;
   }
   .hero-ctas .btn-primary {
-    color: #1A0703;
-    background: linear-gradient(90deg, var(--plasma-glow), var(--plasma));
-    box-shadow:
-      0 0 0 1px rgba(246,247,250,0.12) inset,
-      0 16px 34px -18px rgba(255,77,46,0.70),
-      0 16px 34px -18px rgba(255,77,46,0.60);
+    /* FLAT ember fill (redline: no gradients, no glow). */
+    color: var(--plasma-ink);
+    background: var(--plasma);
   }
   .hero-ctas .btn-ghost {
     color: var(--ion-white);
@@ -1206,9 +1162,8 @@ button { font-family: inherit; cursor: pointer; }
   .nav-logo span[style*="flex-direction"] span:last-child { font-size: 9px !important; }
   .live-chip { display: none; }
   .hero-intro {
-    background:
-      radial-gradient(circle at 50% 50%, rgba(255,77,46,0.12), transparent 36%),
-      rgba(5,6,8,0.84);
+    /* FLAT scrim (redline: no gradients). */
+    background: rgba(8, 9, 12, 0.84);
     animation-duration: 2.1s;
   }
   .hero-intro-mark { font-size: 66px; }

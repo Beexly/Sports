@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
-import { Inter, Barlow_Condensed, Chakra_Petch } from "next/font/google";
+import { Big_Shoulders_Display, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import {
   BRAND_META,
@@ -18,49 +18,41 @@ import {
   shouldRenderMicrosoftClarity,
 } from "@/lib/analytics/provider-gating";
 
-// ONE FAMILY — design contract Law 1: evidence sets the rendering.
+// TWO FAMILIES — design contract Law 1: evidence sets the rendering.
 //
 // A figure and its sample size must sit at the SAME optical size at n=10-29, so
-// the claim and its weakness are read in one glance. That is unachievable across
-// two families: a mono figure beside a sans caption reads as machine output
-// annotated by a human, which silently rebuilds the exact hierarchy Law 1 exists
-// to destroy, at the one moment it matters most.
-//
-// Inter carries every role. Tabular figures are enabled globally on `body` in
+// the claim and its weakness are read in one glance. IBM Plex Sans carries every
+// body/data role; tabular figures are enabled globally on `body` in
 // styles/design-tokens.css, which is what the numerals role actually needed —
 // column alignment, not a second typeface.
 //
-// Only --f-body is bound here. The remaining family vars (--f-display, --f-arch,
-// --f-display-tech, --f-numerals, --f-mono, --f-editorial) derive from it in
-// styles/design-tokens.css, so the 245 files using font-display / font-mono /
-// font-numerals / font-arch need no change.
+// Big Shoulders carries DISPLAY HEADLINES ONLY via the EXISTING --f-cond binding,
+// which --f-display resolves to in styles/design-tokens.css. The wordmark
+// variable --f-word is PRESERVED, but as a plain alias to the display face
+// (declared in design-tokens.css) rather than a third fetched family.
 //
-// Retiring Exo 2, JetBrains Mono and Instrument Serif also removes three Google
-// font downloads from every route. Do not re-introduce a second family without
-// re-opening Law 1.
-const brandFont = Inter({
+// Only --f-body and --f-cond are bound here. The remaining family vars
+// (--f-display, --f-arch, --f-display-tech, --f-numerals, --f-mono,
+// --f-editorial) derive from them in styles/design-tokens.css, so the 245 files
+// using font-display / font-mono / font-numerals / font-arch need no change.
+//
+// Next 14.2.35 exposes no bare `Big_Shoulders` export — the display cut ships as
+// `Big_Shoulders_Display`. Retiring Inter, Barlow Condensed and Chakra Petch also
+// removes their per-route Google font downloads.
+const bodyFont = IBM_Plex_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--f-body",
   display: "swap",
 });
 
-// NEBULA v7 display faces (owner-approved 2026-09-10): Barlow Condensed
-// carries DISPLAY HEADLINES ONLY via --f-display; Chakra Petch carries the
-// wordmark via --f-word. Body, figures and numerals stay Inter with global
-// tabular figures — Law 1's evidence requirement (claim + sample size at the
-// same optical size) is untouched. next/font, zero added network requests.
-const displayFont = Barlow_Condensed({
+// Big Shoulders — DISPLAY HEADLINES ONLY (--f-cond -> --f-display). The wordmark
+// (--f-word) is this same face, aliased in styles/design-tokens.css; no third
+// family is fetched.
+const displayFont = Big_Shoulders_Display({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800", "900"],
   variable: "--f-cond",
-  display: "swap",
-});
-
-const wordmarkFont = Chakra_Petch({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--f-word",
   display: "swap",
 });
 
@@ -75,9 +67,9 @@ export const viewport: Viewport = {
  *
  * Fonts are loaded through next/font and bound directly to the design-system
  * CSS variables consumed by `styles/design-tokens.css` and Tailwind:
- *   --f-display, --f-body, --f-numerals, --f-editorial (loaded here);
- *   --f-arch and --f-mono are aliases in design-tokens.css so each family is
- *   fetched exactly once.
+ *   --f-body (IBM Plex Sans) and --f-cond (Big Shoulders) are loaded here;
+ *   --f-display, --f-arch, --f-numerals, --f-mono, --f-editorial and --f-word
+ *   are aliases in design-tokens.css so each family is fetched exactly once.
  *
  * SEO foundation:
  *  - Per-page <title>/<description> override the defaults below via each
@@ -196,10 +188,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // One family for body/data, display faces for headlines/wordmark. Every
-  // other family token derives from --f-body in styles/design-tokens.css;
-  // --f-display resolves to --f-cond (Barlow Condensed). See above.
-  const fontVariables = `${brandFont.variable} ${displayFont.variable} ${wordmarkFont.variable}`;
+  // Two families: IBM Plex Sans for body/data (--f-body); Big Shoulders for
+  // headlines + the wordmark alias (--f-cond -> --f-display, --f-word). Every
+  // other family token derives from --f-body in styles/design-tokens.css.
+  const fontVariables = `${bodyFont.variable} ${displayFont.variable}`;
 
   return (
     <html lang="en" className={`scroll-smooth ${fontVariables}`}>

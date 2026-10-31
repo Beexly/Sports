@@ -52,6 +52,13 @@ function formatConfidenceStrict(raw: string | number): string {
   return cleaned.endsWith("/100") ? cleaned : `${cleaned}/100`;
 }
 
+/**
+ * PaywallRevealCard — the interactive pay-per-slate unit.
+ *
+ * Redline Ledger: bone ink on panel (#12141A), one ember accent, hairline
+ * rules. No rounding, no shadow, no second hue — the ledger row reads as a
+ * filed entry that happens to be purchasable in place.
+ */
 export function PaywallRevealCard({
   pkg,
   teasers,
@@ -163,124 +170,121 @@ export function PaywallRevealCard({
     }
   }
 
+  const eyebrow = "font-numerals text-[11px] uppercase tracking-[0.2em] text-ion-1";
+
   return (
     <div
       data-testid={`paywall-reveal-card-${pkg.slug}`}
-      className="flex flex-col justify-between bg-slate-900 border-2 border-slate-700 hover:border-amber-400 rounded-xl p-6 shadow-xl transition-colors"
+      className="flex flex-col justify-between border border-mineral bg-eclipse/60"
     >
-      {/* Card Header */}
-      <div>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="inline-flex items-center rounded-md border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-            {pkg.badge || pkg.windowSlot}
-          </span>
-          <div className="flex items-center gap-2">
-            {isUnlocked ? (
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-400/60 bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase text-emerald-300">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                UNLOCKED IN-PLACE
-              </span>
-            ) : (
-              <span className="text-2xl font-bold text-amber-400">
-                ${activePrice}
-              </span>
-            )}
-          </div>
+      {/* ── Identity ─────────────────────────────────────────────── */}
+      <div className="p-6 sm:p-7">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+          <span className={eyebrow}>{pkg.badge || pkg.windowSlot}</span>
+          {isUnlocked ? (
+            <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-plasma">
+              UNLOCKED IN-PLACE
+            </span>
+          ) : (
+            <span className="font-numerals text-3xl font-semibold tabular-nums text-ion-white">
+              ${activePrice}
+            </span>
+          )}
         </div>
 
-        <h3 className="mt-3 font-display text-2xl font-bold text-white">
+        <h3 className="mt-4 font-display text-2xl text-ion-white sm:text-[28px]">
           {pkg.title}
         </h3>
-        <p className="mt-1 text-sm font-semibold text-amber-300">
-          {pkg.gamesCount} {pkg.gamesCount === 1 ? "Game" : "Games"} · Side, Total, Player Props &amp; Same-Game Parlay
+        <p className="mt-2 font-numerals text-[11px] uppercase tracking-[0.2em] tabular-nums text-ion-2">
+          {pkg.gamesCount} {pkg.gamesCount === 1 ? "game" : "games"} · Side, Total, Player Props &amp; Same-Game Parlay
         </p>
-        <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
+        <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
           {sanitizePlainFootballText(pkg.description)}
         </p>
 
-        {/* FREE PREVIEW BOX (Teases Matchup & Storylines Only — ZERO Leaked Picks or Confidence Numbers) */}
+        {/* ── Free preview — storyline only, zero leaked picks ───── */}
         {teasers.length > 0 && (
-          <div className="mt-5 space-y-3 border-t border-slate-700 pt-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                Matchup Storyline &amp; Film Preview (Free)
-              </span>
-              <span className="text-xs font-semibold text-emerald-400">
+          <div className="mt-6 border-t border-mineral pt-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <span className={eyebrow}>Matchup Storyline &amp; Film Preview (Free)</span>
+              <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-ion-2">
                 Plain-English Matchup Breakdown
               </span>
             </div>
-            {teasers.slice(0, 2).map((t) => (
-              <div key={t.id} className="rounded-lg border border-slate-700 bg-slate-800/90 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-base font-bold text-white">{t.matchup}</span>
-                  <span className="text-xs font-semibold text-amber-300">
-                    {formatWindowSlotLabel(t.windowSlot, t.matchup)}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
-                  {sanitizePlainFootballText(t.schemeMatchup.coverageShell || t.schemeMatchup.notes)}
-                </p>
-                {t.paceOfPlay?.notes && (
-                  <p className="mt-2 text-sm md:text-base text-slate-100 leading-relaxed">
-                    {sanitizePlainFootballText(t.paceOfPlay.notes)}
-                  </p>
-                )}
-                <div className="mt-3 rounded-md bg-slate-900/90 px-3 py-2 text-xs font-semibold text-slate-200 border border-slate-700">
-                  Locked Inside This Pack: Official Spread Call · Official Over/Under Call · {t.lockedSummary.propsCount} Player Prop Bets · 3-Leg Same-Game Parlay
-                </div>
 
-                {/* Blurred Locked Preview Row */}
-                {!isUnlocked && (
-                  <div className="relative mt-3 overflow-hidden rounded-lg border border-slate-700 bg-slate-950/90 p-3.5">
-                    <div
-                      aria-hidden="true"
-                      className="select-none blur-[5px] pointer-events-none opacity-60 text-sm text-slate-200"
-                    >
-                      <div className="font-bold text-emerald-400">
-                        Official Spread Verdict · Official Over/Under Verdict
-                      </div>
-                      <div className="mt-1 text-xs text-slate-300">
-                        Player Yardage Props ({t.lockedSummary.propsCount} Official Reads) · 3-Leg Same-Game Parlay
-                      </div>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center p-2">
-                      <span className="inline-flex items-center rounded-md border border-amber-400/60 bg-slate-900/95 px-3 py-1.5 text-xs font-bold text-amber-300 shadow-md">
-                        🔒 Locked Until Purchase — Instant Reveal on This Page
-                      </span>
-                    </div>
+            <div className="mt-4 space-y-6">
+              {teasers.slice(0, 2).map((t) => (
+                <div key={t.id} className="border-l-2 border-plasma pl-4">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <span className="font-display text-lg text-ion-white">{t.matchup}</span>
+                    <span className="font-numerals text-[11px] uppercase tracking-[0.2em] tabular-nums text-ion-2">
+                      {formatWindowSlotLabel(t.windowSlot, t.matchup)}
+                    </span>
                   </div>
-                )}
-              </div>
-            ))}
+                  <p className="mt-2 max-w-2xl text-base leading-7 text-ion-1">
+                    {sanitizePlainFootballText(t.schemeMatchup.coverageShell || t.schemeMatchup.notes)}
+                  </p>
+                  {t.paceOfPlay?.notes && (
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-2">
+                      {sanitizePlainFootballText(t.paceOfPlay.notes)}
+                    </p>
+                  )}
+                  <p className="mt-3 font-numerals text-[11px] uppercase tracking-[0.18em] tabular-nums text-ion-2">
+                    Locked inside this pack: Official Spread Call · Official Over/Under Call · {t.lockedSummary.propsCount} Player Prop Bets · 3-Leg Same-Game Parlay
+                  </p>
+
+                  {/* Blurred locked preview row */}
+                  {!isUnlocked && (
+                    <div className="relative mt-4 overflow-hidden border border-mineral bg-obsidian p-4">
+                      <div
+                        aria-hidden="true"
+                        className="select-none blur-[5px] pointer-events-none opacity-60 text-sm text-ion-1"
+                      >
+                        <div className="font-semibold text-ion-white">
+                          Official Spread Verdict · Official Over/Under Verdict
+                        </div>
+                        <div className="mt-1 font-numerals text-[11px] uppercase tracking-[0.18em] tabular-nums text-ion-2">
+                          Player Yardage Props ({t.lockedSummary.propsCount} Official Reads) · 3-Leg Same-Game Parlay
+                        </div>
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center p-2">
+                        <span className="border border-mineral bg-eclipse px-3 py-1.5 text-xs font-semibold text-ion-1">
+                          🔒 Locked Until Purchase — Instant Reveal on This Page
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* HIGH-CONTRAST PAYWALL CALLOUT OR UNLOCKED PICKS */}
+        {/* ── Paywall callout, or the unlocked picks ─────────────── */}
         {!isUnlocked ? (
-          <div className="mt-5 rounded-xl border-2 border-amber-500/60 bg-slate-800 p-5 text-center shadow-inner">
-            <h4 className="text-lg font-bold text-white">
-              🔒 Unlock Official Picks &amp; Exact Bet Numbers
+          <div className="mt-6 border border-mineral bg-obsidian p-5 sm:p-6">
+            <h4 className="font-display text-xl text-ion-white">
+              Unlock official picks &amp; exact bet numbers
             </h4>
-            <p className="mt-2 text-sm md:text-base leading-relaxed text-slate-100">
+            <p className="mt-2 max-w-2xl text-base leading-7 text-ion-1">
               Click below for instant access to our official Side bet, Total bet, best Player Props, and Same-Game Parlay right on this screen.
             </p>
 
-            {/* Explicit "What's Inside" checklist right above the Unlock button */}
             <div
               data-testid="whats-inside-checklist"
-              className="mt-4 rounded-lg border border-emerald-400/60 bg-slate-900 px-4 py-3 text-sm font-bold text-slate-100 shadow-sm"
+              className="mt-4 border-l-2 border-plasma pl-4 text-xs font-semibold tracking-[0.02em] text-ion-1"
             >
               What’s Inside: Spread Call · Over/Under Call · Player Props · Same-Game Parlay
               {pkg.includesDfs ? " · DFS Lineup Core" : ""}
             </div>
 
             {guaranteedPrice && (
-              <div className="mt-3 inline-flex rounded-lg border border-slate-600 bg-slate-900 p-1 text-xs font-semibold">
+              <div className="mt-4 inline-flex border border-mineral">
                 <button
                   type="button"
                   onClick={() => setGuaranteed(false)}
-                  className={`rounded-md px-3 py-1.5 transition-colors ${
-                    !guaranteed ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-300 hover:text-white"
+                  className={`px-3 py-1.5 font-numerals text-[11px] uppercase tracking-[0.16em] transition-colors ${
+                    !guaranteed ? "bg-plasma text-plasma-ink" : "text-ion-2 hover:text-ion-white"
                   }`}
                 >
                   Standard ${standardPrice}
@@ -288,8 +292,8 @@ export function PaywallRevealCard({
                 <button
                   type="button"
                   onClick={() => setGuaranteed(true)}
-                  className={`rounded-md px-3 py-1.5 transition-colors ${
-                    guaranteed ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-300 hover:text-white"
+                  className={`px-3 py-1.5 font-numerals text-[11px] uppercase tracking-[0.16em] transition-colors ${
+                    guaranteed ? "bg-plasma text-plasma-ink" : "text-ion-2 hover:text-ion-white"
                   }`}
                 >
                   Credit-Back ${guaranteedPrice}
@@ -297,12 +301,12 @@ export function PaywallRevealCard({
               </div>
             )}
 
-            <div className="mt-4">
+            <div className="mt-5">
               <button
                 type="button"
                 disabled={loadingCheckout}
                 onClick={() => void handleOneClickCheckout(guaranteed)}
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-base py-3.5 px-6 rounded-lg shadow-lg transition"
+                className="w-full border border-plasma bg-plasma px-6 py-3.5 text-base font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow disabled:opacity-60"
               >
                 {loadingCheckout
                   ? "Opening Secure Checkout..."
@@ -314,20 +318,20 @@ export function PaywallRevealCard({
               <button
                 type="button"
                 onClick={() => setShowTokenBox((prev) => !prev)}
-                className="text-xs font-semibold text-slate-300 underline hover:text-amber-300"
+                className="font-numerals text-[11px] uppercase tracking-[0.16em] text-ion-2 underline transition-colors hover:text-plasma"
               >
                 {showTokenBox ? "Hide Receipt Box" : "Already purchased? Enter Receipt ID"}
               </button>
             </div>
           </div>
         ) : (
-          /* UNLOCKED IN-PLACE REVEAL */
-          <div className="mt-5 space-y-4 rounded-xl border-2 border-emerald-500/60 bg-slate-950 p-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                ✓ Live Picks Revealed In-Place
+          /* ── UNLOCKED IN-PLACE REVEAL ──────────────────────────── */
+          <div className="mt-6 border border-mineral bg-obsidian p-5 sm:p-6">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-mineral pb-3">
+              <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-plasma">
+                Live Picks Revealed In-Place
               </span>
-              <span className="text-xs font-semibold text-slate-300">
+              <span className="font-numerals text-[11px] uppercase tracking-[0.2em] text-ion-2">
                 Confidence Score Out of 100
               </span>
             </div>
@@ -336,105 +340,92 @@ export function PaywallRevealCard({
               const sideIsPass = String(w.sideTotalCall.sideDecision) === "PASS";
               const totalIsPass = String(w.sideTotalCall.totalDecision) === "PASS";
               return (
-                <div key={w.id} className="space-y-4 border-b border-slate-800 pb-4 last:border-b-0 last:pb-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-bold text-white">{w.matchup}</span>
-                    <span className="text-xs font-bold uppercase text-amber-400">
+                <div
+                  key={w.id}
+                  className="mt-5 border-t border-mineral pt-5 first:mt-0 first:border-t-0 first:pt-0"
+                >
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <span className="font-display text-lg text-ion-white">{w.matchup}</span>
+                    <span className="font-numerals text-[11px] uppercase tracking-[0.2em] tabular-nums text-ion-2">
                       {formatWindowSlotLabel(w.windowSlot, w.matchup)}
                     </span>
                   </div>
 
                   {/* Official Side & Total */}
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div
-                      className={`rounded-lg p-4 border ${
-                        sideIsPass
-                          ? "bg-slate-800/90 border-amber-400/50"
-                          : "bg-slate-800 border-emerald-500/60"
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                          BEST SPREAD BET
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                    <div className="border border-mineral bg-eclipse p-4">
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                        <span className="font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
+                          Best Spread Bet
                         </span>
                         <span
-                          className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase ${
-                            sideIsPass
-                              ? "bg-amber-500/20 text-amber-300 border border-amber-400/40"
-                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40"
+                          className={`font-numerals text-[11px] uppercase tracking-[0.18em] ${
+                            sideIsPass ? "text-ion-2" : "text-plasma"
                           }`}
                         >
                           {sideIsPass ? "PASS — NO BET" : `BET THIS: ${w.sideTotalCall.sideSelection}`}
                         </span>
                       </div>
-                      <div className="mt-2 text-lg font-bold text-white">
+                      <div className="mt-2 font-display text-lg text-ion-white">
                         {sideIsPass ? "PASS — NO BET" : w.sideTotalCall.sideSelection}
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-emerald-300">
+                      <div className="mt-2 font-numerals text-xs tabular-nums text-ion-1">
                         Confidence: {formatConfidenceStrict(w.sideTotalCall.sideConfidence)}
                       </div>
                     </div>
 
-                    <div
-                      className={`rounded-lg p-4 border ${
-                        totalIsPass
-                          ? "bg-slate-800/90 border-amber-400/50"
-                          : "bg-slate-800 border-emerald-500/60"
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                          BEST TOTAL BET
+                    <div className="border border-mineral bg-eclipse p-4">
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                        <span className="font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
+                          Best Total Bet
                         </span>
                         <span
-                          className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase ${
-                            totalIsPass
-                              ? "bg-amber-500/20 text-amber-300 border border-amber-400/40"
-                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40"
+                          className={`font-numerals text-[11px] uppercase tracking-[0.18em] ${
+                            totalIsPass ? "text-ion-2" : "text-plasma"
                           }`}
                         >
                           {totalIsPass ? "PASS — NO BET" : `BET THIS: ${w.sideTotalCall.totalSelection}`}
                         </span>
                       </div>
-                      <div className="mt-2 text-lg font-bold text-white">
+                      <div className="mt-2 font-display text-lg text-ion-white">
                         {totalIsPass ? "PASS — NO BET" : w.sideTotalCall.totalSelection}
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-emerald-300">
+                      <div className="mt-2 font-numerals text-xs tabular-nums text-ion-1">
                         Confidence: {formatConfidenceStrict(w.sideTotalCall.totalConfidence)}
                       </div>
                     </div>
                   </div>
 
-                  {/* Plain-English Rationale */}
-                  <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-                    <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                      WHY BET THIS:
+                  {/* Plain-English rationale */}
+                  <div className="mt-4 border border-mineral bg-eclipse p-4">
+                    <div className="font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
+                      Why Bet This
                     </div>
-                    <p className="mt-1.5 text-sm md:text-base leading-relaxed text-slate-100">
+                    <p className="mt-2 max-w-2xl text-base leading-7 text-ion-1">
                       {sanitizePlainFootballText(w.sideTotalCall.rationale)}
                     </p>
                   </div>
 
-                  {/* Best Player Props */}
+                  {/* Best player props */}
                   {w.topProps.length > 0 && (
-                    <div className="bg-slate-800 border border-emerald-500/50 rounded-lg p-4">
-                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                        BEST PLAYER PROPS
+                    <div className="mt-4 border border-mineral bg-eclipse p-4">
+                      <div className="font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
+                        Best Player Props
                       </div>
-                      <div className="mt-2 space-y-2">
+                      <div className="mt-2">
                         {w.topProps.map((p, idx) => {
                           const propIsPass = String(p.decision) === "PASS";
                           return (
                             <div
                               key={`${p.playerId}-${p.propType}-${idx}`}
-                              className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/70 pb-2 last:border-b-0 last:pb-0 text-sm"
+                              className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-mineral py-2 text-sm last:border-b-0 last:pb-0 first:pt-0"
                             >
-                              <span className="font-bold text-white">
+                              <span className="font-semibold text-ion-white">
                                 {propIsPass
                                   ? `${p.playerName} — PASS — NO BET (${p.propType})`
                                   : `BET THIS: ${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
                               </span>
-                              <span className="text-xs font-semibold text-emerald-300">
+                              <span className="font-numerals text-xs tabular-nums text-ion-1">
                                 Confidence: {formatConfidenceStrict(p.confidence)}
                               </span>
                             </div>
@@ -444,18 +435,18 @@ export function PaywallRevealCard({
                     </div>
                   )}
 
-                  {/* Correlated Same-Game Parlay */}
+                  {/* Correlated same-game parlay */}
                   {w.correlatedSgpTicket && (
-                    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                    <div className="mt-4 border border-mineral bg-eclipse p-4">
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <span className="font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
                           {sanitizePlainFootballText(w.correlatedSgpTicket.title)}
                         </span>
-                        <span className="text-xs font-bold text-white">
+                        <span className="font-numerals text-xs tabular-nums text-ion-1">
                           Book Odds {w.correlatedSgpTicket.marketOdds} (Fair Odds {w.correlatedSgpTicket.fairOdds})
                         </span>
                       </div>
-                      <ul className="mt-2 space-y-1 text-sm text-slate-200">
+                      <ul className="mt-2 space-y-1 text-sm text-ion-1">
                         {w.correlatedSgpTicket.legs.map((leg, idx) => (
                           <li key={idx}>
                             • {sanitizePlainFootballText(leg.description)} (Confidence: {formatConfidenceStrict(leg.confidence)})
@@ -470,25 +461,25 @@ export function PaywallRevealCard({
           </div>
         )}
 
-        {/* Inline Receipt Verification Drawer */}
+        {/* Inline receipt verification drawer */}
         {!isUnlocked && showTokenBox && (
-          <div className="mt-3 rounded-lg border border-slate-700 bg-slate-800 p-4">
-            <label className="block text-xs font-bold uppercase text-slate-200">
+          <div className="mt-4 border border-mineral bg-obsidian p-4">
+            <label className="block font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
               Enter Your Stripe Receipt ID for Instant Access
             </label>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex flex-wrap gap-2">
               <input
                 type="text"
                 value={tokenInput}
                 onChange={(e) => setTokenInput(e.target.value)}
                 placeholder="cs_live_..."
-                className="flex-1 rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
+                className="min-w-0 flex-1 border border-mineral bg-eclipse px-3 py-2 text-sm text-ion-white placeholder:text-ion-2 focus:border-plasma focus:outline-none"
               />
               <button
                 type="button"
                 disabled={loadingUnlock}
                 onClick={() => void handleInlineVerify()}
-                className="rounded-md bg-amber-500 hover:bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950"
+                className="border border-plasma bg-plasma px-4 py-2 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow disabled:opacity-60"
               >
                 {loadingUnlock ? "Checking..." : "Unlock"}
               </button>
@@ -497,19 +488,21 @@ export function PaywallRevealCard({
         )}
 
         {errorMsg && (
-          <p className="mt-2 text-xs font-semibold text-amber-400">{errorMsg}</p>
+          <p className="mt-2 text-xs font-semibold text-caution">{errorMsg}</p>
         )}
       </div>
 
-      {/* Footer Link */}
-      <div className="mt-5 flex items-center justify-between border-t border-slate-800 pt-4 text-xs font-semibold">
+      {/* ── Footer link ──────────────────────────────────────────── */}
+      <div className="flex items-center justify-between border-t border-mineral px-6 py-4 sm:px-7">
         <Link
           href={`/packages/${pkg.slug}`}
-          className="text-amber-400 hover:text-amber-300 transition-colors"
+          className="text-sm font-semibold text-plasma transition-colors hover:text-plasma-glow"
         >
           View Full Game Breakdown &amp; Pick Details →
         </Link>
-        <span className="text-slate-400">Instant On-Screen Access</span>
+        <span className="font-numerals text-[11px] uppercase tracking-[0.18em] text-ion-2">
+          Instant On-Screen Access
+        </span>
       </div>
     </div>
   );

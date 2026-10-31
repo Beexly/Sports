@@ -40,14 +40,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             aria-hidden="true"
             className="grain-overlay absolute inset-0 -z-10"
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10"
-            style={{
-              background:
-                "radial-gradient(ellipse 55% 40% at 70% 18%, rgba(255,77,46,0.09), transparent 58%), linear-gradient(180deg, #08090Cdd 0%, #08090C88 42%, #08090C 100%)",
-            }}
-          />
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#08090C]" />
           <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
             <Reveal>
               <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 text-xs uppercase tracking-wider text-ion-2">
@@ -70,7 +63,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               </h1>
             </Reveal>
             <Reveal delay={120}>
-              <p className="mt-6 max-w-2xl text-lg sm:text-[19px] leading-relaxed text-[#F3EFE6]">
+              <p className="mt-6 max-w-2xl text-lg sm:text-[19px] leading-relaxed text-[#EDE8E0]">
                 Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know
                 exactly what to bet and why in 30 seconds.
               </p>
@@ -100,16 +93,16 @@ export default async function HomePage(): Promise<JSX.Element> {
         <section
           id="revenue-pillars"
           data-testid="five-pillar-revenue-section"
-          className="border-b border-mineral bg-eclipse/40 px-4 py-12 sm:px-6 lg:px-8"
+          className="border-b border-mineral bg-[#08090C] px-4 py-20 sm:px-6 sm:py-24 lg:px-8"
         >
           <div className="mx-auto max-w-7xl">
             <Reveal>
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mineral pb-6">
+              <div className="flex flex-wrap items-center justify-between gap-6 border-b border-mineral pb-8">
                 <div>
                   <p className="font-mono text-xs uppercase tracking-[0.2em] text-plasma font-semibold">
                     Galaxy Picks (Pay-Per-Slate Packs) · DFS Optimizer
                   </p>
-                  <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+                  <h2 className="mt-3 max-w-3xl text-balance font-display text-4xl font-semibold leading-[0.95] text-ion-white sm:text-5xl">
                     Plain-English NFL Picks, Player Props &amp; Parlays
                   </h2>
                 </div>
@@ -122,10 +115,10 @@ export default async function HomePage(): Promise<JSX.Element> {
               </div>
             </Reveal>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="mt-12 divide-y divide-mineral border-y border-mineral tabular-nums">
               <Link
                 href="/packages"
-                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
@@ -137,7 +130,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
                     GALAXY PICKS (PAID)
                   </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
                     Our highest-confidence spread and total bets with plain-English explanations and verified receipts.
                   </p>
                 </div>
@@ -148,7 +141,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               <Link
                 href="/packages#slate-dossiers"
-                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
@@ -160,7 +153,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
                     Week 8 Game Dossiers
                   </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
                     Simple, clear game-by-game breakdowns showing why each matchup favors our side, total, and player props.
                   </p>
                 </div>
@@ -171,7 +164,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               <Link
                 href="/packages"
-                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
@@ -183,7 +176,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
                     Correlated SGP Packs
                   </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
                     3-leg Same-Game Parlays built from plays that naturally help each other hit in the same game script.
                   </p>
                 </div>
@@ -194,7 +187,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               <Link
                 href="/fantasy/dfs"
-                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
@@ -206,7 +199,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
                     DFS Writeups &amp; Lineups
                   </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
                     Plain-English game environment writeups and ready-to-play cash and tournament DFS lineups.
                   </p>
                 </div>
@@ -217,7 +210,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               <Link
                 href="/packages"
-                className="group flex flex-col justify-between border border-mineral bg-carbon p-5 transition-colors hover:border-plasma"
+                className="group flex flex-col justify-between gap-6 px-4 py-8 transition-colors sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs">
@@ -229,7 +222,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-3 text-lg font-semibold text-ion-white group-hover:text-plasma transition-colors">
                     Instant Packages
                   </h3>
-                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#EDE8E0]">
                     Buy individual slates with no subscription required and unlock every pick immediately on your screen.
                   </p>
                 </div>
@@ -249,7 +242,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
                     Coaching Matchups &amp; Free Game Dossiers
                   </h3>
-                  <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
                     Every game is broken down from coaching tendencies, trench matchups, and active injuries. Read our plain-English football analysis below.
                   </p>
                 </div>
@@ -261,82 +254,82 @@ export default async function HomePage(): Promise<JSX.Element> {
                 </Link>
               </div>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div className="mt-8 divide-y divide-mineral border-y border-mineral tabular-nums">
                 {LIVE_SLATE_COACH_WRITEUPS.slice(0, 2).map((w) => {
                   return (
                     <div
                       key={w.id}
-                      className="flex flex-col justify-between border-2 border-slate-800 bg-slate-900/90 p-6 rounded-xl shadow-lg"
+                      className="flex flex-col justify-between px-4 py-8"
                     >
                       <div>
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="rounded bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-300">
+                          <span className="bg-plasma/10 px-2.5 py-1 font-mono text-xs font-bold uppercase text-plasma">
                             {formatWindowSlotLabel(w.windowSlot, w.matchup)}
                           </span>
-                          <span className="font-mono text-xs font-semibold text-slate-300">
+                          <span className="font-mono text-xs font-semibold text-ion-1">
                             {w.topProps.length} Player Prop Reads Locked
                           </span>
                         </div>
-                        <h4 className="mt-3 text-xl font-bold text-white">{w.matchup}</h4>
+                        <h4 className="mt-4 font-display text-3xl font-semibold text-ion-white">{w.matchup}</h4>
 
                         {/* Storyline Teaser Copy (Zero Leaked Picks) */}
                         <div className="mt-3 space-y-2">
-                          <p className="text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                          <p className="text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
                             {sanitizePlainFootballText(w.schemeMatchup.coverageShell)}
                           </p>
-                          <p className="text-sm sm:text-base leading-relaxed text-slate-300">
+                          <p className="text-sm sm:text-base leading-relaxed text-ion-1">
                             {sanitizePlainFootballText(w.paceOfPlay.notes)}
                           </p>
                         </div>
 
                         {/* Locked Official Pick Badges — Never Reveal Side, Total, or Confidence Free */}
-                        <div className="mt-5 grid gap-3 sm:grid-cols-2 border-t border-slate-800 pt-4">
-                          <div className="rounded-lg bg-slate-950 p-3.5 border border-slate-800">
+                        <div className="mt-6 grid gap-px border-y border-mineral bg-mineral sm:grid-cols-2">
+                          <div className="bg-[#08090C] p-5">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                              <span className="text-xs font-bold uppercase tracking-wider text-ion-1">
                                 OFFICIAL SPREAD CALL
                               </span>
-                              <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2 py-0.5 rounded text-xs">
-                                🔒 LOCKED
+                              <span className="border border-plasma/50 px-2 py-0.5 font-mono text-xs font-bold text-plasma">
+                                LOCKED
                               </span>
                             </div>
-                            <div className="mt-2 text-sm font-semibold text-white">
+                            <div className="mt-2 text-sm font-semibold text-ion-white">
                               Side Verdict &amp; Rating Inside Pack
                             </div>
-                            <div className="mt-1 text-xs text-slate-400">
+                            <div className="mt-1 text-xs text-ion-2">
                               Unlock below to reveal exact spread call
                             </div>
                           </div>
 
-                          <div className="rounded-lg bg-slate-950 p-3.5 border border-slate-800">
+                          <div className="bg-[#08090C] p-5">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                              <span className="text-xs font-bold uppercase tracking-wider text-ion-1">
                                 OFFICIAL TOTAL CALL
                               </span>
-                              <span className="bg-amber-500/20 text-amber-300 border border-amber-400/50 font-bold tracking-wide px-2 py-0.5 rounded text-xs">
-                                🔒 LOCKED
+                              <span className="border border-plasma/50 px-2 py-0.5 font-mono text-xs font-bold text-plasma">
+                                LOCKED
                               </span>
                             </div>
-                            <div className="mt-2 text-sm font-semibold text-white">
+                            <div className="mt-2 text-sm font-semibold text-ion-white">
                               Over/Under Verdict Inside Pack
                             </div>
-                            <div className="mt-1 text-xs text-slate-400">
+                            <div className="mt-1 text-xs text-ion-2">
                               Includes {w.topProps.length} player props &amp; parlay ticket
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="mt-5 border-t border-slate-800 pt-3 flex items-center justify-between">
+                      <div className="mt-5 border-t border-mineral pt-3 flex items-center justify-between">
                         <Link
                           href={`/games/${w.gameId}`}
-                          className="text-sm font-bold text-amber-300 hover:text-amber-200"
+                          className="text-sm font-bold text-plasma hover:text-ion-white"
                         >
                           Read Matchup Preview →
                         </Link>
                         <Link
                           href="/packages"
-                          className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                          className="text-xs font-bold text-plasma hover:text-ion-white"
                         >
                           Unlock Official Picks →
                         </Link>
@@ -357,7 +350,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <h3 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
                     Pick Your Slate. See Why We Like the Bet. Unlock Instantly.
                   </h3>
-                  <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+                  <p className="mt-2 text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
                     Read our free game preview on every card below. When you unlock a pack, your official spread bet, total bet, player props, and Same-Game Parlay appear right on this screen.
                   </p>
                 </div>
@@ -373,7 +366,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
               {/* Galaxy Picks paywall cards */}
               <div className="mt-6 grid gap-6 lg:grid-cols-2">
-                {LIVE_PACKAGE_CATALOG.map((pkg) => (
+                {LIVE_PACKAGE_CATALOG.filter((pkg) => pkg.forSale !== false).map((pkg) => (
                   <PaywallRevealCard
                     key={pkg.slug}
                     pkg={pkg}
@@ -393,7 +386,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             <h2 className="text-2xl font-semibold text-ion-white">
               The math can point. The decision stays yours.
             </h2>
-            <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
+            <p className="mt-3 text-base sm:text-[17px] leading-relaxed text-[#EDE8E0]">
               This product is research, not certainty. We get better by adding settled
               rows and clearer uncertainty, not by making louder claims.
             </p>

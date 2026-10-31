@@ -38,6 +38,16 @@ const config: Config = {
         "cosmic-gray":       "#08090C",   // surface → ground
         "steel-gray":        "#191C23",
 
+        // ── RETIRED DECORATIVE FILLS — FLAT (redline: no gradients) ──
+        // These four were `backgroundImage` gradients. They are kept under the
+        // same `bg-*` names so call sites (bg-signal-fade accent bars,
+        // bg-rule-fade hairlines, bg-accent-stripe rules) need no edit; each
+        // now resolves to one flat canonical palette value.
+        "signal-fade":       "#FF4D2E",   // ember accent rule
+        "signal-fade-135":   "#FF4D2E",
+        "rule-fade":         "#23262E",   // mineral hairline
+        "accent-stripe":     "#FF4D2E",
+
         // ── ENVIRONMENT — Field dark scale ────────────────
         void:       "#08090C",
         obsidian:   "#08090C",
@@ -66,7 +76,7 @@ const config: Config = {
         },
         "plasma-on-light":       "#B33D22",
         "orbital-cyan-on-light": "#5B6678",
-        "ultraviolet-on-light":  "#5B43C9",
+        "ultraviolet-on-light":  "#5B6678",   // retired violet -> = --ultraviolet-on-light
         "verify-on-light":       "#0E1320",
         "alert-on-light":        "#0E1320",
         "alarm-on-light":        "#9A4D00",
@@ -80,11 +90,13 @@ const config: Config = {
           ink: "#1A0703",
         },
 
-        // ── IRIS — the wayfinding accent ────────────────────
+        // ── IRIS — RETIRED periwinkle → fog (matches design-tokens --iris) ──
+        // No purple in FIELD. Names kept so `text-iris` / `border-iris` call
+        // sites keep compiling; every step reads as fog/bone.
         iris: {
-          DEFAULT: "#9AA8E8",
-          glow: "#C3CDEF",
-          deep: "#6E7BB8",
+          DEFAULT: "#C4BFB6",
+          glow: "#EDE8E0",
+          deep: "#8F8A82",
         },
         "ion-blue": {
           DEFAULT: "#C4BFB6",
@@ -261,35 +273,30 @@ const config: Config = {
         "2.5xl":  "1.25rem",
       },
       boxShadow: {
-        "glow-plasma":  "0 0 40px -8px rgba(255, 77, 46, 0.45)",
-        "glow-ion-blue":"0 0 36px -8px rgba(27, 21, 48, 0.9)",
-        "glow-uv":      "0 0 32px -6px rgba(27, 21, 48, 0.9)",
-        "glow-cyan":    "0 0 32px -6px rgba(201, 212, 206, 0.25)",
-        "glow-lime":    "0 0 32px -8px rgba(255, 77, 46, 0.40)",
-        "glow-soft":    "0 0 80px -20px rgba(255, 77, 46, 0.20)",
-        glass:
-          "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 12px 32px -8px rgba(0,0,0,0.6)",
-        pop:
-          "0 24px 48px -12px rgba(255,77,46,0.30), 0 0 0 1px rgba(201,212,206,0.20) inset",
+        // RETIRED (redline: no glow, no glass). Names are kept so `shadow-glow-*`
+        // / `shadow-glass` call sites keep compiling. Every halo resolves to
+        // `none`; the two elevation aliases lose their ember halo and their
+        // inset highlight so they read as plain depth, not emitted light.
+        "glow-plasma":  "none",
+        "glow-ion-blue":"none",
+        "glow-uv":      "none",
+        "glow-cyan":    "none",
+        "glow-lime":    "none",
+        "glow-soft":    "none",
+        glass: "0 12px 32px -8px rgba(0,0,0,0.6)",
+        pop: "0 24px 48px -12px rgba(0,0,0,0.7)",
         modal: "0 24px 64px -16px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.5)",
         float: "0 8px 32px -8px rgba(0,0,0,0.7)",
       },
       backgroundImage: {
-        // FIELD: the signature gradient is retired. signal-fade resolves
-        // to flat ember (rules/wordmark accents); atmosphere bands carry the
-        // violet depth instead of decorative color washes.
-        "signal-fade":
-          "linear-gradient(90deg, #FF4D2E 0%, #FF4D2E 100%)",
-        "signal-fade-135":
-          "linear-gradient(135deg, #FF4D2E 0%, #FF4D2E 100%)",
-        "stadium-glow":
-          "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(27,21,48,0.9), rgba(255,77,46,0.10) 35%, transparent 70%)",
-        "cosmic-sweep":
-          "linear-gradient(135deg, rgba(27,21,48,0.6) 0%, rgba(19,16,34,0.6) 50%, rgba(255,77,46,0.08) 100%)",
-        "rule-fade":
-          "linear-gradient(90deg, transparent 0%, rgba(237,232,224,0.14) 50%, transparent 100%)",
-        "accent-stripe":
-          "linear-gradient(90deg, transparent 0%, rgba(255,77,46,0.7) 30%, rgba(255,77,46,0.7) 70%, transparent 100%)",
+        // RETIRED (redline: no gradients, no glow). The flat ember / mineral
+        // fills that replaced signal-fade, signal-fade-135, rule-fade and
+        // accent-stripe now live in `colors`, so `bg-*` still paints. The two
+        // atmosphere washes have no flat equivalent (they were pure decoration),
+        // so their names stay defined as a no-op: `bg-stadium-glow` /
+        // `bg-cosmic-sweep` call sites still compile against a real utility.
+        "stadium-glow": "none",
+        "cosmic-sweep": "none",
       },
       animation: {
         "live-pulse": "live-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
