@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
+import { LIVE_PACKAGE_CATALOG, getPackageBySlug } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
@@ -16,7 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function DfsPage(): JSX.Element {
-  const dfsPackage = LIVE_PACKAGE_CATALOG.find((p) => p.includesDfs) || LIVE_PACKAGE_CATALOG[0];
+  const dfsPackage =
+    getPackageBySlug("redzone-dfs-pro-pack") ||
+    LIVE_PACKAGE_CATALOG.find((p) => p.includesDfs) ||
+    LIVE_PACKAGE_CATALOG[0];
 
   return (
     <div className="relative min-h-screen w-full bg-slate-950 text-white">
@@ -38,10 +41,10 @@ export default function DfsPage(): JSX.Element {
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link
-                href="/packages"
+                href="/packages/redzone-dfs-pro-pack"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-6 py-3.5 text-base font-bold text-slate-950 shadow-lg transition-colors"
               >
-                Unlock Week 8 DFS Slate Pack →
+                Unlock RedZone Standalone DFS Pack ($39.99) →
               </Link>
             </div>
           </div>

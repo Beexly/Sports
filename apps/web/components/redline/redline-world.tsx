@@ -87,7 +87,10 @@ function cameraTransformAt(progress: number): string {
 }
 
 function price(pack: PickPackageOffering): string {
-  return `$${(pack.standardPriceCents / 100).toFixed(0)}`;
+  const dollars = pack.standardPriceCents / 100;
+  return pack.standardPriceCents % 100 === 0
+    ? `$${dollars.toFixed(0)}`
+    : `$${dollars.toFixed(2)}`;
 }
 
 function packScope(pack: PickPackageOffering): string {
@@ -305,7 +308,7 @@ export function RedlineWorld({
           <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
             <p className="plate-kicker">This week · NFL desk</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
-            <p>Plain-English NFL picks, props, and parlays. Three packs. One slate. The official calls stay locked until you buy.</p>
+            <p>Plain-English NFL picks, props, parlays, and DFS. Four packs. One unified site. The official calls stay locked until you buy.</p>
             <div className="plate-actions">
               <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Scroll the field →</button>
               <Link className="plate-ghost" href="/packages">See the packs</Link>
@@ -365,7 +368,7 @@ export function RedlineWorld({
                 <span>THE FIELD</span><span>GSE / NFL</span>
               </div>
               <div className="tunnel-side-mark">
-                GALAXY SPORTS EDGE <b>·</b> REDLINE LEDGER
+                GALAXY SPORTS EDGE <b>·</b> REDZONE LEDGER
               </div>
             </div>
             <div className="stadium-bowl" aria-hidden="true">
@@ -378,7 +381,7 @@ export function RedlineWorld({
               <div className="stadium-ribbon ribbon-near" />
             </div>
             <div className="field-plane" aria-label="Interactive football field">
-              <div className="endzone endzone-far">REDLINE LEDGER</div>
+              <div className="endzone endzone-far">REDZONE LEDGER</div>
               {Array.from({ length: 9 }, (_, index) => (
                 <div
                   className="yard-line"

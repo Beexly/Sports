@@ -8,8 +8,8 @@ import { POST as checkoutRoute } from "@/app/api/packages/checkout/route";
 import { GET as unlockRoute } from "@/app/api/packages/unlock/route";
 
 describe("Galaxy Picks storefront catalog", () => {
-  it("contains the four Week 8 packs at the published prices", () => {
-    expect(LIVE_PACKAGE_CATALOG.length).toBe(4);
+  it("contains the Week 8 packs at the published prices including the $39.99 standalone DFS pack", () => {
+    expect(LIVE_PACKAGE_CATALOG.length).toBe(5);
 
     const tnf = getPackageBySlug("tnf-all-in-pack");
     expect(tnf?.standardPriceCents).toBe(1900);
@@ -26,6 +26,10 @@ describe("Galaxy Picks storefront catalog", () => {
     expect(sgp?.standardPriceCents).toBe(2900);
     expect(sgp?.stripeProductId).toBe("prod_VX40XMRjV4FiJl");
     expect(sgp?.stripePriceId).toBe("price_1UVzseQ2wPZMxx60VqAfAyNe");
+
+    const dfs = getPackageBySlug("redzone-dfs-pro-pack");
+    expect(dfs?.standardPriceCents).toBe(3999);
+    expect(dfs?.includesDfs).toBe(true);
 
     const all = getPackageBySlug("week8-all-access");
     expect(all?.standardPriceCents).toBe(4900);

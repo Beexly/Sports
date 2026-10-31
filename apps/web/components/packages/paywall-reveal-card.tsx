@@ -96,9 +96,14 @@ export function PaywallRevealCard({
 
   const isUnlocked = Boolean(unlockedWriteups && unlockedWriteups.length > 0);
   const forSale = pkg.forSale !== false;
-  const standardPrice = (pkg.standardPriceCents / 100).toFixed(0);
+  const standardPrice =
+    pkg.standardPriceCents % 100 === 0
+      ? (pkg.standardPriceCents / 100).toFixed(0)
+      : (pkg.standardPriceCents / 100).toFixed(2);
   const guaranteedPrice = pkg.guaranteedPriceCents
-    ? (pkg.guaranteedPriceCents / 100).toFixed(0)
+    ? pkg.guaranteedPriceCents % 100 === 0
+      ? (pkg.guaranteedPriceCents / 100).toFixed(0)
+      : (pkg.guaranteedPriceCents / 100).toFixed(2)
     : null;
   const activePrice = guaranteed && guaranteedPrice ? guaranteedPrice : standardPrice;
   const inside = insideList(pkg);

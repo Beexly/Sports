@@ -8,13 +8,14 @@ import { POST as checkoutRoute } from "@/app/api/packages/checkout/route";
 import { GET as unlockRoute } from "@/app/api/packages/unlock/route";
 
 describe("Galaxy Picks Storefront & Instant Checkout Suite", () => {
-  it("validates the 4 Week 8 packages with guaranteedPriceCents: null and zero third-party brand names", () => {
-    expect(LIVE_PACKAGE_CATALOG.length).toBe(4);
+  it("validates the 5 Week 8 packages with guaranteedPriceCents: null and zero third-party brand names", () => {
+    expect(LIVE_PACKAGE_CATALOG.length).toBe(5);
 
     const expectedPackages = [
-      { slug: "tnf-all-in-pack", price: 1900, windowSlot: "TNF", includesDfs: true },
+      { slug: "tnf-all-in-pack", price: 1900, windowSlot: "TNF", includesDfs: false },
       { slug: "sunday-nfl-5pct-slate", price: 3900, windowSlot: "SUN_MAIN", includesDfs: false },
       { slug: "sgp-correlation-basket", price: 2900, windowSlot: "SUN_MAIN", includesDfs: false },
+      { slug: "redzone-dfs-pro-pack", price: 3999, windowSlot: "SUN_MAIN", includesDfs: true },
       { slug: "week8-all-access", price: 4900, windowSlot: "WEEKLY_PASS", includesDfs: true },
     ];
 

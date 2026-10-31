@@ -398,8 +398,8 @@
 }
 .gate-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 24px;
 }
 .real-gate {
   display: flex;

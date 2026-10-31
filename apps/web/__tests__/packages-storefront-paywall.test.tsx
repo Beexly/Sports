@@ -36,13 +36,14 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     vi.restoreAllMocks();
   });
 
-  it("exposes 4 Week 8 Galaxy Picks packages with guaranteedPriceCents: null and zero third-party brand names", () => {
-    expect(LIVE_PACKAGE_CATALOG.length).toBe(4);
+  it("exposes 5 Week 8 Galaxy Picks packages with guaranteedPriceCents: null and zero third-party brand names", () => {
+    expect(LIVE_PACKAGE_CATALOG.length).toBe(5);
     const slugs = LIVE_PACKAGE_CATALOG.map((p) => p.slug);
     expect(slugs).toEqual([
       "tnf-all-in-pack",
       "sunday-nfl-5pct-slate",
       "sgp-correlation-basket",
+      "redzone-dfs-pro-pack",
       "week8-all-access",
     ]);
 
