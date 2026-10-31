@@ -58,9 +58,9 @@ export async function GET(req: Request) {
       package: pkg,
       writeups,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { unlocked: false, error: error?.message || "Internal server error" },
+      { unlocked: false, error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 },
     );
   }

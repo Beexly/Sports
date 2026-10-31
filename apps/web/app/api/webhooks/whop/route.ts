@@ -66,9 +66,9 @@ export async function POST(req: Request) {
         });
       }
     }
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error?.message || "Failed to process Whop webhook" },
+      { error: error instanceof Error ? error.message : "Failed to process Whop webhook" },
       { status: 400 },
     );
   }

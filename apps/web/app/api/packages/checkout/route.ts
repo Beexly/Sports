@@ -93,7 +93,7 @@ export async function POST(req: Request) {
 
     try {
       const stripe = new Stripe(stripeKey, {
-        apiVersion: "2024-06-20" as any,
+        apiVersion: "2024-06-20",
       });
 
       // Use the live pre-created Stripe Price ID (price_1UVzs...) in Stripe Checkout
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
         stripeProductId: pkg.stripeProductId,
         stripePriceId: pkg.stripePriceId,
       });
-    } catch (stripeErr: any) {
+    } catch (stripeErr) {
       if (!isProd && (stripeKey.includes("test") || stripeKey.includes("dummy") || !process.env.CI)) {
         const fallbackSessionId = `cs_test_mock_${pkg.slug}_${Date.now()}`;
         const fallbackUrl = returnToStorefront
@@ -143,14 +143,14 @@ export async function POST(req: Request) {
           stripeProductId: pkg.stripeProductId,
           stripePriceId: pkg.stripePriceId,
           fallback: true,
-          error: stripeErr.message,
+          error: stripeErr instanceof Error ? stripeErr.message : "Stripe checkout failed",
         });
       }
       throw stripeErr;
     }
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error?.message || "Failed to create checkout session" },
+      { error: error instanceof Error ? error.message : "Failed to create checkout session" },
       { status: 400 },
     );
   }

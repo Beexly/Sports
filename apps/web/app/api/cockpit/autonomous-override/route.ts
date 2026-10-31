@@ -85,7 +85,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  let body: any;
+  // Untrusted request body. Every field is read defensively at its use site
+  // (String()/Number() coercion plus explicit guards), so the type only has to
+  // describe the shape, not vouch for the values.
+  let body: { action?: unknown; payload?: Record<string, unknown> };
   try {
     body = await req.json();
   } catch {
