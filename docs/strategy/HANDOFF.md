@@ -5,6 +5,18 @@ next role must do. See `ORG.md` for the contract.
 
 ---
 
+## 2026-10-31 — finished Carolina at Green Bay pack taken off sale
+
+**Changed:** `apps/web/lib/packages/catalog.ts` sets `forSale: false` on `tnf-all-in-pack`. Checkout throws. The pack page shows the final score and no buy button.
+
+**Proven:** ESPN event 401873023 is final, Green Bay 27, Carolina 19, kickoff 2026-10-30T00:15Z. Firecrawl scrape of the live pack still sold it as tonight before this commit.
+
+**Not proven:** The public URL will not change until this reaches `main`. Vercel deploys from main.
+
+**Next:** Merge to main, then re-fetch `https://www.galaxysportsedge.com/packages/tnf-all-in-pack` and confirm the buy button is gone.
+
+---
+
 ## 2026-10-30 — 16-5 prior-record verification gap disclosed (no per-pick trail)
 
 **Changed:**

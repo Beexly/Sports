@@ -32,15 +32,16 @@ export interface PickPackageOffering {
   includesDfs: boolean;
   whopProductId?: string;
   telegramChannelId?: string;
+  forSale?: boolean;
 }
 
 export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
   {
     slug: "tnf-all-in-pack",
-    title: "Sunday Spotlight Game Pack (Panthers @ Packers)",
-    subtitle: "Official Spread Pick, Over/Under Pick, Player Props & Showdown Lineup",
+    title: "Carolina at Green Bay is final. Not for sale.",
+    subtitle: "Green Bay 27, Carolina 19. ESPN event 401873023.",
     description:
-      "Everything you need for Sunday's Week 9 Carolina at Green Bay matchup at Lambeau Field. Unlock our official spread call, over/under call, player prop card, 3-leg same-game parlay, and Showdown lineup.",
+      "This game is over. Kickoff was 2026-10-30T00:15Z. Final score Green Bay 27, Carolina 19. Do not buy a side, total, or prop on a finished game.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     guaranteedPriceCents: null,
@@ -49,15 +50,14 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     stripeLookupKey: "gse-pack-tnf-all-in",
     gamesCount: 1,
     highlights: [
-      "Official Packers vs. Panthers Spread & Over/Under Calls",
-      "Top Player Receiving & Rushing Yardage Prop Bets",
-      "Plain-English Trench & Matchup Breakdown",
-      "DraftKings / FanDuel Showdown Captain & Core Picks",
+      "Final: Green Bay 27, Carolina 19",
+      "Not a live pick",
     ],
-    badge: "SUNDAY · WEEK 9",
-    includesProps: true,
-    includesSgp: true,
-    includesDfs: true,
+    badge: "FINAL · NOT FOR SALE",
+    includesProps: false,
+    includesSgp: false,
+    includesDfs: false,
+    forSale: false,
   },
   {
     slug: "sunday-nfl-5pct-slate",
@@ -171,6 +171,9 @@ export function buildStripePackageCheckoutPayload(
   origin?: string,
   returnToStorefront?: boolean,
 ): StripeCheckoutPayload {
+  if (pkg.forSale === false) {
+    throw new Error(`Package '${pkg.slug}' is not for sale.`);
+  }
   let unitAmount = pkg.standardPriceCents;
   let productName = pkg.title;
 

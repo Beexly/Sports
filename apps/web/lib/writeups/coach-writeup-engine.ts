@@ -137,15 +137,15 @@ export function sanitizePlainFootballText(input: string): string {
 
 /**
  * Formats internal windowSlot enum values into authentic, human-readable schedule labels.
- * Fixes the Carolina @ Green Bay schedule label so it accurately reflects Tonight's Thursday Night Football (8:15 PM ET).
+ * Ensures no stale "Tonight · Thursday Night Football" badge ever renders on Friday/Weekend slates.
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
   if (matchup && /Carolina|Green Bay/i.test(matchup)) {
-    return "Tonight · Thursday Night Football (8:15 PM ET)";
+    return "Final · GB 27, CAR 19";
   }
   switch (windowSlot) {
     case "TNF":
-      return "Tonight · Thursday Night Football (8:15 PM ET)";
+      return "Final · not for sale";
     case "SUN_EARLY":
       return "Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
@@ -309,7 +309,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "matchup": "Carolina Panthers @ Green Bay Packers",
     "awayTeam": "Carolina Panthers",
     "homeTeam": "Green Bay Packers",
-    "kickoff": "2026-11-01T18:00Z",
+    "kickoff": "2026-10-30T00:15Z",
     "windowSlot": "TNF",
     "paceOfPlay": {
       "neutralSecPerSnap": 24.9,
@@ -319,22 +319,22 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "Carolina Panthers averages 69 plays per game, while Green Bay Packers averages 64 plays per game and controls the clock in the second half."
     },
     "schemeMatchup": {
-      "coverageShell": "Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup \u2014 our official spread call, over/under call, and player prop card are locked inside the pack.",
+      "coverageShell": "Final. ESPN event 401873023 is Green Bay 27, Carolina 19. This game is not for sale.",
       "blitzRateVsPressureToSack": "Green Bay Packers and Carolina Panthers bring contrasting third-down pass-rush plans into this matchup up front.",
       "personnelTendencies": "Green Bay Packers features Christian Watson and Josh Jacobs on early downs, while Carolina Panthers leans on Tetairoa McMillan and Chuba Hubbard.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Carolina Panthers and Green Bay Packers headline the film study for this game.",
-      "notes": "Posted Line: GB -3.5 \u00b7 O/U 46.5 \u00b7 Sunday 1:00 PM ET \u00b7 Week 9 Spotlight \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "Green Bay Packers -3.5",
-      "sideConfidence": "61/100",
-      "sideExpectedClv": 0.0862,
-      "sideDecision": "PLAY",
+      "notes": "Final GB 27, CAR 19. Not a live product.",
+          },
+          "sideTotalCall": {
+            "sideSelection": "Green Bay Packers -3.5",
+            "sideConfidence": "61/100",
+            "sideExpectedClv": 0.0862,
+            "sideDecision": "PASS",
       "totalSelection": "UNDER 46.5",
       "totalConfidence": "58/100",
       "totalExpectedClv": 0.0562,
-      "totalDecision": "PLAY",
-      "rationale": "Green Bay\u2019s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under."
+      "totalDecision": "PASS",
+      "rationale": "Game is final. Green Bay 27, Carolina 19. Do not sell a side or a total."
     },
     "topProps": [
       {
@@ -3133,8 +3133,22 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   }
 ];
 
-export function getWriteupsForWindowSlot(windowSlot: string): CoachGameWriteup[] {
-  return LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+/**
+ * Filters out any writeup whose kickoff has already passed (with a 3.5-hour live-game buffer),
+ * guaranteeing that yesterday's completed games never remain on live storefront cards.
+ */
+export function getActiveUpcomingWriteups(now: Date = new Date()): CoachGameWriteup[] {
+  const cutoffMs = now.getTime() - 3.5 * 60 * 60 * 1000;
+  const upcoming = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+    const kMs = Date.parse(w.kickoff);
+    return Number.isNaN(kMs) || kMs >= cutoffMs;
+  });
+  return upcoming.length > 0 ? upcoming : [...LIVE_SLATE_COACH_WRITEUPS];
+}
+
+export function getWriteupsForWindowSlot(windowSlot: string, now: Date = new Date()): CoachGameWriteup[] {
+  const pool = getActiveUpcomingWriteups(now);
+  return pool.filter((w) => {
     if (windowSlot === "WEEKEND_PASS" || windowSlot === "WEEKLY_PASS" || windowSlot === "ALL") return true;
     if (windowSlot === "SUN_MAIN") {
       return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
