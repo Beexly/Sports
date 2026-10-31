@@ -250,8 +250,8 @@ describe("Whop & Telegram Integrations Suite", () => {
       expect(dataPicksLocked.vipUnlocked).toBe(false);
       expect(dataPicksLocked.previewReply).toContain("LOCKED");
       expect(dataPicksLocked.previewReply).toContain("https://www.galaxysportsedge.com/packages");
-      expect(dataPicksLocked.previewReply).toContain("Carolina Panthers @ Green Bay Packers");
-      expect(dataPicksLocked.previewReply).not.toContain("Carolina Panthers +3.5");
+      expect(dataPicksLocked.previewReply).toContain("Washington Commanders @ Kansas City Chiefs");
+      expect(dataPicksLocked.previewReply).not.toContain("Kansas City Chiefs -10.5");
 
       // /props BEFORE unlock -> MUST BE LOCKED (no playerName leaked)
       const resPropsLocked = await telegramWebhookRoute(
@@ -327,8 +327,8 @@ describe("Whop & Telegram Integrations Suite", () => {
       const dataPicksUnlocked = await resPicksUnlocked.json();
       expect(dataPicksUnlocked.vipUnlocked).toBe(true);
       expect(dataPicksUnlocked.previewReply).toContain("VIP UNLOCKED");
-      expect(dataPicksUnlocked.previewReply).toContain("Carolina Panthers @ Green Bay Packers");
-      expect(dataPicksUnlocked.previewReply).toContain("Carolina Panthers +3.5");
+      expect(dataPicksUnlocked.previewReply).toContain("Washington Commanders @ Kansas City Chiefs");
+      expect(dataPicksUnlocked.previewReply).toContain("Kansas City Chiefs -10.5");
     });
   });
 });

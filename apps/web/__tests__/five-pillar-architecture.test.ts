@@ -1,6 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+
+vi.mock("@/components/ui/nav-auth", () => ({
+  NavAuthFallback: () => null,
+  NavAuth: () => null,
+}));
+
 import { FIVE_REVENUE_PILLARS, COMMERCIAL_REVENUE_PILLARS } from "@/components/ui/nav";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import {
@@ -12,10 +18,10 @@ describe("Five-Pillar Storefront & Honest PASS Gate Architecture", () => {
   it("exposes exact 5 commercial pillars centered on GALAXY PICKS (PAID) and DFS with zero Telegram", () => {
     expect(FIVE_REVENUE_PILLARS).toEqual([
       { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "This Week's Football Betting Packs" },
-      { label: "Panthers @ Packers Pack", href: "/packages#tnf-all-in-pack", desc: "Carolina @ Green Bay Sunday Pack" },
-      { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday Best Bets Pack" },
+      { label: "Week 8 Primetime Pack", href: "/packages#tnf-all-in-pack", desc: "Week 8 Sunday & MNF (WAS @ KC) Pack" },
+      { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday 12-Game Main Slate Pack" },
       { label: "DFS", href: "/fantasy/dfs", desc: "Daily Fantasy Lineup Optimizer" },
-      { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Weekly All-Access Pass" },
+      { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Week 8 All-Access Pass" },
     ]);
     expect(COMMERCIAL_REVENUE_PILLARS).toEqual(FIVE_REVENUE_PILLARS);
   });

@@ -26,7 +26,8 @@ from reasoning.interfaces import AnalysisRequest as RAnalysisRequest, DataContex
 from . import types as T
 from .pipeline import TOP_PASS_RUSH_CUTOFF, build_causal_chains
 from .providers import DataGapError, ProviderRegistry
-from context.tau_wire import TAU_STAMP
+from context.signal_pack_wire import load_signal_pack
+from context.tau_wire import TAU_STAMP, tau_decision_observation
 from .trace import FileTraceStore, make_trace_id, utcnow_iso
 from .types import (
     AnalysisRequest,
@@ -395,6 +396,47 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
         hints["scheme_matchup"] = "CLEAR"
     else:
         hints["scheme_matchup"] = "NOTHING-MATERIAL"
+
+    # --- 7-signal research pack observations (READINESS §1 / §5.9) ---
+    try:
+        sp_obs, _sp_gaps = load_signal_pack(home=game.get("home"), away=game.get("away"))
+        for k, v in sp_obs.items():
+            ctx.observations[k] = v
+    except Exception:
+        pass
+
+    # --- Live-state tau_hat decision (TAU-HAT-SOLUTION §5 Solution 3) ---
+    live_state = game.get("live_game_state")
+    if (
+        isinstance(live_state, dict)
+        and live_state.get("context") in ("simulation", "post_hoc")
+        and live_state.get("wp") is not None
+        and providers.coaching is not None
+    ):
+        exp_fn = getattr(providers.coaching, "expected_wp_given_coach", None)
+        if callable(exp_fn):
+            for team in (game.get("away"), game.get("home")):
+                if not team:
+                    continue
+                try:
+                    dec = exp_fn(
+                        team=team,
+                        season=season,
+                        yardline_100=int(live_state.get("yardline_100", 45)),
+                        ydstogo=int(live_state.get("ydstogo", 3)),
+                        score_differential=int(
+                            live_state.get("score_diff", live_state.get("score_differential", 0))
+                        ),
+                        game_seconds_remaining=int(live_state.get("game_seconds_remaining", 900)),
+                        qtr=int(live_state.get("qtr", 3)),
+                        wp=float(live_state["wp"]),
+                        timeouts_rem=int(live_state.get("timeouts_rem", 3)),
+                    )
+                    ctx.observations[f"coaching.{team}.tau_hat_decision"] = (
+                        tau_decision_observation(team, dec, context=str(live_state["context"]))
+                    )
+                except DataGapError as e:
+                    ev("coaching_scheme", f"DATA-GAP: {e.reason}", R.Verification.INFERENCE)
 
     ctx.checklist_hints = hints
     ctx.track_evidence = evidence

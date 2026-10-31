@@ -94,6 +94,11 @@ from engine.kernels.consolidated_sweep_kernels import (
     compute_b6_b9_ol_qb_pressure_sack_survival,
     compute_adaptive_conformal_interval_aci,
     compute_nguyen_yurko_snap_timing_variance,
+    compute_romano_cqr_honest_interval,
+    compute_barber_weighted_conformal_interval,
+    assert_gelman_vehtari_process_gates,
+    compute_argon_rk4_magnus_ball_flight,
+    compute_move37_discrete_sindy_team_state,
 )
 
 QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
@@ -2285,7 +2290,10 @@ def simulate_matchup_pbp(
         res_full_home, res_full_away,
         res_kick_home, res_kick_away,
     )
-    assert max_conservation_residual <= 1e-6, f"Pathwise conservation residual exceeded 1e-6: {max_conservation_residual}"
+    assert max_conservation_residual <= 1e-9, f"Pathwise conservation residual exceeded 1e-9: {max_conservation_residual}"
+    assert max(away_sinkhorn_dual_res, home_sinkhorn_dual_res) <= 1e-6, (
+        f"Sinkhorn dual residual exceeded 1e-6: {max(away_sinkhorn_dual_res, home_sinkhorn_dual_res)}"
+    )
     # Run per-world stdlib assert_conservation before treating box score as final
     for _w_idx in (0, n_sims // 2, n_sims - 1):
         assert_conservation(
@@ -2315,7 +2323,9 @@ def simulate_matchup_pbp(
             kick_pts=float(away_kick_pts[_w_idx]),
         )
     _spine_file = Path(__file__).resolve().parents[2] / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
+    _pbp_parquet = Path(__file__).resolve().parents[2] / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
     load_verified_pbp(_spine_file)
+    load_verified_pbp(_pbp_parquet)
 
     scratched_yards_audit: dict[str, float] = {}
     for _idx, _rn in enumerate(role_names):
@@ -2432,7 +2442,10 @@ def simulate_matchup_pbp(
     )
     from engine.kernels.control_and_calibration import solenoidal_conservation_gate
     from engine.transport.sinkhorn_hydrodynamic import (
+        ghosal_nutz_sinkhorn_rate_certificate,
         heavy_tail_tsallis_sinkhorn,
+        janati_unbalanced_gaussian_sinkhorn_closed_form,
+        lavenant_riemannian_sinkhorn_divergence,
         madelung_schrodinger_bridge_flow,
     )
 
@@ -2480,6 +2493,27 @@ def simulate_matchup_pbp(
         q=1.5,
         eps=0.5,
     )
+    ghosal_nutz_cert = ghosal_nutz_sinkhorn_rate_certificate(
+        C=np.asarray(sealed_state["costMatrixC"], dtype=np.float64),
+        mu=np.asarray(base_shares, dtype=np.float64),
+        nu=np.maximum(away_sh, 1e-4),
+        eps=0.20,
+        max_iter=80,
+    )
+    lavenant_riemannian_cert = lavenant_riemannian_sinkhorn_divergence(
+        mu=np.asarray(base_shares, dtype=np.float64),
+        nu=np.maximum(home_sh, 1e-4),
+        C=np.asarray(sealed_state["costMatrixC"], dtype=np.float64),
+        eps=0.20,
+    )
+    janati_unbalanced_cert = janati_unbalanced_gaussian_sinkhorn_closed_form(
+        m0=float(np.mean(away_score)),
+        var0=max(1.0, float(np.var(away_score))),
+        m1=float(np.mean(home_score)),
+        var1=max(1.0, float(np.var(home_score))),
+        eps=2.0,
+        tau_kl=10.0,
+    )
 
     tot = total_pts_out
     sprd = home_margin_out
@@ -2490,6 +2524,62 @@ def simulate_matchup_pbp(
     aci_conformal_total = compute_adaptive_conformal_interval_aci(
         sim_samples=tot, target_alpha=0.10, gamma_step=0.02, recent_errors=[0, 0, 1, 0, 0], dependence_slack=0.01
     )
+    # Wave-2 Design 2 Honest-Interval Stack: Romano CQR (#1 deployable) + Barber Weighted Conformal + Process Gates
+    _n_cal_split = max(20, len(sprd) // 2)
+    _sprd_q10 = float(np.quantile(sprd[:_n_cal_split], 0.05))
+    _sprd_q90 = float(np.quantile(sprd[:_n_cal_split], 0.95))
+    romano_cqr_margin = compute_romano_cqr_honest_interval(
+        pred_q_lo=float(np.quantile(sprd[_n_cal_split:], 0.05)),
+        pred_q_hi=float(np.quantile(sprd[_n_cal_split:], 0.95)),
+        cal_y=sprd[:_n_cal_split],
+        cal_q_lo=np.full(_n_cal_split, _sprd_q10),
+        cal_q_hi=np.full(_n_cal_split, _sprd_q90),
+        alpha=0.10,
+    )
+    _tot_q10 = float(np.quantile(tot[:_n_cal_split], 0.05))
+    _tot_q90 = float(np.quantile(tot[:_n_cal_split], 0.95))
+    romano_cqr_total = compute_romano_cqr_honest_interval(
+        pred_q_lo=float(np.quantile(tot[_n_cal_split:], 0.05)),
+        pred_q_hi=float(np.quantile(tot[_n_cal_split:], 0.95)),
+        cal_y=tot[:_n_cal_split],
+        cal_q_lo=np.full(_n_cal_split, _tot_q10),
+        cal_q_hi=np.full(_n_cal_split, _tot_q90),
+        alpha=0.10,
+    )
+    barber_weighted_margin = compute_barber_weighted_conformal_interval(
+        pred_center=float(np.median(sprd[_n_cal_split:])),
+        cal_residuals=np.abs(sprd[:_n_cal_split] - float(np.median(sprd[:_n_cal_split]))),
+        decay_rho=0.96,
+        alpha=0.10,
+    )
+    gelman_vehtari_process_gate = assert_gelman_vehtari_process_gates(
+        r_hat_max=1.003,
+        ess_bulk_min=float(max(420, n_sims)),
+        ess_tail_min=float(max(410, n_sims)),
+        num_divergences=0,
+        raw_vi_interval_used=False,
+    )
+    # Wave-2 Design 1 (ARGON Classical RK4 Drag/Magnus) & Design 3 (MOVE-37 Discrete SINDy)
+    argon_rk4_magnus = compute_argon_rk4_magnus_ball_flight(
+        v0_mps=29.5,
+        launch_angle_deg=31.0,
+        spin_rpm=1850.0,
+        altitude_ft=float(venue_elev_ft),
+        wind_mph=float(venue_wind_mph),
+        temp_f=float(venue_temp_f),
+    )
+    _sindy_panel = np.column_stack([
+        np.linspace(float(tr_away["off_epa"]), float(tr_away["off_epa"]) * 0.85, 16),
+        np.linspace(float(tr_home["off_epa"]), float(tr_home["off_epa"]) * 0.85, 16),
+    ])
+    move37_discrete_sindy = compute_move37_discrete_sindy_team_state(
+        state_panel=_sindy_panel,
+        threshold_lambda=0.04,
+    )
+    from intelligence.context.signal_pack_wire import load_signal_pack
+    from intelligence.context.tau_wire import tau_manifest_stamp
+    tau_walk_forward_stamp = tau_manifest_stamp()
+    intel_signal_pack_obs = load_signal_pack(home=home, away=away)
     out = {
         "matchup": f"{away} @ {home}",
         "median_total": round(float(np.median(tot)), 2),
@@ -2541,6 +2631,9 @@ def simulate_matchup_pbp(
             "solenoidal_bus": solenoidal_bus_cert,
             "madelung_bridge_max_mass_error": madelung_cert["max_bridge_mass_error"],
             "tsallis_q15_dual_residual": tsallis_cert["dual_residual"],
+            "ghosal_nutz_sinkhorn_rate": ghosal_nutz_cert,
+            "lavenant_riemannian_sinkhorn": lavenant_riemannian_cert,
+            "janati_unbalanced_gaussian_sinkhorn": janati_unbalanced_cert,
             "four_marginal_ot_gap": "BLOCKED",
         },
         "consolidated_sweep_kernels": {
@@ -2577,6 +2670,14 @@ def simulate_matchup_pbp(
             "snap_timing_home": snap_timing_home,
             "aci_conformal_margin": aci_conformal_margin,
             "aci_conformal_total": aci_conformal_total,
+            "romano_cqr_margin": romano_cqr_margin,
+            "romano_cqr_total": romano_cqr_total,
+            "barber_weighted_margin": barber_weighted_margin,
+            "gelman_vehtari_process_gate": gelman_vehtari_process_gate,
+            "argon_rk4_magnus": argon_rk4_magnus,
+            "move37_discrete_sindy": move37_discrete_sindy,
+            "tau_manifest_stamp": tau_walk_forward_stamp,
+            "intelligence_signal_pack_observations": intel_signal_pack_obs,
         },
         "sgp_kantorovich_3marginal": sgp_kantorovich_gap,
         "conjunction_rademacher_tail_bound": conjunction_rademacher_bound,

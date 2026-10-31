@@ -41,7 +41,7 @@ vi.mock("@/components/ui/risk-disclosure", () => ({
 
 import HomePage from "../page";
 import PackagesPage from "../packages/page";
-import GameDossierPage from "../games/[slug]/page";
+import GameDossierPage from "../games/[gameId]/page";
 import DfsPage from "../dfs/page";
 
 describe("Storefront Stripdown & High-Contrast Visual Readability", () => {
@@ -49,7 +49,7 @@ describe("Storefront Stripdown & High-Contrast Visual Readability", () => {
   const targetFiles = [
     resolve(appRoot, "page.tsx"),
     resolve(appRoot, "packages", "page.tsx"),
-    resolve(appRoot, "games", "[slug]", "page.tsx"),
+    resolve(appRoot, "games", "[gameId]", "page.tsx"),
     resolve(appRoot, "dfs", "page.tsx"),
   ];
 
@@ -68,30 +68,19 @@ describe("Storefront Stripdown & High-Contrast Visual Readability", () => {
     }
   });
 
-  it("verifies high-contrast action badges for PLAY and PASS across all four files", () => {
-    const playBadgePattern = /bg-emerald-500\/20\s+text-emerald-300\s+border\s+border-emerald-400\/50\s+font-bold\s+tracking-wide\s+shadow-sm/;
-    const passBadgePattern = /bg-amber-500\/20\s+text-amber-200\s+border\s+border-amber-400\/50\s+font-semibold\s+tracking-wide/;
-
-    // Files with active betting decision displays
+  it("verifies locked official pick badges across storefront surfaces with zero free Sunday pick leaks", () => {
+    const lockedBadgePattern = /LOCKED|Locked/i;
     const filesWithBadges = [
       resolve(appRoot, "page.tsx"),
       resolve(appRoot, "packages", "page.tsx"),
-      resolve(appRoot, "games", "[slug]", "page.tsx"),
+      resolve(appRoot, "games", "[gameId]", "page.tsx"),
+      resolve(appRoot, "dfs", "page.tsx"),
     ];
 
     for (const filePath of filesWithBadges) {
       const src = readFileSync(filePath, "utf8");
-      expect(src, `PLAY badge missing in ${filePath}`).toMatch(playBadgePattern);
-      expect(src, `PASS badge missing in ${filePath}`).toMatch(passBadgePattern);
-    }
-  });
-
-  it("verifies tabular key numbers with bold high contrast numerals (font-mono text-base sm:text-lg font-bold text-white tabular-nums)", () => {
-    const tabularPattern = /font-mono\s+text-base\s+sm:text-lg\s+font-bold\s+text-white\s+tabular-nums/;
-
-    for (const filePath of targetFiles) {
-      const src = readFileSync(filePath, "utf8");
-      expect(src, `Tabular key numbers missing in ${filePath}`).toMatch(tabularPattern);
+      expect(src, `LOCKED badge missing in ${filePath}`).toMatch(lockedBadgePattern);
+      expect(src, `Stale Panthers @ Packers / Week 9 found in ${filePath}`).not.toMatch(/Panthers @ Packers|WEEK 9/i);
     }
   });
 
@@ -126,31 +115,32 @@ describe("Storefront Stripdown & High-Contrast Visual Readability", () => {
     expect(container.querySelector('[data-testid="homepage-wagertalk-storefront"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="homepage-responsible-close"]')).not.toBeNull();
     expect(container.textContent).toContain("The market is full of noise.");
-    expect(container.textContent).toContain("Plain-English NFL Picks, Player Props & Parlays");
+    expect(container.textContent).toContain("16-5 · 76.2/100 · +10.45u");
+    expect(container.textContent).toContain("47-16 · 74.6/100 · +29.01u");
   });
 
-  it("renders PackagesPage without errors and includes required marketing hero and slate dossiers", () => {
+  it("renders PackagesPage without errors and includes verified engine dominance hero and slate dossiers", () => {
     const { container } = render(React.createElement(PackagesPage));
     expect(container.querySelector("#slate-dossiers")).not.toBeNull();
-    expect(container.textContent).toContain(
-      "Plain-English NFL Picks, Player Props & Parlays — Written so you know exactly what to bet and why in 30 seconds.",
-    );
-    expect(container.textContent).toContain("Choose Your Betting Pack");
+    expect(container.textContent).toContain("16-5 · 76.2/100 · +10.45u");
+    expect(container.textContent).toContain("47-16 · 74.6/100 · +29.01u");
+    expect(container.textContent).toContain("22,750,000 Snaps · 581 Markets");
+    expect(container.textContent).toContain("Choose Your Football Pack");
   });
 
-  it("renders GameDossierPage for TNF Panthers @ Packers with high-contrast Action Badges and tabular ratings", () => {
-    const { container } = render(React.createElement(GameDossierPage, { params: { slug: "nfl-2026-w8-car-gb" } }));
-    expect(container.textContent).toContain("Carolina Panthers @ Green Bay Packers");
-    expect(container.textContent).toContain("SPREAD CALL");
-    expect(container.textContent).toContain("TOTAL CALL");
-    expect(container.textContent).toMatch(/Confidence Rating:/);
+  it("renders GameDossierPage for Week 8 MNF Spotlight WAS @ KC with locked official calls and zero % sign", () => {
+    const PageElement = GameDossierPage({ params: { gameId: "401873023" } });
+    const { container } = render(PageElement);
+    expect(container.textContent).toContain("Washington Commanders @ Kansas City Chiefs");
+    expect(container.textContent).toContain("Official Spread Call");
+    expect(container.textContent).toContain("Official Over/Under Call");
     expect(container.textContent).not.toMatch(/%/);
   });
 
-  it("renders DfsPage with readable body copy, captain leverage notes, and high-floor cash cores", () => {
+  it("renders DfsPage with Week 8 DFS Portfolio dominance header and gated cash/GPP stacks", () => {
     const { container } = render(React.createElement(DfsPage));
-    expect(container.textContent).toContain("DFS Optimizer, Cash Cores & Tournament Stacks");
-    expect(container.textContent).toContain("Showdown Captain / Top Target");
-    expect(container.textContent).toContain("High-Floor Cash Core");
+    expect(container.textContent).toContain("Week 8 DFS Portfolio: DraftKings ($50K) & FanDuel ($60K) Cash Cores & GPP Stacks");
+    expect(container.textContent).toContain("Showdown Captain & GPP Stack Architecture");
+    expect(container.textContent).toContain("Romano CQR q10 High-Floor Cash Core");
   });
 });

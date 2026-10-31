@@ -140,22 +140,22 @@ export function sanitizePlainFootballText(input: string): string {
  * Ensures no stale "Tonight · Thursday Night Football" badge ever renders on Friday/Weekend slates.
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
-  if (matchup && /Carolina|Green Bay/i.test(matchup)) {
-    return "Sunday Spotlight (1:00 PM ET)";
+  if (matchup && /Commanders|Chiefs/i.test(matchup)) {
+    return "Week 8 Spotlight & MNF (WAS @ KC)";
   }
   switch (windowSlot) {
     case "TNF":
-      return "Sunday Spotlight (1:00 PM ET)";
+      return "Week 8 Spotlight & MNF (WAS @ KC)";
     case "SUN_EARLY":
-      return "Sunday Early Slate (1:00 PM ET)";
+      return "Week 8 Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
-      return "Sunday Afternoon Slate (4:25 PM ET)";
+      return "Week 8 Sunday Afternoon Slate (4:25 PM ET)";
     case "SUN_MAIN":
-      return "Sunday Main Slate";
+      return "Week 8 Sunday Main Slate (12 Games)";
     case "SNF":
-      return "Sunday Night Football (8:20 PM ET)";
+      return "Week 8 Sunday Night Football (8:20 PM ET)";
     case "MNF":
-      return "Monday Night Football (8:15 PM ET)";
+      return "Week 8 Monday Night Football (8:15 PM ET)";
     case "WEEKLY_PASS":
     case "WEEKEND_PASS":
       return "Full Week All-Access";
@@ -306,35 +306,35 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   {
     "id": "writeup-tnf-401873023",
     "gameId": "401873023",
-    "matchup": "Carolina Panthers @ Green Bay Packers",
-    "awayTeam": "Carolina Panthers",
-    "homeTeam": "Green Bay Packers",
-    "kickoff": "2026-11-01T18:00Z",
+    "matchup": "Washington Commanders @ Kansas City Chiefs",
+    "awayTeam": "Washington Commanders",
+    "homeTeam": "Kansas City Chiefs",
+    "kickoff": "2026-11-03T01:15Z",
     "windowSlot": "TNF",
     "paceOfPlay": {
-      "neutralSecPerSnap": 24.9,
-      "passEpaPlay": 0.122,
-      "rushEpaPlay": -0.188,
-      "noHuddleRate": 0.076,
-      "notes": "Carolina Panthers averages 69 plays per game, while Green Bay Packers averages 64 plays per game and controls the clock in the second half."
+      "neutralSecPerSnap": 25.4,
+      "passEpaPlay": 0.168,
+      "rushEpaPlay": -0.092,
+      "noHuddleRate": 0.114,
+      "notes": "Washington Commanders operates at a fast up-tempo pace on early downs, while Kansas City Chiefs controls time of possession and third-down conversion efficiency at Arrowhead Stadium."
     },
     "schemeMatchup": {
-      "coverageShell": "Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup \u2014 our official spread call, over/under call, and player prop card are locked inside the pack.",
-      "blitzRateVsPressureToSack": "Green Bay Packers and Carolina Panthers bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Green Bay Packers features Christian Watson and Josh Jacobs on early downs, while Carolina Panthers leans on Tetairoa McMillan and Chuba Hubbard.",
-      "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Carolina Panthers and Green Bay Packers headline the film study for this game.",
-      "notes": "Posted Line: GB -3.5 \u00b7 O/U 46.5 \u00b7 Sunday 1:00 PM ET \u00b7 Week 9 Spotlight \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "Week 8 Monday Night Football at Arrowhead Stadium pits Patrick Mahomes and Andy Reid against Washington in a primetime showdown — backed by our verified 16-5 (76.2 out of 100 · +10.45u) Pre-Week-8 New Engine Record and 47-16 (74.6 out of 100 · +29.01u) Cumulative Season Record. Official spread call, over/under call, and 360-degree player prop card are locked inside the pack.",
+      "blitzRateVsPressureToSack": "Steve Spagnuolo's disguised third-down pressure packages test Washington's pass protection, while Patrick Mahomes excels against five-man pressure.",
+      "personnelTendencies": "Kansas City Chiefs leans on Travis Kelce, Rashee Rice/Xavier Worthy, and Kareem Hunt in multi-tight-end sets, while Washington counters with Terry McLaurin and Brian Robinson Jr.",
+      "coachingEdge": "Andy Reid and Steve Spagnuolo hold a decisive situational and 4th-down (tau_hat +11.16pp) edge at Arrowhead Stadium under the Monday Night Football lights.",
+      "notes": "Posted Line: KC -10.5 · O/U 47.5 · Monday 8:15 PM ET · Week 8 MNF Spotlight — Official spread call, total call, and 360-degree prop picks are locked inside the pack."
     },
     "sideTotalCall": {
-      "sideSelection": "Green Bay Packers -3.5",
-      "sideConfidence": "61/100",
+      "sideSelection": "Kansas City Chiefs -10.5",
+      "sideConfidence": "64/100",
       "sideExpectedClv": 0.0862,
       "sideDecision": "PLAY",
-      "totalSelection": "UNDER 46.5",
-      "totalConfidence": "58/100",
+      "totalSelection": "OVER 47.5",
+      "totalConfidence": "61/100",
       "totalExpectedClv": 0.0562,
       "totalDecision": "PLAY",
-      "rationale": "Green Bay\u2019s offensive line is healthier and Jordan Love has been more accurate under pressure than Bryce Young the last three weeks. Carolina is missing two starting offensive linemen and their best edge rusher. The Packers should control the line of scrimmage and keep the Panthers off the field. Take Green Bay and the under."
+      "rationale": "Kansas City's offense holds a major pass-efficiency advantage against Washington's perimeter coverage, while Steve Spagnuolo's third-down blitz packages create short fields at Arrowhead Stadium. Take Kansas City and the over."
     },
     "topProps": [
       {

@@ -280,14 +280,45 @@ def reallocate_injured(
     return out
 
 
-def load_verified_pbp(path: Union[str, Path]) -> Path:
+PBP_2026_PINNED_SHA256 = "6a6097066474da7ca867d954d6b04b84905c5e242d13917391237b8334f362fe"
+PBP_2026_RELEASE_URL = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet"
+
+
+def load_verified_pbp(
+    path: Union[str, Path],
+    expected_sha256: Optional[str] = None,
+    allow_fetch_once: bool = False,
+) -> Path:
     """
-    Fail-closed PBP loader. Raises SourceNotMountedError when the file is missing or empty.
+    Fail-closed PBP loader. Prefers on-disk file; if missing and allow_fetch_once=True
+    for play_by_play_2026.parquet, fetches once from nflverse release URL and verifies
+    pinned SHA256 (6a6097066474da7ca867d954d6b04b84905c5e242d13917391237b8334f362fe).
+    Raises SourceNotMountedError when missing, empty, or SHA-mismatched.
     Never synthesizes 2026 plays.
     """
+    import hashlib
+    import urllib.request
+
     p = Path(path)
+    if (not p.exists() or not p.is_file() or p.stat().st_size == 0) and allow_fetch_once and p.name == "play_by_play_2026.parquet":
+        try:
+            p.parent.mkdir(parents=True, exist_ok=True)
+            urllib.request.urlretrieve(PBP_2026_RELEASE_URL, str(p))
+        except Exception as exc:
+            raise SourceNotMountedError(f"Verified 2026 PBP not mounted at {p} and fetch failed: {exc}") from exc
+
     if not p.exists() or not p.is_file() or p.stat().st_size == 0:
         raise SourceNotMountedError(f"Verified 2026 PBP not mounted at {p}; synthetic fallback is forbidden")
+
+    sha_target = expected_sha256
+    if sha_target is None and p.name == "play_by_play_2026.parquet":
+        sha_target = PBP_2026_PINNED_SHA256
+    if sha_target is not None:
+        digest = hashlib.sha256(p.read_bytes()).hexdigest().lower()
+        if digest != sha_target.lower():
+            raise SourceNotMountedError(
+                f"Verified 2026 PBP SHA256 mismatch at {p}: got {digest}, expected {sha_target.lower()}"
+            )
     return p
 
 

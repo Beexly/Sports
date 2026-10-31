@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import {
   TACKLE_FEATURE_NAMES,
   computeTackleProbabilityFeatures,
@@ -34,6 +35,7 @@ import {
   scrubSensitive,
   runMasterSituationalReasoningOverlay,
   PROBABILITY_MOVEMENT_CAP,
+  TAU_HAT_WALK_FORWARD_MANIFEST,
 } from "../nfl/master-situational-reasoning-aggregator.js";
 
 const tackleInput: TackleProbabilityInput = {
@@ -383,5 +385,59 @@ describe("Stream 14E — orthogonalizer and master overlay (RT-03 & RT-04)", () 
       },
     });
     expect(pass.publishAllowed).toBe(false);
+  });
+
+  it("supports walk-forward tau_hat (coachAggressivenessIdx +11.1585pp) and the 7-signal pack hooks", () => {
+    expect(TAU_HAT_WALK_FORWARD_MANIFEST.pointInTime).toBe(true);
+    expect(TAU_HAT_WALK_FORWARD_MANIFEST.deltaPp).toBeCloseTo(11.1585, 4);
+    expect(TAU_HAT_WALK_FORWARD_MANIFEST.n).toBe(3988);
+
+    const out = runMasterSituationalReasoningOverlay({
+      familyDeltas: {
+        pressure: 0.02,
+        qbSkillScript: 0.015,
+      },
+      marketAnchorProb: 0.52,
+      independentEdgeDecision: "SPEAK",
+      coachAggressivenessIdx: 0.65,
+      tauHatDecision: {
+        team: "CLE",
+        season: 2026,
+        tauVal: 0.65,
+        wpGap: -0.018,
+        actionPredicted: "FGA",
+        actionOptimal: "GO",
+        context: "simulation",
+      },
+      signalPack: {
+        redzoneProe: 0.04,
+        stHiddenYards: 3.2,
+        qbPressureEscape: 0.045,
+        neutralPace: 26.8,
+        penaltyDiscipline: -0.02,
+        wrCbArchetype: 0.08,
+        defHavocRate: 0.14,
+      },
+      provenance: {
+        source: "tau-and-signal-pack-test",
+        streamId: "stream14e:tau-signal-pack",
+        computedAt: new Date().toISOString(),
+        feedPath: join(tmpdir(), "tau_signal_pack_feed.jsonl"),
+      },
+    });
+
+    expect(out.tauHatSummary).toBeDefined();
+    expect(out.tauHatSummary?.coachAggressivenessIdx).toBeCloseTo(0.65, 6);
+    expect(out.tauHatSummary?.manifest.pointInTime).toBe(true);
+    expect(out.tauHatSummary?.manifest.deltaPp).toBeCloseTo(11.1585, 4);
+    expect(out.tauHatSummary?.actionPredicted).toBe("FGA");
+    expect(out.signalPackSummary).toBeDefined();
+    expect(out.signalPackSummary?.signalsLoaded).toBe(7);
+    expect(
+      out.streamCalls.find((c) => c.stream === "c04:tauHatWalkForward")?.called,
+    ).toBe(true);
+    expect(
+      out.streamCalls.find((c) => c.stream === "signalPack:sevenVerifiedSignals")?.called,
+    ).toBe(true);
   });
 });

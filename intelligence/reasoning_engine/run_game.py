@@ -15,6 +15,8 @@ from typing import Any
 
 from coaching.ol_provider import NflverseOLProvider
 from coaching.provider import CoachingEngineProvider
+from context.signal_pack_wire import SIGNAL_PACK_KEYS, load_signal_pack
+from context.tau_wire import tau_decision_observation
 from integration.api import analyze
 from integration.providers import DataGapError, ProviderRegistry
 from integration.stubs import fixture_league_avgs
@@ -291,9 +293,11 @@ def _auto_market_priors(home: str, away: str, season: int, week: int) -> tuple[l
 def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int = 2026,
                 weather: dict[str, Any] | None = None,
                 market_priors: list | None = None,
-                ingested_signals: list | None = None) -> dict[str, Any]:
+                ingested_signals: list | None = None,
+                live_game_state: dict[str, Any] | None = None) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
     gaps: list[str] = []
+    observations: dict[str, Any] = {}
 
     for team in (home, away):
         try:
@@ -322,9 +326,57 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
             gaps.append(f"ol {team}: {e.reason}")
 
     coaching = CoachingEngineProvider()
-    # No live win probability on this host. 0.5 would be a coin flip wearing
-    # a tau cell. Refuse it. A fitted tau is not served until a real wp exists.
-    gaps.append("tau: no live win probability; refused a 0.5 stand-in")
+    if (
+        isinstance(live_game_state, dict)
+        and live_game_state.get("context") in ("simulation", "post_hoc")
+        and live_game_state.get("wp") is not None
+    ):
+        ctx_mode = str(live_game_state["context"])
+        for team in (home, away):
+            try:
+                dec = coaching.expected_wp_given_coach(
+                    team=team,
+                    season=season,
+                    yardline_100=int(live_game_state.get("yardline_100", 45)),
+                    ydstogo=int(live_game_state.get("ydstogo", 3)),
+                    score_differential=int(
+                        live_game_state.get("score_diff", live_game_state.get("score_differential", 0))
+                    ),
+                    game_seconds_remaining=int(live_game_state.get("game_seconds_remaining", 900)),
+                    qtr=int(live_game_state.get("qtr", 3)),
+                    wp=float(live_game_state["wp"]),
+                    timeouts_rem=int(live_game_state.get("timeouts_rem", 3)),
+                )
+                obs = tau_decision_observation(team, dec, context=ctx_mode)
+                sig_name = f"coaching.{team}.tau_hat_decision"
+                observations[sig_name] = obs
+                facts.append({
+                    "signal": sig_name,
+                    "value": obs,
+                    "fired": True,
+                    "source": "walk_forward_tau_hat",
+                    "license": "nflverse CC-BY-4.0",
+                })
+            except DataGapError as e:
+                gaps.append(f"tau {team}: {e.reason}")
+    else:
+        # No live win probability on this host. 0.5 would be a coin flip wearing
+        # a tau cell. Refuse it. A fitted tau is not served until a real wp exists.
+        gaps.append("tau: no live win probability; refused a 0.5 stand-in")
+
+    sp_obs, sp_gaps = load_signal_pack(home=home, away=away)
+    observations.update(sp_obs)
+    gaps.extend(sp_gaps)
+    for key in SIGNAL_PACK_KEYS:
+        if key in sp_obs:
+            entry = sp_obs[key]
+            facts.append({
+                "signal": key,
+                "value": entry,
+                "fired": bool(entry.get("available", False)),
+                "source": entry.get("source", "signal_pack"),
+                "license": entry.get("license", "nflverse CC-BY-4.0"),
+            })
 
     if weather is None:
         gaps.append("weather: not fetched for this run")
@@ -345,10 +397,13 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
     checklist = _checklist(trace)
     decision = mint_after_mind(label, checklist, asked=True)
     withheld = decision["action"] == "withhold"
+    if withheld and label == "FINAL":
+        label = "ANALYSIS-DRAFT — not for publication"
     return {
         "game_id": f"{away}-{home}-{season}-w{week}",
         "bet_type": "CARD",
         "facts": facts,
+        "observations": observations,
         "gaps": gaps,
         "trace_label": label,
         "trace_depth": str(trace.depth),

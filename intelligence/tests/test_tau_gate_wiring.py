@@ -185,5 +185,56 @@ class TestTauGateWiredAndServed(unittest.TestCase):
             _TAU_CACHE.clear()
 
 
+class TestTauWalkForwardTableAndConsumer(unittest.TestCase):
+    """Solution 3: walk-forward table served, missing season/cell raises DataGapError,
+    and expected_wp_given_coach returns wp_gap + action_predicted + manifest stamp."""
+
+    def setUp(self):
+        self._saved = os.environ.get(BD.ENV_VAR)
+        os.environ.pop(BD.ENV_VAR, None)
+        _TAU_CACHE.clear()
+        self.p = CoachingEngineProvider()
+
+    def tearDown(self):
+        if self._saved is not None:
+            os.environ[BD.ENV_VAR] = self._saved
+        _TAU_CACHE.clear()
+
+    def test_serves_swapped_walk_forward_cells(self):
+        r = self.p.get_tau_hat("CLE", 2026, "opp", 0.50)
+        self.assertIsNotNone(r["tau_hat"])
+        self.assertIn(r["fallback_level"], ("unit", "pooled", "league", "league_region"))
+        self.assertIn("walk-forward", r.get("fit_stamp") or "")
+
+    def test_absent_2022_season_raises_data_gap_error(self):
+        # Served season 2022 is absent by construction in the walk-forward table.
+        with self.assertRaises(DataGapError) as cm:
+            self.p.get_tau_hat("CLE", 2022, "opp", 0.50)
+        self.assertIn("season=2022", str(cm.exception))
+
+    def test_expected_wp_given_coach_serves_decision_with_manifest_stamp(self):
+        out = self.p.expected_wp_given_coach(
+            team="CLE",
+            season=2026,
+            yardline_100=42,
+            ydstogo=3,
+            score_differential=-3,
+            game_seconds_remaining=900,
+            qtr=3,
+            wp=0.45,
+        )
+        self.assertIn(out["action_predicted"], ("GO", "FGA", "PUNT"))
+        self.assertIsInstance(out["wp_gap"], float)
+        self.assertIsInstance(out["tau_hat"], float)
+        self.assertEqual(out["tau_val"], out["tau_hat"])
+        stamp = out["manifest_stamp"]
+        self.assertIs(stamp["point_in_time"], True)
+        self.assertEqual(
+            stamp["sha256"],
+            "17656fdf6981c55dfbbfff99aae5f039e35c1e6172357cd6c9cb9f94dcd4594f",
+        )
+        self.assertIn("walk-forward", stamp["fit_window"])
+
+
 if __name__ == "__main__":
     unittest.main()

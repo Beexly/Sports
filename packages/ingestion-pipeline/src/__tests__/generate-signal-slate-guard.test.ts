@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   pickFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gateDecisionCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   buildIndependents: vi.fn<() => Promise<unknown[]>>(),
 }));
 
@@ -28,6 +29,7 @@ vi.mock("@sports/db", () => ({
   db: {
     game: { findMany: mocks.gameFindMany, update: mocks.gameUpdate, count: vi.fn(async () => 1) },
     pick: { findUnique: mocks.pickFindUnique, updateMany: mocks.pickUpdateMany, create: mocks.pickCreate },
+    gateDecision: { createMany: mocks.gateDecisionCreateMany },
   },
 }));
 
@@ -140,7 +142,11 @@ beforeEach(() => {
   mocks.gameFindMany.mockResolvedValue([GAME]);
   mocks.gameUpdate.mockResolvedValue({});
   mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
-  mocks.pickCreate.mockResolvedValue({});
+  mocks.pickCreate.mockResolvedValue({ id: "pick-created-1" });
+  mocks.gateDecisionCreateMany.mockImplementation(async (args: unknown) => {
+    const data = (args as { data?: unknown[] })?.data ?? [];
+    return { count: data.length };
+  });
   // Home side favoured well past the coin-flip filter (blend + stretch => ~0.72 home).
   mocks.buildIndependents.mockResolvedValue([
     { source: "espn_powerindex", homeFairProb: 0.68, awayFairProb: 0.32, capturedAt: NOW.toISOString() },
@@ -578,5 +584,58 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
       (c) => Object.prototype.hasOwnProperty.call((c[0] as { data: Record<string, unknown> }).data, "commenceTime"),
     );
     expect(commenceUpdates).toHaveLength(0);
+  });
+});
+
+describe("generateSignalSlate gate decision persistence (READINESS §5.8)", () => {
+  it("persists PUBLISHED and GATED gate decisions via persistGateDecisions on the fallback free path", async () => {
+    const phantomGame = {
+      ...GAME,
+      id: "g-phantom",
+      externalId: "odds-g-phantom",
+      homeTeamName: "Illinois Fighting Illini",
+      awayTeamName: "UAB Blazers",
+      commenceTime: new Date("2026-09-05T16:00:00.000Z"),
+    };
+    mocks.gameFindMany.mockResolvedValue([phantomGame, GAME]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    expect(out.picksUpserted).toBe(1);
+    expect(mocks.gateDecisionCreateMany).toHaveBeenCalledTimes(1);
+    const callArg = mocks.gateDecisionCreateMany.mock.calls[0]?.[0] as {
+      data: Array<{ gameId: string; status: string; reasonCode: string }>;
+    };
+    expect(callArg.data).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          gameId: "g-phantom",
+          status: "GATED",
+          reasonCode: "UNCONFIRMED_FIXTURE",
+        }),
+        expect.objectContaining({
+          gameId: "game-1",
+          status: "PUBLISHED",
+          reasonCode: "PUBLISHED",
+        }),
+      ]),
+    );
+    vi.restoreAllMocks();
+  });
+
+  it("surfaces gate decision sink failure without crashing slate generation", async () => {
+    mocks.pickFindUnique.mockResolvedValue(null);
+    mocks.gateDecisionCreateMany.mockRejectedValueOnce(new Error("gate_decisions table locked"));
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    expect(out.picksUpserted).toBe(1);
+    expect(
+      warn.mock.calls.some((c) => /gate_decisions_lost=/.test(String(c[0]))),
+    ).toBe(true);
+    warn.mockRestore();
   });
 });

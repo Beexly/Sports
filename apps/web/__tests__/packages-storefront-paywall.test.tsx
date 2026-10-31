@@ -106,7 +106,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     expect(container.textContent).toContain("UNLOCKED IN-PLACE");
     expect(container.textContent).toContain("Live Picks Revealed In-Place");
-    expect(container.textContent).toContain("Green Bay Packers -3.5");
+    expect(container.textContent).toContain("Kansas City Chiefs -10.5");
     expect(container.textContent).toContain("BET THIS:");
     expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.sideConfidence}`);
     expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.totalConfidence}`);
@@ -164,20 +164,21 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     const packagesSrc = readFileSync(
       resolve(__dirname, "..", "app", "packages", "page.tsx"),
-    "utf8",
+      "utf8",
     );
     expect(packagesSrc).toContain(
-      "Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know exactly what to bet and why in 30 seconds.",
+      "Verified 16-5 (+10.45u) New Engine &amp; 47-16 (+29.01u) Season Record — Week 8 Sunday &amp; MNF Board Live.",
     );
     expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks|%/i);
 
     const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
     const pkgText = pkgPageDom.textContent ?? "";
-    expect(pkgText).toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
-    expect(pkgText).toContain("Sunday · Week 9 (1:00 PM ET)");
-    expect(pkgText).not.toMatch(/TONIGHT\s*·\s*TNF/i);
+    expect(pkgText).toContain("Week 8 Spotlight & MNF Game Pack (WAS @ KC & Sunday Slate)");
+    expect(pkgText).toContain("16-5 · 76.2/100 · +10.45u");
+    expect(pkgText).toContain("47-16 · 74.6/100 · +29.01u");
+    expect(pkgText).not.toMatch(/Panthers @ Packers|WEEK 9|TONIGHT\s*·\s*TNF/i);
     expect(pkgText).not.toMatch(
-      /Take Green Bay|and the under|Side Confidence|Total Confidence|61\/100|58\/100|Green Bay Packers -3\.5|UNDER 47\.5|OVER 54\.5|Detroit Lions -3|Chicago Bears \+3/i,
+      /Take Kansas City|and the over|Side Confidence|Total Confidence|64\/100|61\/100|Kansas City Chiefs -10\.5|OVER 47\.5|OVER 54\.5|Detroit Lions -3|Chicago Bears \+3/i,
     );
     unmountPkgPage();
   });

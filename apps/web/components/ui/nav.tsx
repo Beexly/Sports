@@ -21,10 +21,10 @@ export interface RevenuePillar {
  */
 export const FIVE_REVENUE_PILLARS: readonly RevenuePillar[] = [
   { label: "GALAXY PICKS (PAID)", href: "/packages", desc: "This Week's Football Betting Packs" },
-  { label: "Panthers @ Packers Pack", href: "/packages#tnf-all-in-pack", desc: "Carolina @ Green Bay Sunday Pack" },
-  { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday Best Bets Pack" },
+  { label: "Week 8 Primetime Pack", href: "/packages#tnf-all-in-pack", desc: "Week 8 Sunday & MNF (WAS @ KC) Pack" },
+  { label: "Sunday NFL Pack", href: "/packages#sunday-nfl-5pct-slate", desc: "Sunday 12-Game Main Slate Pack" },
   { label: "DFS", href: "/fantasy/dfs", desc: "Daily Fantasy Lineup Optimizer" },
-  { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Weekly All-Access Pass" },
+  { label: "All-Access Pass", href: "/packages#week8-all-access", desc: "Full Week 8 All-Access Pass" },
 ];
 
 export const COMMERCIAL_REVENUE_PILLARS = FIVE_REVENUE_PILLARS;

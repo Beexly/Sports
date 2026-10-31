@@ -43,6 +43,7 @@ import { envWithStoredSignals } from "./stored-signal-env-bridge.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
 import { emissionBlocked, zeroEmissionNote } from "./walk-forward-emission-gate.js";
+import { persistGateDecisions, type GateDecisionInput } from "./gate-decision-sink.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -480,6 +481,9 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
   const mintedMatchups = new Set<string>();
   let seriesRepeatsSkipped = 0;
   let mindWithheld = 0;
+  const isBootstrap = !gates.canPersistCanonicalHistory;
+  const gateDecisionsToPersist: GateDecisionInput[] = [];
+  const publishedOrRecordedGameIds = new Set<string>();
 
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
@@ -489,12 +493,38 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     // (scoring.ts isThreeWayMoneylineSport) and so does this one.
     if (sportKey.toLowerCase().startsWith("soccer")) {
       picksSkipped += 1;
+      gateDecisionsToPersist.push({
+        gameId: game.id,
+        pickId: null,
+        status: "GATED",
+        reasonCode: "NO_CONVICTION_EDGE",
+        reason: "Three-way soccer market excluded from two-way moneyline signal slate",
+        confidence: null,
+        edgeIndex: null,
+        modelVersion: MODEL_VERSION,
+        isBootstrap,
+        evaluatedAt: now,
+      });
+      publishedOrRecordedGameIds.add(game.id);
       continue;
     }
     const fixtureBatch = await fixtureBatchFor(sportKey);
     if (fixtureBatch.status !== "ok") {
       picksSkipped += 1;
       fixtureUnconfirmed += 1;
+      gateDecisionsToPersist.push({
+        gameId: game.id,
+        pickId: null,
+        status: "GATED",
+        reasonCode: "UNCONFIRMED_FIXTURE",
+        reason: `ESPN fixture scoreboard unavailable for ${sportKey}`,
+        confidence: null,
+        edgeIndex: null,
+        modelVersion: MODEL_VERSION,
+        isBootstrap,
+        evaluatedAt: now,
+      });
+      publishedOrRecordedGameIds.add(game.id);
       continue;
     }
     const fixture = fixtureBatch.byGameId.get(game.id);
@@ -508,6 +538,22 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       );
       picksSkipped += 1;
       fixtureUnconfirmed += 1;
+      gateDecisionsToPersist.push({
+        gameId: game.id,
+        pickId: null,
+        status: "GATED",
+        reasonCode: "UNCONFIRMED_FIXTURE",
+        reason:
+          fixture?.status === "event_already_started"
+            ? "Fixture already started per ESPN scoreboard"
+            : "Fixture not listed on ESPN scoreboard for its date",
+        confidence: null,
+        edgeIndex: null,
+        modelVersion: MODEL_VERSION,
+        isBootstrap,
+        evaluatedAt: now,
+      });
+      publishedOrRecordedGameIds.add(game.id);
       continue;
     }
     let commenceTime = game.commenceTime;
@@ -538,6 +584,19 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       picksSkipped += 1;
       skippedInPlay += 1;
       console.warn(`${logPrefix} ${inPlaySkipLine(game.id, commenceTime, now)}`);
+      gateDecisionsToPersist.push({
+        gameId: game.id,
+        pickId: null,
+        status: "GATED",
+        reasonCode: "IN_PLAY",
+        reason: "Fixture already kicked off",
+        confidence: null,
+        edgeIndex: null,
+        modelVersion: MODEL_VERSION,
+        isBootstrap,
+        evaluatedAt: now,
+      });
+      publishedOrRecordedGameIds.add(game.id);
       continue;
     }
     const homeTeam = game.homeTeamName;
@@ -929,6 +988,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
         ? {}
         : { isPublished: false };
 
+      let upsertedPickId: string | null = existing?.id ?? null;
       if (existing) {
         // Race-safe update (GSE-SEC-043): scope to result:"PENDING" so a
         // concurrent settle cannot have its freshly-graded result overwritten.
@@ -947,7 +1007,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
           continue;
         }
       } else {
-        await db.pick.create({
+        const created = await db.pick.create({
           data: {
             gameId: game.id,
             pickType: "MONEYLINE",
@@ -969,6 +1029,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
             generatedAt: now,
           },
         });
+        upsertedPickId = (created as { id?: string } | null)?.id ?? null;
       }
       // Public /api/picks filters on game.dataQualityScore >= 70 — stamp from
       // independent factor quality so signal path is not invisible by default 0.
@@ -981,12 +1042,53 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
         data: { dataQualityScore: gameDq },
       });
       picksUpserted += 1;
+      const publishedNow = gates.canExposePublicPicks && !publicationVeto;
+      gateDecisionsToPersist.push({
+        gameId: game.id,
+        pickId: upsertedPickId,
+        status: publishedNow ? "PUBLISHED" : "GATED",
+        reasonCode: publishedNow ? "PUBLISHED" : stalenessVeto ? "ODDS_STALE" : "NO_CONVICTION_EDGE",
+        reason: publishedNow
+          ? selection
+          : publicationVeto
+            ? `Signal pick withheld (${stalenessVeto ? "staleness" : "PASS"} veto)`
+            : "Readiness gate closed for public picks",
+        confidence,
+        edgeIndex: edgePts,
+        modelVersion: MODEL_VERSION,
+        isBootstrap,
+        evaluatedAt: now,
+      });
+      publishedOrRecordedGameIds.add(game.id);
     } catch (err) {
       errors.push(
         `${game.id}: upsert failed — ${err instanceof Error ? err.message : String(err)}`,
       );
       picksSkipped += 1;
     }
+  }
+
+  for (const game of gameList) {
+    if (!publishedOrRecordedGameIds.has(game.id)) {
+      gateDecisionsToPersist.push({
+        gameId: game.id,
+        pickId: null,
+        status: "GATED",
+        reasonCode: "NO_CONVICTION_EDGE",
+        reason: "Signal path evaluated fixture and withheld/skipped pick",
+        confidence: null,
+        edgeIndex: null,
+        modelVersion: MODEL_VERSION,
+        isBootstrap,
+        evaluatedAt: now,
+      });
+    }
+  }
+
+  const gateResult = await persistGateDecisions(gateDecisionsToPersist);
+  if (gateResult.error || gateResult.persisted < gateResult.attempted) {
+    const gateLossMessage = `gate_decisions_lost=${gateResult.attempted - gateResult.persisted}/${gateResult.attempted}: ${gateResult.error || "partial persist"}`;
+    console.warn(`${logPrefix} ${gateLossMessage}`);
   }
 
   const note =

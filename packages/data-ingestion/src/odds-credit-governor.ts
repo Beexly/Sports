@@ -24,10 +24,48 @@ export const MONTHLY_CREDITS = 20000;
 export const DAILY_BUDGET = 600;
 /** Reserve pace floor: below this many credits per remaining hour we hold. */
 export const HOURLY_BUDGET = DAILY_BUDGET / 24;
+/** Free-tier monthly quota (500 credits/month) and reserve daily cap (15/day). */
+export const FREE_TIER_MONTHLY_CREDITS = 500;
+export const FREE_TIER_DAILY_BUDGET = 15;
 /** A sport counts as live for odds when it has an event this far ahead. */
 export const EVENT_HORIZON_HOURS = 48;
 /** One paid call per sport per hour under the per-sport cap. */
 export const PAID_CALL_MIN_INTERVAL_MS = 60 * 60 * 1000;
+
+export interface OddsCreditBudgetConfig {
+  readonly monthlyCredits: number;
+  readonly dailyBudget: number;
+  readonly hourlyBudget: number;
+  readonly isFreeTier500Guard: boolean;
+}
+
+/**
+ * Resolve the active Odds API credit budget from environment variables
+ * (`ODDS_API_MONTHLY_CREDITS` / `ODDS_API_DAILY_BUDGET`), defaulting to the
+ * 20K/600 plan when unset, and automatically engaging the 500-credit free-tier
+ * reserve pacing (`15/day`, `0.625/h`) when `ODDS_API_MONTHLY_CREDITS <= 500`.
+ */
+export function resolveOddsCreditBudget(
+  env: Record<string, string | undefined> = typeof process !== "undefined" ? process.env : {},
+): OddsCreditBudgetConfig {
+  const rawMonthly = env.ODDS_API_MONTHLY_CREDITS ? Number(env.ODDS_API_MONTHLY_CREDITS) : NaN;
+  const monthlyCredits =
+    Number.isFinite(rawMonthly) && rawMonthly > 0 ? Math.floor(rawMonthly) : MONTHLY_CREDITS;
+  const isFreeTier500Guard = monthlyCredits <= FREE_TIER_MONTHLY_CREDITS;
+  const rawDaily = env.ODDS_API_DAILY_BUDGET ? Number(env.ODDS_API_DAILY_BUDGET) : NaN;
+  const dailyBudget =
+    Number.isFinite(rawDaily) && rawDaily > 0
+      ? rawDaily
+      : isFreeTier500Guard
+        ? FREE_TIER_DAILY_BUDGET
+        : DAILY_BUDGET;
+  return {
+    monthlyCredits,
+    dailyBudget,
+    hourlyBudget: dailyBudget / 24,
+    isFreeTier500Guard,
+  };
+}
 
 export type PaidCallPurpose = "odds" | "scores";
 

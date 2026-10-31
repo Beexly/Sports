@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   DAILY_BUDGET,
+  FREE_TIER_DAILY_BUDGET,
+  FREE_TIER_MONTHLY_CREDITS,
   HOURLY_BUDGET,
   MONTHLY_CREDITS,
   PAID_CALL_PURPOSES,
@@ -11,6 +13,7 @@ import {
   hoursToMonthEnd,
   projectCreditExhaustion,
   reservePaceOk,
+  resolveOddsCreditBudget,
   zeroObservationIsStale,
 } from "../odds-credit-governor";
 import {
@@ -1060,5 +1063,58 @@ describe("reservePaidCallSlot (atomic hourly slot)", () => {
       reserved: true,
       atomic: false,
     });
+  });
+});
+
+describe("resolveOddsCreditBudget and 500-credit free-tier reserve guard (READINESS §5.8)", () => {
+  it("defaults to 20000 monthly / 600 daily when env is unset", () => {
+    const b = resolveOddsCreditBudget({});
+    expect(b.monthlyCredits).toBe(MONTHLY_CREDITS);
+    expect(b.dailyBudget).toBe(DAILY_BUDGET);
+    expect(b.hourlyBudget).toBe(HOURLY_BUDGET);
+    expect(b.isFreeTier500Guard).toBe(false);
+  });
+
+  it("activates the 500-credit free-tier reserve pacing when ODDS_API_MONTHLY_CREDITS=500", () => {
+    expect(FREE_TIER_MONTHLY_CREDITS).toBe(500);
+    expect(FREE_TIER_DAILY_BUDGET).toBe(15);
+    const b = resolveOddsCreditBudget({ ODDS_API_MONTHLY_CREDITS: "500" });
+    expect(b.monthlyCredits).toBe(500);
+    expect(b.dailyBudget).toBe(15);
+    expect(b.hourlyBudget).toBeCloseTo(15 / 24, 6);
+    expect(b.isFreeTier500Guard).toBe(true);
+  });
+
+  it("honors explicit ODDS_API_MONTHLY_CREDITS and ODDS_API_DAILY_BUDGET overrides", () => {
+    const b = resolveOddsCreditBudget({
+      ODDS_API_MONTHLY_CREDITS: "10000",
+      ODDS_API_DAILY_BUDGET: "300",
+    });
+    expect(b.monthlyCredits).toBe(10000);
+    expect(b.dailyBudget).toBe(300);
+    expect(b.hourlyBudget).toBeCloseTo(300 / 24, 6);
+  });
+
+  it("holds 500 remaining credits in reserve mode so the governor never blindly burns the free-tier quota", () => {
+    const first = decidePaidOddsCall({
+      remaining: 500,
+      now: SEP_6,
+      purpose: "odds",
+      hasEventWithin48h: true,
+      freeCoversPurpose: false,
+      lastPaidCallAt: null,
+    });
+    expect(first.allow).toBe(true);
+    expect(first.reason).toMatch(/reserve/);
+    const secondWithinHour = decidePaidOddsCall({
+      remaining: 500,
+      now: SEP_6,
+      purpose: "odds",
+      hasEventWithin48h: true,
+      freeCoversPurpose: false,
+      lastPaidCallAt: new Date(SEP_6.getTime() - 10 * 60_000),
+    });
+    expect(secondWithinHour.allow).toBe(false);
+    expect(secondWithinHour.reason).toMatch(/reserve/);
   });
 });

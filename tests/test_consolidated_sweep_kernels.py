@@ -459,6 +459,123 @@ def test_simulate_matchup_pbp_consumes_oct30_signal_pack_and_tau_hat() -> None:
     assert "b6_b9_survival_away" in csk
     assert "aci_conformal_margin" in csk
     assert csk["aci_conformal_margin"]["width"] > 0.0
+    assert csk["aci_conformal_margin"]["role"] == "drift_monitor_only"
+    assert "romano_cqr_margin" in csk
+    assert csk["romano_cqr_margin"]["r1_separate_quote"] is True
+    assert "barber_weighted_margin" in csk
+    assert "argon_rk4_magnus" in csk
+    assert "move37_discrete_sindy" in csk
+    assert "gelman_vehtari_process_gate" in csk
+
+
+def test_wave2_romano_cqr_barber_weighted_and_process_gates() -> None:
+    import numpy as np
+    from engine.kernels.consolidated_sweep_kernels import (
+        assert_gelman_vehtari_process_gates,
+        compute_barber_weighted_conformal_interval,
+        compute_romano_cqr_honest_interval,
+    )
+
+    rng = np.random.default_rng(123)
+    cal_y = rng.normal(24.0, 6.5, size=250)
+    cal_q_lo = np.full(250, 14.5)
+    cal_q_hi = np.full(250, 33.5)
+
+    cqr = compute_romano_cqr_honest_interval(
+        pred_q_lo=15.0,
+        pred_q_hi=33.0,
+        cal_y=cal_y,
+        cal_q_lo=cal_q_lo,
+        cal_q_hi=cal_q_hi,
+        alpha=0.10,
+    )
+    assert cqr["lower"] < 15.5
+    assert cqr["upper"] > 32.5
+    assert cqr["width"] == pytest.approx(cqr["upper"] - cqr["lower"])
+    assert cqr["r1_separate_quote"] is True
+    assert cqr["method"] == "Romano_et_al_2019_CQR_1905.03222"
+
+    bw = compute_barber_weighted_conformal_interval(
+        pred_center=24.0,
+        cal_residuals=np.abs(cal_y - 24.0),
+        decay_rho=0.96,
+        alpha=0.10,
+    )
+    assert bw["lower"] < 24.0 < bw["upper"]
+    assert bw["r1_separate_quote"] is True
+    assert bw["effective_sample_size"] > 10.0
+
+    gate_ok = assert_gelman_vehtari_process_gates(
+        r_hat_max=1.004,
+        ess_bulk_min=620.0,
+        ess_tail_min=480.0,
+        num_divergences=0,
+        raw_vi_interval_used=False,
+    )
+    assert gate_ok["promotion_gate_passed"] is True
+    with pytest.raises(ValueError, match="raw VI intervals are banned"):
+        assert_gelman_vehtari_process_gates(
+            r_hat_max=1.004,
+            ess_bulk_min=620.0,
+            ess_tail_min=480.0,
+            num_divergences=0,
+            raw_vi_interval_used=True,
+        )
+
+
+def test_wave2_argon_rk4_magnus_and_move37_discrete_sindy() -> None:
+    import numpy as np
+    from engine.kernels.consolidated_sweep_kernels import (
+        compute_argon_rk4_magnus_ball_flight,
+        compute_move37_discrete_sindy_team_state,
+    )
+
+    sea_level = compute_argon_rk4_magnus_ball_flight(
+        v0_mps=29.5,
+        launch_angle_deg=31.0,
+        spin_rpm=1850.0,
+        altitude_ft=0.0,
+        wind_mph=0.0,
+        temp_f=70.0,
+    )
+    denver = compute_argon_rk4_magnus_ball_flight(
+        v0_mps=29.5,
+        launch_angle_deg=31.0,
+        spin_rpm=1850.0,
+        altitude_ft=5280.0,
+        wind_mph=0.0,
+        temp_f=70.0,
+    )
+    assert denver["carry_yards"] > sea_level["carry_yards"] + 1.5
+    assert denver["grossmann_cost_accuracy_gate_passed"] is True
+
+    with pytest.raises(RuntimeError, match="PINN arm is BLOCKED pending a Part II dossier"):
+        compute_argon_rk4_magnus_ball_flight(
+            v0_mps=29.5,
+            launch_angle_deg=31.0,
+            spin_rpm=1850.0,
+            altitude_ft=0.0,
+            pinn_forward_arm=True,
+        )
+
+    # Planted discrete dynamical system for MOVE-37 SINDy test
+    rng = np.random.default_rng(99)
+    T = 40
+    X = np.zeros((T, 2), dtype=float)
+    X[0] = [0.25, -0.15]
+    for t in range(T - 1):
+        X[t + 1, 0] = 0.82 * X[t, 0] - 0.18 * X[t, 1] + rng.normal(0.0, 0.003)
+        X[t + 1, 1] = 0.12 * X[t, 0] + 0.76 * X[t, 1] + rng.normal(0.0, 0.003)
+
+    sindy = compute_move37_discrete_sindy_team_state(
+        state_panel=X,
+        threshold_lambda=0.04,
+    )
+    assert sindy["planted_law_gate_passed"] is True
+    assert sindy["planted_true_support_recall"] >= 0.80
+    assert sindy["planted_false_discovery_rate"] <= 0.10
+    assert sindy["oos_beats_ridge_persistence"] is True
+
 
 
 

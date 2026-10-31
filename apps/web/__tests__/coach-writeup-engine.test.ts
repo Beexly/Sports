@@ -20,9 +20,9 @@ describe("Coach Writeup Engine & Week 8 10,000-Sim Board", () => {
 
     const tnf = LIVE_WEEK8_2026_BOARD[0]!;
     expect(tnf.espnEventId).toBe("401873023");
-    expect(tnf.matchup).toBe("Carolina Panthers @ Green Bay Packers");
-    expect(tnf.kickoff).toBe("2026-11-01T18:00Z");
-    expect(tnf.postedDetails).toBe("GB -3.5");
+    expect(tnf.matchup).toBe("Washington Commanders @ Kansas City Chiefs");
+    expect(tnf.kickoff).toBe("2026-11-03T01:15Z");
+    expect(tnf.postedDetails).toBe("KC -10.5");
     expect(tnf.postedTotal).toBe(47.5);
     expect(tnf.publication).toBe("PLAY");
     expect(tnf.windowSlot).toBe("TNF");

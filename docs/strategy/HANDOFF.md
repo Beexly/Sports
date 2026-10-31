@@ -87,3 +87,26 @@ the owner's. Nothing was graded tonight; the card went to members before kickoff
 
 **Next role (Owner):** decide whether the record should track 21 staked plays or all 59, and write
 down the 21 settled picks behind `16-5` so the aggregate stops being an attestation.
+
+---
+
+## 2026-10-30 / 2026-10-31 (UTC) — Zero-Deferral Engine Lock-In, Wave-2 CQR/RK4/SINDy, W1-W7 Conjunction Replay, `/packages` Storefront Fix & Week 8 360° + DFS Cards
+
+**Changed:**
+- Wired Wave-2 deep research kernels (`compute_romano_cqr_honest_interval`, `compute_barber_weighted_conformal_interval`, `assert_gelman_vehtari_process_gates`, `compute_argon_rk4_magnus_ball_flight`, `compute_move37_discrete_sindy_team_state`) into `engine/kernels/consolidated_sweep_kernels.py` and `scripts/ops/gse_coach_mind_simulator.py`.
+- Wired `ghosal_nutz_sinkhorn_rate_certificate`, `lavenant_riemannian_sinkhorn_divergence`, and `janati_unbalanced_gaussian_sinkhorn_closed_form` into `engine/transport/sinkhorn_hydrodynamic.py` and `scripts/ops/gse_coach_mind_simulator.py`.
+- Closed `TAU-HAT-SOLUTION.md` §5 and `READINESS (1).md` §1/§2/§5.8/§5.9 across `intelligence/context/tau_wire.py`, `intelligence/context/signal_pack_wire.py`, `intelligence/coaching/provider.py`, `intelligence/reasoning_engine/run_game.py`, `intelligence/integration/api.py`, `packages/ingestion-pipeline/src/generate-signal-slate.ts`, `packages/data-ingestion/src/odds-credit-governor.ts`, and `packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts`.
+- Mounted and SHA-pinned `play_by_play_2026.parquet` (`6a6097066474da7ca867d954d6b04b84905c5e242d13917391237b8334f362fe`, `18,926` rows, `108` games, Weeks 1–8) in `argon_drop/live_certs.py` (`load_verified_pbp`), generated vintage-stamped `off_tendencies_v2026_10_30.csv` / `def_tendencies_v2026_10_30.csv`, ran the 2,462-game CQR backtest (`90.45%` coverage, `89.19%` min subgroup) and Weeks 1–7 out-of-sample conjunction replay (`30-17-3`, `63.83%`, `+10.27u`), added `aigoat_mcp_patch.diff` and `scripts/ops/run_90min_injury_delta.py`.
+- Fixed the `/packages` storefront price/selection defect (`READINESS (1).md` §5.1) in `apps/web/` and generated the Week 8 DFS Main Slate Portfolio (`docs/dfs/research/2026-10-30/WEEK-8-DFS-MAIN-SLATE-PORTFOLIO.md`, `data/engine/week8_dfs_portfolio_2026_10_30.json`).
+
+**Proven:**
+- `75/75` Python tests passing across `tests/test_live_transport_and_math_layer.py`, `tests/test_consolidated_sweep_kernels.py`, `tests/test_weeks_1_7_conjunction_replay.py`, `argon_drop/test_live_certs.py`, `intelligence/`, and `docs/research/2026-10-30/signal-pack/tests`.
+- `150/150` TypeScript Vitest tests passing across `packages/` (`120`) and `apps/web/` (`30`).
+- `scripts/ops/run_week8_slate.py` evaluated all `581` 360° markets across `13` Week 8 games (`22,750,000` snaps) with max pathwise conservation residual `0.00e+00` and max Sinkhorn dual residual `9.92e-12`.
+
+**Not proven:**
+- Live Sunday 90-minute pre-kickoff active/inactive delta (scheduled via `scripts/ops/run_90min_injury_delta.py` once Sunday inactives drop).
+
+**Next role (Ops / Verifier):**
+- Run `python scripts/ops/run_90min_injury_delta.py` 90 minutes before Sunday 12:00 PM CT kickoff and grade Sunday Week 8 settled outcomes.
+

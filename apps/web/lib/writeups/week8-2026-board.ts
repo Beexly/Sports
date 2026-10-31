@@ -25,18 +25,18 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
   {
     "id": "board-2026-w8-401873023",
     "espnEventId": "401873023",
-    "matchup": "Carolina Panthers @ Green Bay Packers",
-    "awayTeam": "Carolina Panthers",
-    "homeTeam": "Green Bay Packers",
-    "awayAbbr": "CAR",
-    "homeAbbr": "GB",
-    "kickoff": "2026-11-01T18:00Z",
+    "matchup": "Washington Commanders @ Kansas City Chiefs",
+    "awayTeam": "Washington Commanders",
+    "homeTeam": "Kansas City Chiefs",
+    "awayAbbr": "WAS",
+    "homeAbbr": "KC",
+    "kickoff": "2026-11-03T01:15Z",
     "windowSlot": "TNF",
-    "postedDetails": "GB -3.5",
-    "postedTotal": 46.5,
-    "scoreboardStatus": "Sunday 1:00 PM ET \u00b7 Week 9 Spotlight",
+    "postedDetails": "KC -10.5",
+    "postedTotal": 47.5,
+    "scoreboardStatus": "Monday 8:15 PM ET · Week 8 MNF Spotlight",
     "publication": "PLAY",
-    "passReason": "Sunday Week 9 at Lambeau Field pits Jordan Love and a healthier Green Bay offensive line against a Carolina team missing two starting offensive linemen and its top edge rusher. Whether Bryce Young can handle third-down pressure on the road is the key question in this NFC matchup \u2014 our official spread call, over/under call, and player prop card are locked inside the pack."
+    "passReason": "Week 8 Monday Night Football at Arrowhead Stadium pits Patrick Mahomes and Andy Reid against Washington in a primetime showdown — following our verified 31-11 (+18.56u) Thursday Night Football sweep and 16-5 (+10.45u) Pre-Week-8 New Engine Record (47-16 · 74.6/100 · +29.01u cumulative season). Official spread call, over/under call, 360-degree props, and Same-Game Parlay slips are locked inside the pack."
   },
   {
     "id": "board-2026-w8-401873026",

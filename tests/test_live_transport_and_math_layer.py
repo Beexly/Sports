@@ -19,7 +19,11 @@ from engine.kernels.control_and_calibration import (
 )
 from engine.transport.kantorovich_mmot import solve_multimarginal_kantorovich
 from engine.transport.sinkhorn_hydrodynamic import (
+    SinkhornLyapunovError,
+    ghosal_nutz_sinkhorn_rate_certificate,
     heavy_tail_tsallis_sinkhorn,
+    janati_unbalanced_gaussian_sinkhorn_closed_form,
+    lavenant_riemannian_sinkhorn_divergence,
     madelung_schrodinger_bridge_flow,
     sinkhorn_dual_ascent_live,
 )
@@ -156,3 +160,29 @@ def test_anchor_free_dual_luck_and_tau_hat():
     assert sol["max_nodal_divergence"] == 0.0
     met = katch_mcardle_metabolic_fence(80.0)
     assert abs(met["bmr_kcal"] - 2098.0) < 1e-9
+
+
+def test_ghosal_nutz_rate_lavenant_riemannian_and_janati_unbalanced():
+    grid_x = np.linspace(0.0, 1.0, 5)
+    C = (grid_x[:, None] - grid_x[None, :]) ** 2
+    mu = np.array([0.32, 0.25, 0.18, 0.15, 0.10], dtype=float)
+    nu = np.array([0.10, 0.15, 0.22, 0.25, 0.28], dtype=float)
+
+    gn = ghosal_nutz_sinkhorn_rate_certificate(C, mu, nu, eps=0.10)
+    assert gn["rate_certificate_passed"] is True
+    assert gn["dual_residual"] <= gn["ghosal_nutz_1_over_t_bound"]
+    assert 0.0 < gn["birkhoff_hopf_kappa"] < 1.0
+
+    lav = lavenant_riemannian_sinkhorn_divergence(C, mu, nu, eps=0.10)
+    assert lav["debiased_sinkhorn_divergence"] >= 0.0
+    assert lav["self_divergence_mu"] == 0.0
+    assert lav["riemannian_hessian_metric_g_eps"] > 0.0
+    with pytest.raises(SinkhornLyapunovError, match="not jointly convex"):
+        lavenant_riemannian_sinkhorn_divergence(C, mu, nu, eps=0.10, assume_joint_convexity=True)
+    with pytest.raises(SinkhornLyapunovError, match="fails the triangle inequality"):
+        lavenant_riemannian_sinkhorn_divergence(C, mu, nu, eps=0.10, assume_sqrt_triangle_inequality=True)
+
+    jan = janati_unbalanced_gaussian_sinkhorn_closed_form(24.0, 36.0, 21.0, 40.0, eps=0.15, tau_kl=1.2)
+    assert jan["closed_form_cross_covariance"] > 0.0
+    assert 0.0 < jan["unbalanced_mass_scaling_factor"] <= 1.0
+

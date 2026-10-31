@@ -404,6 +404,53 @@ export interface MindFeedEmission {
 const DEFAULT_FEED_PATH = "brain/feeds/2026-10-22/master_aggregator_runtime_feed.jsonl";
 
 /**
+ * Walk-forward tau_hat provenance stamp (TAU-HAT-SOLUTION §5 / READINESS §2).
+ * Fitted strictly point-in-time (`train_seasons < served_season`) over
+ * nflverse play_by_play_2022..2025.parquet (+11.1585pp Hamming lift vs WP-max
+ * on 2024-2025 opponent-half 4th downs, n=3,988).
+ */
+export const TAU_HAT_WALK_FORWARD_MANIFEST = {
+  pointInTime: true,
+  fitWindow: "walk-forward: train_seasons < served_season (strict <)",
+  deltaPp: 11.1585,
+  n: 3988,
+  sha256: "17656fdf6981c55dfbbfff99aae5f039e35c1e6172357cd6c9cb9f94dcd4594f",
+} as const;
+
+export interface TauHatWalkForwardDecisionInput {
+  readonly team: string;
+  readonly season: number;
+  readonly tauVal: number;
+  readonly wpGap: number;
+  readonly actionPredicted: "GO" | "FGA" | "PUNT";
+  readonly actionOptimal?: "GO" | "FGA" | "PUNT";
+  readonly context: "simulation" | "post_hoc";
+}
+
+export interface SignalPackObservationsInput {
+  readonly redzoneProe?: number;
+  readonly stHiddenYards?: number;
+  readonly qbPressureEscape?: number;
+  readonly neutralPace?: number;
+  readonly penaltyDiscipline?: number;
+  readonly wrCbArchetype?: number;
+  readonly defHavocRate?: number;
+}
+
+export interface TauHatOverlaySummary {
+  readonly coachAggressivenessIdx: number;
+  readonly wpGap: number | null;
+  readonly actionPredicted: "GO" | "FGA" | "PUNT" | null;
+  readonly context: "simulation" | "post_hoc" | "index_only";
+  readonly manifest: typeof TAU_HAT_WALK_FORWARD_MANIFEST;
+}
+
+export interface SignalPackOverlaySummary {
+  readonly signalsLoaded: number;
+  readonly values: SignalPackObservationsInput;
+}
+
+/**
  * Single-writer Mind feed. Appends exactly one JSONL line and returns the
  * path and byte count. The payload is scrubbed before serialization; the
  * hash is over the scrubbed payload so a rerun with the same input is
@@ -467,6 +514,12 @@ export interface OverlayInput {
   llmPrior?: BayesianReverseTokenInput;
   /** Candidate feature for the misleading-stats gate. */
   featureUnderTest?: import("./x-situational-80-rules.js").FeatureUnderTest;
+  /** Walk-forward coach 4th-down risk preference (tau_hat / coachAggressivenessIdx, +11.1585pp). */
+  coachAggressivenessIdx?: number;
+  /** Live-state tau_hat decision from simulation or post-hoc grading. */
+  tauHatDecision?: TauHatWalkForwardDecisionInput;
+  /** 7-signal research pack observations (READINESS §1 / §5.9). */
+  signalPack?: SignalPackObservationsInput;
   /** Six family deltas for the orthogonalizer. */
   familyDeltas: FamilyDeltas;
   marketAnchorProb: number;
@@ -488,6 +541,8 @@ export interface OverlayResult {
   wr1Suppression?: ReturnType<typeof evaluateDefenseAgainstWr1>;
   llmPosterior?: ReturnType<typeof bayesianReverseTokenLogitUpdate>;
   featureValidation?: ReturnType<typeof validateFeatureAgainstMisleadingStats>;
+  tauHatSummary?: TauHatOverlaySummary;
+  signalPackSummary?: SignalPackOverlaySummary;
   orthogonalization: OrthogonalizationResult;
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
@@ -593,6 +648,47 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     );
   } else {
     mark("8:validateFeatureAgainstMisleadingStats", false, "no feature under test supplied");
+  }
+
+  if (input.tauHatDecision || typeof input.coachAggressivenessIdx === "number") {
+    const idx =
+      typeof input.coachAggressivenessIdx === "number"
+        ? input.coachAggressivenessIdx
+        : input.tauHatDecision!.tauVal;
+    result.tauHatSummary = {
+      coachAggressivenessIdx: idx,
+      wpGap: input.tauHatDecision?.wpGap ?? null,
+      actionPredicted: input.tauHatDecision?.actionPredicted ?? null,
+      context: input.tauHatDecision?.context ?? "index_only",
+      manifest: TAU_HAT_WALK_FORWARD_MANIFEST,
+    };
+    mark(
+      "c04:tauHatWalkForward",
+      true,
+      `tau=${idx.toFixed(2)} pointInTime=${TAU_HAT_WALK_FORWARD_MANIFEST.pointInTime} (+${TAU_HAT_WALK_FORWARD_MANIFEST.deltaPp}pp)`,
+    );
+  } else {
+    mark("c04:tauHatWalkForward", false, "no walk-forward tau_hat / coachAggressivenessIdx supplied");
+  }
+
+  if (input.signalPack) {
+    const keys = [
+      "redzoneProe",
+      "stHiddenYards",
+      "qbPressureEscape",
+      "neutralPace",
+      "penaltyDiscipline",
+      "wrCbArchetype",
+      "defHavocRate",
+    ] as const;
+    const loaded = keys.filter((k) => typeof input.signalPack?.[k] === "number").length;
+    result.signalPackSummary = {
+      signalsLoaded: loaded,
+      values: input.signalPack,
+    };
+    mark("signalPack:sevenVerifiedSignals", loaded > 0, `${loaded}/7 signals loaded`);
+  } else {
+    mark("signalPack:sevenVerifiedSignals", false, "no signalPack supplied");
   }
 
   const canonicalInputs = {

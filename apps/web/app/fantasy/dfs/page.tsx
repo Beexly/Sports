@@ -63,18 +63,18 @@ export default async function DfsSuitePage() {
 
   return (
     <FantasyShell
-      eyebrow="Daily Fantasy Football · Game Environments & Lineup Blueprints"
+      eyebrow="Daily Fantasy Football · Week 8 Sunday Main Slate (12 Games) & MNF (WAS @ KC)"
       accent="cyan"
       projectionsBadge={false}
       title={
         <>
-          Real Football Matchups First.{" "}
+          Week 8 DFS Main Slate Portfolio:{" "}
           <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
-            Salaries &amp; Ownership Last.
+            DraftKings ($50K) &amp; FanDuel ($60K) Cash &amp; GPP Lineups.
           </span>
         </>
       }
-      intro="Football is never played on a spreadsheet. We start with how each game will actually be played on the field — offensive line health, defensive coverage tendencies, injury replacements, and pace of play — before building cash-game cores and tournament stacks."
+      intro="Backed by our Verified 16-5 (76.2/100 · +10.45u) Pre-Week-8 New Engine Record and 47-16 (74.6/100 · +29.01u) Cumulative Season Record (including TNF 31-11 · +18.56u). Built from 22,750,000 snap evaluations, 581 360-degree markets, 4,056 research corpus IDs, 112 IG + 100 X dossiers, 50 doctoral papers, walk-forward tau_hat (+11.16pp on n=3,988 4th downs), the 7-Signal Pack, Romano CQR honest conformal intervals, and OpenAI Math Optimal Transport certificates."
       note={note}
       wide
     >

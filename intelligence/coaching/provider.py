@@ -90,6 +90,8 @@ def _tau_table() -> Optional[dict]:
         for r in _csv.DictReader(fh):
             try:
                 key = (r["team"], int(r["season"]), r["region"], r["wp_bin"])
+                n_raw = r.get("n_decisions") if r.get("n_decisions") not in (None, "") else r.get("n")
+                fit_stamp = r.get("fit_stamp") or r.get("window")
                 table[key] = {
                     "team": r["team"],
                     "season": int(r["season"]),
@@ -97,10 +99,11 @@ def _tau_table() -> Optional[dict]:
                     "wp_bin": r["wp_bin"],
                     "tau_hat": float(r["tau_hat_served"]),
                     "fallback_level": r.get("fallback_level"),
-                    "n_decisions": (int(r["n_decisions"])
-                                    if r.get("n_decisions") not in (None, "")
+                    "n_decisions": (int(float(n_raw))
+                                    if n_raw not in (None, "")
                                     else None),
-                    "window": r.get("window"),
+                    "window": fit_stamp,
+                    "fit_stamp": fit_stamp,
                     "verification": "COMPUTED",
                 }
             except (KeyError, TypeError, ValueError):
@@ -109,6 +112,25 @@ def _tau_table() -> Optional[dict]:
                 continue
     _TAU_CACHE[path] = table
     return table
+
+
+def _pbp_parquet_paths(d: str) -> list[str]:
+    """Return nflverse play-by-play parquet paths in d (2022-2025 walk-forward
+    base when present), excluding pbp_participation* files."""
+    import glob as _glob
+    candidates = sorted(
+        set(_glob.glob(os.path.join(d, "play_by_play_*.parquet")))
+        | set(_glob.glob(os.path.join(d, "pbp_*.parquet")))
+    )
+    paths = [
+        p for p in candidates
+        if not os.path.basename(p).startswith("pbp_participation")
+    ]
+    wf_paths = [
+        p for p in paths
+        if any(yr in os.path.basename(p) for yr in ("2022", "2023", "2024", "2025"))
+    ]
+    return wf_paths if wf_paths else paths
 
 
 def _fitted_fitter():
@@ -124,16 +146,38 @@ def _fitted_fitter():
     from coaching import coach_risk as _CR
 
     for d in _search_dirs():
-        import glob as _glob
-        paths = sorted(_glob.glob(os.path.join(d, "pbp_*.parquet")))
+        paths = _pbp_parquet_paths(d)
         if not paths:
             continue
-        cache_key = "fitter:" + "|".join(paths)
+        tpath = _tau_table_path()
+        cache_key = "fitter:" + "|".join(paths) + f"|tau:{tpath}"
         if cache_key in _TAU_CACHE:
             return _TAU_CACHE[cache_key]
         fd = _CR.load_fourth_downs(paths)
         fitter = _CR.TauFitter(fd)
-        fitter.fit(seasons=sorted({int(s) for s in fd["season"].unique()}))
+        if tpath is not None:
+            import pandas as pd
+            tab = pd.read_csv(tpath)
+            tab["season"] = tab["season"].astype(int)
+            tab["wp_bin"] = tab["wp_bin"].astype(str)
+            tab["tau_hat_served"] = tab["tau_hat_served"].astype(float)
+            ok = tab[tab["fallback_level"] == "unit"] if "fallback_level" in tab.columns else tab
+            if len(ok) == 0:
+                ok = tab
+            val_col = "tau_hat" if "tau_hat" in ok.columns else "tau_hat_served"
+            pooled = ok.groupby(["team", "season", "region"], observed=True)[val_col].median()
+            league = ok.groupby(["region", "wp_bin"], observed=True)[val_col].median()
+            league_r = ok.groupby(["region"], observed=True)[val_col].median()
+            prior = float(ok[val_col].median()) if len(ok) else 0.5
+            fitter.tau_table_ = tab
+            fitter._fallback_maps = {
+                "pooled": pooled,
+                "league": league,
+                "league_region": league_r,
+                "prior": prior,
+            }
+        else:
+            fitter.fit(seasons=sorted({int(s) for s in fd["season"].unique()}))
         _TAU_CACHE[cache_key] = fitter
         return fitter
     raise DataGapError(
@@ -153,8 +197,7 @@ def _fitted_engine():
     from coaching import situational_wp as _SW
 
     for d in _search_dirs():
-        import glob as _glob
-        paths = sorted(_glob.glob(os.path.join(d, "pbp_*.parquet")))
+        paths = _pbp_parquet_paths(d)
         if not paths:
             continue
         cache_key = "engine:" + "|".join(paths)
@@ -165,10 +208,15 @@ def _fitted_engine():
         for p in paths:
             import pyarrow.parquet as pq
             have = set(pq.read_schema(p).names)
-            need = [c for c in ("down", "play_type", "yardline_100", "ydstogo",
-                                "score_differential", "game_seconds_remaining",
-                                "qtr", "posteam", "defteam", "season", "week",
-                                "game_id", "drive", "wpa") if c in have]
+            need = [c for c in (
+                "down", "play_type", "yardline_100", "ydstogo",
+                "score_differential", "game_seconds_remaining",
+                "qtr", "posteam", "defteam", "season", "week",
+                "game_id", "drive", "wp", "wpa",
+                "fourth_down_converted", "first_down",
+                "field_goal_result", "two_point_conv_result",
+                "touchdown", "interception", "fumble_lost",
+            ) if c in have]
             frames.append(pd.read_parquet(p, columns=need))
         pbp = pd.concat(frames, ignore_index=True)
         # SituationalEngine derives its own 4th-down / FG / state frames from
@@ -376,13 +424,19 @@ class CoachingEngineProvider(CoachingProvider):
         from coaching import coach_risk as _CR
         from coaching import situational_wp as _SW
         from coaching import behavior as _BH
+        from context.tau_wire import tau_manifest_stamp
 
         fitter = _fitted_fitter()
         engine = _fitted_engine()
+        region = "opp" if int(yardline_100) <= 50 else "own"
+        cell = self.get_tau_hat(team, int(season), region, float(wp)) if _tau_table() is not None else {}
         out = _BH.expected_wp_given_coach(
             engine, fitter, team, int(season), int(yardline_100), int(ydstogo),
             int(score_differential), int(game_seconds_remaining), int(qtr),
             float(wp), int(timeouts_rem))
+        out["tau_val"] = float(out["tau_hat"])
+        out["fit_stamp"] = cell.get("fit_stamp")
+        out["manifest_stamp"] = tau_manifest_stamp()
         out["verification"] = "COMPUTED"
         out["tau_input_verification"] = "CORPUS"
         return out
