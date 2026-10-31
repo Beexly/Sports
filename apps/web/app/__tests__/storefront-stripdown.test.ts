@@ -115,15 +115,13 @@ describe("Storefront Stripdown & High-Contrast Visual Readability", () => {
     expect(container.querySelector('[data-testid="homepage-wagertalk-storefront"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="homepage-responsible-close"]')).not.toBeNull();
     expect(container.textContent).toContain("The market is full of noise.");
-    expect(container.textContent).toContain("16-5 · 76.2/100 · +10.45u");
-    expect(container.textContent).toContain("47-16 · 74.6/100 · +29.01u");
+    expect(container.textContent).toContain("14-6, 1 split, +7.19u");
   });
 
   it("renders PackagesPage without errors and includes verified engine dominance hero and slate dossiers", () => {
     const { container } = render(React.createElement(PackagesPage));
     expect(container.querySelector("#slate-dossiers")).not.toBeNull();
-    expect(container.textContent).toContain("16-5 · 76.2/100 · +10.45u");
-    expect(container.textContent).toContain("47-16 · 74.6/100 · +29.01u");
+    expect(container.textContent).toContain("14-6, 1 split, +7.19u");
     expect(container.textContent).toContain("22,750,000 Snaps · 581 Markets");
     expect(container.textContent).toContain("Choose Your Football Pack");
   });

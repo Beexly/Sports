@@ -40,7 +40,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     title: "Week 8 Spotlight & MNF Game Pack (WAS @ KC & Sunday Slate)",
     subtitle: "Official Spread Pick, Over/Under Pick, Player Props & Showdown Lineup",
     description:
-      "Everything you need for Week 8 Sunday Spotlight and Monday Night Football (WAS @ KC & CHI @ SEA). Backed by our verified 16-5 (76.2/100 · +10.45u) Pre-Week-8 New Engine Record and 47-16 (74.6/100 · +29.01u) Cumulative Season Record across 581 audited 360-degree markets.",
+      "Everything you need for Week 8 Sunday Spotlight and Monday Night Football (WAS @ KC & CHI @ SEA). TNF official card is 14-6 with 1 split. The 31-11 banner is retracted.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     guaranteedPriceCents: null,

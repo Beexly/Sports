@@ -15,7 +15,7 @@ import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 export const metadata: Metadata = {
   title: "Week 8 NFL Betting Packs (12 Sunday Games & MNF WAS @ KC) | Galaxy Sports Edge",
   description:
-    "Verified 16-5 (76.2/100 · +10.45u) Pre-Week-8 New Engine & 47-16 (74.6/100 · +29.01u) Cumulative Season Record. Unlock Week 8 Sunday Main Slate (12 Games) & MNF (WAS @ KC) packs.",
+    "TNF official card 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Week 8 Sunday and MNF board is live.",
 };
 
 export default function PackagesPage(): JSX.Element {
@@ -31,7 +31,7 @@ export default function PackagesPage(): JSX.Element {
                 GALAXY PICKS · WEEK 8 SUNDAY MAIN SLATE (12 GAMES) &amp; MNF (WAS @ KC)
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-                Verified 16-5 (+10.45u) New Engine &amp; 47-16 (+29.01u) Season Record — Week 8 Sunday &amp; MNF Board Live.
+                TNF card 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Week 8 Sunday and MNF board is live.
               </h1>
               <p className="mt-4 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
                 Powered by the <strong className="text-amber-300 font-semibold">GSE 10-Layer Autonomous Engine</strong>: <strong className="text-white font-semibold">22,750,000 snap evaluations</strong> (13 games × 10k worlds × 175 snaps), <strong className="text-white font-semibold">581 360-degree markets evaluated</strong> (1Q–4Q, 1H/2H, Kicking B4 23,247-kick hierarchical model, IDP Sacks/Tackles, Touchdown Scorers, Skill &amp; QB Props), <strong className="text-white font-semibold">4,056 research corpus IDs</strong>, <strong className="text-white font-semibold">112 Instagram + 100 X deep-math dossiers</strong>, and <strong className="text-white font-semibold">50 doctoral papers</strong>.
@@ -63,10 +63,10 @@ export default function PackagesPage(): JSX.Element {
                 PRE-WEEK-8 NEW ENGINE
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                16-5 · 76.2/100 · +10.45u
+                16-5, owner-attested
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                Official Verified New Engine Ledger
+                Owner-attested. Not combined with the TNF card.
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
@@ -74,10 +74,10 @@ export default function PackagesPage(): JSX.Element {
                 CUMULATIVE SEASON RECORD
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                47-16 · 74.6/100 · +29.01u
+                14-6, 1 split, +7.19u
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                Includes Week 8 TNF 31-11 (+18.56u) · Commit ea67a63
+                TNF official card. The 31-11 banner is retracted.
               </div>
             </div>
             <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">

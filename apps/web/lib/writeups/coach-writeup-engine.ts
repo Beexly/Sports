@@ -319,7 +319,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "Washington Commanders operates at a fast up-tempo pace on early downs, while Kansas City Chiefs controls time of possession and third-down conversion efficiency at Arrowhead Stadium."
     },
     "schemeMatchup": {
-      "coverageShell": "Week 8 Monday Night Football at Arrowhead Stadium pits Patrick Mahomes and Andy Reid against Washington in a primetime showdown — backed by our verified 16-5 (76.2 out of 100 · +10.45u) Pre-Week-8 New Engine Record and 47-16 (74.6 out of 100 · +29.01u) Cumulative Season Record. Official spread call, over/under call, and 360-degree player prop card are locked inside the pack.",
+      "coverageShell": "Week 8 Monday night at Arrowhead. TNF official card, graded from ESPN event 401873023, is 14-6 with 1 split row. The old 31-11 banner is retracted. It does not match the box score.",
       "blitzRateVsPressureToSack": "Steve Spagnuolo's disguised third-down pressure packages test Washington's pass protection, while Patrick Mahomes excels against five-man pressure.",
       "personnelTendencies": "Kansas City Chiefs leans on Travis Kelce, Rashee Rice/Xavier Worthy, and Kareem Hunt in multi-tight-end sets, while Washington counters with Terry McLaurin and Brian Robinson Jr.",
       "coachingEdge": "Andy Reid and Steve Spagnuolo hold a decisive situational and 4th-down (tau_hat +11.16pp) edge at Arrowhead Stadium under the Monday Night Football lights.",
@@ -2983,12 +2983,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideSelection": "Chicago Bears +3",
       "sideConfidence": "56/100",
       "sideExpectedClv": 0.0362,
-      "sideDecision": "PLAY",
+      "sideDecision": "PASS",
       "totalSelection": "UNDER 46.5",
       "totalConfidence": "52/100",
       "totalExpectedClv": -0.035,
       "totalDecision": "PASS",
-      "rationale": "Chicago's defense has forced turnovers and limited big plays over the last month, giving the Bears the toughness to hang inside a field goal in Seattle on Monday night. Take the Bears plus three points and pass on the total."
+      "rationale": "The side does not clear. The board lists Seattle minus three and this writeup had the other side. That conflict is a pass. The total does not clear either."
     },
     "topProps": [
       {

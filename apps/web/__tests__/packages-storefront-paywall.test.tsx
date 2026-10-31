@@ -167,15 +167,14 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       "utf8",
     );
     expect(packagesSrc).toContain(
-      "Verified 16-5 (+10.45u) New Engine &amp; 47-16 (+29.01u) Season Record — Week 8 Sunday &amp; MNF Board Live.",
+      "TNF card 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Week 8 Sunday and MNF board is live.",
     );
     expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks|%/i);
 
     const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
     const pkgText = pkgPageDom.textContent ?? "";
     expect(pkgText).toContain("Week 8 Spotlight & MNF Game Pack (WAS @ KC & Sunday Slate)");
-    expect(pkgText).toContain("16-5 · 76.2/100 · +10.45u");
-    expect(pkgText).toContain("47-16 · 74.6/100 · +29.01u");
+    expect(pkgText).toContain("14-6, 1 split, +7.19u");
     expect(pkgText).not.toMatch(/Panthers @ Packers|WEEK 9|TONIGHT\s*·\s*TNF/i);
     expect(pkgText).not.toMatch(
       /Take Kansas City|and the over|Side Confidence|Total Confidence|64\/100|61\/100|Kansas City Chiefs -10\.5|OVER 47\.5|OVER 54\.5|Detroit Lions -3|Chicago Bears \+3/i,

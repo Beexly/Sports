@@ -36,7 +36,7 @@ export const LIVE_WEEK8_2026_BOARD: readonly Week8BoardCard[] = [
     "postedTotal": 47.5,
     "scoreboardStatus": "Monday 8:15 PM ET · Week 8 MNF Spotlight",
     "publication": "PLAY",
-    "passReason": "Week 8 Monday Night Football at Arrowhead Stadium pits Patrick Mahomes and Andy Reid against Washington in a primetime showdown — following our verified 31-11 (+18.56u) Thursday Night Football sweep and 16-5 (+10.45u) Pre-Week-8 New Engine Record (47-16 · 74.6/100 · +29.01u cumulative season). Official spread call, over/under call, 360-degree props, and Same-Game Parlay slips are locked inside the pack."
+    "passReason": "Week 8 Monday night at Arrowhead. TNF official card is 14-6 with 1 split. The old 31-11 banner is retracted.",
   },
   {
     "id": "board-2026-w8-401873026",

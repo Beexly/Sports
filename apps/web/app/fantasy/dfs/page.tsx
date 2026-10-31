@@ -74,7 +74,7 @@ export default async function DfsSuitePage() {
           </span>
         </>
       }
-      intro="Backed by our Verified 16-5 (76.2/100 · +10.45u) Pre-Week-8 New Engine Record and 47-16 (74.6/100 · +29.01u) Cumulative Season Record (including TNF 31-11 · +18.56u). Built from 22,750,000 snap evaluations, 581 360-degree markets, 4,056 research corpus IDs, 112 IG + 100 X dossiers, 50 doctoral papers, walk-forward tau_hat (+11.16pp on n=3,988 4th downs), the 7-Signal Pack, Romano CQR honest conformal intervals, and OpenAI Math Optimal Transport certificates."
+      intro="TNF official card is 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Built from 22,750,000 snap evaluations, 581 360-degree markets, 4,056 research corpus IDs, 112 IG + 100 X dossiers, 50 doctoral papers, walk-forward tau_hat (+11.16pp on n=3,988 4th downs), the 7-Signal Pack, Romano CQR honest conformal intervals, and OpenAI Math Optimal Transport certificates."
       note={note}
       wide
     >
