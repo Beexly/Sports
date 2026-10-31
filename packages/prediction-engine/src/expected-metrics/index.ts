@@ -159,3 +159,12 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Toxic differential (SHADOW)
+export {
+  computeToxicDifferential,
+  TOXIC_DIFFERENTIAL_MODEL_VERSION,
+  type ToxicPlay,
+  type ToxicDifferentialOutput,
+  type ToxicDifferentialResult,
+} from "./toxic-differential.js";
