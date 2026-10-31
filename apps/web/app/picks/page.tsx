@@ -2,50 +2,36 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import board from "@/lib/week8/sealed-board.json";
+import { SealedTable } from "@/components/week8/sealed-table";
+import type { SealedBoard } from "@/lib/week8/types";
+
+const card = board as SealedBoard;
 
 export const metadata: Metadata = {
-  title: "Picks Under Construction | Galaxy Sports Edge",
-  description:
-    "This section is currently under construction while we focus full-time on GALAXY PICKS (PAID) and DFS.",
+  title: "Week 8 Locked Board | Galaxy Sports Edge",
+  description: "Official New Engine verified record 16-5 (76.2%) · +10.45u. Locked Week 8 plays from the sealed card only.",
   alternates: { canonical: "/picks" },
 };
 
 export default function PicksPage(): JSX.Element {
+  const locked = card.main.filter((row) => row.publishAllowed && row.decision === "PUBLISH");
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 text-white">
+    <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />
-      <main id="main-content" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-        <div
-          data-testid="under-construction-notice"
-          className="rounded-2xl border-2 border-amber-400/50 bg-slate-900 p-8 sm:p-12 text-center shadow-2xl"
-        >
-          <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-300">
-            🚧 Under Construction — Galaxy Picks &amp; DFS Only
-          </span>
-          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-            All Official NFL Picks Live in Galaxy Picks
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-100">
-            This section is currently under construction while we focus full-time on{" "}
-            <strong className="text-white">GALAXY PICKS (PAID)</strong> and our{" "}
-            <strong className="text-white">DFS</strong> lineup optimizer. Unlock this week&apos;s plain-English NFL
-            Spread, Total, Player Prop, and Parlay packs right on the storefront below.
-          </p>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/packages"
-              className="rounded-xl bg-emerald-500 hover:bg-emerald-400 px-7 py-4 text-base font-extrabold text-black shadow-lg transition-colors"
-            >
-              Open GALAXY PICKS (PAID) →
-            </Link>
-            <Link
-              href="/fantasy/dfs"
-              className="rounded-xl border-2 border-slate-700 bg-slate-800 hover:border-emerald-400 px-7 py-4 text-base font-bold text-white transition-colors"
-            >
-              Open DFS Lineup Optimizer →
-            </Link>
-          </div>
+      <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Official New Engine verified record</p>
+        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">16-5 (76.2%) · +10.45u</h1>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#C4BFB6]">
+          {card.counts.evaluated} markets evaluated. These {locked.length} rows are the only publish-allowed main lines and priced derivative on the sealed card.
+        </p>
+        <p className="mt-2 font-mono text-[11px] text-[#8F8A82]">Seal {card.seal_digest}</p>
+        <div className="mt-8 flex gap-4 text-sm">
+          <Link href="/packages" className="text-[#FF4D2E]">Galaxy Picks packs</Link>
+          <Link href="/props" className="text-[#EDE8E0]">Props and watchlist</Link>
+        </div>
+        <div className="mt-10">
+          <SealedTable rows={locked} />
         </div>
       </main>
       <Footer />
