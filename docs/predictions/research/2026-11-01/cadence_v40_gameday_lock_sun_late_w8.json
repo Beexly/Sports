@@ -1,0 +1,536 @@
+{
+  "report_type": "CADENCE_V4_0_T90_GAMEDAY_LOCK_AND_CONFORMAL_DIAGNOSTIC",
+  "version": "v4.0",
+  "phase": "T90_GAMEDAY_LOCK_REFRESH",
+  "slot": "SUN_LATE",
+  "week": 8,
+  "season": 2026,
+  "cadence_window": {
+    "day": "Sun",
+    "ct_time": "13:35",
+    "label": "T-90 inactives lock refresh + conformal residual diagnostic (flag-only)"
+  },
+  "generated_at_utc": "2026-11-01T19:46:33.987404+00:00",
+  "inputs": {
+    "writeups_path": "data/packages/live-slate-writeups.json",
+    "writeups_sha256": "9223b484666a14ea08a0e7e4d6b8ba70590aef1aa3882c1c1fadc29cd696e3d8",
+    "verdicts_path": "data/engine/nfl_2026_w8_five_stage_engine_verdicts.json",
+    "verdicts_sha256": "2a428ee0271bbcb3c62266d1070f6c204d0456dd309d37ebb7e3b6880bbc65f5",
+    "locked_card_path": "data/engine/week8_360_locked_card_2026_10_30.json",
+    "locked_card_sha256": "3326e3055cedb41fe0f6a82bb91616690e2a1bc5849d59632464d7cf24c764c2",
+    "locked_card_generated_at": "2026-11-01T09:35:00-06:00",
+    "locked_card_seal_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d"
+  },
+  "seal": {
+    "verification_level": "partial",
+    "verification_gap": "v25 import unavailable in this interpreter (ModuleNotFoundError: No module named 'intelligence.coaching.qb_disguise_blitz_matrix'). EPA-dropoff table hash and coach-mind canonical digest were NOT re-checked; the four lineage checks below are the independent ones.",
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "no_mutation": {
+    "sealed_state_written": false,
+    "candidate_written": false,
+    "seal_function_called": false,
+    "note": "This run wrote exactly one file: this report. candidates/ and all sealed artifacts were opened read-only."
+  },
+  "availability_refresh": {
+    "slot": "SUN_LATE",
+    "stored_snapshot": {
+      "observed_at": "2026-10-30",
+      "source": "Firecrawl Alexandria nfl-com sports-league-data",
+      "injury_report": {
+        "season": 2026,
+        "season_type": "REG",
+        "week": 8,
+        "report_date": "2026-10-30",
+        "source_url": "https://www.nfl.com/injuries/"
+      },
+      "counts": {
+        "ruled_out": 7,
+        "questionable": 8,
+        "no_game_designation": 3,
+        "roster_confirmed": 15
+      }
+    },
+    "fetched_at_utc": "2026-11-01T19:46:32.593457+00:00",
+    "games": [
+      {
+        "game": "Los Angeles Chargers @ Los Angeles Rams",
+        "gameId": "401873032",
+        "kickoff": "2026-11-01T21:05Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "LAR",
+            "player": "Trent McDuffie",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "LAR",
+            "player": "Jordan Whittington",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "LAR",
+            "player": "Colby Parkinson",
+            "position": "TE",
+            "status": "Questionable"
+          },
+          {
+            "team": "LAR",
+            "player": "Joe Cardona",
+            "position": "LS",
+            "status": "Doubtful"
+          },
+          {
+            "team": "LAC",
+            "player": "Kayode Awosika",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "LAC",
+            "player": "Deane Leonard",
+            "position": "CB",
+            "status": "Out"
+          },
+          {
+            "team": "LAC",
+            "player": "Donte Jackson",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "LAC",
+            "player": "Brenen Thompson",
+            "position": "WR",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "LAR",
+            "player": "Myles Garrett",
+            "position": "DE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LAC",
+            "player": "Derwin James Jr.",
+            "position": "S",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "Kansas City Chiefs @ Denver Broncos",
+        "gameId": "401873033",
+        "kickoff": "2026-11-01T21:25Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "DEN",
+            "player": "Jaylen Waddle",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "DEN",
+            "player": "Zach Allen",
+            "position": "DE",
+            "status": "Questionable"
+          },
+          {
+            "team": "DEN",
+            "player": "Talanoa Hufanga",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "DEN",
+            "player": "Brandon Jones",
+            "position": "S",
+            "status": "Questionable"
+          },
+          {
+            "team": "KC",
+            "player": "Mansoor Delane",
+            "position": "CB",
+            "status": "Out"
+          },
+          {
+            "team": "KC",
+            "player": "Omarr Norman-Lott",
+            "position": "DT",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "DEN",
+            "player": "RJ Harvey",
+            "position": "RB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "KC",
+            "player": "L'Jarius Sneed",
+            "position": "CB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "KC",
+            "player": "Brashard Smith",
+            "position": "RB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "KC",
+            "player": "Josh Simmons",
+            "position": "OT",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "New England Patriots @ Miami Dolphins",
+        "gameId": "401873034",
+        "kickoff": "2026-11-01T21:25Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "MIA",
+            "player": "Reese Taylor",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "MIA",
+            "player": "Kadyn Proctor",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "MIA",
+            "player": "JuJu Brents",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "TreVeyon Henderson",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "NE",
+            "player": "A.J. Brown",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "NE",
+            "player": "Carlton Davis III",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "Christian Elliss",
+            "position": "LB",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "MIA",
+            "player": "De'Von Achane",
+            "position": "RB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "MIA",
+            "player": "Ronnie Harrison Jr.",
+            "position": "LB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "NE",
+            "player": "Marcus Bryant",
+            "position": "OT",
+            "status": "Injured Reserve"
+          }
+        ]
+      }
+    ],
+    "offline": false,
+    "summary": {
+      "games_polled": 3,
+      "games_with_error": 0,
+      "designations_applied": 21,
+      "statuses_not_applied": 9,
+      "stored_curated_subset_size": 15,
+      "newly_listed_not_in_stored_subset": [
+        "Brandon Jones",
+        "Brenen Thompson",
+        "Carlton Davis III",
+        "Christian Elliss",
+        "Deane Leonard",
+        "Donte Jackson",
+        "Joe Cardona",
+        "Jordan Whittington",
+        "JuJu Brents",
+        "Kadyn Proctor",
+        "Kayode Awosika",
+        "Mansoor Delane",
+        "Omarr Norman-Lott",
+        "Reese Taylor",
+        "Talanoa Hufanga",
+        "Trent McDuffie",
+        "Zach Allen"
+      ],
+      "stored_names_absent_from_refresh": [
+        "Breece Hall",
+        "Brian Robinson",
+        "Calvin Ridley",
+        "Carnell Tate",
+        "DJ Moore",
+        "Dalton Kincaid",
+        "DeVonta Smith",
+        "Dontayvion Wicks",
+        "Emeka Egbuka",
+        "RJ Harvey",
+        "Tyjae Spears"
+      ],
+      "diff_caveat": "The stored snapshot is a MATERIALITY-FILTERED list (only names judged to move a number), not the full league injury report. A full refresh will therefore list many players the Friday snapshot never carried; that is a scope difference, not 76 status changes. The meaningful signal is stored_names_absent_from_refresh \u2014 curated names that no longer appear as Out/Questionable at T-90."
+    }
+  },
+  "conformal": {
+    "sigma_total": 12.798,
+    "sigma_total_calibration": {
+      "source": "artifacts/slate/2026-10-25-week7-master-slate.json",
+      "n": 13,
+      "sd": 0.134,
+      "relation": "finalProjectedTotal = totalLine + sigma * Phi^-1(modelOverProb)"
+    },
+    "alpha": 0.1,
+    "path": "single-total (proxy); week-8 artifacts persist no odds pair or P10/P90",
+    "observations": [
+      {
+        "game": "Chicago Bears @ Seattle Seahawks",
+        "gameId": "401873036",
+        "slot": "MNF",
+        "kickoff": "2026-11-03T01:15Z",
+        "marketTotal": 46.5,
+        "pOver": 0.48,
+        "modelTotal": 45.8581,
+        "residual": -0.6419,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Philadelphia Eagles @ Washington Commanders",
+        "gameId": "401873035",
+        "slot": "SNF",
+        "kickoff": "2026-11-02T01:20Z",
+        "marketTotal": 40.5,
+        "pOver": 0.47,
+        "modelTotal": 39.5367,
+        "residual": -0.9633,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Arizona Cardinals @ Dallas Cowboys",
+        "gameId": "401873024",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 54.5,
+        "pOver": 0.53,
+        "modelTotal": 55.4633,
+        "residual": 0.9633,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Atlanta Falcons @ Tampa Bay Buccaneers",
+        "gameId": "401873025",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 44.5,
+        "pOver": 0.48,
+        "modelTotal": 43.8581,
+        "residual": -0.6419,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Baltimore Ravens @ Buffalo Bills",
+        "gameId": "401873026",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 54.5,
+        "pOver": 0.6,
+        "modelTotal": 57.7423,
+        "residual": 3.2423,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Cleveland Browns @ Pittsburgh Steelers",
+        "gameId": "401873027",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 39.5,
+        "pOver": 0.43,
+        "modelTotal": 37.2428,
+        "residual": -2.2572,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Indianapolis Colts @ Jacksonville Jaguars",
+        "gameId": "401873028",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 46.5,
+        "pOver": 0.49,
+        "modelTotal": 46.1792,
+        "residual": -0.3208,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Las Vegas Raiders @ New York Jets",
+        "gameId": "401873029",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 45.5,
+        "pOver": 0.49,
+        "modelTotal": 45.1792,
+        "residual": -0.3208,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Minnesota Vikings @ Detroit Lions",
+        "gameId": "401873030",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 46.5,
+        "pOver": 0.53,
+        "modelTotal": 47.4633,
+        "residual": 0.9633,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Tennessee Titans @ Cincinnati Bengals",
+        "gameId": "401873031",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 46.5,
+        "pOver": 0.48,
+        "modelTotal": 45.8581,
+        "residual": -0.6419,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Los Angeles Chargers @ Los Angeles Rams",
+        "gameId": "401873032",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-01T21:05Z",
+        "marketTotal": 45.5,
+        "pOver": 0.53,
+        "modelTotal": 46.4633,
+        "residual": 0.9633,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Kansas City Chiefs @ Denver Broncos",
+        "gameId": "401873033",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-01T21:25Z",
+        "marketTotal": 40.5,
+        "pOver": 0.48,
+        "modelTotal": 39.8581,
+        "residual": -0.6419,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "New England Patriots @ Miami Dolphins",
+        "gameId": "401873034",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-01T21:25Z",
+        "marketTotal": 43.5,
+        "pOver": 0.49,
+        "modelTotal": 43.1792,
+        "residual": -0.3208,
+        "proxy": true,
+        "devig": false
+      },
+      {
+        "game": "Carolina Panthers @ Green Bay Packers",
+        "gameId": "401873023",
+        "slot": "TNF",
+        "kickoff": "2026-11-01T18:00Z",
+        "marketTotal": 46.5,
+        "pOver": 0.42,
+        "modelTotal": 43.9162,
+        "residual": -2.5838,
+        "proxy": true,
+        "devig": false
+      }
+    ],
+    "band": {
+      "lower": -3.2423,
+      "upper": 3.2423
+    },
+    "residuals": [
+      -0.6419,
+      -0.9633,
+      0.9633,
+      -0.6419,
+      3.2423,
+      -2.2572,
+      -0.3208,
+      -0.3208,
+      0.9633,
+      -0.6419,
+      0.9633,
+      -0.6419,
+      -0.3208,
+      -2.5838
+    ],
+    "flagged": [],
+    "n": 14,
+    "coverage": 1.0,
+    "qLevel": 1.0,
+    "degenerate": true,
+    "degeneracy_note": "qLevel saturates at 1.0 for n<=18 at alpha=0.1; the band equals max|residual| and no flag is possible by construction. This is a property of the estimator at this sample size, not evidence of calibration."
+  },
+  "publication": {
+    "published": false,
+    "reason": "Flag-only diagnostic. Nothing here is a publication."
+  }
+}
