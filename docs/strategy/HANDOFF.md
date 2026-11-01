@@ -66,3 +66,13 @@ start from the matchup instead of the constants 3 and 46.5.
 **Not proven:** that the roles are adopted. That is a habit, not a file.
 
 **Next role (any):** take one role, not two. Hand off with all four fields.
+
+## 2026-11-01 — CI tree repair: guardrail compliance + typecheck wall
+
+**Changed:** 46 files across `apps/web`, `packages/ingestion-pipeline`, `packages/prediction-engine`, `packages/types`, `packages/mcp-equations-server`. Trust-gate copy fixes (70 hits -> 0), em-dash scan fixes, ingestion-pipeline tsconfig/vitest alias repair, `extractRankingP` in `@sports/types`, `AciState.gamma` in `temporal-conformal.ts`, `BEAT_CLOSE` verdict literal in `evidence-producers.ts`, `PrincipleApplicationAuditRecord` fields in `live-engine-proof.test.ts`, Zod v4 fixes in `labeling.ts` / `waitlist-validation.ts`, `confidence` projection in `settle-picks/route.ts`.
+
+**Proven:** `apps/web` tsc exit 0; `packages/prediction-engine` tsc exit 0; `packages/ingestion-pipeline` tsc exit 0; `packages/types` vitest 123/123; `packages/mcp-equations-server` vitest 60/60; `packages/ingestion-pipeline` vitest suite exit 0; `live-engine-proof.test.ts` pass; guardrails 30/31 (only `dependency-audit` founder-waiver stale).
+
+**Not proven:** CI on the pushed branch; the PR merge.
+
+**Next role (Verifier):** push `ci/fix-tree-red-2026-10-31`, open the PR, watch CI, merge on green. Re-run `npm run guardrails` after merge to confirm 31/31.
