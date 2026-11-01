@@ -18,13 +18,13 @@ export async function OPTIONS() {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const packageSlug = searchParams.get("packageSlug") || searchParams.get("package") || searchParams.get("slug") || "";
-  const guaranteed = searchParams.get("guaranteed") === "true" || searchParams.get("guaranteed") === "1";
+  const creditBack = searchParams.get("creditBack") === "true" || searchParams.get("creditBack") === "1";
   const returnToStorefront = searchParams.get("returnToStorefront") === "true" || searchParams.get("returnToStorefront") === "1";
   const email = searchParams.get("email") || undefined;
 
   const form = new URLSearchParams();
   form.set("packageSlug", packageSlug);
-  form.set("guaranteed", String(guaranteed));
+  form.set("creditBack", String(creditBack));
   form.set("returnToStorefront", String(returnToStorefront));
   if (email) form.set("email", email);
 
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
       contentType.includes("multipart/form-data");
 
     let packageSlug: string | undefined;
-    let guaranteed = false;
+    let creditBack = false;
     let email: string | undefined;
     let returnToStorefront = false;
 
@@ -57,8 +57,8 @@ export async function POST(req: Request) {
       const formData = await req.formData().catch(() => null);
       if (formData) {
         packageSlug = String(formData.get("packageSlug") || "");
-        const gVal = String(formData.get("guaranteed") || "false");
-        guaranteed = gVal === "true" || gVal === "1";
+        const gVal = String(formData.get("creditBack") || "false");
+        creditBack = gVal === "true" || gVal === "1";
         const rVal = String(formData.get("returnToStorefront") || "false");
         returnToStorefront = rVal === "true" || rVal === "1";
         const eVal = formData.get("email");
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     } else {
       const body = await req.json().catch(() => ({}));
       packageSlug = body.packageSlug;
-      guaranteed = Boolean(body.guaranteed);
+      creditBack = Boolean(body.creditBack);
       returnToStorefront = Boolean(body.returnToStorefront);
       email = typeof body.email === "string" ? body.email : undefined;
     }
@@ -93,7 +93,7 @@ export async function POST(req: Request) {
 
     const payload = buildStripePackageCheckoutPayload(
       pkg,
-      Boolean(guaranteed),
+      Boolean(creditBack),
       typeof email === "string" ? email : undefined,
       origin,
       returnToStorefront,
@@ -137,7 +137,7 @@ export async function POST(req: Request) {
       const stripeSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
         mode: "payment",
         line_items:
-          pkg.stripePriceId && !guaranteed
+          pkg.stripePriceId && !creditBack
             ? [{ price: pkg.stripePriceId, quantity: 1 }]
             : payload.line_items.map((li) => ({
                 price_data: li.price_data,

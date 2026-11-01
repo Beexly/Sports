@@ -21,7 +21,7 @@ export interface PickPackageOffering {
   description: string;
   windowSlot: 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SUN_MAIN' | 'SNF' | 'MNF' | 'WEEKEND_PASS' | 'WEEKLY_PASS';
   standardPriceCents: number;
-  guaranteedPriceCents: number | null;
+  creditBackPriceCents: number | null;
   stripeProductId: string;
   stripePriceId: string;
   stripeLookupKey: string;
@@ -45,7 +45,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "This game is over. Kickoff was 2026-10-30T00:15Z. Final score Green Bay 27, Carolina 19. Do not buy a side, total, or prop on a finished game.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX406TulqtZwJJ",
     stripePriceId: "price_1UVzsdQ2wPZMxx60lqO3TLbQ",
     stripeLookupKey: "gse-pack-tnf-all-in",
@@ -68,7 +68,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Our complete Sunday NFL day card. Every Sunday afternoon game broken down in plain English to show you which spreads and totals have a real edge — and which trap games to skip.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UVzsfQ2wPZMxx606fYPjKEJ",
     stripeLookupKey: "gse-pack-sunday-nfl-5pct-slate",
@@ -91,7 +91,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Want player props and parlays that actually fit the same game story? Unlock our top receiver and running back yardage props plus 3-leg Same-Game Parlays built around how each matchup plays out.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-sgp-correlation-basket",
@@ -114,7 +114,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Our complete standalone Week 8 Daily Fantasy (DFS) package on the unified RedZone site. Includes Optimal Lineup #1 (High-Floor Cash/Double-Up), Optimal Lineup #2 (GPP Tournament Leverage Stack), our 16-Player Core Pool (2 QB, 4 RB, 6 WR, 2 TE, 2 DST with full coaching & matchup writeups), and the complete 588-Active-Player Pool with 86 OUT/IR players zeroed.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3999,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UWjT2Q2wPZMxx60OrkMpGvF",
     stripeLookupKey: "gse-pack-redzone-dfs-pro-pack",
@@ -137,7 +137,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Unlock every single NFL game pack across the entire slate — Sunday Early, Sunday Afternoon, Sunday Night, and Monday Night Football — plus our complete Daily Fantasy (DFS) cash and tournament stacks in one click.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40T4RNpoNNIp",
     stripePriceId: "price_1UVzsfQ2wPZMxx60ozEJ1P3n",
     stripeLookupKey: "gse-pack-week8-all-access",
@@ -176,7 +176,7 @@ export interface StripeCheckoutPayload {
     packageSlug: string;
     stripeProductId: string;
     stripePriceId: string;
-    guaranteedCreditBack: string;
+    creditBack: string;
     windowSlot: string;
   };
   success_url: string;
@@ -190,7 +190,7 @@ export interface StripeCheckoutPayload {
  */
 export function buildStripePackageCheckoutPayload(
   pkg: PickPackageOffering,
-  guaranteed: boolean,
+  creditBack: boolean,
   buyerEmail?: string,
   origin?: string,
   returnToStorefront?: boolean,
@@ -201,12 +201,12 @@ export function buildStripePackageCheckoutPayload(
   let unitAmount = pkg.standardPriceCents;
   let productName = pkg.title;
 
-  if (guaranteed) {
-    if (pkg.guaranteedPriceCents === null) {
-      throw new Error(`Package '${pkg.slug}' does not offer a guaranteed credit-back tier.`);
+  if (creditBack) {
+    if (pkg.creditBackPriceCents === null) {
+      throw new Error(`Package '${pkg.slug}' does not offer a credit-back tier.`);
     }
-    unitAmount = pkg.guaranteedPriceCents;
-    productName = `${pkg.title} (Guaranteed Credit-Back)`;
+    unitAmount = pkg.creditBackPriceCents;
+    productName = `${pkg.title} (Credit-Back)`;
   }
 
   const baseOrigin = origin ? origin.replace(/\/+$/, "") : "https://www.galaxysportsedge.com";
@@ -234,7 +234,7 @@ export function buildStripePackageCheckoutPayload(
       packageSlug: pkg.slug,
       stripeProductId: pkg.stripeProductId,
       stripePriceId: pkg.stripePriceId,
-      guaranteedCreditBack: String(guaranteed),
+      creditBack: String(creditBack),
       windowSlot: pkg.windowSlot,
     },
     success_url: successUrl,

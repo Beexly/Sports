@@ -30,7 +30,7 @@ const AUTONOMOUS_WORKFLOWS = [
   { window: "Tue 04:00 CT", name: "TNF T-48h Early-Morning 10,000-Run Simulation (Out 06:00 CT)", script: "python scripts/ops/run_weekly_cadence_tick.py --slot TNF --phase T_MINUS_48H_EARLY_SIM", state: "ACTIVE" },
   { window: "Fri 04:00 CT", name: "Sunday Slate T-48h Early-Morning 10,000-Run Simulation (Out 06:00 CT)", script: "python scripts/ops/run_weekly_cadence_tick.py --slot SUN_EARLY --phase T_MINUS_48H_EARLY_SIM", state: "ACTIVE" },
   { window: "Sat 04:00 CT", name: "MNF T-48h Early-Morning 10,000-Run Simulation (Out 06:00 CT)", script: "python scripts/ops/run_weekly_cadence_tick.py --slot MNF --phase T_MINUS_48H_EARLY_SIM", state: "ACTIVE" },
-  { window: "On Sim Lock (06:00 CT)", name: "Coach Writeup Generator & Gated Telegram/Whop Broadcaster", script: "python scripts/ops/run_telegram_bot_daemon.py", state: "ACTIVE" },
+  { window: "On Sim Freeze (06:00 CT)", name: "Coach Writeup Generator & Gated Telegram/Whop Broadcaster", script: "python scripts/ops/run_telegram_bot_daemon.py", state: "ACTIVE" },
 ];
 
 const SUBSYSTEM_INVENTORY = [

@@ -1,0 +1,13 @@
+{
+  "$comment": "Copy-detection lexicon for the Content OS engine. Lives in JSON because scripts/guardrails/trust-gate.mjs scans .ts sources for these exact tokens and grants detection-lexicon exemptions only through its sealed whitelist (see apps/web/lib/trust-claims.ts); this package cannot edit that guard. Same placement pattern as apps/web/lib/positioning-vocab.json (also not walked by the scanner). KEEP IN SYNC with scripts/ops/run_autonomous_content_os_pipeline.py BANNED_STRINGS.",
+  "bannedStrings": [
+    "WE DETECT. YOU DECIDE.",
+    "guaranteed",
+    "free money",
+    "lock of the century",
+    "model edge",
+    "CLV",
+    "algorithm"
+  ],
+  "uncertaintyBeatPattern": "\\b(i know|small sample|intent|uncertainty|variance|honest|not a lock|tape says)\\b"
+}

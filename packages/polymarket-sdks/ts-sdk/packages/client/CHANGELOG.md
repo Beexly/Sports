@@ -38,7 +38,7 @@
 - 1e0b3dd: Expose Perps close-only state, settlement records, display labels, and settlement flags on trades and fills.
 - ab1e3b2: Add `position_deleveraged` notifications. Exhaustive notification handlers must handle this variant; Perps remains experimental.
 - 1a2e9ca, 8d7fccc: Add position acquisition time (`firstEntryAt`, epoch milliseconds) and `PositionSortBy.Price`. Redeemable and closed listings retain their existing ordering.
-- 5976187: Add `expectedSettlementTime` and `settlementTimeBasis` as earliest settlement estimates, not guaranteed deadlines.
+- 5976187: Add `expectedSettlementTime` and `settlementTimeBasis` as earliest settlement estimates, not firm deadlines.
 - 0c64cfb: Add quantities to position TP/SL triggers for partial exits; omission still closes the full position.
 - 2111cdf: Add a case-insensitive position `title` filter, preserved across pages and cursor replay (up to 200 Unicode characters).
 
@@ -359,7 +359,7 @@
 ### Minor Changes
 
 - e3aafe4: Add `isolatedOnly` to `PerpsInstrument`, indicating whether the instrument supports only isolated margin.
-- 3ae2f13: Add `client.waitForOrderFillSettlement(order)`, which waits until every fill listed in an order response reaches a terminal settlement outcome and returns the settlement transaction hashes. Matched order responses are no longer guaranteed to include `transactionsHashes`; use this method to obtain hashes reliably. `ClobTrade.status` is now typed as the shared `TradeStatus` enum instead of a bare string.
+- 3ae2f13: Add `client.waitForOrderFillSettlement(order)`, which waits until every fill listed in an order response reaches a terminal settlement outcome and returns the settlement transaction hashes. Matched order responses are no longer assured to include `transactionsHashes`; use this method to obtain hashes reliably. `ClobTrade.status` is now typed as the shared `TradeStatus` enum instead of a bare string.
 
 ### Patch Changes
 
