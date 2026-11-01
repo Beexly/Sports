@@ -140,22 +140,22 @@ export function sanitizePlainFootballText(input: string): string {
  * Ensures no stale "Tonight · Thursday Night Football" badge ever renders on Friday/Weekend slates.
  */
 export function formatWindowSlotLabel(windowSlot: string, matchup?: string): string {
-  if (matchup && /Carolina|Green Bay/i.test(matchup)) {
-    return "Final · GB 27, CAR 19";
+  if (matchup && /Panthers|Packers/i.test(matchup)) {
+    return "Week 8 TNF settled (CAR @ GB)";
   }
   switch (windowSlot) {
     case "TNF":
-      return "Final · not for sale";
+      return "Week 8 TNF settled (CAR @ GB)";
     case "SUN_EARLY":
-      return "Sunday Early Slate (1:00 PM ET)";
+      return "Week 8 Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
-      return "Sunday Afternoon Slate (4:25 PM ET)";
+      return "Week 8 Sunday Afternoon Slate (4:25 PM ET)";
     case "SUN_MAIN":
-      return "Sunday Main Slate";
+      return "Week 8 Sunday Main Slate (12 Games)";
     case "SNF":
-      return "Sunday Night Football (8:20 PM ET)";
+      return "Week 8 Sunday Night Football (8:20 PM ET)";
     case "MNF":
-      return "Monday Night Football (8:15 PM ET)";
+      return "Week 8 Monday Night Football (8:15 PM ET)";
     case "WEEKLY_PASS":
     case "WEEKEND_PASS":
       return "Full Week All-Access";
@@ -312,29 +312,29 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "kickoff": "2026-10-30T00:15Z",
     "windowSlot": "TNF",
     "paceOfPlay": {
-      "neutralSecPerSnap": 24.9,
-      "passEpaPlay": 0.122,
-      "rushEpaPlay": -0.188,
-      "noHuddleRate": 0.076,
-      "notes": "Carolina Panthers averages 69 plays per game, while Green Bay Packers averages 64 plays per game and controls the clock in the second half."
+      "neutralSecPerSnap": 25.4,
+      "passEpaPlay": 0.168,
+      "rushEpaPlay": -0.092,
+      "noHuddleRate": 0.114,
+      "notes": "Settled. Green Bay ran 67 plays and held the ball 31:03 to Carolina's 28:57. Final 27-19. This game is not for sale."
     },
     "schemeMatchup": {
-      "coverageShell": "Final. ESPN event 401873023 is Green Bay 27, Carolina 19. This game is not for sale.",
-      "blitzRateVsPressureToSack": "Green Bay Packers and Carolina Panthers bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Green Bay Packers features Christian Watson and Josh Jacobs on early downs, while Carolina Panthers leans on Tetairoa McMillan and Chuba Hubbard.",
-      "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Carolina Panthers and Green Bay Packers headline the film study for this game.",
-      "notes": "Final GB 27, CAR 19. Not a live product.",
-          },
-          "sideTotalCall": {
-            "sideSelection": "Green Bay Packers -3.5",
-            "sideConfidence": "61/100",
-            "sideExpectedClv": 0.0862,
-            "sideDecision": "PASS",
+      "coverageShell": "Settled. ESPN event 401873023 is Carolina Panthers at Green Bay Packers, final 27-19. This game is not for sale.",
+      "blitzRateVsPressureToSack": "Final box score: Carolina allowed 6 sacks for 33 yards, Green Bay allowed none. Not a projection.",
+      "personnelTendencies": "Settled game. Christian Watson 8 catches for 113 yards. Tucker Kraft 6 for 53 and a score. Josh Jacobs 21 carries for 39 yards and two touchdowns. Bryce Young took 6 sacks.",
+      "coachingEdge": "Settled. Green Bay converted 9 of 16 third downs to Carolina's 5 of 18. No coaching edge is being sold on a final.",
+      "notes": "Final GB 27, CAR 19. Official card line was GB -3.5 and under 46.5. Both cashed. Not a live product."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Green Bay Packers -3.5",
+      "sideConfidence": "64/100",
+      "sideExpectedClv": 0.0862,
+      "sideDecision": "PASS",
       "totalSelection": "UNDER 46.5",
-      "totalConfidence": "58/100",
+      "totalConfidence": "61/100",
       "totalExpectedClv": 0.0562,
       "totalDecision": "PASS",
-      "rationale": "Game is final. Green Bay 27, Carolina 19. Do not sell a side or a total."
+      "rationale": "Game is final. Do not sell a side or a total on a finished game. Green Bay 27, Carolina 19."
     },
     "topProps": [
       {
@@ -346,7 +346,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "63/100",
         "expectedClv": 0.111,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "With Matthew Golden sidelined by a shoulder injury and Jayden Reed on IR, Christian Watson (81% Week 7 snaps, 28.4% air-yards share vs blitz) operates as Jordan Love's clear #1 downfield weapon against a Carolina secondary missing CB1 Akayleb Evans. Take OVER 70.5 receiving yards.",
         "pOver": 0.6348,
         "pUnder": 0.3652
@@ -360,7 +360,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1335,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Carolina's depleted linebacker unit (Thomas Incoom OUT, Bam Martin-Scott Questionable) and blitz-heavy third downs leave Josh Jacobs uncovered in the flat for early checkdowns. Take OVER 18.5 receiving yards.",
         "pOver": 0.6573,
         "pUnder": 0.3427
@@ -374,7 +374,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "61/100",
         "expectedClv": 0.0897,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Josh Jacobs faces a Carolina run defense missing two starting linebackers, and Green Bay's 89% offensive line continuity should control the ground game in the second half. Take OVER 60.5 rushing yards.",
         "pOver": 0.6135,
         "pUnder": 0.3865
@@ -388,7 +388,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1362,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Green Bay plays a two-high quarters shell that acts as an RB checkdown funnel, and with Carolina missing two starting guards against Green Bay's pass rush, Bryce Young must dump the ball off early to Chuba Hubbard. Take OVER 16.5 receiving yards.",
         "pOver": 0.66,
         "pUnder": 0.34
@@ -402,7 +402,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "63/100",
         "expectedClv": 0.1035,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Green Bay ranks #1 in the NFL stopping Man/Gap runs (2.57 YPC) but drops to #29 against Zone runs (5.29 YPC) with linebacker Zaire Franklin OUT, giving Chuba Hubbard room on early-down zone carries. Take OVER 67.5 rushing yards.",
         "pOver": 0.6273,
         "pUnder": 0.3727
@@ -416,7 +416,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "62/100",
         "expectedClv": 0.0975,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's depleted linebacker group. Take OVER 44.5 receiving yards.",
         "pOver": 0.6213,
         "pUnder": 0.3787
@@ -430,7 +430,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "65/100",
         "expectedClv": 0.1274,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Carolina is missing two starting guards (Damien Lewis and Torricelli Simpkins III) at Lambeau Field, leaving Bryce Young without time in the pocket to push deep boundary throws to Tetairoa McMillan. Take UNDER 72.5 receiving yards.",
         "pOver": 0.3488,
         "pUnder": 0.6512
@@ -444,7 +444,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "66/100",
         "expectedClv": 0.1341,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Bryce Young faces steady four-man pressure behind a patched-up interior offensive line on the road at Lambeau Field, where he has logged 26 throwaways and a 14.5% pressure-to-sack rate. Take UNDER 253.5 passing yards.",
         "pOver": 0.3421,
         "pUnder": 0.6579
@@ -472,7 +472,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "68/100",
         "expectedClv": 0.152,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Matt LaFleur scripts first-quarter play-action bootlegs to Tucker Kraft on 28 out of 100 pass plays; one single catch clears 6.5 yards.",
         "pOver": 0.68,
         "pUnder": 0.32
@@ -486,7 +486,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "65/100",
         "expectedClv": 0.134,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Green Bay outscores Carolina 13.3 to 8.9 in the first half behind scripted play-action and a top-five pass rush.",
         "pOver": 0.65,
         "pUnder": 0.35
@@ -500,7 +500,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "66/100",
         "expectedClv": 0.1366,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Steamed from 9.5 across the key 10-point football number to 10.5 against Green Bay's second-ranked first-half drive defense.",
         "pOver": 0.34,
         "pUnder": 0.66
@@ -514,7 +514,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "58/100",
         "expectedClv": 0.0636,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Carolina's 47.5 out of 100 pressure rate allowed stalls first-half drives and keeps the combined first-half total at 22.2 points.",
         "pOver": 0.42,
         "pUnder": 0.58
@@ -528,7 +528,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "64/100",
         "expectedClv": 0.121,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Green Bay passes on 62 out of 100 first-half plays before shifting to second-half clock-control runs.",
         "pOver": 0.64,
         "pUnder": 0.36
@@ -542,7 +542,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "63/100",
         "expectedClv": 0.109,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Watson averages 2.5 yards per route run against zone coverage and faces a Carolina defense playing zone on 90 out of 100 snaps.",
         "pOver": 0.63,
         "pUnder": 0.37
@@ -556,7 +556,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "64/100",
         "expectedClv": 0.124,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Steamed up 6 yards from 117.5 to 123.5 despite Carolina allowing a league-worst 47.5 out of 100 pressure rate.",
         "pOver": 0.36,
         "pUnder": 0.64
@@ -570,7 +570,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "63/100",
         "expectedClv": 0.112,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Green Bay's fast edge rush forces Bryce Young into early checkdown outlets to Chuba Hubbard in the first half.",
         "pOver": 0.63,
         "pUnder": 0.37
@@ -584,7 +584,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "62/100",
         "expectedClv": 0.104,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Screen and flat outlets against Carolina's middle-field zone push Josh Jacobs to 11.6 first-half receiving yards.",
         "pOver": 0.62,
         "pUnder": 0.38
@@ -598,7 +598,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "61/100",
         "expectedClv": 0.092,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "McMillan averages 0.38 fantasy points per route against zone and faces a Green Bay defense playing zone on 76 out of 100 snaps.",
         "pOver": 0.39,
         "pUnder": 0.61
@@ -612,7 +612,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "60/100",
         "expectedClv": 0.0817,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Opponents leading Carolina by 8 or more points run the ball on 89 out of 100 snaps over the last three weeks, bleeding the second-half clock.",
         "pOver": 0.4,
         "pUnder": 0.6
@@ -626,7 +626,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "63/100",
         "expectedClv": 0.085,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Heavy edge pressure plus Xavier McKinney disguising two-high safety rotations forces Bryce Young into a turnover in 64 out of 100 games.",
         "pOver": 0.63,
         "pUnder": 0.37
@@ -640,7 +640,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "69/100",
         "expectedClv": 0.168,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Steamed up two full attempts from 33.5 to 35.5, but Green Bay runs 60 plays per game and bleeds the fourth-quarter clock on the ground.",
         "pOver": 0.31,
         "pUnder": 0.69
@@ -654,7 +654,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.138,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Collapsed pockets force Bryce Young to scramble nearly three times per game for 14.2 rushing yards.",
         "pOver": 0.66,
         "pUnder": 0.34
@@ -668,7 +668,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "64/100",
         "expectedClv": 0.121,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Carolina moves between the 20s with Chuba Hubbard before stalling inside the red zone on 42 out of 100 drives.",
         "pOver": 0.64,
         "pUnder": 0.36
@@ -682,7 +682,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "61/100",
         "expectedClv": 0.0885,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Top-eight kicking spot on the Week 8 slate as third-and-short red-zone stalls set up two or more field goals.",
         "pOver": 0.61,
         "pUnder": 0.39
@@ -696,7 +696,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1316,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Line dropped a full tackle from 7.5 to 6.5 against 22 or more Packers inside zone carries and short middle completions.",
         "pOver": 0.66,
         "pUnder": 0.34
@@ -710,7 +710,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "62/100",
         "expectedClv": 0.0953,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Half-sack or full sack cashes against a Carolina offensive line allowing pressure on nearly half of all pass plays.",
         "pOver": 0.62,
         "pUnder": 0.38
@@ -724,7 +724,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "61/100",
         "expectedClv": 0.0987,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Dropped from 5.5 to 4.5 while Green Bay plays nickel defense on 77 out of 100 snaps, funneling checkdowns to Nixon.",
         "pOver": 0.61,
         "pUnder": 0.39
@@ -738,7 +738,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "64/100",
         "expectedClv": 0.1065,
-        "decision": "PLAY",
+        "decision": "PASS",
         "nEffTargetNotes": "Plunged two full tackles from 4.5 to 2.5 as Carolina's box safety against Josh Jacobs and Tucker Kraft.",
         "pOver": 0.64,
         "pUnder": 0.36
@@ -753,7 +753,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "Green Bay Packers -3.5",
           "confidence": "61/100",
           "expectedClv": 0.0862,
-          "decision": "PLAY"
+          "decision": "PASS"
         },
         {
           "description": "CAR @ GB Total",
@@ -761,7 +761,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "selection": "UNDER 46.5",
           "confidence": "58/100",
           "expectedClv": 0.0562,
-          "decision": "PLAY"
+          "decision": "PASS"
         },
         {
           "description": "Christian Watson Receiving Yards",
@@ -770,7 +770,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "line": 70.5,
           "confidence": "63/100",
           "expectedClv": 0.1062,
-          "decision": "PLAY"
+          "decision": "PASS"
         }
       ],
       "jointWinProb": 0.2665,
@@ -869,10 +869,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideExpectedClv": -0.015,
       "sideDecision": "PASS",
       "totalSelection": "OVER 54.5",
-      "totalConfidence": "60/100",
-      "totalExpectedClv": 0.0762,
-      "totalDecision": "PLAY",
-      "rationale": "Josh Allen faces a Baltimore secondary missing cornerback T.J. Tampa and safety Jaylinn Hawkins, setting up big plays down the field for both offenses. The spread is priced tightly at a field goal, so pass on the side and bet the over."
+      "totalConfidence": "54/100",
+      "totalExpectedClv": -0.012,
+      "totalDecision": "PASS",
+      "rationale": "Josh Allen faces a Baltimore secondary missing cornerback T.J. Tampa and safety Jaylinn Hawkins, but both the 3-point spread and 54.5 total are priced tightly by the market. Pass on the side and total."
     },
     "topProps": [
       {
@@ -947,9 +947,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "BAL @ BUF Total",
           "pickType": "TOTAL",
           "selection": "OVER 54.5",
-          "confidence": "60/100",
-          "expectedClv": 0.0762,
-          "decision": "PLAY"
+          "confidence": "54/100",
+          "expectedClv": -0.012,
+          "decision": "PASS"
         },
         {
           "description": "Zay Flowers Receiving Yards",
@@ -1047,7 +1047,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Cincinnati's downfield passing game tests a physical Tennessee front that wants to slow the game down and lean on the run. With a double-digit spread on the board at Paycor Stadium, fourth-quarter game script matters everything here \u2014 our official side and total calls are locked inside.",
       "blitzRateVsPressureToSack": "Cincinnati Bengals and Tennessee Titans bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Cincinnati Bengals features Tee Higgins and Chase Brown on early downs, while Tennessee Titans leans on Carnell Tate and Tony Pollard.",
+      "personnelTendencies": "Cincinnati Bengals features Tee Higgins and Chase Brown on early downs, while Tennessee Titans leans on Tony Pollard. Carnell Tate is out. Elic Ayomanor and Wan'Dale Robinson are active and are not listed on the week-8 injury report.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Tennessee Titans and Cincinnati Bengals headline the film study for this game.",
       "notes": "Posted Line: CIN -11.5 \u00b7 O/U 46.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -1063,6 +1063,48 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "rationale": "Cincinnati's passing attack has an edge against Tennessee's secondary, but laying ten points in the NFL leaves too much room for a late backdoor cover. Vegas has this spread and total priced right, so sit this game out."
     },
     "topProps": [
+      {
+        "playerId": "gunnar-helm",
+        "playerName": "Gunnar Helm",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 18.5,
+        "side": "OVER",
+        "confidence": "79/100",
+        "expectedClv": 0.081,
+        "decision": "PLAY",
+        "nEffTargetNotes": "With both Carnell Tate (51 targets OUT) and RB Tyjae Spears (17 targets, 15 catches OUT) inactive, Cam Ward's hot-read and middle-of-field checkdowns funnel directly to TE1 Gunnar Helm (70.6 out of 100 catch rate) against a Cincinnati defense that bleeds tight end volume when leading. Take OVER 18.5 receiving yards (and OVER 2.5 receptions).",
+        "pOver": 0.79,
+        "pUnder": 0.21
+      },
+      {
+        "playerId": "wandale-robinson",
+        "playerName": "Wan'Dale Robinson",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 44.5,
+        "side": "OVER",
+        "confidence": "78/100",
+        "expectedClv": 0.078,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Carnell Tate (51 targets OUT) and Tyjae Spears (17 targets OUT) vacate 68 total targets in a game where Tennessee is an 11.5-point road underdog, elevating Wan'Dale Robinson (43 targets, 29 catches) into Tennessee's undisputed WR1 slot funnel against Cincinnati's two-high prevent shell. Take OVER 44.5 receiving yards (and OVER 4.5 receptions).",
+        "pOver": 0.78,
+        "pUnder": 0.22
+      },
+      {
+        "playerId": "elic-ayomanor",
+        "playerName": "Elic Ayomanor",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 32.5,
+        "side": "OVER",
+        "confidence": "76/100",
+        "expectedClv": 0.072,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Direct boundary replacement for Carnell Tate's 413 vacated receiving yards. Averaging an explosive 17.7 yards per reception, Elic Ayomanor steps into full-time perimeter X/Z routes in a heavy trailing script where two chunk catches clear 32.5 yards. Take OVER 32.5 receiving yards.",
+        "pOver": 0.76,
+        "pUnder": 0.24
+      },
       {
         "playerId": "tony-pollard",
         "playerName": "Tony Pollard",
@@ -1150,10 +1192,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "leverageNote": "Primary red-zone and third-down receiver for Cincinnati Bengals averaging 8.3 targets per game."
         },
         {
-          "player": "Carnell Tate",
+          "player": "Elic Ayomanor",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Tennessee Titans averaging 7.3 targets per game when playing from behind."
+          "leverageNote": "Carnell Tate is out on the NFL.com week-8 report. Elic Ayomanor is active and is not on that report. No new target rate is claimed here."
         }
       ],
       "cashCore": [
@@ -1181,9 +1223,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Ja'Marr Chase"
             ]
           },
-          "bringBack": "Carnell Tate",
-          "valueFiller": "Wan'Dale Robinson",
-          "correlationTheme": "Pair Joe Burrow with Ja'Marr Chase and bring it back with Carnell Tate, then add a two-player mini-stack from a second game."
+          "bringBack": "Wan'Dale Robinson",
+          "valueFiller": "Chimere Dike",
+          "correlationTheme": "Pair Joe Burrow with Ja'Marr Chase and bring it back with Wan'Dale Robinson. Carnell Tate is out. Do not stack him."
         }
       ]
     },
@@ -1395,20 +1437,20 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Detroit has missed only twelve tackles all season and brings one of the league's cleanest offensive lines into an NFC North clash at Ford Field against Minnesota. Divisional familiarity and red-zone execution will decide this three-point matchup \u2014 our official spread, total, and prop calls are locked inside the pack.",
       "blitzRateVsPressureToSack": "Detroit Lions and Minnesota Vikings bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Detroit Lions features Amon-Ra St. Brown and Jahmyr Gibbs on early downs, while Minnesota Vikings leans on Justin Jefferson and Jordan Mason.",
+      "personnelTendencies": "Detroit Lions features Amon-Ra St. Brown and Jahmyr Gibbs on early downs, while Minnesota Vikings leans on Kyler Murray (MIN QB), Justin Jefferson, and Jordan Mason.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Minnesota Vikings and Detroit Lions headline the film study for this game.",
       "notes": "Posted Line: DET -3 \u00b7 O/U 46.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
       "sideSelection": "Detroit Lions -3",
-      "sideConfidence": "59/100",
-      "sideExpectedClv": 0.0662,
-      "sideDecision": "PLAY",
-      "totalSelection": "OVER 46.5",
-      "totalConfidence": "53/100",
-      "totalExpectedClv": -0.025,
+      "sideConfidence": "52/100",
+      "sideExpectedClv": -0.015,
+      "sideDecision": "PASS",
+      "totalSelection": "UNDER 46.5",
+      "totalConfidence": "54/100",
+      "totalExpectedClv": -0.008,
       "totalDecision": "PASS",
-      "rationale": "Detroit leads the entire NFL with only twelve missed tackles through seven weeks and dominates the line of scrimmage at Ford Field against a Minnesota offense starting a backup quarterback. Take the Lions laying three points at home and pass on the total."
+      "rationale": "Brian Flores' Minnesota defense leads the entire NFL at -0.193 EPA/play allowed and sends simulated pressure on 72.2 out of 100 pass plays, while Kyler Murray (MIN QB) faces Detroit's front indoors at Ford Field. Both the three-point spread and 46.5 total sit inside the no-bet zone, so pass on the side and total."
     },
     "topProps": [
       {
@@ -1421,7 +1463,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "61/100",
         "expectedClv": 0.0862,
         "decision": "PLAY",
-        "nEffTargetNotes": "Amon-Ra St. Brown commands elite third-down and slot target volume indoors at Ford Field against Minnesota's blitz looks. Take OVER 77.5 receiving yards.",
+        "nEffTargetNotes": "Amon-Ra St. Brown commands elite third-down and slot target volume indoors at Ford Field as Jared Goff's primary hot-route outlet against Brian Flores' blitz looks. Take OVER 77.5 receiving yards.",
         "pOver": 0.61,
         "pUnder": 0.39
       },
@@ -1435,7 +1477,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "confidence": "60/100",
         "expectedClv": 0.0762,
         "decision": "PLAY",
-        "nEffTargetNotes": "Detroit's offensive line controls the trenches at home while Jahmyr Gibbs gets explosive outside-zone volume. Take OVER 86.5 rushing yards.",
+        "nEffTargetNotes": "Detroit leans on Jahmyr Gibbs on early downs to stay out of 3rd-and-long against Brian Flores' simulated pressure packages. Take OVER 86.5 rushing yards.",
         "pOver": 0.6,
         "pUnder": 0.4
       },
@@ -1475,16 +1517,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "MIN @ DET Spread",
           "pickType": "SPREAD",
           "selection": "Detroit Lions -3",
-          "confidence": "59/100",
-          "expectedClv": 0.0662,
-          "decision": "PLAY"
+          "confidence": "52/100",
+          "expectedClv": -0.015,
+          "decision": "PASS"
         },
         {
           "description": "MIN @ DET Total",
           "pickType": "TOTAL",
-          "selection": "OVER 46.5",
-          "confidence": "53/100",
-          "expectedClv": -0.025,
+          "selection": "UNDER 46.5",
+          "confidence": "54/100",
+          "expectedClv": -0.008,
           "decision": "PASS"
         },
         {
@@ -1501,7 +1543,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "+338",
       "marketOdds": "+390",
       "edgeScore": 0.0376,
-      "correlationRationale": "When Detroit Lions -3 and OVER 46.5 cash together, Amon-Ra St. Brown OVER 77.5 receiving yards fits the exact same game script."
+      "correlationRationale": "When MIN @ DET stays UNDER 46.5 in a defensive battle against Brian Flores' disguise shells, Amon-Ra St. Brown OVER 77.5 receiving yards on short hot-route volume fits the exact same game script."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -1583,7 +1625,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Las Vegas travels east to face the Jets in the Meadowlands wind, where both offensive lines have been tested in obvious passing situations. Field position and third-down protection will swing this tight AFC matchup \u2014 unlock the pack for our official game breakdown and picks.",
       "blitzRateVsPressureToSack": "New York Jets and Las Vegas Raiders bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "New York Jets features Garrett Wilson and Braelon Allen on early downs, while Las Vegas Raiders leans on Brock Bowers and Ashton Jeanty.",
+      "personnelTendencies": "New York Jets features Garrett Wilson and Braelon Allen on early downs, while Las Vegas Raiders leans on Kirk Cousins (LV QB), Brock Bowers, and Ashton Jeanty.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Las Vegas Raiders and New York Jets headline the film study for this game.",
       "notes": "Posted Line: NYJ -1.5 \u00b7 O/U 45.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -1619,13 +1661,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "propType": "Receiving Yards",
         "market": "rec_yds",
         "line": 63.5,
-        "side": "OVER",
-        "confidence": "54/100",
+        "side": "UNDER",
+        "confidence": "56/100",
         "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Garrett Wilson priced tightly at 63.5 receiving yards. Sit this prop out.",
-        "pOver": 0.54,
-        "pUnder": 0.46
+        "nEffTargetNotes": "Internal sim leans UNDER 63.5 receiving yards (mean 57.8, 2026 avg 63.4, WOPR 0.64) but the lean does not clear the publish gate. Sit this prop out.",
+        "pOver": 0.44,
+        "pUnder": 0.56
       },
       {
         "playerId": "ashton-jeanty",
@@ -1682,13 +1724,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         {
           "player": "Garrett Wilson",
           "position": "WR",
-          "salary": 10200,
+          "salary": 6300,
           "leverageNote": "Primary red-zone and third-down receiver for New York Jets averaging 7.3 targets per game."
         },
         {
           "player": "Brock Bowers",
-          "position": "WR",
-          "salary": 9600,
+          "position": "TE",
+          "salary": 7600,
           "leverageNote": "Go-to receiver for Las Vegas Raiders averaging 10.2 targets per game when playing from behind."
         }
       ],
@@ -1696,9 +1738,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         {
           "player": "Geno Smith",
           "position": "QB",
-          "salary": 6600,
-          "projection": 18.7,
-          "floorNote": "Steady pocket passer averaging 231.9 passing yards per game."
+          "salary": 5200,
+          "projection": 16.0,
+          "floorNote": "NYJ QB (DK Classic $5,200, 16.0 DK avg; internal sim 19.9 completions, 1.6 pass TDs). Steady pocket passer."
         },
         {
           "player": "Ashton Jeanty",
@@ -1711,15 +1753,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Geno Smith",
+            "qb": "Kirk Cousins (LV QB)",
             "passCatchers": [
-              "Garrett Wilson",
-              "Omar Cooper"
+              "Brock Bowers",
+              "Michael Mayer"
             ]
           },
-          "bringBack": "Brock Bowers",
-          "valueFiller": "Michael Mayer",
-          "correlationTheme": "Pair Geno Smith with Omar Cooper and bring it back with Brock Bowers, then add a two-player mini-stack from a second game."
+          "bringBack": "Garrett Wilson",
+          "valueFiller": "Ashton Jeanty",
+          "correlationTheme": "Pair Kirk Cousins (LV QB) with Brock Bowers and Michael Mayer and bring it back with Garrett Wilson, then add a two-player mini-stack from a second game."
         }
       ]
     },
@@ -1757,7 +1799,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "AFC North football takes center stage at Acrisure Stadium as Pittsburgh's defensive front squares off against a bruised Cleveland offensive line. Physical trench play and open-field tackling always define Browns-Steelers \u2014 our official spread call, total call, and player prop bets are locked inside.",
       "blitzRateVsPressureToSack": "Pittsburgh Steelers and Cleveland Browns bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Pittsburgh Steelers features Germie Bernard and Jaylen Warren on early downs, while Cleveland Browns leans on Denzel Boston and Quinshon Judkins.",
+      "personnelTendencies": "Pittsburgh Steelers features DK Metcalf (PIT WR), Germie Bernard, and Jaylen Warren on early downs, while Cleveland Browns leans on Denzel Boston and Quinshon Judkins.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Cleveland Browns and Pittsburgh Steelers headline the film study for this game.",
       "notes": "Posted Line: PIT -3.5 \u00b7 O/U 39.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -1767,10 +1809,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideExpectedClv": -0.005,
       "sideDecision": "PASS",
       "totalSelection": "UNDER 39.5",
-      "totalConfidence": "57/100",
-      "totalExpectedClv": 0.0462,
-      "totalDecision": "PLAY",
-      "rationale": "Pittsburgh's front four dominates a bruised Cleveland offensive line while the Browns have missed fifty-one tackles on defense, pointing to a physical, clock-chewing divisional battle. Pass on the spread and take the under."
+      "totalConfidence": "53/100",
+      "totalExpectedClv": -0.015,
+      "totalDecision": "PASS",
+      "rationale": "Pittsburgh's front four battles a bruised Cleveland offensive line outdoors at Acrisure Stadium, and the low 39.5 total is already priced tightly by the market. Pass on the spread and total here."
     },
     "topProps": [
       {
@@ -1831,9 +1873,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "CLE @ PIT Total",
           "pickType": "TOTAL",
           "selection": "UNDER 39.5",
-          "confidence": "57/100",
-          "expectedClv": 0.0462,
-          "decision": "PLAY"
+          "confidence": "53/100",
+          "expectedClv": -0.015,
+          "decision": "PASS"
         },
         {
           "description": "Jaylen Warren Receiving Yards",
@@ -1931,7 +1973,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "First place in the NFC South is on the line in Tampa as the Buccaneers' interior front battles an Atlanta offense that leans heavily on its running backs in the passing game. With the spread sitting inside a field goal, late-game execution is everything \u2014 unlock the pack to reveal our official calls.",
       "blitzRateVsPressureToSack": "Tampa Bay Buccaneers and Atlanta Falcons bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Tampa Bay Buccaneers features Chris Godwin and Bucky Irving on early downs, while Atlanta Falcons leans on Drake London and Bijan Robinson.",
+      "personnelTendencies": "Tampa Bay Buccaneers features Chris Godwin Jr. alongside TB RBs Bucky Irving and Sean Tucker on early downs (with Emeka Egbuka OUT), while Atlanta Falcons leans on Drake London and Bijan Robinson (with ATL RB Brian Robinson Jr. OUT).",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Atlanta Falcons and Tampa Bay Buccaneers headline the film study for this game.",
       "notes": "Posted Line: TB -2.5 \u00b7 O/U 44.5 \u00b7 Sunday 1:00 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -2285,16 +2327,30 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     },
     "sideTotalCall": {
       "sideSelection": "Los Angeles Rams -6.5",
-      "sideConfidence": "54/100",
-      "sideExpectedClv": -0.015,
-      "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
-      "totalConfidence": "53/100",
-      "totalExpectedClv": -0.025,
+      "sideConfidence": "61/100",
+      "sideExpectedClv": 0.086,
+      "sideDecision": "PLAY",
+      "totalSelection": "UNDER 45.5",
+      "totalConfidence": "54/100",
+      "totalExpectedClv": -0.015,
       "totalDecision": "PASS",
-      "rationale": "Matthew Stafford and the Rams offense match up well against the Chargers secondary inside SoFi Stadium, but the Chargers play slow and protect the football to stay in games. Vegas has the number dialed in, so pass on this matchup."
+      "rationale": "The Chargers offense has cratered to -0.257 ridge-adjusted EPA/play (-0.397 EPA/play in Week 5 and -0.311 EPA/play in Week 6), while Matthew Stafford and Sean McVay hold a commanding play-action and red-zone edge inside SoFi Stadium. Lay the 6.5 points with the Rams and pass on the full-game total."
     },
     "topProps": [
+      {
+        "playerId": "justin-herbert",
+        "playerName": "Justin Herbert",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 206.5,
+        "side": "UNDER",
+        "confidence": "63/100",
+        "expectedClv": 0.129,
+        "decision": "PLAY",
+        "nEffTargetNotes": "With the Chargers pass offense posting -0.570 pass EPA/play in Week 5 and -0.407 pass EPA/play in Week 6 behind a collapsing pocket, Justin Herbert's median projection sits at 190.4 passing yards. Take UNDER 206.5 passing yards.",
+        "pOver": 0.37,
+        "pUnder": 0.63
+      },
       {
         "playerId": "puka-nacua",
         "playerName": "Puka Nacua",
@@ -2310,32 +2366,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "pUnder": 0.46
       },
       {
-        "playerId": "kyren-williams",
-        "playerName": "Kyren Williams",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 58.5,
-        "side": "OVER",
-        "confidence": "54/100",
-        "expectedClv": 0.015,
-        "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Kyren Williams priced accurately at 58.5 rushing yards. Sit this prop out.",
-        "pOver": 0.54,
-        "pUnder": 0.46
-      },
-      {
         "playerId": "ladd-mcconkey",
         "playerName": "Ladd McConkey",
         "propType": "Receiving Yards",
         "market": "rec_yds",
         "line": 45.5,
-        "side": "OVER",
-        "confidence": "53/100",
-        "expectedClv": 0.0062,
+        "side": "UNDER",
+        "confidence": "54/100",
+        "expectedClv": 0.015,
         "decision": "PASS",
-        "nEffTargetNotes": "Vegas has Ladd McConkey priced right near 45.5 receiving yards. Sit this prop out.",
-        "pOver": 0.53,
-        "pUnder": 0.47
+        "nEffTargetNotes": "Ladd McConkey was held to 1 target and 17 yards in Week 6 as the Chargers passing game stalled out. Sit this prop out at 45.5.",
+        "pOver": 0.46,
+        "pUnder": 0.54
       }
     ],
     "correlatedSgpTicket": {
@@ -2345,33 +2387,33 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "LAC @ LAR Spread",
           "pickType": "SPREAD",
           "selection": "Los Angeles Rams -6.5",
+          "confidence": "61/100",
+          "expectedClv": 0.086,
+          "decision": "PLAY"
+        },
+        {
+          "description": "LAC @ LAR Total",
+          "pickType": "TOTAL",
+          "selection": "UNDER 45.5",
           "confidence": "54/100",
           "expectedClv": -0.015,
           "decision": "PASS"
         },
         {
-          "description": "LAC @ LAR Total",
-          "pickType": "TOTAL",
-          "selection": "OVER 45.5",
-          "confidence": "53/100",
-          "expectedClv": -0.025,
-          "decision": "PASS"
-        },
-        {
-          "description": "Puka Nacua Receiving Yards",
+          "description": "Justin Herbert Passing Yards",
           "pickType": "PLAYER_PROP",
-          "selection": "Puka Nacua OVER 92.5",
-          "line": 92.5,
-          "confidence": "54/100",
-          "expectedClv": 0.0,
-          "decision": "PASS"
+          "selection": "Justin Herbert UNDER 206.5",
+          "line": 206.5,
+          "confidence": "63/100",
+          "expectedClv": 0.129,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1977,
-      "fairOdds": "n/a",
-      "marketOdds": "n/a",
+      "jointWinProb": 0.2412,
+      "fairOdds": "+315",
+      "marketOdds": "+365",
       "edgeScore": 0.0432,
-      "correlationRationale": "PASS \u2014 Stick to straight bets in this matchup; parlay payout does not beat the true risk."
+      "correlationRationale": "When Los Angeles Rams -6.5 cashes against a struggling Chargers offense, Justin Herbert UNDER 206.5 passing yards correlates directly with Rams pass-rush control."
     },
     "dfsStacks": {
       "captainPicks": [
@@ -2453,7 +2495,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Kansas City heads into the thin air at Mile High to face a Denver defense that has been tough against the pass all season in AFC West play. Divisional games in Denver almost always come down to the final two possessions \u2014 our official spread, total, and player prop calls are locked inside.",
       "blitzRateVsPressureToSack": "Denver Broncos and Kansas City Chiefs bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Denver Broncos features Jaylen Waddle and Jonah Coleman on early downs, while Kansas City Chiefs leans on Travis Kelce and Kenneth Walker III.",
+      "personnelTendencies": "DEN RB RJ Harvey ($5,200) is OUT, vacating backfield volume to active DEN RBs Jonah Coleman and J.K. Dobbins. DEN WR Jaylen Waddle is questionable after limited practice, while Courtland Sutton and Marvin Mims Jr. practiced in full. Kansas City leans on Travis Kelce and KC RB Kenneth Walker III, both active.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Kansas City Chiefs and Denver Broncos headline the film study for this game.",
       "notes": "Posted Line: KC -1.5 \u00b7 O/U 40.5 \u00b7 Sunday 4:25 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -2553,7 +2595,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "player": "Jaylen Waddle",
           "position": "WR",
           "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Denver Broncos averaging 6.4 targets per game."
+          "leverageNote": "Jaylen Waddle is an active Denver receiver and is questionable after limited practice. Courtland Sutton and Marvin Mims Jr. practiced in full. No new target rate is claimed here."
         },
         {
           "player": "Travis Kelce",
@@ -2801,7 +2843,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Sunday Night Football features an NFC East rivalry as Washington's quick-rhythm passing attack meets Philadelphia's physical offensive line under the lights. Open-field tackling and third-and-short execution will decide this prime-time battle \u2014 our official side, total, and prop picks are locked inside.",
       "blitzRateVsPressureToSack": "Washington Commanders and Philadelphia Eagles bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Washington Commanders features Chig Okonkwo and Rachaad White on early downs, while Philadelphia Eagles leans on DeVonta Smith and Dameon Pierce.",
+      "personnelTendencies": "Washington Commanders features Chig Okonkwo and WAS RB Rachaad White on early downs. Philadelphia leans on active PHI RB Saquon Barkley ($6,800, limited practice, no game designation), while PHI WRs DeVonta Smith and Dontayvion Wicks are OUT, vacating target volume to A.J. Brown, Makai Lemon, and Dallas Goedert. Jalen Hurts is on reserve and Tanner McKee is active at quarterback.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Philadelphia Eagles and Washington Commanders headline the film study for this game.",
       "notes": "Posted Line: WSH -6 \u00b7 O/U 40.5 \u00b7 Sunday 8:20 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -2904,10 +2946,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "leverageNote": "Primary red-zone and third-down receiver for Washington Commanders averaging 5.0 targets per game."
         },
         {
-          "player": "DeVonta Smith",
+          "player": "Makai Lemon",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Philadelphia Eagles averaging 10.2 targets per game when playing from behind."
+          "leverageNote": "DeVonta Smith and Dontayvion Wicks are out. Makai Lemon is active and is not on the week-8 injury report. No new target rate is claimed here."
         }
       ],
       "cashCore": [
@@ -2919,11 +2961,11 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "floorNote": "Steady pocket passer averaging 189.8 passing yards per game."
         },
         {
-          "player": "Dameon Pierce",
+          "player": "Saquon Barkley",
           "position": "RB",
-          "salary": 6200,
-          "projection": 17.6,
-          "floorNote": "Three-down workhorse handling 12.3 carries per game."
+          "salary": 6800,
+          "projection": 19.4,
+          "floorNote": "Active PHI RB workhorse (limited practice, no game designation) leading the Philadelphia ground game."
         }
       ],
       "gppStacks": [
@@ -2935,9 +2977,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Stefon Diggs"
             ]
           },
-          "bringBack": "DeVonta Smith",
-          "valueFiller": "Dontayvion Wicks",
-          "correlationTheme": "Pair Jayden Daniels with Stefon Diggs and bring it back with DeVonta Smith, then add a two-player mini-stack from a second game."
+          "bringBack": "Dallas Goedert",
+          "valueFiller": "Makai Lemon",
+          "correlationTheme": "Pair Jayden Daniels with Stefon Diggs and bring it back with Dallas Goedert or A.J. Brown, with PHI WRs DeVonta Smith and Dontayvion Wicks OUT."
         }
       ]
     },
@@ -2975,7 +3017,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "schemeMatchup": {
       "coverageShell": "Monday Night Football wraps up the slate in the Pacific Northwest as Chicago's takeaway-minded defense visits Seattle at Lumen Field. Crowd noise, pass protection, and red-zone defense headline the finale \u2014 unlock the pack to see our official Monday night spread, total, and prop calls.",
       "blitzRateVsPressureToSack": "Seattle Seahawks and Chicago Bears bring contrasting third-down pass-rush plans into this matchup up front.",
-      "personnelTendencies": "Seattle Seahawks features Jaxon Smith-Njigba and Emanuel Wilson on early downs, while Chicago Bears leans on Rome Odunze and D'Andre Swift.",
+      "personnelTendencies": "Seattle Seahawks features Sam Darnold (SEA QB), Jaxon Smith-Njigba, and Emanuel Wilson on early downs, while Chicago Bears leans on Rome Odunze and D'Andre Swift.",
       "coachingEdge": "Ball security, open-field tackling, and red-zone play-calling between Chicago Bears and Seattle Seahawks headline the film study for this game.",
       "notes": "Posted Line: SEA -3 \u00b7 O/U 46.5 \u00b7 Monday 8:15 PM ET \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
     },
@@ -2983,12 +3025,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "sideSelection": "Chicago Bears +3",
       "sideConfidence": "56/100",
       "sideExpectedClv": 0.0362,
-      "sideDecision": "PLAY",
+      "sideDecision": "PASS",
       "totalSelection": "UNDER 46.5",
       "totalConfidence": "52/100",
       "totalExpectedClv": -0.035,
       "totalDecision": "PASS",
-      "rationale": "Chicago's defense has forced turnovers and limited big plays over the last month, giving the Bears the toughness to hang inside a field goal in Seattle on Monday night. Take the Bears plus three points and pass on the total."
+      "rationale": "The side does not clear. The board lists Seattle minus three and this writeup had the other side. That conflict is a pass. The total does not clear either."
     },
     "topProps": [
       {
@@ -2998,10 +3040,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "market": "rec_yds",
         "line": 98.5,
         "side": "UNDER",
-        "confidence": "59/100",
-        "expectedClv": 0.0662,
-        "decision": "PLAY",
-        "nEffTargetNotes": "DraftKings has steamed Jaxon Smith-Njigba all the way to 98.5 receiving yards, but Chicago's takeaway-minded secondary rallies to the ball and caps explosive perimeter gains. Take UNDER 98.5 receiving yards.",
+        "confidence": "54/100",
+        "expectedClv": -0.005,
+        "decision": "PASS",
+        "nEffTargetNotes": "Jaxon Smith-Njigba is a high-volume target for Sam Darnold (SEA QB), and the 98.5 receiving yards line is a PASS after reconciling card vs writeup direction.",
         "pOver": 0.41,
         "pUnder": 0.59
       },
@@ -3041,9 +3083,9 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "description": "CHI @ SEA Spread",
           "pickType": "SPREAD",
           "selection": "Chicago Bears +3",
-          "confidence": "56/100",
-          "expectedClv": 0.0362,
-          "decision": "PLAY"
+          "confidence": "54/100",
+          "expectedClv": -0.015,
+          "decision": "PASS"
         },
         {
           "description": "CHI @ SEA Total",
@@ -3058,16 +3100,16 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "pickType": "PLAYER_PROP",
           "selection": "Jaxon Smith-Njigba UNDER 98.5",
           "line": 98.5,
-          "confidence": "59/100",
-          "expectedClv": 0.0662,
-          "decision": "PLAY"
+          "confidence": "54/100",
+          "expectedClv": -0.005,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.2114,
-      "fairOdds": "+373",
-      "marketOdds": "+420",
-      "edgeScore": 0.0396,
-      "correlationRationale": "When Chicago Bears +3 and UNDER 46.5 cash together, Jaxon Smith-Njigba UNDER 98.5 receiving yards fits the exact same game script."
+      "jointWinProb": 0.1812,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS — Side, total, and Jaxon Smith-Njigba receiving prop are all PASS on the reconciled Week 8 card."
     },
     "dfsStacks": {
       "captainPicks": [

@@ -8,6 +8,7 @@ import { LIVE_PACKAGE_CATALOG, getPackageBySlug } from "@/lib/packages/catalog";
 import {
   LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
+  getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
@@ -59,21 +60,22 @@ export default async function DfsSuitePage() {
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[3]!;
   const tnfPackage = getPackageBySlug("tnf-all-in-pack") ?? LIVE_PACKAGE_CATALOG[0]!;
+  const expandedSunMonDfsPackage = getPackageBySlug("week8-sun-mon-dfs-expanded-pack");
 
   return (
     <FantasyShell
-      eyebrow="Daily Fantasy Football · Game Environments & Lineup Blueprints"
+      eyebrow="Daily Fantasy Football · Week 8 Sunday Main Slate (12 Games) & MNF (CHI @ SEA)"
       accent="cyan"
       projectionsBadge={false}
       title={
         <>
-          Real Football Matchups First.{" "}
+          Week 8 DFS Main Slate Portfolio:{" "}
           <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
-            Salaries &amp; Ownership Last.
+            DraftKings ($50K) &amp; FanDuel ($60K) Cash &amp; GPP Lineups.
           </span>
         </>
       }
-      intro="Football is never played on a spreadsheet. We start with how each game will actually be played on the field — offensive line health, defensive coverage tendencies, injury replacements, and pace of play — before building cash-game cores and tournament stacks."
+      intro="TNF official card is 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Built from 22,750,000 snap evaluations, 581 360-degree markets, 4,056 research corpus IDs, 112 IG + 100 X dossiers, 50 doctoral papers, walk-forward tau_hat (+11.16pp on n=3,988 4th downs), the 7-Signal Pack, Romano CQR honest conformal intervals, and OpenAI Math Optimal Transport certificates."
       note={note}
       wide
     >
@@ -167,7 +169,7 @@ export default async function DfsSuitePage() {
         </div>
 
         <div className="mt-6 space-y-6">
-          {LIVE_SLATE_COACH_WRITEUPS.map((w) => (
+          {getActiveUpcomingWriteups().map((w) => (
             <div key={w.id} className="border border-mineral/70 bg-carbon p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral/50 pb-3">
                 <div>
@@ -238,6 +240,14 @@ export default async function DfsSuitePage() {
             pkg={tnfPackage}
             teasers={getRedactedTeasersForWindowSlot(tnfPackage.windowSlot)}
           />
+          {expandedSunMonDfsPackage && (
+            <div className="lg:col-span-2">
+              <PaywallRevealCard
+                pkg={expandedSunMonDfsPackage}
+                teasers={getRedactedTeasersForWindowSlot(expandedSunMonDfsPackage.windowSlot)}
+              />
+            </div>
+          )}
         </div>
       </section>
 
