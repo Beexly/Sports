@@ -4,6 +4,7 @@ import {
   extractExpectedClv,
   extractTrueProb,
   extractMarketFairProb,
+  extractRankingP,
   extractRankingSource,
   extractModelMinusMarket,
   isPricedTierRow,
@@ -30,6 +31,7 @@ describe("ranking-candidates barrel exports", () => {
     expect(typeof barrel.extractExpectedClv).toBe("function");
     expect(typeof barrel.extractTrueProb).toBe("function");
     expect(typeof barrel.extractMarketFairProb).toBe("function");
+    expect(typeof barrel.extractRankingP).toBe("function");
     expect(typeof barrel.extractRankingSource).toBe("function");
     expect(typeof barrel.extractModelMinusMarket).toBe("function");
     expect(typeof barrel.isPricedTierRow).toBe("function");
@@ -120,6 +122,17 @@ describe("field extractors", () => {
       }),
     ).toBe(0.52);
     expect(extractMarketFairProb({ confidence: 70 })).toBeNull();
+  });
+
+  it("extracts rankingP from direct and nested properties", () => {
+    expect(extractRankingP({ confidence: 70, rankingP: 0.61 })).toBe(0.61);
+    expect(
+      extractRankingP({
+        confidence: 70,
+        factorBreakdown: { rankingP: 0.72 },
+      }),
+    ).toBe(0.72);
+    expect(extractRankingP({ confidence: 70 })).toBeNull();
   });
 
   it("extracts rankingSource correctly", () => {

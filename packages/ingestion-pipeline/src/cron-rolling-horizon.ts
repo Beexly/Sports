@@ -101,7 +101,7 @@ export async function runWednesdayRollingHorizonSlate(
       intrinsic_sd: decision.intrinsicSd,
       horizon_epistemic_sd: decision.horizonSd,
       expected_clv_capture: Math.max(0, decision.marginalizedProb - match.wednesdayVigFreeProb) * 0.75,
-      lineMoveSkillVector: match.lineMoveSkillVector,
+      line_move_skill_vector: match.lineMoveSkillVector,
       watch_commitments: match.watchCommitments ?? [],
       surveillance_status: isLocked ? "LOCKED_ACTIVE" : "SURVEILLANCE_WATCH",
     };

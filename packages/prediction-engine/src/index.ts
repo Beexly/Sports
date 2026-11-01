@@ -5104,7 +5104,18 @@ export type {
   PublishRefusal,
   GateOutcome,
   PublishedBoardEntry,
+  BridgePremise,
+  BridgeGateInput,
+  LiteratureGateInput,
+  IdentifiabilityGateInput,
+  RationaleFaithfulness,
+  ConformalGateInput,
+  CalibrationWindow,
+  ClvGateInput,
+  PriceArchiveCommit,
 } from "./picks/pick-pipeline.js";
+export type { VerificationVerdict } from "./literature/literature-verification.js";
+export type { AdversaryRedTeamVerdict } from "./causal/adversary-red-team.js";
 
 
 export {
