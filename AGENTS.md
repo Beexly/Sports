@@ -20430,3 +20430,87 @@ Filed after the morning section above, on receipt of Lane C's final report (harn
 - The morning section's "post-window set" is withdrawn as a classification: only the three post-cutoff items above carry forward. The morning section's Lane C counts are superseded by the final counts in this correction.
 - Still partial: @ShaanS7_'s two images; @CeeGeeDFS QB map chart (did not load); @corbin_young21 league-average row; @GridironInfo_ chart footer small print.
 - The Lane B double-delivery conflict from the morning section is unchanged and still open.
+
+## 2026-11-01 — 09:08 CT morning sweep — ADDENDUM 2 (Lane A final report)
+
+Filed on receipt of Lane A's final report (browser-task d84890cc, harness-measured run 9:09–10:38 AM CST), which arrived after the morning section and the Lane C correction were filed. It supersedes INTERIM-laneA-received.md as Lane A's record of this window. All items below are as reported in that final report; data sources are stated only where the post, chart, or bio explicitly states one. Read-only confirmed by the lane (no likes, reposts, replies, follows, DMs, bookmarks, or posts).
+
+### CONFLICT — Lane A double delivery (preserved, not reconciled)
+This is the second double delivery in this run (cf. Lane B in the morning section). The interim Lane A delivery behind the morning section and this final report cannot both be right:
+- Counts: interim 290 viewed / 204 in-window / 158 analytics / 46 non-analytics vs final 111 in-window / 62 analytics / 49 non-analytics across the same 11 accounts.
+- Account states flip: @RyanPaganetti (interim 0 in-window; final 5 in-window / 1 analytics), @ScottBarrettDFB (interim 0; final 4 / 1 — the TPRR item below), @MagicSportsGuy (interim 0; final 3 / 1), @SumerSports (interim 1 in-window analytics; final 0 — newest posts Oct 29), @DevyEusuf (interim 2 / 0 analytics; final 24 / 6), @jmthrivept (interim 32 in-window / 25 analytics with team injury tables; final 17 / 2, no team tables).
+- @GridironInfo_ 2116534515510153640 (passer rating): interim filed a PARTIAL team passer-rating top-12 (DET 112.4 top; CSV gridironinfo-team-passer-rating-2026-partial.csv). Final: a 31-bar QB passer-rating chart, Goff 112.4 top, full list captured (CSV gridironinfo-2026-qb-passer-rating-laneA-final.csv); chart header as printed reads "Data: Next Gen Stats," footer small print references nflverse (PARTIAL).
+- @GridironInfo_ 2116538251548791094 (BAL vs BUF card): morning section filed it DAMAGED (BAL side legible with Points 30.6 #2 etc., BUF side illegible; CSV gridironinfo-bal-matchup-card-week8-partial.csv). Final reports a complete card with different BAL values (Points 24.1, 20th; full two-sided card in gridironinfo-week8-matchup-cards-laneA-final.csv). Both versions stand as filed; neither is overwritten.
+- @cmain7 survivor card: interim described an odds-based card (9 PARTIAL rows). Final transcribes a full 32-row win-probability reference card for the same post ID (2116662289462178295; CSV below). Both stand.
+- @statyxio mandatory pair: interim timestamps 10:31 / 10:32 AM Oct 31 with image-only content; final timestamps 9:21 AM Oct 31 (verified by direct navigation, per the final report) with full text and the 1/13 card values (below).
+- Where the final report overlaps the Lane C correction, it agrees: @GridironInfo_ 2116862904855142562 Aggressiveness values (Brissett 24% top; Mahomes and Murray 7% bottom) match the correction's CSV.
+- Watermark unchanged: 2116908622240456770 (the final report's largest Lane A in-window ID, @jmthrivept 2116901868752540040, is below it). Re-verification of Lane A accounts joins the Lane B re-check as a next-run follow-up.
+
+### Lane A final counts (per account)
+@cmain7 6 in-window / 2 analytics · @RyanPaganetti 5 / 1 · @jmthrivept 17 / 2 · @sfdata9ers 18 / 18 · @hawkblogger 24 / 2 · @MagicSportsGuy 3 / 1 · @SumerSports 0 / 0 · @GridironInfo_ 17 / 17 · @DevyEusuf 24 / 6 · @statyxio 10 / 7 · @ScottBarrettDFB 4 / 1. Total 111 in-window (62 analytics, 49 non-analytics), 0 duplicates.
+
+### @sfdata9ers (all 18 posts Oct 31; source @FantasyPtsData / fantasypointsdata as stated in posts and bio)
+- 2116612922713763944 — Passer Rating Allowed through Week 7, all players with 21+ targets, full 98-row ranked table (lowest = best; McDuffie 34.7 top, Marshall 151.0 bottom; name certainty PARTIAL at two rows; CSV).
+- 2116578697373241573 — QB Passing Profile through Week 7 (min 105 attempts): one table combining ADOT, target-depth distribution (behind LOS / 0–9 / 10–19 / 20+), and catchable-throw % by the same depth bands, 32 QBs (CSV).
+- 2116596816670290006 — Offensive TDs by Distance through Week 7, full 32-team table with LONG and SUM columns (SF 25 total top; MIN 9 fewest; CSV).
+- 2116569385989218336 — Career YAC Percentage (REG + POST; QBs with >300 snaps in 2026), full 27-row chart (Nix 54.2% top, Mahomes 53.5% 2nd, Winston 35.6% bottom; CSV). Follow-up post 2116577795497189710: Jackson at 44.0%, noted as below the chart's snap minimum.
+- 2116561585040994743 — Passer Rating When Targeted, top 30 (min 28 targets; Smith-Njigba 144.7 top; CSV). Companion chart 2116593545117401376 — the same metric from the bottom: ranks 85–110 captured (Mooney 57.6 at 110; ranks 81–84 not captured; CSV partial).
+- 2116608141362127318 — Run-Call Rate on 2nd & Long (8+ yards to go) by play-caller, full 33 rows (Slowik 38.9% top, Steichen 7.2% bottom; 2 names illegible; CSV). Post text notes a mid-season play-calling change at one club (Payton 38.7% vs Webb 22.2%, as printed).
+- 2116656711322972450 — Offensive EPA gained on First Down (special teams excluded; Weeks 1–7), values for all 32 ranks (HOU +26.3 top, GB −31.6 bottom; team names logos-only outside ranks 1–3 and 30–32; CSV partial).
+- 2116649916659347600 — "The luck factor": EPA From Opponent FG Misses (FGs & XPs, blocked kicks excluded), values for ranks 1–31 (PIT +13.5 top; KC & NO tied at 0; teams logos-only outside ranks 1–3 and the tie; CSV partial).
+- 2116634817013928417 — Drop Air Yards Lost through Week 7, values for all 32 ranks ascending (21 to 206; NE highest at 206; most team names logos-only; CSV partial).
+- 2116641611874701531 — Rush Yards Over Expectation, Top 25 chart; top 14 captured (K. Walker 217.4 top; CSV partial).
+- Scatter charts (PARTIAL, headline level): Missed Tackles Forced vs attempts (post text min 70 carries, chart footer min 56 — discrepancy as shown; leaders Walker ~43, Gibbs ~42); Early Down Conversions Allowed (1st-down vs 2nd-down conversion rate allowed; SF lowest on both axes, LV worst 1st-down rate); QB EPA/Play per Half (min 105 QB plays; 2nd-half leaders approx. Lawrence ~0.42, Goff ~0.40); QB Pressured vs Catchable Throws (min 105 dropbacks; catchable % excludes throwaways, spikes, batted passes, as printed); Completion % and EPA/Target Allowed (min 28 targets; U. Stout weakest labeled extreme ~0.72 EPA/target).
+- 2116540193448804726 — MIN vs DET Week 8 preview EPA/play table (offense vs defense both directions plus special teams; CSV). Same item as filed this morning at headline level; the final report carries the full table.
+
+### @GridironInfo_ (card footers as printed: Data: nflverse, Weather: NWS)
+- Week 8 matchup cards, full two-sided transcriptions for 12 games (PHI–WAS, NE–MIA, KC–DEN, LAC–LAR, ATL–TB, CLE–PIT, LV–NYJ, IND–JAX, MIN–DET, ARI–DAL, TEN–CIN, BAL–BUF): per-game values and ranks for Points, Pass Yards, Rushing Yards by RB / by QB, and Receiving Yards by WR / TE / RB, each shown against the opponent's defense-allowed value (combined CSV, 168 rows). The morning section had these at headline level beyond the BAL side.
+- 2116893264867451127 — 2026 Season Odds table (live odds dated 10/29; columns Make Playoffs / Win Division / Get 1 Seed / Win Conference / Win Super Bowl / 1st Overall Pick; footer as printed: Data: Kalshi; several cells uncertain reads; CSV partial).
+- 2116564711152001363 — 2026 Record in One-Score Games (definition as printed: games decided by 8 points or less; footer: Data: nflverse), full 32-team division tables (CSV partial; several records flagged uncertain in the report).
+- 2116611161324208379 — Last time each team allowed less than 10 points (footers: Data: nflverse + Wikipedia), 32 tiles newest-first (KC Oct 11, 2026 most recent; DAL Oct 1, 2023 oldest; CSV partial). The final report notes the author acknowledged in-thread that the graphic was made the prior Sunday and not updated.
+- 2116862904855142562 — 2026 QB Aggressiveness: full 31-row table already filed in the Lane C correction (definition and Next Gen Stats source as filed there); the final report's values agree.
+
+### @cmain7
+- 2116662289462178295 — 2026 Survivor Week 8 Reference Card (full 32 rows; CSV). Definitions as printed in the image footer: USABLE WEEKS ≥65% = weeks W8–W18 where the team's win% is ≥65%; TOP-5 WEEKS = weeks ranked top 5; PEAK = highest win% W8–W18. Image carries the ETR logo; no other source stated. (Conflicts with the interim description — see conflict note.)
+- 2116896195553747184 — text-only item built on highest in-game win probability (a $10 rolled-over bet against one team at its highest in-game win probability in each of its last three games stated as worth $11,336.17); no source stated.
+
+### @hawkblogger (author's own graphics; no external source stated beyond "news reports" as quoted in the methodology note)
+- 2116658214033117578 — RB ACL-return timeline: days from ACL tear to first regular-season game back for 19 backs, 1999–2026 (Peterson 265 days fastest, 2012; Charbonnet 289 days highlighted as the fastest since 2012; CSV partial).
+- 2116661732626321905 — RB ACL-return performance curve: each back measured against himself (yards per carry vs his own pre-tear level); typical-back (median) gap by games-back bucket — games 1–4: −0.67 (9 of 12 below own level), 5–8: −0.84 (8 of 12), 9–12: −0.18 (5 of 9), 13+: −0.10 (4 of 8); 13 backs since 1999 per the chart footer (CSV).
+
+### @statyxio (matchup cards branded STATYX DATA LAB; no external source stated in the posts examined)
+- 2116842235815985413 + 2116842238013800894 — Statyx Game Lab simulation post: a tied late-game scenario run as 10,000 matchup games plus 10,000 paired baseline games (method as stated: sims built on both teams' real offensive and defensive tendencies, down to the play level). Results as printed: Buffalo won 61.1%, Baltimore 38.0%, 0.9% tie; most common final Bills 27, Ravens 24 (94 times); the embedded video is one of those games, "not an average" (as printed).
+- 2116536006677790765 (mandatory) — Week 8 Matchup Map thread head: methodology as stated in the post — built on each defense's last 3 games, not the full 7 weeks. The installment cards' headers read "2026 WEEKS 4–7" / "4 GAMES" (both reported as shown).
+- 2116536010066874725 (mandatory) — Matchup Map 1/13 (Raiders at Jets), full 6-row defensive card (LV: pass EPA/dropback allowed +0.351 #1 most, success allowed 54.7%, explosive run rate 16.7%; NYJ mid-pack; CSV). Installments 2/13–13/13 were viewed in conversation view only (thread-reply rule, not counted); lead lines and two glimpsed cards (8/13 CLE–PIT, 9/13 LAC–LAR) are PARTIAL in the lane's report.
+- 2116574073094652015 — coverage-split target rate for one WR (36.4% target rate vs man, 12/33 routes; 15.1% vs zone, 16/106 routes; near-equal yardage on 73 fewer routes, as printed).
+- 2116621229792882801 — yards after contact per carry item (4.33 YAC/carry through 7 games for one RB; opposing defense described by a run-defense grade rank, as printed).
+- 2116678931223019751 — EPA per target ranking claim in text (one WR 21st among WRs), quoting a post that credits the data "(per @statyxio)" with three values (0.476 / 0.433 / 0.305 with ranks).
+
+### @DevyEusuf (college / draft scope; sources as noted)
+- 2116795923070365931 — Experience Adjusted Rec Yds Per Team Pass Att: a per-player career trajectory plotted by year out of high school against a dashed reference line labeled "Avg of WRs with a Top 24 NFL Season"; two players' lines tracked side by side (approx. reads; CSV partial). Chart header as printed: campus2canton.com, min 4 games; image footer as printed (PARTIAL legibility): Figure @JerrickBackous / Data @_TanHo | @CFB_Data with @cfbfastR.
+- 2116710087402356978 — Open Score for rookie WRs through Week 7 (9 names, 70 top to 32). The post itself states no source; the quoted Week 6 post carries the link espnanalytics.com/receivers (as shown).
+- 2116806852403159422 / 2116806519400620516 — 2027-draft underclassmen WR lists by dual thresholds: YPRR ≥ 3.00 vs both man and zone (3 names), and Receiving Grade ≥ 80.0 vs both man and zone (2 names); no per-player values; no source stated.
+- 2116800666626892056 / 2116799091724496980 — two-player first-36-games fantasy comparison table and a single-player by-season table (CSV).
+
+### Remaining Lane A accounts
+- @ScottBarrettDFB 2116661886284447864 — TPRR item: one TE leading the position in TPRR at 0.28 (next named 0.25), rising to a team-high 0.31 with a named QB under center; the opposing defense allowing a league-high 29.4 fantasy points per game to TEs (+7.9 vs the next defense, as printed), with an 8-name list of TEs over 13 points against it. The abbreviation TPRR is not expanded in the post; no source stated in the post (author bio affiliation @FantasyPtsData, as shown).
+- @MagicSportsGuy 2116598245619315008 — Week 8 Pass Funnel / Run Funnel top-5 matchup lists (text only, no values, no definition stated). Companion announcement (ID not captured): a Funnel Report tool described as taking in "46 stats & 16 factors" with a weekly matchup grade, at the author's StatRankings (as shown in the post and bio).
+- @RyanPaganetti 2116700157282775484 — historical-rarity item: no prior NCAA or NFL game with both teams making a 60+ yard field goal in the final 30 seconds of regulation (criteria as stated in text); no source stated. A second in-window post announces a forthcoming analysis of the new NFL K-ball process and kick distance (no data yet).
+- @jmthrivept — 2 analytics-classified items in the final report: 2116901868752540040 (Week 9 availability list with reinjury-risk lean notes; no metric definition, no source stated) and 2116645131210379282 (a definition of the "Questionable" injury designation, as quoted in the report). The interim delivery's team injury tables are part of the conflict above.
+- @SumerSports — 0 in-window in the final report (newest posts Oct 29); conflicts with the interim delivery (see conflict note).
+
+### Innovation-kernel notes (attributed, not build orders)
+- Paired-baseline simulation design (@statyxio Game Lab): matchup sims reported against an equal-size paired baseline set, with the modal final score and its frequency published and the video explicitly framed as one sampled game rather than an average.
+- Recency-window defensive map (@statyxio): a weekly defensive matchup product built on each defense's last 3 games by the author's stated method (card headers show a 4-game window — both as shown), grading pass/run efficiency and explosive rates allowed on one 6-row card per game.
+- Combined passing-profile table (@sfdata9ers / @FantasyPtsData): ADOT, target-depth distribution, and catchable-throw % by depth band in a single per-QB table (2116578697373241573).
+- "Luck factor" framing (@sfdata9ers / @FantasyPtsData): EPA gained from opponent FG misses (blocked kicks excluded) published as a team ranking (2116649916659347600).
+- Self-referenced return curve (@hawkblogger): post-ACL performance measured against each back's own pre-injury level by games-back bucket, paired with a days-to-return timeline for the same population.
+- One-score game records (@GridironInfo_): team W-L in games decided by 8 points or less, published by division (2116564711152001363).
+
+### Endpoints / sources noted in the final report
+- No new data endpoint identified. Source credits as printed: @FantasyPtsData / fantasypointsdata.com (@sfdata9ers posts and bio; @ScottBarrettDFB bio), nflverse and NWS (@GridironInfo_ card footers), Kalshi (@GridironInfo_ season-odds footer), Next Gen Stats (@GridironInfo_ passer-rating chart header and the Aggressiveness post), Wikipedia (@GridironInfo_ under-10 graphic footer), ESPN (@GridironInfo_ college graphics footers, below-window items), campus2canton.com and @_TanHo / @CFB_Data with @cfbfastR (@DevyEusuf chart), espnanalytics.com/receivers (link on the quoted post under @DevyEusuf's Open Score item), Statyx.io / Statyx Game Lab (@statyxio bio and posts, own product), StatRankings.com (@MagicSportsGuy bio).
+
+### Gap-audit update
+- New post-cutoff observations for the next run (viewed by Lane A after the 09:08 CT cutoff): @hawkblogger 2116913529903354357 (9:21 AM Nov 1), @ScottBarrettDFB 2116913177787044015 (9:20 AM Nov 1), and two @GridironInfo_ posts minutes before the lane's ~09:42 AM observation (a birthdays item and a 2026 3rd/4th-and-1-or-less conversion-rate chart; IDs not captured).
+- Still partial from the final report: @sfdata9ers logo-only team names on three rank tables and five scatter charts; @GridironInfo_ season-odds uncertain cells and one-score records; @statyxio installments 2/13–13/13 (conversation-view lead lines only); the sim video itself not transcribed.
+- Open conflicts now stand at two: Lane B (morning section) and Lane A (this addendum). Both interim deliveries are preserved in the run's staging folders; account re-verification is the standing next-run follow-up for both lanes.
