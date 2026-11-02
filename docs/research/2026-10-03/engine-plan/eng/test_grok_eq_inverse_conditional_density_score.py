@@ -1,32 +1,38 @@
-"""Fail-closed tests for inverse_conditional_density_score. Returns None on invalid input."""
+"""Fail-closed tests for inverse_conditional_density_score from arXiv:2610.37866."""
+from __future__ import annotations
+
 import math
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from grok_eq_inverse_conditional_density_score import inverse_conditional_density_score
 
 
-def test_valid_unit_density():
-    res = inverse_conditional_density_score(1.0)
-    assert res is not None
-    assert abs(res - 1.0) < 1e-9
-    assert math.isfinite(res)
+def test_positive_density():
+    assert inverse_conditional_density_score(0.5) == 2.0
 
 
-def test_valid_half_density():
-    res = inverse_conditional_density_score(0.5)
-    assert res is not None
-    assert abs(res - 2.0) < 1e-9
+def test_unit_density():
+    assert inverse_conditional_density_score(1.0) == 1.0
 
 
-def test_none_on_missing():
-    assert inverse_conditional_density_score(None) is None
+def test_small_density():
+    assert abs(inverse_conditional_density_score(0.01) - 100.0) < 1e-9
 
 
-def test_none_on_zero():
+def test_zero_density_fails_closed():
     assert inverse_conditional_density_score(0.0) is None
 
 
-def test_none_on_negative():
+def test_negative_density_fails_closed():
     assert inverse_conditional_density_score(-0.1) is None
 
 
-def test_none_on_non_numeric():
-    assert inverse_conditional_density_score("bad") is None
+def test_non_finite_fails_closed():
+    assert inverse_conditional_density_score(float("nan")) is None
+    assert inverse_conditional_density_score(float("inf")) is None
+
+
+def test_none_fails_closed():
+    assert inverse_conditional_density_score(None) is None
