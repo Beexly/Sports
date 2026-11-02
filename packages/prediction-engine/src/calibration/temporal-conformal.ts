@@ -1,6 +1,8 @@
 
 export interface AciState {
   readonly alpha: number;
+  readonly gamma: number;
+  readonly rollingMiscoverage?: number;
 }
 
 /** ACI update: alpha_{t+1} = alpha_t + gamma * (targetErr - err_t). */
@@ -9,7 +11,11 @@ export function aciUpdate(state: AciState, covered: boolean, targetAlpha: number
   if (!(targetAlpha > 0 && targetAlpha < 1)) throw new Error("temporal-conformal: targetAlpha in (0,1) required");
   const err = covered ? 0 : 1;
   const next = state.alpha + gamma * (targetAlpha - err);
-  return { alpha: Math.min(Math.max(next, 0.001), 0.5) };
+  return {
+    alpha: Math.min(Math.max(next, 0.001), 0.5),
+    gamma,
+    rollingMiscoverage: state.rollingMiscoverage,
+  };
 }
 
 /** Empirical quantile of trailing nonconformity scores at the adapted level. */

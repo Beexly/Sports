@@ -36,7 +36,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     vi.restoreAllMocks();
   });
 
-  it("exposes 5 Week 8 Galaxy Picks packages with guaranteedPriceCents: null and zero third-party brand names", () => {
+  it("exposes 5 Week 8 Galaxy Picks packages with creditBackPriceCents: null and zero third-party brand names", () => {
     expect(LIVE_PACKAGE_CATALOG.length).toBe(5);
     const slugs = LIVE_PACKAGE_CATALOG.map((p) => p.slug);
     expect(slugs).toEqual([
@@ -49,7 +49,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     const bannedBrands = /\b(WagerTalk|OnlyFans|FTN|Circa|Pinnacle)\b/i;
     for (const pkg of LIVE_PACKAGE_CATALOG) {
-      expect(pkg.guaranteedPriceCents).toBeNull();
+      expect(pkg.creditBackPriceCents).toBeNull();
       const serialized = JSON.stringify(pkg);
       expect(serialized).not.toMatch(bannedBrands);
     }
@@ -77,8 +77,8 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
     // Locked preview must NEVER leak confidence numbers, side picks, or over/under picks
     expect(container.textContent).not.toMatch(/Side Confidence|Total Confidence|61\/100|58\/100|Take Green Bay|and the under/i);
-    // Guaranteed toggle must not render when guaranteedPriceCents is null
-    expect(container.textContent).not.toContain("Guaranteed Credit-Back");
+    // CreditBack toggle must not render when creditBackPriceCents is null
+    expect(container.textContent).not.toContain("Credit-Back");
 
     // Teaser confidence is formatted strictly as XX/100
     for (const teaser of teasers) {
@@ -145,7 +145,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     for (const PageComponent of gatedPages) {
       const { container, unmount } = render(<PageComponent />);
       expect(container.textContent).toContain(
-        "🚧 Under Construction — Galaxy Picks & DFS Only",
+        "🚧 Under Construction · Galaxy Picks & DFS Only",
       );
       expect(container.textContent).toContain("GALAXY PICKS (PAID)");
       expect(container.textContent).toContain("DFS");

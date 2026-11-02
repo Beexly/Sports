@@ -9,11 +9,17 @@ export const FABLE_LABEL_TASK_TYPES = [
 
 export const LabelingManifestItemSchema = z.object({
   candidate_id: z.string().min(1),
-  task_type: z.enum(FABLE_LABEL_TASK_TYPES),
+  // Zod v4's enum overloads reject a bare `readonly` tuple binding here; the
+  // spread materialises a fresh array literal the overload accepts.
+  task_type: z.enum([...FABLE_LABEL_TASK_TYPES]),
   source_id: z.string().min(1),
   prompt: z.string().min(1),
   priority: z.number().int().min(1).max(5),
-  metadata: z.record(z.union([z.string(), z.number(), z.boolean(), z.null()])).default({}),
+  // Zod v4's z.record requires BOTH the key schema and the value schema; the
+  // single-argument form was v3 and now resolves to the params overload.
+  metadata: z
+    .record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()]))
+    .default({}),
 });
 
 export const LabelingManifestSchema = z.object({

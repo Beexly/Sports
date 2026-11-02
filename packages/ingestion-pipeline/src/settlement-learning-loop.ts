@@ -103,7 +103,7 @@ export async function runSettlementLearningLoop(
 
   const probs = binaryPicks.map((p) => p.trueProb);
   const outcomes = binaryPicks.map((p) => (p.result === "WIN" ? 1 : 0));
-  const wins = outcomes.reduce((acc, y) => acc + y, 0);
+  const wins = outcomes.reduce<number>((acc, y) => acc + y, 0);
   const winRate = wins / outcomes.length;
 
   // 1. Murphy (1973) Brier Vector Partition
@@ -115,7 +115,10 @@ export async function runSettlementLearningLoop(
   }
 
   // Trailing ECE
-  const ece = expectedCalibrationError(probs, outcomes, 10);
+  const ece = expectedCalibrationError(
+    probs.map((p, i) => ({ p, y: outcomes[i] ?? 0 })),
+    10,
+  );
 
   // 2. Online Beta Recalibration via OGD
   const calibrationSamples = binaryPicks.map((p, idx) => ({

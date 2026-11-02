@@ -264,10 +264,10 @@ export function generateTuesdayMasterLock(
  * against fresh quotes. tau and the mindset hash are never touched here.
  */
 export function advanceWeeklyLockWithInjuries(
-  lock: TuesdayMasterLock,
+  masterLock: TuesdayMasterLock,
   advance: AdvanceInjuryInput,
 ): TuesdayMasterLock {
-  const games: WeeklyGameLock[] = lock.games.map((game) => {
+  const games: WeeklyGameLock[] = masterLock.games.map((game) => {
     const { coachLock } = game;
 
     // SEAL GUARD: the frozen coach input plus the carried tau must reproduce
@@ -303,18 +303,18 @@ export function advanceWeeklyLockWithInjuries(
   // exact string match against the canonical id rather than a regex parse of
   // the row's id back into a team name.
   const affectedCallIds = new Set<string>();
-  for (const game of lock.games) {
+  for (const game of masterLock.games) {
     if (advance.byGameId[game.gameId] === undefined) continue;
     affectedCallIds.add(personnelCallId(game.coachLock.frozenCoachInput.homeTeam));
     affectedCallIds.add(personnelCallId(game.coachLock.frozenCoachInput.awayTeam));
   }
   const signedCalls =
-    lock.signedCalls === undefined
+    masterLock.signedCalls === undefined
       ? undefined
-      : lock.signedCalls.filter((call) => !affectedCallIds.has(call.id));
+      : masterLock.signedCalls.filter((call) => !affectedCallIds.has(call.id));
 
   return {
-    ...lock,
+    ...masterLock,
     version: advance.version,
     lockedAtIso: advance.recordedAtIso,
     games,
@@ -332,7 +332,7 @@ export function advanceWeeklyLockWithInjuries(
  * produced without a market view and quotes arrive later in the day.
  */
 export function priceSealedLock(
-  lock: TuesdayMasterLock,
+  masterLock: TuesdayMasterLock,
   games: readonly WeeklyGameInput[],
   marketQuotes: MarketQuotesByCallId,
   minEdgePct = 2.0,
@@ -342,7 +342,7 @@ export function priceSealedLock(
     marketQuotes,
     minEdgePct,
   );
-  return { ...lock, signedCalls };
+  return { ...masterLock, signedCalls };
 }
 
 // --------------------------------------------------------------------------- //

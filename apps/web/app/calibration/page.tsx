@@ -20,7 +20,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
           className="rounded-2xl border-2 border-amber-400/50 bg-slate-900 p-8 sm:p-12 text-center shadow-2xl"
         >
           <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-300">
-            🚧 Under Construction — Galaxy Picks &amp; DFS Only
+            🚧 Under Construction · Galaxy Picks &amp; DFS Only
           </span>
           <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
             Focused on Galaxy Picks &amp; DFS Right Now

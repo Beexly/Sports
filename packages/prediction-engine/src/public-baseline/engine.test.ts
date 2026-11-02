@@ -9,7 +9,7 @@ import { captainPoints, captainSalary, SHOWDOWN_CAP, underCap, withinTeamLimit }
 import { additiveDevig, compareDevig, multiplicativeDevig, powerDevig, shinDevig } from "./devig.js"
 import { parseEspnScoreboard } from "./espn.js"
 import { NFL_COMPETITION_ID, fixturesUrl, homeAwayScore, homeVsAway, parseScores365 } from "./scores365.js"
-import { bestTeamTitleRate, brierScore, pageCusum, reliabilityBins, seriesWinProb } from "./research.js"
+import { bestTeamTitleRate, brierScoreRows, pageCusum, reliabilityBins, seriesWinProb } from "./research.js"
 import { SHIFT_FLOOR, shouldWithhold, situationalShift } from "./withhold.js"
 
 describe("538 team Elo", () => {
@@ -213,9 +213,9 @@ describe("shrinkage, withhold, metrics, fence", () => {
   })
 
   it("scores calibration, finds a break, and shows the best team does not always win", () => {
-    expect(brierScore([{ p: 1, y: 1 }, { p: 0, y: 0 }])).toBe(0)
-    expect(brierScore([{ p: 0.5, y: 1 }, { p: 0.5, y: 0 }])).toBe(0.25)
-    expect(brierScore([])).toBe(null)
+    expect(brierScoreRows([{ p: 1, y: 1 }, { p: 0, y: 0 }])).toBe(0)
+    expect(brierScoreRows([{ p: 0.5, y: 1 }, { p: 0.5, y: 0 }])).toBe(0.25)
+    expect(brierScoreRows([])).toBe(null)
     const bins = reliabilityBins(
       [
         { p: 0.2, y: 0 },

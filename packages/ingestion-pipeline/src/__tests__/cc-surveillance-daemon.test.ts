@@ -18,7 +18,7 @@ describe("CcSurveillanceDaemon (Component 8 / Workstream 2)", () => {
     intrinsic_sd: 0.20,
     horizon_epistemic_sd: 0.08,
     expected_clv_capture: 0.02,
-    lineMoveSkillVector: [0.40, 0.30, 0.30],
+    line_move_skill_vector: [0.40, 0.30, 0.30],
     watch_commitments: [
       {
         rule_id: "CC-2026-07-CIN-BAL-001",
@@ -77,7 +77,7 @@ describe("CcSurveillanceDaemon (Component 8 / Workstream 2)", () => {
     expect(result.updatedEntries.length).toBe(1);
     expect(lateSwapExecuted).toBe(true);
 
-    const updated = result.updatedEntries[0];
+    const updated = result.updatedEntries[0]!;
     // model_true_prob should shift from 0.54 to 0.68 (+0.14)
     expect(updated.model_true_prob_wednesday).toBeCloseTo(0.68, 3);
     expect(updated.surveillance_status).toBe("SWAP_TRIGGERED");

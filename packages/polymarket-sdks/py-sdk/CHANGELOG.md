@@ -27,7 +27,7 @@
 
 - **client:** Read indexed trading approvals from the configured environment, with no RPC fallback. Recent changes may lag; setup still checks on chain. ([b0aa248](https://github.com/Polymarket/py-sdk/commit/b0aa248))
 - **portfolio:** Add position title filters, price sorting, and first-acquisition times. ([2ee4cde](https://github.com/Polymarket/py-sdk/commit/2ee4cde))
-- **data:** Add earliest settlement estimates and their basis, not guaranteed deadlines. ([6a4e65e](https://github.com/Polymarket/py-sdk/commit/6a4e65e))
+- **data:** Add earliest settlement estimates and their basis, not firm deadlines. ([6a4e65e](https://github.com/Polymarket/py-sdk/commit/6a4e65e))
 - **streams:** Add 60-second equity TWAPs, Chainlink/Pyth provider selection, and price source metadata. ([b543c9d](https://github.com/Polymarket/py-sdk/commit/b543c9d))
 - **perps:** Add chase and TWAP execution lifecycles through async sessions. ([e4454a0](https://github.com/Polymarket/py-sdk/commit/e4454a0))
 - **perps:** Add GTD orders, partial position TP/SL exits, and trailing stops with activation events. ([017b976](https://github.com/Polymarket/py-sdk/commit/017b976))
