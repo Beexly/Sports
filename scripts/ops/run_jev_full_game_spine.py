@@ -40,6 +40,19 @@ from typing import Any
 
 import numpy as np
 
+def _positive_moment_draw(rng, loc, scale, size=None):
+    """Mean/variance-matched gamma draw. Not a Gaussian around a static mean."""
+    loc = float(loc)
+    scale = abs(float(scale))
+    if loc <= 1e-6:
+        return 0.0 if size is None else np.zeros(size)
+    shape = (loc / max(scale, 1e-6)) ** 2
+    gscale = (max(scale, 1e-6) ** 2) / loc
+    if size is None:
+        return float(rng.gamma(shape, gscale))
+    return rng.gamma(shape, gscale, size=size)
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HERMES_JEV_PATH = Path(r"C:\Users\Garrett\hermes-jev-skills")
 if HERMES_JEV_PATH.exists() and str(HERMES_JEV_PATH) not in sys.path:
@@ -632,7 +645,7 @@ def resolve_snap_transition(
         runoff = float(rng.uniform(5.0, 9.0))
     else:
         base_pace = float(off_tend.get("sec_per_play", 27.2))
-        runoff = float(np.clip(rng.normal(base_pace, 3.5), 16.0, 36.0))
+        runoff = float(np.clip(_positive_moment_draw(rng, base_pace, 3.5), 16.0, 36.0))
 
     return {
         "play_type": "pass" if is_pass else "run",

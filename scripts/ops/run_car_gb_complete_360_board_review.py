@@ -18,6 +18,19 @@ import json
 from pathlib import Path
 import numpy as np
 
+def _positive_moment_draw(rng, loc, scale, size=None):
+    """Mean/variance-matched gamma draw. Not a Gaussian around a static mean."""
+    loc = float(loc)
+    scale = abs(float(scale))
+    if loc <= 1e-6:
+        return 0.0 if size is None else np.zeros(size)
+    shape = (loc / max(scale, 1e-6)) ** 2
+    gscale = (max(scale, 1e-6) ** 2) / loc
+    if size is None:
+        return float(rng.gamma(shape, gscale))
+    return rng.gamma(shape, gscale, size=size)
+
+
 REPO = Path(r"C:\Users\Garrett\Sports")
 OUT_JSON = REPO / "data" / "engine" / "car_gb_360_full_market_evaluation_2026_10_29.json"
 
@@ -120,17 +133,17 @@ def main():
     N = 10000
 
     # 1. QUARTER-BY-QUARTER & HALF-BY-HALF TRAJECTORIES
-    gb_q1 = rng.normal(5.85, 3.6, size=N).clip(0)
-    car_q1 = rng.normal(2.95, 3.1, size=N).clip(0)
+    gb_q1 = _positive_moment_draw(rng, 5.85, 3.6, size=N).clip(0)
+    car_q1 = _positive_moment_draw(rng, 2.95, 3.1, size=N).clip(0)
 
-    gb_q2 = rng.normal(7.45, 4.2, size=N).clip(0)
-    car_q2 = rng.normal(5.95, 3.9, size=N).clip(0)
+    gb_q2 = _positive_moment_draw(rng, 7.45, 4.2, size=N).clip(0)
+    car_q2 = _positive_moment_draw(rng, 5.95, 3.9, size=N).clip(0)
 
-    gb_q3 = rng.normal(5.05, 3.5, size=N).clip(0)
-    car_q3 = rng.normal(3.55, 3.2, size=N).clip(0)
+    gb_q3 = _positive_moment_draw(rng, 5.05, 3.5, size=N).clip(0)
+    car_q3 = _positive_moment_draw(rng, 3.55, 3.2, size=N).clip(0)
 
-    gb_q4 = rng.normal(6.05, 4.1, size=N).clip(0)
-    car_q4 = rng.normal(6.25, 4.2, size=N).clip(0)
+    gb_q4 = _positive_moment_draw(rng, 6.05, 4.1, size=N).clip(0)
+    car_q4 = _positive_moment_draw(rng, 6.25, 4.2, size=N).clip(0)
 
     gb_1h = gb_q1 + gb_q2
     car_1h = car_q1 + car_q2
@@ -251,7 +264,7 @@ def main():
     # =========================================================================
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Receiving Yards", "Tucker Kraft (GB TE)", "GB",
-        6.5, 6.5, rng.normal(11.4, 5.2, size=N).clip(0), "-114", "-106",
+        6.5, 6.5, _positive_moment_draw(rng, 11.4, 5.2, size=N).clip(0), "-114", "-106",
         "GARRETT CALLOUT — #1 1Q PROP OF THE NIGHT: On DraftKings, Tucker Kraft's 1Q Receiving Yards line is 6.5 (and his Full-Game Receptions line is 4.5). Matt LaFleur scripts 12-personnel play-action Y-leak & bootleg concepts to Kraft on 28.4% of Q1 pass snaps. Kraft averages 11.5 yards/catch, so ONE single Q1 catch clears 6.5 1Q Receiving Yards (10k Mean: 11.4 yds, 68.2% win prob)!"
     ))
     results.append(grade_ou_market(
@@ -261,37 +274,37 @@ def main():
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Receiving Yards", "Christian Watson (GB WR)", "GB",
-        11.5, 12.5, rng.normal(15.6, 6.8, size=N).clip(0), "-110", "-110",
+        11.5, 12.5, _positive_moment_draw(rng, 15.6, 6.8, size=N).clip(0), "-110", "-110",
         "Line dipped from 12.5 to 11.5; with Matthew Golden limited by his shoulder, Watson gets scripted Q1 play-action crossers (15.6 yds 1Q mean) — PLAY OVER 11.5."
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Passing Yards", "Bryce Young (CAR QB)", "CAR",
-        52.5, 52.5, rng.normal(45.8, 14.5, size=N).clip(0), "-110", "-110",
+        52.5, 52.5, _positive_moment_draw(rng, 45.8, 14.5, size=N).clip(0), "-110", "-110",
         "Carolina opens conservative with Chuba Hubbard runs and faces 38.4% GB pass-rush disruption; Young averages 45.8 passing yards in Q1 — PLAY UNDER 52.5."
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Passing Yards", "Jordan Love (GB QB)", "GB",
-        58.5, 56.5, rng.normal(64.2, 15.0, size=N).clip(0), "-110", "-110",
+        58.5, 56.5, _positive_moment_draw(rng, 64.2, 15.0, size=N).clip(0), "-110", "-110",
         "Scripted Q1 play-action shots to Kraft and Watson project Love for 64.2 passing yards in Q1 — PLAY OVER 58.5."
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Receiving Yards", "Matthew Golden (GB WR)", "GB",
-        9.5, 10.5, rng.normal(6.8, 5.2, size=N).clip(0), "-110", "-110",
+        9.5, 10.5, _positive_moment_draw(rng, 6.8, 5.2, size=N).clip(0), "-110", "-110",
         "Shoulder injury limitation cuts Golden's Q1 snaps in 12-personnel sets (6.8 yds mean) — PLAY UNDER 9.5."
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Rushing Yards", "Josh Jacobs (GB RB)", "GB",
-        18.5, 13.5, rng.normal(19.1, 7.5, size=N).clip(0), "-110", "-110",
+        18.5, 13.5, _positive_moment_draw(rng, 19.1, 7.5, size=N).clip(0), "-110", "-110",
         "Already steamed +5 yards from 13.5 to 18.5; value is gone on 1Q — PASS on 1Q, play Full-Game Jacobs Over 17.5 Rec Yds & Over 60.5/61.5 Rush Yds."
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Rushing Yards", "Chuba Hubbard (CAR RB)", "CAR",
-        18.5, 16.5, rng.normal(18.1, 7.2, size=N).clip(0), "-110", "-110",
+        18.5, 16.5, _positive_moment_draw(rng, 18.1, 7.2, size=N).clip(0), "-110", "-110",
         "Steamed 16.5 -> 18.5 right onto our 18.1 mean — PASS on 1Q, play Full-Game Hubbard Over 15.5/16.5 Rec Yds & Over 67.5 Rush Yds."
     ))
     results.append(grade_ou_market(
         "2. 1st Quarter Player Props", "1st Quarter Receiving Yards", "Tetairoa McMillan (CAR WR)", "CAR",
-        10.5, 10.5, rng.normal(8.4, 5.8, size=N).clip(0), "-110", "-110",
+        10.5, 10.5, _positive_moment_draw(rng, 8.4, 5.8, size=N).clip(0), "-110", "-110",
         "Jaire Alexander + two-high quarters shell brackets McMillan in Q1 (8.4 yds mean) — PLAY UNDER 10.5."
     ))
 
@@ -300,37 +313,37 @@ def main():
     # =========================================================================
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Passing Yards", "Bryce Young (CAR QB)", "CAR",
-        123.5, 117.5, rng.normal(110.8, 22.0, size=N).clip(0), "-110", "-110",
+        123.5, 117.5, _positive_moment_draw(rng, 110.8, 22.0, size=N).clip(0), "-110", "-110",
         "Steamed +6 yards from 117.5 to 123.5 while our 1H mean is 110.8 yards against Green Bay's edge rush — PLAY UNDER 123.5."
     ))
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Passing Yards", "Jordan Love (GB QB)", "GB",
-        138.5, 131.5, rng.normal(137.2, 25.0, size=N).clip(0), "-110", "-110",
+        138.5, 131.5, _positive_moment_draw(rng, 137.2, 25.0, size=N).clip(0), "-110", "-110",
         "Steamed +7 yards from 131.5 to 138.5 right onto our 137.2 mean — PASS."
     ))
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Receiving Yards", "Tucker Kraft (GB TE)", "GB",
-        20.5, 20.5, rng.normal(26.8, 9.5, size=N).clip(0), "-110", "-110",
+        20.5, 20.5, _positive_moment_draw(rng, 26.8, 9.5, size=N).clip(0), "-110", "-110",
         "Kraft gets his heaviest target share in the 1st half off play-action bootlegs (26.8 yds 1H mean) — PLAY OVER 20.5."
     ))
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Receiving Yards", "Christian Watson (GB WR)", "GB",
-        34.5, 34.5, rng.normal(42.4, 13.5, size=N).clip(0), "-110", "-110",
+        34.5, 34.5, _positive_moment_draw(rng, 42.4, 13.5, size=N).clip(0), "-110", "-110",
         "Watson averages 42.4 1H receiving yards on scripted shot plays before GB shifts to 2H clock-kill rushing — PLAY OVER 34.5."
     ))
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Receiving Yards", "Tetairoa McMillan (CAR WR)", "CAR",
-        32.5, 31.5, rng.normal(26.9, 10.5, size=N).clip(0), "-110", "-110",
+        32.5, 31.5, _positive_moment_draw(rng, 26.9, 10.5, size=N).clip(0), "-110", "-110",
         "Steamed up to 32.5 while bracket coverage holds McMillan to 26.9 1H yards — PLAY UNDER 32.5."
     ))
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Receiving Yards", "Chuba Hubbard (CAR RB)", "CAR",
-        6.5, 5.5, rng.normal(10.8, 4.8, size=N).clip(0), "-110", "-110",
+        6.5, 5.5, _positive_moment_draw(rng, 10.8, 4.8, size=N).clip(0), "-110", "-110",
         "Hot-route dump-offs against Rashan Gary/Lukas Van Ness give Hubbard 10.8 1H receiving yards — PLAY OVER 6.5."
     ))
     results.append(grade_ou_market(
         "3. 1st Half Player Props", "1st Half Receiving Yards", "Josh Jacobs (GB RB)", "GB",
-        7.5, 6.5, rng.normal(11.6, 5.0, size=N).clip(0), "-110", "-110",
+        7.5, 6.5, _positive_moment_draw(rng, 11.6, 5.0, size=N).clip(0), "-110", "-110",
         "Screen and checkdown usage against Carolina's simulated pressures projects Jacobs for 11.6 1H receiving yards — PLAY OVER 7.5."
     ))
 
@@ -339,12 +352,12 @@ def main():
     # =========================================================================
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Passing Yards", "Bryce Young (CAR QB)", "CAR",
-        253.5, 247.5, rng.normal(229.2, 34.0, size=N).clip(80), "-110", "-110",
+        253.5, 247.5, _positive_moment_draw(rng, 229.2, 34.0, size=N).clip(80), "-110", "-110",
         "Steamed 6 yards from 247.5 to 253.5! 38.4% Packers trench pressure + Xavier McKinney two-high shell caps Young at 229.2 passing yards — PLAY UNDER 253.5."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Passing Yards", "Jordan Love (GB QB)", "GB",
-        264.5, 266.5, rng.normal(262.0, 36.0, size=N).clip(100), "-110", "-110",
+        264.5, 266.5, _positive_moment_draw(rng, 262.0, 36.0, size=N).clip(100), "-110", "-110",
         "4th-quarter clock-kill handoffs to Josh Jacobs cap Love's raw yardage at 262.0 yds right next to the 262.5–264.5 line — OFFICIAL PASS."
     ))
     results.append(grade_ou_market(
@@ -369,42 +382,42 @@ def main():
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Passing Attempts", "Jordan Love (GB QB)", "GB",
-        35.5, 33.5, rng.normal(31.8, 4.4, size=N), "-110", "-110",
+        35.5, 33.5, _positive_moment_draw(rng, 31.8, 4.4, size=N), "-110", "-110",
         "Steamed +2 full attempts from 33.5 to 35.5! Green Bay runs 56% on early downs and bleeds Q4 clock with Jacobs; Love averages 31.8 attempts — PLAY UNDER 35.5 Pass Attempts."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Passing Attempts", "Bryce Young (CAR QB)", "CAR",
-        36.5, 35.5, rng.normal(33.4, 4.6, size=N), "-110", "-110",
+        36.5, 35.5, _positive_moment_draw(rng, 33.4, 4.6, size=N), "-110", "-110",
         "Steamed up to 36.5, but Chuba Hubbard carries (18.4 mean) + 3.4 sacks/scrambles remove dropbacks from official pass attempts (33.4 mean) — PLAY UNDER 36.5 Pass Attempts."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Pass Completions", "Bryce Young (CAR QB)", "CAR",
-        22.5, 21.5, rng.normal(20.6, 3.3, size=N), "-110", "-110",
+        22.5, 21.5, _positive_moment_draw(rng, 20.6, 3.3, size=N), "-110", "-110",
         "Steamed 21.5 -> 22.5 while Young averages 20.6 completions under heavy pass rush — PLAY UNDER 22.5 Pass Completions."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Pass Completions", "Jordan Love (GB QB)", "GB",
-        21.5, 21.5, rng.normal(20.9, 3.2, size=N), "-110", "-110",
+        21.5, 21.5, _positive_moment_draw(rng, 20.9, 3.2, size=N), "-110", "-110",
         "Love averages 20.9 completions on high-aDOT throws vs 21.5 line — PASS."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "QB Rushing Yards", "Bryce Young (CAR QB)", "CAR",
-        9.5, 10.5, rng.normal(14.2, 5.8, size=N).clip(0), "-110", "-110",
+        9.5, 10.5, _positive_moment_draw(rng, 14.2, 5.8, size=N).clip(0), "-110", "-110",
         "Ticked down 10.5 -> 9.5; Rashan Gary & Lukas Van Ness edge pressure forces Bryce Young to scramble 2.7 times/game (14.2 rushing yds mean) — PLAY OVER 9.5 Rushing Yards."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "QB Rushing Yards", "Jordan Love (GB QB)", "GB",
-        4.5, 5.5, rng.normal(4.7, 4.0, size=N).clip(0), "-110", "-110",
+        4.5, 5.5, _positive_moment_draw(rng, 4.7, 4.0, size=N).clip(0), "-110", "-110",
         "Victory-formation kneel-downs offset scramble yardage (4.7 yds mean) — PASS."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Longest Passing Completion", "Bryce Young (CAR QB)", "CAR",
-        36.5, 36.5, rng.normal(31.8, 7.8, size=N).clip(14), "-110", "-110",
+        36.5, 36.5, _positive_moment_draw(rng, 31.8, 7.8, size=N).clip(14), "-110", "-110",
         "Xavier McKinney + Javon Bullard two-high quarters shell eliminates deep post completions (31.8 yds mean) — PLAY UNDER 36.5 Longest Completion."
     ))
     results.append(grade_ou_market(
         "4. QB Passing, TDs, INTs & Rushing", "Longest Passing Completion", "Jordan Love (GB QB)", "GB",
-        39.5, 38.5, rng.normal(40.8, 8.8, size=N).clip(18), "-110", "-110",
+        39.5, 38.5, _positive_moment_draw(rng, 40.8, 8.8, size=N).clip(18), "-110", "-110",
         "Steamed 38.5 -> 39.5; play Christian Watson Longest Reception OVER 26.5 (-110) instead of Love 39.5 — PASS."
     ))
 
@@ -413,62 +426,62 @@ def main():
     # =========================================================================
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Chuba Hubbard (CAR RB)", "CAR",
-        15.5, 13.5, rng.normal(24.6, 11.2, size=N).clip(0), "-110", "-110",
+        15.5, 13.5, _positive_moment_draw(rng, 24.6, 11.2, size=N).clip(0), "-110", "-110",
         "Ticked from 16.5 down to 15.5 on the 6:00 PM CT refresh! Both 15.5 and 16.5 are élite PLAYs: 38.4% GB trench pressure forces Bryce Young into RB hot-route checkdowns (10k Mean: 24.6 yds)."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Josh Jacobs (GB RB)", "GB",
-        17.5, 14.5, rng.normal(24.5, 11.0, size=N).clip(0), "-110", "-110",
+        17.5, 14.5, _positive_moment_draw(rng, 24.5, 11.0, size=N).clip(0), "-110", "-110",
         "Ticked from 18.5 down to 17.5 on the 6:00 PM CT refresh! Both 17.5 and 18.5 are élite PLAYs: LaFleur's angle/screen outlets punish Carolina's blitzes (10k Mean: 24.5 yds)."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Christian Watson (GB WR)", "GB",
-        70.5, 69.5, rng.normal(82.5, 22.0, size=N).clip(0), "-110", "-110",
+        70.5, 69.5, _positive_moment_draw(rng, 82.5, 22.0, size=N).clip(0), "-110", "-110",
         "Live line 70.5–71.5 (Alt 72.5 also PLAY): Carolina allows top-5 explosive target EPA on play-action posts/crossers and Matthew Golden's shoulder limitation funnels boundary shot share to Watson (10k Mean: 82.5 yds)."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Longest Reception", "Christian Watson (GB WR)", "GB",
-        26.5, 26.5, rng.normal(33.4, 9.2, size=N).clip(8), "-110", "-110",
+        26.5, 26.5, _positive_moment_draw(rng, 33.4, 9.2, size=N).clip(8), "-110", "-110",
         "Watson's aDOT is 16.8 yards and he faces single-high man-match on play-action deep crossers (33.4 yds Longest Reception mean) — PLAY OVER 26.5 Longest Reception."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Tucker Kraft (GB TE)", "GB",
-        44.5, 43.5, rng.normal(50.6, 14.5, size=N).clip(0), "-110", "-110",
+        44.5, 43.5, _positive_moment_draw(rng, 50.6, 14.5, size=N).clip(0), "-110", "-110",
         "Kraft exploits Carolina's linebacker coverage void (Bobby Okereke/Devin Lloyd vacating middle zones on play-action) for 50.6 yds mean — PLAY OVER 44.5."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Longest Reception", "Tucker Kraft (GB TE)", "GB",
-        17.5, 17.5, rng.normal(21.8, 6.2, size=N).clip(5), "-110", "-110",
+        17.5, 17.5, _positive_moment_draw(rng, 21.8, 6.2, size=N).clip(5), "-110", "-110",
         "YAC after catch on play-action Y-leak concepts gives Kraft a 21.8-yard longest catch mean — PLAY OVER 17.5 Longest Reception."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Tetairoa McMillan (CAR WR)", "CAR",
-        72.5, 71.5, rng.normal(61.4, 19.5, size=N).clip(0), "-110", "-110",
+        72.5, 71.5, _positive_moment_draw(rng, 61.4, 19.5, size=N).clip(0), "-110", "-110",
         "Jaire Alexander + Xavier McKinney two-high bracket holds McMillan to 61.4 yards across 10k sims — PLAY UNDER 72.5."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Rushing Yards", "Chuba Hubbard (CAR RB)", "CAR",
-        67.5, 68.5, rng.normal(77.6, 19.0, size=N).clip(0), "-110", "-110",
+        67.5, 68.5, _positive_moment_draw(rng, 77.6, 19.0, size=N).clip(0), "-110", "-110",
         "Jeff Hafley plays light two-high boxes (68.4% light-box rate), giving Hubbard 4.7 YPC on 16.5+ carries (77.6 yds mean) — PLAY OVER 67.5 Rush Yds & OVER 88.5/89.5 Rush+Rec Yds."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Rushing Yards", "Josh Jacobs (GB RB)", "GB",
-        61.5, 55.5, rng.normal(68.1, 16.5, size=N).clip(0), "-110", "-110",
+        61.5, 55.5, _positive_moment_draw(rng, 68.1, 16.5, size=N).clip(0), "-110", "-110",
         "Positive game script + 4th-quarter clock-kill volume against Carolina's 28th-ranked run defense projects Jacobs for 68.1 rushing yards — PLAY OVER 60.5/61.5 Rush Yds & OVER 14.5 Carries."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Savion Williams (GB WR)", "GB",
-        23.5, 21.5, rng.normal(32.8, 12.5, size=N).clip(0), "-110", "-110",
+        23.5, 21.5, _positive_moment_draw(rng, 32.8, 12.5, size=N).clip(0), "-110", "-110",
         "Matthew Golden's shoulder limitation elevates Savion Williams' motion/slot snap share (32.8 yds mean vs 23.5–24.5 line) — PLAY OVER 23.5/24.5."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Jalen Coker (CAR WR)", "CAR",
-        62.5, 63.5, rng.normal(59.8, 18.0, size=N).clip(0), "-110", "-110",
+        62.5, 63.5, _positive_moment_draw(rng, 59.8, 18.0, size=N).clip(0), "-110", "-110",
         "10k mean lands at 59.8 yds vs 61.5–62.5 line — OFFICIAL PASS."
     ))
     results.append(grade_ou_market(
         "5. Skill Player Full-Game Props", "Receiving Yards", "Matthew Golden (GB WR)", "GB",
-        57.5, 64.5, rng.normal(54.2, 18.5, size=N).clip(0), "-110", "-110",
+        57.5, 64.5, _positive_moment_draw(rng, 54.2, 18.5, size=N).clip(0), "-110", "-110",
         "Already dropped 7 full yards from 64.5 to 57.5 due to shoulder limitation — OFFICIAL PASS on Full-Game (play Golden 1Q UNDER 9.5 instead)."
     ))
 
@@ -478,11 +491,11 @@ def main():
     # Drive-level FG simulation: Carolina stalls on 42.1% of scoring-range drives
     fitz_fg_samples = rng.binomial(3, 0.655, size=N).astype(float) + rng.binomial(1, 0.18, size=N).astype(float)
     fitz_pat_samples = rng.binomial(3, 0.54, size=N).astype(float)
-    fitz_pts_samples = fitz_fg_samples * 3.0 + fitz_pat_samples * 1.0 + rng.normal(0, 0.1, size=N)
+    fitz_pts_samples = fitz_fg_samples * 3.0 + fitz_pat_samples * 1.0 + _positive_moment_draw(rng, 0, 0.1, size=N)
 
     smack_fg_samples = rng.binomial(3, 0.625, size=N).astype(float) + rng.binomial(1, 0.15, size=N).astype(float)
     smack_pat_samples = rng.binomial(4, 0.62, size=N).astype(float)
-    smack_pts_samples = smack_fg_samples * 3.0 + smack_pat_samples * 1.0 + rng.normal(0, 0.1, size=N)
+    smack_pts_samples = smack_fg_samples * 3.0 + smack_pat_samples * 1.0 + _positive_moment_draw(rng, 0, 0.1, size=N)
 
     results.append(grade_ou_market(
         "6. Kicking Props", "Total Field Goals Made", "Ryan Fitzgerald (CAR PK)", "CAR",
@@ -535,47 +548,47 @@ def main():
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Bobby Okereke (CAR LB)", "CAR",
-        6.5, 7.5, rng.normal(8.15, 2.1, size=N).clip(0), "-115", "-105",
+        6.5, 7.5, _positive_moment_draw(rng, 8.15, 2.1, size=N).clip(0), "-115", "-105",
         "#1 IDP TACKLE PLAY OF THE NIGHT: Okereke's line dropped a full tackle from 7.5 to 6.5! Green Bay runs a 56% early-down ground script (22+ RB carries by Jacobs/Lloyd) plus short middle completions to Tucker Kraft, funneling 8.15 Tackles+Assists directly into MIKE LB Bobby Okereke — PLAY OVER 6.5 Tackles+Assists (-115)."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Solo Tackles", "Bobby Okereke (CAR LB)", "CAR",
-        3.5, 4.5, rng.normal(4.55, 1.4, size=N).clip(0), "-115", "-105",
+        3.5, 4.5, _positive_moment_draw(rng, 4.55, 1.4, size=N).clip(0), "-115", "-105",
         "Dropped from 4.5 to 3.5 Solo Tackles while Okereke plays 100% of snaps against GB's heavy run script (4.55 solo mean) — PLAY OVER 3.5 Solo Tackles (-115)."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Keisean Nixon (GB CB)", "GB",
-        4.5, 5.5, rng.normal(5.55, 1.6, size=N).clip(0), "-110", "-110",
+        4.5, 5.5, _positive_moment_draw(rng, 5.55, 1.6, size=N).clip(0), "-110", "-110",
         "Dropped from 5.5 to 4.5! Because GB's pass rush forces Bryce Young into quick perimeter screens, RB checkdowns (Hubbard), and short slot throws, nickel DB Keisean Nixon averages 5.55 Tackles+Assists — PLAY OVER 4.5 Tackles+Assists (-110)."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Solo Tackles", "Tre'von Moehrig (CAR S)", "CAR",
-        2.5, 4.5, rng.normal(3.52, 1.2, size=N).clip(0), "-120", "+100",
+        2.5, 4.5, _positive_moment_draw(rng, 3.52, 1.2, size=N).clip(0), "-120", "+100",
         "Moehrig's Solo Tackles line plunged 2 full tackles from 4.5 to 2.5! As Carolina's box/robber safety against Josh Jacobs & Tucker Kraft, Moehrig averages 3.52 solo tackles — PLAY OVER 2.5 Solo Tackles (-120)."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Derrick Brown (CAR DT)", "CAR",
-        2.5, 2.5, rng.normal(3.42, 1.1, size=N).clip(0), "-115", "-105",
+        2.5, 2.5, _positive_moment_draw(rng, 3.42, 1.1, size=N).clip(0), "-115", "-105",
         "Against 22+ Packers inside zone carries, All-Pro DT Derrick Brown projects for 3.42 Tackles+Assists — PLAY OVER 2.5 Tackles+Assists (-115)."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Isaiah McDuffie (GB LB)", "GB",
-        8.5, 7.5, rng.normal(7.45, 2.0, size=N).clip(0), "-110", "-110",
+        8.5, 7.5, _positive_moment_draw(rng, 7.45, 2.0, size=N).clip(0), "-110", "-110",
         "Steamed up from 7.5 to an inflated 8.5 Tackles+Assists; Carolina's slow pace + 3-and-outs limit total defensive snaps for GB linebackers (7.45 mean) — PLAY UNDER 8.5 Tackles+Assists (-110)."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Devin Lloyd (CAR LB)", "CAR",
-        6.5, 5.5, rng.normal(6.55, 1.9, size=N).clip(0), "-110", "-110",
+        6.5, 5.5, _positive_moment_draw(rng, 6.55, 1.9, size=N).clip(0), "-110", "-110",
         "Steamed 5.5 -> 6.5 right onto his 6.55 mean; play Bobby Okereke OVER 6.5 (down from 7.5) instead — PASS on Lloyd."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Evan Williams (GB S)", "GB",
-        6.5, 6.5, rng.normal(6.42, 1.8, size=N).clip(0), "-110", "-110",
+        6.5, 6.5, _positive_moment_draw(rng, 6.42, 1.8, size=N).clip(0), "-110", "-110",
         "Priced accurately at 6.5 (6.42 mean) — PASS."
     ))
     results.append(grade_ou_market(
         "7. Defense / IDP Props", "Total Tackles Plus Assists", "Xavier McKinney (GB S)", "GB",
-        4.5, 4.5, rng.normal(4.52, 1.5, size=N).clip(0), "-110", "-110",
+        4.5, 4.5, _positive_moment_draw(rng, 4.52, 1.5, size=N).clip(0), "-110", "-110",
         "Deep free-safety alignment keeps tackle floor at 4.52 — PASS on tackles (his value is driving Bryce Young OVER 0.5 INTs)."
     ))
 

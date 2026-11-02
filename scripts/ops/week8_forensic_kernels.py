@@ -506,3 +506,101 @@ def platform_quantiles_from_raw(
         idx = min(len(scored) - 1, max(0, int(round(p * (len(scored) - 1)))))
         return scored[idx]
     return {"p10": q(0.10), "p25": q(0.25), "p50": q(0.50), "p85": q(0.85), "p95": q(0.95)}
+
+
+CANONICAL_2026_ROSTER = {"Geno Smith": "NYJ", "Mike Evans": "SF"}
+PASS_ONLY_EPA_FIELDS = ("air_epa", "yac_epa", "cpoe")
+BRILL_WP_SE = 0.018
+BRILL_Z_90 = 1.645
+
+
+def assert_2026_roster_identity_integrity(
+    rows: Sequence[Mapping[str, Any]],
+    canonical_roster_map: Mapping[str, str] | None = None,
+) -> None:
+    """Raise if a stale cutoff still maps Geno to LV or Evans to TB."""
+    canon = dict(CANONICAL_2026_ROSTER if canonical_roster_map is None else canonical_roster_map)
+    for row in rows:
+        name = str(row.get("name") or row.get("player_name") or row.get("Name") or "")
+        team = str(row.get("team") or row.get("TeamAbbrev") or row.get("team_abbr") or "").upper()
+        expected = canon.get(name)
+        if expected and team and team != expected:
+            raise ValueError(f"stale roster identity: {name} mapped to {team}, canonical is {expected}")
+
+
+def validate_pbp_structural_missingness(pbp_rows: Sequence[Mapping[str, Any]]) -> dict[str, int]:
+    """Pass-only fields stay missing on non-pass plays. Clock gaps must have a same-drive neighbor."""
+    errors: list[str] = []
+    groups: dict[tuple, list[int]] = {}
+    for i, row in enumerate(pbp_rows):
+        play = str(row.get("play_type") or row.get("play") or "").lower()
+        is_pass = play == "pass" or row.get("pass_attempt") in (1, True, "1")
+        if not is_pass:
+            for field in PASS_ONLY_EPA_FIELDS:
+                if row.get(field) not in (None, ""):
+                    errors.append(f"row {i}: {field} filled on non-pass")
+        key = (row.get("game_id"), row.get("drive"), row.get("qtr"))
+        groups.setdefault(key, []).append(i)
+    for key, idxs in groups.items():
+        missing = [i for i in idxs if pbp_rows[i].get("game_seconds_remaining") in (None, "")]
+        present = [i for i in idxs if i not in missing]
+        if missing and not present:
+            errors.append(f"group {key}: game_seconds_remaining missing with no neighbor to interpolate")
+    if errors:
+        raise ValueError("; ".join(errors[:12]))
+    return {"rows": len(pbp_rows), "groups": len(groups)}
+
+
+def barber_weighted_conformal_interval(
+    q_low: float,
+    q_high: float,
+    residuals: Sequence[float],
+    alpha: float = 0.10,
+    rho: float = 0.97,
+) -> dict[str, float]:
+    """Weighted residual quantiles. Recent residuals get weight rho**(n-1-i)."""
+    res = [float(r) for r in residuals]
+    if not res:
+        raise ValueError("barber interval needs residuals")
+    if not 0 < alpha < 1 or not 0 < rho <= 1:
+        raise ValueError("alpha must be in (0,1) and rho in (0,1]")
+    n = len(res)
+    raw_w = [rho ** (n - 1 - i) for i in range(n)]
+    total = sum(raw_w) or 1.0
+    weights = [w / total for w in raw_w]
+    order = sorted(range(n), key=lambda i: res[i])
+
+    def weighted_quantile(level: float) -> float:
+        acc = 0.0
+        for i in order:
+            acc += weights[i]
+            if acc >= level:
+                return res[i]
+        return res[order[-1]]
+
+    return {
+        "low": float(q_low) + weighted_quantile(alpha / 2.0),
+        "high": float(q_high) + weighted_quantile(1.0 - alpha / 2.0),
+        "alpha": float(alpha),
+        "rho": float(rho),
+    }
+
+
+def fourth_down_brill_summary(wp_gaps: Sequence[float]) -> dict[str, float | None | str]:
+    """Brill/Yurko/Wyner: a gap is distinct when abs(gap) > 1.645 * 0.018."""
+    threshold = BRILL_Z_90 * BRILL_WP_SE
+    if not wp_gaps:
+        return {
+            "fourth_down_wp_gap_mean": None,
+            "fourth_down_statistically_distinct_rate": None,
+            "threshold": threshold,
+            "reason": "NO_FOURTH_DOWN_WP_GAPS_OBSERVED",
+        }
+    gaps = [float(g) for g in wp_gaps]
+    distinct = sum(1 for g in gaps if abs(g) > threshold) / len(gaps)
+    return {
+        "fourth_down_wp_gap_mean": sum(gaps) / len(gaps),
+        "fourth_down_statistically_distinct_rate": distinct,
+        "threshold": threshold,
+        "reason": "OBSERVED",
+    }

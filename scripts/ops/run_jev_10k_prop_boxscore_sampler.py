@@ -40,6 +40,7 @@ from week8_forensic_kernels import (  # noqa: E402
     compute_empirical_bayes_shrunk_projection,
     deconflate_platform_scoring_variance,
     platform_quantiles_from_raw,
+    validate_pbp_structural_missingness,
 )
 
 SPINE_JSON = REPO / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
@@ -237,6 +238,7 @@ PLAIN_FOOTBALL_PROP_NOTES = {
 
 def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed: int = 20261029) -> dict:
     guard_duplicate_injury_reallocation({})
+    validate_pbp_structural_missingness(spine_game.get("pbp_rows") or [])
     _ = compute_empirical_bayes_shrunk_projection(12.0, 6, 11.0, snap_share=0.8, route_share=0.7, target_share=0.2)
     """
     Vectorized 10,000-world replay of every single snap in `snap_by_snap_log`,
@@ -581,7 +583,8 @@ def evaluate_prop_vector(
         name: round(float(deconflate_platform_scoring_variance(sigma, name)["variance"]), 3)
         for name in ("DK", "FD", "UD")
     }
-    platform_quantiles = platform_quantiles_from_raw(mean_val * 0.25, median_val, p75 * 0.10, p75 * 0.01)
+    raw_draws = [[0.0, float(y), 0.0] for y in vec[:200]]
+    platform_quantiles = {name: platform_quantiles_from_raw(raw_draws, name) for name in ("DK", "FD", "UD")}
 
     # Compare projected mean against line for side direction; use log-normal tail + Empirical-Bayes shrinkage
     z_edge = abs(mean_val - line) / max(6.0, float(np.std(vec)) * 0.48)

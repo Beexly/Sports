@@ -215,6 +215,7 @@ from week8_forensic_kernels import (  # noqa: E402
     fragility_score,
     gpp_objective_coeff,
     pairwise_overlap_ok,
+    assert_2026_roster_identity_integrity,
 )
 from ingest_pregame_ownership_leverage import load_week_ownership  # noqa: E402
 from gse_coach_mind_simulator import (  # noqa: E402
@@ -446,6 +447,9 @@ def apply_week8_forensic_projection_pass(active_df: pd.DataFrame) -> pd.DataFram
     active_df["fragility"] = frags
     active_df["exposure_role"] = roles
     active_df["exposure_cap"] = caps
+    assert_2026_roster_identity_integrity(
+        [{"name": str(r.get("name", r.get("Name", ""))), "team": str(r.get("team", r.get("TeamAbbrev", "")))} for _, r in active_df.iterrows()]
+    )
     return active_df
 
 

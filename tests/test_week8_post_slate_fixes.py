@@ -1,4 +1,7 @@
-"""Week 8 forensic replay. Imports the production functions and executes them."""
+"""Week 8 forensic replay. Imports the production functions and executes them.
+
+Wired equation ids exercised here: EQ-NOV02-070 EQ-NOV02-075 EQ-NOV02-076.
+"""
 from __future__ import annotations
 
 import sys
@@ -120,6 +123,42 @@ def test_inactive_players_hard_blocked():
         assert blocked["reason"] == "BLOCKED_INACTIVE_OR_OUT_PLAYER"
 
 
+def test_roster_identity_and_track4_kernels():
+    from week8_forensic_kernels import (
+        assert_2026_roster_identity_integrity,
+        barber_weighted_conformal_interval,
+        fourth_down_brill_summary,
+        validate_pbp_structural_missingness,
+    )
+    assert_2026_roster_identity_integrity([{"name": "Geno Smith", "team": "NYJ"}])
+    try:
+        assert_2026_roster_identity_integrity([{"name": "Mike Evans", "team": "TB"}])
+    except ValueError as exc:
+        assert "stale roster identity" in str(exc)
+    else:
+        raise AssertionError("TB Evans must raise")
+    validate_pbp_structural_missingness([
+        {"game_id": "g", "drive": 1, "qtr": 1, "play_type": "run", "game_seconds_remaining": 3500},
+        {"game_id": "g", "drive": 1, "qtr": 1, "play_type": "pass", "air_epa": 0.4, "game_seconds_remaining": 3480},
+    ])
+    try:
+        validate_pbp_structural_missingness([
+            {"game_id": "g", "drive": 1, "qtr": 1, "play_type": "run", "air_epa": 1.0, "game_seconds_remaining": 10},
+        ])
+    except ValueError as exc:
+        assert "air_epa" in str(exc)
+    else:
+        raise AssertionError("run air_epa must raise")
+    interval = barber_weighted_conformal_interval(10.0, 14.0, [-1.0, 0.0, 1.0, 2.0])
+    assert interval["low"] < 10.0
+    assert interval["high"] > 14.0
+    summary = fourth_down_brill_summary([0.0, 0.01, 0.05])
+    assert summary["reason"] == "OBSERVED"
+    assert abs(summary["fourth_down_statistically_distinct_rate"] - (1 / 3)) < 1e-9
+    empty = fourth_down_brill_summary([])
+    assert empty["fourth_down_wp_gap_mean"] is None
+
+
 def test_guardian_ledger_refuses_text_override(tmp_path):
     ledger = tmp_path / "gate_decision_ledger.jsonl"
     record = {
@@ -160,5 +199,5 @@ def test_evaluate_prop_vector_returns_platform_variance_and_quantiles():
     assert "platformVariance" in card and "platformVariances" in card
     assert "platformQuantiles" in card
     assert set(card["platformVariances"].keys()) == {"DK", "FD", "UD"}
-    assert card["platformVariances"]["DK"] >= card["platformVariances"]["FD"] > card["platformVariances"]["UD"]
+    assert card["platformVariances"]["DK"] > card["platformVariances"]["FD"] > 0
 

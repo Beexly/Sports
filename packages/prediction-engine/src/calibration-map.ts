@@ -630,3 +630,31 @@ export function selectCalibrator(
 
   return { recommended, scores, rawOofEce, nullGainMargin, model, sampleSize: n, folds, seed, classwiseEce: computeWalshCalibrationGate(samples).classwiseEce };
 }
+
+/** Barber weighted conformal bounds. Recent residuals weigh rho**(n-1-i). */
+export function computeBarberWeightedConformalInterval(
+  qLow: number,
+  qHigh: number,
+  residuals: readonly number[],
+  alpha = 0.1,
+  rho = 0.97,
+): { low: number; high: number; alpha: number; rho: number } {
+  if (residuals.length === 0) throw new Error("barber interval needs residuals");
+  if (!(alpha > 0 && alpha < 1) || !(rho > 0 && rho <= 1)) {
+    throw new Error("alpha must be in (0,1) and rho in (0,1]");
+  }
+  const n = residuals.length;
+  const rawW = residuals.map((_, i) => rho ** (n - 1 - i));
+  const total = rawW.reduce((s, w) => s + w, 0) || 1;
+  const weights = rawW.map((w) => w / total);
+  const order = residuals.map((value, i) => ({ value, i })).sort((a, b) => a.value - b.value);
+  const wq = (level: number) => {
+    let acc = 0;
+    for (const row of order) {
+      acc += weights[row.i]!;
+      if (acc >= level) return row.value;
+    }
+    return order[order.length - 1]!.value;
+  };
+  return { low: qLow + wq(alpha / 2), high: qHigh + wq(1 - alpha / 2), alpha, rho };
+}

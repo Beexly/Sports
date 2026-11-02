@@ -12,5 +12,7 @@ export default defineConfig({
     // executed is not a gate, and this file would have sat in the
     // repository looking like one.
     include: ["src/**/*.test.ts", "test/**/*.spec.ts", "test/**/*.test.ts"],
+    isolate: false,
+    pool: "forks",
   },
 });

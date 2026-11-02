@@ -28,6 +28,7 @@ from week8_forensic_kernels import (  # noqa: E402
     allocate_conserved_box_score,
     assert_no_duplicate_reallocation,
     assert_pbp_conservation,
+    fourth_down_brill_summary,
     stamp_injury_reallocation,
 )
 
@@ -909,6 +910,27 @@ def simulate_matchup_pbp(
         hm_rb1_shrunk = empirical_bayes_line(7, hm_rb1_raw_mean, "rush_yds")
         aw_rb1_shrunk = empirical_bayes_line(7, aw_rb1_raw_mean, "rush_yds")
 
+        home_rush = allocate_conserved_box_score(
+            home_rush_yds_tot.tolist(),
+            {"RB1": hm_rb1_eff_share, "OTHER": max(1e-6, 1.0 - hm_rb1_eff_share)},
+        )
+        away_rush = allocate_conserved_box_score(
+            away_rush_yds_tot.tolist(),
+            {"RB1": aw_rb1_eff_share, "OTHER": max(1e-6, 1.0 - aw_rb1_eff_share)},
+        )
+        zero_td = [0.0] * n_sims
+        assert_pbp_conservation(
+            [home_rush["RB1"], home_rush["OTHER"]],
+            home_rush_yds_tot.tolist(),
+            [zero_td, zero_td],
+            zero_td,
+        )
+        assert_pbp_conservation(
+            [away_rush["RB1"], away_rush["OTHER"]],
+            away_rush_yds_tot.tolist(),
+            [zero_td, zero_td],
+            zero_td,
+        )
         out["vectors"] = {
             "home_score": home_score,
             "away_score": away_score,
@@ -925,12 +947,16 @@ def simulate_matchup_pbp(
             "away_wr1_yds": np.asarray(away_rec["WR1"], dtype=np.float64),
             "home_wr1_tds": np.asarray(home_td_rec["WR1"], dtype=np.float64),
             "away_wr1_tds": np.asarray(away_td_rec["WR1"], dtype=np.float64),
-            "home_rb1_yds": sample_lognormal(hm_rb1_shrunk, n_sims, rng, cv=0.42),
-            "away_rb1_yds": sample_lognormal(aw_rb1_shrunk, n_sims, rng, cv=0.42),
+            "home_rb1_yds": np.asarray(home_rush["RB1"], dtype=np.float64),
+            "away_rb1_yds": np.asarray(away_rush["RB1"], dtype=np.float64),
             "jev_state_tensor_active": has_jev_tensor,
         }
         out["away_injuries_applied"] = list(away_inj)
         out["home_injuries_applied"] = list(home_inj)
+    fd = fourth_down_brill_summary([])
+    out["fourth_down_wp_gap_mean"] = fd["fourth_down_wp_gap_mean"]
+    out["fourth_down_statistically_distinct_rate"] = fd["fourth_down_statistically_distinct_rate"]
+    out["fourth_down_reason"] = fd["reason"]
     return out
 
 
