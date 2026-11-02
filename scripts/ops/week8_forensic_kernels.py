@@ -87,6 +87,33 @@ def participation_hurdle_probability(
     return _sigmoid(g0 + g1 * float(route_share) + g2 * float(snap_share) + g3 * float(target_share))
 
 
+def enforce_route_snap_participation_gate(
+    route_share: float,
+    snap_share: float,
+    min_route_share: float = 0.35,
+    min_snap_share: float = 0.25,
+) -> dict[str, Any]:
+    """Gate out low-participation depth players (e.g. WR5/TE2 under 35% route or 25% snap share)."""
+    r_sh = max(0.0, float(route_share))
+    s_sh = max(0.0, float(snap_share))
+    eligible = (r_sh >= float(min_route_share)) and (s_sh >= float(min_snap_share))
+    if not eligible:
+        return {
+            "eligible": False,
+            "decision": "PASS_LOW_PARTICIPATION",
+            "reason": f"route_share={r_sh:.2f} (<{min_route_share:.2f}) or snap_share={s_sh:.2f} (<{min_snap_share:.2f})",
+            "route_share": r_sh,
+            "snap_share": s_sh,
+        }
+    return {
+        "eligible": True,
+        "decision": "PLAY_ELIGIBLE",
+        "reason": "PARTICIPATION_CLEARED",
+        "route_share": r_sh,
+        "snap_share": s_sh,
+    }
+
+
 def apply_zero_inflation_quantiles(
     quantiles: Mapping[str, float],
     target_share: float,

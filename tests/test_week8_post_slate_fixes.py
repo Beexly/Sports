@@ -179,7 +179,9 @@ def test_guardian_ledger_refuses_text_override(tmp_path):
 
 
 def test_simulate_matchup_pbp_conserves_yards_and_tds_without_gaussian_loop():
+    import os
     import numpy as np
+    from week8_forensic_kernels import enforce_route_snap_participation_gate
 
     sealed_obj, digest = load_sealed_object_readonly("/opt/model/sealed_baseline.json")
     res = simulate_matchup_pbp("CAR", "GB", [], [], sealed_obj, digest, n_sims=64, seed=20261102, return_vectors=True)
@@ -188,6 +190,27 @@ def test_simulate_matchup_pbp_conserves_yards_and_tds_without_gaussian_loop():
     assert "home_wr1_tds" in vecs and "away_wr1_tds" in vecs
     assert np.all(vecs["home_wr1_yds"] <= vecs["home_pass_yds"] + 1e-6)
     assert np.all(vecs["home_wr1_tds"] <= vecs["home_pass_tds"] + 1e-6)
+    assert res["fourth_down_wp_gap_mean"] is not None
+    assert res["fourth_down_statistically_distinct_rate"] is not None
+    assert res["fourth_down_reason"] == "OBSERVED"
+
+    # Participation hurdle gate blocks low-route/low-snap depth players (e.g., Devontez Walker, Drew Sample)
+    walker_gate = enforce_route_snap_participation_gate(route_share=0.0, snap_share=0.0)
+    assert walker_gate["eligible"] is False
+    assert walker_gate["decision"] == "PASS_LOW_PARTICIPATION"
+    sample_gate = enforce_route_snap_participation_gate(route_share=0.22, snap_share=0.38)
+    assert sample_gate["eligible"] is False
+    starter_gate = enforce_route_snap_participation_gate(route_share=0.78, snap_share=0.82)
+    assert starter_gate["eligible"] is True
+    assert starter_gate["decision"] == "PLAY_ELIGIBLE"
+
+    os.environ["ENABLE_BIOMECH_KINETIC_TRANSLATION_V1"] = "1"
+    try:
+        res_bio = simulate_matchup_pbp("CAR", "GB", [], [], sealed_obj, digest, n_sims=32, seed=20261102)
+        assert "biomech_kinetic_overlay" in res_bio
+        assert res_bio["biomech_kinetic_overlay"]["cleat_turf_slip"] > 0.0
+    finally:
+        os.environ.pop("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", None)
 
 
 def test_evaluate_prop_vector_returns_platform_variance_and_quantiles():

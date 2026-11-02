@@ -587,6 +587,28 @@ def simulate_matchup_pbp(
         trench_report = trench_survival_drop(0.92, 0.52)
         home_sack_prob = float(np.clip(home_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
         away_sack_prob = float(np.clip(away_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
+    biomech_overlay = None
+    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "").lower() in {"1", "true", "yes"}:
+        root_dir = str(Path(__file__).resolve().parents[2])
+        if root_dir not in sys.path:
+            sys.path.insert(0, root_dir)
+        from intelligence.coaching.biomech_kinetic_translation import (
+            compute_cleat_turf_viscoelastic_slip,
+            compute_inertial_dissipation_ratio,
+            compute_muscle_group_lactic_accumulation_step,
+        )
+        idr_val = compute_inertial_dissipation_ratio(142.0, 0.81, 4.48, (2.2, 0.4), (-3.8, -0.5))
+        slip_val = compute_cleat_turf_viscoelastic_slip(780.0, 1150.0, 0.25)
+        metabolic_val = compute_muscle_group_lactic_accumulation_step(
+            (6.5, 2.5), 215.0, (0.38, 0.34, 0.18, 0.10), (4.0, 3.8, 2.5, 1.5), dt=0.1
+        )
+        biomech_overlay = {
+            "inertial_dissipation_ratio": round(idr_val, 4),
+            "cleat_turf_slip": round(slip_val, 4),
+            "scalar_torque_throttle": round(metabolic_val["scalar_torque_throttle"], 4),
+        }
+        home_comp_base = float(np.clip(home_comp_base * (1.0 - 0.02 * slip_val), 0.48, 0.76))
+        away_comp_base = float(np.clip(away_comp_base * (1.0 - 0.02 * slip_val), 0.48, 0.76))
     role_names_stamp = ["WR1", "WR2", "WR3", "TE1", "RB1"]
 
     def _unit_shares(weights) -> dict[str, float]:
@@ -642,6 +664,7 @@ def simulate_matchup_pbp(
     down = np.ones(n_sims, dtype=np.int32)
     ydstogo = np.full(n_sims, 10, dtype=np.int32)
     yardline_100 = np.full(n_sims, 75, dtype=np.int32)
+    fourth_down_wp_gaps: list[float] = []
 
     for _ in range(175):
         active = clock_sec > 0.0
@@ -667,6 +690,28 @@ def simulate_matchup_pbp(
         if np.any(is_4th):
             idx_4th = np.where(is_4th)[0]
             yl4, yd4 = yardline_100[idx_4th], ydstogo[idx_4th]
+            sd4 = score_diff[idx_4th]
+            clk4 = np.maximum(60.0, clock_sec[idx_4th])
+            p_conv_all = np.clip(0.64 - 0.05 * yd4 + 0.55 * net_epa_vec[idx_4th], 0.15, 0.82)
+            p_fg_all = np.where(yl4 <= 42, np.clip(0.97 - 0.011 * np.maximum(0, yl4 - 15), 0.15, 0.98), 0.02)
+            ep_conv = 6.0 - 0.08 * np.maximum(1, yl4 - yd4 - 2)
+            ep_fail = -(6.0 - 0.08 * np.clip(100 - yl4, 5, 95))
+            ep_go = p_conv_all * ep_conv + (1.0 - p_conv_all) * ep_fail
+            ep_fg = p_fg_all * 3.0 + (1.0 - p_fg_all) * (-(6.0 - 0.08 * np.clip(100 - yl4 - 7, 20, 80)))
+            ep_punt = -(6.0 - 0.08 * np.clip(100 - (yl4 - 42), 20, 90))
+            scale4 = 1.702 / np.maximum(1.5, 13.4 * np.sqrt(clk4 / 3600.0))
+            wp_go = 1.0 / (1.0 + np.exp(-np.clip((sd4 + ep_go) * scale4, -20.0, 20.0)))
+            wp_fg = 1.0 / (1.0 + np.exp(-np.clip((sd4 + ep_fg) * scale4, -20.0, 20.0)))
+            wp_punt = 1.0 / (1.0 + np.exp(-np.clip((sd4 + ep_punt) * scale4, -20.0, 20.0)))
+            wp_star = np.maximum(wp_go, np.maximum(wp_fg, wp_punt))
+            tau_4th = max(0.05, float(sealed_state["tau"]))
+            wp_stack = np.vstack([wp_go, wp_fg, wp_punt])
+            logits_4th = np.clip((wp_stack - wp_star) / tau_4th, -30.0, 0.0)
+            w_4th = np.exp(logits_4th)
+            w_4th = w_4th / np.maximum(1e-12, np.sum(w_4th, axis=0, keepdims=True))
+            e_wp = np.sum(w_4th * wp_stack, axis=0)
+            fourth_down_wp_gaps.append(float(np.mean(wp_star - e_wp)))
+
             go_mask = ((yl4 <= 58) & (yd4 <= 3)) | ((yl4 <= 40) & (yd4 <= 5) & (sealed_state["tau"] >= 0.40)) | ((qtr[idx_4th] == 4) & (score_diff[idx_4th] < 0) & (yd4 <= 7))
             fg_mask = (~go_mask) & (yl4 <= 37)
             punt_mask = (~go_mask) & (~fg_mask)
@@ -953,7 +998,9 @@ def simulate_matchup_pbp(
         }
         out["away_injuries_applied"] = list(away_inj)
         out["home_injuries_applied"] = list(home_inj)
-    fd = fourth_down_brill_summary([])
+    if biomech_overlay is not None:
+        out["biomech_kinetic_overlay"] = biomech_overlay
+    fd = fourth_down_brill_summary(fourth_down_wp_gaps)
     out["fourth_down_wp_gap_mean"] = fd["fourth_down_wp_gap_mean"]
     out["fourth_down_statistically_distinct_rate"] = fd["fourth_down_statistically_distinct_rate"]
     out["fourth_down_reason"] = fd["reason"]

@@ -25,6 +25,7 @@ ALLOWED_FIDELITY = {
 WIRED_TESTS = (
     ROOT / "tests" / "test_trench_pipeline_integration.py",
     ROOT / "tests" / "test_week8_post_slate_fixes.py",
+    ROOT / "tests" / "test_biomech_kinetic_translation.py",
 )
 
 
