@@ -37,3 +37,15 @@ def honest_gaps() -> dict[str, str]:
         "man_coverage_rate": "not in nflverse pbp — charting-gapped (DATA_GAPS.md)",
         "two_high_rate": "not in nflverse pbp — charting-gapped (DATA_GAPS.md)",
     }
+
+
+def pressure_index_with_trench(tpi: float) -> dict[str, float]:
+    """Feature-flagged Ruscio TPI. Off: return the raw index unchanged."""
+    import os
+
+    if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "").lower() not in {"1", "true", "yes"}:
+        return {"tpi": float(tpi), "win_probability": None, "enabled": 0.0}
+    from intelligence.coaching.trench_pocket_physics import compute_ruscio_pressure_win_probability
+
+    report = compute_ruscio_pressure_win_probability(tpi)
+    return {"tpi": float(tpi), "win_probability": report["win_probability"], "enabled": 1.0}

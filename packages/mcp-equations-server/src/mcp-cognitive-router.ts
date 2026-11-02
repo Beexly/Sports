@@ -29,11 +29,19 @@ export const MAX_ABS_DELTA_LOG_ODDS = 0.35;
 
 export type Signal = { family: number; displacement: number; n: number };
 
+export type VerificationStatus =
+  | "HIGH_PRIORITY_PRODUCTION_TARGET"
+  | "GATED_EXPERIMENT_CANDIDATE"
+  | "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST";
+
 export type Premise = {
   id: string;
   premise: string;
   cluster: string;
   similarity: number;
+  verificationStatus?: VerificationStatus;
+  /** Set only after metric-birth-certificate out-of-sample backtest passes. */
+  backtestPassed?: boolean;
 };
 
 /** Minimal query surface so this does not pin a driver. */
@@ -203,6 +211,7 @@ export interface SpectralPremise extends Premise {
   readonly spectralScore: number;
   readonly jacobianSensitivity?: number;
   readonly rawLogOddsDelta?: number;
+  readonly quarantined?: boolean;
 }
 
 export function stageC(
@@ -224,10 +233,14 @@ export function stageC(
     clusterCounts.set(p.cluster, rank + 1);
     const attenuation = Math.sqrt(1 + gamma * rank);
     const spectralScore = Number((p.similarity / attenuation).toFixed(6));
+    const quarantined =
+      p.verificationStatus === "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST" &&
+      p.backtestPassed !== true;
     return {
       ...p,
       clusterRank: rank,
-      spectralScore,
+      spectralScore: quarantined ? 0 : spectralScore,
+      quarantined,
     };
   });
 
@@ -272,6 +285,10 @@ export function stageD(
 
   const d = spectralPremises.length;
   const rawDeltas = spectralPremises.map((p) => {
+    const quarantined =
+      p.verificationStatus === "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST" &&
+      p.backtestPassed !== true;
+    if (quarantined) return 0;
     const jac = p.jacobianSensitivity ?? 1.0;
     const raw = p.rawLogOddsDelta ?? 0;
     return raw * jac * Math.max(0, p.spectralScore);
@@ -284,10 +301,16 @@ export function stageD(
       ? Math.max(0, 1 - ((d - 2) * sigma2) / sumSq)
       : 1.0;
 
-  const selectedPremises = spectralPremises.map((p, idx) => ({
-    ...p,
-    shrunkLogOddsDelta: Number((rawDeltas[idx]! * jsFactor).toFixed(6)),
-  }));
+  const selectedPremises = spectralPremises.map((p, idx) => {
+    const quarantined =
+      p.verificationStatus === "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST" &&
+      p.backtestPassed !== true;
+    return {
+      ...p,
+      quarantined,
+      shrunkLogOddsDelta: quarantined ? 0 : Number((rawDeltas[idx]! * jsFactor).toFixed(6)),
+    };
+  });
 
   // Integrate coach inverse-MDP risk preference deviation (tau_hat - 0.42)
   const tauHatCoachPriorBonus = Number(((tauHat - baseTau) * 0.12).toFixed(6));

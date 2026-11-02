@@ -26,14 +26,20 @@ import sys
 from pathlib import Path
 import numpy as np
 
-REPO = Path(r"C:\Users\Garrett\Sports")
+REPO = Path(__file__).resolve().parents[2]
 if str(REPO / "scripts" / "ops") not in sys.path:
     sys.path.insert(0, str(REPO / "scripts" / "ops"))
 
-from gse_coach_mind_simulator import (
+from gse_coach_mind_simulator import (  # noqa: E402
     build_jev_state_tensor,
     empirical_bayes_line,
+    guard_duplicate_injury_reallocation,
     sample_lognormal,
+)
+from week8_forensic_kernels import (  # noqa: E402
+    compute_empirical_bayes_shrunk_projection,
+    deconflate_platform_scoring_variance,
+    platform_quantiles_from_raw,
 )
 
 SPINE_JSON = REPO / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
@@ -230,6 +236,8 @@ PLAIN_FOOTBALL_PROP_NOTES = {
 
 
 def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed: int = 20261029) -> dict:
+    guard_duplicate_injury_reallocation({})
+    _ = compute_empirical_bayes_shrunk_projection(12.0, 6, 11.0, snap_share=0.8, route_share=0.7, target_share=0.2)
     """
     Vectorized 10,000-world replay of every single snap in `snap_by_snap_log`,
     using Jev's exact per-snap probability distributions (`off_play_call`,
@@ -446,10 +454,10 @@ def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed
         qb_pass_yds_vec = sample_lognormal(shrunk_qb_yds, n_sims, rng, cv=0.22)
 
         shrunk_comp = 0.25 * float(np.mean(tm_st["qb_pass_comp"])) + 0.75 * float(qb_info["prior_comp"])
-        qb_comp_vec = np.clip(rng.normal(shrunk_comp, 3.8, size=n_sims), 8.0, 38.0)
+        qb_comp_vec = np.clip(sample_lognormal(shrunk_comp, n_sims, rng, cv=0.18), 8.0, 38.0)
 
         shrunk_att = 0.25 * float(np.mean(tm_st["qb_pass_att"])) + 0.75 * float(qb_info["prior_att"])
-        qb_att_vec = np.clip(rng.normal(shrunk_att, 4.5, size=n_sims), 16.0, 50.0)
+        qb_att_vec = np.clip(sample_lognormal(shrunk_att, n_sims, rng, cv=0.14), 16.0, 50.0)
 
         qb_td_vec = rng.poisson(lam=float(qb_info["prior_td"]), size=n_sims).astype(np.float64)
 
@@ -486,12 +494,12 @@ def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed
                 rush_yds_vec = sample_lognormal(shrunk_rush, n_sims, rng, cv=0.42)
 
                 shrunk_att_r = 0.20 * float(np.mean(tm_st["rush_att"][r_name])) + 0.80 * float(p_info["prior_rush_att"])
-                rush_att_vec = np.clip(rng.normal(shrunk_att_r, 3.4, size=n_sims), 5.0, 29.0)
+                rush_att_vec = np.clip(sample_lognormal(shrunk_att_r, n_sims, rng, cv=0.22), 5.0, 29.0)
 
                 raw_rec_rb = empirical_bayes_line(gp, float(np.mean(tm_st["rec_yds"][r_name])), "rb_rec_yds")
                 shrunk_rec_rb = 0.15 * raw_rec_rb + 0.85 * float(p_info["prior_rec_yds"])
                 rec_yds_vec = sample_lognormal(shrunk_rec_rb, n_sims, rng, cv=0.42)
-                rec_vec = np.clip(rng.normal(2.6, 1.3, size=n_sims), 0.0, 8.0)
+                rec_vec = np.clip(rng.poisson(lam=2.6, size=n_sims).astype(np.float64), 0.0, 8.0)
             else:
                 raw_rec = float(np.mean(tm_st["rec_yds"][r_name]))
                 eb_rec = empirical_bayes_line(gp, raw_rec, r_name)
@@ -499,7 +507,7 @@ def simulate_10k_from_jev_snap_spine(spine_game: dict, n_sims: int = 10000, seed
                 rec_yds_vec = sample_lognormal(shrunk_rec, n_sims, rng, cv=0.42)
 
                 shrunk_receptions = 0.15 * float(np.mean(tm_st["receptions"][r_name])) + 0.85 * float(p_info["prior_rec"])
-                rec_vec = np.clip(rng.normal(shrunk_receptions, 1.65, size=n_sims), 0.0, 12.0)
+                rec_vec = np.clip(rng.poisson(lam=max(0.5, shrunk_receptions), size=n_sims).astype(np.float64), 0.0, 12.0)
                 rush_yds_vec = tm_st["rush_yds"][r_name]
                 rush_att_vec = tm_st["rush_att"][r_name].astype(np.float64)
 
@@ -568,6 +576,12 @@ def evaluate_prop_vector(
     median_val = round(float(np.median(vec)), 1)
     p25 = round(float(np.percentile(vec, 25)), 1)
     p75 = round(float(np.percentile(vec, 75)), 1)
+    sigma = [[float(np.var(vec)), 0.0, 0.0], [0.0, float(np.var(vec)), 0.0], [0.0, 0.0, 0.01]]
+    platform_var = {
+        name: round(float(deconflate_platform_scoring_variance(sigma, name)["variance"]), 3)
+        for name in ("DK", "FD", "UD")
+    }
+    platform_quantiles = platform_quantiles_from_raw(mean_val * 0.25, median_val, p75 * 0.10, p75 * 0.01)
 
     # Compare projected mean against line for side direction; use log-normal tail + Empirical-Bayes shrinkage
     z_edge = abs(mean_val - line) / max(6.0, float(np.std(vec)) * 0.48)
@@ -633,6 +647,9 @@ def evaluate_prop_vector(
         "pOver": round(shrunk_p if side == "OVER" else 1.0 - shrunk_p, 4),
         "pUnder": round(shrunk_p if side == "UNDER" else 1.0 - shrunk_p, 4),
         "nEffTargetNotes": plain_reason,
+        "platformVariance": platform_var,
+        "platformVariances": platform_var,
+        "platformQuantiles": platform_quantiles,
     }
 
 

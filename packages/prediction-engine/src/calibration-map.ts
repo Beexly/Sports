@@ -449,9 +449,45 @@ export interface CalibratorSelection {
   readonly sampleSize: number;
   readonly folds: number;
   readonly seed: number;
+  /** Walsh classwise ECE on the same sample. Does not change the family pick. */
+  readonly classwiseEce?: number;
 }
 
 const FAMILIES: readonly CalibrationMethod[] = ["isotonic", "platt", "beta"];
+
+export function computeWalshCalibrationGate(
+  samples: readonly { readonly p: number; readonly y: 0 | 1 }[],
+): { readonly classwiseEce: number; readonly brier: number; readonly gatePass: boolean } {
+  if (samples.length === 0) return { classwiseEce: 1, brier: 1, gatePass: false };
+  const brier = samples.reduce((sum, s) => sum + (s.p - s.y) ** 2, 0) / samples.length;
+  const by = new Map<string, { p: number; y: number }[]>();
+  for (const s of samples) {
+    const key = s.p >= 0.5 ? "favorite" : "dog";
+    const rows = by.get(key) ?? [];
+    rows.push(s);
+    by.set(key, rows);
+  }
+  let total = 0;
+  for (const rows of by.values()) {
+    const bins = Array.from({ length: 10 }, () => [] as { p: number; y: number }[]);
+    for (const row of rows) {
+      const idx = Math.min(9, Math.floor(Math.max(0, Math.min(0.999999, row.p)) * 10));
+      bins[idx]!.push(row);
+    }
+    let ece = 0;
+    for (const bucket of bins) {
+      if (bucket.length === 0) continue;
+      const conf = bucket.reduce((sum, row) => sum + row.p, 0) / bucket.length;
+      const freq = bucket.reduce((sum, row) => sum + row.y, 0) / bucket.length;
+      ece += (bucket.length / rows.length) * Math.abs(freq - conf);
+    }
+    total += ece;
+  }
+  const classwiseEce = total / by.size;
+  return { classwiseEce, brier, gatePass: classwiseEce <= 0.05 && brier <= 0.25 };
+}
+
+export const compute_walsh_calibration_gate = computeWalshCalibrationGate;
 
 function fitFamily(method: CalibrationMethod, samples: readonly CalibrationSample[]): CalibratorFit | null {
   switch (method) {
@@ -592,5 +628,5 @@ export function selectCalibrator(
   const recommended: CalibrationMethod | "identity" = beatsRaw ? best!.method : "identity";
   const model = beatsRaw ? fitFamily(best!.method, samples) : null;
 
-  return { recommended, scores, rawOofEce, nullGainMargin, model, sampleSize: n, folds, seed };
+  return { recommended, scores, rawOofEce, nullGainMargin, model, sampleSize: n, folds, seed, classwiseEce: computeWalshCalibrationGate(samples).classwiseEce };
 }

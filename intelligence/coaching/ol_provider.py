@@ -147,3 +147,12 @@ class NflverseOLProvider(OLProvider):
                 "trench grade."
             ),
         )
+
+
+def weak_link_survival_for_grades(grades: list[float]) -> float:
+    """Flag-gated weak-link efficiency. Off: arithmetic mean. On: product survival."""
+    if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "").lower() not in {"1", "true", "yes"}:
+        return sum(grades) / len(grades)
+    from intelligence.coaching.trench_pocket_physics import compute_weak_link_ol_efficiency
+
+    return float(compute_weak_link_ol_efficiency(grades)["efficiency"])

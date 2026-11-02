@@ -84,6 +84,7 @@ export const PROBABILITY_MOVEMENT_CAP = 0.12;
 
 export interface OrthogonalizationResult {
   totalProbabilityDelta: number;
+  cappedDeltaLogOdds: number;
   rawUnshrunkDelta: number;
   /** The precision-weighted sum that the cap is actually applied to. */
   shrunkUncappedDelta: number;
@@ -160,6 +161,70 @@ export function forwardSubstitute(L: readonly (readonly number[])[], b: readonly
  * absorbs a share 2*|p - 0.5| of the raw family delta. At a coin flip the
  * market absorbs nothing; at a near-certainty it absorbs the whole delta.
  */
+function solveLinear(aIn: number[][], bIn: number[]): number[] {
+  const n = bIn.length;
+  const a = aIn.map((row, i) => [...row, bIn[i]!]);
+  for (let col = 0; col < n; col += 1) {
+    let pivot = col;
+    for (let r = col + 1; r < n; r += 1) {
+      if (Math.abs(a[r]![col]!) > Math.abs(a[pivot]![col]!)) pivot = r;
+    }
+    if (Math.abs(a[pivot]![col]!) < 1e-12) throw new Error("FWL design matrix is singular");
+    if (pivot !== col) {
+      const swap = a[col]!;
+      a[col] = a[pivot]!;
+      a[pivot] = swap;
+    }
+    const div = a[col]![col]!;
+    for (let c = col; c <= n; c += 1) a[col]![c] = a[col]![c]! / div;
+    for (let r = 0; r < n; r += 1) {
+      if (r === col) continue;
+      const factor = a[r]![col]!;
+      for (let c = col; c <= n; c += 1) a[r]![c] = a[r]![c]! - factor * a[col]![c]!;
+    }
+  }
+  return a.map((row) => row[n]!);
+}
+
+/**
+ * Paleologo / Ding FWL residual of a situational series against the market.
+ * M columns are [1, logit(p_market), spread]. Only the residual is allowed
+ * downstream. A feature that is a linear function of the spread is wiped.
+ */
+export function residualizeSituationalFamiliesAgainstMarket(
+  situationalVector: readonly number[],
+  marketImpliedLogit: number,
+  spreadLine: number,
+  historicalWindowMatrix: readonly (readonly number[])[],
+): number[] {
+  if (!Number.isFinite(marketImpliedLogit) || !Number.isFinite(spreadLine)) {
+    throw new Error("market logit and spread must be finite");
+  }
+  if (historicalWindowMatrix.length !== situationalVector.length) {
+    throw new Error("historical window rows must match the situational vector");
+  }
+  const k = historicalWindowMatrix[0]?.length ?? 0;
+  if (k < 2) throw new Error("market design needs at least an intercept and a spread column");
+  const mtM = Array.from({ length: k }, () => Array(k).fill(0));
+  const mtf = Array(k).fill(0);
+  for (let t = 0; t < situationalVector.length; t += 1) {
+    const row = historicalWindowMatrix[t]!;
+    const y = situationalVector[t]!;
+    for (let i = 0; i < k; i += 1) {
+      mtf[i] = mtf[i]! + row[i]! * y;
+      for (let j = 0; j < k; j += 1) mtM[i]![j] = mtM[i]![j]! + row[i]! * row[j]!;
+    }
+  }
+  for (let i = 0; i < k; i += 1) mtM[i]![i] = mtM[i]![i]! + 1e-8;
+  const beta = solveLinear(mtM, mtf);
+  return situationalVector.map((y, t) => {
+    const row = historicalWindowMatrix[t]!;
+    let fitted = 0;
+    for (let j = 0; j < k; j += 1) fitted += row[j]! * beta[j]!;
+    return y - fitted;
+  });
+}
+
 export function projectOntoMarket(rawDelta: number, marketAnchorProb: number): number {
   if (!Number.isFinite(rawDelta)) throw new Error("rawDelta must be finite");
   if (!(marketAnchorProb > 0 && marketAnchorProb < 1)) {
@@ -286,6 +351,10 @@ export function orthogonalizeAndShrink(
 
   const capApplied = Math.abs(weightedSum) > PROBABILITY_MOVEMENT_CAP;
   const totalProbabilityDelta = Math.sign(weightedSum) * Math.min(Math.abs(weightedSum), PROBABILITY_MOVEMENT_CAP);
+  const pPost = Math.max(1e-6, Math.min(1 - 1e-6, marketAnchorProb + totalProbabilityDelta));
+  const rawDeltaLogOdds =
+    Math.log(pPost / (1 - pPost)) - Math.log(marketAnchorProb / (1 - marketAnchorProb));
+  const cappedDeltaLogOdds = Math.max(-0.35, Math.min(0.35, rawDeltaLogOdds));
   if (capApplied) notes.push(`tail cap bound: |${weightedSum.toFixed(6)}| > ${PROBABILITY_MOVEMENT_CAP}`);
   notes.push(
     `market anchor ${marketAnchorProb.toFixed(4)} absorbs ${(2 * Math.abs(marketAnchorProb - 0.5)).toFixed(4)} of each raw family delta`,
@@ -294,6 +363,7 @@ export function orthogonalizeAndShrink(
 
   return {
     totalProbabilityDelta,
+    cappedDeltaLogOdds,
     rawUnshrunkDelta,
     shrunkUncappedDelta: weightedSum,
     shrunkUnweightedDelta,
@@ -473,6 +543,10 @@ export interface OverlayInput {
   /** The independent-edge decision, supplied by the caller's edge engine. */
   independentEdgeDecision: "SPEAK" | "PASS";
   provenance?: Partial<MindFeedProvenance>;
+  /** Optional Layer-2 series residualized against the market before shrink. */
+  situationalVector?: readonly number[];
+  spreadLine?: number;
+  historicalWindowMatrix?: readonly (readonly number[])[];
 }
 
 export interface OverlayResult {
@@ -492,6 +566,7 @@ export interface OverlayResult {
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
   feedRecord: MindFeedEmission;
+  fwlResidual?: readonly number[];
 }
 
 /**
@@ -503,9 +578,23 @@ export interface OverlayResult {
  */
 export function runMasterSituationalReasoningOverlay(input: OverlayInput): OverlayResult {
   const calls: OverlayResult["streamCalls"] = [];
+  let familyDeltas = input.familyDeltas;
+  let fwlResidual: number[] | undefined;
+  if (input.situationalVector && input.historicalWindowMatrix) {
+    const logit = Math.log(input.marketAnchorProb / (1 - input.marketAnchorProb));
+    fwlResidual = residualizeSituationalFamiliesAgainstMarket(
+      input.situationalVector,
+      logit,
+      input.spreadLine ?? 0,
+      input.historicalWindowMatrix,
+    );
+    const mean = fwlResidual.reduce((sum, v) => sum + v, 0) / fwlResidual.length;
+    familyDeltas = { ...input.familyDeltas, pressure: mean };
+  }
   const result: OverlayResult = {
     streamCalls: calls,
-    orthogonalization: orthogonalizeAndShrink(input.familyDeltas, input.marketAnchorProb),
+    orthogonalization: orthogonalizeAndShrink(familyDeltas, input.marketAnchorProb),
+    ...(fwlResidual ? { fwlResidual } : {}),
     independentEdgeDecision: input.independentEdgeDecision,
     publishAllowed: input.independentEdgeDecision === "SPEAK",
     feedRecord: { feedPath: "", lineBytes: 0, inputHash: "", streamId: "", scrubbed: false },

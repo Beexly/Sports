@@ -3,6 +3,18 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-02 — Week 8 forensic kernels on hermes/week8-forensic-tracks-1-3
+
+**Changed:** Empirical-Bayes shrink, ownership penalty, inactive hard-zero, and single-pass injury stamp are called from the DK slate builder and injury overlay. PBP receiving yards are allocated by share instead of a post-sim lognormal draw. Cognitive router clamps quarantined equations to zero log-odds. Gate override requires a verified line or roster delta.
+
+**Proven:** pytest tests/test_trench_pocket_physics.py tests/test_week8_post_slate_fixes.py tests/test_trench_pipeline_integration.py tests/test_mind_guardian.py — 14 passed. npm test --prefix packages/mcp-equations-server — 60 passed, then the quarantine clamp test passed (11/11 on the router file). FWL residualization and calibration-map tests passed.
+
+**Not proven:** npm test --prefix packages/prediction-engine did not finish. Two runs hit the tool timeout while still passing the tests they had reached. The in-loop rng.normal yardage draw in gse_coach_mind_simulator.py is still there. trainer_feed.jsonl is gitignored, so CI will not see that copy.
+
+**Next role:** Finish the prediction-engine suite, or accept the timeout as a pre-existing duration problem. Do not treat this branch as a published pick path.
+
+---
+
 ## 2026-11-01 — Cadence v4.0 T-90 game-day lock refresh (SUN_EARLY + SUN_LATE)
 
 **Changed:** `scripts/ops/run_cadence_v40_gameday_lock.py` — repaired the summary print that crashed the run *after* its report was already written. The print read `surprise_flips_vs_stored`, a key `availability_refresh` stopped emitting when the diff split into `stored_names_absent_from_refresh` + `newly_listed_not_in_stored_subset`. The script was untracked; it is now tracked so the runner is not a local-only file. Landed both W8 reports: `docs/predictions/research/2026-11-01/cadence_v40_gameday_lock_sun_early_w8.json` (10:30 CT) and `..._sun_late_w8.json` (13:35 CT).

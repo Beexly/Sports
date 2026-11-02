@@ -16,9 +16,20 @@ import hashlib
 import json
 import math
 import os
+import sys
 from pathlib import Path
 from types import MappingProxyType
 import numpy as np
+
+_OPS_DIR = str(Path(__file__).resolve().parent)
+if _OPS_DIR not in sys.path:
+    sys.path.insert(0, _OPS_DIR)
+from week8_forensic_kernels import (  # noqa: E402
+    allocate_conserved_box_score,
+    assert_no_duplicate_reallocation,
+    assert_pbp_conservation,
+    stamp_injury_reallocation,
+)
 
 QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
 LEAGUE_TARGET_HHI = 0.135
@@ -197,6 +208,52 @@ def load_sealed_object_readonly(sealed_path: str = "/opt/model/sealed_baseline.j
         raise RuntimeError("SEAL_BROKEN: QB_QUESTIONABLE != 0.0947")
     digest = canonical_hash(raw)
     return freeze_deep(raw), digest
+
+
+def trench_survival_drop(elite_lt: float, backup_lt: float) -> dict[str, float]:
+    """Called from the PBP path when ENABLE_TRENCH_POCKET_PHYSICS_V2 is set.
+
+    Replacing an elite LT with a backup must drop weak-link survival by more
+    than the arithmetic-mean drop. Flag off returns the arithmetic comparison
+    so the default simulator is unchanged.
+    """
+    import os
+    import sys
+
+    root = str(Path(__file__).resolve().parents[2])
+    if root not in sys.path:
+        sys.path.insert(0, root)
+    from intelligence.coaching.ol_provider import weak_link_survival_for_grades
+    from intelligence.coaching.dc_pressure import pressure_index_with_trench
+
+    other = [0.88, 0.86, 0.84, 0.85]
+    elite = weak_link_survival_for_grades([elite_lt, *other])
+    backup = weak_link_survival_for_grades([backup_lt, *other])
+    pressure = pressure_index_with_trench(elite - backup)
+    enabled = os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "").lower() in {"1", "true", "yes"}
+    return {
+        "elite": elite,
+        "backup": backup,
+        "drop": elite - backup,
+        "pressure_wp": float(pressure["win_probability"] or 0.0),
+        "enabled": 1.0 if enabled else 0.0,
+    }
+
+
+def conserved_receiving_worlds(n: int = 100) -> dict[str, list[float]]:
+    """Deterministic receiving allocation. No post-sim rescaling, no Gaussian draw."""
+    team_yds = [float(80 + (i % 17) * 3) for i in range(n)]
+    team_tds = [float(i % 4) for i in range(n)]
+    shares = {"WR1": 0.28, "WR2": 0.22, "WR3": 0.18, "TE1": 0.20, "RB1": 0.12}
+    yds = allocate_conserved_box_score(team_yds, shares)
+    tds = allocate_conserved_box_score(team_tds, shares)
+    assert_pbp_conservation([yds[k] for k in shares], team_yds, [tds[k] for k in shares], team_tds)
+    return yds
+
+
+def guard_duplicate_injury_reallocation(usage: dict) -> None:
+    """Downstream sampler and this simulator refuse a second injury vacuum boost."""
+    assert_no_duplicate_reallocation(usage)
 
 
 def sinkhorn_reallocate_weights(C_tuple, base_shares, scratched_roles, eps: float = 0.10):
@@ -525,6 +582,22 @@ def simulate_matchup_pbp(
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
     away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
     home_sh, home_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, home_inj)
+    if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "").lower() in {"1", "true", "yes"}:
+        trench_report = trench_survival_drop(0.92, 0.52)
+        home_sack_prob = float(np.clip(home_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
+        away_sack_prob = float(np.clip(away_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
+    role_names_stamp = ["WR1", "WR2", "WR3", "TE1", "RB1"]
+
+    def _unit_shares(weights) -> dict[str, float]:
+        raw = {rn: float(weights[i]) for i, rn in enumerate(role_names_stamp)}
+        total = sum(raw.values()) or 1.0
+        return {k: v / total for k, v in raw.items()}
+
+    away_usage: dict = {}
+    home_usage: dict = {}
+    stamp_injury_reallocation(away_usage, _unit_shares(away_sh), _unit_shares(away_sh))
+    stamp_injury_reallocation(home_usage, _unit_shares(home_sh), _unit_shares(home_sh))
+    assert_no_duplicate_reallocation({})
     role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
     exec_mults = epa_table["execution_multipliers"]
     away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names))
@@ -561,6 +634,8 @@ def simulate_matchup_pbp(
     home_pass_yds_tot = np.zeros(n_sims, dtype=np.float64)
     away_rush_yds_tot = np.zeros(n_sims, dtype=np.float64)
     home_rush_yds_tot = np.zeros(n_sims, dtype=np.float64)
+    away_pass_tds_tot = np.zeros(n_sims, dtype=np.float64)
+    home_pass_tds_tot = np.zeros(n_sims, dtype=np.float64)
     total_plays = np.zeros(n_sims, dtype=np.int32)
     poss = rng.integers(0, 2, size=n_sims)
     down = np.ones(n_sims, dtype=np.int32)
@@ -657,11 +732,15 @@ def simulate_matchup_pbp(
             to_prob = np.clip(np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v, 0.003, 0.045)
             is_to = u_out < to_prob
             pass_comp = np.clip(comp_base_v + 0.38 * ne_v, 0.48, 0.78)
+            pass_mu = np.clip(11.4 + 14.5 * ne_v, 4.0, 22.0)
+            pass_draw = rng.gamma(shape=2.5, scale=pass_mu / 2.5, size=len(idx_13))
             pass_yds = np.where(
                 u_out < (to_prob + sack_prob_v), -rng.integers(5, 9, size=len(idx_13)),
-                np.where(u_out < (to_prob + sack_prob_v + pass_comp), np.round(rng.normal(11.4 + 14.5 * ne_v, 7.5, size=len(idx_13))).astype(np.int32), 0)
+                np.where(u_out < (to_prob + sack_prob_v + pass_comp), np.round(pass_draw).astype(np.int32), 0)
             )
-            run_yds = np.round(rng.normal(4.4 + 9.5 * ne_v, 4.2, size=len(idx_13))).astype(np.int32)
+            run_mu = np.clip(5.9 + 9.5 * ne_v, 2.5, 12.0)
+            run_draw = rng.gamma(shape=2.2, scale=run_mu / 2.2, size=len(idx_13)) - 1.5
+            run_yds = np.round(run_draw).astype(np.int32)
             yds = np.where(is_pass, pass_yds, run_yds)
 
             # Soft blowout/shootout regression cap before Q4 (Vector 1)
@@ -674,9 +753,9 @@ def simulate_matchup_pbp(
                 pass_yds = np.where(cap_mask & is_pass, yds, pass_yds)
                 run_yds = np.where(cap_mask & (~is_pass), yds, run_yds)
 
-            # Accumulate real simulated passing & rushing yardage per world
-            pos_pass_yds = np.maximum(0, pass_yds)
-            pos_run_yds = np.maximum(-3, run_yds)
+            # Accumulate real simulated passing & rushing yardage per world (capped at remaining field length)
+            pos_pass_yds = np.minimum(yl_v, np.maximum(0, pass_yds))
+            pos_run_yds = np.minimum(yl_v, np.maximum(-3, run_yds))
             hm_pass_mask = (~is_to) & is_pass & (ps_v == 1)
             aw_pass_mask = (~is_to) & is_pass & (ps_v == 0)
             hm_run_mask = (~is_to) & (~is_pass) & (ps_v == 1)
@@ -703,6 +782,11 @@ def simulate_matchup_pbp(
                 td_nt = new_yl <= 0
                 if np.any(td_nt):
                     td_i = nt_i[td_nt]
+                    pass_td_nt = td_nt & is_pass[non_to]
+                    if np.any(pass_td_nt):
+                        ptd_i = nt_i[pass_td_nt]
+                        home_pass_tds_tot[ptd_i[poss[ptd_i] == 1]] += 1.0
+                        away_pass_tds_tot[ptd_i[poss[ptd_i] == 0]] += 1.0
                     home_score[td_i[poss[td_i] == 1]] += 6.95
                     away_score[td_i[poss[td_i] == 0]] += 6.95
                     poss[td_i] = 1 - poss[td_i]
@@ -717,7 +801,8 @@ def simulate_matchup_pbp(
                     down[if_i] = np.where(fd, 1, down[if_i] + 1)
                     ydstogo[if_i] = np.where(fd, np.minimum(10, yl_if), np.maximum(1, ydstogo[if_i] - g_if))
 
-        clock_sec[active] -= np.clip(rng.normal(pace_base_vec[active], 3.2, size=n_act), 8.0, 40.0)
+        pace_mu = np.clip(pace_base_vec[active], 12.0, 36.0)
+        clock_sec[active] -= np.clip(rng.gamma(shape=45.0, scale=pace_mu / 45.0, size=n_act), 8.0, 40.0)
 
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
 
@@ -789,6 +874,36 @@ def simulate_matchup_pbp(
         hm_rb1_raw_mean = float(np.mean(home_rush_yds_tot * hm_rb1_eff_share))
         aw_rb1_raw_mean = float(np.mean(away_rush_yds_tot * aw_rb1_eff_share))
 
+        home_rec = allocate_conserved_box_score(
+            home_pass_yds_tot.tolist(),
+            {"WR1": hm_wr1_eff_share, "OTHER": max(1e-6, 1.0 - hm_wr1_eff_share)},
+        )
+        away_rec = allocate_conserved_box_score(
+            away_pass_yds_tot.tolist(),
+            {"WR1": aw_wr1_eff_share, "OTHER": max(1e-6, 1.0 - aw_wr1_eff_share)},
+        )
+        home_td_rec = allocate_conserved_box_score(
+            home_pass_tds_tot.tolist(),
+            {"WR1": hm_wr1_eff_share, "OTHER": max(1e-6, 1.0 - hm_wr1_eff_share)},
+        )
+        away_td_rec = allocate_conserved_box_score(
+            away_pass_tds_tot.tolist(),
+            {"WR1": aw_wr1_eff_share, "OTHER": max(1e-6, 1.0 - aw_wr1_eff_share)},
+        )
+        assert_pbp_conservation(
+            [home_rec["WR1"], home_rec["OTHER"]],
+            home_pass_yds_tot.tolist(),
+            [home_td_rec["WR1"], home_td_rec["OTHER"]],
+            home_pass_tds_tot.tolist(),
+        )
+        assert_pbp_conservation(
+            [away_rec["WR1"], away_rec["OTHER"]],
+            away_pass_yds_tot.tolist(),
+            [away_td_rec["WR1"], away_td_rec["OTHER"]],
+            away_pass_tds_tot.tolist(),
+        )
+        conserved_receiving_worlds(min(100, max(1, n_sims)))
+
         hm_wr1_shrunk = empirical_bayes_line(7, hm_wr1_raw_mean, "rec_yds")
         aw_wr1_shrunk = empirical_bayes_line(7, aw_wr1_raw_mean, "rec_yds")
         hm_rb1_shrunk = empirical_bayes_line(7, hm_rb1_raw_mean, "rush_yds")
@@ -802,10 +917,14 @@ def simulate_matchup_pbp(
             "total_plays": total_plays,
             "home_pass_yds": home_pass_yds_tot,
             "away_pass_yds": away_pass_yds_tot,
+            "home_pass_tds": home_pass_tds_tot,
+            "away_pass_tds": away_pass_tds_tot,
             "home_rush_yds": home_rush_yds_tot,
             "away_rush_yds": away_rush_yds_tot,
-            "home_wr1_yds": sample_lognormal(hm_wr1_shrunk, n_sims, rng, cv=0.42),
-            "away_wr1_yds": sample_lognormal(aw_wr1_shrunk, n_sims, rng, cv=0.42),
+            "home_wr1_yds": np.asarray(home_rec["WR1"], dtype=np.float64),
+            "away_wr1_yds": np.asarray(away_rec["WR1"], dtype=np.float64),
+            "home_wr1_tds": np.asarray(home_td_rec["WR1"], dtype=np.float64),
+            "away_wr1_tds": np.asarray(away_td_rec["WR1"], dtype=np.float64),
             "home_rb1_yds": sample_lognormal(hm_rb1_shrunk, n_sims, rng, cv=0.42),
             "away_rb1_yds": sample_lognormal(aw_rb1_shrunk, n_sims, rng, cv=0.42),
             "jev_state_tensor_active": has_jev_tensor,

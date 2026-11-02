@@ -330,6 +330,23 @@ def role_cost_matrix(
 # --------------------------------------------------------------------------- #
 
 
+def reallocate_injury_usage(
+    usage: Dict[str, object],
+    target_shares: Mapping[str, float],
+    carry_shares: Mapping[str, float],
+) -> Dict[str, object]:
+    """Single-pass Sinkhorn stamp. A second call on the same dict raises."""
+    import sys
+    from pathlib import Path
+
+    ops = str(Path(__file__).resolve().parent)
+    if ops not in sys.path:
+        sys.path.insert(0, ops)
+    from week8_forensic_kernels import sinkhorn_reallocate_once
+
+    return sinkhorn_reallocate_once(usage, target_shares, carry_shares)
+
+
 def injury_overlay(
     pre_shares: Mapping[str, float],
     post_shares: Mapping[str, float],
@@ -338,6 +355,7 @@ def injury_overlay(
     players: Sequence[str],
     eps: float = _SINKHORN_EPS,
     table: Mapping[str, float] = EPA_DROPOFF,
+    usage: Dict[str, object] | None = None,
 ) -> Dict[str, object]:
     """
     Full overlay: Sinkhorn reallocation then EPA dropoff.
@@ -392,10 +410,15 @@ def injury_overlay(
         bool(info["converged"]),
     )
 
+    normalized = normalize_shares(effective)
+    usage_in = usage if usage is not None else {}
+    stamped = reallocate_injury_usage(usage_in, normalized, normalized)
     return {
         "feasible_shares": feasible,
         "effective_shares": effective,
-        "normalized_shares": normalize_shares(effective),
+        "normalized_shares": normalized,
+        "_injury_reallocation_applied": stamped["_injury_reallocation_applied"],
+        "_reallocation_hash": stamped["_reallocation_hash"],
         "total_mass_before": total_before,
         "total_mass_after": total_after,
         "mass_loss": total_before - total_after,

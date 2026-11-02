@@ -46,6 +46,13 @@ spec.loader.exec_module(sim)
 from intelligence.coaching.qb_disguise_blitz_matrix import evaluate_qb_matchup_2x2, TEAM_TO_QB_2026
 from intelligence.coaching.pm_sweep_convergence_kernels import wr_360_all_metrics_kernel
 from intelligence.data_loaders.signal_pack_loader import append_gate_decision
+if str(REPO_ROOT / "scripts" / "ops") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / "scripts" / "ops"))
+from week8_forensic_kernels import (  # noqa: E402
+    append_gate_ledger,
+    can_override_gate_decision,
+    degraded_jev_publication_block,
+)
 from engine.kernels.consolidated_sweep_kernels import (
     load_consolidated_2026_pbp_metrics,
     compute_c281_tprr_yprr_composite,
@@ -1649,6 +1656,19 @@ def main() -> None:
             passes_gate = certs_ok and (not has_conflict) and (ed >= 0.035) and (mp >= thr_p)
 
         decision_str = "PUBLISH" if passes_gate else "PASS"
+        if os.environ.get("GSE_USER_OVERRIDE_TEXT"):
+            prior = {
+                "line": float(cand.get("market_line", 0.0) or 0.0),
+                "market_prob_devig": float(cand.get("market_p", 0.5) or 0.5),
+                "decision": "PASS",
+            }
+            if not can_override_gate_decision(prior, {"user_text": os.environ["GSE_USER_OVERRIDE_TEXT"]}):
+                decision_str = "PASS"
+                passes_gate = False
+        if cand.get("jev_status") not in (None, "VERIFIED_LIVE"):
+            blocked = degraded_jev_publication_block(str(cand.get("jev_status")))
+            decision_str = blocked["decision"]
+            passes_gate = False
         gate_schema_decision = "PASS" if passes_gate else ("ABSTAIN" if not certs_ok else "REJECT")
         cand["decision"] = decision_str
         cand["publishAllowed"] = bool(passes_gate)

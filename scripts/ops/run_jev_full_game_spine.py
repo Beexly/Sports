@@ -47,6 +47,11 @@ if HERMES_JEV_PATH.exists() and str(HERMES_JEV_PATH) not in sys.path:
 
 from jevkit import client as jev_client  # noqa: E402
 
+_OPS = str(Path(__file__).resolve().parent)
+if _OPS not in sys.path:
+    sys.path.insert(0, _OPS)
+from week8_forensic_kernels import degraded_jev_publication_block  # noqa: E402
+
 TRENDS_JSON_PATH = REPO_ROOT / "data" / "engine" / "nfl_2026_w1_w7_trends_and_usage.json"
 INJURIES_CSV_PATH = REPO_ROOT / "data" / "nflverse" / "injuries_2026.csv"
 DEFAULT_OUT_PATH = REPO_ROOT / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
@@ -778,7 +783,12 @@ def simulate_full_game_with_jev(
             except Exception as err:
                 last_err = err
         if jev_res is None:
-            raise RuntimeError(f"Jev ask failed after 6 attempts: {last_err}")
+            blocked = degraded_jev_publication_block(reason=str(last_err))
+            raise RuntimeError(
+                "Jev ask failed after 6 attempts: "
+                f"{last_err}; jev_status={blocked['jev_status']}; "
+                f"publish_allowed={blocked['publish_allowed']}; decision={blocked['decision']}"
+            )
         if jev_res.get("model"):
             resolved_model = str(jev_res["model"])
 

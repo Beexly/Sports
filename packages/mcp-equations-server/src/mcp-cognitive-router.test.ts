@@ -84,4 +84,24 @@ describe("Stage C spectral orthogonalization & Stage D James-Stein Jacobian coup
     expect(res.clampedTotalLogOddsDelta).toBe(MAX_ABS_DELTA_LOG_ODDS);
     expect(res.tauHatCoachPriorBonus).toBeCloseTo((0.55 - 0.42) * 0.12, 5);
   });
+
+  it("clamps a quarantined equation to zero log-odds until a backtest passes", () => {
+    const spectral = stageC([
+      {
+        id: "ramanujan",
+        premise: "continued fraction",
+        cluster: "physics",
+        similarity: 0.99,
+        rawLogOddsDelta: 0.3,
+        verificationStatus: "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST",
+      },
+      { id: "p2", premise: "B1", cluster: "c2", similarity: 0.9, rawLogOddsDelta: 0.05 },
+      { id: "p3", premise: "C1", cluster: "c3", similarity: 0.8, rawLogOddsDelta: 0.04 },
+    ]);
+    const quarantined = spectral.find((p) => p.id === "ramanujan");
+    expect(quarantined?.quarantined).toBe(true);
+    expect(quarantined?.spectralScore).toBe(0);
+    const res = stageD(spectral, { noiseVarianceSigma2: 0.0025, tauHatCoach: 0.42 });
+    expect(res.selectedPremises.find((p) => p.id === "ramanujan")?.shrunkLogOddsDelta).toBe(0);
+  });
 });

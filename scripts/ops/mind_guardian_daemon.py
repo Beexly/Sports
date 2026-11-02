@@ -39,6 +39,7 @@ import json
 import re
 import shutil
 import sqlite3
+import sys
 import time
 import zipfile
 from dataclasses import dataclass
@@ -502,6 +503,17 @@ class MindGuardian:
 
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
+
+
+def guard_publication_override(ledger_record: dict, current_market_state: dict, ledger_path: Path) -> bool:
+    """Immutable PASS lock. Conversational urgency is not a market delta."""
+    ops = str(Path(__file__).resolve().parent)
+    if ops not in sys.path:
+        sys.path.insert(0, ops)
+    from week8_forensic_kernels import append_gate_ledger, can_override_gate_decision
+
+    append_gate_ledger(ledger_record, ledger_path)
+    return can_override_gate_decision(ledger_record, current_market_state)
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover

@@ -191,11 +191,33 @@ pulp.value = lambda v: getattr(v, "val", 0.0)  # type: ignore[attr-defined]
 sys.modules["pulp"] = pulp
 
 # Import reference architecture from repo intelligence/dfs and 175-snap PBP + JEV engine
-sys.path.insert(0, "C:/c/wt-sports")
-sys.path.insert(0, "C:/c/wt-sports/scripts/ops")
-sys.path.insert(0, "C:/c/wt-sports/intelligence/dfs")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+_DFS_CANDIDATES = [
+    REPO_ROOT / "intelligence" / "dfs",
+    Path("C:/c/wt-sports/intelligence/dfs"),
+]
+for _dfs in _DFS_CANDIDATES:
+    if _dfs.is_dir() and str(_dfs) not in sys.path:
+        sys.path.insert(0, str(_dfs))
+sys.path.insert(0, str(REPO_ROOT))
+sys.path.insert(0, str(REPO_ROOT / "scripts" / "ops"))
 sys.path.insert(0, "C:/Users/Garrett/hermes-jev-skills")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gpp_architecture as gpp_arch  # noqa: E402
+from week8_forensic_kernels import (  # noqa: E402
+    apply_zero_inflation_quantiles,
+    block_inactive_player,
+    cash_objective_coeff,
+    classify_exposure_role,
+    compute_empirical_bayes_shrunk_projection,
+    det_maso_score,
+    dynamic_exposure_cap,
+    exposure_count_cap,
+    fragility_score,
+    gpp_objective_coeff,
+    pairwise_overlap_ok,
+)
+from ingest_pregame_ownership_leverage import load_week_ownership  # noqa: E402
 from gse_coach_mind_simulator import (  # noqa: E402
     build_jev_state_tensor,
     load_sealed_object_readonly,
@@ -203,8 +225,6 @@ from gse_coach_mind_simulator import (  # noqa: E402
     simulate_matchup_pbp,
 )
 from jevkit import client as jev_client  # noqa: E402
-
-REPO_ROOT = Path("C:/c/wt-sports")
 CSV_11_PATH = REPO_ROOT / "data" / "dfs" / "dk-2026-10-31" / "DKSalaries-1.csv"
 CSV_13_PATH = REPO_ROOT / "data" / "dfs" / "dk-2026-10-31" / "DKSalaries.csv"
 PENNY_PATH = REPO_ROOT / "data" / "nflverse" / "pennydata_2026_player_week_stats.csv"
@@ -363,6 +383,136 @@ def sinkhorn_reallocate_1d(prior_weights: np.ndarray, vacated_mass: float, tau: 
     additions = vacated_mass * q
     dual_res = float(abs(np.sum(additions) - vacated_mass))
     return additions, dual_res
+
+
+def apply_week8_forensic_projection_pass(active_df: pd.DataFrame) -> pd.DataFrame:
+    """Shrink raw FPPG toward the model anchor and hard-zero inactive names.
+
+    Called from build_slate_dataframe on every slate build. Ownership feed, when
+    present, replaces the salary-implied ownership prior. It does not invent a
+    column when the file is absent.
+    """
+    repo = Path(__file__).resolve().parents[2]
+    own_rows = load_week_ownership(8, repo)
+    own_by_name = {str(r["player_name"]).strip().lower(): r for r in own_rows}
+    shrunk, gated, q25, q85, frags, caps, roles = [], [], [], [], [], [], []
+    for _, row in active_df.iterrows():
+        name = str(row.get("name", row.get("Name", "")))
+        gp = int(row.get("player_gp", 1) or 1)
+        raw = float(row.get("AvgPointsPerGame", 0.0) or 0.0)
+        anchor = float(row.get("proj_fpts", raw) or 0.0)
+        role = str(row.get("role", ""))
+        target = 0.24 if role in {"WR1", "RB1", "TE1", "QB1"} else 0.08
+        route = 0.70 if role in {"WR1", "WR2", "TE1"} else 0.25
+        snap = 0.85 if role in {"QB1", "RB1", "WR1"} else 0.40
+        eb = compute_empirical_bayes_shrunk_projection(
+            raw if raw > 0 else anchor,
+            gp,
+            anchor,
+            snap_share=snap,
+            route_share=route,
+            target_share=target,
+        )
+        quant = apply_zero_inflation_quantiles(
+            {"p10": anchor * 0.35, "p25": anchor * 0.55, "p50": anchor, "p85": anchor * 1.45, "p95": anchor * 1.80},
+            target,
+            eb["participation_prob"],
+        )
+        own = own_by_name.get(name.strip().lower())
+        ownership = float(own["proj_ownership_pct"]) / 100.0 if own else float(row.get("proj_ownership", 0.08) or 0.08)
+        frag = fragility_score(quant["p10"], quant["p50"], quant["p85"], target_share=target)
+        status = str(row.get("Status", row.get("status", "")) or "")
+        if own:
+            status = own.get("injury_status") or status
+        blocked = block_inactive_player(name, status, gp, projection=eb["gated_mean"])
+        shrunk.append(0.0 if not blocked["publishAllowed"] else eb["shrunk_mean"])
+        gated.append(blocked["proj"])
+        q25.append(0.0 if not blocked["publishAllowed"] else quant["p25"])
+        q85.append(0.0 if not blocked["publishAllowed"] else quant["p85"])
+        frags.append(frag)
+        role_name = classify_exposure_role(
+            quant["p85"],
+            float(row.get("salary", row.get("Salary", 4000)) or 4000),
+            ownership,
+            frag,
+            q85_per_salary_top_decile=bool(float(row.get("salary", 4000) or 4000) >= 9000 and frag < 0.25),
+        )
+        roles.append(role_name)
+        caps.append(dynamic_exposure_cap(role_name))
+    active_df = active_df.copy()
+    active_df["eb_shrunk_mean"] = shrunk
+    active_df["proj_fpts"] = gated
+    active_df["q25"] = q25
+    active_df["q85"] = q85
+    active_df["fragility"] = frags
+    active_df["exposure_role"] = roles
+    active_df["exposure_cap"] = caps
+    return active_df
+
+
+def refresh_exposure_from_ownership(active_df: pd.DataFrame) -> pd.DataFrame:
+    """Reclassify chalk vs leverage after the ownership vector exists."""
+    roles, caps = [], []
+    for _, row in active_df.iterrows():
+        frag = float(row.get("fragility", 0.0) or 0.0)
+        own = float(row.get("proj_ownership", 0.0) or 0.0)
+        q85 = float(row.get("q85", row.get("proj_fpts", 0.0)) or 0.0)
+        salary = float(row.get("salary", 4000) or 4000)
+        role_name = classify_exposure_role(
+            q85,
+            salary,
+            own,
+            frag,
+            q85_per_salary_top_decile=salary >= 9000 and frag < 0.25,
+        )
+        roles.append(role_name)
+        caps.append(dynamic_exposure_cap(role_name))
+    out = active_df.copy()
+    out["exposure_role"] = roles
+    out["exposure_cap"] = caps
+    return out
+
+
+def solve_dk_slate(players: list[dict[str, Any]], mode: str) -> dict[str, Any]:
+    """Cash vs GPP objective, salary floor, and dynamic exposure caps.
+
+    The MILP in solve_single_dk_lineup calls the same objective helpers. This
+    entry point is what main() and the Week 8 replay test execute directly.
+    """
+    mode_key = "CASH" if mode.upper() == "CASH" else "GPP_20MAX"
+    scored = []
+    for p in players:
+        blocked = block_inactive_player(
+            str(p["name"]),
+            p.get("injury_status"),
+            int(p.get("gp", 1)),
+            projection=float(p.get("proj", 0.0)),
+        )
+        if not blocked["publishAllowed"]:
+            continue
+        frag = float(p.get("fragility", fragility_score(p.get("q15", 0.0), p.get("q50", p["proj"]), p.get("q85", p["proj"]), target_share=float(p.get("target_share", 1.0)))))
+        role = classify_exposure_role(
+            float(p.get("q85", p["proj"])),
+            float(p["salary"]),
+            float(p.get("ownership", 0.0)),
+            frag,
+            q85_per_salary_top_decile=bool(p.get("anchor", False)),
+        )
+        coeff = (
+            cash_objective_coeff(float(p.get("mu", p["proj"])), float(p.get("q25", 0.0)))
+            if mode_key == "CASH"
+            else gpp_objective_coeff(float(p.get("q85", p["proj"])), float(p.get("ownership", 0.0)), frag)
+        )
+        scored.append({
+            "name": p["name"],
+            "coeff": coeff,
+            "salary": int(p["salary"]),
+            "exposure_role": role,
+            "max_lineups": exposure_count_cap(role, int(p.get("n_lineups", 20))),
+            "proj": blocked["proj"],
+        })
+    floor = 49500 if mode_key == "CASH" else 49200
+    return {"mode": mode_key, "salary_floor": floor, "salary_cap": 50000, "players": scored}
 
 
 def build_slate_dataframe(csv_path: Path, emp_stats: Dict[str, Dict[str, Any]]) -> Tuple[pd.DataFrame, pd.DataFrame, List[Dict[str, Any]]]:
@@ -757,6 +907,7 @@ def build_slate_dataframe(csv_path: Path, emp_stats: Dict[str, Dict[str, Any]]) 
             fp = float(np.clip(8.5 + (22.5 - opp_pts) * 0.28 + 0.25 * float(row["AvgPointsPerGame"]), 4.5, 11.5))
         proj_fpts_list.append(fp)
     active_df["proj_fpts"] = proj_fpts_list
+    active_df = apply_week8_forensic_projection_pass(active_df)
 
     # Calibrate positional ownership (sums to ~100% QB, ~245% RB, ~335% WR, ~120% TE, ~100% DST)
     # Anchored to Ship It Nation / Blick Analytics & SiriusXM Week 8 Field Ownership (2026-11-01-PREGAME-DATA-PACK.md Part 7 & Part 4)
@@ -840,6 +991,7 @@ def build_slate_dataframe(csv_path: Path, emp_stats: Dict[str, Dict[str, Any]]) 
         own_vec[idxs] = pos_own
 
     active_df["proj_ownership"] = own_vec
+    active_df = refresh_exposure_from_ownership(active_df)
     return active_df, games_df, reallocation_audit
 
 
@@ -1194,17 +1346,29 @@ def solve_single_dk_lineup(
     prob = pulp.LpProblem(f"DK_Single_{mode}", pulp.LpMaximize)
     x = pulp.LpVariable.dicts("x", pids, cat="Binary")
 
-    if mode == "cash":
-        prob += pulp.lpSum([utility_vec[k] * x[k] for k in pids])
-    else:
+    if mode in ("cash", "CASH"):
         prob += pulp.lpSum([
-            (utility_vec[k] - 2.8 * df.loc[k, "proj_ownership"] * (df.loc[k, "position"] in ["QB", "WR", "DST"])) * x[k]
+            cash_objective_coeff(
+                float(df.loc[k, "eb_shrunk_mean"]) if "eb_shrunk_mean" in df.columns else float(utility_vec[k]),
+                float(df.loc[k, "q25"]) if "q25" in df.columns else 0.45 * float(utility_vec[k]),
+            ) * x[k]
             for k in pids
         ])
+        salary_floor = 49500
+    else:
+        prob += pulp.lpSum([
+            gpp_objective_coeff(
+                float(df.loc[k, "q85"]) if "q85" in df.columns else float(utility_vec[k]),
+                float(df.loc[k, "proj_ownership"]),
+                float(df.loc[k, "fragility"]) if "fragility" in df.columns else 0.0,
+            ) * x[k]
+            for k in pids
+        ])
+        salary_floor = 49200
 
-    # Exact DraftKings Salary Cap & Floor
+    # Exact DraftKings Salary Cap & Floor (cash 49500, GPP 49200 — no $1,500 dead cap)
     prob += pulp.lpSum([df.loc[k, "salary"] * x[k] for k in pids]) <= 50000
-    prob += pulp.lpSum([df.loc[k, "salary"] * x[k] for k in pids]) >= 48800
+    prob += pulp.lpSum([df.loc[k, "salary"] * x[k] for k in pids]) >= salary_floor
 
     # Exact 9-man Positional Rules
     prob += pulp.lpSum([x[k] for k in pids if df.loc[k, "position"] == "QB"]) == 1
@@ -1873,6 +2037,25 @@ def main() -> None:
     # =========================================================================
     print("Building 11-Game Sunday Main Slate pool from DKSalaries-1.csv...")
     df_11, games_11, realloc_11 = build_slate_dataframe(CSV_11_PATH, emp_stats)
+    forensic_cash = solve_dk_slate(
+        [
+            {
+                "name": str(r["name"]),
+                "salary": int(r["salary"]),
+                "proj": float(r["proj_fpts"]),
+                "gp": int(r.get("player_gp", 1)),
+                "ownership": float(r.get("proj_ownership", 0.0)),
+                "q85": float(r.get("q85", r["proj_fpts"])),
+                "q25": float(r.get("q25", 0.0)),
+                "fragility": float(r.get("fragility", 0.0)),
+                "anchor": str(r.get("exposure_role", "")) == "ANCHOR_BELLCOW",
+                "injury_status": str(r.get("Status", "")),
+            }
+            for _, r in df_11.iterrows()
+        ],
+        "CASH",
+    )
+    print(f"Week8 forensic cash slate scored {len(forensic_cash['players'])} legal players, floor ${forensic_cash['salary_floor']}.")
     print(f"11-Game Active Pool: {len(df_11)} active rows across {len(games_11)} games (0 OUT/IR rows).")
 
     # Run Primary 175-Snap PBP-Coupled + Student-t (nu=4) Simulation with GSE Wind Penalty (-3.007 yds/mph)

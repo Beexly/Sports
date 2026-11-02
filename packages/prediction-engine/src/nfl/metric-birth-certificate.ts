@@ -172,3 +172,10 @@ export const GSE_NFL_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertifica
 export function metricBirthCertificate(metricId: string): GseMetricBirthCertificate | null {
   return GSE_NFL_METRIC_BIRTH_CERTIFICATES.find((certificate) => certificate.metricId === metricId) ?? null;
 }
+
+/** Quarantined equations stay at weight 0 until a documented walk-forward backtest exists. */
+export function outOfSampleBacktestPassed(metricId: string): boolean {
+  const cert = metricBirthCertificate(metricId);
+  if (!cert) return false;
+  return cert.status === "PRODUCTION" && cert.validationMethods.some((method) => method.includes("walk-forward"));
+}
