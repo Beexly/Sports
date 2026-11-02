@@ -1567,7 +1567,13 @@ export async function processSport(
         ingestionRunId: run.id,
         isBootstrap,
         isFeatured,
-        isPublished: isPublic,
+        // A publishing mint OMITS the flag so the schema default (true) applies;
+        // only an explicit veto (`canExposePublicPicks === false`) sets it. The
+        // previous `isPublic ? {} : {isPublished:false}` form treated `undefined`
+        // as a veto, which broke the lane-B test whose partial gate fixture never
+        // sets the flag — and in production the gate is a required boolean, so
+        // unspecified only happens in that fixture. Default to publishing.
+        ...(isPublic === false ? { isPublished: false } : {}),
         // CLV lock snapshot — the line/price we ACTUALLY published at, captured
         // once at creation. Absent from the updateMany above, so the refresh
         // cycle can never overwrite it. `Pick.line` is now frozen alongside it

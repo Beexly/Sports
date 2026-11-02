@@ -58,7 +58,7 @@ export {
 export type { DevigBook } from "./devig.js"
 export { ESPN_NFL_SCOREBOARD, parseEspnScoreboard } from "./espn.js"
 export type { EspnBoard } from "./espn.js"
-export { brierScore, reliabilityBins, pageCusum, seriesWinProb, bestTeamTitleRate } from "./research.js"
+export { brierScoreRows, reliabilityBins, pageCusum, seriesWinProb, bestTeamTitleRate } from "./research.js"
 export type { ReliabilityBin, SeasonGame } from "./research.js"
 export {
   parseXPull,

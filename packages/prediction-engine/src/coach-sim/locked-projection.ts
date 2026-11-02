@@ -96,6 +96,54 @@ import {
 
 export type { FourthDownDecisionSample };
 
+/**
+ * Memo for `simulateCoachGame`.
+ *
+ * The simulator is deterministic: every draw comes from
+ * `mulberry32(seedFor(input, ...))`, so an identical input returns an identical
+ * projection. That was measured, not assumed — the same input run twice returns
+ * a byte-equal marginMean.
+ *
+ * Scoring reads the coach lock three times per game (spread, total, moneyline),
+ * and on real team codes the sim resolves trench cells, which forces the played
+ * sample to be drawn separately from the baseline: two 10,000-game Monte Carlo
+ * runs per read. That put `scoreGame` at roughly 5 seconds per call and pushed
+ * the CI test step past its 30-minute cap.
+ *
+ * The key is the FULL sim input. `seedFor` covers only a subset of the fields
+ * the sim reads — it omits belichickHome/Away, staffAggressionAway and
+ * forceApplyCells — so a key derived from the seed or from `hashInput` could
+ * serve a projection built from a different input. Canonical JSON of the whole
+ * input cannot.
+ *
+ * A key that cannot be canonicalized falls back to an uncached run. A cache
+ * failure must never change or block a scoring result.
+ */
+const SIM_CACHE = new Map<string, CoachProjection>();
+const SIM_CACHE_LIMIT = 512;
+
+function simulateCoachGameMemo(input: CoachSimInput, n = 10_000): CoachProjection {
+  let key: string;
+  try {
+    key = canonicalizeForSeal([input, n]);
+  } catch {
+    return simulateCoachGame(input, n);
+  }
+  const hit = SIM_CACHE.get(key);
+  // Clone on the way out so a caller that mutates a projection cannot corrupt
+  // the entry every later read would receive.
+  if (hit) return structuredClone(hit);
+  const fresh = simulateCoachGame(input, n);
+  // FIFO eviction. Map preserves insertion order, and a suite touches far fewer
+  // than 512 distinct inputs, so this only bounds a long-lived process.
+  if (SIM_CACHE.size >= SIM_CACHE_LIMIT) {
+    const oldest = SIM_CACHE.keys().next();
+    if (!oldest.done) SIM_CACHE.delete(oldest.value);
+  }
+  SIM_CACHE.set(key, structuredClone(fresh));
+  return fresh;
+}
+
 export interface LockedCoachProjection extends CoachProjection {
   lockedAt: string;
   inputHash: string;
@@ -182,7 +230,7 @@ export function lockTuesdayCoachBaseline(
     ? { ...recoverTau([...fourthDownDecisions]), source: "recovered" as const }
     : { tau: 0.5, totalResidual: Number.NaN, source: "prior" as const };
 
-  const projection = simulateCoachGame({ ...pureCoachInput, injuryDropOff: 0 });
+  const projection = simulateCoachGameMemo({ ...pureCoachInput, injuryDropOff: 0 });
   const coachMindsetHash = computeCoachMindsetSha256(pureCoachInput, recovered.tau);
   const shadows = pureCoachInput.shadows ?? [];
   const homeTargetAllocations = applyShadowHaircut(
@@ -373,7 +421,7 @@ export function lockCoachProjection(
   // made marginMean/scoreMean depend on injury while inputHash did not, so the
   // hash stopped identifying the projection and a receipt keyed on it could
   // not detect an injury revision. See locked-projection.test.ts.
-  const projection = simulateCoachGame({ ...input, injuryDropOff: 0 });
+  const projection = simulateCoachGameMemo({ ...input, injuryDropOff: 0 });
   return {
     ...projection,
     // Pinned when the caller supplies a time so a re-run reproduces the lock.
