@@ -794,6 +794,30 @@ def compute_fourth_down_uncertainty_gate(delta_wp_draws: Sequence[float]) -> Dic
     return {"suppress": lo <= 0.0 <= hi, "lo": lo, "hi": hi, "reason": "interval_straddles_zero" if lo <= 0.0 <= hi else "interval_clear"}
 
 
+# Eager MIT Sloan 193949. Full pass-set model RMSE was 1.10 yards; play-level
+# features alone were 1.38. Attainment is the share of reps that reach expected depth.
+# It is not a projection. Call it only with observed set depths.
+EXPECTED_PASS_SET_DEPTH_YDS = 1.10
+PLAY_LEVEL_ONLY_PASS_SET_RMSE_YDS = 1.38
+
+
+def pass_set_depth_attainment(
+    observed_depths: Sequence[float],
+    expected_depth: float = EXPECTED_PASS_SET_DEPTH_YDS,
+) -> Dict[str, float]:
+    if not observed_depths:
+        raise ValueError("pass-set attainment needs observed depths; do not invent them")
+    if expected_depth <= 0:
+        raise ValueError("expected depth must be positive")
+    met = sum(1 for depth in observed_depths if float(depth) >= expected_depth)
+    return {
+        "attainment": met / len(observed_depths),
+        "n": float(len(observed_depths)),
+        "expected_depth_yds": float(expected_depth),
+        "play_level_only_rmse_yds": PLAY_LEVEL_ONLY_PASS_SET_RMSE_YDS,
+    }
+
+
 def weak_link_am_gm_clean_pocket_prob(
     linemen_survival_probs: Sequence[float],
 ) -> Dict[str, float]:

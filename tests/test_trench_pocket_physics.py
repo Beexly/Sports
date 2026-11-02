@@ -16,7 +16,23 @@ from intelligence.coaching.trench_pocket_physics import (
 )
 
 
-def test_weak_link_product_is_below_arithmetic_mean():
+def test_pass_set_attainment_uses_observed_depths_only():
+    from intelligence.coaching.trench_pocket_physics import pass_set_depth_attainment
+    report = pass_set_depth_attainment([1.4, 0.6, 1.2, 0.9], expected_depth=1.10)
+    assert report["attainment"] == 0.5
+    assert report["expected_depth_yds"] == 1.10
+    try:
+        pass_set_depth_attainment([])
+    except ValueError as exc:
+        assert "invent" in str(exc)
+    else:
+        raise AssertionError("empty depths must refuse")
+    import os
+    os.environ["ENABLE_TRENCH_POCKET_PHYSICS_V2"] = "1"
+    from intelligence.coaching.ol_provider import ol_pass_set_report
+    wired = ol_pass_set_report([1.4, 0.6, 1.2, 0.9])
+    assert wired["enabled"] is True
+    assert wired["attainment"] == 0.5
     grades = [0.92, 0.90, 0.88, 0.86, 0.52]
     report = compute_weak_link_ol_efficiency(grades)
     base = weak_link_am_gm_clean_pocket_prob(grades)

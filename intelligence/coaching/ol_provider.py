@@ -156,3 +156,13 @@ def weak_link_survival_for_grades(grades: list[float]) -> float:
     from intelligence.coaching.trench_pocket_physics import compute_weak_link_ol_efficiency
 
     return float(compute_weak_link_ol_efficiency(grades)["efficiency"])
+
+
+def ol_pass_set_report(observed_depths: list[float]) -> dict[str, float | bool | None]:
+    """Eager 193949 attainment. Refuses to invent depths when the flag is off or the list is empty."""
+    if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "").lower() not in {"1", "true", "yes"}:
+        return {"enabled": False, "attainment": None}
+    from intelligence.coaching.trench_pocket_physics import pass_set_depth_attainment
+
+    report = pass_set_depth_attainment(observed_depths)
+    return {"enabled": True, "attainment": report["attainment"], "n": report["n"]}
