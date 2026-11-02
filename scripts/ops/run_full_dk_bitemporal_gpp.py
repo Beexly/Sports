@@ -194,7 +194,6 @@ sys.modules["pulp"] = pulp
 REPO_ROOT = Path(__file__).resolve().parents[2]
 _DFS_CANDIDATES = [
     REPO_ROOT / "intelligence" / "dfs",
-    Path("C:/c/wt-sports/intelligence/dfs"),
 ]
 for _dfs in _DFS_CANDIDATES:
     if _dfs.is_dir() and str(_dfs) not in sys.path:

@@ -5,7 +5,7 @@ next role must do. ---
 
 ## 2026-11-02 — Week 8 forensic kernels on hermes/week8-forensic-tracks-1-3
 
-**Changed:** Empirical-Bayes shrink, ownership penalty, inactive hard-zero, and single-pass injury stamp are called from the DK slate builder and injury overlay. PBP receiving yards are allocated by share instead of a post-sim lognormal draw. Cognitive router clamps quarantined equations to zero log-odds. Gate override requires a verified line or roster delta.
+**Changed:** Empirical-Bayes shrink, ownership penalty, inactive hard-zero, and single-pass injury stamp are called from the DK slate builder and injury overlay. PBP receiving yards are allocated by share instead of a post-sim lognormal draw. Cognitive router clamps quarantined equations to zero log-odds. Gate override requires a verified line or roster delta. `gpp_architecture.py` now lives at `intelligence/dfs/gpp_architecture.py` (same bytes as the Downloads copy). The DK optimizer no longer imports it from `C:/c/wt-sports`.
 
 **Proven:** pytest tests/test_trench_pocket_physics.py tests/test_week8_post_slate_fixes.py tests/test_trench_pipeline_integration.py tests/test_mind_guardian.py — 14 passed. npm test --prefix packages/mcp-equations-server — 60 passed, then the quarantine clamp test passed (11/11 on the router file). FWL residualization and calibration-map tests passed.
 
