@@ -151,6 +151,21 @@ def test_dedupe_does_not_launder_a_retracted_paper(tmp_path):
     assert ci.search(idx, "coverage") == []
 
 
+def test_dedupe_prefers_full_text_over_metadata(tmp_path):
+    """A record with full text must beat a metadata-only stub of the same work."""
+    recs = [
+        {"source": "openalex", "source_id": "oa9", "title": "Combine Performance Study",
+         "abstract": "short abstract", "topics": ["x"]},
+        {"source": "web_pdf", "source_id": "wp9", "title": "Combine performance study",
+         "abstract": "short abstract", "full_text": "long body text here",
+         "topics": ["web_pdf"]},
+    ]
+    idx = ci.dedupe(ci.build_index(_manifest(tmp_path, recs)))
+    assert idx["n"] == 1
+    assert idx["records"][0]["source"] == "web_pdf"
+    assert idx["records"][0]["has_full_text"] is True
+
+
 def test_dedupe_keeps_distinct_papers(tmp_path):
     idx = ci.build_index(_manifest(tmp_path, RECORDS))
     before = idx["n"]
