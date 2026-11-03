@@ -25,12 +25,12 @@ def couple_conserved_pbp(
     pbp = np.asarray(pbp_draws, dtype=np.float64)
     if pbp.size == 0 or not np.isfinite(pbp).all():
         return static
-    if float(np.mean(pbp)) <= float(min_mean):
-        return static
     if pbp.shape != static.shape:
         raise ValueError(
             f"PBP draw shape {pbp.shape} != static draw shape {static.shape}"
         )
+    if float(np.mean(pbp)) <= float(min_mean):
+        return static
     return pbp.copy()
 
 
@@ -42,6 +42,7 @@ def degraded_jev_lineup_evaluation(leverage_notes: str = "") -> Dict[str, Any]:
         "latency_ms": 0,
         "jev_status": "DEGRADED_UNVERIFIED",
         "publish_allowed": False,
+        "publishAllowed": False,
         "lineup_verdict": "PASS_FRAGILE",
         "verdict_probabilities": {"PASS_FRAGILE": 1.0},
         "stack_coherence_noul": 0.0,

@@ -663,9 +663,12 @@ def simulate_matchup_pbp(
 
     away_usage: dict = {}
     home_usage: dict = {}
-    stamp_injury_reallocation(away_usage, _unit_shares(away_sh), _unit_shares(away_sh))
-    stamp_injury_reallocation(home_usage, _unit_shares(home_sh), _unit_shares(home_sh))
-    assert_no_duplicate_reallocation({})
+    assert_no_duplicate_reallocation(away_usage)
+    assert_no_duplicate_reallocation(home_usage)
+    away_carry_sh = _unit_shares([0.04, 0.03, 0.02, 0.01, max(0.50, float(away_sh[4]))])
+    home_carry_sh = _unit_shares([0.04, 0.03, 0.02, 0.01, max(0.50, float(home_sh[4]))])
+    stamp_injury_reallocation(away_usage, _unit_shares(away_sh), away_carry_sh)
+    stamp_injury_reallocation(home_usage, _unit_shares(home_sh), home_carry_sh)
     role_names = ["WR1", "WR2", "WR3", "TE1", "RB1"]
     exec_mults = epa_table["execution_multipliers"]
     away_eff_mult = sum(away_sh[i] * (exec_mults.get(rn, 0.90) if rn in away_inj else 1.0) for i, rn in enumerate(role_names))

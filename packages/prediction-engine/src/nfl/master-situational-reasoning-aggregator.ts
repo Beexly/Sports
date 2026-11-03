@@ -444,7 +444,7 @@ export function scrubSensitive(input: unknown): unknown {
       // P1-14 requires `canonicalInputsHash` to be readable from the JSONL record alone;
       // without this allowlist the scrubber rewrites the digest to "[REDACTED]" and any
       // consumer that recomputes/compares the field gets a placeholder instead of a hash.
-      const isDigestField = /^(?:canonicalInputsHash|inputHash|inputHashSha256)$/i.test(key);
+      const isDigestField = /^(?:canonicalInputsHash|inputHash|inputHashSha256|.*Hash|sha256)$/i.test(key);
       if (isDigestField && typeof value === "string" && /^[a-f0-9]{32,128}$/i.test(value)) {
         out[key] = value;
         continue;
@@ -504,10 +504,11 @@ export function emitMindFeedRecord(
     return value;
   });
   const isTestEnv = Boolean(process.env.VITEST || process.env.NODE_ENV === "test");
+  const normalizedPath = feedPath.replace(/\\/g, "/");
   // Single-writer append: exactly one line per call, to the feed path only.
   // brain/mind.jsonl is never referenced here. Skip mutating repo-tracked
   // default feed files during unit tests.
-  if (!(isTestEnv && TRACKED_TEST_FEED_PATHS.has(feedPath))) {
+  if (!(isTestEnv && TRACKED_TEST_FEED_PATHS.has(normalizedPath))) {
     const absolute = isAbsolute(feedPath) ? feedPath : resolve(process.cwd(), feedPath);
     mkdirSync(dirname(absolute), { recursive: true });
     appendFileSync(absolute, `${line}\n`, { encoding: "utf8" });

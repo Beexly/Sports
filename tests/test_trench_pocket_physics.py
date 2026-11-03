@@ -56,3 +56,21 @@ def test_escape_vector_classifies_step_into_pressure():
 def test_fourth_down_gate_suppresses_interval_that_straddles_zero():
     report = compute_fourth_down_uncertainty_gate([-0.03, -0.01, 0.0, 0.02, 0.01, -0.02, 0.0, 0.01, 0.0])
     assert report["suppress"] is True
+
+
+def test_bayesian_shrink_p2s_and_apply_trench_pocket_shock():
+    from scripts.ops.trench_pocket_physics import apply_trench_pocket_shock, bayesian_shrink_p2s
+    shrunk = bayesian_shrink_p2s(observed_p2s=0.310, pressures=15, prior_p2s=0.185, k_pressures=30.0)
+    assert 0.185 < shrunk < 0.310
+    shock = apply_trench_pocket_shock(
+        base_sack_prob=0.068,
+        ol_grades=[0.90, 0.88, 0.86, 0.84, 0.62],
+        dl_pass_rush_threat=0.55,
+        chip_help=0.15,
+        qb_p2s=0.214,
+    )
+    assert shock["weak_link_efficiency"] < shock["arithmetic_mean"]
+    assert shock["am_gm_gap"] > 0.0
+    assert 0.025 <= shock["adjusted_sack_prob"] <= 0.180
+
+

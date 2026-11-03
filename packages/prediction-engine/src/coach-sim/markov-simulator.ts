@@ -200,7 +200,21 @@ const SIM_CACHE = new Map<string, CoachProjection>();
 
 export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjection {
   const games = Math.max(1, Math.floor(n));
-  const cacheKey = JSON.stringify({ input, games });
+  const cacheKey = JSON.stringify([
+    games,
+    input.homeTeam,
+    input.awayTeam,
+    input.week,
+    input.coachSupport,
+    input.injuryDropOff ?? 0,
+    input.neutralPassRate ?? null,
+    input.staffAggression ?? null,
+    input.staffAggressionAway ?? null,
+    input.shadows ?? null,
+    input.belichickHome ?? null,
+    input.belichickAway ?? null,
+    input.forceApplyCells ?? true,
+  ]);
   const cached = SIM_CACHE.get(cacheKey);
   if (cached !== undefined) {
     return cached;
@@ -245,25 +259,33 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
   ];
   const allocated = applyShadowHaircut(allocateTargets(eligible), input.shadows ?? []);
 
-  const result: CoachProjection = {
+  const result: CoachProjection = Object.freeze({
     scoreMean: totalMean / 2 + 1.5,
     marginMean,
     totalP10: totalMean - half,
     totalP90: totalMean + half,
     winProbHome,
-    playerStats: Object.fromEntries(
-      allocated.map((a) => [a.playerId, { mean: a.share * 8, p10: a.share * 4, p90: a.share * 12 }]),
+    playerStats: Object.freeze(
+      Object.fromEntries(
+        allocated.map((a) => [
+          a.playerId,
+          Object.freeze({ mean: a.share * 8, p10: a.share * 4, p90: a.share * 12 }),
+        ]),
+      ),
     ),
     fourthDownWP,
-    targetShares: allocated.map((a) => ({ playerId: a.playerId, share: a.share })),
-    scheme: {
+    targetShares: allocated.map((a) => Object.freeze({ playerId: a.playerId, share: a.share })),
+    scheme: Object.freeze({
       plays: played.schemePlays,
       yardsPerPlay: played.schemePlays > 0 ? played.schemeYards / played.schemePlays : 0,
-      fired: played.schemeFired,
-    },
-  };
-  if (SIM_CACHE.size > 512) {
-    SIM_CACHE.clear();
+      fired: Object.freeze({ ...played.schemeFired }),
+    }),
+  });
+  if (SIM_CACHE.size >= 512) {
+    const oldestKey = SIM_CACHE.keys().next().value;
+    if (oldestKey !== undefined) {
+      SIM_CACHE.delete(oldestKey);
+    }
   }
   SIM_CACHE.set(cacheKey, result);
   return result;

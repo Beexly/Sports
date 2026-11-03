@@ -338,6 +338,7 @@ def degraded_jev_publication_block(reason: str = "jev_ask_failed") -> dict[str, 
         "jev_status": "DEGRADED_UNVERIFIED",
         "confidence": None,
         "publish_allowed": False,
+        "publishAllowed": False,
         "decision": "PASS",
         "reason": reason,
     }

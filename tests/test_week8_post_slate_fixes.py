@@ -247,6 +247,7 @@ def test_pbp_conservation_coupling_and_jev_degraded_and_showdown_floor():
     degraded = degraded_jev_lineup_evaluation("jev offline")
     assert degraded["jev_status"] == "DEGRADED_UNVERIFIED"
     assert degraded["publish_allowed"] is False
+    assert degraded["publishAllowed"] is False
     assert degraded["lineup_verdict"] == "PASS_FRAGILE"
     assert degraded["confidence_int"] is None
 
@@ -256,5 +257,29 @@ def test_pbp_conservation_coupling_and_jev_degraded_and_showdown_floor():
     assert showdown_salary_floor(25000) == 48000
     assert showdown_salary_floor(None) == 48000
     assert showdown_salary_floor(49200) == 49200
+
+    with pytest.raises(ValueError, match="draw shape"):
+        couple_conserved_pbp(static_draws, np.array([1.0, 2.0], dtype=np.float64))
+
+
+def test_top_level_aliases_and_hurdle_non_negative_proj():
+    from week8_forensic_kernels import (
+        degraded_jev_publication_block,
+        empirical_bayes_shrink,
+        evaluate_parlay_conjunction,
+        hurdle_non_negative_proj,
+    )
+
+    eb = empirical_bayes_shrink(18.0, 3, 10.0)
+    assert eb["shrunk_mean"] < 18.0
+    assert hurdle_non_negative_proj(0.85, 0.80, 12.0, route_share=0.75, snap_share=0.80) > 0.0
+    assert hurdle_non_negative_proj(0.85, 0.80, 12.0, route_share=0.15, snap_share=0.20) == 0.0
+    deg = degraded_jev_publication_block("offline")
+    assert deg["publish_allowed"] is False and deg["publishAllowed"] is False
+    conj = evaluate_parlay_conjunction(
+        [{"publishAllowed": True, "decision": "SPEAK"}], 0.44, 0.36
+    )
+    assert conj["publishAllowed"] is True
+
 
 
