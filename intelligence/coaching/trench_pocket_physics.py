@@ -1087,3 +1087,117 @@ def compute_nikolaou_pelechrinis_team_collapse_pgm(
         "citation": "Nikolaou, Pelechrinis & Terzi (2024), arXiv:2402.10243v1 (KDD '24)",
     }
 
+
+# ---------------------------------------------------------------------------
+# EQ-NOV03-031: 25-bin Pocket Voronoi Area Aggregation (sector roll-up)
+#
+# PROVENANCE: this is a GEOMETRIC AGGREGATION HELPER, not a new model. It
+# converts a 25-bin polar tessellation of the pocket (the tessellation Paul
+# Ibrahim's paper describes) into the blindside / center area series that
+# `compute_ibrahim_voronoi_pocket_survival` consumes. The bin areas must be
+# supplied by the tracking-data layer; this function does not estimate them.
+# No fitted constants, no tunable correction factors.
+# ---------------------------------------------------------------------------
+
+def compute_pocket_voronoi_area(
+    pocket_bin_areas_yd2: Sequence[float] | Sequence[Sequence[float]],
+    n_bins: int = 25,
+    blindside_sector_deg: Tuple[float, float] = (150.0, 300.0),
+    center_sector_deg: Tuple[float, float] = (60.0, 120.0),
+) -> Dict[str, Any]:
+    """Aggregate a 25-bin pocket Voronoi tessellation into blindside / center area.
+
+    Bins are treated as equal-angular wedges of 360/n_bins degrees, ordered
+    counter-clockwise from 0 deg, with bin i centred at (i + 0.5) * 360/n_bins.
+    A bin belongs to a sector when its centre angle falls inside the sector.
+
+    Args:
+        pocket_bin_areas_yd2: either one frame of `n_bins` bin areas, or a
+            sequence of frames each containing `n_bins` bin areas.
+        n_bins: number of angular bins (25 in Ibrahim's framework).
+        blindside_sector_deg: angular window for the blindside.
+        center_sector_deg: angular window for the centre.
+
+    Returns:
+        Dict with per-frame blindside / center / total areas, plus the
+        blindside and center series ready to feed
+        `compute_ibrahim_voronoi_pocket_survival`.
+    """
+    if n_bins <= 0:
+        raise ValueError("n_bins must be positive")
+    wedge = 360.0 / n_bins
+
+    def _centres() -> List[float]:
+        return [(i + 0.5) * wedge for i in range(n_bins)]
+
+    centres = _centres()
+    bs_lo, bs_hi = float(blindside_sector_deg[0]), float(blindside_sector_deg[1])
+    c_lo, c_hi = float(center_sector_deg[0]), float(center_sector_deg[1])
+    bs_idx = [i for i, c in enumerate(centres) if bs_lo <= c <= bs_hi]
+    c_idx = [i for i, c in enumerate(centres) if c_lo <= c <= c_hi]
+
+    raw = list(pocket_bin_areas_yd2)
+    single_frame = bool(raw) and not isinstance(raw[0], (list, tuple))
+    frames: List[Sequence[float]] = [raw] if single_frame else list(raw)  # type: ignore[list-item]
+
+    bs_series: List[float] = []
+    c_series: List[float] = []
+    totals: List[float] = []
+    for frame in frames:
+        areas = [max(0.0, float(a)) for a in frame]
+        if len(areas) != n_bins:
+            raise ValueError(f"expected {n_bins} bin areas per frame, got {len(areas)}")
+        bs_series.append(round(sum(areas[i] for i in bs_idx), 4))
+        c_series.append(round(sum(areas[i] for i in c_idx), 4))
+        totals.append(round(sum(areas), 4))
+
+    if single_frame:
+        return {
+            "frames": 1,
+            "blindside_area_yd2": bs_series[0],
+            "center_area_yd2": c_series[0],
+            "total_area_yd2": totals[0],
+            "blindside_bin_indices": bs_idx,
+            "center_bin_indices": c_idx,
+            "n_bins": n_bins,
+            "note": "aggregation only; bin areas must come from tracking data",
+        }
+    return {
+        "frames": len(frames),
+        "blindside_area_series_yd2": bs_series,
+        "center_area_series_yd2": c_series,
+        "total_area_series_yd2": totals,
+        "blindside_bin_indices": bs_idx,
+        "center_bin_indices": c_idx,
+        "n_bins": n_bins,
+        "note": "aggregation only; bin areas must come from tracking data",
+    }
+
+
+# ---------------------------------------------------------------------------
+# EQ-NOV03-032: Sharp chip / slide protection adjustment (contract alias)
+#
+# PROVENANCE: exact delegation to `compute_sharp_pass_rush_protection_adjustment`.
+# The sealed-baseline contract names this adapter; the semantics are identical
+# and no new constants are introduced. Kept as a separate name so callers that
+# follow the contract do not fork the model.
+# ---------------------------------------------------------------------------
+
+def apply_sharp_pass_rush_chip_and_slide_adjustment(
+    raw_strain_rate: float,
+    slide_protection_rate: float = 0.0,
+    rb_te_boink_chip_rate: float = 0.0,
+    two_man_post_double_rate: float = 0.0,
+    jump_set_rate: float = 0.0,
+    quick_release_sub2s_rate: float = 0.0,
+) -> Dict[str, float]:
+    """Contract-named alias of `compute_sharp_pass_rush_protection_adjustment`."""
+    return compute_sharp_pass_rush_protection_adjustment(
+        raw_strain_rate=raw_strain_rate,
+        slide_protection_rate=slide_protection_rate,
+        rb_te_boink_chip_rate=rb_te_boink_chip_rate,
+        two_man_post_double_rate=two_man_post_double_rate,
+        jump_set_rate=jump_set_rate,
+        quick_release_sub2s_rate=quick_release_sub2s_rate,
+    )
+
