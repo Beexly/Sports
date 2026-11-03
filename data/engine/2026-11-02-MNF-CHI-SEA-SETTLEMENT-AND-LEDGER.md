@@ -1,31 +1,30 @@
-# NEW ENGINE OFFICIAL LEDGER — updated after CHI @ SEA, Mon Nov 2, 2026 (MNF)
+# NEW ENGINE OFFICIAL LEDGER — Reconciled Post-MNF Settlement (CHI 34 @ SEA 17, Mon Nov 2, 2026)
 
 **Final: Chicago Bears 34, Seattle Seahawks 17** (Q: CHI 7/6/7/14, SEA 0/9/0/8) — game final, no overtime.
 
-**Season totals after tonight:**
-- **Base card: 85-29-1 · +51.86 units**
-- **With participation-gated props: 94-35-1 · +53.93 units**
+## Reconciled Season Totals After MNF (`2026-11-02` / `2026-11-03`)
 
-- Entering tonight (Garrett-verified 2026-11-02): base 83-29-1 · +49.15u; with props 90-33-1 · +51.57u. Tonight's six were in neither.
-- Tonight (Garrett's six-play MNF slip, primary selections): **4 Wins – 2 Losses – 0 Pushes · +2.36 units** on 8.00 units risked.
-- Results in units only ($5 = 1 unit), per standing rule. Machine-readable ledger: `new_engine_official_ledger_2026.json` (`data/engine/`, section `mnf_settlement_chi_at_sea_2026-11-02`).
-- Convention: base card adds tonight's two game-line plays (Bears +3.0, Bears ML); the with-props total adds all six. The SGP counts only in the with-props layer (it contains a prop leg).
+- **View 1 — Main-Lines-Only Base Card:** **`38-13-1 · 74.5% · +22.85 units`**
+  - Pre-MNF Verified Base: `36-13-1 · +20.14u` (`16-5-0, +10.45u` entering Oct 29 + `14-6-1, +7.19u` TNF + `6-2-0, +2.50u` Sunday Main/Derivatives; superseded `31-11-0` cohort retracted into `superseded[]` per `ledger-truth-and-retraction-fix.md`)
+  - MNF Game-Line Plays Added (Slots 2 & 5): `2-0-0 · +2.71u` (`+$13.54` at `$5.00/u`: CHI +3.0 `+$8.57` = `+1.714u`, CHI ML +142 `+$4.97` = `+0.994u`)
+- **View 2 — Base Card + All 6 Real-Money MNF Tickets:** **`40-15-1 · 72.7% · +22.50 units`**
+  - Pre-MNF Verified Base (`36-13-1 · +20.14u`) + Full 6-Ticket MNF Slip (`4-2-0 · +2.36u` / `+$11.81` net on `$40.00` staked = `8.00u`)
+- **View 3 — All-In Combined Ledger (With Participation-Gated Props & SGPs):** **`47-19-1 · 71.2% · +24.92 units`**
+  - Pre-MNF All-In (`43-17-1 · +22.56u`, including `7-4-0, +2.42u` Sunday route-gated props) + Full 6-Ticket MNF Slip (`4-2-0 · +2.36u`)
+  - Season Gated Prop & SGP Overlay: `9-6-0 · +2.07u` (`7-4-0, +2.42u` Sunday + `2-2-0, -0.35u` MNF)
 
-## Tonight's plays, graded
+> **Forensic Correction Note (Superseding Commit `d5628b5`):** Commit `d5628b5` previously double-appended the retracted `31-11-0` (`+18.56u`) cohort and a duplicate read of the `16-5-0` (`+10.45u`) entering base cohort (`+47W - 16L - 0P`, `+29.01u`) onto the already-accumulated `36-13-1` (`+20.14u`) pre-MNF base, producing the inflated `85-29-1` (`+51.86u`) / `94-35-1` (`+53.93u`) numbers. Those 63 duplicate phantom bets have been permanently purged and guarded by `tests/test_ledger_truth.py`.
 
-| # | Play | Stake | Result | Units | Settling stat |
-|---|------|-------|--------|-------|---------------|
-| 1 | Kalif Raymond OVER 21.5 receiving yards (-110) | 2.0u | **LOSS** | -2.00 | Raymond receiving: 2 rec, 14 yds. His 39-yard play was a backward pass scored as a **rush** (1 rush, 39 yds), not a reception — it does not count toward receiving yards. |
-| 2 | Chicago Bears +3.0 (-105) | 1.8u | **WIN** | +1.71 | Bears won outright 34-17. |
-| 3 | Sam Darnold OVER 4.5 rushing yards (-110) | 1.5u | **WIN** | +1.36 | Darnold: 2 rush att, 20 yds. |
-| 4 | Rome Odunze OVER 2.5 receptions (-110) | 1.2u | **WIN** | +1.09 | Odunze: 4 rec / 6 tgt, 87 yds. |
-| 5 | Chicago Bears moneyline +142 (primary) | 0.7u | **WIN** | +0.99 | Bears won 34-17. |
-| 6 | 2-leg SGP +175: Raymond OVER 21.5 rec yds + Bears +3.0 (primary pairing) | 0.8u | **LOSS** | -0.80 | Raymond leg lost (14 rec yds); Bears +3.0 leg won. One leg lost = SGP lost. |
+---
 
-## Alternatives — flagged for Garrett's confirmation (NOT counted in the totals)
+## Tonight's 6 Real-Money DraftKings Tickets (`$40.00` Staked = `8.00u` $\to$ `$51.81` Payout, `+$11.81` = `+2.362u`)
 
-1. **Play 5 alternative (1Q total UNDER 9.5, if -135 or better): would have WON** — Q1 score was CHI 7, SEA 0 (7 total points). Garrett to confirm whether the Bears ML (graded above as primary) or the 1Q Under was the selection actually placed.
-2. **Play 6 alternative second leg (Rome Odunze OVER 2.5 receptions):** the alternative pairing as written (Raymond OVER 21.5 + Odunze OVER 2.5) **would also have LOST**, because the Raymond leg failed — totals unchanged under that reading. If the intended pairing was Odunze + Bears +3.0, that pairing would have **WON** (+1.40u). Garrett to confirm which pairing was actually placed.
-
-## Sources
-Sportradar and CornerWire final box scores (full player stats), AP/Reuters/USA Today game reports, ChicagoBears.com official recap. USA Today live blog confirms the Raymond 39-yard play counted as a lateral/rush.
+| Slot | Play | Stake (`$`) | Stake (`u`) | Result | Net (`$`) | Net (`u`) | Settling Stat & Forensic Note |
+|---:|---|---:|---:|---|---:|---:|---|
+| 1 | Kalif Raymond OVER 21.5 Receiving Yards (-110) | $10.00 | 2.00u | **LOSS** | -$10.00 | -2.000u | 2 rec, 14 rec yds; 39-yd backward-pass lateral screen scored as a rush (`1 rush, 39 yds`, `53` scrimmage yds). Now guarded by `recommend_scrimmage_over_receiving_prop`. |
+| 2 | Chicago Bears +3.0 (-105) | $9.00 | 1.80u | **WIN** | +$8.57 | +1.714u | Bears won outright 34-17. |
+| 3 | Sam Darnold OVER 4.5 Rushing Yards (-110) | $7.50 | 1.50u | **WIN** | +$6.82 | +1.364u | Darnold: 2 rush att, 20 rushing yards. |
+| 4 | Rome Odunze OVER 2.5 Receptions (-110) | $6.00 | 1.20u | **WIN** | +$5.45 | +1.090u | Odunze: 4 rec on 6 targets, 87 receiving yards. |
+| 5 | Chicago Bears Moneyline +142 | $3.50 | 0.70u | **WIN** | +$4.97 | +0.994u | Bears won outright 34-17. |
+| 6 | 2-Leg SGP (+175): Raymond OVER 21.5 Rec Yds + Bears +3.0 | $4.00 | 0.80u | **LOSS** | -$4.00 | -0.800u | Bears +3.0 won; Raymond rec yds leg lost on lateral rush scoring rule. |
+| **Total** | **6 Real-Money Tickets** | **$40.00** | **8.00u** | **`4-2-0`** | **+$11.81** | **+2.362u** | **Ending DraftKings Balance: `$51.81`** |
