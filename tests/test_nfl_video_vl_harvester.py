@@ -133,3 +133,45 @@ def test_read_key_from_returns_none_when_absent(tmp_path):
 def test_load_api_key_prefers_environment(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-from-env")
     assert h.load_api_key() == "sk-or-from-env"
+
+
+# ---------------------------------------------------------------------------
+# halftime / out-of-town cut-in quarantine
+# ---------------------------------------------------------------------------
+def test_matchup_filter_quarantines_other_game_cutin():
+    """The real failure: at t=5400s a CHI@SEA broadcast showed DET at 13-9.
+
+    A halftime highlight of another game is a wide turf shot, so it survives
+    the green mask and reads as live football. It must not enter CHI@SEA
+    tendencies.
+    """
+    results = [
+        {"frame_type": "live_presnap", "teams": "CHI offense vs SEA defense",
+         "formation": "shotgun"},
+        {"frame_type": "live_inplay", "teams": "DET offense vs CHI defense",
+         "formation": "singleback"},
+        {"frame_type": "live_inplay", "teams": "unknown"},
+        {"frame_type": "graphic", "teams": "CHI vs SEA"},
+    ]
+    keep, quarantine = h.filter_live_frames_for_matchup(results, ("CHI", "SEA"))
+    assert len(keep) == 1
+    assert keep[0]["teams"].startswith("CHI offense")
+    reasons = sorted(q["_quarantine"] for q in quarantine)
+    assert reasons == ["halftime_cutin_other_game", "teams_unreadable"]
+
+
+def test_matchup_filter_keeps_both_sides():
+    results = [
+        {"frame_type": "live_presnap", "teams": "SEA offense vs CHI defense"},
+        {"frame_type": "live_inplay", "teams": "CHI offense vs SEA defense"},
+    ]
+    keep, quarantine = h.filter_live_frames_for_matchup(results, ("CHI", "SEA"))
+    assert len(keep) == 2
+    assert quarantine == []
+
+
+def test_matchup_filter_no_expected_teams_keeps_unreadable():
+    results = [{"frame_type": "live_inplay", "teams": "unknown"}]
+    keep, quarantine = h.filter_live_frames_for_matchup(results, None)
+    assert keep == []
+    assert quarantine[0]["_quarantine"] == "teams_unreadable"

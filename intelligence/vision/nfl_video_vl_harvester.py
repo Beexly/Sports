@@ -68,8 +68,18 @@ Return a STRICT JSON ARRAY of {k} objects in frame order, no prose, no markdown 
  "defenders_in_box":null,
  "down_distance":"e.g. 3rd & 7",
  "scoreboard":"verbatim clock/score/quarter text",
+ "scorebug_away_team":"3-letter abbr from the ON-FIELD scorebug only",
+ "scorebug_home_team":"3-letter abbr from the ON-FIELD scorebug only",
+ "is_halftime_or_other_game_cutin":false,
  "on_screen_text":"verbatim graphic text",
  "confidence":0.0}}
+
+IMPORTANT: broadcasts cut to a halftime studio show and to out-of-town highlight
+reels. Those show OTHER games. Read the on-field scorebug (the small box pinned to
+the game action), not the bottom ticker, which lists other games' scores. Set
+is_halftime_or_other_game_cutin true whenever the frame is a studio shot, a
+highlight of another game, or has no on-field scorebug.
+
 Output the JSON array immediately. Do not explain your reasoning."""
 
 
@@ -198,7 +208,9 @@ def download_window(video_id: str, start_s: int, end_s: int,
 
 
 def extract_frames(video: Path, outdir: Path, every_s: float = 2.0,
-                   width: int = 640) -> list[Path]:
+                   width: int = 960) -> list[Path]:
+    """Extract frames. 960 wide keeps the scorebug above ~7px text at 360p sources;
+    below that the vision model stops being able to read down/distance."""
     outdir.mkdir(parents=True, exist_ok=True)
     for old in outdir.glob("*.jpg"):
         old.unlink()
@@ -362,11 +374,110 @@ def harvest_window(video_id: str, start_s: int, end_s: int,
     }
 
 
+def filter_live_frames_for_matchup(results: list[dict[str, Any]],
+                                   expected_teams: tuple[str, ...] | None = None) -> tuple[list[dict], list[dict]]:
+    """Split live frames into (matchup, quarantined).
+
+    A full broadcast contains halftime studio cut-ins and out-of-town highlight
+    reels. Those are wide turf shots, so they pass the green filter and get
+    classified as live football -- but they belong to *other* games. Left in,
+    they silently contaminate the target game's tendencies.
+    """
+    keep, quarantine = [], []
+    want = {t.upper() for t in (expected_teams or ())}
+
+    # Team codes that appear in prose but are not teams.
+    NOISE = {"NFL", "MNF", "SNF", "TNF", "ESPN", "CBS", "FOX", "NBC", "ABC",
+             "QTR", "YDS", "TDS", "INC", "PEN", "UNK", "VS", "AT", "AND"}
+
+    for r in results:
+        if not str(r.get("frame_type", "")).startswith("live"):
+            continue
+        teams = str(r.get("teams") or "").upper()
+        abbrs = {a for a in re.findall(r"\b[A-Z]{2,3}\b", teams)} - NOISE
+
+        if not abbrs or abbrs == {"UNKNOWN"}:
+            quarantine.append({**r, "_quarantine": "teams_unreadable"})
+            continue
+
+        # An intersection test is not enough: "DET offense vs CHI defense"
+        # contains CHI and would pass, silently importing another game. The
+        # frame must show exactly the expected pair and nothing else.
+        if want and not abbrs <= want:
+            quarantine.append({**r, "_quarantine": "halftime_cutin_other_game"})
+            continue
+
+        keep.append(r)
+    return keep, quarantine
+
+
+def harvest_local(frames_dir: Path, every_n: int = 20, limit: int = 24,
+                  batch: int = 6, model: str = DEFAULT_MODEL,
+                  expected_teams: tuple[str, ...] | None = None) -> dict[str, Any]:
+    """Audit frames already on disk. No network download, no CDN throttle."""
+    key = load_api_key()
+    frames = sorted(Path(frames_dir).glob("*.jpg"))
+    if not frames:
+        raise RuntimeError(f"no jpg frames in {frames_dir}")
+    sampled = frames[::max(1, every_n)]
+    scored = turf_green_scores(sampled)
+    picked = select_candidates(scored, limit=limit)
+
+    results: list[dict[str, Any]] = []
+    for i in range(0, len(picked), batch):
+        chunk = picked[i:i + batch]
+        arr = audit_batch([Path(c["frame"]) for c in chunk], key, model=model)
+        for j, obj in enumerate(arr):
+            if j >= len(chunk):
+                break
+            obj["_frame"] = Path(chunk[j]["frame"]).name
+            obj["_green"] = chunk[j]["green"]
+            results.append(obj)
+
+    keep, quarantine = ([], [])
+    if expected_teams:
+        keep, quarantine = filter_live_frames_for_matchup(results, expected_teams)
+    else:
+        keep = [r for r in results if str(r.get("frame_type", "")).startswith("live")]
+
+    shells: dict[str, int] = {}
+    forms: dict[str, int] = {}
+    for r in keep:
+        shells[str(r.get("coverage_shell"))] = shells.get(str(r.get("coverage_shell")), 0) + 1
+        forms[str(r.get("formation"))] = forms.get(str(r.get("formation")), 0) + 1
+
+    return {
+        "source_dir": str(frames_dir),
+        "sampling": {"every_n": every_n, "frames_on_disk": len(frames),
+                     "frames_sampled": len(sampled), "frames_audited": len(results)},
+        "frame_type_counts": {t: sum(1 for r in results if r.get("frame_type") == t)
+                              for t in {r.get("frame_type") for r in results}},
+        "live_frame_count": len(keep),
+        "quarantined_count": len(quarantine),
+        "quarantine_reasons": {q.get("_quarantine"): sum(1 for x in quarantine
+                                                        if x.get("_quarantine") == q.get("_quarantine"))
+                               for q in quarantine},
+        "coverage_shell_counts": shells,
+        "formation_counts": forms,
+        "down_distance_samples": [r.get("down_distance") for r in keep if r.get("down_distance")],
+        "frames": results,
+        "provenance": {
+            "source": str(frames_dir),
+            "model": model,
+            "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "note": "Local on-disk broadcast frames; no video stored or redistributed.",
+        },
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     import argparse
 
     ap = argparse.ArgumentParser(description="Harvest NFL replay frames with Nemotron VL")
-    ap.add_argument("--video-id", required=True, help="OK.ru video id")
+    ap.add_argument("--video-id", help="OK.ru video id (network mode)")
+    ap.add_argument("--frames-dir", help="local frame dir (offline mode)")
+    ap.add_argument("--every-n", type=int, default=20, help="offline: sample every Nth frame")
+    ap.add_argument("--teams", default="", help="offline: expected teams, e.g. CHI,SEA")
     ap.add_argument("--start", type=int, default=3300)
     ap.add_argument("--end", type=int, default=3540)
     ap.add_argument("--every", type=float, default=2.0)
@@ -376,6 +487,21 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--workdir", default="vl_work")
     ap.add_argument("--out", default="nfl_vl_harvest.json")
     args = ap.parse_args(argv)
+
+    if args.frames_dir:
+        teams = tuple(t.strip() for t in args.teams.split(",") if t.strip()) or None
+        res = harvest_local(Path(args.frames_dir), every_n=args.every_n,
+                            limit=args.limit, batch=args.batch,
+                            model=args.model, expected_teams=teams)
+        Path(args.out).write_text(json.dumps(res, indent=1), encoding="utf-8")
+        print(json.dumps({k: res[k] for k in
+                          ("sampling", "frame_type_counts", "live_frame_count",
+                           "quarantined_count", "coverage_shell_counts")}, indent=1))
+        print(f"wrote {args.out}")
+        return 0
+
+    if not args.video_id:
+        ap.error("one of --video-id or --frames-dir is required")
 
     res = harvest_window(
         args.video_id, args.start, args.end, Path(args.workdir),
