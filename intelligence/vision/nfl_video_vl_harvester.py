@@ -181,8 +181,11 @@ def download_window(video_id: str, start_s: int, end_s: int,
     out = workdir / f"win_{start_s}_{end_s}.mp4"
     if out.exists():
         return out
+    # -N 8 is not cosmetic: a single connection to this CDN throttles to
+    # ~23 KB/s after the first minute, which turns a 10-minute window into a
+    # two-hour download. Eight parallel fragments measured 224 KB/s.
     subprocess.run(
-        [exe, "--no-warnings", "-q", "-f", fmt,
+        [exe, "--no-warnings", "-q", "-N", "8", "-f", fmt,
          "--download-sections", f"*{start_s}-{end_s}",
          "--force-keyframes-at-cuts",
          "-o", str(out.with_suffix(".%(ext)s")),
