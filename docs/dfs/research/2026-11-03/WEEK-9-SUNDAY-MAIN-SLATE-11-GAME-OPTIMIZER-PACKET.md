@@ -1,6 +1,6 @@
 # Week 9 Sunday Main Slate (11 games) — Optimizer Packet
 
-**Generated:** 2026-11-03T17:47:39Z
+**Generated:** 2026-11-03T17:58:08Z
 **Source salary export:** `C:\Users\Garrett\Downloads\DKSalaries (2).csv`
 **Archived copy:** `data/dfs/dk_salaries_week9_main_slate_2026_11_08.csv`
 

@@ -156,8 +156,74 @@
     }
    },
    "elapsed_s": 6.27
+  },
+  {
+   "seat": 4,
+   "name": "market_and_dfs_gate",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "builder_exit_zero": true,
+    "packets_written": true
+   },
+   "details": {
+    "script": "scripts\\dfs\\build_week9_dual_slate_dfs_packets.py",
+    "exists": true,
+    "params": {
+     "lineups": 2,
+     "sims": 120,
+     "opponents": 60
+    },
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\scripts\\dfs\\build_week9_dual_slate_dfs_packets.py --lineups 2 --sims 120 --opponents 60",
+     "returncode": 0,
+     "stdout_tail": "{\n  \"generated_at_utc\": \"2026-11-03T17:58:08+00:00\",\n  \"classic\": {\n    \"slate_name\": \"week9_sunday_main_11_game\",\n    \"slate_identity\": {\n      \"row_count\": 570,\n      \"unique_games\": [\n        \"ARI@SEA 11/08/2026 04:25PM ET\",\n        \"CLE@NO 11/08/2026 01:00PM ET\",\n        \"DAL@IND 11/08/2026 01:00PM ET\",\n        \"DEN@CAR 11/08/2026 01:00PM ET\",\n        \"DET@MIA 11/08/2026 01:00PM ET\",\n        \"GB@NE 11/08/2026 04:25PM ET\",\n        \"HOU@LAC 11/08/2026 04:05PM ET\",\n        \"LAR@WAS 11/08/2026 01:00PM ET\",\n        \"LV@SF 11/08/2026 04:25PM ET\",\n        \"NYG@PHI 11/08/2026 01:00PM ET\",\n        \"NYJ@KC 11/08/2026 01:00PM ET\"\n      ],\n      \"detected_nfl_week\": 9,\n      \"is_week8_retrospective_file\": false,\n      \"is_week9_live_file\": true\n    },\n    \"players_scored\": 570,\n    \"games\": 11,\n    \"sims\": 120,\n    \"opponent_rosters\": 60,\n    \"win_threshold_p99\": 92.47,\n    \"portfolio_size\": 2,\n    \"submodular\": {\n      \"selected_lineup_indices\": [\n        1,\n        0\n      ],\n      \"marginal_win_prob_gains\": [\n        0.516667,\n        0.091667\n      ],\n      \"cumulative_portfolio_win_prob\": 0.608333,\n      \"nemhauser_wolsey_lower_bound_ratio\": 0.632121\n    },\n    \"best_lineup_index\": 2\n  },\n  \"showdown\": {\n    \"slate_name\": \"week9_tnf_showdown_jax_bal\",\n    \"slate_identity\": {\n      \"row_count\": 104,\n      \"unique_games\": [\n        \"JAX@BAL 11/05/2026 08:15PM ET\"\n      ],\n      \"detected_nfl_week\": 9,\n      \"is_week8_retrospective_file\": false,\n      \"is_week9_live_file\": true\n    },\n    \"roster_structure\": \"1 CPT (1.5x) + 5 FLEX\",\n    \"candidates\": 104,\n    \"sims\": 120,\n    \"opponent_rosters\": 60,\n    \"win_threshold_p99\": 83.35,\n    \"portfolio_size\": 2,\n    \"best_lineup_index\": 1\n  },\n  \"files_written\": [\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\dk_salaries_week9_main_slate_2026_11_08.csv\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\week9_sunday_main_11_game_packet_2026_11_03.json\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\week9_tnf_showdown_jax_bal_packet_2026_11_03.json\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\docs\\\\dfs\\\\research\\\\2026-11-03\\\\WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\docs\\\\dfs\\\\research\\\\2026-11-03\\\\WEEK-9-TNF-SHOWDOWN-JAX-BAL-OPTIMIZER-PACKET.md\"\n  ]\n}\n",
+     "stderr_tail": "",
+     "elapsed_s": 276.34
+    },
+    "packets": [
+     "week9_sunday_main_11_game_packet_2026_11_03.json",
+     "week9_tnf_showdown_jax_bal_packet_2026_11_03.json"
+    ]
+   },
+   "elapsed_s": 276.34
+  },
+  {
+   "seat": 5,
+   "name": "audit_and_voice_briefing",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "digest_exit_zero": true,
+    "pytest_exit_zero": true
+   },
+   "details": {
+    "digest_module": "intelligence.voice_brain.morning_digest",
+    "digest": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe -m intelligence.voice_brain.morning_digest --json",
+     "returncode": 0,
+     "stdout_tail": " {\n          \"name\": null,\n          \"record\": \"47-19-1\",\n          \"net_units\": \"+24.92u\"\n        }\n      ],\n      \"as_of\": \"2026-11-02T17:45:00-06:00\"\n    },\n    \"replay_trainer\": {\n      \"available\": true,\n      \"generated_at_utc\": \"2026-11-03T17:55:24+00:00\",\n      \"plays_loaded\": 13131,\n      \"weeks_available\": [\n        1,\n        2,\n        3,\n        4,\n        5,\n        6,\n        7\n      ],\n      \"week8_status\": \"ABSENT_FROM_SOURCE_PARQUET\",\n      \"epochs_run\": 5,\n      \"last_epoch\": {\n        \"brier\": 0.211734,\n        \"log_loss\": 0.612734,\n        \"ece\": 0.024371\n      },\n      \"team_priors_count\": 32,\n      \"secondary_epa_rmse_last_week\": 1.376543\n    },\n    \"workflow_run\": {\n      \"available\": true,\n      \"path\": \"run_20261103T175259Z.json\",\n      \"started_at_utc\": \"2026-11-03T17:52:59+00:00\",\n      \"finished_at_utc\": null,\n      \"seats\": [\n        {\n          \"seat\": 0,\n          \"name\": \"cleanup_and_doctor\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 1,\n          \"name\": \"ingest_and_provenance\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 2,\n          \"name\": \"vision_and_simulation\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 3,\n          \"name\": \"equations_and_situational\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 4,\n          \"name\": \"market_and_dfs_gate\",\n          \"status\": \"PASS\"\n        }\n      ],\n      \"passed\": 5,\n      \"failed\": 0\n    },\n    \"dfs\": {\n      \"available\": true,\n      \"packets\": [\n        {\n          \"packet\": \"week9_sunday_main_11_game_packet_2026_11_03.json\",\n          \"slate\": \"week9_sunday_main_11_game\",\n          \"portfolio_size\": 2,\n          \"win_threshold_p99\": 92.47\n        },\n        {\n          \"packet\": \"week9_tnf_showdown_jax_bal_packet_2026_11_03.json\",\n          \"slate\": \"week9_tnf_showdown_jax_bal\",\n          \"portfolio_size\": 2,\n          \"win_threshold_p99\": 83.35\n        }\n      ],\n      \"docs\": [\n        \"WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md\",\n        \"WEEK-9-TNF-SHOWDOWN-JAX-BAL-OPTIMIZER-PACKET.md\",\n        \"WEEK9-BITEMPORAL-GPP-PORTFOLIO-REPORT.md\"\n      ]\n    }\n  },\n  \"text\": \"Good morning. This is the GSE brain digest for 2026-11-03 17:58 UTC. Canonical ledger: 36-13-1 for +20.14u, 73.5 percent across 50 graded plays. Secondary views: None 43-17-1 +22.56u; None 43-21-1 +18.56u; None 40-15-1 +22.50u; None 38-13-1 +22.85u. Weeks one through eight replay trainer: 5 epochs on 13131 plays, weeks [1, 2, 3, 4, 5, 6, 7], week eight status ABSENT_FROM_SOURCE_PARQUET. Last epoch Brier 0.2117, log loss 0.6127, calibration error 0.0244. 32 team priors written. Last workflow run run_20261103T175259Z.json finished with 5 seats passing and 0 failing. DFS packet week9_sunday_main_11_game: 2 lineups, p99 field threshold 92.47 points. DFS packet week9_tnf_showdown_jax_bal: 2 lineups, p99 field threshold 83.35 points. All figures above are read from disk; nothing is estimated in this digest.\"\n}\n",
+     "stderr_tail": "",
+     "elapsed_s": 0.58
+    },
+    "pytest": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe -m pytest tests -q",
+     "returncode": 0,
+     "stdout_tail": "........................................................................ [ 40%]\n........................................................................ [ 81%]\n.................................                                        [100%]\n177 passed in 61.91s (0:01:01)\n",
+     "stderr_tail": "",
+     "elapsed_s": 64.3
+    },
+    "pytest_summary": "177 passed in 61.91s (0:01:01)"
+   },
+   "elapsed_s": 64.88
   }
  ],
- "summary": {},
- "updated_at_utc": "2026-11-03T17:53:32+00:00"
+ "summary": {
+  "seats_run": 6,
+  "passed": 6,
+  "failed": [],
+  "skipped": [],
+  "finished_at_utc": "2026-11-03T17:59:13+00:00"
+ },
+ "updated_at_utc": "2026-11-03T17:59:13+00:00"
 }
