@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-03T17:40:00+00:00",
+ "generated_at_utc": "2026-11-03T17:51:00+00:00",
  "seed": 20261103,
  "source_parquet": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\data\\play_by_play_2026.parquet",
  "plays_loaded": 13131,
@@ -37,8 +37,8 @@
    "brier_pass": 0.212546,
    "logloss_pass": 0.614978,
    "ece_pass": 0.031889,
-   "prior_alpha_sum": 15204.0,
-   "prior_beta_sum": 11122.0
+   "prior_alpha_sum": 7581.135,
+   "prior_beta_sum": 5549.865
   },
   {
    "epoch": 2,
@@ -51,175 +51,227 @@
     6,
     7
    ],
-   "brier_pass": 0.211515,
-   "logloss_pass": 0.612204,
-   "ece_pass": 0.022971,
-   "prior_alpha_sum": 30376.0,
-   "prior_beta_sum": 22212.0
+   "brier_pass": 0.211736,
+   "logloss_pass": 0.612738,
+   "ece_pass": 0.024264,
+   "prior_alpha_sum": 7583.5675,
+   "prior_beta_sum": 5547.4325
+  },
+  {
+   "epoch": 3,
+   "plays_graded": 11224,
+   "weeks_covered": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "brier_pass": 0.211735,
+   "logloss_pass": 0.612736,
+   "ece_pass": 0.024363,
+   "prior_alpha_sum": 7584.7837,
+   "prior_beta_sum": 5546.2163
+  },
+  {
+   "epoch": 4,
+   "plays_graded": 11224,
+   "weeks_covered": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "brier_pass": 0.211735,
+   "logloss_pass": 0.612735,
+   "ece_pass": 0.024368,
+   "prior_alpha_sum": 7585.3919,
+   "prior_beta_sum": 5545.6081
+  },
+  {
+   "epoch": 5,
+   "plays_graded": 11224,
+   "weeks_covered": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "brier_pass": 0.211734,
+   "logloss_pass": 0.612734,
+   "ece_pass": 0.024371,
+   "prior_alpha_sum": 7585.6959,
+   "prior_beta_sum": 5545.3041
   }
  ],
- "secondary_epa_rmse_last_week": 1.376564,
+ "secondary_epa_rmse_last_week": 1.376543,
  "team_priors": {
   "ARI": {
-   "pass_rate_alpha": 1185.0,
-   "pass_rate_beta": 713.0,
-   "pass_rate_posterior_mean": 0.624341
+   "pass_rate_alpha": 295.9845,
+   "pass_rate_beta": 178.0155,
+   "pass_rate_posterior_mean": 0.62444
   },
   "ATL": {
-   "pass_rate_alpha": 865.0,
-   "pass_rate_beta": 797.0,
-   "pass_rate_posterior_mean": 0.520457
+   "pass_rate_alpha": 215.9975,
+   "pass_rate_beta": 199.0025,
+   "pass_rate_posterior_mean": 0.520476
   },
   "BAL": {
-   "pass_rate_alpha": 873.0,
-   "pass_rate_beta": 825.0,
-   "pass_rate_posterior_mean": 0.514134
+   "pass_rate_alpha": 217.9982,
+   "pass_rate_beta": 206.0018,
+   "pass_rate_posterior_mean": 0.514147
   },
   "BUF": {
-   "pass_rate_alpha": 733.0,
-   "pass_rate_beta": 673.0,
-   "pass_rate_posterior_mean": 0.521337
+   "pass_rate_alpha": 182.9973,
+   "pass_rate_beta": 168.0027,
+   "pass_rate_posterior_mean": 0.52136
   },
   "CAR": {
-   "pass_rate_alpha": 997.0,
-   "pass_rate_beta": 565.0,
-   "pass_rate_posterior_mean": 0.638284
+   "pass_rate_alpha": 248.9828,
+   "pass_rate_beta": 141.0172,
+   "pass_rate_posterior_mean": 0.638417
   },
   "CHI": {
-   "pass_rate_alpha": 1033.0,
-   "pass_rate_beta": 957.0,
-   "pass_rate_posterior_mean": 0.519095
+   "pass_rate_alpha": 257.9976,
+   "pass_rate_beta": 239.0024,
+   "pass_rate_posterior_mean": 0.51911
   },
   "CIN": {
-   "pass_rate_alpha": 917.0,
-   "pass_rate_beta": 521.0,
-   "pass_rate_posterior_mean": 0.637691
+   "pass_rate_alpha": 228.9829,
+   "pass_rate_beta": 130.0171,
+   "pass_rate_posterior_mean": 0.637835
   },
   "CLE": {
-   "pass_rate_alpha": 945.0,
-   "pass_rate_beta": 713.0,
-   "pass_rate_posterior_mean": 0.569964
+   "pass_rate_alpha": 235.9913,
+   "pass_rate_beta": 178.0087,
+   "pass_rate_posterior_mean": 0.570027
   },
   "DAL": {
-   "pass_rate_alpha": 1121.0,
-   "pass_rate_beta": 641.0,
-   "pass_rate_posterior_mean": 0.636209
+   "pass_rate_alpha": 279.983,
+   "pass_rate_beta": 160.017,
+   "pass_rate_posterior_mean": 0.636325
   },
   "DEN": {
-   "pass_rate_alpha": 909.0,
-   "pass_rate_beta": 665.0,
-   "pass_rate_posterior_mean": 0.57751
+   "pass_rate_alpha": 226.9903,
+   "pass_rate_beta": 166.0097,
+   "pass_rate_posterior_mean": 0.577584
   },
   "DET": {
-   "pass_rate_alpha": 941.0,
-   "pass_rate_beta": 641.0,
-   "pass_rate_posterior_mean": 0.594817
+   "pass_rate_alpha": 234.9882,
+   "pass_rate_beta": 160.0118,
+   "pass_rate_posterior_mean": 0.594907
   },
   "GB": {
-   "pass_rate_alpha": 1141.0,
-   "pass_rate_beta": 549.0,
-   "pass_rate_posterior_mean": 0.675148
+   "pass_rate_alpha": 284.9782,
+   "pass_rate_beta": 137.0218,
+   "pass_rate_posterior_mean": 0.675304
   },
   "HOU": {
-   "pass_rate_alpha": 1037.0,
-   "pass_rate_beta": 661.0,
-   "pass_rate_posterior_mean": 0.610718
+   "pass_rate_alpha": 258.9862,
+   "pass_rate_beta": 165.0138,
+   "pass_rate_posterior_mean": 0.610817
   },
   "IND": {
-   "pass_rate_alpha": 1033.0,
-   "pass_rate_beta": 793.0,
-   "pass_rate_posterior_mean": 0.565717
+   "pass_rate_alpha": 257.9918,
+   "pass_rate_beta": 198.0082,
+   "pass_rate_posterior_mean": 0.565772
   },
   "JAX": {
-   "pass_rate_alpha": 773.0,
-   "pass_rate_beta": 645.0,
-   "pass_rate_posterior_mean": 0.545134
+   "pass_rate_alpha": 192.9944,
+   "pass_rate_beta": 161.0056,
+   "pass_rate_posterior_mean": 0.545182
   },
   "KC": {
-   "pass_rate_alpha": 793.0,
-   "pass_rate_beta": 621.0,
-   "pass_rate_posterior_mean": 0.56082
+   "pass_rate_alpha": 197.9924,
+   "pass_rate_beta": 155.0076,
+   "pass_rate_posterior_mean": 0.560885
   },
   "LA": {
-   "pass_rate_alpha": 1157.0,
-   "pass_rate_beta": 713.0,
-   "pass_rate_posterior_mean": 0.618717
+   "pass_rate_alpha": 288.9852,
+   "pass_rate_beta": 178.0148,
+   "pass_rate_posterior_mean": 0.618812
   },
   "LAC": {
-   "pass_rate_alpha": 805.0,
-   "pass_rate_beta": 677.0,
-   "pass_rate_posterior_mean": 0.543185
+   "pass_rate_alpha": 200.9946,
+   "pass_rate_beta": 169.0054,
+   "pass_rate_posterior_mean": 0.543229
   },
   "LV": {
-   "pass_rate_alpha": 1093.0,
-   "pass_rate_beta": 665.0,
-   "pass_rate_posterior_mean": 0.621729
+   "pass_rate_alpha": 272.9848,
+   "pass_rate_beta": 166.0152,
+   "pass_rate_posterior_mean": 0.621833
   },
   "MIA": {
-   "pass_rate_alpha": 665.0,
-   "pass_rate_beta": 677.0,
-   "pass_rate_posterior_mean": 0.495529
+   "pass_rate_alpha": 166.0006,
+   "pass_rate_beta": 168.9994,
+   "pass_rate_posterior_mean": 0.495524
   },
   "MIN": {
-   "pass_rate_alpha": 725.0,
-   "pass_rate_beta": 681.0,
-   "pass_rate_posterior_mean": 0.515647
+   "pass_rate_alpha": 180.9981,
+   "pass_rate_beta": 170.0019,
+   "pass_rate_posterior_mean": 0.515664
   },
   "NE": {
-   "pass_rate_alpha": 929.0,
-   "pass_rate_beta": 785.0,
-   "pass_rate_posterior_mean": 0.542007
+   "pass_rate_alpha": 231.9948,
+   "pass_rate_beta": 196.0052,
+   "pass_rate_posterior_mean": 0.542044
   },
   "NO": {
-   "pass_rate_alpha": 1149.0,
-   "pass_rate_beta": 677.0,
-   "pass_rate_posterior_mean": 0.629244
+   "pass_rate_alpha": 286.9839,
+   "pass_rate_beta": 169.0161,
+   "pass_rate_posterior_mean": 0.629351
   },
   "NYG": {
-   "pass_rate_alpha": 1029.0,
-   "pass_rate_beta": 781.0,
-   "pass_rate_posterior_mean": 0.568508
+   "pass_rate_alpha": 256.9915,
+   "pass_rate_beta": 195.0085,
+   "pass_rate_posterior_mean": 0.568565
   },
   "NYJ": {
-   "pass_rate_alpha": 909.0,
-   "pass_rate_beta": 689.0,
-   "pass_rate_posterior_mean": 0.568836
+   "pass_rate_alpha": 226.9914,
+   "pass_rate_beta": 172.0086,
+   "pass_rate_posterior_mean": 0.568901
   },
   "PHI": {
-   "pass_rate_alpha": 1013.0,
-   "pass_rate_beta": 629.0,
-   "pass_rate_posterior_mean": 0.616931
+   "pass_rate_alpha": 252.9854,
+   "pass_rate_beta": 157.0146,
+   "pass_rate_posterior_mean": 0.617038
   },
   "PIT": {
-   "pass_rate_alpha": 1137.0,
-   "pass_rate_beta": 601.0,
-   "pass_rate_posterior_mean": 0.6542
+   "pass_rate_alpha": 283.9808,
+   "pass_rate_beta": 150.0192,
+   "pass_rate_posterior_mean": 0.654334
   },
   "SEA": {
-   "pass_rate_alpha": 961.0,
-   "pass_rate_beta": 813.0,
-   "pass_rate_posterior_mean": 0.541714
+   "pass_rate_alpha": 239.9948,
+   "pass_rate_beta": 203.0052,
+   "pass_rate_posterior_mean": 0.541749
   },
   "SF": {
-   "pass_rate_alpha": 865.0,
-   "pass_rate_beta": 737.0,
-   "pass_rate_posterior_mean": 0.53995
+   "pass_rate_alpha": 215.995,
+   "pass_rate_beta": 184.005,
+   "pass_rate_posterior_mean": 0.539988
   },
   "TB": {
-   "pass_rate_alpha": 909.0,
-   "pass_rate_beta": 821.0,
-   "pass_rate_posterior_mean": 0.525434
+   "pass_rate_alpha": 226.9968,
+   "pass_rate_beta": 205.0032,
+   "pass_rate_posterior_mean": 0.525456
   },
   "TEN": {
-   "pass_rate_alpha": 877.0,
-   "pass_rate_beta": 641.0,
-   "pass_rate_posterior_mean": 0.577734
+   "pass_rate_alpha": 218.9903,
+   "pass_rate_beta": 160.0097,
+   "pass_rate_posterior_mean": 0.577811
   },
   "WAS": {
-   "pass_rate_alpha": 857.0,
-   "pass_rate_beta": 645.0,
-   "pass_rate_posterior_mean": 0.570573
+   "pass_rate_alpha": 213.9912,
+   "pass_rate_beta": 161.0088,
+   "pass_rate_posterior_mean": 0.570643
   }
  },
- "determinism": "expanding-window walk-forward, lbfgs solver, fixed seed; no stochastic step feeds reported metrics"
+ "determinism": "expanding-window walk-forward, lbfgs solver, fixed seed; no stochastic step feeds reported metrics",
+ "epoch_interpretation": "epochs replay the same weeks; priors are rescaled to observed evidence each pass so later epochs converge rather than accumulate false confidence. Monotone improvement across epochs is NOT expected or claimed."
 }

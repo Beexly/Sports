@@ -179,8 +179,18 @@ def run(epochs: int, pbp_path: str | None, out_dir: Path) -> dict:
                 if n:
                     a, b = week_priors[t]
                     week_priors[t] = _beta_update(a, b, int(df.loc[row, "is_pass"].sum()), n)
+        # Rescale each team's Beta prior to the evidence actually observed
+        # (one count per play), so replaying the same weeks in a later epoch
+        # cannot inflate confidence. Without this, alpha+beta grows with the
+        # epoch count while the posterior mean is unchanged -- pseudo-learning.
         for t in teams:
-            prior_alpha[t], prior_beta[t] = week_priors[t]
+            a, b = week_priors[t]
+            observed = float((df["posteam"] == t).sum())
+            total = a + b
+            if observed > 0 and total > 0:
+                scale = observed / total
+                a, b = a * scale, b * scale
+            prior_alpha[t], prior_beta[t] = a, b
         df["prior_logit"] = prior_logit
 
         preds, ys, week_of = [], [], []
@@ -202,15 +212,6 @@ def run(epochs: int, pbp_path: str | None, out_dir: Path) -> dict:
         brier = _brier(P, Y)
         ll = _logloss(P, Y)
         ece = _ece(P, Y)
-
-        # post-snap Bayesian update: one pass over the epoch's plays, by team
-        for t in teams:
-            m = (df["posteam"] == t) & (df["week"].isin(weeks))
-            n = int(m.sum())
-            if n == 0:
-                continue
-            wins = int(df.loc[m, "is_pass"].sum())
-            prior_alpha[t], prior_beta[t] = _beta_update(prior_alpha[t], prior_beta[t], wins, n)
 
         epoch_rows.append(
             {
@@ -264,6 +265,11 @@ def run(epochs: int, pbp_path: str | None, out_dir: Path) -> dict:
         "secondary_epa_rmse_last_week": epa_rmse,
         "team_priors": team_priors,
         "determinism": "expanding-window walk-forward, lbfgs solver, fixed seed; no stochastic step feeds reported metrics",
+        "epoch_interpretation": (
+            "epochs replay the same weeks; priors are rescaled to observed evidence each "
+            "pass so later epochs converge rather than accumulate false confidence. "
+            "Monotone improvement across epochs is NOT expected or claimed."
+        ),
     }
 
     out_dir.mkdir(parents=True, exist_ok=True)

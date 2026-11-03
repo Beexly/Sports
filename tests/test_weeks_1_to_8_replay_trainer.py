@@ -96,3 +96,36 @@ def test_cli_writes_artifacts(tmp_path):
     assert "week8: ABSENT_FROM_SOURCE_PARQUET" in r.stdout
     assert (ROOT / "data" / "engine" / "team_priors_weeks_1_to_8_trained.json").exists()
     assert (tmp_path / "WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT.md").exists()
+
+
+def test_prior_strength_equals_observed_evidence(out):
+    """Replaying the same weeks must not inflate Beta prior confidence.
+
+    alpha + beta for each team must equal the number of that team's plays the
+    trainer actually saw -- one count per play, not one per play per epoch.
+    """
+    import pandas as pd
+
+    raw, _ = trainer._load_pbp(None)
+    df = trainer._clean(raw)
+    observed = df["posteam"].value_counts().to_dict()
+    for team, prior in out["team_priors"].items():
+        total = prior["pass_rate_alpha"] + prior["pass_rate_beta"]
+        assert total == pytest.approx(float(observed[team]), rel=1e-6), team
+
+
+def test_prior_strength_is_epoch_invariant(tmp_path_factory):
+    """2 epochs and 5 epochs must yield the same prior strength."""
+    a = trainer.run(epochs=2, pbp_path=None, out_dir=tmp_path_factory.mktemp("e2"))
+    b = trainer.run(epochs=5, pbp_path=None, out_dir=tmp_path_factory.mktemp("e5"))
+    for team in a["team_priors"]:
+        ta = a["team_priors"][team]["pass_rate_alpha"] + a["team_priors"][team]["pass_rate_beta"]
+        tb = b["team_priors"][team]["pass_rate_alpha"] + b["team_priors"][team]["pass_rate_beta"]
+        assert ta == pytest.approx(tb, rel=1e-9), team
+
+
+def test_epochs_converge_rather_than_inflate(out):
+    """Late epochs should be stable, not monotonically 'improving'."""
+    briers = [r["brier_pass"] for r in out["epochs"]]
+    assert abs(briers[-1] - briers[-2]) < 5e-5, briers
+    assert "converge" in out.get("epoch_interpretation", "").lower()

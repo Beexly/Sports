@@ -1,0 +1,290 @@
+{
+ "run_id": "run_20261103T174159Z",
+ "started_at_utc": "2026-11-03T17:41:59+00:00",
+ "dry_run": false,
+ "stage_limit": 5,
+ "seats": [
+  {
+   "seat": 0,
+   "name": "cleanup_and_doctor",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "git_head_reachable": true,
+    "ledger_verified_record": true,
+    "ledger_verified_units": true,
+    "ledger_secondary_record": true,
+    "free_space_positive": true
+   },
+   "details": {
+    "free_gb_before": 5.64,
+    "trigger_gb": 6.0,
+    "cleanup_triggered": true,
+    "npm": {
+     "path": "C:\\Users\\Garrett\\AppData\\Local\\npm-cache",
+     "exists": true,
+     "size_gb": 0.56,
+     "run": {
+      "cmd": "C:\\Program Files\\nodejs\\npm.cmd cache clean --force",
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": "npm warn using --force Recommended protections disabled.\n",
+      "elapsed_s": 0.99
+     },
+     "action": "cleaned"
+    },
+    "worktrees": [
+     {
+      "worktree": "C:\\c\\wt-ci-fix",
+      "exists": true,
+      "dirty": false,
+      "clean": true,
+      "ancestor_of": "origin/main",
+      "merged": true,
+      "remove": {
+       "cmd": "git -C C:\\c\\wt-week8-forensic worktree remove C:\\c\\wt-ci-fix",
+       "returncode": 255,
+       "stdout_tail": "",
+       "stderr_tail": "error: failed to delete 'C:/c/wt-ci-fix': Directory not empty\n",
+       "elapsed_s": 23.66
+      },
+      "action": "remove_failed"
+     },
+     {
+      "worktree": "C:\\c\\wt-ledger",
+      "exists": true,
+      "dirty": false,
+      "clean": true,
+      "merged": false,
+      "action": "kept_unmerged"
+     },
+     {
+      "worktree": "C:\\c\\wt-not-for-sale",
+      "exists": true,
+      "dirty": true,
+      "clean": false,
+      "action": "kept_dirty"
+     },
+     {
+      "worktree": "C:\\c\\wt-tree-red",
+      "exists": true,
+      "dirty": false,
+      "clean": true,
+      "merged": false,
+      "action": "kept_unmerged"
+     },
+     {
+      "worktree": "C:\\c\\wt-week8-fail-remediation",
+      "exists": true,
+      "dirty": true,
+      "clean": false,
+      "action": "kept_dirty"
+     }
+    ],
+    "free_gb_after": 7.95,
+    "git": {
+     "head": "764bacc4e",
+     "branch": "hermes/week8-forensic-tracks-1-3",
+     "reachable": true
+    },
+    "ledger": {
+     "path": "data\\engine\\new_engine_official_ledger_2026.json",
+     "exists": true,
+     "verified_record": "36-13-1",
+     "verified_net_units": "+20.14u",
+     "verified_record_ok": true,
+     "verified_units_ok": true,
+     "secondary_key": "pre_oct29_4_2_continuity_plus_week8_22_7_1",
+     "secondary_key_present": false,
+     "secondary_record": "38-13-1",
+     "secondary_record_ok": true
+    },
+    "env": {
+     "env_file": "MISSING",
+     "OPENROUTER_API_KEY": "MISSING",
+     "DATABASE_URL": "MISSING"
+    }
+   },
+   "elapsed_s": 27.25
+  },
+  {
+   "seat": 1,
+   "name": "ingest_and_provenance",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "manifest_exists": true,
+    "all_on_disk": true,
+    "all_indexed": true
+   },
+   "details": {
+    "manifest": {
+     "path": "data\\engine\\INGESTION-MANIFEST-2026-11-02.json",
+     "files": 393,
+     "total_files": 393,
+     "generated_at": "2026-11-03T16:21:57.563747+00:00"
+    },
+    "targets": [
+     {
+      "file": "DKSalaries (2).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "DKSalaries (3).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PM.md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PM (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-03-AM.md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "FUNDING-MASTER-2026-11-03.md",
+      "on_disk": true,
+      "indexed": true
+     }
+    ],
+    "missing_on_disk": [],
+    "not_indexed": [],
+    "remediation": null
+   },
+   "elapsed_s": 0.01
+  },
+  {
+   "seat": 2,
+   "name": "vision_and_simulation",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "crawl_exit_zero": true,
+    "trainer_exit_zero": true,
+    "catalog_written": true
+   },
+   "details": {
+    "harvester": "intelligence\\vision\\nfl_video_2026_harvester.py",
+    "trainer": "scripts\\ops\\replay_weeks_1_to_8_trainer.py",
+    "catalog_exists_before": true,
+    "crawl": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\intelligence\\vision\\nfl_video_2026_harvester.py --pages 2",
+     "returncode": 0,
+     "stdout_tail": "catalog: 19 replay pages, weeks [5, 6, 7, 8], embeddable=0\n{\n \"feature_store\": \"intelligence\\\\vision\\\\data\\\\family_features_week1_to_8.parquet\",\n \"feature_rows\": 3030,\n \"snap_rows\": 788,\n \"coverage_by_week\": {\n  \"1\": {\n   \"family_features\": 813,\n   \"validation_plays\": 171,\n   \"tracking_snaps\": 0,\n   \"total\": 984\n  },\n  \"2\": {\n   \"family_features\": 0,\n   \"validation_plays\": 138,\n   \"tracking_snaps\": 0,\n   \"total\": 138\n  },\n  \"3\": {\n   \"family_features\": 0,\n   \"validation_plays\": 153,\n   \"tracking_snaps\": 0,\n   \"total\": 153\n  },\n  \"4\": {\n   \"family_features\": 0,\n   \"validation_plays\": 171,\n   \"tracking_snaps\": 0,\n   \"total\": 171\n  },\n  \"5\": {\n   \"family_features\": 0,\n   \"validation_plays\": 154,\n   \"tracking_snaps\": 1,\n   \"total\": 155\n  },\n  \"6\": {\n   \"family_features\": 0,\n   \"validation_plays\": 0,\n   \"tracking_snaps\": 0,\n   \"total\": 0\n  },\n  \"7\": {\n   \"family_features\": 709,\n   \"validation_plays\": 0,\n   \"tracking_snaps\": 0,\n   \"total\": 709\n  },\n  \"8\": {\n   \"family_features\": 720,\n   \"validation_plays\": 0,\n   \"tracking_snaps\": 0,\n   \"total\": 720\n  }\n },\n \"weeks_with_zero_rows\": [\n  6\n ],\n \"vlm_key_present\": false,\n \"vlm_note\": \"no OPENROUTER_API_KEY in environment; VLM describe path is wired but idle\"\n}\n",
+     "stderr_tail": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Lib\\site-packages\\numpy\\lib\\_nanfunctions_impl.py:1997: RuntimeWarning: Degrees of freedom <= 0 for slice.\n  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,\n",
+     "elapsed_s": 16.62
+    },
+    "trainer_run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\scripts\\ops\\replay_weeks_1_to_8_trainer.py --epochs 5",
+     "returncode": 0,
+     "stdout_tail": "epoch 1: brier=0.212546 logloss=0.614978 ece=0.031889 plays=11,224\nepoch 2: brier=0.211515 logloss=0.612204 ece=0.022971 plays=11,224\nepoch 3: brier=0.211362 logloss=0.611843 ece=0.022344 plays=11,224\nepoch 4: brier=0.211302 logloss=0.611702 ece=0.023347 plays=11,224\nepoch 5: brier=0.211270 logloss=0.611627 ece=0.023519 plays=11,224\nweeks: [1, 2, 3, 4, 5, 6, 7] | week8: ABSENT_FROM_SOURCE_PARQUET\nwrote data/engine/team_priors_weeks_1_to_8_trained.json\n",
+     "stderr_tail": "",
+     "elapsed_s": 7.36
+    },
+    "catalog_exists_after": true
+   },
+   "elapsed_s": 23.98
+  },
+  {
+   "seat": 3,
+   "name": "equations_and_situational",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "gate_exit_zero": true
+   },
+   "details": {
+    "script": "tests\\verify_out_of_sample_calibration.py",
+    "exists": true,
+    "enforce_gate": true,
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\tests\\verify_out_of_sample_calibration.py --enforce-gate",
+     "returncode": 0,
+     "stdout_tail": "=== REAL NFLVERSE WALK-FORWARD CALIBRATION GATE SUMMARY ===\n{\n  \"eager_split_pass_epa_and_poisson_td\": {\n    \"baseline_log_loss\": 0.72181,\n    \"advanced_log_loss\": 0.66737,\n    \"log_loss_delta\": 0.05444,\n    \"baseline_brier\": 0.25053,\n    \"advanced_brier\": 0.23735,\n    \"brier_delta\": 0.01319,\n    \"baseline_crps\": 0.25053,\n    \"advanced_crps\": 0.23735,\n    \"crps_delta\": 0.01319,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 172,\n    \"baseline_rmse\": 0.34997,\n    \"advanced_rmse\": 0.31912\n  },\n  \"veroulis_eager_weak_link_oline_sack_rate\": {\n    \"baseline_log_loss\": 0.86324,\n    \"advanced_log_loss\": 0.69446,\n    \"log_loss_delta\": 0.16878,\n    \"baseline_brier\": 0.28084,\n    \"advanced_brier\": 0.24846,\n    \"brier_delta\": 0.03238,\n    \"baseline_crps\": 0.28084,\n    \"advanced_crps\": 0.24846,\n    \"crps_delta\": 0.03238,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 153\n  },\n  \"congelio_per_carry_ryoe_deconfounding\": {\n    \"baseline_log_loss\": 0.99582,\n    \"advanced_log_loss\": 0.67339,\n    \"log_loss_delta\": 0.32243,\n    \"baseline_brier\": 0.33016,\n    \"advanced_brier\": 0.23712,\n    \"brier_delta\": 0.09303,\n    \"baseline_crps\": 0.33016,\n    \"advanced_crps\": 0.23712,\n    \"crps_delta\": 0.09303,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 211\n  },\n  \"davidson_pilon_empirical_bayes_receiving_props\": {\n    \"baseline_log_loss\": 1.0128,\n    \"advanced_log_loss\": 0.69062,\n    \"log_loss_delta\": 0.32218,\n    \"baseline_brier\": 0.34999,\n    \"advanced_brier\": 0.24884,\n    \"brier_delta\": 0.10115,\n    \"baseline_crps\": 0.34999,\n    \"advanced_crps\": 0.24884,\n    \"crps_delta\": 0.10115,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 761,\n    \"baseline_rmse\": 35.8704,\n    \"advanced_rmse\": 33.0118\n  },\n  \"alam_crosswind_drag_outdoor_15mph_plus\": {\n    \"baseline_log_loss\": 0.87953,\n    \"advanced_log_loss\": 0.68841,\n    \"log_loss_delta\": 0.19112,\n    \"baseline_brier\": 0.30194,\n    \"advanced_brier\": 0.24087,\n    \"brier_delta\": 0.06107,\n    \"baseline_crps\": 0.30194,\n    \"advanced_crps\": 0.24087,\n    \"crps_delta\": 0.06107,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 66\n  },\n  \"quarantined_pinn_navier_stokes_and_ocular_proxy\": {\n    \"baseline_log_loss\": 0.69062,\n    \"advanced_log_loss\": 0.73235,\n    \"log_loss_delta\": -0.04173,\n    \"baseline_brier\": 0.24884,\n    \"advanced_brier\": 0.26527,\n    \"brier_delta\": -0.01643,\n    \"baseline_crps\": 0.24884,\n    \"advanced_crps\": 0.26527,\n    \"crps_delta\": -0.01643,\n    \"PROMOTION_GATE_STATUS\": \"REJECTED\",\n    \"sample_size_n\": 761\n  }\n}\n",
+     "stderr_tail": "",
+     "elapsed_s": 11.29
+    }
+   },
+   "elapsed_s": 11.29
+  },
+  {
+   "seat": 4,
+   "name": "market_and_dfs_gate",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "builder_exit_zero": true,
+    "packets_written": true
+   },
+   "details": {
+    "script": "scripts\\dfs\\build_week9_dual_slate_dfs_packets.py",
+    "exists": true,
+    "params": {
+     "lineups": 2,
+     "sims": 120,
+     "opponents": 60
+    },
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\scripts\\dfs\\build_week9_dual_slate_dfs_packets.py --lineups 2 --sims 120 --opponents 60",
+     "returncode": 0,
+     "stdout_tail": "{\n  \"generated_at_utc\": \"2026-11-03T17:47:39+00:00\",\n  \"classic\": {\n    \"slate_name\": \"week9_sunday_main_11_game\",\n    \"slate_identity\": {\n      \"row_count\": 570,\n      \"unique_games\": [\n        \"ARI@SEA 11/08/2026 04:25PM ET\",\n        \"CLE@NO 11/08/2026 01:00PM ET\",\n        \"DAL@IND 11/08/2026 01:00PM ET\",\n        \"DEN@CAR 11/08/2026 01:00PM ET\",\n        \"DET@MIA 11/08/2026 01:00PM ET\",\n        \"GB@NE 11/08/2026 04:25PM ET\",\n        \"HOU@LAC 11/08/2026 04:05PM ET\",\n        \"LAR@WAS 11/08/2026 01:00PM ET\",\n        \"LV@SF 11/08/2026 04:25PM ET\",\n        \"NYG@PHI 11/08/2026 01:00PM ET\",\n        \"NYJ@KC 11/08/2026 01:00PM ET\"\n      ],\n      \"detected_nfl_week\": 9,\n      \"is_week8_retrospective_file\": false,\n      \"is_week9_live_file\": true\n    },\n    \"players_scored\": 570,\n    \"games\": 11,\n    \"sims\": 120,\n    \"opponent_rosters\": 60,\n    \"win_threshold_p99\": 92.47,\n    \"portfolio_size\": 2,\n    \"submodular\": {\n      \"selected_lineup_indices\": [\n        1,\n        0\n      ],\n      \"marginal_win_prob_gains\": [\n        0.516667,\n        0.091667\n      ],\n      \"cumulative_portfolio_win_prob\": 0.608333,\n      \"nemhauser_wolsey_lower_bound_ratio\": 0.632121\n    },\n    \"best_lineup_index\": 2\n  },\n  \"showdown\": {\n    \"slate_name\": \"week9_tnf_showdown_jax_bal\",\n    \"slate_identity\": {\n      \"row_count\": 104,\n      \"unique_games\": [\n        \"JAX@BAL 11/05/2026 08:15PM ET\"\n      ],\n      \"detected_nfl_week\": 9,\n      \"is_week8_retrospective_file\": false,\n      \"is_week9_live_file\": true\n    },\n    \"roster_structure\": \"1 CPT (1.5x) + 5 FLEX\",\n    \"candidates\": 104,\n    \"sims\": 120,\n    \"opponent_rosters\": 60,\n    \"win_threshold_p99\": 83.35,\n    \"portfolio_size\": 2,\n    \"best_lineup_index\": 1\n  },\n  \"files_written\": [\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\dk_salaries_week9_main_slate_2026_11_08.csv\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\week9_sunday_main_11_game_packet_2026_11_03.json\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\data\\\\dfs\\\\week9_tnf_showdown_jax_bal_packet_2026_11_03.json\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\docs\\\\dfs\\\\research\\\\2026-11-03\\\\WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md\",\n    \"C:\\\\c\\\\wt-week8-forensic\\\\docs\\\\dfs\\\\research\\\\2026-11-03\\\\WEEK-9-TNF-SHOWDOWN-JAX-BAL-OPTIMIZER-PACKET.md\"\n  ]\n}\n",
+     "stderr_tail": "",
+     "elapsed_s": 278.39
+    },
+    "packets": [
+     "week9_sunday_main_11_game_packet_2026_11_03.json",
+     "week9_tnf_showdown_jax_bal_packet_2026_11_03.json"
+    ]
+   },
+   "elapsed_s": 278.39
+  },
+  {
+   "seat": 5,
+   "name": "audit_and_voice_briefing",
+   "status": "FAIL",
+   "passed": false,
+   "checks": {
+    "digest_exit_zero": true,
+    "pytest_exit_zero": false
+   },
+   "details": {
+    "digest_module": "intelligence.voice_brain.morning_digest",
+    "digest": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe -m intelligence.voice_brain.morning_digest --json",
+     "returncode": 0,
+     "stdout_tail": "  {\n          \"name\": null,\n          \"record\": \"47-19-1\",\n          \"net_units\": \"+24.92u\"\n        }\n      ],\n      \"as_of\": \"2026-11-02T17:45:00-06:00\"\n    },\n    \"replay_trainer\": {\n      \"available\": true,\n      \"generated_at_utc\": \"2026-11-03T17:47:27+00:00\",\n      \"plays_loaded\": 13131,\n      \"weeks_available\": [\n        1,\n        2,\n        3,\n        4,\n        5,\n        6,\n        7\n      ],\n      \"week8_status\": \"ABSENT_FROM_SOURCE_PARQUET\",\n      \"epochs_run\": 5,\n      \"last_epoch\": {\n        \"brier\": 0.211515,\n        \"log_loss\": 0.612204,\n        \"ece\": 0.02289\n      },\n      \"team_priors_count\": 32,\n      \"secondary_epa_rmse_last_week\": 1.376564\n    },\n    \"workflow_run\": {\n      \"available\": true,\n      \"path\": \"run_20261103T174159Z.json\",\n      \"started_at_utc\": \"2026-11-03T17:41:59+00:00\",\n      \"finished_at_utc\": null,\n      \"seats\": [\n        {\n          \"seat\": 0,\n          \"name\": \"cleanup_and_doctor\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 1,\n          \"name\": \"ingest_and_provenance\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 2,\n          \"name\": \"vision_and_simulation\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 3,\n          \"name\": \"equations_and_situational\",\n          \"status\": \"PASS\"\n        },\n        {\n          \"seat\": 4,\n          \"name\": \"market_and_dfs_gate\",\n          \"status\": \"PASS\"\n        }\n      ],\n      \"passed\": 5,\n      \"failed\": 0\n    },\n    \"dfs\": {\n      \"available\": true,\n      \"packets\": [\n        {\n          \"packet\": \"week9_sunday_main_11_game_packet_2026_11_03.json\",\n          \"slate\": \"week9_sunday_main_11_game\",\n          \"portfolio_size\": 2,\n          \"win_threshold_p99\": 92.47\n        },\n        {\n          \"packet\": \"week9_tnf_showdown_jax_bal_packet_2026_11_03.json\",\n          \"slate\": \"week9_tnf_showdown_jax_bal\",\n          \"portfolio_size\": 2,\n          \"win_threshold_p99\": 83.35\n        }\n      ],\n      \"docs\": [\n        \"WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md\",\n        \"WEEK-9-TNF-SHOWDOWN-JAX-BAL-OPTIMIZER-PACKET.md\",\n        \"WEEK9-BITEMPORAL-GPP-PORTFOLIO-REPORT.md\"\n      ]\n    }\n  },\n  \"text\": \"Good morning. This is the GSE brain digest for 2026-11-03 17:47 UTC. Canonical ledger: 36-13-1 for +20.14u, 73.5 percent across 50 graded plays. Secondary views: None 43-17-1 +22.56u; None 43-21-1 +18.56u; None 40-15-1 +22.50u; None 38-13-1 +22.85u. Weeks one through eight replay trainer: 5 epochs on 13131 plays, weeks [1, 2, 3, 4, 5, 6, 7], week eight status ABSENT_FROM_SOURCE_PARQUET. Last epoch Brier 0.2115, log loss 0.6122, calibration error 0.0229. 32 team priors written. Last workflow run run_20261103T174159Z.json finished with 5 seats passing and 0 failing. DFS packet week9_sunday_main_11_game: 2 lineups, p99 field threshold 92.47 points. DFS packet week9_tnf_showdown_jax_bal: 2 lineups, p99 field threshold 83.35 points. All figures above are read from disk; nothing is estimated in this digest.\"\n}\n",
+     "stderr_tail": "",
+     "elapsed_s": 0.58
+    },
+    "pytest": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe -m pytest tests -q",
+     "returncode": 1,
+     "stdout_tail": "........................................................................ [ 40%]\n........................................................................ [ 81%]\n...............F.................                                        [100%]\n================================== FAILURES ===================================\n________________ test_prior_strength_equals_observed_evidence _________________\n\nout = {'generated_at_utc': '2026-11-03T17:48:49+00:00', 'seed': 20261103, 'source_parquet': 'C:\\\\c\\\\wt-week8-forensic\\\\intelligence\\\\coaching\\\\data\\\\play_by_play_2026.parquet', 'plays_loaded': 13131, ...}\n\n    def test_prior_strength_equals_observed_evidence(out):\n        \"\"\"Replaying the same weeks must not inflate Beta prior confidence.\n    \n        alpha + beta for each team must equal the number of that team's plays the\n        trainer actually saw -- one count per play, not one per play per epoch.\n        \"\"\"\n        import pandas as pd\n    \n        raw, _ = trainer._load_pbp(None)\n        df = trainer._clean(raw)\n        observed = df[\"posteam\"].value_counts().to_dict()\n        for team, prior in out[\"team_priors\"].items():\n            total = prior[\"pass_rate_alpha\"] + prior[\"pass_rate_beta\"]\n>           assert total == pytest.approx(float(observed[team]), rel=1e-6), team\nE           AssertionError: ARI\nE           assert 948.0 == 474.0 \u00b1 4.7e-04\nE             \nE             comparison failed\nE             Obtained: 948.0\nE             Expected: 474.0 \u00b1 4.7e-04\n\ntests\\test_weeks_1_to_8_replay_trainer.py:114: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/test_weeks_1_to_8_replay_trainer.py::test_prior_strength_equals_observed_evidence\n1 failed, 176 passed in 123.77s (0:02:03)\n",
+     "stderr_tail": "",
+     "elapsed_s": 125.81
+    },
+    "pytest_summary": "1 failed, 176 passed in 123.77s (0:02:03)"
+   },
+   "elapsed_s": 126.39
+  }
+ ],
+ "summary": {
+  "seats_run": 6,
+  "passed": 5,
+  "failed": [
+   "audit_and_voice_briefing"
+  ],
+  "skipped": [],
+  "finished_at_utc": "2026-11-03T17:49:46+00:00"
+ },
+ "updated_at_utc": "2026-11-03T17:49:46+00:00"
+}

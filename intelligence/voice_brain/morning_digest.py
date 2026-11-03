@@ -79,9 +79,9 @@ def _priors_section() -> dict:
         "week8_status": d.get("week8_status"),
         "epochs_run": len(epochs),
         "last_epoch": {
-            "brier": last.get("brier"),
-            "log_loss": last.get("log_loss"),
-            "ece": last.get("ece"),
+            "brier": last.get("brier_pass", last.get("brier")),
+            "log_loss": last.get("logloss_pass", last.get("log_loss")),
+            "ece": last.get("ece_pass", last.get("ece")),
         },
         "team_priors_count": len(d.get("team_priors") or {}),
         "secondary_epa_rmse_last_week": d.get("secondary_epa_rmse_last_week"),
