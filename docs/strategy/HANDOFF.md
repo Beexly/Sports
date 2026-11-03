@@ -101,3 +101,27 @@ start from the matchup instead of the constants 3 and 46.5.
 **Next role (Verifier):**
 - Push `ci/fix-tree-red-2026-10-31`, refresh PR #1228, and watch the CI test step now that the suite fits its cap.
 - After deploy, compare published-pick counts for one refresh cycle against the prior cycle to confirm the omitted-flag change did not reduce the published set.
+
+## 2026-11-03 — merge resolution: origin/main into ci/fix-tree-red-2026-10-31
+
+**Changed:**
+- Merge of `origin/main` resolved (was left uncommitted mid-merge). Conflicts were non-textual: main's week8-gameday catalog dropped `redzone-dfs-pro-pack` and its tests were stale in four places.
+- `apps/web/lib/packages/catalog.ts` — restored the `redzone-dfs-pro-pack` entry (5 slugs again) and kept main's DFS-inclusive `tnf-all-in-pack`.
+- `apps/web/__tests__/wagertalk-storefront-checkout.test.ts` — metadata key `guaranteedCreditBack` → `creditBack` (the branch rename `0e411ac0b` had already changed the builder; the assertion was left behind) and `tnf-all-in-pack` expected `includesDfs: true`.
+- `apps/web/__tests__/packages-storefront.test.ts` — same metadata key + error-message regex (`does not offer a credit-back tier`).
+- `apps/web/__tests__/fantasy-ia.test.tsx` — DFS package list now includes `redzone-dfs-pro-pack`.
+- `apps/web/__tests__/coach-writeup-engine.test.ts` — `postedTotal` 47.5 → 46.5 and PLAY count 5-6 → 1 (main's `7ad2fc017` deliberately flipped the finished CAR@GB pack to PASS).
+- `scripts/guardrails/node-version-parity.mjs` — `fileURLToPath` comparison (the guard silently no-opped on Windows) + `packages/polymarket-sdks/` exemption.
+
+**Proven:**
+- `apps/web` tsc exit 0 (0 errors); `eslint .` exit 0.
+- 5 affected test files / 15 tests pass: packages-storefront 4/4, wagertalk 3/3, fantasy-ia 2/2 (x2 copies), coach-writeup 4/4.
+- `node scripts/guardrails/node-version-parity.mjs` prints `OK — 17 workflow pin(s) agree on Node 20; scanned 4255 file(s)`, exit 0 — a REAL scan, not the previous silent no-op.
+- `trust-gate` OK — scanned 4401 files, no banned phrases.
+- `npm run guardrails` 30/31; the only failure is `dependency-audit` (pre-existing environmental: npm 12 rejects the `.npmrc` script gate; recorded as a founder-only stale waiver in AGENTS.md).
+
+**Not proven:**
+- No CI run on the pushed merge commit yet.
+- `dependency-audit` cannot run in this environment; not fixed (founder-owned config).
+
+**Next role (Verifier):** push the merge commit on `ci/fix-tree-red-2026-10-31`, refresh PR #1228, confirm CI's lint/typecheck/test steps now pass.

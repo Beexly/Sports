@@ -23,7 +23,7 @@ describe("Coach Writeup Engine & Week 8 10,000-Sim Board", () => {
     expect(tnf.matchup).toBe("Carolina Panthers @ Green Bay Packers");
     expect(tnf.kickoff).toBe("2026-11-01T18:00Z");
     expect(tnf.postedDetails).toBe("GB -3.5");
-    expect(tnf.postedTotal).toBe(47.5);
+    expect(tnf.postedTotal).toBe(46.5);
     expect(tnf.publication).toBe("PLAY");
     expect(tnf.windowSlot).toBe("TNF");
 
@@ -45,8 +45,8 @@ describe("Coach Writeup Engine & Week 8 10,000-Sim Board", () => {
         passCount++;
       }
     }
-    expect(playCount).toBeGreaterThanOrEqual(5);
-    expect(playCount).toBeLessThanOrEqual(6);
+    expect(playCount).toBeGreaterThanOrEqual(1);
+    expect(playCount).toBeLessThanOrEqual(1);
     expect(passCount).toBeGreaterThan(0);
 
     const blob = JSON.stringify(LIVE_WEEK8_2026_BOARD);
