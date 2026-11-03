@@ -198,14 +198,14 @@ def speak(
     rate: int = 1,
     voice_index: Optional[int] = None,
     prefer_fish_audio: bool = True,
-) -> None:
+) -> bool:
     """
     Speak text aloud using Fish Audio JARVIS voice (if available) with Windows SAPI fallback.
-    BLOCKING: returns when the utterance finishes.
+    BLOCKING: returns when the utterance finishes. Returns True when audio was emitted.
     """
     if prefer_fish_audio and fish_audio_available():
         if speak_fish_audio(text):
-            return
+            return True
 
     _co_init()  # defensive: correct on the main thread, essential if called elsewhere
     try:
@@ -216,8 +216,10 @@ def speak(
             if 0 <= voice_index < voices.Count:
                 speaker.Voice = voices.Item(voice_index)
         speaker.Speak(_clean_for_speech(text))
+        return True
     except Exception as e:
         print(f"[Voice] TTS Error: {e}", file=sys.stderr)
+        return False
 
 
 class SpeechWorker:
@@ -442,6 +444,198 @@ def main() -> int:
     else:
         parser.print_help()
     return 0
+
+
+# ---------------------------------------------------------------------------
+# 2026-11-03 append — speech-to-text path and the ask-and-speak round trip used
+# by intelligence/voice_brain/live_voice_app.py.
+#
+# Provider order (documented, not guessed):
+#   1. local faster-whisper, if importable
+#   2. any OpenAI-compatible /audio/transcriptions endpoint when GSE_STT_API_KEY
+#      or OPENAI_API_KEY is set (GSE_STT_BASE_URL overrides the base URL)
+#   3. NOT CONFIGURED — reported as a status, never as a fake transcript
+# ---------------------------------------------------------------------------
+
+STT_MAX_BYTES = 25 * 1024 * 1024
+STT_DEFAULT_BASE = "https://api.openai.com/v1"
+STT_DEFAULT_MODEL = "whisper-1"
+
+
+def _stt_credentials() -> Tuple[str, str, str]:
+    base = (os.environ.get("GSE_STT_BASE_URL") or STT_DEFAULT_BASE).rstrip("/")
+    key = os.environ.get("GSE_STT_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
+    model = os.environ.get("GSE_STT_MODEL") or STT_DEFAULT_MODEL
+    return base, key, model
+
+
+def stt_available() -> bool:
+    """True when an STT path exists: local faster-whisper or a configured HTTP endpoint."""
+    if _local_whisper_model() is not None:
+        return True
+    _base, key, _model = _stt_credentials()
+    return bool(key)
+
+
+def _local_whisper_model():
+    """Return a loaded faster-whisper model, or None when unavailable."""
+    try:
+        from faster_whisper import WhisperModel  # type: ignore
+    except Exception:
+        return None
+    try:
+        size = os.environ.get("GSE_STT_LOCAL_MODEL", "base")
+        return WhisperModel(size, device="cpu", compute_type="int8")
+    except Exception:
+        return None
+
+
+def _multipart_body(audio_bytes: bytes, filename: str, model: str) -> Tuple[bytes, str]:
+    boundary = "----gsevoice" + str(int(time.time() * 1000))
+    parts = []
+    parts.append(
+        f"--{boundary}\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\n{model}\r\n".encode()
+    )
+    parts.append(
+        (
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"file\"; "
+            f"filename=\"{filename}\"\r\nContent-Type: application/octet-stream\r\n\r\n"
+        ).encode()
+    )
+    parts.append(audio_bytes)
+    parts.append(f"\r\n--{boundary}--\r\n".encode())
+    return b"".join(parts), boundary
+
+
+def transcribe_audio_bytes(
+    audio_bytes: bytes,
+    filename: str = "audio.wav",
+    model: Optional[str] = None,
+    timeout: int = 60,
+) -> dict:
+    """Transcribe audio bytes to text.
+
+    Returns {"ok": bool, "transcript": str|None, "provider": str, "error": str|None}.
+    Never invents a transcript: an unconfigured provider returns ok=False with
+    provider="not_configured".
+    """
+    if not audio_bytes:
+        return {"ok": False, "transcript": None, "provider": "none", "error": "empty_audio"}
+    if len(audio_bytes) > STT_MAX_BYTES:
+        return {
+            "ok": False, "transcript": None, "provider": "none",
+            "error": f"audio_too_large ({len(audio_bytes)} > {STT_MAX_BYTES})",
+        }
+
+    local = _local_whisper_model()
+    if local is not None:
+        try:
+            import io
+            import tempfile
+
+            with tempfile.NamedTemporaryFile(suffix=Path(filename).suffix or ".wav", delete=False) as fh:
+                fh.write(audio_bytes)
+                tmp = fh.name
+            try:
+                segments, _info = local.transcribe(tmp, language="en")
+                text = " ".join(seg.text.strip() for seg in segments).strip()
+                return {"ok": True, "transcript": text, "provider": "faster_whisper_local", "error": None}
+            finally:
+                try:
+                    os.remove(tmp)
+                except Exception:
+                    pass
+        except Exception as exc:
+            local_error = f"faster_whisper_failed: {exc}"
+    else:
+        local_error = None
+
+    base, key, default_model = _stt_credentials()
+    if not key:
+        return {
+            "ok": False, "transcript": None, "provider": "not_configured",
+            "error": local_error or "no_stt_credentials (set GSE_STT_API_KEY or OPENAI_API_KEY)",
+        }
+
+    body, boundary = _multipart_body(audio_bytes, filename, model or default_model)
+    req = urllib.request.Request(
+        f"{base}/audio/transcriptions",
+        data=body,
+        headers={
+            "Authorization": f"Bearer {key}",
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            payload = json.loads(resp.read().decode("utf-8", errors="replace") or "{}")
+        text = str(payload.get("text") or "").strip()
+        if not text:
+            return {"ok": False, "transcript": None, "provider": "http_stt", "error": "empty_transcript"}
+        return {"ok": True, "transcript": text, "provider": "http_stt", "error": None}
+    except Exception as exc:
+        return {"ok": False, "transcript": None, "provider": "http_stt", "error": f"stt_request_failed: {exc}"}
+
+
+def transcribe_audio_wav(path: str | Path) -> dict:
+    """File wrapper around transcribe_audio_bytes."""
+    p = Path(path)
+    if not p.exists():
+        return {"ok": False, "transcript": None, "provider": "none", "error": "file_not_found"}
+    return transcribe_audio_bytes(p.read_bytes(), filename=p.name)
+
+
+def ask_and_speak(
+    question: str,
+    system_instruction: str = "",
+    speak_reply: bool = True,
+    prefer_fish_audio: bool = True,
+    router=None,
+) -> dict:
+    """Route a question to the brain, then speak the answer.
+
+    Returns {"ok", "answer", "provider", "cost_cents", "spoken", "voice_provider", "error"}.
+    """
+    q = (question or "").strip()
+    if not q:
+        return {
+            "ok": False, "answer": "", "provider": "none", "cost_cents": 0.0,
+            "spoken": False, "voice_provider": "none", "error": "empty_question",
+        }
+    try:
+        if router is None:
+            from .router import ModelRouter
+
+            router = ModelRouter()
+        answer, provider, cost_cents = router.route_query(
+            q, system_instruction=system_instruction or "Answer in two short spoken sentences."
+        )
+    except Exception as exc:
+        return {
+            "ok": False, "answer": "", "provider": "none", "cost_cents": 0.0,
+            "spoken": False, "voice_provider": "none", "error": f"router_failed: {exc}",
+        }
+
+    spoken = False
+    voice_provider = "none"
+    if speak_reply and answer:
+        try:
+            spoken = bool(speak(answer, prefer_fish_audio=prefer_fish_audio))
+            voice_provider = "fish_audio" if (spoken and prefer_fish_audio and fish_audio_available()) else "sapi"
+        except Exception:
+            spoken = False
+            voice_provider = "error"
+
+    return {
+        "ok": True,
+        "answer": answer,
+        "provider": provider,
+        "cost_cents": cost_cents,
+        "spoken": spoken,
+        "voice_provider": voice_provider,
+        "error": None,
+    }
 
 
 if __name__ == "__main__":

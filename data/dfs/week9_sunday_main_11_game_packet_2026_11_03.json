@@ -1,0 +1,216 @@
+{
+  "slate_name": "week9_sunday_main_11_game",
+  "slate_identity": {
+    "row_count": 570,
+    "unique_games": [
+      "ARI@SEA 11/08/2026 04:25PM ET",
+      "CLE@NO 11/08/2026 01:00PM ET",
+      "DAL@IND 11/08/2026 01:00PM ET",
+      "DEN@CAR 11/08/2026 01:00PM ET",
+      "DET@MIA 11/08/2026 01:00PM ET",
+      "GB@NE 11/08/2026 04:25PM ET",
+      "HOU@LAC 11/08/2026 04:05PM ET",
+      "LAR@WAS 11/08/2026 01:00PM ET",
+      "LV@SF 11/08/2026 04:25PM ET",
+      "NYG@PHI 11/08/2026 01:00PM ET",
+      "NYJ@KC 11/08/2026 01:00PM ET"
+    ],
+    "detected_nfl_week": 9,
+    "is_week8_retrospective_file": false,
+    "is_week9_live_file": true
+  },
+  "players_scored": 570,
+  "games": 11,
+  "sims": 120,
+  "opponent_rosters": 60,
+  "win_threshold_p99": 92.47,
+  "portfolio_size": 2,
+  "submodular": {
+    "selected_lineup_indices": [
+      1,
+      0
+    ],
+    "marginal_win_prob_gains": [
+      0.516667,
+      0.091667
+    ],
+    "cumulative_portfolio_win_prob": 0.608333,
+    "nemhauser_wolsey_lower_bound_ratio": 0.632121
+  },
+  "best_lineup_index": 2,
+  "lineups": [
+    {
+      "index": 1,
+      "salary": 33500,
+      "proj_sum": 101.63,
+      "win_prob_vs_p99_field": 0.4583,
+      "teams": [
+        "DEN",
+        "GB",
+        "KC",
+        "NYJ"
+      ],
+      "players": [
+        {
+          "player": "Rashee Rice",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 6400,
+          "projection": 11.75
+        },
+        {
+          "player": "Justin Fields",
+          "position": "QB",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 4000,
+          "projection": 14.270000457763672
+        },
+        {
+          "player": "Kaleb Johnson",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 4000,
+          "projection": 12.550000190734863
+        },
+        {
+          "player": "Chip Trayanum",
+          "position": "RB",
+          "team": "NYJ",
+          "opponent": "KC",
+          "salary": 4000,
+          "projection": 12.010000228881836
+        },
+        {
+          "player": "Jalen Royals",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3200,
+          "projection": 10.899999618530273
+        },
+        {
+          "player": "Jimmy Holiday",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3000,
+          "projection": 10.75
+        },
+        {
+          "player": "Justin Watson",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3000,
+          "projection": 11.180000305175781
+        },
+        {
+          "player": "Broncos",
+          "position": "DST",
+          "team": "DEN",
+          "opponent": "CAR",
+          "salary": 3000,
+          "projection": 7.769999980926514
+        },
+        {
+          "player": "Noah Gray",
+          "position": "TE",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 2900,
+          "projection": 10.460000038146973
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "salary": 34200,
+      "proj_sum": 101.87,
+      "win_prob_vs_p99_field": 0.5167,
+      "teams": [
+        "GB",
+        "KC",
+        "NYJ",
+        "PHI",
+        "SEA"
+      ],
+      "players": [
+        {
+          "player": "Rashee Rice",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 6400,
+          "projection": 11.75
+        },
+        {
+          "player": "Elijah Mitchell",
+          "position": "RB",
+          "team": "PHI",
+          "opponent": "NYG",
+          "salary": 4500,
+          "projection": 12.149999618530273
+        },
+        {
+          "player": "Justin Fields",
+          "position": "QB",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 4000,
+          "projection": 14.270000457763672
+        },
+        {
+          "player": "Kaleb Johnson",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 4000,
+          "projection": 12.550000190734863
+        },
+        {
+          "player": "Seahawks",
+          "position": "DST",
+          "team": "SEA",
+          "opponent": "ARI",
+          "salary": 3800,
+          "projection": 7.630000114440918
+        },
+        {
+          "player": "Jalen Royals",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3200,
+          "projection": 10.899999618530273
+        },
+        {
+          "player": "Justin Watson",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3000,
+          "projection": 11.180000305175781
+        },
+        {
+          "player": "Kenyon Sadiq",
+          "position": "TE",
+          "team": "NYJ",
+          "opponent": "KC",
+          "salary": 2800,
+          "projection": 11.050000190734863
+        },
+        {
+          "player": "Jared Wiley",
+          "position": "TE",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 2500,
+          "projection": 10.390000343322754
+        }
+      ]
+    }
+  ]
+}
