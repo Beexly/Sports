@@ -173,10 +173,18 @@ def test_build_digest_parses_real_artifacts():
 def test_priors_section_reports_epoch_metrics():
     d = digestmod.build_digest()
     pri = d["sections"]["replay_trainer"]
-    if pri["available"]:
-        assert pri["epochs_run"] >= 1
-        assert pri["team_priors_count"] >= 1
-        assert pri["week8_status"] in {"ABSENT_FROM_SOURCE_PARQUET", "INCLUDED"}
+    assert pri["available"] is True, "team priors artifact must be present for this check"
+    assert pri["epochs_run"] >= 1
+    assert pri["team_priors_count"] >= 1
+    assert pri["week8_status"] in {"ABSENT_FROM_SOURCE_PARQUET", "INCLUDED"}
+    # The trainer emits brier_pass/logloss_pass/ece_pass. If the digest reads the
+    # wrong keys these come back None and the spoken briefing silently loses every
+    # calibration number -- so assert them non-None, not truthy-if-present.
+    last = pri["last_epoch"]
+    assert last["brier"] is not None, last
+    assert last["log_loss"] is not None, last
+    assert last["ece"] is not None, last
+    assert 0.0 < last["brier"] < 0.5
 
 
 def test_speak_digest_uses_voice_interface(monkeypatch):

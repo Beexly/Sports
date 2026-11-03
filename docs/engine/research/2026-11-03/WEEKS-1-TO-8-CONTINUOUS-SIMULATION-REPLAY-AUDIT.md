@@ -1,6 +1,6 @@
 # Weeks 1–8 Continuous Simulation Replay Audit
 
-Generated: 2026-11-03T17:48:58+00:00 · seed `20261103`
+Generated: 2026-11-03T17:53:25+00:00 · seed `20261103`
 Source: `C:\c\wt-week8-forensic\intelligence\coaching\data\play_by_play_2026.parquet` (13,131 plays)
 Weeks available: [1, 2, 3, 4, 5, 6, 7]
 

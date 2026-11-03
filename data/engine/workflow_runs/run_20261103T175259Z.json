@@ -1,0 +1,163 @@
+{
+ "run_id": "run_20261103T175259Z",
+ "started_at_utc": "2026-11-03T17:52:59+00:00",
+ "dry_run": false,
+ "stage_limit": 5,
+ "seats": [
+  {
+   "seat": 0,
+   "name": "cleanup_and_doctor",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "git_head_reachable": true,
+    "ledger_verified_record": true,
+    "ledger_verified_units": true,
+    "ledger_secondary_record": true,
+    "free_space_positive": true
+   },
+   "details": {
+    "free_gb_before": 7.96,
+    "trigger_gb": 6.0,
+    "cleanup_triggered": false,
+    "npm": null,
+    "worktrees": [],
+    "free_gb_after": 7.96,
+    "git": {
+     "head": "ae03a5ff7",
+     "branch": "hermes/week8-forensic-tracks-1-3",
+     "reachable": true
+    },
+    "ledger": {
+     "path": "data\\engine\\new_engine_official_ledger_2026.json",
+     "exists": true,
+     "verified_record": "36-13-1",
+     "verified_net_units": "+20.14u",
+     "verified_record_ok": true,
+     "verified_units_ok": true,
+     "secondary_key": "pre_oct29_4_2_continuity_plus_week8_22_7_1",
+     "secondary_key_present": false,
+     "secondary_record": "38-13-1",
+     "secondary_record_ok": true
+    },
+    "env": {
+     "env_file": "MISSING",
+     "OPENROUTER_API_KEY": "MISSING",
+     "DATABASE_URL": "MISSING"
+    }
+   },
+   "elapsed_s": 0.11
+  },
+  {
+   "seat": 1,
+   "name": "ingest_and_provenance",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "manifest_exists": true,
+    "all_on_disk": true,
+    "all_indexed": true
+   },
+   "details": {
+    "manifest": {
+     "path": "data\\engine\\INGESTION-MANIFEST-2026-11-02.json",
+     "files": 393,
+     "total_files": 393,
+     "generated_at": "2026-11-03T16:21:57.563747+00:00"
+    },
+    "targets": [
+     {
+      "file": "DKSalaries (2).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "DKSalaries (3).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PM.md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PM (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-03-AM.md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "FUNDING-MASTER-2026-11-03.md",
+      "on_disk": true,
+      "indexed": true
+     }
+    ],
+    "missing_on_disk": [],
+    "not_indexed": [],
+    "remediation": null
+   },
+   "elapsed_s": 0.0
+  },
+  {
+   "seat": 2,
+   "name": "vision_and_simulation",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "crawl_exit_zero": true,
+    "trainer_exit_zero": true,
+    "catalog_written": true
+   },
+   "details": {
+    "harvester": "intelligence\\vision\\nfl_video_2026_harvester.py",
+    "trainer": "scripts\\ops\\replay_weeks_1_to_8_trainer.py",
+    "catalog_exists_before": true,
+    "crawl": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\intelligence\\vision\\nfl_video_2026_harvester.py --pages 2",
+     "returncode": 0,
+     "stdout_tail": "catalog: 19 replay pages, weeks [5, 6, 7, 8], embeddable=0\n{\n \"feature_store\": \"intelligence\\\\vision\\\\data\\\\family_features_week1_to_8.parquet\",\n \"feature_rows\": 3030,\n \"snap_rows\": 788,\n \"coverage_by_week\": {\n  \"1\": {\n   \"family_features\": 813,\n   \"validation_plays\": 171,\n   \"tracking_snaps\": 0,\n   \"total\": 984\n  },\n  \"2\": {\n   \"family_features\": 0,\n   \"validation_plays\": 138,\n   \"tracking_snaps\": 0,\n   \"total\": 138\n  },\n  \"3\": {\n   \"family_features\": 0,\n   \"validation_plays\": 153,\n   \"tracking_snaps\": 0,\n   \"total\": 153\n  },\n  \"4\": {\n   \"family_features\": 0,\n   \"validation_plays\": 171,\n   \"tracking_snaps\": 0,\n   \"total\": 171\n  },\n  \"5\": {\n   \"family_features\": 0,\n   \"validation_plays\": 154,\n   \"tracking_snaps\": 1,\n   \"total\": 155\n  },\n  \"6\": {\n   \"family_features\": 0,\n   \"validation_plays\": 0,\n   \"tracking_snaps\": 0,\n   \"total\": 0\n  },\n  \"7\": {\n   \"family_features\": 709,\n   \"validation_plays\": 0,\n   \"tracking_snaps\": 0,\n   \"total\": 709\n  },\n  \"8\": {\n   \"family_features\": 720,\n   \"validation_plays\": 0,\n   \"tracking_snaps\": 0,\n   \"total\": 720\n  }\n },\n \"weeks_with_zero_rows\": [\n  6\n ],\n \"vlm_key_present\": false,\n \"vlm_note\": \"no OPENROUTER_API_KEY in environment; VLM describe path is wired but idle\"\n}\n",
+     "stderr_tail": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Lib\\site-packages\\numpy\\lib\\_nanfunctions_impl.py:1997: RuntimeWarning: Degrees of freedom <= 0 for slice.\n  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,\n",
+     "elapsed_s": 17.36
+    },
+    "trainer_run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\scripts\\ops\\replay_weeks_1_to_8_trainer.py --epochs 5",
+     "returncode": 0,
+     "stdout_tail": "epoch 1: brier=0.212546 logloss=0.614978 ece=0.031889 plays=11,224\nepoch 2: brier=0.211736 logloss=0.612738 ece=0.024264 plays=11,224\nepoch 3: brier=0.211735 logloss=0.612736 ece=0.024363 plays=11,224\nepoch 4: brier=0.211735 logloss=0.612735 ece=0.024368 plays=11,224\nepoch 5: brier=0.211734 logloss=0.612734 ece=0.024371 plays=11,224\nweeks: [1, 2, 3, 4, 5, 6, 7] | week8: ABSENT_FROM_SOURCE_PARQUET\nwrote data/engine/team_priors_weeks_1_to_8_trained.json\n",
+     "stderr_tail": "",
+     "elapsed_s": 9.3
+    },
+    "catalog_exists_after": true
+   },
+   "elapsed_s": 26.66
+  },
+  {
+   "seat": 3,
+   "name": "equations_and_situational",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "gate_exit_zero": true
+   },
+   "details": {
+    "script": "tests\\verify_out_of_sample_calibration.py",
+    "exists": true,
+    "enforce_gate": true,
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\tests\\verify_out_of_sample_calibration.py --enforce-gate",
+     "returncode": 0,
+     "stdout_tail": "=== REAL NFLVERSE WALK-FORWARD CALIBRATION GATE SUMMARY ===\n{\n  \"eager_split_pass_epa_and_poisson_td\": {\n    \"baseline_log_loss\": 0.72181,\n    \"advanced_log_loss\": 0.66737,\n    \"log_loss_delta\": 0.05444,\n    \"baseline_brier\": 0.25053,\n    \"advanced_brier\": 0.23735,\n    \"brier_delta\": 0.01319,\n    \"baseline_crps\": 0.25053,\n    \"advanced_crps\": 0.23735,\n    \"crps_delta\": 0.01319,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 172,\n    \"baseline_rmse\": 0.34997,\n    \"advanced_rmse\": 0.31912\n  },\n  \"veroulis_eager_weak_link_oline_sack_rate\": {\n    \"baseline_log_loss\": 0.86324,\n    \"advanced_log_loss\": 0.69446,\n    \"log_loss_delta\": 0.16878,\n    \"baseline_brier\": 0.28084,\n    \"advanced_brier\": 0.24846,\n    \"brier_delta\": 0.03238,\n    \"baseline_crps\": 0.28084,\n    \"advanced_crps\": 0.24846,\n    \"crps_delta\": 0.03238,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 153\n  },\n  \"congelio_per_carry_ryoe_deconfounding\": {\n    \"baseline_log_loss\": 0.99582,\n    \"advanced_log_loss\": 0.67339,\n    \"log_loss_delta\": 0.32243,\n    \"baseline_brier\": 0.33016,\n    \"advanced_brier\": 0.23712,\n    \"brier_delta\": 0.09303,\n    \"baseline_crps\": 0.33016,\n    \"advanced_crps\": 0.23712,\n    \"crps_delta\": 0.09303,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 211\n  },\n  \"davidson_pilon_empirical_bayes_receiving_props\": {\n    \"baseline_log_loss\": 1.0128,\n    \"advanced_log_loss\": 0.69062,\n    \"log_loss_delta\": 0.32218,\n    \"baseline_brier\": 0.34999,\n    \"advanced_brier\": 0.24884,\n    \"brier_delta\": 0.10115,\n    \"baseline_crps\": 0.34999,\n    \"advanced_crps\": 0.24884,\n    \"crps_delta\": 0.10115,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 761,\n    \"baseline_rmse\": 35.8704,\n    \"advanced_rmse\": 33.0118\n  },\n  \"alam_crosswind_drag_outdoor_15mph_plus\": {\n    \"baseline_log_loss\": 0.87953,\n    \"advanced_log_loss\": 0.68841,\n    \"log_loss_delta\": 0.19112,\n    \"baseline_brier\": 0.30194,\n    \"advanced_brier\": 0.24087,\n    \"brier_delta\": 0.06107,\n    \"baseline_crps\": 0.30194,\n    \"advanced_crps\": 0.24087,\n    \"crps_delta\": 0.06107,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 66\n  },\n  \"quarantined_pinn_navier_stokes_and_ocular_proxy\": {\n    \"baseline_log_loss\": 0.69062,\n    \"advanced_log_loss\": 0.73235,\n    \"log_loss_delta\": -0.04173,\n    \"baseline_brier\": 0.24884,\n    \"advanced_brier\": 0.26527,\n    \"brier_delta\": -0.01643,\n    \"baseline_crps\": 0.24884,\n    \"advanced_crps\": 0.26527,\n    \"crps_delta\": -0.01643,\n    \"PROMOTION_GATE_STATUS\": \"REJECTED\",\n    \"sample_size_n\": 761\n  }\n}\n",
+     "stderr_tail": "",
+     "elapsed_s": 6.27
+    }
+   },
+   "elapsed_s": 6.27
+  }
+ ],
+ "summary": {},
+ "updated_at_utc": "2026-11-03T17:53:32+00:00"
+}
