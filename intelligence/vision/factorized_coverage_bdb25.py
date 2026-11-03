@@ -106,15 +106,41 @@ def build_features(tr: pd.DataFrame, labels: pd.DataFrame,
         d = tr.loc[(tr.gameId == gid) & (tr.playId == pid), "playDirection"]
         return 1.0 if (len(d) and str(d.iloc[0]) == "right") else -1.0
 
-    rows = []
-    # Index by player, not by play: a boolean mask per label row over 4.5M rows
-    # made this loop take minutes. Keyed lookup is O(1) per player.
-    by_player = {k: v.set_index("frameId").sort_index()
-                 for k, v in tr.groupby(["gameId", "playId", "nflId"])}
+    # Lookups used by both the opponent-snapshot pass and the per-player loop.
     ev_index = events.to_dict("index")
     los_dict = los.to_dict("index")
     dir_lookup = (tr.groupby(["gameId", "playId"])["playDirection"]
                     .first().to_dict())
+
+    rows = []
+    # Per-play snapshots of the opposing side. Coverage assignment is largely a
+    # function of WHICH receiver a defender is leveraged over, so defender
+    # coordinates alone cannot separate MAN from zone -- the first version of this
+    # module had no pairwise term and scored below the majority baseline.
+    opp_at_snap: dict[tuple, np.ndarray] = {}
+    opp_at_post: dict[tuple, np.ndarray] = {}
+    club_of: dict[tuple, str] = {}
+    for (gid, pid), pdf in tr.groupby(["gameId", "playId"]):
+        if (gid, pid) not in ev_index:
+            continue
+        snap_f = ev_index[(gid, pid)].get("snap")
+        if pd.isna(snap_f):
+            continue
+        snap_f = int(snap_f)
+        clubs = [c for c in pdf["club"].unique() if c != "football"]
+        club_of[(gid, pid)] = "|".join(sorted(clubs))
+        for frame, store in ((snap_f, opp_at_snap), (snap_f + 15, opp_at_post)):
+            fr = pdf[pdf["frameId"] == frame]
+            if fr.empty:
+                continue
+            by_club = {c: g[["x", "y"]].to_numpy(dtype=float) for c, g in fr.groupby("club")
+                       if c != "football"}
+            store[(gid, pid)] = by_club
+
+    # Index by player, not by play: a boolean mask per label row over 4.5M rows
+    # made this loop take minutes. Keyed lookup is O(1) per player.
+    by_player = {k: v.set_index("frameId").sort_index()
+                 for k, v in tr.groupby(["gameId", "playId", "nflId"])}
     keys = list(zip(labels["gameId"], labels["playId"], labels["nflId"]))
 
     for gid, pid, nid in keys:
@@ -150,6 +176,29 @@ def build_features(tr: pd.DataFrame, labels: pd.DataFrame,
         else:
             f.update(pre_depth=np.nan, pre_lateral=np.nan, pre_speed=np.nan,
                      pre_move_x=np.nan, pre_move_y=np.nan, pre_frames=0)
+
+        # --- pairwise leverage: coverage assignment is mostly about relationships
+        my_club = player["club"].iloc[0] if "club" in player.columns else None
+        clubs_key = club_of.get((gid, pid), "")
+        opp_club = None
+        if my_club and clubs_key:
+            others = [c for c in clubs_key.split("|") if c != my_club]
+            opp_club = others[0] if others else None
+        for tag, store in (("snap", opp_at_snap), ("post", opp_at_post)):
+            pts = (store.get((gid, pid)) or {}).get(opp_club)
+            frame = snap_f if tag == "snap" else snap_f + 15
+            if pts is None or len(pts) == 0 or frame not in player.index:
+                f[f"lev_{tag}_nearest"] = np.nan
+                f[f"lev_{tag}_within5"] = np.nan
+                f[f"lev_{tag}_depth"] = np.nan
+                continue
+            me = player.loc[frame, ["x", "y"]].to_numpy(dtype=float)
+            d = np.hypot(pts[:, 0] - me[0], pts[:, 1] - me[1])
+            f[f"lev_{tag}_nearest"] = float(d.min())
+            f[f"lev_{tag}_within5"] = int((d < 5.0).sum())
+            # signed depth relative to the nearest opponent: behind = negative
+            nearest = pts[int(d.argmin())]
+            f[f"lev_{tag}_depth"] = float((me[0] - nearest[0]) * sign)
 
         end_f = {"pre_snap": snap_f,
                  "through_throw": int(throw_f) if not pd.isna(throw_f) else snap_f + 10,

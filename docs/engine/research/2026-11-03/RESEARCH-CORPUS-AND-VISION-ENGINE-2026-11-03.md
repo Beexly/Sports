@@ -152,11 +152,39 @@ Three horizons: `pre_snap`, `through_throw`, `through_arrival`.
   model answers the horizon question on CPU; the attention encoder slots in behind
   the same feature contract afterwards.
 
-### Status
+### Result (week 1, 8,176 labelled defender-rows, grouped 5-fold CV by gameId)
 
-NOT RUN at time of writing: the three-horizon comparison. Feature extraction over
-4.5M tracking rows is the bottleneck and is still executing. No numbers are quoted
-here because none exist yet.
+    horizon              accuracy   macro-F1   majority baseline
+    pre_snap               0.1799     0.1574        0.2006
+    through_throw          0.1733     0.1277        0.2006
+    through_arrival        0.1630     0.1123        0.2006
+
+    post-snap gain (through_throw - pre_snap): -0.0066
+
+**All three horizons land below the majority-class baseline.** That is the
+finding, and it must be read precisely: this experiment does not show that
+post-snap information is worthless. It shows that a gradient-boosted model over
+~27 hand-crafted per-defender aggregate features cannot perform 19-class coverage
+assignment at all — so the horizon comparison has no signal to detect.
+
+A first pass without pairwise leverage features scored 0.1978 (pre-snap) and
+0.1627 (through_throw). Adding defender-to-receiver leverage terms moved pre-snap
+to 0.1799 — still below baseline. Two very different feature sets both failing the
+same way points at the modelling approach, not at one missing column.
+
+What this rules out, and what it implies:
+
+- RULED OUT: a cheap tabular model on aggregated kinematics as a path to
+  per-defender coverage assignment. Worth knowing before spending more on it.
+- IMPLIED: the source paper's factorized attention encoder is not decoration. The
+  signal lives in the *sequence* of relative positions across the whole play, which
+  aggregation destroys by construction. The next step is a sequence model behind
+  the same feature contract, not more columns.
+
+The 35.1%/31.1% play-level context result stands independently and is unaffected:
+that measured play-level shell classification from pre-snap context. This is a
+different task (19-way per-defender assignment) that turned out to be harder than
+the aggregate-feature approach can reach.
 
 ---
 
@@ -227,8 +255,31 @@ lateral component swamped the Magnus effect being measured.
 
 ## 8. Open items
 
-1. Three-horizon coverage comparison — running, no numbers yet.
-2. Corpus upload to Drive — NOT RUN.
+1. **Coverage needs a sequence model.** The aggregate-feature result (all horizons
+   below the majority baseline) rules out the cheap path and points at the
+   factorized-attention encoder over full trajectories. This is the single highest
+   value next step and the reason not to keep adding columns.
+2. **Play-level shell from predicted assignments** is untested — it needs per-defender
+   assignment to work first, so it is blocked behind item 1.
 3. Full-text PDF extraction and indexing — NOT RUN (metadata index only).
 4. Ball tracker does not exist; the flight model is unexercised on real data.
 5. QB load coefficients are ASSUMED and unvalidated; falsification list recorded.
+
+## 9. Corpus counts at time of writing
+
+    manifest records   648
+    PDFs harvested     179 (562 MB), moved to Drive
+
+The harvester is resumable and append-only: rerunning it adds only source_ids not
+already in the manifest.
+
+## 10. What not to repeat
+
+- Do not report a below-baseline model as evidence about the world. It is evidence
+  about the model.
+- Do not ship a combinatorics kernel because it appears next to a relevant paper.
+- Do not let a constant carry an honesty label. `18.4 m / 12.1 m/s` tagged
+  "computed" survived in the repo because nothing tested two different inputs.
+- Do not pass `/c/Users/...` to a native Windows program (rclone, python). It
+  becomes `//?/C:/c/...` or `\c\...` and the failure looks like a missing
+  directory, not a path bug.
