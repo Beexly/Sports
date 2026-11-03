@@ -145,8 +145,25 @@ def openalex(topic: str, query: str, per_page: int = 50) -> list[dict]:
 ARXIV_NS = {"a": "http://www.w3.org/2005/Atom"}
 
 
+def _arxiv_query(query: str) -> str:
+    """Build an arXiv search_query from free text.
+
+    The obvious form, all:"multiple word phrase", returns zero entries for every
+    phrase tried -- arXiv's field search does not do long exact phrases. Joining
+    individual terms with +AND+ works and is what the API documents. Each term is
+    quoted separately so the result stays URL-safe.
+    """
+    terms = [t for t in re.findall(r"[a-z0-9]+", query.lower())
+             if len(t) > 2 and t not in {"the", "and", "for", "with", "using"}]
+    if not terms:
+        return ""
+    return "+AND+".join(f"all:{urllib.parse.quote(t)}" for t in terms)
+
+
 def arxiv(topic: str, query: str, max_results: int = 40) -> list[dict]:
-    q = urllib.parse.quote(f'all:"{query}"')
+    q = _arxiv_query(query)
+    if not q:
+        return []
     url = (f"http://export.arxiv.org/api/query?search_query={q}"
            f"&start=0&max_results={max_results}&sortBy=relevance")
     raw = _get(url)
@@ -254,7 +271,10 @@ def main(argv: list[str] | None = None) -> int:
                 fh.flush()
                 time.sleep(0.35)
 
-    (out / "PROVENANCE.txt").write_text("\n".join(prov) + "\n", encoding="utf-8")
+    # Append, never overwrite: a second run must not erase the record of the
+    # first. (It did once, when a single-topic probe clobbered a full harvest.)
+    with (out / "PROVENANCE.txt").open("a", encoding="utf-8") as ph:
+        ph.write("\n".join(prov) + "\n")
     print(f"\nnew records: {total_new}")
     print(f"pdfs downloaded: {downloaded}")
     print(f"manifest: {manifest}")
