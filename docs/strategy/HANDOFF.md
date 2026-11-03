@@ -3,6 +3,18 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-03 — GPP conservation coupling, no MNF
+
+**Changed:** `scripts/ops/pbp_conservation_coupling.py` is now what `run_full_dk_bitemporal_gpp.py` calls. Conserved PBP yards are no longer rescaled onto the static mean. A missed JEV call returns `DEGRADED_UNVERIFIED` / `PASS_FRAGILE` instead of `LOCK_TOURNAMENT_ALPHA` and 0.86. Showdown salary floor is clamped to $48,000. ESPN Week 8 finals are in `data/engine/espn_week8_finals_2026-11-02.json`.
+
+**Proven:** `python -m pytest tests/test_pbp_conservation_coupling.py -q` — 5 passed. Ja'Marr Chase receiving line in that ESPN extract is 11/141/1, 34.1 classic DK points. Zay Flowers is 0/0/0.
+
+**Not proven:** The TypeScript vitest timeout and feed-dirtying fix are still an open lane in this worktree. Do not treat those dirty files as mine. MNF was not run. The ESPN file is skill-category classic scoring only; it does not include fumbles or DST, so it is not an official DK contest score.
+
+**Next role:** Do not start CHI @ SEA until the remaining engine suite is green. Leave `packages/prediction-engine` and `packages/ingestion-pipeline/src/process-sport.ts` to the lane already editing them.
+
+---
+
 ## 2026-11-02 — Week 8 forensic kernels on hermes/week8-forensic-tracks-1-3
 
 **Changed:** Empirical-Bayes shrink, ownership penalty, inactive hard-zero, and single-pass injury stamp are called from the DK slate builder and injury overlay. PBP receiving yards are allocated by share instead of a post-sim lognormal draw. Cognitive router clamps quarantined equations to zero log-odds. Gate override requires a verified line or roster delta. `gpp_architecture.py` now lives at `intelligence/dfs/gpp_architecture.py` (same bytes as the Downloads copy). The DK optimizer no longer imports it from `C:/c/wt-sports`.

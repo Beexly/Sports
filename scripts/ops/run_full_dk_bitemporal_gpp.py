@@ -218,6 +218,12 @@ from week8_forensic_kernels import (  # noqa: E402
     assert_2026_roster_identity_integrity,
 )
 from ingest_pregame_ownership_leverage import load_week_ownership  # noqa: E402
+from pbp_conservation_coupling import (  # noqa: E402
+    couple_conserved_pbp,
+    degraded_jev_lineup_evaluation,
+    live_jev_confidence,
+    showdown_salary_floor,
+)
 from gse_coach_mind_simulator import (  # noqa: E402
     build_jev_state_tensor,
     load_sealed_object_readonly,
@@ -1207,15 +1213,13 @@ class EnhancedBitemporalSimulator(gpp_arch.GSEFullSlateSimulator):
                             pbp_rec_y = np.asarray(pbp_v["home_rec_yds_roles" if is_home else "away_rec_yds_roles"][:, r_col], dtype=np.float64)[:self.S]
                             pbp_rec_c = np.asarray(pbp_v["home_receptions_roles" if is_home else "away_receptions_roles"][:, r_col], dtype=np.float64)[:self.S]
                             if np.mean(pbp_rec_y) > 2.0:
-                                scale_y = mu_rec_yds / max(float(np.mean(pbp_rec_y)), 1.0)
-                                rec_yds = 0.65 * rec_yds + 0.35 * (pbp_rec_y * np.clip(scale_y, 0.55, 1.65))
-                                receptions = np.round(0.65 * receptions + 0.35 * pbp_rec_c)
+                                rec_yds = couple_conserved_pbp(rec_yds, pbp_rec_y)
+                                receptions = np.round(couple_conserved_pbp(receptions, pbp_rec_c, min_mean=0.0))
                         if p_role in rush_role_map:
                             c_col = rush_role_map[p_role]
                             pbp_rush_y = np.asarray(pbp_v["home_rush_yds_roles" if is_home else "away_rush_yds_roles"][:, c_col], dtype=np.float64)[:self.S]
                             if np.mean(pbp_rush_y) > 2.0:
-                                scale_ry = mu_rush / max(float(np.mean(pbp_rush_y)), 1.0)
-                                rush_yds = 0.65 * rush_yds + 0.35 * (pbp_rush_y * np.clip(scale_ry, 0.55, 1.65))
+                                rush_yds = couple_conserved_pbp(rush_yds, pbp_rush_y)
 
                     bonus_rec_100 = 3.0 * (rec_yds >= 100.0)
                     bonus_rush_100 = 3.0 * (rush_yds >= 100.0)
@@ -1643,26 +1647,23 @@ def evaluate_lineup_with_jev(
 
     if resp and getattr(resp, "ok", False):
         probs = resp.probabilities.get("lineup_verdict", {}) or {}
-        verdict = resp.values.get("lineup_verdict") or (
-            "LOCK_CASH_CORE" if mode == "cash" else "LOCK_TOURNAMENT_ALPHA"
-        )
-        stack_coh = float(resp.noul.get("stack_coherence", 0.86) or 0.86)
-        lev_eff = float(resp.noul.get("leverage_efficiency", 0.85) or 0.85)
-        inj_frag = float(resp.noul.get("injury_fragility", 0.12) or 0.12)
+        verdict = resp.values.get("lineup_verdict")
+        if not verdict:
+            return degraded_jev_lineup_evaluation(leverage_notes)
+        noul = getattr(resp, "noul", None) or {}
+        if noul.get("stack_coherence") is None or noul.get("leverage_efficiency") is None or noul.get("injury_fragility") is None:
+            return degraded_jev_lineup_evaluation(leverage_notes)
+        stack_coh = float(noul["stack_coherence"])
+        lev_eff = float(noul["leverage_efficiency"])
+        inj_frag = float(noul["injury_fragility"])
         latency_ms = int(getattr(resp, "latency_ms", 0) or 0)
         source = "live_jev_latest"
+        jev_status = "VERIFIED_LIVE"
+        publish_allowed = verdict != "PASS_FRAGILE"
     else:
-        verdict = "LOCK_CASH_CORE" if mode == "cash" else "LOCK_TOURNAMENT_ALPHA"
-        probs = {verdict: 0.84, "SOLID_MME_ROTATION": 0.14, "PASS_FRAGILE": 0.02}
-        stack_coh = 0.86
-        lev_eff = 0.85
-        inj_frag = 0.12
-        latency_ms = 0
-        source = "deterministic_fallback"
+        return degraded_jev_lineup_evaluation(leverage_notes)
 
-    # Compute XX/100 confidence score (strictly integer/100, never percentage)
-    raw_conf = int(round(100.0 * (0.42 * stack_coh + 0.40 * lev_eff + 0.18 * (1.0 - inj_frag))))
-    conf_score = max(72, min(95, raw_conf))
+    conf_score = live_jev_confidence(stack_coh, lev_eff, inj_frag)
     return {
         "source": source,
         "model": "~typesafe/jev-latest",
@@ -1674,6 +1675,8 @@ def evaluate_lineup_with_jev(
         "injury_fragility_noul": round(inj_frag, 4),
         "confidence_display": f"{conf_score}/100",
         "confidence_int": conf_score,
+        "jev_status": jev_status,
+        "publish_allowed": publish_allowed,
         "leverage_notes": leverage_notes,
     }
 
@@ -1695,6 +1698,7 @@ def solve_showdown_dk_lineup(
     + `5 FLEX` at `1.0x` salary & `1.0x` points, `<= $50,000`, at least 1 player from each team)
     from the 10,000-world 175-snap PBP + Student-t simulated player matrix.
     """
+    min_salary = showdown_salary_floor(min_salary)
     sub = df_13[df_13["matchup"] == matchup].copy()
     pids = list(sub.index)
     teams = sorted(sub["team"].unique().tolist())
@@ -2280,7 +2284,7 @@ def main() -> None:
         require_cpt_name="Jayden Daniels",
         require_flex_names=["Tanner McKee", "Dallas Goedert"],
         exclude_names=["Saquon Barkley"],
-        min_salary=25000,
+        min_salary=48000,
     )
     sd_snf_2 = solve_showdown_dk_lineup(
         df_13,
@@ -2290,7 +2294,7 @@ def main() -> None:
         subtitle="Dallas Goedert ($4,700 Base / $7,050 CPT) Captain Leverage capturing DeVonta Smith ($6,700 OUT) + Dontayvion Wicks ($4,900 OUT) target funnel with Darius Cooper & Makai Lemon.",
         require_cpt_name="Dallas Goedert",
         require_flex_names=["Tanner McKee", "Jayden Daniels", "Darius Cooper"],
-        min_salary=25000,
+        min_salary=48000,
     )
     sd_mnf_1 = solve_showdown_dk_lineup(
         df_13,
@@ -2300,7 +2304,7 @@ def main() -> None:
         subtitle="Jaxon Smith-Njigba CPT (2.87 YPRR vs Man) + Caleb Williams + Colston Loveland ($4,200, Cole Kmet OUT 82% route participation surge).",
         require_cpt_name="Jaxon Smith-Njigba",
         require_flex_names=["Caleb Williams", "Colston Loveland"],
-        min_salary=25000,
+        min_salary=48000,
     )
     sd_mnf_2 = solve_showdown_dk_lineup(
         df_13,
@@ -2310,7 +2314,7 @@ def main() -> None:
         subtitle="Ship It Nation (09:42) Low-Total Defense Captain Leverage: Bears DST CPT ($3,900) boosted by the Jeffery Simmons trade vs Sam Darnold's 0.214 P2S (#30) + D'Andre Swift + Colston Loveland.",
         require_cpt_name="Bears",
         require_flex_names=["D'Andre Swift", "Colston Loveland", "Jaxon Smith-Njigba"],
-        min_salary=24000,
+        min_salary=48000,
     )
 
     # =========================================================================
