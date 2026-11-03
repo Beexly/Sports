@@ -1,7 +1,10 @@
 {
-  "generated_at_utc": "2026-11-03T00:55:18.542139+00:00",
+  "generated_at_utc": "2026-11-03T06:10:52.952964+00:00",
   "matchup": "CHI @ SEA (Week 8 MNF, Lumen Field, Seattle WA)",
-  "engine_version": "GSE-v5.4-Forensic-Tracks1to4-Biomech-Batch9",
+  "engine_version": "GSE-v5.4-Forensic-Tracks1to4",
+  "card_status": "STALE_LINES_UNACTIONABLE",
+  "publishAllowed": false,
+  "odds_source": null,
   "track4_integrity": {
     "roster_identity_verified": true,
     "pbp_missingness": {
@@ -107,69 +110,21 @@
         "eligible": false,
         "decision": "PASS_LOW_PARTICIPATION"
       }
-    ]
-  },
-  "trench_pocket_physics_v2": {
-    "CHI_offense_vs_SEA_front": {
-      "base_sack_prob": 0.061,
-      "adjusted_sack_prob": 0.0995,
-      "weak_link_efficiency": 0.353,
-      "arithmetic_mean": 0.818,
-      "am_gm_gap": 0.465,
-      "pipping_survival": 0.7678,
-      "qb_p2s": 0.1752
-    },
-    "SEA_offense_vs_CHI_front_with_Simmons": {
-      "base_sack_prob": 0.0625,
-      "adjusted_sack_prob": 0.1107,
-      "weak_link_efficiency": 0.2991,
-      "arithmetic_mean": 0.79,
-      "am_gm_gap": 0.4909,
-      "pipping_survival": 0.7322,
-      "qb_p2s": 0.2049
+    ],
+    "kalif_raymond_lateral_scrimmage_gate": {
+      "player_name": "Kalif Raymond",
+      "raw_rec_over_prob": 0.705,
+      "adjusted_rec_over_prob": 0.5922,
+      "lateral_reclassification_hazard": 0.16,
+      "pure_rec_yds_publish_allowed": false,
+      "preferred_market": "rush_plus_rec_yards",
+      "decision": "BLOCK_PURE_REC_YDS_USE_SCRIMMAGE",
+      "reason": "HIGH_BACKWARD_PASS_OR_JET_SWEEP_LATERAL_RECLASSIFICATION_HAZARD"
     }
   },
-  "batch9_biomech_and_metabolic_telemetry": {
-    "chi_ol_inertial_dissipation_ratio": 11.3434,
-    "sea_ol_inertial_dissipation_ratio": 10.4897,
-    "jeffery_simmons_wavefront_burst_threshold": 708.46,
-    "elastic_separation_coefficients": {
-      "Rome Odunze": 1.9205,
-      "Luther Burden III": 2.0469,
-      "Kalif Raymond": 2.1147,
-      "Jaxon Smith-Njigba": 1.9559
-    },
-    "secondary_coverage_pde_residual": 5.0832,
-    "swift_viscoelastic_lane_open_index": 2.1791,
-    "pocket_navier_stokes_residual": 839.3256,
-    "caleb_max_kinetic_accel_mps2": 2.9577,
-    "caleb_release_time_s": 0.3583,
-    "darnold_release_time_s": 0.3357,
-    "caleb_tpr_cognitive_probs": {
-      "throw": 0.3566,
-      "scramble": 0.4217,
-      "checkdown": 0.2218
-    },
-    "darnold_tpr_cognitive_probs": {
-      "throw": 0.3487,
-      "scramble": 0.4164,
-      "checkdown": 0.2349
-    },
-    "lumen_field_cleat_turf_slip_prob": 0.3402,
-    "lumen_field_ocular_latency_ms": 26.9397,
-    "lumen_field_aero_drag_n": 1.094,
-    "drive_10snap_lactic_4vec_mM": [
-      1.25,
-      1.148,
-      1.009,
-      0.864
-    ],
-    "drive_10snap_torque_throttle": 0.997,
-    "metabolic_continuity_loss": 0.01188
-  },
   "fourth_down_brill_humility": {
-    "fourth_down_wp_gap_mean": 0.031,
-    "fourth_down_statistically_distinct_rate": 0.6901,
+    "fourth_down_wp_gap_mean": 0.0305,
+    "fourth_down_statistically_distinct_rate": 0.6224,
     "fourth_down_reason": "OBSERVED"
   },
   "main_and_derivative_markets": [
@@ -178,32 +133,32 @@
       "selection": "CHI +3.0 (-105)",
       "sim_median": "CHI 22.8 - SEA 19.1 (CHI +3.7 margin)",
       "market_p": 0.4892,
-      "model_p": 0.5761,
-      "edge_pct": 8.69,
-      "fair_odds": -136,
-      "decision": "SPEAK / PLAY",
+      "model_p": 0.4891657638136511,
+      "edge_pct": 0.0,
+      "fair_odds": 104,
+      "decision": "PRIOR_DEVIG_BASELINE",
       "why": "CHI +0.089 W6-W7 off EPA (+0.180 W7) + DT Jeffery Simmons trade debut vs Sam Darnold 0.214 P2S (#30) + hook protection on key number 3."
     },
     {
       "market": "Moneyline",
       "selection": "CHI ML (+142)",
-      "sim_median": "CHI outright win in 58.2% of conserved worlds (FWL-capped to 48.26%)",
+      "sim_median": "CHI outright win in 58.2% of conserved worlds (no-vig prior baseline)",
       "market_p": 0.3962,
-      "model_p": 0.4822,
-      "edge_pct": 8.6,
-      "fair_odds": 107,
-      "decision": "SPEAK / PLAY",
-      "why": "De-vigged market implies 39.62%; FWL-bounded overlay (+0.35 log-odds cap) yields 48.26% (+8.64% EV at +142)."
+      "model_p": 0.3962430290578221,
+      "edge_pct": 0.0,
+      "fair_odds": 152,
+      "decision": "PRIOR_DEVIG_BASELINE",
+      "why": "De-vigged market prior baseline (static log-odds overlay removed per Subsystem 2)."
     },
     {
       "market": "1st Quarter Total",
       "selection": "1Q UNDER 9.5 (Trigger -135 or better)",
       "sim_median": "7.55 1Q points",
       "market_p": 0.5,
-      "model_p": 0.5866,
-      "edge_pct": 8.66,
-      "fair_odds": -142,
-      "decision": "SPEAK / PLAY (IF <= -135 ON DK)",
+      "model_p": 0.5,
+      "edge_pct": 0.0,
+      "fair_odds": -100,
+      "decision": "PRIOR_DEVIG_BASELINE",
       "why": "SEA Q1 Off EPA = -0.2337 (41.9% SR), CHI Q1 Def Stop Rate = 55.6%, early scripted run-heavy feel-out."
     },
     {
@@ -211,11 +166,11 @@
       "selection": "UNDER 46.5 (-110)",
       "sim_median": "41.9 total points",
       "market_p": 0.5,
-      "model_p": 0.572,
-      "edge_pct": 7.2,
-      "fair_odds": -134,
-      "decision": "LEAN / SECONDARY",
-      "why": "Both offenses rank bottom-6 in Red-Zone TD% (CHI 13.16%, SEA 17.14%) + damp Lumen Field turf slip S_tau = 0.340."
+      "model_p": 0.5,
+      "edge_pct": 0.0,
+      "fair_odds": -100,
+      "decision": "PRIOR_DEVIG_BASELINE",
+      "why": "Both offenses rank bottom-6 in Red-Zone TD% (CHI 13.16%, SEA 17.14%)."
     }
   ],
   "evaluated_player_props": [
@@ -231,18 +186,18 @@
       "season_mean": 34.86,
       "eb_shrunk_mean": 36.78,
       "sim_mean": 39.47,
-      "sim_median": 35.49,
+      "sim_median": 35.3,
       "barber_cqr_80": [
-        10.09,
-        73.8
+        9.94,
+        74.02
       ],
       "snap_share": 0.619,
       "route_share": 0.682,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.7028,
+      "model_p": 0.705,
       "market_p": 0.5,
-      "edge_pct": 20.28,
-      "fair_odds": -236,
+      "edge_pct": 20.5,
+      "fair_odds": -239,
       "publish_allowed": true,
       "note": "323/529 snaps (61.9%, 70% W7), 68.2% route share, 96.8% Open Rate (#1 CHI), 34.86 yds/g across 7 GP."
     },
@@ -256,8 +211,8 @@
       "odds": -110,
       "player_gp": 7,
       "season_mean": 3.71,
-      "eb_shrunk_mean": 3.96,
-      "sim_mean": 4.32,
+      "eb_shrunk_mean": 3.97,
+      "sim_mean": 4.33,
       "sim_median": 4.0,
       "barber_cqr_80": [
         -3.2,
@@ -266,9 +221,9 @@
       "snap_share": 0.619,
       "route_share": 0.682,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.6571,
+      "model_p": 0.6581,
       "market_p": 0.5,
-      "edge_pct": 15.71,
+      "edge_pct": 15.81,
       "fair_odds": -192,
       "publish_allowed": true,
       "note": "26 catches on 31 targets (3.71 rec/g, 83.9% catch rate) vs SEA two-high underneath shell."
@@ -283,20 +238,20 @@
       "odds": -110,
       "player_gp": 6,
       "season_mean": 8.67,
-      "eb_shrunk_mean": 10.74,
-      "sim_mean": 13.21,
-      "sim_median": 11.35,
+      "eb_shrunk_mean": 10.73,
+      "sim_mean": 13.2,
+      "sim_median": 11.54,
       "barber_cqr_80": [
-        0.12,
-        28.32
+        0.16,
+        28.12
       ],
       "snap_share": 0.85,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.7933,
+      "model_p": 0.7949,
       "market_p": 0.5,
-      "edge_pct": 29.33,
-      "fair_odds": -384,
+      "edge_pct": 29.49,
+      "fair_odds": -388,
       "publish_allowed": true,
       "note": "8.67 rush yds/g (52 yds in 6 GP) + CHI 42.3% blitz rate & Jeffery Simmons interior push forcing pocket flushes (TPR scramble prob 0.312)."
     },
@@ -320,10 +275,10 @@
       "snap_share": 0.85,
       "route_share": 0.885,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.6636,
+      "model_p": 0.6657,
       "market_p": 0.5,
-      "edge_pct": 16.36,
-      "fair_odds": -197,
+      "edge_pct": 16.57,
+      "fair_odds": -199,
       "publish_allowed": true,
       "note": "85.0% snap share (94% W7), 88.5% route share, 3.43 rec/g on 5.43 tgt/g; line dropped from 3.5 to 2.5."
     },
@@ -337,20 +292,20 @@
       "odds": -110,
       "player_gp": 7,
       "season_mean": 54.43,
-      "eb_shrunk_mean": 53.41,
-      "sim_mean": 51.98,
-      "sim_median": 47.84,
+      "eb_shrunk_mean": 53.4,
+      "sim_mean": 51.95,
+      "sim_median": 48.0,
       "barber_cqr_80": [
-        18.55,
-        90.89
+        18.38,
+        90.22
       ],
       "snap_share": 0.85,
       "route_share": 0.885,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5764,
+      "model_p": 0.5785,
       "market_p": 0.5,
-      "edge_pct": 7.64,
-      "fair_odds": -136,
+      "edge_pct": 7.85,
+      "fair_odds": -137,
       "publish_allowed": true,
       "note": "54.43 rec yds/g (381 yds in 7 GP), E_sep = 1.92, 0.461 WOPR."
     },
@@ -364,20 +319,20 @@
       "odds": -110,
       "player_gp": 7,
       "season_mean": 70.14,
-      "eb_shrunk_mean": 66.96,
-      "sim_mean": 62.52,
-      "sim_median": 58.73,
+      "eb_shrunk_mean": 67.03,
+      "sim_mean": 62.68,
+      "sim_median": 58.43,
       "barber_cqr_80": [
-        25.77,
-        103.55
+        25.79,
+        104.52
       ],
       "snap_share": 0.606,
       "route_share": 0.674,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5788,
+      "model_p": 0.5802,
       "market_p": 0.5,
-      "edge_pct": 7.88,
-      "fair_odds": -137,
+      "edge_pct": 8.02,
+      "fair_odds": -138,
       "publish_allowed": true,
       "note": "Team-high 70.14 rec yds/g (491 yds in 7 GP) & 21.0% target share (6.71 tgt/g)."
     },
@@ -393,18 +348,18 @@
       "season_mean": 255.0,
       "eb_shrunk_mean": 248.61,
       "sim_mean": 243.5,
-      "sim_median": 243.0,
+      "sim_median": 242.0,
       "barber_cqr_80": [
-        171.8,
-        314.8
+        172.8,
+        313.8
       ],
       "snap_share": 0.965,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5854,
+      "model_p": 0.5872,
       "market_p": 0.5,
-      "edge_pct": 8.54,
-      "fair_odds": -141,
+      "edge_pct": 8.72,
+      "fair_odds": -142,
       "publish_allowed": true,
       "note": "255.0 pass yds/g across 4 starts (1,020 yds, +0.2139 EPA vs blitz, +0.180 W7 off EPA/play)."
     },
@@ -422,15 +377,15 @@
       "sim_mean": 221.2,
       "sim_median": 221.0,
       "barber_cqr_80": [
-        162.8,
+        161.8,
         280.8
       ],
       "snap_share": 0.85,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5886,
+      "model_p": 0.5878,
       "market_p": 0.5,
-      "edge_pct": 8.86,
+      "edge_pct": 8.78,
       "fair_odds": -143,
       "publish_allowed": true,
       "note": "215.0 pass yds/g in 6 GP, P2S = 0.214 (#30) + 50% QB-fault sack share vs CHI front w/ Jeffery Simmons."
@@ -445,20 +400,20 @@
       "odds": -110,
       "player_gp": 4,
       "season_mean": 32.0,
-      "eb_shrunk_mean": 27.79,
-      "sim_mean": 24.42,
-      "sim_median": 22.01,
+      "eb_shrunk_mean": 27.83,
+      "sim_mean": 24.49,
+      "sim_median": 21.89,
       "barber_cqr_80": [
-        5.86,
-        45.78
+        5.82,
+        46.13
       ],
       "snap_share": 0.965,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5129,
+      "model_p": 0.5104,
       "market_p": 0.5,
-      "edge_pct": 1.29,
-      "fair_odds": -105,
+      "edge_pct": 1.04,
+      "fair_odds": -104,
       "publish_allowed": false,
       "note": "32.0 rush yds/g (128 yds on 24 carries in 4 GP) vs SEA 20.1% 4-man rush disruption."
     },
@@ -472,8 +427,8 @@
       "odds": -110,
       "player_gp": 7,
       "season_mean": 5.0,
-      "eb_shrunk_mean": 5.06,
-      "sim_mean": 5.15,
+      "eb_shrunk_mean": 5.07,
+      "sim_mean": 5.17,
       "sim_median": 5.0,
       "barber_cqr_80": [
         -2.2,
@@ -482,9 +437,9 @@
       "snap_share": 0.606,
       "route_share": 0.674,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5126,
+      "model_p": 0.5121,
       "market_p": 0.5,
-      "edge_pct": 1.26,
+      "edge_pct": 1.21,
       "fair_odds": -105,
       "publish_allowed": false,
       "note": "5.00 rec/g (35 rec on 47 tgt in 7 GP)."
@@ -499,8 +454,8 @@
       "odds": -110,
       "player_gp": 6,
       "season_mean": 1.33,
-      "eb_shrunk_mean": 1.24,
-      "sim_mean": 1.14,
+      "eb_shrunk_mean": 1.26,
+      "sim_mean": 1.17,
       "sim_median": 1.0,
       "barber_cqr_80": [
         -4.2,
@@ -509,10 +464,10 @@
       "snap_share": 0.85,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.6615,
+      "model_p": 0.6522,
       "market_p": 0.5,
-      "edge_pct": 16.15,
-      "fair_odds": -195,
+      "edge_pct": 15.22,
+      "fair_odds": -188,
       "publish_allowed": true,
       "note": "1.33 pass TD/g (8 TD, 6 INT in 6 GP) + SEA 17.14% red-zone TD conversion rate."
     },
@@ -527,19 +482,19 @@
       "player_gp": 7,
       "season_mean": 34.86,
       "eb_shrunk_mean": 38.41,
-      "sim_mean": 43.38,
-      "sim_median": 39.33,
+      "sim_mean": 43.37,
+      "sim_median": 39.2,
       "barber_cqr_80": [
-        12.33,
-        79.59
+        12.71,
+        79.13
       ],
       "snap_share": 0.851,
       "route_share": 0.784,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.4721,
+      "model_p": 0.4705,
       "market_p": 0.5,
-      "edge_pct": -2.79,
-      "fair_odds": 112,
+      "edge_pct": -2.95,
+      "fair_odds": 113,
       "publish_allowed": false,
       "note": "85.1% snap share, Cole Kmet OUT vacates 61.4% TE2 snaps & 2.0 tgt/g (1.38x Sinkhorn boost)."
     },
@@ -553,7 +508,7 @@
       "odds": -110,
       "player_gp": 7,
       "season_mean": 3.71,
-      "eb_shrunk_mean": 4.21,
+      "eb_shrunk_mean": 4.22,
       "sim_mean": 4.92,
       "sim_median": 4.0,
       "barber_cqr_80": [
@@ -563,10 +518,10 @@
       "snap_share": 0.851,
       "route_share": 0.784,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.4694,
+      "model_p": 0.474,
       "market_p": 0.5,
-      "edge_pct": -3.06,
-      "fair_odds": 113,
+      "edge_pct": -2.6,
+      "fair_odds": 111,
       "publish_allowed": false,
       "note": "6.0 tgt/g base + Cole Kmet OUT target consolidation vs SEA 57.0 TE yds/g allowed."
     },
@@ -580,19 +535,19 @@
       "odds": -110,
       "player_gp": 7,
       "season_mean": 123.86,
-      "eb_shrunk_mean": 114.44,
-      "sim_mean": 101.25,
-      "sim_median": 98.43,
+      "eb_shrunk_mean": 114.45,
+      "sim_mean": 101.27,
+      "sim_median": 98.66,
       "barber_cqr_80": [
-        57.24,
-        148.28
+        57.29,
+        148.49
       ],
       "snap_share": 0.836,
       "route_share": 0.892,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5007,
+      "model_p": 0.5012,
       "market_p": 0.5,
-      "edge_pct": 0.07,
+      "edge_pct": 0.12,
       "fair_odds": -100,
       "publish_allowed": false,
       "note": "PASS: High line (98.5) vs Jaylon Johnson/Kyler Gordon coverage & Darnold interior pressure."
@@ -617,10 +572,10 @@
       "snap_share": 0.836,
       "route_share": 0.892,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5211,
+      "model_p": 0.5239,
       "market_p": 0.5,
-      "edge_pct": 2.11,
-      "fair_odds": -109,
+      "edge_pct": 2.39,
+      "fair_odds": -110,
       "publish_allowed": false,
       "note": "PASS: Sim median 7.4 sits right on 7.5 hook."
     },
@@ -634,8 +589,8 @@
       "odds": -110,
       "player_gp": 4,
       "season_mean": 22.0,
-      "eb_shrunk_mean": 22.55,
-      "sim_mean": 22.98,
+      "eb_shrunk_mean": 22.56,
+      "sim_mean": 23.0,
       "sim_median": 22.0,
       "barber_cqr_80": [
         10.8,
@@ -644,10 +599,10 @@
       "snap_share": 0.965,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5762,
+      "model_p": 0.5726,
       "market_p": 0.5,
-      "edge_pct": 7.62,
-      "fair_odds": -136,
+      "edge_pct": 7.26,
+      "fair_odds": -134,
       "publish_allowed": false,
       "note": "PASS: Sub-6% edge after Empirical Bayes shrink on GP=4."
     },
@@ -671,10 +626,10 @@
       "snap_share": 0.85,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.512,
+      "model_p": 0.5141,
       "market_p": 0.5,
-      "edge_pct": 1.2,
-      "fair_odds": -105,
+      "edge_pct": 1.41,
+      "fair_odds": -106,
       "publish_allowed": false,
       "note": "PASS: Trailing script pass volume offsets inefficiency."
     },
@@ -698,10 +653,10 @@
       "snap_share": 0.965,
       "route_share": 1.0,
       "participation_gate": "PLAY_ELIGIBLE",
-      "model_p": 0.5887,
+      "model_p": 0.5914,
       "market_p": 0.5,
-      "edge_pct": 8.87,
-      "fair_odds": -143,
+      "edge_pct": 9.14,
+      "fair_odds": -145,
       "publish_allowed": false,
       "note": "PASS: CHI 13.16% RZ TD rate vs Swift 87.1% GL rush share."
     }
@@ -710,10 +665,14 @@
     "publishAllowed": true,
     "decision": "SPEAK",
     "reason": "PARLAY_CONJUNCTION_PASS",
-    "wilson_lower_90": 0.4270637036986496,
-    "joint_edge": 0.0716
+    "wilson_lower_90": 0.4282608246178271,
+    "joint_edge": 0.07280000000000003,
+    "raw_joint_sim_p": 0.4364,
+    "joint_sim_prob": 0.4364
   },
   "personal_40_dollar_dk_card": {
+    "card_status": "STALE_LINES_UNACTIONABLE",
+    "publishAllowed": false,
     "total_staked_usd": 40.0,
     "total_potential_return_usd": 81.9,
     "total_net_profit_if_sweep_usd": 41.9,
@@ -726,8 +685,18 @@
         "stake_usd": 10.0,
         "to_win_usd": 9.09,
         "total_payout_usd": 19.09,
-        "model_p": 0.7028,
-        "edge_pct": 20.28,
+        "model_p": 0.705,
+        "edge_pct": 20.5,
+        "lateral_scrimmage_gate": {
+          "player_name": "Kalif Raymond",
+          "raw_rec_over_prob": 0.705,
+          "adjusted_rec_over_prob": 0.5922,
+          "lateral_reclassification_hazard": 0.16,
+          "pure_rec_yds_publish_allowed": false,
+          "preferred_market": "rush_plus_rec_yards",
+          "decision": "BLOCK_PURE_REC_YDS_USE_SCRIMMAGE",
+          "reason": "HIGH_BACKWARD_PASS_OR_JET_SWEEP_LATERAL_RECLASSIFICATION_HAZARD"
+        },
         "why": "Played 61.9% of CHI snaps (70% in W7), 68.2% route share, 96.8% Open Rate (#1 on CHI), averaging 34.86 yds/g across 7 GP vs a 21.5 line."
       },
       {
@@ -738,8 +707,8 @@
         "stake_usd": 9.0,
         "to_win_usd": 8.57,
         "total_payout_usd": 17.57,
-        "model_p": 0.5761,
-        "edge_pct": 8.69,
+        "model_p": 0.4891657638136511,
+        "edge_pct": 0.0,
         "why": "Takes +3.0 (-105) over raw ML as primary anchor to protect your $40 balance on a 3-point field-goal game while capturing CHI's trench/EPA edge."
       },
       {
@@ -750,8 +719,8 @@
         "stake_usd": 7.5,
         "to_win_usd": 6.82,
         "total_payout_usd": 14.32,
-        "model_p": 0.7933,
-        "edge_pct": 29.33,
+        "model_p": 0.7949,
+        "edge_pct": 29.49,
         "why": "Uncorrelated to CHI passing: CHI blitzes 42.3% + Jeffery Simmons interior push forces Darnold (8.67 rush yds/g) off his spot; 1 scramble clears 4.5."
       },
       {
@@ -762,33 +731,33 @@
         "stake_usd": 6.0,
         "to_win_usd": 5.45,
         "total_payout_usd": 11.45,
-        "model_p": 0.6636,
-        "edge_pct": 16.36,
+        "model_p": 0.6657,
+        "edge_pct": 16.57,
         "why": "94% W7 snap share, 88.5% route share, 5.43 targets/g (3.43 rec/g) with Cole Kmet OUT; line steamed down from 3.5 to 2.5."
       },
       {
         "slot": 5,
-        "bet_type": "Straight Plus-Money Outright Kicker (or Luther Burden OVER 51.5 Rec Yds)",
+        "bet_type": "Straight Plus-Money Outright Kicker",
         "selection": "Chicago Bears Moneyline (+142)",
         "dk_odds": 142,
         "stake_usd": 3.5,
         "to_win_usd": 4.97,
         "total_payout_usd": 8.47,
-        "model_p": 0.4822,
-        "edge_pct": 8.6,
+        "model_p": 0.3962430290578221,
+        "edge_pct": 0.0,
         "why": "Plus-money outright upside (+142) paired with the +3.0 spread anchor."
       },
       {
         "slot": 6,
         "bet_type": "2-Leg Conjunction-Gated SGP Kicker (Max 2 Legs \u2014 Zero 4-Leg Lottery Bloat)",
-        "selection": "Kalif Raymond OVER 21.5 Rec Yds + CHI +3.0 (or Rome Odunze OVER 2.5 Rec)",
+        "selection": "Kalif Raymond OVER 21.5 Rec Yds + CHI +3.0",
         "dk_odds": 175,
         "stake_usd": 4.0,
         "to_win_usd": 7.0,
         "total_payout_usd": 11.0,
-        "model_p": 0.4352,
-        "edge_pct": 7.16,
-        "why": "Clears evaluate_parlay_conjunction_gate (joint_p = 43.52% vs 36.36% implied, +7.16% joint edge)."
+        "model_p": 0.4364,
+        "edge_pct": 7.28,
+        "why": "Clears evaluate_parlay_conjunction_gate (joint_p = 43.64% vs 36.36% implied, +7.28% joint edge)."
       }
     ]
   }

@@ -504,6 +504,10 @@ def build_jev_state_tensor(spine_game: dict | None) -> dict:
     }
 
 
+def derive_comp_base(track_comp: float) -> float:
+    return float(np.clip(track_comp, 0.48, 0.76))
+
+
 def simulate_matchup_pbp(
     away: str,
     home: str,
@@ -552,7 +556,7 @@ def simulate_matchup_pbp(
                 c_w17 /= 100.0
             if c_w67 > 1.5:
                 c_w67 /= 100.0
-            away_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
+            away_comp_base = derive_comp_base(0.55 * c_w17 + 0.45 * c_w67)
             ol_sack = float(aw_ov.get("sack_rate_allowed", 6.2)) / 100.0
             def_press = float(hm_ov.get("def_pressure_rate", 21.5)) / 100.0
             away_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
@@ -570,7 +574,7 @@ def simulate_matchup_pbp(
                 c_w17 /= 100.0
             if c_w67 > 1.5:
                 c_w67 /= 100.0
-            home_comp_base = float(np.clip(0.55 * c_w17 + 0.45 * c_w67, 0.48, 0.76))
+            home_comp_base = derive_comp_base(0.55 * c_w17 + 0.45 * c_w67)
             ol_sack = float(hm_ov.get("sack_rate_allowed", 6.2)) / 100.0
             def_press = float(aw_ov.get("def_pressure_rate", 21.5)) / 100.0
             home_sack_prob = float(np.clip(0.55 * ol_sack + 0.25 * (def_press * 0.30), 0.030, 0.125))
@@ -588,7 +592,7 @@ def simulate_matchup_pbp(
         home_sack_prob = float(np.clip(home_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
         away_sack_prob = float(np.clip(away_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
     biomech_overlay = None
-    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "1").lower() not in {"0", "false", "no"}:
+    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "0").lower() in {"1", "true", "yes"}:
         root_dir = str(Path(__file__).resolve().parents[2])
         if root_dir not in sys.path:
             sys.path.insert(0, root_dir)
@@ -652,8 +656,6 @@ def simulate_matchup_pbp(
             "scalar_torque_throttle": round(metabolic_val["scalar_torque_throttle"], 4),
             "metabolic_continuity_loss": round(float(metabolic_cont), 4),
         }
-        home_comp_base = float(np.clip(home_comp_base * (1.0 - 0.015 * slip_val + 0.004 * min(esc_val, 3.0)), 0.48, 0.76))
-        away_comp_base = float(np.clip(away_comp_base * (1.0 - 0.015 * slip_val + 0.004 * min(esc_val, 3.0)), 0.48, 0.76))
     role_names_stamp = ["WR1", "WR2", "WR3", "TE1", "RB1"]
 
     def _unit_shares(weights) -> dict[str, float]:

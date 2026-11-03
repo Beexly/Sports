@@ -1,6 +1,7 @@
 {
   "engine_version": "GSE v5.3.0 / 5-Stage JEV 10k-World Snap-by-Snap Engine",
-  "as_of": "2026-10-30T21:40:00-05:00",
+  "as_of": "2026-11-02T17:45:00-06:00",
+  "record_truth_note": "Superseded banner retained in superseded[]. Continuity views (53-18-0, 60-22-0, 60-26-0, 37-13-0, 44-21-0) are not records and are not presented.",
   "card_scope": {
     "card_play_rows": 59,
     "ledger_tracked_plays": 21,
@@ -8,19 +9,91 @@
     "note": "Only ledger_tracked_plays carry an assigned stake and count toward verified_record. The remaining card plays are graded for reference and excluded from the record."
   },
   "verified_record": {
-    "record": "31-11-0",
-    "wins": 31,
-    "losses": 11,
-    "pushes": 0,
-    "total_graded": 42,
-    "win_pct": 73.8,
-    "confidence_equivalent": "74/100",
-    "net_units": "+18.56u",
-    "roi_pct": "+66.8%",
-    "display_banner": "31-11-0 (73.8%) \u00b7 +18.56 UNITS (+66.8% ROI) WITH THE NEW ENGINE",
-    "prior_record": "16-5-0 (76.2%) \u00b7 +10.45u entering TNF CAR@GB (21 official tracked plays)",
-    "tonight_result": "15-6-0 (71.4%) \u00b7 +8.11u on TNF CAR@GB official 21-play card"
+    "record": "36-13-1",
+    "wins": 36,
+    "losses": 13,
+    "pushes": 1,
+    "total_graded": 50,
+    "win_pct": 73.5,
+    "confidence_equivalent": "73/100",
+    "net_units": "+20.14u",
+    "roi_pct": null,
+    "display_banner": "36-13-1 (73.5%) \u00b7 +20.14u (MAIN + DERIVATIVE + TNF SINGLE-STAKE) | SECONDARY 43-17-1 \u00b7 +22.56u (ROUTE-GATED SUNDAY PROPS) | SECONDARY 43-21-1 \u00b7 +18.56u (ALL-RAW)",
+    "component_legs": [
+      {
+        "id": "pre_tnf_prior",
+        "record": "16-5-0",
+        "wins": 16,
+        "losses": 5,
+        "pushes": 0,
+        "net_units": "+10.45u",
+        "source": "committed ledger prior_record (as_of 2026-10-30T21:40:00-05:00)"
+      },
+      {
+        "id": "tnf_car_at_gb_2026_10_30",
+        "record": "14-6-1",
+        "wins": 14,
+        "losses": 6,
+        "pushes": 1,
+        "net_units": "+7.19u",
+        "source": "tnf_settlement.official_card + tonight_pending_card_car_at_gb screen (14 WIN / 6 LOSS / 1 SPLIT, stakes 19.0u, settled per grade_source ESPN event 401873023)"
+      },
+      {
+        "id": "sun_nov_1_2026_main",
+        "record": "6-2-0",
+        "wins": 6,
+        "losses": 2,
+        "pushes": 0,
+        "net_units": "+2.50u",
+        "source": "docs/predictions/research/2026-11-02/2026-11-02-WEEK8-SUNDAY-COMPLETE-SETTLEMENT-AND-LEDGER.md lines 10-11 (Main 5-2-0 +1.62u + LAC Team Total UNDER 18.5 (-114) WIN +0.88u); source_verified: false"
+      }
+    ],
+    "prior_record": "16-5-0",
+    "tonight_result": "superseded \u2014 see superseded[] and component_legs"
   },
+  "superseded": [
+    {
+      "banner": "31-11-0 (73.8%) \u00b7 +18.56 UNITS (+66.8% ROI) WITH THE NEW ENGINE",
+      "record": "31-11-0",
+      "net_units": "+18.56u",
+      "reason": "Prior tonight_result 15-6 and verified_record 31-11 are not reconcilable to this box score. They are retained below as superseded, not as the live record.",
+      "retracted_at": "2026-11-02T00:00:00-06:00"
+    }
+  ],
+  "secondary_views": [
+    {
+      "label": "Main + Deriv + TNF + route-gated props",
+      "record": "43-17-1",
+      "win_pct": 71.7,
+      "net_units": "+22.56u",
+      "formula": "36-13-1 (+20.14u) + qualified route-gated Sunday props 7-4-0 (+2.42u)",
+      "record_class": "secondary_view"
+    },
+    {
+      "label": "Main + Deriv + TNF + raw props",
+      "record": "43-21-1",
+      "win_pct": 67.2,
+      "net_units": "+18.56u",
+      "formula": "36-13-1 (+20.14u) + raw 15 props 7-8-0 (-1.58u)",
+      "record_class": "secondary_view"
+    },
+    {
+      "label": "Post-MNF (CHI 34 @ SEA 17) Main + Deriv + TNF",
+      "record": "38-13-1",
+      "win_pct": 74.5,
+      "net_units": "+22.85u",
+      "formula": "36-13-1 (+20.14u) + MNF CHI +3.0 WIN (+1.71u) + CHI ML +142 WIN (+1.00u); Kalif Raymond 53 scrimmage yds (14 rec + 39 lateral rush) graded LOSS on pure rec yds",
+      "record_class": "secondary_view"
+    },
+    {
+      "label": "Post-MNF (CHI 34 @ SEA 17) All-In With Route-Gated Props & MNF 6-Play Slip",
+      "record": "47-19-1",
+      "win_pct": 71.2,
+      "net_units": "+24.92u",
+      "formula": "43-17-1 (+22.56u) + MNF 6-play slip 4-2-0 (+2.36u / +$11.81 on $40 DK card)",
+      "record_class": "secondary_view"
+    }
+  ],
   "tonight_pending_card_car_at_gb": [
     {
       "id": "CAR-GB-01",

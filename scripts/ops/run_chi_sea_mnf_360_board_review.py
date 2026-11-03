@@ -22,8 +22,35 @@ for p in (str(OPS), str(ROOT)):
     if p not in sys.path:
         sys.path.insert(0, p)
 
-os.environ["ENABLE_TRENCH_POCKET_PHYSICS_V2"] = "1"
-os.environ["ENABLE_BIOMECH_KINETIC_TRANSLATION_V1"] = "1"
+# Research flags hard-zeroed for publication runs; never publish picks computed under uncalibrated flags.
+os.environ["ENABLE_TRENCH_POCKET_PHYSICS_V2"] = "0"
+os.environ["ENABLE_BIOMECH_KINETIC_TRANSLATION_V1"] = "0"
+
+CARD_STATUS_LOCKED = "LOCKED"
+CARD_STATUS_STALE = "STALE_LINES_UNACTIONABLE"
+
+
+class StaleOddsError(RuntimeError):
+    pass
+
+
+def load_odds_snapshot(path: str | Path, now: str | None = None, max_age_hours: float = 6.0) -> Dict[str, Any]:
+    p = Path(path)
+    if not p.exists():
+        raise StaleOddsError(f"odds snapshot missing: {p}")
+    snap = json.loads(p.read_text(encoding="utf-8"))
+    got = snap.get("fetched_at")
+    if not got:
+        raise StaleOddsError("odds snapshot lacks fetched_at")
+    n_dt = datetime.fromisoformat(now) if now else datetime.now().astimezone()
+    f_dt = datetime.fromisoformat(got)
+    if (n_dt - f_dt).total_seconds() > max_age_hours * 3600.0:
+        raise StaleOddsError(f"odds snapshot stale: fetched {got}")
+    return snap
+
+
+def joint_from_worlds(over_worlds: np.ndarray, cover_worlds: np.ndarray) -> float:
+    return float(np.mean(over_worlds & cover_worlds))
 
 from biomech_kinetic_translation import (  # noqa: E402
     calculate_viscoelastic_lane_deformation,
@@ -49,6 +76,10 @@ from gse_coach_mind_simulator import (  # noqa: E402
 from trench_pocket_physics import (  # noqa: E402
     apply_trench_pocket_shock,
     bayesian_shrink_p2s,
+    compute_ibrahim_voronoi_pocket_survival,
+    compute_nguyen_yurko_matthews_strain_multilevel,
+    compute_nikolaou_pelechrinis_team_collapse_pgm,
+    compute_sharp_pass_rush_protection_adjustment,
 )
 from week8_forensic_kernels import (  # noqa: E402
     allocate_conserved_box_score,
@@ -59,6 +90,7 @@ from week8_forensic_kernels import (  # noqa: E402
     compute_empirical_bayes_shrunk_projection,
     enforce_route_snap_participation_gate,
     evaluate_parlay_conjunction_gate,
+    recommend_scrimmage_over_receiving_prop,
     validate_pbp_structural_missingness,
 )
 
@@ -523,22 +555,15 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "eligible": g["eligible"], "decision": g["decision"],
         })
 
-    # 8. Main Lines & Derivatives Evaluation (FWL Market Residualized & Bounded)
-    # Market: CHI +3.0 (-105) / SEA -3.0 (-115); CHI ML +142 / SEA ML -170; Total 46.5 (-110/-110)
+    # 8. Main Lines & Derivatives Evaluation (No static FWL log-odds overlay; prior model_p = devigged market)
     mkt_chi_spread_p, _ = devig_two_way(-105, -115)
     mkt_chi_ml_p, _ = devig_two_way(142, -170)
     mkt_under_p, _ = devig_two_way(-110, -110)
 
-    # FWL Capped log-odds overlay (|delta log-odds| <= 0.35) on top of market baseline
-    def apply_fwl_capped_overlay(mkt_prob: float, delta_lo: float) -> float:
-        capped = max(-0.35, min(0.35, float(delta_lo)))
-        lo = math.log(mkt_prob / (1.0 - mkt_prob)) + capped
-        return 1.0 / (1.0 + math.exp(-lo))
-
-    chi_spread_model_p = apply_fwl_capped_overlay(mkt_chi_spread_p, +0.35)
-    chi_ml_model_p = apply_fwl_capped_overlay(mkt_chi_ml_p, +0.35)
-    under_46_5_model_p = apply_fwl_capped_overlay(mkt_under_p, +0.29)
-    q1_under_9_5_model_p = apply_fwl_capped_overlay(0.500, +0.35)
+    chi_spread_model_p = mkt_chi_spread_p
+    chi_ml_model_p = mkt_chi_ml_p
+    under_46_5_model_p = mkt_under_p
+    q1_under_9_5_model_p = 0.5000
 
     main_and_derivatives = [
         {
@@ -546,22 +571,22 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "selection": "CHI +3.0 (-105)",
             "sim_median": "CHI 22.8 - SEA 19.1 (CHI +3.7 margin)",
             "market_p": round(mkt_chi_spread_p, 4),
-            "model_p": round(chi_spread_model_p, 4),
+            "model_p": chi_spread_model_p,
             "edge_pct": round((chi_spread_model_p - mkt_chi_spread_p) * 100.0, 2),
             "fair_odds": prob_to_american(chi_spread_model_p),
-            "decision": "SPEAK / PLAY",
+            "decision": "PRIOR_DEVIG_BASELINE",
             "why": "CHI +0.089 W6-W7 off EPA (+0.180 W7) + DT Jeffery Simmons trade debut vs Sam Darnold 0.214 P2S (#30) + hook protection on key number 3.",
         },
         {
             "market": "Moneyline",
             "selection": "CHI ML (+142)",
-            "sim_median": "CHI outright win in 58.2% of conserved worlds (FWL-capped to 48.26%)",
+            "sim_median": "CHI outright win in 58.2% of conserved worlds (no-vig prior baseline)",
             "market_p": round(mkt_chi_ml_p, 4),
-            "model_p": round(chi_ml_model_p, 4),
+            "model_p": chi_ml_model_p,
             "edge_pct": round((chi_ml_model_p - mkt_chi_ml_p) * 100.0, 2),
             "fair_odds": prob_to_american(chi_ml_model_p),
-            "decision": "SPEAK / PLAY",
-            "why": "De-vigged market implies 39.62%; FWL-bounded overlay (+0.35 log-odds cap) yields 48.26% (+8.64% EV at +142).",
+            "decision": "PRIOR_DEVIG_BASELINE",
+            "why": "De-vigged market prior baseline (static log-odds overlay removed per Subsystem 2).",
         },
         {
             "market": "1st Quarter Total",
@@ -571,7 +596,7 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "model_p": round(q1_under_9_5_model_p, 4),
             "edge_pct": round((q1_under_9_5_model_p - 0.5000) * 100.0, 2),
             "fair_odds": prob_to_american(q1_under_9_5_model_p),
-            "decision": "SPEAK / PLAY (IF <= -135 ON DK)",
+            "decision": "PRIOR_DEVIG_BASELINE",
             "why": "SEA Q1 Off EPA = -0.2337 (41.9% SR), CHI Q1 Def Stop Rate = 55.6%, early scripted run-heavy feel-out.",
         },
         {
@@ -582,25 +607,30 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "model_p": round(under_46_5_model_p, 4),
             "edge_pct": round((under_46_5_model_p - mkt_under_p) * 100.0, 2),
             "fair_odds": prob_to_american(under_46_5_model_p),
-            "decision": "LEAN / SECONDARY",
-            "why": "Both offenses rank bottom-6 in Red-Zone TD% (CHI 13.16%, SEA 17.14%) + damp Lumen Field turf slip S_tau = 0.340.",
+            "decision": "PRIOR_DEVIG_BASELINE",
+            "why": "Both offenses rank bottom-6 in Red-Zone TD% (CHI 13.16%, SEA 17.14%).",
         },
     ]
 
-    # 9. Conjunction Gate Audit on 2-Leg Correlated SGP Kicker
+    # 9. Conjunction Gate Audit on 2-Leg Correlated SGP Kicker (Exact shared-worlds mean, no product cap)
     props_by_key = {(p["player"], p["market"], p["direction"]): p for p in evaluated_props}
     raymond_yds_prop = props_by_key[("Kalif Raymond", "Receiving Yards", "OVER")]
     darnold_rush_prop = props_by_key[("Sam Darnold", "Rushing Yards", "OVER")]
     odunze_rec_prop = props_by_key[("Rome Odunze", "Receptions", "OVER")]
 
+    kalif_lateral_gate = recommend_scrimmage_over_receiving_prop(
+        player_name="Kalif Raymond",
+        raw_rec_over_prob=float(raymond_yds_prop["model_p"]),
+        behind_los_screen_or_jet_share=0.22,
+        rush_attempt_share=0.06,
+        scrimmage_yards_prop_available=True,
+        receptions_prop_available=True,
+    )
+
     chi_cover_worlds = (vecs["away_score"] + 3.0) >= vecs["home_score"]
     raymond_over_worlds = chi_rec_yds_worlds["Kalif Raymond"] > 21.5
-    raw_joint_sim_p = float(np.mean(raymond_over_worlds & chi_cover_worlds))
-    # Bound joint probability by FWL-capped marginal product with empirical copula lift
-    copula_joint_p = round(
-        min(raw_joint_sim_p, float(raymond_yds_prop["model_p"]) * chi_spread_model_p * 1.075),
-        4,
-    )
+    raw_joint_sim_p = joint_from_worlds(raymond_over_worlds, chi_cover_worlds)
+    copula_joint_p = raw_joint_sim_p
 
     sgp_audit = evaluate_parlay_conjunction_gate(
         legs=[
@@ -613,7 +643,7 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             },
             {
                 "selection": "CHI +3.0 (-105)",
-                "model_p": round(chi_spread_model_p, 4),
+                "model_p": chi_spread_model_p,
                 "market_p": round(mkt_chi_spread_p, 4),
                 "publishAllowed": True,
                 "decision": "SPEAK",
@@ -622,11 +652,9 @@ def run_mnf_360_engine() -> Dict[str, Any]:
         joint_sim_prob=copula_joint_p,
         book_parlay_implied_prob=0.3636,
     )
+    sgp_audit["raw_joint_sim_p"] = raw_joint_sim_p
+    sgp_audit["joint_sim_prob"] = copula_joint_p
 
-    # 10. Personal $40.00 DraftKings Sportsbook Capital-Preserving Allocation Plan
-    # Designed for negative bank account / strict $40.00 DK balance:
-    # - 90% ($36.00) in uncorrelated/diversified highest-EV straight bets so 3-of-5 hits already lock profit/capital preservation
-    # - 10% ($4.00) in a single 2-leg conjunction-verified SGP kicker (+175)
     dk_40_bankroll_card = [
         {
             "slot": 1,
@@ -638,6 +666,7 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "total_payout_usd": 19.09,
             "model_p": float(raymond_yds_prop["model_p"]),
             "edge_pct": float(raymond_yds_prop["edge_pct"]),
+            "lateral_scrimmage_gate": kalif_lateral_gate,
             "why": "Played 61.9% of CHI snaps (70% in W7), 68.2% route share, 96.8% Open Rate (#1 on CHI), averaging 34.86 yds/g across 7 GP vs a 21.5 line.",
         },
         {
@@ -648,8 +677,8 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "stake_usd": 9.00,
             "to_win_usd": 8.57,
             "total_payout_usd": 17.57,
-            "model_p": round(chi_spread_model_p, 4),
-            "edge_pct": round((chi_spread_model_p - mkt_chi_spread_p) * 100.0, 2),
+            "model_p": chi_spread_model_p,
+            "edge_pct": round((chi_spread_model_p - mkt_chi_spread_p) * 100.0, 4),
             "why": "Takes +3.0 (-105) over raw ML as primary anchor to protect your $40 balance on a 3-point field-goal game while capturing CHI's trench/EPA edge.",
         },
         {
@@ -678,39 +707,82 @@ def run_mnf_360_engine() -> Dict[str, Any]:
         },
         {
             "slot": 5,
-            "bet_type": "Straight Plus-Money Outright Kicker (or Luther Burden OVER 51.5 Rec Yds)",
+            "bet_type": "Straight Plus-Money Outright Kicker",
             "selection": "Chicago Bears Moneyline (+142)",
             "dk_odds": 142,
             "stake_usd": 3.50,
             "to_win_usd": 4.97,
             "total_payout_usd": 8.47,
-            "model_p": round(chi_ml_model_p, 4),
-            "edge_pct": round((chi_ml_model_p - mkt_chi_ml_p) * 100.0, 2),
+            "model_p": chi_ml_model_p,
+            "edge_pct": round((chi_ml_model_p - mkt_chi_ml_p) * 100.0, 4),
             "why": "Plus-money outright upside (+142) paired with the +3.0 spread anchor.",
         },
         {
             "slot": 6,
             "bet_type": "2-Leg Conjunction-Gated SGP Kicker (Max 2 Legs — Zero 4-Leg Lottery Bloat)",
-            "selection": "Kalif Raymond OVER 21.5 Rec Yds + CHI +3.0 (or Rome Odunze OVER 2.5 Rec)",
+            "selection": "Kalif Raymond OVER 21.5 Rec Yds + CHI +3.0",
             "dk_odds": 175,
             "stake_usd": 4.00,
             "to_win_usd": 7.00,
             "total_payout_usd": 11.00,
-            "model_p": copula_joint_p,
+            "model_p": round(copula_joint_p, 4),
             "edge_pct": round(float(sgp_audit["joint_edge"]) * 100.0, 2),
             "why": f"Clears evaluate_parlay_conjunction_gate (joint_p = {copula_joint_p * 100:.2f}% vs 36.36% implied, +{float(sgp_audit['joint_edge']) * 100:.2f}% joint edge).",
         },
     ]
 
-    report = {
+    odds_path = Path(os.environ.get("MNF_ODDS_FILE", str(ROOT / "data" / "engine" / "mnf_chi_sea_360_odds_2026_11_02.json")))
+    try:
+        odds_snap = load_odds_snapshot(odds_path)
+        card_status = CARD_STATUS_LOCKED
+        publish_allowed_card = True
+        odds_source = odds_snap.get("source")
+    except StaleOddsError:
+        card_status = CARD_STATUS_STALE
+        publish_allowed_card = False
+        odds_source = None
+
+    # Peer-reviewed STRAIN (arXiv:2305.10262v1), Voronoi Pocket Survival (Ibrahim UChicago),
+    # Sharp Blocking Adjustments, and Team Collapse PGM (arXiv:2402.10243v1)
+    simmons_strain = compute_nguyen_yurko_matthews_strain_multilevel(
+        rusher_trajectory=[(0.0, 0.0), (0.0, 0.8), (0.0, 1.9), (0.0, 3.1), (0.0, 4.2)],
+        qb_trajectory=[(0.0, 6.0), (0.0, 6.2), (0.0, 6.3), (0.0, 6.2), (0.0, 6.0)],
+        rusher_name="Jeffery Simmons",
+        position="DT",
+    )
+    sea_voronoi_survival = compute_ibrahim_voronoi_pocket_survival(
+        blindside_voronoi_areas_yd2=[5.2 - 0.12 * t for t in range(25)],
+        center_voronoi_areas_yd2=[4.4 - 0.16 * t for t in range(25)],
+    )
+    sea_protection_adj = compute_sharp_pass_rush_protection_adjustment(
+        raw_strain_rate=simmons_strain["multilevel_expected_strain_s_inv"],
+        slide_protection_rate=0.42,
+        rb_te_boink_chip_rate=0.28,
+        two_man_post_double_rate=0.35,
+        jump_set_rate=0.18,
+        quick_release_sub2s_rate=0.22,
+    )
+    sea_collapse_pgm = compute_nikolaou_pelechrinis_team_collapse_pgm(
+        prior_mental_state=[-1, 0, -1, 0, 0],
+        prior_observed_perf=[-1, -1, 0, 0, -1],
+        influence_matrix_R=[
+            [0.0, 0.25, 0.25, 0.15, 0.15],
+            [0.35, 0.0, 0.20, 0.15, 0.10],
+            [0.35, 0.20, 0.0, 0.15, 0.10],
+            [0.30, 0.20, 0.15, 0.0, 0.15],
+            [0.30, 0.20, 0.15, 0.15, 0.0],
+        ],
+        self_reliance_r=[0.20, 0.20, 0.20, 0.20, 0.20],
+    )
+
+    telemetry_payload = {
+        "class": "RESEARCH_TELEMETRY_NOT_FOR_PUBLICATION",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "matchup": "CHI @ SEA (Week 8 MNF, Lumen Field, Seattle WA)",
-        "engine_version": "GSE-v5.4-Forensic-Tracks1to4-Biomech-Batch9",
-        "track4_integrity": {
-            "roster_identity_verified": True,
-            "pbp_missingness": missingness_report,
-            "inactive_hard_zero_blocks": inactive_checks,
-            "blocked_low_participation_players": blocked_low_route_audit,
+        "peer_reviewed_spatial_and_pgm_models": {
+            "nguyen_yurko_matthews_strain_multilevel": simmons_strain,
+            "ibrahim_voronoi_pocket_survival": sea_voronoi_survival,
+            "sharp_pass_rush_protection_adjustment": sea_protection_adj,
+            "nikolaou_pelechrinis_team_collapse_pgm": sea_collapse_pgm,
         },
         "trench_pocket_physics_v2": {
             "CHI_offense_vs_SEA_front": chi_trench,
@@ -749,6 +821,31 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "drive_10snap_torque_throttle": round(step_out["scalar_torque_throttle"], 4),
             "metabolic_continuity_loss": round(metabolic_loss, 5),
         },
+    }
+
+    telemetry_out = Path(
+        os.environ.get(
+            "MNF_TELEMETRY_OUT",
+            str(ROOT / "data" / "engine" / "mnf_chi_sea_360_telemetry_2026_11_02.json"),
+        )
+    )
+    telemetry_out.parent.mkdir(parents=True, exist_ok=True)
+    telemetry_out.write_text(json.dumps(telemetry_payload, indent=2), encoding="utf-8")
+
+    report = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "matchup": "CHI @ SEA (Week 8 MNF, Lumen Field, Seattle WA)",
+        "engine_version": "GSE-v5.4-Forensic-Tracks1to4",
+        "card_status": card_status,
+        "publishAllowed": publish_allowed_card,
+        "odds_source": odds_source,
+        "track4_integrity": {
+            "roster_identity_verified": True,
+            "pbp_missingness": missingness_report,
+            "inactive_hard_zero_blocks": inactive_checks,
+            "blocked_low_participation_players": blocked_low_route_audit,
+            "kalif_raymond_lateral_scrimmage_gate": kalif_lateral_gate,
+        },
         "fourth_down_brill_humility": {
             "fourth_down_wp_gap_mean": round(float(sim_res["fourth_down_wp_gap_mean"]), 4),
             "fourth_down_statistically_distinct_rate": round(float(sim_res["fourth_down_statistically_distinct_rate"]), 4),
@@ -758,6 +855,8 @@ def run_mnf_360_engine() -> Dict[str, Any]:
         "evaluated_player_props": evaluated_props,
         "sgp_conjunction_audit": sgp_audit,
         "personal_40_dollar_dk_card": {
+            "card_status": card_status,
+            "publishAllowed": publish_allowed_card,
             "total_staked_usd": round(sum(x["stake_usd"] for x in dk_40_bankroll_card), 2),
             "total_potential_return_usd": round(sum(x["total_payout_usd"] for x in dk_40_bankroll_card), 2),
             "total_net_profit_if_sweep_usd": round(sum(x["to_win_usd"] for x in dk_40_bankroll_card), 2),
@@ -765,10 +864,15 @@ def run_mnf_360_engine() -> Dict[str, Any]:
         },
     }
 
-    out_json = ROOT / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json"
+    out_json = Path(
+        os.environ.get(
+            "MNF_CARD_OUT",
+            str(ROOT / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json"),
+        )
+    )
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"Wrote {out_json}")
+    print(f"Wrote {out_json} and {telemetry_out}")
     return report
 
 

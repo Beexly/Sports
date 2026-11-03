@@ -843,3 +843,247 @@ def weak_link_am_gm_clean_pocket_prob(
         "true_weak_link_product_prob": round(prod_prob, 4),
         "am_gm_fragility_penalty": round(naive_prob - prod_prob, 4),
     }
+
+
+# ---------------------------------------------------------------------------
+# 8. PEER-REVIEWED PASS-RUSH STRAIN MULTILEVEL INTERCEPTS (Nguyen, Yurko & Matthews, arXiv:2305.10262v1),
+#    PAUL IBRAHIM POCKET VORONOI SURVIVAL (UChicago 2024), SHARP BLOCKING ADJUSTMENTS, &
+#    NIKOLAOU-PELECHRINIS-TERZI TEAM COLLAPSE PGM (arXiv:2402.10243v1, KDD '24)
+# ---------------------------------------------------------------------------
+
+PASS_RUSHER_STRAIN_VARYING_INTERCEPTS: Dict[str, Dict[str, Any]] = {
+    # DE (Figure 5, Nguyen, Yurko & Matthews, arXiv:2305.10262v1 / The American Statistician 2024)
+    "Myles Garrett": {"pos": "DE", "varying_intercept": 1.12},
+    "Nick Bosa": {"pos": "DE", "varying_intercept": 0.94},
+    "Randy Gregory": {"pos": "DE", "varying_intercept": 0.91},
+    "Takkarist McKinley": {"pos": "DE", "varying_intercept": 0.87},
+    "Trey Hendrickson": {"pos": "DE", "varying_intercept": 0.73},
+    "Darrell Taylor": {"pos": "DE", "varying_intercept": 0.66},
+    "Danielle Hunter": {"pos": "DE", "varying_intercept": 0.62},
+    "Yannick Ngakoue": {"pos": "DE", "varying_intercept": 0.61},
+    "Everson Griffen": {"pos": "DE", "varying_intercept": 0.59},
+    "Josh Sweat": {"pos": "DE", "varying_intercept": 0.54},
+    # OLB
+    "T.J. Watt": {"pos": "OLB", "varying_intercept": 0.66},
+    "Alex Highsmith": {"pos": "OLB", "varying_intercept": 0.61},
+    "Justin Houston": {"pos": "OLB", "varying_intercept": 0.60},
+    "Von Miller": {"pos": "OLB", "varying_intercept": 0.43},
+    "Joey Bosa": {"pos": "OLB", "varying_intercept": 0.34},
+    "Rashan Gary": {"pos": "OLB", "varying_intercept": 0.33},
+    "Josh Allen": {"pos": "OLB", "varying_intercept": 0.29},
+    "Tyus Bowser": {"pos": "OLB", "varying_intercept": 0.26},
+    "Odafe Oweh": {"pos": "OLB", "varying_intercept": 0.25},
+    "Charles Harris": {"pos": "OLB", "varying_intercept": 0.21},
+    # DT
+    "Aaron Donald": {"pos": "DT", "varying_intercept": 0.77},
+    "Chris Jones": {"pos": "DT", "varying_intercept": 0.74},
+    "Osa Odighizuwa": {"pos": "DT", "varying_intercept": 0.61},
+    "Cameron Heyward": {"pos": "DT", "varying_intercept": 0.59},
+    "Jeffery Simmons": {"pos": "DT", "varying_intercept": 0.57},
+    "Leonard Williams": {"pos": "DT", "varying_intercept": 0.51},
+    "Javon Hargrave": {"pos": "DT", "varying_intercept": 0.49},
+    "Grady Jarrett": {"pos": "DT", "varying_intercept": 0.48},
+    "Christian Barmore": {"pos": "DT", "varying_intercept": 0.47},
+    "DeForest Buckner": {"pos": "DT", "varying_intercept": 0.44},
+    # NT
+    "Vita Vea": {"pos": "NT", "varying_intercept": 0.72},
+    "Greg Gaines": {"pos": "NT", "varying_intercept": 0.49},
+    "Kenny Clark": {"pos": "NT", "varying_intercept": 0.48},
+    "Quinnen Williams": {"pos": "NT", "varying_intercept": 0.38},
+    "D.J. Reader": {"pos": "NT", "varying_intercept": 0.33},
+    "Christian Covington": {"pos": "NT", "varying_intercept": 0.24},
+    "Poona Ford": {"pos": "NT", "varying_intercept": 0.13},
+    "Austin Johnson": {"pos": "NT", "varying_intercept": 0.06},
+    "Sebastian Joseph": {"pos": "NT", "varying_intercept": 0.05},
+    "Linval Joseph": {"pos": "NT", "varying_intercept": 0.02},
+}
+
+
+def compute_nguyen_yurko_matthews_strain_multilevel(
+    rusher_trajectory: Sequence[Tuple[float, float]],
+    qb_trajectory: Sequence[Tuple[float, float]],
+    rusher_name: Optional[str] = None,
+    position: str = "DE",
+    dt: float = 0.1,
+) -> Dict[str, Any]:
+    """Compute Nguyen, Yurko & Matthews (arXiv:2305.10262v1, 2024) STRAIN rate + multilevel pass-rusher random intercept.
+
+    STRAIN_{i,t} = -v_{i,t} / d_{i,t} (in s^-1), where v_{i,t} = (d_{i,t} - d_{i,t-1}) / dt.
+    Incorporates the position-specific multilevel varying intercept u_j from Figure 5 of arXiv:2305.10262v1.
+    """
+    base = compute_strain_rate(rusher_trajectory, qb_trajectory, dt=dt)
+    pos_baseline = {"DE": 0.55, "OLB": 0.50, "DT": 0.38, "NT": 0.28}.get(position.upper(), 0.45)
+    entry = PASS_RUSHER_STRAIN_VARYING_INTERCEPTS.get(rusher_name or "", None)
+    varying_intercept = float(entry["varying_intercept"]) if entry else 0.0
+    effective_pos = str(entry["pos"]) if entry else position.upper()
+    multilevel_expected_strain = round(pos_baseline + 0.35 * varying_intercept + 0.65 * float(base["mean_strain"]), 4)
+    return {
+        **base,
+        "rusher_name": rusher_name,
+        "position": effective_pos,
+        "varying_intercept_u_j": round(varying_intercept, 4),
+        "multilevel_expected_strain_s_inv": multilevel_expected_strain,
+        "citation": "Nguyen, Yurko & Matthews (2024), arXiv:2305.10262v1, The American Statistician",
+    }
+
+
+def compute_ibrahim_voronoi_pocket_survival(
+    blindside_voronoi_areas_yd2: Sequence[float],
+    center_voronoi_areas_yd2: Sequence[float],
+    pressure_bin_threshold_yd2: float = 1.51,
+    percentile_threshold_yd2: float = 3.20,
+    median_time_to_throw_frames: int = 22,
+    censor_time_frames: int = 35,
+) -> Dict[str, Any]:
+    """Compute Paul Ibrahim (University of Chicago) 25-Bin Pocket Voronoi Tessellation & Kaplan-Meier Survival.
+
+    Source: Paul Ibrahim, 'A Spatial Framework for Analyzing NFL Offensive Line Play' (PaulIbrahim.pdf):
+      - Partition pocket around QB into 25 spatial bins; angular blindside [150 deg, 300 deg] vs center [60 deg, 120 deg].
+      - Pressure event triggers when pocket bin area < 1.51 yd^2 or total angular Voronoi space < 30th percentile.
+      - Center Voronoi space decays substantially faster than blindside Voronoi space (log-rank chi^2 = 99.2, p < 2e-16).
+    """
+    n_frames = min(len(blindside_voronoi_areas_yd2), len(center_voronoi_areas_yd2), censor_time_frames)
+    if n_frames == 0:
+        return {
+            "frames_evaluated": 0,
+            "blindside_survival_at_throw": 1.0,
+            "center_survival_at_throw": 1.0,
+            "pressure_frame": None,
+            "log_rank_chi2_reference": 99.2,
+        }
+
+    blindside_surv = 1.0
+    center_surv = 1.0
+    pressure_frame: Optional[int] = None
+    blindside_curve: List[float] = []
+    center_curve: List[float] = []
+
+    for t in range(n_frames):
+        b_area = max(0.0, float(blindside_voronoi_areas_yd2[t]))
+        c_area = max(0.0, float(center_voronoi_areas_yd2[t]))
+        # Hazard rises when area drops toward percentile_threshold_yd2 or pressure_bin_threshold_yd2
+        b_hazard = min(0.25, max(0.005, 0.035 * math.exp(-(b_area - pressure_bin_threshold_yd2) / max(0.5, percentile_threshold_yd2))))
+        # Center Voronoi space has steeper early hazard per Ibrahim Section 3.2 (chi^2 = 99.2)
+        c_hazard = min(0.32, max(0.008, 0.052 * math.exp(-(c_area - pressure_bin_threshold_yd2) / max(0.5, percentile_threshold_yd2))))
+        blindside_surv *= (1.0 - b_hazard)
+        center_surv *= (1.0 - c_hazard)
+        blindside_curve.append(round(blindside_surv, 4))
+        center_curve.append(round(center_surv, 4))
+        if pressure_frame is None and (b_area < pressure_bin_threshold_yd2 or c_area < pressure_bin_threshold_yd2):
+            pressure_frame = t + 1
+
+    idx_throw = min(n_frames - 1, max(0, median_time_to_throw_frames - 1))
+    return {
+        "frames_evaluated": n_frames,
+        "blindside_survival_at_throw": blindside_curve[idx_throw],
+        "center_survival_at_throw": center_curve[idx_throw],
+        "center_faster_collapse_delta": round(blindside_curve[idx_throw] - center_curve[idx_throw], 4),
+        "pressure_frame": pressure_frame,
+        "blindside_survival_curve": blindside_curve,
+        "center_survival_curve": center_curve,
+        "log_rank_chi2_reference": 99.2,
+        "citation": "Ibrahim (UChicago), A Spatial Framework for Analyzing NFL Offensive Line Play",
+    }
+
+
+def compute_sharp_pass_rush_protection_adjustment(
+    raw_strain_rate: float,
+    slide_protection_rate: float = 0.0,
+    rb_te_boink_chip_rate: float = 0.0,
+    two_man_post_double_rate: float = 0.0,
+    jump_set_rate: float = 0.0,
+    quick_release_sub2s_rate: float = 0.0,
+) -> Dict[str, float]:
+    """Compute Sharp Football Analysis Pass-Rush Protection Adjustments (Nick Bosa / Aaron Donald study).
+
+    Source: Sharp Football Analysis, 'Pass Rush & Blocking Adjustments: Nick Bosa & Aaron Donald':
+      - Slide protection shifts 3-4 OL to close interior B-gap (Donald/Simmons) or edge (Bosa).
+      - RB/TE 'boink' chip knocks edge rusher off outside hip before releasing into route (delays route by ~0.35s).
+      - Two-man post sets a firm inside post while guard/tackle overtakes rush path.
+      - Jump-set closes space aggressively at snap vs vertical pass-set.
+    """
+    s_slide = max(0.0, min(1.0, float(slide_protection_rate)))
+    s_chip = max(0.0, min(1.0, float(rb_te_boink_chip_rate)))
+    s_double = max(0.0, min(1.0, float(two_man_post_double_rate)))
+    s_jump = max(0.0, min(1.0, float(jump_set_rate)))
+    s_quick = max(0.0, min(1.0, float(quick_release_sub2s_rate)))
+
+    attenuation = (
+        (1.0 - 0.24 * s_slide)
+        * (1.0 - 0.28 * s_chip)
+        * (1.0 - 0.32 * s_double)
+        * (1.0 - 0.14 * s_jump)
+        * (1.0 - 0.20 * s_quick)
+    )
+    attenuation = max(0.30, min(1.0, attenuation))
+    effective_strain = float(raw_strain_rate) * attenuation
+    chip_route_delay_penalty = round(0.18 * s_chip + 0.06 * s_double, 4)
+    return {
+        "raw_strain_rate": round(float(raw_strain_rate), 4),
+        "protection_attenuation_factor": round(attenuation, 4),
+        "effective_strain_rate": round(effective_strain, 4),
+        "chip_route_delay_penalty": chip_route_delay_penalty,
+    }
+
+
+def compute_nikolaou_pelechrinis_team_collapse_pgm(
+    prior_mental_state: Sequence[int],
+    prior_observed_perf: Sequence[int],
+    influence_matrix_R: Sequence[Sequence[float]],
+    self_reliance_r: Sequence[float],
+    psi_mental_to_perf: float = 0.72,
+    phi_perf_to_mental: float = 0.68,
+) -> Dict[str, Any]:
+    """Compute Nikolaou, Pelechrinis & Terzi (arXiv:2402.10243v1, KDD '24) Team Collapse PGM transition.
+
+    Pr(H_i^t | O_{t-1}, H_i^{t-1}) = sum_{j=1}^n R_{ij} * Infl(H_i^t | O_j^{t-1}) + r_i * Infl(H_i^t | H_i^{t-1}),
+    subject to sum_j R_{ij} + r_i = 1, H_i^t in {-1, 0, 1}, O_i^t in {-1, 0, 1}.
+    """
+    n = len(prior_mental_state)
+    if n == 0 or len(prior_observed_perf) != n or len(influence_matrix_R) != n or len(self_reliance_r) != n:
+        raise ValueError("prior states, influence_matrix_R, and self_reliance_r must match team size n > 0")
+
+    states = (-1, 0, 1)
+
+    def infl_dist(source_state: int, strength: float) -> Dict[int, float]:
+        s = max(0.34, min(0.95, float(strength)))
+        rem = (1.0 - s) / 2.0
+        return {k: (s if k == source_state else rem) for k in states}
+
+    mental_probs: List[Dict[int, float]] = []
+    expected_mental: List[float] = []
+    collapse_probs: List[float] = []
+
+    for i in range(n):
+        row_R = [max(0.0, float(x)) for x in influence_matrix_R[i]]
+        r_i = max(0.0, float(self_reliance_r[i]))
+        norm = sum(row_R) + r_i
+        if norm <= 0:
+            raise ValueError(f"row {i} weights must have positive sum")
+        row_R = [x / norm for x in row_R]
+        r_i = r_i / norm
+
+        dist_H = {k: 0.0 for k in states}
+        for j in range(n):
+            d_obs = infl_dist(int(prior_observed_perf[j]), phi_perf_to_mental)
+            for k in states:
+                dist_H[k] += row_R[j] * d_obs[k]
+        d_self = infl_dist(int(prior_mental_state[i]), psi_mental_to_perf)
+        for k in states:
+            dist_H[k] += r_i * d_self[k]
+
+        mental_probs.append({k: round(dist_H[k], 4) for k in states})
+        exp_h = sum(k * dist_H[k] for k in states)
+        expected_mental.append(round(exp_h, 4))
+        collapse_probs.append(round(dist_H[-1], 4))
+
+    team_collapse_risk = sum(collapse_probs) / n
+    return {
+        "player_mental_state_probs": mental_probs,
+        "expected_mental_states": expected_mental,
+        "player_collapse_probs": collapse_probs,
+        "team_collapse_risk": round(team_collapse_risk, 4),
+        "collapse_alert": team_collapse_risk >= 0.45,
+        "citation": "Nikolaou, Pelechrinis & Terzi (2024), arXiv:2402.10243v1 (KDD '24)",
+    }
+

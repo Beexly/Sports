@@ -10,11 +10,17 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from intelligence.coaching.trench_pocket_physics import (  # noqa: E402
+    PASS_RUSHER_STRAIN_VARYING_INTERCEPTS,
     analyze_qb_escape_vectors,
     compute_cox_weibull_pocket_survival,
     compute_fourth_down_uncertainty_gate,
+    compute_ibrahim_voronoi_pocket_survival,
+    compute_nguyen_yurko_matthews_strain_multilevel,
+    compute_nikolaou_pelechrinis_team_collapse_pgm,
     compute_pipping_adjusted_ol_efficiency,
     compute_ruscio_pressure_win_probability,
+    compute_sharp_pass_rush_protection_adjustment,
+    compute_strain_rate,
     compute_weak_link_ol_efficiency,
     cox_weibull_block_survival,
     weak_link_am_gm_clean_pocket_prob,
@@ -66,13 +72,19 @@ def apply_trench_pocket_shock(
 
 
 __all__ = [
+    "PASS_RUSHER_STRAIN_VARYING_INTERCEPTS",
     "analyze_qb_escape_vectors",
     "apply_trench_pocket_shock",
     "bayesian_shrink_p2s",
     "compute_cox_weibull_pocket_survival",
     "compute_fourth_down_uncertainty_gate",
+    "compute_ibrahim_voronoi_pocket_survival",
+    "compute_nguyen_yurko_matthews_strain_multilevel",
+    "compute_nikolaou_pelechrinis_team_collapse_pgm",
     "compute_pipping_adjusted_ol_efficiency",
     "compute_ruscio_pressure_win_probability",
+    "compute_sharp_pass_rush_protection_adjustment",
+    "compute_strain_rate",
     "compute_weak_link_ol_efficiency",
     "cox_weibull_block_survival",
     "trench_survival_drop",

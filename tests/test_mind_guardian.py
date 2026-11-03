@@ -13,6 +13,7 @@ ALLOWED_STATUS = {
     "HIGH_PRIORITY_PRODUCTION_TARGET",
     "GATED_EXPERIMENT_CANDIDATE",
     "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST",
+    "REJECTED_RETRACTED_PAPER",
 }
 ALLOWED_FIDELITY = {
     "DIRECT_FROM_SOURCE",
@@ -26,6 +27,8 @@ WIRED_TESTS = (
     ROOT / "tests" / "test_trench_pipeline_integration.py",
     ROOT / "tests" / "test_week8_post_slate_fixes.py",
     ROOT / "tests" / "test_biomech_kinetic_translation.py",
+    ROOT / "tests" / "test_biomech_quarantine.py",
+    ROOT / "tests" / "test_mnf_card_integrity.py",
 )
 
 

@@ -1,0 +1,196 @@
+{
+  "class": "RESEARCH_TELEMETRY_NOT_FOR_PUBLICATION",
+  "generated_at_utc": "2026-11-03T06:10:52.952174+00:00",
+  "peer_reviewed_spatial_and_pgm_models": {
+    "nguyen_yurko_matthews_strain_multilevel": {
+      "min_distance_yds": 1.8,
+      "strain_series": [
+        0.0,
+        1.1111,
+        2.2727,
+        4.1935,
+        7.2222
+      ],
+      "peak_strain": 7.2222,
+      "mean_strain": 3.6999,
+      "rusher_name": "Jeffery Simmons",
+      "position": "DT",
+      "varying_intercept_u_j": 0.57,
+      "multilevel_expected_strain_s_inv": 2.9844,
+      "citation": "Nguyen, Yurko & Matthews (2024), arXiv:2305.10262v1, The American Statistician"
+    },
+    "ibrahim_voronoi_pocket_survival": {
+      "frames_evaluated": 25,
+      "blindside_survival_at_throw": 0.688,
+      "center_survival_at_throw": 0.4311,
+      "center_faster_collapse_delta": 0.2569,
+      "pressure_frame": 20,
+      "blindside_survival_curve": [
+        0.989,
+        0.9776,
+        0.966,
+        0.954,
+        0.9418,
+        0.9292,
+        0.9164,
+        0.9032,
+        0.8897,
+        0.876,
+        0.8619,
+        0.8475,
+        0.8328,
+        0.8178,
+        0.8026,
+        0.787,
+        0.7712,
+        0.755,
+        0.7387,
+        0.722,
+        0.7051,
+        0.688,
+        0.6707,
+        0.6531,
+        0.6354
+      ],
+      "center_survival_curve": [
+        0.9789,
+        0.9572,
+        0.9349,
+        0.912,
+        0.8886,
+        0.8645,
+        0.8399,
+        0.8148,
+        0.7892,
+        0.7631,
+        0.7366,
+        0.7097,
+        0.6824,
+        0.6549,
+        0.6271,
+        0.5991,
+        0.571,
+        0.5428,
+        0.5147,
+        0.4867,
+        0.4588,
+        0.4311,
+        0.4038,
+        0.377,
+        0.3506
+      ],
+      "log_rank_chi2_reference": 99.2,
+      "citation": "Ibrahim (UChicago), A Spatial Framework for Analyzing NFL Offensive Line Play"
+    },
+    "sharp_pass_rush_protection_adjustment": {
+      "raw_strain_rate": 2.9844,
+      "protection_attenuation_factor": 0.6858,
+      "effective_strain_rate": 2.0466,
+      "chip_route_delay_penalty": 0.0714
+    },
+    "nikolaou_pelechrinis_team_collapse_pgm": {
+      "player_mental_state_probs": [
+        {
+          "-1": 0.48,
+          "0": 0.364,
+          "1": 0.156
+        },
+        {
+          "-1": 0.39,
+          "0": 0.454,
+          "1": 0.156
+        },
+        {
+          "-1": 0.61,
+          "0": 0.234,
+          "1": 0.156
+        },
+        {
+          "-1": 0.494,
+          "0": 0.35,
+          "1": 0.156
+        },
+        {
+          "-1": 0.416,
+          "0": 0.428,
+          "1": 0.156
+        }
+      ],
+      "expected_mental_states": [
+        -0.324,
+        -0.234,
+        -0.454,
+        -0.338,
+        -0.26
+      ],
+      "player_collapse_probs": [
+        0.48,
+        0.39,
+        0.61,
+        0.494,
+        0.416
+      ],
+      "team_collapse_risk": 0.478,
+      "collapse_alert": true,
+      "citation": "Nikolaou, Pelechrinis & Terzi (2024), arXiv:2402.10243v1 (KDD '24)"
+    }
+  },
+  "trench_pocket_physics_v2": {
+    "CHI_offense_vs_SEA_front": {
+      "base_sack_prob": 0.061,
+      "adjusted_sack_prob": 0.0995,
+      "weak_link_efficiency": 0.353,
+      "arithmetic_mean": 0.818,
+      "am_gm_gap": 0.465,
+      "pipping_survival": 0.7678,
+      "qb_p2s": 0.1752
+    },
+    "SEA_offense_vs_CHI_front_with_Simmons": {
+      "base_sack_prob": 0.0625,
+      "adjusted_sack_prob": 0.1107,
+      "weak_link_efficiency": 0.2991,
+      "arithmetic_mean": 0.79,
+      "am_gm_gap": 0.4909,
+      "pipping_survival": 0.7322,
+      "qb_p2s": 0.2049
+    }
+  },
+  "batch9_biomech_and_metabolic_telemetry": {
+    "chi_ol_inertial_dissipation_ratio": 11.3434,
+    "sea_ol_inertial_dissipation_ratio": 10.4897,
+    "jeffery_simmons_wavefront_burst_threshold": 708.46,
+    "elastic_separation_coefficients": {
+      "Rome Odunze": 1.9205,
+      "Luther Burden III": 2.0469,
+      "Kalif Raymond": 2.1147,
+      "Jaxon Smith-Njigba": 1.9559
+    },
+    "secondary_coverage_pde_residual": 5.0832,
+    "swift_viscoelastic_lane_open_index": 2.1791,
+    "pocket_navier_stokes_residual": 839.3256,
+    "caleb_max_kinetic_accel_mps2": 2.9577,
+    "caleb_release_time_s": 0.3583,
+    "darnold_release_time_s": 0.3357,
+    "caleb_tpr_cognitive_probs": {
+      "throw": 0.3566,
+      "scramble": 0.4217,
+      "checkdown": 0.2218
+    },
+    "darnold_tpr_cognitive_probs": {
+      "throw": 0.3487,
+      "scramble": 0.4164,
+      "checkdown": 0.2349
+    },
+    "lumen_field_cleat_turf_slip_prob": 0.3402,
+    "lumen_field_ocular_latency_ms": 26.9397,
+    "lumen_field_aero_drag_n": 1.094,
+    "drive_10snap_lactic_4vec_mM": [
+      1.25,
+      1.148,
+      1.009,
+      0.864
+    ],
+    "drive_10snap_torque_throttle": 0.997,
+    "metabolic_continuity_loss": 0.01188
+  }
+}

@@ -651,3 +651,67 @@ def hurdle_non_negative_proj(
     gate = enforce_route_snap_participation_gate(route_share, snap_share)
     return float(max(0.0, p_part * cond_mean) if gate["eligible"] else 0.0)
 
+
+def recommend_scrimmage_over_receiving_prop(
+    player_name: str,
+    raw_rec_over_prob: float,
+    behind_los_screen_or_jet_share: float,
+    rush_attempt_share: float = 0.0,
+    scrimmage_yards_prop_available: bool = True,
+    receptions_prop_available: bool = True,
+    lateral_hazard_threshold: float = 0.12,
+) -> dict[str, Any]:
+    """Kalif Raymond Lateral/Backward-Pass Scrimmage Gate (MNF CHI @ SEA 2026-11-02 Post-Mortem).
+
+    On MNF (CHI 34 @ SEA 17), Kalif Raymond generated 53 scrimmage yards (clearing 21.5 by 31.5 yards),
+    including a 39-yard catch-and-run. Because Caleb Williams's throw traveled slightly backward
+    (a behind-the-line lateral screen), NFL official scorers ruled the 39-yard gain a RUSH (1 carry, 39 yds)
+    rather than a reception (2 rec, 14 yds), grading OVER 21.5 Receiving Yards as a LOSS.
+
+    Rule:
+      - For any WR/slot/gadget player with behind-the-LOS screen/jet-sweep share >= lateral_hazard_threshold (0.12)
+        or rush_attempt_share >= 0.05, compute the backward-pass lateral reclassification hazard.
+      - Discount pure Receiving Yards OVER probability by (1 - lateral_reclassification_hazard).
+      - When Rush + Rec Yards (Scrimmage Yards) is available, block pure Receiving Yards OVER and route
+        the ticket to Rush + Rec Yards (or Receptions).
+    """
+    screen_jet = max(0.0, min(1.0, float(behind_los_screen_or_jet_share)))
+    rush_sh = max(0.0, min(1.0, float(rush_attempt_share)))
+    lateral_hazard = min(0.45, round(0.55 * screen_jet + 0.65 * rush_sh, 4))
+    adj_rec_prob = round(float(raw_rec_over_prob) * (1.0 - lateral_hazard), 4)
+
+    high_lateral_risk = (screen_jet >= lateral_hazard_threshold) or (rush_sh >= 0.05)
+    if high_lateral_risk and scrimmage_yards_prop_available:
+        return {
+            "player_name": player_name,
+            "raw_rec_over_prob": round(float(raw_rec_over_prob), 4),
+            "adjusted_rec_over_prob": adj_rec_prob,
+            "lateral_reclassification_hazard": lateral_hazard,
+            "pure_rec_yds_publish_allowed": False,
+            "preferred_market": "rush_plus_rec_yards",
+            "decision": "BLOCK_PURE_REC_YDS_USE_SCRIMMAGE",
+            "reason": "HIGH_BACKWARD_PASS_OR_JET_SWEEP_LATERAL_RECLASSIFICATION_HAZARD",
+        }
+    if high_lateral_risk and receptions_prop_available:
+        return {
+            "player_name": player_name,
+            "raw_rec_over_prob": round(float(raw_rec_over_prob), 4),
+            "adjusted_rec_over_prob": adj_rec_prob,
+            "lateral_reclassification_hazard": lateral_hazard,
+            "pure_rec_yds_publish_allowed": False,
+            "preferred_market": "receptions",
+            "decision": "PENALIZE_PURE_REC_YDS_USE_RECEPTIONS",
+            "reason": "HIGH_BACKWARD_PASS_OR_JET_SWEEP_LATERAL_RECLASSIFICATION_HAZARD",
+        }
+    return {
+        "player_name": player_name,
+        "raw_rec_over_prob": round(float(raw_rec_over_prob), 4),
+        "adjusted_rec_over_prob": adj_rec_prob,
+        "lateral_reclassification_hazard": lateral_hazard,
+        "pure_rec_yds_publish_allowed": True,
+        "preferred_market": "receiving_yards",
+        "decision": "ALLOW_PURE_REC_YDS",
+        "reason": "LOW_LATERAL_HAZARD",
+    }
+
+
