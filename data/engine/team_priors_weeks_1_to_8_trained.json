@@ -1,0 +1,225 @@
+{
+ "generated_at_utc": "2026-11-03T16:29:04+00:00",
+ "seed": 20261103,
+ "source_parquet": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\data\\play_by_play_2026.parquet",
+ "plays_loaded": 13131,
+ "weeks_available": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "week8_status": "ABSENT_FROM_SOURCE_PARQUET",
+ "week8_note": "Week 8 play-by-play is not present in the source parquet. This run does NOT fabricate week-8 rows; the replay covers the weeks that exist and the gap is reported. Supply --week8-rows to extend coverage once real week-8 PBP lands.",
+ "features": [
+  "down",
+  "ydstogo",
+  "yardline_100",
+  "score_differential",
+  "qtr",
+  "half_seconds_remaining"
+ ],
+ "epochs": [
+  {
+   "epoch": 1,
+   "plays_graded": 11224,
+   "weeks_covered": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "brier_pass": 0.212546,
+   "logloss_pass": 0.614978,
+   "ece_pass": 0.031889,
+   "prior_alpha_sum": 15204.0,
+   "prior_beta_sum": 11122.0
+  },
+  {
+   "epoch": 2,
+   "plays_graded": 11224,
+   "weeks_covered": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "brier_pass": 0.211515,
+   "logloss_pass": 0.612204,
+   "ece_pass": 0.022971,
+   "prior_alpha_sum": 30376.0,
+   "prior_beta_sum": 22212.0
+  }
+ ],
+ "secondary_epa_rmse_last_week": 1.376564,
+ "team_priors": {
+  "ARI": {
+   "pass_rate_alpha": 1185.0,
+   "pass_rate_beta": 713.0,
+   "pass_rate_posterior_mean": 0.624341
+  },
+  "ATL": {
+   "pass_rate_alpha": 865.0,
+   "pass_rate_beta": 797.0,
+   "pass_rate_posterior_mean": 0.520457
+  },
+  "BAL": {
+   "pass_rate_alpha": 873.0,
+   "pass_rate_beta": 825.0,
+   "pass_rate_posterior_mean": 0.514134
+  },
+  "BUF": {
+   "pass_rate_alpha": 733.0,
+   "pass_rate_beta": 673.0,
+   "pass_rate_posterior_mean": 0.521337
+  },
+  "CAR": {
+   "pass_rate_alpha": 997.0,
+   "pass_rate_beta": 565.0,
+   "pass_rate_posterior_mean": 0.638284
+  },
+  "CHI": {
+   "pass_rate_alpha": 1033.0,
+   "pass_rate_beta": 957.0,
+   "pass_rate_posterior_mean": 0.519095
+  },
+  "CIN": {
+   "pass_rate_alpha": 917.0,
+   "pass_rate_beta": 521.0,
+   "pass_rate_posterior_mean": 0.637691
+  },
+  "CLE": {
+   "pass_rate_alpha": 945.0,
+   "pass_rate_beta": 713.0,
+   "pass_rate_posterior_mean": 0.569964
+  },
+  "DAL": {
+   "pass_rate_alpha": 1121.0,
+   "pass_rate_beta": 641.0,
+   "pass_rate_posterior_mean": 0.636209
+  },
+  "DEN": {
+   "pass_rate_alpha": 909.0,
+   "pass_rate_beta": 665.0,
+   "pass_rate_posterior_mean": 0.57751
+  },
+  "DET": {
+   "pass_rate_alpha": 941.0,
+   "pass_rate_beta": 641.0,
+   "pass_rate_posterior_mean": 0.594817
+  },
+  "GB": {
+   "pass_rate_alpha": 1141.0,
+   "pass_rate_beta": 549.0,
+   "pass_rate_posterior_mean": 0.675148
+  },
+  "HOU": {
+   "pass_rate_alpha": 1037.0,
+   "pass_rate_beta": 661.0,
+   "pass_rate_posterior_mean": 0.610718
+  },
+  "IND": {
+   "pass_rate_alpha": 1033.0,
+   "pass_rate_beta": 793.0,
+   "pass_rate_posterior_mean": 0.565717
+  },
+  "JAX": {
+   "pass_rate_alpha": 773.0,
+   "pass_rate_beta": 645.0,
+   "pass_rate_posterior_mean": 0.545134
+  },
+  "KC": {
+   "pass_rate_alpha": 793.0,
+   "pass_rate_beta": 621.0,
+   "pass_rate_posterior_mean": 0.56082
+  },
+  "LA": {
+   "pass_rate_alpha": 1157.0,
+   "pass_rate_beta": 713.0,
+   "pass_rate_posterior_mean": 0.618717
+  },
+  "LAC": {
+   "pass_rate_alpha": 805.0,
+   "pass_rate_beta": 677.0,
+   "pass_rate_posterior_mean": 0.543185
+  },
+  "LV": {
+   "pass_rate_alpha": 1093.0,
+   "pass_rate_beta": 665.0,
+   "pass_rate_posterior_mean": 0.621729
+  },
+  "MIA": {
+   "pass_rate_alpha": 665.0,
+   "pass_rate_beta": 677.0,
+   "pass_rate_posterior_mean": 0.495529
+  },
+  "MIN": {
+   "pass_rate_alpha": 725.0,
+   "pass_rate_beta": 681.0,
+   "pass_rate_posterior_mean": 0.515647
+  },
+  "NE": {
+   "pass_rate_alpha": 929.0,
+   "pass_rate_beta": 785.0,
+   "pass_rate_posterior_mean": 0.542007
+  },
+  "NO": {
+   "pass_rate_alpha": 1149.0,
+   "pass_rate_beta": 677.0,
+   "pass_rate_posterior_mean": 0.629244
+  },
+  "NYG": {
+   "pass_rate_alpha": 1029.0,
+   "pass_rate_beta": 781.0,
+   "pass_rate_posterior_mean": 0.568508
+  },
+  "NYJ": {
+   "pass_rate_alpha": 909.0,
+   "pass_rate_beta": 689.0,
+   "pass_rate_posterior_mean": 0.568836
+  },
+  "PHI": {
+   "pass_rate_alpha": 1013.0,
+   "pass_rate_beta": 629.0,
+   "pass_rate_posterior_mean": 0.616931
+  },
+  "PIT": {
+   "pass_rate_alpha": 1137.0,
+   "pass_rate_beta": 601.0,
+   "pass_rate_posterior_mean": 0.6542
+  },
+  "SEA": {
+   "pass_rate_alpha": 961.0,
+   "pass_rate_beta": 813.0,
+   "pass_rate_posterior_mean": 0.541714
+  },
+  "SF": {
+   "pass_rate_alpha": 865.0,
+   "pass_rate_beta": 737.0,
+   "pass_rate_posterior_mean": 0.53995
+  },
+  "TB": {
+   "pass_rate_alpha": 909.0,
+   "pass_rate_beta": 821.0,
+   "pass_rate_posterior_mean": 0.525434
+  },
+  "TEN": {
+   "pass_rate_alpha": 877.0,
+   "pass_rate_beta": 641.0,
+   "pass_rate_posterior_mean": 0.577734
+  },
+  "WAS": {
+   "pass_rate_alpha": 857.0,
+   "pass_rate_beta": 645.0,
+   "pass_rate_posterior_mean": 0.570573
+  }
+ },
+ "determinism": "expanding-window walk-forward, lbfgs solver, fixed seed; no stochastic step feeds reported metrics"
+}

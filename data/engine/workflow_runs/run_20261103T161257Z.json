@@ -1,0 +1,300 @@
+{
+ "run_id": "run_20261103T161257Z",
+ "started_at_utc": "2026-11-03T16:12:57+00:00",
+ "dry_run": true,
+ "allow_video": false,
+ "enforce_gate": false,
+ "stage_limit": 5,
+ "seats": [
+  {
+   "seat": 0,
+   "name": "cleanup_doctor",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "disk_has_headroom": true,
+    "git_head_reachable": true,
+    "ledger_verified_record": true,
+    "ledger_secondary_views": true
+   },
+   "details": {
+    "disk": {
+     "total_gb": 510.9,
+     "free_gb": 3.54,
+     "used_pct": 99.3,
+     "under_pressure": true
+    },
+    "npm_cache": {
+     "path": "C:\\Users\\Garrett\\AppData\\Local\\npm-cache",
+     "size_gb": 2.71,
+     "action": "WOULD_CLEAN (dry-run)"
+    },
+    "git": {
+     "head": "a755dadf4",
+     "branch": "hermes/week8-forensic-tracks-1-3",
+     "reachable": true
+    },
+    "ledger": {
+     "path": "data\\engine\\new_engine_official_ledger_2026.json",
+     "exists": true,
+     "verified_record": "36-13-1",
+     "verified_record_matches": true,
+     "verified_net_units": "+20.14u",
+     "secondary_view_records": [
+      "43-17-1",
+      "43-21-1",
+      "40-15-1",
+      "38-13-1",
+      "47-19-1"
+     ],
+     "secondary_missing": []
+    },
+    "env": {
+     "env_file": "MISSING",
+     "declared_keys": 112,
+     "set": [],
+     "missing": [
+      "ADMIN_EMAILS",
+      "AIRWAVE_BEAT_REPORTS_ENABLED",
+      "AIRWAVE_ENABLED",
+      "AIRWAVE_PODCAST_RSS_ENABLED",
+      "AIRWAVE_SIRIUSXM_LEGAL_ACK",
+      "AIRWAVE_STUDIO_HANDOFF_ENABLED",
+      "AIRWAVE_TRANSCRIPT_FILE_PATH",
+      "AIRWAVE_TRANSCRIPT_IMPORT_ENABLED",
+      "AIRWAVE_TRANSCRIPT_SHEET_ID",
+      "AIRWAVE_TRANSCRIPT_WORKSHEET_NAME",
+      "AIRWAVE_YOUTUBE_FEEDS_ENABLED",
+      "ALERTS_EMAIL_FROM",
+      "ANONYMOUS_MODERATION_REPORTS_ENABLED",
+      "ANTHROPIC_API_KEY",
+      "API_SPORTS_KEY",
+      "AWS_ACCESS_KEY_ID",
+      "AWS_BEDROCK_REGION",
+      "AWS_SECRET_ACCESS_KEY",
+      "AWS_SESSION_TOKEN",
+      "AZURE_FOUNDRY_API_KEY",
+      "AZURE_FOUNDRY_BASE_URL",
+      "AZURE_FOUNDRY_MODEL_MAP",
+      "AZURE_FOUNDRY_RESOURCE",
+      "BACKTEST_HARNESS_ENABLED",
+      "BACKTEST_HARNESS_OUTPUT_DIR",
+      "BEDROCK_MODEL_MAP",
+      "CALIBRATION_ADJUSTMENTS_ENABLED",
+      "CANONICAL_HISTORY_ENABLED",
+      "CEREBRAS_API_KEY",
+      "CLAUDE_PROVIDER",
+      "CONFIDENCE_DISPLAY_MODE",
+      "CONTENT_FREE_LANE_ENABLED",
+      "CRON_SECRET",
+      "DATABASE_URL",
+      "DEMO_PICKS_ENABLED",
+      "DERIVED_MODEL_HISTORY_ENABLED",
+      "DEV_ADMIN_EMAIL",
+      "DEV_ADMIN_NAME",
+      "DEV_FAKE_ADMIN",
+      "DIRECT_URL",
+      "FABLE_AWS_ALLOW_DEPLOY",
+      "FABLE_AWS_ALLOW_EXPERIMENTS",
+      "FABLE_AWS_ALLOW_PAID_RESOURCES",
+      "FABLE_AWS_MAX_MONTHLY_COST_USD",
+      "FANTASY_PUBLIC_TOOLS_ENABLED",
+      "FEATURED_PICK_PROMOTION_ENABLED",
+      "FORCE_NO_BET_IF_STALE",
+      "FREE_LANE_SECONDARY_API_KEY",
+      "FREE_LANE_SECONDARY_BASE_URL",
+      "FREE_LANE_SECONDARY_LEDGER_PREFIX",
+      "FREE_LANE_SECONDARY_MODEL",
+      "GOOGLE_APPLICATION_CREDENTIALS_JSON",
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "GOOGLE_VERTEX_PROJECT",
+      "GOOGLE_VERTEX_REGION",
+      "GSE_FABLE_LIVE_PUBLIC_DEMO_ENABLED",
+      "HEALTH_ALERT_WEBHOOK_URL",
+      "HIGGSFIELD_GENERATION_ENABLED",
+      "INTERNAL_LLM_API_KEY",
+      "INTERNAL_LLM_BASE_URL",
+      "INTERNAL_LLM_MODEL",
+      "JARVIS_MEMORY_WRITE_ENABLED",
+      "JYNX_CLOUD_FAILOVER",
+      "JYNX_CLOUD_ORDER",
+      "JYNX_MODE",
+      "LINE_ARCHIVE_ENABLED",
+      "LINE_ARCHIVE_EU_PINNACLE",
+      "MIN_DATA_QUALITY_FOR_GAME_LOG",
+      "MIN_SETTLED_PICKS_FOR_LEARNING",
+      "MODERATION_REPORT_HMAC_SECRET",
+      "MODERATION_REPORT_TRUSTED_IP_HEADER",
+      "NEXTAUTH_SECRET",
+      "NEXTAUTH_URL",
+      "NEXT_PUBLIC_ANALYTICS_ENABLED",
+      "NEXT_PUBLIC_APP_URL",
+      "NEXT_PUBLIC_CF_BEACON_TOKEN",
+      "NEXT_PUBLIC_CLARITY_PROJECT_ID",
+      "NEXT_PUBLIC_SENTRY_DSN",
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+      "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+      "NODE_ENV",
+      "ODDS_API_IO_KEY",
+      "OUTCOME_LEARNING_ENABLED",
+      "OWNER_VISUAL_SPEND_APPROVED",
+      "PERFORMANCE_STATS_ENABLED",
+      "PRICING_PHASE",
+      "PROJECTIONS_PROVIDER",
+      "PUBLIC_BLOG_ENABLED",
+      "PUBLIC_PICKS_ENABLED",
+      "REDIS_URL",
+      "RESEND_API_KEY",
+      "SEALED_ENGINE_ENABLED",
+      "SENTRY_DSN",
+      "SNAPSHOT_RETENTION_DAYS",
+      "SOURCE_SNAPSHOT_MODE",
+      "STRIPE_ELITE_ANNUAL_PRICE_ID",
+      "STRIPE_ELITE_MONTHLY_PRICE_ID",
+      "STRIPE_FANTASY_ANNUAL_PRICE_ID",
+      "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+      "STRIPE_PRO_ANNUAL_PRICE_ID",
+      "STRIPE_PRO_MONTHLY_PRICE_ID",
+      "STRIPE_SECRET_KEY",
+      "STRIPE_TERMS_CONSENT_ENABLED",
+      "STRIPE_WEBHOOK_SECRET",
+      "TEAM_RATES_AVAILABLE",
+      "THE_ODDS_API_KEY",
+      "VAPID_PRIVATE_KEY",
+      "VAPID_SUBJECT",
+      "VERTEX_MODEL_MAP",
+      "WAITLIST_WELCOME_EMAIL",
+      "WATCHLIST_ALERTS_ENABLED"
+     ]
+    }
+   }
+  },
+  {
+   "seat": 1,
+   "name": "downloads_ingest_gate",
+   "status": "FAIL",
+   "passed": false,
+   "checks": {
+    "all_on_disk": true,
+    "all_indexed": false
+   },
+   "details": {
+    "manifest": "data\\engine\\INGESTION-MANIFEST-2026-11-02.json",
+    "manifest_files": 386,
+    "targets": [
+     {
+      "file": "DKSalaries (2).csv",
+      "on_disk": true,
+      "indexed": false
+     },
+     {
+      "file": "2026-11-01-PREGAME-DATA-PACK (2).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-01-PULL-LIST (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PDF-LINKS (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-X-100-DOCUMENTED (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-INSTAGRAM-50-DOCUMENTED (1).md",
+      "on_disk": true,
+      "indexed": true
+     }
+    ],
+    "missing_on_disk": [],
+    "not_indexed": [
+     "DKSalaries (2).csv"
+    ],
+    "remediation": "regenerate the manifest (python scripts/ingest/build_downloads_manifest.py)"
+   }
+  },
+  {
+   "seat": 2,
+   "name": "replay_trainer",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "trainer_ran": true,
+    "cpu_only": true
+   },
+   "details": {
+    "script": "scripts\\ops\\replay_weeks_1_to_8_trainer.py",
+    "exists": true,
+    "cpu_only": true,
+    "trainer": "WOULD_RUN (dry-run)",
+    "video_harvester": "SKIPPED (needs --allow-video)"
+   }
+  },
+  {
+   "seat": 3,
+   "name": "out_of_sample_calibration",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {
+    "script_exists": true
+   },
+   "details": {
+    "script": "tests\\verify_out_of_sample_calibration.py",
+    "exists": true,
+    "enforce_gate": false,
+    "run": "WOULD_RUN (dry-run)"
+   }
+  },
+  {
+   "seat": 4,
+   "name": "dfs_packets_builder",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {
+    "script_exists": true
+   },
+   "details": {
+    "script": "scripts\\ops\\run_week9_gpp_portfolio.py",
+    "exists": true,
+    "alternative": "scripts\\ops\\build_sunday_monday_expanded_dfs.py",
+    "run": "WOULD_RUN (dry-run)"
+   }
+  },
+  {
+   "seat": 5,
+   "name": "pytest",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {
+    "ran": false
+   },
+   "details": {
+    "suite": "tests",
+    "voice_digest_stub": "NOT_IMPLEMENTED (reported, not faked)",
+    "run": "WOULD_RUN (dry-run)"
+   }
+  }
+ ],
+ "summary": {
+  "seats_run": 6,
+  "passed": 2,
+  "failed": [
+   "downloads_ingest_gate"
+  ],
+  "skipped": [
+   "out_of_sample_calibration",
+   "dfs_packets_builder",
+   "pytest"
+  ],
+  "finished_at_utc": "2026-11-03T16:13:03+00:00"
+ },
+ "updated_at_utc": "2026-11-03T16:13:03+00:00"
+}

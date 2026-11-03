@@ -1,0 +1,320 @@
+{
+  "slate": {
+    "row_count": 570,
+    "unique_games": [
+      "ARI@SEA 11/08/2026 04:25PM ET",
+      "CLE@NO 11/08/2026 01:00PM ET",
+      "DAL@IND 11/08/2026 01:00PM ET",
+      "DEN@CAR 11/08/2026 01:00PM ET",
+      "DET@MIA 11/08/2026 01:00PM ET",
+      "GB@NE 11/08/2026 04:25PM ET",
+      "HOU@LAC 11/08/2026 04:05PM ET",
+      "LAR@WAS 11/08/2026 01:00PM ET",
+      "LV@SF 11/08/2026 04:25PM ET",
+      "NYG@PHI 11/08/2026 01:00PM ET",
+      "NYJ@KC 11/08/2026 01:00PM ET"
+    ],
+    "detected_nfl_week": 9,
+    "is_week8_retrospective_file": false,
+    "is_week9_live_file": true
+  },
+  "players_scored": 570,
+  "games": 11,
+  "sims": 120,
+  "opponent_rosters": 120,
+  "win_threshold_p99": 109.91,
+  "simulated_mean_pts": 8.91,
+  "simulated_max_pts": 155.65,
+  "portfolio_size": 3,
+  "submodular": {
+    "selected_lineup_indices": [
+      0,
+      1,
+      2
+    ],
+    "marginal_win_prob_gains": [
+      0.983333,
+      0.016667,
+      0.0
+    ],
+    "cumulative_portfolio_win_prob": 1.0,
+    "nemhauser_wolsey_lower_bound_ratio": 0.6321
+  },
+  "newell_payout": {
+    "lineup_mean_pts": 181.801,
+    "lineup_std_pts": 43.005,
+    "top_tier_win_prob": 0.7702,
+    "expected_payout_usd": 430.0052
+  },
+  "best_lineup_index": 1,
+  "lineups": [
+    {
+      "index": 1,
+      "win_prob_vs_p99_field": 0.9833,
+      "salary": 50000,
+      "proj_sum": 181.8,
+      "teams": [
+        "ARI",
+        "DET",
+        "GB",
+        "KC",
+        "LAR",
+        "SEA"
+      ],
+      "players": [
+        {
+          "player": "Jahmyr Gibbs",
+          "position": "RB",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 10000,
+          "projection": 32.15999984741211
+        },
+        {
+          "player": "Jaxon Smith-Njigba",
+          "position": "WR",
+          "team": "SEA",
+          "opponent": "ARI",
+          "salary": 9300,
+          "projection": 34.66999816894531
+        },
+        {
+          "player": "Kenneth Walker III",
+          "position": "RB",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 9000,
+          "projection": 28.43000030517578
+        },
+        {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 6800,
+          "projection": 23.450000762939453
+        },
+        {
+          "player": "Drew Lock",
+          "position": "QB",
+          "team": "SEA",
+          "opponent": "ARI",
+          "salary": 4000,
+          "projection": 17.1299991607666
+        },
+        {
+          "player": "Davante Adams",
+          "position": "WR",
+          "team": "LAR",
+          "opponent": "WAS",
+          "salary": 3000,
+          "projection": 18.670000076293945
+        },
+        {
+          "player": "Tyquan Thornton",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3000,
+          "projection": 13.260000228881836
+        },
+        {
+          "player": "Hunter Long",
+          "position": "TE",
+          "team": "ARI",
+          "opponent": "SEA",
+          "salary": 2500,
+          "projection": 6.760000228881836
+        },
+        {
+          "player": "Packers",
+          "position": "DST",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 2400,
+          "projection": 7.269999980926514
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "win_prob_vs_p99_field": 0.975,
+      "salary": 49800,
+      "proj_sum": 179.89,
+      "teams": [
+        "ARI",
+        "DEN",
+        "DET",
+        "KC",
+        "LAR",
+        "NYG",
+        "SEA"
+      ],
+      "players": [
+        {
+          "player": "Jahmyr Gibbs",
+          "position": "RB",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 10000,
+          "projection": 32.15999984741211
+        },
+        {
+          "player": "Jaxon Smith-Njigba",
+          "position": "WR",
+          "team": "SEA",
+          "opponent": "ARI",
+          "salary": 9300,
+          "projection": 34.66999816894531
+        },
+        {
+          "player": "Kenneth Walker III",
+          "position": "RB",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 9000,
+          "projection": 28.43000030517578
+        },
+        {
+          "player": "Isaiah Likely",
+          "position": "TE",
+          "team": "NYG",
+          "opponent": "PHI",
+          "salary": 5000,
+          "projection": 16.68000030517578
+        },
+        {
+          "player": "Gardner Minshew II",
+          "position": "QB",
+          "team": "ARI",
+          "opponent": "SEA",
+          "salary": 4500,
+          "projection": 20.260000228881836
+        },
+        {
+          "player": "Zay Jones",
+          "position": "WR",
+          "team": "ARI",
+          "opponent": "SEA",
+          "salary": 3000,
+          "projection": 7.880000114440918
+        },
+        {
+          "player": "Davante Adams",
+          "position": "WR",
+          "team": "LAR",
+          "opponent": "WAS",
+          "salary": 3000,
+          "projection": 18.670000076293945
+        },
+        {
+          "player": "Tyquan Thornton",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3000,
+          "projection": 13.260000228881836
+        },
+        {
+          "player": "Broncos",
+          "position": "DST",
+          "team": "DEN",
+          "opponent": "CAR",
+          "salary": 3000,
+          "projection": 7.869999885559082
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "win_prob_vs_p99_field": 0.975,
+      "salary": 49800,
+      "proj_sum": 179.8,
+      "teams": [
+        "DEN",
+        "DET",
+        "GB",
+        "KC",
+        "LAR",
+        "LV",
+        "SEA",
+        "SF"
+      ],
+      "players": [
+        {
+          "player": "Jahmyr Gibbs",
+          "position": "RB",
+          "team": "DET",
+          "opponent": "MIA",
+          "salary": 10000,
+          "projection": 32.15999984741211
+        },
+        {
+          "player": "Jaxon Smith-Njigba",
+          "position": "WR",
+          "team": "SEA",
+          "opponent": "ARI",
+          "salary": 9300,
+          "projection": 34.66999816894531
+        },
+        {
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "team": "GB",
+          "opponent": "NE",
+          "salary": 6800,
+          "projection": 23.450000762939453
+        },
+        {
+          "player": "George Kittle",
+          "position": "TE",
+          "team": "SF",
+          "opponent": "LV",
+          "salary": 6000,
+          "projection": 15.710000038146973
+        },
+        {
+          "player": "Kirk Cousins",
+          "position": "QB",
+          "team": "LV",
+          "opponent": "SF",
+          "salary": 5300,
+          "projection": 23.479999542236328
+        },
+        {
+          "player": "Michael Mayer",
+          "position": "TE",
+          "team": "LV",
+          "opponent": "SF",
+          "salary": 3400,
+          "projection": 10.520000457763672
+        },
+        {
+          "player": "Davante Adams",
+          "position": "WR",
+          "team": "LAR",
+          "opponent": "WAS",
+          "salary": 3000,
+          "projection": 18.670000076293945
+        },
+        {
+          "player": "Tyquan Thornton",
+          "position": "WR",
+          "team": "KC",
+          "opponent": "NYJ",
+          "salary": 3000,
+          "projection": 13.260000228881836
+        },
+        {
+          "player": "Broncos",
+          "position": "DST",
+          "team": "DEN",
+          "opponent": "CAR",
+          "salary": 3000,
+          "projection": 7.869999885559082
+        }
+      ]
+    }
+  ],
+  "provenance": "projections anchored to DraftKings AvgPointsPerGame; per-position decomposition fixed and documented in run_week9_gpp_portfolio.py; RESEARCH ARTIFACT, not a published play set"
+}
