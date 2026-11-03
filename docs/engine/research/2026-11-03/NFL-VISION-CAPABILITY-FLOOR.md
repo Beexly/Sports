@@ -128,7 +128,31 @@ Verified directly against the arXiv API on 2026-11-03.
 
 ---
 
-## 8. Next actions (ordered by leverage)
+## 8. Detector stack — benchmarked, not assumed
+
+Head-to-head on 10 live-play frames from `frames_chi_vs_car`, conf 0.25. A live
+pre-snap broadcast shot has 22 players on the field.
+
+| Model | Classes | Counts | mean abs err vs 22 | Max |
+|---|---|---|---|---|
+| Removesurgery player detection | player, referee | 2,24,25,25,20,5,42,47,39,24 | 11.1 | 47 |
+| lmarte17 gridiron-ai (MIT) | defense, oline, qb, ref, running_back, tight_end, wide_receiver | 5,22,19,14,3,1,23,22,17,10 | 8.6 | 23 |
+
+Removesurgery has better recall on clean frames but explodes to 39-47 on wide
+shots (crowd and sideline personnel) - that is what forced the field-mask and
+plausibility gates in `broadcast_cv.py`. Gridiron never exceeds 23, is
+**role-labelled** (separates oline from defense from wide_receiver - exactly the
+signal a formation model needs), and is **MIT-licensed**, so it is usable
+commercially where the Removesurgery weights are not.
+
+Decision: gridiron-ai primary, Removesurgery a field-mask-gated recall backup.
+Working stack: detection 49.6 MB + field segmentation 22.8 MB + pose ONNX
+11.3 MB + jersey OCR 20.8 MB = **~104 MB**.
+
+Caveat: measured at library defaults on 640x360 sources. Re-run at higher
+`imgsz` before treating these as final rankings.
+
+## 9. Next actions (ordered by leverage)
 
 1. Retrain the shell model on BDB 2025 (16,124 plays) with game-grouped CV; report
    per-class recall, especially Cover 4 and Cover 6 where the rule-based version
