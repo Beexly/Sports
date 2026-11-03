@@ -56,6 +56,15 @@ LEDGER_VERIFIED_RECORD = "36-13-1"
 LEDGER_SECONDARY_RECORDS = ["38-13-1", "40-15-1", "47-19-1"]
 
 
+def _npm_cmd(*args: str) -> list[str] | None:
+    """Resolve npm on Windows (npm.cmd) — bare "npm" fails CreateProcess."""
+    for name in ("npm", "npm.cmd", "npm.bat"):
+        found = shutil.which(name)
+        if found:
+            return [found, *args]
+    return None
+
+
 def _rel(p: Path) -> str:
     """Path relative to the repo when possible, absolute otherwise."""
     try:
@@ -103,8 +112,14 @@ def seat0_cleanup_doctor(dry_run: bool) -> dict:
         if dry_run:
             details["npm_cache"]["action"] = "WOULD_CLEAN (dry-run)"
         else:
-            details["npm_cache"]["action"] = _run(["npm", "cache", "clean", "--force"], timeout=180)
-            details["npm_cache"]["free_gb_after"] = round(shutil.disk_usage("C:/").free / 1e9, 2)
+            cmd = _npm_cmd("cache", "clean", "--force")
+            if cmd is None:
+                details["npm_cache"]["action"] = "UNAVAILABLE (npm not on PATH)"
+            else:
+                details["npm_cache"]["action"] = _run(cmd, timeout=180)
+                details["npm_cache"]["free_gb_after"] = round(
+                    shutil.disk_usage("C:/").free / 1e9, 2
+                )
     else:
         details["npm_cache"]["action"] = "SKIPPED (disk not under pressure)"
 

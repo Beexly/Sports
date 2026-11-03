@@ -173,6 +173,16 @@ def test_seat_crash_is_captured_not_raised(isolated_runs_dir, monkeypatch):
     assert "simulated seat crash" in state["seats"][0]["details"]["error"]
 
 
+def test_npm_cmd_resolves_or_is_none():
+    """Windows needs npm.cmd; a bare 'npm' string fails CreateProcess."""
+    cmd = wr._npm_cmd("cache", "clean", "--force")
+    if cmd is not None:
+        assert Path(cmd[0]).exists(), cmd[0]
+        assert cmd[1:] == ["cache", "clean", "--force"]
+    else:
+        assert cmd is None  # npm genuinely absent is acceptable, a crash is not
+
+
 def _fake(seat, status):
     return {
         "seat": seat,

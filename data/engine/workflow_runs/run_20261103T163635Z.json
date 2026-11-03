@@ -1,0 +1,322 @@
+{
+ "run_id": "run_20261103T163635Z",
+ "started_at_utc": "2026-11-03T16:36:35+00:00",
+ "dry_run": false,
+ "allow_video": false,
+ "enforce_gate": false,
+ "stage_limit": 5,
+ "seats": [
+  {
+   "seat": 0,
+   "name": "cleanup_doctor",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "disk_has_headroom": true,
+    "git_head_reachable": true,
+    "ledger_verified_record": true,
+    "ledger_secondary_views": true
+   },
+   "details": {
+    "disk": {
+     "total_gb": 510.9,
+     "free_gb": 5.73,
+     "used_pct": 98.9,
+     "under_pressure": true
+    },
+    "npm_cache": {
+     "path": "C:\\Users\\Garrett\\AppData\\Local\\npm-cache",
+     "size_gb": 0.56,
+     "action": {
+      "cmd": "C:\\Program Files\\nodejs\\npm.CMD cache clean --force",
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": "npm warn using --force Recommended protections disabled.\n"
+     },
+     "free_gb_after": 5.73
+    },
+    "git": {
+     "head": "509059000",
+     "branch": "hermes/week8-forensic-tracks-1-3",
+     "reachable": true
+    },
+    "ledger": {
+     "path": "data\\engine\\new_engine_official_ledger_2026.json",
+     "exists": true,
+     "verified_record": "36-13-1",
+     "verified_record_matches": true,
+     "verified_net_units": "+20.14u",
+     "secondary_view_records": [
+      "43-17-1",
+      "43-21-1",
+      "40-15-1",
+      "38-13-1",
+      "47-19-1"
+     ],
+     "secondary_missing": []
+    },
+    "env": {
+     "env_file": "MISSING",
+     "declared_keys": 112,
+     "set": [],
+     "missing": [
+      "ADMIN_EMAILS",
+      "AIRWAVE_BEAT_REPORTS_ENABLED",
+      "AIRWAVE_ENABLED",
+      "AIRWAVE_PODCAST_RSS_ENABLED",
+      "AIRWAVE_SIRIUSXM_LEGAL_ACK",
+      "AIRWAVE_STUDIO_HANDOFF_ENABLED",
+      "AIRWAVE_TRANSCRIPT_FILE_PATH",
+      "AIRWAVE_TRANSCRIPT_IMPORT_ENABLED",
+      "AIRWAVE_TRANSCRIPT_SHEET_ID",
+      "AIRWAVE_TRANSCRIPT_WORKSHEET_NAME",
+      "AIRWAVE_YOUTUBE_FEEDS_ENABLED",
+      "ALERTS_EMAIL_FROM",
+      "ANONYMOUS_MODERATION_REPORTS_ENABLED",
+      "ANTHROPIC_API_KEY",
+      "API_SPORTS_KEY",
+      "AWS_ACCESS_KEY_ID",
+      "AWS_BEDROCK_REGION",
+      "AWS_SECRET_ACCESS_KEY",
+      "AWS_SESSION_TOKEN",
+      "AZURE_FOUNDRY_API_KEY",
+      "AZURE_FOUNDRY_BASE_URL",
+      "AZURE_FOUNDRY_MODEL_MAP",
+      "AZURE_FOUNDRY_RESOURCE",
+      "BACKTEST_HARNESS_ENABLED",
+      "BACKTEST_HARNESS_OUTPUT_DIR",
+      "BEDROCK_MODEL_MAP",
+      "CALIBRATION_ADJUSTMENTS_ENABLED",
+      "CANONICAL_HISTORY_ENABLED",
+      "CEREBRAS_API_KEY",
+      "CLAUDE_PROVIDER",
+      "CONFIDENCE_DISPLAY_MODE",
+      "CONTENT_FREE_LANE_ENABLED",
+      "CRON_SECRET",
+      "DATABASE_URL",
+      "DEMO_PICKS_ENABLED",
+      "DERIVED_MODEL_HISTORY_ENABLED",
+      "DEV_ADMIN_EMAIL",
+      "DEV_ADMIN_NAME",
+      "DEV_FAKE_ADMIN",
+      "DIRECT_URL",
+      "FABLE_AWS_ALLOW_DEPLOY",
+      "FABLE_AWS_ALLOW_EXPERIMENTS",
+      "FABLE_AWS_ALLOW_PAID_RESOURCES",
+      "FABLE_AWS_MAX_MONTHLY_COST_USD",
+      "FANTASY_PUBLIC_TOOLS_ENABLED",
+      "FEATURED_PICK_PROMOTION_ENABLED",
+      "FORCE_NO_BET_IF_STALE",
+      "FREE_LANE_SECONDARY_API_KEY",
+      "FREE_LANE_SECONDARY_BASE_URL",
+      "FREE_LANE_SECONDARY_LEDGER_PREFIX",
+      "FREE_LANE_SECONDARY_MODEL",
+      "GOOGLE_APPLICATION_CREDENTIALS_JSON",
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "GOOGLE_VERTEX_PROJECT",
+      "GOOGLE_VERTEX_REGION",
+      "GSE_FABLE_LIVE_PUBLIC_DEMO_ENABLED",
+      "HEALTH_ALERT_WEBHOOK_URL",
+      "HIGGSFIELD_GENERATION_ENABLED",
+      "INTERNAL_LLM_API_KEY",
+      "INTERNAL_LLM_BASE_URL",
+      "INTERNAL_LLM_MODEL",
+      "JARVIS_MEMORY_WRITE_ENABLED",
+      "JYNX_CLOUD_FAILOVER",
+      "JYNX_CLOUD_ORDER",
+      "JYNX_MODE",
+      "LINE_ARCHIVE_ENABLED",
+      "LINE_ARCHIVE_EU_PINNACLE",
+      "MIN_DATA_QUALITY_FOR_GAME_LOG",
+      "MIN_SETTLED_PICKS_FOR_LEARNING",
+      "MODERATION_REPORT_HMAC_SECRET",
+      "MODERATION_REPORT_TRUSTED_IP_HEADER",
+      "NEXTAUTH_SECRET",
+      "NEXTAUTH_URL",
+      "NEXT_PUBLIC_ANALYTICS_ENABLED",
+      "NEXT_PUBLIC_APP_URL",
+      "NEXT_PUBLIC_CF_BEACON_TOKEN",
+      "NEXT_PUBLIC_CLARITY_PROJECT_ID",
+      "NEXT_PUBLIC_SENTRY_DSN",
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+      "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+      "NODE_ENV",
+      "ODDS_API_IO_KEY",
+      "OUTCOME_LEARNING_ENABLED",
+      "OWNER_VISUAL_SPEND_APPROVED",
+      "PERFORMANCE_STATS_ENABLED",
+      "PRICING_PHASE",
+      "PROJECTIONS_PROVIDER",
+      "PUBLIC_BLOG_ENABLED",
+      "PUBLIC_PICKS_ENABLED",
+      "REDIS_URL",
+      "RESEND_API_KEY",
+      "SEALED_ENGINE_ENABLED",
+      "SENTRY_DSN",
+      "SNAPSHOT_RETENTION_DAYS",
+      "SOURCE_SNAPSHOT_MODE",
+      "STRIPE_ELITE_ANNUAL_PRICE_ID",
+      "STRIPE_ELITE_MONTHLY_PRICE_ID",
+      "STRIPE_FANTASY_ANNUAL_PRICE_ID",
+      "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+      "STRIPE_PRO_ANNUAL_PRICE_ID",
+      "STRIPE_PRO_MONTHLY_PRICE_ID",
+      "STRIPE_SECRET_KEY",
+      "STRIPE_TERMS_CONSENT_ENABLED",
+      "STRIPE_WEBHOOK_SECRET",
+      "TEAM_RATES_AVAILABLE",
+      "THE_ODDS_API_KEY",
+      "VAPID_PRIVATE_KEY",
+      "VAPID_SUBJECT",
+      "VERTEX_MODEL_MAP",
+      "WAITLIST_WELCOME_EMAIL",
+      "WATCHLIST_ALERTS_ENABLED"
+     ]
+    }
+   }
+  },
+  {
+   "seat": 1,
+   "name": "downloads_ingest_gate",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "all_on_disk": true,
+    "all_indexed": true
+   },
+   "details": {
+    "manifest": "data\\engine\\INGESTION-MANIFEST-2026-11-02.json",
+    "manifest_files": 393,
+    "targets": [
+     {
+      "file": "DKSalaries (2).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-01-PREGAME-DATA-PACK (2).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-01-PULL-LIST (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PDF-LINKS (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-X-100-DOCUMENTED (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-INSTAGRAM-50-DOCUMENTED (1).md",
+      "on_disk": true,
+      "indexed": true
+     }
+    ],
+    "missing_on_disk": [],
+    "not_indexed": [],
+    "remediation": null
+   }
+  },
+  {
+   "seat": 2,
+   "name": "replay_trainer",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "trainer_ran": true,
+    "cpu_only": true
+   },
+   "details": {
+    "script": "scripts\\ops\\replay_weeks_1_to_8_trainer.py",
+    "exists": true,
+    "cpu_only": true,
+    "trainer": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\scripts\\ops\\replay_weeks_1_to_8_trainer.py --epochs 5",
+     "returncode": 0,
+     "stdout_tail": "epoch 1: brier=0.212546 logloss=0.614978 ece=0.031889 plays=11,224\nepoch 2: brier=0.211515 logloss=0.612204 ece=0.022971 plays=11,224\nepoch 3: brier=0.211362 logloss=0.611843 ece=0.022344 plays=11,224\nepoch 4: brier=0.211302 logloss=0.611702 ece=0.023347 plays=11,224\nepoch 5: brier=0.211270 logloss=0.611627 ece=0.023519 plays=11,224\nweeks: [1, 2, 3, 4, 5, 6, 7] | week8: ABSENT_FROM_SOURCE_PARQUET\nwrote data/engine/team_priors_weeks_1_to_8_trained.json\n",
+     "stderr_tail": ""
+    },
+    "video_harvester": "SKIPPED (needs --allow-video)"
+   }
+  },
+  {
+   "seat": 3,
+   "name": "out_of_sample_calibration",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "exit_zero": true,
+    "gate_enforced": false
+   },
+   "details": {
+    "script": "tests\\verify_out_of_sample_calibration.py",
+    "exists": true,
+    "enforce_gate": false,
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\tests\\verify_out_of_sample_calibration.py",
+     "returncode": 0,
+     "stdout_tail": "=== REAL NFLVERSE WALK-FORWARD CALIBRATION GATE SUMMARY ===\n{\n  \"eager_split_pass_epa_and_poisson_td\": {\n    \"baseline_log_loss\": 0.72181,\n    \"advanced_log_loss\": 0.66737,\n    \"log_loss_delta\": 0.05444,\n    \"baseline_brier\": 0.25053,\n    \"advanced_brier\": 0.23735,\n    \"brier_delta\": 0.01319,\n    \"baseline_crps\": 0.25053,\n    \"advanced_crps\": 0.23735,\n    \"crps_delta\": 0.01319,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 172,\n    \"baseline_rmse\": 0.34997,\n    \"advanced_rmse\": 0.31912\n  },\n  \"veroulis_eager_weak_link_oline_sack_rate\": {\n    \"baseline_log_loss\": 0.86324,\n    \"advanced_log_loss\": 0.69446,\n    \"log_loss_delta\": 0.16878,\n    \"baseline_brier\": 0.28084,\n    \"advanced_brier\": 0.24846,\n    \"brier_delta\": 0.03238,\n    \"baseline_crps\": 0.28084,\n    \"advanced_crps\": 0.24846,\n    \"crps_delta\": 0.03238,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 153\n  },\n  \"congelio_per_carry_ryoe_deconfounding\": {\n    \"baseline_log_loss\": 0.99582,\n    \"advanced_log_loss\": 0.67339,\n    \"log_loss_delta\": 0.32243,\n    \"baseline_brier\": 0.33016,\n    \"advanced_brier\": 0.23712,\n    \"brier_delta\": 0.09303,\n    \"baseline_crps\": 0.33016,\n    \"advanced_crps\": 0.23712,\n    \"crps_delta\": 0.09303,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 211\n  },\n  \"davidson_pilon_empirical_bayes_receiving_props\": {\n    \"baseline_log_loss\": 1.0128,\n    \"advanced_log_loss\": 0.69062,\n    \"log_loss_delta\": 0.32218,\n    \"baseline_brier\": 0.34999,\n    \"advanced_brier\": 0.24884,\n    \"brier_delta\": 0.10115,\n    \"baseline_crps\": 0.34999,\n    \"advanced_crps\": 0.24884,\n    \"crps_delta\": 0.10115,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 761,\n    \"baseline_rmse\": 35.8704,\n    \"advanced_rmse\": 33.0118\n  },\n  \"alam_crosswind_drag_outdoor_15mph_plus\": {\n    \"baseline_log_loss\": 0.87953,\n    \"advanced_log_loss\": 0.68841,\n    \"log_loss_delta\": 0.19112,\n    \"baseline_brier\": 0.30194,\n    \"advanced_brier\": 0.24087,\n    \"brier_delta\": 0.06107,\n    \"baseline_crps\": 0.30194,\n    \"advanced_crps\": 0.24087,\n    \"crps_delta\": 0.06107,\n    \"PROMOTION_GATE_STATUS\": \"APPROVED\",\n    \"sample_size_n\": 66\n  },\n  \"quarantined_pinn_navier_stokes_and_ocular_proxy\": {\n    \"baseline_log_loss\": 0.69062,\n    \"advanced_log_loss\": 0.73235,\n    \"log_loss_delta\": -0.04173,\n    \"baseline_brier\": 0.24884,\n    \"advanced_brier\": 0.26527,\n    \"brier_delta\": -0.01643,\n    \"baseline_crps\": 0.24884,\n    \"advanced_crps\": 0.26527,\n    \"crps_delta\": -0.01643,\n    \"PROMOTION_GATE_STATUS\": \"REJECTED\",\n    \"sample_size_n\": 761\n  }\n}\n",
+     "stderr_tail": ""
+    }
+   }
+  },
+  {
+   "seat": 4,
+   "name": "dfs_packets_builder",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "exit_zero": true
+   },
+   "details": {
+    "script": "scripts\\ops\\run_week9_gpp_portfolio.py",
+    "exists": true,
+    "alternative": "scripts\\ops\\build_sunday_monday_expanded_dfs.py",
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe C:\\c\\wt-week8-forensic\\scripts\\ops\\run_week9_gpp_portfolio.py --sims 120 --opponents 120 --lineups 3 --out-json C:\\c\\wt-week8-forensic\\data\\engine\\workflow_runs\\seat4_dfs_packets.json",
+     "returncode": 0,
+     "stdout_tail": "{\n  \"slate\": {\n    \"row_count\": 570,\n    \"unique_games\": [\n      \"ARI@SEA 11/08/2026 04:25PM ET\",\n      \"CLE@NO 11/08/2026 01:00PM ET\",\n      \"DAL@IND 11/08/2026 01:00PM ET\",\n      \"DEN@CAR 11/08/2026 01:00PM ET\",\n      \"DET@MIA 11/08/2026 01:00PM ET\",\n      \"GB@NE 11/08/2026 04:25PM ET\",\n      \"HOU@LAC 11/08/2026 04:05PM ET\",\n      \"LAR@WAS 11/08/2026 01:00PM ET\",\n      \"LV@SF 11/08/2026 04:25PM ET\",\n      \"NYG@PHI 11/08/2026 01:00PM ET\",\n      \"NYJ@KC 11/08/2026 01:00PM ET\"\n    ],\n    \"detected_nfl_week\": 9,\n    \"is_week8_retrospective_file\": false,\n    \"is_week9_live_file\": true\n  },\n  \"players_scored\": 570,\n  \"games\": 11,\n  \"sims\": 120,\n  \"opponent_rosters\": 120,\n  \"win_threshold_p99\": 109.91,\n  \"simulated_mean_pts\": 8.91,\n  \"simulated_max_pts\": 155.65,\n  \"portfolio_size\": 3,\n  \"submodular\": {\n    \"selected_lineup_indices\": [\n      0,\n      1,\n      2\n    ],\n    \"marginal_win_prob_gains\": [\n      0.983333,\n      0.016667,\n      0.0\n    ],\n    \"cumulative_portfolio_win_prob\": 1.0,\n    \"nemhauser_wolsey_lower_bound_ratio\": 0.6321\n  },\n  \"newell_payout\": {\n    \"lineup_mean_pts\": 181.801,\n    \"lineup_std_pts\": 43.005,\n    \"top_tier_win_prob\": 0.7702,\n    \"expected_payout_usd\": 430.0052\n  },\n  \"best_lineup_index\": 1,\n  \"provenance\": \"projections anchored to DraftKings AvgPointsPerGame; per-position decomposition fixed and documented in run_week9_gpp_portfolio.py; RESEARCH ARTIFACT, not a published play set\"\n}\nwrote C:\\c\\wt-week8-forensic\\data\\engine\\workflow_runs\\seat4_dfs_packets.json\n",
+     "stderr_tail": ""
+    }
+   }
+  },
+  {
+   "seat": 5,
+   "name": "pytest",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "exit_zero": true,
+    "tests_passed": 110
+   },
+   "details": {
+    "suite": "tests",
+    "voice_digest_stub": "NOT_IMPLEMENTED (reported, not faked)",
+    "run": {
+     "cmd": "C:\\Users\\Garrett\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe -m pytest tests -q",
+     "returncode": 0,
+     "stdout_tail": "........................................................................ [ 65%]\n......................................                                   [100%]\n110 passed in 38.15s\n",
+     "stderr_tail": ""
+    },
+    "summary": "110 passed in 38.15s",
+    "tests_passed": 110
+   }
+  }
+ ],
+ "summary": {
+  "seats_run": 6,
+  "passed": 6,
+  "failed": [],
+  "skipped": [],
+  "finished_at_utc": "2026-11-03T16:40:36+00:00"
+ },
+ "updated_at_utc": "2026-11-03T16:40:36+00:00"
+}
