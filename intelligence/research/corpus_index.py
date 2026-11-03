@@ -114,15 +114,19 @@ def dedupe(index: dict) -> dict:
             continue
         if key in keep:
             j = keep[key]
+            prev = index["records"][j]
+            # Retraction is a property of the WORK, not of the copy. If any
+            # duplicate is retracted, the survivor must stay quarantined -
+            # otherwise dedupe launders a retracted paper by merging it with a
+            # clean metadata record of the same title.
+            was_retracted = bool(prev.get("retracted")) or bool(rec.get("retracted"))
             better_new = SOURCE_PRIORITY.get(rec["source"], 9) < SOURCE_PRIORITY.get(
-                index["records"][j]["source"], 9)
+                prev["source"], 9)
+            merged = sorted(set(prev["topics"]) | set(rec["topics"]))
             if better_new:
-                merged = sorted(set(index["records"][j]["topics"]) | set(rec["topics"]))
                 index["records"][j] = rec
-                index["records"][j]["topics"] = merged
-            else:
-                merged = sorted(set(index["records"][j]["topics"]) | set(rec["topics"]))
-                index["records"][j]["topics"] = merged
+            index["records"][j]["topics"] = merged
+            index["records"][j]["retracted"] = was_retracted
         else:
             keep[key] = i
             order.append(i)

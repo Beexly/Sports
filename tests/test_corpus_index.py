@@ -136,6 +136,21 @@ def test_same_paper_from_three_sources_collapses_to_one(tmp_path):
     assert set(idx["records"][0]["topics"]) == {"coverage_scheme", "local_pdf"}
 
 
+def test_dedupe_does_not_launder_a_retracted_paper(tmp_path):
+    """A retracted work merged with a clean duplicate must stay quarantined."""
+    recs = [
+        {"source": "openalex", "source_id": "r1", "title": "Sports Feedback System",
+         "abstract": "coverage", "retracted": True, "topics": ["x"]},
+        {"source": "local_pdf", "source_id": "r2", "title": "Sports feedback system",
+         "abstract": "coverage", "full_text": "coverage", "retracted": False,
+         "topics": ["local_pdf"]},
+    ]
+    idx = ci.dedupe(ci.build_index(_manifest(tmp_path, recs)))
+    assert idx["n"] == 1
+    assert idx["records"][0]["retracted"] is True, "dedupe laundered a retraction"
+    assert ci.search(idx, "coverage") == []
+
+
 def test_dedupe_keeps_distinct_papers(tmp_path):
     idx = ci.build_index(_manifest(tmp_path, RECORDS))
     before = idx["n"]
