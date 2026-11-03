@@ -78,3 +78,6 @@ start from the matchup instead of the constants 3 and 46.5.
 **Not proven:** that the roles are adopted. That is a habit, not a file.
 
 **Next role (any):** take one role, not two. Hand off with all four fields.
+
+## 2026-11-03
+- Downloads corpus ingested to brain/feeds/2026-11-03/trainer_feed.jsonl (gitignored): 2046 records, 1905 text-extracted, zip members included. Scripts in scripts/ops/corpus_2026_11_03/. Open gaps: OCR of 4 image-only PDFs (no tesseract), equation waves blocked (onejev path missing), tested operators not started.
