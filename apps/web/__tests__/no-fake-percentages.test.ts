@@ -80,7 +80,13 @@ function walkComponents(dir: string): string[] {
 // "win", "edge", "accurate", "accuracy", "hit rate", "roi", "profit",
 // "guaranteed". Plus "verified" because the dashboard uses "Verified
 // Record" — a static "verified record: 67%" would be the exact bug.
-const OUTCOME_CONTEXT = /(win[\s-]?rate|win\s+%|edge|accuracy|accurate|hit\s+rate|hit\s+%|roi|profit|guaranteed|beat[\s-]the[\s-]close|beat[\s-]close|\bclv\b)/i;
+//
+// One narrowed-context exemption (proven both ways on 2026-11-03 when the
+// sealed picks page tripped on it): the brand name itself contains the token
+// ("Galaxy Sports Edge"), so `edge` only counts as an outcome claim when it
+// is NOT the brand, i.e. not immediately preceded by "Sports ". A real edge
+// claim ("edge 62%", "our edge: 62%") still trips and still fails the build.
+const OUTCOME_CONTEXT = /(win[\s-]?rate|win\s+%|(?<!Sports )edge|accuracy|accurate|hit\s+rate|hit\s+%|roi|profit|guaranteed|beat[\s-]the[\s-]close|beat[\s-]close|\bclv\b)/i;
 
 // A regex that matches a literal hardcoded percentage in a string,
 // JSX text node, or comment — but NOT inside `{}` (dynamic), `=`

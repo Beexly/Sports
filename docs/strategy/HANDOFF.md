@@ -125,3 +125,25 @@ start from the matchup instead of the constants 3 and 46.5.
 - `dependency-audit` cannot run in this environment; not fixed (founder-owned config).
 
 **Next role (Verifier):** push the merge commit on `ci/fix-tree-red-2026-10-31`, refresh PR #1228, confirm CI's lint/typecheck/test steps now pass.
+
+## 2026-11-03 (2) — test wall triage: /picks + /packages clusters rewritten to the sealed-board design; em/en-dash debt cleared
+
+**Changed:**
+- 8 /picks test files rewritten or surgically retired to the owner's sealed Week 8 locked board design (`30a6fe52f`): picks-paywall-copy-truth (ledger-provenance banner pin added; teaser-model assertions retired), picks-page-policy-gate, picks-states-conversion, picks-demo-mode, picks-gate-hint-containment, picks-daily-limit-meta, picks-mobile-tap-targets; plus `apps/web/app/picks/page.tsx` (both footer links gain the `inline-flex min-h-11 items-center` 44px tap floor).
+- `apps/web/__tests__/no-fake-percentages.test.ts`: outcome-context regex narrowed so the brand name (Sports Edge) stops false-positiveing beside the sealed banner percentage; a real edge claim still trips.
+- `apps/web/__tests__/packages-storefront-paywall.test.tsx`: pins updated to the current storefront copy (`What's inside` checklist, `Unlock Picks Now · $19`); unlocked-card badge counts now derived from the writeup data (`BET THIS` / `PASS · NO BET` counts must equal the decision counts); PicksPage removed from the Under Construction gate list (deliberately un-gated by `30a6fe52f`) with a sealed-board check added; hero copy pin moved to the `Choose Your Football Pack` chooser.
+- `apps/web/__tests__/em-dash-public-copy.test.ts`: ratchet lowered (board 1->0, fantasy 4->0, games/[gameId] 1->0; entries deleted) and seven files cleaned to zero em/en dashes in public copy: `app/packages/page.tsx`, `app/packages/[slug]/page.tsx`, `app/props/page.tsx`, `app/resources/card-supplies/page.tsx`, `components/packages/paywall-reveal-card.tsx`, `components/redline/redline-world.tsx`, `components/week8/sealed-table.tsx`. Replacement follows the `6862589f6` convention (em dash -> middle dot, ranges -> hyphen, prose joins -> comma).
+
+**Proven (worktree `C:\c\wt-tree-red`, branch `ci/test-wall-triage-2026-11-03`, base `eac0ecdba`):**
+- All 11 rewritten/retired test files pass: the 7 picks files, no-fake-percentages, em-dash-public-copy, packages-storefront-paywall (both copies).
+- No regressions in the 14-file readers-of-/picks sweep: the 10 pre-existing wall failures keep identical counts (23 tests); the 4 baseline-green files stay green.
+- `apps/web` `tsc --noEmit` exit 0; `node scripts/guardrails/em-dash-scan.mjs` OK, 0 hits.
+- Commits: `9eeed2767` (picks cluster), `0527649f4` (packages + copy cluster).
+
+**Not proven:**
+- No CI run on the branch yet at write time.
+- The rest of the wall (~71 apps/web files + 7 other-workspace files) is untouched: homepage cluster (stale against RedlineWorld), board/nav/pricing clusters, and the logic/runtime files that need individual inspection for real regressions.
+
+**Next role (Verifier / next loop):**
+- Watch CI on the pushed branch; merge when the reduced wall is confirmed (no new failures vs `eac0ecdba`).
+- Next triage batches in order: (a) homepage cluster (homepage-content, homepage-doctrine-hero, homepage-engine-centerpiece, homepage-finish-doctrine, homepage-suspense-nflverse, home-signal-anatomy, f28-home-hero-cta, decision-hero-states, storefront-stripdown); (b) board cluster (board-picks-route-equivalence, board-class-banner-honesty, central-time-rendering, kickoff-local-time, honest-degraded-states, freshness-coverage, sample-mode-ui); (c) logic/runtime cluster (dfs-optimizer-optimality, bestball, dfs-correlation, scheme, news/impact, wire-store, mission-control, do-calculus-verifiers, gate-registry.t24, literature-and-bow-arc, public-picks-enabled-readers, module-header-accuracy, periodic-timeseries-id, continuous-reconciliation-daemon); (d) pricing/nav clusters.

@@ -299,7 +299,7 @@ export function PaywallRevealCard({
                 onClick={() => void handleOneClickCheckout(creditBack)}
                 className={`rl-btn rl-figure mt-7 w-full ${ctaTone === "solid" ? "rl-btn-solid" : "rl-btn-line"}`}
               >
-                {loadingCheckout ? "Opening secure checkout…" : `Unlock Picks Now — $${activePrice}`}
+                {loadingCheckout ? "Opening secure checkout…" : `Unlock Picks Now · $${activePrice}`}
               </button>
 
               <button
@@ -376,7 +376,7 @@ export function PaywallRevealCard({
                         <dt className="rl-eyebrow">Best spread bet</dt>
                         <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
                           {sideIsPass ? (
-                            <span className="text-ion-2">PASS — NO BET</span>
+                            <span className="text-ion-2">PASS · NO BET</span>
                           ) : (
                             <>
                               <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
@@ -392,7 +392,7 @@ export function PaywallRevealCard({
                         <dt className="rl-eyebrow">Best total bet</dt>
                         <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
                           {totalIsPass ? (
-                            <span className="text-ion-2">PASS — NO BET</span>
+                            <span className="text-ion-2">PASS · NO BET</span>
                           ) : (
                             <>
                               <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
@@ -424,8 +424,8 @@ export function PaywallRevealCard({
                               >
                                 <span className={propIsPass ? "text-ion-2" : "font-semibold text-ion-white"}>
                                   {propIsPass
-                                    ? `${p.playerName} — PASS — NO BET (${p.propType})`
-                                    : `BET THIS: ${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
+                                    ? `${p.playerName} · PASS · NO BET (${p.propType})`
+                                                                        : `BET THIS: ${p.playerName} · ${p.side} ${p.line} ${p.propType}`}
                                 </span>
                                 <span className="rl-figure text-sm text-ion-1">
                                   Confidence: {formatConfidenceStrict(p.confidence)}

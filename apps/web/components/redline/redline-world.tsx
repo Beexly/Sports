@@ -365,7 +365,7 @@ export function RedlineWorld({
             <p className="plate-kicker">REDZONE · WEEK 8 NFL DESK</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
             <p>
-              Plain-English NFL picks, player props, Same-Game Parlays, and Daily Fantasy lineups — all on one unified board.
+              Plain-English NFL picks, player props, Same-Game Parlays, and Daily Fantasy lineups, all on one unified board.
             </p>
             <div className="plate-actions">
               <button type="button" className="plate-go" onClick={() => goProgress(0.5)}>Enter the field →</button>
@@ -506,7 +506,7 @@ export function RedlineWorld({
 
         {panel === "packs" && (
           <PanelFrame eyebrow="RedZone Storefront · One-time purchase" title="Choose your pack" close={closePanel} className="pack-panel">
-            <p className="panel-intro">Four unified packs — including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
+            <p className="panel-intro">Four unified packs, including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
             <div className="edition-list">
               {packs.map((pack, index) => (
                 <div className={`edition-row${selectedSlug === pack.slug ? " selected" : ""}`} key={pack.slug}>
@@ -536,7 +536,7 @@ export function RedlineWorld({
                   <span>Standalone One-Time Pass · Instant Unlock</span>
                 </div>
                 <button type="button" className="plate-go" onClick={() => openPurchase(dfsPack)}>
-                  Unlock Standalone DFS — {price(dfsPack)} →
+                  Unlock Standalone DFS · {price(dfsPack)} →
                 </button>
               </div>
             )}
@@ -544,29 +544,29 @@ export function RedlineWorld({
               <div className="dfs-box">
                 <span className="dfs-tag">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · 191.55 MEAN PTS)</span>
                 <ul>
-                  <li><b>QB</b> Dak Prescott (DAL) — $6,300 (23.47 pts)</li>
-                  <li><b>RB1</b> Jaylen Warren (PIT) — $6,600 (21.13 pts)</li>
-                  <li><b>RB2</b> Jonah Coleman (DEN) — $4,300 (22.18 pts · RJ Harvey OUT boost)</li>
-                  <li><b>WR1</b> CeeDee Lamb (DAL) — $8,100 (27.77 pts)</li>
-                  <li><b>WR2</b> Zay Flowers (BAL) — $7,200 (27.98 pts)</li>
-                  <li><b>WR3</b> Tee Higgins (CIN) — $6,700 (24.95 pts · Iosivas OUT boost)</li>
-                  <li><b>TE</b> Dallas Goedert (PHI) — $4,700 (25.29 pts · Smith/Wicks OUT, Hurts IR)</li>
-                  <li><b>FLEX</b> Greg Dulcich (MIA) — $3,200 (10.15 pts)</li>
-                  <li><b>DST</b> Jets DST (NYJ) — $2,800 (8.63 pts)</li>
+                  <li><b>QB</b> Dak Prescott (DAL) · $6,300 (23.47 pts)</li>
+                  <li><b>RB1</b> Jaylen Warren (PIT) · $6,600 (21.13 pts)</li>
+                  <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts · RJ Harvey OUT boost)</li>
+                  <li><b>WR1</b> CeeDee Lamb (DAL) · $8,100 (27.77 pts)</li>
+                  <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
+                  <li><b>WR3</b> Tee Higgins (CIN) · $6,700 (24.95 pts · Iosivas OUT boost)</li>
+                  <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts · Smith/Wicks OUT, Hurts IR)</li>
+                  <li><b>FLEX</b> Greg Dulcich (MIA) · $3,200 (10.15 pts)</li>
+                  <li><b>DST</b> Jets DST (NYJ) · $2,800 (8.63 pts)</li>
                 </ul>
               </div>
               <div className="dfs-box">
                 <span className="dfs-tag">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($50,000 · 286.54 P99 PTS)</span>
                 <ul>
-                  <li><b>QB</b> Caleb Williams (CHI) — $6,100 (18.12 pts)</li>
-                  <li><b>RB1</b> James Cook III (BUF) — $7,900 (26.04 pts)</li>
-                  <li><b>RB2</b> Jonah Coleman (DEN) — $4,300 (22.18 pts · RJ Harvey OUT boost)</li>
-                  <li><b>WR1</b> Jaxon Smith-Njigba (SEA) — $9,100 (25.36 pts)</li>
-                  <li><b>WR2</b> Zay Flowers (BAL) — $7,200 (27.98 pts)</li>
-                  <li><b>WR3</b> Rome Odunze (CHI) — $4,600 (10.27 pts)</li>
-                  <li><b>TE</b> Dallas Goedert (PHI) — $4,700 (25.29 pts · Smith/Wicks OUT, Hurts IR)</li>
-                  <li><b>FLEX</b> Kalif Raymond (CHI) — $3,600 (7.88 pts)</li>
-                  <li><b>DST</b> Falcons DST (ATL) — $2,500 (6.23 pts)</li>
+                  <li><b>QB</b> Caleb Williams (CHI) · $6,100 (18.12 pts)</li>
+                  <li><b>RB1</b> James Cook III (BUF) · $7,900 (26.04 pts)</li>
+                  <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts · RJ Harvey OUT boost)</li>
+                  <li><b>WR1</b> Jaxon Smith-Njigba (SEA) · $9,100 (25.36 pts)</li>
+                  <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
+                  <li><b>WR3</b> Rome Odunze (CHI) · $4,600 (10.27 pts)</li>
+                  <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts · Smith/Wicks OUT, Hurts IR)</li>
+                  <li><b>FLEX</b> Kalif Raymond (CHI) · $3,600 (7.88 pts)</li>
+                  <li><b>DST</b> Falcons DST (ATL) · $2,500 (6.23 pts)</li>
                 </ul>
               </div>
             </div>
@@ -590,7 +590,7 @@ export function RedlineWorld({
               {SEALED_MAIN_CALLS.map((c) => (
                 <div className="fixture-row" key={`${c.matchup}-${c.selection}`}>
                   <span className="fixture-week">{c.conf}</span>
-                  <div className="fixture-match">{c.matchup} — {c.selection}</div>
+                  <div className="fixture-match">{c.matchup} · {c.selection}</div>
                   <span className="fixture-angle">{c.market}</span>
                 </div>
               ))}

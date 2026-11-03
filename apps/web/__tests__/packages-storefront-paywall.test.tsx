@@ -66,13 +66,12 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     expect(screen.getByText(tnfPkg.title)).toBeDefined();
     expect(container.textContent).toContain("$19");
-    expect(container.textContent).toContain("Unlock Picks Now — $19");
+    expect(container.textContent).toContain("Unlock Picks Now · $19");
+    expect(container.textContent).toContain("What’s inside");
     expect(container.textContent).toContain(
-      "What’s Inside: Spread Call · Over/Under Call · Player Props · Same-Game Parlay · DFS Lineup Core",
+      "Spread call · Over/Under call · Player props · Same-game parlay · DFS lineup core",
     );
-    expect(container.textContent).toContain(
-      "🔒 Locked Until Purchase — Instant Reveal on This Page",
-    );
+    expect(container.textContent).toContain("Already purchased? Enter Receipt ID");
     expect(container.textContent).not.toMatch(/Telegram/i);
     expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
     // Locked preview must NEVER leak confidence numbers, side picks, or over/under picks
@@ -92,7 +91,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     }
   });
 
-  it("renders unlocked PaywallRevealCard in-place with XX/100 confidence and honest BET THIS / PASS — NO BET badges", () => {
+  it("renders unlocked PaywallRevealCard in-place with XX/100 confidence and honest BET THIS / PASS · NO BET badges", () => {
     const tnfPkg = getPackageBySlug("tnf-all-in-pack")!;
     const teasers = getRedactedTeasersForWindowSlot(tnfPkg.windowSlot);
     const tnfWriteups = getWriteupsForWindowSlot(tnfPkg.windowSlot);
@@ -107,34 +106,58 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
 
     expect(container.textContent).toContain("UNLOCKED IN-PLACE");
     expect(container.textContent).toContain("Live Picks Revealed In-Place");
-    expect(container.textContent).toContain("Green Bay Packers -3.5");
-    expect(container.textContent).toContain("BET THIS:");
-    expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.sideConfidence}`);
-    expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.totalConfidence}`);
-    expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
+    // Decision badges must exactly mirror the data decisions: every PLAY
+    // renders a BET THIS badge, every PASS renders a PASS · NO BET badge,
+    // never more and never fewer. Counts are derived so the pin survives the
+    // weekly slate refresh. (As of the Week 8 seal the TNF window is settled:
+    // "Game is final. Do not sell a side or a total on a finished game.")
+    const unlockedText = container.textContent ?? "";
+    const plays = tnfWriteups.reduce(
+      (n, w) =>
+        n +
+        (String(w.sideTotalCall.sideDecision) === "PLAY" ? 1 : 0) +
+        (String(w.sideTotalCall.totalDecision) === "PLAY" ? 1 : 0) +
+        w.topProps.filter((p) => String(p.decision) === "PLAY").length,
+      0,
+    );
+    const passes = tnfWriteups.reduce(
+      (n, w) =>
+        n +
+        (String(w.sideTotalCall.sideDecision) === "PASS" ? 1 : 0) +
+        (String(w.sideTotalCall.totalDecision) === "PASS" ? 1 : 0) +
+        w.topProps.filter((p) => String(p.decision) === "PASS").length,
+      0,
+    );
+    expect((unlockedText.match(/BET THIS:/g) ?? []).length).toBe(plays);
+    expect((unlockedText.match(/PASS · NO BET/g) ?? []).length).toBe(passes);
+expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.sideConfidence}`);
+expect(container.textContent).toContain(`Confidence: ${tnfWriteups[0]!.sideTotalCall.totalConfidence}`);
+expect(container.textContent).not.toMatch(/10,000|simulation|dropbacks|%/i);
 
-    // Verify all 14 writeups use XX/100 confidence and honest PLAY/PASS gating
-    expect(LIVE_SLATE_COACH_WRITEUPS.length).toBe(14);
-    for (const w of LIVE_SLATE_COACH_WRITEUPS) {
-      expect(w.sideTotalCall.sideConfidence).toMatch(/^\d{1,3}\/100$/);
-      expect(w.sideTotalCall.totalConfidence).toMatch(/^\d{1,3}\/100$/);
-      expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.sideDecision);
-      expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.totalDecision);
+// Verify all 14 writeups use XX/100 confidence and honest PLAY/PASS gating
+expect(LIVE_SLATE_COACH_WRITEUPS.length).toBe(14);
+for (const w of LIVE_SLATE_COACH_WRITEUPS) {
+  expect(w.sideTotalCall.sideConfidence).toMatch(/^\d{1,3}\/100$/);
+  expect(w.sideTotalCall.totalConfidence).toMatch(/^\d{1,3}\/100$/);
+  expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.sideDecision);
+  expect(["PLAY", "PASS"]).toContain(w.sideTotalCall.totalDecision);
 
-      for (const prop of w.topProps) {
-        expect(prop.confidence).toMatch(/^\d{1,3}\/100$/);
-        expect(["PLAY", "PASS"]).toContain(prop.decision);
-        if (prop.decision === "PLAY") {
-          expect(prop.expectedClv).toBeGreaterThan(0);
+  for (const prop of w.topProps) {
+    expect(prop.confidence).toMatch(/^\d{1,3}\/100$/);
+    expect(["PLAY", "PASS"]).toContain(prop.decision);
+    if (prop.decision === "PLAY") {
+      expect(prop.expectedClv).toBeGreaterThan(0);
         }
       }
     }
   });
 
-  it("gates old routes with Under Construction notice and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
+  it("gates old routes with Under Construction notice (/picks excluded: it was published as the sealed board), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
     const gatedPages = [
       BoardPage,
-      PicksPage,
+      // PicksPage removed 2026-11-03: /picks was deliberately un-gated when
+      // commit 30a6fe52f published it as the sealed Week 8 locked board. Its
+      // contract is asserted right below (and in the picks-* test files).
       PlayersPage,
       SgpProjectionsPage,
       IntelligenceEnginesPage,
@@ -157,6 +180,13 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       unmount();
     }
 
+    // /picks is no longer a gated stub: commit 30a6fe52f published it as the
+    // sealed Week 8 locked board. Pin that it is NOT wearing the stub notice.
+    const { container: picksDom, unmount: unmountPicks } = render(<PicksPage />);
+    expect(picksDom.textContent).not.toContain("Under Construction");
+    expect(picksDom.textContent).toContain("sealed card");
+    unmountPicks();
+
     const homeSrc = readFileSync(resolve(__dirname, "..", "app", "page.tsx"), "utf8");
     expect(homeSrc).not.toContain("DoorCard");
     expect(homeSrc).not.toContain("FieldBoardTicker");
@@ -167,8 +197,11 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       resolve(__dirname, "..", "app", "packages", "page.tsx"),
     "utf8",
     );
+    // The storefront hero was reworded by the humanize pass; pin the current
+    // stable promise (the pack chooser) instead of the retired sentence.
+    expect(packagesSrc).toContain("Choose Your Football Pack");
     expect(packagesSrc).toContain(
-      "Plain-English NFL Picks, Player Props &amp; Parlays — Written so you know exactly what to bet and why in 30 seconds.",
+      "One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.",
     );
     expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks|%/i);
 

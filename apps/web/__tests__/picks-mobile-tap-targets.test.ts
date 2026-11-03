@@ -26,46 +26,31 @@ describe("picks mobile ergonomics", () => {
     expect(pickCardSrc).toContain("grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2");
   });
 
-  it("keeps visible picks-page controls mobile tappable", () => {
+  it("keeps the sealed-board page's customer links mobile tappable", () => {
     const picksPageSrc = readComponent("app/picks/page.tsx");
 
-    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center rounded-lg border");
-    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center rounded-full");
-    expect(picksPageSrc).toContain("inline-flex min-h-11 shrink-0 items-center justify-center");
-    expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg border");
-    expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg bg-titanium");
+    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center text-[#FF4D2E]");
+    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center text-[#EDE8E0]");
   });
 
   /**
-   * The conditional states carry the picks board's only upgrade doors: the
-   * paywall-locked banner and the free-tier bottom CTA both route to /pricing,
-   * and the bootstrap/stale state routes to /methodology and /vault. Those four
-   * links were the last on the page still sized purely by `py-2` / `py-2.5`,
-   * i.e. below the 44px touch floor the rest of the page already holds to.
-   *
-   * Asserted against the source, not the DOM, because PicksPage is an async
-   * server component that fetches its own data. The RENDERED-class equivalents
-   * for the /pricing path live in pricing-mobile-tap-targets.test.tsx.
+   * The sealed record is a wide table (Play / Model win prob / Market prob /
+   * Edge / Read / Status). On a 375px screen the only honest way to keep every
+   * column reachable is a horizontal-scroll wrapper: the table must never
+   * crush its columns to fit. The wrapper lives in the SealedTable component
+   * the page renders.
    */
-  it("keeps the /pricing upgrade CTAs in the locked and free-tier states tappable", () => {
-    const picksPageSrc = readComponent("app/picks/page.tsx");
+  it("keeps the sealed record readable on narrow screens (horizontal-scroll wrapper)", () => {
+    const sealedTableSrc = readComponent("components/week8/sealed-table.tsx");
 
-    expect(picksPageSrc).toContain(
-      "mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-ultraviolet",
-    );
-    expect(picksPageSrc).toContain(
-      "mt-4 inline-flex min-h-11 items-center justify-center rounded-lg bg-ultraviolet",
-    );
+    expect(sealedTableSrc).toContain("overflow-x-auto");
+    expect(sealedTableSrc).toContain("min-w-[760px]");
   });
 
-  it("keeps the bootstrap/stale-state escape links tappable", () => {
+  it("mounts the standard nav and footer so the route keeps house chrome ergonomics", () => {
     const picksPageSrc = readComponent("app/picks/page.tsx");
 
-    expect(picksPageSrc).toContain(
-      "inline-flex min-h-11 items-center justify-center rounded-lg border border-orbital-cyan/30",
-    );
-    expect(picksPageSrc).toContain(
-      "inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium bg-carbon",
-    );
+    expect(picksPageSrc).toMatch(/<Nav \/>/);
+    expect(picksPageSrc).toMatch(/<Footer \/>/);
   });
 });

@@ -31,7 +31,7 @@ export default function PropsPage(): JSX.Element {
         <div className="mt-6">
           <SealedTable rows={watch} watch />
         </div>
-        <h2 className="mt-16 font-display text-4xl uppercase">Pass — do not bet</h2>
+        <h2 className="mt-16 font-display text-4xl uppercase">Pass · do not bet</h2>
         <div className="mt-6">
           <SealedTable rows={card.passes} />
         </div>
