@@ -19,6 +19,11 @@ from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (
     evaluate_bezier_route_curve,
     optimize_bayesian_asymmetric_loss_action,
 )
+from scripts.ops.dfs_stochastic_milp_optimizer import (
+    build_sample_week9_dfs_slate_pool,
+    evaluate_newell_tiered_gpp_expected_payout,
+    optimize_dfs_portfolio,
+)
 from scripts.ops.locked_production_pipeline import (
     ESPN_2026_EDGE_PRWR_LEADERS,
     ESPN_2026_OT_PBWR_LEADERS,
@@ -256,5 +261,51 @@ def test_wave4_ocular_quiet_eye_bayesian_asymmetric_loss_and_vi_elbo():
     assert vi["kl_divergence_q_p"] > 0.0
     assert vi["variational_elbo"] < -1.25
     assert vi["ou_sgd_stationary_variance"] > 0.0
+
+
+def test_wave5_dfs_stochastic_milp_portfolio_and_newell_tiered_payout():
+    pool = build_sample_week9_dfs_slate_pool()
+    portfolio = optimize_dfs_portfolio(
+        pool,
+        num_lineups=3,
+        max_overlap=6,
+        salary_cap=50000.0,
+        min_teams=3,
+        require_qb_stack=True,
+    )
+    assert len(portfolio) == 3
+
+    player_sets = []
+    for lu in portfolio:
+        assert len(lu) == 9
+        assert float(lu["salary"].sum()) <= 50000.0
+        pos_counts = lu["position"].value_counts().to_dict()
+        assert pos_counts.get("QB", 0) == 1
+        assert pos_counts.get("DST", 0) == 1
+        assert 2 <= pos_counts.get("RB", 0) <= 3
+        assert 3 <= pos_counts.get("WR", 0) <= 4
+        assert 1 <= pos_counts.get("TE", 0) <= 2
+        assert lu["team"].nunique() >= 3
+
+        # Verify QB is stacked with at least 1 same-team WR/TE and never paired with opposing DST
+        qb_row = lu[lu["position"] == "QB"].iloc[0]
+        dst_row = lu[lu["position"] == "DST"].iloc[0]
+        same_team_pass_catchers = lu[(lu["position"].isin(["WR", "TE"])) & (lu["team"] == qb_row["team"])]
+        assert len(same_team_pass_catchers) >= 1
+        assert str(dst_row["team"]) != str(qb_row["opponent"])
+        assert float(lu["risk_adjusted_objective"].iloc[0]) > float(lu["projection"].sum())
+        player_sets.append(set(lu["player"].tolist()))
+
+    # Verify pairwise multi-entry overlap <= max_overlap (6)
+    for i in range(len(player_sets)):
+        for j in range(i + 1, len(player_sets)):
+            assert len(player_sets[i].intersection(player_sets[j])) <= 6
+
+    # Verify Sarah Newell (2017) tiered GPP expected payout rises with higher lineup variance on top-heavy tiers
+    low_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 14.0, [(185.0, 100000.0), (160.0, 500.0), (145.0, 25.0)])
+    high_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 26.0, [(185.0, 100000.0), (160.0, 500.0), (145.0, 25.0)])
+    assert high_var["top_tier_win_prob"] > low_var["top_tier_win_prob"]
+    assert high_var["expected_payout_usd"] > low_var["expected_payout_usd"]
+
 
 
