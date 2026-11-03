@@ -262,9 +262,15 @@ def main(argv: list[str] | None = None) -> int:
                 continue
         if not url:
             failed += 1
+            # Distinguish "we asked and there is no open copy" from "there is no
+            # identifier to ask with". 148 of 638 candidates have no DOI at all;
+            # calling those a paywall overstates what was actually tried.
+            if not r.get("doi"):
+                detail = "no doi and no arxiv preprint - not addressable by any OA route"
+            else:
+                detail = "doi has no open-access copy and no arxiv preprint"
             log.append({"source_id": r.get("source_id"), "status": "unresolved",
-                        "host": (r.get("pdf_url") or "")[:60],
-                        "detail": "no arxiv preprint and no open-access copy"})
+                        "host": (r.get("pdf_url") or "")[:60], "detail": detail})
             continue
 
         dest = pdfdir / f"{re.sub(r'[^A-Za-z0-9._-]+', '_', str(r.get('source_id')))[:80]}.pdf"
