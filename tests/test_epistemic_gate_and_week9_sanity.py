@@ -7,9 +7,14 @@ import pytest
 from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (
     RESEARCH_SANDBOX_QUARANTINED,
     MultiGameGlycogenDepletionEngine,
+    compute_alam_football_crosswind_drag,
+    compute_chitturi_route_disturbance_score,
+    compute_kent_cleat_surface_entrapment,
     compute_mallat_scattering_intermittency_residual,
     compute_pinn_navier_stokes_composite_loss,
+    deconfound_cumulative_ryoe_r2,
     evaluate_acrisure_tahoma31_turf_shear_upgrade,
+    evaluate_bezier_route_curve,
 )
 from scripts.ops.locked_production_pipeline import (
     ESPN_2026_EDGE_PRWR_LEADERS,
@@ -138,3 +143,54 @@ def test_quarantined_glycogen_pinn_mallat_and_memory_slice():
     assert mem["play_blocks"] == 1
     assert mem["processed_nodes"] == 2
     assert mem["total_kinetic_energy_joules"] > 0.0
+
+
+def test_wave3_alam_crosswind_kent_cleat_bezier_routes_and_congelio_ryoe_deconfounding():
+    # Alam et al. (2012): C_D0 = 0.19 at 0 deg yaw, increases under crosswind toward C_D90 = 0.78
+    zero_wind = compute_alam_football_crosswind_drag(wind_speed_mph=0.0, ball_speed_mph=52.0, crosswind_angle_deg=90.0)
+    cross_wind = compute_alam_football_crosswind_drag(wind_speed_mph=22.0, ball_speed_mph=45.0, crosswind_angle_deg=90.0)
+    assert zero_wind["cd_effective"] == pytest.approx(0.19, abs=1e-4)
+    assert cross_wind["cd_effective"] > zero_wind["cd_effective"]
+    assert cross_wind["drag_multiplier_vs_zero_yaw"] > 1.5
+    assert cross_wind["drag_force_n"] > zero_wind["drag_force_n"]
+
+    # Kent et al. (2015): Natural grass divot tearing (3.2 kN, 145 Nm) vs infill turf (4.5 kN, 197 Nm)
+    grass = compute_kent_cleat_surface_entrapment(is_artificial_turf=False, vertical_load_kn=2.8)
+    turf = compute_kent_cleat_surface_entrapment(is_artificial_turf=True, vertical_load_kn=2.8)
+    assert grass["peak_horizontal_force_kn"] == pytest.approx(3.2, abs=1e-4)
+    assert turf["peak_horizontal_force_kn"] == pytest.approx(4.5, abs=1e-4)
+    assert grass["peak_rotational_torque_nm"] == pytest.approx(145.0, abs=1e-4)
+    assert turf["peak_rotational_torque_nm"] == pytest.approx(197.0, abs=1e-4)
+    assert turf["hershman_sprain_hazard_multiplier"] == pytest.approx(1.22, abs=1e-4)
+    assert grass["divot_force_limiting_active"] is True
+    assert turf["divot_force_limiting_active"] is False
+
+    # Chu et al. (2019, arXiv:1908.02423v1): Bernstein Bezier curve endpoint & trajectory properties
+    ctrl = [[0.0, 0.0], [5.0, 2.0], [12.0, 8.0]]
+    curve = evaluate_bezier_route_curve(ctrl, [0.0, 0.5, 1.0])
+    assert curve.shape == (3, 2)
+    assert np.allclose(curve[0], [0.0, 0.0])
+    assert np.allclose(curve[-1], [12.0, 8.0])
+
+    # Chitturi (2024): Route disturbance average minimum defender clearance
+    tight_cov = compute_chitturi_route_disturbance_score(
+        0.75,
+        route_points_xy=curve,
+        defender_points_xy=[[5.2, 2.1], [11.8, 7.9]],
+    )
+    open_cov = compute_chitturi_route_disturbance_score(
+        0.75,
+        route_points_xy=curve,
+        defender_points_xy=[[20.0, 20.0], [25.0, 18.0]],
+    )
+    assert open_cov["avg_min_defender_clearance_yds"] > tight_cov["avg_min_defender_clearance_yds"]
+    assert open_cov["combined_route_viability_score"] > tight_cov["combined_route_viability_score"]
+
+    # Congelio (2023): De-confounding cumulative rushing yards R^2 ~ 0.99 into per-carry RYOE
+    carries = [100, 300, 600, 900, 1400, 1800]
+    exp_yds = [420, 1280, 2550, 3820, 5950, 7650]
+    act_yds = [410, 1340, 2490, 4010, 6180, 7920]
+    ryoe_audit = deconfound_cumulative_ryoe_r2(act_yds, exp_yds, carries)
+    assert ryoe_audit["cumulative_volume_confounded_r2"] > 0.99
+    assert ryoe_audit["volume_inflation_gap"] > 0.30
+
