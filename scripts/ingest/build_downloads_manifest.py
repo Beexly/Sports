@@ -32,8 +32,10 @@ SENSITIVE_PATTERNS = [
 ]
 
 RETRACTED_PATTERNS = [
-    r"Retracted\s+Sports Feedback System",
+    r"Retracted\s+",
     r"Wang - Retracted",
+    r"Song - Retracted",
+    r"Li - Retracted",
     r"9830141",
 ]
 

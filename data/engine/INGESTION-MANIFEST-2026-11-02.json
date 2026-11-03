@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-03T06:17:23.432090+00:00",
+  "generated_at": "2026-11-03T06:32:49.346760+00:00",
   "host": "Beexly",
-  "git_sha": "4de2a5b56798903ae4a6554924f0e83830921c8b",
+  "git_sha": "bcff5948fcb5705c9d3908e9df73e582e8d44d6b",
   "downloads_root": "C:/Users/Garrett/Downloads",
   "total_files": 348,
   "sensitive_excluded": 5,
-  "rejected_retracted_papers": 1,
+  "rejected_retracted_papers": 3,
   "files": [
     {
       "rel_path": "# GSE \u2014 The Plan.txt",
@@ -741,13 +741,13 @@
     },
     {
       "rel_path": "Computational and Mathematical Methods in Medicine - 2022 - Li - Retracted  Research on Application of Sports Training.pdf",
-      "class": "pdf",
+      "class": "rejected-retracted-paper",
       "size_bytes": 1387639,
       "sha256": "ccf7e4a9cce0481fd09eeccb1db7e7de9b3dd2f0a63e4c7619d8a5877349e1ec"
     },
     {
       "rel_path": "Computational and Mathematical Methods in Medicine - 2022 - Song - Retracted  Data Fusion Algorithm for Myocardial.pdf",
-      "class": "pdf",
+      "class": "rejected-retracted-paper",
       "size_bytes": 1946903,
       "sha256": "ba02ecd74c59bb7032e503ddbf4289c4b35cd6c42e5110d8c69a71ffd2035fb9"
     },
@@ -2766,6 +2766,120 @@
     {
       "id": "EQ-NOV03-005",
       "source": "scripts/ops/week8_forensic_kernels.py",
+      "status": "unmatched",
+      "rel_path": null
+    },
+    {
+      "id": "DOC-NOV03-013",
+      "source": "2105.09506v1.pdf",
+      "status": "matched",
+      "rel_path": "2105.09506v1.pdf"
+    },
+    {
+      "id": "DOC-NOV03-014",
+      "source": "ssrn-7197889.pdf",
+      "status": "matched",
+      "rel_path": "ssrn-7197889.pdf"
+    },
+    {
+      "id": "DOC-NOV03-015",
+      "source": "32263160.pdf",
+      "status": "matched",
+      "rel_path": "32263160.pdf"
+    },
+    {
+      "id": "DOC-NOV03-016",
+      "source": "PVLDB26-song.pdf",
+      "status": "matched",
+      "rel_path": "PVLDB26-song.pdf"
+    },
+    {
+      "id": "DOC-NOV03-017",
+      "source": "rgis1_preview.pdf",
+      "status": "matched",
+      "rel_path": "rgis1_preview.pdf"
+    },
+    {
+      "id": "DOC-NOV03-018",
+      "source": "R_as_a_GIS_A_R_Pearse_V2.pdf",
+      "status": "matched",
+      "rel_path": "R_as_a_GIS_A_R_Pearse_V2.pdf"
+    },
+    {
+      "id": "DOC-NOV03-019",
+      "source": "Python Geospatial Development (2010).pdf",
+      "status": "matched",
+      "rel_path": "Python Geospatial Development (2010).pdf"
+    },
+    {
+      "id": "DOC-NOV03-020",
+      "source": "https://link.springer.com/article/10.1007/s10409-026-51204-x",
+      "status": "external_url",
+      "rel_path": "https://link.springer.com/article/10.1007/s10409-026-51204-x"
+    },
+    {
+      "id": "DOC-NOV03-021",
+      "source": "https://link.springer.com/article/10.1007/s10409-026-60353-x",
+      "status": "external_url",
+      "rel_path": "https://link.springer.com/article/10.1007/s10409-026-60353-x"
+    },
+    {
+      "id": "DOC-NOV03-022",
+      "source": "https://link.springer.com/article/10.1007/s10409-026-60060-x",
+      "status": "external_url",
+      "rel_path": "https://link.springer.com/article/10.1007/s10409-026-60060-x"
+    },
+    {
+      "id": "DOC-NOV03-023",
+      "source": "https://link.springer.com/article/10.1007/s10409-026-51109-x",
+      "status": "external_url",
+      "rel_path": "https://link.springer.com/article/10.1007/s10409-026-51109-x"
+    },
+    {
+      "id": "DOC-NOV03-024",
+      "source": "https://www.gssiweb.org/sports-science-exchange/article/sse-127-carbohydrate-the-football-fuel",
+      "status": "external_url",
+      "rel_path": "https://www.gssiweb.org/sports-science-exchange/article/sse-127-carbohydrate-the-football-fuel"
+    },
+    {
+      "id": "DOC-NOV03-025",
+      "source": "https://www.espn.com/nfl/story/_/id/49742016/2026-win-rates-team-player-rankings-pass-rush-run-stop-blocking",
+      "status": "external_url",
+      "rel_path": "https://www.espn.com/nfl/story/_/id/49742016/2026-win-rates-team-player-rankings-pass-rush-run-stop-blocking"
+    },
+    {
+      "id": "DOC-NOV03-026",
+      "source": "Computational and Mathematical Methods in Medicine - 2022 - Chang - The Application of Transcranial Electrical Stimulation.pdf",
+      "status": "matched",
+      "rel_path": "Computational and Mathematical Methods in Medicine - 2022 - Chang - The Application of Transcranial Electrical Stimulation.pdf"
+    },
+    {
+      "id": "DOC-NOV03-REJECTED-SONG2022",
+      "source": "Computational and Mathematical Methods in Medicine - 2022 - Song - Retracted  Data Fusion Algorithm for Myocardial.pdf",
+      "status": "matched",
+      "rel_path": "Computational and Mathematical Methods in Medicine - 2022 - Song - Retracted  Data Fusion Algorithm for Myocardial.pdf"
+    },
+    {
+      "id": "DOC-NOV03-REJECTED-LI2022",
+      "source": "Computational and Mathematical Methods in Medicine - 2022 - Li - Retracted  Research on Application of Sports Training.pdf",
+      "status": "matched",
+      "rel_path": "Computational and Mathematical Methods in Medicine - 2022 - Li - Retracted  Research on Application of Sports Training.pdf"
+    },
+    {
+      "id": "EQ-NOV03-006",
+      "source": "scripts/ops/locked_production_pipeline.py",
+      "status": "unmatched",
+      "rel_path": null
+    },
+    {
+      "id": "EQ-NOV03-007",
+      "source": "tests/verify_out_of_sample_calibration.py",
+      "status": "unmatched",
+      "rel_path": null
+    },
+    {
+      "id": "EQ-NOV03-008",
+      "source": "research/hypotheses/multi_game_glycogen_and_pinn_sandbox.py",
       "status": "unmatched",
       "rel_path": null
     }
