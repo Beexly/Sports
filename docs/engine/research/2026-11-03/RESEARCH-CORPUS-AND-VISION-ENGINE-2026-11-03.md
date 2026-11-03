@@ -265,6 +265,42 @@ lateral component swamped the Magnus effect being measured.
 4. Ball tracker does not exist; the flight model is unexercised on real data.
 5. QB load coefficients are ASSUMED and unvalidated; falsification list recorded.
 
+## 9a. arXiv search harvest (the seven requested searches)
+
+The arXiv API returned 429 for every request - an IP-level block with no
+Retry-After, not a burst - so the searches were read through the browser instead.
+970 unique IDs across the seven pages.
+
+The "nfl" query is dominated by **non-Fermi-liquid condensed matter**, not football.
+A relevance filter is mandatory:
+
+    football-relevant titles        106
+    sports-method titles             42
+    physics false positives excluded 149
+
+The 106 include the papers this programme actually needs: Who Blocks Whom
+(pass-blocking assignments), NFL Ghosts (defender positioning), STRAIN (pass rush),
+frame-by-frame completion probability, Going Deep (within-play valuation), nflWAR,
+and a 2007 paper on the flight of an American football for the aerodynamics model.
+
+PDFs download fine from arxiv.org/pdf even while the API is blocked, so ingestion
+runs off the PDF host: 148 papers with extracted full text.
+
+## 9b. Metadata repair
+
+The first local-PDF pass took the longest early line as the title and the first
+4-digit number as the year. That produced titles like
+"Procedia Engineering 34 ( 2012 ) 98 - 103" and years like 2080 and 2097.
+
+Fixed by using **font size** - the typographic definition of a title - rather than
+line length, with affiliation and banner patterns rejected. 94 titles and 14 years
+repaired. Verified: "Aerodynamic drag measurement of American footballs",
+"A Spatial Framework for Analyzing NFL Offensive Line Play".
+
+Also found: 4 unparseable manifest lines, one record split across lines by two
+concurrent writers. Dropped and reported rather than silently skipped. Writers
+must not append to the same manifest concurrently.
+
 ## 9. Corpus counts (verified)
 
     manifest records (raw)      920
