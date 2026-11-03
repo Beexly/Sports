@@ -9,12 +9,15 @@ from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (
     MultiGameGlycogenDepletionEngine,
     compute_alam_football_crosswind_drag,
     compute_chitturi_route_disturbance_score,
+    compute_elbo_and_ornstein_uhlenbeck_sgd_posterior_variance,
     compute_kent_cleat_surface_entrapment,
     compute_mallat_scattering_intermittency_residual,
+    compute_ocular_quiet_eye_latency_multiplier,
     compute_pinn_navier_stokes_composite_loss,
     deconfound_cumulative_ryoe_r2,
     evaluate_acrisure_tahoma31_turf_shear_upgrade,
     evaluate_bezier_route_curve,
+    optimize_bayesian_asymmetric_loss_action,
 )
 from scripts.ops.locked_production_pipeline import (
     ESPN_2026_EDGE_PRWR_LEADERS,
@@ -193,4 +196,65 @@ def test_wave3_alam_crosswind_kent_cleat_bezier_routes_and_congelio_ryoe_deconfo
     ryoe_audit = deconfound_cumulative_ryoe_r2(act_yds, exp_yds, carries)
     assert ryoe_audit["cumulative_volume_confounded_r2"] > 0.99
     assert ryoe_audit["volume_inflation_gap"] > 0.30
+
+
+def test_wave4_ocular_quiet_eye_bayesian_asymmetric_loss_and_vi_elbo():
+    # Lochhead et al. (2024 JSEP), Erickson (2021), Kirschen & Laby (2011), Phillips (2021)
+    elite_oc = compute_ocular_quiet_eye_latency_multiplier(
+        quiet_eye_duration_ms=420.0,
+        saccade_latency_ms=190.0,
+        vts_score=1.85,
+        elite_vts_ref=1.50,
+        pocket_window_sec=2.60,
+    )
+    rushed_oc = compute_ocular_quiet_eye_latency_multiplier(
+        quiet_eye_duration_ms=220.0,
+        saccade_latency_ms=215.0,
+        vts_score=1.10,
+        elite_vts_ref=1.50,
+        pocket_window_sec=1.75,
+    )
+    assert elite_oc["ocular_decision_multiplier"] > rushed_oc["ocular_decision_multiplier"]
+    assert elite_oc["far_transfer_training_weight"] == 0.0
+
+    # Davidson-Pilon (Bayesian Methods for Hackers Ch. 4 & Ch. 5):
+    # Small-sample high observation shrinks toward prior and asymmetric loss shifts action below mean
+    small_sample = optimize_bayesian_asymmetric_loss_action(
+        prior_mean=32.0,
+        prior_std=8.0,
+        observed_mean=58.0,
+        sample_size=2,
+        obs_std=16.0,
+        overprediction_penalty=2.5,
+        underprediction_penalty=1.0,
+    )
+    large_sample = optimize_bayesian_asymmetric_loss_action(
+        prior_mean=32.0,
+        prior_std=8.0,
+        observed_mean=58.0,
+        sample_size=50,
+        obs_std=16.0,
+        overprediction_penalty=2.5,
+        underprediction_penalty=1.0,
+    )
+    assert small_sample["empirical_bayes_shrinkage_weight_on_prior"] > large_sample["empirical_bayes_shrinkage_weight_on_prior"]
+    assert small_sample["bayes_optimal_asymmetric_action"] < small_sample["posterior_mean"]
+    assert small_sample["conservative_buffer_below_mean"] > 0.0
+
+    # Murphy (2023 PML Book 2) + Mandt, Hoffman & Blei (2017 SGD as OU Bayesian Inference)
+    vi = compute_elbo_and_ornstein_uhlenbeck_sgd_posterior_variance(
+        expected_log_likelihood=-1.25,
+        mu_q=0.15,
+        sigma_q=0.80,
+        mu_0=0.0,
+        sigma_0=1.0,
+        learning_rate_eta=0.01,
+        minibatch_size_b=32,
+        hessian_curvature_h=2.0,
+        gradient_noise_cov_c=1.5,
+    )
+    assert vi["kl_divergence_q_p"] > 0.0
+    assert vi["variational_elbo"] < -1.25
+    assert vi["ou_sgd_stationary_variance"] > 0.0
+
 

@@ -274,3 +274,111 @@ def deconfound_cumulative_ryoe_r2(
         "volume_inflation_gap": round(cum_r2 - rate_r2, 4),
     }
 
+
+def compute_ocular_quiet_eye_latency_multiplier(
+    quiet_eye_duration_ms: float = 380.0,
+    saccade_latency_ms: float = 210.0,
+    vts_score: float = 1.65,
+    elite_vts_ref: float = 1.50,
+    pocket_window_sec: float = 2.45,
+) -> Dict[str, float]:
+    """Lochhead, Feng, Laby & Appelbaum (2024, JSEP Scoping Review N=667) +
+    Erickson (2021, Optom. Vis. Sci. 98(7):670-680) + Kirschen & Laby (2011) Sports Vision Pyramid +
+    Phillips (2021, Ole Miss ETD 2126/3125 NeuroTracker 3D-MOT Visual Tracking Speed):
+    Computes the quarantined Ocular Latency / Quiet Eye Fixation structural multiplier
+    under a finite pocket time-to-pressure window.
+    Note: Explicitly preserves the Lochhead et al. (2024) finding that baseline visual
+    assessments correlate with elite performance whereas short-term vision-training
+    interventions lack proven causal 'far transfer' (far_transfer_training_weight = 0.0).
+    """
+    net_fixation_sec = max(0.0, (float(quiet_eye_duration_ms) - float(saccade_latency_ms)) / 1000.0)
+    window_ratio = net_fixation_sec / max(0.5, float(pocket_window_sec))
+    fixation_gate = 1.0 / (1.0 + math.exp(-6.0 * (window_ratio - 0.05)))
+    vts_ratio = max(0.5, float(vts_score) / max(0.5, float(elite_vts_ref)))
+    ocular_mult = fixation_gate * (vts_ratio ** 0.15)
+    return {
+        "net_quiet_eye_sec": round(net_fixation_sec, 4),
+        "fixation_gate": round(fixation_gate, 4),
+        "vts_ratio": round(vts_ratio, 4),
+        "ocular_decision_multiplier": round(ocular_mult, 4),
+        "far_transfer_training_weight": 0.0,
+    }
+
+
+def optimize_bayesian_asymmetric_loss_action(
+    prior_mean: float,
+    prior_std: float,
+    observed_mean: float,
+    sample_size: int,
+    obs_std: float = 15.0,
+    overprediction_penalty: float = 2.5,
+    underprediction_penalty: float = 1.0,
+) -> Dict[str, float]:
+    """Davidson-Pilon (Probabilistic Programming and Bayesian Methods for Hackers,
+    Ch. 4 Law of Large Numbers / Empirical Bayes Shrinkage & Ch. 5 Loss Functions):
+    1. Shrinks small-sample observed mean toward prior mean via precision-weighted
+       conjugate Normal-Normal posterior update (Ch. 4).
+    2. Computes the Bayes-optimal point action a* minimizing asymmetric linear/linex
+       expected posterior loss E_{theta|D}[L(theta, a)] where overpredicting a prop
+       is penalized by `overprediction_penalty` > `underprediction_penalty` (Ch. 5).
+    """
+    n = max(0, int(sample_size))
+    tau_0 = 1.0 / max(1e-6, float(prior_std) ** 2)
+    tau_obs = float(n) / max(1e-6, float(obs_std) ** 2)
+    post_prec = tau_0 + tau_obs
+    post_var = 1.0 / post_prec
+    post_std = math.sqrt(post_var)
+    post_mean = post_var * (tau_0 * float(prior_mean) + tau_obs * float(observed_mean))
+    shrinkage_factor = tau_0 / post_prec
+    # Under asymmetric piece-wise linear (pinball/newsvendor) loss with c_over, c_under,
+    # the Bayes action is the q = c_under / (c_over + c_under) posterior quantile:
+    c_over = max(1e-6, float(overprediction_penalty))
+    c_under = max(1e-6, float(underprediction_penalty))
+    critical_fractile = c_under / (c_over + c_under)
+    # Normal inverse CDF approximation via rational/erfinv relation:
+    # For q < 0.5, action is shifted below posterior mean to guard against over-projection.
+    z_grid = np.linspace(-3.5, 3.5, 701)
+    cdf_grid = 0.5 * (1.0 + np. vectorize(math.erf)(z_grid / math.sqrt(2.0)))
+    z_q = float(np.interp(critical_fractile, cdf_grid, z_grid))
+    bayes_optimal_action = post_mean + z_q * post_std
+    return {
+        "posterior_mean": round(post_mean, 4),
+        "posterior_std": round(post_std, 4),
+        "empirical_bayes_shrinkage_weight_on_prior": round(shrinkage_factor, 4),
+        "critical_fractile_q": round(critical_fractile, 4),
+        "bayes_optimal_asymmetric_action": round(bayes_optimal_action, 4),
+        "conservative_buffer_below_mean": round(post_mean - bayes_optimal_action, 4),
+    }
+
+
+def compute_elbo_and_ornstein_uhlenbeck_sgd_posterior_variance(
+    expected_log_likelihood: float,
+    mu_q: float,
+    sigma_q: float,
+    mu_0: float = 0.0,
+    sigma_0: float = 1.0,
+    learning_rate_eta: float = 0.01,
+    minibatch_size_b: int = 32,
+    hessian_curvature_h: float = 2.0,
+    gradient_noise_cov_c: float = 1.5,
+) -> Dict[str, float]:
+    """Murphy (2023, Probabilistic Machine Learning: Advanced Topics, MIT Press) +
+    Mandt, Hoffman & Blei (2017, JMLR / arXiv:1605.09674, SGD as Approximate Bayesian Inference) +
+    Fujii (2025, Machine Learning in Sports, SpringerBriefs DOI: 10.1007/978-981-96-1445-5):
+    Computes exact Gaussian KL divergence D_KL(q || p), Variational Evidence Lower Bound (ELBO),
+    and the Ornstein-Uhlenbeck stationary posterior variance Sigma_OU = (eta / (2 * B * H)) * C.
+    """
+    sq = max(1e-6, float(sigma_q))
+    s0 = max(1e-6, float(sigma_0))
+    kl_qp = math.log(s0 / sq) + (sq ** 2 + (float(mu_q) - float(mu_0)) ** 2) / (2.0 * (s0 ** 2)) - 0.5
+    elbo = float(expected_log_likelihood) - kl_qp
+    ou_stationary_var = (float(learning_rate_eta) * float(gradient_noise_cov_c)) / (
+        2.0 * max(1, int(minibatch_size_b)) * max(1e-6, float(hessian_curvature_h))
+    )
+    return {
+        "kl_divergence_q_p": round(kl_qp, 6),
+        "variational_elbo": round(elbo, 6),
+        "ou_sgd_stationary_variance": round(ou_stationary_var, 6),
+    }
+
+
