@@ -527,23 +527,45 @@ def simulate_dirichlet_multinomial_field(
 
 
 
+def verify_dk_salaries_slate_identity(csv_path: str | pd.DataFrame) -> Dict[str, Any]:
+    """Inspect a DraftKings `DKSalaries.csv` file's `Game Info` column to determine whether
+    the slate belongs to Week 8 (11/01/2026 - 11/02/2026) or Week 9 (11/08/2026 - 11/09/2026),
+    preventing a Week 8 CSV from being mislabeled as a live Week 9 contest pool.
+    """
+    df = pd.read_csv(csv_path) if not isinstance(csv_path, pd.DataFrame) else csv_path
+    games = sorted({str(x).strip() for x in df.get("Game Info", pd.Series(dtype=str)).dropna().unique() if str(x).strip()})
+    has_week8_dates = any("11/01/2026" in g or "11/02/2026" in g for g in games)
+    has_week9_dates = any("11/08/2026" in g or "11/09/2026" in g or "11/05/2026" in g for g in games)
+    detected_week = 8 if (has_week8_dates and not has_week9_dates) else (9 if has_week9_dates else 0)
+    return {
+        "row_count": int(len(df)),
+        "unique_games": games,
+        "detected_nfl_week": detected_week,
+        "is_week8_retrospective_file": bool(detected_week == 8),
+        "is_week9_live_file": bool(detected_week == 9),
+    }
+
+
 def build_sample_week9_dfs_slate_pool() -> pd.DataFrame:
-    """Construct a feasible 18-player multi-team NFL DFS slate pool for testing and demonstration."""
+    """Construct a canonical 2026 Week 9 multi-team NFL DFS slate pool (with Marvin Harrison Jr. EB prior
+    and canonical 2026 SEA/ARI/BAL/DEN rosters).
+    """
     return pd.DataFrame(
         [
             {"player": "Lamar Jackson", "position": "QB", "salary": 7800, "projection": 24.5, "team": "BAL", "opponent": "DEN"},
-            {"player": "Zay Flowers", "position": "WR", "salary": 6400, "projection": 16.2, "team": "BAL", "opponent": "DEN"},
+            {"player": "Zay Flowers", "position": "WR", "salary": 6400, "projection": 14.8, "team": "BAL", "opponent": "DEN"},
             {"player": "Rashod Bateman", "position": "WR", "salary": 4500, "projection": 11.4, "team": "BAL", "opponent": "DEN"},
             {"player": "Mark Andrews", "position": "TE", "salary": 5100, "projection": 13.1, "team": "BAL", "opponent": "DEN"},
             {"player": "Derrick Henry", "position": "RB", "salary": 8100, "projection": 20.4, "team": "BAL", "opponent": "DEN"},
-            {"player": "Geno Smith", "position": "QB", "salary": 5700, "projection": 19.2, "team": "SEA", "opponent": "ARI"},
-            {"player": "Jaxon Smith-Njigba", "position": "WR", "salary": 6200, "projection": 16.8, "team": "SEA", "opponent": "ARI"},
-            {"player": "DK Metcalf", "position": "WR", "salary": 6600, "projection": 15.9, "team": "SEA", "opponent": "ARI"},
-            {"player": "Kenneth Walker III", "position": "RB", "salary": 6900, "projection": 17.5, "team": "SEA", "opponent": "ARI"},
-            {"player": "AJ Barner", "position": "TE", "salary": 3100, "projection": 7.8, "team": "SEA", "opponent": "ARI"},
+            {"player": "Sam Darnold", "position": "QB", "salary": 5700, "projection": 18.9, "team": "SEA", "opponent": "ARI"},
+            {"player": "Jaxon Smith-Njigba", "position": "WR", "salary": 6800, "projection": 17.6, "team": "SEA", "opponent": "ARI"},
+            {"player": "Cooper Kupp", "position": "WR", "salary": 6200, "projection": 15.4, "team": "SEA", "opponent": "ARI"},
+            {"player": "Emanuel Wilson", "position": "RB", "salary": 5900, "projection": 15.8, "team": "SEA", "opponent": "ARI"},
+            {"player": "AJ Barner", "position": "TE", "salary": 3400, "projection": 8.9, "team": "SEA", "opponent": "ARI"},
             {"player": "Kyler Murray", "position": "QB", "salary": 6100, "projection": 18.7, "team": "ARI", "opponent": "SEA"},
             {"player": "Trey McBride", "position": "TE", "salary": 6000, "projection": 15.8, "team": "ARI", "opponent": "SEA"},
-            {"player": "Michael Wilson", "position": "WR", "salary": 4700, "projection": 12.1, "team": "ARI", "opponent": "SEA"},
+            {"player": "Marvin Harrison Jr.", "position": "WR", "salary": 6300, "projection": 15.2, "team": "ARI", "opponent": "SEA"},
+            {"player": "Michael Wilson", "position": "WR", "salary": 4700, "projection": 11.8, "team": "ARI", "opponent": "SEA"},
             {"player": "James Conner", "position": "RB", "salary": 6500, "projection": 16.4, "team": "ARI", "opponent": "SEA"},
             {"player": "Courtland Sutton", "position": "WR", "salary": 5800, "projection": 14.3, "team": "DEN", "opponent": "BAL"},
             {"player": "Javonte Williams", "position": "RB", "salary": 5200, "projection": 12.6, "team": "DEN", "opponent": "BAL"},

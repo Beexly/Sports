@@ -24,39 +24,57 @@ CLASSIFICATION = "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST"
 
 
 class MultiGameGlycogenDepletionEngine:
-    """Tracks multi-week intracellular glycogen depletion fields to forecast fatigue and soft-tissue risk."""
+    """Tracks multi-week intracellular muscle glycogen concentration in mmol/kg wet muscle weight
+    (G_0 in [130, 160] mmol/kg wet weight; elevated fatigue warning < 95 mmol/kg; critical soft-tissue
+    threshold < 70 mmol/kg) to forecast cumulative short-week fatigue without conflating whole-body grams
+    with localized mmol/kg concentration.
+    """
+
+    @staticmethod
+    def _normalize_to_mmol_per_kg(val: float) -> float:
+        v = float(val)
+        # Convert legacy whole-body glycogen mass in grams (e.g. 420-450g) to mmol/kg wet muscle weight (~140-150 mmol/kg)
+        return v / 3.0 if v > 220.0 else v
 
     def __init__(self, baseline_profiles: Mapping[str, Mapping[str, float]]):
-        self.profiles = {k: dict(v) for k, v in baseline_profiles.items()}
-        self.glycogen_state_db: Dict[str, float] = {
-            pid: float(p.get("initial_glycogen", 450.0)) for pid, p in self.profiles.items()
-        }
+        self.profiles = {}
+        self.glycogen_state_db: Dict[str, float] = {}
+        for pid, p in baseline_profiles.items():
+            prof = dict(p)
+            g0_mmol = self._normalize_to_mmol_per_kg(prof.get("initial_glycogen", 150.0))
+            prof["initial_glycogen_mmol_kg"] = g0_mmol
+            self.profiles[pid] = prof
+            self.glycogen_state_db[pid] = g0_mmol
 
     def process_game_workload_discharge(self, player_id: str, accumulated_work_joules: float) -> float:
-        current_glycogen = self.glycogen_state_db.get(player_id, 400.0)
+        current_glycogen = self.glycogen_state_db.get(player_id, 145.0)
         profile = self.profiles.get(player_id, {"mass_kg": 100.0})
         mass_kg = max(40.0, float(profile.get("mass_kg", 100.0)))
         work_scaled_index = max(0.0, float(accumulated_work_joules)) / (mass_kg * 1e5)
-        glycogen_discharged = 15.0 * (work_scaled_index ** 1.5)
-        updated_glycogen = max(50.0, current_glycogen - glycogen_discharged)
+        # Calibrated in mmol/kg wet muscle weight: heavy NFL game workload drains ~55-75 mmol/kg
+        glycogen_discharged = 12.5 * (work_scaled_index ** 1.35)
+        updated_glycogen = max(25.0, current_glycogen - glycogen_discharged)
         self.glycogen_state_db[player_id] = updated_glycogen
         return round(updated_glycogen, 4)
 
     def simulate_weekly_regeneration_recharge(self, player_id: str, rest_days: float = 6.0) -> float:
-        current_glycogen = self.glycogen_state_db.get(player_id, 400.0)
-        profile = self.profiles.get(player_id, {"cho_intake_g_kg": 6.0, "initial_glycogen": 450.0})
-        recharge_efficiency = 8.5
-        glycogen_gained = float(profile.get("cho_intake_g_kg", 6.0)) * recharge_efficiency * max(0.0, float(rest_days))
-        max_capacity_ceiling = float(profile.get("initial_glycogen", 450.0)) * 1.15
+        current_glycogen = self.glycogen_state_db.get(player_id, 145.0)
+        profile = self.profiles.get(player_id, {"cho_intake_g_kg": 6.0, "initial_glycogen_mmol_kg": 150.0})
+        # Net post-practice daily glycogen synthesis rate (1.35 mmol/kg per g/kg CHO per rest day)
+        # so a 3-day short-week turnaround after heavy game drain leaves net cumulative depletion below G_0.
+        net_daily_synthesis_rate = 1.35
+        glycogen_gained = float(profile.get("cho_intake_g_kg", 6.0)) * net_daily_synthesis_rate * max(0.0, float(rest_days))
+        g0 = float(profile.get("initial_glycogen_mmol_kg", self._normalize_to_mmol_per_kg(profile.get("initial_glycogen", 150.0))))
+        max_capacity_ceiling = g0 * 1.05
         updated_glycogen = min(max_capacity_ceiling, current_glycogen + glycogen_gained)
         self.glycogen_state_db[player_id] = updated_glycogen
         return round(updated_glycogen, 4)
 
     def evaluate_soft_tissue_injury_risk(self, player_id: str) -> Tuple[str, float]:
-        current_glycogen = self.glycogen_state_db.get(player_id, 400.0)
-        if current_glycogen < 200.0:
+        current_glycogen = self.glycogen_state_db.get(player_id, 145.0)
+        if current_glycogen < 70.0:
             return "CRITICAL_SOFT_TISSUE_WARNING", 0.78
-        if current_glycogen < 300.0:
+        if current_glycogen < 95.0:
             return "ELEVATED_FATIGUE_RISK", 0.92
         return "OPTIMAL_METABOLIC_HEALTH", 1.00
 
@@ -494,16 +512,16 @@ def evaluate_noyes_systematic_error_gate(
     adversarial_blind_control_passed: bool = True,
     uses_unverified_macroscopic_quantum_jargon: bool = False,
 ) -> Dict[str, Any]:
-    """Synthesizes the Epistemic & Scientific-Skepticism Triad (`9906014v1.pdf`, `p26.pdf`, `CIA-RDP96-00792R000700710002-1.pdf`):
+    """Synthesizes the Epistemic & Metrological Systematic-Error Gate (`9906014v1.pdf`, `p26.pdf`, BIPM GUM):
     1. H. Pierre Noyes (SLAC-PUB-8151, Stanford 1999, `9906014v1.pdf`):
        In large samples N, naive Z_stat = |delta| / (sigma_stat / sqrt(N)) explodes even when |delta| is tiny;
        true effective significance must include uncalibrated systematic error sigma_sys:
            Z_eff = |delta| / sqrt(sigma_stat^2 / N + sigma_sys^2).
     2. Steven N. Shore (Fall 1984, *Skeptical Inquirer*, `p26.pdf`):
        Rejects macroscopic pseudo-quantum vocabulary that lacks physical/empirical correspondence.
-    3. CIA-RDP96-00792R000700710002-1 (1984 Randi Project Alpha & Dumalin Spierlezen / Clever-Hans):
-       Any model/experiment that fails adversarial double-blind / leakage controls (`adversarial_blind_control_passed=False`)
-       is quarantined as Clever-Hans / sycophancy leakage.
+    3. Standard Metrological Blind-Control & Leakage Gate (BIPM / GUM):
+       Any model/experiment that fails adversarial out-of-sample blind / leakage controls
+       (`adversarial_blind_control_passed=False`) is quarantined as Clever-Hans / sycophancy leakage.
     """
     n = max(1, int(sample_size_n))
     s_stat = max(1e-9, float(statistical_std))

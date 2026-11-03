@@ -107,8 +107,8 @@ def test_espn_2026_pbwr_prwr_and_week9_sea_ari_matrix():
     conserved_ari = enforce_production_sanity_gates(raw_ari, priors_ari, team_target_cap=34.0)
     by_id = dict(zip(conserved_ari["player_id"], conserved_ari["conserved_volume"]))
     assert by_id["Kendrick Bourne"] == 0.0
-    assert by_id["Marvin Harrison Jr."] == 0.0
-    assert by_id["Trey McBride"] > by_id["Michael Wilson"] > 0.0
+    assert by_id["Marvin Harrison Jr."] > 6.5
+    assert by_id["Trey McBride"] > by_id["Marvin Harrison Jr."] > by_id["Michael Wilson"] > 0.0
     assert float(conserved_ari["conserved_volume"].sum()) == pytest.approx(34.0, abs=1e-9)
 
 
@@ -136,9 +136,10 @@ def test_quarantined_glycogen_pinn_mallat_and_memory_slice():
         }
     )
     g1 = eng.process_game_workload_discharge("BREECE_HALL", accumulated_work_joules=3.2e7)
-    assert g1 < 450.0
+    # Normalized to mmol/kg wet muscle weight (450g -> 150 mmol/kg)
+    assert g1 < 150.0
     g2 = eng.simulate_weekly_regeneration_recharge("BREECE_HALL", rest_days=3.0)
-    assert g2 > g1
+    assert g1 < g2 < 150.0
     risk, mult = eng.evaluate_soft_tissue_injury_risk("BREECE_HALL")
     assert risk in {"CRITICAL_SOFT_TISSUE_WARNING", "ELEVATED_FATIGUE_RISK", "OPTIMAL_METABOLIC_HEALTH"}
     assert 0.78 <= mult <= 1.00
@@ -155,13 +156,14 @@ def test_quarantined_glycogen_pinn_mallat_and_memory_slice():
 
     mem = evaluate_in_memory_telemetry_rows(
         [
-            ("2026_08_CHI_SEA", 1, 1, 0, 25.0, 26.6, 4.5, 1.2),
-            ("2026_08_CHI_SEA", 1, 2, 0, 25.4, 26.7, 5.1, 1.4),
+            ("2026_08_CHI_SEA", 1, 1, 0, 25.0, 26.6, 4.5, 1.2, 210.0),
+            ("2026_08_CHI_SEA", 1, 2, 0, 25.4, 26.7, 5.1, 1.4, 310.0),
         ]
     )
     assert mem["play_blocks"] == 1
     assert mem["processed_nodes"] == 2
     assert mem["total_kinetic_energy_joules"] > 0.0
+    assert mem["array_dtype"] == "float64"
 
 
 def test_wave3_alam_crosswind_kent_cleat_bezier_routes_and_congelio_ryoe_deconfounding():
@@ -447,6 +449,71 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
     unmatched = [p for p in planned if not p["source_file"]]
     assert len(unmatched) == 0
     assert sum(1 for p in planned if p["record_class"] == "REJECTED_CORRUPT") == 3
+
+
+def test_track_a_b_c_d_forensic_repo_review_fixes():
+    """Verify all fixes from `DOC-NOV03-GSE-SYSTEM-REPO-REVIEW-2` (`GSE System and Repo Review (2).docx`)
+    and `EQ-NOV03-021` (`enforce_monotonic_cqr_cdf_consistency`).
+    """
+    import json
+    from pathlib import Path
+    from scripts.ops.build_week9_tuesday_sealed_baseline import build_week9_tuesday_sealed_baseline
+    from scripts.ops.dfs_stochastic_milp_optimizer import verify_dk_salaries_slate_identity
+    from scripts.ops.week8_forensic_kernels import enforce_monotonic_cqr_cdf_consistency
+    from tests.verify_out_of_sample_calibration import main as cal_main, run_real_nflverse_walk_forward_backtests
+
+    root = Path(__file__).resolve().parents[1]
+
+    # 1. EQ-NOV03-021: Monotonic CQR CDF-quantile consistency & -110 break-even implied probability (52.381%)
+    cqr_fix = enforce_monotonic_cqr_cdf_consistency(23.8, 66.1, line=21.5, model_p_over=0.7028, alpha=0.20)
+    assert cqr_fix["low"] < 21.5
+    assert cqr_fix["monotonic_consistent"] is True
+
+    card = json.loads((root / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json").read_text(encoding="utf-8"))
+    raymond_prop = [p for p in card["evaluated_player_props"] if p["player"] == "Kalif Raymond" and p["market"] == "Receiving Yards"][0]
+    assert raymond_prop["barber_cqr_80"][0] < 21.5
+    assert raymond_prop["cqr_monotonic_consistent"] is True
+    assert raymond_prop["market_p"] == pytest.approx(110.0 / 210.0, abs=1e-4)
+
+    # 2. SQL BRIN Cluster & Telemetry Mutation Guard
+    sql_txt = (root / "schema" / "production_spatial_schema.sql").read_text(encoding="utf-8")
+    assert "CLUSTER telemetry_tracking_fact USING idx_telemetry_btree_order;" in sql_txt
+    assert "CLUSTER telemetry_tracking_fact USING idx_telemetry_brin_spatiotemporal;" not in sql_txt
+    assert "ALTER SYSTEM SET shared_buffers" not in sql_txt
+
+    with pytest.raises(ValueError, match="role = 'BALL'"):
+        validate_roster_and_coordinate_mutation_guard([], sql_statement="UPDATE telemetry_tracking_fact SET role = 'BALL'")
+    with pytest.raises(ValueError, match="velocity vx/vy"):
+        validate_roster_and_coordinate_mutation_guard([], sql_statement="UPDATE telemetry_tracking_fact SET vx = vx * 1.15")
+
+    # 3. CI Workflow & --enforce-gate exit code
+    ci_txt = (root / ".github" / "workflows" / "epistemic_gate.yml").read_text(encoding="utf-8")
+    assert 'python-version: "3.11"' in ci_txt
+    assert "python-range" not in ci_txt
+    assert "gdal-bin" in ci_txt
+    assert "GDAL-bin" not in ci_txt
+    assert cal_main(["--enforce-gate", "--test-reject-exit-code"]) == 1
+    assert cal_main(["--enforce-gate"]) == 0
+
+    # 4. Feed & Manifest Sanitization (Zero non-domain Charcuterie / OperaSetup / CIA Stargate pollution)
+    feed_txt = (root / "brain" / "feeds" / "2026-11-02" / "nov02_multidomain_corpus_and_equations_feed.jsonl").read_text(encoding="utf-8")
+    for banned_substr in ("Charcuterie-Chick", "OperaSetup.exe", "CIA-RDP96-00792", "some_eth_false_exposition", "_vitest_"):
+        assert banned_substr not in feed_txt
+
+    # 5. Real nflverse walk-forward backtests & Week 9 Tuesday sealed baseline
+    wf = run_real_nflverse_walk_forward_backtests()
+    assert wf["eager_split_pass_epa_and_poisson_td"]["PROMOTION_GATE_STATUS"] == "APPROVED"
+    assert wf["davidson_pilon_empirical_bayes_receiving_props"]["PROMOTION_GATE_STATUS"] == "APPROVED"
+    assert wf["quarantined_pinn_navier_stokes_and_ocular_proxy"]["PROMOTION_GATE_STATUS"] == "REJECTED"
+
+    sealed = build_week9_tuesday_sealed_baseline()
+    assert sealed["mhj_shrunk_target_share_prior"] >= 0.20
+
+    dk_Sample = pd.DataFrame({"Game Info": ["MIN@DET 11/01/2026 01:00PM ET", "CHI@SEA 11/02/2026 08:15PM ET"]})
+    dk_id = verify_dk_salaries_slate_identity(dk_Sample)
+    assert dk_id["detected_nfl_week"] == 8
+    assert dk_id["is_week8_retrospective_file"] is True
+
 
 
 

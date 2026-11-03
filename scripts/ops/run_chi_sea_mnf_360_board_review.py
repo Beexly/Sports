@@ -88,6 +88,7 @@ from week8_forensic_kernels import (  # noqa: E402
     barber_weighted_conformal_interval,
     block_inactive_player,
     compute_empirical_bayes_shrunk_projection,
+    enforce_monotonic_cqr_cdf_consistency,
     enforce_route_snap_participation_gate,
     evaluate_parlay_conjunction_gate,
     recommend_scrimmage_over_receiving_prop,
@@ -490,7 +491,7 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             route_share=sp["route_share"],
             target_share=sp["target_share"],
         )
-        cqr = barber_weighted_conformal_interval(sim_p10, sim_p90, residual_history, alpha=0.10, rho=0.97)
+        cqr_raw = barber_weighted_conformal_interval(sim_p10, sim_p90, residual_history, alpha=0.20, rho=0.97)
         mkt_over, mkt_under = devig_two_way(sp["over_odds"], sp["under_odds"])
 
         raw_p_over = float(np.mean(w > sp["line"]))
@@ -499,17 +500,31 @@ def run_mnf_360_engine() -> Dict[str, Any]:
         model_p_over = 0.75 * raw_p_over + 0.25 * 0.50
         model_p_under = 0.75 * raw_p_under + 0.25 * 0.50
 
+        cqr = enforce_monotonic_cqr_cdf_consistency(
+            float(cqr_raw["low"]),
+            float(cqr_raw["high"]),
+            float(sp["line"]),
+            float(model_p_over),
+            alpha=0.20,
+        )
+
         if sp["direction"] == "OVER":
             model_p = model_p_over
             mkt_p = mkt_over
+            breakeven_p = american_to_implied_prob(sp["over_odds"])
         elif sp["direction"] == "UNDER":
             model_p = model_p_under
             mkt_p = mkt_under
+            breakeven_p = american_to_implied_prob(sp["under_odds"])
         else:
             model_p = max(model_p_over, model_p_under)
             mkt_p = 0.50
+            breakeven_p = american_to_implied_prob(-110)
 
-        edge = model_p - mkt_p
+        # Edge is measured against the true break-even implied probability (52.381% at -110),
+        # never inflated by subtracting a vig-free 50.00% midpoint.
+        edge = model_p - breakeven_p
+        edge_vs_devig = model_p - mkt_p
         publish_allowed = bool(gate["eligible"] and sp["direction"] in {"OVER", "UNDER"} and edge >= 0.060)
 
         evaluated_props.append({
@@ -526,12 +541,15 @@ def run_mnf_360_engine() -> Dict[str, Any]:
             "sim_mean": round(sim_mean, 2),
             "sim_median": round(sim_p50, 2),
             "barber_cqr_80": [round(float(cqr["low"]), 2), round(float(cqr["high"]), 2)],
+            "cqr_monotonic_consistent": bool(cqr["monotonic_consistent"]),
             "snap_share": round(sp["snap_share"], 3),
             "route_share": round(sp["route_share"], 3),
             "participation_gate": gate["decision"],
             "model_p": round(model_p, 4),
-            "market_p": round(mkt_p, 4),
+            "market_p": round(breakeven_p, 5),
+            "devig_fair_p": round(mkt_p, 4),
             "edge_pct": round(edge * 100.0, 2),
+            "edge_vs_devig_pct": round(edge_vs_devig * 100.0, 2),
             "fair_odds": prob_to_american(model_p),
             "publish_allowed": publish_allowed,
             "note": sp["note"],

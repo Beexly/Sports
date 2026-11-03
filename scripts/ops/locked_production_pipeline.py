@@ -11,12 +11,16 @@ Enforces:
 from __future__ import annotations
 
 import math
+from pathlib import Path
 from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
 
+from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import optimize_bayesian_asymmetric_loss_action
 from scripts.ops.week8_forensic_kernels import CANONICAL_2026_ROSTER
+
+ROOT = Path(__file__).resolve().parents[2]
 
 EXTENDED_CANONICAL_2026_ROSTER: Dict[str, str] = {
     **CANONICAL_2026_ROSTER,
@@ -41,7 +45,43 @@ EXTENDED_CANONICAL_2026_ROSTER: Dict[str, str] = {
     "Michael Wilson": "ARI",
     "Jaxon Smith-Njigba": "SEA",
     "Cooper Kupp": "SEA",
+    "AJ Barner": "SEA",
 }
+
+
+def load_canonical_2026_roster_map() -> Dict[str, str]:
+    """Load full 2026 player->team map from data/nflverse/rosters_2026.parquet when present,
+    layered with EXTENDED_CANONICAL_2026_ROSTER overrides.
+    """
+    roster_map: Dict[str, str] = {}
+    parquet_path = ROOT / "data" / "nflverse" / "rosters_2026.parquet"
+    if parquet_path.exists():
+        try:
+            df = pd.read_parquet(parquet_path)
+            name_col = next((c for c in ("full_name", "player_name", "football_name") if c in df.columns), None)
+            team_col = next((c for c in ("team", "recent_team", "team_abbr") if c in df.columns), None)
+            if name_col and team_col:
+                for n_val, t_val in zip(df[name_col], df[team_col]):
+                    if pd.notna(n_val) and pd.notna(t_val):
+                        roster_map[str(n_val).strip()] = str(t_val).strip().upper()
+        except Exception:
+            pass
+    roster_map.update(EXTENDED_CANONICAL_2026_ROSTER)
+    return roster_map
+
+
+# Empirical Bayes shrunk target share prior for Marvin Harrison Jr. (ARI WR1, 88% route share):
+# Never hard-zero an 88% route-participation WR1 after a single 0-catch box score (Week 8).
+_MHJ_EB_PRIOR = optimize_bayesian_asymmetric_loss_action(
+    prior_mean=0.235,
+    prior_std=0.045,
+    observed_mean=0.205,
+    sample_size=7,
+    obs_std=0.085,
+    overprediction_penalty=1.2,
+    underprediction_penalty=1.0,
+)
+MHJ_SHRUNK_TARGET_SHARE_PRIOR: float = round(max(0.20, float(_MHJ_EB_PRIOR["posterior_mean"])), 3)
 
 ESPN_2026_OT_PBWR_LEADERS: Dict[str, Dict[str, Any]] = {
     "Jordan Mailata": {"team": "PHI", "pbwr": 0.93},
@@ -83,15 +123,20 @@ WEEK9_TRENCH_MISMATCH_SPOTLIGHT: Dict[str, Dict[str, Any]] = {
     },
 }
 
+# ARI target shares are Dirichlet-normalized so active pass catchers sum to 1.000
+# with Marvin Harrison Jr. anchored to his Empirical Bayes shrunk prior (0.228 >= 0.20).
 WEEK9_SEA_ARI_PASS_CATCHER_MATRIX: List[Dict[str, Any]] = [
     {"team": "ARI", "player_id": "Trey McBride", "pos": "TE", "route_participation": 0.89, "target_share_prior": 0.294, "status": "APPROVED"},
+    {"team": "ARI", "player_id": "Marvin Harrison Jr.", "pos": "WR", "route_participation": 0.88, "target_share_prior": MHJ_SHRUNK_TARGET_SHARE_PRIOR, "status": "APPROVED_EB_SHRUNK_WR1"},
     {"team": "ARI", "player_id": "Michael Wilson", "pos": "WR", "route_participation": 0.76, "target_share_prior": 0.181, "status": "APPROVED_INJURY_CHECK"},
     {"team": "ARI", "player_id": "Reggie Virgil", "pos": "WR", "route_participation": 0.44, "target_share_prior": 0.112, "status": "APPROVED_DEPTH"},
     {"team": "ARI", "player_id": "Simi Fehoko", "pos": "WR", "route_participation": 0.32, "target_share_prior": 0.080, "status": "APPROVED_DEPTH"},
-    {"team": "ARI", "player_id": "Marvin Harrison Jr.", "pos": "WR", "route_participation": 0.88, "target_share_prior": 0.0, "status": "FLAGGED_ZEROED_CHALK_TRAP"},
+    {"team": "ARI", "player_id": "ARI_RBs_Other", "pos": "RB", "route_participation": 0.52, "target_share_prior": round(1.0 - (0.294 + MHJ_SHRUNK_TARGET_SHARE_PRIOR + 0.181 + 0.112 + 0.080), 3), "status": "APPROVED_CHECKDOWN"},
     {"team": "ARI", "player_id": "Kendrick Bourne", "pos": "WR", "route_participation": 0.0, "target_share_prior": 0.0, "status": "HARD_LOCKOUT_OUT"},
     {"team": "SEA", "player_id": "Jaxon Smith-Njigba", "pos": "WR", "route_participation": 0.86, "target_share_prior": 0.265, "status": "APPROVED"},
     {"team": "SEA", "player_id": "Cooper Kupp", "pos": "WR", "route_participation": 0.81, "target_share_prior": 0.240, "status": "APPROVED"},
+    {"team": "SEA", "player_id": "AJ Barner", "pos": "TE", "route_participation": 0.74, "target_share_prior": 0.165, "status": "APPROVED"},
+    {"team": "SEA", "player_id": "SEA_RBs_Other", "pos": "RB", "route_participation": 0.55, "target_share_prior": 0.330, "status": "APPROVED_CHECKDOWN"},
     {"team": "SEA", "player_id": "Rashid Shaheed", "pos": "WR", "route_participation": 0.0, "target_share_prior": 0.0, "status": "HARD_LOCKOUT_OUT"},
 ]
 
@@ -125,9 +170,12 @@ def validate_roster_and_coordinate_mutation_guard(
     roster_assignments: Sequence[Mapping[str, str]],
     coordinate_scale_x: float = 1.0,
     coordinate_scale_y: float = 1.0,
+    sql_statement: str = "",
 ) -> Dict[str, Any]:
-    """Block LLM-hallucinated team assignments (e.g. A.J. Brown on NE, Trey Hendrickson on BAL)
-    and forbid scaling spatial field coordinates (x, y) to model turf friction upgrades.
+    """Block LLM-hallucinated team assignments (validated against data/nflverse/rosters_2026.parquet
+    plus EXTENDED_CANONICAL_2026_ROSTER), forbid scaling spatial field coordinates (x, y) to model turf
+    friction upgrades, and reject tracking telemetry corruption SQL (e.g. setting injured player role = 'BALL'
+    or multiplying physical running velocity vx by vacated target share).
     """
     if abs(float(coordinate_scale_x) - 1.0) > 1e-6 or abs(float(coordinate_scale_y) - 1.0) > 1e-6:
         raise ValueError(
@@ -135,14 +183,21 @@ def validate_roster_and_coordinate_mutation_guard(
             "to model turf friction; adjust shear yield tau_yield in the cleat-turf layer instead."
         )
 
+    sql_upper = str(sql_statement or "").upper()
+    if "ROLE = 'BALL'" in sql_upper or "ROLE='BALL'" in sql_upper:
+        raise ValueError("Forbidden tracking mutation: never reassign injured players to role = 'BALL'.")
+    if "SET VX = VX *" in sql_upper or "SET VY = VY *" in sql_upper:
+        raise ValueError("Forbidden tracking mutation: never scale physical velocity vx/vy by vacated target share.")
+
+    canon_map = load_canonical_2026_roster_map()
     for row in roster_assignments:
         player = str(row.get("player_name") or row.get("player_id") or "").strip()
         team = str(row.get("team") or "").strip().upper()
-        expected = EXTENDED_CANONICAL_2026_ROSTER.get(player)
+        expected = canon_map.get(player)
         if expected and team and team != expected:
             raise ValueError(f"Hallucinated roster assignment blocked: {player} mapped to {team}, canonical is {expected}")
 
-    return {"roster_verified": True, "coordinate_invariance_verified": True}
+    return {"roster_verified": True, "coordinate_invariance_verified": True, "canonical_roster_size": len(canon_map)}
 
 
 def scale_dropoff_by_effective_contributors(

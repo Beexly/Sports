@@ -147,6 +147,13 @@ def execute_neon_insert(planned: List[Dict[str, Any]]) -> Dict[str, Any]:
                 )
                 inserted += 1
 
+            valid_keys = [item["premise_key"] for item in planned]
+            cur.execute(
+                "DELETE FROM lit.premise WHERE premise_key LIKE 'nov02:%%' AND NOT (premise_key = ANY(%s));",
+                (valid_keys,),
+            )
+            purged_stale = cur.rowcount
+
             cur.execute("SELECT count(*) FROM lit.premise WHERE premise_key LIKE 'nov02:%';")
             after_nov02 = int(cur.fetchone()[0])
             cur.execute("SELECT count(*) FROM lit.premise;")
@@ -162,6 +169,7 @@ def execute_neon_insert(planned: List[Dict[str, Any]]) -> Dict[str, Any]:
         "executed_at_utc": datetime.now(timezone.utc).isoformat(),
         "before_total": before_total,
         "existing_nov02": existing_nov02,
+        "purged_non_domain_or_duplicate_rows": purged_stale,
         "planned_count": len(planned),
         "after_nov02": after_nov02,
         "after_total": after_total,

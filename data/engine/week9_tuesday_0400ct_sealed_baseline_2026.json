@@ -1,0 +1,257 @@
+{
+  "schema_version": "GSE-WEEK9-SEALED-BASELINE-v1.0",
+  "sealed_window": "Tuesday 04:00 CT Pre-Market Baseline (Week 9, 2026)",
+  "generated_at_utc": "2026-11-03T08:38:56.038296+00:00",
+  "roster_and_coordinate_guard": {
+    "roster_verified": true,
+    "coordinate_invariance_verified": true,
+    "canonical_roster_size": 24
+  },
+  "mhj_shrunk_target_share_prior": 0.215,
+  "espn_2026_ot_pbwr_leaders": {
+    "Jordan Mailata": {
+      "team": "PHI",
+      "pbwr": 0.93
+    },
+    "Theo Benedet": {
+      "team": "CHI",
+      "pbwr": 0.93
+    },
+    "Trent Williams": {
+      "team": "SF",
+      "pbwr": 0.92
+    },
+    "Lane Johnson": {
+      "team": "PHI",
+      "pbwr": 0.92
+    },
+    "Colton McKivitz": {
+      "team": "SF",
+      "pbwr": 0.92
+    },
+    "Tristan Wirfs": {
+      "team": "TB",
+      "pbwr": 0.92
+    },
+    "Kolton Miller": {
+      "team": "LV",
+      "pbwr": 0.92
+    },
+    "Brian O'Neill": {
+      "team": "MIN",
+      "pbwr": 0.91
+    }
+  },
+  "espn_2026_edge_prwr_leaders": {
+    "Abdul Carter": {
+      "team": "NYG",
+      "prwr": 0.35
+    },
+    "Chop Robinson": {
+      "team": "MIA",
+      "prwr": 0.35
+    },
+    "Trey Hendrickson": {
+      "team": "CIN",
+      "prwr": 0.3
+    },
+    "Romello Height": {
+      "team": "SF",
+      "prwr": 0.29
+    },
+    "DeMarcus Lawrence": {
+      "team": "SEA",
+      "prwr": 0.28
+    },
+    "Dallas Turner": {
+      "team": "MIN",
+      "prwr": 0.28
+    },
+    "Nik Bonitto": {
+      "team": "DEN",
+      "prwr": 0.28
+    }
+  },
+  "week9_trench_mismatch_spotlight": {
+    "ARI_OL_vs_SEA_DL": {
+      "offense": "ARI",
+      "defense": "SEA",
+      "ari_ol_pbwr_rank": 31,
+      "ari_w8_sacks_allowed": 5,
+      "sea_dl_prwr_rank": 2,
+      "sea_def_epa_rank": 3,
+      "verdict": "CLEANEST_STRUCTURAL_PRESSURE_ADVANTAGE"
+    },
+    "GB_OL_PROTECTION_FLOOR": {
+      "offense": "GB",
+      "gb_season_pbwr": 0.31,
+      "gb_single_game_floor_pbwr": 0.09,
+      "gb_ol_pbwr_rank": 32,
+      "verdict": "HEAVY_INTERIOR_DROPBACK_VARIANCE"
+    }
+  },
+  "conserved_pass_catcher_priors": {
+    "ARI": [
+      {
+        "team": "ARI",
+        "player_id": "Trey McBride",
+        "pos": "TE",
+        "route_participation": 0.89,
+        "target_share_prior": 0.294,
+        "status": "APPROVED",
+        "conserved_projected_targets": 9.996,
+        "conserved_target_share": 0.294,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "ARI",
+        "player_id": "Marvin Harrison Jr.",
+        "pos": "WR",
+        "route_participation": 0.88,
+        "target_share_prior": 0.215,
+        "status": "APPROVED_EB_SHRUNK_WR1",
+        "conserved_projected_targets": 7.31,
+        "conserved_target_share": 0.215,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "ARI",
+        "player_id": "Michael Wilson",
+        "pos": "WR",
+        "route_participation": 0.76,
+        "target_share_prior": 0.181,
+        "status": "APPROVED_INJURY_CHECK",
+        "conserved_projected_targets": 6.154,
+        "conserved_target_share": 0.181,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "ARI",
+        "player_id": "Reggie Virgil",
+        "pos": "WR",
+        "route_participation": 0.44,
+        "target_share_prior": 0.112,
+        "status": "APPROVED_DEPTH",
+        "conserved_projected_targets": 3.808,
+        "conserved_target_share": 0.112,
+        "lateral_scrimmage_gate_decision": "BLOCK_PURE_REC_YDS_USE_SCRIMMAGE"
+      },
+      {
+        "team": "ARI",
+        "player_id": "Simi Fehoko",
+        "pos": "WR",
+        "route_participation": 0.32,
+        "target_share_prior": 0.08,
+        "status": "APPROVED_DEPTH",
+        "conserved_projected_targets": 2.72,
+        "conserved_target_share": 0.08,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "ARI",
+        "player_id": "ARI_RBs_Other",
+        "pos": "RB",
+        "route_participation": 0.52,
+        "target_share_prior": 0.118,
+        "status": "APPROVED_CHECKDOWN",
+        "conserved_projected_targets": 4.012,
+        "conserved_target_share": 0.118,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "ARI",
+        "player_id": "Kendrick Bourne",
+        "pos": "WR",
+        "route_participation": 0.0,
+        "target_share_prior": 0.0,
+        "status": "HARD_LOCKOUT_OUT",
+        "conserved_projected_targets": 0.0,
+        "conserved_target_share": 0.0,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      }
+    ],
+    "SEA": [
+      {
+        "team": "SEA",
+        "player_id": "Jaxon Smith-Njigba",
+        "pos": "WR",
+        "route_participation": 0.86,
+        "target_share_prior": 0.265,
+        "status": "APPROVED",
+        "conserved_projected_targets": 8.745,
+        "conserved_target_share": 0.265,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "SEA",
+        "player_id": "Cooper Kupp",
+        "pos": "WR",
+        "route_participation": 0.81,
+        "target_share_prior": 0.24,
+        "status": "APPROVED",
+        "conserved_projected_targets": 7.92,
+        "conserved_target_share": 0.24,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "SEA",
+        "player_id": "AJ Barner",
+        "pos": "TE",
+        "route_participation": 0.74,
+        "target_share_prior": 0.165,
+        "status": "APPROVED",
+        "conserved_projected_targets": 5.445,
+        "conserved_target_share": 0.165,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "SEA",
+        "player_id": "SEA_RBs_Other",
+        "pos": "RB",
+        "route_participation": 0.55,
+        "target_share_prior": 0.33,
+        "status": "APPROVED_CHECKDOWN",
+        "conserved_projected_targets": 10.89,
+        "conserved_target_share": 0.33,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      },
+      {
+        "team": "SEA",
+        "player_id": "Rashid Shaheed",
+        "pos": "WR",
+        "route_participation": 0.0,
+        "target_share_prior": 0.0,
+        "status": "HARD_LOCKOUT_OUT",
+        "conserved_projected_targets": 0.0,
+        "conserved_target_share": 0.0,
+        "lateral_scrimmage_gate_decision": "ALLOW_PURE_REC_YDS"
+      }
+    ]
+  },
+  "ari_effective_contributor_load_scaling": {
+    "effective_contributors_team": 5.0431,
+    "effective_contributors_league": 7.4074,
+    "load_multiplier": 1.2119,
+    "scaled_epa_dropoff": -0.0788
+  },
+  "sea_shaheed_out_unbalanced_sinkhorn": {
+    "reallocated_shares": [
+      0.303591,
+      0.274473,
+      0.18667,
+      0.001761,
+      0.233505
+    ],
+    "effective_epa_weighted_shares": [
+      0.321806,
+      0.282707,
+      0.184803,
+      0.001497,
+      0.224165
+    ],
+    "total_effective_epa_retention": 1.014979,
+    "unbalanced_damping_exponent": 0.925926,
+    "ghosal_nutz_iteration_bound_o_inv_t": 0.0125
+  },
+  "baseline_sha256": "ce0d7e21059aa3b877c74653d0ee72521b87368d8065bd7b6ca5b0d2a24aa873"
+}

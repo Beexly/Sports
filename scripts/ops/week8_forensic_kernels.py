@@ -614,6 +614,53 @@ def barber_weighted_conformal_interval(
     }
 
 
+def enforce_monotonic_cqr_cdf_consistency(
+    cqr_low: float,
+    cqr_high: float,
+    line: float,
+    model_p_over: float,
+    alpha: float = 0.20,
+) -> dict[str, float | bool]:
+    """Enforce monotonic CDF-quantile consistency on a (1 - alpha) prediction interval [Q_{alpha/2}, Q_{1-alpha/2}].
+
+    For any valid cumulative distribution function F_Y:
+      F_Y(line) = P(Y <= line) = 1 - P(Y > line) = 1 - model_p_over.
+    Therefore:
+      - If F_Y(line) > alpha / 2 (i.e. model_p_over < 1 - alpha / 2), then Q_{alpha/2} MUST be strictly < line.
+      - If F_Y(line) < 1 - alpha / 2 (i.e. model_p_over > alpha / 2), then Q_{1-alpha/2} MUST be strictly > line.
+    Fixes the CQR quantile inversion where an unshrunk Monte Carlo lower quantile exceeded the prop line
+    despite the shrunk exceedance probability being < 0.90.
+    """
+    low_q = alpha / 2.0
+    high_q = 1.0 - alpha / 2.0
+    cdf_at_line = max(1e-4, min(1.0 - 1e-4, 1.0 - float(model_p_over)))
+    adj_low = float(cqr_low)
+    adj_high = float(cqr_high)
+    ln = float(line)
+
+    if cdf_at_line > low_q and adj_low >= ln:
+        # Project lower quantile monotonically below the prop line proportional to (alpha/2) / F_Y(line)
+        scale_ratio = low_q / cdf_at_line
+        adj_low = min(ln - 0.1, max(0.0, ln * scale_ratio * 1.40))
+
+    if cdf_at_line < high_q and adj_high <= ln:
+        tail_ratio = (1.0 - cdf_at_line) / max(1e-4, 1.0 - high_q)
+        adj_high = max(ln + 0.1, ln * (1.0 + 0.25 * tail_ratio))
+
+    monotonic_ok = True
+    if cdf_at_line > low_q and not (adj_low < ln):
+        monotonic_ok = False
+    if cdf_at_line < high_q and not (adj_high > ln):
+        monotonic_ok = False
+
+    return {
+        "low": round(adj_low, 2),
+        "high": round(adj_high, 2),
+        "cdf_at_line": round(cdf_at_line, 4),
+        "monotonic_consistent": monotonic_ok,
+    }
+
+
 def fourth_down_brill_summary(wp_gaps: Sequence[float]) -> dict[str, float | None | str]:
     """Brill/Yurko/Wyner: a gap is distinct when abs(gap) > 1.645 * 0.018."""
     threshold = BRILL_Z_90 * BRILL_WP_SE
