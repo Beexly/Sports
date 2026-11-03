@@ -27,9 +27,9 @@ const optionalText = (max: number) => z.string().trim().max(max).optional();
 export const waitlistLeadSchema = z.object({
   fullName: z.string().trim().min(1, "Name is required").max(120),
   email: z.string().trim().email("Enter a valid email").toLowerCase(),
-  role: z.enum(WAITLIST_ROLES, {
-    errorMap: () => ({ message: "Pick a role" }),
-  }),
+  // Zod v4 dropped the `errorMap` param; a plain string or `message` is the
+  // supported custom-error shape.
+  role: z.enum(WAITLIST_ROLES, { message: "Pick a role" }),
   sportInterests: z
     .array(z.string().trim().min(1).max(40))
     .min(1, "Pick at least one sport")

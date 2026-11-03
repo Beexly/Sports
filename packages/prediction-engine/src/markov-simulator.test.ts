@@ -8,8 +8,7 @@
  */
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
-import { describe, it } from "node:test"
+import { describe, it } from "vitest"
 import {
   advanceOutcome,
   ANCHORS,
@@ -239,7 +238,7 @@ describe("sinkhorn on stable cells", () => {
 
 describe("coach fence: the markov module imports no price", () => {
   it("markov-simulator.ts source contains no odds/spread/market import", () => {
-    const src = readFileSync(join(process.cwd(), "packages/prediction-engine/src/markov-simulator.ts"), "utf-8")
+    const src = readFileSync(new URL("./markov-simulator.ts", import.meta.url), "utf-8")
     assert.ok(!/from\s+["'][^"']*(odds|spread|market)/i.test(src), "market import found in coach path")
     assert.ok(!/\bimport\b[^;]*\b(SportsLine|OddsJam|PFF)\b/.test(src))
   })

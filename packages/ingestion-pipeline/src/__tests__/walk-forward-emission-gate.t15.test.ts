@@ -430,19 +430,26 @@ describe("T15 constitutional CRPS circuit breaker — fail closed on every ambig
 });
 
 describe("T15 constitutional CRPS circuit breaker — the on-disk 2462-game artifact", () => {
-  it("the artifact on disk BLOCKS and says the CRPS bar was never reproduced", () => {
+  it("the artifact on disk BLOCKS, and the baseline CRPS is never substituted for the model's own", () => {
     // The real packages/ingestion-pipeline/walk-forward-gate.json: n=2462,
-    // crps=null, gaussian_close_crps=7.154021, passed=false. Its own rerun
-    // block admits "Laplace CRPS 7.1597 was not recomputed: no Laplace margin
-    // module on this branch, and none was written." So the CRPS criterion was
-    // never EVALUATED, and the artifact also declares itself not-passed.
+    // crps=7.1597, gaussian_close_crps=7.154021, delta=-0.0057, passed=false.
+    //
+    // The artifact used to carry crps=null with a rerun block admitting the
+    // Laplace CRPS "was not recomputed". GAP-15 then implemented analytic
+    // crps_laplace and the artifact was re-evaluated with a real number, so the
+    // block reason moved from "never reproduced" to "above the bar": 7.1597
+    // exceeds MAX_EMISSION_CRPS 7.099. The gate must still refuse, and the
+    // artifact's own `passed:false` is the first criterion that closes it.
     const path = join(process.cwd(), "walk-forward-gate.json");
     const v = readEmissionGateFromFile(path);
     expect(v.blocked).toBe(true);
-    expect(v.failedCriteria).toContain("crps_not_reproduced");
-    // The baseline CRPS is reported as context but is NEVER substituted for
-    // the model's own CRPS.
-    expect(v.crps).toBeNull();
+    expect(v.failedCriteria).toContain("artifact_declares_not_passed");
+    expect(v.failedCriteria).toContain("crps_above_bar");
+    // The evaluated CRPS is the MODEL's own (crps_laplace), NOT the Gaussian
+    // baseline reported beside it. If the gate had substituted the baseline,
+    // this would read 7.154021.
+    expect(v.crps).toBe(7.1597);
+    expect(v.crps).not.toBe(7.154021);
     expect(v.crpsContext.map((c) => c.source)).toContain("gaussian_close_crps");
     expect(v.crpsContext.find((c) => c.source === "gaussian_close_crps")?.value).toBe(7.154021);
   });

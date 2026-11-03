@@ -47,7 +47,9 @@ export function quantileValue(samples: NextScoreSample[], tau: number): number {
     cum += s.probability;
     if (cum >= tau) return s.points;
   }
-  return sorted[sorted.length - 1].points;
+  const last = sorted[sorted.length - 1];
+  if (last === undefined) throw new Error("quantileValue requires at least one sample");
+  return last.points;
 }
 
 export function decisionResidual(

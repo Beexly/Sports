@@ -325,7 +325,7 @@ export const ROLLING_GAME_WINDOW_CADENCE: ReadonlyArray<RollingCadenceEntry> = [
 
   // 5. T-Minus-90m Final Lock
   {
-    id: 'final-lock-thu-1745',
+    id: 'final-seal-thu-1745',
     gameSlot: 'TNF',
     phase: 'T_MINUS_90M_FINAL_LOCK',
     day: 'Thu',
@@ -337,7 +337,7 @@ export const ROLLING_GAME_WINDOW_CADENCE: ReadonlyArray<RollingCadenceEntry> = [
     outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
   },
   {
-    id: 'final-lock-sun-1030',
+    id: 'final-seal-sun-1030',
     gameSlot: 'SUN_EARLY',
     phase: 'T_MINUS_90M_FINAL_LOCK',
     day: 'Sun',
@@ -349,7 +349,7 @@ export const ROLLING_GAME_WINDOW_CADENCE: ReadonlyArray<RollingCadenceEntry> = [
     outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
   },
   {
-    id: 'final-lock-sun-1335',
+    id: 'final-seal-sun-1335',
     gameSlot: 'SUN_LATE',
     phase: 'T_MINUS_90M_FINAL_LOCK',
     day: 'Sun',
@@ -361,7 +361,7 @@ export const ROLLING_GAME_WINDOW_CADENCE: ReadonlyArray<RollingCadenceEntry> = [
     outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
   },
   {
-    id: 'final-lock-sun-1750',
+    id: 'final-seal-sun-1750',
     gameSlot: 'SNF',
     phase: 'T_MINUS_90M_FINAL_LOCK',
     day: 'Sun',
@@ -373,7 +373,7 @@ export const ROLLING_GAME_WINDOW_CADENCE: ReadonlyArray<RollingCadenceEntry> = [
     outputs: ['TOTALS_SPREADS', 'PLAYER_PROPS', 'CORRELATED_SGP', 'DFS_WRITEUPS', 'CONTENT_OS_PACKET'],
   },
   {
-    id: 'final-lock-mon-1745',
+    id: 'final-seal-mon-1745',
     gameSlot: 'MNF',
     phase: 'T_MINUS_90M_FINAL_LOCK',
     day: 'Mon',

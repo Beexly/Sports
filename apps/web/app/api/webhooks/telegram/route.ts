@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       case "/start": {
         reply = [
           `🌌 *Welcome to Galaxy Sports Edge (GSE) Intelligence Bot*`,
-          `Calibrated tactical edge with zero subscription lock-in. Tamper-evident receipts sealed before kickoff.`,
+          `Calibrated tactical edge with no subscription required. Tamper-evident receipts sealed before kickoff.`,
           ``,
           `*Available Commands:*`,
           `• \`/picks\` — Game Environment & Pace Teaser (VIP: Official Side & Total Calls)`,

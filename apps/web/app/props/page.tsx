@@ -5,7 +5,7 @@ import board from "@/lib/week8/sealed-board.json";
 import { SealedTable } from "@/components/week8/sealed-table";
 import type { SealedBoard } from "@/lib/week8/types";
 
-const card = board as SealedBoard;
+const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
   title: "Week 8 Props | Galaxy Sports Edge",

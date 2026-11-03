@@ -3,16 +3,16 @@
  *
  * Regenerate with: python scripts/generate-model-registry.py
  *
- * Enumerates all 195 production modules in this package that declare
+ * Enumerates all 200 production modules in this package that declare
  * `ENABLED = false` (ACCEPTANCE_GATE / BARREL_ONLY). Each entry records what input the module needs and why it
  * is off, so the reasoning engine can query availability without grepping.
  *
- * module-set digest: 361d21c21cfb43e7
+ * module-set digest: 34354b4d3dfe5923
  */
 
 import type { ModelRegistryEntry } from "./model-registry.js";
 
-export const MODEL_REGISTRY_DIGEST = "361d21c21cfb43e7";
+export const MODEL_REGISTRY_DIGEST = "34354b4d3dfe5923";
 
 export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
   {id: "1807-09236-empirical-bayes-btl.ts", name: "1807-09236-empirical-bayes-btl", lines: 137, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["shrinkBtl"], hasTest: true, hasGate: true},
@@ -120,6 +120,11 @@ export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
   {id: "ensemble/2209-01697-regime-factor-glasso.ts", name: "2209-01697-regime-factor-glasso", lines: 144, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["stackNNLS", "logScoreStacking", "regimeStackWeights", "softThreshold", "istaLasso", "tvDenoise1d"], hasTest: true, hasGate: true},
   {id: "ensemble/2406-15760-icm-drift-monitor.ts", name: "2406-15760-icm-drift-monitor", lines: 76, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["conformalQuantile", "conformalInterval", "normalizedInterval", "rollingCoverage", "icmMartingaleValue", "icmAlarm"], hasTest: true, hasGate: true},
   {id: "ensemble/2408-00785v4-kairosis-forecast-aggregation.ts", name: "2408-00785v4-kairosis-forecast-aggregation", lines: 103, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["kairosisTimeWeights", "recentChangeProb", "inverseCovIntersection"], hasTest: true, hasGate: true},
+  {id: "equations/arxiv-paper-2026/1807-09236-empirical-bayes-btl.ts", name: "1807-09236-empirical-bayes-btl", lines: 49, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["shrinkBtl"], hasTest: true, hasGate: true},
+  {id: "equations/arxiv-paper-2026/2309-00756-inverse-mdp-fourth-down.ts", name: "2309-00756-inverse-mdp-fourth-down", lines: 131, tier: "DATA_GAME", reason: "requires game input (matched 'score')", exports: ["quantileValue", "decisionResidual", "recoverTau", "assertTauSealed", "makeNextScoreSamples", "exampleRecovery"], hasTest: true, hasGate: true},
+  {id: "equations/arxiv-paper-2026/2502-16313-snap-timing-multilevel.ts", name: "2502-16313-snap-timing-multilevel", lines: 45, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["snapTimingVariance"], hasTest: true, hasGate: true},
+  {id: "equations/arxiv-paper-2026/2606-18512-causal-panel-forecasting.ts", name: "2606-18512-causal-panel-forecasting", lines: 40, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["counterfactualEfficiency"], hasTest: true, hasGate: true},
+  {id: "equations/arxiv-paper-2026/2609-33664-hmm-pass-blocking.ts", name: "2609-33664-hmm-pass-blocking", lines: 73, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["gammaIt", "adjustedPlusMinus", "pocketSurvival"], hasTest: true, hasGate: true},
   {id: "experimental/1601-04302v6-footballonomics-bootstrap.ts", name: "1601-04302v6-footballonomics-bootstrap", lines: 137, tier: "DATA_SLATE", reason: "requires slate input (matched 'calibration')", exports: ["fpmBootstrap", "quantizedBinCalibration", "kellyByLowerBound"], hasTest: true, hasGate: true},
   {id: "experimental/1708-02715v1-order-flow-resiliency.ts", name: "1708-02715v1-order-flow-resiliency", lines: 181, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["volumeBuckets", "resiliencyRegression", "steamSignal", "scarceLiquidityFlag"], hasTest: true, hasGate: true},
   {id: "experimental/1804-04226v1-cfov-decomposition.ts", name: "1804-04226v1-cfov-decomposition", lines: 138, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["cfovFeatures", "sigmoid", "fitLogistic", "predictLogistic", "logLossMean", "timeOrderedEval"], hasTest: true, hasGate: true},
@@ -213,11 +218,11 @@ export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
 ];
 
 export const MODEL_REGISTRY_COUNTS = Object.freeze({
-  total: 195,
-  data_game: 4,
+  total: 200,
+  data_game: 5,
   data_model_artifact: 5,
   data_slate: 6,
   data_tracking: 2,
-  pure_math: 152,
+  pure_math: 156,
   self_contained: 26,
 });

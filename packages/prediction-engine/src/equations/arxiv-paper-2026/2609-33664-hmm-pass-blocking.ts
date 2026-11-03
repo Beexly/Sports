@@ -36,9 +36,10 @@ export type Frame = {
  * Production implementation runs the forward-backward algorithm.
  */
 export function gammaIt(frames: Frame[]): number[][] {
-  if (!ENABLED || frames.length === 0) return [];
-  const nB = frames[0].blockers.length;
-  const nR = frames[0].rushers.length;
+  const first = frames[0];
+  if (!ENABLED || first === undefined) return [];
+  const nB = first.blockers.length;
+  const nR = first.rushers.length;
   // Placeholder: uniform assignment until the real HMM is trained
   const uniform = 1 / Math.max(nR, 1);
   return Array.from({ length: nB }, () => Array(nR).fill(uniform));
@@ -50,8 +51,9 @@ export function gammaIt(frames: Frame[]): number[][] {
  */
 export function adjustedPlusMinus(frames: Frame[]): Map<string, number> {
   const result = new Map<string, number>();
-  if (!ENABLED || frames.length === 0) return result;
-  for (const b of frames[0].blockers) {
+  const first = frames[0];
+  if (!ENABLED || first === undefined) return result;
+  for (const b of first.blockers) {
     result.set(b.id, 0);
   }
   return result;
@@ -63,6 +65,8 @@ export function adjustedPlusMinus(frames: Frame[]): Map<string, number> {
  */
 export function pocketSurvival(frames: Frame[], thresholdSec = 2.5): number {
   if (!ENABLED || frames.length === 0) return 0;
-  const lastT = frames[frames.length - 1].t;
+  const last = frames[frames.length - 1];
+  if (last === undefined) return 0;
+  const lastT = last.t;
   return lastT >= thresholdSec ? 1 : lastT / thresholdSec;
 }

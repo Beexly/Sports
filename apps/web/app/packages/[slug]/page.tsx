@@ -20,7 +20,7 @@ interface PackagePageProps {
     unlocked?: string;
     session_id?: string;
     whop_token?: string;
-    guaranteed?: string;
+    creditBack?: string;
   };
 }
 
@@ -65,7 +65,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
     slug: pkg.slug,
   });
   const isUnlocked = verification.authorized;
-  const isGuaranteedSelected = searchParams.guaranteed === "1";
+  const isCreditBackSelected = searchParams.creditBack === "1";
 
   const relevantWriteups: CoachGameWriteup[] = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
     if (pkg.windowSlot === "WEEKEND_PASS" || pkg.windowSlot === "WEEKLY_PASS") {
@@ -78,8 +78,8 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
   });
 
   const standardPrice = (pkg.standardPriceCents / 100).toFixed(0);
-  const guaranteedPrice = pkg.guaranteedPriceCents
-    ? (pkg.guaranteedPriceCents / 100).toFixed(0)
+  const creditBackPrice = pkg.creditBackPriceCents
+    ? (pkg.creditBackPriceCents / 100).toFixed(0)
     : null;
 
   const eyebrow = "font-numerals text-[11px] uppercase tracking-[0.2em] text-ion-1";
@@ -119,7 +119,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
               <div className="text-right">
                 <div className={eyebrow}>One-time purchase</div>
                 <div className="mt-1 font-numerals text-3xl font-semibold tabular-nums text-ion-white">
-                  ${isGuaranteedSelected && guaranteedPrice ? guaranteedPrice : standardPrice}
+                  ${isCreditBackSelected && creditBackPrice ? creditBackPrice : standardPrice}
                 </div>
               </div>
             )}

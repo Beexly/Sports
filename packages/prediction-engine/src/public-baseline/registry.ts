@@ -29,7 +29,7 @@ export const SOURCE_REGISTRY: readonly SourceRow[] = [
   { id: "hockey-reference", status: "OPEN-HTML", note: "Sports-Reference site is open." },
   { id: "pfr", status: "IDENTITY-GATED", note: "Cloudflare wall. archive.org is the public ladder. Do not replay a session." },
   { id: "pydfs-lineup-optimizer", status: "PUBLIC-CODE", note: "MIT. MILP, stacking, exposure, showdown. This is the lineup layer. Projections stay ours." },
-  { id: "draftfast", status: "PUBLIC-CODE", note: "Lock, ban, and exact-count constraints." },
+  { id: "draftfast", status: "PUBLIC-CODE", note: "Pin, ban, and exact-count constraints." },
   { id: "southpaw", status: "PUBLIC-CODE", note: "FanDuel lineup submit. Automation, not a projection." },
   { id: "numberfire", status: "OPEN-HTML", note: "Free projection pages. FanDuel Research. Feed, not an optimizer." },
   { id: "pickfinder", status: "IDENTITY-GATED", note: "api-v2.pickfinder.app is referenced in HTML. Routes are not a confirmed public feed." },
