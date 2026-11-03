@@ -3,16 +3,14 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
- * /picks demo-mode disclosure contract.
+ * /picks demo-mode contract (successor).
  *
- * Session A renders a sample-data banner on /picks when the dev
- * stub+demo flags are active. The banner clearly communicates:
- *   - These are not live picks
- *   - They never settle (never inflate win-rate)
- *   - No claim is published from them
- *
- * Pin the source-level contract so a future refactor doesn't strip
- * the disclosure.
+ * HISTORY: the original file pinned the sample-data banner the teaser page
+ * rendered under the dev stub+demo flags. Commit 30a6fe52f replaced that page
+ * with the static sealed Week 8 locked board, which has no demo/stub path at
+ * all, so the banner contract was retired with the page. The /api/picks
+ * containsSeedData contract below is unchanged (the route is retained), and
+ * the page-side block now pins the absence instead.
  */
 
 const repoRoot = resolve(__dirname, "..");
@@ -35,27 +33,12 @@ describe("/api/picks containsSeedData flag", () => {
   });
 });
 
-describe("/picks demo-mode disclosure", () => {
-  it("renders a sample-data banner when demoActive is true", () => {
-    expect(pageSrc).toMatch(/demoActive/);
-    expect(pageSrc).toMatch(/data-testid="sample-data-banner-picks"/);
-  });
-
-  it("banner uses ARIA role=status with aria-live for assistive tech", () => {
-    expect(pageSrc).toMatch(/role="status"/);
-    expect(pageSrc).toMatch(/aria-live="polite"/);
-  });
-
-  it("banner copy is brand-safe (no banned phrases)", () => {
-    expect(pageSrc).not.toMatch(/guaranteed|risk-free|sure thing|easy money/i);
-  });
-
-  it("banner clearly says picks never settle / never count toward win-rate", () => {
-    expect(pageSrc).toMatch(/never settle/i);
-    expect(pageSrc).toMatch(/never count|win-rate|verified record/i);
-  });
-
-  it("demoActive gates on isStubMode + isDemoPicksEnabled", () => {
-    expect(pageSrc).toMatch(/isStubMode\(\)\s*&&\s*isDemoPicksEnabled\(\)/);
+describe("/picks demo-mode has no home on the sealed page", () => {
+  it("the sealed page carries no stub/demo/sample machinery (nothing to disclose)", () => {
+    // The page renders only the sealed card; there is no demo path left to
+    // disclose. (Absence pinned here and again in picks-page-policy-gate.)
+    expect(pageSrc).not.toMatch(/isStubMode/);
+    expect(pageSrc).not.toMatch(/demoActive/);
+    expect(pageSrc).not.toMatch(/sample-data-banner/);
   });
 });

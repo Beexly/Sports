@@ -27,8 +27,8 @@ export default function PicksPage(): JSX.Element {
         </p>
         <p className="mt-2 font-mono text-[11px] text-[#8F8A82]">Seal {card.seal_digest}</p>
         <div className="mt-8 flex gap-4 text-sm">
-          <Link href="/packages" className="text-[#FF4D2E]">Galaxy Picks packs</Link>
-          <Link href="/props" className="text-[#EDE8E0]">Props and watchlist</Link>
+          <Link href="/packages" className="inline-flex min-h-11 items-center text-[#FF4D2E]">Galaxy Picks packs</Link>
+          <Link href="/props" className="inline-flex min-h-11 items-center text-[#EDE8E0]">Props and watchlist</Link>
         </div>
         <div className="mt-10">
           <SealedTable rows={locked} />
