@@ -13,6 +13,7 @@
  */
 
 import { db } from "@sports/db";
+import type { Prisma } from "@prisma/client";
 
 export type GateReasonCode =
   | "PUBLISHED"
@@ -56,7 +57,7 @@ export async function persistGateDecisions(
 
   // De-duplicate in memory by gameId to prevent duplicate rows in one cycle
   const seenGameIds = new Set<string>();
-  const deduplicated = [];
+  const deduplicated: Prisma.GateDecisionCreateManyInput[] = [];
 
   for (const d of decisions) {
     if (!d.gameId || seenGameIds.has(d.gameId)) continue;
@@ -72,25 +73,25 @@ export async function persistGateDecisions(
       modelVersion: d.modelVersion,
       isBootstrap: d.isBootstrap,
       evaluatedAt: d.evaluatedAt,
-      evidenceRefs: d.evidenceRefs ? JSON.parse(JSON.stringify(d.evidenceRefs)) : undefined,
+      evidenceRefs: d.evidenceRefs ? (JSON.parse(JSON.stringify(d.evidenceRefs)) as Prisma.InputJsonValue) : undefined,
     });
   }
 
   try {
+    // GateDecision has no unique constraint so cross-cycle idempotency is not provided by this call
     const result = await db.gateDecision.createMany({
-      data: deduplicated as any,
-      skipDuplicates: true,
+      data: deduplicated,
     });
 
     return {
-      attempted: decisions.length,
+      attempted: deduplicated.length,
       persisted: result.count,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`[gate-decision-sink] Warning: Failed to persist gate decisions: ${message}`);
     return {
-      attempted: decisions.length,
+      attempted: deduplicated.length,
       persisted: 0,
       error: message,
     };
