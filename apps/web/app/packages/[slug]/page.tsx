@@ -187,7 +187,7 @@ export default async function PackageDetailPage({ params, searchParams }: Packag
                           {sanitizePlainFootballText(w.paceOfPlay.notes)}
                         </p>
                         <p className="mt-4 border-t border-mineral pt-3 font-numerals text-[11px] uppercase tracking-[0.18em] text-plasma">
-                          Official spread call · Official over/under call · {w.topProps.length} player prop reads · 3-leg parlay — locked
+                          Official spread call · Official over/under call · {w.topProps.length} player prop reads · 3-leg parlay (locked)
                         </p>
                       </div>
                     </article>

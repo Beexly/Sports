@@ -50,7 +50,7 @@ export const CARD_SUPPLY_ITEMS: SupplyItem[] = [
   {
     name: "Centering Loupe",
     category: "Grading & Submission Protection",
-    description: "10x–30x optical magnification with integrated reticle measuring 50/50 and 60/40 border ratios accurately.",
+    description: "10x-30x optical magnification with integrated reticle measuring 50/50 and 60/40 border ratios accurately.",
     amazonQuery: "centering loupe",
     recommendedUse: "Pre-submission centering measurement",
   },
