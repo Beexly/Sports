@@ -29,6 +29,7 @@ import json
 import os
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -37,6 +38,53 @@ from pathlib import Path
 
 UA = "GSE-Research-Harvester/1.0"
 NS = {"a": "http://www.w3.org/2005/Atom"}
+
+
+RATE_LIMITED = "rate_limited"
+UNCONFIGURED = "unconfigured"
+NOT_FOUND = "not_found"
+OK = "ok"
+
+
+class Lookup:
+    """Distinguish "no such preprint" from "we never got an answer".
+
+    Collapsing both into None produced log entries reading "unresolved" for papers
+    that were never actually queried -- arXiv returns 429 after a harvest hammers
+    it, and Unpaywall returns 422 for an invalid email. A false negative recorded
+    as a real answer is worse than no record: it retires a paper that was never
+    searched.
+    """
+
+    __slots__ = ("status", "url", "detail")
+
+    def __init__(self, status: str, url: str | None = None, detail: str = ""):
+        self.status, self.url, self.detail = status, url, detail
+
+    def __bool__(self) -> bool:
+        return self.status == OK and bool(self.url)
+
+    def __repr__(self) -> str:
+        return f"Lookup({self.status}, {(self.url or '')[:50]})"
+
+
+def _get_status(url: str, timeout: int = 45, tries: int = 2):
+    """Return (http_status, body_or_None) without hiding the reason."""
+    for i in range(tries):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.status, r.read()
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                return 429, None
+            if i == tries - 1:
+                return e.code, None
+        except Exception:
+            if i == tries - 1:
+                return None, None
+        time.sleep(1.5 * (i + 1))
+    return None, None
 
 
 def _get(url: str, timeout: int = 45, tries: int = 2) -> bytes | None:
@@ -56,52 +104,62 @@ def _norm(t: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", (t or "").lower()).strip()
 
 
-def arxiv_by_title(title: str, min_ratio: float = 0.82) -> str | None:
+def arxiv_by_title(title: str, min_ratio: float = 0.82) -> Lookup:
     """Find an arXiv preprint whose title matches closely enough to trust."""
     terms = [w for w in _norm(title).split() if len(w) > 3][:8]
     if not terms:
-        return None
+        return Lookup(NOT_FOUND, detail="no usable title terms")
     q = "+AND+".join(f"all:{urllib.parse.quote(w)}" for w in terms)
     url = (f"http://export.arxiv.org/api/query?search_query={q}"
            f"&start=0&max_results=10&sortBy=relevance")
-    raw = _get(url)
+    status, raw = _get_status(url)
+    if status == 429:
+        return Lookup(RATE_LIMITED, detail="arxiv 429")
     if not raw:
-        return None
+        return Lookup(NOT_FOUND, detail=f"arxiv http {status}")
     try:
         root = ET.fromstring(raw)
     except ET.ParseError:
-        return None
+        return Lookup(NOT_FOUND, detail="arxiv parse error")
     want = _norm(title)
     for e in root.findall("a:entry", NS):
         cand = _norm(e.findtext("a:title", "", NS) or "")
         if SequenceMatcher(None, want, cand).ratio() >= min_ratio:
             for link in e.findall("a:link", NS):
                 if link.get("title") == "pdf":
-                    return link.get("href")
-    return None
+                    return Lookup(OK, link.get("href"), "arxiv title match")
+    return Lookup(NOT_FOUND, detail="no title match on arxiv")
 
 
-def unpaywall_by_doi(doi: str, email: str) -> str | None:
+def unpaywall_by_doi(doi: str, email: str) -> Lookup:
     doi = doi.replace("https://doi.org/", "").strip()
-    if not doi or not email:
-        return None
+    if not doi:
+        return Lookup(NOT_FOUND, detail="no doi")
+    if not email or "@" not in email or email.startswith("["):
+        return Lookup(UNCONFIGURED, detail="GSE_UNPAYWALL_EMAIL not a real address")
     url = f"https://api.unpaywall.org/v2/{urllib.parse.quote(doi)}?email={urllib.parse.quote(email)}"
-    raw = _get(url)
+    status, raw = _get_status(url)
+    if status == 422:
+        return Lookup(UNCONFIGURED, detail="unpaywall 422 (bad email)")
+    if status == 429:
+        return Lookup(RATE_LIMITED, detail="unpaywall 429")
     if not raw:
-        return None
+        return Lookup(NOT_FOUND, detail=f"unpaywall http {status}")
     try:
         d = json.loads(raw)
     except json.JSONDecodeError:
-        return None
+        return Lookup(NOT_FOUND, detail="unpaywall parse error")
     for loc in [d.get("best_oa_location")] + (d.get("oa_locations") or []):
         if not loc:
             continue
         for k in ("url_for_pdf", "url"):
             u = loc.get(k)
             if u and u.lower().endswith(".pdf"):
-                return u
+                return Lookup(OK, u, "unpaywall oa location")
     best = d.get("best_oa_location") or {}
-    return best.get("url_for_pdf")
+    if best.get("url_for_pdf"):
+        return Lookup(OK, best["url_for_pdf"], "unpaywall best location")
+    return Lookup(NOT_FOUND, detail="no oa pdf for this doi")
 
 
 def download(url: str, dest: Path) -> bool:
@@ -146,21 +204,36 @@ def main(argv: list[str] | None = None) -> int:
         print("! GSE_UNPAYWALL_EMAIL not set - Unpaywall route disabled")
 
     resolved = failed = 0
+    blocked = 0
     log = []
     for i, r in enumerate(todo[: args.limit], 1):
         url = None
         route = None
         a = arxiv_by_title(r.get("title", ""))
         if a:
-            url, route = a, "arxiv_title"
-        elif r.get("doi") and args.email:
-            u = unpaywall_by_doi(r["doi"], args.email)
+            url, route = a.url, "arxiv_title"
+        elif a.status == RATE_LIMITED:
+            # Do not fall through to Unpaywall pretending this paper has no
+            # preprint; it was never successfully asked. Back off and move on.
+            blocked += 1
+            log.append({"source_id": r.get("source_id"), "status": RATE_LIMITED,
+                        "detail": a.detail, "route": "arxiv_title"})
+            time.sleep(3.0)
+            continue
+        else:
+            u = unpaywall_by_doi(r.get("doi") or "", args.email)
             if u:
-                url, route = u, "unpaywall"
+                url, route = u.url, "unpaywall"
+            elif u.status in (RATE_LIMITED, UNCONFIGURED):
+                blocked += 1
+                log.append({"source_id": r.get("source_id"), "status": u.status,
+                            "detail": u.detail, "route": "unpaywall"})
+                continue
         if not url:
             failed += 1
             log.append({"source_id": r.get("source_id"), "status": "unresolved",
-                        "host": (r.get("pdf_url") or "")[:60], "route": None})
+                        "host": (r.get("pdf_url") or "")[:60],
+                        "detail": "no arxiv preprint and no open-access copy"})
             continue
 
         dest = pdfdir / f"{re.sub(r'[^A-Za-z0-9._-]+', '_', str(r.get('source_id')))[:80]}.pdf"
@@ -173,15 +246,20 @@ def main(argv: list[str] | None = None) -> int:
             log.append({"source_id": r.get("source_id"), "status": "download_failed",
                         "route": route, "pdf_url": url})
         if i % 10 == 0:
-            print(f"  {i}/{min(len(todo), args.limit)} resolved={resolved} failed={failed}")
-        time.sleep(0.4)
+            print(f"  {i}/{min(len(todo), args.limit)} resolved={resolved} "
+                  f"failed={failed} blocked={blocked}")
+        # arXiv asks for roughly 3s between requests and rate-limits otherwise;
+        # this loop was hitting it hard enough to earn 429s.
+        time.sleep(3.0)
 
     out = manifest.parent / "resolution_log.jsonl"
     with out.open("a", encoding="utf-8") as fh:
         for e in log:
             fh.write(json.dumps(e) + "\n")
 
-    print(f"\nresolved {resolved} | failed {failed} | log {out}")
+    print(f"\nresolved {resolved} | unresolved {failed} | blocked {blocked} | log {out}")
+    if blocked:
+        print("blocked = we never got an answer (rate limit / bad email), not a miss.")
     return 0
 
 
