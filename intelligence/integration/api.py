@@ -228,28 +228,47 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                     except DataGapError as e:
                         _note_gap("qb_behavior", qb_id, e.reason,
                                   f"{p.name} scheme-regime history")
-                # τ̂ 4th-down risk preference (P1: wire the validated gate into
-                # the live path). Served at a neutral mid-bin WP because a
-                # pre-game context has no live state; the real call site is
-                # expected_wp_given_coach below, which takes the actual state.
-                # A DataGapError here is EXPECTED while tau_hat.csv is
-                # uncommitted — it is recorded as a gap, never swallowed.
-                get_tau = getattr(providers.coaching, "get_tau_hat", None)
-                if callable(get_tau):
-                    try:
-                        t = get_tau(team, season, "opp", 0.50)
-                        if t.get("tau_hat") is not None:
-                            ctx.observations[f"coaching.{team}.tau_hat"] = \
-                                float(t["tau_hat"])
-                            ctx.observations[f"coaching.{team}.tau_stamp"] = TAU_STAMP
-                            ev("coaching_scheme",
-                               f"{team} 4th-down risk preference tau-hat "
-                               f"{t['tau_hat']:.3f} ({t.get('fallback_level')}"
-                               f", {t.get('n_decisions')} decisions). {TAU_STAMP}",
-                               R.Verification.COMPUTED)
-                    except DataGapError as e:
-                        _note_gap("coaching_scheme", qb_id, e.reason,
-                                  f"{team} tau-hat (4th-down risk preference)")
+                # τ̂ 4th-down risk preference: call expected_wp_given_coach
+                # in simulation and post-hoc contexts only — contexts that carry a REAL game state.
+                has_state = True
+                for key in ("yardline_100", "ydstogo", "score_differential", "game_seconds_remaining", "qtr", "wp"):
+                    if game.get(key) is None:
+                        has_state = False
+                        break
+
+                down = game.get("down")
+                if down is not None and int(down) != 4:
+                    has_state = False
+
+                if has_state:
+                    get_wp_coach = getattr(providers.coaching, "expected_wp_given_coach", None)
+                    if callable(get_wp_coach):
+                        try:
+                            t = get_wp_coach(
+                                team=team,
+                                season=season,
+                                yardline_100=int(game["yardline_100"]),
+                                ydstogo=int(game["ydstogo"]),
+                                score_differential=int(game["score_differential"]),
+                                game_seconds_remaining=int(game["game_seconds_remaining"]),
+                                qtr=int(game["qtr"]),
+                                wp=float(game["wp"]),
+                                timeouts_rem=int(game.get("timeouts_rem", 3))
+                            )
+                            if "tau_hat" in t:
+                                ctx.observations[f"coaching.{team}.tau_wp_gap"] = float(t["wp_gap"])
+                                ctx.observations[f"coaching.{team}.tau_action_predicted"] = t["action_predicted"]
+                                ctx.observations[f"coaching.{team}.tau_stamp"] = TAU_STAMP
+                                ev("coaching_scheme",
+                                   f"{team} 4th-down risk preference predicted {t['action_predicted']} "
+                                   f"with WP gap {t['wp_gap']:.3f} ({t.get('tau_fallback')} fallback). {TAU_STAMP}",
+                                   R.Verification.COMPUTED)
+                        except DataGapError as e:
+                            _note_gap("coaching_scheme", qb_id, e.reason,
+                                      f"{team} tau-hat (4th-down risk preference)")
+                else:
+                    _note_gap("coaching_scheme", qb_id, "no live win probability; refused a 0.5 stand-in",
+                              f"{team} tau-hat (4th-down risk preference)")
             # CLEAR only when the track was actually served. An empty qbs map
             # checked nothing, and a QB whose every sub-provider came back
             # withheld is a gap, not a clean read. Per checklist semantics:
