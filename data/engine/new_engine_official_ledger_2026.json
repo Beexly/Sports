@@ -1,6 +1,6 @@
 {
   "engine_version": "GSE v5.3.0 / 5-Stage JEV 10k-World Snap-by-Snap Engine",
-  "as_of": "2026-10-30T21:40:00-05:00",
+  "as_of": "2026-11-02T23:15:00-06:00",
   "card_scope": {
     "card_play_rows": 59,
     "ledger_tracked_plays": 21,
@@ -352,5 +352,149 @@
       ]
     },
     "engine_note": "Jacobs 21-39 (1.9 YPC) plus 6-13 receiving and 2 TDs. Rushing efficiency was poor; touchdown and receiving volume carried the day. Love 30/41, 288 yards, 3 TD, 1 INT, 0 rush attempts."
+  },
+  "season_totals_entering_2026-11-02_mnf": {
+    "source": "Garrett-verified 2026-11-02 (Week 8 Sunday settlement: 36-13-1, +20.14u base; 43-17-1, +22.56u with participation-gated props, added to the Oct 29 official line)",
+    "base_card": {
+      "wins": 83,
+      "losses": 29,
+      "pushes": 1,
+      "units": 49.15
+    },
+    "with_participation_gated_props": {
+      "wins": 90,
+      "losses": 33,
+      "pushes": 1,
+      "units": 51.57
+    },
+    "note": "Tonight's six MNF plays were NOT in these totals."
+  },
+  "mnf_settlement_chi_at_sea_2026-11-02": {
+    "matchup": "Chicago Bears @ Seattle Seahawks",
+    "date": "2026-11-02",
+    "venue": "Lumen Field",
+    "final_score": "Chicago Bears 34, Seattle Seahawks 17",
+    "quarters": {
+      "CHI": [
+        7,
+        6,
+        7,
+        14
+      ],
+      "SEA": [
+        0,
+        9,
+        0,
+        8
+      ]
+    },
+    "plays": [
+      {
+        "id": "CHI-SEA-01",
+        "category": "Player Prop (Receiving)",
+        "pick": "Kalif Raymond OVER 21.5 Receiving Yards (-110)",
+        "stake_dollars": 10.0,
+        "stake_units": 2.0,
+        "odds": -110,
+        "status": "SETTLED",
+        "result": "LOSS",
+        "profit_units": -2.0,
+        "actual": "Raymond receiving: 2 rec / 3 tgt, 14 yds. His 39-yard play was a backward pass (lateral) scored as a RUSH (1 rush, 39 yds), not a reception \u2014 it does not count toward receiving yards. UNDER 21.5 receiving.",
+        "grade_source": "Sportradar + CornerWire final box score, Nov 2 2026; USA Today live blog confirms the 39-yd play counted as a lateral/rush"
+      },
+      {
+        "id": "CHI-SEA-02",
+        "category": "Game Line",
+        "pick": "Chicago Bears +3.0 (-105)",
+        "stake_dollars": 9.0,
+        "stake_units": 1.8,
+        "odds": -105,
+        "status": "SETTLED",
+        "result": "WIN",
+        "profit_units": 1.714,
+        "actual": "Final: Bears 34, Seahawks 17. Bears won outright by 17; +3.0 covers.",
+        "grade_source": "Final score, multiple sources (AP/Reuters/USA Today), Nov 2 2026"
+      },
+      {
+        "id": "CHI-SEA-03",
+        "category": "Player Prop (QB Rushing)",
+        "pick": "Sam Darnold OVER 4.5 Rushing Yards (-110)",
+        "stake_dollars": 7.5,
+        "stake_units": 1.5,
+        "odds": -110,
+        "status": "SETTLED",
+        "result": "WIN",
+        "profit_units": 1.364,
+        "actual": "Darnold rushing: 2 att, 20 yds. OVER 4.5.",
+        "grade_source": "Sportradar + CornerWire final box score, Nov 2 2026"
+      },
+      {
+        "id": "CHI-SEA-04",
+        "category": "Player Prop (Receptions)",
+        "pick": "Rome Odunze OVER 2.5 Receptions (-110)",
+        "stake_dollars": 6.0,
+        "stake_units": 1.2,
+        "odds": -110,
+        "status": "SETTLED",
+        "result": "WIN",
+        "profit_units": 1.091,
+        "actual": "Odunze: 4 rec / 6 tgt, 87 yds. OVER 2.5 receptions.",
+        "grade_source": "Sportradar final box score; ChicagoBears.com recap (four catches for 87 yards)"
+      },
+      {
+        "id": "CHI-SEA-05",
+        "category": "Game Line (Moneyline)",
+        "pick": "Chicago Bears Moneyline +142 (PRIMARY)",
+        "stake_dollars": 3.5,
+        "stake_units": 0.7,
+        "odds": 142,
+        "status": "SETTLED",
+        "result": "WIN",
+        "profit_units": 0.994,
+        "actual": "Final: Bears 34, Seahawks 17. Bears win outright; ML wins.",
+        "grade_source": "Final score, multiple sources, Nov 2 2026",
+        "alternative_flag": "Slip listed an alternative: 1Q total UNDER 9.5 if -135 or better. Q1 score was CHI 7, SEA 0 (7 total pts), so the alternative would also have WON. Which selection was actually placed needs Garrett's confirmation; the ML is graded as primary and counted in the totals. Do not silently swap."
+      },
+      {
+        "id": "CHI-SEA-06",
+        "category": "Same-Game Parlay (2-leg)",
+        "pick": "SGP +175: Kalif Raymond OVER 21.5 Rec Yds + Chicago Bears +3.0 (PRIMARY pairing)",
+        "stake_dollars": 4.0,
+        "stake_units": 0.8,
+        "odds": 175,
+        "status": "SETTLED",
+        "result": "LOSS",
+        "profit_units": -0.8,
+        "actual": "Leg 1 Raymond OVER 21.5 rec yds: LOSS (14 rec yds). Leg 2 Bears +3.0: WIN. One leg lost, SGP loses.",
+        "grade_source": "Final box score (see CHI-SEA-01 / CHI-SEA-02)",
+        "alternative_flag": "Slip listed an alternative second leg: Rome Odunze OVER 2.5 receptions. Alternative pairing (Raymond OVER 21.5 + Odunze OVER 2.5) would also have LOST because the Raymond leg failed \u2014 totals unchanged either way under that reading. If Garrett meant Odunze + Bears +3.0 instead, that pairing would have WON (+1.40u). Which pairing was actually placed needs Garrett's confirmation."
+      }
+    ],
+    "record_primary": {
+      "wins": 4,
+      "losses": 2,
+      "pushes": 0
+    },
+    "units_risked": 8.0,
+    "net_units": 2.363,
+    "note": "Results in units only ($5 = 1 unit), per standing rule. Alternatives on plays 5 and 6 are graded for information and flagged for Garrett's confirmation; they are NOT counted in the totals. Play 5's alternative (1Q UNDER 9.5) would have won; play 6's alternative pairing as written (Raymond + Odunze) would also have lost."
+  },
+  "season_totals_after_2026-11-02_mnf": {
+    "convention": "Base card adds tonight's two game-line plays (CHI-SEA-02, CHI-SEA-05). With-props total adds all six plays. SGP counted only in the with-props layer (it contains a prop leg).",
+    "base_card": {
+      "wins": 85,
+      "losses": 29,
+      "pushes": 1,
+      "units": 51.86,
+      "added": "Tonight game lines: 2-0, +2.71u"
+    },
+    "with_participation_gated_props": {
+      "wins": 94,
+      "losses": 35,
+      "pushes": 1,
+      "units": 53.93,
+      "added": "Tonight all six: 4-2-0, +2.36u on 8.00u risked"
+    },
+    "pending_confirmation": "Plays 5 and 6 alternatives (see alternative_flag fields). Play 6 totals are unchanged under the as-written alternative; play 5 totals change only if Garrett confirms the 1Q Under was the placed selection instead of the ML."
   }
 }
