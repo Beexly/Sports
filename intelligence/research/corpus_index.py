@@ -55,7 +55,9 @@ def build_index(manifest: Path | str) -> dict[str, Any]:
         except json.JSONDecodeError:
             continue
         rid = r.get("source_id") or hashlib.sha1(line.encode()).hexdigest()[:16]
-        text = f"{r.get('title','')} {r.get('abstract','')}"
+        # Full text when the PDF was ingested; title+abstract otherwise. Metadata-only
+        # records still rank, they simply carry less signal.
+        text = f"{r.get('title','')} {r.get('abstract','')} {r.get('full_text','')}"
         toks = tokenize(text)
         rec = {
             "id": rid,
@@ -70,6 +72,8 @@ def build_index(manifest: Path | str) -> dict[str, Any]:
             "abstract": r.get("abstract", ""),
             "topics": r.get("topics", []),
             "cited_by": r.get("cited_by"),
+            "retracted": bool(r.get("retracted")),
+            "has_full_text": bool(r.get("full_text")),
             "len": len(toks),
             "terms": {},
         }
@@ -85,8 +89,59 @@ def build_index(manifest: Path | str) -> dict[str, Any]:
             if records else 0.0}
 
 
+SOURCE_PRIORITY = {"local_pdf": 0, "arxiv": 1, "openalex": 2}
+
+
+def _title_key(title: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", (title or "").lower())[:90]
+
+
+def dedupe(index: dict) -> dict:
+    """Collapse the same paper arriving from several sources.
+
+    OpenAlex and arXiv both index the same work, and a locally ingested PDF is the
+    same paper again. Left alone, one strong result fills the whole top-10 and the
+    corpus triple-counts itself. Preference: local PDF (has full text) > arXiv
+    (has the preprint) > OpenAlex (metadata only). Topics are merged so no query
+    lineage is lost.
+    """
+    keep: dict[str, int] = {}
+    order: list[int] = []
+    for i, rec in enumerate(index["records"]):
+        key = _title_key(rec["title"])
+        if not key:
+            order.append(i)
+            continue
+        if key in keep:
+            j = keep[key]
+            better_new = SOURCE_PRIORITY.get(rec["source"], 9) < SOURCE_PRIORITY.get(
+                index["records"][j]["source"], 9)
+            if better_new:
+                merged = sorted(set(index["records"][j]["topics"]) | set(rec["topics"]))
+                index["records"][j] = rec
+                index["records"][j]["topics"] = merged
+            else:
+                merged = sorted(set(index["records"][j]["topics"]) | set(rec["topics"]))
+                index["records"][j]["topics"] = merged
+        else:
+            keep[key] = i
+            order.append(i)
+
+    # Rebuild postings against the surviving record set.
+    records = [index["records"][i] for i in order]
+    postings: dict[str, set[int]] = {}
+    df: dict[str, int] = {}
+    for new_i, rec in enumerate(records):
+        for t in rec["terms"]:
+            postings.setdefault(t, set()).add(new_i)
+            df[t] = df.get(t, 0) + 1
+    return {"records": records, "postings": postings, "df": df,
+            "n": len(records),
+            "avgdl": (sum(r["len"] for r in records) / len(records)) if records else 0.0}
+
+
 def search(index: dict, query: str, k: int = 8, k1: float = 1.5,
-           b: float = 0.75) -> list[dict]:
+           b: float = 0.75, include_retracted: bool = False) -> list[dict]:
     """BM25 ranking over title+abstract. Returns records with score and hits."""
     q = tokenize(query)
     if not q or not index["records"]:
@@ -105,6 +160,11 @@ def search(index: dict, query: str, k: int = 8, k1: float = 1.5,
             denom = tf + k1 * (1 - b + b * dl / (index["avgdl"] or 1))
             scores[d] = scores.get(d, 0.0) + idf * tf * (k1 + 1) / denom
 
+    if not include_retracted:
+        # A retracted paper reads exactly like a valid one. If it is indexed at
+        # all it must never rank by default, or the corpus launders it.
+        scores = {d: s for d, s in scores.items()
+                  if not index["records"][d].get("retracted")}
     ranked = sorted(scores.items(), key=lambda kv: -kv[1])[:k]
     out = []
     for d, s in ranked:

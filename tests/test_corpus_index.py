@@ -76,6 +76,73 @@ def test_mind_feed_marks_records_unwired(tmp_path):
     assert all(e["provenance_status"] == "DIRECT_FROM_SOURCE" for e in lines)
 
 
+RETRACTED = [
+    {"source": "local_pdf", "source_id": "ret1", "title":
+     "Data Fusion Algorithm for Myocardial Infarction Detection",
+     "abstract": "coverage calibration football tracking defensive",
+     "retracted": True, "topics": ["local_pdf"]},
+    {"source": "local_pdf", "source_id": "ok1", "title":
+     "Defensive coverage estimation in American football",
+     "abstract": "coverage calibration football tracking defensive",
+     "retracted": False, "topics": ["local_pdf"]},
+]
+
+
+def test_retracted_papers_never_rank_by_default(tmp_path):
+    """A retracted paper reads exactly like a valid one - it must not surface."""
+    idx = ci.build_index(_manifest(tmp_path, RETRACTED))
+    hits = ci.search(idx, "coverage calibration football tracking")
+    ids = [h["id"] for h in hits]
+    assert "ret1" not in ids, "retracted paper ranked by default"
+    assert "ok1" in ids
+
+
+def test_retracted_retrievable_only_on_request(tmp_path):
+    idx = ci.build_index(_manifest(tmp_path, RETRACTED))
+    hits = ci.search(idx, "coverage calibration", include_retracted=True)
+    assert "ret1" in [h["id"] for h in hits]
+
+
+def test_full_text_is_indexed_when_present(tmp_path):
+    recs = [{"source": "local_pdf", "source_id": "ft1", "title": "Untitled",
+             "abstract": "", "full_text": "homography calibration pinhole jacobian",
+             "retracted": False, "topics": ["local_pdf"]}]
+    idx = ci.build_index(_manifest(tmp_path, recs))
+    hits = ci.search(idx, "pinhole jacobian")
+    assert hits and hits[0]["id"] == "ft1"
+    assert hits[0]["has_full_text"] is True
+
+
+SAME_PAPER = [
+    {"source": "openalex", "source_id": "oa1", "title":
+     "Coverage Estimation in American Football", "abstract": "coverage defense",
+     "topics": ["coverage_scheme"]},
+    {"source": "arxiv", "source_id": "ax1", "title":
+     "Coverage estimation in American football.", "abstract": "coverage defense",
+     "topics": ["coverage_scheme"]},
+    {"source": "local_pdf", "source_id": "lp1", "title":
+     "COVERAGE ESTIMATION IN AMERICAN FOOTBALL", "abstract": "coverage defense",
+     "full_text": "coverage defense leverage", "topics": ["local_pdf"]},
+]
+
+
+def test_same_paper_from_three_sources_collapses_to_one(tmp_path):
+    idx = ci.build_index(_manifest(tmp_path, SAME_PAPER))
+    idx = ci.dedupe(idx)
+    assert idx["n"] == 1, f"expected 1 record, got {idx['n']}"
+    # local PDF wins because it carries full text
+    assert idx["records"][0]["source"] == "local_pdf"
+    # but no query lineage is lost
+    assert set(idx["records"][0]["topics"]) == {"coverage_scheme", "local_pdf"}
+
+
+def test_dedupe_keeps_distinct_papers(tmp_path):
+    idx = ci.build_index(_manifest(tmp_path, RECORDS))
+    before = idx["n"]
+    idx = ci.dedupe(idx)
+    assert idx["n"] == before
+
+
 def test_mind_feed_topic_filter(tmp_path):
     idx = ci.build_index(_manifest(tmp_path, RECORDS))
     out = tmp_path / "feed.jsonl"

@@ -265,13 +265,58 @@ lateral component swamped the Magnus effect being measured.
 4. Ball tracker does not exist; the flight model is unexercised on real data.
 5. QB load coefficients are ASSUMED and unvalidated; falsification list recorded.
 
-## 9. Corpus counts at time of writing
+## 9. Corpus counts (verified)
 
-    manifest records   648
-    PDFs harvested     179 (562 MB), moved to Drive
+    manifest records (raw)      920
+    after title dedupe          856 unique works
+    with extracted full text    118
+    retracted, quarantined        3
+    PII/credential files refused  2
+    sources   openalex 672 · arxiv 65 · local_pdf 119
 
-The harvester is resumable and append-only: rerunning it adds only source_ids not
-already in the manifest.
+The harvester is resumable and append-only: rerunning adds only unseen source_ids.
+
+### On-disk PDF ingestion
+
+`scripts/research/ingest_local_pdfs.py` reads the PDFs already in Downloads,
+extracts title/abstract/full text with pymupdf, and appends manifest records so the
+same BM25 index serves both the API harvest and the local library.
+
+Two integrity rules, both load-bearing:
+
+**Retracted papers are quarantined.** Three files from Computational and
+Mathematical Methods in Medicine (2022) carry "Retracted" in their own titles.
+They are recorded with `retracted: true` and `gate_status: QUARANTINED`, and
+`search()` excludes them unless `include_retracted=True` is passed explicitly. A
+retracted paper reads exactly like a valid one; if it can rank by default, the
+corpus launders it into downstream reasoning.
+
+**PII and credential files are refused by name, before any read.** Downloads holds
+passport and SSN scans and a live service-account key. Indexing them would make the
+leak searchable and would push it to Drive. Two files were skipped on this rule.
+(That key still needs rotating in IAM — indexing it is not the fix.)
+
+### Deduplication
+
+The same paper arrives from OpenAlex, from arXiv, and again as a local PDF. Raw
+920 records were 856 distinct works. `dedupe()` collapses on a normalised title
+key with source priority local_pdf > arxiv > openalex (full text beats preprint
+beats metadata), merging topic lists so query lineage survives the collapse.
+
+### Verified retrieval
+
+    QUERY: defensive coverage assignment trajectories
+      [17.06] Integrating Unsupervised and Supervised Learning ... (arxiv 2026)
+      [16.44] Decoding Defensive Coverage Responsibilities in American Football (arxiv 2026)
+      [12.14] Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs (arxiv 2019)
+
+    QUERY: field homography camera calibration
+      [18.69] PnLCalib: Sports field registration via points and lines optimization
+      [18.33] No Bells, Just Whistles: Sports Field Registration ...
+      [17.73] Sports Camera Calibration using Flexible Intersection Selection
+
+The paper this whole thread is built on (arXiv 2603.25901) is retrievable by
+description, which is the actual test of whether the corpus is wired in.
 
 ## 10. What not to repeat
 
