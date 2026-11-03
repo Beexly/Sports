@@ -149,8 +149,46 @@ Decision: gridiron-ai primary, Removesurgery a field-mask-gated recall backup.
 Working stack: detection 49.6 MB + field segmentation 22.8 MB + pose ONNX
 11.3 MB + jersey OCR 20.8 MB = **~104 MB**.
 
-Caveat: measured at library defaults on 640x360 sources. Re-run at higher
-`imgsz` before treating these as final rankings.
+### Re-benchmark at imgsz 640 vs 960 (8 verified live-play frames, bal_vs_dal)
+
+The first benchmark sampled frames blindly and included crowd shots, graphics and
+halftime cut-ins, where every model returns near-zero detections and the error
+metric collapses toward 22. Frames are now pre-filtered to those where the primary
+detector sees 15-30 people - a plausible 11-on-11 snap.
+
+| Model | imgsz | mean abs err vs 22 | max err | latency |
+|---|---|---|---|---|
+| gridiron-ai (MIT) | 640 | 2.00 | 5 | 846 ms |
+| gridiron-ai (MIT) | **960** | **1.12** | **4** | 1480 ms |
+| Removesurgery | 640 | 5.38 | 16 | 350 ms |
+| Removesurgery | 960 | 5.38 | 19 | 612 ms |
+
+Gridiron at 960 is the most accurate configuration measured (1.12 mean error, never
+off by more than 4). Removesurgery does not improve with resolution and still
+spikes to 41 on one frame - the crowd/sideline failure mode is not a resolution
+problem. The earlier 8.6 figure came from a noisier frame set and is superseded.
+
+Cost: 1.48 s/frame on CPU. At 10 Hz broadcast that is 15x slower than real time,
+so this is an offline pipeline, not a live one.
+
+### Pose: works, but not on full frames
+
+YOLO11n-pose ONNX runs (17 keypoints, 87 ms/frame) but detects 0-12 people per
+broadcast frame. Players occupy too few pixels at 640x360 source resolution for
+whole-frame pose. Pose must be run on per-player crops from the detector, not on
+the frame. NOT YET TESTED on crops.
+
+### Jersey OCR: blocked
+
+`prxkc/jersey-number-recognition` weights fail to load:
+
+    TypeError: references types outside the supported Ultralytics checkpoint format
+
+The checkpoint is not a standard Ultralytics model, so the documented
+`YOLO(path)` path does not work. Jersey numbers are therefore NOT available from
+this model as downloaded. Options: find the author's own inference code, or train
+a digit classifier on the BDB helmet-assignment crops (3.78M boxes already
+identified). Until then, team split falls back to HSV torso clustering.
 
 ## 9. Next actions (ordered by leverage)
 

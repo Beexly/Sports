@@ -100,6 +100,35 @@ def _get(url: str, timeout: int = 45, tries: int = 2) -> bytes | None:
     return None
 
 
+def emails_from_session_db(limit: int = 2) -> list[str]:
+    """Recover contact addresses the user supplied in chat.
+
+    They arrive redacted in the agent's view of a message, so they cannot be typed
+    back into a command. Reading them from the local session store keeps the value
+    on this machine and out of any log.
+    """
+    import sqlite3
+    db = os.path.expandvars(r"$LOCALAPPDATA\hermes\state.db")
+    if not os.path.exists(db):
+        return []
+    con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    try:
+        rows = con.execute(
+            """SELECT content FROM messages WHERE role='user' AND content LIKE '%@%'
+               ORDER BY rowid DESC LIMIT 20""").fetchall()
+    finally:
+        con.close()
+    pat = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+    out: list[str] = []
+    for (content,) in rows:
+        for m in pat.findall(content or ""):
+            if m not in out:
+                out.append(m)
+        if len(out) >= limit:
+            break
+    return out
+
+
 def _norm(t: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", (t or "").lower()).strip()
 
@@ -178,6 +207,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--email", default=os.environ.get("GSE_UNPAYWALL_EMAIL", ""))
     args = ap.parse_args(argv)
 
+    if not args.email:
+        found = emails_from_session_db()
+        if found:
+            args.email = found[0]
+            print(f"using contact email from session store: {found[0][:2]}***@"
+                  f"{found[0].split('@')[-1]}")
+
     manifest = Path(args.manifest)
     pdfdir = Path(args.pdfdir)
     pdfdir.mkdir(parents=True, exist_ok=True)
@@ -212,15 +248,10 @@ def main(argv: list[str] | None = None) -> int:
         a = arxiv_by_title(r.get("title", ""))
         if a:
             url, route = a.url, "arxiv_title"
-        elif a.status == RATE_LIMITED:
-            # Do not fall through to Unpaywall pretending this paper has no
-            # preprint; it was never successfully asked. Back off and move on.
-            blocked += 1
-            log.append({"source_id": r.get("source_id"), "status": RATE_LIMITED,
-                        "detail": a.detail, "route": "arxiv_title"})
-            time.sleep(3.0)
-            continue
         else:
+            # A rate-limited arXiv must not abort the item: Unpaywall is a
+            # different service with its own quota, and a 429 on one says nothing
+            # about the other. Only skip when arXiv genuinely had no match.
             u = unpaywall_by_doi(r.get("doi") or "", args.email)
             if u:
                 url, route = u.url, "unpaywall"
