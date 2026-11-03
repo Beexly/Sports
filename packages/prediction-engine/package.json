@@ -6,6 +6,7 @@
   "types": "./src/index.ts",
   "scripts": {
     "test": "vitest run",
+    "test:arxiv": "vitest run src/*.test.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },

@@ -146,7 +146,7 @@ def collect() -> list[dict]:
             "tier": tier,
             "reason": reason,
             "exports": exports,
-            "hasTest": m.with_suffix(".test.ts").exists(),
+            "hasTest": m.with_suffix(".test.ts").exists() or (SRC / f"{m.stem}.test.ts").exists(),
             "hasGate": "ACCEPTANCE_GATE" in txt,
         })
     return rows

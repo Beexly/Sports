@@ -472,6 +472,10 @@ export interface MindFeedEmission {
 }
 
 const DEFAULT_FEED_PATH = "brain/feeds/2026-10-22/master_aggregator_runtime_feed.jsonl";
+const TRACKED_TEST_FEED_PATHS = new Set([
+  DEFAULT_FEED_PATH,
+  "brain/feeds/2026-10-22/pass_discipline_feed.jsonl",
+]);
 
 /**
  * Single-writer Mind feed. Appends exactly one JSONL line and returns the
@@ -499,11 +503,15 @@ export function emitMindFeedRecord(
     if (typeof value === "number" && !Number.isFinite(value)) return null;
     return value;
   });
+  const isTestEnv = Boolean(process.env.VITEST || process.env.NODE_ENV === "test");
   // Single-writer append: exactly one line per call, to the feed path only.
-  // brain/mind.jsonl is never referenced here.
-  const absolute = isAbsolute(feedPath) ? feedPath : resolve(process.cwd(), feedPath);
-  mkdirSync(dirname(absolute), { recursive: true });
-  appendFileSync(absolute, `${line}\n`, { encoding: "utf8" });
+  // brain/mind.jsonl is never referenced here. Skip mutating repo-tracked
+  // default feed files during unit tests.
+  if (!(isTestEnv && TRACKED_TEST_FEED_PATHS.has(feedPath))) {
+    const absolute = isAbsolute(feedPath) ? feedPath : resolve(process.cwd(), feedPath);
+    mkdirSync(dirname(absolute), { recursive: true });
+    appendFileSync(absolute, `${line}\n`, { encoding: "utf8" });
+  }
   return {
     feedPath,
     lineBytes: Buffer.byteLength(line, "utf8"),

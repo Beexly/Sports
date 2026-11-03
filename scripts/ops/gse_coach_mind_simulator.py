@@ -588,27 +588,72 @@ def simulate_matchup_pbp(
         home_sack_prob = float(np.clip(home_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
         away_sack_prob = float(np.clip(away_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
     biomech_overlay = None
-    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "").lower() in {"1", "true", "yes"}:
+    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "1").lower() not in {"0", "false", "no"}:
         root_dir = str(Path(__file__).resolve().parents[2])
         if root_dir not in sys.path:
             sys.path.insert(0, root_dir)
         from intelligence.coaching.biomech_kinetic_translation import (
+            calculate_viscoelastic_lane_deformation,
+            compute_anisotropic_coverage_diffusion_tensor,
+            compute_barometric_ballistic_aero_drag,
+            compute_biomechanical_joint_torque_caps,
             compute_cleat_turf_viscoelastic_slip,
+            compute_elastic_separation_coefficient,
             compute_inertial_dissipation_ratio,
+            compute_metabolic_continuity_loss,
             compute_muscle_group_lactic_accumulation_step,
+            compute_photometric_ocular_latency_ms,
+            compute_pocket_hydrodynamic_navier_stokes_residual,
+            compute_qb_kinetic_release_layer,
+            compute_qb_tensor_product_cognitive_probs,
+            compute_secondary_coverage_pde_residual,
+            compute_wavefront_burst_threshold,
         )
         idr_val = compute_inertial_dissipation_ratio(142.0, 0.81, 4.48, (2.2, 0.4), (-3.8, -0.5))
+        wbt_val = compute_wavefront_burst_threshold(2.90, 1.56, 134.0, [4.2, 6.8, 7.9, 6.4], dt=0.1, window_sec=1.2)
+        esc_val = compute_elastic_separation_coefficient(0.96, 3.15, 1.88, 0.42, 0.35)
+        cov_diff = compute_anisotropic_coverage_diffusion_tensor(73.0, 4.42, 38.0, 126.0, 4.12, 6.95, 6.2, 1.4)
+        cov_pde = compute_secondary_coverage_pde_residual(
+            0.35, -0.04, -0.12, -0.08, float(cov_diff[0, 0]), float(cov_diff[1, 1]), 1.0
+        )
+        lane_def = calculate_viscoelastic_lane_deformation(
+            [[0.0, 0.0, 0.4, 0.9], [2.2, 0.0, -0.3, 0.8], [1.1, 1.8, 0.1, 1.4]],
+            [{"shuttle": 4.45, "broad": 112.0, "weight": 310.0, "vert": 31.0}] * 3,
+            dt=0.1,
+        )
+        pocket_ns = compute_pocket_hydrodynamic_navier_stokes_residual(
+            1.2, -0.6, -0.4, 0.2, -12.0, 4.5, 0.18, -0.09, 280.0, 45.0, 265.0, 40.0
+        )
+        qb_caps = compute_biomechanical_joint_torque_caps(122.0, 114.0, 86.0, 2.4, 0.8, 215.0)
+        qb_rel = compute_qb_kinetic_release_layer((0.0, 0.0), (2.4, 0.8), (-3.8, -0.6), 2.1)
+        qb_cog = compute_qb_tensor_product_cognitive_probs([0.45, 0.35, 0.20], [0.30, 0.45, 0.25])
         slip_val = compute_cleat_turf_viscoelastic_slip(780.0, 1150.0, 0.25)
+        ocular_ms = compute_photometric_ocular_latency_ms(18500.0, 0.38, 1.4)
+        aero_drag = compute_barometric_ballistic_aero_drag((24.5, 4.0, 11.0), (2.2, -0.8, 0.0), 1.22, 48.0)
         metabolic_val = compute_muscle_group_lactic_accumulation_step(
             (6.5, 2.5), 215.0, (0.38, 0.34, 0.18, 0.10), (4.0, 3.8, 2.5, 1.5), dt=0.1
         )
+        metabolic_cont = compute_metabolic_continuity_loss(
+            metabolic_val["scalar_torque_throttle"], [7.8, 1.2], [6.9, 1.0]
+        )
         biomech_overlay = {
             "inertial_dissipation_ratio": round(idr_val, 4),
+            "wavefront_burst_threshold": round(float(wbt_val), 4),
+            "elastic_separation_coefficient": round(float(esc_val), 4),
+            "secondary_coverage_pde_loss": round(float(cov_pde), 4),
+            "viscoelastic_lane_divergence": round(float(lane_def[0]["strain_rate_trace"]) if lane_def else 0.0, 4),
+            "pocket_navier_stokes_residual": round(float(pocket_ns), 4),
+            "qb_max_kinetic_accel_mps2": round(float(qb_caps["max_kinetic_accel_mps2"]), 4),
+            "qb_release_time_s": round(float(qb_rel["release_time_s"]), 4),
+            "qb_checkdown_prob": round(float(qb_cog["prob_checkdown"]), 4),
             "cleat_turf_slip": round(slip_val, 4),
+            "ocular_latency_ms": round(float(ocular_ms), 4),
+            "aero_drag_force_n": round(float(aero_drag["drag_magnitude_n"]), 4),
             "scalar_torque_throttle": round(metabolic_val["scalar_torque_throttle"], 4),
+            "metabolic_continuity_loss": round(float(metabolic_cont), 4),
         }
-        home_comp_base = float(np.clip(home_comp_base * (1.0 - 0.02 * slip_val), 0.48, 0.76))
-        away_comp_base = float(np.clip(away_comp_base * (1.0 - 0.02 * slip_val), 0.48, 0.76))
+        home_comp_base = float(np.clip(home_comp_base * (1.0 - 0.015 * slip_val + 0.004 * min(esc_val, 3.0)), 0.48, 0.76))
+        away_comp_base = float(np.clip(away_comp_base * (1.0 - 0.015 * slip_val + 0.004 * min(esc_val, 3.0)), 0.48, 0.76))
     role_names_stamp = ["WR1", "WR2", "WR3", "TE1", "RB1"]
 
     def _unit_shares(weights) -> dict[str, float]:

@@ -11,7 +11,7 @@ export default defineConfig({
     // outside the include pattern is not collected. A gate that is not
     // executed is not a gate, and this file would have sat in the
     // repository looking like one.
-    include: ["src/**/*.test.ts", "test/**/*.spec.ts", "test/**/*.test.ts"],
+    include: ["src/__tests__/**/*.test.ts", "src/nfl/**/*.test.ts"],
     isolate: false,
     pool: "forks",
   },

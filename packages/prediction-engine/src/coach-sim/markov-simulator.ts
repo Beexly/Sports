@@ -196,9 +196,15 @@ export const SIM_GAPS = {
 } as const;
 
 const KNEEL_HAIRCUT = KNEEL_MEAN_YD * KNEEL_RATE_PER_WINNING_GAME * 0.5;
+const SIM_CACHE = new Map<string, CoachProjection>();
 
 export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjection {
   const games = Math.max(1, Math.floor(n));
+  const cacheKey = JSON.stringify({ input, games });
+  const cached = SIM_CACHE.get(cacheKey);
+  if (cached !== undefined) {
+    return cached;
+  }
   const homeStaff = input.staffAggression ?? STAFF_AGGRESSION.PHI;
   const location = pointLocation(input);
   const awayStaff = input.staffAggressionAway ?? STAFF_AGGRESSION.PHI;
@@ -239,7 +245,7 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
   ];
   const allocated = applyShadowHaircut(allocateTargets(eligible), input.shadows ?? []);
 
-  return {
+  const result: CoachProjection = {
     scoreMean: totalMean / 2 + 1.5,
     marginMean,
     totalP10: totalMean - half,
@@ -256,6 +262,11 @@ export function simulateCoachGame(input: CoachSimInput, n = 10_000): CoachProjec
       fired: played.schemeFired,
     },
   };
+  if (SIM_CACHE.size > 512) {
+    SIM_CACHE.clear();
+  }
+  SIM_CACHE.set(cacheKey, result);
+  return result;
 }
 
 export function runSimulations(n: number, input: CoachSimInput): CoachProjection {

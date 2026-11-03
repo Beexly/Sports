@@ -408,9 +408,9 @@ def apply_week8_forensic_projection_pass(active_df: pd.DataFrame) -> pd.DataFram
         raw = float(row.get("AvgPointsPerGame", 0.0) or 0.0)
         anchor = float(row.get("proj_fpts", raw) or 0.0)
         role = str(row.get("role", ""))
-        target = 0.24 if role in {"WR1", "RB1", "TE1", "QB1"} else 0.08
-        route = 0.70 if role in {"WR1", "WR2", "TE1"} else 0.25
-        snap = 0.85 if role in {"QB1", "RB1", "WR1"} else 0.40
+        target = float(row.get("target_share", 0.24 if role in {"WR1", "RB1", "TE1", "QB1"} else (0.14 if role in {"WR2", "WR3"} else 0.08)))
+        route = float(row.get("route_share", 0.70 if role in {"WR1", "WR2", "TE1"} else (0.58 if role == "WR3" else 0.25)))
+        snap = float(row.get("snap_share", 0.85 if role in {"QB1", "RB1", "WR1"} else (0.60 if role in {"WR2", "WR3", "TE1"} else 0.40)))
         eb = compute_empirical_bayes_shrunk_projection(
             raw if raw > 0 else anchor,
             gp,

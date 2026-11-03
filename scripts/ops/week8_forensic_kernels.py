@@ -631,3 +631,22 @@ def fourth_down_brill_summary(wp_gaps: Sequence[float]) -> dict[str, float | Non
         "threshold": threshold,
         "reason": "OBSERVED",
     }
+
+
+empirical_bayes_shrink = compute_empirical_bayes_shrunk_projection
+evaluate_parlay_conjunction = evaluate_parlay_conjunction_gate
+
+
+def hurdle_non_negative_proj(
+    active_prob: float,
+    snap_cond_prob: float,
+    cond_mean: float,
+    route_share: float = 1.0,
+    snap_share: float = 1.0,
+    target_share: float = 0.15,
+) -> float:
+    """Two-part hurdle projection gated by route/snap participation."""
+    p_part = participation_hurdle_probability(active_prob, snap_cond_prob, target_share)
+    gate = enforce_route_snap_participation_gate(route_share, snap_share)
+    return float(max(0.0, p_part * cond_mean) if gate["eligible"] else 0.0)
+

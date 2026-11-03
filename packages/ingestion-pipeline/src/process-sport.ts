@@ -1920,7 +1920,17 @@ export async function processSport(
     }
 
     // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
-    await persistGateDecisions(gateDecisionsToPersist);
+    let gateDecisionsAttempted = gateDecisionsToPersist.length;
+    let gateDecisionsLost = 0;
+    try {
+      const gateDecisionResult = await persistGateDecisions(gateDecisionsToPersist);
+      gateDecisionsAttempted = gateDecisionResult.attempted;
+      if (gateDecisionResult.error) {
+        gateDecisionsLost = Math.max(0, gateDecisionsAttempted - gateDecisionResult.persisted);
+      }
+    } catch {
+      gateDecisionsLost = gateDecisionsAttempted;
+    }
 
     await db.ingestionRun.update({
       where: { id: run.id },
@@ -1936,7 +1946,8 @@ export async function processSport(
       `${logPrefix} ${sport.key}: ${Object.keys(gameRecords).length} games, ` +
       `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})` +
       (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
-      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "")
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "") +
+      ` gate_decisions_lost=${gateDecisionsLost}/${gateDecisionsAttempted}`
     );
 
     const emptyNote =

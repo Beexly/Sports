@@ -31,6 +31,12 @@ from week8_forensic_kernels import (
     participation_hurdle_probability,
 )
 from run_full_dk_bitemporal_gpp import exposure_count_cap, solve_dk_slate
+from pbp_conservation_coupling import (
+    couple_conserved_pbp,
+    degraded_jev_lineup_evaluation,
+    live_jev_confidence,
+    showdown_salary_floor,
+)
 
 
 def test_empirical_bayes_shrinks_small_sample_outliers():
@@ -223,4 +229,32 @@ def test_evaluate_prop_vector_returns_platform_variance_and_quantiles():
     assert "platformQuantiles" in card
     assert set(card["platformVariances"].keys()) == {"DK", "FD", "UD"}
     assert card["platformVariances"]["DK"] > card["platformVariances"]["FD"] > 0
+
+
+def test_pbp_conservation_coupling_and_jev_degraded_and_showdown_floor():
+    import numpy as np
+
+    static_draws = np.array([18.0, 20.0, 22.0, 24.0], dtype=np.float64)
+    pbp_draws = np.array([10.0, 12.0, 14.0, 16.0], dtype=np.float64)
+    coupled = couple_conserved_pbp(static_draws, pbp_draws)
+    assert np.allclose(coupled, pbp_draws)
+    assert coupled is not pbp_draws
+
+    low_pbp = np.array([1.0, 1.5, 2.0, 1.5], dtype=np.float64)
+    assert np.allclose(couple_conserved_pbp(static_draws, low_pbp), static_draws)
+    assert np.allclose(couple_conserved_pbp(static_draws, np.array([])), static_draws)
+
+    degraded = degraded_jev_lineup_evaluation("jev offline")
+    assert degraded["jev_status"] == "DEGRADED_UNVERIFIED"
+    assert degraded["publish_allowed"] is False
+    assert degraded["lineup_verdict"] == "PASS_FRAGILE"
+    assert degraded["confidence_int"] is None
+
+    assert live_jev_confidence(0.20, 0.25, 0.80) == 22
+    assert live_jev_confidence(0.85, 0.80, 0.15) == 83
+
+    assert showdown_salary_floor(25000) == 48000
+    assert showdown_salary_floor(None) == 48000
+    assert showdown_salary_floor(49200) == 49200
+
 
