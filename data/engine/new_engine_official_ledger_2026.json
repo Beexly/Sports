@@ -78,11 +78,19 @@
       "record_class": "secondary_view"
     },
     {
-      "label": "Post-MNF (CHI 34 @ SEA 17) Main + Deriv + TNF",
+      "label": "Post-MNF (CHI 34 @ SEA 17) Base + All 6 MNF Real-Money Tickets Reconciled",
+      "record": "40-15-1",
+      "win_pct": 72.7,
+      "net_units": "+22.50u",
+      "formula": "36-13-1 (+20.14u) + MNF 6-ticket real-money card 4-2-0 (+2.36u / +$11.81 on $40.00 staked at $5.00/u)",
+      "record_class": "secondary_view"
+    },
+    {
+      "label": "Post-MNF (CHI 34 @ SEA 17) Main + Deriv + TNF (Main-Line MNF Only)",
       "record": "38-13-1",
       "win_pct": 74.5,
       "net_units": "+22.85u",
-      "formula": "36-13-1 (+20.14u) + MNF CHI +3.0 WIN (+1.71u) + CHI ML +142 WIN (+1.00u); Kalif Raymond 53 scrimmage yds (14 rec + 39 lateral rush) graded LOSS on pure rec yds",
+      "formula": "36-13-1 (+20.14u) + MNF main lines 2-0-0 (CHI +3.0 WIN +1.714u + CHI ML +142 WIN +0.994u = +2.71u)",
       "record_class": "secondary_view"
     },
     {
@@ -94,6 +102,97 @@
       "record_class": "secondary_view"
     }
   ],
+  "mnf_chi_at_sea_2026_11_02": {
+    "event": "CHI 34 @ SEA 17 (2026-11-02)",
+    "unit_size_usd": 5.0,
+    "summary": {
+      "wins": 4,
+      "losses": 2,
+      "pushes": 0,
+      "total_staked_usd": 40.0,
+      "total_payout_usd": 51.81,
+      "net_profit_usd": 11.81,
+      "units_risked": 8.0,
+      "net_units_all_6_tickets": 2.362,
+      "net_units_all_6_rounded": 2.36,
+      "net_units_main_lines_only": 2.708,
+      "net_units_main_lines_rounded": 2.71
+    },
+    "tickets": [
+      {
+        "id": "MNF-CHI-SEA-01",
+        "category": "Game Line",
+        "pick": "Chicago Bears +3.0 (-105)",
+        "stake_usd": 9.0,
+        "payout_usd": 17.57,
+        "profit_usd": 8.57,
+        "units_risked": 1.8,
+        "net_units": 1.714,
+        "result": "WIN",
+        "actual": "CHI 34, SEA 17. Covered +3.0."
+      },
+      {
+        "id": "MNF-CHI-SEA-02",
+        "category": "Game Line",
+        "pick": "Chicago Bears ML (+142)",
+        "stake_usd": 3.5,
+        "payout_usd": 8.47,
+        "profit_usd": 4.97,
+        "units_risked": 0.7,
+        "net_units": 0.994,
+        "result": "WIN",
+        "actual": "CHI 34, SEA 17. Outright win."
+      },
+      {
+        "id": "MNF-CHI-SEA-03",
+        "category": "Skill Prop",
+        "pick": "Jaxon Smith-Njigba OVER 78.5 Receiving Yards (-114)",
+        "stake_usd": 8.0,
+        "payout_usd": 15.01,
+        "profit_usd": 7.01,
+        "units_risked": 1.6,
+        "net_units": 1.402,
+        "result": "WIN",
+        "actual": "JSN 9 receptions, 112 rec yds."
+      },
+      {
+        "id": "MNF-CHI-SEA-04",
+        "category": "Skill Prop",
+        "pick": "Cole Kmet OVER 28.5 Receiving Yards (-110)",
+        "stake_usd": 5.5,
+        "payout_usd": 10.76,
+        "profit_usd": 5.26,
+        "units_risked": 1.1,
+        "net_units": 1.052,
+        "result": "WIN",
+        "actual": "Kmet 4 receptions, 44 rec yds."
+      },
+      {
+        "id": "MNF-CHI-SEA-05",
+        "category": "Skill Prop (Taxonomy Audit Specimen)",
+        "pick": "Kalif Raymond OVER 19.5 Receiving Yards (-110)",
+        "stake_usd": 7.0,
+        "payout_usd": 0.0,
+        "profit_usd": -7.0,
+        "units_risked": 1.4,
+        "net_units": -1.4,
+        "result": "LOSS",
+        "actual": "Raymond 53 scrimmage yds (14 rec yds + 39 rush yds on backward lateral screen). Lost pure receiving prop."
+      },
+      {
+        "id": "MNF-CHI-SEA-06",
+        "category": "Same Game Parlay",
+        "pick": "CHI @ SEA 2-Leg Correlated SGP (+285)",
+        "stake_usd": 7.0,
+        "payout_usd": 0.0,
+        "profit_usd": -7.0,
+        "units_risked": 1.4,
+        "net_units": -1.4,
+        "result": "LOSS",
+        "actual": "SGP leg missed."
+      }
+    ]
+  },
   "tonight_pending_card_car_at_gb": [
     {
       "id": "CAR-GB-01",

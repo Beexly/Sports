@@ -382,3 +382,151 @@ def compute_elbo_and_ornstein_uhlenbeck_sgd_posterior_variance(
     }
 
 
+def compute_eager_split_pass_epa_shrinkage_and_poisson_td(
+    short_pass_epa_per_play: float,
+    short_pass_attempts: int,
+    deep_pass_epa_per_play: float,
+    deep_pass_attempts: int,
+    league_short_epa_mean: float = 0.04,
+    league_deep_epa_mean: float = 0.12,
+    expected_pass_tds_lambda: float = 1.65,
+    prop_line_tds: float = 1.5,
+) -> Dict[str, float]:
+    """Eric A. Eager & Richard A. Erickson (2023, *Football Analytics with Python & R*, O'Reilly, 488 pp.):
+    - Ch. 2: Short Passing (<20 air yds, r~0.43 stability, k_short=180) vs. Deep Passing (>=20 air yds,
+      r~0.19 stability, k_deep=380) Marcel Empirical-Bayes regression-to-the-mean shrinkage.
+    - Ch. 6: Poisson Regression for QB Passing Touchdowns P(Y > line) = 1 - sum_{m=0}^{floor(line)} e^-lambda * lambda^m / m!.
+    """
+    n_s = max(0, int(short_pass_attempts))
+    n_d = max(0, int(deep_pass_attempts))
+    k_short = 180.0
+    k_deep = 380.0
+    w_s = n_s / (n_s + k_short)
+    w_d = n_d / (n_d + k_deep)
+    reg_short = w_s * float(short_pass_epa_per_play) + (1.0 - w_s) * float(league_short_epa_mean)
+    reg_deep = w_d * float(deep_pass_epa_per_play) + (1.0 - w_d) * float(league_deep_epa_mean)
+    deep_share = n_d / max(1.0, float(n_s + n_d))
+    composite_regressed_epa = (1.0 - deep_share) * reg_short + deep_share * reg_deep
+
+    lam = max(1e-4, float(expected_pass_tds_lambda))
+    k_max = int(math.floor(float(prop_line_tds)))
+    cdf_under = sum(math.exp(-lam) * (lam ** m) / math.factorial(m) for m in range(k_max + 1))
+    prob_over = max(0.0, min(1.0, 1.0 - cdf_under))
+    return {
+        "short_pass_reliability_weight": round(w_s, 4),
+        "deep_pass_reliability_weight": round(w_d, 4),
+        "regressed_short_epa_per_play": round(reg_short, 4),
+        "regressed_deep_epa_per_play": round(reg_deep, 4),
+        "composite_regressed_pass_epa": round(composite_regressed_epa, 4),
+        "poisson_prob_over_td_line": round(prob_over, 6),
+        "poisson_prob_under_td_line": round(cdf_under, 6),
+    }
+
+
+def compute_weak_link_oline_and_directional_rush_index(
+    five_linemen_pass_block_grades: Sequence[float],
+    actual_vertical_depth_35s: float,
+    expected_vertical_depth_35s: float,
+    rush_epa_to_lineman_side: float,
+    rush_epa_away_from_side: float,
+    cap_hit_millions: float,
+) -> Dict[str, float]:
+    """Synthesizes the 3 Offensive-Line Tracking & Valuation Papers in the Nov 2-3 Corpus:
+    1. Alejandro Demetres Veroulis (UCLA Thesis 2023, `qt5qw5382d_noSplash_983c1629d166d6b046b4a2d65e75e816.pdf`):
+       Weak-Link Theorem — O-Line pocket integrity is dominated by min_j(Q_j) rather than purely mean(Q_j).
+    2. Eric Eager (MIT Sloan #193949, `68d6be744d7efccc22080814_193949 - Using Tracking Data to Build Offensive Line Development Tools.pdf`):
+       Vertical pass-set depth residual at t = 3.5s (actual_depth - expected_depth).
+    3. Nikhil Byanna & Diego Klabjan (Northwestern Univ., `1603.07593v2.pdf`):
+       Directional rushing differential (rushes to lineman's gap/side vs. away) & performance-per-cap-dollar.
+    """
+    grades = [float(x) for x in five_linemen_pass_block_grades]
+    if len(grades) != 5:
+        raise ValueError("five_linemen_pass_block_grades must have exactly 5 linemen (LT, LG, C, RG, RT)")
+    mean_grade = float(np.mean(grades))
+    weak_link_grade = float(np.min(grades))
+    effective_pocket_grade = 0.65 * weak_link_grade + 0.35 * mean_grade
+    depth_residual_35s = float(actual_vertical_depth_35s) - float(expected_vertical_depth_35s)
+    directional_rush_delta = float(rush_epa_to_lineman_side) - float(rush_epa_away_from_side)
+    value_per_million = (effective_pocket_grade + 10.0 * directional_rush_delta) / max(0.5, float(cap_hit_millions))
+    return {
+        "mean_oline_grade": round(mean_grade, 3),
+        "weak_link_min_grade": round(weak_link_grade, 3),
+        "effective_weak_link_pocket_grade": round(effective_pocket_grade, 3),
+        "eager_depth_residual_35s_yds": round(depth_residual_35s, 3),
+        "byanna_klabjan_directional_rush_delta_epa": round(directional_rush_delta, 4),
+        "surplus_value_per_cap_million": round(value_per_million, 4),
+    }
+
+
+def compute_fujii_obso_and_counterfactual_ite(
+    pitch_control_probs: Sequence[float],
+    transition_probs: Sequence[float],
+    shot_or_completion_values: Sequence[float],
+    factual_expected_epa: float,
+    counterfactual_expected_epa: float,
+) -> Dict[str, float]:
+    """Keisuke Fujii (2025, *Machine Learning in Sports: Open Approach for Next-Generation Analytics*,
+    SpringerBriefs in Computer Science, `978-981-96-1445-5.pdf`, Ch. 3.4.3 & Ch. 3.5.2):
+    - Off-Ball Scoring Opportunity (OBSO): sum_{r in grid} P_control(r) * P_transition(r) * V_score(r).
+    - Counterfactual Individual Treatment Effect (ITE): E[Y(1) - Y(0) | X_t] measuring the value of an
+      alternative route/blocking/play-call intervention over the observed factual trajectory.
+    """
+    p_ctrl = np.asarray(pitch_control_probs, dtype=np.float64)
+    p_trans = np.asarray(transition_probs, dtype=np.float64)
+    v_val = np.asarray(shot_or_completion_values, dtype=np.float64)
+    if not (p_ctrl.shape == p_trans.shape == v_val.shape) or p_ctrl.size == 0:
+        raise ValueError("pitch_control_probs, transition_probs, and shot_or_completion_values must match in non-empty shape")
+    p_trans_norm = p_trans / max(1e-9, float(np.sum(p_trans)))
+    obso = float(np.sum(p_ctrl * p_trans_norm * v_val))
+    ite_delta = float(counterfactual_expected_epa) - float(factual_expected_epa)
+    return {
+        "off_ball_scoring_opportunity_obso": round(obso, 5),
+        "counterfactual_ite_epa_delta": round(ite_delta, 5),
+        "optimal_switch_recommended": bool(ite_delta > 0.05),
+    }
+
+
+def evaluate_noyes_systematic_error_gate(
+    effect_size_delta: float,
+    statistical_std: float,
+    sample_size_n: int,
+    systematic_error_floor: float,
+    adversarial_blind_control_passed: bool = True,
+    uses_unverified_macroscopic_quantum_jargon: bool = False,
+) -> Dict[str, Any]:
+    """Synthesizes the Epistemic & Scientific-Skepticism Triad (`9906014v1.pdf`, `p26.pdf`, `CIA-RDP96-00792R000700710002-1.pdf`):
+    1. H. Pierre Noyes (SLAC-PUB-8151, Stanford 1999, `9906014v1.pdf`):
+       In large samples N, naive Z_stat = |delta| / (sigma_stat / sqrt(N)) explodes even when |delta| is tiny;
+       true effective significance must include uncalibrated systematic error sigma_sys:
+           Z_eff = |delta| / sqrt(sigma_stat^2 / N + sigma_sys^2).
+    2. Steven N. Shore (Fall 1984, *Skeptical Inquirer*, `p26.pdf`):
+       Rejects macroscopic pseudo-quantum vocabulary that lacks physical/empirical correspondence.
+    3. CIA-RDP96-00792R000700710002-1 (1984 Randi Project Alpha & Dumalin Spierlezen / Clever-Hans):
+       Any model/experiment that fails adversarial double-blind / leakage controls (`adversarial_blind_control_passed=False`)
+       is quarantined as Clever-Hans / sycophancy leakage.
+    """
+    n = max(1, int(sample_size_n))
+    s_stat = max(1e-9, float(statistical_std))
+    s_sys = max(0.0, float(systematic_error_floor))
+    delta = abs(float(effect_size_delta))
+
+    naive_z_stat = delta / (s_stat / math.sqrt(n))
+    total_uncertainty = math.sqrt((s_stat ** 2) / n + (s_sys ** 2))
+    effective_z = delta / max(1e-9, total_uncertainty)
+
+    passed = (
+        bool(adversarial_blind_control_passed)
+        and not bool(uses_unverified_macroscopic_quantum_jargon)
+        and effective_z >= 1.96
+    )
+    return {
+        "naive_statistical_z": round(naive_z_stat, 4),
+        "effective_systematic_adjusted_z": round(effective_z, 4),
+        "systematic_dominates_statistical": bool(s_sys > (s_stat / math.sqrt(n))),
+        "adversarial_blind_control_passed": bool(adversarial_blind_control_passed),
+        "shore_macroscopic_jargon_penalty": bool(uses_unverified_macroscopic_quantum_jargon),
+        "signal_accepted": passed,
+    }
+
+
+

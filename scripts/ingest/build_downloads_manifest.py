@@ -105,7 +105,7 @@ def match_feed_sources(
     matched_out: List[Dict[str, Any]] = []
     for row in feed_rows:
         rid = str(row.get("id") or row.get("equation_id") or "")
-        src = str(row.get("source") or row.get("source_file") or "").strip()
+        src = str(row.get("source_file") or row.get("source") or "").strip()
         if not src:
             matched_out.append({"id": rid, "source": None, "status": "unmatched", "rel_path": None})
             continue

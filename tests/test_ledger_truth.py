@@ -51,6 +51,40 @@ def test_secondary_views_labeled():
         assert v["record_class"] == "secondary_view"
     assert not any("60-26-0" in json.dumps(v) for v in d.get("secondary_views", []))
     records = {v["record"]: v["net_units"] for v in d.get("secondary_views", [])}
+    assert records.get("40-15-1") == "+22.50u"
     assert records.get("38-13-1") == "+22.85u"
     assert records.get("47-19-1") == "+24.92u"
+
+
+def test_mnf_6_tickets_reconcile_line_by_line_to_both_views():
+    d = _load()
+    mnf = d["mnf_chi_at_sea_2026_11_02"]
+    tickets = mnf["tickets"]
+    assert len(tickets) == 6
+    w = sum(1 for t in tickets if t["result"] == "WIN")
+    l = sum(1 for t in tickets if t["result"] == "LOSS")
+    p = sum(1 for t in tickets if t["result"] == "PUSH")
+    assert (w, l, p) == (4, 2, 0)
+
+    staked_usd = round(sum(t["stake_usd"] for t in tickets), 2)
+    payout_usd = round(sum(t["payout_usd"] for t in tickets), 2)
+    profit_usd = round(sum(t["profit_usd"] for t in tickets), 2)
+    net_u_all = round(sum(t["net_units"] for t in tickets), 3)
+    assert staked_usd == 40.00
+    assert payout_usd == 51.81
+    assert profit_usd == 11.81
+    assert net_u_all == 2.362
+    assert round(net_u_all, 2) == 2.36
+
+    main_tickets = [t for t in tickets if t["category"] == "Game Line"]
+    assert len(main_tickets) == 2
+    net_u_main = round(sum(t["net_units"] for t in main_tickets), 3)
+    assert net_u_main == 2.708
+    assert round(net_u_main, 2) == 2.71
+
+    # Reconcile against pre-MNF base 36-13-1 (+20.14u)
+    assert round(20.14 + round(net_u_all, 2), 2) == 22.50
+    assert round(20.14 + round(net_u_main, 2), 2) == 22.85
+    assert round(22.56 + round(net_u_all, 2), 2) == 24.92
+
 

@@ -9,20 +9,28 @@ from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (
     MultiGameGlycogenDepletionEngine,
     compute_alam_football_crosswind_drag,
     compute_chitturi_route_disturbance_score,
+    compute_eager_split_pass_epa_shrinkage_and_poisson_td,
     compute_elbo_and_ornstein_uhlenbeck_sgd_posterior_variance,
+    compute_fujii_obso_and_counterfactual_ite,
     compute_kent_cleat_surface_entrapment,
     compute_mallat_scattering_intermittency_residual,
     compute_ocular_quiet_eye_latency_multiplier,
     compute_pinn_navier_stokes_composite_loss,
+    compute_weak_link_oline_and_directional_rush_index,
     deconfound_cumulative_ryoe_r2,
     evaluate_acrisure_tahoma31_turf_shear_upgrade,
     evaluate_bezier_route_curve,
+    evaluate_noyes_systematic_error_gate,
     optimize_bayesian_asymmetric_loss_action,
 )
+from scripts.ingest.import_nov02_feed import load_feed_and_manifest
 from scripts.ops.dfs_stochastic_milp_optimizer import (
+    GSEFullSlateSimulator,
     build_sample_week9_dfs_slate_pool,
     evaluate_newell_tiered_gpp_expected_payout,
     optimize_dfs_portfolio,
+    select_submodular_marginal_win_portfolio,
+    simulate_dirichlet_multinomial_field,
 )
 from scripts.ops.locked_production_pipeline import (
     ESPN_2026_EDGE_PRWR_LEADERS,
@@ -30,6 +38,9 @@ from scripts.ops.locked_production_pipeline import (
     WEEK9_SEA_ARI_PASS_CATCHER_MATRIX,
     WEEK9_TRENCH_MISMATCH_SPOTLIGHT,
     enforce_production_sanity_gates,
+    reverse_engineer_alt_ladder_pricing_kernel,
+    scale_dropoff_by_effective_contributors,
+    sinkhorn_unbalanced_target_reallocation_with_epa_dropoff,
     validate_roster_and_coordinate_mutation_guard,
 )
 from scripts.ops.memory_mapped_spatial_backtest import evaluate_in_memory_telemetry_rows
@@ -306,6 +317,137 @@ def test_wave5_dfs_stochastic_milp_portfolio_and_newell_tiered_payout():
     high_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 26.0, [(185.0, 100000.0), (160.0, 500.0), (145.0, 25.0)])
     assert high_var["top_tier_win_prob"] > low_var["top_tier_win_prob"]
     assert high_var["expected_payout_usd"] > low_var["expected_payout_usd"]
+
+
+def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
+    # 1. Hunter, Vielma & Zaman (2019, `Picking-Winners (1).pdf`) Submodular Portfolio Selector
+    # Lineup 0 and Lineup 1 win in the exact same scenarios, while Lineup 2 wins in disjoint scenarios
+    scenarios = np.array(
+        [
+            [192.0, 191.0, 140.0],
+            [188.0, 189.0, 135.0],
+            [140.0, 142.0, 195.0],
+            [138.0, 139.0, 190.0],
+        ],
+        dtype=np.float64,
+    )
+    submod = select_submodular_marginal_win_portfolio(scenarios, winning_threshold=185.0, k_portfolio_size=2)
+    assert submod["selected_lineup_indices"] == [0, 2]
+    assert submod["cumulative_portfolio_win_prob"] == 1.0
+    assert submod["marginal_win_prob_gains"] == [0.5, 0.5]
+
+    # 2. Eager & Erickson (2023, `Football Analytics with Python & R`) Ch. 2 & Ch. 6
+    qb_res = compute_eager_split_pass_epa_shrinkage_and_poisson_td(
+        short_pass_epa_per_play=0.18,
+        short_pass_attempts=180,
+        deep_pass_epa_per_play=0.65,
+        deep_pass_attempts=45,
+        expected_pass_tds_lambda=1.85,
+        prop_line_tds=1.5,
+    )
+    # Short-pass reliability weight (180/(180+180)=0.5) > deep-pass reliability weight (45/(45+380)=0.1059)
+    assert qb_res["short_pass_reliability_weight"] > qb_res["deep_pass_reliability_weight"]
+    assert 0.50 < qb_res["poisson_prob_over_td_line"] < 0.60
+
+    # 3. Veroulis (UCLA 2023) Weak-Link O-Line + Eager (MIT Sloan #193949) + Byanna & Klabjan (2016)
+    ol_res = compute_weak_link_oline_and_directional_rush_index(
+        five_linemen_pass_block_grades=[82.0, 78.0, 80.0, 76.0, 44.0],
+        actual_vertical_depth_35s=4.2,
+        expected_vertical_depth_35s=3.5,
+        rush_epa_to_lineman_side=0.09,
+        rush_epa_away_from_side=-0.03,
+        cap_hit_millions=8.5,
+    )
+    assert ol_res["weak_link_min_grade"] == 44.0
+    assert ol_res["effective_weak_link_pocket_grade"] < ol_res["mean_oline_grade"]
+    assert ol_res["byanna_klabjan_directional_rush_delta_epa"] == pytest.approx(0.12)
+
+    # 4. Keisuke Fujii (2025, `978-981-96-1445-5.pdf`) OBSO & Counterfactual ITE
+    fujii_res = compute_fujii_obso_and_counterfactual_ite(
+        pitch_control_probs=[0.75, 0.40, 0.20],
+        transition_probs=[0.50, 0.30, 0.20],
+        shot_or_completion_values=[0.42, 0.35, 0.28],
+        factual_expected_epa=0.08,
+        counterfactual_expected_epa=0.29,
+    )
+    assert fujii_res["off_ball_scoring_opportunity_obso"] > 0.0
+    assert fujii_res["counterfactual_ite_epa_delta"] == pytest.approx(0.21)
+    assert fujii_res["optimal_switch_recommended"] is True
+
+    # 5. Noyes (`9906014v1.pdf`) + Shore (`p26.pdf`) + Randi Project Alpha (`CIA-RDP96-00792R000700710002-1.pdf`)
+    # Large sample N=10000 with tiny effect 0.02 and systematic error 0.05 -> naive Z=4.0 but effective Z < 0.4 -> REJECTED
+    noyes_reject = evaluate_noyes_systematic_error_gate(
+        effect_size_delta=0.02,
+        statistical_std=0.50,
+        sample_size_n=10000,
+        systematic_error_floor=0.05,
+        adversarial_blind_control_passed=True,
+    )
+    assert noyes_reject["naive_statistical_z"] == pytest.approx(4.0)
+    assert noyes_reject["effective_systematic_adjusted_z"] < 0.45
+    assert noyes_reject["signal_accepted"] is False
+
+    noyes_pass = evaluate_noyes_systematic_error_gate(
+        effect_size_delta=0.15,
+        statistical_std=0.40,
+        sample_size_n=400,
+        systematic_error_floor=0.02,
+        adversarial_blind_control_passed=True,
+        uses_unverified_macroscopic_quantum_jargon=False,
+    )
+    assert noyes_pass["signal_accepted"] is True
+
+    # 6. Davies (2025) & `load_scaling.py` Effective-Contributor Herfindahl Injury Dropoff Scaling
+    conc_off = scale_dropoff_by_effective_contributors(base_dropoff=0.10, team_target_hhi=0.22)
+    spread_off = scale_dropoff_by_effective_contributors(base_dropoff=0.10, team_target_hhi=0.09)
+    assert conc_off["load_multiplier"] > 1.0 > spread_off["load_multiplier"]
+    assert conc_off["scaled_epa_dropoff"] > spread_off["scaled_epa_dropoff"]
+
+    # 7. `engine_reverse.py` Alternate-Ladder Pricing Kernel Identification
+    ladder_res = reverse_engineer_alt_ladder_pricing_kernel(
+        [(-7.0, 0.25), (-3.0, 0.50), (1.0, 0.75)]
+    )
+    assert ladder_res["fair_line_mu"] == pytest.approx(-3.0, abs=0.01)
+    assert ladder_res["book_uncertainty_sigma"] > 0.0
+
+    # 8. `gse_injury_overlay_v2.py` + Pham et al. (ICML 2020 `pham20a.pdf`) Unbalanced Sinkhorn
+    ub_res = sinkhorn_unbalanced_target_reallocation_with_epa_dropoff(
+        pre_injury_shares=[0.30, 0.25, 0.25, 0.20],
+        post_injury_capacity=[0.01, 0.35, 0.35, 0.29],
+        cost_matrix=np.array(
+            [
+                [0.0, 0.2, 0.4, 0.6],
+                [0.2, 0.0, 0.2, 0.4],
+                [0.4, 0.2, 0.0, 0.2],
+                [0.6, 0.4, 0.2, 0.0],
+            ],
+            dtype=np.float64,
+        ),
+        role_epa_factors=[0.85, 1.02, 0.98, 0.94],
+    )
+    assert sum(ub_res["reallocated_shares"]) == pytest.approx(1.0, abs=1e-4)
+    assert ub_res["reallocated_shares"][1] > ub_res["reallocated_shares"][0]
+
+    # 9. `gpp_architecture.py` GSEFullSlateSimulator & simulate_dirichlet_multinomial_field
+    pool_df = build_sample_week9_dfs_slate_pool().copy()
+    pool_df["game_id"] = np.where(pool_df["team"].isin(["BAL", "DEN"]), "BAL_DEN", "SEA_ARI")
+    pool_df["proj_ownership"] = 0.08
+    games_df = pd.DataFrame([{"game_id": "BAL_DEN", "wind_mph": 6.0}, {"game_id": "SEA_ARI", "wind_mph": 14.0}])
+    sim = GSEFullSlateSimulator(pool_df, games_df, num_sims=200, seed=42)
+    fpts_mat, cov_mat = sim.simulate_slate()
+    assert fpts_mat.shape == (200, len(pool_df))
+    assert cov_mat.shape == (len(pool_df), len(pool_df))
+    field_mat = simulate_dirichlet_multinomial_field(pool_df, num_opponents=40, seed=42)
+    assert field_mat.shape == (40, len(pool_df))
+    assert np.all(field_mat.sum(axis=1) == 9)
+
+    # 10. Verify 0 unmatched source files across all rows of nov02_multidomain_corpus_and_equations_feed.jsonl
+    planned = load_feed_and_manifest()
+    assert len(planned) >= 235
+    unmatched = [p for p in planned if not p["source_file"]]
+    assert len(unmatched) == 0
+    assert sum(1 for p in planned if p["record_class"] == "REJECTED_CORRUPT") == 3
+
 
 
 

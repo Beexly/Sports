@@ -30,6 +30,7 @@ WIRED_TESTS = (
     ROOT / "tests" / "test_biomech_quarantine.py",
     ROOT / "tests" / "test_mnf_card_integrity.py",
     ROOT / "tests" / "test_epistemic_gate_and_week9_sanity.py",
+    ROOT / "tests" / "test_ledger_truth.py",
 )
 
 

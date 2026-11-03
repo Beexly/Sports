@@ -43,10 +43,10 @@ def plan_inserts(
         cit_status = "MSVH_S0_UNCITED"
         row_status = "REJECTED" if is_retracted else "ACTIVE"
 
-        src_file = match_map.get(rid) or row.get("source") or row.get("source_file") or None
+        src_file = match_map.get(rid) or row.get("source_file") or row.get("source") or None
         title = str(row.get("title") or rid)
-        eq = str(row.get("equation") or row.get("title") or rid)
-        lesson = str(row.get("lesson") or row.get("source_fidelity") or "nov02_multidomain_feed")
+        eq = str(row.get("equation") or row.get("core_equation") or row.get("title") or rid)
+        lesson = str(row.get("lesson") or row.get("how_it_influences") or row.get("source_fidelity") or "nov02_multidomain_feed")
         domain = str(row.get("domain") or "nfl_multidomain")
 
         planned.append(

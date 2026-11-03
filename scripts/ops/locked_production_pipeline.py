@@ -10,7 +10,8 @@ Enforces:
 """
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Sequence
+import math
+from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
@@ -142,3 +143,107 @@ def validate_roster_and_coordinate_mutation_guard(
             raise ValueError(f"Hallucinated roster assignment blocked: {player} mapped to {team}, canonical is {expected}")
 
     return {"roster_verified": True, "coordinate_invariance_verified": True}
+
+
+def scale_dropoff_by_effective_contributors(
+    base_dropoff: float,
+    team_target_hhi: float,
+    league_hhi: float = 0.135,
+    floor: float = 0.55,
+    ceil: float = 1.60,
+) -> Dict[str, float]:
+    """Davies (2025) & `load_scaling.py` Effective-Contributor Herfindahl Injury Dropoff Scaling:
+    Converts target Herfindahl index HHI into effective contributors N_eff = 1 / HHI,
+    and scales the positional EPA dropoff factor by sqrt(N_league / N_team) clamped to [0.55, 1.60].
+    """
+    hhi = max(1e-6, float(team_target_hhi))
+    l_hhi = max(1e-6, float(league_hhi))
+    eff_n_team = 1.0 / hhi
+    eff_n_league = 1.0 / l_hhi
+    raw_mult = math.sqrt(eff_n_league / eff_n_team)
+    clamped_mult = max(float(floor), min(float(ceil), raw_mult))
+    scaled_dropoff = float(base_dropoff) * clamped_mult
+    return {
+        "effective_contributors_team": round(eff_n_team, 4),
+        "effective_contributors_league": round(eff_n_league, 4),
+        "load_multiplier": round(clamped_mult, 4),
+        "scaled_epa_dropoff": round(scaled_dropoff, 4),
+    }
+
+
+def reverse_engineer_alt_ladder_pricing_kernel(
+    ladder_rungs_and_devig_probs: Sequence[Tuple[float, float]],
+) -> Dict[str, float]:
+    """`engine_reverse.py` Sportsbook Alternate-Ladder Pricing Kernel Identification:
+    Given de-vigged (line, cover_probability) rungs from a sportsbook's alternate ladder,
+    identifies the local slope dP/d(line) = -phi(0)/sigma at the fair line, recovering:
+      - fair_line_mu = x_bar + (0.5 - y_bar) / slope
+      - book_uncertainty_sigma = 1 / (sqrt(2*pi) * |slope|)
+      - ladder_fit_rmse
+    """
+    pts = [(float(x), float(y)) for x, y in ladder_rungs_and_devig_probs]
+    if len(pts) < 2:
+        raise ValueError("At least 2 alternate ladder rungs are required")
+    xs = [x for x, _ in pts]
+    ys = [y for _, y in pts]
+    mx = sum(xs) / len(xs)
+    my = sum(ys) / len(ys)
+    den = sum((x - mx) ** 2 for x in xs) or 1e-12
+    slope = sum((x - mx) * (y - my) for x, y in pts) / den
+    if abs(slope) < 1e-9:
+        raise ValueError("Degenerate zero-slope ladder")
+    fair_mu = mx + (0.5 - my) / slope
+    book_sigma = 1.0 / (math.sqrt(2.0 * math.pi) * abs(slope))
+    rmse = math.sqrt(sum((y - (my + slope * (x - mx))) ** 2 for x, y in pts) / len(pts))
+    return {
+        "slope_dp_dline": round(slope, 6),
+        "fair_line_mu": round(fair_mu, 4),
+        "book_uncertainty_sigma": round(book_sigma, 4),
+        "ladder_fit_rmse": round(rmse, 6),
+    }
+
+
+def sinkhorn_unbalanced_target_reallocation_with_epa_dropoff(
+    pre_injury_shares: Sequence[float],
+    post_injury_capacity: Sequence[float],
+    cost_matrix: np.ndarray,
+    role_epa_factors: Sequence[float],
+    epsilon: float = 0.08,
+    tau_unbalanced: float = 1.0,
+    max_iters: int = 80,
+) -> Dict[str, Any]:
+    """Synthesizes `gse_injury_overlay_v2.py` + Pham et al. (ICML 2020, `pham20a.pdf`) Unbalanced Sinkhorn +
+    Ghosal & Nutz (2025, `Sinkhorn_rate.pdf`) + Tang et al. (ICLR 2024, `6085_Accelerating_Sinkhorn_alg.pdf`):
+    Solves entropically regularized Unbalanced Optimal Transport with KL marginal relaxation exponent
+    alpha = tau / (tau + epsilon), then applies sealed role EPA dropoff factors to the transported shares.
+    """
+    r = np.maximum(np.asarray(pre_injury_shares, dtype=np.float64), 1e-9)
+    c = np.maximum(np.asarray(post_injury_capacity, dtype=np.float64), 1e-9)
+    cost = np.asarray(cost_matrix, dtype=np.float64)
+    epa_f = np.asarray(role_epa_factors, dtype=np.float64)
+    if cost.shape != (r.size, c.size) or epa_f.size != c.size:
+        raise ValueError("Incompatible shapes for unbalanced Sinkhorn target reallocation")
+
+    eps = max(1e-4, float(epsilon))
+    tau = max(1e-4, float(tau_unbalanced))
+    damping_exp = tau / (tau + eps)
+
+    kernel_k = np.exp(-cost / eps)
+    u = np.ones_like(r)
+    v = np.ones_like(c)
+    for _ in range(max(1, int(max_iters))):
+        u = np.power(r / np.maximum(kernel_k @ v, 1e-12), damping_exp)
+        v = np.power(c / np.maximum(kernel_k.T @ u, 1e-12), damping_exp)
+
+    transport_plan = (u[:, None] * kernel_k) * v[None, :]
+    reallocated_shares = np.sum(transport_plan, axis=0)
+    reallocated_shares = reallocated_shares / max(1e-12, float(np.sum(reallocated_shares)))
+    effective_epa_weighted_shares = reallocated_shares * epa_f
+    return {
+        "reallocated_shares": [round(float(x), 6) for x in reallocated_shares],
+        "effective_epa_weighted_shares": [round(float(x), 6) for x in effective_epa_weighted_shares],
+        "total_effective_epa_retention": round(float(np.sum(effective_epa_weighted_shares)), 6),
+        "unbalanced_damping_exponent": round(damping_exp, 6),
+        "ghosal_nutz_iteration_bound_o_inv_t": round(1.0 / max(1, int(max_iters)), 6),
+    }
+
