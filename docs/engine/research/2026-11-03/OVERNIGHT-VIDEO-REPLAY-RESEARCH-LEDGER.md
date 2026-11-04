@@ -24,7 +24,7 @@ before it is allowed to influence anything.
 | VL harvester | `intelligence/vision/nfl_video_vl_harvester.py` | `harvest_local`, `harvest_window` |
 | 2026 harvester | `intelligence/vision/nfl_video_2026_harvester.py` | `crawl_index` |
 | Calibration gate | `tests/verify_out_of_sample_calibration.py` | `--enforce-gate` |
-| Film room | `C:/Users/Garrett/Sports/data/film_room_2026/_bootstrap/` | 14 dirs, 36,328 frames |
+| Film room | `C:/Users/Garrett/Sports/data/film_room_2026/_bootstrap/` | 14 dirs, 35,981 frames (+347 `blocking_frame_*.jpg` in the root = 36,328 total) |
 
 ## Task 1 — Crop-pose pipeline (DONE)
 
@@ -74,7 +74,8 @@ higher-resolution frames arrive; no fabricated poses enter the ledger.
   frame, audits 4 per dir via Nemotron VL.
 - Validation run on `frames_bal_vs_dal`: 2,789 frames → 70 sampled → 6 audited,
   4 live_inplay, 2 graphic, 3 live frames, 1 quarantined.
-- Full 14-dir run: **complete.** 36,328 frames across 14 dirs, 56 audited
+- Full 14-dir run: **complete.** 35,981 frames across 14 dirs (36,328 with
+  the 347 root `blocking_frame_*.jpg`), 56 audited
   (4/dir), 26 live_inplay, 15 quarantined. Per-dir:
 
 | Dir | Frames | Audited | Live | Quarantined |
@@ -201,7 +202,7 @@ should normalise by pre-snap spread before calling it a disguise metric.
 | `hf_bdb2025_plays_presnap_zone1.parquet` | 16,124 | play-level pre-snap features (formation, receiver alignment, play clock, target x/y, EP, WP) | per-player (x, y) trajectories |
 | `kaggle_sumersupplement_bdb26_zone1.parquet` | 173,150 | coverage responsibility, targeted defender, alignment | per-player (x, y) trajectories |
 | `kaggle_bdb2027_public_enrichment_zone1.parquet` | 4,161 | player-season snap counts | anything spatial |
-| Film room frames | 36,328 | 360×640 broadcast frames | resolution for pose |
+| Film room frames | 35,981 | 360×640 broadcast frames (14 game dirs) | resolution for pose |
 
 **Ruling:** the feature pipeline is built and validated on synthetic data,
 but the repo has no per-frame tracking coordinates. The BDB files carry
