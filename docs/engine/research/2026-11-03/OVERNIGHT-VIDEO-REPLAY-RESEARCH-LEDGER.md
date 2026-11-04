@@ -261,3 +261,34 @@ borderline and fails multiple-comparison across four strata).
 It looked significant in the aggregate because down correlates with both
 clock and completion. This is exactly the kind of candidate the gate exists
 to kill — a plausible story that dissolves under stratification.
+
+## Real tracking data — first feature run (2026-11-04 05:50 CT)
+
+Source: `nfl-football-ops/Big-Data-Bowl` `tracking_gameId_2017090700.csv`
+(31.6 MB, 316,025 rows, 177 plays, per-frame x/y for all 22 players).
+
+`python scripts/research/tracking_feature_extraction_2026_11_04.py` → exit 0.
+
+64 pass plays with complete features (37 caught, 27 incomplete). Pre-snap =
+frame at `ball_snap`; post-snap = frame at `pass_forward`; trajectories =
+per-player path between them.
+
+| Feature | t | p | adj_p | Survives |
+|---|---|---|---|---|
+| hazard | 2.530 | 0.0144 | 0.0433 | **yes** |
+| irreversibility | 1.304 | 0.1978 | 0.2967 | no |
+| mot_load | 0.746 | 0.4584 | 0.4584 | no |
+
+1/3 survive. **The hazard feature works on real tracking data**: the
+disguise collapse hazard separates caught from incomplete passes at
+adj_p=0.0433. The t-stat is positive — caught passes have *higher* hazard
+than incomplete ones, which is the opposite of the synthetic demo's
+direction. That is consistent with the engine measuring phase-transition
+proximity: a defense that is being stressed (high hazard) is a defense
+that is losing, and the pass is more likely to be completed.
+
+**Caveats:** one game, 64 plays. Irreversibility and MOT load do not
+survive, but the sample is too small to call them dead. This is a
+proof-of-concept, not a validated feature. The next step is to run the
+same extraction across the full Big Data Bowl tracking set (all games)
+before any of these features is allowed near the engine.
