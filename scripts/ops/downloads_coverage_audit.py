@@ -49,6 +49,33 @@ REPO = Path(__file__).resolve().parents[2]
 # Directories that are tooling debris, not content.
 SKIP_DIRS = {"__pycache__", ".pytest_cache", ".git", "node_modules"}
 
+# Files that are absent from the corpus ON PURPOSE, with the reason. Without
+# this table an auditor cannot tell a refusal from an oversight, and "absent"
+# reads as a gap when it is a decision.
+KNOWN_EXCLUSIONS = {
+    "ssn passport.pdf":
+        "identity document (passport scan) - PII; ingesting it into a searchable corpus is a liability",
+    "statement 10_26_26 (449k, pdf).pdf":
+        "bank statement - PII; same reason",
+    "f.txt":
+        "Chrome runtime bundle (Object.create polyfill), no editorial content",
+    "f(1).txt":
+        "duplicate of f.txt",
+    "js":
+        "Google JS runtime bundle ('Copyright 2012 Google Inc.'), no editorial content",
+    "referer_frame.html":
+        "saved from instagram.com/paid_ads/generete_pixels/ - ad-pixel frame",
+    "saved_resource.html":
+        "saved from facebook.com/instagram/login_sync/ - login-page scaffolding, 70 script tags",
+    "saved_resource(1).html":
+        "saved from fbsbx.com/paid_ads_pixel/iframe/ - ad-pixel iframe",
+}
+
+
+def exclusion_reason(name: str) -> str | None:
+    return KNOWN_EXCLUSIONS.get(name.strip().lower())
+
+
 # Extensions whose content could plausibly be a corpus document. Images and
 # partial downloads are excluded from hashing by design, not by oversight.
 HASHABLE = {".md", ".txt", ".docx", ".pdf", ".html", ".htm", ".ts", ".py",
@@ -154,6 +181,9 @@ def audit() -> dict:
         else:
             absent.append(f)
 
+    excluded = [(p.name, exclusion_reason(p.name)) for p in absent if exclusion_reason(p.name)]
+    unexplained = [p.name for p in absent if not exclusion_reason(p.name)]
+
     def by_ext(paths: list[Path]) -> dict[str, int]:
         c = collections.Counter(p.suffix.lower() or "(none)" for p in paths)
         return dict(c.most_common())
@@ -178,6 +208,9 @@ def audit() -> dict:
         "absent_by_ext": by_ext(absent),
         "archived_only_by_ext": by_ext(archived_only),
         "absent_files": sorted(p.name for p in absent),
+        "excluded": sorted(excluded),
+        "unexplained_count": len(unexplained),
+        "unexplained_files": sorted(unexplained),
         "archived_only_files": sorted(p.name for p in archived_only),
     }
 
@@ -207,6 +240,16 @@ def to_markdown(a: dict) -> str:
     L.append("|---|---|")
     for ext, n in a["absent_by_ext"].items():
         L.append(f"| `{ext}` | {n} |")
+    L.append("")
+    L.append("## Deliberate exclusions")
+    L.append("")
+    L.append("Absent by decision, not by oversight. Each carries its reason.")
+    L.append("")
+    for name, reason in a["excluded"]:
+        L.append(f"- `{name}` — {reason}")
+    L.append("")
+    L.append(f"Unexplained absences: **{a['unexplained_count']}** "
+             f"(these are debris: screenshots and partial downloads).")
     L.append("")
     L.append("## Absent files")
     L.append("")
@@ -247,6 +290,8 @@ def main(argv=None) -> int:
     print(f"  content coverage   : {a['content_pct']}%")
     print(f"  archived only      : {a['archived_only']}")
     print(f"  absent             : {a['absent']}")
+    print(f"    deliberately out : {len(a['excluded'])}")
+    print(f"    unexplained      : {a['unexplained_count']}")
     print(f"manifest records     : {a['manifest_records']} "
           f"({a['local_records']} local_*, the only ones that can match)")
     if a["absent_by_ext"]:

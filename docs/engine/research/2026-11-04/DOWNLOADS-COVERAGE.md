@@ -5,15 +5,15 @@ Measured C:\Users\Garrett\Downloads against `merged_manifest_2026-11-04.clean.js
 ## Headline
 
 - Downloads files: **506**
-- Ingested (manifest holds the path): **354** (70.0%)
+- Ingested (manifest holds the path): **359** (70.9%)
 - Same content under another name (sha256 match): **3**
-- Content coverage: **70.6%**
+- Content coverage: **71.5%**
 - Archived in repo, not in corpus: **1**
-- Absent entirely: **148**
+- Absent entirely: **143**
 
-The manifest has 6962 records, of which 354 are
+The manifest has 6967 records, of which 359 are
 `local_*` — the only sources that can carry a Downloads path. So the ceiling on
-Downloads coverage from this manifest is 354, not 6962.
+Downloads coverage from this manifest is 359, not 6967.
 
 ## Absent, by extension
 
@@ -21,26 +21,36 @@ Downloads coverage from this manifest is 354, not 6962.
 |---|---|
 | `.jpg` | 85 |
 | `.download` | 42 |
-| `.pdf` | 4 |
 | `.css` | 3 |
 | `.html` | 3 |
-| `.md` | 2 |
 | `.jpeg` | 2 |
+| `.pdf` | 2 |
 | `.txt` | 2 |
-| `.docx` | 1 |
 | `.ini` | 1 |
 | `.exe` | 1 |
 | `.crdownload` | 1 |
 | `(none)` | 1 |
 
+## Deliberate exclusions
+
+Absent by decision, not by oversight. Each carries its reason.
+
+- `SSN Passport.pdf` — identity document (passport scan) - PII; ingesting it into a searchable corpus is a liability
+- `Statement 10_26_26 (449K, PDF).pdf` — bank statement - PII; same reason
+- `f(1).txt` — duplicate of f.txt
+- `f.txt` — Chrome runtime bundle (Object.create polyfill), no editorial content
+- `js` — Google JS runtime bundle ('Copyright 2012 Google Inc.'), no editorial content
+- `referer_frame.html` — saved from instagram.com/paid_ads/generete_pixels/ - ad-pixel frame
+- `saved_resource(1).html` — saved from fbsbx.com/paid_ads_pixel/iframe/ - ad-pixel iframe
+- `saved_resource.html` — saved from facebook.com/instagram/login_sync/ - login-page scaffolding, 70 script tags
+
+Unexplained absences: **135** (these are debris: screenshots and partial downloads).
+
 ## Absent files
 
 - -YLziOecVrP.js.download
-- 10_23.docx
 - 193879644_184671960226510_5694083206697819534_n.jpg
 - 1KBjPlvjfsX.js.download
-- 2026-11-04-AM (1).md
-- 2026-11-04-AM.md
 - 349035888_606476164782760_8987274623445400144_n.jpg
 - 38jfaNFXE4j.css
 - 476311757_8888556664606730_5158454275346373128_n.jpg
@@ -134,7 +144,6 @@ Downloads coverage from this manifest is 354, not 6962.
 - 8UyWYjXuibIKT7YM5yrxDgTPBhp2kr6IW_L-hS4-BgLjWcL4MWfiyl9v65mV_ZR6PSTcf-0O6cLbIir1CxCvbMnxyjD1EOwQhZs5kUdUiDJggBjEBX-WMPz6ttfi0EahOzL9VVM0fn8GY16o9TH0CQC93VvssILFUmUjL65F8VQprIY2ep6cM0FV82P3EcolvB7Rvc.js.download
 - 8qAQ9oEqzo8.js.download
 - 9FUEJgno1Xf.js.download
-- AI-Infra-Book-EN.pdf
 - C6Bagc66MIt.js.download
 - Cr1T1bNisUQ.js.download
 - FMF2zjdqtV7LAXQ5Ovaq8eoRpdZuu_WSKtiu9rofidv27obcbZ7FYVpWTdMP4B7XJlhr2oWEbKDSTVs6WYU1k4LiHnpqMxAaXO7yXBdFfhL1oTyfihLhy-Nhy0H77CAcV8TSK3eJHanXlfl65E7fi5ZPuj2jfkFqF0wLWphhshD5-sc1oiU3f-mvIS4oM3gANHBuV-41Vk-.download
@@ -161,7 +170,6 @@ Downloads coverage from this manifest is 354, not 6962.
 - desktop.ini
 - f(1).txt
 - f.txt
-- front_matter.pdf
 - gbaxleyID.jpeg
 - gbpassport.jpeg
 - jJmD1ch9H3A.js.download
