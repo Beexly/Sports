@@ -119,6 +119,29 @@ def test_network_tasks_carry_retries(dag):
     assert tasks["eval"].retries == 0
 
 
+def test_backfill_declares_lock_held_exit_code(dag):
+    """fulltext_backfill returns 3 when another writer owns the lock."""
+    assert dag.build_tasks()["backfill"].lock_held_rc == 3
+
+
+def test_lock_held_is_not_a_failure(tmp_path, dag):
+    """A task exiting with its lock_held_rc must be skipped, not retried."""
+    task = dag.Task(
+        name="locked", command=[sys.executable, "-c", "import sys; sys.exit(3)"],
+        inputs=[], outputs=[tmp_path / "never"], retries=3, lock_held_rc=3)
+    rec = dag.run_task(task, tmp_path, False, [])
+    assert rec["status"] == "skipped_locked"
+    assert rec["attempts"] == 1, "a held lock must not be retried"
+
+
+def test_ordinary_failure_is_still_a_failure(tmp_path, dag):
+    task = dag.Task(
+        name="broken", command=[sys.executable, "-c", "import sys; sys.exit(1)"],
+        inputs=[], outputs=[tmp_path / "never"], retries=0)
+    rec = dag.run_task(task, tmp_path, False, [])
+    assert rec["status"] == "failed"
+
+
 def test_dry_run_writes_run_log(tmp_path, dag, monkeypatch):
     log_path = tmp_path / "_pipeline_run_log.json"
     monkeypatch.setattr(dag, "CORPUS", tmp_path)

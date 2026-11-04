@@ -36,6 +36,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "ops"))
+from run_lock import LockHeld, RunLock  # noqa: E402  (path set above)
+
 # Imported lazily inside main()/run so the pure helpers below stay importable
 # (and testable) without starting the MCP server.
 if str(Path(__file__).resolve().parent) not in sys.path:
@@ -188,6 +191,28 @@ def iter_manifest(manifest: Path | str) -> Iterator[dict]:
 
 
 def run(args: argparse.Namespace) -> int:
+    """Single-flight guard around the backfill body.
+
+    Two processes writing the same --out produced 2,019 rows with only 1,069
+    unique. The resume logic (`already_done`) does not prevent a *second*
+    writer, only redundant fetches by the same one, so the guard is a lock,
+    not a bigger done-set. Dry-run only reads and is exempt.
+    """
+    if args.dry_run:
+        return _run_body(args)
+    out_path = Path(args.out)
+    lock = RunLock(out_path.with_suffix(".lock"), task="fulltext_backfill")
+    try:
+        with lock:
+            return _run_body(args)
+    except LockHeld as exc:
+        print(f"refusing to start: {exc}", file=sys.stderr)
+        print("another backfill owns this output file. Do not delete the lock "
+              "unless you have confirmed that holder is dead.", file=sys.stderr)
+        return 3
+
+
+def _run_body(args: argparse.Namespace) -> int:
     manifest = Path(args.manifest)
     out_path = Path(args.out)
     failures_path = Path(args.failures)

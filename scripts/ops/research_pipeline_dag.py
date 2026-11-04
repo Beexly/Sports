@@ -57,6 +57,9 @@ class Task:
     # A long-running network task whose output is append-only: freshness is
     # judged on the output alone, not against inputs.
     output_only: bool = False
+    # Exit code meaning "another process owns the lock". Not a failure: the
+    # work is already being done, so downstream should wait, not abort.
+    lock_held_rc: int | None = None
 
 
 def build_tasks() -> dict[str, Task]:
@@ -81,6 +84,7 @@ def build_tasks() -> dict[str, Task]:
             retries=2,
             timeout=14400,
             output_only=True,
+            lock_held_rc=3,
         ),
         Task(
             name="consolidate",
@@ -189,6 +193,13 @@ def run_task(task: Task, cwd: Path, dry_run: bool, log: list[dict]) -> dict:
             record["stdout_tail"] = proc.stdout[-600:]
             print(f"[ OK ] {task.name} (attempt {attempt})")
             break
+        if task.lock_held_rc is not None and proc.returncode == task.lock_held_rc:
+            # Another process is already doing this work. Not a failure and
+            # not a retry: retrying would just hit the same lock.
+            record["status"] = "skipped_locked"
+            record["stderr_tail"] = (proc.stderr or proc.stdout)[-400:]
+            print(f"[skip] {task.name}: another run holds the single-flight lock")
+            break
         record["status"] = "failed"
         record["returncode"] = proc.returncode
         record["stderr_tail"] = (proc.stderr or proc.stdout)[-800:]
@@ -241,7 +252,7 @@ def main(argv: list[str] | None = None) -> int:
             continue
         rec = run_task(task, REPO, args.dry_run, log)
         log.append(rec)
-        if rec["status"] not in ("success", "dry_run"):
+        if rec["status"] not in ("success", "dry_run", "skipped_locked"):
             failed = True
             break  # downstream tasks cannot run on a failed dependency
 
@@ -257,7 +268,8 @@ def main(argv: list[str] | None = None) -> int:
         FAILED_SENTINEL.write_text(json.dumps(
             {"failed_at": run_log["run_at"],
              "task": next((r["task"] for r in log if r["status"] not in
-                           ("success", "skipped_fresh", "dry_run")), None)},
+                           ("success", "skipped_fresh", "dry_run",
+                            "skipped_locked")), None)},
             indent=1), encoding="utf-8")
         print(f"=== FAILED — sentinel at {FAILED_SENTINEL} ===")
         return 1
