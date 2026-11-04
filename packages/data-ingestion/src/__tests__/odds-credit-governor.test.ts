@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   DAILY_BUDGET,
+  FREE_TIER_DAILY_BUDGET,
+  FREE_TIER_MONTHLY_CREDITS,
   HOURLY_BUDGET,
+  LEGACY_20K_DAILY_BUDGET,
+  LEGACY_20K_MONTHLY_CREDITS,
   MONTHLY_CREDITS,
   PAID_CALL_PURPOSES,
   buildOddsCreditTruth,
@@ -11,6 +15,7 @@ import {
   hoursToMonthEnd,
   projectCreditExhaustion,
   reservePaceOk,
+  resolveOddsCreditBudget,
   zeroObservationIsStale,
 } from "../odds-credit-governor";
 import {
@@ -42,9 +47,11 @@ import {
 const SEP_6 = new Date("2026-09-06T12:00:00.000Z");
 
 describe("constants", () => {
-  it("pins the plan and the daily budget from plan section 3f", () => {
-    expect(MONTHLY_CREDITS).toBe(20000);
-    expect(DAILY_BUDGET).toBe(600);
+  it("pins the 500-credit free-tier default budget and legacy 20K pace floor", () => {
+    expect(MONTHLY_CREDITS).toBe(500);
+    expect(DAILY_BUDGET).toBe(16);
+    expect(LEGACY_20K_MONTHLY_CREDITS).toBe(20000);
+    expect(LEGACY_20K_DAILY_BUDGET).toBe(600);
     expect(HOURLY_BUDGET).toBe(25);
   });
 });
@@ -252,7 +259,7 @@ describe("decidePaidOddsCall", () => {
     // every 15 minutes at 3 credits a call, settle-picks paid scores capped at
     // 1 call an hour per sport at 2 credits (only when justified, assumed every
     // hour here as the worst case). Start with the full plan on Sep 1.
-    let remaining = MONTHLY_CREDITS;
+    let remaining = LEGACY_20K_MONTHLY_CREDITS;
     const lastOdds = new Map<string, Date>();
     const sports = ["a", "b", "c", "d"];
     const start = Date.UTC(2026, 8, 1, 0, 0, 0);
@@ -286,7 +293,7 @@ describe("decidePaidOddsCall", () => {
     const days = [...spentPerDay.values()];
     // Warm-up days spend the pace-ok surplus; the steady state (day 3 onward)
     // is at or below the daily budget and the plan lasts the month.
-    for (const spent of days.slice(3)) expect(spent).toBeLessThanOrEqual(DAILY_BUDGET);
+    for (const spent of days.slice(3)) expect(spent).toBeLessThanOrEqual(LEGACY_20K_DAILY_BUDGET);
     expect(remaining).toBeGreaterThan(0);
   });
 });
@@ -1060,5 +1067,61 @@ describe("reservePaidCallSlot (atomic hourly slot)", () => {
       reserved: true,
       atomic: false,
     });
+  });
+});
+
+describe("resolveOddsCreditBudget and 500-credit free-tier reserve guard (READINESS §5.8)", () => {
+  it("defaults to 500 monthly / 16 daily free-tier fallback when env is unset", () => {
+    const b = resolveOddsCreditBudget({});
+    expect(b.monthlyCredits).toBe(MONTHLY_CREDITS);
+    expect(b.monthlyCredits).toBe(500);
+    expect(b.dailyBudget).toBe(DAILY_BUDGET);
+    expect(b.dailyBudget).toBe(16);
+    expect(b.hourlyBudget).toBeCloseTo(16 / 24, 6);
+    expect(b.isFreeTier500Guard).toBe(true);
+  });
+
+  it("activates the 500-credit free-tier reserve pacing when ODDS_API_MONTHLY_CREDITS=500", () => {
+    expect(FREE_TIER_MONTHLY_CREDITS).toBe(500);
+    expect(FREE_TIER_DAILY_BUDGET).toBe(16);
+    const b = resolveOddsCreditBudget({ ODDS_API_MONTHLY_CREDITS: "500" });
+    expect(b.monthlyCredits).toBe(500);
+    expect(b.dailyBudget).toBe(16);
+    expect(b.hourlyBudget).toBeCloseTo(16 / 24, 6);
+    expect(b.isFreeTier500Guard).toBe(true);
+  });
+
+  it("honors explicit ODDS_API_MONTHLY_CREDITS and ODDS_API_DAILY_BUDGET overrides", () => {
+    const b = resolveOddsCreditBudget({
+      ODDS_API_MONTHLY_CREDITS: "10000",
+      ODDS_API_DAILY_BUDGET: "300",
+    });
+    expect(b.monthlyCredits).toBe(10000);
+    expect(b.dailyBudget).toBe(300);
+    expect(b.hourlyBudget).toBeCloseTo(300 / 24, 6);
+    expect(b.isFreeTier500Guard).toBe(false);
+  });
+
+  it("holds 500 remaining credits in reserve mode so the governor never blindly burns the free-tier quota", () => {
+    const first = decidePaidOddsCall({
+      remaining: 500,
+      now: SEP_6,
+      purpose: "odds",
+      hasEventWithin48h: true,
+      freeCoversPurpose: false,
+      lastPaidCallAt: null,
+    });
+    expect(first.allow).toBe(true);
+    expect(first.reason).toMatch(/reserve/);
+    const secondWithinHour = decidePaidOddsCall({
+      remaining: 500,
+      now: SEP_6,
+      purpose: "odds",
+      hasEventWithin48h: true,
+      freeCoversPurpose: false,
+      lastPaidCallAt: new Date(SEP_6.getTime() - 10 * 60_000),
+    });
+    expect(secondWithinHour.allow).toBe(false);
+    expect(secondWithinHour.reason).toMatch(/reserve/);
   });
 });

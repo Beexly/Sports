@@ -18,16 +18,57 @@
  * Nothing here touches MIN_BOOKMAKERS, a gate, or a cron schedule.
  */
 
-/** Plan size the founder holds (no tier change). */
-export const MONTHLY_CREDITS = 20000;
-/** Target steady-state spend per UTC day (20000 over a month with margin). */
-export const DAILY_BUDGET = 600;
-/** Reserve pace floor: below this many credits per remaining hour we hold. */
-export const HOURLY_BUDGET = DAILY_BUDGET / 24;
+/** Active monthly quota (500-credit free tier; cancelled 20K plan preserved below). */
+export const MONTHLY_CREDITS = 500;
+/** Target steady-state spend per UTC day on the 500-credit free tier (16/day). */
+export const DAILY_BUDGET = 16;
+/** Legacy 20K plan constants retained for the unthrottled multi-sport pace floor (25/h). */
+export const LEGACY_20K_MONTHLY_CREDITS = 20000;
+export const LEGACY_20K_DAILY_BUDGET = 600;
+/** Reserve pace floor: below this many credits per remaining hour we hold in reserve mode. */
+export const HOURLY_BUDGET = LEGACY_20K_DAILY_BUDGET / 24;
+/** Free-tier monthly quota (500 credits/month) and reserve daily cap (16/day). */
+export const FREE_TIER_MONTHLY_CREDITS = 500;
+export const FREE_TIER_DAILY_BUDGET = 16;
 /** A sport counts as live for odds when it has an event this far ahead. */
 export const EVENT_HORIZON_HOURS = 48;
 /** One paid call per sport per hour under the per-sport cap. */
 export const PAID_CALL_MIN_INTERVAL_MS = 60 * 60 * 1000;
+
+export interface OddsCreditBudgetConfig {
+  readonly monthlyCredits: number;
+  readonly dailyBudget: number;
+  readonly hourlyBudget: number;
+  readonly isFreeTier500Guard: boolean;
+}
+
+/**
+ * Resolve the active Odds API credit budget from environment variables
+ * (`ODDS_API_MONTHLY_CREDITS` / `ODDS_API_DAILY_BUDGET`), defaulting to the
+ * 500-credit free-tier budget (`500` monthly, `16` daily) when unset while
+ * keeping explicit environment overrides intact.
+ */
+export function resolveOddsCreditBudget(
+  env: Record<string, string | undefined> = typeof process !== "undefined" ? process.env : {},
+): OddsCreditBudgetConfig {
+  const rawMonthly = env.ODDS_API_MONTHLY_CREDITS ? Number(env.ODDS_API_MONTHLY_CREDITS) : NaN;
+  const monthlyCredits =
+    Number.isFinite(rawMonthly) && rawMonthly > 0 ? Math.floor(rawMonthly) : MONTHLY_CREDITS;
+  const isFreeTier500Guard = monthlyCredits <= FREE_TIER_MONTHLY_CREDITS;
+  const rawDaily = env.ODDS_API_DAILY_BUDGET ? Number(env.ODDS_API_DAILY_BUDGET) : NaN;
+  const dailyBudget =
+    Number.isFinite(rawDaily) && rawDaily > 0
+      ? rawDaily
+      : isFreeTier500Guard
+        ? FREE_TIER_DAILY_BUDGET
+        : Math.max(DAILY_BUDGET, Math.round((monthlyCredits / LEGACY_20K_MONTHLY_CREDITS) * LEGACY_20K_DAILY_BUDGET));
+  return {
+    monthlyCredits,
+    dailyBudget,
+    hourlyBudget: dailyBudget / 24,
+    isFreeTier500Guard,
+  };
+}
 
 export type PaidCallPurpose = "odds" | "scores";
 
@@ -257,7 +298,7 @@ export interface OddsCreditTruth {
   readonly remaining: number | null;
   readonly used: number | null;
   readonly observedAt: string | null;
-  readonly dailyBudget: typeof DAILY_BUDGET;
+  readonly dailyBudget: number;
   /** ISO, from the last 24h of observations; null with fewer than two. */
   readonly projectedExhaustionAt: string | null;
   /**
@@ -274,12 +315,12 @@ export interface OddsCreditTruth {
   readonly paceOk: boolean | null;
 }
 
-export function emptyOddsCreditTruth(): OddsCreditTruth {
+export function emptyOddsCreditTruth(dailyBudget: number = LEGACY_20K_DAILY_BUDGET): OddsCreditTruth {
   return {
     remaining: null,
     used: null,
     observedAt: null,
-    dailyBudget: DAILY_BUDGET,
+    dailyBudget,
     projectedExhaustionAt: null,
     projectionBasis: PROJECTION_BASIS,
     paceOk: null,
@@ -291,14 +332,15 @@ export function buildOddsCreditTruth(input: {
   readonly latest: OddsCreditObservation | null;
   readonly last24h: readonly OddsCreditObservation[];
   readonly now: Date;
+  readonly dailyBudget?: number;
 }): OddsCreditTruth {
-  const { latest, now } = input;
-  if (!latest) return emptyOddsCreditTruth();
+  const { latest, now, dailyBudget = LEGACY_20K_DAILY_BUDGET } = input;
+  if (!latest) return emptyOddsCreditTruth(dailyBudget);
   return {
     remaining: latest.remaining,
     used: latest.used,
     observedAt: latest.observedAt,
-    dailyBudget: DAILY_BUDGET,
+    dailyBudget,
     projectedExhaustionAt: projectCreditExhaustion(input.last24h, now),
     projectionBasis: PROJECTION_BASIS,
     paceOk: reservePaceOk(latest.remaining, now),
