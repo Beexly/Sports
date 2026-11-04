@@ -210,3 +210,34 @@ features on real data needs either (a) Big Data Bowl tracking CSVs, which
 are not downloaded, or (b) ≥720p frames for pose-derived trajectories.
 Cost if wrong: the pipeline sits validated-but-unfed until tracking arrives;
 no synthetic data is presented as real.
+
+## Real-data falsification — BDB 2025 play level (2026-11-04 05:45 CT)
+
+`python scripts/research/bdb_playlevel_falsification_2026_11_04.py` → exit 0.
+
+9,712 real NFL plays with a pass result and complete features
+(5,624 completed, 4,088 incomplete). Welch t-test per feature, BH-FDR
+across features at q=0.10.
+
+| Feature | t | p | adj_p | Survives |
+|---|---|---|---|---|
+| down | 8.966 | 0.0000 | 0.0000 | **yes** |
+| yards_to_go | −5.875 | 0.0000 | 0.0000 | **yes** |
+| yardline_number | −2.950 | 0.0032 | 0.0064 | **yes** |
+| play_clock_at_snap | −4.624 | 0.0000 | 0.0000 | **yes** |
+| expected_points | 2.246 | 0.0247 | 0.0396 | **yes** |
+| win_prob | −1.138 | 0.2550 | 0.2914 | no |
+| formation_cardinality | −0.134 | 0.8933 | 0.8933 | no |
+| alignment_cardinality | 1.706 | 0.0881 | 0.1175 | no |
+
+5/8 survive. **The negative result is the interesting one:** the pre-snap
+formation and receiver-alignment proxies do *not* separate completed from
+incomplete passes after FDR correction. Situational context (down, distance,
+field position, play clock, EP) does. This is a real finding for the engine:
+pre-snap formation alone is not a completion predictor, and any model that
+leans on it is leaning on noise.
+
+`play_clock_at_snap` is negative: completed passes tend to be snapped with
+less time on the clock. Worth a follow-up — late snaps may correlate with
+better execution or defensive confusion, or it may be a down/distance
+confound.
