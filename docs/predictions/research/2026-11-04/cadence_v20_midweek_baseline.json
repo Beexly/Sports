@@ -1,0 +1,114 @@
+{
+  "report_type": "CADENCE_V2_0_MIDWEEK_OVERLAY",
+  "slot": "WED_MIDWEEK",
+  "version": "v2.0",
+  "cadence": "Wed 17:00 CT",
+  "week_target": 9,
+  "season": 2026,
+  "generated_at_utc": "2026-11-04T23:05:41.667073+00:00",
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "coachMindsetHash_before": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+  "coachMindsetHash_after": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
+  "coachMindsetHash_byte_identical": true,
+  "tau_before": 0.42,
+  "tau_after": 0.42,
+  "tau_byte_identical": true,
+  "qb_questionable": 0.0947,
+  "qb_questionable_ev_weighted_epa_dropoff": 0.0947,
+  "qb_questionable_ok": true,
+  "epa_dropoff_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+  "epa_dropoff_unmodified": true,
+  "sealed_cost_matrix": [
+    [
+      0.05,
+      0.35,
+      0.55,
+      0.75,
+      0.9
+    ],
+    [
+      0.35,
+      0.05,
+      0.28,
+      0.5,
+      0.75
+    ],
+    [
+      0.55,
+      0.28,
+      0.05,
+      0.42,
+      0.65
+    ],
+    [
+      0.75,
+      0.5,
+      0.42,
+      0.05,
+      0.48
+    ],
+    [
+      0.9,
+      0.75,
+      0.65,
+      0.48,
+      0.05
+    ]
+  ],
+  "cost_matrix_byte_identical": true,
+  "cost_matrix_hash": "14146438c430cdc4fad36111b2148047085e92008aa2700a6872b39573772b84",
+  "week9_designations_from_feed": {},
+  "week9_designations_count": 0,
+  "injuries_file": {
+    "path": "data/nflverse/injuries_2026.csv",
+    "sha256": "b9a96a8bd0ad600cb9a4470e3bd301bc13adbf998ef145b345f3e7a921da7517",
+    "rows": 2388,
+    "week9_rows": 0,
+    "latest_week_in_feed": 8
+  },
+  "midweek_reallocation": {
+    "scratched_roles": [],
+    "base_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+    },
+    "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+    },
+    "mass_moved": 0.0,
+    "cross_check_sinkhorn": {
+      "iterations": 200,
+      "row_residual": 4.4392012333915876e-05,
+      "col_residual": 5.551115123125783e-17,
+      "converged": true,
+      "objective": 0.051353823658
+    }
+  },
+  "note": "Wednesday v2.0 advance: Week-9 report_status feed currently carries 0 rows (feed stops at Week 8, 12 designated). Under the sealed fixed cost matrix C, the empty-scratch Sinkhorn reallocation is identity (mass_moved 0.0). No reseal performed; coachMindsetHash and tau byte-identical."
+}
