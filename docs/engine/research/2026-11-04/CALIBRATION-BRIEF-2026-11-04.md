@@ -3,6 +3,14 @@
 **Audience:** product, publishing, and modelling owners
 **Basis:** 2,662 settled picks, `prod-settled-sample-full.csv`
 **Companion:** `CALIBRATION-STRATIFIED-2026-11-04.md` (method and full statistics)
+**Verified against the database:** `CALIBRATION-DB-VERIFICATION-2026-11-04.md`
+
+> **Read this first.** The numbers below come from an 84.7% sample that
+> under-sampled the two broken markets. Rerunning on the full production
+> population (3,143 WIN/LOSS picks) reproduces every conclusion and moves the
+> pooled gap from +8.8 to **+9.4 points** — the sample was biased in the
+> conservative direction. Direction, ordering and recommendations are unchanged;
+> the pooled and per-market figures below are slightly understated.
 
 ---
 
