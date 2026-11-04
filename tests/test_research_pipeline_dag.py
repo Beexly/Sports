@@ -48,15 +48,59 @@ def test_real_pipeline_dependency_chain(dag):
     pos = {n: i for i, n in enumerate(order)}
     assert pos["backfill"] < pos["consolidate"]
     assert pos["sweep_arxiv"] < pos["consolidate"]
-    assert pos["consolidate"] < pos["build_index"]
+    # ingest validates the consolidated manifest before anything indexes it.
+    assert pos["consolidate"] < pos["ingest"]
+    assert pos["ingest"] < pos["build_index"]
     assert pos["build_index"] < pos["eval"]
+
+
+def test_build_index_reads_the_validated_manifest(dag):
+    """build_index must consume CLEAN, not the raw consolidated manifest.
+
+    Reading MERGED directly is what allowed malformed rows to crash the build.
+    """
+    task = dag.build_tasks()["build_index"]
+    assert str(dag.CLEAN) in task.command
+    assert str(dag.MERGED) not in task.command
+    assert dag.CLEAN in task.inputs
+
+
+def test_eval_measures_the_same_manifest_the_index_was_built_from(dag):
+    """Regression: retrieval_eval hardcoded MERGED.
+
+    Once build_index moved to CLEAN, an eval still reading MERGED would report
+    quality for a corpus the index never saw. The two must agree.
+    """
+    tasks = dag.build_tasks()
+    idx_cmd, eval_cmd = tasks["build_index"].command, tasks["eval"].command
+    assert str(dag.CLEAN) in idx_cmd
+    assert str(dag.CLEAN) in eval_cmd
+    assert str(dag.MERGED) not in eval_cmd
+    # Same manifest on both sides, or the eval scores a corpus nobody indexed.
+    assert tasks["eval"].inputs == tasks["build_index"].inputs
+
+
+def test_ingest_rejects_are_not_treated_as_failure(dag):
+    """corpus_ingest exits 1 when rows were rejected but the run completed.
+
+    A corpus built from 11 sources will always have some rejects; making that a
+    task failure would stop the pipeline on normal input.
+    """
+    assert dag.build_tasks()["ingest"].lock_held_rc == 1
+
+
+def test_ingest_writes_both_a_clean_sink_and_a_dlq(dag):
+    cmd = " ".join(dag.build_tasks()["ingest"].command)
+    assert str(dag.CLEAN) in cmd
+    assert str(dag.DLQ) in cmd
+    assert "--dlq" in cmd
 
 
 def test_only_pulls_transitive_upstream(dag):
     tasks = dag.build_tasks()
     order = dag.topo_order(tasks, only="eval")
     assert set(order) == {"backfill", "sweep_arxiv", "consolidate",
-                          "build_index", "eval"}
+                          "ingest", "build_index", "eval"}
 
 
 def test_only_on_leaf_pulls_nothing_extra(dag):

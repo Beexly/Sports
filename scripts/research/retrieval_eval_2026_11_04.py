@@ -15,6 +15,7 @@ expert would name, not whether it returns something vaguely on-topic.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import sys
@@ -61,13 +62,17 @@ def _dcg(gains: list[float]) -> float:
 
 
 _INDEX_CACHE: dict | None = None
+# Overridable so the pipeline can evaluate exactly the manifest that the index
+# was built from. A hardcoded path here silently scored a DIFFERENT corpus than
+# build_index consumed once an ingest stage was inserted upstream.
+_ACTIVE_MANIFEST: Path | None = None
 
 
 def _index() -> dict:
     """Build once per process. Rebuilding per ranker costs ~35s each."""
     global _INDEX_CACHE
     if _INDEX_CACHE is None:
-        _INDEX_CACHE = ci.dedupe(ci.build_index(MANIFEST))
+        _INDEX_CACHE = ci.dedupe(ci.build_index(_ACTIVE_MANIFEST or MANIFEST))
     return _INDEX_CACHE
 
 
@@ -125,7 +130,19 @@ def evaluate(ranker: str, k: int = 10) -> dict:
     }
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    global _ACTIVE_MANIFEST, _INDEX_CACHE
+    ap = argparse.ArgumentParser(description="Retrieval eval over the research corpus")
+    ap.add_argument("--manifest", type=Path, default=MANIFEST,
+                    help="manifest to evaluate (default: the consolidated corpus)")
+    ap.add_argument("--out", type=Path,
+                    default=Path(r"C:\Users\Garrett\AppData\Local\hermes\cache\scratch\retrieval_eval_2026_11_04.json"),
+                    help="where to write the JSON results")
+    args = ap.parse_args(argv)
+    # Reset the cache so the requested manifest is the one measured.
+    _ACTIVE_MANIFEST = args.manifest
+    _INDEX_CACHE = None
+
     results = [evaluate(r) for r in ("bm25", "fused", "prior")]
     print(f"{'ranker':<8} {'MRR':>7} {'NDCG@10':>8} {'R@10':>7} {'P@10':>7} {'H@1':>5} {'H@3':>5}")
     for r in results:
@@ -140,9 +157,10 @@ def main() -> int:
     best = max(results, key=lambda r: r["mrr"])
     print(f"best MRR: {best['ranker']} ({best['mrr']:.4f})")
 
-    out = Path(r"C:\Users\Garrett\AppData\Local\hermes\cache\scratch\retrieval_eval_2026_11_04.json")
+    out = args.out
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(results, indent=1), encoding="utf-8")
-    print(f"wrote {out}")
+    print(f"wrote {out}  (manifest: {args.manifest.name})")
     return 0
 
 

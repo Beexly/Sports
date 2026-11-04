@@ -39,6 +39,10 @@ CORPUS = Path(r"C:\Users\Garrett\AppData\Local\hermes\cache\scratch\research_cor
 PY = r"C:\Users\Garrett\AppData\Local\Programs\Python\Python313\python.exe"
 
 MERGED = CORPUS / "merged_manifest_2026-11-04.jsonl"
+# Validated output of MERGED. build_index and eval read this, not MERGED, so the
+# corpus that is indexed and the corpus that is measured are the same corpus.
+CLEAN = CORPUS / "merged_manifest_2026-11-04.clean.jsonl"
+DLQ = CORPUS / "dlq" / "schema_rejects.jsonl"
 BACKFILL = CORPUS / "fulltext_backfill.jsonl"
 STATS = REPO / "intelligence" / "corpus" / "corpus_index_stats.json"
 EVAL_OUT = Path(r"C:\Users\Garrett\AppData\Local\hermes\cache\scratch\retrieval_eval_2026_11_04.json")
@@ -97,19 +101,44 @@ def build_tasks() -> dict[str, Task]:
             timeout=1200,
         ),
         Task(
+            # The validating stage. Before this existed, build_index read MERGED
+            # directly: non-JSON lines were skipped silently, a malformed row
+            # crashed the whole build, and a row with no title was indexed as an
+            # empty document. Now every row is checked and the rejects land in a
+            # DLQ with the raw row preserved, so a quarantine is repairable.
+            name="ingest",
+            command=[PY, "scripts/ops/corpus_ingest.py",
+                     "--in", str(MERGED),
+                     "--out", str(CLEAN),
+                     "--dlq", str(DLQ)],
+            inputs=[MERGED],
+            outputs=[CLEAN],
+            upstream=["consolidate"],
+            retries=1,
+            timeout=600,
+            # exit 1 means "completed with rejects". Rejects are expected in a
+            # corpus assembled from 11 sources, so this is not a task failure.
+            lock_held_rc=1,
+        ),
+        Task(
             name="build_index",
             command=[PY, "scripts/ops/build_corpus_index.py",
-                     "--manifest", str(MERGED)],
-            inputs=[MERGED],
+                     "--manifest", str(CLEAN)],
+            inputs=[CLEAN],
             outputs=[STATS],
-            upstream=["consolidate"],
+            upstream=["ingest"],
             retries=1,
             timeout=1200,
         ),
         Task(
+            # Passes --manifest explicitly. The eval script used to hardcode the
+            # raw merged path, which would have measured a different corpus than
+            # the one build_index just consumed.
             name="eval",
-            command=[PY, "scripts/research/retrieval_eval_2026_11_04.py"],
-            inputs=[MERGED],
+            command=[PY, "scripts/research/retrieval_eval_2026_11_04.py",
+                     "--manifest", str(CLEAN),
+                     "--out", str(EVAL_OUT)],
+            inputs=[CLEAN],
             outputs=[EVAL_OUT],
             upstream=["build_index"],
             retries=0,
