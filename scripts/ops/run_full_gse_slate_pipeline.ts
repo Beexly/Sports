@@ -618,22 +618,6 @@ function main() {
       awayInjuryDropOffPoints: awayInjPts,
     });
 
-    const coachSim10k = simulateCoachGame(
-      {
-        homeTeam: g.home,
-        awayTeam: g.away,
-        week: 8,
-        coachSupport: Number(
-          ((schemeFit.pureFootballExpectedMarginHome - 2.5) * 2.2).toFixed(2),
-        ),
-        injuryDropOff: Number((homeInjPts - awayInjPts).toFixed(2)),
-        neutralPassRate: Number(hmTend.early_down_pass_rate ?? 0.56),
-        staffAggression: homeStaff.staffAggression,
-        staffAggressionAway: awayStaff.staffAggression,
-      },
-      10_000,
-    );
-
     const entropyProbe = computeWeightedEntropyPlayProbe({
       exactLeverageMatchesP: homeStaff.preSnapMotionRate >= 0.62 ? 3 : 2,
       partialDisplacementMatchesQ: 1,
@@ -831,17 +815,13 @@ function main() {
     ];
 
     const stageCClusters = stageC(candidatePremises);
-    const basePriorProb = Math.min(0.82, Math.max(0.18, coachSim10k.winProbHome));
     const stageDResult = stageD(stageCClusters, {
       tauHatCoach: 0.42 + homeStaff.tauHatPreKickoff,
       baselineTau: 0.42,
     });
-    const posteriorProbHome = logistic(
-      logit(basePriorProb) + stageDResult.clampedTotalLogOddsDelta,
-    );
 
     // -------------------------------------------------------------------------
-    // STAGE 4: Master Situational Reasoning Overlay & 80-Rule Misleading-Stat Firewall
+    // STAGE 2: Master Situational Reasoning Overlay & 80-Rule Misleading-Stat Firewall (SITUATIONAL FIRST)
     // -------------------------------------------------------------------------
     const rawBoxYpgGuard = validateFeatureAgainstMisleadingStats({
       name: "raw_rb_ypc",
@@ -906,6 +886,58 @@ function main() {
     });
     const whitenedOverlay = situationalOverlay.orthogonalization;
     mindFeedRecords.push(JSON.stringify(situationalOverlay.feedRecord));
+
+    // -------------------------------------------------------------------------
+    // STAGE 3: Full-Game Snap-by-Snap 10,000-World Simulation Engine (SITUATIONAL-CONDITIONED)
+    // -------------------------------------------------------------------------
+    // The simulation runs conditioned on situational intelligence: weather, trench pressure, and fatigue
+    const situationalNeutralPassRate = Number(
+      Math.max(
+        0.35,
+        Math.min(
+          0.75,
+          Number(hmTend.early_down_pass_rate ?? 0.56) +
+            (!g.isIndoor && g.windMph >= 11 ? -0.05 : 0.0) +
+            (trenchAdvHome < -0.05 ? -0.03 : 0.02),
+        ),
+      ).toFixed(4),
+    );
+
+    const situationalCoachSupport = Number(
+      (
+        (schemeFit.pureFootballExpectedMarginHome - 2.5) * 2.2 +
+        stageDResult.clampedTotalLogOddsDelta * 3.5 +
+        (g.isShortWeekRoad ? 1.45 : 0.0) +
+        (g.isHighAltitudeDenver && g.home === "DEN" ? 1.15 : 0.0)
+      ).toFixed(2),
+    );
+
+    const situationalInjuryDropOff = Number(
+      (
+        homeInjPts -
+        awayInjPts +
+        (awayInjList.some((x) => x.position === "LT" || x.position === "OL") ? 2.5 : 0.0)
+      ).toFixed(2),
+    );
+
+    const coachSim10k = simulateCoachGame(
+      {
+        homeTeam: g.home,
+        awayTeam: g.away,
+        week: 8,
+        coachSupport: situationalCoachSupport,
+        injuryDropOff: situationalInjuryDropOff,
+        neutralPassRate: situationalNeutralPassRate,
+        staffAggression: homeStaff.staffAggression,
+        staffAggressionAway: awayStaff.staffAggression,
+      },
+      10_000,
+    );
+
+    const basePriorProb = Math.min(0.82, Math.max(0.18, coachSim10k.winProbHome));
+    const posteriorProbHome = logistic(
+      logit(basePriorProb) + whitenedOverlay.totalProbabilityDelta,
+    );
 
     // -------------------------------------------------------------------------
     // STAGE 5: Class B Market De-Vig, Isotonic Calibration & Conjunction Gate
@@ -1323,11 +1355,29 @@ function main() {
           siriusxm_radio_reaction_signals: siriusXmRadioEval,
         },
       },
-      stage2_jev_spine_and_10k_coach_sim: {
+      stage2_situational_reasoning_and_cognitive_router: {
+        context_mask_hex:
+          "0x" +
+          Array.from(contextMask)
+            .map((w) => w.toString(16).padStart(8, "0"))
+            .join(""),
+        orthogonal_clusters: stageCClusters,
+        james_stein_shrinkage_factor: Number(stageDResult.jamesSteinShrinkageFactor.toFixed(4)),
+        total_delta_log_odds: Number(stageDResult.clampedTotalLogOddsDelta.toFixed(4)),
+        total_spread_adjustment_pts_home: situationalSpreadPtsHome,
+        total_points_adjustment: situationalTotalPtsDelta,
+        cholesky_whitened_prob_delta: Number(whitenedOverlay.totalProbabilityDelta.toFixed(4)),
+        raw_unshrunk_prob_delta: Number(whitenedOverlay.rawUnshrunkDelta.toFixed(4)),
+        cap_applied: whitenedOverlay.capApplied,
+      },
+      stage3_jev_spine_and_10k_coach_sim: {
         jev_full_game_spine_executed: Boolean(jevSpine),
         jev_total_snaps: jevSpine?.total_snaps_simulated_with_jev ?? 0,
         jev_final_score_spine: jevSpine?.final_score_spine ?? null,
         jev_posterior_overrides: jevSpine?.jev_posterior_overrides_for_10k_mc ?? null,
+        situational_neutral_pass_rate: situationalNeutralPassRate,
+        situational_coach_support: situationalCoachSupport,
+        situational_injury_drop_off: situationalInjuryDropOff,
         coach_sim_10k_win_prob_home: Number(coachSim10k.winProbHome.toFixed(4)),
         coach_sim_10k_fourth_down_wp: Number((coachSim10k.fourthDownWP ?? 0).toFixed(4)),
         scheme_fit_expected_home_pts: schemeFit.pureFootballExpectedHomePoints,
@@ -1340,28 +1390,13 @@ function main() {
         thursday_cadence_injury_delta_pts: thursdayMarginShift,
         thursday_coach_mindset_hash: thursdayGameLock?.coachLock.coachMindsetHash ?? null,
       },
-      stage3_cognitive_router: {
-        context_mask_hex:
-          "0x" +
-          Array.from(contextMask)
-            .map((w) => w.toString(16).padStart(8, "0"))
-            .join(""),
-        orthogonal_clusters: stageCClusters,
+      stage4_conformal_calibration_and_whitening: {
         base_prior_prob_home: Number(basePriorProb.toFixed(4)),
         posterior_prob_home: st5.posteriorProbHome,
         posterior_prob_over: st5.posteriorProbOver,
-        james_stein_shrinkage_factor: Number(stageDResult.jamesSteinShrinkageFactor.toFixed(4)),
-        total_delta_log_odds: Number(stageDResult.clampedTotalLogOddsDelta.toFixed(4)),
-      },
-      stage4_situational_reasoning_overlay: {
-        total_spread_adjustment_pts_home: situationalSpreadPtsHome,
-        total_points_adjustment: situationalTotalPtsDelta,
-        cholesky_whitened_prob_delta: Number(whitenedOverlay.totalProbabilityDelta.toFixed(4)),
-        raw_unshrunk_prob_delta: Number(whitenedOverlay.rawUnshrunkDelta.toFixed(4)),
-        cap_applied: whitenedOverlay.capApplied,
-        publish_allowed: st5.publishAllowed,
         post_reasoning_spread_delta_home: st5.spreadDeltaHome,
         post_reasoning_total_delta: st5.totalDelta,
+        publish_allowed: st5.publishAllowed,
       },
       stage5_calibration_and_copula_gate: {
         isotonic_calibrated_sample_prob: calWr1Prob,
