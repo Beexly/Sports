@@ -72,6 +72,38 @@ Fix in `intelligence/research/corpus_index.py`:
 Regression tests: `test_local_doc_is_a_registered_source_priority`,
 `test_dedupe_full_text_beats_a_higher_priority_stub`.
 
+## Second bug found and fixed — query_domain forced every query into football
+
+`query_domain()` returned `american_football` for **any** query that was not
+classified as soccer. So `"AIGoat vulnerable FastAPI uvicorn"` was treated as
+a football query, and `RUN-REPORT.md` (classified `other`) was demoted out of
+the fused top-3 — even though it ranked **#1 in BM25 at 49.23**.
+
+Three fixes in `intelligence/research/corpus_index.py`:
+1. `query_domain()` returns `OTHER_DOMAIN` when the query has **zero** sports
+   signal. A query with some football signal but no clear side still inherits
+   the corpus prior.
+2. AF vocabulary expanded. `"football"` itself was missing from `_AF_TOKENS`,
+   along with pigskin, scrimmage, interception, fumble, linebacker,
+   cornerback, audible, redzone, snapcount, and 23 coverage/route phrases
+   (`coverage disguise`, `route tree`, `cover 2/3`, `red zone`,
+   `line of scrimmage`, …).
+3. Phrase evidence breaks af/sc ties: `"football match"` now resolves to
+   soccer instead of defaulting to football.
+
+Regression test: `test_query_with_no_sports_signal_stays_neutral`.
+
+### Verified after the fix
+
+| Query | Fused rank 1 |
+|---|---|
+| "AIGoat vulnerable FastAPI uvicorn" | **RUN REPORT** |
+| "MemPalace LongMemEval recall" | **TEST REPORT** |
+| "OXR MarkItDown bake-off parser" | **BAKEOFF REPORT** |
+
+All three named reports now rank #1 for their own content in fused search,
+not just in raw BM25.
+
 ## Corpus state after ingestion
 
 | Metric | Before | After |
