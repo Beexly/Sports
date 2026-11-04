@@ -18,12 +18,15 @@ import { formatLocalTime } from "@/lib/time/local-time";
  * UTC wall clock into the HTML for every visitor on earth. A bettor in New York
  * opening /picks for a 1:00 PM ET kickoff read "Sun, Sep 7, 5:00 PM UTC".
  *
- * Founder, 2026-09-12: "all times should be from CST central time." The three
- * slate surfaces (pick card, board, picks page) now pin CENTRAL explicitly via
- * lib/time/central with a CT label — deterministic, identical for every
- * viewer. /preview and /room keep the original viewer-clock <LocalTime>
- * deferral. Either idiom closes the UTC bake; a zone-less formatter may not
- * survive on any of them.
+ * Founder, 2026-09-12: "all times should be from CST central time." The
+ * slate surface that formats kickoffs (pick card) pins CENTRAL explicitly
+ * via lib/time/central with a CT label - deterministic, identical for
+ * every viewer. /preview and /room keep the original viewer-clock
+ * <LocalTime> deferral. The board and picks pages of that era pinned
+ * CENTRAL too; they are now an under-construction stub and a static
+ * sealed card that format no timestamps (see central-time-rendering.test.ts),
+ * which closes the UTC bake structurally. Either idiom closes the defect;
+ * a zone-less formatter may not survive on any of them.
  *
  * The concrete case pinned throughout: 2025-09-07T17:00:00.000Z.
  *   UTC wall clock (the bug)        -> "Sun, Sep 7, 5:00 PM UTC"
@@ -70,16 +73,21 @@ const SAMPLE_PICK: PublicPick = {
  * Two honest idioms now cover customer-facing times (the same dual contract
  * public-surface-local-time pins on the deferred surfaces):
  *   1. The three slate surfaces (pick card, board, picks page) pin CENTRAL
- *      explicitly via lib/time/central with a CT label — founder 2026-09-12.
+ *      explicitly via lib/time/central with a CT label - founder 2026-09-12.
  *   2. /preview and /room still defer to <LocalTime>, resolving on the
  *      VIEWER's clock after mount.
  * Either way, no zone-less formatter may survive on a server surface.
  */
-const CENTRAL_SURFACES = [
-  "components/picks/pick-card.tsx",
-  "app/board/page.tsx",
-  "app/picks/page.tsx",
-];
+/**
+ * Surfaces that format a customer-facing timestamp during server render
+ * and must pin CENTRAL explicitly. /board and /picks were on this list in
+ * the live-board era; they are now an under-construction stub and a
+ * static sealed card, neither of which formats a timestamp (pinned by the
+ * sibling "static pages" test in central-time-rendering.test.ts and the
+ * no-timestamp-format test below). A page that formats no kickoff can
+ * never bake a UTC wall clock.
+ */
+const CENTRAL_SURFACES = ["components/picks/pick-card.tsx"];
 
 /** Every surface fixed here, and the timestamp each one renders. */
 const DEFERRED_SURFACES = [
@@ -98,10 +106,10 @@ describe("server render never bakes a UTC wall clock into a kickoff", () => {
     // Founder, 2026-09-12: "all times should be from CST central time." The
     // card formats with an explicit timeZone (lib/time/central), so the server
     // render is byte-for-byte identical for every visitor, whatever zone the
-    // Node runtime runs in — and it can never bake in a UTC wall clock. (The
+    // Node runtime runs in - and it can never bake in a UTC wall clock. (The
     // render below is deliberately NOT asserted against this process's own
     // resolvedOptions().timeZone: with the zone explicit, that env value is
-    // irrelevant — the sibling test proves it by moving TZ.)
+    // irrelevant - the sibling test proves it by moving TZ.)
 
     const html = renderToStaticMarkup(
       <PickCard
@@ -207,6 +215,22 @@ describe("no customer-facing surface formats a timestamp during server render", 
       expect(src).toMatch(/from\s+"@\/lib\/time\/central"/);
     });
   }
+
+  it("static sealed-era pages (board stub, sealed picks) format no timestamp at all", () => {
+    // /board (under-construction stub) and /picks (static sealed card)
+    // were live kickoff surfaces when this file was written. They format
+    // no timestamps in this design, so the UTC-bake defect cannot occur
+    // there. Pin the absence of every banned format shape so a future
+    // timestamp on either page trips this test instead of shipping a
+    // wall clock.
+    for (const rel of ["app/board/page.tsx", "app/picks/page.tsx"]) {
+      const src = readWeb(rel);
+      expect(src).not.toMatch(/toLocaleTimeString\s*\(/);
+      expect(src).not.toMatch(/toLocaleDateString\s*\(/);
+      expect(src).not.toMatch(/Intl\.DateTimeFormat\s*\(/);
+      expect(src).not.toMatch(/new Date\s*\(/);
+    }
+  });
 
   for (const rel of DEFERRED_SURFACES) {
     it(`${rel} defers its timestamps to <LocalTime>`, () => {
