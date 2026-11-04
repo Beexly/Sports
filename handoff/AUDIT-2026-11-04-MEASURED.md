@@ -41,8 +41,39 @@ grep -rl "Route Liberation" docs/ | wc -l          # 0
 
 This is worse than recorded. The skill says "three of seven metrics have
 different names"; the measurement says **zero documentation files use the code's
-expansion for any of the three**. A reader of the docs cannot learn what the code
-computes.
+expansion for any of the three**.
+
+> **CORRECTION 2026-11-04 (same day, deeper read).** The counts above are right;
+> **the prescription originally attached to them was wrong.** I first called this a
+> mechanical rename of ~28 files with "zero risk." It is not, and renaming would
+> have been a factual error.
+>
+> The files are **dated historical snapshots**, not live documentation. The
+> dominant one, `Master_Execution_Report__The_Belichick.txt`, opens: *"as of
+> October 24, 2026."* Its code blocks are the Oct-24 **design**, not the current
+> implementation:
+>
+> ```
+> doc : computeGseSpese(driveOutcomeProbs, epaBetween20s, epaRedZone3rdDown)
+> code: computeGseSpese(input: { stEpa, stPlays, minPlays? })
+> ```
+>
+> The metric **changed meaning**; it did not get a cosmetic rename. `TOR` was
+> "LB Tackle Opportunity & Spine Conflict Rate" taking
+> `(oppProjectedPlays, lbSnapShare, probBoxFitGivenPersonnel, paConflictFreezeRate)`;
+> it is now "Turnover Regret" computed from fumble loss rates. Those are different
+> quantities. Writing "Turnover Regret" over a code block that computes
+> linebacker opportunity would mislabel a historical record and destroy the
+> evidence of what the Oct-24 design did.
+>
+> **The real defect is different:** live documentation has no current-name
+> glossary, so a reader cannot tell which names are current and which are the
+> Oct-24 design. The fix is a `GLOSSARY.md` recording the current definitions plus
+> a one-line "historical" banner on the dated snapshots — **not** a rename.
+>
+> Caught by applying the `ast-grep` skill, whose central invariant is that a bad
+> pattern silently rewrites the wrong thing. The tool was the right one to reach
+> for even though the files carry no AST: it forced the read-before-rewrite step.
 
 Affected (sample): `docs/engine/research/2026-10-28/downloads/Autonomous_GSE_Coach-First_Engine_Plan.txt`,
 `docs/engine/research/2026-10-28/downloads/Master_Execution_Report__The_Belichick.txt`,
@@ -162,9 +193,11 @@ has not silently gone blind.
 
 ## Recommended next actions, ranked by effect
 
-1. **Fix the metric names in docs** (Finding 1). Mechanical, ~28 files, zero
-   risk, and it is the difference between docs that teach the code and docs that
-   contradict it.
+1. **Write a current-name GLOSSARY** (Finding 1, corrected). NOT a rename — the
+   dated snapshots are the Oct-24 design and must keep their own names. Record the
+   seven current metric definitions in `GLOSSARY.md` and put a one-line
+   "historical snapshot" banner on `docs/engine/research/2026-10-28/downloads/`.
+   Then a reader can tell current from historical, which is the actual defect.
 2. **Decide `packages/data-ingestion/src`'s status** (Finding 2). 429 orphaned
    files is not a wiring gap to close one-by-one; it is a package that is either
    an archive to retire or a subsystem awaiting a consumer. Name which.
