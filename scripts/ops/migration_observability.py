@@ -185,7 +185,7 @@ def fetch_columns() -> dict[str, set[str]]:
 
 def fetch_table_state() -> dict[str, dict]:
     sql = ("SELECT relname, n_live_tup, n_dead_tup, autoanalyze_count, "
-           "autovacuum_count, last_autoanalyze FROM pg_stat_user_tables;")
+           "autovacuum_count, last_autoanalyze, last_analyze FROM pg_stat_user_tables;")
     state: dict[str, dict] = {}
     for line in _run(sql).splitlines():
         s = line.strip()
@@ -198,7 +198,7 @@ def fetch_table_state() -> dict[str, dict]:
         # never_analyzed report zero while odds sat at autoanalyze_count = 0.
         if len(parts) < 5:
             continue
-        parts += [""] * (6 - len(parts))
+        parts += [""] * (7 - len(parts))
         try:
             state[parts[0]] = {
                 "live": int(parts[1]),
@@ -206,6 +206,7 @@ def fetch_table_state() -> dict[str, dict]:
                 "autoanalyze": int(parts[3]),
                 "autovacuum": int(parts[4]),
                 "last_autoanalyze": parts[5],
+                "last_analyze": parts[6],
             }
         except ValueError:
             continue
@@ -366,17 +367,26 @@ def check_recency(migrations: list[dict], max_days: int = 45) -> dict:
 
 
 def check_never_analyzed(state: dict[str, dict], min_rows: int = 1000) -> dict:
+    """Tables whose planner statistics have never been refreshed at all.
+
+    The first version tested `autoanalyze_count == 0`, which counts only
+    autovacuum-triggered analyzes. A manual ANALYZE sets last_analyze and leaves
+    that counter at zero, so the check kept reporting CRIT after the condition it
+    claims to test had been fixed. The question is whether histograms exist, not
+    who produced them -- test both timestamps.
+    """
     bad = []
     for t in WATCH_TABLES:
         s = state.get(t)
         if not s:
             continue
-        if s["live"] >= min_rows and s["autoanalyze"] == 0:
+        never = not (s.get("last_analyze") or "").strip() and not (s.get("last_autoanalyze") or "").strip()
+        if s["live"] >= min_rows and never:
             bad.append({"table": t, "rows": s["live"]})
     return {
         "check": "never_analyzed",
         "observed": bad,
-        "display": f"{len(bad)} table(s) with rows but autoanalyze_count = 0",
+        "display": f"{len(bad)} table(s) with rows and no analyze of any kind",
         "threshold": "0",
         "status": CRIT if bad else OK,
         "detail": "planner histograms are absent or from an unknown older snapshot",
