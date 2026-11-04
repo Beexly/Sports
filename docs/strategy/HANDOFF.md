@@ -173,3 +173,29 @@ start from the matchup instead of the constants 3 and 46.5.
 **Next role (Verifier / next loop):**
 - Watch CI on the pushed branch; merge when the reduced wall is confirmed (no new failures vs `ed00ab3d9`).
 - Next triage batches: (a) board cluster (board-picks-route-equivalence, board-class-banner-honesty, central-time-rendering, kickoff-local-time, honest-degraded-states, freshness-coverage, sample-mode-ui); (b) logic/runtime cluster; (c) pricing/nav clusters.
+
+## 2026-11-04 — test wall triage: board cluster (7 files) rewritten to the sealed-era design; PRs #1230 + #1231 verified merged
+
+**Verified this run:** PR #1230 merged (a93313a76 is the merge commit of PR #1231; #1230 = ed00ab3d9). PR #1231 CI failure set diffed against PR #1230's: 78 -> 68 failing files, exactly the 9 homepage files fixed, ZERO new failures. Merged PR #1231 with `gh pr merge --merge` (remote branch deleted; local branch kept by wt-homepage worktree).
+
+**Changed (branch `ci/board-cluster-2026-11-04`, worktree `C:\c\wt-board`, base `a93313a76`):**
+- The root cause for all 7 board-cluster files: /board is now the under-construction stub, /picks is the static sealed Week 8 locked board, / (home) is the static RedlineWorld + responsible close, /pricing is the static under-construction pack catalog. All 24 failing assertions pinned the retired live-board / dynamic-picks / data-driven-home contracts. Each test rewritten to the current design; every prohibition carried over and each repoint documented in-file.
+- `board-picks-route-equivalence`: /board job = parked stub routing to /packages + /fantasy/dfs (no loadBoardState, no sealed-board import); /picks job = sealed card (sealed-board.json, SealedTable, `publishAllowed && PUBLISH` filter, seal digest); nav names /picks as a revenue pillar and deliberately omits /board; neither page links the other (the shared /packages funnel is the route between jobs).
+- `board-class-banner-honesty`: page test rewritten to "parked stub renders no board-class banner" (no testid, no boardClass.publicMessage, no refusePublicFire, no loadBoardState; under-construction notice + both funnel links). Classifier + badge honesty tests untouched.
+- `central-time-rendering` + `kickoff-local-time`: board+picks removed from the Central-pinning surface lists (they format no timestamps now); both files gained a static-page test pinning the absence of EVERY banned timestamp format shape (toLocale*String, Intl.DateTimeFormat, new Date) on the stub and the sealed card, so a future unpinned timestamp fails loudly.
+- `freshness-coverage`: /board stub renders no data-derived numbers so it owes no freshness stamp (pinned: notice present, board-freshness/Last refresh/StateTile absent); /picks pinned to seal-digest provenance (LineFreshnessBadge banned on a static card); homepage pinned to no lastRefresh and no "Board data as-of"; the CST-pinned MethodologySection stamp pinned on /methodology (its real caller); /pricing pinned to NO refresh/cadence language at all (FAQ is gone; numeric-cadence ban preserved).
+- `sample-mode-ui`: homepage test rewritten to the stronger property (imports no board loader at all); /picks test rewritten to "static sealed card, no demo banner, seal digest is the provenance" (dashboard banner test still covers the one surface that renders sample data).
+- `honest-degraded-states`: /board + /home describes rewritten as structural contracts (execute the pages, walk the trees, assert the retired outage/healthy copy can never render, assert no loader imports); /proof describe untouched. File shrank 521 -> 259 lines; all 6 tests pass locally (needs @neondatabase/serverless + @prisma/adapter-neon stubs in this worktree's junction target to run locally; CI installs them).
+- `apps/web` `tsc --noEmit` exit 0; em-dash-scan OK; 7 rewritten files scrubbed to zero em/en dashes.
+
+**Proven (worktree `C:\c\wt-board`):**
+- The 7-file board cluster: 63/63 tests pass.
+- 22-file affected-surface sweep (7 board + 13 readers of board/picks/pricing + homepage cluster + packages paywall): 179/179 pass, zero regressions.
+
+**Not proven:**
+- No CI run on the pushed branch yet (merge gate for the next loop: reduced wall, no new failures vs `a93313a76`).
+- Remaining wall: ~54 apps/web files (logic/runtime cluster, pricing/nav, plus the 7 other-workspace files).
+
+**Next role (Verifier / next loop):**
+- Watch CI on the pushed branch; merge when the reduced wall is confirmed (no new failures vs `a93313a76`).
+- Next triage batches: (a) logic/runtime cluster (dfs-optimizer-optimality, bestball, dfs-correlation, scheme, news/impact, wire-store, mission-control, do-calculus-verifiers, gate-registry.t24, literature-and-bow-arc, public-picks-enabled-readers, module-header-accuracy, continuous-reconciliation-daemon); (b) pricing/nav clusters (pricing-conversion-a11y, pricing-honesty, pricing-mobile-tap-targets, pricing-page-smoke, nav-auth, nav-ia, nav-live-chip-honesty, nav-route-integrity, mobile-nav-ia, five-pillar-nav, cockpit-nav-coverage).
