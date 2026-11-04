@@ -110,3 +110,20 @@ importable). Full suite pending re-run.
   needs Big Data Bowl tracking or pose-derived trajectories.
 - `verify_out_of_sample_calibration.py --enforce-gate` has not been run against
   a real feature matrix yet.
+
+## Calibration gate — run 2026-11-04 05:30 CT
+
+`python tests/verify_out_of_sample_calibration.py --enforce-gate` → **exit 0**.
+
+| Kernel | Status | Brier delta | n |
+|---|---|---|---|
+| `eager_split_pass_epa_and_poisson_td` | APPROVED | — | — |
+| `veroulis_eager_weak_link_oline_sack_rate` | APPROVED | — | — |
+| `congelio_per_carry_ryoe_deconfounding` | APPROVED | — | — |
+| `davidson_pilon_empirical_bayes_receiving_props` | APPROVED | — | — |
+| `alam_crosswind_drag_outdoor_15mph_plus` | APPROVED | +0.061 | 66 |
+| `quarantined_pinn_navier_stokes_and_ocular_proxy` | **REJECTED** | −0.016 | 761 |
+
+The speculative PINN/ocular-proxy kernel is correctly rejected: adding
+uncalibrated PDE variance to the Empirical Bayes baseline makes Brier worse
+by 0.016 on 761 samples. The gate is doing its job — it is not a rubber stamp.
