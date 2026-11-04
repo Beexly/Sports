@@ -15,6 +15,17 @@ The manifest has 6967 records, of which 359 are
 `local_*` — the only sources that can carry a Downloads path. So the ceiling on
 Downloads coverage from this manifest is 359, not 6967.
 
+## Content completeness
+
+Presence is not completeness. The ingest stage capped documents at
+200,000 chars, so a record sitting exactly at that cap was cut, not
+finished. This section is the check the path count cannot make.
+
+- local records: **359**
+- still at the 200,000 cap: **0**
+- records with no text (need OCR): **0**
+- total characters held: **30,065,491**
+
 ## Absent, by extension
 
 | ext | count |

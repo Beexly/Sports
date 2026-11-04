@@ -191,6 +191,23 @@ def audit() -> dict:
     # Which record sources actually cover Downloads? Only local_* can, by design.
     local_records = [r for r in records if str(r.get("source", "")).startswith("local")]
 
+    # A file can be present, indexed, and still incomplete: the ingest stage
+    # capped documents at 200,000 chars. A record sitting exactly at that cap
+    # was cut, not finished. Presence is not completeness.
+    LEGACY_CAP = 200_000
+    at_cap, no_text, text_chars = [], [], 0
+    for r in local_records:
+        ft = r.get("full_text") or ""
+        ce = r.get("chars_extracted")
+        if ce is None:
+            ce = len(ft)
+        text_chars += ce
+        name = Path(str(r.get("pdf_path", ""))).name
+        if ce == LEGACY_CAP:
+            at_cap.append(name)
+        elif ce == 0:
+            no_text.append(name)
+
     return {
         "downloads_dir": str(DOWNLOADS),
         "manifest": str(MANIFEST),
@@ -205,6 +222,10 @@ def audit() -> dict:
         "coverage_pct": round(100.0 * len(ingested) / len(files), 1) if files else 0.0,
         "content_pct": round(100.0 * (len(ingested) + len(ingested_dup)) / len(files), 1) if files else 0.0,
         "ingested_dup_files": sorted(p.name for p in ingested_dup),
+        "local_records": len(local_records),
+        "truncated_at_cap": sorted(at_cap),
+        "empty_records": sorted(no_text),
+        "total_chars_held": text_chars,
         "absent_by_ext": by_ext(absent),
         "archived_only_by_ext": by_ext(archived_only),
         "absent_files": sorted(p.name for p in absent),
@@ -234,6 +255,23 @@ def to_markdown(a: dict) -> str:
     L.append("`local_*` — the only sources that can carry a Downloads path. So the ceiling on")
     L.append(f"Downloads coverage from this manifest is {a['local_records']}, not {a['manifest_records']}.")
     L.append("")
+    L.append("## Content completeness")
+    L.append("")
+    L.append("Presence is not completeness. The ingest stage capped documents at")
+    L.append("200,000 chars, so a record sitting exactly at that cap was cut, not")
+    L.append("finished. This section is the check the path count cannot make.")
+    L.append("")
+    L.append(f"- local records: **{a['local_records']}**")
+    L.append(f"- still at the 200,000 cap: **{len(a['truncated_at_cap'])}**")
+    L.append(f"- records with no text (need OCR): **{len(a['empty_records'])}**")
+    L.append(f"- total characters held: **{a['total_chars_held']:,}**")
+    L.append("")
+    if a["truncated_at_cap"]:
+        L.append("At cap: " + ", ".join(f"`{n}`" for n in a["truncated_at_cap"]))
+        L.append("")
+    if a["empty_records"]:
+        L.append("No text: " + ", ".join(f"`{n}`" for n in a["empty_records"]))
+        L.append("")
     L.append("## Absent, by extension")
     L.append("")
     L.append("| ext | count |")
@@ -292,6 +330,10 @@ def main(argv=None) -> int:
     print(f"  absent             : {a['absent']}")
     print(f"    deliberately out : {len(a['excluded'])}")
     print(f"    unexplained      : {a['unexplained_count']}")
+    print(f"content completeness : {a['local_records'] - len(a['truncated_at_cap']) - len(a['empty_records'])}"
+          f"/{a['local_records']} complete"
+          f" (at cap: {len(a['truncated_at_cap'])}, no text: {len(a['empty_records'])})")
+    print(f"chars held           : {a['total_chars_held']:,}")
     print(f"manifest records     : {a['manifest_records']} "
           f"({a['local_records']} local_*, the only ones that can match)")
     if a["absent_by_ext"]:
