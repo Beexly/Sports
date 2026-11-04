@@ -146,6 +146,9 @@ export async function GET(req: Request): Promise<NextResponse> {
   // every hour and never reaches the tail. Nothing is dropped: shard k of N
   // over a deterministic bucket is a partition, not a sample.
   let candidates: readonly SignalWriteCandidate[] = [];
+  // Hoisted out of the try below: the literature bridge reads the same scoped set
+  // after the write completes, and a failed read must leave it empty, not unbound.
+  let scoped: readonly SignalWriteCandidate[] = [];
   // Rows refused for want of a fitted scale, by key. Reported in the response so
   // an unscorable key is a visible finding rather than a silent disappearance.
   let dropped: Readonly<Record<string, number>> = {};
@@ -257,7 +260,7 @@ export async function GET(req: Request): Promise<NextResponse> {
         { status: 500 },
       );
     }
-    const scoped =
+    scoped =
       shard.total === 1
         ? candidates
         : candidates.filter((c) => shardOf(c.entityId, c.key, shard));

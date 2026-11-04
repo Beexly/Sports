@@ -26,6 +26,11 @@
 
 import { db, isStubMode } from "@sports/db";
 import {
+  extractTrueProb,
+  extractRankingP,
+  extractMarketFairProb,
+} from "@sports/types";
+import {
   OddsApiClient,
   OddsApiError,
   DataNormalizer,
@@ -877,20 +882,26 @@ export async function settleSport(
             await markPostSettlementWorkFailed(workDelegate, pick.id, "SNAPSHOT_OUTCOME", snapErr);
           }
           picksSettled++;
-          settledPicksForLearning.push({
-            pickId: pick.id,
-            gameId: game.id,
-            sport: sport.key,
-            pickType: pick.pickType,
-            selection: pick.selection,
-            trueProb: pick.trueProb,
-            rankingP: pick.rankingP ?? undefined,
-            marketFairProb: pick.marketFairProb ?? undefined,
-            result,
-            settledAt: settledAt.toISOString(),
-            clvLockPrice: pick.clvLockPrice ?? null,
-            closingPrice: closeAmerican !== null ? americanToDecimalOrNull(closeAmerican) : null,
-          });
+          // The model probability lives in the pick's factorBreakdown, not a column
+          // (independentEdge.trueProb). No probability means nothing to learn from:
+          // skip the observation rather than fabricate one.
+          const learningTrueProb = extractTrueProb(pick);
+          if (learningTrueProb !== null) {
+            settledPicksForLearning.push({
+              pickId: pick.id,
+              gameId: game.id,
+              sport: sport.key,
+              pickType: pick.pickType,
+              selection: pick.selection,
+              trueProb: learningTrueProb,
+              rankingP: extractRankingP(pick) ?? undefined,
+              marketFairProb: extractMarketFairProb(pick) ?? undefined,
+              result,
+              settledAt: settledAt.toISOString(),
+              clvLockPrice: pick.clvLockPrice ?? null,
+              closingPrice: closeAmerican !== null ? americanToDecimalOrNull(closeAmerican) : null,
+            });
+          }
         }
 
         // Write TeamGameLog entries for ATS form tracking.

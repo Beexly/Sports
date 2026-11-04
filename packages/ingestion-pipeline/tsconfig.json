@@ -4,7 +4,10 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "lib": ["ES2022", "DOM"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["../../apps/web/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

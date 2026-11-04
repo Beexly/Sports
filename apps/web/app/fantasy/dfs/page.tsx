@@ -6,7 +6,6 @@ import { loadCurrentDfsSlate } from "@/lib/fantasy/dfs-current-slate";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { LIVE_PACKAGE_CATALOG, getPackageBySlug } from "@/lib/packages/catalog";
 import {
-  LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
   getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,

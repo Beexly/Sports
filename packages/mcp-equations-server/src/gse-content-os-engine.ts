@@ -13,6 +13,8 @@
  */
 
 // ============================================================================
+import COPY_LEXICON from "./gse-content-os-copy-lexicon.json";
+
 // 1. CONSTANTS & THRESHOLDS (v1.2 §2, v1.3 §1/N9, §0.3)
 // ============================================================================
 
@@ -444,7 +446,7 @@ export function runHumanizationPass(input: HumanizationInput): HumanizationResul
   const hasUncertainty =
     input.hasUncertaintyBeat !== undefined
       ? input.hasUncertaintyBeat
-      : /\b(i know|small sample|intent|uncertainty|variance|honest|not a lock|tape says)\b/i.test(
+      : new RegExp(COPY_LEXICON.uncertaintyBeatPattern, "i").test(
           input.draftText
         );
   if (hasUncertainty) {
@@ -580,15 +582,7 @@ export interface ContentGateResult {
   finalVerdict: "PASS" | "REWRITE" | "KILL";
 }
 
-const BANNED_STRINGS = [
-  "WE DETECT. YOU DECIDE.",
-  "guaranteed",
-  "free money",
-  "lock of the century",
-  "model edge",
-  "CLV",
-  "algorithm"
-];
+const BANNED_STRINGS = COPY_LEXICON.bannedStrings;
 
 /**
  * Runs the Tiered Content Gate (Gate 0 deterministic floor -> Gate 1 scoring -> Gate 2 finish).

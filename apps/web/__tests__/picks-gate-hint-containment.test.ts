@@ -44,20 +44,6 @@ const codeOnly = (): string =>
 /** SCREAMING_SNAKE env/flag identifiers — the shape that must never ship. */
 const INTERNAL_FLAG_SHAPE = /\b[A-Z][A-Z0-9]+(?:_[A-Z0-9]+)+\b/;
 
-/**
- * The slice of `app/picks/page.tsx` that builds the object the gate block
- * renders from. Narrowed to the object literal so the assertion is about the
- * customer render path specifically, not about the whole file.
- */
-function bootstrapRenderState(): string {
-  const src = codeOnly();
-  const start = src.indexOf("bootstrap: {");
-  expect(start, "the picks page still builds a bootstrap render state").toBeGreaterThan(-1);
-  const end = src.indexOf("},", start);
-  expect(end, "the bootstrap object literal is terminated").toBeGreaterThan(start);
-  return src.slice(start, end);
-}
-
 describe("the gate hint is a real hazard", () => {
   // `bootstrapGateResponse` branches on CANONICAL_HISTORY_ENABLED, which
   // `getPlatformConfig()` re-reads from the environment on every call — so both
@@ -91,19 +77,20 @@ describe("the gate hint is a real hazard", () => {
 });
 
 describe("the gate hint cannot reach the /picks customer render path", () => {
-  it("the bootstrap render state does not carry the hint", () => {
-    expect(bootstrapRenderState()).not.toMatch(/\bhint\b/);
+  it("the page builds no bootstrap/gate render state at all (containment is now structural)", () => {
+    // Commit 30a6fe52f replaced the page with the static sealed-card
+    // publication: there is no gate/bootstrap state for a hint to ride in, so
+    // containment is absence rather than non-rendering. Strictly stronger.
+    const src = codeOnly();
+    expect(src).not.toMatch(/bootstrap/i);
+    expect(src).not.toMatch(/\bhint\b/);
   });
 
-  it("the page's bootstrap state type declares no hint field", () => {
-    // The type is the thing that makes `{bootstrapState.hint}` compile. Removing
-    // the field is what turns an accidental render into a build failure.
+  it("the page imports no gate helpers (no bootstrap state exists to narrow)", () => {
     const src = codeOnly();
-    const start = src.indexOf("bootstrap?: {");
-    expect(start).toBeGreaterThan(-1);
-    const end = src.indexOf("};", start);
-    expect(end).toBeGreaterThan(start);
-    expect(src.slice(start, end)).not.toMatch(/\bhint\b/);
+    expect(src).not.toMatch(/bootstrapGateResponse/);
+    expect(src).not.toMatch(/bootstrapState/);
+    expect(src).not.toMatch(/gateResponse/);
   });
 
   it("nothing in the page reads or re-declares a hint at all", () => {

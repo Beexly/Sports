@@ -114,6 +114,22 @@ export function extractMarketFairProb(row: RankingCandidateRow): number | null {
   return null;
 }
 
+/** Raw independent ranking probability: the row field first, then the
+ * factor breakdown's own `rankingP`. Null when neither carries a number. */
+export function extractRankingP(row: RankingCandidateRow): number | null {
+  if (typeof row.rankingP === "number" && Number.isFinite(row.rankingP)) {
+    return row.rankingP;
+  }
+  const fb = row.factorBreakdown;
+  if (fb && typeof fb === "object") {
+    const rec = fb as Record<string, unknown>;
+    if (typeof rec["rankingP"] === "number" && Number.isFinite(rec["rankingP"])) {
+      return rec["rankingP"] as number;
+    }
+  }
+  return null;
+}
+
 export function extractRankingSource(row: RankingCandidateRow): string | null {
   if (typeof row.rankingSource === "string") return row.rankingSource;
   const fb = row.factorBreakdown;

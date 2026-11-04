@@ -17,16 +17,15 @@ import { resolve } from "node:path";
  *     FREE daily limit.
  *   - Confidence rendering is entitlement-gated (no "% conf" for FREE).
  *
- * /picks page:
- *   - Authenticated requests forward the session cookie with no-store
- *     (members must get their entitled view, never a shared cache hit).
- *   - Anonymous requests stay cached.
+ * /picks page: the member data-flow contract that used to live here (cookie
+ * forwarding + direct handler calls) was retired with the page it guarded.
+ * Commit 30a6fe52f replaced /picks with the static sealed Week 8 locked board;
+ * the route and dashboard halves above still hold.
  */
 
 const repoRoot = resolve(__dirname, "..");
 const routeSrc = readFileSync(resolve(repoRoot, "app/api/picks/route.ts"), "utf8");
 const dashboardSrc = readFileSync(resolve(repoRoot, "app/dashboard/page.tsx"), "utf8");
-const picksPageSrc = readFileSync(resolve(repoRoot, "app/picks/page.tsx"), "utf8");
 
 describe("/api/picks — daily-limit meta", () => {
   it("exposes totalAvailableToday and hitDailyLimit in meta", () => {
@@ -83,36 +82,7 @@ describe("/dashboard — tier-gated picks", () => {
   });
 });
 
-describe("/picks page — member data flow", () => {
-  it("forwards the session cookie for authenticated viewers via direct handler call", () => {
-    // The page calls the route handlers' GET directly (no self-fetch HTTP
-    // round-trip), forwarding the request cookie so auth() inside the handler
-    // resolves the same session the page component sees.
-    expect(picksPageSrc).toMatch(/cookie\s*=\s*h\.get\("cookie"\)/);
-    expect(picksPageSrc).toContain("getPicks");
-    expect(picksPageSrc).toContain("getDailySlate");
-    // No raw fetch() to the app's own origin remains.
-    expect(picksPageSrc).not.toMatch(/await\s+fetch\(url/);
-  });
-
-  it("calls the route handlers directly instead of self-fetching", () => {
-    // P16-04: the page imports and invokes the route GET handlers rather than
-    // making HTTPS round-trips to its own origin during SSR.
-    expect(picksPageSrc).toMatch(/import.*GET as getPicks.*from.*api\/picks\/route/);
-    expect(picksPageSrc).toMatch(/import.*GET as getDailySlate.*from.*api\/picks\/daily-slate\/route/);
-    expect(picksPageSrc).toContain("await getPicks(req)");
-    expect(picksPageSrc).toContain("await getDailySlate(req)");
-  });
-
-  it("passes the session flag into fetchPicks", () => {
-    expect(picksPageSrc).toMatch(/fetchPicks\(sport,\s*date,\s*grade,\s*Boolean\(session\?\.user\?\.id\)\)/);
-  });
-
-  it("surfaces the daily-limit meta in the paywall banner", () => {
-    expect(picksPageSrc).toMatch(/totalAvailableToday/);
-    expect(picksPageSrc).toMatch(/hitDailyLimit/);
-    // Date-aware published-count copy (was "published today" — now selected-date
-    // aware so the date picker / ?date= can't make the banner lie).
-    expect(picksPageSrc).toMatch(/picks published for this date/);
-  });
-});
+// The "/picks page - member data flow" block was retired on 2026-11-03: the
+// page no longer fetches picks at all (static sealed card, no session flow),
+// so there is no cookie/direct-handler contract left to pin. /api/picks (above)
+// and /dashboard (below) still carry their own halves.

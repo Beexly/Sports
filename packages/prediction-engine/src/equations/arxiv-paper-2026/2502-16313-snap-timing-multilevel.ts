@@ -31,7 +31,10 @@ export function snapTimingVariance(frames: MotionFrame[], scheme: string): numbe
   // Simple empirical variance of inter-frame time deltas as a placeholder
   const dts: number[] = [];
   for (let i = 1; i < frames.length; i++) {
-    dts.push(frames[i].t - frames[i - 1].t);
+    const cur = frames[i];
+    const prev = frames[i - 1];
+    if (cur === undefined || prev === undefined) continue;
+    dts.push(cur.t - prev.t);
   }
   const mean = dts.reduce((a, b) => a + b, 0) / dts.length;
   const variance = dts.reduce((s, d) => s + (d - mean) ** 2, 0) / dts.length;

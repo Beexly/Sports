@@ -31,6 +31,11 @@ import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
 import { db } from "@sports/db";
+import {
+  extractTrueProb,
+  extractRankingP,
+  extractMarketFairProb,
+} from "@sports/types";
 import { SUPPORTED_SPORTS, isSportInSeason } from "@sports/data-ingestion";
 import {
   settleSport,
@@ -244,35 +249,46 @@ export async function GET(request: Request) {
       select: {
         id: true,
         gameId: true,
-        sport: true,
         pickType: true,
         selection: true,
-        trueProb: true,
-        rankingP: true,
-        marketFairProb: true,
+        // RankingCandidateRow requires confidence; the extractors read it off
+        // the row, so the column must be in the projection.
+        confidence: true,
+        factorBreakdown: true,
         result: true,
         settledAt: true,
         clvLockPrice: true,
+        game: { select: { sport: { select: { key: true } } } },
       },
       take: 200,
       orderBy: { settledAt: "desc" },
     });
-    if (recentSettled.length > 0) {
-      continualLearning = await runSettlementLearningLoop(
-        recentSettled.map((p) => ({
+    // The model probability lives in the pick's factorBreakdown, not a column
+    // (independentEdge.trueProb). Rows without one carry nothing the loop can
+    // learn from and are skipped rather than fabricated.
+    const observations = recentSettled.flatMap((p) => {
+      const trueProb = extractTrueProb(p);
+      if (trueProb === null) return [];
+      return [
+        {
           pickId: p.id,
           gameId: p.gameId,
-          sport: p.sport,
+          sport: p.game.sport.key,
           pickType: p.pickType,
           selection: p.selection,
-          trueProb: p.trueProb,
-          rankingP: p.rankingP ?? undefined,
-          marketFairProb: p.marketFairProb ?? undefined,
+          // RankingCandidateRow's confidence field, read straight from the row.
+          confidence: p.confidence,
+          trueProb,
+          rankingP: extractRankingP(p) ?? undefined,
+          marketFairProb: extractMarketFairProb(p) ?? undefined,
           result: p.result as "WIN" | "LOSS",
           settledAt: p.settledAt ? p.settledAt.toISOString() : new Date().toISOString(),
           clvLockPrice: p.clvLockPrice ?? null,
-        })),
-      );
+        },
+      ];
+    });
+    if (observations.length > 0) {
+      continualLearning = await runSettlementLearningLoop(observations);
     }
   } catch (loopErr) {
     console.warn(

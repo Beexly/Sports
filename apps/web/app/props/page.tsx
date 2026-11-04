@@ -5,7 +5,7 @@ import board from "@/lib/week8/sealed-board.json";
 import { SealedTable } from "@/components/week8/sealed-table";
 import type { SealedBoard } from "@/lib/week8/types";
 
-const card = board as SealedBoard;
+const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
   title: "Week 8 Props | Galaxy Sports Edge",
@@ -31,7 +31,7 @@ export default function PropsPage(): JSX.Element {
         <div className="mt-6">
           <SealedTable rows={watch} watch />
         </div>
-        <h2 className="mt-16 font-display text-4xl uppercase">Pass — do not bet</h2>
+        <h2 className="mt-16 font-display text-4xl uppercase">Pass · do not bet</h2>
         <div className="mt-6">
           <SealedTable rows={card.passes} />
         </div>

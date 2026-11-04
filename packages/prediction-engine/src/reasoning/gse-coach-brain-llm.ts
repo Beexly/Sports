@@ -54,7 +54,7 @@ export function verifyCoachBrainOutputAgainstPacket(
   if (candidate.quotedCoachHash) {
     const validHashes = new Set(packet.games.map((g) => g.coachLock.coachMindsetHash));
     if (!validHashes.has(candidate.quotedCoachHash)) {
-      violations.push(`Quoted coachMindsetHash ${candidate.quotedCoachHash} does not match any Tuesday v1.0 lock`);
+      violations.push(`Quoted coachMindsetHash ${candidate.quotedCoachHash} does not match any Tuesday v1.0 master seal`);
     }
   }
   return { ok: violations.length === 0, violations };

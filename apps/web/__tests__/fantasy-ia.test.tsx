@@ -67,10 +67,14 @@ describe("Fantasy & DFS Storefront IA", () => {
 
   it("validates DFS-enabled packages in LIVE_PACKAGE_CATALOG and complete DFS stacks across all 14 Week 8 writeups", () => {
     const dfsPackages = LIVE_PACKAGE_CATALOG.filter((p) => p.includesDfs);
-    expect(dfsPackages.map((p) => p.slug)).toEqual(["tnf-all-in-pack", "week8-all-access"]);
+    expect(dfsPackages.map((p) => p.slug)).toEqual([
+      "tnf-all-in-pack",
+      "redzone-dfs-pro-pack",
+      "week8-all-access",
+    ]);
 
     for (const pkg of dfsPackages) {
-      expect(pkg.guaranteedPriceCents).toBeNull();
+      expect(pkg.creditBackPriceCents).toBeNull();
     }
 
     expect(LIVE_SLATE_COACH_WRITEUPS.length).toBe(14);

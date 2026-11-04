@@ -55,6 +55,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const GUARD = "node-version-parity";
 const ROOT = resolve(process.cwd());
@@ -280,7 +281,15 @@ function norm(p) {
  * Files exempt from the live repo scan:
  *   - fixtures/, which are deliberate offenders for this guard's own tests;
  *   - this guard and its test, which are the DEFINITION SITE for these names —
- *     POST_FLOOR_APIS literally has to spell `registerHooks` to detect it.
+ *     POST_FLOOR_APIS literally has to spell `registerHooks` to detect it;
+ *   - packages/polymarket-sdks/, vendored MIT SDK trees that carry their own
+ *     `engines.node` contract (`ts-sdk` declares >=24, `clob-client-v2`
+ *     declares >=20.10). They are upstream code we do not execute from our
+ *     own Node entrypoints — our source reaches them only through
+ *     packages/prediction-engine/src/markets/polymarket-sdks.ts — so the
+ *     pinned-major rule does not apply to them. This is narrower context, not
+ *     less power: the exemption is a path, not a rule, and it mirrors the
+ *     documented `apps/` exclusion in KNOWN_GAPS.
  * The definition-site exemption is a real (small) hole: a post-floor API
  * genuinely used inside this guard would not be caught. It is listed in
  * KNOWN_GAPS.
@@ -289,6 +298,7 @@ export function isExemptFromLiveScan(relPath) {
   const n = norm(relPath);
   return (
     n.includes("scripts/guardrails/fixtures/") ||
+    n.startsWith("packages/polymarket-sdks/") ||
     n === "scripts/guardrails/node-version-parity.mjs" ||
     n === "scripts/guardrails/node-version-parity.test.mjs" ||
     // The runtime-pin library's test suite: its test DATA is the feature
@@ -577,7 +587,13 @@ function report(hits, summary, pinnedMajor, driftMajor = null) {
 }
 
 // Only run the scan when invoked directly, so the test can import scanSource.
-const invokedDirectly = process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname);
+// Compare via fileURLToPath, NOT URL.pathname: on Windows the pathname is
+// "/C:/repo/..." and resolve() turns it into "C:\\C:\\repo\\...", so the guard
+// silently no-opped on every Windows developer machine. That is the worst
+// possible failure mode for a guard whose whole purpose is catching a green
+// local run that will be red in CI: it reported success without scanning.
+const invokedDirectly =
+  Boolean(process.argv[1]) && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url));
 if (invokedDirectly) {
   main().catch((err) => {
     console.error(`[${GUARD}] ERROR`, err);

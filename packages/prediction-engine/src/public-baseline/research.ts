@@ -4,7 +4,12 @@
  * They do not read a betting line.
  */
 
-export function brierScore(rows: readonly { p: number; y: 0 | 1 }[]): number | null {
+// Named `brierScoreRows` (not `brierScore`) on purpose: the package barrel also
+// exports `brierScore(probs, outcomes)` from continual/online-metric-suite.js,
+// and two same-named exports with different signatures resolve to whichever one
+// the bundler's export-* handling prefers rather than to the explicit export.
+// Keeping distinct names means neither call shape can silently bind to the other.
+export function brierScoreRows(rows: readonly { p: number; y: 0 | 1 }[]): number | null {
   if (rows.length === 0) return null
   let sum = 0
   for (const row of rows) {

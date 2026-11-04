@@ -179,7 +179,7 @@ export function buildLiveGateEvidence(context: SignalEvidenceContext): PickGateI
   // G8: CLV and Conformal Edge
   const observations = Array.from({ length: 50 }, () => ({
     value: context.trailingClv50 ?? 0.012,
-    verdict: "BEAT_CLOSING" as const,
+    verdict: "BEAT_CLOSE" as const,
   }));
 
   // trailing nonconformity scores for slow conformal band

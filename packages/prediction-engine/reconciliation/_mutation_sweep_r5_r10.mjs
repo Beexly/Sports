@@ -81,7 +81,10 @@ const BREAK_ANTECEDENT = [
   },
   {
     name: "R7 (alpha/gamma non-adjacent)",
-    from: "if (isAdj(g, alpha, gamma)) continue; // alpha, gamma must be non-adjacent",
+    // The comment moved to its own line above the guard, so the original
+    // inline-comment fragment no longer occurs in the source. Match the guard
+    // statement alone; `isAdj(g, alpha, gamma)` is unique in fci-pag.ts.
+    from: "if (isAdj(g, alpha, gamma)) continue;",
     to: "// MUTANT: the non-adjacency condition is gone",
     expect: "does NOT fire when alpha and gamma are adjacent",
   },

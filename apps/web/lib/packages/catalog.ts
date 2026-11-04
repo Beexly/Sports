@@ -22,7 +22,7 @@ export interface PickPackageOffering {
   description: string;
   windowSlot: 'TNF' | 'SUN_EARLY' | 'SUN_LATE' | 'SUN_MAIN' | 'SNF' | 'MNF' | 'WEEKEND_PASS' | 'WEEKLY_PASS';
   standardPriceCents: number;
-  guaranteedPriceCents: number | null;
+  creditBackPriceCents: number | null;
   stripeProductId: string;
   stripePriceId: string;
   stripeLookupKey: string;
@@ -76,7 +76,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Built for the expanded Sunday 12:00 PM CT through Monday 7:15 PM CT (CHI @ SEA) slate alongside the 11-game Sunday Main Slate. Includes 2 Optimal Lineups (Cash High-Floor + Tournament Leverage), our 14-player Expanded Position Core (2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs), 20-Max MME portfolio, and SNF/MNF Showdown Captain builds. Verified 47-16 (+29.01u) engine record with 0 pulled items.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX406TulqtZwJJ",
     stripePriceId: "price_1UVzsdQ2wPZMxx60lqO3TLbQ",
     stripeLookupKey: "gse-pack-tnf-all-in",
@@ -101,7 +101,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Our complete Week 8 Sunday 12:00 PM CT through Monday Night Football (CHI @ SEA 7:15 PM CT) 13-game card. Includes all 7 locked Tier-1 Spread & Moneyline calls (top ratings 84/100, 80/100, 74/100), our locked Team Total Under derivative (68/100), 1st-Quarter & 1st-Half script calls (top ratings 70/100 & 69/100), and our Red-Zone Stall Kicking Field Goals Made Over 1.5 suite (top ratings 68/100 & 67/100). Verified 47-16 (+29.01u) record with 0 pulled plays.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UVzsfQ2wPZMxx606fYPjKEJ",
     stripeLookupKey: "gse-pack-sunday-nfl-5pct-slate",
@@ -125,7 +125,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Built across all 13 Sunday 12:00 PM CT through Monday Night Football (CHI @ SEA 7:15 PM CT) matchups. Unlocks all 16 Empirical-Bayes Skill & QB Props (led by 95/100, 92/100 & 90/100 reads), our 6 Inside-the-5 Goal-Line Anytime Touchdown plays (89/100, 84/100 & 80/100), our 8 Defense & IDP LB Tackle-Funnel & Sack plays (led by two 81/100 locks), and our 2-Leg & 3-Leg Correlated Parlay & Same-Game Parlay tickets.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-sgp-correlation-basket",
@@ -143,6 +143,30 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     forSale: true,
   },
   {
+    slug: "redzone-dfs-pro-pack",
+    title: "RedZone Standalone DFS Pro Pack (Lineups + 588-Player Pool)",
+    subtitle: "2 Optimal Lineups (Cash & GPP) + 16-Player Core Pool + Full 588-Active-Player Pool",
+    description:
+      "Our complete standalone Week 8 Daily Fantasy (DFS) package on the unified RedZone site. Includes Optimal Lineup #1 (High-Floor Cash/Double-Up), Optimal Lineup #2 (GPP Tournament Leverage Stack), our 16-Player Core Pool (2 QB, 4 RB, 6 WR, 2 TE, 2 DST with full coaching & matchup writeups), and the complete 588-Active-Player Pool with 86 OUT/IR players zeroed.",
+    windowSlot: "SUN_MAIN",
+    standardPriceCents: 3999,
+    creditBackPriceCents: null,
+    stripeProductId: "prod_VX400OaIktCGLb",
+    stripePriceId: "price_1UWjT2Q2wPZMxx60OrkMpGvF",
+    stripeLookupKey: "gse-pack-redzone-dfs-pro-pack",
+    gamesCount: 13,
+    highlights: [
+      "2 Optimal Lineups (Cash High-Floor + GPP Correlated Stack)",
+      "16-Player Core Pool (2 QBs, 4 RBs, 6 WRs, 2 TEs, 2 DSTs + Why)",
+      "Complete 588-Active-Player Pool + 86 Zeroed OUT/IR Audit",
+    ],
+    badge: "REDZONE STANDALONE DFS · $39.99",
+    includesProps: false,
+    includesSgp: false,
+    includesDfs: true,
+    forSale: true,
+  },
+  {
     slug: "week8-all-access",
     title: "Sunday–Monday All-Access Bundle (All 13 Games + Every Specialty Pack + Full DFS)",
     subtitle: "Every Sun 12:00 PM CT – Mon 7:15 PM CT Pack + 2 Optimal DFS Lineups + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core",
@@ -150,7 +174,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Unlock every single Week 8 game-day pack across the entire 13-game Sunday 12:00 PM CT through Monday Night Football (CHI @ SEA 7:15 PM CT) slate in one click: Main Game Lines, 16 Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Correlated Parlay & SGP Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio (11-Game Main + 13-Game Sun–Mon 2 Optimal Lineups + Expanded 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core + 20-Max MME). Verified 47-16 (+29.01u) engine record with 0 pulled items.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40T4RNpoNNIp",
     stripePriceId: "price_1UVzsfQ2wPZMxx60ozEJ1P3n",
     stripeLookupKey: "gse-pack-week8-all-access",
@@ -178,7 +202,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
       "Dedicated Defense, Special Teams & Individual Defensive Player (IDP) pack across the 13-game Sunday 12:00 PM CT – Monday 7:15 PM CT slate. Powered by opponent play-volume tackle funnels, trench pressure-to-sack survival curves, and our 2 locked Sun–Mon DFS DST units (588 active players audited; contaminated NYJ DST pulled).",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 1900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX406TulqtZwJJ",
     stripePriceId: "price_1UVzsdQ2wPZMxx60lqO3TLbQ",
     stripeLookupKey: "gse-pack-week8-defense-idp",
@@ -207,7 +231,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
       "Dedicated Anytime Touchdown Scorer pack across the 13-game Sunday 12:00 PM CT – Monday 7:15 PM CT slate. Isolates red-zone and inside-the-5 carry/target concentration where quarterback rushing vulture rates are suppressed below 15 of 100 snaps.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2400,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-week8-anytime-td",
@@ -236,7 +260,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
       "Built for the biggest structural pricing hole on the board. Pairs Sides, Totals, 16 Empirical-Bayes Skill Props, Anytime TDs, and 1Q/1H derivatives that cash together under the exact same Sunday 12:00 PM CT – Monday 7:15 PM CT game script.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40XMRjV4FiJl",
     stripePriceId: "price_1UVzseQ2wPZMxx60VqAfAyNe",
     stripeLookupKey: "gse-pack-week8-parlay-sgp",
@@ -265,7 +289,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
       "Attack early-script scoring and red-zone stalls across the 13-game Sunday 12:00 PM CT – Monday 7:15 PM CT window. Combines our locked Team Total Under (68/100), 1st-Quarter Total Stop-Kernel calls (up to 70/100), 1H/2Q Winner script calls, and 6 Kicker Field Goals Made Over 1.5 reads (up to 68/100).",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 2400,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UVzsfQ2wPZMxx606fYPjKEJ",
     stripeLookupKey: "gse-pack-week8-kicking-1q-1h",
@@ -294,7 +318,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
       "Built specifically for the bigger Sunday 12:00 PM CT – Monday 7:15 PM CT (13-game, including SNF PHI @ WAS and MNF CHI @ SEA) slate in addition to the 11-game Sunday Main Slate. Delivers 2 Complete Optimal Lineups (Lineup #1 Cash High-Floor + Lineup #2 Tournament Ceiling), our Expanded 14-Player Position Core (2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs), 20-Max MME portfolio, and full 588-active-player pool with 86 OUT/IR players zeroed.",
     windowSlot: "SUN_MAIN",
     standardPriceCents: 3999,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX400OaIktCGLb",
     stripePriceId: "price_1UWjT2Q2wPZMxx60OrkMpGvF",
     stripeLookupKey: "gse-pack-redzone-dfs-pro-pack",
@@ -324,7 +348,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
       "Complete one-click access to every single Week 8 pack across all 13 unplayed games from Sunday 12:00 PM CT through Monday Night Football (CHI @ SEA 7:15 PM CT), including all specialty packs and the Expanded Sun–Mon DFS portfolio (2 Optimal Lineups + 2 QB / 4 RB / 4 WR / 2 TE / 2 DST Core).",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
-    guaranteedPriceCents: null,
+    creditBackPriceCents: null,
     stripeProductId: "prod_VX40T4RNpoNNIp",
     stripePriceId: "price_1UVzsfQ2wPZMxx60ozEJ1P3n",
     stripeLookupKey: "gse-pack-week8-all-access",
@@ -383,7 +407,7 @@ export interface StripeCheckoutPayload {
     packageSlug: string;
     stripeProductId: string;
     stripePriceId: string;
-    guaranteedCreditBack: string;
+    creditBack: string;
     windowSlot: string;
   };
   success_url: string;
@@ -397,7 +421,7 @@ export interface StripeCheckoutPayload {
  */
 export function buildStripePackageCheckoutPayload(
   pkg: PickPackageOffering,
-  guaranteed: boolean,
+  creditBack: boolean,
   buyerEmail?: string,
   origin?: string,
   returnToStorefront?: boolean,
@@ -408,12 +432,12 @@ export function buildStripePackageCheckoutPayload(
   let unitAmount = pkg.standardPriceCents;
   let productName = pkg.title;
 
-  if (guaranteed) {
-    if (pkg.guaranteedPriceCents === null) {
-      throw new Error(`Package '${pkg.slug}' does not offer a guaranteed credit-back tier.`);
+  if (creditBack) {
+    if (pkg.creditBackPriceCents === null) {
+      throw new Error(`Package '${pkg.slug}' does not offer a credit-back tier.`);
     }
-    unitAmount = pkg.guaranteedPriceCents;
-    productName = `${pkg.title} (Guaranteed Credit-Back)`;
+    unitAmount = pkg.creditBackPriceCents;
+    productName = `${pkg.title} (Credit-Back)`;
   }
 
   const baseOrigin = origin ? origin.replace(/\/+$/, "") : "https://www.galaxysportsedge.com";
@@ -441,7 +465,7 @@ export function buildStripePackageCheckoutPayload(
       packageSlug: pkg.slug,
       stripeProductId: pkg.stripeProductId,
       stripePriceId: pkg.stripePriceId,
-      guaranteedCreditBack: String(guaranteed),
+      creditBack: String(creditBack),
       windowSlot: pkg.windowSlot,
     },
     success_url: successUrl,

@@ -13,7 +13,7 @@ describe("Galaxy Picks storefront catalog", () => {
 
     const tnf = getPackageBySlug("tnf-all-in-pack");
     expect(tnf?.standardPriceCents).toBe(1900);
-    expect(tnf?.guaranteedPriceCents).toBeNull();
+    expect(tnf?.creditBackPriceCents).toBeNull();
     expect(tnf?.stripeProductId).toBe("prod_VX406TulqtZwJJ");
     expect(tnf?.stripePriceId).toBe("price_1UVzsdQ2wPZMxx60lqO3TLbQ");
 
@@ -52,12 +52,12 @@ describe("Galaxy Picks storefront catalog", () => {
     expect(standardPayload.line_items[0]?.price_data.unit_amount).toBe(1900);
     expect(standardPayload.line_items[0]?.price_data.currency).toBe("usd");
     expect(standardPayload.metadata.packageSlug).toBe("tnf-all-in-pack");
-    expect(standardPayload.metadata.guaranteedCreditBack).toBe("false");
+    expect(standardPayload.metadata.creditBack).toBe("false");
     expect(standardPayload.customer_email).toBe("buyer@example.com");
     expect(standardPayload.success_url).toContain("/packages/tnf-all-in-pack?unlocked=1");
 
     expect(() => buildStripePackageCheckoutPayload(tnf, true)).toThrow(
-      /does not offer a guaranteed credit-back tier/,
+      /does not offer a credit-back tier/,
     );
   });
 

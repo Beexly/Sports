@@ -39,7 +39,7 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
     },
     {
       title: "OpenAlex Works",
-      value: quadEngineCounts.openAlexWorks ?? quadEngineCounts.openalexWorks.toLocaleString(),
+      value: quadEngineCounts.openalexWorks.toLocaleString(),
       subtext: "Cross-disciplinary bibliometric graph",
       tag: "INDEXED",
       accent: "text-ion-white",

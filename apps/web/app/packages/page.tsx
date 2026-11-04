@@ -4,7 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { LIVE_PACKAGE_CATALOG, WEEK8_SPECIALTY_PACK_TIERS } from "@/lib/packages/catalog";
 import {
-  LIVE_SLATE_COACH_WRITEUPS,
   formatWindowSlotLabel,
   getActiveUpcomingWriteups,
   getRedactedTeasersForWindowSlot,
@@ -34,7 +33,7 @@ export default function PackagesPage(): JSX.Element {
                 TNF card 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Week 8 Sunday and MNF board is live.
               </h1>
               <p className="mt-4 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Powered by the <strong className="text-amber-300 font-semibold">GSE 10-Layer Autonomous Engine</strong>: <strong className="text-white font-semibold">22,750,000 snap evaluations</strong> (13 games × 10k worlds × 175 snaps), <strong className="text-white font-semibold">581 360-degree markets evaluated</strong> (1Q–4Q, 1H/2H, Kicking B4 23,247-kick hierarchical model, IDP Sacks/Tackles, Touchdown Scorers, Skill &amp; QB Props), <strong className="text-white font-semibold">4,056 research corpus IDs</strong>, <strong className="text-white font-semibold">112 Instagram + 100 X deep-math dossiers</strong>, and <strong className="text-white font-semibold">50 doctoral papers</strong>.
+                Powered by the <strong className="text-amber-300 font-semibold">GSE 10-Layer Autonomous Engine</strong>: <strong className="text-white font-semibold">22,750,000 snap evaluations</strong> (13 games × 10k worlds × 175 snaps), <strong className="text-white font-semibold">581 360-degree markets evaluated</strong> (1Q-4Q, 1H/2H, Kicking B4 23,247-kick hierarchical model, IDP Sacks/Tackles, Touchdown Scorers, Skill &amp; QB Props), <strong className="text-white font-semibold">4,056 research corpus IDs</strong>, <strong className="text-white font-semibold">112 Instagram + 100 X deep-math dossiers</strong>, and <strong className="text-white font-semibold">50 doctoral papers</strong>.
               </p>
               <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-300">
                 Validated by walk-forward <strong className="text-emerald-300 font-semibold">tau_hat (+11.16pp over WP-max on n=3,988 4th downs)</strong>, the <strong className="text-emerald-300 font-semibold">7-Signal Pack</strong> (PROE, Special Teams Hidden Yards, QB Pressure Escape, Situation-Neutral Pace, Penalty Discipline, WR/CB Archetype, Defensive Havoc), <strong className="text-emerald-300 font-semibold">Romano CQR honest conformal intervals</strong>, and <strong className="text-emerald-300 font-semibold">OpenAI Math live Optimal Transport certificates</strong>.
@@ -88,7 +87,7 @@ export default function PackagesPage(): JSX.Element {
                 22,750,000 Snaps · 581 Markets
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                13 Games × 10k Worlds × 175 Snaps · 1Q–4Q, 1H/2H, B4 Kicking, IDP
+                13 Games × 10k Worlds × 175 Snaps · 1Q-4Q, 1H/2H, B4 Kicking, IDP
               </div>
             </div>
             <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
@@ -135,13 +134,13 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <div>
               <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                SUNDAY 12:00 PM CT – MONDAY 7:15 PM CT (13-GAME EXPANDED SLATE)
+                SUNDAY 12:00 PM CT - MONDAY 7:15 PM CT (13-GAME EXPANDED SLATE)
               </span>
               <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
-                Specialty Betting &amp; Expanded Sun–Mon DFS Packs
+                Specialty Betting &amp; Expanded Sun-Mon DFS Packs
               </h2>
               <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Target a specific edge across the 13-game Sunday–Monday slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Sunday–Monday DFS Core (2 Optimal Lineups + 2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs).
+                Target a specific edge across the 13-game Sunday-Monday slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Sunday-Monday DFS Core (2 Optimal Lineups + 2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs).
               </p>
             </div>
           </div>
@@ -166,7 +165,7 @@ export default function PackagesPage(): JSX.Element {
                 Free Football Matchup Previews &amp; Storylines
               </h2>
               <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Read how each matchup sets up in the trenches and secondary — then unlock a pack above to reveal our official spread call, over/under call, and player prop bets.
+                Read how each matchup sets up in the trenches and secondary, then unlock a pack above to reveal our official spread call, over/under call, and player prop bets.
               </p>
             </div>
             <span className="rounded-md bg-amber-500/20 border border-amber-400/40 px-3 py-1 text-xs font-bold text-amber-300">

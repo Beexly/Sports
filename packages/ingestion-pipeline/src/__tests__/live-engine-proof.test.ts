@@ -52,8 +52,6 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
         isRosterActive: true,
         isOnIR: false,
         isElevatedFromIRWithoutClearance: false,
-        isSuspended: false,
-        isNonFootballInjury: false,
         projectedSnapShare: 0.88,
         impliedTeamTotal: 23.5,
         isDomeOrIndoor: false,
@@ -140,6 +138,8 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
           ],
         },
         absoluteResiduals: [0.04, 0.05, 0.03, 0.06, 0.04, 0.05, 0.07, 0.03, 0.04, 0.05],
+        eValuePoint: 2.25,
+        eValueCiLower: 1.65,
         oddsB: 1.0 / 0.565 - 1.0,
         capitalScale: 1.0,
         lambdaKelly: 1.0,
@@ -207,14 +207,35 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
       game_id: "2026_07_NE_CHI",
       market_id: "MONEYLINE_CHI",
       true_prob: ladderResult.finalInterventionalProb!,
+      market_vig_free_prob: ne_chi_query.layer1.vigFreeMarketProb,
       edge: ladderResult.finalInterventionalProb! - ne_chi_query.layer1.vigFreeMarketProb,
       audit_trail: [
         {
           item_id: "EXP_TRENCH_PHYSICS_01",
           source_doc_hash: "3b29c54e7d9845012a67e0f81d13f990a42698716bceb0351781295b907106d7",
           principle_name: "OLCAI_INTERIOR_ATTRITION",
+          triggered_context_field: "ol_continuity_shared_snaps_pct",
+          observed_context_value: 0.61,
+          baseline_context_value: 0.72,
+          evidence_quote:
+            "Fixture quote for the interior-attrition principle; span intentionally unverified (S0) in this test.",
+          evidence_span: {
+            start_char: null,
+            end_char: null,
+            verification_tier: "MSVH_S0_UNCITED",
+          },
+          mechanism_quote:
+            "Fixture mechanism quote for the interior-attrition principle; span intentionally unverified (S0) in this test.",
+          mechanism_span: {
+            start_char: null,
+            end_char: null,
+            verification_tier: "MSVH_S0_UNCITED",
+          },
+          numeric_claim: "11-point continuity drop maps to 2.2% interior attrition",
           parsed_delta_applied: 0.022,
-          resolution_status: "RESOLVED_CONVERGENT",
+          claim_type: "correlational",
+          confidence_weight: 0.8,
+          resolution_status: "APPLIED",
         },
       ],
     };
@@ -387,7 +408,7 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
     const t0_dfs = performance.now();
 
     const dfsInputCash: ExactInput = {
-      mode: "CASH",
+      mode: "cash",
       minStack: 1, // QB + 1 pass catcher (Hurts + Brown, or Lamar + Flowers)
     };
     const cashSolve = optimizeExact(dfsInputCash, DFS_SLATE);
@@ -395,7 +416,7 @@ describe("EXHAUSTIVE LIVE ENGINE PROOF & INTEGRITY SUITE", () => {
     expect(cashSolve.lineup).toHaveLength(9);
 
     const dfsInputGpp: ExactInput = {
-      mode: "GPP",
+      mode: "gpp",
       minStack: 1, // QB + 1 pass catcher stack for tournament leverage
     };
     const gppSolve = optimizeExact(dfsInputGpp, DFS_SLATE);

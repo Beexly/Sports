@@ -89,7 +89,7 @@ export function PaywallRevealCard({
   const [showTokenBox, setShowTokenBox] = useState<boolean>(false);
   const [loadingUnlock, setLoadingUnlock] = useState<boolean>(false);
   const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false);
-  const [guaranteed, setGuaranteed] = useState<boolean>(false);
+  const [creditBack, setCreditBack] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const receiptPanelId = useId();
   const receiptInputId = useId();
@@ -100,12 +100,12 @@ export function PaywallRevealCard({
     pkg.standardPriceCents % 100 === 0
       ? (pkg.standardPriceCents / 100).toFixed(0)
       : (pkg.standardPriceCents / 100).toFixed(2);
-  const guaranteedPrice = pkg.guaranteedPriceCents
-    ? pkg.guaranteedPriceCents % 100 === 0
-      ? (pkg.guaranteedPriceCents / 100).toFixed(0)
-      : (pkg.guaranteedPriceCents / 100).toFixed(2)
+  const creditBackPrice = pkg.creditBackPriceCents
+    ? pkg.creditBackPriceCents % 100 === 0
+      ? (pkg.creditBackPriceCents / 100).toFixed(0)
+      : (pkg.creditBackPriceCents / 100).toFixed(2)
     : null;
-  const activePrice = guaranteed && guaranteedPrice ? guaranteedPrice : standardPrice;
+  const activePrice = creditBack && creditBackPrice ? creditBackPrice : standardPrice;
   const inside = insideList(pkg);
   const propReads = pkg.includesProps
     ? teasers.reduce((n, t) => n + t.lockedSummary.propsCount, 0)
@@ -171,7 +171,7 @@ export function PaywallRevealCard({
     }
   }
 
-  async function handleOneClickCheckout(useGuaranteed: boolean) {
+  async function handleOneClickCheckout(useCreditBack: boolean) {
     setLoadingCheckout(true);
     setErrorMsg(null);
     try {
@@ -182,7 +182,7 @@ export function PaywallRevealCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           packageSlug: pkg.slug,
-          guaranteed: useGuaranteed,
+          creditBack: useCreditBack,
           returnToStorefront,
         }),
       });
@@ -267,27 +267,27 @@ export function PaywallRevealCard({
                 {propReads > 0 ? ` · ${propReads} player prop reads` : ""} · one-time purchase
               </p>
 
-              {guaranteedPrice && (
+              {creditBackPrice && (
                 <div role="group" aria-label="Price option" className="mt-6 inline-flex border border-mineral-hi">
                   <button
                     type="button"
-                    aria-pressed={!guaranteed}
-                    onClick={() => setGuaranteed(false)}
+                    aria-pressed={!creditBack}
+                    onClick={() => setCreditBack(false)}
                     className={`rl-figure min-h-[44px] px-4 text-xs font-semibold uppercase tracking-[0.1em] transition-colors ${
-                      !guaranteed ? "bg-ion-white text-obsidian" : "text-ion-1 hover:text-ion-white"
+                      !creditBack ? "bg-ion-white text-obsidian" : "text-ion-1 hover:text-ion-white"
                     }`}
                   >
                     Standard ${standardPrice}
                   </button>
                   <button
                     type="button"
-                    aria-pressed={guaranteed}
-                    onClick={() => setGuaranteed(true)}
+                    aria-pressed={creditBack}
+                    onClick={() => setCreditBack(true)}
                     className={`rl-figure min-h-[44px] px-4 text-xs font-semibold uppercase tracking-[0.1em] transition-colors ${
-                      guaranteed ? "bg-ion-white text-obsidian" : "text-ion-1 hover:text-ion-white"
+                      creditBack ? "bg-ion-white text-obsidian" : "text-ion-1 hover:text-ion-white"
                     }`}
                   >
-                    Credit-Back ${guaranteedPrice}
+                    Credit-Back ${creditBackPrice}
                   </button>
                 </div>
               )}
@@ -296,10 +296,10 @@ export function PaywallRevealCard({
                 type="button"
                 disabled={loadingCheckout}
                 aria-busy={loadingCheckout}
-                onClick={() => void handleOneClickCheckout(guaranteed)}
+                onClick={() => void handleOneClickCheckout(creditBack)}
                 className={`rl-btn rl-figure mt-7 w-full ${ctaTone === "solid" ? "rl-btn-solid" : "rl-btn-line"}`}
               >
-                {loadingCheckout ? "Opening secure checkout…" : `Unlock Picks Now — $${activePrice}`}
+                {loadingCheckout ? "Opening secure checkout…" : `Unlock Picks Now · $${activePrice}`}
               </button>
 
               <button
@@ -376,7 +376,7 @@ export function PaywallRevealCard({
                         <dt className="rl-eyebrow">Best spread bet</dt>
                         <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
                           {sideIsPass ? (
-                            <span className="text-ion-2">PASS — NO BET</span>
+                            <span className="text-ion-2">PASS · NO BET</span>
                           ) : (
                             <>
                               <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
@@ -392,7 +392,7 @@ export function PaywallRevealCard({
                         <dt className="rl-eyebrow">Best total bet</dt>
                         <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
                           {totalIsPass ? (
-                            <span className="text-ion-2">PASS — NO BET</span>
+                            <span className="text-ion-2">PASS · NO BET</span>
                           ) : (
                             <>
                               <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
@@ -424,8 +424,8 @@ export function PaywallRevealCard({
                               >
                                 <span className={propIsPass ? "text-ion-2" : "font-semibold text-ion-white"}>
                                   {propIsPass
-                                    ? `${p.playerName} — PASS — NO BET (${p.propType})`
-                                    : `BET THIS: ${p.playerName} — ${p.side} ${p.line} ${p.propType}`}
+                                    ? `${p.playerName} · PASS · NO BET (${p.propType})`
+                                                                        : `BET THIS: ${p.playerName} · ${p.side} ${p.line} ${p.propType}`}
                                 </span>
                                 <span className="rl-figure text-sm text-ion-1">
                                   Confidence: {formatConfidenceStrict(p.confidence)}

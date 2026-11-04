@@ -136,6 +136,7 @@ export async function bridgeSignalsToLiterature(
       break;
     }
     const row = selected[i];
+    if (row === undefined) continue;
     const at = row.capturedAt ? new Date(row.capturedAt) : new Date();
     const event = signalToEvent(row, at);
     attempted += 1;

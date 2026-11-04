@@ -31,7 +31,7 @@ export function SealedTable({ rows, watch = false }: { rows: SealedRow[]; watch?
               <td className="px-4 py-8 align-top text-[#FF4D2E]">{pct(row.edge)}</td>
               <td className="px-4 py-8 align-top">{row.confidence_display}</td>
               <td className="px-4 py-8 align-top text-xs uppercase tracking-[0.08em]">
-                {row.decision === "PASS" ? "PASS — DO NOT BET" : row.decision}
+                {row.decision === "PASS" ? "PASS · DO NOT BET" : row.decision}
                 {watch && row.trigger_odds != null ? ` · ${row.trigger_odds}` : ""}
               </td>
             </tr>
