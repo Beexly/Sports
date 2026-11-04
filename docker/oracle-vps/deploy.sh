@@ -19,7 +19,29 @@ VPS_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "==> [1/5] Checking Docker..."
 if ! command -v docker &>/dev/null; then
   echo "  Installing Docker..."
-  curl -fsSL https://get.docker.com | sh
+  # Do NOT pipe the installer straight into sh. Two problems with that:
+  #   1. a failed curl still feeds sh an empty script, and under `set -e` the
+  #      pipeline's status is sh's, so a download failure looks like success;
+  #   2. nothing is inspected before execution — whatever the network returned
+  #      runs as root.
+  # Download to a file, verify it looks like a script, then execute it.
+  docker_installer="$(mktemp)"
+  trap 'rm -f "$docker_installer"' EXIT
+  if ! curl -fsSL --max-time 120 https://get.docker.com -o "$docker_installer"; then
+    echo "  ERROR: could not download the Docker installer." >&2
+    exit 1
+  fi
+  if [[ ! -s "$docker_installer" ]]; then
+    echo "  ERROR: Docker installer download was empty." >&2
+    exit 1
+  fi
+  if [[ "$(head -c 2 "$docker_installer")" != "#!" ]]; then
+    echo "  ERROR: Docker installer does not start with a shebang; refusing to run it." >&2
+    exit 1
+  fi
+  echo "  Installer bytes: $(wc -c < "$docker_installer" | tr -d ' ')"
+  sh "$docker_installer"
+  rm -f "$docker_installer"
   sudo usermod -aG docker "$USER"
   echo "  Docker installed. Re-run this script (group refresh needed) or run: newgrp docker && bash deploy.sh"
   exit 0
@@ -36,7 +58,7 @@ source "$VPS_DIR/.env"
 : "${LLM_BASICAUTH_HASH:?LLM_BASICAUTH_HASH is required (generate with: docker run --rm caddy:2-alpine caddy hash-password --plaintext 'yourpass')}"
 
 echo "==> [3/5] Building + starting core stack (ncaa-api, redis, ollama, caddy)..."
-cd "$VPS_DIR"
+cd "$VPS_DIR" || { echo "  ERROR: cannot cd to $VPS_DIR" >&2; exit 1; }
 docker compose -f compose.yml pull --ignore-pull-failures 2>/dev/null || true
 docker compose -f compose.yml build --build-arg BUILDKIT_INLINE_CACHE=1
 docker compose -f compose.yml up -d ncaa-api redis ollama caddy
