@@ -68,7 +68,8 @@ def evaluate_injury_survival_hazard(
     # Kinetic momentum impulse penalty (trench pocket collision physics)
     kinetic_exponent = 0.18 * max(0.0, kinetic_impulse_kj - 5.0)
     
-    hazard_multiplier = float(np.exp(acwr_exponent + kinetic_exponent))
+    # Clip the exponent so extreme ACWR / impulse values cannot overflow exp().
+    hazard_multiplier = float(np.exp(min(acwr_exponent + kinetic_exponent, 50.0)))
     instant_hazard = float(baseline_hazard * hazard_multiplier)
     
     # Categorical clinical risk tier
