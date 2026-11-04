@@ -149,6 +149,16 @@ export {
   type DriveResult,
 } from "./drives.js";
 
+// Target success (deterministic; shadow).
+export {
+  computeTargetSuccess,
+  TARGET_SUCCESS_FEATURE_KEYS,
+  type TargetPlay,
+  type TargetSuccessSplit,
+  type TargetSuccessResult,
+  type TargetSuccessDiagnostics,
+} from "./target-success.js";
+
 // nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
 // ONLY as calibration y-axis, never emitted as a metric).
 export {

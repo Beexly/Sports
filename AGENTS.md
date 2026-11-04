@@ -20587,3 +20587,5 @@ Window: posts after status ID 2117271301882548527 through 9:08 AM CT Tue 2026-11
 - DISCREPANCY recorded, not resolved: Lane A's timeline read vs Lane C's enlarged read of @sfdata9ers 2117364122660618484 (see Lane C). A second cross-check: Lane A's @sfdata9ers QB Performances table and Lane C's @kevin_cole board agree on the Week 8 QB set but use different metric families (QBR-based vs EPA-based) — no conflict.
 - ACCOUNT STATES unchanged: @FTNData protected; @NerdingonNFL and @NFLResearcher (no underscore) display no posts.
 - CARRIED-FORWARD GAPS (unchanged): six Oct 24 Lane B transcriptions lost to compaction; Oct 23 @sfdata9ers Turnover-Worthy Throw Rate post never opened in full; endpoint pages not opened (statyx.io blog, 4thanddata.com, nflcoachprofiles.com, sticktothemodel.com).
+
+- 2026-11-03: Added Target Success Expected Metric (SHADOW) tracking receivers' share of targets yielding positive EPA. Wiredup into `nflverse-pbp-mapper.ts` additive exports and registry updates (`jules/target-success-metric`).
