@@ -286,7 +286,7 @@ _SOCCER_PHRASES = (
 
 def _domain_scores(text: str) -> tuple[int, int]:
     """(american_football hits, soccer hits) for one blob of text."""
-    low = (text or "").lower()
+    low = str(text or "").lower()
     af = sum(1 for p in _AF_PHRASES if p in low)
     sc = sum(1 for p in _SOCCER_PHRASES if p in low)
     toks = set(TOKEN.findall(low))
@@ -301,7 +301,9 @@ def sport_domain_of(*parts: str) -> str:
     The harvest manifest carries no sport_domain field, so the classifier reads
     title/abstract/topics. Absent evidence stays 'other' rather than guessing.
     """
-    af, sc = _domain_scores(" ".join(p for p in parts if p))
+    # Coerce to str: manifest rows carry non-str values (year ints, topic lists,
+    # null abstracts). A single int here used to crash build_index outright.
+    af, sc = _domain_scores(" ".join(str(p) for p in parts if p))
     if af and not sc:
         return AMERICAN_FOOTBALL
     if sc and not af:
@@ -506,7 +508,7 @@ def search_fused(index: dict, query: str, k: int = 8, k_rrf: int = RRF_K,
     for rid, score in fused.items():
         rec = dict(by_id[rid])
         dom = sport_domain_of(rec.get("title", ""), rec.get("abstract", ""),
-                              " ".join(rec.get("topics") or []))
+                              " ".join(str(t) for t in (rec.get("topics") or [])))
         prior = domain_prior(dom, q_dom, same_domain_boost,
                              other_domain_demote, cross_domain_demote)
         score *= prior
