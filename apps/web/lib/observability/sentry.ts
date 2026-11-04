@@ -1,11 +1,18 @@
 /**
- * Observability — Sentry integration.
+ * Observability — Sentry integration for Galaxy Sports Edge.
  *
  * Runtime-only: we deliberately do NOT use withSentryConfig / the Sentry webpack
  * plugin so the build stays deterministic and requires no SENTRY_AUTH_TOKEN.
  *
  * Server reads SENTRY_DSN.
  * Client reads NEXT_PUBLIC_SENTRY_DSN.
+ *
+ * Sentry for Startups org: "galaxy-sports-edge".
+ * Supports:
+ *  - Distributed tracing & spans
+ *  - AI Agent Monitoring (Hermes, Jev, model evaluation, tool execution, token accounting)
+ *  - Error triage & context attachment
+ *  - Session Replay configuration (client-side)
  *
  * When the DSN is absent everything is a clean no-op — the build must pass and
  * the app must run without any Sentry credentials in the environment.
@@ -43,10 +50,30 @@ export function initObservability(): void {
 
   if (_initialized) return;
 
+  const tracesSampleRate =
+    typeof process !== "undefined" && process.env["SENTRY_TRACES_SAMPLE_RATE"]
+      ? parseFloat(process.env["SENTRY_TRACES_SAMPLE_RATE"])
+      : process.env["NODE_ENV"] === "development"
+        ? 1.0
+        : 0.1;
+
+  const replaysSessionSampleRate =
+    typeof process !== "undefined" && process.env["SENTRY_REPLAY_SAMPLE_RATE"]
+      ? parseFloat(process.env["SENTRY_REPLAY_SAMPLE_RATE"])
+      : 0.1;
+
   Sentry.init({
     dsn,
-    tracesSampleRate: 0.1,
+    tracesSampleRate,
+    replaysSessionSampleRate,
+    replaysOnErrorSampleRate: 1.0,
     environment: process.env["NODE_ENV"] ?? "development",
+    initialScope: {
+      tags: {
+        org: process.env["SENTRY_ORG"] ?? "galaxy-sports-edge",
+        service: "sports-web",
+      },
+    },
     // No source-map upload — we intentionally skip the Sentry webpack plugin.
     // Errors still capture and are reported; stack frames reference minified
     // source without upload, which is acceptable for a first-pass integration.
@@ -68,6 +95,102 @@ export function captureError(
   if (!_initialized) return;
 
   Sentry.captureException(err, context ? { extra: context } : undefined);
+}
+
+/**
+ * AI Agent Monitoring — Trace an agent execution session or turn.
+ *
+ * Creates a distributed span with standard GenAI semantic conventions.
+ * If Sentry is not initialized, cleanly executes the function directly.
+ */
+export async function traceAIAgentRun<T>(
+  options: {
+    agentName: string;
+    model?: string;
+    conversationId?: string;
+    prompt?: string;
+  },
+  fn: () => Promise<T> | T,
+): Promise<T> {
+  if (!_initialized) {
+    return await fn();
+  }
+
+  return Sentry.startSpan(
+    {
+      name: `ai.agent.${options.agentName}`,
+      op: "gen_ai.agent",
+      attributes: {
+        "gen_ai.agent.name": options.agentName,
+        "gen_ai.request.model": options.model ?? "unknown",
+        "gen_ai.conversation.id": options.conversationId ?? "default",
+        ...(options.prompt ? { "gen_ai.prompt": options.prompt.slice(0, 500) } : {}),
+      },
+    },
+    async () => await fn(),
+  );
+}
+
+/**
+ * AI Agent Monitoring — Trace an agent tool execution call.
+ *
+ * Creates a sub-span within the active agent trace.
+ * If Sentry is not initialized, cleanly executes the function directly.
+ */
+export async function traceAIToolCall<T>(
+  options: {
+    toolName: string;
+    args?: unknown;
+  },
+  fn: () => Promise<T> | T,
+): Promise<T> {
+  if (!_initialized) {
+    return await fn();
+  }
+
+  return Sentry.startSpan(
+    {
+      name: `ai.tool.${options.toolName}`,
+      op: "gen_ai.tool_call",
+      attributes: {
+        "gen_ai.tool.name": options.toolName,
+        ...(options.args
+          ? { "gen_ai.tool.args": JSON.stringify(options.args).slice(0, 1000) }
+          : {}),
+      },
+    },
+    async () => await fn(),
+  );
+}
+
+/**
+ * AI Agent Monitoring — Record token usage and model spend on the active span.
+ *
+ * No-ops cleanly when Sentry is not initialized.
+ */
+export function recordAITokenUsage(options: {
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
+  model?: string;
+}): void {
+  if (!_initialized) return;
+
+  const activeSpan = Sentry.getActiveSpan();
+  if (activeSpan) {
+    if (options.inputTokens !== undefined) {
+      activeSpan.setAttribute("gen_ai.usage.input_tokens", options.inputTokens);
+    }
+    if (options.outputTokens !== undefined) {
+      activeSpan.setAttribute("gen_ai.usage.output_tokens", options.outputTokens);
+    }
+    if (options.totalTokens !== undefined) {
+      activeSpan.setAttribute("gen_ai.usage.total_tokens", options.totalTokens);
+    }
+    if (options.model !== undefined) {
+      activeSpan.setAttribute("gen_ai.response.model", options.model);
+    }
+  }
 }
 
 /**

@@ -67,6 +67,48 @@ describe("captureError — no DSN", () => {
   });
 });
 
+// ─── 2b. AI Agent Monitoring & Posture — no-DSN path ─────────────────────────
+
+describe("AI Agent Monitoring & Posture — no DSN", () => {
+  beforeEach(() => {
+    delete process.env["SENTRY_DSN"];
+    delete process.env["NEXT_PUBLIC_SENTRY_DSN"];
+    vi.resetModules();
+  });
+
+  it("traceAIAgentRun executes callback and returns value cleanly", async () => {
+    const { traceAIAgentRun } = await import("@/lib/observability/sentry");
+    const result = await traceAIAgentRun(
+      { agentName: "hermes-forensic", model: "claude-3-7-sonnet" },
+      async () => "agent-success",
+    );
+    expect(result).toBe("agent-success");
+  });
+
+  it("traceAIToolCall executes callback and returns value cleanly", async () => {
+    const { traceAIToolCall } = await import("@/lib/observability/sentry");
+    const result = await traceAIToolCall(
+      { toolName: "query-odds-market", args: { market: "spread" } },
+      () => 42,
+    );
+    expect(result).toBe(42);
+  });
+
+  it("recordAITokenUsage no-ops without throwing", async () => {
+    const { recordAITokenUsage } = await import("@/lib/observability/sentry");
+    expect(() =>
+      recordAITokenUsage({ inputTokens: 150, outputTokens: 250, totalTokens: 400 }),
+    ).not.toThrow();
+  });
+
+  it("observabilityPosture reports honest state", async () => {
+    const { observabilityPosture } = await import("@/lib/observability/sentry");
+    expect(observabilityPosture()).toBe("error tracking: not wired (no DSN)");
+    process.env["SENTRY_DSN"] = "https://mock@ingest.sentry.io/123456";
+    expect(observabilityPosture()).toBe("error tracking: wired (DSN set)");
+  });
+});
+
 // ─── 3. Source pins ───────────────────────────────────────────────────────────
 
 describe("instrumentation.ts — source pins", () => {
