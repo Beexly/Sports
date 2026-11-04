@@ -106,6 +106,7 @@ def build_sequences(tr: pd.DataFrame, labels: pd.DataFrame,
     # times instead of 2.4k - and the build never finished.
     by_player = {}
     opp_cache = {}
+    clubs_by_play = {}
     for (g, p), pdf in tr.groupby(["gameId", "playId"]):
         if (g, p) not in snaps:
             continue
@@ -114,9 +115,30 @@ def build_sequences(tr: pd.DataFrame, labels: pd.DataFrame,
         for club, sub in pdf.groupby("club"):
             if club == "football":
                 continue
+            clubs_by_play.setdefault((g, p), []).append(club)
             opp_cache[(g, p, club)] = {
                 f: s[["x", "y"]].to_numpy(dtype=float)
                 for f, s in sub.groupby("frameId")}
+
+    # Opponents of a defender are every tracked player NOT on his own club.
+    # Keyed by (gameId, playId, my_club) and built lazily: at most one entry
+    # per club per play, so this stays cheap. Previously this looked up
+    # opp_cache[(g, p, my_club)], which returns the defender's own teammates
+    # (himself included) and made nearest-opponent distance a constant 0.0.
+    opp_for_cache = {}
+
+    def opponents_for(key, my_club):
+        ck = (key[0], key[1], my_club)
+        if ck in opp_for_cache:
+            return opp_for_cache[ck]
+        merged = {}
+        for club in clubs_by_play.get(key, []):
+            if club == my_club:
+                continue
+            for f, pts in opp_cache.get((key[0], key[1], club), {}).items():
+                merged[f] = pts if f not in merged else np.vstack([merged[f], pts])
+        opp_for_cache[ck] = merged
+        return merged
 
     classes = sorted(labels["pff_defensiveCoverageAssignment"].unique())
     cls_idx = {c: i for i, c in enumerate(classes)}
@@ -147,7 +169,7 @@ def build_sequences(tr: pd.DataFrame, labels: pd.DataFrame,
         bx, by = los[key]
         sign = 1.0 if str(direction.get(key)) == "right" else -1.0
 
-        opp_by_frame = opp_cache.get((g, p, my_club), {})
+        opp_by_frame = opponents_for(key, my_club)
 
         # Arrays, not .loc per frame: 60 pandas lookups x 65k defenders is ~4M
         # scalar lookups and dominated the build.

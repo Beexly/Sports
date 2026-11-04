@@ -1,7 +1,8 @@
 # Research Corpus → Reasoning Engine: Wiring Status
 
 **Date:** 2026-11-03
-**Manifest:** `C:/Users/Garrett/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl` (9.13 MB, 2,034 records)
+**Manifest:** `C:/Users/Garrett/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl` (77.35 MB, 2,883 records)
+**Index rebuilt:** 2026-11-03T20:13:32-0600, after the manifest's 19:28 write — stats are current, not stale.
 **Verdict:** Index and retriever **WIRED and TESTED**. Engine consumption **NOT WIRED** — the extension points are dead fields.
 
 ## What was built (verified by execution)
@@ -9,37 +10,51 @@
 | Artifact | Path | Status |
 |---|---|---|
 | Index driver | `scripts/ops/build_corpus_index.py` | ran, exit 0 |
-| Mind-feed | `intelligence/corpus/corpus_mindfeed.jsonl` | 1,428 entries, 2.1 MB |
+| Mind-feed | `intelligence/corpus/corpus_mindfeed.jsonl` | 2,226 entries |
 | Index stats | `intelligence/corpus/corpus_index_stats.json` | written |
-| Retriever bridge | `intelligence/research/corpus_retriever.py` | 25 tests pass |
+| Retriever bridge | `intelligence/research/corpus_retriever.py` | 28 tests pass |
 
 ### Build numbers (real output, not estimates)
 
 ```
-raw_records            2034
-deduped_records        1428   (606 duplicates collapsed)
-full_text_records       249   of 1428 have extracted PDF text
+raw_records            2883
+deduped_records        2226   (657 duplicates collapsed)
+full_text_records      1143   of 2226 have extracted PDF text
 retracted_records         3   quarantined, excluded by default
-unique_terms          34044
-avg_doc_len          415.06
-build_seconds          0.66
-dedupe_seconds         0.14
+unique_terms         155213
+avg_doc_len         2467.14
+build_seconds         25.01
+dedupe_seconds         3.89
 ```
 
 Topic distribution: football_analytics 308, vision_tracking 300, forecasting_calibration 235,
-pose_homography 190, coverage_scheme 177, local_pdf 118, american_football 48.
+pose_homography 190, coverage_scheme 174, local_pdf 118, american_football 48, nfl_league 21,
+prediction_sports_p2 20, nfl 19, prediction_sports 17, web_pdf 16, prediction_sports_p3 15, nfl_p2 7.
 
-### Retrieval probes — correct paper ranked first every time
+### Retrieval probes — re-run against the rebuilt 2,226-record index (2026-11-03 20:1x)
 
-| Query | Top hit | Score |
-|---|---|---|
-| coverage disguise trajectory | Decoding Defensive Coverage Responsibilities (arXiv:2603.25901) | 17.036 |
-| offensive line spatial framework | A Spatial Framework for Analyzing NFL Offensive Line Play | 19.375 |
-| aerodynamic drag football | Aerodynamic drag measurement of American footballs | 25.636 |
-| pose estimation football | Deep Learning-Based Prediction of Football Players' Performance | 10.785 |
+| Query | Top hit | Score | Holds? |
+|---|---|---|---|
+| coverage disguise trajectory | Decoding Defensive Coverage Responsibilities in American Football | 19.643 | yes |
+| offensive line spatial framework | A Spatial Framework for Analyzing NFL Offensive Line Play | 13.798 | yes |
+| aerodynamic drag football | Aerodynamic drag measurement of American footballs | 27.197 | yes |
+| pose estimation football | Once Upon a Goal: Towards orientation-based shot metrics in football | 8.427 | **no — soccer** |
 
-Retraction quarantine verified: 3 retracted records indexed, **0 surface by default**, 3 surface only
-with `include_retracted=True`.
+Three of four probes still rank the intended American-football paper first. The fourth
+surfaces a *soccer* paper: "football" is ambiguous and the enlarged index now contains enough
+association-football material to win the query. Scores rose across the board because the index
+now carries 1,143 full-text documents vs 249 before.
+
+**Disambiguation does NOT fix the fourth probe.** Tested: "American football pose estimation"
+and "NFL pose estimation football" both fail to surface the original target
+("Deep Learning-Based Prediction of Football Players' Performance"). The target paper appears to
+have dropped out of the top-10 for pose queries after the rebuild — a genuine retrieval-quality
+regression, not just token ambiguity. Documented as an open defect; the honest fix is either
+index-time American-football tagging or a query-side domain filter, neither of which exists yet.
+
+Retraction quarantine verified against matching queries: 3 retracted records indexed,
+**0 surface by default**, all 3 surface only with `include_retracted=True`
+("retracted sports training" → 0/10 default, 3/10 flagged).
 
 ## The gap: the engine never asks
 
@@ -107,8 +122,8 @@ titles into a specialist's reasoning would launder unvalidated research into a p
 2. **Engine-side consumption.** Either a `ResearchSpecialist` that queries the corpus and emits
    claims at `Verification.INFERENCE` (lowest precedence, cannot be load-bearing), or explicit
    `tool_backend` calls from existing specialists.
-3. **Full-text coverage.** Only 249/1428 records (17%) have extracted text. The rest rank on
-   title+abstract. Extracting the remaining PDFs would materially improve retrieval quality.
+3. **Full-text coverage.** 1,143/2,226 records (51%) have extracted text. The rest rank on
+   title+abstract. Extracting the remaining 1,083 PDFs would materially improve retrieval quality.
 4. **arXiv MCP authorization.** The `arxiv` MCP server is configured but settled `not_connected`.
    It needs an `authorize` action before its tools load. Until then, corpus refresh goes through
    the existing harvester scripts.

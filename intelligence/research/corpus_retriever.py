@@ -34,17 +34,37 @@ from __future__ import annotations
 
 import functools
 import json
+import os
 from pathlib import Path
 from typing import Any
 
 from . import corpus_index as ci
 
-DEFAULT_MANIFEST = Path(
-    r"C:\Users\Garrett\AppData\Local\hermes\cache\scratch\research_corpus\manifest.jsonl"
-)
+
+def _default_manifest() -> Path:
+    """Locate the harvest manifest without hardcoding a machine path.
+
+    Order: $GSE_CORPUS_MANIFEST, then a repo-relative copy, then the local
+    harvest cache. The absolute path that used to be baked in here was both
+    non-portable and a PII leak in committed source.
+    """
+    env = os.environ.get("GSE_CORPUS_MANIFEST")
+    if env:
+        return Path(env)
+    repo_rel = Path(__file__).resolve().parents[2] / "data" / "research_corpus" / "manifest.jsonl"
+    if repo_rel.exists():
+        return repo_rel
+    return Path.home() / "AppData" / "Local" / "hermes" / "cache" / "scratch" / \
+        "research_corpus" / "manifest.jsonl"
+
+
+DEFAULT_MANIFEST = _default_manifest()
 DEFAULT_FEED = Path(__file__).resolve().parents[1] / "corpus" / "corpus_mindfeed.jsonl"
 
 GATE_STATUS = "UNVALIDATED"
+# Bounds the ranking cost when a model supplies the query string. Long queries
+# tokenise to thousands of terms and make the inverted-index scan quadratic-ish.
+MAX_QUERY_CHARS = 300
 
 
 @functools.lru_cache(maxsize=1)
@@ -85,12 +105,20 @@ def as_corpus_hits(query: str, k: int = 5, manifest: Path | str = DEFAULT_MANIFE
                                             include_retracted=include_retracted)]
 
 
-def render_hits(query: str, k: int = 5, manifest: Path | str = DEFAULT_MANIFEST) -> str:
-    """Human/agent-readable block. Carries the gate warning into the text so a
-    model reading the tool output cannot mistake this for validated evidence."""
-    hits = retrieve(query, k=k, manifest=manifest)
+def _no_hits_text(query: str) -> str:
+    # The gate stamp belongs on the empty path too. "no records matched" alone
+    # reads as "nothing here", which a model can silently treat as "no evidence
+    # either way" - the same reasoning error as trusting a hit.
+    return (f"research_corpus: no records matched {query!r}.\n"
+            f"GATE: all records {GATE_STATUS} — citation/mechanism use only, "
+            f"not load-bearing evidence in a recommendation.")
+
+
+def _render_hit_list(query: str, hits: list[dict[str, Any]]) -> str:
+    """Render an already-fetched hit list. Split out so callers that fetched
+    with flags (e.g. --include-retracted) do not lose those flags to a re-query."""
     if not hits:
-        return f"research_corpus: no records matched {query!r}."
+        return _no_hits_text(query)
 
     lines = [
         f"research_corpus: {len(hits)} hit(s) for {query!r}",
@@ -119,23 +147,48 @@ def render_hits(query: str, k: int = 5, manifest: Path | str = DEFAULT_MANIFEST)
     return "\n".join(lines)
 
 
+def render_hits(query: str, k: int = 5, manifest: Path | str = DEFAULT_MANIFEST,
+                include_retracted: bool = False) -> str:
+    """Human/agent-readable block. Carries the gate warning into the text so a
+    model reading the tool output cannot mistake this for validated evidence."""
+    return _render_hit_list(query, retrieve(query, k=k, manifest=manifest,
+                                            include_retracted=include_retracted))
+
+
 def tool_backend(name: str, args: dict[str, Any]) -> str:
     """Callable[[str, dict], str] matching DataContext.tool_backend.
 
     Register as:  ctx.tool_backend = corpus_retriever.tool_backend
     Specialists call: ctx.tool_backend("research_corpus", {"query": "...", "k": 3})
+
+    UNTRUSTED-INPUT BOUNDARY. `args` arrives from a model, so it is treated as
+    hostile:
+
+      * The manifest path is NOT read from `args`. An earlier version did, which
+        turned this into an arbitrary-file-read primitive driven by model text -
+        a data-exfiltration bug wearing a tool's clothes. The manifest comes
+        from DEFAULT_MANIFEST / $GSE_CORPUS_MANIFEST only.
+      * The query is truncated to MAX_QUERY_CHARS to bound the ranking cost.
+      * Every failure path returns a string. DataContext.tool_backend is typed
+        Callable[..., str]; a tool that raises crashes the reasoning engine that
+        called it, which is an availability bug.
     """
-    if name not in ("research_corpus", "corpus_search"):
-        return f"research_corpus: unknown tool {name!r}"
-    query = str(args.get("query") or "").strip()
-    if not query:
-        return "research_corpus: empty query"
     try:
-        k = int(args.get("k", 5))
-    except (TypeError, ValueError):
-        k = 5
-    return render_hits(query, k=max(1, min(k, 20)),
-                       manifest=args.get("manifest") or DEFAULT_MANIFEST)
+        if name not in ("research_corpus", "corpus_search"):
+            return f"research_corpus: unknown tool {name!r}"
+        if not isinstance(args, dict):
+            return "research_corpus: args must be a dict"
+        query = str(args.get("query") or "").strip()[:MAX_QUERY_CHARS]
+        if not query:
+            return "research_corpus: empty query"
+        try:
+            k = int(args.get("k", 5))
+        except (TypeError, ValueError):
+            k = 5
+        return render_hits(query, k=max(1, min(k, 20)),
+                           include_retracted=bool(args.get("include_retracted", False)))
+    except Exception as exc:  # noqa: BLE001 - boundary must never raise
+        return f"research_corpus: tool error ({type(exc).__name__}: {exc})"
 
 
 def _main() -> int:  # pragma: no cover - CLI convenience
@@ -152,7 +205,12 @@ def _main() -> int:  # pragma: no cover - CLI convenience
     if a.json:
         print(json.dumps(hits, indent=2, ensure_ascii=False))
     else:
-        print(render_hits(a.query, k=a.k))
+        # Render from the already-fetched hits so --include-retracted is honoured;
+        # render_hits() would re-query and silently drop the flag.
+        if not hits:
+            print(render_hits(a.query, k=a.k))
+        else:
+            print(_render_hit_list(a.query, hits))
     return 0
 
 
