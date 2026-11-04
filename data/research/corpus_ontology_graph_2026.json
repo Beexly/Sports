@@ -1,0 +1,47 @@
+{
+  "version": "2026.1",
+  "methodology": "NVIDIA/auto-ontology + GSI Spectral Graph",
+  "triples_count": 5,
+  "triples": [
+    {
+      "subject": "TrenchDisruption",
+      "predicate": "causes",
+      "object": "EPACollapse",
+      "equation": "EPA_cost = clean_epa - pressured_epa",
+      "domain": "american_football",
+      "falsification_threshold": "t_stat > 2.5 on n >= 50 dropbacks"
+    },
+    {
+      "subject": "CriticalSlowingDown",
+      "predicate": "precedes",
+      "object": "PhaseTransitionBifurcation",
+      "equation": "rho_1 -> 1.0, Var(X) -> inf",
+      "domain": "statistical_physics_and_neuromuscular",
+      "falsification_threshold": "tau_lead >= 2.0s before observable collapse"
+    },
+    {
+      "subject": "PositivePartJamesStein",
+      "predicate": "regularizes",
+      "object": "SpectralCognitiveLogOdds",
+      "equation": "Delta_hat = (1 - (k-2)*sigma_0^2 / ||Delta||^2)_+ * Delta",
+      "domain": "mathematical_statistics",
+      "falsification_threshold": "|Delta_log_odds| <= 0.35 cap"
+    },
+    {
+      "subject": "FrechetHoeffdingCopula",
+      "predicate": "axiomatic_bound_on",
+      "object": "JointMarketProbabilities",
+      "equation": "max(0, p_a + p_b - 1) <= p_ab <= min(p_a, p_b)",
+      "domain": "probability_theory",
+      "falsification_threshold": "strict assertion: publishAllowed = false on clamp violation"
+    },
+    {
+      "subject": "TurboQuant",
+      "predicate": "compresses_vector_space_for",
+      "object": "SubMillisecondRetrieval",
+      "equation": "QJL_projection + PolarQuant_3bit",
+      "domain": "ai_systems_infrastructure",
+      "falsification_threshold": "cosine_similarity_retention >= 0.98"
+    }
+  ]
+}

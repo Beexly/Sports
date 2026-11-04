@@ -28,7 +28,7 @@
     "free:doctor": "npx tsx scripts/free-ingest-smoke.mjs",
     "eval:prompts": "npx promptfoo@0.122.0 eval -c eval/promptfoo/promptfooconfig.yaml",
     "db:generate": "npm run db:generate --workspace=packages/db",
-    "db:push": "npm run db:push --workspace=packages/db",
+    "db:push": "echo 'DANGER: db:push is disabled. Use db:migrate or db:migrate:status.' && exit 1",
     "db:migrate": "npm run db:migrate --workspace=packages/db",
     "db:migrate:status": "npm run db:migrate:status --workspace=packages/db",
     "db:migrate:dev": "npm run db:migrate:dev --workspace=packages/db",

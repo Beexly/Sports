@@ -497,6 +497,8 @@ model IngestionRun {
   errorMessage  String?
   startedAt     DateTime        @default(now())
   completedAt   DateTime?
+  remainingRequests Int?
+  usedRequests      Int?
 
   odds            Odds[]
   sourceSnapshots SourceSnapshot[]
@@ -564,6 +566,14 @@ model Pick {
   clvVerdict    String? // "BEAT_CLOSE" | "MATCHED_CLOSE" | "LOST_TO_CLOSE"
   clvCapturedAt DateTime? // fetchedAt of the closing snapshot used
   clvGradedAt   DateTime? // when CLV was graded at settlement
+
+  // Settlement-side CLV fields
+  closingLine   Float?
+  closingPrice  Float?
+  clvPoints     Float?
+  clvCents      Float?
+  clvPositive   Boolean?
+  clvComputedAt DateTime?
 
   // Book-line dispersion (max−min across books) at lock, in the pick kind's unit
   // (points for SPREAD/TOTAL, implied-prob for MONEYLINE). The CLV decomposition's
@@ -792,6 +802,7 @@ model SourceSnapshot {
 
   ingestionRun IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
 
+  @@unique([provider, sourceKind, externalId])
   @@index([provider, sourceKind])
   @@index([sport])
   @@index([externalId])
@@ -842,6 +853,7 @@ model PickSignalSnapshot {
   // Active signal categories at prediction time (all boolean flags)
   hadOddsSignal             Boolean @default(false) // always true — primary input
   hadLineMovementSignal     Boolean @default(false) // opening line existed
+  hadNgsSignal              Boolean @default(false) // NGS team context present at prediction
   hadRestSignal             Boolean @default(false) // restDays or B2B data present
   hadScheduleSignal         Boolean @default(false) // scheduleDensity data present
   hadAtsFormSignal          Boolean @default(false) // canonical ATS form used
@@ -861,6 +873,8 @@ model PickSignalSnapshot {
   dataQualityScore       Float  @default(0)
   confidenceAtPrediction Int    @default(0) // raw confidence at creation — immutable
   lineMovementDelta      Float? // current_spread − opening_spread at pick time
+  lineAtPrediction       Float? // line value at prediction time
+  selectionAtPrediction  String? // selection text at prediction time
   restAdvantageNet       Int? // restDaysHome − restDaysAway (positive = home more rested)
   atsFormSampleSize      Int? // largest canonical ATS sample used (0 if none)
   h2hSampleSize          Int? // H2H matchup sample size (null if not used)
@@ -1550,6 +1564,7 @@ enum SourceSnapshotKind {
   CONTEXT_WEATHER
   CONTEXT_STANDINGS
   CONTEXT_MILESTONES
+  RESEARCH_ARTIFACT
 }
 
 enum AtsResult {

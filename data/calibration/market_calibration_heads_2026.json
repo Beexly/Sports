@@ -1,0 +1,27 @@
+{
+  "version": "2026.1",
+  "pbo_threshold": 0.15,
+  "heads": {
+    "MONEYLINE": {
+      "method": "isotonic_logistic",
+      "brier_baseline": 0.2229,
+      "brier": 0.2296,
+      "skill": -0.0301,
+      "sample_size": 1219
+    },
+    "SPREAD": {
+      "method": "conformal_cover_logistic",
+      "brier_baseline": 0.2483,
+      "brier": 0.2767,
+      "skill": -0.1146,
+      "sample_size": 795
+    },
+    "TOTAL": {
+      "method": "conformal_cover_logistic",
+      "brier_baseline": 0.2497,
+      "brier": 0.2555,
+      "skill": -0.0232,
+      "sample_size": 648
+    }
+  }
+}

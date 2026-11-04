@@ -3181,11 +3181,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
  */
 export function getActiveUpcomingWriteups(now: Date = new Date()): CoachGameWriteup[] {
   const cutoffMs = now.getTime() - 3.5 * 60 * 60 * 1000;
-  const upcoming = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
+  return LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
     const kMs = Date.parse(w.kickoff);
     return Number.isNaN(kMs) || kMs >= cutoffMs;
   });
-  return upcoming.length > 0 ? upcoming : [...LIVE_SLATE_COACH_WRITEUPS];
 }
 
 export function getWriteupsForWindowSlot(windowSlot: string, now: Date = new Date()): CoachGameWriteup[] {
