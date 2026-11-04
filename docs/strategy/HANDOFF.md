@@ -147,3 +147,29 @@ start from the matchup instead of the constants 3 and 46.5.
 **Next role (Verifier / next loop):**
 - Watch CI on the pushed branch; merge when the reduced wall is confirmed (no new failures vs `eac0ecdba`).
 - Next triage batches in order: (a) homepage cluster (homepage-content, homepage-doctrine-hero, homepage-engine-centerpiece, homepage-finish-doctrine, homepage-suspense-nflverse, home-signal-anatomy, f28-home-hero-cta, decision-hero-states, storefront-stripdown); (b) board cluster (board-picks-route-equivalence, board-class-banner-honesty, central-time-rendering, kickoff-local-time, honest-degraded-states, freshness-coverage, sample-mode-ui); (c) logic/runtime cluster (dfs-optimizer-optimality, bestball, dfs-correlation, scheme, news/impact, wire-store, mission-control, do-calculus-verifiers, gate-registry.t24, literature-and-bow-arc, public-picks-enabled-readers, module-header-accuracy, periodic-timeseries-id, continuous-reconciliation-daemon); (d) pricing/nav clusters.
+
+## 2026-11-04 — test wall triage: homepage cluster (9 files) rewritten to the RedlineWorld design; front-door trust surfaces restored
+
+**Changed:**
+- `apps/web/app/page.tsx`: the front door is now the field plus a responsible close (`id="responsible-close"`, `data-testid="homepage-responsible-close"`, `RiskDisclosure variant="card" includePastPerformance`, links to /methodology, /responsible-play, /how-we-make-money, /accountability, /pricing) and `<Footer />`. The Oct 31 rebuild had shipped the world alone: no disclosure, no footer, no route to the trust surfaces.
+- `apps/web/components/redline/redline-world.tsx`: the wheel releases at both journey ends so the close band and footer are reachable by ordinary scroll; the header gains a RESPONSIBLE PLAY anchor; the retracted `VERIFIED RECORD: 31-11 (+18.56u)` becomes `OFFICIAL CARD: 14-6-1 (+7.19u)`; the slate panel eyebrow `31-11-0 (+18.56u)` becomes `LOCKED`.
+- `apps/web/lib/packages/catalog.ts`: the purged `47-16 (+29.01u)` phantom record is removed from 3 pack descriptions (rendered on the homepage pack panel, /packages/[slug], and the paywall cards) and 7 `verifiedRecordBanner` values; they now carry the ledger `verified_record` `36-13-1 (+20.14u)`.
+- `apps/web/lib/week8/sealed-board.json` `official_ledger`: `31-11-0` -> `36-13-1 (+20.14u)`, `tonight_result` `15-6-0 (+8.11u)` -> `14-6-1 (+7.19u)`, retraction note added.
+- `apps/web/app/calibration/page.tsx`: eyebrow tracking matches the shared evidence-header rhythm (`tracking-[0.22em]`).
+- Nine test files rewritten to the RedlineWorld contract: homepage-content, homepage-doctrine-hero, homepage-engine-centerpiece, homepage-finish-doctrine, homepage-suspense-nflverse, home-signal-anatomy, f28-home-hero-cta, decision-hero-states, storefront-stripdown. Every prohibition carried over; each repointed assertion is documented in-file.
+
+**Proven (worktree `C:\c\wt-homepage`, branch `ci/homepage-cluster-2026-11-03`, base `ed00ab3d9`):**
+- The 9-file homepage cluster: 54/54 tests pass.
+- 21-file affected-surface batch (9 cluster + 7 picks + 2 packages + public-copy-integrity + public-copy-plain-language): 123/127 pass; the 4 failures are the pre-existing FE-10/C-107 wall items, identical on the stashed baseline.
+- 15-file page.tsx-readers sweep: 17 failures, byte-identical failure set on the stashed baseline (zero regressions).
+- `apps/web` `tsc --noEmit` exit 0.
+- Guardrails: em-dash-scan OK (9 files), trust-gate OK (4,401 files), no-unsupported-performance-claims OK (481 files), commercial-copy-scan OK (477 files).
+
+**Not proven:**
+- No CI run on the pushed branch yet.
+- Remaining wall untouched: ~61 apps/web files (board cluster, logic/runtime cluster, pricing/nav) plus the 7 other-workspace files.
+- Open record question for the owner: /picks and /props headline the pre-TNF prior (`16-5 (76.2%) · +10.45u`) as the "Official New Engine verified record", while the ledger `verified_record` now reads `36-13-1 (+20.14u)` and the settlement doc post-MNF base card reads `38-13-1 (+22.85u)`. The homepage header now shows the settled TNF card (`14-6-1 (+7.19u)`) to match the packages page. Decide the single public headline number and align /picks, /props, and the catalog.
+
+**Next role (Verifier / next loop):**
+- Watch CI on the pushed branch; merge when the reduced wall is confirmed (no new failures vs `ed00ab3d9`).
+- Next triage batches: (a) board cluster (board-picks-route-equivalence, board-class-banner-honesty, central-time-rendering, kickoff-local-time, honest-degraded-states, freshness-coverage, sample-mode-ui); (b) logic/runtime cluster; (c) pricing/nav clusters.
