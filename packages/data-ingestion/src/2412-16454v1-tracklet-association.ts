@@ -2,6 +2,7 @@
  * FACTS: Fine-Grained Action Classification for Tactical Sports
  *
  * arXiv:2412.16454v1 · lane:tracking · verdict:ADAPT · owner:Hermes · doctrine:INFRA
+ * GENERIC BASELINE — NOT THE PAPER IMPLEMENTATION (Mechanism below is a generic association baseline, not this paper's method).
  *
  * Mechanism: Global tracklet association over per-frame detections: ReID embedding distances fused with a jersey-number auxiliary head, pruned by a field-coordinate spatial gate (meters on the field plane) instead of a fixed-camera prior; greedy bipartite matching links tracklets across gaps with linear gap-fill interpolation.
  *

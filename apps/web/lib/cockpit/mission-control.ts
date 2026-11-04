@@ -9,7 +9,7 @@
  */
 
 import { rankWireCorroborated } from "../news/impact";
-import { DEMO_WIRE } from "../news/wire";
+import type { NewsItem } from "../news/impact";
 import { SCHEME_SCENARIOS, applyScheme } from "../fantasy/scheme";
 import { DFS_SLATE, leverage } from "../fantasy/dfs-slate";
 import { PROPS, readProp } from "../fantasy/props";
@@ -30,11 +30,11 @@ export type BriefingCard = {
   readonly accent: string;
   /**
    * True when the card's headline/detail numbers come from an illustrative,
-   * fictional engine (DEMO_WIRE, sample slates, illustrative props) rather than
+   * fictional engine (sample wire/slates/props below) rather than
    * a live licensed feed. Provenance travels with the card so the surface can
    * badge it "Sample" and fabricated demo data is never mistaken for a live,
    * sourced alert. The eyebrow of a sample card is also prefixed "Sample · ".
-   * See lib/news/wire.ts (WIRE_DISCLAIMER). Non-negotiables #1/#4.
+   * Sample fixture, invented for this briefing (see SAMPLE_WIRE). Non-negotiables #1/#4.
    * Optional at the type level (absent ⇒ treat as non-sample), but buildBriefing
    * always sets it explicitly on every card it composes.
    */
@@ -46,15 +46,21 @@ const SAMPLE_TAG = "Sample · ";
 
 const HEX = { cyan: "#FF4D2E", magenta: "#FF4D2E", uv: "#C9D4CE", amber: "#FFB454", white: "#EDE8E0" };
 
+const SAMPLE_WIRE: readonly NewsItem[] = [
+  { id: "sample-wire-1", source: "DAL Beat", tier: "Insider", team: "DAL", player: "Javonte Williams", headline: "Sample: DAL RB ruled OUT for Week 9; backfield depth absorbs touches", signal: "injury-out", minutesAgo: 5 },
+  { id: "sample-wire-2", source: "PHI Beat", tier: "Beat", team: "PHI", player: "Saquon Barkley", headline: "Sample: PHI backfield workload to spike with an up-tempo script", signal: "role-up", minutesAgo: 30 },
+  { id: "sample-wire-3", source: "BAL Beat", tier: "Verified", team: "BAL", player: "Zay Flowers", headline: "Sample: BAL target share consolidates around the alpha receiver", signal: "scheme", minutesAgo: 60 },
+];
+
 /** Compose the prioritized, cross-product briefing from the live engines. */
 export function buildBriefing(): BriefingCard[] {
   const cards: BriefingCard[] = [];
 
   // Breaking — top of the wire by urgency (corroboration-aware).
-  // DEMO_WIRE is fictional (see wire.ts): the eyebrow must NOT assert a
+  // SAMPLE_WIRE is illustrative fixture data: the eyebrow must NOT assert a
   // real-world "confirmed by N sources" corroboration over invented reports.
   // Label by source tier only and mark the card a sample.
-  const top = rankWireCorroborated(DEMO_WIRE)[0];
+  const top = rankWireCorroborated(SAMPLE_WIRE)[0];
   if (top) {
     cards.push({
       id: "brief-breaking", kind: "breaking", priority: Math.min(100, top.urgency + 20),

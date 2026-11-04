@@ -21,7 +21,7 @@
  *
  * HONESTY CONSTRAINT — READ THIS BEFORE WIRING IT UP.
  *
- *   The wire this repo ships today (`lib/news/wire.ts` DEMO_WIRE) is SAMPLE
+ *   The sample fixtures shipped inside host/mission-control are SAMPLE
  *   data with fictional reporters and fictional reports. A fabricated wire must
  *   never gate a real pick: a made-up "two sources say the starting QB is out"
  *   would hold a real published row for a reason that does not exist, and the

@@ -40,7 +40,7 @@ export const SCHEME_SCENARIOS: readonly SchemeScenario[] = [
     },
   },
   {
-    id: "air-raid", team: "CIN", tier: "Insider",
+    id: "air-raid", team: "BAL", tier: "Insider",
     headline: "Air-raid coordinator brings a pass-heavy install",
     summary: "Spread, tempo, and volume: the QB and receivers eat, the slot especially; early-down rushing work shrinks.",
     rule: (p) => {
@@ -54,7 +54,7 @@ export const SCHEME_SCENARIOS: readonly SchemeScenario[] = [
     },
   },
   {
-    id: "consolidation", team: "MIA", tier: "Beat",
+    id: "consolidation", team: "CIN", tier: "Beat",
     headline: "New staff signals a target-consolidation plan around WR1",
     summary: "Funnel the offense through the alpha: the WR1 sees a bigger share at the expense of the secondary pass-catchers.",
     rule: (p, mates) => {
