@@ -249,6 +249,11 @@ OTHER_DOMAIN = "other"
 _AF_TOKENS = frozenset({
     "nfl", "ncaa", "xfl", "quarterback", "qb", "gridiron", "touchdown",
     "endzone", "blitz", "sack", "punt", "huddle", "all22", "yac",
+    # Core vocabulary the classifier was missing. "football" itself was
+    # absent, so "pose estimation football" scored zero sports signal and
+    # fell through to the blanket default.
+    "football", "pigskin", "scrimmage", "interception", "fumble",
+    "linebacker", "cornerback", "audible", "redzone", "snapcount",
 })
 _SOCCER_TOKENS = frozenset({
     "soccer", "uefa", "fifa", "bundesliga", "goalkeeper", "striker",
@@ -261,6 +266,14 @@ _AF_PHRASES = (
     "man coverage", "zone coverage", "first down", "down and distance",
     "field goal", "yard line", "route running", "college football",
     "pass coverage", "run game", "play clock", "two minute drill",
+    # Coverage/route vocabulary: "coverage disguise trajectory" scored zero
+    # sports signal because only the compound phrases above were listed.
+    "coverage disguise", "coverage shell", "coverage rotation",
+    "route tree", "passing route", "defensive scheme", "offensive scheme",
+    "play call", "snap count", "red zone", "third down", "fourth down",
+    "second down", "goal line", "end zone", "line of scrimmage",
+    "defensive front", "passing game", "pocket collapse",
+    "cover 2", "cover 3", "single high", "two high",
 )
 _SOCCER_PHRASES = (
     "association football", "premier league", "la liga", "serie a",
@@ -299,9 +312,32 @@ def sport_domain_of(*parts: str) -> str:
 
 
 def query_domain(query: str, default: str = AMERICAN_FOOTBALL) -> str:
-    """Domain intent of a query. Ambiguous queries inherit the corpus prior."""
+    """Domain intent of a query. Ambiguous queries inherit the corpus prior.
+
+    A query with *some* football signal but no clear side (e.g. bare
+    "football") defaults to american_football, because that is the corpus
+    prior. A query with **no sports signal at all** ("AIGoat vulnerable
+    FastAPI") must stay OTHER_DOMAIN: defaulting it to american_football
+    demotes every non-sports document and buries the security/memory/research
+    notes the corpus actually holds.
+    """
     dom = sport_domain_of(query)
-    return default if dom == OTHER_DOMAIN else dom
+    if dom != OTHER_DOMAIN:
+        return dom
+    # Tie or zero. Phrase evidence breaks the tie: "football match" scores
+    # one AF token ("football") and one soccer phrase, and the phrase is the
+    # stronger signal.
+    low = (query or "").lower()
+    af_phrase = sum(1 for p in _AF_PHRASES if p in low)
+    sc_phrase = sum(1 for p in _SOCCER_PHRASES if p in low)
+    if sc_phrase > af_phrase:
+        return SOCCER
+    if af_phrase > sc_phrase:
+        return AMERICAN_FOOTBALL
+    af, sc = _domain_scores(query)
+    if af == 0 and sc == 0:
+        return OTHER_DOMAIN
+    return default
 
 
 # ---------------------------------------------------------------------------

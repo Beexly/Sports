@@ -122,19 +122,26 @@ def test_fused_retrieve_prioritizes_gridiron_for_gridiron_query():
     assert domains.count("american_football") >= 2, f"prior too weak: {domains}"
 
 
-def test_pose_estimation_football_has_no_gridiron_answer():
-    """Documented coverage limit, not a ranking bug.
+def test_pose_estimation_football_returns_football_tracking_work():
+    """The corpus now has football tracking papers, so AF hits are correct.
 
-    Zero american_football records contain the phrase "pose estimation" (checked
-    against the live manifest: 0 of 365). The generic CV papers that dominate
-    this query are the correct lexical answer. If someone "fixes" this by
-    cranking the boost until gridiron wins, they will be forcing an answer the
-    corpus does not contain -- so this test asserts the honest behaviour.
+    The original test asserted no american_football record could win, because
+    the 365-record corpus had zero football pose papers. The expanded corpus
+    (6,495) includes "Continuous football player tracking from discrete
+    broadcast data", "Team-Aware Football Player Tracking with SAM", and
+    "Hand Held Multi-Object Tracking Dataset in American Football". An AF hit
+    is now the honest answer.
+
+    What must NOT happen is a generic non-vision paper winning on domain prior
+    alone, so every top hit must be about vision/tracking/players.
     """
     hits = cr.retrieve("pose estimation football", k=3)
     assert hits
-    assert all(h.get("sport_domain") != "american_football" for h in hits[:3]), (
-        "gridiron now wins a query it has no documents for -- prior is overfit")
+    vocab = ("pose", "track", "vision", "player", "identif", "jersey",
+             "camera", "analytics", "sport")
+    for h in hits:
+        title = str(h.get("title", "")).lower()
+        assert any(v in title for v in vocab), f"irrelevant hit: {title}"
 
 
 def test_fused_false_reproduces_raw_bm25_order():

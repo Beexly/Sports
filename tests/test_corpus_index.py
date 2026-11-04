@@ -329,6 +329,21 @@ def test_other_domain_is_no_longer_exempt_from_demotion():
     assert prior_for_other < 1.0, "other-domain documents escape demotion again"
 
 
+def test_query_with_no_sports_signal_stays_neutral():
+    """A security/memory query must not be forced into the football domain.
+
+    The exact regression: "AIGoat vulnerable FastAPI uvicorn" defaulted to
+    american_football, so RUN-REPORT.md (other domain) was demoted and the
+    BM25 rank-1 hit vanished from the fused top-3.
+    """
+    assert ci.query_domain("AIGoat vulnerable FastAPI uvicorn") == ci.OTHER_DOMAIN
+    assert ci.query_domain("MemPalace LongMemEval recall") == ci.OTHER_DOMAIN
+    # A query with football signal but no clear side still inherits the prior.
+    assert ci.query_domain("football") == ci.AMERICAN_FOOTBALL
+    assert ci.query_domain("NFL fourth down") == ci.AMERICAN_FOOTBALL
+    assert ci.query_domain("soccer expected goals") == ci.SOCCER
+
+
 def test_local_doc_is_a_registered_source_priority():
     """local_doc carries full text; it must not default to lowest priority."""
     assert "local_doc" in ci.SOURCE_PRIORITY
