@@ -59,7 +59,16 @@ package, but `detect_players` already handles role-based filtering.
   4 live_inplay, 2 graphic, 3 live frames, 1 quarantined.
 - Full 14-dir run: in progress (background `proc_e8563d9f213a`).
 - Live crawl (`nfl-video.com/2026`, pages 0..8) for Week 8/9 priority games
-  (`IND@JAX`, `BAL@BUF`, `CHI@SEA`, `ARI@DAL`, `NE@MIA`, `LV@NYJ`): pending.
+  (`IND@JAX`, `BAL@BUF`, `CHI@SEA`, `ARI@DAL`, `NE@MIA`, `LV@NYJ`): **crawl
+  works, streams do not exist.** 19 games discovered across weeks 5–8, all 6
+  priority games present. But `embeddable_pages: 0` — every game page exposes
+  7–8 "server" links that are spam redirects (`basketball-video.com`,
+  `fullraces.com`, `guidedesgemmes.com`, `mlblive.net`, `nhlgamestoday.com`),
+  no OK.ru embed, no `<video>`, no `.mp4`/`.m3u8`. The site is a link farm.
+  **Ruling:** the live crawl cannot supply replay frames. The on-disk film
+  room (36,328 frames) is the only viable source. Cost if wrong: we lose
+  Week 8/9 games not already on disk, but no fabricated streams enter the
+  pipeline.
 
 ## Task 3 — Research-mindset features (DONE, module + tests)
 
