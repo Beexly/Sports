@@ -274,3 +274,68 @@ grows past ~50 GB or index maintenance becomes a measured bottleneck.
   discrepancy above: 9,123,098 and 5,035,283. `signals` (128,818) and `picks`
   (5,150) matched their reported figures exactly, so the counter reset did not
   distort every table — but it did distort the one that matters most.
+
+## 11. Migration mechanics, and a bug in the first draft
+
+The remediation SQL lives at `db/ops/2026-11-04_odds_index_cleanup.sql`. It
+replaces an earlier draft in `docs/engine/architecture/` which was **wrong**, and
+the way it was wrong is worth recording.
+
+### It cannot be a Prisma migration
+
+`packages/db` runs `prisma migrate deploy`, which wraps each migration in a
+transaction. Two statements here are forbidden inside one. Both were verified
+against a throwaway Neon branch, not assumed:
+
+    BEGIN; VACUUM (ANALYZE) public.ingestion_runs; COMMIT;
+      ERROR:  VACUUM cannot run inside a transaction block
+
+    BEGIN; DROP INDEX CONCURRENTLY IF EXISTS public."odds_gameId_idx"; COMMIT;
+      ERROR:  DROP INDEX CONCURRENTLY cannot run inside a transaction block
+
+So this belongs on an operational path that runs in autocommit, one statement at
+a time. That split is also correct on its own terms: `migration-additivity.ts`
+exists to guarantee that a rolled-back app still meets a schema it can read.
+Dropping an index or tuning autovacuum does not touch the column contract, so it
+is outside that invariant — and `findAdditivityViolations` confirms it, since its
+`drop_object` pattern covers `DROP TABLE/TYPE/VIEW/SCHEMA/DATABASE` and not
+indexes.
+
+### 11 of 16 drop statements were silent no-ops
+
+This schema uses camelCase names. Unquoted, Postgres folds `odds_gameId_idx` to
+`oddsgameid_idx`, which does not exist — and `IF EXISTS` turns that into a silent
+no-op that **still prints the `DROP INDEX` command tag**.
+
+Measured on the branch:
+
+    DROP INDEX IF EXISTS public.odds_gameId_idx;
+      -> DROP INDEX                                     (looks like success)
+      -> count(*) FROM pg_class ... -> 1                (nothing dropped)
+
+    DROP INDEX CONCURRENTLY IF EXISTS public."odds_gameId_idx";
+      -> DROP INDEX
+      -> count(*) -> 0                                  (actually dropped)
+
+Six of the eight P1 names contain an uppercase letter; with the P1b/P1c blocks,
+eleven of sixteen statements in the first draft would have done nothing while
+reporting success. I initially read the command tag as confirmation and wrote
+"applies cleanly" — that claim was wrong and is retracted here.
+
+The lesson generalises past this file: **the command tag is not a post-condition.**
+Every block in the new file ends with a verification query, and
+`scripts/guardrails/sql-identifier-case.mjs` now fails the build on any unquoted
+camelCase identifier in a DDL object position, so the mistake cannot return
+silently.
+
+### What the branch test established
+
+On a Neon branch (`hermes-migration-test`, deleted after use):
+
+- All six P1 drops applied; post-condition count of remaining indexes: **0**.
+- `odds` went from 5 indexes to 4.
+- Rollback (`CREATE INDEX CONCURRENTLY` on the original definition) succeeded and
+  was asserted: **26.9 seconds** to rebuild 67 MB over 9.1M rows.
+
+That 27-second rebuild is the real cost of reversing a drop, and it is why the
+rollback is documented per-index in the SQL file rather than assumed.

@@ -63,6 +63,7 @@ const GUARDS = [
   ["api-route-boundary", ["node", "scripts/guardrails/api-route-boundary.mjs"]],
   ["shell-defensive", ["node", "scripts/guardrails/shell-defensive.mjs"]],
   ["solidity-compile", ["node", "scripts/guardrails/solidity-compile.mjs"]],
+  ["sql-identifier-case", ["node", "scripts/guardrails/sql-identifier-case.mjs"]],
   ["commercial-copy-scan", ["node", "scripts/guardrails/commercial-copy-scan.mjs"]],
   ["em-dash-scan", ["node", "scripts/guardrails/em-dash-scan.mjs"]],
   ["no-unsupported-performance-claims", ["node", "scripts/guardrails/no-unsupported-performance-claims.mjs"]],
