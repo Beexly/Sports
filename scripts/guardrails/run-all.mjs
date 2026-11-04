@@ -60,6 +60,7 @@ const GUARDS = [
   ["ai-transport-import-boundary", ["node", "scripts/guardrails/ai-transport-import-boundary.mjs"]],
   ["secret-scan", ["node", "scripts/guardrails/secret-scan.mjs", "--all"]],
   ["api-v1-boundary", ["node", "scripts/guardrails/api-v1-boundary.mjs"]],
+  ["api-route-boundary", ["node", "scripts/guardrails/api-route-boundary.mjs"]],
   ["commercial-copy-scan", ["node", "scripts/guardrails/commercial-copy-scan.mjs"]],
   ["em-dash-scan", ["node", "scripts/guardrails/em-dash-scan.mjs"]],
   ["no-unsupported-performance-claims", ["node", "scripts/guardrails/no-unsupported-performance-claims.mjs"]],
