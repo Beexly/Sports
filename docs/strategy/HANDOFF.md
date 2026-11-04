@@ -199,3 +199,30 @@ start from the matchup instead of the constants 3 and 46.5.
 **Next role (Verifier / next loop):**
 - Watch CI on the pushed branch; merge when the reduced wall is confirmed (no new failures vs `a93313a76`).
 - Next triage batches: (a) logic/runtime cluster (dfs-optimizer-optimality, bestball, dfs-correlation, scheme, news/impact, wire-store, mission-control, do-calculus-verifiers, gate-registry.t24, literature-and-bow-arc, public-picks-enabled-readers, module-header-accuracy, continuous-reconciliation-daemon); (b) pricing/nav clusters (pricing-conversion-a11y, pricing-honesty, pricing-mobile-tap-targets, pricing-page-smoke, nav-auth, nav-ia, nav-live-chip-honesty, nav-route-integrity, mobile-nav-ia, five-pillar-nav, cockpit-nav-coverage).
+
+## 2026-11-04 — test wall triage: nav/pricing cluster (12 files) rewritten to the sealed-era design; PR #1233 verified merged
+
+**Verified this run:** PR #1233 CI failing set diffed against main (`a93313a76`, run 41794523901): 65 -> 57 unique failing test files (55 in CI summary), 8 files fixed (7 board + 1 flaky), ZERO new failures. Merged PR #1233 (`gh pr merge --merge`; merge commit `7e32951a4`; remote branch deleted).
+
+**Changed (branch `ci/nav-pricing-cluster-2026-11-04`, worktree `C:\c\wt-nav`, base `7e32951a4`):**
+- The root cause for all 12 files: the site is the sealed-era design (desktop bar = GALAXY PICKS (PAID) + DFS + 4-door "This week's packs" bar; mobile = 6 links; footer = Picks/Props/Packs/DFS; /pricing = under-construction pay-per-slate catalog; /picks + /props static sealed cards). The tests pinned the retired 5-pillar / subscription-ladder / comparison-table contracts.
+- Implementation fix (1): `app/cockpit/layout.tsx` had no `/cockpit/workflows` NAV entry although the page exists; added under Ops. `cockpit-nav-coverage` now 31/31.
+- `nav-ia` (plus `components/ui/__tests__` re-export copy): pillars aria-label = "This week's packs"; footer = Picks/Props/Packs/DFS. Prohibitions kept (zero Telegram, no /board //players //the-beat //academy //fantasy/studio doors).
+- `mobile-nav-ia` (plus re-export copy): 6 links - Locked board /picks, Props /props, Packs /packages, DFS Optimizer & Stacks, All-Access Pricing, Sign in. Retired-link absence kept.
+- `nav-auth`: signed-out CTA = "Get Today's Picks" -> /packages (was "See plans" -> /pricing); signed-in door = /packages (was /dashboard).
+- `nav-route-integrity`: /pricing is reachable via mobile Account & Access + homepage TRUST_LINKS only (monthly subs under construction), not a desktop-bar door; dead-link and retired-door gates unchanged.
+- `nav-live-chip-honesty`: the Live Board chip is rendered nowhere in the current nav; pinned the gate helper (`shouldShowLiveBoardChip`, LIVE_BOARD + canExposePublicPicks) and zero live-chip markup across nav-auth/nav/mobile-nav.
+- `five-pillar-nav` + `five-pillar-architecture`: FIVE_REVENUE_PILLARS = 4 doors (Picks/Props/Packs/DFS). Writeup gate made future-correct: PLAY => expected CLV > 0 always; PASS <= 0.025 only for future-kickoff (live) cards - frozen sealed records keep their original pre-game CLV estimates as history (the old rule flagged a sealed PASS carrying its pre-game estimate, mis-stating the record as a violation).
+- `pricing-honesty` / `pricing-page-smoke` / `pricing-conversion-a11y` / `pricing-mobile-tap-targets`: /pricing is the static under-construction catalog; pinned zero monthly literals, per-pack h3 headings + /packages#<slug> CTAs, no money-back promise; DOB test flipped to pin the founder's 2026-09-14 age-gate removal (SubscribeButton renders no DOB field - it was removed, the test needed the new truth).
+- `docs-pricing-figures`: `data/snapshots/` added to EXEMPT_TREES (frozen archive of third-party prices); the `$19` lookahead excludes decimals (`$19.07MM` contracts, `$19.99` third-party); `docs/strategy/HANDOFF.md` exempted as a running handoff log (quoted button label).
+- All 12 rewritten files scrubbed to zero em/en dashes. (Note: honest-degraded-states needed local stubs for `@neondatabase/serverless` + `@prisma/adapter-neon` in the junction target again; CI installs them. Stubs were removed after the run.)
+
+**Proven (worktree `C:\c\wt-nav`):**
+- The 12-file cluster + 2 re-export copies: 102/102 tests pass (incl. five-pillar-architecture 3/3, proven locally with the DB stubs).
+- Affected-surface check: cockpit-routes + cockpit-stub-safety 10/10; the other sweep files that fail (public-surface-sweep, conversion-path-contrast, commercial-pages-launch-qa, public-unfinished-copy-fence, public-copy-plain-language, no-double-brand-title, disclosure-surface, sealed-engine) fail identically on the main checkout - pre-existing wall members, zero new failures.
+- `apps/web` `tsc --noEmit`: only pre-existing ingestion-pipeline errors resolve via the dirty main-checkout junction; none in `apps/web` or this diff.
+
+**Not proven:**
+- CI on `ci/nav-pricing-cluster-2026-11-04` still running; merge gate for the next loop: reduced wall with no new failures vs `7e32951a4`.
+- Remaining wall: ~43 apps/web files. Next batch: (a) the logic/runtime cluster named in the board handoff (dfs-optimizer-optimality, bestball, dfs-correlation, scheme, news/impact, wire-store, mission-control, do-calculus-verifiers, gate-registry.t24, literature-and-bow-arc, public-picks-enabled-readers, module-header-accuracy, continuous-reconciliation-daemon).
+- Still open from the homepage handoff: the owner decision on the single public headline record number (/picks + /props headline `16-5 (76.2%) +10.45u`; ledger `verified_record` reads `36-13-1 (+20.14u)`). Other 2026-11-04 runs may have moved this - re-check the ledger before cutting the fix.
