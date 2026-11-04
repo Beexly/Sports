@@ -263,6 +263,25 @@ It looked significant in the aggregate because down correlates with both
 clock and completion. This is exactly the kind of candidate the gate exists
 to kill — a plausible story that dissolves under stratification.
 
+## Corpus state — 2026-11-04 07:15 CT
+
+Backfill recovered after arXiv cleared its 429 at 06:20. Two racing
+processes were found and killed (2,019 rows, 1,069 unique); deduped in
+place and restarted as a single process.
+
+| Metric | Value |
+|---|---|
+| Deduped records | 6,296 |
+| Full text | 2,504 (40.2%) |
+| Unique terms | 249,934 |
+| Backfill rows | 1,532 and climbing (~14/min) |
+| Backfill failures | 143 (empty payload, stable) |
+
+Retrieval verified on six probes: NFL win probability calibration,
+defensive coverage disguise, soccer expected goals, conformal prediction
+sports, player tracking pose, fourth down decision — all on-target, domain
+prior working (AF queries return AF papers, soccer returns soccer).
+
 ## Real tracking data — first feature run (2026-11-04 05:50 CT)
 
 Source: `nfl-football-ops/Big-Data-Bowl` `tracking_gameId_2017090700.csv`
