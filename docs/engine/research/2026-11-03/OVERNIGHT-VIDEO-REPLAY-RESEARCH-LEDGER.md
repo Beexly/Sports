@@ -51,6 +51,23 @@ package, but `detect_players` already handles role-based filtering.
 
 **Tests:** 15, no network. Full suite 343 passed, exit 0.
 
+## Task 1b — Crop-pose on real frames: BLOCKED BY RESOLUTION
+
+The pipeline runs end-to-end on a real frame (`baldal_1001.jpg`, 10 players
+detected by the gridiron-ai detector with correct role labels: `defense`,
+`oline`, `qb`, `ref`, `running_back`, `tight_end`, `wide_receiver`), but
+**0 poses are assigned**.
+
+Root cause: every film-room frame is **360×640**. Player boxes are 26–43 px
+wide and 45–66 px tall. YOLO11n-pose returns 0 persons even after upscaling
+the crop to 256 px tall — interpolation cannot add the information the model
+needs. This is a data limitation, not a code defect.
+
+**Ruling:** the crop-pose pipeline is correct and tested (15 unit tests), but
+the on-disk film room cannot feed it. It needs ≥720p broadcast frames where
+players are ≥80 px wide. Cost if wrong: the pipeline sits unused until
+higher-resolution frames arrive; no fabricated poses enter the ledger.
+
 ## Task 2 — Re-harvest frames (IN PROGRESS)
 
 - Local audit: 14 game dirs, 36,328 frames. `harvest_local` samples every 60th

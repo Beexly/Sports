@@ -271,16 +271,30 @@ def _crop_with_pad(img: np.ndarray, box: dict[str, Any], pad: float = 0.12):
     return img[y1:y2, x1:x2], x1, y1
 
 
+MIN_CROP_H = 256  # upscale small broadcast crops before pose
+
+
 def pose_on_crop(pose_model, img: np.ndarray, box: dict[str, Any],
                  pad: float = 0.12) -> dict[str, Any] | None:
     """Run pose on one player crop; return keypoints in full-image coords.
 
+    Broadcast players are 40-90 px tall. YOLO11n-pose cannot resolve a
+    17-keypoint skeleton at that scale, so the crop is upscaled to at least
+    MIN_CROP_H before inference and the keypoints are scaled back.
+
     Returns None when the crop is unusable or the model finds no person.
     """
+    import cv2
+
     crop, x_off, y_off = _crop_with_pad(img, box, pad)
     if crop is None:
         return None
-    res = pose_model.predict(crop, conf=0.25, imgsz=640, verbose=False)[0]
+    h, w = crop.shape[:2]
+    scale = max(1.0, MIN_CROP_H / float(h))
+    if scale > 1.0:
+        crop = cv2.resize(crop, (int(round(w * scale)), int(round(h * scale))),
+                          interpolation=cv2.INTER_CUBIC)
+    res = pose_model.predict(crop, conf=0.15, imgsz=640, verbose=False)[0]
     if res.keypoints is None or len(res.keypoints) == 0:
         return None
     # Take the highest-confidence person in the crop.
@@ -292,10 +306,11 @@ def pose_on_crop(pose_model, img: np.ndarray, box: dict[str, Any],
     else:
         best = 0
     kp = kpts[best].copy()
-    kp[:, 0] += x_off
-    kp[:, 1] += y_off
-    return {"keypoints": kp, "crop_box": [x_off, y_off, x_off + crop.shape[1],
-                                          y_off + crop.shape[0]]}
+    # Undo the upscale, then shift into full-image coordinates.
+    kp[:, 0] = kp[:, 0] / scale + x_off
+    kp[:, 1] = kp[:, 1] / scale + y_off
+    return {"keypoints": kp, "crop_box": [x_off, y_off, x_off + w, y_off + h],
+            "crop_scale": scale}
 
 
 def _footpoint(kp: np.ndarray) -> tuple[float, float] | None:
