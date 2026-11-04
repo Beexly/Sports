@@ -226,3 +226,20 @@ start from the matchup instead of the constants 3 and 46.5.
 - CI on `ci/nav-pricing-cluster-2026-11-04` still running; merge gate for the next loop: reduced wall with no new failures vs `7e32951a4`.
 - Remaining wall: ~43 apps/web files. Next batch: (a) the logic/runtime cluster named in the board handoff (dfs-optimizer-optimality, bestball, dfs-correlation, scheme, news/impact, wire-store, mission-control, do-calculus-verifiers, gate-registry.t24, literature-and-bow-arc, public-picks-enabled-readers, module-header-accuracy, continuous-reconciliation-daemon).
 - Still open from the homepage handoff: the owner decision on the single public headline record number (/picks + /props headline `16-5 (76.2%) +10.45u`; ledger `verified_record` reads `36-13-1 (+20.14u)`). Other 2026-11-04 runs may have moved this - re-check the ledger before cutting the fix.
+
+## 2026-11-04 - logic/runtime cluster (branch ci/logic-cluster-2026-11-04, base a7ff1d93c)
+
+**Shipped:** PR #1234 (nav/pricing) verified vs main at 7e32951a4 (zero new failures, 10 files fixed by the lane's extraction) and merged (a7ff1d93c); remote branch deleted. Logic cluster below is on ci/logic-cluster-2026-11-04.
+
+**Fixes (30 files):**
+- bestball: bye-fragility fixture drifted - orr is now DAL bye 7, only two bye-14 RBs exist; test now uses ferris+soto (score 2). Rosters slackened to the pool's current teams/bys.
+- dfs-correlation: slate moved - old PHI stack fixtures (dqb1 Silas Hart/WR_PHI Quincy Ohm) point at other teams now; repointed to the DAL stack (Dak Prescott + CeeDee Lamb + Javonte Williams) and LAR Puka as the off-game split. Projection gap 2.0 < 4.
+- scheme: consolidation (#MIA) had no MIA players in the pool; air-raid CIN lacked a back. Scenarios re-targeted: air-raid to BAL (Lamar + Flowers + Henry - QB up and early-down back fades), consolidation to CIN (Chase alpha + Higgins fade).
+- dfs-optimizer-optimality: old optima (120.5/218/259.00/256.24) belonged to a previous slate. Current Week 8 slate (37 players) optima independently re-solved with CP-SAT (stack = QB + >=1 same-team WR/TE) and re-pinned: cash 191.7, gpp 276, leverage 239.86539390434126 / 238.39434127276232. Engine matches all six exactly.
+- C-416 DEMO_WIRE deletion (was a test-ahead-of-code defect): deleted the fictional export from lib/news/wire.ts; TheBeat now has no sample fallback (unconfigured feeds render an honest empty state, never stand-in headlines); host.ts studio script draft and cockpit mission-control briefing carry their own clearly-labelled SAMPLE fixtures (still disclosed, never live news); impact tests use local fixtures.
+- continuous-reconciliation-daemon nextTuesday04CT: was process-TZ-dependent (only correct when TZ=America/Chicago); rewritten to compute the Chicago wall clock with Intl - passes under UTC/NY/London/Tokyo.
+- module-header-accuracy: added the GENERIC BASELINE marker to 17 tracklet-association headers whose titles are not tracking papers but whose Mechanism claimed GTA association.
+
+**Proven (worktree C:\c\wt-logic):** 10/10 target files, 90 tests; plus conviction/fantasy affected surfaces 10/10 (172 tests). tsc clean on touched files (pre-existing unrelated errors remain, as on main checkout).
+
+**Not yet proven:** CI on ci/logic-cluster-2026-11-04; periodic-timeseries-id 'too large to be exact' fails in CI (Node 20) but passes locally (Node 24) - not reproduced, left for a Node-20 repro. Remaining wall per PR #1234 CI: public-surface-sweep, conversion-path-contrast, data-first/fantasy surfaces, do-calculus-verifiers, gate-registry, literature-and-bow-arc, public-picks-enabled-readers, and ~20 docs/picks/props files - next loop.
