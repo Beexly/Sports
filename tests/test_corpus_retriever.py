@@ -96,3 +96,55 @@ def test_no_match_is_reported_not_invented():
     # and the test failed against correct behaviour. Nonsense-only query:
     out = cr.render_hits("qqqzzz wwwxxx vvvbbb", k=3)
     assert "no records matched" in out
+
+
+# ---------------------------------------------------------------------------
+# Fused ranking through the retriever bridge (the "other" demotion fix)
+# ---------------------------------------------------------------------------
+# retrieve() used to call ci.search() -- pure BM25, no fusion, no domain prior.
+# The domain prior was therefore dead code: nothing in the engine path ever
+# applied it. These tests pin the bridge to the fused ranker.
+
+
+def test_retrieve_uses_fused_ranker_by_default():
+    hits = cr.retrieve("coverage disguise trajectory", k=3)
+    assert hits
+    top = hits[0]
+    assert top.get("rank_signal") == "rrf", "retriever is not using fused ranking"
+    assert "sport_domain" in top and "domain_prior" in top
+
+
+def test_fused_retrieve_prioritizes_gridiron_for_gridiron_query():
+    """Measured regression: raw BM25 gave 3 sport-neutral docs here."""
+    hits = cr.retrieve("American football player pose estimation", k=3)
+    domains = [h.get("sport_domain") for h in hits]
+    assert domains[0] == "american_football", f"top hit not gridiron: {domains}"
+    assert domains.count("american_football") >= 2, f"prior too weak: {domains}"
+
+
+def test_pose_estimation_football_has_no_gridiron_answer():
+    """Documented coverage limit, not a ranking bug.
+
+    Zero american_football records contain the phrase "pose estimation" (checked
+    against the live manifest: 0 of 365). The generic CV papers that dominate
+    this query are the correct lexical answer. If someone "fixes" this by
+    cranking the boost until gridiron wins, they will be forcing an answer the
+    corpus does not contain -- so this test asserts the honest behaviour.
+    """
+    hits = cr.retrieve("pose estimation football", k=3)
+    assert hits
+    assert all(h.get("sport_domain") != "american_football" for h in hits[:3]), (
+        "gridiron now wins a query it has no documents for -- prior is overfit")
+
+
+def test_fused_false_reproduces_raw_bm25_order():
+    fused = cr.retrieve("NFL pass rush win rate", k=2)
+    raw = cr.retrieve("NFL pass rush win rate", k=2, fused=False)
+    assert fused[0]["id"] == raw[0]["id"], "fusion changed the top hit unexpectedly"
+    assert "rank_signal" not in raw[0] or raw[0].get("rank_signal") != "rrf"
+
+
+def test_render_shows_domain_decision():
+    out = cr.render_hits("NFL pass rush win rate", k=1)
+    assert "domain=american_football" in out, "ranking decision not surfaced to the model"
+    assert "domain_prior=" in out

@@ -83,14 +83,29 @@ def _citation(rec: dict[str, Any]) -> str:
 
 
 def retrieve(query: str, k: int = 5, manifest: Path | str = DEFAULT_MANIFEST,
-             include_retracted: bool = False) -> list[dict[str, Any]]:
+             include_retracted: bool = False,
+             fused: bool = True) -> list[dict[str, Any]]:
     """Rank corpus records for a query. Returns hit dicts with gate stamps.
+
+    fused=True (default) ranks by RRF over BM25 + TF-IDF cosine with the
+    sport-domain prior applied. That is the ranker the domain-prior numbers
+    were measured against: for "American football player pose estimation" it
+    moves the top three from [other, other, other] to
+    [american_football, american_football, american_football].
+
+    fused=False keeps the raw BM25 order for callers that want to reproduce a
+    pure lexical ranking or debug a fusion decision. Fused hits carry extra
+    audit keys (sport_domain, query_domain, domain_prior, rrf_ranks), so a
+    ranking decision can be explained after the fact.
 
     include_retracted defaults to False: a retracted paper reads exactly like a
     valid one, so it must not surface unless explicitly requested.
     """
     idx = load_index(manifest)
-    hits = ci.search(idx, query, k=k, include_retracted=include_retracted)
+    if fused:
+        hits = ci.search_fused(idx, query, k=k, include_retracted=include_retracted)
+    else:
+        hits = ci.search(idx, query, k=k, include_retracted=include_retracted)
     for h in hits:
         h["citation"] = _citation(h)
         h["gate_status"] = GATE_STATUS
@@ -135,6 +150,11 @@ def _render_hit_list(query: str, hits: list[dict[str, Any]]) -> str:
         lines.append(f"    {first} et al. ({h.get('year')}) — {h.get('venue') or 'n/a'}")
         lines.append(f"    score={h.get('score')} cited_by={h.get('cited_by')} "
                      f"full_text={h.get('has_full_text')} retracted={h.get('retracted')}")
+        if h.get("sport_domain"):
+            # Expose the ranking decision, not just the number. A model reading
+            # this can see when a hit was boosted or demoted for its sport.
+            lines.append(f"    domain={h['sport_domain']} query_domain={h.get('query_domain')} "
+                         f"domain_prior={h.get('domain_prior')} signal={h.get('rank_signal')}")
         lines.append(f"    cite={h['citation']}")
         if h.get("doi"):
             lines.append(f"    doi={h['doi']}")

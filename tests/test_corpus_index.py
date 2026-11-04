@@ -178,3 +178,152 @@ def test_mind_feed_topic_filter(tmp_path):
     out = tmp_path / "feed.jsonl"
     n = ci.to_mind_feed(idx, out, topics=["coverage_scheme"])
     assert n == 1
+
+
+# ---------------------------------------------------------------------------
+# Sport-domain disambiguation + hybrid RRF ranking
+# ---------------------------------------------------------------------------
+# The corpus mixes American football with association football. An ambiguous
+# query must default to gridiron, a cross-domain document must be demoted
+# rather than dropped, and the fusion must stay auditable (per-ranker ranks).
+
+FUSION = [
+    {"source": "arxiv", "source_id": "af1", "title":
+     "Defensive coverage disguise in American Football",
+     "abstract": "We model coverage disguise and trajectory leverage for defenders.",
+     "year": 2026, "topics": ["coverage_scheme"]},
+    {"source": "openalex", "source_id": "sc1", "title":
+     "Coverage disguise in football match play",
+     "abstract": "coverage disguise coverage disguise trajectory in soccer football match",
+     "year": 2022, "topics": ["vision_tracking"]},
+    {"source": "openalex", "source_id": "gen1", "title":
+     "Statistical calibration of forecasting models",
+     "abstract": "We study proper scoring rules and calibration.",
+     "year": 2019, "topics": ["forecasting_calibration"]},
+]
+
+
+def _fusion_index(tmp_path):
+    return ci.dedupe(ci.build_index(_manifest(tmp_path, FUSION)))
+
+
+def test_sport_domain_classifies_american_football(tmp_path):
+    assert ci.sport_domain_of(
+        "Defensive coverage disguise in American Football",
+        "offensive line and pass rush") == ci.AMERICAN_FOOTBALL
+
+
+def test_sport_domain_classifies_soccer():
+    assert ci.sport_domain_of(
+        "Once Upon a Goal: orientation-based shot metrics in football",
+        "expected goals xG model football analytics") == ci.SOCCER
+
+
+def test_sport_domain_leaves_unknown_alone():
+    assert ci.sport_domain_of(
+        "Statistical calibration of forecasting models") == ci.OTHER_DOMAIN
+
+
+def test_football_analytics_is_not_an_american_football_cue():
+    """Regression: 'football analytics' is used by soccer papers too.
+
+    Counting it as gridiron evidence pushed an xG/expected-goals paper into
+    american_football, which then escaped cross-domain demotion.
+    """
+    af, sc = ci._domain_scores(
+        "football analytics expected goals xg model penalty shootout")
+    assert sc > af
+
+
+def test_query_domain_defaults_to_gridiron():
+    assert ci.query_domain("pose estimation football") == ci.AMERICAN_FOOTBALL
+    assert ci.query_domain("coverage disguise") == ci.AMERICAN_FOOTBALL
+
+
+def test_query_domain_honours_explicit_soccer():
+    assert ci.query_domain("soccer offside detection") == ci.SOCCER
+
+
+def test_search_fused_demotes_cross_domain_document(tmp_path):
+    """A soccer hit that outscores the gridiron hit must still rank below it."""
+    idx = _fusion_index(tmp_path)
+    hits = ci.search_fused(idx, "coverage disguise trajectory", k=3)
+    assert hits, "expected fused hits"
+    assert hits[0]["id"] == "af1", (
+        "cross-domain demotion failed: %s ranked first" % hits[0]["id"])
+    ids = [h["id"] for h in hits]
+    assert "sc1" in ids, "demotion must not drop the cross-domain document"
+
+
+def test_search_fused_returns_audit_trail(tmp_path):
+    idx = _fusion_index(tmp_path)
+    hits = ci.search_fused(idx, "coverage disguise trajectory", k=2)
+    top = hits[0]
+    assert top["sport_domain"] == ci.AMERICAN_FOOTBALL
+    assert top["query_domain"] == ci.AMERICAN_FOOTBALL
+    assert top["rrf_ranks"], "fusion must expose the per-ranker ranks"
+    assert "terms" not in top, "internal term counts leaked into results"
+
+
+def test_search_fused_scores_are_descending(tmp_path):
+    idx = _fusion_index(tmp_path)
+    scores = [h["score"] for h in ci.search_fused(idx, "coverage disguise", k=3)]
+    assert scores == sorted(scores, reverse=True)
+
+
+def test_search_fused_empty_query_returns_nothing(tmp_path):
+    idx = _fusion_index(tmp_path)
+    assert ci.search_fused(idx, "   ") == []
+
+
+def test_cosine_rank_is_independent_signal(tmp_path):
+    idx = _fusion_index(tmp_path)
+    hits = ci.cosine_rank(idx, "statistical calibration forecasting")
+    assert hits, "expected cosine hits"
+    assert hits[0]["id"] == "gen1"
+    assert hits[0]["rank_signal"] == "cosine"
+    assert "terms" not in hits[0]
+
+
+# ---------------------------------------------------------------------------
+# Sport-domain prior (the "other" demotion bug)
+# ---------------------------------------------------------------------------
+# The prior version exempted "other" from demotion entirely:
+#     if q_dom != OTHER_DOMAIN and dom not in (OTHER_DOMAIN, q_dom):
+#         score *= cross_domain_demote
+# so a generic computer-vision paper kept FULL fused score while the gridiron
+# paper beside it got nothing. Measured on the live manifest: "American football
+# player pose estimation" returned [other, other, other] even though 19
+# american_football candidates were in the pool. These tests pin the fix.
+
+
+def test_domain_prior_boosts_same_sport():
+    assert ci.domain_prior(ci.AMERICAN_FOOTBALL, ci.AMERICAN_FOOTBALL) == ci.SAME_DOMAIN_BOOST
+    assert ci.domain_prior(ci.SOCCER, ci.SOCCER) == ci.SAME_DOMAIN_BOOST
+
+
+def test_domain_prior_demotes_other_and_cross_sport():
+    assert ci.domain_prior(ci.OTHER_DOMAIN, ci.AMERICAN_FOOTBALL) == ci.OTHER_DOMAIN_DEMOTE
+    assert ci.domain_prior(ci.SOCCER, ci.AMERICAN_FOOTBALL) == ci.CROSS_DOMAIN_DEMOTE
+    # "other" must be demoted LESS than a competing sport: generic mechanism
+    # papers are often the right answer for a methods question.
+    assert ci.OTHER_DOMAIN_DEMOTE > ci.CROSS_DOMAIN_DEMOTE
+
+
+def test_domain_prior_is_neutral_when_query_has_no_sport():
+    assert ci.domain_prior(ci.AMERICAN_FOOTBALL, ci.OTHER_DOMAIN) == 1.0
+    assert ci.domain_prior(ci.SOCCER, ci.OTHER_DOMAIN) == 1.0
+
+
+def test_search_fused_exposes_domain_prior(tmp_path):
+    idx = _fusion_index(tmp_path)
+    top = ci.search_fused(idx, "coverage disguise trajectory", k=2)[0]
+    assert "domain_prior" in top, "ranking decision must be auditable"
+    assert top["domain_prior"] == ci.SAME_DOMAIN_BOOST
+    assert top["rank_signal"] == "rrf"
+
+
+def test_other_domain_is_no_longer_exempt_from_demotion():
+    """The exact regression: a sport-neutral doc must not keep full score."""
+    prior_for_other = ci.domain_prior(ci.OTHER_DOMAIN, ci.AMERICAN_FOOTBALL)
+    assert prior_for_other < 1.0, "other-domain documents escape demotion again"
