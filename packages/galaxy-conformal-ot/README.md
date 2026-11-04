@@ -2,9 +2,9 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
-[![Coverage](https://img.shields.io/badge/tests-11%20passed-brightgreen.svg)]()
+[![Coverage](https://img.shields.io/badge/tests-14%20passed-brightgreen.svg)]()
 
-**Universal High-Dimensional Epistemic Calibration, Spectral Cognitive Routing & Entropic Optimal Transport under Adversarial Non-Stationarity.**
+**Universal High-Dimensional Epistemic Calibration, Spectral Cognitive Routing, Schrödinger Bridge Optimal Transport & Dual-Use Phase-Transition Hazard Forecasting under Adversarial Non-Stationarity.**
 
 Published by the **Galaxy Science Institute Research Group** (`galaxy-research`).
 
@@ -50,6 +50,12 @@ Published by the **Galaxy Science Institute Research Group** (`galaxy-research`)
 
 ### 4. Kinematic Workload & Impact Hazards (`kinematic_workload_hazard.py`)
 - Distributed-lag non-linear models (DLNM) integrating 10-game rolling workloads and kinetic collision impulse accumulation into real-time survival hazard functions $h(t \mid \text{workload}, \text{kinetics})$.
+
+### 5. Dual-Use Schrödinger Bridge & Active Inference Phase-Transition Hazard (`schrodinger_bridge_hazard.py`)
+- **Critical Slowing Down (`CSD`) Internal Fatigue Extraction:** Detects unobserved internal central nervous system (CNS) neuromuscular fatigue or clinical ICU baroreflex exhaustion prior to a saddle-node/Hopf bifurcation via lag-1 autocorrelation ($\rho_1 \to 1$) and variance surge.
+- **Active Inference Expected Free Energy (`EFE`):** Quantifies pragmatic divergence from safe homeostasis vs. epistemic ambiguity under adversarial deception:
+  $$G(\pi) = D_{\text{KL}}(Q(s \mid \pi) \parallel P^*(s)) + \mathbb{E}_Q[\mathcal{H}(P(o \mid s))]$$
+- **Path-Space Schrödinger Bridge Optimal Transport:** Computes the stochastic control drift energy $\mathcal{E}_{\text{SB}} = \tau \cdot D_{\text{KL}}(P_{\text{SB}} \parallel K_{\text{ref}})$ across both 22-agent biomechanical sports formations and 6-organ clinical ICU SOFA networks, gated by finite-sample conformal false-alarm bounds ($\alpha$).
 
 ---
 

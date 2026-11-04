@@ -41,7 +41,14 @@ from .kinematic_workload_hazard import (
     KinematicHazardModel
 )
 
-__version__ = "0.1.0"
+from .schrodinger_bridge_hazard import (
+    compute_critical_slowing_down_index,
+    compute_expected_free_energy,
+    solve_schrodinger_bridge_trajectory,
+    AdversarialSchrodingerActiveHazardEngine
+)
+
+__version__ = "0.2.0"
 __all__ = [
     "build_context_mask_288",
     "mask_to_words",
@@ -60,5 +67,9 @@ __all__ = [
     "compute_acwr_ratio",
     "distributed_lag_kinematic_workload",
     "evaluate_injury_survival_hazard",
-    "KinematicHazardModel"
+    "KinematicHazardModel",
+    "compute_critical_slowing_down_index",
+    "compute_expected_free_energy",
+    "solve_schrodinger_bridge_trajectory",
+    "AdversarialSchrodingerActiveHazardEngine"
 ]

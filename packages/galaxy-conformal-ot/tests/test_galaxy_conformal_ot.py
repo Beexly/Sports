@@ -33,7 +33,11 @@ from galaxy_conformal_ot import (
     compute_acwr_ratio,
     distributed_lag_kinematic_workload,
     evaluate_injury_survival_hazard,
-    KinematicHazardModel
+    KinematicHazardModel,
+    compute_critical_slowing_down_index,
+    compute_expected_free_energy,
+    solve_schrodinger_bridge_trajectory,
+    AdversarialSchrodingerActiveHazardEngine
 )
 
 
@@ -195,3 +199,61 @@ class TestDeterministicReproducibility:
         assert res1["calibrated_prob"] == res2["calibrated_prob"]
         assert res1["capped_log_odds"] == res2["capped_log_odds"]
         np.testing.assert_allclose(res1["whitened_residuals"], res2["whitened_residuals"])
+
+
+class TestAdversarialSchrodingerActiveHazardEngine:
+    """Module 5 Verification: Dual-Use Sports TBI/ACL & Clinical ICU Sepsis Phase Transitions."""
+
+    def test_critical_slowing_down_bifurcation_detection(self):
+        # White noise fluctuations (healthy homeostasis) vs. strongly autocorrelated slowing-down trajectory
+        healthy_series = [0.02, -0.03, 0.01, -0.02, 0.03, -0.01, 0.02, -0.02, 0.01, -0.01]
+        bifurcating_series = [-0.8, -0.6, -0.4, -0.1, 0.2, 0.5, 0.9, 1.3, 1.8, 2.4]
+
+        csd_healthy = compute_critical_slowing_down_index(healthy_series, baseline_variance=0.05)
+        csd_crit = compute_critical_slowing_down_index(bifurcating_series, baseline_variance=0.05)
+
+        assert csd_crit["lag1_autocorrelation"] > 0.70
+        assert csd_crit["csd_bifurcation_score"] > csd_healthy["csd_bifurcation_score"] + 0.50
+
+    def test_schrodinger_bridge_trajectory_mass_conservation(self):
+        # 6-organ SOFA network or 6-man pass protection unit under acute shock redistribution
+        mu_0 = [0.20, 0.20, 0.15, 0.15, 0.15, 0.15]
+        mu_T = [0.42, 0.30, 0.12, 0.08, 0.05, 0.03]
+
+        sb = solve_schrodinger_bridge_trajectory(mu_0, mu_T, tau=0.35)
+        assert sb["conserved_mass"] == pytest.approx(1.0, abs=1e-6)
+        assert sb["control_drift_energy"] > 0.0
+        np.testing.assert_allclose(np.sum(sb["coupling_matrix"], axis=1), mu_0, atol=1e-5)
+        np.testing.assert_allclose(np.sum(sb["coupling_matrix"], axis=0), mu_T, atol=1e-5)
+
+    def test_dual_use_phase_transition_conformal_gate(self):
+        engine = AdversarialSchrodingerActiveHazardEngine(alpha_false_alarm_bound=0.05, tau=0.35)
+        calibration_scores = np.linspace(0.05, 0.45, 50)
+
+        # Scenario A: Stable homeostatic physiological/biomechanical state (no false alarm)
+        stable_res = engine.evaluate_phase_transition_warning(
+            micro_fluctuation_series=[0.01, -0.01, 0.02, -0.02, 0.01, -0.01, 0.01, -0.01],
+            baseline_variance=0.05,
+            source_network_load=[0.20, 0.20, 0.20, 0.20, 0.20],
+            stressed_network_load=[0.21, 0.19, 0.20, 0.20, 0.20],
+            homeostatic_target_dist=[0.20, 0.20, 0.20, 0.20, 0.20],
+            observation_ambiguity=[0.05, 0.05, 0.05, 0.05, 0.05],
+            calibration_nonconformity_scores=calibration_scores
+        )
+        assert stable_res["phase_transition_alert"] is False
+        assert stable_res["system_regime"] == "HOMEOSTATIC_STABLE"
+
+        # Scenario B: Imminent Phase Transition (4th-Qtr TBI/ACL collision hazard OR ICU Septic Shock)
+        crit_res = engine.evaluate_phase_transition_warning(
+            micro_fluctuation_series=[-1.2, -0.9, -0.5, 0.1, 0.6, 1.2, 1.9, 2.7, 3.5, 4.4],
+            baseline_variance=0.05,
+            source_network_load=[0.20, 0.20, 0.20, 0.20, 0.20],
+            stressed_network_load=[0.58, 0.27, 0.08, 0.04, 0.03],
+            homeostatic_target_dist=[0.20, 0.20, 0.20, 0.20, 0.20],
+            observation_ambiguity=[0.35, 0.30, 0.20, 0.15, 0.10],
+            calibration_nonconformity_scores=calibration_scores
+        )
+        assert crit_res["phase_transition_alert"] is True
+        assert crit_res["system_regime"] == "CRITICAL_PHASE_TRANSITION_IMMINENT"
+        assert crit_res["composite_hazard_score"] > crit_res["conformal_threshold"]
+
