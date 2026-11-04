@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -35,6 +36,59 @@ DEFAULT_MANIFEST = Path(
 DEFAULT_OUT = REPO / "intelligence" / "corpus"
 
 
+def _should_keep(record: dict, threshold: int | None) -> bool:
+    """True if a manifest record survives a --min-priority filter.
+
+    Semantics: _merge_prio is an inverted priority -- 1 is best (targeted/
+    tooling) and 9 is worst (v1 contamination). A record is kept only when
+    ``_merge_prio < threshold``. So ``--min-priority 9`` drops every record
+    with _merge_prio >= 9 and keeps 1-8.
+
+    Records with no _merge_prio (or a non-integer one) are kept: the field
+    is absent from older manifests and silently dropping unlabelled
+    records would lose data the filter was never meant to touch.
+    """
+    if threshold is None:
+        return True
+    prio = record.get("_merge_prio")
+    if prio is None:
+        return True
+    try:
+        prio_int = int(prio)
+    except (TypeError, ValueError):
+        return True
+    return prio_int < threshold
+
+
+def write_filtered_manifest(src: Path, threshold: int | None,
+                            dest: Path) -> tuple[int, int]:
+    """Copy *src* to *dest*, dropping records that fail the priority filter.
+
+    Returns ``(kept, dropped)`` raw line counts. Blank lines are skipped;
+    unparseable lines are passed through unchanged (``build_index`` already
+    skips them) so counts here match the raw manifest size.
+    """
+    kept = dropped = 0
+    with Path(src).open(encoding="utf-8") as fin, \
+            Path(dest).open("w", encoding="utf-8") as fout:
+        for line in fin:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            try:
+                record = json.loads(stripped)
+            except json.JSONDecodeError:
+                fout.write(line if line.endswith("\n") else line + "\n")
+                kept += 1
+                continue
+            if _should_keep(record, threshold):
+                fout.write(line if line.endswith("\n") else line + "\n")
+                kept += 1
+            else:
+                dropped += 1
+    return kept, dropped
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
@@ -43,6 +97,11 @@ def main(argv: list[str] | None = None) -> int:
                     help="cap mind-feed entries (default: no cap)")
     ap.add_argument("--topics", nargs="*", default=None,
                     help="restrict mind-feed to these topic tags")
+    ap.add_argument("--min-priority", type=int, default=None, dest="min_priority",
+                    help="exclude records with _merge_prio >= this value before indexing. "
+                         "Lower _merge_prio = higher priority (1 is best, 9 is worst). "
+                         "Example: --min-priority 9 keeps _merge_prio 1-8 and drops "
+                         "the _merge_prio >= 9 v1 contamination. Default: no filtering.")
     args = ap.parse_args(argv)
 
     if not args.manifest.exists():
@@ -52,9 +111,27 @@ def main(argv: list[str] | None = None) -> int:
     args.out.mkdir(parents=True, exist_ok=True)
     size_mb = args.manifest.stat().st_size / 1e6
 
-    t0 = time.time()
-    raw = ci.build_index(args.manifest)
-    t_build = time.time() - t0
+    manifest_to_index = args.manifest
+    temp_filtered: Path | None = None
+    filtered_kept = 0
+    filtered_dropped = 0
+    try:
+        if args.min_priority is not None:
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".jsonl", prefix="corpus_filtered_",
+                delete=False, encoding="utf-8",
+            ) as tf:
+                temp_filtered = Path(tf.name)
+            filtered_kept, filtered_dropped = write_filtered_manifest(
+                args.manifest, args.min_priority, temp_filtered)
+            manifest_to_index = temp_filtered
+
+        t0 = time.time()
+        raw = ci.build_index(manifest_to_index)
+        t_build = time.time() - t0
+    finally:
+        if temp_filtered is not None and temp_filtered.exists():
+            temp_filtered.unlink()
 
     n_raw = raw["n"]
     with_text_raw = sum(1 for r in raw["records"] if r["has_full_text"])
@@ -84,6 +161,9 @@ def main(argv: list[str] | None = None) -> int:
         "manifest": str(args.manifest),
         "manifest_size_mb": round(size_mb, 2),
         "built_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "min_priority": args.min_priority,
+        "records_excluded_by_priority": filtered_dropped,
+        "records_after_priority_filter_raw_kept": filtered_kept if args.min_priority is not None else n_raw,
         "raw_records": n_raw,
         "deduped_records": n_dedup,
         "duplicates_collapsed": n_raw - n_dedup,
