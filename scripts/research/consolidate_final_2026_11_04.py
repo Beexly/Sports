@@ -29,6 +29,8 @@ sources=[
  ("openalex_v1",      REPO+r"\overnight_sweep_2026-11-04.jsonl","openalex",9),
  ("hf_datasets",      REPO+r"\hf_datasets_2026-11-04.jsonl","huggingface_dataset",4),
  ("datasets_tooling", CORPUS+r"\datasets_tooling_2026_11_04.jsonl","tooling",1),
+ ("downloads_audit",  CORPUS+r"\downloads_audit_2026_11_04.jsonl","local_doc",2),
+ ("downloads_audit_ocr", CORPUS+r"\downloads_audit_ocr_2026_11_04.jsonl","local_doc",2),
  ("base_manifest",    CORPUS+r"\manifest.jsonl","openalex",3),
 ]
 print("=== sources ===")

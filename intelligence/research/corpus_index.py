@@ -95,7 +95,8 @@ def build_index(manifest: Path | str) -> dict[str, Any]:
 # Lower wins. Anything carrying full text must outrank metadata-only records, or
 # dedupe throws the text away and keeps the abstract. web_pdf was missing from this
 # map, defaulted to lowest, and lost its full text to an OpenAlex stub.
-SOURCE_PRIORITY = {"local_pdf": 0, "web_pdf": 1, "arxiv": 2, "openalex": 3}
+SOURCE_PRIORITY = {"local_pdf": 0, "local_doc": 0, "web_pdf": 1, "arxiv": 2,
+                   "openalex": 3}
 
 
 def _title_key(title: str) -> str:
@@ -128,6 +129,12 @@ def dedupe(index: dict) -> dict:
             was_retracted = bool(prev.get("retracted")) or bool(rec.get("retracted"))
             better_new = SOURCE_PRIORITY.get(rec["source"], 9) < SOURCE_PRIORITY.get(
                 prev["source"], 9)
+            # A record carrying full text beats a title-only stub of the same
+            # work, whatever its source. Otherwise a high-priority metadata
+            # record evicts the text and the corpus loses the content it just
+            # spent a backfill run acquiring.
+            if not better_new and not prev.get("has_full_text") and rec.get("has_full_text"):
+                better_new = True
             merged = sorted(set(prev["topics"]) | set(rec["topics"]))
             if better_new:
                 index["records"][j] = rec

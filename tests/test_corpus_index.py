@@ -327,3 +327,29 @@ def test_other_domain_is_no_longer_exempt_from_demotion():
     """The exact regression: a sport-neutral doc must not keep full score."""
     prior_for_other = ci.domain_prior(ci.OTHER_DOMAIN, ci.AMERICAN_FOOTBALL)
     assert prior_for_other < 1.0, "other-domain documents escape demotion again"
+
+
+def test_local_doc_is_a_registered_source_priority():
+    """local_doc carries full text; it must not default to lowest priority."""
+    assert "local_doc" in ci.SOURCE_PRIORITY
+    assert ci.SOURCE_PRIORITY["local_doc"] <= ci.SOURCE_PRIORITY["openalex"]
+
+
+def test_dedupe_full_text_beats_a_higher_priority_stub(tmp_path):
+    """A title-only stub must never evict a record that has the text.
+
+    The exact regression: RUN-REPORT.md was ingested as local_doc with 7,183
+    chars, but an openalex stub of the same title outranked it and the index
+    kept 0 chars.
+    """
+    man = tmp_path / "m.jsonl"
+    stub = {"source": "openalex", "source_id": "a", "title": "RUN REPORT",
+            "abstract": "", "topics": ["openalex"], "full_text": ""}
+    full = {"source": "local_doc", "source_id": "b", "title": "RUN REPORT",
+            "abstract": "x", "topics": ["local_doc"],
+            "full_text": "the actual report body " * 50}
+    man.write_text("\n".join(json.dumps(r) for r in (stub, full)), encoding="utf-8")
+    idx = ci.dedupe(ci.build_index(man))
+    assert idx["n"] == 1
+    assert idx["records"][0]["has_full_text"], "stub evicted the full text"
+    assert idx["records"][0]["source"] == "local_doc"
