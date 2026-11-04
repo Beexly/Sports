@@ -60,7 +60,7 @@ export function TheBeat({
   const isLive = liveWire !== null;
   // No fictional fallback: unconfigured feeds = empty wire, never sample news.
   // (C-416 deleted the public DEMO_WIRE; this surface renders only the live wire.)
-  const wire = liveWire ?? [];
+  const wire = useMemo(() => liveWire ?? [], [liveWire]);
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
   const [sort, setSort] = useState<SortMode>("strongest");

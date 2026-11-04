@@ -9,7 +9,7 @@
  * invented reports; nothing it exports may attribute a fabricated report to a real journalist.
  */
 
-import type { NewsItem, Tier } from "./impact";
+import type { Tier } from "./impact";
 
 export type Insider = { readonly name: string; readonly outlet: string; readonly tier: Tier };
 

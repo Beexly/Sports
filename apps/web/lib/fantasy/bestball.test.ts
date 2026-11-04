@@ -23,7 +23,6 @@ const cinQb = playerById("qb-emmett-shaw")!; // CIN, bye 12
 const cinWr = playerById("wr-deshawn-kemp")!; // CIN, bye 12
 const ferris = playerById("rb-kj-ferris")!; // BAL, bye 14
 const soto = playerById("rb-andre-soto")!; // HOU, bye 14
-const orr = playerById("rb-malik-orr")!; // DAL, bye 7
 const pryce = playerById("rb-deon-pryce")!; // DET, bye 8
 
 describe("roster strength", () => {
