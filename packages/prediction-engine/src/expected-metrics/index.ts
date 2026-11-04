@@ -159,3 +159,13 @@ export {
   type TransitionPair,
   type MappedExpectedMetricsPlays,
 } from "./nflverse-pbp-mapper.js";
+
+// Situational Expected-Metrics Catalog (Q1–Q51 bits 220..278).
+export {
+  SITUATIONAL_EXPECTED_METRICS_CATALOG,
+  computeManageableThirdDownRate,
+  computeToxicDifferential,
+  computeTargetShareGini,
+  type ExpectedMetricDescriptor,
+} from "./situational-expected-metrics-catalog.js";
+

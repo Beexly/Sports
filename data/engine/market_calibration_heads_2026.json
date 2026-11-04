@@ -1,0 +1,55 @@
+{
+  "schema_version": "GSE-MARKET-CALIBRATION-HEADS-v1.0",
+  "generated_at_utc": "2026-11-04T14:37:00Z",
+  "provenance": "docs/engine/research/2026-11-04/CALIBRATION-BRIEF-2026-11-04.md",
+  "principles": [
+    "Dedicated heads per market family: Never pool confidence across Moneyline, Spread, and Total.",
+    "Brier Skill Score evaluated against empirical base rate yBar * (1 - yBar), never a static 0.25 coin flip.",
+    "Never render confidence as a win probability percentage on spreads/totals; render conviction XX/100 only.",
+    "Enforce monotonic CQR bounds: Q_{alpha/2} < line iff F_Y(line) > alpha/2."
+  ],
+  "heads": {
+    "MONEYLINE": {
+      "method": "platt_beta_conformal",
+      "calibrator_family_preference": ["beta", "platt", "isotonic"],
+      "brier_skill_required": true,
+      "base_rate_brier_reference": 0.2342,
+      "max_classwise_ece": 0.05,
+      "conformal_alpha": 0.10,
+      "conformal_rho": 0.97,
+      "display_format": "conviction_and_calibrated_prob"
+    },
+    "SPREAD": {
+      "method": "fwl_residualized_cqr",
+      "residualize_against_market": true,
+      "brier_skill_required": true,
+      "base_rate_brier_reference": 0.2490,
+      "max_classwise_ece": 0.045,
+      "monotonic_cqr_enforced": true,
+      "display_format": "conviction_rating_only_no_fake_percent"
+    },
+    "TOTAL": {
+      "method": "poisson_normal_tail_cqr",
+      "residualize_against_market": true,
+      "brier_skill_required": true,
+      "base_rate_brier_reference": 0.2495,
+      "max_classwise_ece": 0.048,
+      "monotonic_cqr_enforced": true,
+      "display_format": "conviction_rating_only_no_fake_percent"
+    },
+    "PLAYER_PROP": {
+      "method": "empirical_bayes_cqr_scrimmage_gated",
+      "scrimmage_gate_threshold_screen_share": 0.12,
+      "scrimmage_gate_threshold_rush_share": 0.05,
+      "monotonic_cqr_enforced": true,
+      "asymmetric_loss_pinball_ratio": 2.5,
+      "display_format": "conviction_and_cqr_interval"
+    },
+    "DERIVATIVE_1Q_1H": {
+      "method": "sportsbook_alt_ladder_kernel",
+      "ladder_slope_fit_required": true,
+      "first_quarter_script_discount": 0.14,
+      "display_format": "conviction_rating"
+    }
+  }
+}

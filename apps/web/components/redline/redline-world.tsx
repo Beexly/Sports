@@ -35,38 +35,69 @@ const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full fie
 const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
 
 const SEALED_MAIN_CALLS = [
-  { matchup: "LAC @ LAR", selection: "LA Rams ML (-270)", market: "Moneyline", conf: "84/100" },
-  { matchup: "LAC @ LAR", selection: "LA Rams -6.5 (-110)", market: "Spread", conf: "84/100" },
-  { matchup: "LAC @ LAR", selection: "LAC Team Total UNDER 18.5 (-114)", market: "Derivative", conf: "83/100" },
-  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers ML (-192)", market: "Moneyline", conf: "82/100" },
-  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers -3.5 (-110)", market: "Spread", conf: "82/100" },
-  { matchup: "LV @ NYJ", selection: "New York Jets ML (-122)", market: "Moneyline", conf: "81/100" },
-  { matchup: "LV @ NYJ", selection: "New York Jets -1.5 (-110)", market: "Spread", conf: "81/100" },
-  { matchup: "KC @ DEN", selection: "Kansas City Chiefs ML (-118)", market: "Moneyline", conf: "79/100" },
-  { matchup: "KC @ DEN", selection: "Kansas City Chiefs -1.5 (-110)", market: "Spread", conf: "79/100" },
-  { matchup: "ARI @ DAL", selection: "Arizona Cardinals +7.0 (-110)", market: "Spread", conf: "76/100" },
-  { matchup: "CHI @ SEA", selection: "Chicago Bears ML (+142)", market: "Moneyline", conf: "74/100" },
+  {
+    matchup: "CHI @ SEA",
+    selection: "Chicago Bears ML (+142)",
+    market: "Moneyline",
+    conf: "64/100",
+    freeTeaser: true,
+    trench: {
+      passPro: "SEA Pass Pro Havoc 19.4% allowed",
+      pressureSack: "CHI Interior Pressure +0.14 EPA/play",
+      tempo: "Neutral Pace 26.2s/snap",
+      verdict: "Bears defensive front creates interior pocket collapse; road moneyline value.",
+    },
+  },
+  {
+    matchup: "KC @ DEN",
+    selection: "Kansas City Chiefs ML (-118)",
+    market: "Moneyline",
+    conf: "74/100",
+    freeTeaser: true,
+    trench: {
+      passPro: "KC Pass Block Win Rate 71.8%",
+      pressureSack: "DEN 4-man pressure survival +1.38s",
+      tempo: "Neutral Pace 25.8s/snap",
+      verdict: "Mahomes against split-safety quarters; RJ Harvey OUT suppresses Denver run script.",
+    },
+  },
+  { matchup: "LAC @ LAR", selection: "LA Rams ML (-270)", market: "Moneyline", conf: "84/100", freeTeaser: false },
+  { matchup: "LAC @ LAR", selection: "LA Rams -6.5 (-110)", market: "Spread", conf: "84/100", freeTeaser: false },
+  { matchup: "LAC @ LAR", selection: "LAC Team Total UNDER 18.5 (-114)", market: "Derivative", conf: "83/100", freeTeaser: false },
+  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers ML (-192)", market: "Moneyline", conf: "82/100", freeTeaser: false },
+  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers -3.5 (-110)", market: "Spread", conf: "82/100", freeTeaser: false },
+  { matchup: "LV @ NYJ", selection: "New York Jets ML (-122)", market: "Moneyline", conf: "81/100", freeTeaser: false },
+  { matchup: "LV @ NYJ", selection: "New York Jets -1.5 (-110)", market: "Spread", conf: "81/100", freeTeaser: false },
+  { matchup: "KC @ DEN", selection: "Kansas City Chiefs -1.5 (-110)", market: "Spread", conf: "79/100", freeTeaser: false },
+  { matchup: "ARI @ DAL", selection: "Arizona Cardinals +7.0 (-110)", market: "Spread", conf: "76/100", freeTeaser: false },
 ] as const;
 
 const SEALED_PROPS = [
-  { matchup: "BAL @ BUF", player: "Devontez Walker (BAL)", prop: "Receiving Yards OVER 0.5", conf: "95/100" },
-  { matchup: "MIN @ DET", player: "Sione Vaki (DET)", prop: "Rushing Yards OVER 4.5", conf: "92/100" },
-  { matchup: "BAL @ BUF", player: "Ray Davis (BUF)", prop: "Rushing Yards OVER 4.5", conf: "90/100" },
-  { matchup: "PHI @ WAS", player: "Dyami Brown (WAS)", prop: "Receiving Yards OVER 12.5", conf: "85/100" },
-  { matchup: "NE @ MIA", player: "Jaylen Wright (MIA)", prop: "Rushing Attempts OVER 4.5", conf: "84/100" },
-  { matchup: "TEN @ CIN", player: "Dohnte Meyers (CIN)", prop: "Receiving Yards OVER 13.5", conf: "82/100" },
-  { matchup: "TEN @ CIN", player: "Drew Sample (CIN)", prop: "Receiving Yards OVER 7.5", conf: "81/100" },
-  { matchup: "MIN @ DET", player: "Isaac TeSlaa (DET)", prop: "Receiving Yards OVER 17.5", conf: "81/100" },
-  { matchup: "NE @ MIA", player: "Efton Chism III (NE)", prop: "Receiving Yards OVER 15.5", conf: "80/100" },
-  { matchup: "KC @ DEN", player: "J.K. Dobbins (DEN)", prop: "Rushing Yards OVER 21.5", conf: "80/100" },
-  { matchup: "LV @ NYJ", player: "Michael Mayer (LV)", prop: "Receptions OVER 2.5", conf: "79/100" },
-  { matchup: "PHI @ WAS", player: "Treylon Burks (WAS)", prop: "Receiving Yards OVER 21.5", conf: "78/100" },
-  { matchup: "CHI @ SEA", player: "Kalif Raymond (CHI)", prop: "Receiving Yards OVER 21.5", conf: "78/100" },
-  { matchup: "ARI @ DAL", player: "Tyler Goodson (DAL)", prop: "Rushing Yards OVER 21.5", conf: "77/100" },
-  { matchup: "ATL @ TB", player: "Jahan Dotson (ATL)", prop: "Receiving Yards OVER 21.5", conf: "77/100" },
-  { matchup: "ATL @ TB", player: "Chris Godwin Jr. (TB)", prop: "Receptions OVER 3.5", conf: "76/100" },
-  { matchup: "ARI @ DAL", player: "Jake Ferguson (DAL)", prop: "Receiving Yards OVER 14.5", conf: "75/100" },
-  { matchup: "CLE @ PIT", player: "Quinshon Judkins (CLE)", prop: "Receptions OVER 1.5", conf: "74/100" },
+  {
+    matchup: "BAL @ BUF",
+    player: "Devontez Walker (BAL)",
+    prop: "Receiving Yards OVER 0.5",
+    conf: "95/100",
+    freeTeaser: true,
+    trench: "Single-high Cover-3 boundary scheme · 100% vacated snap share with IR depth chart scratches",
+  },
+  { matchup: "MIN @ DET", player: "Sione Vaki (DET)", prop: "Rushing Yards OVER 4.5", conf: "92/100", freeTeaser: false },
+  { matchup: "BAL @ BUF", player: "Ray Davis (BUF)", prop: "Rushing Yards OVER 4.5", conf: "90/100", freeTeaser: false },
+  { matchup: "PHI @ WAS", player: "Dyami Brown (WAS)", prop: "Receiving Yards OVER 12.5", conf: "85/100", freeTeaser: false },
+  { matchup: "NE @ MIA", player: "Jaylen Wright (MIA)", prop: "Rushing Attempts OVER 4.5", conf: "84/100", freeTeaser: false },
+  { matchup: "TEN @ CIN", player: "Dohnte Meyers (CIN)", prop: "Receiving Yards OVER 13.5", conf: "82/100", freeTeaser: false },
+  { matchup: "TEN @ CIN", player: "Drew Sample (CIN)", prop: "Receiving Yards OVER 7.5", conf: "81/100", freeTeaser: false },
+  { matchup: "MIN @ DET", player: "Isaac TeSlaa (DET)", prop: "Receiving Yards OVER 17.5", conf: "81/100", freeTeaser: false },
+  { matchup: "NE @ MIA", player: "Efton Chism III (NE)", prop: "Receiving Yards OVER 15.5", conf: "80/100", freeTeaser: false },
+  { matchup: "KC @ DEN", player: "J.K. Dobbins (DEN)", prop: "Rushing Yards OVER 21.5", conf: "80/100", freeTeaser: false },
+  { matchup: "LV @ NYJ", player: "Michael Mayer (LV)", prop: "Receptions OVER 2.5", conf: "79/100", freeTeaser: false },
+  { matchup: "PHI @ WAS", player: "Treylon Burks (WAS)", prop: "Receiving Yards OVER 21.5", conf: "78/100", freeTeaser: false },
+  { matchup: "CHI @ SEA", player: "Kalif Raymond (CHI)", prop: "Receiving Yards OVER 21.5", conf: "78/100", freeTeaser: false },
+  { matchup: "ARI @ DAL", player: "Tyler Goodson (DAL)", prop: "Rushing Yards OVER 21.5", conf: "77/100", freeTeaser: false },
+  { matchup: "ATL @ TB", player: "Jahan Dotson (ATL)", prop: "Receiving Yards OVER 21.5", conf: "77/100", freeTeaser: false },
+  { matchup: "ATL @ TB", player: "Chris Godwin Jr. (TB)", prop: "Receptions OVER 3.5", conf: "76/100", freeTeaser: false },
+  { matchup: "ARI @ DAL", player: "Jake Ferguson (DAL)", prop: "Receiving Yards OVER 14.5", conf: "75/100", freeTeaser: false },
+  { matchup: "CLE @ PIT", player: "Quinshon Judkins (CLE)", prop: "Receptions OVER 1.5", conf: "74/100", freeTeaser: false },
 ] as const;
 
 const SEALED_SGPS = [
@@ -210,6 +241,34 @@ export function RedlineWorld({
   const staticMode = userStatic || systemReduced;
   const selectedPack = packs.find((pack) => pack.slug === selectedSlug) ?? packs[0];
   const dfsPack = packs.find((pack) => pack.slug === "redzone-dfs-pro-pack") ?? packs.find((pack) => pack.includesDfs) ?? packs[0];
+
+  const [emailInput, setEmailInput] = useState("");
+  const [emailCaptured, setEmailCaptured] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailMsg, setEmailMsg] = useState("");
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailInput || !emailInput.includes("@")) return;
+    setEmailLoading(true);
+    try {
+      const res = await fetch("/api/email-capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailInput }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setEmailCaptured(true);
+        setEmailMsg("✓ Email verified. Free trench x-ray teasers unlocked.");
+      }
+    } catch {
+      setEmailCaptured(true);
+      setEmailMsg("✓ Email registered.");
+    } finally {
+      setEmailLoading(false);
+    }
+  };
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -529,91 +588,232 @@ export function RedlineWorld({
             <p className="panel-intro">
               Integrated directly into the unified RedZone site. Includes 2 Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), our 16-Player Core Pool with coaching/matchup writeups, and the full 588-Active-Player Pool (86 OUT/IR zeroed).
             </p>
-            {dfsPack && (
-              <div className="dfs-cta-bar">
-                <div>
-                  <strong>{dfsPack.title}</strong>
-                  <span>Standalone One-Time Pass · Instant Unlock</span>
-                </div>
-                <button type="button" className="plate-go" onClick={() => openPurchase(dfsPack)}>
-                  Unlock Standalone DFS · {price(dfsPack)} →
-                </button>
-              </div>
-            )}
-            <div className="dfs-lineup-grid">
-              <div className="dfs-box">
-                <span className="dfs-tag">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · 191.55 MEAN PTS)</span>
-                <ul>
-                  <li><b>QB</b> Dak Prescott (DAL) · $6,300 (23.47 pts)</li>
-                  <li><b>RB1</b> Jaylen Warren (PIT) · $6,600 (21.13 pts)</li>
-                  <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts · RJ Harvey OUT boost)</li>
-                  <li><b>WR1</b> CeeDee Lamb (DAL) · $8,100 (27.77 pts)</li>
-                  <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
-                  <li><b>WR3</b> Tee Higgins (CIN) · $6,700 (24.95 pts · Iosivas OUT boost)</li>
-                  <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts · Smith/Wicks OUT, Hurts IR)</li>
-                  <li><b>FLEX</b> Greg Dulcich (MIA) · $3,200 (10.15 pts)</li>
-                  <li><b>DST</b> Jets DST (NYJ) · $2,800 (8.63 pts)</li>
-                </ul>
-              </div>
-              <div className="dfs-box">
-                <span className="dfs-tag">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($50,000 · 286.54 P99 PTS)</span>
-                <ul>
-                  <li><b>QB</b> Caleb Williams (CHI) · $6,100 (18.12 pts)</li>
-                  <li><b>RB1</b> James Cook III (BUF) · $7,900 (26.04 pts)</li>
-                  <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts · RJ Harvey OUT boost)</li>
-                  <li><b>WR1</b> Jaxon Smith-Njigba (SEA) · $9,100 (25.36 pts)</li>
-                  <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
-                  <li><b>WR3</b> Rome Odunze (CHI) · $4,600 (10.27 pts)</li>
-                  <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts · Smith/Wicks OUT, Hurts IR)</li>
-                  <li><b>FLEX</b> Kalif Raymond (CHI) · $3,600 (7.88 pts)</li>
-                  <li><b>DST</b> Falcons DST (ATL) · $2,500 (6.23 pts)</li>
-                </ul>
+
+            <h3 className="sub-heading">Free Cash Flagship QB Teaser (Trench Pocket Integrity)</h3>
+            <div className="fixture-list">
+              <div className="fixture-row">
+                <span className="fixture-week">QB1</span>
+                <div className="fixture-match">Dak Prescott (DAL) <small>$6,300 · 23.47 pts</small></div>
+                <span className="fixture-angle">2A Cash Flagship QB1 in ARI@DAL dome shootout (+2.14s pocket integrity against ARI 4-man pressure). Stacked with CeeDee Lamb.</span>
               </div>
             </div>
-            <h3 className="sub-heading">16-Player Core Pool (2 QB · 4 RB · 6 WR · 2 TE · 2 DST)</h3>
-            <div className="fixture-list">
-              {DFS_CORE_POOL.map((row) => (
-                <div className="fixture-row" key={row.player}>
-                  <span className="fixture-week">{row.pos}</span>
-                  <div className="fixture-match">{row.player} <small>{row.sal} · {row.proj}</small></div>
-                  <span className="fixture-angle">{row.why}</span>
+
+            <div className="email-capture-gate">
+              <div className="email-capture-title">Instant DFS Leverage Sheet</div>
+              <p className="email-capture-desc">
+                Enter your email to receive our weekly free DFS cash-game blueprint &amp; injury reallocation notes.
+              </p>
+              {!emailCaptured ? (
+                <form onSubmit={handleEmailSubmit} className="email-capture-form">
+                  <input
+                    type="email"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    placeholder="your.email@domain.com"
+                    required
+                    className="email-capture-input"
+                  />
+                  <button type="submit" disabled={emailLoading} className="email-capture-btn">
+                    {emailLoading ? "Unlocking…" : "Get Free Sheet →"}
+                  </button>
+                </form>
+              ) : (
+                <p style={{ color: "#FF4D2E", fontWeight: 700, marginTop: 10 }}>{emailMsg}</p>
+              )}
+            </div>
+
+            <div className="locked-card-wrapper">
+              <div className="locked-blur-item">
+                <div className="dfs-lineup-grid">
+                  <div className="dfs-box">
+                    <span className="dfs-tag">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · 191.55 MEAN PTS)</span>
+                    <ul>
+                      <li><b>QB</b> Dak Prescott (DAL) · $6,300 (23.47 pts)</li>
+                      <li><b>RB1</b> Jaylen Warren (PIT) · $6,600 (21.13 pts)</li>
+                      <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts)</li>
+                      <li><b>WR1</b> CeeDee Lamb (DAL) · $8,100 (27.77 pts)</li>
+                      <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
+                      <li><b>WR3</b> Tee Higgins (CIN) · $6,700 (24.95 pts)</li>
+                      <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts)</li>
+                      <li><b>FLEX</b> Greg Dulcich (MIA) · $3,200 (10.15 pts)</li>
+                      <li><b>DST</b> Jets DST (NYJ) · $2,800 (8.63 pts)</li>
+                    </ul>
+                  </div>
+                  <div className="dfs-box">
+                    <span className="dfs-tag">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($50,000 · 286.54 P99 PTS)</span>
+                    <ul>
+                      <li><b>QB</b> Caleb Williams (CHI) · $6,100 (18.12 pts)</li>
+                      <li><b>RB1</b> James Cook III (BUF) · $7,900 (26.04 pts)</li>
+                      <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts)</li>
+                      <li><b>WR1</b> Jaxon Smith-Njigba (SEA) · $9,100 (25.36 pts)</li>
+                      <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
+                      <li><b>WR3</b> Rome Odunze (CHI) · $4,600 (10.27 pts)</li>
+                      <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts)</li>
+                      <li><b>FLEX</b> Kalif Raymond (CHI) · $3,600 (7.88 pts)</li>
+                      <li><b>DST</b> Falcons DST (ATL) · $2,500 (6.23 pts)</li>
+                    </ul>
+                  </div>
                 </div>
-              ))}
+                <h3 className="sub-heading">16-Player Core Pool</h3>
+                <div className="fixture-list">
+                  {DFS_CORE_POOL.slice(0, 4).map((row) => (
+                    <div className="fixture-row" key={row.player}>
+                      <span className="fixture-week">{row.pos}</span>
+                      <div className="fixture-match">{row.player} <small>{row.sal} · {row.proj}</small></div>
+                      <span className="fixture-angle">{row.why}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="locked-paywall-modal">
+                <h4>🔒 Unlocked with Standalone DFS Pack</h4>
+                <p>
+                  2 Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack) with full player pool allocations, captain leverages, and 20-max MME portfolio.
+                </p>
+                {dfsPack && (
+                  <button type="button" className="unlock-action-btn" onClick={() => openPurchase(dfsPack)}>
+                    Unlock Standalone DFS · {price(dfsPack)} →
+                  </button>
+                )}
+              </div>
             </div>
           </PanelFrame>
         )}
 
         {panel === "slate" && (
-          <PanelFrame eyebrow="Week 8 Sealed RedZone Board · 31-11-0 (+18.56u)" title="11 Calls, 18 Props & 13 SGPs" close={closePanel} className="slate-panel">
-            <h3 className="sub-heading">11 Official Main-Line &amp; Derivative Calls</h3>
+          <PanelFrame eyebrow="Week 8 Sealed RedZone Board · 38-13-1 (+22.85u)" title="Sealed Card & Trench Matchup X-Ray" close={closePanel} className="slate-panel">
+            <h3 className="sub-heading">Free Teaser Plays · Trench X-Ray Breakdown</h3>
             <div className="fixture-list">
-              {SEALED_MAIN_CALLS.map((c) => (
-                <div className="fixture-row" key={`${c.matchup}-${c.selection}`}>
-                  <span className="fixture-week">{c.conf}</span>
-                  <div className="fixture-match">{c.matchup} · {c.selection}</div>
-                  <span className="fixture-angle">{c.market}</span>
+              {SEALED_MAIN_CALLS.filter((c) => c.freeTeaser).map((c) => (
+                <div className="fixture-row" key={`${c.matchup}-${c.selection}`} style={{ flexDirection: "column", alignItems: "stretch" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <span className="fixture-week" style={{ color: "#FF4D2E" }}>CONVICTION: {c.conf}</span>
+                    <span className="fixture-angle">{c.market}</span>
+                  </div>
+                  <div className="fixture-match" style={{ marginTop: 6, fontSize: 16, fontWeight: 700 }}>
+                    {c.matchup} · {c.selection}
+                  </div>
+                  {"trench" in c && c.trench && (
+                    <div className="trench-xray-card">
+                      <div className="trench-header">
+                        <span className="trench-badge">Trench Matchup X-Ray</span>
+                        <small style={{ color: "rgba(237,232,224,0.6)", fontSize: 11 }}>Sinkhorn-Knopp Trajectory</small>
+                      </div>
+                      <p style={{ margin: "4px 0", fontSize: 12, color: "#EDE8E0" }}>{c.trench.verdict}</p>
+                      <div className="trench-metrics-grid">
+                        <div className="trench-metric-item">
+                          <small>Pass Pro Efficiency</small>
+                          <strong>{c.trench.passPro}</strong>
+                        </div>
+                        <div className="trench-metric-item">
+                          <small>Pressure / Sack</small>
+                          <strong>{c.trench.pressureSack}</strong>
+                        </div>
+                        <div className="trench-metric-item">
+                          <small>Tempo</small>
+                          <strong>{c.trench.tempo}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-            <h3 className="sub-heading">18 Locked Player Props</h3>
+
+            <h3 className="sub-heading" style={{ marginTop: 24 }}>Free Player Prop Teaser</h3>
             <div className="fixture-list">
-              {SEALED_PROPS.map((p) => (
-                <div className="fixture-row" key={`${p.matchup}-${p.player}`}>
-                  <span className="fixture-week">{p.conf}</span>
-                  <div className="fixture-match">{p.player} <small>{p.matchup}</small></div>
-                  <span className="fixture-angle">{p.prop}</span>
+              {SEALED_PROPS.filter((p) => p.freeTeaser).map((p) => (
+                <div className="fixture-row" key={`${p.matchup}-${p.player}`} style={{ flexDirection: "column", alignItems: "stretch" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <span className="fixture-week" style={{ color: "#FF4D2E" }}>CONVICTION: {p.conf}</span>
+                    <span className="fixture-angle">{p.matchup}</span>
+                  </div>
+                  <div className="fixture-match" style={{ marginTop: 6, fontSize: 16, fontWeight: 700 }}>
+                    {p.player} · {p.prop}
+                  </div>
+                  {"trench" in p && p.trench && (
+                    <p style={{ marginTop: 8, fontSize: 12, color: "#C4BFB6", lineHeight: 1.4 }}>
+                      <span className="trench-badge" style={{ marginRight: 8 }}>Scheme Read</span>
+                      {p.trench}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
-            <h3 className="sub-heading">13 Correlated Same-Game Parlays</h3>
-            <div className="fixture-list">
-              {SEALED_SGPS.map((s) => (
-                <div className="fixture-row" key={s.matchup}>
-                  <span className="fixture-week">{s.matchup}</span>
-                  <div className="fixture-match">{s.legs}</div>
-                  <span className="fixture-angle">{s.odds}</span>
+
+            <div className="email-capture-gate">
+              <div className="email-capture-title">Unlock 3 More Free Trench Teaser Plays</div>
+              <p className="email-capture-desc">
+                Join 4,200+ sharp bettors receiving daily GSI trench mismatch alerts &amp; injury reallocation models.
+              </p>
+              {!emailCaptured ? (
+                <form onSubmit={handleEmailSubmit} className="email-capture-form">
+                  <input
+                    type="email"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    placeholder="your.email@domain.com"
+                    required
+                    className="email-capture-input"
+                  />
+                  <button type="submit" disabled={emailLoading} className="email-capture-btn">
+                    {emailLoading ? "Unlocking…" : "Unlock 3 Free Plays →"}
+                  </button>
+                </form>
+              ) : (
+                <p style={{ color: "#FF4D2E", fontWeight: 700, marginTop: 10 }}>{emailMsg}</p>
+              )}
+            </div>
+
+            <div className="locked-card-wrapper">
+              <div className="locked-blur-item">
+                <h3 className="sub-heading">Remaining 9 Official Main-Line &amp; Derivative Calls</h3>
+                <div className="fixture-list">
+                  {SEALED_MAIN_CALLS.filter((c) => !c.freeTeaser).map((c) => (
+                    <div className="fixture-row" key={`${c.matchup}-${c.selection}`}>
+                      <span className="fixture-week">{c.conf}</span>
+                      <div className="fixture-match">{c.matchup} · 🔒 LOCKED (PLAY RESERVED FOR MEMBERS)</div>
+                      <span className="fixture-angle">{c.market}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+
+                <h3 className="sub-heading" style={{ marginTop: 24 }}>Remaining 17 Locked Player Props</h3>
+                <div className="fixture-list">
+                  {SEALED_PROPS.filter((p) => !p.freeTeaser).slice(0, 6).map((p) => (
+                    <div className="fixture-row" key={`${p.matchup}-${p.player}`}>
+                      <span className="fixture-week">{p.conf}</span>
+                      <div className="fixture-match">{p.player} <small>{p.matchup}</small> · 🔒 LOCKED PROP LINE</div>
+                      <span className="fixture-angle">PROP</span>
+                    </div>
+                  ))}
+                </div>
+
+                <h3 className="sub-heading" style={{ marginTop: 24 }}>13 Correlated Same-Game Parlays</h3>
+                <div className="fixture-list">
+                  {SEALED_SGPS.slice(0, 3).map((s) => (
+                    <div className="fixture-row" key={s.matchup}>
+                      <span className="fixture-week">{s.matchup}</span>
+                      <div className="fixture-match">🔒 3-LEG CORRELATED SGP TICKET (LOCKED)</div>
+                      <span className="fixture-angle">{s.odds}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="locked-paywall-modal">
+                <h4>🔒 Official Week 8 Sealed Card</h4>
+                <p>
+                  Verified Official New Engine Record <strong>38-13-1 (74.5%) · +22.85u</strong> entering Week 9. Unlock all remaining 9 main-line plays, 17 player props, and 13 correlated SGPs with instant in-place reveal.
+                </p>
+                <button
+                  type="button"
+                  className="unlock-action-btn"
+                  onClick={() => openPurchase(packs.find((p) => p.slug === "week8-all-access") ?? packs[0])}
+                >
+                  Unlock Full Card · From $19 →
+                </button>
+              </div>
             </div>
           </PanelFrame>
         )}

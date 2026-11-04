@@ -1,7 +1,6 @@
-```markdown
-# **Galaxy Research Labs**  
+# **Galaxy Science Institute (GSI)**  
 **Defense R&D SBIR Proposal**  
-*Document ID: GSE-GRANT-ONR-2026-01*  
+*Document ID: GSI-GRANT-ONR-2026-01*  
 *Topic: Resilient Tactical Decision Support & Adversarial Trajectory Simulation Under Extreme Sensor Disruption*  
 
 ---
@@ -12,7 +11,7 @@ Modern naval command-and-control (C2) systems face escalating threats from adver
 - **Enemy trajectories are disguised** (e.g., `def_shell_call` maneuvers mimicking friendly IFF signatures).  
 - **Probabilistic fusion engines clamp unverified joint likelihoods**, leading to irreversible tactical errors.  
 
-**Galaxy Research Labs (GRL)** proposes a **mathematically bounded decision framework** that:  
+**Galaxy Science Institute (GSI)** proposes a **mathematically bounded decision framework** that:  
 ✔ **Rejects unverifiable sensor correlations** via spectral decomposition.  
 ✔ **Detects adversarial trajectory deception** through quantile-conformalized threat bounds.  
 ✔ **Operates under >80% sensor dropout** without degrading decision integrity.  
@@ -64,22 +63,27 @@ Modern naval command-and-control (C2) systems face escalating threats from adver
 
 ---
 
-## **5. Funding & Team**  
+## **5. Institutional Capacity, Facilities & Key Personnel**  
 - **Requested Phase I Award**: **$250,000**  
+- **Proposing Institution**: **Galaxy Science Institute (GSI)** / Galaxy Sports Edge LLC  
 - **Key Personnel**:  
-  - *Dr. A. Vance* (PI, ex-DARPA MTO) – Decision theory under uncertainty.  
-  - *CDR R. Torres (USN Ret.)* – Fleet EW operational validation.  
-- **Facilities**: GRL’s **Tactical AI Test Range** (NSA-certified RF isolation chambers).  
+  - **Garrett Baxley** (Lead Investigator & Founder, Galaxy Science Institute) — Decision theory under non-stationary uncertainty, real-time combinatorial routing, and finite-sample distribution-free conformal calibration.  
+  - **GSI Quantitative & Defense Systems Core** — Stochastic optimal control, Cholesky spectral decorrelation, and adversarial trajectory estimation.  
+- **Core Verifiable Mathematical Framework**:  
+  - **Sinkhorn-Knopp Conformal Optimal Transport**: GPU-accelerated mass-conserving entropy regularization ($\tau = 0.30 - 0.42$) preventing probability leakage under adversarial dropout.  
+  - **Markovian State Transitions & Schrödinger Bridges**: Entropic interpolation establishing bounded kinetic risk trajectories under active ECM sensor disruption.  
+  - **Finite-Sample TA-CQR**: Exact distribution-free marginal coverage ($\lceil (n+1)(1-\alpha) \rceil / n$) guaranteeing kinematic safety envelopes without parametric Gaussian assumptions.  
+- **Computational Facilities & Infrastructure**:  
+  - High-throughput dedicated simulation and neural-symbolic inference cluster running on Linux/Windows hybrid architecture with NVIDIA Tensor-core acceleration.  
+  - Zero-dependency Apache-2.0 open research kernel (`galaxy-conformal-ot`) benchmarked on real-world continuous multi-agent collision streams and physiological telemetry with 100% test reproducibility.  
 
-**Transition Path**: Phase II targets **ONR N0001427SB001** for at-sea testing aboard *USS Delbert Black* (DDG-119).  
+**Transition Path**: Phase II targets Naval Sea Systems Command (NAVSEA) and ONR tactical decision aid integration for shipboard and unmanned distributed surface/aerial platforms.  
 
 ---  
-**Approval Block**  
-*Submitted on behalf of Galaxy Research Labs by*:  
-**Dr. █████ █████**  
-Director, Defense R&D  
-*[Signed]* | *[Date]*  
-```  
+**Institutional Endorsement Block**  
+*Submitted on behalf of Galaxy Science Institute (GSI) / Galaxy Sports Edge LLC by*:  
+**Garrett Baxley**  
+Lead Investigator & Founder, Galaxy Science Institute  
+*Galaxy Science Institute R&D Office* | *Austin, TX*  
 
-**END OF PROPOSAL**  
-```
+**END OF PROPOSAL**

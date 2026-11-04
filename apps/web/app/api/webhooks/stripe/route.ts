@@ -4,6 +4,7 @@ import { getStripe, StripeConfigError, stripe } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { tierFromPriceRef } from "@/lib/billing/price-ids";
 import { track } from "@/lib/analytics/events";
+import { recordPurchaseLedgerEntry } from "@/lib/packages/purchase-ledger";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -162,6 +163,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         const lookupKey = typeof priceObj === "string" ? null : priceObj?.lookup_key ?? null;
         completedTier = tierFromPriceRef(priceId, lookupKey);
         await syncSubscription(subscription);
+      } else {
+        // One-time pack purchase — record to durable purchase ledger so customer
+        // access survives tab close, browser refreshes, and page navigation.
+        const packageSlug = session.metadata?.packageSlug || session.metadata?.package || "week8-all-access";
+        completedTier = packageSlug;
+        const customerEmail = session.customer_details?.email || session.customer_email || null;
+        await recordPurchaseLedgerEntry({
+          sessionId: session.id,
+          packageSlug,
+          customerEmail,
+          userId: session.metadata?.userId || null,
+          amountCents: session.amount_total ?? 0,
+          currency: session.currency || "usd",
+          metadata: session.metadata as Record<string, unknown> | undefined,
+        });
       }
       // Conversion signal — a checkout session completed and entitlement was
       // synced (or attempted). Inert no-op until a provider is wired.

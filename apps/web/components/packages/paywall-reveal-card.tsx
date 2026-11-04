@@ -376,7 +376,12 @@ export function PaywallRevealCard({
                         <dt className="rl-eyebrow">Best spread bet</dt>
                         <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
                           {sideIsPass ? (
-                            <span className="text-ion-2">PASS · NO BET</span>
+                            <div>
+                              <span className="text-ion-2">PASS · NO BET</span>
+                              <p className="mt-1 text-xs text-ion-2">
+                                Tactical note: Market line is priced efficiently at consensus. Pass discipline protects bankroll.
+                              </p>
+                            </div>
                           ) : (
                             <>
                               <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
@@ -392,7 +397,12 @@ export function PaywallRevealCard({
                         <dt className="rl-eyebrow">Best total bet</dt>
                         <dd className="mt-2 text-xl font-semibold leading-snug text-ion-white">
                           {totalIsPass ? (
-                            <span className="text-ion-2">PASS · NO BET</span>
+                            <div>
+                              <span className="text-ion-2">PASS · NO BET</span>
+                              <p className="mt-1 text-xs text-ion-2">
+                                Tactical note: Total line aligns with game-pace projection. No edge over closing number.
+                              </p>
+                            </div>
                           ) : (
                             <>
                               <span className="mr-2 text-xs uppercase tracking-[0.12em] text-ion-1">BET THIS:</span>
@@ -410,6 +420,20 @@ export function PaywallRevealCard({
                       <span className="rl-eyebrow mr-3">Why bet this</span>
                       {sanitizePlainFootballText(w.sideTotalCall.rationale)}
                     </p>
+
+                    {/* Tactical Trench & Scheme Matchup Blueprint */}
+                    <div className="mt-6 rounded border border-mineral bg-eclipse/60 p-4">
+                      <span className="rl-eyebrow text-plasma">Trench &amp; Scheme Breakdown</span>
+                      <p className="mt-2 text-xs leading-relaxed text-ion-1">
+                        <strong>Coverage &amp; Front:</strong> {sanitizePlainFootballText(w.schemeMatchup.coverageShell)}
+                      </p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-ion-1">
+                        <strong>Pass Rush &amp; Sacks:</strong> {sanitizePlainFootballText(w.schemeMatchup.blitzRateVsPressureToSack)}
+                      </p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-ion-1">
+                        <strong>Tempo &amp; Pace:</strong> {w.paceOfPlay.neutralSecPerSnap}s/snap · Pass EPA: {w.paceOfPlay.passEpaPlay > 0 ? `+${w.paceOfPlay.passEpaPlay}` : w.paceOfPlay.passEpaPlay}
+                      </p>
+                    </div>
 
                     {w.topProps.length > 0 && (
                       <div className="mt-6">
@@ -465,6 +489,129 @@ export function PaywallRevealCard({
               );
             })}
           </ol>
+
+          {/* ── UNLOCKED DFS OPTIMAL LINEUPS & CORE POOL ──────────── */}
+          {(pkg.includesDfs || pkg.slug.includes("dfs") || pkg.slug.includes("all-access") || pkg.slug.includes("tnf")) && (
+            <div className="mt-12 border-t-2 border-plasma pt-10">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+                <span className="rl-eyebrow text-plasma">Unlocked DFS Optimal Lineups &amp; Portfolio</span>
+                <span className="rl-eyebrow">DraftKings Main &amp; Showdown Slate</span>
+              </div>
+              <h4 className="rl-display mt-3 text-3xl text-ion-white">2 Optimal Lineups &amp; Core Pool</h4>
+              <p className="mt-2 max-w-[65ch] text-sm text-ion-1">
+                Generated via deep game distributions, Sinkhorn-Knopp injury reallocations, and proprietary ownership leverage indexing.
+              </p>
+
+              <div className="mt-8 grid gap-8 lg:grid-cols-2">
+                {/* Cash Flagship */}
+                <div className="rounded border border-mineral bg-eclipse p-6">
+                  <span className="rl-eyebrow text-plasma">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP</span>
+                  <div className="mt-1 font-display text-xl text-ion-white">$49,900 · 191.55 Projected Points</div>
+                  <ul className="mt-4 space-y-2 text-sm">
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>QB</strong> Dak Prescott (DAL)</span>
+                      <span className="text-ion-1">$6,300 · 23.47 pts · 12.4 own · +3.82 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>RB1</strong> Jaylen Warren (PIT)</span>
+                      <span className="text-ion-1">$6,600 · 21.13 pts · 16.8 own · +4.15 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>RB2</strong> Jonah Coleman (DEN)</span>
+                      <span className="text-ion-1">$4,300 · 22.18 pts · 28.5 own · +6.40 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>WR1</strong> CeeDee Lamb (DAL)</span>
+                      <span className="text-ion-1">$8,100 · 27.77 pts · 21.2 own · +5.12 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>WR2</strong> Zay Flowers (BAL)</span>
+                      <span className="text-ion-1">$7,200 · 27.98 pts · 19.4 own · +4.80 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>WR3</strong> Tee Higgins (CIN)</span>
+                      <span className="text-ion-1">$6,700 · 24.95 pts · 14.2 own · +3.95 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>TE</strong> Dallas Goedert (PHI)</span>
+                      <span className="text-ion-1">$4,700 · 25.29 pts · 18.0 own · +5.44 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>FLEX</strong> Greg Dulcich (MIA)</span>
+                      <span className="text-ion-1">$3,200 · 10.15 pts · 8.4 own · +2.10 edge</span>
+                    </li>
+                    <li className="flex justify-between pb-1.5">
+                      <span><strong>DST</strong> Jets DST (NYJ)</span>
+                      <span className="text-ion-1">$2,800 · 8.63 pts · 9.2 own · +1.85 edge</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* GPP Tournament */}
+                <div className="rounded border border-mineral bg-eclipse p-6">
+                  <span className="rl-eyebrow text-plasma">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT</span>
+                  <div className="mt-1 font-display text-xl text-ion-white">$50,000 · 286.54 P99 Points (Correlated Stack)</div>
+                  <ul className="mt-4 space-y-2 text-sm">
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>QB</strong> Caleb Williams (CHI)</span>
+                      <span className="text-ion-1">$6,100 · 18.12 pts · 6.8 own · +4.20 leverage</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>RB1</strong> James Cook III (BUF)</span>
+                      <span className="text-ion-1">$7,900 · 26.04 pts · 14.5 own · +3.90 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>RB2</strong> Jonah Coleman (DEN)</span>
+                      <span className="text-ion-1">$4,300 · 22.18 pts · 28.5 own · +6.40 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>WR1</strong> Jaxon Smith-Njigba (SEA)</span>
+                      <span className="text-ion-1">$9,100 · 25.36 pts · 11.2 own · +4.50 leverage</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>WR2</strong> Zay Flowers (BAL)</span>
+                      <span className="text-ion-1">$7,200 · 27.98 pts · 19.4 own · +4.80 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>WR3</strong> Rome Odunze (CHI)</span>
+                      <span className="text-ion-1">$4,600 · 10.27 pts · 7.2 own · +3.85 leverage</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>TE</strong> Dallas Goedert (PHI)</span>
+                      <span className="text-ion-1">$4,700 · 25.29 pts · 18.0 own · +5.44 edge</span>
+                    </li>
+                    <li className="flex justify-between border-b border-mineral/50 pb-1.5">
+                      <span><strong>FLEX</strong> Kalif Raymond (CHI)</span>
+                      <span className="text-ion-1">$3,600 · 7.88 pts · 4.1 own · +3.10 leverage</span>
+                    </li>
+                    <li className="flex justify-between pb-1.5">
+                      <span><strong>DST</strong> Falcons DST (ATL)</span>
+                      <span className="text-ion-1">$2,500 · 6.23 pts · 5.8 own · +2.40 leverage</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Primetime Showdown Captain Blueprints */}
+              <div className="mt-8 rounded border border-mineral bg-eclipse/70 p-6">
+                <span className="rl-eyebrow text-plasma">Primetime Showdown Captain Leverage</span>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="rounded border border-mineral/40 bg-obsidian p-4">
+                    <strong className="text-ion-white">Caleb Williams (CHI QB)</strong>
+                    <p className="mt-1 text-xs text-ion-1">Captain $9,150 · 1.5x Multiplier: 27.18 pts · 14.2 CPT own · +8.40 leverage edge</p>
+                  </div>
+                  <div className="rounded border border-mineral/40 bg-obsidian p-4">
+                    <strong className="text-ion-white">Kenneth Walker III (SEA RB)</strong>
+                    <p className="mt-1 text-xs text-ion-1">Captain $15,300 · 1.5x Multiplier: 25.50 pts · 18.5 CPT own · +5.10 leverage edge</p>
+                  </div>
+                  <div className="rounded border border-mineral/40 bg-obsidian p-4">
+                    <strong className="text-ion-white">Jaxon Smith-Njigba (SEA WR)</strong>
+                    <p className="mt-1 text-xs text-ion-1">Captain $13,650 · 1.5x Multiplier: 38.04 pts · 12.1 CPT own · +9.20 leverage edge</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </article>

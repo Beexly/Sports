@@ -457,9 +457,20 @@ const FAMILIES: readonly CalibrationMethod[] = ["isotonic", "platt", "beta"];
 
 export function computeWalshCalibrationGate(
   samples: readonly { readonly p: number; readonly y: 0 | 1 }[],
-): { readonly classwiseEce: number; readonly brier: number; readonly gatePass: boolean } {
-  if (samples.length === 0) return { classwiseEce: 1, brier: 1, gatePass: false };
+): {
+  readonly classwiseEce: number;
+  readonly brier: number;
+  readonly baseRateBrier: number;
+  readonly brierSkillScore: number;
+  readonly gatePass: boolean;
+} {
+  if (samples.length === 0) {
+    return { classwiseEce: 1, brier: 1, baseRateBrier: 0.25, brierSkillScore: -1, gatePass: false };
+  }
   const brier = samples.reduce((sum, s) => sum + (s.p - s.y) ** 2, 0) / samples.length;
+  const yBar = samples.reduce((sum, s) => sum + s.y, 0) / samples.length;
+  const baseRateBrier = Math.max(1e-6, yBar * (1 - yBar));
+  const brierSkillScore = 1 - brier / baseRateBrier;
   const by = new Map<string, { p: number; y: number }[]>();
   for (const s of samples) {
     const key = s.p >= 0.5 ? "favorite" : "dog";
@@ -484,7 +495,13 @@ export function computeWalshCalibrationGate(
     total += ece;
   }
   const classwiseEce = total / by.size;
-  return { classwiseEce, brier, gatePass: classwiseEce <= 0.05 && brier <= 0.25 };
+  return {
+    classwiseEce,
+    brier,
+    baseRateBrier,
+    brierSkillScore,
+    gatePass: classwiseEce <= 0.05 && brier <= Math.min(0.25, baseRateBrier + 0.01),
+  };
 }
 
 export const compute_walsh_calibration_gate = computeWalshCalibrationGate;

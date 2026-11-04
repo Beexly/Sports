@@ -24,7 +24,7 @@ export default function PropsPage(): JSX.Element {
         <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">16-5 (76.2%) · +10.45u</p>
         <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Locked props</h1>
         <div className="mt-10">
-          <SealedTable rows={props} />
+          <SealedTable rows={props} freeLimit={2} />
         </div>
         <h2 className="mt-16 font-display text-4xl uppercase">360° watchlist</h2>
         <p className="mt-3 max-w-2xl text-[#C4BFB6]">Bet only at or better than the trigger. These are not locked official plays.</p>

@@ -152,16 +152,10 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
     }
   });
 
-  it("gates old routes with Under Construction notice (/picks excluded: it was published as the sealed board), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
+  it("gates inactive routes with Under Construction notice (/picks, /board, /calibration, /sgp-projections un-gated to live verified cards), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
     const gatedPages = [
-      BoardPage,
-      // PicksPage removed 2026-11-03: /picks was deliberately un-gated when
-      // commit 30a6fe52f published it as the sealed Week 8 locked board. Its
-      // contract is asserted right below (and in the picks-* test files).
       PlayersPage,
-      SgpProjectionsPage,
       IntelligenceEnginesPage,
-      CalibrationProofRoomPage,
       FantasyHubPage,
     ];
 
@@ -180,12 +174,28 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
       unmount();
     }
 
-    // /picks is no longer a gated stub: commit 30a6fe52f published it as the
-    // sealed Week 8 locked board. Pin that it is NOT wearing the stub notice.
+    // /picks, /board, /calibration, /sgp-projections are restored to live production:
+    // Pin that they are NOT wearing the stub notice.
     const { container: picksDom, unmount: unmountPicks } = render(<PicksPage />);
     expect(picksDom.textContent).not.toContain("Under Construction");
     expect(picksDom.textContent).toContain("sealed card");
     unmountPicks();
+
+    const { container: boardDom, unmount: unmountBoard } = render(<BoardPage />);
+    expect(boardDom.textContent).not.toContain("Under Construction");
+    expect(boardDom.textContent).toContain("38-13-1");
+    unmountBoard();
+
+    const { container: calDom, unmount: unmountCal } = render(<CalibrationProofRoomPage />);
+    expect(calDom.textContent).not.toContain("Under Construction");
+    expect(calDom.textContent).toContain("Calibration Proof Room");
+    expect(calDom.textContent).toContain("Brier Calibration Score");
+    unmountCal();
+
+    const { container: sgpDom, unmount: unmountSgp } = render(<SgpProjectionsPage />);
+    expect(sgpDom.textContent).not.toContain("Under Construction");
+    expect(sgpDom.textContent).toContain("Correlated SGP Projections");
+    unmountSgp();
 
     const homeSrc = readFileSync(resolve(__dirname, "..", "app", "page.tsx"), "utf8");
     expect(homeSrc).not.toContain("DoorCard");

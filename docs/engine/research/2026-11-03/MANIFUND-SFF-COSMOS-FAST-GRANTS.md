@@ -1,6 +1,6 @@
-# Fast-Grant & Epistemic Regrant Submission Pack: Galaxy Decision Sciences
-**Document ID:** `GDS-FAST-GRANTS-2026-11-03`  
-**Legal Entity:** Galaxy Sports Network LLC (DBA: Galaxy Decision Sciences)  
+# Fast-Grant & Epistemic Regrant Submission Pack: Galaxy Science Institute
+**Document ID:** `GSI-FAST-GRANTS-2026-11-03`  
+**Legal Entity:** Galaxy Sports Edge LLC (Scientific Division: Galaxy Science Institute - GSI)  
 **Primary Repository:** `galaxy-conformal-ot` (Apache-2.0)  
 **Target Payout Timeline:** 2 to 21 Days (Zero Application Fees)  
 
@@ -16,7 +16,7 @@
 `galaxy-conformal-ot`: High-Frequency Distribution-Free Conformal Inference & Entropic Optimal Transport under Adversarial Non-Stationarity
 
 ### Short Summary (100 words)
-Modern prediction markets, epistemic forecasting systems, and dynamic AI agents suffer from acute tail-risk miscalibration and incoherent probability conjunctions. Most models artificially clamp copula bounds or collapse under covariate shift. We built `galaxy-conformal-ot`—a clean, zero-dependency Apache-2.0 Python kernel that couples finite-sample Time-Adaptive Conformalized Quantile Regression (TA-CQR) with axiomatic Fréchet-Hoeffding non-clamping gates and Sinkhorn-Knopp entropic optimal transport ($\tau = 0.42$). The kernel is already live in production, achieving a verified 47-16 (+29.01u) record across 63 live audited events with $2,000 in early commercial receipts. We are requesting $15,000 in runway to release `CalibBench-Adversarial-10K` and integrate distribution-free conformal confidence intervals into open prediction markets.
+Modern prediction markets, epistemic forecasting systems, and dynamic AI agents suffer from acute tail-risk miscalibration and incoherent probability conjunctions. Most models artificially clamp copula bounds or collapse under covariate shift. We built `galaxy-conformal-ot`—a clean, zero-dependency Apache-2.0 Python kernel that couples finite-sample Time-Adaptive Conformalized Quantile Regression (TA-CQR) with axiomatic Fréchet-Hoeffding non-clamping gates and Sinkhorn-Knopp entropic optimal transport ($\tau = 0.42$). The kernel is live in production with a verified graded public record of 38-13-1 (+22.85 units, 74.5% of decided forecasts; 47-19-1, +24.92u including props). We are requesting $15,000 to release `CalibBench-Adversarial-10K` and integrate distribution-free conformal confidence intervals into open prediction markets.
 
 ### What is the problem?
 Prediction models routinely produce overconfident probability forecasts in high-dimensional non-stationary environments. When evaluating multi-asset conjunctions (same-game parlays, joint macroeconomic events, correlated catastrophe bonds), legacy models violate Fréchet-Hoeffding probability bounds ($P(A \cap B) > \min(P(A), P(B))$) or clamp artificially, introducing severe negative expected value (-EV). Furthermore, when key actors drop out, models fail to conserve total physical probability mass ($\sum P \ne 1.0$).
@@ -29,8 +29,8 @@ We solve this via four clean mathematical modules:
 4. **Kinematic Workload & Kinetic Hazard:** Distributed-lag non-linear modeling (DLNM) calculating kinetic fatigue and failure hazard curves.
 
 ### Why us / Track Record?
-- **Production Validation:** Live in production with $2,000 in early customer receipts.
-- **Audited Record:** 47-16 (74.6/100 win rate, +29.01 units net profit) across 63 live audited events entering November 2026.
+- **Audited Public Record:** 38-13-1 (+22.85 units net profit, 74.5% win rate on decided events; 47-19-1, +24.92 units including participation-gated props) across a fully reconciled, pre-registered walk-forward ledger entering November 2026. Negative results published openly.
+- **Bootstrapped Distribution:** Self-funded and pre-revenue with zero outside capital raised; three distribution storefronts live as of November 2026 (galaxysportsedge.com, CapperTek, Whop).
 - **Open Codebase:** 11/11 passing automated unit tests in 0.22s, published under Apache-2.0.
 
 ### Budget Breakdown ($15,000)
@@ -47,7 +47,7 @@ We solve this via four clean mathematical modules:
 
 ### Proposal Narrative
 **Project:** Distribution-Free Conformal Quantile Bounds for Multi-Agent Adversarial Decision Engines.  
-**Abstract:** Artificial intelligence systems deployed in real-time adversarial planning frequently suffer from uncalibrated epistemic uncertainty, confusing epistemic variance with aleatoric noise. `galaxy-conformal-ot` introduces a mathematical framework that guarantees finite-sample marginal coverage across continuous streaming data without Gaussian assumptions. By combining 288-bit spectral cognitive routing, Cholesky $L^{-1}$ decorrelation, and entropic optimal transport mass conservation, the engine prevents catastrophically confident tail actions. With $2,000 in early commercial validation and an audited 74.6% accuracy rate across 63 production decisions, SFF funding will support formalizing the open-source library and publishing empirical benchmarks comparing conformalized multi-agent decisions against standard Bayesian models.
+**Abstract:** Artificial intelligence systems deployed in real-time adversarial planning frequently suffer from uncalibrated epistemic uncertainty, confusing epistemic variance with aleatoric noise. `galaxy-conformal-ot` introduces a mathematical framework that guarantees finite-sample marginal coverage across continuous streaming data without Gaussian assumptions. By combining 288-bit spectral cognitive routing, Cholesky $L^{-1}$ decorrelation, and entropic optimal transport mass conservation, the engine prevents catastrophically confident tail actions. Validated across a pre-registered walk-forward forecasting record of 38-13-1 (+22.85 units; 47-19-1, +24.92u incl. props) and zero-lookahead testing, SFF funding will support formalizing the open-source library and publishing empirical benchmarks comparing conformalized multi-agent decisions against standard Bayesian models.
 
 ---
 
@@ -57,4 +57,4 @@ We solve this via four clean mathematical modules:
 * **Track:** Decentralized Epistemics, Open Science & Human Autonomy
 
 ### Mission Alignment
-The Cosmos Institute funds independent builders creating truth-seeking technological infrastructure outside legacy corporate labs. Galaxy Decision Sciences embodies this ethos: an independent, self-funded quantitative laboratory in Texas using real-world multi-agent physical collisions as a living particle accelerator for epistemic calibration. The entire mathematical core is open-source (Apache-2.0), providing researchers with transparent, verifiable tools to eliminate epistemic distortion, predatory bookmaker overround, and uncalibrated AI decision-making.
+The Cosmos Institute funds independent builders creating truth-seeking technological infrastructure outside legacy corporate labs. Galaxy Science Institute embodies this ethos: an independent, self-funded quantitative laboratory in Texas using real-world multi-agent physical collisions as a living particle accelerator for epistemic calibration. The entire mathematical core is open-source (Apache-2.0), providing researchers with transparent, verifiable tools to eliminate epistemic distortion, predatory bookmaker overround, and uncalibrated AI decision-making.

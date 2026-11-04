@@ -1,7 +1,19 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { registerDeclarations, SIGNAL_FAMILIES, type SignalDeclaration } from "./signal-registry.js";
+
+function resolveSourceFile(filename: string): string {
+  const candidates = [
+    resolve(process.cwd(), "packages/ingestion-pipeline/src", filename),
+    resolve(process.cwd(), "../ingestion-pipeline/src", filename),
+    resolve(__dirname, "../../../ingestion-pipeline/src", filename),
+    resolve("C:/c/wt-week8-forensic/packages/ingestion-pipeline/src", filename),
+  ];
+  const found = candidates.find((p) => existsSync(p));
+  if (!found) throw new Error(`Could not resolve ${filename} across candidates`);
+  return found;
+}
 
 function declaration(id: string, deprecated = false): SignalDeclaration {
   return {
@@ -23,8 +35,8 @@ describe("signal registry", () => {
 
   it("finds every id declared in the live registry sources, once", () => {
     const files = [
-      resolve(process.cwd(), "../ingestion-pipeline/src/signal-registry-definitions.ts"),
-      resolve(process.cwd(), "../ingestion-pipeline/src/signal-registry-extensions.ts"),
+      resolveSourceFile("signal-registry-definitions.ts"),
+      resolveSourceFile("signal-registry-extensions.ts"),
     ];
     const ids: string[] = [];
     for (const file of files) {

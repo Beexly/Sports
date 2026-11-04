@@ -10,6 +10,14 @@ export async function GET(req: Request) {
     const sessionId = searchParams.get("session_id");
     const whopToken = searchParams.get("whop_token") || searchParams.get("token");
 
+    const cookieHeader = req.headers.get("cookie") || "";
+    const cookieMatch = slug
+      ? cookieHeader.match(new RegExp(`(?:^|; )gse_unlock_${slug}=([^;]*)`)) ||
+        cookieHeader.match(/(?:^|; )gse_unlock_global=([^;]*)/)
+      : null;
+    const cookieSessionId = cookieMatch && cookieMatch[1] ? decodeURIComponent(cookieMatch[1]) : null;
+    const effectiveSessionId = sessionId || cookieSessionId;
+
     if (!slug) {
       return NextResponse.json(
         { unlocked: false, error: "Missing required 'package' parameter." },
@@ -26,7 +34,7 @@ export async function GET(req: Request) {
     }
 
     const verification = await verifyPackagePurchase({
-      sessionId,
+      sessionId: effectiveSessionId,
       whopToken,
       slug: pkg.slug,
     });
@@ -52,12 +60,27 @@ export async function GET(req: Request) {
       return w.windowSlot === pkg.windowSlot;
     });
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       unlocked: true,
       authSource: verification.authSource,
       package: pkg,
       writeups,
     });
+
+    if (effectiveSessionId) {
+      res.cookies.set(`gse_unlock_${pkg.slug}`, effectiveSessionId, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+        sameSite: "lax",
+      });
+      res.cookies.set("gse_unlock_global", effectiveSessionId, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+        sameSite: "lax",
+      });
+    }
+
+    return res;
   } catch (error) {
     return NextResponse.json(
       { unlocked: false, error: error instanceof Error ? error.message : "Internal server error" },

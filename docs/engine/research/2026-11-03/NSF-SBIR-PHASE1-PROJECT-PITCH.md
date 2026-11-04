@@ -2,7 +2,7 @@
 **Target Program:** NSF 26-510 Small Business Innovation Research (SBIR) / Small Business Technology Transfer (STTR)  
 **Topic Area:** Artificial Intelligence (AI) / Decision Analytics & Information Systems  
 **Funding Instrument:** Phase I Non-Dilutive Research Grant ($275,000)  
-**Applicant Entity:** Galaxy Sports Network LLC (DBA Galaxy Decision Sciences)  
+**Applicant Entity:** Galaxy Sports Edge LLC (Scientific Division: Galaxy Science Institute - GSI)  
 **Filing Location:** `docs/engine/research/2026-11-03/NSF-SBIR-PHASE1-PROJECT-PITCH.md`  
 
 ---
@@ -11,7 +11,7 @@
 
 Modern autonomous decision-making and forecasting systems fail catastrophically when deployed into high-stakes, non-stationary adversarial environments. Large Language Models (LLMs) hallucinate intermediate factual premises and exhibit severe overconfidence in probability tails. Conventional machine learning classifiers suffer from variance inflation when combining multi-factor signals, lack finite-sample distribution-free guarantees, and clamp invalid joint probabilities, injecting silent mathematical incoherence into downstream risk-allocation models.
 
-To solve this foundational bottleneck, Galaxy Research Labs (GRL) has developed a **Closed-Loop Spectral Cognitive Router and Asymmetric Conformal Trajectory Architecture**. The technology decouples the decision pipeline into four mathematically rigorous, provably bounded stages:
+To solve this foundational bottleneck, the **Galaxy Science Institute (GSI)** has developed a **Closed-Loop Spectral Cognitive Router and Asymmetric Conformal Trajectory Architecture**. The technology decouples the decision pipeline into four mathematically rigorous, provably bounded stages:
 
 1. **288-Bit Bitfield Context Masking (Stage A):** Encodes over 270 continuous physical and game-theoretic signal families into a 9-word 288-bit bitfield. Using bitwise GIN indexing, it prunes a 50,000-premise literature corpus down to ~2,500 active candidate schemas in sub-millisecond execution time, eliminating out-of-context retrieval drift.
 2. **HNSW High-Recall Nearest-Neighbor Embedding Search (Stage B):** Cosine vector retrieval under dynamic `ef_search` limits filters the candidate space from 2,500 to 250 highly relevant premises.
@@ -48,7 +48,7 @@ Phase I research will focus on advancing the technology from Technology Readines
 
 The global market for AI-driven decision intelligence, quantitative risk management, and autonomous operational software is projected to reach **$52.6B by 2030** (CAGR 21.4%). Current commercial solutions (e.g., Palantir, Databricks, enterprise predictive analytics platforms) rely on uncalibrated machine learning models that generate unquantified epistemic risks in catastrophic edge cases.
 
-Galaxy Research Labs addresses three massive commercial segments:
+Galaxy Science Institute (GSI) addresses three massive commercial segments:
 1. **Defense & Tactical Multi-Agent Operations:** Department of Defense, ONR, and defense contractors requiring real-time, provably bounded decision-support systems that reject hallucinated courses of action under adversarial electronic warfare and sensor disruption.
 2. **Fintech, Prediction Markets & Algorithmic Hedging:** Automated market makers and quantitative funds operating on platforms like Polymarket, Kalshi, and institutional derivatives exchanges, where uncalibrated probability tails lead directly to ruinous adverse selection.
 3. **Sports Medicine & Human Performance Digital Twins:** Professional sports franchises, collegiate athletic departments, and military warfighter programs seeking predictive, distributed-lag workload algorithms to mitigate non-contact musculoskeletal injuries before structural failure occurs.
@@ -59,7 +59,7 @@ Our go-to-market strategy combines dual-use commercial licensing: high-margin B2
 
 ## Section 4: Company, Leadership & Core Capabilities (Target: Up to 250 Words | Current: ~220 Words)
 
-Galaxy Sports Network LLC (DBA Galaxy Decision Sciences) (operating its scientific arm as **Galaxy Research Labs**) is an agile, deep-technology computational research laboratory based in the United States. 
+Galaxy Sports Edge LLC (operating its scientific arm as **Galaxy Science Institute - GSI**) is an agile, deep-technology computational research laboratory based in Austin, Texas. 
 
 Our core technical capabilities include:
 - **Comprehensive Literature Implementation:** An operational codebase incorporating **308 fully implemented mathematical modules from peer-reviewed arXiv literature** and an active corpus of over 1,511 indexed research ledgers spanning optimal transport, conformal prediction, and causal graph theory.

@@ -797,6 +797,30 @@ const MISLEADING_PATTERNS: {
     required: ["regular-season-adjustment"],
     reason: "unadjusted preseason or Week 18 stats are not regular-season evidence (Record 8.10)",
   },
+  {
+    record: "8.11",
+    match: /play_?clock_?at_?snap|snap_?timing/i,
+    required: ["down-stratification", "down-distance"],
+    reason: "raw play clock at snap is a proven down confound (pooled t=-3.63 collapses to t=+0.02 within down); must stratify by down (Record 8.11)",
+  },
+  {
+    record: "8.12",
+    match: /disguise_?collapse_?hazard/i,
+    required: ["spread-normalization"],
+    reason: "unnormalized disguise collapse hazard is confounded by pre-snap defensive width; requires spatial spread normalization (Record 8.12)",
+  },
+  {
+    record: "8.13",
+    match: /cumulative_?ryoe|season_?rushing_?yards/i,
+    required: ["per-carry-rate", "ryoe-per-carry"],
+    reason: "cumulative rushing yards R^2~0.99 is volume-confounded; Congelio de-confounding to per-carry rate required (Record 8.13)",
+  },
+  {
+    record: "8.14",
+    match: /stunt_?pressure|twist_?blitz/i,
+    required: ["protection-assignment", "ol-communication-lag"],
+    reason: "stunt pressure rate without OL slide/chip protection adjustments overstates pressure impact (Record 8.14)",
+  },
 ];
 
 /**
@@ -973,66 +997,85 @@ const SCRIPT_PLAYS: SituationalPlay[] = [
 /** Real evaluator dispatch. Every branch calls the published function. */
 export function evaluateXSituationalRecordById(
   id: string,
-  _context?: Record<string, unknown>,
+  context?: Record<string, unknown>,
 ): XSituationalRecordResult {
   const record = X_SITUATIONAL_80_RECORD_CATALOG.find((r) => r.id === id);
   if (!record) throw new Error(`unknown X record id: ${id}`);
   let value: number;
   let gateStatus: XSituationalRecordResult["gateStatus"] = "not-a-gate";
   switch (record.evaluator) {
-    case "leverage":
-      value = computeLeverageAdjustedEpa(LEVERAGE_PLAY).leverageMultiplier - 1;
+    case "leverage": {
+      const p = (context?.play as SituationalPlay) ?? LEVERAGE_PLAY;
+      value = computeLeverageAdjustedEpa(p).leverageMultiplier - 1;
       break;
-    case "script":
-      value = computeNeutralScriptBaselineAndProe(SCRIPT_PLAYS, "AAA").proeResidual;
+    }
+    case "script": {
+      const plays = (context?.plays as SituationalPlay[]) ?? SCRIPT_PLAYS;
+      const team = (context?.team as string) ?? "AAA";
+      value = computeNeutralScriptBaselineAndProe(plays, team).proeResidual;
       break;
+    }
     case "redzone": {
-      const rz = evaluateRedZoneAndTwoMinuteSplits(REDZONE_PLAYS);
+      const plays = (context?.redzonePlays as SituationalPlay[]) ?? REDZONE_PLAYS;
+      const rz = evaluateRedZoneAndTwoMinuteSplits(plays);
       value = rz.rzTdRate - 0.4;
       break;
     }
-    case "decision":
-      value = evaluateDecisionBranchWp(
-        { scoreMargin: -2, quarter: 4, halfSecondsRemaining: 120, yardline100: 65, ydstogo: 4, down: 4 },
-        [
-          { branch: "go", successProbability: 0.55, winProbabilityOnSuccess: 0.65, winProbabilityOnFailure: 0.2 },
-          { branch: "kick", successProbability: 0.85, winProbabilityOnSuccess: 0.5, winProbabilityOnFailure: 0.25 },
-        ],
-      ).recommendationEdge;
+    case "decision": {
+      const state = (context?.decisionState as any) ?? {
+        scoreMargin: -2, quarter: 4, halfSecondsRemaining: 120, yardline100: 65, ydstogo: 4, down: 4,
+      };
+      const branches = (context?.decisionBranches as any) ?? [
+        { branch: "go", successProbability: 0.55, winProbabilityOnSuccess: 0.65, winProbabilityOnFailure: 0.2 },
+        { branch: "kick", successProbability: 0.85, winProbabilityOnSuccess: 0.5, winProbabilityOnFailure: 0.25 },
+      ];
+      value = evaluateDecisionBranchWp(state, branches).recommendationEdge;
       break;
-    case "personnel":
-      value = evaluatePersonnelBoxPassInteraction({
+    }
+    case "personnel": {
+      const p = (context?.personnelContext as any) ?? {
         personnel: "13", boxCount: 8, formationWidth: "normal",
         secondTeOrFbReceivingThreat: true, shell: "loaded-box",
-      }).passEpaAdjustment;
+      };
+      value = evaluatePersonnelBoxPassInteraction(p).passEpaAdjustment;
       break;
-    case "backup":
-      value = evaluateBackupQbReceiverDecoupling({
+    }
+    case "backup": {
+      const b = (context?.backupContext as any) ?? {
         alphaTargetShareWithStarter: 0.3, alphaTargetShareWithBackup: 0.27,
         yprrWithStarter: 2.5, yprrWithBackup: 2.2,
         redZoneShareWithStarter: 0.35, redZoneShareWithBackup: 0.25,
         timingDependentPerimeterWr: true,
-      }).decoupledValueMultiplier - 1;
+      };
+      value = evaluateBackupQbReceiverDecoupling(b).decoupledValueMultiplier - 1;
       break;
-    case "weather":
-      value = evaluatePlayerSpecificWeatherInteraction({
+    }
+    case "weather": {
+      const w = (context?.weatherContext as any) ?? {
         position: "QB", temperatureF: 30, windMph: 18, precipitation: 1,
-      }).positionalMultiplier - 1;
+      };
+      value = evaluatePlayerSpecificWeatherInteraction(w).positionalMultiplier - 1;
       break;
-    case "attrition":
-      value = evaluateOffensiveLineAttritionCluster({
+    }
+    case "attrition": {
+      const a = (context?.attritionContext as any) ?? {
         startersAbsent: 3, opponentDepleted: false, isWeek18: false, rookieBackup: false,
-      }).suWinRateDelta;
+      };
+      value = evaluateOffensiveLineAttritionCluster(a).suWinRateDelta;
       break;
-    case "market":
-      value = evaluateMarketMoveInformationCompleteness({
+    }
+    case "market": {
+      const m = (context?.marketContext as any) ?? {
         stage: "rumor", spreadMove: 9, totalMove: 4, crossedKeyNumber: true, publicShare: 0.7,
-      }).fadeMultiplier - 1;
+      };
+      value = evaluateMarketMoveInformationCompleteness(m).fadeMultiplier - 1;
       break;
+    }
     case "gate": {
-      const verdict = validateFeatureAgainstMisleadingStats({
+      const feature = (context?.feature as any) ?? {
         name: "yards per play", definition: "raw yards per play",
-      });
+      };
+      const verdict = validateFeatureAgainstMisleadingStats(feature);
       gateStatus = verdict.accepted ? "accepted" : "rejected";
       value = verdict.accepted ? 1 : -1;
       break;

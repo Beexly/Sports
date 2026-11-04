@@ -67,6 +67,14 @@ export function initObservability(): void {
     tracesSampleRate,
     replaysSessionSampleRate,
     replaysOnErrorSampleRate: 1.0,
+    ignoreTransactions: ["/api/cron/free-spine-health", "/api/health"],
+    beforeSendTransaction(event) {
+      const txn = event.transaction ?? "";
+      if (txn.includes("/api/cron/free-spine-health") || txn.includes("/api/health")) {
+        return null;
+      }
+      return event;
+    },
     environment: process.env["NODE_ENV"] ?? "development",
     initialScope: {
       tags: {

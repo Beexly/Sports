@@ -2,14 +2,24 @@
   "n_icu_stays_evaluated": 138,
   "total_bedside_vital_measurements": 69124,
   "positives_sepsis_or_mortality": 38,
+  "conformal_calibration": {
+    "alpha": 0.1,
+    "nominal_coverage": 0.9,
+    "empirical_coverage": 0.9,
+    "coverage_guarantee_met": true,
+    "calibration_sample_size": 50,
+    "conformal_threshold": 0.6696817009021774,
+    "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+  },
   "alarm_fatigue_comparison": {
     "naive_bedside_sirs_shock_false_alarm_rate": 0.63,
     "naive_bedside_sirs_shock_false_alarm_rate_same_test_neg_cohort": 0.64,
     "naive_bedside_sirs_shock_detection_rate": 0.8947368421052632,
-    "galaxy_conformal_false_alarm_rate": 0.12,
-    "galaxy_conformal_detection_rate": 0.4473684210526316,
-    "relative_false_alarm_reduction_pct": 80.95238095238095,
-    "relative_false_alarm_reduction_same_test_neg_cohort_pct": 81.25
+    "galaxy_conformal_false_alarm_rate": 0.1,
+    "galaxy_conformal_empirical_coverage": 0.9,
+    "galaxy_conformal_detection_rate": 0.42105263157894735,
+    "relative_false_alarm_reduction_pct": 84.12698412698413,
+    "relative_false_alarm_reduction_same_test_neg_cohort_pct": 84.375
   },
   "models": {
     "shock_index_only": {
@@ -20,27 +30,43 @@
       ]
     },
     "galaxy_spectral_schrodinger_conformal_icu": {
-      "auc": 0.7655263157894737,
+      "auc": 0.7721052631578947,
       "ci95": [
-        0.6641329727648253,
-        0.8418161651234567
+        0.6721858091873262,
+        0.8451605294939661
       ]
     }
   },
   "dataset": "MIT MIMIC-IV Clinical Database Demo v2.2 (Real Beth Israel Deaconess ICU Stays)",
+  "whitening_leakage_audit": {
+    "status": "PASSED_ZERO_LEAKAGE",
+    "whitening_fit_split": "D_cal_negatives_only",
+    "n_calibration_samples": 50,
+    "test_and_validation_frozen": true
+  },
   "prospective_early_warning_horizons": {
     "first_6h_timestamp_aligned": {
       "n_icu_stays_evaluated": 136,
       "total_bedside_vital_measurements": 6003,
       "positives_sepsis_or_mortality": 38,
+      "conformal_calibration": {
+        "alpha": 0.1,
+        "nominal_coverage": 0.9,
+        "empirical_coverage": 0.8775510204081632,
+        "coverage_guarantee_met": false,
+        "calibration_sample_size": 49,
+        "conformal_threshold": 0.880351620349074,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+      },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.6020408163265306,
         "naive_bedside_sirs_shock_false_alarm_rate_same_test_neg_cohort": 0.5510204081632653,
         "naive_bedside_sirs_shock_detection_rate": 0.7368421052631579,
-        "galaxy_conformal_false_alarm_rate": 0.1836734693877551,
-        "galaxy_conformal_detection_rate": 0.23684210526315788,
-        "relative_false_alarm_reduction_pct": 69.49152542372882,
-        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 66.66666666666666
+        "galaxy_conformal_false_alarm_rate": 0.12244897959183673,
+        "galaxy_conformal_empirical_coverage": 0.8775510204081632,
+        "galaxy_conformal_detection_rate": 0.18421052631578946,
+        "relative_false_alarm_reduction_pct": 79.66101694915254,
+        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 77.77777777777777
       },
       "models": {
         "shock_index_only": {
@@ -51,10 +77,10 @@
           ]
         },
         "galaxy_spectral_schrodinger_conformal_icu": {
-          "auc": 0.6509129967776585,
+          "auc": 0.6495703544575725,
           "ci95": [
-            0.5513177981995498,
-            0.7392779252896916
+            0.5482387007891872,
+            0.735883152173913
           ]
         }
       }
@@ -63,14 +89,24 @@
       "n_icu_stays_evaluated": 137,
       "total_bedside_vital_measurements": 10838,
       "positives_sepsis_or_mortality": 38,
+      "conformal_calibration": {
+        "alpha": 0.1,
+        "nominal_coverage": 0.9,
+        "empirical_coverage": 0.9,
+        "coverage_guarantee_met": true,
+        "calibration_sample_size": 49,
+        "conformal_threshold": 0.7199499479046362,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+      },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.6060606060606061,
         "naive_bedside_sirs_shock_false_alarm_rate_same_test_neg_cohort": 0.58,
         "naive_bedside_sirs_shock_detection_rate": 0.8157894736842105,
-        "galaxy_conformal_false_alarm_rate": 0.12,
-        "galaxy_conformal_detection_rate": 0.23684210526315788,
-        "relative_false_alarm_reduction_pct": 80.2,
-        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 79.3103448275862
+        "galaxy_conformal_false_alarm_rate": 0.1,
+        "galaxy_conformal_empirical_coverage": 0.9,
+        "galaxy_conformal_detection_rate": 0.21052631578947367,
+        "relative_false_alarm_reduction_pct": 83.50000000000001,
+        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 82.75862068965517
       },
       "models": {
         "shock_index_only": {
@@ -81,10 +117,10 @@
           ]
         },
         "galaxy_spectral_schrodinger_conformal_icu": {
-          "auc": 0.6552365762892078,
+          "auc": 0.672514619883041,
           "ci95": [
-            0.5479226333456516,
-            0.7573189325689326
+            0.5638950848714568,
+            0.7723192917798181
           ]
         }
       }
@@ -93,14 +129,24 @@
       "n_icu_stays_evaluated": 138,
       "total_bedside_vital_measurements": 19395,
       "positives_sepsis_or_mortality": 38,
+      "conformal_calibration": {
+        "alpha": 0.1,
+        "nominal_coverage": 0.9,
+        "empirical_coverage": 0.86,
+        "coverage_guarantee_met": false,
+        "calibration_sample_size": 50,
+        "conformal_threshold": 0.6953122867078536,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+      },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.66,
         "naive_bedside_sirs_shock_false_alarm_rate_same_test_neg_cohort": 0.66,
         "naive_bedside_sirs_shock_detection_rate": 0.8421052631578947,
-        "galaxy_conformal_false_alarm_rate": 0.12,
-        "galaxy_conformal_detection_rate": 0.3157894736842105,
-        "relative_false_alarm_reduction_pct": 81.81818181818183,
-        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 81.81818181818183
+        "galaxy_conformal_false_alarm_rate": 0.14,
+        "galaxy_conformal_empirical_coverage": 0.86,
+        "galaxy_conformal_detection_rate": 0.34210526315789475,
+        "relative_false_alarm_reduction_pct": 78.78787878787878,
+        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 78.78787878787878
       },
       "models": {
         "shock_index_only": {
@@ -111,10 +157,10 @@
           ]
         },
         "galaxy_spectral_schrodinger_conformal_icu": {
-          "auc": 0.7107894736842105,
+          "auc": 0.7121052631578947,
           "ci95": [
-            0.6098023578363384,
-            0.8029662698412698
+            0.6096935125060126,
+            0.8000772491502066
           ]
         }
       }
@@ -123,14 +169,24 @@
       "n_icu_stays_evaluated": 138,
       "total_bedside_vital_measurements": 69124,
       "positives_sepsis_or_mortality": 38,
+      "conformal_calibration": {
+        "alpha": 0.1,
+        "nominal_coverage": 0.9,
+        "empirical_coverage": 0.92,
+        "coverage_guarantee_met": true,
+        "calibration_sample_size": 50,
+        "conformal_threshold": 0.6613734113432721,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+      },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.62,
         "naive_bedside_sirs_shock_false_alarm_rate_same_test_neg_cohort": 0.62,
         "naive_bedside_sirs_shock_detection_rate": 0.8947368421052632,
-        "galaxy_conformal_false_alarm_rate": 0.12,
-        "galaxy_conformal_detection_rate": 0.47368421052631576,
-        "relative_false_alarm_reduction_pct": 80.64516129032259,
-        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 80.64516129032259
+        "galaxy_conformal_false_alarm_rate": 0.08,
+        "galaxy_conformal_empirical_coverage": 0.92,
+        "galaxy_conformal_detection_rate": 0.42105263157894735,
+        "relative_false_alarm_reduction_pct": 87.0967741935484,
+        "relative_false_alarm_reduction_same_test_neg_cohort_pct": 87.0967741935484
       },
       "models": {
         "shock_index_only": {
@@ -141,10 +197,10 @@
           ]
         },
         "galaxy_spectral_schrodinger_conformal_icu": {
-          "auc": 0.7707894736842106,
+          "auc": 0.7789473684210526,
           "ci95": [
-            0.6713188042878496,
-            0.8441446124763705
+            0.6842043516524363,
+            0.8526557026289172
           ]
         }
       }

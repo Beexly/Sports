@@ -18,6 +18,18 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@sports/types": [
+        "../../packages/types/src/index.ts"
+      ],
+      "@sports/db": [
+        "../../packages/db/src/index.ts"
+      ],
+      "@sports/data-ingestion": [
+        "../../packages/data-ingestion/src/index.ts"
+      ],
+      "@sports/ingestion-pipeline": [
+        "../../packages/ingestion-pipeline/src/index.ts"
       ]
     },
     "baseUrl": ".",
@@ -25,6 +37,8 @@
     "declaration": false,
     "declarationMap": false,
     "allowJs": true,
+    "skipLibCheck": true,
+    "preserveSymlinks": true,
     "noEmit": true,
     "incremental": true
   },

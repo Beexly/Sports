@@ -1,8 +1,18 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ENGINE_FAMILIES } from "./engine-weights.js";
 import { LAC_BUF_EDGE, LAC_BUF_PARTS, LIVE_EDGE_PARTS } from "./live-edge-registry.js";
+
+function resolveDataFile(rel: string): string {
+  const candidates = [
+    resolve(process.cwd(), rel),
+    resolve(process.cwd(), "../../", rel),
+    resolve("C:/c/wt-week8-forensic", rel),
+    resolve("C:/Users/Garrett/Sports", rel),
+  ];
+  return candidates.find((p) => existsSync(p)) ?? candidates[0]!;
+}
 
 interface RegistryRow {
   family: string;
@@ -42,7 +52,7 @@ describe("live edge registry", () => {
   });
 
   it("matches the LAC at BUF row on disk", () => {
-    const path = resolve(process.cwd(), "../../data/gse-dataset/current/week3-engine-readings.jsonl");
+    const path = resolveDataFile("data/gse-dataset/current/week3-engine-readings.jsonl");
     const row = readFileSync(path, "utf8")
       .trim()
       .split("\n")
@@ -57,7 +67,7 @@ describe("live edge registry", () => {
   });
 
   it("matches the parts registry file the selector reads", () => {
-    const path = resolve(process.cwd(), "../../data/reasoning/parts-registry.jsonl");
+    const path = resolveDataFile("data/reasoning/parts-registry.jsonl");
     const rows = readFileSync(path, "utf8")
       .trim()
       .split("\n")

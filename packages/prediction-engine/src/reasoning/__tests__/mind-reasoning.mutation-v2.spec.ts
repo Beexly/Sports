@@ -1,9 +1,14 @@
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import * as assert from "node:assert/strict";
 import {
   evaluateMindPrinciples,
   verifyCandidateExtraction,
   verifyCandidateWithMechanismGate,
+  loadVerifiedMindCorpus,
+  loadCitableMindCorpus,
+  toVerifiedSituationalPrinciple,
+  matchApplicablePrinciples,
+  isClassACitable,
   type VerifiedSituationalPrinciple,
   type GameContextVector,
 } from "../mind-reasoning.js";
@@ -119,7 +124,6 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
   });
 
   it("Probe T5: Full Mind Corpus Ingestion & Deadband Conflict Resolution Audit (>= 3,000 Verified Principles)", () => {
-    const { loadVerifiedMindCorpus } = require("../mind-reasoning.js");
     const corpus = loadVerifiedMindCorpus();
 
     assert.ok(corpus.length >= 3000, `Expected >= 3,000 verified principles, got ${corpus.length}`);
@@ -288,8 +292,6 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
   });
 
   it("Probe T7: Residual Hardcode Eradication Invariant (Ungrounded principles produce 0 magnitude)", () => {
-    const { toVerifiedSituationalPrinciple } = require("../mind-reasoning.js");
-
     // Case A: Missing magnitude and ungrounded quote
     const ungroundedRecord = {
       item_id: "UNGROUNDED_TEST_01",
@@ -336,9 +338,6 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
   // literature has to be there.
   // ======================================================================
   it("Probe T8: Unverified Records May Not Mint A Delta (Class-A Exclusivity)", () => {
-    const { toVerifiedSituationalPrinciple, matchApplicablePrinciples, isClassACitable } =
-      require("../mind-reasoning.js");
-
     const base = {
       item_id: "CLASS_A_TEST_01",
       source: "test",
@@ -446,8 +445,6 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
   // each defect and requires the suite to fail.
   // ======================================================================
   it("Probe T8b: Unverified Principles May Not Reach The Final Adjustment", () => {
-    const { evaluateMindPrinciples } = require("../mind-reasoning.js");
-
     const citablePrinciple: VerifiedSituationalPrinciple = {
       item_id: "T8B_CITABLE",
       source_doc_hash: "hash_citable",
@@ -519,8 +516,6 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
   // no span.
   // ======================================================================
   it("Probe T9: A Record With No Span Gets No Span (No Fabricated Offset 0)", () => {
-    const { toVerifiedSituationalPrinciple } = require("../mind-reasoning.js");
-
     const noSpanRecord = {
       item_id: "NO_SPAN_TEST_01",
       source: "test",
@@ -570,8 +565,6 @@ describe("Mutation Test 2.0: Falsification Suite for Content-Driven Inference", 
   // with "Verified" in its name gets uncitable records with it.
   // ======================================================================
   it("Probe T10: The Citable Loader Excludes Every Non-Citable Record", () => {
-    const { loadVerifiedMindCorpus, loadCitableMindCorpus } = require("../mind-reasoning.js");
-
     const corpus = loadVerifiedMindCorpus();
     const citable = loadCitableMindCorpus();
 

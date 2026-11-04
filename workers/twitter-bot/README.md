@@ -1,24 +1,32 @@
-# workers/twitter-bot — the X transport
+# workers/twitter-bot — Motif/Muse X Transport & Content Lanes
 
-**What this is.** The missing half of the GSE X bot. Everything up to the HTTP call already
-existed (`apps/web/lib/twitter-bot/*` for the templates, `apps/web/lib/bot-outbox/*` for planning,
-idempotency keys and the compliance gate, `apps/web/app/cockpit/bot-outbox/` for operator review).
-This is the call.
+**What this is.** The X (Twitter) transport and content lane generator for **Motif/Muse** on **@GalaxySportsHQ** (NEVER grokbot).
+Everything up to the HTTP call is planned and verified with zero hindsight:
+- `apps/web/lib/twitter-bot/*` for base templates
+- `apps/web/lib/bot-outbox/*` for planning, idempotency keys, and compliance gates
+- `workers/twitter-bot/x-client.js` for API v2 posting, quote tweets, replies, and chunked media upload
+- `workers/twitter-bot/sender.js` for `MUTE_BOT` checking, idempotency, and outcome classification
+- `workers/twitter-bot/ledger.js` for persistent `BotOutboxRecord` ledger tracking
+- `workers/twitter-bot/receipts.js` for settlement receipt tweets quoting original pre-game calls
+- `workers/twitter-bot/content-lanes/sniper-replies.js` for high-signal chart replies under top NFL accounts
 
 ```
-oauth1.js        OAuth 1.0a request signing (HMAC-SHA256, or SHA1 where required)
-x-client.js      POST /2/tweets, rate-limit header parsing, structured attempt log
-sender.js        MUTE_BOT, idempotency, thread chaining, outcome classification
-*.test.js        41 tests, including the RFC 5849 section 3.4.1.1 base-string vector
+oauth1.js                         OAuth 1.0a request signing (HMAC-SHA1 & HMAC-SHA256)
+x-client.js                       POST /2/tweets, media upload (INIT->APPEND->FINALIZE), rate limits
+sender.js                         MUTE_BOT, idempotency, thread chaining, outcome classification
+ledger.js                         BotOutboxLedger persistence, status tracking, UNKNOWN safety
+receipts.js                       Settlement receipt quote-tweets (single settlement glyph)
+content-lanes/sniper-replies.js   High-signal chart replies (@SamHoppen, @FantasyPtsData, @PattonAnalytics)
+*.test.js, test/*.test.mjs        Comprehensive test suite (61 tests)
 ```
 
 ```sh
-node --test --test-concurrency=1 *.test.js
+npm test
 ```
 
 ---
 
-## The four rules, and the failure each one prevents
+## The Four Rules, and the Failure Each One Prevents
 
 ### 1. `MUTE_BOT` is checked at SEND time
 
@@ -26,9 +34,7 @@ Not at schedule time. A mute that takes effect on the next cycle leaves everythi
 free to go out, which means it is not a mute.
 
 Only the literal `"true"` (case- and whitespace-insensitive) mutes. A typo'd value such as `"yes"`
-or `"1"` does **not** mute, and that direction is deliberate: the check is strict so the exact
-spelling documented here is the only thing that works, rather than a guess at what an operator
-might have meant. A test pins it.
+or `"1"` does **not** mute.
 
 ### 2. The idempotency key is recorded BEFORE the request leaves
 
@@ -36,83 +42,47 @@ The failure that matters is not "posted never". It is **"posted twice after a ti
 request succeeded, the response was lost, the job retried. Recording the key afterwards cannot
 distinguish that from a failure, so a retry duplicates a public post.
 
-Recording first means a lost response is classified `UNKNOWN` and **not retried**. A test asserts
-the ledger contains the key at the moment the HTTP call is made.
+Recording first means a lost response is classified `UNKNOWN` and **not retried**.
 
 ### 3. A thread is not atomic, and the outcome says so
 
-If post 3 of 6 fails, posts 1 and 2 are public and permanent. There is no rollback. So:
-
-- The whole thread is validated **before any of it is sent** — discovering post 6 is too long after
-  five are live is not a recoverable state.
-- A failure mid-thread returns `PARTIAL` **with the ids that landed**. A caller that believes the
-  thread failed entirely will re-post it. The fix for a partial thread is a follow-up reply, never
-  a duplicate.
+If post 3 of 6 fails, posts 1 and 2 are public and permanent. There is no rollback:
+- The whole thread is validated **before any of it is sent**.
+- A failure mid-thread returns `PARTIAL` **with the ids that landed**.
 
 ### 4. Rate limits come from the response, never from a constant
 
-`x-rate-limit-remaining` and `x-rate-limit-reset` are the authority. The ceiling depends on the
-account's tier, and a stale constant in the optimistic direction is how an account gets throttled
-by the platform instead of by us. Note `reset` is in **seconds**; treating it as milliseconds
-yields a reset time in 1970 and an immediate retry loop.
+`x-rate-limit-remaining` and `x-rate-limit-reset` are the authority. Note `reset` is in **seconds**;
+converting from seconds to ms is strictly handled.
 
 ---
 
-## Outcomes
+## Media Upload & Quote Tweet Capabilities
 
-| Outcome | Meaning | What the caller should do |
-|---|---|---|
-| `sent` | Posted. | Record the id. |
-| `muted` | `MUTE_BOT=true` at send time. No request was made. | Leave queued. |
-| `already_sent` | The idempotency key was already used. | Nothing. |
-| `rate_limited` | 429 or 5xx. Carries `retryAfterSec`. | Retry after the delay. |
-| `partial` | A thread landed some posts. Carries `tweetIds`. | **Never** re-post the thread. |
-| `failed` | A definitive API rejection. | Surface to the cockpit. |
-| `unknown` | The request left; the response did not arrive. | **Do not retry.** A human decides. |
-| `invalid` | A thread post was empty or over 280 characters. | Fix the copy. |
-
-`unknown` is the most important row on that table. It is the honest answer when the outcome is
-genuinely unknowable, and the safe one: a duplicate post to a public account is worse than a
-missing one.
+- **Chunked Media Upload:** `uploadMedia(buffer, mimeType, mediaCategory)` implements the Twitter v1.1
+  chunked media upload protocol:
+  1. `INIT`: Reserves media ID with `command=INIT`, total bytes, MIME type, and media category.
+  2. `APPEND`: Uploads 1MB–4MB chunks as multipart form data.
+  3. `FINALIZE`: Finalizes the upload.
+  4. `STATUS`: Polls processing status for videos or asynchronous media until succeeded or failed.
+- **Quote Tweets:** `postTweet({ text, quoteTweetId })` quotes the target tweet ID directly via API v2 `quote_tweet_id`.
+- **Settlement Receipts:** Quotes the original timestamped pre-game call tweet to prove 0 hindsight.
+  Single settlement glyph rule: Exactly one settlement glyph (`W`, `L`, `PUSH`, or `⚖️`) on lead post.
+- **Zero External Links in Root:** Root tweets avoid external links to eliminate X's 50–80% link suppression penalty.
+  Dossier/room links are reserved for sub-replies or bio.
 
 ---
 
-## Account hygiene is enforced by absence
+## Governed Dispatch Gate
 
-The voice spec says the bot follows, likes and retweets **zero** accounts. `XClient` therefore has
-exactly one mutating method — `postTweet`. There is no `follow`, `like`, `retweet`, `unfollow`,
-`unlike` or `delete`, and a test asserts the prototype surface contains none of them.
-
-A capability that does not exist cannot be called by a future change that did not read the spec.
+To prevent accidental public posts while enabling legitimate operator and content lane dispatch:
+- Scripts under `scripts/` must implement a Governed Dispatch Gate: requiring explicit dry-run flags (`--dry-run` / `dryRun: true`) or environment approval (`MUSE_X_PUBLISH_APPROVED=true`).
+- The core engine (`apps/`, `packages/`) remains strictly forbidden from ever importing or reaching the transport.
 
 ---
 
-## Wiring it up (not done yet)
+## Agent Routing & Identity
 
-1. **Credentials.** Four values from the X developer portal, for the `@GalaxySportsAI` account:
-   `X_CONSUMER_KEY`, `X_CONSUMER_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`. Store them as
-   environment variables, never in the repo. Read them with the same `$$ENV` indirection the rest of
-   the platform uses.
-
-2. **The ledger.** `MemoryLedger` is for tests only. The real one needs a `BotOutboxRecord` write
-   before the send and an update after — the table already exists and already carries an
-   `idempotencyKey` from `apps/web/lib/bot-outbox/plan.ts`.
-
-3. **The scheduler.** The planner exists and produces the outbox; it needs a clock. The repo has 22
-   Vercel cron schedules already; this is one more.
-
-4. **The two template corrections.** `apps/web/lib/twitter-bot/templates/pick-publication.ts` has
-   been fixed (confidence as a score, and a duplicated pick line). The settlement-glyph question in
-   `docs/product/twitter-bot-voice-spec.md` is still open and is an owner decision — see
-   `docs/mobile/X_COMMUNITY_STRATEGY.md` section 3.
-
----
-
-## What is NOT here
-
-- **No reply-reading, no mentions, no engagement.** The voice spec refuses all of it, and the
-  community strategy argues for keeping that refusal.
-- **No scheduling logic.** This sends what it is given.
-- **No media upload.** `post/2/tweets` with text only; the strategy notes images as a later step.
-- **No retry loop.** Outcomes are returned, not retried internally. Retry policy belongs to the
-  caller, which knows whether a given post is still worth sending an hour later.
+- **Agent:** `motif-muse`
+- **Account:** `@GalaxySportsHQ`
+- All logs, ledger rows, and events emit `{ agent: "motif-muse", account: "@GalaxySportsHQ" }`.

@@ -65,8 +65,9 @@ def disguise_collapse_hazard(
     if pre.shape != post.shape:
         raise ValueError(f"pre/post shape mismatch: {pre.shape} vs {post.shape}")
 
-    # Micro-fluctuation series: per-player displacement magnitude over the snap.
-    disp = np.linalg.norm(post - pre, axis=1)
+    # Micro-fluctuation series: per-player displacement magnitude normalized by pre-snap spatial spread.
+    pre_spread = max(float(np.std(pre)), 1e-3)
+    disp = np.linalg.norm(post - pre, axis=1) / pre_spread
     baseline_var = float(np.var(disp)) + 1e-9
 
     engine = AdversarialSchrodingerActiveHazardEngine(alpha_false_alarm_bound=alpha)

@@ -324,7 +324,7 @@ def build_showdown_packet(
         lu = _greedy_showdown_lineup(pool)
         if lu is None:
             break
-        lu = _improve_showdown_lineup(lu, cands)
+        lu = _improve_showdown_lineup(lu, pool)
         portfolios.append(lu)
         # forbid exact repeats by dropping the CPT used so the next pass differs
         used_cpt = lu[lu["slot"] == "CPT"]["name"].astype(str).iloc[0]

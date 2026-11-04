@@ -79,7 +79,7 @@
  *    the snapshot IT took, which may already contain the other's mutation.
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, rmSync, openSync, closeSync } from "node:fs";
+import { readFileSync, writeFileSync, rmSync, openSync, closeSync, mkdirSync } from "node:fs";
 
 const GATE = "src/causal/adversary-red-team.ts";
 const TESTS = ["test/adversary-red-team.t6.spec.ts"];
@@ -421,6 +421,7 @@ const LOCK_STALE_AFTER_MS = 15 * 60 * 1000;
 
 function takeLock() {
   const acquire = () => {
+    mkdirSync("C:/Users/Garrett/AppData/Local/hermes/cache/scratch", { recursive: true });
     const fd = openSync(SWEEP_LOCK, "wx");
     writeFileSync(SWEEP_LOCK, JSON.stringify({ pid: process.pid, at: Date.now() }));
     closeSync(fd);

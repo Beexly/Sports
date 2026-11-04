@@ -1,0 +1,47 @@
+{
+  "agent-deepseek41-engine": {
+    "id": "agent-deepseek41-engine",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "role": "Engine Total Wiring & Equation Verification Subagent",
+    "system": "You are the Senior Mathematics & Systems Verification Agent for Galaxy Sports Edge. You enforce zero synthetic equations, strict grounding in peer-reviewed literature, and clean mathematical coupling across cognitive router stages.",
+    "prompt": "\nAudit the equation ingestion architecture for the 1,000-equation matrix in scripts/ops/build_thousand_equation_matrix.py:\n1. Explain how to cleanly map the 1,098 CITABLE_VERIFIED records in packages/prediction-engine/data/MIND_CORPUS_3000.jsonl (using parsed_float_magnitude, domain, title, and evidence_quote) to replace all 1,256 placeholder EQ-EXP-* synthetic loops.\n2. Specify the mathematical mapping between domain names (e.g., trench_warfare, market_microstructure, qb_decision_tree, coverage_schemes) and the 6 signal family bitmask indices (0..278) in the 288-bit context vector.\n3. Validate the positive-part James-Stein shrinkage shrinkage cap (|delta log-odds| <= 0.35) and how it guarantees mathematical stability when aggregating over 1,000 equations.\nProvide actionable mathematical specifications for implementation.\n",
+    "max_tokens": 1500,
+    "result": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "status": "SUCCESS",
+      "elapsed_sec": 11.16,
+      "tokens": 1769,
+      "response": ""
+    }
+  },
+  "agent-crouton-x-content": {
+    "id": "agent-crouton-x-content",
+    "model": "stealth/crouton-alpha",
+    "role": "Muse/Motif X/Twitter Bot & Content Lanes Subagent",
+    "system": "You are Motif/Muse, the official autonomous voice and distribution director for @GalaxySportsHQ. You write sharp, authoritative, zero-fluff analytics content. You NEVER use emojis except for a single settlement glyph on settlement leads. You NEVER put external links in root tweets (links only in sub-replies). You respect the official 16-5 (+10.45u) / 38-13-1 (+22.85u) verified record.",
+    "prompt": "\nDesign 3 sniper reply drafts for @GalaxySportsHQ targeting high-traffic NFL analytics threads this week:\nTarget 1: Under a @SamHoppen chart on Pass Rate Over Expected (PROE) vs EPA/play.\nTarget 2: Under a @FantasyPtsData chart on first-read target share vs Cover-1 man blitz.\nTarget 3: Under a @PattonAnalytics chart on Pressure-to-Sack conversion rate vs offensive tackle pass block win rate.\n\nFor each target:\n1. Identify the analytical counter-intuitive angle grounded in GSE 175-snap simulation or trench mechanics.\n2. Write the exact tweet copy for Motif/Muse (concise, analytical, 0 emojis, 0 root links, citing verified mechanical film/data).\n3. Write the follow-up sub-reply containing the Trench X-Ray link to galaxysportsedge.com.\n",
+    "max_tokens": 1800,
+    "result": {
+      "model": "stealth/crouton-alpha",
+      "status": "SUCCESS",
+      "elapsed_sec": 11.11,
+      "tokens": 364,
+      "response": "Here are 3 sniper drafts built for Motif/Muse \u2014 zero-fluff, no root links, link isolated to sub-reply.\n\n### Target 1: @SamHoppen \u2014 PROE vs EPA/play\n\n**Counter-intuitive angle:** High PROE + flat EPA/play is not inefficiency. In the GSE 175-snap simulation, that profile clusters against 2-high shells where PROE is forced by structure, not aggression. EPA/play only separates once you filter for 3rd-and-long vs 1st"
+    }
+  },
+  "agent-nemotron-gsi-grants": {
+    "id": "agent-nemotron-gsi-grants",
+    "model": "nvidia/nemotron-3.5-super-vl",
+    "role": "GSI Research & Fast Grants Verification Subagent",
+    "system": "You are the Principal Scientific Reviewer for the Galaxy Science Institute (GSI). You review mathematical proposals and clinical benchmarks for submission to Manifund, SFF, Cosmos, Emergent Ventures, and ONR SBIR.",
+    "prompt": "\nAudit the GSI research grant application and clinical benchmark package:\n1. Review the clinical MIMIC-IV benchmark methodology in packages/galaxy-conformal-ot/benchmarks/clinical_mimic_iv_real_benchmark.py:\n   - Verify why the Cholesky whitening covariance matrix must be fit strictly on the calibration split D_cal rather than the combined dataset, and state the formal proof that fitting on test horizons induces non-exchangeability.\n   - Confirm the mathematical guarantees of the Debiased Sinkhorn divergence under covariate shift.\n2. Outline the institutional governance narrative for GSI: positioning our dual-use foundational work in Markovian state transitions, Schrodinger bridge trajectory estimation, and conformal inference across both high-frequency physiological monitoring and sports biomechanics.\nProvide a clean, publication-grade executive summary for grant committees.\n",
+    "max_tokens": 1500,
+    "result": {
+      "model": "nvidia/nemotron-3.5-super-vl",
+      "status": "SUCCESS",
+      "elapsed_sec": 30.73,
+      "tokens": 1736,
+      "response": ""
+    }
+  }
+}

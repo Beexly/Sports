@@ -38,7 +38,7 @@
  *   cd packages/prediction-engine && node reconciliation/_mutation_sweep_t8_picks.mjs
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, rmSync, mkdirSync, existsSync } from "node:fs";
 
 const GATE = "src/picks/pick-pipeline.ts";
 const TEST = "test/pick-pipeline.t8.spec.ts";
@@ -177,9 +177,10 @@ function withEol(fragment, eol) {
  * which covers an assertion failure, a crash, and a test that never ran.
  */
 function passedTitles() {
+  mkdirSync("C:/Users/Garrett/AppData/Local/hermes/cache/scratch", { recursive: true });
   rmSync(REPORT, { force: true });
   try {
-    execFileSync("node", [VITEST, "run", "--reporter=json", `--outputFile=${REPORT}`, ...TESTS], {
+    execFileSync(process.execPath, [VITEST, "run", "--reporter=json", `--outputFile=${REPORT}`, ...TESTS], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
       // T8_SWEEP_CHILD is set so the gate's own "run the sweep" test does not recurse when the
@@ -188,6 +189,9 @@ function passedTitles() {
     });
   } catch {
     // A non-zero exit is EXPECTED for a mutation that breaks a test; the report still lands.
+  }
+  if (!existsSync(REPORT)) {
+    throw new Error(`Report file ${REPORT} was not created by vitest run`);
   }
   const report = JSON.parse(readFileSync(REPORT, "utf8"));
   const passed = new Set();

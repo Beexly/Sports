@@ -1,0 +1,206 @@
+{
+ "run_id": "run_20261104T204457Z",
+ "started_at_utc": "2026-11-04T20:44:57+00:00",
+ "dry_run": true,
+ "stage_limit": 5,
+ "seats": [
+  {
+   "seat": 0,
+   "name": "cleanup_and_doctor",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "git_head_reachable": true,
+    "ledger_verified_record": true,
+    "ledger_verified_units": true,
+    "ledger_secondary_record": true,
+    "free_space_positive": true
+   },
+   "details": {
+    "free_gb_before": 3.66,
+    "trigger_gb": 6.0,
+    "cleanup_triggered": true,
+    "npm": {
+     "path": "C:\\Users\\Garrett\\AppData\\Local\\npm-cache",
+     "exists": true,
+     "size_gb": 2.6,
+     "action": "would_clean"
+    },
+    "worktrees": [
+     {
+      "worktree": "C:\\c\\wt-ci-fix",
+      "exists": true,
+      "dirty": false,
+      "clean": true,
+      "merged": false,
+      "action": "kept_unmerged"
+     },
+     {
+      "worktree": "C:\\c\\wt-ledger",
+      "exists": true,
+      "dirty": true,
+      "clean": false,
+      "action": "kept_dirty"
+     },
+     {
+      "worktree": "C:\\c\\wt-not-for-sale",
+      "exists": true,
+      "dirty": true,
+      "clean": false,
+      "action": "kept_dirty"
+     },
+     {
+      "worktree": "C:\\c\\wt-tree-red",
+      "exists": true,
+      "dirty": true,
+      "clean": false,
+      "action": "kept_dirty"
+     },
+     {
+      "worktree": "C:\\c\\wt-week8-fail-remediation",
+      "exists": true,
+      "dirty": true,
+      "clean": false,
+      "action": "kept_dirty"
+     }
+    ],
+    "free_gb_after": 3.66,
+    "git": {
+     "head": "dca21f347",
+     "branch": "hermes/overnight-2026-11-03-corpus",
+     "reachable": true
+    },
+    "ledger": {
+     "path": "data\\engine\\new_engine_official_ledger_2026.json",
+     "exists": true,
+     "verified_record": "36-13-1",
+     "verified_net_units": "+20.14u",
+     "verified_record_ok": true,
+     "verified_units_ok": true,
+     "secondary_key": "pre_oct29_4_2_continuity_plus_week8_22_7_1",
+     "secondary_key_present": false,
+     "secondary_record": "38-13-1",
+     "secondary_record_ok": true
+    },
+    "env": {
+     "env_file": "PRESENT",
+     "OPENROUTER_API_KEY": "SET",
+     "DATABASE_URL": "MISSING"
+    }
+   },
+   "elapsed_s": 3.77
+  },
+  {
+   "seat": 1,
+   "name": "ingest_and_provenance",
+   "status": "PASS",
+   "passed": true,
+   "checks": {
+    "manifest_exists": true,
+    "all_on_disk": true,
+    "all_indexed": true
+   },
+   "details": {
+    "manifest": {
+     "path": "data\\engine\\INGESTION-MANIFEST-2026-11-02.json",
+     "files": 393,
+     "total_files": 393,
+     "generated_at": "2026-11-03T16:21:57.563747+00:00"
+    },
+    "targets": [
+     {
+      "file": "DKSalaries (2).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "DKSalaries (3).csv",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PM.md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-02-PM (1).md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "2026-11-03-AM.md",
+      "on_disk": true,
+      "indexed": true
+     },
+     {
+      "file": "FUNDING-MASTER-2026-11-03.md",
+      "on_disk": true,
+      "indexed": true
+     }
+    ],
+    "missing_on_disk": [],
+    "not_indexed": [],
+    "remediation": null
+   },
+   "elapsed_s": 0.04
+  },
+  {
+   "seat": 2,
+   "name": "vision_and_simulation",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {},
+   "details": {
+    "reason": "dry-run"
+   },
+   "elapsed_s": 0.0
+  },
+  {
+   "seat": 3,
+   "name": "equations_and_situational",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {},
+   "details": {
+    "reason": "dry-run"
+   },
+   "elapsed_s": 0.0
+  },
+  {
+   "seat": 4,
+   "name": "market_and_dfs_gate",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {},
+   "details": {
+    "reason": "dry-run"
+   },
+   "elapsed_s": 0.0
+  },
+  {
+   "seat": 5,
+   "name": "audit_and_voice_briefing",
+   "status": "SKIP",
+   "passed": true,
+   "checks": {},
+   "details": {
+    "reason": "dry-run"
+   },
+   "elapsed_s": 0.0
+  }
+ ],
+ "summary": {
+  "seats_run": 6,
+  "passed": 2,
+  "failed": [],
+  "skipped": [
+   "vision_and_simulation",
+   "equations_and_situational",
+   "market_and_dfs_gate",
+   "audit_and_voice_briefing"
+  ],
+  "finished_at_utc": "2026-11-04T20:45:01+00:00"
+ },
+ "updated_at_utc": "2026-11-04T20:45:01+00:00"
+}

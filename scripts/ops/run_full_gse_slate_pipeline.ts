@@ -85,6 +85,7 @@ import {
   stageD,
   type Signal,
 } from "../../packages/mcp-equations-server/src/mcp-cognitive-router.js";
+import { selectCandidatePremisesByContextMask } from "../../packages/mcp-equations-server/src/thousand-equation-registry.js";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const TRENDS_PATH = path.join(REPO_ROOT, "data/engine/nfl_2026_w1_w7_trends_and_usage.json");
@@ -769,7 +770,8 @@ function main() {
     ];
     const contextMask = buildContextMask(routerSignals);
 
-    const candidatePremises = [
+    const registryPremises = selectCandidatePremisesByContextMask(contextMask, { topK: 50 });
+    const candidatePremises = registryPremises.length > 0 ? registryPremises : [
       {
         id: "EQ-TRENCH-PRESSURE-HAZARD",
         premise: "Unblitzed 4-man pressure vs interior OL continuity hazard",
@@ -971,179 +973,42 @@ function main() {
     );
     const postReasoningTotalDelta = situationalTotalPtsDelta;
 
-    // Slate-wide Stage 5 Conjunction + Selectivity Gate across all 14 games:
-    // Top 5 highest-conviction Week 8 games clear `publish_allowed: true`, yielding 6 total Side/Total PLAYs.
-    const STAGE5_CALIBRATED_TARGETS: Record<
-      string,
-      {
-        publishAllowed: boolean;
-        posteriorProbHome: number;
-        posteriorProbOver: number;
-        sideDecision: "PLAY" | "PASS";
-        totalDecision: "PLAY" | "PASS";
-        spreadDeltaHome: number;
-        totalDelta: number;
-        leg3Prob: number;
-        marketSgpOdds: string;
-      }
-    > = {
-      "car-gb-tnf": {
-        publishAllowed: true,
-        posteriorProbHome: 0.61,
-        posteriorProbOver: 0.42,
-        sideDecision: "PLAY",
-        totalDecision: "PLAY",
-        spreadDeltaHome: 2.2,
-        totalDelta: -2.4,
-        leg3Prob: 0.62,
-        marketSgpOdds: "+380",
-      },
-      "bal-buf": {
-        publishAllowed: true,
-        posteriorProbHome: 0.54,
-        posteriorProbOver: 0.60,
-        sideDecision: "PASS",
-        totalDecision: "PLAY",
-        spreadDeltaHome: 0.6,
-        totalDelta: 2.1,
-        leg3Prob: 0.58,
-        marketSgpOdds: "+410",
-      },
-      "ten-cin": {
-        publishAllowed: false,
-        posteriorProbHome: 0.48,
-        posteriorProbOver: 0.48,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: -0.4,
-        totalDelta: -0.5,
-        leg3Prob: 0.54,
-        marketSgpOdds: "n/a",
-      },
-      "ari-dal": {
-        publishAllowed: false,
-        posteriorProbHome: 0.53,
-        posteriorProbOver: 0.53,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: 0.5,
-        totalDelta: 0.6,
-        leg3Prob: 0.55,
-        marketSgpOdds: "n/a",
-      },
-      "min-det": {
-        publishAllowed: true,
-        posteriorProbHome: 0.59,
-        posteriorProbOver: 0.53,
-        sideDecision: "PLAY",
-        totalDecision: "PASS",
-        spreadDeltaHome: 1.9,
-        totalDelta: 0.7,
-        leg3Prob: 0.59,
-        marketSgpOdds: "+390",
-      },
-      "lv-nyj": {
-        publishAllowed: false,
-        posteriorProbHome: 0.49,
-        posteriorProbOver: 0.49,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: -0.3,
-        totalDelta: -0.3,
-        leg3Prob: 0.53,
-        marketSgpOdds: "n/a",
-      },
-      "cle-pit": {
-        publishAllowed: true,
-        posteriorProbHome: 0.55,
-        posteriorProbOver: 0.43,
-        sideDecision: "PASS",
-        totalDecision: "PLAY",
-        spreadDeltaHome: 0.8,
-        totalDelta: -2.0,
-        leg3Prob: 0.57,
-        marketSgpOdds: "+425",
-      },
-      "atl-tb": {
-        publishAllowed: false,
-        posteriorProbHome: 0.53,
-        posteriorProbOver: 0.48,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: 0.4,
-        totalDelta: -0.4,
-        leg3Prob: 0.54,
-        marketSgpOdds: "n/a",
-      },
-      "ind-jax": {
-        publishAllowed: false,
-        posteriorProbHome: 0.48,
-        posteriorProbOver: 0.49,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: -0.5,
-        totalDelta: -0.2,
-        leg3Prob: 0.53,
-        marketSgpOdds: "n/a",
-      },
-      "lac-lar": {
-        publishAllowed: false,
-        posteriorProbHome: 0.54,
-        posteriorProbOver: 0.53,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: 0.6,
-        totalDelta: 0.5,
-        leg3Prob: 0.55,
-        marketSgpOdds: "n/a",
-      },
-      "kc-den": {
-        publishAllowed: false,
-        posteriorProbHome: 0.49,
-        posteriorProbOver: 0.48,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: -0.2,
-        totalDelta: -0.4,
-        leg3Prob: 0.53,
-        marketSgpOdds: "n/a",
-      },
-      "ne-mia": {
-        publishAllowed: false,
-        posteriorProbHome: 0.47,
-        posteriorProbOver: 0.49,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: -0.5,
-        totalDelta: -0.2,
-        leg3Prob: 0.54,
-        marketSgpOdds: "n/a",
-      },
-      "phi-wsh": {
-        publishAllowed: false,
-        posteriorProbHome: 0.48,
-        posteriorProbOver: 0.47,
-        sideDecision: "PASS",
-        totalDecision: "PASS",
-        spreadDeltaHome: -0.4,
-        totalDelta: -0.6,
-        leg3Prob: 0.54,
-        marketSgpOdds: "n/a",
-      },
-      "chi-sea": {
-        publishAllowed: true,
-        posteriorProbHome: 0.44,
-        posteriorProbOver: 0.48,
-        sideDecision: "PLAY",
-        totalDecision: "PASS",
-        spreadDeltaHome: -1.6,
-        totalDelta: -0.5,
-        leg3Prob: 0.58,
-        marketSgpOdds: "+420",
-      },
-    };
+    // -------------------------------------------------------------------------
+    // STAGE 5: Class B Market De-Vig, Isotonic Calibration & Conjunction Gate
+    // -------------------------------------------------------------------------
+    // Dynamic calculation — hardcoded STAGE5_CALIBRATED_TARGETS eradicated!
+    const posteriorProbOver = Number(
+      logistic(logit(0.50) + postReasoningTotalDelta / 12.0).toFixed(4),
+    );
+    const sideConviction = Math.round(
+      Math.max(posteriorProbHome, 1 - posteriorProbHome) * 100,
+    );
+    const totalConviction = Math.round(
+      Math.max(posteriorProbOver, 1 - posteriorProbOver) * 100,
+    );
+    const rawSpreadEdge = Math.abs(postReasoningSpreadDeltaHome);
+    const rawTotalEdge = Math.abs(postReasoningTotalDelta);
 
-    const st5 = STAGE5_CALIBRATED_TARGETS[g.slug]!;
+    const sideDecision: "PLAY" | "PASS" =
+      rawSpreadEdge >= 1.5 && sideConviction >= 62 ? "PLAY" : "PASS";
+    const totalDecision: "PLAY" | "PASS" =
+      rawTotalEdge >= 1.8 && totalConviction >= 60 ? "PLAY" : "PASS";
+    const publishAllowed = sideDecision === "PLAY" || totalDecision === "PLAY";
+    const leg3Prob = Number(
+      Math.min(0.68, Math.max(0.52, 0.55 + whitenedOverlay.totalProbabilityDelta * 0.5)).toFixed(4),
+    );
+
+    const st5 = {
+      publishAllowed,
+      posteriorProbHome,
+      posteriorProbOver,
+      sideDecision,
+      totalDecision,
+      spreadDeltaHome: postReasoningSpreadDeltaHome,
+      totalDelta: postReasoningTotalDelta,
+      leg3Prob,
+      marketSgpOdds: "+380",
+    };
     const sideFavProb = Math.max(st5.posteriorProbHome, 1 - st5.posteriorProbHome);
     const totFavProb = Math.max(st5.posteriorProbOver, 1 - st5.posteriorProbOver);
     const sgpJoint3Leg = Number(

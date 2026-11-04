@@ -31,7 +31,7 @@ export default function PicksPage(): JSX.Element {
           <Link href="/props" className="inline-flex min-h-11 items-center text-[#EDE8E0]">Props and watchlist</Link>
         </div>
         <div className="mt-10">
-          <SealedTable rows={locked} />
+          <SealedTable rows={locked} freeLimit={2} />
         </div>
       </main>
       <Footer />

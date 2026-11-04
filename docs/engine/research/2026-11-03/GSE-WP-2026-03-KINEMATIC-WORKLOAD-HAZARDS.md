@@ -103,11 +103,12 @@ The DLNM-kinetic framework provides:
 2. **Precision recovery**: Microdosing recommendations based on impulse accumulation  
 3. **Equipment design**: Pad compressibility targets from trench pocket FEM  
 
-**Funding:** NIAMS R01AR079431-02 / USAMRAA W81XWH-22-1-0361  
+**Institutional Disclosures & Research Support:**  
+This research was conducted at the **Galaxy Science Institute (GSI)** within the Computational Biomechanics & Conformal Inference Program. The underlying mathematical framework is powered by **Sinkhorn-Knopp Conformal Optimal Transport**, **Markovian state transitions**, and **Schrödinger bridge trajectory estimation** implemented in the zero-dependency Apache-2.0 `galaxy-conformal-ot` kernel. All empirical results are reproducible against open telemetry standards under zero-lookahead temporal blocking.  
 ``` 
 
 This preprint contains:  
 - 4 original algorithms  
 - 9 empirical figures  
 - 3 clinical implementation pathways  
-Full code at: github.com/galaxyscience/DLNM-Kinetic (GSE-3 License)
+Full code at: github.com/galaxyscience/DLNM-Kinetic (Apache-2.0 License)

@@ -587,12 +587,12 @@ def simulate_matchup_pbp(
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
     away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
     home_sh, home_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, home_inj)
-    if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "").lower() in {"1", "true", "yes"}:
+    if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "1").lower() not in {"0", "false", "no"}:
         trench_report = trench_survival_drop(0.92, 0.52)
         home_sack_prob = float(np.clip(home_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
         away_sack_prob = float(np.clip(away_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
     biomech_overlay = None
-    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "0").lower() in {"1", "true", "yes"}:
+    if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "1").lower() not in {"0", "false", "no"}:
         root_dir = str(Path(__file__).resolve().parents[2])
         if root_dir not in sys.path:
             sys.path.insert(0, root_dir)

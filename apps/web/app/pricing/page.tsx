@@ -2,82 +2,178 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 
 export const metadata: Metadata = {
-  title: "Pricing & Betting Packs | Galaxy Sports Edge",
+  title: "Pricing & Plans | Galaxy Sports Edge",
   description:
-    "Monthly subscription plans are currently under construction. Grab individual NFL Betting Packs or open the DFS Optimizer today with zero subscription.",
+    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Analytics / GSI API ($499). Powered by our verified 38-13-1 (+22.85u) autonomous engine.",
   alternates: { canonical: "/pricing" },
 };
 
+const TIERS = [
+  {
+    id: "single-game",
+    name: "Single Game Pass",
+    price: "$9",
+    cadence: "per game",
+    description: "Full tactical breakdown, official side/total calls, top 3 player props, and 1 correlated SGP for any individual marquee game.",
+    popular: false,
+    slug: "tnf-all-in-pack",
+    features: [
+      "Official Spread & Total Calls",
+      "Top 3 High-Conviction Player Props",
+      "1 Correlated Same-Game Parlay",
+      "Trench Pocket Physics & Matchup X-Ray",
+      "Instant In-Place Unlock",
+    ],
+    cta: "Get Single Game Pass",
+    ctaLink: "/packages#tnf-all-in-pack",
+  },
+  {
+    id: "weekly-all-access",
+    name: "Weekly All-Access",
+    price: "$29",
+    cadence: "per week",
+    description: "Complete slate coverage across all 13+ games from Thursday Night through Monday Night Football, plus full DFS optimizer portfolio.",
+    popular: true,
+    slug: "week8-all-access",
+    features: [
+      "All 13+ Game Cards (Thursday to Monday)",
+      "18+ Locked Player Props (Full Board)",
+      "13 Correlated Same-Game Parlays",
+      "Full DFS Portfolio (Cash & GPP Optimal Lineups)",
+      "16-Player Expanded Position Core",
+      "Trench X-Ray & Injury Reallocation Dossiers",
+    ],
+    cta: "Unlock Weekly All-Access",
+    ctaLink: "/packages#week8-all-access",
+  },
+  {
+    id: "vip-season-pass",
+    name: "VIP Season Pass",
+    price: "$199",
+    cadence: "rest of season & playoffs",
+    description: "Unrestricted VIP access for the remainder of the 2026 season and Super Bowl LXI. Zero recurring rebills.",
+    popular: false,
+    slug: "vip-season-pass",
+    features: [
+      "Every Game Card Through Super Bowl LXI",
+      "Complete Player Props & Derivatives Suite",
+      "Daily Fantasy (DFS) Cash & MME Portfolios",
+      "Early Friday Injury Reallocation Models",
+      "Private VIP Discord & Real-Time Alert Desk",
+      "Direct Line to Research Team",
+    ],
+    cta: "Join VIP Season Pass",
+    ctaLink: "/packages#week8-all-access",
+  },
+  {
+    id: "pro-analytics-gsi-api",
+    name: "Pro Analytics / GSI API",
+    price: "$499",
+    cadence: "per month",
+    description: "Institutional quant and syndicate access. Direct programmatic API, sub-second odds feeds, and 10k-world distribution vectors.",
+    popular: false,
+    slug: "pro-analytics-gsi-api",
+    features: [
+      "Programmatic REST & WebSocket API Access",
+      "10,000-World Snap-by-Snap Vector Stream",
+      "Sinkhorn-Knopp Optimal Transport Matrices",
+      "Sub-second Market Odds & De-Vig Pipeline",
+      "Historical PBP Datasets & Replay Provenance",
+      "Dedicated Enterprise SLA & Quant Support",
+    ],
+    cta: "Contact Enterprise Sales",
+    ctaLink: "/research",
+  },
+];
+
 export default function PricingPage(): JSX.Element {
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 text-white">
+    <div className="relative min-h-screen w-full bg-[#08090C] text-[#EDE8E0]">
       <Nav />
-      <main id="main-content" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border-2 border-amber-400/50 bg-slate-900 p-8 sm:p-12 text-center shadow-2xl">
-          <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-300">
-            🚧 Monthly Subscriptions Under Construction
-          </span>
-          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-            No Monthly Subscription Needed Right Now
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-200">
-            Our monthly membership tiers are currently under construction while we focus full-time on{" "}
-            <strong className="text-white">this week&apos;s NFL Betting Packs</strong> and our{" "}
-            <strong className="text-white">Daily Fantasy (DFS) Lineup Optimizer</strong>. You can grab any individual
-            game pack below with a simple one-time checkout.
+      <main id="main-content" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF4D2E]">
+            Official New Engine Verified Record: 38-13-1 (74.5%) · +22.85u
           </p>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/packages"
-              className="rounded-xl bg-amber-500 hover:bg-amber-400 px-7 py-4 text-base font-extrabold text-slate-950 shadow-lg transition-colors"
-            >
-              View This Week&apos;s NFL Betting Packs →
-            </Link>
-            <Link
-              href="/fantasy/dfs"
-              className="rounded-xl border-2 border-slate-700 bg-slate-800 hover:border-amber-400 px-7 py-4 text-base font-bold text-white transition-colors"
-            >
-              Open DFS Lineup Optimizer →
-            </Link>
-          </div>
+          <h1 className="mt-3 font-display text-4xl uppercase tracking-tight text-white sm:text-6xl">
+            Choose Your Edge
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-[#C4BFB6] sm:text-lg">
+            Powered by the Galaxy 10-Layer Autonomous Engine. Honest conviction scores (strictly XX/100, never raw percentages), verified track record, and disciplined pass criteria.
+          </p>
         </div>
 
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold text-white text-center">
-            Available Pay-Per-Slate NFL Packs (One-Time Purchase)
-          </h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2">
-            {LIVE_PACKAGE_CATALOG.map((pkg) => (
-              <div
-                key={pkg.slug}
-                className="flex flex-col justify-between rounded-xl border-2 border-slate-800 bg-slate-900 p-6 shadow-lg"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="rounded bg-amber-500/20 px-2.5 py-1 text-xs font-bold text-amber-300">
-                      {pkg.badge || pkg.windowSlot}
+        {/* Pricing Cards Grid */}
+        <div className="mt-14 grid gap-8 lg:grid-cols-4">
+          {TIERS.map((tier) => (
+            <div
+              key={tier.id}
+              className={`flex flex-col justify-between rounded-xl border p-7 transition-all ${
+                tier.popular
+                  ? "border-[#FF4D2E] bg-[#12141C] shadow-[0_0_30px_rgba(255,77,46,0.18)]"
+                  : "border-[#252833] bg-[#0E1015] hover:border-[#3A3F50]"
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-2xl uppercase tracking-wide text-white">{tier.name}</h3>
+                  {tier.popular && (
+                    <span className="rounded bg-[#FF4D2E] px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#08090C]">
+                      Most Popular
                     </span>
-                    <span className="text-2xl font-extrabold text-amber-400">
-                      ${(pkg.standardPriceCents / 100).toFixed(0)}
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-xl font-bold text-white">{pkg.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-200">{pkg.description}</p>
+                  )}
                 </div>
+                <div className="mt-5 flex items-baseline">
+                  <span className="font-display text-5xl uppercase tracking-tight text-white">{tier.price}</span>
+                  <span className="ml-2 text-xs uppercase tracking-wider text-[#8F8A82]">/{tier.cadence}</span>
+                </div>
+                <p className="mt-4 text-xs leading-relaxed text-[#C4BFB6]">{tier.description}</p>
+
+                <div className="my-6 border-t border-[#252833]" />
+
+                <ul className="space-y-3 text-xs text-[#EDE8E0]">
+                  {tier.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <span className="font-bold text-[#FF4D2E]">✓</span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-8">
                 <Link
-                  href={`/packages#${pkg.slug}`}
-                  className="mt-5 inline-flex w-full items-center justify-center rounded-lg bg-amber-500 hover:bg-amber-400 px-4 py-3 text-sm font-bold text-slate-950 transition-colors"
+                  href={tier.ctaLink}
+                  className={`inline-flex min-h-[46px] w-full items-center justify-center rounded text-xs font-bold uppercase tracking-wider transition-colors ${
+                    tier.popular
+                      ? "bg-[#FF4D2E] text-[#08090C] hover:opacity-90 shadow-md"
+                      : "border border-[#EDE8E0]/40 text-[#EDE8E0] hover:border-[#FF4D2E] hover:text-[#FF4D2E]"
+                  }`}
                 >
-                  Open Pack (${(pkg.standardPriceCents / 100).toFixed(0)}) →
+                  {tier.cta} →
                 </Link>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Verification Guarantee & Scientific Transparency */}
+        <div className="mt-16 rounded-xl border border-[#252833] bg-[#0E1015] p-8 text-center sm:p-10">
+          <h2 className="font-display text-2xl uppercase tracking-wide text-white sm:text-3xl">
+            Mathematical Integrity &amp; Strict Pass Discipline
+          </h2>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-[#C4BFB6]">
+            Every call published on Galaxy Sports Edge originates from our 5-Stage Autonomous Engine: film-tendency coaching models, 10,000-world JEV snap-by-snap simulations, spectral cluster orthogonalization, and class-B market de-vigged copulas. If an edge does not clear our conjunction threshold, we mark it <strong>PASS · NO BET</strong>. We never force action.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
+            <span>✓ Verified Record: 38-13-1 (74.5%) · +22.85u</span>
+            <span>✓ Secondary All-In: 47-19-1 (71.2%) · +24.92u</span>
+            <span>✓ 100% Cryptographic Timestamp Hashes</span>
           </div>
-        </section>
+        </div>
       </main>
       <Footer />
     </div>

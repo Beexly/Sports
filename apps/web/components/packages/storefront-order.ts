@@ -32,8 +32,12 @@ export function upcomingOnly(
   writeups: readonly CoachGameWriteup[],
   now: Date = new Date(),
 ): CoachGameWriteup[] {
-  return writeups.filter((w) => {
+  const upcoming = writeups.filter((w) => {
     const kickoff = Date.parse(w.kickoff);
     return !Number.isNaN(kickoff) && kickoff > now.getTime();
   });
+  if (upcoming.length === 0) {
+    return [...writeups];
+  }
+  return upcoming;
 }

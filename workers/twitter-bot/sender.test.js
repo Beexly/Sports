@@ -292,9 +292,9 @@ test("the client exposes NO follow, like or retweet capability", () => {
   }
 });
 
-test("the ONLY mutating capability is posting", () => {
+test("the ONLY mutating capabilities are posting and media upload", () => {
   const surface = Object.getOwnPropertyNames(XClient.prototype).filter(
     (n) => !n.startsWith("#") && n !== "constructor",
   );
-  assert.deepEqual(surface, ["postTweet"]);
+  assert.deepEqual(surface.sort(), ["postTweet", "uploadMedia"].sort());
 });

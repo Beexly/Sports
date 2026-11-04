@@ -33,9 +33,17 @@ import { captureError } from "@/lib/observability/sentry";
 import { db } from "@sports/db";
 import {
   extractTrueProb,
-  extractRankingP,
   extractMarketFairProb,
 } from "@sports/types";
+
+function extractRankingP(p: { rankingP?: number | null; factorBreakdown?: unknown }): number | null {
+  if (typeof p.rankingP === "number" && Number.isFinite(p.rankingP)) return p.rankingP;
+  if (p.factorBreakdown && typeof p.factorBreakdown === "object") {
+    const fb = p.factorBreakdown as Record<string, unknown>;
+    if (typeof fb.rankingP === "number" && Number.isFinite(fb.rankingP)) return fb.rankingP;
+  }
+  return null;
+}
 import { SUPPORTED_SPORTS, isSportInSeason } from "@sports/data-ingestion";
 import {
   settleSport,
