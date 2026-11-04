@@ -1,36 +1,27 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 /**
- * P16-01 VERIFY — Homepage shell renders without awaiting the nflverse loader.
+ * P16-01 VERIFY — the homepage shell never waits on the nflverse archive.
  *
- * The fix moved `loadNflverseUsagePulse()` out of the blocking Promise.all on
- * the homepage and into a Suspense-bounded sub-component (`NflverseLabDoor`).
- * This test proves the critical path no longer waits on the nflverse archive:
- * even when the loader hangs forever, `await HomePage()` resolves and the page
- * shell (thesis headline, nav, board door, methodology) is present.
+ * The original fix moved `loadNflverseUsagePulse()` out of the homepage's
+ * blocking Promise.all and into a Suspense-bounded `NflverseLabDoor`. The
+ * RedlineWorld rebuild removed the door from the homepage entirely, so the
+ * invariant is now stronger and simpler: the front door does not import or
+ * await the nflverse loader at all, and the pulse feature still exists in
+ * NflverseLabDoor for the surfaces that render it.
  */
 const mocks = vi.hoisted(() => ({
-  boardState: vi.fn(),
-  boardPasses: vi.fn(),
-  calibration: vi.fn(),
   nflverse: vi.fn(),
 }));
 
-vi.mock("@/lib/board/state", () => ({ loadBoardState: mocks.boardState }));
-vi.mock("@/lib/board/passes", () => ({ loadBoardPasses: mocks.boardPasses }));
-vi.mock(
-  "@/lib/calibration/report",
-  () => ({ loadPublicCalibrationReport: mocks.calibration }),
-);
-vi.mock(
-  "@/lib/nflverse/usage-pulse",
-  () => ({ loadNflverseUsagePulse: mocks.nflverse }),
-);
+vi.mock("@/lib/nflverse/usage-pulse", () => ({
+  loadNflverseUsagePulse: mocks.nflverse,
+}));
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import HomePage from "@/app/page";
-import { NflverseLabDoor, NflverseLabDoorPlaceholder } from "@/components/landing/nflverse-lab-door";
+import { NflverseLabDoor } from "@/components/landing/nflverse-lab-door";
 
 // ── element-tree helpers (same pattern as honest-degraded-states.test.ts) ────
 
@@ -74,76 +65,7 @@ function textOf(tree: unknown): string {
   return out.join("\u0001");
 }
 
-function findByType(node: unknown, type: unknown): ElementNode | null {
-  if (node == null || typeof node === "boolean") return null;
-  if (Array.isArray(node)) {
-    for (const child of node) {
-      const found = findByType(child, type);
-      if (found) return found;
-    }
-    return null;
-  }
-  if (isElement(node)) {
-    if (node.type === type) return node;
-    // Search children AND prop values (e.g. Suspense fallback prop).
-    for (const value of Object.values(node.props)) {
-      if (typeof value === "string") continue;
-      const found = findByType(value, type);
-      if (found) return found;
-    }
-    return null;
-  }
-  return null;
-}
-
-function hasType(node: unknown, type: unknown): boolean {
-  return findByType(node, type) !== null;
-}
-
-// ── fixture builders ─────────────────────────────────────────────────────────
-
-const NOW = "2026-06-17T16:00:00.000Z";
-
-const boardStateFixture = {
-  data: {
-    sportsWatched: 0,
-    booksPolled: 0,
-    openPicks: 2,
-    gatedToday: 1,
-    lastRefresh: NOW,
-    modelVersion: "v5.0.0",
-    bootstrap: false,
-    scoringNow: [],
-    publishedToday: [],
-    gatedTodayRows: [],
-  },
-  meta: {
-    degradations: [],
-    health: "GREEN",
-    isSampleData: false,
-    boardClass: "LIVE" as const,
-    traceId: "t1",
-  },
-};
-
-const calibrationFixture = {
-  data: {
-    sampleSize: 120,
-    brierScore: null,
-    isCollecting: false,
-    publicMessage: "Calibration is computed from settled canonical picks only.",
-    updatedAt: NOW,
-  },
-  meta: { gated: false, isSampleData: false },
-};
-
 beforeEach(() => {
-  mocks.boardState.mockReset().mockResolvedValue(boardStateFixture);
-  mocks.boardPasses.mockReset().mockResolvedValue({
-    data: { date: "2026-06-17", passes: [] },
-    meta: { isSampleData: false },
-  });
-  mocks.calibration.mockReset().mockResolvedValue(calibrationFixture);
   mocks.nflverse.mockReset();
 });
 
@@ -155,70 +77,44 @@ afterEach(() => {
 
 describe("P16-01 — homepage shell renders without awaiting nflverse loader", () => {
   it("resolves immediately even when loadNflverseUsagePulse hangs forever", async () => {
-    // The nflverse loader is mocked to NEVER resolve (hangs for 30s+).
-    // If the page still awaited it in Promise.all, this test would time out.
+    // The nflverse loader is mocked to NEVER resolve. If the page still awaited
+    // it, this test would time out.
     mocks.nflverse.mockReturnValue(
       new Promise(() => {
-        /* never resolves — simulates the full-archive download hanging */
+        /* never resolves: simulates the full-archive download hanging */
       }),
     );
 
     const tree = await HomePage();
     const text = textOf(tree);
 
-    // The page shell rendered without waiting for nflverse.
-    expect(text).toContain("The market is full of");
-    // Was "Galaxy turns it into", retired by the FIELD hero rebuild. This test
-    // only needs a stable hero string to prove the shell rendered without
-    // awaiting the nflverse loader, so pin the current thesis line.
-    expect(text).toContain("The market is full of");
-    expect(text).toContain("We detect. You decide.");
-    // Was "Pick the decision you came to make." The FIELD rebuild reworded the
-    // "Where to start" section heading; the property is unchanged.
-    expect(text).toContain("What are you here to decide?");
-    expect(text).toContain("Board");
-    // "The Lab" door label lives inside the suspended NflverseLabDoor
-    // component — it does NOT appear in the shell text when the loader
-    // hangs. The shell itself (doors grid, thesis, nav, footer) is present.
-    expect(text).toContain("Intelligence");
-    expect(text).toContain("Fantasy & Daily");
+    // The shell rendered without waiting for nflverse: the responsible close
+    // and its disclosure are present in the returned tree.
+    expect(text).toContain("The math can point. The decision stays yours.");
+    expect(text).toContain("Close / Responsible Intelligence");
   });
 
-  it("renders the page shell with a Suspense boundary around the nflverse door", async () => {
-    mocks.nflverse.mockReturnValue(
-      new Promise(() => {
-        /* never resolves */
-      }),
+  it("does not import or await the nflverse loader on the front door", () => {
+    const pageSource = readFileSync(
+      resolve(__dirname, "..", "app", "page.tsx"),
+      "utf8",
     );
-
-    const tree = await HomePage();
-
-    // The NflverseLabDoor component is present as an unresolved async element.
-    expect(hasType(tree, NflverseLabDoor)).toBe(true);
-    // And it is wrapped in Suspense with a placeholder fallback.
-    expect(hasType(tree, NflverseLabDoorPlaceholder)).toBe(true);
+    expect(pageSource).not.toContain("loadNflverseUsagePulse");
+    expect(pageSource).not.toContain("NflverseLabDoor");
+    expect(pageSource).not.toMatch(/await\s+Promise\.all/);
   });
 
-  it("page shell renders even when loadNflverseUsagePulse rejects", async () => {
-    mocks.nflverse.mockRejectedValue(new Error("nflverse network failure"));
-
-    // HomePage resolves without throwing — the rejection is deferred.
-    const tree = await HomePage();
-    const text = textOf(tree);
-
-    expect(text).toContain("The market is full of");
-    // Was "Galaxy turns it into", retired by the FIELD hero rebuild. This test
-    // only needs a stable hero string to prove the shell rendered without
-    // awaiting the nflverse loader, so pin the current thesis line.
-    expect(text).toContain("The market is full of");
-    // The nflverse door is still present (as a Suspense boundary, unresolved).
-    expect(hasType(tree, NflverseLabDoor)).toBe(true);
+  it("keeps the pulse feature in NflverseLabDoor for the surfaces that render it", () => {
+    const doorSource = readFileSync(
+      resolve(__dirname, "..", "components", "landing", "nflverse-lab-door.tsx"),
+      "utf8",
+    );
+    expect(doorSource).toContain("loadNflverseUsagePulse");
   });
 
   it("NflverseLabDoor renders real pulse data when the loader resolves", async () => {
     mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 1234 });
 
-    // NflverseLabDoor suspends, then resolves with the mocked pulse.
     const door = await NflverseLabDoor();
     const text = textOf(door);
 
@@ -237,29 +133,5 @@ describe("P16-01 — homepage shell renders without awaiting nflverse loader", (
 
     expect(text).toContain("Live player data unavailable");
     expect(text).not.toContain("1,234 live player rows");
-  });
-
-  it("pulse feature still exists in NflverseLabDoor (not deleted, just deferred)", () => {
-    // Belt-and-suspenders: the pulse feature must still exist — now in the
-    // Suspense-bounded NflverseLabDoor component, not the page-level Promise.all.
-    const doorSource = readFileSync(
-      resolve(__dirname, "..", "components", "landing", "nflverse-lab-door.tsx"),
-      "utf8",
-    );
-    expect(doorSource).toContain("loadNflverseUsagePulse");
-
-    // The homepage page.tsx must still use Suspense for the door, and the
-    // nflverse loader must NOT appear inside the homepage's blocking Promise.all.
-    const pageSource = readFileSync(
-      resolve(__dirname, "..", "app", "page.tsx"),
-      "utf8",
-    );
-    expect(pageSource).toContain("Suspense");
-    const match = pageSource.match(/await Promise\.all\([\s\S]*?\]\)/);
-    expect(match).not.toBeNull();
-    const promiseAllBlock = match![0];
-    expect(promiseAllBlock).not.toContain("loadNflverseUsagePulse");
-    expect(promiseAllBlock).toContain("loadBoardState");
-    expect(promiseAllBlock).toContain("loadPublicCalibrationReport");
   });
 });

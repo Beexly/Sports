@@ -109,6 +109,9 @@
 .live-dot { display:inline-block;width:7px;height:7px;margin-right:6px;background:var(--ember); }
 .header-menu { padding:11px 14px;border:1px solid var(--bone-58);background:transparent;font-size:10px;font-weight:700;letter-spacing:.12em; }
 .header-menu span { margin-left:10px;color:var(--ember); }
+.header-links { display:flex;align-items:center;gap:10px; }
+.header-menu-ghost { border-color:transparent;color:var(--bone-58); }
+.header-menu-ghost:hover { border-color:var(--bone-58);color:var(--bone); }
 .world-caption { position:absolute;z-index:4;left:40px;bottom:152px;display:grid;gap:5px;max-width:310px; }
 .caption-index { color:var(--ember);font-size:9px;font-weight:700;letter-spacing:.17em; }
 .world-caption strong { font:800 46px/.86 var(--f-display);letter-spacing:.01em; }
