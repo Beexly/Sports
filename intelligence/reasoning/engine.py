@@ -42,8 +42,15 @@ from .trace import TraceStore, log_escalation, utcnow
 
 class AnalysisEngine:
     def __init__(self, store_dir: str = "/tmp/gse-traces",
-                 registry: SpecialistRegistry | None = None):
+                 registry: SpecialistRegistry | None = None,
+                 enable_research: bool = False):
         self.store = TraceStore(store_dir)
+        # Opt-in research corpus: default off, so no existing run changes.
+        # An explicit registry wins over enable_research (caller chose the
+        # specialist set); otherwise enable_research adds the gated
+        # ResearchSpecialist to the default five.
+        if registry is None and enable_research:
+            registry = SpecialistRegistry(include_research=True)
         self.registry = registry or SpecialistRegistry()
 
     # -- trace lifecycle ---------------------------------------------------
@@ -230,5 +237,7 @@ class AnalysisEngine:
 
 
 def analyze(req: AnalysisRequest, ctx: DataContext,
-            store_dir: str = "/tmp/gse-traces") -> ReasoningTrace:
-    return AnalysisEngine(store_dir=store_dir).analyze(req, ctx)
+            store_dir: str = "/tmp/gse-traces",
+            enable_research: bool = False) -> ReasoningTrace:
+    return AnalysisEngine(store_dir=store_dir,
+                          enable_research=enable_research).analyze(req, ctx)

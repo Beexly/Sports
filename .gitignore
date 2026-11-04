@@ -268,3 +268,11 @@ intelligence/ingestion/.wall-clear/
 # scripts/ops/build_corpus_index.py; committing multi-MB derived JSONL bloats history)
 intelligence/corpus/corpus_mindfeed.jsonl
 *.bak.2026*
+
+# Large model weights (downloaded, not source)
+gridiron_best.pt
+yolo11n-pose.pt
+
+# Scratch probes
+_tmp_*.py
+_commitmsg.txt
