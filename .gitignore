@@ -263,3 +263,8 @@ reconciliation/_branches.txt
 
 # wall-clear session cookies (cf_clearance is a live token)
 intelligence/ingestion/.wall-clear/
+
+# Generated research-corpus artifacts (reproducible in ~25s via
+# scripts/ops/build_corpus_index.py; committing multi-MB derived JSONL bloats history)
+intelligence/corpus/corpus_mindfeed.jsonl
+*.bak.2026*

@@ -102,3 +102,28 @@ start from the matchup instead of the constants 3 and 46.5.
 **Not proven:** that the roles are adopted. That is a habit, not a file.
 
 **Next role (any):** take one role, not two. Hand off with all four fields.
+
+---
+
+## 2026-11-04 — Corpus / Overnight Harvest
+
+**Changed:** `scripts/research/harvest_overnight_500.py`, `extract_corpus_text.py`,
+`repair_and_extract.py`, `intelligence/research/corpus_retriever.py`,
+`scripts/ops/build_corpus_index.py`, `tests/test_corpus_retriever.py`,
+`intelligence/corpus/corpus_index_stats.json`, this file.
+
+**Proven:** 552 new PDFs downloaded against a 500 target, 1,117 unique on Drive after
+content-hash dedupe (115 arXiv/OpenAlex duplicates removed by md5). Corpus index rebuilt to
+2,226 deduped records with 1,143 carrying full text (was 249). 25 tests pass against the real
+manifest, exit 0. Two genuine defects found and fixed: `pdf_path` stored as MSYS `\c\Users\...`
+(400 records, unopenable by `Path`) and filename-scheme drift (276 relinked by source_id stem).
+
+**Not proven:** that the expanded corpus improves any pick. Every record is `UNVALIDATED`
+against GSE data and the reasoning engine reads neither `corpus_hits` nor `tool_backend` —
+both remain dead fields (`CORPUS-WIRING-STATUS.md`). Kaggle was not harvested: no
+`~/.kaggle/kaggle.json`, reported BLOCKED rather than faked. Gmail/Google Docs are not
+connected in this profile, so those sources were not scanned.
+
+**Next role (Builder):** add a gate check in `intelligence/reasoning/` that refuses a
+`gate_status != VALIDATED` record from becoming load-bearing, then wire `tool_backend` into
+the specialists. Without the gate first, wiring is unsafe by construction.
