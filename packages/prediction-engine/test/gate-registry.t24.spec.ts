@@ -31,7 +31,9 @@ describe("GAP-24: 38-Gate Registry Verification", () => {
       expect(gate.file).toMatch(/^[^:]+:\d+$/);
 
       const [relPath, lineStr] = gate.file.split(":");
-      const absPath = join(ROOT, relPath.replace(/\//g, "\\"));
+      // NOTE: no backslash replacement — path.join handles "/" on both
+      // Windows and POSIX; the old replace made this check fail on Linux CI.
+      const absPath = join(ROOT, relPath);
       expect(existsSync(absPath), `File in gate ${gate.id} must exist: ${relPath}`).toBe(true);
 
       const lineNum = parseInt(lineStr, 10);
