@@ -298,6 +298,40 @@ def check_schema_unknown_columns(schema: dict[str, set[str]], columns: dict[str,
     }
 
 
+def check_schema_declared_missing_in_db(schema: dict[str, set[str]],
+                                       columns: dict[str, set[str]]) -> dict:
+    """Columns declared in schema.prisma that the database does not have.
+
+    The mirror of check_schema_unknown_columns, and the direction that throws
+    rather than corrupts: the generated client emits SELECTs for a column that
+    is not there, so every query touching the model fails at runtime. The other
+    direction drops data silently.
+
+    Checking only one direction is what let the 11-column drift survive: the
+    schema was missing columns the database had, and nothing asked whether the
+    schema also claimed columns the database lacked.
+    """
+    missing: dict[str, list[str]] = {}
+    for table, declared in schema.items():
+        actual = columns.get(table)
+        if not actual:
+            continue
+        absent = sorted(declared - actual)
+        if absent:
+            missing[table] = absent
+    tables = len(missing)
+    cols = sum(len(v) for v in missing.values())
+    return {
+        "check": "schema_declared_missing_in_db",
+        "observed": missing,
+        "display": f"{cols} column(s) across {tables} table(s) declared but absent from the DB",
+        "threshold": "0",
+        "status": CRIT if missing else OK,
+        "detail": "prisma migrate deploy would create these; the current client would fail on them."
+                  if missing else "",
+    }
+
+
 def check_failed_migrations(migrations: list[dict]) -> dict:
     unfinished = [m["migration_name"] for m in migrations
                   if not m["finished_at"] and not m["rolled_back_at"]]
@@ -426,6 +460,7 @@ def gather() -> list[dict]:
     results = [
         check_migration_drift(migrations),
         check_schema_unknown_columns(schema, columns),
+        check_schema_declared_missing_in_db(schema, columns),
         check_failed_migrations(migrations),
         check_recency(migrations),
         check_never_analyzed(state),
