@@ -136,3 +136,22 @@ claude --prompt "Review docs/engine/research/2026-11-04/ARGON-MASTER-REASONING-A
 - **SITUATIONAL-FIRST:** Never run simulations on baseline averages. Situational context must condition the game priors before and throughout the simulation.
 - **NEVER HIDE CONFIDENCE:** Keep honest `XX/100` conviction ratings across all published markets.
 - **HOSTILE SELF-AUDIT:** Run tests, definition-of-done, and all 35 guardrails before every commit.
+
+---
+
+## 6. OPERATING COST MINIMIZATION WITHOUT COMPRESSION (ZERO-WASTE DOCTRINE)
+
+Keep operating costs as low as humanly possible **WITHOUT MINIMIZING, COMPRESSING, OR DUMBING DOWN OPERATIONS OR INTELLIGENCE**:
+1. **Hierarchical Model Routing:**
+   - Free frontier endpoints (`omniroute/auto/coding:free`, `qwen/qwen-2.5-coder-32b-instruct:free`, `deepseek/deepseek-r1:free`) and local models (`mimo-v2.6-flash`) handle routine parsing, document indexing, and test generation.
+   - Frontier models (Claude 3.7 Sonnet / o3) are reserved for JEV snap synthesis and the 5-stage conjunction gate.
+2. **Sentry $5k Grant Preservation:**
+   - Maintain 10% sampling (`tracesSampleRate: 0.1` in production) so full distribution fidelity is captured while preserving the $5,000 credit buffer across the entire 12-month period (Nov 4, 2026 – Nov 4, 2027).
+   - Filter out repetitive health check pings from billable span volume.
+3. **Database Resource Discipline:**
+   - Automated weekly `pg_cron` jobs (`weekly-vacuum-analyze` and `weekly-odds-analyze`) prevent table bloat and maintain rapid index scans on the 9.1M-row `odds` table without requiring costly vertical tier upgrades.
+4. **Data Feed Governance:**
+   - Strict daily budgeting in `odds-credit-governor.ts` (16 free / 600 paid) prevents overage penalties while locking closing line values (CLV).
+5. **Vectorized Mathematical Computation:**
+   - 10,000-world PBP trajectory simulations run locally via vectorized NumPy and Sinkhorn-Knopp algorithms, eliminating expensive cloud GPU rental fees.
+
