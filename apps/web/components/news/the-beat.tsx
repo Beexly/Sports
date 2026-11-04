@@ -20,7 +20,6 @@ import {
   type NewsItem,
   type Tier,
 } from "@/lib/news/impact";
-import { DEMO_WIRE } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const TIER_HEX: Record<Tier, string> = {
@@ -59,7 +58,9 @@ export function TheBeat({
   // Live and sample stay visually unmistakable: sample shows the
   // fictional-sources marker, live shows the real-source attribution.
   const isLive = liveWire !== null;
-  const wire = liveWire ?? DEMO_WIRE;
+  // No fictional fallback: unconfigured feeds = empty wire, never sample news.
+  // (C-416 deleted the public DEMO_WIRE; this surface renders only the live wire.)
+  const wire = useMemo(() => liveWire ?? [], [liveWire]);
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
   const [sort, setSort] = useState<SortMode>("strongest");
@@ -109,6 +110,25 @@ export function TheBeat({
           <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
             The sources are not answering right now. We would rather show you nothing than
             show you a stand-in. Check back in a minute.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLive) {
+    return (
+      <div className="space-y-5">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.steelGray}1c`, color: BRAND_COLORS.steelGray }}
+        >
+          Wire not configured
+        </span>
+        <div className="surface-card p-8 text-center">
+          <p className="font-display text-xl text-ion-white">No wire to show.</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+            News feeds are not configured, so there is no newsroom to render yet. We would rather show nothing than show stand-in headlines.
           </p>
         </div>
       </div>

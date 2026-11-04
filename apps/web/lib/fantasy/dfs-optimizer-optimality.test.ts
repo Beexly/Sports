@@ -10,9 +10,12 @@ import { DFS_SLATE, DFS_SLOTS, SALARY_CAP } from "./dfs-slate";
  * `scripts/dfs/oracle.py` (Google OR-Tools CP-SAT), run against this slate.
  * Run `python scripts/dfs/oracle.py` to reproduce or refresh them.
  *
- * Before the exact search landed, the hill-climb engine returned 120.0 (cash)
- * and 216.0 (GPP) here — 0.4% and 0.9% short of the optimum — and silently
- * dropped `stack: true` on slates where it could not afford a stack.
+ * Before the exact search landed, the hill-climb engine returned values ~0.4%
+ * and ~0.9% short of the then-slate optimum — and silently dropped
+ * `stack: true` on slates where it could not afford a stack. The pinned optima
+ * below were re-run against the CURRENT Week 8 slate (37 players): the older
+ * 120.5 / 218 / 259.003 / 256.236 values belonged to a previous slate with much
+ * lower projections and are no longer a valid oracle.
  */
 const base = (over: Partial<OptOpts> = {}): OptOpts => ({
   mode: "gpp",
@@ -43,13 +46,17 @@ function slotsValid(lu: readonly { pos: string }[]): boolean {
 describe("dfs optimizer — optimality (oracle-checked)", () => {
   // CP-SAT solves the objective scaled to integers, so the leverage values below
   // carry a ~1e-6 lattice; cash/gpp are integral, so they get the tight epsilon.
+  // Re-pinned 2026-11-04 for the Week 8 slate: cash 191.7 / gpp 276.0
+  // (salary 49900–50000 lineups) and leverage 239.86539390434126 /
+  // 238.39434127276232, verified with an independent CP-SAT solve (stack =
+  // QB + at least one same-team WR/TE) before pinning.
   const cases: { mode: Mode; stack: boolean; optimum: number; tol: number }[] = [
-    { mode: "cash", stack: false, optimum: 120.5, tol: 1e-6 },
-    { mode: "cash", stack: true, optimum: 120.5, tol: 1e-6 },
-    { mode: "gpp", stack: false, optimum: 218, tol: 1e-6 },
-    { mode: "gpp", stack: true, optimum: 218, tol: 1e-6 },
-    { mode: "leverage", stack: false, optimum: 259.00296370296365, tol: 1e-3 },
-    { mode: "leverage", stack: true, optimum: 256.236241294937, tol: 1e-3 },
+    { mode: "cash", stack: false, optimum: 191.7, tol: 1e-6 },
+    { mode: "cash", stack: true, optimum: 191.7, tol: 1e-6 },
+    { mode: "gpp", stack: false, optimum: 276, tol: 1e-6 },
+    { mode: "gpp", stack: true, optimum: 276, tol: 1e-6 },
+    { mode: "leverage", stack: false, optimum: 239.86539390434126, tol: 1e-3 },
+    { mode: "leverage", stack: true, optimum: 238.39434127276232, tol: 1e-3 },
   ];
 
   it.each(cases)(

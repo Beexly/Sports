@@ -16,7 +16,6 @@
  */
 
 import { rankWire, type NewsItem, type SignalType } from "../news/impact";
-import { DEMO_WIRE } from "../news/wire";
 import { generateWeeklyBrief } from "./studio";
 import { scanText, type SafetyVerdict } from "../safety/content-safety";
 
@@ -149,7 +148,7 @@ export type Broadcast = {
 };
 
 // Honest and brand-safe. These scripts are composed deterministically from the
-// fictional DEMO_WIRE and the illustrative roster in lib/fantasy/studio.ts:
+// illustrative SAMPLE_BROADCAST_WIRE and the illustrative roster in lib/fantasy/studio.ts:
 // no language model, and no real report. The previous wording said the segments
 // were "compiled from verified news signals" and "human-reviewed", which read as
 // a claim about the content; this says what the content actually is.
@@ -246,10 +245,16 @@ export function assessPublishReadiness(broadcast: Broadcast, ctx: PublishContext
   return { ready: gates.every((g) => g.passed), gates, safety: safety.verdict };
 }
 
+const SAMPLE_BROADCAST_WIRE: readonly NewsItem[] = [
+  { id: "sample-1", source: "DAL Beat", tier: "Insider", team: "DAL", player: "Javonte Williams", headline: "Sample: DAL RB ruled OUT for Week 9; backfield depth absorbs touches", signal: "injury-out", minutesAgo: 12 },
+  { id: "sample-2", source: "PHI Beat", tier: "Beat", team: "PHI", player: "Saquon Barkley", headline: "Sample: PHI backfield workload to spike with an up-tempo script", signal: "role-up", minutesAgo: 35 },
+  { id: "sample-3", source: "BAL Beat", tier: "Verified", team: "BAL", player: "Zay Flowers", headline: "Sample: BAL target share consolidates around the alpha receiver", signal: "scheme", minutesAgo: 60 },
+];
+
 export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const brief = generateWeeklyBrief();
   const week = brief.week;
-  const wire = rankWire(DEMO_WIRE);
+  const wire = rankWire(SAMPLE_BROADCAST_WIRE);
   const top = wire[0]!;
   const topScene = sceneForSignal(top.item.signal);
 

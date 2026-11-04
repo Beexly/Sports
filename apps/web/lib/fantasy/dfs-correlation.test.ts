@@ -8,12 +8,12 @@ const byId = (id: string): DfsPlayer => {
   return p;
 };
 
-// dqb1 = Silas Hart (QB, PHI) · dwr0 = Quincy Ohm (WR, PHI, his stack) ·
-// dwr3 = Emory Banks (WR, LAR — a different game, similar ceiling)
-const QB_PHI = byId("dqb1");
-const WR_PHI = byId("dwr0");
+// dqb1 = Dak Prescott (QB, DAL) · dwr7 = CeeDee Lamb (WR, DAL — his stack) ·
+// dwr3 = Puka Nacua (WR, LAR — a different game, similar ceiling)
+const QB_PHI = byId("dqb1"); // name kept: the DAL stack under the old label
+const WR_PHI = byId("dwr7");
 const WR_LAR = byId("dwr3");
-const RB_PHI = byId("drb3"); // Tariq Bell, PHI RB — same team as QB_PHI
+const RB_PHI = byId("drb9"); // Javonte Williams, DAL RB — same team as QB_PHI
 
 describe("dfs correlation / simulation", () => {
   it("is deterministic under a fixed seed", () => {
