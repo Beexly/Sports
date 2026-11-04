@@ -73,8 +73,8 @@ function checkTests() {
   }
   if (pkgs.size === 0) return add(true, "tests", "no package touched");
   // Presence of a test file next to the change is the cheap proxy; the suite itself is run by
-  // the caller, which is where the real evidence lives.
-  const hasTests = staged.some((p) => /\.test\.ts$/.test(p));
+  // the caller, which is where the real evidence lives. Supports TS/JS tests and Python package tests.
+  const hasTests = staged.some((p) => /(\.test\.(ts|js)|test_.*\.py)$/.test(p));
   add(hasTests, "tests", hasTests ? "test file staged alongside" : `package(s) ${[...pkgs].join(",")} touched with no test change`);
 }
 
