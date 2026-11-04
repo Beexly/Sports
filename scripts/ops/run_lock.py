@@ -88,7 +88,13 @@ class RunLock:
             return None
 
     def _is_stale(self, holder: dict) -> bool:
-        if not _pid_alive(int(holder.get("pid", -1)), str(holder.get("host", ""))):
+        try:
+            pid = int(holder.get("pid", -1))
+        except (TypeError, ValueError):
+            # A malformed holder cannot be verified. Reclaim it: otherwise a
+            # process killed mid-write would wedge the pipeline permanently.
+            return True
+        if not _pid_alive(pid, str(holder.get("host", ""))):
             return True
         try:
             started = datetime.fromisoformat(holder["started_at"])

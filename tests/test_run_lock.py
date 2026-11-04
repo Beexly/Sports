@@ -88,6 +88,37 @@ def test_corrupt_lock_is_reclaimed(tmp_path, rl):
         assert lock.acquired
 
 
+def test_non_numeric_pid_is_reclaimed(tmp_path, rl):
+    """A process killed mid-write leaves a half-formed lock; it must not wedge."""
+    p = tmp_path / "t.lock"
+    p.write_text(json.dumps({
+        "pid": "not-a-number", "host": socket.gethostname(),
+        "started_at": datetime.now(timezone.utc).isoformat(), "task": "half",
+    }))
+    with rl.RunLock(p, task="new") as lock:
+        assert lock.acquired
+
+
+def test_null_pid_is_reclaimed(tmp_path, rl):
+    p = tmp_path / "t.lock"
+    p.write_text(json.dumps({
+        "pid": None, "host": socket.gethostname(),
+        "started_at": datetime.now(timezone.utc).isoformat(), "task": "half",
+    }))
+    with rl.RunLock(p, task="new") as lock:
+        assert lock.acquired
+
+
+def test_missing_pid_is_reclaimed(tmp_path, rl):
+    p = tmp_path / "t.lock"
+    p.write_text(json.dumps({
+        "host": socket.gethostname(),
+        "started_at": datetime.now(timezone.utc).isoformat(), "task": "half",
+    }))
+    with rl.RunLock(p, task="new") as lock:
+        assert lock.acquired
+
+
 def test_foreign_host_lock_is_not_stolen(tmp_path, rl):
     p = tmp_path / "t.lock"
     p.write_text(json.dumps({
