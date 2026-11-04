@@ -1,0 +1,29 @@
+{
+  "dataset": "MIT MIMIC-IV Clinical Database Demo v2.2 (Real Beth Israel Deaconess ICU Stays)",
+  "n_icu_stays_evaluated": 138,
+  "total_bedside_vital_measurements": 69124,
+  "positives_sepsis_or_mortality": 38,
+  "alarm_fatigue_comparison": {
+    "naive_bedside_sirs_shock_false_alarm_rate": 0.63,
+    "naive_bedside_sirs_shock_detection_rate": 0.8947368421052632,
+    "galaxy_conformal_false_alarm_rate": 0.12,
+    "galaxy_conformal_detection_rate": 0.4473684210526316,
+    "relative_false_alarm_reduction_pct": 80.95238095238095
+  },
+  "models": {
+    "shock_index_only": {
+      "auc": 0.6773684210526316,
+      "ci95": [
+        0.5787959370261351,
+        0.7710271329514622
+      ]
+    },
+    "galaxy_spectral_schrodinger_conformal_icu": {
+      "auc": 0.7655263157894737,
+      "ci95": [
+        0.6641329727648253,
+        0.8418161651234567
+      ]
+    }
+  }
+}

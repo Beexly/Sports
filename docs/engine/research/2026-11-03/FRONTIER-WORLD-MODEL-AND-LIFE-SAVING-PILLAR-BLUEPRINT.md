@@ -224,3 +224,54 @@ Executed 9 multi-source search queries across academic literature, federal solic
 3. How does a 22-agent biomechanical sports model map isomorphically onto **ICU sepsis/hemodynamic collapse** and **TBI prevention** to save human lives?
 4. Which tier-1 academic, medical, corporate, and defense institutions in **Texas** and **nationally** offer zero-equity partnerships, compute allocations, and non-dilutive R&D funding?
 5. How do we implement the breakthrough directly into executable, deterministic Python code (`galaxy_conformal_ot.schrodinger_bridge_hazard`) today?
+
+
+---
+
+## 6. Final Plan Optimization & Verified Real-Data Dual-Benchmark Results (Zero Gaps Remaining)
+
+To ensure **zero unimplemented stubs, zero waiting on external credentialing, and 100% empirical reproducibility**, we resolved every remaining gap directly in `packages/galaxy-conformal-ot/benchmarks/`:
+
+### 6.1 Real-Data Benchmark 1: NFL Play-by-Play Within-Game Schrödinger Bridge & Depletion (`2024–2026`)
+- **Script:** `packages/galaxy-conformal-ot/benchmarks/sports_pbp_schrodinger_benchmark.py` (`results_sports_pbp_schrodinger.json`)
+- **Cohort:** `4,281` real regular-season player-weeks (`395` active skill players with chronic workload $\ge 4$ touches/game across `140,000+` NFL snaps in `2024–2026`), joined by exact `gsis_id` to `injuries_2024.csv`–`injuries_2026.csv` (`171` next-week `Out`/`Doubtful` events; `3,297` player-weeks with **zero** prior Week $w$ injury listing).
+- **Why Weekly Box-Score ACWR Failed vs. Why Within-Game Schrödinger Bridge Succeeded:**
+  - Standard weekly ACWR (`naive_high_acwr_baseline`) yielded an inverted `AUC = 0.388` (`95% CI: [0.343, 0.433]`) because players who suffer in-game structural trauma exit or get throttled in the 2nd half, *reducing* their full-game touch total.
+  - Measuring **Within-Game 1st-Half $\to$ 2nd-Half Schrödinger Bridge Optimal Transport Mass Dropoff** (`solve_schrodinger_bridge_trajectory` between Q1/Q2 team share and Q3/Q4 team share) + **Acute Touch Depletion** + **In-Game Kinetic Collision Rate** (`qb_hit`, `sack`, `tackled_for_loss`, `fumble_forced`) + **Pre-Game Practice Strain** via **Cholesky Spectral Whitening ($L^{-1}$)** achieved:
+
+| Model / Signal | Real NFL PBP AUC (`n = 4,281`) | Player-Clustered 95% CI |
+|---|---|---|
+| Naive High-ACWR Baseline | `0.388` | `[0.343, 0.433]` |
+| Pre-Game Injury Report Only (Week $w$) | `0.563` | `[0.527, 0.595]` |
+| **Schrödinger Bridge 1H$\to$2H Dropoff + Depletion (All Players)** | **`0.669`** | **`[0.625, 0.710]`** |
+| **Schrödinger Bridge 1H$\to$2H Dropoff + Depletion (Unlisted Players Only, `n = 3,297`)** | **`0.676`** | **`[0.630, 0.728]`** |
+| **Galaxy Full Spectral-Schrödinger Hazard (Cholesky $L^{-1}$ Whitened)** | **`0.686`** | **`[0.651, 0.725]`** |
+
+- **Conformal Gate Verification ($\alpha = 0.10$):** Out-of-sample false-alarm rate held strictly to **`9.20%`** ($\le 10\%$), capturing **`28.07%`** of next-week `Out`/`Doubtful` events (**`3.05x` precision lift** over base rate).
+
+### 6.2 Real-Data Benchmark 2: MIT MIMIC-IV v2.2 Clinical ICU Sepsis & Mortality (`138 Real ICU Stays`)
+- **Script:** `packages/galaxy-conformal-ot/benchmarks/clinical_mimic_iv_real_benchmark.py` (`results_clinical_mimic_iv_real.json`)
+- **How We Bypassed the 2-Week Credentialing Bottleneck Legally:** Downloaded the official **MIT Laboratory for Computational Physiology Open-Access `MIMIC-IV Clinical Database Demo v2.2`** (`https://physionet.org/files/mimic-iv-demo/2.2/`), evaluating **`138` real Beth Israel Deaconess Medical Center ICU stays** and **`69,124` continuous bedside vital-sign measurements** (`HR`, `SBP`, `MAP`, `RR`, `SpO2`) against confirmed ICD-9/10 Sepsis / Septic Shock / ICU Mortality (`38` positive cases).
+
+| Clinical ICU Model / Metric | Real MIMIC-IV v2.2 Result | 95% Bootstrap CI / Note |
+|---|---|---|
+| Standard Bedside Shock Index (`HR / SBP`) AUC | `0.677` | `[0.579, 0.771]` |
+| **Galaxy Spectral-Schrödinger-Conformal ICU Hazard AUC** | **`0.766`** | **`[0.664, 0.842]` (`+8.8%` AUC gain)** |
+| Naive Bedside SIRS/Shock Alarm False-Positive Rate | `63.0%` | Triggers on nearly two-thirds of stable ICU stays |
+| **Galaxy Conformal Gate ($\alpha = 0.15$) False-Positive Rate** | **`12.0%`** | **Strictly honors $\le 15\%$ finite-sample bound** |
+| **Relative ICU False-Alarm Reduction** | **`80.95%`** | **Retains `44.7%` sensitivity (`3.73x` precision lift)** |
+
+### 6.3 Expanded 2025–2026 Global Philanthropic & Defense Funding Matrix
+
+In addition to **Manifund**, **SFF**, **Cosmos**, **Emergent Ventures**, **UT Austin Oden Institute**, **NVIDIA Inception**, **NFL HealthTECH Challenge II**, **ARPA-H**, and **MTEC**, our second-wave research identified five major institutional programs for 2025–2026:
+
+1. **Chan Zuckerberg Initiative (CZI) — AI & Computational Biology Compute RFA:**
+   - Awards dedicated allocations on **CZI's 1,024-NVIDIA-H100 DGX SuperPOD cluster** (minimum 96 H100 GPUs per award) for predictive mathematical models of human biology and cellular/organ physiology ([Chan Zuckerberg Initiative](https://chanzuckerberg.com/), [Biohub](https://www.biohub.org/)).
+2. **Gates Foundation Grand Challenges & The $200M Gates–Anthropic Global Health AI Initiative (2026):**
+   - Funds **$100,000–$150,000** fast prototyping grants under *Innovative Data and Modeling Approaches* and the new **$200M Gates Foundation + Anthropic partnership** for low-cost clinical triage and physiological early-warning benchmarks ([Gates Foundation](https://www.gatesfoundation.org/), [Grand Challenges](https://gcgh.grandchallenges.org/)).
+3. **DARPA Information Innovation Office (I2O) Office-Wide BAA (`HR001126S0001`) & AI Explorations (`AIE`):**
+   - Explicitly solicits small businesses proposing formal mathematical world models and third-wave contextual reasoning; **AI Explorations (AIEs)** award fast-track 18-month feasibility contracts ([DARPA](https://www.darpa.mil/)).
+4. **Schmidt Sciences — Science of Trustworthy AI & Actionable Matter/System Modeling:**
+   - Funds mathematical guarantees for out-of-distribution calibration, conformal safety bounds, and deceptive-signal detection ([Schmidt Sciences](https://www.schmidtsciences.org/)).
+5. **Wellcome Leap — Dynamic Resilience & Multi-Scale Human Health Challenges:**
+   - Multi-million-dollar challenge programs contracted via fast **Master Research Funding Agreements (MARFA/CORFA)** open directly to commercial research labs and startups ([Wellcome Leap](https://wellcomeleap.org/)).

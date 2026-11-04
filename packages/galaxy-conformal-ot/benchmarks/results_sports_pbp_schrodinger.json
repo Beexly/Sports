@@ -1,0 +1,51 @@
+{
+  "dataset": "NFL Real Play-by-Play 2024-2026 (GSIS ID exact join, chronic >= 4 touches/wk)",
+  "n_player_weeks": 4281,
+  "n_unique_players": 395,
+  "positives_out_next_week": 171,
+  "unlisted_subset_n": 3297,
+  "unlisted_subset_positives": 113,
+  "conformal_gate_alpha_0_10": {
+    "conformal_threshold": 0.7749012980467039,
+    "realized_out_of_sample_false_alarm_rate": 0.09197080291970802,
+    "true_positive_detection_rate": 0.2807017543859649,
+    "precision_lift_over_base_rate": 3.0520746310219997
+  },
+  "models": {
+    "naive_high_acwr_baseline": {
+      "auc": 0.3878430870363256,
+      "ci95_player_clustered": [
+        0.34255536982879475,
+        0.43291292770511397
+      ]
+    },
+    "pregame_injury_report_only": {
+      "auc": 0.5628975114184488,
+      "ci95_player_clustered": [
+        0.5266346641470391,
+        0.5946480464545086
+      ]
+    },
+    "schrodinger_1h_2h_dropoff_and_depletion_all": {
+      "auc": 0.6692399083678376,
+      "ci95_player_clustered": [
+        0.6251814560274679,
+        0.7100193235299584
+      ]
+    },
+    "schrodinger_1h_2h_dropoff_and_depletion_unlisted_only": {
+      "auc": 0.6761003579846133,
+      "ci95_player_clustered": [
+        0.6304420323476028,
+        0.7277728028600724
+      ]
+    },
+    "galaxy_full_spectral_schrodinger_hazard": {
+      "auc": 0.6860758953344431,
+      "ci95_player_clustered": [
+        0.6513599473168424,
+        0.7251074401579392
+      ]
+    }
+  }
+}

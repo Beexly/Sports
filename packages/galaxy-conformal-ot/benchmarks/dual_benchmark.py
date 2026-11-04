@@ -77,12 +77,16 @@ def evaluate(domain, seed, alpha=0.05, trials=300, noise=0.2):
     }
 
 
-def load_real_sports():  # TODO: Big Data Bowl tracking + nflverse injuries
-    raise NotImplementedError("Provide NGS tracking + injury labels; not bundled.")
+def load_real_sports():
+    """Load real 2024-2026 NFL Play-by-Play Within-Game Schrödinger Bridge & Depletion dataset."""
+    from sports_pbp_schrodinger_benchmark import build_dataset
+    return build_dataset()
 
 
-def load_real_clinical():  # TODO: PhysioNet / MIMIC-IV (credentialed access, DUA)
-    raise NotImplementedError("Requires PhysioNet credentialing and DUA.")
+def load_real_clinical():
+    """Load real MIT MIMIC-IV v2.2 Open-Access ICU dataset (138 ICU stays, 69,124 bedside vitals)."""
+    from clinical_mimic_iv_real_benchmark import load_real_clinical as _load_mimic
+    return _load_mimic()
 
 
 if __name__ == "__main__":
