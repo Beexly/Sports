@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "galaxy-conformal-ot"
+version = "0.1.0"
+description = "High-Dimensional Epistemic Calibration, Spectral Cognitive Routing & Entropic Optimal Transport under Adversarial Non-Stationarity"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Galaxy Science Institute Research Group", email = "research@galaxyinstitute.org" }
+]
+keywords = [
+    "conformal-prediction",
+    "optimal-transport",
+    "sinkhorn-knopp",
+    "spectral-clustering",
+    "cholesky-whitening",
+    "epistemic-calibration",
+    "copula-bounds",
+    "decision-intelligence"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "scipy>=1.10.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "torch>=2.0.0"
+]
+
+[project.urls]
+Homepage = "https://research.galaxysportsedge.com"
+Repository = "https://github.com/galaxy-science-institute/galaxy-conformal-ot"
+Documentation = "https://research.galaxysportsedge.com/docs"
