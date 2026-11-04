@@ -131,6 +131,20 @@ def build_tasks() -> dict[str, Task]:
             timeout=1200,
         ),
         Task(
+            # Six-dimension quality gate on the validated corpus. Runs after
+            # ingest (which only checks SHAPE) and before the index is trusted.
+            # Unique keys, stale rows, contradictory flags, mixed field types and
+            # row-count collapse are all invisible to the contract alone.
+            name="quality",
+            command=[PY, "scripts/ops/data_quality.py",
+                     "--manifest", str(CLEAN)],
+            inputs=[CLEAN],
+            outputs=[],
+            upstream=["ingest"],
+            retries=0,
+            timeout=900,
+        ),
+        Task(
             # Passes --manifest explicitly. The eval script used to hardcode the
             # raw merged path, which would have measured a different corpus than
             # the one build_index just consumed.

@@ -89,6 +89,27 @@ def test_ingest_rejects_are_not_treated_as_failure(dag):
     assert dag.build_tasks()["ingest"].lock_held_rc == 1
 
 
+def test_quality_runs_after_ingest_on_the_validated_manifest(dag):
+    tasks = dag.build_tasks()
+    order = dag.topo_order(tasks)
+    pos = {n: i for i, n in enumerate(order)}
+    assert "quality" in tasks
+    assert pos["ingest"] < pos["quality"]
+    assert str(dag.CLEAN) in tasks["quality"].command
+
+
+def test_quality_does_not_block_indexing(dag):
+    """A failed quality check must not stop the index being built.
+
+    Quality reports on the corpus; it is not a gate on production. Blocking the
+    pipeline on a thin-abstract warning would take the whole research surface
+    down for a cosmetic issue.
+    """
+    tasks = dag.build_tasks()
+    assert "quality" not in tasks["build_index"].upstream
+    assert "quality" not in tasks["eval"].upstream
+
+
 def test_ingest_writes_both_a_clean_sink_and_a_dlq(dag):
     cmd = " ".join(dag.build_tasks()["ingest"].command)
     assert str(dag.CLEAN) in cmd
