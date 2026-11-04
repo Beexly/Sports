@@ -35,28 +35,43 @@ describe("public pricing honesty", () => {
     expect(FOUNDING.elite.annual).toBe(179);
   });
 
-  it("pricing page derives prices from the phase and delegates rendering to PricingPlans", () => {
+  it("pricing page is the static pay-per-slate catalog  -  no subscription price anywhere", () => {
+    // Sealed-era design: monthly subscriptions are under construction, so
+    // /pricing renders LIVE_PACKAGE_CATALOG directly (one-time packs) and
+    // advertises NO monthly price, NO founding-rate headline, NO money-back
+    // promise. The phase ladder module below (money-path stripe.ts, which
+    // DOES derive from the phase) is unchanged; the public page simply does
+    // not sell subscriptions yet.
     const pricing = readRepoFile("apps/web/app/pricing/page.tsx");
-    expect(pricing).toContain("getCurrentPricingPhase");
-    expect(pricing).toContain("PricingPlans");
+    expect(pricing).not.toContain("getCurrentPricingPhase");
+    expect(pricing).not.toContain("PricingPlans");
+    expect(pricing).toContain("LIVE_PACKAGE_CATALOG");
+    expect(pricing).toMatch(/under construction/i);
+    expect(pricing).toMatch(/No Monthly Subscription/i);
+    expect(pricing).not.toMatch(/\$\s?[\d.]+\s*\/\s*(?:mo|month)/i);
+    expect(pricing).not.toMatch(/locked for the life/i);
+    expect(pricing).not.toMatch(/money-back/i);
   });
 
-  it("FAQ and picks derive their displayed prices from the phase module (can never go stale)", () => {
-    // Stronger than pinning literals: these surfaces now interpolate from
-    // getCurrentPricingPhase(), the same source checkout reads — so advancing
-    // PRICING_PHASE can never leave a page advertising a price checkout won't honor.
+  it("FAQ derives its prices from the phase module; picks advertises no subscription price", () => {
+    // The FAQ answers "What does Pro get?" by interpolating
+    // getCurrentPricingPhase()  -  the same source checkout reads  -  so advancing
+    // PRICING_PHASE can never leave the FAQ advertising a price checkout
+    // won't honor. /picks is the static sealed board: it sells no
+    // subscription at all (packs are funnelled through /packages), so the
+    // honest pin is the ABSENCE of any subscription price, upgrade banner,
+    // or phase interpolation there.
     const faq = readRepoFile("apps/web/app/faq/page.tsx");
     const picks = readRepoFile("apps/web/app/picks/page.tsx");
     expect(faq).toContain("getCurrentPricingPhase");
     expect(faq).toContain("${phase.pro.monthly}/month");
     expect(faq).toContain("${phase.elite.monthly}/month");
-    expect(picks).toContain("getCurrentPricingPhase");
-    expect(picks).toContain("Upgrade to Pro · $${phase.pro.monthly}/mo");
-    expect(picks).toContain("Upgrade to Elite · $${phase.elite.monthly}/mo");
-    // No stale hardcoded founding prices left behind on either surface.
+    // No stale hardcoded founding prices left behind on the FAQ.
     expect(faq).not.toContain("$14.99/month");
-    expect(picks).not.toContain("· $14.99/mo");
-    expect(picks).not.toContain("· $24.99/mo");
+    // /picks carries no subscription price and no upgrade banner.
+    expect(picks).not.toContain("getCurrentPricingPhase");
+    expect(picks).not.toContain("Upgrade to");
+    expect(picks).not.toMatch(/\$\s?[\d.]+\s*\/\s*(?:mo|month)/i);
   });
 
   it("retires weekly billing from every public pricing surface", () => {
@@ -75,7 +90,7 @@ describe("public pricing honesty", () => {
     }
   });
 
-  it("the price ladder only ever goes up — proof earns the increase", () => {
+  it("the price ladder only ever goes up  -  proof earns the increase", () => {
     for (let i = 1; i < PRICING_PHASES.length; i++) {
       const prev = PRICING_PHASES[i - 1]!;
       const cur = PRICING_PHASES[i]!;

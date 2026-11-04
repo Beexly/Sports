@@ -1,5 +1,13 @@
 /**
  * @vitest-environment jsdom
+ *
+ * Storefront navigation (sealed-era design). FIVE_REVENUE_PILLARS is the
+ * four-door "This week's packs" bar: Picks (locked Week 8 board), Props
+ * (locked props + watchlist), Packs (the GALAXY PICKS storefront), DFS
+ * (optimizer). The desktop primary bar keeps exactly two doors  -  GALAXY PICKS
+ * (PAID) → /packages and DFS → /fantasy/dfs. The homepage routes buyers
+ * through TRUST_LINKS + the RedlineWorld storefront, never through a
+ * "5 promo anchors" block. /board, /players, /the-beat stay absent.
  */
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
@@ -34,19 +42,13 @@ vi.mock("@/components/ui/nav-menu", () => ({
     React.createElement("a", { href, "data-testid": `navmenu-${label.toLowerCase()}` }, label),
 }));
 
-describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
-  it("exports FIVE_REVENUE_PILLARS with exact required routes", () => {
+describe("Storefront navigation  -  four weekly doors over the sealed Week 8 board", () => {
+  it("exports FIVE_REVENUE_PILLARS with the four current routes", () => {
     expect(FIVE_REVENUE_PILLARS).toBeDefined();
-    expect(FIVE_REVENUE_PILLARS.length).toBe(5);
+    expect(FIVE_REVENUE_PILLARS.length).toBe(4);
 
     const hrefs = FIVE_REVENUE_PILLARS.map((p) => p.href);
-    const expectedRoutes = [
-      "/packages",
-      "/packages#tnf-all-in-pack",
-      "/packages#sunday-nfl-5pct-slate",
-      "/fantasy/dfs",
-      "/packages#week8-all-access",
-    ];
+    const expectedRoutes = ["/picks", "/props", "/packages", "/fantasy/dfs"];
 
     expect(hrefs).toEqual(expectedRoutes);
 
@@ -56,20 +58,14 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
     }
   });
 
-  it("Nav component renders all 5 revenue pillar links prominently in the bar", () => {
+  it("Nav component renders the four pillar links in the bar", () => {
     const { container } = render(React.createElement(Nav));
 
     const renderedHrefs = Array.from(container.querySelectorAll("a"))
       .map((a) => a.getAttribute("href"))
       .filter(Boolean);
 
-    for (const route of [
-      "/packages",
-      "/packages#tnf-all-in-pack",
-      "/packages#sunday-nfl-5pct-slate",
-      "/fantasy/dfs",
-      "/packages#week8-all-access",
-    ]) {
+    for (const route of ["/picks", "/props", "/packages", "/fantasy/dfs"]) {
       expect(renderedHrefs).toContain(route);
     }
 
@@ -78,15 +74,17 @@ describe("5-Pillar Live Site Revenue Navigation & Homepage Focus", () => {
     expect(renderedHrefs).not.toContain("/the-beat");
   });
 
-  it("app/page.tsx links directly to all 5 revenue pillars in its commercial callout section", () => {
+  it("app/page.tsx routes buyers through TRUST_LINKS in the responsible close", () => {
     const homeSrc = readFileSync(
       resolve(__dirname, "..", "app", "page.tsx"),
       "utf8",
     );
 
-    expect(homeSrc).toContain("GALAXY PICKS (PAID)");
-    expect(homeSrc).toMatch(/href="\/packages" className="btn-primary/);
-    expect(homeSrc).toMatch(/href="\/fantasy\/dfs"/);
-    expect(homeSrc).toMatch(/href="\/pricing"/);
+    // The homepage is RedlineWorld + responsible close; its only route to
+    // the price list and the proof/trust surfaces is the TRUST_LINKS block.
+    expect(homeSrc).toMatch(/const\s+TRUST_LINKS/);
+    for (const route of ["/methodology", "/responsible-play", "/how-we-make-money", "/accountability", "/pricing"]) {
+      expect(homeSrc).toContain(`href: "${route}"`);
+    }
   });
 });

@@ -3,12 +3,14 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
- * Nav route integrity + desktop/mobile parity.
+ * Nav route integrity + desktop/mobile parity (sealed-era design).
  *
- * After the R2 IA condensation (Players → one door, Proof → its own door at
- * /calibration, Intelligence/Fantasy trimmed), this guard proves there are no
- * dead links and that the mobile menu still reaches the same primary doors as
- * desktop. A route is "real" when its app-router page file exists.
+ * The desktop bar carries two primary doors (GALAXY PICKS (PAID) → /packages,
+ * DFS → /fantasy/dfs) plus the "This week's packs" pillars bar. Mobile adds
+ * Account & Access (/pricing, /auth/signin). A route is "real" when its
+ * app-router page file exists; every href in both navs must resolve.
+ * /board is deliberately absent: the funnel door shared by every pack is
+ * /packages, and /picks is the static sealed board, not a nav door.
  */
 
 const webRoot = resolve(__dirname, "..");
@@ -58,10 +60,16 @@ describe("Nav route integrity", () => {
   });
 
   it("commercial doors are present and the old public doors are not", () => {
-    for (const route of ["/packages", "/fantasy/dfs", "/pricing"]) {
+    // Desktop: the two primary doors plus the four pillar routes.
+    for (const route of ["/packages", "/fantasy/dfs", "/picks", "/props"]) {
       expect(desktop.includes(`"${route}"`) || desktop.includes(`"${route}#`), `desktop missing ${route}`).toBe(true);
       expect(mobile.includes(route), `mobile missing ${route}`).toBe(true);
     }
+    // /pricing lives in mobile Account & Access and in the homepage's
+    // responsible close (TRUST_LINKS)  -  monthly subscriptions are under
+    // construction, so it is not a desktop-bar door.
+    expect(mobile).toContain("/pricing");
+    expect(read("app/page.tsx")).toContain('href: "/pricing"');
     expect(mobile).toContain("/auth/signin");
     for (const banned of ["/board", "/players", "/the-beat", "/intelligence/engines", "/fantasy/studio", "/academy"]) {
       expect(desktop).not.toContain(`"${banned}"`);
@@ -71,8 +79,8 @@ describe("Nav route integrity", () => {
 
   it("GSN is its own door for The Beat; Studio and Academy are unlinked (ASTRA A-5, owner 2026-09-14)", () => {
     // Owner: Studio "was supposed to be more internal... zero value, causing
-    // confusion" — moved internal. Academy "completely useless... redesign or
-    // remove" — hidden from public nav (route stays, robots noindex).
+    // confusion"  -  moved internal. Academy "completely useless... redesign or
+    // remove"  -  hidden from public nav (route stays, robots noindex).
     // GSN now carries The Beat only.
     expect(desktop).not.toContain('"/the-beat"');
     expect(mobile).not.toContain('"/the-beat"');
