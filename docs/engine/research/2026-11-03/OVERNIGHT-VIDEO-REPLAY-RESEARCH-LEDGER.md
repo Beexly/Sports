@@ -167,3 +167,29 @@ importable). Full suite pending re-run.
 The speculative PINN/ocular-proxy kernel is correctly rejected: adding
 uncalibrated PDE variance to the Empirical Bayes baseline makes Brier worse
 by 0.016 on 761 samples. The gate is doing its job — it is not a rubber stamp.
+
+## Feature pipeline demo — 2026-11-04 05:40 CT
+
+`python scripts/research/feature_pipeline_demo_2026_11_04.py` → **PASS, exit 0**.
+
+80 synthetic plays (40 "disguised": tight pre-snap spread, large post-snap
+displacement; 40 "static": wide pre-snap spread, small displacement).
+
+| Feature | t | p | adj_p | Survives q=0.10 |
+|---|---|---|---|---|
+| hazard | −9.069 | 0.0000 | 0.0000 | **yes** |
+| irreversibility | −15.914 | 0.0000 | 0.0000 | **yes** |
+| mot_load | 0.237 | 0.8136 | 0.8136 | no |
+| noise | 1.030 | 0.3064 | 0.4086 | no |
+
+2/4 features survive BH-FDR. The gate separates real signal from noise.
+
+**Finding — hazard direction is inverted from naive expectation.** The
+hazard t-stat is negative: the "static" group scores *higher* than the
+"disguised" group. The engine's composite is a ratio (CSD vs baseline
+variance, Schrödinger control energy, EFE), not "more movement = more
+hazard". A tight pre-snap picture that explodes post-snap has a large
+baseline variance, which suppresses the CSD term. This is a real property
+of the engine, not a bug — but it means the feature must be interpreted as
+"phase-transition proximity", not "disguise quality". A future version
+should normalise by pre-snap spread before calling it a disguise metric.
