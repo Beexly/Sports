@@ -241,3 +241,23 @@ leans on it is leaning on noise.
 less time on the clock. Worth a follow-up — late snaps may correlate with
 better execution or defensive confusion, or it may be a down/distance
 confound.
+
+### Follow-up — the play-clock effect is a down confound
+
+Stratified by down (n=9,735):
+
+| Down | n | mean clock (complete) | mean clock (incomplete) | p |
+|---|---|---|---|---|
+| 1 | 3,541 | 12.15 | 12.25 | 0.6752 |
+| 2 | 3,350 | 10.71 | 10.48 | 0.3307 |
+| 3 | 2,624 | 8.02 | 7.60 | 0.0509 |
+| 4 | 220 | 9.83 | 8.99 | 0.3727 |
+
+Raw corr(play_clock, complete) = 0.0364. Partial corr controlling for down
+= 0.0144 — a 60% reduction. No stratum survives (3rd down at p=0.0509 is
+borderline and fails multiple-comparison across four strata).
+
+**Verdict:** `play_clock_at_snap` is not an independent completion predictor.
+It looked significant in the aggregate because down correlates with both
+clock and completion. This is exactly the kind of candidate the gate exists
+to kill — a plausible story that dissolves under stratification.
