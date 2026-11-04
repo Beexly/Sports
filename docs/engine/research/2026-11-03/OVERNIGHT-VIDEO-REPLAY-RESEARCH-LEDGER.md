@@ -193,3 +193,20 @@ baseline variance, which suppresses the CSD term. This is a real property
 of the engine, not a bug — but it means the feature must be interpreted as
 "phase-transition proximity", not "disguise quality". A future version
 should normalise by pre-snap spread before calling it a disguise metric.
+
+## Data availability — what real tracking exists
+
+| Source | Rows | What it has | What it lacks |
+|---|---|---|---|
+| `hf_bdb2025_plays_presnap_zone1.parquet` | 16,124 | play-level pre-snap features (formation, receiver alignment, play clock, target x/y, EP, WP) | per-player (x, y) trajectories |
+| `kaggle_sumersupplement_bdb26_zone1.parquet` | 173,150 | coverage responsibility, targeted defender, alignment | per-player (x, y) trajectories |
+| `kaggle_bdb2027_public_enrichment_zone1.parquet` | 4,161 | player-season snap counts | anything spatial |
+| Film room frames | 36,328 | 360×640 broadcast frames | resolution for pose |
+
+**Ruling:** the feature pipeline is built and validated on synthetic data,
+but the repo has no per-frame tracking coordinates. The BDB files carry
+play-level features and coverage labels, not trajectories. Running the
+features on real data needs either (a) Big Data Bowl tracking CSVs, which
+are not downloaded, or (b) ≥720p frames for pose-derived trajectories.
+Cost if wrong: the pipeline sits validated-but-unfed until tracking arrives;
+no synthetic data is presented as real.
