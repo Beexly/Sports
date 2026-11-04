@@ -74,6 +74,9 @@ def build_index(manifest: Path | str) -> dict[str, Any]:
             "cited_by": r.get("cited_by"),
             "retracted": bool(r.get("retracted")),
             "has_full_text": bool(r.get("full_text")),
+            "sport_domain": sport_domain_of(
+                r.get("title", ""), r.get("abstract", ""), r.get("full_text", "")
+            ),
             "len": len(toks),
             "terms": {},
         }
