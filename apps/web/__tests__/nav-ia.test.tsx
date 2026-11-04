@@ -1,5 +1,13 @@
 /**
  * @vitest-environment jsdom
+ *
+ * Field IA (sealed-era design): the desktop bar carries exactly two primary
+ * doors  -  GALAXY PICKS (PAID) → /packages and DFS → /fantasy/dfs  -  plus the
+ * "This week's packs" pillars bar mirroring FIVE_REVENUE_PILLARS (Picks,
+ * Props, Packs, DFS over the sealed Week 8 board). /board is deliberately
+ * absent from nav; the funnel door shared by every pack is /packages.
+ * Prohibitions carried over from the retired live-board IA: zero Telegram,
+ * no /board, /players, /the-beat, /academy, or /fantasy/studio doors.
  */
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
@@ -39,7 +47,7 @@ describe("Desktop Navigation & Footer IA", () => {
     ]);
 
     const pillarsNav = container.querySelector(
-      'nav[aria-label="Five Revenue Pillars"]',
+      'nav[aria-label="This week’s packs"]',
     ) as HTMLElement;
     expect(pillarsNav).not.toBeNull();
     const pillarLinks = Array.from(pillarsNav.querySelectorAll("a")).map((a) => ({
@@ -70,7 +78,7 @@ describe("Desktop Navigation & Footer IA", () => {
     expect(within(primaryNav).getByText("DFS").getAttribute("href")).toBe("/fantasy/dfs");
   });
 
-  it("Footer exposes GALAXY PICKS (PAID), Game Dossiers, DFS, and Pricing alongside disclosures", () => {
+  it("Footer exposes Picks, Props, Packs, and DFS alongside disclosures", () => {
     const { container } = render(<Footer />);
     const footerNav = container.querySelector('nav[aria-label="Footer"]') as HTMLElement;
     expect(footerNav).not.toBeNull();
@@ -81,10 +89,10 @@ describe("Desktop Navigation & Footer IA", () => {
     }));
 
     expect(footerLinks).toEqual([
-      { label: "GALAXY PICKS (PAID)", href: "/packages" },
-      { label: "Game Dossiers", href: "/packages#slate-dossiers" },
+      { label: "Picks", href: "/picks" },
+      { label: "Props", href: "/props" },
+      { label: "Packs", href: "/packages" },
       { label: "DFS", href: "/fantasy/dfs" },
-      { label: "Pricing", href: "/pricing" },
     ]);
 
     const disclosuresNav = container.querySelector('nav[aria-label="Disclosures"]') as HTMLElement;

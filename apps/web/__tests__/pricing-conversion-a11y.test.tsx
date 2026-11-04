@@ -4,25 +4,25 @@ import type { ReactNode } from "react";
 
 /**
  * Accessibility contract for the two surfaces a buyer actually reads before
- * paying: the plan cards' feature lists and the "Side by side" comparison
- * table on /pricing.
+ * paying: the plan cards' feature lists and the static pack catalog on
+ * /pricing (sealed-era design  -  the "Side by side" comparison table is
+ * retired; monthly subscriptions are under construction).
  *
  * These assert ACCESSIBLE ROLE AND NAME at RUNTIME (apps/web/tsconfig.json
  * excludes test files from typecheck, so a type-level assertion here would
  * never be checked).
  *
- * Two failure modes this locks down:
+ * Failure modes this locks down:
  *
  *  1. Plan-card feature rows render an ✓ or ✗ icon that was `aria-hidden`,
- *     so "Confidence scores" and "Confidence scores — NOT included" were
+ *     so "Confidence scores" and "Confidence scores  -  NOT included" were
  *     announced identically. On a pricing page that is the buying decision
  *     itself, so the included/excluded state must be in the accessibility
  *     tree, not only in the icon shape (WCAG 1.1.1 / 1.3.1).
  *
- *  2. The comparison table's feature column was a plain <td>, so every
- *     "Included"/"Not included" cell was announced with no row context —
- *     a screen-reader user hears 60 disconnected checkmarks. <th scope="row">
- *     restores the row header association (WCAG 1.3.1).
+ *  2. The /pricing pack catalog must expose each pack as a proper heading
+ *     (level 3) with its CTA link, not a bare wall of divs  -  a screen-reader
+ *     user jumps by heading to compare packs.
  */
 
 vi.mock("@/components/ui/nav", () => ({ Nav: (): null => null }));
@@ -59,6 +59,7 @@ beforeAll(() => {
 });
 
 import PricingPage from "@/app/pricing/page";
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
 
 const PLAN_FIXTURE: PlanView[] = [
@@ -79,7 +80,7 @@ const PLAN_FIXTURE: PlanView[] = [
   },
 ];
 
-describe("/pricing plan-card feature lists — included vs excluded is in the a11y tree", () => {
+describe("/pricing plan-card feature lists  -  included vs excluded is in the a11y tree", () => {
   it("exposes an accessible name for the INCLUDED marker", () => {
     const { getByRole } = render(
       <PricingPlans plans={PLAN_FIXTURE} grandfatherNote="Founding rate." />,
@@ -118,31 +119,31 @@ describe("/pricing plan-card feature lists — included vs excluded is in the a1
     ).toBe("Not included");
   });
 });
-
-describe("/pricing comparison table — header association", () => {
-  it("renders the feature column as row headers, not bare cells", async () => {
-    const { getByRole } = render(await PricingPage());
-    // <td> maps to role "cell"; only <th scope="row"> maps to "rowheader".
-    expect(
-      getByRole("rowheader", { name: "Confidence rating" }),
-    ).toBeInTheDocument();
-    expect(
-      getByRole("rowheader", { name: "Parlay MRI" }),
-    ).toBeInTheDocument();
+describe("/pricing pack catalog  -  heading and link structure", () => {
+  it("renders every pack title as a level-3 heading", async () => {
+    const { getAllByRole } = render(await PricingPage());
+    const headings = getAllByRole("heading", { level: 3 });
+    expect(headings.length).toEqual(LIVE_PACKAGE_CATALOG.length);
+    expect(headings.map((h) => h.textContent)).toEqual(
+      LIVE_PACKAGE_CATALOG.map((p) => p.title),
+    );
   });
 
-  it("scopes the plan column headers to their column", async () => {
+  it("gives every pack an Open Pack CTA link to its /packages anchor", async () => {
     const { getAllByRole } = render(await PricingPage());
-    const colHeaders = getAllByRole("columnheader");
-    expect(colHeaders.length).toBeGreaterThan(0);
-    // Every column header in the comparison table declares scope="col" so the
-    // plan name is announced with each cell beneath it.
-    const comparisonHeaders = colHeaders.filter((h) =>
-      h.closest("table") !== null,
-    );
-    expect(comparisonHeaders.length).toBeGreaterThan(0);
-    for (const h of comparisonHeaders) {
-      expect(h.getAttribute("scope")).toBe("col");
+    const links = getAllByRole("link");
+    for (const pkg of LIVE_PACKAGE_CATALOG) {
+      expect(
+        links.some((a) => a.getAttribute("href") === `/packages#${pkg.slug}`),
+        `no CTA to /packages#${pkg.slug}`,
+      ).toBe(true);
     }
+  });
+
+  it("preserves the heading hierarchy: h1 page, h2 catalog section, h3 packs", async () => {
+    const { getByRole, getAllByRole } = render(await PricingPage());
+    expect(getByRole("heading", { level: 1 })).toBeInTheDocument();
+    expect(getByRole("heading", { level: 2 })).toBeInTheDocument();
+    expect(getAllByRole("heading", { level: 3 }).length).toBeGreaterThan(0);
   });
 });

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
 
 /**
- * P16-03 — NavAuth and NavAuthFallback tests.
+ * P16-03  -  NavAuth and NavAuthFallback tests.
  *
  * NavAuth is an async server component. In the test environment we mock
  * @/lib/auth and the sibling components it transitively imports, then await
@@ -31,7 +31,7 @@ vi.mock("next/image", () => ({
   ),
 }));
 
-// Import the REAL NavAuth and NavAuthFallback from their own module — no
+// Import the REAL NavAuth and NavAuthFallback from their own module  -  no
 // module-level mock of nav-auth.tsx, so these tests exercise the actual
 // auth-dependent code path.
 import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
@@ -40,30 +40,30 @@ beforeEach(() => {
   mocks.auth.mockReset();
 });
 
-describe("NavAuth — signed-out state", () => {
-  it("renders Sign in + See plans when auth() returns null", async () => {
+describe("NavAuth  -  signed-out state", () => {
+  it("renders Sign in + Get Today's Picks when auth() returns null", async () => {
     mocks.auth.mockResolvedValue(null);
 
     const { container } = render(await NavAuth());
 
     expect(container.querySelector('a[href="/auth/signin"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/pricing"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/packages"]')).not.toBeNull();
     expect(container.querySelector('a[href="/dashboard"]')).toBeNull();
   });
 
-  it("renders Sign in + See plans when auth() rejects (fail-closed to anonymous)", async () => {
+  it("renders Sign in + Get Today's Picks when auth() rejects (fail-closed to anonymous)", async () => {
     mocks.auth.mockRejectedValue(new Error("cookie read failed"));
 
     const { container } = render(await NavAuth());
 
     expect(container.querySelector('a[href="/auth/signin"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/pricing"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/packages"]')).not.toBeNull();
     expect(container.querySelector('a[href="/dashboard"]')).toBeNull();
   });
 });
 
-describe("NavAuth — signed-in state", () => {
-  it("renders the user's name as a dashboard link when auth() returns a session", async () => {
+describe("NavAuth  -  signed-in state", () => {
+  it("renders the user's name as a storefront link when auth() returns a session", async () => {
     mocks.auth.mockResolvedValue({
       user: {
         id: "user-123",
@@ -75,10 +75,11 @@ describe("NavAuth — signed-in state", () => {
 
     const { container, getByText } = render(await NavAuth());
 
-    expect(container.querySelector('a[href="/dashboard"]')).not.toBeNull();
+    // The signed-in user door is the storefront (/packages), not a
+    // /dashboard hub: every surface funnels to the packs.
+    expect(container.querySelector('a[href="/packages"]')).not.toBeNull();
     expect(getByText("Test User")).toBeInTheDocument();
     expect(container.querySelector('a[href="/auth/signin"]')).toBeNull();
-    expect(container.querySelector('a[href="/pricing"]')).toBeNull();
   });
 
   it("renders the avatar image when auth() returns a session with an image", async () => {
@@ -98,12 +99,12 @@ describe("NavAuth — signed-in state", () => {
   });
 });
 
-describe("NavAuthFallback — signed-out mirror for Suspense loading state", () => {
-  it("renders Sign in + See plans (same as NavAuth signed-out)", () => {
+describe("NavAuthFallback  -  signed-out mirror for Suspense loading state", () => {
+  it("renders Sign in + Get Today's Picks (same as NavAuth signed-out)", () => {
     const { container } = render(<NavAuthFallback />);
 
     expect(container.querySelector('a[href="/auth/signin"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/pricing"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/packages"]')).not.toBeNull();
     expect(container.querySelector('a[href="/dashboard"]')).toBeNull();
   });
 });
