@@ -13,9 +13,9 @@ import { resolve } from "node:path";
  *
  * Out of scope by design: the pinned once-per-session cold-open stays until
  * the doctrine test that pins it is superseded by founder direction
- * (homepage-doctrine-hero pins FieldCinematicIntro; guards are preserved,
- * not softened). proof-crystal on /engine, /proof, and fable content is
- * untouched — this task covers Record + Verify only.
+ * (homepage-doctrine-hero now pins the RedlineWorld field copy; guards are
+ * preserved, not softened). proof-crystal on /engine, /proof, and fable
+ * content is untouched; this task covers Record + Verify only.
  */
 
 const webRoot = resolve(__dirname, "..");
@@ -25,6 +25,7 @@ const verify = read("app/verify/page.tsx");
 const calibration = read("app/calibration/page.tsx");
 const home = read("app/page.tsx");
 const board = read("app/board/page.tsx");
+const world = read("components/redline/redline-world.tsx");
 
 describe("Record + Verify share one evidence room, no decorative plate", () => {
   it("neither page renders the proof-crystal plate", () => {
@@ -51,6 +52,10 @@ describe("banned FIELD phrases stay off customer chrome", () => {
   });
 
   it("homepage eyebrow states the concrete product", () => {
-    expect(home).toMatch(/today's picks|Today's signals|Compare fantasy options/i);
+    // The front door's eyebrow moved into the field's first plate during the
+    // RedlineWorld rebuild. It must still name the product (an NFL desk), not
+    // an abstract category.
+    expect(world).toMatch(/REDZONE · WEEK 8 NFL DESK/);
+    expect(world).not.toMatch(/sports decision intelligence/i);
   });
 });

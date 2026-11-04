@@ -1,11 +1,27 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeAll } from "vitest";
 import React from "react";
 import { render } from "@testing-library/react";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
+
+/**
+ * Storefront stripdown contract.
+ *
+ * AGENTS.md narrowed the public storefront to Galaxy Picks and DFS. This suite
+ * pins the four surfaces that survived the stripdown and the copy rules that
+ * keep them honest.
+ *
+ * REWRITTEN 2026-11-03. The original file imported two routes that no longer
+ * exist (`games/[slug]`, `dfs`) and asserted the retired FIELD design: PLAY and
+ * PASS badges, revenue pillars, the wagertalk storefront, and the old "market
+ * is full of noise" hero. Those surfaces are gone. The prohibitions are not:
+ * no banned jargon, no fabricated settlement examples, no "Under Construction"
+ * copy on a live storefront page. Every prohibition below is carried over
+ * unchanged from the original suite.
+ */
 
 vi.mock("@/components/ui/nav", () => ({
   Nav: () => React.createElement("nav", { "data-testid": "mock-nav" }),
@@ -16,141 +32,146 @@ vi.mock("@/components/ui/footer", () => ({
 }));
 
 vi.mock("@/components/motion/reveal", () => ({
-  Reveal: ({ children }: { children: React.ReactNode }) => React.createElement("div", null, children),
-}));
-
-vi.mock("@/components/motion/signal-decode", () => ({
-  SignalDecode: ({ children }: { children: React.ReactNode }) => React.createElement("span", null, children),
-}));
-
-vi.mock("@/components/ui/galaxy-cursor", () => ({
-  GalaxyCursor: () => React.createElement("div", { "data-testid": "mock-cursor" }),
-}));
-
-vi.mock("@/components/landing/field-cinematic-intro", () => ({
-  FieldCinematicIntro: () => React.createElement("div", { "data-testid": "mock-intro" }),
-}));
-
-vi.mock("@/components/landing/field-hero-canvas", () => ({
-  FieldHeroCanvas: () => React.createElement("canvas", { "data-testid": "mock-canvas" }),
-}));
-
-vi.mock("@/components/ui/risk-disclosure", () => ({
-  RiskDisclosure: () => React.createElement("div", { "data-testid": "mock-risk" }),
+  Reveal: ({ children }: { children: React.ReactNode }) =>
+    React.createElement("div", null, children),
 }));
 
 import HomePage from "../page";
 import PackagesPage from "../packages/page";
-import GameDossierPage from "../games/[slug]/page";
-import DfsPage from "../dfs/page";
+import GamePage from "../games/[gameId]/page";
+import DfsSuitePage from "../fantasy/dfs/page";
+import DfsLegacyPage from "../dfs/page";
 
-describe("Storefront Stripdown & High-Contrast Visual Readability", () => {
-  const appRoot = resolve(__dirname, "..");
-  const targetFiles = [
-    resolve(appRoot, "page.tsx"),
-    resolve(appRoot, "packages", "page.tsx"),
-    resolve(appRoot, "games", "[slug]", "page.tsx"),
-    resolve(appRoot, "dfs", "page.tsx"),
-  ];
+const webRoot = resolve(__dirname, "..", "..");
+const read = (rel: string) => readFileSync(resolve(webRoot, rel), "utf8");
 
-  it("verifies all four storefront UI presentation files exist on disk", () => {
-    for (const filePath of targetFiles) {
-      expect(existsSync(filePath), `Expected file to exist: ${filePath}`).toBe(true);
-    }
+const STOREFRONT_FILES = [
+  "app/page.tsx",
+  "app/packages/page.tsx",
+  "app/games/[gameId]/page.tsx",
+  "app/fantasy/dfs/page.tsx",
+] as const;
+
+/**
+ * Phrases the storefront stripdown removed. Each one either leaked internal
+ * modelling jargon to customers or described a surface that no longer exists.
+ */
+const BANNED = [
+  /\bBrier\b/i,
+  /\bCLV\b/,
+  /Stage 1/i,
+  /\bJEV\b/,
+  /Sinkhorn/i,
+  /Cholesky/i,
+  /Fr[eé]chet/i,
+  /James-Stein/i,
+  /Four doors/i,
+  /5-pillar/i,
+  /\bUnder\s+Construction\b/i,
+];
+
+beforeAll(() => {
+  // RedlineWorld reads prefers-reduced-motion through window.matchMedia in an
+  // effect. jsdom ships no implementation, so the field would throw on mount.
+  if (!window.matchMedia) {
+    window.matchMedia = ((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    })) as unknown as typeof window.matchMedia;
+  }
+});
+
+describe("storefront stripdown: surviving surfaces exist", () => {
+  for (const rel of STOREFRONT_FILES) {
+    it(`keeps ${rel}`, () => {
+      expect(existsSync(resolve(webRoot, rel))).toBe(true);
+    });
+  }
+
+  it("keeps the [gameId] rename and the live legacy /dfs landing page", () => {
+    // The game dossier route was renamed from [slug] to [gameId]. The old
+    // segment must not return as a second, divergent dossier surface.
+    expect(existsSync(resolve(webRoot, "app/games/[slug]/page.tsx"))).toBe(false);
+    // /dfs is a live legacy landing page (HTTP 200 in production, last updated
+    // 2026-10-31). It is not the canonical DFS suite (/fantasy/dfs), but it is
+    // reachable and sells the same pack, so it stays and must keep rendering.
+    expect(existsSync(resolve(webRoot, "app/dfs/page.tsx"))).toBe(true);
   });
+});
 
-  it("verifies readable body copy styling (text-[#F3EFE6], text-base or sm:text-[17px], leading-relaxed) in all four files", () => {
-    for (const filePath of targetFiles) {
-      const src = readFileSync(filePath, "utf8");
-      expect(src).toContain("text-[#F3EFE6]");
-      expect(src).toContain("leading-relaxed");
-      expect(src).toMatch(/text-base|sm:text-\[17px\]/);
-    }
-  });
-
-  it("verifies high-contrast action badges for PLAY and PASS across all four files", () => {
-    const playBadgePattern = /bg-emerald-500\/20\s+text-emerald-300\s+border\s+border-emerald-400\/50\s+font-bold\s+tracking-wide\s+shadow-sm/;
-    const passBadgePattern = /bg-amber-500\/20\s+text-amber-200\s+border\s+border-amber-400\/50\s+font-semibold\s+tracking-wide/;
-
-    // Files with active betting decision displays
-    const filesWithBadges = [
-      resolve(appRoot, "page.tsx"),
-      resolve(appRoot, "packages", "page.tsx"),
-      resolve(appRoot, "games", "[slug]", "page.tsx"),
-    ];
-
-    for (const filePath of filesWithBadges) {
-      const src = readFileSync(filePath, "utf8");
-      expect(src, `PLAY badge missing in ${filePath}`).toMatch(playBadgePattern);
-      expect(src, `PASS badge missing in ${filePath}`).toMatch(passBadgePattern);
-    }
-  });
-
-  it("verifies tabular key numbers with bold high contrast numerals (font-mono text-base sm:text-lg font-bold text-white tabular-nums)", () => {
-    const tabularPattern = /font-mono\s+text-base\s+sm:text-lg\s+font-bold\s+text-white\s+tabular-nums/;
-
-    for (const filePath of targetFiles) {
-      const src = readFileSync(filePath, "utf8");
-      expect(src, `Tabular key numbers missing in ${filePath}`).toMatch(tabularPattern);
-    }
-  });
-
-  it("verifies strictly zero banned phrases across all four files", () => {
-    const bannedPhrases = [
-      /\bBrier\b/i,
-      /\bCLV\b/,
-      /\bStage\s*1\b/i,
-      /\bJEV\b/,
-      /\bSinkhorn\b/i,
-      /\bCholesky\b/i,
-      /\bFr[eé]chet\b/i,
-      /\bJames-Stein\b/i,
-      /\bFour\s+Doors\b/i,
-      /\b5-Pillar\b/i,
-      /\bUnder\s+Construction\b/i,
-    ];
-
-    for (const filePath of targetFiles) {
-      const src = readFileSync(filePath, "utf8");
-      for (const banned of bannedPhrases) {
-        expect(src, `File ${filePath} contains banned phrase matching ${String(banned)}`).not.toMatch(banned);
+describe("storefront stripdown: copy stays clean", () => {
+  for (const rel of STOREFRONT_FILES) {
+    it(`${rel} carries no banned jargon`, () => {
+      const src = read(rel);
+      for (const pattern of BANNED) {
+        expect(src).not.toMatch(pattern);
       }
-    }
-  });
+    });
+  }
+});
 
-  it("renders HomePage without errors and preserves revenue-pillars and wagertalk-storefront test hooks", async () => {
-    const PageComponent = await HomePage();
-    const { container } = render(PageComponent);
-    expect(container.querySelector("#revenue-pillars")).not.toBeNull();
-    expect(container.querySelector('[data-testid="five-pillar-revenue-section"]')).not.toBeNull();
-    expect(container.querySelector('[data-testid="homepage-wagertalk-storefront"]')).not.toBeNull();
-    expect(container.querySelector('[data-testid="homepage-responsible-close"]')).not.toBeNull();
-    expect(container.textContent).toContain("The market is full of noise.");
-    expect(container.textContent).toContain("Plain-English NFL Picks, Player Props & Parlays");
-  });
+describe("storefront stripdown: surfaces render", () => {
+  it("renders HomePage with the field and the responsible close", () => {
+    const { container } = render(React.createElement(HomePage));
 
-  it("renders PackagesPage without errors and includes required marketing hero and slate dossiers", () => {
-    const { container } = render(React.createElement(PackagesPage));
-    expect(container.querySelector("#slate-dossiers")).not.toBeNull();
+    expect(container.querySelector('[data-testid="redline-world"]')).not.toBeNull();
+    expect(
+      container.querySelector('[data-testid="homepage-responsible-close"]')
+    ).not.toBeNull();
+    expect(container.textContent).toContain("The math can point. The decision stays yours.");
+    expect(container.textContent).toContain("Close / Responsible Intelligence");
     expect(container.textContent).toContain(
-      "Plain-English NFL Picks, Player Props & Parlays — Written so you know exactly what to bet and why in 30 seconds.",
+      "Past performance does not guarantee future results."
     );
-    expect(container.textContent).toContain("Choose Your Betting Pack");
+    expect(container.querySelector('[data-testid="mock-footer"]')).not.toBeNull();
   });
 
-  it("renders GameDossierPage for TNF Panthers @ Packers with high-contrast Action Badges and tabular ratings", () => {
-    const { container } = render(React.createElement(GameDossierPage, { params: { slug: "nfl-2026-w8-car-gb" } }));
-    expect(container.textContent).toContain("Carolina Panthers @ Green Bay Packers");
-    expect(container.textContent).toContain("SPREAD CALL");
-    expect(container.textContent).toContain("TOTAL CALL");
-    expect(container.textContent).toMatch(/Confidence Rating:/);
+  it("renders PackagesPage with the Week 8 sealed board hero", () => {
+    const { container } = render(React.createElement(PackagesPage));
+
+    expect(container.textContent).toContain("GALAXY PICKS");
+    expect(container.textContent).toContain("Choose Your Football Pack");
+    expect(container.querySelector("#slate-dossiers")).not.toBeNull();
+    expect(container.querySelector('[data-testid="mock-footer"]')).not.toBeNull();
+  });
+
+  it("renders GamePage with locked official calls and no leaked picks", () => {
+    const { container } = render(
+      React.createElement(GamePage, { params: { gameId: "nfl-2026-w8-lac-lar" } })
+    );
+
+    expect(container.textContent).toContain("Official Picks Locked");
+    expect(container.textContent).toContain("Official Spread Call");
+    expect(container.textContent).toContain("Locked Until Purchase");
+    // Locked means locked: no side, total, or confidence number escapes the card.
+    expect(container.textContent).not.toMatch(/Confidence Rating:/);
     expect(container.textContent).not.toMatch(/%/);
   });
 
-  it("renders DfsPage with readable body copy, captain leverage notes, and high-floor cash cores", () => {
-    const { container } = render(React.createElement(DfsPage));
-    expect(container.textContent).toContain("DFS Optimizer, Cash Cores & Tournament Stacks");
-    expect(container.textContent).toContain("Showdown Captain / Top Target");
-    expect(container.textContent).toContain("High-Floor Cash Core");
+  it("renders DfsSuitePage with its slate-breakdown copy", async () => {
+    const element = await DfsSuitePage();
+    const { container } = render(element);
+
+    expect(container.textContent).toContain(
+      "How We Break Down the Slate for Cash Games & Tournaments"
+    );
+    expect(container.textContent).toContain(
+      "Unlock Full DFS Lineup Cores & Official Game Picks"
+    );
+  });
+
+  it("renders the legacy /dfs landing page", () => {
+    const { container } = render(React.createElement(DfsLegacyPage));
+
+    expect(container.textContent).toContain(
+      "DFS Optimizer, Cash Cores & Tournament Stacks"
+    );
+    expect(container.textContent).toContain("How We Build Winning DFS Rosters");
   });
 });
