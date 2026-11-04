@@ -57,7 +57,30 @@ package, but `detect_players` already handles role-based filtering.
   frame, audits 4 per dir via Nemotron VL.
 - Validation run on `frames_bal_vs_dal`: 2,789 frames → 70 sampled → 6 audited,
   4 live_inplay, 2 graphic, 3 live frames, 1 quarantined.
-- Full 14-dir run: in progress (background `proc_e8563d9f213a`).
+- Full 14-dir run: **complete.** 36,328 frames across 14 dirs, 56 audited
+  (4/dir), 26 live_inplay, 15 quarantined. Per-dir:
+
+| Dir | Frames | Audited | Live | Quarantined |
+|---|---|---|---|---|
+| frames_bal_vs_dal | 2,789 | 4 | 2 | 0 |
+| frames_bal_vs_dal_week3 | 81 | 2 | 0 | 2 |
+| frames_bal_vs_ind | 2,659 | 4 | 3 | 0 |
+| frames_bal_vs_ind_week1 | 2,659 | 4 | 0 | 3 |
+| frames_buf_vs_lar | 2,975 | 4 | 1 | 0 |
+| frames_chi_vs_car | 2,910 | 4 | 4 | 0 |
+| frames_chi_vs_car_week1 | 2,910 | 4 | 0 | 4 |
+| frames_dal_vs_nyg | 2,619 | 4 | 4 | 0 |
+| frames_hou_vs_jax | 2,693 | 4 | 3 | 0 |
+| frames_ind_vs_kc | 2,856 | 4 | 2 | 0 |
+| frames_ind_vs_kc_week2 | 2,856 | 4 | 0 | 2 |
+| frames_nyg_vs_hou | 2,551 | 4 | 4 | 0 |
+| frames_pit_vs_cle | 2,937 | 4 | 0 | 4 |
+| frames_sf_vs_sea | 2,486 | 4 | 3 | 0 |
+
+**Finding:** the `_week1/2/3` suffixed dirs have 0 live frames and high
+quarantine counts, while their unsuffixed twins have live frames. They are
+duplicate frame sets with worse sampling — the unsuffixed dir is the one to
+use. `frames_pit_vs_cle` is the exception: 0 live, 4 quarantined, no twin.
 - Live crawl (`nfl-video.com/2026`, pages 0..8) for Week 8/9 priority games
   (`IND@JAX`, `BAL@BUF`, `CHI@SEA`, `ARI@DAL`, `NE@MIA`, `LV@NYJ`): **crawl
   works, streams do not exist.** 19 games discovered across weeks 5–8, all 6
