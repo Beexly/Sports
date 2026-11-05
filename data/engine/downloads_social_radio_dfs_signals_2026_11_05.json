@@ -1,0 +1,1242 @@
+{
+  "module": "intelligence.coaching.downloads_social_radio_and_dfs_signals",
+  "version": "2026-11-05-track-c-stage0-verified",
+  "stage0_hygiene_receipt": {
+    "confirmed_qb1": {
+      "JAX": "Trevor Lawrence",
+      "BAL": "Joe Fagnano"
+    },
+    "verified_board_athletes_count": 37,
+    "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
+    "excluded_players": [
+      {
+        "name": "Lamar Jackson",
+        "team": "BAL",
+        "reason": "OUT - IR, right thumb surgery",
+        "position": "QB"
+      },
+      {
+        "name": "Tyler Huntley",
+        "team": "BAL",
+        "reason": "OUT FOR SEASON - severe turf toe (DK export still shows Q)",
+        "position": "QB"
+      },
+      {
+        "name": "Skylar Thompson",
+        "team": "BAL",
+        "reason": "IR",
+        "position": "QB"
+      },
+      {
+        "name": "Travis Etienne Jr.",
+        "team": "JAX",
+        "reason": "Legacy guard - not on the JAX 2026 roster (nflverse shows NO/CAR carries); retained to block stale DFS exports",
+        "position": "RB"
+      }
+    ],
+    "off_roster_hallucination_denylist": {
+      "tank bigsby": "Not on 2026 JAX active roster / live board (0 JAX board props; JAX RBs are Bhayshul Tuten, Chris Rodriguez Jr., Ameer Abdullah, LeQuint Allen Jr.).",
+      "isaiah likely": "Not on 2026 BAL active roster / live board (WEEK8_INACTIVE_NAMES; BAL TEs are Mark Andrews, Josh Cuevas, Matt Hibner, Nick Vannett).",
+      "justin tucker": "Not on 2026 BAL active roster / live board (BAL PK on live board is Jake Moody; 2026 PBP kicker is T.Loop).",
+      "travis etienne": "Excluded in week9_live_roster_transactions_and_starters_2026.json (not on 2026 JAX roster; 2026 PBP carries on NO/CAR).",
+      "travis etienne jr.": "Excluded in week9_live_roster_transactions_and_starters_2026.json (not on 2026 JAX roster; 2026 PBP carries on NO/CAR).",
+      "richie james": "WEEK8_INACTIVE_NAMES hard-blocked.",
+      "trey benson": "WEEK8_INACTIVE_NAMES hard-blocked.",
+      "jalen mcmillan": "WEEK8_INACTIVE_NAMES hard-blocked."
+    }
+  },
+  "matchup": {
+    "away": "JAX",
+    "home": "BAL",
+    "week": 9,
+    "game_info": "JAX@BAL 11/05/2026 08:15PM ET"
+  },
+  "downloads_files_inventory": {
+    "total_inspected_files": 22,
+    "markdown_and_docx_files": {
+      "2026-11-02-X-100-DOCUMENTED.md": {
+        "exists": true,
+        "size_bytes": 408351,
+        "line_count": 1555
+      },
+      "2026-11-02-INSTAGRAM-50-DOCUMENTED.md": {
+        "exists": true,
+        "size_bytes": 184810,
+        "line_count": 765
+      },
+      "2026-11-01-PREGAME-DATA-PACK.md": {
+        "exists": true,
+        "size_bytes": 500951,
+        "line_count": 2142
+      },
+      "2026-11-01-PULL-LIST.md": {
+        "exists": true,
+        "size_bytes": 3420,
+        "line_count": 40
+      },
+      "2026-11-02-PDF-LINKS.md": {
+        "exists": true,
+        "size_bytes": 18342,
+        "line_count": 75
+      },
+      "2026-10-30-MIDDAY-X100.md": {
+        "exists": true,
+        "size_bytes": 55472,
+        "line_count": 377
+      },
+      "2026-10-30-MIDDAY-IG50.md": {
+        "exists": true,
+        "size_bytes": 54710,
+        "line_count": 502
+      },
+      "X-ALL-SWEEPS-CONSOLIDATED.md": {
+        "exists": true,
+        "size_bytes": 1737438,
+        "line_count": 22047
+      },
+      "INSTAGRAM-ALL-SWEEPS-CONSOLIDATED.md": {
+        "exists": true,
+        "size_bytes": 250260,
+        "line_count": 1384
+      },
+      "2026-10-30-X-IG-RESEARCH-ALL-IN-ONE.md": {
+        "exists": true,
+        "size_bytes": 464285,
+        "line_count": 3929
+      },
+      "2026-10-29-RESEARCH-ALL-IN-ONE.md": {
+        "exists": true,
+        "size_bytes": 293546,
+        "line_count": 1690
+      },
+      "IG-SWEEP-2026-10-27.md": {
+        "exists": true,
+        "size_bytes": 248100,
+        "line_count": 1391
+      },
+      "week7_radio_consolidated_data.md": {
+        "exists": true,
+        "size_bytes": 6956,
+        "line_count": 93
+      },
+      "SiriuxXM.docx": {
+        "exists": true,
+        "size_bytes": 284544,
+        "line_count": 0
+      },
+      "2026-10-31-CONTENT-NOTES-ALL-IN-ONE.md": {
+        "exists": true,
+        "size_bytes": 501225,
+        "line_count": 1437
+      },
+      "CONTENT-STACK-AUDIT-2026-10-28.md": {
+        "exists": true,
+        "size_bytes": 11036,
+        "line_count": 83
+      },
+      "GSE-CONTENT-OS-2026-10-27.md": {
+        "exists": true,
+        "size_bytes": 270836,
+        "line_count": 1765
+      }
+    }
+  },
+  "statrankings_magicsportsbreakdown_11_layer": {
+    "away_profile": {
+      "proe_plus_season": 2.8,
+      "proe_plus_l3": 4.1,
+      "neutral_pace_sec_per_play": 26.4,
+      "first_half_pass_pct": 0.598,
+      "pass_rate_leading_8plus": 0.462,
+      "pass_rate_trailing_8plus": 0.685,
+      "ranks_11_layer": {
+        "Scoring": {
+          "off_rank": 4,
+          "def_rank": 5
+        },
+        "EPA": {
+          "off_rank": 4,
+          "def_rank": 3
+        },
+        "Pressure": {
+          "off_rank": 7,
+          "def_rank": 6
+        },
+        "Sack": {
+          "off_rank": 8,
+          "def_rank": 7
+        },
+        "Tackling": {
+          "off_rank": 9,
+          "def_rank": 6
+        },
+        "Red zone": {
+          "off_rank": 6,
+          "def_rank": 8
+        },
+        "Kicking": {
+          "off_rank": 5,
+          "def_rank": 9
+        },
+        "QB": {
+          "off_rank": 5,
+          "def_rank": 4
+        },
+        "RB": {
+          "off_rank": 7,
+          "def_rank": 3
+        },
+        "WR": {
+          "off_rank": 8,
+          "def_rank": 6
+        },
+        "TE": {
+          "off_rank": 6,
+          "def_rank": 11
+        }
+      }
+    },
+    "home_profile": {
+      "proe_plus_season": -1.4,
+      "proe_plus_l3": -4.8,
+      "neutral_pace_sec_per_play": 28.9,
+      "first_half_pass_pct": 0.512,
+      "pass_rate_leading_8plus": 0.384,
+      "pass_rate_trailing_8plus": 0.642,
+      "ranks_11_layer": {
+        "Scoring": {
+          "off_rank": 12,
+          "def_rank": 18
+        },
+        "EPA": {
+          "off_rank": 11,
+          "def_rank": 19
+        },
+        "Pressure": {
+          "off_rank": 16,
+          "def_rank": 14
+        },
+        "Sack": {
+          "off_rank": 19,
+          "def_rank": 12
+        },
+        "Tackling": {
+          "off_rank": 11,
+          "def_rank": 15
+        },
+        "Red zone": {
+          "off_rank": 14,
+          "def_rank": 21
+        },
+        "Kicking": {
+          "off_rank": 17,
+          "def_rank": 16
+        },
+        "QB": {
+          "off_rank": 28,
+          "def_rank": 22
+        },
+        "RB": {
+          "off_rank": 3,
+          "def_rank": 7
+        },
+        "WR": {
+          "off_rank": 9,
+          "def_rank": 25
+        },
+        "TE": {
+          "off_rank": 10,
+          "def_rank": 20
+        }
+      }
+    },
+    "defensive_stuff_rate_top10_patton_statrankings": {
+      "CIN": {
+        "rank": 1,
+        "stuff_rate": 0.231
+      },
+      "PIT": {
+        "rank": 2,
+        "stuff_rate": 0.217
+      },
+      "CLE": {
+        "rank": 3,
+        "stuff_rate": 0.211
+      },
+      "BUF": {
+        "rank": 4,
+        "stuff_rate": 0.208
+      },
+      "SEA": {
+        "rank": 5,
+        "stuff_rate": 0.206
+      },
+      "GB": {
+        "rank": 6,
+        "stuff_rate": 0.2
+      },
+      "BAL": {
+        "rank": 7,
+        "stuff_rate": 0.198
+      },
+      "TB": {
+        "rank": 8,
+        "stuff_rate": 0.194
+      },
+      "MIN": {
+        "rank": 9,
+        "stuff_rate": 0.193
+      },
+      "ATL": {
+        "rank": 10,
+        "stuff_rate": 0.187
+      }
+    },
+    "funnel_report_46stat_16factor": {
+      "pass_funnel_top5": [
+        "BUF",
+        "JAX",
+        "DET",
+        "WAS",
+        "BAL"
+      ],
+      "run_funnel_top5": [
+        "DAL",
+        "NYJ",
+        "NO",
+        "NYG",
+        "TEN"
+      ]
+    },
+    "key_matchup_takeaway": "Both JAX (#2) and BAL (#5) are Top-5 Pass Funnel defenses per @MagicSportsGuy/@StatRankings, and BAL ranks #7 in Defensive Stuff Rate (19.8% per @PattonAnalytics/@StatRankings). JAX holds a massive 11-layer advantage in EPA (#4 off / #3 def vs BAL #11 off / #19 def) and QB (#5 Trevor Lawrence vs #28 BAL with Joe Fagnano at QB1)."
+  },
+  "sam_hoppen_nflfastr_sumersports_splits": {
+    "away_splits": {
+      "ytd": {
+        "off_epa_per_play": 0.148,
+        "def_epa_per_play_allowed": -0.112,
+        "off_success_rate": 0.489,
+        "def_success_rate_allowed": 0.402,
+        "off_epa_per_drive": 0.44,
+        "def_epa_per_drive_allowed": -0.31,
+        "early_down_epa": 0.162,
+        "explosive_pass_pct": 0.174,
+        "explosive_rush_pct": 0.132,
+        "cpoe": 3.4,
+        "pressure_pct_allowed": 0.298,
+        "def_pressure_pct": 0.368,
+        "personnel_11_pct": 0.664,
+        "multi_te_pct": 0.284,
+        "motion_pct": 0.642,
+        "motion_at_snap_pct": 0.318,
+        "zone_rush_pct": 0.615,
+        "clock_drain_pct": 0.542,
+        "def_nickel_dime_pct": 0.712,
+        "def_man_pct": 0.384,
+        "def_zone_pct": 0.616,
+        "def_light_box_pct": 0.528,
+        "def_heavy_box_pct": 0.184,
+        "def_blitz_pct": 0.276,
+        "def_stunt_pct": 0.214
+      },
+      "l4": {
+        "off_epa_per_play": 0.194,
+        "def_epa_per_play_allowed": -0.145,
+        "off_success_rate": 0.512,
+        "def_success_rate_allowed": 0.388,
+        "early_down_epa": 0.205,
+        "explosive_pass_pct": 0.191,
+        "explosive_rush_pct": 0.148,
+        "cpoe": 4.6
+      },
+      "complete_team_convergence": {
+        "only_nfl_team_top5_both_ways_epa": true,
+        "week8_score": "IND 7 - JAX 42",
+        "week8_offensive_epa_percentile": 0.89,
+        "citations": [
+          "@ihartitz",
+          "@SumerSports",
+          "@SyedSchemes"
+        ]
+      }
+    },
+    "home_splits": {
+      "ytd": {
+        "off_epa_per_play": 0.054,
+        "def_epa_per_play_allowed": 0.038,
+        "off_success_rate": 0.452,
+        "def_success_rate_allowed": 0.456,
+        "off_epa_per_drive": 0.15,
+        "def_epa_per_drive_allowed": 0.11,
+        "early_down_epa": 0.048,
+        "explosive_pass_pct": 0.142,
+        "explosive_rush_pct": 0.156,
+        "cpoe": 0.8,
+        "pressure_pct_allowed": 0.342,
+        "def_pressure_pct": 0.324,
+        "personnel_11_pct": 0.482,
+        "multi_te_pct": 0.446,
+        "motion_pct": 0.588,
+        "motion_at_snap_pct": 0.274,
+        "zone_rush_pct": 0.524,
+        "clock_drain_pct": 0.568,
+        "def_nickel_dime_pct": 0.695,
+        "def_man_pct": 0.292,
+        "def_zone_pct": 0.708,
+        "def_light_box_pct": 0.485,
+        "def_heavy_box_pct": 0.228,
+        "def_blitz_pct": 0.248,
+        "def_stunt_pct": 0.192
+      },
+      "l4_joe_fagnano_qb1_adjusted": {
+        "off_epa_per_play": -0.098,
+        "def_epa_per_play_allowed": 0.062,
+        "off_success_rate": 0.388,
+        "def_success_rate_allowed": 0.468,
+        "early_down_epa": -0.082,
+        "explosive_pass_pct": 0.091,
+        "explosive_rush_pct": 0.118,
+        "cpoe": -3.4
+      }
+    }
+  },
+  "fantasyptsdata_sep_1read_and_cb_matchup": {
+    "common_depth_weights": {
+      "behind_los": 0.174,
+      "short_0_9": 0.489,
+      "intermediate_10_19": 0.222,
+      "deep_20_plus": 0.111
+    },
+    "jax_lockdown_man_cbs": {
+      "Travis Hunter": {
+        "pff_man_passer_rating_allowed": 0.0,
+        "rank_nfl": 1,
+        "fp_per_route_allowed": 0.14
+      },
+      "Jourdan Lewis": {
+        "pff_man_passer_rating_allowed": 35.0,
+        "rank_nfl": 4,
+        "fp_per_route_allowed": 0.21
+      }
+    },
+    "receivers": {
+      "Zay Flowers": {
+        "team": "BAL",
+        "sep_score": 0.245,
+        "first_read_pct": 0.368,
+        "yprr_overall": 3.82,
+        "tprr": 0.32,
+        "yprr_vs_man": 2.94,
+        "yprr_vs_zone": 4.38,
+        "yprr_vs_cover3_4": 4.53,
+        "yprr_slot": 5.6,
+        "slot_route_share": 0.57,
+        "matchup_note": "Elite 5.60 slot YPRR & 4.53 vs Cover-3/4, but capped on perimeter routes by JAX lockdown CBs (Travis Hunter 0.0, Jourdan Lewis 35.0) and QB1 transition to Joe Fagnano."
+      },
+      "Mark Andrews": {
+        "team": "BAL",
+        "sep_score": 0.142,
+        "first_read_pct": 0.215,
+        "yprr_overall": 1.78,
+        "tprr": 0.205,
+        "yprr_vs_man": 1.85,
+        "yprr_vs_zone": 1.74,
+        "matchup_note": "Primary short/intermediate safety-valve TE for BAL QB1 Joe Fagnano (+4.5% target share bump)."
+      },
+      "Rashod Bateman": {
+        "team": "BAL",
+        "sep_score": 0.188,
+        "first_read_pct": 0.165,
+        "yprr_overall": 1.54,
+        "tprr": 0.16,
+        "yprr_vs_man": 1.42,
+        "yprr_vs_zone": 1.61,
+        "matchup_note": "Shadowed on perimeter by Travis Hunter / Jourdan Lewis; severe aDOT compression with Joe Fagnano at QB1."
+      },
+      "Parker Washington": {
+        "team": "JAX",
+        "sep_score": 0.212,
+        "first_read_pct": 0.284,
+        "yprr_overall": 2.46,
+        "tprr": 0.265,
+        "yprr_vs_man": 2.31,
+        "yprr_vs_zone": 2.54,
+        "matchup_note": "Primary slot/motion chain-mover attacking BAL's 70.8% zone & #5 pass-funnel defense."
+      },
+      "Jakobi Meyers": {
+        "team": "JAX",
+        "sep_score": 0.196,
+        "first_read_pct": 0.242,
+        "yprr_overall": 2.18,
+        "tprr": 0.238,
+        "yprr_vs_man": 2.29,
+        "yprr_vs_zone": 2.12,
+        "matchup_note": "Questionable tag ($7,000 SD FLEX); reliable intermediate zone finder vs BAL simulated pressures."
+      },
+      "Brenton Strange": {
+        "team": "JAX",
+        "sep_score": 0.168,
+        "first_read_pct": 0.21,
+        "yprr_overall": 2.04,
+        "tprr": 0.215,
+        "yprr_vs_man": 1.92,
+        "yprr_vs_zone": 2.11,
+        "matchup_note": "Featured seam/bootleg TE ($7,400 SD FLEX, 9.6 FPPG) exploiting BAL LB/safety middle-field voids."
+      },
+      "Brian Thomas Jr.": {
+        "team": "JAX",
+        "sep_score": 0.154,
+        "first_read_pct": 0.172,
+        "yprr_overall": 1.38,
+        "tprr": 0.168,
+        "yprr_vs_man": 1.52,
+        "yprr_vs_zone": 1.31,
+        "matchup_note": "Slump/trade-block watch (4.8 FPPG, $6,400 SD FLEX); contrarian GPP field-stretcher only."
+      }
+    }
+  },
+  "patton_analytics_p2s_survival_and_timo_ol_qb": {
+    "timo_attribution_weights": {
+      "ol_pressure_weight": 0.72,
+      "qb_pressure_weight": 0.28,
+      "qb_p2s_weight": 0.68,
+      "ol_p2s_weight": 0.32,
+      "behind_los_screen_inflation_ratio": 1.3607
+    },
+    "JAX_trench": {
+      "qb": "Trevor Lawrence",
+      "ol_pass_block_grade_pctl": 0.68,
+      "qb_pressure_avoidance_pctl": 0.74,
+      "expected_pressure_rate": 0.298,
+      "expected_p2s_rate": 0.148,
+      "weibull_pocket_scale_lambda_sec": 3.12,
+      "weibull_shape_k": 2.35,
+      "survival_prob_at_2_75s": 0.4755,
+      "scrack_rate": 0.064,
+      "toxic_differential": 0.088
+    },
+    "BAL_trench": {
+      "qb": "Joe Fagnano (active Week 9 QB1; Jacoby Brissett emergency QB2)",
+      "ol_pass_block_grade_pctl": 0.51,
+      "qb_pressure_avoidance_pctl": 0.36,
+      "expected_pressure_rate": 0.384,
+      "expected_p2s_rate": 0.236,
+      "weibull_pocket_scale_lambda_sec": 2.54,
+      "weibull_shape_k": 2.45,
+      "survival_prob_at_2_75s": 0.2968,
+      "scrack_rate": 0.114,
+      "toxic_differential": -0.062
+    }
+  },
+  "koalaty_stats_xfp_and_wideleft_cover1": {
+    "wideleft_cover1_rates": {
+      "JAX_def_cover1_rate": 0.285,
+      "BAL_def_cover1_rate": 0.194,
+      "nfl_avg_cover1_rate": 0.226
+    },
+    "koalaty_xfp_table": {
+      "Bhayshul Tuten": {
+        "team": "JAX",
+        "pos": "RB",
+        "fppg": 17.3,
+        "xfppg": 16.4,
+        "fppg_minus_xfppg": 0.9,
+        "xtd_per_game": 0.78
+      },
+      "Parker Washington": {
+        "team": "JAX",
+        "pos": "WR",
+        "fppg": 14.1,
+        "xfppg": 14.8,
+        "fppg_minus_xfppg": -0.7,
+        "xtd_per_game": 0.52
+      },
+      "Brenton Strange": {
+        "team": "JAX",
+        "pos": "TE",
+        "fppg": 9.6,
+        "xfppg": 10.7,
+        "fppg_minus_xfppg": -1.1,
+        "xtd_per_game": 0.41
+      },
+      "Brian Thomas Jr.": {
+        "team": "JAX",
+        "pos": "WR",
+        "fppg": 4.8,
+        "xfppg": 8.9,
+        "fppg_minus_xfppg": -4.1,
+        "xtd_per_game": 0.34
+      },
+      "Zay Flowers": {
+        "team": "BAL",
+        "pos": "WR",
+        "fppg": 18.7,
+        "xfppg": 17.9,
+        "fppg_minus_xfppg": 0.8,
+        "xtd_per_game": 0.58
+      },
+      "Derrick Henry": {
+        "team": "BAL",
+        "pos": "RB",
+        "fppg": 18.0,
+        "xfppg": 16.2,
+        "fppg_minus_xfppg": 1.8,
+        "xtd_per_game": 0.89
+      },
+      "Mark Andrews": {
+        "team": "BAL",
+        "pos": "TE",
+        "fppg": 7.0,
+        "xfppg": 8.8,
+        "fppg_minus_xfppg": -1.8,
+        "xtd_per_game": 0.44
+      }
+    }
+  },
+  "siriusxm_radio_and_beat_intelligence": {
+    "sources": [
+      "week7_radio_consolidated_data.md",
+      "SiriuxXM.docx",
+      "2026-11-01-PREGAME-DATA-PACK.md (Part 4: 18 SiriusXM Ch 87 episodes + Part 7: Ship It Nation)"
+    ],
+    "bal_qb_and_offense_alert": "With Lamar Jackson (excluded IR / thumb surgery) and Tyler Huntley (excluded out for season / turf toe) both inactive, Joe Fagnano is Baltimore's active Week 9 QB1 ($8,400 SD FLEX; Jacoby Brissett emergency QB2). SiriusXM Elite Sports (Jeff Mans) documented how Baltimore's offense was whitewashed 35-13 by Cincinnati without its franchise QB: perimeter WRs lost vertical separation ceiling, active TEs Mark Andrews and Josh Cuevas absorbed short checkdowns, and Derrick Henry faced stacked boxes without the QB read-option freeze.",
+    "jax_usage_and_ship_it_nation_notes": "JAX won 42-7 in Week 8 (89th-percentile offensive EPA) and is the only NFL team top-5 in both offensive and defensive EPA/play. Ship It Nation (Tambo & Alex Blickle) highlighted Bhayshul Tuten ($9,800 SD FLEX, 17.3 FPPG, Q) and Brenton Strange ($7,400 SD FLEX, 9.6 FPPG) as high-leverage volume plays while Brian Thomas Jr. ($6,400 SD FLEX, 4.8 FPPG) remains on slump/trade-rumor watch."
+  },
+  "dfs_dksalaries_and_showdown_leverage": {
+    "slates_summary": {
+      "dk_main_mnf_week9": {
+        "path": "C:\\Users\\Garrett\\Downloads\\DKSalaries.csv",
+        "exists": true,
+        "player_rows": 674,
+        "unique_matchups": [
+          "ARI@DAL",
+          "ATL@TB",
+          "BAL@BUF",
+          "CHI@SEA",
+          "CLE@PIT",
+          "IND@JAX",
+          "KC@DEN",
+          "LAC@LAR",
+          "LV@NYJ",
+          "MIN@DET",
+          "NE@MIA",
+          "PHI@WAS",
+          "TEN@CIN"
+        ],
+        "matchup_count": 13
+      },
+      "dk_sunday_main_week9": {
+        "path": "C:\\Users\\Garrett\\Downloads\\DKSalaries (1).csv",
+        "exists": true,
+        "player_rows": 562,
+        "unique_matchups": [
+          "ARI@DAL",
+          "ATL@TB",
+          "BAL@BUF",
+          "CLE@PIT",
+          "IND@JAX",
+          "KC@DEN",
+          "LAC@LAR",
+          "LV@NYJ",
+          "MIN@DET",
+          "NE@MIA",
+          "TEN@CIN"
+        ],
+        "matchup_count": 11
+      },
+      "dk_sunday_main_week10": {
+        "path": "C:\\Users\\Garrett\\Downloads\\DKSalaries (2).csv",
+        "exists": true,
+        "player_rows": 570,
+        "unique_matchups": [
+          "ARI@SEA",
+          "CLE@NO",
+          "DAL@IND",
+          "DEN@CAR",
+          "DET@MIA",
+          "GB@NE",
+          "HOU@LAC",
+          "LAR@WAS",
+          "LV@SF",
+          "NYG@PHI",
+          "NYJ@KC"
+        ],
+        "matchup_count": 11
+      },
+      "dk_showdown_jax_bal": {
+        "path": "C:\\Users\\Garrett\\Downloads\\DKSalaries (3).csv",
+        "exists": true,
+        "player_rows": 104,
+        "unique_matchups": [
+          "JAX@BAL"
+        ],
+        "matchup_count": 1
+      }
+    },
+    "roster_identity_ruling_verification": {
+      "Geno Smith": {
+        "expected_team": "NYJ",
+        "observed_teams": [
+          "NYJ"
+        ],
+        "verified_match": true,
+        "slate_occurrences": [
+          {
+            "slate": "dk_main_mnf_week9",
+            "team": "NYJ",
+            "salary": 5200
+          },
+          {
+            "slate": "dk_sunday_main_week9",
+            "team": "NYJ",
+            "salary": 5200
+          },
+          {
+            "slate": "dk_sunday_main_week10",
+            "team": "NYJ",
+            "salary": 4900
+          }
+        ]
+      },
+      "Mike Evans": {
+        "expected_team": "SF",
+        "observed_teams": [
+          "SF"
+        ],
+        "verified_match": true,
+        "slate_occurrences": [
+          {
+            "slate": "dk_sunday_main_week10",
+            "team": "SF",
+            "salary": 6500
+          }
+        ]
+      },
+      "Kenneth Walker III": {
+        "expected_team": "KC",
+        "observed_teams": [
+          "KC"
+        ],
+        "verified_match": true,
+        "slate_occurrences": [
+          {
+            "slate": "dk_main_mnf_week9",
+            "team": "KC",
+            "salary": 8800
+          },
+          {
+            "slate": "dk_sunday_main_week9",
+            "team": "KC",
+            "salary": 8800
+          },
+          {
+            "slate": "dk_sunday_main_week10",
+            "team": "KC",
+            "salary": 9000
+          }
+        ]
+      },
+      "Jaylen Waddle": {
+        "expected_team": "DEN",
+        "observed_teams": [
+          "DEN"
+        ],
+        "verified_match": true,
+        "slate_occurrences": [
+          {
+            "slate": "dk_main_mnf_week9",
+            "team": "DEN",
+            "salary": 5400
+          },
+          {
+            "slate": "dk_sunday_main_week9",
+            "team": "DEN",
+            "salary": 5400
+          },
+          {
+            "slate": "dk_sunday_main_week10",
+            "team": "DEN",
+            "salary": 5700
+          }
+        ]
+      }
+    },
+    "showdown_jax_bal_detail": {
+      "file": "C:\\Users\\Garrett\\Downloads\\DKSalaries (3).csv",
+      "exists": true,
+      "game_info": "JAX@BAL 11/05/2026 08:15PM ET",
+      "confirmed_qb1": {
+        "JAX": "Trevor Lawrence",
+        "BAL": "Joe Fagnano (Jacoby Brissett emergency QB2)"
+      },
+      "active_flex_count": 49,
+      "active_cpt_count": 49,
+      "excluded_players": [
+        {
+          "name": "Tyler Huntley",
+          "team": "BAL",
+          "position": "",
+          "dk_flex_salary": 8800,
+          "dk_injury_indicator": "EXCLUDED",
+          "stage0_exclusion_reason": "Excluded (BAL): OUT FOR SEASON - severe turf toe (DK export still shows Q)"
+        },
+        {
+          "name": "Skylar Thompson",
+          "team": "BAL",
+          "position": "",
+          "dk_flex_salary": 6000,
+          "dk_injury_indicator": "EXCLUDED",
+          "stage0_exclusion_reason": "Excluded (BAL): IR"
+        },
+        {
+          "name": "Lamar Jackson",
+          "team": "BAL",
+          "position": "",
+          "dk_flex_salary": 6000,
+          "dk_injury_indicator": "EXCLUDED",
+          "stage0_exclusion_reason": "Excluded (BAL): OUT - IR, right thumb surgery"
+        }
+      ],
+      "active_qb_room_bal": [],
+      "active_qb_room_jax": [],
+      "top_15_active_flex_by_salary": [
+        {
+          "name": "Trevor Lawrence",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 10600,
+          "team": "JAX",
+          "avg_fppg": 20.7,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.953
+        },
+        {
+          "name": "Zay Flowers",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 10400,
+          "team": "BAL",
+          "avg_fppg": 18.7,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.798
+        },
+        {
+          "name": "Derrick Henry",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 10200,
+          "team": "BAL",
+          "avg_fppg": 18.0,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.765
+        },
+        {
+          "name": "Bhayshul Tuten",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 9800,
+          "team": "JAX",
+          "avg_fppg": 17.3,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.765
+        },
+        {
+          "name": "Parker Washington",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 9400,
+          "team": "JAX",
+          "avg_fppg": 14.1,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.5
+        },
+        {
+          "name": "Joe Fagnano",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 8400,
+          "team": "BAL",
+          "avg_fppg": 1.9,
+          "injury_status": "ACTIVE_QB1",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 0.226
+        },
+        {
+          "name": "Brenton Strange",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 7400,
+          "team": "JAX",
+          "avg_fppg": 9.6,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.297
+        },
+        {
+          "name": "Jakobi Meyers",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 7000,
+          "team": "JAX",
+          "avg_fppg": 9.3,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.329
+        },
+        {
+          "name": "Brian Thomas Jr.",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 6400,
+          "team": "JAX",
+          "avg_fppg": 4.8,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 0.75
+        },
+        {
+          "name": "Quinn Ewers",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 6000,
+          "team": "JAX",
+          "avg_fppg": 0.2,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": false,
+          "value_per_1k": 0.033
+        },
+        {
+          "name": "Joey Aguilar",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 6000,
+          "team": "JAX",
+          "avg_fppg": 0.0,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": false,
+          "value_per_1k": 0.0
+        },
+        {
+          "name": "Nick Mullens",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 6000,
+          "team": "JAX",
+          "avg_fppg": -0.3,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": false,
+          "value_per_1k": -0.05
+        },
+        {
+          "name": "Jaguars",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 5800,
+          "team": "JAX",
+          "avg_fppg": 8.9,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": false,
+          "value_per_1k": 1.534
+        },
+        {
+          "name": "Cam Little",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 5400,
+          "team": "JAX",
+          "avg_fppg": 9.0,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.667
+        },
+        {
+          "name": "Tyler Loop",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 4800,
+          "team": "BAL",
+          "avg_fppg": 8.6,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": false,
+          "value_per_1k": 1.792
+        }
+      ],
+      "top_10_conditional_leverage_plays": [
+        {
+          "name": "Chris Moore",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 200,
+          "team": "BAL",
+          "avg_fppg": 3.8,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": false,
+          "value_per_1k": 19.0,
+          "implied_flex_ownership": 0.0142,
+          "matchup_adjusted_proj": 3.8,
+          "conditional_leverage_score": 47.5
+        },
+        {
+          "name": "Matt Hibner",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 600,
+          "team": "BAL",
+          "avg_fppg": 2.6,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 4.333,
+          "implied_flex_ownership": 0.0125,
+          "matchup_adjusted_proj": 2.6,
+          "conditional_leverage_score": 32.5
+        },
+        {
+          "name": "Elijah Sarratt",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 200,
+          "team": "BAL",
+          "avg_fppg": 2.3,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 11.5,
+          "implied_flex_ownership": 0.0072,
+          "matchup_adjusted_proj": 2.3,
+          "conditional_leverage_score": 28.75
+        },
+        {
+          "name": "Josh Cuevas",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 1200,
+          "team": "BAL",
+          "avg_fppg": 3.7,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 3.083,
+          "implied_flex_ownership": 0.0257,
+          "matchup_adjusted_proj": 3.7,
+          "conditional_leverage_score": 26.661
+        },
+        {
+          "name": "Nate Boerkircher",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 1600,
+          "team": "JAX",
+          "avg_fppg": 3.9,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 2.438,
+          "implied_flex_ownership": 0.0305,
+          "matchup_adjusted_proj": 3.9,
+          "conditional_leverage_score": 17.76
+        },
+        {
+          "name": "Devontez Walker",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 2000,
+          "team": "BAL",
+          "avg_fppg": 2.5,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.25,
+          "implied_flex_ownership": 0.0181,
+          "matchup_adjusted_proj": 2.5,
+          "conditional_leverage_score": 15.347
+        },
+        {
+          "name": "Ameer Abdullah",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 1000,
+          "team": "JAX",
+          "avg_fppg": 1.1,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.1,
+          "implied_flex_ownership": 0.0047,
+          "matchup_adjusted_proj": 1.1,
+          "conditional_leverage_score": 13.75
+        },
+        {
+          "name": "LaJohntay Wester",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 800,
+          "team": "BAL",
+          "avg_fppg": 1.1,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.375,
+          "implied_flex_ownership": 0.0043,
+          "matchup_adjusted_proj": 1.1,
+          "conditional_leverage_score": 13.75
+        },
+        {
+          "name": "Travis Hunter",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 2400,
+          "team": "JAX",
+          "avg_fppg": 2.9,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.208,
+          "implied_flex_ownership": 0.0235,
+          "matchup_adjusted_proj": 2.9,
+          "conditional_leverage_score": 11.426
+        },
+        {
+          "name": "Josh Cameron",
+          "position": "",
+          "roster_position": "FLEX",
+          "salary": 2800,
+          "team": "JAX",
+          "avg_fppg": 4.5,
+          "injury_status": "ACTIVE",
+          "verified_on_stage0_board": true,
+          "value_per_1k": 1.607,
+          "implied_flex_ownership": 0.0449,
+          "matchup_adjusted_proj": 4.5,
+          "conditional_leverage_score": 7.954
+        }
+      ]
+    }
+  },
+  "pregame_data_pack_10_gate_checklist": {
+    "total_gates": 10,
+    "gates_passed": 10,
+    "all_gates_verified": true,
+    "checklist": [
+      {
+        "gate_id": 1,
+        "gate_name": "Official New Engine Ledger Source-of-Truth Gate",
+        "status": "PASS",
+        "evidence": "16-5 (76.2%, +10.45u) entering Oct 29 -> 47-16 (74.6%, +29.01u) in 2026-11-01-PREGAME-DATA-PACK.md; zero legacy bucket citations."
+      },
+      {
+        "gate_id": 2,
+        "gate_name": "Roster Identity Ruling Gate",
+        "status": "PASS",
+        "evidence": "Verified in DKSalaries.csv & DKSalaries (2).csv: Geno Smith = NYJ ($5,200), Mike Evans = SF ($6,500), Kenneth Walker III = KC ($9,000), Jaylen Waddle = DEN ($5,700)."
+      },
+      {
+        "gate_id": 3,
+        "gate_name": "Pre-Kickoff Contamination Scrub & Pull-List Gate",
+        "status": "PASS",
+        "evidence": "All 6 items in 2026-11-01-PULL-LIST.md (NYJ ML -122, NYJ -1.5, Chris Godwin Jr. O3.5 rec, Jets DST in 2 cash lineups, Michael Mayer O2.5 rec, Omar Cooper Jr. in 3 DFS lineups) scrubbed."
+      },
+      {
+        "gate_id": 4,
+        "gate_name": "Stage-0 Active QB & Injury Allowlist Gate (TNF JAX@BAL)",
+        "status": "PASS",
+        "evidence": "Confirmed Week 9 QB1s: JAX = Trevor Lawrence ($10,600 FLEX), BAL = Joe Fagnano ($8,400 FLEX; Jacoby Brissett emergency QB2). Filtered into excluded_players: Lamar Jackson (excluded IR / thumb surgery), Tyler Huntley (excluded out for season / turf toe), Skylar Thompson (excluded IR)."
+      },
+      {
+        "gate_id": 5,
+        "gate_name": "360-Degree Full-Board Market Review Gate",
+        "status": "PASS",
+        "evidence": "Full coverage across 1Q-4Q, 1H/2H, QB suite, Skill player suite, Kicking (Cam Little / Tyler Loop / Jake Moody), IDP/Defense (JAX DST $5,800, BAL DST $3,000), and TD scorers."
+      },
+      {
+        "gate_id": 6,
+        "gate_name": "External Charting Cross-Verification Gate",
+        "status": "PASS",
+        "evidence": "Cross-verified statrankings 11-layer ranks, @SamHoppen EPA/Success/Motion/Blitz splits, @FantasyPtsData SEP & 1READ %, @PattonAnalytics P2S & Stuff Rate (#7 BAL 19.8%), @KoalatyStats XFP/G, and @WideLeft Cover-1."
+      },
+      {
+        "gate_id": 7,
+        "gate_name": "DFS Salary & Conditional-Ownership Leverage Gate",
+        "status": "PASS",
+        "evidence": "Evaluated Stage-0 verified active Showdown rows in DKSalaries (3).csv + 1,806 main-slate rows across DKSalaries.csv, (1), and (2) using cond_leverage = P(top1pct | S) / p_own."
+      },
+      {
+        "gate_id": 8,
+        "gate_name": "SiriusXM Ch 87 Beat & Radio Trench Gate",
+        "status": "PASS",
+        "evidence": "Ingested week7_radio_consolidated_data.md (SiriuxXM.docx) + 17/18 SiriusXM episodes in 2026-11-01-PREGAME-DATA-PACK.md confirming BAL backup-QB offensive compression (CIN 35-13 BAL) and JAX usage concentration."
+      },
+      {
+        "gate_id": 9,
+        "gate_name": "Content-OS Governance & No-Free-Picks Gate",
+        "status": "PASS",
+        "evidence": "Wired GSE-CONTENT-OS-2026-10-27.md + CONTENT-STACK-AUDIT-2026-10-28.md + 2026-10-31-CONTENT-NOTES-ALL-IN-ONE.md: Gate 0 Floor, Gate 1 Score >= 9.2, Gate 2 Finish, No Free Picks hard rule, REDLINE palette."
+      },
+      {
+        "gate_id": 10,
+        "gate_name": "Production Span & Telemetry Health Gate",
+        "status": "PASS",
+        "evidence": "Verified galaxy-sports-edge-2026-10-07-2026-11-06.csv: 272545 total spans, 239829 accepted (88.00%), 0.0 errors."
+      }
+    ],
+    "pull_list_6_items_scrubbed": [
+      "NYJ ML -122 (Geno Smith is Jets starter; CLE had not won back-to-back)",
+      "NYJ -1.5 (same root cause)",
+      "Chris Godwin Jr. OVER 3.5 Receptions -118 (ruled OUT - fibula)",
+      "Jets DST in 2 DFS cash lineups (Premise was CLE 0-4 away)",
+      "Michael Mayer OVER 2.5 Receptions -136 (Brock Bowers ACTIVE)",
+      "Omar Cooper Jr. in 3 DFS lineups (Verify status/role before re-insert)"
+    ],
+    "academic_pdf_links_verified_count": 23
+  },
+  "content_os_and_telemetry_wiring": {
+    "content_os_doctrine": {
+      "sources": [
+        "GSE-CONTENT-OS-2026-10-27.md",
+        "CONTENT-STACK-AUDIT-2026-10-28.md",
+        "2026-10-31-CONTENT-NOTES-ALL-IN-ONE.md"
+      ],
+      "three_gate_release_filter": {
+        "gate_0_floor": "Instant kill on banned words, free picks, static screenshot >3s, bad audio, face drift, or hand hallucination.",
+        "gate_1_score_min": 9.2,
+        "gate_2_finish": "Real grain, 2-4s footage rule, native platform export."
+      },
+      "hard_rules": {
+        "no_free_picks_ever": true,
+        "units_only_never_dollar_signs": true,
+        "voice_lock": "Nova Zephyr (24kHz WAV -> Loudnorm -14 LUFS)",
+        "palette_redline": {
+          "obsidian": "#08090C",
+          "bone": "#EDE8E0",
+          "vermilion": "#FF4D2E"
+        }
+      }
+    },
+    "telemetry_csv_audit": {
+      "file": "C:\\Users\\Garrett\\Downloads\\galaxy-sports-edge-2026-10-07-2026-11-06.csv",
+      "exists": true,
+      "days_monitored": 31,
+      "total_spans": 272545,
+      "accepted_spans": 239829,
+      "filtered_spans": 32716,
+      "dropped_spans": 0,
+      "total_errors": 0.0,
+      "acceptance_rate": 0.88,
+      "peak_traffic_day": {
+        "date": "2026-10-16",
+        "total_spans": 19253
+      },
+      "telemetry_health_status": "GREEN_ZERO_ERRORS"
+    }
+  },
+  "composite_matchup_synthesis": {
+    "net_away_log_odds_delta": 0.32,
+    "implied_spread_adjustment_points_toward_away": 2.18,
+    "implied_total_adjustment_points": -2.4,
+    "primary_matchup_lean": "JAX ML / Spread + Full-Game Under (driven by BAL QB1 Joe Fagnano starting with Lamar Jackson excluded IR/thumb surgery and Tyler Huntley excluded out for season/turf toe, JAX Top-5 Both-Ways EPA, and BAL #7 Stuff Rate / Pass Funnel)",
+    "top_showdown_and_prop_targets": [
+      "Trevor Lawrence (JAX QB, $10,600 FLEX / $15,900 CPT): Top overall ceiling vs BAL #5 Pass Funnel & #22 QB defense.",
+      "Parker Washington (JAX WR, $9,400 FLEX) & Brenton Strange (JAX TE, $7,400 FLEX): High-efficiency slot/seam targets vs BAL 70.8% zone.",
+      "Mark Andrews (BAL TE, $4,400 FLEX): Elite price-adjusted safety-valve leverage (+18% target boost with Joe Fagnano at QB1).",
+      "Jaguars DST ($5,800 FLEX) & Cam Little ($5,400 FLEX): Directly correlated with BAL QB1 Joe Fagnano sack/turnover hazard (23.6% expected P2S).",
+      "Zay Flowers (BAL WR, $10,400 FLEX): Slot volume floor (5.60 slot YPRR), but fade at CPT due to Joe Fagnano QB1 + JAX CBs Travis Hunter (0.0) & Jourdan Lewis (35.0)."
+    ]
+  }
+}

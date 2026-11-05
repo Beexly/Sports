@@ -151,8 +151,23 @@ import {
   evaluateProductNoBet,
 } from "../../packages/prediction-engine/src/honesty/no-bet-gate.js";
 import {
-  compareDevigMethods,
-} from "../../packages/prediction-engine/src/honesty/devig-method-compare.js";
+  gotoConversion,
+  shinDevig,
+} from "../../packages/prediction-engine/src/shin-devig.js";
+
+function compareDevigMethods(book: { homeImplied: number; awayImplied: number }) {
+  const sum = book.homeImplied + book.awayImplied;
+  const multiplicative = sum > 0 ? { home: book.homeImplied / sum, away: book.awayImplied / sum } : { home: 0.5, away: 0.5 };
+  const shin = shinDevig([book.homeImplied, book.awayImplied]);
+  const goto = gotoConversion([book.homeImplied, book.awayImplied]);
+  const homeRange = [multiplicative.home, shin.probabilities[0] ?? 0, goto[0] ?? 0];
+  return {
+    multiplicative,
+    shin: { home: shin.probabilities[0] ?? 0, away: shin.probabilities[1] ?? 0, z: shin.z },
+    goto: { home: goto[0] ?? 0, away: goto[1] ?? 0 },
+    maxHomeProbDiff: Math.max(...homeRange) - Math.min(...homeRange),
+  };
+}
 import {
   commitPick,
   revealPick,
