@@ -168,7 +168,10 @@ describe("public claim surface wiring (preview + dashboard + API)", () => {
   });
 
   it("all core public claim surfaces still import the evidence binder and caption", () => {
-    for (const rel of [paths.preview, paths.picks, paths.card, paths.api]) {
+    // /picks shipped as the Week 8 sealed card, which renders no
+    // bookmaker-consensus claim, so it is not a claim surface: the tripwire
+    // for it is the sealed-rows-only invariant below.
+    for (const rel of [paths.preview, paths.card, paths.api]) {
       const src = readFileSync(resolve(root, rel), "utf8");
       // API uses projector which re-exports caption via bound result; caption still on API.
       if (rel === paths.api) {
@@ -182,5 +185,13 @@ describe("public claim surface wiring (preview + dashboard + API)", () => {
     // Dashboard uses the shared projector (same binder path).
     const dash = readFileSync(resolve(root, paths.dashboard), "utf8");
     expect(dash).toMatch(/projectPublicConsensusReasoning/);
+  });
+
+  it("/picks renders sealed rows only and makes no bookmaker claim", () => {
+    const src = readFileSync(resolve(root, paths.picks), "utf8");
+    expect(src).toMatch(/sealed-board\.json/);
+    expect(src).toMatch(/publishAllowed/);
+    expect(src).not.toMatch(/bindPublicConsensusClaim/);
+    expect(src).not.toMatch(/bookmaker consensus/i);
   });
 });

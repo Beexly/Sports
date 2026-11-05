@@ -32,25 +32,41 @@ const calibration = read("app/calibration/page.tsx");
 
 const JARGON = /LIVE_BOARD|Just now|refuse-default|gate held by law|founder enable/;
 
-describe("FE-10: /board and /picks speak plainly about a closed board", () => {
+describe("FE-10: /board and /picks speak plainly (sealed-era design)", () => {
+  // Shipped design (founder doctrine 2026-10-29): the public web UI serves
+  // ONLY GALAXY PICKS (PAID) (/packages) and DFS (/fantasy/dfs). /board is
+  // an under-construction stub that redirects there; /picks renders the
+  // Week 8 sealed card only. Neither renders a live board, a timestamp, or
+  // ranking internals, so the pre-sealed "board is closed" copy and the
+  // timeLabel helper are gone by design — these pins assert the shipped
+  // plain-language redirect instead.
   it("carries none of the internal gate jargon", () => {
     expect(board).not.toMatch(JARGON);
     expect(picks).not.toMatch(JARGON);
   });
 
-  it("says the board is closed until the data checks pass", () => {
-    expect(board).toContain("The board is closed until the data checks pass.");
-    expect(picks).toContain("The board is closed until the data checks pass.");
+  it("/board says it is under construction and points at Galaxy Picks and DFS", () => {
+    expect(board).toContain("under construction");
+    expect(board).toContain('href="/packages"');
+    expect(board).toContain('href="/fantasy/dfs"');
+    expect(board).toContain('data-testid="under-construction-notice"');
   });
 
-  it("timeLabel returns Unavailable for an unparseable timestamp", () => {
-    expect(board).toMatch(/if \(Number\.isNaN\(date\.getTime\(\)\)\) return "Unavailable";/);
+  it("/picks renders the sealed card only, in plain language", () => {
+    expect(picks).toContain("16-5");
+    expect(picks).toContain('href="/packages"');
+    expect(picks).toMatch(/publishAllowed/);
   });
 
-  it("the public board row does not render rankingP or rankingSource", () => {
-    const rowItem = board.slice(board.indexOf("function BoardRowItem("));
-    expect(rowItem).not.toMatch(/row\.rankingP/);
-    expect(rowItem).not.toMatch(/row\.rankingSource/);
+  it("/board renders no timestamp and never invents 'Just now'", () => {
+    expect(board).not.toMatch(/timeLabel/);
+    expect(board).not.toMatch(/Just now/);
+    expect(board).not.toMatch(/getTime/);
+  });
+
+  it("the public board does not render rankingP or rankingSource", () => {
+    expect(board).not.toMatch(/rankingP/);
+    expect(board).not.toMatch(/rankingSource/);
   });
 });
 
@@ -83,19 +99,23 @@ describe("C-107: the public calibration claim is MONEYLINE-scoped", () => {
     expect(MARKET_IMPLIED_CALIBRATION_CLAIM).toContain("Confidence is a ranking score");
   });
 
-  it("is rendered on /about and /calibration from the single constant", () => {
+  it("is rendered on /about from the single constant (/calibration is a stub)", () => {
     expect(about).toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
-    expect(calibration).toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
-    expect(calibration).toContain('data-testid="calibration-claim-scope"');
+    // /calibration shipped as an under-construction stub redirecting to
+    // Galaxy Picks and DFS, so it renders no calibration claim at all.
+    expect(calibration).not.toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
+    expect(calibration).not.toContain('data-testid="calibration-claim-scope"');
+    expect(calibration).toContain('data-testid="under-construction-notice"');
   });
 
-  it("/calibration says the interactive chart is confidence-bucketed, not the market-implied measurement", () => {
-    // The ProofExplorer directly under the claim buckets by pick.confidence
-    // (lib/calibration/report.ts); without this caption a reader would take
-    // it for "that measurement".
-    expect(calibration).toContain('data-testid="calibration-chart-basis"');
-    expect(calibration).toContain("groups settled picks by confidence score");
-    expect(calibration).toContain("not the market-implied measurement");
+  it("/calibration renders no interactive chart and no chart-basis claim", () => {
+    // The stub renders no ProofExplorer and no confidence-bucketed chart, so
+    // there is no chart to misread as the market-implied measurement.
+    expect(calibration).not.toContain('data-testid="calibration-chart-basis"');
+    expect(calibration).not.toContain("groups settled picks by confidence score");
+    expect(calibration).not.toContain("not the market-implied measurement");
+    expect(calibration).toContain('href="/packages"');
+    expect(calibration).toContain('href="/fantasy/dfs"');
   });
 
   it("no public copy still calls confidence a calibrated number", () => {

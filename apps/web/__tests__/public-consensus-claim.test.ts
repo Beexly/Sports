@@ -98,9 +98,11 @@ describe("public claim surface contract (T-1)", () => {
   it("all core public claim surfaces import the evidence binder and caption", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
+    // /picks shipped as the Week 8 sealed card, which renders no
+    // bookmaker-consensus claim, so it is not a claim surface: the tripwire
+    // for it is the sealed-rows-only invariant below.
     const paths = [
       "../app/preview/[sport]/[slug]/page.tsx",
-      "../app/picks/page.tsx",
       "../components/picks/pick-card.tsx",
     ];
     for (const path of paths) {
@@ -114,5 +116,15 @@ describe("public claim surface contract (T-1)", () => {
       expect(src).toMatch(/projectPublicConsensusReasoning|bindPublicConsensusClaim/);
       expect(src).toMatch(/consensusEvidenceCaption|projectPublicConsensusReasoning/);
     }
+  });
+
+  it("/picks renders sealed rows only and makes no bookmaker claim", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const src = readFileSync(resolve(__dirname, "../app/picks/page.tsx"), "utf8");
+    expect(src).toMatch(/sealed-board\.json/);
+    expect(src).toMatch(/publishAllowed/);
+    expect(src).not.toMatch(/bindPublicConsensusClaim/);
+    expect(src).not.toMatch(/bookmaker consensus/i);
   });
 });
