@@ -149,6 +149,7 @@ def run_all_coaching_physics_and_signal_functions(pbp_df: pd.DataFrame, away: st
     from intelligence.coaching import (
         biomech_kinetic_translation,
         coach_speak_emotional_deflection_probe,
+        downloads_architecture_and_whitening_kernels,
         drive_dire_situations,
         ol_provider,
         pgwe_luck_audit,
@@ -226,6 +227,11 @@ def run_all_coaching_physics_and_signal_functions(pbp_df: pd.DataFrame, away: st
         "ol_weak_link_survival": ol_provider.weak_link_survival_for_grades([74.2, 68.5, 79.1, 64.8, 71.0]),
         "ol_pass_set_report": ol_provider.ol_pass_set_report([2.8, 3.1, 2.9, 3.0, 2.7]),
     }
+
+    # 5. downloads_architecture_and_whitening_kernels (All 6 kernel suites from C:\Users\Garrett\Downloads\)
+    out["downloads_architecture_and_whitening_kernels"] = (
+        downloads_architecture_and_whitening_kernels.run_all_downloads_architecture_kernels(away=away, home=home)
+    )
 
     return out
 
@@ -374,22 +380,35 @@ def run_all_31_intelligence_subpackages(away: str = "JAX", home: str = "BAL") ->
     }
 
 
+def _sanitize_json(obj: Any) -> Any:
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return 0.0
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
+
+
 def main() -> int:
     pbp_df = pd.read_parquet(REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet")
     datasets_report = run_all_31_datasets("JAX", "BAL")
     coaching_deep = run_all_coaching_physics_and_signal_functions(pbp_df, "JAX", "BAL")
     intel_domains = run_all_31_intelligence_subpackages("JAX", "BAL")
 
-    payload = {
-        "schema_version": "gse_python_intelligence_and_datasets_v2.0",
+    payload = _sanitize_json({
+        "schema_version": "gse_python_intelligence_and_datasets_v2.1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "datasets_connected_count": len(datasets_report) + 10,  # includes all 11 step-n parquets
         "datasets_report": datasets_report,
         "coaching_deep_70_functions": coaching_deep,
+        "downloads_architecture_kernels": coaching_deep["downloads_architecture_and_whitening_kernels"],
         "intelligence_31_subpackages": intel_domains,
-    }
+    })
     out_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_python_31_domains_telemetry_2026_11_05.json"
-    out_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+    out_path.write_text(json.dumps(payload, indent=2, default=str, allow_nan=False), encoding="utf-8")
     print(json.dumps({
         "ok": True,
         "out_path": str(out_path),
@@ -398,6 +417,7 @@ def main() -> int:
         "ftn_2026_rows": datasets_report["ftn_charting_2026"]["rows"],
         "step_n_parquets": len(datasets_report["step_n_market_11_parquets"]),
         "mt_bank_air_density": intel_domains["live_domain_executions"]["physics_mt_bank_air_density_kg_m3"],
+        "downloads_architecture_kernels_status": coaching_deep["downloads_architecture_and_whitening_kernels"]["status"],
     }))
     return 0
 

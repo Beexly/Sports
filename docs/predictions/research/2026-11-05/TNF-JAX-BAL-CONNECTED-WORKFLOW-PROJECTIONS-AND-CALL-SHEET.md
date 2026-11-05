@@ -2,11 +2,11 @@
 
 ## 0. Cryptographic Connected Workflow Receipts (Zero-Skip Chain)
 - **Stage 0 Receipt (`enforce_stage0_roster_and_board_allowlist.py`):** `6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b`
-- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `49ba0c608616bf26c7eeb5fc7a8ce33511fc9d169405ded1db3a86d08d3cf58d`
-- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `acff665129a9f7dc0ed2da3821e9cd5de934b7242141909328360332e0f8a0c5`
-- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3`
-- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3`
-- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d`
+- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `cf29fa2fce67c7d837594b24b3a8f35ddd9b378014674218611e586e902fed5b`
+- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa`
+- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b`
+- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06`
+- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308`
 
 ---
 
@@ -26,8 +26,8 @@
 ---
 
 ## 2. Stage 1A — Coaching Mind (`38/38` Modules), All `31` Non-Empty Python `intelligence/` Subpackages & `31+` Datasets
-- **Coaching Mind Modules Executed & Verified:** `38 / 38` (`fingerprint`, `intent_beliefs`, `sequencing`, `regime`, `coach_risk`, `coach_audit`, `coach_speak_emotional_deflection_probe`, `qb_visual_cognitive_load`, `trench_pocket_physics`, `biomech_kinetic_translation`, `ol_provider`, `dc_pressure`, `pressure_answer`, `compute_tendencies`, `proe`, `redzone`, `script_elasticity`, `tempo`, `drive_dire_situations`, `situational_wp`, `pm_sweep_convergence_kernels`, `x_sweep_production_signals`, `pgwe_luck_audit`, `schedule_cleaned_epa`, `adjustments`, `behavior`, `ingame`, `tenures`, `coach_tenures`, `provider`, etc.)
-- **Python `intelligence/` Subpackages Connected (`run_python_25_intelligence_domains.py`):** **`39`** subpackages connected (all `31` non-empty Python `intelligence/` subpackages + `8` namespace packages across **`443`** Python files) + ~70 deep coaching physics/signal functions (`biomech_kinetic_translation`, `trench_pocket_physics`, `pm_sweep_convergence_kernels`, `situational_wp`).
+- **Coaching Mind Modules Executed & Verified:** `41 / 41` (`fingerprint`, `intent_beliefs`, `sequencing`, `regime`, `coach_risk`, `coach_audit`, `coach_speak_emotional_deflection_probe`, `qb_visual_cognitive_load`, `trench_pocket_physics`, `biomech_kinetic_translation`, `ol_provider`, `dc_pressure`, `pressure_answer`, `compute_tendencies`, `proe`, `redzone`, `script_elasticity`, `tempo`, `drive_dire_situations`, `situational_wp`, `pm_sweep_convergence_kernels`, `x_sweep_production_signals`, `pgwe_luck_audit`, `schedule_cleaned_epa`, `adjustments`, `behavior`, `ingame`, `tenures`, `coach_tenures`, `provider`, etc.)
+- **Python `intelligence/` Subpackages Connected (`run_python_25_intelligence_domains.py`):** **`39`** subpackages connected (all `31` non-empty Python `intelligence/` subpackages + `8` namespace packages across **`447`** Python files) + ~70 deep coaching physics/signal functions (`biomech_kinetic_translation`, `trench_pocket_physics`, `pm_sweep_convergence_kernels`, `situational_wp`).
 - **`31+` Local Parquet / CSV / JSON Datasets Connected:** `ftn_charting_2026.parquet` (`18,019` rows), `advstats_season_pass/rush/rec/def` (`4` Parquets), `pennydata_2026_player_week_stats.csv` (`6,100` rows), `hf_bdb2025_plays_presnap_zone1.parquet` (`16,124` plays), `kaggle_sumersupplement_bdb26_zone1.parquet`, `hf_karmane_stats_player_week_2025.parquet` + `hf_karmane_pbp_2025.parquet`, and all **`11`** `data/step-n-market/*.parquet` files.
 - **Scheme Clash 1 (`BAL` Defense vs `JAX` Offense):** Baltimore plays Two-High MOFO on 59.5% of snaps and <=5 in the box on 77.95% of dropbacks to cap explosive air yards and force patience underneath (Parker Washington 48 targets, Brenton Strange 35 targets, Jakobi Meyers 31 targets). BDB2025 (16,124 plays) proves Trevor Lawrence's MOFO-vs-MOFC delta is only -0.0149 EPA/play (not -0.17), while Baltimore's light boxes invite JAX early-down rushing (Chris Rodriguez Jr. +0.120 EPA/rush if Bhayshul Tuten is Out).
 - **Scheme Clash 2 (`JAX` Defense vs `BAL` Offense):** With Lamar Jackson (IR - thumb surgery) and Tyler Huntley (Out for season - turf toe) both excluded, undrafted rookie Joe Fagnano starts at QB1 for Baltimore (-0.4308 EPA/dropback on 24 W8 dropbacks) with Jacoby Brissett acquired 2026-11-04 from ARI as emergency QB2. Todd Monken is forced into a heavy Derrick Henry ground script (159 carries, 632 yds, 8 TDs; 2.52 YBC/att) + quick-game/screen releases to Zay Flowers and Mark Andrews against Jacksonville's 30.9% blitz / 34.78% PA-blitz front.
@@ -44,6 +44,7 @@
   - Athlete-level equation crossings (`37` athletes $\times$ `213` equations): **`7,881`** evaluations
 - **Real TypeScript `mcp-cognitive-router.ts` 4-Stage Execution (`run_ts_prediction_and_mcp_engines.ts`):** `288`-bit Context Mask (`288` active bits, `258` signal families) $\to$ Stage C Spectral Orthogonalization (`25` selected premises across Categories `A–G`, Marchenko-Pastur effective rank shrinkage **`0.96809`**) $\to$ Stage D Positive-Part James-Stein Shrinkage factor **`0.916978`** (unclamped delta `+1.096888`) $\to$ Clamped Log-Odds Delta **`+0.35`** (capped at `|Delta log-odds| <= 0.35`).
 - **Real TypeScript `master-situational-reasoning-aggregator.ts` & Registry Surface:** **`22/22`** situational streams executed (`0` skipped) | **`80/80`** situational rules (`x-situational-80-rules.ts`) | **`77`** zero-orphan modules & **`51`** catalog signals | **`173`** wireable modules / **`196`** registered models.
+- **Compiled Downloads Books & PDFs Executable Engine (`intelligence/coaching/live_books_and_pdfs_executable_engine.py` — `6/6` Live Algorithms):** VMLS KKT saddle-point box-score reconciler (`||Cx^* - d||_inf = 0.0`) | Overrelaxed Anderson Sinkhorn-Knopp OT (`theta = 1.35`, `<15` iterations) | BM25F+ probabilistic relevance retriever (`3,129` indexed corpus works, top-15 lessons) | Cantu/McKee TBI rotational strain hazard & Katch-McArdle 96h TNF fatigue | Prolate-spheroid football aerodynamics (`rho = 1.24182 kg/m^3`), OL pass-set anchor & Coaching Network Graph-Laplacian | Tukey fourth-spread EPA fences, Huff/Levitin Simpson's Paradox audit, 4x4 Zero-Sum Nash Equilibrium & Absorbing Markov Chain Drive Matrix.
 
 ---
 

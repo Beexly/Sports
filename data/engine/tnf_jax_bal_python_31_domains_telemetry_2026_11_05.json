@@ -1,6 +1,6 @@
 {
-  "schema_version": "gse_python_intelligence_and_datasets_v2.0",
-  "generated_at_utc": "2026-11-05T20:52:52.170712+00:00",
+  "schema_version": "gse_python_intelligence_and_datasets_v2.1",
+  "generated_at_utc": "2026-11-05T21:07:08.164791+00:00",
   "datasets_connected_count": 33,
   "datasets_report": {
     "ftn_charting_2026": {
@@ -561,11 +561,1139 @@
         "attainment": 1.0,
         "n": 5.0
       }
+    },
+    "downloads_architecture_and_whitening_kernels": {
+      "status": "ALL_6_DOWNLOADS_ARCHITECTURE_KERNELS_VERIFIED",
+      "matchup": "JAX @ BAL",
+      "1_conformal_whitening_live_pipeline": {
+        "engine_version": "GSE_GSI_Unified_Conformal_OT_v2.0",
+        "calibration_epoch_loss": 0.012431,
+        "empirical_conformal_boundary_tau": 1.8432,
+        "coverage_target": 0.9,
+        "total_timesteps": 30,
+        "nominal_steps": 18,
+        "shock_steps": 12,
+        "first_shock_timestep": 16,
+        "cholesky_whitening": {
+          "window_k": 15,
+          "feature_dim": 3,
+          "mu_tk": [
+            44.15333,
+            -4.36,
+            0.61677
+          ],
+          "cholesky_diag": [
+            20.23076,
+            0.74955,
+            0.03162
+          ],
+          "whitened_state_z_t": [
+            -1.11975,
+            0.87905,
+            -2e-05
+          ],
+          "mahalanobis_radius": 1.42357
+        },
+        "conformal_calibration": {
+          "n_calibration": 15,
+          "target_coverage": 0.9,
+          "empirical_tau_quantile": -1.1867,
+          "paper_locked_tau": 1.8432,
+          "paper_final_epoch_loss": 0.012431,
+          "paper_roc_auc_gain": {
+            "baseline": 0.7721,
+            "gse_gsi_v2": 0.9344
+          },
+          "paper_false_alarm_attenuation": {
+            "baseline_pct": 84.38,
+            "gse_gsi_v2_pct": 97.12
+          }
+        },
+        "trajectory_head": [
+          {
+            "step": 1,
+            "raw_map": 91.2,
+            "adjusted_lower": 84.24,
+            "adjusted_upper": 97.32,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          },
+          {
+            "step": 2,
+            "raw_map": 90.5,
+            "adjusted_lower": 83.14,
+            "adjusted_upper": 96.42,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          },
+          {
+            "step": 3,
+            "raw_map": 89.8,
+            "adjusted_lower": 85.34,
+            "adjusted_upper": 97.32,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          }
+        ],
+        "trajectory_shock_transition": [
+          {
+            "step": 15,
+            "raw_map": 90.1,
+            "adjusted_lower": 85.34,
+            "adjusted_upper": 97.32,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          },
+          {
+            "step": 16,
+            "raw_map": 82.4,
+            "adjusted_lower": 59.35,
+            "adjusted_upper": 82.24,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          },
+          {
+            "step": 17,
+            "raw_map": 75.1,
+            "adjusted_lower": 58.55,
+            "adjusted_upper": 81.84,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          },
+          {
+            "step": 18,
+            "raw_map": 68.9,
+            "adjusted_lower": 57.75,
+            "adjusted_upper": 81.44,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          },
+          {
+            "step": 19,
+            "raw_map": 61.2,
+            "adjusted_lower": 56.95,
+            "adjusted_upper": 81.04,
+            "is_shock": false,
+            "status": "STATE: NOMINAL"
+          },
+          {
+            "step": 20,
+            "raw_map": 54.3,
+            "adjusted_lower": 56.15,
+            "adjusted_upper": 80.64,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          },
+          {
+            "step": 21,
+            "raw_map": 49.8,
+            "adjusted_lower": 55.35,
+            "adjusted_upper": 80.24,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          },
+          {
+            "step": 22,
+            "raw_map": 44.1,
+            "adjusted_lower": 54.55,
+            "adjusted_upper": 79.84,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          }
+        ],
+        "trajectory_tail": [
+          {
+            "step": 28,
+            "raw_map": 24.0,
+            "adjusted_lower": 49.75,
+            "adjusted_upper": 77.44,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          },
+          {
+            "step": 29,
+            "raw_map": 22.8,
+            "adjusted_lower": 48.95,
+            "adjusted_upper": 77.04,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          },
+          {
+            "step": 30,
+            "raw_map": 21.5,
+            "adjusted_lower": 48.15,
+            "adjusted_upper": 76.64,
+            "is_shock": true,
+            "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+          }
+        ]
+      },
+      "2_bitemporal_dk_gpp_regret": {
+        "hermes_scale": 45.42,
+        "wind_pass_penalty_yds_per_mph": -3.007,
+        "td_negbin_vmr": 1.87,
+        "student_t_copula_nu": 4.0,
+        "num_sims": 2000,
+        "num_opponents": 600,
+        "mean_lineup_score": 128.923,
+        "p85_lineup_score": 168.307,
+        "mean_field_win_equity": 0.63528,
+        "portfolio_grade": {
+          "n_lineups": 2,
+          "mean_win_equity": 0.38757,
+          "mean_score": 109.854,
+          "p85_score": 142.55
+        },
+        "top_player_tail_utilities": {
+          "Joe Fagnano": 18.477,
+          "Trevor Lawrence": 25.688,
+          "Derrick Henry": 30.837,
+          "Justice Hill": 14.695,
+          "Bhayshul Tuten": 19.493,
+          "LeQuint Allen": 14.778,
+          "Zay Flowers": 23.577,
+          "Rashod Bateman": 14.531
+        },
+        "gumbel_and_submodular_bounds": {
+          "gumbel_copula_cdf": 0.76941,
+          "gumbel_upper_tail_lambda_u": 0.3871,
+          "submodular_first_order_tail_sum": 0.009138,
+          "submodular_second_order_overlap_penalty": 3.1e-05,
+          "submodular_u2_lower_bound": 0.009106
+        }
+      },
+      "3_load_scaling_and_scheme_effects": {
+        "league_median_hhi": 0.135,
+        "qb_questionable_ev_dropoff": 0.0947,
+        "qb_questionable_conditional_dropoff": 0.1159,
+        "team_load_scaling": {
+          "JAX": {
+            "target_hhi": 0.1458,
+            "effective_n": 6.86,
+            "load_multiplier": 1.0393,
+            "scaled_qb_q_dropoff": 0.0984
+          },
+          "BAL": {
+            "target_hhi": 0.1447,
+            "effective_n": 6.91,
+            "load_multiplier": 1.0351,
+            "scaled_qb_q_dropoff": 0.098
+          },
+          "DET_reference": {
+            "target_hhi": 0.159,
+            "effective_n": 6.29,
+            "load_multiplier": 1.0853,
+            "scaled_dropoff_on_0095": 0.1031
+          },
+          "NO_reference": {
+            "target_hhi": 0.087,
+            "effective_n": 11.49,
+            "load_multiplier": 0.8028,
+            "scaled_dropoff_on_0095": 0.0763
+          }
+        },
+        "ftn_joined_plays_2026": 17179,
+        "scheme_effects_2026": [
+          {
+            "flag": "play action",
+            "n_on": 1815,
+            "n_off": 6098,
+            "epa_on": 0.0918,
+            "epa_off": 0.054,
+            "delta": 0.0378
+          },
+          {
+            "flag": "motion",
+            "n_on": 8026,
+            "n_off": 9153,
+            "epa_on": -0.0024,
+            "epa_off": 0.0201,
+            "delta": -0.0225
+          },
+          {
+            "flag": "RPO",
+            "n_on": 643,
+            "n_off": 16536,
+            "epa_on": -0.0948,
+            "epa_off": 0.0136,
+            "delta": -0.1084
+          },
+          {
+            "flag": "screen",
+            "n_on": 668,
+            "n_off": 7245,
+            "epa_on": -0.0986,
+            "epa_off": 0.0775,
+            "delta": -0.1761
+          },
+          {
+            "flag": "no huddle",
+            "n_on": 932,
+            "n_off": 16247,
+            "epa_on": 0.0663,
+            "epa_off": 0.0063,
+            "delta": 0.06
+          },
+          {
+            "flag": "QB out of pocket",
+            "n_on": 1592,
+            "n_off": 6321,
+            "epa_on": 0.0422,
+            "epa_off": 0.0678,
+            "delta": -0.0255
+          },
+          {
+            "flag": "box 8+ vs 6-",
+            "n_on": 471,
+            "n_off": 2685,
+            "epa_on": -0.0276,
+            "epa_off": -0.0582,
+            "delta": 0.0306
+          },
+          {
+            "flag": "blitz 5+ vs rush 4",
+            "n_on": 2511,
+            "n_off": 5174,
+            "epa_on": -0.0005,
+            "epa_off": 0.0971,
+            "delta": -0.0977
+          }
+        ],
+        "three_season_benchmark_deltas": {
+          "play_action": 0.0978,
+          "rpo": -0.0657,
+          "qb_out_of_pocket": -0.0357,
+          "no_huddle": 0.0262,
+          "blitz_5plus_vs_rush4": -0.0135,
+          "box_8plus_vs_6minus": 0.009,
+          "motion": 0.0016
+        },
+        "qb_decision_quality": {
+          "JAX": {
+            "dropbacks": 200,
+            "int_worthy_rate": 0.03,
+            "qb_fault_sack_rate": 0.015,
+            "catchable_ball_rate": 0.68
+          },
+          "BAL": {
+            "dropbacks": 237,
+            "int_worthy_rate": 0.0295,
+            "qb_fault_sack_rate": 0.0127,
+            "catchable_ball_rate": 0.6456
+          }
+        },
+        "sinkhorn_log_stabilized": {
+          "eps_final": 0.08,
+          "stages_executed": 5,
+          "total_iterations": 1072,
+          "final_marginal_error": 1.220762343989712e-08,
+          "converged": true,
+          "transport_cost": 0.022989,
+          "reallocated_row_marginals": [
+            0.28,
+            0.22,
+            0.16,
+            0.2,
+            0.14
+          ]
+        }
+      },
+      "4_engine_reverse_and_betmgm_entry": {
+        "true_nfl_margin_sigma_pts": 13.36,
+        "recovered_book_kernels": {
+          "BetMGM": {
+            "rungs_evaluated": 15,
+            "fair_line_recovered": -6.5,
+            "sigma_recovered_pts": 12.07,
+            "rmse": 0.0,
+            "monotone_verified": true,
+            "tail_underpricing_vs_reality_pts": 1.29
+          },
+          "Pinnacle": {
+            "rungs_evaluated": 15,
+            "fair_line_recovered": -6.5,
+            "sigma_recovered_pts": 12.21,
+            "rmse": 0.0,
+            "monotone_verified": true,
+            "tail_underpricing_vs_reality_pts": 1.15
+          },
+          "DraftKings": {
+            "rungs_evaluated": 15,
+            "fair_line_recovered": -6.5,
+            "sigma_recovered_pts": 13.16,
+            "rmse": 0.0,
+            "monotone_verified": true,
+            "tail_underpricing_vs_reality_pts": 0.2
+          }
+        },
+        "vig_fingerprint_table": {
+          "DraftKings": {
+            "total_pct": 5.09,
+            "spread_pct": 5.0,
+            "moneyline_pct": 4.51,
+            "rungs": 47
+          },
+          "Pinnacle": {
+            "total_pct": 4.93,
+            "spread_pct": 3.6,
+            "moneyline_pct": 4.06,
+            "rungs": 12
+          },
+          "BetMGM": {
+            "total_pct": 5.24,
+            "spread_pct": 6.42,
+            "moneyline_pct": 4.88,
+            "rungs": 41
+          },
+          "FanDuel": {
+            "total_pct": 4.79,
+            "spread_pct": 4.83,
+            "moneyline_pct": 4.04,
+            "rungs": 1
+          }
+        },
+        "pinnacle_class_limits": {
+          "full_game_spread": {
+            "median_usd": 10000,
+            "max_usd": 20000
+          },
+          "full_game_total": {
+            "median_usd": 5000,
+            "max_usd": 5000
+          },
+          "moneyline": {
+            "median_usd": 5000,
+            "max_usd": 10000
+          },
+          "team_total": {
+            "median_usd": 2000,
+            "max_usd": 2000
+          },
+          "halves_quarters": {
+            "median_usd": 500,
+            "max_usd": 500
+          }
+        },
+        "sharp_money_divergences": {
+          "JAX@BAL_spread_sharp_divergence": {
+            "jax_ticket_pct": 34.0,
+            "jax_money_pct": 46.0,
+            "divergence_pts": 12.0,
+            "signal": "SHARP_ON_JAX_PLUS_6_5"
+          },
+          "oct27_slate_benchmarks": {
+            "BUF_at_BAL_total_over": 40.0,
+            "CHI_at_SEA_ml_CHI": 32.0,
+            "DEN_at_KC_ml_KC": 31.0,
+            "CHI_at_SEA_spread_CHI": 11.0,
+            "TEN_at_CIN_spread_CIN": 18.0,
+            "MIN_at_DET_spread_MIN": 14.0
+          }
+        }
+      },
+      "5_tau_hat_and_wave2_annex": {
+        "tau_hat_walkforward_and_sim_consumer": {
+          "tau_coach_sealed": 0.42,
+          "tau_rating_eb_dispersion": 4.6607,
+          "held_out_baseline_delta_pp": 6.7703,
+          "walkforward_candidate_delta_pp": 11.1585,
+          "walkforward_n_plays": 3988,
+          "walkforward_acc_tau": 0.4032,
+          "walkforward_acc_wpmax": 0.2916,
+          "served_rows": 1523,
+          "JAX_mean_tau_hat": 0.275,
+          "BAL_mean_tau_hat": 0.4,
+          "live_sim_4th_down_state": {
+            "spot": "Q3 06:12, 4th & 3 at Opp 38, Score Tied",
+            "wp_optimal_go": 0.564,
+            "BAL": {
+              "expected_wp_given_coach": 0.52152,
+              "wp_gap": -0.04248,
+              "action_predicted": "GO"
+            },
+            "JAX": {
+              "expected_wp_given_coach": 0.52311,
+              "wp_gap": -0.04089,
+              "action_predicted": "GO"
+            }
+          }
+        },
+        "dgrifka_process_meter_car_gb_repro": {
+          "home_folded_sr": 0.4783,
+          "home_folded_ypp": 5.343,
+          "home_likely_points": 22.29,
+          "away_folded_sr": 0.3662,
+          "away_folded_ypp": 3.986,
+          "away_likely_points": 12.68,
+          "deserved_margin_home": 9.61,
+          "p_home_deserve_to_win": 0.8676,
+          "margin_ci_89": [
+            -0.98,
+            19.94
+          ]
+        },
+        "wave2_and_autonomous_reasoning_certificates": {
+          "wave2_verdicts": {
+            "Romano_CQR": "ADOPT_SINGLE_MOST_DEPLOYABLE",
+            "Barber_Weighted_Conformal": "ADOPT",
+            "NUTS_Caron_Gibbs": "ADOPT",
+            "SINDy_Discrete_State_Panel": "ADAPT_BEHIND_PLANTED_LAW_GATE",
+            "PINN_Inverse_Only": "ADAPT_NARROW",
+            "FNO_DeepONet_GNS_Pyro": "REJECT"
+          },
+          "multimarginal_ot_certificates": {
+            "N3_kantorovich_cost": 0.0,
+            "N3_monge_cost": 0.5,
+            "N3_friesecke_relaxation_gap": 0.5,
+            "N4_kantorovich_cost": 0.125,
+            "N4_monge_cost": 0.375,
+            "N4_relaxation_gap": 0.25,
+            "madelung_trotter_step_h": 1.75,
+            "tsallis_heavy_tail_q": 1.5,
+            "tsallis_entropy_s15": 1.2845
+          }
+        }
+      },
+      "6_belichick_and_sealed_architecture": {
+        "gse_proprietary_seven": {
+          "GSE_SVA": 0.63367,
+          "GSE_SII_pinned": 0.05,
+          "GSE_QPTSR_residual": 0.01482,
+          "GSE_QPTSR_checkdown_boost": 0.0572,
+          "GSE_RLS": -0.04898,
+          "GSE_SPESE": 0.16006,
+          "GSE_TOR": -1.512,
+          "GSE_DWP": -0.0142
+        },
+        "bbp_spectral_spike_detector": {
+          "gamma_ratio": 0.25,
+          "lambda_minus": 0.25,
+          "lambda_plus": 2.25,
+          "theta_crit": 0.5,
+          "tw_threshold": 2.378,
+          "detached_spikes": [
+            {
+              "raw_eigenvalue": 2.5451,
+              "debiased_theta": 1.059,
+              "supercritical": true
+            }
+          ]
+        },
+        "five_method_devig_suite": {
+          "overround_Q": 1.047079,
+          "multiplicative": [
+            0.510834,
+            0.489166
+          ],
+          "additive": [
+            0.511344,
+            0.488656
+          ],
+          "power": [
+            0.511604,
+            0.488396
+          ],
+          "odds_ratio": [
+            0.51137,
+            0.48863
+          ],
+          "shin": [
+            0.511344,
+            0.488656
+          ],
+          "shin_insider_z": 0.04708
+        },
+        "fivethirtyeight_winner_signed_mov_step": {
+          "elo_diff_with_hfa": 215.0,
+          "e_prob1": 0.7751528656,
+          "winner_signed_d": 1.985,
+          "shift": -46.5303408
+        },
+        "cuda_mastermind_entropy_kernel": {
+          "state_space_S": 1296,
+          "num_coefs": 14,
+          "population_size": 4096,
+          "first_guess_target_idx": 8,
+          "shannon_entropy_bits": 2.825414,
+          "weighted_entropy_score": 2.834743
+        },
+        "epistemic_and_pocket_gates": {
+          "am_gm_weak_link_clean_pocket_prob": 0.4887,
+          "convex_weak_link_pocket_score": 66.419,
+          "gadget_screen_role_gate_triggered_example": true,
+          "bitmask_288_xor_popcount": 2,
+          "bitemporal_merkle_root": "55c5846759af8a6d24dfb12375c319a6c5b685d612dce585c148272b36a7095c"
+        }
+      }
+    }
+  },
+  "downloads_architecture_kernels": {
+    "status": "ALL_6_DOWNLOADS_ARCHITECTURE_KERNELS_VERIFIED",
+    "matchup": "JAX @ BAL",
+    "1_conformal_whitening_live_pipeline": {
+      "engine_version": "GSE_GSI_Unified_Conformal_OT_v2.0",
+      "calibration_epoch_loss": 0.012431,
+      "empirical_conformal_boundary_tau": 1.8432,
+      "coverage_target": 0.9,
+      "total_timesteps": 30,
+      "nominal_steps": 18,
+      "shock_steps": 12,
+      "first_shock_timestep": 16,
+      "cholesky_whitening": {
+        "window_k": 15,
+        "feature_dim": 3,
+        "mu_tk": [
+          44.15333,
+          -4.36,
+          0.61677
+        ],
+        "cholesky_diag": [
+          20.23076,
+          0.74955,
+          0.03162
+        ],
+        "whitened_state_z_t": [
+          -1.11975,
+          0.87905,
+          -2e-05
+        ],
+        "mahalanobis_radius": 1.42357
+      },
+      "conformal_calibration": {
+        "n_calibration": 15,
+        "target_coverage": 0.9,
+        "empirical_tau_quantile": -1.1867,
+        "paper_locked_tau": 1.8432,
+        "paper_final_epoch_loss": 0.012431,
+        "paper_roc_auc_gain": {
+          "baseline": 0.7721,
+          "gse_gsi_v2": 0.9344
+        },
+        "paper_false_alarm_attenuation": {
+          "baseline_pct": 84.38,
+          "gse_gsi_v2_pct": 97.12
+        }
+      },
+      "trajectory_head": [
+        {
+          "step": 1,
+          "raw_map": 91.2,
+          "adjusted_lower": 84.24,
+          "adjusted_upper": 97.32,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        },
+        {
+          "step": 2,
+          "raw_map": 90.5,
+          "adjusted_lower": 83.14,
+          "adjusted_upper": 96.42,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        },
+        {
+          "step": 3,
+          "raw_map": 89.8,
+          "adjusted_lower": 85.34,
+          "adjusted_upper": 97.32,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        }
+      ],
+      "trajectory_shock_transition": [
+        {
+          "step": 15,
+          "raw_map": 90.1,
+          "adjusted_lower": 85.34,
+          "adjusted_upper": 97.32,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        },
+        {
+          "step": 16,
+          "raw_map": 82.4,
+          "adjusted_lower": 59.35,
+          "adjusted_upper": 82.24,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        },
+        {
+          "step": 17,
+          "raw_map": 75.1,
+          "adjusted_lower": 58.55,
+          "adjusted_upper": 81.84,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        },
+        {
+          "step": 18,
+          "raw_map": 68.9,
+          "adjusted_lower": 57.75,
+          "adjusted_upper": 81.44,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        },
+        {
+          "step": 19,
+          "raw_map": 61.2,
+          "adjusted_lower": 56.95,
+          "adjusted_upper": 81.04,
+          "is_shock": false,
+          "status": "STATE: NOMINAL"
+        },
+        {
+          "step": 20,
+          "raw_map": 54.3,
+          "adjusted_lower": 56.15,
+          "adjusted_upper": 80.64,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        },
+        {
+          "step": 21,
+          "raw_map": 49.8,
+          "adjusted_lower": 55.35,
+          "adjusted_upper": 80.24,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        },
+        {
+          "step": 22,
+          "raw_map": 44.1,
+          "adjusted_lower": 54.55,
+          "adjusted_upper": 79.84,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        }
+      ],
+      "trajectory_tail": [
+        {
+          "step": 28,
+          "raw_map": 24.0,
+          "adjusted_lower": 49.75,
+          "adjusted_upper": 77.44,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        },
+        {
+          "step": 29,
+          "raw_map": 22.8,
+          "adjusted_lower": 48.95,
+          "adjusted_upper": 77.04,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        },
+        {
+          "step": 30,
+          "raw_map": 21.5,
+          "adjusted_lower": 48.15,
+          "adjusted_upper": 76.64,
+          "is_shock": true,
+          "status": "CRITICAL SHOCK SIGNAL TRIGGERED"
+        }
+      ]
+    },
+    "2_bitemporal_dk_gpp_regret": {
+      "hermes_scale": 45.42,
+      "wind_pass_penalty_yds_per_mph": -3.007,
+      "td_negbin_vmr": 1.87,
+      "student_t_copula_nu": 4.0,
+      "num_sims": 2000,
+      "num_opponents": 600,
+      "mean_lineup_score": 128.923,
+      "p85_lineup_score": 168.307,
+      "mean_field_win_equity": 0.63528,
+      "portfolio_grade": {
+        "n_lineups": 2,
+        "mean_win_equity": 0.38757,
+        "mean_score": 109.854,
+        "p85_score": 142.55
+      },
+      "top_player_tail_utilities": {
+        "Joe Fagnano": 18.477,
+        "Trevor Lawrence": 25.688,
+        "Derrick Henry": 30.837,
+        "Justice Hill": 14.695,
+        "Bhayshul Tuten": 19.493,
+        "LeQuint Allen": 14.778,
+        "Zay Flowers": 23.577,
+        "Rashod Bateman": 14.531
+      },
+      "gumbel_and_submodular_bounds": {
+        "gumbel_copula_cdf": 0.76941,
+        "gumbel_upper_tail_lambda_u": 0.3871,
+        "submodular_first_order_tail_sum": 0.009138,
+        "submodular_second_order_overlap_penalty": 3.1e-05,
+        "submodular_u2_lower_bound": 0.009106
+      }
+    },
+    "3_load_scaling_and_scheme_effects": {
+      "league_median_hhi": 0.135,
+      "qb_questionable_ev_dropoff": 0.0947,
+      "qb_questionable_conditional_dropoff": 0.1159,
+      "team_load_scaling": {
+        "JAX": {
+          "target_hhi": 0.1458,
+          "effective_n": 6.86,
+          "load_multiplier": 1.0393,
+          "scaled_qb_q_dropoff": 0.0984
+        },
+        "BAL": {
+          "target_hhi": 0.1447,
+          "effective_n": 6.91,
+          "load_multiplier": 1.0351,
+          "scaled_qb_q_dropoff": 0.098
+        },
+        "DET_reference": {
+          "target_hhi": 0.159,
+          "effective_n": 6.29,
+          "load_multiplier": 1.0853,
+          "scaled_dropoff_on_0095": 0.1031
+        },
+        "NO_reference": {
+          "target_hhi": 0.087,
+          "effective_n": 11.49,
+          "load_multiplier": 0.8028,
+          "scaled_dropoff_on_0095": 0.0763
+        }
+      },
+      "ftn_joined_plays_2026": 17179,
+      "scheme_effects_2026": [
+        {
+          "flag": "play action",
+          "n_on": 1815,
+          "n_off": 6098,
+          "epa_on": 0.0918,
+          "epa_off": 0.054,
+          "delta": 0.0378
+        },
+        {
+          "flag": "motion",
+          "n_on": 8026,
+          "n_off": 9153,
+          "epa_on": -0.0024,
+          "epa_off": 0.0201,
+          "delta": -0.0225
+        },
+        {
+          "flag": "RPO",
+          "n_on": 643,
+          "n_off": 16536,
+          "epa_on": -0.0948,
+          "epa_off": 0.0136,
+          "delta": -0.1084
+        },
+        {
+          "flag": "screen",
+          "n_on": 668,
+          "n_off": 7245,
+          "epa_on": -0.0986,
+          "epa_off": 0.0775,
+          "delta": -0.1761
+        },
+        {
+          "flag": "no huddle",
+          "n_on": 932,
+          "n_off": 16247,
+          "epa_on": 0.0663,
+          "epa_off": 0.0063,
+          "delta": 0.06
+        },
+        {
+          "flag": "QB out of pocket",
+          "n_on": 1592,
+          "n_off": 6321,
+          "epa_on": 0.0422,
+          "epa_off": 0.0678,
+          "delta": -0.0255
+        },
+        {
+          "flag": "box 8+ vs 6-",
+          "n_on": 471,
+          "n_off": 2685,
+          "epa_on": -0.0276,
+          "epa_off": -0.0582,
+          "delta": 0.0306
+        },
+        {
+          "flag": "blitz 5+ vs rush 4",
+          "n_on": 2511,
+          "n_off": 5174,
+          "epa_on": -0.0005,
+          "epa_off": 0.0971,
+          "delta": -0.0977
+        }
+      ],
+      "three_season_benchmark_deltas": {
+        "play_action": 0.0978,
+        "rpo": -0.0657,
+        "qb_out_of_pocket": -0.0357,
+        "no_huddle": 0.0262,
+        "blitz_5plus_vs_rush4": -0.0135,
+        "box_8plus_vs_6minus": 0.009,
+        "motion": 0.0016
+      },
+      "qb_decision_quality": {
+        "JAX": {
+          "dropbacks": 200,
+          "int_worthy_rate": 0.03,
+          "qb_fault_sack_rate": 0.015,
+          "catchable_ball_rate": 0.68
+        },
+        "BAL": {
+          "dropbacks": 237,
+          "int_worthy_rate": 0.0295,
+          "qb_fault_sack_rate": 0.0127,
+          "catchable_ball_rate": 0.6456
+        }
+      },
+      "sinkhorn_log_stabilized": {
+        "eps_final": 0.08,
+        "stages_executed": 5,
+        "total_iterations": 1072,
+        "final_marginal_error": 1.220762343989712e-08,
+        "converged": true,
+        "transport_cost": 0.022989,
+        "reallocated_row_marginals": [
+          0.28,
+          0.22,
+          0.16,
+          0.2,
+          0.14
+        ]
+      }
+    },
+    "4_engine_reverse_and_betmgm_entry": {
+      "true_nfl_margin_sigma_pts": 13.36,
+      "recovered_book_kernels": {
+        "BetMGM": {
+          "rungs_evaluated": 15,
+          "fair_line_recovered": -6.5,
+          "sigma_recovered_pts": 12.07,
+          "rmse": 0.0,
+          "monotone_verified": true,
+          "tail_underpricing_vs_reality_pts": 1.29
+        },
+        "Pinnacle": {
+          "rungs_evaluated": 15,
+          "fair_line_recovered": -6.5,
+          "sigma_recovered_pts": 12.21,
+          "rmse": 0.0,
+          "monotone_verified": true,
+          "tail_underpricing_vs_reality_pts": 1.15
+        },
+        "DraftKings": {
+          "rungs_evaluated": 15,
+          "fair_line_recovered": -6.5,
+          "sigma_recovered_pts": 13.16,
+          "rmse": 0.0,
+          "monotone_verified": true,
+          "tail_underpricing_vs_reality_pts": 0.2
+        }
+      },
+      "vig_fingerprint_table": {
+        "DraftKings": {
+          "total_pct": 5.09,
+          "spread_pct": 5.0,
+          "moneyline_pct": 4.51,
+          "rungs": 47
+        },
+        "Pinnacle": {
+          "total_pct": 4.93,
+          "spread_pct": 3.6,
+          "moneyline_pct": 4.06,
+          "rungs": 12
+        },
+        "BetMGM": {
+          "total_pct": 5.24,
+          "spread_pct": 6.42,
+          "moneyline_pct": 4.88,
+          "rungs": 41
+        },
+        "FanDuel": {
+          "total_pct": 4.79,
+          "spread_pct": 4.83,
+          "moneyline_pct": 4.04,
+          "rungs": 1
+        }
+      },
+      "pinnacle_class_limits": {
+        "full_game_spread": {
+          "median_usd": 10000,
+          "max_usd": 20000
+        },
+        "full_game_total": {
+          "median_usd": 5000,
+          "max_usd": 5000
+        },
+        "moneyline": {
+          "median_usd": 5000,
+          "max_usd": 10000
+        },
+        "team_total": {
+          "median_usd": 2000,
+          "max_usd": 2000
+        },
+        "halves_quarters": {
+          "median_usd": 500,
+          "max_usd": 500
+        }
+      },
+      "sharp_money_divergences": {
+        "JAX@BAL_spread_sharp_divergence": {
+          "jax_ticket_pct": 34.0,
+          "jax_money_pct": 46.0,
+          "divergence_pts": 12.0,
+          "signal": "SHARP_ON_JAX_PLUS_6_5"
+        },
+        "oct27_slate_benchmarks": {
+          "BUF_at_BAL_total_over": 40.0,
+          "CHI_at_SEA_ml_CHI": 32.0,
+          "DEN_at_KC_ml_KC": 31.0,
+          "CHI_at_SEA_spread_CHI": 11.0,
+          "TEN_at_CIN_spread_CIN": 18.0,
+          "MIN_at_DET_spread_MIN": 14.0
+        }
+      }
+    },
+    "5_tau_hat_and_wave2_annex": {
+      "tau_hat_walkforward_and_sim_consumer": {
+        "tau_coach_sealed": 0.42,
+        "tau_rating_eb_dispersion": 4.6607,
+        "held_out_baseline_delta_pp": 6.7703,
+        "walkforward_candidate_delta_pp": 11.1585,
+        "walkforward_n_plays": 3988,
+        "walkforward_acc_tau": 0.4032,
+        "walkforward_acc_wpmax": 0.2916,
+        "served_rows": 1523,
+        "JAX_mean_tau_hat": 0.275,
+        "BAL_mean_tau_hat": 0.4,
+        "live_sim_4th_down_state": {
+          "spot": "Q3 06:12, 4th & 3 at Opp 38, Score Tied",
+          "wp_optimal_go": 0.564,
+          "BAL": {
+            "expected_wp_given_coach": 0.52152,
+            "wp_gap": -0.04248,
+            "action_predicted": "GO"
+          },
+          "JAX": {
+            "expected_wp_given_coach": 0.52311,
+            "wp_gap": -0.04089,
+            "action_predicted": "GO"
+          }
+        }
+      },
+      "dgrifka_process_meter_car_gb_repro": {
+        "home_folded_sr": 0.4783,
+        "home_folded_ypp": 5.343,
+        "home_likely_points": 22.29,
+        "away_folded_sr": 0.3662,
+        "away_folded_ypp": 3.986,
+        "away_likely_points": 12.68,
+        "deserved_margin_home": 9.61,
+        "p_home_deserve_to_win": 0.8676,
+        "margin_ci_89": [
+          -0.98,
+          19.94
+        ]
+      },
+      "wave2_and_autonomous_reasoning_certificates": {
+        "wave2_verdicts": {
+          "Romano_CQR": "ADOPT_SINGLE_MOST_DEPLOYABLE",
+          "Barber_Weighted_Conformal": "ADOPT",
+          "NUTS_Caron_Gibbs": "ADOPT",
+          "SINDy_Discrete_State_Panel": "ADAPT_BEHIND_PLANTED_LAW_GATE",
+          "PINN_Inverse_Only": "ADAPT_NARROW",
+          "FNO_DeepONet_GNS_Pyro": "REJECT"
+        },
+        "multimarginal_ot_certificates": {
+          "N3_kantorovich_cost": 0.0,
+          "N3_monge_cost": 0.5,
+          "N3_friesecke_relaxation_gap": 0.5,
+          "N4_kantorovich_cost": 0.125,
+          "N4_monge_cost": 0.375,
+          "N4_relaxation_gap": 0.25,
+          "madelung_trotter_step_h": 1.75,
+          "tsallis_heavy_tail_q": 1.5,
+          "tsallis_entropy_s15": 1.2845
+        }
+      }
+    },
+    "6_belichick_and_sealed_architecture": {
+      "gse_proprietary_seven": {
+        "GSE_SVA": 0.63367,
+        "GSE_SII_pinned": 0.05,
+        "GSE_QPTSR_residual": 0.01482,
+        "GSE_QPTSR_checkdown_boost": 0.0572,
+        "GSE_RLS": -0.04898,
+        "GSE_SPESE": 0.16006,
+        "GSE_TOR": -1.512,
+        "GSE_DWP": -0.0142
+      },
+      "bbp_spectral_spike_detector": {
+        "gamma_ratio": 0.25,
+        "lambda_minus": 0.25,
+        "lambda_plus": 2.25,
+        "theta_crit": 0.5,
+        "tw_threshold": 2.378,
+        "detached_spikes": [
+          {
+            "raw_eigenvalue": 2.5451,
+            "debiased_theta": 1.059,
+            "supercritical": true
+          }
+        ]
+      },
+      "five_method_devig_suite": {
+        "overround_Q": 1.047079,
+        "multiplicative": [
+          0.510834,
+          0.489166
+        ],
+        "additive": [
+          0.511344,
+          0.488656
+        ],
+        "power": [
+          0.511604,
+          0.488396
+        ],
+        "odds_ratio": [
+          0.51137,
+          0.48863
+        ],
+        "shin": [
+          0.511344,
+          0.488656
+        ],
+        "shin_insider_z": 0.04708
+      },
+      "fivethirtyeight_winner_signed_mov_step": {
+        "elo_diff_with_hfa": 215.0,
+        "e_prob1": 0.7751528656,
+        "winner_signed_d": 1.985,
+        "shift": -46.5303408
+      },
+      "cuda_mastermind_entropy_kernel": {
+        "state_space_S": 1296,
+        "num_coefs": 14,
+        "population_size": 4096,
+        "first_guess_target_idx": 8,
+        "shannon_entropy_bits": 2.825414,
+        "weighted_entropy_score": 2.834743
+      },
+      "epistemic_and_pocket_gates": {
+        "am_gm_weak_link_clean_pocket_prob": 0.4887,
+        "convex_weak_link_pocket_score": 66.419,
+        "gadget_screen_role_gate_triggered_example": true,
+        "bitmask_288_xor_popcount": 2,
+        "bitemporal_merkle_root": "55c5846759af8a6d24dfb12375c319a6c5b685d612dce585c148272b36a7095c"
+      }
     }
   },
   "intelligence_31_subpackages": {
     "subpackages_connected_count": 39,
-    "total_intelligence_python_files": 443,
+    "total_intelligence_python_files": 447,
     "subpackage_inventory": {
       "audit": {
         "python_files": 10,
@@ -574,9 +1702,9 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "coaching": {
-        "python_files": 48,
-        "top_level_functions": 212,
-        "top_level_classes": 19,
+        "python_files": 51,
+        "top_level_functions": 250,
+        "top_level_classes": 20,
         "status": "CONNECTED_AND_AUDITED"
       },
       "colab": {
@@ -772,8 +1900,8 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "tests": {
-        "python_files": 34,
-        "top_level_functions": 134,
+        "python_files": 35,
+        "top_level_functions": 141,
         "top_level_classes": 89,
         "status": "CONNECTED_AND_AUDITED"
       },

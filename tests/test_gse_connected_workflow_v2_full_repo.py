@@ -113,6 +113,20 @@ def test_ts_prediction_and_mcp_engines_telemetry():
     assert wdr["wireable_module_ids_count"] == 173
     assert wdr["registered_model_ids_count"] == 196
 
+    inv87 = ts_data["prediction_engine_87_domains_inventory"]
+    assert inv87["total_domains"] >= 87
+    assert inv87["total_ts_files"] >= 1200
+
+    mono25 = ts_data["monorepo_25_packages_inventory"]
+    assert mono25["total_packages"] >= 25
+    assert mono25["total_ts_files"] >= 2000
+
+    live_exec = ts_data["live_87_domains_and_25_packages_executions"]
+    assert live_exec["epistemic_twin"]["can_act_as_if_sim_healthy"] is True
+    assert live_exec["epistemic_twin"]["can_act_as_if_publish_healthy"] is False
+    assert live_exec["mcp_fleet_and_content_os"]["foreman_arbiter"]["decision"] == "FINISH_VERIFIED"
+
+
 
 def test_python_31_subpackages_and_31_datasets_telemetry():
     py_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_python_31_domains_telemetry_2026_11_05.json"
@@ -273,6 +287,78 @@ def test_connected_workflow_dossier_precommit_guard():
     )
     assert proc.returncode == 0, f"Guardrail failed: {proc.stderr}\n{proc.stdout}"
     assert "PASS  connected-workflow-dossier-guard" in proc.stdout
+
+
+def test_live_books_and_pdfs_executable_engine():
+    from intelligence.coaching.live_books_and_pdfs_executable_engine import (
+        run_all_live_books_and_pdfs_engines,
+    )
+
+    res = run_all_live_books_and_pdfs_engines("JAX", "BAL", 9)
+    assert res["engines_executed_count"] == 6
+
+    # 1. VMLS KKT Constrained Box-Score Reconciler
+    kkt = res["vmls_kkt_constrained_boxscore_reconciler"]
+    assert kkt["zero_residual_verified"] is True
+    assert kkt["conservation_residual_linf"] < 1e-10
+
+    # 2. Overrelaxed Anderson Sinkhorn-Knopp Optimal Transport (<15 iterations)
+    ot = res["overrelaxed_anderson_sinkhorn_ot"]
+    assert ot["overrelaxation_theta"] == 1.35
+    assert ot["overrelaxed_iterations"] < 15
+    assert ot["converged_under_15_iterations"] is True
+    assert ot["speedup_factor"] >= 1.0
+
+    # 3. BM25F+ Probabilistic Corpus & Book Lesson Retriever
+    bm25f = res["bm25f_corpus_and_book_lesson_retriever"]
+    assert bm25f["total_documents_indexed"] >= 3000
+    assert len(bm25f["top_15_ranked_lessons"]) == 15
+    assert bm25f["top_15_ranked_lessons"][0]["bm25f_plus_score"] > 0.0
+
+    # 4. Cantu/McKee TBI Rotational Strain & Katch-McArdle 96h Short-Week Fatigue
+    tbi = res["tbi_rotational_strain_and_katch_mcardle_short_week_fatigue"]
+    assert tbi["katch_mcardle_metabolic_model"]["trench_bmr_kcal_day"] > 2500.0
+    assert tbi["cantu_mckee_rotational_strain_hazard"]["short_week_hazard_elevation_pct"] > 0.0
+
+    # 5. Prolate-Spheroid Football Aerodynamics & Coaching Network Graph-Laplacian
+    aero = res["prolate_spheroid_football_aerodynamics_and_ol_route_coaching_network"]
+    assert abs(aero["prolate_spheroid_aerodynamics_mt_bank"]["air_density_kg_m3"] - 1.24182) < 1e-4
+    assert aero["coaching_network_graph_laplacian"]["fiedler_algebraic_connectivity_lambda2"] > 0.0
+
+    # 6. Tukey Fourth-Spread Fences, Huff/Levitin Simpson's Paradox, Nash Equilibrium & Markov Drive Matrix
+    thl = res["tukey_huff_levitin_game_theory_and_markov_drive_engine"]
+    assert "JAX" in thl["tukey_fourth_spread_epa_fences"]
+    assert "BAL" in thl["tukey_fourth_spread_epa_fences"]
+    assert thl["huff_levitin_simpsons_paradox_audit"]["simpsons_confounder_gap_epa_per_dropback"] > 0.25
+    assert thl["zero_sum_nash_equilibrium_play_calling"]["duality_gap"] < 0.05
+    assert thl["absorbing_markov_chain_drive_matrix"]["JAX"]["from_own_25_zone1"]["expected_drive_points"] > 1.5
+
+
+def test_web_app_connected_workflow_api_route():
+    import subprocess
+
+    loader_path = REPO_ROOT / "apps" / "web" / "lib" / "engine" / "connected-workflow-loader.ts"
+    route_path = REPO_ROOT / "apps" / "web" / "app" / "api" / "engine" / "connected-workflow" / "route.ts"
+    assert loader_path.is_file()
+    assert route_path.is_file()
+
+    proc = subprocess.run(
+        "npx tsx -e \"import { loadVerifiedConnectedWorkflowBundle } from './apps/web/lib/engine/connected-workflow-loader.ts'; const res = loadVerifiedConnectedWorkflowBundle(); console.log(JSON.stringify({status: res.status, matchup: res.matchup, subpackages: res.pythonIntelligenceSummary.subpackagesConnected, streams: res.typescriptEngineSummary.situationalStreamsExecuted, booksEngines: (res.liveBooksAndPdfsEngine as any).engines_executed_count}));\"",
+        shell=True,
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, f"TS loader failed: {proc.stderr}\n{proc.stdout}"
+    out_lines = [ln.strip() for ln in proc.stdout.splitlines() if ln.strip().startswith("{")]
+    assert out_lines, f"No JSON output from TS loader: {proc.stdout}"
+    parsed = json.loads(out_lines[-1])
+    assert parsed["status"] == "CONNECTED_WORKFLOW_VERIFIED"
+    assert parsed["matchup"] == "JAX @ BAL"
+    assert parsed["subpackages"] >= 30
+    assert parsed["streams"] == 22
+    assert parsed["booksEngines"] == 6
 
 
 def test_gse_connected_game_workflow_skill_installed_and_valid() -> None:

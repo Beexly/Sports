@@ -2,15 +2,15 @@
   "schema": "gse_post_injury_5stage_master_v2",
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "stage1a_receipt_sha256": "49ba0c608616bf26c7eeb5fc7a8ce33511fc9d169405ded1db3a86d08d3cf58d",
-    "stage1b_receipt_sha256": "acff665129a9f7dc0ed2da3821e9cd5de934b7242141909328360332e0f8a0c5",
-    "stage2_receipt_sha256": "80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3",
-    "stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3",
-    "stage5_receipt_sha256": "1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d"
+    "stage1a_receipt_sha256": "cf29fa2fce67c7d837594b24b3a8f35ddd9b378014674218611e586e902fed5b",
+    "stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa",
+    "stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
+    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
+    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "acff665129a9f7dc0ed2da3821e9cd5de934b7242141909328360332e0f8a0c5",
+    "parent_stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa",
     "coachMindsetHash": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
     "tau": 0.42,
     "jev_full_game_spine": {
@@ -140,11 +140,11 @@
       "bal_cover_plus_7_5_prob": 0.469,
       "over_41_5_prob": 0.5076
     },
-    "stage2_receipt_sha256": "80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3"
+    "stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3",
+    "parent_stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
     "pbp_conservation_verified": true,
     "conserved_shares_summary": {
       "jax_receiving_target_shares_sum": 1.0,
@@ -4878,13 +4878,122 @@
           "p_1_plus_sack": 0.1647,
           "matchup_note": "7 TFL & 48 combined tackles in 7 GP; overhang slot pressure & run support"
         }
-      ]
+      ],
+      "vmls_kkt_and_overrelaxed_sinkhorn_reconciliation": {
+        "jax_receiving_kkt": {
+          "source_books": [
+            "vmls_boyd_vandenberghe.pdf",
+            "vmls.pdf",
+            "numpybook.pdf"
+          ],
+          "dimension_n": 14,
+          "team_total_target": 1.0,
+          "reconciled_vector": [
+            0.15565706,
+            0.17568517,
+            0.24104005,
+            0.11033028,
+            0.03513703,
+            0.05270555,
+            0.09135629,
+            0.02635277,
+            0.01405481,
+            0.01510892,
+            4e-08,
+            0.03513703,
+            0.03513703,
+            0.01229796
+          ],
+          "reconciled_sum": 1.0,
+          "lagrange_multiplier_nu": -0.0,
+          "conservation_residual_linf": 1.1102230246251565e-16,
+          "zero_residual_verified": true,
+          "kkt_condition_number": 2.303
+        },
+        "bal_receiving_kkt": {
+          "source_books": [
+            "vmls_boyd_vandenberghe.pdf",
+            "vmls.pdf",
+            "numpybook.pdf"
+          ],
+          "dimension_n": 13,
+          "team_total_target": 1.0,
+          "reconciled_vector": [
+            0.04908836,
+            0.08751753,
+            0.14726508,
+            0.10154278,
+            0.23253857,
+            0.04207574,
+            0.09817672,
+            0.07293128,
+            0.00981767,
+            0.0056101,
+            0.04684432,
+            0.05049088,
+            0.05610098
+          ],
+          "reconciled_sum": 1.0,
+          "lagrange_multiplier_nu": -0.0,
+          "conservation_residual_linf": 0.0,
+          "zero_residual_verified": true,
+          "kkt_condition_number": 2.2425
+        },
+        "overrelaxed_anderson_sinkhorn_ot": {
+          "source_books": [
+            "CourseOT.pdf",
+            "6085_Accelerating_Sinkhorn_alg.pdf",
+            "Sinkhorn_rate.pdf",
+            "pham20a.pdf"
+          ],
+          "overrelaxation_theta": 1.35,
+          "entropic_epsilon": 0.08,
+          "overrelaxed_iterations": 9,
+          "standard_sinkhorn_iterations": 26,
+          "speedup_factor": 2.889,
+          "converged_under_15_iterations": true,
+          "marginal_error_linf": 5.876369359192335e-05,
+          "wasserstein_distance_W_eps": 0.135711,
+          "reallocated_post_shock_shares": [
+            0.010002,
+            0.559946,
+            0.270033,
+            0.160019
+          ],
+          "optimal_coupling_P": [
+            [
+              0.009959,
+              0.450374,
+              0.059364,
+              0.00027
+            ],
+            [
+              4.3e-05,
+              0.108231,
+              0.122811,
+              0.008974
+            ],
+            [
+              0.0,
+              0.001336,
+              0.085104,
+              0.053532
+            ],
+            [
+              0.0,
+              5e-06,
+              0.002754,
+              0.097244
+            ]
+          ]
+        }
+      }
     },
-    "stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3"
+    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3",
+    "parent_stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
     "board_summary": {
       "total_game_lines_evaluated": 6,
       "total_props_on_board": 1461,
@@ -6389,6 +6498,6 @@
         }
       }
     },
-    "stage5_receipt_sha256": "1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d"
+    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
   }
 }
