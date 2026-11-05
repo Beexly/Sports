@@ -176,6 +176,13 @@ function loadWriteups(): WriteupsPayload {
 }
 
 export async function GET(): Promise<NextResponse> {
+  // Default-off feature gate (public-surface keep-out sweep): this packet
+  // names keep-out material (edge internals, metric families) and serves
+  // illustrative writeups, so it is not publicly reachable until an operator
+  // deliberately enables it.
+  if (process.env.CONTENT_OS_PACKET_ENABLED !== "true") {
+    return NextResponse.json({ error: "not_found" }, { status: 404 });
+  }
   const rawPayload = loadWriteups();
   const writeups = rawPayload.writeups;
 

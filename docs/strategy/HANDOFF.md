@@ -243,3 +243,11 @@ start from the matchup instead of the constants 3 and 46.5.
 **Proven (worktree C:\c\wt-logic):** 10/10 target files, 90 tests; plus conviction/fantasy affected surfaces 10/10 (172 tests). tsc clean on touched files (pre-existing unrelated errors remain, as on main checkout).
 
 **Not yet proven:** CI on ci/logic-cluster-2026-11-04; periodic-timeseries-id 'too large to be exact' fails in CI (Node 20) but passes locally (Node 24) - not reproduced, left for a Node-20 repro. Remaining wall per PR #1234 CI: public-surface-sweep, conversion-path-contrast, data-first/fantasy surfaces, do-calculus-verifiers, gate-registry, literature-and-bow-arc, public-picks-enabled-readers, and ~20 docs/picks/props files - next loop.
+
+## 2026-11-04 — public/verifier cluster (PR pending): content-os gate, Node-20 verifier hook, POSIX path fixes
+
+**What:** `apps/web/app/api/content-os/packet/route.ts` served fabricated writeups naming keep-out material (expectedClv, passEpaPlay) with no gate — the public-surface-sweep failure. Now default-off (`CONTENT_OS_PACKET_ENABLED`, 404 when unset); the content-os test stubs the flag for the 200 case and asserts the default 404.
+**Node-20 verifiers:** `reconciliation/ts-resolve-hook.mjs` had only a resolve hook — on CI's pinned Node 20, importing `.ts` is ERR_UNKNOWN_FILE_EXTENSION, which failed do-calculus-verifiers (A082/A083/estimand probe) and literature-and-bow-arc. Added a load hook that transpiles `.ts` with the repo's own typescript package (Node 22.6+ native stripping unchanged in behavior).
+**POSIX path bug:** gate-registry.t24 and public-picks-enabled-readers.t21 built paths with `.replace(/\//g, "\\")`, which fails on Linux CI ("file must exist: false"). path.join handles "/" on both platforms — removed the replacement.
+**Proven (worktree C:\c\wt-public):** public-surface-sweep 9/9, content-os 18/18 (incl. new 404 test), the 4 verifier/registry specs 32/32, both verifier scripts exit 0 directly.
+**Not yet proven:** CI on ci/public-cluster-2026-11-04. periodic-timeseries-id 'too large to be exact' still unexplained (passes locally Node 24, failed twice on PR #1235 CI; zero file overlap with that diff).
