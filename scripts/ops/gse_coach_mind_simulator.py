@@ -428,7 +428,7 @@ def _classify_score_script(score_diff: float) -> str:
 def build_jev_state_tensor(spine_game: dict | None) -> dict:
     """
     Aggregate the 166 snap responses from `spine_game["snap_by_snap_log"]` into a
-    48-state transition tensor keyed by `(offense_abbr, down_bucket, field_zone, score_script)`.
+    transition tensor keyed by `(offense_abbr, down_bucket, field_zone, score_script)`.
     """
     if not spine_game or not isinstance(spine_game, dict):
         return {"by_state": {}, "by_team": {}, "total_snaps_ingested": 0}

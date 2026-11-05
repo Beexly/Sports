@@ -23,7 +23,7 @@ Official ledger: **16-5 (76.2%, +10.45u)** — `data/engine/new_engine_official_
 | Travis Etienne Jr. | **Not on the 2026 Jaguars roster** (nflverse: NO 31 carries, CAR 8). Retained in the config as a legacy guard; no board impact. |
 | Tyler Huntley / Skylar Thompson | Out / IR — hard-excluded |
 | Bhayshul Tuten (JAX RB) | **Questionable, ankle + foot, DNP** — 8 board props converted to PASS; modeled as RB1 out |
-| BAL QB1 | Joe Fagnano (UDFA rookie, taped ankle) |
+| BAL QB1 | Joe Fagnano (UDFA rookie; Week 9 ankle, full practice, no game designation) |
 | JAX QB1 | Trevor Lawrence |
 | Standing rulings | Geno Smith = NYJ; Mike Evans = SF, DNP practice (ribs/achilles) |
 
