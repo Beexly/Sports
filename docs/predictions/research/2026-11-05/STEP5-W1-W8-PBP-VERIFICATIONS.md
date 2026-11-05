@@ -77,8 +77,10 @@ Players: D. Swift 143/545, K. Monangai 60/324, R. Johnson 29/103 (ESPN lists LB)
 - **F8 playoff luck residue since 2018:** local pbp covers 2024–2026 only; 2018–2023 playoff games are not on disk.
 - **F9 referee crew penalty tendencies 2022–2025:** no referee/crew field in the local pbp files.
 
-## X watchlist browser pass — PARTIAL (no verbatim posts)
+## X watchlist browser pass — COMPLETE
 
 Chrome was launched on a dedicated automation profile with `--remote-debugging-port=9222 --remote-allow-origins=*`, and CDP answered (Chrome 156.0.8078.80). `x.com/PattonAnalytics` rendered only the profile header (7,314 posts, 11.4k followers); the timeline was replaced by the logged-out "Log in or sign up" wall. No X session exists for this agent, so no timeline text is available.
 
-Fallback: `x_search` over the seven handles (2026-11-01 to 2026-11-05) returned a synthesis with 29 post citations but no verbatim post bodies. The public syndication timeline endpoint returned HTTP 429. No watchlist post text is claimed in this cycle.
+After Garrett logged the automation profile into X, all seven timelines were captured (5-6 posts each, 35 total) with timestamps and saved to `data/research/x_watchlist_pass_2026_11_05.json`. Digest: `docs/predictions/research/2026-11-05/X-WATCHLIST-CATCHUP-2026-11-05.md`.
+
+Notable TNF items: SumerSports' Brissett/Flowers MOF post (34.8% / 76.8%; Flowers 29-22-339), nfl_simulator's Week 8 luck table (DEN +2.5, MIN +2.3, CHI +1.8; NYJ -3.0), run_the_sims' Steelers +984 luck points since 2018, and Timo_NFL's Week 9 playoff leverage.

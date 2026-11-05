@@ -29,7 +29,7 @@ Script: `scripts/ops/tnf_jax_bal_matchup_reproductions.py`
 | F6 BAL two-high rate `59.7%`, 7th | **Not reproducible** | No coverage-shell field in public charting; requires All-22/PFF/FTN proprietary |
 | F6 TLaw EPA/dropback vs two-high `-0.17` | **Not reproducible as stated** | Box split only: vs light box (≤6) **+0.3521** (n=137); vs heavy box (≥7) **+0.1091** (n=56) |
 | W2 JAX backside A-gap / Fire Zone | **Film-only, rates computed** | Blitz 30.9%, pressure 16.67%, PA blitz 34.78%, under-center pressure 27.5% |
-| W8 Zay Flowers MOF | **Reproduced (team MOF level differs)** | Flowers 58 tgts / 40 rec / 608 yds; MOF 22 tgts (37.9% of his targets) / 14 rec / 258 yds. BAL MOF attempt share 25.81%, completion 64.06% (claimed 34.8% / 76.8%) |
+| W8 Zay Flowers MOF | **Reproduced at counts, definition differs** | Flowers 58 tgts / 40 rec / 608 yds; `pass_location == middle` 22 tgts / 14 rec / 258 yds. Published line (29 tgts / 22 rec / 339 yds) uses over-the-middle charting, not pass location. The 34.8% / 76.8% figures are Brissett QB-level MOF rates, not a team share. |
 | W10 Catchable Ball Rate | **Reproduced** | TLaw 70.47% (193 charted) EPA/dropback +0.2878; Brissett 69.15%, Jackson 72.28%, Huntley 68.97%; Fagnano uncharted (Week 8 only) |
 | W3 Mismatch Manifesto sums | **Reproduced except RB YBC** | See table below |
 
@@ -51,6 +51,10 @@ Rank convention: 1 = best in the league; pressure rank 1 = lowest pressure allow
 - Baltimore's defense is a genuinely light-box unit (2nd) but the popular 53.2% figure is not reproducible on this data; do not present the level as verified.
 - Trevor Lawrence is not a two-high victim in the public box-count proxy; the claimed negative shell delta cannot be validated, so any market leg that depends on it must be marked **PASS (publishAllowed: false)** until a shell-level charting source exists.
 - Tuten is Questionable with a DNP, so Jacksonville RB volume is unstable; prop exposure requires a status re-check at 90 minutes pre-kick.
+
+## Watchlist correction (2026-11-05 capture)
+
+`@SumerSports` (2026-11-04) states the MOF claim directly: Brissett throws over the middle 34.8% of the time and completes 76.8% of those; Flowers over the middle has 29 targets (3rd), 22 catches (T-2nd), 339 yards (4th). Those are QB-level and charting-level numbers, not the team pass-location share computed here. The count gap is definitional, not an error in either source.
 
 ## Reproducibility boundary
 
