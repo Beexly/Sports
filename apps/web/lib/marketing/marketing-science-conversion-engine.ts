@@ -58,7 +58,7 @@ export function computeThalerHedonicBundleFraming(
     integratedGainUtility: Number(integratedGainUtility.toFixed(4)),
     hedonicSegregationLift: Number((segregatedGainsUtility - integratedGainUtility).toFixed(4)),
     transactionUtility: Number(transactionUtility.toFixed(4)),
-    prospectTheoryLossAvoidanceHeadline: `Avoid the -EV public trap on BAL -3.5 (Lamar Jackson OUT, Tyler Huntley starting; CPT loss-aversion weight ${avoidedTrapLossUtility}).`,
+    prospectTheoryLossAvoidanceHeadline: `Avoid the -EV public trap on BAL -7.5 (steamed across -3 and -7 with Lamar Jackson OUT; CPT loss-aversion weight ${avoidedTrapLossUtility}).`,
   };
 }
 
@@ -89,7 +89,7 @@ export function buildSahniPersonalizedEmailDispatch(
     expectedOpenRateMultiplier: 1.2,
     expectedLeadGenMultiplier: 1.31,
     expectedUnsubscribeReductionPct: 17.0,
-    bodyMarkdown: `Hey ${cleanName},\n\nMost "computer models" are still feeding you season-long Baltimore averages tonight as if Lamar Jackson and Travis Etienne Jr. are suiting up. They aren't.\n\nEntering Thursday Night Football (**${favoriteTeamOrHook}**), the **Official New Engine Ledger sits at ${verifiedRecordText}**. We ran \`10,000 worlds x 175 snaps\` with **Tyler Huntley** at QB1 for Baltimore and **Tank Bigsby** at RB1 for Jacksonville.\n\n**What cleared all 5 Conjunction Gates tonight:**\n- **${topConjunctionPlaySummary}**\n- Plus **4 explicit PASS grades** (including why we refused to touch the 3-leg SGP at a 24.5% sportsbook hold).\n\nUnlock the full 360° TNF Call Sheet & Showdown DFS Packet before kickoff.`,
+    bodyMarkdown: `Hey ${cleanName},\n\nMost public models are still feeding you season-long Baltimore averages tonight as if Lamar Jackson and Travis Etienne Jr. are suiting up. They aren't.\n\nEntering Thursday Night Football (**${favoriteTeamOrHook}**), our **Verified Season Record sits at ${verifiedRecordText}**. We broke down every drive and snap matchup with Baltimore projecting for 61.3 offensive plays (18.6 carries for **Derrick Henry**) and **Chris Rodriguez Jr.** leading Jacksonville's early-down backfield.\n\n**What made our Thursday Night card tonight:**\n- **${topConjunctionPlaySummary}**\n- Plus **explicit PASS grades** on the over-steamed -7.5 spread and full-game total.\n\nUnlock the full 10-play TNF Card, 3-Leg SGP & Showdown DFS Packet at /packages before kickoff.`,
   };
 }
 

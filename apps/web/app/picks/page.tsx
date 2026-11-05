@@ -9,8 +9,8 @@ import type { SealedBoard } from "@/lib/week8/types";
 const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
-  title: "Week 8 Locked Board | Galaxy Sports Edge",
-  description: "Official New Engine verified record 16-5 (76.2%) · +10.45u. Locked Week 8 plays from the sealed card only.",
+  title: "Locked NFL Board | Galaxy Sports Edge",
+  description: "Official verified NFL record 62-23-1 (72.9%) · +26.50u. Locked plays from the sealed card only.",
   alternates: { canonical: "/picks" },
 };
 
@@ -20,8 +20,8 @@ export default function PicksPage(): JSX.Element {
     <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Official New Engine verified record</p>
-        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">16-5 (76.2%) · +10.45u</h1>
+        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">Official verified NFL record</p>
+        <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">62-23-1 (72.9%) · +26.50u</h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#C4BFB6]">
           {card.counts.evaluated} markets evaluated. These {locked.length} rows are the only publish-allowed main lines and priced derivative on the sealed card.
         </p>

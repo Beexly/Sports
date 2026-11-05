@@ -40,77 +40,79 @@ const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-en
 
 const SEALED_MAIN_CALLS = [
   {
-    matchup: "CHI @ SEA",
-    selection: "Chicago Bears ML (+142)",
-    market: "Moneyline",
-    conf: "64/100",
+    matchup: "JAX @ BAL",
+    selection: "Spread PASS at -7.5 (Steamed from -3.5 — Attacking 10 Player Matchups Instead)",
+    market: "Pass Discipline",
+    conf: "54/100",
     freeTeaser: true,
     trench: {
-      passPro: "SEA Pass Pro Havoc 19.4% allowed",
-      pressureSack: "CHI Interior Pressure +0.14 EPA/play",
-      tempo: "Neutral Pace 26.2s/snap",
-      verdict: "Bears defensive front creates interior pocket collapse; road moneyline value.",
+      passPro: "BAL OL Continuity 88 out of 100 vs JAX 5-man blitz",
+      pressureSack: "JAX Blitz Rate 34 out of 100 · Hot-read middle open",
+      tempo: "Neutral Pace 26.4s/snap",
+      verdict: "Baltimore steamed from -3.5 past the key -7 number to -7.5. We never chase steamed numbers — we pass the spread and attack 10 high-conviction TNF player matchups and derivatives instead.",
     },
   },
-  {
-    matchup: "KC @ DEN",
-    selection: "Kansas City Chiefs ML (-118)",
-    market: "Moneyline",
-    conf: "74/100",
-    freeTeaser: true,
-    trench: {
-      passPro: "KC Pass Block Win Rate 71.8%",
-      pressureSack: "DEN 4-man pressure survival +1.38s",
-      tempo: "Neutral Pace 25.8s/snap",
-      verdict: "Mahomes against split-safety quarters; RJ Harvey OUT suppresses Denver run script.",
-    },
-  },
-  { matchup: "LAC @ LAR", selection: "LA Rams ML (-270)", market: "Moneyline", conf: "84/100", freeTeaser: false },
-  { matchup: "LAC @ LAR", selection: "LA Rams -6.5 (-110)", market: "Spread", conf: "84/100", freeTeaser: false },
-  { matchup: "LAC @ LAR", selection: "LAC Team Total UNDER 18.5 (-114)", market: "Derivative", conf: "83/100", freeTeaser: false },
-  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers ML (-192)", market: "Moneyline", conf: "82/100", freeTeaser: false },
-  { matchup: "CLE @ PIT", selection: "Pittsburgh Steelers -3.5 (-110)", market: "Spread", conf: "82/100", freeTeaser: false },
-  { matchup: "LV @ NYJ", selection: "New York Jets ML (-122)", market: "Moneyline", conf: "81/100", freeTeaser: false },
-  { matchup: "LV @ NYJ", selection: "New York Jets -1.5 (-110)", market: "Spread", conf: "81/100", freeTeaser: false },
-  { matchup: "KC @ DEN", selection: "Kansas City Chiefs -1.5 (-110)", market: "Spread", conf: "79/100", freeTeaser: false },
-  { matchup: "ARI @ DAL", selection: "Arizona Cardinals +7.0 (-110)", market: "Spread", conf: "76/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", selection: "🔒 LOCKED TNF FULL-GAME TOTAL CALL", market: "Total", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", selection: "🔒 LOCKED TNF 1ST-HALF DERIVATIVE CALL", market: "1H Derivative", conf: "88/100", freeTeaser: false },
+  { matchup: "DET @ GB", selection: "🔒 LOCKED NFC NORTH DIVISION SPREAD CALL", market: "Spread", conf: "85/100", freeTeaser: false },
+  { matchup: "MIA @ BUF", selection: "🔒 LOCKED AFC EAST DIVISION TOTAL CALL", market: "Total", conf: "84/100", freeTeaser: false },
+  { matchup: "IND @ MIN", selection: "🔒 LOCKED SUNDAY NIGHT FOOTBALL CALL", market: "Spread", conf: "83/100", freeTeaser: false },
+  { matchup: "DAL @ ATL", selection: "🔒 LOCKED DOME SHOOTOUT MAIN LINE CALL", market: "Spread", conf: "82/100", freeTeaser: false },
+  { matchup: "LAR @ SEA", selection: "🔒 LOCKED NFC WEST SPREAD CALL", market: "Spread", conf: "81/100", freeTeaser: false },
+  { matchup: "WAS @ NYG", selection: "🔒 LOCKED NFC EAST DIVISION CALL", market: "Spread", conf: "80/100", freeTeaser: false },
+  { matchup: "TB @ KC", selection: "🔒 LOCKED MONDAY NIGHT FOOTBALL CALL", market: "Spread", conf: "79/100", freeTeaser: false },
 ] as const;
 
 const SEALED_PROPS = [
   {
-    matchup: "BAL @ BUF",
-    player: "Devontez Walker (BAL)",
-    prop: "Receiving Yards OVER 0.5",
-    conf: "95/100",
+    matchup: "JAX @ BAL",
+    player: "Mark Andrews (BAL TE)",
+    prop: "Receptions OVER 2.5",
+    conf: "88/100",
     freeTeaser: true,
-    trench: "Single-high Cover-3 boundary scheme · 100% vacated snap share with IR depth chart scratches",
+    trench: "Jacksonville blitzes on 34 out of 100 pass plays and leaves the middle of the field open against tight ends. Mark Andrews operates as Baltimore's primary hot-read safety valve over the middle and inside the red zone — 3 receptions clears this low 2.5 number.",
   },
-  { matchup: "MIN @ DET", player: "Sione Vaki (DET)", prop: "Rushing Yards OVER 4.5", conf: "92/100", freeTeaser: false },
-  { matchup: "BAL @ BUF", player: "Ray Davis (BUF)", prop: "Rushing Yards OVER 4.5", conf: "90/100", freeTeaser: false },
-  { matchup: "PHI @ WAS", player: "Dyami Brown (WAS)", prop: "Receiving Yards OVER 12.5", conf: "85/100", freeTeaser: false },
-  { matchup: "NE @ MIA", player: "Jaylen Wright (MIA)", prop: "Rushing Attempts OVER 4.5", conf: "84/100", freeTeaser: false },
-  { matchup: "TEN @ CIN", player: "Dohnte Meyers (CIN)", prop: "Receiving Yards OVER 13.5", conf: "82/100", freeTeaser: false },
-  { matchup: "TEN @ CIN", player: "Drew Sample (CIN)", prop: "Receiving Yards OVER 7.5", conf: "81/100", freeTeaser: false },
-  { matchup: "MIN @ DET", player: "Isaac TeSlaa (DET)", prop: "Receiving Yards OVER 17.5", conf: "81/100", freeTeaser: false },
-  { matchup: "NE @ MIA", player: "Efton Chism III (NE)", prop: "Receiving Yards OVER 15.5", conf: "80/100", freeTeaser: false },
-  { matchup: "KC @ DEN", player: "J.K. Dobbins (DEN)", prop: "Rushing Yards OVER 21.5", conf: "80/100", freeTeaser: false },
-  { matchup: "LV @ NYJ", player: "Michael Mayer (LV)", prop: "Receptions OVER 2.5", conf: "79/100", freeTeaser: false },
-  { matchup: "PHI @ WAS", player: "Treylon Burks (WAS)", prop: "Receiving Yards OVER 21.5", conf: "78/100", freeTeaser: false },
-  { matchup: "CHI @ SEA", player: "Kalif Raymond (CHI)", prop: "Receiving Yards OVER 21.5", conf: "78/100", freeTeaser: false },
-  { matchup: "ARI @ DAL", player: "Tyler Goodson (DAL)", prop: "Rushing Yards OVER 21.5", conf: "77/100", freeTeaser: false },
-  { matchup: "ATL @ TB", player: "Jahan Dotson (ATL)", prop: "Receiving Yards OVER 21.5", conf: "77/100", freeTeaser: false },
-  { matchup: "ATL @ TB", player: "Chris Godwin Jr. (TB)", prop: "Receptions OVER 3.5", conf: "76/100", freeTeaser: false },
-  { matchup: "ARI @ DAL", player: "Jake Ferguson (DAL)", prop: "Receiving Yards OVER 14.5", conf: "75/100", freeTeaser: false },
-  { matchup: "CLE @ PIT", player: "Quinshon Judkins (CLE)", prop: "Receptions OVER 1.5", conf: "74/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #2 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #3 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #4 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #5 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #6 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #7 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #8 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #9 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "JAX @ BAL", player: "TNF Top-Confidence Play #10 (BAL/JAX)", prop: "🔒 LOCKED TNF PLAYER PROP", conf: "88/100", freeTeaser: false },
+  { matchup: "DET @ GB", player: "Week 9 Sunday Locked Prop #1", prop: "🔒 LOCKED SUNDAY PROP PLAY", conf: "86/100", freeTeaser: false },
+  { matchup: "MIA @ BUF", player: "Week 9 Sunday Locked Prop #2", prop: "🔒 LOCKED SUNDAY PROP PLAY", conf: "85/100", freeTeaser: false },
+  { matchup: "IND @ MIN", player: "Week 9 SNF Locked Prop #3", prop: "🔒 LOCKED SNF PROP PLAY", conf: "84/100", freeTeaser: false },
+  { matchup: "TB @ KC", player: "Week 9 MNF Locked Prop #4", prop: "🔒 LOCKED MNF PROP PLAY", conf: "83/100", freeTeaser: false },
 ] as const;
 
 const SEALED_SGPS = STAGE0_VERIFIED_WEEK9_SGPS.map((row) => ({
   matchup: row.matchup,
-  legs: row.free ? row.legs : "[LOCKED SGP TICKET · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]",
-  odds: row.free ? `Fair ${row.fairOdds} / Book ${row.bookOdds}` : `Fair LOCKED / Book ${row.bookOdds}`,
+  legs: "[LOCKED SGP TICKET · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]",
+  odds: `Fair LOCKED / Book ${row.bookOdds}`,
 }));
 
 const DFS_CORE_POOL = STAGE0_VERIFIED_DFS_CORE_POOL;
+
+const TNF_FREE_GAME_ENVIRONMENT_ANALYTICS = [
+  {
+    metric: "Projected Offensive Plays",
+    breakdown: "Baltimore 61.3 median (61.9 mean; 57–66 IQR across 11 drives) vs Jacksonville 63.5 plays",
+  },
+  {
+    metric: "Baltimore Play-Call Split",
+    breakdown: "25.5 Rush Attempts (18.6 Derrick Henry) + 33.3 Pass Attempts + 3.1 Sacks Taken (54% run in 1H -> 62% pass trailing in 2H)",
+  },
+  {
+    metric: "Jacksonville Play-Call Split",
+    breakdown: "31.4 Rush Attempts + 29.5 Pass Attempts + 2.6 Sacks (26.2 sec/snap pace)",
+  },
+  {
+    metric: "Trench & Coverage Keys",
+    breakdown: "Baltimore 59.5% Two-High Safety Shell & 78.0% Light Boxes (<=5 in box) | Jacksonville 30.9% Blitz Rate (34.8% on Play-Action) vs Baltimore 36.5% Clean-Pocket Rate.",
+  },
+] as const;
 
 function clamp01(value: number): number {
   return value < 0 ? 0 : value > 1 ? 1 : value;
@@ -398,7 +400,7 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
-            <p className="plate-kicker">REDZONE · WEEK 8 NFL DESK</p>
+            <p className="plate-kicker">REDZONE · WEEK 9 NFL DESK (JAX @ BAL TNF &amp; FULL SLATE)</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
             <p>
               Plain-English NFL picks, player props, Same-Game Parlays, and Daily Fantasy lineups, all on one unified board.
@@ -410,10 +412,33 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
-            <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 8</p>
-            <h1>{headline?.matchup ?? "Week 8 NFL Slate"}</h1>
+            <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 9 TNF &amp; SUNDAY SLATE</p>
+            <h1>{headline?.matchup ?? "Jacksonville Jaguars @ Baltimore Ravens"}</h1>
             <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official game calls, player props, Same-Game Parlays, and optimal DFS lineups."}</p>
             <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
+            <div
+              data-testid="free-matchup-game-environment-analytics"
+              style={{
+                marginTop: 14,
+                marginBottom: 14,
+                padding: "12px 14px",
+                borderRadius: 10,
+                border: "1px solid rgba(255,77,46,0.28)",
+                background: "rgba(12,14,18,0.82)",
+              }}
+            >
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#FF4D2E", marginBottom: 8 }}>
+                Free Matchup &amp; Game-Environment Analytics · TNF JAX @ BAL
+              </div>
+              <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#EDE8E0" }}>
+                {TNF_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
+                  <div key={row.metric} style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    <strong style={{ color: "#FFFFFF" }}>{row.metric}:</strong>
+                    <span style={{ color: "#C4BFB6" }}>{row.breakdown}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="plate-actions">
               {headline && <button type="button" className="plate-ghost" onClick={() => openFixture(headline)}>Read matchup</button>}
               <button type="button" className="plate-ghost" onClick={() => setPanel("slate")}>View sealed board</button>
@@ -424,9 +449,9 @@ export function RedlineWorld({
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
             <div className="overhead-header">
               <div>
-                <p className="plate-kicker">REDZONE STOREFRONT</p>
+                <p className="plate-kicker">REDZONE STOREFRONT · VERIFIED 62-23-1 (+26.50u)</p>
                 <h1>Pick your gate.</h1>
-                <p className="plate-deck">Select any pack below to review what’s inside and unlock instant access.</p>
+                <p className="plate-deck">Select any Week 9 pack below to review what’s inside and unlock instant access.</p>
               </div>
               <div className="overhead-quick-links">
                 <button type="button" className="plate-ghost" onClick={() => setPanel("dfs")}>Preview DFS Lineups &amp; Pool</button>
@@ -441,7 +466,7 @@ export function RedlineWorld({
                   className={`real-gate${selectedSlug === pack.slug ? " selected" : ""}`}
                   onClick={() => openPurchase(pack)}
                 >
-                  <small>{pack.badge ?? "WEEK 8 PACK"}</small>
+                  <small>{pack.badge ?? "WEEK 9 PACK"}</small>
                   <strong>{pack.title.split("(")[0]?.trim()}</strong>
                   <span className="gate-sub">{pack.subtitle}</span>
                   <b>{price(pack)}</b>
@@ -561,24 +586,24 @@ export function RedlineWorld({
         )}
 
         {panel === "dfs" && (
-          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 8 DFS Lineups & Pool" close={closePanel} className="dfs-panel">
+          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 9 TNF Showdown & Sunday DFS Lineups" close={closePanel} className="dfs-panel">
             <p className="panel-intro">
-              Integrated directly into the unified RedZone site. Includes 2 Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), our 16-Player Core Pool with coaching/matchup writeups, and the full 588-Active-Player Pool (86 OUT/IR zeroed).
+              Integrated directly into the unified RedZone site. Includes DraftKings &amp; FanDuel TNF Showdown Captain builds (JAX @ BAL), 2 Sunday Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), and our 14-Player Core Pool with coaching and injury replacement notes.
             </p>
 
-            <h3 className="sub-heading">Free Cash Flagship QB Teaser (Trench Pocket Integrity)</h3>
+            <h3 className="sub-heading">Free TNF Showdown &amp; Week 9 Matchup Setup Teaser</h3>
             <div className="fixture-list">
               <div className="fixture-row">
-                <span className="fixture-week">QB1</span>
-                <div className="fixture-match">Dak Prescott (DAL) <small>$6,300 · 23.47 pts</small></div>
-                <span className="fixture-angle">2A Cash Flagship QB1 in ARI@DAL dome shootout (+2.14s pocket integrity against ARI 4-man pressure). Stacked with CeeDee Lamb.</span>
+                <span className="fixture-week">TNF</span>
+                <div className="fixture-match">Trevor Lawrence (JAX) / Derrick Henry (BAL) <small>JAX @ BAL Showdown &amp; Week 9 Slate</small></div>
+                <span className="fixture-angle">Derrick Henry anchors Baltimore&apos;s early-down and goal-line ground script while Trevor Lawrence leads Jacksonville&apos;s perimeter passing attack with Travis Etienne Jr. sidelined. Official DK/FD Showdown Captain lineups and Sunday optimal builds are locked below.</span>
               </div>
             </div>
 
             <div className="email-capture-gate">
               <div className="email-capture-title">Instant DFS Leverage Sheet</div>
               <p className="email-capture-desc">
-                Enter your email to receive our weekly free DFS cash-game blueprint &amp; injury reallocation notes.
+                Enter your email to receive our weekly free DFS cash-game blueprint &amp; injury replacement notes.
               </p>
               {!emailCaptured ? (
                 <form onSubmit={handleEmailSubmit} className="email-capture-form">
@@ -603,7 +628,7 @@ export function RedlineWorld({
               <div className="locked-blur-item">
                 <div className="dfs-lineup-grid">
                   <div className="dfs-box">
-                    <span className="dfs-tag">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · REDACTED UNTIL UNLOCK)</span>
+                    <span className="dfs-tag">OPTIMAL LINEUP #1 · CASH HIGH-FLOOR ($49,900 · REDACTED UNTIL UNLOCK)</span>
                     <ul>
                       <li><b>QB</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
                       <li><b>RB1</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
@@ -617,7 +642,7 @@ export function RedlineWorld({
                     </ul>
                   </div>
                   <div className="dfs-box">
-                    <span className="dfs-tag">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($50,000 · REDACTED UNTIL UNLOCK)</span>
+                    <span className="dfs-tag">OPTIMAL LINEUP #2 · GPP TOURNAMENT ($50,000 · REDACTED UNTIL UNLOCK)</span>
                     <ul>
                       <li><b>QB</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
                       <li><b>RB1</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
@@ -631,13 +656,13 @@ export function RedlineWorld({
                     </ul>
                   </div>
                 </div>
-                <h3 className="sub-heading">14-Player Stage-0 Verified Core Pool Preview</h3>
+                <h3 className="sub-heading">14-Player Core Pool Preview (Locked Until Unlock)</h3>
                 <div className="fixture-list">
                   {DFS_CORE_POOL.slice(0, 2).map((row) => (
                     <div className="fixture-row" key={row.player}>
                       <span className="fixture-week">{row.pos}</span>
-                      <div className="fixture-match">{row.player} <small>{row.sal} · {row.proj}</small></div>
-                      <span className="fixture-angle">{row.why}</span>
+                      <div className="fixture-match">[LOCKED CORE PLAYER · UNLOCK DFS PACK] <small>{row.sal}</small></div>
+                      <span className="fixture-angle">Locked position core play &amp; matchup leverage note</span>
                     </div>
                   ))}
                 </div>
@@ -645,7 +670,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Unlocked with Standalone DFS Pack</h4>
                 <p>
-                  2 Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack) with full player pool allocations, captain leverages, and 20-max MME portfolio.
+                  DK/FD Showdown Captain lineups (JAX @ BAL) plus 2 Sunday Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack) with full player pool allocations.
                 </p>
                 {dfsPack && (
                   <button type="button" className="unlock-action-btn" onClick={() => openPurchase(dfsPack)}>
@@ -658,8 +683,28 @@ export function RedlineWorld({
         )}
 
         {panel === "slate" && (
-          <PanelFrame eyebrow="Verified RedZone Board · 62-23-1 (+26.50u)" title="Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
-            <h3 className="sub-heading">Free Teaser Plays · Trench Matchup Breakdown</h3>
+          <PanelFrame eyebrow="Verified RedZone Board · 62-23-1 (+26.50u)" title="Week 9 Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
+            <h3 className="sub-heading">Free Matchup &amp; Game-Environment Analytics · Week 9 TNF (JAX @ BAL)</h3>
+            <div className="table-scroll" data-testid="slate-free-game-environment-analytics" style={{ marginBottom: 20 }}>
+              <table className="world-table">
+                <thead>
+                  <tr>
+                    <th scope="col">GAME-SCRIPT METRIC</th>
+                    <th scope="col">TNF (JAX @ BAL) MATCHUP &amp; TRENCH BREAKDOWN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {TNF_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
+                    <tr key={row.metric}>
+                      <th scope="row">{row.metric}</th>
+                      <td>{row.breakdown}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <h3 className="sub-heading">Free Main-Line Discipline Teaser · Week 9 TNF (JAX @ BAL)</h3>
             <div className="fixture-list">
               {SEALED_MAIN_CALLS.filter((c) => c.freeTeaser).map((c) => (
                 <div className="fixture-row" key={`${c.matchup}-${c.selection}`} style={{ flexDirection: "column", alignItems: "stretch" }}>
@@ -697,7 +742,7 @@ export function RedlineWorld({
               ))}
             </div>
 
-            <h3 className="sub-heading" style={{ marginTop: 24 }}>Free Player Prop Teaser</h3>
+            <h3 className="sub-heading" style={{ marginTop: 24 }}>Free Player Prop Teaser · Week 9 TNF (JAX @ BAL)</h3>
             <div className="fixture-list">
               {SEALED_PROPS.filter((p) => p.freeTeaser).map((p) => (
                 <div className="fixture-row" key={`${p.matchup}-${p.player}`} style={{ flexDirection: "column", alignItems: "stretch" }}>
@@ -719,9 +764,9 @@ export function RedlineWorld({
             </div>
 
             <div className="email-capture-gate">
-              <div className="email-capture-title">Unlock 3 More Free Trench Teaser Plays</div>
+              <div className="email-capture-title">Get Daily Trench &amp; Injury Matchup Notes</div>
               <p className="email-capture-desc">
-                Join 4,200+ sharp bettors receiving daily GSI trench mismatch alerts &amp; injury reallocation models.
+                Enter your email for weekly offensive/defensive line protection notes and active injury updates before kickoff.
               </p>
               {!emailCaptured ? (
                 <form onSubmit={handleEmailSubmit} className="email-capture-form">
@@ -734,7 +779,7 @@ export function RedlineWorld({
                     className="email-capture-input"
                   />
                   <button type="submit" disabled={emailLoading} className="email-capture-btn">
-                    {emailLoading ? "Unlocking…" : "Unlock 3 Free Plays →"}
+                    {emailLoading ? "Unlocking…" : "Get Matchup Notes →"}
                   </button>
                 </form>
               ) : (
@@ -744,7 +789,7 @@ export function RedlineWorld({
 
             <div className="locked-card-wrapper">
               <div className="locked-blur-item">
-                <h3 className="sub-heading">Remaining 9 Official Main-Line &amp; Derivative Calls</h3>
+                <h3 className="sub-heading">9 Locked Top-Confidence TNF Plays (88/100) &amp; Week 9 Main-Line Calls</h3>
                 <div className="fixture-list">
                   {SEALED_MAIN_CALLS.filter((c) => !c.freeTeaser).map((c) => (
                     <div className="fixture-row" key={`${c.matchup}-${c.selection}`}>
@@ -755,9 +800,9 @@ export function RedlineWorld({
                   ))}
                 </div>
 
-                <h3 className="sub-heading" style={{ marginTop: 24 }}>Remaining 17 Locked Player Props</h3>
+                <h3 className="sub-heading" style={{ marginTop: 24 }}>9 Locked TNF Player Matchups (88/100) &amp; Week 9 Sunday/MNF Props</h3>
                 <div className="fixture-list">
-                  {SEALED_PROPS.filter((p) => !p.freeTeaser).slice(0, 6).map((p) => (
+                  {SEALED_PROPS.filter((p) => !p.freeTeaser).slice(0, 9).map((p) => (
                     <div className="fixture-row" key={`${p.matchup}-${p.player}`}>
                       <span className="fixture-week">{p.conf}</span>
                       <div className="fixture-match">{p.player} <small>{p.matchup}</small> · 🔒 LOCKED PROP LINE</div>
@@ -766,7 +811,7 @@ export function RedlineWorld({
                   ))}
                 </div>
 
-                <h3 className="sub-heading" style={{ marginTop: 24 }}>13 Correlated Same-Game Parlays</h3>
+                <h3 className="sub-heading" style={{ marginTop: 24 }}>Locked 3-Leg TNF SGP &amp; Week 9 Correlated Parlays</h3>
                 <div className="fixture-list">
                   {SEALED_SGPS.slice(0, 3).map((s) => (
                     <div className="fixture-row" key={s.matchup}>
@@ -781,7 +826,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Verified Season Record <strong>62-23-1 · +26.50u</strong> entering Week 9. Unlock all remaining main-line plays, player props, and correlated SGPs with instant in-place reveal.
+                  Verified Season Record <strong>62-23-1 · +26.50u</strong> entering Week 9. Unlock all 9 remaining top-confidence TNF plays (88/100), the 3-Leg SGP, Showdown Captain lineups, and our full Week 9 Sunday/MNF card.
                 </p>
                 <button
                   type="button"
@@ -829,19 +874,19 @@ export function RedlineWorld({
             close={() => setPanel("board")}
             className="detail-panel"
           >
-            <div className="detail-focus">Coach&apos;s Mind Matchup Dossier</div>
+            <div className="detail-focus">Matchup Film &amp; Trench Breakdown</div>
             <p className="fixture-copy">{sanitizePlainFootballText(selectedFixture.schemeMatchup.coverageShell)}</p>
             <p className="fixture-copy mt-4">{sanitizePlainFootballText(selectedFixture.paceOfPlay.notes)}</p>
             <p className="panel-footnote">Official spread, total, props, and parlays unlock inside the RedZone packs.</p>
             <div className="detail-nav">
-              <button type="button" className="subtle-action" onClick={() => setPanel("board")}>Back to all 13 matchups</button>
+              <button type="button" className="subtle-action" onClick={() => setPanel("board")}>Back to all matchups</button>
               <button type="button" className="plate-go" onClick={() => setPanel("packs")}>Unlock Pack →</button>
             </div>
           </PanelFrame>
         )}
 
         {panel === "board" && (
-          <PanelFrame eyebrow="Week 8 · All 13 Matchup Dossiers" title="The field board" close={closePanel} className="board-panel">
+          <PanelFrame eyebrow="Week 9 · Matchup Previews & Film Breakdown" title="The field board" close={closePanel} className="board-panel">
             <div className="board-controls" data-no-camera>
               <label>SEARCH MATCHUPS<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Team or coverage angle" /></label>
               <label>SLATE<select value={slot} onChange={(event) => setSlot(event.target.value)}><option value="all">All slates</option>{Array.from(new Set(writeups.map((fixture) => fixture.windowSlot))).map((windowSlot) => <option key={windowSlot} value={windowSlot}>{formatWindowSlotLabel(windowSlot)}</option>)}</select></label>

@@ -6,7 +6,7 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Pricing & Plans | Galaxy Sports Edge",
   description:
-    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Analytics / GSI API ($499). Powered by our verified 38-13-1 (+22.85u) autonomous engine.",
+    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Syndicate Data Feed ($499). Backed by our verified 62-23-1 (72.9% · +26.50u) official NFL record.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -16,15 +16,15 @@ const TIERS = [
     name: "Single Game Pass",
     price: "$9",
     cadence: "per game",
-    description: "Full tactical breakdown, official side/total calls, top 3 player props, and 1 correlated SGP for any individual marquee game.",
+    description: "Full game breakdown, official spread and total calls, top 3 player props, and 1 correlated Same-Game Parlay for any marquee island game.",
     popular: false,
     slug: "tnf-all-in-pack",
     features: [
       "Official Spread & Total Calls",
       "Top 3 High-Conviction Player Props",
       "1 Correlated Same-Game Parlay",
-      "Trench Pocket Physics & Matchup X-Ray",
-      "Instant In-Place Unlock",
+      "Offensive & Defensive Line Matchup Notes",
+      "Instant In-Place Browser Unlock",
     ],
     cta: "Get Single Game Pass",
     ctaLink: "/packages#tnf-all-in-pack",
@@ -34,16 +34,16 @@ const TIERS = [
     name: "Weekly All-Access",
     price: "$29",
     cadence: "per week",
-    description: "Complete slate coverage across all 13+ games from Thursday Night through Monday Night Football, plus full DFS optimizer portfolio.",
+    description: "Complete slate coverage across all 13+ games from Thursday Night through Monday Night Football, plus our full DraftKings & FanDuel DFS lineup portfolio.",
     popular: true,
     slug: "week8-all-access",
     features: [
       "All 13+ Game Cards (Thursday to Monday)",
       "18+ Locked Player Props (Full Board)",
       "13 Correlated Same-Game Parlays",
-      "Full DFS Portfolio (Cash & GPP Optimal Lineups)",
+      "Full DFS Portfolio (Cash & GPP Lineups)",
       "16-Player Expanded Position Core",
-      "Trench X-Ray & Injury Reallocation Dossiers",
+      "Trench Matchup & Injury Workload Breakdowns",
     ],
     cta: "Unlock Weekly All-Access",
     ctaLink: "/packages#week8-all-access",
@@ -53,37 +53,37 @@ const TIERS = [
     name: "VIP Season Pass",
     price: "$199",
     cadence: "rest of season & playoffs",
-    description: "Unrestricted VIP access for the remainder of the 2026 season and Super Bowl LXI. Zero recurring rebills.",
+    description: "Unrestricted VIP access for the remainder of the 2026 season through Super Bowl LXI. One-time payment with zero recurring rebills.",
     popular: false,
     slug: "vip-season-pass",
     features: [
       "Every Game Card Through Super Bowl LXI",
       "Complete Player Props & Derivatives Suite",
-      "Daily Fantasy (DFS) Cash & MME Portfolios",
-      "Early Friday Injury Reallocation Models",
-      "Private VIP Discord & Real-Time Alert Desk",
-      "Direct Line to Research Team",
+      "Daily Fantasy (DFS) Cash & Tournament Lineups",
+      "Friday Injury & Target Redistribution Reports",
+      "Real-Time Line Movement & Injury Alerts",
+      "Direct Access to the Football Research Desk",
     ],
     cta: "Join VIP Season Pass",
     ctaLink: "/packages#week8-all-access",
   },
   {
     id: "pro-analytics-gsi-api",
-    name: "Pro Analytics / GSI API",
+    name: "Pro Syndicate Data Feed",
     price: "$499",
     cadence: "per month",
-    description: "Institutional quant and syndicate access. Direct programmatic API, sub-second odds feeds, and 10k-world distribution vectors.",
+    description: "Direct data feed for high-volume bettors and syndicate desks. Real-time de-vigged fair odds, injury workload updates, and full-slate matchup grades.",
     popular: false,
     slug: "pro-analytics-gsi-api",
     features: [
-      "Programmatic REST & WebSocket API Access",
-      "10,000-World Snap-by-Snap Vector Stream",
-      "Sinkhorn-Knopp Optimal Transport Matrices",
-      "Sub-second Market Odds & De-Vig Pipeline",
-      "Historical PBP Datasets & Replay Provenance",
-      "Dedicated Enterprise SLA & Quant Support",
+      "Programmatic REST & WebSocket Feed Access",
+      "Full-Slate Snap & Target Share Projections",
+      "Injury Workload & Depth Chart Redistribution",
+      "Live Sportsbook Odds & De-Vigged Fair Prices",
+      "Historical Play-by-Play & Closing Line Archive",
+      "Dedicated Analyst Desk Support",
     ],
-    cta: "Contact Enterprise Sales",
+    cta: "Contact Syndicate Desk",
     ctaLink: "/research",
   },
 ];
@@ -96,13 +96,13 @@ export default function PricingPage(): JSX.Element {
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF4D2E]">
-            Official New Engine Verified Record: 62-23-1 (72.9%) · +26.50u
+            Official Verified NFL Record: 62-23-1 (72.9%) · +26.50u
           </p>
           <h1 className="mt-3 font-display text-4xl uppercase tracking-tight text-white sm:text-6xl">
             Choose Your Edge
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-[#C4BFB6] sm:text-lg">
-            Powered by the Galaxy 10-Layer Quantitative Engine. Honest conviction scores (strictly XX/100, never raw percentages), audited public ledger, and disciplined pass criteria.
+            Built on film tendencies, trench matchups, verified injury reports, and de-vigged line comparisons. Honest conviction scores (strictly XX/100, never raw percentages), audited public ledger, and disciplined pass rules.
           </p>
         </div>
 
@@ -160,18 +160,18 @@ export default function PricingPage(): JSX.Element {
           ))}
         </div>
 
-        {/* Verification Guarantee & Scientific Transparency */}
+        {/* Verification Guarantee & Pass Discipline */}
         <div className="mt-16 rounded-xl border border-[#252833] bg-[#0E1015] p-8 text-center sm:p-10">
           <h2 className="font-display text-2xl uppercase tracking-wide text-white sm:text-3xl">
-            Mathematical Integrity &amp; Strict Pass Discipline
+            Honest Football Grading &amp; Strict Pass Discipline
           </h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-[#C4BFB6]">
-            Every call published on Galaxy Sports Edge originates from our 5-Stage Autonomous Engine: film-tendency coaching models, 10,000-world JEV snap-by-snap simulations, spectral cluster orthogonalization, and class-B market de-vigged copulas. If an edge does not clear our conjunction threshold, we mark it <strong>PASS · NO BET</strong>. We never force action.
+            Every call published on Galaxy Sports Edge is built from coaching tendencies, offensive and defensive line pass-protection matchups, active injury reports, and de-vigged sportsbook price comparisons. If a game or prop does not give us a clear edge over the market number, we mark it <strong>PASS · NO BET</strong>. We never force action.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
-            <span>✓ Verified Record: 38-13-1 (74.5%) · +22.85u</span>
-            <span>✓ Secondary All-In: 47-19-1 (71.2%) · +24.92u</span>
-            <span>✓ 100% Cryptographic Timestamp Hashes</span>
+            <span>✓ Verified Record: 62-23-1 (72.9%) · +26.50u</span>
+            <span>✓ Week 8 Settled Sweep: 22-8-1 · +12.40u</span>
+            <span>✓ Timestamped Pre-Kickoff Ledger</span>
           </div>
         </div>
       </main>

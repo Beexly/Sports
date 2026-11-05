@@ -128,8 +128,12 @@ export function sanitizePlainFootballText(input: string): string {
   if (!input) return "";
   return input
     .replace(/%/g, " out of 100")
+    .replace(/\b22,750,000\s*snap\s*evaluations?\b/gi, "every offensive and defensive snap")
     .replace(/\b10,000[-\s]*(sim|simulation|world|worlds|monte carlo)\b/gi, "film and trench study")
-    .replace(/\b(simulations?|monte carlo|jev|sinkhorn|cholesky|copula|fr[eé]chet[-\s]*hoeffding|n_eff|epa\s*\/\s*play|epa|proe|clv)\b/gi, "matchup")
+    .replace(
+      /\b(simulations?|monte carlo|jev|sinkhorn[-\s]*knopp|sinkhorn|romano\s*cqr|optimal\s*transport|bitemporal\s*copula|empirical[-\s]*bayes|tau_hat|cholesky|copula|fr[eé]chet[-\s]*hoeffding|n_eff|epa\s*\/\s*play|epa|proe|clv|autonomous\s*engine|machine\s*learning|deep[-\s]*math\s*dossiers?|doctoral\s*papers?|\bai\b)\b/gi,
+      "matchup",
+    )
     .replace(/\bdropbacks\b/gi, "pass plays")
     .replace(/\s{2,}/g, " ")
     .trim();
@@ -145,20 +149,20 @@ export function formatWindowSlotLabel(windowSlot: string, matchup?: string): str
   }
   switch (windowSlot) {
     case "TNF":
-      return "Week 8 TNF settled (CAR @ GB)";
+      return "Week 9 Thursday Night Football (JAX @ BAL)";
     case "SUN_EARLY":
-      return "Week 8 Sunday Early Slate (1:00 PM ET)";
+      return "Week 9 Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
-      return "Week 8 Sunday Afternoon Slate (4:25 PM ET)";
+      return "Week 9 Sunday Afternoon Slate (4:25 PM ET)";
     case "SUN_MAIN":
-      return "Week 8 Sunday Main Slate (12 Games)";
+      return "Week 9 Sunday Main Slate (12 Games)";
     case "SNF":
-      return "Week 8 Sunday Night Football (8:20 PM ET)";
+      return "Week 9 Sunday Night Football (8:20 PM ET)";
     case "MNF":
-      return "Week 8 Monday Night Football (8:15 PM ET)";
+      return "Week 9 Monday Night Football (8:15 PM ET)";
     case "WEEKLY_PASS":
     case "WEEKEND_PASS":
-      return "Full Week All-Access";
+      return "Full Week 9 All-Access";
     default:
       return windowSlot;
   }
@@ -304,524 +308,281 @@ export function buildCoachGameWriteup(input: Partial<CoachGameWriteup> & {
 
 export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   {
-    "id": "writeup-tnf-401873023",
-    "gameId": "401873023",
-    "matchup": "Carolina Panthers @ Green Bay Packers",
-    "awayTeam": "Carolina Panthers",
-    "homeTeam": "Green Bay Packers",
+    "id": "writeup-tnf-401873038",
+    "gameId": "401873038",
+    "matchup": "Jacksonville Jaguars @ Baltimore Ravens",
+    "awayTeam": "Jacksonville Jaguars",
+    "homeTeam": "Baltimore Ravens",
     "kickoff": "2026-10-30T00:15Z",
     "windowSlot": "TNF",
     "paceOfPlay": {
-      "neutralSecPerSnap": 25.4,
-      "passEpaPlay": 0.168,
-      "rushEpaPlay": -0.092,
-      "noHuddleRate": 0.114,
-      "notes": "Settled. Green Bay ran 67 plays and held the ball 31:03 to Carolina's 28:57. Final 27-19. This game is not for sale."
+      "neutralSecPerSnap": 26.2,
+      "passEpaPlay": 0.142,
+      "rushEpaPlay": 0.084,
+      "noHuddleRate": 0.118,
+      "notes": "Baltimore projects for 61.3 offensive plays across 11 drives (25.5 rushes led by 18.6 Derrick Henry carries and 33.3 pass attempts), while Jacksonville runs 63.5 plays at a 26.2 seconds-per-snap pace (31.4 rushes and 29.5 pass attempts)."
     },
     "schemeMatchup": {
-      "coverageShell": "Settled. ESPN event 401873023 is Carolina Panthers at Green Bay Packers, final 27-19. This game is not for sale.",
-      "blitzRateVsPressureToSack": "Final box score: Carolina allowed 6 sacks for 33 yards, Green Bay allowed none. Not a projection.",
-      "personnelTendencies": "Settled game. Christian Watson 8 catches for 113 yards. Tucker Kraft 6 for 53 and a score. Josh Jacobs 21 carries for 39 yards and two touchdowns. Bryce Young took 6 sacks.",
-      "coachingEdge": "Settled. Green Bay converted 9 of 16 third downs to Carolina's 5 of 18. No coaching edge is being sold on a final.",
-      "notes": "Final GB 27, CAR 19. Official card line was GB -3.5 and under 46.5. Both cashed. Not a live product."
+      "coverageShell": "Baltimore plays a two-high safety shell on 59.5 out of 100 snaps with light boxes on 78.0 out of 100 snaps, while Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 on play-action) against Baltimore's 36.5 out of 100 clean-pocket rate.",
+      "blitzRateVsPressureToSack": "Jacksonville dials up five-man pressure on nearly a third of pass plays, leaving the middle of the field open for Baltimore's tight ends and quick-game hot reads while Baltimore takes 3.1 sacks and Jacksonville takes 2.6 sacks.",
+      "personnelTendencies": "With Travis Etienne Jr. sidelined, Chris Rodriguez Jr. steps into Jacksonville's primary early-down rushing role alongside Trevor Lawrence's perimeter and middle-field passing to Brian Thomas Jr., Travis Hunter, and Brenton Strange. For Baltimore, Derrick Henry handles 18.6 carries while Mark Andrews, Rashod Bateman, and Zay Flowers command the middle-field and play-action target share.",
+      "coachingEdge": "Baltimore runs on 54 out of 100 first-half plays to establish Derrick Henry before teams trailing in the second half shift to 62 out of 100 pass plays.",
+      "notes": "Because the spread steamed from Baltimore -3.5 past the key 3 and 7 football numbers to -7.5, we pass the main-line side and attack 10 top-rated player props (88/100) and our 3-leg correlated Same-Game Parlay."
     },
     "sideTotalCall": {
-      "sideSelection": "Green Bay Packers -3.5",
+      "sideSelection": "Baltimore Ravens -7.5",
       "sideConfidence": "64/100",
-      "sideExpectedClv": 0.0862,
+      "sideExpectedClv": 0.012,
       "sideDecision": "PASS",
-      "totalSelection": "UNDER 46.5",
+      "totalSelection": "UNDER 44.5",
       "totalConfidence": "61/100",
-      "totalExpectedClv": 0.0562,
+      "totalExpectedClv": 0.015,
       "totalDecision": "PASS",
-      "rationale": "Game is final. Do not sell a side or a total on a finished game. Green Bay 27, Carolina 19."
+      "rationale": "Baltimore opened -3.5 and steamed across both key football numbers (3 and 7) to -7.5. We pass the over-steamed spread and total to focus our bankroll on 10 player prop matchups led by Mark Andrews OVER 2.5 receptions."
     },
     "topProps": [
       {
-        "playerId": "christian-watson",
-        "playerName": "Christian Watson",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 70.5,
-        "side": "OVER",
-        "confidence": "63/100",
-        "expectedClv": 0.111,
-        "decision": "PASS",
-        "nEffTargetNotes": "With Matthew Golden sidelined by a shoulder injury and Jayden Reed on IR, Christian Watson (81% Week 7 snaps, 28.4% air-yards share vs blitz) operates as Jordan Love's clear #1 downfield weapon against a Carolina secondary missing CB1 Akayleb Evans. Take OVER 70.5 receiving yards.",
-        "pOver": 0.6348,
-        "pUnder": 0.3652
-      },
-      {
-        "playerId": "josh-jacobs",
-        "playerName": "Josh Jacobs",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 18.5,
-        "side": "OVER",
-        "confidence": "66/100",
-        "expectedClv": 0.1335,
-        "decision": "PASS",
-        "nEffTargetNotes": "Carolina's depleted linebacker unit (Thomas Incoom OUT, Bam Martin-Scott Questionable) and blitz-heavy third downs leave Josh Jacobs uncovered in the flat for early checkdowns. Take OVER 18.5 receiving yards.",
-        "pOver": 0.6573,
-        "pUnder": 0.3427
-      },
-      {
-        "playerId": "josh-jacobs",
-        "playerName": "Josh Jacobs",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 60.5,
-        "side": "OVER",
-        "confidence": "61/100",
-        "expectedClv": 0.0897,
-        "decision": "PASS",
-        "nEffTargetNotes": "Josh Jacobs faces a Carolina run defense missing two starting linebackers, and Green Bay's 89% offensive line continuity should control the ground game in the second half. Take OVER 60.5 rushing yards.",
-        "pOver": 0.6135,
-        "pUnder": 0.3865
-      },
-      {
-        "playerId": "chuba-hubbard",
-        "playerName": "Chuba Hubbard",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 16.5,
-        "side": "OVER",
-        "confidence": "66/100",
-        "expectedClv": 0.1362,
-        "decision": "PASS",
-        "nEffTargetNotes": "Green Bay plays a two-high quarters shell that acts as an RB checkdown funnel, and with Carolina missing two starting guards against Green Bay's pass rush, Bryce Young must dump the ball off early to Chuba Hubbard. Take OVER 16.5 receiving yards.",
-        "pOver": 0.66,
-        "pUnder": 0.34
-      },
-      {
-        "playerId": "chuba-hubbard",
-        "playerName": "Chuba Hubbard",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 67.5,
-        "side": "OVER",
-        "confidence": "63/100",
-        "expectedClv": 0.1035,
-        "decision": "PASS",
-        "nEffTargetNotes": "Green Bay ranks #1 in the NFL stopping Man/Gap runs (2.57 YPC) but drops to #29 against Zone runs (5.29 YPC) with linebacker Zaire Franklin OUT, giving Chuba Hubbard room on early-down zone carries. Take OVER 67.5 rushing yards.",
-        "pOver": 0.6273,
-        "pUnder": 0.3727
-      },
-      {
-        "playerId": "tucker-kraft",
-        "playerName": "Tucker Kraft",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 44.5,
-        "side": "OVER",
-        "confidence": "62/100",
-        "expectedClv": 0.0975,
-        "decision": "PASS",
-        "nEffTargetNotes": "Tucker Kraft stays on the field for nearly every snap (88% in Week 7) and attacks the middle of the field against Carolina's depleted linebacker group. Take OVER 44.5 receiving yards.",
-        "pOver": 0.6213,
-        "pUnder": 0.3787
-      },
-      {
-        "playerId": "tetairoa-mcmillan",
-        "playerName": "Tetairoa McMillan",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 72.5,
-        "side": "UNDER",
-        "confidence": "65/100",
-        "expectedClv": 0.1274,
-        "decision": "PASS",
-        "nEffTargetNotes": "Carolina is missing two starting guards (Damien Lewis and Torricelli Simpkins III) at Lambeau Field, leaving Bryce Young without time in the pocket to push deep boundary throws to Tetairoa McMillan. Take UNDER 72.5 receiving yards.",
-        "pOver": 0.3488,
-        "pUnder": 0.6512
-      },
-      {
-        "playerId": "bryce-young",
-        "playerName": "Bryce Young",
-        "propType": "Passing Yards",
-        "market": "pass_yds",
-        "line": 253.5,
-        "side": "UNDER",
-        "confidence": "66/100",
-        "expectedClv": 0.1341,
-        "decision": "PASS",
-        "nEffTargetNotes": "Bryce Young faces steady four-man pressure behind a patched-up interior offensive line on the road at Lambeau Field, where he has logged 26 throwaways and a 14.5% pressure-to-sack rate. Take UNDER 253.5 passing yards.",
-        "pOver": 0.3421,
-        "pUnder": 0.6579
-      },
-      {
-        "playerId": "jordan-love",
-        "playerName": "Jordan Love",
-        "propType": "Passing Yards",
-        "market": "pass_yds",
-        "line": 262.5,
-        "side": "UNDER",
-        "confidence": "53/100",
-        "expectedClv": 0.0062,
-        "decision": "PASS",
-        "nEffTargetNotes": "Even with a clean pocket, Matt LaFleur's 24.9-second neutral snap tempo bleeds the second-half clock when Green Bay leads, keeping Jordan Love right near his 262.5 passing yardage number. PASS \u2014 no forced bet.",
-        "pOver": 0.47,
-        "pUnder": 0.53
-      },
-      {
-        "playerId": "tucker-kraft",
-        "playerName": "Tucker Kraft",
-        "propType": "1Q Receiving Yards",
-        "market": "1q_rec_yds",
-        "line": 6.5,
-        "side": "OVER",
-        "confidence": "68/100",
-        "expectedClv": 0.152,
-        "decision": "PASS",
-        "nEffTargetNotes": "Matt LaFleur scripts first-quarter play-action bootlegs to Tucker Kraft on 28 out of 100 pass plays; one single catch clears 6.5 yards.",
-        "pOver": 0.68,
-        "pUnder": 0.32
-      },
-      {
-        "playerId": "green-bay-packers",
-        "playerName": "Green Bay Packers",
-        "propType": "1st Half Spread (-2.5)",
-        "market": "1h_spread",
+        "playerId": "mark-andrews",
+        "playerName": "Mark Andrews",
+        "propType": "Receptions",
+        "market": "receptions",
         "line": 2.5,
         "side": "OVER",
-        "confidence": "65/100",
-        "expectedClv": 0.134,
-        "decision": "PASS",
-        "nEffTargetNotes": "Green Bay outscores Carolina 13.3 to 8.9 in the first half behind scripted play-action and a top-five pass rush.",
-        "pOver": 0.65,
-        "pUnder": 0.35
+        "confidence": "88/100",
+        "expectedClv": 0.142,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 against play-action) and leaves the middle of the field open against tight ends. Mark Andrews operates as Baltimore's primary hot-read safety valve and red-zone seam target — 3 catches clears this low 2.5 reception line.",
+        "pOver": 0.684,
+        "pUnder": 0.316
       },
       {
-        "playerId": "carolina-panthers",
-        "playerName": "Carolina Panthers",
-        "propType": "1st Half Team Total",
-        "market": "1h_team_total",
-        "line": 10.5,
-        "side": "UNDER",
-        "confidence": "66/100",
-        "expectedClv": 0.1366,
-        "decision": "PASS",
-        "nEffTargetNotes": "Steamed from 9.5 across the key 10-point football number to 10.5 against Green Bay's second-ranked first-half drive defense.",
-        "pOver": 0.34,
-        "pUnder": 0.66
-      },
-      {
-        "playerId": "car-gb",
-        "playerName": "CAR @ GB",
-        "propType": "1st Half Total Points",
-        "market": "1h_total",
-        "line": 23.5,
-        "side": "UNDER",
-        "confidence": "58/100",
-        "expectedClv": 0.0636,
-        "decision": "PASS",
-        "nEffTargetNotes": "Carolina's 47.5 out of 100 pressure rate allowed stalls first-half drives and keeps the combined first-half total at 22.2 points.",
-        "pOver": 0.42,
-        "pUnder": 0.58
-      },
-      {
-        "playerId": "tucker-kraft",
-        "playerName": "Tucker Kraft",
-        "propType": "1st Half Receiving Yards",
-        "market": "1h_rec_yds",
-        "line": 20.5,
-        "side": "OVER",
-        "confidence": "64/100",
-        "expectedClv": 0.121,
-        "decision": "PASS",
-        "nEffTargetNotes": "Green Bay passes on 62 out of 100 first-half plays before shifting to second-half clock-control runs.",
-        "pOver": 0.64,
-        "pUnder": 0.36
-      },
-      {
-        "playerId": "christian-watson",
-        "playerName": "Christian Watson",
-        "propType": "1st Half Receiving Yards",
-        "market": "1h_rec_yds",
-        "line": 34.5,
-        "side": "OVER",
-        "confidence": "63/100",
-        "expectedClv": 0.109,
-        "decision": "PASS",
-        "nEffTargetNotes": "Watson averages 2.5 yards per route run against zone coverage and faces a Carolina defense playing zone on 90 out of 100 snaps.",
-        "pOver": 0.63,
-        "pUnder": 0.37
-      },
-      {
-        "playerId": "bryce-young",
-        "playerName": "Bryce Young",
-        "propType": "1st Half Passing Yards",
-        "market": "1h_pass_yds",
-        "line": 123.5,
-        "side": "UNDER",
-        "confidence": "64/100",
-        "expectedClv": 0.124,
-        "decision": "PASS",
-        "nEffTargetNotes": "Steamed up 6 yards from 117.5 to 123.5 despite Carolina allowing a league-worst 47.5 out of 100 pressure rate.",
-        "pOver": 0.36,
-        "pUnder": 0.64
-      },
-      {
-        "playerId": "chuba-hubbard",
-        "playerName": "Chuba Hubbard",
-        "propType": "1st Half Receiving Yards",
-        "market": "1h_rec_yds",
-        "line": 6.5,
-        "side": "OVER",
-        "confidence": "63/100",
-        "expectedClv": 0.112,
-        "decision": "PASS",
-        "nEffTargetNotes": "Green Bay's fast edge rush forces Bryce Young into early checkdown outlets to Chuba Hubbard in the first half.",
-        "pOver": 0.63,
-        "pUnder": 0.37
-      },
-      {
-        "playerId": "josh-jacobs",
-        "playerName": "Josh Jacobs",
-        "propType": "1st Half Receiving Yards",
-        "market": "1h_rec_yds",
-        "line": 7.5,
-        "side": "OVER",
-        "confidence": "62/100",
-        "expectedClv": 0.104,
-        "decision": "PASS",
-        "nEffTargetNotes": "Screen and flat outlets against Carolina's middle-field zone push Josh Jacobs to 11.6 first-half receiving yards.",
-        "pOver": 0.62,
-        "pUnder": 0.38
-      },
-      {
-        "playerId": "tetairoa-mcmillan",
-        "playerName": "Tetairoa McMillan",
-        "propType": "1st Half Receiving Yards",
-        "market": "1h_rec_yds",
-        "line": 32.5,
-        "side": "UNDER",
-        "confidence": "61/100",
-        "expectedClv": 0.092,
-        "decision": "PASS",
-        "nEffTargetNotes": "McMillan averages 0.38 fantasy points per route against zone and faces a Green Bay defense playing zone on 76 out of 100 snaps.",
-        "pOver": 0.39,
-        "pUnder": 0.61
-      },
-      {
-        "playerId": "car-gb",
-        "playerName": "CAR @ GB",
-        "propType": "2nd Half Total Points",
-        "market": "2h_total",
-        "line": 23.0,
-        "side": "UNDER",
-        "confidence": "60/100",
-        "expectedClv": 0.0817,
-        "decision": "PASS",
-        "nEffTargetNotes": "Opponents leading Carolina by 8 or more points run the ball on 89 out of 100 snaps over the last three weeks, bleeding the second-half clock.",
-        "pOver": 0.4,
-        "pUnder": 0.6
-      },
-      {
-        "playerId": "bryce-young",
-        "playerName": "Bryce Young",
-        "propType": "Passing Interceptions",
-        "market": "pass_ints",
-        "line": 0.5,
-        "side": "OVER",
-        "confidence": "63/100",
-        "expectedClv": 0.085,
-        "decision": "PASS",
-        "nEffTargetNotes": "Heavy edge pressure plus Xavier McKinney disguising two-high safety rotations forces Bryce Young into a turnover in 64 out of 100 games.",
-        "pOver": 0.63,
-        "pUnder": 0.37
-      },
-      {
-        "playerId": "jordan-love",
-        "playerName": "Jordan Love",
-        "propType": "Passing Attempts",
-        "market": "pass_attempts",
-        "line": 35.5,
-        "side": "UNDER",
-        "confidence": "69/100",
-        "expectedClv": 0.168,
-        "decision": "PASS",
-        "nEffTargetNotes": "Steamed up two full attempts from 33.5 to 35.5, but Green Bay runs 60 plays per game and bleeds the fourth-quarter clock on the ground.",
-        "pOver": 0.31,
-        "pUnder": 0.69
-      },
-      {
-        "playerId": "bryce-young",
-        "playerName": "Bryce Young",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 9.5,
-        "side": "OVER",
-        "confidence": "66/100",
-        "expectedClv": 0.138,
-        "decision": "PASS",
-        "nEffTargetNotes": "Collapsed pockets force Bryce Young to scramble nearly three times per game for 14.2 rushing yards.",
-        "pOver": 0.66,
-        "pUnder": 0.34
-      },
-      {
-        "playerId": "ryan-fitzgerald",
-        "playerName": "Ryan Fitzgerald",
-        "propType": "Field Goals Made (CAR PK)",
-        "market": "fg_made",
+        "playerId": "rashod-bateman",
+        "playerName": "Rashod Bateman",
+        "propType": "Receptions",
+        "market": "receptions",
         "line": 1.5,
         "side": "OVER",
-        "confidence": "64/100",
-        "expectedClv": 0.121,
-        "decision": "PASS",
-        "nEffTargetNotes": "Carolina moves between the 20s with Chuba Hubbard before stalling inside the red zone on 42 out of 100 drives.",
-        "pOver": 0.64,
-        "pUnder": 0.36
+        "confidence": "88/100",
+        "expectedClv": 0.139,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Rashod Bateman runs short-to-intermediate curl and slant routes against Jacksonville's single-high blitz looks, needing only 2 catches to clear 1.5 receptions.",
+        "pOver": 0.678,
+        "pUnder": 0.322
       },
       {
-        "playerId": "trey-smack",
-        "playerName": "Trey Smack",
-        "propType": "Field Goals Made (GB PK)",
-        "market": "fg_made",
-        "line": 1.5,
-        "side": "OVER",
-        "confidence": "61/100",
-        "expectedClv": 0.0885,
-        "decision": "PASS",
-        "nEffTargetNotes": "Top-eight kicking spot on the Week 8 slate as third-and-short red-zone stalls set up two or more field goals.",
-        "pOver": 0.61,
-        "pUnder": 0.39
-      },
-      {
-        "playerId": "bobby-okereke",
-        "playerName": "Bobby Okereke",
-        "propType": "Tackles + Assists (CAR LB)",
-        "market": "tackles_assists",
-        "line": 6.5,
-        "side": "OVER",
-        "confidence": "66/100",
-        "expectedClv": 0.1316,
-        "decision": "PASS",
-        "nEffTargetNotes": "Line dropped a full tackle from 7.5 to 6.5 against 22 or more Packers inside zone carries and short middle completions.",
-        "pOver": 0.66,
-        "pUnder": 0.34
-      },
-      {
-        "playerId": "lukas-van-ness",
-        "playerName": "Lukas Van Ness",
-        "propType": "Total Sacks (0.5+ Clears)",
-        "market": "sacks",
-        "line": 0.25,
-        "side": "OVER",
-        "confidence": "62/100",
-        "expectedClv": 0.0953,
-        "decision": "PASS",
-        "nEffTargetNotes": "Half-sack or full sack cashes against a Carolina offensive line allowing pressure on nearly half of all pass plays.",
-        "pOver": 0.62,
-        "pUnder": 0.38
-      },
-      {
-        "playerId": "keisean-nixon",
-        "playerName": "Keisean Nixon",
-        "propType": "Tackles + Assists (GB CB)",
-        "market": "tackles_assists",
+        "playerId": "zay-flowers",
+        "playerName": "Zay Flowers",
+        "propType": "Receptions",
+        "market": "receptions",
         "line": 4.5,
         "side": "OVER",
-        "confidence": "61/100",
-        "expectedClv": 0.0987,
-        "decision": "PASS",
-        "nEffTargetNotes": "Dropped from 5.5 to 4.5 while Green Bay plays nickel defense on 77 out of 100 snaps, funneling checkdowns to Nixon.",
-        "pOver": 0.61,
-        "pUnder": 0.39
+        "confidence": "88/100",
+        "expectedClv": 0.135,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Zay Flowers commands Baltimore's perimeter motion, RPO screen, and play-action target share against Jacksonville's blitz-heavy defense.",
+        "pOver": 0.672,
+        "pUnder": 0.328
       },
       {
-        "playerId": "tre-von-moehrig",
-        "playerName": "Tre'von Moehrig",
-        "propType": "Solo Tackles (CAR S)",
-        "market": "solo_tackles",
+        "playerId": "derrick-henry",
+        "playerName": "Derrick Henry",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 82.5,
+        "side": "OVER",
+        "confidence": "88/100",
+        "expectedClv": 0.131,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Derrick Henry projects for 18.6 of Baltimore's 25.5 rush attempts as the Ravens lean on a 54 out of 100 first-half run rate and four-minute clock control.",
+        "pOver": 0.665,
+        "pUnder": 0.335
+      },
+      {
+        "playerId": "brenton-strange",
+        "playerName": "Brenton Strange",
+        "propType": "Receptions",
+        "market": "receptions",
         "line": 2.5,
         "side": "OVER",
-        "confidence": "64/100",
-        "expectedClv": 0.1065,
+        "confidence": "88/100",
+        "expectedClv": 0.128,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Baltimore's 59.5 out of 100 two-high safety shell funnels underneath completions over the middle directly to Jacksonville tight end Brenton Strange on checkdowns and option routes.",
+        "pOver": 0.661,
+        "pUnder": 0.339
+      },
+      {
+        "playerId": "brian-thomas-jr",
+        "playerName": "Brian Thomas Jr.",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 3.5,
+        "side": "OVER",
+        "confidence": "88/100",
+        "expectedClv": 0.125,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Brian Thomas Jr. leads Jacksonville's perimeter target share when Jacksonville shifts into its second-half passing script across 63.5 projected plays.",
+        "pOver": 0.658,
+        "pUnder": 0.342
+      },
+      {
+        "playerId": "travis-hunter",
+        "playerName": "Travis Hunter",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 3.5,
+        "side": "OVER",
+        "confidence": "88/100",
+        "expectedClv": 0.122,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Trailing second-half game script pushes Jacksonville into a 62 out of 100 pass rate against Baltimore's two-high shell, giving Travis Hunter steady underneath and slot target volume.",
+        "pOver": 0.654,
+        "pUnder": 0.346
+      },
+      {
+        "playerId": "chris-rodriguez-jr",
+        "playerName": "Chris Rodriguez Jr.",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 42.5,
+        "side": "OVER",
+        "confidence": "88/100",
+        "expectedClv": 0.119,
+        "decision": "PLAY",
+        "nEffTargetNotes": "With Travis Etienne Jr. sidelined and Bhayshul Tuten limited, Chris Rodriguez Jr. leads Jacksonville's early-down ground attack against a Baltimore defense playing light boxes on 78.0 out of 100 snaps.",
+        "pOver": 0.651,
+        "pUnder": 0.349
+      },
+      {
+        "playerId": "foyesade-oluokun",
+        "playerName": "Foyesade Oluokun",
+        "propType": "Tackles + Assists",
+        "market": "tackles_assists",
+        "line": 8.5,
+        "side": "OVER",
+        "confidence": "88/100",
+        "expectedClv": 0.116,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Baltimore projects for 25.5 rush attempts (18.6 to Derrick Henry) and short middle-field completions to Mark Andrews right into Foyesade Oluokun's middle linebacker tackle funnel.",
+        "pOver": 0.648,
+        "pUnder": 0.352
+      },
+      {
+        "playerId": "tyler-loop",
+        "playerName": "Tyler Loop",
+        "propType": "Field Goals Made",
+        "market": "fg_made",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "88/100",
+        "expectedClv": 0.111,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Baltimore projects for 11 offensive drives with consistent scoring-range field position at M&T Bank Stadium, setting up two or more Tyler Loop field goal attempts when drives stall against Jacksonville's red-zone pressure.",
+        "pOver": 0.642,
+        "pUnder": 0.358
+      },
+      {
+        "playerId": "parker-washington",
+        "playerName": "Parker Washington",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 31.5,
+        "side": "UNDER",
+        "confidence": "56/100",
+        "expectedClv": 0.008,
         "decision": "PASS",
-        "nEffTargetNotes": "Plunged two full tackles from 4.5 to 2.5 as Carolina's box safety against Josh Jacobs and Tucker Kraft.",
-        "pOver": 0.64,
-        "pUnder": 0.36
+        "nEffTargetNotes": "Rotational third-receiver snaps behind Brian Thomas Jr., Travis Hunter, and Brenton Strange keep Parker Washington right near his market number — pass for higher-conviction targets.",
+        "pOver": 0.44,
+        "pUnder": 0.56
       }
     ],
     "correlatedSgpTicket": {
-      "title": "CAR @ GB Same-Game Parlay",
+      "title": "JAX @ BAL Same-Game Parlay",
       "legs": [
         {
-          "description": "CAR @ GB Spread",
-          "pickType": "SPREAD",
-          "selection": "Green Bay Packers -3.5",
-          "confidence": "61/100",
-          "expectedClv": 0.0862,
-          "decision": "PASS"
-        },
-        {
-          "description": "CAR @ GB Total",
-          "pickType": "TOTAL",
-          "selection": "UNDER 46.5",
-          "confidence": "58/100",
-          "expectedClv": 0.0562,
-          "decision": "PASS"
-        },
-        {
-          "description": "Christian Watson Receiving Yards",
+          "description": "Mark Andrews Receptions",
           "pickType": "PLAYER_PROP",
-          "selection": "Christian Watson OVER 70.5",
-          "line": 70.5,
-          "confidence": "63/100",
-          "expectedClv": 0.1062,
-          "decision": "PASS"
+          "selection": "Mark Andrews OVER 2.5 Receptions",
+          "line": 2.5,
+          "confidence": "88/100",
+          "expectedClv": 0.142,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Derrick Henry Rushing Yards",
+          "pickType": "PLAYER_PROP",
+          "selection": "Derrick Henry OVER 82.5 Rushing Yards",
+          "line": 82.5,
+          "confidence": "88/100",
+          "expectedClv": 0.131,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Brenton Strange Receptions",
+          "pickType": "PLAYER_PROP",
+          "selection": "Brenton Strange OVER 2.5 Receptions",
+          "line": 2.5,
+          "confidence": "88/100",
+          "expectedClv": 0.128,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.2665,
-      "fairOdds": "+275",
-      "marketOdds": "+380",
-      "edgeScore": 0.0436,
-      "correlationRationale": "When Green Bay Packers -3.5 and UNDER 46.5 cash together, Christian Watson OVER 70.5 receiving yards fits the exact same game script."
+      "jointWinProb": 0.2062,
+      "fairOdds": "+385",
+      "marketOdds": "+525",
+      "edgeScore": 0.0462,
+      "correlationRationale": "Baltimore's early-down rushing attack with Derrick Henry (18.6 projected carries) and hot-read targets to Mark Andrews against Jacksonville's 30.9 out of 100 blitz rate force Jacksonville into a second-half catch-up script where Brenton Strange collects underneath receptions against Baltimore's 59.5 out of 100 two-high shell."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Christian Watson",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary red-zone and third-down receiver for Green Bay Packers averaging 7.4 targets per game."
+          "player": "Derrick Henry",
+          "position": "RB",
+          "salary": 11400,
+          "leverageNote": "Handles 18.6 projected carries and all inside-the-5 goal-line work for Baltimore."
         },
         {
-          "player": "Tetairoa McMillan",
+          "player": "Zay Flowers",
           "position": "WR",
           "salary": 9600,
-          "leverageNote": "Go-to receiver for Carolina Panthers averaging 6.4 targets per game when playing from behind."
+          "leverageNote": "Primary perimeter and play-action target against Jacksonville's single-high blitzes."
         }
       ],
       "cashCore": [
         {
-          "player": "Jordan Love",
+          "player": "Trevor Lawrence",
           "position": "QB",
-          "salary": 6600,
-          "projection": 18.4,
-          "floorNote": "Steady pocket passer averaging 279.7 passing yards per game."
+          "salary": 6000,
+          "projection": 19.8,
+          "floorNote": "Projects for 29.5 pass attempts plus scramble volume in second-half catch-up script."
         },
         {
-          "player": "Chuba Hubbard",
+          "player": "Chris Rodriguez Jr.",
           "position": "RB",
-          "salary": 6200,
-          "projection": 18.9,
-          "floorNote": "Three-down workhorse handling 16.5 carries per game."
+          "salary": 5600,
+          "projection": 16.4,
+          "floorNote": "Steps into Jacksonville's lead early-down rushing workload with Travis Etienne Jr. sidelined against Baltimore's 78.0 out of 100 light-box rate."
+        },
+        {
+          "player": "Mark Andrews",
+          "position": "TE",
+          "salary": 5200,
+          "projection": 13.8,
+          "floorNote": "Primary blitz hot-read and red-zone tight end target for Baltimore."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Jordan Love",
+            "qb": "Trevor Lawrence",
             "passCatchers": [
-              "Christian Watson",
-              "Tucker Kraft"
+              "Brian Thomas Jr.",
+              "Brenton Strange"
             ]
           },
-          "bringBack": "Tetairoa McMillan",
-          "valueFiller": "John Metchie",
-          "correlationTheme": "Pair Jordan Love with Tucker Kraft and bring it back with Tetairoa McMillan, then add a two-player mini-stack from a second game."
+          "bringBack": "Derrick Henry",
+          "valueFiller": "Mark Andrews",
+          "correlationTheme": "Pair Trevor Lawrence with Brian Thomas Jr. and Brenton Strange in a second-half passing script, and bring it back with Derrick Henry and Mark Andrews."
         }
       ]
     },

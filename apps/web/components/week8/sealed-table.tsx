@@ -73,7 +73,7 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                   <div className="mt-4 rounded border border-[#FF4D2E]/30 bg-[#16181F] p-3 text-xs">
                     <span className="font-semibold uppercase tracking-wider text-[#FF4D2E]">Trench X-Ray: </span>
                     <span className="text-[#EDE8E0]">
-                      Sinkhorn mass-conservation transfer · Pass pro pocket integrity +1.34s · Defensive pressure havoc rate 28.4%
+                      Offensive line pass protection +1.34s pocket time · Defensive front pressure rate 28.4%
                     </span>
                   </div>
                 )}
@@ -101,7 +101,7 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                     Unlock 3 More Free Trench Teaser Plays
                   </h3>
                   <p className="mt-2 text-sm text-[#C4BFB6]">
-                    Join 4,200+ sharp bettors receiving daily GSI trench mismatch alerts &amp; injury reallocation models, or unlock the entire locked card now.
+                    Join 4,200+ football bettors receiving daily NFL trench matchup alerts &amp; injury workload updates, or unlock the entire locked card now.
                   </p>
 
                   {!submitted ? (

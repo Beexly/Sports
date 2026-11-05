@@ -65,7 +65,7 @@ export default function PackagesPage(): JSX.Element {
                 62-23-1 · +26.50u
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                Through Week 8 Monday Night Football (CHI 34, SEA 17).
+                72.9% Win Rate · Entering Week 9 TNF (JAX @ BAL) &amp; Sunday/MNF Slate (Week 8 Settled).
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
@@ -104,6 +104,74 @@ export default function PackagesPage(): JSX.Element {
           </div>
         </div>
 
+        {/* Free Matchup & Game-Environment Analytics Strip / Table (Week 9 TNF: JAX @ BAL) */}
+        <section
+          data-testid="packages-free-game-environment-analytics"
+          className="mt-8 rounded-2xl border-2 border-amber-500/40 bg-slate-900/95 p-6 shadow-xl"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <span className="inline-block rounded bg-amber-500/20 border border-amber-400/50 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-300">
+                FREE GAME-SCRIPT INTELLIGENCE · WEEK 9 TNF (JAX @ BAL)
+              </span>
+              <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-white">
+                Free Matchup &amp; Game-Environment Analytics: Jacksonville Jaguars @ Baltimore Ravens
+              </h2>
+              <p className="mt-1 text-sm text-slate-300">
+                Full offensive pace, play-call splits, and trench protection tendencies for Thursday Night Football. All 9 remaining top-confidence TNF plays (88/100), the 3-Leg SGP, and Showdown Captain lineups are locked inside the packs below.
+              </p>
+            </div>
+            <span className="rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1.5 text-xs font-extrabold text-emerald-300">
+              Free Teaser: Mark Andrews OVER 2.5 Rec (88/100) · Spread PASS at -7.5
+            </span>
+          </div>
+
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-amber-300">
+                  <th className="py-2.5 pr-4">Matchup &amp; Game-Environment Metric</th>
+                  <th className="py-2.5">Week 9 TNF (JAX @ BAL) Film &amp; Script Breakdown</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/80 text-slate-200">
+                <tr>
+                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
+                    Projected Offensive Plays
+                  </th>
+                  <td className="py-3">
+                    Baltimore <strong className="text-white">61.3</strong> median (<strong className="text-white">61.9</strong> mean; <strong className="text-white">57–66</strong> IQR across <strong className="text-white">11</strong> drives) vs Jacksonville <strong className="text-white">63.5</strong> plays
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
+                    Baltimore Play-Call Split
+                  </th>
+                  <td className="py-3">
+                    <strong className="text-white">25.5</strong> Rush Attempts (<strong className="text-white">18.6</strong> Derrick Henry) + <strong className="text-white">33.3</strong> Pass Attempts + <strong className="text-white">3.1</strong> Sacks Taken (<strong className="text-white">54%</strong> run in 1H -&gt; <strong className="text-white">62%</strong> pass trailing in 2H)
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
+                    Jacksonville Play-Call Split
+                  </th>
+                  <td className="py-3">
+                    <strong className="text-white">31.4</strong> Rush Attempts + <strong className="text-white">29.5</strong> Pass Attempts + <strong className="text-white">2.6</strong> Sacks (<strong className="text-white">26.2 sec/snap</strong> pace)
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
+                    Trench &amp; Coverage Keys
+                  </th>
+                  <td className="py-3">
+                    Baltimore <strong className="text-white">59.5%</strong> Two-High Safety Shell &amp; <strong className="text-white">78.0%</strong> Light Boxes (<strong className="text-white">&lt;=5</strong> in box) | Jacksonville <strong className="text-white">30.9%</strong> Blitz Rate (<strong className="text-white">34.8%</strong> on Play-Action) vs Baltimore <strong className="text-white">36.5%</strong> Clean-Pocket Rate.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         {/* Wide, High-Contrast 2-Column Pack Cards */}
         <section id="pack-cards" className="mt-10">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
@@ -134,13 +202,13 @@ export default function PackagesPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <div>
               <span className="inline-block rounded-md bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                SUNDAY 12:00 PM CT - MONDAY 7:15 PM CT (13-GAME EXPANDED SLATE)
+                WEEK 9 TNF (JAX @ BAL) &amp; SUNDAY–MONDAY EXPANDED SLATE
               </span>
               <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-white">
-                Specialty Betting &amp; Expanded Sun-Mon DFS Packs
+                Specialty Betting &amp; Expanded Week 9 DFS Packs
               </h2>
               <p className="mt-1 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Target a specific edge across the 13-game Sunday-Monday slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Sunday-Monday DFS Core (2 Optimal Lineups + 2 QBs, 4 RBs, 4 WRs, 2 TEs, 2 DSTs).
+                Target a specific edge across the Week 9 slate: Defense &amp; IDP Tackles/Sacks, Goal-Line Anytime Touchdowns, Correlated Parlays &amp; SGPs, Kicking &amp; 1Q/1H Derivatives, or our Expanded Week 9 DFS Core (Showdown Captain + 2 Sunday Optimal Lineups + 14-Player Core Pool).
               </p>
             </div>
           </div>

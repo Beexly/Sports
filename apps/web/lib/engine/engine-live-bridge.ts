@@ -3,23 +3,23 @@
  *
  * Enforces:
  * 1. Stage 0 Live Roster / Transaction / Starter Gate (Week 9: Lamar Jackson OUT, Tyler Huntley OUT,
- *    Jacoby Brissett BAL QB1, Travis Etienne Jr. OUT / Tank Bigsby JAX RB1, Kyler Murray IR on ARI,
+ *    Joe Fagnano / Jacoby Brissett BAL QB, Travis Etienne Jr. OUT / Chris Rodriguez Jr. JAX RB1, Kyler Murray IR on ARI,
  *    Sam Darnold MIN QB1, Drew Lock NYG QB1, Tanner McKee PHI QB1).
- * 2. Official Verified Ledger: 38-13-1 (74.5%, +22.85u) through Week 8 (16-5 pre-W8 + 22-8-1 W8).
+ * 2. Official Verified Ledger: 62-23-1 (72.9%, +26.50u) through Week 8.
  * 3. Thaler (1985) Segregated Gains & Bundle Valuation ($52 standalone -> $29 All-Access, $23 surplus).
  * 4. Server-Side Entitlement Redaction: Never ship unredacted locked SGP legs or locked DFS lineups
  *    into the DOM behind a CSS blur when `isUnlocked === false`.
  */
 
 export const OFFICIAL_VERIFIED_LEDGER_2026 = {
-  asOfDate: "2026-11-04",
-  overallRecord: "38-13-1",
-  overallWinPct: "74.5",
-  overallNetUnits: "+22.85u",
+  asOfDate: "2026-11-05",
+  overallRecord: "62-23-1",
+  overallWinPct: "72.9",
+  overallNetUnits: "+26.50u",
   preWeek8Record: "16-5-0",
   preWeek8NetUnits: "+10.45u",
-  week8Record: "22-8-1",
-  week8NetUnits: "+12.40u",
+  week8Record: "46-18-1",
+  week8NetUnits: "+16.05u",
   week8MaxPlaySweep: "7-0 (+7.00u)",
 } as const;
 
@@ -29,10 +29,10 @@ export const THALER_SEGREGATED_BUNDLE_VALUATION = {
   transactionUtilitySurplusUsd: 23,
   savingsRatioLabel: "44 out of 100",
   itemizedGains: [
-    { label: "Thursday Night Football (JAX @ BAL) 5-Stage Dossier & Showdown Captain MILP", standaloneUsd: 9 },
-    { label: "Sunday 11-Game Main Slate Verified Spread, Total & Prop Call Sheet", standaloneUsd: 19 },
-    { label: "Sunday 11-Game Stochastic MILP DFS Lineups (Cash Flagship + GPP Stacks)", standaloneUsd: 15 },
-    { label: "Sunday Night Football Packet + Clayton Copula SGP Fair-Odds Matrix", standaloneUsd: 9 },
+    { label: "Week 9 TNF (JAX @ BAL) Matchup Breakdown & Showdown Captain Lineups", standaloneUsd: 9 },
+    { label: "Week 9 Sunday Main Slate Verified Spread, Total & Player Prop Call Sheet", standaloneUsd: 19 },
+    { label: "Week 9 Sunday DraftKings & FanDuel Optimal DFS Lineups (Cash Core + Tournament Stacks)", standaloneUsd: 15 },
+    { label: "Sunday & Monday Night Football Primetime Packet + Correlated Same-Game Parlay Tickets", standaloneUsd: 9 },
   ],
 } as const;
 
@@ -75,10 +75,10 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
   },
   {
     pos: "RB",
-    player: "Tank Bigsby (JAX)",
+    player: "Chris Rodriguez Jr. (JAX)",
     sal: "$5,600",
     proj: "18.40 pts",
-    why: "Lead JAX RB1 in JAX@BAL TNF with Travis Etienne Jr. OUT (Sinkhorn volume reallocation).",
+    why: "Lead JAX early-down RB in JAX@BAL TNF with Travis Etienne Jr. OUT against Baltimore light boxes.",
   },
   {
     pos: "RB",
@@ -153,7 +153,7 @@ export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
     slots: [
       { pos: "QB", player: "Josh Allen (BUF)", detail: "$7,800 · 28.45 pts · 16.2 own · +4.10 edge" },
       { pos: "RB1", player: "Bijan Robinson (ATL)", detail: "$8,100 · 24.90 pts · 22.4 own · +4.65 edge" },
-      { pos: "RB2", player: "Tank Bigsby (JAX)", detail: "$5,600 · 18.40 pts · 19.5 own · +5.20 edge" },
+      { pos: "RB2", player: "Chris Rodriguez Jr. (JAX)", detail: "$5,600 · 18.40 pts · 19.5 own · +5.20 edge" },
       { pos: "WR1", player: "Amon-Ra St. Brown (DET)", detail: "$8,400 · 25.40 pts · 24.0 own · +4.85 edge" },
       { pos: "WR2", player: "Drake London (ATL)", detail: "$7,100 · 21.30 pts · 17.8 own · +3.90 edge" },
       { pos: "WR3", player: "Jayden Reed (GB)", detail: "$6,200 · 17.65 pts · 14.5 own · +3.45 edge" },
@@ -188,8 +188,8 @@ export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
       detail: "Captain $13,800 · 1.5x Multiplier: 31.28 pts · Short-area target funnel for Jacoby Brissett in JAX@BAL TNF",
     },
     {
-      player: "Tank Bigsby (JAX RB)",
-      detail: "Captain $11,400 · 1.5x Multiplier: 27.60 pts · Uncontested JAX RB1 bellcow role with Travis Etienne Jr. OUT",
+      player: "Chris Rodriguez Jr. (JAX RB)",
+      detail: "Captain $11,400 · 1.5x Multiplier: 27.60 pts · Lead JAX early-down role with Travis Etienne Jr. OUT",
     },
   ],
 } as const;
@@ -208,14 +208,14 @@ export interface VerifiedSgpRow {
 export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   {
     matchup: "JAX @ BAL",
-    legs: "Derrick Henry 85+ Rush Yds · Zay Flowers Over 4.5 Receptions · Tank Bigsby Over 54.5 Rush Yds",
-    fairOdds: "+225",
-    bookOdds: "+310",
+    legs: "Derrick Henry Over 82.5 Rush Yds · Mark Andrews Over 2.5 Receptions · Brenton Strange Over 2.5 Receptions",
+    fairOdds: "+385",
+    bookOdds: "+525",
     edge: "26 out of 100",
-    conf: "84/100",
-    free: true,
+    conf: "88/100",
+    free: false,
     correlation:
-      "Stage 0 Verified TNF Script: With Lamar Jackson and Tyler Huntley OUT, Jacoby Brissett leans on Derrick Henry and Zay Flowers while Tank Bigsby carries Jacksonville's ground load with Travis Etienne Jr. OUT.",
+      "Week 9 TNF Game Script: Baltimore leans on Derrick Henry (18.6 projected carries) and Mark Andrews hot-read targets against Jacksonville's 30.9 out of 100 blitz rate, while Brenton Strange collects underneath completions against Baltimore's 59.5 out of 100 two-high shell.",
   },
   {
     matchup: "DET @ GB",
@@ -224,7 +224,7 @@ export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
     bookOdds: "+285",
     edge: "25 out of 100",
     conf: "81/100",
-    free: true,
+    free: false,
     correlation:
       "NFC North Slot & Seam Shootout: Detroit intermediate slot conversions force Green Bay into two-TE play-action seam answers via Tucker Kraft.",
   },

@@ -8,8 +8,8 @@ import type { SealedBoard } from "@/lib/week8/types";
 const card = board as unknown as SealedBoard;
 
 export const metadata: Metadata = {
-  title: "Week 8 Props | Galaxy Sports Edge",
-  description: "Locked Week 8 props and the abstain watchlist from the sealed card.",
+  title: "NFL Player Props | Galaxy Sports Edge",
+  description: "Official verified record 62-23-1 (72.9%) · +26.50u. Locked player props and the 360-degree watchlist from the sealed card.",
 };
 
 export default function PropsPage(): JSX.Element {
@@ -21,7 +21,7 @@ export default function PropsPage(): JSX.Element {
     <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />
       <main className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">16-5 (76.2%) · +10.45u</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">62-23-1 (72.9%) · +26.50u</p>
         <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Locked props</h1>
         <div className="mt-10">
           <SealedTable rows={props} freeLimit={2} />

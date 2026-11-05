@@ -183,7 +183,7 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
 
     const { container: boardDom, unmount: unmountBoard } = render(<BoardPage />);
     expect(boardDom.textContent).not.toContain("Under Construction");
-    expect(boardDom.textContent).toContain("38-13-1");
+    expect(boardDom.textContent).toContain("62-23-1");
     unmountBoard();
 
     const { container: calDom, unmount: unmountCal } = render(<CalibrationProofRoomPage />);
@@ -213,10 +213,12 @@ for (const w of LIVE_SLATE_COACH_WRITEUPS) {
     expect(packagesSrc).toContain(
       "One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.",
     );
-    expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks|%/i);
+    expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks/i);
+    expect(packagesSrc).toContain("62-23-1");
 
     const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
     const pkgText = pkgPageDom.textContent ?? "";
+    expect(pkgText).toContain("Free Matchup & Game-Environment Analytics: Jacksonville Jaguars @ Baltimore Ravens");
     expect(pkgText).not.toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
     expect(pkgText).not.toContain("Tonight");
     expect(pkgText).not.toMatch(/TONIGHT\s*·\s*TNF/i);

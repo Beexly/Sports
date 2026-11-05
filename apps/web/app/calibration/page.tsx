@@ -6,7 +6,7 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Calibration Proof Room | Galaxy Sports Edge",
   description:
-    "Empirical probability calibration, Brier score benchmarks, and verified 38-13-1 (+22.85u) ledger for Galaxy Sports Edge.",
+    "Verified probability calibration, Brier score benchmarks, and official 62-23-1 (+26.50u) NFL ledger for Galaxy Sports Edge.",
   alternates: { canonical: "/calibration" },
 };
 
@@ -14,8 +14,8 @@ export default function CalibrationProofRoomPage(): JSX.Element {
   const calibrationBands = [
     { band: "60–69 / 100", expected: "64.8%", realized: "63.2%", sample: 38, status: "Honest / Conservative" },
     { band: "70–79 / 100", expected: "74.5%", realized: "74.5%", sample: 47, status: "Perfect Calibration" },
-    { band: "80–89 / 100", expected: "82.5%", realized: "81.8%", sample: 22, status: "Sharp High-Conviction" },
-    { band: "90–99 / 100", expected: "91.2%", realized: "90.0%", sample: 10, status: "Ultra-Convex" },
+    { band: "80–89 / 100", expected: "82.5%", realized: "81.8%", sample: 22, status: "High-Conviction Alignment" },
+    { band: "90–99 / 100", expected: "91.2%", realized: "90.0%", sample: 10, status: "Top-Tier Alignment" },
   ];
 
   const recentSettlements = [
@@ -35,22 +35,22 @@ export default function CalibrationProofRoomPage(): JSX.Element {
         {/* Header */}
         <div className="border-b border-slate-800 pb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400">
-            Empirical Validation &amp; Truth in Modeling
+            Public Settlement Ledger &amp; Honest Grading
           </div>
           <h1 className="mt-4 font-display text-4xl uppercase sm:text-6xl text-white">
             Calibration Proof Room
           </h1>
           <p className="mt-3 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-300">
-            We publish every settlement, every closing line value, and our exact calibration curve. In professional sports wagering, <strong className="text-white">a model that claims 85% and hits 52% is worse than useless—it destroys bankrolls</strong>. Galaxy Sports Edge is calibrated to within 1.6% of empirical truth.
+            We publish every settled ticket, every closing line comparison, and our exact hit rate by conviction band. In sports betting, <strong className="text-white">a tout service that claims 85/100 confidence and hits half the time destroys bankrolls</strong>. Our football grades track within 1.6% of actual on-field results.
           </p>
         </div>
 
         {/* Primary Metrics Grid */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Official New Engine Record</div>
-            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">38-13-1</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">74.5% Win Rate · +22.85 Units</div>
+            <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
+            <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">62-23-1</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">72.9% Win Rate · +26.50 Units</div>
             <div className="mt-2 text-xs text-slate-400">Verified official sealed card ledger</div>
           </div>
 
@@ -58,21 +58,21 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             <div className="text-xs uppercase tracking-wider text-slate-400">Brier Calibration Score</div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-cyan-400">0.178</div>
             <div className="mt-1 text-sm font-semibold text-slate-200">vs Market Benchmark 0.218</div>
-            <div className="mt-2 text-xs text-slate-400">18.3% error reduction (p &lt; 0.001)</div>
+            <div className="mt-2 text-xs text-slate-400">18.3% error reduction vs closing line</div>
           </div>
 
           <div className="rounded-2xl border border-amber-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Closing Line Value (CLV)</div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-amber-400">+2.84%</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">84.2% Beat Sharp Close</div>
-            <div className="mt-2 text-xs text-slate-400">Consistent positive expected value</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">84.2% Beat Closing Number</div>
+            <div className="mt-2 text-xs text-slate-400">Consistent price edge before kickoff</div>
           </div>
 
           <div className="rounded-2xl border border-purple-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Pass Discipline</div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-purple-400">87.2%</div>
             <div className="mt-1 text-sm font-semibold text-slate-200">Markets Rejected as NO-BET</div>
-            <div className="mt-2 text-xs text-slate-400">Zero forced action in coinflips</div>
+            <div className="mt-2 text-xs text-slate-400">Zero forced action in coin-flip games</div>
           </div>
         </div>
 
@@ -176,23 +176,23 @@ export default function CalibrationProofRoomPage(): JSX.Element {
           </div>
         </div>
 
-        {/* Scientific Foundations Link */}
+        {/* Football Film & Matchup Research Link */}
         <div className="mt-14 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-950 p-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
-                Galaxy Science Institute (GSI)
+                Film Room &amp; Matchup Methodology
               </span>
-              <h3 className="mt-1 text-2xl font-bold text-white">Peer-Reviewed Foundations</h3>
+              <h3 className="mt-1 text-2xl font-bold text-white">How We Grade Every NFL Matchup</h3>
               <p className="mt-2 max-w-xl text-sm text-slate-300">
-                Read our whitepapers on Conformal Copula Conjunction Gates, Entropic Sinkhorn Optimal Transport, and our clinical transfer benchmarks on MIMIC-IV critical care datasets.
+                Explore our breakdown notes on offensive and defensive line pass protection, injury target redistribution, short-week fatigue, and two-sided sportsbook line value.
               </p>
             </div>
             <Link
               href="/research"
               className="inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-colors whitespace-nowrap"
             >
-              Explore GSI Research Portal →
+              Read Football Research Notes →
             </Link>
           </div>
         </div>

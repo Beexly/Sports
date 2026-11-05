@@ -451,7 +451,7 @@ export function PaywallRevealCard({
                         <strong>Pass Rush &amp; Sacks:</strong> {sanitizePlainFootballText(w.schemeMatchup.blitzRateVsPressureToSack)}
                       </p>
                       <p className="mt-1.5 text-xs leading-relaxed text-ion-1">
-                        <strong>Tempo &amp; Pace:</strong> {w.paceOfPlay.neutralSecPerSnap}s/snap · Pass EPA: {w.paceOfPlay.passEpaPlay > 0 ? `+${w.paceOfPlay.passEpaPlay}` : w.paceOfPlay.passEpaPlay}
+                        <strong>Tempo &amp; Pace:</strong> {w.paceOfPlay.neutralSecPerSnap}s/snap · Pass Efficiency: {w.paceOfPlay.passEpaPlay > 0 ? `+${w.paceOfPlay.passEpaPlay}` : w.paceOfPlay.passEpaPlay}
                       </p>
                     </div>
 
@@ -528,7 +528,7 @@ export function PaywallRevealCard({
               </div>
               <h4 className="rl-display mt-3 text-3xl text-ion-white">2 Optimal Lineups &amp; Core Pool</h4>
               <p className="mt-2 max-w-[65ch] text-sm text-ion-1">
-                Generated via deep game distributions, Sinkhorn-Knopp injury reallocations, and proprietary ownership leverage indexing.
+                Built from film study, offensive and defensive line protection splits, active injury replacements, and ownership leverage across the slate.
               </p>
 
               <div className="mt-8 grid gap-8 lg:grid-cols-2">

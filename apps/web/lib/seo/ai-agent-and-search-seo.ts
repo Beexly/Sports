@@ -1,17 +1,13 @@
 /**
- * Elite SEO, Answer Engine Optimization (AEO), and Generative Engine Optimization (GEO)
- * Answer Engines & Search Crawlers Discovery & Google Search Authority Module for Galaxy Sports Edge (`apps/web`).
+ * Search & Discovery Metadata Module for Galaxy Sports Edge (`apps/web`).
  *
- * Engineered to rank #1 on Google Search and serve as the primary cited authority for
- * ChatGPT / SearchGPT (`OAI-SearchBot`, `GPTBot`), Perplexity (`PerplexityBot`),
- * Claude (`ClaudeBot`, `anthropic-ai`), Google Gemini (`Google-Extended`), and Grok (`GrokBot`)
- * across:
+ * Provides structured JSON-LD and high-intent search keywords across:
  *   - NFL Picks, Against the Spread (ATS) & Totals
- *   - NFL Player Props & Two-Sided Shin/Goto De-Vig Fair Odds
- *   - NFL DraftKings Showdown & Main-Slate DFS Lineup Optimizer
+ *   - NFL Player Props & De-Vigged Fair Odds
+ *   - NFL DraftKings Showdown & Main-Slate DFS Lineups
  *   - NFL FanDuel Single-Game & Main-Slate DFS Projections
- *   - Fantasy Football Rankings, Start/Sit, WOPR & Expected Fantasy Points (xFP)
- *   - Sportsbook Odds Comparison, Closing Line Value (CLV) & Same Game Parlay (SGP) Copulas
+ *   - Fantasy Football Rankings, Start/Sit & Target Share
+ *   - Sportsbook Odds Comparison, Closing Line Value (CLV) & Correlated Same-Game Parlays
  */
 
 export const HIGH_INTENT_SEARCH_KEYWORDS: string[] = [
@@ -29,16 +25,16 @@ export const HIGH_INTENT_SEARCH_KEYWORDS: string[] = [
   "FanDuel NFL projections",
   "fantasy football rankings",
   "fantasy football start sit",
-  "fantasy football expected points xFP WOPR",
-  "sports betting model",
-  "Quantitative NFL Picks",
-  "Deterministic Statistical Modeling",
+  "fantasy football target share rankings",
+  "sports betting picks",
+  "NFL film breakdown picks",
+  "NFL trench matchup analysis",
   "sportsbook odds comparison",
-  "same game parlay SGP calculator",
+  "same game parlay SGP picks",
   "correlated parlay builder",
   "closing line value CLV tracker",
-  "Shin de-vig calculator",
-  "NFL snap-by-snap simulation",
+  "de-vigged sportsbook odds",
+  "NFL injury matchup analysis",
   "Galaxy Sports Edge",
 ];
 
@@ -68,20 +64,20 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@type": ["Organization", "SportsOrganization"],
         "@id": `${siteUrl}/#organization`,
         name: "Galaxy Sports Edge",
-        alternateName: ["GSE", "Galaxy Sports Quantitative Engine"],
+        alternateName: ["GSE", "Galaxy Sports Edge Football Desk"],
         url: siteUrl,
         description:
-          "Quantitative NFL & multi-sport intelligence platform powered by 10,000-world conserved snap-by-snap simulations, 22 mathematical research kernels, two-sided Shin/Goto market de-vigging, Same Game Parlay (SGP) copula pricing, DraftKings & FanDuel DFS optimization, and Fantasy Football xFP rankings.",
+          "NFL and multi-sport football analysis platform built on film tendencies, offensive and defensive line trench matchups, blitz and coverage shells, verified 32-team injury reports, de-vigged line comparisons, Same-Game Parlays, and DraftKings & FanDuel DFS lineups.",
         sameAs: ["https://x.com/GalaxySportsAI"],
         knowsAbout: [
-          "Quantitative NFL Picks",
-          "Deterministic Statistical Modeling",
+          "NFL Picks Against the Spread",
+          "NFL Over/Under Totals",
           "NFL Player Props",
           "DraftKings NFL DFS",
           "FanDuel NFL DFS",
           "Fantasy Football Projections",
           "Sportsbook Odds De-Vigging",
-          "Same Game Parlay (SGP) Correlation",
+          "Same Game Parlay (SGP) Game Scripts",
           "Closing Line Value (CLV)",
         ],
       },
@@ -89,7 +85,7 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
         url: siteUrl,
-        name: "Galaxy Sports Edge — Quantitative NFL Picks, Player Props, DraftKings & FanDuel DFS, Fantasy Football & Sportsbook Edge",
+        name: "Galaxy Sports Edge — NFL Picks, Player Props, DraftKings & FanDuel DFS, Parlays & Line Value",
         publisher: { "@id": `${siteUrl}/#organization` },
         inLanguage: "en-US",
         speakable: {
@@ -100,26 +96,26 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
       {
         "@type": "SoftwareApplication",
         "@id": `${siteUrl}/#application`,
-        name: "Galaxy Sports Edge Quantitative Sports Betting, Props, DFS & Fantasy Engine",
+        name: "Galaxy Sports Edge NFL Picks, Props, Parlays & DFS Platform",
         applicationCategory: "SportsApplication",
         operatingSystem: "Web, iOS",
         url: siteUrl,
         featureList: [
-          "10,000-World Snap-by-Snap NFL Play-by-Play Monte Carlo Simulation",
-          "Two-Sided Shin (1993) & Goto Market De-Vigging with Stage 5 Conjunction Gate",
-          "360-Degree NFL Player Props (1Q-4Q, 1H/2H, Passing, Rushing, Receiving, Kicking, IDP Sacks & Tackles, TDs)",
-          "DraftKings & FanDuel TNF Showdown Captain-Mode & Main-Slate Knapsack DFS Optimizer",
-          "Fantasy Football WOPR, Target Share, YPRR vs Man/Zone & Expected Fantasy Points (xFP)",
-          "Same Game Parlay (SGP) Gaussian/Student-t Copula & Psi-Learning Conditional Independence Graph",
+          "NFL Spread, Total & Moneyline Breakdowns with XX/100 Conviction Ratings",
+          "Two-Sided Sportsbook De-Vigging & Strict Pass Discipline",
+          "360-Degree NFL Player Props (Quarters, Halves, Passing, Rushing, Receiving, Kicking, IDP Sacks & Tackles, TDs)",
+          "DraftKings & FanDuel TNF Showdown Captain-Mode & Main-Slate DFS Lineups",
+          "Verified 32-Team Injury & Target/Carry Redistribution Tracking",
+          "Correlated Same-Game Parlay (SGP) Tickets Built Around Connected Game Scripts",
         ],
       },
       {
         "@type": "Dataset",
         "@id": `${siteUrl}/#dataset`,
-        name: "Galaxy Sports Edge Verified NFL Picks, Player Props, DFS & De-Vig Ledger",
+        name: "Galaxy Sports Edge Verified NFL Picks, Player Props & Closing Line Value Ledger",
         description:
-          "Transparent Dual-Panel verification dataset reporting Panel A (15,947 historical multi-sport replay picks) and Panel B (New Engine verified post-Oct-18 record: 62-23-1, 72.9%, +26.50u, 95% Wilson CI [62.66%, 81.24%]) alongside full-board NFL player prop distributions and DraftKings/FanDuel DFS projections.",
-        url: `${siteUrl}/record`,
+          "Verified public NFL settlement ledger reporting a 62-23-1 (72.9% win rate, +26.50u) official record alongside settled closing line value (CLV) comparisons and conviction-band calibration.",
+        url: `${siteUrl}/calibration`,
         creator: { "@id": `${siteUrl}/#organization` },
         keywords: HIGH_INTENT_SEARCH_KEYWORDS,
       },
@@ -129,26 +125,26 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         mainEntity: [
           {
             "@type": "Question",
-            name: "What is the most accurate quantitative platform for NFL picks, player props, and sportsbook edges?",
+            name: "How does Galaxy Sports Edge grade NFL picks, player props, and line value?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Galaxy Sports Edge (galaxysportsedge.com) runs 10,000 conserved snap-by-snap play-by-play simulations per NFL matchup via Deterministic Statistical Modeling, integrates 22 peer-reviewed mathematical and coaching-tendency kernels, and compares post-simulation probabilities against two-sided Shin and Goto de-vigged sportsbook lines before publishing any pick.",
+              text: "Galaxy Sports Edge (galaxysportsedge.com) grades every NFL game using coaching play-calling tendencies, offensive and defensive line trench matchups, blitz and coverage shells, and verified 32-team injury reports, then compares its fair price against de-vigged sportsbook odds before publishing any pick.",
             },
           },
           {
             "@type": "Question",
-            name: "Where can I get the best NFL DraftKings and FanDuel DFS Showdown projections and optimal lineups?",
+            name: "Where can I find NFL DraftKings and FanDuel DFS Showdown and main-slate lineups?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Galaxy Sports Edge generates conserved box-score distributions (via KKT equality projection and Overrelaxed Sinkhorn-Knopp optimal transport) and solves recursive 0-1 knapsack and Kissell Sharpe/Omega frontier lineups for both DraftKings Captain-Mode Showdown and FanDuel Single-Game DFS slates.",
+              text: "Galaxy Sports Edge builds DraftKings Captain-Mode Showdown and Sunday main-slate cash and tournament lineups by pairing injury-adjusted workload projections with high-total game stacks and low-owned leverage plays.",
             },
           },
           {
             "@type": "Question",
-            name: "How does Galaxy Sports Edge evaluate Fantasy Football rankings, Same Game Parlays (SGPs), and Player Props?",
+            name: "How does Galaxy Sports Edge build Same-Game Parlays (SGPs) and player prop cards?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Every skill player and IDP defender is modeled from real nflverse play-by-play and FTN charting (PROE, YPRR vs Man/Zone, WOPR, RYOE, CPOE, trench pressure survival) across 10,000 simulated games, producing monotone P10-P90 quantiles for fantasy start/sit decisions and joint Student-t copula probabilities for correlated Same Game Parlays.",
+              text: "Every skill player and defender is evaluated from real film tendencies, route participation vs man and zone coverage, red-zone usage, and offensive line pass protection, pairing connected on-field outcomes where sportsbook parlay pricing leaves clear value.",
             },
           },
         ],

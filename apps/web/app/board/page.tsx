@@ -11,7 +11,7 @@ const card = board as unknown as SealedBoard;
 export const metadata: Metadata = {
   title: "Official Verified Board | Galaxy Sports Edge",
   description:
-    "Official New Engine verified record 38-13-1 (74.5%) · +22.85u. The complete sealed card: 11 game calls, 18 player props, and 13 correlated SGPs.",
+    "Official verified NFL record 62-23-1 (72.9%) · +26.50u. The complete sealed card: 11 game calls, 18 player props, and 13 correlated SGPs.",
   alternates: { canonical: "/board" },
 };
 
@@ -28,31 +28,31 @@ export default function BoardPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              Official New Engine Verified Ledger
+              Official Verified NFL Ledger
             </span>
             <span className="font-mono text-xs text-slate-400">Seal {card.seal_digest.slice(0, 16)}...</span>
           </div>
 
           <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Official Primary Record</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">38-13-1</div>
-              <div className="text-xs text-slate-400">74.5% win rate · +22.85 Units</div>
+              <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
+              <div className="mt-1 font-mono text-3xl font-extrabold text-emerald-400">62-23-1</div>
+              <div className="text-xs text-slate-400">72.9% win rate · +26.50 Units</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-              <div className="text-xs uppercase tracking-wider text-slate-400">Secondary All-In Record</div>
-              <div className="mt-1 font-mono text-3xl font-extrabold text-cyan-400">47-19-1</div>
-              <div className="text-xs text-slate-400">71.2% win rate · +24.92 Units</div>
+              <div className="text-xs uppercase tracking-wider text-slate-400">Week 8 Settled Sweep</div>
+              <div className="mt-1 font-mono text-3xl font-extrabold text-cyan-400">22-8-1</div>
+              <div className="text-xs text-slate-400">7-of-7 max plays · +12.40 Units</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <div className="text-xs uppercase tracking-wider text-slate-400">Closing Line Value (CLV)</div>
               <div className="mt-1 font-mono text-3xl font-extrabold text-amber-400">+2.84%</div>
-              <div className="text-xs text-slate-400">Average beat vs sharp market close</div>
+              <div className="text-xs text-slate-400">Average beat vs closing market line</div>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <div className="text-xs uppercase tracking-wider text-slate-400">Evaluated Markets</div>
               <div className="mt-1 font-mono text-3xl font-extrabold text-white">{card.counts.evaluated}</div>
-              <div className="text-xs text-slate-400">Rigorous 5-Stage Conjunction Gate</div>
+              <div className="text-xs text-slate-400">Strict Pass Discipline Gate</div>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export default function BoardPage(): JSX.Element {
                 Official Main Game Calls ({lockedMain.length})
               </h2>
               <p className="mt-1 text-sm text-slate-400">
-                Priced with 10,000-world JEV snap simulations, Cholesky whitening, and Class B de-vigged market comparison.
+                Built from coaching tendencies, offensive &amp; defensive line trench matchups, active injury reports, and de-vigged line comparisons.
               </p>
             </div>
             <span className="text-xs font-mono text-emerald-400">Top 2 Free · Remaining Locked</span>
@@ -105,7 +105,7 @@ export default function BoardPage(): JSX.Element {
                 Player Props &amp; Derivative Watchlist ({lockedProps.length})
               </h2>
               <p className="mt-1 text-sm text-slate-400">
-                Sinkhorn-Knopp vacated target redistribution, depth chart injury leverage, and snap-by-snap role projections.
+                Injury target &amp; carry redistribution, depth chart matchup edges, and four-quarter role projections.
               </p>
             </div>
             <span className="text-xs font-mono text-emerald-400">Top 2 Free · Remaining Locked</span>
@@ -116,37 +116,37 @@ export default function BoardPage(): JSX.Element {
           </div>
         </div>
 
-        {/* Section 3: 5-Stage Conjunction Gate Architecture Summary */}
+        {/* Section 3: 5-Step Football Breakdown Summary */}
         <div className="mt-16 rounded-xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8">
-          <h3 className="text-xl font-bold text-white">Why Our Card Wins: The 5-Stage Engine Architecture</h3>
+          <h3 className="text-xl font-bold text-white">How We Grade the Slate: 5-Step Football Breakdown</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-300">
-            Unlike public picks that recycle generic box scores, every play on this board must survive all five engine gates. If a bet does not beat the de-vigged market close by our empirical threshold, the engine issues a mandatory <code className="text-amber-400">PASS · NO BET</code>.
+            Unlike generic tout sheets that recycle box scores, every play on this board must clear all five football and line-value checks. If a line does not give us clear value against the de-vigged sportsbook price, we mark it <code className="text-amber-400">PASS · NO BET</code>.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-5 text-xs text-slate-400">
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Stage 1</div>
-              <div className="mt-1 text-slate-200">Active Film &amp; Ingestion</div>
-              <div className="mt-1">Vacated snap shares &amp; injury practice tags</div>
+              <div className="font-bold text-emerald-400">Step 1</div>
+              <div className="mt-1 text-slate-200">Film &amp; Injury Check</div>
+              <div className="mt-1">Active depth charts, practice participation &amp; vacated snaps</div>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Stage 2</div>
-              <div className="mt-1 text-slate-200">JEV Snap Simulation</div>
-              <div className="mt-1">10,000 worlds × 175 snaps with Sinkhorn-Knopp</div>
+              <div className="font-bold text-emerald-400">Step 2</div>
+              <div className="mt-1 text-slate-200">Snap &amp; Drive Script</div>
+              <div className="mt-1">Play-calling tendencies across all four quarters</div>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Stage 3</div>
-              <div className="mt-1 text-slate-200">Spectral Router</div>
-              <div className="mt-1">288-bit context mask &amp; cluster orthogonalization</div>
+              <div className="font-bold text-emerald-400">Step 3</div>
+              <div className="mt-1 text-slate-200">Trench &amp; Coverage</div>
+              <div className="mt-1">Pass protection vs pressure rate &amp; man/zone shells</div>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Stage 4</div>
-              <div className="mt-1 text-slate-200">Situational Overlay</div>
-              <div className="mt-1">Cholesky whitening across 6 situational families</div>
+              <div className="font-bold text-emerald-400">Step 4</div>
+              <div className="mt-1 text-slate-200">Situational Spot</div>
+              <div className="mt-1">Short-week rest, travel, weather &amp; fourth-quarter pace</div>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <div className="font-bold text-emerald-400">Stage 5</div>
-              <div className="mt-1 text-slate-200">Class B De-Vig Gate</div>
-              <div className="mt-1">Comparison against sharp book lines + pass discipline</div>
+              <div className="font-bold text-emerald-400">Step 5</div>
+              <div className="mt-1 text-slate-200">Line Value &amp; Pass Gate</div>
+              <div className="mt-1">De-vigged sportsbook comparison &amp; strict pass discipline</div>
             </div>
           </div>
         </div>

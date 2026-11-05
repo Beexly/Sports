@@ -220,8 +220,8 @@ export default function RootLayout({
             __html: jsonLdScript(buildGlobalSearchAndAiJsonLd(SITE_URL)),
           }}
         />
-        <link rel="alternate" type="text/plain" href="/llms.txt" title="Answer Engines & Search Crawlers Discovery Manifest" />
-        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Quantitative Full Technical Corpus" />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="Search & Answer Engine Discovery Guide" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="NFL Matchup, Props, Parlays & DFS Guide" />
       </head>
       <body className="min-h-screen antialiased">
         <a
