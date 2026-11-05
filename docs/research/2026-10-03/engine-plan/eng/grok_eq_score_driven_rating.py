@@ -1,27 +1,27 @@
-"""Score-driven rating update as printed in Holý Černý, arXiv:2604.09143 eq (6).
+"""Score-driven rating update as printed in Holý & Černý arXiv:2604.09143 eq (6).
 
-r_{t+1}^{(i)} = r_t^{(i)} + K * nabla_i(r_t; y_t)
-Fail-closed on bad inputs. Does not score or write mind.
+r_{t+1}^{(i)} = r_t^{(i)} + K * nabla_i(r_t; y_t) for i=1..n
+Missing inputs, non-numeric, length mismatch, K<=0, or math failure -> null.
+Does not score, mint, or write mind.jsonl.
 """
 from __future__ import annotations
-import math
+
+from typing import Sequence
 
 
 def score_driven_rating_update(
-    r: float | None,
+    ratings: Sequence[float] | None,
+    gradients: Sequence[float] | None,
     k: float | None,
-    nabla: float | None,
-) -> float | None:
-    if r is None or k is None or nabla is None:
+) -> list[float] | None:
+    if ratings is None or gradients is None or k is None:
         return None
     try:
-        rr = float(r)
+        rs = [float(x) for x in ratings]
+        gs = [float(x) for x in gradients]
         kk = float(k)
-        nn = float(nabla)
-        if not (math.isfinite(rr) and math.isfinite(kk) and math.isfinite(nn)):
+        if not rs or len(rs) != len(gs) or not (kk > 0.0):
             return None
-        if kk <= 0:
-            return None  # K > 0 required
-        return rr + kk * nn
+        return [r + kk * g for r, g in zip(rs, gs)]
     except (TypeError, ValueError, OverflowError):
         return None
