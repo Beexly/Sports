@@ -109,6 +109,10 @@ const TNF_FREE_GAME_ENVIRONMENT_ANALYTICS = [
     breakdown: "31.4 Rush Attempts + 29.5 Pass Attempts + 2.6 Sacks (26.2 sec/snap pace)",
   },
   {
+    metric: "Projected Pass Completions",
+    breakdown: "Baltimore 18.0 median (18.1 mean on 33.3 attempts; 54.1% comp rate, 15–21 IQR, 188.0 pass yds) vs Jacksonville 19.2 completions (on 29.3 attempts; 65.8% comp rate, 218.0 pass yds)",
+  },
+  {
     metric: "Trench & Coverage Keys",
     breakdown: "Baltimore 59.5% Two-High Safety Shell & 78.0% Light Boxes (<=5 in box) | Jacksonville 30.9% Blitz Rate (34.8% on Play-Action) vs Baltimore 36.5% Clean-Pocket Rate.",
   },

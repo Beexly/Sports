@@ -161,6 +161,14 @@ export default function PackagesPage(): JSX.Element {
                 </tr>
                 <tr>
                   <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
+                    Projected Pass Completions
+                  </th>
+                  <td className="py-3">
+                    Baltimore <strong className="text-white">18.0</strong> median (<strong className="text-white">18.1</strong> mean on <strong className="text-white">33.3</strong> attempts; <strong className="text-white">54.1%</strong> comp rate, <strong className="text-white">15–21</strong> IQR, <strong className="text-white">188.0</strong> pass yds) vs Jacksonville <strong className="text-white">19.2</strong> completions (on <strong className="text-white">29.3</strong> attempts; <strong className="text-white">65.8%</strong> comp rate, <strong className="text-white">218.0</strong> pass yds)
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-3 pr-4 font-bold text-white whitespace-nowrap">
                     Trench &amp; Coverage Keys
                   </th>
                   <td className="py-3">
