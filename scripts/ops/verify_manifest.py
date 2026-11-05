@@ -4,9 +4,9 @@ import os
 import re
 
 bridge = open('packages/prediction-engine/src/nfl/zero-orphan-expected-metrics-bridge.ts').read().splitlines()
-em = [l.strip().strip('"').rstrip(',').rstrip('') for l in bridge[30:47] if l.strip().startswith('"')]
-em = [x.rstrip('"') for x in em]
-nfl = [x.rstrip('"') for x in [l.strip().strip('"').rstrip(',') for l in bridge[47:108] if l.strip().startswith('"')]]
+quoted = [l.strip().strip(',').strip('"') for l in bridge if l.strip().startswith('"')]
+em = [x for x in quoted if x.startswith('expected-metrics/')]
+nfl = [x for x in quoted if x.startswith('nfl/')]
 
 em_disk = [f for f in os.listdir('packages/prediction-engine/src/expected-metrics') if f.endswith('.ts') and not f.endswith('.test.ts')]
 nfl_disk = [f for f in os.listdir('packages/prediction-engine/src/nfl') if f.endswith('.ts') and not f.endswith('.test.ts')]

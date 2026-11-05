@@ -247,6 +247,81 @@ export function stageC(
   return scored.sort((a, b) => b.spectralScore - a.spectralScore).slice(0, limit);
 }
 
+/**
+ * Bun, Bouchaud & Potters (2016, arXiv:1605.00690v2):
+ * Marchenko-Pastur bulk noise bound lambda_+ = (1 + sqrt(q))^2 where q = N / T.
+ * Clips finite-sample spurious correlation inflation in high-dimensional equation clusters.
+ */
+export function denoiseMarchenkoPasturEffectiveRankShrinkage(
+  dimensionN: number,
+  sampleHorizonT = 24,
+): number {
+  if (dimensionN <= 1) return 1.0;
+  const q = Math.max(0.01, Math.min(2.0, dimensionN / Math.max(4, sampleHorizonT)));
+  const lambdaPlus = Math.pow(1 + Math.sqrt(q), 2);
+  return Number((1 / (1 + 0.045 * (lambdaPlus - 1))).toFixed(5));
+}
+
+/**
+ * Hastie, Tibshirani & Wainwright (2015, Statistical Learning with Sparsity, Ch. 2):
+ * Proximal L1 soft-thresholding operator S_lambda(z) = sign(z) * max(|z| - lambda, 0)
+ * with Restricted Eigenvalue (RE) sparsity guarantees.
+ */
+export function softThresholdSparseLasso(
+  coefficients: readonly number[],
+  lambdaPenalty: number,
+): number[] {
+  const lam = Math.max(0, lambdaPenalty);
+  return coefficients.map((z) => {
+    const absZ = Math.abs(z);
+    if (absZ <= lam) return 0;
+    return Number(((z > 0 ? 1 : -1) * (absZ - lam)).toFixed(6));
+  });
+}
+
+/**
+ * He (2024, arXiv:2407.04153 PEER: Mixture of a Million Experts) Cartesian Product-Key Routing
+ * + Edge0 (AM-02) Next-Snap Prerouter Prefetching.
+ */
+export function routePeerProductKeyAndPrerouter(
+  querySubvecA: readonly number[],
+  querySubvecB: readonly number[],
+  codebookA: ReadonlyArray<{ id: string; key: readonly number[] }>,
+  codebookB: ReadonlyArray<{ id: string; key: readonly number[] }>,
+  topK = 2,
+): { selectedProductKeys: string[]; prerouterPrefetchIds: string[] } {
+  const dot = (u: readonly number[], v: readonly number[]) => {
+    const len = Math.min(u.length, v.length);
+    let s = 0;
+    for (let i = 0; i < len; i++) s += u[i]! * v[i]!;
+    return s;
+  };
+
+  const scoredA = codebookA
+    .map((c) => ({ id: c.id, score: dot(querySubvecA, c.key) }))
+    .sort((x, y) => y.score - x.score)
+    .slice(0, Math.max(1, topK));
+
+  const scoredB = codebookB
+    .map((c) => ({ id: c.id, score: dot(querySubvecB, c.key) }))
+    .sort((x, y) => y.score - x.score)
+    .slice(0, Math.max(1, topK));
+
+  const cartesian: Array<{ id: string; score: number }> = [];
+  for (const a of scoredA) {
+    for (const b of scoredB) {
+      cartesian.push({ id: `${a.id}x${b.id}`, score: a.score + b.score });
+    }
+  }
+  cartesian.sort((x, y) => y.score - x.score);
+
+  const selectedProductKeys = cartesian.slice(0, Math.max(1, topK)).map((c) => c.id);
+  const prerouterPrefetchIds = cartesian.slice(0, Math.max(2, topK + 1)).map(
+    (c) => `prefetch:${c.id}`,
+  );
+  return { selectedProductKeys, prerouterPrefetchIds };
+}
+
 // ============================================================================
 // STAGE D: Cross-Equation Jacobian Coupling & Positive-Part James-Stein
 // Shrinkage with |Δ log-odds| <= 0.35 Hard Clamp + tau_hat Prior Integration

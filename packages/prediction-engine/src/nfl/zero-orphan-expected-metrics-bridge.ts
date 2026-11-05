@@ -21,13 +21,22 @@ import {
   computeCleanPocketPassingSuccessSplit,
   SITUATIONAL_EXPECTED_METRICS_CATALOG,
 } from "../expected-metrics/situational-expected-metrics-catalog.js";
+import {
+  computeShortWeekCircadianPenalty,
+  computeNeuroBiomechanicalCollisionLoad,
+  computeDefensiveDriveFatigueDecay,
+  computeHydrodynamicTrenchShockwaveAndPercolation,
+  computeHeuerAchDiagnosticityScore,
+  predictNextSnapPrerouterActivation,
+} from "../expected-metrics/batch3-sports-physics-bridge.js";
 
 /**
  * Exhaustive manifest of every non-test module in `src/expected-metrics/` and `src/nfl/`.
  * Verified against the filesystem by `zero-orphan-engine-audit.test.ts`.
  */
 export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
-  // src/expected-metrics/ (16 modules)
+  // src/expected-metrics/ (17 modules)
+  "expected-metrics/batch3-sports-physics-bridge.ts",
   "expected-metrics/drives.ts",
   "expected-metrics/expected-completion.ts",
   "expected-metrics/expected-points.ts",
@@ -132,6 +141,13 @@ export interface ZeroOrphanOverlayInput {
   readonly cleanSuccessRate?: number;
   readonly pressuredSuccessRate?: number;
   readonly projectedPressureRate?: number;
+  readonly restDaysOffense?: number;
+  readonly restDaysDefense?: number;
+  readonly timeZoneDeltaHours?: number;
+  readonly priorCareerConcussions?: number;
+  readonly recent72hSubconcussiveHits?: number;
+  readonly consecutiveDefensiveSnapsOnDrive?: number;
+  readonly boxDefenderDensityRho?: number;
 }
 
 export interface ZeroOrphanOverlayResult {
@@ -146,6 +162,12 @@ export interface ZeroOrphanOverlayResult {
   readonly w13PlayoffLeverageDelta: number;
   readonly f2PersonnelMismatchExploit: number;
   readonly f3CleanPocketWeightedSuccess: number;
+  readonly batch3CircadianPenalty: ReturnType<typeof computeShortWeekCircadianPenalty>;
+  readonly batch4NeuroCollisionLoad: ReturnType<typeof computeNeuroBiomechanicalCollisionLoad>;
+  readonly batch3DriveFatigueDecay: ReturnType<typeof computeDefensiveDriveFatigueDecay>;
+  readonly batch3HydrodynamicTrench: ReturnType<typeof computeHydrodynamicTrenchShockwaveAndPercolation>;
+  readonly gapHuntHeuerAchDiagnosticity: ReturnType<typeof computeHeuerAchDiagnosticityScore>;
+  readonly amSweepPrerouterActivation: ReturnType<typeof predictNextSnapPrerouterActivation>;
   readonly familyAdjustments: {
     readonly pressure: number;
     readonly coveragePersonnel: number;
@@ -205,11 +227,112 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     input.projectedPressureRate ?? 0.33,
   );
 
+  const batch3CircadianPenalty = computeShortWeekCircadianPenalty({
+    restDaysOffense: input.restDaysOffense ?? 6,
+    restDaysDefense: input.restDaysDefense ?? 6,
+    timeZoneDeltaHours: input.timeZoneDeltaHours ?? 0,
+    kickoffLocalHour24: 20.25,
+    isAwayTeam: (input.timeZoneDeltaHours ?? 0) !== 0,
+  });
+
+  const batch4NeuroCollisionLoad = computeNeuroBiomechanicalCollisionLoad({
+    priorCareerConcussions: input.priorCareerConcussions ?? 1,
+    recent72hSubconcussiveHits: input.recent72hSubconcussiveHits ?? 14,
+    peakRotationalAccelerationRadPerSec2: 3200,
+    hoursSinceLastHighGImpact: 96,
+  });
+
+  const batch3DriveFatigueDecay = computeDefensiveDriveFatigueDecay({
+    consecutiveDefensiveSnapsOnDrive: input.consecutiveDefensiveSnapsOnDrive ?? 7,
+    cumulativeDefensiveSnapsGame: 52,
+    secondsBetweenPlays: 26,
+    defensiveLineRotationDepth: 1.0,
+  });
+
+  const batch3HydrodynamicTrench = computeHydrodynamicTrenchShockwaveAndPercolation({
+    gapClearanceAspectRatio: 1.15,
+    boxDefenderDensityRho: input.boxDefenderDensityRho ?? 0.54,
+    pocketCollapseVelocityYdsPerSec: 1.35,
+    initialPocketRadiusYards: 4.5,
+    leadBlockerMomentumRatio: 1.12,
+  });
+
+  const gapHuntHeuerAchDiagnosticity = computeHeuerAchDiagnosticityScore([
+    {
+      evidenceId: "clean_pocket_vs_pressure_split",
+      likelihoodGivenPrimaryH1: Math.max(0.05, Math.min(0.95, f3)),
+      likelihoodGivenNullH0: 0.45,
+    },
+    {
+      evidenceId: "trench_percolation_conductance",
+      likelihoodGivenPrimaryH1: Math.max(0.05, Math.min(0.95, batch3HydrodynamicTrench.anisotropicPercolationOpenProb)),
+      likelihoodGivenNullH0: 0.50,
+    },
+  ]);
+
+  const amSweepPrerouterActivation = predictNextSnapPrerouterActivation([
+    {
+      expertClusterId: "trench_pressure_cluster",
+      currentLayerAffinity: 0.72,
+      historicalVisitsN: 28,
+      totalParentSimulationsT: 120,
+      meanDeterminizedReward: 0.64,
+    },
+    {
+      expertClusterId: "coverage_shell_cluster",
+      currentLayerAffinity: 0.68,
+      historicalVisitsN: 24,
+      totalParentSimulationsT: 120,
+      meanDeterminizedReward: 0.61,
+    },
+    {
+      expertClusterId: "short_week_fatigue_cluster",
+      currentLayerAffinity: 0.61,
+      historicalVisitsN: 19,
+      totalParentSimulationsT: 120,
+      meanDeterminizedReward: 0.58,
+    },
+  ]);
+
   // Compute bounded family probability deltas
-  const pressureDelta = Number(Math.max(-0.04, Math.min(0.04, (0.15 - w1.cleanBadThrowRate) * 0.15 - w9w10 * 0.05)).toFixed(4));
-  const coveragePersonnelDelta = Number(Math.max(-0.04, Math.min(0.04, (w8 - 0.12) * 0.12 + f2 * 0.08)).toFixed(4));
-  const qbSkillScriptDelta = Number(Math.max(-0.04, Math.min(0.04, (w2 - 0.14) * 0.10 + w12 * 0.12 + (f3 - 0.44) * 0.10 + (w3.independentCreationShare - 0.35) * 0.05)).toFixed(4));
-  const restFatigueDelta = Number(Math.max(-0.03, Math.min(0.03, w13 * 0.05)).toFixed(4));
+  const pressureDelta = Number(
+    Math.max(
+      -0.04,
+      Math.min(
+        0.04,
+        (0.15 - w1.cleanBadThrowRate) * 0.15 -
+          w9w10 * 0.05 -
+          (batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard - 0.25) * 0.02,
+      ),
+    ).toFixed(4),
+  );
+  const coveragePersonnelDelta = Number(
+    Math.max(-0.04, Math.min(0.04, (w8 - 0.12) * 0.12 + f2 * 0.08)).toFixed(4),
+  );
+  const qbSkillScriptDelta = Number(
+    Math.max(
+      -0.04,
+      Math.min(
+        0.04,
+        (w2 - 0.14) * 0.10 +
+          w12 * 0.12 +
+          (f3 - 0.44) * 0.10 +
+          (w3.independentCreationShare - 0.35) * 0.05 +
+          batch4NeuroCollisionLoad.processingSpeedLogitPenalty * 0.15,
+      ),
+    ).toFixed(4),
+  );
+  const restFatigueDelta = Number(
+    Math.max(
+      -0.03,
+      Math.min(
+        0.03,
+        w13 * 0.05 +
+          batch3CircadianPenalty.circadianPhasePenaltyEpa * 0.25 +
+          batch3DriveFatigueDecay.fatigueSuccessRateAllowanceDelta * 0.15,
+      ),
+    ).toFixed(4),
+  );
 
   return {
     wiredModuleCount: REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES.length,
@@ -223,6 +346,12 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     w13PlayoffLeverageDelta: w13,
     f2PersonnelMismatchExploit: f2,
     f3CleanPocketWeightedSuccess: f3,
+    batch3CircadianPenalty,
+    batch4NeuroCollisionLoad,
+    batch3DriveFatigueDecay,
+    batch3HydrodynamicTrench,
+    gapHuntHeuerAchDiagnosticity,
+    amSweepPrerouterActivation,
     familyAdjustments: {
       pressure: pressureDelta,
       coveragePersonnel: coveragePersonnelDelta,

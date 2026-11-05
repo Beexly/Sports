@@ -821,6 +821,12 @@ const MISLEADING_PATTERNS: {
     required: ["protection-assignment", "ol-communication-lag"],
     reason: "stunt pressure rate without OL slide/chip protection adjustments overstates pressure impact (Record 8.14)",
   },
+  {
+    record: "8.15",
+    match: /right_?censored|survivorship_?cohort|relative_?risk_?without_?base_?rate/i,
+    required: ["kaplan-meier-uncensored", "base-rate-denominator"],
+    reason: "Bergstrom & West (Calling Bullshit, UW INFO 198): right-censored career cohorts and relative-risk percentages without base-rate denominators create spurious edges (Record 8.15)",
+  },
 ];
 
 /**
