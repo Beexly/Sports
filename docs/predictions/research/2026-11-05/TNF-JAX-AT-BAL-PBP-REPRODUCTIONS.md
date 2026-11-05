@@ -30,7 +30,7 @@ Script: `scripts/ops/tnf_jax_bal_matchup_reproductions.py`
 | F6 TLaw EPA/dropback vs two-high `-0.17` | **Not reproducible as stated** | Box split only: vs light box (≤6) **+0.3521** (n=137); vs heavy box (≥7) **+0.1091** (n=56) |
 | W2 JAX backside A-gap / Fire Zone | **Film-only, rates computed** | Blitz 30.9%, pressure 16.67%, PA blitz 34.78%, under-center pressure 27.5% |
 | W8 Zay Flowers MOF | **Reproduced at counts, definition differs** | Flowers 58 tgts / 40 rec / 608 yds; `pass_location == middle` 22 tgts / 14 rec / 258 yds. Published line (29 tgts / 22 rec / 339 yds) uses over-the-middle charting, not pass location. The 34.8% / 76.8% figures are Brissett QB-level MOF rates, not a team share. |
-| W10 Catchable Ball Rate | **Reproduced** | TLaw 70.47% (193 charted) EPA/dropback +0.2878; Brissett 69.15%, Jackson 72.28%, Huntley 68.97%; Fagnano uncharted (Week 8 only) |
+| W10 Catchable Ball Rate | **Reproduced** | TLaw 70.47% (193 charted) EPA/dropback +0.2878; BAL: Jackson 72.28%, Huntley 68.97%; Fagnano uncharted (Week 8 only). Brissett's 69.15% is Arizona, excluded after the team filter. |
 | W3 Mismatch Manifesto sums | **Reproduced except RB YBC** | See table below |
 
 ### W3 combined sums (offense value + opponent defense allowed)
@@ -43,7 +43,7 @@ Script: `scripts/ops/tnf_jax_bal_matchup_reproductions.py`
 | Pressure rate allowed | 0.1622 | 20 | 0.1700 | 7 | 0.3322 |
 | Explosive rate | 0.1106 | 4 | 0.0832 | 10 | 0.1938 |
 
-Rank convention: 1 = best in the league; pressure rank 1 = lowest pressure allowed. RB YBC/rush is unavailable in the 2026 nflverse pbp file (no yards-before-contact field); rushing yards per rush is the substituted metric.
+Rank convention: 1 = best in the league for EPA, pass yards, rush yards and explosive rate. For pressure, rank 1 = highest pressure rate allowed, i.e. the defense that generates the most pressure; Baltimore's 7 means 7th-most pressure generated. RB YBC/rush is unavailable in the 2026 nflverse pbp file (no yards-before-contact field); rushing yards per rush is the substituted metric.
 
 ## What this means for the TNF board
 

@@ -116,7 +116,7 @@ def main() -> dict:
             "line": cur,
             "open_line": opn,
             "last_updated": it.get("lastUpdated"),
-            "has_price": False,
+            "has_price": bool(it.get("odds") or it.get("price") or ((it.get("current") or {}).get("odds"))),
         })
 
     payload = {

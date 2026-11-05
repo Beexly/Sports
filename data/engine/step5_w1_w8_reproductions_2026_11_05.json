@@ -238,7 +238,7 @@
     ]
   },
   "w8_qb_fantasy_points": {
-    "note": "Actual fantasy points from nflverse box stats (4-pt pass TD, 6-pt rush TD, 0.04 pass yd, 0.1 rush yd, -2 INT). This is NOT the @boxscorescout xFP model, whose internals are unpublished.",
+    "note": "FP per game divides by team games, assuming the QB started all of them; starts are not independently verified. Actual fantasy points from nflverse box stats (4-pt pass TD, 6-pt rush TD, 0.04 pass yd, 0.1 rush yd, -2 INT). This is NOT the @boxscorescout xFP model, whose internals are unpublished.",
     "qualified_qbs": 34,
     "shough": [
       {
@@ -565,7 +565,8 @@
         "carries": 1,
         "yards": 11.0
       }
-    ]
+    ],
+    "caveat": "Position mapping keys on surname from the ESPN roster; surname collisions can mislabel a player (R. Johnson shows LB)."
   },
   "unavailable": {
     "F8_playoff_luck_residue_since_2018": "Local pbp files cover 2024-2026 only; 2018-2023 playoff games are not on disk, so the since-2018 residue cannot be recomputed.",

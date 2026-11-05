@@ -17,5 +17,32 @@
     "batch4_local_files": 0,
     "batch5_7_works": 98
   },
-  "note": "Batch 4 has no source file; its contents come from the handoff enumeration. Batches 5-7 name 8 operators and 16 datasets/contributors, not all 122 works; the unlisted remainder is reported, not invented."
+  "note": "Batch 4 has no source file; its contents come from the handoff enumeration. Batches 5-7 name 8 operators and 16 datasets/contributors, not all 122 works; the unlisted remainder is reported, not invented.",
+  "readiness": {
+    "mind_2026_11_05_full_corpus.jsonl": {
+      "records": 1097,
+      "trainer_ready": 177,
+      "classes": {
+        "full_text": 177,
+        "short_text": 30,
+        "context_stub": 10,
+        "metadata_only": 3,
+        "pointer": 877
+      }
+    },
+    "mind_batch3_batch4_gaphunt_repocatalog_am_pm_2026_11_05.jsonl": {
+      "records": 1195,
+      "trainer_ready": 196,
+      "classes": {
+        "full_text": 188,
+        "short_text": 89,
+        "context_stub": 10,
+        "metadata_only": 7,
+        "pointer": 877,
+        "operator_spec": 8,
+        "dataset_reference": 16
+      }
+    }
+  },
+  "readiness_note": "trainer_ready is true only for full_text (>=200 chars of source text) and operator_spec records. PDF pointers, context stubs, metadata-only OpenAlex rows, dataset references and short_text are staged but not trainer-ready."
 }

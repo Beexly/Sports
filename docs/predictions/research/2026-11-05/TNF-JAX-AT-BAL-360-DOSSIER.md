@@ -54,7 +54,7 @@ ESPN Core `propBets` publishes target lines without over/under prices. De-vig, C
 
 | Metric | Value |
 |---|---|
-| Simulated snaps | **1,750,000** |
+| Simulated snaps | **1,336,286** (10,000 x median 134 plays; 175 is the per-game cap) |
 | Median total | **38.64** (market 39.5) |
 | Median home margin | **−7.83** (BAL +10 covers on median) |
 | Margin σ | 13.50 |

@@ -70,6 +70,7 @@ def main() -> dict:
         return obj
 
     vectors = result.get("vectors") or {}
+    actual_snaps = int(np.asarray(vectors.get("total_plays", []), dtype=float).sum()) if vectors.get("total_plays") is not None else 0
     hm = np.asarray(vectors.get("home_margin_out", []), dtype=float)
     tot = np.asarray(vectors.get("total_pts_out", []), dtype=float)
     derived = {
@@ -90,7 +91,8 @@ def main() -> dict:
         "engine": "gse_coach_mind_simulator.simulate_matchup_pbp",
         "sims": 10000,
         "snaps_per_sim": 175,
-        "total_simulated_snaps": 10000 * 175,
+        "total_simulated_snaps": actual_snaps,
+        "snap_cap": "175 per game cap; median observed 134 plays",
         "jev_spine": {
             "path": str(SPINE.relative_to(ROOT)),
             "snaps": spine.get("total_snaps_simulated_with_jev"),

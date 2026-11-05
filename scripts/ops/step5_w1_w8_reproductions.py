@@ -99,7 +99,7 @@ def w8_qb_fp(df: pd.DataFrame) -> dict:
     g["rank_fp_per_dropback"] = range(1, len(g) + 1)
     shough = g[g.index.str.contains("Shough", na=False)]
     return {
-        "note": "Actual fantasy points from nflverse box stats (4-pt pass TD, 6-pt rush TD, 0.04 pass yd, 0.1 rush yd, -2 INT). This is NOT the @boxscorescout xFP model, whose internals are unpublished.",
+        "note": "FP per game divides by team games, assuming the QB started all of them; starts are not independently verified. Actual fantasy points from nflverse box stats (4-pt pass TD, 6-pt rush TD, 0.04 pass yd, 0.1 rush yd, -2 INT). This is NOT the @boxscorescout xFP model, whose internals are unpublished.",
         "qualified_qbs": len(g),
         "shough": shough.reset_index().to_dict(orient="records"),
         "top10": g.head(10).reset_index().to_dict(orient="records"),
@@ -148,7 +148,7 @@ def b8_chicago_carries(df: pd.DataFrame) -> dict:
     g["position"] = [pos.get(str(n).split(".")[-1], pos.get(str(n), "UNK")) for n in g.index]
     g = g.sort_values("carries", ascending=False)
     by_pos = g.groupby("position").agg(carries=("carries", "sum"), yards=("yards", "sum")).sort_values("carries", ascending=False)
-    return {"by_player": g.reset_index().to_dict(orient="records"), "by_position_group": by_pos.reset_index().to_dict(orient="records")}
+    return {"by_player": g.reset_index().to_dict(orient="records"), "by_position_group": by_pos.reset_index().to_dict(orient="records"), "caveat": "Position mapping keys on surname from the ESPN roster; surname collisions can mislabel a player (R. Johnson shows LB)."}
 
 
 def main() -> dict:

@@ -40,7 +40,7 @@
   "sinkhorn": {
     "sims": 10000,
     "snaps_per_sim": 175,
-    "total_simulated_snaps": 1750000,
+    "total_simulated_snaps": 1336286,
     "median_total": 38.64,
     "median_home_margin": -7.83,
     "sinkhorn_mass_moved": 0.1482,
@@ -240,7 +240,7 @@
   },
   "board_publish_verdict": {
     "publish_allowed": false,
-    "reason": "Game legs fail the calibration-deflated edge gate; every prop leg fails the price gate. Nothing on this board is publishable.",
+    "reason": "No game leg is publishable: five fail the calibration-deflated edge gate and BAL ML is blocked by the longshot guard. Every prop leg fails the price gate.",
     "pass_receipts": 1459
   }
 }

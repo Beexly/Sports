@@ -8,7 +8,7 @@ applies the gates that can actually be evaluated:
   G1 price gate      - two-sided price required for de-vig
   G2 edge gate       - calibration-deflated model prob must beat de-vig by >= 3.0 pts
   G3 Stage-0 gate    - excluded/inactive players can never be published
-  G4 longshot guard  - Snowberg-Wolfers: implied < 10% is not a value leg
+  G4 longshot guard  - Snowberg-Wolfers: sub-25% implied ML legs are blocked
   G5 provenance gate - every non-reproducible claimed input is PASS-only
 
 No price floors, no invented CLV. Markets that cannot clear a gate are PASS.
@@ -26,7 +26,6 @@ OUT = ROOT / "data" / "engine" / "tnf_jax_bal_360_board_review_2026_11_05.json"
 
 EDGE_THRESHOLD_PTS = 3.0
 CALIBRATION_DEFLATION_PTS = 5.2  # measured 2026-09-30: ranking monotone, level inflated ~5.2pt
-LONGSHOT_FLOOR = 0.10
 LONGSHOT_ML_FLOOR = 0.25  # Snowberg-Wolfers: sub-25% longshots carry a structural bias
 STAGE0_EXCLUDED = {"Lamar Jackson", "Travis Etienne", "Travis Etienne Jr.", "Tyler Huntley", "Skylar Thompson"}
 CONDITIONAL_PASS = {"Bhayshul Tuten"}  # Questionable, ankle, DNP at Week 9 report
@@ -165,7 +164,7 @@ def main() -> dict:
         "provenance_gate": provenance,
         "board_publish_verdict": {
             "publish_allowed": False,
-            "reason": "Game legs fail the calibration-deflated edge gate; every prop leg fails the price gate. Nothing on this board is publishable.",
+            "reason": "No game leg is publishable: five fail the calibration-deflated edge gate and BAL ML is blocked by the longshot guard. Every prop leg fails the price gate.",
             "pass_receipts": board["total_props"] + len(game_markets),
         },
     }

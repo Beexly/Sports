@@ -94,8 +94,8 @@ def rank_of(table: pd.DataFrame, team: str, metric: str, higher_is_better: bool)
     return {"value": round(float(s[team]), 4), "rank": int(r), "of": int(len(s))}
 
 
-def qb_pass_profile(pbp: pd.DataFrame, ftn: pd.DataFrame, name_pat: str) -> dict:
-    q = pbp[(pbp.qb_dropback == 1) & pbp.passer_player_name.fillna("").str.contains(name_pat, regex=False)]
+def qb_pass_profile(pbp: pd.DataFrame, ftn: pd.DataFrame, name_pat: str, team: str) -> dict:
+    q = pbp[(pbp.qb_dropback == 1) & (pbp.posteam == team) & pbp.passer_player_name.fillna("").str.contains(name_pat, regex=False)]
     if q.empty:
         return {"dropbacks": 0}
     f = ftn[ftn.key.isin(q.key) & ftn.is_catchable_ball.notna()]
@@ -195,11 +195,11 @@ def main() -> dict:
 
     # ---- W10: Catchable Ball Rate vs EPA ----------------------------------
     w10 = {
-        "trevor_lawrence": qb_pass_profile(pbp, ftn, "Lawrence"),
+        "trevor_lawrence": qb_pass_profile(pbp, ftn, "Lawrence", "JAX"),
         "bal_qbs": {},
     }
     for nm in ("Fagnano", "Brissett", "Jackson", "Huntley"):
-        prof = qb_pass_profile(pbp, ftn, nm)
+        prof = qb_pass_profile(pbp, ftn, nm, "BAL")
         if prof.get("dropbacks", 0):
             w10["bal_qbs"][nm] = prof
 
