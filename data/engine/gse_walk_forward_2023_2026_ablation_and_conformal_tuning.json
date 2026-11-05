@@ -1,10 +1,261 @@
 {
-  "track": "Track 3: Walk-Forward 1,666-Equation Ablation and ACI-CRC",
+  "track": "Track 3: Walk-forward ablation Pareto (real engine constants)",
   "status": "VERIFIED",
-  "timestamp": "2026-11-05T03:22:54.367082+00:00",
-  "metrics": {
-    "decisive_tier_accuracy": "100.0%",
-    "brier_score_calibration": 0.0412,
-    "aci_crc_coverage": "95.0% exact"
-  }
+  "modules_evaluated": 76,
+  "module_list_count_expected": 74,
+  "modules_on_disk_total": 76,
+  "module_count_note": "Manifest block contains 76 entries (16 expected-metrics + 60 nfl) verified against filesystem, zero orphans. Plan said 74 and bridge comment said 58 nfl; both stale. Filesystem count is authoritative: 76.",
+  "orphans_expected_metrics": [],
+  "orphans_nfl": [],
+  "gate_constants_from_edge_engine_ts": {
+    "SPEAK_EDGE": 0.025,
+    "LEAN_EDGE": 0.012
+  },
+  "W_F_codes": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "W1",
+    "W10",
+    "W11",
+    "W12",
+    "W13",
+    "W14",
+    "W15",
+    "W16",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6",
+    "W7",
+    "W8",
+    "W9"
+  ],
+  "tau_sweep": [
+    {
+      "tau": 0.006,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.4392,
+      "published_count_pct": 56.084,
+      "hit_rate_among_published_simulated": 0.5229,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5229,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.012,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.5344,
+      "published_count_pct": 46.563,
+      "hit_rate_among_published_simulated": 0.5258,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5258,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.018,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.606,
+      "published_count_pct": 39.403,
+      "hit_rate_among_published_simulated": 0.5277,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5277,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.024,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.7251,
+      "published_count_pct": 27.494,
+      "hit_rate_among_published_simulated": 0.5305,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5305,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.03,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.8692,
+      "published_count_pct": 13.076,
+      "hit_rate_among_published_simulated": 0.5344,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5344,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.036,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.9635,
+      "published_count_pct": 3.647,
+      "hit_rate_among_published_simulated": 0.5393,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5393,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.02717,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.804,
+      "published_count_pct": 19.605,
+      "hit_rate_among_published_simulated": 0.5325,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5325,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.02933,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.8548,
+      "published_count_pct": 14.524,
+      "hit_rate_among_published_simulated": 0.534,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.534,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.0315,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.9004,
+      "published_count_pct": 9.956,
+      "hit_rate_among_published_simulated": 0.5356,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5356,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.03367,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.9363,
+      "published_count_pct": 6.373,
+      "hit_rate_among_published_simulated": 0.5373,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5373,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.03583,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.962,
+      "published_count_pct": 3.8,
+      "hit_rate_among_published_simulated": 0.5391,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.5391,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    },
+    {
+      "tau": 0.038,
+      "threshold_role": "shrunk-edge cutoff (LEAN/SPEAK region)",
+      "pass_rate": 0.979,
+      "published_count_pct": 2.104,
+      "hit_rate_among_published_simulated": 0.541,
+      "false_pos_share_simulated": 0.0,
+      "mean_implied_win_rate_simulated": 0.541,
+      "ev_zero_mass_share": 0.55,
+      "ev_top_decile_plus": 0.026,
+      "prior_sd": 0.0072,
+      "sim_seed": 20261104
+    }
+  ],
+  "speak_edge_multiplier_sweep": [
+    {
+      "speak_edge_mult": 0.25,
+      "tau": 0.00625,
+      "publish_rate": 0.5553,
+      "pass_rate": 0.4447,
+      "hit_rate_among_published_simulated": 0.523,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 0.5,
+      "tau": 0.0125,
+      "publish_rate": 0.4598,
+      "pass_rate": 0.5402,
+      "hit_rate_among_published_simulated": 0.526,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 0.75,
+      "tau": 0.01875,
+      "publish_rate": 0.3826,
+      "pass_rate": 0.6174,
+      "hit_rate_among_published_simulated": 0.528,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 1.0,
+      "tau": 0.025,
+      "publish_rate": 0.2504,
+      "pass_rate": 0.7496,
+      "hit_rate_among_published_simulated": 0.5311,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 1.25,
+      "tau": 0.03125,
+      "publish_rate": 0.1043,
+      "pass_rate": 0.8957,
+      "hit_rate_among_published_simulated": 0.5354,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 1.5,
+      "tau": 0.0375,
+      "publish_rate": 0.0243,
+      "pass_rate": 0.9757,
+      "hit_rate_among_published_simulated": 0.5406,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 2.0,
+      "tau": 0.05,
+      "publish_rate": 0.0002,
+      "pass_rate": 0.9998,
+      "hit_rate_among_published_simulated": 0.5522,
+      "false_pos_rate_among_published_simulated": 0.0
+    },
+    {
+      "speak_edge_mult": 3.0,
+      "tau": 0.075,
+      "publish_rate": 0.0,
+      "pass_rate": 1.0,
+      "hit_rate_among_published_simulated": 0.0,
+      "false_pos_rate_among_published_simulated": 0.0
+    }
+  ],
+  "note": "Pareto rows are simulated from a labeled prior (seed 20261104, n=200000) centered on the model's measured true edge; they are NOT realized walk-forward outcomes. No settled-game labels for Week 9 exist in-repo. Calibration basis: calibration/isotonic-calibration.ts documents Brier 0.2484 (vs coin 0.2500) and +5.2pt level inflation with monotone ranking; that is the real measured artifact."
 }
