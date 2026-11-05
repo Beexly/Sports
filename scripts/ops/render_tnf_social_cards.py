@@ -448,12 +448,11 @@ def render_private_top10_for_garrett_and_dad() -> Path:
         draw.text((150, y + 70), item["reason"], fill=TEXT_MUTED, font=f_row)
         y += 118
 
-    out = DOWNLOADS_DIR / "PRIVATE-GARRETT-DAD-TOP10-CONFIDENCE.png"
+    out = ARTIFACT_DIR / "PRIVATE-GARRETT-DAD-TOP10-CONFIDENCE.png"
     img.save(out, format="PNG")
-    # Remove the old public TOP10 file if it existed so it can't accidentally be posted
-    old_public = DOWNLOADS_DIR / "TNF-JAX-BAL-TOP10-CONFIDENCE.png"
-    if old_public.exists():
-        old_public.unlink()
+    public_leak = DOWNLOADS_DIR / "PRIVATE-GARRETT-DAD-TOP10-CONFIDENCE.png"
+    if public_leak.exists():
+        public_leak.unlink()
     return out
 
 
@@ -463,7 +462,7 @@ def main() -> None:
     ig_slides = render_ig_slides()
     gif_path = render_scheme_gif()
     private_card = render_private_top10_for_garrett_and_dad()
-    for p in [x_card, *ig_slides, gif_path, private_card]:
+    for p in [x_card, *ig_slides, gif_path]:
         shutil.copy2(p, ARTIFACT_DIR / p.name)
     print(f"Rendered X Teaser Card: {x_card}")
     for s in ig_slides:
