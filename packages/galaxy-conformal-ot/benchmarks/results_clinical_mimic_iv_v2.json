@@ -1,0 +1,215 @@
+{
+  "dataset": "MIMIC-IV Clinical Database Demo v2.2 (public demo; n small)",
+  "protocol": "10x repeated 5-fold stratified CV, all scores out-of-fold; conformal calibration on held-out negatives never used to fit the model",
+  "label": "sepsis ICD OR in-hospital death (whole admission; ICD assigned post hoc) - inherited from v1",
+  "v1_baseline_reference": {
+    "full_stay_retrospective_auc": 0.7721,
+    "ci95": [
+      0.6722,
+      0.8452
+    ],
+    "note": "v1 hand weights, scored on its own 138-stay cohort, not CV"
+  },
+  "horizons": {
+    "first_6h": {
+      "shock_index_only": {
+        "oof_auc_mean_over_repeats": 0.614994026284349,
+        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
+        "oof_auc_repeat_averaged_scores": 0.6149940262843488,
+        "bootstrap_ci95_repeat_averaged": [
+          0.5061162782963439,
+          0.7288174362690205
+        ]
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.5397252090800477,
+        "oof_auc_sd_over_repeats": 0.017405463893820354,
+        "oof_auc_repeat_averaged_scores": 0.5570489844683393,
+        "bootstrap_ci95_repeat_averaged": [
+          0.4423574226550188,
+          0.6654013811193444
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.8913978494623656,
+          "false_alarm_rate": 0.1086021505376344,
+          "detection_rate_positives": 0.08333333333333333,
+          "n_neg_evals": 930,
+          "n_pos_evals": 360
+        }
+      },
+      "v2_rff_mahalanobis": {
+        "oof_auc_mean_over_repeats": 0.48859020310633217,
+        "oof_auc_sd_over_repeats": 0.026954236453109185,
+        "oof_auc_repeat_averaged_scores": 0.483273596176822,
+        "bootstrap_ci95_repeat_averaged": [
+          0.37718799753368987,
+          0.5882691539352114
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.9064516129032258,
+          "false_alarm_rate": 0.0935483870967742,
+          "detection_rate_positives": 0.05,
+          "n_neg_evals": 930,
+          "n_pos_evals": 360
+        }
+      },
+      "n_stays": 129,
+      "n_positives": 36,
+      "n_features": 36
+    },
+    "first_12h": {
+      "shock_index_only": {
+        "oof_auc_mean_over_repeats": 0.6412776412776413,
+        "oof_auc_sd_over_repeats": 0.0,
+        "oof_auc_repeat_averaged_scores": 0.6412776412776413,
+        "bootstrap_ci95_repeat_averaged": [
+          0.5407444756158148,
+          0.7444754832626119
+        ]
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.49511329511329505,
+        "oof_auc_sd_over_repeats": 0.03301321764845088,
+        "oof_auc_repeat_averaged_scores": 0.5102375102375102,
+        "bootstrap_ci95_repeat_averaged": [
+          0.4003490158253849,
+          0.6138399415978464
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.9242424242424242,
+          "false_alarm_rate": 0.07575757575757576,
+          "detection_rate_positives": 0.013513513513513514,
+          "n_neg_evals": 990,
+          "n_pos_evals": 370
+        }
+      },
+      "v2_rff_mahalanobis": {
+        "oof_auc_mean_over_repeats": 0.493993993993994,
+        "oof_auc_sd_over_repeats": 0.01766472099226093,
+        "oof_auc_repeat_averaged_scores": 0.49221949221949224,
+        "bootstrap_ci95_repeat_averaged": [
+          0.38039763191460796,
+          0.5948285119001161
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.9141414141414141,
+          "false_alarm_rate": 0.08585858585858586,
+          "detection_rate_positives": 0.043243243243243246,
+          "n_neg_evals": 990,
+          "n_pos_evals": 370
+        }
+      },
+      "n_stays": 136,
+      "n_positives": 37,
+      "n_features": 36
+    },
+    "first_24h": {
+      "shock_index_only": {
+        "oof_auc_mean_over_repeats": 0.6572972972972974,
+        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
+        "oof_auc_repeat_averaged_scores": 0.6572972972972972,
+        "bootstrap_ci95_repeat_averaged": [
+          0.5474893313208531,
+          0.7514288330716903
+        ]
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.5400270270270271,
+        "oof_auc_sd_over_repeats": 0.03213318021921781,
+        "oof_auc_repeat_averaged_scores": 0.5437837837837838,
+        "bootstrap_ci95_repeat_averaged": [
+          0.4246349647967295,
+          0.6596164772727273
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.919,
+          "false_alarm_rate": 0.081,
+          "detection_rate_positives": 0.12432432432432433,
+          "n_neg_evals": 1000,
+          "n_pos_evals": 370
+        }
+      },
+      "v2_rff_mahalanobis": {
+        "oof_auc_mean_over_repeats": 0.5361351351351351,
+        "oof_auc_sd_over_repeats": 0.018458509729832238,
+        "oof_auc_repeat_averaged_scores": 0.5351351351351351,
+        "bootstrap_ci95_repeat_averaged": [
+          0.4272384856961092,
+          0.6368249638509
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.905,
+          "false_alarm_rate": 0.095,
+          "detection_rate_positives": 0.11621621621621622,
+          "n_neg_evals": 1000,
+          "n_pos_evals": 370
+        }
+      },
+      "n_stays": 137,
+      "n_positives": 37,
+      "n_features": 36
+    },
+    "full_stay": {
+      "shock_index_only": {
+        "oof_auc_mean_over_repeats": 0.6937837837837837,
+        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
+        "oof_auc_repeat_averaged_scores": 0.6937837837837838,
+        "bootstrap_ci95_repeat_averaged": [
+          0.5954083361813626,
+          0.7821190909992315
+        ]
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.5687837837837838,
+        "oof_auc_sd_over_repeats": 0.030201236435778874,
+        "oof_auc_repeat_averaged_scores": 0.5710810810810811,
+        "bootstrap_ci95_repeat_averaged": [
+          0.4545331695331695,
+          0.6866379102316602
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.919,
+          "false_alarm_rate": 0.081,
+          "detection_rate_positives": 0.20540540540540542,
+          "n_neg_evals": 1000,
+          "n_pos_evals": 370
+        }
+      },
+      "v2_rff_mahalanobis": {
+        "oof_auc_mean_over_repeats": 0.5792432432432432,
+        "oof_auc_sd_over_repeats": 0.02441897500704008,
+        "oof_auc_repeat_averaged_scores": 0.5848648648648649,
+        "bootstrap_ci95_repeat_averaged": [
+          0.4623493702032273,
+          0.7059337509113807
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.922,
+          "false_alarm_rate": 0.078,
+          "detection_rate_positives": 0.17297297297297298,
+          "n_neg_evals": 1000,
+          "n_pos_evals": 370
+        }
+      },
+      "n_stays": 137,
+      "n_positives": 37,
+      "n_features": 36
+    }
+  }
+}

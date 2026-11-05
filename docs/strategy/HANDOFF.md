@@ -233,3 +233,16 @@ TS mirror packages/prediction-engine/src/nfl/preflight-roster-gate.ts; excluded 
 runs rewrite tracked outputs (verdicts json, brain/feeds runtime feed); revert after test runs.
 
 **Next role (Builder):** ingest Week 8 results + Week 9 odds (needs odds source), then add a --week 9 slate. Then Components 1-4.
+
+## 2026-11-05 - Conformal-OT v2.0 MIMIC-IV pilot: NEGATIVE result (Antigravity)
+
+**Done:** galaxy_conformal_ot/wasserstein_mahalanobis_whitening.py (causal multi-frame covariance features, RFF kernel Mahalanobis,
+split-conformal, entropic-OT counterfactual) + enchmarks/clinical_mimic_iv_v2_benchmark.py (10x5 CV, all out-of-fold) + 8 new tests (22/22 pass).
+Report: docs/engine/research/2026-11-04/GSI-WP-05-V2-MIMIC-IV-RESULTS.md.
+
+**Result:** v2 out-of-fold AUC 0.49-0.58 vs shock-index anchor 0.62-0.69. It did NOT beat baseline. v1's 0.7721 was in-sample hand weights, never CV.
+**0.9344 is unsupported** - appears in Downloads/gsi_whitepaper_camera_ready.tex line 63 and in two charts; nothing computes it. Remove before any grant/paper/post.
+
+**Not built:** FastAPI/Kafka/CI/NFL backtest rig/hyperloop (pointless before the score shows skill). Split CQR n/a (binary task).
+
+**Next role (Builder or Founder decision):** full MIMIC-IV access + Sepsis-3 onset label and re-run the frozen protocol, or drop the clinical performance claim.
