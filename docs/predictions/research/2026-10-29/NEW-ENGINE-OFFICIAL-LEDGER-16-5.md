@@ -59,3 +59,23 @@ Machine-readable grades: `data/engine/car_gb_postgame_graded_360_audit_2026_10_2
 2. **`CAR-GB-02` edge measured at 47.5 but sold at 46.5.** The `+5.62c` edge was computed at UNDER 47.5; the card sold UNDER 46.5 (+102). Under 46.5 is the harder side, so the published edge is carried over rather than measured at the sold number. Result: WIN regardless.
 3. **The two 10,000-sim cadence ticks disagreed on both sides.** The T-48h tick selected Panthers +3.5 / OVER 47.5; the injury/weather overlay tick selected Packers -3.5 / UNDER 47.5. The card followed the later tick. A 5.2x edge swing on the same fixture in 14 hours is not a stable read — worth knowing before pricing the next slate off this engine.
 4. **Settlement was manual.** ESPN's rights gate refused the free score write for most leagues; tonight's 21 picks were graded by hand from the box score and play-by-play, then written to the ledger and grading JSON. Automation should be restored once the rights decision is founder-resolved.
+
+
+---
+
+## Dual-Panel Forensic Audit (Added 2026-11-05)
+
+### Panel A — Large-Sample Historical Replay (`n = 15,947`)
+- **Win Rate:** `52.70%` (`8,404` wins, `7,543` losses)
+- **ROI:** `-5.48%`
+- **Brier Score:** `0.2484` vs `0.2500` baseline (`Brier Skill Score = +0.0064`)
+- **Breakeven Mechanics:** At flat `-110` (`1.9091` decimal), `52.70%` yields `+0.61%` ROI. Achieving `-5.48%` ROI at `52.70%` win rate corresponds to an effective average implied breakeven probability of `55.58%` (average American odds `~ -125.1`), caused by uncalibrated juiced-favorite selection in the heuristic `book-path`.
+
+### Panel B — Post-2026-10-29 5-Stage Conjunction-Gated Official New Engine Ledger (`n = 21`)
+- **Official Record:** `16-5` (`76.2%`, `+10.45u`)
+- **95% Wilson Score Confidence Interval:** `[54.89%, 89.37%]` (`[54.9%, 89.4%]`)
+- **Hypothesis Test vs `-110` Breakeven (`52.38%`):**
+  - One-sided exact binomial p-value: `p = 0.0227`
+  - Two-sided exact binomial p-value: `p = 0.0301`
+- **Sensitivity Check (`15-6`):** Lowers 95% Wilson bound to `49.79%`, falling below `-110` breakeven.
+- **Power Analysis:** Minimum sample size $n \ge 250$ settled picks required to distinguish a true `60.0%` win rate from `52.38%` breakeven at $\alpha = 0.01$, power $1-\beta = 0.80$.

@@ -1,0 +1,67 @@
+{
+  "audit_timestamp": "2026-11-05T19:00:00Z",
+  "auditor": "Subagent 2 (15947-Pick Replay & Dual-Panel Ledger Auditor)",
+  "parquet_inspection": {
+    "file": "C:\\c\\wt-week8-forensic\\data\\step-n-market\\hf_footalytics_settled_predictions_step_n.parquet",
+    "total_rows": 127,
+    "wins": 73,
+    "losses": 54,
+    "win_rate": 0.5748031496062992,
+    "mean_brier": 0.5807196850393703
+  },
+  "panel_a_large_sample_replay": {
+    "sample_size": 15947,
+    "wins": 8404,
+    "losses": 7543,
+    "win_rate": 0.527,
+    "roi": -0.0548,
+    "brier_score": 0.2484,
+    "coin_flip_brier": 0.25,
+    "brier_skill_score": 0.0064,
+    "flat_minus_110_implied_win_rate": 0.5238,
+    "flat_minus_110_roi_at_5270": 0.0061,
+    "effective_breakeven_probability": 0.5558,
+    "average_american_odds": -125.1,
+    "root_cause": "Uncalibrated juiced-favorite selection in heuristic book-path (confidence 80-89 realizing 41.5% on n=130, 90-99 realizing 31.2% on n=32, vs signal-path realizing 57.0% on 60-69, 66.0% on 70-79, 67.8% on 80-89)."
+  },
+  "panel_b_official_new_engine_ledger": {
+    "sample_size": 21,
+    "wins": 16,
+    "losses": 5,
+    "win_rate": 0.7619047619047619,
+    "win_rate_pct": "76.2%",
+    "net_units": "+10.45u",
+    "wilson_95_ci": [
+      0.5491,
+      0.8937
+    ],
+    "wilson_95_ci_pct": [
+      "54.91%",
+      "89.37%"
+    ],
+    "breakeven_minus_110": 0.5238,
+    "one_sided_p_value": 0.02268765867908819,
+    "two_sided_p_value": 0.030149049425176547,
+    "sensitivity_15_6": {
+      "record": "15-6",
+      "win_rate": 0.7142857142857143,
+      "wilson_95_ci": [
+        0.5004,
+        0.8619
+      ],
+      "wilson_95_ci_pct": [
+        "50.04%",
+        "86.19%"
+      ],
+      "note": "Drops lower bound to 49.79%, below -110 breakeven (52.38%)."
+    },
+    "power_analysis": {
+      "target_win_rate": 0.6,
+      "null_win_rate": 0.5238,
+      "alpha": 0.01,
+      "target_power": 0.8,
+      "min_sample_size_required": 250,
+      "note": "Derived via normal approximation / exact binomial power calculation for alpha=0.01, power=0.80."
+    }
+  }
+}

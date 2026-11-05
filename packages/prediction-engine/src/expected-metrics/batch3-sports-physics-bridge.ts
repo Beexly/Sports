@@ -979,3 +979,103 @@ export function computeFp32RouterZLossStabilizedSoftmax(
   };
 }
 
+/**
+ * Operator #24: computeNvidiaNim40RpmAndKumoRelationalPrior
+ * Models build.nvidia.com ("gse-platform") 40-RPM token-bucket scheduler (minIntervalMs = 1500)
+ * and NVIDIA Kumo relational tabular graph message passing across foreign-key tables.
+ */
+export interface NvidiaNimKumoInput {
+  requestCountLastMinute: number;
+  minIntervalMs?: number; // default 1500ms for 40-RPM
+  tokenBucketCapacity?: number; // default 40
+  relationalTablesJoined: number; // e.g., player <-> snap <-> charting <-> market
+  graphMessagePassingHops: number;
+}
+
+export interface NvidiaNimKumoResult {
+  rateLimited: boolean;
+  recommendedWaitMs: number;
+  kumoRelationalPriorConfidenceBoost: number;
+  effectiveThroughputRpm: number;
+}
+
+export function computeNvidiaNim40RpmAndKumoRelationalPrior(
+  input: NvidiaNimKumoInput,
+): NvidiaNimKumoResult {
+  const minInterval = input.minIntervalMs ?? 1500;
+  const capacity = input.tokenBucketCapacity ?? 40;
+  const rateLimited = input.requestCountLastMinute >= capacity;
+  const recommendedWaitMs = rateLimited ? minInterval * 1.5 : 0;
+  
+  // Kumo graph relational prior boost scales with hops and joined tables
+  const hopWeight = Math.min(0.15, input.graphMessagePassingHops * 0.03);
+  const tableWeight = Math.min(0.10, input.relationalTablesJoined * 0.02);
+  const kumoRelationalPriorConfidenceBoost = Number((hopWeight + tableWeight).toFixed(4));
+  
+  const effectiveThroughputRpm = Math.min(capacity, Math.max(1, capacity - input.requestCountLastMinute));
+
+  return {
+    rateLimited,
+    recommendedWaitMs,
+    kumoRelationalPriorConfidenceBoost,
+    effectiveThroughputRpm,
+  };
+}
+
+/**
+ * Operator #25: computeJevEpistemicAleatoricConfidence100
+ * Formalizes Jev confidence semantics (Hermes operational item #3):
+ * combines Jev epistemic uncertainty noul in [0, 1] and normalized Shannon entropy H(p)/ln K
+ * of choice distribution p into an integer confidence100 in [0, 100] formatted as "XX/100" (never %),
+ * plus conjunction-gate boolean passesEpistemicGate.
+ */
+export interface JevEpistemicConfidenceInput {
+  noulEpistemicUncertainty: number; // in [0, 1] (0 = complete certainty, 1 = maximum uncertainty)
+  choiceProbabilities: readonly number[]; // probability distribution over discrete outcomes
+  conjunctionEdgeThreshold?: number; // default 0.025
+}
+
+export interface JevEpistemicConfidenceResult {
+  confidence100: number; // integer 0 to 100
+  formattedConfidence: string; // "XX/100"
+  normalizedEntropy: number; // H(p) / ln(K)
+  passesEpistemicGate: boolean;
+}
+
+export function computeJevEpistemicAleatoricConfidence100(
+  input: JevEpistemicConfidenceInput,
+): JevEpistemicConfidenceResult {
+  const probs = input.choiceProbabilities;
+  const K = probs.length;
+  
+  let entropy = 0;
+  if (K > 1) {
+    for (const p of probs) {
+      if (p > 0) {
+        entropy -= p * Math.log(p);
+      }
+    }
+    const maxEntropy = Math.log(K);
+    entropy = maxEntropy > 0 ? entropy / maxEntropy : 0;
+  }
+  const normalizedEntropy = Number(Math.max(0, Math.min(1, entropy)).toFixed(4));
+  const noul = Math.max(0, Math.min(1, input.noulEpistemicUncertainty));
+
+  // Combined uncertainty: weighted toward entropy or noul appropriately
+  const combinedUncertainty = 0.4 * noul + 0.6 * normalizedEntropy;
+  const rawConf = Math.round((1 - combinedUncertainty) * 100);
+  const confidence100 = Math.max(0, Math.min(100, rawConf));
+  const formattedConfidence = `${confidence100}/100`;
+
+  const threshold = input.conjunctionEdgeThreshold ?? 0.025;
+  // Passes epistemic gate if epistemic uncertainty and entropy are sufficiently low
+  const passesEpistemicGate = combinedUncertainty <= (1 - threshold * 10);
+
+  return {
+    confidence100,
+    formattedConfidence,
+    normalizedEntropy,
+    passesEpistemicGate,
+  };
+}
+

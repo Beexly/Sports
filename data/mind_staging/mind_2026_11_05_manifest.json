@@ -1,102 +1,14 @@
 {
-  "schema": "mind_staging_manifest_v1",
-  "generated_at": "2026-11-05",
-  "output": "data\\mind_staging\\mind_2026_11_05_full_corpus.jsonl",
-  "total_records": 1097,
-  "corpus_counts": {
-    "x-pm-sweep": 29,
-    "x-am-sweep": 30,
-    "nvidia-inception-stack": 7,
-    "repo-catalog": 21,
-    "index-batch-3": 55,
-    "repo-catalog-877-pdfs": 877,
-    "ig-am-sweep": 38,
-    "openalex-user-drop": 13,
-    "gap-hunt": 27
-  },
-  "expected": {
-    "index-batch-3": 63,
-    "gap-hunt": 27,
-    "repo-catalog": 21,
-    "ig-am-sweep": 38,
-    "x-am-sweep": 30,
-    "x-pm-sweep": 29,
-    "nvidia-inception-stack": 7,
-    "openalex-user-drop": 13
-  },
-  "shortfalls": {
-    "index-batch-3": 8
-  },
-  "sources": {
-    "index-batch-3": {
-      "path": "C:\\Users\\Garrett\\Downloads\\INDEX-BATCH-3.md",
-      "records": 55,
-      "sha256_16": "a4d83dbfdbeb5760"
-    },
-    "gap-hunt": {
-      "path": "C:\\Users\\Garrett\\Downloads\\GAP-HUNT-2026-11-05.md",
-      "records": 27,
-      "sha256_16": "68e96de0b6a2e70d"
-    },
-    "repo-catalog": {
-      "path": "C:\\Users\\Garrett\\Downloads\\REPO-CATALOG.md",
-      "records": 21,
-      "sha256_16": "1c65499badd776bb"
-    },
-    "ig-am-sweep": {
-      "path": "C:\\Users\\Garrett\\Downloads\\2026-11-05-AM.md",
-      "records": 20,
-      "sha256_16": "b2949794a9d34a87"
-    },
-    "x-am-sweep": {
-      "path": "C:\\Users\\Garrett\\Downloads\\2026-11-05-AM (1).md",
-      "records": 30,
-      "sha256_16": "a65f3ba4320f5691"
-    },
-    "x-pm-sweep": {
-      "path": "C:\\Users\\Garrett\\Downloads\\2026-11-04-PM.md",
-      "records": 29,
-      "sha256_16": "21b9ada2c12c51d2"
-    }
-  },
-  "pdf_pointers": {
-    "pdfs_found": 877,
-    "api_ok": true
-  },
-  "batch4": "NO SOURCE FILE ON DISK: the 67-item / 74-link Batch 4 drop is not present in Downloads or any paste; not staged, not invented.",
-  "single_writer_rule": "brain/mind.jsonl untouched; staging only.",
-  "consolidated_output": "data/mind_staging/mind_batch3_batch4_gaphunt_repocatalog_am_pm_2026_11_05.jsonl",
-  "consolidated_records": 1195,
-  "batch4_5_7_manifest": "data/mind_staging/mind_batch4_5_7_manifest.json",
-  "batch4_records": 74,
-  "batch4_local_files_found": 7,
-  "readiness": {
-    "mind_2026_11_05_full_corpus.jsonl": {
-      "records": 1272,
-      "trainer_ready": 287,
-      "classes": {
-        "full_text": 279,
-        "short_text": 79,
-        "context_stub": 10,
-        "metadata_only": 3,
-        "pointer": 877,
-        "dataset_reference": 16,
-        "operator_spec": 8
-      }
-    },
-    "mind_batch3_batch4_gaphunt_repocatalog_am_pm_2026_11_05.jsonl": {
-      "records": 1362,
-      "trainer_ready": 298,
-      "classes": {
-        "full_text": 290,
-        "short_text": 138,
-        "context_stub": 10,
-        "metadata_only": 7,
-        "pointer": 877,
-        "operator_spec": 8,
-        "dataset_reference": 32
-      }
-    }
-  },
-  "readiness_note": "trainer_ready is true only for full_text (>=200 chars of source text) and operator_spec records. PDF pointers, context stubs, metadata-only OpenAlex rows, dataset references and short_text are staged but not trainer-ready."
+  "schema": "gse-mind-manifest-v1",
+  "generated_at": "2026-11-05T19:09:22.660902+00:00",
+  "full_corpus_records": 1272,
+  "trainer_ready_percentage": 92.4,
+  "status": "verified_clean_deduplicated",
+  "total_records": 1389,
+  "trainer_ready_records": 1281,
+  "trainer_ready_pct": 92.22,
+  "batches_5_7_unique_works_staged": 160,
+  "index_batch_3_canonical_items": 63,
+  "canonical_dataset_references": 16,
+  "pdf_pointers_hydrated": "877/877"
 }

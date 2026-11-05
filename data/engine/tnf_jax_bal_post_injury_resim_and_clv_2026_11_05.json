@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-11-05T17:45:00CT",
+  "prekick_check": {
+    "status": "PASSED",
+    "bhayshul_tuten": "Questionable / Active (Ankle/Foot)",
+    "lamar_jackson": "OUT (Rest/Injury)",
+    "tyler_huntley": "ACTIVE / QB1"
+  },
+  "simulation": {
+    "simulation_worlds": 10000,
+    "snaps_per_world": 134,
+    "bal_qb": "Tyler Huntley",
+    "jax_rb_status": "Bhayshul Tuten inactive, workload consolidated on Etienne/Bigsby",
+    "win_probabilities": {
+      "JAX": 0.812,
+      "BAL": 0.188
+    },
+    "cover_probabilities": {
+      "JAX -10": 0.534,
+      "BAL +10": 0.466
+    },
+    "total_probabilities": {
+      "Over 42.5": 0.482,
+      "Under 42.5": 0.518
+    }
+  },
+  "market_evaluation": {
+    "spread": {
+      "line": "JAX -10",
+      "jax_odds": -105,
+      "bal_odds": -115,
+      "fair_jax": 0.4891657638136511,
+      "fair_bal": 0.5108342361863488
+    },
+    "moneyline": {
+      "jax_odds": -520,
+      "bal_odds": 390,
+      "fair_jax": 0.8042929292929294,
+      "fair_bal": 0.19570707070707072
+    },
+    "total": {
+      "line": 42.5,
+      "over_odds": -110,
+      "under_odds": -110
+    }
+  },
+  "jev_confidence_scores": {
+    "JAX_ML": "28/100",
+    "JAX_Spread": "28/100"
+  },
+  "publish_allowed": true
+}
