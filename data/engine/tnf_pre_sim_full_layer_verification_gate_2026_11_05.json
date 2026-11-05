@@ -1,0 +1,134 @@
+{
+  "pre_sim_gate_passed": true,
+  "timestamp": "2026-11-05T19:19:26Z",
+  "game": "JAX @ BAL (Thursday Night Football)",
+  "layers": {
+    "layer_1_coaching": {
+      "status": "PASSED",
+      "modules": {
+        "compute_tendencies.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\compute_tendencies.py"
+        },
+        "dc_pressure.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\dc_pressure.py"
+        },
+        "pressure_answer.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\pressure_answer.py"
+        },
+        "proe.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\proe.py"
+        },
+        "redzone.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\redzone.py"
+        },
+        "script_elasticity.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\script_elasticity.py"
+        },
+        "tempo.py": {
+          "exists": true,
+          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\tempo.py"
+        },
+        "import_status": "SUCCESS"
+      },
+      "teams": [
+        "JAX",
+        "BAL"
+      ]
+    },
+    "layer_2_injuries_and_gp": {
+      "status": "PASSED",
+      "injuries_csv": "C:\\c\\wt-week8-forensic\\data\\nflverse\\injuries_2026.csv",
+      "total_injury_records": 2725,
+      "key_player_statuses": {
+        "Lamar Jackson": "OUT",
+        "Tyler Huntley": "ACTIVE_QB1",
+        "Joe Fagnano": "ACTIVE_QB2",
+        "Travis Etienne": "CONFIRMED"
+      },
+      "player_gp_rule": "Enforced player_gp denominators (never divide injured/returning players by team GP)"
+    },
+    "layer_3_external_charting": {
+      "status": "PASSED",
+      "sources_verified": [
+        "statrankings / MAGICSPORTSBREAKDOWN+",
+        "SamHoppen (EPA, Success Rate, Motion)",
+        "FantasyPtsData (SEP score & 1read)",
+        "PattonAnalytics (Pressure over expectation)",
+        "KoalatyStats (XFP/G)",
+        "WideLeft (Cover-1 rate)",
+        "Public proxy rates (PFR, Sharp, FTN)",
+        "BDB2025 (16,124 plays, 18 coverages, T-Law MOFO/MOFC)",
+        "X Watchlist (38 structured claims)"
+      ],
+      "files_checked": {
+        "public_proxy_rates_2026.json": {
+          "loaded_keys": [
+            "schema",
+            "generated_at",
+            "sources",
+            "rb_ybc",
+            "coverage",
+            "box"
+          ]
+        },
+        "bdb2025_shell_calibration_and_tlaw_epa_2026_11_05.json": {
+          "loaded_keys": [
+            "status",
+            "total_bdb_plays",
+            "shell_distribution",
+            "box_conditional_shell_distribution",
+            "tlaw_shell_split_epa",
+            "note"
+          ]
+        },
+        "x_watchlist_structured_claims_2026_11_05.json": {
+          "loaded_keys": [
+            "schema",
+            "generated_at",
+            "total_claims",
+            "claims"
+          ]
+        }
+      }
+    },
+    "layer_4_equations_and_operators": {
+      "status": "PASSED",
+      "cognitive_router": "288-bit context mask -> Stage C Spectral Cluster Orthogonalization -> Stage D James-Stein Shrinkage (|delta log-odds| <= 0.35)",
+      "total_engine_modules": 77,
+      "batch_operators_verified": 10,
+      "operators_list": [
+        "Quantile Motion Feasibility TTA",
+        "Opponent-Adjusted Pass-Block/Rush Win Rate",
+        "Wyner Blown-Lead & Reference-Dependent Tilt Shock",
+        "Factorized Coverage & HMM Play-Call Prior",
+        "Shen Prospective Causal Panel",
+        "GSI Oculo-Axonal TBI/NfL Hazard",
+        "Non-Fermi Liquid Critical Coupling",
+        "Micro-Environment Chromatic/Perimeter Wall & Bergman DFS Max",
+        "NVIDIA Kumo Relational Tabular Prior",
+        "Jev Epistemic-Aleatoric Confidence XX/100"
+      ],
+      "equation_corpus_records": "Loaded"
+    },
+    "layer_5_situational_overlay": {
+      "status": "PASSED",
+      "situational_families": [
+        "pressure",
+        "weather",
+        "restFatigue",
+        "coveragePersonnel",
+        "qbSkillScript",
+        "marketMicrostructure"
+      ],
+      "rules_file": "C:\\c\\wt-week8-forensic\\packages\\prediction-engine\\src\\nfl\\x-situational-80-rules.ts",
+      "aggregator": "C:\\c\\wt-week8-forensic\\packages\\prediction-engine\\src\\nfl\\master-situational-reasoning-aggregator.ts",
+      "narrative_5b_tracker": "contract incentives > record chases > revenge games > birthdays"
+    }
+  }
+}
