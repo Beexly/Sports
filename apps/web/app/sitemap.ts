@@ -95,6 +95,8 @@ const ROUTES: ReadonlyArray<{
   { path: "/glass-ledger", priority: 0.55, changeFrequency: "weekly" },
   { path: "/data", priority: 0.5, changeFrequency: "monthly" },
   { path: "/content-lab", priority: 0.4, changeFrequency: "monthly" },
+  { path: "/llms.txt", priority: 0.9, changeFrequency: "daily" },
+  { path: "/llms-full.txt", priority: 0.85, changeFrequency: "daily" },
 ];
 
 /** Upcoming + recent live games only — not thousands of FINAL archives. */

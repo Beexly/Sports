@@ -94,3 +94,28 @@ def test_run_all_downloads_architecture_kernels() -> None:
         "6_belichick_and_sealed_architecture",
     ):
         assert key in all_res
+
+
+def test_live_22_books_github_marketing_and_seo_aeo_engines() -> None:
+    from intelligence.coaching.live_books_and_pdfs_executable_engine import (
+        run_all_live_books_and_pdfs_engines,
+    )
+
+    res = run_all_live_books_and_pdfs_engines("JAX", "BAL", 9)
+    assert res["engines_executed_count"] == 22
+    mkt_seo = res["marketing_science_and_seo_aeo_geo_engine"]
+    assert mkt_seo["ok"] is True
+    assert mkt_seo["index_marketing_works_wired"] == 24
+    assert mkt_seo["fader_hardie_clv_retention"]["bg_nbd_p_alive"] > 0.70
+    assert mkt_seo["meridian_robyn_mmm"]["brand_search_suppressed_by_bnt_2015"] is True
+    assert mkt_seo["kunzel_wager_athey_uplift"]["qini_efficiency_multiplier"] > 1.0
+    assert mkt_seo["bass_goel_watts_virality"]["structural_virality_gain_over_broadcast"] > 1.2
+    assert mkt_seo["thaler_sahni_behavioral"]["segregated_hedonic_lift_pct"] > 15.0
+    assert mkt_seo["train_mixed_logit_demand"]["gse_total_market_capture"] > 0.70
+    seo_audit = mkt_seo["seo_aeo_geo_ai_discovery"]
+    assert seo_audit["llms_txt_route_wired"] is True
+    assert seo_audit["llms_full_txt_route_wired"] is True
+    assert seo_audit["ai_plugin_manifest_wired"] is True
+    assert seo_audit["seo_jsonld_library_wired"] is True
+    assert seo_audit["kdd_2024_geo_citation_authority_score"] >= 99.0
+

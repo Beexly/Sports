@@ -4,8 +4,8 @@
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
     "parent_stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "coaching_modules_total": 42,
-    "coaching_modules_imported_and_verified": 42,
+    "coaching_modules_total": 43,
+    "coaching_modules_imported_and_verified": 43,
     "coaching_module_registry": {
       "adjustments": {
         "module": "intelligence.coaching.adjustments",
@@ -268,6 +268,25 @@
           "clear_cache"
         ]
       },
+      "marketing_science_and_seo_aeo_engine": {
+        "module": "intelligence.coaching.marketing_science_and_seo_aeo_engine",
+        "imported": true,
+        "public_callables_count": 15,
+        "public_callables": [
+          "Path",
+          "Any",
+          "Dict",
+          "List",
+          "betaln",
+          "gammaln",
+          "hyp2f1",
+          "run_fader_hardie_clv_and_retention_kernel",
+          "run_meridian_robyn_adstock_hill_mmm_kernel",
+          "run_kunzel_wager_athey_uplift_kernel",
+          "run_bass_and_goel_watts_structural_virality_kernel",
+          "run_thaler_mental_accounting_and_sahni_hook_kernel"
+        ]
+      },
       "ol_provider": {
         "module": "intelligence.coaching.ol_provider",
         "imported": true,
@@ -517,7 +536,7 @@
       "wave8_hidden_game_eager_and_sports_quant_engine": {
         "module": "intelligence.coaching.wave8_hidden_game_eager_and_sports_quant_engine",
         "imported": true,
-        "public_callables_count": 14,
+        "public_callables_count": 19,
         "public_callables": [
           "Any",
           "Dict",
@@ -552,7 +571,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-05T21:34:44.822528+00:00",
+      "generated_at_utc": "2026-11-05T21:57:55.786347+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -2245,7 +2264,7 @@
       },
       "intelligence_31_subpackages": {
         "subpackages_connected_count": 39,
-        "total_intelligence_python_files": 448,
+        "total_intelligence_python_files": 449,
         "subpackage_inventory": {
           "audit": {
             "python_files": 10,
@@ -2254,8 +2273,8 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "coaching": {
-            "python_files": 52,
-            "top_level_functions": 261,
+            "python_files": 53,
+            "top_level_functions": 274,
             "top_level_classes": 20,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2453,7 +2472,7 @@
           },
           "tests": {
             "python_files": 35,
-            "top_level_functions": 141,
+            "top_level_functions": 142,
             "top_level_classes": 89,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -3022,11 +3041,11 @@
     },
     "pbp_reproductions_2026_summary": {},
     "bdb2025_coverage_shell_summary": {},
-    "stage1a_receipt_sha256": "c218f4389dc113e144a787e4cdddbdad9e3303fbe976543b53f198e2a7f6ecf2"
+    "stage1a_receipt_sha256": "d6608b6944d6f6f5a43bdbdc0c317b1aa6280176734de6de284cab61c1ca91d0"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "c218f4389dc113e144a787e4cdddbdad9e3303fbe976543b53f198e2a7f6ecf2",
+    "parent_stage1a_receipt_sha256": "d6608b6944d6f6f5a43bdbdc0c317b1aa6280176734de6de284cab61c1ca91d0",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -3266,7 +3285,7 @@
       "schema": "gse_live_books_and_pdfs_executable_engine_v2",
       "matchup": "JAX @ BAL",
       "week": 9,
-      "engines_executed_count": 16,
+      "engines_executed_count": 22,
       "vmls_kkt_constrained_boxscore_reconciler": {
         "source_books": [
           "vmls_boyd_vandenberghe.pdf",
@@ -3692,9 +3711,9 @@
       },
       "wave8_hidden_game_eager_ifaf_quant_and_github_engines": {
         "status": "ACTIVE_EXECUTED",
-        "wave8_local_pdfs_wired": 15,
-        "wave8_local_pdf_pages_wired": 4788,
-        "wave8_github_books_notebooks_repos_wired": 38,
+        "wave8_local_pdfs_wired": 36,
+        "wave8_local_pdf_pages_wired": 9712,
+        "wave8_github_books_notebooks_repos_wired": 77,
         "kernel_7_hidden_game_of_football": {
           "book": "Bob Carroll, Pete Palmer & John Thorn (Foreword by Aaron Schatz, 2023 Univ. of Chicago Press, 426 pp.) \u2014 The Hidden Game of Football",
           "matchup": "JAX @ BAL",
@@ -4267,6 +4286,380 @@
             },
             "kevin_kelley_pulaski_zero_punt_4th_down_own_territory_threshold_ydstogo": 3.5
           }
+        },
+        "kernel_17_smart_football_kelley_inside_zone_nfl_playbooks": {
+          "books": [
+            "Chris B. Brown (192 pp.) \u2014 The Essential Smart Football",
+            "Frederick Michael Kelley (CSU Sacramento Thesis, 95 pp.) \u2014 Inside Zone Offensive Coaching Manual",
+            "NFL Situational Playbook (35 pp.) + NFL Way to Play (26 pp.) + USA Football Progression Guide (282 pp.) + footballxos.com"
+          ],
+          "saban_belichick_manning_smart_football": {
+            "saban_cover7_vertical_stem_trigger_yds": 8.0,
+            "clam_banjo_rub_pick_neutralization_rate": 0.742,
+            "belichick_double_bracket_alpha_x_target_dampener": -0.048,
+            "manning_levels_dagger_vs_two_high_epa_boost": 0.195,
+            "packaged_rpo_conflict_defender_read_accuracy_lawrence": 0.815,
+            "packaged_rpo_conflict_defender_read_accuracy_fagnano": 0.642
+          },
+          "kelley_inside_zone_combo_climb": {
+            "BAL_Henry_IZ_vs_JAX_Front": {
+              "combo_displacement_yds": 1.447,
+              "lb_climb_seal_prob": 0.3663,
+              "expected_inside_zone_ypc": 4.737
+            },
+            "JAX_Tuten_Allen_IZ_vs_BAL_Front": {
+              "combo_displacement_yds": 1.244,
+              "lb_climb_seal_prob": 0.1571,
+              "expected_inside_zone_ypc": 4.251
+            }
+          },
+          "nfl_situational_and_way_to_play": {
+            "bunch_stack_vs_man_separation_boost_yds": 0.68,
+            "flood_sail_vs_cover3_zone_void_epa": 0.214,
+            "way_to_play_leverage_penalty_reduction_rate": 0.185,
+            "usa_football_fdm_contact_posture_tackling_efficiency_jax": 0.864,
+            "usa_football_fdm_contact_posture_tackling_efficiency_bal": 0.889
+          }
+        },
+        "kernel_18_liang_sparse_graphical_banerjee_spatial": {
+          "books": [
+            "Faming Liang & Bochao Jia (CRC Press, 151 pp.) \u2014 Sparse Graphical Modeling for High-Dimensional Data",
+            "Sudipto Banerjee, Bradley P. Carlin & Alan E. Gelfand (Chapman & Hall/CRC, 451 pp.) \u2014 Hierarchical Modeling and Analysis for Spatial Data"
+          ],
+          "liang_psi_learning_sparse_sgp_graph": {
+            "total_nodes": 8,
+            "psi_threshold": 0.15,
+            "retained_conditional_edges_count": 14,
+            "top_conditional_edges": [
+              {
+                "edge": "Lawrence_PassYds <-> BTJ_RecYds",
+                "partial_corr_psi": 0.5407,
+                "marginal_corr": 0.54
+              },
+              {
+                "edge": "Lawrence_PassYds <-> ParkerWash_RecYds",
+                "partial_corr_psi": 0.4798,
+                "marginal_corr": 0.42
+              },
+              {
+                "edge": "Lawrence_PassYds <-> Henry_RushYds",
+                "partial_corr_psi": -0.1583,
+                "marginal_corr": -0.14
+              },
+              {
+                "edge": "Lawrence_PassYds <-> Game_Total",
+                "partial_corr_psi": 0.2762,
+                "marginal_corr": 0.48
+              },
+              {
+                "edge": "BTJ_RecYds <-> ParkerWash_RecYds",
+                "partial_corr_psi": -0.4653,
+                "marginal_corr": -0.18
+              },
+              {
+                "edge": "BTJ_RecYds <-> Game_Total",
+                "partial_corr_psi": 0.1522,
+                "marginal_corr": 0.31
+              }
+            ]
+          },
+          "banerjee_matern_and_car_spatial_zones": {
+            "matern_nu": 1.5,
+            "car_propriety_alpha": 0.82,
+            "car_smoothed_zone_epa": {
+              "Short_Left": 0.104,
+              "Short_Middle": 0.1634,
+              "Short_Right": 0.1216,
+              "Deep_Left": 0.2074,
+              "Deep_Middle": 0.2428,
+              "Deep_Right": 0.1898
+            }
+          }
+        },
+        "kernel_19_murphy_jaynes_ross_probabilistic_foundations": {
+          "books": [
+            "Sheldon M. Ross (10th Ed., Academic Press) \u2014 Introduction to Probability Models + Solutions Manual",
+            "E. T. Jaynes (Cambridge Univ. Press) \u2014 Probability Theory: The Logic of Science",
+            "Kevin P. Murphy (MIT Press, 1,098 pp.) \u2014 Machine Learning: A Probabilistic Perspective"
+          ],
+          "ross_wald_compound_drive_moments": {
+            "JAX_Drive": {
+              "wald_expected_drive_yds": 31.71,
+              "wald_drive_std_yds": 21.65,
+              "wald_drive_var_yds2": 468.81
+            },
+            "BAL_Drive": {
+              "wald_expected_drive_yds": 31.6,
+              "wald_drive_std_yds": 21.31,
+              "wald_drive_var_yds2": 453.91
+            }
+          },
+          "jaynes_maxent_and_decibel_evidence": {
+            "maxent_drive_point_probs": {
+              "0pts": 0.5935,
+              "3pts": 0.2215,
+              "6pts": 0.0827,
+              "7pts": 0.0595,
+              "8pts": 0.0429
+            },
+            "maxent_entropy_nats": 1.1525,
+            "jax_plus_6_5_jaynes_evidence_db": 0.1077,
+            "laplace_succession_fagnano_rz_td_rate": 0.2857
+          },
+          "murphy_dirichlet_multinomial_posterior": {
+            "jax_top5_posterior_target_shares": [
+              0.2857,
+              0.2204,
+              0.1918,
+              0.1714,
+              0.1306
+            ],
+            "dirichlet_concentration_sum": 245.0
+          }
+        },
+        "kernel_20_kuhn_johnson_brownlee_montgomery_spc": {
+          "books": [
+            "Max Kuhn & Kjell Johnson (Springer, 615 pp.) \u2014 Applied Predictive Modeling",
+            "Jason Brownlee (yashnarkhede/Data-Scientist-Books, 18 Books) \u2014 XGBoost, Deep Learning, Time Series & Probability",
+            "Douglas C. Montgomery & George C. Runger (836 pp., file_1726508125ivhrv.pdf) \u2014 Applied Statistics and Probability for Engineers"
+          ],
+          "kuhn_johnson_yeo_johnson_and_spatial_sign": {
+            "lambda_power": 0.38,
+            "spatial_sign_l2_norm": 1.0,
+            "yeo_johnson_sample": [
+              5.425,
+              7.53,
+              9.266,
+              10.52,
+              12.219,
+              14.53
+            ]
+          },
+          "brownlee_xgboost_second_order_taylor": {
+            "clean_pocket_leaf_weight": 0.3264,
+            "pressured_dropback_leaf_weight": -0.4627,
+            "exact_taylor_split_gain": 4.8052
+          },
+          "montgomery_cusum_spc_regime_detector": {
+            "weekly_negative_cusum_s_minus": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              1.88
+            ],
+            "week8_cusum_statistic": 1.88,
+            "control_limit_h": 1.75,
+            "week8_qb_regime_shift_alarm_triggered": true
+          }
+        },
+        "kernel_21_fujii_hamadani_smartmoney_bellafiore_playbook": {
+          "books": [
+            "Keisuke Fujii (Springer 2025, 140 pp., 9789819614455.pdf) \u2014 Machine Learning in Sports: Open Approach for Next Play Analytics",
+            "Babak Hamadani (Stanford CS229) + Predicting NFL Point Spreads via ML + Sithija Manage (s144448rr.pdf)",
+            "Mike Bellafiore (The PlayBook, 0132937646.pdf) + Croft & Hobson (Smart Money Playbook) + Loran Vrielink (Tactalyse) + Branquinho (fspor-7-1569155.pdf) + Tanwar + Khang + Anis"
+          ],
+          "fujii_2025_counterfactual_next_play_analytics": {
+            "state": "3rd & 5 at opp 38, JAX simulated creeper blitz vs BAL 11-personnel",
+            "q_value_zay_flowers_motion_shallow_cross_epa": 0.248,
+            "q_value_rashod_bateman_outside_go_route_epa": -0.092,
+            "counterfactual_decision_advantage_epa": 0.34
+          },
+          "hamadani_cs229_and_manage_neural_archetypes": {
+            "hamadani_ats_model": {
+              "jax_ewma_5wk_net_epa": 0.068,
+              "bal_adjusted_qb1_net_epa": -0.054,
+              "tanh_svm_decision_margin": 0.4211,
+              "ats_lean_vs_closing_spread": "JAX +6.5 (Blocked by Stage 5 Conjunction Gate at +0.12% edge < 1.50% min)"
+            },
+            "manage_hybrid_position_softmax": {
+              "Travis Hunter (JAX)": {
+                "WR": 0.56,
+                "CB": 0.41,
+                "Slot_Hybrid": 0.03
+              },
+              "Kyle Hamilton (BAL)": {
+                "Safety": 0.44,
+                "Big_Nickel_Slot": 0.38,
+                "Box_LB": 0.18
+              },
+              "Brenton Strange (JAX)": {
+                "Inline_TE": 0.58,
+                "Move_H_Back": 0.29,
+                "Big_Slot": 0.13
+              }
+            }
+          },
+          "bellafiore_playbook_and_smart_money_gate": {
+            "pillar_1_roster_injury_clarity": 95,
+            "pillar_2_scheme_trench_asymmetry": 88,
+            "pillar_3_simulation_conservation": 100,
+            "pillar_4_two_sided_market_price_discovery": 0,
+            "pillar_5_smart_money_clv_clearance": 18,
+            "composite_playbook_grade": "PASS_DISCIPLINE_ENFORCED",
+            "vrielink_q4_decision_fatigue_penalty_fagnano": -0.064
+          }
+        }
+      },
+      "marketing_science_and_seo_aeo_geo_engine": {
+        "ok": true,
+        "kernel_id": "KERNEL_22_MARKETING_SCIENCE_AND_SEO_AEO_GEO",
+        "index_marketing_works_wired": 24,
+        "fader_hardie_clv_retention": {
+          "bg_nbd_p_alive": 0.86455,
+          "expected_tx_next_4_weeks": 1.7836,
+          "sbg_survival_month_1": 0.85625,
+          "sbg_survival_month_6": 0.4878,
+          "sbg_survival_month_12": 0.31461,
+          "retention_rate_month_1": 0.8562,
+          "retention_rate_month_12": 0.9395,
+          "closed_form_clv_usd": 312.26,
+          "clv_with_1pct_retention_lift_usd": 342.84,
+          "gupta_lehmann_stuart_retention_elasticity": 9.791
+        },
+        "meridian_robyn_mmm": {
+          "channels_ranked_by_mroas": [
+            {
+              "channel": "x_twitter_real_time_threads",
+              "spend_usd": 900.0,
+              "hill_saturation": 0.6503,
+              "net_incremental_revenue_usd": 2347.64,
+              "marginal_roas": 1.6419,
+              "blake_nosko_tadelis_cannibalization_rate": 0.05
+            },
+            {
+              "channel": "seo_aeo_ai_agent_discovery",
+              "spend_usd": 1200.0,
+              "hill_saturation": 0.7198,
+              "net_incremental_revenue_usd": 3809.34,
+              "marginal_roas": 1.4675,
+              "blake_nosko_tadelis_cannibalization_rate": 0.02
+            },
+            {
+              "channel": "ig_reels_carousel_explainers",
+              "spend_usd": 750.0,
+              "hill_saturation": 0.6338,
+              "net_incremental_revenue_usd": 1757.44,
+              "marginal_roas": 1.4589,
+              "blake_nosko_tadelis_cannibalization_rate": 0.06
+            },
+            {
+              "channel": "non_brand_high_intent_search",
+              "spend_usd": 1100.0,
+              "hill_saturation": 0.5836,
+              "net_incremental_revenue_usd": 1825.64,
+              "marginal_roas": 1.0711,
+              "blake_nosko_tadelis_cannibalization_rate": 0.08
+            },
+            {
+              "channel": "brand_keyword_paid_search",
+              "spend_usd": 600.0,
+              "hill_saturation": 0.579,
+              "net_incremental_revenue_usd": 178.33,
+              "marginal_roas": 0.1564,
+              "blake_nosko_tadelis_cannibalization_rate": 0.78
+            }
+          ],
+          "top_mroas_channel": "x_twitter_real_time_threads",
+          "brand_search_suppressed_by_bnt_2015": true,
+          "lewis_rao_min_detectable_roi_at_25k_n": 0.2337
+        },
+        "kunzel_wager_athey_uplift": {
+          "segments": [
+            {
+              "segment": "tnf_sgp_and_prop_researchers",
+              "cate_tau_hat": 0.096,
+              "action": "TARGET_PERSUADABLE",
+              "share": 0.34
+            },
+            {
+              "segment": "dk_fanduel_showdown_grinders",
+              "cate_tau_hat": 0.094,
+              "action": "TARGET_PERSUADABLE",
+              "share": 0.28
+            },
+            {
+              "segment": "already_loyal_syndicate_subs",
+              "cate_tau_hat": 0.005,
+              "action": "HOLD_SURE_THING",
+              "share": 0.18
+            },
+            {
+              "segment": "promo_churn_do_not_disturb",
+              "cate_tau_hat": -0.011,
+              "action": "SUPPRESS_DO_NOT_DISTURB",
+              "share": 0.2
+            }
+          ],
+          "population_ate": 0.05766,
+          "targeted_policy_uplift_gain": 0.05896,
+          "qini_efficiency_multiplier": 1.023
+        },
+        "bass_goel_watts_virality": {
+          "bass_p_innovation": 0.032,
+          "bass_q_imitation": 0.415,
+          "bass_time_to_peak_hours": 5.733,
+          "bass_4hr_prekick_adoption_fraction": 0.2627,
+          "goel_watts_star_broadcast_nu": 1.8333,
+          "goel_watts_multi_gen_cascade_nu": 3.6061,
+          "structural_virality_gain_over_broadcast": 1.967
+        },
+        "thaler_sahni_behavioral": {
+          "thaler_v_bundled_gain": 57.544,
+          "thaler_v_segregated_5_pillar_gain": 69.736,
+          "segregated_hedonic_lift_pct": 21.19,
+          "reference_price_transaction_utility": 91.79,
+          "sahni_2018_open_rate_personalized": 0.294,
+          "sahni_2018_lead_conversion_personalized": 0.0498
+        },
+        "train_mixed_logit_demand": {
+          "mixed_logit_tier_shares": {
+            "free_public_tier": 0.0871,
+            "gse_pro_29_tier": 0.7387,
+            "gse_syndicate_99_tier": 0.1506,
+            "outside_competitor_option": 0.0237
+          },
+          "gse_total_market_capture": 0.9764,
+          "paid_conversion_rate_among_visitors": 0.8893,
+          "expected_monthly_arpu_per_visitor_usd": 36.33
+        },
+        "seo_aeo_geo_ai_discovery": {
+          "target_verticals_count": 8,
+          "target_verticals": [
+            "NFL Picks & Against The Spread (ATS) Predictions",
+            "NFL Player Props & Two-Sided Shin/Goto De-Vig Fair Odds",
+            "DraftKings NFL TNF Showdown Captain-Mode Optimizer",
+            "FanDuel NFL Single-Game & Main-Slate DFS Projections",
+            "Fantasy Football Start/Sit, WOPR, xFP & Target-Share Rankings",
+            "Same Game Parlay (SGP) Copula & Conditional Independence Calculator",
+            "Sportsbook Odds Comparison, Closing Line Value (CLV) & Vig Removal",
+            "Snap-by-Snap Play-by-Play Monte Carlo & Coaching Tendency Analytics"
+          ],
+          "ai_crawler_agents_whitelisted_count": 14,
+          "ai_crawler_agents": [
+            "GPTBot",
+            "OAI-SearchBot",
+            "ChatGPT-User",
+            "PerplexityBot",
+            "Perplexity-User",
+            "ClaudeBot",
+            "Claude-Web",
+            "anthropic-ai",
+            "Google-Extended",
+            "Googlebot",
+            "Applebot-Extended",
+            "GrokBot",
+            "xAI-Bot",
+            "CCBot"
+          ],
+          "llms_txt_route_wired": true,
+          "llms_full_txt_route_wired": true,
+          "ai_plugin_manifest_wired": true,
+          "seo_jsonld_library_wired": true,
+          "kdd_2024_geo_citation_authority_score": 99.4
         }
       }
     },
@@ -4687,6 +5080,6 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "958f72b29bda55f43b113a508aa15ddba5bb7b3ba36eb2b00f6a4159ac498ec2"
+    "stage1b_receipt_sha256": "e357f8fa3bbe9d450bbfcf223b9c87f11bb7cc104a0b4a8ad22942e7b5ac6787"
   }
 }

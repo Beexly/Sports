@@ -172,7 +172,7 @@ def map_engine_target_and_domain(filename: str, title: str, category: str, text_
     fname_low = filename.lower()
     low = f"{filename} {title} {text_sample[:2500]}".lower()
 
-    # 0. Wave 8 & Wave 9 Football Books & Live Books Executable Engine
+    # 0. Wave 8, Wave 9 & Wave 10 Football/Sports/Probabilistic Books & Live Books Executable Engine
     if any(
         k in fname_low
         for k in (
@@ -189,6 +189,28 @@ def map_engine_target_and_domain(filename: str, title: str, category: str, text_
             "the_recursive_mind",
             "football_-_chuck_klosterman",
             "predictive_modelling_for_football_analytics",
+            "machine learning a probabilistic perspective by kevin p. murphy",
+            "applied-predictive-modeling-max-kuhn-kjell-johnson",
+            "file_1726508125ivhrv",
+            "hierarchical_modeling_and_analysis_for_spatial_data_-_banerjee",
+            "sparse_graphical_modeling_for_high_dimensional_data_-_faming_liang",
+            "data-driven_modelling_and_predictive_analytics_-_alex_khang",
+            "predictive_data_modelling_for_biomedical_data_-_poonam_tanwar",
+            "ultimate_step_by_step_guide_to_machine_lea_-_daneyal_anis",
+            "0132937646",
+            "smartmoney",
+            "predicting_nfl_point_spreads_via_machine_learning",
+            "9789819614455",
+            "s144448rr",
+            "babakhamadani-predictingnflgames",
+            "fspor-7-1569155",
+            "nfl flag situational play book_prd",
+            "nfl_way-to-play-playbook",
+            "player_progression_guide_template",
+            "the essential smart football",
+            "nfl football - playbook",
+            "kelley, frederick michael_spring_2009",
+            "e-book-mastering-the-art-of-player-development",
         )
     ):
         return ("wave8_hidden_game_eager_and_sports_quant_engine.py", "wave8_football_books_and_sports_quant")
@@ -585,6 +607,23 @@ def extract_pdf_content(path: Path) -> Tuple[str, str, List[str]]:
             return title, f"[PDF_METADATA_ONLY: {path.name}, error={exc}]", [f"pages={page_count}"]
 
     full_text = "\n".join(text_parts)[:MAX_TEXT_READ_BYTES]
+    if page_count == 0 or not full_text.strip():
+        # Regex + zlib stream fallback for malformed /Pages xref PDFs (e.g. Poonam Tanwar)
+        try:
+            raw_bytes = path.read_bytes()
+            m_lin = re.search(rb"/Linearized\s+1.*?/N\s+(\d+)", raw_bytes[:4096], flags=re.S)
+            page_objs = len(re.findall(rb"/Type\s*/Page\b", raw_bytes))
+            page_count = int(m_lin.group(1)) if m_lin else max(1, page_objs)
+            ascii_tokens = [
+                m.decode("ascii", errors="ignore")
+                for m in re.findall(rb"[A-Za-z][A-Za-z0-9 ,.;:\-\(\)/]{10,120}", raw_bytes[:500_000])
+            ]
+            full_text = (
+                f"[REGEX_STREAM_FALLBACK: {path.name}, linearized_pages={page_count}, intact_page_objs={page_objs}] "
+                + " | ".join(ascii_tokens[:80])
+            )[:MAX_TEXT_READ_BYTES]
+        except Exception:
+            pass
     if title == path.stem and full_text:
         for line in full_text.splitlines()[:15]:
             s = line.strip()
@@ -765,10 +804,26 @@ def process_single_file(path: Path, idx: int) -> Dict[str, Any]:
                 inner_snippets.extend(names[:80])
                 if byte_size < 50_000_000:
                     for info in infos[:8]:
-                        if Path(info.filename).suffix.lower() in {".md", ".py", ".ts", ".json", ".txt"} and info.file_size < 60_000:
+                        ext_in = Path(info.filename).suffix.lower()
+                        if ext_in in {".md", ".py", ".ts", ".json", ".txt"} and info.file_size < 60_000:
                             try:
                                 sub_txt = zf.read(info).decode("utf-8", errors="replace")[:1500]
                                 inner_snippets.append(f"\n--- {info.filename} ---\n{sub_txt}")
+                            except Exception:
+                                pass
+                        elif ext_in == ".pdf":
+                            try:
+                                try:
+                                    import pymupdf as fitz_zip
+                                except ImportError:
+                                    import fitz as fitz_zip
+                                pdf_bytes = zf.read(info)
+                                zdoc = fitz_zip.open(stream=pdf_bytes, filetype="pdf")
+                                zpages = len(zdoc)
+                                headers.append(f"inner_pdf_pages={zpages}")
+                                ztxt = "\n".join((zdoc[i].get_text() or "") for i in range(min(zpages, 8)))
+                                zdoc.close()
+                                inner_snippets.append(f"\n--- {info.filename} ({zpages} pages) ---\n{ztxt[:4000]}")
                             except Exception:
                                 pass
                 full_text = "\n".join(inner_snippets)[:MAX_TEXT_READ_BYTES]

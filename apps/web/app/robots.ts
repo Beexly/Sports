@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/site-url";
 import { isStatsPublic } from "@/lib/launch/public-surface-gate";
+import { AI_CRAWLER_USER_AGENTS } from "@/lib/seo/ai-agent-and-search-seo";
 
 /**
  * robots.txt
@@ -17,27 +18,33 @@ import { isStatsPublic } from "@/lib/launch/public-surface-gate";
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = SITE_URL;
+  const disallowed = [
+    "/admin",
+    "/admin/",
+    "/cockpit",
+    "/cockpit/",
+    "/api/",
+    "/auth/",
+    "/dashboard",
+    "/dashboard/",
+    "/brief",
+    "/go/",
+    // StatKing foundation — public only with STATS_PUBLIC=true.
+    // Kept in lockstep with the sitemap's isStatsPublic() gate.
+    ...(isStatsPublic() ? [] : ["/stats", "/stats/"]),
+  ];
 
   return {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
-        disallow: [
-          "/admin",
-          "/admin/",
-          "/cockpit",
-          "/cockpit/",
-          "/api/",
-          "/auth/",
-          "/dashboard",
-          "/dashboard/",
-          "/brief",
-          "/go/",
-          // StatKing foundation — public only with STATS_PUBLIC=true.
-          // Kept in lockstep with the sitemap's isStatsPublic() gate.
-          ...(isStatsPublic() ? [] : ["/stats", "/stats/"]),
-        ],
+        allow: ["/", "/llms.txt", "/llms-full.txt", "/.well-known/ai-plugin.json"],
+        disallow: disallowed,
+      },
+      {
+        userAgent: AI_CRAWLER_USER_AGENTS,
+        allow: ["/", "/llms.txt", "/llms-full.txt", "/.well-known/ai-plugin.json"],
+        disallow: disallowed,
       },
     ],
     sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/news-sitemap.xml`],

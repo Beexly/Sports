@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
+import {
+  HIGH_INTENT_SEARCH_KEYWORDS,
+  buildGlobalSearchAndAiJsonLd,
+} from "@/lib/seo/ai-agent-and-search-seo";
 import { Big_Shoulders_Display, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import {
@@ -91,7 +95,7 @@ export const metadata: Metadata = {
   },
   description: BRAND_META.description,
   keywords: [
-    "sports betting model",
+    ...HIGH_INTENT_SEARCH_KEYWORDS,
     "sports analytics platform",
     "transparent sports picks",
     "audited sports picks",
@@ -210,6 +214,14 @@ export default function RootLayout({
             __html: jsonLdScript(websiteJsonLd),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLdScript(buildGlobalSearchAndAiJsonLd(SITE_URL)),
+          }}
+        />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="AI Agent Discovery Manifest" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="AI Full Technical Corpus" />
       </head>
       <body className="min-h-screen antialiased">
         <a

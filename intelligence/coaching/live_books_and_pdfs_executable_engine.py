@@ -815,18 +815,23 @@ def run_all_live_books_and_pdfs_engines(
     # 6. Tukey Fourth-Spread Fences, Huff/Levitin Simpson's Paradox, Nash Equilibrium & Markov Drive Matrix
     tukey_nash_markov_res = tukey_huff_levitin_game_theory_and_markov_drive_engine(away=away, home=home)
 
-    # 7-11. Wave 8 Local Football Books (Hidden Game of Football 426p, Eager/Erickson O'Reilly 488p,
-    #       IFAF Rulebook 201p, Baylor/TCU SID Game Notes 68p, The Numbers Game) + 38 GitHub Books/Repos
+    # 7-21. Wave 8-10 Local Football Books & 77 GitHub Books/Repos
     from intelligence.coaching.wave8_hidden_game_eager_and_sports_quant_engine import (
         run_all_wave8_books_and_github_kernels,
     )
     wave8_res = run_all_wave8_books_and_github_kernels(away_team=away, home_team=home)
 
+    # 22. Marketing Science (INDEX-MARKETING.md 24 Works) & Elite SEO/AEO/GEO AI-Agent Discovery Engine
+    from intelligence.coaching.marketing_science_and_seo_aeo_engine import (
+        run_all_marketing_science_and_seo_aeo_engines,
+    )
+    mkt_seo_res = run_all_marketing_science_and_seo_aeo_engines()
+
     return {
         "schema": "gse_live_books_and_pdfs_executable_engine_v2",
         "matchup": f"{away} @ {home}",
         "week": week,
-        "engines_executed_count": 16,
+        "engines_executed_count": 22,
         "vmls_kkt_constrained_boxscore_reconciler": kkt_res,
         "overrelaxed_anderson_sinkhorn_ot": sinkhorn_res,
         "bm25f_corpus_and_book_lesson_retriever": bm25f_res,
@@ -834,6 +839,7 @@ def run_all_live_books_and_pdfs_engines(
         "prolate_spheroid_football_aerodynamics_and_ol_route_coaching_network": aero_ol_coach_res,
         "tukey_huff_levitin_game_theory_and_markov_drive_engine": tukey_nash_markov_res,
         "wave8_hidden_game_eager_ifaf_quant_and_github_engines": wave8_res,
+        "marketing_science_and_seo_aeo_geo_engine": mkt_seo_res,
     }
 
 
