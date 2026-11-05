@@ -77,6 +77,8 @@ Players: D. Swift 143/545, K. Monangai 60/324, R. Johnson 29/103 (ESPN lists LB)
 - **F8 playoff luck residue since 2018:** local pbp covers 2024–2026 only; 2018–2023 playoff games are not on disk.
 - **F9 referee crew penalty tendencies 2022–2025:** no referee/crew field in the local pbp files.
 
-## X watchlist browser pass — BLOCKED
+## X watchlist browser pass — PARTIAL (no verbatim posts)
 
-Fresh-tab pass for `@PattonAnalytics`, `@StatsHubCom`, `@Timo_NFL`, `@nfl_simulator`, `@run_the_sims`, `@HaydenWinks`, `@SumerSports` could not run: the automation Chrome at `127.0.0.1:9222` is not running (CDP connection refused after 30s), and no X session is available to this agent. No content from those accounts is claimed in this cycle. To enable it, launch Chrome with `--remote-debugging-port=9222 --remote-allow-origins=*` on the dedicated profile, then re-run.
+Chrome was launched on a dedicated automation profile with `--remote-debugging-port=9222 --remote-allow-origins=*`, and CDP answered (Chrome 156.0.8078.80). `x.com/PattonAnalytics` rendered only the profile header (7,314 posts, 11.4k followers); the timeline was replaced by the logged-out "Log in or sign up" wall. No X session exists for this agent, so no timeline text is available.
+
+Fallback: `x_search` over the seven handles (2026-11-01 to 2026-11-05) returned a synthesis with 29 post citations but no verbatim post bodies. The public syndication timeline endpoint returned HTTP 429. No watchlist post text is claimed in this cycle.
