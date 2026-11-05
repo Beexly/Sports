@@ -114,7 +114,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
           </div>
 
           <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs leading-relaxed text-slate-400">
-            <strong className="text-slate-200">Why we render 74/100, never 74%:</strong> Industry research proves sports bettors conflate 74% win probability with a 100% lock, triggering irrational Kelly over-betting. Our bounded index displays honest conviction without misleading decimal claims.
+            <strong className="text-slate-200">Why we render 74/100, never 74%:</strong> Industry research proves sports bettors conflate 74% win probability with a 100% certainty, triggering irrational Kelly over-betting. Our bounded index displays honest conviction without misleading decimal claims.
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
               </p>
             </div>
             <Link href="/board" className="text-xs font-bold text-emerald-400 hover:text-emerald-300">
-              View Full 38-13-1 Board →
+              View Full 62-23-1 Board →
             </Link>
           </div>
 

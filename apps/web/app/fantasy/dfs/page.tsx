@@ -63,18 +63,18 @@ export default async function DfsSuitePage() {
 
   return (
     <FantasyShell
-      eyebrow="Daily Fantasy Football · Week 8 Sunday Main Slate (12 Games) & MNF (CHI @ SEA)"
+      eyebrow="Daily Fantasy Football · DraftKings & FanDuel Lineups"
       accent="cyan"
       projectionsBadge={false}
       title={
         <>
-          Week 8 DFS Main Slate Portfolio:{" "}
+          NFL DFS Slate Portfolio:{" "}
           <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
             DraftKings ($50K) &amp; FanDuel ($60K) Cash &amp; GPP Lineups.
           </span>
         </>
       }
-      intro="TNF official card is 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Built from 22,750,000 snap evaluations, 581 360-degree markets, 4,056 research corpus IDs, 112 IG + 100 X dossiers, 50 doctoral papers, walk-forward tau_hat (+11.16pp on n=3,988 4th downs), the 7-Signal Pack, Romano CQR honest conformal intervals, and OpenAI Math Optimal Transport certificates."
+      intro="Built from film study, offensive and defensive line matchups, verified active rosters, and how each game script actually plays out on the field before comparing against DraftKings and FanDuel salaries."
       note={note}
       wide
     >

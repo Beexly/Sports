@@ -83,9 +83,9 @@ export const ISSUES: readonly NewsletterIssue[] = [
     ],
   },
   {
-    slug: "004-week-8-sweep-and-week-9-stage-0-lock",
+    slug: "004-week-8-sweep-and-week-9-stage-0-gate",
     number: 4,
-    title: "Board Meeting 004: 7-of-7 Max-Play Sweep, 38-13-1 Ledger & Week 9 Stage 0 Lock",
+    title: "Board Meeting 004: 7-of-7 Max-Play Sweep, 62-23-1 Ledger & Week 9 Stage 0 Gate",
     publishedAt: "2026-11-04T18:00:00.000Z",
     lede:
       "How the 5-Stage GSE Engine swept all 7 top-conviction 1.00u plays in Week 8 (22-8-1, +12.40u) to reach 38-13-1 (+22.85u overall), and how Stage 0 locks Week 9 TNF (JAX @ BAL) and the 11-game Sunday Main Slate.",

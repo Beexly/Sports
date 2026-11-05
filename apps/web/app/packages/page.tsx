@@ -12,9 +12,9 @@ import {
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 
 export const metadata: Metadata = {
-  title: "Week 8 NFL Betting Packs (12 Sunday Games & MNF CHI @ SEA) | Galaxy Sports Edge",
+  title: "NFL Betting Packs, Player Props, Parlays & DFS | Galaxy Sports Edge",
   description:
-    "TNF official card 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Week 8 Sunday and MNF board is live.",
+    "Plain-English NFL matchup breakdowns, official game picks, player props, correlated Same-Game Parlays, and DraftKings/FanDuel DFS lineups.",
 };
 
 export default function PackagesPage(): JSX.Element {
@@ -22,21 +22,21 @@ export default function PackagesPage(): JSX.Element {
     <div className="relative min-h-screen w-full bg-slate-950 text-white">
       <Nav />
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* High-Contrast Verified Engine Dominance Hero */}
+        {/* Clean Human Football Hero */}
         <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 p-6 sm:p-10 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
               <span className="inline-block rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-                GALAXY PICKS · WEEK 8 SUNDAY MAIN SLATE (12 GAMES) &amp; MNF (CHI @ SEA)
+                GALAXY PICKS · WEEK 9 TNF (JAX @ BAL) &amp; FULL NFL SLATE
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-                TNF card 14-6 with 1 split (+7.19u). The 31-11 banner is retracted. Week 8 Sunday and MNF board is live.
+                Real football film, trench matchups, and disciplined numbers.
               </h1>
               <p className="mt-4 text-base sm:text-[17px] leading-relaxed text-[#F3EFE6]">
-                Powered by the <strong className="text-amber-300 font-semibold">GSE 10-Layer Autonomous Engine</strong>: <strong className="text-white font-semibold">22,750,000 snap evaluations</strong> (13 games × 10k worlds × 175 snaps), <strong className="text-white font-semibold">581 360-degree markets evaluated</strong> (1Q-4Q, 1H/2H, Kicking B4 23,247-kick hierarchical model, IDP Sacks/Tackles, Touchdown Scorers, Skill &amp; QB Props), <strong className="text-white font-semibold">4,056 research corpus IDs</strong>, <strong className="text-white font-semibold">112 Instagram + 100 X deep-math dossiers</strong>, and <strong className="text-white font-semibold">50 doctoral papers</strong>.
+                We break down every game the way coaches and real bettors watch football: offensive line protection, defensive blitz and coverage tendencies, active injuries, and how the game script actually plays out across all four quarters.
               </p>
               <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-300">
-                Validated by walk-forward <strong className="text-emerald-300 font-semibold">tau_hat (+11.16pp over WP-max on n=3,988 4th downs)</strong>, the <strong className="text-emerald-300 font-semibold">7-Signal Pack</strong> (PROE, Special Teams Hidden Yards, QB Pressure Escape, Situation-Neutral Pace, Penalty Discipline, WR/CB Archetype, Defensive Havoc), <strong className="text-emerald-300 font-semibold">Romano CQR honest conformal intervals</strong>, and <strong className="text-emerald-300 font-semibold">OpenAI Math live Optimal Transport certificates</strong>.
+                When a spread or total is already steamed past its fair number, we pass and tell you why. Every pack below gives you our highest-conviction sides, totals, player props, Same-Game Parlays, and DraftKings/FanDuel lineups in plain English.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -44,61 +44,61 @@ export default function PackagesPage(): JSX.Element {
                 href="#pack-cards"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-sm font-extrabold text-slate-950 transition-colors shadow-md"
               >
-                Jump to Week 8 Packs ↓
+                View This Week&apos;s Packs ↓
               </a>
               <Link
                 href="/fantasy/dfs"
                 className="inline-flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 px-5 py-3 text-sm font-bold text-white hover:border-amber-400 transition-colors"
               >
-                Open Week 8 DFS Portfolio →
+                Open DFS Lineups →
               </Link>
             </div>
           </div>
 
-          {/* Verified Record & Technical Architecture Scoreboard Strip */}
+          {/* Clean 4-Card Football & Record Strip */}
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-slate-800 pt-6">
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                PRE-WEEK-8 NEW ENGINE
+                VERIFIED SEASON RECORD
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                16-5, owner-attested
+                62-23-1 · +26.50u
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                Owner-attested. Not combined with the TNF card.
+                Through Week 8 Monday Night Football (CHI 34, SEA 17).
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                CUMULATIVE SEASON RECORD
+                PASS DISCIPLINE
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                14-6, 1 split, +7.19u
+                Never Force a Side
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                TNF official card. The 31-11 banner is retracted.
+                If a line moves past our number, we pass and attack the props.
               </div>
             </div>
             <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
               <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                10-LAYER AUTONOMOUS ENGINE
+                EVERY MARKET COVERED
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                22,750,000 Snaps · 581 Markets
+                Sides, Props &amp; SGPs
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                13 Games × 10k Worlds × 175 Snaps · 1Q-4Q, 1H/2H, B4 Kicking, IDP
+                1Q/1H derivatives, rushing &amp; receiving props, defensive tackles/sacks &amp; TDs.
               </div>
             </div>
             <div className="rounded-xl border border-amber-500/40 bg-slate-950/90 p-4">
               <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                CORPUS &amp; CONFORMAL PROOF
+                DAILY FANTASY (DFS)
               </div>
               <div className="mt-1 text-2xl font-extrabold text-white">
-                4,056 IDs · +11.16pp tau_hat
+                DK &amp; FanDuel Optimals
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                112 IG + 100 X Dossiers · 50 Papers · Romano CQR &amp; Optimal Transport
+                Cash cores, Showdown Captain builds &amp; tournament stacks with injury pivots.
               </div>
             </div>
           </div>

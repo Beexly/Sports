@@ -477,7 +477,7 @@ export function RedlineWorld({
             <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state">
-            <span className="live-dot" /> VERIFIED RECORD: 31-11 (+18.56u)
+            <span className="live-dot" /> VERIFIED RECORD: 62-23-1 (+26.50u)
           </div>
           <Link className="header-menu" href="/packages">ALL PACKS <span>→</span></Link>
         </header>
@@ -658,8 +658,8 @@ export function RedlineWorld({
         )}
 
         {panel === "slate" && (
-          <PanelFrame eyebrow="Week 8 Sealed RedZone Board · 38-13-1 (+22.85u)" title="Sealed Card & Trench Matchup X-Ray" close={closePanel} className="slate-panel">
-            <h3 className="sub-heading">Free Teaser Plays · Trench X-Ray Breakdown</h3>
+          <PanelFrame eyebrow="Verified RedZone Board · 62-23-1 (+26.50u)" title="Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
+            <h3 className="sub-heading">Free Teaser Plays · Trench Matchup Breakdown</h3>
             <div className="fixture-list">
               {SEALED_MAIN_CALLS.filter((c) => c.freeTeaser).map((c) => (
                 <div className="fixture-row" key={`${c.matchup}-${c.selection}`} style={{ flexDirection: "column", alignItems: "stretch" }}>
@@ -673,8 +673,8 @@ export function RedlineWorld({
                   {"trench" in c && c.trench && (
                     <div className="trench-xray-card">
                       <div className="trench-header">
-                        <span className="trench-badge">Trench Matchup X-Ray</span>
-                        <small style={{ color: "rgba(237,232,224,0.6)", fontSize: 11 }}>Sinkhorn-Knopp Trajectory</small>
+                        <span className="trench-badge">Trench Matchup Breakdown</span>
+                        <small style={{ color: "rgba(237,232,224,0.6)", fontSize: 11 }}>Film &amp; Protection Split</small>
                       </div>
                       <p style={{ margin: "4px 0", fontSize: 12, color: "#EDE8E0" }}>{c.trench.verdict}</p>
                       <div className="trench-metrics-grid">
@@ -779,9 +779,9 @@ export function RedlineWorld({
               </div>
 
               <div className="locked-paywall-modal">
-                <h4>🔒 Official Week 8 Sealed Card</h4>
+                <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Verified Official New Engine Record <strong>38-13-1 (74.5%) · +22.85u</strong> entering Week 9. Unlock all remaining 9 main-line plays, 17 player props, and 13 correlated SGPs with instant in-place reveal.
+                  Verified Season Record <strong>62-23-1 · +26.50u</strong> entering Week 9. Unlock all remaining main-line plays, player props, and correlated SGPs with instant in-place reveal.
                 </p>
                 <button
                   type="button"

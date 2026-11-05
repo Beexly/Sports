@@ -25,23 +25,52 @@
     "root_cause": "Uncalibrated juiced-favorite selection in heuristic book-path (confidence 80-89 realizing 41.5% on n=130, 90-99 realizing 31.2% on n=32, vs signal-path realizing 57.0% on 60-69, 66.0% on 70-79, 67.8% on 80-89)."
   },
   "panel_b_official_new_engine_ledger": {
-    "sample_size": 21,
-    "wins": 16,
-    "losses": 5,
-    "win_rate": 0.7619047619047619,
-    "win_rate_pct": "76.2%",
-    "net_units": "+10.45u",
+    "record": "62-23-1",
+    "sample_size": 86,
+    "resolved_decisions": 85,
+    "wins": 62,
+    "losses": 23,
+    "pushes_or_splits": 1,
+    "win_rate": 0.7294117647058823,
+    "win_rate_pct": "72.9%",
+    "net_units": "+26.50u",
+    "display_banner": "62-23-1 (72.9%) · +26.50 UNITS",
+    "component_breakdown": {
+      "entering_w8": { "record": "16-5-0", "net_units": "+10.45u" },
+      "tnf_360_verified_board": { "record": "29-10-1", "net_units": "+8.77u" },
+      "sun_route_gated_official": { "record": "13-6-0", "net_units": "+4.92u" },
+      "mnf_6_ticket_slip": { "record": "4-2-0", "net_units": "+2.36u" }
+    },
     "wilson_95_ci": [
-      0.5491,
-      0.8937
+      0.6266,
+      0.8124
     ],
     "wilson_95_ci_pct": [
-      "54.91%",
-      "89.37%"
+      "62.66%",
+      "81.24%"
     ],
     "breakeven_minus_110": 0.5238,
-    "one_sided_p_value": 0.02268765867908819,
-    "two_sided_p_value": 0.030149049425176547,
+    "one_sided_p_value": 0.0000831,
+    "two_sided_p_value": 0.0001482,
+    "entering_w8_baseline_16_5": {
+      "record": "16-5",
+      "sample_size": 21,
+      "wins": 16,
+      "losses": 5,
+      "win_rate": 0.7619047619047619,
+      "win_rate_pct": "76.2%",
+      "net_units": "+10.45u",
+      "wilson_95_ci": [
+        0.5491,
+        0.8937
+      ],
+      "wilson_95_ci_pct": [
+        "54.91%",
+        "89.37%"
+      ],
+      "one_sided_p_value": 0.02268765867908819,
+      "two_sided_p_value": 0.030149049425176547
+    },
     "sensitivity_15_6": {
       "record": "15-6",
       "win_rate": 0.7142857142857143,

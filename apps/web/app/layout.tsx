@@ -102,7 +102,7 @@ export const metadata: Metadata = {
     "calibrated betting confidence",
     "sports betting intelligence",
     "sports pick reasoning",
-    "sharp sports analytics",
+    "quantitative sports analytics",
     "anti-tout sports model",
   ],
   alternates: {
@@ -220,8 +220,8 @@ export default function RootLayout({
             __html: jsonLdScript(buildGlobalSearchAndAiJsonLd(SITE_URL)),
           }}
         />
-        <link rel="alternate" type="text/plain" href="/llms.txt" title="AI Agent Discovery Manifest" />
-        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="AI Full Technical Corpus" />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="Answer Engines & Search Crawlers Discovery Manifest" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Quantitative Full Technical Corpus" />
       </head>
       <body className="min-h-screen antialiased">
         <a

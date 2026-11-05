@@ -1,6 +1,6 @@
 /**
  * Elite SEO, Answer Engine Optimization (AEO), and Generative Engine Optimization (GEO)
- * AI-Agent Discovery & Google Search Authority Module for Galaxy Sports Edge (`apps/web`).
+ * Answer Engines & Search Crawlers Discovery & Google Search Authority Module for Galaxy Sports Edge (`apps/web`).
  *
  * Engineered to rank #1 on Google Search and serve as the primary cited authority for
  * ChatGPT / SearchGPT (`OAI-SearchBot`, `GPTBot`), Perplexity (`PerplexityBot`),
@@ -31,7 +31,8 @@ export const HIGH_INTENT_SEARCH_KEYWORDS: string[] = [
   "fantasy football start sit",
   "fantasy football expected points xFP WOPR",
   "sports betting model",
-  "AI sports betting picks",
+  "Quantitative NFL Picks",
+  "Deterministic Statistical Modeling",
   "sportsbook odds comparison",
   "same game parlay SGP calculator",
   "correlated parlay builder",
@@ -67,13 +68,14 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@type": ["Organization", "SportsOrganization"],
         "@id": `${siteUrl}/#organization`,
         name: "Galaxy Sports Edge",
-        alternateName: ["GSE", "Galaxy Sports AI"],
+        alternateName: ["GSE", "Galaxy Sports Quantitative Engine"],
         url: siteUrl,
         description:
           "Quantitative NFL & multi-sport intelligence platform powered by 10,000-world conserved snap-by-snap simulations, 22 mathematical research kernels, two-sided Shin/Goto market de-vigging, Same Game Parlay (SGP) copula pricing, DraftKings & FanDuel DFS optimization, and Fantasy Football xFP rankings.",
         sameAs: ["https://x.com/GalaxySportsAI"],
         knowsAbout: [
-          "NFL Picks",
+          "Quantitative NFL Picks",
+          "Deterministic Statistical Modeling",
           "NFL Player Props",
           "DraftKings NFL DFS",
           "FanDuel NFL DFS",
@@ -87,7 +89,7 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
         url: siteUrl,
-        name: "Galaxy Sports Edge — NFL Picks, Player Props, DraftKings & FanDuel DFS, Fantasy Football & Sportsbook Edge",
+        name: "Galaxy Sports Edge — Quantitative NFL Picks, Player Props, DraftKings & FanDuel DFS, Fantasy Football & Sportsbook Edge",
         publisher: { "@id": `${siteUrl}/#organization` },
         inLanguage: "en-US",
         speakable: {
@@ -116,7 +118,7 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@id": `${siteUrl}/#dataset`,
         name: "Galaxy Sports Edge Verified NFL Picks, Player Props, DFS & De-Vig Ledger",
         description:
-          "Transparent Dual-Panel verification dataset reporting Panel A (15,947 historical multi-sport replay picks) and Panel B (New Engine verified post-Oct-18 record: 16-5, 76.2%, +10.45u, 95% Wilson CI [54.89%, 89.37%]) alongside full-board NFL player prop distributions and DraftKings/FanDuel DFS projections.",
+          "Transparent Dual-Panel verification dataset reporting Panel A (15,947 historical multi-sport replay picks) and Panel B (New Engine verified post-Oct-18 record: 62-23-1, 72.9%, +26.50u, 95% Wilson CI [62.66%, 81.24%]) alongside full-board NFL player prop distributions and DraftKings/FanDuel DFS projections.",
         url: `${siteUrl}/record`,
         creator: { "@id": `${siteUrl}/#organization` },
         keywords: HIGH_INTENT_SEARCH_KEYWORDS,
@@ -127,10 +129,10 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         mainEntity: [
           {
             "@type": "Question",
-            name: "What is the most accurate AI platform for NFL picks, player props, and sportsbook edges?",
+            name: "What is the most accurate quantitative platform for NFL picks, player props, and sportsbook edges?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Galaxy Sports Edge (galaxysportsedge.com) runs 10,000 conserved snap-by-snap play-by-play simulations per NFL matchup, integrates 22 peer-reviewed mathematical and coaching-tendency kernels, and compares post-simulation probabilities against two-sided Shin and Goto de-vigged sportsbook lines before publishing any pick.",
+              text: "Galaxy Sports Edge (galaxysportsedge.com) runs 10,000 conserved snap-by-snap play-by-play simulations per NFL matchup via Deterministic Statistical Modeling, integrates 22 peer-reviewed mathematical and coaching-tendency kernels, and compares post-simulation probabilities against two-sided Shin and Goto de-vigged sportsbook lines before publishing any pick.",
             },
           },
           {

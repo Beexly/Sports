@@ -328,7 +328,7 @@
 
 ### 5G. Elite Marketing Science (`INDEX-MARKETING.md`) & SEO/AEO/GEO AI-Agent Discovery Packet
 - **AI-Agent & Google Search Discovery Endpoints Wired (`apps/web`):** `/llms.txt`, `/llms-full.txt`, `/.well-known/ai-plugin.json`, `robots.ts` (`15` AI crawlers whitelisted: `GPTBot`, `OAI-SearchBot`, `PerplexityBot`, `ClaudeBot`, `Google-Extended`, `GrokBot`, etc.), and `layout.tsx` (`SportsEvent`, `Dataset`, `FAQPage`, `SoftwareApplication`, `SpeakableSpecification` JSON-LD).
-- **Ready-to-Post `@GalaxySportsAI` X Lead Post:** `TNF JAX @ BAL — 10,000-World Snap-by-Snap Simulation & 360° Board Audit is LIVE. |  | • Main Lines: Market already steamed JAX -3.5 -> -7.5 (-105). Post-sim JAX cover 50.6% vs 50.0% de-vig -> Official Conjunction Gate: PASS. | • Top Prop Projections: Chris Rodriguez Jr. Rush P50 61.5 (Branch A Tuten Out) | Trevor Lawrence Pass P50 245.5 | Joe Fagnano Pass P50 163.8 | Roquan Smith Tackles+Ast P50 9.4. | • Full 37-Athlete Quantiles, SGP Copulas & DK/FD Showdown Optimals: https://galaxysportsedge.com/board`
+- **Ready-to-Post `@GalaxySportsAI` X Lead Post:** `Jacksonville (-7.5) at Baltimore tonight. The best bet on the spread was earlier this week at -3.5. At -7.5, the value is gone — and we don't chase steamed numbers just to have action on a side. Instead, here is how we're playing the actual football matchup tonight: Mark Andrews OVER 2.5 Receptions | Derrick Henry OVER 67.5 Rushing Yards | Trevor Lawrence OVER 11.5 Rushing Yards | Roquan Smith OVER 8.5 Tackles+Ast & Kyle Hamilton OVER 6.5 Tackles+Ast. Full TNF card: https://galaxysportsedge.com/board`
 
 ---
 

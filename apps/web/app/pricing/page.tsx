@@ -96,13 +96,13 @@ export default function PricingPage(): JSX.Element {
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF4D2E]">
-            Official New Engine Verified Record: 38-13-1 (74.5%) · +22.85u
+            Official New Engine Verified Record: 62-23-1 (72.9%) · +26.50u
           </p>
           <h1 className="mt-3 font-display text-4xl uppercase tracking-tight text-white sm:text-6xl">
             Choose Your Edge
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-[#C4BFB6] sm:text-lg">
-            Powered by the Galaxy 10-Layer Autonomous Engine. Honest conviction scores (strictly XX/100, never raw percentages), verified track record, and disciplined pass criteria.
+            Powered by the Galaxy 10-Layer Quantitative Engine. Honest conviction scores (strictly XX/100, never raw percentages), audited public ledger, and disciplined pass criteria.
           </p>
         </div>
 

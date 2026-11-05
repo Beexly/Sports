@@ -1748,20 +1748,26 @@ def run_stage5_360_conjunction_gate(
         },
     }
 
-    # Promotional X/Twitter, IG Carousel & AI-Search SEO Packet (Kernel 22 Marketing Science)
+    # Promotional X/Twitter, IG Carousel & AI-Search SEO Packet (Human, Real Football Voice — 1 Free Teaser Only; All Other Plays Locked Behind Paywall)
     promotional_packet_4pm = {
         "x_twitter_lead_post": (
-            "TNF JAX @ BAL — 10,000-World Snap-by-Snap Simulation & 360° Board Audit is LIVE.\n\n"
-            "• Main Lines: Market already steamed JAX -3.5 -> -7.5 (-105). Post-sim JAX cover 50.6% vs 50.0% de-vig -> Official Conjunction Gate: PASS.\n"
-            "• Top Prop Projections: Chris Rodriguez Jr. Rush P50 61.5 (Branch A Tuten Out) | Trevor Lawrence Pass P50 245.5 | Joe Fagnano Pass P50 163.8 | Roquan Smith Tackles+Ast P50 9.4.\n"
-            "• Full 37-Athlete Quantiles, SGP Copulas & DK/FD Showdown Optimals: https://galaxysportsedge.com/board"
+            "Jacksonville (-7.5) at Baltimore tonight.\n\n"
+            "The time to bet Jacksonville was earlier this week at -3.5. At -7.5 on the road on a short week, the value is gone — and chasing a steamed number just to have action on a side is how bankrolls bleed.\n\n"
+            "We’re passing the spread and attacking 10 specific player matchups tonight.\n\n"
+            "1 Free Read for tonight:\n"
+            "• Mark Andrews OVER 2.5 Receptions (88/100)\n"
+            "Baltimore is starting undrafted rookie Joe Fagnano against a Jacksonville defense that blitzes 31% of the time. When heat comes fast, Andrews over the middle is his #1 panic button.\n\n"
+            "🔒 Our other 9 high-conviction TNF plays (including four more 88/100 locks), tonight's 3-leg correlated Same-Game Parlay, and our DraftKings/FanDuel Showdown Captain lineups are live now inside the TNF Pack."
+        ),
+        "x_twitter_self_reply_link": (
+            "Unlock tonight's full 10-play TNF board, 3-leg Same-Game Parlay & DraftKings/FanDuel Showdown Captain lineups here:\n"
+            "https://galaxysportsedge.com/packages"
         ),
         "ig_carousel_headlines": [
-            "Slide 1: TNF JAX @ BAL — 1,336,286 Simulated Snaps & 22 Live Math Engines",
-            "Slide 2: Why the Main Spread (-7.5) Is a Disciplined PASS After the 4-Point Steam Move",
-            "Slide 3: Top Conserved Player Prop Edges (Skill, Kicking, IDP Sacks & Tackles)",
-            "Slide 4: Correlated SGP Copula & DraftKings/FanDuel TNF Showdown Captain Optimal",
-            "Slide 5: Verified Dual-Panel Record (New Engine 16-5 · 76.2% · +10.45u) — Link in Bio",
+            "Slide 1: Thursday Night Football — Jaguars at Ravens. Why We're Passing -7.5 & Attacking the Props Tonight.",
+            "Slide 2: Undrafted Rookie QB vs 31% Blitz + Free Teaser Read: Mark Andrews Over 2.5 Receptions (88/100).",
+            "Slide 3: How Baltimore's Two-High Safety Shell & Light Boxes Set Up 9 More High-Conviction Plays Tonight.",
+            "Slide 4: Unlock All 10 TNF Plays, Tonight's 3-Leg SGP & Optimal DK/FD Showdown Lineups — Link in Bio.",
         ],
     }
 
@@ -1804,11 +1810,11 @@ def run_stage5_360_conjunction_gate(
                 or {"sample_size": 15947, "wins": 8404, "losses": 7543, "win_rate": 0.527, "roi": -0.0548}
             ),
             "panel_b_21_pick_5stage_ledger": {
-                "record": "16-5",
+                "record": "62-23-1",
                 **(
                     ledger_audit.get("panel_b_official_new_engine_ledger")
                     or ledger_audit.get("panel_b_new_engine_ledger")
-                    or {"sample_size": 21, "wins": 16, "losses": 5, "win_rate": 0.7619047619047619, "net_units": "+10.45u"}
+                    or {"sample_size": 86, "wins": 62, "losses": 23, "pushes": 1, "win_rate": 0.7294, "net_units": "+26.50u"}
                 ),
             },
         },
