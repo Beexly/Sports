@@ -51,6 +51,11 @@ describe("Galaxy Picks storefront catalog", () => {
     expect(standardPayload.mode).toBe("payment");
     expect(standardPayload.line_items[0]?.price_data.unit_amount).toBe(1900);
     expect(standardPayload.line_items[0]?.price_data.currency).toBe("usd");
+    expect(standardPayload.line_items[0]?.price_data.product_data.name).toContain("Week 9");
+    expect(standardPayload.line_items[0]?.price_data.product_data.name).not.toContain("Panthers");
+    expect(standardPayload.line_items[0]?.price_data.product_data.name).not.toContain("?");
+    expect(standardPayload.line_items[0]?.price_data.product_data.description).toContain("Jacksonville");
+    expect(standardPayload.line_items[0]?.price_data.product_data.description).not.toContain("Panthers");
     expect(standardPayload.metadata.packageSlug).toBe("tnf-all-in-pack");
     expect(standardPayload.metadata.creditBack).toBe("false");
     expect(standardPayload.customer_email).toBe("buyer@example.com");

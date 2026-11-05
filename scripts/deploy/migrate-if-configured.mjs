@@ -314,6 +314,12 @@ function main() {
   console.log(
     `[migrate-if-configured] RUN prisma migrate deploy (VERCEL_ENV=${env || "unset"})`
   );
+  if (process.env.STRIPE_SECRET_KEY) {
+    spawnSync(process.execPath, ["scripts/sync-stripe-week-products.mjs"], {
+      encoding: "utf8",
+      stdio: "inherit",
+    });
+  }
   process.exit(runMigrateWithRetry());
 }
 

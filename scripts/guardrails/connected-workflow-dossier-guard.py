@@ -76,6 +76,16 @@ def verify_web_storefront_human_copy() -> None:
                     f"GUARD_FAIL: Verified season record '62-23-1' missing in {rel_path}"
                 )
 
+    checkout_route = REPO_ROOT / "apps/web/app/api/packages/checkout/route.ts"
+    if checkout_route.is_file():
+        route_text = checkout_route.read_text(encoding="utf-8")
+        if "[{ price: pkg.stripePriceId" in route_text:
+            raise RuntimeError(
+                "GUARD_FAIL: apps/web/app/api/packages/checkout/route.ts must use inline price_data "
+                "(never static [{ price: pkg.stripePriceId }]) so Stripe Checkout never displays stale prior-week product names."
+            )
+
+
 
 
 def _get_staged_files() -> list[str]:

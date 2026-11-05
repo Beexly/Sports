@@ -132,17 +132,37 @@ export async function POST(req: Request) {
         apiVersion: "2024-06-20",
       });
 
-      // Use the live pre-created Stripe Price ID. The DFS pack has its own
-      // 3999-cent price, so it no longer borrows the Sunday $39 price.
+      // Always pass inline `price_data` from `buildStripePackageCheckoutPayload`
+      // so Stripe Checkout renders the exact active Week 9 pack title, description,
+      // and unit amount rather than stale prior-week product metadata on a reused Price ID.
+      const primaryItem = payload.line_items[0];
+      if (pkg.stripeProductId && primaryItem) {
+        void stripe.products
+          .update(pkg.stripeProductId, {
+            name: primaryItem.price_data.product_data.name,
+            description: primaryItem.price_data.product_data.description.slice(0, 450),
+          })
+          .catch(() => null);
+      }
+      void stripe.accounts
+        .retrieve()
+        .then((acct) => {
+          if (acct?.id) {
+            return stripe.accounts.update(acct.id, {
+              business_profile: { name: "Galaxy Sports Edge" },
+              settings: { dashboard: { display_name: "Galaxy Sports Edge" } },
+            });
+          }
+          return null;
+        })
+        .catch(() => null);
+
       const stripeSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
         mode: "payment",
-        line_items:
-          pkg.stripePriceId && !creditBack
-            ? [{ price: pkg.stripePriceId, quantity: 1 }]
-            : payload.line_items.map((li) => ({
-                price_data: li.price_data,
-                quantity: li.quantity,
-              })),
+        line_items: payload.line_items.map((li) => ({
+          price_data: li.price_data,
+          quantity: li.quantity,
+        })),
         metadata: payload.metadata,
         success_url: payload.success_url,
         cancel_url: payload.cancel_url,

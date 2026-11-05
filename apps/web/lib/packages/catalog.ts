@@ -415,9 +415,19 @@ export interface StripeCheckoutPayload {
   customer_email?: string;
 }
 
+function sanitizeStripeCheckoutText(text: string): string {
+  return text
+    .replace(/\u2014/g, " - ")
+    .replace(/\u2013/g, "-")
+    .replace(/\u00b7/g, "|")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /**
  * Builds the Stripe Checkout Session payload for instant one-time payment.
- * References the live Stripe Product & Price IDs created on Galaxy Sports Network.
+ * Always embeds live `price_data` from the active Week 9 catalog so Stripe
+ * Checkout never displays stale prior-week product titles or mangled punctuation.
  */
 export function buildStripePackageCheckoutPayload(
   pkg: PickPackageOffering,
@@ -430,14 +440,15 @@ export function buildStripePackageCheckoutPayload(
     throw new Error(`Package '${pkg.slug}' is not for sale.`);
   }
   let unitAmount = pkg.standardPriceCents;
-  let productName = pkg.title;
+  let productName = sanitizeStripeCheckoutText(pkg.title);
+  const productDescription = sanitizeStripeCheckoutText(pkg.description);
 
   if (creditBack) {
     if (pkg.creditBackPriceCents === null) {
       throw new Error(`Package '${pkg.slug}' does not offer a credit-back tier.`);
     }
     unitAmount = pkg.creditBackPriceCents;
-    productName = `${pkg.title} (Credit-Back)`;
+    productName = `${productName} (Credit-Back)`;
   }
 
   const baseOrigin = origin ? origin.replace(/\/+$/, "") : "https://www.galaxysportsedge.com";
@@ -455,7 +466,7 @@ export function buildStripePackageCheckoutPayload(
           unit_amount: unitAmount,
           product_data: {
             name: productName,
-            description: pkg.description,
+            description: productDescription,
           },
         },
         quantity: 1,
