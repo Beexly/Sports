@@ -36,7 +36,7 @@ describe("mission control briefing", () => {
   });
 
   it("leads with breaking news when the wire is hot", () => {
-    // the demo wire has a fresh insider 'ruled out' — it should top the briefing
+    // the sample wire has a fresh Insider 'ruled out' — it should top the briefing
     expect(cards[0]!.kind).toBe("breaking");
   });
 
@@ -60,7 +60,7 @@ describe("mission control briefing", () => {
   });
 
   it("does not assert a fabricated 'confirmed by N sources' corroboration on the breaking card", () => {
-    // DEMO_WIRE is fictional; the eyebrow must not present a real-world
+    // the sample wire is fictional; the eyebrow must not present a real-world
     // corroboration count as a live, sourced alert.
     const breaking = cards.find((c) => c.kind === "breaking");
     expect(breaking).toBeDefined();

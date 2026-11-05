@@ -3,32 +3,46 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /**
- * F-28 (founder-delegated 2026-09-08, via orchestrator): the home hero's
- * primary CTA goes to /picks, secondary to /pricing. /board stays
- * reachable from the "Four doors" section but is no longer presented as a
- * competing "today" surface — copy only, no layout change.
+ * F-28 (founder-delegated 2026-09-08, via orchestrator): the front door's
+ * primary CTA goes to the packs surface; DFS and pricing stay one action away;
+ * no free-tool or methodology CTA competes with the packs.
+ *
+ * REPOINTED, NOT SOFTENED (2026-11-03). The RedlineWorld rebuild moved the CTAs
+ * out of the four-door hero and into the field header plus the plate actions.
+ * The assertions now read the component that owns them. The decision is the
+ * same; only the file carrying it changed.
  */
-describe("F-28: home hero CTAs and board door copy", () => {
-  const src = readFileSync(join(process.cwd(), "app/page.tsx"), "utf8");
+describe("F-28: front door CTAs and board door copy", () => {
+  const page = readFileSync(join(process.cwd(), "app/page.tsx"), "utf8");
+  const world = readFileSync(
+    join(process.cwd(), "components/redline/redline-world.tsx"),
+    "utf8"
+  );
 
-  it("primary hero CTA links to /packages", () => {
-    expect(src).toMatch(/href="\/packages" className="btn-primary/);
+  it("primary CTA links to /packages", () => {
+    // The header's "ALL PACKS" control is the persistent primary CTA across
+    // every stage of the field walk.
+    expect(world).toMatch(/className="header-menu" href="\/packages"/);
+    // The first plate's "View packs" action walks the camera to the storefront
+    // stage instead of navigating away.
+    expect(world).toContain("View packs");
   });
 
-  it("secondary hero CTA links to DFS and pricing remains available", () => {
-    expect(src).toMatch(/href="\/fantasy\/dfs"/);
-    expect(src).toMatch(/DFS Optimizer/);
-    expect(src).toMatch(/href="\/pricing"/);
-    expect(src).toMatch(/See pricing/);
+  it("DFS and pricing remain reachable from the front door", () => {
+    expect(world).toContain('setPanel("dfs")');
+    expect(world).toContain("Preview DFS Lineups");
+    expect(page).toContain('"/pricing"');
+    expect(page).toContain("Plans and pricing");
   });
 
-  it("the hero no longer sends visitors to /tools or /methodology as its CTAs", () => {
-    expect(src).not.toMatch(/href="\/tools" className="btn-primary/);
-    expect(src).not.toMatch(/Free calculators/);
-    expect(src).not.toMatch(/How the engine works/);
+  it("no free-tool or methodology CTA competes with the packs", () => {
+    expect(world).not.toContain("Free calculators");
+    expect(world).not.toContain("How the engine works");
+    expect(world).not.toMatch(/href="\/tools"/);
+    expect(world).not.toMatch(/href="\/methodology"/);
   });
 
-  it("the board door no longer claims 'today' as a competing surface", () => {
-    expect(src).not.toMatch(/What's worth a play today, and what to pass\./);
+  it("the board surface no longer claims 'today' as a competing surface", () => {
+    expect(world).not.toContain("What's worth a play today, and what to pass.");
   });
 });

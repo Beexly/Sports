@@ -20,12 +20,19 @@ const read = (rel: string) =>
   readFileSync(join(__dirname, "..", rel), "utf8");
 
 describe("proof-funnel weave", () => {
-  it("homepage Proof Strip routes to the sealed record and the verifier", () => {
+  it("homepage funnel is the packs storefront with the trust close", () => {
+    // The homepage shipped as the RedlineWorld storefront (PR #1231): the
+    // old Proof Strip linking to /proof and /verify is gone by design. The
+    // front-door funnel is the packs storefront plus the responsible close
+    // and its trust links; /proof, /verify and /vault keep their own funnel
+    // pins below.
     const home = read("app/page.tsx");
-    expect(home).toContain('href="/proof"');
-    expect(home).toContain('href="/verify"');
-    // The strip keeps its non-negotiable honesty line.
-    expect(home).toContain("Trust is an architecture, not a tagline.");
+    expect(home).toContain("RedlineWorld");
+    expect(home).toContain('data-testid="homepage-responsible-close"');
+    for (const href of ["/methodology", "/responsible-play", "/how-we-make-money", "/accountability", "/pricing"]) {
+      expect(home).toContain(`href: "${href}"`);
+    }
+    expect(home).toContain("RiskDisclosure");
   });
 
   it("/proof closes with the pricing funnel — the record is the product demo", () => {

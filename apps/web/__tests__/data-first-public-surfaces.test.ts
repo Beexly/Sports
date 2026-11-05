@@ -12,11 +12,18 @@ describe("data-first public surfaces", () => {
   it("homepage is data-first — every number from a real loader, no fabricated rows", () => {
     const page = read("apps/web/app/page.tsx");
     const labDoor = read("apps/web/components/landing/nflverse-lab-door.tsx");
-    expect(page).toMatch(/loadBoardState/);
-    expect(page).toMatch(/loadPublicCalibrationReport/);
+    // The Redline storefront rebuild (deliberate, on main): the homepage renders
+    // the live package catalog and the coach-writeup engine, with the trust
+    // destinations in TRUST_LINKS and RiskDisclosure. The old pins
+    // (loadBoardState / loadPublicCalibrationReport / calibration.sampleSize)
+    // describe the pre-rebuild homepage; what must still hold is that every
+    // number rides a real loader, never a fabricated row.
+    expect(page).toMatch(/LIVE_PACKAGE_CATALOG/);
+    expect(page).toMatch(/getActiveUpcomingWriteups/);
+    expect(page).toMatch(/orderPacksForStorefront/);
+    expect(page).toMatch(/TRUST_LINKS/);
+    expect(page).toMatch(/RiskDisclosure/);
     expect(labDoor).toMatch(/loadNflverseUsagePulse/);
-    expect(page).toMatch(/calibration\.sampleSize/);
-    expect(page).toMatch(/What are you here to decide\?/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
     expect(page).not.toMatch(/sample-data-banner-home/);
     expect(page).not.toMatch(/FALLBACK_PICKS/);
@@ -90,7 +97,9 @@ describe("data-first public surfaces", () => {
     const fantasy = read("apps/web/app/fantasy/page.tsx");
     expect(middleware).not.toMatch(/PUBLIC_FANTASY_GATED_ROUTES/);
     expect(middleware).not.toMatch(/searchParams\.set\("tool"/);
-    expect(fantasy).toMatch(/LEGACY_TOOL_ROUTES/);
+    // LEGACY_TOOL_ROUTES retired with the GALAXY-PICKS+DFS hub rebuild: no code
+    // links to /fantasy?tool= any more, so the legacy redirect defends only
+    // hypothetical external links. The hub's honesty contract is what remains.
     expect(fantasy).toMatch(/Real roster first/);
     expect(fantasy).toMatch(/No fake projections/);
     expect(fantasy).toMatch(/Connect your league/);

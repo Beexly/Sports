@@ -47,6 +47,44 @@ export default function FantasyHubPage(): JSX.Element {
             </Link>
           </div>
         </div>
+
+        <section className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-8 sm:p-10">
+          <h2 className="text-2xl font-extrabold tracking-tight">Real roster first</h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-200">
+            When season-long tools ship, they start from a real roster. League connection is read-only:
+            no league writes, no autonomous moves against your team.
+          </p>
+          <Link
+            href="/fantasy/connect"
+            className="mt-5 inline-block rounded-xl border-2 border-slate-700 bg-slate-800 px-6 py-3 text-base font-bold text-white transition-colors hover:border-emerald-400"
+          >
+            Connect your league →
+          </Link>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-8 sm:p-10">
+          <h2 className="text-2xl font-extrabold tracking-tight">Projections stay gated</h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-200">
+            No fake projections. Until licensed player data is connected, Projections stay gated.
+            projection-driven lineup, waiver, trade, DFS, or pick&apos;em advice stays gated rather than
+            presenting invented numbers as live guidance.
+          </p>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-8 sm:p-10">
+          <h2 className="text-2xl font-extrabold tracking-tight">Baseline map</h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-200">
+            The LineStar / Elite baseline is the floor. Our competitive map lists each baseline module
+            with its current truth (live proof, CSV-import-ready, or gated data), so nothing gated is
+            dressed up as live.
+          </p>
+          <Link
+            href="/fantasy/baseline"
+            className="mt-5 inline-block rounded-xl border-2 border-slate-700 bg-slate-800 px-6 py-3 text-base font-bold text-white transition-colors hover:border-emerald-400"
+          >
+            Open the baseline map →
+          </Link>
+        </section>
       </main>
       <Footer />
     </div>

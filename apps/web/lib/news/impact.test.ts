@@ -1,10 +1,17 @@
 import { describe, it, expect } from "vitest";
 import { readImpact, rankWire, corroborate, rankWireCorroborated, TIER_WEIGHT, signalLabel, type NewsItem } from "./impact";
-import { DEMO_WIRE, NATIONAL_INSIDERS, NFL_TEAMS } from "./wire";
+import { NATIONAL_INSIDERS, NFL_TEAMS } from "./wire";
 
 const item = (over: Partial<NewsItem> = {}): NewsItem => ({
   id: "x", source: "src", tier: "Insider", team: "ATL", player: "X", headline: "h", signal: "injury-out", minutesAgo: 0, ...over,
 });
+
+// Ranking fixtures (previously the public DEMO_WIRE, deleted under C-416).
+const RANK_FIXTURE: NewsItem[] = [
+  item({ id: "vale-a", source: "Insider desk", tier: "Insider", team: "DAL", player: "Vale", signal: "injury-out", minutesAgo: 5 }),
+  item({ id: "vale-b", source: "National desk", tier: "Insider", team: "DAL", player: "Vale", signal: "injury-out", minutesAgo: 9 }),
+  item({ id: "stale", source: "Aggregator", tier: "Aggregator", team: "PHI", player: "Other", signal: "role-up", minutesAgo: 400 }),
+];
 
 describe("news impact engine", () => {
   it("injury-out is a strong negative fantasy delta", () => {
@@ -58,7 +65,7 @@ describe("news impact engine", () => {
   });
 
   it("rankWire orders by urgency, fresh insider out-news on top", () => {
-    const ranked = rankWire(DEMO_WIRE);
+    const ranked = rankWire(RANK_FIXTURE);
     expect(ranked[0]!.urgency).toBeGreaterThanOrEqual(ranked[ranked.length - 1]!.urgency);
     // the fresh insider 'ruled out' should outrank a stale low-tier rumor
     const top = ranked[0]!;
@@ -79,14 +86,14 @@ describe("news impact engine", () => {
     expect(NATIONAL_INSIDERS.every((i) => i.tier === "Insider")).toBe(true);
   });
 
-  it("the public DEMO_WIRE never attributes a fabricated report to a real journalist", () => {
-    // The Beat renders DEMO_WIRE with each item's `source` shown next to a
+  it("the ranking fixtures never attribute a fabricated report to a real journalist", () => {
+    // Fixture wires use desk-style sources with each item's `source` shown next to a
     // "Confirmed / Reliability %" badge. A fabricated report attributed to a real
     // reporter (Schefter, Pelissero, …) reads as a genuine endorsement — a trust +
     // right-of-publicity risk. Demo sources must be fictional; real insider names
     // stay an internal reliability seed only.
     const realInsiders = new Set(NATIONAL_INSIDERS.map((i) => i.name));
-    for (const w of DEMO_WIRE) {
+    for (const w of RANK_FIXTURE) {
       expect(realInsiders.has(w.source), `demo source "${w.source}" is a real insider`).toBe(false);
     }
   });
@@ -125,7 +132,7 @@ describe("corroboration", () => {
   });
 
   it("the live demo wire surfaces the corroborated top story", () => {
-    const ranked = rankWireCorroborated(DEMO_WIRE);
+    const ranked = rankWireCorroborated(RANK_FIXTURE);
     expect(ranked[0]!.corroboration.confirmed).toBe(true); // Vale injury-out, two insiders
     expect(ranked[0]!.corroboration.sources).toBeGreaterThanOrEqual(2);
   });

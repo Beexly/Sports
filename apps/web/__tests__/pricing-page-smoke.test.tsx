@@ -3,21 +3,18 @@ import { render, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 
 /**
- * Smoke test: /pricing — the revenue conversion page.
+ * Smoke test: /pricing  -  the revenue conversion page (sealed-era design).
  *
- * Reachable from the footer (Pricing link) and from /auth/signin.
- * Touches money (subscription tiers, prices, refund policy).
- * Only 14 of 231 routes are render-tested; /pricing was weakly covered
- * (source-level text matches only) — this is the first real render test.
+ * Monthly subscriptions are under construction; /pricing is the static
+ * pay-per-slate catalog: an under-construction banner, CTAs to /packages
+ * and /fantasy/dfs, and one card per LIVE_PACKAGE_CATALOG entry whose
+ * "Open Pack" buttons deep-link to /packages#<slug>. The money promises on
+ * this page: NO subscription exists to cancel or to refund  -  the only
+ * purchase is a one-time pack checkout, and no monthly price is advertised.
  *
- * Nav and Footer are stubbed. `next/navigation` is mocked because the page
- * renders the client-side SubscribeButton which calls useRouter().
- * Motion components (Reveal, ShootingStars, SignalRule) are stubbed to
- * avoid browser-API dependencies (matchMedia, rAF).
- *
- * A matchMedia polyfill is installed for any remaining motion component
- * (e.g. HoloTilt) that uses it in a useEffect after render.
+ * Nav, Footer, and motion components are stubbed as before.
  */
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 vi.mock("@/components/ui/nav", () => ({
   Nav: (): null => null,
 }));
@@ -68,15 +65,29 @@ describe("/pricing smoke", () => {
     });
   });
 
-  it("renders the founding-rate headline and key money promises", async () => {
-    const { container, getByText } = render(await PricingPage());
+  it("renders the under-construction headline, the pack catalog, and zero monthly price", async () => {
+    const { container, getByText, getAllByRole } = render(await PricingPage());
     await waitFor(() => {
-      expect(getByText(/^Claim the [A-Za-z]+ rate\.$/)).toBeInTheDocument();
+      expect(getByText("No Monthly Subscription Needed Right Now")).toBeInTheDocument();
     });
     const text = container.textContent ?? "";
-    // Pin the key money promises that must survive edits to /pricing.
-    expect(text).toMatch(/locked for the life/i);
-    expect(text).toMatch(/Cancel any time/i);
-    expect(text).toMatch(/3-day money-back/i);
+    // Pin the money posture that must survive edits to /pricing.
+    expect(text).toMatch(/under construction/i);
+    expect(text).toMatch(/one-time/i);
+    // No subscription ladder, no founding-rate headline, no monthly price.
+    expect(text).not.toMatch(/locked for the life/i);
+    expect(text).not.toMatch(/3-day money-back/i);
+    expect(text).not.toMatch(/\$\s?[\d.]+\s*\/\s*(?:mo|month)/i);
+    // One card per catalog pack, each with a deep-linking Open Pack CTA.
+    expect(getAllByRole("heading", { level: 3 })).toHaveLength(LIVE_PACKAGE_CATALOG.length);
+    for (const pkg of LIVE_PACKAGE_CATALOG) {
+      expect(getByText(pkg.title)).toBeInTheDocument();
+    }
+    const hrefs = Array.from(container.querySelectorAll("a")).map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("/packages");
+    expect(hrefs).toContain("/fantasy/dfs");
+    for (const pkg of LIVE_PACKAGE_CATALOG) {
+      expect(hrefs).toContain(`/packages#${pkg.slug}`);
+    }
   });
 });

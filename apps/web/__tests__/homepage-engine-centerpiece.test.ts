@@ -12,19 +12,20 @@ describe("homepage engine centerpiece", () => {
     "apps/web/components/landing/nflverse-lab-door.tsx"
   );
   const curve = readRepoFile("apps/web/components/home/calibration-curve.tsx");
+  const world = readRepoFile("apps/web/components/redline/redline-world.tsx");
+  const worldCss = readRepoFile("apps/web/components/redline/redline-world.css");
 
-  it("leads with the thesis and routes to the four doors", () => {
-    expect(page).toContain("The market is full of");
-    // Was "Galaxy turns it into", retired by the FIELD hero rebuild. Same
-    // noise-to-signal thesis, new wording.
-    expect(page).toContain("We find the");
-    expect(page).toContain("We detect. You decide.");
-    expect(page).toContain("What are you here to decide?");
-    // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
-    // off the page's critical path via Suspense); the other three are inline.
-    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
-      expect(page).toContain(door);
-    }
+  it("leads with the thesis and routes the product surfaces", () => {
+    // The RedlineWorld rebuild moved the thesis into the field component and
+    // replaced the four-door grid with the stage rail, the header, and the
+    // responsible close. The destinations are unchanged.
+    expect(world).toContain("Leave the noise.");
+    expect(world).toContain("Enter the field.");
+    expect(page).toContain("The math can point. The decision stays yours.");
+    expect(world).toContain('href="/packages"');
+    expect(world).toContain('setPanel("board")');
+    expect(world).toContain('setPanel("dfs")');
+    expect(page).toContain('"/methodology"');
     expect(labDoor).toContain("The Lab");
   });
 
@@ -42,24 +43,27 @@ describe("homepage engine centerpiece", () => {
   });
 
   it("keeps the front door on design-token classes, not raw casino or gray utility colors", () => {
+    // The field carries its own token set (--ink/--bone/--ember) in CSS; the
+    // close band uses the Tailwind token layer. Neither may fall back to raw
+    // casino or gray utilities.
     expect(page).not.toMatch(/\b(?:text|bg|border)-(?:gray|cyan|pink|green|yellow|emerald|orange)-/);
     expect(page).toMatch(/bg-carbon/);
-    expect(page).toMatch(/bg-eclipse/);
     expect(page).toMatch(/border-mineral/);
-    // Was /text-orbital-cyan/. FIELD retired the cyan accent; the front door now
-    // carries text-plasma. The PROPERTY is that the hero uses a design token and
-    // not a raw casino/gray utility colour, so pin the live token.
     expect(page).toMatch(/text-plasma/);
-    expect(page).not.toMatch(/text-orbital-cyan/);
     expect(page).toMatch(/text-ion-white/);
+    expect(worldCss).toMatch(/var\(--ink\)/);
+    expect(worldCss).toMatch(/var\(--bone\)/);
+    expect(worldCss).toMatch(/var\(--ember\)/);
+    expect(worldCss).not.toMatch(/#(?:00ffff|ff00ff|00ff00)/i);
   });
 
   it("uses real data paths — every number comes from a loader, none fabricated", () => {
-    expect(page).toMatch(/\bloadBoardState\b/);
-    expect(page).toMatch(/\bloadPublicCalibrationReport\b/);
+    expect(page).toMatch(/\borderPacksForStorefront\b/);
+    expect(page).toMatch(/\bgetActiveUpcomingWriteups\b/);
+    expect(page).toMatch(/\bLIVE_PACKAGE_CATALOG\b/);
     expect(labDoor).toMatch(/\bloadNflverseUsagePulse\b/);
-    expect(page).toContain("calibration.sampleSize");
-    expect(page).toContain("state.publishedToday.length");
+    // The retracted 31-11 banner must not return to the field.
+    expect(world).not.toContain("31-11");
   });
 
   it("draws calibration on scroll with a reduced-motion-safe fallback", () => {

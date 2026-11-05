@@ -1,5 +1,11 @@
 /**
  * @vitest-environment jsdom
+ *
+ * Mobile IA (sealed-era design): the flyout carries three sections. The
+ * GALAXY PICKS (PAID) section holds Locked board /picks, Props /props, and
+ * Packs /packages; DFS holds the optimizer door; Account & Access holds
+ * All-Access Pricing and Sign in. Retired doors (/board, /players,
+ * /the-beat, /academy, /fantasy/studio) stay absent.
  */
 import { describe, it, expect } from "vitest";
 import React from "react";
@@ -30,8 +36,9 @@ describe("Mobile Navigation IA", () => {
     }));
 
     expect(links).toEqual([
-      { label: "Galaxy Picks Storefront", href: "/packages" },
-      { label: "Week 8 Game Dossiers", href: "/packages#slate-dossiers" },
+      { label: "Locked board", href: "/picks" },
+      { label: "Props", href: "/props" },
+      { label: "Packs", href: "/packages" },
       { label: "DFS Optimizer & Stacks", href: "/fantasy/dfs" },
       { label: "All-Access Pricing", href: "/pricing" },
       { label: "Sign in", href: "/auth/signin" },

@@ -7,7 +7,7 @@ import { CockpitNav, type CockpitNavGroup } from "@/components/cockpit/cockpit-n
 import { CockpitCommandPalette } from "@/components/cockpit/cockpit-command-palette";
 
 /**
- * Cockpit layout — admin-only, internal-only.
+ * Cockpit layout  -  admin-only, internal-only.
  *
  * Reuses the existing `session.user.role !== "ADMIN"` pattern from
  * apps/web/app/admin/*. Visitors without an admin session are bounced
@@ -96,12 +96,12 @@ export default async function CockpitLayout({
     redirect("/auth/signin?callbackUrl=/cockpit");
   }
   // Surface the deployment's operator allow-list state. An empty ADMIN_EMAILS
-  // means owner access is riding on DB roles alone — flag it until the env
+  // means owner access is riding on DB roles alone  -  flag it until the env
   // var lands in Vercel.
   const adminEmailsConfigured = (process.env["ADMIN_EMAILS"] ?? "").trim().length > 0;
   // Signed in but not an operator: render a terminal screen. Redirecting
   // back to signin here looped forever (signin bounces signed-in users to
-  // callbackUrl) — the exact ERR_TOO_MANY_REDIRECTS the owner hit.
+  // callbackUrl)  -  the exact ERR_TOO_MANY_REDIRECTS the owner hit.
   if (session.user.role !== "ADMIN") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-obsidian/60 px-6 text-center">
@@ -136,7 +136,7 @@ export default async function CockpitLayout({
             {!adminEmailsConfigured && (
               <span
                 className="rounded-md border border-caution/60 bg-caution/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution"
-                title="This deployment has no ADMIN_EMAILS env var — operator access relies on DB roles only. Set it in Vercel."
+                title="This deployment has no ADMIN_EMAILS env var  -  operator access relies on DB roles only. Set it in Vercel."
               >
                 ADMIN_EMAILS unset
               </span>

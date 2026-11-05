@@ -53,7 +53,7 @@ export default async function TheBeatPage() {
   }
 
   // THE BROADCAST IS BUILT FROM THE WIRE, NOT FROM A FIXTURE. It used to be
-  // `buildBroadcast()`, which ranks DEMO_WIRE (a module whose own header calls
+  // `buildBroadcast()`, which ranked a fictional sample wire (a module whose own header called
   // the sources, players and reports "fully FICTIONAL") and printed those
   // injury claims under a disclosure saying segments are "compiled from
   // verified news signals". With no wire there is no rundown at all; the

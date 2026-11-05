@@ -54,29 +54,48 @@ export function maybeRecompute<T>(
 }
 
 /**
- * Next Tuesday 04:00 CT (America/Chicago), computed with the IANA timezone so
- * DST is handled by the platform, not by arithmetic on offsets.
+ * Next Tuesday 04:00 CT (America/Chicago), correct under any process TZ.
+ * The earlier version called setHours()/setDate() on the local clock, so it
+ * only returned 04:00 Chicago when the process TZ was already
+ * America/Chicago. This version computes the Chicago wall clock with Intl and
+ * converts the candidate 04:00 back to a UTC instant, so DST is handled by the
+ * platform on any host (including CI, which runs UTC).
  * Cron wiring comment: `0 4 * * 2` America/Chicago — call this at deploy time.
  */
 export function nextTuesday04CT(from: Date = new Date()): Date {
+  const TZ = "America/Chicago";
   const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
+    timeZone: TZ,
     weekday: "short", hour: "numeric", minute: "numeric", hour12: false,
+    year: "numeric", month: "2-digit", day: "2-digit",
   });
-  const cursor = new Date(from.getTime());
-  for (let i = 0; i < 8; i++) {
-    const parts = fmt.formatToParts(cursor);
-    const weekday = parts.find((p) => p.type === "weekday")?.value;
-    const hour = Number(parts.find((p) => p.type === "hour")?.value ?? 0);
-    const minute = Number(parts.find((p) => p.type === "minute")?.value ?? 0);
-    if (weekday === "Tue" && hour * 60 + minute >= 4 * 60) {
-      // Walk back to 04:00 local of this day.
-      const at4 = new Date(cursor.getTime());
-      at4.setHours(4, 0, 0, 0);
-      return at4;
+  const partsOf = (t: number) =>
+    Object.fromEntries(fmt.formatToParts(new Date(t)).map((q) => [q.type, q.value]));
+  // UTC instant whose Chicago wall time is the given date at 04:00.
+  // Estimate in UTC first, then correct by the Chicago offset of that estimate
+  // (iterate twice to settle across DST boundaries).
+  const utcOfChicago0400 = (year: number, month: number, day: number): number => {
+    let t = Date.UTC(year, month - 1, day, 4, 0, 0, 0);
+    for (let k = 0; k < 2; k++) {
+      const p = partsOf(t);
+      const wallAsUtc = Date.UTC(
+        Number(p.year), Number(p.month) - 1, Number(p.day),
+        Number(p.hour) % 24, Number(p.minute), 0, 0,
+      );
+      t += Date.UTC(year, month - 1, day, 4, 0, 0, 0) - wallAsUtc;
     }
-    cursor.setDate(cursor.getDate() + 1);
-    cursor.setHours(4, 0, 0, 0);
+    return t;
+  };
+  const start = partsOf(from.getTime());
+  let y = Number(start.year), mo = Number(start.month), d = Number(start.day);
+  for (let i = 0; i < 8; i++) {
+    const t = utcOfChicago0400(y, mo, d);
+    const p = partsOf(t);
+    if (p.weekday === "Tue" && t > from.getTime()) return new Date(t);
+    if (p.weekday === "Tue" && t === from.getTime()) return new Date(t);
+    const next = new Date(Date.UTC(y, mo - 1, d));
+    next.setUTCDate(next.getUTCDate() + 1);
+    y = next.getUTCFullYear(); mo = next.getUTCMonth() + 1; d = next.getUTCDate();
   }
-  return cursor;
+  return new Date(from.getTime() + 7 * 24 * 60 * 60 * 1000);
 }

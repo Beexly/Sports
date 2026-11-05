@@ -15,6 +15,7 @@ describe("homepage doctrine hero", () => {
   const tokens = readRepoFile("apps/web/styles/design-tokens.css");
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
+  const world = readRepoFile("apps/web/components/redline/redline-world.tsx");
 
   it("keeps evidence single-family with tabular figures; display faces are headlines-only (TWO-FAMILY)", () => {
     // Law 1 — evidence sets the rendering. A figure and its sample size must sit
@@ -102,40 +103,35 @@ describe("homepage doctrine hero", () => {
   });
 
   it("uses the noise-to-signal thesis headline, one cold-open, no legacy hero", () => {
-    expect(page).toContain("The market is full of");
-    // Was "Galaxy turns it into". The FIELD rebuild rewrote the second half of
-    // the thesis to "We find the signal", which is the SAME noise-to-signal
-    // structure this test is named for and matches AGENTS.md's stated hero
-    // thesis (Noise. / Signal. Closer: We detect. You decide.). Pin the thesis,
-    // not the retired clause.
-    expect(page).toContain("We find the");
-    expect(page).toMatch(/>noise</);
-    expect(page).toMatch(/>signal</);
-    expect(page).toContain("We detect. You decide.");
-    // ONE cold-open: the Field intro replaced the montage (96e505471 hero,
-    // 417fa6ae3 strip) with a lighter canvas sting that downloads no video
-    // (F-24 media weight). The intent of this line is unchanged — exactly one
-    // self-gating cold-open — so it pins the live intro and keeps the retired
-    // ones retired.
-    expect(page).toContain("FieldCinematicIntro");
+    // The RedlineWorld rebuild moved the hero copy into the field component.
+    // The thesis is unchanged: noise in, signal out, the decision stays human.
+    expect(world).toContain("Leave the noise.");
+    expect(world).toContain("Enter the field.");
+    expect(page).toContain("The math can point. The decision stays yours.");
+    // No legacy hero may return to the front door.
     expect(page).not.toContain("MontageEntrance");
     expect(page).not.toContain("CinematicEntrance");
     expect(page).not.toContain("We&apos;re not AI");
     expect(page).not.toMatch(/data-testid="homepage-arch-headline"/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
+    expect(world).not.toMatch(/AnnotatedSampleSignal/);
   });
 
-  it("routes the four doors from the front door with live, real-sourced stats", () => {
-    // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
-    // off the page's critical path via Suspense); the other three are inline.
-    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
-      expect(page).toContain(door);
-    }
+  it("routes the product surfaces from the front door with live, real-sourced data", () => {
+    // The four-door grid became the field's stage rail plus the header and the
+    // responsible close. Every destination is still one action from the front
+    // door, and every number still comes from a loader.
+    expect(page).toContain("RedlineWorld");
+    expect(world).toContain('href="/packages"');
+    expect(world).toContain('setPanel("board")');
+    expect(world).toContain('setPanel("dfs")');
+    expect(page).toContain('"/methodology"');
+    expect(page).toContain('"/responsible-play"');
+    expect(page).toContain('"/pricing"');
+    expect(page).toMatch(/\borderPacksForStorefront\b/);
+    expect(page).toMatch(/\bgetActiveUpcomingWriteups\b/);
     expect(labDoor).toContain("The Lab");
-    expect(page).toMatch(/loadBoardState/);
-    expect(page).toMatch(/calibration\.sampleSize/);
-    expect(page).toMatch(/state\.publishedToday\.length/);
-    // The sprawling telemetry card + source-health table moved off the home.
+    // The sprawling telemetry card + source-health table stay off the home.
     expect(page).not.toMatch(/Source health/);
     expect(page).not.toMatch(/PUBLIC_DATA_SOURCES/);
   });

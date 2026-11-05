@@ -5,7 +5,7 @@ import { getEntitlements } from "@sports/types";
 import { getPricingPhase } from "@/lib/pricing/pricing-phases";
 
 /**
- * Documentation pricing pin — the money-path figures cannot go stale silently.
+ * Documentation pricing pin  -  the money-path figures cannot go stale silently.
  *
  * `apps/web/lib/pricing/pricing-phases.ts` is the single source of truth for
  * what a new subscriber pays, and `packages/types/src/index.ts` is the single
@@ -16,18 +16,18 @@ import { getPricingPhase } from "@/lib/pricing/pricing-phases";
  * roughly a dozen documents long after the code moved on. That is not cosmetic:
  * `apps/web/lib/stripe.ts` fails CLOSED when a Stripe price does not match the
  * advertised amount (GSE-SEC-024), so an operator who follows a doc carrying a
- * retired figure creates Stripe prices that checkout then refuses — every Pro
+ * retired figure creates Stripe prices that checkout then refuses  -  every Pro
  * and Elite purchase 503s, silently, from the first minute of launch.
  *
  * This suite pins three things:
  *
  *   A. No live-guidance markdown file restates a retired figure (tree scan,
  *      with an EXPLICIT, commented exemption list for genuine historical
- *      records — see EXEMPT_FILES / EXEMPT_TREES below).
+ *      records  -  see EXEMPT_FILES / EXEMPT_TREES below).
  *   B. The docs that operators and writers actually work from name the source
  *      of truth by path, so a reader can always check the live number.
  *   C. Every dollar figure a doc places next to a tier name is a real
- *      advertised FOUNDING amount, derived from the phase module — never a
+ *      advertised FOUNDING amount, derived from the phase module  -  never a
  *      literal this test hardcodes.
  *
  * Adding a doc to an exemption list requires a reason on the same line. "It
@@ -46,7 +46,7 @@ const FOUNDING = getPricingPhase("FOUNDING");
 /**
  * Each pattern targets a figure the code has NOT advertised for a long time.
  * The patterns live here as regexes precisely so the corrective prose in the
- * docs never has to restate the retired literal — a doc that says "do not use
+ * docs never has to restate the retired literal  -  a doc that says "do not use
  * <retired figure>" both defeats a grep check and hands a skimming operator the
  * wrong number to copy.
  */
@@ -59,12 +59,15 @@ const RETIRED_FIGURES: ReadonlyArray<{
     id: "retired-pro-monthly",
     // Negative lookahead so genuine larger figures ($199, $19.99 as a named
     // higher rung) are only caught when they are the bare retired amount.
-    pattern: /\$19(?!\d)/,
+    // The lookahead also excludes the decimal point: "$19.07MM" (an NFL
+    // contract figure in scraped news) and "$19.99" (Google AI Pro) are
+    // different figures, not the retired $19.
+    pattern: /\$19(?![\d.])/,
     why: `not an advertised amount in any phase of ${SOURCE_OF_TRUTH}`,
   },
   {
     id: "retired-elite-monthly",
-    // Bare "$49" is legitimate — it is the FOUNDING Fantasy ANNUAL price — so
+    // Bare "$49" is legitimate  -  it is the FOUNDING Fantasy ANNUAL price  -  so
     // this pins the per-month rendering specifically.
     pattern: /\$\s?49\s?\/\s?(?:mo\b|month)/i,
     why: `no tier is advertised at that monthly amount in ${SOURCE_OF_TRUTH}`,
@@ -86,7 +89,7 @@ const RETIRED_FIGURES: ReadonlyArray<{
  * falsifying the record, not fixing a doc.
  */
 const EXEMPT_TREES: ReadonlyArray<readonly [string, string]> = [
-  ["docs/ops/archive/", "the archive tree — museum copies and retired audit prompts, preserved as-shipped"],
+  ["docs/ops/archive/", "the archive tree  -  museum copies and retired audit prompts, preserved as-shipped"],
   ["handoff/", "dated session handoff reports; each is a point-in-time account of what a run observed"],
   ["reports/", "dated analysis reports; findings are anchored to the date they were produced"],
   ["_logs/", "append-only decision/journal logs; entries record what was decided when"],
@@ -104,10 +107,14 @@ const EXEMPT_TREES: ReadonlyArray<readonly [string, string]> = [
   ["docs/engine/research/", "dated engine research inbox; dollar figures are third-party or infra costs of their date"],
   ["docs/data-sources/research/", "dated data-source research inbox plus misc/ scrape captures; dollar figures are third-party vendor prices, not GSE tiers"],
   ["docs/arxiv-program/research/", "dated arxiv-corpus research inbox; paper pricing notes are third-party"],
+  // The dated snapshot archive (frozen workspace exports): dollar figures
+  // there are third-party vendor / market prices as captured on their date,
+  // never GSE tier pricing. Rewriting them would be falsifying the record.
+  ["data/snapshots/", "frozen snapshot archive  -  third-party prices captured on their date, preserved as-shipped"],
 ];
 
 /**
- * Individual files exempted, each with the reason it is not live guidance —
+ * Individual files exempted, each with the reason it is not live guidance  - 
  * or the reason its figure is correct as written.
  */
 const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
@@ -117,7 +124,7 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
   ],
   [
     "docs/adr/004-member-data-flow-and-dunning-ux.md",
-    "dated ADR (Accepted) — its context section records the entitlement state at decision time, which is the point of an ADR",
+    "dated ADR (Accepted)  -  its context section records the entitlement state at decision time, which is the point of an ADR",
   ],
   [
     "docs/gse/gate-decision-packet.md",
@@ -125,7 +132,7 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
   ],
   [
     "docs/strategy/RESEARCH_MAP.md",
-    "the reconciliation map — it names the retired figures explicitly in order to mark them retired, and quotes higher ladder rungs correctly",
+    "the reconciliation map  -  it names the retired figures explicitly in order to mark them retired, and quotes higher ladder rungs correctly",
   ],
   [
     "docs/strategy/COMPETITIVE_LANDSCAPE_2026-07.md",
@@ -133,11 +140,11 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
   ],
   [
     "docs/data-source-options.md",
-    "vendor plan pricing for third-party data APIs — not our subscription tiers",
+    "vendor plan pricing for third-party data APIs  -  not our subscription tiers",
   ],
   [
     "docs/operator-playbook.md",
-    "database host plan pricing (infrastructure vendor) — not our subscription tiers",
+    "database host plan pricing (infrastructure vendor)  -  not our subscription tiers",
   ],
   [
     "docs/reasoning/infrastructure-2026-09-28.md",
@@ -146,6 +153,10 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
   [
     "docs/ops/LAUNCH_FINISH_LINE_2026-09-05.md",
     "dated 2026-09-05 launch plan; the flagged amount is a Signal Origin payment link recorded as it was then (since deactivated), not a GSE tier price",
+  ],
+  [
+    "docs/strategy/HANDOFF.md",
+    "running handoff log (same precedent as the exempt handoff/ tree): the flagged $19 is a quoted button label from a prior run's note, not a subscription price being advertised",
   ],
 ];
 
@@ -187,7 +198,7 @@ function read(relPath: string): string {
   return readFileSync(resolve(repoRoot, relPath), "utf8");
 }
 
-describe("docs — retired money-path figures stay retired", () => {
+describe("docs  -  retired money-path figures stay retired", () => {
   it("finds markdown to scan (the walker itself is not silently empty)", () => {
     expect(ALL_MARKDOWN.length).toBeGreaterThan(50);
     expect(LIVE_GUIDANCE_DOCS.length).toBeGreaterThan(20);
@@ -206,7 +217,7 @@ describe("docs — retired money-path figures stay retired", () => {
       }
       expect(
         offenders,
-        `${offenders.length} occurrence(s) of ${figure.id} — ${figure.why}.\n` +
+        `${offenders.length} occurrence(s) of ${figure.id}  -  ${figure.why}.\n` +
           `Fix the doc, or add it to EXEMPT_FILES with the reason it is a historical record:\n` +
           offenders.join("\n"),
       ).toEqual([]);
@@ -231,7 +242,7 @@ describe("docs — retired money-path figures stay retired", () => {
  * number the entitlement code actually returns. Derived, so advancing the
  * allowance in code fails this until the prose follows.
  */
-describe("docs — a stated free daily allowance matches the entitlement code", () => {
+describe("docs  -  a stated free daily allowance matches the entitlement code", () => {
   const freeLimit = getEntitlements("FREE").dailyPickLimit;
 
   it("FREE has a finite daily allowance to compare against", () => {
@@ -271,7 +282,7 @@ const MUST_CITE_SOURCE_OF_TRUTH: readonly string[] = [
   "design-system/README.md",
 ];
 
-describe("docs — pricing prose points at the source of truth", () => {
+describe("docs  -  pricing prose points at the source of truth", () => {
   for (const doc of MUST_CITE_SOURCE_OF_TRUTH) {
     it(`${doc} names ${SOURCE_OF_TRUTH}`, () => {
       expect(
@@ -314,7 +325,7 @@ const TIER_FIGURE_DOCS: readonly string[] = [
   "design-system/README.md",
 ];
 
-describe("docs — tier-adjacent figures match the advertised FOUNDING ladder", () => {
+describe("docs  -  tier-adjacent figures match the advertised FOUNDING ladder", () => {
   const advertised = foundingFigureLiterals();
 
   it("the advertised set is derived from the phase module, not from literals here", () => {

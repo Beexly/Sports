@@ -334,6 +334,13 @@ export function RedlineWorld({
     target.closest("[data-no-camera],button,input,select,textarea,a,[role=dialog]");
   const wheel = (event: WheelEvent<HTMLDivElement>) => {
     if (isCameraTarget(event.target as HTMLElement)) return;
+    // Hand the scroll back to the document at the two ends of the field walk.
+    // Inside the journey the wheel only scrubs the camera; past the last stage
+    // the page must keep moving so the responsible-close band and the site
+    // footer below the world stay reachable by an ordinary scroll.
+    const atJourneyEnd = progressRef.current >= 0.999;
+    const atJourneyStart = progressRef.current <= 0.001;
+    if ((atJourneyEnd && event.deltaY > 0) || (atJourneyStart && event.deltaY < 0)) return;
     event.preventDefault();
     if (Math.abs(event.deltaY) < 1.5 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
     goProgress(progressRef.current + event.deltaY * WHEEL_STEP);
@@ -508,7 +515,6 @@ export function RedlineWorld({
           <div className="header-state">
             <span className="live-dot" /> VERIFIED RECORD: 62-23-1 (+26.50u)
           </div>
-          <Link className="header-menu" href="/packages">ALL PACKS <span>→</span></Link>
         </header>
 
         <div className="world-controls" data-no-camera>

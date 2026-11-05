@@ -80,13 +80,13 @@ const MAX_HOPS = 1;
  * an exemption cannot outlive the condition that justified it.
  */
 const ALLOWLIST: ReadonlyMap<string, string> = new Map([
-  [
-    "app/page.tsx",
-    "Homepage door stat. Reaches loadNflverseUsagePulse via " +
-      "@/components/landing/nflverse-lab-door, which renders ONLY pulse.sourceRows " +
-      "(a row COUNT) and pulse.status — never playerRows/qbAgeRows. Cardinality is a " +
-      "deliberate public trust signal, not the paid per-player table.",
-  ],
+  // Entries removed 2026-11-05 (stale-exemption sweep): app/page.tsx (the
+  // homepage is the static RedlineWorld front door and reaches no paid
+  // loader), app/fantasy/page.tsx (the hub no longer reaches a paid loader
+  // through live-evidence), and app/players/page.tsx (the page is now a
+  // data-free under-construction stub that imports no @/lib module). Each
+  // entry went stale because the page stopped tripping the check, which is
+  // exactly the condition this list exists to catch.
   [
     "app/integrations/page.tsx",
     "Data-readiness page. Reaches the nflverse loaders via " +
@@ -94,24 +94,6 @@ const ALLOWLIST: ReadonlyMap<string, string> = new Map([
       "(summary.usagePlayerStatsRows, cohortObservations, latestUsageWeek). The page " +
       "states the intent inline: 'Row counts are evidence, not permission to score.' " +
       "No per-player row crosses to the client.",
-  ],
-  [
-    "app/fantasy/page.tsx",
-    "Fantasy hub. Same @/lib/data-sources/live-evidence aggregate summary as " +
-      "/integrations (evidence.summary.* scalars + qbAge34Lift), rendered as " +
-      "EvidenceMetric counts. No paid rows are rendered.",
-  ],
-  [
-    // ⚠ NOT a "this page is fine" exemption — this one is a REAL LEAK, held here
-    // only because its fix belongs to another in-flight PR and this branch must not
-    // touch the file. The stale-entry check below is the safety net: the moment that
-    // branch lands and the page imports getViewerEntitlements, this entry goes stale
-    // and FAILS the suite, forcing its removal. It cannot quietly become permanent.
-    "app/players/page.tsx",
-    "REAL LEAK, fixed on branch claude/kernel-wave-k-slots (verified: that branch adds " +
-      "getViewerEntitlements + TierGatePanel and gates each view on view.requires). The " +
-      "page reaches 12 paid loaders through the @/lib/players/views wrapper. DELETE THIS " +
-      "ENTRY when that branch merges — the stale-exemption check will demand it.",
   ],
   [
     "app/cockpit/sources/page.tsx",

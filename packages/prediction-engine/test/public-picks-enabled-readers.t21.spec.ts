@@ -125,7 +125,7 @@ const ON_WHEN_UNSET = /parseBool\(\s*process\.env\[["']PUBLIC_PICKS_ENABLED["']\
 const OFF_WHEN_UNSET = /parseBool\(\s*process\.env\[["']PUBLIC_PICKS_ENABLED["']\]\s*,\s*false\s*\)|process\.env\[["']PUBLIC_PICKS_ENABLED["']\][^;\n]*?===\s*["']true["']|env\[["']PUBLIC_PICKS_ENABLED["']\]\s*===\s*["']true["']|envTrue\(\s*["']PUBLIC_PICKS_ENABLED["']\s*\)|envFlag\(\s*["']PUBLIC_PICKS_ENABLED["']\s*\)|truthy\(env\[["']PUBLIC_PICKS["']\]\)/;
 
 function sourceOf(relPath: string): string {
-  const abs = join(ROOT, relPath.replace(/\//g, "\\"));
+  const abs = join(ROOT, relPath);
   expect(existsSync(abs), `${relPath} must exist`).toBe(true);
   return readFileSync(abs, "utf8");
 }
@@ -183,7 +183,7 @@ describe("GAP-21: the PUBLIC_PICKS_ENABLED reader table", () => {
       if (KNOWN.has(rel)) continue;
       let text: string;
       try {
-        text = readFileSync(join(ROOT, rel.replace(/\//g, "\\")), "utf8");
+        text = readFileSync(join(ROOT, rel), "utf8");
       } catch {
         continue;
       }

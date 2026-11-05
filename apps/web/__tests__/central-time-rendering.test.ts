@@ -7,7 +7,7 @@ import { CENTRAL_TZ, centralDateKey, formatCentralDateTime, formatCentralTime } 
  * Every customer-facing time reads Central, and says so.
  *
  * Founder, 2026-09-12: "all times should be from CST central time." A helper
- * was written that day (lib/time/central.ts) and wired to NOTHING — it had zero
+ * was written that day (lib/time/central.ts) and wired to NOTHING - it had zero
  * importers for a full day while the bug it fixes was live.
  *
  * The bug: these are SERVER components, so `toLocaleTimeString()` with no
@@ -31,14 +31,25 @@ const read = (rel: string): string => readFileSync(join(root, rel), "utf8");
 
 /** Files that render a time or date to a customer and must pin the zone. */
 const CUSTOMER_TIME_SURFACES = [
-  "app/board/page.tsx",
   "app/slate/[sport]/page.tsx",
   "components/picks/pick-card.tsx",
-  // The picks board's own "last updated", and the "Board data as-of" stamp that
-  // renders on the HOMEPAGE. The second was the worst of the set: no
-  // `timeZoneName` at all, so it printed a bare wrong clock face.
-  "app/picks/page.tsx",
+  // The "Board data as-of" stamp (renders on /methodology via
+  // MethodologySection now; see freshness-coverage.test.ts).
   "components/ui/methodology-section.tsx",
+] as const;
+
+/**
+ * Static pages that render NO timestamps at all (this era): /board is the
+ * under-construction stub and /picks is the static sealed Week 8 locked
+ * card. The Central-pinning prohibition is satisfied structurally - a
+ * page that formats no time cannot bake a UTC wall clock - but only while
+ * they keep formatting none. The tests below pin that invariant, so a
+ * future timestamp added to either page without a CENTRAL_TZ pin fails
+ * here instead of shipping a wrong-zone clock.
+ */
+const STATIC_NO_TIMESTAMP_PAGES = [
+  "app/board/page.tsx",
+  "app/picks/page.tsx",
 ] as const;
 
 /**
@@ -80,9 +91,18 @@ describe("customer-facing times are pinned to Central", () => {
     });
   }
 
-  it("the board labels its timestamp so the zone is never guessed", () => {
-    const src = read("app/board/page.tsx");
-    expect(src).toMatch(/CT_SUFFIX|["'`]CT["'`]/);
+  it("static pages that render no timestamps keep rendering none", () => {
+    // BOARD-CLUSTER REPOINT (2026-11-04): /board and /picks were live
+    // timestamp surfaces in the era this file was written for. They are
+    // now an under-construction stub and a static sealed card, neither of
+    // which formats a time. The zone-never-guessed property holds
+    // vacuously; these assertions keep it holding as the pages evolve.
+    for (const rel of STATIC_NO_TIMESTAMP_PAGES) {
+      const src = read(rel);
+      expect(src).not.toMatch(/\.toLocale(?:Time|Date)?String\s*\(/);
+      expect(src).not.toMatch(/Intl\.DateTimeFormat\s*\(/);
+      expect(src).not.toMatch(/new Date\s*\(/);
+    }
   });
 });
 
@@ -108,7 +128,7 @@ describe("lib/time/central", () => {
   });
 
   it("buckets the day on the Central boundary, not the UTC one", () => {
-    // 2026-09-14T02:30Z is Sunday 9:30 PM Central — still Sunday's late game,
+    // 2026-09-14T02:30Z is Sunday 9:30 PM Central - still Sunday's late game,
     // already Monday in UTC. This is the exact shape of a Sunday Night Football
     // kickoff and why a UTC day key mislabels it.
     expect(centralDateKey(new Date("2026-09-14T02:30:00Z"))).toBe("2026-09-13");

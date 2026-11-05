@@ -18,12 +18,11 @@ import {
 
 // Real (illustrative) pool fixtures, chosen for known teams/byes/bands.
 const vale = playerById("rb-marcus-vale")!; // ATL, bye 12, proj 312, ceil 380
-const roe = playerById("wr-julian-roe")!; // MIA, bye 6, proj 308, ceil 372
+const roe = playerById("wr-julian-roe")!; // SEA, bye 10, proj 308, ceil 372
 const cinQb = playerById("qb-emmett-shaw")!; // CIN, bye 12
 const cinWr = playerById("wr-deshawn-kemp")!; // CIN, bye 12
 const ferris = playerById("rb-kj-ferris")!; // BAL, bye 14
 const soto = playerById("rb-andre-soto")!; // HOU, bye 14
-const orr = playerById("rb-malik-orr")!; // DEN, bye 14
 const pryce = playerById("rb-deon-pryce")!; // DET, bye 8
 
 describe("roster strength", () => {
@@ -77,9 +76,12 @@ describe("bestBallDistribution", () => {
 
 describe("byeFragility", () => {
   it("flags a position dropped below its lineup requirement by a shared bye", () => {
-    const { risks, score } = byeFragility([ferris, soto, orr]); // 3 RB all bye 14
+    // Fixture history: ferris (BAL) and soto (HOU) share bye 14, but the pool only
+    // carries two bye-14 RBs now (orr moved to DAL, bye 7). Two starters on bye
+    // with zero available is still a fragility flag and score 2.
+    const { risks, score } = byeFragility([ferris, soto]);
     expect(risks).toHaveLength(1);
-    expect(risks[0]).toMatchObject({ week: 14, pos: "RB", onBye: 3, available: 0, starters: 2 });
+    expect(risks[0]).toMatchObject({ week: 14, pos: "RB", onBye: 2, available: 0, starters: 2 });
     expect(score).toBe(2);
   });
 

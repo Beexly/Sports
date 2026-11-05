@@ -117,8 +117,19 @@ describe("Resources Card Supplies & Operator Revenue Surface", () => {
 });
 
 describe("Content OS Daily Packet API Route", () => {
+  it("GET() is 404 by default (default-off feature gate)", async () => {
+    vi.resetModules();
+    vi.stubEnv("CONTENT_OS_PACKET_ENABLED", "");
+    const route = await import("@/app/api/content-os/packet/route");
+    const response = await route.GET();
+
+    expect(response.status).toBe(404);
+    vi.unstubAllEnvs();
+  });
+
   it("GET() returns 200, packet_id: PKT-2026-10-29, ROUNDUP (Host: Nova), and attribution kit", async () => {
     vi.resetModules();
+    vi.stubEnv("CONTENT_OS_PACKET_ENABLED", "true");
     const route = await import("@/app/api/content-os/packet/route");
     const response = await route.GET();
 
@@ -158,6 +169,7 @@ describe("Content OS Daily Packet API Route", () => {
     const firstGame = data.board[0];
     expect(firstGame.matchup).toBeDefined();
     expect(firstGame.reasoning).toBeDefined();
+    vi.unstubAllEnvs();
     expect(firstGame.price_check).toBeDefined();
 
     const allCalls = data.board.flatMap((g: { calls: Array<{ decision: string; reasoning: string; price_check: string }> }) => g.calls);
