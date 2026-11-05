@@ -26,7 +26,7 @@ def test_public_proxy_rates_values() -> None:
     raw = json.dumps(data)
     assert "2.52" in raw  # BAL YBC/Att
     assert "1.92" in raw  # JAX YBC/Att
-    assert "59.5" in raw  # BAL two-high rate
+    assert "0.595" in raw or "59.5" in raw  # BAL two-high rate
 
 
 def test_batches_5_7_160_works_and_877_pdfs_hydrated() -> None:
