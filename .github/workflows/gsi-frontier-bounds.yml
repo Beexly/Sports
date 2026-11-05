@@ -1,0 +1,67 @@
+name: GSI Frontier Boundary Enforcer
+
+on:
+  push:
+    branches:
+      - "main"
+      - "dev-braid-topology"
+      - "hermes/overnight-2026-11-03-corpus"
+  pull_request:
+    branches:
+      - "main"
+      - "dev-braid-topology"
+      - "hermes/overnight-2026-11-03-corpus"
+
+jobs:
+  enforce-frontier-bounds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch numpy scipy scikit-learn pandas pytest
+          pip install -e packages/galaxy-conformal-ot
+
+      - name: Live mathematical invariance assertion
+        env:
+          PYTHONPATH: packages/galaxy-conformal-ot:packages/galaxy-conformal-ot/benchmarks
+        run: |
+          python -c '
+          import sys
+          from clinical_mimic_iv_v3_teb_benchmark import run_pillar2a_invariance_stress_tests
+
+          raw = run_pillar2a_invariance_stress_tests()
+          res = {
+              "time_warp": {
+                  "3.0": {"braid_relative_drift": raw["monotonic_time_warping_invariance"]["gamma_3.0"]["braid_levy_relative_drift_pct"] / 100.0}
+              },
+              "sparsity_dropout": {
+                  "0.6": {"braid_relative_drift": raw["irregular_packet_dropout_degradation"]["dropout_60pct"]["braid_levy_mean_drift_pct"] / 100.0}
+              },
+              "noise_breakdown": {
+                  "0.3": {"braid_auc_vs_clean": raw["sensor_noise_snr_boundary"]["noise_sigma_0.30"]["braid_invariant_roc_auc"]}
+              }
+          }
+
+          print(f"Evaluated Pillar 2A Invariance Frontiers: {res}")
+          assert res["time_warp"]["3.0"]["braid_relative_drift"] < 0.005, f"Time-warp drift {res[\"time_warp\"][\"3.0\"][\"braid_relative_drift\"]} >= 0.005"
+          assert res["sparsity_dropout"]["0.6"]["braid_relative_drift"] < 0.015, f"Dropout drift {res[\"sparsity_dropout\"][\"0.6\"][\"braid_relative_drift\"]} >= 0.015"
+          assert res["noise_breakdown"]["0.3"]["braid_auc_vs_clean"] >= 0.75, f"Noise AUC {res[\"noise_breakdown\"][\"0.3\"][\"braid_auc_vs_clean\"]} < 0.75"
+          print("ALL GSI FRONTIER BOUNDARY INVARIANCE TESTS PASSED!")
+          '
+
+      - name: Run pytest test suite
+        run: |
+          pytest packages/galaxy-conformal-ot/tests -v --durations=5
+
+      - name: Bare-Metal C++20 Embedded Kernel verification
+        run: |
+          g++ -std=c++20 -O3 -fno-exceptions -fno-rtti -I packages/galaxy-conformal-ot/embedded packages/galaxy-conformal-ot/embedded/gsi_embedded_braid_kernel.cpp packages/galaxy-conformal-ot/embedded/tests/embedded_kernel_tests.cpp -o /tmp/gsi_embedded_verification && /tmp/gsi_embedded_verification

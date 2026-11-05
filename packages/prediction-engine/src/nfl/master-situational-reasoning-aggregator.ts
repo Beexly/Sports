@@ -77,6 +77,11 @@ import {
   detectKatsMarketCusumAndHarmonicRegime,
 } from "./ig-consolidated-conformal-and-kats-signals.js";
 import { loadStage0Config, assertNamesClean } from "./preflight-roster-gate.js";
+import {
+  computeTebAvalancheBraidOverlay,
+  type TebAvalancheBraidInput,
+  type TebAvalancheBraidResult,
+} from "./teb-avalanche-braid-overlay.js";
 
 export const FAMILY_NAMES = [
   "pressure",
@@ -585,6 +590,8 @@ export interface OverlayInput {
   katsCusumInput?: Parameters<typeof detectKatsMarketCusumAndHarmonicRegime>[0];
   /** Optional Stage 0 roster gate config path and candidate player names to verify. */
   stage0Check?: { configPath: string; candidatePlayerNames: readonly string[] };
+  /** Optional TEB failed-avalanche & D(S3) braid overlay input. */
+  tebAvalancheBraidInput?: TebAvalancheBraidInput;
 }
 
 export interface OverlayResult {
@@ -608,6 +615,7 @@ export interface OverlayResult {
   borghesiRosen?: ReturnType<typeof computeBorghesiWeatherAndRosenQbBackupTransition>;
   katsCusum?: ReturnType<typeof detectKatsMarketCusumAndHarmonicRegime>;
   stage0Verified?: { week: number; asOf: string; candidateCount: number };
+  tebAvalancheBraid?: ReturnType<typeof computeTebAvalancheBraidOverlay>;
   orthogonalization: OrthogonalizationResult;
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
@@ -771,6 +779,10 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     };
     mark("0:stage0RosterGate", true, `week ${cfg.week} verified (${cfg.as_of})`);
   }
+  if (input.tebAvalancheBraidInput) {
+    result.tebAvalancheBraid = computeTebAvalancheBraidOverlay(input.tebAvalancheBraidInput);
+    mark("15H:computeTebAvalancheBraidOverlay", true, result.tebAvalancheBraid.pocketRegime);
+  }
 
   const canonicalInputs = {
     familyDeltas: input.familyDeltas,
@@ -815,4 +827,4 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
   return result;
 }
 
-export { mean };
+export { mean, computeTebAvalancheBraidOverlay, type TebAvalancheBraidInput, type TebAvalancheBraidResult };

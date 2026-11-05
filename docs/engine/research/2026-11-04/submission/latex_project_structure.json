@@ -1,0 +1,59 @@
+{
+  "project_name": "GSI-WP-06-Camera-Ready",
+  "institution": {
+    "legal_name": "Galaxy Science Institute",
+    "jurisdiction": "Texas Domestic Non-Profit Corporation",
+    "sos_filing_number": "15043440630001",
+    "irs_ein": "43-2804773",
+    "headquarters": "Austin, Texas, USA"
+  },
+  "document_type": "IEEE Transactions / CompSoc 2-Column Camera-Ready Whitepaper",
+  "document_class": "IEEEtran",
+  "class_options": ["10pt", "journal", "compsoc"],
+  "entrypoint": "wp06_finalized_camera_ready.tex",
+  "bibliography": "references.bib",
+  "bib_engine": "bibtex",
+  "tex_engine": "pdflatex",
+  "sections": [
+    {"index": 1, "title": "Introduction", "label": "sec:intro"},
+    {"index": 2, "title": "The Four Historical Aborted Paths", "label": "sec:aborted_paths", "subsections": [
+      "Linear Granger Causality Failure under Time-Slippage",
+      "Static Point-Cloud TDA Bottleneck",
+      "Crowley-Chandran-Gopalakrishnan Avalanche Theory",
+      "Measurement-Only D(S_3) Braiding vs. Physical Transport"
+    ]},
+    {"index": 3, "title": "Mathematical Formulation", "label": "sec:math", "equations": [
+      "Asynchronous Time-Slippage Metric phi_i(t) and Delta_phi",
+      "Chen Stochastic Levy Area Circulation A_ij",
+      "SO(d) Matrix Exponential and Jones-Skein Invariant",
+      "Seifert Non-Equilibrium Entropy Production S_dot_irr",
+      "Two-Qutrit D(S_3) Charge-Projection Reduction",
+      "Split-Conformal Selective Horizon Gate"
+    ]},
+    {"index": 4, "title": "Empirical Verification on Real MIMIC-IV Cohort", "label": "sec:empirical", "cohort": "N=138 (38 septic shock, 100 controls)", "tables": [
+      {"table": 1, "title": "Pillar 1 Time-Slippage and Thermodynamic Entropy Metrics"},
+      {"table": 2, "title": "Pillar 2A Mathematical Invariance and Degradation Boundaries"},
+      {"table": 3, "title": "Pillar 2B 6-Architecture Head-to-Head Progression on Real MIMIC-IV ICU Cohort"},
+      {"table": 4, "title": "Pillar 3 Pre-Bifurcation Early-Warning Lead Time"}
+    ]},
+    {"index": 5, "title": "Bare-Metal C++20 Embedded Silicon Realization", "label": "sec:embedded", "targets": [
+      "ARM Cortex-M7 (STM32H753ZI, 480 MHz)",
+      "Xilinx/AMD Artix-7 FPGA"
+    ]},
+    {"index": 6, "title": "Conclusion", "label": "sec:conclusion"}
+  ],
+  "compiled_artifacts": [
+    "wp06_finalized_camera_ready.pdf",
+    "wp06_finalized_camera_ready.aux",
+    "wp06_finalized_camera_ready.bbl",
+    "wp06_finalized_camera_ready.blg",
+    "wp06_finalized_camera_ready.log"
+  ],
+  "invariance_thresholds": {
+    "monotonic_time_warp_gamma_3.0_drift_pct": 0.212,
+    "irregular_packet_dropout_60pct_drift_pct": 1.20,
+    "sensor_noise_sigma_0.30_auc": 0.7956,
+    "mimic_iv_lead_time_hours": 7.08,
+    "decisive_alert_precision_pct": 100.0
+  }
+}

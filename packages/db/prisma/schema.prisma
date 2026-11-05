@@ -3978,3 +3978,20 @@ model EntityEdge {
   @@index([observed_at])
   @@map("entity_edges")
 }
+
+model MimicStayMetric {
+  id                           String   @id @default(cuid())
+  stayId                       String   @unique
+  subjectId                    String
+  septicShockOutcome           Boolean
+  clockVelocityDispersion      Float
+  dtwTemporalSlippage          Float
+  seifertIrreversibleEntropy   Float
+  chenLevyAreaCirculation      Float
+  v3UnifiedScore               Float
+  conformalSelectiveTier       String   @default("STANDARD")
+  evaluatedAt                  DateTime @default(now())
+
+  @@index([septicShockOutcome])
+  @@map("mimic_stay_metrics")
+}

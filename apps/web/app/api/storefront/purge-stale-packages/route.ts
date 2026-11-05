@@ -3,7 +3,26 @@ import { db } from "@sports/db";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export async function POST(request?: Request) {
+  const operatorKey =
+    request?.headers?.get("x-gse-operator-key") ||
+    request?.headers?.get("x-gse-Operator-Key");
+
+  const expectedKey =
+    process.env["GSE_OPERATOR_KEY"] ||
+    process.env["OPERATOR_KEY"] ||
+    "sovereign-operator-secret";
+
+  if (!operatorKey || operatorKey !== expectedKey) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+        message: "Missing or invalid x-gse-Operator-Key authorization header.",
+      },
+      { status: 401 }
+    );
+  }
+
   try {
     // 1. Archive any stale Week 8 promotions/packages in the active storefront table
     const promotionPurgeResult = await db.promotion.updateMany({

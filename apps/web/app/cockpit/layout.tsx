@@ -31,6 +31,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
       { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
       { href: "/cockpit/tasks", label: "Tasks", hint: "Queue by status" },
       { href: "/cockpit/review", label: "Review", hint: "Needs-review + blocked" },
+      { href: "/cockpit/workflows", label: "Workflows", hint: "Autonomous cadence & systems" },
     ],
   },
   {
@@ -80,6 +81,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
       { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
       { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
       { href: "/cockpit/settlement-hold", label: "Settlement Hold", hint: "Needs adjudication worklist" },
+      { href: "/cockpit/gsi-telemetry", label: "GSI Telemetry", hint: "TEB braid & time-slippage mesh" },
     ],
   },
 ];

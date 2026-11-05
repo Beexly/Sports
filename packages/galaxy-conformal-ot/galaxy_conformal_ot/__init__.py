@@ -2,7 +2,8 @@
 galaxy_conformal_ot
 ===================
 Universal High-Dimensional Epistemic Calibration, Spectral Cognitive Routing,
-Wasserstein-Mahalanobis Conformal Filtering, and Entropic Optimal Transport
+Wasserstein-Mahalanobis Conformal Filtering, Entropic Optimal Transport,
+and Sovereign v4.0 Topological-Ergodic Braid / Failed Avalanche Mechanics
 under Adversarial Non-Stationarity.
 """
 
@@ -62,6 +63,8 @@ from .gse_gsi_unified_hyperloop import (
 
 from .gsi_research_api_wrapper import (
     evaluate_trajectory_payload,
+    stream_braid_invariants_payload,
+    RECOGNIZED_PARTNERS,
     app as gsi_research_asgi_app,
 )
 
@@ -84,7 +87,13 @@ from .quantum_braid_teb import (
     ErgodicBraidBifurcationMonitor,
 )
 
-__version__ = "3.0.0"
+from .sovereign_v4_ds3_avalanche_engine import (
+    BylesMeasurementOnlyDS3Braid,
+    CrowleyFailedAvalancheFunctional,
+    ConformalSelectiveHorizonGate,
+)
+
+__version__ = "4.0.0"
 __all__ = [
     "build_context_mask_288",
     "mask_to_words",
@@ -120,6 +129,8 @@ __all__ = [
     "HyperloopStepVerdict",
     "UnifiedHyperloopOrchestrator",
     "evaluate_trajectory_payload",
+    "stream_braid_invariants_payload",
+    "RECOGNIZED_PARTNERS",
     "gsi_research_asgi_app",
     "TopologicalManifoldQuantumEmbedding",
     "GSEClinicalEngineV3",
@@ -134,4 +145,7 @@ __all__ = [
     "PersistentHomologyBetti",
     "ErgodicBifurcationSummary",
     "ErgodicBraidBifurcationMonitor",
+    "BylesMeasurementOnlyDS3Braid",
+    "CrowleyFailedAvalancheFunctional",
+    "ConformalSelectiveHorizonGate",
 ]
