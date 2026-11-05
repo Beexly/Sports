@@ -72,6 +72,9 @@ LOCAL_TBI = [
     DL / "SeminNeurol2015352028..pdf",
     DL / "Special_Issue_Traumatic_Brain_InjuryChronic_Trauma.pdf",
     DL / "nlmui-0166161.xml",
+    DL / "bookchapterPolypathology.pdf",
+    DL / "YiPadalinoChinMontenigroCantu_CSMR_2013.pdf",
+    DL / "book_review.pdf",
 ]
 
 DATASETS_567 = [
@@ -136,12 +139,14 @@ def main() -> dict:
     batch4 = []
     i = 0
     # 2 core PDFs
-    for title, url in [
-        ("Robertson & Zaragoza - BM25 / BM25F", "https://github.com/emintham/Papers"),
-        ("Manning, Raghavan & Schutze - Introduction to Information Retrieval", "https://nlp.stanford.edu/IR-book/"),
+    for title, url, local_name in [
+        ("Robertson & Zaragoza - BM25 / BM25F", "https://github.com/emintham/Papers", "The_Probabilistic_Relevance_Framework_BM25_and_Bey.pdf"),
+        ("Manning, Raghavan & Schutze - Introduction to Information Retrieval", "https://nlp.stanford.edu/IR-book/", "Introduction_to_Information_Retrieval_Christopher_.pdf"),
     ]:
         i += 1
-        batch4.append(rec(i, "batch-4", title, "Core retrieval reference named in the Batch 4 drop.", [url], "paper"))
+        lp = DL / local_name
+        extra = {"local_path": str(lp), "sha256_16": hashlib.sha256(lp.read_bytes()).hexdigest()[:16]} if lp.exists() else None
+        batch4.append(rec(i, "batch-4", title, "Core retrieval reference named in the Batch 4 drop" + (" (local PDF verified)." if extra else "."), [url], "paper", extra))
     # emintham 12
     for p in EMINTHAM:
         i += 1
