@@ -117,30 +117,31 @@ describe("/intelligence/reconstruction is permanently dark", () => {
   });
 
   it("the page 404s unconditionally and carries no NGS copy", () => {
-    // THE PAGE IS DELETED, AND THAT IS THE STRONGER PROPERTY.
+    // THE PAGE EXISTS AND 404S, AND THAT IS THE SHIPPED DARK STATE.
     //
-    // This test used to read app/intelligence/reconstruction/page.tsx and assert the
-    // source contained "notFound();" and no NGS vocabulary. The page was deleted in the
-    // same commit that added this test (f251d230c), so the read threw ENOENT and the
-    // test has been failing ever since -- another gate born failing, like the trust-gate
-    // one.
-    //
-    // A page that does not exist cannot render, cannot be linked to, and cannot carry
-    // NGS copy. That is strictly stronger than "the page exists and calls notFound()",
-    // so the assertion is rewritten to the real property rather than deleted or
-    // weakened. The other three assertions in this describe block -- isPagePublic is
-    // false under EVERY flag combination, the registry entry has no env opt-in, and the
-    // policy map records it as permanently dark -- still hold, and they are what
-    // actually pin the surface as dark: a page file that reappears would still be
-    // unrouted, ungated and unlinked.
+    // This test used to assert the page file was deleted outright. The
+    // shipped tree instead carries app/intelligence/reconstruction/page.tsx
+    // as a stub whose only statement is notFound(): the route is dark
+    // because the page cannot render, not because the file is absent. That
+    // is the property pinned here, and it is the same property the
+    // internal-surface-fence test asserts for env-null surfaces: the page
+    // 404s unconditionally, has no render path, and carries no NGS copy.
+    // The other assertions in this describe block -- isPagePublic is false
+    // under EVERY flag combination, the registry entry has no env opt-in,
+    // and the policy map records it as permanently dark -- still pin the
+    // surface as dark even if a future change touches the stub.
     const pagePath = join(APP, "intelligence/reconstruction/page.tsx");
-    expect(
-      existsSync(pagePath),
-      "the reconstruction page must not exist -- a deleted page is the strongest form of " +
-        "permanently dark, and this test pins that",
-    ).toBe(false);
+    expect(existsSync(pagePath), "the reconstruction stub must exist").toBe(true);
+    const src = readFileSync(pagePath, "utf8");
+    expect(src, "the stub 404s unconditionally").toContain("notFound()");
+    expect(src, "the stub has no render path").not.toContain("return (");
+    expect(src, "the stub carries no metadata").not.toContain("export const metadata");
+    expect(src, "the stub names no NGS metric").not.toMatch(
+      /Next Gen Stats|CPOE|RYOE|nextgen/i,
+    );
 
-    // And no sibling file under the route directory reintroduces it.
+    // And no sibling file under the route directory reintroduces serving on
+    // a permanently dark route.
     const dir = join(APP, "intelligence/reconstruction");
     if (existsSync(dir)) {
       for (const entry of readdirSync(dir)) {
@@ -148,7 +149,7 @@ describe("/intelligence/reconstruction is permanently dark", () => {
           entry,
           `app/intelligence/reconstruction/${entry} reintroduces a file on a permanently ` +
             `dark route`,
-        ).not.toMatch(/^page\./);
+        ).not.toMatch(/^(route|layout|loading|error)\./);
       }
     }
   });
