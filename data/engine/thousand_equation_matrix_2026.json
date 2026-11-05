@@ -1,11 +1,11 @@
 {
   "schema_version": "GSE-THOUSAND-EQUATION-MATRIX-v2.0",
   "generated_at_utc": "2026-11-04T14:35:00Z",
-  "total_equations": 1660,
-  "citable_verified_count": 1334,
+  "total_equations": 1666,
+  "citable_verified_count": 1340,
   "computed_count": 326,
   "inference_quarantined_count": 0,
-  "load_bearing_count": 1660,
+  "load_bearing_count": 1666,
   "categories": {
     "A": "Fluid, Environmental & Aerodynamic Dynamics",
     "B": "Biomechanical & Kinetic Fatigue Translation",
@@ -5236,6 +5236,96 @@
       "rawLogOddsDelta": 0.14,
       "jacobianSensitivity": 1.18,
       "cluster": "optimal_transport",
+      "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
+    },
+    {
+      "id": "EQ-GSI-WP05-005-TIME-SLIPPAGE",
+      "title": "GSI-WP-05 v3.0 Operational Asynchronous Subsystem Clock Velocity & DTW Slippage",
+      "category": "F",
+      "signalFamilyIdx": 223,
+      "equationLatex": "\\phi_i(t) = \\frac{|\\Delta X_i(t)|}{\\text{median}_{\\text{cal}}(|\\Delta X_i|)}, \\quad \\Delta\\phi = \\max_{i\\ne j}|\\bar{\\phi}_i - \\bar{\\phi}_j| + \\text{std}(\\bar{\\phi}), \\quad \\tau_{\\text{DTW}} = \\frac{1}{L}\\sum_{k=1}^L \\frac{|t_k^{(i)}-t_k^{(j)}|}{T}",
+      "verificationStatus": "CITABLE_VERIFIED",
+      "load_bearing": true,
+      "noyes_z_eff": 4.15,
+      "priorWeight": 0.93,
+      "rawLogOddsDelta": 0.14,
+      "jacobianSensitivity": 1.18,
+      "cluster": "conformal_calibration",
+      "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
+    },
+    {
+      "id": "EQ-GSI-WP05-006-CHEN-LEVY-AREA",
+      "title": "Chen (1954) / Lyons (1998) Reparameterization-Invariant Stochastic L\u00e9vy Area",
+      "category": "F",
+      "signalFamilyIdx": 224,
+      "equationLatex": "A_{ij}(0,T) = \\frac{1}{2}\\int_0^T \\left(Z_t^{(i)}\\,dZ_t^{(j)} - Z_t^{(j)}\\,dZ_t^{(i)}\\right) = A_{ij}(\\psi(0),\\psi(T))",
+      "verificationStatus": "CITABLE_VERIFIED",
+      "load_bearing": true,
+      "noyes_z_eff": 4.15,
+      "priorWeight": 0.93,
+      "rawLogOddsDelta": 0.14,
+      "jacobianSensitivity": 1.18,
+      "cluster": "spatiotemporal_graph",
+      "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
+    },
+    {
+      "id": "EQ-GSI-WP05-007-GAUSS-BRAID-SO",
+      "title": "Racorean (2014) / GSI v3.0 Gauss Winding Tensor & Non-Abelian SO(d) Braid Operator",
+      "category": "F",
+      "signalFamilyIdx": 225,
+      "equationLatex": "W_{ij} = \\frac{1}{2\\pi}\\int_0^T \\frac{Z_i\\,dZ_j - Z_j\\,dZ_i}{Z_i^2+Z_j^2+\\varepsilon}, \\quad U_{\\text{braid}} = \\exp\\!\\left(\\sum_{i<j} W_{ij} G_{ij}\\right) \\in SO(d)",
+      "verificationStatus": "CITABLE_VERIFIED",
+      "load_bearing": true,
+      "noyes_z_eff": 4.15,
+      "priorWeight": 0.93,
+      "rawLogOddsDelta": 0.14,
+      "jacobianSensitivity": 1.18,
+      "cluster": "spatiotemporal_graph",
+      "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
+    },
+    {
+      "id": "EQ-GSI-WP05-008-SEIFERT-EPR",
+      "title": "Seifert (2012) / Battle et al. (2016) Broken-Detailed-Balance Irreversible Entropy Production",
+      "category": "F",
+      "signalFamilyIdx": 226,
+      "equationLatex": "\\dot{S}_{\\text{irr}} = \\log\\!\\left(1 + \\frac{1}{T-1}\\|A\\|_F^2 + \\frac{1}{T-1}\\sum_{t=1}^{T-1}\\|\\Delta Z_+(t)\\|_2^2\\right) > 0",
+      "verificationStatus": "CITABLE_VERIFIED",
+      "load_bearing": true,
+      "noyes_z_eff": 4.15,
+      "priorWeight": 0.93,
+      "rawLogOddsDelta": 0.14,
+      "jacobianSensitivity": 1.18,
+      "cluster": "conformal_calibration",
+      "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
+    },
+    {
+      "id": "EQ-GSI-WP05-009-QUANTUM-VN-LAPLACIAN",
+      "title": "De Domenico & Biamonte (2016) PRX Quantum Density Operator & Von Neumann Graph Entropy",
+      "category": "D",
+      "signalFamilyIdx": 151,
+      "equationLatex": "\\rho_\\beta = \\frac{\\exp(-\\beta L_{\\text{norm}})}{\\text{Tr}(\\exp(-\\beta L_{\\text{norm}}))}, \\quad S_{\\text{VN}}(\\rho_\\beta) = -\\text{Tr}(\\rho_\\beta \\ln \\rho_\\beta)",
+      "verificationStatus": "CITABLE_VERIFIED",
+      "load_bearing": true,
+      "noyes_z_eff": 4.15,
+      "priorWeight": 0.93,
+      "rawLogOddsDelta": 0.14,
+      "jacobianSensitivity": 1.18,
+      "cluster": "spatiotemporal_graph",
+      "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
+    },
+    {
+      "id": "EQ-GSI-WP05-010-FTBE-ERGODIC",
+      "title": "Thirumalai-Mountain (1989) Ergodicity Breaking & Finite-Time Braiding Exponent (FTBE)",
+      "category": "F",
+      "signalFamilyIdx": 227,
+      "equationLatex": "\\lambda_{\\text{FTBE}}(T) = \\frac{1}{T}\\ln \\sigma_{\\max}\\!\\left(\\prod_{t=1}^{T-1}\\exp(\\Delta A_t + \\gamma \\Delta S_t)\\right), \\quad \\text{EB} = \\frac{\\text{Var}(\\overline{\\delta^2})}{\\langle\\overline{\\delta^2}\\rangle^2}",
+      "verificationStatus": "CITABLE_VERIFIED",
+      "load_bearing": true,
+      "noyes_z_eff": 4.15,
+      "priorWeight": 0.93,
+      "rawLogOddsDelta": 0.14,
+      "jacobianSensitivity": 1.18,
+      "cluster": "conformal_calibration",
       "source": "docs/engine/research/2026-11-04/GSI-WP-05-WASSERSTEIN-MAHALANOBIS-CONFORMAL-FILTERING.md"
     },
     {
@@ -24919,5 +25009,5 @@
       "source": "docs/props/research/2026-09-17/props-consensus/props-report.md"
     }
   ],
-  "matrix_sha256": "e61f6d198292853d9c02eae1a0d837fe11772b19ca5f5f981ce9b4912b803926"
+  "matrix_sha256": "0e1477dad65badfefa5231bd5fe3815846bde3e66bce9dcd719ea996b276d6d9"
 }

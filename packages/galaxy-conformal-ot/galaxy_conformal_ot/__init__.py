@@ -65,7 +65,26 @@ from .gsi_research_api_wrapper import (
     app as gsi_research_asgi_app,
 )
 
-__version__ = "2.0.0"
+from .quantum_topology_hyper_embedding import (
+    TopologicalManifoldQuantumEmbedding,
+    GSEClinicalEngineV3,
+    GSIBraidedInvariantEngine,
+)
+
+from .quantum_braid_teb import (
+    TimeSlippageMetrics,
+    AsynchronousTimeSlippageEstimator,
+    BraidInvariantSummary,
+    ThermodynamicBraidInvariant,
+    QuantumSpectralSummary,
+    QuantumSpectralTrajectoryLaplacian,
+    PersistentHomologySummary,
+    PersistentHomologyBetti,
+    ErgodicBifurcationSummary,
+    ErgodicBraidBifurcationMonitor,
+)
+
+__version__ = "3.0.0"
 __all__ = [
     "build_context_mask_288",
     "mask_to_words",
@@ -102,4 +121,17 @@ __all__ = [
     "UnifiedHyperloopOrchestrator",
     "evaluate_trajectory_payload",
     "gsi_research_asgi_app",
+    "TopologicalManifoldQuantumEmbedding",
+    "GSEClinicalEngineV3",
+    "GSIBraidedInvariantEngine",
+    "TimeSlippageMetrics",
+    "AsynchronousTimeSlippageEstimator",
+    "BraidInvariantSummary",
+    "ThermodynamicBraidInvariant",
+    "QuantumSpectralSummary",
+    "QuantumSpectralTrajectoryLaplacian",
+    "PersistentHomologySummary",
+    "PersistentHomologyBetti",
+    "ErgodicBifurcationSummary",
+    "ErgodicBraidBifurcationMonitor",
 ]

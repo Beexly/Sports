@@ -1,0 +1,335 @@
+{
+  "institution": "Galaxy Science Institute (Texas Domestic Nonprofit Corp #15043440630001 | IRS EIN 43-2804773)",
+  "benchmark_suite": "GSI-WP-05 v3.0 Falsifiable Three-Pillar Validation (TEB, Quantum Spectral TDA, Persistent Homology, Conformal-OT)",
+  "pillar_1_asynchronous_time_slippage_hypothesis": {
+    "subsystem_velocity_dispersion_phi": {
+      "mean_positive_shock_stays": 5.475607510180511,
+      "mean_negative_survivor_stays": 2.8308481572061117,
+      "welch_t_stat": 1.951219071387625,
+      "welch_p_value": 0.058417101444165204,
+      "mann_whitney_u_p_value": 0.0001705147437850871,
+      "cohens_d_effect_size": 0.4425171037214339,
+      "univariate_roc_auc": 0.6978947368421052,
+      "hypothesis_h1_supported": true
+    },
+    "dtw_temporal_warp_slippage": {
+      "mean_positive_shock_stays": 0.9083126641005524,
+      "mean_negative_survivor_stays": 0.2898024553051152,
+      "welch_t_stat": 2.246334757189091,
+      "welch_p_value": 0.030558010369136045,
+      "mann_whitney_u_p_value": 1.3690779659145814e-07,
+      "cohens_d_effect_size": 0.5093026913426372,
+      "univariate_roc_auc": 0.7839473684210526,
+      "hypothesis_h1_supported": true
+    },
+    "seifert_irreversible_entropy_production": {
+      "mean_positive_shock_stays": 2.8932710081483473,
+      "mean_negative_survivor_stays": 1.4971738802091743,
+      "welch_t_stat": 6.110012382685063,
+      "welch_p_value": 1.1874674393851811e-07,
+      "mann_whitney_u_p_value": 2.5907497019268344e-09,
+      "cohens_d_effect_size": 1.2374865883195245,
+      "univariate_roc_auc": 0.8226315789473684,
+      "hypothesis_h1_supported": true
+    },
+    "chen_levy_area_circulation": {
+      "mean_positive_shock_stays": 2.2687578567791804,
+      "mean_negative_survivor_stays": 0.40423296283924065,
+      "welch_t_stat": 1.9122904627218495,
+      "welch_p_value": 0.06352238545400211,
+      "mann_whitney_u_p_value": 9.387410331765794e-10,
+      "cohens_d_effect_size": 0.43682547657448884,
+      "univariate_roc_auc": 0.8318421052631579,
+      "hypothesis_h1_supported": true
+    }
+  },
+  "pillar_2a_synthetic_braid_invariance_stress_tests": {
+    "monotonic_time_warping_invariance": {
+      "gamma_1.0": {
+        "braid_levy_relative_drift_pct": 0.0,
+        "flat_euclidean_velocity_drift_pct": 0.0
+      },
+      "gamma_1.5": {
+        "braid_levy_relative_drift_pct": 0.029,
+        "flat_euclidean_velocity_drift_pct": 7.44
+      },
+      "gamma_2.0": {
+        "braid_levy_relative_drift_pct": 0.076,
+        "flat_euclidean_velocity_drift_pct": 17.763
+      },
+      "gamma_3.0": {
+        "braid_levy_relative_drift_pct": 0.212,
+        "flat_euclidean_velocity_drift_pct": 37.676
+      }
+    },
+    "irregular_packet_dropout_degradation": {
+      "dropout_0pct": {
+        "braid_levy_mean_drift_pct": 0.0,
+        "flat_velocity_mean_drift_pct": 0.0
+      },
+      "dropout_20pct": {
+        "braid_levy_mean_drift_pct": 0.11,
+        "flat_velocity_mean_drift_pct": 10.03
+      },
+      "dropout_40pct": {
+        "braid_levy_mean_drift_pct": 0.35,
+        "flat_velocity_mean_drift_pct": 16.95
+      },
+      "dropout_60pct": {
+        "braid_levy_mean_drift_pct": 1.2,
+        "flat_velocity_mean_drift_pct": 24.28
+      }
+    },
+    "sensor_noise_snr_boundary": {
+      "noise_sigma_0.05": {
+        "braid_invariant_roc_auc": 1.0
+      },
+      "noise_sigma_0.15": {
+        "braid_invariant_roc_auc": 0.9992
+      },
+      "noise_sigma_0.30": {
+        "braid_invariant_roc_auc": 0.7956
+      },
+      "noise_sigma_0.50": {
+        "braid_invariant_roc_auc": 0.4644
+      }
+    }
+  },
+  "pillar_2b_real_mimic_iv_head_to_head_horizons": {
+    "first_6h": {
+      "n_stays": 136,
+      "n_positives": 38,
+      "v3_heldout_conformal_coverage_90pct_target": 0.84,
+      "models": {
+        "1_v1_baseline_linear": {
+          "roc_auc": 0.6356,
+          "ci95": [
+            0.5348,
+            0.7219
+          ],
+          "lift_over_v1_baseline": 0.0
+        },
+        "2_tda_persistent_homology_betti": {
+          "roc_auc": 0.6375,
+          "ci95": [
+            0.5324,
+            0.7297
+          ],
+          "lift_over_v1_baseline": 0.0019
+        },
+        "3_quantum_tda_spectral_laplacian": {
+          "roc_auc": 0.6796,
+          "ci95": [
+            0.5839,
+            0.7707
+          ],
+          "lift_over_v1_baseline": 0.044
+        },
+        "4_teb_braid_and_time_slippage_alone": {
+          "roc_auc": 0.6834,
+          "ci95": [
+            0.585,
+            0.7743
+          ],
+          "lift_over_v1_baseline": 0.0478
+        },
+        "5_v2_conformal_ot_rff_cone": {
+          "roc_auc": 0.7229,
+          "ci95": [
+            0.6243,
+            0.8225
+          ],
+          "lift_over_v1_baseline": 0.0873
+        },
+        "6_v3_gsi_unified_conformal_ot_quantum_braid": {
+          "roc_auc": 0.7368,
+          "ci95": [
+            0.6291,
+            0.8295
+          ],
+          "lift_over_v1_baseline": 0.1012
+        }
+      }
+    },
+    "first_12h": {
+      "n_stays": 137,
+      "n_positives": 38,
+      "v3_heldout_conformal_coverage_90pct_target": 1.0,
+      "models": {
+        "1_v1_baseline_linear": {
+          "roc_auc": 0.6746,
+          "ci95": [
+            0.5649,
+            0.7749
+          ],
+          "lift_over_v1_baseline": 0.0
+        },
+        "2_tda_persistent_homology_betti": {
+          "roc_auc": 0.6295,
+          "ci95": [
+            0.5121,
+            0.7318
+          ],
+          "lift_over_v1_baseline": -0.0452
+        },
+        "3_quantum_tda_spectral_laplacian": {
+          "roc_auc": 0.748,
+          "ci95": [
+            0.6501,
+            0.8317
+          ],
+          "lift_over_v1_baseline": 0.0734
+        },
+        "4_teb_braid_and_time_slippage_alone": {
+          "roc_auc": 0.7408,
+          "ci95": [
+            0.6432,
+            0.8228
+          ],
+          "lift_over_v1_baseline": 0.0662
+        },
+        "5_v2_conformal_ot_rff_cone": {
+          "roc_auc": 0.794,
+          "ci95": [
+            0.7061,
+            0.867
+          ],
+          "lift_over_v1_baseline": 0.1194
+        },
+        "6_v3_gsi_unified_conformal_ot_quantum_braid": {
+          "roc_auc": 0.8118,
+          "ci95": [
+            0.7289,
+            0.887
+          ],
+          "lift_over_v1_baseline": 0.1372
+        }
+      }
+    },
+    "first_24h": {
+      "n_stays": 138,
+      "n_positives": 38,
+      "v3_heldout_conformal_coverage_90pct_target": 0.84,
+      "models": {
+        "1_v1_baseline_linear": {
+          "roc_auc": 0.7134,
+          "ci95": [
+            0.6103,
+            0.8035
+          ],
+          "lift_over_v1_baseline": 0.0
+        },
+        "2_tda_persistent_homology_betti": {
+          "roc_auc": 0.6545,
+          "ci95": [
+            0.5526,
+            0.7606
+          ],
+          "lift_over_v1_baseline": -0.0589
+        },
+        "3_quantum_tda_spectral_laplacian": {
+          "roc_auc": 0.7895,
+          "ci95": [
+            0.7098,
+            0.8698
+          ],
+          "lift_over_v1_baseline": 0.0761
+        },
+        "4_teb_braid_and_time_slippage_alone": {
+          "roc_auc": 0.7726,
+          "ci95": [
+            0.6812,
+            0.8571
+          ],
+          "lift_over_v1_baseline": 0.0592
+        },
+        "5_v2_conformal_ot_rff_cone": {
+          "roc_auc": 0.8284,
+          "ci95": [
+            0.7455,
+            0.9
+          ],
+          "lift_over_v1_baseline": 0.115
+        },
+        "6_v3_gsi_unified_conformal_ot_quantum_braid": {
+          "roc_auc": 0.8387,
+          "ci95": [
+            0.7584,
+            0.9085
+          ],
+          "lift_over_v1_baseline": 0.1253
+        }
+      }
+    },
+    "full_stay": {
+      "n_stays": 138,
+      "n_positives": 38,
+      "v3_heldout_conformal_coverage_90pct_target": 0.8,
+      "models": {
+        "1_v1_baseline_linear": {
+          "roc_auc": 0.7721,
+          "ci95": [
+            0.6722,
+            0.8452
+          ],
+          "lift_over_v1_baseline": 0.0
+        },
+        "2_tda_persistent_homology_betti": {
+          "roc_auc": 0.7634,
+          "ci95": [
+            0.6697,
+            0.849
+          ],
+          "lift_over_v1_baseline": -0.0087
+        },
+        "3_quantum_tda_spectral_laplacian": {
+          "roc_auc": 0.8034,
+          "ci95": [
+            0.7261,
+            0.8755
+          ],
+          "lift_over_v1_baseline": 0.0313
+        },
+        "4_teb_braid_and_time_slippage_alone": {
+          "roc_auc": 0.8392,
+          "ci95": [
+            0.7598,
+            0.9059
+          ],
+          "lift_over_v1_baseline": 0.0671
+        },
+        "5_v2_conformal_ot_rff_cone": {
+          "roc_auc": 0.8437,
+          "ci95": [
+            0.7643,
+            0.9144
+          ],
+          "lift_over_v1_baseline": 0.0716
+        },
+        "6_v3_gsi_unified_conformal_ot_quantum_braid": {
+          "roc_auc": 0.8545,
+          "ci95": [
+            0.7777,
+            0.9222
+          ],
+          "lift_over_v1_baseline": 0.0824
+        }
+      }
+    }
+  },
+  "pillar_3_ergodicity_breaking_and_lead_time": {
+    "coupled_van_der_pol_hopf_bifurcation": {
+      "n_simulations": 50,
+      "mean_ftbe_stable_regime": 0.0112,
+      "mean_ftbe_pre_collapse_regime": 0.0047,
+      "mean_early_warning_lead_steps_before_scalar_alarm": 58.32,
+      "median_early_warning_lead_steps": 56.5
+    },
+    "real_mimic_iv_shock_stays_lead_time": {
+      "n_evaluated_shock_stays": 38,
+      "mean_early_warning_lead_hours_before_map65_alarm": 7.08,
+      "pct_shock_stays_with_positive_teb_lead_time": 39.5,
+      "mean_ergodicity_breaking_index": 0.689
+    }
+  }
+}
