@@ -310,7 +310,7 @@ def load_stage0_game_roster_allowlist(
 
 def assert_zero_roster_contamination(
     payload_or_text: Any,
-    allowlist: Mapping[str, Any],
+    allowlist: Mapping[str, Any] | None = None,
     context_label: str = "output",
 ) -> None:
     """
@@ -322,8 +322,16 @@ def assert_zero_roster_contamination(
     """
     if isinstance(payload_or_text, str):
         text_lower = payload_or_text.lower()
-        for bad_name, reason in OFF_ROSTER_HALLUCINATION_DENYLIST.items():
-            # Allow mentions only if explicitly labeled as EXCLUDED / NOT ON ROSTER / DENYLIST
+        combined_denylist = dict(OFF_ROSTER_HALLUCINATION_DENYLIST)
+        for default_excl in ("lamar jackson", "tyler huntley", "skylar thompson"):
+            combined_denylist.setdefault(default_excl, "Excluded Week 9 inactive/IR player")
+        if isinstance(allowlist, Mapping):
+            for ep in allowlist.get("excluded_players", []):
+                ep_name = str(ep.get("name") or "").strip().lower()
+                if ep_name:
+                    combined_denylist.setdefault(ep_name, str(ep.get("reason") or "Excluded player"))
+        for bad_name, reason in combined_denylist.items():
+            # Allow mentions only if explicitly labeled as EXCLUDED / NOT ON ROSTER / DENYLIST / IR / OUT FOR SEASON
             idx = 0
             while True:
                 pos = text_lower.find(bad_name, idx)
@@ -332,14 +340,29 @@ def assert_zero_roster_contamination(
                 window = text_lower[max(0, pos - 90): min(len(text_lower), pos + len(bad_name) + 90)]
                 allowed_context = any(
                     marker in window
-                    for marker in ("excluded", "denylist", "not on", "off-roster", "blocked", "ir", "out for season")
+                    for marker in (
+                        "excluded",
+                        "denylist",
+                        "not on",
+                        "off-roster",
+                        "blocked",
+                        "ir",
+                        "out for season",
+                        "inactive",
+                        "thumb surgery",
+                        "turf toe",
+                        "replaced",
+                    )
                 )
                 if not allowed_context:
                     raise Stage0RosterContaminationError(
-                        f"STAGE0_CONTAMINATION in {context_label}: Off-roster name '{bad_name}' found without exclusion context ({reason}). Snippet: {window!r}"
+                        f"STAGE0_CONTAMINATION in {context_label}: Off-roster/excluded name '{bad_name}' found without exclusion context ({reason}). Snippet: {window!r}"
                     )
                 idx = pos + len(bad_name)
         return
+
+    if allowlist is None:
+        allowlist = {}
 
     if isinstance(payload_or_text, Mapping):
         # Check if this mapping represents a player projection row

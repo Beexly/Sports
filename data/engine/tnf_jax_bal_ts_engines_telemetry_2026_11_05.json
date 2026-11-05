@@ -1,0 +1,493 @@
+{
+  "status": "TS_ENGINES_VERIFIED_LIVE",
+  "mcp_cognitive_router": {
+    "thousand_equation_matrix_count": 1666,
+    "context_mask_words": [
+      4095,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "stage_c_selected_count": 25,
+    "stage_d_james_stein_shrinkage": 0.916978,
+    "stage_d_unclamped_log_odds_delta": 1.096888,
+    "stage_d_clamped_log_odds_delta": 0.35,
+    "stage_d_clamped": true,
+    "tau_hat_coach_prior_bonus": 0.0072,
+    "marchenko_pastur_rank_shrinkage": 0.96809,
+    "marchenko_pastur_effective_rank_shrinkage": 0.96809,
+    "lasso_nonzero_count": 24,
+    "peer_product_key_routing": {
+      "selectedProductKeys": [
+        "trench_pressurextwo_high_shell",
+        "trench_pressurexheavy_box_rush"
+      ],
+      "prerouterPrefetchIds": [
+        "prefetch:trench_pressurextwo_high_shell",
+        "prefetch:trench_pressurexheavy_box_rush",
+        "prefetch:backup_qb_funnelxtwo_high_shell"
+      ]
+    },
+    "quad_engine_crosswalk_nodes": 3742,
+    "quad_engine_pressure_hits": 5,
+    "top_5_premises": [
+      {
+        "id": "EQ-SCRIMMAGE-001",
+        "cluster": "scrimmage_gate",
+        "spectralScore": 0.8415,
+        "shrunkLogOddsDelta": -0.370386
+      },
+      {
+        "id": "EQ-CONFORMAL-001",
+        "cluster": "conformal_calibration",
+        "spectralScore": 0.833,
+        "shrunkLogOddsDelta": 0.061107
+      },
+      {
+        "id": "EQ-PYMC-MCMC-LOSS",
+        "cluster": "bayesian_loss",
+        "spectralScore": 0.8245,
+        "shrunkLogOddsDelta": -0.106149
+      },
+      {
+        "id": "EQ-SGP-COPULA",
+        "cluster": "sgp_dependence",
+        "spectralScore": 0.8245,
+        "shrunkLogOddsDelta": 0.145161
+      },
+      {
+        "id": "EQ-WINKS-WR-BLUEPRINT",
+        "cluster": "skill_utilization",
+        "spectralScore": 0.816,
+        "shrunkLogOddsDelta": 0.196417
+      }
+    ]
+  },
+  "master_situational_overlay": {
+    "streams_executed_count": 22,
+    "streams_total_count": 22,
+    "streams_skipped_count": 0,
+    "stream_calls": [
+      {
+        "stream": "13A:runNgsAwsCnnAttentionCoveragePipeline",
+        "called": true,
+        "detail": "2 frames"
+      },
+      {
+        "stream": "13B:computeLeverageAdjustedEpa",
+        "called": true,
+        "detail": "situational play supplied"
+      },
+      {
+        "stream": "13B:evaluateDecisionBranchWp",
+        "called": true,
+        "detail": "3 branches"
+      },
+      {
+        "stream": "14B:computeTackleProbability",
+        "called": true,
+        "detail": "20 features"
+      },
+      {
+        "stream": "14B:computeClobMicroPrice",
+        "called": true,
+        "detail": "2 bids / 2 asks"
+      },
+      {
+        "stream": "14C:filterKnownAt",
+        "called": true,
+        "detail": "admitted 3 of 3 records with knownAt <= 2026-11-05T19:30:00Z"
+      },
+      {
+        "stream": "12B:computeQbEpaGiniAndVolOe",
+        "called": true,
+        "detail": "12 dropbacks"
+      },
+      {
+        "stream": "12C:estimateMultilevelTeamEpaAbility",
+        "called": true,
+        "detail": "6 team-metrics"
+      },
+      {
+        "stream": "12D:evaluateDefenseAgainstWr1",
+        "called": true,
+        "detail": "68 WR1 targets"
+      },
+      {
+        "stream": "14D:bayesianReverseTokenLogitUpdate",
+        "called": true,
+        "detail": "4 tokens"
+      },
+      {
+        "stream": "8:validateFeatureAgainstMisleadingStats",
+        "called": true,
+        "detail": "accepted"
+      },
+      {
+        "stream": "15A:evaluateBelichickTenMetrics",
+        "called": true,
+        "detail": "10 Belichick situational metrics evaluated"
+      },
+      {
+        "stream": "15B:computeCatchableBallAndPlacementEdge",
+        "called": true,
+        "detail": "FTN ball placement evaluated"
+      },
+      {
+        "stream": "15C:evaluateTargetFunnelMatchup",
+        "called": true
+      },
+      {
+        "stream": "15D:computeRushConceptZoneGapMatchup",
+        "called": true,
+        "detail": "undefined yds delta"
+      },
+      {
+        "stream": "15E:evaluateConformalSelectiveAbstention",
+        "called": true
+      },
+      {
+        "stream": "15F:computeBorghesiWeatherAndRosenQbBackupTransition",
+        "called": true,
+        "detail": "weather/QB prior evaluated"
+      },
+      {
+        "stream": "15G:detectKatsMarketCusumAndHarmonicRegime",
+        "called": true,
+        "detail": "drift=undefined"
+      },
+      {
+        "stream": "0:stage0RosterGate",
+        "called": true,
+        "detail": "week 9 verified (2026-11-04)"
+      },
+      {
+        "stream": "15H:computeTebAvalancheBraidOverlay",
+        "called": true,
+        "detail": "RUNAWAY_POCKET_COLLAPSE_AVALANCHE"
+      },
+      {
+        "stream": "15I:evaluateZeroOrphanExpectedMetricsOverlay",
+        "called": true,
+        "detail": "77 modules / 40 catalog signals"
+      },
+      {
+        "stream": "14E:emitMindFeedRecord",
+        "called": true,
+        "detail": "2549 bytes to C:\\c\\wt-week8-forensic\\data\\mind_staging\\master_aggregator_tnf_jax_bal_2026_11_05.jsonl"
+      }
+    ],
+    "orthogonalization": {
+      "totalProbabilityDelta": 0.0005700117875824275,
+      "cappedDeltaLogOdds": 0.0027598938616422153,
+      "rawUnshrunkDelta": 0.011,
+      "shrunkUncappedDelta": 0.0005700117875824275,
+      "shrunkUnweightedDelta": 0.0028156657400234568,
+      "capApplied": false,
+      "familyResiduals": {
+        "pressure": 0.030930799999999998,
+        "weather": -0.0035015999999999992,
+        "restFatigue": -0.019842399999999996,
+        "coveragePersonnel": 0.03384879999999999,
+        "qbSkillScript": -0.042602799999999996,
+        "marketMicrostructure": 0.0075867999999999994
+      },
+      "familyRawDeltas": {
+        "pressure": 0.053000000000000005,
+        "weather": -0.006,
+        "restFatigue": -0.034,
+        "coveragePersonnel": 0.057999999999999996,
+        "qbSkillScript": -0.07300000000000001,
+        "marketMicrostructure": 0.013000000000000001
+      },
+      "familyWhitenedResiduals": {
+        "pressure": 2.0635824795081334,
+        "weather": -0.3003324158810129,
+        "restFatigue": -1.5802838855656989,
+        "coveragePersonnel": 2.3010706608398195,
+        "qbSkillScript": -2.9169341036630043,
+        "marketMicrostructure": 0.60884396602134
+      },
+      "correlationMatrixSource": "default",
+      "withinFamilyShrinkFactors": {
+        "pressure": 0.7071067811865475,
+        "weather": 0.8164965809277261,
+        "restFatigue": 0.8164965809277261,
+        "coveragePersonnel": 0.7071067811865475,
+        "qbSkillScript": 0.7071067811865475,
+        "marketMicrostructure": 0.8164965809277261
+      },
+      "precisionDiagonalWeights": {
+        "pressure": 8910.719317623063,
+        "weather": 9804.86958485001,
+        "restFatigue": 9262.377626297843,
+        "coveragePersonnel": 9412.021139803164,
+        "qbSkillScript": 8911.038053666845,
+        "marketMicrostructure": 9569.709244982052
+      },
+      "normalizedWeights": {
+        "pressure": 0.15560567863803343,
+        "weather": 0.1794356862435905,
+        "restFatigue": 0.16629478343184764,
+        "coveragePersonnel": 0.16644736822124417,
+        "qbSkillScript": 0.15605791446135842,
+        "marketMicrostructure": 0.17615856900392582
+      },
+      "marketAnchorProb": 0.7082,
+      "regularizationLambda": 0.0001,
+      "notes": [
+        "market anchor 0.7082 absorbs 0.4164 of each raw family delta",
+        "within-family rho=0.5; regularization lambda=0.0001"
+      ]
+    },
+    "x_situational_80_records_evaluated": 80,
+    "zero_orphan_wired_modules": 77,
+    "situational_expected_metrics_catalog_count": 40,
+    "zero_orphan_family_adjustments": {
+      "pressure": -0.0194,
+      "coveragePersonnel": 0.0118,
+      "qbSkillScript": -0.0013,
+      "restFatigue": 0.0042
+    },
+    "teb_pocket_regime": "RUNAWAY_POCKET_COLLAPSE_AVALANCHE",
+    "target_funnel_classification": "RB_CHECKDOWN_FUNNEL",
+    "rush_concept_adjustment_yds": 5.33,
+    "conformal_abstention_decision": "ABSTAIN_CONFORMAL",
+    "kats_cusum_drift_detected": false,
+    "stage0_verified": {
+      "week": 9,
+      "asOf": "2026-11-04",
+      "candidateCount": 1323
+    },
+    "mind_feed_emission": {
+      "feedPath": "C:\\c\\wt-week8-forensic\\data\\mind_staging\\master_aggregator_tnf_jax_bal_2026_11_05.jsonl",
+      "lineBytes": 2549,
+      "inputHash": "8927a3472d71a921f2cfbfacfe115a5187e368bf4669ae713366f6ea1d7fac77",
+      "streamId": "stream14e:master-situational-reasoning",
+      "scrubbed": false
+    }
+  },
+  "master_situational_reasoning_aggregator": {
+    "streams_executed_count": 22,
+    "streams_total_count": 22,
+    "streams_skipped_count": 0,
+    "stream15i_zero_orphan_modules_evaluated": 77,
+    "stream15i_catalog_signals_evaluated": 51,
+    "situational_expected_metrics_catalog_descriptors": 40
+  },
+  "x_situational_80_rules": {
+    "total_rules": 80,
+    "evaluated_count": 80
+  },
+  "wireable_dispatch_registry": {
+    "wireable_module_ids_count": 173,
+    "registered_model_ids_count": 196,
+    "total_registered_models_current": 200,
+    "wireable_now_count": 182
+  },
+  "signals_and_hb_props": {
+    "short_week_road_deficit": {
+      "restDifferential": 0,
+      "acuteTravelDeficit": true,
+      "spreadPointAdjustment": -1.75,
+      "fourthQuarterFatigueFactor": 1,
+      "confidence": 0.78,
+      "explanation": "Road team on short rest (4d vs 4d, 680mi travel) incurs -1.75 pt situational deficit with 0% Q4 fatigue elevation."
+    },
+    "backup_qb_rb_funnel": {
+      "checkdownFunnelActive": true,
+      "targetShareMultiplier": 1.29,
+      "adjustedTargetShare": 0.1285,
+      "adjustedAdot": 1.5,
+      "receptionsProjectionMultiplier": 1.24,
+      "targetFunnelCategory": "HIGH_VOLUME_BENEFICIARY"
+    },
+    "backup_qb_te_funnel": {
+      "checkdownFunnelActive": true,
+      "targetShareMultiplier": 1.18,
+      "adjustedTargetShare": 0.2478,
+      "adjustedAdot": 7.6,
+      "receptionsProjectionMultiplier": 1.15,
+      "targetFunnelCategory": "MODERATE_BENEFICIARY"
+    },
+    "backup_qb_deep_wr_funnel": {
+      "checkdownFunnelActive": true,
+      "targetShareMultiplier": 0.73,
+      "adjustedTargetShare": 0.1314,
+      "adjustedAdot": 10.8,
+      "receptionsProjectionMultiplier": 0.69,
+      "targetFunnelCategory": "SEVERE_DECAY"
+    },
+    "henry_contract_incentive": {
+      "incentiveProximityRatio": 0.729,
+      "neededPerGame": 36.1,
+      "incentiveAttainability": "ACHIEVABLE",
+      "touchPriorityBoostMultiplier": 1.06,
+      "projectedTargetShareDelta": 1.1,
+      "financialUrgencyScore": 33
+    },
+    "andrews_contract_incentive": {
+      "incentiveProximityRatio": 0.567,
+      "neededPerGame": 2.9,
+      "incentiveAttainability": "ACHIEVABLE",
+      "touchPriorityBoostMultiplier": 1.06,
+      "projectedTargetShareDelta": 1.1,
+      "financialUrgencyScore": 51
+    },
+    "hb_wr_receptions_prior": {
+      "alpha": 3.5473115556681005,
+      "beta": 0.9690216932556763
+    },
+    "hb_btj_rec_posterior": {
+      "mean": 5.301281809968378,
+      "alpha": 47.5473115556681,
+      "beta": 8.969021693255677
+    },
+    "hb_btj_prob_over_4_5": 0.5995,
+    "hb_btj_prob_over_58_5_yds": 0.5125,
+    "hb_shrinkage_rows": 7
+  },
+  "signals_and_edge_lab": {
+    "short_week_road_deficit": {
+      "restDifferential": 0,
+      "acuteTravelDeficit": true,
+      "spreadPointAdjustment": -1.75,
+      "fourthQuarterFatigueFactor": 1,
+      "confidence": 0.78,
+      "explanation": "Road team on short rest (4d vs 4d, 680mi travel) incurs -1.75 pt situational deficit with 0% Q4 fatigue elevation."
+    },
+    "backup_qb_rb_funnel": {
+      "checkdownFunnelActive": true,
+      "targetShareMultiplier": 1.29,
+      "adjustedTargetShare": 0.1285,
+      "adjustedAdot": 1.5,
+      "receptionsProjectionMultiplier": 1.24,
+      "targetFunnelCategory": "HIGH_VOLUME_BENEFICIARY"
+    },
+    "backup_qb_te_funnel": {
+      "checkdownFunnelActive": true,
+      "targetShareMultiplier": 1.18,
+      "adjustedTargetShare": 0.2478,
+      "adjustedAdot": 7.6,
+      "receptionsProjectionMultiplier": 1.15,
+      "targetFunnelCategory": "MODERATE_BENEFICIARY"
+    },
+    "backup_qb_deep_wr_funnel": {
+      "checkdownFunnelActive": true,
+      "targetShareMultiplier": 0.73,
+      "adjustedTargetShare": 0.1314,
+      "adjustedAdot": 10.8,
+      "receptionsProjectionMultiplier": 0.69,
+      "targetFunnelCategory": "SEVERE_DECAY"
+    },
+    "henry_contract_incentive": {
+      "incentiveProximityRatio": 0.729,
+      "neededPerGame": 36.1,
+      "incentiveAttainability": "ACHIEVABLE",
+      "touchPriorityBoostMultiplier": 1.06,
+      "projectedTargetShareDelta": 1.1,
+      "financialUrgencyScore": 33
+    },
+    "andrews_contract_incentive": {
+      "incentiveProximityRatio": 0.567,
+      "neededPerGame": 2.9,
+      "incentiveAttainability": "ACHIEVABLE",
+      "touchPriorityBoostMultiplier": 1.06,
+      "projectedTargetShareDelta": 1.1,
+      "financialUrgencyScore": 51
+    },
+    "hb_wr_receptions_prior": {
+      "alpha": 3.5473115556681005,
+      "beta": 0.9690216932556763
+    },
+    "hb_btj_rec_posterior": {
+      "mean": 5.301281809968378,
+      "alpha": 47.5473115556681,
+      "beta": 8.969021693255677
+    },
+    "hb_btj_prob_over_4_5": 0.5995,
+    "hb_btj_prob_over_58_5_yds": 0.5125,
+    "hb_shrinkage_rows": 7
+  },
+  "calibration_sgp_and_gates": {
+    "market_family_calibration": {
+      "MONEYLINE": {
+        "calibratedProb": 0.6678,
+        "convictionScore": 67,
+        "headMethod": "platt_beta_conformal",
+        "displayFormat": "conviction_and_calibrated_prob"
+      },
+      "SPREAD": {
+        "calibratedProb": 0.4829,
+        "convictionScore": 52,
+        "headMethod": "fwl_residualized_cqr",
+        "displayFormat": "conviction_rating_only_no_fake_percent"
+      },
+      "TOTAL": {
+        "calibratedProb": 0.4798,
+        "convictionScore": 52,
+        "headMethod": "poisson_normal_tail_cqr",
+        "displayFormat": "conviction_rating_only_no_fake_percent"
+      },
+      "PLAYER_PROP": {
+        "calibratedProb": 0.56,
+        "convictionScore": 56,
+        "headMethod": "empirical_bayes_cqr_scrimmage_gated",
+        "displayFormat": "conviction_and_cqr_interval"
+      },
+      "DERIVATIVE_1Q_1H": {
+        "calibratedProb": 0.4968,
+        "convictionScore": 50,
+        "headMethod": "sportsbook_alt_ladder_kernel",
+        "displayFormat": "conviction_rating"
+      }
+    },
+    "sgp_clayton_copula": {
+      "qb_wr_joint": 0.3765,
+      "qb_wr_lift_pp": 7.41,
+      "three_leg_joint": 0.216
+    },
+    "parlay_conjunction_gate_check": {
+      "publishAllowed": false,
+      "decision": "PASS",
+      "reason": "PARLAY_CONTAINS_PASS_LEG",
+      "wilsonLower90": 0
+    },
+    "jev_publication_allowed": true
+  },
+  "prediction_engine_registry": {
+    "total_registered_models": 200,
+    "wireable_now_count": 182,
+    "wireable_dispatch_count": 173,
+    "wireable_module_names_sample": [
+      "0803-1364v2-generalized-kelly-solver",
+      "0903-2910v1-ou-line-mean-reversion-sizing",
+      "1011-3177v3-data-replication-abstention",
+      "1106-4509-ml-market-pooling",
+      "1109-2825v2-scoring-random-walk",
+      "1310-6998v1-twitter-volume-momentum",
+      "1403-7642-college-ranking-sensitivity",
+      "1503-07642-ordinal-structure-select",
+      "1505-01147v2-local-matrix-completion",
+      "1612-00796v2-ewc-feature-anchoring",
+      "1703-03400v3-maml-rookie-adapter",
+      "1705-03918-two-version-causal",
+      "1707-06887v1-distributional-slate-rl",
+      "1708-02715v1-order-flow-resiliency",
+      "1710-01787-kelly-saturation-hardening"
+    ],
+    "by_tier": {
+      "PURE_MATH": 156,
+      "DATA_TRACKING": 2,
+      "SELF_CONTAINED": 26,
+      "DATA_MODEL_ARTIFACT": 5,
+      "DATA_SLATE": 6,
+      "DATA_GAME": 5
+    }
+  }
+}

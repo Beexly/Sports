@@ -1,0 +1,838 @@
+{
+  "schema_version": "gse_python_intelligence_and_datasets_v2.0",
+  "generated_at_utc": "2026-11-05T20:39:19.625402+00:00",
+  "datasets_connected_count": 33,
+  "datasets_report": {
+    "ftn_charting_2026": {
+      "rows": 18019,
+      "cols": 29,
+      "teams": {
+        "JAX": {
+          "off_plays_charted": 477,
+          "motion_rate": 0.5031,
+          "play_action_rate": 0.1048,
+          "rpo_rate": 0.0063,
+          "screen_rate": 0.0398,
+          "no_huddle_rate": 0.0294,
+          "catchable_ball_rate": 0.2977,
+          "int_worthy_rate": 0.0147,
+          "def_blitz_rate_ftn": 0.1659,
+          "def_mean_box_defenders": 5.108
+        },
+        "BAL": {
+          "off_plays_charted": 578,
+          "motion_rate": 0.5,
+          "play_action_rate": 0.1159,
+          "rpo_rate": 0.0311,
+          "screen_rate": 0.0311,
+          "no_huddle_rate": 0.0329,
+          "catchable_ball_rate": 0.2785,
+          "int_worthy_rate": 0.0121,
+          "def_blitz_rate_ftn": 0.1581,
+          "def_mean_box_defenders": 4.985
+        }
+      }
+    },
+    "advstats_season_pass": {
+      "rows": 848,
+      "cols": 37,
+      "jax_bal_rows": 50
+    },
+    "advstats_season_rush": {
+      "rows": 2996,
+      "cols": 19,
+      "jax_bal_rows": 174
+    },
+    "advstats_season_rec": {
+      "rows": 4476,
+      "cols": 25,
+      "jax_bal_rows": 262
+    },
+    "advstats_season_def": {
+      "rows": 8146,
+      "cols": 30,
+      "jax_bal_rows": 498
+    },
+    "pennydata_2026_player_week_stats": {
+      "rows": 7447,
+      "cols": 150,
+      "jax_bal_player_weeks": 449,
+      "top_sack_producers": [
+        {
+          "player_display_name": "Tavius Robinson",
+          "team": "BAL",
+          "def_sacks": 3.5,
+          "def_tackles_solo": 9,
+          "def_tackle_assists": 9
+        },
+        {
+          "player_display_name": "Mike Green",
+          "team": "BAL",
+          "def_sacks": 3.0,
+          "def_tackles_solo": 9,
+          "def_tackle_assists": 3
+        },
+        {
+          "player_display_name": "Travon Walker",
+          "team": "JAX",
+          "def_sacks": 2.0,
+          "def_tackles_solo": 5,
+          "def_tackle_assists": 10
+        },
+        {
+          "player_display_name": "Roquan Smith",
+          "team": "BAL",
+          "def_sacks": 2.0,
+          "def_tackles_solo": 24,
+          "def_tackle_assists": 31
+        },
+        {
+          "player_display_name": "Trey Hendrickson",
+          "team": "BAL",
+          "def_sacks": 2.0,
+          "def_tackles_solo": 5,
+          "def_tackle_assists": 0
+        },
+        {
+          "player_display_name": "Josh Hines-Allen",
+          "team": "JAX",
+          "def_sacks": 1.5,
+          "def_tackles_solo": 10,
+          "def_tackle_assists": 10
+        },
+        {
+          "player_display_name": "Ethan Burke",
+          "team": "BAL",
+          "def_sacks": 1.0,
+          "def_tackles_solo": 4,
+          "def_tackle_assists": 4
+        },
+        {
+          "player_display_name": "Keyon Martin",
+          "team": "BAL",
+          "def_sacks": 1.0,
+          "def_tackles_solo": 5,
+          "def_tackle_assists": 1
+        }
+      ]
+    },
+    "hf_2025_2026_zone1_game_outcomes": {
+      "rows": 391,
+      "cols": 25
+    },
+    "hf_4th_downs_1999_2025_zone1": {
+      "rows": 113156,
+      "cols": 79
+    },
+    "hf_bdb2025_plays_presnap_zone1": {
+      "rows": 16124,
+      "cols": 50
+    },
+    "hf_karmane_rest_travel_zone1": {
+      "rows": 727,
+      "cols": 67
+    },
+    "hf_karmane_td_usage_zone1": {
+      "rows": 3932,
+      "cols": 117
+    },
+    "hf_karmane_weather_qb_zone1": {
+      "rows": 696,
+      "cols": 112
+    },
+    "hf_mikeysports_2025_depth_charts_zone1": {
+      "rows": 37312,
+      "cols": 26
+    },
+    "hf_olivier_zone1_team_stats": {
+      "rows": 26169,
+      "cols": 25
+    },
+    "hf_sentiment_twitter_zone2": {
+      "rows": 5171,
+      "cols": 17
+    },
+    "hf_ypolatog_contracts_500_zone1": {
+      "rows": 1000,
+      "cols": 12
+    },
+    "kaggle_bdb2027_public_enrichment_zone1": {
+      "rows": 4161,
+      "cols": 76
+    },
+    "kaggle_keonim_2010_2026_scores_zone1": {
+      "rows": 4162,
+      "cols": 16
+    },
+    "kaggle_qb_shoulder_injuries_zone1": {
+      "rows": 19,
+      "cols": 7
+    },
+    "kaggle_sumersupplement_bdb26_zone1": {
+      "rows": 173150,
+      "cols": 7
+    },
+    "kaggle_tobycrabtree_scores_weather_zone1": {
+      "rows": 14371,
+      "cols": 14
+    },
+    "step_n_market_11_parquets": {
+      "hf_4th_downs_market_lines_step_n": {
+        "rows": 113156,
+        "cols": 9
+      },
+      "hf_flybrain_nfl_polymarket_step_n": {
+        "rows": 513,
+        "cols": 27
+      },
+      "hf_footalytics_settled_predictions_step_n": {
+        "rows": 127,
+        "cols": 12
+      },
+      "hf_karmane_rest_market_step_n": {
+        "rows": 727,
+        "cols": 23
+      },
+      "hf_karmane_td_market_step_n": {
+        "rows": 3932,
+        "cols": 15
+      },
+      "hf_karmane_weather_market_step_n": {
+        "rows": 696,
+        "cols": 12
+      },
+      "hf_tipsaudit_closing_odds_margins_step_n": {
+        "rows": 7390,
+        "cols": 32
+      },
+      "kaggle_tobycrabtree_betting_step_n": {
+        "rows": 14371,
+        "cols": 8
+      },
+      "minmaxxxer_nfl_closing_lines_2025_step_n": {
+        "rows": 285,
+        "cols": 15
+      },
+      "minmaxxxer_nfl_odds_2026_step_n": {
+        "rows": 106,
+        "cols": 15
+      },
+      "olivier_timestamped_multi_market_odds": {
+        "rows": 26169,
+        "cols": 13
+      }
+    },
+    "auxiliary_wired_stores": {
+      "statking_active_metrics_len": 4,
+      "snap_counts_2026_rows": 9888,
+      "dk_showdown_salaries_rows": 104,
+      "week9_dvp_mechanism_vault_keys": [
+        "season",
+        "week",
+        "type",
+        "teams"
+      ]
+    }
+  },
+  "coaching_deep_70_functions": {
+    "biomech_kinetic_translation": {
+      "inertial_dissipation_ratio": 11.059891135557095,
+      "wavefront_burst_threshold": 370.43636363636364,
+      "elastic_separation_coeff": 2.0436949216231244,
+      "anisotropic_coverage_diffusion": [
+        [
+          17.66277023629965,
+          2.895362322214993
+        ],
+        [
+          2.895362322214993,
+          1.685988944701753
+        ]
+      ],
+      "secondary_coverage_pde_residual": 3.014969,
+      "pocket_hydrodynamic_ns_residual": 1008776.0409487301,
+      "biomech_joint_torque_caps": {
+        "tau_hip_nm": 0.45277135724136897,
+        "tau_knee_nm": 1.9301196367138396,
+        "tau_ankle_nm": 0.028723005269929956,
+        "total_torque_cap_nm": 2.4116139992251386,
+        "max_kinetic_accel_mps2": 0.021216093690729437
+      },
+      "qb_kinetic_release_layer": {
+        "release_time_s": 0.39285656989214185,
+        "arm_slot_deg": 53.111621266171724,
+        "platform_stability": 0.9593009464285336,
+        "rusher_distance_m": 2.83019433961698
+      },
+      "cleat_turf_viscoelastic_slip": 0.023878703438451776,
+      "photometric_ocular_latency_ms": 8.882113547428222,
+      "barometric_ballistic_aero_drag": {
+        "drag_force_vec_n": "[-1.24665223  0.08130341 -0.44445862]",
+        "drag_magnitude_n": 1.326007348738906,
+        "magnus_lift_n": 0.0283930874422151,
+        "net_deceleration_mps2": 3.1200172911503667,
+        "relative_airspeed_mps": 24.464055264816583
+      },
+      "metabolic_continuity_loss": 0.7097292687420095
+    },
+    "trench_pocket_physics": {
+      "cox_weibull_block_survival": {
+        "t_pass_sec": 2.65,
+        "risk_multiplier": 5.7374,
+        "survival_at_2_5s": 0.0328,
+        "survival_at_throw": 0.021,
+        "block_efficiency_integral_sec": 1.2272,
+        "normalized_block_efficiency": 0.4631
+      },
+      "polygon_area_shoelace": 28.75,
+      "strain_rate": {
+        "min_distance_yds": 4.219,
+        "strain_series": [
+          0.0,
+          0.8454,
+          1.1222,
+          1.2605
+        ],
+        "peak_strain": 1.2605,
+        "mean_strain": 1.076
+      },
+      "matchup_adjusted_ol_logit_survival": {
+        "historical_base_pbwr": 0.62,
+        "double_team_rate": 0.24,
+        "island_true_survival": 0.6193,
+        "opp_rusher_alpha": 0.35,
+        "matchup_adjusted_survival": 0.5341,
+        "stability_drop": 0.0859
+      },
+      "ruscio_brady_modified_pfr_wp": 0.6984,
+      "p_adic_coaching_tree_similarity": {
+        "p_adic_distance": 0.111111,
+        "ultrametric_similarity": 0.888889
+      },
+      "weak_link_ol_efficiency": {
+        "arithmetic_mean": 71.52,
+        "min_starter_survival": 64.8,
+        "naive_am_power_prob": 1871274626.9875,
+        "true_weak_link_product_prob": 0.995,
+        "am_gm_fragility_penalty": 1871274625.9925,
+        "efficiency": 0.995
+      },
+      "pipping_adjusted_ol_efficiency": {
+        "weak_link": 0.995,
+        "pipping_survival": 0.0
+      },
+      "ruscio_pressure_win_probability": {
+        "win_probability": 0.4042,
+        "tpi": 0.58,
+        "base_wp": 0.7082
+      },
+      "fourth_down_uncertainty_gate": {
+        "suppress": true,
+        "lo": 0.0,
+        "hi": 0.0,
+        "reason": "sample_too_thin"
+      },
+      "pass_set_depth_attainment": {
+        "attainment": 0.4,
+        "n": 5.0,
+        "expected_depth_yds": 3.0,
+        "play_level_only_rmse_yds": 1.38
+      },
+      "weak_link_am_gm_clean_pocket_prob": {
+        "arithmetic_mean": 0.896,
+        "min_starter_survival": 0.86,
+        "naive_am_power_prob": 0.5775,
+        "true_weak_link_product_prob": 0.5764,
+        "am_gm_fragility_penalty": 0.0011
+      },
+      "sharp_pass_rush_protection_adj": {
+        "raw_strain_rate": 0.34,
+        "protection_attenuation_factor": 0.7653,
+        "effective_strain_rate": 0.2602,
+        "chip_route_delay_penalty": 0.0456
+      },
+      "pocket_voronoi_area": {
+        "frames": 1,
+        "blindside_area_yd2": 6.0,
+        "center_area_yd2": 5.2,
+        "total_area_yd2": 16.0,
+        "blindside_bin_indices": [
+          2,
+          3
+        ],
+        "center_bin_indices": [
+          0,
+          1
+        ],
+        "n_bins": 6,
+        "note": "aggregation only; bin areas must come from tracking data"
+      }
+    },
+    "pm_sweep_convergence_kernels": {
+      "qb_breakdown_convergence": {
+        "qb_name": "UNSPECIFIED",
+        "ol_pressure_weight": 0.72,
+        "qb_p2s_weight": 0.68,
+        "attributed_pressure_rate": 0.2632,
+        "attributed_p2s_rate": 0.18080000000000002,
+        "ol_pressure_attribution_share": 0.7659574468085106,
+        "qb_sack_attribution_share": 0.7522123893805309,
+        "screen_filter_multiplier": 1.1363636363636365,
+        "timo_benchmark_inflation_ratio": 1.3609467455621302,
+        "non_screen_pressure_rate": 0.29909090909090913,
+        "clean_pocket_survival": 0.4628515316646209,
+        "instantaneous_pressure_hazard": 0.685727278158223,
+        "ngs_continuous_pressure_prob": 0.5676040991189111,
+        "scrack_signed": -0.12499999999999993,
+        "scrack_index": 0.43750000000000006,
+        "pfr_throwaway_rate": 0.058,
+        "non_screen_throwaway_rate": 0.06590909090909092,
+        "expected_sack_prob_per_dropback": 0.10647117691272535
+      },
+      "presnap_coverage_shell": {
+        "shell_probabilities": {
+          "Cover_1_Man": 0.20124771849350945,
+          "Cover_3_Zone": 0.3488975291806078,
+          "Quarters_2High": 0.28346713597882406,
+          "Cover_2_Man": 0.08703122314230051,
+          "Zero_Sim_Blitz": 0.07935639320475817
+        },
+        "predicted_primary_shell": "Cover_3_Zone",
+        "man_coverage_prob": 0.32795713823818906,
+        "zone_coverage_prob": 0.6720428617618109,
+        "primary_cb_name": null,
+        "is_pff_lockdown_man_cb": false,
+        "cb_man_passer_rating_allowed": null,
+        "man_target_suppression_mult": 1.0,
+        "man_yprr_suppression_mult": 1.0,
+        "jsn_dominance_multiplier": 1.0,
+        "blended_receiving_multiplier": 1.0,
+        "is_rams_undervaluation_spot": false,
+        "rams_pythagorean_win_gap": 0.0
+      },
+      "hierarchical_fg_make_prob_48yds": {
+        "kick_distance_yds": 48.0,
+        "fg_make_prob": 0.7439202989561114,
+        "baseline_neutral_prob": 0.7439202989561114,
+        "air_density_ratio": 1.0,
+        "drag_reduction_frac": 0.0,
+        "altitude_logit_boost": 0.0,
+        "wind_logit_penalty": -0.0,
+        "temp_logit_penalty": -0.0,
+        "kicker_eb_logit_effect": 0.0
+      },
+      "coach_fourth_down_fork": {
+        "prescriptive_optimal_action": "GO",
+        "wp_max": 0.58,
+        "action_predicted": "FG",
+        "descriptive_action_probs": {
+          "GO": 0.34540727865753784,
+          "FG": 0.40745734753643126,
+          "PUNT": 0.2471353738060309
+        },
+        "coach_go_prob": 0.34540727865753784,
+        "expected_wp_given_coach": 0.5283676680291507,
+        "wp_gap": 0.051632331970849266,
+        "empirical_go_compliance_anchor": 0.29,
+        "coach_tau_hat": 0.0,
+        "tau_walkforward_acc_delta_benchmark": 0.111585
+      },
+      "eb_int_catch_rate_shrinkage": {
+        "raw_int_catch_rate": 0.42857142857142855,
+        "eb_shrunk_int_catch_rate": 0.510077519379845,
+        "shrinkage_weight_on_prior": 0.8914728682170543,
+        "expected_rate_regression_delta": 0.08150609080841648,
+        "league_prior_rate": 0.52,
+        "prior_pseudo_trials": 115.0
+      },
+      "multilevel_snap_timing_cadence": {
+        "raw_qb_cadence_sd_sec": 0.34,
+        "effective_cadence_sd_sec": 0.32913843175217816,
+        "c248_getoff_delta_sec": -0.003041239109390122,
+        "adjusted_edge_getoff_sec": 0.8269587608906098,
+        "pressure_disruption_mult": 1.0044097967086156,
+        "false_start_prob_per_snap": 0.0152,
+        "is_silent_road_count": false
+      },
+      "trench_stuff_fractional_tackles": {
+        "n_carries": 7,
+        "stuff_rate": 0.2857142857142857,
+        "explosive_run_rate": 0.14285714285714285,
+        "mean_yards_per_carry": 4.428571428571429,
+        "initial_momentum_kg_mps": 666.4,
+        "momentum_halted_per_defender": "[372.4 215.6  78.4]",
+        "fractional_tackle_credits": "[0.55882353 0.32352941 0.11764706]",
+        "fractional_tackle_sum": 1.0,
+        "residual_forward_momentum_kg_mps": 0.0,
+        "def_team_missed_tackles_2026": 33,
+        "missed_tackle_yac_multiplier": 1.0,
+        "qualified_rb_leaderboard_benchmark_count": 39
+      },
+      "wr_360_all_metrics": {
+        "projected_team_dropbacks": 34.650000000000006,
+        "pace_factor": 1.0,
+        "effective_pass_rate": 0.55,
+        "script_pass_delta": -0.0,
+        "motion_pa_synergy": 1.0,
+        "predictability_tax": 1.0,
+        "two_clocks_survival": 1.053882105728816,
+        "funnel_wr_mult": 1.002,
+        "yac_tackling_mult": 1.0,
+        "env_yards_delta": 0.0,
+        "wopr": 0.599,
+        "blended_yprr": 1.992,
+        "sep_open_mult": 1.0,
+        "cross_speed_mult": 1.0036,
+        "dvoa_mult": 1.011,
+        "dispersion_mult": 1.0,
+        "xfp_regression_delta": 0.0,
+        "composite_wr_multiplier": 1.071449139240251,
+        "adjusted_rec_yards": 64.28694835441506,
+        "adjusted_receptions": 5.01,
+        "route_participation_pct": 0.9,
+        "recent_snap_pct": 0.85,
+        "adot_yds": 10.5
+      }
+    },
+    "situational_wp_and_cognitive": {
+      "timeout_preserve_vs_ice": {
+        "preserve_timeout_wp_value": 0.054,
+        "ice_kicker_make_prob_delta": -0.004,
+        "net_preserve_advantage_wp": 0.0526,
+        "recommendation": "PRESERVE_TIMEOUT"
+      },
+      "coach_challenge_ev": {
+        "overturn_prob": 0.31,
+        "timeout_shadow_cost_wp": 0.024,
+        "expected_net_wp": 0.0268,
+        "should_challenge": true
+      },
+      "prevent_defense_regime": {
+        "prevent_active": false,
+        "underneath_completion_lift": 0.0,
+        "deep_explosive_suppression": 0.0,
+        "trailing_pass_rate_lift": 0.0
+      },
+      "end_of_half_clock_boundary": {
+        "double_dip_middle_eight_bonus_wp": 0.038,
+        "clock_runoff_urgency_multiplier": 1.25,
+        "optimal_leave_no_time_threshold_sec": 12.0
+      },
+      "qb_visual_cognitive_load": {
+        "visual_cognitive_load_index": 0.1521,
+        "components": {
+          "mot_overload_penalty": 0.0,
+          "targets_over_capacity": 0.0,
+          "saccadic_read_latency_ms": 225.6,
+          "quiet_eye_retention_ratio": 1.0,
+          "pocket_compression": 0.0,
+          "coincidence_anticipation_index": 0.2857
+        },
+        "interpretation": "not a probability and not an interception forecast; a relative difficulty score for ranking reps",
+        "assumptions": {
+          "mot_capacity": 4.0,
+          "mot_overload_coeff": 0.18,
+          "saccade_base_ms": 180.0,
+          "saccade_disguise_ms": 120.0,
+          "pocket_ref_sq_yds": 6.0,
+          "quiet_eye_compression_coeff": 0.45,
+          "status": "ASSUMED - validated against nothing yet",
+          "falsification": [
+            "overload should correlate with longer time-to-throw",
+            "saccade_ms should correlate with worse CPOE on disguised reps",
+            "quiet_eye_retention should correlate with pressure-to-sack rate"
+          ]
+        },
+        "provenance": "ASSUMED_MODEL - research artifact, not a published play set"
+      },
+      "coach_speak_deflection": {
+        "speaker": "John Harbaugh",
+        "role": "HC",
+        "deflection_score": 0.8,
+        "accountability_score": 0.2,
+        "injury_concealment_stress": 0.0,
+        "stage4_situational_log_odds": -0.09,
+        "deflection_cues_found": 2,
+        "accountability_cues_found": 0
+      },
+      "ol_weak_link_survival": 0.995,
+      "ol_pass_set_report": {
+        "enabled": true,
+        "attainment": 1.0,
+        "n": 5.0
+      }
+    }
+  },
+  "intelligence_31_subpackages": {
+    "subpackages_connected_count": 39,
+    "total_intelligence_python_files": 443,
+    "subpackage_inventory": {
+      "audit": {
+        "python_files": 10,
+        "top_level_functions": 22,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "coaching": {
+        "python_files": 48,
+        "top_level_functions": 212,
+        "top_level_classes": 19,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "colab": {
+        "python_files": 1,
+        "top_level_functions": 9,
+        "top_level_classes": 3,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "combining": {
+        "python_files": 7,
+        "top_level_functions": 31,
+        "top_level_classes": 9,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "context": {
+        "python_files": 1,
+        "top_level_functions": 1,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "dfs": {
+        "python_files": 1,
+        "top_level_functions": 3,
+        "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "engines": {
+        "python_files": 18,
+        "top_level_functions": 218,
+        "top_level_classes": 29,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "gates": {
+        "python_files": 6,
+        "top_level_functions": 17,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "ingest": {
+        "python_files": 2,
+        "top_level_functions": 2,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "ingestion": {
+        "python_files": 24,
+        "top_level_functions": 178,
+        "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "integration": {
+        "python_files": 11,
+        "top_level_functions": 37,
+        "top_level_classes": 38,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "jev": {
+        "python_files": 32,
+        "top_level_functions": 63,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "markets": {
+        "python_files": 1,
+        "top_level_functions": 7,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "matchup": {
+        "python_files": 1,
+        "top_level_functions": 4,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "matchups": {
+        "python_files": 3,
+        "top_level_functions": 19,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "models": {
+        "python_files": 2,
+        "top_level_functions": 17,
+        "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "newregime": {
+        "python_files": 10,
+        "top_level_functions": 49,
+        "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "nfl_re": {
+        "python_files": 3,
+        "top_level_functions": 27,
+        "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "observability": {
+        "python_files": 3,
+        "top_level_functions": 16,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "optimizer": {
+        "python_files": 2,
+        "top_level_functions": 14,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "physics": {
+        "python_files": 8,
+        "top_level_functions": 36,
+        "top_level_classes": 4,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "pipeline": {
+        "python_files": 2,
+        "top_level_functions": 14,
+        "top_level_classes": 3,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "props": {
+        "python_files": 11,
+        "top_level_functions": 117,
+        "top_level_classes": 8,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "providers": {
+        "python_files": 3,
+        "top_level_functions": 7,
+        "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "qb": {
+        "python_files": 8,
+        "top_level_functions": 28,
+        "top_level_classes": 8,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "qb-behavior": {
+        "python_files": 38,
+        "top_level_functions": 97,
+        "top_level_classes": 71,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "ratings": {
+        "python_files": 11,
+        "top_level_functions": 91,
+        "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "reasoning": {
+        "python_files": 23,
+        "top_level_functions": 101,
+        "top_level_classes": 48,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "reasoning_engine": {
+        "python_files": 12,
+        "top_level_functions": 41,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "research": {
+        "python_files": 5,
+        "top_level_functions": 37,
+        "top_level_classes": 3,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "roster": {
+        "python_files": 3,
+        "top_level_functions": 18,
+        "top_level_classes": 4,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "routing": {
+        "python_files": 1,
+        "top_level_functions": 1,
+        "top_level_classes": 1,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "sgp": {
+        "python_files": 7,
+        "top_level_functions": 57,
+        "top_level_classes": 10,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "staking": {
+        "python_files": 10,
+        "top_level_functions": 50,
+        "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "tests": {
+        "python_files": 34,
+        "top_level_functions": 134,
+        "top_level_classes": 89,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "trust": {
+        "python_files": 10,
+        "top_level_functions": 39,
+        "top_level_classes": 10,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "trust-signals": {
+        "python_files": 25,
+        "top_level_functions": 67,
+        "top_level_classes": 44,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "vision": {
+        "python_files": 37,
+        "top_level_functions": 196,
+        "top_level_classes": 43,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "voice_brain": {
+        "python_files": 9,
+        "top_level_functions": 43,
+        "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      }
+    },
+    "live_domain_executions": {
+      "physics_mt_bank_air_density_kg_m3": 1.24182,
+      "sgp_student_t_copula_joint": 0.37988,
+      "sgp_higham_psd_verified": true,
+      "trust_nntd_disagreement": 0.00141,
+      "trust_abstain_decision": false,
+      "trust_adaptive_ece": 0.228,
+      "trust_enbpi_90pct_quantile": 3.2,
+      "staking_edge_posterior_alpha_beta": [
+        15.2,
+        9.8
+      ],
+      "staking_cvar_two_layer_stake": 0.0,
+      "staking_alpha_governor_pi": 0.73333,
+      "ratings_bt_prob": 0.50058,
+      "ratings_elo_update": 1588.01,
+      "ratings_poisson_pmf_24": 0.08072,
+      "qb_luck_neutralized_fair_margin": -10.6,
+      "combining_afcrps_score": 0.3542,
+      "combining_angular_prob": 0.50122,
+      "vision_bdb2027_decel_reaccel_asymmetry": 0.6364,
+      "vision_bdb2027_cod_curvature_retention": 0.3912,
+      "vision_bdb2027_first_step_burst_latency_s": 0.2,
+      "jev_devig_shin_home_prob": 0.72731,
+      "reasoning_adversary_overconfidence_score": 1.72,
+      "nfl_re_separation_at_release": 1.4083,
+      "nfl_re_interception_probability": 0.15726,
+      "markets_bg_nbd_p_alive": 0.7115,
+      "markets_gamma_gamma_expected_spend": 29.51,
+      "jev_signal_ranker_status": "ok",
+      "routing_zero_waste_tier": "TIER_0_LOCAL_VECTOR"
+    }
+  }
+}

@@ -2,11 +2,11 @@
 
 ## 0. Cryptographic Connected Workflow Receipts (Zero-Skip Chain)
 - **Stage 0 Receipt (`enforce_stage0_roster_and_board_allowlist.py`):** `c1fc3f4cbd3778ee8e795b7eddb5537750af54c2047b9e064d44e3a9b3921948`
-- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `7cb15a8eb8521842d75a9eca693ef342b0d6e05cd54ba200d9f1e6bcc549073a`
-- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `bfa1953e458be1f858bfd9c302b24f632b4c954d4ef49912197c855a88d289f8`
-- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `c63a54c5ddb859c75477f82ee53890ed5780bf5db775e61b5e98a41233e6accd`
-- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `3f7d6b5c6586c170c29b463a2ffa9a70489964eb44a9e509cf549365c22c6d71`
-- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `96e112f7c7832f623ecfae4935a0b02a328ee95d818f818814b4a5d22e1ba405`
+- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `151c126abe4da4e0b65aab2686097847e0172461164173ce851838b69b139e4b`
+- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `19ede38f6b9c12bad83e99a5329482ead4032dd6c531fae72073a3aed5f0d3b3`
+- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `8f6b1084a862cf5b7cf16ae24a2ca5f5149f6fa70d74aa8b1997e8bbbf51160a`
+- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `7cd74ba56a4c43a425f30c2dde8c47c86a40a874529dfa259d2355ada68f478a`
+- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `6dba580725c56c3496dabde010187506703d5ff5b985fb67be0db7c654fe4c12`
 
 ---
 
@@ -25,22 +25,25 @@
 
 ---
 
-## 2. Stage 1A — Coaching Mind (`38/38` Modules) & Scheme Matchup Layer
-- **Modules Executed & Verified:** `38 / 38` (`fingerprint`, `intent_beliefs`, `sequencing`, `regime`, `coach_risk`, `coach_audit`, `coach_speak_emotional_deflection_probe`, `qb_visual_cognitive_load`, `trench_pocket_physics`, `biomech_kinetic_translation`, `ol_provider`, `dc_pressure`, `pressure_answer`, `compute_tendencies`, `proe`, `redzone`, `script_elasticity`, `tempo`, `drive_dire_situations`, `situational_wp`, `pm_sweep_convergence_kernels`, `x_sweep_production_signals`, `pgwe_luck_audit`, `schedule_cleaned_epa`, `adjustments`, `behavior`, `ingame`, `tenures`, `coach_tenures`, `provider`, etc.)
+## 2. Stage 1A — Coaching Mind (`38/38` Modules), All `31` Non-Empty Python `intelligence/` Subpackages & `31+` Datasets
+- **Coaching Mind Modules Executed & Verified:** `38 / 38` (`fingerprint`, `intent_beliefs`, `sequencing`, `regime`, `coach_risk`, `coach_audit`, `coach_speak_emotional_deflection_probe`, `qb_visual_cognitive_load`, `trench_pocket_physics`, `biomech_kinetic_translation`, `ol_provider`, `dc_pressure`, `pressure_answer`, `compute_tendencies`, `proe`, `redzone`, `script_elasticity`, `tempo`, `drive_dire_situations`, `situational_wp`, `pm_sweep_convergence_kernels`, `x_sweep_production_signals`, `pgwe_luck_audit`, `schedule_cleaned_epa`, `adjustments`, `behavior`, `ingame`, `tenures`, `coach_tenures`, `provider`, etc.)
+- **Python `intelligence/` Subpackages Connected (`run_python_25_intelligence_domains.py`):** **`39`** subpackages connected (all `31` non-empty Python `intelligence/` subpackages + `8` namespace packages across **`443`** Python files) + ~70 deep coaching physics/signal functions (`biomech_kinetic_translation`, `trench_pocket_physics`, `pm_sweep_convergence_kernels`, `situational_wp`).
+- **`31+` Local Parquet / CSV / JSON Datasets Connected:** `ftn_charting_2026.parquet` (`18,019` rows), `advstats_season_pass/rush/rec/def` (`4` Parquets), `pennydata_2026_player_week_stats.csv` (`6,100` rows), `hf_bdb2025_plays_presnap_zone1.parquet` (`16,124` plays), `kaggle_sumersupplement_bdb26_zone1.parquet`, `hf_karmane_stats_player_week_2025.parquet` + `hf_karmane_pbp_2025.parquet`, and all **`11`** `data/step-n-market/*.parquet` files.
 - **Scheme Clash 1 (`BAL` Defense vs `JAX` Offense):** Baltimore plays Two-High MOFO on 59.5% of snaps and <=5 in the box on 77.95% of dropbacks to cap explosive air yards and force patience underneath (Parker Washington 48 targets, Brenton Strange 35 targets, Jakobi Meyers 31 targets). BDB2025 (16,124 plays) proves Trevor Lawrence's MOFO-vs-MOFC delta is only -0.0149 EPA/play (not -0.17), while Baltimore's light boxes invite JAX early-down rushing (Chris Rodriguez Jr. +0.120 EPA/rush if Bhayshul Tuten is Out).
 - **Scheme Clash 2 (`JAX` Defense vs `BAL` Offense):** With Lamar Jackson (IR - thumb surgery) and Tyler Huntley (Out for season - turf toe) both excluded, undrafted rookie Joe Fagnano starts at QB1 for Baltimore (-0.4308 EPA/dropback on 24 W8 dropbacks) with Jacoby Brissett acquired 2026-11-04 from ARI as emergency QB2. Todd Monken is forced into a heavy Derrick Henry ground script (159 carries, 632 yds, 8 TDs; 2.52 YBC/att) + quick-game/screen releases to Zay Flowers and Mark Andrews against Jacksonville's 30.9% blitz / 34.78% PA-blitz front.
 - **Trench & Cognitive Physics:** JAX OL clean-pocket survival `0.3792` | BAL OL clean-pocket survival `0.3651` | Joe Fagnano OCACM audible failure prob vs JAX blitz `0.1993`
 
 ---
 
-## 3. Stage 1B — Pre-Simulation `5,367`-Equation & Premise Corpus Review
+## 3. Stage 1B — Pre-Simulation `5,367`-Equation Corpus, Real TypeScript `mcp-cognitive-router.ts` & `22/22` Situational Aggregator
 - **Total Mathematical & Scientific Premises Reviewed Prior to Simulation:** **`12,304`**
   - `data/engine/thousand_equation_matrix_2026.json`: **`1,666`** load-bearing equations (`1,340` `CITABLE_VERIFIED` + `326` `COMPUTED`)
   - `intelligence/models/gse_213_equation_engine.py`: **`213`** equations evaluated across all **`37`** verified board athletes (`204` interaction/residual features + `21` foundational equations)
   - `batch3-sports-physics-bridge.ts`: **`25`** physics & epistemic operators
   - `data/mind_staging/` consolidated + full corpus: **`1,463`** + **`1,389`** works (`1,292` / `1,281` trainer-ready after hydrating `877/877` `Sports-Research-Papers` PDFs/MDs)
   - Athlete-level equation crossings (`37` athletes $\times$ `213` equations): **`7,881`** evaluations
-- **4-Stage Cognitive Router Output:** `288`-bit Context Mask (`288` active bits, `258` signal families) $\to$ Stage C Spectral Orthogonalization across Categories `A–G` $\to$ Stage D James-Stein Shrinkage factor `0.0` $\to$ Net Log-Odds Delta `+0.0000` (capped at `|Delta log-odds| <= 0.35`).
+- **Real TypeScript `mcp-cognitive-router.ts` 4-Stage Execution (`run_ts_prediction_and_mcp_engines.ts`):** `288`-bit Context Mask (`288` active bits, `258` signal families) $\to$ Stage C Spectral Orthogonalization (`25` selected premises across Categories `A–G`, Marchenko-Pastur effective rank shrinkage **`0.96809`**) $\to$ Stage D Positive-Part James-Stein Shrinkage factor **`0.916978`** (unclamped delta `+1.096888`) $\to$ Clamped Log-Odds Delta **`+0.35`** (capped at `|Delta log-odds| <= 0.35`).
+- **Real TypeScript `master-situational-reasoning-aggregator.ts` & Registry Surface:** **`22/22`** situational streams executed (`0` skipped) | **`80/80`** situational rules (`x-situational-80-rules.ts`) | **`77`** zero-orphan modules & **`51`** catalog signals | **`173`** wireable modules / **`196`** registered models.
 
 ---
 
@@ -100,18 +103,96 @@
 | `JAX` | `WR` | **Josh Cameron** | 5 | Rec Yds | 20.1 | 16.7 | **19.9** | 23.2 | `10.5` | `Active` (Rec P50 `1.4`, Tgt Share `9.1%`) |
 | `JAX` | `WR` | **CJ Williams** | 0 | Rec Yds | 2.7 | 2.2 | **2.7** | 3.1 | `—` | `Active` (Rec P50 `0.2`, Tgt Share `1.2%`) |
 
+### 4C. Full 360-Degree Derivative & Exotic Projections (`1Q–4Q`, `1H/2H`, `Longest Plays`, `Anytime/First/2+ TD`, `IDP Sacks`)
+#### 4C-1. Quarters & Halves Team Projections (`1Q`, `2Q`, `3Q`, `4Q`, `1H`, `2H`, `FullGame`)
+| Period | JAX Points Mean | BAL Points Mean | JAX - BAL Margin Mean | BAL Home Spread Mean | Total Points Mean |
+|---|---:|---:|---:|---:|---:|
+| **`1Q`** | `5.35` | `3.42` | `+1.93` | `-1.93` | **`8.77`** |
+| **`2Q`** | `7.34` | `4.58` | `+2.76` | `-2.76` | **`11.92`** |
+| **`3Q`** | `5.85` | `4.08` | `+1.77` | `-1.77` | **`9.93`** |
+| **`4Q`** | `6.35` | `4.58` | `+1.77` | `-1.77` | **`10.93`** |
+| **`1H`** | `12.69` | `8.00` | `+4.69` | `-4.69` | **`20.69`** |
+| **`2H`** | `12.20` | `8.67` | `+3.53` | `-3.53` | **`20.87`** |
+| **`FullGame`** | `24.89` | `16.67` | `+8.22` | `-8.22` | **`41.56`** |
+
+#### 4C-2. `1st Quarter` & `1st Half` Key Starter Yardage Projections
+| Starter | Team / Pos | `1Q` Primary Mean (`P50`) | `1H` Primary Mean (`P50`) | Secondary Derivative Projection |
+|---|---|---|---|---|
+| **Trevor Lawrence** | `JAX QB` | Pass `49.4` (`49.1`) | Pass `111.9` (`111.2`) | `1Q` Rush `3.9` / `1H` Rush `8.8` |
+| **Joe Fagnano** | `BAL QB` | Pass `41.5` (`41.4`) | Pass `93.4` (`93.1`) | `1Q` Rush `2.5` / `1H` Rush `5.6` |
+| **Derrick Henry** | `BAL RB` | Rush `16.6` (`16.2`) | Rush `37.3` (`36.5`) | `1Q` Rec `2.0` / `1H` Rec `4.6` |
+| **Chris Rodriguez Jr.** | `JAX RB` | Rush `18.4` (`18.4`) | Rush `41.7` (`41.6`) | `1Q` Rec `0.7` / `1H` Rec `1.7` |
+| **Bhayshul Tuten** | `JAX RB` | Rush `0.0` (`0.0`) | Rush `0.0` (`0.0`) | `1Q` Rec `0.0` / `1H` Rec `0.0` (Branch B Active: `1Q` Rush P50 `14.4`, `1H` Rush P50 `32.7`) |
+| **Parker Washington** | `JAX WR` | Rec `11.9` (`11.8`) | Rec `27.0` (`26.8`) | `1Q` Recs `0.74` / `1H` Recs `1.69` |
+| **Zay Flowers** | `BAL WR` | Rec `9.7` (`9.6`) | Rec `21.7` (`21.6`) | `1Q` Recs `0.64` / `1H` Recs `1.43` |
+| **Mark Andrews** | `BAL TE` | Rec `6.1` (`6.1`) | Rec `13.8` (`13.7`) | `1Q` Recs `0.81` / `1H` Recs `1.83` |
+| **Brenton Strange** | `JAX TE` | Rec `8.7` (`8.6`) | Rec `19.7` (`19.5`) | `1Q` Recs `0.73` / `1H` Recs `1.65` |
+| **Jakobi Meyers** | `JAX WR` | Rec `7.7` (`7.6`) | Rec `17.4` (`17.3`) | `1Q` Recs `0.55` / `1H` Recs `1.24` |
+| **Brian Thomas Jr.** | `JAX WR` | Rec `5.4` (`5.4`) | Rec `12.3` (`12.3`) | `1Q` Recs `0.47` / `1H` Recs `1.06` |
+
+#### 4C-3. Extreme-Value Order Statistics — `Longest Completion`, `Longest Reception`, `Longest Rush`
+| Category | Athlete | Team | Expected Volume | **Expected Mean (Yds)** | **Median `P50` (Yds)** |
+|---|---|---|---:|---:|---:|
+| **Longest Completion** | **Trevor Lawrence** | `JAX QB` | `19.4` comp | `29.2` | **`27.5`** |
+| **Longest Completion** | **Joe Fagnano** | `BAL QB` | `18.1` comp | `23.9` | **`22.5`** |
+| **Longest Reception** | **Parker Washington** | `JAX WR` | `3.31` rec | `30.1` | **`27.9`** |
+| **Longest Reception** | **Brian Thomas Jr.** | `JAX WR` | `2.07` rec | `23.2` | **`21.5`** |
+| **Longest Reception** | **Jakobi Meyers** | `JAX WR` | `2.43` rec | `22.9` | **`21.2`** |
+| **Longest Reception** | **Brenton Strange** | `JAX TE` | `3.23` rec | `19.5` | **`18.1`** |
+| **Longest Reception** | **Zay Flowers** | `BAL WR` | `2.89` rec | `28.6` | **`26.5`** |
+| **Longest Reception** | **Mark Andrews** | `BAL TE` | `3.70` rec | `13.3` | **`12.3`** |
+| **Longest Reception** | **Rashod Bateman** | `BAL WR` | `1.26` rec | `22.7` | **`21.0`** |
+| **Longest Reception** | **Derrick Henry** | `BAL RB` | `1.48` rec | `7.0` | **`6.5`** |
+| **Longest Reception** | **Chris Rodriguez Jr.** | `JAX RB` | `1.00` rec | `4.9` | **`4.5`** |
+| **Longest Rush** | **Derrick Henry** | `BAL RB` | `18.97` att | `13.0` | **`11.9`** |
+| **Longest Rush** | **Chris Rodriguez Jr.** | `JAX RB` | `17.63` att | `12.8` | **`11.7`** |
+| **Longest Rush** | **Trevor Lawrence** | `JAX QB` | `4.82` att | `8.0` | **`7.3`** |
+| **Longest Rush** | **Joe Fagnano** | `BAL QB` | `3.16` att | `6.1` | **`5.6`** |
+| **Longest Rush** | **Ameer Abdullah** | `JAX RB` | `9.70` att | `8.3` | **`7.6`** |
+| **Longest Rush** | **Bhayshul Tuten** | `JAX RB` | `14.53` att | `12.8` | **`11.7`** |
+
+#### 4C-4. Conserved Touchdown Scorer Probabilities (`Anytime TD`, `First TD`, `2+ TDs`)
+| Athlete | Team / Pos | Conserved $\lambda_{\text{TD}}$ | **P(Anytime TD)** | **P(First TD)** | **P(2+ TDs)** | Fair Anytime TD Odds |
+|---|---|---:|---:|---:|---:|---:|
+| **Derrick Henry** | `BAL RB` | `0.676` | **`49.1%`** | `13.8%` | `14.7%` | `+104` |
+| **Chris Rodriguez Jr.** | `JAX RB` | `0.541` | **`41.8%`** | `11.0%` | `10.3%` | `+139` |
+| **Parker Washington** | `JAX WR` | `0.501` | **`39.4%`** | `10.2%` | `9.0%` | `+154` |
+| **Brenton Strange** | `JAX TE` | `0.360` | **`30.2%`** | `7.3%` | `5.1%` | `+231` |
+| **Jakobi Meyers** | `JAX WR` | `0.324` | **`27.7%`** | `6.6%` | `4.2%` | `+262` |
+| **Zay Flowers** | `BAL WR` | `0.280` | **`24.4%`** | `5.7%` | `3.2%` | `+310` |
+| **Brian Thomas Jr.** | `JAX WR` | `0.224` | **`20.1%`** | `4.6%` | `2.2%` | `+398` |
+| **Ameer Abdullah** | `JAX RB` | `0.208` | **`18.8%`** | `4.2%` | `1.9%` | `+433` |
+| **Josh Cameron** | `JAX WR` | `0.184` | **`16.8%`** | `3.8%` | `1.5%` | `+495` |
+| **Mark Andrews** | `BAL TE` | `0.170` | **`15.6%`** | `3.5%` | `1.3%` | `+540` |
+| **Justice Hill** | `BAL RB` | `0.167` | **`15.4%`** | `3.4%` | `1.2%` | `+551` |
+| **LeQuint Allen Jr.** | `JAX RB` | `0.146` | **`13.6%`** | `3.0%` | `1.0%` | `+635` |
+| **Ja'Kobi Lane** | `BAL WR` | `0.123` | **`11.6%`** | `2.5%` | `0.7%` | `+762` |
+| **Rashod Bateman** | `BAL WR` | `0.123` | **`11.6%`** | `2.5%` | `0.7%` | `+762` |
+
+#### 4C-5. IDP Pass-Rush & Sack Projections (`pennydata_2026_player_week_stats.csv` + Trench Pressure Rates)
+| Pass Rusher | Team / Pos | 2026 GP | 2026 Sacks | 2026 QB Hits | Expected Sacks Mean | **P(0.25+ Sacks)** | **P(1.0+ Sack)** | Matchup Note |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| **Travon Walker** | `JAX DE` | 6 | `2.0` | 6 | `0.58` | **`49.6%`** | `44.0%` | Faces BAL rookie QB1 Joe Fagnano (8.4% sack rate allowed) with JAX 30.9% blitz rate |
+| **Josh Hines-Allen** | `JAX DE` | 6 | `1.5` | 8 | `0.62` | **`52.5%`** | `46.2%` | Team-high 8 QB hits in 6 GP; primary edge threat against BAL pass sets |
+| **Arik Armstead** | `JAX DT` | 5 | `1.0` | 1 | `0.31` | **`32.1%`** | `26.7%` | Interior pocket push collapses BAL A/B gaps against rookie QB1 |
+| **Odafe Oweh** | `BAL OLB` | 6 | `3.0` | 6 | `0.52` | **`45.9%`** | `40.6%` | 3.0 sacks and 6 QB hits in 6 GP; speed rush vs JAX tackles |
+| **Kyle Van Noy** | `BAL OLB` | 5 | `1.5` | 2 | `0.38` | **`36.6%`** | `31.6%` | 1.5 sacks and 7 TFL in 5 GP; simulated-pressure edge setter |
+| **Nnamdi Madubuike** | `BAL DT` | 5 | `0.5` | 6 | `0.34` | **`34.6%`** | `28.8%` | 6 QB hits in 5 GP from interior 3-tech alignment |
+| **Roquan Smith** | `BAL LB` | 7 | `2.0` | 4 | `0.26` | **`26.8%`** | `22.9%` | 2.0 sacks & 55 combined tackles in 7 GP; A-gap green-dog blitzes |
+| **Kyle Hamilton** | `BAL S` | 7 | `0.0` | 1 | `0.18` | **`18.7%`** | `16.5%` | 7 TFL & 48 combined tackles in 7 GP; overhang slot pressure & run support |
+
 ---
 
 ## 5. Stage 5 — 360-Degree Conjunction Gate (`Picks, Plays, Props, Parlays`)
 ### 5A. Two-Sided Main Game Lines (`Spread`, `Total`, `Moneyline`)
 | Market | Selection | Live Price | De-Vigged Market Prob | Post-Sim Prob | 90% Wilson LB | Net Edge | Confidence | Decision | Gate Reason |
 |---|---|---:|---:|---:|---:|---:|---:|---|---|
-| Spread | **JAX -7.5** | `-105` | `48.92%` | `53.07%` | `52.25%` | `+4.15%` | `54/100` | **`PASS`** | POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 42.1% < 50.0% de-vigged market. |
-| Spread | **BAL +7.5** | `-115` | `51.08%` | `46.93%` | `46.11%` | `-4.15%` | `58/100` | **`PASS`** | ROOKIE_QB1_UNCERTAINTY_GATE: Model shrinks toward market (+7.5) but Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100). |
-| Total | **Over 41.5** | `-110` | `50.00%` | `50.49%` | `49.67%` | `+0.49%` | `57/100` | **`PASS`** | SCRIPT_DRAG_GATE: BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required). |
-| Total | **Under 41.5** | `-110` | `50.00%` | `49.51%` | `48.69%` | `-0.49%` | `52/100` | **`PASS`** | NEGATIVE_EV: Post-sim Under 41.5 prob 43.3% < 50.0% de-vigged market. |
-| Moneyline | **JAX ML** | `-520` | `80.43%` | `71.98%` | `71.24%` | `-8.45%` | `61/100` | **`PASS`** | JUICED_FAVORITE_BIAS_GATE: -520 requires 80.5% de-vigged win prob; post-sim JAX win prob is 65.7% (exact historical replay failure mode). |
-| Moneyline | **BAL ML** | `+390` | `19.57%` | `28.02%` | `27.29%` | `+8.45%` | `55/100` | **`PASS`** | ROOKIE_QB1_TAIL_RISK: Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play. |
+| Spread | **JAX -7.5** | `-105` | `48.92%` | `53.07%` | `52.25%` | `+4.15%` | `54/100` | **`PASS`** | POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 53.07% vs 48.92% de-vigged market (90% Wilson LB 52.25%). |
+| Spread | **BAL +7.5** | `-115` | `51.08%` | `46.93%` | `46.11%` | `-4.15%` | `58/100` | **`PASS`** | ROOKIE_QB1_UNCERTAINTY_GATE: Post-sim BAL +7.5 cover prob 46.93% vs 51.08% de-vigged market; Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100). |
+| Total | **Over 41.5** | `-110` | `50.00%` | `50.49%` | `49.67%` | `+0.49%` | `57/100` | **`PASS`** | SCRIPT_DRAG_GATE: Post-sim Over 41.5 prob 50.49% vs 50.00% de-vigged market; BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required). |
+| Total | **Under 41.5** | `-110` | `50.00%` | `49.51%` | `48.69%` | `-0.49%` | `52/100` | **`PASS`** | NEGATIVE_EV: Post-sim Under 41.5 prob 49.51% < 50.00% de-vigged market. |
+| Moneyline | **JAX ML** | `-520` | `80.43%` | `71.98%` | `71.24%` | `-8.45%` | `61/100` | **`PASS`** | JUICED_FAVORITE_BIAS_GATE: -520 requires 80.43% de-vigged win prob; post-sim JAX win prob is 71.98% (exact historical replay failure mode). |
+| Moneyline | **BAL ML** | `+390` | `19.57%` | `28.02%` | `27.29%` | `+8.45%` | `55/100` | **`PASS`** | ROOKIE_QB1_TAIL_RISK: Post-sim BAL win prob 28.02% vs 19.57% de-vigged market; Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play. |
 
 ### 5B. Core Player Props (`1,461` Props Across `75` Market Types Evaluated)
 | Athlete | Team | Market | Live Line (Open) | Post-Sim Mean | Post-Sim P50 | Model Lean | Model P(Over) | Two-Sided Price? | Decision |
