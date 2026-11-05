@@ -1,73 +1,66 @@
 {
-  "track": "Track 1: GSI 100k CTE/VFib (real Python timing)",
-  "status": "VERIFIED",
+  "track": "Track 1: GSI 100k CTE/VFib",
+  "status": "PARTIAL - relabeled by final review: latency measured, dropout retention measured, hardware cycles and dt-sweep tables attributed to the C++ kernel, not restated here",
   "trials": 100000,
   "binary_sources": {
     "ecg_bytes": 24000,
-    "nfl_bytes": 4900
+    "nfl_bytes": 4900,
+    "ecg_path": "data\\frontier_ingestion\\physionet_500hz_ecg\\cpp_binary_streams\\mimic_ecg_500hz_stream.bin",
+    "nfl_path": "data\\frontier_ingestion\\nfl_10hz_kinematics\\cpp_binary_streams\\nfl_10hz_kinematics_stream.bin"
   },
   "latency_us": {
-    "p50": 0.8,
-    "p95": 0.9,
+    "p50": 1.0,
+    "p95": 1.1,
     "p99": 1.1,
-    "mean": 0.866
+    "mean": 0.98
   },
-  "cycles_per_frame": {
-    "p50": 0.38,
-    "p95": 0.43,
-    "p99": 0.53
-  },
-  "sram_bytes": {
-    "used": 20769,
-    "total": 262144
+  "hardware_reference": {
+    "where": "packages/galaxy-conformal-ot/embedded/tests/embedded_kernel_tests.cpp",
+    "test": "verify_hardware_sram_cycle_and_latency_profiler",
+    "measurements": {
+      "sram_used": 20769,
+      "sram_total": 262144,
+      "note": "reported by the C++ kernel test, not by Python"
+    }
   },
   "dropout_sweeps": {
     "10_pct": {
-      "kept": 9000,
-      "rel_error_pct": 0.1
+      "retained": 9000,
+      "aligned": 9000,
+      "retention_pct": 100.0
     },
     "30_pct": {
-      "kept": 7000,
-      "rel_error_pct": 0.1
+      "retained": 7000,
+      "aligned": 7000,
+      "retention_pct": 100.0
     },
     "50_pct": {
-      "kept": 5000,
-      "rel_error_pct": 0.1
+      "retained": 5000,
+      "aligned": 5000,
+      "retention_pct": 100.0
     },
     "60_pct": {
-      "kept": 4000,
-      "rel_error_pct": 0.1
+      "retained": 4000,
+      "aligned": 4000,
+      "retention_pct": 100.0
     },
     "75_pct": {
-      "kept": 2500,
-      "rel_error_pct": 0.1
+      "retained": 2500,
+      "aligned": 2500,
+      "retention_pct": 100.0
     }
   },
-  "dt_sweeps": {
-    "dt_15s": {
-      "stress_kPa": 20.2,
-      "alert": 0
-    },
-    "dt_30s": {
-      "stress_kPa": 20.4,
-      "alert": 0
-    },
+  "dt_stress_reference": {
+    "producer": "C++ test 7 (verify_cte_cumulative_subconcussive_avalanche_braiding)",
     "dt_40s": {
       "stress_kPa": 22.4607,
       "alert": 1
     },
-    "dt_60s": {
-      "stress_kPa": 20.8,
-      "alert": 0
-    },
-    "dt_120s": {
-      "stress_kPa": 20.2,
-      "alert": 0
-    },
     "dt_300s": {
       "stress_kPa": 19.8176,
       "alert": 0
-    }
+    },
+    "note": "sub-concussive CTE braiding constants live in the embedded kernel; this file cites them, it does not re-synthesize a sweep from them"
   },
-  "note": "Python per-frame checksum timing, not STM32H7 bare-metal; C++ test 10 reports hardware cycles."
+  "note": "latency_us is wall-clock per-frame Python timing on the shift host, not STM32H7 bare-metal. Hardware SRAM/cycle telemetry is in the embedded kernel test output; see hardware_reference and dt_stress_reference."
 }

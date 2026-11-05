@@ -1,6 +1,7 @@
 {
   "track": "Track 3: Walk-forward ablation Pareto (real engine constants)",
-  "status": "VERIFIED",
+  "status": "SIMULATED - not realized walk-forward: Pareto rows generated from a labeled prior (seed 20261104, n=200000). Components: 76-module zero-orphan audit (filesystem-verified), gate constants from calibration-map.ts/no-bet-gate.ts, and the two sweeps below, relabeled measured-vs-simulated. No settled Week 9 labels exist in-repo.",
+  "week9_picks_published_allowed": false,
   "modules_evaluated": 76,
   "module_list_count_expected": 74,
   "modules_on_disk_total": 76,
@@ -40,7 +41,6 @@
       "pass_rate": 0.4392,
       "published_count_pct": 56.084,
       "hit_rate_among_published_simulated": 0.5229,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5229,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -53,7 +53,6 @@
       "pass_rate": 0.5344,
       "published_count_pct": 46.563,
       "hit_rate_among_published_simulated": 0.5258,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5258,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -66,7 +65,6 @@
       "pass_rate": 0.606,
       "published_count_pct": 39.403,
       "hit_rate_among_published_simulated": 0.5277,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5277,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -79,7 +77,6 @@
       "pass_rate": 0.7251,
       "published_count_pct": 27.494,
       "hit_rate_among_published_simulated": 0.5305,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5305,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -92,7 +89,6 @@
       "pass_rate": 0.8692,
       "published_count_pct": 13.076,
       "hit_rate_among_published_simulated": 0.5344,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5344,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -105,7 +101,6 @@
       "pass_rate": 0.9635,
       "published_count_pct": 3.647,
       "hit_rate_among_published_simulated": 0.5393,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5393,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -118,7 +113,6 @@
       "pass_rate": 0.804,
       "published_count_pct": 19.605,
       "hit_rate_among_published_simulated": 0.5325,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5325,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -131,7 +125,6 @@
       "pass_rate": 0.8548,
       "published_count_pct": 14.524,
       "hit_rate_among_published_simulated": 0.534,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.534,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -144,7 +137,6 @@
       "pass_rate": 0.9004,
       "published_count_pct": 9.956,
       "hit_rate_among_published_simulated": 0.5356,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5356,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -157,7 +149,6 @@
       "pass_rate": 0.9363,
       "published_count_pct": 6.373,
       "hit_rate_among_published_simulated": 0.5373,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5373,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -170,7 +161,6 @@
       "pass_rate": 0.962,
       "published_count_pct": 3.8,
       "hit_rate_among_published_simulated": 0.5391,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.5391,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -183,7 +173,6 @@
       "pass_rate": 0.979,
       "published_count_pct": 2.104,
       "hit_rate_among_published_simulated": 0.541,
-      "false_pos_share_simulated": 0.0,
       "mean_implied_win_rate_simulated": 0.541,
       "ev_zero_mass_share": 0.55,
       "ev_top_decile_plus": 0.026,
@@ -197,65 +186,57 @@
       "tau": 0.00625,
       "publish_rate": 0.5553,
       "pass_rate": 0.4447,
-      "hit_rate_among_published_simulated": 0.523,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.523
     },
     {
       "speak_edge_mult": 0.5,
       "tau": 0.0125,
       "publish_rate": 0.4598,
       "pass_rate": 0.5402,
-      "hit_rate_among_published_simulated": 0.526,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.526
     },
     {
       "speak_edge_mult": 0.75,
       "tau": 0.01875,
       "publish_rate": 0.3826,
       "pass_rate": 0.6174,
-      "hit_rate_among_published_simulated": 0.528,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.528
     },
     {
       "speak_edge_mult": 1.0,
       "tau": 0.025,
       "publish_rate": 0.2504,
       "pass_rate": 0.7496,
-      "hit_rate_among_published_simulated": 0.5311,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.5311
     },
     {
       "speak_edge_mult": 1.25,
       "tau": 0.03125,
       "publish_rate": 0.1043,
       "pass_rate": 0.8957,
-      "hit_rate_among_published_simulated": 0.5354,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.5354
     },
     {
       "speak_edge_mult": 1.5,
       "tau": 0.0375,
       "publish_rate": 0.0243,
       "pass_rate": 0.9757,
-      "hit_rate_among_published_simulated": 0.5406,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.5406
     },
     {
       "speak_edge_mult": 2.0,
       "tau": 0.05,
       "publish_rate": 0.0002,
       "pass_rate": 0.9998,
-      "hit_rate_among_published_simulated": 0.5522,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.5522
     },
     {
       "speak_edge_mult": 3.0,
       "tau": 0.075,
       "publish_rate": 0.0,
       "pass_rate": 1.0,
-      "hit_rate_among_published_simulated": 0.0,
-      "false_pos_rate_among_published_simulated": 0.0
+      "hit_rate_among_published_simulated": 0.0
     }
   ],
-  "note": "Pareto rows are simulated from a labeled prior (seed 20261104, n=200000) centered on the model's measured true edge; they are NOT realized walk-forward outcomes. No settled-game labels for Week 9 exist in-repo. Calibration basis: calibration/isotonic-calibration.ts documents Brier 0.2484 (vs coin 0.2500) and +5.2pt level inflation with monotone ranking; that is the real measured artifact."
+  "note": "Pareto rows are simulated from a labeled prior (seed 20261104, n=200000) centered on the model's measured true edge; they are NOT realized walk-forward outcomes. No settled-game labels for Week 9 exist in-repo. Calibration basis: calibration/isotonic-calibration.ts documents Brier 0.2484 (vs coin 0.2500) and +5.2pt level inflation with monotone ranking; that is the real measured artifact. The false-positive fields present in earlier versions (false_pos_share_simulated in the tau sweep, false_pos_rate_among_published_simulated in the multiplier sweep) were removed by the final review: both were defined by the sweep itself and were 0.0 by construction at every threshold, so they cannot be cited as measured metrics. Rows themselves are unchanged otherwise."
 }
