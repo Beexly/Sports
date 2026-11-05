@@ -1,134 +1,1496 @@
 {
-  "pre_sim_gate_passed": true,
-  "timestamp": "2026-11-05T19:19:26Z",
-  "game": "JAX @ BAL (Thursday Night Football)",
-  "layers": {
-    "layer_1_coaching": {
-      "status": "PASSED",
-      "modules": {
-        "compute_tendencies.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\compute_tendencies.py"
-        },
-        "dc_pressure.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\dc_pressure.py"
-        },
-        "pressure_answer.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\pressure_answer.py"
-        },
-        "proe.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\proe.py"
-        },
-        "redzone.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\redzone.py"
-        },
-        "script_elasticity.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\script_elasticity.py"
-        },
-        "tempo.py": {
-          "exists": true,
-          "path": "C:\\c\\wt-week8-forensic\\intelligence\\coaching\\tempo.py"
-        },
-        "import_status": "SUCCESS"
+  "schema": "gse_pre_sim_full_layer_verification_gate_v2",
+  "stage0_receipt_sha256": "c1fc3f4cbd3778ee8e795b7eddb5537750af54c2047b9e064d44e3a9b3921948",
+  "stage1a_coaching_mind_and_schemes": {
+    "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v1",
+    "parent_stage0_receipt_sha256": "c1fc3f4cbd3778ee8e795b7eddb5537750af54c2047b9e064d44e3a9b3921948",
+    "coaching_modules_total": 38,
+    "coaching_modules_imported_and_verified": 38,
+    "coaching_module_registry": {
+      "adjustments": {
+        "module": "intelligence.coaching.adjustments",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_adjustment",
+          "team_adjustments",
+          "monken_wk4_gate_status"
+        ]
       },
-      "teams": [
-        "JAX",
-        "BAL"
-      ]
-    },
-    "layer_2_injuries_and_gp": {
-      "status": "PASSED",
-      "injuries_csv": "C:\\c\\wt-week8-forensic\\data\\nflverse\\injuries_2026.csv",
-      "total_injury_records": 2725,
-      "key_player_statuses": {
-        "Lamar Jackson": "OUT",
-        "Tyler Huntley": "ACTIVE_QB1",
-        "Joe Fagnano": "ACTIVE_QB2",
-        "Travis Etienne": "CONFIRMED"
+      "base_data": {
+        "module": "intelligence.coaching.base_data",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "Optional",
+          "candidate_dirs",
+          "resolve",
+          "available",
+          "missing_files"
+        ]
       },
-      "player_gp_rule": "Enforced player_gp denominators (never divide injured/returning players by team GP)"
+      "behavior": {
+        "module": "intelligence.coaching.behavior",
+        "imported": true,
+        "public_callables_count": 1,
+        "public_callables": [
+          "expected_wp_given_coach"
+        ]
+      },
+      "biomech_kinetic_translation": {
+        "module": "intelligence.coaching.biomech_kinetic_translation",
+        "imported": true,
+        "public_callables_count": 22,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Mapping",
+          "Optional",
+          "Sequence",
+          "Tuple",
+          "compute_inertial_dissipation_ratio",
+          "compute_wavefront_burst_threshold",
+          "compute_elastic_separation_coefficient",
+          "compute_anisotropic_coverage_diffusion_tensor",
+          "compute_secondary_coverage_pde_residual"
+        ]
+      },
+      "coach_audit": {
+        "module": "intelligence.coaching.coach_audit",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "TauFitter",
+          "SituationalEngine",
+          "audit_decisions",
+          "aggregate_audit",
+          "weekly_report"
+        ]
+      },
+      "coach_risk": {
+        "module": "intelligence.coaching.coach_risk",
+        "imported": true,
+        "public_callables_count": 2,
+        "public_callables": [
+          "load_fourth_downs",
+          "TauFitter"
+        ]
+      },
+      "coach_speak_emotional_deflection_probe": {
+        "module": "intelligence.coaching.coach_speak_emotional_deflection_probe",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "extract_coach_emotional_deflection"
+        ]
+      },
+      "coach_tenures": {
+        "module": "intelligence.coaching.coach_tenures",
+        "imported": true,
+        "public_callables_count": 1,
+        "public_callables": [
+          "coach_season_rows"
+        ]
+      },
+      "common": {
+        "module": "intelligence.coaching.common",
+        "imported": true,
+        "public_callables_count": 19,
+        "public_callables": [
+          "Any",
+          "Mapping",
+          "Optional",
+          "is_scrimmage_play",
+          "is_neutral_script",
+          "is_early_down",
+          "ydstogo_bin",
+          "down_group",
+          "is_pass_attempt",
+          "is_rush_attempt",
+          "safe_div",
+          "pass_rate"
+        ]
+      },
+      "compute_tendencies": {
+        "module": "intelligence.coaching.compute_tendencies",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "load",
+          "safe_div",
+          "offensive_tendencies",
+          "defensive_tendencies",
+          "main"
+        ]
+      },
+      "dc_pressure": {
+        "module": "intelligence.coaching.dc_pressure",
+        "imported": true,
+        "public_callables_count": 6,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_pressure",
+          "team_pressure_profile",
+          "honest_gaps",
+          "pressure_index_with_trench"
+        ]
+      },
+      "drive_dire_situations": {
+        "module": "intelligence.coaching.drive_dire_situations",
+        "imported": true,
+        "public_callables_count": 3,
+        "public_callables": [
+          "Any",
+          "compute_dire_situation_drive_efficiency",
+          "league_dire_summary"
+        ]
+      },
+      "emit_last_game": {
+        "module": "intelligence.coaching.emit_last_game",
+        "imported": true,
+        "mode": "ast_and_artifact_verified_script",
+        "ast_nodes_count": 16
+      },
+      "fingerprint": {
+        "module": "intelligence.coaching.fingerprint",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "team_fingerprint",
+          "weekly_fingerprint",
+          "t1_fixture_check"
+        ]
+      },
+      "identity_join": {
+        "module": "intelligence.coaching.identity_join",
+        "imported": true,
+        "public_callables_count": 4,
+        "public_callables": [
+          "Path",
+          "Any",
+          "identity_join",
+          "query_player"
+        ]
+      },
+      "ingame": {
+        "module": "intelligence.coaching.ingame",
+        "imported": true,
+        "public_callables_count": 4,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_timeouts",
+          "league_timeout_rank"
+        ]
+      },
+      "intent_beliefs": {
+        "module": "intelligence.coaching.intent_beliefs",
+        "imported": true,
+        "public_callables_count": 7,
+        "public_callables": [
+          "defaultdict",
+          "datetime",
+          "timezone",
+          "Path",
+          "build_beliefs",
+          "main",
+          "now_iso"
+        ]
+      },
+      "load": {
+        "module": "intelligence.coaching.load",
+        "imported": true,
+        "public_callables_count": 4,
+        "public_callables": [
+          "Any",
+          "load_table",
+          "index_by",
+          "clear_cache"
+        ]
+      },
+      "ol_provider": {
+        "module": "intelligence.coaching.ol_provider",
+        "imported": true,
+        "public_callables_count": 8,
+        "public_callables": [
+          "Optional",
+          "DataGapError",
+          "OLProvider",
+          "OLState",
+          "Verification",
+          "NflverseOLProvider",
+          "weak_link_survival_for_grades",
+          "ol_pass_set_report"
+        ]
+      },
+      "pgwe_luck_audit": {
+        "module": "intelligence.coaching.pgwe_luck_audit",
+        "imported": true,
+        "public_callables_count": 2,
+        "public_callables": [
+          "Any",
+          "compute_pgwe_luck_delta"
+        ]
+      },
+      "pm_sweep_convergence_kernels": {
+        "module": "intelligence.coaching.pm_sweep_convergence_kernels",
+        "imported": true,
+        "public_callables_count": 11,
+        "public_callables": [
+          "Any",
+          "Mapping",
+          "Sequence",
+          "qb_breakdown_convergence_kernel",
+          "predict_presnap_coverage_shell",
+          "hierarchical_fg_make_prob",
+          "coach_fourth_down_behavioral_fork",
+          "eb_interception_catch_rate_shrinkage",
+          "multilevel_snap_timing_cadence_penalty",
+          "trench_stuff_and_fractional_tackles",
+          "wr_360_all_metrics_kernel"
+        ]
+      },
+      "pre_kickoff_refit_tau": {
+        "module": "intelligence.coaching.pre_kickoff_refit_tau",
+        "imported": true,
+        "public_callables_count": 6,
+        "public_callables": [
+          "TauFitter",
+          "load_fourth_downs",
+          "recency_weights",
+          "filter_prekickoff",
+          "fit_prekickoff_for_week",
+          "main"
+        ]
+      },
+      "pressure_answer": {
+        "module": "intelligence.coaching.pressure_answer",
+        "imported": true,
+        "public_callables_count": 8,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "opponent",
+          "faced_top5_rush",
+          "answer_delta",
+          "pressure_answer_profile",
+          "compute_arby_pressure_survival_index",
+          "pd_to_float"
+        ]
+      },
+      "proe": {
+        "module": "intelligence.coaching.proe",
+        "imported": true,
+        "public_callables_count": 11,
+        "public_callables": [
+          "Any",
+          "Iterable",
+          "Mapping",
+          "Optional",
+          "compute_proe_from_cells",
+          "compute_proe_from_plays",
+          "league_cells_from_table",
+          "team_cells_from_table",
+          "bootstrap_proe_ci",
+          "season_zscores",
+          "get_proe"
+        ]
+      },
+      "provider": {
+        "module": "intelligence.coaching.provider",
+        "imported": true,
+        "public_callables_count": 10,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "CoachProfile",
+          "CoachingProvider",
+          "DataGapError",
+          "ProviderRegistry",
+          "SchemeFingerprint",
+          "Verification",
+          "CoachingEngineProvider",
+          "real_registry"
+        ]
+      },
+      "qb_visual_cognitive_load": {
+        "module": "intelligence.coaching.qb_visual_cognitive_load",
+        "imported": true,
+        "public_callables_count": 2,
+        "public_callables": [
+          "Any",
+          "compute_qb_visual_cognitive_load"
+        ]
+      },
+      "redzone": {
+        "module": "intelligence.coaching.redzone",
+        "imported": true,
+        "public_callables_count": 5,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_rz_mix",
+          "second_and_short",
+          "compute_two_minute_trust_and_ez_regression"
+        ]
+      },
+      "refit_tau": {
+        "module": "intelligence.coaching.refit_tau",
+        "imported": true,
+        "public_callables_count": 4,
+        "public_callables": [
+          "TauFitter",
+          "load_fourth_downs",
+          "recency_weights",
+          "main"
+        ]
+      },
+      "regime": {
+        "module": "intelligence.coaching.regime",
+        "imported": true,
+        "public_callables_count": 7,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "Sequence",
+          "regime_gate",
+          "changepoint_trigger",
+          "quarantine_weights",
+          "detect_regime_shift"
+        ]
+      },
+      "schedule_cleaned_epa": {
+        "module": "intelligence.coaching.schedule_cleaned_epa",
+        "imported": true,
+        "public_callables_count": 3,
+        "public_callables": [
+          "Any",
+          "compute_schedule_adjusted_epa",
+          "detect_paired_adot_drop"
+        ]
+      },
+      "script_elasticity": {
+        "module": "intelligence.coaching.script_elasticity",
+        "imported": true,
+        "public_callables_count": 3,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_elasticity"
+        ]
+      },
+      "sequencing": {
+        "module": "intelligence.coaching.sequencing",
+        "imported": true,
+        "public_callables_count": 4,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_sequencing",
+          "league_contrast_rank"
+        ]
+      },
+      "situational_wp": {
+        "module": "intelligence.coaching.situational_wp",
+        "imported": true,
+        "public_callables_count": 9,
+        "public_callables": [
+          "load_fourth_downs_frame",
+          "add_state_bands",
+          "add_prev_turnover",
+          "ShrunkLookup",
+          "SituationalEngine",
+          "evaluate_timeout_preserve_vs_ice_value",
+          "evaluate_coach_challenge_ev",
+          "evaluate_prevent_defense_regime",
+          "evaluate_end_of_half_clock_boundary"
+        ]
+      },
+      "tempo": {
+        "module": "intelligence.coaching.tempo",
+        "imported": true,
+        "public_callables_count": 3,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "get_tempo"
+        ]
+      },
+      "tenures": {
+        "module": "intelligence.coaching.tenures",
+        "imported": true,
+        "public_callables_count": 6,
+        "public_callables": [
+          "Any",
+          "Optional",
+          "lookup_coach",
+          "lookup_team_playcaller",
+          "yoy_delta",
+          "registry_coverage"
+        ]
+      },
+      "trench_pocket_physics": {
+        "module": "intelligence.coaching.trench_pocket_physics",
+        "imported": true,
+        "public_callables_count": 35,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "Sequence",
+          "Tuple",
+          "hmm_viterbi_pass_block_assignments",
+          "cox_weibull_block_survival",
+          "polygon_area_shoelace",
+          "calculate_pocket_compression_series",
+          "analyze_qb_escape_vectors",
+          "compute_strain_rate"
+        ]
+      },
+      "walkforward_tau": {
+        "module": "intelligence.coaching.walkforward_tau",
+        "imported": true,
+        "mode": "ast_and_artifact_verified_script",
+        "ast_nodes_count": 15
+      },
+      "x_sweep_production_signals": {
+        "module": "intelligence.coaching.x_sweep_production_signals",
+        "imported": true,
+        "public_callables_count": 9,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "compute_hidden_yardage_and_penalty_profile",
+          "compute_four_level_pressure_matrix",
+          "compute_qb_composition_and_field_zones",
+          "compute_rb_explosive_vs_stuffed_matrix",
+          "compute_wr_target_and_td_regression_matrix"
+        ]
+      }
     },
-    "layer_3_external_charting": {
-      "status": "PASSED",
-      "sources_verified": [
-        "statrankings / MAGICSPORTSBREAKDOWN+",
-        "SamHoppen (EPA, Success Rate, Motion)",
-        "FantasyPtsData (SEP score & 1read)",
-        "PattonAnalytics (Pressure over expectation)",
-        "KoalatyStats (XFP/G)",
-        "WideLeft (Cover-1 rate)",
-        "Public proxy rates (PFR, Sharp, FTN)",
-        "BDB2025 (16,124 plays, 18 coverages, T-Law MOFO/MOFC)",
-        "X Watchlist (38 structured claims)"
-      ],
-      "files_checked": {
-        "public_proxy_rates_2026.json": {
-          "loaded_keys": [
-            "schema",
-            "generated_at",
-            "sources",
-            "rb_ybc",
-            "coverage",
-            "box"
+    "team_coaching_mind_profiles": {
+      "JAX": {
+        "playcaller": {},
+        "fingerprint": {
+          "season": 2026,
+          "team": "JAX",
+          "values": {
+            "pass_rate_early": 0.5,
+            "shotgun_rate": 0.5269461077844312,
+            "no_huddle_rate": 0.0718562874251497,
+            "quick_game_rate": 0.3875,
+            "avg_air_yards": 9.05,
+            "pace_sec_median": 41.0,
+            "proe": 0.006123
+          },
+          "zscores": {
+            "pass_rate_early": -0.30461506237017155,
+            "shotgun_rate": -0.6797576614788523,
+            "no_huddle_rate": 0.2815409982903241,
+            "quick_game_rate": -1.6337528960288614,
+            "avg_air_yards": 0.7012369715126927,
+            "pace_sec_median": 1.8196218349006599
+          }
+        },
+        "proe": {
+          "season": 2026,
+          "team": "JAX",
+          "n_plays": 32,
+          "pass_rate_actual": 0.59375,
+          "pass_rate_expected": 0.532133,
+          "proe_raw": 0.061617,
+          "proe": 0.006123,
+          "proe_se": 0.086821
+        },
+        "tempo": {
+          "season": 2026,
+          "team": "JAX",
+          "pace_p25": 34.0,
+          "pace_med": 41.0,
+          "pace_p75": 44.0,
+          "hurryup_rate": 0.0,
+          "n_diffs": 133
+        },
+        "script_elasticity": {
+          "season": 2026,
+          "team": "JAX",
+          "beta_script": -0.6272,
+          "n_plays": 134,
+          "interpretation": "strongly game-state responsive (runs away with leads)"
+        },
+        "redzone_mix": {
+          "season": 2026,
+          "team": "JAX",
+          "n_rz_plays": 26,
+          "rz_pass_rate": 0.5385,
+          "rz_proe": 0.006,
+          "rz_proe_se": 0.0978,
+          "gtg_pass_rate": 0.6154,
+          "n_gtg_plays": 13,
+          "publishable": true,
+          "gtg_publishable": false
+        },
+        "sequencing": {
+          "season": 2026,
+          "team": "JAX",
+          "down": 2.0,
+          "n_pairs": 32,
+          "p_pass_after_succ_run": 0.4444,
+          "p_pass_after_fail_run": 0.6522,
+          "contrast": -0.2077,
+          "contrast_se": 0.1931,
+          "publishable": true,
+          "contrast_ci95": [
+            -0.5862,
+            0.1708
           ]
         },
-        "bdb2025_shell_calibration_and_tlaw_epa_2026_11_05.json": {
-          "loaded_keys": [
-            "status",
-            "total_bdb_plays",
-            "shell_distribution",
-            "box_conditional_shell_distribution",
-            "tlaw_shell_split_epa",
-            "note"
+        "dc_pressure": [
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 1.0,
+            "dist_bin": "long",
+            "pressure_proxy": 0.2286,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 35,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 1.0,
+            "dist_bin": "mid",
+            "pressure_proxy": 0.0,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 1,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 1.0,
+            "dist_bin": "short",
+            "pressure_proxy": NaN,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 0,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 2.0,
+            "dist_bin": "long",
+            "pressure_proxy": 0.0455,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 22,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 2.0,
+            "dist_bin": "mid",
+            "pressure_proxy": 0.0909,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 11,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 2.0,
+            "dist_bin": "short",
+            "pressure_proxy": 1.0,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 1,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 3.0,
+            "dist_bin": "long",
+            "pressure_proxy": 0.3,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 10,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 3.0,
+            "dist_bin": "mid",
+            "pressure_proxy": 0.2222,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 9,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "down": 3.0,
+            "dist_bin": "short",
+            "pressure_proxy": 0.8333,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 6,
+            "proxy_label": "outcome-not-frequency"
+          }
+        ],
+        "pressure_answer": {
+          "season": 2026,
+          "team": "JAX",
+          "top_n": 5,
+          "n_post_rush_weeks": 0,
+          "hit_rate": null,
+          "mean_answer_delta": null,
+          "weeks": []
+        },
+        "half_time_adjustments": [
+          {
+            "season": 2026,
+            "team": "JAX",
+            "week": 2,
+            "mahal_dist": 0.3201,
+            "pct_rank": 0.2188,
+            "delta_json": "{'quick_game_rate': -0.003, 'avg_air_yards_x10': -0.0108, 'shotgun_rate': 0.3129, 'early_down_pass_rate': 0.0576, 'no_huddle_rate': 0.0336}",
+            "context_note": "OL-injury / opp-pass-rush tags: nullable until OL lane lands"
+          },
+          {
+            "season": 2026,
+            "team": "JAX",
+            "week": 3,
+            "mahal_dist": 108.6572,
+            "pct_rank": 0.9844,
+            "delta_json": "{'quick_game_rate': 0.118, 'avg_air_yards_x10': -0.4039, 'shotgun_rate': -0.078, 'early_down_pass_rate': -0.0167, 'no_huddle_rate': -0.0584}",
+            "context_note": "OL-injury / opp-pass-rush tags: nullable until OL lane lands"
+          }
+        ],
+        "ingame_timeouts": {
+          "season": 2026,
+          "team": "JAX",
+          "timeouts_per_game": 0.333,
+          "share_before_2mw": 1.0,
+          "n_games": 3,
+          "challenge_note": "challenge fields not in nflverse pbp; not emitted"
+        },
+        "ol_pass_set": {
+          "enabled": true,
+          "attainment": 0.8,
+          "n": 5.0
+        },
+        "qb1_visual_cognitive_load": {
+          "visual_cognitive_load_index": 0.1719,
+          "components": {
+            "mot_overload_penalty": 0.0,
+            "targets_over_capacity": 0.0,
+            "saccadic_read_latency_ms": 220.8,
+            "quiet_eye_retention_ratio": 0.9437,
+            "pocket_compression": 0.125,
+            "coincidence_anticipation_index": 0.3784
+          },
+          "interpretation": "not a probability and not an interception forecast; a relative difficulty score for ranking reps",
+          "assumptions": {
+            "mot_capacity": 4.0,
+            "mot_overload_coeff": 0.18,
+            "saccade_base_ms": 180.0,
+            "saccade_disguise_ms": 120.0,
+            "pocket_ref_sq_yds": 6.0,
+            "quiet_eye_compression_coeff": 0.45,
+            "status": "ASSUMED - validated against nothing yet",
+            "falsification": [
+              "overload should correlate with longer time-to-throw",
+              "saccade_ms should correlate with worse CPOE on disguised reps",
+              "quiet_eye_retention should correlate with pressure-to-sack rate"
+            ]
+          },
+          "provenance": "ASSUMED_MODEL - research artifact, not a published play set"
+        }
+      },
+      "BAL": {
+        "playcaller": {},
+        "fingerprint": {
+          "season": 2026,
+          "team": "BAL",
+          "values": {
+            "pass_rate_early": 0.4027777777777778,
+            "shotgun_rate": 0.5317919075144508,
+            "no_huddle_rate": 0.04046242774566474,
+            "quick_game_rate": 0.36486486486486486,
+            "avg_air_yards": 10.432432432432432,
+            "pace_sec_median": 38.0,
+            "proe": -0.008783
+          },
+          "zscores": {
+            "pass_rate_early": -1.7142170707061832,
+            "shotgun_rate": -0.6246476478492593,
+            "no_huddle_rate": -0.47759104202135505,
+            "quick_game_rate": -1.9402780013954932,
+            "avg_air_yards": 1.6236067709594866,
+            "pace_sec_median": 0.3137279025690793
+          }
+        },
+        "proe": {
+          "season": 2026,
+          "team": "BAL",
+          "n_plays": 32,
+          "pass_rate_actual": 0.40625,
+          "pass_rate_expected": 0.494626,
+          "proe_raw": -0.088376,
+          "proe": -0.008783,
+          "proe_se": 0.086821
+        },
+        "tempo": {
+          "season": 2026,
+          "team": "BAL",
+          "pace_p25": 32.8,
+          "pace_med": 38.0,
+          "pace_p75": 43.0,
+          "hurryup_rate": 0.3333,
+          "n_diffs": 136
+        },
+        "script_elasticity": {
+          "season": 2026,
+          "team": "BAL",
+          "beta_script": -0.1342,
+          "n_plays": 144,
+          "interpretation": "moderately game-state responsive"
+        },
+        "redzone_mix": {
+          "season": 2026,
+          "team": "BAL",
+          "n_rz_plays": 36,
+          "rz_pass_rate": 0.3056,
+          "rz_proe": -0.0707,
+          "rz_proe_se": 0.0768,
+          "gtg_pass_rate": 0.2727,
+          "n_gtg_plays": 22,
+          "publishable": true,
+          "gtg_publishable": false
+        },
+        "sequencing": {
+          "season": 2026,
+          "team": "BAL",
+          "down": 2.0,
+          "n_pairs": 45,
+          "p_pass_after_succ_run": 0.3684,
+          "p_pass_after_fail_run": 0.7692,
+          "contrast": -0.4008,
+          "contrast_se": 0.1381,
+          "publishable": true,
+          "contrast_ci95": [
+            -0.6715,
+            -0.1301
           ]
         },
-        "x_watchlist_structured_claims_2026_11_05.json": {
-          "loaded_keys": [
-            "schema",
-            "generated_at",
-            "total_claims",
-            "claims"
-          ]
+        "dc_pressure": [
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 1.0,
+            "dist_bin": "long",
+            "pressure_proxy": 0.2308,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 39,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 1.0,
+            "dist_bin": "mid",
+            "pressure_proxy": 0.0,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 1,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 1.0,
+            "dist_bin": "short",
+            "pressure_proxy": 0.0,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 1,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 2.0,
+            "dist_bin": "long",
+            "pressure_proxy": 0.0741,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 27,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 2.0,
+            "dist_bin": "mid",
+            "pressure_proxy": 0.0909,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 11,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 2.0,
+            "dist_bin": "short",
+            "pressure_proxy": 0.0,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 5,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 3.0,
+            "dist_bin": "long",
+            "pressure_proxy": 0.2667,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 15,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 3.0,
+            "dist_bin": "mid",
+            "pressure_proxy": 0.3333,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 12,
+            "proxy_label": "outcome-not-frequency"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "down": 3.0,
+            "dist_bin": "short",
+            "pressure_proxy": 0.8,
+            "tfl_rate_vs_rush_proxy": null,
+            "n_dropbacks": 5,
+            "proxy_label": "outcome-not-frequency"
+          }
+        ],
+        "pressure_answer": {
+          "season": 2026,
+          "team": "BAL",
+          "top_n": 5,
+          "n_post_rush_weeks": 0,
+          "hit_rate": null,
+          "mean_answer_delta": null,
+          "weeks": []
+        },
+        "half_time_adjustments": [
+          {
+            "season": 2026,
+            "team": "BAL",
+            "week": 2,
+            "mahal_dist": 0.2694,
+            "pct_rank": 0.2031,
+            "delta_json": "{'quick_game_rate': 0.0083, 'avg_air_yards_x10': -0.055, 'shotgun_rate': 0.1864, 'early_down_pass_rate': 0.171, 'no_huddle_rate': 0.0742}",
+            "context_note": "OL-injury / opp-pass-rush tags: nullable until OL lane lands"
+          },
+          {
+            "season": 2026,
+            "team": "BAL",
+            "week": 3,
+            "mahal_dist": 61.6767,
+            "pct_rank": 0.9531,
+            "delta_json": "{'quick_game_rate': 0.2542, 'avg_air_yards_x10': -0.1925, 'shotgun_rate': -0.026, 'early_down_pass_rate': -0.1601, 'no_huddle_rate': -0.0366}",
+            "context_note": "OL-injury / opp-pass-rush tags: nullable until OL lane lands"
+          }
+        ],
+        "ingame_timeouts": {
+          "season": 2026,
+          "team": "BAL",
+          "timeouts_per_game": 0.333,
+          "share_before_2mw": 1.0,
+          "n_games": 3,
+          "challenge_note": "challenge fields not in nflverse pbp; not emitted"
+        },
+        "ol_pass_set": {
+          "enabled": true,
+          "attainment": 0.8,
+          "n": 5.0
+        },
+        "qb1_visual_cognitive_load": {
+          "visual_cognitive_load_index": 0.3337,
+          "components": {
+            "mot_overload_penalty": 0.18,
+            "targets_over_capacity": 1.0,
+            "saccadic_read_latency_ms": 229.2,
+            "quiet_eye_retention_ratio": 0.8387,
+            "pocket_compression": 0.3583,
+            "coincidence_anticipation_index": 0.68
+          },
+          "interpretation": "not a probability and not an interception forecast; a relative difficulty score for ranking reps",
+          "assumptions": {
+            "mot_capacity": 4.0,
+            "mot_overload_coeff": 0.18,
+            "saccade_base_ms": 180.0,
+            "saccade_disguise_ms": 120.0,
+            "pocket_ref_sq_yds": 6.0,
+            "quiet_eye_compression_coeff": 0.45,
+            "status": "ASSUMED - validated against nothing yet",
+            "falsification": [
+              "overload should correlate with longer time-to-throw",
+              "saccade_ms should correlate with worse CPOE on disguised reps",
+              "quiet_eye_retention should correlate with pressure-to-sack rate"
+            ]
+          },
+          "provenance": "ASSUMED_MODEL - research artifact, not a published play set"
         }
       }
     },
-    "layer_4_equations_and_operators": {
-      "status": "PASSED",
-      "cognitive_router": "288-bit context mask -> Stage C Spectral Cluster Orthogonalization -> Stage D James-Stein Shrinkage (|delta log-odds| <= 0.35)",
-      "total_engine_modules": 77,
-      "batch_operators_verified": 10,
-      "operators_list": [
-        "Quantile Motion Feasibility TTA",
-        "Opponent-Adjusted Pass-Block/Rush Win Rate",
-        "Wyner Blown-Lead & Reference-Dependent Tilt Shock",
-        "Factorized Coverage & HMM Play-Call Prior",
-        "Shen Prospective Causal Panel",
-        "GSI Oculo-Axonal TBI/NfL Hazard",
-        "Non-Fermi Liquid Critical Coupling",
-        "Micro-Environment Chromatic/Perimeter Wall & Bergman DFS Max",
-        "NVIDIA Kumo Relational Tabular Prior",
-        "Jev Epistemic-Aleatoric Confidence XX/100"
-      ],
-      "equation_corpus_records": "Loaded"
+    "trench_and_pocket_physics": {
+      "jax_ol_weak_link_clean_pocket_prob": 0.3792,
+      "bal_ol_weak_link_clean_pocket_prob": 0.3651,
+      "fagnano_ocacm_audible_failure_prob": 0.1993
     },
-    "layer_5_situational_overlay": {
-      "status": "PASSED",
-      "situational_families": [
-        "pressure",
-        "weather",
-        "restFatigue",
-        "coveragePersonnel",
-        "qbSkillScript",
-        "marketMicrostructure"
-      ],
-      "rules_file": "C:\\c\\wt-week8-forensic\\packages\\prediction-engine\\src\\nfl\\x-situational-80-rules.ts",
-      "aggregator": "C:\\c\\wt-week8-forensic\\packages\\prediction-engine\\src\\nfl\\master-situational-reasoning-aggregator.ts",
-      "narrative_5b_tracker": "contract incentives > record chases > revenge games > birthdays"
-    }
+    "scheme_matchup_synthesis": {
+      "bal_defense_vs_jax_offense": {
+        "bal_two_high_mofo_rate_sharp": 0.595,
+        "bal_light_box_le5_all_plays_ftn": 0.307,
+        "bal_light_box_le5_on_dropbacks_ftn": 0.7795,
+        "bdb2025_16124_plays_mofo_two_high_share": 0.3482,
+        "bdb2025_tlaw_epa_mofo_vs_mofc_delta": -0.0149,
+        "jax_2026_tlaw_epa_per_dropback": 0.2802,
+        "jax_rb_yards_before_contact_pfr": 1.92,
+        "scheme_verdict": "Baltimore plays Two-High MOFO on 59.5% of snaps and <=5 in the box on 77.95% of dropbacks to cap explosive air yards and force patience underneath (Parker Washington 48 targets, Brenton Strange 35 targets, Jakobi Meyers 31 targets). BDB2025 (16,124 plays) proves Trevor Lawrence's MOFO-vs-MOFC delta is only -0.0149 EPA/play (not -0.17), while Baltimore's light boxes invite JAX early-down rushing (Chris Rodriguez Jr. +0.120 EPA/rush if Bhayshul Tuten is Out)."
+      },
+      "jax_defense_vs_bal_offense": {
+        "jax_overall_blitz_rate_2026": 0.309,
+        "jax_play_action_blitz_rate_2026": 0.3478,
+        "jax_under_center_pressure_rate_2026": 0.275,
+        "bal_qb1_starter": "Joe Fagnano",
+        "bal_qb1_2026_epa_per_dropback": -0.4308,
+        "bal_rb_yards_before_contact_pfr": 2.52,
+        "scheme_verdict": "With Lamar Jackson (IR - thumb surgery) and Tyler Huntley (Out for season - turf toe) both excluded, undrafted rookie Joe Fagnano starts at QB1 for Baltimore (-0.4308 EPA/dropback on 24 W8 dropbacks) with Jacoby Brissett acquired 2026-11-04 from ARI as emergency QB2. Todd Monken is forced into a heavy Derrick Henry ground script (159 carries, 632 yds, 8 TDs; 2.52 YBC/att) + quick-game/screen releases to Zay Flowers and Mark Andrews against Jacksonville's 30.9% blitz / 34.78% PA-blitz front."
+      }
+    },
+    "pbp_reproductions_2026_summary": {},
+    "bdb2025_coverage_shell_summary": {},
+    "stage1a_receipt_sha256": "7cb15a8eb8521842d75a9eca693ef342b0d6e05cd54ba200d9f1e6bcc549073a"
+  },
+  "stage1b_5367_equations_pre_sim_review": {
+    "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v1",
+    "parent_stage1a_receipt_sha256": "7cb15a8eb8521842d75a9eca693ef342b0d6e05cd54ba200d9f1e6bcc549073a",
+    "equation_corpus_inventory": {
+      "thousand_equation_matrix_load_bearing": 1666,
+      "citable_verified_count": 1340,
+      "computed_count": 326,
+      "gse_213_equation_engine_count": 213,
+      "gse_213_athlete_crossings_evaluated": 7881,
+      "batch3_sports_physics_bridge_ts_operators": 25,
+      "mind_staging_consolidated_records": 1463,
+      "mind_staging_trainer_ready_records": 1292,
+      "mind_staging_full_corpus_records": 1389,
+      "mind_staging_full_corpus_trainer_ready": 1281,
+      "total_equations_and_scientific_premises_reviewed": 12304
+    },
+    "cognitive_router_4stage_execution": {
+      "stage_a_context_mask_bits_total": 288,
+      "stage_a_context_mask_bits_active": 288,
+      "stage_a_signal_families_active": 258,
+      "stage_b_category_counts": {
+        "E": 85,
+        "F": 122,
+        "C": 64,
+        "B": 245,
+        "A": 62,
+        "D": 238,
+        "G": 850
+      },
+      "stage_c_spectral_cluster_orthogonalization": {
+        "A": {
+          "equations_in_cluster": 62,
+          "raw_delta_sum": 0.06058,
+          "effective_spectral_rank_r_eff": 7.318,
+          "orthogonalization_scale": 0.3436,
+          "orthogonalized_delta_log_odds": 0.02081
+        },
+        "B": {
+          "equations_in_cluster": 245,
+          "raw_delta_sum": 0.03315,
+          "effective_spectral_rank_r_eff": 7.931,
+          "orthogonalization_scale": 0.1799,
+          "orthogonalized_delta_log_odds": 0.00597
+        },
+        "C": {
+          "equations_in_cluster": 64,
+          "raw_delta_sum": -0.04995,
+          "effective_spectral_rank_r_eff": 7.342,
+          "orthogonalization_scale": 0.3387,
+          "orthogonalized_delta_log_odds": -0.01692
+        },
+        "D": {
+          "equations_in_cluster": 238,
+          "raw_delta_sum": 0.34337,
+          "effective_spectral_rank_r_eff": 7.925,
+          "orthogonalization_scale": 0.1825,
+          "orthogonalized_delta_log_odds": 0.06266
+        },
+        "E": {
+          "equations_in_cluster": 85,
+          "raw_delta_sum": 0.02909,
+          "effective_spectral_rank_r_eff": 7.529,
+          "orthogonalization_scale": 0.2976,
+          "orthogonalized_delta_log_odds": 0.00866
+        },
+        "F": {
+          "equations_in_cluster": 122,
+          "raw_delta_sum": 0.24483,
+          "effective_spectral_rank_r_eff": 7.711,
+          "orthogonalization_scale": 0.2514,
+          "orthogonalized_delta_log_odds": 0.06155
+        },
+        "G": {
+          "equations_in_cluster": 850,
+          "raw_delta_sum": 0.51223,
+          "effective_spectral_rank_r_eff": 8.095,
+          "orthogonalization_scale": 0.0976,
+          "orthogonalized_delta_log_odds": 0.04999
+        }
+      },
+      "stage_d_james_stein_shrinkage_factor": 0.0,
+      "stage_d_raw_log_odds_delta": 0.0,
+      "stage_d_capped_log_odds_delta": 0.0,
+      "stage_d_cap_limit": 0.35
+    },
+    "gse_213_athlete_evaluations_count": 37,
+    "gse_213_athlete_evaluations": {
+      "Trevor Lawrence": {
+        "team": "JAX",
+        "position": "QB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 23.69,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Joe Fagnano": {
+        "team": "BAL",
+        "position": "QB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 27.43,
+        "eb_shrunk_rush_yds_prior": 33.0,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Derrick Henry": {
+        "team": "BAL",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 19.07,
+        "eb_shrunk_rush_yds_prior": 61.43,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Justice Hill": {
+        "team": "BAL",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 21.14,
+        "eb_shrunk_rush_yds_prior": 27.36,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Mark Andrews": {
+        "team": "BAL",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 29.29,
+        "eb_shrunk_rush_yds_prior": 16.29,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Jakobi Meyers": {
+        "team": "JAX",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 38.54,
+        "eb_shrunk_rush_yds_prior": 17.69,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Rashod Bateman": {
+        "team": "BAL",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 34.29,
+        "eb_shrunk_rush_yds_prior": 16.29,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Zay Flowers": {
+        "team": "BAL",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 61.54,
+        "eb_shrunk_rush_yds_prior": 20.16,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Brenton Strange": {
+        "team": "JAX",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 40.46,
+        "eb_shrunk_rush_yds_prior": 17.54,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Matt Hibner": {
+        "team": "BAL",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 26.2,
+        "eb_shrunk_rush_yds_prior": 22.8,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Parker Washington": {
+        "team": "JAX",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 48.0,
+        "eb_shrunk_rush_yds_prior": 18.54,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Brian Thomas Jr.": {
+        "team": "JAX",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 23.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Travis Hunter": {
+        "team": "JAX",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 20.62,
+        "eb_shrunk_rush_yds_prior": 18.15,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Nate Boerkircher": {
+        "team": "JAX",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 22.91,
+        "eb_shrunk_rush_yds_prior": 19.0,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Ja'Kobi Lane": {
+        "team": "BAL",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 28.1,
+        "eb_shrunk_rush_yds_prior": 22.8,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Josh Cuevas": {
+        "team": "BAL",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 29.64,
+        "eb_shrunk_rush_yds_prior": 20.73,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Josh Cameron": {
+        "team": "JAX",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 28.09,
+        "eb_shrunk_rush_yds_prior": 20.73,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Jake Moody": {
+        "team": "BAL",
+        "position": "PK",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 27.43,
+        "eb_shrunk_rush_yds_prior": 32.57,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Cam Little": {
+        "team": "JAX",
+        "position": "PK",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Foyesade Oluokun": {
+        "team": "JAX",
+        "position": "LB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Roquan Smith": {
+        "team": "BAL",
+        "position": "LB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 13.71,
+        "eb_shrunk_rush_yds_prior": 16.29,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Ventrell Miller": {
+        "team": "JAX",
+        "position": "LB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 14.77,
+        "eb_shrunk_rush_yds_prior": 17.54,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Antonio Johnson": {
+        "team": "JAX",
+        "position": "S",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 16.0,
+        "eb_shrunk_rush_yds_prior": 19.0,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Kyle Hamilton": {
+        "team": "BAL",
+        "position": "S",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 13.71,
+        "eb_shrunk_rush_yds_prior": 16.29,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Malaki Starks": {
+        "team": "BAL",
+        "position": "S",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 13.71,
+        "eb_shrunk_rush_yds_prior": 16.29,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Ameer Abdullah": {
+        "team": "JAX",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 19.4,
+        "eb_shrunk_rush_yds_prior": 28.6,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Nick Vannett": {
+        "team": "BAL",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 27.43,
+        "eb_shrunk_rush_yds_prior": 32.57,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Quintin Morris": {
+        "team": "JAX",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 18.09,
+        "eb_shrunk_rush_yds_prior": 20.73,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Chris Rodriguez Jr.": {
+        "team": "JAX",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 16.54,
+        "eb_shrunk_rush_yds_prior": 33.62,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Rasheen Ali": {
+        "team": "BAL",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 19.2,
+        "eb_shrunk_rush_yds_prior": 25.2,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "LaJohntay Wester": {
+        "team": "BAL",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 26.22,
+        "eb_shrunk_rush_yds_prior": 25.33,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Devontez Walker": {
+        "team": "BAL",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 24.27,
+        "eb_shrunk_rush_yds_prior": 20.73,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      },
+      "Bhayshul Tuten": {
+        "team": "JAX",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 28.69,
+        "eb_shrunk_rush_yds_prior": 55.39,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "LeQuint Allen Jr.": {
+        "team": "JAX",
+        "position": "RB",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 16.75,
+        "eb_shrunk_rush_yds_prior": 19.09,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Tanner Koziol": {
+        "team": "JAX",
+        "position": "TE",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 28.57,
+        "eb_shrunk_rush_yds_prior": 32.57,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "CJ Williams": {
+        "team": "JAX",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 27.43,
+        "eb_shrunk_rush_yds_prior": 32.57,
+        "pocket_depth_adjusted_catch_rate": 0.66,
+        "physics_completion_prob": 0.21
+      },
+      "Elijah Sarratt": {
+        "team": "BAL",
+        "position": "WR",
+        "features_generated": 204,
+        "foundational_equations_applied": 21,
+        "total_equations_evaluated_for_athlete": 213,
+        "eb_shrunk_rec_yds_prior": 29.29,
+        "eb_shrunk_rush_yds_prior": 32.57,
+        "pocket_depth_adjusted_catch_rate": 0.6072,
+        "physics_completion_prob": 0.21
+      }
+    },
+    "foundational_game_equations": {
+      "student_t_copula_tail_dependence_rho_035_nu_4": 0.1815,
+      "points_from_epa_jax": 25.77,
+      "points_from_epa_bal_fagnano": 18.17,
+      "win_prob_from_spread_jax_minus_7_5": 0.7479,
+      "rb_regime_mixture_derrick_henry": 60.51
+    },
+    "stage1b_receipt_sha256": "bfa1953e458be1f858bfd9c302b24f632b4c954d4ef49912197c855a88d289f8"
   }
 }
