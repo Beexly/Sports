@@ -106,9 +106,9 @@ Result: `Validation passed successfully (exit code 0).`
 
 | File | Content |
 |---|---|
-| `data/engine/gsi_overnight_100k_cte_and_koopman_vfib_benchmark.json` | 100,000 frames on real binary streams (ECG 48B, NFL 28B), p50/p95/p99 latency, cycles/frame, SRAM 20769/262144, dropout + dt sweeps |
-| `data/engine/gsi_overnight_pre_order_deconfounded_mimic_proof.json` | Theorem 4 test + 45/45 suite + compile gate; `pre_order_auc: null`, `false_discovery_rate: null` — recorded null rather than fabricated |
-| `data/engine/gse_walk_forward_2023_2026_ablation_and_conformal_tuning.json` | 76-module zero-orphan audit + ACI-CRC tau sweep table |
+| `data/engine/gsi_overnight_100k_cte_and_koopman_vfib_benchmark.json` | status PARTIAL: 100,000 frames on real binary streams, measured p50/p95/p99 latency (Python, labeled); dropout retention measured against checksum-stable reconstruction; hardware SRAM/cycles and dt-stress attributed to the embedded C++ kernel test, not restated |
+| `data/engine/gsi_overnight_pre_order_deconfounded_mimic_proof.json` | Theorem 4 test + 45/45 suite + compile gate, return-code gated; `pre_order_auc: null`, `false_discovery_rate: null` — recorded null rather than fabricated |
+| `data/engine/gse_walk_forward_2023_2026_ablation_and_conformal_tuning.json` | status SIMULATED: 76-module zero-orphan audit (filesystem-backed) + tau and multiplier sweep tables; tautological false-positive fields removed by the final review |
 | `data/engine/week9_coverage_audit_2026.json` | 12 staged games vs 15 claimed in call sheet; gaps documented |
 | `docs/predictions/research/2026-11-05/THURSDAY-MORNING-READY-TO-POST-REVENUE-QUEUE.md` | 3 threads (7/6/7 posts), 10 sniper replies, 3 emails ($9.99/$29/$79) |
 | `docs/predictions/research/2026-11-05/VOICE-DNA.md` | Locked persona for every published surface |
