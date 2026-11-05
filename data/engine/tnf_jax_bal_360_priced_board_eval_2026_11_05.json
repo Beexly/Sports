@@ -1,6 +1,6 @@
 {
   "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-  "parent_stage3_4_receipt_sha256": "3f7d6b5c6586c170c29b463a2ffa9a70489964eb44a9e509cf549365c22c6d71",
+  "parent_stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3",
   "board_summary": {
     "total_game_lines_evaluated": 6,
     "total_props_on_board": 1461,
@@ -23,7 +23,7 @@
       "confidence_score": "54/100",
       "decision": "PASS",
       "publishAllowed": false,
-      "gate_reason": "POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 42.1% < 50.0% de-vigged market."
+      "gate_reason": "POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 53.07% vs 48.92% de-vigged market (90% Wilson LB 52.25%)."
     },
     {
       "market": "Spread",
@@ -36,7 +36,7 @@
       "confidence_score": "58/100",
       "decision": "PASS",
       "publishAllowed": false,
-      "gate_reason": "ROOKIE_QB1_UNCERTAINTY_GATE: Model shrinks toward market (+7.5) but Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100)."
+      "gate_reason": "ROOKIE_QB1_UNCERTAINTY_GATE: Post-sim BAL +7.5 cover prob 46.93% vs 51.08% de-vigged market; Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100)."
     },
     {
       "market": "Total",
@@ -49,7 +49,7 @@
       "confidence_score": "57/100",
       "decision": "PASS",
       "publishAllowed": false,
-      "gate_reason": "SCRIPT_DRAG_GATE: BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required)."
+      "gate_reason": "SCRIPT_DRAG_GATE: Post-sim Over 41.5 prob 50.49% vs 50.00% de-vigged market; BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required)."
     },
     {
       "market": "Total",
@@ -62,7 +62,7 @@
       "confidence_score": "52/100",
       "decision": "PASS",
       "publishAllowed": false,
-      "gate_reason": "NEGATIVE_EV: Post-sim Under 41.5 prob 43.3% < 50.0% de-vigged market."
+      "gate_reason": "NEGATIVE_EV: Post-sim Under 41.5 prob 49.51% < 50.00% de-vigged market."
     },
     {
       "market": "Moneyline",
@@ -75,7 +75,7 @@
       "confidence_score": "61/100",
       "decision": "PASS",
       "publishAllowed": false,
-      "gate_reason": "JUICED_FAVORITE_BIAS_GATE: -520 requires 80.5% de-vigged win prob; post-sim JAX win prob is 65.7% (exact historical replay failure mode)."
+      "gate_reason": "JUICED_FAVORITE_BIAS_GATE: -520 requires 80.43% de-vigged win prob; post-sim JAX win prob is 71.98% (exact historical replay failure mode)."
     },
     {
       "market": "Moneyline",
@@ -88,7 +88,7 @@
       "confidence_score": "55/100",
       "decision": "PASS",
       "publishAllowed": false,
-      "gate_reason": "ROOKIE_QB1_TAIL_RISK: Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play."
+      "gate_reason": "ROOKIE_QB1_TAIL_RISK: Post-sim BAL win prob 28.02% vs 19.57% de-vigged market; Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play."
     }
   ],
   "core_prop_evaluations": [
@@ -1448,8 +1448,62 @@
     "reason": "PARLAY_CONTAINS_PASS_LEG"
   },
   "dual_panel_ledger_summary": {
-    "panel_a_15947_historical_replay": {},
-    "panel_b_21_pick_5stage_ledger": {}
+    "panel_a_15947_historical_replay": {
+      "sample_size": 15947,
+      "wins": 8404,
+      "losses": 7543,
+      "win_rate": 0.527,
+      "roi": -0.0548,
+      "brier_score": 0.2484,
+      "coin_flip_brier": 0.25,
+      "brier_skill_score": 0.0064,
+      "flat_minus_110_implied_win_rate": 0.5238,
+      "flat_minus_110_roi_at_5270": 0.0061,
+      "effective_breakeven_probability": 0.5558,
+      "average_american_odds": -125.1,
+      "root_cause": "Uncalibrated juiced-favorite selection in heuristic book-path (confidence 80-89 realizing 41.5% on n=130, 90-99 realizing 31.2% on n=32, vs signal-path realizing 57.0% on 60-69, 66.0% on 70-79, 67.8% on 80-89)."
+    },
+    "panel_b_21_pick_5stage_ledger": {
+      "record": "16-5",
+      "sample_size": 21,
+      "wins": 16,
+      "losses": 5,
+      "win_rate": 0.7619047619047619,
+      "win_rate_pct": "76.2%",
+      "net_units": "+10.45u",
+      "wilson_95_ci": [
+        0.5491,
+        0.8937
+      ],
+      "wilson_95_ci_pct": [
+        "54.91%",
+        "89.37%"
+      ],
+      "breakeven_minus_110": 0.5238,
+      "one_sided_p_value": 0.02268765867908819,
+      "two_sided_p_value": 0.030149049425176547,
+      "sensitivity_15_6": {
+        "record": "15-6",
+        "win_rate": 0.7142857142857143,
+        "wilson_95_ci": [
+          0.5004,
+          0.8619
+        ],
+        "wilson_95_ci_pct": [
+          "50.04%",
+          "86.19%"
+        ],
+        "note": "Drops lower bound to 49.79%, below -110 breakeven (52.38%)."
+      },
+      "power_analysis": {
+        "target_win_rate": 0.6,
+        "null_win_rate": 0.5238,
+        "alpha": 0.01,
+        "target_power": 0.8,
+        "min_sample_size_required": 250,
+        "note": "Derived via normal approximation / exact binomial power calculation for alpha=0.01, power=0.80."
+      }
+    }
   },
-  "stage5_receipt_sha256": "96e112f7c7832f623ecfae4935a0b02a328ee95d818f818814b4a5d22e1ba405"
+  "stage5_receipt_sha256": "1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d"
 }

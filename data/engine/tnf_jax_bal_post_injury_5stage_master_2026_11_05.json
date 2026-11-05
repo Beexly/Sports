@@ -1,16 +1,16 @@
 {
   "schema": "gse_post_injury_5stage_master_v2",
   "cryptographic_receipt_chain": {
-    "stage0_receipt_sha256": "c1fc3f4cbd3778ee8e795b7eddb5537750af54c2047b9e064d44e3a9b3921948",
-    "stage1a_receipt_sha256": "7cb15a8eb8521842d75a9eca693ef342b0d6e05cd54ba200d9f1e6bcc549073a",
-    "stage1b_receipt_sha256": "bfa1953e458be1f858bfd9c302b24f632b4c954d4ef49912197c855a88d289f8",
-    "stage2_receipt_sha256": "c63a54c5ddb859c75477f82ee53890ed5780bf5db775e61b5e98a41233e6accd",
-    "stage3_4_receipt_sha256": "3f7d6b5c6586c170c29b463a2ffa9a70489964eb44a9e509cf549365c22c6d71",
-    "stage5_receipt_sha256": "96e112f7c7832f623ecfae4935a0b02a328ee95d818f818814b4a5d22e1ba405"
+    "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
+    "stage1a_receipt_sha256": "49ba0c608616bf26c7eeb5fc7a8ce33511fc9d169405ded1db3a86d08d3cf58d",
+    "stage1b_receipt_sha256": "acff665129a9f7dc0ed2da3821e9cd5de934b7242141909328360332e0f8a0c5",
+    "stage2_receipt_sha256": "80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3",
+    "stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3",
+    "stage5_receipt_sha256": "1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "bfa1953e458be1f858bfd9c302b24f632b4c954d4ef49912197c855a88d289f8",
+    "parent_stage1b_receipt_sha256": "acff665129a9f7dc0ed2da3821e9cd5de934b7242141909328360332e0f8a0c5",
     "coachMindsetHash": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
     "tau": 0.42,
     "jev_full_game_spine": {
@@ -140,11 +140,11 @@
       "bal_cover_plus_7_5_prob": 0.469,
       "over_41_5_prob": 0.5076
     },
-    "stage2_receipt_sha256": "c63a54c5ddb859c75477f82ee53890ed5780bf5db775e61b5e98a41233e6accd"
+    "stage2_receipt_sha256": "80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3"
   },
   "stage3_4_conserved_post_sim_projections": {
-    "schema": "gse_stage3_4_conserved_post_sim_projections_v1",
-    "parent_stage2_receipt_sha256": "c63a54c5ddb859c75477f82ee53890ed5780bf5db775e61b5e98a41233e6accd",
+    "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
+    "parent_stage2_receipt_sha256": "80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3",
     "pbp_conservation_verified": true,
     "conserved_shares_summary": {
       "jax_receiving_target_shares_sum": 1.0,
@@ -4200,11 +4200,691 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "3f7d6b5c6586c170c29b463a2ffa9a70489964eb44a9e509cf549365c22c6d71"
+    "derivatives_and_exotics_360": {
+      "quarters_and_halves_team_projections": {
+        "1Q": {
+          "jax_points_mean": 5.35,
+          "bal_points_mean": 3.42,
+          "jax_minus_bal_spread_mean": 1.93,
+          "bal_home_margin_mean": -1.93,
+          "total_points_mean": 8.77
+        },
+        "2Q": {
+          "jax_points_mean": 7.34,
+          "bal_points_mean": 4.58,
+          "jax_minus_bal_spread_mean": 2.76,
+          "bal_home_margin_mean": -2.76,
+          "total_points_mean": 11.92
+        },
+        "3Q": {
+          "jax_points_mean": 5.85,
+          "bal_points_mean": 4.08,
+          "jax_minus_bal_spread_mean": 1.77,
+          "bal_home_margin_mean": -1.77,
+          "total_points_mean": 9.93
+        },
+        "4Q": {
+          "jax_points_mean": 6.35,
+          "bal_points_mean": 4.58,
+          "jax_minus_bal_spread_mean": 1.77,
+          "bal_home_margin_mean": -1.77,
+          "total_points_mean": 10.93
+        },
+        "1H": {
+          "jax_points_mean": 12.69,
+          "bal_points_mean": 8.0,
+          "jax_minus_bal_spread_mean": 4.69,
+          "bal_home_margin_mean": -4.69,
+          "total_points_mean": 20.69
+        },
+        "2H": {
+          "jax_points_mean": 12.2,
+          "bal_points_mean": 8.67,
+          "jax_minus_bal_spread_mean": 3.53,
+          "bal_home_margin_mean": -3.53,
+          "total_points_mean": 20.87
+        },
+        "FullGame": {
+          "jax_points_mean": 24.89,
+          "bal_points_mean": 16.67,
+          "jax_minus_bal_spread_mean": 8.22,
+          "bal_home_margin_mean": -8.22,
+          "total_points_mean": 41.56
+        }
+      },
+      "first_quarter_and_first_half_player_projections": {
+        "Trevor Lawrence": {
+          "starter_name": "Trevor Lawrence",
+          "team": "JAX",
+          "position": "QB",
+          "1Q_pass_yds_mean": 49.4,
+          "1Q_pass_yds_p50": 49.1,
+          "1H_pass_yds_mean": 111.9,
+          "1H_pass_yds_p50": 111.2,
+          "1Q_rush_yds_mean": 3.9,
+          "1H_rush_yds_mean": 8.8
+        },
+        "Joe Fagnano": {
+          "starter_name": "Joe Fagnano",
+          "team": "BAL",
+          "position": "QB",
+          "1Q_pass_yds_mean": 41.5,
+          "1Q_pass_yds_p50": 41.4,
+          "1H_pass_yds_mean": 93.4,
+          "1H_pass_yds_p50": 93.1,
+          "1Q_rush_yds_mean": 2.5,
+          "1H_rush_yds_mean": 5.6
+        },
+        "Derrick Henry": {
+          "starter_name": "Derrick Henry",
+          "team": "BAL",
+          "position": "RB",
+          "1Q_rush_yds_mean": 16.6,
+          "1Q_rush_yds_p50": 16.2,
+          "1H_rush_yds_mean": 37.3,
+          "1H_rush_yds_p50": 36.5,
+          "1Q_rec_yds_mean": 2.0,
+          "1H_rec_yds_mean": 4.6
+        },
+        "Chris Rodriguez Jr.": {
+          "starter_name": "Chris Rodriguez Jr.",
+          "team": "JAX",
+          "position": "RB",
+          "1Q_rush_yds_mean": 18.4,
+          "1Q_rush_yds_p50": 18.4,
+          "1H_rush_yds_mean": 41.7,
+          "1H_rush_yds_p50": 41.6,
+          "1Q_rec_yds_mean": 0.7,
+          "1H_rec_yds_mean": 1.7
+        },
+        "Bhayshul Tuten": {
+          "starter_name": "Bhayshul Tuten",
+          "team": "JAX",
+          "position": "RB",
+          "1Q_rush_yds_mean": 0.0,
+          "1Q_rush_yds_p50": 0.0,
+          "1H_rush_yds_mean": 0.0,
+          "1H_rush_yds_p50": 0.0,
+          "1Q_rec_yds_mean": 0.0,
+          "1H_rec_yds_mean": 0.0,
+          "branch_b_active_limited_1Q_rush_yds_p50": 14.4,
+          "branch_b_active_limited_1H_rush_yds_p50": 32.7
+        },
+        "Parker Washington": {
+          "starter_name": "Parker Washington",
+          "team": "JAX",
+          "position": "WR",
+          "1Q_rec_yds_mean": 11.9,
+          "1Q_rec_yds_p50": 11.8,
+          "1H_rec_yds_mean": 27.0,
+          "1H_rec_yds_p50": 26.8,
+          "1Q_receptions_mean": 0.74,
+          "1H_receptions_mean": 1.69
+        },
+        "Zay Flowers": {
+          "starter_name": "Zay Flowers",
+          "team": "BAL",
+          "position": "WR",
+          "1Q_rec_yds_mean": 9.7,
+          "1Q_rec_yds_p50": 9.6,
+          "1H_rec_yds_mean": 21.7,
+          "1H_rec_yds_p50": 21.6,
+          "1Q_receptions_mean": 0.64,
+          "1H_receptions_mean": 1.43
+        },
+        "Mark Andrews": {
+          "starter_name": "Mark Andrews",
+          "team": "BAL",
+          "position": "TE",
+          "1Q_rec_yds_mean": 6.1,
+          "1Q_rec_yds_p50": 6.1,
+          "1H_rec_yds_mean": 13.8,
+          "1H_rec_yds_p50": 13.7,
+          "1Q_receptions_mean": 0.81,
+          "1H_receptions_mean": 1.83
+        },
+        "Brenton Strange": {
+          "starter_name": "Brenton Strange",
+          "team": "JAX",
+          "position": "TE",
+          "1Q_rec_yds_mean": 8.7,
+          "1Q_rec_yds_p50": 8.6,
+          "1H_rec_yds_mean": 19.7,
+          "1H_rec_yds_p50": 19.5,
+          "1Q_receptions_mean": 0.73,
+          "1H_receptions_mean": 1.65
+        },
+        "Jakobi Meyers": {
+          "starter_name": "Jakobi Meyers",
+          "team": "JAX",
+          "position": "WR",
+          "1Q_rec_yds_mean": 7.7,
+          "1Q_rec_yds_p50": 7.6,
+          "1H_rec_yds_mean": 17.4,
+          "1H_rec_yds_p50": 17.3,
+          "1Q_receptions_mean": 0.55,
+          "1H_receptions_mean": 1.24
+        },
+        "Brian Thomas Jr.": {
+          "starter_name": "Brian Thomas Jr.",
+          "team": "JAX",
+          "position": "WR",
+          "1Q_rec_yds_mean": 5.4,
+          "1Q_rec_yds_p50": 5.4,
+          "1H_rec_yds_mean": 12.3,
+          "1H_rec_yds_p50": 12.3,
+          "1Q_receptions_mean": 0.47,
+          "1H_receptions_mean": 1.06
+        }
+      },
+      "longest_play_projections": {
+        "longest_completion": {
+          "Trevor Lawrence": {
+            "team": "JAX",
+            "expected_completions": 19.4,
+            "explosive_pass_rate_ftn": 0.142,
+            "longest_completion_mean": 29.2,
+            "longest_completion_p50": 27.5
+          },
+          "Joe Fagnano": {
+            "team": "BAL",
+            "expected_completions": 18.1,
+            "explosive_pass_rate_ftn": 0.088,
+            "longest_completion_mean": 23.9,
+            "longest_completion_p50": 22.5
+          }
+        },
+        "longest_reception": {
+          "Parker Washington": {
+            "team": "JAX",
+            "position": "WR",
+            "expected_receptions": 3.31,
+            "longest_reception_mean": 30.1,
+            "longest_reception_p50": 27.9
+          },
+          "Brian Thomas Jr.": {
+            "team": "JAX",
+            "position": "WR",
+            "expected_receptions": 2.07,
+            "longest_reception_mean": 23.2,
+            "longest_reception_p50": 21.5
+          },
+          "Jakobi Meyers": {
+            "team": "JAX",
+            "position": "WR",
+            "expected_receptions": 2.43,
+            "longest_reception_mean": 22.9,
+            "longest_reception_p50": 21.2
+          },
+          "Brenton Strange": {
+            "team": "JAX",
+            "position": "TE",
+            "expected_receptions": 3.23,
+            "longest_reception_mean": 19.5,
+            "longest_reception_p50": 18.1
+          },
+          "Zay Flowers": {
+            "team": "BAL",
+            "position": "WR",
+            "expected_receptions": 2.89,
+            "longest_reception_mean": 28.6,
+            "longest_reception_p50": 26.5
+          },
+          "Mark Andrews": {
+            "team": "BAL",
+            "position": "TE",
+            "expected_receptions": 3.7,
+            "longest_reception_mean": 13.3,
+            "longest_reception_p50": 12.3
+          },
+          "Rashod Bateman": {
+            "team": "BAL",
+            "position": "WR",
+            "expected_receptions": 1.26,
+            "longest_reception_mean": 22.7,
+            "longest_reception_p50": 21.0
+          },
+          "Derrick Henry": {
+            "team": "BAL",
+            "position": "RB",
+            "expected_receptions": 1.48,
+            "longest_reception_mean": 7.0,
+            "longest_reception_p50": 6.5
+          },
+          "Chris Rodriguez Jr.": {
+            "team": "JAX",
+            "position": "RB",
+            "expected_receptions": 1.0,
+            "longest_reception_mean": 4.9,
+            "longest_reception_p50": 4.5
+          }
+        },
+        "longest_rush": {
+          "Derrick Henry": {
+            "team": "BAL",
+            "position": "RB",
+            "expected_carries": 18.97,
+            "longest_rush_mean": 13.0,
+            "longest_rush_p50": 11.9,
+            "branch_note": "Branch A Primary"
+          },
+          "Chris Rodriguez Jr.": {
+            "team": "JAX",
+            "position": "RB",
+            "expected_carries": 17.63,
+            "longest_rush_mean": 12.8,
+            "longest_rush_p50": 11.7,
+            "branch_note": "Branch A Primary"
+          },
+          "Trevor Lawrence": {
+            "team": "JAX",
+            "position": "QB",
+            "expected_carries": 4.82,
+            "longest_rush_mean": 8.0,
+            "longest_rush_p50": 7.3,
+            "branch_note": "Branch A Primary"
+          },
+          "Joe Fagnano": {
+            "team": "BAL",
+            "position": "QB",
+            "expected_carries": 3.16,
+            "longest_rush_mean": 6.1,
+            "longest_rush_p50": 5.6,
+            "branch_note": "Branch A Primary"
+          },
+          "Ameer Abdullah": {
+            "team": "JAX",
+            "position": "RB",
+            "expected_carries": 9.7,
+            "longest_rush_mean": 8.3,
+            "longest_rush_p50": 7.6,
+            "branch_note": "Branch A Primary"
+          },
+          "Bhayshul Tuten": {
+            "team": "JAX",
+            "position": "RB",
+            "expected_carries": 14.53,
+            "longest_rush_mean": 12.8,
+            "longest_rush_p50": 11.7,
+            "branch_note": "Branch B Active Limited contingency (Branch A Out = 0.0)"
+          }
+        }
+      },
+      "touchdown_scorer_probabilities": {
+        "Derrick Henry": {
+          "team": "BAL",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.6756,
+          "anytime_td_prob": 0.4911,
+          "first_td_prob": 0.1375,
+          "two_plus_tds_prob": 0.1474,
+          "fair_anytime_td_american_odds": 104
+        },
+        "Chris Rodriguez Jr.": {
+          "team": "JAX",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.5415,
+          "anytime_td_prob": 0.4181,
+          "first_td_prob": 0.1102,
+          "two_plus_tds_prob": 0.103,
+          "fair_anytime_td_american_odds": 139
+        },
+        "Parker Washington": {
+          "team": "JAX",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.501,
+          "anytime_td_prob": 0.3941,
+          "first_td_prob": 0.1019,
+          "two_plus_tds_prob": 0.0905,
+          "fair_anytime_td_american_odds": 154
+        },
+        "Brenton Strange": {
+          "team": "JAX",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.36,
+          "anytime_td_prob": 0.3023,
+          "first_td_prob": 0.0733,
+          "two_plus_tds_prob": 0.0512,
+          "fair_anytime_td_american_odds": 231
+        },
+        "Jakobi Meyers": {
+          "team": "JAX",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.3238,
+          "anytime_td_prob": 0.2766,
+          "first_td_prob": 0.0659,
+          "two_plus_tds_prob": 0.0424,
+          "fair_anytime_td_american_odds": 262
+        },
+        "Zay Flowers": {
+          "team": "BAL",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.2796,
+          "anytime_td_prob": 0.2439,
+          "first_td_prob": 0.0569,
+          "two_plus_tds_prob": 0.0325,
+          "fair_anytime_td_american_odds": 310
+        },
+        "Brian Thomas Jr.": {
+          "team": "JAX",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.2241,
+          "anytime_td_prob": 0.2008,
+          "first_td_prob": 0.0456,
+          "two_plus_tds_prob": 0.0217,
+          "fair_anytime_td_american_odds": 398
+        },
+        "Ameer Abdullah": {
+          "team": "JAX",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.2079,
+          "anytime_td_prob": 0.1877,
+          "first_td_prob": 0.0423,
+          "two_plus_tds_prob": 0.0188,
+          "fair_anytime_td_american_odds": 433
+        },
+        "Josh Cameron": {
+          "team": "JAX",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.1841,
+          "anytime_td_prob": 0.1681,
+          "first_td_prob": 0.0375,
+          "two_plus_tds_prob": 0.015,
+          "fair_anytime_td_american_odds": 495
+        },
+        "Mark Andrews": {
+          "team": "BAL",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.17,
+          "anytime_td_prob": 0.1563,
+          "first_td_prob": 0.0346,
+          "two_plus_tds_prob": 0.0129,
+          "fair_anytime_td_american_odds": 540
+        },
+        "Justice Hill": {
+          "team": "BAL",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.1668,
+          "anytime_td_prob": 0.1536,
+          "first_td_prob": 0.0339,
+          "two_plus_tds_prob": 0.0125,
+          "fair_anytime_td_american_odds": 551
+        },
+        "LeQuint Allen Jr.": {
+          "team": "JAX",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.1462,
+          "anytime_td_prob": 0.1361,
+          "first_td_prob": 0.0298,
+          "two_plus_tds_prob": 0.0097,
+          "fair_anytime_td_american_odds": 635
+        },
+        "Ja'Kobi Lane": {
+          "team": "BAL",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.1233,
+          "anytime_td_prob": 0.116,
+          "first_td_prob": 0.0251,
+          "two_plus_tds_prob": 0.007,
+          "fair_anytime_td_american_odds": 762
+        },
+        "Rashod Bateman": {
+          "team": "BAL",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.1233,
+          "anytime_td_prob": 0.116,
+          "first_td_prob": 0.0251,
+          "two_plus_tds_prob": 0.007,
+          "fair_anytime_td_american_odds": 762
+        },
+        "Nate Boerkircher": {
+          "team": "JAX",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.11,
+          "anytime_td_prob": 0.1042,
+          "first_td_prob": 0.0224,
+          "two_plus_tds_prob": 0.0056,
+          "fair_anytime_td_american_odds": 860
+        },
+        "Josh Cuevas": {
+          "team": "BAL",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.09,
+          "anytime_td_prob": 0.0861,
+          "first_td_prob": 0.0183,
+          "two_plus_tds_prob": 0.0038,
+          "fair_anytime_td_american_odds": 1062
+        },
+        "Travis Hunter": {
+          "team": "JAX",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.0779,
+          "anytime_td_prob": 0.0749,
+          "first_td_prob": 0.0158,
+          "two_plus_tds_prob": 0.0029,
+          "fair_anytime_td_american_odds": 1234
+        },
+        "Trevor Lawrence": {
+          "team": "JAX",
+          "position": "QB",
+          "expected_total_tds_lambda": 0.0779,
+          "anytime_td_prob": 0.0749,
+          "first_td_prob": 0.0158,
+          "two_plus_tds_prob": 0.0029,
+          "fair_anytime_td_american_odds": 1235
+        },
+        "Elijah Sarratt": {
+          "team": "BAL",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.0733,
+          "anytime_td_prob": 0.0707,
+          "first_td_prob": 0.0149,
+          "two_plus_tds_prob": 0.0026,
+          "fair_anytime_td_american_odds": 1314
+        },
+        "Tanner Koziol": {
+          "team": "JAX",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.07,
+          "anytime_td_prob": 0.0676,
+          "first_td_prob": 0.0142,
+          "two_plus_tds_prob": 0.0023,
+          "fair_anytime_td_american_odds": 1379
+        },
+        "Joe Fagnano": {
+          "team": "BAL",
+          "position": "QB",
+          "expected_total_tds_lambda": 0.0668,
+          "anytime_td_prob": 0.0646,
+          "first_td_prob": 0.0136,
+          "two_plus_tds_prob": 0.0021,
+          "fair_anytime_td_american_odds": 1448
+        },
+        "LaJohntay Wester": {
+          "team": "BAL",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.0633,
+          "anytime_td_prob": 0.0614,
+          "first_td_prob": 0.0129,
+          "two_plus_tds_prob": 0.0019,
+          "fair_anytime_td_american_odds": 1529
+        },
+        "Devontez Walker": {
+          "team": "BAL",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.0633,
+          "anytime_td_prob": 0.0614,
+          "first_td_prob": 0.0129,
+          "two_plus_tds_prob": 0.0019,
+          "fair_anytime_td_american_odds": 1529
+        },
+        "Matt Hibner": {
+          "team": "BAL",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.05,
+          "anytime_td_prob": 0.0488,
+          "first_td_prob": 0.0102,
+          "two_plus_tds_prob": 0.0012,
+          "fair_anytime_td_american_odds": 1950
+        },
+        "Rasheen Ali": {
+          "team": "BAL",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.0434,
+          "anytime_td_prob": 0.0425,
+          "first_td_prob": 0.0088,
+          "two_plus_tds_prob": 0.0009,
+          "fair_anytime_td_american_odds": 2255
+        },
+        "Quintin Morris": {
+          "team": "JAX",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.03,
+          "anytime_td_prob": 0.0296,
+          "first_td_prob": 0.0061,
+          "two_plus_tds_prob": 0.0004,
+          "fair_anytime_td_american_odds": 3284
+        },
+        "CJ Williams": {
+          "team": "JAX",
+          "position": "WR",
+          "expected_total_tds_lambda": 0.0241,
+          "anytime_td_prob": 0.0238,
+          "first_td_prob": 0.0049,
+          "two_plus_tds_prob": 0.0003,
+          "fair_anytime_td_american_odds": 4102
+        },
+        "Nick Vannett": {
+          "team": "BAL",
+          "position": "TE",
+          "expected_total_tds_lambda": 0.01,
+          "anytime_td_prob": 0.01,
+          "first_td_prob": 0.002,
+          "two_plus_tds_prob": 0.0,
+          "fair_anytime_td_american_odds": 9950
+        },
+        "Bhayshul Tuten": {
+          "team": "JAX",
+          "position": "RB",
+          "expected_total_tds_lambda": 0.0,
+          "anytime_td_prob": 0.0,
+          "first_td_prob": 0.0,
+          "two_plus_tds_prob": 0.0,
+          "fair_anytime_td_american_odds": 1000000
+        }
+      },
+      "idp_pass_rush_sack_projections": [
+        {
+          "pass_rusher": "Travon Walker",
+          "team": "JAX",
+          "position": "DE",
+          "pennydata_2026_gp": 6,
+          "pennydata_2026_sacks": 2.0,
+          "pennydata_2026_qb_hits": 6,
+          "pennydata_2026_tfl": 2,
+          "expected_sacks_mean": 0.58,
+          "p_0_25_plus_sacks": 0.4956,
+          "p_1_plus_sack": 0.4401,
+          "matchup_note": "Faces BAL rookie QB1 Joe Fagnano (8.4% sack rate allowed) with JAX 30.9% blitz rate"
+        },
+        {
+          "pass_rusher": "Josh Hines-Allen",
+          "team": "JAX",
+          "position": "DE",
+          "pennydata_2026_gp": 6,
+          "pennydata_2026_sacks": 1.5,
+          "pennydata_2026_qb_hits": 8,
+          "pennydata_2026_tfl": 3,
+          "expected_sacks_mean": 0.62,
+          "p_0_25_plus_sacks": 0.5248,
+          "p_1_plus_sack": 0.4621,
+          "matchup_note": "Team-high 8 QB hits in 6 GP; primary edge threat against BAL pass sets"
+        },
+        {
+          "pass_rusher": "Arik Armstead",
+          "team": "JAX",
+          "position": "DT",
+          "pennydata_2026_gp": 5,
+          "pennydata_2026_sacks": 1.0,
+          "pennydata_2026_qb_hits": 1,
+          "pennydata_2026_tfl": 2,
+          "expected_sacks_mean": 0.31,
+          "p_0_25_plus_sacks": 0.3212,
+          "p_1_plus_sack": 0.2666,
+          "matchup_note": "Interior pocket push collapses BAL A/B gaps against rookie QB1"
+        },
+        {
+          "pass_rusher": "Odafe Oweh",
+          "team": "BAL",
+          "position": "OLB",
+          "pennydata_2026_gp": 6,
+          "pennydata_2026_sacks": 3.0,
+          "pennydata_2026_qb_hits": 6,
+          "pennydata_2026_tfl": 4,
+          "expected_sacks_mean": 0.52,
+          "p_0_25_plus_sacks": 0.4586,
+          "p_1_plus_sack": 0.4055,
+          "matchup_note": "3.0 sacks and 6 QB hits in 6 GP; speed rush vs JAX tackles"
+        },
+        {
+          "pass_rusher": "Kyle Van Noy",
+          "team": "BAL",
+          "position": "OLB",
+          "pennydata_2026_gp": 5,
+          "pennydata_2026_sacks": 1.5,
+          "pennydata_2026_qb_hits": 2,
+          "pennydata_2026_tfl": 7,
+          "expected_sacks_mean": 0.38,
+          "p_0_25_plus_sacks": 0.3662,
+          "p_1_plus_sack": 0.3161,
+          "matchup_note": "1.5 sacks and 7 TFL in 5 GP; simulated-pressure edge setter"
+        },
+        {
+          "pass_rusher": "Nnamdi Madubuike",
+          "team": "BAL",
+          "position": "DT",
+          "pennydata_2026_gp": 5,
+          "pennydata_2026_sacks": 0.5,
+          "pennydata_2026_qb_hits": 6,
+          "pennydata_2026_tfl": 0,
+          "expected_sacks_mean": 0.34,
+          "p_0_25_plus_sacks": 0.3462,
+          "p_1_plus_sack": 0.2882,
+          "matchup_note": "6 QB hits in 5 GP from interior 3-tech alignment"
+        },
+        {
+          "pass_rusher": "Roquan Smith",
+          "team": "BAL",
+          "position": "LB",
+          "pennydata_2026_gp": 7,
+          "pennydata_2026_sacks": 2.0,
+          "pennydata_2026_qb_hits": 4,
+          "pennydata_2026_tfl": 1,
+          "expected_sacks_mean": 0.26,
+          "p_0_25_plus_sacks": 0.268,
+          "p_1_plus_sack": 0.2289,
+          "matchup_note": "2.0 sacks & 55 combined tackles in 7 GP; A-gap green-dog blitzes"
+        },
+        {
+          "pass_rusher": "Kyle Hamilton",
+          "team": "BAL",
+          "position": "S",
+          "pennydata_2026_gp": 7,
+          "pennydata_2026_sacks": 0.0,
+          "pennydata_2026_qb_hits": 1,
+          "pennydata_2026_tfl": 7,
+          "expected_sacks_mean": 0.18,
+          "p_0_25_plus_sacks": 0.187,
+          "p_1_plus_sack": 0.1647,
+          "matchup_note": "7 TFL & 48 combined tackles in 7 GP; overhang slot pressure & run support"
+        }
+      ]
+    },
+    "stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "3f7d6b5c6586c170c29b463a2ffa9a70489964eb44a9e509cf549365c22c6d71",
+    "parent_stage3_4_receipt_sha256": "81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3",
     "board_summary": {
       "total_game_lines_evaluated": 6,
       "total_props_on_board": 1461,
@@ -4227,7 +4907,7 @@
         "confidence_score": "54/100",
         "decision": "PASS",
         "publishAllowed": false,
-        "gate_reason": "POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 42.1% < 50.0% de-vigged market."
+        "gate_reason": "POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 53.07% vs 48.92% de-vigged market (90% Wilson LB 52.25%)."
       },
       {
         "market": "Spread",
@@ -4240,7 +4920,7 @@
         "confidence_score": "58/100",
         "decision": "PASS",
         "publishAllowed": false,
-        "gate_reason": "ROOKIE_QB1_UNCERTAINTY_GATE: Model shrinks toward market (+7.5) but Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100)."
+        "gate_reason": "ROOKIE_QB1_UNCERTAINTY_GATE: Post-sim BAL +7.5 cover prob 46.93% vs 51.08% de-vigged market; Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100)."
       },
       {
         "market": "Total",
@@ -4253,7 +4933,7 @@
         "confidence_score": "57/100",
         "decision": "PASS",
         "publishAllowed": false,
-        "gate_reason": "SCRIPT_DRAG_GATE: BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required)."
+        "gate_reason": "SCRIPT_DRAG_GATE: Post-sim Over 41.5 prob 50.49% vs 50.00% de-vigged market; BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required)."
       },
       {
         "market": "Total",
@@ -4266,7 +4946,7 @@
         "confidence_score": "52/100",
         "decision": "PASS",
         "publishAllowed": false,
-        "gate_reason": "NEGATIVE_EV: Post-sim Under 41.5 prob 43.3% < 50.0% de-vigged market."
+        "gate_reason": "NEGATIVE_EV: Post-sim Under 41.5 prob 49.51% < 50.00% de-vigged market."
       },
       {
         "market": "Moneyline",
@@ -4279,7 +4959,7 @@
         "confidence_score": "61/100",
         "decision": "PASS",
         "publishAllowed": false,
-        "gate_reason": "JUICED_FAVORITE_BIAS_GATE: -520 requires 80.5% de-vigged win prob; post-sim JAX win prob is 65.7% (exact historical replay failure mode)."
+        "gate_reason": "JUICED_FAVORITE_BIAS_GATE: -520 requires 80.43% de-vigged win prob; post-sim JAX win prob is 71.98% (exact historical replay failure mode)."
       },
       {
         "market": "Moneyline",
@@ -4292,7 +4972,7 @@
         "confidence_score": "55/100",
         "decision": "PASS",
         "publishAllowed": false,
-        "gate_reason": "ROOKIE_QB1_TAIL_RISK: Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play."
+        "gate_reason": "ROOKIE_QB1_TAIL_RISK: Post-sim BAL win prob 28.02% vs 19.57% de-vigged market; Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play."
       }
     ],
     "core_prop_evaluations": [
@@ -5652,9 +6332,63 @@
       "reason": "PARLAY_CONTAINS_PASS_LEG"
     },
     "dual_panel_ledger_summary": {
-      "panel_a_15947_historical_replay": {},
-      "panel_b_21_pick_5stage_ledger": {}
+      "panel_a_15947_historical_replay": {
+        "sample_size": 15947,
+        "wins": 8404,
+        "losses": 7543,
+        "win_rate": 0.527,
+        "roi": -0.0548,
+        "brier_score": 0.2484,
+        "coin_flip_brier": 0.25,
+        "brier_skill_score": 0.0064,
+        "flat_minus_110_implied_win_rate": 0.5238,
+        "flat_minus_110_roi_at_5270": 0.0061,
+        "effective_breakeven_probability": 0.5558,
+        "average_american_odds": -125.1,
+        "root_cause": "Uncalibrated juiced-favorite selection in heuristic book-path (confidence 80-89 realizing 41.5% on n=130, 90-99 realizing 31.2% on n=32, vs signal-path realizing 57.0% on 60-69, 66.0% on 70-79, 67.8% on 80-89)."
+      },
+      "panel_b_21_pick_5stage_ledger": {
+        "record": "16-5",
+        "sample_size": 21,
+        "wins": 16,
+        "losses": 5,
+        "win_rate": 0.7619047619047619,
+        "win_rate_pct": "76.2%",
+        "net_units": "+10.45u",
+        "wilson_95_ci": [
+          0.5491,
+          0.8937
+        ],
+        "wilson_95_ci_pct": [
+          "54.91%",
+          "89.37%"
+        ],
+        "breakeven_minus_110": 0.5238,
+        "one_sided_p_value": 0.02268765867908819,
+        "two_sided_p_value": 0.030149049425176547,
+        "sensitivity_15_6": {
+          "record": "15-6",
+          "win_rate": 0.7142857142857143,
+          "wilson_95_ci": [
+            0.5004,
+            0.8619
+          ],
+          "wilson_95_ci_pct": [
+            "50.04%",
+            "86.19%"
+          ],
+          "note": "Drops lower bound to 49.79%, below -110 breakeven (52.38%)."
+        },
+        "power_analysis": {
+          "target_win_rate": 0.6,
+          "null_win_rate": 0.5238,
+          "alpha": 0.01,
+          "target_power": 0.8,
+          "min_sample_size_required": 250,
+          "note": "Derived via normal approximation / exact binomial power calculation for alpha=0.01, power=0.80."
+        }
+      }
     },
-    "stage5_receipt_sha256": "96e112f7c7832f623ecfae4935a0b02a328ee95d818f818814b4a5d22e1ba405"
+    "stage5_receipt_sha256": "1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d"
   }
 }

@@ -31,4 +31,12 @@ if [ "$status" -ne 0 ]; then
   echo "pre-commit: definition-of-done blocked this commit (see above)." 1>&2
   exit "$status"
 fi
+
+# Connected 5-Stage Workflow & Zero-Contamination Dossier Guardrail:
+python scripts/guardrails/connected-workflow-dossier-guard.py
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "pre-commit: connected-workflow-dossier-guard blocked this commit (see above)." 1>&2
+  exit "$status"
+fi
 exit 0

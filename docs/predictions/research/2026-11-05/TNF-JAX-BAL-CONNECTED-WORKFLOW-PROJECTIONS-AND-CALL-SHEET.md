@@ -1,12 +1,12 @@
 # TNF `JAX @ BAL` (Week 9, 2026-11-05) — Connected 5-Stage Master Call-Sheet & Post-Simulation Projections
 
 ## 0. Cryptographic Connected Workflow Receipts (Zero-Skip Chain)
-- **Stage 0 Receipt (`enforce_stage0_roster_and_board_allowlist.py`):** `c1fc3f4cbd3778ee8e795b7eddb5537750af54c2047b9e064d44e3a9b3921948`
-- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `151c126abe4da4e0b65aab2686097847e0172461164173ce851838b69b139e4b`
-- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `19ede38f6b9c12bad83e99a5329482ead4032dd6c531fae72073a3aed5f0d3b3`
-- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `8f6b1084a862cf5b7cf16ae24a2ca5f5149f6fa70d74aa8b1997e8bbbf51160a`
-- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `7cd74ba56a4c43a425f30c2dde8c47c86a40a874529dfa259d2355ada68f478a`
-- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `6dba580725c56c3496dabde010187506703d5ff5b985fb67be0db7c654fe4c12`
+- **Stage 0 Receipt (`enforce_stage0_roster_and_board_allowlist.py`):** `6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b`
+- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `49ba0c608616bf26c7eeb5fc7a8ce33511fc9d169405ded1db3a86d08d3cf58d`
+- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `acff665129a9f7dc0ed2da3821e9cd5de934b7242141909328360332e0f8a0c5`
+- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `80945d7d3d4d771207f21cc4f7a00af627731bc8f0e957fc46e5faed485b39b3`
+- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `81409b8b2cb47e44a8afb4f0e7ab4da24ee29dec8a04db720ec8714eabf5dca3`
+- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `1994aaf5c0ffbba84f8b176ff22235551f2a0cc915ef2e03afa418d0ce8c7b6d`
 
 ---
 

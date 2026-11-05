@@ -46,6 +46,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E402
     Stage0RosterContaminationError,
     assert_zero_roster_contamination,
+    build_dynamic_league_wide_denylist_for_matchup,
     load_stage0_game_roster_allowlist,
 )
 
@@ -232,3 +233,69 @@ def test_connected_workflow_master_receipt_and_markdown_dossier():
     assert "16-5" in md_text
     assert "42.1%" not in md_text
     assert "65.7%" not in md_text
+
+
+def test_dynamic_32_team_league_wide_denylist():
+    allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9)
+    assert allowlist["dynamic_league_wide_denylist_count"] >= 2400
+
+    dyn_jax_bal = build_dynamic_league_wide_denylist_for_matchup("JAX", "BAL", 9)
+    assert len(dyn_jax_bal) >= 2400
+
+    # Any player from another NFL team (e.g., Patrick Mahomes on KC, Ja'Marr Chase on CIN, Saquon Barkley on PHI)
+    # must be automatically blocked by assert_zero_roster_contamination for JAX @ BAL
+    for wrong_team_player in ("Patrick Mahomes", "Ja'Marr Chase", "Saquon Barkley"):
+        assert wrong_team_player.lower() in dyn_jax_bal
+        with pytest.raises(Stage0RosterContaminationError):
+            assert_zero_roster_contamination(
+                {"athlete": wrong_team_player, "proj": 75.5},
+                allowlist,
+                f"test_wrong_team_{wrong_team_player}",
+            )
+
+    # Works dynamically for any other matchup (e.g., CIN @ CHI)
+    dyn_cin_chi = build_dynamic_league_wide_denylist_for_matchup("CIN", "CHI", 9)
+    assert "trevor lawrence" in dyn_cin_chi
+    assert "derrick henry" in dyn_cin_chi
+
+
+def test_connected_workflow_dossier_precommit_guard():
+    import subprocess
+
+    guard_script = REPO_ROOT / "scripts" / "guardrails" / "connected-workflow-dossier-guard.py"
+    assert guard_script.is_file()
+    proc = subprocess.run(
+        [sys.executable, str(guard_script)],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, f"Guardrail failed: {proc.stderr}\n{proc.stdout}"
+    assert "PASS  connected-workflow-dossier-guard" in proc.stdout
+
+
+def test_gse_connected_game_workflow_skill_installed_and_valid() -> None:
+    repo_skill = REPO_ROOT / ".claude" / "skills" / "gse-connected-game-workflow" / "SKILL.md"
+    global_skill = Path.home() / ".agents" / "skills" / "gse-connected-game-workflow" / "SKILL.md"
+    assert repo_skill.is_file()
+    assert global_skill.is_file()
+
+    for skill_path in (repo_skill, global_skill):
+        text = skill_path.read_text(encoding="utf-8")
+        assert "name: gse-connected-game-workflow" in text
+        m = re.search(r"^description:\s*(.+)$", text, flags=re.MULTILINE)
+        assert m is not None
+        desc = m.group(1).strip()
+        assert desc.startswith("Use when ")
+        assert len(desc) <= 200
+        assert "NO GAME PICK, PROP, PROJECTION, OR DOSSIER WITHOUT RUNNING" in text
+        assert "enforce_stage0_roster_and_board_allowlist.py" in text
+        assert "run_python_25_intelligence_domains.py" in text
+        assert "run_ts_prediction_and_mcp_engines.ts" in text
+        assert "gse_coach_mind_simulator.py" in text
+        assert "allocate_conserved_box_score" in text
+        assert "connected-workflow-dossier-guard.py" in text
+        assert "## Rationalization Table" in text
+        assert "## Red Flags" in text
+

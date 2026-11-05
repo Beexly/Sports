@@ -22,6 +22,7 @@ Executes in strict, non-bypassable order:
 """
 from __future__ import annotations
 
+import argparse
 import hashlib
 import importlib
 import json
@@ -1375,6 +1376,7 @@ def run_stage5_360_conjunction_gate(
     stage2_receipt: dict[str, Any],
     stage3_4_receipt: dict[str, Any],
     sim_branch_a: dict[str, Any],
+    board_rel_path: str = "data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
 ) -> dict[str, Any]:
     """
     Stage 5: Class B Market De-Vig & Conjunction Gate (`PASS` Discipline).
@@ -1502,7 +1504,7 @@ def run_stage5_360_conjunction_gate(
     ]
 
     # 2. Evaluate all core player prop lines against conserved post-simulation distributions
-    board_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_dk_full_board_2026_11_05.json"
+    board_path = REPO_ROOT / board_rel_path
     board = json.loads(board_path.read_text(encoding="utf-8"))
     props_list = board.get("props", [])
     athlete_projs = stage3_4_receipt["athlete_post_sim_projections"]
@@ -1901,9 +1903,12 @@ def execute_connected_game_workflow(
     home: str = "BAL",
     week: int = 9,
     n_sims: int = 10000,
+    board_rel_path: str = "data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
 ) -> dict[str, Any]:
     """Run the entire connected Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5 pipeline."""
-    stage0 = load_stage0_game_roster_allowlist(away=away, home=home, week=week)
+    stage0 = load_stage0_game_roster_allowlist(
+        away=away, home=home, week=week, board_rel_path=board_rel_path
+    )
     assert_zero_roster_contamination(stage0, stage0, "stage0_allowlist")
 
     stage1a = run_stage1a_all_38_coaching_and_scheme_layers(stage0)
@@ -1923,7 +1928,7 @@ def execute_connected_game_workflow(
     assert_zero_roster_contamination(stage3_4, stage0, "stage3_4_receipt")
 
     stage5 = run_stage5_360_conjunction_gate(
-        stage0, stage1a, stage1b, stage2, stage3_4, sim_a
+        stage0, stage1a, stage1b, stage2, stage3_4, sim_a, board_rel_path=board_rel_path
     )
     assert_zero_roster_contamination(stage5, stage0, "stage5_receipt")
 
@@ -2001,7 +2006,27 @@ def execute_connected_game_workflow(
 
 
 if __name__ == "__main__":
-    bundle = execute_connected_game_workflow("JAX", "BAL", 9, n_sims=10000)
+    parser = argparse.ArgumentParser(
+        description="Execute the GSE Connected 5-Stage Master Game Workflow."
+    )
+    parser.add_argument("--away", default="JAX", help="Away team abbreviation (default: JAX)")
+    parser.add_argument("--home", default="BAL", help="Home team abbreviation (default: BAL)")
+    parser.add_argument("--week", type=int, default=9, help="NFL week number (default: 9)")
+    parser.add_argument(
+        "--board-json",
+        default="data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
+        help="Relative path to live game board JSON",
+    )
+    parser.add_argument("--n-sims", type=int, default=10000, help="Number of Monte Carlo worlds (default: 10000)")
+    args = parser.parse_args()
+
+    bundle = execute_connected_game_workflow(
+        away=args.away,
+        home=args.home,
+        week=args.week,
+        n_sims=args.n_sims,
+        board_rel_path=args.board_json,
+    )
     c = bundle["cryptographic_receipt_chain"]
     print(
         f"[GSE CONNECTED WORKFLOW COMPLETE] matchup={bundle['matchup']} | "
