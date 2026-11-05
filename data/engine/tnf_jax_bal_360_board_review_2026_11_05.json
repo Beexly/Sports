@@ -1,0 +1,245 @@
+{
+  "schema": "tnf_360_board_review_v1",
+  "generated_at": "2026-11-05",
+  "event": {
+    "event_id": "401873037",
+    "matchup": "JAX @ BAL",
+    "kickoff_utc": "2026-11-06T01:15Z",
+    "teams": {
+      "33": "BAL",
+      "30": "JAX"
+    }
+  },
+  "official_ledger": "16-5 (76.2%, +10.45u) \u2014 data/engine/new_engine_official_ledger_2026.json",
+  "stage0": {
+    "status": "PASS",
+    "config_as_of": "2026-11-04",
+    "excluded": [
+      "Lamar Jackson",
+      "Skylar Thompson",
+      "Travis Etienne",
+      "Travis Etienne Jr.",
+      "Tyler Huntley"
+    ],
+    "confirmed_qb1": {
+      "JAX": "Trevor Lawrence",
+      "BAL": "Joe Fagnano"
+    },
+    "tuten": "Questionable (ankle, DNP) \u2014 volume-dependent legs PASS until 90-min re-check"
+  },
+  "jev_spine": {
+    "path": "data\\engine\\jev_full_game_spine_tnf_jax_bal_2026_11_05.json",
+    "snaps": 158,
+    "drives": 22,
+    "final_score": {
+      "JAX": 13,
+      "BAL": 21
+    },
+    "state_tensor_states": 43
+  },
+  "sinkhorn": {
+    "sims": 10000,
+    "snaps_per_sim": 175,
+    "total_simulated_snaps": 1750000,
+    "median_total": 40.29,
+    "median_home_margin": -4.69,
+    "sinkhorn_mass_moved": 0.1482,
+    "derived": {
+      "n": 10000,
+      "p_away_covers_minus10": 0.3685,
+      "p_home_covers_plus10": 0.6315,
+      "p_over_39_5": 0.5769,
+      "p_under_39_5": 0.4231,
+      "p_away_ml": 0.653,
+      "home_margin_std": 13.5,
+      "total_std": 12.925
+    }
+  },
+  "game_lines": {
+    "publish_allowed": false,
+    "numerically_clearing": [
+      "BAL +10 (-115)",
+      "BAL ML +390"
+    ],
+    "reason": "BAL +10 (+6.87 pts) and BAL ML (+9.93 pts) clear the numeric gate only because the sealed baseline (2026-10-25) predates Baltimore's QB1-out re-rating (Lamar Jackson thumb surgery, Huntley out, Fagnano starting). The model's team ratings do not carry that loss, so the edge is a stale-input artifact, not alpha. PASS with ruling.",
+    "markets": [
+      {
+        "market": "JAX -10 (-105)",
+        "model_prob": 0.3685,
+        "model_prob_calibration_deflated": 0.3165,
+        "devig_market_prob": 0.4892,
+        "edge_pts_after_deflation": -17.27,
+        "clears_edge_gate": false,
+        "note": "spread"
+      },
+      {
+        "market": "BAL +10 (-115)",
+        "model_prob": 0.6315,
+        "model_prob_calibration_deflated": 0.5795,
+        "devig_market_prob": 0.5108,
+        "edge_pts_after_deflation": 6.87,
+        "clears_edge_gate": true,
+        "note": "spread"
+      },
+      {
+        "market": "JAX ML -520",
+        "model_prob": 0.653,
+        "model_prob_calibration_deflated": 0.601,
+        "devig_market_prob": 0.8043,
+        "edge_pts_after_deflation": -20.33,
+        "clears_edge_gate": false,
+        "note": "moneyline"
+      },
+      {
+        "market": "BAL ML +390",
+        "model_prob": 0.347,
+        "model_prob_calibration_deflated": 0.295,
+        "devig_market_prob": 0.1957,
+        "edge_pts_after_deflation": 9.93,
+        "clears_edge_gate": true,
+        "note": "moneyline"
+      },
+      {
+        "market": "OVER 39.5 (-110)",
+        "model_prob": 0.5769,
+        "model_prob_calibration_deflated": 0.5249,
+        "devig_market_prob": 0.5,
+        "edge_pts_after_deflation": 2.49,
+        "clears_edge_gate": false,
+        "note": "total"
+      },
+      {
+        "market": "UNDER 39.5 (-110)",
+        "model_prob": 0.4231,
+        "model_prob_calibration_deflated": 0.3711,
+        "devig_market_prob": 0.5,
+        "edge_pts_after_deflation": -12.89,
+        "clears_edge_gate": false,
+        "note": "total"
+      }
+    ],
+    "model_market_divergence": {
+      "spread": "model -4.69 home vs market +10.00 home",
+      "total": "model 40.29 vs market 39.50",
+      "interpretation": "Model is materially less bullish on JAX than the market and its ML (65.3%) sits far below the de-vigged 80.4%; treat the sealed baseline as stale on the BAL QB1-out re-rating, not as an edge."
+    }
+  },
+  "props": {
+    "total_props": 1453,
+    "market_types": 75,
+    "publish_allowed": false,
+    "publish_allowed_count": 0,
+    "pass_count": 1453,
+    "pass_reason": "G1 FAIL: ESPN/DraftKings propBets publish target lines without two-sided prices; de-vig, CLV and conjunction pricing cannot be computed. No prop may be published.",
+    "stage0_blocked_props": 8,
+    "stage0_examples": [
+      "Bhayshul Tuten | First Touchdown Scorer | None",
+      "Bhayshul Tuten | Last Touchdown Scorer | None",
+      "Bhayshul Tuten | Anytime Touchdown Scorer | None",
+      "Bhayshul Tuten | Player to score 2 or more touchdowns | None",
+      "Bhayshul Tuten | Player to score 3 or more touchdowns | None",
+      "Bhayshul Tuten | 1st Half Touchdown Scorer | None",
+      "Bhayshul Tuten | 1st Quarter Touchdown Scorer | None",
+      "Bhayshul Tuten | First Team Touchdown Scorer | None"
+    ],
+    "market_counts": {
+      "Receiving Yards Milestones": 174,
+      "Receptions Milestones": 85,
+      "Team Total Points": 78,
+      "Receiving Yards Milestones - 1st Half": 74,
+      "Tackles + Assists Milestones": 63,
+      "Passing Yards Milestones - 1st Half": 52,
+      "Receiving Yards Milestones - 1st Quarter": 49,
+      "Passing Yards Milestones": 46,
+      "Passing Yards Milestones - 1st Quarter": 41,
+      "Tackles Milestones": 38,
+      "Rushing Yards Milestones": 36,
+      "Assists Milestones (Football)": 36,
+      "First Team Touchdown Scorer": 33,
+      "First Touchdown Scorer": 32,
+      "Last Touchdown Scorer": 32,
+      "Anytime Touchdown Scorer": 31,
+      "1st Half Touchdown Scorer": 31,
+      "1st Quarter Touchdown Scorer": 31,
+      "Player to score 2 or more touchdowns": 30,
+      "Passing + Rushing Yards Milestones": 29,
+      "Total Receiving Yards (incl. overtime)": 28,
+      "Total Receptions (incl. overtime)": 28,
+      "Rushing + Receiving Yards Milestones": 27,
+      "Rushing Yards Milestones - 1st Half": 27,
+      "Longest Reception (incl. overtime)": 24,
+      "Passing Attempts Milestones": 24,
+      "Player to score 3 or more touchdowns": 19,
+      "Passing Completions Milestones": 18,
+      "Rushing Yards Milestones - 1st Quarter": 17,
+      "Rushing Attempts Milestones": 13,
+      "Total Assists (incl. overtime)": 12,
+      "Total Tackles (incl. overtime)": 12,
+      "Total Tackles Plus Assists (incl. overtime)": 12,
+      "1st Half Total Receiving Yards": 12,
+      "1st Quarter Total Receiving Yards": 12,
+      "Kicking Points Milestones": 9,
+      "Passing Touchdown Milestones": 8,
+      "Field Goals Made Milestones": 7,
+      "Total Rushing Yards (incl. overtime)": 6,
+      "Longest Rush (incl. overtime)": 6,
+      "1st Half Total Rushing Yards": 6,
+      "1st Quarter Total Rushing Yards": 6,
+      "Interceptions Thrown Milestones": 5,
+      "Total Passing Yards (incl. overtime)": 4,
+      "Total Pass Completions (incl. overtime)": 4,
+      "Total Passing Touchdowns (incl. overtime)": 4,
+      "Total Carries (incl. overtime)": 4,
+      "Total Passing Interceptions (incl. overtime)": 4,
+      "Total Passing Attempts (incl. overtime)": 4,
+      "Longest Passing Completion (incl. overtime)": 4,
+      "Total Rushing Plus Receiving Yards (incl. overtime)": 4,
+      "Total Kicking Points (incl. overtime)": 4,
+      "Total Extra Points Made (incl. overtime)": 4,
+      "Total Field Goals Made (incl. overtime)": 4,
+      "Team 1st Half Total Points": 4,
+      "Team Total Touchdowns": 4,
+      "1st Half Total Passing Yards": 4,
+      "1st Quarter Total Passing Yards": 4,
+      "Total Passing Plus Rushing Yards (incl. overtime)": 2,
+      "1st Half Total": 2,
+      "1st Half Moneyline": 2,
+      "1st Half Spread": 2,
+      "1st Quarter Total": 2,
+      "1st Quarter Moneyline": 2,
+      "1st Quarter Spread": 2,
+      "2nd Quarter Total": 2,
+      "2nd Quarter Moneyline": 2,
+      "2nd Quarter Spread": 2,
+      "3rd Quarter Total": 2,
+      "3rd Quarter Moneyline": 2,
+      "3rd Quarter Spread": 2,
+      "4th Quarter Total": 2,
+      "4th Quarter Moneyline": 2,
+      "4th Quarter Spread": 2,
+      "Will There Be Overtime?": 2
+    }
+  },
+  "provenance_gate": {
+    "blocked_claims": [
+      "BAL dime rate (no def personnel)",
+      "BAL two-high rate (no coverage shell field)",
+      "shell-split TLaw EPA delta",
+      "RB YBC/rush (no YBC field)",
+      "A-gap/Fire Zone attribution (film only)"
+    ],
+    "publish_rule": "Any leg whose thesis depends on a blocked claim is PASS (publishAllowed: false).",
+    "affected_theses": [
+      "BAL dime-rate matchup legs",
+      "BAL two-high shell legs",
+      "TLaw vs two-high regression legs",
+      "RB YBC-efficiency legs",
+      "A-gap/Fire Zone pressure legs"
+    ]
+  },
+  "board_publish_verdict": {
+    "publish_allowed": false,
+    "reason": "Game legs fail the calibration-deflated edge gate; every prop leg fails the price gate. Nothing on this board is publishable.",
+    "pass_receipts": 1459
+  }
+}
