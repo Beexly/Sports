@@ -19,8 +19,8 @@ import pyarrow.parquet as pq
 from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[2]
-PFR = ROOT / "data" / "engine" / "_pfr_rush.html"
-SHARP = ROOT / "data" / "engine" / "_sharp_cov.html"
+PFR = ROOT / "data" / "engine" / "sources" / "pfr_rush_advanced_2026.html"
+SHARP = ROOT / "data" / "engine" / "sources" / "sharp_coverage_2026.html"
 OUT = ROOT / "data" / "engine" / "public_proxy_rates_2026.json"
 
 NAME_TO_ABBR = {
