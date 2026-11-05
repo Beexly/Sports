@@ -38,6 +38,45 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
 
 PERCENT_CONF_RE = re.compile(r"\b(?:confidence|conf)\s*[:=]?\s*\d+(?:\.\d+)?\s*%", re.IGNORECASE)
 
+BANNED_WEB_STOREFRONT_PHRASES = (
+    "22,750,000 snap evaluations",
+    "10-Layer Autonomous Engine",
+    "112 Instagram + 100 X deep-math dossiers",
+    "50 doctoral papers",
+    "Romano CQR honest conformal intervals",
+    "Optimal Transport certificates",
+    "31-11 banner is retracted",
+    "TNF card 14-6",
+    "tau_hat (+11.16pp",
+)
+
+WEB_STOREFRONT_CRITICAL_FILES = (
+    "apps/web/app/packages/page.tsx",
+    "apps/web/components/redline/redline-world.tsx",
+    "apps/web/components/packages/paywall-reveal-card.tsx",
+    "apps/web/lib/packages/catalog.ts",
+)
+
+
+def verify_web_storefront_human_copy() -> None:
+    for rel_path in WEB_STOREFRONT_CRITICAL_FILES:
+        fpath = REPO_ROOT / rel_path
+        if not fpath.is_file():
+            continue
+        content = fpath.read_text(encoding="utf-8")
+        lower_content = content.lower()
+        for banned in BANNED_WEB_STOREFRONT_PHRASES:
+            if banned.lower() in lower_content:
+                raise RuntimeError(
+                    f"GUARD_FAIL: Banned robotic/AI/stale phrase '{banned}' found in {rel_path}"
+                )
+        if rel_path in ("apps/web/app/packages/page.tsx", "apps/web/lib/packages/catalog.ts"):
+            if "62-23-1" not in content:
+                raise RuntimeError(
+                    f"GUARD_FAIL: Verified season record '62-23-1' missing in {rel_path}"
+                )
+
+
 
 def _get_staged_files() -> list[str]:
     try:
@@ -197,6 +236,7 @@ def main() -> int:
             allowlist = load_stage0_game_roster_allowlist("JAX", "BAL", 9)
         for mp in mds_to_check:
             verify_dossier_markdown(mp, allowlist)
+        verify_web_storefront_human_copy()
     except Exception as exc:
         print(f"  FAIL  connected-workflow-dossier-guard — {exc}", file=sys.stderr)
         return 1
