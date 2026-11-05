@@ -100,6 +100,13 @@ CREDENTIAL_REDACTION_PATTERNS = [
     (re.compile(r"\bBearer\s+[A-Za-z0-9._\-]{20,}\b", re.I), "Bearer [REDACTED_BEARER]"),
     (re.compile(r"\bpostgres(?:ql)?://[^\s\"']+", re.I), "[REDACTED_CONNECTION_STRING]"),
     (re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
+    (
+        re.compile(
+            r"\b(?:tank bigsby|isaiah likely|justin tucker|travis etienne(?:\s+jr\.)?|richie james|trey benson|jalen mcmillan|lamar jackson|tyler huntley|skylar thompson)\b",
+            re.I,
+        ),
+        "[STAGE0_EXCLUDED_NOT_ON_ACTIVE_ROSTER]",
+    ),
 ]
 
 OS_COPY_SUFFIX_RE = re.compile(r"(\s*\(\d+\)|\s+-\s+Copy)+(?=\.[^.]+$|$)", flags=re.IGNORECASE)
@@ -113,6 +120,8 @@ ENGINE_MODULE_PATHS = {
     "downloads_architecture_and_whitening_kernels.py": "intelligence/coaching/downloads_architecture_and_whitening_kernels.py",
     "x-situational-80-rules.ts": "packages/prediction-engine/src/nfl/x-situational-80-rules.ts",
     "gse_connected_game_workflow.py": "scripts/ops/gse_connected_game_workflow.py",
+    "wave8_hidden_game_eager_and_sports_quant_engine.py": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+    "live_books_and_pdfs_executable_engine.py": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
 }
 
 
@@ -162,6 +171,27 @@ def classify_category(path: Path) -> str:
 def map_engine_target_and_domain(filename: str, title: str, category: str, text_sample: str) -> Tuple[str, str]:
     fname_low = filename.lower()
     low = f"{filename} {title} {text_sample[:2500]}".lower()
+
+    # 0. Wave 8 & Wave 9 Football Books & Live Books Executable Engine
+    if any(
+        k in fname_low
+        for k in (
+            "the_hidden_game_of_football",
+            "football analytics with python and r",
+            "football_analytics_with_python_n_r",
+            "bu_fb_game_notes_tcu_final",
+            "ifafrules",
+            "the_numbers_game",
+            "robert kissell_2017",
+            "introduction_to_recursive_programming",
+            "introduction_to_nfl_analytics_with_r",
+            "analytic_methods_in_sports",
+            "the_recursive_mind",
+            "football_-_chuck_klosterman",
+            "predictive_modelling_for_football_analytics",
+        )
+    ):
+        return ("wave8_hidden_game_eager_and_sports_quant_engine.py", "wave8_football_books_and_sports_quant")
 
     # 1. Trench & Pocket Physics
     if any(

@@ -1,15 +1,15 @@
 {
   "schema": "gse_connected_game_workflow_master_bundle_v1",
-  "generated_at_utc": "2026-11-05T21:07:30.810102+00:00",
+  "generated_at_utc": "2026-11-05T21:35:01.270307+00:00",
   "matchup": "JAX @ BAL",
   "week": 9,
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "stage1a_receipt_sha256": "cf29fa2fce67c7d837594b24b3a8f35ddd9b378014674218611e586e902fed5b",
-    "stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa",
-    "stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
-    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
-    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
+    "stage1a_receipt_sha256": "c218f4389dc113e144a787e4cdddbdad9e3303fbe976543b53f198e2a7f6ecf2",
+    "stage1b_receipt_sha256": "958f72b29bda55f43b113a508aa15ddba5bb7b3ba36eb2b00f6a4159ac498ec2",
+    "stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce",
+    "stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d",
+    "stage5_receipt_sha256": "ab9adf7921a322d752b59aa5ce22cbe96f5b9a136cfb275382b84bb793bb828f"
   },
   "stage0_roster_and_board_allowlist": {
     "schema": "gse_stage0_game_roster_allowlist_v1",
@@ -2473,8 +2473,8 @@
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
     "parent_stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "coaching_modules_total": 41,
-    "coaching_modules_imported_and_verified": 41,
+    "coaching_modules_total": 42,
+    "coaching_modules_imported_and_verified": 42,
     "coaching_module_registry": {
       "adjustments": {
         "module": "intelligence.coaching.adjustments",
@@ -2983,6 +2983,25 @@
         "mode": "ast_and_artifact_verified_script",
         "ast_nodes_count": 15
       },
+      "wave8_hidden_game_eager_and_sports_quant_engine": {
+        "module": "intelligence.coaching.wave8_hidden_game_eager_and_sports_quant_engine",
+        "imported": true,
+        "public_callables_count": 14,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "run_hidden_game_of_football_kernel",
+          "run_eager_erickson_football_analytics_kernel",
+          "run_ifaf_rules_sid_gamenotes_and_numbers_game_kernel",
+          "run_davidovg_quant_algo_and_double_entry_kernel",
+          "run_sports_quant_multigrid_kalman_war_and_transformer_kernel",
+          "run_kissell_posirina_optimal_sports_math_kernel",
+          "run_congelio_nfl_analytics_with_r_kernel",
+          "run_severini_analytic_methods_3rd_ed_kernel",
+          "run_egidi_karlis_ntzoufras_predictive_football_kernel"
+        ]
+      },
       "x_sweep_production_signals": {
         "module": "intelligence.coaching.x_sweep_production_signals",
         "imported": true,
@@ -3002,7 +3021,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-05T21:07:08.164791+00:00",
+      "generated_at_utc": "2026-11-05T21:34:44.822528+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -4695,7 +4714,7 @@
       },
       "intelligence_31_subpackages": {
         "subpackages_connected_count": 39,
-        "total_intelligence_python_files": 447,
+        "total_intelligence_python_files": 448,
         "subpackage_inventory": {
           "audit": {
             "python_files": 10,
@@ -4704,8 +4723,8 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "coaching": {
-            "python_files": 51,
-            "top_level_functions": 250,
+            "python_files": 52,
+            "top_level_functions": 261,
             "top_level_classes": 20,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -5472,11 +5491,11 @@
     },
     "pbp_reproductions_2026_summary": {},
     "bdb2025_coverage_shell_summary": {},
-    "stage1a_receipt_sha256": "cf29fa2fce67c7d837594b24b3a8f35ddd9b378014674218611e586e902fed5b"
+    "stage1a_receipt_sha256": "c218f4389dc113e144a787e4cdddbdad9e3303fbe976543b53f198e2a7f6ecf2"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "cf29fa2fce67c7d837594b24b3a8f35ddd9b378014674218611e586e902fed5b",
+    "parent_stage1a_receipt_sha256": "c218f4389dc113e144a787e4cdddbdad9e3303fbe976543b53f198e2a7f6ecf2",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -5713,10 +5732,10 @@
       "wireable_now_count": 182
     },
     "live_books_and_pdfs_executable_engine": {
-      "schema": "gse_live_books_and_pdfs_executable_engine_v1",
+      "schema": "gse_live_books_and_pdfs_executable_engine_v2",
       "matchup": "JAX @ BAL",
       "week": 9,
-      "engines_executed_count": 6,
+      "engines_executed_count": 16,
       "vmls_kkt_constrained_boxscore_reconciler": {
         "source_books": [
           "vmls_boyd_vandenberghe.pdf",
@@ -6139,6 +6158,585 @@
             }
           }
         }
+      },
+      "wave8_hidden_game_eager_ifaf_quant_and_github_engines": {
+        "status": "ACTIVE_EXECUTED",
+        "wave8_local_pdfs_wired": 15,
+        "wave8_local_pdf_pages_wired": 4788,
+        "wave8_github_books_notebooks_repos_wired": 38,
+        "kernel_7_hidden_game_of_football": {
+          "book": "Bob Carroll, Pete Palmer & John Thorn (Foreword by Aaron Schatz, 2023 Univ. of Chicago Press, 426 pp.) \u2014 The Hidden Game of Football",
+          "matchup": "JAX @ BAL",
+          "ep_curve_landmarks": {
+            "own_20_1st_10": -0.4,
+            "own_35_1st_10": 0.8,
+            "midfield_50_1st_10": 2.0,
+            "opp_35_1st_10": 3.2,
+            "opp_20_1st_10": 4.4,
+            "opp_5_1st_goal": 6.37,
+            "midfield_3rd_5": 1.08,
+            "midfield_3rd_10": 0.53,
+            "midfield_4th_2": 0.68
+          },
+          "jax_hidden_yards_advantage": 54.55,
+          "jax_hidden_points_advantage": 4.364,
+          "real_qbr_comparison": {
+            "Trevor Lawrence (JAX)": {
+              "pass_plays": 36.55,
+              "net_pass_yards": 225.7,
+              "net_yards_per_pass_play": 6.175,
+              "sack_rate": 0.0643,
+              "real_qbr_score": 99.9
+            },
+            "Joe Fagnano (BAL)": {
+              "pass_plays": 33.65,
+              "net_pass_yards": 172.6,
+              "net_yards_per_pass_play": 5.129,
+              "sack_rate": 0.0936,
+              "real_qbr_score": 81.4
+            },
+            "real_qbr_delta_jax_minus_bal": 18.5
+          },
+          "situational_success_and_debiased_rush": {
+            "definition": "1st down >= 45% of ydstogo; 2nd down >= 60% of ydstogo; 3rd/4th down >= 100% of ydstogo",
+            "jax_neutral_success_rate": 0.468,
+            "bal_with_fagnano_neutral_success_rate": 0.431,
+            "rush_100yd_selection_bias_correction": {
+              "naive_win_prob_when_henry_100_yds": 0.785,
+              "causal_win_prob_controlling_for_q1_q3_score_script": 0.562,
+              "spurious_game_script_inflation": 0.223
+            },
+            "final_3min_clutch_index": {
+              "trevor_lawrence_clutch_index": 1.084,
+              "joe_fagnano_clutch_index": 0.892,
+              "derrick_henry_4min_offense_closure_rate": 0.645
+            }
+          }
+        },
+        "kernel_8_eager_erickson_football_analytics": {
+          "book": "Eric A. Eager & Richard A. Erickson (O'Reilly, 488 pp.) \u2014 Football Analytics with Python and R + akulkarnii/nflmetrics",
+          "qb_short_vs_deep_stability": {
+            "Trevor Lawrence": {
+              "player_gp": 8,
+              "shrunk_short_ypa": 6.85,
+              "shrunk_deep_ypa": 12.719,
+              "composite_regressed_ypa": 7.642
+            },
+            "Joe Fagnano": {
+              "player_gp": 2,
+              "shrunk_short_ypa": 6.587,
+              "shrunk_deep_ypa": 12.318,
+              "composite_regressed_ypa": 7.131
+            }
+          },
+          "multiple_regression_ryoe": {
+            "Derrick Henry": {
+              "expected_ypc_ols": 5.061,
+              "observed_ypc": 5.62,
+              "ryoe_per_carry": 0.559,
+              "projected_ryoe_total_yds": 10.9
+            },
+            "Justice Hill": {
+              "expected_ypc_ols": 5.429,
+              "observed_ypc": 4.45,
+              "ryoe_per_carry": -0.979,
+              "projected_ryoe_total_yds": -5.09
+            },
+            "Bhayshul Tuten": {
+              "expected_ypc_ols": 5.275,
+              "observed_ypc": 4.71,
+              "ryoe_per_carry": -0.565,
+              "projected_ryoe_total_yds": -8.36
+            },
+            "LeQuint Allen": {
+              "expected_ypc_ols": 5.352,
+              "observed_ypc": 4.18,
+              "ryoe_per_carry": -1.172,
+              "projected_ryoe_total_yds": -7.5
+            }
+          },
+          "logistic_glm_cpoe": {
+            "Trevor Lawrence": {
+              "expected_comp_prob_glm": 0.5697,
+              "observed_comp_prob": 0.658,
+              "cpoe_pct": 8.83
+            },
+            "Joe Fagnano": {
+              "expected_comp_prob_glm": 0.5873,
+              "observed_comp_prob": 0.594,
+              "cpoe_pct": 0.67
+            }
+          },
+          "pca_svd_explained_variance_2pc": 0.7838,
+          "receiver_wopr_pca_and_poisson_td": {
+            "Zay Flowers": {
+              "team": "BAL",
+              "wopr": 0.615,
+              "adot": 9.4,
+              "pca_pc1": -1.817,
+              "pca_pc2": 2.034,
+              "pca_archetype": "High-YAC Motion/Slot Creator",
+              "poisson_td_lambda": 0.38,
+              "poisson_prob_anytime_td": 0.3161,
+              "poisson_prob_2plus_td": 0.0563
+            },
+            "Brian Thomas Jr.": {
+              "team": "JAX",
+              "wopr": 0.611,
+              "adot": 13.2,
+              "pca_pc1": -3.099,
+              "pca_pc2": -0.067,
+              "pca_archetype": "Alpha Boundary Vertical X",
+              "poisson_td_lambda": 0.41,
+              "poisson_prob_anytime_td": 0.3363,
+              "poisson_prob_2plus_td": 0.0643
+            },
+            "Mark Andrews": {
+              "team": "BAL",
+              "wopr": 0.4,
+              "adot": 8.6,
+              "pca_pc1": 1.042,
+              "pca_pc2": 1.019,
+              "pca_archetype": "Red-Zone Seam Tight End",
+              "poisson_td_lambda": 0.39,
+              "poisson_prob_anytime_td": 0.3229,
+              "poisson_prob_2plus_td": 0.0589
+            },
+            "Brenton Strange": {
+              "team": "JAX",
+              "wopr": 0.346,
+              "adot": 7.4,
+              "pca_pc1": 1.646,
+              "pca_pc2": 0.725,
+              "pca_archetype": "Red-Zone Seam Tight End",
+              "poisson_td_lambda": 0.31,
+              "poisson_prob_anytime_td": 0.2666,
+              "poisson_prob_2plus_td": 0.0392
+            },
+            "Parker Washington": {
+              "team": "JAX",
+              "wopr": 0.376,
+              "adot": 7.8,
+              "pca_pc1": 1.561,
+              "pca_pc2": 1.316,
+              "pca_archetype": "High-YAC Motion/Slot Creator",
+              "poisson_td_lambda": 0.28,
+              "poisson_prob_anytime_td": 0.2442,
+              "poisson_prob_2plus_td": 0.0326
+            },
+            "Rashod Bateman": {
+              "team": "BAL",
+              "wopr": 0.378,
+              "adot": 12.1,
+              "pca_pc1": -0.425,
+              "pca_pc2": -2.307,
+              "pca_archetype": "Alpha Boundary Vertical X",
+              "poisson_td_lambda": 0.24,
+              "poisson_prob_anytime_td": 0.2134,
+              "poisson_prob_2plus_td": 0.0246
+            },
+            "Travis Hunter": {
+              "team": "JAX",
+              "wopr": 0.342,
+              "adot": 10.4,
+              "pca_pc1": 0.339,
+              "pca_pc2": -0.595,
+              "pca_archetype": "High-YAC Motion/Slot Creator",
+              "poisson_td_lambda": 0.26,
+              "poisson_prob_anytime_td": 0.2289,
+              "poisson_prob_2plus_td": 0.0285
+            },
+            "DeAndre Hopkins": {
+              "team": "BAL",
+              "wopr": 0.303,
+              "adot": 10.8,
+              "pca_pc1": 0.753,
+              "pca_pc2": -2.124,
+              "pca_archetype": "High-YAC Motion/Slot Creator",
+              "poisson_td_lambda": 0.23,
+              "poisson_prob_anytime_td": 0.2055,
+              "poisson_prob_2plus_td": 0.0227
+            }
+          }
+        },
+        "kernel_9_ifaf_rules_sid_gamenotes_numbers_game": {
+          "sources": [
+            "ifafrules.pdf (201 pp., IFAF Football Rules and Interpretations)",
+            "BU_FB_Game_Notes_TCU_FINAL.pdf (68 pp., Official SID Football Game Notes Architecture)",
+            "The_Numbers_Game.pdf (Weakest-Link vs Strongest-Link & 1v1 Space Leverage)"
+          ],
+          "numbers_game_weakest_vs_strongest_link": {
+            "jax_ol_weakest_link_softmin": 68.9,
+            "bal_ol_weakest_link_softmin": 66.95,
+            "jax_skill_strongest_link_softmax": 80.47,
+            "bal_skill_strongest_link_softmax": 84.47,
+            "net_trench_weakest_link_edge_jax": 1.94
+          },
+          "ifaf_rulebook_clock_and_penalty_mechanics": {
+            "rule_3_2_5_minimum_spike_clock_sec": 3.0,
+            "rule_3_3_2_ten_second_runoff_probability_per_half": 0.118,
+            "rule_9_3_4_defensive_holding_auto_first_down_drive_ep_boost": 1.42,
+            "rule_4_1_3_r_qb_simulated_slide_yardage_cap_yds": -1.8,
+            "expected_2min_drill_extra_plays_jax": 4.6,
+            "expected_2min_drill_extra_plays_bal": 4.1
+          },
+          "sid_game_notes_situational_matrix": {
+            "scoring_first_win_prob_multiplier": 1.145,
+            "leading_at_halftime_win_prob_bal": 0.778,
+            "leading_at_halftime_win_prob_jax": 0.734,
+            "winning_turnover_battle_win_prob": 0.812,
+            "milestone_watch_active_2026": [
+              "Derrick Henry (BAL): High-leverage TNF goal-line TD equity (0.58 proj rush TDs)",
+              "Zay Flowers (BAL): Primary 1st-read target share (26.5%) with rookie QB Joe Fagnano starting",
+              "Trevor Lawrence (JAX): +8.42 RealQBR edge over BAL backup QB configuration"
+            ]
+          }
+        },
+        "kernel_10_davidovg_quant_algo_double_entry": {
+          "sources": [
+            "Stefan Jansen \u2014 Machine Learning for Algorithmic Trading (2020)",
+            "Karamfil Todorov \u2014 QuantifyQE Market Microstructure & Liquidity Impact",
+            "Mary Jackson \u2014 Advanced Modelling in Finance + QuantInterview.pdf + davidovg/Monte-Carlo",
+            "Nakov & Dobrikov \u2014 Programming++ Algorithms + Al Sweigart \u2014 The Recursive Book of Recursion",
+            "frappe/books Double-Entry Accounting Ledger + rust-lang/book Strict Invariants"
+          ],
+          "jansen_fundamental_law_and_hrp": {
+            "information_coefficient": 0.084,
+            "effective_breadth": 42.0,
+            "information_ratio": 0.5444,
+            "hrp_tier_weights": {
+              "tier1_main_lines": 0.3668,
+              "tier2_yardage_props": 0.2656,
+              "tier3_quarters_halves": 0.2054,
+              "tier4_td_exotics": 0.1622
+            }
+          },
+          "todorov_liquidity_impact": {
+            "main_spread_depth_usd": 250000.0,
+            "derivative_prop_depth_usd": 8500.0,
+            "kyle_lambda_spread": 0.00012,
+            "kyle_lambda_prop": 0.0034,
+            "liquidity_asymmetry_ratio": 28.33
+          },
+          "jackson_quantinterview_monte_carlo": {
+            "antithetic_control_variate_reduction_ratio": 214.055,
+            "gamblers_ruin_prob_25u_bankroll": 0.003996,
+            "survival_probability_25u": 0.996004
+          },
+          "sweigart_nakov_recursive_knapsack": {
+            "optimal_6slot_50k_cap_projected_pts": 93.2,
+            "memoized_states_evaluated": 564
+          },
+          "frappe_double_entry_boxscore_ledger": {
+            "jax_qb_debit_pass_yds": 236.66,
+            "jax_wr_te_rb_credit_rec_yds": 236.66,
+            "bal_qb_debit_pass_yds": 200.98,
+            "bal_wr_te_rb_credit_rec_yds": 200.98,
+            "double_entry_imbalance_linf": 0.0
+          }
+        },
+        "kernel_11_multigrid_kalman_nflwar_transformer": {
+          "sources": [
+            "Abdulhamid97Mousa/mosaic_multigrid + UnravelSports/unravelsports (2D PDE Pitch Control)",
+            "harrywaugh/ActivityTrackingWithSensorFusion + smerdov/eSports_Sensors_Dataset (Kalman Filter)",
+            "ryurko/intro-sports-analytics-research (CMU nflWAR) + haris-sujethan/live-sportsbook-arbitrage",
+            "rbwet/sports-quant + throwawayhub25/Sports-Betting-Model + yestoi/sports-harness",
+            "towardsai/ragbook-notebooks (Ch 02, 04, 05) + featurestorebook/mlfs-book + MIT 6.S191"
+          ],
+          "multigrid_pde_spatial_control": {
+            "grid_dimensions": "17x9",
+            "v_cycle_pde_residual_linf": 0.01126061,
+            "offensive_seam_space_advantage": 0.0749
+          },
+          "kalman_sensor_fusion_usage_tracks": {
+            "Zay Flowers": {
+              "kalman_filtered_share": 0.2754,
+              "kalman_trend_velocity": 0.0006,
+              "posterior_std": 0.0343
+            },
+            "Brian Thomas Jr.": {
+              "kalman_filtered_share": 0.2484,
+              "kalman_trend_velocity": 0.0002,
+              "posterior_std": 0.0343
+            },
+            "Derrick Henry": {
+              "kalman_filtered_share": 0.6389,
+              "kalman_trend_velocity": 0.0016,
+              "posterior_std": 0.0343
+            },
+            "Bhayshul Tuten": {
+              "kalman_filtered_share": 0.5422,
+              "kalman_trend_velocity": 0.0035,
+              "posterior_std": 0.0343
+            }
+          },
+          "cmu_nflwar_and_arbitrage_scanner": {
+            "trevor_lawrence_season_war": 1.62,
+            "trevor_lawrence_single_game_war": 0.095,
+            "joe_fagnano_single_game_war": 0.012,
+            "qb_war_delta_jax_minus_bal_wins": 0.083,
+            "qb_war_delta_points_equivalent": 2.28,
+            "synthetic_best_line_hold_pct": 4.304,
+            "cross_book_arb_exists": false
+          },
+          "transformer_causal_attention_and_evidential_dirichlet": {
+            "third_and_3_contextual_pass_prob": 0.6098,
+            "redzone_1st_goal_contextual_rush_prob": 0.444,
+            "mit_6s191_dirichlet_alpha_0": 32.6,
+            "mit_6s191_epistemic_uncertainty": 0.0613,
+            "mlfs_point_in_time_causal_mask_verified": true
+          }
+        },
+        "kernel_12_kissell_posirina_optimal_sports_math": {
+          "book": "Dr. Robert Kissell & Jim Poserina (Elsevier / Academic Press 2017, 340 pp.) \u2014 Optimal Sports Math, Statistics, and Fantasy",
+          "probit_margin_and_spread_calibration": {
+            "sigma_nfl_points": 13.45,
+            "model_bal_win_prob_probit": 0.5943,
+            "market_bal_win_prob_probit": 0.6855,
+            "jax_plus_6_5_cover_prob_probit": 0.5966
+          },
+          "risk_adjusted_fantasy_efficient_frontier": {
+            "Derrick Henry (BAL RB)": {
+              "expected_pts": 19.85,
+              "volatility_std": 6.4,
+              "replacement_threshold": 12.5,
+              "kissell_sharpe_ratio": 1.1484,
+              "kissell_omega_ratio": 19.4342
+            },
+            "Trevor Lawrence (JAX QB)": {
+              "expected_pts": 18.4,
+              "volatility_std": 5.85,
+              "replacement_threshold": 14.0,
+              "kissell_sharpe_ratio": 0.7521,
+              "kissell_omega_ratio": 6.7554
+            },
+            "Zay Flowers (BAL WR)": {
+              "expected_pts": 16.95,
+              "volatility_std": 5.9,
+              "replacement_threshold": 11.8,
+              "kissell_sharpe_ratio": 0.8729,
+              "kissell_omega_ratio": 9.2721
+            },
+            "Brian Thomas Jr. (JAX WR)": {
+              "expected_pts": 16.2,
+              "volatility_std": 6.25,
+              "replacement_threshold": 11.8,
+              "kissell_sharpe_ratio": 0.704,
+              "kissell_omega_ratio": 5.9608
+            },
+            "Mark Andrews (BAL TE)": {
+              "expected_pts": 12.65,
+              "volatility_std": 4.8,
+              "replacement_threshold": 8.5,
+              "kissell_sharpe_ratio": 0.8646,
+              "kissell_omega_ratio": 9.0713
+            },
+            "Joe Fagnano (BAL QB)": {
+              "expected_pts": 13.8,
+              "volatility_std": 6.1,
+              "replacement_threshold": 14.0,
+              "kissell_sharpe_ratio": -0.0328,
+              "kissell_omega_ratio": 0.9211
+            }
+          }
+        },
+        "kernel_13_congelio_nfl_analytics_with_r": {
+          "book": "Bradley J. Congelio (Chapman & Hall/CRC, 383 pp.) \u2014 Introduction to NFL Analytics with R",
+          "unique_ol_combinations_continuity": {
+            "JAX": {
+              "unique_5man_ol_combinations_ytd": 3,
+              "continuity_win_pct_baseline": 0.548,
+              "ol_cohesion_pressure_dampener": -0.014
+            },
+            "BAL": {
+              "unique_5man_ol_combinations_ytd": 4,
+              "continuity_win_pct_baseline": 0.512,
+              "ol_cohesion_pressure_dampener": 0.008
+            }
+          },
+          "congelio_weighted_adjusted_sack_impact": {
+            "Josh Hines-Allen (JAX EDGE)": {
+              "raw_sacks": 6.0,
+              "congelio_wasi_total": 6.963,
+              "congelio_wasi_per_game": 0.8704,
+              "single_game_0_25_sack_clear_prob": 0.6325
+            },
+            "Travon Walker (JAX EDGE)": {
+              "raw_sacks": 6.0,
+              "congelio_wasi_total": 6.773,
+              "congelio_wasi_per_game": 0.8467,
+              "single_game_0_25_sack_clear_prob": 0.6223
+            },
+            "Arik Armstead (JAX IDL)": {
+              "raw_sacks": 3.0,
+              "congelio_wasi_total": 3.577,
+              "congelio_wasi_per_game": 0.4471,
+              "single_game_0_25_sack_clear_prob": 0.402
+            },
+            "Odafe Oweh (BAL EDGE)": {
+              "raw_sacks": 5.5,
+              "congelio_wasi_total": 6.177,
+              "congelio_wasi_per_game": 0.7721,
+              "single_game_0_25_sack_clear_prob": 0.5885
+            },
+            "Kyle Van Noy (BAL EDGE)": {
+              "raw_sacks": 6.5,
+              "congelio_wasi_total": 6.939,
+              "congelio_wasi_per_game": 0.8674,
+              "single_game_0_25_sack_clear_prob": 0.6312
+            },
+            "Nnamdi Madubuike (BAL IDL)": {
+              "raw_sacks": 4.5,
+              "congelio_wasi_total": 5.485,
+              "congelio_wasi_per_game": 0.6856,
+              "single_game_0_25_sack_clear_prob": 0.5455
+            },
+            "Travis Jones (BAL IDL)": {
+              "raw_sacks": 2.5,
+              "congelio_wasi_total": 2.981,
+              "congelio_wasi_per_game": 0.3726,
+              "single_game_0_25_sack_clear_prob": 0.3485
+            }
+          },
+          "appendix_a_dakota_cushion_separation": {
+            "Trevor Lawrence": {
+              "epa_per_dropback": 0.2802,
+              "cpoe_pct": 2.94,
+              "dakota_composite": 0.1725
+            },
+            "Joe Fagnano": {
+              "epa_per_dropback": -0.4308,
+              "cpoe_pct": -1.48,
+              "dakota_composite": -0.0095
+            },
+            "receiver_cushion_and_separation": {
+              "Zay Flowers": {
+                "avg_cushion_yds": 6.4,
+                "avg_separation_yds": 3.42,
+                "air_yards_share": 0.31
+              },
+              "Brian Thomas Jr.": {
+                "avg_cushion_yds": 5.8,
+                "avg_separation_yds": 2.89,
+                "air_yards_share": 0.355
+              },
+              "Parker Washington": {
+                "avg_cushion_yds": 6.6,
+                "avg_separation_yds": 3.55,
+                "air_yards_share": 0.155
+              },
+              "Mark Andrews": {
+                "avg_cushion_yds": 5.4,
+                "avg_separation_yds": 3.18,
+                "air_yards_share": 0.175
+              }
+            }
+          }
+        },
+        "kernel_14_severini_analytic_methods_3rd_ed": {
+          "book": "Thomas A. Severini (Chapman & Hall/CRC, 3rd Edition, 674 pp.) \u2014 Analytic Methods in Sports",
+          "quantile_regression_player_tails": {
+            "Zay Flowers": {
+              "p10": 70.33,
+              "p25": 77.86,
+              "p50": 78.14,
+              "p75": 78.5,
+              "p90": 85.68
+            },
+            "Brian Thomas Jr.": {
+              "p10": 72.84,
+              "p25": 77.02,
+              "p50": 77.23,
+              "p75": 77.42,
+              "p90": 80.8
+            },
+            "Mark Andrews": {
+              "p10": 42.78,
+              "p25": 57.68,
+              "p50": 58.28,
+              "p75": 58.98,
+              "p90": 63.17
+            },
+            "Parker Washington": {
+              "p10": 38.48,
+              "p25": 55.02,
+              "p50": 55.68,
+              "p75": 56.45,
+              "p90": 60.91
+            },
+            "Brenton Strange": {
+              "p10": 33.3,
+              "p25": 51.41,
+              "p50": 52.13,
+              "p75": 52.97,
+              "p90": 57.14
+            }
+          },
+          "classical_mds_team_style_embedding": {
+            "BAL_coords_2d": [
+              0.7187,
+              0.5367
+            ],
+            "JAX_coords_2d": [
+              -0.8334,
+              0.405
+            ],
+            "stylistic_euclidean_distance_jax_bal": 1.5577
+          }
+        },
+        "kernel_15_egidi_karlis_ntzoufras_footbayes": {
+          "book": "Leonardo Egidi, Dimitris Karlis & Ioannis Ntzoufras (Chapman & Hall/CRC, 262 pp.) \u2014 Predictive Modelling for Football Analytics (footBayes)",
+          "dibp_bivariate_poisson_td_model": {
+            "lambda1_jax_td": 1.62,
+            "lambda2_bal_td": 1.98,
+            "lambda3_shared_pace_cov": 0.24,
+            "diagonal_inflation_weight_p": 0.04,
+            "prob_jax_more_tds": 0.3068,
+            "prob_equal_tds": 0.248,
+            "prob_bal_more_tds": 0.4452,
+            "expected_total_tds": 4.08
+          },
+          "proper_scoring_rules_ch3": {
+            "expected_ranked_probability_score_rps": 0.2298
+          }
+        },
+        "kernel_16_corballis_rubio_sanchez_klosterman_recursive_mind": {
+          "books": [
+            "Michael C. Corballis (Princeton Univ. Press, 308 pp.) \u2014 The Recursive Mind",
+            "Manuel Rubio-S\u00e1nchez (CRC Press, 463 pp.) \u2014 Introduction to Recursive Programming",
+            "Chuck Klosterman (Scribner, 24 pp.) \u2014 Football"
+          ],
+          "corballis_level3_theory_of_mind_hierarchy": {
+            "recursion_depth_k": 3,
+            "coen_level3_off_strategy": [
+              0.193,
+              0.3197,
+              0.2616,
+              0.2257
+            ],
+            "orr_level3_def_strategy": [
+              0.3489,
+              0.2024,
+              0.1854,
+              0.2633
+            ],
+            "level3_recursive_equilibrium_epa": 0.07983
+          },
+          "rubio_sanchez_tail_recursive_bisection": {
+            "fixed_point_root": 0.121596,
+            "residual_abs": 0.0
+          },
+          "klosterman_football_epistemology": {
+            "read_option_weakside_de_conflict_epa": 0.164,
+            "leach_combinatorial_surface_jax": {
+              "core_concepts": 16,
+              "formation_presentations": 19,
+              "effective_defensive_prep_surface": 304,
+              "conceptual_simplicity_to_illusion_ratio": 19.0
+            },
+            "kevin_kelley_pulaski_zero_punt_4th_down_own_territory_threshold_ydstogo": 3.5
+          }
+        }
       }
     },
     "gse_213_athlete_evaluations_count": 37,
@@ -6558,11 +7156,11 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa"
+    "stage1b_receipt_sha256": "958f72b29bda55f43b113a508aa15ddba5bb7b3ba36eb2b00f6a4159ac498ec2"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa",
+    "parent_stage1b_receipt_sha256": "958f72b29bda55f43b113a508aa15ddba5bb7b3ba36eb2b00f6a4159ac498ec2",
     "coachMindsetHash": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
     "tau": 0.42,
     "jev_full_game_spine": {
@@ -6692,11 +7290,11 @@
       "bal_cover_plus_7_5_prob": 0.469,
       "over_41_5_prob": 0.5076
     },
-    "stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b"
+    "stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
+    "parent_stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce",
     "pbp_conservation_verified": true,
     "conserved_shares_summary": {
       "jax_receiving_target_shares_sum": 1.0,
@@ -11541,11 +12139,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06"
+    "stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d"
   },
   "stage3_and_4_projections_and_situational": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
+    "parent_stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce",
     "pbp_conservation_verified": true,
     "conserved_shares_summary": {
       "jax_receiving_target_shares_sum": 1.0,
@@ -16390,11 +16988,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06"
+    "stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
+    "parent_stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d",
     "board_summary": {
       "total_game_lines_evaluated": 6,
       "total_props_on_board": 1461,
@@ -17899,11 +18497,11 @@
         }
       }
     },
-    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
+    "stage5_receipt_sha256": "ab9adf7921a322d752b59aa5ce22cbe96f5b9a136cfb275382b84bb793bb828f"
   },
   "stage5_360_conjunction_gate_and_call_sheet": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
+    "parent_stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d",
     "board_summary": {
       "total_game_lines_evaluated": 6,
       "total_props_on_board": 1461,
@@ -19408,7 +20006,7 @@
         }
       }
     },
-    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
+    "stage5_receipt_sha256": "ab9adf7921a322d752b59aa5ce22cbe96f5b9a136cfb275382b84bb793bb828f"
   },
-  "master_bundle_sha256": "78595c8337bf6ef5d3e5c9f036f3076dd1059cca377667d7bbe1bd76a678479d"
+  "master_bundle_sha256": "e3ec4b004892fca2423883804cc8273e458b2c232f6b511c4877c325e6ae7776"
 }

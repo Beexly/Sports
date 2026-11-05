@@ -833,7 +833,19 @@ def run_load_scaling_and_scheme_effects_kernel(
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
     ftn_path = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
 
-    pbp = pd.read_parquet(pbp_path)
+    pbp = pd.read_parquet(
+        pbp_path,
+        columns=[
+            "game_id",
+            "play_id",
+            "posteam",
+            "epa",
+            "two_point_attempt",
+            "receiver_player_id",
+            "qb_dropback",
+            "rush_attempt",
+        ],
+    )
     ftn = pd.read_parquet(ftn_path)
 
     p_reg = pbp[pbp["posteam"].notna() & pbp["epa"].notna()].copy()

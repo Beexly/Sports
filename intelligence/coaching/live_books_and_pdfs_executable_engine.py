@@ -594,7 +594,10 @@ def tukey_huff_levitin_game_theory_and_markov_drive_engine(
     simpsons_paradox_audit: dict[str, Any] = {}
 
     if pbp_path.is_file():
-        pbp = pd.read_parquet(pbp_path)
+        pbp = pd.read_parquet(
+            pbp_path,
+            columns=["posteam", "play_type", "week", "epa", "passer_player_name"],
+        )
         for tm in (away, home):
             epa_ser = pbp[pbp["posteam"] == tm]["epa"].dropna().to_numpy(dtype=np.float64)
             if len(epa_ser) > 10:
@@ -812,17 +815,25 @@ def run_all_live_books_and_pdfs_engines(
     # 6. Tukey Fourth-Spread Fences, Huff/Levitin Simpson's Paradox, Nash Equilibrium & Markov Drive Matrix
     tukey_nash_markov_res = tukey_huff_levitin_game_theory_and_markov_drive_engine(away=away, home=home)
 
+    # 7-11. Wave 8 Local Football Books (Hidden Game of Football 426p, Eager/Erickson O'Reilly 488p,
+    #       IFAF Rulebook 201p, Baylor/TCU SID Game Notes 68p, The Numbers Game) + 38 GitHub Books/Repos
+    from intelligence.coaching.wave8_hidden_game_eager_and_sports_quant_engine import (
+        run_all_wave8_books_and_github_kernels,
+    )
+    wave8_res = run_all_wave8_books_and_github_kernels(away_team=away, home_team=home)
+
     return {
-        "schema": "gse_live_books_and_pdfs_executable_engine_v1",
+        "schema": "gse_live_books_and_pdfs_executable_engine_v2",
         "matchup": f"{away} @ {home}",
         "week": week,
-        "engines_executed_count": 6,
+        "engines_executed_count": 16,
         "vmls_kkt_constrained_boxscore_reconciler": kkt_res,
         "overrelaxed_anderson_sinkhorn_ot": sinkhorn_res,
         "bm25f_corpus_and_book_lesson_retriever": bm25f_res,
         "tbi_rotational_strain_and_katch_mcardle_short_week_fatigue": fatigue_tbi_res,
         "prolate_spheroid_football_aerodynamics_and_ol_route_coaching_network": aero_ol_coach_res,
         "tukey_huff_levitin_game_theory_and_markov_drive_engine": tukey_nash_markov_res,
+        "wave8_hidden_game_eager_ifaf_quant_and_github_engines": wave8_res,
     }
 
 

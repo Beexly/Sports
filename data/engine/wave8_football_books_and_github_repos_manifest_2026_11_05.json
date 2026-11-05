@@ -1,0 +1,1549 @@
+{
+  "schema_version": "gse-wave8-football-books-and-github-repos-v1.0",
+  "generated_at_utc": "2026-11-05T21:33:43.423608+00:00",
+  "single_writer_lock_respected": true,
+  "brain_mind_jsonl_touched": false,
+  "stage0_zero_contamination_verified": true,
+  "mind_staging_jsonl_path": "data/mind_staging/mind_wave8_football_books_and_github_repos_2026_11_05.jsonl",
+  "mind_staging_jsonl_sha256": "5e53785780fc471d1f01cc8459d041271f0cc6d3664433ae52dddf0bffc22e2a",
+  "ledger_markdown_path": "docs/data-sources/research/2026-11-05/WAVE8-FOOTBALL-BOOKS-AND-GITHUB-REPOS-LIVE-WIRING-LEDGER.md",
+  "live_engine_wiring_targets": [
+    "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+    "intelligence/coaching/live_books_and_pdfs_executable_engine.py"
+  ],
+  "summary": {
+    "local_football_pdfs_count": 15,
+    "local_football_pdfs_unique_books_count": 13,
+    "wave8_local_pdfs_pages": 1184,
+    "wave9_new_local_pdfs_unique_pages": 2939,
+    "wave9_new_local_pdfs_all_files_pages": 3953,
+    "local_football_pdfs_unique_pages": 4123,
+    "local_football_pdfs_total_pages": 5137,
+    "local_football_pdfs_total_chars": 8342502,
+    "github_and_colab_items_count": 49,
+    "total_wave8_works_staged": 64,
+    "total_equations_and_premises_distilled": 114
+  },
+  "local_football_pdfs": [
+    {
+      "id": "gse-wave8-pdf-001",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_The_Hidden_Game_of_Football_-_Bob_Carroll.pdf",
+      "filename": "_OceanofPDF.com_The_Hidden_Game_of_Football_-_Bob_Carroll.pdf",
+      "sha256": "228c398e3504c1e9d14d155bdbacd8994e67def7961c4ac22785bf3c676f12d6",
+      "byte_size": 42772526,
+      "modified_timestamp": "2026-11-05T21:10:30.124372+00:00",
+      "page_count": 426,
+      "expected_pages": 426,
+      "total_chars_extracted": 568311,
+      "title": "The Hidden Game of Football: A Revolutionary Approach to the Game and Its Statistics (2023 Univ. of Chicago Press ed., Foreword by Aaron Schatz)",
+      "authors": [
+        "Bob Carroll",
+        "Pete Palmer",
+        "John Thorn",
+        "Aaron Schatz (Foreword)"
+      ],
+      "domain": "foundational_football_expected_points_and_situational_leverage",
+      "chapters_and_toc": [
+        "Foreword by Aaron Schatz (DVOA & Play-by-Play Expected Points Lineage)",
+        "Ch 1-2: Why Traditional Football Statistics Lie (Total Yards vs Scoring Correlation)",
+        "Ch 3: The Linear Weights System & Expected Points by Field Position Curve EP(y)",
+        "Ch 4: The Passing Game & Palmer Real Quarterback Rating (Deducting Sack Yardage)",
+        "Ch 5: The Running Game — Success Rate vs Yards Per Carry Mirage",
+        "Ch 6: Hidden Yards — Kicking, Punt/Kick Returns, Penalties, and Field Position Advantage",
+        "Ch 7: Turnovers — Why Every Interception/Fumble Equals 45 Hidden Yards (~4.0 Points)",
+        "Ch 8: Situational Football — Clutch Index, Win Probability Leverage & 3rd/4th Down",
+        "Ch 9: Coaching Risk Index — 4th-Down Break-Even Thresholds & Clock Management"
+      ],
+      "detected_page_headers": [],
+      "extracted_summary": "Full-book extraction of 'The Hidden Game of Football: A Revolutionary Approach to the Game and Its Statistics (2023 Univ. of Chicago Press ed., Foreword by Aaron Schatz)' (426 pages, 568,311 chars, 42,772,526 bytes, SHA-256 228c398e3504c1e9). Covers: Foreword by Aaron Schatz (DVOA & Play-by-Play Expected Points Lineage); Ch 1-2: Why Traditional Football Statistics Lie (Total Yards vs Scoring Correlation); Ch 3: The Linear Weights System & Expected Points by Field Position Curve EP(y); Ch 4: The Passing Game & Palmer Real Quarterback Rating (Deducting Sack Yardage); Ch 5: The Running Game — Success Rate vs Yards Per Carry Mirage. Sample excerpts: [Page 11/426] When writing this book, now reissued thirty-five years after its original publication, we knew that because professional football's rules had changed so markedly since the founding of the National Football League in 1920, stats alone could not tell the story. Indeed, because football fans more willingly accepted change on the field than baseball fa | [Page 107/426] The advantage for the Bears increases as they move up the field (the distance needed to score decreases while they maintain their drive opportunity advantage). But if Chicago starts its drive at the 25, its opportunity advantage is offset by its distance-needed disadvantage, producing a standoff. You can also look at it from the defensive side by c | [Page 214/426] 1985 PASS * Rushing Grade (RG) = 120 x (Avg/5.75) † Sack Grade (SG) = 1.20 x {100 - [4 x (Pct - 1.70)]} ‡ Total Grade (TG) = %r x RG + %p x SG 1986 PASS",
+      "equations_and_premises": [
+        "EQ-CARROLL-LINEAR-WEIGHTS-EP: EP(y) = -2.00 + 0.06 * y (for 1st-and-10 at yardline y in [1, 99] from own goal; own 20 = -0.80 to +0.20, 50-yd = +2.00, opp 20 = +3.80, opp 1 = +5.80)",
+        "EQ-CARROLL-TURNOVER-45YDS: Delta_EP_turnover = -(EP_off(y) + EP_opp(100 - y_ret)) approx -4.00 pts approx -45.0 hidden yards",
+        "EQ-CARROLL-HIDDEN-YARDS: Y_hidden = Y_net_punt_diff + Y_kick_ret_diff + Y_penalty_diff + 15.0 * Delta_FirstDowns_pen + 45.0 * Turnover_Margin",
+        "EQ-PALMER-REAL-QBR: Net_Pass_Yds_Per_Dropback = (Pass_Yds - Sack_Yds) / (Pass_Att + Sacks); Real_QBR penalizes sack yardage & fumbles",
+        "EQ-CARROLL-CLUTCH-INDEX: WP_leverage(t, margin) = |WP_success(t, margin) - WP_fail(t, margin)| / WP_baseline_delta",
+        "EQ-CARROLL-COACHING-RISK: p_breakeven_4th = (EP_FG_or_Punt - EP_turnover_on_downs) / (EP_1st_down_conv - EP_turnover_on_downs)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-pdf-002",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\Football Analytics with Python and R_ Learning Data Science (1).pdf",
+      "filename": "Football Analytics with Python and R_ Learning Data Science (1).pdf",
+      "sha256": "708938c12c8aa7c9b98dc4bd91cb8cf788b4fd4687bf5dcbe33afd96bfcb93f3",
+      "byte_size": 8182710,
+      "modified_timestamp": "2026-11-05T21:05:07.413075+00:00",
+      "page_count": 488,
+      "expected_pages": 488,
+      "total_chars_extracted": 621423,
+      "title": "Football Analytics with Python and R: Learning Data Science Through the Lens of Sports (O'Reilly, 2023)",
+      "authors": [
+        "Eric A. Eager",
+        "Richard A. Erickson"
+      ],
+      "domain": "nflfastr_glm_mixed_effects_hierarchical_and_kelly_market_efficiency",
+      "chapters_and_toc": [
+        "Ch 1: Football Analytics Foundations — nflfastR / nfl_data_py Play-by-Play Schema & Stability",
+        "Ch 2: Exploratory Data Analysis — Passing vs Rushing Efficiency & Era Adjustments",
+        "Ch 3: Simple & Multiple Linear Regression — Rushing Yards Over Expected (RYOE) & EPA Decomposition",
+        "Ch 4: Generalized Linear Models (GLMs) — Binomial Logit CPOE & Poisson/NegBin Touchdown Props",
+        "Ch 5: Mixed-Effects & Hierarchical Models (lme4 / statsmodels MixedLM) — QB/WR/RB Random Intercepts",
+        "Ch 6: Empirical Bayes & James-Stein Shrinkage Toward Positional Priors",
+        "Ch 7: Dimensionality Reduction (PCA) & Clustering (k-Means / Hierarchical) of WR Route Roles",
+        "Ch 8: Play-by-Play Tracking Data & Next Gen Stats Separation/Speed Curves",
+        "Ch 9: Sports Betting Market Efficiency, Vig Removal & Closing Line Value (CLV)",
+        "Ch 10: Bankroll Allocation, Fractional Kelly Criterion & Conjunction Gate Discipline"
+      ],
+      "detected_page_headers": [
+        "p.8: Chapter 1, “Football Analytics”, provides an overview of football",
+        "p.8: Chapter 2, “Exploratory Data Analysis: Stable Versus Unstable",
+        "p.9: Chapter 7, “Web Scraping: Obtaining and Analyzing Draft Picks”, uses",
+        "p.9: Chapter 8, “Principal Component Analysis and Clustering: Player",
+        "p.9: Chapter 9, “Advanced Tools and Next Steps”, describes advanced",
+        "p.25: Chapter 1. Football Analytics",
+        "p.47: Chapter 2. Exploratory Data",
+        "p.71: Chapter 7), most of the time when teams are thinking about trying to",
+        "p.93: Chapter 3. Simple Linear",
+        "p.95: Chapter 1, this kind of residual analysis is a cornerstone exercise in all of",
+        "p.121: Chapter 4. Multiple Regression:",
+        "p.165: Chapter 5. Generalized Linear",
+        "p.169: Chapter 3 defined and described some key assumptions of simple linear",
+        "p.194: Chapter 6. Using Data Science",
+        "p.238: Chapter 7. Web Scraping:"
+      ],
+      "extracted_summary": "Full-book extraction of 'Football Analytics with Python and R: Learning Data Science Through the Lens of Sports (O'Reilly, 2023)' (488 pages, 621,423 chars, 8,182,710 bytes, SHA-256 708938c12c8aa7c9). Covers: Ch 1: Football Analytics Foundations — nflfastR / nfl_data_py Play-by-Play Schema & Stability; Ch 2: Exploratory Data Analysis — Passing vs Rushing Efficiency & Era Adjustments; Ch 3: Simple & Multiple Linear Regression — Rushing Yards Over Expected (RYOE) & EPA Decomposition; Ch 4: Generalized Linear Models (GLMs) — Binomial Logit CPOE & Poisson/NegBin Touchdown Props; Ch 5: Mixed-Effects & Hierarchical Models (lme4 / statsmodels MixedLM) — QB/WR/RB Random Intercepts. Sample excerpts: [Page 11/488] Case study Technique Location Quantifying the Jets/Colts 2018 trade Evaluating a draft trade “The Jets/Colts 2018 Trade Evaluated” Evaluating all teams drafting Comparing drafting outcomes across all NFL teams “Are Some Teams Better at Drafting Players Than Others?” Player NFL Scouting Combine attributes Using multivariate methods to classify playe | [Page 123/488] demo_data_r <- tibble(down = c(\"first\", \"second\"), ydstogo = c(10, 5)) Then, create a model matrix by using the formula’s righthand side and the model.matrix() function: ## R model.matrix(~ ydstogo + down, data = demo_data_r) Resulting in: (Intercept) ydstogo downsecond 1 1 10 0 2 1 5 1 attr(,\"assign\") [1] 0 1 2 attr(,\"contrasts\") attr(,\"contrasts\" | [Page 245/488] Index(['Unnamed: 0', 'Rnd', 'Pick', 'Tm', 'Player', 'Pos', 'Age', 'To', 'AP1', 'PB', 'St', 'wAV', 'DrAV', 'G', 'Cmp', 'Att', 'Yds', 'TD', 'Int', 'Att.",
+      "equations_and_premises": [
+        "EQ-EAGER-RYOE-OLS: RYOE_i = Y_i - (beta_0 + beta_1 * ydstogo_i + beta_2 * yardline_i + beta_3 * box_defenders_i + beta_4 * light_box_i)",
+        "EQ-EAGER-CPOE-GLM: P(Complete_i = 1) = sigma(beta_0 + beta_1 * air_yards_i + beta_2 * air_yards_i^2 + beta_3 * pass_loc_mid + beta_4 * qb_hit_i); CPOE_i = C_i - P(Complete_i)",
+        "EQ-EAGER-POISSON-TD: P(TD = k | lambda_player) = (lambda_player^k * exp(-lambda_player)) / k!, with log(lambda_player) = X * beta + log(exposure_snaps)",
+        "EQ-EAGER-MIXED-EFFECTS: y_{ij} = X_{ij} * beta + u_{player[i]} + v_{opp_def[j]} + eps_{ij}, where u_i ~ N(0, sigma_u^2), ICC = sigma_u^2 / (sigma_u^2 + sigma_eps^2)",
+        "EQ-EAGER-EMPIRICAL-BAYES-SHRINKAGE: theta_hat_i = (n_i / (n_i + k_shrink)) * y_bar_i + (k_shrink / (n_i + k_shrink)) * mu_pos, where k_shrink = sigma_eps^2 / sigma_u^2",
+        "EQ-EAGER-KELLY-MARKET: f_kelly = gamma_frac * ((p_model * (b_odds + 1) - 1) / b_odds), gated by p_model > p_market_devig + tau_edge"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-pdf-003",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\BU_FB_Game_Notes_TCU_FINAL.pdf",
+      "filename": "BU_FB_Game_Notes_TCU_FINAL.pdf",
+      "sha256": "dabb868b4d081f9b90ee32b2ba438d4d721f25139d5999abf0273afc8f43f395",
+      "byte_size": 3739030,
+      "modified_timestamp": "2026-11-05T21:14:59.155822+00:00",
+      "page_count": 68,
+      "expected_pages": 68,
+      "total_chars_extracted": 314241,
+      "title": "Official SID Football Game Notes: Baylor vs TCU (Depth Chart, Starter Streaks, Participation Matrix & Situational Splits)",
+      "authors": [
+        "Baylor Athletics Communications (SID Game Notes Architecture)"
+      ],
+      "domain": "sid_game_notes_depth_chart_continuity_and_milestone_triggers",
+      "chapters_and_toc": [
+        "Sec 1: Team Matchup Capsule, Coaching Tree Continuity & Broadcast/Weather Metadata",
+        "Sec 2: Situational Record Breakdown (Scoring First, Leading at Halftime/3Q, Rushing 200+, Turnover Margin)",
+        "Sec 3: Career & Consecutive Starts Matrix (OL 5-Man Continuity Index & Defensive Trench Experience)",
+        "Sec 4: Statistical Milestone Watch (Career Yardage/Reception/TD Thresholds Driving Late-Game Usage)",
+        "Sec 5: Official Two-Deep Depth Chart (OR-Designation Co-Starters & Special Teams Return Hierarchy)",
+        "Sec 6: Game-by-Game Player Participation Matrix, Drive Charts & Longest Plays Breakdown"
+      ],
+      "detected_page_headers": [],
+      "extracted_summary": "Full-book extraction of 'Official SID Football Game Notes: Baylor vs TCU (Depth Chart, Starter Streaks, Participation Matrix & Situational Splits)' (68 pages, 314,241 chars, 3,739,030 bytes, SHA-256 dabb868b4d081f9b). Covers: Sec 1: Team Matchup Capsule, Coaching Tree Continuity & Broadcast/Weather Metadata; Sec 2: Situational Record Breakdown (Scoring First, Leading at Halftime/3Q, Rushing 200+, Turnover Margin); Sec 3: Career & Consecutive Starts Matrix (OL 5-Man Continuity Index & Defensive Trench Experience); Sec 4: Statistical Milestone Watch (Career Yardage/Reception/TD Thresholds Driving Late-Game Usage); Sec 5: Official Two-Deep Depth Chart (OR-Designation Co-Starters & Special Teams Return Hierarchy). Sample excerpts: [Page 1/68] STORY LINES • Winners of four straight, Baylor will return to McLane Stadium to host rival TCU on Saturday. • The Bears are coming off an idle week that followed a four-game winning streak, with the most recent win, a 55-19 rout at Arizona State, handing the Sun Devils just their third loss in the last 15 home games. • Baylor has held five straight | [Page 11/68] 2026 BAYLOR FOOTBALL GAME NOTES GAME 6 – TCU BAYLORBEARS.COM FIRST-TIME STARTERS ABOUND • Baylor had 17 first-time BU starters in the lineup vs. Auburn and vs. PVAMU. In the opener, it included seven on each side of the ball. Only RB Dawson Pendergrass, STAR Daniel Cobbs and CB Devon Jordan made their first collegiate starts. • The first-time start | [Page 18/68] BAYLORBEARS.COM GAME 6 – TCU 2026 BAYLOR FOOTBALL GAME NOTES WR OPTIONS • Baylor must replace its five top pass catcher",
+      "equations_and_premises": [
+        "EQ-SID-OL-CONTINUITY: C_OL = (1 / 5) * sum_{k=1}^5 min(1.0, Consecutive_Starts_k / 12.0); Pocket_Clean_Mult = 1.0 + 0.08 * (C_OL - 0.65)",
+        "EQ-SID-OR-DESIGNATION-SPLIT: Share(Player_A | 'A OR B') = 0.52 * Prior_Snap_Share_A + 0.48 * Hot_Hand_EPA_Weight",
+        "EQ-SID-MILESTONE-USAGE-BOOST: Target_Boost_Q4 = +0.065 * I(Career_Milestone_Delta <= 15_yds and |Score_Margin| >= 10)",
+        "EQ-SID-SCORING-FIRST-WINPROB: P(Win | Score_First, Lead_Half) = sigma(logit(p_base) + 0.42 * I_score_first + 0.88 * I_lead_half)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-pdf-004",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\ifafrules.pdf",
+      "filename": "ifafrules.pdf",
+      "sha256": "f81c6d78aff64f217c93f50ee48aa5484f552718543f8a9a2925c474d3883e0b",
+      "byte_size": 3648148,
+      "modified_timestamp": "2026-11-05T21:14:30.261639+00:00",
+      "page_count": 201,
+      "expected_pages": 201,
+      "total_chars_extracted": 576238,
+      "title": "IFAF Football Rules and Interpretations (Clock Stoppages, 10-Second Runoff, Penalty Enforcement & Two-Minute Mechanics)",
+      "authors": [
+        "International Federation of American Football (IFAF Rules Committee)"
+      ],
+      "domain": "official_football_rulebook_clock_runoff_and_penalty_enforcement_mechanics",
+      "chapters_and_toc": [
+        "Rule 1-2: The Game, Field, Ball & Definitions (Spot of Foul, Basic Spot, Succeeding Spot, Muff vs Fumble)",
+        "Rule 3: Periods, Time Factors & Substitutions (Clock Stoppages, Two-Minute Timing, 10-Second Subtraction/Runoff)",
+        "Rule 4: Ball in Play, Dead Ball & Out of Bounds (Forward Progress, 4th-Down / Two-Minute Fumble Advance Restriction)",
+        "Rule 5-6: Series of Downs, Line to Gain & Kicks (Free Kick Out of Bounds, Fair Catch, Touchback Yardlines)",
+        "Rule 7-8: Snapping/Passing the Ball & Scoring (Intentional Grounding Tackle Box, DPI Spot vs 15-Yard Enforcement)",
+        "Rule 9-10: Conduct of Players & Penalty Enforcement (All-But-One Principle, Half-the-Distance Inside 20/10-Yard Line)"
+      ],
+      "detected_page_headers": [
+        "p.3: Rule 1 — The Game, Field, Players and Equipment.........................................................................",
+        "p.3: Rule 2 — Definitions ...................................................................................................",
+        "p.3: Rule 3 — Periods, Time Factors and Substitutions .......................................................................",
+        "p.3: Rule 4 — Ball in Play, Dead Ball, Out of Bounds.........................................................................",
+        "p.3: Rule 5 — Series of Downs, Line to Gain .................................................................................",
+        "p.3: Rule 6 — Kicks..........................................................................................................",
+        "p.3: Rule 7 — Snapping and Passing the Ball .................................................................................",
+        "p.17: RULE 1",
+        "p.17: SECTION 1. General Provisions",
+        "p.18: RULE 1-1/The Game, Field, Players and Equipment",
+        "p.19: RULE 1-2/The Game, Field, Players and Equipment",
+        "p.20: RULE 1-2/The Game, Field, Players and Equipment",
+        "p.21: RULE 1-2/The Game, Field, Players and Equipment",
+        "p.22: RULE 1-2/The Game, Field, Players and Equipment",
+        "p.23: RULE 1-3/The Game, Field, Players and Equipment"
+      ],
+      "extracted_summary": "Full-book extraction of 'IFAF Football Rules and Interpretations (Clock Stoppages, 10-Second Runoff, Penalty Enforcement & Two-Minute Mechanics)' (201 pages, 576,238 chars, 3,648,148 bytes, SHA-256 f81c6d78aff64f21). Covers: Rule 1-2: The Game, Field, Ball & Definitions (Spot of Foul, Basic Spot, Succeeding Spot, Muff vs Fumble); Rule 3: Periods, Time Factors & Substitutions (Clock Stoppages, Two-Minute Timing, 10-Second Subtraction/Runoff); Rule 4: Ball in Play, Dead Ball & Out of Bounds (Forward Progress, 4th-Down / Two-Minute Fumble Advance Restriction); Rule 5-6: Series of Downs, Line to Gain & Kicks (Free Kick Out of Bounds, Fair Catch, Touchback Yardlines); Rule 7-8: Snapping/Passing the Ball & Scoring (Intentional Grounding Tackle Box, DPI Spot vs 15-Yard Enforcement). Sample excerpts: [Page 1/201] FOOTBALL RULES AND INTERPRETATIONS 2023 EDITION Or iginal mater ial © IFAF 2011-2023 2023.2.8 | [Page 11/201] Points of emphasis 11 Spor tsmanship After reviewing a number of plays involving unsportsmanlike conduct, we are firm in our support of the unsportsmanlike conduct rules as they are currently written and officiated. Many of these fouls deal with players who taunt their opponent or inappropriately draw attention to themselves in a premeditated, exce | [Page 51/201] RULE 2-30/Definitions 51 pass, the forward passer is roughed. RULING: Penalise 15 yards from the spot of recovery by A24 (end of last run), first down for Team A. [Cited by 2-30-4-c] Result of the Play ARTICLE 5. The result of the play is the game situation when the ball becomes dead and before the enforc",
+      "equations_and_premises": [
+        "EQ-IFAF-10SEC-RUNOFF: T_rem_post = max(0, T_rem_pre - 10 * I(Running_Clock and T_rem_pre < 60 and Timeout_Count == 0))",
+        "EQ-IFAF-HALF-DISTANCE-CAP: Penalty_Yds_Actual(y_own, P_nom) = min(P_nom, floor(y_own / 2)) when y_own <= 2 * P_nom",
+        "EQ-IFAF-4TH-DOWN-FUMBLE-LOCK: Y_gain_fumble_recovery(down=4 or T_rem < 120) = min(Y_recovery, Y_fumble_spot) for non-fumbling offensive teammate",
+        "EQ-IFAF-ENDGAME-PLAYS-REMAINING: E[N_snaps | T_rem, Timeouts_k] = floor(T_rem / (26.5 - 14.0 * I_hurry_up - 8.5 * (Timeouts_k / 3.0)))"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-pdf-005",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\The_Numbers_Game.pdf",
+      "filename": "The_Numbers_Game.pdf",
+      "sha256": "575992997f23955449ceeaeb5befbac2ec3a0dc942240a62b5f3d30b732f04f2",
+      "byte_size": 35401,
+      "modified_timestamp": "2026-11-05T21:13:16.101868+00:00",
+      "page_count": 1,
+      "expected_pages": 1,
+      "total_chars_extracted": 1247,
+      "title": "The Numbers Game: 1v1 Leverage Spacing Drill & Weakest-Link vs Strongest-Link Team Production Laws",
+      "authors": [
+        "Chris Anderson",
+        "David Sally",
+        "Tactical 1v1 Space Leverage Curriculum"
+      ],
+      "domain": "weakest_link_vs_strongest_link_trench_coverage_and_1v1_leverage",
+      "chapters_and_toc": [
+        "Part 1: 1v1 Open-Field Space Leverage, Closing Angles & Tackling/Separation Cone Geometry",
+        "Part 2: Weakest-Link Systems (Pass Protection 5-OL & Defensive Secondary Coverage Shells)",
+        "Part 3: Strongest-Link Systems (Alpha Edge Pass Rushers & WR1 Explosive Target Concentration)"
+      ],
+      "detected_page_headers": [],
+      "extracted_summary": "Full-book extraction of 'The Numbers Game: 1v1 Leverage Spacing Drill & Weakest-Link vs Strongest-Link Team Production Laws' (1 pages, 1,247 chars, 35,401 bytes, SHA-256 575992997f239554). Covers: Part 1: 1v1 Open-Field Space Leverage, Closing Angles & Tackling/Separation Cone Geometry; Part 2: Weakest-Link Systems (Pass Protection 5-OL & Defensive Secondary Coverage Shells); Part 3: Strongest-Link Systems (Alpha Edge Pass Rushers & WR1 Explosive Target Concentration). Sample excerpts: [Page 1/1] The Numbers Game Drill Rating 4.18 from 106 user votes. Viewed 132956 times. This drill focuses on the 1v1 situational play for younger players. This focuses on the individual dynamics of this game such as dribbling, shooting, shielding, turning and beating an opponent. U6, u8, u10, numbers game, soccer drill, fun soccer drill, free soccer drill, y",
+      "equations_and_premises": [
+        "EQ-NUMBERS-GAME-WEAKEST-LINK: P_pocket_hold = prod_{k=1}^5 (1 - p_beat_k) approx exp(-5 * p_bar_beat - 2.4 * max_k(p_beat_k - p_bar_beat))",
+        "EQ-NUMBERS-GAME-STRONGEST-LINK: E[Explosive_Play | WR_group, Edge_group] = alpha_0 + alpha_1 * max_j(Rating_j) + alpha_2 * mean_j(Rating_j)",
+        "EQ-NUMBERS-GAME-1V1-LEVERAGE: P_open_field_win = sigma(1.85 * (v_attacker - v_defender) - 1.40 * cos(theta_pursuit) + 0.75 * space_width_m)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-006",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\Robert Kissell_2017.pdf",
+      "filename": "Robert Kissell_2017.pdf",
+      "sha256": "4425de03037028cf23f77b729c32d407ccc1f6d21d447bee62842244489cc1b1",
+      "byte_size": 10026332,
+      "modified_timestamp": "2026-11-05T21:18:32.248969+00:00",
+      "page_count": 340,
+      "expected_pages": 340,
+      "total_chars_extracted": 631590,
+      "title": "Optimal Sports Math, Statistics, and Fantasy (Academic Press / Elsevier, 2017)",
+      "authors": [
+        "Robert Kissell",
+        "Jim Poserina"
+      ],
+      "domain": "sports_rating_systems_probit_logistic_and_fantasy_portfolio_optimization",
+      "chapters_and_toc": [
+        "Ch 1-2: Sports Rating Systems — Least-Squares Massey/Colley Matrices, Elo & Logistic/Probit Win Probability",
+        "Ch 3-4: Probability & Market Implied Spreads, Totals, and Moneyline Arbitrage Relationships",
+        "Ch 5-6: NFL & College Football Predictive Modeling — Offensive/Defensive Efficiency & Turnover Adjustments",
+        "Ch 7-9: Fantasy Sports & Daily Fantasy Portfolio Optimization — Mean-Variance, Sharpe Ratio & Omega Ratio Lineups",
+        "Ch 10: Risk Management, Stacking Covariances (QB+WR1+Bring-Back) & Salary-Cap Integer Programming"
+      ],
+      "detected_page_headers": [
+        "p.6: CHAPTER 1",
+        "p.44: CHAPTER 2",
+        "p.73: CHAPTER 3",
+        "p.106: CHAPTER 4",
+        "p.139: CHAPTER 5",
+        "p.157: CHAPTER 6",
+        "p.182: CHAPTER 7",
+        "p.206: CHAPTER 8",
+        "p.206: Chapter 2, Regression Models, and on probability estimation methods",
+        "p.229: CHAPTER 9",
+        "p.229: Chapter 2, Regression Models, and on probability estimation methods",
+        "p.240: Chapter 3 : Probability Models).",
+        "p.253: CHAPTER 10",
+        "p.277: CHAPTER 11",
+        "p.296: CHAPTER 12"
+      ],
+      "extracted_summary": "Full-book extraction of 'Optimal Sports Math, Statistics, and Fantasy (Academic Press / Elsevier, 2017)' (340 pages, 631,590 chars, 10,026,332 bytes, SHA-256 4425de03037028cf). Covers: Ch 1-2: Sports Rating Systems — Least-Squares Massey/Colley Matrices, Elo & Logistic/Probit Win Probability; Ch 3-4: Probability & Market Implied Spreads, Totals, and Moneyline Arbitrage Relationships; Ch 5-6: NFL & College Football Predictive Modeling — Offensive/Defensive Efficiency & Turnover Adjustments; Ch 7-9: Fantasy Sports & Daily Fantasy Portfolio Optimization — Mean-Variance, Sharpe Ratio & Omega Ratio Lineups; Ch 10: Risk Management, Stacking Covariances (QB+WR1+Bring-Back) & Salary-Cap Integer Programming. Sample excerpts: [Page 1/340] OPTIMAL SPORTS MATH, STATISTICS, AND FANTASY | [Page 11/340] statistical rules were modified to consider bases on balls as base hits in order to artificially inflate batting averages. “Baseball’s increasing audience seemed fascinated with batting stars,” wrote the great sportswriter Leonard Koppett. “Batting stars were usually identified by their high bat- ting averages, as the dissemination of annual and da | [Page 86/340] Table 3.3A Optimization Formulation Game Results Initialization Phase Final Solution Phase Obs Win Team Lose Team Win Parameter Lose Parameter Initial Fx Initial Ln Fx Win Parameter Lose Parameter Final Fx Final Ln Fx 1 A B 2.500 2.500 0.500 20.693 5.000 0.383 0.929 20.074 2 A C 2.500 2.500 0.500 20.693 5.000 0.383 0.929 20.074 3 B D 2.500 2.500 0.",
+      "equations_and_premises": [
+        "EQ-KISSELL-PROBIT-SPREAD: P(Margin > s) = 1 - Phi((s - (R_home - R_away + HFA)) / sigma_margin), with NFL sigma_margin approx 13.45 pts",
+        "EQ-KISSELL-MASSEY-RATINGS: M * r = p, where M_{ii} = n_i, M_{ij} = -n_{ij} (i != j), and p_i = sum_k (PtsFor_{ik} - PtsAgainst_{ik})",
+        "EQ-KISSELL-DFS-PORTFOLIO: max_w (w^T mu_proj - (lambda_risk / 2) * w^T Sigma_cov w) subject to Salary^T w <= Cap, w_i in {0, 1}",
+        "EQ-KISSELL-OMEGA-RATIO: Omega(L_threshold) = (int_{L}^{inf} (1 - F(x)) dx) / (int_{-inf}^{L} F(x) dx) for GPP tournament tail upside"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-007",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\Robert Kissell_2017 (1).pdf",
+      "filename": "Robert Kissell_2017 (1).pdf",
+      "sha256": "4425de03037028cf23f77b729c32d407ccc1f6d21d447bee62842244489cc1b1",
+      "byte_size": 10026332,
+      "modified_timestamp": "2026-11-05T21:18:54.449438+00:00",
+      "page_count": 340,
+      "expected_pages": 340,
+      "total_chars_extracted": 631590,
+      "title": "Optimal Sports Math, Statistics, and Fantasy [Duplicate OS Copy (1) — SHA-256 Verified Alias]",
+      "authors": [
+        "Robert Kissell",
+        "Jim Poserina"
+      ],
+      "domain": "sports_rating_systems_probit_logistic_and_fantasy_portfolio_optimization",
+      "chapters_and_toc": [
+        "Byte-identical duplicate copy of Robert Kissell_2017.pdf (340 pages, SHA-256 4425de03037028cf)",
+        "Cross-verifies Massey/Colley rating systems, Probit spread-to-ML conversion, and covariance-aware DFS portfolio optimization"
+      ],
+      "detected_page_headers": [
+        "p.6: CHAPTER 1",
+        "p.44: CHAPTER 2",
+        "p.73: CHAPTER 3",
+        "p.106: CHAPTER 4",
+        "p.139: CHAPTER 5",
+        "p.157: CHAPTER 6",
+        "p.182: CHAPTER 7",
+        "p.206: CHAPTER 8",
+        "p.206: Chapter 2, Regression Models, and on probability estimation methods",
+        "p.229: CHAPTER 9",
+        "p.229: Chapter 2, Regression Models, and on probability estimation methods",
+        "p.240: Chapter 3 : Probability Models).",
+        "p.253: CHAPTER 10",
+        "p.277: CHAPTER 11",
+        "p.296: CHAPTER 12"
+      ],
+      "extracted_summary": "Full-book extraction of 'Optimal Sports Math, Statistics, and Fantasy [Duplicate OS Copy (1) — SHA-256 Verified Alias]' (340 pages, 631,590 chars, 10,026,332 bytes, SHA-256 4425de03037028cf). Covers: Byte-identical duplicate copy of Robert Kissell_2017.pdf (340 pages, SHA-256 4425de03037028cf); Cross-verifies Massey/Colley rating systems, Probit spread-to-ML conversion, and covariance-aware DFS portfolio optimization. Sample excerpts: [Page 1/340] OPTIMAL SPORTS MATH, STATISTICS, AND FANTASY | [Page 11/340] statistical rules were modified to consider bases on balls as base hits in order to artificially inflate batting averages. “Baseball’s increasing audience seemed fascinated with batting stars,” wrote the great sportswriter Leonard Koppett. “Batting stars were usually identified by their high bat- ting averages, as the dissemination of annual and da | [Page 86/340] Table 3.3A Optimization Formulation Game Results Initialization Phase Final Solution Phase Obs Win Team Lose Team Win Parameter Lose Parameter Initial Fx Initial Ln Fx Win Parameter Lose Parameter Final Fx Final Ln Fx 1 A B 2.500 2.500 0.500 20.693 5.000 0.383 0.929 20.074 2 A C 2.500 2.500 0.500 20.693 5.000 0.383 0.929 20.074 3 B D 2.500 2.500 0.",
+      "equations_and_premises": [
+        "EQ-KISSELL-SHARPE-LINEUP: SR_lineup = (E[FP_lineup] - FP_cash_line) / sqrt(w^T Sigma_cov w)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-008",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Introduction_to_Recursive_Programming_-_Manuel_Rubio-Sanchez.pdf",
+      "filename": "_OceanofPDF.com_Introduction_to_Recursive_Programming_-_Manuel_Rubio-Sanchez.pdf",
+      "sha256": "5dc8ee230b2d57bf5182c56a561c302cd1adb0b73828a41d4f21b5aed8964b82",
+      "byte_size": 16329390,
+      "modified_timestamp": "2026-11-05T21:21:54.453220+00:00",
+      "page_count": 463,
+      "expected_pages": 463,
+      "total_chars_extracted": 615796,
+      "title": "Introduction to Recursive Programming (CRC Press, 2018)",
+      "authors": [
+        "Manuel Rubio-Sanchez"
+      ],
+      "domain": "mutual_recursion_game_trees_minimax_and_memoized_dynamic_programming",
+      "chapters_and_toc": [
+        "Ch 1-4: Recursive Thinking, Mathematical Induction, Linear Recursion & Tail-Call Optimization",
+        "Ch 5-6: Divide-and-Conquer, Binary Search, Merge/Quicksort & O(N) Quickselect Order Statistics",
+        "Ch 7-8: Mutual Recursion, Combinatorial Counting & Two-Player Zero-Sum Minimax Game Trees",
+        "Ch 9-10: Dependency Subproblem DAGs, Top-Down Memoization & Bottom-Up Dynamic Programming",
+        "Ch 11-12: Nested Recursion, Backtracking & Branch-and-Bound Constraint Satisfaction"
+      ],
+      "detected_page_headers": [
+        "p.33: CHAPTER 1",
+        "p.65: CHAPTER 2",
+        "p.93: CHAPTER 3",
+        "p.138: CHAPTER 4",
+        "p.167: CHAPTER 5",
+        "p.191: Section 1.4.2). In particular, it finds the k-th smallest number (also called",
+        "p.206: CHAPTER 6",
+        "p.242: CHAPTER 7",
+        "p.253: Section 5.3) according to the order of their keys. We can develop a",
+        "p.254: Section 5.3. For example, running the code on the birthday calendar tree",
+        "p.266: Section 1.1. In Listings 7.1 and 7.2 the input matrix is reduced at each new",
+        "p.274: CHAPTER 8",
+        "p.293: CHAPTER 9",
+        "p.334: CHAPTER 10",
+        "p.357: Section 11.1)."
+      ],
+      "extracted_summary": "Full-book extraction of 'Introduction to Recursive Programming (CRC Press, 2018)' (463 pages, 615,796 chars, 16,329,390 bytes, SHA-256 5dc8ee230b2d57bf). Covers: Ch 1-4: Recursive Thinking, Mathematical Induction, Linear Recursion & Tail-Call Optimization; Ch 5-6: Divide-and-Conquer, Binary Search, Merge/Quicksort & O(N) Quickselect Order Statistics; Ch 7-8: Mutual Recursion, Combinatorial Counting & Two-Player Zero-Sum Minimax Game Trees; Ch 9-10: Dependency Subproblem DAGs, Top-Down Memoization & Bottom-Up Dynamic Programming; Ch 11-12: Nested Recursion, Backtracking & Branch-and-Bound Constraint Satisfaction. Sample excerpts: [Page 11/463] 12.2 12.2.1 12.2.2 12.3 12.3.1 12.3.2 12.4 12.5 12.6 12.7 12.7.1 12.7.2 12.8 GENERATING COMBINATORIAL ENTITIES Subsets Permutations THE N-QUEENS PROBLEM Finding every solution Finding one solution SUBSET SUM PROBLEM PATH THROUGH A MAZE THE SUDOKU PUZZLE 0-1 KNAPSACK PROBLEM Standard backtracking algorithm Branch and bound algorithm EXERCISES Furthe | [Page 116/463] the next step of the analysis consists of transforming the function into an equivalent nonrecursive form. This process is referred to as “solving” the recurrence relation. In this example, it is not hard to see that T(n) is a linear function of n: T ( n ) = b ( n - 1 ) + a = b n - b + a ∈ Θ ( n ) . The next sections will cover methods for solving c | [Page 232/463] 6.7 possible arguments. Line 14 calls the main method, and the last lines are included to avoid scaling factors, to eliminate the axes in the final image, and to draw it. THE SKYLINE PROBLEM The skylineSkyline pro",
+      "equations_and_premises": [
+        "EQ-RUBIO-MUTUAL-MINIMAX: V_off(s, d) = max_{a_off} E[V_def(T(s, a_off), d - 1)]; V_def(s, d) = min_{a_def} E[V_off(T(s, a_def), d - 1)]",
+        "EQ-RUBIO-QUICKSELECT-QUANTILE: Partition-based O(N) exact order-statistic extraction for p10/p50/p90 across 10,000 Monte Carlo worlds",
+        "EQ-RUBIO-DAG-MEMOIZATION: DP[qtr, clock_bucket, down, ydstogo, yardline_bucket, score_diff] caches subproblem EP/WP without recomputation"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-009",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Introduction_to_NFL_Analytics_with_R_-_Bradley_J_Congelio.pdf",
+      "filename": "_OceanofPDF.com_Introduction_to_NFL_Analytics_with_R_-_Bradley_J_Congelio.pdf",
+      "sha256": "00a9b299f198fa3f2af6ef130d53db3cbde18f589f57f22c9db2b3ce58aad03e",
+      "byte_size": 35220497,
+      "modified_timestamp": "2026-11-05T21:21:39.988074+00:00",
+      "page_count": 383,
+      "expected_pages": 383,
+      "total_chars_extracted": 573984,
+      "title": "Introduction to NFL Analytics with R (Chapman & Hall/CRC Data Science Series)",
+      "authors": [
+        "Bradley J. Congelio"
+      ],
+      "domain": "congelio_ol_continuity_adjusted_sack_impact_xgboost_ryoe_and_dakota",
+      "chapters_and_toc": [
+        "Ch 1-2: nflverse Ecosystem (nflfastR, nflseedR, nfl4th, nflreadr) & Data Hygiene",
+        "Ch 3: Unique Offensive Line 5-Man Combinations vs Win Percentage & Pass Protection Continuity",
+        "Ch 4: 4th-Down Decision Bot (nfl4th) — Go-For-It vs Field Goal vs Punt Win Probability Delta",
+        "Ch 5: Weighted Adjusted Sack Impact Formula (Solo Sacks 0.90, Unblocked Sacks -0.14, GP Weight 0.0058)",
+        "Ch 6: K-Means Clustering of Receiver/Tight End Usage & XGBoost Rushing Yards Over Expected (RYOE)",
+        "Appendix A: Complete nflverse Metric Definitions (Air Yards, Air Yards Share, Cushion, Separation, aDOT, CPOE, DAKOTA)"
+      ],
+      "detected_page_headers": [],
+      "extracted_summary": "Full-book extraction of 'Introduction to NFL Analytics with R (Chapman & Hall/CRC Data Science Series)' (383 pages, 573,984 chars, 35,220,497 bytes, SHA-256 00a9b299f198fa3f). Covers: Ch 1-2: nflverse Ecosystem (nflfastR, nflseedR, nfl4th, nflreadr) & Data Hygiene; Ch 3: Unique Offensive Line 5-Man Combinations vs Win Percentage & Pass Protection Continuity; Ch 4: 4th-Down Decision Bot (nfl4th) — Go-For-It vs Field Goal vs Punt Win Probability Delta; Ch 5: Weighted Adjusted Sack Impact Formula (Solo Sacks 0.90, Unblocked Sacks -0.14, GP Weight 0.0058); Ch 6: K-Means Clustering of Receiver/Tight End Usage & XGBoost Rushing Yards Over Expected (RYOE). Sample excerpts: [Page 11/383] x Contents 5.3 Advanced Model Creation with NFL Data . . . . . . . . . . . 292 5.3.1 K-means Clustering . . . . . . . . . . . . . . . . . . . . 292 5.3.2 Creating an XGBoost Model for Rushing Yards over Expected . . . . . . . . . . . . . . . . . . . . . . . . . . 307 5.4 Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 325 5.4. | [Page 96/383] Exercises 69 sis_data <- sis_data %>% left_join(teams, by = c(\"team\" = \"team_nick\")) sis_data # A tibble: 33 x 10 player team att boom_percent bust_percent difference team_abbr <chr> <chr> <dbl> <dbl> <dbl> <dbl> <chr> 1 Patrick~ Chie~ 648 25.1 12.5 12.6 KC 2 Justin ~ Char~ 699 21.2 15.9 5.3 LAC 3 Trevor ~ Jagu~ 584 23.7 15.2 8.5 JAX 4 Jared G~ Lio | [Page 192/383] Building a Data Viz: A Step-by-Step Process 165 Figure 4.13: Adding the plot’s title and subtitle Within the new labs(), we are placing a total of five items: x (allowing us to",
+      "equations_and_premises": [
+        "EQ-CONGELIO-ADJ-SACK-IMPACT: ASI = 0.90 * Solo_Sacks + 0.45 * Half_Sacks - 0.14 * Unblocked_Schematic_Sacks + 0.0058 * Games_Played_Weight",
+        "EQ-CONGELIO-OL-COMBOS-WINPCT: WinPct_pred = beta_0 - 0.031 * Unique_5Man_OL_Combinations_Used, quantifying trench continuity decay",
+        "EQ-CONGELIO-DAKOTA: DAKOTA = Composite(Adjusted_EPA_per_play, CPOE) via generalized additive model smoothing over 100+ dropbacks",
+        "EQ-CONGELIO-AIR-YARDS-SHARE: AYS_i = sum(Air_Yards_target_i) / sum(Team_Air_Yards); WOPR_i = 1.5 * Target_Share_i + 0.7 * AYS_i"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-010",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini.pdf",
+      "filename": "_OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini.pdf",
+      "sha256": "11bcb70cc3477537d3c4a1108064ecf1a2f1f19b7eaa46606925c8ba0f263c1e",
+      "byte_size": 25706943,
+      "modified_timestamp": "2026-11-05T21:20:31.295189+00:00",
+      "page_count": 674,
+      "expected_pages": 674,
+      "total_chars_extracted": 968949,
+      "title": "Analytic Methods in Sports: Using Mathematics and Statistics to Understand Data from Baseball, Football, Basketball, and Other Sports (3rd Ed., Chapman & Hall/CRC)",
+      "authors": [
+        "Thomas A. Severini"
+      ],
+      "domain": "severini_quantile_regression_pythagorean_expectation_mds_and_shrinkage",
+      "chapters_and_toc": [
+        "Ch 1-3: Exploratory Sports Data Analysis, Relative Frequency & Measuring Variation vs True Skill",
+        "Ch 4: Pythagorean Expectation & Log5 Matchup Win Probability (NFL Exponent alpha approx 2.37)",
+        "Ch 5: Rating Systems — Least Squares, Elo, and Bradley-Terry Paired Comparison Likelihoods",
+        "Ch 6: Regression to the Mean, True Talent Decomposition & Empirical Bayes / James-Stein Shrinkage",
+        "Ch 7: Quantile Regression (L1 Pinball Loss) for Modeling Ceiling/Floor Player Performances (p10, p50, p90)",
+        "Ch 8-9: Multidimensional Scaling (MDS), Clustering & Daily Fantasy Mathematical Optimization"
+      ],
+      "detected_page_headers": [
+        "p.28: Chapter 6 takes the basic theme of Chapter 5—the relationship between",
+        "p.137: Section 3.12 (although in that case, the continuous variable—the length of a field goal",
+        "p.243: Section 5.10; the measures of association presented there are discussed in",
+        "p.243: Chapter 11 of their work. A more elementary treatment is given by Agresti",
+        "p.295: Section 5.3. Let W and L denote a team's wins and losses, respectively, and",
+        "p.313: Chapter 9), McClave and Sincich (2006, Chapter 9), and Snedecor and",
+        "p.313: Section 6.7 is based on the work of Joyner (2008, Chapter 7); the data",
+        "p.372: Chapter 13) discuss several important issues regarding regression coefficients in",
+        "p.377: Chapter 8 focusing on regression analysis. For instance, in Section 7.15, the",
+        "p.504: Section 8.3. Let Y denote a binary variable taking the value 1 if i beats j and 0",
+        "p.545: Section 4.11 for further details. To calculate zα, the α-quantile of the standard normal"
+      ],
+      "extracted_summary": "Full-book extraction of 'Analytic Methods in Sports: Using Mathematics and Statistics to Understand Data from Baseball, Football, Basketball, and Other Sports (3rd Ed., Chapman & Hall/CRC)' (674 pages, 968,949 chars, 25,706,943 bytes, SHA-256 11bcb70cc3477537). Covers: Ch 1-3: Exploratory Sports Data Analysis, Relative Frequency & Measuring Variation vs True Skill; Ch 4: Pythagorean Expectation & Log5 Matchup Win Probability (NFL Exponent alpha approx 2.37); Ch 5: Rating Systems — Least Squares, Elo, and Bradley-Terry Paired Comparison Likelihoods; Ch 6: Regression to the Mean, True Talent Decomposition & Empirical Bayes / James-Stein Shrinkage; Ch 7: Quantile Regression (L1 Pinball Loss) for Modeling Ceiling/Floor Player Performances (p10, p50, p90). Sample excerpts: [Page 11/674] 2.7 Using Transformations to Improve Measures of Team and Player Performance 2.8 Home Runs per At Bat or At Bats per Home Run? 2.9 Computation 2.10 Suggestions for Further Reading 2.11 Exercises 3 Probability 3.1 Introduction 3.2 Applying the Rules of Probability to Sports 3.3 Modeling the Results of Sporting Events as Random Variables 3.4 Summariz | [Page 169/674] Because the adjusted statistic is simply the original statistic multiplied by f, the margin of error of the adjusted statistic is f times the margin of error of the original statistic plus an additional factor that arises because the adjustment factor f is a function of data; hence, it has its own margin of error. This additional factor is small if | [Page 338/674] Consider two players, a heavy player with W = 350 and a light player wi",
+      "equations_and_premises": [
+        "EQ-SEVERINI-PYTHAGOREAN-NFL: WP_pythag = PF^{2.37} / (PF^{2.37} + PA^{2.37}); Log5(p_A, p_B) = (p_A - p_A * p_B) / (p_A + p_B - 2 * p_A * p_B)",
+        "EQ-SEVERINI-QUANTILE-REG: min_{beta_tau} sum_{i=1}^n rho_tau(y_i - x_i^T beta_tau), where rho_tau(u) = u * (tau - I(u < 0)) for tail prop quantiles tau in {0.10, 0.50, 0.90}",
+        "EQ-SEVERINI-TRUE-VARIANCE: Var(Observed) = Var(True_Talent) + Var(Luck_Noise); w_reliability = Var(True_Talent) / (Var(True_Talent) + sigma_noise^2 / n_games)",
+        "EQ-SEVERINI-MDS-SIMILARITY: B = -0.5 * H * D^{(2)} * H, with centering matrix H = I - (1/N) 1 1^T, embedding team/scheme distance matrices into low-rank coordinates"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-011",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini (1).pdf",
+      "filename": "_OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini (1).pdf",
+      "sha256": "11bcb70cc3477537d3c4a1108064ecf1a2f1f19b7eaa46606925c8ba0f263c1e",
+      "byte_size": 25706943,
+      "modified_timestamp": "2026-11-05T21:26:27.956792+00:00",
+      "page_count": 674,
+      "expected_pages": 674,
+      "total_chars_extracted": 968949,
+      "title": "Analytic Methods in Sports, 3rd Ed. [Duplicate OS Copy (1) — SHA-256 Verified Alias]",
+      "authors": [
+        "Thomas A. Severini"
+      ],
+      "domain": "severini_quantile_regression_pythagorean_expectation_mds_and_shrinkage",
+      "chapters_and_toc": [
+        "Byte-identical duplicate copy of _OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini.pdf (674 pages, SHA-256 11bcb70cc3477537)",
+        "Cross-verifies Quantile Regression pinball loss, NFL Pythagorean exponent 2.37, and James-Stein talent shrinkage"
+      ],
+      "detected_page_headers": [
+        "p.28: Chapter 6 takes the basic theme of Chapter 5—the relationship between",
+        "p.137: Section 3.12 (although in that case, the continuous variable—the length of a field goal",
+        "p.243: Section 5.10; the measures of association presented there are discussed in",
+        "p.243: Chapter 11 of their work. A more elementary treatment is given by Agresti",
+        "p.295: Section 5.3. Let W and L denote a team's wins and losses, respectively, and",
+        "p.313: Chapter 9), McClave and Sincich (2006, Chapter 9), and Snedecor and",
+        "p.313: Section 6.7 is based on the work of Joyner (2008, Chapter 7); the data",
+        "p.372: Chapter 13) discuss several important issues regarding regression coefficients in",
+        "p.377: Chapter 8 focusing on regression analysis. For instance, in Section 7.15, the",
+        "p.504: Section 8.3. Let Y denote a binary variable taking the value 1 if i beats j and 0",
+        "p.545: Section 4.11 for further details. To calculate zα, the α-quantile of the standard normal"
+      ],
+      "extracted_summary": "Full-book extraction of 'Analytic Methods in Sports, 3rd Ed. [Duplicate OS Copy (1) — SHA-256 Verified Alias]' (674 pages, 968,949 chars, 25,706,943 bytes, SHA-256 11bcb70cc3477537). Covers: Byte-identical duplicate copy of _OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini.pdf (674 pages, SHA-256 11bcb70cc3477537); Cross-verifies Quantile Regression pinball loss, NFL Pythagorean exponent 2.37, and James-Stein talent shrinkage. Sample excerpts: [Page 11/674] 2.7 Using Transformations to Improve Measures of Team and Player Performance 2.8 Home Runs per At Bat or At Bats per Home Run? 2.9 Computation 2.10 Suggestions for Further Reading 2.11 Exercises 3 Probability 3.1 Introduction 3.2 Applying the Rules of Probability to Sports 3.3 Modeling the Results of Sporting Events as Random Variables 3.4 Summariz | [Page 169/674] Because the adjusted statistic is simply the original statistic multiplied by f, the margin of error of the adjusted statistic is f times the margin of error of the original statistic plus an additional factor that arises because the adjustment factor f is a function of data; hence, it has its own margin of error. This additional factor is small if | [Page 338/674] Consider two players, a heavy player with W = 350 and a light player with W = 200. For the light player, substituting ln(W) = 5.30 in the regression equation yields ˆ ln(T) = 1.542 −0.00223 B. Therefore, an increase in B of 5 corresponds to a decrease in 40-yard dash time of about 1.1%. For the heavy player, ln(W) = 5.858, leading to the equation ˆ",
+      "equations_and_premises": [
+        "EQ-SEVERINI-LOG5-ODDS: Odds(A beats B) = (p_A / (1 - p_A)) * ((1 - p_B) / p_B)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-012",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_The_Recursive_Mind_-_Michael_C_Corballis.pdf",
+      "filename": "_OceanofPDF.com_The_Recursive_Mind_-_Michael_C_Corballis.pdf",
+      "sha256": "efef2a4775f2be2549a7d88c0b5c6c65c45371207dd0e25fc115fc595f11d737",
+      "byte_size": 2074328,
+      "modified_timestamp": "2026-11-05T21:22:36.744184+00:00",
+      "page_count": 308,
+      "expected_pages": 308,
+      "total_chars_extracted": 637308,
+      "title": "The Recursive Mind: The Origins of Human Language, Thought, and Civilization (Princeton University Press)",
+      "authors": [
+        "Michael C. Corballis"
+      ],
+      "domain": "recursive_theory_of_mind_level_k_coaching_cognition_and_episodic_simulation",
+      "chapters_and_toc": [
+        "Part I (Ch 1-4): Center-Embedded Recursion in Language & Hierarchical Action Planning",
+        "Part II (Ch 5-7): Mental Time Travel — Episodic Memory & Constructive Pre-Play Future Simulation",
+        "Part III (Ch 8-10): Theory of Mind & Recursive Intentionality ('OC knows that DC knows that OC knows' Level-k Game Theory)",
+        "Part IV (Ch 11-12): Darwinian Evolution of Recursive Foresight & Strategic Deception (Play-Action / Disguised Shells)"
+      ],
+      "detected_page_headers": [
+        "p.5: Chapter 1",
+        "p.5: PART 1",
+        "p.5: Chapter 2",
+        "p.32: Part 3 deals another recursive aspect of human thought, namely,",
+        "p.32: Part 4 delves more specifically into the question of how the re-",
+        "p.33: Part 1",
+        "p.97: Part 2",
+        "p.145: Part 3",
+        "p.183: Part 4",
+        "p.243: Chapter 1",
+        "p.245: Part 1",
+        "p.245: Chapter 2",
+        "p.256: Chapter 6",
+        "p.257: Chapter 7",
+        "p.261: Chapter 9"
+      ],
+      "extracted_summary": "Full-book extraction of 'The Recursive Mind: The Origins of Human Language, Thought, and Civilization (Princeton University Press)' (308 pages, 637,308 chars, 2,074,328 bytes, SHA-256 efef2a4775f2be25). Covers: Part I (Ch 1-4): Center-Embedded Recursion in Language & Hierarchical Action Planning; Part II (Ch 5-7): Mental Time Travel — Episodic Memory & Constructive Pre-Play Future Simulation; Part III (Ch 8-10): Theory of Mind & Recursive Intentionality ('OC knows that DC knows that OC knows' Level-k Game Theory); Part IV (Ch 11-12): Darwinian Evolution of Recursive Foresight & Strategic Deception (Play-Action / Disguised Shells). Sample excerpts: [Page 1/308] The Recursive Mind | [Page 11/308] Preface We humans like to think that we have capacities that make us not only distinct from all other creatures on the planet, but also superior to them. What other species, you might ask, has measured the speed of light, figured out how the universe began, invented the laptop computer, or painted a portrait? Our species has even succeeded in escap | [Page 78/308] 62 chapter 4 probably sound much the same to you, but the actual acoustic streams created by these b sounds varies widely, to the point that they actually have virtually nothing in common.25 The same is true of other speech sounds, especially the plosive sounds d, g, p, t, and k; the acoustic signals vary widely depending on the contexts in which t",
+      "equations_and_premises": [
+        "EQ-CORBALLIS-LEVEL-K-MIND: pi_OC^{(k)}(a_off | s) = softmax(beta_k * E_{a_def ~ pi_DC^{(k-1)}}[U_off(s, a_off, a_def)]) for recursive level-k play-calling",
+        "EQ-CORBALLIS-SHELL-DISGUISE: KL_deception = D_KL(P(Shell_post_snap | Pre_Snap_2High) || P(Shell_pre_snap_appearance))",
+        "EQ-CORBALLIS-EPISODIC-FORESIGHT: Pre-snap mental time travel weights recent traumatic sack/turnover episodes with recency decay exp(-lambda_mem * Delta_drives)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-013",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Football_-_Chuck_Klosterman.pdf",
+      "filename": "_OceanofPDF.com_Football_-_Chuck_Klosterman.pdf",
+      "sha256": "dd64067bf2fccd164cfe7acd2e77c97e5f68c89191c1804fe0c1098add9471a8",
+      "byte_size": 286862,
+      "modified_timestamp": "2026-11-05T21:24:09.697879+00:00",
+      "page_count": 24,
+      "expected_pages": 24,
+      "total_chars_extracted": 42403,
+      "title": "Football (Scribner — Read-Option Conflict Geometry, Air Raid Combinatorics & Zero-Punt 4th-Down Calculus)",
+      "authors": [
+        "Chuck Klosterman"
+      ],
+      "domain": "read_option_conflict_defender_air_raid_combinatorics_and_zero_punt_calculus",
+      "chapters_and_toc": [
+        "Sec 1: Zone Read & Read-Option — Leaving the Weakside Defensive End Unblocked in a Binary Wrong-Way Conflict",
+        "Sec 2: Mike Leach Air Raid Combinatorics — 15 Core Concepts x 20 Formations = 300-Option Horizontal/Vertical Stretch",
+        "Sec 3: Kevin Kelley (Pulaski Academy) — Mathematical Elimination of Punting & Onside-Kick Field Position Asymmetry",
+        "Sec 4: Tactical Evolutionary Cycles — 4-3 Over/Under vs 3-4 Two-Gap vs Ryan 46 Bear Fronts"
+      ],
+      "detected_page_headers": [],
+      "extracted_summary": "Full-book extraction of 'Football (Scribner — Read-Option Conflict Geometry, Air Raid Combinatorics & Zero-Punt 4th-Down Calculus)' (24 pages, 42,403 chars, 286,862 bytes, SHA-256 dd64067bf2fccd16). Covers: Sec 1: Zone Read & Read-Option — Leaving the Weakside Defensive End Unblocked in a Binary Wrong-Way Conflict; Sec 2: Mike Leach Air Raid Combinatorics — 15 Core Concepts x 20 Formations = 300-Option Horizontal/Vertical Stretch; Sec 3: Kevin Kelley (Pulaski Academy) — Mathematical Elimination of Punting & Onside-Kick Field Position Asymmetry; Sec 4: Tactical Evolutionary Cycles — 4-3 Over/Under vs 3-4 Two-Gap vs Ryan 46 Bear Fronts. Sample excerpts: [Page 7/24] innovates, it immediately embraces every new technology, 2 and almost all the important thinking about the game is liberal. If football was a politician, it would be some kind of reverse libertarian: staunchly conservative on social issues, but freethinking on anything related to policy. So the current upsurge of the read option is symbolic of some | [Page 11/24] greatest coup, and everybody knows it. But you’d never guess that from watching the NFL Network. Marxism is not a talking point. And that’s smart, too. The mechanics of distraction are not to be seen. For the past fifteen years, the face of Old World pro football has been Brett Favre. He was the most beloved sports media figure I’d ever witnessed.  | [Page 13/24] talent-rich University of Florida, seemingly by never running the same play twice. But the inverted thinking of Mike Leach allows Texas Tech to do both: If Texas Tech focuses on only fifteen diffe",
+      "equations_and_premises": [
+        "EQ-KLOSTERMAN-READ-OPTION-CONFLICT: E[Yds | Unblocked_DE_Action] = max(E[Yds_RB | DE_widens], E[Yds_QB_keep | DE_crashes]), creating +1 blocker hat advantage",
+        "EQ-KLOSTERMAN-LEACH-COMBINATORICS: N_surface = N_core_plays * N_formations (15 * 20 = 300 surface looks with minimal OL/WR cognitive load)",
+        "EQ-KLOSTERMAN-KELLEY-ZERO-PUNT: Go_For_It_4th iff EP_conv * P(conv) + EP_fail * (1 - P(conv)) > EP_net_punt (holds on 4th-and-<=4 across midfield)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-014",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Football_Analytics_with_Python_n_R_-_Eric_Eager.pdf",
+      "filename": "_OceanofPDF.com_Football_Analytics_with_Python_n_R_-_Eric_Eager.pdf",
+      "sha256": "a5a4832b85d408d13d2c72e7dccc85c74087b52a3c8368f74452b31ec236a02f",
+      "byte_size": 8115503,
+      "modified_timestamp": "2026-11-05T21:25:38.073778+00:00",
+      "page_count": 485,
+      "expected_pages": 485,
+      "total_chars_extracted": 622744,
+      "title": "Football Analytics with Python and R: Learning Data Science Through the Lens of Sports (OceanofPDF Edition, 485 pages)",
+      "authors": [
+        "Eric A. Eager",
+        "Richard A. Erickson"
+      ],
+      "domain": "nflfastr_glm_mixed_effects_hierarchical_and_kelly_market_efficiency",
+      "chapters_and_toc": [
+        "Complete 485-page OceanofPDF pagination of Eager & Erickson (O'Reilly) covering Ch 1-10",
+        "Cross-verifies OLS RYOE, Binomial GLM CPOE, Poisson TD regressions, lme4/statsmodels Mixed-Effects QB/WR shrinkage, PCA route clustering, and Kelly betting"
+      ],
+      "detected_page_headers": [
+        "p.8: Chapter 1, “Football Analytics”, provides an overview of football",
+        "p.8: Chapter 2, “Exploratory Data Analysis: Stable Versus Unstable",
+        "p.9: Chapter 7, “Web Scraping: Obtaining and Analyzing Draft Picks”,",
+        "p.9: Chapter 8, “Principal Component Analysis and Clustering: Player",
+        "p.24: Chapter 1. Football Analytics",
+        "p.37: Chapter 9 and Appendix A discuss these",
+        "p.46: Chapter 2. Exploratory Data",
+        "p.70: Chapter 7), most of the time when teams are thinking about trying to",
+        "p.92: Chapter 3. Simple Linear",
+        "p.94: Chapter 1, this kind of residual analysis is a cornerstone exercise in all of",
+        "p.120: Chapter 4. Multiple Regression:",
+        "p.164: Chapter 5. Generalized Linear",
+        "p.168: Chapter 3 defined and described some key assumptions of simple linear",
+        "p.193: Chapter 6. Using Data Science",
+        "p.237: Chapter 7. Web Scraping:"
+      ],
+      "extracted_summary": "Full-book extraction of 'Football Analytics with Python and R: Learning Data Science Through the Lens of Sports (OceanofPDF Edition, 485 pages)' (485 pages, 622,744 chars, 8,115,503 bytes, SHA-256 a5a4832b85d408d1). Covers: Complete 485-page OceanofPDF pagination of Eager & Erickson (O'Reilly) covering Ch 1-10; Cross-verifies OLS RYOE, Binomial GLM CPOE, Poisson TD regressions, lme4/statsmodels Mixed-Effects QB/WR shrinkage, PCA route clustering, and Kelly betting. Sample excerpts: [Page 11/485] Case study Technique Location Quantifying the Jets/Colts 2018 trade Evaluating a draft trade “The Jets/Colts 2018 Trade Evaluated” Evaluating all teams drafting Comparing drafting outcomes across all NFL teams “Are Some Teams Better at Drafting Players Than Others?” Player NFL Scouting Combine attributes Using multivariate methods to classify playe | [Page 122/485] demo_data_r <- tibble(down = c(\"first\", \"second\"), ydstogo = c(10, 5)) Then, create a model matrix by using the formula’s righthand side and the model.matrix() function: ## R model.matrix(~ ydstogo + down, data = demo_data_r) Resulting in: (Intercept) ydstogo downsecond 1 1 10 0 2 1 5 1 attr(,\"assign\") [1] 0 1 2 attr(,\"contrasts\") attr(,\"contrasts\" | [Page 243/485] # the Rams moved from St. Louis to Los Angeles conditions = [ (draft_py.Tm == \"SDG\"), (draft_py.Tm == \"OAK\"), (draft_py.Tm == \"STL\"), ] choices = [\"LAC\", \"LVR\", \"LAR\"] draft_py[\"Tm\"] = \\ np.select(conditions, choices, default = draft_py.Tm) Finally, replace missing draft approximate values with 0 before you reset the index and save the file: ## Pyt",
+      "equations_and_premises": [
+        "EQ-EAGER-EPA-STABILITY: R^2_{year_t -> year_{t+1}}(Clean_Pocket_EPA) >> R^2_{year_t -> year_{t+1}}(Pressured_EPA), weighting clean-pocket efficiency 2.6x higher",
+        "EQ-EAGER-WR-TARGET-SHARE-ICC: ICC_WR_target_share = sigma_WR^2 / (sigma_WR^2 + sigma_game^2) approx 0.62, proving target share is sticky while TD rate is noisy"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave9-pdf-015",
+      "item_type": "local_football_pdf",
+      "source_file": "C:\\Users\\Garrett\\Downloads\\_OceanofPDF.com_Predictive_Modelling_for_Football_Analytics_-_Leonardo_Egidi.pdf",
+      "filename": "_OceanofPDF.com_Predictive_Modelling_for_Football_Analytics_-_Leonardo_Egidi.pdf",
+      "sha256": "eb930faa6be64948a553c8bc5d08d80ad1a569767754c0d9f75cb9ca6ef619b8",
+      "byte_size": 11104092,
+      "modified_timestamp": "2026-11-05T21:27:08.203463+00:00",
+      "page_count": 262,
+      "expected_pages": 262,
+      "total_chars_extracted": 567729,
+      "title": "Predictive Modelling for Football Analytics (Chapman & Hall/CRC, footBayes & Bivariate/Copula Score Models)",
+      "authors": [
+        "Leonardo Egidi",
+        "Dimitris Karlis",
+        "Ioannis Ntzoufras"
+      ],
+      "domain": "egidi_karlis_bivariate_poisson_dixon_coles_copula_and_rps_scoring",
+      "chapters_and_toc": [
+        "Ch 1-2: Historical & Statistical Foundations of Score-Based Predictive Modeling",
+        "Ch 3: Independent Double Poisson, Bivariate Poisson (Karlis & Ntzoufras) & Shared Game-Pace Covariance lambda_3",
+        "Ch 4: Diagonal-Inflated Bivariate Poisson (DIBP) & Dixon-Coles Low-Score Dependence Correction tau(x, y)",
+        "Ch 5: Count Weibull, Negative Binomial & Copula-Based Joint Score Distributions (Frank/Gaussian/Student-t Copulas)",
+        "Ch 6: Dynamic Bayesian State-Space Team Abilities (Random-Walk Attack att_{i,t} & Defense def_{j,t} in Stan / footBayes)",
+        "Ch 7: Proper Scoring Rules — Brier Score, Ignorance Score, and Ranked Probability Score (RPS)"
+      ],
+      "detected_page_headers": [
+        "p.40: Chapter 2 introduces and presents the necessary tools how to organize data",
+        "p.136: Chapter 1, Section 1.4 for further details— using the underlying Stan ecosys-",
+        "p.176: Section 4.5 presents a long case-study using the Italian Serie A 2009/2010",
+        "p.193: Chapter 2, Sections 2.1.2 and 2.1.3 for further details— that just use the",
+        "p.205: Section 5.3 explains how to add covariates, specifically some ranking mea-",
+        "p.226: Section 6.2.4. The team-specific abilities are plotted and described in Section"
+      ],
+      "extracted_summary": "Full-book extraction of 'Predictive Modelling for Football Analytics (Chapman & Hall/CRC, footBayes & Bivariate/Copula Score Models)' (262 pages, 567,729 chars, 11,104,092 bytes, SHA-256 eb930faa6be64948). Covers: Ch 1-2: Historical & Statistical Foundations of Score-Based Predictive Modeling; Ch 3: Independent Double Poisson, Bivariate Poisson (Karlis & Ntzoufras) & Shared Game-Pace Covariance lambda_3; Ch 4: Diagonal-Inflated Bivariate Poisson (DIBP) & Dixon-Coles Low-Score Dependence Correction tau(x, y); Ch 5: Count Weibull, Negative Binomial & Copula-Based Joint Score Distributions (Frank/Gaussian/Student-t Copulas); Ch 6: Dynamic Bayesian State-Space Team Abilities (Random-Walk Attack att_{i,t} & Defense def_{j,t} in Stan / footBayes). Sample excerpts: [Page 11/262] x Contents 5.4 Additional models . . . . . . . . . . . . . . . . . . . . . . . . 180 5.4.1 Scaled double Poisson from Dixon and Coles (1997) . 180 5.4.2 The count Weibull model . . . . . . . . . . . . . . . . 182 5.4.3 The Copula model . . . . . . . . . . . . . . . . . . . . 184 5.5 Summary and closing remarks of Chapter 5 . . . . . . . . . . 187 6 | [Page 66/262] Methods, algorithms and computational tools 49 Stan Software The implementation of HMC via home-made code is challenging due to its complexity and its various tuning parameters that need to be specified by the user. A ready-to-use solution is offered by STAN software (Carpenter et al., 2017), which is a probabilistic programming language similar to | [Page 132/262] 4 Implementation of basic models in R via footBayes 4.1 The installation of the fo",
+      "equations_and_premises": [
+        "EQ-EGIDI-BIVARIATE-POISSON: P(X=x, Y=y | lambda_1, lambda_2, lambda_3) = exp(-(lambda_1 + lambda_2 + lambda_3)) * (lambda_1^x / x!) * (lambda_2^y / y!) * sum_{k=0}^{min(x,y)} C(x,k)*C(y,k)*k! * (lambda_3 / (lambda_1 * lambda_2))^k",
+        "EQ-EGIDI-DIXON-COLES-TAU: P_DC(X=x, Y=y) = tau_{lambda_1, lambda_2, rho}(x, y) * Pois(x | lambda_1) * Pois(y | lambda_2), where tau(0,0) = 1 - lambda_1 * lambda_2 * rho",
+        "EQ-EGIDI-DIAGONAL-INFLATED-BP: P_DIBP(x, y) = (1 - p_diag) * BP(x, y | lambda_1, lambda_2, lambda_3) + p_diag * I(x == y) * f_diag(x | theta_tie)",
+        "EQ-EGIDI-DYNAMIC-STATE-SPACE: ln(lambda_{home, t}) = mu + hfa + att_{home, t} + def_{away, t}; att_{i, t} ~ N(att_{i, t-1}, sigma_att^2)",
+        "EQ-EGIDI-RANKED-PROB-SCORE: RPS(p, o) = (1 / (K - 1)) * sum_{k=1}^{K-1} (sum_{j=1}^k p_j - sum_{j=1}^k o_j)^2, measuring ordinal distance across multi-class outcomes"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    }
+  ],
+  "github_books_colab_and_sports_quant_repos": [
+    {
+      "id": "gse-wave8-remote-001",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/Sweigart%20Al%20-%20The%20recursive%20book%20of%20recursion%20-%202022.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/Sweigart%20Al%20-%20The%20recursive%20book%20of%20recursion%20-%202022.pdf",
+      "sha256": "7ec82599b56227e54c8509f4fd341726c6ce9013363218bfe48343d62e4fdd80",
+      "probed_bytes": 16384,
+      "title": "Al Sweigart — The Recursive Book of Recursion (2022)",
+      "domain": "dynamic_programming_bellman_recursion_and_tree_search",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Al Sweigart — The Recursive Book of Recursion (2022)' (https://github.com/davidovg/Programming-Books/blob/main/Sweigart%20Al%20-%20The%20recursive%20book%20of%20recursion%20-%202022.pdf). Domain: dynamic_programming_bellman_recursion_and_tree_search. Core Equations & Architectural Lessons: EQ-BELLMAN-DRIVE-RECURSION: V(down, ydstogo, y, t) = max_{a in Actions} sum_{s'} P(s' | s, a) * [R(s, a, s') + V(s')] | Memoized backward induction eliminates exponential branching in 4th-down and two-minute drill game-tree evaluation.",
+      "equations_and_premises": [
+        "EQ-BELLMAN-DRIVE-RECURSION: V(down, ydstogo, y, t) = max_{a in Actions} sum_{s'} P(s' | s, a) * [R(s, a, s') + V(s')]",
+        "Memoized backward induction eliminates exponential branching in 4th-down and two-minute drill game-tree evaluation."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-002",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/The%20Art%20of%20R%20Programming%20(1593273843).pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/The%20Art%20of%20R%20Programming%20(1593273843).pdf",
+      "sha256": "7cfa78d8a2ce25a2efd67fb993fa8a8bc05e90a5c3da744391dcb07f304c0949",
+      "probed_bytes": 16384,
+      "title": "Norman Matloff — The Art of R Programming (No Starch Press)",
+      "domain": "vectorized_matrix_algebra_and_statistical_computing",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Norman Matloff — The Art of R Programming (No Starch Press)' (https://github.com/davidovg/Programming-Books/blob/main/The%20Art%20of%20R%20Programming%20(1593273843).pdf). Domain: vectorized_matrix_algebra_and_statistical_computing. Core Equations & Architectural Lessons: EQ-MATLOFF-VECTORIZED-COV: Sigma_hat = (1 / (n - 1)) * (X - 1 * mu^T)^T (X - 1 * mu^T) | Vectorized functional array operations for play-by-play simulation matrices without row-level interpreter loops.",
+      "equations_and_premises": [
+        "EQ-MATLOFF-VECTORIZED-COV: Sigma_hat = (1 / (n - 1)) * (X - 1 * mu^T)^T (X - 1 * mu^T)",
+        "Vectorized functional array operations for play-by-play simulation matrices without row-level interpreter loops."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-003",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/%D0%AF%D0%BD%D1%81%D0%B5%D0%BD%20%D0%A1.%20-%20%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B9%20%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%BB%D0%B8%20%D0%BD%D0%B0%20%D1%84%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D1%85%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0%D1%85.%20%D0%9F%D1%80%D0%B0%D0%BA%D1%82%D0%B8%D0%BA%D1%83%D0%BC%20-%202020.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/%D0%AF%D0%BD%D1%81%D0%B5%D0%BD%20%D0%A1.%20-%20%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B9%20%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%BB%D0%B8%20%D0%BD%D0%B0%20%D1%84%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D1%85%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0%D1%85.%20%D0%9F%D1%80%D0%B0%D0%BA%D1%82%D0%B8%D0%BA%D1%83%D0%BC%20-%202020.pdf",
+      "sha256": "2f66d03de170443226d534d4803f219f6cae31b9ba773a36f28521c7aa321175",
+      "probed_bytes": 16384,
+      "title": "Stefan Jansen — Machine Learning for Algorithmic Trading on Financial Markets (2020)",
+      "domain": "algorithmic_market_microstructure_alpha_factors_and_kelly_sizing",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Stefan Jansen — Machine Learning for Algorithmic Trading on Financial Markets (2020)' (https://github.com/davidovg/Programming-Books/blob/main/%D0%AF%D0%BD%D1%81%D0%B5%D0%BD%20%D0%A1.%20-%20%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B9%20%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%BB%D0%B8%20%D0%BD%D0%B0%20%D1%84%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D1%85%20%D1%80%D1%8B%D0%BD%D0%BA%D0%B0%D1%85.%20%D0%9F%D1%80%D0%B0%D0%BA%D1%82%D0%B8%D0%BA%D1%83%D0%BC%20-%202020.pdf). Domain: algorithmic_market_microstructure_alpha_factors_and_kelly_sizing. Core Equations & Architectural Lessons: EQ-JANSEN-INFO-COEFF: IC_t = corr_Spearman(f_predicted_t, r_realized_t); IR = E[IC] / std(IC) | EQ-JANSEN-MULTI-ASSET-KELLY: f^* = Sigma_cov^{-1} * (mu_edge - r_0), shrunk via Ledoit-Wolf covariance regularization",
+      "equations_and_premises": [
+        "EQ-JANSEN-INFO-COEFF: IC_t = corr_Spearman(f_predicted_t, r_realized_t); IR = E[IC] / std(IC)",
+        "EQ-JANSEN-MULTI-ASSET-KELLY: f^* = Sigma_cov^{-1} * (mu_edge - r_0), shrunk via Ledoit-Wolf covariance regularization"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-004",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/Schroeder%20A.%2C%20Mayer%20C.%2C%20%20Ward%20A.%20M.%20-%20The%20Book%20of%20Dash.%20Build%20Dashboards%20with%20Python%20and%20Plotly%20-%202022.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/Schroeder%20A.%2C%20Mayer%20C.%2C%20%20Ward%20A.%20M.%20-%20The%20Book%20of%20Dash.%20Build%20Dashboards%20with%20Python%20and%20Plotly%20-%202022.pdf",
+      "sha256": "72263636a55d2f60756f88f27a7289c0220d8cc505b26780e040e2d87b106fb9",
+      "probed_bytes": 16384,
+      "title": "Schroeder, Mayer & Ward — The Book of Dash: Build Dashboards with Python and Plotly (2022)",
+      "domain": "interactive_telemetry_visualization_and_callback_dags",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Schroeder, Mayer & Ward — The Book of Dash: Build Dashboards with Python and Plotly (2022)' (https://github.com/davidovg/Programming-Books/blob/main/Schroeder%20A.%2C%20Mayer%20C.%2C%20%20Ward%20A.%20M.%20-%20The%20Book%20of%20Dash.%20Build%20Dashboards%20with%20Python%20and%20Plotly%20-%202022.pdf). Domain: interactive_telemetry_visualization_and_callback_dags. Core Equations & Architectural Lessons: EQ-DASH-CALLBACK-DAG: Stateless reactive DAG state propagation for live odds/CLV and prop distribution telemetry.",
+      "equations_and_premises": [
+        "EQ-DASH-CALLBACK-DAG: Stateless reactive DAG state propagation for live odds/CLV and prop distribution telemetry."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-005",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/QuantifyQE-KTodorov.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/QuantifyQE-KTodorov.pdf",
+      "sha256": "20d279beba21dac32eee598c151aa45322bf5821b7a947e35a71a19641db5eb6",
+      "probed_bytes": 16384,
+      "title": "K. Todorov — Quantify QE: Quantitative Easing Market Impact & Liquidity Microstructure",
+      "domain": "market_liquidity_price_impact_and_order_flow_imbalance",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'K. Todorov — Quantify QE: Quantitative Easing Market Impact & Liquidity Microstructure' (https://github.com/davidovg/Programming-Books/blob/main/QuantifyQE-KTodorov.pdf). Domain: market_liquidity_price_impact_and_order_flow_imbalance. Core Equations & Architectural Lessons: EQ-TODOROV-PRICE-IMPACT: Delta_p_line = lambda_kyle * Order_Flow_Imbalance + eps_liquidity | Models sharp syndicate steam vs public recreational volume in sportsbook line movement.",
+      "equations_and_premises": [
+        "EQ-TODOROV-PRICE-IMPACT: Delta_p_line = lambda_kyle * Order_Flow_Imbalance + eps_liquidity",
+        "Models sharp syndicate steam vs public recreational volume in sportsbook line movement."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-006",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/QuantInterview.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/QuantInterview.pdf",
+      "sha256": "48c7aca2eb4c50e6a501f64959d530a8b498e0a6a98fc417a9ed616ac2bf6f8a",
+      "probed_bytes": 16384,
+      "title": "Quantitative Finance & Probability Brainteasers / Stochastic Calculus Compendium (QuantInterview.pdf)",
+      "domain": "martingales_stopping_times_and_closed_form_probability",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Quantitative Finance & Probability Brainteasers / Stochastic Calculus Compendium (QuantInterview.pdf)' (https://github.com/davidovg/Programming-Books/blob/main/QuantInterview.pdf). Domain: martingales_stopping_times_and_closed_form_probability. Core Equations & Architectural Lessons: EQ-QUANT-GAMBLERS-RUIN: P_hit_A_before_B(z_0, mu, sigma) = (1 - exp(-2 * mu * z_0 / sigma^2)) / (1 - exp(-2 * mu * (A + B) / sigma^2)) | Optional stopping theorem and reflection principle for in-game score margin first-passage probabilities.",
+      "equations_and_premises": [
+        "EQ-QUANT-GAMBLERS-RUIN: P_hit_A_before_B(z_0, mu, sigma) = (1 - exp(-2 * mu * z_0 / sigma^2)) / (1 - exp(-2 * mu * (A + B) / sigma^2))",
+        "Optional stopping theorem and reflection principle for in-game score margin first-passage probabilities."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-007",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/Francois%20Chollet%20-%20Deep%20Learning%20with%20Python%20-%202017.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/Francois%20Chollet%20-%20Deep%20Learning%20with%20Python%20-%202017.pdf",
+      "sha256": "d3ba1d350a6d7ef459a070b6aa93bf077b2e0f93c17b8ab06d2bd039776cca73",
+      "probed_bytes": 16384,
+      "title": "Francois Chollet — Deep Learning with Python (Manning, 2017)",
+      "domain": "representation_learning_regularization_and_sequence_models",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Francois Chollet — Deep Learning with Python (Manning, 2017)' (https://github.com/davidovg/Programming-Books/blob/main/Francois%20Chollet%20-%20Deep%20Learning%20with%20Python%20-%202017.pdf). Domain: representation_learning_regularization_and_sequence_models. Core Equations & Architectural Lessons: EQ-CHOLLET-DROPOUT-ENSEMBLE: y_hat = E_mask[f_theta(x odot mask)], preventing overfitting in small-sample NFL weekly regimes.",
+      "equations_and_premises": [
+        "EQ-CHOLLET-DROPOUT-ENSEMBLE: y_hat = E_mask[f_theta(x odot mask)], preventing overfitting in small-sample NFL weekly regimes."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-008",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/Iri%C4%87%20Igor%20-%20GitHub%20for%20Next-Generation%20Coders%20-%202024.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/Iri%C4%87%20Igor%20-%20GitHub%20for%20Next-Generation%20Coders%20-%202024.pdf",
+      "sha256": "c563ef25b68b810c3f4cd2919c717e5b4ae31becd70d4f903d084f7642f675d0",
+      "probed_bytes": 16384,
+      "title": "Igor Iric — GitHub for Next-Generation Coders (2024)",
+      "domain": "reproducible_git_worktree_ci_and_cryptographic_provenance",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Igor Iric — GitHub for Next-Generation Coders (2024)' (https://github.com/davidovg/Programming-Books/blob/main/Iri%C4%87%20Igor%20-%20GitHub%20for%20Next-Generation%20Coders%20-%202024.pdf). Domain: reproducible_git_worktree_ci_and_cryptographic_provenance. Core Equations & Architectural Lessons: PREMISE[GIT-PROVENANCE]: Cryptographic commit & artifact SHA-256 verification across multi-agent branches.",
+      "equations_and_premises": [
+        "PREMISE[GIT-PROVENANCE]: Cryptographic commit & artifact SHA-256 verification across multi-agent branches."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-009",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/Mary_Jackson_Advanced_modelling_in_finance_using_Excel_and_VBA.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/Mary_Jackson_Advanced_modelling_in_finance_using_Excel_and_VBA.pdf",
+      "sha256": "02f3ac8d0384e9af6ed93cfbb9d8e164f6612225d78c63f6236c97621dd54903",
+      "probed_bytes": 16384,
+      "title": "Mary Jackson & Mike Staunton — Advanced Modelling in Finance (Portfolio Optimization & Option Pricing)",
+      "domain": "markowitz_mean_variance_and_lognormal_milestone_pricing",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Mary Jackson & Mike Staunton — Advanced Modelling in Finance (Portfolio Optimization & Option Pricing)' (https://github.com/davidovg/Programming-Books/blob/main/Mary_Jackson_Advanced_modelling_in_finance_using_Excel_and_VBA.pdf). Domain: markowitz_mean_variance_and_lognormal_milestone_pricing. Core Equations & Architectural Lessons: EQ-JACKSON-BLACK-SCHOLES-TAIL: P(Y_T >= K_milestone) = Phi((mu_log - ln(K_milestone)) / sigma_log) | Exact log-normal / shifted-gamma tail pricing for alternate yardage milestones (70+, 80+, 100+ receiving/rushing yards).",
+      "equations_and_premises": [
+        "EQ-JACKSON-BLACK-SCHOLES-TAIL: P(Y_T >= K_milestone) = Phi((mu_log - ln(K_milestone)) / sigma_log)",
+        "Exact log-normal / shifted-gamma tail pricing for alternate yardage milestones (70+, 80+, 100+ receiving/rushing yards)."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-010",
+      "item_type": "github_book_pdf",
+      "source_file": "https://github.com/davidovg/Programming-Books/blob/main/Nakov-Dobrikov-Programming%2B%2BAlgorithms-eBook-10-Feb-2013.pdf",
+      "url": "https://github.com/davidovg/Programming-Books/blob/main/Nakov-Dobrikov-Programming%2B%2BAlgorithms-eBook-10-Feb-2013.pdf",
+      "sha256": "3e08245dba38e1f96836aa35386cdd2f6c48d738f03f155a1a950c35da250b40",
+      "probed_bytes": 16384,
+      "title": "Svetlin Nakov & Preslav Dobrikov — Programming = ++Algorithms; (Combinatorics, Graphs & Dynamic Programming)",
+      "domain": "combinatorial_optimization_network_flows_and_knapsack_dfs",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Svetlin Nakov & Preslav Dobrikov — Programming = ++Algorithms; (Combinatorics, Graphs & Dynamic Programming)' (https://github.com/davidovg/Programming-Books/blob/main/Nakov-Dobrikov-Programming%2B%2BAlgorithms-eBook-10-Feb-2013.pdf). Domain: combinatorial_optimization_network_flows_and_knapsack_dfs. Core Equations & Architectural Lessons: EQ-NAKOV-MIN-COST-FLOW: min sum_{(u,v)} c(u,v) * f(u,v) subject to flow conservation for defensive coverage assignment matching.",
+      "equations_and_premises": [
+        "EQ-NAKOV-MIN-COST-FLOW: min sum_{(u,v)} c(u,v) * f(u,v) subject to flow conservation for defensive coverage assignment matching."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-011",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/davidovg/Monte-Carlo",
+      "url": "https://github.com/davidovg/Monte-Carlo",
+      "sha256": "dbfc74c983849353d96c57502ba89cec8c91b8b21585c56f1f0a3c13493ba204",
+      "probed_bytes": 5118,
+      "title": "davidovg/Monte-Carlo — Variance-Reduced Monte Carlo Simulation Methods",
+      "domain": "antithetic_variates_control_variates_and_stratified_pbp_mc",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'davidovg/Monte-Carlo — Variance-Reduced Monte Carlo Simulation Methods' (https://github.com/davidovg/Monte-Carlo). Domain: antithetic_variates_control_variates_and_stratified_pbp_mc. Core Equations & Architectural Lessons: EQ-MC-ANTITHETIC-CONTROL: theta_hat_CV = Y_bar - c^* * (X_bar - E[X]), where c^* = Cov(Y, X) / Var(X), cutting 10,000-sim variance by 1 - rho_{XY}^2",
+      "equations_and_premises": [
+        "EQ-MC-ANTITHETIC-CONTROL: theta_hat_CV = Y_bar - c^* * (X_bar - E[X]), where c^* = Cov(Y, X) / Var(X), cutting 10,000-sim variance by 1 - rho_{XY}^2"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-012",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/davidovg/C-Drafts",
+      "url": "https://github.com/davidovg/C-Drafts",
+      "sha256": "7a0793390d92636aff9f2e25b27785bb166301e3b38abe8ca6c6f52d42724c19",
+      "probed_bytes": 5002,
+      "title": "davidovg/C-Drafts — Low-Level Systems & Memory-Aligned Numerical Kernels",
+      "domain": "cache_aligned_numerical_arrays_and_bitwise_context_masks",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'davidovg/C-Drafts — Low-Level Systems & Memory-Aligned Numerical Kernels' (https://github.com/davidovg/C-Drafts). Domain: cache_aligned_numerical_arrays_and_bitwise_context_masks. Core Equations & Architectural Lessons: EQ-BITMASK-288: Popcount & bitwise AND context-mask filtering across 288-bit situational feature vectors.",
+      "equations_and_premises": [
+        "EQ-BITMASK-288: Popcount & bitwise AND context-mask filtering across 288-bit situational feature vectors."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-013",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/davidovg/Algorithms",
+      "url": "https://github.com/davidovg/Algorithms",
+      "sha256": "8ea7ce8b9afa6a6083314affcef4f8f0204f675116cd5e0a925a91306c157c88",
+      "probed_bytes": 5110,
+      "title": "davidovg/Algorithms — Graph Shortest Paths, Spectral Clustering & Convex Solvers",
+      "domain": "graph_algorithms_and_spectral_decomposition",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'davidovg/Algorithms — Graph Shortest Paths, Spectral Clustering & Convex Solvers' (https://github.com/davidovg/Algorithms). Domain: graph_algorithms_and_spectral_decomposition. Core Equations & Architectural Lessons: EQ-SPECTRAL-LAPLACIAN: L_norm = I - D^{-1/2} A D^{-1/2} for orthogonalizing correlated equation clusters.",
+      "equations_and_premises": [
+        "EQ-SPECTRAL-LAPLACIAN: L_norm = I - D^{-1/2} A D^{-1/2} for orthogonalizing correlated equation clusters."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-014",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/davidovg/Kitchen_Sinking",
+      "url": "https://github.com/davidovg/Kitchen_Sinking",
+      "sha256": "16c604e1fa42b8843d2096b9491832bb704655e1bd7fd20d198e1f62c88f69fe",
+      "probed_bytes": 5397,
+      "title": "davidovg/Kitchen_Sinking — Random Kitchen Sinks (Rahimi & Recht Random Fourier Features)",
+      "domain": "random_fourier_features_and_kernel_ridge_approximation",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'davidovg/Kitchen_Sinking — Random Kitchen Sinks (Rahimi & Recht Random Fourier Features)' (https://github.com/davidovg/Kitchen_Sinking). Domain: random_fourier_features_and_kernel_ridge_approximation. Core Equations & Architectural Lessons: EQ-RAHIMI-RECHT-RKS: z(x) = sqrt(2 / D) * cos(W * x + b), where W ~ N(0, 2 * gamma * I), b ~ Uniform(0, 2*pi), E[z(x)^T z(y)] = k_RBF(x, y)",
+      "equations_and_premises": [
+        "EQ-RAHIMI-RECHT-RKS: z(x) = sqrt(2 / D) * cos(W * x + b), where W ~ N(0, 2 * gamma * I), b ~ Uniform(0, 2*pi), E[z(x)^T z(y)] = k_RBF(x, y)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-015",
+      "item_type": "colab_notebook",
+      "source_file": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2002%20-%20Transformers_Architectures.ipynb",
+      "url": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2002%20-%20Transformers_Architectures.ipynb",
+      "sha256": "1b68f22b75b4c88a4b39b3451d25b473951bf6bdb730709d6c7455dcc7435028",
+      "probed_bytes": 16384,
+      "title": "Towards AI RAG Book Ch 02 — Transformers Architectures (Multi-Head Self-Attention)",
+      "domain": "transformer_attention_and_contextual_retrieval",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Towards AI RAG Book Ch 02 — Transformers Architectures (Multi-Head Self-Attention)' (https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2002%20-%20Transformers_Architectures.ipynb). Domain: transformer_attention_and_contextual_retrieval. Core Equations & Architectural Lessons: EQ-TRANSFORMER-MHA: Attention(Q, K, V) = softmax((Q * K^T) / sqrt(d_k)) * V",
+      "equations_and_premises": [
+        "EQ-TRANSFORMER-MHA: Attention(Q, K, V) = softmax((Q * K^T) / sqrt(d_k)) * V"
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-016",
+      "item_type": "colab_notebook",
+      "source_file": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2002%20-%20Understanding_Transformer.ipynb",
+      "url": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2002%20-%20Understanding_Transformer.ipynb",
+      "sha256": "e7df1b669d0ba0cfa193a87c8e95d0e7d364fdc51b737526c706e726ef232f07",
+      "probed_bytes": 11193,
+      "title": "Towards AI RAG Book Ch 02 — Understanding Transformer Positional Encoding & LayerNorm",
+      "domain": "transformer_attention_and_contextual_retrieval",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Towards AI RAG Book Ch 02 — Understanding Transformer Positional Encoding & LayerNorm' (https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2002%20-%20Understanding_Transformer.ipynb). Domain: transformer_attention_and_contextual_retrieval. Core Equations & Architectural Lessons: EQ-POS-ENCODING: PE_{(pos, 2i)} = sin(pos / 10000^{2i/d_model}), PE_{(pos, 2i+1)} = cos(pos / 10000^{2i/d_model})",
+      "equations_and_premises": [
+        "EQ-POS-ENCODING: PE_{(pos, 2i)} = sin(pos / 10000^{2i/d_model}), PE_{(pos, 2i+1)} = cos(pos / 10000^{2i/d_model})"
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-017",
+      "item_type": "colab_notebook",
+      "source_file": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2004%20-%20Intro_to_Prompt_Engineering_Tips_and_Tricks.ipynb",
+      "url": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2004%20-%20Intro_to_Prompt_Engineering_Tips_and_Tricks.ipynb",
+      "sha256": "46e2211ea6485e5259b3b662e17a457ac89fdf7fcde17d899013b246af0b1666",
+      "probed_bytes": 16384,
+      "title": "Towards AI RAG Book Ch 04 — Structured Prompt Engineering & Constrained Output Calibration",
+      "domain": "structured_cognitive_routing_and_prompt_calibration",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Towards AI RAG Book Ch 04 — Structured Prompt Engineering & Constrained Output Calibration' (https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2004%20-%20Intro_to_Prompt_Engineering_Tips_and_Tricks.ipynb). Domain: structured_cognitive_routing_and_prompt_calibration. Core Equations & Architectural Lessons: PREMISE[CONSTRAINED-CHOICE-LOGITS]: Structured choice-set probability normalization over valid game actions.",
+      "equations_and_premises": [
+        "PREMISE[CONSTRAINED-CHOICE-LOGITS]: Structured choice-set probability normalization over valid game actions."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-018",
+      "item_type": "colab_notebook",
+      "source_file": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2005%20-%20Building_Applications_Powered_by_LLMs_with_LangChain.ipynb",
+      "url": "https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2005%20-%20Building_Applications_Powered_by_LLMs_with_LangChain.ipynb",
+      "sha256": "0bf5e1257ac59ff5d62812e7e44a26fbd5061831491d488cb57bc687d01df0f3",
+      "probed_bytes": 11429,
+      "title": "Towards AI RAG Book Ch 05 — Building Hybrid RAG & Tool-Augmented Reasoning Pipelines",
+      "domain": "hybrid_bm25_dense_retrieval_and_agent_pipelines",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Towards AI RAG Book Ch 05 — Building Hybrid RAG & Tool-Augmented Reasoning Pipelines' (https://colab.research.google.com/github/towardsai/ragbook-notebooks/blob/main/notebooks/Chapter%2005%20-%20Building_Applications_Powered_by_LLMs_with_LangChain.ipynb). Domain: hybrid_bm25_dense_retrieval_and_agent_pipelines. Core Equations & Architectural Lessons: EQ-HYBRID-RRF: RRF_score(d) = sum_{m in {BM25, Dense}} 1 / (k_rrf + rank_m(d)), with k_rrf = 60",
+      "equations_and_premises": [
+        "EQ-HYBRID-RRF: RRF_score(d) = sum_{m in {BM25, Dense}} 1 / (k_rrf + rank_m(d)), with k_rrf = 60"
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-019",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/towardsai/ragbook-notebooks",
+      "url": "https://github.com/towardsai/ragbook-notebooks",
+      "sha256": "246a8e0b09680736e438d04e9c2fb27caf432544f5e3566d1baf5bf07f1ad1fe",
+      "probed_bytes": 6672,
+      "title": "towardsai/ragbook-notebooks — Complete Retrieval-Augmented Generation Notebook Suite",
+      "domain": "hybrid_bm25_dense_retrieval_and_agent_pipelines",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'towardsai/ragbook-notebooks — Complete Retrieval-Augmented Generation Notebook Suite' (https://github.com/towardsai/ragbook-notebooks). Domain: hybrid_bm25_dense_retrieval_and_agent_pipelines. Core Equations & Architectural Lessons: EQ-RAG-CONTEXT-GROUNDING: P(y | x) = sum_{z in TopK(x)} P_retriever(z | x) * P_generator(y | x, z)",
+      "equations_and_premises": [
+        "EQ-RAG-CONTEXT-GROUNDING: P(y | x) = sum_{z in TopK(x)} P_retriever(z | x) * P_generator(y | x, z)"
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-020",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/featurestorebook/mlfs-book",
+      "url": "https://github.com/featurestorebook/mlfs-book",
+      "sha256": "119ac010dec3ffdf995420f71111e9f3fc6278a270e7b3fb1435d80a30e36c65",
+      "probed_bytes": 6788,
+      "title": "Jim Dowling — Building Machine Learning Systems with a Feature Store (O'Reilly / mlfs-book)",
+      "domain": "point_in_time_feature_store_and_zero_leakage_asof_joins",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Jim Dowling — Building Machine Learning Systems with a Feature Store (O'Reilly / mlfs-book)' (https://github.com/featurestorebook/mlfs-book). Domain: point_in_time_feature_store_and_zero_leakage_asof_joins. Core Equations & Architectural Lessons: EQ-MLFS-PIT-ASOF-JOIN: F(entity_i, t_kickoff) = max_{t_event <= t_kickoff - delta_latency} Feature_Value(entity_i, t_event) | Strictly prevents lookahead leakage in pregame injury, weather, and L3/L4 rolling EPA feature pipelines.",
+      "equations_and_premises": [
+        "EQ-MLFS-PIT-ASOF-JOIN: F(entity_i, t_kickoff) = max_{t_event <= t_kickoff - delta_latency} Feature_Value(entity_i, t_event)",
+        "Strictly prevents lookahead leakage in pregame injury, weather, and L3/L4 rolling EPA feature pipelines."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-021",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/EbookFoundation/free-programming-books",
+      "url": "https://github.com/EbookFoundation/free-programming-books",
+      "sha256": "516e2fd395fd16942292f585e9b856aecfe2ea7a1b7606b7f06afb1ffbd48d6c",
+      "probed_bytes": 7444,
+      "title": "EbookFoundation/free-programming-books — Canonical Computer Science & Quantitative Engineering Index",
+      "domain": "computer_science_and_numerical_engineering_canon",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'EbookFoundation/free-programming-books — Canonical Computer Science & Quantitative Engineering Index' (https://github.com/EbookFoundation/free-programming-books). Domain: computer_science_and_numerical_engineering_canon. Core Equations & Architectural Lessons: PREMISE[CS-CANON-INDEX]: Multi-domain algorithmic reference taxonomy for numerical stability and systems verification.",
+      "equations_and_premises": [
+        "PREMISE[CS-CANON-INDEX]: Multi-domain algorithmic reference taxonomy for numerical stability and systems verification."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-022",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/programthink/books",
+      "url": "https://github.com/programthink/books",
+      "sha256": "da5aeb76a81431af84b20de8248d753396fdc5360e268b17cd08bf9c847d2485",
+      "probed_bytes": 5333,
+      "title": "programthink/books — Critical Epistemology, Cognitive Bias & Adversarial Red-Team Analysis",
+      "domain": "cognitive_debiasing_and_red_team_falsification",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'programthink/books — Critical Epistemology, Cognitive Bias & Adversarial Red-Team Analysis' (https://github.com/programthink/books). Domain: cognitive_debiasing_and_red_team_falsification. Core Equations & Architectural Lessons: EQ-BAYES-DEBIASING: LogOdds_post = LogOdds_prior + ln(P(E | H_1) / P(E | H_0)) - Bias_Anchoring_Penalty",
+      "equations_and_premises": [
+        "EQ-BAYES-DEBIASING: LogOdds_post = LogOdds_prior + ln(P(E | H_1) / P(E | H_0)) - Bias_Anchoring_Penalty"
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-023",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/frappe/books",
+      "url": "https://github.com/frappe/books",
+      "sha256": "78c5b44664ed7e1fd924d37b545c459c46dec5baad3a2dc649ac332eaf899eaf",
+      "probed_bytes": 6157,
+      "title": "frappe/books — Double-Entry Ledger Accounting & Immutable Audit Trail Architecture",
+      "domain": "double_entry_unit_ledger_and_bankroll_audit_invariants",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'frappe/books — Double-Entry Ledger Accounting & Immutable Audit Trail Architecture' (https://github.com/frappe/books). Domain: double_entry_unit_ledger_and_bankroll_audit_invariants. Core Equations & Architectural Lessons: EQ-DOUBLE-ENTRY-LEDGER: sum_i Debit_Units_i - sum_j Credit_Units_j == 0; Net_Units_t = Net_Units_{t-1} + sum_k Settlement_PnL_k",
+      "equations_and_premises": [
+        "EQ-DOUBLE-ENTRY-LEDGER: sum_i Debit_Units_i - sum_j Credit_Units_j == 0; Net_Units_t = Net_Units_{t-1} + sum_k Settlement_PnL_k"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-024",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/linsa-io/books",
+      "url": "https://github.com/linsa-io/books",
+      "sha256": "d4967af4e80804b0501c870d4dd4092634b574d5d8c27a54962a6b66e94748a8",
+      "probed_bytes": 6000,
+      "title": "linsa-io/books — Quantitative Systems & Engineering Knowledge Base",
+      "domain": "systems_architecture_and_knowledge_indexing",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'linsa-io/books — Quantitative Systems & Engineering Knowledge Base' (https://github.com/linsa-io/books). Domain: systems_architecture_and_knowledge_indexing. Core Equations & Architectural Lessons: PREMISE[KNOWLEDGE-INDEXING]: Structured technical corpus indexing for low-latency retrieval.",
+      "equations_and_premises": [
+        "PREMISE[KNOWLEDGE-INDEXING]: Structured technical corpus indexing for low-latency retrieval."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-025",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/knowsuchagency/pdf-to-podcast",
+      "url": "https://github.com/knowsuchagency/pdf-to-podcast",
+      "sha256": "7f81dfe5c7d992482df6bbada8231df2cf9bd42e7063b1d6f6e140769e7e3a81",
+      "probed_bytes": 5822,
+      "title": "knowsuchagency/pdf-to-podcast — Document-to-Dialogue Distillation & Multi-Voice Synthesis",
+      "domain": "document_parsing_and_adversarial_dialogue_distillation",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'knowsuchagency/pdf-to-podcast — Document-to-Dialogue Distillation & Multi-Voice Synthesis' (https://github.com/knowsuchagency/pdf-to-podcast). Domain: document_parsing_and_adversarial_dialogue_distillation. Core Equations & Architectural Lessons: PREMISE[MULTI-VOICE-SYNTHESIS]: Bull vs Bear dialectical synthesis of research dossiers.",
+      "equations_and_premises": [
+        "PREMISE[MULTI-VOICE-SYNTHESIS]: Bull vs Bear dialectical synthesis of research dossiers."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-026",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/rust-lang/book",
+      "url": "https://github.com/rust-lang/book",
+      "sha256": "27ebe1cab86d5fa89faee9f975cabfed07e9caf27ab3d265787ac3288714331f",
+      "probed_bytes": 6130,
+      "title": "The Rust Programming Language (Ownership, Borrow Checker & Typestate Invariants)",
+      "domain": "single_writer_ownership_and_compile_time_typestate_safety",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'The Rust Programming Language (Ownership, Borrow Checker & Typestate Invariants)' (https://github.com/rust-lang/book). Domain: single_writer_ownership_and_compile_time_typestate_safety. Core Equations & Architectural Lessons: PREMISE[SINGLE-WRITER-BORROW-LAW]: Exclusive mutable writer lock (`brain/mind.jsonl` single-writer invariant) vs shared immutable readers (`data/mind_staging/*.jsonl`).",
+      "equations_and_premises": [
+        "PREMISE[SINGLE-WRITER-BORROW-LAW]: Exclusive mutable writer lock (`brain/mind.jsonl` single-writer invariant) vs shared immutable readers (`data/mind_staging/*.jsonl`)."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-027",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/PaddlePaddle/book",
+      "url": "https://github.com/PaddlePaddle/book",
+      "sha256": "f1a181b219d52f3f517d0fd366f36138011a164f1c2a8c2c58621c0af599a34d",
+      "probed_bytes": 6300,
+      "title": "PaddlePaddle/book — Deep Learning Fundamentals (Recommender Systems, Sequence RNNs & Gradient Ranking)",
+      "domain": "sequence_modeling_and_pairwise_ranking_losses",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'PaddlePaddle/book — Deep Learning Fundamentals (Recommender Systems, Sequence RNNs & Gradient Ranking)' (https://github.com/PaddlePaddle/book). Domain: sequence_modeling_and_pairwise_ranking_losses. Core Equations & Architectural Lessons: EQ-BPR-RANKING-LOSS: L_BPR = -sum_{(i, j)} ln(sigma(s_hat_i - s_hat_j)) + lambda_reg * ||Theta||_2^2",
+      "equations_and_premises": [
+        "EQ-BPR-RANKING-LOSS: L_BPR = -sum_{(i, j)} ln(sigma(s_hat_i - s_hat_j)) + lambda_reg * ||Theta||_2^2"
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-028",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/wx-chevalier/Awesome-Books-Notes",
+      "url": "https://github.com/wx-chevalier/Awesome-Books-Notes",
+      "sha256": "51bdf3e1f1adf44aa1f7edd67d9b5a3e00b374bcfa07bc2c9a44386bea17275c",
+      "probed_bytes": 6172,
+      "title": "wx-chevalier/Awesome-Books-Notes — Distributed Systems, Math & Machine Learning Notes",
+      "domain": "distributed_systems_and_mathematical_foundations",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'wx-chevalier/Awesome-Books-Notes — Distributed Systems, Math & Machine Learning Notes' (https://github.com/wx-chevalier/Awesome-Books-Notes). Domain: distributed_systems_and_mathematical_foundations. Core Equations & Architectural Lessons: PREMISE[DISTRIBUTED-CONSENSUS]: Idempotent state transitions and content-addressable SHA-256 manifests.",
+      "equations_and_premises": [
+        "PREMISE[DISTRIBUTED-CONSENSUS]: Idempotent state transitions and content-addressable SHA-256 manifests."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-029",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/bumzy/book",
+      "url": "https://github.com/bumzy/book",
+      "sha256": "c60b936063d9943ecefdb4f4bc769e0986875839ec1e50340520733fdc2d23dd",
+      "probed_bytes": 4666,
+      "title": "bumzy/book — Algorithmic Engineering & Data Structure Reference",
+      "domain": "algorithmic_data_structures_and_complexity_bounds",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'bumzy/book — Algorithmic Engineering & Data Structure Reference' (https://github.com/bumzy/book). Domain: algorithmic_data_structures_and_complexity_bounds. Core Equations & Architectural Lessons: PREMISE[AMORTIZED-COMPLEXITY]: O(1) hash-indexed allowlist/denylist lookups for Stage-0 roster gates.",
+      "equations_and_premises": [
+        "PREMISE[AMORTIZED-COMPLEXITY]: O(1) hash-indexed allowlist/denylist lookups for Stage-0 roster gates."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-030",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/rbwet/sports-quant",
+      "url": "https://github.com/rbwet/sports-quant",
+      "sha256": "bd53a9d2f7ff38d6e5378d64baead4d8e3103003cd0968b19abce08d9e4a41cf",
+      "probed_bytes": 5323,
+      "title": "rbwet/sports-quant — Quantitative Sports Betting Pricing, Shin De-Vigging & CLV Analytics",
+      "domain": "sports_quant_shin_devig_and_clv_pricing",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'rbwet/sports-quant — Quantitative Sports Betting Pricing, Shin De-Vigging & CLV Analytics' (https://github.com/rbwet/sports-quant). Domain: sports_quant_shin_devig_and_clv_pricing. Core Equations & Architectural Lessons: EQ-SHIN-DEVIG: p_i(z) = (sqrt(z^2 + 4 * (1 - z) * (q_i^2 / S_q)) - z) / (2 * (1 - z)), solving sum_i p_i(z) = 1 for insider trading parameter z | EQ-POWER-DEVIG: sum_i q_i^{1/k} = 1, where q_i = 1 / d_i are raw implied decimal probabilities",
+      "equations_and_premises": [
+        "EQ-SHIN-DEVIG: p_i(z) = (sqrt(z^2 + 4 * (1 - z) * (q_i^2 / S_q)) - z) / (2 * (1 - z)), solving sum_i p_i(z) = 1 for insider trading parameter z",
+        "EQ-POWER-DEVIG: sum_i q_i^{1/k} = 1, where q_i = 1 / d_i are raw implied decimal probabilities"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-031",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/yestoi/sports-harness",
+      "url": "https://github.com/yestoi/sports-harness",
+      "sha256": "df016c6602342513e3e7df7cbda53842052943a23c7936c2f54a818eee7e0b88",
+      "probed_bytes": 5262,
+      "title": "yestoi/sports-harness — Backtesting Harness & Walk-Forward Validation for Sports Models",
+      "domain": "walk_forward_backtesting_and_brier_log_loss_calibration",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'yestoi/sports-harness — Backtesting Harness & Walk-Forward Validation for Sports Models' (https://github.com/yestoi/sports-harness). Domain: walk_forward_backtesting_and_brier_log_loss_calibration. Core Equations & Architectural Lessons: EQ-WALK-FORWARD-BRIER: Brier_decomp = Reliability - Resolution + Uncertainty = (1/N) sum_k n_k (p_k - o_bar_k)^2 - (1/N) sum_k n_k (o_bar_k - o_bar)^2 + o_bar(1 - o_bar)",
+      "equations_and_premises": [
+        "EQ-WALK-FORWARD-BRIER: Brier_decomp = Reliability - Resolution + Uncertainty = (1/N) sum_k n_k (p_k - o_bar_k)^2 - (1/N) sum_k n_k (o_bar_k - o_bar)^2 + o_bar(1 - o_bar)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-032",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/abusufyanvu/6S191_MIT_DeepLearning",
+      "url": "https://github.com/abusufyanvu/6S191_MIT_DeepLearning",
+      "sha256": "86e37d10fd69a877dc58cf0efd199a80dc48563511de1ee09c36455ffc79fb4e",
+      "probed_bytes": 16384,
+      "title": "MIT 6.S191 Introduction to Deep Learning — Evidential Uncertainty & Sequence Attention Labs",
+      "domain": "evidential_deep_learning_and_epistemic_uncertainty",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'MIT 6.S191 Introduction to Deep Learning — Evidential Uncertainty & Sequence Attention Labs' (https://github.com/abusufyanvu/6S191_MIT_DeepLearning). Domain: evidential_deep_learning_and_epistemic_uncertainty. Core Equations & Architectural Lessons: EQ-MIT-EVIDENTIAL-DIRICHLET: alpha_k = e_k + 1, S = sum_{k=1}^K alpha_k, Epistemic_Uncertainty = K / S, p_hat_k = alpha_k / S",
+      "equations_and_premises": [
+        "EQ-MIT-EVIDENTIAL-DIRICHLET: alpha_k = e_k + 1, S = sum_{k=1}^K alpha_k, Epistemic_Uncertainty = K / S, p_hat_k = alpha_k / S"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-033",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/UnravelSports/unravelsports",
+      "url": "https://github.com/UnravelSports/unravelsports",
+      "sha256": "8923032f8bbcbab444913b9a5fdadef0395712c96a1d53755767b9bfdb50f74c",
+      "probed_bytes": 6051,
+      "title": "UnravelSports/unravelsports — Graph Neural Networks & Spatio-Temporal Tracking Analytics",
+      "domain": "spatio_temporal_player_tracking_graphs_and_pitch_control",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'UnravelSports/unravelsports — Graph Neural Networks & Spatio-Temporal Tracking Analytics' (https://github.com/UnravelSports/unravelsports). Domain: spatio_temporal_player_tracking_graphs_and_pitch_control. Core Equations & Architectural Lessons: EQ-UNRAVEL-GNN-PASS: h_i^{(l+1)} = phi(h_i^{(l)}, sum_{j in N(i)} psi(h_i^{(l)}, h_j^{(l)}, r_{ij}, Delta_v_{ij})) | Computes defender closing-speed edges r_{ij} and relative velocity vectors Delta_v_{ij} for separation and YAC.",
+      "equations_and_premises": [
+        "EQ-UNRAVEL-GNN-PASS: h_i^{(l+1)} = phi(h_i^{(l)}, sum_{j in N(i)} psi(h_i^{(l)}, h_j^{(l)}, r_{ij}, Delta_v_{ij}))",
+        "Computes defender closing-speed edges r_{ij} and relative velocity vectors Delta_v_{ij} for separation and YAC."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-034",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/smerdov/eSports_Sensors_Dataset",
+      "url": "https://github.com/smerdov/eSports_Sensors_Dataset",
+      "sha256": "ed4014868dbaee2f05dcd66f8ddbbdee6f38ac5546ac9c403971616a51b9ca1e",
+      "probed_bytes": 6098,
+      "title": "smerdov/eSports_Sensors_Dataset — Multimodal Biometric, HRV & Cognitive Arousal Telemetry",
+      "domain": "biometric_autonomic_fatigue_and_reaction_latency",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'smerdov/eSports_Sensors_Dataset — Multimodal Biometric, HRV & Cognitive Arousal Telemetry' (https://github.com/smerdov/eSports_Sensors_Dataset). Domain: biometric_autonomic_fatigue_and_reaction_latency. Core Equations & Architectural Lessons: EQ-YERKES-DODSON-AROUSAL: Perf(A) = Perf_max - kappa * (A - A_opt)^2, modeling primetime cognitive pressure on rookie/backup QBs.",
+      "equations_and_premises": [
+        "EQ-YERKES-DODSON-AROUSAL: Perf(A) = Perf_max - kappa * (A - A_opt)^2, modeling primetime cognitive pressure on rookie/backup QBs."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-035",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/NingK1ng/Sports-Matter",
+      "url": "https://github.com/NingK1ng/Sports-Matter",
+      "sha256": "482a7c39cc745f605134cdb245a63b978f052e5d32235726543dbbf10c43efe0",
+      "probed_bytes": 5251,
+      "title": "NingK1ng/Sports-Matter — Multi-Sport Quantitative Analytics & Matchup Feature Engineering",
+      "domain": "opponent_adjusted_efficiency_and_elo_ratings",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'NingK1ng/Sports-Matter — Multi-Sport Quantitative Analytics & Matchup Feature Engineering' (https://github.com/NingK1ng/Sports-Matter). Domain: opponent_adjusted_efficiency_and_elo_ratings. Core Equations & Architectural Lessons: EQ-MARGIN-ELO-UPDATE: R_A' = R_A + K * ln(|Margin| + 1) * (2.2 / ((R_A - R_B)*0.001 + 2.2)) * (S_A - E_A)",
+      "equations_and_premises": [
+        "EQ-MARGIN-ELO-UPDATE: R_A' = R_A + K * ln(|Margin| + 1) * (2.2 / ((R_A - R_B)*0.001 + 2.2)) * (S_A - E_A)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-036",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/Yogapriya2512/A-Simple-Chatbot-",
+      "url": "https://github.com/Yogapriya2512/A-Simple-Chatbot-",
+      "sha256": "cf0c691b444eca91e101ef37b46b405340f66f8cd7545e37a2a93995de347541",
+      "probed_bytes": 9373,
+      "title": "Yogapriya2512/A-Simple-Chatbot- — Intent Classification & Slot-Filling Dialogue State Machine",
+      "domain": "intent_routing_and_deterministic_state_machines",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Yogapriya2512/A-Simple-Chatbot- — Intent Classification & Slot-Filling Dialogue State Machine' (https://github.com/Yogapriya2512/A-Simple-Chatbot-). Domain: intent_routing_and_deterministic_state_machines. Core Equations & Architectural Lessons: PREMISE[INTENT-SLOT-FINITE-STATE]: Deterministic query parsing for athlete, market, and game-period prop lookups.",
+      "equations_and_premises": [
+        "PREMISE[INTENT-SLOT-FINITE-STATE]: Deterministic query parsing for athlete, market, and game-period prop lookups."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-037",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/khushboo-agarwal/Action-Recognition",
+      "url": "https://github.com/khushboo-agarwal/Action-Recognition",
+      "sha256": "18d9e73117d7da6ee3a9508e7bf99cc8e22dc004afcd00e9b9ef3dd7ffad59cd",
+      "probed_bytes": 6997,
+      "title": "khushboo-agarwal/Action-Recognition — Spatio-Temporal Pose & Optical Flow Action Classification",
+      "domain": "kinematic_action_recognition_and_route_break_detection",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'khushboo-agarwal/Action-Recognition — Spatio-Temporal Pose & Optical Flow Action Classification' (https://github.com/khushboo-agarwal/Action-Recognition). Domain: kinematic_action_recognition_and_route_break_detection. Core Equations & Architectural Lessons: EQ-ACTION-ANGULAR-JERK: J_hip(t) = d^3 theta_hip / dt^3, detecting receiver top-of-route stem deceleration and break angle.",
+      "equations_and_premises": [
+        "EQ-ACTION-ANGULAR-JERK: J_hip(t) = d^3 theta_hip / dt^3, detecting receiver top-of-route stem deceleration and break angle."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-038",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/imclab/SportsDataAnalytics",
+      "url": "https://github.com/imclab/SportsDataAnalytics",
+      "sha256": "dbe300a118c54c3c70fced876d882c739291dab015106594bb07a25b09b0c785",
+      "probed_bytes": 6485,
+      "title": "imclab/SportsDataAnalytics — Play-by-Play Event Sequence Mining & Win Probability Curves",
+      "domain": "event_sequence_mining_and_markov_win_probability",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'imclab/SportsDataAnalytics — Play-by-Play Event Sequence Mining & Win Probability Curves' (https://github.com/imclab/SportsDataAnalytics). Domain: event_sequence_mining_and_markov_win_probability. Core Equations & Architectural Lessons: EQ-IMCLAB-WP-STATE: WP(s_t) = P(Home_Win | qtr, clock, score_diff, down, ydstogo, yardline_100, timeouts)",
+      "equations_and_premises": [
+        "EQ-IMCLAB-WP-STATE: WP(s_t) = P(Home_Win | qtr, clock, score_diff, down, ydstogo, yardline_100, timeouts)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-039",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/haris-sujethan/live-sportsbook-arbitrage",
+      "url": "https://github.com/haris-sujethan/live-sportsbook-arbitrage",
+      "sha256": "7e5e843acebfd9126db7d00ff478c151db2b9b760863bb50ddc243b695e61f3b",
+      "probed_bytes": 6222,
+      "title": "haris-sujethan/live-sportsbook-arbitrage — Cross-Book Synthetic Best-Line & Two-Way Market Efficiency",
+      "domain": "cross_book_arbitrage_synthetic_hold_and_steam_detection",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'haris-sujethan/live-sportsbook-arbitrage — Cross-Book Synthetic Best-Line & Two-Way Market Efficiency' (https://github.com/haris-sujethan/live-sportsbook-arbitrage). Domain: cross_book_arbitrage_synthetic_hold_and_steam_detection. Core Equations & Architectural Lessons: EQ-SYNTHETIC-HOLD: H_syn = sum_{i=1}^n min_{b in Books} (1 / d_{i, b}) - 1; Arb exists iff H_syn < 0 | EQ-CONSENSUS-PINNACLE-ANCHOR: p_consensus = 0.60 * p_sharp_devig + 0.40 * median_b(p_retail_devig_b)",
+      "equations_and_premises": [
+        "EQ-SYNTHETIC-HOLD: H_syn = sum_{i=1}^n min_{b in Books} (1 / d_{i, b}) - 1; Arb exists iff H_syn < 0",
+        "EQ-CONSENSUS-PINNACLE-ANCHOR: p_consensus = 0.60 * p_sharp_devig + 0.40 * median_b(p_retail_devig_b)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-040",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/saiemgilani/Sports-Research-Papers",
+      "url": "https://github.com/saiemgilani/Sports-Research-Papers",
+      "sha256": "9a40b078d3c9ca21516ff1ede46fa270b0f4a58ae041566c68d8f70ebf1b3e38",
+      "probed_bytes": 5824,
+      "title": "saiemgilani/Sports-Research-Papers — SportsDataVerse Academic Football/Basketball Analytics Canon (Saiem Gilani)",
+      "domain": "academic_sports_analytics_epa_wpa_and_expected_yards",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'saiemgilani/Sports-Research-Papers — SportsDataVerse Academic Football/Basketball Analytics Canon (Saiem Gilani)' (https://github.com/saiemgilani/Sports-Research-Papers). Domain: academic_sports_analytics_epa_wpa_and_expected_yards. Core Equations & Architectural Lessons: EQ-GILANI-XYAC: E[YAC | x_catch, v_wr, d_nearest_def, blocker_count] = sum_y y * P_multinomial(YAC = y | Tracking_Features)",
+      "equations_and_premises": [
+        "EQ-GILANI-XYAC: E[YAC | x_catch, v_wr, d_nearest_def, blocker_count] = sum_y y * P_multinomial(YAC = y | Tracking_Features)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-041",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/hagrin/sports",
+      "url": "https://github.com/hagrin/sports",
+      "sha256": "e875d8321a5623ee547b9ab0a219b5c04ced751c58b6f3771f3d266284cdfc3e",
+      "probed_bytes": 0,
+      "title": "hagrin/sports — Historical Matchup Database Normalization & Elo/Bradley-Terry Rating Pipelines",
+      "domain": "bradley_terry_paired_comparisons_and_schedule_strength",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'hagrin/sports — Historical Matchup Database Normalization & Elo/Bradley-Terry Rating Pipelines' (https://github.com/hagrin/sports). Domain: bradley_terry_paired_comparisons_and_schedule_strength. Core Equations & Architectural Lessons: EQ-BRADLEY-TERRY-HFA: P(i beats j at home) = exp(theta_i - theta_j + eta_HFA) / (1 + exp(theta_i - theta_j + eta_HFA))",
+      "equations_and_premises": [
+        "EQ-BRADLEY-TERRY-HFA: P(i beats j at home) = exp(theta_i - theta_j + eta_HFA) / (1 + exp(theta_i - theta_j + eta_HFA))"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-042",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/Abdulhamid97Mousa/mosaic_multigrid",
+      "url": "https://github.com/Abdulhamid97Mousa/mosaic_multigrid",
+      "sha256": "92fb7148c5bd7b5bf24c51b8653d363a0b6976c236d75ccdc4af111073772c9e",
+      "probed_bytes": 0,
+      "title": "Abdulhamid97Mousa/mosaic_multigrid — Multigrid PDE Relaxation & Spatial Field Potential Solvers",
+      "domain": "multigrid_spatial_field_control_and_poisson_pde_solvers",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Abdulhamid97Mousa/mosaic_multigrid — Multigrid PDE Relaxation & Spatial Field Potential Solvers' (https://github.com/Abdulhamid97Mousa/mosaic_multigrid). Domain: multigrid_spatial_field_control_and_poisson_pde_solvers. Core Equations & Architectural Lessons: EQ-MULTIGRID-FIELD-POTENTIAL: nabla^2 Phi(x, y) = rho_off(x, y) - rho_def(x, y) solved via V-cycle restriction/prolongation for open-grass receiver voids.",
+      "equations_and_premises": [
+        "EQ-MULTIGRID-FIELD-POTENTIAL: nabla^2 Phi(x, y) = rho_off(x, y) - rho_def(x, y) solved via V-cycle restriction/prolongation for open-grass receiver voids."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-043",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/harrywaugh/ActivityTrackingWithSensorFusion",
+      "url": "https://github.com/harrywaugh/ActivityTrackingWithSensorFusion",
+      "sha256": "083bfc929b808c2684f3ea0405c5278882583f7b6d40783245d87e4b646b7de3",
+      "probed_bytes": 0,
+      "title": "harrywaugh/ActivityTrackingWithSensorFusion — Extended Kalman Filter (EKF) & Madgwick IMU Sensor Fusion",
+      "domain": "kalman_sensor_fusion_and_player_kinematic_state_tracking",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'harrywaugh/ActivityTrackingWithSensorFusion — Extended Kalman Filter (EKF) & Madgwick IMU Sensor Fusion' (https://github.com/harrywaugh/ActivityTrackingWithSensorFusion). Domain: kalman_sensor_fusion_and_player_kinematic_state_tracking. Core Equations & Architectural Lessons: EQ-EKF-KINEMATIC-UPDATE: K_k = P_{k|k-1} H_k^T (H_k P_{k|k-1} H_k^T + R_k)^{-1}, fusing GPS speed with local accelerometer burst.",
+      "equations_and_premises": [
+        "EQ-EKF-KINEMATIC-UPDATE: K_k = P_{k|k-1} H_k^T (H_k P_{k|k-1} H_k^T + R_k)^{-1}, fusing GPS speed with local accelerometer burst."
+      ],
+      "engine_target_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-044",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/sealneaward/research-notes",
+      "url": "https://github.com/sealneaward/research-notes",
+      "sha256": "91de1cd4fa974d5967517ad59262155554f5030c8e38bb2a71bfa7398ee217c7",
+      "probed_bytes": 0,
+      "title": "sealneaward/research-notes — Statistical Learning, Causal Inference & Quantitative Research Compendium",
+      "domain": "causal_identification_and_double_machine_learning",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'sealneaward/research-notes — Statistical Learning, Causal Inference & Quantitative Research Compendium' (https://github.com/sealneaward/research-notes). Domain: causal_identification_and_double_machine_learning. Core Equations & Architectural Lessons: EQ-CHERNZHUKOV-DML: theta_hat_DML = (sum_i tilde_D_i^2)^{-1} sum_i tilde_D_i * tilde_Y_i, orthogonalizing treatment (blitz/motion) from confounders (down/distance).",
+      "equations_and_premises": [
+        "EQ-CHERNZHUKOV-DML: theta_hat_DML = (sum_i tilde_D_i^2)^{-1} sum_i tilde_D_i * tilde_Y_i, orthogonalizing treatment (blitz/motion) from confounders (down/distance)."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-045",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/clandgrebe/predicting-nba-games-ml",
+      "url": "https://github.com/clandgrebe/predicting-nba-games-ml",
+      "sha256": "3586b06ed3be6aa345a6cc9e7c689eea61ba818f7375ed7449f366ec02acb63a",
+      "probed_bytes": 0,
+      "title": "clandgrebe/predicting-nba-games-ml — Rolling Pace-Adjusted Four-Factor & Rest-Disadvantage ML Pipeline",
+      "domain": "pace_adjusted_efficiency_and_short_rest_fatigue_features",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'clandgrebe/predicting-nba-games-ml — Rolling Pace-Adjusted Four-Factor & Rest-Disadvantage ML Pipeline' (https://github.com/clandgrebe/predicting-nba-games-ml). Domain: pace_adjusted_efficiency_and_short_rest_fatigue_features. Core Equations & Architectural Lessons: EQ-EWMA-ROLLING-FORM: E_t^{(EWMA)} = alpha_decay * Perf_t + (1 - alpha_decay) * E_{t-1}^{(EWMA)}, weighting L3/L4 weeks over stale Week 1-2 priors.",
+      "equations_and_premises": [
+        "EQ-EWMA-ROLLING-FORM: E_t^{(EWMA)} = alpha_decay * Perf_t + (1 - alpha_decay) * E_{t-1}^{(EWMA)}, weighting L3/L4 weeks over stale Week 1-2 priors."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-046",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/ryurko/intro-sports-analytics-research",
+      "url": "https://github.com/ryurko/intro-sports-analytics-research",
+      "sha256": "59e0c849586c3767334bfee2715797c5939a96a7dfa6ed9972c884d87483cffa",
+      "probed_bytes": 0,
+      "title": "Ron Yurko (CMU) — Intro to Sports Analytics Research (nflWAR, Expected Points, WP & Multilevel Tracking Models)",
+      "domain": "cmu_yurko_nflwar_multilevel_replacement_level_and_ep_wp",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Ron Yurko (CMU) — Intro to Sports Analytics Research (nflWAR, Expected Points, WP & Multilevel Tracking Models)' (https://github.com/ryurko/intro-sports-analytics-research). Domain: cmu_yurko_nflwar_multilevel_replacement_level_and_ep_wp. Core Equations & Architectural Lessons: EQ-YURKO-NFLWAR: WAR_player = (IPA_air + IPA_yac + IPA_rush - IPA_replacement) / Points_Per_Win, where Points_Per_Win approx 22.5 | EQ-YURKO-MULTINOMIAL-EP: EP(s) = +7*P(TD) + 3*P(FG) + 2*P(Safety) - 2*P(Opp_Safety) - 3*P(Opp_FG) - 7*P(Opp_TD)",
+      "equations_and_premises": [
+        "EQ-YURKO-NFLWAR: WAR_player = (IPA_air + IPA_yac + IPA_rush - IPA_replacement) / Points_Per_Win, where Points_Per_Win approx 22.5",
+        "EQ-YURKO-MULTINOMIAL-EP: EP(s) = +7*P(TD) + 3*P(FG) + 2*P(Safety) - 2*P(Opp_Safety) - 3*P(Opp_FG) - 7*P(Opp_TD)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-047",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/akulkarnii/nflmetrics",
+      "url": "https://github.com/akulkarnii/nflmetrics",
+      "sha256": "53d96b2d8cbf275ad2295f03170e921d7beed1ac1b82ce0254af6566034b2688",
+      "probed_bytes": 0,
+      "title": "akulkarnii/nflmetrics — NFL Play-by-Play CPOE, EPA/Play, Success Rate & Trench Win-Rate Aggregator",
+      "domain": "nfl_epa_cpoe_success_rate_and_situational_splits",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'akulkarnii/nflmetrics — NFL Play-by-Play CPOE, EPA/Play, Success Rate & Trench Win-Rate Aggregator' (https://github.com/akulkarnii/nflmetrics). Domain: nfl_epa_cpoe_success_rate_and_situational_splits. Core Equations & Architectural Lessons: EQ-NFLMETRICS-COMPOSITE-QB: QB_Comp = 0.45 * z(EPA_per_dropback) + 0.30 * z(CPOE) + 0.25 * z(Success_Rate) - 0.20 * z(Sack_Rate_Over_Expected)",
+      "equations_and_premises": [
+        "EQ-NFLMETRICS-COMPOSITE-QB: QB_Comp = 0.45 * z(EPA_per_dropback) + 0.30 * z(CPOE) + 0.25 * z(Success_Rate) - 0.20 * z(Sack_Rate_Over_Expected)"
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-048",
+      "item_type": "reddit_quant_postmortems",
+      "source_file": "https://www.reddit.com/r/sportsbetting/comments/1v9ap9i/i_stopped_buying_picks_and_built_my_own_model/",
+      "url": "https://www.reddit.com/r/sportsbetting/comments/1v9ap9i/i_stopped_buying_picks_and_built_my_own_model/",
+      "sha256": "68ea71fa6b7560341b5879cfabcac1d712a4eeb1660c07b9e7a2f035b3b4e023",
+      "probed_bytes": 8485,
+      "title": "Reddit r/sportsbetting — 'I Stopped Buying Picks and Built My Own Model' (Closing Line Value, De-Vig Discipline & Pass-Rate Architecture)",
+      "domain": "market_first_devig_discipline_clv_and_pass_rate_governance",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'Reddit r/sportsbetting — 'I Stopped Buying Picks and Built My Own Model' (Closing Line Value, De-Vig Discipline & Pass-Rate Architecture)' (https://www.reddit.com/r/sportsbetting/comments/1v9ap9i/i_stopped_buying_picks_and_built_my_own_model/). Domain: market_first_devig_discipline_clv_and_pass_rate_governance. Core Equations & Architectural Lessons: EQ-CLV-VERIFICATION: CLV_pct = (p_close_devig - p_bet_implied) / p_bet_implied; long-run ROI converges to E[CLV_pct] | PREMISE[PASS-DISCIPLINE]: Start from the de-vigged market number (Layer 1), apply situational/injury delta (Layer 2), and PASS whenever post-shrinkage edge < conjunction threshold.",
+      "equations_and_premises": [
+        "EQ-CLV-VERIFICATION: CLV_pct = (p_close_devig - p_bet_implied) / p_bet_implied; long-run ROI converges to E[CLV_pct]",
+        "PREMISE[PASS-DISCIPLINE]: Start from the de-vigged market number (Layer 1), apply situational/injury delta (Layer 2), and PASS whenever post-shrinkage edge < conjunction threshold."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    },
+    {
+      "id": "gse-wave8-remote-049",
+      "item_type": "github_repo",
+      "source_file": "https://github.com/throwawayhub25/Sports-Betting-Model",
+      "url": "https://github.com/throwawayhub25/Sports-Betting-Model",
+      "sha256": "bb88cf32c0721e83e78c65fc8827f5ff501122b941d3792cd234380983a45a36",
+      "probed_bytes": 0,
+      "title": "throwawayhub25/Sports-Betting-Model — End-to-End Automated Odds Ingestion, Probability Calibration & Kelly Sizing Pipeline",
+      "domain": "automated_odds_calibration_isotonic_platt_and_kelly_execution",
+      "extracted_summary": "Wave 8 GitHub/Colab/Quant distillation for 'throwawayhub25/Sports-Betting-Model — End-to-End Automated Odds Ingestion, Probability Calibration & Kelly Sizing Pipeline' (https://github.com/throwawayhub25/Sports-Betting-Model). Domain: automated_odds_calibration_isotonic_platt_and_kelly_execution. Core Equations & Architectural Lessons: EQ-PLATT-LOGIT-CALIB: p_cal = 1 / (1 + exp(-(A * logit(p_raw) + B))), preventing overconfident tail probabilities from inflating Kelly stakes.",
+      "equations_and_premises": [
+        "EQ-PLATT-LOGIT-CALIB: p_cal = 1 / (1 + exp(-(A * logit(p_raw) + B))), preventing overconfident tail probabilities from inflating Kelly stakes."
+      ],
+      "engine_target_module": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "secondary_engine_module": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ingestion_status": "INGESTED_AND_WIRED"
+    }
+  ]
+}

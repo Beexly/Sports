@@ -295,7 +295,7 @@ def test_live_books_and_pdfs_executable_engine():
     )
 
     res = run_all_live_books_and_pdfs_engines("JAX", "BAL", 9)
-    assert res["engines_executed_count"] == 6
+    assert res["engines_executed_count"] == 16
 
     # 1. VMLS KKT Constrained Box-Score Reconciler
     kkt = res["vmls_kkt_constrained_boxscore_reconciler"]
@@ -333,6 +333,24 @@ def test_live_books_and_pdfs_executable_engine():
     assert thl["zero_sum_nash_equilibrium_play_calling"]["duality_gap"] < 0.05
     assert thl["absorbing_markov_chain_drive_matrix"]["JAX"]["from_own_25_zone1"]["expected_drive_points"] > 1.5
 
+    # 7-16. Wave 8 & Wave 9 Local Football/Sports/Recursion Books (4,788 pages) + 38 GitHub Sports-Quant/ML Repos
+    w8 = res["wave8_hidden_game_eager_ifaf_quant_and_github_engines"]
+    assert w8["status"] == "ACTIVE_EXECUTED"
+    assert w8["wave8_local_pdfs_wired"] == 15
+    assert w8["wave8_local_pdf_pages_wired"] == 4788
+    assert w8["wave8_github_books_notebooks_repos_wired"] == 38
+    assert w8["kernel_7_hidden_game_of_football"]["jax_hidden_points_advantage"] > 3.0
+    assert w8["kernel_7_hidden_game_of_football"]["real_qbr_comparison"]["real_qbr_delta_jax_minus_bal"] > 10.0
+    assert "Zay Flowers" in w8["kernel_8_eager_erickson_football_analytics"]["receiver_wopr_pca_and_poisson_td"]
+    assert w8["kernel_9_ifaf_rules_sid_gamenotes_numbers_game"]["ifaf_rulebook_clock_and_penalty_mechanics"]["rule_3_2_5_minimum_spike_clock_sec"] == 3.0
+    assert w8["kernel_10_davidovg_quant_algo_double_entry"]["frappe_double_entry_boxscore_ledger"]["double_entry_imbalance_linf"] == 0.0
+    assert w8["kernel_11_multigrid_kalman_nflwar_transformer"]["transformer_causal_attention_and_evidential_dirichlet"]["mlfs_point_in_time_causal_mask_verified"] is True
+    assert w8["kernel_12_kissell_posirina_optimal_sports_math"]["probit_margin_and_spread_calibration"]["jax_plus_6_5_cover_prob_probit"] > 0.55
+    assert "Josh Hines-Allen (JAX EDGE)" in w8["kernel_13_congelio_nfl_analytics_with_r"]["congelio_weighted_adjusted_sack_impact"]
+    assert w8["kernel_14_severini_analytic_methods_3rd_ed"]["quantile_regression_player_tails"]["Zay Flowers"]["p90"] > w8["kernel_14_severini_analytic_methods_3rd_ed"]["quantile_regression_player_tails"]["Zay Flowers"]["p50"]
+    assert w8["kernel_15_egidi_karlis_ntzoufras_footbayes"]["dibp_bivariate_poisson_td_model"]["expected_total_tds"] > 3.5
+    assert w8["kernel_16_corballis_rubio_sanchez_klosterman_recursive_mind"]["corballis_level3_theory_of_mind_hierarchy"]["recursion_depth_k"] == 3
+
 
 def test_web_app_connected_workflow_api_route():
     import subprocess
@@ -358,7 +376,7 @@ def test_web_app_connected_workflow_api_route():
     assert parsed["matchup"] == "JAX @ BAL"
     assert parsed["subpackages"] >= 30
     assert parsed["streams"] == 22
-    assert parsed["booksEngines"] == 6
+    assert parsed["booksEngines"] == 16
 
 
 def test_gse_connected_game_workflow_skill_installed_and_valid() -> None:

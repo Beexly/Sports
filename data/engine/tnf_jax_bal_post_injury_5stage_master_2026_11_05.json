@@ -2,15 +2,15 @@
   "schema": "gse_post_injury_5stage_master_v2",
   "cryptographic_receipt_chain": {
     "stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "stage1a_receipt_sha256": "cf29fa2fce67c7d837594b24b3a8f35ddd9b378014674218611e586e902fed5b",
-    "stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa",
-    "stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
-    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
-    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
+    "stage1a_receipt_sha256": "c218f4389dc113e144a787e4cdddbdad9e3303fbe976543b53f198e2a7f6ecf2",
+    "stage1b_receipt_sha256": "958f72b29bda55f43b113a508aa15ddba5bb7b3ba36eb2b00f6a4159ac498ec2",
+    "stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce",
+    "stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d",
+    "stage5_receipt_sha256": "ab9adf7921a322d752b59aa5ce22cbe96f5b9a136cfb275382b84bb793bb828f"
   },
   "stage2_jev_spine_and_10k_simulation": {
     "schema": "gse_stage2_jev_spine_and_10k_sim_receipt_v1",
-    "parent_stage1b_receipt_sha256": "27c63d235d2363ea5dfc5b4f3ea7a14d8cbc23ab302b5b8e9dba816b0fb8bfaa",
+    "parent_stage1b_receipt_sha256": "958f72b29bda55f43b113a508aa15ddba5bb7b3ba36eb2b00f6a4159ac498ec2",
     "coachMindsetHash": "a293ee26ed6f1350047b26151aa1f4c890457ed9d44d1eecd50e5fc2ee9e775d",
     "tau": 0.42,
     "jev_full_game_spine": {
@@ -140,11 +140,11 @@
       "bal_cover_plus_7_5_prob": 0.469,
       "over_41_5_prob": 0.5076
     },
-    "stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b"
+    "stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce"
   },
   "stage3_4_conserved_post_sim_projections": {
     "schema": "gse_stage3_4_conserved_post_sim_projections_v2",
-    "parent_stage2_receipt_sha256": "3d23e367d8eea057cbbd47ef27165a1d9314f6a64423a08985f5e919f4416b8b",
+    "parent_stage2_receipt_sha256": "5e582929f03d75dc70ccce8ac837d0d5c555aa4f75f8524bfd6c5d697e194bce",
     "pbp_conservation_verified": true,
     "conserved_shares_summary": {
       "jax_receiving_target_shares_sum": 1.0,
@@ -4989,11 +4989,11 @@
         }
       }
     },
-    "stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06"
+    "stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d"
   },
   "stage5_360_conjunction_gate": {
     "schema": "gse_stage5_360_conjunction_gate_receipt_v1",
-    "parent_stage3_4_receipt_sha256": "be4964f88b4183c5baa137b333c63c5467793dfc7affd65a4555928f0b28fb06",
+    "parent_stage3_4_receipt_sha256": "77cba9edcdd9ad670dbae98792ae47e5948af3ebfb6521ff48c5659950daaa1d",
     "board_summary": {
       "total_game_lines_evaluated": 6,
       "total_props_on_board": 1461,
@@ -6498,6 +6498,6 @@
         }
       }
     },
-    "stage5_receipt_sha256": "7e01c971056c2c2f0d7bc434c007aad2d715cb356d4350607c5808638ad5b308"
+    "stage5_receipt_sha256": "ab9adf7921a322d752b59aa5ce22cbe96f5b9a136cfb275382b84bb793bb828f"
   }
 }
