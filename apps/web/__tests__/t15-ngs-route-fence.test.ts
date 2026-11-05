@@ -90,13 +90,18 @@
  * THE KNOWN EXCEPTION IS RECORDED, NOT HIDDEN. app/api/picks/route.ts is
  * listed in KNOWN_PUBLIC_NGS_EXPOSURES with the reason it is there. It is a
  * PUBLIC route by design (the published picks board is on the doctrine's
- * KEEP list), and its readiness gate (canExposePublicPicks) is ON by
- * default -- PUBLIC_PICKS_ENABLED defaults to true. The NGS prose in its
- * intelligence.why[] is a real exposure of NGS metric names and values to a
- * possibly-anonymous caller. It is recorded here as a KNOWN, OWNED exposure
- * with the reason, so the fence is honest about it rather than pretending it
- * does not exist, and so the count of "routes that leak NGS identifiers" is
- * exactly 1 and not 0.
+ * KEEP list), and it carries no internal gate, so an anonymous caller can
+ * reach it. The NGS prose in its intelligence.why[] is produced by the NGS
+ * adapter into the bundle BEFORE projection, and the route projects the
+ * intelligence block with the viewer's confidence entitlement
+ * (entitlements.canSeeConfidence), which empties why[] for viewers without
+ * that entitlement (anonymous and FREE viewers get an empty why[], a null
+ * summary and null sixQuestions). The exposure is therefore recorded as a
+ * KNOWN, OWNED gap in this registry's terms (the route is anonymous
+ * reachable and the NGS material flows through its bundle for entitled
+ * viewers), and the "exposure is real" test below pins the exact wiring,
+ * so a regression to a hardcoded `true` (or a projector bypass) goes red
+ * instead of quietly re-opening the prose to anonymous callers.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -180,7 +185,7 @@ const NGS_FENCED_ROUTES: Readonly<Record<string, string>> = {
  */
 const KNOWN_PUBLIC_NGS_EXPOSURES: Readonly<Record<string, string>> = {
   "picks/route.ts":
-    "The published picks board is on the doctrine KEEP list and is deliberately public; its readiness gate (canExposePublicPicks / PUBLIC_PICKS_ENABLED) defaults ON, so an anonymous caller can reach it. The NGS prose in intelligence.why[] (metric names AND values: CPOE, separation, YAC+/-, RYOE/att, aDOT share) is a REAL exposure of NGS material to that caller and is recorded here as an owned gap, not a clean bill of health. Closing it means stripping NGS observations from the public intelligence projection (or gating the intelligence block), which is a product change and not this file's to make.",
+    "The published picks board is on the doctrine KEEP list and is deliberately public; it carries no internal gate, so an anonymous caller can reach it. The NGS prose produced by the adapter into intelligence.why[] (metric names AND values: CPOE, separation, YAC+/-, RYOE/att, aDOT share) is a REAL exposure of NGS material flowing through this route's bundle, recorded here as an owned gap rather than a clean bill of health. The route projects the intelligence block with the viewer's confidence entitlement (entitlements.canSeeConfidence), and the projector empties why[] for viewers without that entitlement, which is what keeps the prose from reaching anonymous and FREE callers today. Closing the gap means stripping NGS observations from the public intelligence projection (or gating the intelligence block), which is a product change and not this file's to make; the wiring pin below goes red if the projection regresses to a hardcoded true.",
 };
 
 /**
@@ -420,11 +425,20 @@ describe("T15 NGS route fence — no NGS metric identifier is served publicly", 
     // removed rather than quietly kept.
     const src = readFileSync(join(API, "picks/route.ts"), "utf8");
     // The route loads the DB surfaces that include db.nextGenStat, and it
-    // projects the intelligence block with canSeeConfidence=true, which keeps
-    // why[] intact for every viewer tier.
+    // projects the intelligence block with the viewer's confidence
+    // entitlement (entitlements.canSeeConfidence), so viewers without that
+    // entitlement (anonymous and FREE) receive an emptied why[] while
+    // entitled viewers keep the full prose.
     expect(src).toContain("loadBundleSurfaces");
     expect(src).toContain("projectPickIntelligenceForViewer");
-    expect(src).toMatch(/projectPickIntelligenceForViewer\(\s*raw,\s*true/);
+    expect(src).toMatch(
+      /projectPickIntelligenceForViewer\(\s*raw\s*,\s*entitlements\.canSeeConfidence/,
+    );
+    // A hardcoded `true` here would re-open the NGS prose to anonymous
+    // callers (the projector keeps why[] intact for entitled viewers). The
+    // entitlement wiring is the only thing between the bundle and the
+    // anonymous caller, so pin it from both sides.
+    expect(src).not.toMatch(/projectPickIntelligenceForViewer\(\s*raw\s*,\s*true/);
     // The prose itself is produced by the NGS adapter, not by the route.
     const adapter = readFileSync(
       join(process.cwd(), "lib/intelligence-core/signal-adapters.ts"),

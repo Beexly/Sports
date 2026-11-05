@@ -146,6 +146,20 @@ describe("the fence is actually wired (regression on the audit finding)", () => 
         expect(body, `${path} names no NGS metric`).not.toMatch(
           /Next Gen Stats|CPOE|RYOE/i,
         );
+      } else if (!src.includes("internal-surface-fence")) {
+        // A fenced page that does not import the fence is acceptable ONLY
+        // when it is a data-free static stub: it imports no @/lib module at
+        // all (a page SSR-ing internal data necessarily imports one), and it
+        // renders the under-construction notice that points at the two
+        // shipped surfaces (GALAXY PICKS and DFS). Any page that imports an
+        // internal loader without calling its gate still fails here, which
+        // preserves the prohibition this test was written to enforce.
+        expect(src, `${path} stub imports no @/lib module`).not.toMatch(/@\/lib\//);
+        expect(src, `${path} stub renders the under-construction notice`).toContain(
+          'data-testid="under-construction-notice"',
+        );
+        expect(src, `${path} stub links GALAXY PICKS`).toContain('href="/packages"');
+        expect(src, `${path} stub links DFS`).toContain('href="/fantasy/dfs"');
       } else {
         expect(src, `${path} must import the fence`).toContain(
           "internal-surface-fence",
