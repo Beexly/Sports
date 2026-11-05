@@ -1,0 +1,481 @@
+{
+  "schema": "public_proxy_rates_2026_v1",
+  "generated_at": "2026-11-05",
+  "sources": {
+    "rb_ybc": {
+      "source": "Pro-Football-Reference 2026 Advanced Rushing",
+      "url": "https://www.pro-football-reference.com/years/2026/rushing_advanced.htm",
+      "status": "measured"
+    },
+    "two_high": {
+      "source": "Sharp Football Analysis coverage schemes",
+      "url": "https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-schemes/",
+      "updated": "2026-10-27",
+      "status": "proxy = middle-open rate"
+    },
+    "dime": {
+      "source": "nflverse FTN charting 2026 n_defense_box",
+      "status": "proxy = light-box rate (<=6 in box); no free team-level dime charting exists"
+    }
+  },
+  "rb_ybc": {
+    "BAL": {
+      "att": 231,
+      "ybc": 582,
+      "ybc_att": 2.5195
+    },
+    "DET": {
+      "att": 202,
+      "ybc": 552,
+      "ybc_att": 2.7327
+    },
+    "ATL": {
+      "att": 234,
+      "ybc": 525,
+      "ybc_att": 2.2436
+    },
+    "IND": {
+      "att": 226,
+      "ybc": 549,
+      "ybc_att": 2.4292
+    },
+    "TAM": {
+      "att": 266,
+      "ybc": 715,
+      "ybc_att": 2.688
+    },
+    "CHI": {
+      "att": 281,
+      "ybc": 708,
+      "ybc_att": 2.5196
+    },
+    "KAN": {
+      "att": 185,
+      "ybc": 493,
+      "ybc_att": 2.6649
+    },
+    "BUF": {
+      "att": 217,
+      "ybc": 664,
+      "ybc_att": 3.0599
+    },
+    "DAL": {
+      "att": 199,
+      "ybc": 491,
+      "ybc_att": 2.4673
+    },
+    "TEN": {
+      "att": 189,
+      "ybc": 492,
+      "ybc_att": 2.6032
+    },
+    "PIT": {
+      "att": 193,
+      "ybc": 487,
+      "ybc_att": 2.5233
+    },
+    "CAR": {
+      "att": 169,
+      "ybc": 399,
+      "ybc_att": 2.3609
+    },
+    "NYJ": {
+      "att": 206,
+      "ybc": 495,
+      "ybc_att": 2.4029
+    },
+    "LAR": {
+      "att": 213,
+      "ybc": 596,
+      "ybc_att": 2.7981
+    },
+    "SEA": {
+      "att": 225,
+      "ybc": 561,
+      "ybc_att": 2.4933
+    },
+    "MIN": {
+      "att": 199,
+      "ybc": 549,
+      "ybc_att": 2.7588
+    },
+    "JAX": {
+      "att": 200,
+      "ybc": 384,
+      "ybc_att": 1.92
+    },
+    "LVR": {
+      "att": 207,
+      "ybc": 287,
+      "ybc_att": 1.3865
+    },
+    "CLE": {
+      "att": 199,
+      "ybc": 460,
+      "ybc_att": 2.3116
+    },
+    "NYG": {
+      "att": 201,
+      "ybc": 463,
+      "ybc_att": 2.3035
+    },
+    "NWE": {
+      "att": 240,
+      "ybc": 607,
+      "ybc_att": 2.5292
+    },
+    "CIN": {
+      "att": 153,
+      "ybc": 334,
+      "ybc_att": 2.183
+    },
+    "DEN": {
+      "att": 196,
+      "ybc": 444,
+      "ybc_att": 2.2653
+    },
+    "MIA": {
+      "att": 194,
+      "ybc": 580,
+      "ybc_att": 2.9897
+    },
+    "LAC": {
+      "att": 194,
+      "ybc": 443,
+      "ybc_att": 2.2835
+    },
+    "SFO": {
+      "att": 191,
+      "ybc": 546,
+      "ybc_att": 2.8586
+    },
+    "HOU": {
+      "att": 167,
+      "ybc": 361,
+      "ybc_att": 2.1617
+    },
+    "ARI": {
+      "att": 208,
+      "ybc": 505,
+      "ybc_att": 2.4279
+    },
+    "WAS": {
+      "att": 191,
+      "ybc": 607,
+      "ybc_att": 3.178
+    },
+    "GNB": {
+      "att": 170,
+      "ybc": 293,
+      "ybc_att": 1.7235
+    },
+    "NOR": {
+      "att": 171,
+      "ybc": 360,
+      "ybc_att": 2.1053
+    },
+    "PHI": {
+      "att": 188,
+      "ybc": 395,
+      "ybc_att": 2.1011
+    }
+  },
+  "coverage": {
+    "CLE": {
+      "man_rate": 0.434,
+      "zone_rate": 0.528,
+      "middle_closed_rate": 0.7290000000000001,
+      "middle_open_rate": 0.244
+    },
+    "CHI": {
+      "man_rate": 0.295,
+      "zone_rate": 0.6659999999999999,
+      "middle_closed_rate": 0.525,
+      "middle_open_rate": 0.433
+    },
+    "NE": {
+      "man_rate": 0.29,
+      "zone_rate": 0.657,
+      "middle_closed_rate": 0.479,
+      "middle_open_rate": 0.479
+    },
+    "CIN": {
+      "man_rate": 0.285,
+      "zone_rate": 0.64,
+      "middle_closed_rate": 0.54,
+      "middle_open_rate": 0.414
+    },
+    "NYJ": {
+      "man_rate": 0.261,
+      "zone_rate": 0.639,
+      "middle_closed_rate": 0.45799999999999996,
+      "middle_open_rate": 0.48700000000000004
+    },
+    "NYG": {
+      "man_rate": 0.261,
+      "zone_rate": 0.6859999999999999,
+      "middle_closed_rate": 0.49200000000000005,
+      "middle_open_rate": 0.475
+    },
+    "DEN": {
+      "man_rate": 0.255,
+      "zone_rate": 0.696,
+      "middle_closed_rate": 0.485,
+      "middle_open_rate": 0.47600000000000003
+    },
+    "IND": {
+      "man_rate": 0.253,
+      "zone_rate": 0.675,
+      "middle_closed_rate": 0.51,
+      "middle_open_rate": 0.436
+    },
+    "DAL": {
+      "man_rate": 0.233,
+      "zone_rate": 0.677,
+      "middle_closed_rate": 0.5920000000000001,
+      "middle_open_rate": 0.364
+    },
+    "ATL": {
+      "man_rate": 0.223,
+      "zone_rate": 0.705,
+      "middle_closed_rate": 0.603,
+      "middle_open_rate": 0.337
+    },
+    "LAR": {
+      "man_rate": 0.214,
+      "zone_rate": 0.706,
+      "middle_closed_rate": 0.37,
+      "middle_open_rate": 0.5770000000000001
+    },
+    "LV": {
+      "man_rate": 0.21,
+      "zone_rate": 0.7070000000000001,
+      "middle_closed_rate": 0.46,
+      "middle_open_rate": 0.48100000000000004
+    },
+    "BUF": {
+      "man_rate": 0.193,
+      "zone_rate": 0.726,
+      "middle_closed_rate": 0.48100000000000004,
+      "middle_open_rate": 0.474
+    },
+    "JAX": {
+      "man_rate": 0.18899999999999997,
+      "zone_rate": 0.753,
+      "middle_closed_rate": 0.449,
+      "middle_open_rate": 0.522
+    },
+    "DET": {
+      "man_rate": 0.18100000000000002,
+      "zone_rate": 0.768,
+      "middle_closed_rate": 0.48,
+      "middle_open_rate": 0.489
+    },
+    "PHI": {
+      "man_rate": 0.174,
+      "zone_rate": 0.731,
+      "middle_closed_rate": 0.513,
+      "middle_open_rate": 0.41600000000000004
+    },
+    "MIA": {
+      "man_rate": 0.17,
+      "zone_rate": 0.748,
+      "middle_closed_rate": 0.431,
+      "middle_open_rate": 0.509
+    },
+    "TEN": {
+      "man_rate": 0.168,
+      "zone_rate": 0.77,
+      "middle_closed_rate": 0.47200000000000003,
+      "middle_open_rate": 0.495
+    },
+    "KC": {
+      "man_rate": 0.165,
+      "zone_rate": 0.797,
+      "middle_closed_rate": 0.445,
+      "middle_open_rate": 0.528
+    },
+    "TB": {
+      "man_rate": 0.161,
+      "zone_rate": 0.7909999999999999,
+      "middle_closed_rate": 0.59,
+      "middle_open_rate": 0.392
+    },
+    "BAL": {
+      "man_rate": 0.159,
+      "zone_rate": 0.777,
+      "middle_closed_rate": 0.385,
+      "middle_open_rate": 0.595
+    },
+    "HOU": {
+      "man_rate": 0.155,
+      "zone_rate": 0.805,
+      "middle_closed_rate": 0.5820000000000001,
+      "middle_open_rate": 0.39899999999999997
+    },
+    "NO": {
+      "man_rate": 0.151,
+      "zone_rate": 0.752,
+      "middle_closed_rate": 0.654,
+      "middle_open_rate": 0.304
+    },
+    "LAC": {
+      "man_rate": 0.136,
+      "zone_rate": 0.7290000000000001,
+      "middle_closed_rate": 0.419,
+      "middle_open_rate": 0.53
+    },
+    "PIT": {
+      "man_rate": 0.126,
+      "zone_rate": 0.8190000000000001,
+      "middle_closed_rate": 0.45,
+      "middle_open_rate": 0.513
+    },
+    "GB": {
+      "man_rate": 0.124,
+      "zone_rate": 0.792,
+      "middle_closed_rate": 0.315,
+      "middle_open_rate": 0.639
+    },
+    "WAS": {
+      "man_rate": 0.122,
+      "zone_rate": 0.784,
+      "middle_closed_rate": 0.321,
+      "middle_open_rate": 0.61
+    },
+    "SF": {
+      "man_rate": 0.11800000000000001,
+      "zone_rate": 0.821,
+      "middle_closed_rate": 0.556,
+      "middle_open_rate": 0.40299999999999997
+    },
+    "ARI": {
+      "man_rate": 0.109,
+      "zone_rate": 0.812,
+      "middle_closed_rate": 0.276,
+      "middle_open_rate": 0.655
+    },
+    "CAR": {
+      "man_rate": 0.105,
+      "zone_rate": 0.8440000000000001,
+      "middle_closed_rate": 0.5670000000000001,
+      "middle_open_rate": 0.392
+    },
+    "MIN": {
+      "man_rate": 0.054000000000000006,
+      "zone_rate": 0.865,
+      "middle_closed_rate": 0.294,
+      "middle_open_rate": 0.634
+    },
+    "SEA": {
+      "man_rate": 0.046,
+      "zone_rate": 0.769,
+      "middle_closed_rate": 0.32299999999999995,
+      "middle_open_rate": 0.53
+    }
+  },
+  "box": {
+    "light_box_rate": {
+      "ARI": 0.6311,
+      "ATL": 0.6977,
+      "BAL": 0.7665,
+      "BUF": 0.6232,
+      "CAR": 0.7168,
+      "CHI": 0.6046,
+      "CIN": 0.7157,
+      "CLE": 0.7478,
+      "DAL": 0.6587,
+      "DEN": 0.6688,
+      "DET": 0.6067,
+      "GB": 0.6218,
+      "HOU": 0.637,
+      "IND": 0.6292,
+      "JAX": 0.681,
+      "KC": 0.6574,
+      "LA": 0.6875,
+      "LAC": 0.7288,
+      "LV": 0.7321,
+      "MIA": 0.6208,
+      "MIN": 0.5277,
+      "NE": 0.6352,
+      "NO": 0.6972,
+      "NYG": 0.6243,
+      "NYJ": 0.6532,
+      "PHI": 0.7833,
+      "PIT": 0.6161,
+      "SEA": 0.6903,
+      "SF": 0.6597,
+      "TB": 0.5798,
+      "TEN": 0.6824,
+      "WAS": 0.6037
+    },
+    "dime_or_fewer_box_rate": {
+      "ARI": 0.2603,
+      "ATL": 0.281,
+      "BAL": 0.307,
+      "BUF": 0.3107,
+      "CAR": 0.3006,
+      "CHI": 0.3064,
+      "CIN": 0.2843,
+      "CLE": 0.3183,
+      "DAL": 0.3016,
+      "DEN": 0.2862,
+      "DET": 0.2846,
+      "GB": 0.2232,
+      "HOU": 0.2792,
+      "IND": 0.2952,
+      "JAX": 0.3017,
+      "KC": 0.2709,
+      "LA": 0.2821,
+      "LAC": 0.3147,
+      "LV": 0.2867,
+      "MIA": 0.2461,
+      "MIN": 0.2483,
+      "NE": 0.2704,
+      "NO": 0.2699,
+      "NYG": 0.2704,
+      "NYJ": 0.2592,
+      "PHI": 0.327,
+      "PIT": 0.2669,
+      "SEA": 0.2878,
+      "SF": 0.2743,
+      "TB": 0.255,
+      "TEN": 0.2889,
+      "WAS": 0.2764
+    },
+    "plays": {
+      "ARI": 534,
+      "ATL": 612,
+      "BAL": 544,
+      "BUF": 544,
+      "CAR": 519,
+      "CHI": 483,
+      "CIN": 489,
+      "CLE": 575,
+      "DAL": 504,
+      "DEN": 622,
+      "DET": 534,
+      "GB": 587,
+      "HOU": 573,
+      "IND": 542,
+      "JAX": 464,
+      "KC": 502,
+      "LA": 560,
+      "LAC": 483,
+      "LV": 586,
+      "MIA": 451,
+      "MIN": 451,
+      "NE": 540,
+      "NO": 578,
+      "NYG": 551,
+      "NYJ": 571,
+      "PHI": 526,
+      "PIT": 547,
+      "SEA": 549,
+      "SF": 576,
+      "TB": 545,
+      "TEN": 592,
+      "WAS": 492
+    }
+  }
+}

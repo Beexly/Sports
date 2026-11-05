@@ -1,0 +1,1010 @@
+{
+  "schema": "batches_5_7_works_v1",
+  "generated_at": "2026-11-05",
+  "handoff_claim": 122,
+  "enumerated_works": 63,
+  "enumerated_extras": 16,
+  "resolved_metadata": 44,
+  "disclosure": "The handoff asserts 122 works but writes down only these source lines. Every citation that exists in the document is staged; the shortfall against 122 is disclosed, not padded.",
+  "works": [
+    {
+      "cited_as": "arXiv:2610.36183 (lower-envelope quantile TTA)",
+      "operator": "computeQuantileRegressionMotionFeasibilityTta",
+      "arxiv_id": "2610.36183",
+      "openalex_id": null,
+      "title": "Learning Human Sports Motion Feasibility via Quantile Regression on Tracking Data",
+      "abstract": "We study time-to-arrival (TTA) in sports: the shortest plausible time a player needs to reach an arbitrary location on the pitch given their current kinematic state, estimated as the lower envelope of observed locomotion times. Rather than modeling space ownership through position density estimation or closed-form physics-based models, we cast TTA as a conditional quantile regression problem, estimating the lower quantile of locomotion time so the model learns a player's lower-envelope arrival time. We train the model on optical tracking data from all 64 matches of the PFF FC FIFA World Cup 2022 dataset, and evaluate a lightweight multilayer perceptron against six player-motion models from the literature, re-expressed as TTA predictors, and a learned reachable- hull baseline. Across our evaluation metrics, the MLP consistently outperforms every physics-based baseline. To probe the generality of the learned locomotion model, we further evaluate it on basketball tracking data and a single-game NFL tracking dataset, analyzing the transferability of player motion dynamics across sports. Our project is available at https://github.com/mguti97/TTA-Quantile.",
+      "authors": [
+        "Marc Guti\u00e9rrez-P\u00e9rez",
+        "Antonio Agudo"
+      ],
+      "published": "2026-10-26",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2603.17866 (Nguyen & Yurko step-and-turn agility kernel)",
+      "operator": "computeQuantileRegressionMotionFeasibilityTta",
+      "arxiv_id": "2603.17866",
+      "openalex_id": null,
+      "title": "NFL step-and-turn: A generative framework for evaluating player movement in American football",
+      "abstract": "In sports analytics, player tracking data have driven significant advancements in the task of player evaluation. We present a novel generative framework for evaluating the observed frame-by-frame player positioning against a distribution of hypothetical alternatives. We illustrate our approach by modeling the within-play movement of an individual ball carrier in the National Football League (NFL). Specifically, we develop Bayesian multilevel models for frame-level player movement based on two components: step length (distance between successive locations) and turn angle (change in direction between successive steps). Using the step-and-turn models, we perform posterior predictive simulation to generate hypothetical ball carrier steps at each frame during a play. This enables comparison of the observed player movement with a distribution of simulated alternatives using common valuation measures in American football. We apply our framework to tracking data from the first nine weeks of the 2022 NFL season and derive novel player performance metrics based on hypothetical evaluation.",
+      "authors": [
+        "Quang Nguyen",
+        "Ronald Yurko"
+      ],
+      "published": "2026-03-18",
+      "resolved": true
+    },
+    {
+      "cited_as": "Fahey 2026 (Combine allometric scaling)",
+      "operator": "computeQuantileRegressionMotionFeasibilityTta",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Fahey 2026 (Combine allometric scaling)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Soares 2026 ($\\tau_0$ 40-yd acceleration asymptote)",
+      "operator": "computeQuantileRegressionMotionFeasibilityTta",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Soares 2026 ($\\tau_0$ 40-yd acceleration asymptote)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Mao arXiv:2303.10895 (Leapfrog diffusion variance)",
+      "operator": "computeQuantileRegressionMotionFeasibilityTta",
+      "arxiv_id": "2303.10895",
+      "openalex_id": null,
+      "title": "Leapfrog Diffusion Model for Stochastic Trajectory Prediction",
+      "abstract": "To model the indeterminacy of human behaviors, stochastic trajectory prediction requires a sophisticated multi-modal distribution of future trajectories. Emerging diffusion models have revealed their tremendous representation capacities in numerous generation tasks, showing potential for stochastic trajectory prediction. However, expensive time consumption prevents diffusion models from real-time prediction, since a large number of denoising steps are required to assure sufficient representation ability. To resolve the dilemma, we present LEapfrog Diffusion model (LED), a novel diffusion-based trajectory prediction model, which provides real-time, precise, and diverse predictions. The core of the proposed LED is to leverage a trainable leapfrog initializer to directly learn an expressive multi-modal distribution of future trajectories, which skips a large number of denoising steps, significantly accelerating inference speed. Moreover, the leapfrog initializer is trained to appropriately allocate correlated samples to provide a diversity of predicted future trajectories, significantly improving prediction performances. Extensive experiments on four real-world datasets, including NBA/NFL/SDD/ETH-UCY, show that LED consistently improves performance and achieves 23.7%/21.9% ADE/FDE improvement on NFL. The proposed LED also speeds up the inference 19.3/30.8/24.3/25.1 times compared to the standard diffusion model on NBA/NFL/SDD/ETH-UCY, satisfying real-time inference needs. Code is available at https://github.com/MediaBrain-SJTU/LED.",
+      "authors": [
+        "Weibo Mao",
+        "Chenxin Xu",
+        "Qi Zhu",
+        "Siheng Chen",
+        "Yanfeng Wang"
+      ],
+      "published": "2023-03-20",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2604.01491 (Pipping-Gam\u00f3n, Gebauer & Lee opponent-adjusted Rasch trench model)",
+      "operator": "computeOpponentAdjustedPassBlockAndRushWinRate",
+      "arxiv_id": "2604.01491",
+      "openalex_id": null,
+      "title": "Opponent-Adjusted Evaluation of NFL Pass Protection and Pass Rush",
+      "abstract": "Evaluating NFL pass protectors and rushers is difficult because observed win rates reflect both player performance and the difficulty of the blocking assignments each player faces. Using Hudl player coordinates and blocking annotations from the 2021 NFL regular season, we estimate blocker and rusher strength jointly from initial blocking matchups. A ridge-regularized Bradley--Terry model uses early pass rush wins and losses within 2.5 seconds of the snap, while a multinomial extension models full-play losses, wins, pressures, and sacks. To summarize full-play performance, we use the outcomes' conditional associations with offensive expected points added (EPA) to weight predicted probabilities, giving ratings of expected disruption produced by rushers or allowed by blockers. In held-out Weeks 16--18, the early and final models reduce log loss by 4.5% and 3.6%, respectively, relative to historical matchup baselines whose smoothing strengths are selected by cross-validation; 95% game-bootstrap intervals for both reductions are above zero. The resulting ratings place observed success in the context of opponents and protection help, with game-bootstrap intervals quantifying sampling uncertainty in early strength and full-play disruption.",
+      "authors": [
+        "Jonathan Pipping-Gam\u00f3n",
+        "Maximilian Gebauer",
+        "Victoria Lee",
+        "Kenny Watts",
+        "Abraham J. Wyner"
+      ],
+      "published": "2026-04-02",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2609.33664 (Brahme-Mehta-Matthews probabilistic pass-blocking assignment)",
+      "operator": "computeOpponentAdjustedPassBlockAndRushWinRate",
+      "arxiv_id": "2609.33664",
+      "openalex_id": null,
+      "title": "Who Blocks Whom? Probabilistic Pass-Blocking Assignments for Evaluating Blockers and Pass Rushers in American Football",
+      "abstract": "Historically, statistical analysis of offensive lineman has been hindered by the lack of easily measurable quantities. More recently, with the introduction of player tracking data new methodological advances are now possible. Using high-dimensional spatio-temporal data, we adapt the defensive-matchup hidden Markov model of \\cite{franks2015characterizing} from basketball to football pass protection, producing frame-by-frame probabilistic assignments of each pass blocker to the rushers. We show how this probabilistic assignment is a usable modeling artifact that augments existing player-evaluation frameworks. We directly quantify the attention a rusher commands, upgrade adjusted plus-minus \\citep{Macdonald+2012} from all-or-nothing stints to partial, continuous blocking credit in continuous time, yield block-shedding survival metrics, and measure the space a rusher generates for his teammates. Fit to the first eight weeks of the 2021 NFL season, the resulting metrics recover widely-recognized elite rushers and pass protectors and align with independent charting.",
+      "authors": [
+        "Abhijit Brahme",
+        "Ishan Mehta",
+        "Gregory J. Matthews",
+        "Alexander Franks"
+      ],
+      "published": "2026-09-27",
+      "resolved": true
+    },
+    {
+      "cited_as": "Latham W7162123526 (NFL OT bilateral lower-limb loading asymmetry)",
+      "operator": "computeOpponentAdjustedPassBlockAndRushWinRate",
+      "arxiv_id": null,
+      "openalex_id": "W7162123526",
+      "title": "The Effects of the Repetitive Use of a Position-Specific Loading Pattern on Lower Limb Asymmetry in NFL Offensive Tackles",
+      "abstract": "ABSTRACT: Latham, KB. The effects of the repetitive use of a position-specific loading pattern on lower limb asymmetry in NFL offensive tackles. J Strength Cond Res 40(7): 757-768, 2026-American football is a fast-paced, high-impact, collision sport associated with a high frequency of injuries that occur through contact, noncontact, acute impact, or repeated stresses. The purpose of this short-term longitudinal study was to examine developments of musculoskeletal asymmetries through specific loading patterns used by offensive tackles in the National Football League (NFL). Using both cross-sectional and longitudinal designs, strength asymmetry changes in 5 NFL offensive tackles were analyzed pre- and post-training camp, focusing on 3 key isometric strength tests: (a) isometric midthigh pull test, (b) isometric staggered stance pull test (IMSSP), and (c) force frame tests for isometric abduction and adduction strength. A countermovement jump (CMJ) was used to assess dynamic strength. Results revealed statistically significant changes in isometric strength and asymmetry over the course of training camp, with IMSSP ( p < 0.05) and CMJ ( p < 0.05). Notably, post-leg dominance was observed in several athletes in isometric strength. Asymmetry percentages were most noticeable in CMJ tests, with substantial increases in post-training camp asymmetries for several athletes. These findings suggest that repetitive use of a staggered stance position during an NFL training camp can lead to musculoskeletal imbalances in strength between limbs. The results highlight the importance of monitoring isometric strength and asymmetry as part of a tailored strength and conditioning program to mitigate injury risks. Future research should be focused on monitoring strength asymmetry through metrics such as eccentric hamstring strength and for longer. Future training should include alternating positions and incorporating exercises to balance strength across limbs.",
+      "authors": [
+        "Kavan B. Latham"
+      ],
+      "published": "2026",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2601.18774 (Pipping-Gam\u00f3n & Wyner *Blown Lead Paradox* martingale supremum tail bound $\\frac{1-p}{p}$)",
+      "operator": "computeWynerBlownLeadAndReferenceDependentTiltShock",
+      "arxiv_id": "2601.18774",
+      "openalex_id": null,
+      "title": "The Blown Lead Paradox: A Pathwise Calibration Benchmark for Win Probability Forecasts",
+      "abstract": "Live win probabilities have given sports collapses a common numerical language: the highest win probability attained by the team that eventually lost. Yet this familiar number is a selected pathwise extreme. The losing path is identified by the terminal outcome and then searched for its most favorable point. Under ideal sequential calibration, we derive an exact continuous-path benchmark for this statistic, a conservative bound for discretely reported paths, and a probability-integral-transform diagnostic for collections of games. Unlike fixed-time calibration summaries and proper scores, the diagnostic asks whether a published feed produces severe losing paths as often as a calibrated sequential model should. We apply the benchmark separately to public regular-season NFL and NBA feeds from 2018-2024, using a season-stratified dyadic bootstrap to account for recurring teams. We detect no global departure in the NFL and a systematic excess of extreme losing-team peaks in the NBA. In the upper 5% benchmark tail, the NBA excess is 1.3% (95% interval 0.4% to 2.3%); first crossings of a published win probability of 0.95 show the same positive gap between observed and implied loss rates.",
+      "authors": [
+        "Jonathan Pipping-Gam\u00f3n",
+        "Abraham J. Wyner"
+      ],
+      "published": "2026-01-26",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2606.18805 (Richardson K\u0151szegi-Rabin reference-dependent emotional shock)",
+      "operator": "computeWynerBlownLeadAndReferenceDependentTiltShock",
+      "arxiv_id": "2606.18805",
+      "openalex_id": null,
+      "title": "Emotional driving: Reference-dependent emotions and risky driving behavior after sporting events",
+      "abstract": "Using average vehicle speed data in 10-minute increments at the Traffic Message Channel (TMC) location level, along with precise crash timing and location information, we analyze driving behavior around five Florida stadiums before and after NFL and NBA regular season games from 2015 to 2019. We find no evidence of emotional driving following NBA games, but strong and consistent effects following NFL games, concentrated in predicted-close games that end in disappointing home-team losses -- combining high pre-game suspense with negative outcome valence. These games are associated with significant increases in average vehicle speed within 3 km of stadiums during the first post-game hour, dissipating with increasing time and distance from the stadium. Average vehicle speed increases by up to 3 mph relative to predicted-close games that ended in a win -- an effect several times larger than the typical game day versus non-game day speed differential. Overall, our results highlight how the combination of sustained suspense and negative outcome valence in close sporting contests can spill over into risky post-game driving behavior, underscoring the behavioral and public safety implications of affective cues in large-scale sporting events.",
+      "authors": [
+        "Travis Richardson",
+        "Steve Bickley",
+        "Ho Fai Ben Chan",
+        "Benno Torgler",
+        "Shamsunnahar Yasmin",
+        "Tim Pawlowski"
+      ],
+      "published": "2026-06-17",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2607.18461 (Kollrack NFL tweet sentiment arc fade)",
+      "operator": "computeWynerBlownLeadAndReferenceDependentTiltShock",
+      "arxiv_id": "2607.18461",
+      "openalex_id": null,
+      "title": "The triumphs and tragedies of fandom: Emotional arcs in NFL tweets",
+      "abstract": "Online fandom communities influence public opinion toward movies, musicians, and sports teams. Using a corpus of game-referencing tweets, we measure variation in sentiment toward National Football League (NFL) teams driven by geography, game outcomes, and team performance for the 2011--2014 NFL seasons. We estimate a fandom radius for each team, identifying regions where engagement exceeds background levels of discussion. We find sentiment for both winning and losing teams is positive immediately prior to games, drops at kickoff, and rebounds slightly during halftime. After halftime however, the trajectories diverge: Sentiment for winning teams increases toward the end of the game, while sentiment for losing teams remains low, though both end up below their start of game levels. Finally, a comparison between sentiment and win percentage reveals a weak positive relationship, suggesting that while team success contributes to fandom happiness, other factors also influence how fans discuss the NFL on social media. Our work contributes to a growing body of computational social science research that quantifies the many aspects of modern fandom.",
+      "authors": [
+        "Elisabeth Kollrack",
+        "Michael V. Arnold",
+        "Peter Sheridan Dodds",
+        "Christopher M. Danforth"
+      ],
+      "published": "2026-07-20",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2607.00164 (Singh RLVR Brier verifiable reward)",
+      "operator": "computeWynerBlownLeadAndReferenceDependentTiltShock",
+      "arxiv_id": "2607.00164",
+      "openalex_id": null,
+      "title": "Verifiable Rewards for Calibrated Probabilistic Forecasting",
+      "abstract": "Reinforcement learning with verifiable rewards can in principle train calibrated probabilistic forecasters, since a proper scoring rule such as the Brier score is computed from outcomes alone and is minimized in expectation by the true probability. In practice it degrades calibration, and existing remedies address epistemic uncertainty, where a model's confidence accompanies a verifiably correct or incorrect answer. We study aleatoric forecasting, where the forecast itself is the output and the label is one stochastic outcome, taking NFL in-game win probability as a testbed with the betting market as a reference. Rewarding the realized per-play outcome fails, because the single outcome is a noisy target and the policy gradient corrupts the chain of thought. We introduce a verifiable, label-free reward, a state-conditioned empirical win rate estimated from past outcomes, that removes the label noise, and we keep the gradient off the reasoning, by direct prediction or a gradient mask, so it cannot be corrupted. Trained with this reward alone, without human labels or supervised fine-tuning, a 7B model reaches the calibration of the betting market by direct prediction and is better calibrated than a zero-shot frontier model. That frontier model and a tabular estimator reach the same Brier score as this model, identifying the market's small remaining edge as live in-game information beyond their shared inputs. Masking the gradient, rather than dropping the chain of thought, preserves reasoning from which the forecast follows, which ordinary chain-of-thought training corrupts.",
+      "authors": [
+        "Sadanand Singh",
+        "Allam Reddy",
+        "Manan Chopra"
+      ],
+      "published": "2026-06-30",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2603.25901 (Song et al. factorized-attention coverage decoding)",
+      "operator": "computeFactorizedCoverageAndHmmPlayCallPrior",
+      "arxiv_id": "2603.25901",
+      "openalex_id": null,
+      "title": "Decoding Defensive Coverage Responsibilities in American Football Using Factorized Attention Based Transformer Models",
+      "abstract": "Defensive coverage schemes in the National Football League (NFL) represent complex tactical patterns requiring coordinated assignments among defenders who must react dynamically to the offense's passing concept. This paper presents a factorized attention-based transformer model applied to NFL multi-agent play tracking data to predict individual coverage assignments, receiver-defender matchups, and the targeted defender on every pass play. Unlike previous approaches that focus on post-hoc coverage classification at the team level, our model enables predictive modeling of individual player assignments and matchup dynamics throughout the play. The factorized attention mechanism separates temporal and agent dimensions, allowing independent modeling of player movement patterns and inter-player relationships. Trained on randomly truncated trajectories, the model generates frame-by-frame predictions that capture how defensive responsibilities evolve from pre-snap through pass arrival. Our models achieve approximately 89\\%+ accuracy for all tasks, with true accuracy potentially higher given annotation ambiguity in the ground truth labels. These outputs also enable novel derivative metrics, including disguise rate and double coverage rate, which enable enhanced storytelling in TV broadcasts as well as provide actionable insights for team strategy development and player evaluation.",
+      "authors": [
+        "Kevin Song",
+        "Evan Diewald",
+        "Ornob Siddiquee",
+        "Chris Boomhower",
+        "Keegan Abdoo",
+        "Mike Band",
+        "Amy Lee"
+      ],
+      "published": "2026-03-26",
+      "resolved": true
+    },
+    {
+      "cited_as": "Dutta & Yurko arXiv:1906.11373",
+      "operator": "computeFactorizedCoverageAndHmmPlayCallPrior",
+      "arxiv_id": "1906.11373",
+      "openalex_id": null,
+      "title": "Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data",
+      "abstract": "Analysis of player tracking data for American football is in its infancy, since the National Football League (NFL) released its Next Gen Stats tracking data publicly for the first time in December 2018. While tracking datasets in other sports often contain detailed annotations of on-field events, annotations in the NFL's tracking data are limited. Methods for creating these annotations typically require extensive human labeling, which is difficult and expensive. We begin tackling this class of problems by creating annotations for pass coverage types by defensive backs using unsupervised learning techniques, which require no manual labeling or human oversight. We define a set of features from the NFL's tracking data that help distinguish between \"zone\" and \"man\" coverage. We use Gaussian mixture modeling and hierarchical clustering to create clusters corresponding to each group, and we assign the appropriate type of coverage to each cluster through qualitative analysis of the plays in each cluster. We find that the mixture model's \"soft\" cluster assignments allow for more flexibility when identifying coverage types. Our work makes possible several potential avenues of future NFL research, and we provide a basic exploration of these in this paper.",
+      "authors": [
+        "Rishav Dutta",
+        "Ronald Yurko",
+        "Samuel Ventura"
+      ],
+      "published": "2019-06-26",
+      "resolved": true
+    },
+    {
+      "cited_as": "\u00d6tting arXiv:2003.10791 (HMM play-call regimes)",
+      "operator": "computeFactorizedCoverageAndHmmPlayCallPrior",
+      "arxiv_id": "2003.10791",
+      "openalex_id": null,
+      "title": "Predicting play calls in the National Football League using hidden Markov models",
+      "abstract": "In recent years, data-driven approaches have become a popular tool in a variety of sports to gain an advantage by, e.g., analysing potential strategies of opponents. Whereas the availability of play-by-play or player tracking data in sports such as basketball and baseball has led to an increase of sports analytics studies, equivalent datasets for the National Football League (NFL) were not freely available for a long time. In this contribution, we consider a comprehensive play-by-play NFL dataset provided by www.kaggle.com, comprising 289,191 observations in total, to predict play calls in the NFL using hidden Markov models. The resulting out-of-sample prediction accuracy for the 2018 NFL season is 71.5%, which is substantially higher compared to similar studies on play call predictions in the NFL.",
+      "authors": [
+        "Marius \u00d6tting"
+      ],
+      "published": "2020-03-24",
+      "resolved": true
+    },
+    {
+      "cited_as": "Williamson 2026 (coaching-tree heritability $h^2$)",
+      "operator": "computeFactorizedCoverageAndHmmPlayCallPrior",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Williamson 2026 (coaching-tree heritability $h^2$)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Yip 2026 (4th-down tool-onset causal overlap)",
+      "operator": "computeFactorizedCoverageAndHmmPlayCallPrior",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Yip 2026 (4th-down tool-onset causal overlap)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "arXiv:2606.18512 (Dennis Shen prospective causal panel forecasting beyond the observed panel)",
+      "operator": "computeShenProspectiveCausalPanelAndDensityCurvature",
+      "arxiv_id": "2606.18512",
+      "openalex_id": null,
+      "title": "From Control to Treatment: Causal Forecasting Beyond the Observed Panel",
+      "abstract": "Conventional panel data methods recover retrospective counterfactuals within the observed horizon. Many policy decisions, however, are prospective: how would an untreated unit evolve beyond the observed panel under an intervention it has not previously experienced? We develop a causal forecasting framework that combines the counterfactual logic of synthetic controls with multivariate time-series extrapolation. Under a latent factor model, we impose low-rank structure on the treated-state time factors. This yields the Two-Way Synthetic Forecasting estimator, which learns cross-unit weights from pre-treatment outcomes and temporal dynamics from treated donors' post-treatment trajectories. We establish pointwise identification, finite-sample error bounds, consistency, asymptotic normality, and inference for prespecified linear summaries over fixed forecast horizons. Simulations support the theory, and an application to the opening of NFL stadiums during the 2020 season illustrates how the method can inform a prospective policy change using only information available at the decision date.",
+      "authors": [
+        "Dennis Shen"
+      ],
+      "published": "2026-06-16",
+      "resolved": true
+    },
+    {
+      "cited_as": "Chac\u00f3n & Serrano arXiv:2208.00174 (Hessian density curvature bump-hunting)",
+      "operator": "computeShenProspectiveCausalPanelAndDensityCurvature",
+      "arxiv_id": "2208.00174",
+      "openalex_id": null,
+      "title": "Bump hunting through density curvature features",
+      "abstract": "Bump hunting deals with finding in sample spaces meaningful data subsets known as bumps. These have traditionally been conceived as modal or concave regions in the graph of the underlying density function. We define an abstract bump construct based on curvature functionals of the probability density. Then, we explore several alternative characterizations involving derivatives up to second order. In particular, a suitable implementation of Good and Gaskins' original concave bumps is proposed in the multivariate case. Moreover, we bring to exploratory data analysis concepts like the mean curvature and the Laplacian that have produced good results in applied domains. Our methodology addresses the approximation of the curvature functional with a plug-in kernel density estimator. We provide theoretical results that assure the asymptotic consistency of bump boundaries in the Hausdorff distance with affordable convergence rates. We also present asymptotically valid and consistent confidence regions bounding curvature bumps. The theory is illustrated through several use cases in sports analytics with datasets from the NBA, MLB and NFL. We conclude that the different curvature instances effectively combine to generate insightful visualizations.",
+      "authors": [
+        "Jos\u00e9 E. Chac\u00f3n",
+        "Javier Fern\u00e1ndez Serrano"
+      ],
+      "published": "2022-07-30",
+      "resolved": true
+    },
+    {
+      "cited_as": "Wu arXiv:2205.11807 (Normalizing-Flow Learned Index)",
+      "operator": "computeShenProspectiveCausalPanelAndDensityCurvature",
+      "arxiv_id": "2205.11807",
+      "openalex_id": null,
+      "title": "NFL: Robust Learned Index via Distribution Transformation",
+      "abstract": "Recent works on learned index open a new direction for the indexing field. The key insight of the learned index is to approximate the mapping between keys and positions with piece-wise linear functions. Such methods require partitioning key space for a better approximation. Although lots of heuristics are proposed to improve the approximation quality, the bottleneck is that the segmentation overheads could hinder the overall performance. This paper tackles the approximation problem by applying a \\textit{distribution transformation} to the keys before constructing the learned index. A two-stage Normalizing-Flow-based Learned index framework (NFL) is proposed, which first transforms the original complex key distribution into a near-uniform distribution, then builds a learned index leveraging the transformed keys. For effective distribution transformation, we propose a Numerical Normalizing Flow (Numerical NF). Based on the characteristics of the transformed keys, we propose a robust After-Flow Learned Index (AFLI). To validate the performance, comprehensive evaluations are conducted on both synthetic and real-world workloads, which shows that the proposed NFL produces the highest throughput and the lowest tail latency compared to the state-of-the-art learned indexes.",
+      "authors": [
+        "Shangyu Wu",
+        "Yufei Cui",
+        "Jinghuan Yu",
+        "Xuan Sun",
+        "Tei-Wei Kuo",
+        "Chun Jason Xue"
+      ],
+      "published": "2022-05-24",
+      "resolved": true
+    },
+    {
+      "cited_as": "Gallini & Alosco 2026 (referral-bias-adjusted IPSW CTE prevalence)",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Gallini & Alosco 2026 (referral-bias-adjusted IPSW CTE prevalence)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Cai arXiv:1705.04600 (white-matter tract strain)",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": "1705.04600",
+      "openalex_id": null,
+      "title": "Concussion classification via deep learning using whole-brain white matter fiber strains",
+      "abstract": "Developing an accurate and reliable injury predictor is central to the biomechanical studies of traumatic brain injury. State-of-the-art efforts continue to rely on empirical, scalar metrics based on kinematics or model-estimated tissue responses explicitly pre-defined in a specific brain region of interest. They could suffer from loss of information. A single training dataset has also been used to evaluate performance but without cross-validation. In this study, we developed a deep learning approach for concussion classification using implicit features of the entire voxel-wise white matter fiber strains. Using reconstructed American National Football League (NFL) injury cases, leave-one-out cross-validation was employed to objectively compare injury prediction performances against two baseline machine learning classifiers (support vector machine (SVM) and random forest (RF)) and four scalar metrics via univariate logistic regression (Brain Injury Criterion (BrIC), cumulative strain damage measure of the whole brain (CSDM-WB) and the corpus callosum (CSDM-CC), and peak fiber strain in the CC). Feature-based deep learning and machine learning classifiers consistently outperformed all scalar injury metrics across all performance categories in cross-validation (e.g., average accuracy of 0.844 vs. 0.746, and average area under the receiver operating curve (AUC) of 0.873 vs. 0.769, respectively, based on the testing dataset). Nevertheless, deep learning achieved the best cross-validation accuracy, sensitivity, and AUC (e.g., accuracy of 0.862 vs. 0.828 and 0.842 for SVM and RF, respectively). These findings demonstrate the superior performances of deep learning in concussion prediction, and suggest its promise for future applications in biomechanical investigations of traumatic brain injury.",
+      "authors": [
+        "Yunliang Cai",
+        "Shaoju Wu",
+        "Wei Zhao",
+        "Zhigang Li",
+        "Songbai Ji"
+      ],
+      "published": "2017-05-12",
+      "resolved": true
+    },
+    {
+      "cited_as": "Tan & Hossain arXiv:2406.00170",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": "2406.00170",
+      "openalex_id": null,
+      "title": "Focal Loss Analysis of Peripapillary Nerve Fiber Layer Reflectance for Glaucoma Diagnosis",
+      "abstract": "Purpose: To evaluate nerve fiber layer (NFL) reflectance for glaucoma diagnosis using a large dataset. Methods: Participants were imaged with 4.9mm ONH scans using spectral-domain optical coherence tomography (OCT). The NFL reflectance map was reconstructed from 13 concentric rings of optic nerve head(ONH) scan, then processed by an azimuthal filter to reduce directional reflectance bias due to variation of beam incidence angle. The peripapillary thickness and reflectance maps were both divided into 96 superpixels. Low-reflectance and low-thickness superpixels were defined as values below the 5th percentile normative reference for that location. Focal reflectance loss was measured by summing loss, relative to the normal reference average, in low-reflectance superpixels. Focal thickness loss was calculated in a similar fashion. The area under receiving characteristic curve (AROC) was used to assess diagnostic accuracy. Results: Fifty-three normal, 196 pre-perimetric, 132 early perimetric, and 59 moderate and advanced perimetric glaucoma participants were included from the Advanced Imaging for Glaucoma Study. Sixty-seven percent of glaucomatous reflectance maps showed characteristic contiguous wedge or diffuse defects. Focal NFL reflectance loss had significantly higher diagnostic accuracy than the best NFL thickness parameters (both map-based and profile-based): AROC 0.80 v. 0.75 (p<0.004) for distinguishing glaucoma eyes from healthy control eyes. The diagnostic sensitivity was also significantly higher at both 99% and 95% specificity operating points. Conclusions: Focal NFL reflectance loss improved glaucoma diagnostic accuracy compared to the standard NFL thickness parameters.",
+      "authors": [
+        "Ou Tan",
+        "Dongseok Choi",
+        "Aiyin Chen",
+        "David S. Greenfield",
+        "Brian A. Francis",
+        "Rohit Varma",
+        "Joel S. Schuman",
+        "David Huang"
+      ],
+      "published": "2024-05-31",
+      "resolved": true
+    },
+    {
+      "cited_as": "2406.00168 (peripapillary Retinal Nerve Fiber Layer `pRNFL` OCT focal-loss reflectance)",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": "2406.00168",
+      "openalex_id": null,
+      "title": "Reliability for Nerve Fiber Layer Reflectance Using Spectral Domain Optical Coherence Tomography",
+      "abstract": "Purpose: Reliability for Nerve Fiber Layer Reflectance Using Spectral Domain Optical Coherence Tomography (OCT) Methods: The study utilized OCT to scan participants with a cubic 6x6 mm disc scan. NFL reflectance were normalized by the average of bands below NFL and summarized. We selected several reference bands, including the pigment epithelium complex (PPEC), the band between NFL and Bruch's membrane (Post-NFL), and the top 50% of pixels with higher values were selected from the Post-NFL band by Post-NFL-Bright. Especially, we also included NFL attenuation coefficient (AC), which was equivalent to NFL reflectance normalized by all pixels below NFL. An experiment was designed to test the NFL reflectance against different levels of attenuation using neutral density filter (NDF). We also evaluated the within-visit and between-visit repeatability using a clinical dataset with normal and glaucoma eyes. Results: The experiment enrolled 20 healthy participants. The clinical dataset selected 22 normal and 55 glaucoma eyes with at least two visits form functional and structural OCT (FSOCT) study. The experiment showed that NFL reflectance normalized PPEC Max and Post-NFL-Bright had lowest dependence, slope=-0.77 and -1.34 dB/optical density on NDF levels, respectively. The clinical data showed that the NFL reflectance metrics normalized by Post-NFL-Bright or Post-NFL-Mean metrics had a trend of better repeatability and reproducibility than others, but the trend was not significant. All metrics demonstrated similar diagnostic accuracy (0.82-0.87), but Post-NFL-Bright provide the best result. Conclusions: The NFL reflectance normalized by the maximum in PPEC had less dependence of the global attenuation followed by Post-NFL-Bright, PPEC/Mean, Post-NFL-Mean and NFL/AC. But NFL reflectance normalized by Post-NFL-Bright had better result in two datasets.",
+      "authors": [
+        "Kabir Hossain",
+        "Ou Tan",
+        "Po-Han Yeh",
+        "Jie Wang",
+        "Elizabeth White",
+        "Dongseok Choi",
+        "David Huang"
+      ],
+      "published": "2024-05-31",
+      "resolved": true
+    },
+    {
+      "cited_as": "Fernandes",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Fernandes",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Streicher",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Streicher",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Kreye",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Kreye",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Davias",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Davias",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Tasiudi",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Tasiudi",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "P\u00e9rez-P\u00e9rez",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "P\u00e9rez-P\u00e9rez",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Serna",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Serna",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Kryshtofik & Zhou 2026 (serum `NfL`/`GFAP` axonal injury biomarkers)",
+      "operator": "computeGsiOculoAxonalTbiAndCtePrevalence",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Kryshtofik & Zhou 2026 (serum `NfL`/`GFAP` axonal injury biomarkers)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "arXiv:2610.10048",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2610.10048",
+      "openalex_id": null,
+      "title": "Coupled quantum critical states in a circuit simulator",
+      "abstract": "Hybrid metal-semiconductor quantum circuits offer a controlled setting for realizing and probing strongly correlated quantum matter. A largely open question that may be addressed by such simulators is whether coupled critical states can combine into new non-Fermi liquid (NFL) phases. Inspired by the recent realization of a two-site charge-Kondo circuit [W. Pouse \\textit{et al.}, \\href{https://www.nature.com/articles/s41567-022-01905-4}{Nat. Phys. \\textbf{19}, 492 (2023)}], we uncover the fate of coupled Kondo anyons emerging from the two-channel-Kondo critical point at each site. Bosonization and quantum Brownian motion methods yield the full quasiballistic phase diagram and low-temperature transport properties, while numerical renormalization group calculations resolve the complementary weak-coupling limit. Together, these provide a unified description, and reveal robust NFL phases with continuously tunable transport and susceptibility exponents. Stronger inter-site coupling ultimately produces a screened Fermi liquid.",
+      "authors": [
+        "D. B. Karki",
+        "Andrew K. Mitchell"
+      ],
+      "published": "2026-10-07",
+      "resolved": true
+    },
+    {
+      "cited_as": "2607.18394",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2607.18394",
+      "openalex_id": null,
+      "title": "Non-Fermi-Liquid Behaviors in Weakly Interacting Two-Dimensional Quasicrystals",
+      "abstract": "Non-Fermi-liquid (NFL) behavior is usually associated with strong electronic correlations, quantum criticality, or singular fluctuations that invalidate the quasiparticle picture. Quasicrystals are known to provide a fundamentally different route to such physics: their lack of translational symmetry gives rise to critical single-particle states and fragmented spectra even in the absence of electron-electron interactions. Here, we numerically study the NFL behaviors in quasicrystals with weak interactions. Using Penrose and Ammann--Beenker tilings as representative quasiperiodic systems, we analyze thermodynamic, magnetic, and transport properties within a weak-coupling perturbative framework. The Sommerfeld coefficient and magnetic susceptibility show anomalous temperature dependences governed by the singular energy dependence of the density of states near the Fermi level. The Wilson ratio reveals that low-temperature NFL behavior in quasicrystals is accompanied by enhanced spin fluctuations over a broad range of filling fractions, while its magnitude and temperature dependence vary sensitively with filling fraction. The self-energy shows anomalous scaling and a finite residual scattering rate, indicating the breakdown of quasiparticles. Our site-resolved analysis reveals a pronounced enhancement of the residual scattering rate in regions with a high local density of states. These results serve as a guide to analyze experimental data for quasicrystals and to identify the microscopic mechanism of the NFL behaviors.",
+      "authors": [
+        "Junmo Jeon",
+        "Shiro Sakai"
+      ],
+      "published": "2026-07-20",
+      "resolved": true
+    },
+    {
+      "cited_as": "2607.09542",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2607.09542",
+      "openalex_id": null,
+      "title": "A nonstandard statistics for strongly correlated systems: Two simple examples",
+      "abstract": "We discuss two different cases of strongly correlated fermions statistics. The first of them is the non-Fermi liquid (NFL) case, $i.e.$, that of fermions with exclusion of doubly occupancy of quasimomentum states $\\{\\bf k\\}$ with opposite spins ($\\uparrow\\downarrow$). The second is that of statistical spin liquid (SSL) case, in which the fermion spins hop around and mix with the holes (unoccupied) states. For both cases we calculate the system entropy and the corresponding statistical distribution function, analyzed for a two-dimensional square-lattice filling $n\\in [0,1]$ and relative temperature $k_B T/|t|$, where $t<0$ is the nearest neighbor hopping integral. We are particularly interested in the situation when the system of itinerant fermions reduce to the Mott-insulator state for the half-filled band ($n\\to1$). This limiting situation signals a qualitative difference between the present SSL statistics and that of uncorrelated fermions representing normal Fermi-liquid state.",
+      "authors": [
+        "J\u00f3zef Spa\u0142ek",
+        "Piotr Kuterba",
+        "Mateusz W\u00f3jcik",
+        "Danuta Goc-Jag\u0142o",
+        "Maciej Fidrysiak",
+        "Leszek Spa\u0142ek",
+        "W\u0142odzimierz W\u00f3jcik"
+      ],
+      "published": "2026-07-10",
+      "resolved": true
+    },
+    {
+      "cited_as": "2606.31028",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2606.31028",
+      "openalex_id": null,
+      "title": "Tunable Extended Magnetic Non-Fermi Liquid in Graphene Moir\u00e9 Heterostructures",
+      "abstract": "Exploring exotic quantum metallic states beyond Landau's Fermi liquid theory remains a central focus in condensed matter physics. Such non-Fermi liquid behavior is mostly observed near quantum criticality, yet growing attention is directed toward extended NFL phases with intrinsic quantum fluctuations rooted in the extended ground state. While these extended NFL states have been previously reported only in a limited set of d- and f-electron systems, realizing a single, highly tunable platform capable of exhibiting multiple resistance exponent values is essential for uncovering the connection between the resistance exponent and the dominant quantum fluctuations coupled to quasiparticles. However, corresponding experimental progress remains elusive. Here, we report the observation of tunable extended non-Fermi liquid behavior in twisted double bilayer graphene encapsulated by aligned hBN layers. This NFL phase spans a broad range of carrier densities and exhibiting a carrier density dependent resistance exponent. Combined with temperature dependent resistance, magnetotransport and differential resistance measurements, these findings support a scenario where strong quantum fluctuations emerge from the interplay between localized and itinerant carriers. Our work establishes a highly tunable platform beyond conventional frameworks to investigate the organizing principles of non-Fermi liquid physics manifested in diverse behaviors.",
+      "authors": [
+        "Yongqin Xie",
+        "Jian Wang",
+        "Moyu Chen",
+        "Chen Zhao",
+        "Fanqiang Chen",
+        "Qiao Li",
+        "Sicheng Chen",
+        "Jiao Xie"
+      ],
+      "published": "2026-06-30",
+      "resolved": true
+    },
+    {
+      "cited_as": "2606.02534",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2606.02534",
+      "openalex_id": null,
+      "title": "Reduce dimensional quantum criticality for Non-Fermi liquids",
+      "abstract": "We present a reduced dimension theoretical framework for studying quantum field theories at finite density, providing a tractable model for investigating non-Fermi liquid (NFL) behavior near quantum phase transitions. Our approach departs from the standard paradigm by placing bosons and fermions in different spatial dimensions: bosonic fields reside in a $(d+1)$-dimensional bulk, while fermionic fields are confined on a $d$-dimensional boundary. This dimensional separation significantly simplifies the renormalization group (RG) analysis of gapless boson-fermion coupling. We demonstrate that the tree-level boson exchange contributions, which typically exhibit logarithmic divergences, become finite in our reduced-dimension scheme. Furthermore, the $\\log^2$ and $\\log^3$ divergences that characterize 1-loop four-fermion interactions in conventional treatments are reduced to logarithmic divergences within this framework, substantially improving the convergence properties of the perturbative expansion and allowing controlled theoretical analysis of NFL physics.",
+      "authors": [
+        "Phumudzo T. Rabambi",
+        "Mario Sol\u00eds"
+      ],
+      "published": "2026-06-01",
+      "resolved": true
+    },
+    {
+      "cited_as": "2603.25742",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2603.25742",
+      "openalex_id": null,
+      "title": "Pseudogap and Non-Fermi-liquid criticality in double Kondo model for bilayer nickelates",
+      "abstract": "Motivated by recent experimental progress on high-temperature superconductivity in bilayer nickelates, we investigate the phase diagram of the normal state in a bilayer Kondo lattice model using single-site dynamical mean-field theory (DMFT). When the interlayer tunneling $t_\\perp$ is absent, we identify a non-Fermi-liquid (NFL) critical point tuned by the interlayer spin coupling $J_\\perp$ or hole doping $x$, which separates a standard Fermi liquid in the overdoped region from a distinct pseudogap (PG) metal in the underdoped regime. This PG phase, which we term the `second Fermi liquid' (sFL), exhibits small hole pockets and violates the perturbative Luttinger theorem despite the absence of symmetry breaking or fractionalization. The PG metal behaves like a heavy Fermi liquid, with small quasi-particle residue and large effective mass. We also provide an intuitive analytical description of the pseudogap and the ground-state wave function based on an ancilla-fermion framework. Inside the PG phase, we interpret the ancilla fermion as a spin-polaron and demonstrate a Kondo-like resonance peak in the spectral function of this composite fermion directly in DMFT calculation. Extending the analysis to finite $t_\\perp$, we apply this framework to the bilayer nickelate $\\mathrm{La}_3\\mathrm{Ni}_2\\mathrm{O}_7$. We propose that current experimental samples ($x \\approx 0.5$) reside in the overdoped FL regime, suggesting that the pseudogap phase and the NFL criticality may be accessed via electron doping.",
+      "authors": [
+        "Jing-Yu Zhao",
+        "Ya-Hui Zhang"
+      ],
+      "published": "2026-03-26",
+      "resolved": true
+    },
+    {
+      "cited_as": "2603.29138 (Non-Fermi-Liquid Planckian critical coupling breakdown $\\alpha < 1$ for ICU VFib/sepsis crash & NFL pocket avalanche)",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2603.29138",
+      "openalex_id": null,
+      "title": "Robust Flat Magnetoresistivity in D0$_3$-Fe$_3$Ga Driven by Chiral Anomaly",
+      "abstract": "Topologically non-trivial nodes emerging from flat-band crossings not only enhance unconventional topological responses but also play a fundamental role in exploring correlation-driven topological physics. Here, we report the exceptionally robust chiral-anomaly-dominated transport in D0_3-Fe_3Ga. First, we observe a combination of positive and negative magnetoresistance, ideal planar longitudinal magnetoresistance (PLMR), and the planar Hall effect (PHE). Second, ultra-low-temperature resistivity exhibits pronounced non-Fermi-liquid (NFL) behavior, accompanied by the emergence of giant intrinsic anomalous Hall conductivity (AHC), in excellent agreement with our DFT calculations, which confirm the existence of tilted Weyl points arising from crossings of nearly three-dimensional (3D) flat bands. Most remarkably, we detect an exceptionally robust flat magnetoresistance (flat-MR) that persists without decay up to 33 T. This set of phenomena provides strong evidence that the Fermi level intersects the flattened Weyl crossings, offering confirmation of a topological flat-band semimetal. D0_3-Fe_3Ga presents a promising magnetic platform for quantum device innovations.",
+      "authors": [
+        "Ruoqi Wang",
+        "Xinyang Li",
+        "Bo Zhao",
+        "Haofu Wen",
+        "Xin Gu",
+        "Shijun Yuan",
+        "Langsheng Ling",
+        "Chuanying Xi"
+      ],
+      "published": "2026-03-31",
+      "resolved": true
+    },
+    {
+      "cited_as": "FL-GUARD arXiv:2403.04146 & LINDT arXiv:2011.11160 (negative federated learning guard)",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2403.04146",
+      "openalex_id": null,
+      "title": "FL-GUARD: A Holistic Framework for Run-Time Detection and Recovery of Negative Federated Learning",
+      "abstract": "Federated learning (FL) is a promising approach for learning a model from data distributed on massive clients without exposing data privacy. It works effectively in the ideal federation where clients share homogeneous data distribution and learning behavior. However, FL may fail to function appropriately when the federation is not ideal, amid an unhealthy state called Negative Federated Learning (NFL), in which most clients gain no benefit from participating in FL. Many studies have tried to address NFL. However, their solutions either (1) predetermine to prevent NFL in the entire learning life-cycle or (2) tackle NFL in the aftermath of numerous learning rounds. Thus, they either (1) indiscriminately incur extra costs even if FL can perform well without such costs or (2) waste numerous learning rounds. Additionally, none of the previous work takes into account the clients who may be unwilling/unable to follow the proposed NFL solutions when using those solutions to upgrade an FL system in use. This paper introduces FL-GUARD, a holistic framework that can be employed on any FL system for tackling NFL in a run-time paradigm. That is, to dynamically detect NFL at the early stage (tens of rounds) of learning and then to activate recovery measures when necessary. Specifically, we devise a cost-effective NFL detection mechanism, which relies on an estimation of performance gain on clients. Only when NFL is detected, we activate the NFL recovery process, in which each client learns in parallel an adapted model when training the global model. Extensive experiment results confirm the effectiveness of FL-GUARD in detecting NFL and recovering from NFL to a healthy learning state. We also show that FL-GUARD is compatible with previous NFL solutions and robust against clients unwilling/unable to take any recovery measures.",
+      "authors": [
+        "Hong Lin",
+        "Lidan Shou",
+        "Ke Chen",
+        "Gang Chen",
+        "Sai Wu"
+      ],
+      "published": "2024-03-07",
+      "resolved": true
+    },
+    {
+      "cited_as": "Rosenberg arXiv:2401.04112 (Conversational Swarm Intelligence)",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2401.04112",
+      "openalex_id": null,
+      "title": "Conversational Swarm Intelligence amplifies the accuracy of networked groupwise deliberations",
+      "abstract": "Conversational Swarm Intelligence (CSI) is a communication technology that enables large, networked groups (25 to 2500 people) to hold real-time conversational deliberations online. Modeled on the dynamics of biological swarms, CSI enables the reasoning benefits of small-groups with the collective intelligence benefits of large-groups. In this pilot study, groups of 25 to 30 participants were asked to select players for a weekly Fantasy Football contest over an 11-week period. As a baseline, participants filled out a survey to record their player selections. As an experimental method, participants engaged in a real-time text-chat deliberation using a CSI platform called Thinkscape to collaboratively select sets of players. The results show that the real-time conversational group using CSI outperformed 66% of survey participants, demonstrating significant amplification of intelligence versus the median individual (p=0.020). The CSI method also significantly outperformed the most popular choices from the survey (the Wisdom of Crowd, p<0.001). These results suggest that CSI is an effective technology for amplifying the intelligence of groups engaged in real-time large-scale conversational deliberation and may offer a path to collective superintelligence.",
+      "authors": [
+        "Louis Rosenberg",
+        "Gregg Willcox",
+        "Hans Schumann",
+        "Ganesh Mani"
+      ],
+      "published": "2023-12-19",
+      "resolved": true
+    },
+    {
+      "cited_as": "No Free Lunch",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "No Free Lunch",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Universal Induction arXiv:2609.34458",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2609.34458",
+      "openalex_id": null,
+      "title": "Understanding Generalization Requires Universal Induction",
+      "abstract": "Classical statistical theory is insufficient to explain the successes of general-purpose AI models, because it depends on handcrafted inductive biases that it cannot justify. No Free Lunch (NFL) theorems force any learner that beats chance on some environments to underperform on others. We might hope that past experience informs which environments to expect, but NFL applies equally to meta-learning. Thus, any method that makes meaningful predictions necessarily begins with an inductive bias external to the data. Choosing to bias toward short programs yields Solomonoff induction (SI), whose performance is competitive against all computable learners - albeit up to \"constants\" that become large when comparing against specialized methods that exploit background information. We therefore relativize SI to an information vantage point, biasing toward short programs with access to all preexisting information. This reframes the inductive bias: instead of seeking some absolute notion of simplicity, we favour accessibility with respect to our vantage point. An algorithm can only outpredict the relativized SI to the extent that its code contains additional information about the data, and no algorithm can generate such information. While SI is incomputable and hence not a practical algorithm, it provides a formal optimum for inference in the limit of infinite compute, and there is evidence to suggest that frontier AI systems roughly approximate it. Thus, the only known answer to meta-NFL is rooted in algorithmic information theory, which we should expect to play a fundamental role in explaining the generalization behaviour of modern (and future) AI systems.",
+      "authors": [
+        "Aram Ebtekar",
+        "Marcus Hutter",
+        "Danica J. Sutherland"
+      ],
+      "published": "2026-09-28",
+      "resolved": true
+    },
+    {
+      "cited_as": "2603.03613",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2603.03613",
+      "openalex_id": null,
+      "title": "Empirical Evaluation of No Free Lunch Violations in Permutation-Based Optimization",
+      "abstract": "The No Free Lunch (NFL) theorem guarantees equal average performance only under uniform sampling of a function space closed under permutation (c.u.p.). We ask when this averaging ceases to reflect what benchmarking actually reports. We study an iterative-search setting with sampling without replacement, where algorithms differ only in evaluation order. Binary objectives allow exhaustive evaluation in the fully enumerable case, and efficiency is defined by the first time the global minimum is reached. We then construct two additional benchmarks by algebraically recombining the same baseline functions through sums and differences. Function-algorithm relations are examined via correlation structure, hierarchical clustering, delta heatmaps, and PCA. A one-way ANOVA with Tukey contrasts confirms that algebraic reformulations induce statistically meaningful shifts in performance patterns. The uniformly sampled baseline remains consistent with the global NFL symmetry. In contrast, the algebraically modified benchmarks yield stable re-rankings and coherent clusters of functions and sampling policies. Composite objectives can also exhibit non-additive search effort despite being built from simpler components. Monte Carlo experiments indicate that order effects persist in larger spaces and depend on function class. Taken together, the results show how objective reformulation and benchmark design can generate structured local departures from NFL intuition. They motivate algorithm choice that is aware of both the problem class and the objective representation. This message applies to evolutionary computation as well as to statistical procedures based on relabeling, resampling, and permutation tests.",
+      "authors": [
+        "Grzegorz Sroka"
+      ],
+      "published": "2026-03-04",
+      "resolved": true
+    },
+    {
+      "cited_as": "2405.20681",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2405.20681",
+      "openalex_id": null,
+      "title": "No Free Lunch Theorem for Privacy-Preserving LLM Inference",
+      "abstract": "Individuals and businesses have been significantly benefited by Large Language Models (LLMs) including PaLM, Gemini and ChatGPT in various ways. For example, LLMs enhance productivity, reduce costs, and enable us to focus on more valuable tasks. Furthermore, LLMs possess the capacity to sift through extensive datasets, uncover underlying patterns, and furnish critical insights that propel the frontiers of technology and science. However, LLMs also pose privacy concerns. Users' interactions with LLMs may expose their sensitive personal or company information. A lack of robust privacy safeguards and legal frameworks could permit the unwarranted intrusion or improper handling of individual data, thereby risking infringements of privacy and the theft of personal identities. To ensure privacy, it is essential to minimize the dependency between shared prompts and private information. Various randomization approaches have been proposed to protect prompts' privacy, but they may incur utility loss compared to unprotected LLMs prompting. Therefore, it is essential to evaluate the balance between the risk of privacy leakage and loss of utility when conducting effective protection mechanisms. The current study develops a framework for inferring privacy-protected Large Language Models (LLMs) and lays down a solid theoretical basis for examining the interplay between privacy preservation and utility. The core insight is encapsulated within a theorem that is called as the NFL (abbreviation of the word No-Free-Lunch) Theorem.",
+      "authors": [
+        "Xiaojin Zhang",
+        "Yahao Pang",
+        "Yan Kang",
+        "Wei Chen",
+        "Lixin Fan",
+        "Hai Jin",
+        "Qiang Yang"
+      ],
+      "published": "2024-05-31",
+      "resolved": true
+    },
+    {
+      "cited_as": "RNFL math auto-formalization arXiv:2606.24443",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2606.24443",
+      "openalex_id": null,
+      "title": "Verifiable Auto-Formalization of Mathematics Using a Relaxed Natural Formal Language",
+      "abstract": "Auto-formalization aims to translate informal mathematical content into formal languages that can be processed by theorem provers. However, directly targeting existing theorem provers requires LLMs to bridge a substantial representational gap between informal mathematical writing and formal proof languages. This gap also makes semantic consistency difficult to evaluate. We address these difficulties by introducing a Relaxed Natural Formal Language (Relaxed NFL) as an intermediate target for auto-formalization. The Relaxed NFL is designed to remain close to informal mathematical writing: it preserves the usual structure of informal reasoning and allows partially specified expressions and propositions, without requiring their precise interpretation to be fixed at the auto-formalization stage. The remaining ambiguity and implicitness inherited from informal reasoning are resolved during a later elaboration stage, which transforms Relaxed NFL proofs into Core Natural Formal Language (Core NFL) proofs with formally defined semantics. The elaboration procedure combines rule-based transformations with LLM-generated heuristics, while maintaining verifiability through explicit constraints on each transformation step. The Core NFL is then used to generate proof gaps, namely verification conditions that must hold for the formalized proof to be correct. These gaps are discharged by LLM-generated proof scripts written in a domain-specific tactic language, which provides commands for invoking theorem libraries and domain-specific solvers implemented as part of our system.",
+      "authors": [
+        "Zhicheng Hui",
+        "Lihan Xie",
+        "Xingzhi Qi",
+        "Zhehao Li",
+        "Yingjun Lan",
+        "Qinxiang Cao"
+      ],
+      "published": "2026-06-23",
+      "resolved": true
+    },
+    {
+      "cited_as": "near-field photometric de-aliasing arXiv:2412.13176",
+      "operator": "computeNonFermiLiquidCriticalCouplingAndFederatedGuard",
+      "arxiv_id": "2412.13176",
+      "openalex_id": null,
+      "title": "NFL-BA: Near-Field Light Bundle Adjustment for SLAM in Dynamic Lighting",
+      "abstract": "Simultaneous Localization and Mapping (SLAM) systems typically assume static, distant illumination; however, many real-world scenarios, such as endoscopy, subterranean robotics, and search & rescue in collapsed environments, require agents to operate with a co-located light and camera in the absence of external lighting. In such cases, dynamic near-field lighting introduces strong, view-dependent shading that significantly degrades SLAM performance. We introduce Near-Field Lighting Bundle Adjustment Loss (NFL-BA) which explicitly models near-field lighting as a part of Bundle Adjustment loss and enables better performance for scenes captured with dynamic lighting. NFL-BA can be integrated into neural rendering-based SLAM systems with implicit or explicit scene representations. Our evaluations mainly focus on endoscopy procedure where SLAM can enable autonomous navigation, guidance to unsurveyed regions, blindspot detections, and 3D visualizations, which can significantly improve patient outcomes and endoscopy experience for both physicians and patients. Replacing Photometric Bundle Adjustment loss of SLAM systems with NFL-BA leads to significant improvement in camera tracking, 37% for MonoGS and 14% for EndoGS, and leads to state-of-the-art camera tracking and mapping performance on the C3VD colonoscopy dataset. Further evaluation on indoor scenes captured with phone camera with flashlight turned on, also demonstrate significant improvement in SLAM performance due to NFL-BA. See results at https://asdunnbe.github.io/NFL-BA/",
+      "authors": [
+        "Andrea Dunn Beltran",
+        "Daniel Rho",
+        "Marc Niethammer",
+        "Roni Sengupta"
+      ],
+      "published": "2024-12-17",
+      "resolved": true
+    },
+    {
+      "cited_as": "arXiv:2303.17637 (CIELAB chromatic saccadic target latency & solar jersey thermal load)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2303.17637",
+      "openalex_id": null,
+      "title": "Chromaticity Effects on the Outcomes of Spheroid-based Scored Events",
+      "abstract": "The immense popularity of spheroid-based scored events (colloquially ``football games'') motivates the desire to better understand the underlying mechanisms affecting their outcomes. By construction of these events, participants must distinguish the spheroidal ball from not only the background, but also their team and enemy players, which are marked by self-assigned linear combinations of specific frequencies of electromagnetic magnetic radiation, known as uniform color. We investigate chromatic effects on the outcome of such events. We do this by finding the correlation between the color contrast and the success of several key spheroidal ball match tactics. We perform this analysis for the 2020 NFL regular season, focusing on moves in which uniform colors may be a factor in performance. We conduct a primary analysis using each team's cumulative results over the season, but in doing so neglect non-uniformity in the chosen uniform color per individual. We then conduct a secondary analysis of the performance per game of a single team, the Seattle Seahawks, which exhibited large uniform color variability for the 2020 NFL regular season. In this work, tackles and completions are considered. The Pearson correlation coefficient is then calculated for both tactics. We find little evidence of chromaticity effects, with correlation values of $r_t=-0.0885\\pm 0.1819$ and $r_c-0.0292\\pm0.1825 $, respectively, for the primary analysis.",
+      "authors": [
+        "Lisa McBride",
+        "Michael Pagano"
+      ],
+      "published": "2023-03-30",
+      "resolved": true
+    },
+    {
+      "cited_as": "Zwickl 2021 (SoFi perimeter wall deceleration clearance)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Zwickl 2021 (SoFi perimeter wall deceleration clearance)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Dude 2026 (international travel entrainment)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Dude 2026 (international travel entrainment)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Austell 2026 & Raja W7224119290 (turf ACL & turf-toe RTP)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": null,
+      "openalex_id": "W7224119290",
+      "title": "Return-to-Play After Turf Toe Injuries in Elite American Football Players: A Systematic Review and Clinical Guide",
+      "abstract": "Turf toe, a traumatic sprain of the first metatarsophalangeal joint capsuloligamentous complex, is a clinically important cause of missed playing time in elite American football players.Low-grade injuries are commonly managed conservatively, whereas complete Grade 3 disruptions present a more complex therapeutic challenge because management depends on joint stability, sesamoid alignment, performance demands, and season timing.This systematic review evaluated return-to-play rates, recovery timelines, patient-reported outcomes, and post-recovery performance after operative and nonoperative management of turf toe injuries in collegiate and professional American football players.A systematic literature search of MEDLINE via PubMed, Embase, and the Cochrane Central Register of Controlled Trials was performed from database inception through January 2026 in accordance with Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) 2020 guidance.Eligible studies included peer-reviewed cohorts or case series reporting return-to-play outcomes after turf toe injury in elite or near-elite American football athletes.Nine primary clinical studies representing 151 competitive athletes were included in the descriptive synthesis.Nonoperatively managed athletes demonstrated higher observed return-to-play rates and shorter recovery timelines than operatively managed athletes, but these comparisons were substantially limited by confounding by indication because surgically treated athletes generally represented more severe and mechanically unstable injury patterns.Operative repair restored joint alignment and produced favorable pain outcomes in selected unstable injuries but was associated with longer rehabilitation timelines and restricted terminal dorsiflexion.Stable low-grade and selected stable high-grade injuries may be appropriate for structured nonoperative management, while unstable Grade 3 injuries require careful imaging evaluation and may benefit from operative reconstruction to preserve long-term joint stability.",
+      "authors": [
+        "Vijay Karthikeya Raja",
+        "Joshua J Leazer",
+        "Jared W. Nichols"
+      ],
+      "published": "2026",
+      "resolved": true
+    },
+    {
+      "cited_as": "Taborda",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Taborda",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Diego & Ong 2026 (macroevent logistics & forward pricing)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Diego & Ong 2026 (macroevent logistics & forward pricing)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Jiang 2026 (capital stack leverage)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": null,
+      "openalex_id": null,
+      "title": "Jiang 2026 (capital stack leverage)",
+      "abstract": "",
+      "authors": [],
+      "published": "",
+      "resolved": false
+    },
+    {
+      "cited_as": "Bergman arXiv:2112.07002 (exact Gaussian Expected-Max 2-lineup GPP optimizer)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2112.07002",
+      "openalex_id": null,
+      "title": "Optimizing the expected maximum of two linear functions defined on a multivariate Gaussian distribution",
+      "abstract": "We study stochastic optimization problems with objective function given by the expectation of the maximum of two linear functions defined on the component random variables of a multivariate Gaussian distribution. We consider random variables that are arbitrarily correlated, and we show that the problem is NP-hard even if the space of feasible solutions is unconstrained. We exploit a closed-form expression for the objective function from the literature to construct a cutting-plane algorithm that can be seen as an extension of the integer L-shaped method for a highly nonlinear function, which includes the evaluation of the c.d.f and p.d.f of a standard normal random variable with decision variables as part of the arguments. To exhibit the model's applicability, we consider two featured applications. The first is daily fantasy sports, where the algorithm identifies entries with positive returns during the 2018-2019 National Football League season. The second is a special case of makespan minimization for two parallel machines and jobs with uncertain processing times; for the special case where the jobs are uncorrelated, we prove the equivalence between its deterministic and stochastic versions and show that our algorithm can deliver a constant-factor approximation guarantee for the problem. The results of our computational evaluation involving synthetic and real-world data suggest that our discretization and upper bounding techniques lead to significant computational improvements and that the proposed algorithm outperforms sub-optimal solutions approaches.",
+      "authors": [
+        "David Bergman",
+        "Carlos Cardonha",
+        "Jason Imbrogno",
+        "Leonardo Lozano"
+      ],
+      "published": "2021-12-13",
+      "resolved": true
+    },
+    {
+      "cited_as": "Gullholm arXiv:2211.02417 (Barbell salary dispersion)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2211.02417",
+      "openalex_id": null,
+      "title": "Diversity is Key: Fantasy football dream teams under budget constraints",
+      "abstract": "Given a fixed budget for player salaries, what is the distribution of salaries of the top scoring teams? We investigated this question using the wealth of data available from fantasy premier league football (soccer). Using the players' data from past seasons, for several seasons and several different budget constraints, we identified the highest scoring fantasy team for each season subject to each budget constraint. We then investigated quantifiable characteristics of these teams. Interestingly, across nearly every variable that is significant to the game of football and the budget, these top teams display diversity across these variables. Furthermore, randomly assembled teams would statistically \\em not \\em display such diversity across these variables. Our results indicate that diversity across these variables, including salaries, is a general feature of top performing teams. Moreover, in the process of obtaining these results we developed a data cleaning (or data reduction) algorithm that drastically reduced the amount of data to be analyzed.",
+      "authors": [
+        "Josef Gullholm",
+        "Jil Kl\u00fcnder",
+        "Julie Rowlett",
+        "Jonathan St\u00e5lberg"
+      ],
+      "published": "2022-11-04",
+      "resolved": true
+    },
+    {
+      "cited_as": "Parshall arXiv:2511.17535 & Baughman arXiv:2111.02859 (playoff-biased mutual-gain trade optimizer)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2511.17535",
+      "openalex_id": null,
+      "title": "A Genetic Algorithm for Optimizing Fantasy Football Trades with Playoff Biasing",
+      "abstract": "Fantasy football leagues involve strategic player trades to optimize team performance. However, identifying optimal trades is complex due to varying player projections, positional needs, and league-specific scoring. Existing approaches focus on team selection or lineup optimization, but automated trade generation remains underexplored. In this paper, an algorithm that generates optimal trades, biasing toward improved playoff performance while maintaining apparent fairness for negotiation is explored. We introduce a genetic algorithm for fantasy football trade optimization, building on existing frameworks for team selection and lineup generation. The algorithm initializes with single-player trades, evolves through custom mutations (add/remove players, combine trades, exchange players, add from other trades, and spawn new trades), and uses team-specific elitism to preserve diversity. The cost function incorporates a playoff-weighted gain for the user's team (while maintaining apparent fairness), opponent gain, and fairness penalty. Integration with ESPN data sources enables real-time projections for all positions, including kickers and defenses. On a 12-team ESPN league (Week 8, 2025), the algorithm generated trades that upgraded the projected point totals of both the trade initiator and trade partner by nearly 3 fantasy points per week ensuring positive gains for both teams. The algorithm demonstrates effective trade optimization, with potential extensions to other fantasy sports or combinatorial problems requiring temporal biasing. Open-source implementation enables practical use and further research.",
+      "authors": [
+        "Evan Parshall",
+        "Junaid Ali",
+        "Michael Zimmerman"
+      ],
+      "published": "2025-11-05",
+      "resolved": true
+    },
+    {
+      "cited_as": "Mahoney arXiv:2309.15253 (ML+ILP DFS)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2309.15253",
+      "openalex_id": null,
+      "title": "Method and Validation for Optimal Lineup Creation for Daily Fantasy Football Using Machine Learning and Linear Programming",
+      "abstract": "Daily fantasy sports (DFS) are weekly or daily online contests where real-game performances of individual players are converted to fantasy points (FPTS). Users select players for their lineup to maximize their FPTS within a set player salary cap. This paper focuses on (1) the development of a method to forecast NFL player performance under uncertainty and (2) determining an optimal lineup to maximize FPTS under a set salary limit. A supervised learning neural network was created and used to project FPTS based on past player performance (2018 NFL regular season for this work) prior to the upcoming week. These projected FPTS were used in a mixed integer linear program to find the optimal lineup. The performance of resultant lineups was compared to randomly-created lineups. On average, the optimal lineups outperformed the random lineups. The generated lineups were then compared to real-world lineups from users on DraftKings. The generated lineups generally fell in approximately the 31st percentile (median). The FPTS methods and predictions presented here can be further improved using this study as a baseline comparison.",
+      "authors": [
+        "Joseph M. Mahoney",
+        "Tomasz B. Paniak"
+      ],
+      "published": "2023-09-26",
+      "resolved": true
+    },
+    {
+      "cited_as": "OpenFPL arXiv:2508.09992",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2508.09992",
+      "openalex_id": null,
+      "title": "OpenFPL: An open-source forecasting method rivaling state-of-the-art Fantasy Premier League services",
+      "abstract": "Fantasy Premier League engages the football community in selecting the Premier League players who will perform best from gameweek to gameweek. Access to accurate performance forecasts gives participants an edge over competitors by guiding expectations about player outcomes and reducing uncertainty in squad selection. However, high-accuracy forecasts are currently limited to commercial services whose inner workings are undisclosed and that rely on proprietary data. This paper aims to democratize access to highly accurate forecasts of player performance by presenting OpenFPL, an open-source Fantasy Premier League forecasting method developed exclusively from public data. Comprising position-specific ensemble models optimized on Fantasy Premier League and Understat data from four previous seasons (2020-21 to 2023-24), OpenFPL achieves accuracy comparable to a leading commercial service when tested prospectively on data from the 2024-25 season. OpenFPL also surpasses the commercial benchmark for high-return players ($>$ 2 points), which are most influential for rank gains. These findings hold across one-, two-, and three-gameweek forecast horizons, supporting long-term planning of transfers and strategies while also informing final-day decisions.",
+      "authors": [
+        "Daniel Groos"
+      ],
+      "published": "2025-07-29",
+      "resolved": true
+    },
+    {
+      "cited_as": "Ramezani arXiv:2505.02170 (MILP)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2505.02170",
+      "openalex_id": null,
+      "title": "A data-driven framework for team selection in Fantasy Premier League",
+      "abstract": "Fantasy football is a billion-dollar industry with millions of participants. Under a fixed budget, managers select squads to maximize future Fantasy Premier League (FPL) points. This study formulates lineup selection as data-driven optimization and develops deterministic and robust mixed-integer linear programs that choose the starting eleven, bench, and captain under budget, formation, and club-quota constraints (maximum three players per club). The objective is parameterized by a hybrid scoring metric that combines realized FPL points with predictions from a linear regression model trained on match-performance features identified using exploratory data analysis techniques. The study benchmarks alternative objectives and cost estimators, including simple and recency-weighted averages, exponential smoothing, autoregressive integrated moving average (ARIMA), and Monte Carlo simulation. Experiments on the 2023/24 Premier League season show that ARIMA with a constrained budget and a rolling window yields the most consistent out-of-sample performance; weighted averages and Monte Carlo are also competitive. Robust variants and hybrid scoring metrics improve some objectives but are not uniformly superior. The framework provides transparent decision support for fantasy roster construction and extends to FPL chips, multi-week rolling-horizon transfer planning, and week-by-week dynamic captaincy.",
+      "authors": [
+        "Danial Ramezani",
+        "Tai Dinh"
+      ],
+      "published": "2025-05-04",
+      "resolved": true
+    },
+    {
+      "cited_as": "O'Brien arXiv:2009.01206 (skill persistence)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2009.01206",
+      "openalex_id": null,
+      "title": "Identification of skill in an online game: The case of Fantasy Premier League",
+      "abstract": "In all competitions where results are based upon an individual's performance the question of whether the outcome is a consequence of skill or luck arises. We explore this question through an analysis of a large dataset of approximately one million contestants playing Fantasy Premier League, an online fantasy sport where managers choose players from the English football (soccer) league. We show that managers' ranks over multiple seasons are correlated and we analyse the actions taken by managers to increase their likelihood of success. The prime factors in determining a manager's success are found to be long-term planning and consistently good decision-making in the face of the noisy contests upon which this game is based. Similarities between managers' decisions over time that result in the emergence of 'template' teams, suggesting a form of herding dynamics taking place within the game, are also observed. Taken together, these findings indicate common strategic considerations and consensus among successful managers on crucial decision points over an extended temporal period.",
+      "authors": [
+        "Joseph D. O'Brien",
+        "James P. Gleeson",
+        "David J. P. O'Sullivan"
+      ],
+      "published": "2020-09-02",
+      "resolved": true
+    },
+    {
+      "cited_as": "Bonello arXiv:1912.07441 (multi-stream)",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "1912.07441",
+      "openalex_id": null,
+      "title": "Multi-stream Data Analytics for Enhanced Performance Prediction in Fantasy Football",
+      "abstract": "Fantasy Premier League (FPL) performance predictors tend to base their algorithms purely on historical statistical data. The main problems with this approach is that external factors such as injuries, managerial decisions and other tournament match statistics can never be factored into the final predictions. In this paper, we present a new method for predicting future player performances by automatically incorporating human feedback into our model. Through statistical data analysis such as previous performances, upcoming fixture difficulty ratings, betting market analysis, opinions of the general-public and experts alike via social media and web articles, we can improve our understanding of who is likely to perform well in upcoming matches. When tested on the English Premier League 2018/19 season, the model outperformed regular statistical predictors by over 300 points, an average of 11 points per week, ranking within the top 0.5% of players rank 30,000 out of over 6.5 million players.",
+      "authors": [
+        "Nicholas Bonello",
+        "Joeran Beel",
+        "Seamus Lawless",
+        "Jeremy Debattista"
+      ],
+      "published": "2019-12-16",
+      "resolved": true
+    },
+    {
+      "cited_as": "MimicBot arXiv:2108.09478",
+      "operator": "computeMicroEnvironmentChromaticWallAndBergmanDfsMax",
+      "arxiv_id": "2108.09478",
+      "openalex_id": null,
+      "title": "MimicBot: Combining Imitation and Reinforcement Learning to win in Bot Bowl",
+      "abstract": "This paper describe an hybrid agent trained to play in Fantasy Football AI which participated in the Bot Bowl III competition. The agent, MimicBot, is implemented using a specifically designed deep policy network and trained using a combination of imitation and reinforcement learning. Previous attempts in using a reinforcement learning approach in such context failed for a number of reasons, e.g. due to the intrinsic randomness in the environment and the large and uneven number of actions available, with a curriculum learning approach failing to consistently beat a randomly paying agent. Currently no machine learning approach can beat a scripted bot which makes use of the domain knowledge on the game. Our solution, thanks to an imitation learning and a hybrid decision-making process, consistently beat such scripted agents. Moreover we shed lights on how to more efficiently train in a reinforcement learning setting while drastically increasing sample efficiency. MimicBot is the winner of the Bot Bowl III competition, and it is currently the state-of-the-art solution.",
+      "authors": [
+        "Nicola Pezzotti"
+      ],
+      "published": "2021-08-21",
+      "resolved": true
+    }
+  ],
+  "extras": [
+    {
+      "cited_as": "Edward Glush 2026 datasets: 11.7M odds snapshots, 6,131 markets, 997 open-air weather games, 97 2026 HFA games, 14-league closing odds, Bet Better teaching dataset",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Matchbook Labs dataset: 1999-2026 historical betting market data",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Ali Shaik dataset: 2015-2026 NFL tracking and play-by-play repository",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Samer Attrah: Big Data Bowl 2026 LSTM tracking models",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Talpey (OpenAlex W7128531288)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Montoye (OpenAlex W7161171385)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Wilwand (OpenAlex W7171391843)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Brooks (OpenAlex W4417197998)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Zaidi (OpenAlex W7214741436)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Worley (OpenAlex W7161116319)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Norwood (OpenAlex W7198453926)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Cooper (OpenAlex W7203708319)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Koncilija (OpenAlex W7214569737)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Luster/Nowinski (OpenAlex W7213874916)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Copeland (PIERCE)",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    },
+    {
+      "cited_as": "Aaronson/Jelinska",
+      "operator": null,
+      "arxiv_id": null,
+      "openalex_id": null
+    }
+  ]
+}
