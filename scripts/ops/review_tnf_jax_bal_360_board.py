@@ -27,6 +27,7 @@ OUT = ROOT / "data" / "engine" / "tnf_jax_bal_360_board_review_2026_11_05.json"
 EDGE_THRESHOLD_PTS = 3.0
 CALIBRATION_DEFLATION_PTS = 5.2  # measured 2026-09-30: ranking monotone, level inflated ~5.2pt
 LONGSHOT_FLOOR = 0.10
+LONGSHOT_ML_FLOOR = 0.25  # Snowberg-Wolfers: sub-25% longshots carry a structural bias
 STAGE0_EXCLUDED = {"Lamar Jackson", "Travis Etienne", "Travis Etienne Jr.", "Tyler Huntley", "Skylar Thompson"}
 CONDITIONAL_PASS = {"Bhayshul Tuten"}  # Questionable, ankle, DNP at Week 9 report
 
@@ -82,15 +83,19 @@ def main() -> dict:
         leg("OVER 39.5 (-110)", derived["p_over_39_5"], dv_to_o, "total"),
         leg("UNDER 39.5 (-110)", derived["p_under_39_5"], dv_to_u, "total"),
     ]
+    for m in game_markets:
+        if m["clears_edge_gate"] and m["devig_market_prob"] < LONGSHOT_ML_FLOOR:
+            m["clears_edge_gate"] = False
+            m["blocked_by"] = "longshot_bias_guard (implied < 25%)"
     clearing = [m["market"] for m in game_markets if m["clears_edge_gate"]]
     game_decision = {
         "publish_allowed": False,
         "numerically_clearing": clearing,
+        "previously_clearing_but_now_gated": ["BAL ML +390 (longshot guard)"] if not clearing else [],
         "reason": (
-            "BAL +10 (+6.87 pts) and BAL ML (+9.93 pts) clear the numeric gate only because the sealed "
-            "baseline (2026-10-25) predates Baltimore's QB1-out re-rating (Lamar Jackson thumb surgery, "
-            "Huntley out, Fagnano starting). The model's team ratings do not carry that loss, so the "
-            "edge is a stale-input artifact, not alpha. PASS with ruling."
+            "No leg clears. BAL +10 sits at -0.31 pts after the QB1 drop-off and the 5.2-pt deflation. "
+            "BAL ML +390 shows +3.18 pts but is blocked by the longshot-bias guard (19.57% implied) and by "
+            "the unresolved divergence between the model's JAX ML (72.05%) and the de-vigged 80.43%."
         ),
         "markets": game_markets,
         "model_market_divergence": {

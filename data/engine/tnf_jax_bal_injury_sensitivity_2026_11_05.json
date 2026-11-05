@@ -1,0 +1,63 @@
+{
+  "schema": "tnf_injury_sensitivity_v1",
+  "generated_at": "2026-11-05",
+  "finding": "Travis Etienne Jr. is not on the 2026 Jaguars roster (nflverse 2026 pbp: NO 31 carries, CAR 8). away_inj=['RB1'] removes Bhayshul Tuten, not Etienne.",
+  "rows": [
+    {
+      "config": "A_rb1_only_current",
+      "away_inj": [
+        "RB1"
+      ],
+      "home_inj": [],
+      "median_total": 40.29,
+      "median_home_margin": -4.69,
+      "p_home_covers_plus10": 0.6315,
+      "p_over_39_5": 0.5769,
+      "sinkhorn_mass_moved": 0.1482
+    },
+    {
+      "config": "B_rb1_and_qb1",
+      "away_inj": [
+        "RB1"
+      ],
+      "home_inj": [
+        "QB1"
+      ],
+      "median_total": 38.64,
+      "median_home_margin": -7.83,
+      "p_home_covers_plus10": 0.5597,
+      "p_over_39_5": 0.4531,
+      "sinkhorn_mass_moved": 0.1482
+    },
+    {
+      "config": "C_neither",
+      "away_inj": [],
+      "home_inj": [],
+      "median_total": 40.17,
+      "median_home_margin": -4.63,
+      "p_home_covers_plus10": 0.6249,
+      "p_over_39_5": 0.5803,
+      "sinkhorn_mass_moved": 0.0
+    },
+    {
+      "config": "D_qb1_only",
+      "away_inj": [],
+      "home_inj": [
+        "QB1"
+      ],
+      "median_total": 38.67,
+      "median_home_margin": -7.93,
+      "p_home_covers_plus10": 0.5668,
+      "p_over_39_5": 0.451,
+      "sinkhorn_mass_moved": 0.0
+    }
+  ],
+  "verdict_stability": {
+    "median_margin_range": [
+      -7.93,
+      -4.63
+    ],
+    "all_configs_home_margin_above_minus10": true,
+    "publish_verdict": "PASS under every injury configuration; no leg becomes publishable."
+  }
+}

@@ -45,8 +45,8 @@ def main() -> dict:
 
     result = simulate_matchup_pbp(
         "JAX", "BAL",
-        away_inj=["RB1"],   # Travis Etienne Jr. IR
-        home_inj=[],        # QB1-out already carried in the trend override + spine tensor
+        away_inj=["RB1"],   # Bhayshul Tuten (Q, ankle+foot, DNP) is the live JAX RB1; Etienne is not on the 2026 roster
+        home_inj=["QB1"],   # Lamar Jackson out (thumb); applies the sealed QB1 drop-off, not just the trend override
         sealed_state=sealed,
         expected_hash=digest,
         n_sims=10000,

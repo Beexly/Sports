@@ -1,7 +1,7 @@
 # TNF `JAX @ BAL` — W1–8 nflverse PBP Reproduction Receipt
 
 **Generated:** 2026-11-05 | **Kickoff:** 2026-11-06 01:15 UTC (7:15 PM CST)
-**Data window:** 2026 regular season Weeks 1–8 (`play_by_play_2026.parquet`, 18,926 plays, 121 games) + FTN charting Weeks 1–7
+**Data window:** 2026 regular season Weeks 1–8 (`play_by_play_2026.parquet`, 21,191 plays, 121 games; 14,910 filtered pass/run plays) + FTN charting Weeks 1–7
 **Official ledger:** 16-5 (76.2%, +10.45u) — `data/engine/new_engine_official_ledger_2026.json`
 
 Source-of-truth JSON: `data/engine/tnf_jax_bal_pbp_reproductions_2026_11_05.json`
@@ -16,7 +16,7 @@ Script: `scripts/ops/tnf_jax_bal_matchup_reproductions.py`
 | Week 9 game scripts | no 15-game staging file | 15 games staged with live total + home spread | ESPN scoreboard odds snapshot |
 | Bhayshul Tuten | unresolved | **Questionable, ankle, DNP** | nflverse Week 9 row + startwho (Alexandria) |
 | Lamar Jackson | hard-excluded | confirmed **Out, thumb** | nflverse Week 9 row |
-| Travis Etienne Jr. | hard-excluded | IR, not on injury report (consistent) | Stage-0 config |
+| Travis Etienne Jr. | hard-excluded (legacy) | **Not on the JAX 2026 roster**; nflverse shows NO 31 carries / CAR 8. No board impact. | nflverse pbp |
 | Mike Evans | ruling SF | 49ers Week 9 row, DNP (rest/knee) | nflverse |
 | Geno Smith | ruling NYJ | Jets QB1 in Stage-0 config | Stage-0 config |
 
