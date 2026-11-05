@@ -219,6 +219,25 @@ function runMigrateWithRetry() {
     if ((result.status ?? 1) === 0) return 0;
 
     const combined = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+    if (
+      attempt === 1 &&
+      combined.includes("P3009") &&
+      combined.includes("20261104_purge_stale_packages")
+    ) {
+      console.warn(
+        "[migrate-if-configured] Resolving failed data-only migration 20261104_purge_stale_packages (--rolled-back) before re-applying safe idempotent SQL..."
+      );
+      const resolveResult = spawnSync(
+        "npm",
+        ["run", "db:migrate:resolve-stale", "--workspace=packages/db"],
+        { encoding: "utf8" }
+      );
+      if (resolveResult.stdout) process.stdout.write(resolveResult.stdout);
+      if (resolveResult.stderr) process.stderr.write(resolveResult.stderr);
+      if ((resolveResult.status ?? 1) === 0) {
+        continue;
+      }
+    }
     const transient = isTransientDbError(combined);
 
     // A NON-transient failure is a real migration error (drift, conflict, bad

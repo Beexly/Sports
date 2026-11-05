@@ -77,7 +77,7 @@ NEVER post a pick, play, prop, SGP, or game dossier that has not gone through EV
    - Map probabilities against dedicated market-specific calibration heads (`data/calibration/market_calibration_heads_2026.json`).
 5. **Stage 5 — Class B Market De-Vig & Conjunction Gate (`PASS` Discipline):** Compare post-reasoning, situationally conditioned probabilities **LAST** against the de-vigged market line (`calibration-map.ts` `signCallSheetTickets`, `sgp-copula.ts`, `no-bet-gate.ts`). Any side, total, prop, or SGP that does not clear the conjunction gate is marked **`PASS` (`publishAllowed: false`)**. Fake CLV floors (`max(0.008, ...)`) are strictly banned.
 
-### 360-DEGREE FULL-BOARD MARKET REVIEW & OFFICIAL `16-5` NEW ENGINE LEDGER DOCTRINE (Garrett, 2026-10-29 — HARD, EVERY TIME GOING FORWARD)
+### 360-DEGREE FULL-BOARD MARKET REVIEW & OFFICIAL `62-23-1` NEW ENGINE LEDGER DOCTRINE (Garrett, 2026-11-05 — HARD, EVERY TIME GOING FORWARD)
 1. **Every Single Market Must Be Reviewed Every Time (`1Q–4Q`, `1H/2H`, `Kicking`, `Defense/IDP`, `INTs`, `TDs`, `Props`):**
    - Never stop at main game lines and basic yardage props. Every game review MUST fetch all pages (`page=1..N`) of live DraftKings `propBets` (~1,800+ items / 77+ market types per game) and evaluate:
      - **Quarters & Halves (`1Q`, `2Q`, `3Q`, `4Q`, `1H`, `2H`):** Spreads, Totals, Moneylines, Team Totals (`1H` & Full-Game), Team Total TDs, and Overtime.
@@ -92,9 +92,13 @@ NEVER post a pick, play, prop, SGP, or game dossier that has not gone through EV
      - `statrankings` / `MAGICSPORTSBREAKDOWN+`: `PROE+` (season & L3), `Neutral pace (sec/play)`, `1st-half pass %`, `Pass rate when leading/trailing 8+`, 11-layer Matchup Ranks (`Scoring`, `EPA`, `Pressure`, `Sack`, `Tackling`, `Red zone`, `Kicking`, `QB`, `RB`, `WR`, `TE`), Receiver `YPRR vs Man` & `YPRR vs Zone` against opponent `Man/Zone %` & Primary CB `FP/rt allowed`, and `Season FP vs Season xFP`.
      - `@SamHoppen` (`nflfastR` / `SumerSports`): YTD & L4 Weeks `EPA/Play`, `Success Rate`, `EPA/Drive`, `Early Down EPA`, `Explosive Pass/Rush %`, `CPOE`, `Pressure %`, `11-Personnel / Multi-TE %`, `Motion % / Motion at Snap %`, `Zone Rush %`, `Clock-Drain %`, `Nickel/Dime %`, `Man/Zone %`, `Light/Heavy Box %`, `Blitz %`, and `Stunt %`.
      - `@FantasyPtsData` (`SEP SCORE & 1READ %`), `@PattonAnalytics` (`Pressure Over Expectation vs Pressure-to-Sack Survival Curve`), `@KoalatyStats` (`XFP/G` & `FPPG - XFPPG`), and `@WideLeft` (`Cover-1 Rate by Defense`).
-3. **Official New Engine Verified Record & Units Tracker (`16-5` · `76.2%` · `+10.45u` — THAT'S IT!):**
-   - Never cite old legacy DB bucket numbers (`57.0% / 66.0% / 67.8%` or `11-6`).
-   - Only track and publish the **Official New Engine Record (`16-5`, `76.2%`, `+10.45 Units` entering Oct 29, 2026)** stored in `data/engine/new_engine_official_ledger_2026.json` and `docs/predictions/research/2026-10-29/NEW-ENGINE-OFFICIAL-LEDGER-16-5.md`, updating Total Wins, Losses, Pushes, and Net Units after every single game.
+3. **Official New Engine Verified Record & Units Tracker (`62-23-1` · `72.9%` · `+26.50u` — THAT'S IT!):**
+   - Never cite old legacy DB bucket numbers (`57.0% / 66.0% / 67.8%` or `11-6`), unverified `31-11` / `14-6` banners, or pre-Week-8 `16-5` as the current cumulative total.
+   - Only track and publish the **Official New Engine Verified Record (`62-23-1`, `72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement)** stored in `data/engine/new_engine_official_ledger_2026.json` alongside the Dual-Panel historical replay (`15,947` historical DB picks), updating Total Wins, Losses, Pushes, and Net Units after every single game.
+4. **Customer-Facing Human Copy, Paywall Protection & Live `origin/main` Deployment Gate (HARD):**
+   - **Zero AI / Robotic Math-Dump on Public Surfaces (`apps/web`, `apps/mobile`, X/IG):** Never render internal math/pipeline jargon (`"22,750,000 snap evaluations"`, `"10-Layer Autonomous Engine"`, `"Romano CQR"`, `"Optimal Transport"`, `"10,000 worlds"`, `"tau_hat"`, `"TNF card 14-6"`, `"31-11 banner is retracted"`, `"JEV"`, `"Cholesky"`, `"Sinkhorn"`) on customer-facing UI. Write sharp, natural football-film & matchup analysis.
+   - **Never Give Away Paid Picks for Free:** Public pages and social posts may share game-environment analytics (play volume, pass completion projections, trench pressure rates, red-zone tendencies), but official sides, totals, player prop tickets, and SGP legs stay strictly behind the paywall.
+   - **Always Push Live to `origin/main` & Verify Production:** Every web/storefront change must pass `node scripts/trust-gate.mjs`, `node apps/mobile/scripts/lint-rules.js`, and `python scripts/guardrails/connected-workflow-dossier-guard.py`, push to `origin/main`, and verify Vercel production deployment `READY` on `https://www.galaxysportsedge.com`.
 
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full

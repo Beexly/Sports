@@ -8,6 +8,7 @@
     "db:generate": "prisma generate",
     "db:push": "echo 'DANGER: db:push is disabled on production schema. Use prisma migrate deploy or migrate dev.' && exit 1",
     "db:migrate": "prisma migrate deploy",
+    "db:migrate:resolve-stale": "prisma migrate resolve --rolled-back 20261104_purge_stale_packages",
     "db:migrate:status": "prisma migrate status",
     "db:migrate:dev": "prisma migrate dev",
     "db:seed": "ts-node --esm prisma/seed.ts",
