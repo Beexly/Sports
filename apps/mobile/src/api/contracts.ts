@@ -287,6 +287,62 @@ export interface BriefPayload {
   gateReason?: string | null;
 }
 
+export interface OfficialVerifiedLedgerSummary {
+  asOfDate: string;
+  overallRecord: string;
+  overallWinPct: string;
+  overallNetUnits: string;
+}
+
+export interface FreeGameEnvironmentAnalyticsSummary {
+  matchup: string;
+  windowSlot: string;
+  freeTeaserPlay: {
+    player: string;
+    selection: string;
+    /** Strictly formatted as XX/100, never % */
+    confidence: string;
+    projectedReceptions: number;
+    projectedYards: number;
+    rationale: string;
+  };
+  spreadDisciplineCall: {
+    selection: string;
+    confidence: string;
+    decision: "PASS";
+  };
+  lockedPaywallSummary: {
+    lockedTopConfidencePlaysCount: number;
+    lockedTopConfidenceRating: string;
+    includesCorrelatedSgp: boolean;
+    includesShowdownCaptains: boolean;
+  };
+  teamEnvironment: {
+    balOffensivePlaysMedian: number;
+    balOffensivePlaysMean: number;
+    balOffensivePlaysIqr: string;
+    balDrivesProjected: number;
+    balRushAttempts: number;
+    balDerrickHenryCarries: number;
+    balPassAttempts: number;
+    balPassCompletionsMedian: number;
+    balPassCompletionsMean: number;
+    balCompletionRatePct: number;
+    balPassCompletionsIqr: string;
+    balPassingYardsMedian: number;
+    balSacksTaken: number;
+    jaxOffensivePlaysMedian: number;
+    jaxRushAttempts: number;
+    jaxPassAttempts: number;
+    jaxPassCompletionsMedian: number;
+    jaxPassCompletionsMean: number;
+    jaxCompletionRatePct: number;
+    jaxPassingYardsMedian: number;
+    jaxSacksTaken: number;
+    jaxNeutralPaceSecPerSnap: number;
+  };
+}
+
 /* ── Gate envelopes ─────────────────────────────────────────────────────── */
 /**
  * The server's deliberately-distinct gate bodies. `bootstrapGateResponse`

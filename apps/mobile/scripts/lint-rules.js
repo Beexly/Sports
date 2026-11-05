@@ -220,7 +220,7 @@ function stripCommentsAndStrings(line) {
 }
 
 for (const file of files) {
-  const rel = path.relative(ROOT, file);
+  const rel = path.relative(ROOT, file).replace(/\\/g, "/");
   const raw = fs.readFileSync(file, "utf8");
   const lines = raw.split("\n");
   const isTheme = rel.startsWith("src/theme/");

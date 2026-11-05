@@ -5,6 +5,10 @@ import { loadBoardState, redactBoardConfidence } from "@/lib/board/state";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  FREE_TNF_GAME_ENVIRONMENT_ANALYTICS,
+  OFFICIAL_VERIFIED_LEDGER_2026,
+} from "@/lib/engine/engine-live-bridge";
 
 /**
  * GET /api/mobile/v1/bootstrap — the native client's cold-start payload.
@@ -99,6 +103,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           publicPicks: gates.canExposePublicPicks,
           forceNoBetIfStale: gates.forceNoBetIfStale,
         },
+        officialRecord: OFFICIAL_VERIFIED_LEDGER_2026,
+        freeGameEnvironmentAnalytics: FREE_TNF_GAME_ENVIRONMENT_ANALYTICS,
         serverTime: new Date().toISOString(),
         modelVersion: board?.data.modelVersion ?? null,
       },

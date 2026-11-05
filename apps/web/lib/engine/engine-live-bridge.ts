@@ -23,6 +23,60 @@ export const OFFICIAL_VERIFIED_LEDGER_2026 = {
   week8MaxPlaySweep: "7-0 (+7.00u)",
 } as const;
 
+export const FREE_TNF_GAME_ENVIRONMENT_ANALYTICS = {
+  matchup: "JAX @ BAL",
+  windowSlot: "TNF",
+  freeTeaserPlay: {
+    player: "Mark Andrews (BAL TE)",
+    selection: "Mark Andrews OVER 2.5 Receptions",
+    confidence: "88/100",
+    projectedReceptions: 3.7,
+    projectedYards: 27.7,
+    rationale:
+      "Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 on play-action), leaving the middle of the field open for Mark Andrews as Baltimore's primary hot-read safety valve.",
+  },
+  spreadDisciplineCall: {
+    selection: "Spread PASS at -7.5 (Steamed from -3.5)",
+    confidence: "54/100",
+    decision: "PASS",
+  },
+  lockedPaywallSummary: {
+    lockedTopConfidencePlaysCount: 9,
+    lockedTopConfidenceRating: "88/100",
+    includesCorrelatedSgp: true,
+    includesShowdownCaptains: true,
+  },
+  teamEnvironment: {
+    balOffensivePlaysMedian: 61.3,
+    balOffensivePlaysMean: 61.9,
+    balOffensivePlaysIqr: "57-66",
+    balDrivesProjected: 11,
+    balRushAttempts: 25.5,
+    balDerrickHenryCarries: 18.6,
+    balPassAttempts: 33.3,
+    balPassCompletionsMedian: 18.0,
+    balPassCompletionsMean: 18.1,
+    balCompletionRatePct: 54.1,
+    balPassCompletionsIqr: "15-21",
+    balPassingYardsMedian: 188.0,
+    balSacksTaken: 3.1,
+    jaxOffensivePlaysMedian: 63.5,
+    jaxRushAttempts: 31.4,
+    jaxPassAttempts: 29.5,
+    jaxPassCompletionsMedian: 19.2,
+    jaxPassCompletionsMean: 19.4,
+    jaxCompletionRatePct: 65.8,
+    jaxPassingYardsMedian: 218.0,
+    jaxSacksTaken: 2.6,
+    jaxNeutralPaceSecPerSnap: 26.2,
+    balTwoHighShellPct: 59.5,
+    balLightBoxPct: 78.0,
+    jaxBlitzRatePct: 30.9,
+    jaxPlayActionBlitzRatePct: 34.8,
+    balCleanPocketRatePct: 36.5,
+  },
+} as const;
+
 export const THALER_SEGREGATED_BUNDLE_VALUATION = {
   bundlePriceUsd: 29,
   standaloneSumUsd: 52,
