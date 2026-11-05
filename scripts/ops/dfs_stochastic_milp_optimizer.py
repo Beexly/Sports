@@ -79,6 +79,8 @@ def optimize_dfs_portfolio(
     require_qb_stack: bool = True,
     require_bring_back: bool = False,
     covariance_bonuses: Optional[Dict[Tuple[int, int], float]] = None,
+    min_salary: float = 0.0,
+    max_per_team: Optional[int] = None,
 ) -> List[pd.DataFrame]:
     """Optimize a portfolio of K distinct, covariance-aware DraftKings Classic lineups
     using exact McCormick/Glover MILP linearization solved via HiGHS (`scipy.optimize.milp`).
@@ -136,8 +138,13 @@ def optimize_dfs_portfolio(
         base_lb.append(lower)
         base_ub.append(upper)
 
-    # 1. Salary cap constraint: sum_i s_i x_i <= salary_cap
-    add_constraint({i: float(df.loc[i, "salary"]) for i in range(n)}, -np.inf, float(salary_cap))
+    # 1. Salary cap constraint: sum_i s_i x_i <= salary_cap (and optional floor: no stranded salary)
+    add_constraint({i: float(df.loc[i, "salary"]) for i in range(n)}, float(min_salary), float(salary_cap))
+
+    # 1b. Optional per-team concentration cap
+    if max_per_team is not None:
+        for t, idxs in team_to_players.items():
+            add_constraint({i: 1.0 for i in idxs}, 0.0, float(max_per_team))
 
     # 2. Roster size == 9
     add_constraint({i: 1.0 for i in range(n)}, 9.0, 9.0)
@@ -394,6 +401,16 @@ class GSEFullSlateSimulator:
         d = np.sqrt(np.diag(corr_psd))
         return corr_psd / np.outer(d, d)
 
+    strict_projections = False  # Stage 0: when True, a missing component projection is an error, never a generic default
+
+    def _proj(self, row, col, default):
+        val = row.get(col, None)
+        if val is None or (isinstance(val, float) and np.isnan(val)):
+            if self.strict_projections:
+                raise ValueError(f"missing {col} for {row.get('name', '?')} ({row.get('position', '?')}); refusing generic default")
+            return float(default)
+        return float(val)
+
     def simulate_slate(self) -> Tuple[np.ndarray, np.ndarray]:
         k_players = len(self.players)
         fpts_matrix = np.zeros((self.S, k_players), dtype=np.float32)
@@ -421,13 +438,13 @@ class GSEFullSlateSimulator:
                 p_pos = row["position"]
                 u = np.clip(u_copula[:, local_i], 1e-5, 1.0 - 1e-5)
 
-                mu_td = max(0.05, float(row.get("proj_td", 0.4)))
+                mu_td = max(0.05, self._proj(row, "proj_td", 0.4))
                 r_nb = mu_td / (self.td_vmr - 1.0)
                 p_nb = r_nb / (r_nb + mu_td)
                 tds = nbinom.ppf(u, n=r_nb, p=p_nb)
 
                 if p_pos == "QB":
-                    mu_py = max(50.0, float(row.get("proj_pass_yds", 250)) + self.wind_pass_penalty * wind_mph)
+                    mu_py = max(50.0, self._proj(row, "proj_pass_yds", 250) + self.wind_pass_penalty * wind_mph)
                     sigma_py = mu_py * 0.32
                     pass_yds = gamma.ppf(u, a=(mu_py / sigma_py) ** 2, scale=(sigma_py ** 2) / mu_py)
                     bonus_300 = 3.0 * (pass_yds >= 300.0)
@@ -438,11 +455,11 @@ class GSEFullSlateSimulator:
                     fpts_matrix[:, global_k] = 0.04 * pass_yds + bonus_300 + 4.0 * tds - 1.0 * ints + 0.10 * rush_yds + bonus_100
                 elif p_pos in ("RB", "WR", "TE"):
                     wind_factor = 0.35 * self.wind_pass_penalty * wind_mph if p_pos in ("WR", "TE") else 0.0
-                    mu_rec_yds = max(5.0, float(row.get("proj_rec_yds", 40)) + wind_factor)
+                    mu_rec_yds = max(5.0, self._proj(row, "proj_rec_yds", 40) + wind_factor)
                     sigma_rec = mu_rec_yds * (0.48 if p_pos == "WR" else 0.42)
                     rec_yds = gamma.ppf(u, a=(mu_rec_yds / sigma_rec) ** 2, scale=(sigma_rec ** 2) / mu_rec_yds)
                     bonus_rec_100 = 3.0 * (rec_yds >= 100.0)
-                    mu_rec = max(0.5, float(row.get("proj_receptions", 3.0)))
+                    mu_rec = max(0.5, self._proj(row, "proj_receptions", 3.0))
                     r_rec = mu_rec / 0.45
                     receptions = nbinom.ppf(
                         np.clip(u * 0.85 + self.rng.uniform(0, 0.15, self.S), 1e-4, 0.9999),
@@ -458,7 +475,7 @@ class GSEFullSlateSimulator:
                     bonus_rush_100 = 3.0 * (rush_yds >= 100.0)
                     fpts_matrix[:, global_k] = 1.0 * receptions + 0.10 * rec_yds + bonus_rec_100 + 0.10 * rush_yds + bonus_rush_100 + 6.0 * tds
                 elif p_pos == "DST":
-                    mu_dst = max(3.0, float(row.get("proj_fpts", 7.0)))
+                    mu_dst = max(3.0, self._proj(row, "proj_fpts", 7.0))
                     fpts_matrix[:, global_k] = norm.ppf(u, loc=mu_dst, scale=4.8)
 
         cov_matrix = np.cov(fpts_matrix, rowvar=False)

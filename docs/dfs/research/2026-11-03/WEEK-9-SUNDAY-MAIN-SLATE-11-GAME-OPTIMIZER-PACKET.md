@@ -1,6 +1,6 @@
 # Week 9 Sunday Main Slate (11 games) — Optimizer Packet
 
-**Generated:** 2026-11-03T17:58:08Z
+**Generated:** 2026-11-05T00:12:39Z
 **Source salary export:** `C:\Users\Garrett\Downloads\DKSalaries (2).csv`
 **Archived copy:** `data/dfs/dk_salaries_week9_main_slate_2026_11_08.csv`
 
@@ -31,48 +31,63 @@
 ## Run parameters
 
 - roster structure: QB/2RB/3WR/TE/FLEX/DST
-- candidates scored: 570
-- Monte Carlo sims: 120
-- adversarial field rosters: 60
-- p99 field win threshold: 92.47 points
-- portfolio size: 2
+- candidates scored: 203
+- Monte Carlo sims: 400
+- adversarial field rosters: 300
+- p99 field win threshold: 133.06 points
+- portfolio size: 3
 
 ## Portfolio
 
 | # | Salary | Proj | Win prob vs p99 | Teams |
 |---|---|---|---|---|
-| 1 | $33,500 | 101.63 | 0.4583 | DEN, GB, KC, NYJ |
-| 2 | $34,200 | 101.87 | 0.5167 | GB, KC, NYJ, PHI, SEA |
+| 1 | $49,900 | 160.09 | 0.725 | ARI, DET, GB, NYG, NYJ, SEA |
+| 2 | $49,900 | 160.02 | 0.7325 | DET, GB, HOU, LV, MIA, SEA, SF |
+| 3 | $49,900 | 158.89 | 0.7225 | ARI, DET, GB, LV, MIA, NYJ, SEA |
 
 ## Rosters
 
-### Lineup 1 — $33,500 / proj 101.63
+### Lineup 1 — $49,900 / proj 160.09
 
 | Slot | Player | Pos | Team | Salary | Proj |
 |---|---|---|---|---|---|
-| WR | Rashee Rice | WR | KC | $6,400 | 11.75 |
-| QB | Justin Fields | QB | KC | $4,000 | 14.270000457763672 |
-| RB | Kaleb Johnson | RB | GB | $4,000 | 12.550000190734863 |
-| RB | Chip Trayanum | RB | NYJ | $4,000 | 12.010000228881836 |
-| WR | Jalen Royals | WR | KC | $3,200 | 10.899999618530273 |
-| WR | Jimmy Holiday | WR | KC | $3,000 | 10.75 |
-| WR | Justin Watson | WR | KC | $3,000 | 11.180000305175781 |
-| DST | Broncos | DST | DEN | $3,000 | 7.769999980926514 |
-| TE | Noah Gray | TE | KC | $2,900 | 10.460000038146973 |
+| RB | Jahmyr Gibbs | RB | DET | $10,000 | 31.700000762939453 |
+| WR | Jaxon Smith-Njigba | WR | SEA | $9,300 | 31.510000228881836 |
+| RB | Josh Jacobs | RB | GB | $6,800 | 22.209999084472656 |
+| TE | Isaiah Likely | TE | NYG | $5,000 | 15.350000381469727 |
+| WR | Omar Cooper Jr. | WR | NYJ | $4,900 | 14.100000381469727 |
+| QB | Gardner Minshew II | QB | ARI | $4,500 | 20.030000686645508 |
+| WR | Adonai Mitchell | WR | NYJ | $4,500 | 13.619999885559082 |
+| TE | Elijah Higgins | TE | ARI | $2,500 | 4.460000038146973 |
+| DST | Packers | DST | GB | $2,400 | 7.119999885559082 |
 
-### Lineup 2 — $34,200 / proj 101.87
+### Lineup 2 — $49,900 / proj 160.02
 
 | Slot | Player | Pos | Team | Salary | Proj |
 |---|---|---|---|---|---|
-| WR | Rashee Rice | WR | KC | $6,400 | 11.75 |
-| RB | Elijah Mitchell | RB | PHI | $4,500 | 12.149999618530273 |
-| QB | Justin Fields | QB | KC | $4,000 | 14.270000457763672 |
-| RB | Kaleb Johnson | RB | GB | $4,000 | 12.550000190734863 |
-| DST | Seahawks | DST | SEA | $3,800 | 7.630000114440918 |
-| WR | Jalen Royals | WR | KC | $3,200 | 10.899999618530273 |
-| WR | Justin Watson | WR | KC | $3,000 | 11.180000305175781 |
-| TE | Kenyon Sadiq | TE | NYJ | $2,800 | 11.050000190734863 |
-| TE | Jared Wiley | TE | KC | $2,500 | 10.390000343322754 |
+| RB | Jahmyr Gibbs | RB | DET | $10,000 | 31.700000762939453 |
+| WR | Jaxon Smith-Njigba | WR | SEA | $9,300 | 31.510000228881836 |
+| RB | Josh Jacobs | RB | GB | $6,800 | 22.209999084472656 |
+| QB | Kirk Cousins | QB | LV | $5,300 | 22.649999618530273 |
+| WR | Deebo Samuel Sr. | WR | SF | $5,300 | 12.359999656677246 |
+| WR | Caleb Douglas | WR | MIA | $4,200 | 12.579999923706055 |
+| TE | Michael Mayer | TE | LV | $3,400 | 9.789999961853027 |
+| TE | Dalton Schultz | TE | HOU | $3,200 | 10.119999885559082 |
+| DST | Packers | DST | GB | $2,400 | 7.119999885559082 |
+
+### Lineup 3 — $49,900 / proj 158.89
+
+| Slot | Player | Pos | Team | Salary | Proj |
+|---|---|---|---|---|---|
+| RB | Jahmyr Gibbs | RB | DET | $10,000 | 31.700000762939453 |
+| WR | Jaxon Smith-Njigba | WR | SEA | $9,300 | 31.510000228881836 |
+| RB | Josh Jacobs | RB | GB | $6,800 | 22.209999084472656 |
+| RB | Ashton Jeanty | RB | LV | $5,900 | 17.3799991607666 |
+| QB | Gardner Minshew II | QB | ARI | $4,500 | 20.030000686645508 |
+| WR | Adonai Mitchell | WR | NYJ | $4,500 | 13.619999885559082 |
+| WR | Caleb Douglas | WR | MIA | $4,200 | 12.579999923706055 |
+| TE | Teagan Quitoriano | TE | ARI | $2,500 | 3.7300000190734863 |
+| DST | Raiders | DST | LV | $2,200 | 6.139999866485596 |
 
 ## Provenance and honesty
 

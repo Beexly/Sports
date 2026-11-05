@@ -208,3 +208,17 @@ connected in this profile, so those sources were not scanned.
 **Next role (Builder):** add a gate check in `intelligence/reasoning/` that refuses a
 `gate_status != VALIDATED` record from becoming load-bearing, then wire `tool_backend` into
 the specialists. Without the gate first, wiring is unsafe by construction.
+
+## 2026-11-05 - Stage 0 pre-flight roster gate + Week 9 DFS packet fix (Antigravity)
+
+**Done:** scripts/ops/preflight_live_roster_injury_gate.py + data/nflverse/week9_live_roster_transactions_and_starters_2026.json.
+Wired into scripts/dfs/build_week9_dual_slate_dfs_packets.py (Showdown + Classic). Fixes: Status column ignored
+(Lamar Jackson OUT reached the TNF lineup), IR/OUT/D not filtered on Sunday, backup-QB default projections, CPT 1.5x never applied.
+Optimizer gained min_salary / max_per_team. scripts/ops/verify_week9_packets_stage0.py PASSES on the regenerated packets.
+
+**Not proven / open:** config is hand-maintained from a 2026-11-04 web check (BAL QB room, Brissett trade); QB1 for teams not in
+confirmed_qb1 is a highest-salary heuristic. BAL/JAX multipliers are unfitted analyst judgment, not JEV output.
+injuries_2026.csv still stops at week 8. Packets remain research artifacts, not publishable (no 5-stage/JEV pass).
+
+**Next role (Builder):** preflight-roster-gate.ts mirror, gate the pick/prop/SGP pipelines (un_full_gse_slate_pipeline.ts,
+gse_coach_mind_simulator.py), then Components 1-4 of the approved plan.

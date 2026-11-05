@@ -1,5 +1,106 @@
 {
   "slate_name": "week9_tnf_showdown_jax_bal",
+  "stage0_removed": [
+    {
+      "name": "Tyler Huntley",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "config exclusion: OUT FOR SEASON - severe turf toe (DK export still shows Q)"
+    },
+    {
+      "name": "Skylar Thompson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status OUT"
+    },
+    {
+      "name": "Tyler Huntley",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "config exclusion: OUT FOR SEASON - severe turf toe (DK export still shows Q)"
+    },
+    {
+      "name": "Skylar Thompson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "position": "QB",
+      "reason": "DK status OUT"
+    },
+    {
+      "name": "Adam Randall",
+      "team": "BAL",
+      "position": "RB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Durham Smythe",
+      "team": "BAL",
+      "position": "TE",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Adam Randall",
+      "team": "BAL",
+      "position": "RB",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Durham Smythe",
+      "team": "BAL",
+      "position": "TE",
+      "reason": "DK status IR"
+    },
+    {
+      "name": "Quinn Ewers",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Nick Mullens",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Joey Aguilar",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Quinn Ewers",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Nick Mullens",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    },
+    {
+      "name": "Joey Aguilar",
+      "team": "JAX",
+      "position": "QB",
+      "reason": "not confirmed QB1 (Trevor Lawrence)"
+    }
+  ],
+  "situational_flags": {
+    "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle). Downgrade BAL pass efficiency; raise Derrick Henry carry share and JAX DST expectation."
+  },
   "slate_identity": {
     "row_count": 104,
     "unique_games": [
@@ -10,18 +111,18 @@
     "is_week9_live_file": true
   },
   "roster_structure": "1 CPT (1.5x) + 5 FLEX",
-  "candidates": 104,
-  "sims": 120,
-  "opponent_rosters": 60,
-  "win_threshold_p99": 83.35,
-  "portfolio_size": 2,
+  "candidates": 88,
+  "sims": 400,
+  "opponent_rosters": 300,
+  "win_threshold_p99": 84.74,
+  "portfolio_size": 3,
   "best_lineup_index": 1,
   "lineups": [
     {
       "index": 1,
-      "salary": 49500,
-      "proj_sum": 87.1,
-      "win_prob_vs_p99_field": 0.5083,
+      "salary": 49900,
+      "proj_sum": 93.48,
+      "win_prob_vs_p99_field": 0.4525,
       "teams": [
         "BAL",
         "JAX"
@@ -33,15 +134,7 @@
           "slot": "CPT",
           "team": "JAX",
           "salary": 15900,
-          "projection": 20.7
-        },
-        {
-          "name": "Zay Flowers",
-          "position": "WR",
-          "slot": "FLEX",
-          "team": "BAL",
-          "salary": 10400,
-          "projection": 18.7
+          "projection": 31.05
         },
         {
           "name": "Derrick Henry",
@@ -49,51 +142,75 @@
           "slot": "FLEX",
           "team": "BAL",
           "salary": 10200,
-          "projection": 18.0
+          "projection": 19.8
         },
         {
-          "name": "Cam Little",
-          "position": "K",
+          "name": "Bhayshul Tuten",
+          "position": "RB",
           "slot": "FLEX",
           "team": "JAX",
-          "salary": 5400,
-          "projection": 9.0
+          "salary": 9800,
+          "projection": 17.3
         },
         {
-          "name": "Lamar Jackson",
-          "position": "QB",
+          "name": "Zay Flowers",
+          "position": "WR",
           "slot": "FLEX",
           "team": "BAL",
-          "salary": 6000,
-          "projection": 16.8
+          "salary": 10400,
+          "projection": 15.9
         },
         {
-          "name": "Nate Boerkircher",
-          "position": "TE",
+          "name": "Chris Rodriguez Jr.",
+          "position": "RB",
           "slot": "FLEX",
           "team": "JAX",
-          "salary": 1600,
-          "projection": 3.9
+          "salary": 3400,
+          "projection": 6.2
+        },
+        {
+          "name": "Chris Moore",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 200,
+          "projection": 3.23
         }
       ]
     },
     {
       "index": 2,
-      "salary": 49500,
-      "proj_sum": 87.1,
-      "win_prob_vs_p99_field": 0.5083,
+      "salary": 49700,
+      "proj_sum": 93.03,
+      "win_prob_vs_p99_field": 0.4525,
       "teams": [
         "BAL",
         "JAX"
       ],
       "players": [
         {
+          "name": "Derrick Henry",
+          "position": "RB",
+          "slot": "CPT",
+          "team": "BAL",
+          "salary": 15300,
+          "projection": 29.7
+        },
+        {
           "name": "Trevor Lawrence",
           "position": "QB",
-          "slot": "CPT",
+          "slot": "FLEX",
           "team": "JAX",
-          "salary": 15900,
+          "salary": 10600,
           "projection": 20.7
+        },
+        {
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 9800,
+          "projection": 17.3
         },
         {
           "name": "Zay Flowers",
@@ -101,7 +218,51 @@
           "slot": "FLEX",
           "team": "BAL",
           "salary": 10400,
-          "projection": 18.7
+          "projection": 15.9
+        },
+        {
+          "name": "Chris Rodriguez Jr.",
+          "position": "RB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 3400,
+          "projection": 6.2
+        },
+        {
+          "name": "Chris Moore",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 200,
+          "projection": 3.23
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "salary": 49500,
+      "proj_sum": 91.78,
+      "win_prob_vs_p99_field": 0.4525,
+      "teams": [
+        "BAL",
+        "JAX"
+      ],
+      "players": [
+        {
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "slot": "CPT",
+          "team": "JAX",
+          "salary": 14700,
+          "projection": 25.95
+        },
+        {
+          "name": "Trevor Lawrence",
+          "position": "QB",
+          "slot": "FLEX",
+          "team": "JAX",
+          "salary": 10600,
+          "projection": 20.7
         },
         {
           "name": "Derrick Henry",
@@ -109,31 +270,31 @@
           "slot": "FLEX",
           "team": "BAL",
           "salary": 10200,
-          "projection": 18.0
+          "projection": 19.8
         },
         {
-          "name": "Cam Little",
-          "position": "K",
-          "slot": "FLEX",
-          "team": "JAX",
-          "salary": 5400,
-          "projection": 9.0
-        },
-        {
-          "name": "Lamar Jackson",
-          "position": "QB",
+          "name": "Zay Flowers",
+          "position": "WR",
           "slot": "FLEX",
           "team": "BAL",
-          "salary": 6000,
-          "projection": 16.8
+          "salary": 10400,
+          "projection": 15.9
         },
         {
-          "name": "Nate Boerkircher",
-          "position": "TE",
+          "name": "Chris Rodriguez Jr.",
+          "position": "RB",
           "slot": "FLEX",
           "team": "JAX",
-          "salary": 1600,
-          "projection": 3.9
+          "salary": 3400,
+          "projection": 6.2
+        },
+        {
+          "name": "Chris Moore",
+          "position": "WR",
+          "slot": "FLEX",
+          "team": "BAL",
+          "salary": 200,
+          "projection": 3.23
         }
       ]
     }

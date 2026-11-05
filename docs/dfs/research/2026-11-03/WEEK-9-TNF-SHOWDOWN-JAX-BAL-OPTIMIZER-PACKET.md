@@ -1,6 +1,6 @@
 # Week 9 TNF Showdown JAX@BAL — Optimizer Packet
 
-**Generated:** 2026-11-03T17:58:08Z
+**Generated:** 2026-11-05T00:12:39Z
 **Source salary export:** `C:\Users\Garrett\Downloads\DKSalaries (3).csv`
 **Archived copy:** `data/dfs/dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv`
 
@@ -21,42 +21,54 @@
 ## Run parameters
 
 - roster structure: 1 CPT (1.5x) + 5 FLEX
-- candidates scored: 104
-- Monte Carlo sims: 120
-- adversarial field rosters: 60
-- p99 field win threshold: 83.35 points
-- portfolio size: 2
+- candidates scored: 88
+- Monte Carlo sims: 400
+- adversarial field rosters: 300
+- p99 field win threshold: 84.74 points
+- portfolio size: 3
 
 ## Portfolio
 
 | # | Salary | Proj | Win prob vs p99 | Teams |
 |---|---|---|---|---|
-| 1 | $49,500 | 87.1 | 0.5083 | BAL, JAX |
-| 2 | $49,500 | 87.1 | 0.5083 | BAL, JAX |
+| 1 | $49,900 | 93.48 | 0.4525 | BAL, JAX |
+| 2 | $49,700 | 93.03 | 0.4525 | BAL, JAX |
+| 3 | $49,500 | 91.78 | 0.4525 | BAL, JAX |
 
 ## Rosters
 
-### Lineup 1 — $49,500 / proj 87.1
+### Lineup 1 — $49,900 / proj 93.48
 
 | Slot | Player | Pos | Team | Salary | Proj |
 |---|---|---|---|---|---|
-| CPT | Trevor Lawrence | QB | JAX | $15,900 | 20.7 |
-| FLEX | Zay Flowers | WR | BAL | $10,400 | 18.7 |
-| FLEX | Derrick Henry | RB | BAL | $10,200 | 18.0 |
-| FLEX | Cam Little | K | JAX | $5,400 | 9.0 |
-| FLEX | Lamar Jackson | QB | BAL | $6,000 | 16.8 |
-| FLEX | Nate Boerkircher | TE | JAX | $1,600 | 3.9 |
+| CPT | Trevor Lawrence | QB | JAX | $15,900 | 31.05 |
+| FLEX | Derrick Henry | RB | BAL | $10,200 | 19.8 |
+| FLEX | Bhayshul Tuten | RB | JAX | $9,800 | 17.3 |
+| FLEX | Zay Flowers | WR | BAL | $10,400 | 15.9 |
+| FLEX | Chris Rodriguez Jr. | RB | JAX | $3,400 | 6.2 |
+| FLEX | Chris Moore | WR | BAL | $200 | 3.23 |
 
-### Lineup 2 — $49,500 / proj 87.1
+### Lineup 2 — $49,700 / proj 93.03
 
 | Slot | Player | Pos | Team | Salary | Proj |
 |---|---|---|---|---|---|
-| CPT | Trevor Lawrence | QB | JAX | $15,900 | 20.7 |
-| FLEX | Zay Flowers | WR | BAL | $10,400 | 18.7 |
-| FLEX | Derrick Henry | RB | BAL | $10,200 | 18.0 |
-| FLEX | Cam Little | K | JAX | $5,400 | 9.0 |
-| FLEX | Lamar Jackson | QB | BAL | $6,000 | 16.8 |
-| FLEX | Nate Boerkircher | TE | JAX | $1,600 | 3.9 |
+| CPT | Derrick Henry | RB | BAL | $15,300 | 29.7 |
+| FLEX | Trevor Lawrence | QB | JAX | $10,600 | 20.7 |
+| FLEX | Bhayshul Tuten | RB | JAX | $9,800 | 17.3 |
+| FLEX | Zay Flowers | WR | BAL | $10,400 | 15.9 |
+| FLEX | Chris Rodriguez Jr. | RB | JAX | $3,400 | 6.2 |
+| FLEX | Chris Moore | WR | BAL | $200 | 3.23 |
+
+### Lineup 3 — $49,500 / proj 91.78
+
+| Slot | Player | Pos | Team | Salary | Proj |
+|---|---|---|---|---|---|
+| CPT | Bhayshul Tuten | RB | JAX | $14,700 | 25.95 |
+| FLEX | Trevor Lawrence | QB | JAX | $10,600 | 20.7 |
+| FLEX | Derrick Henry | RB | BAL | $10,200 | 19.8 |
+| FLEX | Zay Flowers | WR | BAL | $10,400 | 15.9 |
+| FLEX | Chris Rodriguez Jr. | RB | JAX | $3,400 | 6.2 |
+| FLEX | Chris Moore | WR | BAL | $200 | 3.23 |
 
 ## Provenance and honesty
 

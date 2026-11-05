@@ -45,6 +45,15 @@ from scripts.ops.dfs_stochastic_milp_optimizer import (  # noqa: E402
     verify_dk_salaries_slate_identity,
 )
 
+from scripts.ops.preflight_live_roster_injury_gate import (  # noqa: E402
+    PreflightRosterGateError,
+    apply_gate,
+    assert_lineup_clean,
+    assert_lineup_rules,
+    load_config as load_gate_config,
+)
+
+MIN_AVG_PPG = 3.0  # below this a DK player has no usable role evidence this season
 DOWNLOADS = Path("C:/Users/Garrett/Downloads")
 TNF_SRC = DOWNLOADS / "DKSalaries (3).csv"
 MAIN_SRC = DOWNLOADS / "DKSalaries (2).csv"
@@ -78,8 +87,6 @@ def load_classic_slate(csv_path: str | Path) -> pd.DataFrame:
     raw["AvgPointsPerGame"] = pd.to_numeric(raw["AvgPointsPerGame"], errors="coerce").fillna(0.0)
     raw = raw[(raw["Salary"].fillna(0) >= 2000) & (raw["Salary"].fillna(0) <= SALARY_CAP)]
     raw = raw.drop_duplicates(subset=["ID"])
-    if "Status" in raw.columns:
-        raw = raw[raw["Status"].fillna("").astype(str).str.upper() != "O"]
     raw["opponent"] = np.where(
         raw["TeamAbbrev"] == raw["away"], raw["home"], raw["away"]
     )
@@ -91,10 +98,51 @@ def load_classic_slate(csv_path: str | Path) -> pd.DataFrame:
         "game_id": raw["game_id"].astype(str),
         "salary": raw["Salary"].astype(int),
         "projection": raw["AvgPointsPerGame"].astype(float).round(3),
+        "status": raw["Status"].fillna("").astype(str) if "Status" in raw.columns else "",
         "role": "",
         "dk_id": raw["ID"].astype(str),
     }).reset_index(drop=True)
-    return out
+    # STAGE 0 GATE: purge OUT/IR/D/season-ending, traded-away and non-starting QBs.
+    cfg = load_gate_config()
+    out, removed = apply_gate(out, cfg)
+    out.attrs["stage0_removed"] = removed
+    # Players with no real season scoring have no role evidence; do not let them into the pool.
+    out = out[out["projection"] >= MIN_AVG_PPG].reset_index(drop=True)
+    return derive_component_projections(out)
+
+
+def derive_component_projections(df: pd.DataFrame) -> pd.DataFrame:
+    """Populate proj_* component columns from DK AvgPointsPerGame so simulate_slate never
+    falls back to its generic defaults (250 pass yds / 40 rec yds / 3 rec / 0.4 TD)."""
+    d = df.copy()
+    a = d["projection"].astype(float)
+    pos = d["position"]
+    d["proj_pass_yds"] = np.nan
+    d["proj_rush_yds"] = np.nan
+    d["proj_rec_yds"] = np.nan
+    d["proj_receptions"] = np.nan
+    d["proj_td"] = np.nan
+    d["proj_fpts"] = np.nan
+    qb = pos == "QB"
+    r = (a[qb] + 0.75 - 1.5).clip(lower=1.0)
+    d.loc[qb, "proj_pass_yds"] = 0.55 * r / 0.04
+    d.loc[qb, "proj_td"] = 0.45 * r / 4.0
+    d.loc[qb, "proj_rush_yds"] = 15.0
+    rb = pos == "RB"
+    rec = 0.30 * a[rb] / 1.7
+    d.loc[rb, "proj_rush_yds"] = 0.45 * a[rb] / 0.1
+    d.loc[rb, "proj_receptions"] = rec
+    d.loc[rb, "proj_rec_yds"] = 7.0 * rec
+    d.loc[rb, "proj_td"] = 0.25 * a[rb] / 6.0
+    rcv = pos.isin(["WR", "TE"])
+    rec = 0.72 * a[rcv] / 2.1
+    d.loc[rcv, "proj_receptions"] = rec
+    d.loc[rcv, "proj_rec_yds"] = 11.0 * rec
+    d.loc[rcv, "proj_td"] = 0.28 * a[rcv] / 6.0
+    d.loc[rcv, "proj_rush_yds"] = 0.0
+    d.loc[pos == "DST", "proj_fpts"] = a[pos == "DST"]
+    d.loc[pos == "DST", "proj_td"] = 0.1  # unused by DST scoring; set so strict mode has no NaN
+    return d
 
 
 def load_showdown_slate(csv_path: str | Path) -> pd.DataFrame:
@@ -149,6 +197,7 @@ def build_classic_packet(
         .assign(wind_mph=0.0)
     )
     sim = GSEFullSlateSimulator(players, games, num_sims=sims, seed=seed, copula_nu=4)
+    sim.strict_projections = True
     fpts, _cov = sim.simulate_slate()
 
     mu = fpts.mean(axis=0)
@@ -167,7 +216,13 @@ def build_classic_packet(
         require_qb_stack=True,
         require_bring_back=True,
         covariance_bonuses=bonuses,
+        min_salary=48500.0,
+        max_per_team=4,
     )
+    cfg = load_gate_config()
+    for lu in portfolio:
+        assert_lineup_clean(lu["player"].tolist(), cfg)
+        assert_lineup_rules(int(lu["salary"].sum()), lu["team"].astype(str).tolist())
 
     name_to_idx = {n: i for i, n in enumerate(players["name"])}
     lineup_scores = np.vstack([
@@ -188,6 +243,7 @@ def build_classic_packet(
 
     return {
         "slate_name": "week9_sunday_main_11_game",
+        "stage0_removed": players.attrs.get("stage0_removed", []),
         "slate_identity": ident,
         "players_scored": int(len(players)),
         "games": int(players["game_id"].nunique()),
@@ -300,6 +356,13 @@ def build_showdown_packet(
     raw["Salary"] = pd.to_numeric(raw["Salary"], errors="coerce")
     raw["AvgPointsPerGame"] = pd.to_numeric(raw["AvgPointsPerGame"], errors="coerce").fillna(0.0)
     raw = raw[raw["Salary"].fillna(0) >= 200]
+    # STAGE 0 GATE (Showdown): Status column, config exclusions, traded players, QB1 only.
+    gate_in = pd.DataFrame({"name": raw["Name"].astype(str), "team": raw["TeamAbbrev"].astype(str),
+                            "position": raw["Position"].astype(str), "status": raw["Status"].fillna("").astype(str),
+                            "salary": raw["Salary"]}, index=raw.index)
+    cfg = load_gate_config()
+    _clean, stage0_removed = apply_gate(gate_in, cfg)
+    raw = raw.loc[_clean.index]
 
     cands = pd.DataFrame({
         "name": raw["Name"].astype(str),
@@ -310,7 +373,20 @@ def build_showdown_packet(
         "salary": raw["Salary"].astype(int),
         "projection": raw["AvgPointsPerGame"].astype(float).round(3),
     })
-    # CPT rows already carry the 1.5x multiplier in both salary and the DK average.
+    # Stage 0 situational overlay (unfitted analyst multipliers; see config note).
+    for _team, _m in cfg.get("situational_multipliers_unfitted", {}).items():
+        if _team == "note":
+            continue
+        for _key, _mult in _m.items():
+            if ":" in _key:
+                _pos, _nm = _key.split(":", 1)
+                _mask = (cands["team"] == _team) & (cands["name"] == _nm)
+            else:
+                _mask = (cands["team"] == _team) & (cands["position"] == _key)
+            cands.loc[_mask, "projection"] = (cands.loc[_mask, "projection"] * _mult).round(3)
+    # DK CPT rows carry 1.5x salary but the SAME AvgPointsPerGame as FLEX; apply the 1.5x scoring here.
+    cands.loc[cands["slot"] == "CPT", "projection"] = (cands.loc[cands["slot"] == "CPT", "projection"] * 1.5).round(3)
+
     cands["value_ratio"] = cands["projection"] / cands["salary"].clip(lower=1)
     cands = cands.drop_duplicates(subset=["name", "slot"]).reset_index(drop=True)
 
@@ -329,6 +405,9 @@ def build_showdown_packet(
         # forbid exact repeats by dropping the CPT used so the next pass differs
         used_cpt = lu[lu["slot"] == "CPT"]["name"].astype(str).iloc[0]
         pool = pool[~((pool["slot"] == "CPT") & (pool["name"].astype(str) == used_cpt))]
+
+    for _lu in portfolios:
+        assert_lineup_clean(_lu["name"].tolist(), cfg)
 
     # --- simulation: one-factor within-team correlation, sigma = 0.55 * mean --
     rng = np.random.default_rng(seed)
@@ -378,6 +457,8 @@ def build_showdown_packet(
 
     return {
         "slate_name": "week9_tnf_showdown_jax_bal",
+        "stage0_removed": stage0_removed,
+        "situational_flags": cfg.get("situational_flags", {}),
         "slate_identity": ident,
         "roster_structure": "1 CPT (1.5x) + 5 FLEX",
         "candidates": int(len(cands)),
