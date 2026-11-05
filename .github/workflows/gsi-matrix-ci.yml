@@ -1,0 +1,36 @@
+name: GSI Conformal-OT Matrix CI
+
+on:
+  push:
+    paths:
+      - "packages/galaxy-conformal-ot/**"
+      - ".github/workflows/gsi-matrix-ci.yml"
+  pull_request:
+    paths:
+      - "packages/galaxy-conformal-ot/**"
+
+jobs:
+  test-conformal-ot:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy pandas scikit-learn pytest
+          pip install -e packages/galaxy-conformal-ot
+      - name: Run unit & mathematical invariant tests
+        run: |
+          python -m pytest packages/galaxy-conformal-ot/tests -v
+      - name: Run MIMIC-IV & NFL Conformal-OT v2.0 benchmarks
+        run: |
+          python packages/galaxy-conformal-ot/benchmarks/clinical_mimic_iv_real_benchmark.py
+          python packages/galaxy-conformal-ot/benchmarks/clinical_mimic_iv_v2_benchmark.py
+          python packages/galaxy-conformal-ot/benchmarks/gse_nfl_live_backtest_rig.py

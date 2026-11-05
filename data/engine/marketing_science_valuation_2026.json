@@ -1,0 +1,37 @@
+{
+  "schema": "gse.marketing_science_canon.v1",
+  "bg_nbd_p_alive_sample": 0.7115,
+  "bg_bb_discrete_slate_p_alive_sample": 0.8673,
+  "gamma_gamma_expected_spend_usd": 29.51,
+  "mmm_adstock_hill_terminal_saturation": 0.8056,
+  "ascarza_retention_lift_audit": {
+    "n_customers": 6,
+    "expected_net_value_lift_policy": 32.3,
+    "expected_net_value_naive_churn_policy": -0.1,
+    "lift_over_naive_churn_targeting": 32.4
+  },
+  "thaler_segregated_bundle_valuation": {
+    "bundle_price_usd": 29.0,
+    "segregated_standalone_sum_usd": 52.0,
+    "transaction_utility_surplus_usd": 23.0,
+    "savings_pct": 44.2,
+    "components": [
+      {
+        "item": "Thursday Night Football (JAX @ BAL) Full 5-Stage Packet & Showdown MILP",
+        "standalone_usd": 9.0
+      },
+      {
+        "item": "Sunday 11-Game Main Slate Verified Spread/Total/Prop Call Sheet",
+        "standalone_usd": 19.0
+      },
+      {
+        "item": "Sunday 11-Game Classic Stochastic MILP Optimizer Lineups (3 Archetypes)",
+        "standalone_usd": 15.0
+      },
+      {
+        "item": "Monday Night Football Packet + Clayton Copula SGP Fair-Odds Matrix",
+        "standalone_usd": 9.0
+      }
+    ]
+  }
+}

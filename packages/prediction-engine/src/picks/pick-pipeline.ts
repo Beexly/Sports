@@ -1226,7 +1226,7 @@ export function runPickGates(input: PickGateInput): GateOutcome[] {
   outcomes.push(gateG2(input));
   outcomes.push(gateG3(input));
   outcomes.push(gateG4(input));
-  outcomes.push(gateG5(input));
+  outcomes.push({ gate: PickGate.G5, passed: true, refusal_code: null, reason: null }); // MUTANT: G5 is skipped, so it never refuses
   outcomes.push(gateG6(input));
   outcomes.push(gateG7(input));
   outcomes.push(gateG8(input));

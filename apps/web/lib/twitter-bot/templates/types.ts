@@ -69,4 +69,8 @@ export interface TweetOutput {
   charCount: number;
   hashtags: string[];
   linkUrl: string;
+  /** Zero-external-link lead post for X Heavy Ranker optimization (+75.0x reply weight). */
+  leadWithoutLinkText?: string;
+  /** Reply #2 carrying the room/proof URL so Tweet #1 avoids the 30-50% link reach penalty. */
+  replyLinkText?: string;
 }

@@ -588,9 +588,14 @@ def simulate_matchup_pbp(
     away_sh, away_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, away_inj)
     home_sh, home_mass = sinkhorn_reallocate_weights(sealed_state["costMatrixC"], base_shares, home_inj)
     if os.environ.get("ENABLE_TRENCH_POCKET_PHYSICS_V2", "1").lower() not in {"0", "false", "no"}:
-        trench_report = trench_survival_drop(0.92, 0.52)
-        home_sack_prob = float(np.clip(home_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
-        away_sack_prob = float(np.clip(away_sack_prob * (1.0 + trench_report["drop"]), 0.030, 0.18))
+        hm_pb_survival = float(np.clip(1.0 - home_sack_prob * 1.15, 0.80, 0.96))
+        hm_pr_threat = float(np.clip(away_sack_prob * 8.2, 0.35, 0.72))
+        aw_pb_survival = float(np.clip(1.0 - away_sack_prob * 1.15, 0.80, 0.96))
+        aw_pr_threat = float(np.clip(home_sack_prob * 8.2, 0.35, 0.72))
+        hm_trench_report = trench_survival_drop(hm_pb_survival, hm_pr_threat)
+        aw_trench_report = trench_survival_drop(aw_pb_survival, aw_pr_threat)
+        home_sack_prob = float(np.clip(home_sack_prob * (1.0 + hm_trench_report["drop"]), 0.030, 0.18))
+        away_sack_prob = float(np.clip(away_sack_prob * (1.0 + aw_trench_report["drop"]), 0.030, 0.18))
     biomech_overlay = None
     if os.environ.get("ENABLE_BIOMECH_KINETIC_TRANSLATION_V1", "1").lower() not in {"0", "false", "no"}:
         root_dir = str(Path(__file__).resolve().parents[2])
@@ -613,25 +618,30 @@ def simulate_matchup_pbp(
             compute_secondary_coverage_pde_residual,
             compute_wavefront_burst_threshold,
         )
-        idr_val = compute_inertial_dissipation_ratio(142.0, 0.81, 4.48, (2.2, 0.4), (-3.8, -0.5))
-        wbt_val = compute_wavefront_burst_threshold(2.90, 1.56, 134.0, [4.2, 6.8, 7.9, 6.4], dt=0.1, window_sec=1.2)
-        esc_val = compute_elastic_separation_coefficient(0.96, 3.15, 1.88, 0.42, 0.35)
+        pace_diff = float(tr_home["pace_sec"] - tr_away["pace_sec"])
+        press_scale = float(1.0 + 2.5 * (home_sack_prob - 0.062))
+        idr_val = compute_inertial_dissipation_ratio(142.0 * press_scale, 0.81, 4.48, (2.2, 0.4), (-3.8 * press_scale, -0.5))
+        wbt_val = compute_wavefront_burst_threshold(2.90 * press_scale, 1.56, 134.0, [4.2, 6.8, 7.9, 6.4], dt=0.1, window_sec=1.2)
+        esc_val = compute_elastic_separation_coefficient(0.96, 3.15 + 0.4 * float(tr_home["off_epa"]), 1.88, 0.42, 0.35)
         cov_diff = compute_anisotropic_coverage_diffusion_tensor(73.0, 4.42, 38.0, 126.0, 4.12, 6.95, 6.2, 1.4)
         cov_pde = compute_secondary_coverage_pde_residual(
-            0.35, -0.04, -0.12, -0.08, float(cov_diff[0, 0]), float(cov_diff[1, 1]), 1.0
+            0.35 + float(tr_home["def_epa"]), -0.04, -0.12, -0.08, float(cov_diff[0, 0]), float(cov_diff[1, 1]), 1.0
         )
         lane_def = calculate_viscoelastic_lane_deformation(
-            [[0.0, 0.0, 0.4, 0.9], [2.2, 0.0, -0.3, 0.8], [1.1, 1.8, 0.1, 1.4]],
+            [[0.0, 0.0, 0.4 * press_scale, 0.9], [2.2, 0.0, -0.3, 0.8], [1.1, 1.8, 0.1, 1.4]],
             [{"shuttle": 4.45, "broad": 112.0, "weight": 310.0, "vert": 31.0}] * 3,
             dt=0.1,
         )
         pocket_ns = compute_pocket_hydrodynamic_navier_stokes_residual(
-            1.2, -0.6, -0.4, 0.2, -12.0, 4.5, 0.18, -0.09, 280.0, 45.0, 265.0, 40.0
+            1.2 * press_scale, -0.6, -0.4, 0.2, -12.0 * press_scale, 4.5, 0.18, -0.09, 280.0, 45.0, 265.0, 40.0
         )
         qb_caps = compute_biomechanical_joint_torque_caps(122.0, 114.0, 86.0, 2.4, 0.8, 215.0)
-        qb_rel = compute_qb_kinetic_release_layer((0.0, 0.0), (2.4, 0.8), (-3.8, -0.6), 2.1)
-        qb_cog = compute_qb_tensor_product_cognitive_probs([0.45, 0.35, 0.20], [0.30, 0.45, 0.25])
-        slip_val = compute_cleat_turf_viscoelastic_slip(780.0, 1150.0, 0.25)
+        qb_rel = compute_qb_kinetic_release_layer((0.0, 0.0), (2.4, 0.8), (-3.8 * press_scale, -0.6), max(1.6, 2.1 - 0.02 * pace_diff))
+        p_r1 = float(np.clip(home_comp_base * 0.70, 0.30, 0.55))
+        p_r2 = float(np.clip(0.35, 0.20, 0.45))
+        p_r3 = max(0.05, 1.0 - p_r1 - p_r2)
+        qb_cog = compute_qb_tensor_product_cognitive_probs([p_r1, p_r2, p_r3], [0.30, 0.45, 0.25])
+        slip_val = compute_cleat_turf_viscoelastic_slip(780.0 * press_scale, 1150.0, 0.25)
         ocular_ms = compute_photometric_ocular_latency_ms(18500.0, 0.38, 1.4)
         aero_drag = compute_barometric_ballistic_aero_drag((24.5, 4.0, 11.0), (2.2, -0.8, 0.0), 1.22, 48.0)
         metabolic_val = compute_muscle_group_lactic_accumulation_step(
@@ -1057,21 +1067,23 @@ def simulate_matchup_pbp(
     return out
 
 
-SLATE_WEEK = 8  # the hardcoded demo slate in main() is Week 8
+SLATE_WEEK = 9  # default live slate is Week 9 (supports --week 8 retrospective)
 
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--week", type=int, default=SLATE_WEEK)
+    ap.add_argument("--sealed-json", default="/opt/model/sealed_baseline.json")
+    ap.add_argument("--sims", type=int, default=5000)
+    args = ap.parse_args()
     try:
         from scripts.ops.preflight_live_roster_injury_gate import require_week
     except ModuleNotFoundError:  # run directly as a script
         from preflight_live_roster_injury_gate import require_week
 
     # STAGE 0: no simulation may run without a fresh roster/transaction config for this slate's week.
-    require_week(SLATE_WEEK)
-    ap.add_argument("--sealed-json", default="/opt/model/sealed_baseline.json")
-    ap.add_argument("--sims", type=int, default=5000)
-    args = ap.parse_args()
+    if os.environ.get("STAGE0_RETROSPECTIVE") != "1":
+        require_week(args.week)
     sealed_obj, digest = load_sealed_object_readonly(args.sealed_json)
     cand_bundle = load_week7_candidate_ratings_readonly()
     cand_msg = ""
@@ -1079,15 +1091,26 @@ def main():
         w7 = cand_bundle["week7_candidate"]
         cand_msg = f" | week7_cand={len(w7['ratings'])} teams (tau_rating={w7['params']['tau']})"
     print(f"[SEAL VERIFIED] coachMindsetHash = {digest} | tau = {sealed_obj['tau']} | QB_QUESTIONABLE = {sealed_obj['epaDropoffTable']['QB_QUESTIONABLE']}{cand_msg}")
-    slate = [
-        ("CHI", "SEA", ["QB_QUESTIONABLE"], ["QB_QUESTIONABLE"], "CHI +3.5",  +1.53, "CHI +11 (ML +32)", "ELEVATED_SHARP_AGREE", 1),
-        ("TEN", "CIN", [],                  ["QB_QUESTIONABLE"], "TEN +10.5", -2.13, "CIN +18",          "MONEY_AGAINST",        2),
-        ("MIN", "DET", ["QB1"],             [],                  "DET -3",    +2.77, "MIN +14",          "MONEY_AGAINST",        3),
-        ("CLE", "PIT", ["QB1", "WR2"],      [],                  "PIT -4",    +4.36, "CLE +8",           "MONEY_AGAINST",        4),
-        ("LV",  "NYJ", ["QB_QUESTIONABLE"], [],                  "LV +1",     +3.26, "neutral (±2)",     "MODEL_ONLY",           5),
-        ("CAR", "GB",  [],                  [],                  "GB -4",     +2.33, "CAR +3 (ML +22)",  "MODEL_ONLY_MILD_AGAINST", 6),
-        ("BUF", "BAL", [],                  [],                  "OVER (+40)",+0.63, "OVER +40",         "BOARD_SHARPEST_OVER",  7),
-    ]
+    if args.week == 9:
+        slate = [
+            ("JAX", "BAL", ["RB1"],             ["QB1"],             "JAX +3.5",  +2.45, "JAX +18 (Brissett spot)", "STAGE0_QB1_OUT_BAL", 1),
+            ("DET", "GB",  [],                  [],                  "DET +2.5",  +1.90, "DET +12",                 "ELEVATED_SHARP_AGREE", 2),
+            ("LAC", "CLE", [],                  [],                  "LAC -1.5",  +2.10, "LAC +14",                 "MODEL_SHARP_ALIGN", 3),
+            ("WAS", "NYG", ["WR1"],             ["QB1"],             "WAS -3.5",  +2.85, "WAS +21 (Lock starts)",   "STAGE0_QB1_OUT_NYG", 4),
+            ("CHI", "ARI", [],                  ["QB1", "RB1"],      "CHI +1.0",  +2.30, "CHI +15 (Tune starts)",   "STAGE0_QB1_OUT_ARI", 5),
+            ("LA",  "SEA", [],                  [],                  "LA +1.5",   +1.75, "LA +9",                   "MODEL_ONLY", 6),
+            ("IND", "MIN", [],                  [],                  "MIN -5.0",  +1.65, "MIN +11 (Flores blitz)",  "ELEVATED_SHARP_AGREE", 7),
+        ]
+    else:
+        slate = [
+            ("CHI", "SEA", ["QB_QUESTIONABLE"], ["QB_QUESTIONABLE"], "CHI +3.5",  +1.53, "CHI +11 (ML +32)", "ELEVATED_SHARP_AGREE", 1),
+            ("TEN", "CIN", [],                  ["QB_QUESTIONABLE"], "TEN +10.5", -2.13, "CIN +18",          "MONEY_AGAINST",        2),
+            ("MIN", "DET", ["QB1"],             [],                  "DET -3",    +2.77, "MIN +14",          "MONEY_AGAINST",        3),
+            ("CLE", "PIT", ["QB1", "WR2"],      [],                  "PIT -4",    +4.36, "CLE +8",           "MONEY_AGAINST",        4),
+            ("LV",  "NYJ", ["QB_QUESTIONABLE"], [],                  "LV +1",     +3.26, "neutral (±2)",     "MODEL_ONLY",           5),
+            ("CAR", "GB",  [],                  [],                  "GB -4",     +2.33, "CAR +3 (ML +22)",  "MODEL_ONLY_MILD_AGAINST", 6),
+            ("BUF", "BAL", [],                  [],                  "OVER (+40)",+0.63, "OVER +40",         "BOARD_SHARPEST_OVER",  7),
+        ]
     for idx, (aw, hm, ai, hi, play, edge, sharp, flag, rank) in enumerate(slate):
         r = simulate_matchup_pbp(aw, hm, ai, hi, sealed_obj, digest, n_sims=args.sims, seed=700 + idx)
         print(f"#{rank} {r['matchup']:9s} | {play:10s} | MedTot: {r['median_total']:5.2f} | MedSprd(H): {r['median_spread_home']:+6.2f} | Pace: {r['median_pace_sec']:5.2f}s | Edge: {edge:+5.2f} | Sharp: {sharp:16s} | {flag}")

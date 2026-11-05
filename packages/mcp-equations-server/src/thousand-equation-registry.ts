@@ -107,6 +107,7 @@ export function selectCandidatePremisesByContextMask(
   opts: {
     readonly topK?: number;
     readonly includeInference?: boolean;
+    readonly signals?: readonly { readonly family: number; readonly displacement: number; readonly n: number }[];
   } = {},
 ): (Premise & {
   readonly jacobianSensitivity: number;
@@ -117,6 +118,15 @@ export function selectCandidatePremisesByContextMask(
   const matrix = loadThousandEquationMatrix();
   const topK = opts.topK ?? 250;
   const includeInference = opts.includeInference ?? false;
+
+  const signalDisplacementByFamily = new Map<number, number>();
+  if (opts.signals) {
+    for (const s of opts.signals) {
+      if (Number.isFinite(s.displacement) && Math.abs(s.displacement) > 0 && s.n >= MIN_SAMPLE) {
+        signalDisplacementByFamily.set(s.family, s.displacement);
+      }
+    }
+  }
 
   const matched: (Premise & {
     readonly jacobianSensitivity: number;
@@ -138,6 +148,18 @@ export function selectCandidatePremisesByContextMask(
           ? "GATED_EXPERIMENT_CANDIDATE"
           : "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST";
 
+    const liveDisp = signalDisplacementByFamily.get(eq.signalFamilyIdx);
+    const conditionedDelta =
+      liveDisp !== undefined
+        ? Number(
+            (
+              Math.abs(eq.rawLogOddsDelta) *
+              Math.sign(liveDisp) *
+              Math.min(2.0, Math.max(0.25, Math.abs(liveDisp)))
+            ).toFixed(6),
+          )
+        : eq.rawLogOddsDelta;
+
     matched.push({
       id: eq.id,
       premise: `${eq.title}: ${eq.equationLatex}`,
@@ -146,7 +168,7 @@ export function selectCandidatePremisesByContextMask(
       verificationStatus: vStatus,
       backtestPassed: eq.load_bearing,
       jacobianSensitivity: eq.jacobianSensitivity,
-      rawLogOddsDelta: eq.rawLogOddsDelta,
+      rawLogOddsDelta: conditionedDelta,
       category: eq.category,
       signalFamilyIdx: eq.signalFamilyIdx,
     });

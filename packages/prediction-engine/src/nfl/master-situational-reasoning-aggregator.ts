@@ -64,6 +64,19 @@ import type { KnownAtRecord } from "./universal-handoff-warehouse-priors.js";
 import { filterKnownAt } from "./universal-handoff-warehouse-priors.js";
 import type { BayesianReverseTokenInput } from "../forecasting/llm-probability-and-hybrid-forecasters.js";
 import { bayesianReverseTokenLogitUpdate } from "../forecasting/llm-probability-and-hybrid-forecasters.js";
+import { evaluateBelichickTenMetrics, type BelichickMetricInputs } from "./belichick-ten-metrics.js";
+import {
+  computeCatchableBallAndPlacementEdge,
+  evaluateTargetFunnelMatchup,
+  type QbBallPlacementProfile,
+} from "./all-in-one-research-signals.js";
+import { computeRushConceptZoneGapMatchup } from "./x-consolidated-sweep-signals.js";
+import {
+  evaluateConformalSelectiveAbstention,
+  computeBorghesiWeatherAndRosenQbBackupTransition,
+  detectKatsMarketCusumAndHarmonicRegime,
+} from "./ig-consolidated-conformal-and-kats-signals.js";
+import { loadStage0Config, assertNamesClean } from "./preflight-roster-gate.js";
 
 export const FAMILY_NAMES = [
   "pressure",
@@ -556,6 +569,22 @@ export interface OverlayInput {
   situationalVector?: readonly number[];
   spreadLine?: number;
   historicalWindowMatrix?: readonly (readonly number[])[];
+  /** Optional Belichick 10-metrics bundle input. */
+  belichickInputs?: BelichickMetricInputs;
+  /** Optional FTN human-charted QB ball placement matchup. */
+  qbBallPlacementMatchup?: { homeQb: QbBallPlacementProfile; awayQb: QbBallPlacementProfile };
+  /** Optional defensive target funnel input. */
+  targetFunnelInput?: Parameters<typeof evaluateTargetFunnelMatchup>[0];
+  /** Optional zone/gap rush concept input. */
+  rushConceptInput?: Parameters<typeof computeRushConceptZoneGapMatchup>[0];
+  /** Optional conformal selective abstention input. */
+  conformalAbstentionInput?: Parameters<typeof evaluateConformalSelectiveAbstention>[0];
+  /** Optional Borghesi weather & Rosen QB backup transition input. */
+  borghesiRosenInput?: Parameters<typeof computeBorghesiWeatherAndRosenQbBackupTransition>[0];
+  /** Optional Kats market CUSUM & harmonic regime input. */
+  katsCusumInput?: Parameters<typeof detectKatsMarketCusumAndHarmonicRegime>[0];
+  /** Optional Stage 0 roster gate config path and candidate player names to verify. */
+  stage0Check?: { configPath: string; candidatePlayerNames: readonly string[] };
 }
 
 export interface OverlayResult {
@@ -571,6 +600,14 @@ export interface OverlayResult {
   wr1Suppression?: ReturnType<typeof evaluateDefenseAgainstWr1>;
   llmPosterior?: ReturnType<typeof bayesianReverseTokenLogitUpdate>;
   featureValidation?: ReturnType<typeof validateFeatureAgainstMisleadingStats>;
+  belichickBundle?: ReturnType<typeof evaluateBelichickTenMetrics>;
+  qbBallPlacementEdge?: ReturnType<typeof computeCatchableBallAndPlacementEdge>;
+  targetFunnel?: ReturnType<typeof evaluateTargetFunnelMatchup>;
+  rushConcept?: ReturnType<typeof computeRushConceptZoneGapMatchup>;
+  conformalAbstention?: ReturnType<typeof evaluateConformalSelectiveAbstention>;
+  borghesiRosen?: ReturnType<typeof computeBorghesiWeatherAndRosenQbBackupTransition>;
+  katsCusum?: ReturnType<typeof detectKatsMarketCusumAndHarmonicRegime>;
+  stage0Verified?: { week: number; asOf: string; candidateCount: number };
   orthogonalization: OrthogonalizationResult;
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
@@ -691,6 +728,48 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     );
   } else {
     mark("8:validateFeatureAgainstMisleadingStats", false, "no feature under test supplied");
+  }
+
+  if (input.belichickInputs) {
+    result.belichickBundle = evaluateBelichickTenMetrics(input.belichickInputs);
+    mark("15A:evaluateBelichickTenMetrics", true, "10 Belichick situational metrics evaluated");
+  }
+  if (input.qbBallPlacementMatchup) {
+    result.qbBallPlacementEdge = computeCatchableBallAndPlacementEdge(
+      input.qbBallPlacementMatchup.homeQb,
+      input.qbBallPlacementMatchup.awayQb,
+    );
+    mark("15B:computeCatchableBallAndPlacementEdge", true, "FTN ball placement evaluated");
+  }
+  if (input.targetFunnelInput) {
+    result.targetFunnel = evaluateTargetFunnelMatchup(input.targetFunnelInput);
+    mark("15C:evaluateTargetFunnelMatchup", true, result.targetFunnel.primaryFunnelClassification);
+  }
+  if (input.rushConceptInput) {
+    result.rushConcept = computeRushConceptZoneGapMatchup(input.rushConceptInput);
+    mark("15D:computeRushConceptZoneGapMatchup", true, `${result.rushConcept.conceptYardsAdjustment} yds delta`);
+  }
+  if (input.conformalAbstentionInput) {
+    result.conformalAbstention = evaluateConformalSelectiveAbstention(input.conformalAbstentionInput);
+    mark("15E:evaluateConformalSelectiveAbstention", true, result.conformalAbstention.decision);
+  }
+  if (input.borghesiRosenInput) {
+    result.borghesiRosen = computeBorghesiWeatherAndRosenQbBackupTransition(input.borghesiRosenInput);
+    mark("15F:computeBorghesiWeatherAndRosenQbBackupTransition", true, "weather/QB prior evaluated");
+  }
+  if (input.katsCusumInput) {
+    result.katsCusum = detectKatsMarketCusumAndHarmonicRegime(input.katsCusumInput);
+    mark("15G:detectKatsMarketCusumAndHarmonicRegime", true, `drift=${result.katsCusum.cusumChangePointDetected}`);
+  }
+  if (input.stage0Check) {
+    const cfg = loadStage0Config(input.stage0Check.configPath);
+    assertNamesClean(input.stage0Check.candidatePlayerNames, cfg);
+    result.stage0Verified = {
+      week: cfg.week,
+      asOf: cfg.as_of,
+      candidateCount: input.stage0Check.candidatePlayerNames.length,
+    };
+    mark("0:stage0RosterGate", true, `week ${cfg.week} verified (${cfg.as_of})`);
   }
 
   const canonicalInputs = {

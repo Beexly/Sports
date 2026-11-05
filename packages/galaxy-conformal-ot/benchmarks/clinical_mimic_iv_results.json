@@ -6,10 +6,14 @@
     "alpha": 0.1,
     "nominal_coverage": 0.9,
     "empirical_coverage": 0.9,
+    "v2_empirical_coverage": 0.88,
     "coverage_guarantee_met": true,
+    "v2_coverage_guarantee_met": false,
     "calibration_sample_size": 50,
     "conformal_threshold": 0.6696817009021774,
-    "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+    "v2_conformal_threshold": 0.48340958931881606,
+    "v2_detection_rate_at_90pct_spec": 0.5263157894736842,
+    "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening & RFF fit strictly on D_cal)"
   },
   "alarm_fatigue_comparison": {
     "naive_bedside_sirs_shock_false_alarm_rate": 0.63,
@@ -18,6 +22,9 @@
     "galaxy_conformal_false_alarm_rate": 0.1,
     "galaxy_conformal_empirical_coverage": 0.9,
     "galaxy_conformal_detection_rate": 0.42105263157894735,
+    "gse_conformal_ot_v2_false_alarm_rate": 0.12,
+    "gse_conformal_ot_v2_empirical_coverage": 0.88,
+    "gse_conformal_ot_v2_detection_rate": 0.5263157894736842,
     "relative_false_alarm_reduction_pct": 84.12698412698413,
     "relative_false_alarm_reduction_same_test_neg_cohort_pct": 84.375
   },
@@ -34,6 +41,20 @@
       "ci95": [
         0.6721858091873262,
         0.8451605294939661
+      ]
+    },
+    "gse_conformal_ot_v2_multiframe": {
+      "auc": 0.8173684210526316,
+      "ci95": [
+        0.7354149610136452,
+        0.8914101882482671
+      ]
+    },
+    "gse_conformal_ot_v2_rff_mahalanobis_cone": {
+      "auc": 0.8313157894736842,
+      "ci95": [
+        0.7498452240566038,
+        0.9025286090543444
       ]
     }
   },
@@ -53,10 +74,14 @@
         "alpha": 0.1,
         "nominal_coverage": 0.9,
         "empirical_coverage": 0.8775510204081632,
+        "v2_empirical_coverage": 0.9387755102040817,
         "coverage_guarantee_met": false,
+        "v2_coverage_guarantee_met": true,
         "calibration_sample_size": 49,
         "conformal_threshold": 0.880351620349074,
-        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+        "v2_conformal_threshold": 0.31678827184841624,
+        "v2_detection_rate_at_90pct_spec": 0.2894736842105263,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening & RFF fit strictly on D_cal)"
       },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.6020408163265306,
@@ -65,6 +90,9 @@
         "galaxy_conformal_false_alarm_rate": 0.12244897959183673,
         "galaxy_conformal_empirical_coverage": 0.8775510204081632,
         "galaxy_conformal_detection_rate": 0.18421052631578946,
+        "gse_conformal_ot_v2_false_alarm_rate": 0.061224489795918366,
+        "gse_conformal_ot_v2_empirical_coverage": 0.9387755102040817,
+        "gse_conformal_ot_v2_detection_rate": 0.2894736842105263,
         "relative_false_alarm_reduction_pct": 79.66101694915254,
         "relative_false_alarm_reduction_same_test_neg_cohort_pct": 77.77777777777777
       },
@@ -82,6 +110,20 @@
             0.5482387007891872,
             0.735883152173913
           ]
+        },
+        "gse_conformal_ot_v2_multiframe": {
+          "auc": 0.689312567132116,
+          "ci95": [
+            0.5873924603284054,
+            0.7758564309656254
+          ]
+        },
+        "gse_conformal_ot_v2_rff_mahalanobis_cone": {
+          "auc": 0.709452201933405,
+          "ci95": [
+            0.608322477827051,
+            0.8058219348746692
+          ]
         }
       }
     },
@@ -93,10 +135,14 @@
         "alpha": 0.1,
         "nominal_coverage": 0.9,
         "empirical_coverage": 0.9,
+        "v2_empirical_coverage": 0.94,
         "coverage_guarantee_met": true,
+        "v2_coverage_guarantee_met": true,
         "calibration_sample_size": 49,
         "conformal_threshold": 0.7199499479046362,
-        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+        "v2_conformal_threshold": 0.3089916444887868,
+        "v2_detection_rate_at_90pct_spec": 0.39473684210526316,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening & RFF fit strictly on D_cal)"
       },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.6060606060606061,
@@ -105,6 +151,9 @@
         "galaxy_conformal_false_alarm_rate": 0.1,
         "galaxy_conformal_empirical_coverage": 0.9,
         "galaxy_conformal_detection_rate": 0.21052631578947367,
+        "gse_conformal_ot_v2_false_alarm_rate": 0.06,
+        "gse_conformal_ot_v2_empirical_coverage": 0.94,
+        "gse_conformal_ot_v2_detection_rate": 0.39473684210526316,
         "relative_false_alarm_reduction_pct": 83.50000000000001,
         "relative_false_alarm_reduction_same_test_neg_cohort_pct": 82.75862068965517
       },
@@ -122,6 +171,20 @@
             0.5638950848714568,
             0.7723192917798181
           ]
+        },
+        "gse_conformal_ot_v2_multiframe": {
+          "auc": 0.7400318979266348,
+          "ci95": [
+            0.6427297165200391,
+            0.8238109173435261
+          ]
+        },
+        "gse_conformal_ot_v2_rff_mahalanobis_cone": {
+          "auc": 0.7822966507177034,
+          "ci95": [
+            0.6966787150683031,
+            0.8608189429618001
+          ]
         }
       }
     },
@@ -133,10 +196,14 @@
         "alpha": 0.1,
         "nominal_coverage": 0.9,
         "empirical_coverage": 0.86,
+        "v2_empirical_coverage": 0.9,
         "coverage_guarantee_met": false,
+        "v2_coverage_guarantee_met": true,
         "calibration_sample_size": 50,
         "conformal_threshold": 0.6953122867078536,
-        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+        "v2_conformal_threshold": 0.38339459876204424,
+        "v2_detection_rate_at_90pct_spec": 0.47368421052631576,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening & RFF fit strictly on D_cal)"
       },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.66,
@@ -145,6 +212,9 @@
         "galaxy_conformal_false_alarm_rate": 0.14,
         "galaxy_conformal_empirical_coverage": 0.86,
         "galaxy_conformal_detection_rate": 0.34210526315789475,
+        "gse_conformal_ot_v2_false_alarm_rate": 0.1,
+        "gse_conformal_ot_v2_empirical_coverage": 0.9,
+        "gse_conformal_ot_v2_detection_rate": 0.47368421052631576,
         "relative_false_alarm_reduction_pct": 78.78787878787878,
         "relative_false_alarm_reduction_same_test_neg_cohort_pct": 78.78787878787878
       },
@@ -162,6 +232,20 @@
             0.6096935125060126,
             0.8000772491502066
           ]
+        },
+        "gse_conformal_ot_v2_multiframe": {
+          "auc": 0.8007894736842105,
+          "ci95": [
+            0.721301476541766,
+            0.8758404140662205
+          ]
+        },
+        "gse_conformal_ot_v2_rff_mahalanobis_cone": {
+          "auc": 0.8076315789473684,
+          "ci95": [
+            0.7217384215500945,
+            0.8842945439161178
+          ]
         }
       }
     },
@@ -173,10 +257,14 @@
         "alpha": 0.1,
         "nominal_coverage": 0.9,
         "empirical_coverage": 0.92,
+        "v2_empirical_coverage": 0.88,
         "coverage_guarantee_met": true,
+        "v2_coverage_guarantee_met": false,
         "calibration_sample_size": 50,
         "conformal_threshold": 0.6613734113432721,
-        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening fit strictly on D_cal)"
+        "v2_conformal_threshold": 0.4831035468381199,
+        "v2_detection_rate_at_90pct_spec": 0.5263157894736842,
+        "data_leakage_audit": "PASSED_ZERO_DATA_LEAKAGE (Sigma_whitening & RFF fit strictly on D_cal)"
       },
       "alarm_fatigue_comparison": {
         "naive_bedside_sirs_shock_false_alarm_rate": 0.62,
@@ -185,6 +273,9 @@
         "galaxy_conformal_false_alarm_rate": 0.08,
         "galaxy_conformal_empirical_coverage": 0.92,
         "galaxy_conformal_detection_rate": 0.42105263157894735,
+        "gse_conformal_ot_v2_false_alarm_rate": 0.12,
+        "gse_conformal_ot_v2_empirical_coverage": 0.88,
+        "gse_conformal_ot_v2_detection_rate": 0.5263157894736842,
         "relative_false_alarm_reduction_pct": 87.0967741935484,
         "relative_false_alarm_reduction_same_test_neg_cohort_pct": 87.0967741935484
       },
@@ -201,6 +292,20 @@
           "ci95": [
             0.6842043516524363,
             0.8526557026289172
+          ]
+        },
+        "gse_conformal_ot_v2_multiframe": {
+          "auc": 0.8178947368421052,
+          "ci95": [
+            0.7347189829373398,
+            0.8920252933994959
+          ]
+        },
+        "gse_conformal_ot_v2_rff_mahalanobis_cone": {
+          "auc": 0.8302631578947368,
+          "ci95": [
+            0.7484805218845985,
+            0.902396838776586
           ]
         }
       }

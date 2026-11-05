@@ -90,10 +90,35 @@ export function buildPickPublicationTweet(
     .join("\n")
     .trim();
 
+  const leadWithoutLinkText = [
+    `Published ${pickLine} at ${confidence}/100 confidence score (${gradeLabel}).`,
+    hashtag ? `\n#${hashtag}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .trim();
+
+  const replyLinkText = `Factor breakdown & pre-kickoff SHA-256 receipt: ${linkUrl}`;
+
   return {
     text,
     charCount: text.length,
     hashtags: hashtag ? [hashtag] : [],
     linkUrl,
+    leadWithoutLinkText,
+    replyLinkText,
   };
+}
+
+/**
+ * Builds a 2-post thread for X Heavy Ranker optimization:
+ * Tweet #1 has ZERO external links (preventing the 30-50% link penalty),
+ * and Tweet #2 (reply) carries the factor breakdown URL.
+ */
+export function buildPickPublicationThread(
+  input: PickPublicationInput,
+  publicUrl: string,
+): [string, string] {
+  const out = buildPickPublicationTweet(input, publicUrl);
+  return [out.leadWithoutLinkText ?? out.text, out.replyLinkText ?? `Factor breakdown: ${out.linkUrl}`];
 }

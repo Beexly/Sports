@@ -19,6 +19,10 @@ import {
   type CoachGameWriteup,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
+import {
+  STAGE0_VERIFIED_DFS_CORE_POOL,
+  STAGE0_VERIFIED_WEEK9_SGPS,
+} from "@/lib/engine/engine-live-bridge";
 import "./redline-world.css";
 
 type Panel = "packs" | "compare" | "board" | "detail" | "purchase" | "dfs" | "slate" | null;
@@ -100,40 +104,13 @@ const SEALED_PROPS = [
   { matchup: "CLE @ PIT", player: "Quinshon Judkins (CLE)", prop: "Receptions OVER 1.5", conf: "74/100", freeTeaser: false },
 ] as const;
 
-const SEALED_SGPS = [
-  { matchup: "BAL @ BUF", legs: "Zay Flowers 70+ Rec Yds · James Cook III 75+ Rush+Rec Yds · Josh Allen Anytime Rush TD", odds: "Fair +252 / Book +340" },
-  { matchup: "TEN @ CIN", legs: "CIN -11.5 · Tee Higgins 70+ Rec Yds · Samaje Perine Over 22.5 Rush Yds", odds: "Fair +214 / Book +290" },
-  { matchup: "ARI @ DAL", legs: "ARI +7.0 · Jake Ferguson Over 14.5 Rec Yds · Kendrick Bourne (ARI) Over 3.5 Receptions", odds: "Fair +192 / Book +275" },
-  { matchup: "MIN @ DET", legs: "Kyler Murray (MIN QB) Under 225.5 Pass Yds · Will Reichard Over 1.5 FGM · Isaac TeSlaa (DET) Over 17.5 Rec Yds", odds: "Fair +143 / Book +215" },
-  { matchup: "LV @ NYJ", legs: "NYJ ML (-122) · Braelon Allen Anytime TD · Michael Mayer Over 2.5 Receptions", odds: "Fair +135 / Book +205" },
-  { matchup: "CLE @ PIT", legs: "PIT -3.5 · Chris Boswell Over 1.5 FGM · Quinshon Judkins (CLE) Over 1.5 Receptions", odds: "Fair +175 / Book +245" },
-  { matchup: "ATL @ TB", legs: "Chris Godwin Jr. Over 3.5 Receptions · Chris Godwin Jr. Over 30.5 Rec Yds · Jahan Dotson (ATL) Over 21.5 Rec Yds", odds: "Fair -120 / Book +120" },
-  { matchup: "IND @ JAX", legs: "Trevor Lawrence Over 1.5 Pass TDs · Jakobi Meyers Over 35.5 Rec Yds · Chris Rodriguez Jr. Over 6.5 Rush Att", odds: "Fair +157 / Book +225" },
-  { matchup: "LAC @ LAR", legs: "LA -6.5 · LAC Team Total Under 18.5 · Nate Landman Under 8.5 Tackles+Ast", odds: "Fair +114 / Book +175" },
-  { matchup: "KC @ DEN", legs: "KC ML (-118) · Patrick Mahomes Over 225.5 Pass Yds · J.K. Dobbins (DEN) Over 21.5 Rush Yds", odds: "Fair +132 / Book +200" },
-  { matchup: "NE @ MIA", legs: "Jaylen Wright Over 4.5 Rush Att · Jaylen Wright Over 14.5 Rush Yds · Efton Chism III (NE) Over 15.5 Rec Yds", odds: "Fair -159 / Book +100" },
-  { matchup: "PHI @ WAS", legs: "Dyami Brown (WAS) Over 12.5 Rec Yds · Treylon Burks (WAS) Over 21.5 Rec Yds · Rachaad White (WAS) Anytime TD", odds: "Fair +107 / Book +160" },
-  { matchup: "CHI @ SEA", legs: "CHI ML (+142) · Kalif Raymond (CHI) Over 21.5 Rec Yds · Rome Odunze (CHI) Over 2.5 Receptions", odds: "Fair +165 / Book +280" },
-] as const;
+const SEALED_SGPS = STAGE0_VERIFIED_WEEK9_SGPS.map((row) => ({
+  matchup: row.matchup,
+  legs: row.free ? row.legs : "[LOCKED SGP TICKET · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]",
+  odds: row.free ? `Fair ${row.fairOdds} / Book ${row.bookOdds}` : `Fair LOCKED / Book ${row.bookOdds}`,
+}));
 
-const DFS_CORE_POOL = [
-  { pos: "QB", player: "Josh Allen (BUF)", sal: "$7,700", proj: "30.06 pts", why: "#1 overall ceiling QB (45.76 p85) with goal-line rush TD equity in BAL@BUF." },
-  { pos: "QB", player: "Dak Prescott (DAL)", sal: "$6,300", proj: "23.47 pts", why: "2A Cash Flagship QB1 in ARI@DAL dome shootout (Kyler Murray is on MIN; Jacoby Brissett starts for ARI)." },
-  { pos: "RB", player: "James Cook III (BUF)", sal: "$7,900", proj: "26.04 pts", why: "44.61 p85 ceiling in BAL@BUF with high-leverage rush + checkdown usage." },
-  { pos: "RB", player: "Bijan Robinson (ATL)", sal: "$8,000", proj: "25.80 pts", why: "+25.4 vacated yards via Sinkhorn reallocation with Brian Robinson Jr. OUT on ATL." },
-  { pos: "RB", player: "Jaylen Warren (PIT)", sal: "$6,600", proj: "21.13 pts", why: "2A Cash RB1 vs CLE with 35.67 p85 ceiling and pass-game floor." },
-  { pos: "RB", player: "Jonah Coleman (DEN)", sal: "$4,300", proj: "22.18 pts", why: "DEN Lead Active RB (Week 7 takeover + +32.8 yds Sinkhorn boost with RJ Harvey OUT)." },
-  { pos: "WR", player: "Zay Flowers (BAL)", sal: "$7,200", proj: "27.98 pts", why: "#1 WR projection on the slate (43.45 p85) in BAL@BUF shootout." },
-  { pos: "WR", player: "CeeDee Lamb (DAL)", sal: "$8,100", proj: "27.77 pts", why: "Alpha dome target share (43.82 p85) stacked with Dak Prescott vs ARI." },
-  { pos: "WR", player: "Jaxon Smith-Njigba (SEA)", sal: "$9,100", proj: "25.36 pts", why: "2B GPP alpha bring-back (41.96 p85) in CHI@SEA stack." },
-  { pos: "WR", player: "Tee Higgins (CIN)", sal: "$6,700", proj: "24.95 pts", why: "40.36 p85 ceiling + +4.1 rec yds Sinkhorn boost with Andrei Iosivas OUT." },
-  { pos: "WR", player: "Wan'Dale Robinson (TEN)", sal: "$5,400", proj: "18.40 pts", why: "+19.5 vacated rec yds via Sinkhorn boost with Carnell Tate OUT on TEN." },
-  { pos: "WR", player: "Chris Godwin Jr. (TB)", sal: "$6,100", proj: "17.90 pts", why: "+9.5 vacated rec yds via Sinkhorn boost with Emeka Egbuka OUT on TB." },
-  { pos: "TE", player: "Dallas Goedert (PHI)", sal: "$4,700", proj: "25.29 pts", why: "Massive +50.0 rec yds Sinkhorn boost with DeVonta Smith & Dontayvion Wicks OUT (Jalen Hurts on IR; Tanner McKee active QB)." },
-  { pos: "TE", player: "Greg Dulcich (MIA)", sal: "$3,200", proj: "10.15 pts", why: "2A Cash double-TE salary unlocker ($3,200) vs New England." },
-  { pos: "DST", player: "Jets DST (NYJ)", sal: "$2,800", proj: "8.63 pts", why: "2A Cash DST ($2,800) with interior trench pressure vs Las Vegas." },
-  { pos: "DST", player: "Falcons DST (ATL)", sal: "$2,500", proj: "6.23 pts", why: "2B GPP salary-Floor DST ($2,500) vs Tampa Bay (Emeka Egbuka OUT)." },
-] as const;
+const DFS_CORE_POOL = STAGE0_VERIFIED_DFS_CORE_POOL;
 
 function clamp01(value: number): number {
   return value < 0 ? 0 : value > 1 ? 1 : value;
@@ -626,37 +603,37 @@ export function RedlineWorld({
               <div className="locked-blur-item">
                 <div className="dfs-lineup-grid">
                   <div className="dfs-box">
-                    <span className="dfs-tag">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · 191.55 MEAN PTS)</span>
+                    <span className="dfs-tag">OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,900 · REDACTED UNTIL UNLOCK)</span>
                     <ul>
-                      <li><b>QB</b> Dak Prescott (DAL) · $6,300 (23.47 pts)</li>
-                      <li><b>RB1</b> Jaylen Warren (PIT) · $6,600 (21.13 pts)</li>
-                      <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts)</li>
-                      <li><b>WR1</b> CeeDee Lamb (DAL) · $8,100 (27.77 pts)</li>
-                      <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
-                      <li><b>WR3</b> Tee Higgins (CIN) · $6,700 (24.95 pts)</li>
-                      <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts)</li>
-                      <li><b>FLEX</b> Greg Dulcich (MIA) · $3,200 (10.15 pts)</li>
-                      <li><b>DST</b> Jets DST (NYJ) · $2,800 (8.63 pts)</li>
+                      <li><b>QB</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>RB1</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>RB2</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>WR1</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>WR2</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>WR3</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>TE</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>FLEX</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>DST</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
                     </ul>
                   </div>
                   <div className="dfs-box">
-                    <span className="dfs-tag">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($50,000 · 286.54 P99 PTS)</span>
+                    <span className="dfs-tag">OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($50,000 · REDACTED UNTIL UNLOCK)</span>
                     <ul>
-                      <li><b>QB</b> Caleb Williams (CHI) · $6,100 (18.12 pts)</li>
-                      <li><b>RB1</b> James Cook III (BUF) · $7,900 (26.04 pts)</li>
-                      <li><b>RB2</b> Jonah Coleman (DEN) · $4,300 (22.18 pts)</li>
-                      <li><b>WR1</b> Jaxon Smith-Njigba (SEA) · $9,100 (25.36 pts)</li>
-                      <li><b>WR2</b> Zay Flowers (BAL) · $7,200 (27.98 pts)</li>
-                      <li><b>WR3</b> Rome Odunze (CHI) · $4,600 (10.27 pts)</li>
-                      <li><b>TE</b> Dallas Goedert (PHI) · $4,700 (25.29 pts)</li>
-                      <li><b>FLEX</b> Kalif Raymond (CHI) · $3,600 (7.88 pts)</li>
-                      <li><b>DST</b> Falcons DST (ATL) · $2,500 (6.23 pts)</li>
+                      <li><b>QB</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>RB1</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>RB2</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>WR1</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>WR2</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>WR3</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>TE</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>FLEX</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
+                      <li><b>DST</b> [REDACTED ON SERVER · UNLOCK DFS PACK]</li>
                     </ul>
                   </div>
                 </div>
-                <h3 className="sub-heading">16-Player Core Pool</h3>
+                <h3 className="sub-heading">14-Player Stage-0 Verified Core Pool Preview</h3>
                 <div className="fixture-list">
-                  {DFS_CORE_POOL.slice(0, 4).map((row) => (
+                  {DFS_CORE_POOL.slice(0, 2).map((row) => (
                     <div className="fixture-row" key={row.player}>
                       <span className="fixture-week">{row.pos}</span>
                       <div className="fixture-match">{row.player} <small>{row.sal} · {row.proj}</small></div>

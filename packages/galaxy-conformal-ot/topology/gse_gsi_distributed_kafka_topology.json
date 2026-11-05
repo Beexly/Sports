@@ -1,0 +1,48 @@
+{
+  "$schema": "https://science.institute/schemas/kafka-topology-v2.json",
+  "cluster_id": "gse-gsi-production-mesh-01",
+  "deployment_environment": "bare-metal-nvme-sriov",
+  "latency_slo_ms_500k_frames": 782,
+  "topics": {
+    "gse.telemetry.raw.v2": {
+      "partitions": 64,
+      "replication_factor": 3,
+      "configs": {
+        "cleanup.policy": "delete",
+        "retention.ms": 86400000,
+        "compression.type": "zstd",
+        "segment.bytes": 1073741824
+      }
+    },
+    "gsi.conformal.whitened.v2": {
+      "partitions": 64,
+      "replication_factor": 3,
+      "configs": {
+        "cleanup.policy": "delete",
+        "retention.ms": 28800000,
+        "compression.type": "zstd"
+      }
+    },
+    "gsi.triage.alerts.critical.v2": {
+      "partitions": 16,
+      "replication_factor": 3,
+      "configs": {
+        "cleanup.policy": "compact,delete",
+        "retention.ms": 604800000,
+        "compression.type": "zstd"
+      }
+    }
+  },
+  "flink_stateful_operators": {
+    "multi_frame_rolling_covariance_window": {
+      "frames_k": [4, 8, 12],
+      "cholesky_regularization_gamma": 0.15,
+      "state_backend": "rocksdb-nvme"
+    },
+    "conformal_quantile_calibrator": {
+      "nominal_coverage": 0.90,
+      "alpha": 0.10,
+      "pathological_strain_cone": true
+    }
+  }
+}

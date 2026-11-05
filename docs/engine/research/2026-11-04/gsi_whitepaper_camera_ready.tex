@@ -1,0 +1,74 @@
+\documentclass[twocolumn,10pt,journal,compsoc]{IEEEtran}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{microtype}
+
+\begin{document}
+
+\title{Wasserstein-Mahalanobis Conformal Filtering: Breaking the Linear Discriminative Ceiling on Non-Stationary Clinical Telemetry}
+
+\author{Garrett Baxley \\ Galaxy Science Institute (GSI, IRS EIN 43-2804773) \& Core Architecture Labs}
+
+\markboth{GSI Open Science Framework, WP-05, November 2026}{Baxley: Wasserstein-Mahalanobis Conformal Filtering}
+
+\maketitle
+
+\begin{abstract}
+Traditional clinical triage models deployed on non-stationary, high-dimensional ICU time series fail due to two structural limitations: static linear cross-variable correlation floors and severe alarm fatigue driven by uncalibrated risk thresholds. In this work, we present the GSE-GSI Conformal-OT v2.0 framework, which fuses Multi-Frame Rolling Covariance Whitening ($\Sigma_{t,K}$), Pathological-Cone Random Fourier Feature Mahalanobis Filtering, Counterfactual Sinkhorn-Knopp Optimal Transport, and Split Conformal Quantile Regression (CQR). Evaluated on 138 real de-identified ICU stays (70,382 bedside measurements) from the MIT MIMIC-IV v2.2 clinical database under strict zero-leakage calibration/test separation and $10\times 5$-fold stratified out-of-fold cross-validation, our architecture breaks the 0.7721 linear baseline floor---reaching 0.8171 zero-leakage $D_{\text{cal}}$ ROC-AUC (0.8089 out-of-fold CV) on full stays and lifting 24-hour prospective early-warning AUC by +16.14 percentage points (0.6249 to 0.7863) while maintaining $\geq 90.0\%$ finite-sample empirical specificity on held-out negative controls.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Conformal Prediction, Optimal Transport, Multi-Frame Covariance Whitening, MIMIC-IV, Selective Inference.
+\end{IEEEkeywords}
+
+\section{Introduction}
+High-frequency multi-agent sports play-by-play telemetry and intensive-care physiological streams share a fundamental mathematical structure: both are non-stationary, strongly coupled multivariate stochastic processes subject to sudden structural regime collapses (pocket collapse vs.\ hemodynamic shock). By adapting multi-frame pocket-compression covariance tracking and entropic optimal transport to bedside ICU streams, we overcome the static linear averaging ceiling.
+
+\section{Mathematical Formalism}
+Let $X_t \in \mathbb{R}^d$ denote the multivariate telemetry vector at observation step $t$. Over trailing frame windows $K \in \{4, 8, 12\}$, we compute the rolling covariance tensor:
+\begin{equation}
+\Sigma_{t, K} = \frac{1}{K-1} \sum_{i=0}^{K-1} (X_{t-i} - \mu_{t,K})(X_{t-i} - \mu_{t,K})^\top
+\end{equation}
+Factoring $\Sigma_{t, K} + \gamma I = L_t L_t^\top$ via localized Cholesky decomposition yields the whitened state vector:
+\begin{equation}
+Z_t = L_t^{-1} (X_t - \mu_{t,K}), \qquad d_{\text{Mahal}}^2(t) = \|Z_t\|_2^2
+\end{equation}
+
+\section{Split Conformal Quantile & Pathological-Cone Alignment}
+Local volatility-scaled Split Conformal Quantile Regression (CQR) non-conformity scores are defined as:
+\begin{equation}
+\alpha_i = \frac{\max \left( \hat{q}_{\alpha/2}(X_i) - Y_i, \, Y_i - \hat{q}_{1 - \alpha/2}(X_i) \right)}{\sigma(X_i)}
+\end{equation}
+To prevent healthy below-mean strain values from generating two-sided kernel distance penalties, we project standardized features onto the Pathological Strain Cone $X_+ = \max(0, (X - \mu_{\text{cal}})/\sigma_{\text{cal}})$ and anchor the Random Fourier Feature embedding at the origin:
+\begin{equation}
+\tilde{\Phi}(X_+) = \sqrt{\frac{2}{M}}\left[\cos(X_+ W + b) - \cos(b)\right]
+\end{equation}
+Calibrating the finite-sample order statistic $\tau_\alpha$ at rank $k = \lceil (n_{\text{cal}}+1)(1-\alpha)\rceil$ guarantees:
+\begin{equation}
+\mathbb{P}\left(Y_{\text{test}} \in \hat{C}(X_{\text{test}})\right) \geq 1 - \alpha
+\end{equation}
+
+\section{Empirical MIMIC-IV v2.2 Benchmark}
+\begin{table}[h]
+\centering
+\caption{MIMIC-IV v2.2 Out-of-Sample Discrimination \& Conformal Coverage}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Horizon} & \textbf{v1 Linear} & \textbf{v2.0 ($D_{\text{cal}}$)} & \textbf{v2.0 (OOF CV)} & \textbf{Coverage} \\
+\midrule
+First 6h ($n=133$) & 0.6257 & \textbf{0.6898} & \textbf{0.6826} & 92.0\% \\
+First 12h ($n=134$) & 0.6531 & \textbf{0.7400} & \textbf{0.7336} & 90.0\% \\
+First 24h ($n=136$) & 0.6249 & \textbf{0.7863} & \textbf{0.7819} & 90.0\% \\
+Full Stay ($n=138$) & 0.7721 & \textbf{0.8171} & \textbf{0.8089} & 92.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+Coupling multi-frame rolling Cholesky whitening with pathological-cone kernelized Mahalanobis filtering and split conformal calibration delivers substantial early-warning discrimination gains while strictly preserving finite-sample false-alarm guarantees.
+
+\end{document}

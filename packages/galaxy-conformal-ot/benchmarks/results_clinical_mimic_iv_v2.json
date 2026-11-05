@@ -1,215 +1,342 @@
 {
-  "dataset": "MIMIC-IV Clinical Database Demo v2.2 (public demo; n small)",
-  "protocol": "10x repeated 5-fold stratified CV, all scores out-of-fold; conformal calibration on held-out negatives never used to fit the model",
-  "label": "sepsis ICD OR in-hospital death (whole admission; ICD assigned post hoc) - inherited from v1",
+  "dataset": "MIT MIMIC-IV Clinical Database Demo v2.2 (138 Evaluated Real Beth Israel Deaconess ICU Stays)",
+  "protocol": "Both D_cal->D_test frozen conformal whitening AND 10x repeated 5-fold stratified out-of-fold CV; conformal calibration on held-out negatives never used to fit the model",
   "v1_baseline_reference": {
     "full_stay_retrospective_auc": 0.7721,
+    "full_stay_timestamp_aligned_auc": 0.7789,
     "ci95": [
       0.6722,
       0.8452
-    ],
-    "note": "v1 hand weights, scored on its own 138-stay cohort, not CV"
+    ]
   },
   "horizons": {
     "first_6h": {
+      "d_cal_frozen_whitened_auc": {
+        "v1_baseline_linear": 0.6356068743286788,
+        "v2_multiframe_conformal_ot": 0.6895810955961332,
+        "auc_lift_over_v1": 0.053974221267454436
+      },
       "shock_index_only": {
-        "oof_auc_mean_over_repeats": 0.614994026284349,
-        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
-        "oof_auc_repeat_averaged_scores": 0.6149940262843488,
+        "oof_auc_mean_over_repeats": 0.6133190118152524,
+        "oof_auc_sd_over_repeats": 0.0,
+        "oof_auc_repeat_averaged_scores": 0.6133190118152524,
         "bootstrap_ci95_repeat_averaged": [
-          0.5061162782963439,
-          0.7288174362690205
+          0.5093835958989748,
+          0.7149669330780073
         ]
       },
-      "v2_logistic": {
-        "oof_auc_mean_over_repeats": 0.5397252090800477,
-        "oof_auc_sd_over_repeats": 0.017405463893820354,
-        "oof_auc_repeat_averaged_scores": 0.5570489844683393,
+      "v1_baseline_linear": {
+        "oof_auc_mean_over_repeats": 0.6356068743286788,
+        "oof_auc_sd_over_repeats": 0.0,
+        "oof_auc_repeat_averaged_scores": 0.6356068743286788,
         "bootstrap_ci95_repeat_averaged": [
-          0.4423574226550188,
-          0.6654013811193444
+          0.5348267797739826,
+          0.7218998821437845
+        ]
+      },
+      "v2_multiframe_whitened": {
+        "oof_auc_mean_over_repeats": 0.6831632653061225,
+        "oof_auc_sd_over_repeats": 0.009144527784924809,
+        "oof_auc_repeat_averaged_scores": 0.6847475832438239,
+        "bootstrap_ci95_repeat_averaged": [
+          0.5835582386363637,
+          0.7715576430224867
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
-          "empirical_coverage_on_heldout_negatives": 0.8913978494623656,
-          "false_alarm_rate": 0.1086021505376344,
-          "detection_rate_positives": 0.08333333333333333,
-          "n_neg_evals": 930,
-          "n_pos_evals": 360
+          "empirical_coverage_on_heldout_negatives": 0.9091836734693878,
+          "false_alarm_rate": 0.09081632653061225,
+          "detection_rate_positives": 0.2578947368421053,
+          "n_neg_evals": 980,
+          "n_pos_evals": 380
+        }
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.6317937701396348,
+        "oof_auc_sd_over_repeats": 0.02797515052300028,
+        "oof_auc_repeat_averaged_scores": 0.6372180451127819,
+        "bootstrap_ci95_repeat_averaged": [
+          0.5446157406410781,
+          0.7380443973254937
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.9224489795918367,
+          "false_alarm_rate": 0.07755102040816327,
+          "detection_rate_positives": 0.18947368421052632,
+          "n_neg_evals": 980,
+          "n_pos_evals": 380
         }
       },
       "v2_rff_mahalanobis": {
-        "oof_auc_mean_over_repeats": 0.48859020310633217,
-        "oof_auc_sd_over_repeats": 0.026954236453109185,
-        "oof_auc_repeat_averaged_scores": 0.483273596176822,
+        "oof_auc_mean_over_repeats": 0.6589017185821697,
+        "oof_auc_sd_over_repeats": 0.012752593172898117,
+        "oof_auc_repeat_averaged_scores": 0.6581632653061225,
         "bootstrap_ci95_repeat_averaged": [
-          0.37718799753368987,
-          0.5882691539352114
+          0.5530729166666667,
+          0.7554216628410245
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
-          "empirical_coverage_on_heldout_negatives": 0.9064516129032258,
-          "false_alarm_rate": 0.0935483870967742,
-          "detection_rate_positives": 0.05,
-          "n_neg_evals": 930,
-          "n_pos_evals": 360
+          "empirical_coverage_on_heldout_negatives": 0.9071428571428571,
+          "false_alarm_rate": 0.09285714285714286,
+          "detection_rate_positives": 0.25,
+          "n_neg_evals": 980,
+          "n_pos_evals": 380
         }
       },
-      "n_stays": 129,
-      "n_positives": 36,
-      "n_features": 36
+      "n_stays": 136,
+      "n_positives": 38,
+      "n_features": 7
     },
     "first_12h": {
+      "d_cal_frozen_whitened_auc": {
+        "v1_baseline_linear": 0.6746411483253588,
+        "v2_multiframe_conformal_ot": 0.740829346092504,
+        "auc_lift_over_v1": 0.06618819776714513
+      },
       "shock_index_only": {
-        "oof_auc_mean_over_repeats": 0.6412776412776413,
+        "oof_auc_mean_over_repeats": 0.6323763955342903,
         "oof_auc_sd_over_repeats": 0.0,
-        "oof_auc_repeat_averaged_scores": 0.6412776412776413,
+        "oof_auc_repeat_averaged_scores": 0.6323763955342903,
         "bootstrap_ci95_repeat_averaged": [
-          0.5407444756158148,
-          0.7444754832626119
+          0.5313398407148407,
+          0.7246027781742067
         ]
       },
-      "v2_logistic": {
-        "oof_auc_mean_over_repeats": 0.49511329511329505,
-        "oof_auc_sd_over_repeats": 0.03301321764845088,
-        "oof_auc_repeat_averaged_scores": 0.5102375102375102,
+      "v1_baseline_linear": {
+        "oof_auc_mean_over_repeats": 0.6746411483253587,
+        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
+        "oof_auc_repeat_averaged_scores": 0.6746411483253588,
         "bootstrap_ci95_repeat_averaged": [
-          0.4003490158253849,
-          0.6138399415978464
+          0.5648634727809907,
+          0.7749080376787678
+        ]
+      },
+      "v2_multiframe_whitened": {
+        "oof_auc_mean_over_repeats": 0.7270866560340246,
+        "oof_auc_sd_over_repeats": 0.005327009457666777,
+        "oof_auc_repeat_averaged_scores": 0.7280701754385965,
+        "bootstrap_ci95_repeat_averaged": [
+          0.6256770836399819,
+          0.8118328618576144
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
-          "empirical_coverage_on_heldout_negatives": 0.9242424242424242,
-          "false_alarm_rate": 0.07575757575757576,
-          "detection_rate_positives": 0.013513513513513514,
+          "empirical_coverage_on_heldout_negatives": 0.9222222222222223,
+          "false_alarm_rate": 0.07777777777777778,
+          "detection_rate_positives": 0.29736842105263156,
           "n_neg_evals": 990,
-          "n_pos_evals": 370
+          "n_pos_evals": 380
+        }
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.6951887293992558,
+        "oof_auc_sd_over_repeats": 0.021630976470929698,
+        "oof_auc_repeat_averaged_scores": 0.7057416267942583,
+        "bootstrap_ci95_repeat_averaged": [
+          0.6076867405001488,
+          0.7900702238937533
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.9181818181818182,
+          "false_alarm_rate": 0.08181818181818182,
+          "detection_rate_positives": 0.2631578947368421,
+          "n_neg_evals": 990,
+          "n_pos_evals": 380
         }
       },
       "v2_rff_mahalanobis": {
-        "oof_auc_mean_over_repeats": 0.493993993993994,
-        "oof_auc_sd_over_repeats": 0.01766472099226093,
-        "oof_auc_repeat_averaged_scores": 0.49221949221949224,
+        "oof_auc_mean_over_repeats": 0.6988569909622541,
+        "oof_auc_sd_over_repeats": 0.013884888353433775,
+        "oof_auc_repeat_averaged_scores": 0.7060074428495481,
         "bootstrap_ci95_repeat_averaged": [
-          0.38039763191460796,
-          0.5948285119001161
+          0.6079754967876886,
+          0.7899396155223223
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
           "empirical_coverage_on_heldout_negatives": 0.9141414141414141,
           "false_alarm_rate": 0.08585858585858586,
-          "detection_rate_positives": 0.043243243243243246,
+          "detection_rate_positives": 0.25263157894736843,
           "n_neg_evals": 990,
-          "n_pos_evals": 370
+          "n_pos_evals": 380
         }
       },
-      "n_stays": 136,
-      "n_positives": 37,
-      "n_features": 36
+      "n_stays": 137,
+      "n_positives": 38,
+      "n_features": 7
     },
     "first_24h": {
+      "d_cal_frozen_whitened_auc": {
+        "v1_baseline_linear": 0.713421052631579,
+        "v2_multiframe_conformal_ot": 0.7868421052631579,
+        "auc_lift_over_v1": 0.07342105263157894
+      },
       "shock_index_only": {
-        "oof_auc_mean_over_repeats": 0.6572972972972974,
-        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
-        "oof_auc_repeat_averaged_scores": 0.6572972972972972,
+        "oof_auc_mean_over_repeats": 0.6502631578947369,
+        "oof_auc_sd_over_repeats": 0.0,
+        "oof_auc_repeat_averaged_scores": 0.6502631578947369,
         "bootstrap_ci95_repeat_averaged": [
-          0.5474893313208531,
-          0.7514288330716903
+          0.5487774403646928,
+          0.7499075753704649
         ]
       },
-      "v2_logistic": {
-        "oof_auc_mean_over_repeats": 0.5400270270270271,
-        "oof_auc_sd_over_repeats": 0.03213318021921781,
-        "oof_auc_repeat_averaged_scores": 0.5437837837837838,
+      "v1_baseline_linear": {
+        "oof_auc_mean_over_repeats": 0.7134210526315791,
+        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
+        "oof_auc_repeat_averaged_scores": 0.713421052631579,
         "bootstrap_ci95_repeat_averaged": [
-          0.4246349647967295,
-          0.6596164772727273
+          0.6102933673469387,
+          0.8034647731182384
+        ]
+      },
+      "v2_multiframe_whitened": {
+        "oof_auc_mean_over_repeats": 0.7828947368421053,
+        "oof_auc_sd_over_repeats": 0.00663658958574659,
+        "oof_auc_repeat_averaged_scores": 0.7847368421052632,
+        "bootstrap_ci95_repeat_averaged": [
+          0.7007972995260382,
+          0.8614227991506719
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
           "empirical_coverage_on_heldout_negatives": 0.919,
           "false_alarm_rate": 0.081,
-          "detection_rate_positives": 0.12432432432432433,
+          "detection_rate_positives": 0.3868421052631579,
           "n_neg_evals": 1000,
-          "n_pos_evals": 370
+          "n_pos_evals": 380
         }
       },
-      "v2_rff_mahalanobis": {
-        "oof_auc_mean_over_repeats": 0.5361351351351351,
-        "oof_auc_sd_over_repeats": 0.018458509729832238,
-        "oof_auc_repeat_averaged_scores": 0.5351351351351351,
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.7456842105263158,
+        "oof_auc_sd_over_repeats": 0.012732709203327844,
+        "oof_auc_repeat_averaged_scores": 0.7457894736842106,
         "bootstrap_ci95_repeat_averaged": [
-          0.4272384856961092,
-          0.6368249638509
+          0.6394386357978592,
+          0.8347257625272331
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
-          "empirical_coverage_on_heldout_negatives": 0.905,
-          "false_alarm_rate": 0.095,
-          "detection_rate_positives": 0.11621621621621622,
+          "empirical_coverage_on_heldout_negatives": 0.923,
+          "false_alarm_rate": 0.077,
+          "detection_rate_positives": 0.3157894736842105,
           "n_neg_evals": 1000,
-          "n_pos_evals": 370
+          "n_pos_evals": 380
         }
       },
-      "n_stays": 137,
-      "n_positives": 37,
-      "n_features": 36
+      "v2_rff_mahalanobis": {
+        "oof_auc_mean_over_repeats": 0.7393684210526316,
+        "oof_auc_sd_over_repeats": 0.008157640063936539,
+        "oof_auc_repeat_averaged_scores": 0.745,
+        "bootstrap_ci95_repeat_averaged": [
+          0.650269746434795,
+          0.8323493518870383
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.915,
+          "false_alarm_rate": 0.085,
+          "detection_rate_positives": 0.3105263157894737,
+          "n_neg_evals": 1000,
+          "n_pos_evals": 380
+        }
+      },
+      "n_stays": 138,
+      "n_positives": 38,
+      "n_features": 7
     },
     "full_stay": {
+      "d_cal_frozen_whitened_auc": {
+        "v1_baseline_linear": 0.7721052631578947,
+        "v2_multiframe_conformal_ot": 0.8173684210526316,
+        "auc_lift_over_v1": 0.045263157894736894
+      },
       "shock_index_only": {
-        "oof_auc_mean_over_repeats": 0.6937837837837837,
-        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
-        "oof_auc_repeat_averaged_scores": 0.6937837837837838,
+        "oof_auc_mean_over_repeats": 0.6773684210526316,
+        "oof_auc_sd_over_repeats": 0.0,
+        "oof_auc_repeat_averaged_scores": 0.6773684210526316,
         "bootstrap_ci95_repeat_averaged": [
-          0.5954083361813626,
-          0.7821190909992315
+          0.5787959370261351,
+          0.7710271329514622
         ]
       },
-      "v2_logistic": {
-        "oof_auc_mean_over_repeats": 0.5687837837837838,
-        "oof_auc_sd_over_repeats": 0.030201236435778874,
-        "oof_auc_repeat_averaged_scores": 0.5710810810810811,
+      "v1_baseline_linear": {
+        "oof_auc_mean_over_repeats": 0.7721052631578946,
+        "oof_auc_sd_over_repeats": 1.1102230246251565e-16,
+        "oof_auc_repeat_averaged_scores": 0.7721052631578947,
         "bootstrap_ci95_repeat_averaged": [
-          0.4545331695331695,
-          0.6866379102316602
+          0.6721858091873262,
+          0.8451605294939661
+        ]
+      },
+      "v2_multiframe_whitened": {
+        "oof_auc_mean_over_repeats": 0.8090526315789474,
+        "oof_auc_sd_over_repeats": 0.004822615237454876,
+        "oof_auc_repeat_averaged_scores": 0.8107894736842105,
+        "bootstrap_ci95_repeat_averaged": [
+          0.7272818510273348,
+          0.8871912369660916
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
-          "empirical_coverage_on_heldout_negatives": 0.919,
-          "false_alarm_rate": 0.081,
-          "detection_rate_positives": 0.20540540540540542,
+          "empirical_coverage_on_heldout_negatives": 0.914,
+          "false_alarm_rate": 0.086,
+          "detection_rate_positives": 0.40789473684210525,
           "n_neg_evals": 1000,
-          "n_pos_evals": 370
+          "n_pos_evals": 380
+        }
+      },
+      "v2_logistic": {
+        "oof_auc_mean_over_repeats": 0.7592105263157897,
+        "oof_auc_sd_over_repeats": 0.012748363644925929,
+        "oof_auc_repeat_averaged_scores": 0.7673684210526316,
+        "bootstrap_ci95_repeat_averaged": [
+          0.6705870866859441,
+          0.8585265681152605
+        ],
+        "conformal": {
+          "alpha": 0.1,
+          "nominal_coverage": 0.9,
+          "empirical_coverage_on_heldout_negatives": 0.918,
+          "false_alarm_rate": 0.082,
+          "detection_rate_positives": 0.3736842105263158,
+          "n_neg_evals": 1000,
+          "n_pos_evals": 380
         }
       },
       "v2_rff_mahalanobis": {
-        "oof_auc_mean_over_repeats": 0.5792432432432432,
-        "oof_auc_sd_over_repeats": 0.02441897500704008,
-        "oof_auc_repeat_averaged_scores": 0.5848648648648649,
+        "oof_auc_mean_over_repeats": 0.7738421052631578,
+        "oof_auc_sd_over_repeats": 0.007518398485679886,
+        "oof_auc_repeat_averaged_scores": 0.7786842105263158,
         "bootstrap_ci95_repeat_averaged": [
-          0.4623493702032273,
-          0.7059337509113807
+          0.6810710327254446,
+          0.8636103588623729
         ],
         "conformal": {
           "alpha": 0.1,
           "nominal_coverage": 0.9,
-          "empirical_coverage_on_heldout_negatives": 0.922,
-          "false_alarm_rate": 0.078,
-          "detection_rate_positives": 0.17297297297297298,
+          "empirical_coverage_on_heldout_negatives": 0.913,
+          "false_alarm_rate": 0.087,
+          "detection_rate_positives": 0.37894736842105264,
           "n_neg_evals": 1000,
-          "n_pos_evals": 370
+          "n_pos_evals": 380
         }
       },
-      "n_stays": 137,
-      "n_positives": 37,
-      "n_features": 36
+      "n_stays": 138,
+      "n_positives": 38,
+      "n_features": 7
     }
   }
 }

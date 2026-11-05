@@ -36,6 +36,19 @@ export function isWaitlistWelcomeEmailEnabled(env: Env = process.env): boolean {
 export interface WaitlistWelcomeEmail {
   readonly subject: string;
   readonly body: string;
+  readonly headers?: Readonly<Record<string, string>>;
+}
+
+/**
+ * RFC 8058 / Gmail / Yahoo 2024+ one-click unsubscribe headers.
+ */
+export function buildWaitlistWelcomeHeaders(
+  unsubscribeEmail: string = SUPPORT_EMAIL,
+): Readonly<Record<string, string>> {
+  return Object.freeze({
+    "List-Unsubscribe": `<mailto:${unsubscribeEmail}?subject=unsubscribe>, <https://www.galaxysportsedge.com/api/waitlist/unsubscribe>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+  });
 }
 
 /**
@@ -67,6 +80,7 @@ not be sent anything else in the meantime.
 — Galaxy Sports Edge
 We detect. You decide.
 `,
+    headers: buildWaitlistWelcomeHeaders(SUPPORT_EMAIL),
   };
 }
 

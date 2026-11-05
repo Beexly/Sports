@@ -354,6 +354,44 @@ export async function routeFullFourStage(
   return stageD(stageCResults, { tauHatCoach: opts.tauHatCoach });
 }
 
+/**
+ * Zero-DB In-Memory 4-Stage Cognitive Router over the compiled Thousand-Equation Matrix.
+ * Evaluates 288-bit context mask -> signed displacement conditioning -> Stage C Spectral
+ * Cluster Orthogonalization -> Stage D Jacobian Coupling & Positive-Part James-Stein Shrinkage.
+ */
+export function routeInMemoryFourStage(
+  signals: readonly Signal[],
+  opts: {
+    readonly topK?: number;
+    readonly stageCLimit?: number;
+    readonly clusterRedundancyGamma?: number;
+    readonly tauHatCoach?: number;
+  } = {},
+): StageDCoupledResult & { readonly contextMask: Uint32Array } {
+  const mask = buildContextMask(signals);
+  // Lazy-import via synchronous ESM module function to avoid circular top-level init
+  const candidates = selectCandidatePremisesFromLoadedMatrix(mask, signals, opts.topK ?? STAGE_B_LIMIT);
+  const stageCResults = stageC(candidates, {
+    limit: opts.stageCLimit ?? STAGE_C_LIMIT,
+    clusterRedundancyGamma: opts.clusterRedundancyGamma,
+  });
+  const dRes = stageD(stageCResults, { tauHatCoach: opts.tauHatCoach });
+  return {
+    ...dRes,
+    contextMask: mask,
+  };
+}
+
+import { selectCandidatePremisesByContextMask } from "./thousand-equation-registry.js";
+
+function selectCandidatePremisesFromLoadedMatrix(
+  mask: Uint32Array,
+  signals: readonly Signal[],
+  topK: number,
+) {
+  return selectCandidatePremisesByContextMask(mask, { topK, signals });
+}
+
 // ============================================================================
 // QUAD-ENGINE CROSSWALK INTEGRATION (Task 1 & 2)
 // ============================================================================

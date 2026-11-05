@@ -52,6 +52,7 @@ import {
 import { validateFeatureAgainstMisleadingStats } from "../../packages/prediction-engine/src/nfl/x-situational-80-rules.js";
 import {
   calibrateGseProbability,
+  calibrateMarketFamilyProbability,
   signCallSheetTickets,
   type MarketQuoteForCall,
 } from "../../packages/prediction-engine/src/public-baseline/calibration-map.js";
@@ -377,6 +378,225 @@ const WEEK8_SLATE: readonly Week8GameSpec[] = [
   },
 ];
 
+const WEEK9_SLATE: readonly Week8GameSpec[] = [
+  {
+    espnEventId: "401873041",
+    slug: "jax-bal-tnf",
+    away: "JAX",
+    home: "BAL",
+    window: "Thursday Night Football",
+    kickoff: "11/5 - 8:15 PM EST",
+    venue: "M&T Bank Stadium (Outdoor Grass)",
+    isIndoor: false,
+    isTurf: false,
+    isShortWeekRoad: true,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 9,
+    tempF: 51,
+    marketSpreadHome: -3.5,
+    marketTotal: 43.5,
+  },
+  {
+    espnEventId: "401873042",
+    slug: "no-car",
+    away: "NO",
+    home: "CAR",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "Bank of America Stadium (Outdoor Turf)",
+    isIndoor: false,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: true,
+    windMph: 7,
+    tempF: 63,
+    marketSpreadHome: 3.5,
+    marketTotal: 43.5,
+  },
+  {
+    espnEventId: "401873043",
+    slug: "lac-cle",
+    away: "LAC",
+    home: "CLE",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "Huntington Bank Field (Outdoor Grass)",
+    isIndoor: false,
+    isTurf: false,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 14,
+    tempF: 46,
+    marketSpreadHome: 1.5,
+    marketTotal: 41.5,
+  },
+  {
+    espnEventId: "401873044",
+    slug: "was-nyg",
+    away: "WAS",
+    home: "NYG",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "MetLife Stadium (Outdoor Turf)",
+    isIndoor: false,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: true,
+    windMph: 10,
+    tempF: 52,
+    marketSpreadHome: 3.5,
+    marketTotal: 42.5,
+  },
+  {
+    espnEventId: "401873045",
+    slug: "mia-buf",
+    away: "MIA",
+    home: "BUF",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "Highmark Stadium (Outdoor Turf)",
+    isIndoor: false,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: true,
+    windMph: 12,
+    tempF: 45,
+    marketSpreadHome: -6.0,
+    marketTotal: 49.5,
+  },
+  {
+    espnEventId: "401873046",
+    slug: "lv-cin",
+    away: "LV",
+    home: "CIN",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "Paycor Stadium (Outdoor Turf)",
+    isIndoor: false,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 8,
+    tempF: 54,
+    marketSpreadHome: -7.0,
+    marketTotal: 45.5,
+  },
+  {
+    espnEventId: "401873047",
+    slug: "den-ten",
+    away: "DEN",
+    home: "TEN",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "Nissan Stadium (Outdoor Turf)",
+    isIndoor: false,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 7,
+    tempF: 61,
+    marketSpreadHome: 3.0,
+    marketTotal: 40.5,
+  },
+  {
+    espnEventId: "401873048",
+    slug: "dal-atl",
+    away: "DAL",
+    home: "ATL",
+    window: "Sunday Early 1:00 PM ET",
+    kickoff: "11/8 - 1:00 PM EST",
+    venue: "Mercedes-Benz Stadium (Indoor Turf)",
+    isIndoor: true,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 0,
+    tempF: 72,
+    marketSpreadHome: -3.0,
+    marketTotal: 51.5,
+  },
+  {
+    espnEventId: "401873049",
+    slug: "chi-ari",
+    away: "CHI",
+    home: "ARI",
+    window: "Sunday Late 4:05 PM ET",
+    kickoff: "11/8 - 4:05 PM EST",
+    venue: "State Farm Stadium (Indoor Grass)",
+    isIndoor: true,
+    isTurf: false,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 0,
+    tempF: 72,
+    marketSpreadHome: -1.0,
+    marketTotal: 44.5,
+  },
+  {
+    espnEventId: "401873050",
+    slug: "det-gb",
+    away: "DET",
+    home: "GB",
+    window: "Sunday Late 4:25 PM ET",
+    kickoff: "11/8 - 4:25 PM EST",
+    venue: "Lambeau Field (Outdoor Grass)",
+    isIndoor: false,
+    isTurf: false,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: true,
+    windMph: 13,
+    tempF: 43,
+    marketSpreadHome: 2.5,
+    marketTotal: 48.5,
+  },
+  {
+    espnEventId: "401873051",
+    slug: "lar-sea",
+    away: "LAR",
+    home: "SEA",
+    window: "Sunday Late 4:25 PM ET",
+    kickoff: "11/8 - 4:25 PM EST",
+    venue: "Lumen Field (Outdoor Turf)",
+    isIndoor: false,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: true,
+    windMph: 10,
+    tempF: 50,
+    marketSpreadHome: 1.5,
+    marketTotal: 48.0,
+  },
+  {
+    espnEventId: "401873052",
+    slug: "ind-min",
+    away: "IND",
+    home: "MIN",
+    window: "Sunday Night Football",
+    kickoff: "11/8 - 8:20 PM EST",
+    venue: "U.S. Bank Stadium (Indoor Turf)",
+    isIndoor: true,
+    isTurf: true,
+    isShortWeekRoad: false,
+    isHighAltitudeDenver: false,
+    isDivisional: false,
+    windMph: 0,
+    tempF: 72,
+    marketSpreadHome: -5.0,
+    marketTotal: 46.5,
+  },
+];
+
 interface LocalPlayerInjuryRecord {
   readonly playerId: string;
   readonly playerName: string;
@@ -507,7 +727,15 @@ function logit(p: number): number {
   return Math.log(c / (1 - c));
 }
 
-const PIPELINE_WEEK = 8;
+const cliWeekIdx = process.argv.indexOf("--week");
+const PIPELINE_WEEK = cliWeekIdx >= 0 && process.argv[cliWeekIdx + 1]
+  ? Number(process.argv[cliWeekIdx + 1])
+  : 9;
+const ACTIVE_SLATE: readonly Week8GameSpec[] = PIPELINE_WEEK === 8 ? WEEK8_SLATE : WEEK9_SLATE;
+const ACTIVE_OUT_PATH =
+  PIPELINE_WEEK === 8
+    ? OUT_PATH
+    : path.join(REPO_ROOT, "data/engine/nfl_2026_w9_five_stage_engine_verdicts.json");
 const STAGE0_CONFIG_PATH = path.join(
   REPO_ROOT,
   "data/nflverse/week9_live_roster_transactions_and_starters_2026.json",
@@ -578,14 +806,14 @@ function main() {
   );
 
   // Stage 1/2A: Generate Tuesday Pure-Football Master Lock & Advance to Thursday Injury Lock
-  const weeklyGamesInput: WeeklyGameInput[] = WEEK8_SLATE.map((g) => {
+  const weeklyGamesInput: WeeklyGameInput[] = ACTIVE_SLATE.map((g) => {
     const hmStaff = COACH_32_STAFF_PROFILES[g.home] ?? COACH_32_STAFF_PROFILES.GB!;
     const awStaff = COACH_32_STAFF_PROFILES[g.away] ?? COACH_32_STAFF_PROFILES.CAR!;
     return {
       gameId: g.slug,
       homeTeam: g.home,
       awayTeam: g.away,
-      week: 8,
+      week: PIPELINE_WEEK,
       coachSupport: 0.5,
       neutralPassRate: 0.56,
       staffAggression: hmStaff.staffAggression,
@@ -611,8 +839,8 @@ function main() {
 
   const tuesdayLock = generateTuesdayMasterLock({
     season: 2026,
-    week: 8,
-    lockedAtIso: "2026-10-27T09:00:00Z",
+    week: PIPELINE_WEEK,
+    lockedAtIso: PIPELINE_WEEK === 9 ? "2026-11-03T09:00:00Z" : "2026-10-27T09:00:00Z",
     games: weeklyGamesInput,
   });
 
@@ -624,7 +852,7 @@ function main() {
       readonly awayInjuryPointsDelta?: number;
     }
   > = {};
-  for (const g of WEEK8_SLATE) {
+  for (const g of ACTIVE_SLATE) {
     const hmInj = teamInjuriesMap.get(g.home) ?? [];
     const awInj = teamInjuriesMap.get(g.away) ?? [];
     byGameIdAdvance[g.slug] = {
@@ -640,14 +868,14 @@ function main() {
 
   const thursdayLock = advanceWeeklyLockWithInjuries(tuesdayLock, {
     version: "v3.0",
-    recordedAtIso: "2026-10-29T16:30:00Z",
+    recordedAtIso: PIPELINE_WEEK === 9 ? "2026-11-04T18:30:00Z" : "2026-10-29T16:30:00Z",
     byGameId: byGameIdAdvance,
   } satisfies AdvanceInjuryInput);
 
   const verdictsByGame: Record<string, any> = {};
   const mindFeedRecords: string[] = [];
 
-  for (const g of WEEK8_SLATE) {
+  for (const g of ACTIVE_SLATE) {
     const awTend = trendsTeams[g.away] ?? {};
     const hmTend = trendsTeams[g.home] ?? {};
     const homeStaff = COACH_32_STAFF_PROFILES[g.home] ?? COACH_32_STAFF_PROFILES.GB!;
@@ -1085,6 +1313,9 @@ function main() {
     const hmWr1Line = Math.max(24.5, Math.round(Number(hmTend.wr1?.ypg ?? 52.5)) - 0.5);
     const rawWr1Prob = 0.615;
     const calWr1Prob = calibrateGseProbability(rawWr1Prob);
+    const spreadHeadCal = calibrateMarketFamilyProbability(st5.posteriorProbHome, "SPREAD");
+    const totalHeadCal = calibrateMarketFamilyProbability(st5.posteriorProbOver, "TOTAL");
+    const propHeadCal = calibrateMarketFamilyProbability(rawWr1Prob, "PLAYER_PROP");
     const signedTickets = signCallSheetTickets(
       [
         {
@@ -1321,6 +1552,11 @@ function main() {
       },
       stage5_calibration_and_copula_gate: {
         isotonic_calibrated_sample_prob: calWr1Prob,
+        market_family_heads: {
+          spread: spreadHeadCal,
+          total: totalHeadCal,
+          player_prop: propHeadCal,
+        },
         sgp_clayton_qb_wr_joint_at_56_55: Number(sgpJointQbWr.toFixed(4)),
         sgp_three_leg_frechet_joint: sgpJoint3Leg,
         sgp_copula_lift_pp: Number(sgpLiftPp.toFixed(2)),
@@ -1347,24 +1583,25 @@ function main() {
 
   const outputPayload = {
     schema: "gse_five_stage_engine_verdicts.v1",
-    generated_at: "2026-10-29T16:30:00Z",
+    generated_at: PIPELINE_WEEK === 9 ? "2026-11-04T18:30:00Z" : "2026-10-29T16:30:00Z",
     season: 2026,
-    week: 8,
-    total_games: WEEK8_SLATE.length,
+    week: PIPELINE_WEEK,
+    total_games: ACTIVE_SLATE.length,
     stages_verified: [
-      "Stage 1: Real 2026 W1-W7 Coaching & Film Tendencies + Active Week 8 Injuries (injuries_2026.csv)",
-      "Stage 2: Full-Game Snap-by-Snap JEV Decision Spine (166 live snaps on CAR@GB) + 10,000-World Coach Drive Simulator + CUDA Entropy Probe",
+      `Stage 0: Live Week ${PIPELINE_WEEK} Roster, Transaction & Confirmed QB1 Gate (${stage0.asOf})`,
+      "Stage 1: Real 2026 W1-W8 Coaching & Film Tendencies + Active Injuries (injuries_2026.csv)",
+      "Stage 2: Full-Game Snap-by-Snap JEV Decision Spine + 10,000-World Coach Drive Simulator + CUDA Entropy Probe",
       "Stage 3: 4-Stage Cognitive Router (288-bit Context Mask -> Stage C Spectral Cluster Orthogonalization -> Stage D Jacobian Coupling & James-Stein Shrinkage)",
       "Stage 4: Master Situational Reasoning Overlay + Cholesky Whitening + 80-Rule Misleading-Stat Firewall",
-      "Stage 5: Class B Shin De-Vig + Isotonic Calibration Map + Contradiction Gate + Clayton SGP Copula",
+      "Stage 5: Class B Shin De-Vig + Per-Market Calibration Heads + Contradiction Gate + Clayton SGP Copula",
     ],
     games: verdictsByGame,
   };
 
-  fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
-  fs.writeFileSync(OUT_PATH, JSON.stringify(outputPayload, null, 2), "utf-8");
+  fs.mkdirSync(path.dirname(ACTIVE_OUT_PATH), { recursive: true });
+  fs.writeFileSync(ACTIVE_OUT_PATH, JSON.stringify(outputPayload, null, 2), "utf-8");
   console.log(
-    `[GSE 5-STAGE ENGINE PIPELINE COMPLETE] Wrote ${WEEK8_SLATE.length} game verdicts -> ${OUT_PATH}`,
+    `[GSE 5-STAGE ENGINE PIPELINE COMPLETE] Wrote ${ACTIVE_SLATE.length} Week ${PIPELINE_WEEK} game verdicts -> ${ACTIVE_OUT_PATH}`,
   );
 }
 

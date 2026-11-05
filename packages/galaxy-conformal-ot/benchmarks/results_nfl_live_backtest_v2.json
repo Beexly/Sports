@@ -1,0 +1,31 @@
+{
+  "schema": "gse.nfl_live_backtest_rig.v2",
+  "total_snaps_evaluated": 175,
+  "calibration_summary": {
+    "n_calibration": 75,
+    "alpha": 0.1,
+    "target_coverage": 0.9,
+    "conformal_tau": 30.277161606542926
+  },
+  "stable_pocket_metrics": {
+    "mf_mahal_p90": 8.281951888244066,
+    "mf_mahal_max": 73.76700753827556,
+    "mf_cqr_p90": 2.1391831686872385,
+    "mf_pocket_compression": 0.9986748314610839,
+    "mf_logdet_drop": 1.0365499260172095
+  },
+  "fourth_quarter_collapse_metrics": {
+    "mf_mahal_p90": 10.355707649699673,
+    "mf_mahal_max": 2337.6405216530998,
+    "mf_cqr_p90": 2.263068869811469,
+    "mf_pocket_compression": 0.9993319211698394,
+    "mf_logdet_drop": 1.0032183582369387
+  },
+  "mahalanobis_surge_ratio": 1.2504,
+  "critical_pocket_shock_snaps_detected": 0,
+  "official_new_engine_ledger_summary": {
+    "record": "38-13-1",
+    "win_pct": 74.5,
+    "net_units": 22.85
+  }
+}

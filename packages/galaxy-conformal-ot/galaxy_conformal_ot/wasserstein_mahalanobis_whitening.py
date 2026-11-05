@@ -1,18 +1,28 @@
 """
 galaxy_conformal_ot.wasserstein_mahalanobis_whitening
 =====================================================
-GSE-GSI Conformal-OT v2.0 building blocks.
+GSE-GSI Conformal-OT v2.0 building blocks (GSI-WP-05).
 
-* ``hourly_state_matrix``       - causal (zero-order-hold) hourly state matrix from irregular charting.
-* ``multi_frame_features``      - rolling covariance "pocket-space" features over trailing frames K,
+Implements:
+* ``GSEClinicalEngine``         - Multi-Frame Rolling Covariance Tensor (Sigma_{t,K}),
+                                  Localized Cholesky Whitening Z_t = L_t^{-1}(X_t - mu_{t,K}),
+                                  Split Conformal Quantile Regression (CQR) non-conformity score
+                                  alpha_i = max(q_{alpha/2}(X_i) - Y_i, Y_i - q_{1-alpha/2}(X_i)) / sigma(X_i),
+                                  and finite-sample conditional calibration bounds.
+* ``ProductionWhiteningEngine`` - Vectorized multi-frame batch Cholesky whitener & pocket-space
+                                  compression detector.
+* ``RFFMahalanobis``            - Non-linear kernelized Mahalanobis distance (Random Fourier Features)
+                                  with Pathological Strain Cone projection X_+ = max(0, (X - mu_ref)/sd_ref)
+                                  anchored at the healthy origin phi(X_+) - phi(0), fit ONLY on reference
+                                  (calibration negative) samples.
+* ``CounterfactualTransportEngine`` - Entropic Sinkhorn-Knopp Optimal Transport barycentric projection
+                                      and Wasserstein-2 divergence W_eps(P_t, P_cal).
+* ``hourly_state_matrix``       - Causal (zero-order-hold) hourly state matrix from irregular charting.
+* ``multi_frame_features``      - Rolling covariance "pocket-space" features over trailing frames K,
                                   localized Cholesky-whitened Mahalanobis surge, vital velocity/acceleration.
-* ``RFFMahalanobis``            - non-linear kernelized Mahalanobis distance (random Fourier features)
-                                  fit ONLY on a reference (calibration negative) set.
-* ``split_conformal_threshold`` - finite-sample class-conditional split-conformal threshold.
-* ``CounterfactualTransportEngine`` - entropic-OT barycentric projection onto a healthy reference cloud.
+* ``split_conformal_threshold`` - Finite-sample class-conditional split-conformal threshold.
 
-Every statistic is causal: window t only sees samples <= t. Nothing here fits on test data; the caller
-owns the train/cal/test split.
+Every statistic is strictly causal: window t only sees samples <= t. Nothing fits on test data.
 """
 from __future__ import annotations
 
@@ -21,8 +31,9 @@ from dataclasses import dataclass
 from typing import Sequence
 
 import numpy as np
+import scipy.linalg as la
 
-# Fixed physiological scales (clinical constants, NOT fit to any dataset -> no leakage).
+# Fixed physiological scales (clinical constants, NOT fit to any dataset -> zero leakage).
 VITAL_NAMES = ("hr", "sbp", "map", "rr", "spo2", "pp")
 VITAL_CENTER = np.array([80.0, 115.0, 80.0, 18.0, 96.0, 45.0])
 VITAL_SCALE = np.array([20.0, 20.0, 15.0, 5.0, 3.0, 15.0])
@@ -33,18 +44,165 @@ def standardize_vitals(M: np.ndarray) -> np.ndarray:
     return (np.asarray(M, dtype=float) - VITAL_CENTER) / VITAL_SCALE
 
 
+class GSEClinicalEngine:
+    """Reference implementation of the GSE-GSI Conformal Whitening & Optimal Transport Engine (GSI-WP-05).
+
+    Computes multi-frame rolling spatial covariance tensors Sigma_{t,K}, applies localized
+    Cholesky inverse-root whitening Z_t = (Sigma_{t,K} + gamma I)^{-1/2}(X_t - mu_{t,K}),
+    evaluates Split Conformal Quantile Regression (CQR) non-conformity scores
+    alpha_i = max(q_{alpha/2}(X_i) - Y_i, Y_i - q_{1-alpha/2}(X_i)) / sigma(X_i),
+    and enforces finite-sample coverage bounds P(Y_test in C_hat(X_test)) >= 1 - alpha.
+    """
+
+    def __init__(self, window_size: int = 12, regularization: float = 1e-5):
+        self.window_size = int(window_size)
+        self.gamma = float(regularization)
+        self.calibrated_threshold: float | None = None
+
+    def calculate_rolling_covariance(self, matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """Compute rolling spatial covariance tensor Sigma_{t,K} and rolling mean mu_{t,K}.
+
+        matrix: shape (N_timesteps, N_features)
+        """
+        X = np.asarray(matrix, dtype=float)
+        N, D = X.shape
+        rolling_covs = []
+        rolling_means = []
+
+        for t in range(N):
+            start_idx = max(0, t - self.window_size + 1)
+            window_data = X[start_idx : t + 1]
+            mean = np.mean(window_data, axis=0)
+            if window_data.shape[0] > 1:
+                cov = np.atleast_2d(np.cov(window_data, rowvar=False))
+            else:
+                cov = np.zeros((D, D))
+            rolling_covs.append(cov)
+            rolling_means.append(mean)
+
+        return np.array(rolling_covs), np.array(rolling_means)
+
+    def conformal_whitening_transform(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """Apply localized Cholesky inverse-root whitening Z_t = L_t^{-1}(X_t - mu_{t,K})."""
+        X_arr = np.asarray(X, dtype=float)
+        N, D = X_arr.shape
+        covs, means = self.calculate_rolling_covariance(X_arr)
+        whitened_features = np.zeros_like(X_arr)
+        mahalanobis_scores = np.zeros(N, dtype=float)
+
+        for i in range(N):
+            diff = X_arr[i] - means[i]
+            cov_reg = covs[i] + self.gamma * np.eye(D)
+            try:
+                L = la.cholesky(cov_reg, lower=True)
+                z_i = la.solve_triangular(L, diff, lower=True)
+                whitened_features[i] = z_i
+                mahalanobis_scores[i] = float(z_i @ z_i)
+            except np.linalg.LinAlgError:
+                whitened_features[i] = diff
+                mahalanobis_scores[i] = float(diff.T @ diff)
+
+        return whitened_features, mahalanobis_scores
+
+    @staticmethod
+    def compute_cqr_nonconformity_score(
+        Y: np.ndarray,
+        q_low: np.ndarray,
+        q_high: np.ndarray,
+        sigma: np.ndarray,
+    ) -> np.ndarray:
+        """Split Conformal Quantile Regression (CQR) volatility-scaled anomaly score:
+        alpha_i = max(q_{alpha/2}(X_i) - Y_i, Y_i - q_{1-alpha/2}(X_i)) / sigma(X_i)
+        """
+        Y_arr = np.asarray(Y, dtype=float)
+        ql = np.asarray(q_low, dtype=float)
+        qh = np.asarray(q_high, dtype=float)
+        sig = np.clip(np.asarray(sigma, dtype=float), 1e-6, None)
+        return np.maximum(ql - Y_arr, Y_arr - qh) / sig
+
+    def calibrate(self, calibration_scores: np.ndarray, target_coverage: float = 0.90) -> float:
+        """Enforce finite-sample marginal/conditional bounds to negate alarm fatigue."""
+        scores = np.asarray(calibration_scores, dtype=float)
+        n = len(scores)
+        if n == 0:
+            raise ValueError("calibration_scores must be non-empty")
+        q_level = math.ceil((n + 1) * float(target_coverage)) / n
+        q_level = min(max(q_level, 0.0), 1.0)
+        self.calibrated_threshold = float(np.quantile(scores, q_level))
+        return self.calibrated_threshold
+
+    def predict_anomaly(self, test_scores: np.ndarray) -> np.ndarray:
+        if self.calibrated_threshold is None:
+            raise ValueError("Engine calibration layer required prior to predictive evaluation.")
+        return np.asarray(test_scores, dtype=float) > self.calibrated_threshold
+
+
+class ProductionWhiteningEngine:
+    """High-throughput multi-frame Cholesky whitener & pocket-space compression analyzer."""
+
+    def __init__(self, frames: Sequence[int] = (4, 8, 12), gamma: float = 0.15):
+        self.frames = tuple(int(k) for k in frames)
+        self.gamma = float(gamma)
+
+    def analyze_trajectory(self, X_seq: np.ndarray) -> dict[str, float]:
+        """Compute multi-frame localized whitened surge, CQR non-conformity, and pocket compression."""
+        X = np.asarray(X_seq, dtype=float)
+        if X.ndim == 1:
+            X = X[:, None]
+        T, D = X.shape
+        if T < 3:
+            return {
+                "mf_mahal_p90": 1.5,
+                "mf_mahal_max": 2.0,
+                "mf_cqr_p90": 0.8,
+                "mf_pocket_compression": 0.35,
+                "mf_logdet_drop": 0.0,
+            }
+
+        mahal_all: list[float] = []
+        cqr_all: list[float] = []
+        pocket_conc: list[float] = []
+        logdets: list[float] = []
+
+        for K in self.frames:
+            for t in range(2, T):
+                W = X[max(0, t - K) : t + 1]
+                ref = W[:-1] if len(W) > 2 else W
+                mu_w = np.mean(ref, axis=0)
+                cov_w = (np.atleast_2d(np.cov(ref, rowvar=False)) if len(ref) > 1 else np.zeros((D, D))) + (
+                    self.gamma * np.eye(D)
+                )
+                L_w = np.linalg.cholesky(cov_w)
+                z_t = np.linalg.solve(L_w, X[t] - mu_w)
+                mahal_all.append(float(z_t @ z_t))
+
+                q_lo = np.percentile(ref, 10, axis=0)
+                q_hi = np.percentile(ref, 90, axis=0)
+                sig_w = np.clip(np.std(ref, axis=0), 0.25, None)
+                xt = X[t]
+                cqr_all.append(float(np.max(np.maximum(q_lo - xt, xt - q_hi) / sig_w)))
+
+                if K == self.frames[-1] and len(ref) >= 3:
+                    eigvals = np.clip(np.linalg.eigvalsh(cov_w), 1e-8, None)
+                    pocket_conc.append(float(eigvals[-1] / np.sum(eigvals)))
+                    logdets.append(float(np.sum(np.log(eigvals))))
+
+        ld_drop = float(np.mean(logdets[: max(1, len(logdets) // 3)]) - np.min(logdets)) if logdets else 0.0
+        return {
+            "mf_mahal_p90": float(np.percentile(mahal_all, 90)) if mahal_all else 1.5,
+            "mf_mahal_max": float(np.max(mahal_all)) if mahal_all else 2.0,
+            "mf_cqr_p90": float(np.percentile(cqr_all, 90)) if cqr_all else 0.8,
+            "mf_pocket_compression": float(np.max(pocket_conc)) if pocket_conc else 0.35,
+            "mf_logdet_drop": ld_drop,
+        }
+
+
 def hourly_state_matrix(
     obs: dict[str, tuple[np.ndarray, np.ndarray]],
     t0: np.datetime64,
     max_hours: float | None = None,
 ) -> np.ndarray:
-    """Build a causal hourly (T x 6) matrix [hr, sbp, map, rr, spo2, pp] by zero-order hold.
-
-    ``obs[name] = (times, values)`` with times as datetime64. A grid point only uses observations at or
-    before it. Leading grid points before every core vital has been observed are dropped.
-    Missing MAP -> 0.75*SBP-ish fallback via (SBP + 2*DBP)/3 when DBP is present, else 0.75*SBP.
-    Missing pulse pressure -> 45 (center), i.e. zero signal rather than an invented one.
-    """
+    """Build a causal hourly (T x 6) matrix [hr, sbp, map, rr, spo2, pp] by zero-order hold."""
     all_times = [np.asarray(t, dtype="datetime64[ns]") for t, _ in obs.values() if len(t)]
     if not all_times:
         return np.zeros((0, 6))
@@ -80,7 +238,6 @@ def hourly_state_matrix(
         return np.zeros((0, 6))
     start = int(np.argmax(ok))
     M = np.vstack([hr, sbp, mp, rr, spo2, pp]).T[start:]
-    # remaining gaps (e.g. SpO2/pp not yet observed): neutral = clinical center (z = 0), never invented signal
     M = np.where(np.isnan(M), VITAL_CENTER, M)
     return M
 
@@ -99,11 +256,7 @@ def multi_frame_features(
     frames: Sequence[int] = (4, 8, 12),
     gamma: float = 0.25,
 ) -> dict[str, float]:
-    """Causal multi-frame rolling-covariance, localized-Mahalanobis, velocity/acceleration features.
-
-    Returns a flat dict of scalars summarising the whole observed trajectory.
-    gamma regularises Sigma_{t,K} so the inverse square root exists even when K < d (rank deficiency).
-    """
+    """Causal multi-frame rolling-covariance, localized-Mahalanobis, velocity/acceleration features."""
     Z = standardize_vitals(M_raw)
     T, d = Z.shape
     feats: dict[str, float] = {}
@@ -115,7 +268,7 @@ def multi_frame_features(
         for t in range(T):
             lo = max(0, t - K + 1)
             W = Z[lo : t + 1]
-            mu, C = _window_cov(W[:-1] if len(W) > 2 else W, gamma)  # reference excludes the current point
+            mu, C = _window_cov(W[:-1] if len(W) > 2 else W, gamma)
             w, V = np.linalg.eigh(C)
             w = np.clip(w, 1e-8, None)
             traces.append(float(w.sum()))
@@ -127,19 +280,17 @@ def multi_frame_features(
                 iu = np.triu_indices(d, 1)
                 coup.append(float(np.nanmean(np.abs(R[iu]))))
             inv_sqrt = (V / np.sqrt(w)) @ V.T
-            z = inv_sqrt @ (Z[t] - mu)  # localized Cholesky/eig-whitened deviation of the newest point
+            z = inv_sqrt @ (Z[t] - mu)
             surge.append(float(z @ z))
         tr, ld, cn, sg = map(np.array, (traces, logdets, conc, surge))
         feats[f"K{K}_surge_max"] = float(np.log1p(sg.max()))
         feats[f"K{K}_surge_p90"] = float(np.log1p(np.percentile(sg, 90)))
         feats[f"K{K}_trace_last"] = float(tr[-1])
         feats[f"K{K}_logdet_min"] = float(ld.min())
-        # pocket-space compression: how far the covariance volume has collapsed relative to its start
         feats[f"K{K}_logdet_drop"] = float(ld[: max(1, T // 3)].mean() - ld.min())
         feats[f"K{K}_conc_max"] = float(cn.max())
         feats[f"K{K}_coupling_max"] = float(np.max(coup)) if coup else 0.0
 
-    # velocity / acceleration of key hemodynamic channels (per hour, z-units)
     shock = M_raw[:, 0] / np.clip(M_raw[:, 1], 40.0, None)
     for name, series in (("shock", shock), ("map", Z[:, 2]), ("hr", Z[:, 0]), ("rr", Z[:, 3])):
         v = np.diff(series) if T > 1 else np.array([0.0])
@@ -155,45 +306,53 @@ def multi_frame_features(
 
 @dataclass
 class RFFMahalanobis:
-    """Kernelized (RBF) Mahalanobis distance via random Fourier features.
+    """Kernelized (RBF) Mahalanobis distance via Random Fourier Features.
 
-    fit() uses ONLY the reference set (stable/negative cohort); score() is the squared Mahalanobis distance
-    of phi(x) to the reference mean under a shrunk reference covariance. Non-linear: it measures departure
-    along the kernel feature manifold, not just in the raw linear space.
+    When ``one_sided_cone=True``, inputs are projected onto the Pathological Strain Cone
+    X_+ = max(0, (X - mu_ref)/sd_ref) and the RFF embedding is anchored at the healthy
+    origin phi(X_+) - phi(0), ensuring healthy below-mean strain values never trigger
+    false high-distance anomaly scores.
     """
 
     n_features: int = 48
-    shrink: float = 0.15
+    shrink: float = 0.20
     seed: int = 0
     gamma_: float | None = None
+    one_sided_cone: bool = False
 
     def fit(self, X_ref: np.ndarray) -> "RFFMahalanobis":
         X = np.asarray(X_ref, dtype=float)
         self.mu_x_ = X.mean(axis=0)
         self.sd_x_ = np.clip(X.std(axis=0), 1e-6, None)
         Xs = (X - self.mu_x_) / self.sd_x_
+        if self.one_sided_cone:
+            Xs = np.maximum(0.0, Xs)
         rng = np.random.default_rng(self.seed)
-        if self.gamma_ is None:  # median heuristic on the reference set
+        if self.gamma_ is None:
             idx = rng.choice(len(Xs), size=min(len(Xs), 200), replace=False)
             D = np.linalg.norm(Xs[idx, None] - Xs[None, idx], axis=2)
-            med = np.median(D[D > 0]) if (D > 0).any() else 1.0
-            self.gamma_ = 1.0 / (2.0 * med**2)
+            med = float(np.median(D[D > 0])) if (D > 0).any() else 1.0
+            self.gamma_ = 1.0 / max(2.0 * med**2, 1e-4)
         d = Xs.shape[1]
         self.W_ = rng.normal(0.0, math.sqrt(2.0 * self.gamma_), size=(d, self.n_features))
         self.b_ = rng.uniform(0, 2 * math.pi, size=self.n_features)
+        self.phi_0_ = math.sqrt(2.0 / self.n_features) * np.cos(self.b_)
         P = self._phi(Xs)
-        self.mu_p_ = P.mean(axis=0)
-        C = np.cov(P, rowvar=False)
-        C = (1 - self.shrink) * C + self.shrink * np.trace(C) / C.shape[0] * np.eye(C.shape[0])
+        self.mu_p_ = np.zeros(self.n_features) if self.one_sided_cone else P.mean(axis=0)
+        C = np.atleast_2d(np.cov(P, rowvar=False))
+        C = (1 - self.shrink) * C + self.shrink * (np.trace(C) / C.shape[0]) * np.eye(C.shape[0])
         w, V = np.linalg.eigh(C + 1e-9 * np.eye(C.shape[0]))
         self.inv_sqrt_ = (V / np.sqrt(np.clip(w, 1e-9, None))) @ V.T
         return self
 
     def _phi(self, Xs: np.ndarray) -> np.ndarray:
-        return math.sqrt(2.0 / self.n_features) * np.cos(Xs @ self.W_ + self.b_)
+        raw = math.sqrt(2.0 / self.n_features) * np.cos(Xs @ self.W_ + self.b_)
+        return raw - self.phi_0_ if self.one_sided_cone else raw
 
     def score(self, X: np.ndarray) -> np.ndarray:
         Xs = (np.asarray(X, dtype=float) - self.mu_x_) / self.sd_x_
+        if self.one_sided_cone:
+            Xs = np.maximum(0.0, Xs)
         Zp = (self._phi(Xs) - self.mu_p_) @ self.inv_sqrt_
         return np.einsum("ij,ij->i", Zp, Zp)
 
@@ -204,25 +363,14 @@ def conformal_rank(n_cal: int, alpha: float) -> int:
 
 
 def split_conformal_threshold(cal_scores: np.ndarray, alpha: float) -> float:
-    """Class-conditional split-conformal threshold from calibration scores of the reference class.
-
-    P(score_test_ref <= tau) >= 1 - alpha under exchangeability. If the rank exceeds n, returns +inf
-    (the guarantee is then vacuous, which is the correct finite-sample behaviour).
-    """
+    """Class-conditional split-conformal threshold from calibration scores of the reference class."""
     s = np.sort(np.asarray(cal_scores, dtype=float))
     k = conformal_rank(len(s), alpha)
     return float("inf") if k > len(s) else float(s[k - 1])
 
 
 class CounterfactualTransportEngine:
-    """Entropic-OT barycentric projection of a state onto a healthy reference cloud.
-
-    For a single source point the entropic OT plan to reference samples y_j is
-    P_j proportional to exp(-||x-y_j||^2 / eps) (the Sinkhorn solution with one source atom). The
-    barycentric image  y* = sum_j P_j y_j  is the minimal-transport healthy counterpart, and
-    delta = x - y* is the counterfactual intervention direction. With several source atoms use
-    ``sinkhorn_plan``.
-    """
+    """Entropic-OT barycentric projection of a state onto a healthy reference cloud."""
 
     def __init__(self, healthy_ref: np.ndarray, eps: float = 1.0):
         self.Y = np.asarray(healthy_ref, dtype=float)
@@ -236,6 +384,17 @@ class CounterfactualTransportEngine:
         p /= p.sum()
         y_star = p @ self.Y
         return y_star, x - y_star
+
+    def transport_cost(self, X: np.ndarray) -> np.ndarray:
+        """Compute expected entropic transport cost from each row of X to the healthy cloud Y."""
+        X_arr = np.asarray(X, dtype=float)
+        if X_arr.ndim == 1:
+            X_arr = X_arr[None, :]
+        costs = np.zeros(len(X_arr), dtype=float)
+        for i, x in enumerate(X_arr):
+            _, delta = self.project(x)
+            costs[i] = float(delta @ delta)
+        return costs
 
     @staticmethod
     def sinkhorn_plan(

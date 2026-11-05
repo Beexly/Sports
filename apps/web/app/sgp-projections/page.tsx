@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { getEntitledSgpRows } from "@/lib/engine/engine-live-bridge";
 
 export const metadata: Metadata = {
   title: "Correlated SGP Projections | Galaxy Sports Edge",
@@ -10,138 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/sgp-projections" },
 };
 
-const SGPS = [
-  {
-    matchup: "BAL @ BUF",
-    legs: "Zay Flowers 70+ Rec Yds · James Cook III 75+ Rush+Rec Yds · Josh Allen Anytime Rush TD",
-    fairOdds: "+252",
-    bookOdds: "+340",
-    edge: "+25.0%",
-    conf: "82/100",
-    free: true,
-    correlation: "Positive Game Script Synergies: High-pace red-zone rush equity correlates directly with intermediate passing volume.",
-  },
-  {
-    matchup: "TEN @ CIN",
-    legs: "CIN -11.5 · Tee Higgins 70+ Rec Yds · Samaje Perine Over 22.5 Rush Yds",
-    fairOdds: "+214",
-    bookOdds: "+290",
-    edge: "+24.2%",
-    conf: "79/100",
-    free: true,
-    correlation: "Blowout Script Elasticity: 1H separation via Higgins air yards transitions to Perine clock-killing 2H ground workload.",
-  },
-  {
-    matchup: "ARI @ DAL",
-    legs: "ARI +7.0 · Jake Ferguson Over 14.5 Rec Yds · Kendrick Bourne (ARI) Over 3.5 Receptions",
-    fairOdds: "+192",
-    bookOdds: "+275",
-    edge: "+28.4%",
-    conf: "78/100",
-    free: false,
-    correlation: "Underdog Trailing Volume: Brissett short-game distribution to Bourne paired with Ferguson red-zone checkdowns.",
-  },
-  {
-    matchup: "MIN @ DET",
-    legs: "Kyler Murray (MIN) Under 225.5 Pass Yds · Will Reichard Over 1.5 FGM · Isaac TeSlaa (DET) Over 17.5 Rec Yds",
-    fairOdds: "+143",
-    bookOdds: "+215",
-    edge: "+29.6%",
-    conf: "77/100",
-    free: false,
-    correlation: "Trench Stifling & Red-Zone Stall: DET interior pressure caps Murray passing while driving conservative FG attempts.",
-  },
-  {
-    matchup: "LV @ NYJ",
-    legs: "NYJ ML (-122) · Braelon Allen Anytime TD · Michael Mayer Over 2.5 Receptions",
-    fairOdds: "+135",
-    bookOdds: "+205",
-    edge: "+29.8%",
-    conf: "76/100",
-    free: false,
-    correlation: "Short Yardage Dominance: Allen goal-line conversion package coupled with Mayer intermediate checkdown funnel.",
-  },
-  {
-    matchup: "CLE @ PIT",
-    legs: "PIT -3.5 · Chris Boswell Over 1.5 FGM · Quinshon Judkins (CLE) Over 1.5 Receptions",
-    fairOdds: "+175",
-    bookOdds: "+245",
-    edge: "+25.5%",
-    conf: "75/100",
-    free: false,
-    correlation: "AFC North Defensive Slog: Field-position attrition yields Boswell kicks and Judkins checkdowns under blitz.",
-  },
-  {
-    matchup: "ATL @ TB",
-    legs: "Chris Godwin Jr. Over 3.5 Receptions · Chris Godwin Jr. Over 30.5 Rec Yds · Jahan Dotson (ATL) Over 21.5 Rec Yds",
-    fairOdds: "-120",
-    bookOdds: "+120",
-    edge: "+21.8%",
-    conf: "74/100",
-    free: false,
-    correlation: "Target Concentration Surge: Egbuka OUT channels 32% slot target share directly to Chris Godwin.",
-  },
-  {
-    matchup: "IND @ JAX",
-    legs: "Trevor Lawrence Over 1.5 Pass TDs · Jakobi Meyers Over 35.5 Rec Yds · Chris Rodriguez Jr. Over 6.5 Rush Att",
-    fairOdds: "+157",
-    bookOdds: "+225",
-    edge: "+26.5%",
-    conf: "73/100",
-    free: false,
-    correlation: "Balanced Red-Zone Efficiency: Goal line play-action creates TD distribution across Meyers and short yardage Rodriguez carries.",
-  },
-  {
-    matchup: "LAC @ LAR",
-    legs: "LA -6.5 · LAC Team Total Under 18.5 · Nate Landman Under 8.5 Tackles+Ast",
-    fairOdds: "+114",
-    bookOdds: "+175",
-    edge: "+28.5%",
-    conf: "72/100",
-    free: false,
-    correlation: "Pass-Heavy Incompletion Script: Reduced tackle opportunities on boundary deep shots while limiting total scoring.",
-  },
-  {
-    matchup: "KC @ DEN",
-    legs: "KC ML (-118) · Patrick Mahomes Over 225.5 Pass Yds · J.K. Dobbins (DEN) Over 21.5 Rush Yds",
-    fairOdds: "+132",
-    bookOdds: "+200",
-    edge: "+29.3%",
-    conf: "75/100",
-    free: false,
-    correlation: "High Altitude Pace: Mahomes transition game keeps clock moving while Dobbins maintains early-down baseline.",
-  },
-  {
-    matchup: "NE @ MIA",
-    legs: "Jaylen Wright Over 4.5 Rush Att · Jaylen Wright Over 14.5 Rush Yds · Efton Chism III (NE) Over 15.5 Rec Yds",
-    fairOdds: "-159",
-    bookOdds: "+100",
-    edge: "+22.4%",
-    conf: "74/100",
-    free: false,
-    correlation: "Specialty Role Floor: Wright rotational change-of-pace combined with Chism quick-separation slot routes.",
-  },
-  {
-    matchup: "PHI @ WAS",
-    legs: "Dyami Brown (WAS) Over 12.5 Rec Yds · Treylon Burks (WAS) Over 21.5 Rec Yds · Rachaad White (WAS) Anytime TD",
-    fairOdds: "+107",
-    bookOdds: "+160",
-    edge: "+25.6%",
-    conf: "73/100",
-    free: false,
-    correlation: "Vacated Target Cascade: Washington perimeter redistributions against injured Philadelphia secondary.",
-  },
-  {
-    matchup: "CHI @ SEA",
-    legs: "CHI ML (+142) · Kalif Raymond (CHI) Over 21.5 Rec Yds · Rome Odunze (CHI) Over 2.5 Receptions",
-    fairOdds: "+165",
-    bookOdds: "+280",
-    edge: "+43.4%",
-    conf: "76/100",
-    free: false,
-    correlation: "Chicago Upset Pathway: Multi-receiver intermediate conversions beating Seattle single-high shell.",
-  },
-];
+const SGPS = getEntitledSgpRows(false);
 
 export default function SgpProjectionsPage(): JSX.Element {
   return (

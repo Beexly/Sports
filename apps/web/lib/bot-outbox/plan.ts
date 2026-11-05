@@ -82,6 +82,8 @@ export interface BotSettlementInput {
   topFactorsAtPublish: Array<{ factor: FactorKey; score: number }>;
   whatChanged: string;
   whatThisUpdates: string;
+  /** When true, settled post-game PREMIUM picks may publish a public W/L/P receipt via Muse/Motif. */
+  allowPostGamePremiumReceipt?: boolean;
 }
 
 export interface BotGatedSlateInput {
@@ -113,10 +115,10 @@ function blockedPublicationReason(
 function blockedSettlementReason(
   input: Pick<
     BotSettlementInput,
-    "tier" | "isPublished" | "isBootstrap" | "outcome" | "settledAt"
+    "tier" | "isPublished" | "isBootstrap" | "outcome" | "settledAt" | "allowPostGamePremiumReceipt"
   >,
 ): BotOutboxBlockedReason | null {
-  if (input.tier !== "FREE") return "premium-pick";
+  if (input.tier !== "FREE" && !input.allowPostGamePremiumReceipt) return "premium-pick";
   if (input.isBootstrap) return "bootstrap-data";
   if (!input.isPublished) return "unpublished-pick";
   if (input.outcome === "PENDING" || input.settledAt === null) return "pending-settlement";

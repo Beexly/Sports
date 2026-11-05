@@ -13,10 +13,148 @@
  *   - the same player+stat priced OVER and UNDER in the same signed set.
  * That is how the Brandin Cooks OVER/UNDER split is stopped at the source.
  */
+import * as fs from "node:fs"
+import * as path from "node:path"
 import { shinDevig } from "./devig.js"
 import type { Call, SignedTicket } from "./call-sheet.js"
 
 export type { SignedTicket }
+
+export type MarketCalibrationFamily =
+  | "MONEYLINE"
+  | "SPREAD"
+  | "TOTAL"
+  | "PLAYER_PROP"
+  | "DERIVATIVE_1Q_1H"
+
+export interface MarketCalibrationHeadSpec {
+  readonly method: string
+  readonly base_rate_brier_reference?: number
+  readonly max_classwise_ece?: number
+  readonly display_format: string
+  readonly first_quarter_script_discount?: number
+}
+
+const DEFAULT_HEAD_SPECS: Readonly<Record<MarketCalibrationFamily, MarketCalibrationHeadSpec>> = {
+  MONEYLINE: {
+    method: "platt_beta_conformal",
+    base_rate_brier_reference: 0.2342,
+    max_classwise_ece: 0.05,
+    display_format: "conviction_and_calibrated_prob",
+  },
+  SPREAD: {
+    method: "fwl_residualized_cqr",
+    base_rate_brier_reference: 0.249,
+    max_classwise_ece: 0.045,
+    display_format: "conviction_rating_only_no_fake_percent",
+  },
+  TOTAL: {
+    method: "poisson_normal_tail_cqr",
+    base_rate_brier_reference: 0.2495,
+    max_classwise_ece: 0.048,
+    display_format: "conviction_rating_only_no_fake_percent",
+  },
+  PLAYER_PROP: {
+    method: "empirical_bayes_cqr_scrimmage_gated",
+    display_format: "conviction_and_cqr_interval",
+  },
+  DERIVATIVE_1Q_1H: {
+    method: "sportsbook_alt_ladder_kernel",
+    first_quarter_script_discount: 0.14,
+    display_format: "conviction_rating",
+  },
+}
+
+let cachedHeads: Readonly<Record<MarketCalibrationFamily, MarketCalibrationHeadSpec>> | null = null
+
+export function loadMarketCalibrationHeads(): Readonly<
+  Record<MarketCalibrationFamily, MarketCalibrationHeadSpec>
+> {
+  if (cachedHeads) return cachedHeads
+  try {
+    const candidate = path.resolve(process.cwd(), "data/engine/market_calibration_heads_2026.json")
+    if (fs.existsSync(candidate)) {
+      const parsed = JSON.parse(fs.readFileSync(candidate, "utf-8"))
+      if (parsed?.heads) {
+        cachedHeads = { ...DEFAULT_HEAD_SPECS, ...parsed.heads }
+        return cachedHeads!
+      }
+    }
+  } catch {
+    // Fall back to deterministic in-memory spec if fs is unavailable
+  }
+  cachedHeads = DEFAULT_HEAD_SPECS
+  return cachedHeads
+}
+
+/**
+ * Calibrate a raw probability using the dedicated per-market head from
+ * `market_calibration_heads_2026.json` (never pooling Moneyline, Spread, Total, Props, 1Q/1H).
+ */
+export function calibrateMarketFamilyProbability(
+  rawProb: number,
+  family: MarketCalibrationFamily,
+): {
+  readonly calibratedProb: number
+  readonly convictionScore: number
+  readonly headMethod: string
+  readonly displayFormat: string
+} {
+  const heads = loadMarketCalibrationHeads()
+  const spec = heads[family] ?? DEFAULT_HEAD_SPECS[family]
+  const baseCal = calibrateGseProbability(rawProb)
+  let adjusted = baseCal
+  if (family === "SPREAD") {
+    // FWL-residualized spread head shrinks toward 0.50 coin-flip anchor slightly harder
+    adjusted = 0.5 + 0.92 * (baseCal - 0.5)
+  } else if (family === "TOTAL") {
+    adjusted = 0.5 + 0.9 * (baseCal - 0.5)
+  } else if (family === "DERIVATIVE_1Q_1H") {
+    const disc = spec.first_quarter_script_discount ?? 0.14
+    adjusted = 0.5 + (1 - disc) * (baseCal - 0.5)
+  }
+  const calibratedProb = Number(Math.min(0.9655, Math.max(0.05, adjusted)).toFixed(4))
+  const convictionScore = Math.round(Math.max(calibratedProb, 1 - calibratedProb) * 100)
+  return {
+    calibratedProb,
+    convictionScore,
+    headMethod: spec.method,
+    displayFormat: spec.display_format,
+  }
+}
+
+/**
+ * Brier Skill Score evaluated strictly against the empirical sample base rate
+ * yBar * (1 - yBar), never a hardcoded 0.25 coin flip.
+ */
+export function computeEmpiricalBaseRateBrierSkill(
+  predictions: readonly number[],
+  outcomes: readonly (0 | 1)[],
+): {
+  readonly brier: number
+  readonly empiricalBaseRate: number
+  readonly referenceBrier: number
+  readonly brierSkillScore: number
+} {
+  if (predictions.length === 0 || predictions.length !== outcomes.length) {
+    throw new Error("predictions and outcomes must be non-empty and equal length")
+  }
+  const n = predictions.length
+  const yBar = outcomes.reduce<number>((acc, y) => acc + y, 0) / n
+  const referenceBrier = Math.max(1e-9, yBar * (1 - yBar))
+  const brier =
+    predictions.reduce<number>((acc, p, idx) => {
+      const diff = p - outcomes[idx]!
+      return acc + diff * diff
+    }, 0) / n
+  const brierSkillScore = 1 - brier / referenceBrier
+  return {
+    brier: Number(brier.toFixed(6)),
+    empiricalBaseRate: Number(yBar.toFixed(6)),
+    referenceBrier: Number(referenceBrier.toFixed(6)),
+    brierSkillScore: Number(brierSkillScore.toFixed(6)),
+  }
+}
 
 export interface MarketQuoteForCall {
   readonly marketLabel: string

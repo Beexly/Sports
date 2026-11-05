@@ -265,6 +265,41 @@ Passes traveling > 20 air yards experience exponential trajectory deviation abov
 James-A. Goulet PMLCE (Ch 2-13):
 Rigorous state-space filtering, Bayesian inference, and variational approximations for real-time tracking of complex dynamic systems.
             """
+        },
+        {
+            "filename": "INDEX-MARKETING-SCIENCE-CANON-2026-11-04.md",
+            "doc_type": "marketing_science_canon",
+            "title": "Marketing Science & Customer-Base Valuation Canon (Fader/Hardie BG/NBD, BG/BB, Gamma-Gamma, Jin Adstock/Hill MMM, Kunzel X-Learner, Ascarza Retention Lift, Thaler Mental Accounting)",
+            "url": "file:///C:/Users/Garrett/Downloads/INDEX-MARKETING.md",
+            "equations": [
+                "EQ-MKT-BGNBD-PALIVE: P(alive | x, t_x, T) = [1 + 1_{x>0} (a / (b + x - 1)) ((alpha + T)/(alpha + t_x))^{r+x}]^{-1}",
+                "EQ-MKT-BGBB-DISCRETE: P(X(n)=x | p, theta) = C(n,x) p^x (1-p)^{n-x} (1-theta)^n + sum_{j=0}^{n-x-1} C(x+j, x) p^x (1-p)^j theta (1-theta)^{x+j}",
+                "EQ-MKT-GAMMA-GAMMA: E[M | p, q, gamma, m_x, x] = ((q - 1) / (p x + q - 1)) (gamma p / (q - 1)) + (p x / (p x + q - 1)) m_x",
+                "EQ-MKT-ADSTOCK-HILL: Hill(Adstock(x_t; alpha); K, S) = A_t^S / (K^S + A_t^S)",
+                "EQ-MKT-ASCARZA-LIFT: tau_hat(x) = E[Y(0) - Y(1) | X=x]"
+            ],
+            "text": """
+Marketing Science Canon (INDEX-MARKETING.md + 2026-11-04-MASTER-PULL Rounds 1 & 2):
+Covers Fader & Hardie BG/NBD, Pareto/NBD, Discrete-Time BG/BB, Gamma-Gamma spend model, Jin et al. Bayesian MMM with Geometric Adstock & Hill saturation, Kunzel et al. X-Learner / R-Learner CATE uplift, Ascarza (2018) retention futility law, and Thaler (1985) mental accounting & decoy pricing.
+            """
+        },
+        {
+            "filename": "GSI-NONPROFIT-FORMATION-AND-EIN-2026-11-04.md",
+            "doc_type": "corporate_governance_gsi",
+            "title": "Galaxy Science Institute Official Texas Form 202 Certificate of Formation (#15043440630001) & IRS Notice CP575E (EIN 43-2804773)",
+            "url": "file:///C:/Users/Garrett/Downloads/CP_575_E.pdf",
+            "equations": [
+                "EQ-GSI-WP05-001: Sigma_{t,K} = (1/(K-1)) sum_{i=0}^{K-1} (X_{t-i} - mu_{t,K})(X_{t-i} - mu_{t,K})^T, Z_t = L_t^{-1}(X_t - mu_{t,K})",
+                "EQ-GSI-WP05-002: alpha_i = max(q_{alpha/2}(X_i) - Y_i, Y_i - q_{1-alpha/2}(X_i)) / sigma(X_i)",
+                "EQ-GSI-WP05-003: Phi_tilde(X_+) = sqrt(2/M) [cos(X_+ W + b) - cos(b)]"
+            ],
+            "text": """
+Galaxy Science Institute (GSI) Legal Formation & Federal Tax ID Verification:
+- Entity Name: Galaxy Science Institute (Texas Domestic Nonprofit Corporation, IRC Section 501(c)(3) scientific, educational, and charitable research organization)
+- Texas SOS Form 202 Tracking Number: #15043440630001 (Submitted 11/04/2026 6:15 PM)
+- Registered Agent & Organizer: Garrett Baxley, 2047 Riverlawn Dr, Kingwood, TX 77339-2375
+- IRS Employer Identification Number (Notice CP575E dated November 04, 2026): 43-2804773 (Name Control: GALA)
+            """
         }
     ]
 
