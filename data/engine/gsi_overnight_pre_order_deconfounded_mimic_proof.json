@@ -1,11 +1,10 @@
 {
-  "track": "Track 1: MIMIC-IV and 500Hz ECG Torture Test",
+  "track": "Track 2: Theorem4 pre-order (real test run)",
   "status": "VERIFIED",
-  "timestamp": "2026-11-05T03:22:54.364597+00:00",
-  "theorem_4_drift": "0.0000%",
-  "metrics": {
-    "samples_processed": 2500000,
-    "sampling_rate_variance_robustness": "100%",
-    "log_signature_error": 0.0
-  }
+  "theorem4_test_passed": true,
+  "full_pytest_45_passed": true,
+  "compile_proposal_exit0": true,
+  "pre_order_auc": null,
+  "false_discovery_rate": null,
+  "note": "No MIMIC-IV patient-level data in repo to compute AUC/FDR pre-order; tests are synthetic. AUC/FDR left null, not fabricated. cte_viscoelastic_isomorphic_engine tests pass synthetically."
 }
