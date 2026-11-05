@@ -1,0 +1,95 @@
+{
+  "slate_sources": {
+    "dfs_week9_tnf_packet": {
+      "file": "data/dfs/week9_tnf_showdown_jax_bal_packet_2026_11_03.json",
+      "slate": "JAX@BAL TNF",
+      "games": [
+        "JAX@BAL 11/05/2026 08:15PM ET"
+      ],
+      "members": [
+        "candidates",
+        "roster_structure",
+        "sims",
+        "lineups"
+      ]
+    },
+    "dfs_week9_sunday_packet": {
+      "file": "data/dfs/week9_sunday_main_11_game_packet_2026_11_03.json",
+      "slate": "11-game Sunday",
+      "games": [
+        "ARI@SEA 11/08/2026 04:25PM ET",
+        "CLE@NO 11/08/2026 01:00PM ET",
+        "DAL@IND 11/08/2026 01:00PM ET",
+        "DEN@CAR 11/08/2026 01:00PM ET",
+        "DET@MIA 11/08/2026 01:00PM ET",
+        "GB@NE 11/08/2026 04:25PM ET",
+        "HOU@LAC 11/08/2026 04:05PM ET",
+        "LAR@WAS 11/08/2026 01:00PM ET",
+        "LV@SF 11/08/2026 04:25PM ET",
+        "NYG@PHI 11/08/2026 01:00PM ET",
+        "NYJ@KC 11/08/2026 01:00PM ET"
+      ],
+      "members": [
+        "games(11)",
+        "lineups"
+      ]
+    },
+    "live_board": {
+      "file": "data/engine/week9_live_board_simulations_props_dfs_2026.json",
+      "games": [
+        "2026_09_JAX_BAL",
+        "2026_09_LAC_CLE",
+        "2026_09_DET_GB"
+      ],
+      "members": [
+        "aci_crc_decisive_plays",
+        "dfs_tnf_showdown_projections(9)",
+        "dfs_tnf_optimal_builds(2)"
+      ]
+    },
+    "sealed_baseline": {
+      "file": "data/engine/week9_tuesday_0400ct_sealed_baseline_2026.json",
+      "members": [
+        "pbwr_leaders",
+        "mhj_shrunk_target_share_prior"
+      ]
+    }
+  },
+  "total_staged_week9_games": 12,
+  "claimed_15_games_source": "data/engine/week9_complete_360_all_games_verified_call_sheet.json",
+  "claimed_15_games_artifacts": {
+    "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet",
+    "status": "VERIFIED",
+    "timestamp": "2026-11-05T03:22:54.368087+00:00",
+    "games_simulated": 15,
+    "markets_covered": 77,
+    "official_ledger_record": "16-5 (76.2 percent, +10.45u)"
+  },
+  "market_families_present_in_live_board": [
+    "1st Half Total",
+    "1st Quarter Player Prop",
+    "Full-Game Spread",
+    "Full-Game Total",
+    "IDP Sacks",
+    "Kicking Total FGs",
+    "Player Receiving Yards Prop",
+    "Player Receptions Prop"
+  ],
+  "roster_feed": {
+    "file": "data/nflverse/week9_live_roster_transactions_and_starters_2026.json",
+    "as_of": "2026-11-04",
+    "excluded_count": 14,
+    "confirmed_qb1_count": 24
+  },
+  "injuries_csv_weeks": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "note": "Source systems stage 12 Week 9 games (11 Sunday + 1 TNF). The 15-game call sheet is a stub produced by the shift orchestrator and is not backed by 15 staged games; the TNF file stages JAX@BAL. Week 9 injuries live in the roster feed, not injuries_2026.csv (weeks 1-8)."
+}
