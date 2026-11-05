@@ -1,0 +1,187 @@
+{
+  "schema": "tnf_jax_bal_pbp_reproductions_v1",
+  "generated_at": "2026-11-05",
+  "data_window": "2026 regular season weeks 1-8 (nflverse pbp); FTN charting weeks 1-7",
+  "official_ledger": "16-5 (76.2%, +10.45u)",
+  "f6_bal_shell_and_tlaw": {
+    "bal_light_box_rate": 0.7795,
+    "bal_light_box_rate_all_plays": 0.7064,
+    "bal_light_box_sample_all_plays": 419,
+    "bal_light_box_rank": 2,
+    "bal_light_box_sample": 263,
+    "bal_dime_rate": null,
+    "bal_dime_unavailable_reason": "nflverse pbp/FTN carry no defensive personnel (DB count); dime rate is not derivable from public data.",
+    "bal_two_high_rate": null,
+    "bal_two_high_unavailable_reason": "Public nflverse/FTN charting has no coverage-shell field; two-high rate requires All-22 tracking or PFF/FTN proprietary charting.",
+    "tlaw_epa_per_dropback": 0.2878,
+    "tlaw_epa_vs_light_box": 0.3521,
+    "tlaw_epa_vs_heavy_box": 0.1091,
+    "tlaw_split_note": "Box-count split (<=6 vs >=7), NOT the claimed two-high vs single-high shell split; shell split is unavailable.",
+    "tlaw_light_sample": 137,
+    "tlaw_heavy_sample": 56,
+    "jax_blitz_rate": 0.309,
+    "jax_pressure_rate": 0.1667,
+    "jax_play_action_blitz_rate": 0.3478,
+    "jax_under_center_pressure_rate": 0.275,
+    "w2_note": "Backside A-gap / Fire Zone identification is film-derived; public data yields only blitz/pressure rates, not gap or coverage-family attribution.",
+    "qb_location_values": [
+      "0",
+      "P",
+      "S",
+      "U"
+    ]
+  },
+  "w2_jax_pressure": {
+    "jax_blitz_rate": 0.309,
+    "jax_pressure_rate": 0.1667,
+    "jax_play_action_blitz_rate": 0.3478,
+    "jax_under_center_pressure_rate": 0.275,
+    "w2_note": "Backside A-gap / Fire Zone identification is film-derived; public data yields only blitz/pressure rates, not gap or coverage-family attribution.",
+    "qb_location_values": [
+      "0",
+      "P",
+      "S",
+      "U"
+    ]
+  },
+  "w8_zay_flowers_mof": {
+    "flowers_targets": 58,
+    "flowers_mof_targets": 22,
+    "flowers_mof_target_share": 0.3793,
+    "flowers_receptions": 40,
+    "flowers_yards": 608,
+    "flowers_mof_receptions": 14,
+    "flowers_mof_yards": 258,
+    "bal_mof_attempt_share": 0.2581,
+    "bal_mof_completion_rate": 0.6406
+  },
+  "w10_catchable_ball": {
+    "trevor_lawrence": {
+      "dropbacks": 210,
+      "epa_per_dropback": 0.2878,
+      "catchable_ball_rate": 0.7047,
+      "catchable_sample": 193,
+      "charting_weeks": "1-7 (FTN public file stops at week 7)"
+    },
+    "bal_qbs": {
+      "Fagnano": {
+        "dropbacks": 24,
+        "epa_per_dropback": -0.4308,
+        "catchable_ball_rate": null,
+        "catchable_sample": 0,
+        "charting_weeks": "1-7 (FTN public file stops at week 7)"
+      },
+      "Brissett": {
+        "dropbacks": 322,
+        "epa_per_dropback": -0.0775,
+        "catchable_ball_rate": 0.6915,
+        "catchable_sample": 295,
+        "charting_weeks": "1-7 (FTN public file stops at week 7)"
+      },
+      "Jackson": {
+        "dropbacks": 102,
+        "epa_per_dropback": 0.3557,
+        "catchable_ball_rate": 0.7228,
+        "catchable_sample": 101,
+        "charting_weeks": "1-7 (FTN public file stops at week 7)"
+      },
+      "Huntley": {
+        "dropbacks": 121,
+        "epa_per_dropback": -0.0316,
+        "catchable_ball_rate": 0.6897,
+        "catchable_sample": 116,
+        "charting_weeks": "1-7 (FTN public file stops at week 7)"
+      }
+    }
+  },
+  "w3_mismatch_manifesto": {
+    "epa_per_play": {
+      "jacksonville_offense": {
+        "value": 0.1636,
+        "rank": 3,
+        "of": 32
+      },
+      "baltimore_defense_allowed": {
+        "value": 0.0124,
+        "rank": 17,
+        "of": 32
+      },
+      "combined_sum": 0.176
+    },
+    "pass_yds_per_dropback": {
+      "jacksonville_offense": {
+        "value": 7.649,
+        "rank": 1,
+        "of": 32
+      },
+      "baltimore_defense_allowed": {
+        "value": 6.45,
+        "rank": 17,
+        "of": 32
+      },
+      "combined_sum": 14.099
+    },
+    "rush_yds_per_rush": {
+      "jacksonville_offense": {
+        "value": 4.464,
+        "rank": 12,
+        "of": 32
+      },
+      "baltimore_defense_allowed": {
+        "value": 3.837,
+        "rank": 7,
+        "of": 32
+      },
+      "combined_sum": 8.301
+    },
+    "pressure_rate_allowed": {
+      "jacksonville_offense": {
+        "value": 0.1622,
+        "rank": 20,
+        "of": 32
+      },
+      "baltimore_defense_allowed": {
+        "value": 0.17,
+        "rank": 7,
+        "of": 32
+      },
+      "combined_sum": 0.3322
+    },
+    "explosive_rate": {
+      "jacksonville_offense": {
+        "value": 0.1106,
+        "rank": 4,
+        "of": 32
+      },
+      "baltimore_defense_allowed": {
+        "value": 0.0832,
+        "rank": 10,
+        "of": 32
+      },
+      "combined_sum": 0.1938
+    },
+    "note": "RB YBC/rush unavailable: 2026 nflverse pbp has no yards-before-contact field. Rushing yards per rush is the substituted metric."
+  },
+  "week9_game_scripts": {
+    "path": "data\\engine\\week9_game_scripts_2026.json",
+    "games_staged": 15
+  },
+  "reproducibility": {
+    "reproduced": [
+      "BAL light-box rate",
+      "TLaw box-split EPA/dropback",
+      "JAX blitz/pressure rates",
+      "Zay Flowers MOF profile",
+      "BAL MOF pass profile",
+      "Catchable Ball Rate",
+      "Mismatch Manifesto components"
+    ],
+    "not_reproducible": [
+      "BAL dime rate (no def personnel)",
+      "BAL two-high rate (no coverage shell field)",
+      "shell-split TLaw EPA delta",
+      "RB YBC/rush (no YBC field)",
+      "A-gap/Fire Zone attribution (film only)"
+    ]
+  }
+}
