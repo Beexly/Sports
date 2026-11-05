@@ -53,9 +53,11 @@ export default async function DfsSuitePage() {
   const measuredCopy = slate && engineRows.length > 0
     ? `${slateLabel}. Lineup builds start with offensive and defensive line matchups, injury reports, and target roles before comparing against salaries last.`
     : "Our plain-English game-environment breakdowns and DFS lineup packs below cover every game on the slate.";
-  const note = feedDown
-    ? `Live salary feed is currently offline. ${measuredCopy}`
-    : measuredCopy;
+  const note = salaryIsReal
+    ? `Licensed DFS salaries are live. ${measuredCopy}`
+    : feedDown
+      ? `No licensed salary feed is connected. No licensed DFS salary feed is connected to this surface. ${measuredCopy}`
+      : `A licensed DFS salary feed is connected, but your tier does not unlock the salary board. ${measuredCopy}`;
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[3]!;
   const tnfPackage = getPackageBySlug("tnf-all-in-pack") ?? LIVE_PACKAGE_CATALOG[0]!;
@@ -271,7 +273,8 @@ export default async function DfsSuitePage() {
         {feedConnected && !viewer.canUseFantasyFull && (
           <p className="mt-2 text-sm text-ion-1">
             The licensed salary feed is live. Full pricing unlocks with a{" "}
-            <a href="/packages" className="text-orbital-cyan underline">pack purchase</a>.
+            <a href="/packages" className="text-orbital-cyan underline">pack purchase</a>.{" "}
+            <a href="/pricing" className="text-orbital-cyan underline">See plans and pricing</a>.
           </p>
         )}
         {slate && (
