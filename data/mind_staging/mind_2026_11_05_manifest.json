@@ -1,0 +1,68 @@
+{
+  "schema": "mind_staging_manifest_v1",
+  "generated_at": "2026-11-05",
+  "output": "data\\mind_staging\\mind_2026_11_05_full_corpus.jsonl",
+  "total_records": 1097,
+  "corpus_counts": {
+    "nvidia-inception-stack": 7,
+    "index-batch-3": 55,
+    "ig-am-sweep": 38,
+    "repo-catalog-877-pdfs": 877,
+    "x-pm-sweep": 29,
+    "x-am-sweep": 30,
+    "openalex-user-drop": 13,
+    "repo-catalog": 21,
+    "gap-hunt": 27
+  },
+  "expected": {
+    "index-batch-3": 63,
+    "gap-hunt": 27,
+    "repo-catalog": 21,
+    "ig-am-sweep": 38,
+    "x-am-sweep": 30,
+    "x-pm-sweep": 29,
+    "nvidia-inception-stack": 7,
+    "openalex-user-drop": 13
+  },
+  "shortfalls": {
+    "index-batch-3": 8
+  },
+  "sources": {
+    "index-batch-3": {
+      "path": "C:\\Users\\Garrett\\Downloads\\INDEX-BATCH-3.md",
+      "records": 55,
+      "sha256_16": "a4d83dbfdbeb5760"
+    },
+    "gap-hunt": {
+      "path": "C:\\Users\\Garrett\\Downloads\\GAP-HUNT-2026-11-05.md",
+      "records": 27,
+      "sha256_16": "68e96de0b6a2e70d"
+    },
+    "repo-catalog": {
+      "path": "C:\\Users\\Garrett\\Downloads\\REPO-CATALOG.md",
+      "records": 21,
+      "sha256_16": "1c65499badd776bb"
+    },
+    "ig-am-sweep": {
+      "path": "C:\\Users\\Garrett\\Downloads\\2026-11-05-AM.md",
+      "records": 20,
+      "sha256_16": "b2949794a9d34a87"
+    },
+    "x-am-sweep": {
+      "path": "C:\\Users\\Garrett\\Downloads\\2026-11-05-AM (1).md",
+      "records": 30,
+      "sha256_16": "a65f3ba4320f5691"
+    },
+    "x-pm-sweep": {
+      "path": "C:\\Users\\Garrett\\Downloads\\2026-11-04-PM.md",
+      "records": 29,
+      "sha256_16": "21b9ada2c12c51d2"
+    }
+  },
+  "pdf_pointers": {
+    "pdfs_found": 877,
+    "api_ok": true
+  },
+  "batch4": "NO SOURCE FILE ON DISK: the 67-item / 74-link Batch 4 drop is not present in Downloads or any paste; not staged, not invented.",
+  "single_writer_rule": "brain/mind.jsonl untouched; staging only."
+}
