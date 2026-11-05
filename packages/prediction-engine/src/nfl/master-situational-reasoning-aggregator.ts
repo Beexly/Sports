@@ -82,6 +82,11 @@ import {
   type TebAvalancheBraidInput,
   type TebAvalancheBraidResult,
 } from "./teb-avalanche-braid-overlay.js";
+import {
+  evaluateZeroOrphanExpectedMetricsOverlay,
+  type ZeroOrphanOverlayInput,
+  type ZeroOrphanOverlayResult,
+} from "./zero-orphan-expected-metrics-bridge.js";
 
 export const FAMILY_NAMES = [
   "pressure",
@@ -592,6 +597,8 @@ export interface OverlayInput {
   stage0Check?: { configPath: string; candidatePlayerNames: readonly string[] };
   /** Optional TEB failed-avalanche & D(S3) braid overlay input. */
   tebAvalancheBraidInput?: TebAvalancheBraidInput;
+  /** Optional Zero-Orphan Expected-Metrics & W1-W14/F1-F4 Dossier overlay input. */
+  zeroOrphanOverlay?: ZeroOrphanOverlayInput;
 }
 
 export interface OverlayResult {
@@ -616,6 +623,7 @@ export interface OverlayResult {
   katsCusum?: ReturnType<typeof detectKatsMarketCusumAndHarmonicRegime>;
   stage0Verified?: { week: number; asOf: string; candidateCount: number };
   tebAvalancheBraid?: ReturnType<typeof computeTebAvalancheBraidOverlay>;
+  zeroOrphanResult?: ZeroOrphanOverlayResult;
   orthogonalization: OrthogonalizationResult;
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
@@ -782,6 +790,14 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
   if (input.tebAvalancheBraidInput) {
     result.tebAvalancheBraid = computeTebAvalancheBraidOverlay(input.tebAvalancheBraidInput);
     mark("15H:computeTebAvalancheBraidOverlay", true, result.tebAvalancheBraid.pocketRegime);
+  }
+  if (input.zeroOrphanOverlay) {
+    result.zeroOrphanResult = evaluateZeroOrphanExpectedMetricsOverlay(input.zeroOrphanOverlay);
+    mark(
+      "15I:evaluateZeroOrphanExpectedMetricsOverlay",
+      true,
+      `${result.zeroOrphanResult.wiredModuleCount} modules / ${result.zeroOrphanResult.catalogSignalCount} catalog signals`,
+    );
   }
 
   const canonicalInputs = {

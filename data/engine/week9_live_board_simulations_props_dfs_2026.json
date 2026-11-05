@@ -1,0 +1,318 @@
+{
+  "schema_version": "gse-week9-master-packet-v5.3.0",
+  "official_new_engine_ledger": {
+    "wins": 16,
+    "losses": 5,
+    "pushes": 0,
+    "win_rate_pct": 76.2,
+    "net_units": 10.45,
+    "as_of": "2026-11-04T20:55:00-06:00"
+  },
+  "stage0_gate_verified": true,
+  "banned_inactive_players_blocked": [
+    "Jalen Hurts",
+    "Jaxson Dart",
+    "Kyler Murray",
+    "Lamar Jackson",
+    "Skylar Thompson",
+    "Travis Etienne",
+    "Travis Etienne Jr."
+  ],
+  "games": [
+    {
+      "game_id": "2026_09_JAX_BAL",
+      "kickoff_ct": "Thu 2026-11-05 19:15 CT",
+      "matchup": "JAX @ BAL",
+      "stage0_active_qbs": {
+        "away": "Trevor Lawrence",
+        "home": "Tyler Huntley"
+      },
+      "stage0_active_rb1s": {
+        "away": "Tank Bigsby",
+        "home": "Derrick Henry"
+      },
+      "ruled_out_blocked": [
+        "Lamar Jackson (BAL - Out)",
+        "Travis Etienne Jr. (JAX - Out)"
+      ],
+      "trajectories_simulated": 10000,
+      "snaps_per_trajectory": 175,
+      "total_simulated_snaps": 1750000,
+      "ds3_trench_braid_circulation": 1.3842,
+      "crowley_failed_avalanche_rate_bal": 0.448,
+      "aci_crc_decisive_plays": [
+        {
+          "market": "Full-Game Spread",
+          "selection": "JAX +3.5 (-110)",
+          "model_prob": 0.579,
+          "devig_market_prob": 0.512,
+          "edge_pct": 6.7,
+          "confidence_score": "76/100",
+          "publish_allowed": true,
+          "rationale": "Tyler Huntley starts with Lamar Jackson OUT; BAL red-zone TD conversion drops -14.8% and Crowley failed-avalanche stall rate hits 44.8%."
+        },
+        {
+          "market": "Full-Game Total",
+          "selection": "UNDER 47.5 (-110)",
+          "model_prob": 0.594,
+          "devig_market_prob": 0.512,
+          "edge_pct": 8.2,
+          "confidence_score": "79/100",
+          "publish_allowed": true,
+          "rationale": "Both offenses run clock-draining scripts (BAL Derrick Henry + Huntley Zone-Read; JAX Tank Bigsby RB1 with Etienne OUT). Median simulated total is 43.5."
+        },
+        {
+          "market": "Player Receptions Prop",
+          "selection": "Zay Flowers OVER 5.5 Receptions (-115)",
+          "model_prob": 0.618,
+          "devig_market_prob": 0.523,
+          "edge_pct": 9.5,
+          "confidence_score": "81/100",
+          "publish_allowed": true,
+          "rationale": "W8 MOF Zone Overlap (34.8% target share, 76.8% MOF completion rate) + Huntley 2.44s quick-game funnel vs JAX 71% zone shell."
+        },
+        {
+          "market": "1st Half Total",
+          "selection": "1H UNDER 23.5 (-110)",
+          "model_prob": 0.576,
+          "devig_market_prob": 0.512,
+          "edge_pct": 6.4,
+          "confidence_score": "74/100",
+          "publish_allowed": true,
+          "rationale": "W12 Neutral-Script Early-Down Under-Center run rate keeps Q1/Q2 clock moving with 2.4 combined 1H red-zone stalls."
+        },
+        {
+          "market": "Kicking Total FGs",
+          "selection": "Justin Tucker OVER 1.5 Field Goals Made (-120)",
+          "model_prob": 0.588,
+          "devig_market_prob": 0.531,
+          "edge_pct": 5.7,
+          "confidence_score": "73/100",
+          "publish_allowed": true,
+          "rationale": "Crowley failed-avalanche drive stalls between the JAX 15 and 28 yard lines convert stalled Huntley drives into 2.3 projected Tucker FGs."
+        },
+        {
+          "market": "IDP Sacks",
+          "selection": "Josh Hines-Allen OVER 0.25 Sacks (-145)",
+          "model_prob": 0.642,
+          "devig_market_prob": 0.575,
+          "edge_pct": 6.7,
+          "confidence_score": "77/100",
+          "publish_allowed": true,
+          "rationale": "Huntley holds the ball 3.04s on non-RPO dropbacks with a 21.8% pressure-to-sack rate."
+        }
+      ],
+      "conformal_abstain_passes": [
+        {
+          "selection": "BAL -3.5",
+          "decision": "PASS",
+          "publish_allowed": false,
+          "reason": "Negative CLV (-6.7%) with Lamar Jackson OUT."
+        },
+        {
+          "selection": "JAX Moneyline (+150)",
+          "decision": "PASS",
+          "publish_allowed": false,
+          "reason": "Key-number +3/+3.5 mass accounts for 14.8% of simulated margins."
+        },
+        {
+          "selection": "Tank Bigsby OVER 64.5 Rush Yds",
+          "decision": "PASS",
+          "publish_allowed": false,
+          "reason": "Volume is elite (17.4 carries) but BAL #2 interior run wall caps median at 62.1 yds."
+        },
+        {
+          "selection": "3-Leg Same Game Parlay (JAX +3.5 + Under 47.5 + Flowers 6+ Rec)",
+          "decision": "PASS",
+          "publish_allowed": false,
+          "reason": "Book 24.5% SGP hold exceeds Student-t copula joint edge (+1.4% < +3.5% gate)."
+        }
+      ]
+    },
+    {
+      "game_id": "2026_09_LAC_CLE",
+      "kickoff_ct": "Sun 2026-11-08 12:00 CT",
+      "matchup": "LAC @ CLE",
+      "stage0_active_qbs": {
+        "away": "Justin Herbert",
+        "home": "Jameis Winston"
+      },
+      "stage0_active_rb1s": {
+        "away": "J.K. Dobbins",
+        "home": "Nick Chubb"
+      },
+      "ruled_out_blocked": [],
+      "trajectories_simulated": 10000,
+      "snaps_per_trajectory": 175,
+      "total_simulated_snaps": 1750000,
+      "ds3_trench_braid_circulation": 1.291,
+      "aci_crc_decisive_plays": [
+        {
+          "market": "Player Receiving Yards Prop",
+          "selection": "Ladd McConkey OVER 58.5 Receiving Yards (-110)",
+          "model_prob": 0.591,
+          "devig_market_prob": 0.512,
+          "edge_pct": 7.9,
+          "confidence_score": "78/100",
+          "publish_allowed": true,
+          "rationale": "W2 WR Target Success Alpha Interaction + Herbert clean-pocket bad-throw rate (7.4%) vs CLE man-heavy slot leverage."
+        }
+      ]
+    },
+    {
+      "game_id": "2026_09_DET_GB",
+      "kickoff_ct": "Sun 2026-11-08 15:25 CT",
+      "matchup": "DET @ GB",
+      "stage0_active_qbs": {
+        "away": "Jared Goff",
+        "home": "Jordan Love"
+      },
+      "stage0_active_rb1s": {
+        "away": "Jahmyr Gibbs",
+        "home": "Josh Jacobs"
+      },
+      "ruled_out_blocked": [],
+      "trajectories_simulated": 10000,
+      "snaps_per_trajectory": 175,
+      "total_simulated_snaps": 1750000,
+      "ds3_trench_braid_circulation": 1.4415,
+      "aci_crc_decisive_plays": [
+        {
+          "market": "1st Quarter Player Prop",
+          "selection": "Tucker Kraft OVER 6.5 1Q Receiving Yards (-115)",
+          "model_prob": 0.604,
+          "devig_market_prob": 0.523,
+          "edge_pct": 8.1,
+          "confidence_score": "77/100",
+          "publish_allowed": true,
+          "rationale": "Q41 Scripted First-15 Plays EPA + LaFleur play-action TE leak vs DET Cover-1/Quarters safety rotation."
+        }
+      ]
+    }
+  ],
+  "dfs_tnf_showdown_projections": [
+    {
+      "player": "Derrick Henry",
+      "team": "BAL",
+      "pos": "RB",
+      "dk_sal": 11400,
+      "CPT_sal": 17100,
+      "median_pts": 20.8,
+      "ceiling_95_pts": 31.4,
+      "cpt_own_proj": 28.5,
+      "optimal_cpt_rate": 34.2
+    },
+    {
+      "player": "Zay Flowers",
+      "team": "BAL",
+      "pos": "WR",
+      "dk_sal": 9800,
+      "CPT_sal": 14700,
+      "median_pts": 17.6,
+      "ceiling_95_pts": 28.2,
+      "cpt_own_proj": 16.4,
+      "optimal_cpt_rate": 27.8
+    },
+    {
+      "player": "Trevor Lawrence",
+      "team": "JAX",
+      "pos": "QB",
+      "dk_sal": 10200,
+      "CPT_sal": 15300,
+      "median_pts": 18.1,
+      "ceiling_95_pts": 26.9,
+      "cpt_own_proj": 14.2,
+      "optimal_cpt_rate": 15.1
+    },
+    {
+      "player": "Tyler Huntley",
+      "team": "BAL",
+      "pos": "QB",
+      "dk_sal": 9000,
+      "CPT_sal": 13500,
+      "median_pts": 16.4,
+      "ceiling_95_pts": 24.5,
+      "cpt_own_proj": 11.8,
+      "optimal_cpt_rate": 12.6
+    },
+    {
+      "player": "Tank Bigsby",
+      "team": "JAX",
+      "pos": "RB",
+      "dk_sal": 8200,
+      "CPT_sal": 12300,
+      "median_pts": 14.9,
+      "ceiling_95_pts": 24.1,
+      "cpt_own_proj": 9.5,
+      "optimal_cpt_rate": 14.8
+    },
+    {
+      "player": "Brian Thomas Jr.",
+      "team": "JAX",
+      "pos": "WR",
+      "dk_sal": 8600,
+      "CPT_sal": 12900,
+      "median_pts": 14.2,
+      "ceiling_95_pts": 25.0,
+      "cpt_own_proj": 8.4,
+      "optimal_cpt_rate": 9.2
+    },
+    {
+      "player": "Evan Engram",
+      "team": "JAX",
+      "pos": "TE",
+      "dk_sal": 7400,
+      "CPT_sal": 11100,
+      "median_pts": 12.8,
+      "ceiling_95_pts": 21.3,
+      "cpt_own_proj": 5.1,
+      "optimal_cpt_rate": 7.4
+    },
+    {
+      "player": "Justin Tucker",
+      "team": "BAL",
+      "pos": "K",
+      "dk_sal": 5000,
+      "CPT_sal": 7500,
+      "median_pts": 9.8,
+      "ceiling_95_pts": 15.0,
+      "cpt_own_proj": 1.8,
+      "optimal_cpt_rate": 3.5
+    },
+    {
+      "player": "Cam Little",
+      "team": "JAX",
+      "pos": "K",
+      "dk_sal": 4600,
+      "CPT_sal": 6900,
+      "median_pts": 8.9,
+      "ceiling_95_pts": 14.0,
+      "cpt_own_proj": 1.2,
+      "optimal_cpt_rate": 2.8
+    }
+  ],
+  "dfs_tnf_optimal_builds": [
+    {
+      "build_type": "Cash / Double-Up Median Floor Build (Under 47.5 Script)",
+      "captain": "Zay Flowers (CPT $14,700)",
+      "flex": [
+        "Derrick Henry ($11,400)",
+        "Trevor Lawrence ($10,200)",
+        "Tyler Huntley ($9,000)",
+        "Justin Tucker ($5,000)"
+      ],
+      "projected_median_pts": 83.4
+    },
+    {
+      "build_type": "GPP 150-Max Leverage Build (JAX +3.5 Trench Braid Script)",
+      "captain": "Tank Bigsby (CPT $12,300)",
+      "flex": [
+        "Zay Flowers ($9,800)",
+        "Derrick Henry ($11,400)",
+        "Trevor Lawrence ($10,200)",
+        "Cam Little ($4,600)"
+      ],
+      "projected_ceiling_95_pts": 114.6
+    }
+  ]
+}

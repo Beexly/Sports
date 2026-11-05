@@ -2,8 +2,9 @@
 galaxy_conformal_ot.gsi_research_api_wrapper
 ============================================
 Production ASGI/FastAPI & pure-Python microservice wrapper for real-time
-GSE-GSI Wasserstein-Mahalanobis Conformal-OT trajectory evaluation (`POST /v2/evaluate_trajectory`)
-and GSI Frontier v4.0 Topological-Ergodic Braid Streaming (`POST /api/v3/frontier/stream-braid-invariants`).
+GSE-GSI Wasserstein-Mahalanobis Conformal-OT trajectory evaluation,
+GSI Frontier v4.0 Topological-Ergodic Braid Streaming, and
+Theorem 4 Pure De-Confounded Sepsis Braid & 5-Domain Isomorphic Collapse evaluation.
 """
 from __future__ import annotations
 
@@ -17,6 +18,14 @@ from .quantum_braid_teb import AsynchronousTimeSlippageEstimator, ThermodynamicB
 from .sovereign_v4_ds3_avalanche_engine import (
     BylesMeasurementOnlyDS3Braid,
     CrowleyFailedAvalancheFunctional,
+)
+from .cte_viscoelastic_isomorphic_engine import (
+    evaluate_physiology_pure_deconfounded_sepsis_braid,
+    evaluate_cte_subconcussive_waveguide,
+    evaluate_koopman_ecg_vfib_interception,
+    evaluate_metamaterial_aerostructure_fracture,
+    evaluate_power_grid_synchrophasor_islanding,
+    evaluate_clob_liquidity_cavitation,
 )
 
 # Ensure AsynchronousTimeSlippageEstimator has estimate_slippage alias
@@ -132,6 +141,56 @@ def stream_braid_invariants_payload(payload: dict[str, Any], api_key: str) -> di
     }
 
 
+def evaluate_isomorphic_collapse_payload(payload: dict[str, Any], api_key: str) -> dict[str, Any]:
+    """
+    Handler for `POST /api/v3/frontier/evaluate-isomorphic-collapse`:
+    Exposes Theorem 4 deconfounded sepsis evaluation and the 5 isomorphic collapse domains.
+    """
+    if api_key not in RECOGNIZED_PARTNERS:
+        raise PermissionError("Forbidden: Unverified GSI Frontier Access Signature")
+
+    domain = payload.get("domain", "sepsis_theorem4")
+    params = payload.get("parameters", {})
+
+    if domain == "sepsis_theorem4":
+        patient_stream = params.get("patient_stream", [])
+        horizon = float(params.get("prediction_horizon_hours", 6.0))
+        gamma = float(params.get("time_warp_gamma", 1.0))
+        res = evaluate_physiology_pure_deconfounded_sepsis_braid(
+            patient_stream=patient_stream,
+            prediction_horizon_hours=horizon,
+            time_warp_gamma=gamma,
+        )
+    elif domain == "cte_waveguide":
+        hit_a = float(params.get("hit_a_magnitude_g", 95.0))
+        hit_b = float(params.get("hit_b_magnitude_g", 110.0))
+        dt = float(params.get("delta_t_seconds", 40.0))
+        res = evaluate_cte_subconcussive_waveguide(hit_a, hit_b, dt)
+    elif domain == "koopman_ecg":
+        ecg = params.get("ecg_signal_500hz", [])
+        res = evaluate_koopman_ecg_vfib_interception(ecg)
+    elif domain == "metamaterial_aerostructure":
+        vel = float(params.get("impact_velocity_mps", 350.0))
+        angle = float(params.get("chiral_cell_angle_deg", 45.0))
+        res = evaluate_metamaterial_aerostructure_fracture(vel, angle)
+    elif domain == "power_grid":
+        var = float(params.get("phase_angle_variance", 0.12))
+        roco = float(params.get("frequency_rate_of_change", 0.05))
+        res = evaluate_power_grid_synchrophasor_islanding(var, roco)
+    elif domain == "clob_liquidity":
+        imbalance = float(params.get("order_book_depth_imbalance", -0.85))
+        cancel_rate = float(params.get("cancel_rate_per_sec", 1500.0))
+        res = evaluate_clob_liquidity_cavitation(imbalance, cancel_rate)
+    else:
+        raise ValueError(f"Unknown isomorphic domain: {domain}")
+
+    return {
+        "status": "SUCCESS",
+        "partner_identity": RECOGNIZED_PARTNERS[api_key],
+        "domain_evaluation": res,
+    }
+
+
 async def app(scope: dict[str, Any], receive: Any, send: Any) -> None:
     """Minimal zero-dependency ASGI application exposing v2 and v3 GSI endpoints."""
     if scope["type"] != "http":
@@ -180,6 +239,38 @@ async def app(scope: dict[str, Any], receive: Any, send: Any) -> None:
             raw_body = b"".join(chunks).decode("utf-8")
             payload = json.loads(raw_body) if raw_body else {}
             res = stream_braid_invariants_payload(payload, api_key=api_key)
+            status = 200
+        except PermissionError as exc:
+            res = {"error": str(exc)}
+            status = 403
+        except ValueError as exc:
+            res = {"error": str(exc)}
+            status = 400
+        except Exception as exc:
+            res = {"error": str(exc)}
+            status = 500
+
+        body = json.dumps(res).encode("utf-8")
+        await send({"type": "http.response.start", "status": status, "headers": [(b"content-type", b"application/json")]})
+        await send({"type": "http.response.body", "body": body})
+        return
+
+    if path == "/api/v3/frontier/evaluate-isomorphic-collapse" and method == "POST":
+        chunks = []
+        while True:
+            msg = await receive()
+            chunks.append(msg.get("body", b""))
+            if not msg.get("more_body", False):
+                break
+        try:
+            raw_headers = scope.get("headers", [])
+            headers_dict = {k.lower(): v for k, v in raw_headers}
+            api_key_bytes = headers_dict.get(b"x-gsi-frontier-key", b"")
+            api_key = api_key_bytes.decode("utf-8")
+
+            raw_body = b"".join(chunks).decode("utf-8")
+            payload = json.loads(raw_body) if raw_body else {}
+            res = evaluate_isomorphic_collapse_payload(payload, api_key=api_key)
             status = 200
         except PermissionError as exc:
             res = {"error": str(exc)}

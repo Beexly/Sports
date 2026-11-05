@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolve } from "node:path";
+import { existsSync } from "node:fs";
 import {
   computeTebAvalancheBraidOverlay,
   DS3_THEORETICAL_MAGIC_M2_BASELINE,
@@ -78,10 +79,10 @@ describe("GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay"
   });
 
   it("integrates seamlessly into runMasterSituationalReasoningOverlay with Stage 0 roster check", () => {
-    const configPath = resolve(
-      process.cwd(),
-      "../../data/nflverse/week9_live_roster_transactions_and_starters_2026.json",
-    );
+    const configPath = [
+      resolve(process.cwd(), "data/nflverse/week9_live_roster_transactions_and_starters_2026.json"),
+      resolve(process.cwd(), "../../data/nflverse/week9_live_roster_transactions_and_starters_2026.json"),
+    ].find((p) => existsSync(p)) ?? resolve(process.cwd(), "data/nflverse/week9_live_roster_transactions_and_starters_2026.json");
 
     const overlay = runMasterSituationalReasoningOverlay({
       familyDeltas: { pressure: -0.04, qbSkillScript: -0.05 },

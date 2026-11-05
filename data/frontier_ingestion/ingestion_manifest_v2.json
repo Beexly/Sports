@@ -1,0 +1,29 @@
+{
+  "schema_version": "gsi-unified-ingestor-v2.0",
+  "generated_at_epoch": 1793848592,
+  "seed_arxiv_papers_extracted": 10,
+  "arxiv_ids": [
+    "2205.02385",
+    "0805.3583",
+    "1601.03641",
+    "1701.06081",
+    "2503.21251",
+    "1905.03222",
+    "2107.07511",
+    "2608.04103",
+    "2503.23757",
+    "2608.21128"
+  ],
+  "ecg_500hz_binary_stream": {
+    "path": "data\\frontier_ingestion\\physionet_500hz_ecg\\cpp_binary_streams\\mimic_ecg_500hz_stream.bin",
+    "frame_struct_bytes": 48,
+    "frame_count": 500,
+    "total_bytes": 24000
+  },
+  "nfl_10hz_binary_stream": {
+    "path": "data\\frontier_ingestion\\nfl_10hz_kinematics\\cpp_binary_streams\\nfl_10hz_kinematics_stream.bin",
+    "frame_struct_bytes": 28,
+    "frame_count": 175,
+    "total_bytes": 4900
+  }
+}
