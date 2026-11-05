@@ -222,3 +222,14 @@ injuries_2026.csv still stops at week 8. Packets remain research artifacts, not 
 
 **Next role (Builder):** preflight-roster-gate.ts mirror, gate the pick/prop/SGP pipelines (un_full_gse_slate_pipeline.ts,
 gse_coach_mind_simulator.py), then Components 1-4 of the approved plan.
+
+## 2026-11-05 - Stage 0 gate on pick/sim pipelines (Antigravity)
+
+**Done:** un_full_gse_slate_pipeline.ts and gse_coach_mind_simulator.py now hard-refuse unless a fresh roster config for their
+week exists (both are Week-8-hardcoded, so both refuse today; explicit non-publishable override STAGE0_RETROSPECTIVE=1).
+TS mirror packages/prediction-engine/src/nfl/preflight-roster-gate.ts; excluded QBs feed QB1-out into the injury map in live mode.
+
+**Not proven / open:** Week 9 engine verdicts NOT generated - repo has no Week 9 odds, no W8 trends, no W9 JEV spine. Retrospective
+runs rewrite tracked outputs (verdicts json, brain/feeds runtime feed); revert after test runs.
+
+**Next role (Builder):** ingest Week 8 results + Week 9 odds (needs odds source), then add a --week 9 slate. Then Components 1-4.

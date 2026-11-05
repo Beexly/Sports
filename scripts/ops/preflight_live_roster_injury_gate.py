@@ -10,6 +10,7 @@ Origin: Week 9 TNF packet recommended Lamar Jackson (OUT) and Sunday pool carrie
 from __future__ import annotations
 
 import json
+import os
 from datetime import date, datetime
 from pathlib import Path
 from typing import Iterable
@@ -130,3 +131,30 @@ def assert_lineup_rules(salary: int, teams: list[str], classic: bool = True,
     worst = max(teams.count(t) for t in set(teams))
     if worst > max_per_team:
         raise PreflightRosterGateError(f"classic lineup has {worst} players from one team (max {max_per_team})")
+
+
+def require_week(week: int, config_path: str | Path = DEFAULT_CONFIG) -> dict:
+    """Hard gate for any simulation/pick entry point: a roster config for `week` must exist and be fresh.
+
+    Explicit, logged retrospective path: STAGE0_RETROSPECTIVE=1 (returns {} - never for publishable output).
+    """
+    if os.environ.get("STAGE0_RETROSPECTIVE") == "1":
+        print("[STAGE 0] RETROSPECTIVE mode - output is NOT publishable")
+        return {}
+    cfg = load_config(config_path)
+    if int(cfg["week"]) != int(week):
+        raise PreflightRosterGateError(
+            f"no roster/transaction config for week {week} (config is week {cfg['week']}); "
+            "refusing to run on stale rosters. Use STAGE0_RETROSPECTIVE=1 only for non-publishable replays."
+        )
+    print(f"[STAGE 0] LIVE | as_of {cfg['as_of']} | excluded {len(cfg['excluded_players'])} | QB1s {sorted(cfg['confirmed_qb1'])}")
+    return cfg
+
+
+def qb1_out_roles(cfg: dict) -> dict[str, list[str]]:
+    """team -> ['QB1'] for teams whose QB1 slot is vacated by an excluded QB (feeds injury reallocation)."""
+    out: dict[str, list[str]] = {}
+    for p in cfg.get("excluded_players", []):
+        if str(p.get("position", "")).upper() == "QB":
+            out.setdefault(p["team"], ["QB1"])
+    return out

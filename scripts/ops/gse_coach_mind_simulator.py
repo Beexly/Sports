@@ -1057,8 +1057,18 @@ def simulate_matchup_pbp(
     return out
 
 
+SLATE_WEEK = 8  # the hardcoded demo slate in main() is Week 8
+
+
 def main():
     ap = argparse.ArgumentParser()
+    try:
+        from scripts.ops.preflight_live_roster_injury_gate import require_week
+    except ModuleNotFoundError:  # run directly as a script
+        from preflight_live_roster_injury_gate import require_week
+
+    # STAGE 0: no simulation may run without a fresh roster/transaction config for this slate's week.
+    require_week(SLATE_WEEK)
     ap.add_argument("--sealed-json", default="/opt/model/sealed_baseline.json")
     ap.add_argument("--sims", type=int, default=5000)
     args = ap.parse_args()

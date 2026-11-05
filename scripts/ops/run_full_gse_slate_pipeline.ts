@@ -25,6 +25,12 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 import {
+  loadStage0Config,
+  PreflightRosterGateError,
+  teamsWithQb1Out,
+} from "../../packages/prediction-engine/src/nfl/preflight-roster-gate.js";
+
+import {
   evaluateCoachSchemePlayerFitMatchup,
   computeWeightedEntropyPlayProbe,
   evolvePlayCallPartitionWeights,
@@ -501,6 +507,50 @@ function logit(p: number): number {
   return Math.log(c / (1 - c));
 }
 
+const PIPELINE_WEEK = 8;
+const STAGE0_CONFIG_PATH = path.join(
+  REPO_ROOT,
+  "data/nflverse/week9_live_roster_transactions_and_starters_2026.json",
+);
+
+/**
+ * Stage 0 gate. Refuses to run unless a roster/transaction config exists for this pipeline's week.
+ * Explicit, logged retrospective path: STAGE0_RETROSPECTIVE=1 (never for anything publishable).
+ * Merges config-excluded QBs (OUT/IR/season-ending) into the injury map as QB1-out.
+ */
+function stage0PreflightForWeek(
+  week: number,
+  injuries: Map<string, LocalPlayerInjuryRecord[]>,
+): { mode: string; asOf: string; qb1OutTeams: string[] } {
+  if (process.env.STAGE0_RETROSPECTIVE === "1") {
+    return { mode: "RETROSPECTIVE (not publishable)", asOf: "n/a", qb1OutTeams: [] };
+  }
+  const cfg = loadStage0Config(STAGE0_CONFIG_PATH);
+  if (cfg.week !== week) {
+    throw new PreflightRosterGateError(
+      `no roster/transaction config for week ${week} (config is week ${cfg.week}). ` +
+        "Refusing to run on stale rosters. Use STAGE0_RETROSPECTIVE=1 only for non-publishable replays.",
+    );
+  }
+  const qb1Out = teamsWithQb1Out(cfg);
+  for (const [team, names] of qb1Out) {
+    const list = injuries.get(team) ?? [];
+    if (!list.some((r) => r.position === "QB" && r.status === "OUT")) {
+      list.push({
+        playerId: `${team}-QB1-STAGE0`,
+        playerName: names.join(" / "),
+        team,
+        position: "QB",
+        status: "OUT",
+        epaReplacementDelta: 0.145,
+        snapShare: 1.0,
+      });
+    }
+    injuries.set(team, list);
+  }
+  return { mode: "LIVE", asOf: cfg.as_of, qb1OutTeams: [...qb1Out.keys()] };
+}
+
 function main() {
   const trendsRaw = JSON.parse(fs.readFileSync(TRENDS_PATH, "utf-8"));
   const trendsTeams: Record<string, any> = trendsRaw.teams ?? {};
@@ -520,6 +570,12 @@ function main() {
   const jevGames: Record<string, any> = jevSpineRaw.games ?? {};
 
   const teamInjuriesMap = loadRealInjuriesFromCsv();
+
+  // STAGE 0: pre-flight live roster / transaction / starter gate. Must pass before anything else.
+  const stage0 = stage0PreflightForWeek(PIPELINE_WEEK, teamInjuriesMap);
+  console.log(
+    `[STAGE 0] ${stage0.mode} | config as_of ${stage0.asOf} | QB1-out teams: ${stage0.qb1OutTeams.join(", ") || "none"}`,
+  );
 
   // Stage 1/2A: Generate Tuesday Pure-Football Master Lock & Advance to Thursday Injury Lock
   const weeklyGamesInput: WeeklyGameInput[] = WEEK8_SLATE.map((g) => {

@@ -1,36 +1,83 @@
 {
-  "schema": "gse.preflight_roster_gate.v1",
-  "week": 9,
-  "as_of": "2026-11-04",
-  "verified_by": "web search 2026-11-04 (Ravens QB situation) + DraftKings export Status column (DKSalaries (2)/(3).csv)",
-  "note": "STAGE 0 source of truth. Entries here OVERRIDE stale DraftKings exports. Update before every slate; the gate refuses to run if as_of is older than max_age_days.",
-  "max_age_days": 3,
-  "blocked_statuses": ["OUT", "O", "IR", "D", "DOUBTFUL", "SUSP", "PUP", "NFI", "OUT_FOR_SEASON"],
-  "excluded_players": [
-    {"name": "Lamar Jackson", "team": "BAL", "reason": "OUT - IR, right thumb surgery"},
-    {"name": "Tyler Huntley", "team": "BAL", "reason": "OUT FOR SEASON - severe turf toe (DK export still shows Q)"},
-    {"name": "Skylar Thompson", "team": "BAL", "reason": "IR"},
-    {"name": "Jalen Hurts", "team": "PHI", "reason": "IR"},
-    {"name": "Jaxson Dart", "team": "NYG", "reason": "IR"}
-  ],
-  "traded_players": [
-    {"name": "Jacoby Brissett", "from": "ARI", "to": "BAL", "date": "2026-11-04", "note": "Acquired by BAL today; not on ARI Sunday. Emergency depth only behind Fagnano on TNF; not on the TNF DK pool."}
-  ],
-  "confirmed_qb1": {
-    "BAL": "Joe Fagnano",
-    "JAX": "Trevor Lawrence",
-    "ARI": "Gardner Minshew II",
-    "PHI": "Tanner McKee",
-    "NYG": "J.J. McCarthy",
-    "NYJ": "Geno Smith"
-  },
-  "qb1_fallback_rule": "Teams absent from confirmed_qb1 use the highest-salary non-excluded QB in the pool, flagged in the gate report as UNVERIFIED so a human can confirm.",
-  "situational_multipliers_unfitted": {
-    "note": "Analyst-judgment multipliers, NOT fitted. Rookie QB Fagnano (taped ankle) starting on short notice. Replace with JEV-sim output when available.",
-    "BAL": {"WR": 0.85, "TE": 0.85, "RB:Derrick Henry": 1.10},
-    "JAX": {"DST": 1.10}
-  },
-  "situational_flags": {
-    "BAL": "Starting QB Joe Fagnano (undrafted rookie, taped ankle). Downgrade BAL pass efficiency; raise Derrick Henry carry share and JAX DST expectation."
-  }
+    "schema":  "gse.preflight_roster_gate.v1",
+    "week":  9,
+    "as_of":  "2026-11-04",
+    "verified_by":  "web search 2026-11-04 (Ravens QB situation) + DraftKings export Status column (DKSalaries (2)/(3).csv)",
+    "note":  "STAGE 0 source of truth. Entries here OVERRIDE stale DraftKings exports. Update before every slate; the gate refuses to run if as_of is older than max_age_days.",
+    "max_age_days":  3,
+    "blocked_statuses":  [
+                             "OUT",
+                             "O",
+                             "IR",
+                             "D",
+                             "DOUBTFUL",
+                             "SUSP",
+                             "PUP",
+                             "NFI",
+                             "OUT_FOR_SEASON"
+                         ],
+    "excluded_players":  [
+                             {
+                                 "name":  "Lamar Jackson",
+                                 "team":  "BAL",
+                                 "reason":  "OUT - IR, right thumb surgery",
+                                 "position":  "QB"
+                             },
+                             {
+                                 "name":  "Tyler Huntley",
+                                 "team":  "BAL",
+                                 "reason":  "OUT FOR SEASON - severe turf toe (DK export still shows Q)",
+                                 "position":  "QB"
+                             },
+                             {
+                                 "name":  "Skylar Thompson",
+                                 "team":  "BAL",
+                                 "reason":  "IR",
+                                 "position":  "QB"
+                             },
+                             {
+                                 "name":  "Jalen Hurts",
+                                 "team":  "PHI",
+                                 "reason":  "IR",
+                                 "position":  "QB"
+                             },
+                             {
+                                 "name":  "Jaxson Dart",
+                                 "team":  "NYG",
+                                 "reason":  "IR",
+                                 "position":  "QB"
+                             }
+                         ],
+    "traded_players":  [
+                           {
+                               "name":  "Jacoby Brissett",
+                               "from":  "ARI",
+                               "to":  "BAL",
+                               "date":  "2026-11-04",
+                               "note":  "Acquired by BAL today; not on ARI Sunday. Emergency depth only behind Fagnano on TNF; not on the TNF DK pool."
+                           }
+                       ],
+    "confirmed_qb1":  {
+                          "BAL":  "Joe Fagnano",
+                          "JAX":  "Trevor Lawrence",
+                          "ARI":  "Gardner Minshew II",
+                          "PHI":  "Tanner McKee",
+                          "NYG":  "J.J. McCarthy",
+                          "NYJ":  "Geno Smith"
+                      },
+    "qb1_fallback_rule":  "Teams absent from confirmed_qb1 use the highest-salary non-excluded QB in the pool, flagged in the gate report as UNVERIFIED so a human can confirm.",
+    "situational_multipliers_unfitted":  {
+                                             "note":  "Analyst-judgment multipliers, NOT fitted. Rookie QB Fagnano (taped ankle) starting on short notice. Replace with JEV-sim output when available.",
+                                             "BAL":  {
+                                                         "WR":  0.85,
+                                                         "TE":  0.85,
+                                                         "RB:Derrick Henry":  1.10
+                                                     },
+                                             "JAX":  {
+                                                         "DST":  1.10
+                                                     }
+                                         },
+    "situational_flags":  {
+                              "BAL":  "Starting QB Joe Fagnano (undrafted rookie, taped ankle). Downgrade BAL pass efficiency; raise Derrick Henry carry share and JAX DST expectation."
+                          }
 }
