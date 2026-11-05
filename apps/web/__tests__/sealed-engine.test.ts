@@ -99,9 +99,21 @@ describe("sealed engine — the interlock (left hand, right hand)", () => {
     expect(page).toContain("RiskDisclosure");
   });
 
-  it("the homepage proof strip routes into the engine", () => {
+  it("the homepage carries the trust close instead of a proof strip", () => {
+    // The homepage shipped as the RedlineWorld storefront (PR #1231): the
+    // old proof strip and its /engine link are gone by design. The front-door
+    // trust surface is the responsible close + TRUST_LINKS, and it exposes
+    // no method vocabulary.
     const home = read("app/page.tsx");
-    expect(home).toContain('href="/engine"');
+    expect(home).toContain("RedlineWorld");
+    expect(home).toContain('data-testid="homepage-responsible-close"');
+    for (const href of ["/methodology", "/responsible-play", "/how-we-make-money", "/accountability", "/pricing"]) {
+      expect(home).toContain(`href: "${href}"`);
+    }
+    expect(home).toContain("RiskDisclosure");
+    for (const banned of ["factorBreakdown", "edgeIndex"]) {
+      expect(home).not.toContain(banned);
+    }
   });
 });
 

@@ -251,3 +251,14 @@ start from the matchup instead of the constants 3 and 46.5.
 **POSIX path bug:** gate-registry.t24 and public-picks-enabled-readers.t21 built paths with `.replace(/\//g, "\\")`, which fails on Linux CI ("file must exist: false"). path.join handles "/" on both platforms — removed the replacement.
 **Proven (worktree C:\c\wt-public):** public-surface-sweep 9/9, content-os 18/18 (incl. new 404 test), the 4 verifier/registry specs 32/32, both verifier scripts exit 0 directly.
 **Not yet proven:** CI on ci/public-cluster-2026-11-04. periodic-timeseries-id 'too large to be exact' still unexplained (passes locally Node 24, failed twice on PR #1235 CI; zero file overlap with that diff).
+
+## 2026-11-05 — public-copy cluster (branch ci/publiccopy-cluster-2026-11-05, base 5901ff6d1)
+
+**What:** 6 test files / 9 tests retargeted to the shipped sealed-era / under-construction design (founder doctrine 2026-10-29: public UI serves ONLY GALAXY PICKS (/packages) + DFS (/fantasy/dfs)). No product code changed.
+- public-copy-plain-language (4): FE-10 now pins the /board under-construction redirect (/packages + /fantasy/dfs, no jargon, no timestamp/rankingP) and the /picks sealed card; C-107 pins MARKET_IMPLIED_CALIBRATION_CLAIM on /about only, with /calibration asserted to render no claim/chart (stub).
+- c224 board (1): Decided-tile pin replaced with under-construction-notice + redirect links; no-win-rate negatives kept.
+- public-consensus-claim + public-consensus-surfaces (2): /picks removed from claim surfaces, sealed-rows-only invariant added (publishAllowed filter, no bookmaker claim); preview/pick-card/dashboard/API binder pins kept.
+- sealed-engine + proof-funnel-weave (2): homepage proof-strip pins replaced with RedlineWorld storefront + TRUST_LINKS + responsible-close invariants (PR #1231 design); /proof, /verify, /vault funnel pins kept.
+
+**Proven (worktree C:\c\wt-publiccopy):** the 6 files pass (54 tests); the other 21 CI-failing files fail identically to main CI run 42012340073 (file-level subset re-run, no new failures — edits are test-only). apps/web tsc --noEmit: 0 errors. Full local apps/web run: 24 files / 26 tests failed vs CI main 27/32+periodic — the 3-file delta is local-env-only files outside the CI-27 (test-only diff cannot cause them); branch-CI diff is the merge gate.
+**Not yet proven:** CI on ci/publiccopy-cluster-2026-11-05. Remaining wall after this cluster: ~21 files / ~23 tests + periodic-timeseries-id Node-20 flake (prediction-engine) — next loops: fence/rails (t15-ngs, internal-surface-fence, page-loader, ngs-public-exposure), commercial/pricing (commercial, compliance-payments, free-tier, disclosure, states-matrix, claude-md/docs), room/nav (game-room, games-room-consolidation, main-content, no-double-brand, palette, fe17, conversion-contrast, ingest-depth, whop-telegram).

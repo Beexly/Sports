@@ -60,11 +60,15 @@ describe("C-224: app/board/page.tsx", () => {
   it("does not render a win rate at all — reserved for the governed CLV headline policy", () => {
     // lib/performance/public-performance-policy.ts: win rate is deliberately
     // not a member of the public headline type, so this page must not
-    // construct one on its own path. A settled-picks count replaces the
-    // removed Brier tile instead — a fact, not a performance claim.
+    // construct one on its own path. /board shipped as an
+    // under-construction stub redirecting to Galaxy Picks and DFS, so it
+    // renders no calibration tile of any kind.
     expect(src).not.toMatch(/decidedWinRateLabel/);
     expect(src).not.toMatch(/headlineClopperPearsonLow/);
-    expect(src).toMatch(/label="Decided" value=\{String\(calibration\.population\.decided\)\}/);
+    expect(src).not.toMatch(/calibration\.population/);
+    expect(src).toContain('data-testid="under-construction-notice"');
+    expect(src).toContain('href="/packages"');
+    expect(src).toContain('href="/fantasy/dfs"');
   });
 });
 
