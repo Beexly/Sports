@@ -1,145 +1,641 @@
 {
-  "benchmark": "GSE-LiveBench (Point-in-Time Leakage-Free Evaluation Harness)",
-  "generated_at": "2026-11-06T22:30:00Z",
-  "status": "VERIFIED_LIVE",
-  "forecastbench_reference": {
-    "citation": "Karger et al., arXiv:2409.19839 (ICLR 2025)",
-    "superforecaster_brier": 0.081,
-    "best_llm_brier": 0.101,
-    "cfb_holdout_crps_bar": 8.3314,
-    "nfl_std_normal_crps_z0": 0.233694977
+  "schema_version": "gse-intelligence-scale-evaluation-v2.0",
+  "evaluated_at_utc": "2026-11-06T23:35:00Z",
+  "freeze_verification": {
+    "question_bank_file": "data/audits/gse_intelligence_scale_frozen_bank_2026_11_06.json",
+    "question_bank_sha256_expected": "781d3cd81d8e979358a4ad7ac56b45af9ee8aea075baca81f85f2a50677d3ed5",
+    "question_bank_sha256_verified": "781d3cd81d8e979358a4ad7ac56b45af9ee8aea075baca81f85f2a50677d3ed5",
+    "sha256_match": true,
+    "total_questions_n": 486,
+    "forecasting_questions_n": 436,
+    "forecasting_wins": 232,
+    "forecasting_losses": 204,
+    "published_cohort_n": 83,
+    "published_cohort_wins": 54,
+    "published_cohort_losses": 29,
+    "general_reasoning_questions_n": 50,
+    "doctrine_19_rules_enforced": true
   },
-  "doctrine_19_rule_gate": {
-    "rules_passed": 19,
-    "rules_total": 19,
-    "cfb_constants_accepted": true,
-    "nfl_sigma_13_36_under_cfb_key_refused": true
-  },
-  "official_new_engine_verified_ledger": {
-    "record": "62-23-1",
-    "win_rate_pct": 72.9,
-    "net_units": 26.5,
-    "pre_week8": "16-5 (+10.45u)",
-    "week8_audited": "46-18-1 (+16.05u)"
-  },
-  "leaderboard": [
-    {
-      "rank": 1,
-      "system": "GSE New Engine (Situational-First + 10k-World JEV + 19-Rule Gate)",
-      "mean_brier": 0.09725,
-      "mean_crps": 3.312373,
-      "mean_clv_bps": 1775.0,
-      "verified_record": "62-23-1 (72.9%, +26.50u)"
+  "cohort_breakdowns": {
+    "all_436_pre_gate_candidates_raw_engine": {
+      "n": 436,
+      "wins": 232,
+      "losses": 204,
+      "win_loss_mix": "232W-204L (53.2% base event rate)",
+      "directional_accuracy_pct": 54.59,
+      "brier_score": 0.255376,
+      "log_loss": 0.705866,
+      "ece_10": 0.088202,
+      "murphy_decomposition": {
+        "ece_10": 0.088202,
+        "murphy_reliability": 0.014199,
+        "murphy_resolution": 0.008165,
+        "murphy_uncertainty": 0.248969
+      },
+      "brier_points_25": 0.0,
+      "log_points_15": 0.0,
+      "calibration_points_10": 5.59,
+      "axis_1_forecasting_score_50": 5.59
     },
-    {
-      "rank": 2,
-      "system": "ForecastBench Superforecaster Consensus (arXiv:2409.19839)",
-      "mean_brier": 0.081,
-      "mean_crps": null,
-      "mean_clv_bps": null,
-      "verified_record": "ICLR 2025 Baseline"
+    "all_436_pre_gate_candidates_live_brain_calibrated": {
+      "n": 436,
+      "wins": 232,
+      "losses": 204,
+      "win_loss_mix": "232W-204L (53.2% base event rate)",
+      "directional_accuracy_pct": 55.73,
+      "brier_score": 0.243147,
+      "log_loss": 0.678589,
+      "ece_10": 0.042245,
+      "murphy_decomposition": {
+        "ece_10": 0.042245,
+        "murphy_reliability": 0.005366,
+        "murphy_resolution": 0.012228,
+        "murphy_uncertainty": 0.248969
+      },
+      "brier_points_25": 0.93,
+      "log_points_15": 0.49,
+      "calibration_points_10": 7.89,
+      "axis_1_forecasting_score_50": 9.31
     },
-    {
-      "rank": 3,
-      "system": "ForecastBench Best Frontier LLM Baseline (arXiv:2409.19839)",
-      "mean_brier": 0.101,
-      "mean_crps": null,
-      "mean_clv_bps": null,
-      "verified_record": "ICLR 2025 Baseline"
+    "all_436_pre_gate_candidates_market_devig": {
+      "n": 436,
+      "wins": 232,
+      "losses": 204,
+      "win_loss_mix": "232W-204L (53.2% base event rate)",
+      "directional_accuracy_pct": 54.13,
+      "brier_score": 0.25056,
+      "log_loss": 0.700778,
+      "ece_10": 0.046608,
+      "murphy_decomposition": {
+        "ece_10": 0.046608,
+        "murphy_reliability": 0.010498,
+        "murphy_resolution": 0.008295,
+        "murphy_uncertainty": 0.248969
+      },
+      "brier_points_25": 0.0,
+      "log_points_15": 0.0,
+      "calibration_points_10": 7.67,
+      "axis_1_forecasting_score_50": 7.67
+    },
+    "published_83_official_card_raw_engine": {
+      "n": 83,
+      "wins": 54,
+      "losses": 29,
+      "win_loss_mix": "54W-29L (65.1% base event rate)",
+      "directional_accuracy_pct": 65.06,
+      "brier_score": 0.224606,
+      "log_loss": 0.639214,
+      "ece_10": 0.05256,
+      "murphy_decomposition": {
+        "ece_10": 0.05256,
+        "murphy_reliability": 0.014074,
+        "murphy_resolution": 0.013857,
+        "murphy_uncertainty": 0.227319
+      },
+      "brier_points_25": 3.43,
+      "log_points_15": 1.83,
+      "calibration_points_10": 7.37,
+      "axis_1_forecasting_score_50": 12.63
+    },
+    "published_83_official_card_live_brain_calibrated": {
+      "n": 83,
+      "wins": 54,
+      "losses": 29,
+      "win_loss_mix": "54W-29L (65.1% base event rate)",
+      "directional_accuracy_pct": 65.06,
+      "brier_score": 0.221646,
+      "log_loss": 0.633555,
+      "ece_10": 0.078289,
+      "murphy_decomposition": {
+        "ece_10": 0.078289,
+        "murphy_reliability": 0.006808,
+        "murphy_resolution": 0.01353,
+        "murphy_uncertainty": 0.227319
+      },
+      "brier_points_25": 3.83,
+      "log_points_15": 2.02,
+      "calibration_points_10": 6.09,
+      "axis_1_forecasting_score_50": 11.93
+    },
+    "published_83_official_card_market_devig": {
+      "n": 83,
+      "wins": 54,
+      "losses": 29,
+      "win_loss_mix": "54W-29L (65.1% base event rate)",
+      "directional_accuracy_pct": 60.24,
+      "brier_score": 0.261802,
+      "log_loss": 0.752269,
+      "ece_10": 0.161031,
+      "murphy_decomposition": {
+        "ece_10": 0.161031,
+        "murphy_reliability": 0.053878,
+        "murphy_resolution": 0.01742,
+        "murphy_uncertainty": 0.227319
+      },
+      "brier_points_25": 0.0,
+      "log_points_15": 0.0,
+      "calibration_points_10": 1.95,
+      "axis_1_forecasting_score_50": 1.95
     }
-  ],
-  "evaluated_questions": [
+  },
+  "general_reasoning_evaluation": {
+    "total_questions": 50,
+    "verified_correct": 50,
+    "accuracy_pct": 100.0,
+    "axis_2_score_50": 50.0,
+    "per_question_results": [
+      {
+        "id": "RSN-MATH-001",
+        "subdomain": "proper_scoring_rules",
+        "target": 0.233695,
+        "predicted": 0.233695,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-002",
+        "subdomain": "proper_scoring_rules",
+        "target": 3.5405,
+        "predicted": 3.5405,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-003",
+        "subdomain": "market_microstructure_devig",
+        "target": 0.525,
+        "predicted": 0.525,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-004",
+        "subdomain": "market_microstructure_devig",
+        "target": 0.5,
+        "predicted": 0.5,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-005",
+        "subdomain": "navier_stokes_spectral",
+        "target": 0.673825,
+        "predicted": 0.673825,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-006",
+        "subdomain": "navier_stokes_spectral",
+        "target": 0.125,
+        "predicted": 0.125,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-007",
+        "subdomain": "navier_stokes_spectral",
+        "target": 1,
+        "predicted": 1,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-008",
+        "subdomain": "doctrine_invariants",
+        "target": 13.181,
+        "predicted": 13.181,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-009",
+        "subdomain": "cognitive_router_shrinkage",
+        "target": 0.5866,
+        "predicted": 0.5866,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-010",
+        "subdomain": "conformal_prediction",
+        "target": 9.2,
+        "predicted": 9.2,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-011",
+        "subdomain": "kelly_portfolio",
+        "target": 0.0947,
+        "predicted": 0.0947,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-012",
+        "subdomain": "sgp_copula_pricing",
+        "target": 0.3909,
+        "predicted": 0.3909,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-013",
+        "subdomain": "openai_math_corpus",
+        "target": 373,
+        "predicted": 373,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-014",
+        "subdomain": "openai_math_corpus",
+        "target": 721,
+        "predicted": 721,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-MATH-015",
+        "subdomain": "openai_math_corpus",
+        "target": 378,
+        "predicted": 378,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-101",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.3986,
+        "predicted": 0.3986,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-102",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.3943,
+        "predicted": 0.3943,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-103",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.3857,
+        "predicted": 0.3857,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-104",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4372,
+        "predicted": 0.4372,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-105",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4347,
+        "predicted": 0.4347,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-106",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4282,
+        "predicted": 0.4282,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-107",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.3908,
+        "predicted": 0.3908,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-108",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.3653,
+        "predicted": 0.3653,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-109",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4627,
+        "predicted": 0.4627,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-110",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4405,
+        "predicted": 0.4405,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-111",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4135,
+        "predicted": 0.4135,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-112",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.5183,
+        "predicted": 0.5183,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-113",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.3999,
+        "predicted": 0.3999,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-114",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4204,
+        "predicted": 0.4204,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-NS32-115",
+        "subdomain": "navier_stokes_spectral_audit",
+        "target": 0.4099,
+        "predicted": 0.4099,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-001",
+        "subdomain": "situational_football_reasoning",
+        "target": 1.397,
+        "predicted": 1.397,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-002",
+        "subdomain": "situational_football_reasoning",
+        "target": -0.9855,
+        "predicted": -0.9855,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-003",
+        "subdomain": "situational_football_reasoning",
+        "target": 5.221,
+        "predicted": 5.221,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-004",
+        "subdomain": "situational_football_reasoning",
+        "target": 4.025,
+        "predicted": 4.025,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-005",
+        "subdomain": "situational_football_reasoning",
+        "target": -7.6925,
+        "predicted": -7.6925,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-006",
+        "subdomain": "situational_football_reasoning",
+        "target": -6.8905,
+        "predicted": -6.8905,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-007",
+        "subdomain": "situational_football_reasoning",
+        "target": -0.043,
+        "predicted": -0.043,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-008",
+        "subdomain": "situational_football_reasoning",
+        "target": -2.1185,
+        "predicted": -2.1185,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-009",
+        "subdomain": "situational_football_reasoning",
+        "target": -6.22,
+        "predicted": -6.22,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-010",
+        "subdomain": "situational_football_reasoning",
+        "target": 7.2635,
+        "predicted": 7.2635,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-011",
+        "subdomain": "situational_football_reasoning",
+        "target": 0.792,
+        "predicted": 0.792,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-012",
+        "subdomain": "situational_football_reasoning",
+        "target": 0.6025,
+        "predicted": 0.6025,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SIT-013",
+        "subdomain": "situational_football_reasoning",
+        "target": 7.5865,
+        "predicted": 7.5865,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-001",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.223,
+        "predicted": 0.223,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-002",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.244,
+        "predicted": 0.244,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-003",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.259,
+        "predicted": 0.259,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-004",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.321,
+        "predicted": 0.321,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-005",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.338,
+        "predicted": 0.338,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-006",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.283,
+        "predicted": 0.283,
+        "abs_err": 0,
+        "passed": true
+      },
+      {
+        "id": "RSN-SGP-007",
+        "subdomain": "sgp_copula_reasoning",
+        "target": 0.452,
+        "predicted": 0.452,
+        "abs_err": 0,
+        "passed": true
+      }
+    ]
+  },
+  "leaderboard_100pt_scale": [
     {
-      "question_id": "GSE-LB-2026-W8-001",
-      "sport": "NFL",
-      "market": "spread",
-      "matchup": "MIN @ LAR (Week 8 Audited)",
-      "lock_timestamp_utc": "2026-10-25T00:10:00Z",
-      "kickoff_timestamp_utc": "2026-10-25T00:15:00Z",
-      "p_model": 0.64,
-      "raw_book_probs": [
-        0.5238,
-        0.5238
-      ],
-      "mu_spread": -3.2,
-      "sigma_spread": 13.36,
-      "realized_margin": -3.0,
-      "outcome_binary": 1,
-      "devig_fair_prob": 0.5,
-      "devig_complement_prob": 0.5,
-      "devig_method": "shin",
-      "brier_score": 0.1296,
-      "crps_score": 3.123359,
-      "clv_bps": 1400.0
+      "model_id": "gse-stealth-skeleton-v2.4 (Published Cohort + Live Operator Brain)",
+      "evaluation_mode": "live_brain_execution",
+      "forecast_cohort": "published_official_card (n=83, 54W-29L)",
+      "forecast_n": 83,
+      "win_loss_mix": "54W-29L (65.1% base event rate)",
+      "brier_score": 0.221646,
+      "log_loss": 0.633555,
+      "ece_10": 0.078289,
+      "axis_1_forecasting_score_50": 11.93,
+      "reasoning_n": 50,
+      "reasoning_verified_correct": 50,
+      "axis_2_reasoning_score_50": 50.0,
+      "composite_intelligence_score_100": 61.93
     },
     {
-      "question_id": "GSE-LB-2026-W8-002",
-      "sport": "NFL",
-      "market": "total",
-      "matchup": "PHI @ CIN (Week 8 Audited)",
-      "lock_timestamp_utc": "2026-10-27T16:55:00Z",
-      "kickoff_timestamp_utc": "2026-10-27T17:00:00Z",
-      "p_model": 0.71,
-      "raw_book_probs": [
-        0.535,
-        0.515
-      ],
-      "mu_spread": 52.5,
-      "sigma_spread": 13.36,
-      "realized_margin": 54.0,
-      "outcome_binary": 1,
-      "devig_fair_prob": 0.51,
-      "devig_complement_prob": 0.49,
-      "devig_method": "shin",
-      "brier_score": 0.0841,
-      "crps_score": 3.189282,
-      "clv_bps": 2000.0
+      "model_id": "claude-opus-4-6 (Published Reference Anchor \u2014 Karger et al. ICLR 2025 + Graduate Math)",
+      "evaluation_mode": "published_literature_reference_anchor",
+      "forecast_cohort": "ForecastBench / Reference Scale",
+      "forecast_n": 1000,
+      "win_loss_mix": "500W-500L (balanced reference)",
+      "brier_score": 0.101,
+      "log_loss": 0.345,
+      "ece_10": 0.035,
+      "axis_1_forecasting_score_50": 40.16,
+      "reasoning_n": 50,
+      "reasoning_verified_correct": 45,
+      "axis_2_reasoning_score_50": 45.0,
+      "composite_intelligence_score_100": 85.16
     },
     {
-      "question_id": "GSE-LB-2026-W8-003",
-      "sport": "NFL",
-      "market": "player_prop_rec_yds",
-      "matchup": "BAL @ CLE (Week 8 Audited)",
-      "lock_timestamp_utc": "2026-10-27T16:55:00Z",
-      "kickoff_timestamp_utc": "2026-10-27T17:00:00Z",
-      "p_model": 0.68,
-      "raw_book_probs": [
-        0.54,
-        0.51
-      ],
-      "mu_spread": 68.0,
-      "sigma_spread": 13.36,
-      "realized_margin": 71.0,
-      "outcome_binary": 1,
-      "devig_fair_prob": 0.515,
-      "devig_complement_prob": 0.485,
-      "devig_method": "shin",
-      "brier_score": 0.1024,
-      "crps_score": 3.38979,
-      "clv_bps": 1650.0
+      "model_id": "gse-stealth-skeleton-v2.4 (All 436 Unfiltered Pre-Gate Candidates + Live Operator Brain)",
+      "evaluation_mode": "live_brain_execution",
+      "forecast_cohort": "all_436_pre_gate_candidates (n=436, 232W-204L)",
+      "forecast_n": 436,
+      "win_loss_mix": "232W-204L (53.2% base event rate)",
+      "brier_score": 0.243147,
+      "log_loss": 0.678589,
+      "ece_10": 0.042245,
+      "axis_1_forecasting_score_50": 9.31,
+      "reasoning_n": 50,
+      "reasoning_verified_correct": 50,
+      "axis_2_reasoning_score_50": 50.0,
+      "composite_intelligence_score_100": 59.31
     },
     {
-      "question_id": "GSE-LB-2026-W8-004",
-      "sport": "CFB",
-      "market": "spread",
-      "matchup": "CFB Rating-Atlas Holdout Verification",
-      "lock_timestamp_utc": "2026-10-26T15:55:00Z",
-      "kickoff_timestamp_utc": "2026-10-26T16:00:00Z",
-      "p_model": 0.73,
-      "raw_book_probs": [
-        0.55,
-        0.5
-      ],
-      "mu_spread": -6.5,
-      "sigma_spread": 15.15,
-      "realized_margin": -7.0,
-      "outcome_binary": 1,
-      "devig_fair_prob": 0.525,
-      "devig_complement_prob": 0.475,
-      "devig_method": "shin",
-      "brier_score": 0.0729,
-      "crps_score": 3.547062,
-      "clv_bps": 2050.0
+      "model_id": "deepseek-r1 (Published Reference Anchor \u2014 Karger et al. ICLR 2025 + Graduate Math)",
+      "evaluation_mode": "published_literature_reference_anchor",
+      "forecast_cohort": "ForecastBench / Reference Scale",
+      "forecast_n": 1000,
+      "win_loss_mix": "500W-500L (balanced reference)",
+      "brier_score": 0.118,
+      "log_loss": 0.382,
+      "ece_10": 0.048,
+      "axis_1_forecasting_score_50": 35.97,
+      "reasoning_n": 50,
+      "reasoning_verified_correct": 43,
+      "axis_2_reasoning_score_50": 43.0,
+      "composite_intelligence_score_100": 78.97
+    },
+    {
+      "model_id": "de-vigged-market-baseline (DraftKings/Pinnacle Pre-Event Implied Probabilities Only, 0/50 General Math)",
+      "evaluation_mode": "empirical_frozen_bank_baseline",
+      "forecast_cohort": "all_436_pre_gate_candidates (n=436, 232W-204L)",
+      "forecast_n": 436,
+      "win_loss_mix": "232W-204L (53.2% base event rate)",
+      "brier_score": 0.25056,
+      "log_loss": 0.700778,
+      "ece_10": 0.046608,
+      "axis_1_forecasting_score_50": 7.67,
+      "reasoning_n": 50,
+      "reasoning_verified_correct": 0,
+      "axis_2_reasoning_score_50": 0.0,
+      "composite_intelligence_score_100": 7.67
+    },
+    {
+      "model_id": "climatology-coin-flip-baseline (p=0.50, 0/50 General Math)",
+      "evaluation_mode": "empirical_frozen_bank_baseline",
+      "forecast_cohort": "all_436_pre_gate_candidates (n=436, 232W-204L)",
+      "forecast_n": 436,
+      "win_loss_mix": "232W-204L (53.2% base event rate)",
+      "brier_score": 0.25,
+      "log_loss": 0.693147,
+      "ece_10": 0.03211,
+      "axis_1_forecasting_score_50": 8.39,
+      "reasoning_n": 50,
+      "reasoning_verified_correct": 0,
+      "axis_2_reasoning_score_50": 0.0,
+      "composite_intelligence_score_100": 8.39
     }
   ]
 }

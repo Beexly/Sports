@@ -30,6 +30,8 @@ export async function POST(request: Request) {
 
   return handleStealthSkeletonRequest(request, {
     OPENROUTER_PROVIDER_SECRET: process.env["OPENROUTER_PROVIDER_API_KEY"],
+    OPENROUTER_API_KEY: process.env["OPENROUTER_API_KEY"],
+    DEEPINFRA_API_KEY: process.env["DEEPINFRA_API_KEY"],
     STEALTH_SKELETON_PHASE: "dual",
   });
 }

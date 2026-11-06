@@ -202,4 +202,54 @@ describe("workers/stealth-skeleton-provider (OpenRouter v2.4 Provider Spec)", ()
     );
     assert.equal(validateRes.status, 200);
   });
+
+  it("answers from the real analytical & forecasting brain and never echoes a static template", async () => {
+    const crpsRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "gse/skeleton-v1",
+          messages: [
+            {
+              role: "user",
+              content:
+                "For a Gaussian predictive distribution N(mu, sigma^2) with CFB spread dispersion sigma = 15.15 evaluated at y = mu, compute the exact CRPS(N(mu, 15.15^2), mu) to 4 decimal places.",
+            },
+          ],
+        }),
+      })
+    );
+    assert.equal(crpsRes.status, 200);
+    const crpsBody = (await crpsRes.json()) as {
+      choices: Array<{ message: { content: string } }>;
+    };
+    const content = crpsBody.choices[0].message.content;
+    assert.ok(!content.includes("Response for:"), "Must never return static template text");
+    assert.ok(content.includes("Answer: 3.5405"), `Expected exact CRPS Answer: 3.5405, got: ${content}`);
+
+    const forecastRes = await handleStealthSkeletonRequest(
+      new Request("https://stealth.galaxysportsedge.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "gse/skeleton-v1",
+          messages: [
+            {
+              role: "user",
+              content:
+                "Forecast CHI@SEA CHI ML (+142) [market_type=MONEYLINE, gate_decision=PUBLISH, engine_prob=0.6356, market_prob=0.3962]",
+            },
+          ],
+        }),
+      })
+    );
+    assert.equal(forecastRes.status, 200);
+    const forecastBody = (await forecastRes.json()) as {
+      choices: Array<{ message: { content: string } }>;
+    };
+    const fcContent = forecastBody.choices[0].message.content;
+    assert.ok(!fcContent.includes("Response for:"));
+    assert.match(fcContent, /Answer:\s*0\.6121/);
+  });
 });

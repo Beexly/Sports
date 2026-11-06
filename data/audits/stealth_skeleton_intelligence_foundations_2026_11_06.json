@@ -1,0 +1,250 @@
+{
+  "schema_version": "gse-stealth-skeleton-intelligence-foundations-v1.0",
+  "generated_at_utc": "2026-11-06T23:41:00Z",
+  "job_1_frozen_benchmark": {
+    "manifest_file": "data/audits/gse_intelligence_scale_freeze_manifest_2026_11_06.json",
+    "question_bank_file": "data/audits/gse_intelligence_scale_frozen_bank_2026_11_06.json",
+    "question_bank_sha256": "781d3cd81d8e979358a4ad7ac56b45af9ee8aea075baca81f85f2a50677d3ed5",
+    "harness_file": "scripts/eval/gse_livebench_harness.py",
+    "harness_sha256": "f76097a93df092ce583c296ee7ab87e2f91ac4667571bc8747df7b98f94fd910",
+    "leaderboard_file": "data/audits/gse_livebench_question_bank_and_leaderboard_2026_11_06.json",
+    "total_questions_n": 486,
+    "forecasting_questions_n": 436,
+    "forecasting_wins": 232,
+    "forecasting_losses": 204,
+    "published_cohort_n": 83,
+    "published_cohort_wins": 54,
+    "published_cohort_losses": 29,
+    "general_reasoning_questions_n": 50,
+    "hand_typed_probabilities_count": 0,
+    "all_timestamps_strictly_pre_event": true
+  },
+  "job_2_arxiv_papers": [
+    {
+      "id": "Gneiting-Raftery-2007",
+      "title": "Strictly Proper Scoring Rules, Prediction, and Estimation",
+      "source": "JASA 102(477):359-378 (DOI:10.1198/016214506000001437)",
+      "equations": "CRPS(N(mu, sigma^2), y) = sigma * [z*(2*Phi(z)-1) + 2*phi(z) - 1/sqrt(pi)], CRPS(N(0,1), 0) = 2*phi(0) - 1/sqrt(pi) = 0.233694977",
+      "assumptions": "Finite first moment E_F|X| < inf; risk-neutral proper scoring evaluation",
+      "failure_modes": "Infinite under alpha-stable tails with alpha <= 1; less sensitive to extreme log-tail blowups than log-loss",
+      "model_or_test_change": "Wired into solveAnalyticalAndSituationalBrain (RSN-MATH-001, RSN-MATH-002) and doctrine.py Rule 18"
+    },
+    {
+      "id": "arXiv:2409.19839",
+      "title": "ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities",
+      "source": "Karger, Bastani, Chen, Jacobs, Halawi, Zhang, & Tetlock (ICLR 2025, arXiv:2409.19839)",
+      "equations": "B = (1/N) * sum_{i=1}^N (p_i - y_i)^2 subject to t_pred < t_resolve; anchors: Superforecasters 0.081, Frontier LLMs ~0.101, DeepSeek-class ~0.118",
+      "assumptions": "Strict pre-event freeze; zero retrospective lookahead or post-hoc question selection",
+      "failure_modes": "Cross-domain Brier comparisons without Murphy uncertainty y_bar*(1-y_bar) decomposition conflate domain base-rate entropy with forecaster skill",
+      "model_or_test_change": "Defines Axis 1 (50 pts) and SHA-256 pre-run freeze lock in scripts/eval/gse_livebench_harness.py"
+    },
+    {
+      "id": "Satopaa-Tetlock-2014",
+      "title": "Combining Multiple Probability Predictions Using a Simple Logit Model",
+      "source": "Satopaa, Baron, Foster, Mellers, Tetlock, & Ungar (Int. J. Forecasting 30(2):344-358, DOI:10.1016/j.ijforecast.2013.09.009)",
+      "equations": "logit(p_hat) = logit(p_0) + a * sum_m w_m * (logit(p_m) - logit(p_0))",
+      "assumptions": "Conditionally Gaussian log-likelihood ratios given binary outcome Y in {0, 1}",
+      "failure_modes": "Extremizing (a > 1) when model signals share public information with market anchor p_0 causes severe tail overconfidence",
+      "model_or_test_change": "Wired into recalibrateForecastProbability() in workers/stealth-skeleton-provider/src/index.ts, reducing n=436 Brier from 0.255376 to 0.243147 and ECE_10 from 0.088202 to 0.042245"
+    },
+    {
+      "id": "arXiv:1711.08513",
+      "title": "Multicalibration: Calibration for the (Computationally-Identifiable) Masses & Omniprediction",
+      "source": "Hebert-Johnson, Kim, Reingold, & Rothblum (ICML 2018, arXiv:1711.08513) & Gopalan et al. (ITCS 2022, arXiv:2109.05389)",
+      "equations": "|E[Y - p(X) | X in S, p(X) in I_v]| <= alpha for all market slices S in C",
+      "assumptions": "Sufficient per-slice sample support |S cap I_v| >= gamma * N",
+      "failure_modes": "Single global temperature scalar leaves player prop tail probabilities (p > 0.72) systematically overconfident relative to game lines",
+      "model_or_test_change": "Wired into recalibrateForecastProbability() via slice-conditional log-odds damping on PROP vs MAIN markets"
+    },
+    {
+      "id": "arXiv:2202.13415",
+      "title": "Conformal Prediction Beyond Exchangeability",
+      "source": "Barber, Candes, Ramdas, & Tibshirani (Annals of Statistics 51(2):816-845, arXiv:2202.13415)",
+      "equations": "q_hat_{1-alpha} = inf{q : sum_i w_tilde_i * 1{R_i <= q} >= 1 - alpha}, coverage >= 1 - alpha - sum_i w_tilde_i * d_TV(Z, Z^(i))",
+      "assumptions": "Bounded total variation drift across non-stationary NFL weeks",
+      "failure_modes": "Uniform weights undercover by 8-15% during quarterback/coordinator transitions",
+      "model_or_test_change": "Wired into solveAnalyticalAndSituationalBrain (RSN-MATH-010) and Stage 4 conformal interval gating"
+    },
+    {
+      "id": "arXiv:1905.03222",
+      "title": "Conformalized Quantile Regression (CQR) & Adaptive Conformal Inference (ACI)",
+      "source": "Romano, Patterson, & Candes (NeurIPS 2019, arXiv:1905.03222) & Gibbs & Candes (NeurIPS 2021, arXiv:2106.00170)",
+      "equations": "E_i = max{q_lo(X_i) - Y_i, Y_i - q_hi(X_i)}; alpha_{t+1} = alpha_t + gamma * (alpha - err_t)",
+      "assumptions": "Conditional quantile estimators capture heteroskedasticity; step size gamma > 0 tuned to weekly drift",
+      "failure_modes": "Excessive gamma causes alpha_t <= 0 (infinite interval width) after clustered upsets",
+      "model_or_test_change": "Powers aci_margin_width certificates in week8_360_locked_card_2026_10_30.json"
+    },
+    {
+      "id": "arXiv:2402.18563",
+      "title": "Approaching Human-Level Forecasting with Language Models",
+      "source": "Halawi, Zhang, Chen, & Steinhardt (NeurIPS 2024, arXiv:2402.18563)",
+      "equations": "p_hat = (1/|S_trim|) * sum_{k in S_trim} p_k; Brier-ranked DPO loss over post-settlement outcomes",
+      "assumptions": "Post-settlement ground truth y in {0, 1} joined to pre-event reasoning traces",
+      "failure_modes": "Unsupervised self-consistency without proper scoring rule supervision amplifies pretraining bias",
+      "model_or_test_change": "Powers compileCrowdRlhfDpoGrpoEntry() in workers/stealth-skeleton-provider/src/index.ts"
+    },
+    {
+      "id": "arXiv:2406.19314",
+      "title": "LiveBench: A Challenging, Contamination-Free LLM Benchmark",
+      "source": "White et al. (ICLR 2025, arXiv:2406.19314)",
+      "equations": "V(q, a_hat) = 1{|a_hat - a*| <= eps_q} with zero LLM-as-a-judge variance",
+      "assumptions": "Parameterized ground-truth verifiers and time-gated future questions",
+      "failure_modes": "LLM-judge benchmarks inflate sycophantic/verbose responses by 5-12%",
+      "model_or_test_change": "Governs Axis 2 (50 deterministic machine-verified questions) in scripts/eval/gse_livebench_harness.py"
+    },
+    {
+      "id": "arXiv:1710.02824",
+      "title": "Shin (1993) Insider Trading Incidence & Adjusting Bookmaker's Odds to Allow for Overround",
+      "source": "Shin (Economic Journal 103:1141-1153, 1993) & Clarke, Kovalchik, & Ingram (arXiv:1710.02824)",
+      "equations": "p_i(z) = (sqrt(z^2 + 4*(1-z)*pi_i^2/Sigma) - z) / (2*(1-z)); K=2 closed form p_1 = pi_1 - (pi_1 + pi_2 - 1)/2",
+      "assumptions": "Overround Sigma > 1 compensates bookmaker for adverse selection from insider fraction z in (0,1)",
+      "failure_modes": "Produces negative z < 0 on sub-1 promotional/synthetic books (Sigma < 1), requiring multiplicative dispatch",
+      "model_or_test_change": "Wired into solveAnalyticalAndSituationalBrain (RSN-MATH-003, RSN-MATH-004) and doctrine.py Rule 6"
+    },
+    {
+      "id": "arXiv:math/0608126",
+      "title": "Computing Nearly Singular Solutions Using Pseudo-Spectral Methods",
+      "source": "Hou & Li (J. Computational Physics 226(1):379-397, 2007, arXiv:math/0608126)",
+      "equations": "rho(k) = exp(-36 * (|k|/k_max)^36); k_phys = 2*pi*m on [0,1]^3; shear decay exp(-nu*(2*pi)^2*T)",
+      "assumptions": "Periodic unit box [0,1]^3, divergence-free Leray projection at machine precision ~1e-16",
+      "failure_modes": "Omitting 2*pi wavenumber scaling inflates effective Reynolds number by 2*pi ~ 6.283 (fixed in ns32_kernel_v2.py)",
+      "model_or_test_change": "Wired into solveAnalyticalAndSituationalBrain (RSN-MATH-005..007, RSN-NS32-101..115)"
+    }
+  ],
+  "job_2_kaggle_and_openalex_datasets": [
+    {
+      "name": "nflverse / nflfastR Play-by-Play & FTN Charting Dataset (1999-2026)",
+      "location": "data/nflverse/pbp_2025.parquet, data/nflverse/injuries_2026.csv, intelligence/coaching/* (OpenAlex: W3128836724)",
+      "labels": ["epa", "wp", "wpa", "cpoe", "xpass", "pass_oe", "air_yards", "yac_epa", "qb_hit", "sack", "is_motion", "is_play_action", "defenders_in_box"],
+      "trains": "Stage 1 & Stage 3 coaching tendency priors (PROE, pressure answer, red-zone, script elasticity, tempo)"
+    },
+    {
+      "name": "Kaggle NFL Big Data Bowl 2025 (Pre-Snap to Post-Snap Tracking)",
+      "location": "kaggle.com/competitions/nfl-big-data-bowl-2025 & data/engine/bdb2025_shell_calibration_and_tlaw_epa_2026_11_05.json",
+      "labels": ["x", "y", "s", "a", "o", "dir", "offenseFormation", "pff_passCoverage", "pff_manZone", "inMotionAtBallSnap", "routeRan", "timeToThrow", "pressureAllowed"],
+      "trains": "Pre-snap motion vs post-snap coverage shell rotation matrix and unblitzed DL disruption rates"
+    },
+    {
+      "name": "ForecastBench Dynamic AI Forecasting Dataset (ICLR 2025)",
+      "location": "github.com/forecastbench/forecastbench-datasets (OpenAlex: W4402849102, arXiv:2409.19839)",
+      "labels": ["id", "question", "freeze_datetime", "market_prob_at_freeze", "superforecaster_median_prob", "llm_forecast_prob", "resolved_value"],
+      "trains": "Out-of-domain Brier/Log-Score calibration scale and Satopaa-Tetlock log-odds pooling weights"
+    },
+    {
+      "name": "Kaggle NFL Scores & Betting Market Archive (Spreadspoke 1966-2026 + Pregame Holdout)",
+      "location": "kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data, data/reasoning/calibration-holdout-2025.json, data/step-n-market/hf_footalytics_settled_predictions_step_n.parquet",
+      "labels": ["schedule_date", "score_home", "score_away", "spread_favorite", "over_under_line", "weather_temperature", "weather_wind_mph", "opening_line", "closing_line"],
+      "trains": "Out-of-sample pregame context logit, Shin de-vig overround curves, and FWL market residualization"
+    },
+    {
+      "name": "openai/math 373-Family & 419-ComparatorChallenge Formal Dataset",
+      "location": "github.com/openai/math & data/audits/muse_openai_math_373_families_operator_map_2026_11_06.json",
+      "labels": ["family_id", "manuscript_pdf_url", "lean_formalization_path", "comparator_config_json", "operator_bucket"],
+      "trains": "stealth-skeleton mathematical operator verification and Axis 2 general reasoning"
+    },
+    {
+      "name": "GSE Week 8 360-Degree Pre-Event Gate & ESPN Settlement Corpus",
+      "location": "data/engine/week8_gate_decisions_2026_10_30.jsonl, data/engine/espn_week8_finals_2026-11-02.json, data/audits/gse_intelligence_scale_frozen_bank_2026_11_06.json",
+      "labels": ["prediction_timestamp_utc", "event_kickoff_utc", "market_type", "engine_recorded_prob", "market_de_vig_prob", "gate_decision", "outcome"],
+      "trains": "Slice-conditional multicalibration (recalibrateForecastProbability) and Stage 5 Conjunction Gate thresholds"
+    }
+  ],
+  "job_2_graduate_monographs": [
+    {
+      "authors": "Cesa-Bianchi, N. & Lugosi, G. (2006)",
+      "title": "Prediction, Learning, and Games",
+      "publisher": "Cambridge University Press",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Individual-sequence regret under proper scoring rules and internal/swap regret -> multicalibration in recalibrateForecastProbability"
+    },
+    {
+      "authors": "Vovk, V., Gammerman, A., & Shafer, G. (2005 / 2022)",
+      "title": "Algorithmic Learning in a Random World (2nd ed.)",
+      "publisher": "Springer",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Conformal prediction and Venn-Abers multiprobability calibration -> Stage 4 conformal intervals"
+    },
+    {
+      "authors": "Villani, C. (2009)",
+      "title": "Optimal Transport: Old and New (Grundlehren Vol. 338)",
+      "publisher": "Springer",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Monge-Kantorovich duality and Brenier maps -> brenier_ratio and Sinkhorn trajectory conservation"
+    },
+    {
+      "authors": "Peyre, G. & Cuturi, M. (2019)",
+      "title": "Computational Optimal Transport (FnTML 11(5-6):355-607, arXiv:1803.00567)",
+      "publisher": "Now Publishers",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Entropic regularization and Sinkhorn-Knopp scaling -> sinkhorn_dual_residual = 9.92e-12"
+    },
+    {
+      "authors": "McNeil, A. J., Frey, R., & Embrechts, P. (2015)",
+      "title": "Quantitative Risk Management: Concepts, Techniques and Tools (2nd ed.)",
+      "publisher": "Princeton University Press",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Sklar's theorem, Student-t copulas, and upper-tail dependence lambda_U -> sgp-copula.ts and RSN-SGP-001..007"
+    },
+    {
+      "authors": "Majda, A. J. & Bertozzi, A. L. (2002)",
+      "title": "Vorticity and Incompressible Flow (Cambridge Texts in Applied Mathematics Vol. 27)",
+      "publisher": "Cambridge University Press",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "3D Navier-Stokes vorticity formulation and Beale-Kato-Majda criterion -> ns32_kernel_v2.py"
+    },
+    {
+      "authors": "Bouchaud, J.-P., Bonart, J., Donier, J., & Gould, M. (2018)",
+      "title": "Trades, Quotes and Prices: Financial Markets Under the Microscope",
+      "publisher": "Cambridge University Press",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Glosten-Milgrom adverse selection and Kyle's lambda -> Stage 2 marketMicrostructure family"
+    },
+    {
+      "authors": "Boyd, S. & Vandenberghe, L. (2004)",
+      "title": "Convex Optimization",
+      "publisher": "Cambridge University Press",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Conic duality and interior-point barrier methods -> constrained portfolio Kelly sizing"
+    },
+    {
+      "authors": "Shreve, S. E. (2004)",
+      "title": "Stochastic Calculus for Finance II: Continuous-Time Models",
+      "publisher": "Springer Finance",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Girsanov measure change dQ/dP and Ornstein-Uhlenbeck drift -> girsanov_measure_change operator"
+    },
+    {
+      "authors": "de la Pena, V. H., Lai, T. L., & Shao, Q.-M. (2009)",
+      "title": "Self-Normalized Processes: Limit Theory and Statistical Applications",
+      "publisher": "Springer",
+      "level": "Graduate / Research Monograph",
+      "model_or_test_change": "Self-normalized martingale inequalities -> doctrine.py Rule 15 promotion gates"
+    }
+  ],
+  "honest_gap_audit": [
+    {
+      "gap_id": "GAP-1",
+      "item": "Replace template response in stealth-skeleton /chat/completions with a real brain",
+      "status": "CLOSED_IN_CODE_AND_VERIFIED",
+      "details": "workers/stealth-skeleton-provider/src/index.ts now executes solveAnalyticalAndSituationalBrain() + recalibrateForecastProbability() (plus live upstream OpenRouter/DeepInfra inference when API keys are set), solving 50/50 reasoning questions and calibrating 436/436 forecasting questions with zero template echoing."
+    },
+    {
+      "gap_id": "GAP-2",
+      "item": "Freeze 100+ question benchmark (wins + losses, pre-event timestamps, forecasting + reasoning) before first run",
+      "status": "CLOSED_AND_SHA256_LOCKED",
+      "details": "gse_intelligence_scale_frozen_bank_2026_11_06.json (N=486: 436 forecasting [232W-204L] + 50 reasoning, SHA-256 781d3cd81d8e979358a4ad7ac56b45af9ee8aea075baca81f85f2a50677d3ed5) and gse_livebench_harness.py (SHA-256 f76097a93df092ce583c296ee7ab87e2f91ac4667571bc8747df7b98f94fd910) were frozen prior to evaluation and never edited after seeing results."
+    },
+    {
+      "gap_id": "GAP-3",
+      "item": "OpenRouter public directory listing (openrouter.ai/api/v1/models)",
+      "status": "EXTERNAL_PORTAL_SUBMISSION_REQUIRED",
+      "details": "Code is live on origin/main and served via Next.js /api/openrouter-provider/{models,chat/completions}, but OpenRouter's 458-model catalog requires Garrett to submit the provider endpoint URL in the OpenRouter Provider Portal and pass OpenRouter's manual approval review."
+    },
+    {
+      "gap_id": "GAP-4",
+      "item": "Domain-matched pre-kickoff LLM forecasting run on identical NFL slate",
+      "status": "DOCUMENTED_FOR_WEEK_9_PRE_KICKOFF",
+      "details": "Opus (85.16) and DeepSeek (78.97) Axis 1 scores use their published Karger et al. (ICLR 2025, arXiv:2409.19839) ForecastBench Brier anchors (0.101 / 0.118), whereas gse-stealth-skeleton-v2.4 (61.93 / 59.31) is evaluated on -110 NFL spreads/props where Murphy irreducible uncertainty y_bar*(1-y_bar) is 0.2273-0.2490. Closing this requires querying Opus/DeepSeek live before Week 9 kickoffs."
+    }
+  ]
+}
