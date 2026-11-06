@@ -25,9 +25,17 @@ DB = r"C:/Users/Garrett/capper-one/_shared/capper.db"
 def connect(path: str = DB) -> sqlite3.Connection:
     con = sqlite3.connect(path, timeout=30, isolation_level=None)
     con.execute("PRAGMA busy_timeout=30000")
-    mode = con.execute("PRAGMA journal_mode=WAL").fetchone()[0]
-    if mode.lower() != "wal":
-        raise RuntimeError(f"journal_mode is {mode}, expected wal")
+    # Switching journal mode needs a brief exclusive lock. Under load that fails even with
+    # busy_timeout set, so retry before treating a non-WAL mode as a broken database.
+    mode, delay = "delete", 0.4
+    for attempt in range(6):
+        mode = con.execute("PRAGMA journal_mode=WAL").fetchone()[0]
+        if mode.lower() == "wal":
+            break
+        if attempt == 5:
+            raise RuntimeError(f"journal_mode stayed {mode} after 6 attempts")
+        time.sleep(delay)
+        delay = min(delay * 1.8, 6.0)
     con.execute("PRAGMA synchronous=NORMAL")
     return con
 
