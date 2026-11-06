@@ -37,6 +37,9 @@ from intelligence.retrieval.pinecone_hybrid_corpus_index import (
     build_uncompressed_full_corpus_documents,
 )
 from intelligence.telemetry.posthog_cloud_context_layer import (
+    OPENDOTS_SPACE_DOT_CONFIG,
+    POSTHOG_EXECUTIVE_HOGQL_INSIGHTS,
+    POSTHOG_EXECUTIVE_WAREHOUSE_TABLES,
     POSTHOG_WAREHOUSE_TABLES,
     ContextMillCompactor,
     DuckgresHoglakeEngine,
@@ -345,3 +348,36 @@ def test_reverse_interleaved_8step_5api_xai_cascade_artifacts() -> None:
     assert payload["pinecone_upsert_receipt"]["namespace"] == "gse-xai-5api-omniscience"
     assert payload["pinecone_upsert_receipt"]["vectors_upserted"] == 20
     assert payload["posthog_warehouse_sync"]["tables_synced"] == 5
+
+
+def test_posthog_516325_executive_5_hogql_insights_and_opendots_config() -> None:
+    expected_exec_tables = {
+        "gse_settled_ledger_62_23_1",
+        "gse_121_funding_inventory",
+        "gse_71_wave_xai_omniscience",
+        "gse_210_books_and_372_repos",
+        "gse_week9_360_board_and_dfs",
+    }
+    assert set(POSTHOG_EXECUTIVE_WAREHOUSE_TABLES.keys()) == expected_exec_tables
+    assert len(POSTHOG_EXECUTIVE_HOGQL_INSIGHTS) == 5
+
+    client = PostHogCloudContextClient(offline_mode=True)
+    exec_report = client.verify_and_run_executive_5_hogql_insights(send_live=False)
+    assert exec_report["project_id"] == "516325"
+    assert exec_report["host"] == "https://us.posthog.com"
+    assert set(exec_report["executive_tables"]) == expected_exec_tables
+    assert exec_report["insights_verified_count"] == 5
+    assert exec_report["opendots_config_verified"] is True
+
+    assert OPENDOTS_SPACE_DOT_CONFIG["web_ui_url"] == "http://127.0.0.1:5173"
+    assert OPENDOTS_SPACE_DOT_CONFIG["api_server_url"] == "http://127.0.0.1:4310"
+    assert OPENDOTS_SPACE_DOT_CONFIG["telemetry_guard"]["COPILOTKIT_TELEMETRY_DISABLED"] == "true"
+    assert OPENDOTS_SPACE_DOT_CONFIG["isolated_computers"]["zero_host_shell_fallback"] is True
+    assert set(OPENDOTS_SPACE_DOT_CONFIG["copilotkit_ecosystem_integrations"].keys()) == {
+        "OpenDots",
+        "OpenBot",
+        "OpenMuse",
+        "OpenTag",
+        "channels-sdk",
+    }
+
