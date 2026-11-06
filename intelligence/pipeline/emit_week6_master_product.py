@@ -29,7 +29,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
-import psycopg2
 from dotenv import dotenv_values
 
 REPO = Path(__file__).resolve().parents[2]
@@ -117,6 +116,7 @@ def _norm_name(name: str) -> str:
 
 
 def _get_db_conn():
+    import psycopg2
     for fname in (".env.production.local", ".env.local"):
         p = REPO / fname
         if p.exists():
