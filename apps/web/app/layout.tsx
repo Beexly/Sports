@@ -17,6 +17,7 @@ import {
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
+import { AdSenseLoader } from "@/components/observability/AdSenseLoader";
 import {
   shouldRenderCloudflareAnalytics,
   shouldRenderMicrosoftClarity,
@@ -202,6 +203,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <meta name="google-adsense-account" content="ca-pub-8151105906877749" />
+        <AdSenseLoader src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8151105906877749" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

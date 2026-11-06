@@ -1,13 +1,13 @@
 /**
- * ads.txt — honest empty inventory declaration.
- * GSE is not a display-ad network; crawlers should not invent sellers.
+ * ads.txt — authorizes Google AdSense (publisher pub-8151105906877749) as the
+ * only seller of this site's display inventory. f08c47fec0942fa0 is Google's
+ * fixed AdSense certification authority ID.
  */
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";
 
-const BODY = `# Galaxy Sports Edge does not sell third-party display advertising inventory.
-# No authorized digital sellers. Contact: hq@galaxysportsedge.com
+const BODY = `google.com, pub-8151105906877749, DIRECT, f08c47fec0942fa0
 `;
 
 export function GET(): NextResponse {
