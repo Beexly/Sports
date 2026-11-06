@@ -194,16 +194,68 @@ export function buildSituationalContext(bundle: GameBundle): SituationalContext 
  */
 export function runIntelligence(bundle: GameBundle): IntelligenceResult {
   const ctx = buildSituationalContext(bundle);
-  const reasoning = reason(ctx);
+  const baseReasoning = reason(ctx);
+  // L2 trace: the situational engine consumes the spine's calibrated market
+  // fair-probability and the SAME observations reason() saw, then modulates
+  // calibratedProb (clamped to [0.05, 0.95] with |deltaProb| <= 0.08) and
+  // appends active situational/corpus/mind evidence to reasoning.why.
+  const situationTrace = runSituationalTrace(ctx, baseReasoning);
+
+  const sel = (ctx.selection || "").trim().toUpperCase();
+  const away = (ctx.awayTeam || "").trim().toUpperCase();
+  const isAwayOrUnder =
+    (away.length > 0 && (sel === away || sel.startsWith(`${away} `))) ||
+    sel.startsWith("UNDER");
+  const orientationSign = isAwayOrUnder ? -1 : 1;
+
+  const matchedPaperCount =
+    situationTrace.corpusEvaluation?.matchedPaperCount ??
+    situationTrace.corpusEvaluation?.itemsEvaluatedCount ??
+    0;
+
+  let calibratedProb = baseReasoning.calibratedProb;
+  let why = baseReasoning.why;
+
+  if (situationTrace.ok) {
+    const obsComponent =
+      situationTrace.activeCount > 0 ? (situationTrace.delta ?? 0) * 0.25 : 0;
+    const corpusComponent =
+      (situationTrace.corpusSituationalShift ?? 0) * orientationSign * 0.25;
+    const mindComponent =
+      (situationTrace.mindEvaluation?.netLogitShift ??
+        situationTrace.mindEvaluation?.netSituationalAdjustment ??
+        0) *
+      orientationSign *
+      0.05;
+    const rawDeltaProb = obsComponent + corpusComponent + mindComponent;
+    const boundedDeltaProb = Math.max(-0.08, Math.min(0.08, rawDeltaProb));
+    calibratedProb = Number(
+      Math.max(0.05, Math.min(0.95, baseReasoning.calibratedProb + boundedDeltaProb)).toFixed(4),
+    );
+
+    if (situationTrace.activeCount > 0 || matchedPaperCount > 0) {
+      const mindPrinciplesCount =
+        situationTrace.mindEvaluation?.applicablePrinciples.length ?? 0;
+      const traceEvidence = `L2 situational trace: ${situationTrace.activeCount} active signal(s), ${matchedPaperCount} corpus paper(s) evaluated, ${mindPrinciplesCount} mind principle(s) triggered (delta ${(boundedDeltaProb >= 0 ? "+" : "") + (boundedDeltaProb * 100).toFixed(2)}%)`;
+      why = [...baseReasoning.why, traceEvidence];
+    }
+  }
+
+  const edgeVsMarket =
+    baseReasoning.marketFairProb != null
+      ? Number((calibratedProb - baseReasoning.marketFairProb).toFixed(4))
+      : baseReasoning.edgeVsMarket;
+
+  const reasoning: IntelligenceReasoning = {
+    ...baseReasoning,
+    calibratedProb,
+    edgeVsMarket,
+    why,
+  };
+
   const summary = explain(ctx, reasoning);
   const presence = signalPresence(ctx.observations);
-  // modelProb is calibratedProb (shift is already inside reason()); exposed
-  // separately so proof receipts can store it and Brier can be computed.
   const modelProb = computeModelProb(reasoning.calibratedProb, 0);
-  // L2 trace: the situational engine consumes the spine's calibrated market
-  // fair-probability and the SAME observations reason() saw. Fail-open by
-  // contract: a trace failure records the reason and never blocks the pick.
-  const situationTrace = runSituationalTrace(ctx, reasoning);
 
   return {
     reasoning,

@@ -76,7 +76,13 @@ describe("calibration weights (live Neon picks, 3,263 graded)", () => {
     expect(boost.some((a) => a.value === "MONEYLINE")).toBe(true);
     expect(boost.some((a) => a.value === "NCAAF")).toBe(true);
     expect(shouldSuppress("NFL", "SPREAD", "LEAN")).toBe(true);
+    expect(shouldSuppress("NFL", "SPREAD")).toBe(true);
     expect(shouldSuppress("NCAAF", "MONEYLINE", "STRONG_PLAY")).toBe(false);
+    expect(shouldSuppress("NFL", "SPREAD", { verifiedStage5Gate: true })).toBe(false);
+    expect(shouldSuppress("NFL", "SPREAD", "LEAN", { verifiedStage5Gate: true })).toBe(false);
+    expect(shouldSuppress("NFL", "SPREAD", { independentEdgeDecision: "BET", rawEdge: 0.03 })).toBe(false);
+    expect(shouldSuppress("NFL", "SPREAD", { independentEdgeDecision: "BET", rawEdge: 0.01 })).toBe(true);
+    expect(shouldSuppress("NFL", "SPREAD", { independentEdgeDecision: "PASS", rawEdge: 0.05, verifiedStage5Gate: true })).toBe(true);
   });
 
   it("exposes the live signal-coverage gap: injuries/NGS/weather never attach to picks", () => {

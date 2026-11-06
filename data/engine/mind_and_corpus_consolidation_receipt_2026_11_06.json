@@ -1,0 +1,103 @@
+{
+  "schema": "gse-mind-and-corpus-consolidation-receipt-v1",
+  "generated_at": "2026-11-06T07:01:42.335819+00:00",
+  "single_writer_doctrine_respected": true,
+  "brain_mind_jsonl_modified": false,
+  "staging_directory": "data/mind_staging",
+  "output_feed_path": "brain/feeds/unified_mind_staging_waves1_to_12_2026_11_06.jsonl",
+  "output_feed_sha256": "4fd9e145e75b2e169fc0fde1d80fe2da810eb37a99d3bc7acd996cbc698b5393",
+  "total_staging_files_inspected": 11,
+  "staging_jsonl_files_count": 9,
+  "staging_manifest_files_count": 2,
+  "auxiliary_mind_jsonl_files_count": 1,
+  "raw_staging_jsonl_records": 3943,
+  "raw_staging_plus_manifest_lines": 3962,
+  "raw_total_records_with_auxiliary": 3965,
+  "deduplicated_unified_records": 2592,
+  "duplicates_collapsed": 1373,
+  "waves_covered": [
+    "wave_1_to_4_full_corpus",
+    "wave_3_4_gaphunt_repocatalog_am_pm",
+    "wave_5_6_7_batches",
+    "wave_8_football_books_and_github_repos",
+    "wave_9_downloads_full_225_corpus",
+    "wave_10_gcp_catalog_and_34_github_repos",
+    "wave_11_downloads_27files_situational_rescue",
+    "wave_12_entire_google_drive_and_onedrive",
+    "master_aggregator_tnf_jax_bal"
+  ],
+  "file_breakdown": [
+    {
+      "file": "mind_2026_11_05_manifest.json",
+      "kind": "manifest_json",
+      "line_count": 14,
+      "records_ingested": 0
+    },
+    {
+      "file": "mind_batch4_5_7_manifest.json",
+      "kind": "manifest_json",
+      "line_count": 19,
+      "records_ingested": 0
+    },
+    {
+      "file": "master_aggregator_tnf_jax_bal_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 18,
+      "unique_new_records": 18
+    },
+    {
+      "file": "mind_2026_11_05_full_corpus.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 1389,
+      "unique_new_records": 1389
+    },
+    {
+      "file": "mind_batch3_batch4_gaphunt_repocatalog_am_pm_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 1463,
+      "unique_new_records": 98
+    },
+    {
+      "file": "mind_batches_5_6_7_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 8,
+      "unique_new_records": 0
+    },
+    {
+      "file": "mind_downloads_full_225_corpus_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 441,
+      "unique_new_records": 441
+    },
+    {
+      "file": "mind_wave10_gcp_catalog_and_34_github_repos_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 240,
+      "unique_new_records": 240
+    },
+    {
+      "file": "mind_wave11_downloads_27files_situational_rescue_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 100,
+      "unique_new_records": 100
+    },
+    {
+      "file": "mind_wave12_entire_google_drive_and_onedrive_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 169,
+      "unique_new_records": 169
+    },
+    {
+      "file": "mind_wave8_football_books_and_github_repos_2026_11_05.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 115,
+      "unique_new_records": 115
+    },
+    {
+      "file": "data/mind/mind_feed_2026_10_30_pm_sweep_and_github10.jsonl",
+      "kind": "auxiliary_mind_jsonl",
+      "line_count": 22,
+      "unique_new_records": 22
+    }
+  ]
+}

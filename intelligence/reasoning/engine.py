@@ -28,6 +28,7 @@ from .escalation import (
 )
 from .exceptions import ChecklistInvalid, ContractViolation, InvalidDepth
 from .interfaces import AnalysisRequest, DataContext
+from .orchestrator import validate_corpus_and_equation_gate
 from .levels import (
     build_checklist,
     run_l1,
@@ -87,6 +88,9 @@ class AnalysisEngine:
         floor = self._effective_floor(req)
         if floor is not None and floor.rank() > trace.depth.rank():
             escalate_to(trace, floor, self._floor_trigger_name(req))
+
+        # Populate corpus_hits (when empty) and enforce equation gate_status == "VALIDATED".
+        validate_corpus_and_equation_gate(ctx, query=req.question)
 
         # L1 — direct lookup.
         triggers = run_l1(req, ctx, trace, self.registry)

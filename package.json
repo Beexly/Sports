@@ -162,6 +162,12 @@
     "ops:impeccable": "node scripts/ops/impeccable-probe.mjs",
     "check:ledger": "node scripts/ops/check-agent-ledger.mjs",
     "guardrails:chain": "node scripts/guardrails/run-all.mjs",
+    "turbo:build": "turbo build",
+    "turbo:test": "turbo test",
+    "turbo:typecheck": "turbo typecheck",
+    "turbo:lint": "turbo lint",
+    "turbo:affected:test": "turbo test --filter=...[origin/main]",
+    "turbo:affected:build": "turbo build --filter=...[origin/main]",
     "mobile:start": "npm --prefix apps/mobile run start",
     "mobile:verify": "sh apps/mobile/scripts/verify.sh",
     "mobile:test": "npm --prefix apps/mobile run test"

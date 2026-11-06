@@ -21,6 +21,7 @@ from .adversary import (
 )
 from .checklist import depth_contract_ok, describe_gate, validate_checklist
 from .engine import AnalysisEngine, analyze
+from .orchestrator import ReasoningOrchestrator, validate_corpus_and_equation_gate
 from .enums import (
     TRACKS,
     VERIFICATION_PRECEDENCE,
@@ -105,7 +106,7 @@ __all__ = [
     "AdversaryNotWired", "ChecklistInvalid", "ContractViolation",
     "InvalidDepth", "TraceNotFound",
     # engine / levels / escalation / trace / specialists
-    "AnalysisEngine", "analyze",
+    "AnalysisEngine", "analyze", "ReasoningOrchestrator", "validate_corpus_and_equation_gate",
     "EscalationSignal", "checklist_conflict_count", "count_weak_links",
     "escalate_to", "next_depth",
     "AnalysisRequest", "DataContext", "GameRequest", "SpecialistOutput",

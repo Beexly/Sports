@@ -162,7 +162,37 @@ export function interpretSituation(
   // Autonomous Mind reasoning evaluation from 3,085 literature records
   const mindEvaluation = evaluateMindReasoning(context);
 
-  const signalImplied = weight > 0 ? weighted / weight : null;
+  const hasSituationalPerturbation =
+    context.restDaysHome !== context.restDaysAway ||
+    (context.weather.trim().toLowerCase() !== "clear" && context.weather.trim().length > 0) ||
+    context.altitudeFt != null ||
+    context.windSpeedMph != null ||
+    context.temperatureF != null ||
+    context.olContinuityDelta != null ||
+    context.dlContinuityDelta != null ||
+    context.dbContinuityDelta != null ||
+    context.publicTicketPct != null ||
+    context.timeZoneShiftHours != null ||
+    context.coachAggressivenessDelta != null ||
+    context.turnoverMarginDelta != null ||
+    context.acuteChronicWorkloadRatio != null ||
+    context.crowdDecibels != null ||
+    context.refereeCrewFlagsPerGame != null ||
+    options?.corpusEvaluatorWeight !== undefined;
+
+  const matchedPaperCount =
+    corpusEvaluation.matchedPaperCount ?? corpusEvaluation.itemsEvaluatedCount;
+  const effectiveCorpusShift =
+    hasSituationalPerturbation && matchedPaperCount > 0 ? corpusSituationalShift : 0;
+
+  const signalImplied =
+    weight > 0
+      ? effectiveCorpusShift !== 0
+        ? Math.min(0.98, Math.max(0.02, weighted / weight + effectiveCorpusShift))
+        : weighted / weight
+      : signals.length === 0 && matchedPaperCount > 0 && corpusSituationalShift !== 0
+        ? Math.min(0.98, Math.max(0.02, market + corpusSituationalShift))
+        : null;
   const divergence = signalImplied === null ? null : signalImplied - market;
   const reasoningTrace = [
     `${context.awayTeam} at ${context.homeTeam}, venue ${context.venue}, outcome ${context.outcome}`,

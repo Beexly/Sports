@@ -4,8 +4,52 @@
   "stage1a_coaching_mind_and_schemes": {
     "schema": "gse_stage1a_coaching_mind_and_scheme_receipt_v2",
     "parent_stage0_receipt_sha256": "6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b",
-    "coaching_modules_total": 43,
-    "coaching_modules_imported_and_verified": 43,
+    "away": "JAX",
+    "home": "BAL",
+    "week": 9,
+    "away_qb1_starter": "Trevor Lawrence",
+    "home_qb1_starter": "Joe Fagnano",
+    "matchup_environment": {
+      "window": "TNF (Thu 8:15 PM ET)",
+      "posted_home_spread": 7.5,
+      "posted_total": 41.5,
+      "away_spread_label": "JAX -7.5",
+      "home_spread_label": "BAL +7.5",
+      "away_sp_odds": -105,
+      "home_sp_odds": -115,
+      "away_ml_odds": -520,
+      "home_ml_odds": 390,
+      "stadium": "M&T Bank Stadium",
+      "surface": "grass",
+      "is_indoor": false,
+      "wind_mph": 6.5,
+      "temp_f": 54.0,
+      "precip_prob": 0.05,
+      "short_week": 1.0,
+      "away_qb_tier": "QB1",
+      "home_qb_tier": "EMERGENCY_QB3_UDFA",
+      "weather_note": "M&T Bank Stadium outdoor grass, clear Nov night, mild aero drag (6.5 mph wind, 54F)"
+    },
+    "coaching_tendencies_resolved": {
+      "JAX": {
+        "team": "JAX",
+        "proe": 0.0061,
+        "neutral_pace_sec": 26.8,
+        "dc_blitz_rate": 0.309,
+        "dc_man_rate": 0.285,
+        "ol_pressure_allowed": 0.6208
+      },
+      "BAL": {
+        "team": "BAL",
+        "proe": -0.0088,
+        "neutral_pace_sec": 27.6,
+        "dc_blitz_rate": 0.245,
+        "dc_man_rate": 0.245,
+        "ol_pressure_allowed": 0.6349
+      }
+    },
+    "coaching_modules_total": 48,
+    "coaching_modules_imported_and_verified": 48,
     "coaching_module_registry": {
       "adjustments": {
         "module": "intelligence.coaching.adjustments",
@@ -203,6 +247,61 @@
           "team_fingerprint",
           "weekly_fingerprint",
           "t1_fixture_check"
+        ]
+      },
+      "full_repo_279_family_situational_reasoning_matrix": {
+        "module": "intelligence.coaching.full_repo_279_family_situational_reasoning_matrix",
+        "imported": true,
+        "public_callables_count": 13,
+        "public_callables": [
+          "datetime",
+          "timezone",
+          "Path",
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "Tuple",
+          "evaluate_all_80_x_situational_rules",
+          "evaluate_measured_reasoning_primitives",
+          "execute_288bit_12304_equation_cognitive_router",
+          "execute_master_6family_cholesky_aggregator"
+        ]
+      },
+      "gcp_ml_design_patterns_and_agent_workbench_engine": {
+        "module": "intelligence.coaching.gcp_ml_design_patterns_and_agent_workbench_engine",
+        "imported": true,
+        "public_callables_count": 12,
+        "public_callables": [
+          "datetime",
+          "timezone",
+          "Any",
+          "Dict",
+          "List",
+          "ml_pattern_probabilistic_distribution_reframing",
+          "ml_pattern_feature_store_decoy_anomaly_gate",
+          "ml_pattern_checkpoint_freshness_and_eventarc_invalidation",
+          "ml_pattern_model_armor_invariant_shield",
+          "gcp_healthcare_data_engine_fhir_mimic_bridge",
+          "gcp_cloud_run_mcp_and_agent_starter_telemetry",
+          "run_gcp_ml_design_patterns_and_agent_workbench_suite"
+        ]
+      },
+      "google_drive_and_onedrive_omni_situational_engine": {
+        "module": "intelligence.coaching.google_drive_and_onedrive_omni_situational_engine",
+        "imported": true,
+        "public_callables_count": 10,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Tuple",
+          "evaluate_gdrive_58_paper_and_corpus_situational_laws",
+          "evaluate_tracking_decoupled_and_cqr_small_sample_calibration",
+          "evaluate_onedrive_weather_edge_aerodynamics",
+          "evaluate_nfl_roster_truth_and_wave3_line_level",
+          "evaluate_vault_entropy_evolution_and_alter_xiv_twin",
+          "run_google_drive_and_onedrive_omni_situational_overlay"
         ]
       },
       "identity_join": {
@@ -527,6 +626,21 @@
           "compute_strain_rate"
         ]
       },
+      "uncompressed_25k_repo_books_papers_routes_bridge": {
+        "module": "intelligence.coaching.uncompressed_25k_repo_books_papers_routes_bridge",
+        "imported": true,
+        "public_callables_count": 8,
+        "public_callables": [
+          "Path",
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "Tuple",
+          "scan_full_monorepo_and_drives_census",
+          "evaluate_uncompressed_books_papers_and_monorepo_priors"
+        ]
+      },
       "walkforward_tau": {
         "module": "intelligence.coaching.walkforward_tau",
         "imported": true,
@@ -552,6 +666,20 @@
           "run_egidi_karlis_ntzoufras_predictive_football_kernel"
         ]
       },
+      "x_situational_layer2_compiler": {
+        "module": "intelligence.coaching.x_situational_layer2_compiler",
+        "imported": true,
+        "public_callables_count": 7,
+        "public_callables": [
+          "Any",
+          "Dict",
+          "List",
+          "Optional",
+          "compile_x_situational_layer2_overlay",
+          "evaluate_q1_to_q51_feature_registry",
+          "build_jax_at_bal_week9_forensic_context"
+        ]
+      },
       "x_sweep_production_signals": {
         "module": "intelligence.coaching.x_sweep_production_signals",
         "imported": true,
@@ -571,7 +699,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-05T21:57:55.786347+00:00",
+      "generated_at_utc": "2026-11-06T07:57:36.953622+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -2264,7 +2392,7 @@
       },
       "intelligence_31_subpackages": {
         "subpackages_connected_count": 39,
-        "total_intelligence_python_files": 449,
+        "total_intelligence_python_files": 456,
         "subpackage_inventory": {
           "audit": {
             "python_files": 10,
@@ -2273,8 +2401,8 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "coaching": {
-            "python_files": 53,
-            "top_level_functions": 274,
+            "python_files": 58,
+            "top_level_functions": 298,
             "top_level_classes": 20,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2429,9 +2557,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "reasoning": {
-            "python_files": 23,
-            "top_level_functions": 101,
-            "top_level_classes": 48,
+            "python_files": 24,
+            "top_level_functions": 103,
+            "top_level_classes": 49,
             "status": "CONNECTED_AND_AUDITED"
           },
           "reasoning_engine": {
@@ -2453,9 +2581,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "routing": {
-            "python_files": 1,
-            "top_level_functions": 1,
-            "top_level_classes": 1,
+            "python_files": 2,
+            "top_level_functions": 10,
+            "top_level_classes": 2,
             "status": "CONNECTED_AND_AUDITED"
           },
           "sgp": {
@@ -2473,7 +2601,7 @@
           "tests": {
             "python_files": 35,
             "top_level_functions": 142,
-            "top_level_classes": 89,
+            "top_level_classes": 90,
             "status": "CONNECTED_AND_AUDITED"
           },
           "trust": {
@@ -3041,11 +3169,11 @@
     },
     "pbp_reproductions_2026_summary": {},
     "bdb2025_coverage_shell_summary": {},
-    "stage1a_receipt_sha256": "d6608b6944d6f6f5a43bdbdc0c317b1aa6280176734de6de284cab61c1ca91d0"
+    "stage1a_receipt_sha256": "d20b5ccceba81efe06c0e31c667be4645417e18bd2c73e0a7411b99d3ab051d1"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "d6608b6944d6f6f5a43bdbdc0c317b1aa6280176734de6de284cab61c1ca91d0",
+    "parent_stage1a_receipt_sha256": "d20b5ccceba81efe06c0e31c667be4645417e18bd2c73e0a7411b99d3ab051d1",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -5080,6 +5208,6 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "e357f8fa3bbe9d450bbfcf223b9c87f11bb7cc104a0b4a8ad22942e7b5ac6787"
+    "stage1b_receipt_sha256": "ebe1e5af3ddbb134512782fc0349667d774e672f42af2af1917b2afbbffc9fd9"
   }
 }

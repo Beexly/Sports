@@ -383,6 +383,9 @@ def allocate_stochastic_conserved_box_score(
     stat_family: str = "receiving_yds",
     concentration_kappa: float = 12.0,
     seed: int = 42,
+    n_worlds: int | None = None,
+    concentration: float | None = None,
+    rng: Any = None,
 ) -> dict[str, np.ndarray]:
     """Stochastic Dirichlet-Multinomial / Negative-Binomial conserved box-score allocation (SG-4).
 
@@ -396,8 +399,10 @@ def allocate_stochastic_conserved_box_score(
     if not keys:
         raise ValueError("baseline_shares cannot be empty")
     team_arr = np.asarray(team_total_vec, dtype=np.float64)
-    n_worlds = int(team_arr.shape[0])
-    if n_worlds == 0:
+    if n_worlds is not None and int(n_worlds) != int(team_arr.shape[0]) and int(team_arr.shape[0]) > int(n_worlds):
+        team_arr = team_arr[: int(n_worlds)]
+    n_worlds_eff = int(team_arr.shape[0])
+    if n_worlds_eff == 0:
         return {k: np.zeros(0, dtype=np.float64) for k in keys}
 
     raw_w = np.array([max(0.0, float(baseline_shares[k])) for k in keys], dtype=np.float64)
@@ -412,7 +417,7 @@ def allocate_stochastic_conserved_box_score(
 
     out: dict[str, np.ndarray] = {}
     for idx in inactive_indices:
-        out[keys[idx]] = np.zeros(n_worlds, dtype=np.float64)
+        out[keys[idx]] = np.zeros(n_worlds_eff, dtype=np.float64)
 
     k_act = len(active_indices)
     if k_act == 1:
@@ -420,15 +425,16 @@ def allocate_stochastic_conserved_box_score(
         out[only_key] = team_arr.copy()
         return {k: out[k] for k in keys}
 
-    rng = np.random.default_rng(seed)
+    kappa_eff = float(concentration) if concentration is not None else float(concentration_kappa)
+    rng_eff = rng if hasattr(rng, "dirichlet") else np.random.default_rng(seed)
     share_vec = raw_w[active_indices]
     share_vec = share_vec / float(np.sum(share_vec))
-    alpha = np.maximum(0.35, float(concentration_kappa) * share_vec)
+    alpha = np.maximum(0.35, kappa_eff * share_vec)
 
-    dir_draws = rng.dirichlet(alpha, size=n_worlds)
+    dir_draws = rng_eff.dirichlet(alpha, size=n_worlds_eff)
     # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
     gamma_shape = 1.45 if "yd" in stat_family.lower() else 1.85
-    gamma_noise = rng.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds, k_act))
+    gamma_noise = rng_eff.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds_eff, k_act))
     weights = dir_draws * gamma_noise
     row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
     weights = weights / row_sums
@@ -440,6 +446,8 @@ def allocate_stochastic_conserved_box_score(
         min_std_floor = 12.25
     elif any(tok in fam_lower for tok in ("tackle", "reception", "receptions", "carries", "attempts", "targets")):
         min_std_floor = 1.20
+    elif "td" in fam_lower:
+        min_std_floor = 0.25
     else:
         min_std_floor = 1.15
 
@@ -450,7 +458,7 @@ def allocate_stochastic_conserved_box_score(
             absorber_local_idx = local_i
             break
 
-    if n_worlds >= 4 and float(np.std(team_arr)) + float(np.mean(np.abs(team_arr))) > 0.0:
+    if n_worlds_eff >= 4 and float(np.std(team_arr)) + float(np.mean(np.abs(team_arr))) > 0.0:
         for j in range(k_act):
             col = alloc[:, j]
             cur_mean = max(1e-6, float(np.mean(np.abs(col))))
@@ -460,9 +468,9 @@ def allocate_stochastic_conserved_box_score(
             if cur_std < req_std or cur_cv < 0.35:
                 partner = absorber_local_idx if j != absorber_local_idx else (1 if k_act > 1 else 0)
                 # Zero-sum game-script boom/bust transfer between player j and partner
-                z_raw = rng.standard_normal(n_worlds)
+                z_raw = rng_eff.standard_normal(n_worlds_eff)
                 z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
-                add_std = math.sqrt(max(0.25, req_std * req_std - cur_std * cur_std * 0.15))
+                add_std = math.sqrt(max(0.05 if "td" in fam_lower else 0.25, req_std * req_std - cur_std * cur_std * 0.15))
                 # Project z_unit orthogonal to col so variance strictly increases
                 cov_cz = float(np.mean((col - float(np.mean(col))) * z_unit))
                 if cov_cz < 0.0:
@@ -478,7 +486,7 @@ def allocate_stochastic_conserved_box_score(
         req_abs_std = max(min_std_floor, 0.36 * abs_mean)
         if abs_std < req_abs_std and k_act > 1:
             alt_partner = 0 if absorber_local_idx != 0 else 1
-            z_raw = rng.standard_normal(n_worlds)
+            z_raw = rng_eff.standard_normal(n_worlds_eff)
             z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
             if float(np.mean((abs_col - float(np.mean(abs_col))) * z_unit)) < 0.0:
                 z_unit = -z_unit

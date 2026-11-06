@@ -245,3 +245,29 @@ class TestHierarchy:
     def test_check_hierarchy_defaults(self):
         trace = ReasoningTrace(trace_id="h", depth=ReasoningDepth.L5)
         assert check_hierarchy(trace) is True  # falls back to HIERARCHY_ORDER
+
+
+class TestCorpusAndEquationGate:
+    def test_validate_corpus_and_equation_gate_populates_hits_and_filters_equations(self):
+        from reasoning.interfaces import DataContext
+        from reasoning.orchestrator import validate_corpus_and_equation_gate
+
+        ctx = DataContext(
+            equations=[
+                {"id": "eq-1", "name": "Shin Devig", "gate_status": "VALIDATED"},
+                {"id": "eq-2", "name": "Unvalidated Draft", "gate_status": "UNTESTED"},
+                {"id": "eq-3", "name": "Missing Gate Status"},
+            ]
+        )
+        summary = validate_corpus_and_equation_gate(ctx, query="quarterback pressure epa", k=3)
+        assert len(ctx.corpus_hits) > 0
+        assert ctx.validated_corpus_hits == ctx.corpus_hits
+        assert len(ctx.validated_equations) == 1
+        assert ctx.validated_equations[0]["id"] == "eq-1"
+        assert len(ctx.flagged_equations) == 2
+        assert summary["validated_equation_count"] == 1
+        assert summary["flagged_equation_count"] == 2
+        assert summary["gate_passed"] is False
+        assert ctx.profiles["validated_corpus_hits"] == ctx.validated_corpus_hits
+        assert len(ctx.profiles["validated_equations"]) == 1
+

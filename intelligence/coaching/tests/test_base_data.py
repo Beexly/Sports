@@ -43,8 +43,9 @@ class TestResolve:
         with pytest.raises(DataGapError):
             BD.resolve(("definitely_absent.csv",))
 
-    def test_absent_data_raises_with_diagnostics(self, monkeypatch):
+    def test_absent_data_raises_with_diagnostics(self, tmp_path, monkeypatch):
         monkeypatch.delenv("GSE_COACHING_DATA_DIR", raising=False)
+        monkeypatch.setattr(BD, "REPO_DATA_DIR", str(tmp_path / "nonexistent-repo-data"))
         monkeypatch.setattr(BD, "LEGACY_DATA_DIR",
                             os.path.join("Z:/nonexistent-legacy", "data"))
         with pytest.raises(DataGapError) as ei:
@@ -80,17 +81,19 @@ class TestNoHardcodedHomeDependency:
 class TestRegistryIsLoudNotEmpty:
     """An absent registry must never masquerade as an empty-but-valid one."""
 
-    def test_lookup_coach_raises_when_registry_absent(self, monkeypatch):
+    def test_lookup_coach_raises_when_registry_absent(self, tmp_path, monkeypatch):
         from coaching import tenures as TN
         monkeypatch.delenv("GSE_COACHING_DATA_DIR", raising=False)
+        monkeypatch.setattr(BD, "REPO_DATA_DIR", str(tmp_path / "nonexistent-repo-data"))
         monkeypatch.setattr(BD, "LEGACY_DATA_DIR", "Z:/nonexistent-legacy")
         monkeypatch.setattr(TN, "_REGISTRY", None)
         with pytest.raises(DataGapError):
             TN.lookup_coach("Todd Monken", 2026)
 
-    def test_registry_coverage_raises_when_absent(self, monkeypatch):
+    def test_registry_coverage_raises_when_absent(self, tmp_path, monkeypatch):
         from coaching import tenures as TN
         monkeypatch.delenv("GSE_COACHING_DATA_DIR", raising=False)
+        monkeypatch.setattr(BD, "REPO_DATA_DIR", str(tmp_path / "nonexistent-repo-data"))
         monkeypatch.setattr(BD, "LEGACY_DATA_DIR", "Z:/nonexistent-legacy")
         monkeypatch.setattr(TN, "_REGISTRY", None)
         with pytest.raises(DataGapError):

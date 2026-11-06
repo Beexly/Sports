@@ -97,11 +97,40 @@ export function combinedSignalWeight(
   return Math.min(1.5, Math.max(0.4, avg));
 }
 
-export function shouldSuppress(sport: string, pickType: string, grade: string): boolean {
+export interface ConjunctionOverride {
+  readonly independentEdgeDecision?: string;
+  readonly rawEdge?: number;
+  readonly verifiedStage5Gate?: boolean;
+}
+
+export function shouldSuppress(
+  sport: string,
+  pickType: string,
+  gradeOrOverride?: string | ConjunctionOverride | null,
+  conjunctionOverride?: ConjunctionOverride | null,
+): boolean {
+  const grade = typeof gradeOrOverride === 'string' ? gradeOrOverride : undefined;
+  const override =
+    typeof gradeOrOverride === 'object' && gradeOrOverride !== null
+      ? gradeOrOverride
+      : conjunctionOverride ?? undefined;
+
+  if (override) {
+    if (override.independentEdgeDecision === 'PASS') {
+      return true;
+    }
+    if (
+      override.verifiedStage5Gate === true ||
+      (override.independentEdgeDecision === 'BET' && (override.rawEdge ?? 0) >= 0.025)
+    ) {
+      return false;
+    }
+  }
+
   return PUBLISH_ACTIONS.some(
     (a) =>
       a.action === 'suppress-or-shrink' &&
-      (a.value === sport || a.value === pickType || a.value === grade),
+      (a.value === sport || a.value === pickType || (grade != null && a.value === grade)),
   );
 }
 

@@ -819,3 +819,91 @@ def test_18_wave12_entire_google_drive_and_onedrive_omni_situational_engine() ->
     assert 0.01 <= adj["calibrated_win_prob"] <= 0.99
     assert len(overlay["cryptographic_provenance_sha256"]) == 64
 
+
+# ============================================================================
+# TEST 19: Workstreams 1-6 Zero-Idle Load-Bearing Math & Full 15-Game Week 9 Slate
+# ============================================================================
+def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games() -> None:
+    """
+    Verifies:
+      - IDLE-1A..1D: combined_load_bearing_priors in compile_stage1_to_stage2_simulation_priors()
+        and all 15 official 2026 Week 9 NFL games + 4 featured showcase matchups registered in
+        WEEK9_MATCHUP_ENVIRONMENT_REGISTRY with zero 'etc.' omissions.
+      - PY-3A: validate_corpus_and_equation_gate enforces gate_status == 'VALIDATED'.
+      - PY-3B & Workstream 5: mind_and_corpus_consolidation_receipt_2026_11_06.json and
+        corpus_pdf_extraction_audit_2026_11_06.json (877/877 PDFs = 100.0% extracted).
+      - Workstream 4 & 6: turbo.json, apps/web/turbo.json, and
+        .github/workflows/gse-connected-5stage-gameday-orchestrator.yml.
+    """
+    from scripts.ops.gse_connected_game_workflow import (
+        WEEK9_MATCHUP_ENVIRONMENT_REGISTRY,
+        compile_stage1_to_stage2_simulation_priors,
+    )
+    from scripts.ops.run_week9_full_slate_connected_workflow import (
+        FEATURED_WEEK9_SLATE,
+        OFFICIAL_WEEK9_15_GAME_SLATE,
+    )
+    from intelligence.reasoning.engine import validate_corpus_and_equation_gate
+    from intelligence.reasoning.interfaces import DataContext
+
+    # 1. All 15 official 2026 Week 9 NFL games + 4 featured showcase games explicitly registered
+    assert len(OFFICIAL_WEEK9_15_GAME_SLATE) == 15
+    for away, home in OFFICIAL_WEEK9_15_GAME_SLATE + FEATURED_WEEK9_SLATE:
+        assert (away, home) in WEEK9_MATCHUP_ENVIRONMENT_REGISTRY, f"Missing {(away, home)} in WEEK9_MATCHUP_ENVIRONMENT_REGISTRY"
+        env = WEEK9_MATCHUP_ENVIRONMENT_REGISTRY[(away, home)]
+        assert "posted_home_spread" in env and "posted_total" in env and "stadium" in env
+
+    # 2. Load-bearing math priors in compile_stage1_to_stage2_simulation_priors
+    priors = compile_stage1_to_stage2_simulation_priors(
+        stage1a_receipt={"away": "DET", "home": "GB", "away_qb1_starter": "Jared Goff", "home_qb1_starter": "Jordan Love"},
+        stage1b_receipt={"weather_wind_mph": 16.5},
+    )
+    lb = priors["combined_load_bearing_priors"]
+    assert "away_off_epa_adj" in lb and "home_off_epa_adj" in lb
+    assert "away_off_epa_delta_situational" in lb and "home_off_epa_delta_situational" in lb
+    assert "away_comp_rate_adj" in lb and "home_comp_rate_adj" in lb
+    assert "cqr_interval_width_mult" in lb and lb["cqr_interval_width_mult"] >= 1.0
+    assert "student_t_copula_df_nu" in lb and lb["student_t_copula_df_nu"] > 0.0
+    assert "afml_meta_label_kelly_multiplier" in lb and 0.10 <= lb["afml_meta_label_kelly_multiplier"] <= 1.0
+
+    # 3. PY-3A: validate_corpus_and_equation_gate filters unvalidated equations
+    ctx = DataContext(
+        equations=[
+            {"id": "EQ_OK", "gate_status": "VALIDATED"},
+            {"id": "EQ_BAD", "gate_status": "UNVALIDATED"},
+        ],
+    )
+    gate_res = validate_corpus_and_equation_gate(ctx, query="NFL situational weather pressure")
+    assert gate_res["validated_equation_count"] == 1
+    assert gate_res["flagged_equation_count"] == 1
+    assert ctx.corpus_hits, "Expected corpus_hits to be auto-populated"
+
+    # 4. PY-3B & Workstream 5 receipts
+    mind_rcpt_path = REPO_ROOT / "data" / "engine" / "mind_and_corpus_consolidation_receipt_2026_11_06.json"
+    pdf_rcpt_path = REPO_ROOT / "data" / "engine" / "corpus_pdf_extraction_audit_2026_11_06.json"
+    assert mind_rcpt_path.is_file()
+    assert pdf_rcpt_path.is_file()
+    pdf_rcpt = json.loads(pdf_rcpt_path.read_text(encoding="utf-8"))
+    pdf_sum = pdf_rcpt["summary"]["sports_research_papers_877_pdfs"]
+    assert pdf_sum["verified_full_text"] == 877
+    assert pdf_sum["coverage_pct"] == 100.0
+
+    # 5. Workstream 4 & 6 Turborepo + GitHub Actions workflow + 19-game Week 9 master dossier
+    assert (REPO_ROOT / "turbo.json").is_file()
+    assert (REPO_ROOT / "apps" / "web" / "turbo.json").is_file()
+    assert (REPO_ROOT / ".github" / "workflows" / "gse-connected-5stage-gameday-orchestrator.yml").is_file()
+
+    w9_slate_path = REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
+    assert w9_slate_path.is_file()
+    w9_slate = json.loads(w9_slate_path.read_text(encoding="utf-8"))
+    assert w9_slate["official_15_week9_games_count"] == 15
+    assert w9_slate["matchups_evaluated_count"] == 19
+    assert w9_slate["zero_etc_policy_enforced"] is True
+    for away, home in OFFICIAL_WEEK9_15_GAME_SLATE + FEATURED_WEEK9_SLATE:
+        key = f"{away} @ {home}"
+        assert key in w9_slate["dossiers"], f"Missing {key} in week9_full_slate_connected_dossiers_2026_11_06.json"
+        indiv_path = REPO_ROOT / "data" / "engine" / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week9.json"
+        assert indiv_path.is_file(), f"Missing individual dossier: {indiv_path}"
+
+
+

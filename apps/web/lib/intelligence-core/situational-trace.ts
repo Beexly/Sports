@@ -21,6 +21,8 @@ import {
   interpretSituation,
   type SituationalEval,
   type SignalObservation as TraceObservation,
+  type CorpusEvaluation,
+  type MindEvaluationResult,
 } from "@sports/prediction-engine";
 import type { SignalFamily as TraceFamily } from "@sports/types";
 import type { SignalObservation, SituationalContext } from "./reasoning";
@@ -31,14 +33,35 @@ function toTraceFamily(f: SignalObservation["family"]): TraceFamily {
   return f as unknown as TraceFamily;
 }
 
+function toObservationProbability(
+  ctx: SituationalContext,
+  reasoning: IntelligenceReasoning,
+  o: SignalObservation,
+): number {
+  const baseProb = Math.min(
+    0.95,
+    Math.max(0.05, reasoning.marketFairProb ?? reasoning.calibratedProb ?? 0.5),
+  );
+  // Preserve explicit probabilities in (0.45, 1) (e.g. direct probability observations in wire tests)
+  if (o.lean != null && o.lean > 0.45 && o.lean < 1) {
+    return o.lean;
+  }
+  const sel = (ctx.selection || "").trim().toUpperCase();
+  const away = (ctx.awayTeam || "").trim().toUpperCase();
+  const isAwayOrUnder =
+    (away.length > 0 && (sel === away || sel.startsWith(`${away} `))) ||
+    sel.startsWith("UNDER");
+  const sign = isAwayOrUnder ? -1 : 1;
+  const rawLean = o.lean ?? 0;
+  const shifted = baseProb + rawLean * sign * 0.1;
+  return Math.min(0.98, Math.max(0.02, shifted));
+}
+
 /**
  * Build the trace-side observations from the spine's observations. Only
  * publishable, non-shadowed observations enter the trace: shadowed families
  * must not re-enter reasoning through a second door (the spine already
  * enforces this inside reason(); we mirror the filter here).
- *
- * Lean in [0, 1] is preserved as a probability. Non-positive or out-of-range
- * leans become undefined so the trace can still run (no early abort).
  */
 export function toTraceObservations(
   ctx: SituationalContext,
@@ -47,6 +70,7 @@ export function toTraceObservations(
   const shadowed = new Set<string>(
     reasoning.shadowReport?.families ?? [],
   );
+  const targetOutcome = ctx.selection || "home_win";
   return ctx.observations
     .filter((o) => o.rights === "cleared" || o.rights === "licensed")
     .filter((o) => !shadowed.has(o.family as unknown as string))
@@ -55,9 +79,8 @@ export function toTraceObservations(
       sourceModule: o.origin,
       family: toTraceFamily(o.family),
       reasoningPath: o.tier === 5 ? "chatter" : "measured",
-      outcome: "home_win",
-      probability:
-        o.lean != null && o.lean >= 0 && o.lean <= 1 ? o.lean : undefined,
+      outcome: targetOutcome,
+      probability: toObservationProbability(ctx, reasoning, o),
       declaredWeight: o.trust,
       evidenceTimestamp: o.knownAt,
       provenance: [o.origin],
@@ -67,11 +90,16 @@ export function toTraceObservations(
 export interface SituationTraceResult {
   readonly ok: boolean;
   readonly divergence: number | null;
+  readonly delta: number;
   readonly signalImplied: number | null;
   readonly consistencyPassed: boolean | null;
   readonly consistencyViolations: readonly string[];
   readonly activeSignals: readonly string[];
+  readonly activeCount: number;
   readonly dormantSignals: readonly { signalId: string; reason: string }[];
+  readonly corpusEvaluation?: CorpusEvaluation;
+  readonly corpusSituationalShift: number;
+  readonly mindEvaluation?: MindEvaluationResult;
   readonly reasoningTrace: string | null;
   readonly failReason?: string;
 }
@@ -90,17 +118,29 @@ export function runSituationalTrace(
     return {
       ok: false,
       divergence: null,
+      delta: 0,
       signalImplied: null,
       consistencyPassed: null,
       consistencyViolations: [],
       activeSignals: [],
+      activeCount: 0,
       dormantSignals: [],
+      corpusSituationalShift: 0,
       reasoningTrace: null,
       failReason: "no market probability strictly inside (0,1) from the spine",
     };
   }
   let evalResult: SituationalEval;
   try {
+    const observations = toTraceObservations(ctx, reasoning);
+    const targetOutcome = ctx.selection || "home_win";
+    const parsedTimes = observations
+      .map((o) => Date.parse(o.evidenceTimestamp))
+      .filter((ms) => Number.isFinite(ms));
+    const decisionTimestamp =
+      parsedTimes.length > 0
+        ? new Date(Math.max(...parsedTimes)).toISOString()
+        : ctx.commenceTime || "2026-09-25T12:00:00Z";
     evalResult = interpretSituation(
       {
         homeTeam: ctx.homeTeam ?? "selection-A",
@@ -114,26 +154,24 @@ export function runSituationalTrace(
             : "unspecified",
         marketLine: ctx.market.line ?? null,
         marketImpliedProbability: marketProb,
-        outcome: ctx.selection,
-        decisionTimestamp: new Date().toISOString(),
-        decisionWindowMs: 15 * 60 * 1000,
+        outcome: targetOutcome,
+        decisionTimestamp,
+        decisionWindowMs: 7 * 24 * 60 * 60 * 1000,
       },
-      toTraceObservations(ctx, reasoning),
+      observations,
     );
   } catch (err) {
-    // Fail-open by contract (header): a trace failure MUST NOT break the pick
-    // path. interpretSituation can THROW (not just return !ok) — e.g. the
-    // mind-corpus loader raising when the literature artifact is not shipped
-    // in a deployment — and an uncaught throw here previously killed the
-    // entire runIntelligence path. Record the reason, degrade, never block.
     return {
       ok: false,
       divergence: null,
+      delta: 0,
       signalImplied: null,
       consistencyPassed: null,
       consistencyViolations: [],
       activeSignals: [],
+      activeCount: 0,
       dormantSignals: [],
+      corpusSituationalShift: 0,
       reasoningTrace: null,
       failReason: err instanceof Error ? err.message : String(err),
     };
@@ -142,24 +180,33 @@ export function runSituationalTrace(
     return {
       ok: false,
       divergence: null,
+      delta: 0,
       signalImplied: null,
       consistencyPassed: null,
       consistencyViolations: [],
       activeSignals: [],
+      activeCount: 0,
       dormantSignals: [],
+      corpusSituationalShift: 0,
       reasoningTrace: null,
       failReason: evalResult.reason,
     };
   }
   const d = evalResult.data;
+  const delta = d.divergence ?? d.corpusSituationalShift ?? 0;
   return {
     ok: true,
     divergence: d.divergence,
+    delta,
     signalImplied: d.signalImplied,
     consistencyPassed: d.consistency.passed,
     consistencyViolations: [...d.consistency.violations],
     activeSignals: d.activeSignals,
+    activeCount: d.activeSignals.length,
     dormantSignals: [...d.dormantSignals],
+    corpusEvaluation: d.corpusEvaluation,
+    corpusSituationalShift: d.corpusSituationalShift,
+    mindEvaluation: d.mindEvaluation,
     reasoningTrace: d.reasoningTrace,
   };
 }

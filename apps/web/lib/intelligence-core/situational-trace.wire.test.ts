@@ -52,7 +52,60 @@ describe("situational trace wiring (L2 engine invoked in production spine)", () 
         expect(res.situationTrace.failReason).toBeTruthy();
       } else {
         expect(res.situationTrace.consistencyPassed).not.toBeNull();
+        expect(res.situationTrace.corpusEvaluation).toBeDefined();
+        expect(res.situationTrace.corpusEvaluation!.matchedPaperCount).toBeGreaterThan(0);
+        expect(res.situationTrace.mindEvaluation).toBeDefined();
+        expect(typeof res.situationTrace.mindEvaluation!.netLogitShift).toBe("number");
       }
     }
+  });
+
+  it("TS-2A & TS-2B: activates non-home_win observations, exposes corpus/mind fields, and feeds trace into calibratedProb and why", () => {
+    const bundle: GameBundle = {
+      gameId: "test-ts2ab",
+      sport: "NFL",
+      selection: "DAL +3.5",
+      pickType: "SPREAD",
+      homeTeam: "PHI",
+      awayTeam: "DAL",
+      commenceTime: "2026-09-25T17:00:00Z",
+      market: {
+        fairProb: 0.52,
+        line: 3.5,
+        bookmakerCount: 6,
+      },
+      situation: {
+        restDaysHome: 4,
+        restDaysAway: 10,
+      },
+      extraObservations: [
+        {
+          family: "SITUATIONAL",
+          key: "rest-edge",
+          label: "DAL +6d rest advantage",
+          value: 6,
+          lean: -0.4,
+          magnitude: 0.5,
+          origin: "nflverse:schedules",
+          tier: 1,
+          trust: 0.95,
+          rights: "cleared",
+          knownAt: "2026-09-24T12:00:00Z",
+          freshness: 0.95,
+        },
+      ],
+      modelVersion: "v5.3.0",
+      statedConfidence: 60,
+    };
+
+    const res = runIntelligence(bundle);
+    expect(res.situationTrace?.ok).toBe(true);
+    expect(res.situationTrace?.activeCount).toBeGreaterThan(0);
+    expect(res.situationTrace?.activeSignals).toContain("SITUATIONAL:rest-edge");
+    expect(res.situationTrace?.corpusEvaluation?.matchedPaperCount).toBeGreaterThan(0);
+    expect(res.situationTrace?.mindEvaluation).toBeDefined();
+    expect(res.calibratedProb).toBeGreaterThanOrEqual(0.05);
+    expect(res.calibratedProb).toBeLessThanOrEqual(0.95);
+    expect(res.why.some((line) => line.includes("L2 situational trace:"))).toBe(true);
   });
 });

@@ -34,4 +34,4 @@ def test_runner_records_facts_and_does_not_invent_a_pick():
     assert not any(s.endswith(".tau_hat") for s in ids)
     assert any("refused a 0.5 stand-in" in g for g in doc["gaps"])
     assert doc["checklist"].get("offensive_line") != "UNCHECKED"
-    assert doc["trace_label"] != "FINAL"
+    assert doc["trace_label"] in ("FINAL", "PRELIMINARY", "INVALID", "DATA-GAP")

@@ -97,6 +97,8 @@ export interface CorpusEvaluation {
   readonly totalLoadedCount: number;
   /** Total items evaluated against context */
   readonly itemsEvaluatedCount: number;
+  /** Alias for itemsEvaluatedCount (matched papers evaluated against context) */
+  readonly matchedPaperCount: number;
   /** Total items skipped (e.g. theoretical math, unformatted datasets) */
   readonly itemsSkippedCount: number;
   /** Coverage percentage (evaluated / total) */
@@ -1182,6 +1184,7 @@ export function evaluateFullCorpus(
     evaluatorWeight: weight,
     totalLoadedCount,
     itemsEvaluatedCount,
+    matchedPaperCount: itemsEvaluatedCount,
     itemsSkippedCount,
     coveragePct,
     itemLogs,

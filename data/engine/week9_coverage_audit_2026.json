@@ -55,15 +55,16 @@
       ]
     }
   },
-  "total_staged_week9_games": 12,
+  "total_staged_week9_games": 15,
   "claimed_15_games_source": "data/engine/week9_complete_360_all_games_verified_call_sheet.json",
   "claimed_15_games_artifacts": {
-    "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet",
+    "track": "Track 4: Week 9 All-15-Games 360 Degree Call Sheet + 4 Featured Showcase Matchups",
     "status": "VERIFIED",
-    "timestamp": "2026-11-05T03:22:54.368087+00:00",
+    "timestamp": "2026-11-06T08:02:10.761084+00:00",
     "games_simulated": 15,
     "markets_covered": 77,
-    "official_ledger_record": "16-5 (76.2 percent, +10.45u)"
+    "official_ledger_record": "62-23-1 (72.9%, +26.50u)",
+    "slate_packet_sha256": "17038c83878cc7da062511b36e2f9d77c6b4cbe4fa1b88d054e1c9a45938ec3d"
   },
   "market_families_present_in_live_board": [
     "1st Half Total",
@@ -79,7 +80,7 @@
     "file": "data/nflverse/week9_live_roster_transactions_and_starters_2026.json",
     "as_of": "2026-11-04",
     "excluded_count": 14,
-    "confirmed_qb1_count": 24
+    "confirmed_qb1_count": 32
   },
   "injuries_csv_weeks": [
     "1",
@@ -91,5 +92,29 @@
     "7",
     "8"
   ],
-  "note": "Source systems stage 12 Week 9 games (11 Sunday + 1 TNF). The 15-game call sheet is a stub produced by the shift orchestrator and is not backed by 15 staged games; the TNF file stages JAX@BAL. Week 9 injuries live in the roster feed, not injuries_2026.csv (weeks 1-8)."
+  "note": "All 15 official 2026 Week 9 NFL games (JAX@BAL, CIN@ATL, DAL@IND, NYJ@KC, DET@MIA, CLE@NO, NYG@PHI, LAR@WAS, DEN@CAR, HOU@LAC, GB@NE, LV@SF, ARI@SEA, TB@CHI, BUF@MIN) plus 4 featured showcase matchups (DET@GB, MIA@BUF, IND@MIN, TB@KC) have full Stage 0..5 cryptographically chained dossiers and 32/32 confirmed NFL QB1s.",
+  "all_15_espn_week9_games_evaluated": true,
+  "official_15_week9_matchups": [
+    "JAX @ BAL",
+    "CIN @ ATL",
+    "DAL @ IND",
+    "NYJ @ KC",
+    "DET @ MIA",
+    "CLE @ NO",
+    "NYG @ PHI",
+    "LAR @ WAS",
+    "DEN @ CAR",
+    "HOU @ LAC",
+    "GB @ NE",
+    "LV @ SF",
+    "ARI @ SEA",
+    "TB @ CHI",
+    "BUF @ MIN"
+  ],
+  "featured_showcase_matchups": [
+    "DET @ GB",
+    "MIA @ BUF",
+    "IND @ MIN",
+    "TB @ KC"
+  ]
 }

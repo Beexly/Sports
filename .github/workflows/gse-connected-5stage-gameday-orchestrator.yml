@@ -1,0 +1,148 @@
+name: GSE Connected 5-Stage Gameday & Overnight Orchestrator
+
+on:
+  schedule:
+    # T-85m Pregame Connected 5-Stage Windows (UTC)
+    - cron: "35 16 * * 0"     # T-85m Sunday Early (1:00 PM ET slate)
+    - cron: "40 19 * * 0"     # T-85m Sunday Late (4:05/4:25 PM ET slate)
+    - cron: "50 23 * * 0,1,4" # T-85m SNF / MNF / TNF primetime windows
+    # Halftime Live 2H Re-Simulation Windows (UTC)
+    - cron: "30 19 * * 0"     # Halftime Sunday Early slate
+    - cron: "35 22 * * 0"     # Halftime Sunday Late slate
+    - cron: "15 2 * * 1,2,5"  # Halftime SNF / MNF / TNF primetime windows
+    # Daily Overnight Corpus & Mind Consolidation (UTC)
+    - cron: "0 4 * * *"       # Daily 4:00 AM UTC (11:00 PM ET) overnight shift
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Orchestrator execution mode"
+        required: true
+        default: "full_slate_pregame_t85m"
+        type: choice
+        options:
+          - full_slate_pregame_t85m
+          - halftime_live_2h
+          - overnight_corpus_mind_consolidation
+      week:
+        description: "NFL regular-season week number"
+        required: true
+        default: "9"
+        type: string
+
+concurrency:
+  group: gse-5stage-orchestrator-${{ github.event.schedule || github.event.inputs.mode }}-${{ github.event.inputs.week || '9' }}
+  cancel-in-progress: false
+
+jobs:
+  pregame-t85m-connected-5stage-workflow:
+    name: Pregame T-85m Connected 5-Stage Workflow (Stages 0..5)
+    if: >-
+      github.event.schedule == '35 16 * * 0' ||
+      github.event.schedule == '40 19 * * 0' ||
+      github.event.schedule == '50 23 * * 0,1,4' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'full_slate_pregame_t85m')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python scientific stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy pandas pyarrow
+
+      - name: Consolidate Mind Staging & Corpus (Pre-Sim Readiness)
+        run: python scripts/ops/consolidate_mind_staging_and_corpus.py
+
+      - name: Execute Week ${{ github.event.inputs.week || '9' }} Connected 5-Stage Slate Workflow
+        env:
+          GSE_NFL_WEEK: ${{ github.event.inputs.week || '9' }}
+        run: python scripts/ops/run_week9_full_slate_connected_workflow.py
+
+      - name: Verify Cryptographic Stage 0..5 Receipts & Forensic Invariants
+        run: python scripts/guardrails/connected-workflow-dossier-guard.py
+
+      - name: Run Trust Gate Guardrail
+        run: node scripts/guardrails/trust-gate.mjs
+
+  halftime-live-2h-resimulator:
+    name: Halftime Live 2H 10,000-World Re-Simulator (Rules H1, H2, H3)
+    if: >-
+      github.event.schedule == '30 19 * * 0' ||
+      github.event.schedule == '35 22 * * 0' ||
+      github.event.schedule == '15 2 * * 1,2,5' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'halftime_live_2h')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python scientific stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy
+
+      - name: Execute Halftime Live 2H Re-Simulator (H1 Emergency QB Clamp, H2 Blowout Preservation, H3 Immutable Pregame Direction Lock)
+        env:
+          GSE_NFL_WEEK: ${{ github.event.inputs.week || '9' }}
+          ENFORCE_RULE_H1_EMERGENCY_QB_CLAMP: "1"
+          ENFORCE_RULE_H2_BLOWOUT_STARTER_PRESERVATION: "1"
+          ENFORCE_RULE_H3_IMMUTABLE_PREGAME_DIRECTION_LOCK: "1"
+        run: python scripts/ops/run_halftime_live_simulator.py
+
+  overnight-corpus-and-mind-shift:
+    name: Overnight Corpus & Mind Shift Consolidation
+    if: >-
+      github.event.schedule == '0 4 * * *' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'overnight_corpus_mind_consolidation')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python scientific stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy
+
+      - name: Consolidate Mind Staging & Corpus
+        run: python scripts/ops/consolidate_mind_staging_and_corpus.py
+
+      - name: Execute 20h Overnight Hermes/OpenCode/NVIDIA/OpenRouter/RunPod Shift Verification
+        run: python scripts/ops/run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run

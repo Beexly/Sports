@@ -1,0 +1,97 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    "tsconfig.json"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "VERCEL_URL",
+    "CI",
+    "SKIP_ENV_VALIDATION",
+    "CALIBRATION_ADJUSTMENTS_ENABLED"
+  ],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build", "db:generate"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!docs/**"
+      ],
+      "env": [
+        "NEXT_PUBLIC_*",
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "NEXTAUTH_SECRET",
+        "NEXTAUTH_URL",
+        "SKIP_ENV_VALIDATION"
+      ]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "coverage/**",
+        "test-artifacts/**"
+      ],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "tests/**",
+        "__tests__/**",
+        "*.config.*"
+      ],
+      "env": [
+        "CI",
+        "NODE_ENV",
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "AI_BUDGET_PG_URL"
+      ]
+    },
+    "lint": {
+      "outputs": [],
+      "cache": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "cache": true
+    },
+    "db:generate": {
+      "cache": true,
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
+      "outputs": [
+        "node_modules/.prisma/**"
+      ]
+    },
+    "db:migrate": {
+      "cache": false,
+      "dependsOn": ["db:generate"]
+    },
+    "guardrails": {
+      "cache": true,
+      "inputs": [
+        "scripts/guardrails/**",
+        "apps/web/**",
+        "packages/**"
+      ],
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

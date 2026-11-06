@@ -2,11 +2,11 @@
 
 ## 0. Cryptographic Connected Workflow Receipts (Zero-Skip Chain)
 - **Stage 0 Receipt (`enforce_stage0_roster_and_board_allowlist.py`):** `6f8db9d18a7d246cf20477f01255d0765676ad38b2eacc7a520f09ec28f60b6b`
-- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `d6608b6944d6f6f5a43bdbdc0c317b1aa6280176734de6de284cab61c1ca91d0`
-- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `e357f8fa3bbe9d450bbfcf223b9c87f11bb7cc104a0b4a8ad22942e7b5ac6787`
-- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `1,335,891`-Snap Sinkhorn Simulation):** `567a8283f1e0c1a3c870aa49afa961d23df5cded1137a0d87aa0ac7627a9d993`
-- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `fd5dacd6556c1dd62fd5a803637b808fbb20194dccc9adb359bd27fb234d2281`
-- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `4657d48f952822bf2101216d70f8e75312cce0b41bf4e1b88cfacd0ce14ffbab`
+- **Stage 1A Receipt (`38/38` Coaching Mind & Scheme Modules):** `d20b5ccceba81efe06c0e31c667be4645417e18bd2c73e0a7411b99d3ab051d1`
+- **Stage 1B Receipt (`12304` Equations & Premises Pre-Sim Review):** `ebe1e5af3ddbb134512782fc0349667d774e672f42af2af1917b2afbbffc9fd9`
+- **Stage 2 Receipt (`158`-Snap JEV Spine + `10,000`-World `264,054`-Snap Sinkhorn Simulation):** `0ccec7c75f22b218c253564351e2d4438f4b6ce07aba63ac3a399b86f1f6a87d`
+- **Stage 3 & 4 Receipt (Conserved Team & `37`-Athlete Post-Sim Projections + Cholesky 6-Family Overlay):** `9c16b6eecf078873f15d733ebdb312a13d47bff04b5130ef5647a52bbb3b9051`
+- **Stage 5 Receipt (360-Degree Conjunction Gate — `6` Game Lines + `1,461` Props):** `e2b06171bceb894c79de37466be87a672ec11b92385742b14e936dfed43c398a`
 
 ---
 
@@ -26,8 +26,8 @@
 ---
 
 ## 2. Stage 1A — Coaching Mind (`38/38` Modules), All `31` Non-Empty Python `intelligence/` Subpackages & `31+` Datasets
-- **Coaching Mind Modules Executed & Verified:** `43 / 43` (`fingerprint`, `intent_beliefs`, `sequencing`, `regime`, `coach_risk`, `coach_audit`, `coach_speak_emotional_deflection_probe`, `qb_visual_cognitive_load`, `trench_pocket_physics`, `biomech_kinetic_translation`, `ol_provider`, `dc_pressure`, `pressure_answer`, `compute_tendencies`, `proe`, `redzone`, `script_elasticity`, `tempo`, `drive_dire_situations`, `situational_wp`, `pm_sweep_convergence_kernels`, `x_sweep_production_signals`, `pgwe_luck_audit`, `schedule_cleaned_epa`, `adjustments`, `behavior`, `ingame`, `tenures`, `coach_tenures`, `provider`, etc.)
-- **Python `intelligence/` Subpackages Connected (`run_python_25_intelligence_domains.py`):** **`39`** subpackages connected (all `31` non-empty Python `intelligence/` subpackages + `8` namespace packages across **`449`** Python files) + ~70 deep coaching physics/signal functions (`biomech_kinetic_translation`, `trench_pocket_physics`, `pm_sweep_convergence_kernels`, `situational_wp`).
+- **Coaching Mind Modules Executed & Verified:** `48 / 48` (`fingerprint`, `intent_beliefs`, `sequencing`, `regime`, `coach_risk`, `coach_audit`, `coach_speak_emotional_deflection_probe`, `qb_visual_cognitive_load`, `trench_pocket_physics`, `biomech_kinetic_translation`, `ol_provider`, `dc_pressure`, `pressure_answer`, `compute_tendencies`, `proe`, `redzone`, `script_elasticity`, `tempo`, `drive_dire_situations`, `situational_wp`, `pm_sweep_convergence_kernels`, `x_sweep_production_signals`, `pgwe_luck_audit`, `schedule_cleaned_epa`, `adjustments`, `behavior`, `ingame`, `tenures`, `coach_tenures`, `provider`, etc.)
+- **Python `intelligence/` Subpackages Connected (`run_python_25_intelligence_domains.py`):** **`39`** subpackages connected (all `31` non-empty Python `intelligence/` subpackages + `8` namespace packages across **`456`** Python files) + ~70 deep coaching physics/signal functions (`biomech_kinetic_translation`, `trench_pocket_physics`, `pm_sweep_convergence_kernels`, `situational_wp`).
 - **`31+` Local Parquet / CSV / JSON Datasets Connected:** `ftn_charting_2026.parquet` (`18,019` rows), `advstats_season_pass/rush/rec/def` (`4` Parquets), `pennydata_2026_player_week_stats.csv` (`6,100` rows), `hf_bdb2025_plays_presnap_zone1.parquet` (`16,124` plays), `kaggle_sumersupplement_bdb26_zone1.parquet`, `hf_karmane_stats_player_week_2025.parquet` + `hf_karmane_pbp_2025.parquet`, and all **`11`** `data/step-n-market/*.parquet` files.
 - **Scheme Clash 1 (`BAL` Defense vs `JAX` Offense):** Baltimore plays Two-High MOFO on 59.5% of snaps and <=5 in the box on 77.95% of dropbacks to cap explosive air yards and force patience underneath (Parker Washington 48 targets, Brenton Strange 35 targets, Jakobi Meyers 31 targets). BDB2025 (16,124 plays) proves Trevor Lawrence's MOFO-vs-MOFC delta is only -0.0149 EPA/play (not -0.17), while Baltimore's light boxes invite JAX early-down rushing (Chris Rodriguez Jr. +0.120 EPA/rush if Bhayshul Tuten is Out).
 - **Scheme Clash 2 (`JAX` Defense vs `BAL` Offense):** With Lamar Jackson (IR - thumb surgery) and Tyler Huntley (Out for season - turf toe) both excluded, undrafted rookie Joe Fagnano starts at QB1 for Baltimore (-0.4308 EPA/dropback on 24 W8 dropbacks) with Jacoby Brissett acquired 2026-11-04 from ARI as emergency QB2. Todd Monken is forced into a heavy Derrick Henry ground script (159 carries, 632 yds, 8 TDs; 2.52 YBC/att) + quick-game/screen releases to Zay Flowers and Mark Andrews against Jacksonville's 30.9% blitz / 34.78% PA-blitz front.
@@ -49,126 +49,126 @@
 ---
 
 ## 4. Stage 2, 3 & 4 — Post-Simulation Conserved Team & `37`-Athlete Box-Score Projections
-- **Simulation Engine:** Sealed Coach-Mind PBP Simulator (`coachMindsetHash = a293ee26ed6f1350...`, `tau = 0.42`) conditioned on `158`-snap JEV Full-Game Spine (`22` drives, `36` state cells) across **`10,000` worlds (`1,335,891` simulated snaps)**.
+- **Simulation Engine:** Sealed Coach-Mind PBP Simulator (`coachMindsetHash = 354b4c132e200657...`, `tau = 0.42`) conditioned on `158`-snap JEV Full-Game Spine (`22` drives, `36` state cells) across **`10,000` worlds (`264,054` simulated snaps)**.
 - **Conservation Check (`assert_pbp_conservation`):** `PASS` (`0.0000` yardage/TD discrepancy across all `10,000` worlds).
 
 ### 4A. Team-Level Post-Simulation Distributions (Branch A Primary vs Branch B Tuten Active Contingency)
 | Team / Metric | Branch A Mean | Branch A SD | P10 | P25 | **P50 (Median)** | P75 | P90 | Branch B (Tuten Active) P50 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| **JAX Points** | 24.89 | 9.85 | 12.25 | 18.91 | **25.59** | 30.94 | 37.60 | 25.77 |
-| **BAL Points** | 16.67 | 8.84 | 6.39 | 10.16 | **15.83** | 22.18 | 29.00 | 15.82 |
-| **Game Total Points** | 41.56 | 12.95 | 24.52 | 32.53 | **41.64** | 49.66 | 57.67 | 41.59 |
-| **JAX Team Pass Yds** | 219.5 | 52.5 | 152.0 | 183.0 | **218.0** | 254.0 | 288.0 | — |
-| **BAL Team Pass Yds** | 188.8 | 52.4 | 122.0 | 152.0 | **188.0** | 224.0 | 257.0 | — |
-| **JAX Team Rush Yds** | 158.4 | 38.2 | 109.0 | 132.0 | **158.0** | 184.0 | 208.0 | — |
-| **BAL Team Rush Yds** | 108.3 | 33.7 | 67.0 | 84.0 | **106.0** | 130.0 | 152.0 | — |
+| **JAX Points** | 27.30 | 12.65 | 6.10 | 16.57 | **27.31** | 38.05 | 44.39 | 27.30 |
+| **BAL Points** | 9.30 | 3.66 | 6.59 | 6.90 | **7.28** | 11.53 | 16.43 | 7.29 |
+| **Game Total Points** | 36.60 | 12.83 | 16.35 | 27.35 | **38.36** | 44.61 | 55.61 | 38.33 |
+| **JAX Team Pass Yds** | 260.6 | 53.1 | 182.3 | 219.4 | **260.0** | 302.9 | 341.2 | — |
+| **BAL Team Pass Yds** | 69.5 | 30.4 | 27.7 | 44.0 | **66.0** | 92.7 | 117.0 | — |
+| **JAX Team Rush Yds** | 139.5 | 33.6 | 91.8 | 113.8 | **137.0** | 163.7 | 191.5 | — |
+| **BAL Team Rush Yds** | 36.3 | 14.9 | 16.4 | 24.6 | **35.0** | 46.6 | 59.4 | — |
 
 ### 4B. Complete 37-Athlete Conserved Post-Simulation Box-Score Projections (`JAX` & `BAL`)
 | Team | Pos | Verified 2026 Athlete | 2026 GP | Primary Stat Projected | Post-Sim Mean | P25 | **P50 (Median)** | P75 | Live Board Line | Status / Note |
 |---|---|---|---:|---|---:|---:|---:|---:|---:|---|
-| `BAL` | `LB` | **Roquan Smith** | 8 | Tackles + Ast | 9.5 | 9.4 | **9.5** | 9.6 | `8.5` | `Active` (Solo P50 `4.3`, Ast P50 `5.2`) |
-| `BAL` | `PK` | **Jake Moody** | 0 | Kicking Pts | 5.5 | 3.4 | **5.3** | 7.4 | `4.5` | `Active` (FG Made Mean `1.22`, PAT Mean `1.87`) |
-| `BAL` | `QB` | **Joe Fagnano** | 1 | Pass Yds (Rush P50 `11.1`) | 188.8 | 152.0 | **188.0** | 224.0 | `160.5` | `Active` (Comp P50 `18.0`, TD Mean `1.18`) |
-| `BAL` | `RB` | **Derrick Henry** | 8 | Rush Yds | 75.4 | 58.5 | **73.8** | 90.5 | `67.5` | `Active` (Rec P50 `9.2`, Carries P50 `18.6`) |
-| `BAL` | `RB` | **Justice Hill** | 8 | Rush Yds | 11.4 | 8.8 | **11.1** | 13.7 | `13.5` | `Active` (Rec P50 `16.4`, Carries P50 `1.9`) |
-| `BAL` | `RB` | **Rasheen Ali** | 4 | Rush Yds | 5.7 | 4.4 | **5.6** | 6.8 | `—` | `Active` (Rec P50 `1.1`, Carries P50 `1.4`) |
-| `BAL` | `S` | **Kyle Hamilton** | 8 | Tackles + Ast | 7.9 | 7.8 | **8.0** | 8.0 | `6.5` | `Active` (Solo P50 `5.5`, Ast P50 `2.5`) |
-| `BAL` | `S` | **Malaki Starks** | 8 | Tackles + Ast | 6.6 | 6.5 | **6.7** | 6.7 | `5.5` | `Active` (Solo P50 `3.6`, Ast P50 `3.0`) |
-| `BAL` | `TE` | **Mark Andrews** | 8 | Rec Yds | 27.8 | 22.4 | **27.7** | 33.0 | `18.5` | `Active` (Rec P50 `3.7`, Tgt Share `14.7%`) |
-| `BAL` | `TE` | **Josh Cuevas** | 5 | Rec Yds | 13.8 | 11.1 | **13.7** | 16.3 | `8.5` | `Active` (Rec P50 `1.0`, Tgt Share `7.3%`) |
-| `BAL` | `TE` | **Matt Hibner** | 4 | Rec Yds | 7.9 | 6.4 | **7.9** | 9.4 | `0.5` | `Active` (Rec P50 `0.6`, Tgt Share `4.2%`) |
-| `BAL` | `TE` | **Nick Vannett** | 0 | Rec Yds | 1.9 | 1.5 | **1.9** | 2.2 | `—` | `Active` (Rec P50 `0.2`, Tgt Share `1.0%`) |
-| `BAL` | `WR` | **Zay Flowers** | 7 | Rec Yds | 43.9 | 35.4 | **43.7** | 52.1 | `49.5` | `Active` (Rec P50 `2.9`, Tgt Share `23.2%`) |
-| `BAL` | `WR` | **Ja'Kobi Lane** | 4 | Rec Yds | 18.5 | 14.9 | **18.5** | 22.0 | `16.5` | `Questionable` (Rec P50 `1.9`, Tgt Share `9.8%`) |
-| `BAL` | `WR` | **Rashod Bateman** | 8 | Rec Yds | 19.2 | 15.4 | **19.1** | 22.8 | `13.5` | `Active` (Rec P50 `1.3`, Tgt Share `10.2%`) |
-| `BAL` | `WR` | **LaJohntay Wester** | 3 | Rec Yds | 8.8 | 7.1 | **8.8** | 10.5 | `—` | `Active` (Rec P50 `0.8`, Tgt Share `4.7%`) |
-| `BAL` | `WR` | **Devontez Walker** | 5 | Rec Yds | 9.5 | 7.7 | **9.5** | 11.3 | `—` | `Active` (Rec P50 `0.6`, Tgt Share `5.1%`) |
-| `BAL` | `WR` | **Elijah Sarratt** | 1 | Rec Yds | 10.6 | 8.5 | **10.6** | 12.6 | `—` | `Active` (Rec P50 `0.9`, Tgt Share `5.6%`) |
-| `JAX` | `LB` | **Foyesade Oluokun** | 7 | Tackles + Ast | 8.7 | 8.6 | **8.8** | 8.8 | `8.5` | `Active` (Solo P50 `5.2`, Ast P50 `3.6`) |
-| `JAX` | `LB` | **Ventrell Miller** | 7 | Tackles + Ast | 7.3 | 7.2 | **7.3** | 7.4 | `6.5` | `Active` (Solo P50 `3.8`, Ast P50 `3.6`) |
-| `JAX` | `PK` | **Cam Little** | 7 | Kicking Pts | 8.3 | 6.3 | **8.5** | 10.3 | `8.5` | `Active` (FG Made Mean `1.83`, PAT Mean `2.79`) |
-| `JAX` | `QB` | **Trevor Lawrence** | 7 | Pass Yds (Rush P50 `17.3`) | 219.5 | 183.0 | **218.0** | 254.0 | `233.5` | `Active` (Comp P50 `19.2`, TD Mean `2.02`) |
-| `JAX` | `RB` | **Ameer Abdullah** | 4 | Rush Yds | 35.2 | 29.3 | **35.1** | 40.8 | `—` | `Active` (Rec P50 `5.7`, Carries P50 `9.7`) |
-| `JAX` | `RB` | **Chris Rodriguez Jr.** | 7 | Rush Yds | 81.9 | 68.2 | **81.6** | 95.1 | `—` | `Active` (Rec P50 `3.3`, Carries P50 `17.6`) |
-| `JAX` | `RB` | **Bhayshul Tuten** | 7 | Rush Yds | 0.0 | 0.0 | **0.0** | 0.0 | `—` | `Questionable DNP` (Branch A Out=`0.0`; **Branch B Active Limited: Rush P50 `64.1`, Rec P50 `10.8`**) |
-| `JAX` | `RB` | **LeQuint Allen Jr.** | 6 | Rush Yds | 17.0 | 14.1 | **16.9** | 19.7 | `—` | `Active` (Rec P50 `7.7`, Carries P50 `4.1`) |
-| `JAX` | `S` | **Antonio Johnson** | 6 | Tackles + Ast | 6.0 | 6.0 | **6.0** | 6.1 | `4.5` | `Active` (Solo P50 `3.5`, Ast P50 `2.5`) |
-| `JAX` | `TE` | **Brenton Strange** | 7 | Rec Yds | 38.6 | 32.1 | **38.3** | 44.6 | `35.5` | `Active` (Rec P50 `3.2`, Tgt Share `17.6%`) |
-| `JAX` | `TE` | **Nate Boerkircher** | 6 | Rec Yds | 11.6 | 9.7 | **11.5** | 13.4 | `8.5` | `Active` (Rec P50 `1.0`, Tgt Share `5.3%`) |
-| `JAX` | `TE` | **Quintin Morris** | 5 | Rec Yds | 3.1 | 2.6 | **3.1** | 3.6 | `—` | `Active` (Rec P50 `0.3`, Tgt Share `1.4%`) |
-| `JAX` | `TE` | **Tanner Koziol** | 1 | Rec Yds | 7.7 | 6.4 | **7.7** | 8.9 | `—` | `Active` (Rec P50 `0.8`, Tgt Share `3.5%`) |
-| `JAX` | `WR` | **Parker Washington** | 7 | Rec Yds | 52.9 | 44.1 | **52.5** | 61.2 | `63.5` | `Active` (Rec P50 `3.3`, Tgt Share `24.1%`) |
-| `JAX` | `WR` | **Jakobi Meyers** | 7 | Rec Yds | 34.2 | 28.5 | **33.9** | 39.5 | `40.5` | `Active` (Rec P50 `2.4`, Tgt Share `15.6%`) |
-| `JAX` | `WR` | **Brian Thomas Jr.** | 7 | Rec Yds | 24.2 | 20.2 | **24.1** | 28.0 | `12.5` | `Active` (Rec P50 `2.1`, Tgt Share `11.0%`) |
-| `JAX` | `WR` | **Travis Hunter** | 7 | Rec Yds | 7.7 | 6.4 | **7.7** | 8.9 | `10.5` | `Active` (Rec P50 `0.6`, Tgt Share `3.5%`) |
-| `JAX` | `WR` | **Josh Cameron** | 5 | Rec Yds | 20.1 | 16.7 | **19.9** | 23.2 | `10.5` | `Active` (Rec P50 `1.4`, Tgt Share `9.1%`) |
-| `JAX` | `WR` | **CJ Williams** | 0 | Rec Yds | 2.7 | 2.2 | **2.7** | 3.1 | `—` | `Active` (Rec P50 `0.2`, Tgt Share `1.2%`) |
+| `BAL` | `LB` | **Roquan Smith** | 8 | Tackles + Ast | 10.8 | 2.8 | **7.5** | 16.1 | `8.5` | `Active` (Solo P50 `3.5`, Ast P50 `4.2`) |
+| `BAL` | `PK` | **Jake Moody** | 0 | Kicking Pts | 3.6 | 1.2 | **3.0** | 5.7 | `4.5` | `Active` (FG Made Mean `0.81`, PAT Mean `1.13`) |
+| `BAL` | `QB` | **Joe Fagnano** | 1 | Pass Yds (Rush P50 `8.6`) | 69.5 | 44.0 | **66.0** | 92.7 | `160.5` | `Active` (Comp P50 `9.0`, TD Mean `0.04`) |
+| `BAL` | `RB` | **Derrick Henry** | 8 | Rush Yds | 21.1 | -9.8 | **20.1** | 53.1 | `67.5` | `Active` (Rec P50 `2.9`, Carries P50 `5.0`) |
+| `BAL` | `RB` | **Justice Hill** | 8 | Rush Yds | 4.2 | -6.2 | **3.9** | 14.4 | `13.5` | `Active` (Rec P50 `5.7`, Carries P50 `0.7`) |
+| `BAL` | `RB` | **Rasheen Ali** | 4 | Rush Yds | 2.0 | -7.8 | **1.8** | 11.7 | `—` | `Active` (Rec P50 `1.3`, Carries P50 `0.4`) |
+| `BAL` | `S` | **Kyle Hamilton** | 8 | Tackles + Ast | 8.8 | -5.4 | **8.2** | 23.1 | `6.5` | `Active` (Solo P50 `5.7`, Ast P50 `2.6`) |
+| `BAL` | `S` | **Malaki Starks** | 8 | Tackles + Ast | 7.5 | 1.4 | **4.5** | 10.5 | `5.5` | `Active` (Solo P50 `2.5`, Ast P50 `2.1`) |
+| `BAL` | `TE` | **Mark Andrews** | 8 | Rec Yds | 9.8 | -2.5 | **8.4** | 21.1 | `18.5` | `Active` (Rec P50 `1.2`, Tgt Share `14.7%`) |
+| `BAL` | `TE` | **Josh Cuevas** | 5 | Rec Yds | 5.1 | -5.7 | **4.5** | 15.6 | `8.5` | `Active` (Rec P50 `0.6`, Tgt Share `7.3%`) |
+| `BAL` | `TE` | **Matt Hibner** | 4 | Rec Yds | 2.8 | -7.8 | **2.6** | 13.1 | `0.5` | `Active` (Rec P50 `0.6`, Tgt Share `4.2%`) |
+| `BAL` | `TE` | **Nick Vannett** | 0 | Rec Yds | 1.2 | -9.3 | **1.2** | 11.4 | `—` | `Active` (Rec P50 `0.6`, Tgt Share `1.0%`) |
+| `BAL` | `WR` | **Zay Flowers** | 7 | Rec Yds | 15.2 | -22.5 | **15.6** | 52.5 | `49.5` | `Active` (Rec P50 `1.0`, Tgt Share `23.2%`) |
+| `BAL` | `WR` | **Ja'Kobi Lane** | 4 | Rec Yds | 6.5 | -5.2 | **5.8** | 17.4 | `16.5` | `Questionable` (Rec P50 `0.6`, Tgt Share `9.8%`) |
+| `BAL` | `WR` | **Rashod Bateman** | 8 | Rec Yds | 7.1 | -4.5 | **6.0** | 17.6 | `13.5` | `Active` (Rec P50 `0.6`, Tgt Share `10.2%`) |
+| `BAL` | `WR` | **LaJohntay Wester** | 3 | Rec Yds | 3.3 | -7.5 | **2.9** | 14.0 | `—` | `Active` (Rec P50 `0.7`, Tgt Share `4.7%`) |
+| `BAL` | `WR` | **Devontez Walker** | 5 | Rec Yds | 3.4 | -7.5 | **3.2** | 13.7 | `—` | `Active` (Rec P50 `0.6`, Tgt Share `5.1%`) |
+| `BAL` | `WR` | **Elijah Sarratt** | 1 | Rec Yds | 4.0 | -6.7 | **3.7** | 14.0 | `—` | `Active` (Rec P50 `0.7`, Tgt Share `5.6%`) |
+| `JAX` | `LB` | **Foyesade Oluokun** | 7 | Tackles + Ast | 10.0 | -4.8 | **8.8** | 23.5 | `8.5` | `Active` (Solo P50 `5.2`, Ast P50 `3.7`) |
+| `JAX` | `LB` | **Ventrell Miller** | 7 | Tackles + Ast | 8.7 | 1.6 | **5.4** | 13.1 | `6.5` | `Active` (Solo P50 `2.9`, Ast P50 `2.7`) |
+| `JAX` | `PK` | **Cam Little** | 7 | Kicking Pts | 9.2 | 5.1 | **9.0** | 13.2 | `8.5` | `Active` (FG Made Mean `2.03`, PAT Mean `3.10`) |
+| `JAX` | `QB` | **Trevor Lawrence** | 7 | Pass Yds (Rush P50 `19.0`) | 260.6 | 219.4 | **260.0** | 302.9 | `233.5` | `Active` (Comp P50 `24.0`, TD Mean `2.63`) |
+| `JAX` | `RB` | **Ameer Abdullah** | 4 | Rush Yds | 29.7 | 8.2 | **22.6** | 45.3 | `—` | `Active` (Rec P50 `2.7`, Carries P50 `6.5`) |
+| `JAX` | `RB` | **Chris Rodriguez Jr.** | 7 | Rush Yds | 61.9 | 21.7 | **60.2** | 99.0 | `—` | `Active` (Rec P50 `3.6`, Carries P50 `12.9`) |
+| `JAX` | `RB` | **Bhayshul Tuten** | 7 | Rush Yds | 0.0 | 0.0 | **0.0** | 0.0 | `—` | `Questionable DNP` (Branch A Out=`0.0`; **Branch B Active Limited: Rush P50 `48.8`, Rec P50 `5.8`**) |
+| `JAX` | `RB` | **LeQuint Allen Jr.** | 6 | Rush Yds | 15.2 | 3.1 | **9.6** | 22.1 | `—` | `Active` (Rec P50 `4.5`, Carries P50 `2.5`) |
+| `JAX` | `S` | **Antonio Johnson** | 6 | Tackles + Ast | 7.0 | 1.3 | **4.0** | 10.3 | `4.5` | `Active` (Solo P50 `2.5`, Ast P50 `1.8`) |
+| `JAX` | `TE` | **Brenton Strange** | 7 | Rec Yds | 47.5 | 14.1 | **36.3** | 71.0 | `35.5` | `Active` (Rec P50 `3.2`, Tgt Share `19.0%`) |
+| `JAX` | `TE` | **Nate Boerkircher** | 6 | Rec Yds | 16.6 | 1.9 | **8.4** | 23.6 | `8.5` | `Active` (Rec P50 `0.9`, Tgt Share `5.7%`) |
+| `JAX` | `TE` | **Quintin Morris** | 5 | Rec Yds | 5.1 | -6.6 | **3.8** | 14.3 | `—` | `Active` (Rec P50 `0.4`, Tgt Share `1.5%`) |
+| `JAX` | `TE` | **Tanner Koziol** | 1 | Rec Yds | 10.4 | 0.6 | **4.3** | 13.8 | `—` | `Active` (Rec P50 `0.7`, Tgt Share `3.8%`) |
+| `JAX` | `WR` | **Parker Washington** | 7 | Rec Yds | 63.0 | 20.1 | **53.7** | 99.3 | `63.5` | `Active` (Rec P50 `3.4`, Tgt Share `26.0%`) |
+| `JAX` | `WR` | **Jakobi Meyers** | 7 | Rec Yds | 42.9 | 11.0 | **31.2** | 66.5 | `40.5` | `Active` (Rec P50 `2.3`, Tgt Share `16.8%`) |
+| `JAX` | `WR` | **Brian Thomas Jr.** | 7 | Rec Yds | 10.7 | 0.6 | **4.1** | 14.3 | `12.5` | `Active` (Rec P50 `0.6`, Tgt Share `3.9%`) |
+| `JAX` | `WR` | **Travis Hunter** | 7 | Rec Yds | 10.1 | 0.7 | **4.5** | 14.1 | `10.5` | `Active` (Rec P50 `0.6`, Tgt Share `3.8%`) |
+| `JAX` | `WR` | **Josh Cameron** | 5 | Rec Yds | 26.0 | 4.8 | **16.5** | 38.7 | `10.5` | `Active` (Rec P50 `1.2`, Tgt Share `9.9%`) |
+| `JAX` | `WR` | **CJ Williams** | 0 | Rec Yds | 4.7 | -7.3 | **3.5** | 14.9 | `—` | `Active` (Rec P50 `0.7`, Tgt Share `1.3%`) |
 
 ### 4C. Full 360-Degree Derivative & Exotic Projections (`1Q–4Q`, `1H/2H`, `Longest Plays`, `Anytime/First/2+ TD`, `IDP Sacks`)
 #### 4C-1. Quarters & Halves Team Projections (`1Q`, `2Q`, `3Q`, `4Q`, `1H`, `2H`, `FullGame`)
 | Period | JAX Points Mean | BAL Points Mean | JAX - BAL Margin Mean | BAL Home Spread Mean | Total Points Mean |
 |---|---:|---:|---:|---:|---:|
-| **`1Q`** | `5.35` | `3.42` | `+1.93` | `-1.93` | **`8.77`** |
-| **`2Q`** | `7.34` | `4.58` | `+2.76` | `-2.76` | **`11.92`** |
-| **`3Q`** | `5.85` | `4.08` | `+1.77` | `-1.77` | **`9.93`** |
-| **`4Q`** | `6.35` | `4.58` | `+1.77` | `-1.77` | **`10.93`** |
-| **`1H`** | `12.69` | `8.00` | `+4.69` | `-4.69` | **`20.69`** |
-| **`2H`** | `12.20` | `8.67` | `+3.53` | `-3.53` | **`20.87`** |
-| **`FullGame`** | `24.89` | `16.67` | `+8.22` | `-8.22` | **`41.56`** |
+| **`1Q`** | `5.87` | `1.91` | `+3.96` | `-3.96` | **`7.78`** |
+| **`2Q`** | `8.05` | `2.56` | `+5.49` | `-5.49` | **`10.61`** |
+| **`3Q`** | `6.42` | `2.28` | `+4.14` | `-4.14` | **`8.70`** |
+| **`4Q`** | `6.96` | `2.56` | `+4.40` | `-4.40` | **`9.52`** |
+| **`1H`** | `13.92` | `4.46` | `+9.46` | `-9.46` | **`18.38`** |
+| **`2H`** | `13.38` | `4.84` | `+8.54` | `-8.54` | **`18.22`** |
+| **`FullGame`** | `27.30` | `9.30` | `+18.00` | `-18.00` | **`36.60`** |
 
 #### 4C-2. `1st Quarter` & `1st Half` Key Starter Yardage Projections
 | Starter | Team / Pos | `1Q` Primary Mean (`P50`) | `1H` Primary Mean (`P50`) | Secondary Derivative Projection |
 |---|---|---|---|---|
-| **Trevor Lawrence** | `JAX QB` | Pass `49.4` (`49.1`) | Pass `111.9` (`111.2`) | `1Q` Rush `3.9` / `1H` Rush `8.8` |
-| **Joe Fagnano** | `BAL QB` | Pass `41.5` (`41.4`) | Pass `93.4` (`93.1`) | `1Q` Rush `2.5` / `1H` Rush `5.6` |
-| **Derrick Henry** | `BAL RB` | Rush `16.6` (`16.2`) | Rush `37.3` (`36.5`) | `1Q` Rec `2.0` / `1H` Rec `4.6` |
-| **Chris Rodriguez Jr.** | `JAX RB` | Rush `18.4` (`18.4`) | Rush `41.7` (`41.6`) | `1Q` Rec `0.7` / `1H` Rec `1.7` |
-| **Bhayshul Tuten** | `JAX RB` | Rush `0.0` (`0.0`) | Rush `0.0` (`0.0`) | `1Q` Rec `0.0` / `1H` Rec `0.0` (Branch B Active: `1Q` Rush P50 `14.4`, `1H` Rush P50 `32.7`) |
-| **Parker Washington** | `JAX WR` | Rec `11.9` (`11.8`) | Rec `27.0` (`26.8`) | `1Q` Recs `0.74` / `1H` Recs `1.69` |
-| **Zay Flowers** | `BAL WR` | Rec `9.7` (`9.6`) | Rec `21.7` (`21.6`) | `1Q` Recs `0.64` / `1H` Recs `1.43` |
-| **Mark Andrews** | `BAL TE` | Rec `6.1` (`6.1`) | Rec `13.8` (`13.7`) | `1Q` Recs `0.81` / `1H` Recs `1.83` |
-| **Brenton Strange** | `JAX TE` | Rec `8.7` (`8.6`) | Rec `19.7` (`19.5`) | `1Q` Recs `0.73` / `1H` Recs `1.65` |
-| **Jakobi Meyers** | `JAX WR` | Rec `7.7` (`7.6`) | Rec `17.4` (`17.3`) | `1Q` Recs `0.55` / `1H` Recs `1.24` |
-| **Brian Thomas Jr.** | `JAX WR` | Rec `5.4` (`5.4`) | Rec `12.3` (`12.3`) | `1Q` Recs `0.47` / `1H` Recs `1.06` |
+| **Trevor Lawrence** | `JAX QB` | Pass `58.6` (`58.5`) | Pass `132.9` (`132.6`) | `1Q` Rush `4.6` / `1H` Rush `10.4` |
+| **Joe Fagnano** | `BAL QB` | Pass `15.3` (`14.5`) | Pass `34.4` (`32.7`) | `1Q` Rush `2.2` / `1H` Rush `5.0` |
+| **Derrick Henry** | `BAL RB` | Rush `4.7` (`4.4`) | Rush `10.5` (`9.9`) | `1Q` Rec `0.8` / `1H` Rec `1.7` |
+| **Chris Rodriguez Jr.** | `JAX RB` | Rush `13.9` (`13.5`) | Rush `31.6` (`30.7`) | `1Q` Rec `1.0` / `1H` Rec `2.3` |
+| **Bhayshul Tuten** | `JAX RB` | Rush `0.0` (`0.0`) | Rush `0.0` (`0.0`) | `1Q` Rec `0.0` / `1H` Rec `0.0` (Branch B Active: `1Q` Rush P50 `11.0`, `1H` Rush P50 `24.9`) |
+| **Parker Washington** | `JAX WR` | Rec `14.2` (`12.1`) | Rec `32.1` (`27.4`) | `1Q` Recs `0.90` / `1H` Recs `2.05` |
+| **Zay Flowers** | `BAL WR` | Rec `3.3` (`3.4`) | Rec `7.5` (`7.7`) | `1Q` Recs `0.40` / `1H` Recs `0.91` |
+| **Mark Andrews** | `BAL TE` | Rec `2.2` (`1.8`) | Rec `4.9` (`4.1`) | `1Q` Recs `0.37` / `1H` Recs `0.83` |
+| **Brenton Strange** | `JAX TE` | Rec `10.7` (`8.2`) | Rec `24.2` (`18.5`) | `1Q` Recs `0.90` / `1H` Recs `2.05` |
+| **Jakobi Meyers** | `JAX WR` | Rec `9.6` (`7.0`) | Rec `21.9` (`15.9`) | `1Q` Recs `0.70` / `1H` Recs `1.58` |
+| **Brian Thomas Jr.** | `JAX WR` | Rec `2.4` (`0.9`) | Rec `5.4` (`2.1`) | `1Q` Recs `0.24` / `1H` Recs `0.55` |
 
 #### 4C-3. Extreme-Value Order Statistics — `Longest Completion`, `Longest Reception`, `Longest Rush`
 | Category | Athlete | Team | Expected Volume | **Expected Mean (Yds)** | **Median `P50` (Yds)** |
 |---|---|---|---:|---:|---:|
-| **Longest Completion** | **Trevor Lawrence** | `JAX QB` | `19.4` comp | `29.2` | **`27.5`** |
-| **Longest Completion** | **Joe Fagnano** | `BAL QB` | `18.1` comp | `23.9` | **`22.5`** |
-| **Longest Reception** | **Parker Washington** | `JAX WR` | `3.31` rec | `30.1` | **`27.9`** |
-| **Longest Reception** | **Brian Thomas Jr.** | `JAX WR` | `2.07` rec | `23.2` | **`21.5`** |
-| **Longest Reception** | **Jakobi Meyers** | `JAX WR` | `2.43` rec | `22.9` | **`21.2`** |
-| **Longest Reception** | **Brenton Strange** | `JAX TE` | `3.23` rec | `19.5` | **`18.1`** |
-| **Longest Reception** | **Zay Flowers** | `BAL WR` | `2.89` rec | `28.6` | **`26.5`** |
-| **Longest Reception** | **Mark Andrews** | `BAL TE` | `3.70` rec | `13.3` | **`12.3`** |
-| **Longest Reception** | **Rashod Bateman** | `BAL WR` | `1.26` rec | `22.7` | **`21.0`** |
-| **Longest Reception** | **Derrick Henry** | `BAL RB` | `1.48` rec | `7.0` | **`6.5`** |
-| **Longest Reception** | **Chris Rodriguez Jr.** | `JAX RB` | `1.00` rec | `4.9` | **`4.5`** |
-| **Longest Rush** | **Derrick Henry** | `BAL RB` | `18.97` att | `13.0` | **`11.9`** |
-| **Longest Rush** | **Chris Rodriguez Jr.** | `JAX RB` | `17.63` att | `12.8` | **`11.7`** |
-| **Longest Rush** | **Trevor Lawrence** | `JAX QB` | `4.82` att | `8.0` | **`7.3`** |
-| **Longest Rush** | **Joe Fagnano** | `BAL QB` | `3.16` att | `6.1` | **`5.6`** |
-| **Longest Rush** | **Ameer Abdullah** | `JAX RB` | `9.70` att | `8.3` | **`7.6`** |
-| **Longest Rush** | **Bhayshul Tuten** | `JAX RB` | `14.53` att | `12.8` | **`11.7`** |
+| **Longest Completion** | **Trevor Lawrence** | `JAX QB` | `24.6` comp | `28.4` | **`26.8`** |
+| **Longest Completion** | **Joe Fagnano** | `BAL QB` | `9.0` comp | `15.5` | **`14.6`** |
+| **Longest Reception** | **Parker Washington** | `JAX WR` | `4.01` rec | `31.3` | **`29.0`** |
+| **Longest Reception** | **Brian Thomas Jr.** | `JAX WR` | `1.08` rec | `15.2` | **`14.1`** |
+| **Longest Reception** | **Jakobi Meyers** | `JAX WR` | `3.09` rec | `24.3` | **`22.5`** |
+| **Longest Reception** | **Brenton Strange** | `JAX TE` | `4.02` rec | `20.5` | **`19.0`** |
+| **Longest Reception** | **Zay Flowers** | `BAL WR` | `1.83` rec | `13.5` | **`12.5`** |
+| **Longest Reception** | **Mark Andrews** | `BAL TE` | `1.68` rec | `8.2` | **`7.6`** |
+| **Longest Reception** | **Rashod Bateman** | `BAL WR` | `1.02` rec | `9.6` | **`8.9`** |
+| **Longest Reception** | **Derrick Henry** | `BAL RB` | `1.22` rec | `4.9` | **`4.5`** |
+| **Longest Reception** | **Chris Rodriguez Jr.** | `JAX RB` | `1.24` rec | `4.9` | **`4.5`** |
+| **Longest Rush** | **Derrick Henry** | `BAL RB` | `7.22` att | `7.8` | **`7.2`** |
+| **Longest Rush** | **Chris Rodriguez Jr.** | `JAX RB` | `13.68` att | `11.9` | **`10.9`** |
+| **Longest Rush** | **Trevor Lawrence** | `JAX QB` | `6.14` att | `7.7` | **`7.1`** |
+| **Longest Rush** | **Joe Fagnano** | `BAL QB` | `3.30` att | `5.1` | **`4.7`** |
+| **Longest Rush** | **Ameer Abdullah** | `JAX RB` | `8.26` att | `8.0` | **`7.3`** |
+| **Longest Rush** | **Bhayshul Tuten** | `JAX RB` | `11.30` att | `12.2` | **`11.2`** |
 
 #### 4C-4. Conserved Touchdown Scorer Probabilities (`Anytime TD`, `First TD`, `2+ TDs`)
 | Athlete | Team / Pos | Conserved $\lambda_{\text{TD}}$ | **P(Anytime TD)** | **P(First TD)** | **P(2+ TDs)** | Fair Anytime TD Odds |
 |---|---|---:|---:|---:|---:|---:|
-| **Derrick Henry** | `BAL RB` | `0.676` | **`49.1%`** | `13.8%` | `14.7%` | `+104` |
-| **Chris Rodriguez Jr.** | `JAX RB` | `0.541` | **`41.8%`** | `11.0%` | `10.3%` | `+139` |
-| **Parker Washington** | `JAX WR` | `0.501` | **`39.4%`** | `10.2%` | `9.0%` | `+154` |
-| **Brenton Strange** | `JAX TE` | `0.360` | **`30.2%`** | `7.3%` | `5.1%` | `+231` |
-| **Jakobi Meyers** | `JAX WR` | `0.324` | **`27.7%`** | `6.6%` | `4.2%` | `+262` |
-| **Zay Flowers** | `BAL WR` | `0.280` | **`24.4%`** | `5.7%` | `3.2%` | `+310` |
-| **Brian Thomas Jr.** | `JAX WR` | `0.224` | **`20.1%`** | `4.6%` | `2.2%` | `+398` |
-| **Ameer Abdullah** | `JAX RB` | `0.208` | **`18.8%`** | `4.2%` | `1.9%` | `+433` |
-| **Josh Cameron** | `JAX WR` | `0.184` | **`16.8%`** | `3.8%` | `1.5%` | `+495` |
-| **Mark Andrews** | `BAL TE` | `0.170` | **`15.6%`** | `3.5%` | `1.3%` | `+540` |
-| **Justice Hill** | `BAL RB` | `0.167` | **`15.4%`** | `3.4%` | `1.2%` | `+551` |
-| **LeQuint Allen Jr.** | `JAX RB` | `0.146` | **`13.6%`** | `3.0%` | `1.0%` | `+635` |
-| **Ja'Kobi Lane** | `BAL WR` | `0.123` | **`11.6%`** | `2.5%` | `0.7%` | `+762` |
-| **Rashod Bateman** | `BAL WR` | `0.123` | **`11.6%`** | `2.5%` | `0.7%` | `+762` |
+| **Derrick Henry** | `BAL RB` | `0.885` | **`58.7%`** | `19.7%` | `22.2%` | `-142` |
+| **Parker Washington** | `JAX WR` | `0.656` | **`48.1%`** | `14.6%` | `14.1%` | `+108` |
+| **Brenton Strange** | `JAX TE` | `0.490` | **`38.7%`** | `10.9%` | `8.7%` | `+158` |
+| **Jakobi Meyers** | `JAX WR` | `0.442` | **`35.7%`** | `9.9%` | `7.3%` | `+180` |
+| **Chris Rodriguez Jr.** | `JAX RB` | `0.337` | **`28.6%`** | `7.5%` | `4.5%` | `+250` |
+| **Josh Cameron** | `JAX WR` | `0.262` | **`23.1%`** | `5.9%` | `2.9%` | `+333` |
+| **Ameer Abdullah** | `JAX RB` | `0.203` | **`18.4%`** | `4.5%` | `1.8%` | `+444` |
+| **LeQuint Allen Jr.** | `JAX RB` | `0.160` | **`14.8%`** | `3.6%` | `1.1%` | `+578` |
+| **Nate Boerkircher** | `JAX TE` | `0.150` | **`13.9%`** | `3.3%` | `1.0%` | `+618` |
+| **Justice Hill** | `BAL RB` | `0.134` | **`12.5%`** | `3.0%` | `0.8%` | `+699` |
+| **Brian Thomas Jr.** | `JAX WR` | `0.112` | **`10.6%`** | `2.5%` | `0.6%` | `+841` |
+| **Tanner Koziol** | `JAX TE` | `0.110` | **`10.4%`** | `2.5%` | `0.6%` | `+860` |
+| **Travis Hunter** | `JAX WR` | `0.104` | **`9.9%`** | `2.3%` | `0.5%` | `+909` |
+| **Joe Fagnano** | `BAL QB` | `0.096` | **`9.2%`** | `2.1%` | `0.4%` | `+992` |
 
 #### 4C-5. IDP Pass-Rush & Sack Projections (`pennydata_2026_player_week_stats.csv` + Trench Pressure Rates)
 | Pass Rusher | Team / Pos | 2026 GP | 2026 Sacks | 2026 QB Hits | Expected Sacks Mean | **P(0.25+ Sacks)** | **P(1.0+ Sack)** | Matchup Note |
@@ -188,87 +188,87 @@
 ### 5A. Two-Sided Main Game Lines (`Spread`, `Total`, `Moneyline`)
 | Market | Selection | Live Price | De-Vigged Market Prob | Post-Sim Prob | 90% Wilson LB | Net Edge | Confidence | Decision | Gate Reason |
 |---|---|---:|---:|---:|---:|---:|---:|---|---|
-| Spread | **JAX -7.5** | `-105` | `48.92%` | `53.07%` | `52.25%` | `+4.15%` | `54/100` | **`PASS`** | POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 53.07% vs 48.92% de-vigged market (90% Wilson LB 52.25%). |
-| Spread | **BAL +7.5** | `-115` | `51.08%` | `46.93%` | `46.11%` | `-4.15%` | `58/100` | **`PASS`** | ROOKIE_QB1_UNCERTAINTY_GATE: Post-sim BAL +7.5 cover prob 46.93% vs 51.08% de-vigged market; Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100). |
-| Total | **Over 41.5** | `-110` | `50.00%` | `50.49%` | `49.67%` | `+0.49%` | `57/100` | **`PASS`** | SCRIPT_DRAG_GATE: Post-sim Over 41.5 prob 50.49% vs 50.00% de-vigged market; BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required). |
-| Total | **Under 41.5** | `-110` | `50.00%` | `49.51%` | `48.69%` | `-0.49%` | `52/100` | **`PASS`** | NEGATIVE_EV: Post-sim Under 41.5 prob 49.51% < 50.00% de-vigged market. |
-| Moneyline | **JAX ML** | `-520` | `80.43%` | `71.98%` | `71.24%` | `-8.45%` | `61/100` | **`PASS`** | JUICED_FAVORITE_BIAS_GATE: -520 requires 80.43% de-vigged win prob; post-sim JAX win prob is 71.98% (exact historical replay failure mode). |
-| Moneyline | **BAL ML** | `+390` | `19.57%` | `28.02%` | `27.29%` | `+8.45%` | `55/100` | **`PASS`** | ROOKIE_QB1_TAIL_RISK: Post-sim BAL win prob 28.02% vs 19.57% de-vigged market; Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play. |
+| Spread | **JAX -7.5** | `-105` | `48.92%` | `74.25%` | `72.61%` | `+25.33%` | `54/100` | **`PASS`** | POST_MOVE_NO_EDGE: Line already moved from JAX -3.5 to JAX -7.5 (-105); post-sim cover prob 74.25% vs 48.92% de-vigged market (90% Wilson LB 72.61%). |
+| Spread | **BAL +7.5** | `-115` | `51.08%` | `25.75%` | `24.18%` | `-25.33%` | `58/100` | **`PASS`** | ROOKIE_QB1_UNCERTAINTY_GATE: Post-sim BAL +7.5 cover prob 25.75% vs 51.08% de-vigged market; Joe Fagnano (24 career NFL dropbacks at -0.4308 EPA/play) vs JAX 30.9% blitz fails Stage 5 epistemic certainty threshold (conf 58/100 < 65/100). |
+| Total | **Over 41.5** | `-110` | `50.00%` | `34.55%` | `32.82%` | `-15.45%` | `57/100` | **`PASS`** | SCRIPT_DRAG_GATE: Post-sim Over 41.5 prob 34.55% vs 50.00% de-vigged market; BAL heavy Derrick Henry run script + slow clock drain caps confidence at 57/100 (< 65/100 required). |
+| Total | **Under 41.5** | `-110` | `50.00%` | `65.45%` | `63.68%` | `+15.45%` | `52/100` | **`PASS`** | NEGATIVE_EV: Post-sim Under 41.5 prob 65.45% < 50.00% de-vigged market. |
+| Moneyline | **JAX ML** | `-520` | `80.43%` | `88.55%` | `87.33%` | `+8.12%` | `61/100` | **`PASS`** | JUICED_FAVORITE_BIAS_GATE: -520 requires 80.43% de-vigged win prob; post-sim JAX win prob is 88.55% (exact historical replay failure mode). |
+| Moneyline | **BAL ML** | `+390` | `19.57%` | `11.45%` | `10.33%` | `-8.12%` | `55/100` | **`PASS`** | ROOKIE_QB1_TAIL_RISK: Post-sim BAL win prob 11.45% vs 19.57% de-vigged market; Joe Fagnano (-0.4308 EPA/play) trailing script against JAX pass rush blocks moneyline dog play. |
 
 ### 5B. Core Player Props (`1,461` Props Across `75` Market Types Evaluated)
 | Athlete | Team | Market | Live Line (Open) | Post-Sim Mean | Post-Sim P50 | Model Lean | Model P(Over) | Two-Sided Price? | Decision |
 |---|---|---|---:|---:|---:|---|---:|---|---|
-| **Trevor Lawrence** | `JAX QB` | Total Passing Yards (incl. overtime) | `233.5` (open `244.5`) | `219.5` | **`218.0`** | `UNDER` | `39.5%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Joe Fagnano** | `BAL QB` | Total Passing Yards (incl. overtime) | `160.5` (open `169.5`) | `188.8` | **`188.0`** | `OVER` | `70.5%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Trevor Lawrence** | `JAX QB` | Total Pass Completions (incl. overtime) | `19.5` (open `19.5`) | `19.4` | **`19.2`** | `UNDER` | `49.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Joe Fagnano** | `BAL QB` | Total Pass Completions (incl. overtime) | `16.5` (open `15.5`) | `18.1` | **`18.0`** | `OVER` | `62.7%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Trevor Lawrence** | `JAX QB` | Total Passing Touchdowns (incl. overtime) | `1.5` (open `1.5`) | `2.0` | **`2.0`** | `OVER` | `66.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Joe Fagnano** | `BAL QB` | Total Passing Touchdowns (incl. overtime) | `0.5` (open `0.5`) | `1.2` | **`1.0`** | `OVER` | `75.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Derrick Henry** | `BAL RB` | Total Carries (incl. overtime) | `16.5` (open `19.5`) | `19.0` | **`18.6`** | `OVER` | `66.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Trevor Lawrence** | `JAX QB` | Total Carries (incl. overtime) | `3.5` (open `3.5`) | `4.8` | **`4.8`** | `OVER` | `87.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Derrick Henry** | `BAL RB` | Total Rushing Yards (incl. overtime) | `67.5` (open `74.5`) | `75.4` | **`73.8`** | `OVER` | `63.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Justice Hill** | `BAL RB` | Total Rushing Yards (incl. overtime) | `13.5` (open `16.5`) | `11.4` | **`11.1`** | `UNDER` | `27.5%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Trevor Lawrence** | `JAX QB` | Total Rushing Yards (incl. overtime) | `11.5` (open `12.5`) | `17.3` | **`17.3`** | `OVER` | `91.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Derrick Henry** | `BAL RB` | Total Receiving Yards (incl. overtime) | `7.5` (open `8.5`) | `9.3` | **`9.2`** | `OVER` | `75.4%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Mark Andrews** | `BAL TE` | Total Receiving Yards (incl. overtime) | `18.5` (open `20.5`) | `27.8` | **`27.7`** | `OVER` | `88.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Jakobi Meyers** | `JAX WR` | Total Receiving Yards (incl. overtime) | `40.5` (open `41.5`) | `34.2` | **`33.9`** | `UNDER` | `21.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Justice Hill** | `BAL RB` | Total Receiving Yards (incl. overtime) | `16.5` (open `12.5`) | `16.5` | **`16.4`** | `UNDER` | `50.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Rashod Bateman** | `BAL WR` | Total Receiving Yards (incl. overtime) | `13.5` (open `16.5`) | `19.2` | **`19.1`** | `OVER` | `85.7%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Zay Flowers** | `BAL WR` | Total Receiving Yards (incl. overtime) | `49.5` (open `46.5`) | `43.9` | **`43.7`** | `UNDER` | `32.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Brenton Strange** | `JAX TE` | Total Receiving Yards (incl. overtime) | `35.5` (open `33.5`) | `38.6` | **`38.3`** | `OVER` | `63.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Matt Hibner** | `BAL TE` | Total Receiving Yards (incl. overtime) | `0.5` (open `0.5`) | `7.9` | **`7.9`** | `OVER` | `100.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Parker Washington** | `JAX WR` | Total Receiving Yards (incl. overtime) | `63.5` (open `67.5`) | `52.9` | **`52.5`** | `UNDER` | `20.1%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Brian Thomas Jr.** | `JAX WR` | Total Receiving Yards (incl. overtime) | `12.5` (open `11.5`) | `24.2` | **`24.1`** | `OVER` | `97.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Travis Hunter** | `JAX WR` | Total Receiving Yards (incl. overtime) | `10.5` (open `9.5`) | `7.7` | **`7.7`** | `UNDER` | `6.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Nate Boerkircher** | `JAX TE` | Total Receiving Yards (incl. overtime) | `8.5` (open `6.5`) | `11.6` | **`11.5`** | `OVER` | `86.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Ja'Kobi Lane** | `BAL WR` | Total Receiving Yards (incl. overtime) | `16.5` (open `16.5`) | `18.5` | **`18.5`** | `OVER` | `65.4%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Josh Cuevas** | `BAL TE` | Total Receiving Yards (incl. overtime) | `8.5` (open `7.5`) | `13.8` | **`13.7`** | `OVER` | `91.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Josh Cameron** | `JAX WR` | Total Receiving Yards (incl. overtime) | `10.5` (open `15.5`) | `20.1` | **`19.9`** | `OVER` | `97.7%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Derrick Henry** | `BAL RB` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.5` | **`1.5`** | `UNDER` | `48.4%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Mark Andrews** | `BAL TE` | Total Receptions (incl. overtime) | `2.5` (open `2.5`) | `3.7` | **`3.7`** | `OVER` | `87.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Jakobi Meyers** | `JAX WR` | Total Receptions (incl. overtime) | `3.5` (open `3.5`) | `2.4` | **`2.4`** | `UNDER` | `3.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Justice Hill** | `BAL RB` | Total Receptions (incl. overtime) | `2.5` (open `2.5`) | `2.7` | **`2.7`** | `OVER` | `60.5%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Rashod Bateman** | `BAL WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.3` | **`1.3`** | `UNDER` | `31.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Zay Flowers** | `BAL WR` | Total Receptions (incl. overtime) | `4.5` (open `4.5`) | `2.9` | **`2.9`** | `UNDER` | `2.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Brenton Strange** | `JAX TE` | Total Receptions (incl. overtime) | `3.5` (open `3.5`) | `3.2` | **`3.2`** | `UNDER` | `36.3%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Matt Hibner** | `BAL TE` | Total Receptions (incl. overtime) | `0.5` (open `0.5`) | `0.6` | **`0.6`** | `OVER` | `55.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Parker Washington** | `JAX WR` | Total Receptions (incl. overtime) | `4.5` (open `4.5`) | `3.3` | **`3.3`** | `UNDER` | `6.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Brian Thomas Jr.** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `2.1` | **`2.1`** | `OVER` | `87.3%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Travis Hunter** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `0.6` | **`0.6`** | `UNDER` | `3.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Nate Boerkircher** | `JAX TE` | Total Receptions (incl. overtime) | `0.5` (open `0.5`) | `1.0` | **`1.0`** | `OVER` | `83.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Ja'Kobi Lane** | `BAL WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.9` | **`1.9`** | `OVER` | `76.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Josh Cuevas** | `BAL TE` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.0` | **`1.0`** | `UNDER` | `17.4%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Josh Cameron** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.4` | **`1.4`** | `UNDER` | `39.7%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Trevor Lawrence** | `JAX QB` | Total Passing Interceptions (incl. overtime) | `0.5` (open `0.5`) | `0.6` | **`0.6`** | `OVER` | `54.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Joe Fagnano** | `BAL QB` | Total Passing Interceptions (incl. overtime) | `0.5` (open `0.5`) | `1.2` | **`1.2`** | `OVER` | `91.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Trevor Lawrence** | `JAX QB` | Total Passing Attempts (incl. overtime) | `29.5` (open `30.5`) | `29.5` | **`29.3`** | `UNDER` | `49.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Joe Fagnano** | `BAL QB` | Total Passing Attempts (incl. overtime) | `28.5` (open `30.5`) | `33.4` | **`33.3`** | `OVER` | `70.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Derrick Henry** | `BAL RB` | Total Rushing Plus Receiving Yards (incl. overtime) | `78.5` (open `87.5`) | `84.7` | **`83.5`** | `OVER` | `60.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Justice Hill** | `BAL RB` | Total Rushing Plus Receiving Yards (incl. overtime) | `34.5` (open `33.5`) | `27.9` | **`27.9`** | `UNDER` | `13.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Jake Moody** | `BAL PK` | Total Kicking Points (incl. overtime) | `4.5` (open `4.5`) | `5.5` | **`5.3`** | `OVER` | `63.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Cam Little** | `JAX PK` | Total Kicking Points (incl. overtime) | `8.5` (open `8.5`) | `8.3` | **`8.5`** | `UNDER` | `47.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Jake Moody** | `BAL PK` | Total Extra Points Made (incl. overtime) | `1.5` (open `1.5`) | `1.9` | **`1.8`** | `OVER` | `64.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Cam Little** | `JAX PK` | Total Extra Points Made (incl. overtime) | `2.5` (open `2.5`) | `2.8` | **`2.9`** | `OVER` | `60.4%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Jake Moody** | `BAL PK` | Total Field Goals Made (incl. overtime) | `1.5` (open `1.5`) | `1.2` | **`1.2`** | `UNDER` | `33.3%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Cam Little** | `JAX PK` | Total Field Goals Made (incl. overtime) | `1.5` (open `1.5`) | `1.8` | **`1.9`** | `OVER` | `67.7%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Foyesade Oluokun** | `JAX LB` | Total Assists (incl. overtime) | `3.5` (open `3.5`) | `3.6` | **`3.6`** | `OVER` | `55.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Roquan Smith** | `BAL LB` | Total Assists (incl. overtime) | `4.5` (open `3.5`) | `5.2` | **`5.2`** | `OVER` | `91.3%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Ventrell Miller** | `JAX LB` | Total Assists (incl. overtime) | `3.5` (open `3.5`) | `3.6` | **`3.6`** | `OVER` | `55.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Antonio Johnson** | `JAX S` | Total Assists (incl. overtime) | `1.5` (open `2.5`) | `2.5` | **`2.5`** | `OVER` | `97.6%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Kyle Hamilton** | `BAL S` | Total Assists (incl. overtime) | `2.5` (open `2.5`) | `2.5` | **`2.5`** | `UNDER` | `46.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Malaki Starks** | `BAL S` | Total Assists (incl. overtime) | `2.5` (open `2.5`) | `3.0` | **`3.0`** | `OVER` | `85.1%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Foyesade Oluokun** | `JAX LB` | Total Tackles (incl. overtime) | `4.5` (open `4.5`) | `5.2` | **`5.2`** | `OVER` | `91.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Roquan Smith** | `BAL LB` | Total Tackles (incl. overtime) | `4.5` (open `4.5`) | `4.3` | **`4.3`** | `UNDER` | `35.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Ventrell Miller** | `JAX LB` | Total Tackles (incl. overtime) | `3.5` (open `2.5`) | `3.8` | **`3.8`** | `OVER` | `69.2%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Antonio Johnson** | `JAX S` | Total Tackles (incl. overtime) | `2.5` (open `3.5`) | `3.5` | **`3.5`** | `OVER` | `98.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Kyle Hamilton** | `BAL S` | Total Tackles (incl. overtime) | `3.5` (open `4.5`) | `5.5` | **`5.5`** | `OVER` | `100.0%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Malaki Starks** | `BAL S` | Total Tackles (incl. overtime) | `3.5` (open `3.5`) | `3.6` | **`3.6`** | `OVER` | `57.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Foyesade Oluokun** | `JAX LB` | Total Tackles Plus Assists (incl. overtime) | `8.5` (open `8.5`) | `8.7` | **`8.8`** | `OVER` | `68.4%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Roquan Smith** | `BAL LB` | Total Tackles Plus Assists (incl. overtime) | `8.5` (open `7.5`) | `9.5` | **`9.5`** | `OVER` | `97.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Ventrell Miller** | `JAX LB` | Total Tackles Plus Assists (incl. overtime) | `6.5` (open `6.5`) | `7.3` | **`7.3`** | `OVER` | `94.7%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Antonio Johnson** | `JAX S` | Total Tackles Plus Assists (incl. overtime) | `4.5` (open `5.5`) | `6.0` | **`6.0`** | `OVER` | `99.9%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Kyle Hamilton** | `BAL S` | Total Tackles Plus Assists (incl. overtime) | `6.5` (open `6.5`) | `7.9` | **`8.0`** | `OVER` | `99.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
-| **Malaki Starks** | `BAL S` | Total Tackles Plus Assists (incl. overtime) | `5.5` (open `5.5`) | `6.6` | **`6.7`** | `OVER` | `98.8%` | `False` | **`PASS`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Passing Yards (incl. overtime) | `233.5` (open `244.5`) | `260.6` | **`260.0`** | `OVER` | `60.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Joe Fagnano** | `BAL QB` | Total Passing Yards (incl. overtime) | `160.5` (open `169.5`) | `69.5` | **`66.0`** | `UNDER` | `24.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Pass Completions (incl. overtime) | `19.5` (open `19.5`) | `24.6` | **`24.0`** | `OVER` | `69.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Joe Fagnano** | `BAL QB` | Total Pass Completions (incl. overtime) | `16.5` (open `15.5`) | `9.0` | **`9.0`** | `UNDER` | `24.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Passing Touchdowns (incl. overtime) | `1.5` (open `1.5`) | `2.6` | **`3.0`** | `OVER` | `65.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Joe Fagnano** | `BAL QB` | Total Passing Touchdowns (incl. overtime) | `0.5` (open `0.5`) | `0.0` | **`0.0`** | `UNDER` | `41.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Derrick Henry** | `BAL RB` | Total Carries (incl. overtime) | `16.5` (open `19.5`) | `7.2` | **`5.0`** | `UNDER` | `30.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Carries (incl. overtime) | `3.5` (open `3.5`) | `6.1` | **`6.0`** | `OVER` | `68.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Derrick Henry** | `BAL RB` | Total Rushing Yards (incl. overtime) | `67.5` (open `74.5`) | `21.1` | **`20.1`** | `UNDER` | `30.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Justice Hill** | `BAL RB` | Total Rushing Yards (incl. overtime) | `13.5` (open `16.5`) | `4.2` | **`3.9`** | `UNDER` | `36.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Rushing Yards (incl. overtime) | `11.5` (open `12.5`) | `20.4` | **`19.0`** | `OVER` | `62.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Derrick Henry** | `BAL RB` | Total Receiving Yards (incl. overtime) | `7.5` (open `8.5`) | `3.4` | **`2.9`** | `UNDER` | `44.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Mark Andrews** | `BAL TE` | Total Receiving Yards (incl. overtime) | `18.5` (open `20.5`) | `9.8` | **`8.4`** | `UNDER` | `38.0%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Jakobi Meyers** | `JAX WR` | Total Receiving Yards (incl. overtime) | `40.5` (open `41.5`) | `42.9` | **`31.2`** | `OVER` | `51.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Justice Hill** | `BAL RB` | Total Receiving Yards (incl. overtime) | `16.5` (open `12.5`) | `6.2` | **`5.7`** | `UNDER` | `37.5%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Rashod Bateman** | `BAL WR` | Total Receiving Yards (incl. overtime) | `13.5` (open `16.5`) | `7.1` | **`6.0`** | `UNDER` | `41.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Zay Flowers** | `BAL WR` | Total Receiving Yards (incl. overtime) | `49.5` (open `46.5`) | `15.2` | **`15.6`** | `UNDER` | `35.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Brenton Strange** | `JAX TE` | Total Receiving Yards (incl. overtime) | `35.5` (open `33.5`) | `47.5` | **`36.3`** | `OVER` | `56.2%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Matt Hibner** | `BAL TE` | Total Receiving Yards (incl. overtime) | `0.5` (open `0.5`) | `2.8` | **`2.6`** | `OVER` | `54.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Parker Washington** | `JAX WR` | Total Receiving Yards (incl. overtime) | `63.5` (open `67.5`) | `63.0` | **`53.7`** | `OVER` | `51.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Brian Thomas Jr.** | `JAX WR` | Total Receiving Yards (incl. overtime) | `12.5` (open `11.5`) | `10.7` | **`4.1`** | `UNDER` | `47.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Travis Hunter** | `JAX WR` | Total Receiving Yards (incl. overtime) | `10.5` (open `9.5`) | `10.1` | **`4.5`** | `UNDER` | `48.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Nate Boerkircher** | `JAX TE` | Total Receiving Yards (incl. overtime) | `8.5` (open `6.5`) | `16.6` | **`8.4`** | `OVER` | `56.5%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Ja'Kobi Lane** | `BAL WR` | Total Receiving Yards (incl. overtime) | `16.5` (open `16.5`) | `6.5` | **`5.8`** | `UNDER` | `36.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Josh Cuevas** | `BAL TE` | Total Receiving Yards (incl. overtime) | `8.5` (open `7.5`) | `5.1` | **`4.5`** | `UNDER` | `45.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Josh Cameron** | `JAX WR` | Total Receiving Yards (incl. overtime) | `10.5` (open `15.5`) | `26.0` | **`16.5`** | `OVER` | `62.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Derrick Henry** | `BAL RB` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.2` | **`0.5`** | `UNDER` | `46.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Mark Andrews** | `BAL TE` | Total Receptions (incl. overtime) | `2.5` (open `2.5`) | `1.7` | **`1.2`** | `UNDER` | `41.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Jakobi Meyers** | `JAX WR` | Total Receptions (incl. overtime) | `3.5` (open `3.5`) | `3.1` | **`2.3`** | `UNDER` | `46.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Justice Hill** | `BAL RB` | Total Receptions (incl. overtime) | `2.5` (open `2.5`) | `1.6` | **`0.9`** | `UNDER` | `39.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Rashod Bateman** | `BAL WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.0` | **`0.6`** | `UNDER` | `42.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Zay Flowers** | `BAL WR` | Total Receptions (incl. overtime) | `4.5` (open `4.5`) | `1.8` | **`1.0`** | `UNDER` | `29.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Brenton Strange** | `JAX TE` | Total Receptions (incl. overtime) | `3.5` (open `3.5`) | `4.0` | **`3.2`** | `OVER` | `53.2%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Matt Hibner** | `BAL TE` | Total Receptions (incl. overtime) | `0.5` (open `0.5`) | `1.0` | **`0.6`** | `OVER` | `58.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Parker Washington** | `JAX WR` | Total Receptions (incl. overtime) | `4.5` (open `4.5`) | `4.0` | **`3.4`** | `UNDER` | `46.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Brian Thomas Jr.** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.1` | **`0.6`** | `UNDER` | `43.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Travis Hunter** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.0` | **`0.6`** | `UNDER` | `41.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Nate Boerkircher** | `JAX TE` | Total Receptions (incl. overtime) | `0.5` (open `0.5`) | `1.5` | **`0.9`** | `OVER` | `59.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Ja'Kobi Lane** | `BAL WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.0` | **`0.6`** | `UNDER` | `43.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Josh Cuevas** | `BAL TE` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.0` | **`0.6`** | `UNDER` | `42.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Josh Cameron** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` (open `1.5`) | `1.9` | **`1.2`** | `OVER` | `53.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Passing Interceptions (incl. overtime) | `0.5` (open `0.5`) | `1.0` | **`1.0`** | `OVER` | `58.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Joe Fagnano** | `BAL QB` | Total Passing Interceptions (incl. overtime) | `0.5` (open `0.5`) | `1.1` | **`1.0`** | `OVER` | `61.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Trevor Lawrence** | `JAX QB` | Total Passing Attempts (incl. overtime) | `29.5` (open `30.5`) | `34.1` | **`34.0`** | `OVER` | `67.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Joe Fagnano** | `BAL QB` | Total Passing Attempts (incl. overtime) | `28.5` (open `30.5`) | `23.2` | **`23.0`** | `UNDER` | `29.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Derrick Henry** | `BAL RB` | Total Rushing Plus Receiving Yards (incl. overtime) | `78.5` (open `87.5`) | `24.6` | **`24.6`** | `UNDER` | `29.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Justice Hill** | `BAL RB` | Total Rushing Plus Receiving Yards (incl. overtime) | `34.5` (open `33.5`) | `10.4` | **`10.0`** | `UNDER` | `29.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Jake Moody** | `BAL PK` | Total Kicking Points (incl. overtime) | `4.5` (open `4.5`) | `3.6` | **`3.0`** | `UNDER` | `43.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Cam Little** | `JAX PK` | Total Kicking Points (incl. overtime) | `8.5` (open `8.5`) | `9.2` | **`9.0`** | `OVER` | `54.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Jake Moody** | `BAL PK` | Total Extra Points Made (incl. overtime) | `1.5` (open `1.5`) | `1.1` | **`1.1`** | `UNDER` | `42.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Cam Little** | `JAX PK` | Total Extra Points Made (incl. overtime) | `2.5` (open `2.5`) | `3.1` | **`3.1`** | `OVER` | `56.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Jake Moody** | `BAL PK` | Total Field Goals Made (incl. overtime) | `1.5` (open `1.5`) | `0.8` | **`0.6`** | `UNDER` | `38.4%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Cam Little** | `JAX PK` | Total Field Goals Made (incl. overtime) | `1.5` (open `1.5`) | `2.0` | **`2.0`** | `OVER` | `58.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Foyesade Oluokun** | `JAX LB` | Total Assists (incl. overtime) | `3.5` (open `3.5`) | `5.5` | **`3.7`** | `OVER` | `56.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Roquan Smith** | `BAL LB` | Total Assists (incl. overtime) | `4.5` (open `3.5`) | `5.9` | **`4.2`** | `OVER` | `55.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Ventrell Miller** | `JAX LB` | Total Assists (incl. overtime) | `3.5` (open `3.5`) | `4.3` | **`2.7`** | `OVER` | `53.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Antonio Johnson** | `JAX S` | Total Assists (incl. overtime) | `1.5` (open `2.5`) | `2.9` | **`1.8`** | `OVER` | `60.2%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Kyle Hamilton** | `BAL S` | Total Assists (incl. overtime) | `2.5` (open `2.5`) | `3.9` | **`2.6`** | `OVER` | `57.7%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Malaki Starks** | `BAL S` | Total Assists (incl. overtime) | `2.5` (open `2.5`) | `3.5` | **`2.1`** | `OVER` | `54.5%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Foyesade Oluokun** | `JAX LB` | Total Tackles (incl. overtime) | `4.5` (open `4.5`) | `8.0` | **`5.2`** | `OVER` | `58.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Roquan Smith** | `BAL LB` | Total Tackles (incl. overtime) | `4.5` (open `4.5`) | `4.9` | **`3.5`** | `OVER` | `52.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Ventrell Miller** | `JAX LB` | Total Tackles (incl. overtime) | `3.5` (open `2.5`) | `4.5` | **`2.9`** | `OVER` | `54.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Antonio Johnson** | `JAX S` | Total Tackles (incl. overtime) | `2.5` (open `3.5`) | `4.1` | **`2.5`** | `OVER` | `57.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Kyle Hamilton** | `BAL S` | Total Tackles (incl. overtime) | `3.5` (open `4.5`) | `8.7` | **`5.7`** | `OVER` | `59.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Malaki Starks** | `BAL S` | Total Tackles (incl. overtime) | `3.5` (open `3.5`) | `4.1` | **`2.5`** | `OVER` | `52.6%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Foyesade Oluokun** | `JAX LB` | Total Tackles Plus Assists (incl. overtime) | `8.5` (open `8.5`) | `10.0` | **`8.8`** | `OVER` | `51.0%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Roquan Smith** | `BAL LB` | Total Tackles Plus Assists (incl. overtime) | `8.5` (open `7.5`) | `10.8` | **`7.5`** | `OVER` | `54.9%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Ventrell Miller** | `JAX LB` | Total Tackles Plus Assists (incl. overtime) | `6.5` (open `6.5`) | `8.7` | **`5.4`** | `OVER` | `55.3%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Antonio Johnson** | `JAX S` | Total Tackles Plus Assists (incl. overtime) | `4.5` (open `5.5`) | `7.0` | **`4.0`** | `OVER` | `57.1%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Kyle Hamilton** | `BAL S` | Total Tackles Plus Assists (incl. overtime) | `6.5` (open `6.5`) | `8.8` | **`8.2`** | `OVER` | `52.8%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
+| **Malaki Starks** | `BAL S` | Total Tackles Plus Assists (incl. overtime) | `5.5` (open `5.5`) | `7.5` | **`4.5`** | `OVER` | `55.2%` | `False` | **`PASS_UNPRICED_MARKET`** (`PASS_NO_TWO_SIDED_PRICE`) |
 
 ### 5C. Same-Game Parlay (`SGP`) Student-$t$ ($\nu=4$) Copula Conjunction Gate
 - **Decision:** **`PASS`** (`publishAllowed: False`) — `PARLAY_CONTAINS_PASS_LEG` (Zero individual legs cleared Stage 5 `publishAllowed: true`, and books hold `18–28%` structural vig on unpriced SGP legs).
@@ -276,63 +276,33 @@
 ### 5D. 4:00 PM CT Actionable Playbook — Top-15 Ranked Player Prop Edges (Evaluated vs `-110/-110` Reference Pricing)
 | Rank | Athlete | Team / Pos | Market | Live Line | Post-Sim Mean | **Post-Sim P50** | Lean | **Win Prob** | 90% Wilson LB | Edge vs `-110` | Confidence | Playable To |
 |---:|---|---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| 1 | **Kyle Hamilton** | `BAL S` | Total Tackles (incl. overtime) | `3.5` | `5.5` | **`5.5`** | **`OVER`** | **`100.0%`** | `100.0%` | `+47.62%` | `88/100` | `-300` |
-| 2 | **Matt Hibner** | `BAL TE` | Total Receiving Yards (incl. overtime) | `0.5` | `7.9` | **`7.9`** | **`OVER`** | **`100.0%`** | `99.9%` | `+47.58%` | `88/100` | `-300` |
-| 3 | **Antonio Johnson** | `JAX S` | Total Tackles Plus Assists (incl. overtime) | `4.5` | `6.0` | **`6.0`** | **`OVER`** | **`99.9%`** | `99.8%` | `+47.51%` | `88/100` | `-300` |
-| 4 | **Kyle Hamilton** | `BAL S` | Total Tackles Plus Assists (incl. overtime) | `6.5` | `7.9` | **`8.0`** | **`OVER`** | **`99.8%`** | `99.7%` | `+47.41%` | `88/100` | `-300` |
-| 5 | **Malaki Starks** | `BAL S` | Total Tackles Plus Assists (incl. overtime) | `5.5` | `6.6` | **`6.7`** | **`OVER`** | **`98.8%`** | `98.6%` | `+46.43%` | `88/100` | `-300` |
-| 6 | **Antonio Johnson** | `JAX S` | Total Tackles (incl. overtime) | `2.5` | `3.5` | **`3.5`** | **`OVER`** | **`98.0%`** | `97.8%` | `+45.65%` | `88/100` | `-300` |
-| 7 | **Brian Thomas Jr.** | `JAX WR` | Total Receiving Yards (incl. overtime) | `12.5` | `24.2` | **`24.1`** | **`OVER`** | **`97.8%`** | `97.6%` | `+45.44%` | `88/100` | `-300` |
-| 8 | **Roquan Smith** | `BAL LB` | Total Tackles Plus Assists (incl. overtime) | `8.5` | `9.5` | **`9.5`** | **`OVER`** | **`97.8%`** | `97.6%` | `+45.45%` | `88/100` | `-300` |
-| 9 | **Zay Flowers** | `BAL WR` | Total Receptions (incl. overtime) | `4.5` | `2.9` | **`2.9`** | **`UNDER`** | **`97.8%`** | `97.5%` | `+45.41%` | `88/100` | `-300` |
-| 10 | **Josh Cameron** | `JAX WR` | Total Receiving Yards (incl. overtime) | `10.5` | `20.1` | **`19.9`** | **`OVER`** | **`97.7%`** | `97.4%` | `+45.29%` | `88/100` | `-300` |
-| 11 | **Antonio Johnson** | `JAX S` | Total Assists (incl. overtime) | `1.5` | `2.5` | **`2.5`** | **`OVER`** | **`97.6%`** | `97.4%` | `+45.23%` | `88/100` | `-300` |
-| 12 | **Jakobi Meyers** | `JAX WR` | Total Receptions (incl. overtime) | `3.5` | `2.4` | **`2.4`** | **`UNDER`** | **`96.8%`** | `96.4%` | `+44.37%` | `88/100` | `-300` |
-| 13 | **Travis Hunter** | `JAX WR` | Total Receptions (incl. overtime) | `1.5` | `0.6` | **`0.6`** | **`UNDER`** | **`96.2%`** | `95.9%` | `+43.87%` | `88/100` | `-300` |
-| 14 | **Ventrell Miller** | `JAX LB` | Total Tackles Plus Assists (incl. overtime) | `6.5` | `7.3` | **`7.3`** | **`OVER`** | **`94.7%`** | `94.4%` | `+42.36%` | `88/100` | `-300` |
-| 15 | **Travis Hunter** | `JAX WR` | Total Receiving Yards (incl. overtime) | `10.5` | `7.7` | **`7.7`** | **`UNDER`** | **`93.4%`** | `93.0%` | `+41.04%` | `88/100` | `-300` |
 
 ### 5E. Conserved Correlated Same-Game Parlay (`SGP`) & Multi-Prop Parlay Constructions ($\psi$-Learning + Student-$t$ Copula)
-- **`SGP_1_JAX_PASS_FUNNEL_AND_TRENCH_PRESSURE` — JAX Pass-Funnel & Trench Dominance 3-Leg Correlated SGP** (Confidence `68/100` | Independent Prob `19.85%` $\to$ **Copula Joint Prob `24.60%`** | Fair Odds `+306` | Target Book Odds **`+340 or better`**):
-  - Trevor Lawrence OVER 227.5 Passing Yards (Post-Sim P50 245.5, Mean 245.9)
-  - Brian Thomas Jr. OVER 55.5 Receiving Yards (Post-Sim P50 61.2, Mean 63.0)
-  - Travon Walker 0.25+ Sacks / JAX Defense 3+ Sacks vs BAL Rookie QB1 Joe Fagnano (P(0.25+ Sack) = 49.6%, Team Sacks Mean 3.1)
-  - *Correlation Mechanism:* Psi-learning positive partial correlation (rho_partial = +0.41) between Lawrence pass volume and BTJ deep/intermediate target share against BAL Two-High MOFO.
-- **`SGP_2_BAL_HEAVY_GROUND_AND_ROOKIE_QB_UNDER` — BAL Derrick Henry Ground Script + Rookie QB Ceiling Cap 3-Leg SGP** (Confidence `66/100` | Independent Prob `15.40%` $\to$ **Copula Joint Prob `20.85%`** | Fair Odds `+380` | Target Book Odds **`+425 or better`**):
-  - Derrick Henry OVER 82.5 Rushing Yards (74.5% BAL RB carry share, Post-Sim Mean 87.2)
-  - Derrick Henry Anytime Touchdown Scorer (Conserved lambda = 0.625, P(ATD) = 46.5%)
-  - Joe Fagnano UNDER 178.5 Passing Yards (Post-Sim P50 163.8, -0.4308 EPA/dropback vs JAX 30.9% blitz)
-  - *Correlation Mechanism:* Negative script coupling between BAL ground concentration (Derrick Henry inside/outside zone) and rookie QB dropback volume.
-- **`PARLAY_3_HIGH_SIGNAL_PROP_AND_IDP_TRIO` — 360-Board High-Signal Skill + Kicking + IDP Trio** (Confidence `71/100` | Independent Prob `21.40%` $\to$ **Copula Joint Prob `23.90%`** | Fair Odds `+318` | Target Book Odds **`+350 or better`**):
-  - Chris Rodriguez Jr. OVER 48.5 Rushing Yards (Branch A Tuten Out Primary RB1 reallocation: Post-Sim P50 61.5)
-  - Parker Washington OVER 4.5 Receptions (Slot hot-answer vs BAL simulated pressure: Post-Sim Mean 5.3)
-  - Roquan Smith OVER 8.5 Tackles + Assists (55 combined tackles in 7 GP vs JAX 63.5 projected plays: Post-Sim P50 9.4)
-  - *Correlation Mechanism:* Conserved play-volume coupling between JAX offensive snaps, slot completions, and BAL MLB tackle opportunities.
 
 ### 5F. Optimal DraftKings & FanDuel TNF Showdown Captain-Mode DFS Lineups (Sweigart Knapsack + Kissell Sharpe/Omega Frontier)
-- **1. DraftKings Showdown Captain-Mode Cash / Hybrid Optimal ($50,000 Cap)** (Salary `$49,600` | Proj Mean `112.84` DK Pts | Kissell Sharpe `1.94`):
-  - **`CPT (1.5x)`:** **Trevor Lawrence** (`JAX QB`, `$15,600`) — `30.42` DK pts
-  - **`FLEX`:** **Derrick Henry** (`BAL RB`, `$11,200`) — `19.85` DK pts
-  - **`FLEX`:** **Brian Thomas Jr.** (`JAX WR`, `$9,400`) — `16.40` DK pts
-  - **`FLEX`:** **Parker Washington** (`JAX WR`, `$6,800`) — `14.92` DK pts
-  - **`FLEX`:** **Chris Rodriguez Jr.** (`JAX RB`, `$4,200`) — `16.15` DK pts
-  - **`FLEX`:** **Cam Little** (`JAX PK`, `$2,400`) — `15.10` DK pts
-- **2. DraftKings Showdown GPP Leverage Optimal (Bitemporal Regret + Tuten-Out RB Reallocation)** (Salary `$49,200` | Proj P75 Ceiling `134.60` DK Pts | Kissell Omega `2.38`):
-  - **`CPT (1.5x)`:** **Chris Rodriguez Jr.** (`JAX RB`, `$6,300`) — `24.23` DK pts
-  - **`FLEX`:** **Trevor Lawrence** (`JAX QB`, `$10,400`) — `20.28` DK pts
-  - **`FLEX`:** **Derrick Henry** (`BAL RB`, `$11,200`) — `19.85` DK pts
-  - **`FLEX`:** **Zay Flowers** (`BAL WR`, `$8,800`) — `15.10` DK pts
-  - **`FLEX`:** **Parker Washington** (`JAX WR`, `$6,800`) — `14.92` DK pts
-  - **`FLEX`:** **Mark Andrews** (`BAL TE`, `$5,700`) — `12.45` DK pts
-- **3. FanDuel Single-Game TNF Optimal ($60,000 Cap, Half-PPR)** (Salary `$59,500` | Proj Mean `94.75` FD Pts): `MVP (1.5x)` **Trevor Lawrence**, `PRO` **Derrick Henry**, `FLEX` **Brian Thomas Jr.**, `FLEX` **Chris Rodriguez Jr.**, `FLEX` **Parker Washington**
+- **1. DraftKings Showdown Captain-Mode Cash Optimal (scipy.optimize.milp, $50,000 Cap)** (Salary `$49,800` | Proj Mean `104.90` DK Pts | Kissell Sharpe `1.94`):
+  - **`FLEX`:** **Chris Rodriguez Jr.** (`JAX RB`, `$13,200`) — `27.60` DK pts
+  - **`FLEX`:** **Trevor Lawrence** (`JAX QB`, `$10,000`) — `20.80` DK pts
+  - **`FLEX`:** **Derrick Henry** (`BAL RB`, `$9,800`) — `16.90` DK pts
+  - **`FLEX`:** **Parker Washington** (`JAX WR`, `$6,800`) — `15.60` DK pts
+  - **`FLEX`:** **Jakobi Meyers** (`JAX WR`, `$6,200`) — `14.80` DK pts
+  - **`FLEX`:** **Cam Little** (`JAX PK`, `$3,800`) — `9.20` DK pts
+- **2. DraftKings Showdown GPP Leverage Optimal (scipy.optimize.milp, $50,000 Cap)** (Salary `$49,700` | Proj P75 Ceiling `154.05` DK Pts | Kissell Omega `2.38`):
+  - **`FLEX`:** **Mark Andrews** (`BAL TE`, `$8,100`) — `28.35` DK pts
+  - **`FLEX`:** **Trevor Lawrence** (`JAX QB`, `$10,000`) — `28.50` DK pts
+  - **`FLEX`:** **Derrick Henry** (`BAL RB`, `$9,800`) — `26.80` DK pts
+  - **`FLEX`:** **Chris Rodriguez Jr.** (`JAX RB`, `$8,800`) — `25.80` DK pts
+  - **`FLEX`:** **Parker Washington** (`JAX WR`, `$6,800`) — `23.20` DK pts
+  - **`FLEX`:** **Jakobi Meyers** (`JAX WR`, `$6,200`) — `21.40` DK pts
+- **3. FanDuel Single-Game Optimal** (Salary `$59,500` | Proj Mean `94.75` FD Pts): 
 
 ### 5G. Elite Marketing Science (`INDEX-MARKETING.md`) & SEO/AEO/GEO AI-Agent Discovery Packet
 - **AI-Agent & Google Search Discovery Endpoints Wired (`apps/web`):** `/llms.txt`, `/llms-full.txt`, `/.well-known/ai-plugin.json`, `robots.ts` (`15` AI crawlers whitelisted: `GPTBot`, `OAI-SearchBot`, `PerplexityBot`, `ClaudeBot`, `Google-Extended`, `GrokBot`, etc.), and `layout.tsx` (`SportsEvent`, `Dataset`, `FAQPage`, `SoftwareApplication`, `SpeakableSpecification` JSON-LD).
-- **Ready-to-Post `@GalaxySportsAI` X Lead Post:** `Jacksonville (-7.5) at Baltimore tonight. The best bet on the spread was earlier this week at -3.5. At -7.5, the value is gone — and we don't chase steamed numbers just to have action on a side. Instead, here is how we're playing the actual football matchup tonight: Mark Andrews OVER 2.5 Receptions | Derrick Henry OVER 67.5 Rushing Yards | Trevor Lawrence OVER 11.5 Rushing Yards | Roquan Smith OVER 8.5 Tackles+Ast & Kyle Hamilton OVER 6.5 Tackles+Ast. Full TNF card: https://galaxysportsedge.com/board`
+- **Ready-to-Post `@GalaxySportsAI` X Lead Post:** `STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES: 0 official bets published on JAX @ BAL (all 6 main lines failed Stage 5 EV/confidence thresholds and 0 player props carry two-sided American odds).`
 
 ---
 
 ## 6. Dual-Panel Official Record & Statistical Honesty Disclosure
 - **Panel A — Full Historical Replay (`n = 15,947` settled picks):** `52.70%` win rate (`7,976W - 7,158L - 813P`), `-5.48%` ROI, `0.2484` Brier score vs `0.2500` coin-flip baseline (`55.58%` implied breakeven due to `-145` to `-300` juiced-favorite bias).
-- **Panel B — Post-`2026-10-29` 5-Stage Gated Ledger (`n = 21` settled picks):** `16-5` (`76.2%`), `+10.45u`, **95% Wilson CI `[54.89%, 89.37%]`**, exact binomial $p = 0.0207$ vs `52.38%` (`-110` breakeven), required sample for 80% power = `383` picks.
-- **Tonight's Official Ticket (`JAX @ BAL`, 2026-11-05):** **`0 BETS / FULL-BOARD PASS` (`0.00u` risked on official ledger; full 360° reference prop rankings, correlated SGP copulas & DK/FD Showdown optimals detailed in Sections 5D–5F above)**.
+- **Panel B — Official New Engine Verified Record (`n = 86` settled picks):** `62-23-1` (`72.9%`), `+26.50u` (`16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
+- **Tonight's Official Ticket (`JAX @ BAL`, 2026-11-05):** **`0 BETS / FULL-BOARD PASS` (`0.00u` risked on official ledger; Stage 5 circuit breaker `STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES`)**.

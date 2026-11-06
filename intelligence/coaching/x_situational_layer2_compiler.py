@@ -967,7 +967,7 @@ def build_jax_at_bal_week9_forensic_context() -> Dict[str, Any]:
         ],
         "rb_committee_context": {
             "explosive_committee_rb": "Bhayshul Tuten",
-            "lead_rb_name": "Travis Etienne Jr.",
+            "lead_rb_name": "Chris Rodriguez Jr.",
             "rookie_ryoe_per_att": 1.38,
             "opp_light_box_rate": 0.61,
             "lead_rb_entered_questionable": True,
@@ -976,7 +976,7 @@ def build_jax_at_bal_week9_forensic_context() -> Dict[str, Any]:
         "beat_writer_notes": [
             "simplifying playbook for backup QB Joe Fagnano in ankle brace",
             "pitch count / decoy alert for Brian Thomas Jr. (chest/ribs)",
-            "Baltimore heavy 12/13 personnel with Mark Andrews and Isaiah Likely",
+            "Baltimore heavy 12/13 personnel with Mark Andrews",
         ],
         "defensive_pressure_context": {
             "dc_name": "Anthony Campanile",
@@ -985,7 +985,7 @@ def build_jax_at_bal_week9_forensic_context() -> Dict[str, Any]:
             "primary_off_ball_blitzer": "Foyesade Oluokun",
         },
         "te_funnel_context": {
-            "te_names": ["Mark Andrews", "Isaiah Likely"],
+            "te_names": ["Mark Andrews"],
             "qb_career_dropbacks": 32.0,
             "qb_rolling_dropbacks": 32.0,
             "observed_te_target_rate": 0.34,

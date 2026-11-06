@@ -162,6 +162,7 @@ export interface MindEvaluationResult {
   readonly fantasyDfsAdvice: MindFantasyDfsAdvice;
   readonly reasoningTrace: string;
   readonly netSituationalAdjustment: number;
+  readonly netLogitShift: number;
 }
 
 let cachedMindRecords: readonly MindRecord[] | null = null;
@@ -1276,6 +1277,7 @@ export function evaluateMindReasoning(
     fantasyDfsAdvice,
     reasoningTrace,
     netSituationalAdjustment,
+    netLogitShift: netSituationalAdjustment,
   };
 }
 

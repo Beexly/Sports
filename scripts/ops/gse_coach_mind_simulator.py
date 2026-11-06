@@ -99,6 +99,7 @@ ALL_32_TEAM_RATINGS = {
     "JAX": {"off_epa": 0.011,  "def_epa": 0.035,  "pace_sec": 27.0, "hfa": 1.56, "early_pass_rate": 0.56, "panic_pp": 0.024, "target_hhi": 0.134},
     "KC":  {"off_epa": 0.089,  "def_epa": -0.054, "pace_sec": 27.8, "hfa": 1.72, "early_pass_rate": 0.60, "panic_pp": -0.012, "target_hhi": 0.141},
     "LA":  {"off_epa": 0.046,  "def_epa": 0.012,  "pace_sec": 27.2, "hfa": 1.45, "early_pass_rate": 0.56, "panic_pp": 0.008, "target_hhi": 0.156},
+    "LAR": {"off_epa": 0.046,  "def_epa": 0.012,  "pace_sec": 27.2, "hfa": 1.45, "early_pass_rate": 0.56, "panic_pp": 0.008, "target_hhi": 0.156},
     "LAC": {"off_epa": 0.008,  "def_epa": -0.044, "pace_sec": 28.4, "hfa": 1.40, "early_pass_rate": 0.50, "panic_pp": -0.018, "target_hhi": 0.137},
     "MIA": {"off_epa": -0.039, "def_epa": -0.008, "pace_sec": 27.4, "hfa": 1.56, "early_pass_rate": 0.55, "panic_pp": 0.015, "target_hhi": 0.158},
     "NE":  {"off_epa": -0.071, "def_epa": 0.019,  "pace_sec": 27.6, "hfa": 1.56, "early_pass_rate": 0.53, "panic_pp": 0.012, "target_hhi": 0.124},
@@ -108,6 +109,8 @@ ALL_32_TEAM_RATINGS = {
     "SF":  {"off_epa": 0.096,  "def_epa": -0.035, "pace_sec": 28.0, "hfa": 1.58, "early_pass_rate": 0.53, "panic_pp": -0.009, "target_hhi": 0.145},
     "TB":  {"off_epa": 0.061,  "def_epa": 0.016,  "pace_sec": 26.8, "hfa": 1.56, "early_pass_rate": 0.57, "panic_pp": 0.014, "target_hhi": 0.147},
     "WAS": {"off_epa": 0.104,  "def_epa": 0.021,  "pace_sec": 26.4, "hfa": 1.56, "early_pass_rate": 0.54, "panic_pp": -0.011, "target_hhi": 0.143},
+    "WSH": {"off_epa": 0.104,  "def_epa": 0.021,  "pace_sec": 26.4, "hfa": 1.56, "early_pass_rate": 0.54, "panic_pp": -0.011, "target_hhi": 0.143},
+    "JAC": {"off_epa": 0.011,  "def_epa": 0.035,  "pace_sec": 27.0, "hfa": 1.56, "early_pass_rate": 0.56, "panic_pp": 0.024, "target_hhi": 0.134},
 }
 
 FORBIDDEN_MARKET_TOKENS = (
@@ -946,8 +949,11 @@ def simulate_matchup_pbp(
         home_drop = home_drop - (float(epa_table["QB1"]) if "QB1" in home_inj else 0.0) + float(epa_table["EMERGENCY_QB3_UDFA"])
     elif home_qb_tier == "QB2_BACKUP" and "QB2_BACKUP" not in home_inj:
         home_drop = home_drop - (float(epa_table["QB1"]) if "QB1" in home_inj else 0.0) + float(epa_table["QB2_BACKUP"])
-    away_net_epa = ((tr_away["off_epa"] - away_drop) * away_eff_mult) - tr_home["def_epa"]
-    home_net_epa = ((tr_home["off_epa"] - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
+    away_sit_epa_delta = float((w1_w7_override or {}).get("away_off_epa_delta_situational", 0.0))
+    home_sit_epa_delta = float((w1_w7_override or {}).get("home_off_epa_delta_situational", 0.0))
+    fg_prob_delta_sit = float((w1_w7_override or {}).get("fg_make_prob_delta", 0.0))
+    away_net_epa = ((tr_away["off_epa"] + away_sit_epa_delta - away_drop) * away_eff_mult) - tr_home["def_epa"]
+    home_net_epa = ((tr_home["off_epa"] + home_sit_epa_delta - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
 
     r_shrink = 1.0 / (1.0 + 45.0 * 0.04)
     away_pass_delta = (1.0 - r_shrink) * (tr_away["early_pass_rate"] - 0.54)
@@ -1027,7 +1033,7 @@ def simulate_matchup_pbp(
             sd4 = score_diff[idx_4th]
             clk4 = np.maximum(60.0, clock_sec[idx_4th])
             p_conv_all = np.clip(0.64 - 0.05 * yd4 + 0.55 * net_epa_vec[idx_4th], 0.15, 0.82)
-            p_fg_all = np.where(yl4 <= 42, np.clip(0.97 - 0.011 * np.maximum(0, yl4 - 15), 0.15, 0.98), 0.02)
+            p_fg_all = np.where(yl4 <= 42, np.clip(0.97 - 0.011 * np.maximum(0, yl4 - 15) + fg_prob_delta_sit, 0.15, 0.98), 0.02)
             ep_conv = 6.0 - 0.08 * np.maximum(1, yl4 - yd4 - 2)
             ep_fail = -(6.0 - 0.08 * np.clip(100 - yl4, 5, 95))
             ep_go = p_conv_all * ep_conv + (1.0 - p_conv_all) * ep_fail
@@ -1067,7 +1073,7 @@ def simulate_matchup_pbp(
                 ydstogo[g_idx] = np.minimum(10, yardline_100[g_idx])
             if np.any(fg_mask):
                 f_idx = idx_4th[fg_mask]
-                p_fg = np.clip(0.97 - 0.011 * np.maximum(0, yardline_100[f_idx] - 15), 0.45, 0.98)
+                p_fg = np.clip(0.97 - 0.011 * np.maximum(0, yardline_100[f_idx] - 15) + fg_prob_delta_sit, 0.45, 0.98)
                 made = rng.random(len(f_idx)) < p_fg
                 home_score[f_idx[made & (poss[f_idx] == 1)]] += 3.0
                 away_score[f_idx[made & (poss[f_idx] == 0)]] += 3.0

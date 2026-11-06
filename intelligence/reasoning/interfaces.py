@@ -48,9 +48,26 @@ class DataContext:
     chains: list[CausalChain] = field(default_factory=list)
     checklist_hints: dict[str, str] = field(default_factory=dict)
     corpus_hits: list[str] = field(default_factory=list)
+    validated_corpus_hits: list[str] = field(default_factory=list)
+    equations: list[dict[str, Any]] = field(default_factory=list)
+    validated_equations: list[dict[str, Any]] = field(default_factory=list)
+    flagged_equations: list[dict[str, Any]] = field(default_factory=list)
+    corpus_gate_status: dict[str, Any] = field(default_factory=dict)
     live_signals: list[str] = field(default_factory=list)
     track_evidence: dict[str, list[tuple[str, str]]] = field(default_factory=dict)
     tool_backend: Callable[[str, dict], str] | None = None
+
+    def ensure_corpus_hits(self, query: str = "", k: int = 5) -> list[str]:
+        """Populate corpus_hits via corpus_retriever.as_corpus_hits() when empty."""
+        if not self.corpus_hits:
+            try:
+                from intelligence.research.corpus_retriever import as_corpus_hits
+
+                q = query.strip() if query and query.strip() else "nfl situational reasoning"
+                self.corpus_hits = list(as_corpus_hits(q, k=k))
+            except Exception:
+                self.corpus_hits = []
+        return self.corpus_hits
 
 
 @dataclass

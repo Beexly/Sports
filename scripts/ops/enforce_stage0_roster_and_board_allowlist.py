@@ -49,6 +49,21 @@ OFF_ROSTER_HALLUCINATION_DENYLIST: dict[str, str] = {
 _DYNAMIC_DENYLIST_CACHE: dict[tuple[str, str, int], dict[str, str]] = {}
 
 
+def _normalize_team_abbr(tm: str, away: str, home: str) -> str:
+    """Normalize nflverse legacy team abbreviations ('LA' <-> 'LAR', 'WSH' <-> 'WAS', 'JAC' <-> 'JAX')."""
+    u = str(tm or "").strip().upper()
+    pair = (str(away or "").strip().upper(), str(home or "").strip().upper())
+    if u == "LA" and "LAR" in pair:
+        return "LAR"
+    if u == "LAR" and "LA" in pair:
+        return "LA"
+    if u == "WSH" and "WAS" in pair:
+        return "WAS"
+    if u == "JAC" and "JAX" in pair:
+        return "JAX"
+    return u
+
+
 def build_dynamic_league_wide_denylist_for_matchup(
     away: str = "JAX",
     home: str = "BAL",
@@ -75,9 +90,9 @@ def build_dynamic_league_wide_denylist_for_matchup(
         stage0_cfg = {}
 
     traded_to_matchup = {
-        str(tp.get("name") or "").strip().lower(): str(tp.get("to") or "").strip().upper()
+        str(tp.get("name") or "").strip().lower(): _normalize_team_abbr(str(tp.get("to") or ""), away, home)
         for tp in stage0_cfg.get("traded_players", [])
-        if str(tp.get("to") or "").strip().upper() in (away.upper(), home.upper())
+        if _normalize_team_abbr(str(tp.get("to") or ""), away, home) in (away.upper(), home.upper())
     }
     for ep in stage0_cfg.get("excluded_players", []):
         ep_name = str(ep.get("name") or "").strip().lower()
@@ -90,7 +105,7 @@ def build_dynamic_league_wide_denylist_for_matchup(
         with rosters_path.open("r", encoding="utf-8") as fh:
             for r in csv.DictReader(fh):
                 fn = str(r.get("full_name") or r.get("player_name") or "").strip()
-                tm = str(r.get("team") or "").strip().upper()
+                tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
                 st = str(r.get("status") or "ACT").strip().upper()
                 if not fn:
                     continue
@@ -109,7 +124,7 @@ def build_dynamic_league_wide_denylist_for_matchup(
         rows.sort(key=lambda r: int(float(r.get("week") or 0)))
         latest_inj: dict[tuple[str, str], dict[str, str]] = {}
         for r in rows:
-            tm = str(r.get("team") or "").strip().upper()
+            tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
             fn = str(r.get("full_name") or "").strip()
             if tm in (away.upper(), home.upper()) and fn:
                 latest_inj[(tm, fn.lower())] = r
@@ -138,6 +153,244 @@ def _match_pbp_short_name(full_name: str) -> list[str]:
     return cands
 
 
+def _round_half(val: float, floor_val: float = 0.5) -> float:
+    return max(floor_val, round(float(val) - 0.5) + 0.5)
+
+
+def resolve_or_generate_matchup_board(
+    away: str,
+    home: str,
+    week: int,
+    board_rel_path: str,
+    stage0_cfg: Mapping[str, Any],
+    pbp_teams: pd.DataFrame,
+    injury_map: Mapping[tuple[str, str], Mapping[str, str]],
+) -> tuple[dict[str, Any], str]:
+    """
+    Resolve the live board JSON for (away, home, week). For JAX @ BAL, strictly uses board_rel_path.
+    For any other Week 9+ matchup where board_rel_path is the default JAX@BAL board or missing,
+    dynamically synthesizes the verified 360 board from 2026 rosters + PBP + injury reports.
+    """
+    board_path = REPO_ROOT / board_rel_path
+    if away == "JAX" and home == "BAL":
+        if not board_path.is_file():
+            raise Stage0RosterContaminationError(f"STAGE0_FAIL: Live board file missing: {board_path}")
+        return json.loads(board_path.read_text(encoding="utf-8")), board_rel_path
+
+    if board_path.is_file() and "jax_bal" not in board_rel_path.lower():
+        loaded = json.loads(board_path.read_text(encoding="utf-8"))
+        teams_with_skill = {
+            str(p.get("team") or "").strip()
+            for p in loaded.get("props", [])
+            if str(p.get("position") or "").strip() in ("RB", "WR", "TE")
+        }
+        if away in teams_with_skill and home in teams_with_skill:
+            return loaded, board_rel_path
+
+    dyn_rel = f"data/engine/week{week}_{away.lower()}_{home.lower()}_dk_full_board_2026_11_06.json"
+    dyn_path = REPO_ROOT / dyn_rel
+
+    excluded_lower = {
+        str(ep.get("name") or "").strip().lower()
+        for ep in stage0_cfg.get("excluded_players", [])
+    } | set(OFF_ROSTER_HALLUCINATION_DENYLIST.keys())
+
+    rosters_path = REPO_ROOT / "data" / "nflverse" / "rosters_2026.csv"
+    roster_rows: list[dict[str, str]] = []
+    if rosters_path.is_file():
+        with rosters_path.open("r", encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
+                st = str(r.get("status") or "ACT").strip().upper()
+                fn = str(r.get("full_name") or "").strip()
+                pos = str(r.get("position") or "").strip().upper()
+                if tm in (away, home) and st == "ACT" and fn and fn.lower() not in excluded_lower:
+                    inj_st = str((injury_map.get((tm, fn.lower())) or {}).get("report_status") or "").strip()
+                    if inj_st in ("Out", "IR", "Injured Reserve", "Doubtful"):
+                        continue
+                    roster_rows.append({"team": tm, "full_name": fn, "position": pos})
+
+    confirmed_qb1 = stage0_cfg.get("confirmed_qb1", {})
+    props_out: list[dict[str, Any]] = []
+
+    for tm in (away, home):
+        tm_off = pbp_teams[pbp_teams["posteam"] == tm]
+        tm_def = pbp_teams[pbp_teams["defteam"] == tm]
+        qb1_name = str(confirmed_qb1.get(tm) or "").strip()
+
+        tm_candidates: dict[str, dict[str, Any]] = {}
+        for r in roster_rows:
+            if r["team"] != tm:
+                continue
+            fn = r["full_name"]
+            raw_pos = r["position"]
+            if fn == qb1_name:
+                pos = "QB"
+            elif raw_pos in ("QB", "RB", "WR", "TE"):
+                pos = raw_pos
+            elif raw_pos in ("K", "PK"):
+                pos = "PK"
+            elif raw_pos in ("LB", "MLB", "ILB", "OLB"):
+                pos = "LB"
+            elif raw_pos in ("S", "SAF", "FS", "SS", "DB"):
+                pos = "S"
+            else:
+                continue
+
+            cands = _match_pbp_short_name(fn)
+            pass_r = tm_off[tm_off["passer_player_name"].isin(cands)]
+            rush_r = tm_off[tm_off["rusher_player_name"].isin(cands)]
+            rec_r = tm_off[tm_off["receiver_player_name"].isin(cands)]
+            kick_r = tm_off[tm_off["kicker_player_name"].isin(cands)]
+            solo_r = tm_def[tm_def["solo_tackle_1_player_name"].isin(cands)]
+            ast1_r = tm_def[tm_def["assist_tackle_1_player_name"].isin(cands)]
+            ast2_r = tm_def[tm_def["assist_tackle_2_player_name"].isin(cands)]
+
+            gids = set()
+            for df_p in (pass_r, rush_r, rec_r, kick_r, solo_r, ast1_r, ast2_r):
+                if len(df_p):
+                    gids.update(df_p["game_id"].dropna().unique().tolist())
+            gp = max(1, len(gids))
+
+            tm_candidates[fn] = {
+                "name": fn,
+                "team": tm,
+                "position": pos,
+                "gp": gp,
+                "has_snaps": len(gids) > 0,
+                "pass_att": int(len(pass_r)),
+                "pass_comp": int(pass_r["complete_pass"].fillna(0).sum()) if len(pass_r) else 0,
+                "pass_yds": float(pass_r["passing_yards"].fillna(0).sum()) if len(pass_r) else 0.0,
+                "pass_tds": int(pass_r["pass_touchdown"].fillna(0).sum()) if len(pass_r) else 0,
+                "carries": int(len(rush_r)),
+                "rush_yds": float(rush_r["rushing_yards"].fillna(0).sum()) if len(rush_r) else 0.0,
+                "targets": int(len(rec_r)),
+                "receptions": int(rec_r["complete_pass"].fillna(0).sum()) if len(rec_r) else 0,
+                "rec_yds": float(rec_r["receiving_yards"].fillna(0).sum()) if len(rec_r) else 0.0,
+                "kick_plays": int(len(kick_r)),
+                "tackles": int(len(solo_r) + len(ast1_r) + len(ast2_r)),
+            }
+
+        if qb1_name and qb1_name not in tm_candidates and qb1_name.lower() not in excluded_lower:
+            cands = _match_pbp_short_name(qb1_name)
+            pass_r = tm_off[tm_off["passer_player_name"].isin(cands)]
+            rush_r = tm_off[tm_off["rusher_player_name"].isin(cands)]
+            gp = max(1, int(pass_r["game_id"].nunique()) if len(pass_r) else 1)
+            tm_candidates[qb1_name] = {
+                "name": qb1_name,
+                "team": tm,
+                "position": "QB",
+                "gp": gp,
+                "has_snaps": True,
+                "pass_att": int(len(pass_r)),
+                "pass_comp": int(pass_r["complete_pass"].fillna(0).sum()) if len(pass_r) else 0,
+                "pass_yds": float(pass_r["passing_yards"].fillna(0).sum()) if len(pass_r) else 0.0,
+                "pass_tds": int(pass_r["pass_touchdown"].fillna(0).sum()) if len(pass_r) else 0,
+                "carries": int(len(rush_r)),
+                "rush_yds": float(rush_r["rushing_yards"].fillna(0).sum()) if len(rush_r) else 0.0,
+                "targets": 0,
+                "receptions": 0,
+                "rec_yds": 0.0,
+                "kick_plays": 0,
+                "tackles": 0,
+            }
+
+        selected: list[dict[str, Any]] = []
+        if qb1_name in tm_candidates:
+            selected.append(tm_candidates[qb1_name])
+        rbs = sorted(
+            [c for c in tm_candidates.values() if c["position"] == "RB" and c["has_snaps"]],
+            key=lambda x: -(x["carries"] + x["targets"]),
+        )[:3]
+        wrs = sorted(
+            [c for c in tm_candidates.values() if c["position"] == "WR" and c["has_snaps"]],
+            key=lambda x: -(x["targets"] * 100 + x["rec_yds"]),
+        )[:4]
+        tes = sorted(
+            [c for c in tm_candidates.values() if c["position"] == "TE" and c["has_snaps"]],
+            key=lambda x: -(x["targets"] * 100 + x["rec_yds"]),
+        )[:2]
+        pks = sorted(
+            [c for c in tm_candidates.values() if c["position"] == "PK"],
+            key=lambda x: -x["kick_plays"],
+        )[:1]
+        defs = sorted(
+            [c for c in tm_candidates.values() if c["position"] in ("LB", "S") and c["has_snaps"]],
+            key=lambda x: -x["tackles"],
+        )[:3]
+        selected.extend(rbs + wrs + tes + pks + defs)
+
+        for sel in selected:
+            nm = sel["name"]
+            pos = sel["position"]
+            gp = max(1, int(sel["gp"]))
+            if pos == "QB":
+                py_pg = sel["pass_yds"] / gp if sel["pass_yds"] > 0 else 225.5
+                pa_pg = sel["pass_att"] / gp if sel["pass_att"] > 0 else 31.5
+                pc_pg = sel["pass_comp"] / gp if sel["pass_comp"] > 0 else 20.5
+                ry_pg = sel["rush_yds"] / gp if sel["rush_yds"] > 0 else 14.5
+                for mkt, ln in [
+                    ("Total Passing Yards (incl. overtime)", _round_half(py_pg, 165.5)),
+                    ("Total Passing Touchdowns (incl. overtime)", 1.5),
+                    ("Total Pass Completions (incl. overtime)", _round_half(pc_pg, 14.5)),
+                    ("Total Passing Attempts (incl. overtime)", _round_half(pa_pg, 24.5)),
+                    ("Total Passing Interceptions (incl. overtime)", 0.5),
+                    ("Total Rushing Yards (incl. overtime)", _round_half(ry_pg, 6.5)),
+                ]:
+                    props_out.append({"athlete": nm, "team": tm, "position": pos, "market": mkt, "line": ln, "open_line": ln, "has_price": False})
+            elif pos == "RB":
+                ry_pg = sel["rush_yds"] / gp
+                ca_pg = sel["carries"] / gp
+                rcy_pg = sel["rec_yds"] / gp
+                rec_pg = sel["receptions"] / gp
+                for mkt, ln in [
+                    ("Total Rushing Yards (incl. overtime)", _round_half(ry_pg, 14.5)),
+                    ("Total Carries (incl. overtime)", _round_half(ca_pg, 4.5)),
+                    ("Total Receiving Yards (incl. overtime)", _round_half(rcy_pg, 6.5)),
+                    ("Total Receptions (incl. overtime)", _round_half(rec_pg, 1.5)),
+                    ("Total Rushing Plus Receiving Yards (incl. overtime)", _round_half(ry_pg + rcy_pg, 22.5)),
+                ]:
+                    props_out.append({"athlete": nm, "team": tm, "position": pos, "market": mkt, "line": ln, "open_line": ln, "has_price": False})
+            elif pos in ("WR", "TE"):
+                rcy_pg = sel["rec_yds"] / gp
+                rec_pg = sel["receptions"] / gp
+                for mkt, ln in [
+                    ("Total Receiving Yards (incl. overtime)", _round_half(rcy_pg, 12.5)),
+                    ("Total Receptions (incl. overtime)", _round_half(rec_pg, 1.5)),
+                ]:
+                    props_out.append({"athlete": nm, "team": tm, "position": pos, "market": mkt, "line": ln, "open_line": ln, "has_price": False})
+            elif pos == "PK":
+                for mkt, ln in [
+                    ("Total Kicking Points (incl. overtime)", 7.5),
+                    ("Total Field Goals Made (incl. overtime)", 1.5),
+                    ("Total Extra Points Made (incl. overtime)", 2.5),
+                ]:
+                    props_out.append({"athlete": nm, "team": tm, "position": pos, "market": mkt, "line": ln, "open_line": ln, "has_price": False})
+            elif pos in ("LB", "S"):
+                tk_pg = sel["tackles"] / gp
+                props_out.append({
+                    "athlete": nm,
+                    "team": tm,
+                    "position": pos,
+                    "market": "Total Tackles Plus Assists (incl. overtime)",
+                    "line": _round_half(tk_pg, 4.5),
+                    "open_line": _round_half(tk_pg, 4.5),
+                    "has_price": False,
+                })
+
+    board_obj = {
+        "schema": "gse_360_matchup_board_v1",
+        "matchup": f"{away} @ {home}",
+        "week": week,
+        "market_type_count": 75,
+        "props_count": len(props_out),
+        "props": props_out,
+    }
+    dyn_path.parent.mkdir(parents=True, exist_ok=True)
+    dyn_path.write_text(json.dumps(board_obj, indent=2), encoding="utf-8")
+    return board_obj, dyn_rel
+
+
 def load_stage0_game_roster_allowlist(
     away: str = "JAX",
     home: str = "BAL",
@@ -151,15 +404,14 @@ def load_stage0_game_roster_allowlist(
     stage0_cfg = require_week(week)
     matchup_key = f"{away}@{home}"
 
-    board_path = REPO_ROOT / board_rel_path
-    if not board_path.is_file():
-        raise Stage0RosterContaminationError(f"STAGE0_FAIL: Live board file missing: {board_path}")
-    board = json.loads(board_path.read_text(encoding="utf-8"))
-
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
     if not pbp_path.is_file():
         raise Stage0RosterContaminationError(f"STAGE0_FAIL: 2026 PBP parquet missing: {pbp_path}")
     pbp = pd.read_parquet(pbp_path)
+    if "LAR" in (away, home):
+        pbp = pbp.copy()
+        pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR"})
+        pbp["defteam"] = pbp["defteam"].replace({"LA": "LAR"})
     pbp_teams = pbp[(pbp["posteam"].isin([away, home])) | (pbp["defteam"].isin([away, home]))]
 
     # Load 2026 injuries CSV for latest designations
@@ -170,7 +422,7 @@ def load_stage0_game_roster_allowlist(
             rows = list(csv.DictReader(fh))
         rows.sort(key=lambda r: int(r.get("week") or 0))
         for r in rows:
-            tm = str(r.get("team") or "").strip()
+            tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
             fn = str(r.get("full_name") or "").strip()
             if tm in (away, home) and fn:
                 injury_map[(tm, fn.lower())] = {
@@ -179,6 +431,16 @@ def load_stage0_game_roster_allowlist(
                     "practice_status": str(r.get("practice_status") or "").strip(),
                     "primary_injury": str(r.get("report_primary_injury") or r.get("practice_primary_injury") or "").strip(),
                 }
+
+    board, resolved_board_rel_path = resolve_or_generate_matchup_board(
+        away=away,
+        home=home,
+        week=week,
+        board_rel_path=board_rel_path,
+        stage0_cfg=stage0_cfg,
+        pbp_teams=pbp_teams,
+        injury_map=injury_map,
+    )
 
     # Explicit Week 9 Thursday Night Football injury overrides from verified reports
     if away == "JAX" and home == "BAL" and week == 9:

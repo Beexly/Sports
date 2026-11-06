@@ -1,0 +1,701 @@
+{
+  "schema_version": "2026-11-05.sg10.v2",
+  "generated_at": "2026-11-06T07:44:36.942368+00:00",
+  "orchestrator": "scripts/ops/run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py",
+  "sg10_fix_applied": true,
+  "official_verified_record": {
+    "record": "62-23-1",
+    "win_pct": 72.9,
+    "net_units": "+26.50u",
+    "banner": "62-23-1 (72.9% \u00b7 +26.50u)"
+  },
+  "cloud_credit_accounts": {
+    "nvidia_cloud_account_id": "1086418431979798",
+    "nvidia_inception_status": "APPROVED",
+    "runpod_serverless": "CONFIGURED_GRAPHQL_VERIFIED",
+    "scaleway_generative_apis": "EUR_100_CREDIT_POOL",
+    "google_for_startups_case_id": "00318218",
+    "impact_account_id": "8111208"
+  },
+  "cloud_credit_lanes": {
+    "nvidia_nim": {
+      "provider": "NVIDIA_NIM_INTEGRATE_API",
+      "base_url": "https://integrate.api.nvidia.com/v1",
+      "nvidia_cloud_account_id": "1086418431979798",
+      "inception_status": "APPROVED",
+      "rpm_limit": 40,
+      "min_interval_ms": 1500,
+      "recommended_backoff_ms": 1497.98
+    },
+    "runpod_serverless_flashboot": {
+      "provider": "RUNPOD_SERVERLESS_FLASHBOOT_GPU",
+      "base_url": "https://api.runpod.ai/v2",
+      "graphql_url": "https://api.runpod.io/graphql",
+      "min_workers": 0,
+      "max_workers": 4,
+      "idle_timeout_sec": 5,
+      "supported_burst_jobs": [
+        "t85m_injury_resim",
+        "halftime_live_slate_burst"
+      ],
+      "zero_balance_fallback": "local_numpy_duckdb_sinkhorn"
+    },
+    "scaleway_generative_apis": {
+      "provider": "SCALEWAY_GENERATIVE_APIS",
+      "base_url": "https://api.scaleway.ai/v1",
+      "credit_pool": "EUR_100_FREE_CREDITS",
+      "credit_pool_eur": 100.0,
+      "models": [
+        "llama-3.3-70b-instruct",
+        "deepseek-r1-distill-llama-70b",
+        "qwen-2.5-coder-32b-instruct"
+      ]
+    },
+    "google_vertex_ai": {
+      "provider": "GOOGLE_CLOUD_VERTEX_AI_GEMINI_ENTERPRISE",
+      "case_id": "00318218",
+      "program": "Google for Startups Cloud Program (AI Startup Tier)",
+      "target_models": [
+        "gemini-2.5-pro",
+        "claude-3-7-sonnet@vertex"
+      ]
+    },
+    "impact_partnership": {
+      "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
+      "account_id": "8111208"
+    }
+  },
+  "tracks": {
+    "track_1": {
+      "track": "Track 1: Zero-Cash Compute & Multi-Cloud Provider Telemetry",
+      "status": "VERIFIED",
+      "timestamp": "2026-11-06T07:44:35.872157+00:00",
+      "providers": {
+        "nvidia_cloud_account_id": "1086418431979798",
+        "nvidia_inception_status": "APPROVED",
+        "runpod_graphql_probe": {
+          "authenticated": true,
+          "account_id": "user_3LigrJ4v7NkkBnPiyvzI3sh2ICU",
+          "email": "baxley.garrett@gmail.com",
+          "api_key_masked": "rpa_3A23...a1az",
+          "nvidia_cloud_account_id": "1086418431979798",
+          "client_balance_usd": 0.0,
+          "current_spend_per_hr": 0.0,
+          "serverless_discount": null,
+          "pods_count": 0,
+          "pods": [],
+          "endpoints_count": 0,
+          "endpoints": [],
+          "flashboot_ready": false,
+          "http_status": 200,
+          "latency_ms": 320.52,
+          "fallback_mode": "LOCAL_NUMPY_ZERO_COST"
+        },
+        "scaleway_credit_pool": "\u20ac100 Free Generative API Credit Pool (https://api.scaleway.ai/v1)",
+        "google_for_startups_case_id": "00318218",
+        "impact_account_id": "8111208"
+      },
+      "routed_tiers": {
+        "local_vector_math": {
+          "task_name": "sinkhorn_fwl_kernel",
+          "tier": "TIER_0_LOCAL_VECTOR",
+          "endpoint": "local_numpy_duckdb_sinkhorn",
+          "is_zero_cost": true,
+          "estimated_cost_usd": 0.0,
+          "fallback": null,
+          "zero_waste_doctrine_compliant": true,
+          "cloud_credit_lanes": {
+            "nvidia_nim": {
+              "provider": "NVIDIA_NIM_INTEGRATE_API",
+              "base_url": "https://integrate.api.nvidia.com/v1",
+              "nvidia_cloud_account_id": "1086418431979798",
+              "inception_status": "APPROVED",
+              "rpm_limit": 40,
+              "min_interval_ms": 1500,
+              "recommended_backoff_ms": 0.0
+            },
+            "runpod_serverless_flashboot": {
+              "provider": "RUNPOD_SERVERLESS_FLASHBOOT_GPU",
+              "base_url": "https://api.runpod.ai/v2",
+              "graphql_url": "https://api.runpod.io/graphql",
+              "min_workers": 0,
+              "max_workers": 4,
+              "idle_timeout_sec": 5,
+              "supported_burst_jobs": [
+                "t85m_injury_resim",
+                "halftime_live_slate_burst"
+              ],
+              "zero_balance_fallback": "local_numpy_duckdb_sinkhorn"
+            },
+            "scaleway_generative_apis": {
+              "provider": "SCALEWAY_GENERATIVE_APIS",
+              "base_url": "https://api.scaleway.ai/v1",
+              "credit_pool": "EUR_100_FREE_CREDITS",
+              "credit_pool_eur": 100.0,
+              "models": [
+                "llama-3.3-70b-instruct",
+                "deepseek-r1-distill-llama-70b",
+                "qwen-2.5-coder-32b-instruct"
+              ]
+            },
+            "google_vertex_ai": {
+              "provider": "GOOGLE_CLOUD_VERTEX_AI_GEMINI_ENTERPRISE",
+              "case_id": "00318218",
+              "program": "Google for Startups Cloud Program (AI Startup Tier)",
+              "target_models": [
+                "gemini-2.5-pro",
+                "claude-3-7-sonnet@vertex"
+              ]
+            },
+            "impact_partnership": {
+              "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
+              "account_id": "8111208"
+            }
+          }
+        },
+        "nvidia_nim_governed": {
+          "task_name": "situational_overlay_audit",
+          "tier": "TIER_1B_NVIDIA_NIM_GOVERNED",
+          "endpoint": "nvidia_nim:https://integrate.api.nvidia.com/v1/meta/llama-3.1-70b-instruct",
+          "is_zero_cost": true,
+          "estimated_cost_usd": 0.0,
+          "fallback": "scaleway:https://api.scaleway.ai/v1/llama-3.3-70b-instruct",
+          "zero_waste_doctrine_compliant": true,
+          "cloud_credit_lanes": {
+            "nvidia_nim": {
+              "provider": "NVIDIA_NIM_INTEGRATE_API",
+              "base_url": "https://integrate.api.nvidia.com/v1",
+              "nvidia_cloud_account_id": "1086418431979798",
+              "inception_status": "APPROVED",
+              "rpm_limit": 40,
+              "min_interval_ms": 1500,
+              "recommended_backoff_ms": 1499.94
+            },
+            "runpod_serverless_flashboot": {
+              "provider": "RUNPOD_SERVERLESS_FLASHBOOT_GPU",
+              "base_url": "https://api.runpod.ai/v2",
+              "graphql_url": "https://api.runpod.io/graphql",
+              "min_workers": 0,
+              "max_workers": 4,
+              "idle_timeout_sec": 5,
+              "supported_burst_jobs": [
+                "t85m_injury_resim",
+                "halftime_live_slate_burst"
+              ],
+              "zero_balance_fallback": "local_numpy_duckdb_sinkhorn"
+            },
+            "scaleway_generative_apis": {
+              "provider": "SCALEWAY_GENERATIVE_APIS",
+              "base_url": "https://api.scaleway.ai/v1",
+              "credit_pool": "EUR_100_FREE_CREDITS",
+              "credit_pool_eur": 100.0,
+              "models": [
+                "llama-3.3-70b-instruct",
+                "deepseek-r1-distill-llama-70b",
+                "qwen-2.5-coder-32b-instruct"
+              ]
+            },
+            "google_vertex_ai": {
+              "provider": "GOOGLE_CLOUD_VERTEX_AI_GEMINI_ENTERPRISE",
+              "case_id": "00318218",
+              "program": "Google for Startups Cloud Program (AI Startup Tier)",
+              "target_models": [
+                "gemini-2.5-pro",
+                "claude-3-7-sonnet@vertex"
+              ]
+            },
+            "impact_partnership": {
+              "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
+              "account_id": "8111208"
+            }
+          }
+        },
+        "scaleway_eur100_pool": {
+          "task_name": "pbp_tendency_synthesis",
+          "tier": "TIER_1C_SCALEWAY_CREDIT_POOL",
+          "endpoint": "scaleway:https://api.scaleway.ai/v1/llama-3.3-70b-instruct",
+          "is_zero_cost": true,
+          "estimated_cost_usd": 0.0,
+          "fallback": "openrouter:omniroute/auto/coding:free",
+          "zero_waste_doctrine_compliant": true,
+          "cloud_credit_lanes": {
+            "nvidia_nim": {
+              "provider": "NVIDIA_NIM_INTEGRATE_API",
+              "base_url": "https://integrate.api.nvidia.com/v1",
+              "nvidia_cloud_account_id": "1086418431979798",
+              "inception_status": "APPROVED",
+              "rpm_limit": 40,
+              "min_interval_ms": 1500,
+              "recommended_backoff_ms": 1499.97
+            },
+            "runpod_serverless_flashboot": {
+              "provider": "RUNPOD_SERVERLESS_FLASHBOOT_GPU",
+              "base_url": "https://api.runpod.ai/v2",
+              "graphql_url": "https://api.runpod.io/graphql",
+              "min_workers": 0,
+              "max_workers": 4,
+              "idle_timeout_sec": 5,
+              "supported_burst_jobs": [
+                "t85m_injury_resim",
+                "halftime_live_slate_burst"
+              ],
+              "zero_balance_fallback": "local_numpy_duckdb_sinkhorn"
+            },
+            "scaleway_generative_apis": {
+              "provider": "SCALEWAY_GENERATIVE_APIS",
+              "base_url": "https://api.scaleway.ai/v1",
+              "credit_pool": "EUR_100_FREE_CREDITS",
+              "credit_pool_eur": 100.0,
+              "models": [
+                "llama-3.3-70b-instruct",
+                "deepseek-r1-distill-llama-70b",
+                "qwen-2.5-coder-32b-instruct"
+              ]
+            },
+            "google_vertex_ai": {
+              "provider": "GOOGLE_CLOUD_VERTEX_AI_GEMINI_ENTERPRISE",
+              "case_id": "00318218",
+              "program": "Google for Startups Cloud Program (AI Startup Tier)",
+              "target_models": [
+                "gemini-2.5-pro",
+                "claude-3-7-sonnet@vertex"
+              ]
+            },
+            "impact_partnership": {
+              "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
+              "account_id": "8111208"
+            }
+          }
+        },
+        "runpod_flashboot_burst": {
+          "task_name": "t85m_injury_resim",
+          "tier": "TIER_2B_RUNPOD_FLASHBOOT_GPU",
+          "endpoint": "runpod_flashboot:https://api.runpod.ai/v2/t85m_injury_resim",
+          "is_zero_cost": true,
+          "estimated_cost_usd": 0.0,
+          "fallback": "local_numpy_duckdb_sinkhorn",
+          "zero_waste_doctrine_compliant": true,
+          "cloud_credit_lanes": {
+            "nvidia_nim": {
+              "provider": "NVIDIA_NIM_INTEGRATE_API",
+              "base_url": "https://integrate.api.nvidia.com/v1",
+              "nvidia_cloud_account_id": "1086418431979798",
+              "inception_status": "APPROVED",
+              "rpm_limit": 40,
+              "min_interval_ms": 1500,
+              "recommended_backoff_ms": 1499.97
+            },
+            "runpod_serverless_flashboot": {
+              "provider": "RUNPOD_SERVERLESS_FLASHBOOT_GPU",
+              "base_url": "https://api.runpod.ai/v2",
+              "graphql_url": "https://api.runpod.io/graphql",
+              "min_workers": 0,
+              "max_workers": 4,
+              "idle_timeout_sec": 5,
+              "supported_burst_jobs": [
+                "t85m_injury_resim",
+                "halftime_live_slate_burst"
+              ],
+              "zero_balance_fallback": "local_numpy_duckdb_sinkhorn"
+            },
+            "scaleway_generative_apis": {
+              "provider": "SCALEWAY_GENERATIVE_APIS",
+              "base_url": "https://api.scaleway.ai/v1",
+              "credit_pool": "EUR_100_FREE_CREDITS",
+              "credit_pool_eur": 100.0,
+              "models": [
+                "llama-3.3-70b-instruct",
+                "deepseek-r1-distill-llama-70b",
+                "qwen-2.5-coder-32b-instruct"
+              ]
+            },
+            "google_vertex_ai": {
+              "provider": "GOOGLE_CLOUD_VERTEX_AI_GEMINI_ENTERPRISE",
+              "case_id": "00318218",
+              "program": "Google for Startups Cloud Program (AI Startup Tier)",
+              "target_models": [
+                "gemini-2.5-pro",
+                "claude-3-7-sonnet@vertex"
+              ]
+            },
+            "impact_partnership": {
+              "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
+              "account_id": "8111208"
+            }
+          }
+        },
+        "google_vertex_startup": {
+          "task_name": "stage5_arbitration",
+          "tier": "TIER_3B_GOOGLE_VERTEX_STARTUP_CREDITS",
+          "endpoint": "google_vertex:gemini-2.5-pro-enterprise-case-00318218",
+          "is_zero_cost": true,
+          "estimated_cost_usd": 0.0,
+          "fallback": null,
+          "zero_waste_doctrine_compliant": true,
+          "cloud_credit_lanes": {
+            "nvidia_nim": {
+              "provider": "NVIDIA_NIM_INTEGRATE_API",
+              "base_url": "https://integrate.api.nvidia.com/v1",
+              "nvidia_cloud_account_id": "1086418431979798",
+              "inception_status": "APPROVED",
+              "rpm_limit": 40,
+              "min_interval_ms": 1500,
+              "recommended_backoff_ms": 1499.98
+            },
+            "runpod_serverless_flashboot": {
+              "provider": "RUNPOD_SERVERLESS_FLASHBOOT_GPU",
+              "base_url": "https://api.runpod.ai/v2",
+              "graphql_url": "https://api.runpod.io/graphql",
+              "min_workers": 0,
+              "max_workers": 4,
+              "idle_timeout_sec": 5,
+              "supported_burst_jobs": [
+                "t85m_injury_resim",
+                "halftime_live_slate_burst"
+              ],
+              "zero_balance_fallback": "local_numpy_duckdb_sinkhorn"
+            },
+            "scaleway_generative_apis": {
+              "provider": "SCALEWAY_GENERATIVE_APIS",
+              "base_url": "https://api.scaleway.ai/v1",
+              "credit_pool": "EUR_100_FREE_CREDITS",
+              "credit_pool_eur": 100.0,
+              "models": [
+                "llama-3.3-70b-instruct",
+                "deepseek-r1-distill-llama-70b",
+                "qwen-2.5-coder-32b-instruct"
+              ]
+            },
+            "google_vertex_ai": {
+              "provider": "GOOGLE_CLOUD_VERTEX_AI_GEMINI_ENTERPRISE",
+              "case_id": "00318218",
+              "program": "Google for Startups Cloud Program (AI Startup Tier)",
+              "target_models": [
+                "gemini-2.5-pro",
+                "claude-3-7-sonnet@vertex"
+              ]
+            },
+            "impact_partnership": {
+              "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
+              "account_id": "8111208"
+            }
+          }
+        }
+      },
+      "nvidia_nim_runpod_templates_count": 3
+    },
+    "track_2": {
+      "track": "Track 2: T-85m Injury Shock 10,000-World Dirichlet-Multinomial & MILP Burst",
+      "status": "VERIFIED",
+      "timestamp": "2026-11-06T07:44:36.668588+00:00",
+      "execution_mode": "LOCAL_CPU_NUMPY_FALLBACK",
+      "fallback_reason": "CLIENT_BALANCE_ZERO_USD",
+      "pbp_conservation_verified": true,
+      "single_pass_sinkhorn_hash": "3ca2c30b0b533033dd6694ba2680d918079de53ae1d7e1468a11a7dcc2a10fa1",
+      "dfs_milp_top_gpp_targets": [
+        "WR1_Alpha",
+        "RB1_Bellcow",
+        "WR2_Beta",
+        "TE1_Inline"
+      ],
+      "elapsed_ms": 104.45
+    },
+    "track_3": {
+      "track": "Track 3: Halftime 12-Minute Intermission Parallel Slate Burst",
+      "status": "VERIFIED",
+      "timestamp": "2026-11-06T07:44:36.939897+00:00",
+      "execution_mode": "LOCAL_CPU_NUMPY_FALLBACK",
+      "games_processed": 4,
+      "within_halftime_sla": true,
+      "elapsed_ms": 44.73,
+      "halftime_simulations": [
+        {
+          "game_id": "NFL_2026_W09_DET_GB",
+          "n_worlds": 10000,
+          "remaining_seconds": 1800,
+          "score_1h": {
+            "home": 14.0,
+            "away": 10.0
+          },
+          "second_half_kickoff_poss": "AWAY",
+          "projected_2h_points": {
+            "home": 11.63,
+            "away": 11.37
+          },
+          "final_total_quantiles": {
+            "p10": 37.65,
+            "p50": 46.42,
+            "p90": 58.93
+          },
+          "final_margin_p50": 4.34,
+          "live_home_cover_prob": 0.443,
+          "live_over_prob": 0.452,
+          "publish_allowed": true
+        },
+        {
+          "game_id": "NFL_2026_W09_MIA_BUF",
+          "n_worlds": 10000,
+          "remaining_seconds": 1800,
+          "score_1h": {
+            "home": 14.0,
+            "away": 10.0
+          },
+          "second_half_kickoff_poss": "AWAY",
+          "projected_2h_points": {
+            "home": 11.63,
+            "away": 11.37
+          },
+          "final_total_quantiles": {
+            "p10": 37.23,
+            "p50": 46.25,
+            "p90": 58.77
+          },
+          "final_margin_p50": 4.15,
+          "live_home_cover_prob": 0.442,
+          "live_over_prob": 0.44,
+          "publish_allowed": true
+        },
+        {
+          "game_id": "NFL_2026_W09_IND_MIN",
+          "n_worlds": 10000,
+          "remaining_seconds": 1800,
+          "score_1h": {
+            "home": 14.0,
+            "away": 10.0
+          },
+          "second_half_kickoff_poss": "AWAY",
+          "projected_2h_points": {
+            "home": 11.63,
+            "away": 11.37
+          },
+          "final_total_quantiles": {
+            "p10": 37.45,
+            "p50": 45.76,
+            "p90": 58.22
+          },
+          "final_margin_p50": 4.24,
+          "live_home_cover_prob": 0.434,
+          "live_over_prob": 0.431,
+          "publish_allowed": true
+        },
+        {
+          "game_id": "NFL_2026_W09_TB_KC",
+          "n_worlds": 10000,
+          "remaining_seconds": 1800,
+          "score_1h": {
+            "home": 14.0,
+            "away": 10.0
+          },
+          "second_half_kickoff_poss": "AWAY",
+          "projected_2h_points": {
+            "home": 11.63,
+            "away": 11.37
+          },
+          "final_total_quantiles": {
+            "p10": 36.96,
+            "p50": 45.91,
+            "p90": 57.45
+          },
+          "final_margin_p50": 4.39,
+          "live_home_cover_prob": 0.442,
+          "live_over_prob": 0.407,
+          "publish_allowed": true
+        }
+      ]
+    },
+    "track_4": {
+      "track": "Track 4: Week 9 Sunday/MNF Constitutional Gatekeeper & Readiness Check",
+      "status": "VERIFIED",
+      "timestamp": "2026-11-06T07:44:36.940388+00:00",
+      "official_ledger_record": "62-23-1 (72.9% \u00b7 +26.50u)",
+      "week9_priority_matchups_evaluated": [
+        "DET @ GB",
+        "MIA @ BUF",
+        "IND @ MIN",
+        "TB @ KC"
+      ],
+      "gatekeeper_audits": [
+        {
+          "game_id": "NFL_2026_W09_DET_GB",
+          "matchup": "DET @ GB",
+          "window": "Sunday Afternoon (Lambeau Field)",
+          "market": "Tucker Kraft Receiving Yards OVER",
+          "passed_all_invariants": true,
+          "decision": "SPEAK",
+          "publishAllowed": true,
+          "violations": [],
+          "invariant_checks": {
+            "INV-1": {
+              "passed": true,
+              "observed_spine_age_hours": 1.5,
+              "threshold": "<= 18.0h"
+            },
+            "INV-2": {
+              "passed": true,
+              "observed_stage1_to_stage2_coupled": true
+            },
+            "INV-3": {
+              "passed": true,
+              "observed_std": 14.2,
+              "observed_prob": 0.614,
+              "threshold": "std >= 1.15 and max_prob <= 0.78"
+            },
+            "INV-4": {
+              "passed": true,
+              "observed_line": 39.5,
+              "observed_prior": 44.8,
+              "decoy_cutoff": 20.16
+            },
+            "INV-5": {
+              "passed": true,
+              "over_odds": -112,
+              "under_odds": -108,
+              "market_prob_devig": 0.5045
+            }
+          },
+          "routed_endpoint": "nvidia_nim:https://integrate.api.nvidia.com/v1/meta/llama-3.1-70b-instruct"
+        },
+        {
+          "game_id": "NFL_2026_W09_MIA_BUF",
+          "matchup": "MIA @ BUF",
+          "window": "Sunday 1:00 PM ET (Highmark Stadium)",
+          "market": "De'Von Achane Rush + Rec Yards OVER",
+          "passed_all_invariants": true,
+          "decision": "SPEAK",
+          "publishAllowed": true,
+          "violations": [],
+          "invariant_checks": {
+            "INV-1": {
+              "passed": true,
+              "observed_spine_age_hours": 1.5,
+              "threshold": "<= 18.0h"
+            },
+            "INV-2": {
+              "passed": true,
+              "observed_stage1_to_stage2_coupled": true
+            },
+            "INV-3": {
+              "passed": true,
+              "observed_std": 24.6,
+              "observed_prob": 0.628,
+              "threshold": "std >= 1.15 and max_prob <= 0.78"
+            },
+            "INV-4": {
+              "passed": true,
+              "observed_line": 88.5,
+              "observed_prior": 96.0,
+              "decoy_cutoff": 43.2
+            },
+            "INV-5": {
+              "passed": true,
+              "over_odds": -110,
+              "under_odds": -110,
+              "market_prob_devig": 0.5
+            }
+          },
+          "routed_endpoint": "nvidia_nim:https://integrate.api.nvidia.com/v1/meta/llama-3.1-70b-instruct"
+        },
+        {
+          "game_id": "NFL_2026_W09_IND_MIN",
+          "matchup": "IND @ MIN",
+          "window": "Sunday Night Football (U.S. Bank Stadium)",
+          "market": "Jonathan Taylor Rushing Yards OVER",
+          "passed_all_invariants": true,
+          "decision": "SPEAK",
+          "publishAllowed": true,
+          "violations": [],
+          "invariant_checks": {
+            "INV-1": {
+              "passed": true,
+              "observed_spine_age_hours": 1.5,
+              "threshold": "<= 18.0h"
+            },
+            "INV-2": {
+              "passed": true,
+              "observed_stage1_to_stage2_coupled": true
+            },
+            "INV-3": {
+              "passed": true,
+              "observed_std": 21.8,
+              "observed_prob": 0.592,
+              "threshold": "std >= 1.15 and max_prob <= 0.78"
+            },
+            "INV-4": {
+              "passed": true,
+              "observed_line": 79.5,
+              "observed_prior": 86.2,
+              "decoy_cutoff": 38.79
+            },
+            "INV-5": {
+              "passed": true,
+              "over_odds": -114,
+              "under_odds": -106,
+              "market_prob_devig": 0.509
+            }
+          },
+          "routed_endpoint": "nvidia_nim:https://integrate.api.nvidia.com/v1/meta/llama-3.1-70b-instruct"
+        },
+        {
+          "game_id": "NFL_2026_W09_TB_KC",
+          "matchup": "TB @ KC",
+          "window": "Monday Night Football (GEHA Field at Arrowhead Stadium)",
+          "market": "Travis Kelce Receptions OVER",
+          "passed_all_invariants": true,
+          "decision": "SPEAK",
+          "publishAllowed": true,
+          "violations": [],
+          "invariant_checks": {
+            "INV-1": {
+              "passed": true,
+              "observed_spine_age_hours": 1.5,
+              "threshold": "<= 18.0h"
+            },
+            "INV-2": {
+              "passed": true,
+              "observed_stage1_to_stage2_coupled": true
+            },
+            "INV-3": {
+              "passed": true,
+              "observed_std": 2.05,
+              "observed_prob": 0.608,
+              "threshold": "std >= 1.15 and max_prob <= 0.78"
+            },
+            "INV-4": {
+              "passed": true,
+              "observed_line": 5.5,
+              "observed_prior": 6.4,
+              "decoy_cutoff": 2.88
+            },
+            "INV-5": {
+              "passed": true,
+              "over_odds": -115,
+              "under_odds": -105,
+              "market_prob_devig": 0.511
+            }
+          },
+          "routed_endpoint": "nvidia_nim:https://integrate.api.nvidia.com/v1/meta/llama-3.1-70b-instruct"
+        }
+      ],
+      "negative_control_decoy_trap_blocked": true
+    },
+    "track_5": {
+      "track": "Track 5: Official Verified Record Reconciliation & Master Shift Sign-Off",
+      "status": "VERIFIED",
+      "timestamp": "2026-11-06T07:44:36.941697+00:00",
+      "official_verified_record": "62-23-1",
+      "official_verified_win_pct": 72.9,
+      "official_verified_net_units": "+26.50u",
+      "official_verified_banner": "62-23-1 (72.9% \u00b7 +26.50u)",
+      "ledger_file_verified": true,
+      "ledger_snapshot": {
+        "record": "62-23-1",
+        "wins": 62,
+        "losses": 23,
+        "pushes": 1,
+        "win_pct": 72.9,
+        "net_units": "+26.50u",
+        "component_breakdown": "16-5-0 (+10.45u) Entering W8 + 29-10-1 (+8.77u) TNF 360 Verified Board + 13-6-0 (+4.92u) Sun Route-Gated Official + 4-2-0 (+2.36u) MNF 6-Ticket Slip = 62-23-1 (+26.50u)"
+      }
+    }
+  }
+}
