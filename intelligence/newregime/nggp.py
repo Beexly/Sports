@@ -21,9 +21,21 @@
 
 """Few-shot GP classifier with calibrated uncertainty (1902)."""
 
+from dataclasses import dataclass
+from typing import Optional
+
 import numpy as np
 
 from .dgp import sigmoid, sample_nggp_tasks, MODULE_SEED
+
+
+@dataclass(frozen=True)
+class LaplaceGPConfig:
+    """Hyper-parameters for binary GP classifier via Laplace approximation."""
+    lengthscale: float = 0.7
+    var: float = 4.0
+    jitter: float = 1e-6
+    newton_iters: int = 25
 
 
 def _rbf(A, B, lengthscale, var):
@@ -32,10 +44,19 @@ def _rbf(A, B, lengthscale, var):
     return var * np.exp(-0.5 * d2 / lengthscale ** 2)
 
 
-def _laplace_gp_predict(X_s, y_s, X_q, lengthscale=0.7, var=4.0, jitter=1e-6,
-                        newton_iters=25):
+def _laplace_gp_predict(X_s, y_s, X_q,
+                        config: Optional[LaplaceGPConfig] = None,
+                        **kwargs):
     """Binary GP classifier via Laplace approximation (Rasmussen & Williams
     Alg. 5.1). Returns predictive probabilities for X_q."""
+    if config is None:
+        config = LaplaceGPConfig()
+
+    lengthscale = kwargs.get("lengthscale", config.lengthscale)
+    var = kwargs.get("var", config.var)
+    jitter = kwargs.get("jitter", config.jitter)
+    newton_iters = kwargs.get("newton_iters", config.newton_iters)
+
     n = len(X_s)
     K = _rbf(X_s, X_s, lengthscale, var) + jitter * np.eye(n)
     f = np.zeros(n)
@@ -72,7 +93,8 @@ def _laplace_gp_predict(X_s, y_s, X_q, lengthscale=0.7, var=4.0, jitter=1e-6,
 
 
 def nggp_new_regime_check(seed=MODULE_SEED + 7, n_tasks=64,
-                          n_support=8, n_query=48):
+                          n_support=8, n_query=48,
+                          config: Optional[LaplaceGPConfig] = None):
     """Run the 1902 gate: few-shot GP vs pooled base-rate baseline.
 
     Baseline = pooled base rate (what a non-adapted model predicts for a brand
@@ -81,6 +103,9 @@ def nggp_new_regime_check(seed=MODULE_SEED + 7, n_tasks=64,
 
     Returns dict with brier_improvement. Gate: brier_improvement >= 0.01.
     """
+    if config is None:
+        config = LaplaceGPConfig()
+
     data = sample_nggp_tasks(seed=seed, n_tasks=n_tasks,
                              n_support=n_support, n_query=n_query)
     tasks = data["tasks"]
@@ -93,7 +118,7 @@ def nggp_new_regime_check(seed=MODULE_SEED + 7, n_tasks=64,
     for t in tasks:
         p_base = np.full_like(t["y_q"], base_rate)
         brier_base.append(float(np.mean((p_base - t["y_q"]) ** 2)))
-        p_gp = _laplace_gp_predict(t["X_s"], t["y_s"], t["X_q"])
+        p_gp = _laplace_gp_predict(t["X_s"], t["y_s"], t["X_q"], config=config)
         brier_gp.append(float(np.mean((p_gp - t["y_q"]) ** 2)))
 
     brier_base = float(np.mean(brier_base))

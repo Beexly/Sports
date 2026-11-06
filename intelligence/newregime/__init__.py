@@ -21,7 +21,7 @@
 """New-regime prediction module: MAML vs NGGP race + supporting lanes."""
 
 from .maml import maml_new_regime_check
-from .nggp import nggp_new_regime_check
+from .nggp import nggp_new_regime_check, LaplaceGPConfig
 from .feature_store import FeatureStore, BackfillRunner, leak_injection_test
 from .drift import (DriftEnsemble, drift_acceptance_check, knn_impute,
                     ADWIN, HDDM_A, HDDM_W, KSWIN, PageHinkley)
@@ -63,6 +63,7 @@ def research_lanes_status():
 __all__ = [
     "maml_new_regime_check",
     "nggp_new_regime_check",
+    "LaplaceGPConfig",
     "research_lanes_status",
     "FeatureStore",
     "BackfillRunner",
