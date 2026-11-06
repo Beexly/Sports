@@ -26,3 +26,11 @@ provider output out of git.
 
 If you believe material here infringes your rights, open an issue or email the
 address in SECURITY.md and it will be removed.
+## Competitive intel sources (2026-11-06)
+
+`data/rival/<slug>/` holds raw JSONL captured from rival public endpoints. Each org carries
+an entry in `apps/web/lib/scraping/source-rights-registry.ts` and a key in
+`DATASET_LICENSES.json`. ToS-scraped sources default to `commercial_ok: false` until a terms
+read and, where needed, written permission exist. The first such source is
+`fantasylabs-public-api` (FantasyLabs unauthenticated JSON, handles plus owner ids, personal
+data risk high).

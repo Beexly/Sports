@@ -928,6 +928,46 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     vendor_contact: null,
     notes: "Circumvents paid SiriusXM activation. PERMANENTLY EXCLUDED. No path to approval.",
   },
+  {
+    source_id: "fantasylabs-public-api",
+    source_name: "FantasyLabs public JSON API (unofficial, unauthenticated)",
+    source_url: "https://www.fantasylabs.com/api/",
+    terms_url: "https://www.fantasylabs.com/terms/",
+    robots_url: "https://www.fantasylabs.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "FantasyLabs",
+    personal_data_risk: "high",
+    copyright_expression_risk: "low",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-11-06",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.fantasylabs.com/api/subscription/products/",
+      "https://www.fantasylabs.com/api/contests/usernames/5/41347962",
+      "https://www.fantasylabs.com/api/contests/usersummary/5/41347962/45454",
+      "https://www.fantasylabs.com/api/lines/4/Columbus%20Blue%20Jackets/10-6-2017",
+    ],
+    unlock_condition:
+      "ToS text still unread at review time. Needs a terms read plus written permission before " +
+      "commercial_display_allowed or storage_allowed flips true. Contest usernames are personal " +
+      "data (handle plus owner id), so personal_data_risk stays high regardless of licence.",
+    vendor_contact: null,
+    notes:
+      "IIS 10 origin, AngularJS client, no bot wall: plain curl answers 200. The usernames " +
+      "endpoint returns 91k unique handles across six calls. Legacy 2017-era routes still live " +
+      "under www with trailing slashes, which is the cheapest historical archive on the target.",
+  },
 ];
 
 // ─── Registry access ──────────────────────────────────────────────────────────
