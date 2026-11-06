@@ -25,8 +25,11 @@ export const FANTASYLABS_FILTERS_URL = "https://www.fantasylabs.com/api/filters/
 export interface RivalFeature {
   readonly featureId: number;
   readonly name: string;
-  /** "none" is the honest name for the three rows whose source field is an empty string. */
-  readonly filterType: "range" | "list" | "list-rev" | "daterange" | "none";
+  /**
+   * "none" is the honest name for the rows whose source filter type is an empty string.
+   * `source` and `excludelist-rev` are live values the first fixture missed.
+   */
+  readonly filterType: "range" | "list" | "list-rev" | "daterange" | "excludelist-rev" | "source" | "none";
   readonly dataItemType: number;
   readonly property: string;
   readonly table: string;
@@ -39,9 +42,10 @@ export interface RivalFeature {
 
 const rawRow = z
   .object({
-    DataItemId: z.number().int().positive(),
+    // One live row keys on 0, so zero is legal even though it looks like a null sentinel.
+    DataItemId: z.number().int().nonnegative(),
     DataItemName: z.string().min(1),
-    FilterType: z.enum(["range", "list", "list-rev", "daterange", ""]),
+    FilterType: z.enum(["range", "list", "list-rev", "daterange", "excludelist-rev", "source", ""]),
     DataItemType: z.number().int(),
     HelpId: z.string(),
     Description: z.string().nullable().optional(),
@@ -61,9 +65,9 @@ export type RawFilterRow = z.infer<typeof rawRow>;
 /** Strict output schema. No coercion, no optional family. */
 export const rivalFeatureSchema = z
   .object({
-    featureId: z.number().int().positive(),
+    featureId: z.number().int().nonnegative(),
     name: z.string().min(1),
-    filterType: z.enum(["range", "list", "list-rev", "daterange", "none"]),
+    filterType: z.enum(["range", "list", "list-rev", "daterange", "excludelist-rev", "source", "none"]),
     dataItemType: z.number().int(),
     property: z.string(),
     table: z.string(),

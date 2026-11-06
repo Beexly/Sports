@@ -172,7 +172,8 @@
     "mobile:verify": "sh apps/mobile/scripts/verify.sh",
     "mobile:test": "npm --prefix apps/mobile run test",
     "provenance:audit": "node scripts/competitive-intel/provenance-audit.mjs",
-    "competitors:reconcile": "node reconciliation/rival-delta.mjs"
+    "competitors:reconcile": "node reconciliation/rival-delta.mjs",
+    "competitors:harvest": "tsx scripts/competitive-intel/harvest.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

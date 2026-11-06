@@ -59,6 +59,17 @@ fetch, normalize, validate, provenance, in that order:
   replays it. No test may touch the network.
 - signal family comes from `familyForFeature`. Do not add a ninth family.
 
+## Running a harvest
+
+`npm run competitors:harvest -- --adapter products --out .ci-out` fetches the real URL, stamps
+provenance, writes one artifact per run and prints a summary (price ladder for a price sheet,
+family histogram for a feature catalogue). It is the only place the package touches the
+network, so every test stays offline.
+
+First live run, 2026-11-06, 968 features: MARKET 525, EFFICIENCY 345, TRENCHES 39,
+MARKET_MICROSTRUCTURE 20, SITUATIONAL 19, MICROCLIMATE 16, LUCK 2, NARRATIVE 2. Their thinnest
+coverage is luck and narrative, which is where a differentiator is cheapest.
+
 ## Reconciliation
 
 `npm run competitors:reconcile` writes `rival_deltas` and prints the top 20 `rival_only`

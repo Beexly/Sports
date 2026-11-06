@@ -30,7 +30,8 @@ function artifact(body = FIXTURE, status = 200) {
 describe("fantasylabs filters adapter", () => {
   it("normalizes every fixture row and keeps determinism", async () => {
     const run = await runAdapter(fantasylabsFiltersAdapter, artifact());
-    expect(run.rows).toHaveLength(12);
+    // 15 rows: 12 feature rows plus the live oddities (id 0, excludelist-rev, source).
+    expect(run.rows).toHaveLength(15);
     expect(run.rows.map((r) => r.featureId)).toEqual([...run.rows.map((r) => r.featureId)]);
     // Running twice over the same bytes is byte-identical: normalize is pure.
     const again = await runAdapter(fantasylabsFiltersAdapter, artifact());
@@ -76,6 +77,18 @@ describe("fantasylabs filters adapter", () => {
     }
   });
 
+  it("accepts the live oddities a first fixture misses", async () => {
+    // Found on the live 968-row payload after the fixture passed: one row keys on DataItemId 0,
+    // and the filter type set carries "source" and "excludelist-rev" beyond range/list/daterange.
+    const run = await runAdapter(fantasylabsFiltersAdapter, artifact());
+    const zero = run.rows.find((r) => r.featureId === 0);
+    expect(zero).toBeDefined();
+    expect(zero?.filterType).toBe("range");
+    const types = new Set(run.rows.map((r) => r.filterType));
+    expect(types.has("source")).toBe(true);
+    expect(types.has("excludelist-rev")).toBe(true);
+  });
+
   it("rejects a non-array payload rather than reporting zero rows", () => {
     expect(() => parseFilters('{"error":"nope"}')).toThrow(/not a JSON array/);
     expect(() => parseFilters("")).toThrow(/not a JSON array/);
@@ -86,6 +99,7 @@ describe("fantasylabs filters adapter", () => {
     const hist = familyHistogram(run.rows);
     expect(hist.TRENCHES).toBeGreaterThan(0);
     expect(hist.MARKET_MICROSTRUCTURE).toBe(2);
+    expect(hist.MARKET).toBeGreaterThan(0);
     expect(Object.values(hist).reduce((a, b) => a + b, 0)).toBe(run.rows.length);
   });
 
