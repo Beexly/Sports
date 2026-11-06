@@ -3,6 +3,17 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-06 — Guard-hygiene cluster: trust-gate AGENTS.md governance quote, em-dash calibration bands, shell-defensive POSIX keys (hermes-takeover-loop)
+
+**Changed:** `scripts/guardrails/trust-gate.mjs` gains a narrow per-line exemption for the AGENTS.md jargon forbid-list bullet ("Never render internal math/pipeline jargon"); the bullet names the banned positioning phrases to forbid them, it does not publish them. `scripts/guardrails/trust-gate.test.mjs` pins it (AGENTS.md passes, the same phrases in public copy still hit). `apps/web/app/calibration/page.tsx` calibration bands use ASCII hyphens (60-69/100 etc.). `scripts/guardrails/shell-defensive.mjs` POSIX-normalizes frozen-debt keys on both sides so the Windows-written baseline matches Linux CI (11 frozen violations were surfacing as NEW); baseline regenerated with forward slashes; `scripts/guardrails/shell-defensive.test.mjs` pins the POSIX-baseline behavior.
+
+**Proven:** `node scripts/guardrails/trust-gate.mjs` — OK, 4430 files, exit 0. `node scripts/guardrails/em-dash-scan.mjs` — OK, exit 0. `node scripts/guardrails/shell-defensive.mjs` — PASS, 17 scripts, 11 frozen, 0 new. `node --test scripts/guardrails/trust-gate.test.mjs` — 10 pass. `node --test scripts/guardrails/shell-defensive.test.mjs` — 13 pass. No vitest pins on the en-dash band strings (tests use hyphen form).
+
+**Not proven:** Branch CI (test-job drift gate and full vitest wall still masked on main by the migration-drift failure); commercial-copy / performance-claims / raw-ngs / api-route-boundary guard failures remain open (pricing/board/calibration/packages/research/llms.txt hardcode the 62-23-1 official ledger record as literals).
+
+**Next role:** Commercial/pricing cluster next: commercial-pages-launch-qa, compliance-scanner-payments-surfaces, free-tier-gate-coupling, disclosure-surface (2), states-matrix-slice, claude-md-accuracy, docs-claim-accuracy, docs-public-copy-scan. Migration drift (schema.prisma without migrations: ingestion_runs remainingRequests/usedRequests, pick_signal_snapshots lineAtPrediction/selectionAtPrediction, picks closingLine/closingPrice/clv*) needs an owner-gated migration, not this loop.
+
+---
 ## 2026-11-03 — GPP conservation coupling, no MNF
 
 **Changed:** `scripts/ops/pbp_conservation_coupling.py` is now what `run_full_dk_bitemporal_gpp.py` calls. Conserved PBP yards are no longer rescaled onto the static mean. A missed JEV call returns `DEGRADED_UNVERIFIED` / `PASS_FRAGILE` instead of `LOCK_TOURNAMENT_ALPHA` and 0.86. Showdown salary floor is clamped to $48,000. ESPN Week 8 finals are in `data/engine/espn_week8_finals_2026-11-02.json`.
@@ -220,12 +231,14 @@ Optimizer gained min_salary / max_per_team. scripts/ops/verify_week9_packets_sta
 confirmed_qb1 is a highest-salary heuristic. BAL/JAX multipliers are unfitted analyst judgment, not JEV output.
 injuries_2026.csv still stops at week 8. Packets remain research artifacts, not publishable (no 5-stage/JEV pass).
 
-**Next role (Builder):** preflight-roster-gate.ts mirror, gate the pick/prop/SGP pipelines (un_full_gse_slate_pipeline.ts,
+**Next role (Builder):** preflight-roster-gate.ts mirror, gate the pick/prop/SGP pipelines (
+un_full_gse_slate_pipeline.ts,
 gse_coach_mind_simulator.py), then Components 1-4 of the approved plan.
 
 ## 2026-11-05 - Stage 0 gate on pick/sim pipelines (Antigravity)
 
-**Done:** un_full_gse_slate_pipeline.ts and gse_coach_mind_simulator.py now hard-refuse unless a fresh roster config for their
+**Done:** 
+un_full_gse_slate_pipeline.ts and gse_coach_mind_simulator.py now hard-refuse unless a fresh roster config for their
 week exists (both are Week-8-hardcoded, so both refuse today; explicit non-publishable override STAGE0_RETROSPECTIVE=1).
 TS mirror packages/prediction-engine/src/nfl/preflight-roster-gate.ts; excluded QBs feed QB1-out into the injury map in live mode.
 

@@ -3,47 +3,47 @@
  "count": 11,
  "violations": [
   {
-   "file": "apps\\mobile\\scripts\\verify.sh",
+   "file": "apps/mobile/scripts/verify.sh",
    "check": "unguarded-cd"
   },
   {
-   "file": "docs\\ops\\gse-kit\\claude-payload\\hooks\\gate-session-close.sh",
+   "file": "docs/ops/gse-kit/claude-payload/hooks/gate-session-close.sh",
    "check": "strict-mode"
   },
   {
-   "file": "docs\\ops\\gse-kit\\claude-payload\\hooks\\guard-git-and-gates.sh",
+   "file": "docs/ops/gse-kit/claude-payload/hooks/guard-git-and-gates.sh",
    "check": "strict-mode"
   },
   {
-   "file": "docs\\ops\\gse-kit\\claude-payload\\hooks\\guard-sealed-paths.sh",
+   "file": "docs/ops/gse-kit/claude-payload/hooks/guard-sealed-paths.sh",
    "check": "strict-mode"
   },
   {
-   "file": "docs\\ops\\gse-kit\\claude-payload\\hooks\\trim-verbose-output.sh",
+   "file": "docs/ops/gse-kit/claude-payload/hooks/trim-verbose-output.sh",
    "check": "strict-mode"
   },
   {
-   "file": "handoff\\auth-page-check.sh",
+   "file": "handoff/auth-page-check.sh",
    "check": "strict-mode"
   },
   {
-   "file": "handoff\\auth-premium-check.sh",
+   "file": "handoff/auth-premium-check.sh",
    "check": "strict-mode"
   },
   {
-   "file": "packages\\polymarket-sdks\\lattice-std\\bash\\check-coverage.sh",
+   "file": "packages/polymarket-sdks/lattice-std/bash/check-coverage.sh",
    "check": "unguarded-cd"
   },
   {
-   "file": "scripts\\formal\\run-cutoff-matrix.sh",
+   "file": "scripts/formal/run-cutoff-matrix.sh",
    "check": "strict-mode"
   },
   {
-   "file": "scripts\\mobile\\build_preview_video.sh",
+   "file": "scripts/mobile/build_preview_video.sh",
    "check": "unguarded-cd"
   },
   {
-   "file": "scripts\\smoke-prod.sh",
+   "file": "scripts/smoke-prod.sh",
    "check": "strict-mode"
   }
  ]
