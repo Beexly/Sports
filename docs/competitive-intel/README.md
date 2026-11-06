@@ -66,6 +66,11 @@ rows. Deltas use the closing line, never the entry line. Own picks join only whe
 `games.externalId` is already in `YYYY_WW_AWAY_HOME` form; everything else is counted as
 unkeyed rather than fuzzy-matched.
 
+Market is normalized on both sides to `spread | total | moneyline`, and side is derived: an
+own pick's `selection` is prose ("Chiefs -3.5") and joining it to a market column matches
+nothing. `rival_only` and `own_only` are deleted and re-derived every run, because both carry
+a NULL half of the unique key and Postgres treats NULLs as distinct in a unique index.
+
 ## Flag and rollback
 
 There is no public route yet, so there is no flag to flip. When one lands it is

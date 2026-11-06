@@ -44,6 +44,7 @@ CREATE TABLE "rival_picks" (
   "orgId" TEXT NOT NULL,
   "gameKey" TEXT NOT NULL,
   "market" TEXT NOT NULL,
+  "side" TEXT,
   "line" DOUBLE PRECISION,
   "priceAmerican" INTEGER,
   "stakeUnits" DOUBLE PRECISION,

@@ -4052,7 +4052,8 @@ model RivalPick {
   id           String    @id @default(cuid())
   orgId        String
   gameKey      String // GSE format, e.g. 2026_03_LAC_BUF
-  market       String
+  market       String // normalized: spread | total | moneyline
+  side         String? // team name for spread and moneyline, OVER or UNDER for total
   line         Float?
   priceAmerican Int?
   stakeUnits   Float?
