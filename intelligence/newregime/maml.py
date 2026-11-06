@@ -25,9 +25,20 @@
 
 """First-order MAML adapter for new-regime prediction (1912)."""
 
+from dataclasses import dataclass
 import numpy as np
 
 from .dgp import sigmoid, sample_meta_tasks, MODULE_SEED
+
+
+@dataclass
+class MamlConfig:
+    """Hyperparameters for First-order MAML training."""
+    meta_iters: int = 400
+    outer_lr: float = 0.05
+    inner_steps: int = 3
+    inner_lr: float = 1.0
+    seed: int = MODULE_SEED
 
 
 # ---------------------------------------------------------------------------
@@ -76,26 +87,36 @@ def fit_pooled_baseline(tasks, d, iters=400, lr=0.2):
     return w, b
 
 
-def meta_train(tasks, d, meta_iters=400, outer_lr=0.05,
-               inner_steps=3, inner_lr=1.0, seed=MODULE_SEED):
+def meta_train(tasks, d, config=None, **kwargs):
     """First-order MAML: meta-learn init theta s.t. `inner_steps` support steps
     (intercept-only, see _adapt) minimize query loss. FOMAML (first-order
     approx): the meta-gradient is the query-loss gradient evaluated at the
     ADAPTED params, applied to theta — ~33% less compute than full
     second-order MAML (syntheses.md S5)."""
-    rng = np.random.RandomState(seed)
+    if config is None:
+        cfg = MamlConfig(
+            meta_iters=kwargs.get("meta_iters", 400),
+            outer_lr=kwargs.get("outer_lr", 0.05),
+            inner_steps=kwargs.get("inner_steps", 3),
+            inner_lr=kwargs.get("inner_lr", 1.0),
+            seed=kwargs.get("seed", MODULE_SEED),
+        )
+    else:
+        cfg = config
+
+    rng = np.random.RandomState(cfg.seed)
     w = rng.randn(d) * 0.01
     b = 0.0
     order = np.arange(len(tasks))
-    for _ in range(meta_iters):
+    for _ in range(cfg.meta_iters):
         rng.shuffle(order)
         for idx in order:
             t = tasks[idx]
             w_a, b_a = _adapt(w, b, t["X_s"], t["y_s"],
-                              inner_steps=inner_steps, inner_lr=inner_lr)
+                              inner_steps=cfg.inner_steps, inner_lr=cfg.inner_lr)
             gw, gb = _bce_grad(t["X_q"], t["y_q"], w_a, b_a)
-            w = w - outer_lr * gw
-            b = b - outer_lr * gb
+            w = w - cfg.outer_lr * gw
+            b = b - cfg.outer_lr * gb
     return w, b
 
 
@@ -117,9 +138,8 @@ def maml_new_regime_check(seed=MODULE_SEED, n_tasks=256, d=6,
     test_tasks = [tasks[i] for i in idx[n_tasks // 2:]]
 
     w_base, b_base = fit_pooled_baseline(train_tasks, d)
-    w_meta, b_meta = meta_train(train_tasks, d,
-                                inner_steps=inner_steps, inner_lr=inner_lr,
-                                seed=seed)
+    config = MamlConfig(inner_steps=inner_steps, inner_lr=inner_lr, seed=seed)
+    w_meta, b_meta = meta_train(train_tasks, d, config=config)
 
     brier_base, brier_maml = [], []
     for t in test_tasks:
