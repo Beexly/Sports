@@ -39,8 +39,15 @@ for i, (handle, h) in enumerate(rows, 1):
             break
     for _ in range(5):
         try:
-            con.execute("UPDATE contact SET platform='x.com', source_url=?, verified_at=?, confidence=? WHERE email_hash=?",
-                        (url, "2026-11-06T11:00:00Z", 85 if code == 200 else 40, h))
+            # A 404 is recorded as x.com:missing rather than x.com: the handle is not an account, so
+            # pointing source_url at it is a dead link. Keeping it out of the NULL pool stops a
+            # re-probe of every handle that already failed.
+            if code == 200:
+                con.execute("UPDATE contact SET platform='x.com', source_url=?, verified_at=?, confidence=85 WHERE email_hash=?",
+                            (url, "2026-11-06T11:00:00Z", h))
+            else:
+                con.execute("UPDATE contact SET platform='x.com:missing', source_url=NULL, verified_at=?, confidence=60 WHERE email_hash=?",
+                            ("2026-11-06T11:00:00Z", h))
             break
         except sqlite3.OperationalError:
             time.sleep(1.5)
