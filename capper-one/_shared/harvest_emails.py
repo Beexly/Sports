@@ -46,11 +46,19 @@ def add(con, slug, email, source, conf, url):
         return False
     dom = slug.split(".")[0]
     h = hashlib.sha256(email.encode()).hexdigest()[:32]
+    # An address on the company's own domain is a staff address; a gmail from a commit author is a
+    # contributor. Both are worth having, but a flat confidence made the list look uniform, so the
+    # mail domain decides the band and the segment.
+    own = email.split("@")[-1].replace("www.", "").startswith(dom.lower())
+    if source == "github_commit":
+        conf, segment = (85, "staff") if own else (65, "contributor")
+    else:
+        segment = "staff"
     cur = db.write(
         con,
         "INSERT OR IGNORE INTO contact (org,email_hash,email,platform,segment,confidence,source_url,verified_at) "
-        "VALUES (?,?,?,'email','staff',?,?,'2026-11-06')",
-        (dom, h, email, conf, url))
+        "VALUES (?,?,?,'email',?,?,?,'2026-11-06')",
+        (dom, h, email, segment, conf, url))
     return cur.rowcount > 0
 
 
