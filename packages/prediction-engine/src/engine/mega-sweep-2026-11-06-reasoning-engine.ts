@@ -712,7 +712,7 @@ export interface LaptopHardwarePlanOutput {
   readonly systemRamGb: 32;
   readonly cpuWorkerCap: 6;
   readonly enforcedCpuWorkers: number;
-  readonly mklNumThreads: 6;
+  readonly mklNumThreads: number;
   readonly igpuSharedMemoryCeilingMb: 4096;
   readonly allocatedIgpuMemoryMb: number;
   readonly withinIgpu4096MbCeiling: boolean;
@@ -746,6 +746,7 @@ export function evaluateLaptopHardwareExecutionPlan(
     CPU_WORKER_CAP,
     Math.max(1, Math.trunc(input.requestedWorkers ?? 12)),
   );
+  const mklNumThreads = Math.min(MKL_NUM_THREADS_CAP, enforcedCpuWorkers);
   const allocatedIgpuMemoryMb = Math.min(
     IGPU_SHARED_MEMORY_CEILING_MB,
     Math.max(256, Math.trunc(input.requestedIgpuMemoryMb ?? 2048)),
@@ -792,7 +793,7 @@ export function evaluateLaptopHardwareExecutionPlan(
     systemRamGb: 32,
     cpuWorkerCap: CPU_WORKER_CAP,
     enforcedCpuWorkers,
-    mklNumThreads: MKL_NUM_THREADS_CAP,
+    mklNumThreads,
     igpuSharedMemoryCeilingMb: IGPU_SHARED_MEMORY_CEILING_MB,
     allocatedIgpuMemoryMb,
     withinIgpu4096MbCeiling: allocatedIgpuMemoryMb <= IGPU_SHARED_MEMORY_CEILING_MB,

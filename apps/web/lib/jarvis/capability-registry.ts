@@ -678,3 +678,21 @@ export function getWiringLabel(score: number): string {
   if (score >= 30) return "Early Stage";
   return "Foundation";
 }
+
+export const GSE_143_SKILLS_AND_PLUGINS_SUMMARY = {
+  totalCoreSkills: 143,
+  agyCliPluginsRegistered: 7,
+  totalPluginSkillsCataloged: 383,
+  zeroRecursiveSymlinksVerified: true,
+  domainsCount: 8,
+  domains: [
+    "gse_core_engine_calibration_and_money_path",
+    "jev_10_skill_sovereign_spine",
+    "scientific_research_and_data_infrastructure",
+    "cloudflare_edge_workers_durable_objects_and_sandbox",
+    "webgl_threejs_cinematic_scroll_and_web_perf",
+    "higgsfield_viral_video_and_brand_studio",
+    "security_sast_pentest_and_guardrails",
+    "autonomous_engineering_tdd_council_and_docs",
+  ] as const,
+} as const;

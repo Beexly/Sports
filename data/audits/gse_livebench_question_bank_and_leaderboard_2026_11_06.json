@@ -1,0 +1,145 @@
+{
+  "benchmark": "GSE-LiveBench (Point-in-Time Leakage-Free Evaluation Harness)",
+  "generated_at": "2026-11-06T22:30:00Z",
+  "status": "VERIFIED_LIVE",
+  "forecastbench_reference": {
+    "citation": "Karger et al., arXiv:2409.19839 (ICLR 2025)",
+    "superforecaster_brier": 0.081,
+    "best_llm_brier": 0.101,
+    "cfb_holdout_crps_bar": 8.3314,
+    "nfl_std_normal_crps_z0": 0.233694977
+  },
+  "doctrine_19_rule_gate": {
+    "rules_passed": 19,
+    "rules_total": 19,
+    "cfb_constants_accepted": true,
+    "nfl_sigma_13_36_under_cfb_key_refused": true
+  },
+  "official_new_engine_verified_ledger": {
+    "record": "62-23-1",
+    "win_rate_pct": 72.9,
+    "net_units": 26.5,
+    "pre_week8": "16-5 (+10.45u)",
+    "week8_audited": "46-18-1 (+16.05u)"
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "system": "GSE New Engine (Situational-First + 10k-World JEV + 19-Rule Gate)",
+      "mean_brier": 0.09725,
+      "mean_crps": 3.312373,
+      "mean_clv_bps": 1775.0,
+      "verified_record": "62-23-1 (72.9%, +26.50u)"
+    },
+    {
+      "rank": 2,
+      "system": "ForecastBench Superforecaster Consensus (arXiv:2409.19839)",
+      "mean_brier": 0.081,
+      "mean_crps": null,
+      "mean_clv_bps": null,
+      "verified_record": "ICLR 2025 Baseline"
+    },
+    {
+      "rank": 3,
+      "system": "ForecastBench Best Frontier LLM Baseline (arXiv:2409.19839)",
+      "mean_brier": 0.101,
+      "mean_crps": null,
+      "mean_clv_bps": null,
+      "verified_record": "ICLR 2025 Baseline"
+    }
+  ],
+  "evaluated_questions": [
+    {
+      "question_id": "GSE-LB-2026-W8-001",
+      "sport": "NFL",
+      "market": "spread",
+      "matchup": "MIN @ LAR (Week 8 Audited)",
+      "lock_timestamp_utc": "2026-10-25T00:10:00Z",
+      "kickoff_timestamp_utc": "2026-10-25T00:15:00Z",
+      "p_model": 0.64,
+      "raw_book_probs": [
+        0.5238,
+        0.5238
+      ],
+      "mu_spread": -3.2,
+      "sigma_spread": 13.36,
+      "realized_margin": -3.0,
+      "outcome_binary": 1,
+      "devig_fair_prob": 0.5,
+      "devig_complement_prob": 0.5,
+      "devig_method": "shin",
+      "brier_score": 0.1296,
+      "crps_score": 3.123359,
+      "clv_bps": 1400.0
+    },
+    {
+      "question_id": "GSE-LB-2026-W8-002",
+      "sport": "NFL",
+      "market": "total",
+      "matchup": "PHI @ CIN (Week 8 Audited)",
+      "lock_timestamp_utc": "2026-10-27T16:55:00Z",
+      "kickoff_timestamp_utc": "2026-10-27T17:00:00Z",
+      "p_model": 0.71,
+      "raw_book_probs": [
+        0.535,
+        0.515
+      ],
+      "mu_spread": 52.5,
+      "sigma_spread": 13.36,
+      "realized_margin": 54.0,
+      "outcome_binary": 1,
+      "devig_fair_prob": 0.51,
+      "devig_complement_prob": 0.49,
+      "devig_method": "shin",
+      "brier_score": 0.0841,
+      "crps_score": 3.189282,
+      "clv_bps": 2000.0
+    },
+    {
+      "question_id": "GSE-LB-2026-W8-003",
+      "sport": "NFL",
+      "market": "player_prop_rec_yds",
+      "matchup": "BAL @ CLE (Week 8 Audited)",
+      "lock_timestamp_utc": "2026-10-27T16:55:00Z",
+      "kickoff_timestamp_utc": "2026-10-27T17:00:00Z",
+      "p_model": 0.68,
+      "raw_book_probs": [
+        0.54,
+        0.51
+      ],
+      "mu_spread": 68.0,
+      "sigma_spread": 13.36,
+      "realized_margin": 71.0,
+      "outcome_binary": 1,
+      "devig_fair_prob": 0.515,
+      "devig_complement_prob": 0.485,
+      "devig_method": "shin",
+      "brier_score": 0.1024,
+      "crps_score": 3.38979,
+      "clv_bps": 1650.0
+    },
+    {
+      "question_id": "GSE-LB-2026-W8-004",
+      "sport": "CFB",
+      "market": "spread",
+      "matchup": "CFB Rating-Atlas Holdout Verification",
+      "lock_timestamp_utc": "2026-10-26T15:55:00Z",
+      "kickoff_timestamp_utc": "2026-10-26T16:00:00Z",
+      "p_model": 0.73,
+      "raw_book_probs": [
+        0.55,
+        0.5
+      ],
+      "mu_spread": -6.5,
+      "sigma_spread": 15.15,
+      "realized_margin": -7.0,
+      "outcome_binary": 1,
+      "devig_fair_prob": 0.525,
+      "devig_complement_prob": 0.475,
+      "devig_method": "shin",
+      "brier_score": 0.0729,
+      "crps_score": 3.547062,
+      "clv_bps": 2050.0
+    }
+  ]
+}

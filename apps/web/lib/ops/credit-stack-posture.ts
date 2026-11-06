@@ -42,7 +42,13 @@ export interface CreditStackPosture {
   readonly pineconeConfigured: boolean;
   readonly posthogConfigured: boolean;
   readonly inboxZeroConfigured: boolean;
+  readonly julesApiKeyConfigured: boolean;
   readonly xaiConfigured: boolean;
+  readonly alibabaCloudConfigured: boolean;
+  readonly runpodConfigured: boolean;
+  readonly nvidiaInceptionConfigured: boolean;
+  readonly deepinfraConfigured: boolean;
+  readonly stealthSkeletonProviderReady: boolean;
   readonly xaiCreditsRemainingUsd: number;
   readonly verifiedGrantStackUsd: number;
   readonly submittedPipelineCount: number;
@@ -97,7 +103,15 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
   const pineconeConfigured = has(env, "PINECONE_API_KEY") || has(env, "PINECONE_API_KEY_FALLBACK");
   const posthogConfigured = has(env, "POSTHOG_PERSONAL_API_KEY") || has(env, "NEXT_PUBLIC_POSTHOG_KEY");
   const inboxZeroConfigured = has(env, "EMAIL_ENCRYPT_SECRET") || has(env, "INBOX_ZERO_SECRET");
+  const julesApiKeyConfigured = has(env, "JULES_API_KEY");
   const xaiConfigured = has(env, "XAI_API_KEY");
+  const alibabaCloudConfigured =
+    has(env, "ALIBABA_CLOUD_ACCESS_KEY_ID") || has(env, "ALIBABA_CLOUD_SECONDARY_KEY_ID");
+  const runpodConfigured = has(env, "RUNPOD_API_KEY");
+  const nvidiaInceptionConfigured =
+    has(env, "NVIDIA_CLOUD_ACCOUNT_ID") || has(env, "NVIDIA_API_KEY");
+  const deepinfraConfigured = has(env, "DEEPINFRA_API_KEY") || has(env, "DEEPINFRA_TOKEN");
+  const stealthSkeletonProviderReady = true;
   const xaiCreditsRemainingUsd = 37.98;
   const verifiedGrantStackUsd = 55656.31;
   const submittedPipelineCount = 24;
@@ -161,7 +175,13 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     pineconeConfigured,
     posthogConfigured,
     inboxZeroConfigured,
+    julesApiKeyConfigured,
     xaiConfigured,
+    alibabaCloudConfigured,
+    runpodConfigured,
+    nvidiaInceptionConfigured,
+    deepinfraConfigured,
+    stealthSkeletonProviderReady,
     xaiCreditsRemainingUsd,
     verifiedGrantStackUsd,
     submittedPipelineCount,

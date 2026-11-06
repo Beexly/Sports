@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  shouldEnableCopilotKitTelemetry,
   shouldRenderCloudflareAnalytics,
   shouldRenderMicrosoftClarity,
   shouldRenderPostHogAnalytics,
@@ -82,6 +83,23 @@ describe("analytics provider gating (OP-004)", () => {
       expect(shouldRenderPostHogAnalytics("true", undefined)).toBe(false);
       expect(shouldRenderPostHogAnalytics("true", "")).toBe(false);
       expect(shouldRenderPostHogAnalytics("true", "   ")).toBe(false);
+    });
+  });
+
+  describe("shouldEnableCopilotKitTelemetry (OpenDots SETUP-TELEMETRY.md)", () => {
+    it("disables telemetry when DO_NOT_TRACK is true or 1", () => {
+      expect(shouldEnableCopilotKitTelemetry("true", undefined)).toBe(false);
+      expect(shouldEnableCopilotKitTelemetry("1", "false")).toBe(false);
+    });
+
+    it("disables telemetry when COPILOTKIT_TELEMETRY_DISABLED is true or 1", () => {
+      expect(shouldEnableCopilotKitTelemetry(undefined, "true")).toBe(false);
+      expect(shouldEnableCopilotKitTelemetry("0", "1")).toBe(false);
+    });
+
+    it("enables telemetry only when neither opt-out flag is set", () => {
+      expect(shouldEnableCopilotKitTelemetry(undefined, undefined)).toBe(true);
+      expect(shouldEnableCopilotKitTelemetry("false", "false")).toBe(true);
     });
   });
 });

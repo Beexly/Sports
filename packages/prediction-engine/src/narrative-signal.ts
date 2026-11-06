@@ -231,7 +231,7 @@ export function narrativeEdgeAdjustment(
   cap: number = DEFAULT_NARRATIVE_EDGE_CAP,
 ): number {
   if (!signal) return 0;
-  const bound = Math.abs(cap);
+  const bound = cap >= 0 ? cap : Math.min(DEFAULT_NARRATIVE_EDGE_CAP, Math.abs(cap));
   const raw = signal.direction * signal.intensity * signal.confidence * bound;
   return round4(Math.max(-bound, Math.min(bound, raw)));
 }

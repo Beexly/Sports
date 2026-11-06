@@ -1,0 +1,14 @@
+name = "gse-immortal-orchestrator"
+main = "src/index.ts"
+compatibility_date = "2025-11-01"
+
+[[durable_objects.bindings]]
+name = "IMMORTAL_CONTROL_AGENT"
+class_name = "ImmortalControlAgent"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ImmortalControlAgent"]
+
+[triggers]
+crons = ["0 10 * * 2", "*/15 * * * *"]

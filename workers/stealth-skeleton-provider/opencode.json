@@ -1,0 +1,53 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "openrouter": {
+      "name": "OpenRouter GSE Stealth-Skeleton Gateway",
+      "api": "https://openrouter.ai/api/v1",
+      "models": {
+        "gse/stealth-skeleton-alpha": {
+          "id": "gse/stealth-skeleton-alpha",
+          "name": "GSE Stealth-Skeleton Alpha (Free Execution-Verified Coding & Math Engine)",
+          "context_length": 131072,
+          "max_output_tokens": 16384,
+          "pricing": {
+            "input_per_1m_usd": 0.0,
+            "output_per_1m_usd": 0.0,
+            "cache_read_per_1m_usd": 0.0
+          },
+          "privacy": {
+            "declared_zdr": false,
+            "crowd_rlhf_queue_enabled": true
+          }
+        },
+        "gse/skeleton-v1": {
+          "id": "gse/skeleton-v1",
+          "name": "GSE Skeleton v1 (Sovereign Mathematical & Systems Reasoning Model)",
+          "context_length": 131072,
+          "max_output_tokens": 32768,
+          "pricing": {
+            "input_per_1m_usd": 1.5,
+            "output_per_1m_usd": 6.0,
+            "cache_read_per_1m_usd": 0.3
+          },
+          "privacy": {
+            "declared_zdr": true,
+            "crowd_rlhf_queue_enabled": false
+          }
+        }
+      }
+    }
+  },
+  "mcp": {
+    "stealth-skeleton-mcp": {
+      "package": "@galaxysportsedge/stealth-skeleton-mcp",
+      "transport": "stdio-or-http",
+      "endpoint": "/mcp/manifest",
+      "tools": [
+        "verify_equation_trace",
+        "audit_situational_priors",
+        "compile_crowd_rlhf_dpo_grpo"
+      ]
+    }
+  }
+}

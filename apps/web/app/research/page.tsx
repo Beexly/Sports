@@ -84,6 +84,24 @@ export default function ResearchPortalPage(): JSX.Element {
         "Surface stats miss what happens inside a game when a backup guard enters and immediately draws targeted defensive stunts, or when early interior hits speed up a quarterback's internal clock on clean-pocket snaps. We combine 32-team beat-writer practice rep tracking with coaching-tree scheme matchups and officiating crew tendencies.",
       keywords: ["Weak-Link Trench Protection", "Post-Snap Safety Spin", "32-Team Beat Tracking", "Officiating Crew Tendencies"],
     },
+    {
+      id: "NOTE-09",
+      title: "Cumulative Contact Load & Mid-Game Fatigue Tipping Points (GSI)",
+      category: "Galaxy Sports Institute (GSI) Contact & Recovery Science",
+      status: "Live Process Standard",
+      abstract:
+        "Repeated interior line collisions and back-to-back quarterback hits accumulate across a four-quarter game rather than resetting between drives. Galaxy Sports Institute (GSI) tracks cumulative contact load, helmet and turf impact conditions, and fourth-quarter fatigue tipping points where pass-rush win rates and tackling missed-yardage spikes accelerate.",
+      keywords: ["Cumulative Contact Load", "Fourth-Quarter Tipping Points", "Trench Fatigue", "GSI Recovery Science"],
+    },
+    {
+      id: "NOTE-10",
+      title: "Pre-Snap Motion Synchrony, Snap-Count Timing & Late-Game Clock Management",
+      category: "On-Field Execution & Late-Game Situational Film",
+      status: "Live Process Standard",
+      abstract:
+        "Elite offensive lines gain a half-step advantage on the road when pre-snap motion and silent snap counts stay in rhythm, while late-game victory-formation kneeldowns quietly strip 2 to 4 rushing yards from quarterback rushing props. We account for pre-snap motion timing, coordinator script adjustments, and end-of-game clock-drain scenarios on every player prop.",
+      keywords: ["Pre-Snap Motion Rhythm", "Silent Count Timing", "Kneeldown Prop Adjustment", "Late-Game Clock Drain"],
+    },
   ];
 
   const processMetrics = [

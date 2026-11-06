@@ -844,6 +844,21 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     from intelligence.coaching.mega_sweep_2026_11_06_wiring_engine import (
         evaluate_mega_sweep_2026_11_06_full_pipeline,
     )
+    from intelligence.coaching.sovereign_openai_eyi_execution_engine import (
+        evaluate_sovereign_openai_eyi_execution_dossier,
+    )
+    from intelligence.coaching.openai_math_721_manuscript_and_lean_engine import (
+        evaluate_openai_math_721_pre_projection_overlay,
+    )
+    from intelligence.ops.openai_ecosystem_jules_and_opendots_engine import (
+        evaluate_openai_ecosystem_jules_opendots_readiness,
+    )
+    from intelligence.ops.gse_143_skills_orchestrator_and_router import (
+        evaluate_143_skills_pre_projection_and_workflow_readiness,
+    )
+    from intelligence.doctrine.gse_livebench_forecastbench import (
+        evaluate_gse_livebench_vs_forecastbench,
+    )
 
     universal_overrides = dict(ctx.get("universal_overrides") or {})
     universal_overrides_sit = dict(universal_overrides.get("situational") or {})
@@ -895,6 +910,28 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         **retrieval_and_telemetry["posthog_cloud_context_layer"],
         "all_4_pillars_verified": True,
     }
+    sovereign_execution = evaluate_sovereign_openai_eyi_execution_dossier(
+        {
+            "away_team": away_u,
+            "home_team": home_u,
+            "away_ol_starters_out": away_ol_out,
+            "home_ol_starters_out": home_ol_out,
+            "wind_mph": wind_mph,
+        }
+    )
+    sov_cond = sovereign_execution["sovereign_trajectory_conditioners"]
+    openai_math_721 = evaluate_openai_math_721_pre_projection_overlay(
+        home_team=home_u,
+        away_team=away_u,
+        crosswind_mph=wind_mph,
+        cumulative_interior_hits=max(1, away_ol_out + home_ol_out + 2),
+    )
+    openai_jules_opendots = evaluate_openai_ecosystem_jules_opendots_readiness(fetch_live_jules=False)
+    skills_143_readiness = evaluate_143_skills_pre_projection_and_workflow_readiness(
+        home_team=home_u,
+        away_team=away_u,
+    )
+    gse_livebench = evaluate_gse_livebench_vs_forecastbench()
 
     deep = universal_dossier["deep_non_stationary_kernels"]
     script_cliff = deep["coordinator_script_cliff_and_tendency_trap"]
@@ -965,6 +1002,18 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "gse_ml_service_5_model_composite_epa_delta": float(gse_ml_5["composite_epa_delta"]),
         "morning_sweep_30csv_10kernels_composite_epa": float(ms_30_10["ngs_and_commercial_composite_epa"]),
         "composite_pre_projection_epa_delta": float(mega_sweep_pipeline["composite_pre_projection_epa_delta"]),
+        "sovereign_pocket_collapse_mult": float(sov_cond["sovereign_pocket_collapse_mult"]),
+        "sovereign_kuramoto_snap_timing_epa_boost": float(sov_cond["sovereign_kuramoto_snap_timing_epa_boost"]),
+        "sovereign_breaker_box_fatigue_epa_delta": float(sov_cond["sovereign_breaker_box_fatigue_epa_delta"]),
+        "sovereign_sva_high_leverage_epa_delta": float(sov_cond["sovereign_sva_high_leverage_epa_delta"]),
+        "mahler_joint_conformal_score": float(sov_cond["mahler_joint_conformal_score"]),
+        "virtual_icp_deconfounded_mmhg": float(sov_cond["virtual_icp_deconfounded_mmhg"]),
+        "kneeldown_per_snap_mass_yds": float(sov_cond["kneeldown_per_snap_mass_yds"]),
+        "shin_insider_z": float(sov_cond["shin_insider_z"]),
+        "openai_math_721_pre_projection_epa_delta": float(openai_math_721["pre_projection_epa_delta"]),
+        "openai_math_sogge_wave_focusing_gain": float(openai_math_721["sogge_wave_focusing_gain"]),
+        "openai_math_amplitude_damping_retention": float(openai_math_721["amplitude_damping_retention"]),
+        "openai_math_cnf_satisfaction_prob": float(openai_math_721["cnf_conjunction_satisfaction_prob"]),
         "wired_into_10k_world_175_snap_simulation": True,
     }
 
@@ -981,6 +1030,11 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "pinecone_hybrid_corpus": pinecone_enriched,
         "posthog_cloud_context_layer": posthog_enriched,
         "posthog_cloud_context": posthog_enriched,
+        "sovereign_openai_eyi_execution": sovereign_execution,
+        "openai_math_721_manuscript_and_lean_overlay": openai_math_721,
+        "openai_ecosystem_jules_and_opendots": openai_jules_opendots,
+        "gse_143_skills_and_7_agy_plugins": skills_143_readiness,
+        "gse_livebench_vs_forecastbench": gse_livebench,
         "trajectory_conditioners": conditioners,
         "simulation_trajectory_conditioners": conditioners,
     }

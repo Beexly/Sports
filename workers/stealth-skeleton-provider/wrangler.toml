@@ -1,0 +1,10 @@
+name = "gse-stealth-skeleton-provider"
+main = "src/index.ts"
+compatibility_date = "2025-11-01"
+
+[vars]
+STEALTH_SKELETON_PHASE = "dual"
+
+[[queues.producers]]
+queue = "gse-crowd-rlhf-queue"
+binding = "CROWD_RLHF_QUEUE"

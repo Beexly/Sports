@@ -35,3 +35,23 @@ export function shouldRenderPostHogAnalytics(
 ): boolean {
   return isAnalyticsMasterEnabled(analyticsEnabled) && isPresentEnvValue(posthogProjectKey);
 }
+
+/**
+ * CopilotKit / OpenDots Telemetry Gate (`docs/SETUP-TELEMETRY.md` & `docs.copilotkit.ai/telemetry`):
+ * Telemetry is disabled whenever `DO_NOT_TRACK` is `"true"` or `"1"`, or when
+ * `COPILOTKIT_TELEMETRY_DISABLED` is `"true"` or `"1"`.
+ */
+export function shouldEnableCopilotKitTelemetry(
+  doNotTrack: string | undefined,
+  copilotKitTelemetryDisabled: string | undefined,
+): boolean {
+  const dnt = (doNotTrack ?? "").trim().toLowerCase();
+  const disabled = (copilotKitTelemetryDisabled ?? "").trim().toLowerCase();
+  if (dnt === "true" || dnt === "1") {
+    return false;
+  }
+  if (disabled === "true" || disabled === "1") {
+    return false;
+  }
+  return true;
+}

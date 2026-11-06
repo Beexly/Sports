@@ -23,6 +23,19 @@ export interface IntelligenceGrowthSnapshot {
     coupled5ApiScientificNodes: number;
     reverseInterleaved8StepCascadeNodes: number;
     posthogDataWarehouseTablesSynced: number;
+    downloadsFlagshipPacksWired: number;
+    sovereignOpenAiEyiKernelsWired: number;
+    registeredAgentSkillsWired: number;
+    agyCliPluginsRegistered: number;
+    openaiMathManuscriptsWired: number;
+    openaiMathResultFamiliesWired: number;
+    openaiMathLeanFilesCataloged: number;
+    openaiEcosystemReposWired: number;
+    copilotKitEcosystemReposWired: number;
+    julesConnectedSourcesCount: number;
+    julesTotalSessionsAudited: number;
+    julesCompletedPatchOutputsHarvested: number;
+    freeTechnicalTextbooksIndexed: number;
     totalCanonicalNodes: number;
   };
   routerFunnel: {
@@ -56,16 +69,29 @@ export const CANONICAL_QUAD_ENGINE_DEFAULTS = {
   megaSweepBooksIngested: 210,
   megaSweepReposAndUrlsWired: 372,
   morningSweepCsvsAndKernels: 40,
-  pineconeHybridVectors: 631,
+  pineconeHybridVectors: 742,
   xaiOmniscienceWavesExecuted: 71,
   coupled5ApiScientificNodes: 204,
   reverseInterleaved8StepCascadeNodes: 8,
   posthogDataWarehouseTablesSynced: 5,
-  totalCanonicalNodes: 4653,
+  downloadsFlagshipPacksWired: 17,
+  sovereignOpenAiEyiKernelsWired: 9,
+  registeredAgentSkillsWired: 143,
+  agyCliPluginsRegistered: 7,
+  openaiMathManuscriptsWired: 721,
+  openaiMathResultFamiliesWired: 373,
+  openaiMathLeanFilesCataloged: 53554,
+  openaiEcosystemReposWired: 10,
+  copilotKitEcosystemReposWired: 5,
+  julesConnectedSourcesCount: 28,
+  julesTotalSessionsAudited: 167,
+  julesCompletedPatchOutputsHarvested: 75,
+  freeTechnicalTextbooksIndexed: 1116,
+  totalCanonicalNodes: 5620,
 } as const;
 
 export const CANONICAL_ROUTER_FUNNEL_DEFAULTS = {
-  stageA: 4653,
+  stageA: 5620,
   stageB: 2000,
   stageC: 250,
   stageD: 25,

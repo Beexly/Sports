@@ -1,0 +1,47 @@
+{
+  "reconciled_at": "2026-11-06T22:32:00Z",
+  "status": "ALL_GAPS_CLOSED_AND_VERIFIED",
+  "textbook_1116_reconciliation": {
+    "muse_open_textbook_items": 881,
+    "unique_google_drive_books_extracted": 197,
+    "quantitative_math_reference_books": 38,
+    "total_verified_books_and_textbooks": 1116,
+    "exact_1116_match": true
+  },
+  "openai_math_comparator_closure": {
+    "families_mapped": 373,
+    "manuscripts_mapped": 721,
+    "comparator_json_configs_total": 419,
+    "yaml_main_results_pairs_total": 208,
+    "yaml_pairs_attached_in_muse_v2": 207,
+    "nested_hodge_208th_pair_explicit_attachment": {
+      "config_path": "lean/ComparatorChallenges/Hodge/main.json",
+      "challenge_lean": "lean/ComparatorChallenges/Hodge/Challenge.lean",
+      "solution_lean": "lean/ComparatorChallenges/Hodge/Solution.lean",
+      "status": "ATTACHED_AND_VERIFIED"
+    },
+    "total_yaml_pairs_reconciled": 208
+  },
+  "ns32_spectral_kernel_v2_closure": {
+    "kernel_file": "data/audits/ns32_kernel_v2.py",
+    "validation_file": "data/audits/ns_kernel_validation.py",
+    "validation_tests_passed": "4/4",
+    "draws_evaluated": 100,
+    "draws_audit_clean": 100,
+    "top_32_transient_amplification_candidates_count": 0,
+    "rejected_v1_2pi_artifact_preserved": "data/audits/ns100_draws_v1_2pi_convention_REJECTED.jsonl"
+  },
+  "gse_livebench_closure": {
+    "harness_script": "scripts/eval/gse_livebench_harness.py",
+    "artifact_path": "data/audits/gse_livebench_question_bank_and_leaderboard_2026_11_06.json",
+    "doctrine_rules_verified": "19/19",
+    "numeric_checks_verified": "5/5"
+  },
+  "operator_map_summary_keys": [
+    "meta",
+    "domain_summary",
+    "anchor_mappings",
+    "families",
+    "comparator_registry"
+  ]
+}

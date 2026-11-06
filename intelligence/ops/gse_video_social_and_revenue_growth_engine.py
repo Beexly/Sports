@@ -323,6 +323,36 @@ REVENUE_STREAM_ATTRIBUTION_MATRIX: list[dict[str, Any]] = [
     },
 ]
 
+EYI_VIRAL_VIDEO_ARSENAL_SPEC: dict[str, Any] = {
+    "source_package": "EYI Package_11-06-2026_1793956103.zip",
+    "deepseek_phase3_machine_architecture": {
+        "source_doc": "workspace/goals/galaxy-sports-edge-viral-video-operation/files/deepseek-phase3-build-the-machine.md",
+        "stages": [
+            "Stage 1 (Signal & Hook Trigger): Extract game-environment mismatch or post-game recap angle within 15 minutes of line move or final whistle.",
+            "Stage 2 (Script & Voiceover Synthesis): Generate 45-60s natural football-film script segmented into c1..c5 audio chunks.",
+            "Stage 3 (1080x1920 Pillow + FFmpeg Frame Renderer): Render high-contrast dark-slate data cards, telestrator overlays, and verified 62-23-1 (+26.50u) badge frames.",
+            "Stage 4 (Audio-Synced MP4 Muxing): Concatenate c1.mp3..c5.mp3 into vo_final.mp3 and mux with libx264 60fps vertical video stream.",
+            "Stage 5 (Multi-Platform Distribution & PostHog Funnel Tracking): Publish to TikTok, IG Reels, YouTube Shorts, and X Video with UTM-tagged /packages and /fantasy/dfs CTAs.",
+        ],
+    },
+    "ig_reels_viral_video_lanes": {
+        "source_doc": "workspace/goals/autonomous-revenue-engine/files/INTEL-2026-09-29-ig-reels-viral-video-lanes.md",
+        "lanes": [
+            "Lane 1: Trench & Silent-Count Film Telestrator Breakdown (0-3s visual snap tell).",
+            "Lane 2: Primetime (MNF/TNF/SNF) 5-Scene Rapid Recap & Next-Slate Environment Teaser.",
+            "Lane 3: 1st-Quarter Scripted Play-Call & Red-Zone Stall-Zone Kicking/IDP Edge.",
+            "Lane 4: DraftKings & FanDuel Tournament Stacking Blueprint (Cash Core vs GPP Leverage).",
+        ],
+    },
+    "pillow_ffmpeg_build_video_pipeline": {
+        "source_script": "workspace/your_files/mnf-recap-20260915/build_video.py",
+        "resolution": "1080x1920",
+        "fps": 60,
+        "video_codec": "libx264 (pix_fmt yuv420p, crf 18)",
+        "audio_codec": "aac (192k, synced to c1..c5 -> vo_final.mp3)",
+    },
+}
+
 
 def build_week9_video_social_dfs_and_revenue_packet() -> dict[str, Any]:
     return {
@@ -339,6 +369,7 @@ def build_week9_video_social_dfs_and_revenue_packet() -> dict[str, Any]:
         "week9_public_game_environment_hooks": WEEK9_PUBLIC_GAME_ENVIRONMENT_HOOKS,
         "week9_dfs_contest_architecture": WEEK9_DFS_CONTEST_ARCHITECTURE,
         "short_form_video_production_packets": SHORT_FORM_VIDEO_PRODUCTION_PACKETS,
+        "eyi_viral_video_arsenal_spec": EYI_VIRAL_VIDEO_ARSENAL_SPEC,
         "revenue_stream_attribution_matrix": REVENUE_STREAM_ATTRIBUTION_MATRIX,
     }
 
@@ -431,6 +462,28 @@ def main() -> int:
         md_lines.append(
             f"| `{rev['stream_id']}` | **{rev['channel']}** | `{rev['endpoint_or_id']}` | {rev['monetization_mechanism']} | {ev_str} | `{rev['status']}` |"
         )
+
+    md_lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## 5. EYI Viral Video Arsenal & Automated `1080x1920` Pillow/FFmpeg Synthesis Pipeline",
+            "",
+            f"- **Source Archive:** `{EYI_VIRAL_VIDEO_ARSENAL_SPEC['source_package']}`",
+            f"- **Phase 3 Autonomous Machine Blueprint:** `{EYI_VIRAL_VIDEO_ARSENAL_SPEC['deepseek_phase3_machine_architecture']['source_doc']}`",
+            f"- **IG Reels Viral Video Lanes:** `{EYI_VIRAL_VIDEO_ARSENAL_SPEC['ig_reels_viral_video_lanes']['source_doc']}`",
+            f"- **Automated Frame Renderer (`build_video.py`):** `{EYI_VIRAL_VIDEO_ARSENAL_SPEC['pillow_ffmpeg_build_video_pipeline']['source_script']}` (`1080x1920` `60fps` `libx264` + `c1..c5 -> vo_final.mp3` audio-synced assembly)",
+            "",
+            "### 5-Stage Autonomous Video Production Machine",
+        ]
+    )
+    for stg in EYI_VIRAL_VIDEO_ARSENAL_SPEC["deepseek_phase3_machine_architecture"]["stages"]:
+        md_lines.append(f"- {stg}")
+    md_lines.append("")
+    md_lines.append("### High-Retention IG Reels & Short-Form Viral Lanes")
+    for ln in EYI_VIRAL_VIDEO_ARSENAL_SPEC["ig_reels_viral_video_lanes"]["lanes"]:
+        md_lines.append(f"- {ln}")
 
     md_txt = ETC_PATTERN.sub("and related items", "\n".join(md_lines))
     OUT_MD.write_text(md_txt + "\n", encoding="utf-8")

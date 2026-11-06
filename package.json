@@ -6,7 +6,9 @@
     "apps/*",
     "!apps/mobile",
     "packages/*",
-    "workers/*"
+    "workers/*",
+    "!workers/stealth-skeleton-provider",
+    "!workers/immortal-orchestrator"
   ],
   "scripts": {
     "postinstall": "npm run db:generate",

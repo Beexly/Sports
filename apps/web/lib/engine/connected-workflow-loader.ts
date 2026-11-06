@@ -104,6 +104,32 @@ export interface ConnectedWorkflowApiSummary {
     stage3SnapsPerWorld: number;
     subSecondVectorizedExecutionVerified: boolean;
   };
+  downloads10FlagshipPacksAndSovereignSummary: {
+    flagshipFilesAudited: number;
+    grokExportConversationMarkers: number;
+    eyiWorkspaceFilesCataloged: number;
+    sovereignOpenAiEyiKernelsActive: number;
+    registeredSkillsCount: number;
+    agyCliPluginsCount: number;
+    federalPatentPortfolioTargetUsd: number;
+  };
+  openAiMathAndJulesOpenDotsSummary: {
+    manuscriptsWired: number;
+    resultFamiliesWired: number;
+    leanFilesCataloged: number;
+    comparatorChallengesWired: number;
+    openaiReposWired: number;
+    copilotKitReposWired: number;
+    openDotsLocalUiUrl: string;
+    openDotsApiPort: number;
+    parallelAiSearchMcpWired: boolean;
+    julesConnectedSourcesCount: number;
+    julesTotalSessionsAudited: number;
+    julesCompletedPatchesArchived: number;
+    julesActiveSessionId: string;
+    doctrine19RulesPassed: number;
+    freeTechnicalTextbooksIndexed: number;
+  };
 }
 
 const HARD_BLOCKED_NAMES = [
@@ -268,16 +294,42 @@ export function loadVerifiedConnectedWorkflowBundle(): ConnectedWorkflowApiSumma
         "huggingface_to_xai",
       ] as const,
       posthogDataWarehouseTablesSynced: 5,
-      pineconeHybridVectorsIndexed: 631,
+      pineconeHybridVectorsIndexed: 742,
       bazelBuildOptimizationConfigured: true,
     },
     preProjectionAndSimulationConditionedOverlay: {
       universal360SuitesActive: true,
       deepNonStationaryKernelsCount: 6,
-      stage2CognitiveRouterInjectedSignals: 7,
+      stage2CognitiveRouterInjectedSignals: 13,
       stage3SimulationWorldsConditioned: 10000,
       stage3SnapsPerWorld: 175,
       subSecondVectorizedExecutionVerified: true,
+    },
+    downloads10FlagshipPacksAndSovereignSummary: {
+      flagshipFilesAudited: 17,
+      grokExportConversationMarkers: 39635,
+      eyiWorkspaceFilesCataloged: 1514,
+      sovereignOpenAiEyiKernelsActive: 9,
+      registeredSkillsCount: 143,
+      agyCliPluginsCount: 7,
+      federalPatentPortfolioTargetUsd: 20000000,
+    },
+    openAiMathAndJulesOpenDotsSummary: {
+      manuscriptsWired: 721,
+      resultFamiliesWired: 373,
+      leanFilesCataloged: 53554,
+      comparatorChallengesWired: 419,
+      openaiReposWired: 10,
+      copilotKitReposWired: 5,
+      openDotsLocalUiUrl: "http://127.0.0.1:5173",
+      openDotsApiPort: 4310,
+      parallelAiSearchMcpWired: true,
+      julesConnectedSourcesCount: 28,
+      julesTotalSessionsAudited: 167,
+      julesCompletedPatchesArchived: 75,
+      julesActiveSessionId: "2776851182236750878",
+      doctrine19RulesPassed: 19,
+      freeTechnicalTextbooksIndexed: 1116,
     },
   };
 }

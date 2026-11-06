@@ -160,7 +160,7 @@ export const SAFETY_OUT_EXPLOSIVE_DELTA = -0.0258;
 export function safetyOutExplosiveBoost(): never {
   throw new KilledClaimError(
     "safety_out_explosive_boost",
-    "Safety out cuts the explosive rate by 0.0258 (p=0.033). A cornerback being out is null (p=0.702).",
+    "Safety out cuts the explosive rate by 0.0258 (p=0.0330). A cornerback being out is null (p=0.702).",
   );
 }
 

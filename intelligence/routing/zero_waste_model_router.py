@@ -31,6 +31,9 @@ class TaskTier(str, Enum):
     TIER_1_FREE_OR_LOCAL = "TIER_1_FREE_OR_LOCAL"
     TIER_1B_NVIDIA_NIM_GOVERNED = "TIER_1B_NVIDIA_NIM_GOVERNED"
     TIER_1C_SCALEWAY_CREDIT_POOL = "TIER_1C_SCALEWAY_CREDIT_POOL"
+    TIER_1D_ALIBABA_MODEL_STUDIO = "TIER_1D_ALIBABA_MODEL_STUDIO"
+    TIER_1E_DEEPINFRA_COACH_BRAIN = "TIER_1E_DEEPINFRA_COACH_BRAIN"
+    TIER_1F_STEALTH_SKELETON_OPENROUTER = "TIER_1F_STEALTH_SKELETON_OPENROUTER"
     TIER_2_JEV_VALIDATED = "TIER_2_JEV_VALIDATED"
     TIER_2B_RUNPOD_FLASHBOOT_GPU = "TIER_2B_RUNPOD_FLASHBOOT_GPU"
     TIER_3_FRONTIER_ARBITRATION = "TIER_3_FRONTIER_ARBITRATION"
@@ -42,6 +45,9 @@ TIER_DEFAULT_ENDPOINTS: Dict[TaskTier, str] = {
     TaskTier.TIER_1_FREE_OR_LOCAL: "openrouter:omniroute/auto/coding:free",
     TaskTier.TIER_1B_NVIDIA_NIM_GOVERNED: "nvidia_nim:https://integrate.api.nvidia.com/v1/meta/llama-3.1-70b-instruct",
     TaskTier.TIER_1C_SCALEWAY_CREDIT_POOL: "scaleway:https://api.scaleway.ai/v1/llama-3.3-70b-instruct",
+    TaskTier.TIER_1D_ALIBABA_MODEL_STUDIO: "alibaba_dashscope:https://dashscope-intl.aliyuncs.com/compatible-mode/v1/qwen-2.5-coder-32b-instruct",
+    TaskTier.TIER_1E_DEEPINFRA_COACH_BRAIN: "deepinfra:https://api.deepinfra.com/v1/openai/deepseek-ai/DeepSeek-R1",
+    TaskTier.TIER_1F_STEALTH_SKELETON_OPENROUTER: "openrouter_provider:https://www.galaxysportsedge.com/api/openrouter-provider/chat/completions#gse/stealth-skeleton-alpha",
     TaskTier.TIER_2_JEV_VALIDATED: "jevkit:~typesafe/jev-latest",
     TaskTier.TIER_2B_RUNPOD_FLASHBOOT_GPU: "runpod_flashboot:https://api.runpod.ai/v2",
     TaskTier.TIER_3_FRONTIER_ARBITRATION: "anthropic:claude-3-7-sonnet",
@@ -105,6 +111,35 @@ def get_cloud_credit_lanes_summary() -> Dict[str, Any]:
             "program": "Google for Startups Cloud Program (AI Startup Tier)",
             "target_models": ["gemini-2.5-pro", "claude-3-7-sonnet@vertex"],
         },
+        "alibaba_cloud_model_studio": {
+            "provider": "ALIBABA_CLOUD_DASHSCOPE_MODEL_STUDIO",
+            "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+            "primary_key_configured": bool(os.environ.get("ALIBABA_CLOUD_ACCESS_KEY_ID", "").strip()),
+            "secondary_key_configured": bool(os.environ.get("ALIBABA_CLOUD_SECONDARY_KEY_ID", "").strip()),
+            "models": ["qwen-max", "qwen-2.5-coder-32b-instruct", "qwq-32b"],
+        },
+        "deepinfra_coach_brain": {
+            "provider": "DEEPINFRA_OPENAI_COMPATIBLE_INFERENCE",
+            "base_url": "https://api.deepinfra.com/v1/openai",
+            "api_key_configured": bool(os.environ.get("DEEPINFRA_API_KEY", "").strip()),
+            "models": ["deepseek-ai/DeepSeek-R1", "deepseek-ai/DeepSeek-V3", "meta-llama/Llama-3.3-70B-Instruct"],
+        },
+        "posthog_zero_waste_governor": {
+            "provider": "POSTHOG_STARTUP_GRANT_50K",
+            "project_id": "516325",
+            "grant_credit_usd": 50000.0,
+            "traces_sample_rate": 0.1,
+            "drop_static_health_pings": True,
+            "batch_flush_size": 50,
+        },
+        "stealth_skeleton_provider": {
+            "provider": "GSE_STEALTH_SKELETON_OPENROUTER_V2_4",
+            "models_endpoint": "https://www.galaxysportsedge.com/api/openrouter-provider/models",
+            "chat_completions_endpoint": "https://www.galaxysportsedge.com/api/openrouter-provider/chat/completions",
+            "mcp_manifest_endpoint": "https://www.galaxysportsedge.com/api/openrouter-provider/mcp/manifest",
+            "schema_version": "2.4",
+            "models": ["gse/stealth-skeleton-alpha", "gse/skeleton-v1", "gse/skeleton-v1-fast"],
+        },
         "impact_partnership": {
             "provider": "IMPACT_COM_PARTNERSHIP_LEDGER",
             "account_id": os.environ.get("IMPACT_ACCOUNT_ID", "8111208"),
@@ -123,6 +158,9 @@ def route_zero_waste_task(task_name: str, tier: TaskTier, fallback: Optional[str
         TaskTier.TIER_1_FREE_OR_LOCAL,
         TaskTier.TIER_1B_NVIDIA_NIM_GOVERNED,
         TaskTier.TIER_1C_SCALEWAY_CREDIT_POOL,
+        TaskTier.TIER_1D_ALIBABA_MODEL_STUDIO,
+        TaskTier.TIER_1E_DEEPINFRA_COACH_BRAIN,
+        TaskTier.TIER_1F_STEALTH_SKELETON_OPENROUTER,
         TaskTier.TIER_2B_RUNPOD_FLASHBOOT_GPU,
         TaskTier.TIER_3B_GOOGLE_VERTEX_STARTUP_CREDITS,
     )

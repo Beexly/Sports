@@ -1,0 +1,321 @@
+{
+  "schema": "gse_openai_10_repos_jules_and_opendots_audit_2026_11_06_v1",
+  "generated_at_utc": "2026-11-06T21:56:52.088675+00:00",
+  "elapsed_sec": 14.08,
+  "openai_10_repos_count": 10,
+  "copilotkit_5_repos_count": 5,
+  "jules_sources_count": 28,
+  "jules_total_sessions": 167,
+  "jules_sessions_with_outputs_count": 75,
+  "pinecone_upsert_receipt": {
+    "index_name": "gse-200-book-hybrid-index",
+    "index_host": "gse-200-book-hybrid-index-r8g25gd.svc.aped-4627-b74a.pinecone.io",
+    "namespace": "gse-openai-ecosystem-jules-opendots",
+    "vectors_upserted": 20,
+    "mode": "live_pinecone_2025_04_hybrid"
+  },
+  "readiness": {
+    "schema": "gse_openai_10_repos_jules_opendots_readiness_v1",
+    "openai_10_repos_wired": [
+      "openai/math",
+      "openai/evals",
+      "openai/openai-cookbook",
+      "openai/gym",
+      "openai/CLIP",
+      "openai/gpt-2",
+      "openai/swarm",
+      "openai/gpt-oss",
+      "openai/chatgpt-retrieval-plugin",
+      "openai/tiktoken"
+    ],
+    "openai_evals": {
+      "repo": "openai/evals",
+      "eval_suite_id": "gse_nfl_conformal_clv_and_brier_eval_v1",
+      "samples_evaluated": 5,
+      "brier_model": 0.14076,
+      "brier_market": 0.16566,
+      "brier_skill_score": 0.150308,
+      "mean_clv_prob_delta": 0.054,
+      "empirical_conformal_coverage": 0.8,
+      "target_conformal_coverage": 0.9,
+      "official_verified_record_baseline": "62-23-1 (72.9%, +26.50u)",
+      "eval_gate_passed": true
+    },
+    "openai_cookbook": {
+      "repo": "openai/openai-cookbook",
+      "rrf_k": 60,
+      "fused_rankings": [
+        {
+          "doc_id": "doc_01",
+          "rrf_score": 0.032522
+        },
+        {
+          "doc_id": "doc_02",
+          "rrf_score": 0.032522
+        },
+        {
+          "doc_id": "doc_03",
+          "rrf_score": 0.031498
+        },
+        {
+          "doc_id": "doc_05",
+          "rrf_score": 0.015873
+        },
+        {
+          "doc_id": "doc_04",
+          "rrf_score": 0.015625
+        }
+      ],
+      "top_doc_id": "doc_01",
+      "strict_json_schema_fields": [
+        "matchup",
+        "stage2_situational_priors",
+        "stage3_jev_10k_worlds",
+        "stage4_conformal_bounds",
+        "stage5_conjunction_gate_decision"
+      ],
+      "structured_output_schema_valid": true
+    },
+    "openai_gym": {
+      "observation": {
+        "down": 1,
+        "ydstogo": 10,
+        "yardline_100": 54,
+        "chi_sg": 0.92,
+        "league": "NFL"
+      },
+      "reward": 0.9605,
+      "terminated": false,
+      "truncated": false,
+      "info": {
+        "repo": "openai/gym",
+        "env_id": "GSE-GSI-PhaseGym-v1",
+        "action_taken": "PASS_PLAY_ACTION_DEEP",
+        "yards_gained": 11.3,
+        "first_down_converted": true,
+        "college_guard_sigma_pts": 13.36
+      }
+    },
+    "openai_clip": {
+      "repo": "openai/CLIP",
+      "cosine_similarities": {
+        "two_high_fangio_quarters_creeper_disguise": 0.999317,
+        "single_high_cover1_man_free_a_gap_mug": -0.094926,
+        "cover3_sky_wide9_four_man_rush": 0.202189
+      },
+      "contrastive_probabilities": {
+        "two_high_fangio_quarters_creeper_disguise": 0.999989,
+        "single_high_cover1_man_free_a_gap_mug": 0.0,
+        "cover3_sky_wide9_four_man_rush": 1.1e-05
+      },
+      "predicted_coverage_shell": "two_high_fangio_quarters_creeper_disguise",
+      "logit_scale_temp": 0.07
+    },
+    "openai_gpt2": {
+      "repo": "openai/gpt-2",
+      "snap_surprisals_bits": [
+        0.785875,
+        0.943416,
+        0.643856,
+        2.473931,
+        0.713119
+      ],
+      "mean_surprisal_bits": 1.11204,
+      "max_snap_surprisal_bits": 2.473931,
+      "sequence_perplexity": 2.16151,
+      "tendency_breaker_detected": true
+    },
+    "openai_swarm": {
+      "repo": "openai/swarm",
+      "task_domain": "nfl_week9_360_board_and_jules_fleet",
+      "handoff_target_agent": "JulesFleetCommanderAgent",
+      "total_catalog_skills_indexed": 143,
+      "selected_skills_for_handoff": [
+        "dispatching-parallel-agents",
+        "subagent-driven-development",
+        "verification-loop",
+        "bazel-build-optimization"
+      ],
+      "stateless_context_variables_preserved": true
+    },
+    "openai_gpt_oss": {
+      "repo": "openai/gpt-oss",
+      "harmony_channels": [
+        "system",
+        "developer",
+        "user",
+        "analysis",
+        "commentary",
+        "final"
+      ],
+      "reasoning_effort": "high",
+      "paywall_and_copy_firewall_verified": true,
+      "tool_call_schema_strict": true
+    },
+    "openai_retrieval_plugin": {
+      "repo": "openai/chatgpt-retrieval-plugin",
+      "id": "openai-10-repos-master-contract",
+      "namespace": "gse-openai-ecosystem-jules-opendots",
+      "metadata": {
+        "document_id": "openai-10-repos-master-contract",
+        "title": "OpenAI 10-Repo + Google Jules + OpenDots Master Hybrid Contract",
+        "source": "github_and_jules_api",
+        "source_url": "https://github.com/openai",
+        "category": "openai_jules_opendots_ecosystem",
+        "chunk_sha256_16": "3010582bf66af107",
+        "text": "Unified OpenAI 10-repo, Google Jules 167-session/75-patch archive, and CopilotKit OpenDots AG-UI spine."
+      }
+    },
+    "openai_tiktoken": {
+      "repo": "openai/tiktoken",
+      "encoding_name": "o200k_base",
+      "exact_bpe_library_used": true,
+      "estimated_tokens": 25,
+      "max_token_budget": 128000,
+      "budget_utilization_ratio": 0.000195,
+      "compaction_required": false
+    },
+    "google_jules_fleet": {
+      "api_base": "https://jules.googleapis.com/v1alpha",
+      "turndown_changelog_url": "https://jules.google/docs/changelog#jules-turndown",
+      "sources_count": 28,
+      "total_sessions": 167,
+      "sessions_with_outputs_count": 75,
+      "state_counts": {
+        "COMPLETED": 122,
+        "IN_PROGRESS": 30,
+        "FAILED": 7,
+        "AWAITING_USER_FEEDBACK": 8
+      },
+      "awaiting_user_feedback_session_id": "17868364571305722991",
+      "flagship_in_progress_session_id": "2776851182236750878"
+    },
+    "opendots_ag_ui_review_card": {
+      "protocol": "AG-UI-v1",
+      "docs_url": "https://docs.ag-ui.com/introduction",
+      "coworker_repo": "CopilotKit/OpenDots",
+      "ui_ports": {
+        "web_vite_port": 5173,
+        "agent_server_port": 4310
+      },
+      "session_id": "17868364571305722991",
+      "task_title": "Fix OpeningLine N+1 Query in Duplicate Games Merge Script",
+      "tool_name": "github_create_or_update_pull_request",
+      "read_only_hint": false,
+      "mcp_permission_tier": "Ask first",
+      "requires_human_approval": true,
+      "state_delta_events": [
+        "RUN_STARTED",
+        "TOOL_CALL_START",
+        "STATE_DELTA",
+        "RUN_FINISHED"
+      ]
+    },
+    "opendots_connections_and_computers_policy": {
+      "repo": "CopilotKit/OpenDots",
+      "setup_ports": {
+        "web_ui": 5173,
+        "agent_server": 4310,
+        "computer_sandbox_api": 7070
+      },
+      "telemetry_env": {
+        "COPILOTKIT_TELEMETRY_DISABLED": "true"
+      },
+      "connections_oauth_pkce_method": "S256",
+      "connections_permission_tiers": {
+        "readOnlyHint_true": "Always allow",
+        "mutating_or_external_write": "Ask first"
+      },
+      "computers_isolation_policy": {
+        "isolated_container_or_vm_required": true,
+        "silent_host_fallback_forbidden": true
+      },
+      "policy_compliant": true
+    },
+    "copilotkit_5repo_mesh": {
+      "suite": "CopilotKit-5-Repo-Coworker-And-Channels-Mesh",
+      "repos_count": 5,
+      "repos": [
+        {
+          "repo": "CopilotKit/OpenDots",
+          "role": "AI Coworker Desktop/Web Runtime (:5173 / :4310) with MCP PKCE & Isolated Computer Sandbox",
+          "gse_integration_surface": "AG-UI Human Review Cards & Jules Fleet Supervisory Console"
+        },
+        {
+          "repo": "CopilotKit/OpenTag",
+          "role": "Structured Semantic Tagging & Entity Taxonomy Extractor",
+          "gse_integration_surface": "32-Team Beat-Writer Tell Tagging & 360-Board Market Classification"
+        },
+        {
+          "repo": "CopilotKit/openbot",
+          "role": "Autonomous Background Issue/PR Triage & CI Repair Bot",
+          "gse_integration_surface": "Coupled with Google Jules v1alpha 28-Repo Beexly/* Fleet"
+        },
+        {
+          "repo": "CopilotKit/OpenMuse",
+          "role": "Multimodal Storyboard & Creative Studio",
+          "gse_integration_surface": "1080x1920 60fps Vertical Video Storyboard & Pillow/FFmpeg Scene Composer"
+        },
+        {
+          "repo": "CopilotKit/channels-sdk",
+          "role": "Unified Multi-Channel Webhook & Event Delivery SDK",
+          "gse_integration_surface": "Whop VIP Alerts, X Transport, Mobile Push & Web Content-OS"
+        }
+      ],
+      "ag_ui_protocol_wired": true
+    },
+    "parallel_ai_search_mcp": {
+      "integration": "Parallel.ai Search MCP",
+      "docs_url": "https://docs.parallel.ai/integrations/mcp/search-mcp",
+      "transport": "Streamable HTTP MCP",
+      "capabilities": [
+        "parallel_web_search_multi_query_fanout",
+        "atomic_fact_and_citation_extraction",
+        "low_latency_beat_writer_and_injury_wire_verification"
+      ],
+      "coupled_with_5api_omniscience": true,
+      "read_only_hint": true
+    },
+    "skills_17_antigravity_and_11_matt_pocock": {
+      "antigravity_17_audit_cloud_skills_count": 17,
+      "antigravity_17_audit_cloud_skills": [
+        "workflow-accessibility-audit",
+        "bazel-build-optimization",
+        "architecture-decision-records",
+        "c4-architecture-c4-architecture",
+        "comprehensive-review-full-review",
+        "code-review-ai-ai-review",
+        "security-scanning-security-hardening",
+        "security-scanning-security-sast",
+        "frontend-mobile-security-xss-scan",
+        "backend-security-coder",
+        "api-security-testing",
+        "application-security-testing",
+        "owasp-top-10-testing",
+        "database-migrations-sql-migrations",
+        "database-migrations-migration-observability",
+        "error-diagnostics-error-trace",
+        "error-diagnostics-smart-debug"
+      ],
+      "matt_pocock_11_skills_count": 11,
+      "matt_pocock_11_skills": [
+        "domain-modeling",
+        "diagnosing-bugs",
+        "grilling",
+        "migrate-to-shoehorn",
+        "pr",
+        "prototype",
+        "research",
+        "scaffold-exercises",
+        "setup-pre-commit",
+        "tdd",
+        "writing-for-agents"
+      ],
+      "total_specialized_workflow_skills": 28,
+      "all_28_skills_verified": true
+    },
+    "all_10_openai_repos_active": true,
+    "jules_turndown_continuity_verified": true,
+    "opendots_and_ag_ui_verified": true
+  }
+}

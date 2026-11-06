@@ -602,7 +602,7 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
 }
 
 // ============================================================================
-// QUAD-ENGINE CROSSWALK INTEGRATION (Task 1 & 2)
+// QUAD-ENGINE CROSSWALK & OPENAI MATH 721-MANUSCRIPT INTEGRATION (Task 1, 2 & 6A)
 // ============================================================================
 
 export {
@@ -612,4 +612,22 @@ export {
   queryQuadEngineByContext,
   loadLiveQuadEngineCrosswalk,
 } from "./quad-engine-crosswalk.js";
+
+export {
+  OPENAI_MATH_721_SUMMARY,
+  computeSoggeLocalSmoothingWaveFocusing,
+  computeBoundedTreewidthL1Embedding,
+  computeRadialPairPotentialCriticality,
+  computeAmplitudeDampingFatigueChannel,
+  computeFixedWidthCnfConjunctionGate,
+  verifyLeanComparatorChallengeSoundness,
+  type OpenAiMath721Summary,
+  type SoggeWaveFocusingResult,
+  type BoundedTreewidthL1Result,
+  type RadialPairPotentialCriticalityResult,
+  type AmplitudeDampingFatigueResult,
+  type FixedWidthCnfConjunctionResult,
+  type LeanComparatorSoundnessResult,
+} from "./openai-math-721-catalog-and-kernels.js";
+
 

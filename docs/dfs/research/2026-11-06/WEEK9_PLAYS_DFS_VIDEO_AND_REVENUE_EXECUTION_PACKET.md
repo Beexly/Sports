@@ -1,6 +1,6 @@
 # Week 9 Plays, 360-Degree Board, DraftKings/FanDuel DFS, Short-Form Video & Multi-Stream Revenue Execution Packet
 
-- **Generated At (UTC):** `2026-11-06T20:58:50.267159+00:00`
+- **Generated At (UTC):** `2026-11-06T22:04:57.519536+00:00`
 - **Official New Engine Verified Record:** **`62-23-1` (`72.9%`, `+26.50 Units` entering Week 9 — `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 settled)**
 - **Paywall & Copy Compliance:** `0` Free Paid Picks Leaked · `0` Robotic Math Jargon on Public Surfaces · Official Plays & Full DFS Lineups Gated at `https://www.galaxysportsedge.com/packages` and `/fantasy/dfs`
 
@@ -95,3 +95,25 @@
 | `REV-05` | **OddsJam Line-Shopping & Positive-EV Partner Referral** | `https://oddsjam.com/?ref=zwniodg` | Recurring affiliate commission when subscribers use our execution price-shopping referral link. | `oddsjam_referral_clicked` | `ACTIVE_PRODUCTION` |
 | `REV-06` | **CapperTek Verified Record Syndication & Leaderboard Funnel** | `CapperTek Verified Tracker (62-23-1, 72.9%, +26.50u)` | Third-party verified record syndication driving high-intent organic bettors to /packages. | `cappertek_referral_landed`, `package_checkout_started` | `ACTIVE_PRODUCTION` |
 | `REV-07` | **Short-Form Video Creator Ad Revenue (YouTube Shorts, X, TikTok, IG Reels)** | `Multi-Platform Vertical Video Feed (VID-W9-01..05)` | Platform ad-revenue sharing plus top-of-funnel organic follower acquisition routing to /packages and /fantasy/dfs. | `video_hook_viewed`, `social_cta_clicked`, `dfs_hub_viewed` | `ACTIVE_PRODUCTION` |
+
+---
+
+## 5. EYI Viral Video Arsenal & Automated `1080x1920` Pillow/FFmpeg Synthesis Pipeline
+
+- **Source Archive:** `EYI Package_11-06-2026_1793956103.zip`
+- **Phase 3 Autonomous Machine Blueprint:** `workspace/goals/galaxy-sports-edge-viral-video-operation/files/deepseek-phase3-build-the-machine.md`
+- **IG Reels Viral Video Lanes:** `workspace/goals/autonomous-revenue-engine/files/INTEL-2026-09-29-ig-reels-viral-video-lanes.md`
+- **Automated Frame Renderer (`build_video.py`):** `workspace/your_files/mnf-recap-20260915/build_video.py` (`1080x1920` `60fps` `libx264` + `c1..c5 -> vo_final.mp3` audio-synced assembly)
+
+### 5-Stage Autonomous Video Production Machine
+- Stage 1 (Signal & Hook Trigger): Extract game-environment mismatch or post-game recap angle within 15 minutes of line move or final whistle.
+- Stage 2 (Script & Voiceover Synthesis): Generate 45-60s natural football-film script segmented into c1..c5 audio chunks.
+- Stage 3 (1080x1920 Pillow + FFmpeg Frame Renderer): Render high-contrast dark-slate data cards, telestrator overlays, and verified 62-23-1 (+26.50u) badge frames.
+- Stage 4 (Audio-Synced MP4 Muxing): Concatenate c1.mp3..c5.mp3 into vo_final.mp3 and mux with libx264 60fps vertical video stream.
+- Stage 5 (Multi-Platform Distribution & PostHog Funnel Tracking): Publish to TikTok, IG Reels, YouTube Shorts, and X Video with UTM-tagged /packages and /fantasy/dfs CTAs.
+
+### High-Retention IG Reels & Short-Form Viral Lanes
+- Lane 1: Trench & Silent-Count Film Telestrator Breakdown (0-3s visual snap tell).
+- Lane 2: Primetime (MNF/TNF/SNF) 5-Scene Rapid Recap & Next-Slate Environment Teaser.
+- Lane 3: 1st-Quarter Scripted Play-Call & Red-Zone Stall-Zone Kicking/IDP Edge.
+- Lane 4: DraftKings & FanDuel Tournament Stacking Blueprint (Cash Core vs GPP Leverage).

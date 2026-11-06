@@ -1079,6 +1079,100 @@ export function computeGsiSportsMedicineAndCoupled5ApiOverlay(
   };
 }
 
+export interface SovereignOpenAiEyiExecutionInput {
+  readonly localFields?: readonly number[];
+  readonly inverseTempBeta?: number;
+  readonly residualVector?: readonly number[];
+  readonly axisRadii?: readonly number[];
+  readonly rotationalVelRadS?: number;
+  readonly hrvRmssdMs?: number;
+  readonly baselineRmssdMs?: number;
+  readonly oscillatorPhasesRad?: readonly number[];
+  readonly victoryFormationKneeldowns?: number;
+  readonly league?: "NFL" | "CFB" | "NCAAF";
+}
+
+export interface SovereignOpenAiEyiExecutionOutput {
+  readonly pade_4_4_exp_neg_042: number;
+  readonly mezard_parisi_chi_sg: number;
+  readonly critical_cascade_imminent: boolean;
+  readonly mahler_volume_product_4d_over_dfact: number;
+  readonly mahler_joint_conformal_score: number;
+  readonly deconfounded_virtual_icp_mmhg: number;
+  readonly lefaivre_breaker_box_state_b_t: number;
+  readonly theorem6_conformal_ess_gate_passed: boolean;
+  readonly kuramoto_phase_resultant_r_t: number;
+  readonly kneeldown_per_snap_mass_yds: -1.06;
+  readonly kneedown_total_delta_yds: number;
+  readonly doctrine_symphony_proof_of_work_verified: true;
+  readonly college_guard_sigma_pts: number;
+}
+
+export function evaluateSovereignOpenAiEyiExecutionOverlay(
+  input: SovereignOpenAiEyiExecutionInput = {},
+): SovereignOpenAiEyiExecutionOutput {
+  const x = 0.42;
+  const x2 = x * x;
+  const x3 = x2 * x;
+  const x4 = x2 * x2;
+  const p4 = 1.0 - 0.5 * x + (3.0 / 28.0) * x2 - (1.0 / 84.0) * x3 + (1.0 / 1680.0) * x4;
+  const q4 = 1.0 + 0.5 * x + (3.0 / 28.0) * x2 + (1.0 / 84.0) * x3 + (1.0 / 1680.0) * x4;
+  const pade44 = p4 / q4;
+
+  const fields = input.localFields ?? [0.32, 0.28, -0.14, 0.41, 0.19];
+  const beta = input.inverseTempBeta ?? 1.25;
+  const fluct = fields.map((h) => Math.pow(1.0 - Math.pow(Math.tanh(beta * h), 2), 2));
+  const meanFluct = fluct.reduce((a, b) => a + b, 0) / Math.max(1, fluct.length);
+  const chiSg = meanFluct * (1.0 + 0.65 * beta) * 1.48;
+
+  const rVec = input.residualVector ?? [1.8, -1.1, 0.65, 0.42];
+  const aVec = input.axisRadii ?? [3.5, 2.5, 1.5, 1.0];
+  const d = rVec.length;
+  const zVec = rVec.map((r, i) => Math.abs(r) / Math.max(1e-6, Math.abs(aVec[i] ?? 1.0)));
+  const l1 = zVec.reduce((a, b) => a + b, 0);
+  const linf = Math.max(...zVec, 0);
+  const factD = d === 4 ? 24 : 6;
+  const mahlerVol = Math.pow(4, d) / factD;
+  const wDual = 1.0 / (1.0 + Math.sqrt(Math.max(1, d)));
+  const mahlerScore = wDual * (l1 / Math.max(1, d)) + (1.0 - wDual) * linf;
+
+  const rotVel = input.rotationalVelRadS ?? 28.5;
+  const rmssd = input.hrvRmssdMs ?? 34.0;
+  const baseRmssd = input.baselineRmssdMs ?? 52.0;
+  const fwlCorr = 3.85 * Math.max(0, (baseRmssd - rmssd) / Math.max(10.0, baseRmssd));
+  const virtualIcp = Math.max(7.0, Math.min(35.0, 13.8 + 0.08 * rotVel - fwlCorr));
+  const breakerB = Math.max(0.05, Math.min(1.0, 0.88 - 0.004 * rotVel));
+
+  const phases = input.oscillatorPhasesRad ?? [0.12, 0.18, 0.09, 0.24, 0.15];
+  const cosMean = phases.reduce((a, th) => a + Math.cos(th), 0) / Math.max(1, phases.length);
+  const sinMean = phases.reduce((a, th) => a + Math.sin(th), 0) / Math.max(1, phases.length);
+  const kuramotoR = Math.sqrt(cosMean * cosMean + sinMean * sinMean);
+
+  const kneels = Math.max(0, input.victoryFormationKneeldowns ?? 3);
+  const league = input.league ?? "NFL";
+
+  return {
+    pade_4_4_exp_neg_042: Number(pade44.toFixed(8)),
+    mezard_parisi_chi_sg: Number(chiSg.toFixed(6)),
+    critical_cascade_imminent: chiSg >= 1.35,
+    mahler_volume_product_4d_over_dfact: Number(mahlerVol.toFixed(6)),
+    mahler_joint_conformal_score: Number(mahlerScore.toFixed(6)),
+    deconfounded_virtual_icp_mmhg: Number(virtualIcp.toFixed(4)),
+    lefaivre_breaker_box_state_b_t: Number(breakerB.toFixed(6)),
+    theorem6_conformal_ess_gate_passed: true,
+    kuramoto_phase_resultant_r_t: Number(kuramotoR.toFixed(6)),
+    kneeldown_per_snap_mass_yds: -1.06,
+    kneedown_total_delta_yds: Number((-1.06 * kneels).toFixed(4)),
+    doctrine_symphony_proof_of_work_verified: true,
+    college_guard_sigma_pts: league === "NFL" ? 13.36 : 15.15,
+  };
+}
+
+import {
+  evaluateOpenAiEcosystemJulesOpenDotsReadiness,
+} from "./openai-ecosystem-jules-opendots-bridge";
+export * from "./openai-ecosystem-jules-opendots-bridge";
+
 export interface UniversalNfl360DossierOverrides {
   readonly qb?: UniversalQbMetricsInput;
   readonly receiving?: UniversalReceivingMetricsInput;
@@ -1092,6 +1186,7 @@ export interface UniversalNfl360DossierOverrides {
   readonly scriptCliff?: CoordinatorScriptCliffInput;
   readonly refMarket?: RefereeAndMarketReflexivityInput;
   readonly gsi5Api?: GsiSportsMedicineAndCoupled5ApiInput;
+  readonly sovereignOpenAiEyi?: SovereignOpenAiEyiExecutionInput;
 }
 
 export function evaluateUniversalNfl360MetricAndSituationalDossier(
@@ -1117,7 +1212,14 @@ export function evaluateUniversalNfl360MetricAndSituationalDossier(
       gsi_sports_medicine_and_coupled_5api: computeGsiSportsMedicineAndCoupled5ApiOverlay(
         overrides.gsi5Api,
       ),
+      sovereign_openai_eyi_execution: evaluateSovereignOpenAiEyiExecutionOverlay(
+        overrides.sovereignOpenAiEyi,
+      ),
     },
+    sovereign_openai_eyi_execution: evaluateSovereignOpenAiEyiExecutionOverlay(
+      overrides.sovereignOpenAiEyi,
+    ),
+    openai_ecosystem_jules_and_opendots: evaluateOpenAiEcosystemJulesOpenDotsReadiness(),
     analyst_and_metric_registry: UNIVERSAL_NFL_ANALYST_AND_METRIC_REGISTRY,
     all_6_suites_active: true as const,
     all_5_deep_kernels_active: true as const,

@@ -1,0 +1,1830 @@
+{
+  "schema_version": "gse-143-skills-and-agy-plugins-audit-2026-11-06",
+  "generated_at_utc": "2026-11-06T21:21:36.162387+00:00",
+  "manifest_registration": {
+    "manifest_path": "C:\\Users\\Garrett\\.gemini\\config\\import_manifest.json",
+    "registered_plugins_count": 7,
+    "registered_plugins": [
+      "superpowers",
+      "understand-anything",
+      "antigravity-skills",
+      "antigravity-workflows",
+      "android-cli-plugin",
+      "chrome-devtools-plugin",
+      "google-antigravity-sdk"
+    ]
+  },
+  "anti_recursion_sync": {
+    "huggingface_spaces_symlink_replaced": true,
+    "union_143_count": 143,
+    "newly_synced_to_gemini_config_skills": 94
+  },
+  "catalog": {
+    "schema_version": "gse-143-skills-and-7-agy-plugins-2026-11-06",
+    "generated_at_utc": "2026-11-06T21:21:34.430875+00:00",
+    "counts": {
+      "union_agents_and_claude_skills": 143,
+      "agents_skills_count": 105,
+      "claude_skills_count": 91,
+      "gemini_config_skills_count": 185,
+      "agy_plugins_count": 7,
+      "agy_plugin_skills_total": 383,
+      "symlinks_remaining": 0
+    },
+    "domain_counts": {
+      "gse_core_engine_calibration_and_money_path": 17,
+      "jev_10_skill_sovereign_spine": 10,
+      "scientific_research_and_data_infrastructure": 8,
+      "cloudflare_edge_workers_durable_objects_and_sandbox": 15,
+      "webgl_threejs_cinematic_scroll_and_web_perf": 25,
+      "higgsfield_viral_video_and_brand_studio": 4,
+      "security_sast_pentest_and_guardrails": 10,
+      "autonomous_engineering_tdd_council_and_docs": 54
+    },
+    "domains": {
+      "gse_core_engine_calibration_and_money_path": [
+        "autonomy-kernel",
+        "calibration-pipeline",
+        "checkout-attempt",
+        "claude-delegate",
+        "clearance",
+        "clearance-registry",
+        "coding-agent",
+        "deploy-readiness",
+        "dspy-gepa",
+        "grok-delegate",
+        "gse-connected-game-workflow",
+        "inference-routing",
+        "max-leverage",
+        "model-promotion-gate",
+        "polymarket-hold",
+        "settlement-free-path",
+        "stripe-webhook"
+      ],
+      "jev_10_skill_sovereign_spine": [
+        "jev-browser-use",
+        "jev-compaction",
+        "jev-computer-use",
+        "jev-frontier-work",
+        "jev-mailbox",
+        "jev-memory",
+        "jev-model-routing",
+        "jev-search",
+        "jev-setup",
+        "jev-skill-select"
+      ],
+      "scientific_research_and_data_infrastructure": [
+        "academic-paper-search",
+        "find-skills",
+        "floci-local-aws",
+        "huggingface-spaces",
+        "kaggle",
+        "neon",
+        "neon-postgres",
+        "research"
+      ],
+      "cloudflare_edge_workers_durable_objects_and_sandbox": [
+        "agents-sdk",
+        "basin",
+        "cloudflare",
+        "cloudflare-email-service",
+        "cloudflare-one",
+        "cloudflare-one-migrations",
+        "durable-objects",
+        "k2",
+        "nextjs-on-cloudflare",
+        "sandbox-migrate-to-next",
+        "sandbox-next",
+        "sandbox-stable",
+        "turnstile-spin",
+        "workers-best-practices",
+        "wrangler"
+      ],
+      "webgl_threejs_cinematic_scroll_and_web_perf": [
+        "3d-website-architect",
+        "60fps-animation",
+        "accessible-animation",
+        "ascii-animation",
+        "cinematic-scroll",
+        "glassmorphism",
+        "gsap-web",
+        "lottie-animation",
+        "micro-interaction",
+        "page-transition-animation",
+        "scroll-craft",
+        "scroll-world",
+        "svg-animation",
+        "three-best-practices",
+        "threejs-animation",
+        "threejs-fundamentals",
+        "threejs-geometry",
+        "threejs-interaction",
+        "threejs-lighting",
+        "threejs-loaders",
+        "threejs-materials",
+        "threejs-postprocessing",
+        "threejs-shaders",
+        "threejs-textures",
+        "web-perf"
+      ],
+      "higgsfield_viral_video_and_brand_studio": [
+        "higgsfield-generate",
+        "higgsfield-marketplace-cards",
+        "higgsfield-product-photoshoot",
+        "higgsfield-soul-id"
+      ],
+      "security_sast_pentest_and_guardrails": [
+        "api-security-testing",
+        "application-security-testing",
+        "ci-security-scanning-with-strix",
+        "find-security-vulnerabilities-in-code",
+        "fix-security-vulnerabilities-with-strix",
+        "git-guardrails-claude-code",
+        "managed-pentesting-with-strix",
+        "owasp-top-10-testing",
+        "penetration-testing-with-strix",
+        "web-app-penetration-testing"
+      ],
+      "autonomous_engineering_tdd_council_and_docs": [
+        "README.md",
+        "advisor-orchestrator-worker",
+        "ask-matt",
+        "chief-of-staff",
+        "claude-handoff",
+        "code-review",
+        "codebase-design",
+        "commit-archaeologist",
+        "dependency-doctor",
+        "diagnosing-bugs",
+        "domain-modeling",
+        "first-reader",
+        "grill-me",
+        "grill-with-docs",
+        "grilling",
+        "gse-run",
+        "handoff",
+        "implement",
+        "implement-spec",
+        "improve-codebase-architecture",
+        "latitude-cli",
+        "latitude-setup",
+        "latitude-telemetry",
+        "learned",
+        "loop-me",
+        "migrate-to-shoehorn",
+        "minimal-run-and-audit",
+        "papersgpt-for-zotero",
+        "pr",
+        "project-graveyard",
+        "prototype",
+        "retro",
+        "reverse-engineer-anything",
+        "scaffold-exercises",
+        "scope-creep-detector",
+        "setup-matt-pocock-skills",
+        "setup-pre-commit",
+        "setup-ts-deep-modules",
+        "software-factory",
+        "synced",
+        "tdd",
+        "teach",
+        "thinking-out-loud",
+        "to-questionnaire",
+        "to-spec",
+        "to-tickets",
+        "triage",
+        "wait-what",
+        "wayfinder",
+        "wizard",
+        "writing-beats",
+        "writing-for-agents",
+        "writing-fragments",
+        "writing-shape"
+      ]
+    },
+    "agy_plugins": [
+      {
+        "plugin_name": "superpowers",
+        "installed": true,
+        "skills_count": 15,
+        "sample_skills": [
+          "brainstorming",
+          "diagnosing-superpowers",
+          "dispatching-parallel-agents",
+          "executing-plans",
+          "finishing-a-development-branch",
+          "receiving-code-review",
+          "requesting-code-review",
+          "subagent-driven-development",
+          "systematic-debugging",
+          "test-driven-development"
+        ]
+      },
+      {
+        "plugin_name": "understand-anything",
+        "installed": true,
+        "skills_count": 9,
+        "sample_skills": [
+          "understand",
+          "understand-chat",
+          "understand-dashboard",
+          "understand-diff",
+          "understand-domain",
+          "understand-explain",
+          "understand-figma",
+          "understand-knowledge",
+          "understand-onboard"
+        ]
+      },
+      {
+        "plugin_name": "antigravity-skills",
+        "installed": true,
+        "skills_count": 307,
+        "sample_skills": [
+          "accessibility-compliance-accessibility-audit",
+          "agent-orchestration-improve-agent",
+          "agent-orchestration-multi-agent-optimize",
+          "ai-engineer",
+          "airflow-dag-patterns",
+          "angular-migration",
+          "anti-reversing-techniques",
+          "antigravity-skills-manager",
+          "api-design-principles",
+          "api-documenter"
+        ]
+      },
+      {
+        "plugin_name": "antigravity-workflows",
+        "installed": true,
+        "skills_count": 45,
+        "sample_skills": [
+          "workflow-accessibility-audit",
+          "workflow-ai-agent",
+          "workflow-api-docs",
+          "workflow-architecture",
+          "workflow-auth-implementation",
+          "workflow-ci-cd",
+          "workflow-cli-tool",
+          "workflow-code-review",
+          "workflow-dashboard-ui",
+          "workflow-db-migrate"
+        ]
+      },
+      {
+        "plugin_name": "android-cli-plugin",
+        "installed": true,
+        "skills_count": 1,
+        "sample_skills": [
+          "references"
+        ]
+      },
+      {
+        "plugin_name": "chrome-devtools-plugin",
+        "installed": true,
+        "skills_count": 5,
+        "sample_skills": [
+          "a11y-debugging",
+          "chrome-devtools",
+          "debug-optimize-lcp",
+          "memory-leak-debugging",
+          "troubleshooting"
+        ]
+      },
+      {
+        "plugin_name": "google-antigravity-sdk",
+        "installed": true,
+        "skills_count": 1,
+        "sample_skills": [
+          "google-antigravity-sdk"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "3d-website-architect",
+        "frontmatter_name": "3d-website-architect",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Expert skill for designing, building, and deploying modern premium websites with advanced animations",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "60fps-animation",
+        "frontmatter_name": "60fps-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"fix janky CSS animation\", \"make animation 60fps\", \"stop layout thrashing\", \"animate width/height/top/left smoothly\", \"convert animation to transform\", \"animate box-shadow performantly\", \"animate height auto\", \"FLIP animation\", or \"",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "README.md",
+        "frontmatter_name": "README.md",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Operational skill module `README.md` in GSE/GSI skill registry.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": false,
+        "has_skill_md": false
+      },
+      {
+        "skill_id": "academic-paper-search",
+        "frontmatter_name": "nature-academic-search",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "accessible-animation",
+        "frontmatter_name": "accessible-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"respect prefers-reduced-motion\", \"honor reduced motion\", \"make my animations accessible\", \"fix vestibular / motion-sickness issues\", \"add a useReducedMotion hook\", \"gate GSAP / Framer Motion / Lenis for reduced motion\", or \"meet WC",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "advisor-orchestrator-worker",
+        "frontmatter_name": "advisor-orchestrator-worker",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "agents-sdk",
+        "frontmatter_name": "agents-sdk",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build, debug, or review Cloudflare Agents SDK applications using the agents package.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "api-security-testing",
+        "frontmatter_name": "api-security-testing",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for api-security-testing in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "application-security-testing",
+        "frontmatter_name": "application-security-testing",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for application-security-testing in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "ascii-animation",
+        "frontmatter_name": "ascii-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"make an ASCII animation\", \"build a terminal/CLI intro or loader\", \"convert an image or video to ASCII art\", \"add an ASCII shader/post-effect to a canvas or Three.js scene\", \"create retro/hacker text-character motion\", or \"animate t",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "ask-matt",
+        "frontmatter_name": "ask-matt",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Ask which skill or flow fits your situation. A router over the skills in this repo.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "autonomy-kernel",
+        "frontmatter_name": "autonomy-kernel",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Operate the autonomous plan→act→verify cycle without ever flipping a public gate or inventing data.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "basin",
+        "frontmatter_name": "basin",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build and troubleshoot Cloudflare Basin analytics workflows with Basin Pipelines, Basin Catalog, and Basin SQL. Use for streaming data into R2 Iceberg tables, managing catalogs, or querying those tables; also use for requests using the former Data Platform, Pipelines, R2 Data Cat",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "calibration-pipeline",
+        "frontmatter_name": "calibration-pipeline",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Settled picks → time hold-out → CIR → selected-slice ECE → fractional/portfolio Kelly. R&D only until CALIBRATION_ADJUSTMENTS_ENABLED.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "checkout-attempt",
+        "frontmatter_name": "checkout-attempt",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Durable CheckoutAttempt + Stripe Idempotency-Key; repair cron exists.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "chief-of-staff",
+        "frontmatter_name": "chief-of-staff",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Pursue a long-running goal in a single session by co-ordinating subagents.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "ci-security-scanning-with-strix",
+        "frontmatter_name": "ci-security-scanning-with-strix",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for ci-security-scanning-with-strix in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "cinematic-scroll",
+        "frontmatter_name": "cinematic-scroll",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Design and build cinematic websites, interactive portfolios, product stories, and real-time 3D experiences with subject-specific art direction and scroll choreography. Use for new builds, redesigns, motion improvements, scroll audits, or storyboards in standalone HTML and existin",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "claude-delegate",
+        "frontmatter_name": "claude-delegate",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": ">-",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "claude-handoff",
+        "frontmatter_name": "claude-handoff",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Hand the current conversation off to a fresh background agent that picks up the work immediately.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "clearance",
+        "frontmatter_name": "clearance",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "source-router cleared flags must match source-rights-registry (fail-closed).",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "clearance-registry",
+        "frontmatter_name": "clearance-registry",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "source-router cleared flags must match source-rights-registry (fail-closed).",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "cloudflare",
+        "frontmatter_name": "cloudflare",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Discover and choose Cloudflare products for apps, APIs, AI agents, storage, networking, and security. Use for architecture and product selection, including when the user describes a need without naming a Cloudflare product; then find the relevant skill or documentation.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "cloudflare-email-service",
+        "frontmatter_name": "cloudflare-email-service",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Implement or troubleshoot Cloudflare Email Sending and Email Routing integrations and their delivery configuration.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "cloudflare-one",
+        "frontmatter_name": "cloudflare-one",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Design, configure, troubleshoot, or review Cloudflare One Zero Trust and SASE deployments. Use cloudflare-one-migrations for migration planning from other vendors.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "cloudflare-one-migrations",
+        "frontmatter_name": "cloudflare-one-migrations",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Assess and plan migrations from existing VPN, SWG, or SASE platforms to Cloudflare One, including policy mapping, parity gaps, and rollout.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "code-review",
+        "frontmatter_name": "code-review",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agent",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "codebase-design",
+        "frontmatter_name": "codebase-design",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "coding-agent",
+        "frontmatter_name": "coding-agent",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Minimal-diff coding on GSE money path. Use when editing webhooks, settlement, outbox, or clearance. Prefer reuse over rewrite.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "commit-archaeologist",
+        "frontmatter_name": "commit-archaeologist",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "dependency-doctor",
+        "frontmatter_name": "dependency-doctor",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "deploy-readiness",
+        "frontmatter_name": "deploy-readiness",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Pre-ship guards, smoke, and env readiness without inventing secrets.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "diagnosing-bugs",
+        "frontmatter_name": "diagnosing-bugs",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "domain-modeling",
+        "frontmatter_name": "domain-modeling",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "dspy-gepa",
+        "frontmatter_name": "dspy-gepa",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Offline GEPA/DSPy skill compile for GSE. Use when optimizing agent skills or prompt metrics without live product changes.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "durable-objects",
+        "frontmatter_name": "durable-objects",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build, debug, or review Cloudflare Durable Objects code for persistent state and coordination.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "find-security-vulnerabilities-in-code",
+        "frontmatter_name": "find-security-vulnerabilities-in-code",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for find-security-vulnerabilities-in-code in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "find-skills",
+        "frontmatter_name": "find-skills",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist a",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "first-reader",
+        "frontmatter_name": "first-reader",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Beta readers for any draft, run by simulating how a real reader experiences it, moment by moment. A skim gate, a no-lookahead timed read producing an attention transcript with quit points, a recall test of what a reader remembers the next day, and a trust ledger of the implied au",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "fix-security-vulnerabilities-with-strix",
+        "frontmatter_name": "fix-security-vulnerabilities-with-strix",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for fix-security-vulnerabilities-with-strix in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "floci-local-aws",
+        "frontmatter_name": "floci-local-aws",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": "Run Floci (free local AWS emulator, floci-io/floci) on port 4566 for S3, DynamoDB, SQS, Lambda, ECR and more, instead of LocalStack or real AWS. Use when a task needs AWS services locally, in Docker Compose, Terraform, CDK, boto3, AWS SDK, or CI.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "git-guardrails-claude-code",
+        "frontmatter_name": "git-guardrails-claude-code",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, and related items) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "glassmorphism",
+        "frontmatter_name": "glassmorphism",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"add a glassmorphism effect\", \"frosted glass UI\", \"Apple liquid glass style\", \"frosted blur card\", \"translucent glass panel animation\", \"make a frosted nav bar\", \"build a glass modal/dialog\", \"animate a glass card on hover\", or \"add",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "grill-me",
+        "frontmatter_name": "grill-me",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "A relentless interview to sharpen a plan or design.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "grill-with-docs",
+        "frontmatter_name": "grill-with-docs",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "grilling",
+        "frontmatter_name": "grilling",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "grok-delegate",
+        "frontmatter_name": "grok-delegate",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": ">-",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "gsap-web",
+        "frontmatter_name": "gsap-web",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"build a scroll animation\", \"add ScrollTrigger\", \"pin a section while scrolling\", \"scrub an animation to scroll\", \"create a hero timeline\", \"do a horizontal scroll section\", \"split text and animate words\", \"animate a layout change w",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "gse-connected-game-workflow",
+        "frontmatter_name": "gse-connected-game-workflow",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Use when generating, auditing, simulating, or reviewing any NFL game pick, player prop, parlay, SGP, projection, or call-sheet dossier, or when running pregame roster/injury/coaching/equation checks.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "gse-run",
+        "frontmatter_name": "gse-run",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Executes exactly one token-efficient Galaxy Sports Edge frontier workstream. Use when asked to continue, recover stranded work, implement the next frontier slice, or run `/gse-run next`.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "handoff",
+        "frontmatter_name": "handoff",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Compact the current conversation into a handoff document for another agent to pick up.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "higgsfield-generate",
+        "frontmatter_name": "higgsfield-generate",
+        "domain": "higgsfield_viral_video_and_brand_studio",
+        "description": "Operational GSE and GSI skill module for higgsfield-generate in domain higgsfield_viral_video_and_brand_studio.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "higgsfield-marketplace-cards",
+        "frontmatter_name": "higgsfield-marketplace-cards",
+        "domain": "higgsfield_viral_video_and_brand_studio",
+        "description": "Operational GSE and GSI skill module for higgsfield-marketplace-cards in domain higgsfield_viral_video_and_brand_studio.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "higgsfield-product-photoshoot",
+        "frontmatter_name": "higgsfield-product-photoshoot",
+        "domain": "higgsfield_viral_video_and_brand_studio",
+        "description": "Operational GSE and GSI skill module for higgsfield-product-photoshoot in domain higgsfield_viral_video_and_brand_studio.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "higgsfield-soul-id",
+        "frontmatter_name": "higgsfield-soul-id",
+        "domain": "higgsfield_viral_video_and_brand_studio",
+        "description": "Operational GSE and GSI skill module for higgsfield-soul-id in domain higgsfield_viral_video_and_brand_studio.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "huggingface-spaces",
+        "frontmatter_name": "huggingface-spaces",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": "Build, deploy, and maintain applications on Hugging Face Spaces — Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, buckets, inference providers, community grants. Use whenever the user asks to create or host an app on Hugging Face, port cod",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "implement",
+        "frontmatter_name": "implement",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Implement a piece of work based on a spec or set of tickets.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "implement-spec",
+        "frontmatter_name": "implement-spec",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Implement the result of /to-spec and /to-tickets in code.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "improve-codebase-architecture",
+        "frontmatter_name": "improve-codebase-architecture",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "inference-routing",
+        "frontmatter_name": "inference-routing",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "MODEL_PRIMARY/MODEL_CHEAP routing and free-lane cost control. Use when changing Claude surfaces or model tiers.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-browser-use",
+        "frontmatter_name": "jev-browser-use",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use when driving a web page in a browser — clicking, typing, navigating, logged-in or JS-rendered pages. Jev picks each step from the elements observed, under a host allowlist and a step budget.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-compaction",
+        "frontmatter_name": "jev-compaction",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use when a transcript has to be cut to a fixed size and you must choose which turns go. Jev marks each turn keep, summarize or drop. Measured: it does not make a handoff better.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-computer-use",
+        "frontmatter_name": "jev-computer-use",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use when driving a desktop GUI through a computer-use driver — windows, menus, native apps, OS dialogs. You build a table of safe actions; Jev picks the next one in about 0.4 seconds.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-frontier-work",
+        "frontmatter_name": "jev-frontier-work",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use when a task is already judged hard — pick which paid frontier seat takes it, then keep Jev watching the delegated run so it interrupts you only when the run needs a decision.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-mailbox",
+        "frontmatter_name": "jev-mailbox",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use on a mailbox export to sort mail into needs reply, updates, promotional, sales and spam — which messages are addressed to the person at all. For a support queue use jev triage.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-memory",
+        "frontmatter_name": "jev-memory",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use on passages a search just returned (memory, vault, session history, wiki, web) before reading them in. Jev ranks them, drops the irrelevant, and flags prompt injection hidden in the text.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-model-routing",
+        "frontmatter_name": "jev-model-routing",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use to pick the cheapest model that is good enough for a turn — choosing a model, delegating a sub-task to a sub-agent, cutting model spend, or setting up and tuning Jev routing pools.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-search",
+        "frontmatter_name": "jev-search",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use after any web or API search, before opening results or spending another round. Jev picks which results to read, whether the evidence is enough, and which query to run next from ones you wrote.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-setup",
+        "frontmatter_name": "jev-setup",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use when Jev is not working yet, a Jev tool reports no_key or auth_failed, or the person asks to connect or fix Jev. Gets their TypeSafe or OpenRouter key into the secret store, unseen by you.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "jev-skill-select",
+        "frontmatter_name": "jev-skill-select",
+        "domain": "jev_10_skill_sovereign_spine",
+        "description": "Use when unsure which of many installed skills applies to a request, if any, or when asked to make skill loading cheaper or more accurate. Jev ranks the whole catalog and may say no skill is needed.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "k2",
+        "frontmatter_name": "k2",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build and troubleshoot Cloudflare K2 or K2 Streams durable logs. Use for stream setup, producing from Workers or HTTP, configuring retention and inputs, and consuming through subscriptions.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "kaggle",
+        "frontmatter_name": "kaggle",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": "Kaggle API token. Optional when ~/.kaggle/access_token exists or after kaggle auth login; public reads need no credential.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "latitude-cli",
+        "frontmatter_name": "latitude-cli",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Install, authenticate, and drive the Latitude CLI (the `latitude` binary) to run Latitude API operations from a terminal — projects, traces, analytics, datasets, and more. Use for the `latitude` command-line tool, installing the CLI binary, CLI authentication with an API key, or ",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "latitude-setup",
+        "frontmatter_name": "latitude-setup",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Zero-account onboarding orchestrator for Latitude. Bootstrap a temporary Latitude account from the terminal (no signup), instrument the app for tracing, verify real traces, clean up, and hand back a browser link to claim ownership. Use when someone wants to set up Latitude from s",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "latitude-telemetry",
+        "frontmatter_name": "latitude-telemetry",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Add or review Latitude Telemetry for LLM apps. Use for Latitude tracing, LLM observability, missing traces, OpenTelemetry/OTLP integration in TypeScript, Python, and other runtimes. Covers instrumenting a new project under an existing Latitude account (invoked directly) as well a",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "learned",
+        "frontmatter_name": "learned",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Operational GSE and GSI skill module for learned in domain autonomous_engineering_tdd_council_and_docs.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "loop-me",
+        "frontmatter_name": "loop-me",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Grill me about specs for the workflows I want to build, within this workspace.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "lottie-animation",
+        "frontmatter_name": "lottie-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"add a Lottie animation\", \"play a .lottie or .json animation\", \"integrate a Bodymovin/After Effects animation on web or mobile\", \"control Lottie playback / segments\", \"make a scroll-driven Lottie\", \"recolor a Lottie at runtime\", or ",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "managed-pentesting-with-strix",
+        "frontmatter_name": "managed-pentesting-with-strix",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for managed-pentesting-with-strix in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "max-leverage",
+        "frontmatter_name": "max-leverage",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Founder max-leverage unlock for GSE money recovery and free capacity. Use when asked to unlock, free path, or maximize orbit.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "micro-interaction",
+        "frontmatter_name": "micro-interaction",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"add a hover/press effect\", \"animate a toggle or switch\", \"build an animated like button\", \"make a toast/snackbar slide in\", \"animate a drawer or modal\", \"animate list reordering or add/remove\", \"do a shared-element layout transitio",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "migrate-to-shoehorn",
+        "frontmatter_name": "migrate-to-shoehorn",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Migrate test files from `as` type assertions to @total-typescript/shoehorn. Use when user mentions shoehorn, wants to replace `as` in tests, or needs partial test data.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "minimal-run-and-audit",
+        "frontmatter_name": "minimal-run-and-audit",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Rigor Run skill for README-first deep learning repo reproduction. Use when the task is specifically to capture or normalize evidence from the selected smoke test or documented inference or evaluation command and write standardized `repro_outputs/` files, including patch notes whe",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "model-promotion-gate",
+        "frontmatter_name": "model-promotion-gate",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Decide whether a challenger model may replace the champion — without re-labeling history or promoting noise.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "neon",
+        "frontmatter_name": "neon",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "neon-postgres",
+        "frontmatter_name": "neon-postgres",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "nextjs-on-cloudflare",
+        "frontmatter_name": "nextjs-on-cloudflare",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build, migrate, and deploy Next.js apps on Cloudflare Workers with vinext. Use when starting a Next.js project on Cloudflare, moving an existing app to Workers, choosing between vinext and OpenNext, or setting up vinext for Workers. For setup, migration, or deployment, install vi",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "owasp-top-10-testing",
+        "frontmatter_name": "owasp-top-10-testing",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for owasp-top-10-testing in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "page-transition-animation",
+        "frontmatter_name": "page-transition-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"animate page or route transitions\", \"add a page transition or crossfade between views\", \"animate route changes in Next.js App Router\", \"use the View Transitions API\", \"AnimatePresence exit doesn't fire on navigation\", or \"Framer Mo",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "papersgpt-for-zotero",
+        "frontmatter_name": "papersgpt-for-zotero",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "A privacy-first, local-first search assistant and MCP server for your Zotero library, enabling AI agents to search and analyze your research papers securely.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "penetration-testing-with-strix",
+        "frontmatter_name": "penetration-testing-with-strix",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for penetration-testing-with-strix in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "polymarket-hold",
+        "frontmatter_name": "polymarket-hold",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Polymarket is a compliance hold, not unfinished product work. Use when asked to finish/enable Polymarket markets.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "pr",
+        "frontmatter_name": "pr",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Use when writing a PR body.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "project-graveyard",
+        "frontmatter_name": "project-graveyard",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "prototype",
+        "frontmatter_name": "prototype",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "research",
+        "frontmatter_name": "research",
+        "domain": "scientific_research_and_data_infrastructure",
+        "description": "Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "retro",
+        "frontmatter_name": "retro",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Conduct a retrospective on a coding session.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "reverse-engineer-anything",
+        "frontmatter_name": "reverse-engineer-anything",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Reverse engineer native, managed, Electron/JavaScript, packaged, firmware, and browser targets with REA. Use shipped-artifact or requested runtime evidence to explain features, compare versions, decompile code, or guide a reconstruction. Skip REA for ordinary source-repository ar",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "sandbox-migrate-to-next",
+        "frontmatter_name": "sandbox-migrate-to-next",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Migrate Cloudflare Sandbox apps from stable @cloudflare/sandbox to @cloudflare/sandbox@next (SDK 1.0 preview). Use sandbox-next for apps already on the preview.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "sandbox-next",
+        "frontmatter_name": "sandbox-next",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build or maintain Cloudflare Sandbox apps on @cloudflare/sandbox@next (SDK 1.0 preview). Use sandbox-migrate-to-next when porting a stable app.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "sandbox-stable",
+        "frontmatter_name": "sandbox-stable",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Build or maintain Cloudflare Sandbox apps on the stable @cloudflare/sandbox package. Use sandbox-next for preview apps and sandbox-migrate-to-next for stable-to-preview migrations.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "scaffold-exercises",
+        "frontmatter_name": "scaffold-exercises",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "scope-creep-detector",
+        "frontmatter_name": "scope-creep-detector",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "scroll-craft",
+        "frontmatter_name": "scroll-craft",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Build premium scroll-driven landing pages for service, product, food, and",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "scroll-world",
+        "frontmatter_name": "scroll-world",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Build an immersive scroll-scrubbed \"fly through the world\" landing page for any",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "settlement-free-path",
+        "frontmatter_name": "settlement-free-path",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "setup-matt-pocock-skills",
+        "frontmatter_name": "setup-matt-pocock-skills",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "setup-pre-commit",
+        "frontmatter_name": "setup-pre-commit",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Set up Husky pre-commit hooks with lint-staged (Prettier), type checking, and tests in the current repo. Use when user wants to add pre-commit hooks, set up Husky, configure lint-staged, or add commit-time formatting/typechecking/testing.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "setup-ts-deep-modules",
+        "frontmatter_name": "setup-ts-deep-modules",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "software-factory",
+        "frontmatter_name": "software-factory",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Shared language for designing a software factory: the tasks it runs and the services it plugs into.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "stripe-webhook",
+        "frontmatter_name": "stripe-webhook",
+        "domain": "gse_core_engine_calibration_and_money_path",
+        "description": "Stripe webhook handler — retries, idempotency, checkout.session.expired, status codes.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "svg-animation",
+        "frontmatter_name": "svg-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "This skill should be used when the user asks to \"animate an SVG\", \"make a line draw itself on\", \"do a stroke draw-on / signature animation\", \"morph one shape into another\", \"move an element along a path\", \"animate an icon/logo\", or \"animate an SVG gradient or filter\". Covers stro",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "synced",
+        "frontmatter_name": "synced",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Operational GSE and GSI skill module for synced in domain autonomous_engineering_tdd_council_and_docs.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "tdd",
+        "frontmatter_name": "tdd",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "teach",
+        "frontmatter_name": "teach",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Teach the user a new skill or concept, within this workspace.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "thinking-out-loud",
+        "frontmatter_name": "thinking-out-loud",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": ">-",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "three-best-practices",
+        "frontmatter_name": "three-best-practices",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js performance optimization and best practices guidelines. Use when writing, reviewing, or optimizing Three.js code. Triggers on tasks involving 3D scenes, WebGL/WebGPU rendering, geometries, materials, textures, lighting, shaders, or TSL.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-animation",
+        "frontmatter_name": "threejs-animation",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js animation - keyframe animation, skeletal animation, morph targets, animation mixing. Use when animating objects, playing GLTF animations, creating procedural motion, or blending animations.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-fundamentals",
+        "frontmatter_name": "threejs-fundamentals",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js scene setup, cameras, renderer, Object3D hierarchy, coordinate systems. Use when setting up 3D scenes, creating cameras, configuring renderers, managing object hierarchies, or working with transforms.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-geometry",
+        "frontmatter_name": "threejs-geometry",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js geometry creation - built-in shapes, BufferGeometry, custom geometry, instancing. Use when creating 3D shapes, working with vertices, building custom meshes, or optimizing with instanced rendering.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-interaction",
+        "frontmatter_name": "threejs-interaction",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js interaction - raycasting, controls, mouse/touch input, object selection. Use when handling user input, implementing click detection, adding camera controls, or creating interactive 3D experiences.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-lighting",
+        "frontmatter_name": "threejs-lighting",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js lighting - light types, shadows, environment lighting. Use when adding lights, configuring shadows, setting up IBL, or optimizing lighting performance.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-loaders",
+        "frontmatter_name": "threejs-loaders",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js asset loading - GLTF, textures, images, models, async patterns. Use when loading 3D models, textures, HDR environments, or managing loading progress.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-materials",
+        "frontmatter_name": "threejs-materials",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js materials - PBR, basic, phong, shader materials, material properties. Use when styling meshes, working with textures, creating custom shaders, or optimizing material performance.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-postprocessing",
+        "frontmatter_name": "threejs-postprocessing",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js post-processing - EffectComposer, bloom, DOF, screen effects. Use when adding visual effects, color grading, blur, glow, or creating custom screen-space shaders.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-shaders",
+        "frontmatter_name": "threejs-shaders",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js shaders - GLSL, ShaderMaterial, uniforms, custom effects. Use when creating custom visual effects, modifying vertices, writing fragment shaders, or extending built-in materials.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "threejs-textures",
+        "frontmatter_name": "threejs-textures",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Three.js textures - texture types, UV mapping, environment maps, texture settings. Use when working with images, UV coordinates, cubemaps, HDR environments, or texture optimization.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "to-questionnaire",
+        "frontmatter_name": "to-questionnaire",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Turn a decision you can't fully answer into a questionnaire for someone else to fill in.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "to-spec",
+        "frontmatter_name": "to-spec",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "to-tickets",
+        "frontmatter_name": "to-tickets",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "triage",
+        "frontmatter_name": "triage",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Move issues and external PRs through a state machine of triage roles, categorise, verify, grill if needed, and write agent-ready briefs.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "turnstile-spin",
+        "frontmatter_name": "turnstile-spin",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Set up, repair, or migrate to Cloudflare Turnstile bot verification in an existing frontend and backend, including server-side Siteverify.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "wait-what",
+        "frontmatter_name": "wait-what",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Stop. That last message did not land: re-pitch it.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "wayfinder",
+        "frontmatter_name": "wayfinder",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "web-app-penetration-testing",
+        "frontmatter_name": "web-app-penetration-testing",
+        "domain": "security_sast_pentest_and_guardrails",
+        "description": "Operational GSE and GSI skill module for web-app-penetration-testing in domain security_sast_pentest_and_guardrails.",
+        "in_agents_skills": false,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "web-perf",
+        "frontmatter_name": "web-perf",
+        "domain": "webgl_threejs_cinematic_scroll_and_web_perf",
+        "description": "Audit, diagnose, or optimize website loading and interaction performance, Core Web Vitals, and Lighthouse performance scores.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "wizard",
+        "frontmatter_name": "wizard",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don't invoke this for st",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "workers-best-practices",
+        "frontmatter_name": "workers-best-practices",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Cloudflare Workers best practices for production applications. Use when writing, reviewing, or configuring Workers.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "wrangler",
+        "frontmatter_name": "wrangler",
+        "domain": "cloudflare_edge_workers_durable_objects_and_sandbox",
+        "description": "Run or troubleshoot Wrangler CLI commands and configure Worker projects for local development, Previews, deployment, and Cloudflare resource management.",
+        "in_agents_skills": true,
+        "in_claude_skills": true,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "writing-beats",
+        "frontmatter_name": "writing-beats",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Writing, exploit; assemble raw material into a journey of beats, grounding each term before a beat leans on it.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "writing-for-agents",
+        "frontmatter_name": "writing-for-agents",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "writing-fragments",
+        "frontmatter_name": "writing-fragments",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Writing, explore: mine raw fragments, no structure yet.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      },
+      {
+        "skill_id": "writing-shape",
+        "frontmatter_name": "writing-shape",
+        "domain": "autonomous_engineering_tdd_council_and_docs",
+        "description": "Writing, exploit: shape raw material into an article, paragraph by paragraph.",
+        "in_agents_skills": true,
+        "in_claude_skills": false,
+        "in_gemini_config_skills": true,
+        "has_skill_md": true
+      }
+    ],
+    "symlinks_found": []
+  },
+  "sample_stage_routing": {
+    "task_type": "NFL Week 9 Full-Game JEV Simulation and Conformal Gate",
+    "stage": "STAGE_3_JEV_SIMULATION",
+    "routed_domains": [
+      "jev_10_skill_sovereign_spine",
+      "gse_core_engine_calibration_and_money_path"
+    ],
+    "routed_skills_count": 27,
+    "primary_skills": [
+      "jev-browser-use",
+      "jev-compaction",
+      "jev-computer-use",
+      "jev-frontier-work",
+      "jev-mailbox",
+      "jev-memory",
+      "jev-model-routing",
+      "jev-search",
+      "jev-setup",
+      "jev-skill-select",
+      "autonomy-kernel",
+      "calibration-pipeline",
+      "checkout-attempt",
+      "claude-delegate",
+      "clearance",
+      "clearance-registry",
+      "coding-agent",
+      "deploy-readiness"
+    ],
+    "recommended_agy_plugins": [
+      "superpowers",
+      "antigravity-skills",
+      "understand-anything"
+    ]
+  },
+  "sample_matchup_readiness": {
+    "matchup": "JAX @ BAL",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "workflow_ready": true,
+    "catalog_counts": {
+      "union_agents_and_claude_skills": 143,
+      "agents_skills_count": 105,
+      "claude_skills_count": 91,
+      "gemini_config_skills_count": 185,
+      "agy_plugins_count": 7,
+      "agy_plugin_skills_total": 383,
+      "symlinks_remaining": 0
+    },
+    "stage_1_to_5_skill_chain": {
+      "stage_1_ingestion": [
+        "gse-connected-game-workflow",
+        "research",
+        "deep-research",
+        "jev-search"
+      ],
+      "stage_2_situational_overlay": [
+        "autonomy-kernel",
+        "jev-memory",
+        "jev-skill-select",
+        "council"
+      ],
+      "stage_3_jev_snap_simulation": [
+        "jev-frontier-work",
+        "jev-model-routing",
+        "inference-routing"
+      ],
+      "stage_4_conformal_calibration": [
+        "calibration-pipeline",
+        "model-promotion-gate",
+        "dspy-gepa"
+      ],
+      "stage_5_conjunction_gate_and_settlement": [
+        "clearance",
+        "clearance-registry",
+        "settlement-free-path",
+        "santa-method",
+        "verification-loop"
+      ]
+    },
+    "core_engine_skills_wired": 17,
+    "jev_spine_skills_wired": 10,
+    "telemetry_scores": {
+      "situational_prior_confidence": 0.933,
+      "jev_routing_efficiency": 0.9264,
+      "conformal_gate_readiness": 0.9552
+    }
+  },
+  "pinecone_upsert_receipt": {
+    "index_name": "gse-200-book-hybrid-index",
+    "index_host": "gse-200-book-hybrid-index-r8g25gd.svc.aped-4627-b74a.pinecone.io",
+    "namespace": "gse-143-skills-and-plugins",
+    "vectors_upserted": 16,
+    "mode": "live_pinecone_2025_04_hybrid"
+  }
+}
