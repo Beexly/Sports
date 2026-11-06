@@ -145,7 +145,12 @@ function analyse(relPath, text) {
   return violations;
 }
 
-const key = (v) => `${v.file}::${v.check}`;
+// POSIX-normalized key: baseline JSON was historically written on Windows with
+// backslash separators while CI (Linux) reports forward slashes. Normalizing
+// both sides makes the frozen-debt match host-independent (same class as the
+// mobile lint-rules POSIX fix, ed69b6966).
+const posix = (f) => String(f).replaceAll(String.fromCharCode(92), "/");
+const key = (v) => `${posix(v.file)}::${v.check}`;
 
 async function main() {
   const root = resolve(arg("--root", process.cwd()));
@@ -193,7 +198,7 @@ async function main() {
       note: "Frozen shell-script debt. The gate fails only on violations NOT listed here. Delete entries as you fix them.",
       count: found.length,
       violations: found
-        .map((v) => ({ file: v.file, check: v.check }))
+        .map((v) => ({ file: posix(v.file), check: v.check }))
         .sort((a, b) => key(a).localeCompare(key(b))),
     };
     await writeFile(baselinePath, JSON.stringify(payload, null, 1) + "\n", "utf8");

@@ -163,3 +163,19 @@ test("--list prints the baseline", () => {
   assert.equal(r.code, 0);
   assert.match(r.stdout, /strict-mode/);
 });
+
+test("POSIX baseline keys match host-native paths (CI is Linux, baseline was Windows-written)", () => {
+  // Baseline JSON historically stored Windows backslashes (apps\mobile\...).
+  // On Linux CI the gate reports forward slashes, so the frozen keys never
+  // matched and 11 frozen violations surfaced as NEW. Keys normalize both
+  // sides; either separator form must freeze.
+  const root = makeRoot(
+    { "sub/bad.sh": BAD_CD },
+    { baseline: [{ file: "sub/bad.sh", check: "strict-mode" }, { file: "sub/bad.sh", check: "unguarded-cd" }] },
+  );
+  const r = run(root);
+  assert.equal(r.code, 0, r.stdout);
+  // And a genuinely new violation still fails.
+  const root2 = makeRoot({ "sub/bad.sh": BAD_CD }, { baseline: [] });
+  assert.equal(run(root2).code, 1);
+});
