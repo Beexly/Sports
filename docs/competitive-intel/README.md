@@ -59,8 +59,34 @@ fetch, normalize, validate, provenance, in that order:
   replays it. No test may touch the network.
 - signal family comes from `familyForFeature`. Do not add a ninth family.
 
+## The contest API, and why it is the seam
+
+`/api/contests/usernames/{sportId}/{contestId}` is unauthenticated, per contest, and returns the
+whole field with each entrant's lineup count. One request is 17k to 90k handles: 5 contests gave
+216,928 entrant rows and 114,798 unique people, 46.9 percent of whom repeat across contests.
+That is not a guess at a subscriber list, it is the paying population of a contest.
+
+`/api/contests/usersummary/{sportId}/{contestId}/{ownerId}` returns one entrant's lineup with
+salary, their own exposure, the field's exposure and the gap. The gap is a readable statement of
+how a strong player thinks, closer to the model than a projection number is.
+
+### The id space is the hard part
+
+Contest ids are not a sequence. Neighbouring ids miss, and 40 random samples across a two
+million wide band returned zero. So ids are gathered and then verified:
+
+- archived `/api/contests/usernames` and `/usersummary` URLs from Wayback carry literal ids and
+  verified 7 of 8
+- `/api/contests/{sport}/slates/?date=YYYY-MM-DD` is the live listing, but its `id` field is a
+  DIFFERENT id space and verified 0 of 4 against `usernames`. The verifier is what catches this
+- probing +/- N around verified ids found 6 of 61, so the space is locally clumpy, not global
+
+`npm run competitors:discover` runs all three sources and writes only ids that answered.
+
 ## Running a harvest
 
+`npm run competitors:harvest -- --adapter contests --contest 42264108 --out .ci-out`
+`npm run competitors:harvest -- --adapter ownership --contest 42928458 --owner 4 --out .ci-out`
 `npm run competitors:harvest -- --adapter products --out .ci-out` fetches the real URL, stamps
 provenance, writes one artifact per run and prints a summary (price ladder for a price sheet,
 family histogram for a feature catalogue). It is the only place the package touches the
@@ -76,6 +102,13 @@ coverage is luck and narrative, which is where a differentiator is cheapest.
 writes a steal sheet: price posture and a wedge for a price sheet, a family histogram with the
 thinnest families for a feature catalogue. It never fetches, so the sheet is reproducible from
 the artifact alone and carries that artifact's provenance verbatim.
+
+## The customer base brief
+
+`npm run competitors:base -- --in .ci-out` reads every contest artifact in the directory, rolls
+the same owner across contests into one person, bands commitment and writes the whale list with
+each contributing artifact's provenance printed above it. Whale is a behaviour, not a compliment:
+once one contest caps entries around 20, only repetition across contests can reach the band.
 
 ## Reconciliation
 

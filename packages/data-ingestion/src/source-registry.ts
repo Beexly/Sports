@@ -1330,9 +1330,9 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     robotsRespected: true,
     rateLimit: "No published limit; 20 concurrent cap, back off on 403/429. Catalogue responses up to 6.4 MB.",
     verdict: "use-with-caution",
-    reason: "VERIFIED 2026-11-06: /api/filters/ 200 (674 KB), /api/contests/usernames/5/41347962 200 (1.77 MB, 17,967 rows), /api/lines/ 200 (80 KB). ToS text still unread, so commercial display stays false until a terms read lands.",
+    reason: "VERIFIED 2026-11-06: /api/filters/ 200 (674 KB, 968 features), /api/subscription/products/ 200 (100 SKUs), /api/contests/usernames/5/{id} 200 (19k to 64k rows per contest, 216,928 rows over 5 contests), /api/contests/usersummary/5/{id}/{owner} 200 (salary, own and field exposure), /api/contests/5/slates/?date= 200 (listing, different id space). ToS text still unread, so commercial display stays false until a terms read lands.",
     baseUrl: "https://www.fantasylabs.com/api",
-    datasets: ["filters", "contests/usernames", "contests/usersummary", "lines"],
+    datasets: ["filters", "subscription/products", "contests/usernames", "contests/usersummary", "contests/slates"],
     docsUrl: "https://www.fantasylabs.com/api/filters/",
   },
   "dvoa-timeseries-local": {

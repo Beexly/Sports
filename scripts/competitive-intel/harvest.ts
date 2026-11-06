@@ -23,11 +23,37 @@ import {
   fantasylabsProductsAdapter,
   type RivalPrice,
 } from "../../packages/competitive-intel/src/adapters/fantasylabs-products.js";
+import {
+  chalkBoard,
+  ownershipAdapter,
+  type RivalOwnership,
+} from "../../packages/competitive-intel/src/adapters/fantasylabs-ownership.js";
+import {
+  engagementBand,
+  entrantsAdapter,
+  rollUpEntrants,
+  type RivalEntrant,
+} from "../../packages/competitive-intel/src/adapters/fantasylabs-contests.js";
 
-const ADAPTERS: Record<string, RivalAdapter<unknown>> = {
-  filters: fantasylabsFiltersAdapter as RivalAdapter<unknown>,
-  products: fantasylabsProductsAdapter as RivalAdapter<unknown>,
-};
+const SPORT = Number(process.env.CI_SPORT ?? 5);
+
+/** Contest-scoped adapters need an id, so they are built after the args are read. */
+function buildAdapter(name: string): RivalAdapter<unknown> | undefined {
+  if (name === "filters") return fantasylabsFiltersAdapter as RivalAdapter<unknown>;
+  if (name === "products") return fantasylabsProductsAdapter as RivalAdapter<unknown>;
+  if (name === "ownership") {
+    const contest = Number(arg("contest"));
+    const owner = Number(arg("owner"));
+    if (!Number.isInteger(contest) || !Number.isInteger(owner)) return undefined;
+    return ownershipAdapter(SPORT, contest, owner) as RivalAdapter<unknown>;
+  }
+  if (name === "contests") {
+    const contest = Number(arg("contest"));
+    if (!Number.isInteger(contest) || contest <= 0) return undefined;
+    return entrantsAdapter(contest, SPORT) as RivalAdapter<unknown>;
+  }
+  return undefined;
+}
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -36,11 +62,10 @@ function arg(name: string): string | undefined {
 
 const name = arg("adapter");
 const outDir = arg("out") ?? ".ci-out";
-if (!name || !ADAPTERS[name]) {
-  console.error(`usage: harvest.ts --adapter <${Object.keys(ADAPTERS).join("|")}> --out <dir>`);
-  throw new Error(`usage: harvest.ts --adapter <${Object.keys(ADAPTERS).join("|")}> --out <dir>`);
+const adapter = name ? buildAdapter(name) : undefined;
+if (!name || !adapter) {
+  throw new Error("usage: harvest.ts --adapter <filters|products|contests|ownership> --out <dir> [--contest <id>]");
 }
-const adapter = ADAPTERS[name]!;
 
 async function main(): Promise<void> {
   const started = Date.now();
@@ -72,11 +97,25 @@ async function main(): Promise<void> {
     console.log(`[harvest] tier ${run.provenance.harvest_tier} · licence ${run.provenance.license_class} · commercial_ok ${run.provenance.commercial_ok}`);
     for (const warning of run.warnings) console.log(`[harvest] warn: ${warning}`);
 
-    if (adapter.assetType === "projection_file") {
+    if (run.rows.length > 0 && "family" in (run.rows[0] as Record<string, unknown>)) {
       const hist = familyHistogram(run.rows as RivalFeature[]);
       console.log(`[harvest] families ${JSON.stringify(hist)}`);
+  }
+  if (run.rows.length > 0 && "fieldPercent" in (run.rows[0] as Record<string, unknown>)) {
+    const board = chalkBoard(run.rows as RivalOwnership[]);
+    console.log(`[harvest] chalk board top: ${board.slice(0, 5).map((r) => `${r.playerName} ${r.fieldPercent}%`).join(" · ")}`);
     }
-    if (adapter.assetType === "price_sheet") {
+    if (adapter.assetType === "pick_archive") {
+    const profiles = rollUpEntrants(run.rows as RivalEntrant[]);
+    const bands = profiles.reduce<Record<string, number>>((acc, p) => {
+      const band = engagementBand(p);
+      acc[band] = (acc[band] ?? 0) + 1;
+      return acc;
+    }, {});
+    console.log(`[harvest] ${profiles.length} unique entrant(s), bands ${JSON.stringify(bands)}`);
+    console.log(`[harvest] top by lineups: ${profiles.slice(0, 5).map((p) => `${p.username}:${p.lineups}`).join(" ")}`);
+  }
+  if (adapter.assetType === "price_sheet") {
       const entry = entryPriceByFamily(run.rows as RivalPrice[]);
       console.log(`[harvest] cheapest paid entry by family: ${JSON.stringify(Object.fromEntries(entry))}`);
     }
