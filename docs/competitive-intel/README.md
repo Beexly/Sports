@@ -118,6 +118,18 @@ stdin so 100k people load in one statement. `emailHash` is stable per owner id, 
 updates rather than duplicates. Handles load at confidence 60, grinders 70, whales 80, because a
 public handle is not an email and should not claim to be.
 
+## The chalk board
+
+`npm run competitors:chalk -- --in .ci-out/<contest>.json --owners 20 --out .ci-out` pulls the
+strongest entrants' lineups, four concurrent, and writes field exposure against entrant count
+plus a leverage list of players they are over the field on. Live run over 20 entrants and 886
+lineup rows: field chalk sat at 30 to 32 percent on four golfers, and Sergio Garcia was at 100
+percent of those lineups against a 9.15 percent field, a 90.85 gap.
+
+Field percent is the source's own number repeated on every row for a player, so it is maxed, not
+summed. Entrant count is the honest denominator for "how many of these strong players are on
+him" and is printed beside the percent rather than folded into it.
+
 ## The customer base brief
 
 `npm run competitors:base -- --in .ci-out` reads every contest artifact in the directory, rolls
