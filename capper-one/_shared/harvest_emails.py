@@ -54,9 +54,40 @@ def add(con, slug, email, source, conf, url):
     return cur.rowcount > 0
 
 
+CONTACT_HINT = re.compile(
+    r"/(?:contact(?:-us)?|about(?:-us)?|team|staff|press|company|support|advertis\w*|media)(?:/|$)", re.I)
+
+
+def site_paths(dom):
+    """Real paths that might carry a mailto, instead of six guesses.
+
+    The guess list missed every one of these on sportsline and vsin: /contact/ and /contact-us/
+    were 404, so a whole domain scored zero on paths that never existed. Anchor links from the
+    homepage and sitemap.xml give the site's own names for those pages. Discovered paths are
+    capped so a big odds site cannot fill the budget with fixture pages and crowd the guesses out.
+    """
+    discovered = []
+    code, body = get(f"https://{dom}/")
+    if code == 200:
+        for href in re.findall(r'href="([^"]+)"', body):
+            if href.startswith("/") and CONTACT_HINT.search(href) and len(href) < 60:
+                discovered.append(href.split("?")[0].split("#")[0])
+        for loc in re.findall(r"<loc>([^<]+)</loc>", body)[:60]:
+            if re.search(r"(contact|about|team|press|support|advertis)", loc, re.I):
+                tail = loc.split("//", 1)[-1].split("/", 1)[-1]
+                discovered.append("/" + tail)
+    ordered = discovered[:4] + ["/", "/contact", "/contact-us", "/about", "/press"]
+    seen, out = set(), []
+    for path in ordered:
+        if path not in seen:
+            seen.add(path)
+            out.append(path)
+    return out[:7]
+
+
 def site(con, slug, dom):
     n = 0
-    for path in ("/", "/about", "/team", "/contact", "/press", "/company"):
+    for path in site_paths(dom):
         code, body = get(f"https://{dom}{path}")
         if code != 200:
             continue
