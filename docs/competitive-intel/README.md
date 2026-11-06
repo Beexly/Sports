@@ -70,6 +70,13 @@ First live run, 2026-11-06, 968 features: MARKET 525, EFFICIENCY 345, TRENCHES 3
 MARKET_MICROSTRUCTURE 20, SITUATIONAL 19, MICROCLIMATE 16, LUCK 2, NARRATIVE 2. Their thinnest
 coverage is luck and narrative, which is where a differentiator is cheapest.
 
+## The sheet
+
+`npm run competitors:sheet -- --in .ci-out/<artifact>.json --out .ci-out` reads one artifact and
+writes a steal sheet: price posture and a wedge for a price sheet, a family histogram with the
+thinnest families for a feature catalogue. It never fetches, so the sheet is reproducible from
+the artifact alone and carries that artifact's provenance verbatim.
+
 ## Reconciliation
 
 `npm run competitors:reconcile` writes `rival_deltas` and prints the top 20 `rival_only`
