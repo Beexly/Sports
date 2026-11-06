@@ -72,6 +72,48 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
       tag: "COMPILED",
       accent: "text-orbital-cyan",
     },
+    {
+      title: "Mega-Sweep Textbooks",
+      value: quadEngineCounts.megaSweepBooksIngested.toLocaleString(),
+      subtext: "197/197 Drive PDFs (395 files) + 13 online/repo books",
+      tag: "ZERO SKIP",
+      accent: "text-orbital-cyan",
+    },
+    {
+      title: "GitHub Repos & Technical URLs",
+      value: quadEngineCounts.megaSweepReposAndUrlsWired.toLocaleString(),
+      subtext: "198 wave repos + 174 PostHog/RL/GPU/Lakehouse URLs",
+      tag: "372 WIRED",
+      accent: "text-ultraviolet",
+    },
+    {
+      title: "Morning Sweep CSVs & Kernels",
+      value: quadEngineCounts.morningSweepCsvsAndKernels.toLocaleString(),
+      subtext: "30 Quantitative CSVs + 10 Physics/Stochastic Kernels",
+      tag: "FULL INGEST",
+      accent: "text-ion-white",
+    },
+    {
+      title: "Pinecone Hybrid Corpus Vectors",
+      value: quadEngineCounts.pineconeHybridVectors.toLocaleString(),
+      subtext: "2025-04 Dense (1024d) + Sparse BM25+ + Neural Rerank",
+      tag: "PINECONE",
+      accent: "text-orbital-cyan",
+    },
+    {
+      title: "xAI Live X-Search & Web Waves",
+      value: quadEngineCounts.xaiOmniscienceWavesExecuted.toLocaleString(),
+      subtext: "Analysts, 32-team beat writers, schemes, GSI medical & 2nd-order physics",
+      tag: "X-API LIVE",
+      accent: "text-ultraviolet",
+    },
+    {
+      title: "Coupled 5-API GSE/GSI Nodes",
+      value: quadEngineCounts.coupled5ApiScientificNodes.toLocaleString(),
+      subtext: "X-driven arXiv (48) + OpenAlex (60) + HF (52) + Kaggle (43)",
+      tag: "5-API ENGINE",
+      accent: "text-ion-white",
+    },
   ];
 
   const funnelSteps = [

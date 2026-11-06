@@ -48,6 +48,42 @@ export default function ResearchPortalPage(): JSX.Element {
         "Most sportsbooks price multi-leg Same-Game Parlays as if player stats happen in a vacuum. We build tickets around connected football scripts—such as a road favorite controlling the clock on the ground while the trailing quarterback is forced into checkdown volume.",
       keywords: ["Game Script", "Correlated Parlays", "Slot & Seam Volume", "Clock Control"],
     },
+    {
+      id: "NOTE-05",
+      title: "Full-Spectrum Tracking, Charting & Film Synthesis",
+      category: "Multi-Source Football Intelligence",
+      status: "Live Process Standard",
+      abstract:
+        "Our research desk ingests every available layer of football intelligence -- from play-by-play tendencies, receiver separation and route-win charting, and quarterback pressure-to-sack survival curves to red-zone formation usage and weather-adjusted ball-flight physics -- synthesizing them into our own independent matchup grades.",
+      keywords: ["Separation Charting", "Pressure Survival", "Formation Tendencies", "Weather Physics"],
+    },
+    {
+      id: "NOTE-06",
+      title: "Fourth-Down Decision Value & Mid-Game Pace Shifts",
+      category: "Coaching Strategy & Live Regimes",
+      status: "Live Process Standard",
+      abstract:
+        "Aggressive fourth-down go-for-it tendencies and two-minute hurry-up scripts swing totals and player prop ceilings by full possessions. We grade each head coach and coordinator on true fourth-down aggressiveness, neutral-script tempo, and how quickly they abandon the run when trailing.",
+      keywords: ["Fourth-Down Aggressiveness", "Neutral Pace", "Script Elasticity", "Possession Volume"],
+    },
+    {
+      id: "NOTE-07",
+      title: "Return-to-Play Biomechanics: High-Ankle, Hamstring & Turf-Toe Curves (GSI)",
+      category: "Galaxy Sports Institute (GSI) Sports Medicine",
+      status: "Live Process Standard",
+      abstract:
+        "Clearing the Friday injury report does not mean a player is back at 100%. Through Galaxy Sports Institute (GSI), we track position-specific return-to-play degradation -- including lateral cutting loss in Weeks 1-3 after a high-ankle sprain, top-speed sprinting caps and re-injury risk after a hamstring strain, and quarterback deep-out velocity loss after shoulder or rib trauma.",
+      keywords: ["Return-to-Play Curves", "High-Ankle Cutting Loss", "Hamstring Re-Injury Risk", "GSI Biomechanics"],
+    },
+    {
+      id: "NOTE-08",
+      title: "Second-Order Trench Trauma, Safety Spin Disguises & 32-Team Beat Tells",
+      category: "Deep Situational & Scheme Intelligence",
+      status: "Live Process Standard",
+      abstract:
+        "Surface stats miss what happens inside a game when a backup guard enters and immediately draws targeted defensive stunts, or when early interior hits speed up a quarterback's internal clock on clean-pocket snaps. We combine 32-team beat-writer practice rep tracking with coaching-tree scheme matchups and officiating crew tendencies.",
+      keywords: ["Weak-Link Trench Protection", "Post-Snap Safety Spin", "32-Team Beat Tracking", "Officiating Crew Tendencies"],
+    },
   ];
 
   const processMetrics = [

@@ -1,0 +1,1231 @@
+{
+  "schema_version": "2026-11-06.v1",
+  "compiled_date": "2026-11-06",
+  "canonical_markdown_path": "docs/ops/FUNDING-INVENTORY-2026-11-06.md",
+  "fast_grants_pack_path": "docs/ops/FAST-GRANTS-PACK-CORRECTED-2026-11-03.md",
+  "entity": {
+    "legal_name": "GALAXY SPORTS NETWORK LLC",
+    "dba_brand": "Galaxy Sports Edge (GSE)",
+    "nonprofit_arm": "Galaxy Sports Institute (GSI)",
+    "jurisdiction": "Texas",
+    "sos_file_number": "0806617184",
+    "headquarters": "Kingwood, TX",
+    "founded_year": 2026,
+    "founder": "Garrett Baxley",
+    "ownership_pct": 100.0,
+    "stage": "Bootstrapped, $0 raised, pre-revenue",
+    "company_linkedin_url": "https://www.linkedin.com/company/galaxy-sports-edge",
+    "contact_email": "hq@galaxysportsedge.com"
+  },
+  "founder_financing_rules": {
+    "no_loans": true,
+    "no_loans_order_date": "2026-11-03",
+    "no_loans_statement": "Zero loans, credit lines, or debt instruments permitted.",
+    "no_equity_dilution": true,
+    "no_equity_order_date": "2026-11-06",
+    "no_equity_statement": "100% founder ownership \u2014 not for sale / 0% equity dilution ('i dont want to sell my company yet').",
+    "parked_equity_programs": [
+      "Techstars Spring 2027 (Sports / Anywhere)",
+      "Comcast NBCUniversal SportsTech",
+      "YC W27 (late application)"
+    ],
+    "clock_protection_rules": {
+      "Amplitude Startup Scholarship ($60,000)": "Do NOT sign up before site instrumentation ships; free-year clock starts on approval.",
+      "Mixpanel for Startups ($145,000)": "Do NOT sign up before site instrumentation ships; free year cannot be banked and events must flow within 90 days."
+    },
+    "fee_trap_guards": {
+      "Disability:IN DOBE Certification ($300 non-refundable fee)": "BLOCKED/GUARDED \u2014 requires 3 years of signed federal tax returns; do not pay $300 non-refundable fee prior to 3-year tax return eligibility."
+    }
+  },
+  "gsi_501c3_dependency_chain": {
+    "sequence": "EIN -> Form 1023 -> Determination Letter -> TechSoup FIRST",
+    "steps": [
+      {
+        "step": 1,
+        "milestone": "IRS EIN issuance for Galaxy Sports Institute (Texas nonprofit corporation)"
+      },
+      {
+        "step": 2,
+        "milestone": "IRS Form 1023 submission"
+      },
+      {
+        "step": 3,
+        "milestone": "IRS 501(c)(3) Determination Letter receipt"
+      },
+      {
+        "step": 4,
+        "milestone": "TechSoup / Goodstack validation FIRST (unlocks Google for Nonprofits, Microsoft for Nonprofits, Salesforce Power of Us, Canva, Slack, GitHub, AWS Nonprofit)"
+      }
+    ],
+    "staged_programs_count": 11
+  },
+  "decision_watch_schedule": {
+    "primary_sweep_timestamp_ct": "2026-11-18T09:00:00-06:00",
+    "cron_id": "startup-credits-decisions-check-nov18",
+    "programs_polled": [
+      "Pinecone for Startups",
+      "MongoDB for Startups",
+      "Google for Startups Cloud Program",
+      "RunPod Starter",
+      "Lambda Research Grant",
+      "Deepgram Startup Program",
+      "Together AI Startup Accelerator (Build tier)",
+      "ElevenLabs Startup Grant",
+      "Scaleway Startup Program"
+    ],
+    "upcoming_milestones": [
+      {
+        "date": "2026-11-10",
+        "event": "Awesome Foundation window closes; Google for Startups recheck after Nov 10"
+      },
+      {
+        "date": "2026-11-13",
+        "event": "MongoDB for Startups 3-5 business day window (~Nov 11-13)"
+      },
+      {
+        "date": "2026-11-17",
+        "event": "RunPod Starter expected window (~Nov 12-17)"
+      },
+      {
+        "date": "2026-11-18",
+        "event": "9:00 AM CT automated decision sweep"
+      },
+      {
+        "date": "2026-11-26",
+        "event": "Scaleway Startup Program 21-day decision window"
+      },
+      {
+        "date": "2026-11-27",
+        "event": "Pinecone Standard Trial $300 credit 21-day window expires"
+      },
+      {
+        "date": "2026-11-28",
+        "event": "Coach K Legacy Grant winner announcement (7:30 PM EST)"
+      },
+      {
+        "date": "2026-11-30",
+        "event": "EDDIE Awards, Freed Fellowship, and Shophand Round 2 deadlines"
+      },
+      {
+        "date": "2026-12-05",
+        "event": "NVIDIA Inception DLI course codes expire"
+      },
+      {
+        "date": "2026-12-07",
+        "event": "Anthropic AI for Science & External Researcher Access review"
+      },
+      {
+        "date": "2026-12-21",
+        "event": "Metaculus Market Pulse 26Q4 deadline"
+      },
+      {
+        "date": "2027-01-06",
+        "event": "NFL Big Data Bowl 2027 Open Track ($45,000) submission deadline"
+      }
+    ]
+  },
+  "totals": {
+    "approved_live_count": 10,
+    "approved_live_face_value_usd": 55656.31,
+    "submitted_count": 24,
+    "submitted_stated_face_value_usd": 256500.0,
+    "held_count": 4,
+    "parked_no_equity_count": 3,
+    "blocked_count": 10,
+    "drafted_ready_count": 22,
+    "store_partner_count": 8,
+    "dead_count": 40,
+    "total_programs_inventoried": 121
+  },
+  "programs": [
+    {
+      "id": "prog-001",
+      "name": "PostHog Startup Program",
+      "provider": "PostHog",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 50000.0,
+      "status_date": "2026-11-03",
+      "notes": "Org Galaxy Sports Network, Project ID 516325, $50,000 credits live."
+    },
+    {
+      "id": "prog-002",
+      "name": "Sentry for Startups",
+      "provider": "Sentry",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 5000.0,
+      "status_date": "2026-11-03",
+      "notes": "Expires ~Nov 3, 2027 in galaxy-sports-edge org."
+    },
+    {
+      "id": "prog-003",
+      "name": "Pinecone Standard Trial",
+      "provider": "Pinecone",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 300.0,
+      "status_date": "2026-11-06",
+      "notes": "Live Nov 6 through Nov 27, 2026 (21-day window), Developer support, all clouds/regions/models, $1/GB bulk import, index snapshots/backups, RBAC under GALAXY SPORTS NETWORK LLC."
+    },
+    {
+      "id": "prog-004",
+      "name": "Deepgram account credit",
+      "provider": "Deepgram",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 200.0,
+      "status_date": "2026-11-03",
+      "notes": "Pay As You Go signup credit in console."
+    },
+    {
+      "id": "prog-005",
+      "name": "Google Cloud credits (incl. $100 AI Studio redemption)",
+      "provider": "Google",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 118.33,
+      "status_date": "2026-11-06",
+      "notes": "$100 + $10 + $8.33 on billing 0189D2-25EC7A-569654."
+    },
+    {
+      "id": "xai-grok-console-credits-live",
+      "name": "xAI Grok API Console Credits",
+      "provider": "xAI",
+      "status": "APPROVED_LIVE",
+      "amount_usd": 37.98,
+      "status_date": "2026-11-06",
+      "notes": "Live XAI_API_KEY active in .env.local with $37.98 remaining balance; separate Grok for Startups application in SUBMITTED."
+    },
+    {
+      "id": "prog-006",
+      "name": "NVIDIA Inception",
+      "provider": "NVIDIA",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-05",
+      "notes": "Membership active; 6 DLI codes claimed (14 remain); INCEPTION50 code."
+    },
+    {
+      "id": "prog-007",
+      "name": "NVIDIA NIM / Developer free tier",
+      "provider": "NVIDIA",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-05",
+      "notes": "45 free endpoints at 40 rpm; expires Nov 5, 2027."
+    },
+    {
+      "id": "prog-008",
+      "name": "Google AI Ultra",
+      "provider": "Google",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Paid 20x subscription on baxley.garrett@gmail.com."
+    },
+    {
+      "id": "prog-009",
+      "name": "Azure App Service promo",
+      "provider": "Microsoft",
+      "bucket": "APPROVED_LIVE",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-05",
+      "notes": "20% off Basic through Feb 5, 2027."
+    },
+    {
+      "id": "prog-010",
+      "name": "Pinecone for Startups",
+      "provider": "Pinecone",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Submission successful Nov 6, Bootstrap stage, LinkedIn https://www.linkedin.com/company/galaxy-sports-edge, contact hq@galaxysportsedge.com."
+    },
+    {
+      "id": "prog-011",
+      "name": "Verizon Small Business Grant (via LISC)",
+      "provider": "Verizon / LISC",
+      "bucket": "SUBMITTED",
+      "amount_usd": 10000.0,
+      "status_date": "2026-11-06",
+      "notes": "Both gate courses completed; finalists picked monthly through Dec 2026."
+    },
+    {
+      "id": "prog-012",
+      "name": "EDDIE Awards 2027",
+      "provider": "Synergies Work",
+      "bucket": "SUBMITTED",
+      "amount_usd": 10000.0,
+      "status_date": "2026-11-06",
+      "notes": "Techpreneur category; judged Jan 2027, notified Feb 2027."
+    },
+    {
+      "id": "prog-013",
+      "name": "Anthropic Fellows",
+      "provider": "Anthropic",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Greenhouse job 5183053008, Jan 2027 cohort."
+    },
+    {
+      "id": "prog-014",
+      "name": "MongoDB for Startups",
+      "provider": "MongoDB",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Bootstrapped Inspire tier; reply in 3-5 business days."
+    },
+    {
+      "id": "prog-015",
+      "name": "Grok for Startups",
+      "provider": "xAI",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Rolling review by email to hq@galaxysportsedge.com."
+    },
+    {
+      "id": "prog-016",
+      "name": "Google for Startups Cloud Program",
+      "provider": "Google",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Case 00318218; billing 0189D2-25EC7A-569654."
+    },
+    {
+      "id": "prog-017",
+      "name": "Anthropic AI for Science",
+      "provider": "Anthropic",
+      "bucket": "SUBMITTED",
+      "amount_usd": 50000.0,
+      "status_date": "2026-11-03",
+      "notes": "Calibrated Machines proposal; monthly review Dec 7, 2026."
+    },
+    {
+      "id": "prog-018",
+      "name": "Anthropic External Researcher Access",
+      "provider": "Anthropic",
+      "bucket": "SUBMITTED",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-03",
+      "notes": "Review Dec 7, 2026."
+    },
+    {
+      "id": "prog-019",
+      "name": "OpenAI Researcher Access",
+      "provider": "OpenAI",
+      "bucket": "SUBMITTED",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-03",
+      "notes": "Application ID 0000055819; quarterly review Dec 2026."
+    },
+    {
+      "id": "prog-020",
+      "name": "EA Funds \u2014 Transformative AI Fund",
+      "provider": "EA Funds",
+      "bucket": "SUBMITTED",
+      "amount_usd": 50000.0,
+      "status_date": "2026-11-03",
+      "notes": "Calibrated Machines 12-month proposal."
+    },
+    {
+      "id": "prog-021",
+      "name": "Databricks Startup Program (Neon tier)",
+      "provider": "Databricks / Neon",
+      "bucket": "SUBMITTED",
+      "amount_usd": 100000.0,
+      "status_date": "2026-11-03",
+      "notes": "Filed truthfully as bootstrapped."
+    },
+    {
+      "id": "prog-022",
+      "name": "Together AI Startup Accelerator (Build tier)",
+      "provider": "Together AI",
+      "bucket": "SUBMITTED",
+      "amount_usd": 15000.0,
+      "status_date": "2026-11-03",
+      "notes": "Confirmation received Nov 3."
+    },
+    {
+      "id": "prog-023",
+      "name": "Lambda Research Grant",
+      "provider": "Lambda",
+      "bucket": "SUBMITTED",
+      "amount_usd": 5000.0,
+      "status_date": "2026-11-03",
+      "notes": "100 H100 hours requested for Calibrated Machines."
+    },
+    {
+      "id": "prog-024",
+      "name": "RunPod Starter",
+      "provider": "RunPod",
+      "bucket": "SUBMITTED",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-03",
+      "notes": "Expected ~Nov 12-17, 2026."
+    },
+    {
+      "id": "prog-025",
+      "name": "Deepgram Startup Program",
+      "provider": "Deepgram",
+      "bucket": "SUBMITTED",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-03",
+      "notes": "Usable after $200 signup credit is spent."
+    },
+    {
+      "id": "prog-026",
+      "name": "Awesome Foundation \u2014 Disability Chapter",
+      "provider": "Awesome Foundation",
+      "bucket": "SUBMITTED",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-03",
+      "notes": "Public Open Forecasting Science project."
+    },
+    {
+      "id": "prog-027",
+      "name": "Coach K Legacy Grant",
+      "provider": "Coach K Legacy",
+      "bucket": "SUBMITTED",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-03",
+      "notes": "Winner announced Nov 28, 2026."
+    },
+    {
+      "id": "prog-028",
+      "name": "2Gether-International Venture Labs",
+      "provider": "2Gether-International",
+      "bucket": "SUBMITTED",
+      "amount_usd": 10000.0,
+      "status_date": "2026-11-03",
+      "notes": "Disabled-founder cohort."
+    },
+    {
+      "id": "prog-029",
+      "name": "TWC Vocational Rehabilitation referral",
+      "provider": "Texas Workforce Commission",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Self-employment equipment/support services."
+    },
+    {
+      "id": "prog-030",
+      "name": "Hello Alice",
+      "provider": "Hello Alice",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-10-28",
+      "notes": "Submitted Oct 28, 2026."
+    },
+    {
+      "id": "prog-031",
+      "name": "Scaleway Startup Program",
+      "provider": "Scaleway",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-05",
+      "notes": "EUR 1,000-36,000 tiered; decision within 21 days (~Nov 26)."
+    },
+    {
+      "id": "prog-032",
+      "name": "fal.ai Research Grant",
+      "provider": "fal.ai",
+      "bucket": "SUBMITTED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-05",
+      "notes": "Emailed grants@fal.ai from hq@galaxysportsedge.com."
+    },
+    {
+      "id": "prog-033",
+      "name": "Airtable for Startups",
+      "provider": "Airtable",
+      "bucket": "SUBMITTED",
+      "amount_usd": 500.0,
+      "status_date": "2026-11-05",
+      "notes": "Workspace wspVs7xfI19wWFd8a."
+    },
+    {
+      "id": "prog-034",
+      "name": "Manifund",
+      "provider": "Manifund",
+      "bucket": "HELD",
+      "amount_usd": 15000.0,
+      "status_date": "2026-11-03",
+      "notes": "galaxy-conformal-ot in FAST-GRANTS-PACK-CORRECTED-2026-11-03.md."
+    },
+    {
+      "id": "prog-035",
+      "name": "SFF Speculation Grant",
+      "provider": "Survival and Flourishing Fund",
+      "bucket": "HELD",
+      "amount_usd": 25000.0,
+      "status_date": "2026-11-03",
+      "notes": "Corrected abstract ready in Fast-Grants pack."
+    },
+    {
+      "id": "prog-036",
+      "name": "Cosmos Institute Grant",
+      "provider": "Cosmos Institute",
+      "bucket": "HELD",
+      "amount_usd": 25000.0,
+      "status_date": "2026-11-03",
+      "notes": "Mission-alignment draft ready in Fast-Grants pack."
+    },
+    {
+      "id": "prog-037",
+      "name": "Emergent Ventures",
+      "provider": "Mercatus Center",
+      "bucket": "HELD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Requires Garrett's own non-AI prose."
+    },
+    {
+      "id": "prog-038",
+      "name": "Techstars Spring 2027 (Sports / Anywhere)",
+      "provider": "Techstars",
+      "bucket": "PARKED_NO_EQUITY",
+      "amount_usd": 220000.0,
+      "status_date": "2026-11-06",
+      "notes": "5% equity + $200K SAFE \u2014 parked by Founder No-Equity Order (0% dilution)."
+    },
+    {
+      "id": "prog-039",
+      "name": "Comcast NBCUniversal SportsTech",
+      "provider": "Comcast",
+      "bucket": "PARKED_NO_EQUITY",
+      "amount_usd": 50000.0,
+      "status_date": "2026-11-06",
+      "notes": "$50K equity \u2014 parked by Founder No-Equity Order (0% dilution)."
+    },
+    {
+      "id": "prog-040",
+      "name": "YC W27 (late application)",
+      "provider": "Y Combinator",
+      "bucket": "PARKED_NO_EQUITY",
+      "amount_usd": 500000.0,
+      "status_date": "2026-11-06",
+      "notes": "Standard equity deal \u2014 parked by Founder No-Equity Order (0% dilution)."
+    },
+    {
+      "id": "prog-041",
+      "name": "Cloudflare for Startups (Tier 3, bootstrapped)",
+      "provider": "Cloudflare",
+      "bucket": "BLOCKED",
+      "amount_usd": 10000.0,
+      "status_date": "2026-11-06",
+      "notes": "Blocked on Google 2-Step verification tap."
+    },
+    {
+      "id": "prog-042",
+      "name": "ElevenLabs Startup Grant",
+      "provider": "ElevenLabs",
+      "bucket": "BLOCKED",
+      "amount_usd": 5500.0,
+      "status_date": "2026-11-06",
+      "notes": "Blocked on Secure Vault Google sign-in for hq@."
+    },
+    {
+      "id": "prog-043",
+      "name": "Metaculus \u2014 Fall 2026 FutureEval + MiniBench + Market Pulse 26Q4",
+      "provider": "Metaculus",
+      "bucket": "BLOCKED",
+      "amount_usd": 58500.0,
+      "status_date": "2026-11-06",
+      "notes": "Blocked on setting account password via Secure Vault."
+    },
+    {
+      "id": "prog-044",
+      "name": "Microsoft Founders Hub",
+      "provider": "Microsoft",
+      "bucket": "BLOCKED",
+      "amount_usd": 5000.0,
+      "status_date": "2026-11-06",
+      "notes": "Blocked on portal redirect loop; needs founder browser."
+    },
+    {
+      "id": "prog-045",
+      "name": "Google AdSense",
+      "provider": "Google",
+      "bucket": "BLOCKED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Account pub-8151105906877749; needs payments/tax profile."
+    },
+    {
+      "id": "prog-046",
+      "name": "AWS Activate",
+      "provider": "Amazon",
+      "bucket": "BLOCKED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Parked on legacy AWS balance."
+    },
+    {
+      "id": "prog-047",
+      "name": "SAM.gov entity registration",
+      "provider": "SAM.gov",
+      "bucket": "BLOCKED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Paused pending federal EIN and entity-structure confirmation."
+    },
+    {
+      "id": "prog-048",
+      "name": "Shophand Small Business Boost Grant, Round 2",
+      "provider": "Shophand",
+      "bucket": "BLOCKED",
+      "amount_usd": 5000.0,
+      "status_date": "2026-11-06",
+      "notes": "Needs founder social follows before Nov 30, 2026."
+    },
+    {
+      "id": "prog-049",
+      "name": "Freed Fellowship",
+      "provider": "Freed Fellowship",
+      "bucket": "BLOCKED",
+      "amount_usd": 3000.0,
+      "status_date": "2026-11-06",
+      "notes": "Needs founder approval of $19 application fee before Nov 30, 2026."
+    },
+    {
+      "id": "prog-050",
+      "name": "Mercury business banking + perks bundle",
+      "provider": "Mercury",
+      "bucket": "BLOCKED",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Needs EIN, formation docs, and government ID."
+    },
+    {
+      "id": "prog-051",
+      "name": "Own storefront \u2014 /packages + /fantasy/dfs",
+      "provider": "galaxysportsedge.com",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-10-29",
+      "notes": "Live paywall storefront ($29-$49 packs)."
+    },
+    {
+      "id": "prog-052",
+      "name": "CapperTek",
+      "provider": "CapperTek",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "1-Day $39 / 7-Day $49, 0% commission."
+    },
+    {
+      "id": "prog-053",
+      "name": "Whop",
+      "provider": "Whop",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "$49 / $39 / $29 / $39.99 tiers live."
+    },
+    {
+      "id": "prog-054",
+      "name": "Impact.com publisher account",
+      "provider": "Impact.com",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Publisher 8111208 (hq@galaxysportsedge.com)."
+    },
+    {
+      "id": "prog-055",
+      "name": "OddsJam affiliate",
+      "provider": "OddsJam",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "50% lifetime rev-share; oddsjam.com/?ref=zwniodg."
+    },
+    {
+      "id": "prog-056",
+      "name": "Dabble affiliate",
+      "provider": "Dabble",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Account GalaxySportsEdge created Nov 3."
+    },
+    {
+      "id": "prog-057",
+      "name": "Betr Partner",
+      "provider": "Betr",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Application submitted Nov 3."
+    },
+    {
+      "id": "prog-058",
+      "name": "PrizePicks Partner",
+      "provider": "PrizePicks",
+      "bucket": "STORE_PARTNER",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Application submitted Nov 3."
+    },
+    {
+      "id": "prog-059",
+      "name": "NSF SBIR Project Pitch",
+      "provider": "NSF",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 305000.0,
+      "status_date": "2026-11-03",
+      "notes": "NSF 26-510 Phase I pitch ready; needs founder attestation + SAM.gov/UEI."
+    },
+    {
+      "id": "prog-060",
+      "name": "NFL Big Data Bowl 2027 \u2014 Open Track",
+      "provider": "NFL / Kaggle",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 45000.0,
+      "status_date": "2026-11-06",
+      "notes": "Deadline Jan 6, 2027; scaffolded in research/nfl_big_data_bowl_2027/."
+    },
+    {
+      "id": "prog-061",
+      "name": "Amplitude Startup Scholarship",
+      "provider": "Amplitude",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 60000.0,
+      "status_date": "2026-11-06",
+      "notes": "CLOCK-PROTECTION RULE: Do NOT sign up before site instrumentation ships."
+    },
+    {
+      "id": "prog-062",
+      "name": "Mixpanel for Startups",
+      "provider": "Mixpanel",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 145000.0,
+      "status_date": "2026-11-06",
+      "notes": "CLOCK-PROTECTION RULE: Do NOT sign up before site instrumentation ships (90-day ingestion rule)."
+    },
+    {
+      "id": "prog-063",
+      "name": "Datadog for Startups",
+      "provider": "Datadog",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 100000.0,
+      "status_date": "2026-11-06",
+      "notes": "Gated on partner referral confirmation (NVIDIA Inception / Google for Startups)."
+    },
+    {
+      "id": "prog-064",
+      "name": "Notion for Startups",
+      "provider": "Notion",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-05",
+      "notes": "Parked at founder order Nov 5; needs hq@ work email route."
+    },
+    {
+      "id": "prog-065",
+      "name": "NIDILRR SBIR Phase I",
+      "provider": "ACL / HHS",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 100000.0,
+      "status_date": "2026-11-06",
+      "notes": "FY2027 call expected ~Dec 2026 + SAM.gov."
+    },
+    {
+      "id": "prog-066",
+      "name": "Google Ad Grants + Google for Nonprofits",
+      "provider": "Google",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 120000.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain (EIN -> Form 1023 -> Determination Letter -> TechSoup FIRST)."
+    },
+    {
+      "id": "prog-067",
+      "name": "Microsoft for Nonprofits",
+      "provider": "Microsoft",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 2000.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-068",
+      "name": "TechSoup validation",
+      "provider": "TechSoup",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Execute FIRST immediately after IRS 501(c)(3) Determination Letter."
+    },
+    {
+      "id": "prog-069",
+      "name": "Salesforce Power of Us",
+      "provider": "Salesforce",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 15000.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-070",
+      "name": "Canva for Nonprofits",
+      "provider": "Canva",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-071",
+      "name": "Slack for Nonprofits",
+      "provider": "Slack",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain via TechSoup."
+    },
+    {
+      "id": "prog-072",
+      "name": "GitHub for Nonprofits",
+      "provider": "GitHub",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-073",
+      "name": "AWS Imagine Grant",
+      "provider": "AWS",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 300000.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-074",
+      "name": "AWS Nonprofit Credit Program",
+      "provider": "AWS via TechSoup",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 1000.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain + $95 TechSoup fee."
+    },
+    {
+      "id": "prog-075",
+      "name": "Sloan Foundation \u2014 Letter of Inquiry",
+      "provider": "Alfred P. Sloan Foundation",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 50000.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-076",
+      "name": "Templeton Foundation \u2014 Online Funding Inquiry",
+      "provider": "John Templeton Foundation",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-077",
+      "name": "Benevity causes listing",
+      "provider": "Benevity",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Staged on GSI 501(c)(3) chain."
+    },
+    {
+      "id": "prog-078",
+      "name": "Synergies Work \u2014 Igniting Ideas accelerator",
+      "provider": "Synergies Work",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-06",
+      "notes": "Scholarship cohort watched; SEED loan fund closed by no-loans rule."
+    },
+    {
+      "id": "prog-079",
+      "name": "IBM Sports Tech Startup Challenge",
+      "provider": "IBM / Web Summit",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 100000.0,
+      "status_date": "2026-11-06",
+      "notes": "Watch only via Web Summit showcase."
+    },
+    {
+      "id": "prog-080",
+      "name": "TWC Skills for Small Business",
+      "provider": "Texas Workforce Commission",
+      "bucket": "DRAFTED_READY",
+      "amount_usd": 2000.0,
+      "status_date": "2026-11-06",
+      "notes": "Activates upon first W-2 hire."
+    },
+    {
+      "id": "prog-081",
+      "name": "GitHub for Startups",
+      "provider": "GitHub",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires partner affiliation + outside equity."
+    },
+    {
+      "id": "prog-082",
+      "name": "Vercel for Startups",
+      "provider": "Vercel",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires partner proof + funding round within 12 months."
+    },
+    {
+      "id": "prog-083",
+      "name": "HubSpot for Startups",
+      "provider": "HubSpot",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires VC funding or partner org."
+    },
+    {
+      "id": "prog-084",
+      "name": "Supabase (direct)",
+      "provider": "Supabase",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Public startup form removed mid-2026."
+    },
+    {
+      "id": "prog-085",
+      "name": "Snowflake for Startups",
+      "provider": "Snowflake",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "VC-gated and wrong stack."
+    },
+    {
+      "id": "prog-086",
+      "name": "IBM for Startups (general cloud)",
+      "provider": "IBM",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "No self-serve program live."
+    },
+    {
+      "id": "prog-087",
+      "name": "Replicate",
+      "provider": "Replicate",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "replicate.com/startups is 404."
+    },
+    {
+      "id": "prog-088",
+      "name": "LangChain / LangSmith",
+      "provider": "LangChain",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires >=$25K raised or VC partner."
+    },
+    {
+      "id": "prog-089",
+      "name": "Modal",
+      "provider": "Modal",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires partner VC or >$1M raised."
+    },
+    {
+      "id": "prog-090",
+      "name": "Hugging Face",
+      "provider": "Hugging Face",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "No startup program; free credit ended Oct 7, 2026."
+    },
+    {
+      "id": "prog-091",
+      "name": "Weights & Biases startup program",
+      "provider": "Weights & Biases",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Foundation-model builders only."
+    },
+    {
+      "id": "prog-092",
+      "name": "Groq for Startups",
+      "provider": "Groq",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Closed; intake redirects to homepage."
+    },
+    {
+      "id": "prog-093",
+      "name": "Mistral Mistralship",
+      "provider": "Mistral",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Program page 404."
+    },
+    {
+      "id": "prog-094",
+      "name": "Nebius",
+      "provider": "Nebius",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "$5M+ venture backing required."
+    },
+    {
+      "id": "prog-095",
+      "name": "Stripe Atlas",
+      "provider": "Stripe",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "$500 paid formation; already a Texas LLC."
+    },
+    {
+      "id": "prog-096",
+      "name": "Stripe Startups Program",
+      "provider": "Stripe",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Institutional funding required."
+    },
+    {
+      "id": "prog-097",
+      "name": "Linear for Startups",
+      "provider": "Linear",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Partner-only."
+    },
+    {
+      "id": "prog-098",
+      "name": "Deel / Gusto (standalone)",
+      "provider": "Deel / Gusto",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Partner marketplaces only."
+    },
+    {
+      "id": "prog-099",
+      "name": "Microsoft for Startups (self-serve)",
+      "provider": "Microsoft",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Existing Azure subscription disqualified self-serve route."
+    },
+    {
+      "id": "prog-100",
+      "name": "DigitalOcean Hatch",
+      "provider": "DigitalOcean",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Applications paused until early 2027."
+    },
+    {
+      "id": "prog-101",
+      "name": "Kessler Foundation",
+      "provider": "Kessler Foundation",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires >$3M nonprofit or NJ entity."
+    },
+    {
+      "id": "prog-102",
+      "name": "National Disability Institute Empowerment Fund",
+      "provider": "NDI",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Unverified on NDI site."
+    },
+    {
+      "id": "prog-103",
+      "name": "Fast Grants",
+      "provider": "Fast Grants",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Paused/dormant."
+    },
+    {
+      "id": "prog-104",
+      "name": "ACX Grants",
+      "provider": "ACX",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "No open 2026 round; adjacent mini-grants via Manifund."
+    },
+    {
+      "id": "prog-105",
+      "name": "Open Philanthropy / Coefficient Giving forecasting RFP",
+      "provider": "Coefficient Giving",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Closed Jan 30, 2026."
+    },
+    {
+      "id": "prog-106",
+      "name": "Longview Philanthropy",
+      "provider": "Longview Philanthropy",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "No open portal for independents."
+    },
+    {
+      "id": "prog-107",
+      "name": "Forecasting Research Institute",
+      "provider": "FRI",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Grantee, not grantmaker."
+    },
+    {
+      "id": "prog-108",
+      "name": "Sportradar Acceleradar",
+      "provider": "Sportradar",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Discontinued post-2018."
+    },
+    {
+      "id": "prog-109",
+      "name": "Stats Perform",
+      "provider": "Stats Perform",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "No startup program verified."
+    },
+    {
+      "id": "prog-110",
+      "name": "beehiiv creator fund",
+      "provider": "beehiiv",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "No grant fund exists."
+    },
+    {
+      "id": "prog-111",
+      "name": "Substack Creator Accelerator",
+      "provider": "Substack",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Gated on existing MRR / Bestseller status."
+    },
+    {
+      "id": "prog-112",
+      "name": "City of Houston Neighborhood Matching Grant",
+      "provider": "City of Houston",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Wrong applicant type."
+    },
+    {
+      "id": "prog-113",
+      "name": "Harris County Beryl CDBG-DR",
+      "provider": "Harris County",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires pre-July 8, 2024 operation (and Hello Alice Houston Pitch Oct 28 deadline passed)."
+    },
+    {
+      "id": "prog-114",
+      "name": "Harris County Opportunity Fund (PeopleFund)",
+      "provider": "PeopleFund",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Loan program; closed by Founder No-Loans Order."
+    },
+    {
+      "id": "prog-115",
+      "name": "Kiva U.S.",
+      "provider": "Kiva",
+      "bucket": "DEAD",
+      "amount_usd": 15000.0,
+      "status_date": "2026-11-03",
+      "notes": "0% loan class; closed by Founder No-Loans Order (Nov 3)."
+    },
+    {
+      "id": "prog-116",
+      "name": "SBA general grants",
+      "provider": "SBA",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "SBA does not grant funds to start/expand a general business."
+    },
+    {
+      "id": "prog-117",
+      "name": "NASE Growth Grants",
+      "provider": "NASE",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Requires paid membership + 90-day hold + prior tax return (plus Disability:IN DOBE $300 non-refundable fee trap guard requires 3 yrs tax returns)."
+    },
+    {
+      "id": "prog-118",
+      "name": "LiftFund",
+      "provider": "LiftFund",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Loan program; closed by Founder No-Loans Order."
+    },
+    {
+      "id": "prog-119",
+      "name": "BCL of Texas",
+      "provider": "BCL of Texas",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Loan program; closed by Founder No-Loans Order."
+    },
+    {
+      "id": "prog-120",
+      "name": "DreamSpring",
+      "provider": "DreamSpring",
+      "bucket": "DEAD",
+      "amount_usd": 0.0,
+      "status_date": "2026-11-03",
+      "notes": "Loan program; closed by Founder No-Loans Order."
+    }
+  ]
+}

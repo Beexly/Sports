@@ -1,0 +1,130 @@
+{
+  "schema_version": "2026-11-06.pinecone-hybrid-v1",
+  "verified_at_utc": "2026-11-06T19:47:46.490852+00:00",
+  "organization": "GALAXY SPORTS NETWORK LLC",
+  "plan_tier": "Pinecone Standard Trial ($300 Credits Live Nov 6 - Nov 27, 2026)",
+  "startup_application_status": "SUBMITTED (Submission successful Nov 6, 2026)",
+  "api_version": "2025-04",
+  "index_name": "gse-200-book-hybrid-index",
+  "index_host": "gse-200-book-hybrid-index-r8g25gd.svc.aped-4627-b74a.pinecone.io",
+  "dimension": 1024,
+  "metric": "dotproduct",
+  "cloud": "aws",
+  "region": "us-east-1",
+  "models": {
+    "dense_embedding_model": "llama-text-embed-v2",
+    "sparse_embedding_model": "pinecone-sparse-english-v0",
+    "primary_rerank_model": "pinecone-rerank-v0",
+    "fallback_rerank_model": "bge-reranker-v2-m3"
+  },
+  "scoring_parameters": {
+    "bm25_plus_k1": 1.2,
+    "bm25_plus_b": 0.75,
+    "bm25_plus_delta": 1.0,
+    "hybrid_convex_alpha": 0.65
+  },
+  "uncompressed_corpus_totals": {
+    "total_documents_indexed": 624,
+    "books_count": 210,
+    "repos_and_urls_count": 372,
+    "morning_sweep_csvs_count": 30,
+    "innovation_kernels_count": 10,
+    "ngs_commercial_intelligence_count": 2
+  },
+  "namespaces_upserted": {
+    "gse-200-book-corpus": 124,
+    "gse-372-repos": 221,
+    "gsi-biomechanics": 279
+  },
+  "backups_endpoint_check": {
+    "mode": "listed",
+    "active_backups_count": 0
+  },
+  "verification_query": {
+    "query": "Sinkhorn-Knopp optimal transport conformal prediction BM25+ lexical scoring and NFL pre-snap motion coverage disguise",
+    "top_reranked_results": [
+      {
+        "doc_id": "book-206",
+        "title": "GSE+GSI Canonical Reference Volume #206 (B-MEDICAL)",
+        "namespace": "gsi-biomechanics",
+        "bm25_plus_score": 37.910201,
+        "dense_score": 0.030033,
+        "sparse_score": 0.5,
+        "hybrid_convex_score": 0.194521,
+        "rerank_score": 0.002397,
+        "final_score": 0.079247
+      },
+      {
+        "doc_id": "book-208",
+        "title": "GSE+GSI Canonical Reference Volume #208 (D-MODELS)",
+        "namespace": "gse-200-book-corpus",
+        "bm25_plus_score": 37.910201,
+        "dense_score": 0.008912,
+        "sparse_score": 0.5,
+        "hybrid_convex_score": 0.180793,
+        "rerank_score": 0.003945,
+        "final_score": 0.074684
+      },
+      {
+        "doc_id": "book-210",
+        "title": "GSE+GSI Canonical Reference Volume #210 (A-SPORTS)",
+        "namespace": "gse-200-book-corpus",
+        "bm25_plus_score": 37.910201,
+        "dense_score": 0.008899,
+        "sparse_score": 0.5,
+        "hybrid_convex_score": 0.180784,
+        "rerank_score": 0.003594,
+        "final_score": 0.07447
+      },
+      {
+        "doc_id": "book-205",
+        "title": "GSE+GSI Canonical Reference Volume #205 (A-SPORTS)",
+        "namespace": "gse-200-book-corpus",
+        "bm25_plus_score": 37.910201,
+        "dense_score": 0.00728,
+        "sparse_score": 0.5,
+        "hybrid_convex_score": 0.179732,
+        "rerank_score": 0.003707,
+        "final_score": 0.074117
+      },
+      {
+        "doc_id": "book-207",
+        "title": "GSE+GSI Canonical Reference Volume #207 (C-SYSTEMS)",
+        "namespace": "gse-200-book-corpus",
+        "bm25_plus_score": 37.910201,
+        "dense_score": 0.00194,
+        "sparse_score": 0.5,
+        "hybrid_convex_score": 0.176261,
+        "rerank_score": 0.003945,
+        "final_score": 0.072871
+      }
+    ],
+    "live_data_plane_matches": [
+      {
+        "id": "kernel-03",
+        "score": 6.239021,
+        "title": "Sinkhorn-Knopp Entropic Optimal Transport Mass Conservation"
+      },
+      {
+        "id": "book-195",
+        "score": 5.849405,
+        "title": "Computational Optimal Transport"
+      },
+      {
+        "id": "kernel-06",
+        "score": 5.549445,
+        "title": "BDB 2027 Pre-Snap Motion Entropy & Post-Snap Shell Rotation Disguise KL"
+      },
+      {
+        "id": "book-209",
+        "score": 4.980501,
+        "title": "GSE+GSI Canonical Reference Volume #209 (MUST-HAVE)"
+      },
+      {
+        "id": "book-208",
+        "score": 4.969449,
+        "title": "GSE+GSI Canonical Reference Volume #208 (D-MODELS)"
+      }
+    ]
+  }
+}

@@ -68,6 +68,7 @@ export const SOCIAL = {
   instagram: "https://instagram.com/galaxysportsedge",
   facebook: "https://facebook.com/galaxysportsedge",
   threads: "https://threads.net/@galaxysportsedge",
+  linkedin: "https://www.linkedin.com/company/galaxy-sports-edge",
   youtube: "",
   // Owner note 2026-06-11: Telegram + WhatsApp wanted; Discord too, but only
   // after the security/bot/moderation structure is designed (structure first).

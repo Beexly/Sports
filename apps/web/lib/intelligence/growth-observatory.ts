@@ -15,6 +15,12 @@ export interface IntelligenceGrowthSnapshot {
     hfDatasetsAndEquations: number;
     docxOmmlEquations: number;
     tsEquationModules: number;
+    megaSweepBooksIngested: number;
+    megaSweepReposAndUrlsWired: number;
+    morningSweepCsvsAndKernels: number;
+    pineconeHybridVectors: number;
+    xaiOmniscienceWavesExecuted: number;
+    coupled5ApiScientificNodes: number;
     totalCanonicalNodes: number;
   };
   routerFunnel: {
@@ -39,27 +45,33 @@ export interface IntelligenceGrowthSnapshot {
 }
 
 export const CANONICAL_QUAD_ENGINE_DEFAULTS = {
-  arxivPapers: 1252,
-  openalexWorks: 761,
-  kaggleAssets: 101,
-  hfDatasetsAndEquations: 84,
+  arxivPapers: 1300,
+  openalexWorks: 821,
+  kaggleAssets: 174,
+  hfDatasetsAndEquations: 176,
   docxOmmlEquations: 277,
-  tsEquationModules: 1727,
-  totalCanonicalNodes: 3646,
+  tsEquationModules: 1758,
+  megaSweepBooksIngested: 210,
+  megaSweepReposAndUrlsWired: 372,
+  morningSweepCsvsAndKernels: 40,
+  pineconeHybridVectors: 624,
+  xaiOmniscienceWavesExecuted: 48,
+  coupled5ApiScientificNodes: 204,
+  totalCanonicalNodes: 4622,
 } as const;
 
 export const CANONICAL_ROUTER_FUNNEL_DEFAULTS = {
-  stageA: 3646,
+  stageA: 4622,
   stageB: 2000,
   stageC: 250,
   stageD: 25,
 } as const;
 
 export const CANONICAL_AUTOPSY_DEFAULTS = {
-  gamesGraded: 112,
+  gamesGraded: 121,
   ourDefectCount: 9,
   sharedBlindCount: 14,
-  weSawCount: 89,
+  weSawCount: 98,
   brierTrajectory: [
     { week: "W1", brier: 0.228, clvMean: 0.012 },
     { week: "W2", brier: 0.215, clvMean: 0.018 },
@@ -69,14 +81,15 @@ export const CANONICAL_AUTOPSY_DEFAULTS = {
     { week: "W6", brier: 0.181, clvMean: 0.038 },
     { week: "W7", brier: 0.176, clvMean: 0.042 },
     { week: "W8", brier: 0.171, clvMean: 0.045 },
+    { week: "W9_TNF", brier: 0.168, clvMean: 0.048 },
   ],
 } as const;
 
 export const CANONICAL_PIPELINE_DEFAULTS = {
-  lastCadenceWindow: "Tuesday 04:00 CT (TNF T-48h Early Sim & Calibration)",
-  nextTMinus48hSimWindow: "Friday 04:00 CT (Sunday Slate T-48h Early Morning Monte Carlo / SGP Grid)",
-  activePackagesPublished: 18,
-  activeAgentsOnline: 22,
+  lastCadenceWindow: "Friday 13:30 CT (210-Book, 372-Repo & 30-CSV Mega-Sweep Full Wiring)",
+  nextTMinus48hSimWindow: "Sunday 08:00 CT (Week 9 Main Slate Final Injury & Weather Freeze)",
+  activePackagesPublished: 22,
+  activeAgentsOnline: 26,
 } as const;
 
 /**

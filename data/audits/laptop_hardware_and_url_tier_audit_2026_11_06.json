@@ -1,0 +1,653 @@
+{
+  "hardware": {
+    "cpu": {
+      "Name": "12th Gen Intel(R) Core(TM) i7-1255U",
+      "NumberOfCores": 10,
+      "NumberOfLogicalProcessors": 12
+    },
+    "memory_kb": {
+      "TotalVisibleMemorySize": 33231568,
+      "FreePhysicalMemory": 4174808
+    },
+    "gpu": {
+      "Name": "Intel(R) Iris(R) Xe Graphics",
+      "AdapterRAM": 2147479552,
+      "DriverVersion": "32.0.101.7088"
+    },
+    "nvidia_smi": "No NVIDIA GPU / nvidia-smi not present",
+    "disk_C": {
+      "total_gb": 475.85,
+      "used_gb": 474.06,
+      "free_gb": 1.79
+    },
+    "disk_G": {
+      "total_gb": 475.85,
+      "used_gb": 474.15,
+      "free_gb": 1.7
+    }
+  },
+  "branch_prefixes": {
+    "research": {
+      "count": 9,
+      "ahead_zero": 1,
+      "ahead_pos": 8,
+      "max_ahead": 1002,
+      "total_ahead_sum": 1697,
+      "samples": [
+        "research/engine-plan-2026-10-03 (behind=1374, ahead=1002, 2026-11-06)",
+        "research/engine-plan-2026-10-03-local-3420f4fac (behind=1374, ahead=416, 2026-10-03)",
+        "research/rating-atlas-2026-10-09-packet (behind=1200, ahead=197, 2026-10-11)",
+        "research/galaxy-genesis-metacortex-2026-07-17 (behind=4041, ahead=63, 2026-07-18)",
+        "research/gds-fast-grants-and-clean-kernel-2026-11-03 (behind=232, ahead=8, 2026-11-04)"
+      ]
+    },
+    "backup": {
+      "count": 19,
+      "ahead_zero": 0,
+      "ahead_pos": 19,
+      "max_ahead": 420,
+      "total_ahead_sum": 912,
+      "samples": [
+        "backup/local/research/engine-plan-2026-10-03 (behind=1374, ahead=420, 2026-11-02)",
+        "backup/local/all-local-commits-2026-10-21 (behind=1374, ahead=416, 2026-10-03)",
+        "backup/local/hermes/v528-week1 (behind=2569, ahead=19, 2026-09-08)",
+        "backup/local/preserve/at-risk-venn-2026-09-29 (behind=1521, ahead=18, 2026-09-29)",
+        "backup/pre-gg-rewrite-4fc09e9e3 (behind=2468, ahead=6, 2026-09-09)"
+      ]
+    },
+    "claude": {
+      "count": 192,
+      "ahead_zero": 1,
+      "ahead_pos": 191,
+      "max_ahead": 336,
+      "total_ahead_sum": 2678,
+      "samples": [
+        "claude/compassionate-ramanujan-qqt5nb (behind=4366, ahead=336, 2026-06-19)",
+        "claude/integration-train (behind=2820, ahead=188, 2026-08-26)",
+        "claude/customer-copy-pass (behind=2102, ahead=123, 2026-10-17)",
+        "claude/determined-keller-dUcdG (behind=4826, ahead=112, 2026-05-29)",
+        "claude/keen-ptolemy-t38f1g (behind=4194, ahead=108, 2026-06-26)"
+      ]
+    },
+    "codex": {
+      "count": 23,
+      "ahead_zero": 0,
+      "ahead_pos": 23,
+      "max_ahead": 171,
+      "total_ahead_sum": 2342,
+      "samples": [
+        "codex/sunday-frontier-maxforce-2026-07-05 (behind=4075, ahead=171, 2026-07-07)",
+        "codex/api-v1-disposable-rehearsal-packet (behind=4075, ahead=122, 2026-07-04)",
+        "codex/api-v1-promotion-readiness-matrix (behind=4075, ahead=121, 2026-07-04)",
+        "codex/api-v1-autonomous-polish-hardening (behind=4075, ahead=120, 2026-07-04)",
+        "codex/api-v1-rd-polish-guards (behind=4075, ahead=118, 2026-07-04)"
+      ]
+    },
+    "stats": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 164,
+      "total_ahead_sum": 164,
+      "samples": [
+        "stats/books-ordering-2026-09-18 (behind=2102, ahead=164, 2026-09-19)"
+      ]
+    },
+    "hermes": {
+      "count": 114,
+      "ahead_zero": 9,
+      "ahead_pos": 105,
+      "max_ahead": 132,
+      "total_ahead_sum": 1154,
+      "samples": [
+        "hermes/last-plan-2026-09-15 (behind=2102, ahead=132, 2026-10-06)",
+        "hermes/lane-bc-20260920 (behind=2102, ahead=129, 2026-10-02)",
+        "hermes/live-wip-2026-09-24 (behind=1183, ahead=103, 2026-10-15)",
+        "hermes/w2-audit-settlement (behind=2823, ahead=101, 2026-08-28)",
+        "hermes/frozen-path-guardrails (behind=2102, ahead=100, 2026-09-15)"
+      ]
+    },
+    "mimo": {
+      "count": 7,
+      "ahead_zero": 0,
+      "ahead_pos": 7,
+      "max_ahead": 131,
+      "total_ahead_sum": 353,
+      "samples": [
+        "mimo/docs-cleanup-calib-2026-09-21 (behind=2102, ahead=131, 2026-09-21)",
+        "mimo/mimo-xfp-2026-09-18 (behind=2102, ahead=130, 2026-09-18)",
+        "mimo/typecheck-signal-value-fix (behind=2096, ahead=70, 2026-09-19)",
+        "mimo/wire-nfl-mlb-2026-09-23 (behind=1815, ahead=9, 2026-10-06)",
+        "mimo/calib-clv-2026-09-23 (behind=1815, ahead=6, 2026-09-23)"
+      ]
+    },
+    "fix": {
+      "count": 29,
+      "ahead_zero": 4,
+      "ahead_pos": 25,
+      "max_ahead": 101,
+      "total_ahead_sum": 186,
+      "samples": [
+        "fix/overnight-codex-feature-gates-260524 (behind=4981, ahead=101, 2026-05-24)",
+        "fix/signal-ledger-shard-v2 (behind=1532, ahead=28, 2026-09-28)",
+        "fix/ingestion-run-open-outage-guard (behind=1521, ahead=22, 2026-09-29)",
+        "fix/signal-scale-ts-0930 (behind=1498, ahead=3, 2026-09-30)",
+        "fix/health-alert-unmeasurable-not-green (behind=1514, ahead=3, 2026-09-29)"
+      ]
+    },
+    "root": {
+      "count": 52,
+      "ahead_zero": 3,
+      "ahead_pos": 49,
+      "max_ahead": 90,
+      "total_ahead_sum": 320,
+      "samples": [
+        "engine-plan-2026-10-03 (behind=1366, ahead=90, 2026-11-05)",
+        "Autonomous-Revenue-Engine (behind=1810, ahead=54, 2026-11-06)",
+        "hermes-surf-16b (behind=1521, ahead=19, 2026-09-29)",
+        "prophet-kats-integration-6664991429016496442 (behind=1311, ahead=11, 2026-10-07)",
+        "cv-synth-generator-9671756677691540515 (behind=1356, ahead=11, 2026-10-06)"
+      ]
+    },
+    "grok": {
+      "count": 70,
+      "ahead_zero": 0,
+      "ahead_pos": 70,
+      "max_ahead": 73,
+      "total_ahead_sum": 251,
+      "samples": [
+        "grok/walk-forward-2026-10-14 (behind=1008, ahead=73, 2026-10-16)",
+        "grok/reasoning-layer-2026-09-26 (behind=1601, ahead=13, 2026-09-27)",
+        "grok/calibration-ci (behind=2984, ahead=6, 2026-08-21)",
+        "grok/props-hb-air-yac (behind=2907, ahead=5, 2026-08-22)",
+        "grok/props-hb-atd (behind=2910, ahead=5, 2026-08-22)"
+      ]
+    },
+    "feat": {
+      "count": 45,
+      "ahead_zero": 2,
+      "ahead_pos": 43,
+      "max_ahead": 70,
+      "total_ahead_sum": 263,
+      "samples": [
+        "feat/trueprob-calibration-boundary (behind=1478, ahead=70, 2026-10-02)",
+        "feat/ios-swiftui (behind=1683, ahead=25, 2026-09-26)",
+        "feat/competitive-intel (behind=5, ahead=14, 2026-11-06)",
+        "feat/ios-native-client (behind=2104, ahead=12, 2026-09-16)",
+        "feat/uq-honesty-stack-hardening (behind=3837, ahead=11, 2026-07-27)"
+      ]
+    },
+    "motif": {
+      "count": 85,
+      "ahead_zero": 1,
+      "ahead_pos": 84,
+      "max_ahead": 62,
+      "total_ahead_sum": 497,
+      "samples": [
+        "motif/orchestration-v4-2026-09-28 (behind=1524, ahead=62, 2026-09-29)",
+        "motif/prj1-perf-2026-10-15 (behind=1008, ahead=52, 2026-10-15)",
+        "motif/prj1-freeze-2026-10-15 (behind=1008, ahead=51, 2026-10-15)",
+        "motif/pit-joint-freeze-2026-10-15 (behind=1008, ahead=51, 2026-10-15)",
+        "motif/sai-diagnostics-2026-10-15 (behind=1008, ahead=47, 2026-10-15)"
+      ]
+    },
+    "engine": {
+      "count": 3,
+      "ahead_zero": 0,
+      "ahead_pos": 3,
+      "max_ahead": 38,
+      "total_ahead_sum": 51,
+      "samples": [
+        "engine/cv-bootstrap-2026-10-30 (behind=271, ahead=38, 2026-10-30)",
+        "engine/public-baseline-2026-10-24 (behind=278, ahead=9, 2026-10-30)",
+        "engine/w1w7-tendencies-2026-10-30 (behind=274, ahead=4, 2026-10-30)"
+      ]
+    },
+    "safety": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 30,
+      "total_ahead_sum": 30,
+      "samples": [
+        "safety/sports-wip-2026-06-04 (behind=4826, ahead=30, 2026-06-10)"
+      ]
+    },
+    "opencode": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 26,
+      "total_ahead_sum": 26,
+      "samples": [
+        "opencode/grok-espn-odds-first-20261008 (behind=1431, ahead=26, 2026-10-08)"
+      ]
+    },
+    "copilot": {
+      "count": 28,
+      "ahead_zero": 0,
+      "ahead_pos": 28,
+      "max_ahead": 24,
+      "total_ahead_sum": 58,
+      "samples": [
+        "copilot/fix-274342140-1204334907-e459a8f0-2491-46c6-b284-64057b10c09a (behind=2102, ahead=24, 2026-09-16)",
+        "copilot/document-findings-gse-design-benchmarks (behind=2102, ahead=5, 2026-09-16)",
+        "copilot/implement-link-to-repo-master (behind=2102, ahead=3, 2026-09-16)",
+        "copilot/continue-benchmark-review (behind=2102, ahead=2, 2026-09-16)",
+        "copilot/restore-scoring-ts-file (behind=769, ahead=1, 2026-10-23)"
+      ]
+    },
+    "jarvis": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 21,
+      "total_ahead_sum": 21,
+      "samples": [
+        "jarvis/os-foundation-fable5-v1 (behind=4621, ahead=21, 2026-06-13)"
+      ]
+    },
+    "docs": {
+      "count": 7,
+      "ahead_zero": 0,
+      "ahead_pos": 7,
+      "max_ahead": 20,
+      "total_ahead_sum": 56,
+      "samples": [
+        "docs/surf-21-round (behind=1431, ahead=20, 2026-10-04)",
+        "docs/move37-research-corpus (behind=2106, ahead=17, 2026-09-15)",
+        "docs/gse-handoff-2026-10-18 (behind=887, ahead=11, 2026-10-18)",
+        "docs/neon-note-4b3e (behind=1512, ahead=3, 2026-09-29)",
+        "docs/nested-process-2026-10-08 (behind=1203, ahead=2, 2026-10-09)"
+      ]
+    },
+    "rebase": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 20,
+      "total_ahead_sum": 20,
+      "samples": [
+        "rebase/988-onto-main (behind=1481, ahead=20, 2026-10-01)"
+      ]
+    },
+    "gse": {
+      "count": 27,
+      "ahead_zero": 0,
+      "ahead_pos": 27,
+      "max_ahead": 17,
+      "total_ahead_sum": 79,
+      "samples": [
+        "gse/research-by-category-workflow (behind=2102, ahead=17, 2026-09-16)",
+        "gse/cat-c5-c1-offline-helpers (behind=2102, ahead=12, 2026-09-16)",
+        "gse/phase2-binary-conformal-adapter (behind=3788, ahead=7, 2026-07-30)",
+        "gse/wp24-c86-totals-drop-reasons (behind=1795, ahead=5, 2026-10-06)",
+        "gse/eprocess-calib-shadow (behind=1795, ahead=4, 2026-09-23)"
+      ]
+    },
+    "ledger": {
+      "count": 3,
+      "ahead_zero": 0,
+      "ahead_pos": 3,
+      "max_ahead": 14,
+      "total_ahead_sum": 17,
+      "samples": [
+        "ledger/consolidated-2026-10-30 (behind=272, ahead=14, 2026-10-31)",
+        "ledger/canonical-settle-2026-10-30 (behind=274, ahead=2, 2026-10-30)",
+        "ledger/16-5-honesty (behind=274, ahead=1, 2026-10-30)"
+      ]
+    },
+    "cursor": {
+      "count": 8,
+      "ahead_zero": 0,
+      "ahead_pos": 8,
+      "max_ahead": 12,
+      "total_ahead_sum": 23,
+      "samples": [
+        "cursor/wire-port-contract-79e9 (behind=1788, ahead=12, 2026-09-25)",
+        "cursor/markets-steam-surprise-1301-0594-8d88 (behind=1815, ahead=2, 2026-09-23)",
+        "cursor/c-96-odds-api-remaining-1228 (behind=1809, ahead=2, 2026-09-23)",
+        "cursor/c-85-espn-externalid-1228 (behind=1815, ahead=2, 2026-09-23)",
+        "cursor/cloud-agent-environment-a2af (behind=1816, ahead=2, 2026-09-23)"
+      ]
+    },
+    "overnight": {
+      "count": 3,
+      "ahead_zero": 0,
+      "ahead_pos": 3,
+      "max_ahead": 9,
+      "total_ahead_sum": 17,
+      "samples": [
+        "overnight/gse-mind-v6-2026-10-23 (behind=791, ahead=9, 2026-10-23)",
+        "overnight/2026-08-20-mlb-nfl (behind=2995, ahead=5, 2026-08-20)",
+        "overnight/2026-08-20-laguna (behind=2995, ahead=3, 2026-08-20)"
+      ]
+    },
+    "explore": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 9,
+      "total_ahead_sum": 9,
+      "samples": [
+        "explore/mondrian-eig-deepen-2026-07-31 (behind=3788, ahead=9, 2026-07-31)"
+      ]
+    },
+    "jules": {
+      "count": 10,
+      "ahead_zero": 0,
+      "ahead_pos": 10,
+      "max_ahead": 8,
+      "total_ahead_sum": 29,
+      "samples": [
+        "jules/deploy-webhook-log-12746768609929093709 (behind=1362, ahead=8, 2026-10-06)",
+        "jules/kats-harmonic-v3-6014192495758848516 (behind=1356, ahead=8, 2026-10-06)",
+        "jules/game-script-splits-shadow-20261007-2829890701410284052 (behind=1213, ahead=4, 2026-10-08)",
+        "jules/q31-avg-separation-metric-14061453502077652843 (behind=831, ahead=2, 2026-10-22)",
+        "jules/drive-failure-rate-shadow-20261007-7817249937090190923 (behind=1213, ahead=2, 2026-10-10)"
+      ]
+    },
+    "uq": {
+      "count": 2,
+      "ahead_zero": 0,
+      "ahead_pos": 2,
+      "max_ahead": 7,
+      "total_ahead_sum": 8,
+      "samples": [
+        "uq/section2-complete (behind=3850, ahead=7, 2026-07-24)",
+        "uq/section2-remaining-2026-07-24 (behind=3850, ahead=1, 2026-07-24)"
+      ]
+    },
+    "weight-auditor": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 6,
+      "total_ahead_sum": 6,
+      "samples": [
+        "weight-auditor/js-published-cell-2026-10-24 (behind=735, ahead=6, 2026-10-24)"
+      ]
+    },
+    "wire": {
+      "count": 2,
+      "ahead_zero": 0,
+      "ahead_pos": 2,
+      "max_ahead": 6,
+      "total_ahead_sum": 7,
+      "samples": [
+        "wire/emission-ranking-2026-10-17 (behind=1145, ahead=6, 2026-10-16)",
+        "wire/port-contract (behind=1815, ahead=1, 2026-09-23)"
+      ]
+    },
+    "ci": {
+      "count": 10,
+      "ahead_zero": 6,
+      "ahead_pos": 4,
+      "max_ahead": 6,
+      "total_ahead_sum": 16,
+      "samples": [
+        "ci/shared-trust-gate-web-calib-lint (behind=1803, ahead=6, 2026-09-23)",
+        "ci/trust-gate-agents-md (behind=1815, ahead=5, 2026-09-23)",
+        "ci/web-calibration-lint (behind=1815, ahead=4, 2026-09-23)",
+        "ci/c96-agent-ledger-hygiene (behind=1808, ahead=1, 2026-09-23)"
+      ]
+    },
+    "handoff": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 6,
+      "total_ahead_sum": 6,
+      "samples": [
+        "handoff/gse-complete-2026-09-20 (behind=4981, ahead=6, 2026-09-20)"
+      ]
+    },
+    "orbit": {
+      "count": 5,
+      "ahead_zero": 0,
+      "ahead_pos": 5,
+      "max_ahead": 5,
+      "total_ahead_sum": 15,
+      "samples": [
+        "orbit/wave7-max-leverage (behind=3780, ahead=5, 2026-07-31)",
+        "orbit/wave6-full-session-embed-integrity (behind=3780, ahead=4, 2026-07-31)",
+        "orbit/wave5-session2-extract-integrate (behind=3780, ahead=3, 2026-07-31)",
+        "orbit/wave4-holdout-paradox-offline (behind=3780, ahead=2, 2026-07-31)",
+        "orbit/wave3-cir-dspy-map (behind=3780, ahead=1, 2026-07-31)"
+      ]
+    },
+    "test": {
+      "count": 2,
+      "ahead_zero": 0,
+      "ahead_pos": 2,
+      "max_ahead": 4,
+      "total_ahead_sum": 5,
+      "samples": [
+        "test/keel-score-hit-11396810358770670005 (behind=1361, ahead=4, 2026-10-06)",
+        "test/devig-asymmetric-inputs-2026-09-30 (behind=1505, ahead=1, 2026-09-30)"
+      ]
+    },
+    "agent": {
+      "count": 3,
+      "ahead_zero": 0,
+      "ahead_pos": 3,
+      "max_ahead": 4,
+      "total_ahead_sum": 6,
+      "samples": [
+        "agent/total-signal-wiring (behind=1563, ahead=4, 2026-09-27)",
+        "agent/visibility-index-2026-09-26 (behind=1683, ahead=1, 2026-09-26)",
+        "agent/ethandojo-handoff-v2-2026-09-25 (behind=1787, ahead=1, 2026-09-25)"
+      ]
+    },
+    "feature": {
+      "count": 2,
+      "ahead_zero": 0,
+      "ahead_pos": 2,
+      "max_ahead": 3,
+      "total_ahead_sum": 5,
+      "samples": [
+        "feature/q37-directional-qb-epa-1317395786965183098 (behind=783, ahead=3, 2026-10-25)",
+        "feature/q36-team-special-teams-epa-2902083220633510312 (behind=787, ahead=2, 2026-10-24)"
+      ]
+    },
+    "chore": {
+      "count": 6,
+      "ahead_zero": 0,
+      "ahead_pos": 6,
+      "max_ahead": 3,
+      "total_ahead_sum": 8,
+      "samples": [
+        "chore/remove-contests-surface (behind=1516, ahead=3, 2026-09-29)",
+        "chore/purge-premium-scrapes-0930 (behind=1498, ahead=1, 2026-09-30)",
+        "chore/license-and-pin-0930 (behind=1504, ahead=1, 2026-09-30)",
+        "chore/polyform-licensing-0930 (behind=1504, ahead=1, 2026-09-30)",
+        "chore/provenance-truth-02 (behind=1510, ahead=1, 2026-09-29)"
+      ]
+    },
+    "sonnet": {
+      "count": 14,
+      "ahead_zero": 0,
+      "ahead_pos": 14,
+      "max_ahead": 3,
+      "total_ahead_sum": 18,
+      "samples": [
+        "sonnet/devig-method-honesty (behind=2935, ahead=3, 2026-08-22)",
+        "sonnet/clv-headline (behind=2967, ahead=2, 2026-08-22)",
+        "sonnet/honest-ceiling (behind=2967, ahead=2, 2026-08-22)",
+        "sonnet/hermes-ox-alpha-model-choice (behind=2917, ahead=1, 2026-08-22)",
+        "sonnet/durable-picks-rate-limit (behind=2930, ahead=1, 2026-08-22)"
+      ]
+    },
+    "ops": {
+      "count": 4,
+      "ahead_zero": 2,
+      "ahead_pos": 2,
+      "max_ahead": 2,
+      "total_ahead_sum": 3,
+      "samples": [
+        "ops/prisma-diff-2026-10-08 (behind=1210, ahead=2, 2026-10-08)",
+        "ops/lane-stop-2026-10-08 (behind=1215, ahead=1, 2026-10-08)"
+      ]
+    },
+    "founder": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 2,
+      "total_ahead_sum": 2,
+      "samples": [
+        "founder/week3-narrative-live-2026-09-27 (behind=1569, ahead=2, 2026-09-27)"
+      ]
+    },
+    "wt": {
+      "count": 2,
+      "ahead_zero": 0,
+      "ahead_pos": 2,
+      "max_ahead": 2,
+      "total_ahead_sum": 3,
+      "samples": [
+        "wt/cycle3-2026-09-26 (behind=1658, ahead=2, 2026-09-26)",
+        "wt/integrator-2026-09-26 (behind=1656, ahead=1, 2026-09-26)"
+      ]
+    },
+    "verify": {
+      "count": 2,
+      "ahead_zero": 1,
+      "ahead_pos": 1,
+      "max_ahead": 2,
+      "total_ahead_sum": 2,
+      "samples": [
+        "verify/510 (behind=2925, ahead=2, 2026-08-22)"
+      ]
+    },
+    "dependabot": {
+      "count": 8,
+      "ahead_zero": 0,
+      "ahead_pos": 8,
+      "max_ahead": 1,
+      "total_ahead_sum": 8,
+      "samples": [
+        "dependabot/npm_and_yarn/production-deps-f7bba3199f (behind=233, ahead=1, 2026-11-02)",
+        "dependabot/npm_and_yarn/dev-deps-50bcad1f66 (behind=233, ahead=1, 2026-11-02)",
+        "dependabot/github_actions/actions/setup-node-7 (behind=249, ahead=1, 2026-10-31)",
+        "dependabot/github_actions/actions/checkout-7 (behind=249, ahead=1, 2026-10-31)",
+        "dependabot/npm_and_yarn/react-native-safe-area-context-5.10.1 (behind=1170, ahead=1, 2026-10-13)"
+      ]
+    },
+    "redline": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 1,
+      "total_ahead_sum": 1,
+      "samples": [
+        "redline/release (behind=2106, ahead=1, 2026-10-31)"
+      ]
+    },
+    "data": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 1,
+      "total_ahead_sum": 1,
+      "samples": [
+        "data/nflverse-refresh-2026-10-30 (behind=271, ahead=1, 2026-10-30)"
+      ]
+    },
+    "tau": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 1,
+      "total_ahead_sum": 1,
+      "samples": [
+        "tau/walkforward-swap-2026-10-30 (behind=271, ahead=1, 2026-10-30)"
+      ]
+    },
+    "sheriff2": {
+      "count": 61,
+      "ahead_zero": 0,
+      "ahead_pos": 61,
+      "max_ahead": 1,
+      "total_ahead_sum": 61,
+      "samples": [
+        "sheriff2/pr-643-rebase (behind=1224, ahead=1, 2026-10-06)",
+        "sheriff2/pr-601-rebase (behind=1225, ahead=1, 2026-10-06)",
+        "sheriff2/pr-440-rebase (behind=1225, ahead=1, 2026-10-06)",
+        "sheriff2/pr-644-central-time (behind=1226, ahead=1, 2026-10-06)",
+        "sheriff2/pr-438-rebase (behind=1227, ahead=1, 2026-10-06)"
+      ]
+    },
+    "tmp": {
+      "count": 4,
+      "ahead_zero": 0,
+      "ahead_pos": 4,
+      "max_ahead": 1,
+      "total_ahead_sum": 4,
+      "samples": [
+        "tmp/rev990 (behind=1491, ahead=1, 2026-09-30)",
+        "tmp/rev989 (behind=1492, ahead=1, 2026-09-30)",
+        "tmp/review987 (behind=1493, ahead=1, 2026-09-30)",
+        "tmp/merge983 (behind=1496, ahead=1, 2026-09-30)"
+      ]
+    },
+    "preserve": {
+      "count": 2,
+      "ahead_zero": 0,
+      "ahead_pos": 2,
+      "max_ahead": 1,
+      "total_ahead_sum": 2,
+      "samples": [
+        "preserve/at-risk-venn-2026-09-29 (behind=1517, ahead=1, 2026-09-29)",
+        "preserve/at-risk-bridges-2026-09-29 (behind=1521, ahead=1, 2026-09-29)"
+      ]
+    },
+    "salvage": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 1,
+      "total_ahead_sum": 1,
+      "samples": [
+        "salvage/hardening-run (behind=2106, ahead=1, 2026-09-13)"
+      ]
+    },
+    "props": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 1,
+      "total_ahead_sum": 1,
+      "samples": [
+        "props/production-path-2026-09-11 (behind=2331, ahead=1, 2026-09-10)"
+      ]
+    },
+    "rescue": {
+      "count": 1,
+      "ahead_zero": 0,
+      "ahead_pos": 1,
+      "max_ahead": 1,
+      "total_ahead_sum": 1,
+      "samples": [
+        "rescue/intelligence-core-2026-06-28 (behind=4270, ahead=1, 2026-06-28)"
+      ]
+    },
+    "integration": {
+      "count": 2,
+      "ahead_zero": 2,
+      "ahead_pos": 0,
+      "max_ahead": 0,
+      "total_ahead_sum": 0,
+      "samples": []
+    },
+    "audit": {
+      "count": 1,
+      "ahead_zero": 1,
+      "ahead_pos": 0,
+      "max_ahead": 0,
+      "total_ahead_sum": 0,
+      "samples": []
+    }
+  },
+  "repos_waves": {}
+}

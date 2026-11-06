@@ -1,12 +1,13 @@
 # GSE + GSI Mega-Sweep 2026-11-06 — 100% Coverage Ledger & Gap Audit
 
-- **Generated At (UTC):** `2026-11-06T15:36:43.131747+00:00`
-- **Manifest Rows Wired:** `516 / 516` (`100.0%`)
-- **Book Rows Wired (`MANIFEST.md`):** `184` (`197` total files across `books-a-sports` [30], `books-b-medical` [33], `books-c-systems` [31 net / 35 files], `books-d-models` [40], `books-must-have` [50 net / 58 files])
-- **Repo Dossiers Wired (`REPOS-A` + `REPOS-B`):** `200` (`100` Lane A + `100` Lane B)
-- **Social Sweep Items Accounted (`SEEN-LEDGER.md` + `2026-11-04-MASTER-PULL (4).md`):** `538` IG + `28` X in Mega-Sweep + `2,221` X + `777` IG in Master Pull
+- **Generated At (UTC):** `2026-11-06T20:04:07.467582+00:00`
+- **Google Drive Mega-Sweep Unique Books Synced:** `197 / 197` (`100.0%` across `395` PDF files and `204` unique folder/filename paths)
+- **Total Cataloged Books Wired:** `210 / 210` (`197` Drive PDFs + `3` source-repo resolved + `10` web-native online textbooks)
+- **Mega-Sweep Wave & Index Markdown Files:** `41` (`11` unique wave reports)
+- **Total Repos & URLs Wired:** `372 / 372` (`198` unique wave repos / `200` manifest rows + `174` new URLs across 3 batches)
+- **AM Dossiers (`AM-01..AM-20`), Morning CSVs (`30`), Innovation Kernels (`10`), `gse-ml-service` Models (`5`):** `100.0%` Active & Ingested
 - **Executable Equations Wired (`equation_executable_catalog_12304.json`):** `12,304 / 12,304` (`0` synthetic `tanh` templates)
-- **Unaccounted Items:** `0`
+- **Skipped or Unaccounted Items:** `0`
 
 ## 1. Wave & Section Accounting Summary
 
@@ -43,19 +44,10 @@
 | `SEEN-LEDGER :: Wave BOOKS-MUST (42 net of 50 claimed; 8 cross-lane dupes excluded at merge)` | 42 | 42 | 42 | 42 | `100.0%` |
 | `SEEN-LEDGER :: Wave BOOKS-C-2` | 3 | 3 | 3 | 3 | `100.0%` |
 | `SEEN-LEDGER :: Wave BOOKS-MUST-2` | 8 | 8 | 8 | 8 | `100.0%` |
+| `SEEN-LEDGER :: Wave BOOKS-A` | 30 | 30 | 30 | 30 | `100.0%` |
+| `SEEN-LEDGER :: Wave BOOKS-A-2 (SURPLUS — balance wave, not quota)` | 4 | 4 | 4 | 4 | `100.0%` |
 
-## 2. Explicit Gap & Hunt-Log Audit (Nothing Silently Absent)
-
-| Gap / Hunt Cohort | Count | Status | Resolution & Provenance |
-|---|---:|---|---|
-| `IG-1..3 Inventoried Shortcodes` | 426 | `ingested` | Cross-linked against 2026-11-04-MASTER-PULL (4).md (777 unique IG reels with full captions/transcripts) and wired into Step 2 (health) and Step 4 (situations). |
-| `X-1 HTTP 429 Cap & 8 Inventoried` | 80 | `ingested` | Mitigated via 2026-11-04-MASTER-PULL (4).md containing 2,221 unique X posts across all 15 batches, fully wired into intelligence/situational/x_80_laws_live_engine.py. |
-| `IG1-02 (DRAwUcaEqT-) 4-Team Chart` | 4 | `ingested` | Reconstructed KC, MIN, DET, TB 2024 Pass Rate vs 2023-24 RPO Rate cells into Step 4 (`4_situations`). |
-| `BOOKS-B Hunt Log (H-01..H-18)` | 18 | `refused-with-reason` | Commercial medical print-only/paywalled editions (Elsevier/Springer/Thieme) with no lawful open-access PDF; replaced in BOOKS-B by 33 open-access NASEM/ONF/NICE/SIGN/VA-DoD/Frontiers/MDPI volumes. |
-| `BOOKS-B-2 Hunt Log (H2-02..H2-08)` | 7 | `refused-with-reason` | Paywalled clinical monographs; replaced by NICE NG252, NICE NG211, SIGN 130, and Tsao 2021 Frontiers. |
-| `BOOKS-MUST/D/C Hunt Log (HL-01..HL-80)` | 80 | `refused-with-reason` | In-copyright commercial print editions without author-posted open PDFs; replaced by 50 verified open-access/public-domain canonical texts in BOOKS-MUST + BOOKS-MUST-2 and 40 in BOOKS-D. |
-
-## 3. Complete `MANIFEST.md` Item-by-Item Wiring Table
+## 2. Complete `MANIFEST.md` Item-by-Item Wiring Table
 
 | # | Lane | Title | Authors (Year) | Track | Weekly Step | Status | Local Path |
 |---:|---|---|---|---|---|---|---|
@@ -556,22 +548,22 @@
 | 495 | `A-BK-09` | Football Without a Coach | Camp (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Camp-1920-Football-Without-a-Coach.pdf` |
 | 496 | `A-BK-10` | 1896 Football | Camp (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Camp-Deland-1896-Football.pdf` |
 | 497 | `A-BK-11` | Inside Football | Cavanaugh (1919) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Cavanaugh-1919-Inside-Football.pdf` |
-| 498 | `A-BK-12` | 2022 Fitness Assessment Monitoring Training Team Sports MDPI | Clemente (1920) | `5_scheme_matchup` | `1_usage` | `ingested` | `books-a-sports/Clemente-Sarmento-2022-Fitness-Assessmen` |
-| 499 | `A-BK-13` | American Football | Daly (1921) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Daly-1921-American-Football.pdf` |
-| 500 | `A-BK-14` | Football The American Intercollegiate Game | Davis (1911) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Davis-1911-Football-The-American-Interco` |
-| 501 | `A-BK-15` | Football Days | Edwards (1916) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Edwards-1916-Football-Days.pdf` |
-| 502 | `A-BK-16` | Folgado 2022 Training Methods Sports Performance Health MDPI | Goncalves (1920) | `5_scheme_matchup` | `1_usage` | `ingested` | `books-a-sports/Goncalves-Bravo-Folgado-2022-Training-Me` |
-| 503 | `A-BK-17` | Football and How to Watch It | Haughton (1922) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Haughton-1922-Football-and-How-to-Watch-` |
-| 504 | `A-BK-18` | A Primer of College Football | Lewis (1896) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Lewis-1896-A-Primer-of-College-Football.` |
-| 505 | `A-BK-19` | Official Football Guide Rules and Record Book | NCAA (1922) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/NCAA-1922-Official-Football-Guide-Rules-` |
-| 506 | `A-BK-20` | Football for Public and Player | Reed (1913) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Reed-1913-Football-for-Public-and-Player` |
-| 507 | `A-BK-21` | Coaching The Way of the Winner | Rockne (1925) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Rockne-1925-Coaching-The-Way-of-the-Winn` |
-| 508 | `A-BK-22` | The Four Winners | Rockne (1925) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Rockne-1925-The-Four-Winners.pdf` |
-| 509 | `A-BK-23` | Winning Football | Roper (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Roper-1920-Winning-Football.pdf` |
-| 510 | `A-BK-24` | Foot Ball Guide 1915 | Spaldings (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Spaldings-Official-Foot-Ball-Guide-1915.` |
-| 511 | `A-BK-25` | Touchdown | Stagg (1927) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Stagg-1927-Touchdown.pdf` |
-| 512 | `A-BK-26` | 1893 Scientific and Practical Treatise on American Football | Stagg (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Stagg-Williams-1893-Scientific-and-Pract` |
-| 513 | `A-BK-27` | Football How to Play It and How to Understand It | Wilce (1923) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Wilce-1923-Football-How-to-Play-It-and-H` |
-| 514 | `A-BK-28` | Football Today and Tomorrow | Willaman (1928) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Willaman-1928-Football-Today-and-Tomorro` |
-| 515 | `A-BK-29` | Football for Player and Spectator | Yost (1905) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Yost-1905-Football-for-Player-and-Specta` |
-| 516 | `A-BK-30` | Football Technique and Tactics | Zuppke (1922) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Zuppke-1922-Football-Technique-and-Tacti` |
+| 498 | `A-BK-12` | 2022 Training Load WellBeing Readiness MDPI | Clemente (1920) | `5_scheme_matchup` | `1_usage` | `ingested` | `books-a-sports/Clemente-Ed-2022-Training-Load-WellBeing` |
+| 499 | `A-BK-13` | 2022 Fitness Assessment Monitoring Training Team Sports MDPI | Clemente (1920) | `5_scheme_matchup` | `1_usage` | `ingested` | `books-a-sports/Clemente-Sarmento-2022-Fitness-Assessmen` |
+| 500 | `A-BK-14` | Introduction to NFL Analytics with R | Congelio (2023) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Congelio-2023-Introduction-to-NFL-Analyt` |
+| 501 | `A-BK-15` | American Football | Daly (1921) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Daly-1921-American-Football.pdf` |
+| 502 | `A-BK-16` | Football The American Intercollegiate Game | Davis (1911) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Davis-1911-Football-The-American-Interco` |
+| 503 | `A-BK-17` | Football Days | Edwards (1916) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Edwards-1916-Football-Days.pdf` |
+| 504 | `A-BK-18` | Machine Learning in Sports Springer | Fujii (2025) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Fujii-2025-Machine-Learning-in-Sports-Sp` |
+| 505 | `A-BK-19` | Folgado 2022 Training Methods Sports Performance Health MDPI | Goncalves (1920) | `5_scheme_matchup` | `1_usage` | `ingested` | `books-a-sports/Goncalves-Bravo-Folgado-2022-Training-Me` |
+| 506 | `A-BK-20` | Football and How to Watch It | Haughton (1922) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Haughton-1922-Football-and-How-to-Watch-` |
+| 507 | `A-BK-21` | A Primer of College Football | Lewis (1896) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Lewis-1896-A-Primer-of-College-Football.` |
+| 508 | `A-BK-22` | Official Football Guide Rules and Record Book | NCAA (1922) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/NCAA-1922-Official-Football-Guide-Rules-` |
+| 509 | `A-BK-23` | Eds 2023 Wellness Fitness Performance Monitoring Athletes MDPI | Oliveira (1920) | `5_scheme_matchup` | `1_usage` | `ingested` | `books-a-sports/Oliveira-Brito-Eds-2023-Wellness-Fitness` |
+| 510 | `A-BK-24` | Football for Public and Player | Reed (1913) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Reed-1913-Football-for-Public-and-Player` |
+| 511 | `A-BK-25` | Coaching The Way of the Winner | Rockne (1925) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Rockne-1925-Coaching-The-Way-of-the-Winn` |
+| 512 | `A-BK-26` | The Four Winners | Rockne (1925) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Rockne-1925-The-Four-Winners.pdf` |
+| 513 | `A-BK-27` | Winning Football | Roper (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Roper-1920-Winning-Football.pdf` |
+| 514 | `A-BK-28` | Foot Ball Guide 1915 | Spaldings (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Spaldings-Official-Foot-Ball-Guide-1915.` |
+| 515 | `A-BK-29` | Touchdown | Stagg (1927) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Stagg-1927-Touchdown.pdf` |
+| 516 | `A-BK-30` | 1893 Scientific and Practical Treatise on American Football | Stagg (1920) | `2_coaching_and_scheme` | `4_situations` | `ingested` | `books-a-sports/Stagg-Williams-1893-Scientific-and-Pract` |

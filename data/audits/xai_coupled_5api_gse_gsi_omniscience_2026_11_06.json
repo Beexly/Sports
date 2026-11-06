@@ -1,0 +1,2553 @@
+{
+  "generated_at_utc": "2026-11-06T20:09:33.963603+00:00",
+  "architecture": "X-API -> (arXiv API + OpenAlex API + Kaggle API + Hugging Face Hub API) -> GSE & GSI Reasoning Engine + Pinecone + Live Site",
+  "counts": {
+    "xai_driver_chars": 23278,
+    "xai_driver_cost_usd": 0.347644,
+    "arxiv_preprints_fetched": 48,
+    "openalex_peer_reviewed_works_fetched": 60,
+    "huggingface_datasets_and_models_fetched": 52,
+    "kaggle_datasets_fetched": 43,
+    "total_cross_api_scientific_nodes": 204
+  },
+  "xai_driver": {
+    "model": "grok-4.7",
+    "cost_usd": 0.347644,
+    "usage": {
+      "input_tokens": 142561,
+      "input_tokens_details": {
+        "cached_tokens": 80000
+      },
+      "output_tokens": 9587,
+      "output_tokens_details": {
+        "reasoning_tokens": 3550
+      },
+      "total_tokens": 152148,
+      "num_sources_used": 0,
+      "num_server_side_tools_used": 16,
+      "cost_in_usd_ticks": 3476440000,
+      "server_side_tool_usage_details": {
+        "web_search_calls": 14,
+        "x_search_calls": 2,
+        "x_posts_fetched": 11,
+        "x_users_fetched": 0,
+        "code_interpreter_calls": 0,
+        "file_search_calls": 0,
+        "mcp_calls": 0,
+        "document_search_calls": 0,
+        "image_generation_calls": 0
+      },
+      "context_details": {
+        "input_tokens": 64356,
+        "output_tokens": 8362
+      }
+    },
+    "synthesis": "I'll search X and the web for frontier NFL quantitative methods and sports-medicine/biomechanics work, then turn what surfaces into concrete harvest queries.\n\nThe first pass shows transformer coverage models and hamstring video review. I\u2019m digging into Big Data Bowl methods and NFL biomechanics literature next.\n\nA few of the example methods look more speculative than published. I\u2019m checking which ones NFL researchers actually use before locking the lists and harvest queries.\n\nThe lists below are ranked by how often NFL Next Gen Stats, Big Data Bowl work that entered production, Carnegie Mellon tracking papers, Biocore, and NFL injury epidemiology actually use the method. Several of the example labels in the request are real pieces of adjacent science, but they are not attested as methods NFL analysts or NFL sports-medicine groups currently discuss. Those are marked and still get harvest queries.\n\n## 1. Fifteen mathematical and statistical methods in NFL quantitative work\n\nEvidence grades: **P** = in or directly upstream of Next Gen Stats production; **A** = peer-reviewed or public technical paper on NFL tracking; **B** = Big Data Bowl or public model that NFL analysts have cited; **M** = betting-market quants, not team or league operations.\n\n| Rank | Method | Grade | What it is used for |\n|---|---|---|---|\n| 1 | Factorized-attention spatiotemporal transformers on 10 Hz RFID trajectories | P | Frame-level coverage assignment, receiver-defender matchup, targeted defender, and run-concept labels. NGS and AWS report about 89%+ task accuracy on 2020\u20132024 passing plays. Inputs are x, y, speed, acceleration, orientation, and direction. |\n| 2 | Graph neural networks with players as nodes and matchups as edges | P | Real-time blocker versus route-runner and rusher versus coverage identification, then blocker-rusher matchup edges. This is the identification layer under NGS pressure probability. |\n| 3 | Frame-level tree ensembles (random forest, gradient boosting, extremely randomized trees) | P | Completion Probability (XGBoost since 2018, rebuilt in 2025), pressure probability (random forest; pressure called when probability exceeds 75%), and Tackle Probability (tree model, 20 features per defender every tenth of a second). |\n| 4 | Heteroscedastic spatiotemporal transformers with a Gaussian negative-log-likelihood head | B | 2026 Big Data Bowl trajectory forecasting. Encoder alternates spatial and temporal attention; decoder emits (x, y, \u03c3x, \u03c3y). Domain attention biases borrowed from pedestrian GNNs. |\n| 5 | Isolation forests on pre-snap kinematics | P | 2024 NGS shift, motion, and motion-at-snap classifier from speed, acceleration, and distance traveled after the line is set. Later expanded toward a 19-type motion dictionary. |\n| 6 | Bayesian multilevel Gamma models with heterogeneous variance | A | Snap-timing skill: time from receiver motion onset to snap, shape parameter varying by quarterback, fit in Stan via brms. Nguyen and Yurko. |\n| 7 | Bayesian circular mixed-effects models | A | Turning tendency and turning variability by position group. Same CMU line of work as STRAIN. |\n| 8 | Bayesian step-and-turn generative models with posterior predictive simulation | A | Frame-level step length and turn angle for a ball carrier, then hypothetical alternative paths scored with standard valuation. Nguyen and Yurko, arXiv 2603.17866. |\n| 9 | Random-forest conditional density estimation for ghost defenders | A | Distribution of nearest-defender location at the catch, and a distribution of yards after catch, so observed positioning is scored against a baseline ghost. Yurko, Nguyen, and Pelechrinis. |\n| 10 | Continuous-time within-play expected points and win probability | A | Expected points and win probability updated through the play from 10 Hz player and ball tracks, not only at the snap and the whistle. |\n| 11 | Expected Hypothetical Completion Probability, plus DeepQB-style neural decision models | A | Bayesian completion probability had the quarterback thrown to another receiver (Deshpande and Evans), and feedforward nets for target, outcome, and expected yards (Burke), extended on 2022 10 Hz data. |\n| 12 | Physics-constrained reachable sets | B | Minimum-time reachable boundary from momentum, heading, and physical limits (Burris, 2019), reused in 2026 Big Data Bowl decision-point work. |\n| 13 | STRAIN: speed-versus-distance-to-quarterback functionals | A | Pass-rush evaluation that does not wait for a binary sack, hit, or hurry. Nguyen and Matthews. |\n| 14 | Marked Hawkes processes, and neural marked spatiotemporal point processes | A | Self-exciting play sequences. A marked exponential-kernel Hawkes model was fit to Eagles 2023\u201324 play-by-play to study pace shifts. Transformer Hawkes and neural marked point processes are the football-events extension, not an NGS pressure-trauma model. |\n| 15 | Market de-vigging: probit, power, multiplicative, and Shin | M | NFL prop and side markets. On two-outcome markets Shin is degenerate with additive. Across 64,670 settled two-way markets, additive, odds-ratio, and probit were not separable, and multiplicative was worst on heavy favorites. Probit vig removal is the method associated with PlusEVAnalytics. |\n\n**Not attested as methods NFL analysts discuss, despite the examples in the request.**\n\n- Vine copulas for correlated same-game parlays. No NFL-analyst or NGS discussion turned up. Vine copulas are a finance and horse-racing tool.\n- Bayesian online changepoint detection for coordinator script shifts. The Eagles pace study uses a marked Hawkes model, not online changepoint detection.\n- Hawkes processes for quarterback pressure trauma. Pressure is modeled as a frame-level random forest and a GNN matchup graph, not a Hawkes process. Trauma is a sports-medicine problem, not this model class.\n- Bregman-divergence de-vigging. Not a method NFL betting quants were using in the sources reviewed. Power, probit, Shin, additive, and multiplicative were.\n\n## 2. Fifteen sports-medicine and biomechanical tracking methods\n\n| Rank | Method | What NFL-linked groups actually do |\n|---|---|---|\n| 1 | Multi-reviewer video scenario and posture coding for hamstring strain | 305 NFL hamstring injuries, 2018\u20132022, seven predefined scenarios. Sprint-type was 43% of agreed cases. Excessive trunk flexion in contact, acceleration, or change of direction was 39%. Agreement was only poor to moderate, so the method\u2019s limit is label noise. |\n| 2 | Time-aligned player-tracking generalized linear mixed models for change-of-direction ACL risk | Biocore, 216 game ACLs, 2018\u20132022. 46% were change-of-direction. 98% of those athletes were decelerating. Maximum speed (odds ratio 1.52 per 1 m/s) and normalized maximum deceleration power (odds ratio 1.08 per 1 W/kg) predicted risk. |\n| 3 | BEAST shoe-surface traction protocols | Biomechanical Elite Athlete Shoe-Turf Tester replicates elite running, cutting, and stopping. Deployed on synthetic NFL fields to measure rotational traction and the torque at which a cleat fails to release. Natural grass divots and releases. Synthetic surfaces often do not. |\n| 4 | Finite-element synthetic-turf models and force-limiting natural-turf tests | Kent, O\u2019Cain, and colleagues. Lab validation against Clegg impact data, plus mechanical response of NFL natural turfgrass as a step toward removing the surface-injury gap. |\n| 5 | Play-level incidence-rate models of surface and lower-extremity injury | Mack, Kent, and colleagues, 2012\u20132016: synthetic turf IRR 1.16 (95% CI 1.10\u20131.23) versus natural grass, stronger for non-contact and surface-contact injuries. 2021\u20132022: 1.42 versus 1.22 injuries per game, and higher odds of season-ending surgery on turf (OR 1.60). |\n| 6 | Digital Athlete markerless motion capture | Biocore lab: multi-camera markerless capture, force plates under turf and wood, skeletal avatars for more than 2,000 players. Team portal since 2023. League-reported practice lower-extremity strains down about 14% after launch. That is a program outcome, not a randomized effect. |\n| 7 | Pose estimation to joint kinematics and estimated ground reaction force | NFL engineering target with AWS: move injury review from qualitative video to joint angles and velocities. Ground-reaction force is estimated from pose plus player and equipment mass, then joint loads are projected. Occlusion in contact is the stated bottleneck. |\n| 8 | Instrumented mouthguards with video adjudication | Triaxial accelerometer and gyroscope rigidly coupled through the upper teeth. Lab errors on peak angular acceleration, angular velocity, and brain-injury criteria are generally under 13%. On-field machine-learning filters separate impacts from spurious events (reported precision about 98% at recall about 82% in one collegiate test). |\n| 9 | Convolutional or finite-element brain-strain models driven by mouthguard kinematics | Peak kinematics are passed to a brain model. CNN-based strain error versus a reference model was under 9% in the mouthguard validation study. NFL engineers log on the order of 150 variables per concussive play. |\n| 10 | Video-reconstructed impact signatures for loss of consciousness | Zimmerman and colleagues, in Brain: video of professional American-football concussions plus impact modeling to separate a biomechanical signature linked to loss of consciousness. |\n| 11 | Bayesian surface-by-temperature models of concussion risk | Smoliga and Binney: posterior probability about 98% that grass has lower concussion risk than artificial turf (median IRR about 0.53), with temperature and week-of-season interactions. Cold turf is the worse cell. |\n| 12 | Syndesmosis spectrum classification tied to return-to-participation | Distal tibiofibular syndesmosis injuries in the NFL are treated as a spectrum, not a single sprain grade, and that spectrum tracks time to full participation. High-ankle and syndesmosis fixation also show up among season-ending turf surgeries. |\n| 13 | Ankle-sprain mechanism video taxonomy | Biocore video review separates external-rotation and eversion mechanisms from inversion. Non-contact inversion from a cleat that does not release is a current NFL foot-and-ankle focus, alongside the older eversion and ACL signal on turf. |\n| 14 | MRI-informed musculoskeletal models of biceps femoris eccentric demand | Subject-specific models, not generic scaled models, show lower biceps femoris short-head muscle-tendon force and less negative work in late swing after prior hamstring strain. NFL cohort literature puts the distal third of biceps femoris at about 43\u201346% of hamstring injury sites, and those injuries recur. |\n| 15 | Week-to-return recurrence models for hamstring injury | 2,075 NFL hamstring injuries, 2009\u20132020. 38.4% recurred. 11.9% were same-season. Highest same-season recurrence when return was inside two weeks (13.4%). Shorter time to return, in-game injury, lower BMI, and wide receiver were same-season risk factors. This is logistic and week-by-week risk, not a published eccentric-load hazard model. |\n\n**Not attested as NFL tracking methods.**\n\n- A named \u201chigh-ankle syndesmosis cutting deceleration asymmetry\u201d metric. Change-of-direction deceleration is published for ACL, and syndesmosis is published as its own spectrum. The joined signal was not found.\n- Quarterback rotational kinetic-chain velocity loss after rib or acromioclavicular trauma. No NFL biomechanics paper on that signal turned up.\n- Anaerobic phosphocreatine depletion in 300-lb linemen as a tracking method. That is classic muscle energetics, not an NFL sensor pipeline in the sources reviewed.\n- \u201cSlit-film\u201d as the fiber specified in NFL torque papers. Rotational traction testing is real. Slit-film as the named fiber in those NFL papers was not confirmed here.\n\n## 3. Harvest queries\n\nFire these as written. Do not add a trailing abbreviation. Run the arXiv query on arXiv all-fields, the OpenAlex string on the works search endpoint, the Kaggle string in Kaggle search, and the Hugging Face string in both Papers and Datasets.\n\n### Quantitative analytics\n\n**Q1. Factorized spatiotemporal transformers, 10 Hz**\n\n- arXiv: `\"factorized attention\" AND (transformer) AND (NFL OR football) AND (tracking OR coverage)`\n- OpenAlex: `factorized attention transformer NFL tracking coverage responsibility`\n- Kaggle: `nfl-big-data-bowl transformer factorized attention`\n- Hugging Face: `factorized attention transformer NFL tracking`\n\n**Q2. Graph networks for matchups and pressure**\n\n- arXiv: `\"graph neural\" AND (football OR NFL) AND (tracking OR pressure OR matchup)`\n- OpenAlex: `graph neural network NFL player tracking blocker rusher pressure`\n- Kaggle: `nfl big data bowl graph neural network pressure`\n- Hugging Face: `graph neural network sports tracking football`\n\n**Q3. Tree ensembles for completion, pressure, tackle probability**\n\n- arXiv: `\"completion probability\" OR \"tackle probability\" OR \"pressure probability\" NFL tracking`\n- OpenAlex: `NFL completion probability XGBoost random forest tracking`\n- Kaggle: `nfl-big-data-bowl-2024 tackle probability`\n- Hugging Face: `NFL completion probability tracking model`\n\n**Q4. Heteroscedastic trajectory transformers**\n\n- arXiv: `spatiotemporal transformer trajectory prediction Gaussian \"negative log\" football`\n- OpenAlex: `spatiotemporal transformer trajectory prediction sports tracking heteroscedastic`\n- Kaggle: `nfl-big-data-bowl-2026-prediction ST-Transformer`\n- Hugging Face: `spatiotemporal transformer trajectory sports`\n\n**Q5. Isolation forests for pre-snap motion**\n\n- arXiv: `\"isolation forest\" AND (motion OR shift) AND (football OR NFL OR \"player tracking\")`\n- OpenAlex: `isolation forest NFL pre-snap motion shift classification`\n- Kaggle: `nfl big data bowl pre-snap motion isolation forest`\n- Hugging Face: `isolation forest sports tracking motion`\n\n**Q6. Bayesian snap timing**\n\n- arXiv: `Bayesian multilevel \"snap timing\" NFL Nguyen Yurko`\n- OpenAlex: `Bayesian multilevel heterogeneous variance snap timing NFL`\n- Kaggle: `nfl big data bowl snap timing motion`\n- Hugging Face: `Bayesian snap timing NFL tracking`\n\n**Q7. Bayesian circular turning models**\n\n- arXiv: `\"circular mixed\" OR \"turning variability\" NFL tracking Bayesian`\n- OpenAlex: `Bayesian circular mixed-effects NFL player tracking turning`\n- Kaggle: `nfl tracking direction orientation circular`\n- Hugging Face: `circular mixed effects sports tracking`\n\n**Q8. Step-and-turn generative evaluation**\n\n- arXiv: `NFL step-and-turn Bayesian multilevel player movement`\n- OpenAlex: `NFL step-and-turn generative framework player movement Nguyen`\n- Kaggle: `nfl-big-data-bowl-2026-prediction trajectory`\n- Hugging Face: `2603.17866`\n\n**Q9. Ghost defenders and conditional density estimation**\n\n- arXiv: `NFL ghosts \"conditional density\" defender tracking Yurko`\n- OpenAlex: `NFL ghosts conditional density estimation defender positioning`\n- Kaggle: `nfl big data bowl ghost defender yards after catch`\n- Hugging Face: `2406.17220`\n\n**Q10. Continuous-time within-play value**\n\n- arXiv: `continuous-time within-play valuation NFL tracking expected points`\n- OpenAlex: `continuous-time within-play expected points NFL tracking`\n- Kaggle: `nfl big data bowl expected points tracking frame`\n- Hugging Face: `1906.01760`\n\n**Q11. Expected hypothetical completion and DeepQB**\n\n- arXiv: `\"expected hypothetical completion\" OR DeepQB NFL tracking`\n- OpenAlex: `expected hypothetical completion probability NFL Deshpande Evans`\n- Kaggle: `nfl big data bowl completion probability quarterback decision`\n- Hugging Face: `DeepQB NFL tracking completion probability`\n\n**Q12. Reachable sets and optimal trajectories**\n\n- arXiv: `optimal trajectory NFL defender \"tracking data\" reachable`\n- OpenAlex: `NFL player tracking optimal trajectory reachable set Burris`\n- Kaggle: `nfl big data bowl 2019 optimal trajectory`\n- Hugging Face: `sports tracking reachable set trajectory football`\n\n**Q13. STRAIN and kinematic pressure**\n\n- arXiv: `STRAIN NFL pass rush speed distance quarterback tracking`\n- OpenAlex: `STRAIN NFL quarterback distance speed Nguyen Matthews`\n- Kaggle: `nfl big data bowl pass rush pressure`\n- Hugging Face: `NFL pass rush tracking metric`\n\n**Q14. Hawkes and neural marked point processes**\n\n- arXiv: `Hawkes NFL play OR \"marked spatio temporal point process\" football`\n- OpenAlex: `marked Hawkes process NFL play-by-play`\n- Kaggle: `nfl play-by-play hawkes`\n- Hugging Face: `2302.09276`\n\nAlso run, because the pressure-trauma Hawkes label was not found: `Hawkes \"quarterback\" pressure NFL` on arXiv and OpenAlex. Expect football-events papers, not trauma papers.\n\n**Q15. De-vigging**\n\n- arXiv: `Shin \"favorite-longshot\" odds margin probability sports`\n- OpenAlex: `Shin method devig favorite longshot bias sports betting`\n- Kaggle: `nfl odds closing line devig`\n- Hugging Face: `Shin devig sports betting probability`\n\nAdd these four strings on arXiv and OpenAlex so the unattested labels are tested rather than assumed:\n\n- `\"vine copula\" NFL OR \"same game parlay\" OR \"player prop\"`\n- `\"Bregman\" devig OR \"Bregman divergence\" odds`\n- `\"Bayesian online changepoint\" NFL OR football coordinator`\n- `changepoint \"play calling\" NFL Bayesian`\n\n### Sports medicine and biomechanics\n\n**S1. Hamstring video scenarios**\n\n- arXiv: `hamstring strain video NFL posture sprint`\n- OpenAlex: `Characterising body postures hamstring strain National Football League`\n- Kaggle: `nfl injury video hamstring`\n- Hugging Face: `hamstring strain injury video analysis football`\n\n**S2. Change-of-direction ACL tracking models**\n\n- arXiv: `\"change-of-direction\" ACL NFL \"player tracking\" deceleration`\n- OpenAlex: `Player Tracking Metrics Anterior Cruciate Ligament Change-of-Direction National Football League O'Cain`\n- Kaggle: `nfl tracking deceleration ACL`\n- Hugging Face: `NFL ACL tracking deceleration power`\n\n**S3. Shoe-surface torque**\n\n- arXiv: `cleat turf rotational traction torque American football`\n- OpenAlex: `BEAST shoe turf tester NFL rotational traction synthetic`\n- Kaggle: `nfl turf injury surface`\n- Hugging Face: `shoe surface traction football turf torque`\n\nAdd, to test the slit-film label: `slit-film OR \"slit film\" turf torque football` on OpenAlex.\n\n**S4. Surface finite elements**\n\n- arXiv: `\"synthetic turf\" finite element football lower extremity`\n- OpenAlex: `synthetic turf finite element model NFL Kent O'Cain`\n- Kaggle: `nfl field surface injury`\n- Hugging Face: `synthetic turf finite element sports`\n\n**S5. Surface injury rates**\n\n- arXiv: `synthetic turf natural grass NFL \"lower extremity\" incidence`\n- OpenAlex: `Higher Rates of Lower Extremity Injury on Synthetic Turf National Football League Mack Kent`\n- Kaggle: `nfl injuries turf grass`\n- Hugging Face: `synthetic turf NFL injury epidemiology`\n\n**S6. Digital Athlete and markerless capture**\n\n- arXiv: `markerless motion capture American football injury`\n- OpenAlex: `NFL Digital Athlete markerless motion capture Biocore`\n- Kaggle: `nfl pose tracking injury`\n- Hugging Face: `markerless motion capture football biomechanics`\n\n**S7. Pose to joint load**\n\n- arXiv: `pose estimation American football ground reaction force joint`\n- OpenAlex: `pose estimation NFL injury joint velocity ground reaction force`\n- Kaggle: `nfl-big-data-bowl pose OR tracking speed acceleration`\n- Hugging Face: `sports pose estimation biomechanics football`\n\n**S8. Instrumented mouthguards**\n\n- arXiv: `instrumented mouthguard football head kinematics`\n- OpenAlex: `instrumented mouthguards head kinematics brain deformation football`\n- Kaggle: `nfl head impact sensor`\n- Hugging Face: `2008.01903`\n\n**S9. Brain strain from kinematics**\n\n- arXiv: `convolutional neural network brain strain football mouthguard`\n- OpenAlex: `brain strain football impact mouthguard maximum principal strain`\n- Kaggle: `concussion kinematics football dataset`\n- Hugging Face: `football head impact brain strain model`\n\n**S10. Loss-of-consciousness impact signature**\n\n- arXiv: `concussion \"loss of consciousness\" biomechanical American football video`\n- OpenAlex: `Zimmerman concussion loss of consciousness American football biomechanical`\n- Kaggle: `nfl concussion video impact`\n- Hugging Face: `football concussion biomechanics video`\n\n**S11. Turf, temperature, and concussion**\n\n- arXiv: `artificial turf concussion NFL Bayesian temperature`\n- OpenAlex: `Artificial Turf Increases Concussion Risk National Football League Bayesian Smoliga`\n- Kaggle: `nfl concussion surface weather`\n- Hugging Face: `turf concussion football Bayesian`\n\n**S12. Syndesmosis spectrum**\n\n- arXiv: `syndesmosis NFL return to participation`\n- OpenAlex: `distal tibiofibular syndesmosis injuries National Football League Kuhn`\n- Kaggle: `nfl ankle injury`\n- Hugging Face: `syndesmosis football injury`\n\n**S13. Ankle mechanism video**\n\n- arXiv: `ankle sprain external rotation eversion NFL video`\n- OpenAlex: `Injury Scenarios of Ankle Sprains National Football League external rotation eversion O'Cain`\n- Kaggle: `nfl ankle sprain tracking`\n- Hugging Face: `ankle sprain video analysis football`\n\n**S14. Biceps femoris eccentric models**\n\n- arXiv: `\"biceps femoris\" eccentric sprint \"muscle-tendon\" American football`\n- OpenAlex: `prior hamstring strain biceps femoris sprinting biomechanics American football MRI`\n- Kaggle: `hamstring injury sport dataset`\n- Hugging Face: `biceps femoris eccentric sprint musculoskeletal model`\n\n**S15. Hamstring recurrence**\n\n- arXiv: `hamstring recurrence \"National Football League\" return`\n- OpenAlex: `Recurrence of Hamstring Injuries National Football League 2009 2020`\n- Kaggle: `nfl injuries dataset hamstring`\n- Hugging Face: `hamstring reinjury survival football`\n\n**Queries for the three unattested medical labels**\n\n- High-ankle plus cutting asymmetry: `syndesmosis OR \"high ankle\" AND (deceleration OR cutting) AND (asymmetry) AND (NFL OR football)` on arXiv and OpenAlex.\n- Quarterback rib or acromioclavicular kinetic chain: `\"quarterback\" AND (rib OR acromioclavicular) AND (\"kinetic chain\" OR \"angular velocity\") AND football` on OpenAlex.\n- Phosphocreatine in heavy linemen: `phosphocreatine OR \"creatine phosphate\" AND (linemen OR \"American football\") AND (anaerobic)` on OpenAlex. Do not expect a tracking dataset.\n\n### Dataset queries that back more than one signal\n\nKaggle, exact competition slugs:\n\n- `nfl-big-data-bowl-2026-prediction`\n- `nfl-big-data-bowl-2026-analytics`\n- `nfl-big-data-bowl-2025`\n- `nfl-big-data-bowl-2024`\n- `nfl-big-data-bowl-2023`\n- `nfl-big-data-bowl-2021`\n- `nfl-big-data-bowl-2020`\n\nHugging Face papers to open directly:\n\n- `2406.17220`\n- `2603.17866`\n- `2603.25901`\n- `2302.09276`\n- `2207.14124`\n- `1906.01760`\n- `2008.01903`\n\nOpenAlex author and institution filters worth running after the topical queries: `author.search:Nguyen, Quang`, `author.search:Yurko, Ronald`, `author.search:O'Cain, Cody`, `author.search:Kent, Richard`, `institutions.search:Biocore`.\n\nPublic NFL tracking on Kaggle is 10 Hz x, y, speed, acceleration, direction, and orientation for 22 players and the ball. It can back the quantitative list and the ACL deceleration model. It cannot back mouthguard kinematics, shoe-surface torque, MRI muscle architecture, or phosphocreatine. Those need OpenAlex and the instrument papers, not a Kaggle tracking file."
+  },
+  "arxiv_papers": [
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2409.04889v1",
+      "title": "Moving from Machine Learning to Statistics: the case of Expected Points in American football",
+      "published": "2024-09-07T19:18:58Z",
+      "authors": [
+        "Ryan S. Brill",
+        "Ryan Yee",
+        "Sameer K. Deshpande",
+        "Abraham J. Wyner"
+      ],
+      "abstract": "Expected points is a value function fundamental to player evaluation and strategic in-game decision-making across sports analytics, particularly in American football. To estimate expected points, football analysts use machine learning tools, which are not equipped to handle certain challenges. They suffer from selection bias, display counter-intuitive artifacts of overfitting, do not quantify uncertainty in point estimates, and do not account for the strong dependence structure of observational football data. These issues are not unique to American football or even sports analytics; they are general problems analysts encounter across various statistical applications, particularly when using machine learning in lieu of traditional statistical models. We explore these issues in detail and devise expected points models that account for them. We also introduce a widely applicable novel metho"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2511.09455v1",
+      "title": "Hand Held Multi-Object Tracking Dataset in American Football",
+      "published": "2025-11-12T16:15:18Z",
+      "authors": [
+        "Rintaro Otsubo",
+        "Kanta Sawafuji",
+        "Hideo Saito"
+      ],
+      "abstract": "Multi-Object Tracking (MOT) plays a critical role in analyzing player behavior from videos, enabling performance evaluation. Current MOT methods are often evaluated using publicly available datasets. However, most of these focus on everyday scenarios such as pedestrian tracking or are tailored to specific sports, including soccer and basketball. Despite the inherent challenges of tracking players in American football, such as frequent occlusion and physical contact, no standardized dataset has been publicly available, making fair comparisons between methods difficult. To address this gap, we constructed the first dedicated detection and tracking dataset for the American football players and conducted a comparative evaluation of various detection and tracking methods. Our results demonstrate that accurate detection and tracking can be achieved even in crowded scenarios. Fine-tuning detect"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2403.14769v2",
+      "title": "Fractional Tackles: Leveraging Player Tracking Data for Within-Play Tackling Evaluation in American Football",
+      "published": "2024-03-21T18:14:44Z",
+      "authors": [
+        "Quang Nguyen",
+        "Ruitong Jiang",
+        "Meg Ellingwood",
+        "Ronald Yurko"
+      ],
+      "abstract": "Tackling is a fundamental defensive move in American football, with the main purpose of stopping the forward motion of the ball-carrier. However, current tackling metrics are manually recorded outcomes that are inherently flawed due to their discrete and subjective nature. Using player tracking data, we present a novel framework for assessing tackling contribution in a continuous and objective manner. Our approach first identifies when a defender is in a ``contact window'' of the ball-carrier during a play, before assigning value to each window and the players involved. This enables us to devise a new metric called fractional tackles, which credits defenders for halting the ball-carrier's forward motion toward the end zone. We demonstrate that fractional tackles overcome the shortcomings of traditional metrics such as tackles and assists, by providing greater variation and measurable inf"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2608.16642v2",
+      "title": "Throwing a Tight Spiral American Football by a Humanoid Robot",
+      "published": "2026-08-17T14:40:54Z",
+      "authors": [
+        "Zaid Mahboob",
+        "Bowen Weng"
+      ],
+      "abstract": "Accurate throwing of the American football requires precise regulation of release conditions, where coupled linear and angular momentum determine flight stability and targeting accuracy. While prior work on robotic object throwing has largely focused on generating dynamically feasible release velocities using open-gripper paradigms, explicit control of spin injection at detachment remains underexplored, particularly for aerodynamically anisotropic objects like the American football. In this paper, we present the spin-stabilized controlled tight spiral throw of an American football by a humanoid robot. Achieving this requires (i) accurately reaching the desired coupled momentum, which often involves high degrees-of-freedom (DoF) movements completed within approximately half a second, and (ii) managing the complex transient contact dynamics that arise during the sub-100-millisecond release"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/1906.01760v3",
+      "title": "Going Deep: Models for Continuous-Time Within-Play Valuation of Game Outcomes in American Football with Tracking Data",
+      "published": "2019-06-05T00:21:48Z",
+      "authors": [
+        "Ronald Yurko",
+        "Francesca Matano",
+        "Lee F. Richardson",
+        "Nicholas Granered",
+        "Taylor Pospisil",
+        "Konstantinos Pelechrinis"
+      ],
+      "abstract": "Continuous-time assessments of game outcomes in sports have become increasingly common in the last decade. In American football, only discrete-time estimates of play value were possible, since the most advanced public football datasets were recorded at the play-by-play level. While measures such as expected points and win probability are useful for evaluating football plays and game situations, there has been no research into how these values change throughout the course of a play. In this work, we make two main contributions: First, we introduce a general framework for continuous-time within-play valuation in the National Football League using player-tracking data. Our modular framework incorporates several modular sub-models, to easily incorporate recent work involving player tracking data in football. Second, we use a long short-term memory recurrent neural network to construct a ball"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2305.10262v3",
+      "title": "Here Comes the STRAIN: Analyzing Defensive Pass Rush in American Football with Player Tracking Data",
+      "published": "2023-05-17T14:52:49Z",
+      "authors": [
+        "Quang Nguyen",
+        "Ronald Yurko",
+        "Gregory J. Matthews"
+      ],
+      "abstract": "In American football, a pass rush is an attempt by the defensive team to disrupt the offense and prevent the quarterback (QB) from completing a pass. Existing metrics for assessing pass rush performance are either discrete-time quantities or based on subjective judgment. Using player tracking data, we propose STRAIN, a novel metric for evaluating pass rushers in the National Football League (NFL) at the continuous-time within-play level. Inspired by the concept of strain rate in materials science, STRAIN is a simple and interpretable means for measuring defensive pressure in football. It is a directly-observed statistic as a function of two features: the distance between the pass rusher and QB, and the rate at which this distance is being reduced. Our metric possesses great predictability of pressure and stability over time. We also fit a multilevel model for STRAIN to understand the def"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2109.08051v1",
+      "title": "Frame by frame completion probability of an NFL pass",
+      "published": "2021-09-16T15:34:56Z",
+      "authors": [
+        "Gustavo Pompeu da Silva",
+        "Rafael de Andrade Moral"
+      ],
+      "abstract": "American football is an increasingly popular sport, with a growing audience in many countries in the world. The most watched American football league in the world is the United States' National Football League (NFL), where every offensive play can be either a run or a pass, and in this work we focus on passes. Many factors can affect the probability of pass completion, such as receiver separation from the nearest defender, distance from receiver to passer, offense formation, among many others. When predicting the completion probability of a pass, it is essential to know who the target of the pass is. By using distance measures between players and the ball, it is possible to calculate empirical probabilities and predict very accurately who the target will be. The big question is: how likely is it for a pass to be completed in an NFL match while the ball is in the air? We developed a machi"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_tracking_spatiotemporal",
+      "arxiv_id": "http://arxiv.org/abs/2603.17866v3",
+      "title": "NFL step-and-turn: A generative framework for evaluating player movement in American football",
+      "published": "2026-03-18T15:54:28Z",
+      "authors": [
+        "Quang Nguyen",
+        "Ronald Yurko"
+      ],
+      "abstract": "In sports analytics, player tracking data have driven significant advancements in the task of player evaluation. We present a novel generative framework for evaluating the observed frame-by-frame player positioning against a distribution of hypothetical alternatives. We illustrate our approach by modeling the within-play movement of an individual ball carrier in the National Football League (NFL). Specifically, we develop Bayesian multilevel models for frame-level player movement based on two components: step length (distance between successive locations) and turn angle (change in direction between successive steps). Using the step-and-turn models, we perform posterior predictive simulation to generate hypothetical ball carrier steps at each frame during a play. This enables comparison of the observed player movement with a distribution of simulated alternatives using common valuation me"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2306.01566v2",
+      "title": "Fatigue detection via sequential testing of biomechanical data using martingale statistic",
+      "published": "2023-06-02T14:22:56Z",
+      "authors": [
+        "Rupsa Basu",
+        "Katharina Proksch"
+      ],
+      "abstract": "Injuries to the knee joint are very common for long-distance and frequent runners, an issue which is often attributed to fatigue. We address the problem of fatigue detection from biomechanical data from different sources, consisting of lower extremity joint angles and ground reaction forces from running athletes with the goal of better understanding the impact of fatigue on the biomechanics of runners in general and on an individual level. This is done by sequentially testing for change in a datastream using a simple martingale test statistic. Time-uniform probabilistic martingale bounds are provided which are used as thresholds for the test statistic. Sharp bounds can be developed by a hybrid of a piece-wise linear- and a law of iterated logarithm- bound over all time regimes, where the probability of an early detection is controlled in a uniform way. If the underlying distribution of t"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2403.03105v3",
+      "title": "Biomechanical Comparison of Human Walking Locomotion on Solid Ground and Sand",
+      "published": "2024-03-05T16:46:18Z",
+      "authors": [
+        "Chunchu Zhu",
+        "Xunjie Chen",
+        "Jingang Yi"
+      ],
+      "abstract": "Current studies on human locomotion focus mainly on solid ground walking conditions. In this paper, we present a biomechanic comparison of human walking locomotion on solid ground and sand. A novel dataset containing 3-dimensional motion and biomechanical data from 20 able-bodied adults for locomotion on solid ground and sand is collected. We present the data collection methods and report the sensor data along with the kinematic and kinetic profiles of joint biomechanics. A comprehensive analysis of human gait and joint stiffness profiles is presented. The kinematic and kinetic analysis reveals that human walking locomotion on sand shows different ground reaction forces and joint torque profiles, compared with those patterns from walking on solid ground. These gait differences reflect that humans adopt motion control strategies for yielding terrain conditions such as sand. The dataset al"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2603.26031v1",
+      "title": "Designing Fatigue-Aware VR Interfaces via Biomechanical Models",
+      "published": "2026-03-27T03:00:17Z",
+      "authors": [
+        "Harshitha Voleti",
+        "Charalambos Poullis"
+      ],
+      "abstract": "Prolonged mid-air interaction in virtual reality (VR) causes arm fatigue and discomfort, negatively affecting user experience. Incorporating ergonomic considerations into VR user interface (UI) design typically requires extensive human-in-the-loop evaluation. Although biomechanical models have been used to simulate human behavior in HCI tasks, their application as surrogate users for ergonomic VR UI design remains underexplored. We propose a hierarchical reinforcement learning framework that leverages biomechanical user models to evaluate and optimize VR interfaces for mid-air interaction. A motion agent is trained to perform button-press tasks in VR under sequential conditions, using realistic movement strategies and estimating muscle-level effort via a validated three-compartment control with recovery (3CC-r) fatigue model. The simulated fatigue output serves as feedback for a UI agent"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2312.11108v3",
+      "title": "Multiple change point detection in functional data with applications to biomechanical fatigue data",
+      "published": "2023-12-18T11:12:57Z",
+      "authors": [
+        "Patrick Bastian",
+        "Rupsa Basu",
+        "Holger Dette"
+      ],
+      "abstract": "Injuries to the lower extremity joints are often debilitating, particularly for professional athletes. Understanding the onset of stressful conditions on these joints is therefore important in order to ensure prevention of injuries as well as individualised training for enhanced athletic performance. We study the biomechanical joint angles from the hip, knee and ankle for runners who are experiencing fatigue. The data is cyclic in nature and densely collected by body worn sensors, which makes it ideal to work with in the functional data analysis (FDA) framework. We develop a new method for multiple change point detection for functional data, which improves the state of the art with respect to at least two novel aspects. First, the curves are compared with respect to their maximum absolute deviation, which leads to a better interpretation of local changes in the functional data compared t"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/1702.04988v1",
+      "title": "A new computational method for a model of C. elegans biomechanics: Insights into elasticity and locomotion performance",
+      "published": "2017-02-16T14:37:53Z",
+      "authors": [
+        "Netta Cohen",
+        "Thomas Ranner"
+      ],
+      "abstract": "An organism's ability to move freely is a fundamental behaviour in the animal kingdom. To understand animal locomotion requires a characterisation of the material properties, as well as the biomechanics and physiology. We present a biomechanical model of C. elegans locomotion together with a novel finite element method. We formulate our model as a nonlinear initial-boundary value problem which allows the study of the dynamics of arbitrary body shapes, undulation gaits and the link between the animal's material properties and its performance across a range of environments. Our model replicates behaviours across a wide range of environments. It makes strong predictions on the viable range of the worm's Young's modulus and suggests that animals can control speed via the known mechanism of gait modulation that is observed across different media."
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2610.05552v2",
+      "title": "Monocular markerless biomechanics for clinically interpretable gait assessment in spinal cord injury",
+      "published": "2026-10-04T21:40:41Z",
+      "authors": [
+        "Shreyasvi Natraj",
+        "Mathieu Ruepp",
+        "Yanke Li",
+        "Robert Riener",
+        "Inge Eriks-Hoogland",
+        "Diego Paez-Granados"
+      ],
+      "abstract": "Three-dimensional gait analysis guides rehabilitation after spinal cord injury but depends on marker-based motion capture and force plates, which few clinics have. Monocular markerless pipelines have been established in fewer healthy adult cohorts but not in neurological cohorts. We present the SCAI SCI Gait dataset, comprising 239 adult individuals with spinal cord injury with synchronized video, motion capture, and force-plate measurements, we fitted a parametric body mesh to a single sagittal-view video, driving an anthropometrically scaled OpenSim model via virtual markers. Markerless lower-body kinematics showed state-of-the-art agreement with motion-capture measurements (r = 0.68-0.90, p < 0.001, and RMSE = 4.18-6.49 degrees), and accurate kinematics-based predicted ground-reaction forces closely matched those measured by force plates (r = 0.85-0.87, p < 0.001, and RMSE = 2.13-2.19"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2502.19056v2",
+      "title": "Fatigue-PINN: Physics-Informed Fatigue-Driven Motion Modulation and Synthesis",
+      "published": "2025-02-26T11:14:48Z",
+      "authors": [
+        "Iliana Loi",
+        "Konstantinos Moustakas"
+      ],
+      "abstract": "Fatigue modeling is essential for motion synthesis tasks to model human motions under fatigued conditions and biomechanical engineering applications, such as investigating the variations in movement patterns and posture due to fatigue, defining injury risk mitigation and prevention strategies, formulating fatigue minimization schemes, and creating improved ergonomic designs. Nevertheless, employing datadriven methods for synthesizing the impact of fatigue on motion, receives little to no attention in the literature. In this work, we present Fatigue-PINN, a deep learning framework based on Physics-Informed Neural Networks, for modeling fatigued human movements, while providing joint-specific fatigue configurations for adaptation and mitigation of motion artifacts on a joint level, resulting in more smooth, hence physicallyplausible animations. To account for muscle fatigue, we simulate th"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "biomechanics_acl_hamstring_fatigue",
+      "arxiv_id": "http://arxiv.org/abs/2604.10199v1",
+      "title": "FatigueFusion: Latent Space Fusion for Fatigue-Driven Motion Synthesis",
+      "published": "2026-04-11T13:12:20Z",
+      "authors": [
+        "Iliana Loi",
+        "Konstantinos Moustakas"
+      ],
+      "abstract": "Investigating the impact of fatigue on human physiological function and motor behavior is crucial for developing biomechanics and medical applications aimed at mitigating fatigue, reducing injury risk, and creating sophisticated ergonomic designs, as well as for producing physically-plausible 3D animation sequences. While the former has a prominent position in state-of-the-art literature, fatigue-driven motion generation is still an underexplored area. In this study, we present FatigueFusion, a deep-learning architecture for the fusion of fatigue features within a latent representation space, enabling the creation of a variation of novel fatigued movements, intermediate fatigued states, and progressively fatigued motions. Unlike existing approaches that focus on imitating the effects of fatigue accumulation in motion patterns, our framework incorporates algorithmic and data-driven module"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2105.13591v2",
+      "title": "Spatio-Temporal Dual Graph Neural Networks for Travel Time Estimation",
+      "published": "2021-05-28T05:15:45Z",
+      "authors": [
+        "Guangyin Jin",
+        "Huan Yan",
+        "Fuxian Li",
+        "Jincai Huang",
+        "Yong Li"
+      ],
+      "abstract": "Travel time estimation is one of the core tasks for the development of intelligent transportation systems. Most previous works model the road segments or intersections separately by learning their spatio-temporal characteristics to estimate travel time. However, due to the continuous alternations of the road segments and intersections in a path, the dynamic features are supposed to be coupled and interactive. Therefore, modeling one of them limits further improvement in accuracy of estimating travel time. To address the above problems, a novel graph-based deep learning framework for travel time estimation is proposed in this paper, namely Spatio-Temporal Dual Graph Neural Networks (STDGNN). Specifically, we first establish the node-wise and edge-wise graphs to respectively characterize the adjacency relations of intersections and that of road segments. In order to extract the joint spati"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2106.02930v1",
+      "title": "Spectral Temporal Graph Neural Network for Trajectory Prediction",
+      "published": "2021-06-05T16:51:54Z",
+      "authors": [
+        "Defu Cao",
+        "Jiachen Li",
+        "Hengbo Ma",
+        "Masayoshi Tomizuka"
+      ],
+      "abstract": "An effective understanding of the contextual environment and accurate motion forecasting of surrounding agents is crucial for the development of autonomous vehicles and social mobile robots. This task is challenging since the behavior of an autonomous agent is not only affected by its own intention, but also by the static environment and surrounding dynamically interacting agents. Previous works focused on utilizing the spatial and temporal information in time domain while not sufficiently taking advantage of the cues in frequency domain. To this end, we propose a Spectral Temporal Graph Neural Network (SpecTGNN), which can capture inter-agent correlations and temporal dependency simultaneously in frequency domain in addition to time domain. SpecTGNN operates on both an agent graph with dynamic state information and an environment graph with the features extracted from context images in "
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2605.09676v1",
+      "title": "ChaosNetBench: Benchmarking Spatio-Temporal Graph Neural Networks on Chaotic Lattice Dynamics",
+      "published": "2026-05-10T17:45:53Z",
+      "authors": [
+        "Henok Tenaw Moges",
+        "Charalampos Skokos",
+        "Deshendran Moodley"
+      ],
+      "abstract": "Spatio-temporal graph neural networks (STGNNs) are widely used for short-term forecasting in dynamic physical systems such as traffic and weather. However, the prevailing evaluation practice uses real world benchmark data sets in a single domain with a single fixed holdout splits, making it difficult to compare architectures across different dynamical regimes. We introduce ChaosNetBench (CNB), a synthetic benchmark dataset and evaluation framework for studying STGNN performance under controlled multidimensional chaotic dynamics. CNB is built on a lattice of coupled standard maps with independently tunable local chaos ($K$), coupling strength ($\\varepsilon$), and system size ($N$), providing known topology and known dynamics across 96 system instances and 9{,}600 trajectories. We introduce chaos indicators, evaluation metrics and a protocol to analyze and compare the capacity of STGNN arc"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2405.12868v1",
+      "title": "Equivariant Spatio-Temporal Attentive Graph Networks to Simulate Physical Dynamics",
+      "published": "2024-05-21T15:33:21Z",
+      "authors": [
+        "Liming Wu",
+        "Zhichao Hou",
+        "Jirui Yuan",
+        "Yu Rong",
+        "Wenbing Huang"
+      ],
+      "abstract": "Learning to represent and simulate the dynamics of physical systems is a crucial yet challenging task. Existing equivariant Graph Neural Network (GNN) based methods have encapsulated the symmetry of physics, \\emph{e.g.}, translations, rotations, etc, leading to better generalization ability. Nevertheless, their frame-to-frame formulation of the task overlooks the non-Markov property mainly incurred by unobserved dynamics in the environment. In this paper, we reformulate dynamics simulation as a spatio-temporal prediction task, by employing the trajectory in the past period to recover the Non-Markovian interactions. We propose Equivariant Spatio-Temporal Attentive Graph Networks (ESTAG), an equivariant version of spatio-temporal GNNs, to fulfill our purpose. At its core, we design a novel Equivariant Discrete Fourier Transform (EDFT) to extract periodic patterns from the history frames, a"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2601.14115v1",
+      "title": "Riemannian Liquid Spatio-Temporal Graph Network",
+      "published": "2026-01-20T16:09:05Z",
+      "authors": [
+        "Liangsi Lu",
+        "Jingchao Wang",
+        "Zhaorong Dai",
+        "Hanqian Liu",
+        "Yang Shi"
+      ],
+      "abstract": "Liquid Time-Constant networks (LTCs), a type of continuous-time graph neural network, excel at modeling irregularly-sampled dynamics but are fundamentally confined to Euclidean space. This limitation introduces significant geometric distortion when representing real-world graphs with inherent non-Euclidean structures (e.g., hierarchies and cycles), degrading representation quality. To overcome this limitation, we introduce the Riemannian Liquid Spatio-Temporal Graph Network (RLSTG), a framework that unifies continuous-time liquid dynamics with the geometric inductive biases of Riemannian manifolds. RLSTG models graph evolution through an Ordinary Differential Equation (ODE) formulated directly on a curved manifold, enabling it to faithfully capture the intrinsic geometry of both structurally static and dynamic spatio-temporal graphs. Moreover, we provide rigorous theoretical guarantees f"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2308.07439v2",
+      "title": "Interaction-Aware Personalized Vehicle Trajectory Prediction Using Temporal Graph Neural Networks",
+      "published": "2023-08-14T20:20:26Z",
+      "authors": [
+        "Amr Abdelraouf",
+        "Rohit Gupta",
+        "Kyungtae Han"
+      ],
+      "abstract": "Accurate prediction of vehicle trajectories is vital for advanced driver assistance systems and autonomous vehicles. Existing methods mainly rely on generic trajectory predictions derived from large datasets, overlooking the personalized driving patterns of individual drivers. To address this gap, we propose an approach for interaction-aware personalized vehicle trajectory prediction that incorporates temporal graph neural networks. Our method utilizes Graph Convolution Networks (GCN) and Long Short-Term Memory (LSTM) to model the spatio-temporal interactions between target vehicles and their surrounding traffic. To personalize the predictions, we establish a pipeline that leverages transfer learning: the model is initially pre-trained on a large-scale trajectory dataset and then fine-tuned for each driver using their specific driving data. We employ human-in-the-loop simulation to colle"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2512.20086v1",
+      "title": "Spatio-Temporal Graphs Beyond Grids: Benchmark for Maritime Anomaly Detection",
+      "published": "2025-12-23T06:28:12Z",
+      "authors": [
+        "Jeehong Kim",
+        "Youngseok Hwang",
+        "Minchan Kim",
+        "Sungho Bae",
+        "Hyunwoo Park"
+      ],
+      "abstract": "Spatio-temporal graph neural networks (ST-GNNs) have achieved notable success in structured domains such as road traffic and public transportation, where spatial entities can be naturally represented as fixed nodes. In contrast, many real-world systems including maritime traffic lack such fixed anchors, making the construction of spatio-temporal graphs a fundamental challenge. Anomaly detection in these non-grid environments is particularly difficult due to the absence of canonical reference points, the sparsity and irregularity of trajectories, and the fact that anomalies may manifest at multiple granularities. In this work, we introduce a novel benchmark dataset for anomaly detection in the maritime domain, extending the Open Maritime Traffic Analysis Dataset (OMTAD) into a benchmark tailored for graph-based anomaly detection. Our dataset enables systematic evaluation across three diff"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "spatiotemporal_graph_neural_network_pose",
+      "arxiv_id": "http://arxiv.org/abs/2204.11855v1",
+      "title": "Discovering Gateway Ports in Maritime Using Temporal Graph Neural Network Port Classification",
+      "published": "2022-04-25T12:02:18Z",
+      "authors": [
+        "Dogan Altan",
+        "Mohammad Etemad",
+        "Dusica Marijan",
+        "Tetyana Kholodna"
+      ],
+      "abstract": "Vessel navigation is influenced by various factors, such as dynamic environmental factors that change over time or static features such as vessel type or depth of the ocean. These dynamic and static navigational factors impose limitations on vessels, such as long waiting times in regions outside the actual ports, and we call these waiting regions gateway ports. Identifying gateway ports and their associated features such as congestion and available utilities can enhance vessel navigation by planning on fuel optimization or saving time in cargo operation. In this paper, we propose a novel temporal graph neural network (TGNN) based port classification method to enable vessels to discover gateway ports efficiently, thus optimizing their operations. The proposed method processes vessel trajectory data to build dynamic graphs capturing spatio-temporal dependencies between a set of static and "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/2012.09623v1",
+      "title": "A geometric investigation into the tail dependence of vine copulas",
+      "published": "2020-12-17T14:49:02Z",
+      "authors": [
+        "Emma S. Simpson",
+        "Jennifer L. Wadsworth",
+        "Jonathan A. Tawn"
+      ],
+      "abstract": "Vine copulas are a type of multivariate dependence model, composed of a collection of bivariate copulas that are combined according to a specific underlying graphical structure. Their flexibility and practicality in moderate and high dimensions have contributed to the popularity of vine copulas, but relatively little attention has been paid to their extremal properties. To address this issue, we present results on the tail dependence properties of some of the most widely studied vine copula classes. We focus our study on the coefficient of tail dependence and the asymptotic shape of the sample cloud, which we calculate using the geometric approach of Nolde (2014). We offer new insights by presenting results for trivariate vine copulas constructed from asymptotically dependent and asymptotically independent bivariate copulas, focusing on bivariate extreme value and inverted extreme value "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/2102.03257v2",
+      "title": "Vine copula mixture models and clustering for non-Gaussian data",
+      "published": "2021-02-05T16:04:26Z",
+      "authors": [
+        "\u00d6zge Sahin",
+        "Claudia Czado"
+      ],
+      "abstract": "The majority of finite mixture models suffer from not allowing asymmetric tail dependencies within components and not capturing non-elliptical clusters in clustering applications. Since vine copulas are very flexible in capturing these types of dependencies, we propose a novel vine copula mixture model for continuous data. We discuss the model selection and parameter estimation problems and further formulate a new model-based clustering algorithm. The use of vine copulas in clustering allows for a range of shapes and dependency structures for the clusters. Our simulation experiments illustrate a significant gain in clustering accuracy when notably asymmetric tail dependencies or/and non-Gaussian margins within the components exist. The analysis of real data sets accompanies the proposed method. We show that the model-based clustering algorithm with vine copula mixture models outperforms "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/2008.05606v1",
+      "title": "Conditional Inferences Based on Vine Copulas with Applications to Credit Spread Data of Corporate Bonds",
+      "published": "2020-08-12T23:17:41Z",
+      "authors": [
+        "Shenyi Pan",
+        "Harry Joe",
+        "Guofu Li"
+      ],
+      "abstract": "Understanding the dependence relationship of credit spreads of corporate bonds is important for risk management. Vine copula models with tail dependence are used to analyze a credit spread dataset of Chinese corporate bonds, understand the dependence among different sectors and perform conditional inferences. It is shown how the effect of tail dependence affects risk transfer, or the conditional distributions given one variable is extreme. Vine copula models also provide more accurate cross prediction results compared with linear regressions. These conditional inference techniques are a statistical contribution for analysis of bond credit spreads of investment portfolios consisting of corporate bonds from various sectors."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/1701.00845v2",
+      "title": "Nonparametric estimation of simplified vine copula models: comparison of methods",
+      "published": "2017-01-03T21:58:51Z",
+      "authors": [
+        "Thomas Nagler",
+        "Christian Schellhase",
+        "Claudia Czado"
+      ],
+      "abstract": "In the last decade, simplified vine copula models have been an active area of research. They build a high dimensional probability density from the product of marginals densities and bivariate copula densities. Besides parametric models, several approaches to nonparametric estimation of vine copulas have been proposed. In this article, we extend these approaches and compare them in an extensive simulation study and a real data application. We identify several factors driving the relative performance of the estimators. The most important one is the strength of dependence. No method was found to be uniformly better than all others. Overall, the kernel estimators performed best, but do worse than penalized B-spline estimators when there is weak dependence and no tail dependence."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/1712.10232v1",
+      "title": "Dependence Structure Analysis Of Meta-level Metrics in YouTube Videos: A Vine Copula Approach",
+      "published": "2017-12-29T13:56:16Z",
+      "authors": [
+        "Vikram Krishnamurthy",
+        "Yan Duan"
+      ],
+      "abstract": "This paper uses vine copula to analyze the multivariate statistical dependence in a massive YouTube dataset consisting of 6 million videos over 25 thousand channels. Specifically we study the statistical dependency of 7 YouTube meta-level metrics: view count, number of likes, number of comments, length of video title, number of subscribers, click rates, and average percentage watching. Dependency parameters such as the Kendall's tau and tail dependence coefficients are computed to evaluate the pair-wise dependence of these meta-level metrics. The vine copula model yields several interesting dependency structures. We show that view count and number of likes' are in the central position of the dependence structure. Conditioned on these two metrics, the other five meta-level metrics are virtually independent of each other. Also, Sports, Gaming, Fashion, Comedy videos have similar dependence"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/1506.03920v1",
+      "title": "A vine copula mixed effect model for trivariate meta-analysis of diagnostic test accuracy studies accounting for disease prevalence",
+      "published": "2015-06-12T07:50:24Z",
+      "authors": [
+        "Aristidis K. Nikoloulopoulos"
+      ],
+      "abstract": "A bivariate copula mixed model has been recently proposed to synthesize diagnostic test accuracy studies and it has been shown that is superior to the standard generalized linear mixed model (GLMM) in this context. Here we call trivariate vine copulas to extend the bivariate meta-analysis of diagnostic test accuracy studies by accounting for disease prevalence. Our vine copula mixed model includes the trivariate GLMM as a special case and can also operate on the original scale of sensitivity, specificity, and disease prevalence. Our general methodology is illustrated by re-analysing the data of two published meta-analyses. Our study suggests that there can be an improvement on trivariate GLMM in fit to data and makes the argument for moving to vine copula random effects models especially because of their richness including reflection asymmetric tail dependence, and, computational feasibi"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/2609.18742v1",
+      "title": "A new tractable Archimedean copula for full-range tail dependence",
+      "published": "2026-09-16T14:39:14Z",
+      "authors": [
+        "Lei Hua"
+      ],
+      "abstract": "Parametric copulas capable of capturing full-range tail dependence in both lower and upper tails are useful in many applications, including as pair-copula building blocks in vine copula models. However, it is challenging to create such copulas that have closed-form density functions, which limits their practical applicability in complex modeling scenarios. To the best of our knowledge, all existing full-range tail dependence copulas do not have closed-form density functions. In this paper, we propose a new Archimedean copula family, called the \\emph{full-range Archimedean copula of type I} (FRA1), that captures full-range tail dependence in both tails and admits a closed-form density function. The copula has two parameters, one controlling the strength of dependence in the lower tail and the other controlling that in the upper tail. We provide results on dependence properties of the copu"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "copula_tail_dependence_portfolio",
+      "arxiv_id": "http://arxiv.org/abs/2609.37996v1",
+      "title": "Stochastic Variational Inference for Vine Copula Distributional Regression",
+      "published": "2026-09-29T16:53:22Z",
+      "authors": [
+        "Gianmarco Callegher",
+        "Thomas Kneib"
+      ],
+      "abstract": "Structured additive distributional regression flexibly relates all parameters of a conditional response distribution to covariates, but multivariate extensions remain challenging when dependence is complex. We propose a multivariate structured additive distributional regression model based on regular vine copulas. Different vine edges may use different pair-copula families, while every pair-copula parameter may vary with covariates through a structured additive predictor. The model therefore accommodates heterogeneous marginal distributions together with pair-specific asymmetric, tail-dependent, and covariate-dependent dependence structures. For scalable inference, we develop a tree-wise stochastic variational inference procedure based on component-specific Gaussian variational approximations. Marginal models are estimated first, followed by pair-copula regressions sequentially along the"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2504.21795v3",
+      "title": "Balancing Interpretability and Flexibility in Modeling Diagnostic Trajectories with an Embedded Neural Hawkes Process Model",
+      "published": "2025-04-30T16:52:43Z",
+      "authors": [
+        "Yuankang Zhao",
+        "Matthew Engelhard"
+      ],
+      "abstract": "The Hawkes process (HP) is commonly used to model event sequences with self-reinforcing dynamics, including electronic health records (EHRs). Traditional HPs capture self-reinforcement via parametric impact functions that can be inspected to understand how each event modulates the intensity of others. Neural network-based HPs offer greater flexibility, resulting in improved fit and prediction performance, but at the cost of interpretability, which is often critical in healthcare. In this work, we aim to understand and improve upon this tradeoff. We propose a novel HP formulation in which impact functions are modeled by defining a flexible impact kernel, instantiated as a neural network, in event embedding space, which allows us to model large-scale event sequences with many event types. This approach is more flexible than traditional HPs yet more interpretable than other neural network a"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2604.05844v1",
+      "title": "Modeling Patient Care Trajectories with Transformer Hawkes Processes",
+      "published": "2026-04-07T13:10:49Z",
+      "authors": [
+        "Saumya Pandey",
+        "Varun Chandola"
+      ],
+      "abstract": "Patient healthcare utilization consists of irregularly time-stamped events, such as outpatient visits, inpatient admissions, and emergency encounters, forming individualized care trajectories. Modeling these trajectories is crucial for understanding utilization patterns and predicting future care needs, but is challenging due to temporal irregularity and severe class imbalance. In this work, we build on the Transformer Hawkes Process framework to model patient trajectories in continuous time. By combining Transformer-based history encoding with Hawkes process dynamics, the model captures event dependencies and jointly predicts event type and time-to-event. To address extreme imbalance, we introduce an imbalance-aware training strategy using inverse square-root class weighting. This improves sensitivity to rare but clinically important events without altering the data distribution. Experi"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2410.08420v1",
+      "title": "Variance-Hawkes Process and its Application to Energy Markets",
+      "published": "2024-10-10T23:44:26Z",
+      "authors": [
+        "Joshua McGillivray",
+        "Anatoliy Swishchuk"
+      ],
+      "abstract": "We define a new model using a Hawkes process as a subordinator in a standard Brownian motion. We demonstrate that this Hawkes subordinated Brownian motion or more succinctly, variance-Hawkes process can be fit to 2018 and 2019 natural gas and crude oil front-month futures log returns. This variance-Hawkes process allows financial models to easily have clustering effects encoded into their behaviour in a simple and tractable way. We also compare the simulations of a square of a variance Hawkes process with its Ito formula. We simulate both processes and compare their distributions, trajectories, and percent errors across multiple runs. We derive the generator relating to this Hawkes subordinated Brownian motion, calculate several moments, and conjecture its distribution. We also provide explicit solutions to the second moments of the Hawkes process and its intensity as well as the cross m"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2208.09555v1",
+      "title": "Age-stratified epidemic model using a latent marked Hawkes process",
+      "published": "2022-08-19T21:53:33Z",
+      "authors": [
+        "Stamatina Lamprinakou",
+        "Axel Gandy"
+      ],
+      "abstract": "We extend the unstructured homogeneously mixing epidemic model introduced by Lamprinakou et al. [arXiv:2208.07340] considering a finite population stratified by age bands. We model the actual unobserved infections using a latent marked Hawkes process and the reported aggregated infections as random quantities driven by the underlying Hawkes process. We apply a Kernel Density Particle Filter (KDPF) to infer the marked counting process, the instantaneous reproduction number for each age group and forecast the epidemic's future trajectory in the near future; considering the age bands and the population size does not increase the computational effort. We demonstrate the performance of the proposed inference algorithm on synthetic data sets and COVID-19 reported cases in various local authorities in the UK. We illustrate that taking into account the individual heterogeneity in age decreases t"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/1910.13052v1",
+      "title": "Scalable Inference for Nonparametric Hawkes Process Using P\u00f3lya-Gamma Augmentation",
+      "published": "2019-10-29T02:49:19Z",
+      "authors": [
+        "Feng Zhou",
+        "Zhidong Li",
+        "Xuhui Fan",
+        "Yang Wang",
+        "Arcot Sowmya",
+        "Fang Chen"
+      ],
+      "abstract": "In this paper, we consider the sigmoid Gaussian Hawkes process model: the baseline intensity and triggering kernel of Hawkes process are both modeled as the sigmoid transformation of random trajectories drawn from Gaussian processes (GP). By introducing auxiliary latent random variables (branching structure, P\u00f3lya-Gamma random variables and latent marked Poisson processes), the likelihood is converted to two decoupled components with a Gaussian form which allows for an efficient conjugate analytical inference. Using the augmented likelihood, we derive an expectation-maximization (EM) algorithm to obtain the maximum a posteriori (MAP) estimate. Furthermore, we extend the EM algorithm to an efficient approximate Bayesian inference algorithm: mean-field variational inference. We demonstrate the performance of two algorithms on simulated fictitious data. Experiments on real data show that ou"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2504.10282v2",
+      "title": "Optimal Execution in Intraday Energy Markets under Hawkes Processes with Transient Impact",
+      "published": "2025-04-14T14:51:18Z",
+      "authors": [
+        "Konstantinos Chatziandreou",
+        "Sven Karbach"
+      ],
+      "abstract": "This paper investigates optimal execution strategies in intraday energy markets through a mutually exciting Hawkes process model. Calibrated to data from the German intraday electricity market, the model effectively captures key empirical features, including intra-session volatility, distinct intraday market activity patterns, and the Samuelson effect as gate closure approaches. By integrating a transient price impact model with a bivariate Hawkes process to model the market order flow, we derive an optimal trading trajectory for energy companies managing large volumes, accounting for the specific trading patterns in these markets. A back-testing analysis compares the proposed strategy against standard benchmarks such as Time-Weighted Average Price (TWAP) and Volume-Weighted Average Price (VWAP), demonstrating substantial cost reductions across various hourly trading products in intraday"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2409.01660v1",
+      "title": "Stability of discrete-time Hawkes process with inhibition: towards a general condition",
+      "published": "2024-09-03T07:06:57Z",
+      "authors": [
+        "Manon Costa",
+        "Pascal Maillard",
+        "Anthony Muraro"
+      ],
+      "abstract": "In this paper, we study a discrete-time analogue of a Hawkes process, modelled as a Poisson autoregressive process whose parameters depend on the past of the trajectory. The model is characterized to allow these parameters to take negative values, modelling inhibitory dynamics. More precisely, the model is the stochastic process $(\\Tilde X_n)_{n\\ge0}$ with parameters $a_1,\\ldots,a_p \\in \\R$, $p\\in\\N$ and $\u03bb> 0$, such that for all $n\\ge p$, conditioned on $\\Tilde X_0,\\ldots,\\Tilde X_{n-1}$, $\\Tilde X_n$ is Poisson distributed with parameter \\[ \\left(a_1 \\Tilde X_{n-1} + \\cdots + a_p \\Tilde X_{n-p} + \u03bb\\right)_+. \\] This process can be seen as a discrete time Hawkes process with inhibition with a memory of length $p$. %This work is an extension of a prior work where we studied the specific case $p = 2$, for which we were able to classify the asymptotic behaviour of the process for the whole"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "hawkes_process_changepoint_sports",
+      "arxiv_id": "http://arxiv.org/abs/2507.20153v1",
+      "title": "A Markov switching discrete-time Hawkes process: application to the monitoring of bats behavior",
+      "published": "2025-07-27T07:09:08Z",
+      "authors": [
+        "Anna Bonnet",
+        "St\u00e9phane Robin"
+      ],
+      "abstract": "Over the past few decades, the Hawkes process has become a popular framework for modeling temporal events thanks to its flexibility to capture different dependency structures. The objective of this work is to model call sequences emitted by bats for echolocation, whose patterns are known to change depending on the animal's activity. The novelty of the model lies in the combination of a Hawkes-type dependency from past events, as well as a latent variable that encodes changes in bat behavior. More precisely, we consider a discrete-time version of the Hawkes process, with an exponential kernel, where the immigration term varies according to a latent Markov chain. We prove that this model is identifiable and can be reformulated in terms of a Hidden Markov Model, with Poisson emissions. Based on these properties, we show that maximum likelihood inference of the model parameters can be perfor"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2303.06021v4",
+      "title": "Machine learning for sports betting: should model selection be based on accuracy or calibration?",
+      "published": "2023-03-10T16:22:38Z",
+      "authors": [
+        "Conor Walsh",
+        "Alok Joshi"
+      ],
+      "abstract": "Sports betting's recent federal legalisation in the USA coincides with the golden age of machine learning. If bettors can leverage data to reliably predict the probability of an outcome, they can recognise when the bookmaker's odds are in their favour. As sports betting is a multi-billion dollar industry in the USA alone, identifying such opportunities could be extremely lucrative. Many researchers have applied machine learning to the sports outcome prediction problem, generally using accuracy to evaluate the performance of predictive models. We hypothesise that for the sports betting problem, model calibration is more important than accuracy. To test this hypothesis, we train models on NBA data over several seasons and run betting experiments on a single season, using published odds. We show that using calibration, rather than accuracy, as the basis for model selection leads to greater "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2107.08827v1",
+      "title": "Optimal sports betting strategies in practice: an experimental review",
+      "published": "2021-07-15T15:09:47Z",
+      "authors": [
+        "Matej Uhr\u00edn",
+        "Gustav \u0160ourek",
+        "Ond\u0159ej Hub\u00e1\u010dek",
+        "Filip \u017delezn\u00fd"
+      ],
+      "abstract": "We investigate the most popular approaches to the problem of sports betting investment based on modern portfolio theory and the Kelly criterion. We define the problem setting, the formal investment strategies, and review their common modifications used in practice. The underlying purpose of the reviewed modifications is to mitigate the additional risk stemming from the unrealistic mathematical assumptions of the formal strategies. We test the resulting methods using a unified evaluation protocol for three sports: horse racing, basketball and soccer. The results show the practical necessity of the additional risk-control methods and demonstrate their individual benefits. Particularly, we show that an adaptive variant of the popular ``fractional Kelly'' method is a very suitable choice across a wide range of settings."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2307.13807v1",
+      "title": "Sports Betting: an application of neural networks and modern portfolio theory to the English Premier League",
+      "published": "2023-07-11T15:53:11Z",
+      "authors": [
+        "V\u00e9lez Jim\u00e9nez",
+        "Rom\u00e1n Alberto",
+        "Lecuanda Ontiveros",
+        "Jos\u00e9 Manuel",
+        "Edgar Possani"
+      ],
+      "abstract": "This paper presents a novel approach for optimizing betting strategies in sports gambling by integrating Von Neumann-Morgenstern Expected Utility Theory, deep learning techniques, and advanced formulations of the Kelly Criterion. By combining neural network models with portfolio optimization, our method achieved remarkable profits of 135.8% relative to the initial wealth during the latter half of the 20/21 season of the English Premier League. We explore complete and restricted strategies, evaluating their performance, risk management, and diversification. A deep neural network model is developed to forecast match outcomes, addressing challenges such as limited variables. Our research provides valuable insights and practical applications in the field of sports betting and predictive modeling."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/1710.02824v2",
+      "title": "Beating the bookies with their own numbers - and how the online sports betting market is rigged",
+      "published": "2017-10-08T11:44:35Z",
+      "authors": [
+        "Lisandro Kaunitz",
+        "Shenjun Zhong",
+        "Javier Kreiner"
+      ],
+      "abstract": "The online sports gambling industry employs teams of data analysts to build forecast models that turn the odds at sports games in their favour. While several betting strategies have been proposed to beat bookmakers, from expert prediction models and arbitrage strategies to odds bias exploitation, their returns have been inconsistent and it remains to be shown that a betting strategy can outperform the online sports betting market. We designed a strategy to beat football bookmakers with their own numbers. Instead of building a forecasting model to compete with bookmakers predictions, we exploited the probability information implicit in the odds publicly available in the marketplace to find bets with mispriced odds. Our strategy proved profitable in a 10-year historical simulation using closing odds, a 6-month historical simulation using minute to minute odds, and a 5-month period during w"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2207.13770v1",
+      "title": "Calibrate: Interactive Analysis of Probabilistic Model Output",
+      "published": "2022-07-27T20:01:27Z",
+      "authors": [
+        "Peter Xenopoulos",
+        "Joao Rulff",
+        "Luis Gustavo Nonato",
+        "Brian Barr",
+        "Claudio Silva"
+      ],
+      "abstract": "Analyzing classification model performance is a crucial task for machine learning practitioners. While practitioners often use count-based metrics derived from confusion matrices, like accuracy, many applications, such as weather prediction, sports betting, or patient risk prediction, rely on a classifier's predicted probabilities rather than predicted labels. In these instances, practitioners are concerned with producing a calibrated model, that is, one which outputs probabilities that reflect those of the true distribution. Model calibration is often analyzed visually, through static reliability diagrams, however, the traditional calibration visualization may suffer from a variety of drawbacks due to the strong aggregations it necessitates. Furthermore, count-based approaches are unable to sufficiently analyze model calibration. We present Calibrate, an interactive reliability diagram "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2505.21543v1",
+      "title": "Boltzmann-Informed Probabilities",
+      "published": "2025-05-24T18:45:48Z",
+      "authors": [
+        "Yair Neuman",
+        "Yochai Cohen"
+      ],
+      "abstract": "Traditional interpretations of probability, whether frequentist or subjective, make no reference to the concept of energy. In this paper, we propose that assigning hypothetical energy levels to the outcomes of a random variable can yield improved probability estimates. We apply this Boltzmann-informed approach to the context of sports betting and analyze five seasons of the English Premier League data. It was found that when used to compute the Kelly criterion, Boltzmann-informed probabilities consistently outperform probabilities derived from the original betting odds. These findings demonstrate the value of integrating energy-informed probabilities into studying complex social systems."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2010.12508v1",
+      "title": "Beating the market with a bad predictive model",
+      "published": "2020-10-23T16:20:35Z",
+      "authors": [
+        "Ond\u0159ej Hub\u00e1\u010dek",
+        "Gustav \u0160\u00edr"
+      ],
+      "abstract": "It is a common misconception that in order to make consistent profits as a trader, one needs to posses some extra information leading to an asset value estimation more accurate than that reflected by the current market price. While the idea makes intuitive sense and is also well substantiated by the widely popular Kelly criterion, we prove that it is generally possible to make systematic profits with a completely inferior price-predicting model. The key idea is to alter the training objective of the predictive models to explicitly decorrelate them from the market, enabling to exploit inconspicuous biases in market maker's pricing, and profit on the inherent advantage of the market taker. We introduce the problem setting throughout the diverse domains of stock trading and sports betting to provide insights into the common underlying properties of profitable predictive models, their connec"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_calibration_kelly",
+      "arxiv_id": "http://arxiv.org/abs/2409.13528v2",
+      "title": "A Comparison between Financial and Gambling Markets",
+      "published": "2024-09-20T14:09:15Z",
+      "authors": [
+        "Haoyu Liu",
+        "Carl Donovan",
+        "Valentin Popov"
+      ],
+      "abstract": "Financial and gambling markets are ostensibly similar and hence strategies from one could potentially be applied to the other. Financial markets have been extensively studied, resulting in numerous theorems and models, while gambling markets have received comparatively less attention and remain relatively undocumented. This study conducts a comprehensive comparison of both markets, focusing on trading rather than regulation. Five key aspects are examined: platform, product, procedure, participant and strategy. The findings reveal numerous similarities between these two markets. Financial exchanges resemble online betting platforms, such as Betfair, and some financial products, including stocks and options, share speculative traits with sports betting. We examine whether well-established models and strategies from financial markets could be applied to the gambling industry, which lacks co"
+    }
+  ],
+  "openalex_works": [
+    {
+      "domain": "GSE",
+      "query_slug": "referee_home_bias_penalty_decision_nfl",
+      "openalex_id": "https://openalex.org/W3043286185",
+      "doi": "https://doi.org/10.3389/fsoc.2020.00048",
+      "title": "Racial Bias in National Football League Officiating",
+      "publication_year": 2020,
+      "cited_by_count": 7,
+      "abstract": "Racial bias in sport is a prevalent research topic. Much of the previous research regarding bias among referees in sport focused on sports such as baseball, basketball, hockey, and soccer. Professional American football is unique because race is more clearly defined when compared to these other sports. Additionally, by examining holding penalties, which are known to be more subjective and called predominately by a single official on the field (i.e., the umpire), racial bias in officiating can be more efficiently analyzed in professional American football. The purpose of this study is to examine potential racial bias regarding holding penalties in the National Football League (NFL). Three years of data from the 2013 to 2014 through 2015 to 2016 NFL seasons were used, including the races of officials and players involved in holding penalties. Results showed no evidence of racial bias in th"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "referee_home_bias_penalty_decision_nfl",
+      "openalex_id": "https://openalex.org/W2534480012",
+      "doi": "https://doi.org/10.15203/ciss_2016.004",
+      "title": "Psychological issues in football officiating: An interview study with top-level referees",
+      "publication_year": 2016,
+      "cited_by_count": 24,
+      "abstract": "The present study aims on the identification of problems in the practice of top-level football refereeing. For this purpose, semi-structured interviews were conducted to collect data from 23 European elite referees. Through inductive content analysis, seven higher-order themes emerged: (1) descriptive, (2) characteristics of a good elite referee, (3) difficulties in decision-making, (4) pre-match preparation, (5) communication through headset, (6) decision-making, and (7) decision-making training. On the one hand, the findings underline the practical relevance of existing scientific research; on the other hand, the relevance of some areas of research, for instance, on the role of biases, is questioned by the interviewees\u2019 statements. A particular need for further research could be revealed regarding the development, optimisation, or evaluation of (1) the pre-match preparation, (2) suppor"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "referee_home_bias_penalty_decision_nfl",
+      "openalex_id": "https://openalex.org/W2996330182",
+      "doi": "https://doi.org/10.1186/s40359-020-0370-4",
+      "title": "Referee height influences decision making in British football leagues",
+      "publication_year": 2020,
+      "cited_by_count": 18,
+      "abstract": "BACKGROUND: Male height is positively associated with social dominance, and more agonistic/competitive behaviours. However, the 'Napoleon complex' or 'small man syndrome' suggests that smaller males are more assertive and punitive to compensate for lack of height and social dominance. Here, we assess possible relationships between height and punitive behaviours in a real-world setting. METHODS: Using a non-experimental correlational design, we analysed data on 61 male association football referees from four professional leagues in England, and explored relationships between their height and punitive behaviours in the form of yellow cards, red cards and penalties given during an entire season. RESULTS: Overall there was no effect of referee height on fouls awarded. However, there was a main effect of height on yellow cards awarded, with shorter referees issuing more yellow cards. The same"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "referee_home_bias_penalty_decision_nfl",
+      "openalex_id": "https://openalex.org/W4390316931",
+      "doi": "https://doi.org/10.51224/srxiv.365",
+      "title": "Referee bias in Scottish football",
+      "publication_year": 2023,
+      "cited_by_count": 0,
+      "abstract": "This study presents a statistical analysis of penalties conceded in the top tier of the Scottish Professional Football League (SPFL) from seasons 2016/2017 -2022/2023.In particular, claims in the media that the number of penalties conceded by Glasgow Rangers is statistically anomalous are considered.A t-test analysis of the penalties conceded by Rangers versus other SPFL premier league clubs, reveals a statistically significant difference, with Rangers conceding fewer penalties.This result is even more pronounced for Rangers if the analysis is restricted to penalties conceded at home.By comparison, the number of penalties conceded by Glasgow Celtic do not diverge significantly from the league's average, despite their dominant playing style and high possession rates.The study concludes that the number of penalties conceded by Rangers over this period is formally a statistical outlier, len"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "referee_home_bias_penalty_decision_nfl",
+      "openalex_id": "https://openalex.org/W2168225178",
+      "doi": null,
+      "title": "Are football referees really biased and inconsistent? Evidence from the English Premier League",
+      "publication_year": 2005,
+      "cited_by_count": 13,
+      "abstract": "+ Corresponding author. The authors are grateful to participants at a Sports Economics Workshop held at the University of Groningen in March 2005 for comments on an earlier draft of this paper. We are grateful to Rob Simmons and Tunde Buraimo for providing access to their list of televised Premier League matches. This paper presents a statistical analysis of patterns in the incidence of disciplinary sanction (yellow and red cards) taken against players in the English Premier League over the period 1996-2003, using bivariate negative binomial and bivariate Poisson regressions. Several questions concerning sources of inconsistency and bias in refereeing standards are examined. Evidence is found to support a time consistency hypothesis, that the average incidence of disciplinary sanction is predominantly stable over time. However, a refereeing consistency hypothesis, that the incidence of d"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "referee_home_bias_penalty_decision_nfl",
+      "openalex_id": "https://openalex.org/W4417464205",
+      "doi": "https://doi.org/10.36905/jses.2025.02.05",
+      "title": "No home team bias in elite football referees: Assessing correctness of refereeing decisions in the English Premier League",
+      "publication_year": 2025,
+      "cited_by_count": 0,
+      "abstract": "It is unclear whether referee decisions contribute to home advantage in football.This ambiguity stems from significant advancements in the development and training of officials, methodological limitations, such as the use of regression models to provide estimates, in extant research, and team behaviours.Thus, there may appear to be a bias when there is none.This study aimed to establish whether referees contribute to home advantage in elite football.Decisions (N = 4,201) from 172 games from the English Premier League 2022/23 season were analysed by 43 qualified football referees, with two officials allocated to each fixture.The referees independently assessed free-kicks, yellow cards, red cards, penalty kicks, and non-whistled penalty kicks given by the on-field official using clips from WyScout.Decisions were recorded as 'correct' or 'incorrect' in unanimous cases, or 'disputed' if the "
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_hamstring_strain_reinjury_sprint_biomechanics",
+      "openalex_id": "https://openalex.org/W4385984393",
+      "doi": "https://doi.org/10.5204/thesis.eprints.242360",
+      "title": "Hamstring strain injuries and sprinting biomechanics. Is there a link?",
+      "publication_year": 2023,
+      "cited_by_count": 0,
+      "abstract": "This thesis examined the link between hamstring strain injury and sprinting biomechanics in professional and semi-professional football players. Such a link is still unclear and there is a need for more quality research. Training prescription could be a risk factor for hamstring strain injury according to a group of experts and there is need for research involving all stakeholders. The propulsive ground reaction force should be monitored during the rehabilitation process and specific exercise aiming at improving the propulsive ground reaction force should be included in the hamstring injury prevention strategy."
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_hamstring_strain_reinjury_sprint_biomechanics",
+      "openalex_id": "https://openalex.org/W3205668198",
+      "doi": "https://doi.org/10.3390/sports9100141",
+      "title": "Sprinting Biomechanics and Hamstring Injuries: Is There a Link? A Literature Review",
+      "publication_year": 2021,
+      "cited_by_count": 19,
+      "abstract": "Hamstring strain injury (HSI) is a common and costly injury in many sports such as the various professional football codes. Most HSIs have been reported to occur during high intensity sprinting actions. This observation has led to the suggestion that a link between sprinting biomechanics and HSIs may exist. The aim of this literature review was to evaluate the available scientific evidence underpinning the potential link between sprinting biomechanics and HSIs. A structured search of the literature was completed followed by a risk of bias assessment. A total of eighteen studies were retrieved. Sixteen studies involved retrospective and/or prospective analyses, of which only three were judged to have a low risk of bias. Two other case studies captured data before and after an acute HSI. A range of biomechanical variables have been measured, including ground reaction forces, trunk and lowe"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_hamstring_strain_reinjury_sprint_biomechanics",
+      "openalex_id": "https://openalex.org/W7165010265",
+      "doi": "https://doi.org/10.33607/rmske.v1i34.2279",
+      "title": "Sprint Biomechanics Associated With Hamstring Strain Injury in Football: A Systematic Review and Mechanistic Synthesis",
+      "publication_year": 2026,
+      "cited_by_count": 1,
+      "abstract": "Background. Hamstring strain injury (HSI) is one of the most common non-contact injuries in football and frequently occurs during sprinting. Although several studies have examined sprint biomechanics in relation to HSI, findings remain dispersed across epidemiological and laboratory-based investigations, limiting the understanding of how sprint mechanics may contribute to injury risk. Aim. To systematically synthesise evidence regarding the association between sprint biomechanics and HSI in football players, with particular attention to lumbopelvic control, neuromuscular activation, and force-production characteristics. Methods. A systematic review was conducted according to PRISMA 2020 guidelines and registered in PROSPERO (CRD420251248990). Searches were performed in Scopus and PubMed. Studies involving football players that investigated sprint-related biomechanical variables and repor"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_hamstring_strain_reinjury_sprint_biomechanics",
+      "openalex_id": "https://openalex.org/W4386845470",
+      "doi": "https://doi.org/10.1007/s40279-023-01925-x",
+      "title": "Exploring the Role of Sprint Biomechanics in Hamstring Strain Injuries: A Current Opinion on Existing Concepts and Evidence",
+      "publication_year": 2023,
+      "cited_by_count": 77,
+      "abstract": "Hamstring strain injuries are one of the most common injuries in sprint-based sports with the mechanism of injury considered the result of an interaction between applied mechanical strain and the capacity of the muscle to tolerate strain. To date, injury prevention and rehabilitation strategies have frequently focused on enhancing the capacity of the hamstrings to tolerate strain, with little consideration of factors directly influencing mechanical strain. Sprint running biomechanics are one factor proposed to influence the mechanical strain applied to the hamstrings that may be modified (towards reduced strain) within rehabilitation and injury prevention programs. This article aims to explore the theoretical mechanistic link between sprint running mechanics and hamstring strain injury, along with the available supporting evidence. In doing so, it hopes to provide practitioners with an u"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_hamstring_strain_reinjury_sprint_biomechanics",
+      "openalex_id": "https://openalex.org/W2606765117",
+      "doi": "https://doi.org/10.1016/j.jshs.2017.04.001",
+      "title": "Rehabilitation and return to sport after hamstring strain injury",
+      "publication_year": 2017,
+      "cited_by_count": 152,
+      "abstract": "Hamstring strain injuries are common among sports that involve sprinting, kicking, and high-speed skilled movements or extensive muscle lengthening-type maneuvers with hip flexion and knee extension. These injuries present the challenge of significant recovery time and a lengthy period of increased susceptibility for recurrent injury. Nearly one third of hamstring strains recur within the first year following return to sport with subsequent injuries often being more severe than the original. This high re-injury rate suggests that athletes may be returning to sport prematurely due to inadequate return to sport criteria. In this review article, we describe the epidemiology, risk factors, differential diagnosis, and prognosis of an acute hamstring strain. Based on the current available evidence, we then propose a clinical guide for the rehabilitation of acute hamstring strains and an algori"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_hamstring_strain_reinjury_sprint_biomechanics",
+      "openalex_id": "https://openalex.org/W70517415",
+      "doi": "https://doi.org/10.2165/11594800-000000000-00000",
+      "title": "Hamstring Strain Injuries",
+      "publication_year": 2012,
+      "cited_by_count": 753,
+      "abstract": ""
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_concussion_protocol_neurocognitive_recovery",
+      "openalex_id": "https://openalex.org/W4380487276",
+      "doi": "https://doi.org/10.1177/15563316231177207",
+      "title": "The National Football League Concussion Protocol: A Review",
+      "publication_year": 2023,
+      "cited_by_count": 18,
+      "abstract": "Sport-related concussion remains an area of high concern for contact sport athletes and their families, as well as for the medical and scientific communities. The National Football League (NFL), along with the NFL Players Association and experts in the field, has developed protocols for the detection and management of sport-related concussions. This article reviews the NFL's most recent concussion protocol including preseason education and baseline testing for players, concussion surveillance by gameday medical teams and neurotrauma consultants and athletic trainers, gameday concussion protocol and procedures, and return to participation guidelines."
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_concussion_protocol_neurocognitive_recovery",
+      "openalex_id": "https://openalex.org/W2789584892",
+      "doi": "https://doi.org/10.1136/bjsports-2018-099203",
+      "title": "National Football League Head, Neck and Spine Committee\u2019s Concussion Diagnosis and Management Protocol: 2017-18 season",
+      "publication_year": 2018,
+      "cited_by_count": 67,
+      "abstract": "One of the National Football League's (NFL) Head, Neck and Spine Committee's principal goals is to create a 'best practice' protocol for concussion diagnosis and management for its players. The science related to concussion diagnosis and management continues to evolve, thus the protocol has evolved contemporaneously. The Fifth International Conference on Concussion in Sport was held in Berlin in 2016, and guidelines for sports concussion diagnosis and management were revised and refined. The NFL Head, Neck and Spine Committee has synthesised the most recent empirical evidence for sports concussion diagnosis and management including the Berlin consensus statement and tailored it to the game played in the NFL. One of the goals of the Committee is to provide a standardised, reliable, efficient and evidence-based protocol for concussion diagnosis and management that can be applied in this pr"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_concussion_protocol_neurocognitive_recovery",
+      "openalex_id": "https://openalex.org/W3105316184",
+      "doi": "https://doi.org/10.3389/fspor.2020.595445",
+      "title": "Determinants of Missed Games Following Concussions in the National Football League",
+      "publication_year": 2020,
+      "cited_by_count": 4,
+      "abstract": "Concussions in the National Football League (NFL) are a rising topic of concern and debate. With the implementation of new protocols, NFL players are required to be removed from play and must follow specific processes before full return to play after sustaining a concussion. While concussion severity is the primary determinant of time-off, it is possible that other factors associated with player value influence time-off as well. The purpose of this study is to examine determinants of NFL games missed after a concussion. NFL concussion data from 2012 to 2015 were used in conjunction with player salary, position, previous concussions, average plays per game, and season during which the concussion occurred. Results indicate that quarterbacks and players who sustained multiple concussions missed more games, while players involved in more plays per game miss less games, providing evidence tha"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_concussion_protocol_neurocognitive_recovery",
+      "openalex_id": "https://openalex.org/W2568462642",
+      "doi": "https://doi.org/10.1177/0363546516677793",
+      "title": "Descriptive Characteristics of Concussions in National Football League Games, 2010-2011 to 2013-2014",
+      "publication_year": 2017,
+      "cited_by_count": 46,
+      "abstract": "BACKGROUND: Despite a high reported incidence rate of concussion, little is known about the on-field characteristics of injurious head impacts in National Football League (NFL) games. PURPOSE: To characterize on-field features (location, player position, and time during game) and biomechanical features (anticipation status, closing distance, impact location and type) associated with concussions in NFL games over a 4-season period (2010-2011 to 2013-2014). STUDY DESIGN: Descriptive epidemiology study. METHODS: We analyzed video of a subset of reported, in-game concussions for the 2010-2011 to 2013-2014 seasons. These videos represented a sample of injuries that were diagnosed and reported on the same day and that could be clearly associated with an in-game collision as captured on video. We determined anticipation status, closing distance, impact location on the injured player's helmet, a"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_concussion_protocol_neurocognitive_recovery",
+      "openalex_id": "https://openalex.org/W4401472231",
+      "doi": "https://doi.org/10.1136/bjsports-2023-107970",
+      "title": "Subsequent musculoskeletal injury after concussion in National Football League players",
+      "publication_year": 2024,
+      "cited_by_count": 3,
+      "abstract": "OBJECTIVE: To assess whether National Football League (NFL) players diagnosed with a concussion have an increased risk of injury after return to football. METHODS: A retrospective cohort study analysed the hazard of subsequent time-loss lower extremity (LEX) or any musculoskeletal injury among NFL players diagnosed with a concussion in 2015-2021 preseason or regular season games compared with: (1) all non-concussed players participating in the same game and (2) players with time-loss upper extremity injury. Cox proportional hazards models were adjusted for number of injuries and concussions in the prior year, player tenure and roster position. Additional models accounted for time lost from participation after concussion. RESULTS: There was no statistical difference in the hazards of LEX injury or any musculoskeletal injury among concussed players compared with non-concussed players, thou"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_concussion_protocol_neurocognitive_recovery",
+      "openalex_id": "https://openalex.org/W2346745639",
+      "doi": "https://doi.org/10.1001/jamapediatrics.2016.0073",
+      "title": "Concussion Symptoms and Return to Play Time in Youth, High School, and College American Football Athletes",
+      "publication_year": 2016,
+      "cited_by_count": 140,
+      "abstract": "IMPORTANCE: To our knowledge, little research has examined concussion across the youth/adolescent spectrum and even less has examined concussion-related outcomes (ie, symptoms and return to play). OBJECTIVE: To examine and compare sport-related concussion outcomes (symptoms and return to play) in youth, high school, and collegiate football athletes. DESIGN, SETTING, AND PARTICIPANTS: Athletic trainers attended each practice and game during the 2012 to 2014 seasons and reported injuries. For this descriptive, epidemiological study, data were collected from youth, high school, and collegiate football teams, and the analysis of the data was conducted between July 2015 and September 2015. The Youth Football Surveillance System included more than 3000 youth football athletes aged 5 to 14 years from 118 teams, providing 310 team seasons (ie, 1 team providing 1 season of data). The National Ath"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_market_efficiency_closing_line",
+      "openalex_id": "https://openalex.org/W325164933",
+      "doi": null,
+      "title": "Testing the Efficiency of the NFL Point Spread Betting Market",
+      "publication_year": 2014,
+      "cited_by_count": 1,
+      "abstract": "This paper examines the efficiency of pricing in the NFL point spread betting market, as hypothesized by the Efficient Market Hypothesis, through both statistical and economic tests. This market provides a simpler framework to test such economic hypotheses than conventional financial markets. Using a larger sample size than past literature, this paper finds that while the market is efficient in the aggregate sense, there are still some profit opportunities which imply pricing inefficiencies."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_market_efficiency_closing_line",
+      "openalex_id": "https://openalex.org/W7220881886",
+      "doi": null,
+      "title": "An Examination of the Money Line Market for National Football League Games",
+      "publication_year": 2024,
+      "cited_by_count": 0,
+      "abstract": "We examine market efficiency of the opening and closing money lines (wager on the winner of a game) for National Football League (NFL) games from 2007 through 2016. A simple analysis shows that inefficiencies exist in the opening and closing NFL money line market. Inefficiencies in the closing money lines suggests that the money line market fails to completely adjust and eliminate some of these inefficiencies. Further, the market adjustments suggest that bookmakers may take advantage of bettors\u2019 biases to earn profits in excess of their commission. The results here support the existence of a reverse favorite-longshot bias, where bettors tend to overbet the favorite and underbet the underdog. These inefficiencies, however, are unpredictable and vary by season. Finally, utilizing game-specific factors, it appears that the presence of precipitation creates opportunities to earn profits when"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_market_efficiency_closing_line",
+      "openalex_id": "https://openalex.org/W2084913862",
+      "doi": "https://doi.org/10.1257/jep.2.2.161",
+      "title": "Anomalies: Parimutuel Betting Markets: Racetracks and Lotteries",
+      "publication_year": 1988,
+      "cited_by_count": 603,
+      "abstract": "Economists have given great attention to stock markets in their efforts to test the concepts of market efficiency and rationality. Yet wagering markets are, in one key respect, better suited for testing market efficiency and rationality. The advantage of wagering markets is that each asset (bet) has a well-defined termination point at which its value becomes certain. The absence of this property is one of the factors that has made it so difficult to test for rationality in the stock market. Since a stock is infinitely lived, its value today depends both on the present value of future cash flows and on the price someone will pay for the security tomorrow. Indeed, one can argue that wagering markets have a better chance of being efficient because the conditions (quick, repeated feedback) are those which usually facilitate learning. However, empirical research has uncovered several interest"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_market_efficiency_closing_line",
+      "openalex_id": "https://openalex.org/W4378803412",
+      "doi": "https://doi.org/10.33423/ajm.v23i2.6051",
+      "title": "Weak Form Efficiency in Sports Betting Markets",
+      "publication_year": 2023,
+      "cited_by_count": 3,
+      "abstract": "Betting on sports is increasingly popular, and legal in the United States. Many states have moved to legalize sports betting both in-person and on-line. In this paper we evaluate the sports betting market and assess its efficiency in the financial sense. Using a large dataset of betting odds and outcomes across a wide range of sports over an extended period, we evaluate the weak-form efficiency of the sports betting market. While we find some minor technical inefficiencies, overall, the markets are generally efficient, and no odds-based betting strategy will yield statistically significant long-term profits. But some bets are better than others. Slight underdog bets in professional and collegiate football and the UFC have had positive returns over an extended time frame, though they do not clear a statistical significance test. On the other hand, we find some bets clearly under perform. "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_market_efficiency_closing_line",
+      "openalex_id": "https://openalex.org/W2136688050",
+      "doi": "https://doi.org/10.1177/031289629502000204",
+      "title": "The Efficiency of Australian Football Betting Markets",
+      "publication_year": 1995,
+      "cited_by_count": 18,
+      "abstract": "This paper examines the efficiency of the two major Australian football betting markets: the Australian Rugby League (ARL) FootyTAB market and the Australian Football League (AFL) Footywin market. Probit and ordered probit models are tailored to the unique structures of the markets. This circumvents some potential econometric problems, and also allows us to test betting strategies in which a bet is placed only when there is a high ex\u2010ante probability of success. Our probit models are successful in predicting game outcomes in both the ARL and AFL. While several of our betting strategies generate significant profits, both in\u2010sample and out\u2010of\u2010sample, we offer a number of reasons why we are cautious about interpreting these results as conclusive evidence of market inefficiency."
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "sports_betting_market_efficiency_closing_line",
+      "openalex_id": "https://openalex.org/W1984282644",
+      "doi": "https://doi.org/10.3390/ijfs2020193",
+      "title": "Market Efficiency and Behavioral Biases in the WNBA Betting Market",
+      "publication_year": 2014,
+      "cited_by_count": 5,
+      "abstract": "The betting market for the Women\u2019s National Basketball Association (WNBA) is a thin financial market, which does not attract much interest from sports bettors. Given these characteristics, it is possible that profitable wagering strategies could exist for informed bettors of the WNBA. Using betting data on the WNBA from 2007\u20132012, we find that simple betting strategies do not earn statistically significant returns. WNBA bettors are like NBA bettors; however, in that they strongly prefer the best teams, particularly when they are on the road. Despite this clear bias, betting against the most popular public wagers is not found to earn statistically significant profits."
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_travel_circadian_rhythm_short_week_fatigue",
+      "openalex_id": "https://openalex.org/W2770877630",
+      "doi": "https://doi.org/10.1177/2325967117740862",
+      "title": "Game Schedules and Rate of Concussions in the National Football League",
+      "publication_year": 2017,
+      "cited_by_count": 22,
+      "abstract": "Background: Concussion prevention in the National Football League (NFL) is an important priority for player safety. The NFL now has modified game schedules, and one concern is that unconventional game schedules, such as a shortened rest period due to playing on a Thursday rather than during the weekend, may lead to an increased risk of injuries. Hypothesis: Unconventional game schedules in the NFL are associated with an increased rate of concussion. Study Design: Descriptive epidemiological study. Methods: This study analyzed concussions and game schedules over the NFL regular seasons from 2012 to 2015 (4 years). Documented numbers of concussions, identified by use of the online database PBS Frontline Concussion Watch, were summarized by regular-season weeks. Association of days of rest and game location (home, away, or overseas) with the rate of concussion was examined by use of the \u03c7 2"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_travel_circadian_rhythm_short_week_fatigue",
+      "openalex_id": "https://openalex.org/W4409571292",
+      "doi": "https://doi.org/10.47206/86sf6z35",
+      "title": "Relative Rest Correlates to Winning Percentage in 2022 National Football League Season: A Preliminary Study",
+      "publication_year": 2025,
+      "cited_by_count": 1,
+      "abstract": "The purpose of this investigation was to examine whether season average relative rest (RR) influences winning percentage (WIN%) in professional American Football. We define RR as the difference in rest intervals between teams from prior games. To address this, we analyzed each game played in the 2022 NFL season (n=271) and calculated rest intervals between each successive game for each team. The rest interval was defined as the number of days between the schedule start for each successive game, with all teams being assigned a rest interval of 0 during Week 1. Each team\u2019s RR was then determined by subtracting the opposing team\u2019s rest interval. The RR for each game for all teams were then averaged across the season. Subsequently, a correlation between season average RR and WIN% was performed and a tertial split in season average RR was conducted to separate teams into HIGH (teams 1-11), MI"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_travel_circadian_rhythm_short_week_fatigue",
+      "openalex_id": "https://openalex.org/W4403499104",
+      "doi": "https://doi.org/10.3389/frbhe.2024.1479832",
+      "title": "Bye-bye, bye advantage: estimating the competitive impact of rest differential in the National Football League",
+      "publication_year": 2024,
+      "cited_by_count": 1,
+      "abstract": "The National Football League (NFL) sets its regular season schedule to optimize viewership and minimize competitive inequities. One inequity assumed to impact team performance is rest differential, defined as the relative number of days between games. Using Bayesian state space models on both game outcomes and betting market data, we estimate the competitive effect of rest differential in American football. We find that the most commonly referred to inequities\u2014both the bye week rest advantage and the mini-bye week rest advantage\u2014 currently show no significant evidence of providing the rested team a competitive edge. Further, we trace a decline in the advantage of a bye week to a 2011 change to the NFL's Collective Bargaining Agreement, which represents a natural experiment to test the relevance of rest and preparation in football. Prior to the agreement, NFL teams off a bye week received"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_travel_circadian_rhythm_short_week_fatigue",
+      "openalex_id": "https://openalex.org/W7110509155",
+      "doi": null,
+      "title": "Subjective readiness in American football: Evaluating the effects of travel on player readiness",
+      "publication_year": 2025,
+      "cited_by_count": 0,
+      "abstract": "This study examined the impact of travel on perceived readiness in NCAA Division I American football players, utilizing the Hooper Index and practice load across home and away conditions.Results revealed that athletes reported better sleep quality, lower fatigue, and reduced DOMS when traveling, despite higher perceived practice loads during away games, suggesting that structured travel routines may enhance perceptual readiness contrary to prior assumptions.These findings highlight the potential benefits of travel logistics in supporting athlete preparation, particularly as collegiate conference realignment increases travel demands, though elevated away-game practice loads underscore the need to manage competitive strain.Table of Contents List of Tables........."
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_travel_circadian_rhythm_short_week_fatigue",
+      "openalex_id": "https://openalex.org/W7128032840",
+      "doi": "https://doi.org/10.1080/02640414.2026.2623568",
+      "title": "Playing against the clock: The hidden costs of circadian disruption in the football ecosystem of performance, recovery and spectator engagement",
+      "publication_year": 2026,
+      "cited_by_count": 1,
+      "abstract": "Elite football imposes intense physical and psychological demands, with congested schedules, late-evening fixtures, artificial lighting, and long-haul travel restricting recovery opportunities. These factors disrupt circadian rhythms, impairing sleep quality and quantity, suppressing melatonin, elevating cortisol, and delaying physiological restoration. The consequences extend beyond immediate performance deficits to increased injury risk, emotional instability, and long-term health concerns similar to those observed in shift-working populations. Youth and female players are particularly vulnerable due to developmental and hormonal sensitivities to circadian misalignment. This narrative review synthesises interdisciplinary evidence on how disrupted circadian timing affects athlete health, performance stability, and recovery capacity, and evaluates structural contributors, including sched"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_travel_circadian_rhythm_short_week_fatigue",
+      "openalex_id": "https://openalex.org/W7167849162",
+      "doi": "https://doi.org/10.1186/s40798-026-01067-0",
+      "title": "Home-Court Advantage and the Associations of Travel and Jet Lag with Team Performance in the Women\u2019s National Basketball Association (WNBA)",
+      "publication_year": 2026,
+      "cited_by_count": 0,
+      "abstract": "BACKGROUND: Travel-related fatigue and circadian disruption (i.e., jet lag) are well-established factors limiting performance in elite men's sport and are recognized contributors to home advantage. Yet evidence from women's professional leagues remains scarce. AIM: This study examined temporal trends in home-court advantage and assessed how cumulative travel burden and directional jet lag relate to performance in the Women's National Basketball Association (WNBA). METHODS: Game location, timing, and performance data from 3489 regular season WNBA games spanning 18 seasons (2007-2024) were analyzed using mixed-effects models adjusted for game time, team and opponent strength, and season. We quantified cumulative travel distance over the preceding seven days and directional jet lag based on eastward or westward travel adjusted for circadian resynchronization. RESULTS: Home-court advantage d"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_syndesmotic_high_ankle_sprain_return_to_play",
+      "openalex_id": "https://openalex.org/W3159567068",
+      "doi": "https://doi.org/10.1080/00913847.2021.1924046",
+      "title": "Defining the contemporary epidemiology and return to play for high ankle sprains in the National Football League",
+      "publication_year": 2021,
+      "cited_by_count": 17,
+      "abstract": "BACKGROUND: High ankle sprains and syndesmotic injuries are commonly sustained by National Football League players, yet there is apaucity of literature reporting the incidence, risk factors and return to play (RTP) rates for these injuries. The purpose of this study is to examine the epidemiology and trends in incidence of high ankle sprains across 11 NFL seasons. METHODS: Publicly available data from the 2009-2010 through 2019-20 seasons were reviewed to identify injuries and collect player characteristics and return to play. Incidence of high ankle injuries was calculated per 10,000 athlete-exposures. Linear regression was performed for incidence of injuries. Risk factors for failure to RTP were identified through multivariate logistic regression, controlling foryear of injury, player position, body mass index (BMI), age at injury, and years of experience before injury. RESULTS: = 0.33"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_syndesmotic_high_ankle_sprain_return_to_play",
+      "openalex_id": "https://openalex.org/W3023690833",
+      "doi": "https://doi.org/10.1007/s12178-020-09631-1",
+      "title": "Return to Play After a Lateral Ligament Ankle Sprain",
+      "publication_year": 2020,
+      "cited_by_count": 90,
+      "abstract": "PURPOSE OF REVIEW: The purpose of this review is to describe the current evidence on the most common sports-related ankle injuries. Joint anatomy, epidemiology, clinical findings, diagnostic approach, and treatment are presented with a specific focus on the available evidence towards return to play. RECENT FINDINGS: Recent findings show that ankle sprain is the most common injury in the world of sports. Bony fractures, cartilage defects, and syndesmotic lesions are frequently seen in association with the more severe type of ankle sprains. In summary, the majority of the athletes' ankle sprains are managed conservatively with excellent outcomes and full return to their pre-injury level of play. However, it is essential to differentiate the single ligament sprain from a more complex injury to the ankle joint. The evidence-based treatment and rehabilitation programmes are associated with a "
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_syndesmotic_high_ankle_sprain_return_to_play",
+      "openalex_id": "https://openalex.org/W2120649890",
+      "doi": "https://doi.org/10.1136/bjsm.37.3.233",
+      "title": "The Football Association Medical Research Programme: an audit of injuries in professional football: an analysis of ankle sprains",
+      "publication_year": 2003,
+      "cited_by_count": 310,
+      "abstract": "AIM: To conduct a detailed analysis of ankle sprains sustained in English professional football over two competitive seasons. METHODS: Club medical staff at 91 professional football clubs annotated player injuries. A specific injury audit questionnaire was used together with a weekly form that documented each club's current injury status. RESULTS: Completed injury records for the two competitive seasons were obtained from 87% and 76% of the participating clubs. Ankle ligament sprains accounted for 11% of the total injuries over the two seasons, with over three quarters (77%) of sprains involving the lateral ligament complex. A total of 12 138 days and 2033 matches were missed because of ankle sprains. More sprains were caused by contact mechanisms than non-contact mechanisms (59% v 39%) except in goalkeepers who sustained more non-contact sprains (21% v 79%, p<0.01). Ankle sprains were m"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_syndesmotic_high_ankle_sprain_return_to_play",
+      "openalex_id": "https://openalex.org/W4393315334",
+      "doi": "https://doi.org/10.1016/j.jor.2024.03.030",
+      "title": "Fantasy football points capture performance declines in National Football League offensive skill players following an ankle injury",
+      "publication_year": 2024,
+      "cited_by_count": 5,
+      "abstract": "Background: The ankle is one of the anatomic sites most frequently injured in National Football League (NFL) players. Ankle injuries have previously been shown to have long-lasting negative impacts, and have been associated with impaired athletic performance. The aim of this study was to use fantasy football points as a metric to evaluate the impact of ankle injuries on NFL offensive skill player performance. Methods: An open-access online database was used to identify NFL players who sustained ankle injuries from 2009 to 2020. Another public online database was used to determine fantasy points and other performance metrics for injured offensive skill players in the seasons before and after their ankle injury. Injured players were matched to a healthy control by position, age, and BMI. Paired T-tests were performed to evaluate performance metrics before and after the ankle injury. An ANC"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_syndesmotic_high_ankle_sprain_return_to_play",
+      "openalex_id": "https://openalex.org/W7149388084",
+      "doi": "https://doi.org/10.30574/ijsra.2026.19.1.0655",
+      "title": "Prevalence of high ankle sprains among regional-level football players in Kota",
+      "publication_year": 2026,
+      "cited_by_count": 0,
+      "abstract": "Introduction- High ankle sprains are common among football players, particularly in positions involving frequent cutting, stopping, and physical contact. These injuries lead to prolonged recovery times and significant performance impacts. This study examines the prevalence, risk factors, recovery, and prevention strategies for high ankle sprains in football players, addressing gaps in current literature. The aim - To investigate the prevalence high ankle sprains in football players. Objectives: Assess the prevalence of high ankle sprains across different playing positions, identify risk factors and evaluate recovery timelines, Analyze the effectiveness of preventive measures and rehabilitation protocols. Need of study \u2013 High ankle sprains significantly impact player performance and career longevity. Existing studies lack focus on regional leagues and position-specific risks. This study p"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_syndesmotic_high_ankle_sprain_return_to_play",
+      "openalex_id": "https://openalex.org/W4412893598",
+      "doi": "https://doi.org/10.1016/j.jor.2025.07.033",
+      "title": "High rates of return-to-play and No deterioration in performance following ankle fractures in National Hockey League players",
+      "publication_year": 2025,
+      "cited_by_count": 1,
+      "abstract": "Background Ankle fractures are common injuries in high-impact sports but have not been extensively studied in professional hockey. Given the high-speed, collision-heavy nature of the National Hockey League (NHL), ankle fractures may significantly affect player performance and team resources. Purpose To investigate the incidence, management, and impact of ankle fractures on return-to-play (RTP) and performance metrics among NHL players. Methods A retrospective review of NHL players from 2013 to 2023 identified 30 athletes who sustained ankle fractures. Injury data, treatment intervention (surgical vs. non-surgical), and mechanism of injury were recorded from an online databse. Performance metrics were compared between pre- and post-injury seasons using non-parametric statistical methods. Results The calculated rate of occurrence was 0.52 ankle fractures per 10,000 athlete exposures. All p"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_pass_rush_tracking_expected_points_added",
+      "openalex_id": "https://openalex.org/W4385349899",
+      "doi": "https://doi.org/10.1080/00031305.2023.2242442",
+      "title": "Here Comes the STRAIN: Analyzing Defensive Pass Rush in American Football with Player Tracking Data",
+      "publication_year": 2023,
+      "cited_by_count": 9,
+      "abstract": "In American football, a pass rush is an attempt by the defensive team to disrupt the offense and prevent the quarterback (QB) from completing a pass. Existing metrics for assessing pass rush performance are either discrete-time quantities or based on subjective judgment. Using player tracking data, we propose STRAIN, a novel metric for evaluating pass rushers in the National Football League (NFL) at the continuous-time within-play level. Inspired by the concept of strain rate in materials science, STRAIN is a simple and interpretable means for measuring defensive pressure in football. It is a directly observed statistic as a function of two features: the distance between the pass rusher and QB, and the rate at which this distance is being reduced. Our metric possesses great predictability of pressure and stability over time. We also fit a multilevel model for STRAIN to understand the def"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_pass_rush_tracking_expected_points_added",
+      "openalex_id": "https://openalex.org/W2595775792",
+      "doi": null,
+      "title": "The No-Fantasy League: Why The National Football League Should Ban Its Players From Managing Personal Fantasy Football Teams",
+      "publication_year": 2016,
+      "cited_by_count": 0,
+      "abstract": ""
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_pass_rush_tracking_expected_points_added",
+      "openalex_id": "https://openalex.org/W2611860671",
+      "doi": null,
+      "title": "Perceptions concerning successful development of Finnish players involved in the National Football League (NFL)",
+      "publication_year": 2017,
+      "cited_by_count": 0,
+      "abstract": "Development of American Football in Finland is largely influenced by its licensed participants and Finland's American Football Union (Suomen Amerikkalaisen Jalkapallon Liitto, SAJL). To increase competitive excellence and the level of competition at national and international levels requires certain psychological skills in supportive environments, which later have to be turned into opportunities. Multiple large-scale studies (Bloom, 1985; Csikszentmihalyi, Rathunde, Whalen, & Wong, 1993) on talent development in a vast number of areas (art, music, sport, science), show that helping individuals enhance competence is not just hand picking talented people and introducing financial contributions. Turning talent into accomplishments involves the development of psychological skills, systems of habit, orientations, and the presence of supportive environments that nurture physical and mental dev"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_pass_rush_tracking_expected_points_added",
+      "openalex_id": "https://openalex.org/W7112540155",
+      "doi": null,
+      "title": "Bringing the Heat: Predicting the Pass Rush and Quantifying Pressure in NFL Football",
+      "publication_year": 2023,
+      "cited_by_count": 0,
+      "abstract": "Pass protection and the pass rush are frequently overlooked elements of American football. While the players involved in these matchups are typically the largest on the field, they also tend to be the most anonymous and may not receive the credit they deserve for performing their mental and physical responsibilities. In this paper, the pre-snap strategy and post-snap execution of pass protection and the pass rush are studied. First, models are designed to predict defensive play calling, specifically whether or not the defense chooses to blitz. Several different machine learning models are used, with various strengths and weaknesses, and while a number of interesting relationships arise, the overarching conclusion is that coaches are successfully unpredictable in choosing when to be aggressive with a blitz call. Second, a new metric is proposed for measuring the amount of pressure the qua"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_pass_rush_tracking_expected_points_added",
+      "openalex_id": "https://openalex.org/W4416058942",
+      "doi": "https://doi.org/10.1093/jrsssa/qnaf185",
+      "title": "A multilevel model with heterogeneous variances for snap timing in the National Football League",
+      "publication_year": 2025,
+      "cited_by_count": 1,
+      "abstract": "Abstract Player tracking data have provided great opportunities to generate insights into understudied areas of American football, such as pre-snap motion. Using a Bayesian multilevel model with heterogeneous variances, we provide an assessment of National Football League (NFL) quarterbacks and their ability to synchronize the timing of the ball snap with pre-snap movement from their teammates. We focus on passing plays with receivers in motion at the snap and running a route, and define the snap timing as the time between the moment a receiver begins motioning and the ball snap event. We assume a Gamma distribution for the play-level snap timing and model the mean parameter with player and team random effects, along with relevant fixed effects such as the motion type identified via a Gaussian mixture model. Most importantly, we model the shape parameter with quarterback random effects, "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_pass_rush_tracking_expected_points_added",
+      "openalex_id": "https://openalex.org/W2954325026",
+      "doi": "https://doi.org/10.1515/jqas-2020-0017",
+      "title": "Unsupervised methods for identifying pass coverage among defensive backs with NFL player tracking data",
+      "publication_year": 2020,
+      "cited_by_count": 4,
+      "abstract": "Abstract Statistical analysis of defensive players in football has lagged behind that of offensive players, special teams, and coaching decisions, largely because data on individual defensive players has historically been lacking. With the introduction of player tracking data from the NFL, researchers can now tackle these problems. However, event and strategy annotations in the NFL\u2019s tracking data are limited, especially when it comes to describing what defensive players do on each play. Moreover, methods for creating these annotations typically require extensive human labeling, which is difficult and expensive. Because of the importance of the passing game and the limited prior research on the defensive side of passing, we provide annotations for the pass coverage types of cornerbacks using unsupervised learning techniques, which require no training data. We define a set of features fro"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_synthetic_turf_grass_lower_extremity_injury",
+      "openalex_id": "https://openalex.org/W2901470200",
+      "doi": "https://doi.org/10.1177/0363546518808499",
+      "title": "Higher Rates of Lower Extremity Injury on Synthetic Turf Compared With Natural Turf Among National Football League Athletes: Epidemiologic Confirmation of a Biomechanical Hypothesis",
+      "publication_year": 2018,
+      "cited_by_count": 62,
+      "abstract": "BACKGROUND: Biomechanical studies have shown that synthetic turf surfaces do not release cleats as readily as natural turf, and it has been hypothesized that concomitant increased loading on the foot contributes to the incidence of lower body injuries. This study evaluates this hypothesis from an epidemiologic perspective, examining whether the lower extremity injury rate in National Football League (NFL) games is greater on contemporary synthetic turfs as compared with natural surfaces. HYPOTHESIS: Incidence of lower body injury is higher on synthetic turf than on natural turf among elite NFL athletes playing on modern-generation surfaces. STUDY DESIGN: Cohort study; Level of evidence, 3. METHODS: Lower extremity injuries reported during 2012-2016 regular season games were included, with all 32 NFL teams reporting injuries under mandated, consistent data collection guidelines. Poisson m"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_synthetic_turf_grass_lower_extremity_injury",
+      "openalex_id": "https://openalex.org/W7118177697",
+      "doi": "https://doi.org/10.60118/001c.146424",
+      "title": "Analyzing Ankle Injuries in the NFL: A Video-Based Investigation of the Impact of Artificial Turf on Injury Mechanisms",
+      "publication_year": 2026,
+      "cited_by_count": 0,
+      "abstract": "Purpose Artificial turf is increasingly used in professional football due to its economic and logistical advantages. However, concerns persist that certain turf types, especially slit-film, may alter biomechanics and increase the risk of lower extremity injuries. This study aimed to evaluate the mechanism and frequency of ankle and foot injuries across three surface types, natural grass, monofilament/dual-fiber (MFDF) turf, and slit-film turf, during the 2022\u20132023 NFL season. We hypothesize that slit-film turf will show a higher rate of ankle and foot injuries compared to other types of turf and natural grass. Methods A retrospective review of NFL injury reports and game footage was conducted to identify 78 in-game ankle and foot injuries. Injuries were classified by mechanism (contact vs. non-contact) and correlated with surface type. Statistical analyses including Mann-Whitney U, Chi-S"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_synthetic_turf_grass_lower_extremity_injury",
+      "openalex_id": "https://openalex.org/W4293319041",
+      "doi": "https://doi.org/10.5772/intechopen.106615",
+      "title": "Playing Surface and Injury Risk: Artificial Turf Vs. Natural Grass",
+      "publication_year": 2022,
+      "cited_by_count": 6,
+      "abstract": "Artificial turf\u2019s developmental history spans 6 generations and includes design improvements that transformed an injury-inducing 1st generation field into a modern 3rd generation natural grass substitute. Artificial turf has become a widely adopted playing surface with a $2.7 billion United States Dollar (USD) valuation in North America. Turf\u2019s popularity is due to its increased functionality and decreased cost compared to natural grass that allows more sports to play on the surface for longer time periods with decreased maintenance costs. From a biomechanical perspective, artificial turf exhibits higher frictional coefficients than natural grass resulting in higher foot and ankle injury rates. Concussion rates on turf are decreased compared to natural grass due to lower G-max values on well-maintained artificial surfaces. Hip, knee, and overall injury rates are equivalent between the tw"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_synthetic_turf_grass_lower_extremity_injury",
+      "openalex_id": "https://openalex.org/W7154797824",
+      "doi": null,
+      "title": "ACL Injury Incidence on Artificial Turf Versus Natural Grass in Elite Male Football Players: A Critically Appraised Topic",
+      "publication_year": 2026,
+      "cited_by_count": 0,
+      "abstract": "Context: Artificial turf has been shown to be controversial despite being a cost-effective alternative to natural grass because of the potential risks it has on athletes\u2019 lower extremity (LE) injury, specifically the anterior cruciate ligament (ACL). Elite male football players were chosen as the population of choice to determine the risk of ACL injury incidence on artificial turf compared to natural grass. The purpose of this critically appraised topic is to appraise the best available literature to identify the impact of artificial turf on knee injury rate in male elite football players. Methods: A computerized search strategy was done from December 2025 through February 2026. Databases searched include ScienceDirect, PubMed, TRIP database, Google Scholar, EBSCO host, and the JFL database. \"Elite male football player\u201d AND \u201cACL\u201d AND \u201cartificial turf\u201d were the search phrases used to find"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_synthetic_turf_grass_lower_extremity_injury",
+      "openalex_id": "https://openalex.org/W4404192849",
+      "doi": "https://doi.org/10.1155/2024/6832213",
+      "title": "Field Surface Type and Season\u2010Ending Lower Extremity Injury in NFL Players",
+      "publication_year": 2024,
+      "cited_by_count": 2,
+      "abstract": "There is growing concern over the safety of artificial turf when it comes to the incidence of player injuries. The artificial surfaces can withstand more play, are cheaper to maintain, and are more predictable. However, there is concern that this beneficial durability comes at the expense of the forgiveness of the surface, leading to more injuries. In this study, we aim to compare the incidence of in\u2010game season\u2010ending lower extremity injuries on natural and artificial playing surfaces in the National Football League (NFL) during the 2020, 2021, and 2022 seasons. For this study, we used publicly available data to determine and classify the specific injury, where the injury occurred, field surface type, and duration of recovery. All data were collected, and significance was determined using two\u2010sample T\u2010tests. Only in\u2010game injuries were included in this study. Over the course of 2020, 202"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_synthetic_turf_grass_lower_extremity_injury",
+      "openalex_id": "https://openalex.org/W4411285363",
+      "doi": "https://doi.org/10.3390/healthcare13121415",
+      "title": "College-to-NFL Stadium Turf Transitions as a Risk Factor for Lower Extremity Non-Contact Injuries in Rookie Players: A 13-Year Cohort Analysis",
+      "publication_year": 2025,
+      "cited_by_count": 0,
+      "abstract": "Background/Objectives: Lower extremity non-contact injuries (LE-NCIs) pose a significant burden on the National Football League (NFL), with ongoing debates regarding playing surface safety. The stressful college-to-professional transition period for rookies, which can include adapting to new playing surfaces, may influence injury susceptibility. This study aimed to determine whether the transition in a home stadium turf type (natural grass, artificial, and hybrid) from the final college season to the rookie NFL season impacts LE-NCI likelihood. Methods: A retrospective cohort study analyzed 826 first and second-round NFL draft picks from 2012 to 2024. Data on college/NFL home surfaces (defining six transition types), position group, college training surface access, and rookie season LE-NCIs were collected from public sources. Competing risk analysis was used to estimate the cumulative LE"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_fourth_down_decision_making_win_probability",
+      "openalex_id": "https://openalex.org/W2953855120",
+      "doi": "https://doi.org/10.2139/ssrn.3114242",
+      "title": "Quantifying the Causal Effects of Conservative Fourth Down Decision Making in the National Football League",
+      "publication_year": 2018,
+      "cited_by_count": 33,
+      "abstract": "In part driven by academic research, perception in the sports analytics community asserts that coaches in the National Football League are too conservative on fourth down. Using 13 years of data, we confirm this premise and quantify the unobserved benefit that teams have missed out on by not utilizing a better fourth down strategy. Formally, teams that went for it are paired to those who did not go for it via a nearest neighbor matching algorithm. Within the matched cohort, we estimate the additional number of wins that each NFL team would have added by implementing a basic but more aggressive fourth down strategy. We find that, on average, a better strategy would have been worth roughly an extra 0.4 wins per year for each team. Our results better inform decision-making in a high-stakes environment where standard statistical tools, while informative, have possibly been confounded by extr"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_fourth_down_decision_making_win_probability",
+      "openalex_id": "https://openalex.org/W4411218871",
+      "doi": "https://doi.org/10.1123/jsm.2024-0254",
+      "title": "Competitive Position, Expectations, and Managerial Approaches to Risk in National Football League Football",
+      "publication_year": 2025,
+      "cited_by_count": 2,
+      "abstract": "This paper analyzes how National Football League coaches incorporate information on competitive position and expectations of winning into fourth down decisions. Theoretically, teams should take more risk when their win probability is relatively low since additional risk broadens the distribution of possible outcomes thereby increasing the likelihood of victory. Our findings confirm this. We find that heavier favorites and teams having had higher levels of win probability within the game attempt more fourth down conversions, both on plays where attempting a play is estimated to be optimal and on plays where it is not. One possible explanation for this is coaches in those positions more likely frame their current win probability as being below a previously defined reference point, which reduces their degree of loss aversion. On balance, we find that this increased aggressiveness on fourth "
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_fourth_down_decision_making_win_probability",
+      "openalex_id": "https://openalex.org/W2582220921",
+      "doi": null,
+      "title": "An Examination of Decision-Making Biases on Fourth Down in The National Football League",
+      "publication_year": 2016,
+      "cited_by_count": 0,
+      "abstract": "The recent developments in the \ufb01eld of sport analytics have given researchers the tools to examine an increasingly diverse set of topics within the world of sport in ways not previously possible (Alamar, 2013; Fry and Ohlmann, 2012). This study analyzes the decision-making processes of high level coaches under di\ufb00erent contexts and then determines whether or not a speci\ufb01c subconscious psychological bias, known as the representativeness heuristic, caused the individual to make the choice they did. Past empirical research has examined people\u2019s decisions in di\ufb00erent contexts and, from those con- texts, made inferences about how those individuals made their decisions and what errors in their decision-making processes could have led to their suboptimal choices (Kahneman and Tversky, 1979; Kobberling and Wakker, 2005; Tom et al, 2007; Tversky and Kahneman, 1992). The representativeness heurist"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_fourth_down_decision_making_win_probability",
+      "openalex_id": "https://openalex.org/W3172830383",
+      "doi": null,
+      "title": "Fourth Down's Critical Role in a Winning Strategy for American Football Games",
+      "publication_year": 2021,
+      "cited_by_count": 0,
+      "abstract": "Data analytics is booming, and this boom has started to creep into sports \u2013 originating in baseball and moving its way across other popular sports leagues. American Football is one of the last sports to embrace the analytics revolution; however, a noticeable use of data analytics in recent years within the sport of American Football is the decision on whether to punt or \u201cgo for it\u201d on any fourth down during a game. There have been studies on this dating back to the 1970\u2019s, yet most of these studies revolved around the discrete concept of points, as opposed to a continuous concept such as win probability. Regardless of the variable of interest, studies have shown that teams are being too conservative on their fourth downs and punting the ball to their opponent far too often. This study uses ten years of historical play-level data from the National Football League coupled with machine lear"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_fourth_down_decision_making_win_probability",
+      "openalex_id": "https://openalex.org/W4403925054",
+      "doi": "https://doi.org/10.1214/24-aoas1933",
+      "title": "Learning risk preferences in Markov decision processes: An application to the fourth down decision in the national football league",
+      "publication_year": 2024,
+      "cited_by_count": 1,
+      "abstract": "For decades National Football League (NFL) coaches\u2019 observed fourth down decisions have been largely inconsistent with prescriptions based on statistical models. In this paper we develop a framework to explain this discrepancy using an inverse optimization approach. We model the fourth down decision and the subsequent sequence of plays in a game as a Markov decision process (MDP), the dynamics of which we estimate from NFL play-by-play data from the 2014 through 2022 seasons. We assume that coaches\u2019 observed decisions are optimal but that the risk preferences governing their decisions are unknown. This yields an inverse decision problem for which the optimality criterion, or risk measure, of the MDP is the estimand. Using the quantile function to parameterize risk, we estimate which quantile-optimal policy yields the coaches\u2019 observed decisions as minimally suboptimal. In general, we fin"
+    },
+    {
+      "domain": "GSE",
+      "query_slug": "nfl_fourth_down_decision_making_win_probability",
+      "openalex_id": "https://openalex.org/W3125994436",
+      "doi": "https://doi.org/10.1287/mnsc.1120.1657",
+      "title": "The Loser's Curse: Decision Making and Market Efficiency in the National Football League Draft",
+      "publication_year": 2013,
+      "cited_by_count": 199,
+      "abstract": "A question of increasing interest to researchers in a variety of fields is whether the biases found in judgment and decision-making research remain present in contexts in which experienced participants face strong economic incentives. To investigate this question, we analyze the decision making of National Football League teams during their annual player draft. This is a domain in which monetary stakes are exceedingly high and the opportunities for learning are rich. It is also a domain in which multiple psychological factors suggest that teams may overvalue the chance to pick early in the draft. Using archival data on draft-day trades, player performance, and compensation, we compare the market value of draft picks with the surplus value to teams provided by the drafted players. We find that top draft picks are significantly overvalued in a manner that is inconsistent with rational expe"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_quarterback_shoulder_rib_throwing_biomechanics",
+      "openalex_id": "https://openalex.org/W2791117754",
+      "doi": "https://doi.org/10.1007/s12178-018-9453-8",
+      "title": "Common Injuries in Professional Football Quarterbacks",
+      "publication_year": 2018,
+      "cited_by_count": 15,
+      "abstract": ""
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_quarterback_shoulder_rib_throwing_biomechanics",
+      "openalex_id": "https://openalex.org/W4404859803",
+      "doi": "https://doi.org/10.1515/jom-2024-0031",
+      "title": "Osteopathic approach to injuries of the overhead thrower\u2019s shoulder",
+      "publication_year": 2024,
+      "cited_by_count": 2,
+      "abstract": "Overhead sports place a significant amount of stress on the shoulder. There are a variety of activities and sports with overhead athletes including both throwing (baseball, softball, football, cricket) and nonthrowing (tennis, swimming, volleyball) sports. Although all of these overhead motions can lead to pathology, a large focus has been on the consequences of overhead throwing. Overhead-throwing sports place forces on the joints, muscles, tendons, and ligaments that vary through the spectrum of athletes, as does the potential injuries that may be caused by these forces. The primary joints that are commonly injured in overhead sports are the shoulder and the elbow. The goal of this article is to discuss the impact of overhead motions on the shoulder, with a primary focus on throwing, as well as to highlight the osteopathic approach to assessment, treatment, management, and prevention."
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_quarterback_shoulder_rib_throwing_biomechanics",
+      "openalex_id": "https://openalex.org/W2750816348",
+      "doi": "https://doi.org/10.1016/j.jsams.2017.08.015",
+      "title": "Shoulder injury in water polo: A systematic review of incidence and intrinsic risk factors",
+      "publication_year": 2017,
+      "cited_by_count": 58,
+      "abstract": ""
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_quarterback_shoulder_rib_throwing_biomechanics",
+      "openalex_id": "https://openalex.org/W7117251317",
+      "doi": "https://doi.org/10.1016/j.jseint.2025.101607",
+      "title": "Relationship between trunk and pelvic rotation angles during throwing and the Kerlan\u2013Jobe Orthopedic Clinic score in quarterbacks in American football",
+      "publication_year": 2025,
+      "cited_by_count": 0,
+      "abstract": "Background Quarterbacks (QBs) in American football frequently perform repetitive overhead throwing, which can lead to shoulder and elbow injuries. Effective control of trunk and pelvic movements is considered crucial for minimizing shoulder and elbow joint stress during throwing. The Kerlan\u2013Jobe Orthopedic Clinic (KJOC) score is a self-perceived index of shoulder and elbow function and level of competition in overhead athletes. However, the relationship between trunk and pelvic movements during throwing and the KJOC score among QBs remains unclear. This study aimed to examine the association between trunk and pelvic motion during the QB throwing sequence and the KJOC score. Methods A total of 11 healthy QBs were enrolled in this study. Each participant completed 5 throws at distances of 18.2 m (20 yards) and 27.4 m (30 yards). Throwing mechanics were analyzed using the PitchAI applicatio"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_quarterback_shoulder_rib_throwing_biomechanics",
+      "openalex_id": "https://openalex.org/W4404095686",
+      "doi": "https://doi.org/10.1016/j.asmr.2024.101037",
+      "title": "Risk Factors and Injury Prevention in the Throwing Athlete",
+      "publication_year": 2024,
+      "cited_by_count": 6,
+      "abstract": "Abstract: Arm injuries are the most common throwing injury, with growing concern as the most severe injuries, such as UCL reconstruction, continue to rise. Furthermore, throwing injuries are frequently recurrent, suggesting once injured, players are at increased risk for another arm injury. The increase in injury rates and severity has been attributed to increases in pitching volume and year-round participation, and specialized training. Thus, initial efforts to prevent arm injuries by USA Baseball and Little League have focused on the extrinsic factor of pitching exposure in the form of pitch counts, yet arm injury rates have stayed constant. Therefore, injury prevention strategies should include extrinsic factors and address modifiable, intrinsic factors that are associated with arm injury. Collectively addressing factors, such as shoulder range of motion and strength deficits, trunk a"
+    },
+    {
+      "domain": "GSI",
+      "query_slug": "nfl_quarterback_shoulder_rib_throwing_biomechanics",
+      "openalex_id": "https://openalex.org/W936365267",
+      "doi": null,
+      "title": "Analysis of hip and shoulder rotation and linear ball velocity in the transverse plane during handball power serve /by Adam Coronado.",
+      "publication_year": 2014,
+      "cited_by_count": 0,
+      "abstract": "The purpose of this research was to analyze angular velocities of the hip and shoulders in the transverse plane and resultant linear velocity of the ball during a handball power serve. There has been little research of any type in court handball and no known research reports involving the biomechanics of handball. Eighteen trained, competitive handball players, from the professional division to the B class amateur division, served 10 legal serves in a mock court setup. The serve patterns were digitized and angular velocities of hip and shoulder rotation were compared to ball velocities. The primary findings showed that hip rotation preceded shoulder rotation, the shoulders rotated at a higher angular velocity than the hips (429.796 deg/sec ???154.067, 801.237 deg/sec ???130.254 respectively), and better players achieved higher maximum and average linear ball velocities. Hip rotation was "
+    }
+  ],
+  "huggingface_assets": [
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "Voxel51/Football-Player-Segmentation",
+      "downloads": 4712,
+      "likes": 5,
+      "tags": [
+        "task_categories:object-detection",
+        "language:en",
+        "license:cc0-1.0",
+        "size_categories:n<1K",
+        "format:imagefolder",
+        "modality:image",
+        "library:datasets",
+        "library:mlcroissant"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "Chucks90/football-holefinder-jobs",
+      "downloads": 3751,
+      "likes": 2,
+      "tags": [
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "Enxin/Football",
+      "downloads": 1832,
+      "likes": 4,
+      "tags": [
+        "size_categories:10M<n<100M",
+        "format:webdataset",
+        "modality:image",
+        "modality:text",
+        "library:datasets",
+        "library:webdataset",
+        "library:mlcroissant",
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "martinjolif/football-ball-detection",
+      "downloads": 1473,
+      "likes": 4,
+      "tags": [
+        "task_categories:object-detection",
+        "license:cc-by-4.0",
+        "size_categories:1K<n<10K",
+        "format:imagefolder",
+        "modality:image",
+        "modality:text",
+        "library:datasets",
+        "library:mlcroissant"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "unitreerobotics/G1_Dex1_Play_Football",
+      "downloads": 1442,
+      "likes": 1,
+      "tags": [
+        "task_categories:robotics",
+        "license:apache-2.0",
+        "size_categories:100K<n<1M",
+        "format:parquet",
+        "modality:tabular",
+        "modality:timeseries",
+        "modality:video",
+        "library:datasets"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "illuin-conteb/football",
+      "downloads": 1159,
+      "likes": 1,
+      "tags": [
+        "size_categories:1K<n<10K",
+        "format:parquet",
+        "modality:text",
+        "library:datasets",
+        "library:pandas",
+        "library:mlcroissant",
+        "library:polars",
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "Damir81/football-charts-results-goal-timing",
+      "downloads": 1003,
+      "likes": 4,
+      "tags": [
+        "task_categories:tabular-regression",
+        "task_categories:tabular-classification",
+        "task_categories:time-series-forecasting",
+        "source_datasets:original",
+        "language:en",
+        "license:cc-by-4.0",
+        "size_categories:10K<n<100K",
+        "format:csv"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "football",
+      "id": "oliviersportsdata/European-Football-Timestamped-Odds-Pinnacle-Match-Stats",
+      "downloads": 586,
+      "likes": 0,
+      "tags": [
+        "task_categories:tabular-regression",
+        "task_categories:tabular-classification",
+        "task_categories:time-series-forecasting",
+        "language:en",
+        "license:other",
+        "size_categories:10K<n<100K",
+        "format:csv",
+        "modality:tabular"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "Hellfire98/sportsmot",
+      "downloads": 65140,
+      "likes": 1,
+      "tags": [
+        "task_categories:object-detection",
+        "task_categories:other",
+        "language:en",
+        "license:cc-by-nc-4.0",
+        "size_categories:1M<n<10M",
+        "modality:video",
+        "library:datasets",
+        "arxiv:2304.05170"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "LiuRunky/Leeds_Sports_Pose",
+      "downloads": 18452,
+      "likes": 0,
+      "tags": [
+        "size_categories:1K<n<10K",
+        "format:imagefolder",
+        "modality:image",
+        "library:datasets",
+        "library:mlcroissant",
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "ruslanmv/sports-trends-dataset",
+      "downloads": 12471,
+      "likes": 5,
+      "tags": [
+        "task_categories:tabular-classification",
+        "language:en",
+        "license:mit",
+        "size_categories:n<1K",
+        "format:parquet",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "Lekim89/sportsmot",
+      "downloads": 6207,
+      "likes": 2,
+      "tags": [
+        "task_categories:object-detection",
+        "task_categories:other",
+        "language:en",
+        "license:cc-by-nc-4.0",
+        "size_categories:100K<n<1M",
+        "format:imagefolder",
+        "modality:image",
+        "modality:video"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "resfunny717/sports-betting-bundle",
+      "downloads": 5667,
+      "likes": 0,
+      "tags": [
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "karunapu/sports-calendar",
+      "downloads": 5541,
+      "likes": 0,
+      "tags": [
+        "region:us",
+        "sports",
+        "calendar",
+        "ics"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "MCG-NJU/SportsMOT",
+      "downloads": 3882,
+      "likes": 8,
+      "tags": [
+        "task_categories:object-detection",
+        "task_categories:other",
+        "annotations_creators:crowdsourced",
+        "source_datasets:MultiSports",
+        "language:en",
+        "license:cc-by-nc-4.0",
+        "size_categories:n<1K",
+        "format:text"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "sports",
+      "id": "kennyhyder/sportsbookish-daily-odds",
+      "downloads": 2979,
+      "likes": 1,
+      "tags": [
+        "task_categories:tabular-regression",
+        "language:en",
+        "license:cc-by-4.0",
+        "size_categories:n<1K",
+        "format:csv",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-tspulse-r1",
+      "downloads": 1352749,
+      "likes": 48,
+      "tags": [
+        "granite-tsfm",
+        "safetensors",
+        "tspulse",
+        "time series",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models",
+        "time-series"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-ttm-r3",
+      "downloads": 535387,
+      "likes": 20,
+      "tags": [
+        "safetensors",
+        "tinytimemixer",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models",
+        "time-series"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-patchtst-fm-r2",
+      "downloads": 115354,
+      "likes": 18,
+      "tags": [
+        "safetensors",
+        "patchtst_fm",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models",
+        "time-series"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-ttm-r2",
+      "downloads": 107409,
+      "likes": 169,
+      "tags": [
+        "granite-tsfm",
+        "safetensors",
+        "tinytimemixer",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-flowstate-r1",
+      "downloads": 34319,
+      "likes": 29,
+      "tags": [
+        "safetensors",
+        "flowstate",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models",
+        "time-series"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-patchtst-fm-r1",
+      "downloads": 15131,
+      "likes": 7,
+      "tags": [
+        "safetensors",
+        "patchtst_fm",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models",
+        "time-series"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-ttm-r1",
+      "downloads": 11940,
+      "likes": 331,
+      "tags": [
+        "granite-tsfm",
+        "safetensors",
+        "tinytimemixer",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models",
+        "time series foundation models"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "time-series",
+      "id": "ibm-granite/granite-timeseries-patchtst",
+      "downloads": 5564,
+      "likes": 20,
+      "tags": [
+        "transformers",
+        "safetensors",
+        "patchtst",
+        "generated_from_trainer",
+        "time series",
+        "forecasting",
+        "pretrained models",
+        "foundation models"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "nvidia/Kumo-Tabular",
+      "downloads": 144654,
+      "likes": 205,
+      "tags": [
+        "kumo_tabular",
+        "tabular-foundation-model",
+        "structured-data-models",
+        "license:openmdw-1.1",
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "tabularisai/multilingual-sentiment-analysis",
+      "downloads": 108407,
+      "likes": 398,
+      "tags": [
+        "transformers",
+        "safetensors",
+        "distilbert",
+        "text-classification",
+        "sentiment-analysis",
+        "sentiment",
+        "synthetic data",
+        "multi-class"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "LG-AI-Research/EXAONE-Tabular",
+      "downloads": 107851,
+      "likes": 14,
+      "tags": [
+        "tabular",
+        "tabular-classification",
+        "tabular-regression",
+        "in-context-learning",
+        "foundation-model",
+        "pytorch",
+        "safetensors",
+        "exaone"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "tabularisai/ModernFinBERT",
+      "downloads": 4946,
+      "likes": 13,
+      "tags": [
+        "safetensors",
+        "modernbert",
+        "synthetic data",
+        "financial-sentiment-analysis",
+        "sentiment-analysis",
+        "crypto",
+        "stocks",
+        "finbert"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "tabularisai/multilingual-emotion-classification",
+      "downloads": 2189,
+      "likes": 27,
+      "tags": [
+        "transformers",
+        "safetensors",
+        "xlm-roberta",
+        "text-classification",
+        "emotion-classification",
+        "emotion",
+        "multi-label-classification",
+        "synthetic data"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "tabularisai/Qwen3-0.3B-distil",
+      "downloads": 1370,
+      "likes": 2,
+      "tags": [
+        "safetensors",
+        "qwen3",
+        "distillation",
+        "text-generation",
+        "conversational",
+        "en",
+        "base_model:Qwen/Qwen3-0.6B",
+        "base_model:finetune:Qwen/Qwen3-0.6B"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "tabularisai/Faust-1",
+      "downloads": 1110,
+      "likes": 6,
+      "tags": [
+        "transformers",
+        "safetensors",
+        "gguf",
+        "qwen3",
+        "text-generation",
+        "llama.cpp",
+        "synthetic data",
+        "conversational"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "model",
+      "search": "tabular",
+      "id": "tabularisai/ai-text-detection",
+      "downloads": 1077,
+      "likes": 5,
+      "tags": [
+        "transformers",
+        "safetensors",
+        "modernbert",
+        "text-classification",
+        "ai-text-detection",
+        "raid",
+        "en",
+        "base_model:answerdotai/ModernBERT-base"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "biomechanics",
+      "id": "lekhoa288/picklebase-open-biomechanics",
+      "downloads": 87,
+      "likes": 2,
+      "tags": [
+        "task_categories:question-answering",
+        "task_categories:text-generation",
+        "task_categories:tabular-classification",
+        "language:en",
+        "language:vi",
+        "license:cc-by-4.0",
+        "size_categories:n<1K",
+        "format:json"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "biomechanics",
+      "id": "abnjamilahmad/fenm-3d-biomechanics",
+      "downloads": 36,
+      "likes": 0,
+      "tags": [
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "biomechanics",
+      "id": "JatinkInnovision/Injury_Biomechanics",
+      "downloads": 26,
+      "likes": 1,
+      "tags": [
+        "license:apache-2.0",
+        "size_categories:1K<n<10K",
+        "format:json",
+        "modality:text",
+        "library:datasets",
+        "library:pandas",
+        "library:mlcroissant",
+        "library:polars"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "biomechanics",
+      "id": "Innovision/Injury_Biomechanics",
+      "downloads": 7,
+      "likes": 1,
+      "tags": [
+        "license:apache-2.0",
+        "size_categories:1K<n<10K",
+        "format:json",
+        "modality:text",
+        "library:datasets",
+        "library:pandas",
+        "library:mlcroissant",
+        "library:polars"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "masonmarker/osha-severe-injury-reports-enriched",
+      "downloads": 449,
+      "likes": 2,
+      "tags": [
+        "task_categories:tabular-classification",
+        "language:en",
+        "license:mit",
+        "size_categories:100K<n<1M",
+        "format:parquet",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "Layered-Labs/neiss-injury-data",
+      "downloads": 374,
+      "likes": 1,
+      "tags": [
+        "task_categories:other",
+        "language:en",
+        "license:other",
+        "size_categories:1M<n<10M",
+        "format:parquet",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "multabench/extended-text-cls-osha-injury",
+      "downloads": 211,
+      "likes": 0,
+      "tags": [
+        "size_categories:1K<n<10K",
+        "format:parquet",
+        "modality:text",
+        "modality:tabular",
+        "library:datasets",
+        "library:pandas",
+        "library:polars",
+        "library:mlcroissant"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "who-is-tyler-durden/thailand-road-traffic-injury-aggregates-2018",
+      "downloads": 96,
+      "likes": 0,
+      "tags": [
+        "language:en",
+        "language:th",
+        "license:cc-by-4.0",
+        "region:us",
+        "thailand",
+        "bangkok",
+        "road-safety",
+        "traffic-injuries"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "mayerantoine/injury-narrative-coding",
+      "downloads": 90,
+      "likes": 0,
+      "tags": [
+        "task_categories:text-classification",
+        "language:en",
+        "license:apache-2.0",
+        "size_categories:100K<n<1M",
+        "region:us",
+        "medical"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "electricsheepafrica/africa-synth-disability-spinal-cord-injury-paraplegia-all",
+      "downloads": 67,
+      "likes": 0,
+      "tags": [
+        "task_categories:tabular-classification",
+        "task_categories:tabular-regression",
+        "multilinguality:monolingual",
+        "language:en",
+        "license:cc-by-4.0",
+        "size_categories:n<1K",
+        "format:imagefolder",
+        "modality:image"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "jablonkagroup/drug_induced_liver_injury-multimodal",
+      "downloads": 56,
+      "likes": 0,
+      "tags": [
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSI",
+      "kind": "dataset",
+      "search": "injury",
+      "id": "Emulated-Inc/sci-spinal-cord-structure-injury",
+      "downloads": 53,
+      "likes": 0,
+      "tags": [
+        "license:cc-by-4.0",
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "minmaxxxer/nfl-odds-2026",
+      "downloads": 553,
+      "likes": 0,
+      "tags": [
+        "task_categories:tabular-classification",
+        "task_categories:tabular-regression",
+        "language:en",
+        "license:cc-by-4.0",
+        "size_categories:n<1K",
+        "format:csv",
+        "modality:tabular",
+        "modality:text"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "minmaxxxer/nfl-closing-lines-ats-2025",
+      "downloads": 386,
+      "likes": 0,
+      "tags": [
+        "task_categories:tabular-classification",
+        "task_categories:tabular-regression",
+        "language:en",
+        "license:cc-by-4.0",
+        "size_categories:n<1K",
+        "format:csv",
+        "modality:tabular",
+        "modality:text"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "dismalnow/nfl-stats-2021-2025",
+      "downloads": 378,
+      "likes": 0,
+      "tags": [
+        "license:cc-by-4.0",
+        "size_categories:1M<n<10M",
+        "format:parquet",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets",
+        "library:dask",
+        "library:polars"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "nfL6/yahoo_answers_qa",
+      "downloads": 295,
+      "likes": 28,
+      "tags": [
+        "task_categories:question-answering",
+        "task_ids:open-domain-qa",
+        "annotations_creators:found",
+        "language_creators:found",
+        "multilinguality:monolingual",
+        "source_datasets:extended|other-yahoo-webscope-l6",
+        "language:en",
+        "license:unknown"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "michaelmallari/nfl",
+      "downloads": 235,
+      "likes": 1,
+      "tags": [
+        "license:mit",
+        "region:us"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "oliviersportsdata/NFL-Multi-Market-Timestamped-Odds-Team-Stats",
+      "downloads": 186,
+      "likes": 0,
+      "tags": [
+        "task_categories:tabular-regression",
+        "task_categories:tabular-classification",
+        "task_categories:time-series-forecasting",
+        "language:en",
+        "license:other",
+        "size_categories:10K<n<100K",
+        "format:csv",
+        "modality:tabular"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "MikeySports/nfl-stats-2021-2025",
+      "downloads": 158,
+      "likes": 0,
+      "tags": [
+        "license:cc-by-4.0",
+        "size_categories:1M<n<10M",
+        "format:parquet",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets",
+        "library:dask",
+        "library:polars"
+      ]
+    },
+    {
+      "domain": "GSE",
+      "kind": "dataset",
+      "search": "nfl",
+      "id": "nfliu/decontextualization",
+      "downloads": 124,
+      "likes": 0,
+      "tags": [
+        "size_categories:10K<n<100K",
+        "format:parquet",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets",
+        "library:pandas",
+        "library:mlcroissant",
+        "library:polars"
+      ]
+    }
+  ],
+  "kaggle_datasets": [
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "tobycrabtree/nfl-scores-and-betting-data",
+      "title": "NFL scores and betting data",
+      "downloadCount": 39300,
+      "voteCount": 516,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "philiphyde1/nfl-stats-1999-2022",
+      "title": "NFL Stats 2012-2025",
+      "downloadCount": 9122,
+      "voteCount": 61,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "ulrikthygepedersen/nfl-draft-1985-2015",
+      "title": "NFL Draft 1985-2015",
+      "downloadCount": 1247,
+      "voteCount": 31,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "willvernon/nfl-scores-and-lines",
+      "title": "NFL Scores and Lines",
+      "downloadCount": 238,
+      "voteCount": 7,
+      "usabilityRating": 0.7647059
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "caseydurfee/mgm-grand-nfl-betting-data",
+      "title": "MGM Grand NFL betting data",
+      "downloadCount": 190,
+      "voteCount": 1,
+      "usabilityRating": 0.64705884
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "smadler92/nfl-pfr",
+      "title": "NFL (PFR)",
+      "downloadCount": 1388,
+      "voteCount": 9,
+      "usabilityRating": 0.75
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "scottfree/sports-lines",
+      "title": "Pro and College Sports Lines",
+      "downloadCount": 1379,
+      "voteCount": 30,
+      "usabilityRating": 0.64705884
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "marcuslin/marcuslin-nbadata",
+      "title": "NBA_data with bet365(2009-2011)",
+      "downloadCount": 370,
+      "voteCount": 7,
+      "usabilityRating": 0.7058824
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "minmaxer/nba-closing-lines-ats-2024-25",
+      "title": "NBA 2024-25 Closing Lines and ATS Results",
+      "downloadCount": 206,
+      "voteCount": 2,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl betting",
+      "ref": "minmaxer/nfl-closing-lines-ats-2025",
+      "title": "NFL 2025 Closing Lines and ATS Results",
+      "downloadCount": 62,
+      "voteCount": 2,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "hidehisaarai1213/nfl-impact-tracking-animation",
+      "title": "NFL impact: Tracking animation",
+      "downloadCount": 110,
+      "voteCount": 14,
+      "usabilityRating": 0.5882353
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "robikscube/helmet-assignment-helpers",
+      "title": "NFL Helmet Assignment Helper Code",
+      "downloadCount": 636,
+      "voteCount": 61,
+      "usabilityRating": 0.875
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "vishakhsandwar/sumersupplement-bdb-26",
+      "title": "SumerSupplement BDB '26",
+      "downloadCount": 253,
+      "voteCount": 7,
+      "usabilityRating": 0.7058824
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "arjundubashi/nfl-modified-tracking-data",
+      "title": "NFL Modified Tracking Data",
+      "downloadCount": 127,
+      "voteCount": 1,
+      "usabilityRating": 0.23529412
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "dariushafshar/bdb-2027-public-enrichment",
+      "title": "BDB 2027 Public Enrichment: IDs, Snaps, Outcomes",
+      "downloadCount": 158,
+      "voteCount": 6,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "cammyc/nfl-twitter-sentiment-analysis",
+      "title": "NFL Twitter Sentiment Analysis",
+      "downloadCount": 182,
+      "voteCount": 4,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "thedevastator/nfl-player-performance-statistics",
+      "title": "NFL Player Performance Statistics",
+      "downloadCount": 443,
+      "voteCount": 9,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "ashfaqueahmed15129/ashfaque",
+      "title": "Ashfaque",
+      "downloadCount": 2,
+      "voteCount": 1,
+      "usabilityRating": 0.875
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "coldfir3/nlf-helmet-safety-camera-rotations",
+      "title": "NLF Helmet Safety Camera Rotations",
+      "downloadCount": 168,
+      "voteCount": 19,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl tracking",
+      "ref": "ryanadamsai/weaponxnfl",
+      "title": "NFL Big Data Bowl 2026 - Weapon X",
+      "downloadCount": 30,
+      "voteCount": 2,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "kendallgillies/nflstatistics",
+      "title": "NFL Statistics",
+      "downloadCount": 22814,
+      "voteCount": 270,
+      "usabilityRating": 0.7058824
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "nickcantalupa/nfl-team-data-2003-2023",
+      "title": "NFL Team Data 2003-2023",
+      "downloadCount": 6570,
+      "voteCount": 63,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "maxhorowitz/nflplaybyplay2009to2016",
+      "title": "Detailed NFL Play-by-Play Data 2009-2018",
+      "downloadCount": 58408,
+      "voteCount": 775,
+      "usabilityRating": 0.6764706
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "zynicide/nfl-football-player-stats",
+      "title": "NFL Football Player Stats",
+      "downloadCount": 7903,
+      "voteCount": 146,
+      "usabilityRating": 0.875
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "washingtonpost/nfl-arrests",
+      "title": "NFL Arrests",
+      "downloadCount": 2087,
+      "voteCount": 17,
+      "usabilityRating": 0.8235294
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "mattop/2022nfl-team-offense",
+      "title": "2022 NFL Team Offense",
+      "downloadCount": 2343,
+      "voteCount": 94,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "nfl",
+      "ref": "rishabjadhav/nfl-passing-statistics-2001-2023",
+      "title": "NFL Passing Statistics (2001-2023)",
+      "downloadCount": 2301,
+      "voteCount": 38,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "mansiaggarwal88/nfl-injury-reports-dataset-20092025",
+      "title": "NFL Injury Reports Dataset (2009\u20132025)",
+      "downloadCount": 177,
+      "voteCount": 5,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "thedevastator/nfl-injury-data-2012-2017",
+      "title": "NFL Injury Data 2012-2017",
+      "downloadCount": 588,
+      "voteCount": 6,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "thedevastator/nfl-injury-analysis-2012-2017",
+      "title": "NFL Injury Analysis 2012-2017",
+      "downloadCount": 351,
+      "voteCount": 3,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "jpmiller/nfl-competition-data",
+      "title": "\ud83c\udfc8 NFL Stats for BDB 2024 and Fantasy Football",
+      "downloadCount": 2483,
+      "voteCount": 24,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "robikscube/nfl-punt-data-ngs-injury-plays",
+      "title": "NFL Punt Data - NGS Injury_Plays",
+      "downloadCount": 51,
+      "voteCount": 7,
+      "usabilityRating": 0.1875
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "willianoliveiragibin/independent-predictors-postoperative",
+      "title": "Independent_Predictors_Postoperative",
+      "downloadCount": 149,
+      "voteCount": 10,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "georgedurrant/nfl-qb-shoulder-injuries",
+      "title": "NFL-QB-Shoulder-Injuries",
+      "downloadCount": 478,
+      "voteCount": 7,
+      "usabilityRating": 0.5882353
+    },
+    {
+      "domain": "GSI",
+      "search": "nfl injury",
+      "ref": "rishidamarla/concussions-in-the-nfl-20122014",
+      "title": "Concussions in the NFL (2012-2014)",
+      "downloadCount": 3606,
+      "voteCount": 43,
+      "usabilityRating": 0.9411765
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "tombliss/nfl-big-data-bowl-2021-bonus",
+      "title": "Nfl Big Data Bowl 2021 Bonus",
+      "downloadCount": 650,
+      "voteCount": 11,
+      "usabilityRating": 0.3529412
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "aryashah2k/beginners-sports-analytics-nfl-dataset",
+      "title": "Beginners Sports Analytics NFL Dataset",
+      "downloadCount": 4293,
+      "voteCount": 30,
+      "usabilityRating": 1.0
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "mathurinache/nflbigdatabowl2021-feather-files",
+      "title": "nfl-big-data-bowl-2021 Feather files",
+      "downloadCount": 582,
+      "voteCount": 10,
+      "usabilityRating": 0.9375
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "dott1718/nfl-big-data-bowl-expected-yards",
+      "title": "NFL Big Data Bowl + expected Yards",
+      "downloadCount": 137,
+      "voteCount": 11,
+      "usabilityRating": 0.4117647
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "robikscube/nfl-big-data-bowl-2021-pp",
+      "title": "nfl big data bowl 2021 pp",
+      "downloadCount": 87,
+      "voteCount": 8,
+      "usabilityRating": 0.1875
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "charliezimmerman/nfl-play-data-2010-2020",
+      "title": "NFL Play Data 2010 - 2020",
+      "downloadCount": 275,
+      "voteCount": 6,
+      "usabilityRating": 0.5294118
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "petergirgis/nfl-2021",
+      "title": "NFL Big Data Bowl 2021 ",
+      "downloadCount": 41,
+      "voteCount": 2,
+      "usabilityRating": 0.5
+    },
+    {
+      "domain": "GSE",
+      "search": "big data bowl",
+      "ref": "joshuamould/big-data-bowl-data",
+      "title": "Big Data Bowl Data",
+      "downloadCount": 63,
+      "voteCount": 2,
+      "usabilityRating": 0.1764706
+    }
+  ]
+}

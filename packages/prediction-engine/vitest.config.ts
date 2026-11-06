@@ -14,6 +14,8 @@ export default defineConfig({
     include: [
       "src/__tests__/**/*.test.ts",
       "src/__tests__/**/*.spec.ts",
+      "src/engine/**/*.test.ts",
+      "src/engine/**/*.spec.ts",
       "src/nfl/**/*.test.ts",
       "src/nfl/**/*.spec.ts",
       "src/reasoning/**/*.test.ts",

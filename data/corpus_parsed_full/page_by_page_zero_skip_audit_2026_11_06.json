@@ -1,12 +1,12 @@
 {
   "schema": "gse_workstream2_page_by_page_zero_skip_audit_v2",
-  "generated_at_utc": "2026-11-06T15:20:21.848502+00:00",
-  "elapsed_seconds": 254.46,
+  "generated_at_utc": "2026-11-06T19:58:15.728060+00:00",
+  "elapsed_seconds": 9.71,
   "zero_pages_skipped_verified": true,
   "truncation_cap_active": false,
   "total_skipped_pages": 0,
-  "total_pdfs_verified_all_roots": 2853,
-  "total_pdf_pages_verified_all_roots": 228686,
+  "total_pdfs_verified_all_roots": 3113,
+  "total_pdf_pages_verified_all_roots": 339589,
   "total_docxs_verified_all_roots": 148,
   "six_roots_page_by_page_verification": {
     "SRP_Cache": {
@@ -31,10 +31,14 @@
       "docxs_opened": 15
     },
     "GDrive_MegaSweep": {
-      "pdfs_opened": 135,
-      "pages_extracted": 39918,
-      "mds_opened": 7,
-      "indexed_rows": 1523
+      "pdfs_opened": 395,
+      "unique_book_targets_verified": 197,
+      "unique_relpath_pdfs_opened": 204,
+      "pages_extracted": 150821,
+      "unique_book_pages_extracted": 83023,
+      "mds_opened": 41,
+      "unique_wave_reports": 12,
+      "indexed_rows": 2968
     },
     "Repo": {
       "pdfs_opened": 99,
@@ -576,19 +580,33 @@
     "gdrive_gsn_pages": 44210,
     "gdrive_gsn_docxs_count": 15,
     "gdrive_gsn_docx_paragraphs": 10538,
-    "gdrive_megasweep_pdfs_count": 135,
-    "gdrive_megasweep_pages": 39918,
-    "gdrive_megasweep_mds_count": 7,
-    "gdrive_megasweep_indexed_rows": 1523,
+    "gdrive_megasweep_pdfs_count": 395,
+    "gdrive_megasweep_pages": 150821,
+    "gdrive_megasweep_mds_count": 41,
+    "gdrive_megasweep_indexed_rows": 2968,
     "docs_arxiv_program_total_files": 1791,
     "docs_arxiv_program_markdown_dossiers": 1579,
     "docs_arxiv_program_json_corpora": 50,
     "onedrive_galaxy_sports_edge_files": 1014,
     "gdrive_total_files": 4003,
     "skipped_pages_across_all_corpora": 0,
-    "gdrive_pdfs_and_docxs_opened": 1694
+    "gdrive_pdfs_and_docxs_opened": 1988,
+    "gdrive_megasweep_unique_book_targets": 197,
+    "gdrive_megasweep_unique_relpath_pdfs": 204
   },
   "extracted_theorems_lemmas_algorithms_count": 2949,
   "extracted_theorems_jsonl_path": "data/corpus_parsed_full/extracted_theorems_lemmas_algorithms_2026_11_06.jsonl",
-  "mind_staging_jsonl_path": "data/mind_staging/mind_2026_11_06_zero_skip_theorems_and_archeology.jsonl"
+  "mind_staging_jsonl_path": "data/mind_staging/mind_2026_11_06_zero_skip_theorems_and_archeology.jsonl",
+  "mega_sweep_drive_sync_100_pct": {
+    "mega_sweep_drive_unique_pdfs": "197/197 (100.0%)",
+    "mega_sweep_drive_unique_pdfs_count": 197,
+    "mega_sweep_drive_unique_pdfs_target": 197,
+    "mega_sweep_drive_unique_pdfs_pct": 100.0,
+    "mega_sweep_drive_unique_relpath_pdfs": 204,
+    "mega_sweep_drive_total_pdf_files": 395,
+    "mega_sweep_drive_md_wave_files": 41,
+    "mega_sweep_drive_unique_wave_reports": 12,
+    "cataloged_books_total": 210,
+    "skipped": 0
+  }
 }

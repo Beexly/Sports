@@ -1,8 +1,10 @@
 # Funding · Partnerships · Credit alignment — MASTER
 
-**2026-08-06** · One page. Do not scatter.  
-**Law:** Applications = **founder-only**. Agent wires env + smoke after keys land.  
+**2026-11-06** · One page. Do not scatter. Canonical 120-program ledger: [`docs/ops/FUNDING-INVENTORY-2026-11-06.md`](FUNDING-INVENTORY-2026-11-06.md) (`data/ops/funding_inventory_2026_11_06.json`) and corrected Fast-Grants pack: [`docs/ops/FAST-GRANTS-PACK-CORRECTED-2026-11-03.md`](FAST-GRANTS-PACK-CORRECTED-2026-11-03.md).  
+**Law:** Applications = **founder-only**. Agent wires env + smoke after keys land. **No Loans (`2026-11-03`)** · **No Equity / 0% Dilution (`2026-11-06`)**.  
 **Never invent grants. Never claim ROI. Sportsbook CPA = HARD_REFUSE.**
+**Official Company LinkedIn:** `https://www.linkedin.com/company/galaxy-sports-edge` (`GALAXY SPORTS NETWORK LLC` / `Galaxy Sports Institute (GSI)`).
+**Live Credit Total (`2026-11-06`):** `9` APPROVED/LIVE programs (`$55,618.33` face value: PostHog `$50,000`, Sentry `$5,000`, Pinecone Standard Trial `$300`, Deepgram `$200`, Google Cloud `$118.33`, plus NVIDIA Inception, NVIDIA NIM, Google AI Ultra, Azure App Service promo) + `24` SUBMITTED applications (`$256,500` stated asks, including Pinecone for Startups, MongoDB for Startups, Verizon LISC, EDDIE Awards, Anthropic AI for Science, EA Funds, Databricks/Neon, Together AI, Lambda, RunPod, Scaleway).
 
 Goal: **systems that reward us for using them** — free tiers, Activate credits, startup programs, non-gambling partners — so **cash AI burn → 0** while product moat compounds.
 

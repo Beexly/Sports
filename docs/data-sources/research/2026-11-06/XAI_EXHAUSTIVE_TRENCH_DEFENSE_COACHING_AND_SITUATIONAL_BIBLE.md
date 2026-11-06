@@ -1,0 +1,1095 @@
+# Exhaustive xAI Grok Live X-Search & Web-Search Bible: Waves 5–8 (Trench Warfare, Coverage Shells, IDP, Coaching & Situational Context)
+
+- **Generated At (UTC):** `2026-11-06T20:04:56.269913+00:00`
+- **Waves Executed:** `12` (`grok-4.7` & `grok-4.20-0309-reasoning` with live `x_search` + `web_search`)
+- **Total Characters Harvested:** `164,944`
+- **Total xAI API Spend (Waves 5–8):** `$6.5532`
+
+---
+
+## WAVE_5A_OL_PASS_BLOCK_METRICS — Offensive Line Pass Protection Metrics, True Pass Sets & Continuity Engineering (`grok-4.7`)
+
+I'll look up the published definitions and formulas for those pass-protection metrics from PFF, ESPN/NGS, Brandon Thorn, and the other analyst sources.
+
+The classic PBE formula is published, but the later PFF version and Brandon Thorn’s True Pass Set filters still need primary sources. I’ll pull those pages and the remaining metrics next.
+
+PFF’s published True Pass Set definition is clearer than Thorn’s. I’ll open the primary pages and check the remaining analyst sources for exact formulas.
+
+Public sources do not support one closed formula for every item you listed. Several of the filters you named are real, but they belong to different shops, and a few of the exact weights you asked for were never published.
+
+## 1. PFF Pass Blocking Efficiency
+
+The only algebraically closed formula PFF has published more than once is the 2011–2012 version. Hits and hurries are each worth 75 percent of a sack. Higher is better. A clean sheet is 100. [[1]](https://www.pff.com/news/2011-pass-blocking-efficiency-offensive-tackles) [[2]](https://www.pff.com/news/2011-pass-blocking-efficiency-running-backs)
+
+\[
+\text{PBE} = \left(1 - \frac{\text{Sacks} + 0.75 \times (\text{Hits} + \text{Hurries})}{\text{Pass-blocking snaps}}\right) \times 100
+\]
+
+| Event | Weight |
+| --- | --- |
+| Sack | 1.00 |
+| Hit | 0.75 |
+| Hurry | 0.75 |
+
+That formula checks out on a published example. David Dahl in 2011: 0 sacks, 3 hits, 3 hurries, 200 snaps. \(0.75 \times 6 = 4.5\), \(4.5 / 200 = 0.0225\), \(100 - 2.25 = 97.75\), published as 97.8. [[1]](https://www.pff.com/news/2011-pass-blocking-efficiency-offensive-tackles)
+
+A 2010 tight-end version was the inverse rate, where lower was better: \((\text{Sacks} + 0.75 \times \text{Hits} + 0.75 \times \text{Hurries}) / \text{snaps} \times 100\). [[3]](https://www.pff.com/news/2010-pass-blocking-efficiency-tight-ends)
+
+In February 2020, PFF published a different string, and the line breaks broke the parentheses. The text as printed is: \(1 - (\text{Sacks} + \text{Hits}) / (2) + (\text{Hurries}) / (2) / (\text{Total Pass-Block Snaps}) \times 100\). The prose around it still says the metric weights toward sacks. [[4]](https://www.pff.com/news/pro-signature-stat-spotlight-offensive-line) That string cannot be reconstructed into one unambiguous equation. A hurry weight of 0.5, not 0.75, is consistent with a later public box: 1 hurry, 0 sacks, 0 hits, 27 snaps, listed PBE 98.1. \((1 - 0.5/27) \times 100 = 98.15\). The 0.75 weight would have printed 97.2. [[5]](https://x.com/MJRodnick/status/2117060188712693784) PFF has not published a clean replacement equation that I can verify against sacks and hits as well as hurries.
+
+PBE is not the grade. The grade does not change just because a loss became a sack instead of a hurry. [[6]](https://www.pff.com/news/pro-how-pff-grades-pass-protection)
+
+## 2. ESPN / Next Gen Stats Pass Block Win Rate
+
+Brian Burke’s definition, still the baseline after the 2026 update: a blocker wins if the block is sustained for 2.5 seconds. A rusher wins if he beats the block before 2.5 seconds. [[7]](https://www.espn.com/espn/print?id=24892208) [[8]](https://www.espn.com/espn/print?id=49672562)
+
+\[
+\text{PBWR} = \frac{\text{pass-block snaps sustained at least 2.5 seconds}}{\text{pass-block snaps}}
+\]
+
+The 2.5-second mark was chosen because it was near the average time to release on a conventional dropback, and because it separated known good blockers and rushers. It is a summary of a survival curve, not a claim that 2.4 seconds and 1.3 seconds are equal wins. [[7]](https://www.espn.com/espn/print?id=24892208) [[8]](https://www.espn.com/espn/print?id=49672562)
+
+Pocket geometry, from ESPN’s own explainer:
+
+- Who is blocking whom is scored from location, proximity, and orientation. Close, at or behind the line, and facing the defender means a block.
+- The pocket is a polygon connecting the pass blockers, redrawn at each time step.
+- An inside win is penetration of that polygon plus being within “a certain distance” of the quarterback. ESPN has not published that distance in the explainer.
+- An edge win is the rusher getting closer to the quarterback than his blocker, again within a certain distance. Long distances are thrown out, including many rollout beats that never threaten the quarterback.
+- Screens are excluded.
+- A free rusher counts for the rusher and for the team. He is not charged to an individual blocker, because there is no blocker to debit.
+- Team PBWR is a weak-link rule: one lost block loses the snap for the unit. [[7]](https://www.espn.com/espn/print?id=24892208) [[7]](https://www.espn.com/espn/print?id=24892208)
+
+The 2019 revision fixed double-teams (beating one of two blockers is not a win; running backs and tight ends count in the double-team), fixed false pocket collapses when the polygon went convex, and stopped counting chip-and-release as a block loss. [[7]](https://www.espn.com/espn/print?id=24892208) The 2026 revision added a bull-rush win: the rusher’s tracking chips need not pass the blocker’s chips if he drives the blocker close enough to affect vision, the step-up, or forces the quarterback out of the pocket. [[8]](https://www.espn.com/espn/print?id=49672562)
+
+A 2025 Wharton paper says the close distance is 1.5 yards and cites Burke. That yardage is not in ESPN’s public explainer, so treat 1.5 yards as a secondary claim, not as ESPN’s published constant. [[9]](https://wsb.wharton.upenn.edu/wp-content/uploads/2025/12/HAFIZ_PRSS-A-new-metric.pdf)
+
+## 3. True Pass Set is a PFF filter, not a Brandon Thorn formula
+
+Brandon Thorn’s published math is on the rush side: True Pressure Rate, True Sack Rate, and True Pass Rush Productivity. He has not published a True Pass Set exclusion list. [[10]](https://trenchwarfare.substack.com/p/true-pressure-rate-tpr-week-16-update)
+
+PFF has published two related definitions.
+
+Eric Eager’s January 2020 research heuristic, the set he found most stable for evaluating blockers: [[11]](https://www.pff.com/news/nfl-true-pass-sets-and-their-importance-to-player-evaluation)
+
+- No play-action
+- No screen
+- No rollout
+- Time to throw between 2.0 and 4.0 seconds
+- More than a three-man rush
+
+The operational definition PFF now prints on its account and in Premium Stats is narrower on time and adds drop depth: [[12]](https://x.com/PFF/status/2043827913913712799) [[13]](https://premium.pff.com/nfl/positions/2024/REGPO/offense-pass-blocking)
+
+> Passes with 4 or more pass-rushers, a straight quarterback drop to 7 or more yards, no play-action, no screens, and 2 or more seconds for the quarterback to throw.
+
+So the exclusions you listed (play-action, screens, time to throw under 2.0 seconds, 3 or fewer rushers) match the current PFF product. Rollouts and a 4.0-second ceiling are in the 2020 research note, not in the current one-line definition. There is no further algebraic weight on top of the filter. It is a sample restriction.
+
+## 4. Island rate versus double-team and chip help
+
+These are rates, not one combined formula.
+
+PFF Island Rate, from the 2026 Premium Stats Pro launch: [[14]](https://www.pff.com/news/nfl-pff-pass-block-win-rate)
+
+\[
+\text{ISL\%} = \frac{\text{pass-block snaps with no chip, no tight end, and no adjacent-lineman help}}{\text{pass-block snaps}}
+\]
+
+Island Win Rate is the win rate on that subset only. Island Rate is usage. Island Win Rate is performance.
+
+Sports Info Solutions charts four help states, not two: true double-team, help (a hand or a brief shove), island, and unblocked. On their charting, interior rushers saw help on 34 percent of snaps and an island on 62 percent. Edge rushers saw help on 14 percent and an island on 76 percent. True double-teams were about 1 percent or less. Help from a lineman or tight end cut pressure rate versus expectation by about 4 to 5 points. A back’s help cut it by about 2. [[15]](https://www.sportsinfosolutions.com/2026/07/21/digging-into-our-pass-rush-detail-charting/)
+
+Next Gen Stats defines a chip as a route-runner who briefly engages a rusher and then releases. From 2019 through 2025, edge rushers reached pressure in 3.43 seconds against a chip and 2.84 seconds in a one-on-one. Chip rate rose from 16 percent of dropbacks in 2020 to 27 percent in 2025. [[16]](https://www.nfl.com/news/the-secret-weapon-nfl-offenses-are-using-to-buy-qbs-an-extra-half-second) [[17]](https://x.com/NextGenStats/status/2021393650132165081) ESPN’s double-team rate, since 2019, counts any two-player combination, not only two offensive linemen. [[7]](https://www.espn.com/espn/print?id=24892208)
+
+## 5. Five-man continuity is not a mid-game communication penalty
+
+No public source publishes a coefficient that docks a line specifically because a backup left tackle, right tackle, or center enters during a game.
+
+The closest closed formula is the old Football Outsiders continuity score. On a 16-game season the perfect score was 48. It started at 48 and subtracted three things: [[18]](https://www.catscratchreader.com/2016/8/10/12415732/football-outsiders-almanac-highlighting-the-lie-of-a-highly-maligned-o-line)
+
+- Players above five who started at least one game on the line
+- Games in which at least one starter differed from the previous game
+- 16 minus the longest streak of the same five starters
+
+A later retelling for a 17-game season starts at 51 and uses the first two subtractions. [[19]](https://www.bloggingtheboys.com/dallas-cowboys-roster/199154/offensvie-line-roster-continuity-terence-steele-contract-tj-bass) FO’s own bands, from that same secondary write-up: scores above 41 averaged 1.87 points per drive and about 21 false starts; 27 to 40 averaged 1.70 and about 23 false starts; below 26 averaged 1.49 and about 26 false starts. That is an association with false starts, not a proven communication penalty, and FO itself warned that bad play causes lineup changes as much as lineup changes cause bad play. [[19]](https://www.bloggingtheboys.com/dallas-cowboys-roster/199154/offensvie-line-roster-continuity-terence-steele-contract-tj-bass)
+
+Sports Info Solutions tested the continuity claim directly in November 2024 and found almost no performance gain from shared snaps in either the run game or the pass game. Groups that reached 500 snaps together had already been better individually before they played together. [[20]](https://www.sportsinfosolutions.com/2024/11/15/study-does-offensive-line-continuity-drive-better-performance/)
+
+## 6. Quarterback versus line on pressure
+
+There is no published rule that automatically assigns a pressure to the quarterback at 3.0 seconds, or for drifting, as a formula.
+
+PFF’s charting rule is qualitative. Steve Palazzolo, 2019: the quarterback is charged when he leaves a clean pocket, holds the ball too long, or moves inside the pocket in a way that ruins the blocker’s leverage. The explainer does not set a second threshold. [[6]](https://www.pff.com/news/pro-how-pff-grades-pass-protection) The rate they publish is a count, not a weighted score:
+
+\[
+\text{QB pressure responsibility rate} = \frac{\text{pressures charged to the QB}}{\text{pressures allowed by blockers}}
+\]
+
+Unblocked and free-rush pressures are excluded from that denominator. [[21]](https://www.pff.com/news/nfl-pff-signature-stat-spotlight-quarterback-pressures) [[22]](https://www.pff.com/news/draft-breaking-down-quarterback-pressure-responsibility-rate-top-prospects)
+
+The 3.0-second figure is a separate outcome fact, not an attribution rule. If the quarterback holds the ball longer than 3 seconds, he is pressured on more than 60 percent of those plays. [[23]](https://www.pff.com/news/nfl-the-perfect-timing-a-deeper-dive-into-time-to-throw-data) PFF’s Time Since Pressure measures how long he keeps the ball after pressure arrives. That year-to-year correlation was 0.78, higher than time to throw, pressure rate, or sack rate. [[24]](https://www.pff.com/news/nfl-time-since-pressure-simpsons-paradox-evasive-quarterbacks-russell-wilson)
+
+FTN’s Caused Pressure Rate is the charting split you are closest to. Caused means at least one lineman is charted with a blown block or a similar mistake. Uncaused is the rest: held ball, free rusher, or scheme. In 2023 the medians were 28.4 percent pressure rate, 18.4 percent caused, and 11.3 percent uncaused. About two-thirds of pressures were charged to the line, and 28 teams sat between 55 and 70 percent caused. [[25]](https://ftnfantasy.com/nfl/caused-pressure-rate-for-2023-offenses)
+
+Next Gen Stats does not use a 3.0-second blame rule either. A pressure is a tracking event: pressure probability above 75 percent before the throw. Quick pressure is pressure inside 2.5 seconds. Average time to pressure in the introductory write-up was 2.9 seconds. [[26]](https://www.nfl.com/news-migrated-v2/next-gen-stats-introduction-to-pressure-probability)
+
+Thorn’s only numeric split that touches quarterback drift is on the rusher’s scorecard. In True Pressure Rate, a low-quality or unblocked pressure is worth 0.5 points when the quarterback runs into the rusher on a boot or rollout, another rusher creates the pressure, or the rusher is unblocked by scheme or a missed assignment. A clean one-on-one win is 1.0 or 1.25 depending on the blocker’s quality. Sacks are kept out of TPR and scored in True Sack Rate. [[10]](https://trenchwarfare.substack.com/p/true-pressure-rate-tpr-week-16-update)
+
+## What those accounts actually publish
+
+| Handle | What is public |
+| --- | --- |
+| @PFF | PBE, True Pass Set filter, grades, Island Rate |
+| @SethWalder | ESPN PBWR and PRWR, with Brian Burke |
+| @NextGenStats | Time to throw, pressure probability at a 75 percent threshold, quick pressure at 2.5 seconds, chip rate |
+| @FTNFantasy | Caused versus uncaused pressure rate |
+| @SportsInfo_SIS | Blown-block rate, pressure rate versus expectation, four-level help charting |
+| @BrandonThornNFL | TPR, TSR, TPRP for rushers, not a True Pass Set formula |
+| @DukeManyweather | Technique rules: stance, get out of the stance, create space, half-man leverage. No statistical formula |
+| @SamHoppen | Uses pass-block win rate and pressure rate in charts. No original closed-form line formula found |
+
+If you want one number that can be recomputed from a public box score today, it is the 2011 PFF equation with sack = 1 and hit = hurry = 0.75. Everything else either changed without a republished equation, is a sample filter rather than a formula, or was never given a numeric penalty at all.
+
+---
+
+## WAVE_5B_DL_PASS_RUSH_STUNTS_CREEPERS — Defensive Front Pass-Rush Productivity, Stunts, Creepers & Survival Curves (`grok-4.7`)
+
+Here is what public PFF write-ups, ESPN Analytics, Next Gen Stats, Sports Info Solutions charting, Steven Patton’s work, and schematic sources actually publish on these pass-rush metrics.
+
+## 1. PFF Pass Rush Productivity (PRP)
+
+PFF’s public definition is still only that PRP “measures pressure created on a per snap basis with weighting toward sacks” and “combines sacks, hits and hurries relative to how many times they rush the passer.” The exact weight has changed.
+
+**Original published formula (Khaled Elsayed, 2010–2013):** hits and hurries were valued at three-quarters of a sack after an internal grade audit.
+
+**PRP = [Sacks + 0.75 × (Hits + Hurries)] / Pass-rush snaps × 100**
+
+That is the formula printed in PFF articles through at least 2013.
+
+**Formula that matches recent published PRP numbers:** a 2023 PFF table lists Rashan Gary at 4 sacks, 1 hit, 8 hurries, 44 rushes, and a 19.3 PRP. Myles Garrett is listed at 5 sacks, 4 hits, 9 hurries, 77 rushes, and a 14.9 PRP. Both match a half-weight, not 0.75:
+
+**PRP = [Sacks + 0.5 × (Hits + Hurries)] / Pass-rush snaps × 100**
+
+The same half-weight is what Brett Kollmann and other draft analysts now quote as PFF’s formula. PFF has not republished the algebra in a recent glossary entry, so the 0.5 version is the one that reproduces current leaderboards, while the 0.75 version is the one PFF itself printed in the early 2010s. PRP is not a PFF grade. Minimums used in public lists have ranged from about 75 to 200 pass-rush snaps.
+
+PFF also publishes a separate charted **pass-rush win rate** (share of non-penalty pass-rush snaps on which the rusher “wins” the block) and an **obvious-passing-situation win rate** (third or fourth and 4-plus). Those are not PRP.
+
+## 2. ESPN Pass Rush Win Rate and double-team charts
+
+**PRWR** is the rate at which a pass rusher beats his blocker within **2.5 seconds** of the snap. **PBWR** is the mirror: the rate a blocker sustains the block for 2.5 seconds or longer. Both are ESPN Analytics metrics built on NFL Next Gen Stats tracking, not film grades.
+
+Mechanics, from Brian Burke’s ESPN explainers:
+
+- Tracking location, proximity, and orientation decide who is blocking whom.
+- A rusher generally “wins” when his tracking chips are closer to the quarterback than his blocker’s.
+- The model tracks the block across the whole play and builds a survival curve. The published win rate is the value of that curve at 2.5 seconds, chosen because it is near a normal dropback’s time to throw and is easier to report than the full curve.
+- Later versions added a **bull-rush win** (pushes the blocker close enough to affect vision or step-up, or forces the quarterback out of the pocket), better double-team handling (beating one half of a double does not count as a win), chip identification, and tags for twists and simulated pressure. Core win rate is **not** adjusted for double-teams, chips, or stunts. Those are reported beside it.
+
+**@SethWalder** is the analyst who publishes the scatter charts. Standard axes:
+
+- **x** = double-team rate while pass rushing (edge chart and defensive-tackle chart are separate)
+- **y** = PRWR at that alignment
+
+He has said double-team rate is driven by alignment first, then number of rushers and blockers, simulated pressure, stunts, and only then by the attention a player’s skill draws. He uses it as a rough difficulty adjustment: a high PRWR at a high double-team rate is harder to earn. He has also warned that pure double-team rate understates chips, which is why some later charts swap in sack rate or a chip-or-double rate. ESPN now reports chips and stunts alongside win rate the same way it has long reported double-teams.
+
+## 3. NGS Time to Pressure and Get-Off
+
+**Get-Off** (pass-rush get-off) is the time, in seconds, from the snap until the pass rusher’s tracking point crosses the line of scrimmage. **@NextGenStats** defines it that way, and it correlates with the 10-yard split of the 40. Published season averages for qualifiers typically sit in the high 0.6s to low 0.8s. Examples that have been posted: Myles Garrett at 0.63 seconds early in 2022 (a tenth faster than anyone else at that point), and a 2025 minimum-50-rushes list with Jonathon Cooper at 0.69, Bryce Huff at 0.71, and Nik Bonitto and Garrett at 0.72. A team get-off near 0.94 seconds has been cited as among the slowest single-game marks.
+
+**Time to Pressure** is the time from the snap to the first moment of pressure. In the NGS pressure-probability model, a rush becomes a pressure when estimated pressure probability exceeds 75 percent (sacks, hits, hurries, close proximity, a free path, or a clearly won matchup). League context from that model: average pressure arrives in about **2.9 seconds**, average pressure rate is about **10.3 percent** of pass-rush snaps, and a **quick pressure** is one inside **2.5 seconds**. Related outputs include pressure probability at the snap, average pressure probability over the dropback, pressure time above the 75 percent threshold, and pressure rate over expected (average probability minus probability at the snap).
+
+## 4. @PattonAnalytics: Pressure Over Expectation and the pressure-to-sack survival curve
+
+Steven Patton (**@PattonAnalytics**, StatRankings) treats pressure as mostly an offensive-line outcome and sacks as mostly a quarterback outcome. The pieces he has actually described:
+
+**Pressure-to-sack ratio (P2S):** sacks divided by charted pressures. Lower means the quarterback turns fewer pressures into sacks. He has shown P2S tracking with efficiency on the pressures that do not become sacks, which is part of the “sacks are a QB stat” argument. **@FTNFantasy** has posted his 2024 Pressures Over Expectation plus P2S scatter.
+
+**Survival curve:** he uses a Kaplan-Meier estimator for how long a quarterback “survives” before pressure. He flags censoring bias. A pressure-only curve overfits (only plays that were pressured). A curve that uses time-to-throw on clean plays underfits. His working curve is the average of those two. That blended curve puts a reasonable expectation for time to throw between 2 and 3 seconds. He cites the same clock ESPN uses: about 52 percent of dropbacks are released inside 2.5 seconds, 60 percent by 2.7, and 70 percent by 3.0.
+
+**Pressures Over Expectation (POE):** actual pressure versus what that blended survival curve expects inside the 2.5-second window. In the published example, pocket passers such as Joe Burrow, Kirk Cousins, Justin Herbert, Geno Smith, and Derek Carr clustered together on that POE view and also posted lower sack rates. He has not published a closed-form regression equation for POE in the public piece. The mechanic is “observed pressure minus survival-curve expectation inside 2.5 seconds.”
+
+**Adjusted P2S** (posted September 2026): replaces raw sacks over pressures with **QB-fault sacks / Pressures Over Expectation**, restricted to plays with a charted pressure. He reported a 0.63 Pearson correlation with traditional P2S in the prior year. That is a quarterback finishing metric, not a rusher productivity metric.
+
+## 5. Stunt, twist, T-E, and E-T rates
+
+A twist (also called a game or stunt) is two or more rushers trading paths after the snap. One is the **penetrator** (crashes first, occupies or picks blockers). One is the **looper** (delays, then wraps into the lane the first rusher created).
+
+Sports Info Solutions annotates games as N (nose), T (tackle), E (end), B (linebacker), in the order they rush. From their charting since 2023, per-play rates on either side of the line:
+
+| Game | Rate |
+|---|---|
+| TE | 13% |
+| 3-man | 6% |
+| ET | 6% |
+| TT | 6% |
+| TB, EB, NT, BE, EE | about 2% each |
+| TN, BB | about 1% each |
+
+**T-E (also written TEX or TED):** the tackle penetrates first, the end loops. Cody Alexander (**MatchQuarters**, **@The_Coach_A**) describes the common NFL version as the interior lineman getting vertical through the B-gap, setting a natural pick on the tackle while occupying the guard. The edge stabs vertical, then wraps inside. A mugged linebacker can pull the center away from the stunt and widen the runway. SIS says a TE is a tackle crashing first and an end looping up the middle. It is the most common game they chart. Rams defensive coordinator Chris Shula has led recent TE and TT usage.
+
+**E-T:** the inverse. The end penetrates first (often into the B-gap). The tackle loops outside. It is used to get a more athletic interior player to the edge, or to crash an end hard enough that the tackle is late to the looper.
+
+Why these stress guards and centers, especially backups:
+
+- The stunt is a communication problem, not a pure strength problem. Blockers must recognize the cross, pass the rusher off, and keep the pocket connected while moving backward.
+- A T-E is designed to occupy the guard and pick the tackle so the looping end arrives in the A-gap with the guard and center already committed. If the center has been slid away by a mugged linebacker, there is no inside help.
+- Twists work best against man protection or the man side of a half-slide, where the center is not available to help. On a full slide, the offense often has a three-on-two and can cover a missed exchange.
+- Interior games (TT, NT) specifically try to make the center and guard both take the penetrator and leave the looper free. Schwartz-style teaching has long treated “force the less athletic guard to block the more athletic looping end” as the point of some T/E looks.
+- Backup or inexperienced interior linemen fail these more often because the fix is a pre-snap call plus a live handoff (flatten the penetrator, keep depth, do not chase the man who started over you). A first-time starter who has not seen the picture is late on the “switch” even when the technique is ordinary. Quick game and screens punish the same looks, because the looper needs an extra beat.
+
+PFF’s public **stunt success rate** is simply pressure rate on dropbacks that included a stunt. Through five weeks of 2024 that ranged from the low 20s to the high 50s by team. A separate 2025 PFF pressure-rate cut had the Rams at 51.4 percent pressure on stunts, with Cleveland, Minnesota, and Chicago at 48.6 percent. League stunt volume is often described around a dozen per game, with large coordinator-to-coordinator swings.
+
+## 6. Simulated pressures (creepers) versus 5-plus blitzes
+
+Count the rushers after the snap. Names differ by staff. The operational split used by Cody Alexander at MatchQuarters and by most public explainers is:
+
+**Standard four-man rush:** the declared front rushes. Seven cover. Identities are not surprising.
+
+**Creeper (replacement pressure):** still four rushers. One expected rusher (often a defensive end or outside linebacker) drops, and an unexpected second-level or third-level player (linebacker, nickel, or safety) replaces him. The pre-snap picture can look like a normal nickel. The point is a different four, not an extra hat. Alexander’s rule of thumb on many of these: if the line blocks in, rush out. If the line blocks out, rush in. The dropped edge often becomes the flat or curl defender, so the “extra” rusher is paid for by removing a route, not by playing man down a defender.
+
+**Simulated pressure:** same idea, stacked. The defense shows five, six, or seven at the line, then drops some of the declared threats and brings an unexpected rusher, usually still ending at four. A common teaching version drops both defensive ends and inserts an inside linebacker through the A-gap, or drops interior linemen and brings an edge and a corner. It is meant to force the protection call (big-on-big, man, or full slide) and then violate that call. Some coaches reserve “simulated” for the heavy pre-snap picture and “creeper” for a replacement from a standard alignment. Others use the words interchangeably as long as the post-snap count is four.
+
+**Five-man pressure / fire zone:** five rush, typically three under and three deep behind it. A true blitz in many coaching rooms is six or more. The defense gains a rusher and loses a coverage defender. PFF’s 2024 team pressure-rate cut separated “four or fewer” (Denver led at 39.3 percent) from blitzes (Green Bay led at 48.3 percent). Higher blitz pressure rate is expected because of the extra rusher. The cost is the vacated window.
+
+Why defenses have moved toward creepers and sims: PFF’s Jason DeLoach has charted simulated-pressure usage rising every year from 2018, reaching 19.2 percent of snaps in 2024, with offenses posting their lowest EPA per play against those looks since 2021. MatchQuarters frames a roughly 40 percent pressure rate as the modern benchmark, and treats simulated and creeper designs as ways to manufacture one-on-ones and protection errors without playing with six in coverage. A four-man stunt and a creeper are both attempts to get unblocked or mismatched pressure while keeping seven in coverage. A 5-plus blitz buys a higher raw pressure rate and pays for it in coverage.
+
+## Who posts what
+
+| Handle | Role in this literature |
+|---|---|
+| @SethWalder | ESPN. PRWR definition and the double-team-rate versus PRWR charts |
+| @NextGenStats | Official get-off, time to pressure, pressure probability |
+| @PattonAnalytics | POE, Kaplan-Meier pocket survival, P2S and adjusted P2S |
+| @FTNFantasy | Republishes Patton POE and P2S charts |
+| @SamHoppen | Independent charts of pass-block win rate and run-block rate, not a proprietary rush formula |
+| @PFF (and team/staff accounts) | PRP, charted win rate, stunt pressure rate, pressure rate by rush count |
+| MatchQuarters / @The_Coach_A | Creeper and simulated-pressure manuals, T-E (TEX) mechanics |
+
+@PFF_Moo does not have a distinct public formula attached to these metrics in the sources above. PFF’s own published pass-rush numbers remain PRP, charted win rate, pressure counts, and stunt pressure rate.
+
+---
+
+## WAVE_5C_RUN_BLOCKING_LINE_YARDS_TRENCH — Run Blocking Win Rate, Adjusted Line Yards, Gap vs Zone & Trench Displacement (`grok-4.20-0309-reasoning`)
+
+**Adjusted Line Yards (ALY) and associated FTN/Football Outsiders (Aaron Schatz) metrics are among the foundational trench/run-blocking stats.** ALY attempts to isolate offensive line (and other blockers') contributions to the run game from the running back's, by applying regression-based weights to RB carries only (excluding QB runs, WR runs, and fumbles in some contexts). Long runs are truncated in effect because the line's responsibility drops to zero past a certain point.[[1]](https://ftnfantasy.com/dvoa/nfl/adjusted-line-yards)[[2]](https://ftnfantasy.com/stats/nfl/adjusted-line-yards)
+
+**Exact piecewise weights (responsibility assigned to the offensive line):**
+- Losses (negative yardage): 120% value (offensive line is 20% *more* responsible for losses than for short positive gains).
+- 0-4 yards: 100% value.
+- 5-10 yards: 50% value.
+- 11+ yards: 0% value.[[1]](https://ftnfantasy.com/dvoa/nfl/adjusted-line-yards)[[3]](https://www.footballstudyhall.com/2011/4/26/2132589/the-toolbox-offensive-line-stats)[[4]](https://www.actionnetwork.com/education/adjusted-line-yards-metric-bettors-fantasy-running-backs)
+
+These weighted yards per carry are further adjusted for down/distance/situation, opponent quality, and the difference in rushing averages between shotgun and under-center formations (defenses play lighter in shotgun). Results are normalized so league-average ALY per carry equals league-average RB yards per carry (historically around 4.1–4.3 YPC depending on the year). Higher ALY is better for offense; the defensive version (ALY allowed) uses analogous weights to attribute responsibility more to the defensive line versus linebackers/second-level defenders (lower is better).[[2]](https://ftnfantasy.com/stats/nfl/adjusted-line-yards)[[5]](https://www.bigblueview.com/2014/11/22/7243065/fighting-the-riptide-football-outsiders-analysis-giants-defensive-line-jason-pierre-paul)
+
+**Associated unadjusted per-carry metrics from the same system (not opponent-adjusted):**
+- **Stuffed Rate**: Percentage of runs tackled at or behind the line of scrimmage (lower is better for offense; teams are often ranked from least-stuffed to most-stuffed).[[1]](https://ftnfantasy.com/dvoa/nfl/adjusted-line-yards)
+- **Second Level Yards**: Yards earned by RBs between 5 and 10 yards past the line of scrimmage, divided by total RB carries.
+- **Open Field Yards**: Yards earned by RBs more than 10 yards past the line of scrimmage, divided by total RB carries.[[1]](https://ftnfantasy.com/dvoa/nfl/adjusted-line-yards)
+
+**Power Success Rate**: Percentage of runs on third or fourth down with two or fewer yards to go that achieve a first down or touchdown. Also includes runs on first-and-goal or second-and-goal from the 2-yard line or closer. This is the only stat in the FTN ALY package that includes quarterback runs.[[2]](https://ftnfantasy.com/stats/nfl/adjusted-line-yards)[[6]](https://www.footballstudyhall.com/2018/2/2/16963820/8887897777)
+
+These FTN metrics (successor to Football Outsiders) remain core for evaluating trench play in the run game. DVOA itself (Defense-adjusted Value Over Average, created by Aaron Schatz and now at FTN) provides broader run offense/defense efficiency that incorporates situation, opponent, and play context but is not purely a "trench" stat.[[7]](https://ftnfantasy.com/learn-more-about-dvoa)
+
+**ESPN Run Block Win Rate (RBWR) and Run Stop Win Rate (RSWR)** use NFL Next Gen Stats player tracking data. RBWR measures the proportion of designed run plays in which an offensive lineman (or tight end) "won" his block(s). RSWR does the same for defenders "winning" against their blocker on run plays.[[8]](https://www.espn.com/espn/print?id=29813062)
+
+Identification of blocks relies on tracking-derived angles, distances, speeds, relative velocity to the runner, and geometric/kinematic rules. A defender "wins" a run block (triggering a loss for the blocker) if they beat the block to gain better position to stop the runner, push the blocker backward to disrupt the lane/pocket, contain the runner forcing a path adjustment, or record a tackle within approximately 3 yards of the line of scrimmage (even if geometrically blocked, under certain closing-velocity conditions). The metrics have been updated over time (including tweaks for 2026); they sometimes reference survival curves or time-based elements, with 2.5 seconds as a simplifying baseline in related pass metrics. They apply a "weak-link" approach at the unit level. Higher RBWR is better for offense; higher RSWR is better for defense. These are available for players and teams.[[8]](https://www.espn.com/espn/print?id=29813062)[[9]](https://www.espn.com/nfl/story/_/id/49742016/2026-win-rates-team-player-rankings-pass-rush-run-stop-blocking)
+
+**SIS (Sports Info Solutions) Blown Block Rate (BB% or Blown Blocks Pct)** counts the percentage of blocking snaps (pass or rush) in which a blocker fails to successfully engage the defender they are responsible for, giving that defender a chance to negatively affect the play. It is a direct measure of trench failure. SIS also publishes Adjusted Blown Block Rate (AdjBB%) that applies a strength-of-schedule adjustment based on how much a player's opponents forced blown blocks relative to those offenses' norms.[[10]](https://www.sharpfootballanalysis.com/analysis/pass-rush-blocking-adjustments-nick-bosa-aaron-donald/)[[11]](https://sisdatahub.com/glossary)
+
+Blown blocks are a core input to SIS's Total Points system. For the run game, blockers receive credit or debit scaled by the EPA value of a blown block. Responsibility for yards before contact (YBC) is graduated: blockers (and relevant box defenders, focused on intended gap/alignment) take on higher shares (up to ~90%) for plays blown up behind the line and lower shares (down to ~25%) for YBC far downfield. YBC is split into first-level (typically ≤5 yards), second-level (roughly 6–15), and open-field (>15) buckets, with adjustments for scheme, run direction, defensive alignment/technique, and expected YBC based on those factors. This avoids over-crediting blockers for long runs created mostly by the RB.[[12]](https://www.sportsinfosolutions.com/wp-json/wp/v2/posts/1069)[[13]](https://www.sportsinfosolutions.com/2020/12/23/enhancing-the-way-total-points-evaluates-the-running-game/)
+
+**PFF run blocking grades and scheme-specific metrics** grade every blocker on every run play on a scale from -2.0 to +2.0 in 0.5 increments, where 0 represents expected/average performance given the specific context (scheme, down/distance, quality of blocking opportunity, number of defenders in the box, and related metrics). Positives are awarded for decisive wins: moving a defender well out of their gap, creating significant movement, sealing the edge or front-side on zone, or sustaining blocks effectively. Negatives come for missed blocks, allowing penetration, failing to seal, poor angles, or not accounting for backside pursuit. "Expected" (0-grade) blocks include many standard down-blocks or stalemates where both sides execute reasonably.[[14]](https://www.pff.com/news/pro-how-pff-grades-run-blocking)
+
+PFF aggregates these into overall run-blocking grades and, more recently, Positively Graded Play Rate (% of run snaps graded above expected, measuring impact) and Negatively Graded Play Rate (% graded below expected, measuring consistency/stability). These are broken down by run scheme, including Zone (inside/outside), Gap concepts, Man, Power, Counter, and Duo (a common gap/man scheme heavy on double teams where the back reads the line). PFF also grades run defense. Recent NFL Next Gen Stats work complements this with an AI/transformer model that infers exact blocking assignments, block types (pull, down, crack, and related metrics), engagement start/end times, run concepts (16 designs categorized into man/zone/gap, with tags for read-option, split zone, and related metrics), and compares intended vs. actual run gap.[[15]](https://www.sportsrec.com/explainers/pff-run-blocking-metrics-explained-vs-nfls-ai-model/)[[16]](https://www.pff.com/news/nfl-premium-stats-pro-run-metrics)[[15]](https://www.sportsrec.com/explainers/pff-run-blocking-metrics-explained-vs-nfls-ai-model/)
+
+**NGS Yards Before Contact (YBC or YBC/Att)** measures the average yards a ball carrier advances before the first defender makes contact. It serves as a proxy for run-blocking effectiveness and lane creation by the offensive line, fullbacks, tight ends, and wide receivers (plus the RB's vision). It is the counterpart to yards after contact (YAC), which leans more toward the runner's individual ability. Typical averages hover around 1–2 yards but vary by situation, scheme, and personnel; it is not extremely variable play-to-play once context is controlled. Recent NGS advancements add assignment-level data on blocking matchups, sustained blocks, disruptions without tackles, and run-concept identification to better attribute credit.[[17]](https://www.4for4.com/2025/preseason/how-offensive-line-play-impacts-fantasy-football)[[18]](https://samhoppen.substack.com/p/the-curious-case-of-yards-before)[[19]](https://www.nfl.com/news/next-gen-stats-new-advanced-metrics-you-need-to-know-for-the-2026-nfl-season)
+
+**Other related or derivative metrics** include team or player-level run DVOA (contextual efficiency), RB Yards (raw YPC), combined offensive/defensive YBC views, "perfect blocking" YPC vs. non-perfect from tracking data, and scheme-specific YPC (e.g., inside zone, outside zone, power, man/duo, counter).[[20]](https://x.com/Ihartitz/status/2118359204201144520)[[21]](https://x.com/throwthedamball/status/2115140722114617600)
+
+These metrics overlap and complement each other: ALY and YBC focus on creation of lanes/holes, win rates and blown-block rates on individual matchups, PFF on graded execution by scheme, and SIS on EPA-valued responsibility with alignment detail. No single stat perfectly isolates the trenches because of scheme complexity, double-teams, linebacker pursuit, RB reads, and unblocked defenders, but using them in combination (with film) provides the clearest picture. Data sources evolve with tracking and AI improvements from NGS, PFF, SIS, ESPN, and FTN.
+
+---
+
+## WAVE_6A_COVERAGE_SHELLS_DISGUISE_MATCHQUARTERS — Defensive Coverage Shells, Pre-to-Post Disguise & MatchQuarters Taxonomy (`grok-4.7`)
+
+I'll search the named analysts and public coverage data for shell taxonomy, disguise metrics, and splits.
+
+Shell, technique, and disguise are three different labels. The accounts you named do not publish one shared taxonomy, and none of them publish a Shannon entropy or KL-divergence of pre-snap shell versus post-snap shell. What they do publish is a shell count, a technique family, a rotation direction, and player splits against those bins.
+
+## How the labels actually stack
+
+Middle-of-field language is a safety count, not a coverage call. It tells the quarterback where deep help starts. It does not tell him man, spot-drop, or match. Cody Alexander’s MatchQuarters work, the Washington Post’s shell primer, and standard quarterback teaching all use the same first cut. Two deep safeties is middle of the field open (MOFO). One post safety is middle of the field closed (MOFC). Zero deep safeties is middle of the field empty (MOFE). Putting Cover-0 under MOFO is the one place the requested list is off. Cover-0 has no deep middle at all. [[1]](https://www.washingtonpost.com/sports/2020/11/11/understanding-coverage-schemes-football/) [[2]](https://www.si.com/nfl/colts/onsi/film/gus-glossary-mofo-mofc) [[3]](https://www.footballnationusa.com/post/middle-open-vs-middle-closed-coverage-explained)
+
+Alexander also separates spacing from the shell name. Nine-man spacing is lock or zero. Eight-man spacing is MOFC. Seven-man spacing is MOFO. Coverage decides the front, not the other way around. [[4]](https://www.matchquarters.com/p/flipping-the-script)
+
+A second, independent axis is technique:
+
+- Spot zone: landmarks, eyes on the quarterback.
+- Pattern match: zone structure until a route declares, then carry.
+- Pure man: a body, with or without a free safety.
+
+Fantasy Points bins man as Cover-0, Cover-1, and Cover-2 Man, and zone as Cover-2, Cover-3, Cover-4, and Cover-6. Single-high and two-high are a separate safety-count split, not a synonym for man and zone. Cover-1 and Cover-3 are both single-high. Cover-2, Cover-4, Cover-6, and Cover-2 Man are all two-high. [[5]](https://www.fantasypoints.com/nfl/articles/2024/nfl-coverage-bible-broad-coverages)
+
+A third axis is rotation: open-to-closed, closed-to-open, open-to-open, or static. Fangio-tree defenses live in the first of those. Most NFL Tampa looks still spin from a closed pre-snap picture. Jesse Minter’s open-to-open Tampa is the exception Alexander keeps flagging. [[6]](https://substack.com/@matchquarters/note/c-343083186) [[7]](https://substack.com/@matchquarters/note/c-318721882)
+
+## MOFC family
+
+**Cover-1 man.** One free safety in the post, five underneath in man. Stress is outside isolation and anything the free safety cannot get to. Help is inside, so corners usually play outside leverage. MatchQuarters’ glossary calls the pure man-free version Silver and the weak-safety robber version Blue. [[8]](https://www.matchquarters.com/p/comprehensive-defensive-football-glossary)
+
+**Cover-1 robber.** Same deep middle, but the second safety does not fit the run or carry a man. He sits the intermediate middle and jumps digs and crossers. Pre-snap it can look like two-high or like a box safety. Post-snap the middle stays closed and the hole player is the tell. [[2]](https://www.si.com/nfl/colts/onsi/film/gus-glossary-mofo-mofc)
+
+**Cover-3 Sky, Buzz, and Cloud.** All three are three-deep, four-under. The name is who owns the flat, not a different deep structure.
+
+- Sky: the rolled safety takes curl-flat. The corner on that side plays the deep third. Best run fit of the three, late to the quick flat.
+- Buzz: the safety drops to the hook or seam, and a linebacker or nickel takes curl-flat. Built to plug the seam, which is stock Cover-3’s structural hole.
+- Cloud: the corner squats the flat and a safety replaces him in the outside third. Hard jam on a featured receiver, late over the top because the safety starts from depth. [[9]](https://cfbbible.com/articles/coverages/cover-3/) [[10]](https://www.sportologyx.com/blog/cover-3-defense/)
+
+Alexander’s rotation vocabulary for the same shell is Skate, Cross, Skinny, Buzz, and Site. Weak rotation away from the nickel is the Fangio staple, because it can be shown from a quarters contour and still end MOFC. He tags the nickel-matches-the-slot-vertical version as Cover-3 Seam, which PFF charts as 3-Seam. [[11]](https://www.matchquarters.com/p/art-of-x-show-cover-3) [[12]](https://substack.com/@matchquarters/note/c-325232961)
+
+**Saban Rip/Liz match Cover-3.** This is pattern-match Cover-3, not a new shell. Rip and Liz are right and left. The call tells the box safety which side he is rolling into, and the opposite overhang plays “match.” It exists because stock three-deep loses four verticals: the free safety cannot be right on both seams. Rules, as charted from Saban’s teaching:
+
+- Corner has No. 1 unless No. 1 is short or under inside about five yards. Then he smash-calls and carries No. 2 vertical.
+- Flat player matches No. 2 if No. 2 is vertical in the seam. If No. 2 goes under, he zones off to curl-flat. A smash call pulls him off No. 2 onto short No. 1.
+- Hook player carries No. 3 through unless he gets an under call.
+- If there is no vertical from No. 2, it collapses back into ordinary Cover-3.
+
+Saban started it after 1994 specifically to answer seam-plus-out combinations that beat his three-deep against Pittsburgh. Strong rotation is match Cover-3. Weak rotation of the same rules is often taught as Cover-6. [[13]](https://x.com/JamesALight/status/1933599018418123009) [[14]](https://www.tomahawknation.com/florida-state-football-fsu-noles/2020/5/21/21265925/fsu-nick-saban-rip-liz-pattern-matching-cover-adam-fuller-florida-state-seminoles-football-norvell)
+
+## MOFO family
+
+**Cover-2.** Two deep halves, five underneath. Stress is the seam between the safeties and the hole outside the hash. Corners are usually hard-flat or trap players. [[3]](https://www.footballnationusa.com/post/middle-open-vs-middle-closed-coverage-explained)
+
+**Tampa-2.** Still two halves, but a linebacker runs the middle hole to cap the post that stock Cover-2 gives up. Alexander’s recent point is about the disguise path, not the zone map. Most non-traditional Tampa schemes spin closed-to-open. Minter’s Ravens and Chargers often showed quarters and morphed open-to-open, with the field safety as the middle run-through and the nickel popping to a deep half. That keeps the pre-snap picture MOFO and the post-snap picture MOFO, so a quarterback who only counts safeties never gets a tell. [[6]](https://substack.com/@matchquarters/note/c-343083186) [[7]](https://substack.com/@matchquarters/note/c-318721882)
+
+**Fangio Cover-4 quarters.** Four deep: corners own the outside quarters, safeties split the two inside quarters and still fit the run off No. 2. Alexander’s read is geometric. A corner who caps and stays on top is a “box” shell (quarters, or four-over-three). A corner who trails low is a “triangle” shell (Cover-2, or three-over-two). Fangio’s actual system is not static quarters. It is a two-high pre-snap contour that can stay MOFO in quarters or spin MOFC into weak-rotation match-3. In 2023 with Miami he called quarters on 12 percent of snaps and Cover-6/8 on 21 percent. In 2024 with Philadelphia quarters rose to almost 20 percent and Cover-6/8 fell to 17.7 percent, because condensed formations and mesh routes reward safeties who can cross-key deep crossers from depth. [[15]](https://x.com/The_Coach_A/status/2090936994746785976) [[16]](https://www.matchquarters.com/p/vic-fangio-quarters-coverage-eagles-scheme-2024)
+
+**Palms / 2-Read.** Split-field match, usually taught as a quarters check. Both the corner and the safety read No. 2.
+
+- No. 2 out quickly, inside about five to seven yards: corner jumps the flat, safety overlaps No. 1. That is the trap.
+- No. 2 vertical: safety matches No. 2, corner stays on No. 1. The side has become quarters.
+- No. 2 inside immediately: eyes back to No. 1.
+
+Alexander files zone-match Cover-2, Cloud, and Palms in the same family: corner and safety play man-match, the overhang is a wall player. It is MOFO before the snap and can finish as halves, quarters, or man carry depending on the release. The wheel and the post are the known problem routes. [[17]](https://www.footballnationusa.com/post/what-is-palms-coverage-how-two-read-quarters-traps-the-flat) [[18]](https://www.matchquarters.com/p/unlocking-the-fangio-coverage-system) [[19]](https://www.youtube.com/watch?v=lyYmI25Kpw4)
+
+**Cover-6, quarter-quarter-half.** Quarters to the passing strength, halves to the other side. Fangio’s call for this is Stuff. Cover-8 is the mirror: halves to strength, quarters away. Next Gen Stats’ 2025 definition is the boundary safety taking a half and the field safety splitting a quarter with the corner, four underneath. It brackets an isolated X that pure quarters would leave in man-everywhere-he-goes. Usage in 2025 was 9.2 percent of pass plays, the least common of the three split-safety families, and a staple of the last four Super Bowl defenses in that tracking window. [[20]](https://www.bleedinggreennation.com/2024/8/15/24211869/vic-fangio-defense-101-part-2-mfo-coverages-eagles-defensive-coordinator-scheme-nfl) [[21]](https://www.nfl.com/news/the-coverage-that-turned-the-seahawks-into-super-bowl-winners-and-is-taking-the-nfl-by-storm)
+
+**Cover-2 Man.** Two deep halves, five in man underneath. MOFO shell, man technique. It is why a two-high count is not a zone tell. Fantasy Points files it with man, not with Cover-2 zone. [[5]](https://www.fantasypoints.com/nfl/articles/2024/nfl-coverage-bible-broad-coverages) [[1]](https://www.washingtonpost.com/sports/2020/11/11/understanding-coverage-schemes-football/)
+
+**Cover-0.** MOFE, not MOFO. No deep help. Man everywhere, inside leverage, pressure usually attached. MatchQuarters’ glossary name is Purple. The only reason it shows up in two-high discussions is as a disguise terminal state: Next Gen Stats flags a spin from a split-safety picture into Cover-0 as a disguise. [[8]](https://www.matchquarters.com/p/comprehensive-defensive-football-glossary) [[22]](https://www.nfl.com/news/next-gen-stats-new-advanced-metrics-you-need-to-know-for-the-2025-nfl-season)
+
+## Pre-snap to post-snap: what is actually measured
+
+**Disguise rate, the published metric.** SumerSports defines it as the defense showing one coverage picture pre-snap and playing another post-snap. League rate on opponent pass plays: 26.8 percent in 2022, 27.8 percent in 2023, 30.4 percent in 2024, 32.2 percent through Week 6 of 2025. From 2022 through that Week 6 sample, quarterbacks against disguised coverages completed 65.3 percent for 7.14 yards per attempt, with 426 touchdowns and 466 interceptions. Against static coverages they completed 64.2 percent for 6.89 yards per attempt, with 2,679 touchdowns and 1,190 interceptions. The interception rate is the real gap, not completion percentage. In that 2025 slice the Rams led at 50.5 percent disguise but allowed plus-0.15 EPA when disguising and minus-0.02 when they did not. Joe Flacco, Bo Nix, Bryce Young, Jalen Hurts, and Cam Ward were the quarterbacks who struggled most against disguises in that sample. Drake Maye went the other way: 80 percent completions against safety rotations, 672 yards, three touchdowns, no interceptions, and 80.49 percent at 11.59 yards per attempt against open-to-closed specifically. [[23]](https://athlonsports.com/nfl/nfl-disguised-coverages-brian-flores-drake-maye-all-22-analysis)
+
+**Next Gen Stats’ version is model-based, not charted.** For 2025 they productionized a pre-snap transformer that estimates what the quarterback is seeing, then compare that label to the post-snap classification. A change from split-safety zone to single-high man, or a spin to Cover-0, is flagged as disguised. That work was inspired by the 2025 Big Data Bowl winners, Smit Bajaj and Vishakh Sandwar. The companion Coverage Responsibility models assign, every tenth of a second, the targeted defender, the receiver-defender matchup, and the zone or man assignment. Disguise at the player level is a derivative of those models, not a hand chart. Kansas City has been cited by AWS as one of the strongest disguising staffs under that framework. [[22]](https://www.nfl.com/news/next-gen-stats-new-advanced-metrics-you-need-to-know-for-the-2025-nfl-season) [[24]](https://aws.amazon.com/blogs/media/reading-the-defense-how-the-nfl-and-aws-quantify-coverage-responsibility/)
+
+**Directional rotation, Alexander’s cut.** This is the metric that actually separates schemes. League baseline he cites is about a 30 percent disguise rate, with closed-to-open under 10 percent of all calls. In the season he charted, pre-snap open-post looks were 57.5 percent league-wide, and static two-high (36.5 percent) finally passed static single-high (33 percent).
+
+- Eagles under Fangio: 87 percent pre-snap open (1,012 plays). Of 488 disguised snaps, 98 percent were open-to-closed. Closed-to-open was 8 snaps, last in the league. Cover-3 was 34 percent of the call sheet, and 96 percent of their 3-Seam calls came open-to-closed.
+- Panthers under Evero and Cooley: second in disguise at 41.5 percent, about 70 percent open shells, and a near 1-to-1 of staying two-high versus rotating closed (397 static, 375 rotated). Alexander calls that “entropy.” It is a coaching word for a frozen pre-snap picture with no tell, not a computed Shannon number.
+- Rams under Shula: third in disguise at 40 percent, fifth in closed-to-open at 13 percent, two-high disguise on 27 percent of plays. Eighty-three percent of those closed-to-open snaps were Cover-2. Green Bay under Gannon is the other closed-to-open outlier Alexander has isolated.
+- From 2024 to 2025, open-to-closed 3-Seam doubled from 4 percent to 8 percent of disguise calls. Over 70 percent of 2025 3-Seam calls started from a two-high shell. [[25]](https://www.matchquarters.com/p/fangio-cover-9-eagles-two-high-disguise) [[26]](https://www.matchquarters.com/p/panthers-defense-disguise-entropy-safety-steals) [[27]](https://www.matchquarters.com/p/rams-closed-to-open-cover-2-traps) [[12]](https://substack.com/@matchquarters/note/c-325232961)
+
+**Post-snap two-high volume, Next Gen Stats.** This is the shell after the rotation, not the disguise rate. Split-safety on dropbacks: 32.9 percent in 2018, 37.8 percent in 2021, 40.4 percent in 2024, 42.0 percent in 2025. In 2025 every defense cleared 30 percent for the first time in the tracking era. Inside that 42 percent: Cover-2 at 13.9 percent (barely above the 13.2 percent average from 2018-2024), quarters at 17.2 percent (up from 13.9 percent), Cover-6 at 9.2 percent. First-down conversion against split-safety in 2025 was 29.0 percent, tied for the low since 2018. Two-high EPA flipped from plus-220.8 over the prior seven seasons to minus-286.6 in 2025. The 2025 Texans were the extreme at minus-92.6 EPA in two-high. Blitzing out of two-high is still rare league-wide (about 10 percent of those plays since 2018, versus 39.7 percent blitz when not two-high). Spagnuolo’s Chiefs and Flores’s Vikings are the exceptions. Minnesota blitzed on 33.1 percent of split-safety plays in 2024 and 37.4 percent in 2025. [[21]](https://www.nfl.com/news/the-coverage-that-turned-the-seahawks-into-super-bowl-winners-and-is-taking-the-nfl-by-storm)
+
+**Shannon entropy and KL divergence.** I could not find a published Shannon entropy or KL divergence of pre-snap shell versus post-snap shell from MatchQuarters, Wide Left, Fantasy Points, Sam Hoppen, SumerSports, Next Gen Stats, or Ted Nguyen. Alexander’s “entropy” articles use the dictionary sense: lack of predictability. The closest public operational proxies are:
+
+- Binary disguise rate, P(pre ≠ post).
+- A transition matrix, P(post shell | pre shell), which is what Alexander is really charting when he splits open-to-closed from closed-to-open.
+- DISCO, from an independent analytics writeup: the share of plays whose post-snap coverage is seen on fewer than 10 percent of league snaps given that pre-snap alignment cluster. [[28]](https://malteranalytics.github.io/Sunday_Afternoon_Fever/)
+- An academic transformer paper that treats low pre-snap classification accuracy as a disguise proxy, and a separate paper that computes Shannon entropy of which offensive player each defender is guarding during motion. That entropy is about assignment consistency, not shell identity. Mean assignment entropy in that sample was 0.17. [[29]](https://arxiv.org/html/2603.25901v1) [[30]](https://arxiv.org/html/2602.10784v1)
+
+If you have the joint counts, the information-theoretic versions are straightforward and should be labeled as constructed, not as a league stat.
+
+Shell uncertainty on a side is Shannon entropy of the post-snap distribution:
+
+H(post) = −Σ p(s) log p(s), over shells s.
+
+A defense that is 50/50 MOFC and MOFO has higher H than one that is 90 percent quarters. That is the Panthers’ 397-versus-375 split, restated.
+
+Disguise as information loss is the conditional entropy H(post | pre), or the KL divergence of the conditional from the marginal:
+
+D_KL(P(post|pre) ∥ P(post)) = Σ P(post|pre) log [P(post|pre) / P(post)].
+
+Averaged over pre-snap looks, that is how many bits the pre-snap picture fails to buy you. Open-to-open Tampa has a low KL on the shell axis even if the technique changes, because the middle stays open. Fangio open-to-closed has a high KL on the shell axis: the pre-snap distribution is almost all two-high, and the post-snap distribution is a large Cover-3 mass. A single disguise rate cannot see that difference. The transition matrix can.
+
+## Man versus zone, single-high versus two-high
+
+League man rate, Fantasy Points charting: 30.8 percent in 2020, 27.9 percent in 2021, 24.3 percent in 2022, 24 percent in 2023. Zone is the default. Single-high remains the plurality post-snap family because Cover-1 and Cover-3 still outnumber any one two-high call, even as two-high has climbed into the low 40s. [[5]](https://www.fantasypoints.com/nfl/articles/2024/nfl-coverage-bible-broad-coverages) [[21]](https://www.nfl.com/news/the-coverage-that-turned-the-seahawks-into-super-bowl-winners-and-is-taking-the-nfl-by-storm)
+
+Fantasy Points’ public matchup study, not a full player dump, is the cleanest statement of when the split matters. Filtering receivers to an expected 60 percent-or-higher single-high rate made coverage-filtered production more predictive than the unfiltered stat (correlation 0.336 versus 0.312). Against defenses at 42 percent man or higher, a receiver already 10 percent better in yards per route against man hit 20 or more fantasy points 25.5 percent of the time, about double the base ceiling rate. Against defenses at 63 percent single-high or higher, a 10 percent target-per-route edge versus single-high raised the 20-point ceiling rate about 35 percent. They did not find a stable ceiling boost for zone, two-high, or Cover-2 at any reasonable sample threshold. Man and single-high are the matchups with enough variance to bet. Zone is too common to be a separator. [[31]](https://www.fantasypoints.com/nfl/articles/2025/why-coverage-matchups-matter-in-fantasy)
+
+**2023 receiver extremes, Fantasy Points Coverage Bible.** Against man, the public names at the top of fantasy points per route were D.J. Moore (0.76, 16.1 air yards per target, 42.1 percent first-read targets), Christian Watson (0.70), George Pickens (0.67), and Sam LaPorta (0.67). Against zone, Tyreek Hill produced 21.2 percent more fantasy points per route than any other pass-catcher, with Amon-Ra St. Brown second. Against single-high, Hill was 33.3 percent clear of the next player, Nico Collins. CeeDee Lamb stayed close on efficiency against man rather than separating. [[5]](https://www.fantasypoints.com/nfl/articles/2024/nfl-coverage-bible-broad-coverages)
+
+**2025 quarterbacks versus man, SumerSports, minimum 100 plays, EPA per play.** Jordan Love 0.44, Matthew Stafford 0.33, Drake Maye 0.30, Dak Prescott 0.27, Sam Darnold 0.25, Caleb Williams 0.21, Bo Nix 0.19, Trevor Lawrence 0.17, C.J. Stroud 0.16. [[32]](https://x.com/SumerSports/status/2064348305849495640)
+
+**Bo Nix is the best public worked example of why the bins must be split.** SumerSports had his 2024 success rate at 38.6 percent versus man and 45 percent versus zone. In 2025 man success rose to 49 percent (9th) while zone stayed at 45 percent (33rd), and he saw man on only 18 percent of dropbacks against a cited league man rate of 32 percent. Fantasy Points had him at minus-0.43 EPA per dropback versus Cover-1 (37 plays), plus-0.21 versus Cover-3 (58), and minus-0.46 versus Cover-4 (33). Cover-1 and Cover-3 are both single-high. Cover-4 is two-high. The single-high bucket would have hidden a Cover-3 strength and a Cover-1 weakness. Early 2026 Fantasy Points had him at minus-0.40 EPA and 4.29 yards per attempt versus man (46 dropbacks) against minus-0.02 EPA and 6.06 yards per attempt versus zone (149). Next Gen Stats had him facing split safeties on 43.1 percent of dropbacks, 22nd, while only 21.7 percent of his passes traveled 10 or more yards, last among 37 qualifiers. Two-high volume did not produce downfield throws. [[33]](https://x.com/NickKendellMHH/status/2114070175662440552)
+
+**Route-level man versus zone, public tracking sample.** Breaking routes beat man. Vertical routes beat zone. A go route in that sample gained 10.03 yards per attempt against zone and 7.12 against man. Reported EPA edges included hitch or curl at minus-0.014 versus man and plus-0.180 versus zone, go at plus-0.392 versus man and plus-0.524 versus zone, in or dig at plus-0.320 versus man and plus-0.255 versus zone. Versus Cover-1 the strong routes were post, corner, and go. Versus Cover-2 the post was the outlier and the corner route was the one to avoid. Man also carries a higher touchdown rate, mostly because of how often it is called in the red zone, not because it is structurally softer between the 20s. [[34]](https://outsidezone.io/insights/how-nfl-offenses-beat-coverages/)
+
+**A current-season Next Gen Stats receiving slice** (posted late October 2026, so it is a partial season, not a career split): most yards versus man, DK Metcalf 215. Versus zone, Jaxon Smith-Njigba 702. Versus two-high, Smith-Njigba 495. Versus single-high, Drake London 426. Versus press, Smith-Njigba 354. That is a usage-and-scheme split, not a pure efficiency ranking. Smith-Njigba’s zone and two-high totals are what you expect from a high-volume receiver in a zone league. [[35]](https://x.com/NFL_Researcher/status/2115156582250221835)
+
+Role-level tendencies across 2023-2025, not single-player lines: outside X receivers drew more targets per route against man than their position-mates. Slot receivers drew fewer. Field stretchers saw fewer targets per route against two-high than against single-high. Slot receivers saw more. That matches the geometry. Single-high isolates the boundary. Two-high caps the field stretcher and leaves the slot working the seams and the underneath voids. [[36]](https://www.edgehalla.com/nfl/roles)
+
+## What each named source actually contributes
+
+- **Cody Alexander, MatchQuarters (@The_Coach_A, also @matchquarters).** The taxonomy. MOFC versus MOFO, box versus triangle, Fangio quarters as a disguise contour rather than a static call, Rip/Liz-adjacent match-3, Palms, Cover-6/8, open-to-closed versus closed-to-open rates, and the Panthers “entropy” case. Most of the shell-by-shell numbers live in paid posts. The public notes still carry the rates cited above.
+- **Next Gen Stats.** The league time series on post-snap split-safety, Cover-2, quarters, and Cover-6, plus the 2025 pre-snap versus post-snap disguise classifier and Coverage Responsibility. This is the cleanest public usage series.
+- **SumerSports.** Disguise-rate trend, man and zone EPA by quarterback, and live coverage assignment. The full matrix is behind SumerPass. Public posts are leaderboards, not the whole distribution.
+- **Fantasy Points Data (@FantasyPtsData).** The man, zone, single-high, and two-high receiving and quarterback matrices, plus the Coverage Bible bin rules. The suite is the right place for a full player split. The open web only has the Bible excerpts and scattered EPA lines.
+- **Sam Hoppen.** Chart-first defensive coverage posts and a Substack. His public recent work is more corner catch rate over expectation and pressure than a shell taxonomy. He is a consumer and republisher of charted coverage, not the source of the MOFC definitions.
+- **Arif Hasan, Wide Left.** Scheme narrative more than a shell metric feed. The public Flores material is the useful piece: Minnesota pairs a very high blitz rate with a very high zone rate, which is the same two-high-plus-pressure idea Next Gen Stats measured at 37.4 percent split-safety blitz in 2025. His October 2026 “coverage trends” review is the piece to read for his own numbers. It is not fully on the open web. [[37]](https://www.theleap.football/p/behind-enemy-lines-packers-vikings)
+- **Ted Nguyen (@FB_FilmAnalysis).** All-22 identification, not a rate publisher. Use him to confirm whether a call is Sky, Buzz, Palms, or a spin. Do not cite him for league disguise percentages.
+
+Paywalled charting is why a request for every shell metric cannot be closed from public posts alone. PFF, Fantasy Points, SumerPass, and MatchQuarters each cut match Cover-3, 3-Seam, Palms, and robber differently. A Cover-3 Sky on one chart can be a weak-rotation match-3 on another. Compare rates only inside one vendor.
+
+The usable public stack, if you are building the metric yourself, is four columns per play, not one coverage string: pre-snap shell (open, closed, empty), post-snap shell, technique (spot, match, man), and rotation class (static, open-to-closed, closed-to-open, open-to-open). Disguise rate is column one versus column two. Shannon entropy is the distribution of column two. KL divergence is column two given column one, measured against the marginal of column two. Man-versus-zone and single-high-versus-two-high splits should stay as separate filters, because Cover-1 and Cover-3 punish different quarterbacks and different receivers even though both close the middle.
+
+---
+
+## WAVE_6B_CB_SEPARATION_AND_COVERAGE_CHARTING — Cornerback & Safety Coverage Metrics, FP/Route Allowed & Ball-Hawk Engineering (`grok-4.20-0309-reasoning`)
+
+**These advanced defensive back (DB) coverage metrics—primarily for cornerbacks (CBs), safeties, and relevant linebackers (LBs)—are tracked and discussed by the requested accounts/sources (@FantasyPtsData/Fantasy Points, @StatRankings and founder @MagicSportsGuy’s StatRankings.com platform often linked to “MAGIC SPORTS BREAKDOWN” style analysis, @PFF, @NextGenStats, and @SportsInfo_SIS/@football_SIS).**[[1]](https://statrankings.com/nfl/advanced/players/cb/right-aligned-fantasy-points-per-route-allowed)[[2]](https://vsin.com/wr/)
+
+They appear in tools like StatRankings’ CoverageIQ (customizable by coverage shell, man/zone, side of field, week range, and minimum routes/snaps), Fantasy Points WR/CB matchup reports, PFF charting and grades, Next Gen tracking data, and SIS/Sharp Football Analysis positional or scheme splits. Many full leaderboards or custom splits require subscriptions (StatRankings+, PFF+, and related metrics), but public posts, articles, and free views highlight leaders as of early November 2026 (data through ~Nov 3 games).[[3]](https://statrankings.com/nfl/coverage/fantasy-points-per-coverage-snap/vs/all-coverages)[[4]](https://statrankings.com/nfl/coverage/yards-per-route-run-allowed/vs/cover-0)
+
+Key public or summarized insights by metric (2026 season focus unless noted; lower allowed numbers are generally better for the defender except where noted as “highest” for negative metrics). Data evolves weekly with play-by-play processing. Minimums (e.g., routes, targets, or snaps) are common to qualify.
+
+### Fantasy Points Per Route Allowed (FP/rt or FP/Route Allowed) and Fantasy Points Per Cover Snap
+Half-PPR scoring (0.5 per reception, 0.1 per yard, 6 per TD). Measures fantasy points surrendered by the defender per route run against him or per coverage snap. Used heavily in Fantasy Points matchup tools and StatRankings for WR/CB or TE matchups. Splits exist by side of field (e.g., right-aligned = offense’s right/defense’s left), coverage type (Cover 0/1/2/3/4/6/9, man/zone), alignment, or weeks.[[1]](https://statrankings.com/nfl/advanced/players/cb/right-aligned-fantasy-points-per-route-allowed)[[2]](https://vsin.com/wr/)
+
+- StatRankings example (right-aligned FP/Route Allowed, min ~76 routes, through Nov 3, 2026): Myles Harden (Cleveland) led at 0.51 FP/route allowed (0.07 clear of 2nd); DaRon Bland (Dallas) and Jarrian Jones (Jacksonville) ~0.44; Daxton Hill (Cincinnati, safety) ranked high among DBs at 0.38. Lower is better for the defender.[[1]](https://statrankings.com/nfl/advanced/players/cb/right-aligned-fantasy-points-per-route-allowed)
+- Related: Fantasy Points Per Coverage Snap (or per cover snap allowed) in CoverageIQ. Public views show safeties and CBs with values like 0.05–0.08 in some low samples; full sortable tables available via subscription. Also tied to YPRR Allowed, Target Rate Allowed, Catch Rate Allowed, and Passer Rating Allowed in the same tool.[[3]](https://statrankings.com/nfl/coverage/fantasy-points-per-coverage-snap/vs/all-coverages)[[4]](https://statrankings.com/nfl/coverage/yards-per-route-run-allowed/vs/cover-0)
+- Fantasy Points site powers WR/CB tools with FP/RR, TGT/RR (targets per route run), route %, alignment (LWR/SWR/RWR, LCB/SCB/RCB), and matchup scores.[[2]](https://vsin.com/wr/)
+
+### Yards Per Coverage Snap (or YPRR Allowed / Yards Per Route Run Allowed / Yards Per Target Allowed)
+Per-snap or per-route yards surrendered in coverage. Often split by man/zone, coverage shell, or alignment. Lower is better. SIS, StatRankings CoverageIQ, Sharp, and older NextGenStats/@KeeganAbdoo (formerly SIS) work frequently reference this.[[5]](https://x.com/KeeganAbdoo/status/1078332209990254597)
+
+- StatRankings CoverageIQ allows filtering YPRR Allowed vs specific coverages (e.g., vs Cover 0). Public examples show high variance in small samples (e.g., 4.5–19+ in tiny route totals).[[4]](https://statrankings.com/nfl/coverage/yards-per-route-run-allowed/vs/cover-0)
+- Team level (Sharp Football Analysis, updated Nov 3, 2026): Yards per target (YPT) allowed to WR/TE/RB, outside vs slot. Examples: Seattle strong overall (low YPT to WR/TE/RB, especially slot at 3.9); Jacksonville very low YPT to TE (4.8); several teams worse vs slot or outside. Useful for TE props.[[6]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-stats-by-position/)
+- Hashtag Football and others publish cornerback coverage tables with yards, YAC, comp %, and related metrics[[7]](https://hashtagfootball.com/nfl-cornerback-coverage)
+
+### Target Rate Per Coverage Snap (or Target Rate Allowed, TPRR context)
+Targets or target % per coverage snap/route against the defender. Lower target rate often signals “sticky” or deterring coverage (especially outside CBs). PFF, StatRankings CoverageIQ, and Fantasy Points tools track this. Slot vs perimeter splits matter—slot defenders often see higher rates.[[8]](https://www.pff.com/news/nfl-most-targeted-cornerbacks-by-situation-2025)
+
+- PFF has tracked high target-rate CBs by situation (e.g., all routes, specific route types, or coverage). One season example showed players over 18–21% target rate on coverage snaps.[[8]](https://www.pff.com/news/nfl-most-targeted-cornerbacks-by-situation-2025)
+- CoverageIQ filters Target Rate Allowed vs shells (e.g., Cover 9) or all coverages; combines with YPRR, FP per snap, Passer Rating Allowed.[[9]](https://statrankings.com/nfl/coverage/target-rate-allowed/vs/cover-9)
+- Alignment splits (slot CB vs outside/perimeter): Slot often higher target volume but different YAC/after-catch liability; outside/perimeter CBs can deter targets better. Team splits (Sharp) show outside vs slot YPT allowed. NextGenStats/SIS have historically provided snap-weighted or alignment-specific views.[[6]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-stats-by-position/)
+
+### Forced Incompletion Rate (FINC%)
+PFF-charted metric: share of targets resulting in a forced incompletion (deflection, PBU at catch point, and related metrics). Higher % is better. Frequently posted by @PFF.[[10]](https://x.com/PFF/status/2106431333866086889)
+
+- Recent 2026 example (min 15 targets): Sauce Gardner 30.0% (leads), Davison Igbinosun and Deonte Banks ~23.3%, Martin Emerson Jr. 22.2%, Charvarius Ward 21.4%. LBs example: Zack Baun 28.6%, Ernest Jones/T.J. Edwards 22.2%. Earlier seasons highlighted players with multiple FINCs in man or single coverage.[[11]](https://x.com/PFF/status/2118075138792898915)
+- PFF premium stats break it down by man/zone, route type, or scheme. Also ties to coverage grade, passer rating when targeted, and yards per coverage target.[[12]](https://py.sportsdataverse.org/docs/nfl/reference/pff_core)
+
+### Passer Rating Allowed (when targeted)
+Standard efficiency metric when the defender is targeted. Lower is better. Available in PFF, StatRankings CoverageIQ (filterable with target rate, YPRR, FP per snap), and team schemes.[[13]](https://www.pff.com/news/nfl-highest-graded-cornerbacks-targeted-route-type-jaylon-johnson-brian-branch)
+
+- Often paired with completion % allowed, yards per target, or by route type (e.g., PFF breakdowns vs comebacks, slants, flats, corner routes). Examples show elite CBs with very low ratings (under 40–60) on certain routes in limited targets.[[13]](https://www.pff.com/news/nfl-highest-graded-cornerbacks-targeted-route-type-jaylon-johnson-brian-branch)
+
+### Ball-Hawk / Catch-Point Disruption Rate
+Ball-hawk typically refers to interceptions, pass breakups, or turnover-worthy plays. Catch-point disruption overlaps heavily with FINC%, PFF forced incompletions, PBUs, or “coverage wins” at the catch point. PFF charts these extensively; NextGenStats may tie to tracking like contest% or separation at catch point. StatRankings and SIS also surface disruptive plays.[[14]](https://www.matchquarters.com/p/introducing-the-coverage-execution-index)
+
+- Not always a single “rate” but appears in coverage grades, CEI (Coverage Execution Index) concepts (catch-point leverage/win%, forced TOW/turnover-worthy throws), or ball-hawk leaderboards. High FINC% players often excel here.[[14]](https://www.matchquarters.com/p/introducing-the-coverage-execution-index)
+
+### Shadow Coverage Tracking Criteria
+Primarily PFF and advanced analysts (@NextGenStats, SIS-influenced work). A CB “shadows” when assigned to follow one receiver across the formation or for a high % of routes (often the opponent’s WR1). Criteria typically include man coverage following the same player >60–70% of snaps, mirroring motion, or specific assignment tracking. Public mentions in PFF articles or @PFF posts about shutdown corners. Useful for WR/TE props—avoid shadow matchups.[[15]](https://www.fantasylife.com/articles/fantasy/week-9-fantasy-football-utilization-report)
+
+### Slot CB vs Outside Perimeter CB Splits
+Widely available. Slot CBs/nickel defenders often face higher target rates and different route mixes (underneath, YAC-heavy) vs outside/perimeter CBs (boundary, deeper routes, lower target rate for elites). StatRankings, PFF (by alignment or route type), Sharp (team outside vs slot YPT), Fantasy Points alignment % (LCB/SCB/RCB), and SIS/NextGenStats charting all provide splits. Slot vs outside performance can vary dramatically for the same player.[[6]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-stats-by-position/)[[16]](https://www.rotoballer.com/wr-cb-matchups-for-fantasy-football-sleepers-targets-for-week-9-2026/1982521)
+
+### Linebacker/Safety Seam-Match Liability Metrics for TE Props
+Critical for TE receiving props. Focus on YPT/YPRR/FP allowed to TEs, coverage grade vs TEs, performance in man vs TEs or zone seam responsibility (seam routes in Cover 2/3/4, middle-of-field open/closed), and seam vulnerability (deep posts/seams). Safeties and LBs often handle seam/TE matchups in zone or man.[[6]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-stats-by-position/)
+
+- Team level (Sharp, updated Nov 2026): YPT allowed to TE (e.g., Jacksonville ~4.8 low/good, Seattle/New York Giants/Pittsburgh also strong; some teams 8.0–9.4+ vulnerable). Also vs RB/WR for context.[[6]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-coverage-stats-by-position/)
+- Individual: StatRankings CoverageIQ or PFF splits vs TEs, by coverage shell, or man/zone. Look for high target rate or YPRR allowed to TEs on seams, poor FINC% or passer rating vs TE routes. Shifts to zone can boost LB/S coverage opportunities; man-heavy teams increase shadow or direct TE matchups. NextGenStats/SIS data on separation or EPA vs TEs helps.[[15]](https://www.fantasylife.com/articles/fantasy/week-9-fantasy-football-utilization-report)
+
+**Overall resources**: StatRankings.com (CoverageIQ for most listed metrics with heavy customization) and Fantasy Points WR/CB tools are primary for FP/rt, per-snap/route rates, and matchup edges. PFF excels on FINC%, route-specific grades, and charting (including shadow). @NextGenStats and SIS provide tracking context (separation, alignment splits). Sharp offers accessible team positional coverage tables. Check recent posts from the listed accounts for weekly updates, leaderboards, or charts—many post FINC% leaders, matchup notes, or CoverageIQ highlights.[[17]](https://www.fantasypoints.com/nfl/reports/wr-cb-matchups)
+
+For the latest or player-specific numbers, visit the sites or subscription platforms, as full sortable/filterable data (with minimums applied) is often premium. These metrics are far more predictive for matchups than basic box-score stats when sample sizes are reasonable. Data as of early November 2026; always verify current week updates.
+
+---
+
+## WAVE_6C_IDP_SCOREKEEPER_BIAS_AND_SACK_PROPS — IDP Tackle/Sack Props, Stadium Stat-Crew Assist Bias & 0.25 Half-Sack Mechanics (`grok-4.7`)
+
+Public sources cover the mechanics and the 2025 extremes. A complete 32-stadium table is not freely published, and the named X accounts did not return usable posts on these four metrics.
+
+Jon Macri’s live handles are **@PFF_Macri** and **@IDP_Macri**. Searches for **@adamcophoto** and **@IDP_Sharks** did not resolve to NFL IDP accounts. FantasySharks has historically pointed readers to an **IDPSharks** Twitter account, but that feed was not retrievable here. Keyword search on X was rate-limited. What follows is from gamebooks, NFLGSIS documentation, PFF, IDPGuru, Footballguys, and sportsbook explainers.
+
+## 1. Stadium scorekeeper bias (solo vs assist)
+
+Tackles are not an official NFL statistic. Sacks are. NFLGSIS Stat ID 79 is a solo tackle (“tackle with no assists”) and explicitly notes that there are no official defensive statistics except sacks. Stat ID 80 is an assisted tackle, Stat ID 82 is a tackle assist, and Stat ID 81 (half tackle) is marked not in use. [[1]](http://www.nflgsis.com/gsis/Documentation/Partners/StatIDs_files/sheet001.html)
+
+On a shared stop, the home crew’s Split Tackle code decides the credit:
+
+- **TA**: first player assisted tackle, second player tackle assist
+- **AT**: the reverse
+- **AA**: both get a tackle assist
+
+A single defender filled in on the Tackle event gets a solo. [[2]](https://www.nflgsis.com/gsis/Documentation/StadiumGuides/Events_And_Attributes.pdf)
+
+The home crew never travels. Every number in a stadium belongs to that building’s crew, including how they score the visitor. [[3]](https://mikewoellert.substack.com/p/the-stat-crew-solo-assist-report)
+
+**2025 home-crew aggregates** (Ryan Sitzmann / IDPGuru data, published by Mike Woellert and Footballguys):
+
+| Measure | League home average |
+| --- | --- |
+| Solos | 275 |
+| Assists | 213 |
+| Solo-to-assist ratio | 1.32:1 |
+| Solo share of credited tackles | 56.4% |
+
+Any crew above 1.32 leans solo. Any crew below leans assist. [[3]](https://mikewoellert.substack.com/p/the-stat-crew-solo-assist-report) [[4]](https://www.footballguys.com/article/2026-death-of-the-solo-changing-face-tackles-in-idp)
+
+Public 2025 extremes, not the full 32:
+
+| Crew | Solos | Assists | Total | Solo % |
+| --- | --- | --- | --- | --- |
+| TB | 282 | 146 | 428 | 65.9 |
+| LAC | 242 | 138 | 380 | 63.7 |
+| BUF | 291 | 173 | 464 | 62.7 |
+| League | 275 | 213 | — | 56.4 |
+| CIN | 273 | 262 | 535 | 51.0 |
+| WAS | 264 | 263 | 527 | 50.1 |
+| ARI | 246 | 248 | 494 | 49.8 |
+
+Arizona was the only crew that awarded more assists than solos. The solo-share gap from Tampa Bay to Arizona was more than 16 points. [[4]](https://www.footballguys.com/article/2026-death-of-the-solo-changing-face-tackles-in-idp)
+
+The full 32-row scoreboard (volume rank vs fantasy rank) sits behind Woellert’s paywall and IDPGuru’s premium “Tackles Issued by Home Stat Crews” chart. Woellert’s public finding is that those two ranks do not agree, and for some crews the gap is 22 ranks. Volume rank is solos plus assists. Fantasy rank is fantasy points per tackle opportunity, solos weighted 2:1 over assists, divided by plays that could produce a tackle (completions + rush attempts + sacks, minus kneels). [[3]](https://mikewoellert.substack.com/p/the-stat-crew-solo-assist-report) [[5]](https://idpguru.com/2026/06/how-nfl-stat-crews-impact-idp-fantasy-football-scoring/)
+
+**How that hits props**
+
+- A solo line is fragile. One shared stop that the crew codes AA or TA instead of a solo can flip Over/Under 4.5 solos. Combined tackles (solo + assists) absorb that call. [[6]](https://blog.statsbench.com/nfl-tackles-props-guide/)
+- Same involvement, different settlement: 6 solos beats 3 solos and 3 assists in any market or league that pays solos more than assists, even though both are six involvements. [[5]](https://idpguru.com/2026/06/how-nfl-stat-crews-impact-idp-fantasy-football-scoring/)
+- Assist-heavy rooms (ARI, WAS, CIN in 2025) can inflate **total tackles + assists** while suppressing **solo** props. Solo-heavy rooms (TB, LAC, BUF) do the opposite. LAC’s raw volume was low (380) while its solo share was second-highest, which is why volume rank and 2:1 fantasy rank diverge. [[4]](https://www.footballguys.com/article/2026-death-of-the-solo-changing-face-tackles-in-idp) [[3]](https://mikewoellert.substack.com/p/the-stat-crew-solo-assist-report)
+- Crews are a tiebreaker after snaps, alignment, and opponent tackle opportunity, not a reason to start a part-timer. Prior-year crew habits can shift when personnel or internal guidance changes, so early-season reads should stay directional. [[5]](https://idpguru.com/2026/06/how-nfl-stat-crews-impact-idp-fantasy-football-scoring/)
+
+Older home-vs-road studies (PFF “Home Cookin’,” 2003–2012) found statistically significant assist bias at 14 stadiums and solo bias at 10. Those crews are not the 2025 list. Treat them as proof the bias is real, not as a current map. [[7]](https://www.pff.com/news/home-cookin-how-nfl-stat-crews-affect-idp-pt-2) [[8]](https://www.pff.com/news/home-cookin-how-nfl-stats-crews-affect-idp-pt-1)
+
+## 2. Tackle Opportunity Rate
+
+There is no single league definition. The version you named — tackles divided by opponent rushes plus completions — is the cleanest “could a tackle have been recorded” rate.
+
+Common formulas in the IDP literature:
+
+- **Your rate:** defender tackles / (opponent rush attempts + completions). Incompletions drop out because nobody is tackled.
+- **PFF tPOP (Jeff Ratcliffe, 2015):** total tackles / (snaps minus incompletions). Lavonte David 17.23%, Bobby Wagner 17.73%, Luke Kuechly 18.53% among off-ball linebackers with 500-plus snaps. Normalized tPOP correlated with tackle production at r-squared 0.97 in that study. PFF’s own tackle charting was used so one crew scored every player. [[9]](https://www.pff.com/news/introducing-tackles-per-opportunity)
+- **Crew-level opportunity (Sitzmann / Woellert):** completions + rushes + sacks, minus quarterback kneels. That denominator is for stadium generosity, not for one defender’s rate. [[3]](https://mikewoellert.substack.com/p/the-stat-crew-solo-assist-report)
+- **Footballguys team TVO:** rushes (minus kneels) + pass attempts + sacks. That includes incompletions, so it is a volume environment, not a finishing rate. [[10]](https://www.footballguys.com/article/2022-idp-matchup-week05)
+
+Jon Macri has used a related efficiency number on the PFF Fantasy podcast: typical linebacker tackle efficiency around 12%, with zone and Cover 2 environments running above 15% in the seasons he cited. Alignment moves the rate before talent does. His published safety split (2021–2023, PFF) was box 11.1%, wide 10.4%, slot 9.6%, average 9.1%, deep 8.5%. [[11]](https://www.youtube.com/watch?v=7qMan-naRvE) [[12]](https://x.com/IDP_Macri/status/1798077000281985128)
+
+For a prop, multiply expected rushes plus completions faced while the defender is on the field by his historical opportunity rate, then split the projection into solo vs assist using the stadium’s solo share. A 15% finisher in a 66% solo room and a 15% finisher in a 50% solo room can post the same combined total and very different solo props.
+
+## 3. Missed Tackle Rate
+
+Modern PFF missed-tackle rate is missed tackles divided by tackle attempts, expressed as a percentage. Lower is better. It is a charting stat, not an NFLGSIS box-score field, so it will not match the gamebook the book grades on.
+
+Published snapshots:
+
+- Through mid-October 2026, minimum 25 tackles: Bobby Okereke 0.0%, Kevin Winston Jr. 0.0%, Jihaad Campbell 2.1% (1 miss, 29 solos), Evan Williams 2.3%, Daiyan Henley 2.6%. [[13]](https://x.com/PFF/status/2110744001372430392) [[14]](https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/15/eagles-jihaad-campbell-missed-tackle-rate-pff-coverage-trotter/92262596007/)
+- Minimum 30 tackles later that month: Deommodore Lenoir 0.0% on 30, Devin Bush 2.5%, Ernest Jones 2.8%. [[15]](https://x.com/PFF/status/2115594210296377585)
+- Team missed-tackle percentage in 2026, as of November 6 on StatRankings: Detroit 6.9% best, with the top of the league clustered from the high single digits into the low teens. [[16]](https://statrankings.com/nfl/advanced/teams/defense/missed-tackle-percentage)
+
+Older PFF formulas are not the same number. Tackling Inefficiency Rating was missed / (missed + solos) times 100. Tackling Efficiency was attempted tackles / missed tackles, so a higher figure was better. [[17]](https://www.pff.com/news/tackling-inefficiency-rating-part-1) [[18]](https://www.pff.com/news/signature-stat-snapshot-tackle-efficiency)
+
+For betting and IDP, missed-tackle rate is a regression flag, not a settlement input. Macri’s 2025 tackles-versus-expected writeup used it that way: Jordyn Brooks’s career-best 4.3% missed-tackle rate sat next to a strong tackles-versus-expected year, after a 16.5% miss rate in the year he fell short of expected tackles. [[19]](https://www.pff.com/news/fantasy-football-evaluating-2025-idp-linebacker-tackles-vs-expected) A high miss rate means the box score understates how often he was in position. It does not add a solo the home crew failed to award.
+
+IDPGuru publishes a position-split missed-tackle frequency sheet (DL, LB, DB) for draft filtering. The tables themselves are in a linked sheet, not in the article text. [[20]](https://idpguru.com/2025/05/2024-idp-missed-tackle-frequency/)
+
+## 4. Over 0.25 sacks, half-sacks, and co-pressure
+
+When two defenders are equally responsible for dropping the quarterback, each is credited **0.5** and the team is credited **1.0**. Statisticians almost always cap the split at two players. [[21]](https://www.sportingnews.com/au/nfl/news/what-half-sack-nfl-how-players-can-share/3bc208d85b72f04f513dec3d)
+
+Books post **0.25** because 0.5 is a real result. A 0.5 credit is greater than 0.25, so **Over 0.25 wins on a half-sack**. Over 0.5 does not: a lone half-sack lands on 0.5 and pushes if the book grades the official half-sack total. [[22]](https://www.covers.com/nfl/sack-bets-tackle-props-idp-plays-divisional-round-2024) [[23]](https://help.outlier.bet/en/articles/8617744-how-to-research-sack-props-nfl-player-prop-analysis)
+
+Outlier’s framing is the clean one: 0.25 lines are the half-sack market, 0.5 lines are the full-sack market. Their walkthrough states that a half-sack still cashes Over 0.25, while a 0.5 line needs the full sack or else pushes. [[23]](https://help.outlier.bet/en/articles/8617744-how-to-research-sack-props-nfl-player-prop-analysis) [[24]](https://www.youtube.com/watch?v=ZdFlk0KO5Vk)
+
+Two grading styles sit on top of that:
+
+- **Standard total:** 0 loses Over 0.25, 0.5 wins it, 1.0 wins it.
+- **Split-stake / quarter-line at some books:** zero sacks pushes half the stake and loses half. One full sack wins the whole ticket. A half-sack still clears 0.25, so it should win the full Over. Confirm the house rule before you treat 0.25 as a simple win/loss. [[25]](https://blog.statsbench.com/nfl-sacks-props/)
+- **Yes/No “to record a sack”** is a different market. FanDuel’s checked rule settles on the league body and does not spell out what 0.5 does to a yes. Some books count a half as a yes. Some do not. [[26]](https://www.oddsshopper.com/articles/betting-101/nfl-defensive-props)
+
+Covers’ practical note: most sack numbers are set at 0.25 or 0.75 specifically because shared sacks pay 0.5. Read the market name. DraftKings and FanDuel both post these boards. Prices on the same player routinely differ. [[22]](https://www.covers.com/nfl/sack-bets-tackle-props-idp-plays-divisional-round-2024)
+
+**Why interior and edge Overs are correlated**
+
+A shared sack is the product of two rushers, not one. Interior penetration that collapses the pocket and an edge that arrives at the same time is the usual half-sack. Both names get 0.5. Both Over 0.25 tickets cash on that one play. Both Over 0.5 tickets push.
+
+That is why paired 0.25 tickets show up together in IDP betting writeups: Harold Landry (edge) and Jeffrey Simmons (interior) both Over 0.25 against the same offensive line, or Christian Wilkins next to Maxx Crosby. The correlation is the co-pressure itself. One pocket collapse can settle two tickets the same way, so parlaying them is not two independent events. [[27]](https://idpplus.com/best-week-1-nfl-sack-prop-and-big-parlay-pay-offs/)
+
+What actually moves the chance of that shared credit, more than last week’s sack column:
+
+- Pass-rush snaps for each of the two rushers
+- Opponent pressure allowed and time to throw
+- Game script (trailing teams throw more)
+- Whether the book is 0.25 (half-sack wins) or 0.5 (half-sack pushes)
+
+Pressure rate stabilizes faster than sacks. A rusher living in the backfield with a quiet sack line is the profile these 0.25 markets are built for, because one shared finish is enough. [[25]](https://blog.statsbench.com/nfl-sacks-props/) [[28]](https://www.fantasylife.com/articles/fantasy/idp-fantasy-football-strategy-advanced-idp-stats-that-move-the-n)
+
+This is research on how the markets settle, not a recommendation to bet them.
+
+---
+
+## WAVE_7A_COACHING_PROE_TEMPO_SCRIPT_ELASTICITY — Coaching PROE, Neutral Pace, Script Elasticity & Establish-the-Run Tendencies (`grok-4.7`)
+
+A complete table of all five metrics, under those exact definitions, for every offensive coordinator and head coach is not published by @benbbaldwin, @SamHoppen, @statrankings, @SharpFootball, @SumerSports, or @PattonAnalytics. Live X search was rate-limited. What follows is what those sources and the nflfastR code actually document. Almost all public numbers are team-level, not caller-level.
+
+## 1. Pass rate over expected and the nflfastR xpass features
+
+Ben Baldwin’s live `prepare_xpass_data` feeds the xpass model these columns: `down`, `ydstogo`, `yardline_100`, `qtr`, `wp`, `vegas_wp`, era dummies `era2` / `era3` / `era4`, `score_differential`, `home`, `half_seconds_remaining`, `posteam_timeouts_remaining`, `defteam_timeouts_remaining`, and roof dummies `outdoors` / `retractable` / `dome`. Valid plays are 2006 and later, with a known posteam, down, yard line, score differential, and both teams’ timeouts. The model returns `NA` before 2006 because scrambles were not marked. [[1]](https://raw.githubusercontent.com/nflverse/nflfastR/master/R/helper_add_xpass.R)
+
+His write-up of the same model lists the same ideas in words: yard line, home, roof type, down, quarter, half seconds remaining, yards to go, score differential, timeouts for each team, win probability both with and without the spread, and era bins of 2006–2013, 2014–2017, and 2018 onward. It is an XGBoost dropback model. Scrambles count as called passes. [[2]](https://www.opensourcefootball.com/posts/2020-09-28-nflfastr-ep-wp-and-cp-models/)
+
+On each play, `pass_oe = 100 * (pass - xpass)`. Team PROE is the average of those play-level gaps, which is the same as actual dropback rate minus mean `xpass`. [[3]](https://nflfastr.com/reference/add_xpass.html)
+
+A season-versus-last-3-weeks delta is not published by those accounts. The closest public window is Sharp Football’s season PROE versus last 4, updated around Nov. 3–6, 2026. Sharp’s expected rates are fit on 2021–2025 and described as down, distance, quarter, and score difference, so they are not identical to raw nflfastR `mean(pass_oe)`. [[4]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-pass-rate-over-expected/)
+
+| Offense | Season PROE | Last 4 | Last 4 minus season |
+| --- | ---: | ---: | ---: |
+| Bengals | +9.7 | +12.2 | +2.5 |
+| Packers | +6.5 | +7.7 | +1.2 |
+| Panthers | +5.8 | +5.1 | −0.7 |
+| Chiefs | +4.9 | +4.5 | −0.4 |
+| Cowboys | +4.4 | +0.8 | −3.6 |
+| Steelers | +4.1 | +1.3 | −2.8 |
+| Rams | +3.9 | +3.2 | −0.7 |
+| 49ers | +2.6 | +1.2 | −1.4 |
+| Browns | +2.2 | +2.1 | −0.1 |
+| Texans | +1.4 | +1.1 | −0.3 |
+| Saints | +1.4 | 0.0 | −1.4 |
+| Bills | +1.2 | +0.7 | −0.5 |
+| Eagles | +0.7 | +4.0 | +3.3 |
+| Raiders | +0.6 | +1.0 | +0.4 |
+| Patriots | +0.6 | +0.6 | 0.0 |
+| Bears | +0.5 | +2.9 | +2.4 |
+| Cardinals | 0.0 | 0.0 | 0.0 |
+| Lions | 0.0 | −1.3 | −1.3 |
+| Broncos | −0.4 | −2.9 | −2.5 |
+| Jets | −0.5 | −1.2 | −0.7 |
+| Commanders | −1.1 | +1.8 | +2.9 |
+| Colts | −1.8 | −2.3 | −0.5 |
+| Ravens | −2.1 | −0.7 | +1.4 |
+| Titans | −2.3 | −0.1 | +2.2 |
+| Vikings | −2.4 | +1.1 | +3.5 |
+| Seahawks | −3.0 | −3.3 | −0.3 |
+| Jaguars | −3.2 | −3.4 | −0.2 |
+| Giants | −3.6 | −1.4 | +2.2 |
+| Falcons | −6.5 | −0.9 | +5.6 |
+| Chargers | −6.8 | −8.7 | −1.9 |
+| Buccaneers | −8.6 | −17.2 | −8.6 |
+| Dolphins | −10.3 | −13.0 | −2.7 |
+
+Largest recent pass-up among that Last-4 window: Falcons (+5.6), Vikings (+3.5), Eagles (+3.3). Largest recent pass-down: Buccaneers (−8.6), Cowboys (−3.6). A different 2026 tracker (Muffed, through Week 9) had the Bengals at +7.9 rather than +9.7, which is a reminder that filters and training windows move the number. [[5]](https://muffed.ai/stats/pass-rate-over-expected)
+
+Named callers, not a full board: Sam Hoppen had Carolina’s Brad Idzik at +4.2% PROE and the league’s second-fastest pace through four weeks of 2026, and Kyle Shanahan at +4.6% early in 2026 after negative PROE in each of the prior four seasons. Hoppen keeps a public play-caller file, not a PROE file, at `github.com/samhoppen/NFL_public` `all_playcallers.csv`. [[6]](https://samhoppen.substack.com/p/hoppen-to-conclusions-week-5-nfl-496) [[7]](https://samhoppen.substack.com/p/hoppen-to-conclusions-week-4-nfl-545) [[8]](https://x.com/SamHoppen/status/2026688973712568752)
+
+## 2. Pace: neutral versus clock-drain versus hurry-up
+
+The exact split you asked for — seconds per snap at win probability 20–80%, versus up by 7 or more, versus trailing by 8 or more — is not a published series from those accounts. Win probability 20–80% shows up in other situational work, not as their pace definition.
+
+Sharp’s neutral pace is first three quarters, score within 14, excluding the final two minutes of the first half. The table is play-clock seconds used, not game-clock seconds between snaps. “Gear change” is the gap between neutral pace and pace while trailing. Updated Nov. 3, 2026, league average was 32.2 seconds of play clock used overall, 32.7 in neutral, gear change +1.4, no-huddle 6%. Fastest neutral: Saints 30.6, Cowboys 30.7, Titans 31.2, Panthers 31.5, Lions 31.6. Slowest neutral: Jaguars 34.5, Vikings 34.4, Steelers 34.2, Dolphins 34.1. Highest no-huddle in that cut: Titans 20%, Saints 14%. [[9]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-team-pace-stats/) [[9]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-team-pace-stats/)
+
+StatRankings, where Steven Patton works, publishes a different “neutral situation pace” in seconds between snaps. As of Nov. 6, 2026, Carolina was fastest at 29.5, New Orleans 31.3, Tennessee 31.9. That ranking does not match Sharp’s play-clock ranking, which is expected when the unit and the neutral filter differ. [[10]](https://statrankings.com/nfl/advanced/teams/pace-playcalling/neutral-situation-pace)
+
+## 3. Script elasticity
+
+“Script elasticity” — how sharply pass rate rises when trailing, versus stubborn runs into stacked boxes — is not a named metric on those accounts.
+
+The nearest published constructs:
+
+- Sharp’s gear change is tempo elasticity when trailing, not pass-rate elasticity, and it does not include box count. [[9]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-team-pace-stats/)
+- Patton’s play-caller model (v3, Oct. 22, 2026) scores personnel diversification (Shannon entropy of 11 / 12 / 21 / other), sequencing predictability, sequencing volatility, a PROE-plus-pace component, motion rate, and play-action rate. EPA orients the principal components. It is a tendency profile, not a grade of each call. Through Week 6 he had Kyle Shanahan and Andy Reid at the top, with Sean Payton high on process despite negative EPA per play. On Nov. 4, 2026 he listed Shane Steichen 23rd, Kellen Moore 25th, and Sean Mannion 31st. Those ranks are the six-component score, not the five metrics in this request. [[11]](https://pattonanalytics365.substack.com/p/evaluating-play-callers) [[12]](https://x.com/PattonAnalytics/status/2118098823486513271)
+
+No public stacked-box run-rate board for every coordinator turned up from these accounts.
+
+## 4. “Establish It”: 2nd-and-10 run rate after a 1st-down incompletion
+
+That label is not used by the requested accounts. Warren Sharp has published the underlying rate, but the posts that are indexed are older team lists, not a 2026 coordinator board.
+
+First half, 2nd-down run rate after an incompletion (July 13, 2022): Giants 70%, Lions 66%, Titans 65%, Commanders / Vikings / Bears 64%. Low end: Buccaneers 11%, Bengals 18%, Chiefs 21%, Cardinals 22%, 49ers 24%. [[13]](https://x.com/SharpFootball/status/1547308745809711109)
+
+Pass rate on 2nd-and-10 after an incompletion, quarters 1–3, 2022 (April 19, 2023): Bengals 92%, Dolphins 88%, Cardinals 78%, Eagles 77%, Giants 75%, Chiefs 74%. Low end: Bears 29%, Saints 36%, Commanders and Browns 41%, Titans 42%, 49ers 43%. [[14]](https://x.com/SharpFootball/status/1648754730917584910)
+
+Baldwin has argued against the “establish it” story, including an Oct. 29, 2026 post that play-action should still be pressed in high-leverage games even if a team “established it the week before.” [[15]](https://x.com/benbbaldwin/status/2115843430597149158) A 2026 play-caller graphic on this spot exists from Ryan Paganetti, who is outside the account list you named. The image text was not recoverable here, so those names are not repeated.
+
+## 5. First-15 script EPA versus second-half adjustment
+
+SumerSports (Quinn Maclean, Oct. 18, 2024) treats the first 15 plays as the script and compares them with the rest of the game, not with a second-half-only adjustment delta.
+
+Since 2007, 60% of NFL teams had higher EPA per play on those scripted plays than off-script. Year-to-year correlation of scripted EPA per play was 0.25. Off-script was more stable at 0.40. Deep passes graded better inside the script than outside it. Cited scripted-versus-rest gaps include Detroit 2019 near +2 EPA per play, Cleveland 2017 +1.39, Kansas City 2019 near +0.6, and Miami 2022 +0.34 on the script itself. Early 2024, the piece pointed at Detroit, Baltimore, and Tampa Bay as offenses attacking well inside the script. It does not list every 2026 coordinator, and it does not isolate second-half adjustment. [[16]](https://sumersports.com/the-zone/whats-on-the-script-looking-at-how-offenses-approach-the-first-15-plays-of-the-game)
+
+A separate first-15 EPA series, not from the accounts you named, is the usual Andy Reid reference: since 2018 the Chiefs own four of the ten best first-15 seasons by total EPA, led by 2018 at 0.27 EPA per play (64.3 EPA, 50.4% success). [[17]](https://www.theringer.com/2025/02/06/nfl/andy-reid-game-planner-opening-script-kansas-city-chiefs-super-bowl)
+
+## What is actually attributable to a caller
+
+| Source | What it attributes | What it does not |
+| --- | --- | --- |
+| nflfastR / Baldwin | Play-level `xpass` and `pass_oe` from the feature list above | A caller name, an L3 delta, pace splits |
+| Sharp | Team PROE (season and last 4) and team pace / gear change | OC versus head coach, WP 20–80% pace, stacked-box elasticity |
+| StatRankings / Patton | Neutral seconds-between-snaps, plus a six-part play-caller score | The five definitions in this request |
+| Hoppen | Weekly team PROE notes and a play-caller identity file | A full metric board by caller |
+| SumerSports | First-15 versus rest-of-game EPA, mostly 2024 and historical | A 2026 second-half adjustment delta for every caller |
+
+If you want this rebuilt as a caller table, the workable path is Hoppen’s play-caller file joined to nflverse play-by-play: mean `pass_oe` for the season and for the last three team-games, seconds between snaps inside `wp` 0.20–0.80 versus score differential of +7 or more versus −8 or less, pass-rate change when trailing versus early-down run rate into heavy boxes, run rate on 2nd-and-10 after a 1st-down incompletion, and EPA per play on plays 1–15 versus second-half EPA per play. That join is not already published by the accounts you listed.
+
+---
+
+## WAVE_7B_MOTION_PERSONNEL_FORMATIONS_4TH_DOWN — Pre-Snap Motion, Motion-at-Snap, Personnel Groupings & 4th-Down Decision Models (`grok-4.20-0309-reasoning`)
+
+**Pre-snap motion percentage versus motion-at-snap percentage (with emphasis on Shanahan/McDaniel/McVay-style fly/jet/orbit motion for leverage and coverage tells).**[[1]](https://x.com/SethWalder/status/1841157429817405443)[[2]](https://x.com/SethWalder/status/1714644641167917230)
+
+Seth Walder has repeatedly shared tracking data (via ESPN video trackers or Stats & Info) that separates *all pre-snap motion* (any movement before the snap, including players who reset) from *motion at the snap* (the player is still moving parallel to the line when the ball is snapped). League-wide motion-at-snap rates rose sharply from around 4% in 2017 to 14% by 2020, 22% in 2023, and approximately 25% in later seasons. Top users include the Dolphins (McDaniel), 49ers (Shanahan), and Rams (McVay), often exceeding 70–80%+ total motion usage with high shares at the snap.[[3]](https://x.com/SethWalder/status/1305524436167282688)[[4]](https://apnews.com/article/nfl-motion-dolphins-49ers-4eed59e8206cb85b13cb6711f044039b)
+
+These coaches (and the broader tree) weaponize jet/fly/orbit/"cheat" motion to give receivers or backs a running start, create horizontal or vertical displacement, force coverage tells (man coverage tends to follow the motion; zone stays put), generate leverage/mismatches, and produce YAC advantages. Short/timed motion at the snap proved particularly effective for speed players (e.g., Tyreek Hill, Deebo Samuel) before rule tweaks limited certain stance changes or forward-leaning "cheat" techniques. Motion at the snap has shown positive EPA/play value, especially on passes, and is used more on designed runs or to stress defensive fits and run/pass keys. Walder's periodic reports (e.g., through Week 6 or full-season) often include sortable charts or team scatter plots (motion-at-snap rate on runs vs. passes). SumerSports and others discuss how motion creates pre-snap ambiguity for defenses like Brian Flores' blitz-heavy units.[[5]](https://sportsorca.com/nfl/cheap-motion-boom-pre-snap-motion/)[[6]](https://www.sbnation.com/nfl/2023/12/19/23998667/nfl-motion-offense-trends-49ers-dolphins-rams-tyreek-hill)
+
+**Personnel grouping matrices (11, 12, 13, 21, 22, 10, 6-OL jumbo) and defensive responses (Base 4-3/3-4 vs. Nickel vs. Dime vs. Penny/5-1).**[[7]](https://reigncreativellc.com/blog/personnel-groupings-football/)
+
+Standard shorthand counts running backs first then tight ends (the rest are WRs, with 5 OL + QB always on the field): 11 personnel (1 RB, 1 TE, 3 WR) is the most common and flexible passing set; 12 (1-2-2) and 21 (2-1-2) are balanced or run-leaning; 13 (1-3-1), 22, and 6-OL/"jumbo" sets are heavy/run or goal-line oriented; 10 personnel (1-0-4) or empty stretches the defense.[[8]](https://raycarp.com/nfl/personnel)
+
+Defenses historically countered light sets (10/11) with Nickel (5 DBs, often subbing out a LB) or Dime (6 DBs); heavier groupings (12/13/21/22/jumbo) traditionally invited Base (4-3 or 3-4 with 7–8 in the box, more LBs). Modern trends show defenses staying in sub packages (Nickel or hybrid "Star" DB alignments) far more often even against 12/21/22 to prioritize pass coverage, using versatile personnel to maintain multiplicity. Sam Hoppen has posted charts showing team-specific matching—e.g., the Browns defaulting to sub personnel almost regardless of offensive grouping in expected pass situations. Offenses (including Rams under McVay) have shifted toward more 13/jumbo or multiple-TE looks to pull LBs back in or create mismatches.[[9]](https://x.com/SamHoppen/status/2118019863343993187)[[10]](https://www.reddit.com/r/nfl/comments/1ov5975/sam_hoppen_personnel_usage_by_team_by_week/)
+
+Analytics (via nflfastR participation data, SumerSports, Ray Carpenter-style dashboards, or FTN) produce EPA/play matrices by offensive personnel versus defensive package (Base/Nickel/Dime), down, quarter, and situation. Heavier/condensed personnel has increased to distort spacing, force run fits, and open play-action windows; defenses counter with simulated pressures, zone behind blitzes, or hybrid fronts (e.g., 5-1 or 4-2 Nickel family groups). 6-OL jumbo or 13 personnel often aims to create "loaded box" looks that offenses can exploit with leaks or play-action.[[11]](https://substack.com/@matchquarters/note/c-259424376)
+
+**Condensed formation splits versus wide splits.**[[12]](https://www.wsj.com/sports/football/kyle-shanahan-offense-49ers-brock-purdy-christian-mccaffrey-1776f02e)
+
+Condensed (or "tight"/bunch/nasty/box) alignments keep receivers/TEs close to the core or each other (formation width often ~19–22 yards from widest player to widest), as heavily used by Shanahan's 49ers, McVay's Rams, and similar systems. Wide spreads (30+ yards between widest players) were once dominant but have declined as condensed usage rose. Condensed formations force safeties into the box (promoting single-high coverage and isolated outside corners with outside leverage), enable legal traffic/rubs/picks for crossers or outs, improve WR run-blocking involvement, create predictable coverage reactions, and open horizontal/vertical space outside. They pair well with motion, jet sweeps, crack blocks, and play-action.[[13]](https://www.mercurynews.com/2024/02/07/why-the-49ers-use-this-type-of-formation-more-than-anyone/)
+
+Wide splits stretch the field more and can invite two-high shells but make run/pass keys easier for defenses and reduce some rub/pick potential. Next Gen Stats tracking shows the 49ers and similar Shanahan/McVay/McDaniel teams leading in condensed usage, with league-wide formation width narrowing over time. Film breakdowns (McVay "bunch" installs, nasty/boxed variants) emphasize how condensed looks counter modern base defenses installed against spread sets. DB technique adjustments include backing off, using banjo/in-out rules, or bracket concepts against stacks and short motion.[[14]](https://alleyesdbcamp.com/condensed-splits-why-offenses-love-them-and-how-your-dbs-steal-the-space-back/)
+
+**Pistol versus shotgun versus under-center play-action/pass/run tells.**[[15]](https://legionreport.com/shotgun-vs-pistol-vs-under-center/)
+
+Alignment affects run/pass efficiency, play-action selling, quarterback vision, and defensive keys. Under center hides the ball on fakes (best for traditional play-action and outside zone in Shanahan/McVay-style systems), supports downhill power runs, but slows the quick game and pass protection setup. Shotgun (QB 5–7 yards back, RB offset) provides superior pre-snap vision and quick throws but tips run direction more easily and weakens some play-action deception because the defense sees the ball. Pistol (RB directly behind QB at ~4 yards) blends downhill run phasing/spacing similar to under center with shotgun-like QB vision and option/read elements; it has seen renewed interest (e.g., McVay/Rams, Falcons) for activating run concepts in passing situations or creating poor defensive angles without a full back turn on PA.[[16]](https://www.sbnation.com/nfl/2024/9/5/24219476/nfl-offense-trend-piece-pistol-breakdown-analysis-xs-and-os)
+
+Play-action is generally strongest from under center or pistol (better sell, deeper shots); shotgun PA can still work with creative designs but has shown variable efficiency (some data shows shotgun PA competitive or better in certain systems like recent Packers). Tendency charts (motion rate, PA rate, shotgun rate) vary by team—Shanahan-tree offenses often mix under-center early-down runs/PA with shotgun elements. Defenses key on QB depth, RB alignment, TE/wide splits, motion, and personnel for run/pass tells. League shotgun usage is high (~50–70% for many teams), but under-center snaps have ticked up for efficiency with certain QBs on PA.[[17]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-offensive-tendencies-stats/)
+
+**4th-down go-for-it WP-added models and two-point conversion analytics charts.**[[18]](https://rbsdm.com/stats/fourth_calculator/?_inputs_&posteam_to=%223%22&posteam=%22BAL%22&home_ko=%221%22&type=%22reg%22&mins=10&update=0&defteam_to=%222%22&qtr=%221%22&season=%222025%22&away=%22PIT%22&yardline=18&secs=58&score_diff=0&home=%22BAL%22&ydstogo=4&runoff=0)
+
+Ben Baldwin (@benbbaldwin) maintains the widely referenced rbsdm.com fourth-down calculator (powered by nflfastR data). It uses win-probability (WP) models to estimate WP added (or "go_boost") for going for it versus punting or kicking a field goal, factoring in yard line, yards to go, score differential, time remaining, quarter, and timeouts. The interactive tool outputs WP percentages for each choice, success probabilities, and conditional WP if the attempt succeeds or fails. It highlights that NFL teams remain somewhat conservative relative to the model in many spots (especially mid-range 4th downs in opponent territory). Related packages and research (nfl4th, cfb4th) produce charts of go rates versus WP gain or expected boost, showing increased aggression over time when the model shows clear WP upside (often +1–4% or more).[[19]](https://github.com/nflverse/nfl4th/blob/master/vignettes/articles/4th-down-research.Rmd)
+
+Two-point conversion analytics use both expected points (EP) break-even math (roughly a 48–50% conversion rate makes going for two neutral versus an ~94% PAT, given historical success rates around 47–48%) and situational WP charts. These charts map post-TD score differential and time left to recommendations—commonly advising go-for-2 when down 2, 5, 8 (or similar) in the fourth quarter to optimize for later scoring to tie or take the lead by 1/3 points, versus kicking in other spots. ESPN, NFL Next Gen Stats Decision Guide, and analysts have published updated charts accounting for game state; WP models often diverge from pure EP late in close games. Teams have increased two-point attempts in analytically favorable spots, though usage remains selective.[[20]](https://nflanalytic.com/explainer-two-point-conversions.html)[[21]](https://www.espn.com/nfl/story/_/id/33059528/nfl-game-management-cheat-sheet-punt-go-kick-field-goal-fourth-downs-plus-2-point-conversion-recommendations)
+
+These topics interconnect in modern NFL scheme (motion + condensed/heavy personnel + specific alignments to manipulate defensive personnel, coverage, and run/pass keys), with SumerSports, FTNFantasy, Hoppen, Walder, and Baldwin among the primary public data providers. Real-time tracking, participation data, and WP/EPA models continue to refine the edges.
+
+---
+
+## WAVE_7C_REDZONE_GREENZONE_GOAL_LINE_COACHING — Red-Zone, Green-Zone, Inside-5 & Goal-Line Play-Calling & TD Conversion Mechanics (`grok-4.7`)
+
+I'll search X and the web for red-zone, green-zone, and goal-line play-calling and usage metrics across those five categories.
+
+The first pass found partial numbers. I’m digging into the specific red-zone, sneak, and route-conversion sources next.
+
+No public source publishes a complete league table for all five of these. X keyword search was rate-limited, so the posts below are ones already indexed on the web. Numbers are labeled by season and window. Where two charts disagree, both are shown rather than averaged.
+
+## 1. Red-zone PROE and pass/run touchdown mix
+
+**Pass rate over expected (PROE)** is actual dropback rate minus the rate a model expects from down, distance, score, clock, and field position. A positive number means the offense threw more than the situation called for. Neutral PROE drops the final two minutes of each half and plays outside a one-score game. Red-zone PROE is that same gap on snaps inside the opponent’s 20. Establish The Run tracks a dedicated red-zone PROE column and treats it as a leading indicator of future pass-to-rush touchdown mix, with the warning that the sample is small. [[1]](https://establishtherun.com/pass-rate-over-expectation/)
+
+**2025 neutral red-zone and green-zone PROE**, published May 2026 for 2026 fantasy (not a full 32-team list; only the pass-heavy clubs were printed): [[2]](https://www.nbcsports.com/fantasy/football/news/fantasy-football-2026-who-benefits-from-pass-heavy-red-zone-offenses)
+
+| Team | Neutral PROE inside 20 | Rank | Neutral PROE inside 10 | Rank |
+| --- | --- | --- | --- | --- |
+| Rams | +6.4% | 1st | +7.2% | 4th |
+| Chiefs | +3.0% | 3rd | +0.1% | 10th |
+| Broncos | +2.0% | 7th | −5.6% | 20th |
+| Bengals | +1.1% | 6th | +1.0% | 8th |
+| Vikings | +0.2% | 10th | +12.4% | 2nd |
+
+A separate May 2026 post on **PROE inside the 10** (not labeled neutral) had the Vikings at 14.9%, the Rams at 11.1%, the Commanders at −13.6%, and the Saints with Tyler Shough at −29.7%. The Vikings gap versus the table above is a filter difference, not a typo. [[3]](https://x.com/DhananiZain/status/2058980474442170630)
+
+**How that showed up in touchdowns**
+
+- 2024 Bengals were 15.5 points over expected pass rate in the red zone. Joe Burrow’s 122 red-zone attempts led the league, and 30 of his 41 touchdowns came inside the 20. [[2]](https://www.nbcsports.com/fantasy/football/news/fantasy-football-2026-who-benefits-from-pass-heavy-red-zone-offenses)
+- Through late October 2026, the Steelers were first in overall PROE (+6.3%) and first in red-zone PROE. In Aaron Rodgers’ 22 starts, 71% of Pittsburgh touchdowns were passes, against a league pass-touchdown share of 61.6% since the start of 2025. Twelve of 13 Steelers touchdowns this season were passes. [[4]](https://x.com/MarkDank/status/2113332958874800459)
+- One November 2025 note put a club 12th in raw red-zone pass rate at 56%, against a league average of 53%. That is pass rate, not PROE. [[5]](https://x.com/theStevenRuiz/status/1993768746700427445)
+
+There is no published “pass/run touchdown ratio over expectation” leaderboard. The closest public proxies are red-zone PROE and pass share of touchdowns versus the league rate.
+
+**Where the scores actually come from** (Sharp, since 2010; 2025 in parentheses): 73.7% of red-zone touchdowns start inside the 10 (73.1%); 47.3% start inside the 5 (47.2%); 86.4% of rushing touchdowns and 67.1% of passing touchdowns come from the red zone (84.1% and 69.1%). [[6]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-red-zone-stats/)
+
+**2026 trip efficiency**, not play-call tendency: through nine games the league scored a touchdown on 59% of red-zone trips. San Francisco led at 87% (20 touchdowns on 23 trips; 93% on goal-to-go). New Orleans was at 75% (93% goal-to-go). The Jets were last at 42%. [[7]](https://www.malteranalytics.com/sports/nfl/red-zone)
+
+Season-long 2026 PROE, which is not a red-zone split, has Cincinnati first in every public board checked, at about +7.9 to +9.8 depending on the model and week. [[8]](https://www.sharpfootballanalysis.com/stats-nfl/nfl-pass-rate-over-expected/) [[9]](https://muffed.ai/stats/pass-rate-over-expected)
+
+## 2. Quarterback sneak and Tush Push
+
+**Best current combined sample.** Since 2022, on 3rd/4th-and-1 or any snap from the 1-yard line, quarterback sneaks converted at 81.8% with +0.45 expected points added per play. Every other play in those spots converted at 63.8% with +0.03 EPA. [[10]](https://x.com/RyanPaganetti/status/2074909997834592380)
+
+Ball-tracking on 3rd-and-a-full-yard still favors the sneak against the fronts people claim stop it: 75% versus two A-gap defensive linemen (non-sneak runs 67%), and 88% versus a head-up nose plus two 3-techniques (non-sneak runs 73%). [[10]](https://x.com/RyanPaganetti/status/2074909997834592380)
+
+**Usage among play-callers since 2022**, one-yard situations: Joe Brady / Bills 51.9% sneak rate, Kellen Moore / Saints 31.0%, Kyle Shanahan 30.1% (58 sneaks on 193 chances over 76 games). [[11]](https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/07/08/49ers-rely-on-this-play-call-at-high-rate-under-kyle-shanahan/90849866007/)
+
+**Volume since 2022** (PFF, June 2026): Eagles 163, Bills 109, 49ers 73, Steelers 63, Broncos 60. The Chiefs called three, none with Patrick Mahomes. Philadelphia succeeded on 130 of 163 (about 80%). Green Bay, which pushed to ban the play, held the Eagles to 5 of 9 (55.6%), against an otherwise 81.2% Eagles rate. [[12]](https://www.pff.com/news/is-the-tush-push-losing-its-edge-analyzing-nfl-sneak-success-since-2022)
+
+**Eagles first-down rate on the Tush Push, by year:** 2022 88.1%, 2023 83.7%, 2024 77.6%, 2025 65.5%. League-wide sneak first-down rate in 2025 was 75.8%, the first season it beat Philadelphia’s own mark. In 2025 the Bills went 26 of 30, the 49ers 20 of 23, and the Bengals 10 of 10. [[12]](https://www.pff.com/news/is-the-tush-push-losing-its-edge-analyzing-nfl-sneak-success-since-2022)
+
+**Other published conversion rates on 3rd/4th-and-1**
+
+| Sample | Sneak / QB keep | Comparison |
+| --- | --- | --- |
+| Since 2022, sneak plus Tush Push (Warren Sharp, Feb 2025) | Packers 92%, Eagles 90%, NFL 84%, other 31 teams 83% | — |
+| 2017 through Week 8 of 2023 (CBS) | Sneaks 85.9% | All other plays 69.1% |
+| 2001–2015 (FiveThirtyEight) | Sneaks 84% | Non-sneaks 65% |
+| 2024 Eagles Tush Push only (CBS) | 39 of 48, 81.3% | — |
+| 2024, all quarterbacks on 3rd/4th-and-1 | 84% | Running backs about 67% since 2019 |
+| 1999–2025, 4th-and-1 QB carries that were not scrambles | 80% of 1,273 | Other runs 66% |
+| Eagles 4th-and-1 QB carries, 2021–2025 | 38 of 41, 93% (35 by Jalen Hurts) | Bills 21 of 24 |
+
+[[13]](https://x.com/SharpFootball/status/1894212512431673795?lang=en) [[14]](https://www.cbssports.com/nfl/news/evolution-of-the-qb-sneak-how-we-got-here-and-what-history-tells-us-about-the-tush-pushs-future-in-the-nfl/) [[15]](https://atozsports.com/nfl/tampa-bay-buccaneers-news/bucs-offense-doesnt-run-qb-sneaks-but-it-can-be-fixed/) [[16]](https://sports.betmgm.com/en/blog/nfl/tush-push-success-rate-eagles-sneak-nfl-bm06/) [[17]](https://vertizesports.com/blog/nfl-fourth-down-decisions)
+
+A clean sneak-only rate from the 1-yard line, split off from 3rd/4th-and-1, is not published. The 81.8% figure already folds in every snap from the 1. From the 1, a goal-line fade was completed 38% of the time from 2013 through 2018, while a run succeeded more than 54% of the time. [[18]](https://www.pff.com/news/pro-its-time-to-fade-the-fade)
+
+## 3. Designed quarterback red-zone RPO and zone-read keeper share
+
+This is the largest hole. No public table gives designed quarterback keeper share on red-zone run-pass options or zone reads.
+
+What is published:
+
+- Over 2021–2025, run-pass options were 9.5% of all offensive plays. About three-quarters of those RPOs were designed runs. In 2025 only the Rams and Texans passed as often as they ran on RPOs, and both used the concept lightly and mostly near the goal line. [[19]](https://www.pff.com/news/nfl-analyzing-the-effectiveness-of-rpos-over-the-last-five-nfl-seasons)
+- Most run-heavy RPO offenses in 2025: Jaguars 93.2%, Browns 90.9%, Jets 89.6%, Ravens 88.6%, Lions 88.0%. That is run share of RPOs, not red-zone keeper share. [[19]](https://www.pff.com/news/nfl-analyzing-the-effectiveness-of-rpos-over-the-last-five-nfl-seasons)
+
+The closest 2026 personnel split, through Nov. 2, is who touches the ball near the goal line, not whether the quarterback keep was a zone read: [[20]](https://hashtagfootball.com/nfl-goal-line-roles)
+
+| Situation | RB | QB | WR | TE |
+| --- | --- | --- | --- | --- |
+| 1st-and-goal opportunities | 65% | 7% | 17% | 11% |
+| Inside-5 opportunities | 56% | 11% | 20% | 12% |
+| Short-yardage opportunities | 47% | 19% | 20% | 13% |
+
+Quarterbacks took 53 of 330 inside-5 carries, a 16% carry share. That mixes sneaks, designed keeps, and scrambles. It is not an RPO or zone-read rate. [[20]](https://hashtagfootball.com/nfl-goal-line-roles)
+
+## 4. Running-back inside-5 carry share versus third-down substitution
+
+**League shape through Nov. 2, 2026:** 955 goal-to-go snaps produced 898 opportunities and 317 touchdowns (35% per opportunity). Inside the 5, the run rate was 67% (330 carries, 166 targets). Touchdown rate inside the 5 was 46% overall, 42% on carries and 55% on targets. Short-yardage conversion was 69% (runs 72%, passes 63%). Eight running backs held 60% or more of their team’s inside-5 opportunities (minimum three). Fourteen “vulture” flags were tagged: five quarterbacks and nine committee backs. [[20]](https://hashtagfootball.com/nfl-goal-line-roles)
+
+**Inside-5 leaders, same window** (carries, not share of team rushes): [[20]](https://hashtagfootball.com/nfl-goal-line-roles)
+
+| Player | Inside-5 opps | Carries | Targets | Inside-5 TDs |
+| --- | --- | --- | --- | --- |
+| Javonte Williams | 17 | 17 | 0 | 8 |
+| D’Andre Swift | 15 | 15 | 0 | 7 |
+| Derrick Henry | 14 | 14 | 0 | 6 |
+| Kenneth Walker III | 13 | 12 | 1 | 3 |
+| Christian McCaffrey | 12 | 12 | 0 | 7 |
+| Jahmyr Gibbs | 12 | 12 | 0 | 6 |
+| Josh Allen | 10 | 10 | 0 | 8 |
+| James Cook III | 6 | 6 | 0 | 3 |
+
+PFF on Oct. 30 had the same doorstep ranking with a slightly earlier cut: Williams 17 carries inside the 5 and 7 touchdowns, Henry 15 attempts inside the 5, Jeanty 9 carries inside the 5 and only one rushing score. Gibbs and Henry were tied at 36 red-zone carries; Gibbs added 7 red-zone targets for 43 combined chances in six games. [[21]](https://www.pff.com/news/fantasy-football-red-zone-end-zone-opportunities) A later board through Week 9 listed Williams at 20 carries inside the 5, so the count moved after the Oct. 30 and Nov. 2 cuts. [[22]](https://fantasytools.ai/red-zone-stats/)
+
+**2025 team context**, not 2026: the Rams were third in inside-the-5 rushes; Kyren Williams had 30 carries inside the 10 (fifth among backs) and Blake Corum had 16 green-zone chances. Kansas City was 20th in inside-the-5 rushes, with Kareem Hunt taking 13 of 20 and scoring 7. Denver had 19 rushes inside the 5. Minnesota had 15, fewer than all but three teams. [[2]](https://www.nbcsports.com/fantasy/football/news/fantasy-football-2026-who-benefits-from-pass-heavy-red-zone-offenses)
+
+Buffalo is the clearest 2026 quarterback-versus-back split: Josh Allen and the lead back had monopolized all 15 of the team’s goal-line runs in the Week 8 goal-line guide, and Allen led the league in red-zone and goal-line rushing touchdowns at that point. [[23]](https://fantasysixpack.net/2026-fantasy-football-goal-line-guide-week-8/)
+
+**Why the 5 matters more than the 20.** In 2019, a carry between the 20 and the 10 averaged 0.68 fantasy points, a carry inside the 10 averaged 1.91, and a carry inside the 5 averaged 2.91. Carries inside the 5 were 5% of rushes and 64% of rushing touchdowns. [[24]](https://www.pff.com/news/the-fantasy-football-impact-of-carries-inside-the-5-yard-line) [[25]](https://www.nydailynews.com/2020/07/12/fantasy-football-running-backs-to-buysell-based-on-projected-attempts-inside-the-5/)
+
+**Third-down back substitution rules:** no public table pairs inside-5 carry share with third-down snap share or a formal substitution rule. The published pattern is qualitative. The back who gets the carry at the 2 is often the player who was off the field on the drive that got there, which is why early-down and third-down roles and goal-line roles diverge. Hashtag’s vulture flags are the only systematic tag of that split in the sources checked. Team-level inside-5 rush share (I5%) is charted at FantasySixPack, but the full player table is behind a membership wall. [[26]](https://snapcountpicks.com/red-zone-usage-fantasy/) [[27]](https://fantasysixpack.net/fantasy-football-usage-stats/)
+
+## 5. End-zone target share, and fade versus flat versus rub
+
+**Definitions differ, and the boards do not match.** A red-zone target is a throw on a snap inside the 20. An end-zone target is a throw aimed into the end zone, including from outside the 20. Those totals should not be added. [[21]](https://www.pff.com/news/fantasy-football-red-zone-end-zone-opportunities)
+
+**PFF, posted Oct. 30, 2026**
+
+Wide receivers, red-zone targets: Matthew Golden 27, Amon-Ra St. Brown 22, Michael Wilson and CeeDee Lamb 19 each, Christian Watson 18. End-zone targets: Lamb 10 (6 touchdowns), Watson 9 (5), Golden and Wilson 8 each. Wilson had zero touchdowns on those eight end-zone looks. Golden had three touchdowns on eight end-zone targets, with seven drops and a 16.3% drop rate on the season. [[21]](https://www.pff.com/news/fantasy-football-red-zone-end-zone-opportunities)
+
+Tight ends: Trey McBride 19 red-zone targets and 5 end-zone targets (3 touchdowns). George Kittle 14 red-zone targets. Darnell Washington led tight ends with 6 end-zone targets and 3 touchdowns on only 23 targets all year. Mike Gesicki converted 4 of 5 end-zone targets. Sam LaPorta 2 of 5. Colston Loveland 1 of 5. [[21]](https://www.pff.com/news/fantasy-football-red-zone-end-zone-opportunities)
+
+**FantasyTools through Week 9** has much lower red-zone target counts for the same receivers (McBride 19 and a 29% share, Wilson 17, Lamb 16 and a 34% share, St. Brown 16, Golden 14, Jaxon Smith-Njigba 13 and a 35% share). McBride matches. Golden does not (27 versus 14). Treat the PFF and FantasyTools receiver boards as different charts, not one ranking. [[22]](https://fantasytools.ai/red-zone-stats/)
+
+**End-zone target share.** In the Fantasy Points charting era, the league end-zone touchdown rate in 2024 was just under 42%. Drake London led the NFL that season with a 56.0% end-zone target share and converted at about the league rate. Receivers under a 20% end-zone touchdown rate the year before (Garrett Wilson 2022, DK Metcalf 2022, A.J. Brown 2023) bounced to about 38.5% the next year. [[28]](https://www.fantasypoints.com/nfl/articles/2025/statistically-significant-end-zone-targets) CeeDee Lamb led 2026 end-zone targets in a separate usage board with 11, as of late October. [[29]](https://fantasyoutsiders.com/stats-explained)
+
+**Route conversion, not current-season player shares**
+
+From the 5 and in, 2013 through 2018, fades into the end zone were completed just under 33%, the worst rate among routes with more than five targets, and lost 0.08 expected points per target. Quick outs were completed 75%, sticks 60%, crossers 59%, slants 54%. Even elite fade targets (10 or more) converted at about 33%. Only Calvin Johnson cleared 50% in that group. [[18]](https://www.pff.com/news/pro-its-time-to-fade-the-fade)
+
+From the 10 and in, through nine weeks of 2019 (Sports Info Solutions): [[30]](https://www.sharpfootballanalysis.com/analysis/nfl-teams-are-finding-a-new-slant-near-the-goal-line/)
+
+| Route | Attempts | Comp% | TD% | INT% |
+| --- | --- | --- | --- | --- |
+| Slant | 52 | 53.8% | 44.2% | 1.9% |
+| Flat | 51 | 64.7% | 41.2% | 1.9% |
+| Out | 50 | 50% | 36% | 4.0% |
+| Screen / shovel | 35 | 94.3% | 40% | 0% |
+| Fade | 31 | 12.9% | 12.9% (every completion scored) | 6.4% |
+
+Fades were 5.7% of throws from the 10 and in that year. Only 14 of 31 were charted catchable. Slot fades were 0 for 8. Flats in that sample were mostly short of the goal line and depended on a run after the catch, often by a back. [[30]](https://www.sharpfootballanalysis.com/analysis/nfl-teams-are-finding-a-new-slant-near-the-goal-line/)
+
+Since 2018, fade routes have ranked below broken plays in positive-play rate and at the bottom of goal-to-go target types. [[31]](https://www.youtube.com/watch?v=EH0GZY-kWWk) A 2021–2025 route study did not reprint a red-zone fade touchdown rate. It did note that end-zone fades produce almost no yards after the catch, and that crossing routes accounted for 483 receiving touchdowns, 11.6% of all passing scores, over the whole field. [[32]](https://www.pff.com/news/nfl-route-analysis-the-most-and-least-effective-routes-over-the-last-five-years)
+
+**Rub and pick routes:** no league touchdown conversion rate is published. Coaching clips show bunch rubs, return-motion picks, and legal picks into tunnel screens as standard goal-line man-beaters, but those are play diagrams, not a rate. [[33]](https://blogs.usafootball.com/blog/7138/learn-how-nfl-teams-use-pick-plays-to-score-on-the-goal-line) The reason those concepts exist is coverage mix: inside the 20, man coverage was called on 47.3% of dropbacks versus 29.0% between the 20s, and the touchdown rate on those throws was 26.5% against man (1,232 attempts) versus 18.2% against zone (1,371). [[34]](https://outsidezone.io/insights/how-nfl-offenses-beat-coverages/)
+
+## What is still not public
+
+- A full 32-team 2025 or 2026 red-zone and green-zone PROE table. Establish The Run’s red-zone PROE column and Sharp’s PROE tool are the places that table would live; the open pages did not print every club’s red-zone split.
+- A pass/run touchdown ratio over expectation leaderboard.
+- Designed quarterback keeper share on red-zone RPOs and zone reads.
+- Inside-5 carry share set next to a third-down back substitution rule, team by team.
+- Current-season fade, flat, and rub/pick touchdown rates. The route rates above are 2013–2018 and 2019.
+
+Those five gaps are charting products (PFF, Sports Info Solutions, Establish The Run), not missing arithmetic on the open web.
+
+---
+
+## WAVE_8A_OFFICIATING_CREWS_PENALTIES_PACE — NFL Officiating Crew Analytics, Penalty Tendencies, DPI Yardage & Clock Impact (`grok-4.7`)
+
+Professional models treat the crew chief as a small, partially repeatable adjustment on top of team discipline, not as a game-script machine. The useful split is penalty type, not raw flag count. Dead-ball and offensive flags stall drives. Automatic-first-down defensive flags hand hidden yardage to the offense. Large-sample tests say the first effect is real and sticky. The second is mostly noise at the crew level. Neither reliably moves closing totals or spreads once team quality is removed.
+
+### How the models are built
+
+Three public approaches show up repeatedly among Sharp Football, independent observatories, and quantitative shops.
+
+**Type mix, not volume.** Sharp Football’s weekly referee notes (and the cheat sheets from @nflrefstats1, who also posts as working with Sharp) start from one contrast: a crew that leans on defensive holding and roughing the passer changes flow differently from a crew that leans on offensive holding and false starts. They match the crew’s share of those calls to each team’s rate of committing them and of drawing them, then layer historical ATS and totals records. They also track automatic first downs, especially on third down, and the share of flags that are pre-snap. A Super Bowl note on Shawn Smith is typical of the framing: lower playoff flag volume, but a higher share of penalties that produced automatic first downs (35% versus a cited league average of 28.3%).
+
+**Shrinkage projections.** The NFL Officiating Observatory projects each team’s accepted penalties from three inputs: the team’s own discipline, what the opponent tends to draw, and the assigned crew chief’s calling rate. Each input is pulled toward the league average when the sample is small. Projections are stored before kickoff. Through the public track record they have missed actual flag counts by about 3.25 on average, only a hair better than guessing the league average every game (3.34). Cost is scored in expected points: about 6.4 expected points per team per game in 2026, with pass interference and third-down personal fouls the most expensive.
+
+**Variance decomposition.** EdgeDesk’s study of 7,272 games from 1999 to 2025 removes both teams’ season tendencies, then asks what is left for the referee. Crew differences in total flags are real: about 0.52 flags per game (one standard deviation) around a 12.5 league mean, permutation p = 0.001. That is only about 1.9% of variance. A prior-season flag tendency predicts this season’s flags (+0.84 flags per flag of prior tendency) and does not predict total points or the result against the total. High-flag crews went over 49.6% of the time versus 49.3% for low-flag crews. The shop therefore shows the crew as context and does not move a fair line for it.
+
+@NFLOfficiating publishes rules clarifications, not crew rates. nflpenalties.com is the raw ledger most of these models sit on: accepted counts, yards, declined flags, and home versus away, by crew chief and penalty type. No public modeling account under @Austen_Sports turned up in these searches. Assignment feeds used by the data sites come from Football Zebras (Ben Austro) and nflverse.
+
+### 1. Offensive holding
+
+This is the penalty type that actually belongs to the crew.
+
+EdgeDesk: offensive holding averages 2.34 per game. Referee standard deviation is 0.25 (2.8% of variance). Odd-season versus even-season correlation is 0.57, the highest of the types they tested. Year-to-year correlation is 0.35.
+
+Observatory, 2015–25, rates shrunk toward the league average: Shawn Hochuli 2.94 (124 games), Adrian Hill 2.83 (109), Carl Cheffers 2.81 (170).
+
+nflpenalties.com, 2025 accepted offensive holding per game (raw, not shrunk): Adrian Hill 3.20, Alex Moore 3.13, Clay Martin 2.94, Scott Novak 2.82. The low end was Shawn Smith at 1.72 and Brad Allen at 1.75. Home calls exceeded road calls for most crews that year (league totals 384 home, 300 away).
+
+P3 Adaptive’s longer window makes the same point with a simpler contrast: Cheffers 2.76 offensive holdings per game since 2008 versus Vinovich 1.76, against a 2.35 league rate, while their defensive pass interference rates were essentially identical (0.91 and 0.90).
+
+Betting use, as Sharp and the public betting write-ups frame it: holding (with false starts) kills explosives, backs offenses up, and is treated as an under and underdog-script drag when both clubs already hold a lot and the crew ranks high in the category. In 2026, offensive holding is the league’s biggest year-over-year increase, at 3.13 per game versus 2.67 through the comparable 2025 weeks. Sharp’s Week 9 notes put the holding-plus-false-start share near 40% of all assessed penalties, and higher than that for crews such as Alex Moore.
+
+### 2. Defensive pass interference and defensive holding
+
+These are the calls bettors want for deep-ball quarterbacks and overs, because DPI is a spot foul and both DPI and defensive holding can be automatic first downs. Crew identity does not hold up for DPI.
+
+EdgeDesk: defensive pass interference mean 0.89 per game, referee standard deviation only 0.05, share of variance 0.3%, permutation p = 0.17, split-half r = 0.17, year-to-year r = 0.01. Defensive holding plus illegal contact is only weakly repeatable (split-half r = 0.22, year-to-year 0.12). Pass-defense flags as a group (DPI, defensive holding, illegal contact, roughing the passer) do correlate 0.60 across referees in pass-heavy versus pass-light games, with a slightly wider spread when there are more dropbacks. That is a style interaction, not a stable DPI fingerprint.
+
+Observatory still publishes long-run DPI rates, shrunk: Shawn Smith 1.22 (125 games), Adrian Hill 1.21 (109), Brad Rogers 1.14 (108), 2015–25. League DPI has sat near 0.8 to 1.2 accepted calls per game depending on the year (2025 about 1.01; 2026 about 1.12, flat versus the prior year). Defensive holding in 2026 is about 0.75 per game.
+
+Sharp still uses the in-season rank. A Cheffers note flagged his crew as leading the league in defensive penalties and DPI for that week’s matchup. A Torbert note in another week put DPI plus defensive holding at 8.5% of his flags versus a cited league share of 13.3%. The practical model is “this crew’s current defensive-flag rate, crossed with whether this offense actually draws DPI,” not a career DPI prior. Forum and Sports Betting Dime-style trackers that claim 2.5-plus DPI per game should add 2–3 points to the total are not supported by the out-of-sample points test. Spot-foul yardage is real on the plays that are flagged. Crews do not reliably produce those plays at different rates.
+
+### 3. Roughing the passer and unnecessary roughness
+
+Roughing the passer is one of the few defensive fouls with a repeatable crew component. Unnecessary roughness sits inside a broader personal-foul bucket that also repeats.
+
+EdgeDesk: roughing the passer mean 0.37 per game, referee standard deviation 0.07, permutation p = 0.002, split-half r = 0.49, year-to-year r = 0.26. Personal fouls and conduct: mean 1.32, split-half r = 0.56.
+
+nflpenalties.com, 2023 roughing the passer per game, shows a wide raw range on small counts: Shawn Hochuli 0.82 (14 calls in 17 games), Brad Rogers 0.53, Bill Vinovich 0.22, Clay Martin and John Hussey 0.18. League roughing the passer in 2026 is about 0.48 per game, up from 0.39 in the comparable 2025 window. Unnecessary roughness is about 0.66, slightly down.
+
+Sharp treats roughing the passer with defensive holding as an offense-friendly, automatic-first-down family, and has published crew-specific home versus road splits on it. In one three-year Shawn Smith cut, he called more unnecessary roughness and more roughing the passer on home teams than the rest of the league’s road-leaning baseline. @nflrefstats1 has also published quarterback-level beneficiary rates for roughing the passer and unnecessary roughness since 2018, which is a team-draw model rather than a crew model.
+
+Because the counts are small, serious projections shrink hard. A crew that is high on roughing the passer in one season is a mild prior, not a bet by itself.
+
+### 4. Home versus away, and trailing-team catch-up flags
+
+**Home versus road is a league fact, not a crew trait.**
+
+Observatory, 2015–25: 48.6% of accepted penalties were on the home team and 51.4% on the road. In 2026 the split is even. They note the gap can be crowd noise (road false starts) as much as officiating. EdgeDesk: home teams draw 0.40 fewer flags per game league-wide, but the referee-level spread in that gap is indistinguishable from chance (p = 0.23, split-half r = 0.03, year-to-year r = 0.03). nflpenalties.com 2026 crew table is consistent with a small road lean in aggregate (877 accepted on home teams, 892 on road teams through that snapshot), with individual crews flipping either way on six to eight games.
+
+Sharp still publishes crew-specific home and road splits, and historical home-team ATS records, because a single crew can deviate in a short window (Smith’s home penalty-yard surplus in one season is an example they have used). Those splits are descriptive. They do not survive as a stable crew parameter in the 1999–2025 decomposition. Home cover rates for crews that historically flagged home teams more versus less were 50.6% versus 47.9%, not distinguishable from zero.
+
+**Trailing-team catch-up flags are not a standard input in these models.**
+
+The sources that actually publish crew projections (Observatory, EdgeDesk, Sharp’s weekly type-mix notes, nflpenalties.com) do not include a trailing-team or “let them back in the game” parameter. ESPN’s compilation of penalties from 2001 to 2024 found no evidence that more-penalized teams lose more often, and no crew-level challenge bias. In the fourth quarter and overtime, teams that committed impact penalties (defensive holding, DPI, illegal contact, offensive pass interference) tended to win more often than when they did not, about 54% in a recent five-season cut. That is the opposite of a simple “refs bail out the trailer by flagging the leader” rule, and it is not crew-specific. Late-game EPA studies (Berkeley Sports Analytics Group) attribute large late penalty value mainly to DPI’s spot-foul yardage in pass-heavy endgames, which is a play-mix effect: trailing teams throw, so more DPI and roughing opportunities exist. Frequency of clutch penalties is fairly even across teams. A public YouTube audit of roughly 92,000 flags argues officials call more in lower-leverage field position. None of that has been turned into a crew assignment feature by the betting statisticians above.
+
+### 5. Total flags and stoppages versus play volume
+
+League accepted penalties have run from about 11.2 to 13.8 per game across 2015–25, with early weeks higher than late weeks (Weeks 1–4 about 13.6, Weeks 15–18 about 11.3 in that span). 2026 is elevated: 14.6 accepted penalties per game through Week 8 plus one Week 9 game, versus 13.7 in 2025 over the same weeks. About 9% of plays draw a flag. Current crew range is wide in-season and unstable: Scott Novak 19.0 in eight 2026 games against a career 11.7 (2015–25). Alan Eck’s longer recent rate is the quiet end, near 10.8 to 10.9 in the write-ups that have tested it.
+
+EdgeDesk’s bottom line on volume: high-flag crews call about one more flag per game than low-flag crews after team adjustment, and total points do not move. Extra flags do not become extra points on average, which is why a pure flag-count lean is not priced as an edge.
+
+The betting community still separates two mechanisms inside that flat points result:
+
+- Pre-snap and dead-ball flags (false start, delay of game, illegal formation) stop the clock and often kill a down without giving a first down. Sharp treats a high share of these, as with some Torbert and Moore samples, as a grind and an under lean when both teams already jump or hold.
+- Accepted offensive holding removes explosive plays and is scored as negative expected points for the offense. Observatory’s EPA accounting is the clean version of that cost.
+- Automatic-first-down flags do the reverse on the plays they hit, but crew rates for DPI do not repeat, so they are a weak assignment prior.
+
+Play volume itself is only indirectly in these models. Flags per quarter since 2015 run about 2.65, 3.70, 2.98, and 3.28, with the second quarter highest partly because the two-minute drill packs in plays. A crew that throws more administrative fouls reduces snaps. The quantified, out-of-sample result is that this does not produce a reliable over or under once the closing total is the benchmark. Sample-size theater is the main failure mode: single-season ATS streaks (Kemp favorites, Vinovich unders, Moore home teams) are published every week and mostly fail to clear significance when someone holds out prior seasons only.
+
+### What a disciplined assignment model actually contains
+
+Use the crew chief, not the full seven-man crew. Full crews rotate, and play-by-play does not say who threw the flag. Shrink every rate toward the league mean. Put real weight on offensive holding, roughing the passer, and personal fouls. Put little weight on DPI and on home-minus-road as a crew trait. Cross the crew prior with each team’s own penalty and “penalties drawn” rates, especially on third down. Score impact in expected points or in automatic first downs, not in raw flags. Do not add a trailing-team catch-up term unless new evidence appears. Do not move a total off total flags alone. The Observatory projection error and the EdgeDesk points test are the current public ceiling: the crew changes the flag count by a fraction of a call, and the market’s number is not leaving money on that fraction.
+
+---
+
+## WAVE_8B_STADIUM_TURF_WEATHER_ALTITUDE_FATIGUE — Stadium Microclimates, Turf Physics, Wind Tunnels, Altitude & Circadian/Rest Fatigue (`grok-4.7`)
+
+Documented NFL situational factors split cleanly between effects that show up in injury surveillance, kicking physics, and scoring data, and several precise thresholds in the query that do not appear as established research cutoffs.
+
+## Playing surfaces
+
+Fiber type and whether the surface can fail under a cleat matter more than the broad label “turf” or “grass.”
+
+**Slit-film vs monofilament.** Slit-film fibers can split and catch a cleat. League-adjacent engineering analysis (Biocore, aligned with IQVIA) found a statistically higher lower-extremity injury risk on slit-film than the league average, on the order of 2–3 extra non-contact lower-extremity injuries per stadium per season versus other synthetics. An Emory analysis put slit-film at about 1.49 lower-extremity injuries per team-game versus about 1.36 for other artificial surfaces. An AAOS analysis of 2016–2021 data found ankle injuries at 0.671 per game on slit-film versus 0.515 on other surfaces, with higher rates also for hamstring, quadriceps, and Achilles injuries on slit-film relative to grass plus non-slit artificial. Teams largely replaced slit-film after 2022 for that reason. Monofilament products (FieldTurf Revolution and similar) are the surfaces clubs moved toward; injury rates on monofilament sit closer to grass for several injury types, though not all.
+
+**Natural grass vs synthetic, non-contact risk.** The biomechanical mechanism is consistent across studies: natural grass can tear or divot and release the cleat before peak load; synthetic infill holds the cleat and transmits more horizontal force and rotational torque. Mack and colleagues reported about 16% more lower-extremity injuries and about 27% more non-contact lower-extremity injuries on synthetic surfaces in 2012–2016 games. NFLPA summaries of 2012–2018 data cited roughly 28% higher non-contact lower-extremity injuries, 32% higher non-contact knee injuries, and 69% higher non-contact foot and ankle injuries on artificial surfaces. A 2000–2009 FieldTurf-specific study found knee and ankle sprain rates about 22% higher than grass, with ACL sprains about 67% higher. A 2021–2022 analysis found lower-extremity injury incidence of 1.42 per game on artificial turf versus 1.22 on grass, and odds of season-ending surgery about 1.60 times higher on turf. The league’s joint surfaces committee has also reported years (including 2021 and 2023) in which non-contact lower-extremity rates were nearly identical (2023: 0.043 per 100 plays on synthetic versus 0.042 on natural). Year-to-year lines cross; product, maintenance, and cleat interaction all move the rate.
+
+**Bermuda, Kentucky bluegrass, and hybrid.** Lab loading of NFL-type natural surfaces found bermudagrass withstood higher peak force and torque before failure than Kentucky bluegrass, so the two grasses are not interchangeable under a cleat. Emory surface-specific rates were similar for Bermuda (about 1.30) and Kentucky bluegrass (about 1.34). Hybrid systems such as GrassMaster or SISGrass stitch synthetic fibers into natural turf. One ACL series reported per-game rates of 0.134 on GrassMaster, 0.115 on conventional turf, and 0.097 on grass; the non-natural versus grass odds ratio was not statistically significant. Lambeau’s heated hybrid bluegrass is often treated as a high-maintenance grass standard rather than a pure synthetic. Hybrids still lack the full divot-release behavior of unmanaged natural soil.
+
+**40-yard burst and cutting.** College football testing found no meaningful difference in electronically timed 40-yard dash between FieldTurf and natural grass. Change-of-direction (pro-agility) was about 3% faster on FieldTurf. Soccer match-load studies show small increases in high-speed running and in accelerations and decelerations on artificial grass. That pattern fits higher traction: straighter burst speed is similar, cutting can be quicker, and the same grip that speeds the cut is the mechanism linked to non-contact lower-limb injury. NFL-specific published comparisons that isolate slit-film versus monofilament versus GrassMaster versus Bermuda versus Kentucky bluegrass on 40-yard burst or peak cutting deceleration were not found. Player surveys have long reported feeling faster on synthetic surfaces and more sore afterward.
+
+## Wind, stadium orientation, and kicking and deep passes
+
+Wind is the weather variable that reliably moves points. One multi-year scoring set: about 44.4 points per game under 8 mph, 42.3 at 8–14 mph, 40.7 at 15–21 mph, and 33.4 at 22 mph or more, with pass-play share falling from about 59.5% in calm air to about 52.7% above 22 mph. Field-goal make rate from 40–49 yards was about 74.3% in calm conditions versus about 66.6% at 15 mph or more. A separate kick sample found the drop starting near 10 mph on longer attempts and becoming clear by 15 mph; 40–49 yard attempts in 10–14 mph wind finished several points below expectation. Crosswind is harder to correct than a straight headwind once the attempt is beyond the mid-30s, because the ball is pushed sideways for the whole flight. Gusts and stadium swirl are not the same as a sustained airport reading; bowls can accelerate or reverse local flow.
+
+The exact nonlinear breakpoints of 12 mph and 17 mph were not recovered as standard published thresholds. The breakpoints that do appear repeatedly are roughly 10 mph (longer kicks start to miss expectation), about 15 mph (passing efficiency and 40-yard field goals degrade measurably), and 20–22 mph (deep game largely checked down, scoring falls sharply).
+
+**Buffalo, Highmark.** The old open bowl was known for swirl that could kill a ball at the top of its arc even with a nominal tailwind. The new Highmark design uses a partial canopy and perforated exterior panels, refined with computational fluid dynamics, to break the suction that pulls wind down into the bowl. Design claims put field-level wind at roughly one-third of the old stadium, strongest protection on the prevailing southwest side. It remains open-air.
+
+**Pittsburgh, Acrisure.** The horseshoe opens at the south end toward the rivers and downtown. Wind enters that open end and forms swirls rather than a clean headwind or tailwind. Filling in part of the south end reduced the effect; it did not remove it. In one recent season, visiting kickers made 77.8% of field goals there against a league average near 85.6%. The surface is Kentucky bluegrass.
+
+**MetLife.** Open ends run roughly north–south. Prevailing autumn flow is often west to east, so the stadium more often sees crosswind than a pure end-to-end tunnel, though nor’easters can align with the long axis and funnel. Kickers who worked there have described flow coming in from the end zones to about the 30s, then shifting across the field between the 30s, so a deep throw or field goal can meet a different wind at midfield than at the spot of the kick. Swirl makes pregame range checks day-specific.
+
+**Cleveland, Huntington Bank Field.** This is a fully open lakefront bowl on Lake Erie, not a classic two-open-end tunnel. Lake wind and cold are the defining exposure; the north and upper lake-facing sections are the most open, the south sideline somewhat more sheltered. The field is heated Kentucky bluegrass. Published quantitative deep-pass or field-goal accuracy curves specific to this bowl, at the wind speeds in the query, were not found. The practical effect is the same class of problem as other exposed northern grass stadiums: once sustained wind is in the mid-teens, deep shots and kicks beyond 40 yards become lower-percentage for both teams.
+
+## Empower Field altitude
+
+Empower Field sits at 5,280 feet. Air density there is roughly 82–83% of sea level, about 17% thinner. Gravity barely changes; drag does.
+
+A constant-speed physics model of a kick at that elevation produced about 4 to 5 extra yards of range versus the same kick at sea level. Special-teams coaches who have worked the building have described about 5 yards, or 5–6 yards on a calm day. An older outdoor-stadium comparison of field-goal success treated Denver range as about 5 yards longer than other outdoor venues. Make rate on 50-plus-yard attempts has run higher in Denver than at other outdoor stadiums (one recent compilation: 68.0% versus 62.4%), and coaches attempt a larger share of those kicks because the ball carries. Cold dense air partially offsets the altitude gain. Accuracy is not automatically easier; the ball also “jumps,” so touch and trajectory change for visitors.
+
+Hypoxia is separate from ball flight. Unacclimated athletes get fewer oxygen molecules per breath. Full red-cell adaptation takes on the order of one to three weeks, which a road week cannot provide. Reported effects are slower recovery between snaps, faster dehydration, and fatigue that shows more in the second half than the first. High-effort anaerobic positions, including defensive linemen, are a plausible place for that to appear, because they already operate near the edge of recovery between plays. Published work does not isolate a quantified “visiting defensive line hypoxia” effect. Broader scoring checks are mixed: one analysis found visitors scoring slightly fewer fourth-quarter points in Denver than elsewhere, while season-long away scoring and home-win rates in recent decades sit closer to ordinary home-field norms than the old mile-high legend implies.
+
+## Circadian travel, short weeks, overtime, and Europe
+
+**West-to-East, 1:00 p.m. ET.** A Pacific body clock reads that kickoff as about 10:00 a.m. The best-known circadian NFL study (night games after 8:00 p.m. ET, 1970–2011) found West Coast teams covering the spread about 66% of the time, by about 5.3 points, against Eastern opponents. The same study’s daytime control games showed no significant edge either way. A 2000–2025 closing-line check of Pacific teams in 1:00 p.m. ET road games was 140–135–7 against the spread, about 50.9%, in line with all road teams. The early-kickoff disadvantage is still discussed by teams and still shows up in single seasons. It does not show up as a stable market edge once spreads and modern sleep routines are in the data. The clearer historical signal is the night game, when West Coast players are nearer their late-afternoon performance peak and East Coast players are not.
+
+**Thursday short week.** Sunday-to-Thursday leaves roughly three recovery days instead of six. League injury surveillance has generally found similar in-game injury rates on Thursday versus Sunday, and scoring totals are similar as well. The gap that medical staffs describe is availability before kickoff: soft-tissue problems that would clear with extra days do not, and the week often includes little or no padded work. Offensive and defensive linemen are the positions most often cited for contact load and incomplete recovery. A published performance decrement specifically tied to “zero padded practices” for the trenches was not found; the supported claim is compressed recovery and a thinner injury report, not a measured trench-speed tax.
+
+**After overtime.** Overtime adds snaps at the end of a game that has already produced a full defensive workload. Average team defensive snap counts sit in the low-to-mid 60s; overtime and failed three-and-outs push individuals well above that, sometimes past 90 or 100. Defensive-line coordinators commonly target rotations in the 30–45 snap range because pass-rush quality falls when those players are gassed. A Thursday game immediately after overtime is the scheduling spot with a reported against-the-spread lean in one betting study. A validated exhaustion threshold at more than 78 defensive snaps was not found in the literature. High counts in the 70s are treated as a heavy burden in team reporting, not as a magic cutoff.
+
+**Return from Europe.** Eastbound travel is the harder circadian shift because sleep must move earlier. London is five hours ahead of Eastern time, so a local afternoon kickoff can feel like morning to a U.S. body clock. A common applied rule is about one day of adjustment per time zone crossed. Teams that fly midweek and shift light, meals, and sleep do better than teams that arrive the day before. A 2026 Melbourne case (a much larger time shift) contrasted a club that arrived a week early with one that arrived about a day prior; the early arrival dominated, but single-game case studies cannot separate travel from team quality. Documented athlete effects of long-haul eastward trips include fragmented sleep, slower reaction time, reduced power, stiffness from the flight, and dehydration. Injury risk in the first few days after return is less studied than season-long travel load.
+
+Where the query’s exact cutoffs (12 mph, 17 mph, +4.5 yards, more than 78 defensive snaps, zero-padded trench fatigue) are slightly off the published figures, the nearest supported values are the ones above: field-goal and deep-pass degradation from about 10–15 mph, a sharp scoring drop above about 22 mph, roughly 4–5 extra yards of kick range in Denver, and overtime or short-week fatigue that is real but not pinned to a single snap number.
+
+---
+
+## WAVE_8C_INCENTIVES_NARRATIVES_MARKET_MICROSTRUCTURE — Contract Incentives, Revenge Spots & Sportsbook Market Microstructure (Pinnacle/Circa/DK/FD) (`grok-4.20-0309-reasoning`)
+
+**NFL contract incentives and escalators are governed by the CBA (Article 13, Section 6), which limits individual performance categories to specific Exhibit B items.** These include rushing/receiving yards, receptions, touchdowns, sacks, interceptions, passer rating (typically with a minimum of 224 attempts), completion percentage, yards per attempt, and playtime bonuses (offensive or defensive snap percentage, often excluding special teams). Honors like Pro Bowl or All-Pro also qualify.[[1]](https://overthecap.com/collective-bargaining-agreement/article/13/section/6/(c)(xi)/)[[2]](https://operations.nfl.com/inside-football-ops/nfl-operations/nfl-free-agency/contract-language/)
+
+Incentives are classified as **LTBE** (likely to be earned, based on the player or team repeating prior-year performance) or **NLTBE**. LTBE counts against the current salary cap; NLTBE does not until earned, with reconciliation at season’s end that can create cap credits or charges the following year. Salary escalators (e.g., sack or reception thresholds that raise future base salaries) function similarly but vest as raises rather than one-time bonuses.[[3]](https://www.footballnationusa.com/post/how-nfl-contract-incentives-affect-the-salary-cap)[[4]](https://www.cbssports.com/nfl/news/agents-take-inside-2025-performance-bonuses-for-sam-darnold-bradley-chubb-and-other-notable-nfl/)
+
+**Spotrac and OverTheCap** actively track these in real time. Examples include tiered bonuses (e.g., $500k each for 70/80/90/100 catches or 1,000/1,100/1,200/1,300 receiving yards), sack escalators (e.g., thresholds at 3.5/5, 7/8/9/10, or 12.5/14 sacks), playing-time ladders (55%, 60%, 65–85% snap thresholds), and QB stats (100+ passer rating, 28+ TDs, 4,000+ yards, 67.5% completion). Rookie contracts (rounds 2–7) include standardized **Proven Performance Escalators (PPE)** that raise Paragraph 5 salary in year 4 based on snap% thresholds (e.g., Level 1 at 35–60% in two of first three seasons or cumulatively; stricter sustained-starter rules for higher levels). First-round picks and UDFAs are ineligible.[[5]](https://www.spotrac.com/nfl/contracts/incentives/_/year/2025)[[6]](https://www.footballnationusa.com/post/how-nfl-proven-performance-escalators-reward-draft-picks)
+
+**Coaches do not reliably “force-feed” players near milestones.** An incentive signals a meaningful role or usage threshold that is already supported by the player’s usage, but it is not a guarantee of manufactured touches or snaps if it harms team performance. The bonus is secondary to the player’s established role; fantasy or betting analysts treat proximity to thresholds as context rather than a coaching mandate. Late-season examples (e.g., WRs needing receptions/yards/TDs for escalators, edges chasing sacks, QBs near rating/yardage/TD marks) appear in Spotrac trackers, but outcomes depend on game script, health, and scheme more than cap engineering.[[3]](https://www.footballnationusa.com/post/how-nfl-contract-incentives-affect-the-salary-cap)
+
+**@Spotrac** frequently posts live updates on players maxing incentives (e.g., Baker Mayfield’s top-5/10 passer-rating, completion, yards/attempt, TD, and yards bonuses; Gardner Minshew snap incentives; Jalen Carter sack/Pro Bowl/DPOY escalators; various reception, yardage, and TD escalators for WRs and TEs). These highlight real-time tracking but do not generally claim systematic force-feeding.[[7]](https://x.com/spotrac/status/1875554784549523644)
+
+**Layered revenge and coaching-tree familiarity** receive less quantitative treatment in the searched accounts. “Revenge” narratives (coach or player facing a former team after being fired, benched, or traded) are common qualitative betting angles, sometimes layered with scheme familiarity. Coaching-tree spots—e.g., a coordinator facing a former head coach—can imply schematic advantages or tendencies (knowing play-calling quirks, personnel usage, or weaknesses). Accounts like @TheHammerHQ discuss matchup-specific factors in video content but did not surface many explicit “layered revenge” or tree-familiarity threads in the semantic results. These remain situational narrative edges rather than systematic, data-driven ones compared with incentives or market moves.[[8]](https://x.com/TheHammerHQ/status/2116560833635581952)
+
+**Market microstructure details align with sharp-betting commentary from @UnabatedSports, @PlusEVAnalytics, @spanky, and related sources.** Pinnacle, Circa, and BookMaker (along with a small set of other market-makers) originate many Sunday-night or Monday-morning “look-ahead” lines for the following week once the current slate ends. These books use low vig, high limits, and model-driven opens that sharp syndicates immediately test. Retail books and derivatives follow, often with shading for public biases (favorites, overs, primetime narratives).[[9]](https://comparenbet.org/guide-market-efficiency)[[10]](https://dawghousepicks.com/kennel/nfl-totals-timing-opening-to-closing-line/)
+
+**Sharp steam moves** are rapid (often within minutes), simultaneous line shifts across multiple books, frequently beginning at Pinnacle or Circa. They reflect coordinated syndicate action on mispriced numbers and differ from public-driven movement. Public betting shows high *ticket* percentages on popular sides (favorites, overs) but lower *handle* (dollar volume) when sharps oppose them. **Reverse line movement** (line drifting against heavy ticket percentage) is a classic sharp signal. Early-week moves (Sunday night–Tuesday) are purest; later steam can incorporate news. @spanky has discussed Circa hanging numbers out of consensus and using line history to anticipate movement; @UnabatedSports emphasizes understanding lineup/injury impacts on market adjustment.[[11]](https://nflanalytic.com/betting-sharp-public.html)[[12]](https://wagerbird.com/learn/reading-line-movement)[[13]](https://x.com/spanky/status/1865834345832820900)
+
+**Wong teasers** target the NFL’s structural key numbers—primarily 3 (most common margin, ~15%) and 7 (~9%), with 6, 10, and 14 also relevant (two field goals, TD+FG, two TDs). The classic **6-point Wong** uses two-team -110 teasers on dogs +1.5 to +2.5 (teased to +7.5 to +8.5) or favorites -7.5 to -8.5 (to -1.5 to -2.5) to cross both 3 and 7. This captures the highest-probability margins efficiently. Updated considerations under modern 4th-down aggression and 2-point conversion trends include lower totals (≤48–49) and road teams in some analyses; 10-point versions can cross additional keys (3/7/10). Value has compressed over time as books adjusted, but the arithmetic of crossing dense scoring clusters remains the core rationale. Calculators and historical data confirm the specific windows outperform generic teasers.[[14]](https://gambleverdict.com/betting/blog/wong-teaser-explained/)[[15]](https://www.covers.com/nfl/teaser-strategy)
+
+**1Q and 1H lines** are derivatives of full-game models, adjusted for pace, early-game tendencies, and variance. They can offer softer pricing or different edges than full-game markets.
+
+**DraftKings and FanDuel Same-Game Parlays (SGPs)** carry 15–30%+ hold (vs. ~4–5% on sides/totals) because of correlation modeling. Legs within one game are positively correlated (e.g., QB passing yards and WR receiving yards; player props with team totals or game outcome). Books use **Gaussian copulas** (or similar correlation matrices and empirical tables) to estimate joint probabilities while preserving marginals. This joint probability exceeds the naive independent product, so payouts are shaded lower—the “correlation tax.” Per-leg margins compound; FanDuel has shown higher parlay/SGP hold than DraftKings in some regulatory data, attributed to model quality. @PlusEVAnalytics has noted that correlated SGPs are “complex and hard to price” and exist primarily to extract edge from recreational bettors; sharp players look for rare mispricings or avoid them. Independence assumptions dramatically overstate fair payouts on SGPs.[[16]](https://bidcanvas.com/research/same-game-parlay-data-edge)[[17]](https://wizardofodds.com/article/same-game-parlays-the-mathematics-of-correlation/)[[18]](https://x.com/PlusEVAnalytics/status/1996412547143201109)
+
+**Overall**, @Spotrac and @OverTheCap dominate incentive tracking with granular, real-time data. Sharp-market accounts (@UnabatedSports, @PlusEVAnalytics, @spanky, @TheHammerHQ, @CaptainJack2000) emphasize origination at Pinnacle/Circa, steam vs. ticket/handle dynamics, Wong-style key-number math (adjusted for modern rules), and the structural edge books hold on correlated SGPs via copula-style modeling. Revenge/coaching-tree spots remain more narrative than systematic in the returned content. These factors combine quantitative cap mechanics, matchup familiarity, and market microstructure into sharper NFL betting analysis. Always cross-reference current trackers, line movement, and model outputs rather than treating any single angle as automatic.
+
+---

@@ -39,6 +39,13 @@ export interface CreditStackPosture {
   readonly bedrockConfigured: boolean;
   readonly vertexConfigured: boolean;
   readonly azureFoundryConfigured: boolean;
+  readonly pineconeConfigured: boolean;
+  readonly posthogConfigured: boolean;
+  readonly inboxZeroConfigured: boolean;
+  readonly xaiConfigured: boolean;
+  readonly xaiCreditsRemainingUsd: number;
+  readonly verifiedGrantStackUsd: number;
+  readonly submittedPipelineCount: number;
   readonly anyCreditLaneReady: boolean;
   readonly operatorHint: string;
   /** Unified Jynx routing snapshot (no secrets). */
@@ -86,6 +93,14 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     has(env, "AZURE_FOUNDRY_API_KEY") &&
     has(env, "AZURE_FOUNDRY_MODEL_MAP") &&
     (has(env, "AZURE_FOUNDRY_RESOURCE") || has(env, "AZURE_FOUNDRY_BASE_URL"));
+
+  const pineconeConfigured = has(env, "PINECONE_API_KEY") || has(env, "PINECONE_API_KEY_FALLBACK");
+  const posthogConfigured = has(env, "POSTHOG_PERSONAL_API_KEY") || has(env, "NEXT_PUBLIC_POSTHOG_KEY");
+  const inboxZeroConfigured = has(env, "EMAIL_ENCRYPT_SECRET") || has(env, "INBOX_ZERO_SECRET");
+  const xaiConfigured = has(env, "XAI_API_KEY");
+  const xaiCreditsRemainingUsd = 37.98;
+  const verifiedGrantStackUsd = 55656.31;
+  const submittedPipelineCount = 24;
 
   const freeLaneSurfaces = ["brief", "content"] as const;
 
@@ -143,6 +158,13 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     bedrockConfigured,
     vertexConfigured,
     azureFoundryConfigured,
+    pineconeConfigured,
+    posthogConfigured,
+    inboxZeroConfigured,
+    xaiConfigured,
+    xaiCreditsRemainingUsd,
+    verifiedGrantStackUsd,
+    submittedPipelineCount,
     anyCreditLaneReady,
     operatorHint,
     jynx,

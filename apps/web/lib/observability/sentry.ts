@@ -67,10 +67,18 @@ export function initObservability(): void {
     tracesSampleRate,
     replaysSessionSampleRate,
     replaysOnErrorSampleRate: 1.0,
-    ignoreTransactions: ["/api/cron/free-spine-health", "/api/health"],
+    ignoreTransactions: [
+      "/api/cron/free-spine-health",
+      "/api/health",
+      "/api/ops/public-surface-truth",
+    ],
     beforeSendTransaction(event) {
       const txn = event.transaction ?? "";
-      if (txn.includes("/api/cron/free-spine-health") || txn.includes("/api/health")) {
+      if (
+        txn.includes("/api/cron/free-spine-health") ||
+        txn.includes("/api/health") ||
+        txn.includes("/api/ops/public-surface-truth")
+      ) {
         return null;
       }
       return event;

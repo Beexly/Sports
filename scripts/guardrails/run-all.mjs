@@ -91,6 +91,7 @@ const GUARDS = [
   ["agent-bash-guard", ["node", "scripts/guardrails/agent-bash-guard.mjs", "--selftest"]],
   ["node-version-parity-test", ["node", "--test", "scripts/guardrails/node-version-parity.test.mjs"]],
   ["node-version-parity", ["node", "scripts/guardrails/node-version-parity.mjs"]],
+  ["ingestion-source-clearance", ["node", "scripts/guardrails/ingestion-source-clearance.mjs"]],
 ];
 
 /**

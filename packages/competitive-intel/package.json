@@ -1,0 +1,21 @@
+{
+  "name": "@sports/competitive-intel",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "description": "Rival harvest adapters, provenance stamping and reconciliation inputs. Read-only, tier-gated.",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sports/types": "*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "typescript": "^5.4.5",
+    "vitest": "^2.1.1"
+  }
+}

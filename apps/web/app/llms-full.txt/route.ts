@@ -17,15 +17,16 @@ Galaxy Sports Edge (${siteUrl}) provides plain-English, film-backed NFL analysis
 
 Official Verified Record: **62-23-1 (72.9% · +26.50u)**.
 
-## 2. Our 5-Step Football Breakdown Process
-1. **Step 1 — Active 32-Team Roster & Injury Verification:**
-   - Confirms active starting quarterbacks, offensive line availability, injured reserve and practice-report exclusions, and vacated target/carry shares before grading any market.
-2. **Step 2 — Coaching Tendencies & Film Charting:**
-   - Evaluates pass rate over expectation, neutral pace, motion at the snap, personnel groupings (11, 12, 21), blitz and stunt tendencies, and two-high vs single-high coverage shells.
+## 2. Our 5-Step Football Breakdown Process (GSE & GSI)
+1. **Step 1 — Active 32-Team Roster, Beat-Writer & GSI Sports Medicine Verification:**
+   - Confirms active starting quarterbacks, offensive line availability, injured reserve and mid-week practice-report participation across all 32 NFL beat desks, and vacated target/carry shares before grading any market.
+   - **Galaxy Sports Institute (GSI) Sports Medicine & Biomechanics:** Evaluates position-specific return-to-play degradation curves across high-ankle syndesmotic sprains, hamstring sprint-speed caps and re-injury risk, turf toe push-off loss, quarterback rib/shoulder velocity changes, concussion return protocols, and short-week trench recovery deficits.
+2. **Step 2 — Coaching Trees, Tendencies & Film Charting:**
+   - Evaluates head coach, offensive coordinator, and defensive coordinator play-calling trees, pass rate over expectation, neutral pace, motion at the snap, personnel groupings (11, 12, 21), blitz and stunt tendencies, and two-high vs single-high coverage shells.
 3. **Step 3 — Offensive & Defensive Line Trench Matchups:**
-   - Measures pocket protection time, edge rush win rates, interior run-blocking displacement, and fourth-quarter defensive front fatigue.
-4. **Step 4 — Situational & Weather Context:**
-   - Accounts for Thursday Night short rest, cross-country travel, outdoor wind and precipitation effects on kicking and deep passing, and late-game clock scripts.
+   - Measures pocket protection time, weakest-link offensive line pressure leaks, edge rush win rates, interior run-blocking displacement, and fourth-quarter defensive front fatigue.
+4. **Step 4 — Situational, Officiating & Weather Context:**
+   - Accounts for Thursday Night short rest, cross-country travel, altitude, referee crew penalty tendencies, outdoor wind and precipitation effects on kicking and deep passing, and late-game clock scripts.
 5. **Step 5 — Two-Sided De-Vigged Line Comparison & Pass Discipline:**
    - Compares our fair football price against live de-vigged sportsbook odds. Confidence is always displayed as XX/100 (never as a raw percentage), and any market without clear line value is marked PASS · NO BET.
 

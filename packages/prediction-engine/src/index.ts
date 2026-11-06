@@ -5887,6 +5887,10 @@ export { buildContextualBitmask288 } from "./mcp/bitmask-schema.js";
 export { evaluateCausalPrmTrajectory } from "./reasoning/causal-prm.js";
 export { verifyAndBrandCausalReceipt } from "./verification/neuro-symbolic-z3-verifier.js";
 export { evaluateEmissionGate, isEmission } from "./edge-lab/emission-gate.js";
+export * from "./engine/mega-sweep-2026-11-06-reasoning-engine.js";
+export * from "./engine/universal-nfl-metric-and-situational-engine.js";
+export * from "./retrieval/pinecone-corpus-retriever.js";
+
 
 
 

@@ -28,3 +28,10 @@ export function shouldRenderMicrosoftClarity(
 ): boolean {
   return isAnalyticsMasterEnabled(analyticsEnabled) && isPresentEnvValue(clarityProjectId);
 }
+
+export function shouldRenderPostHogAnalytics(
+  analyticsEnabled: string | undefined,
+  posthogProjectKey: string | undefined,
+): boolean {
+  return isAnalyticsMasterEnabled(analyticsEnabled) && isPresentEnvValue(posthogProjectKey);
+}

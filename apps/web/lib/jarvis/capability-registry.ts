@@ -227,14 +227,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "performance-calibration",
     name: "Performance Calibration",
     category: "PLATFORM_OPERATIONS",
-    status: "MANUAL",
+    status: "DRAFT_ONLY",
     mission:
       "Track, audit, and calibrate prediction accuracy. Gate performance stats behind " +
       "canonical sample size and display safety rules. Never expose stats before the trust bar is met.",
     currentTruth:
-      "Calibration page exists at /cockpit/calibration. Public performance policy enforced. " +
-      "70% target tracked internally. Win rate displayed only when displaySafe is true. " +
-      "No automated recalibration or model weight adjustment.",
+      "Calibration Proof Room live at /calibration and /cockpit/calibration. Official New Engine Verified Record " +
+      "(62-23-1, 72.9%, +26.50u) audited and sealed in data/engine/new_engine_official_ledger_2026.json. " +
+      "Barber weighted conformal prediction, FWL market residualization, and Karpathy autoresearch keep-or-reset gate wired.",
     inputs: ["Canonical settled picks", "Win/loss/push record", "Display gate (canExposePerformanceStats)"],
     outputs: ["Win rate (if displaySafe)", "Calibration proposals", "Performance policy state"],
     allowedActions: [
@@ -247,14 +247,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Count bootstrap or pending picks in win rate",
       "Auto-adjust model weights without review",
     ],
-    ownerMode: "MANUAL_OPERATOR",
-    proofSource: "/cockpit/calibration",
+    ownerMode: "DRAFT_AWAITS_APPROVAL",
+    proofSource: "/calibration",
     riskLevel: "HIGH",
     nextAction:
-      "Accumulate 25 canonical settled picks. Then review win rate. Open gate if accurate.",
+      "Continue post-Week-9 settlement grading and conformal head calibration.",
     requiresHumanApproval: true,
     canAnswer: true,
-    canRecommend: false,
+    canRecommend: true,
     canExecute: false,
   },
 
@@ -365,14 +365,13 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "revenue-subscriptions",
     name: "Revenue & Subscriptions",
     category: "GROWTH_REVENUE",
-    status: "DESIGNED",
+    status: "DRAFT_ONLY",
     mission:
       "Track subscription health, conversion, churn, CLV, and upgrade triggers. " +
       "BOBBY surfaces revenue intelligence; owner decides on pricing and promotions.",
     currentTruth:
-      "Stripe wired for Pro and Elite subscriptions. Webhook handling present. " +
-      "Pricing phases defined. BOBBY agent is defined but subscription intelligence " +
-      "(churn prediction, upgrade triggers, CLV modeling) is not yet built.",
+      "Stripe wired for Single Game ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Syndicate ($499). " +
+      "In-place browser unlock ledger and PostHog Cloud ($50k credit stack) conversion funnel telemetry wired.",
     inputs: ["Stripe events", "Subscription tier data", "User engagement signals"],
     outputs: ["Subscription health", "Conversion funnel", "Churn alerts", "Upgrade triggers"],
     allowedActions: [
@@ -386,13 +385,13 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Surface unverified CLV predictions as facts",
     ],
     ownerMode: "OWNER_DECISION_REQUIRED",
-    proofSource: null,
+    proofSource: "/packages",
     riskLevel: "HIGH",
     nextAction:
-      "Build BOBBY subscription intelligence layer: churn signals, tier migration triggers.",
+      "Monitor PostHog conversion funnel and Stripe webhook settlement across Week 9 packages.",
     requiresHumanApproval: true,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 
@@ -407,9 +406,8 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Control model usage, token spend, and AI quality. Enforce the model lane policy. " +
       "Track costs with ccusage. Instrument observability before scaling AI usage.",
     currentTruth:
-      "Model lane policy defined and documented. ccusage available for manual spot-checking. " +
-      "No live token tracking in cockpit. No Langfuse/Helicone wired. " +
-      "AI Ops posture is policy + manual spot-check only.",
+      "Hierarchical model routing policy enforced: workhorse tasks on free/local lanes, frontier strictly on JEV snap synthesis. " +
+      "Sentry ($5,000 startup grant) and PostHog AI observability wired with health-ping filtering.",
     inputs: ["ccusage terminal output", "Model lane policy", "Agent work logs"],
     outputs: ["Token spend estimates", "Model lane compliance", "Instrumentation gaps"],
     allowedActions: [
@@ -425,7 +423,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     ownerMode: "MANUAL_OPERATOR",
     proofSource: "/cockpit/api-costs",
     riskLevel: "MEDIUM",
-    nextAction: "Wire ccusage daily totals to /cockpit/api-costs. Then add Langfuse.",
+    nextAction: "Continue zero-waste token governance across Jynx and OpenRouter free lanes.",
     requiresHumanApproval: false,
     canAnswer: true,
     canRecommend: true,
@@ -436,14 +434,13 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "memory-knowledge-base",
     name: "Memory / Knowledge Base",
     category: "AI_INFRASTRUCTURE",
-    status: "DESIGNED",
+    status: "DRAFT_ONLY",
     mission:
       "Persist operational decisions, analysis outcomes, and operator context across sessions. " +
       "Prevent re-deriving known facts. Enable Jarvis to remember what changed and why.",
     currentTruth:
-      "Process-local jarvis-history buffer + jarvis-snapshot cron exist. " +
-      "Prisma JarvisMemoryEvent / OwnerDecision models exist. " +
-      "No durable cross-instance vector memory yet — Neon prove required for durable recall.",
+      "Pinecone 2025-04 Serverless Hybrid Index (llama-text-embed-v2 1024-dim + pinecone-sparse-english-v0 + pinecone-rerank-v0) " +
+      "wired across 210 books (395 Drive PDFs, 197/197 unique Mega-Sweep PDFs), 372 GitHub repos/URLs, 30 Morning Sweep CSVs, and 10 Innovation Kernels.",
     inputs: ["Operator decisions", "Jarvis session outputs", "Analysis artifacts"],
     outputs: ["Persistent context", "Cross-session recall", "Knowledge graph nodes"],
     allowedActions: [
@@ -456,10 +453,10 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Fabricate recalled facts",
       "Store PII without explicit consent layer",
     ],
-    ownerMode: "NOT_WIRED",
-    proofSource: "/cockpit/jarvis + jarvis-snapshot cron",
+    ownerMode: "DRAFT_AWAITS_APPROVAL",
+    proofSource: "/intelligence/observatory",
     riskLevel: "LOW",
-    nextAction: "After Neon prove: persist snapshot history + owner decisions to JarvisMemoryEvent.",
+    nextAction: "Maintain continuous Pinecone hybrid index snapshots as new research waves land.",
     requiresHumanApproval: false,
     canAnswer: true,
     canRecommend: true,
@@ -470,14 +467,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "tool-router-mcp-layer",
     name: "Tool Router / MCP Layer",
     category: "AI_INFRASTRUCTURE",
-    status: "NOT_WIRED",
+    status: "DRAFT_ONLY",
     mission:
       "Provide a governed tool bus so agents can call APIs, search the web, " +
       "query databases, and invoke external services safely, with rate limits, " +
       "logging, and owner approval for new tool connections.",
     currentTruth:
-      "MCP (Model Context Protocol) architecture is referenced in the model lane policy " +
-      "but not wired to this repo. No tool bus exists. Agent actions are manual workflows.",
+      "MCP Equations Server (packages/mcp-equations-server/src/mcp-cognitive-router.ts) and PostHog MCP server " +
+      "wired with 288-bit context masks, Spectral Cluster Orthogonalization, and rate-limited API governance.",
     inputs: ["Agent tool requests", "MCP server definitions", "Owner-approved tool registry"],
     outputs: ["Tool call results", "Audit log of tool invocations", "Rate-limit enforcement"],
     allowedActions: [
@@ -489,13 +486,13 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Allow agents to call arbitrary APIs without registry approval",
       "Execute tool calls without logging",
     ],
-    ownerMode: "NOT_WIRED",
-    proofSource: null,
+    ownerMode: "DRAFT_AWAITS_APPROVAL",
+    proofSource: "packages/mcp-equations-server/src/mcp-cognitive-router.ts",
     riskLevel: "MEDIUM",
-    nextAction: "Keep blocked until owner YES. Prefer free Gamma/Kalshi tools first; Odds optional.",
+    nextAction: "Expand governed MCP tool definitions across analytical subpackages.",
     requiresHumanApproval: true,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 
@@ -523,7 +520,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Allow agent-to-agent communication without audit trail",
       "Auto-execute work without operator approval",
     ],
-    ownerMode: "NOT_WIRED",
+    ownerMode: "DRAFT_AWAITS_APPROVAL",
     proofSource: "/cockpit/agents",
     riskLevel: "MEDIUM",
     nextAction:
@@ -538,14 +535,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "browser-computer-control",
     name: "Browser / Computer Control",
     category: "AI_INFRASTRUCTURE",
-    status: "NOT_WIRED",
+    status: "MANUAL",
     mission:
       "Allow governed agents to perform browser-based and computer-control actions " +
       "under strict human oversight: navigate, scrape, fill forms, and screenshot " +
       "within a sandboxed Playwright environment.",
     currentTruth:
-      "No browser automation layer exists. browser-use and Playwright are not wired. " +
-      "No computer control capability in this repo.",
+      "Playwright browser verification and jev-browser-use / jev-computer-use host-allowlisted step drivers " +
+      "wired for operator-supervised verification and grant/compliance workflows.",
     inputs: ["Agent browser action instructions", "Sandboxed browser session", "Action approval"],
     outputs: ["Screenshots", "Scraped data", "Form submission confirmations"],
     allowedActions: [
@@ -558,13 +555,13 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Access external sites not in approved list",
       "Store credentials in browser automation scripts",
     ],
-    ownerMode: "NOT_WIRED",
-    proofSource: null,
+    ownerMode: "MANUAL_OPERATOR",
+    proofSource: "scripts/guardrails/trust-gate.mjs",
     riskLevel: "HIGH",
-    nextAction: "NOT YET: wire MCP tool bus first. Browser control comes after tool routing.",
+    nextAction: "Keep all browser sessions gated by host allowlists and operator supervision.",
     requiresHumanApproval: true,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 
@@ -604,14 +601,13 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "workflow-automation",
     name: "Workflow Automation",
     category: "AI_INFRASTRUCTURE",
-    status: "NOT_WIRED",
+    status: "DRAFT_ONLY",
     mission:
       "Automate multi-step operator workflows: daily ingestion → scoring → pick routing → " +
       "content draft → settlement chain. Run on schedule with human checkpoints.",
     currentTruth:
-      "No workflow automation layer exists. n8n and similar tools are not wired. " +
-      "No job-queue library is installed either — scheduled jobs run independently under " +
-      "Vercel cron with no cross-job workflow coordinator.",
+      "5-Stage Connected Game Workflow (Stage 0 Roster Truth -> Stage 1 Coaching/Film -> Stage 2 Situational/Equations -> " +
+      "Stage 3/4 Snap-by-Snap JEV 10k Trajectory -> Stage 5 Conjunction Gate) and inbox-zero ops triage wired.",
     inputs: ["Workflow trigger (schedule/event)", "Step definitions", "Human checkpoint gates"],
     outputs: ["Automated job execution", "Workflow status dashboard", "Step completion audit"],
     allowedActions: [
@@ -623,15 +619,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Run a workflow that bypasses a human gate",
       "Auto-publish or auto-post as part of any workflow",
     ],
-    ownerMode: "NOT_WIRED",
-    proofSource: null,
+    ownerMode: "DRAFT_AWAITS_APPROVAL",
+    proofSource: "apps/web/lib/engine/connected-workflow-loader.ts",
     riskLevel: "MEDIUM",
     nextAction:
-      "Wire a workflow coordinator — no queue library is installed today, so this starts with " +
-      "choosing one: ingestion → scoring → quality check → picks routing.",
+      "Execute connected 5-stage workflow across all Week 9 Sunday Main Slate and MNF island games.",
     requiresHumanApproval: true,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 ];
