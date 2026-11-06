@@ -13,6 +13,7 @@
  * ids — Vertex ids (e.g. `claude-3-5-sonnet-v2@20241022`) are supplied via a
  * verified `VERTEX_MODEL_MAP`; an unmapped model throws rather than guesses.
  */
+import { captureAiGeneration } from "@/lib/observability/posthog-ai";
 import { fetchAccessToken } from "../google-oauth";
 import type { ClaudeMessagesResult } from "../messages";
 
@@ -170,11 +171,25 @@ export async function callVertexClaudeMessages(
     });
   }
 
-  return {
+  const result = {
     text: text.trim(),
     modelName: modelId,
     inputTokens: payload.usage?.input_tokens ?? 0,
     outputTokens: payload.usage?.output_tokens ?? 0,
     durationMs,
   };
+  await captureAiGeneration({
+    provider: "vertex",
+    model: result.modelName,
+    system: request.system,
+    user: request.user,
+    output: result.text,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    latencyMs: result.durationMs,
+    maxTokens: request.maxTokens,
+    temperature: request.temperature,
+  });
+
+  return result;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import posthog from "posthog-js";
 import type { WatchlistEntityType } from "@/lib/watchlist/types";
 
 /**
@@ -72,6 +73,9 @@ export function FollowButton({
       }
 
       const nowFollowing = !following;
+      posthog.capture(nowFollowing ? "watchlist_followed" : "watchlist_unfollowed", {
+        entity_type: entityType,
+      });
       setFollowing(nowFollowing);
       setState("idle");
       onChange?.(nowFollowing);

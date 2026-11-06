@@ -263,24 +263,28 @@ const nextConfig = {
     // (e.g. SubscribeButton) are silently dead. We drop the directive in dev
     // so the e2e browser can load the bundle over HTTP.
     const isDev = process.env["NODE_ENV"] !== "production";
+    const posthogHost = process.env["NEXT_PUBLIC_POSTHOG_HOST"];
+    const posthogAssetsHost = posthogHost?.replace(".i.", "-assets.i.");
+    const posthogCspSources = [posthogHost, posthogAssetsHost].filter(Boolean).join(" ");
     // `unsafe-eval` is needed only for `next dev`'s eval-source-map source maps
     // (the production bundle has zero `eval(` / `new Function(` calls). Splitting
     // it out of the production `script-src` is the security fix — see P13-05.
     const scriptSrcProd =
       "'self' 'unsafe-inline' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://www.googletagservices.com https://partner.googleadservices.com https://tpc.googlesyndication.com";
     const scriptSrcDev = `${scriptSrcProd} 'unsafe-eval'`;
+    const scriptSrc = `${isDev ? scriptSrcDev : scriptSrcProd}${posthogCspSources ? ` ${posthogCspSources}` : ""}`;
     // Sentry client-side error reporting: connect-src must allow the ingest
     // endpoints or client DSN transport silently fails in production. Added
     // alongside the existing clarity/stripe origins.
     const connectSrc =
-      "'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloudflareinsights.com https://pagead2.googlesyndication.com https://*.g.doubleclick.net https://ep1.adtrafficquality.google";
+      `'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloudflareinsights.com https://pagead2.googlesyndication.com https://*.g.doubleclick.net https://ep1.adtrafficquality.google${posthogHost ? ` ${posthogHost}` : ""}`;
     const baseCsp = [
       "default-src 'self'",
       "base-uri 'self'",
       "form-action 'self'",
       "object-src 'none'",
       "frame-ancestors 'self'",
-      `script-src ${isDev ? scriptSrcDev : scriptSrcProd}`,
+      `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data: https:",

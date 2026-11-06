@@ -12,6 +12,7 @@
  * free-lane can hop to secondary free host or callClaude. Unexpected bugs still
  * throw generic Error and abort the chain (no silent swallow).
  */
+import { captureAiGeneration } from "@/lib/observability/posthog-ai";
 import type { ClaudeMessagesResult } from "../messages";
 
 // Error classes live outside `providers/` so consumers can classify
@@ -111,13 +112,27 @@ export async function callCerebrasMessages(
     });
   }
 
-  return {
+  const result = {
     text,
     modelName,
     inputTokens: payload.usage?.prompt_tokens ?? 0,
     outputTokens: payload.usage?.completion_tokens ?? 0,
     durationMs,
   };
+  await captureAiGeneration({
+    provider: "cerebras",
+    model: result.modelName,
+    system: request.system,
+    user: request.user,
+    output: result.text,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    latencyMs: result.durationMs,
+    maxTokens: request.maxTokens,
+    temperature: request.temperature,
+  });
+
+  return result;
 }
 
 function extractText(response: CerebrasChatResponse): string | null {

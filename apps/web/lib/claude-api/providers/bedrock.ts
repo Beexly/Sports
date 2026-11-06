@@ -19,6 +19,7 @@
  * ship guessed defaults — the operator supplies a verified `BEDROCK_MODEL_MAP`
  * (anthropic id → bedrock id). An unmapped model throws rather than guesses.
  */
+import { captureAiGeneration } from "@/lib/observability/posthog-ai";
 import { signRequest, awsUriEncode } from "./aws-sigv4";
 import type { ClaudeMessagesResult } from "../messages";
 
@@ -176,11 +177,25 @@ export async function callBedrockClaudeMessages(
     });
   }
 
-  return {
+  const result = {
     text: text.trim(),
     modelName: bedrockModelId,
     inputTokens: payload.usage?.input_tokens ?? 0,
     outputTokens: payload.usage?.output_tokens ?? 0,
     durationMs,
   };
+  await captureAiGeneration({
+    provider: "bedrock",
+    model: result.modelName,
+    system: request.system,
+    user: request.user,
+    output: result.text,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    latencyMs: result.durationMs,
+    maxTokens: request.maxTokens,
+    temperature: request.temperature,
+  });
+
+  return result;
 }

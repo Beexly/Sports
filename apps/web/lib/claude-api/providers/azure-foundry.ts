@@ -15,6 +15,7 @@
  * model map are present. Any config/API error falls back via callClaude.
  * NO guessed model ids — AZURE_FOUNDRY_MODEL_MAP only.
  */
+import { captureAiGeneration } from "@/lib/observability/posthog-ai";
 import type { ClaudeMessagesResult } from "../messages";
 
 // Error classes live outside `providers/` so consumers can classify
@@ -148,11 +149,25 @@ export async function callAzureFoundryClaudeMessages(
     });
   }
 
-  return {
+  const result = {
     text: text.trim(),
     modelName: ledgerModelName,
     inputTokens: payload.usage?.input_tokens ?? 0,
     outputTokens: payload.usage?.output_tokens ?? 0,
     durationMs,
   };
+  await captureAiGeneration({
+    provider: "azure-foundry",
+    model: result.modelName,
+    system: request.system,
+    user: request.user,
+    output: result.text,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    latencyMs: result.durationMs,
+    maxTokens: request.maxTokens,
+    temperature: request.temperature,
+  });
+
+  return result;
 }

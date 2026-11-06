@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import posthog from "posthog-js";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/brand";
 
 /**
@@ -29,6 +30,19 @@ export default function GlobalError({
   reset: () => void;
 }): JSX.Element {
   useEffect(() => {
+    const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
+    const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+    if (projectToken && host) {
+      if (!posthog.__loaded) {
+        posthog.init(projectToken, {
+          api_host: host,
+          defaults: "2026-01-30",
+          capture_exceptions: true,
+          debug: process.env.NODE_ENV === "development",
+        });
+      }
+      posthog.captureException(error);
+    }
     console.error("[app] root layout error boundary caught:", error);
   }, [error]);
 
