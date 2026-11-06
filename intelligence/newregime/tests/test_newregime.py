@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
 import pytest
 
 import newregime
-from newregime import (maml_new_regime_check, nggp_new_regime_check,
+from newregime import (maml_new_regime_check, MamlConfig, nggp_new_regime_check,
                        research_lanes_status, FeatureStore, BackfillRunner,
                        leak_injection_test, DriftEnsemble,
                        drift_acceptance_check, knn_impute,
@@ -64,6 +64,38 @@ def test_maml_beats_baseline_on_held_out_regimes():
     res = maml_new_regime_check()
     assert res["n_test_tasks"] > 0
     assert res["brier_maml"] < res["brier_baseline"]
+
+
+def test_maml_config_dataclass_and_parameter_handling():
+    """Verify MamlConfig dataclass defaults, custom overrides, and backward compatibility."""
+    # Default instantiation
+    cfg = MamlConfig()
+    assert cfg.n_tasks == 256
+    assert cfg.d == 6
+    assert cfg.n_support == 4
+    assert cfg.n_query == 64
+    assert cfg.inner_steps == 3
+    assert cfg.inner_lr == 1.0
+
+    # Custom dataclass config
+    custom_cfg = MamlConfig(n_tasks=16, n_query=16)
+    res_cfg = maml_new_regime_check(custom_cfg)
+    assert res_cfg["n_test_tasks"] == 8
+
+    # Overriding config with kwargs
+    res_override = maml_new_regime_check(custom_cfg, inner_steps=2)
+    assert res_override["inner_steps"] == 2
+
+    # Direct kwargs without config instance
+    res_kwargs = maml_new_regime_check(n_tasks=16, n_query=16, inner_steps=1)
+    assert res_kwargs["inner_steps"] == 1
+    assert res_kwargs["n_test_tasks"] == 8
+
+    # Positional legacy argument (seed)
+    res_pos = maml_new_regime_check(cfg.seed, n_tasks=16, n_query=16)
+    assert res_pos["seed"] == cfg.seed
+    assert res_pos["n_test_tasks"] == 8
+
 
 
 # ---------------------------------------------------------------------------
@@ -261,6 +293,7 @@ def test_provenance_headers_on_every_file():
 
 
 def test_public_api_surface():
+    assert newregime.MamlConfig is not None
     assert callable(newregime.maml_new_regime_check)
     assert callable(newregime.nggp_new_regime_check)
     assert callable(newregime.research_lanes_status)
