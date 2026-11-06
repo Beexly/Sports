@@ -102,6 +102,25 @@ const PINNED_LOSS: readonly string[] = [
  */
 const PINNED_UNENFORCED_HARDENING: readonly string[] = ["script-src: 'unsafe-eval'"];
 
+const ADSENSE_PINNED_ORIGINS: Readonly<Record<string, readonly string[]>> = {
+  "script-src": [
+    "https://pagead2.googlesyndication.com",
+    "https://www.googletagservices.com",
+    "https://partner.googleadservices.com",
+    "https://tpc.googlesyndication.com",
+  ],
+  "frame-src": [
+    "https://googleads.g.doubleclick.net",
+    "https://tpc.googlesyndication.com",
+    "https://www.google.com",
+  ],
+  "connect-src": [
+    "https://pagead2.googlesyndication.com",
+    "https://*.g.doubleclick.net",
+    "https://ep1.adtrafficquality.google",
+  ],
+};
+
 /**
  * Whether the OWNER ACTION (delete the CSP from both vercel.json copies) is
  * still outstanding.
@@ -242,6 +261,25 @@ describe("Content-Security-Policy single source of truth", () => {
         "policy deliberately omits changed. `'unsafe-eval'` here is the P13-05 " +
         "hardening being undone by the vercel.json copy.",
     ).toEqual([...PINNED_UNENFORCED_HARDENING].sort());
+  });
+
+  it("pins the required Google AdSense origins across script-src, frame-src, and connect-src in all active CSP configs", async () => {
+    const fromVercel = cspValuesOnNonEmbedSource(vercelHeaderRules(LIVE_VERCEL_CONFIG));
+    const fromNext = cspValuesOnNonEmbedSource(await nextProductionHeaderRules());
+    const configs: Array<[string, Map<string, Set<string>>]> = [
+      ["apps/web/next.config.mjs", parseCsp(fromNext[0] as string)],
+      ...(fromVercel.length > 0 ? [["apps/web/vercel.json", parseCsp(fromVercel[0] as string)] as [string, Map<string, Set<string>>]] : []),
+    ];
+
+    for (const [label, parsed] of configs) {
+      for (const [directive, origins] of Object.entries(ADSENSE_PINNED_ORIGINS)) {
+        const set = parsed.get(directive);
+        expect(set, `${label} missing ${directive}`).toBeDefined();
+        for (const origin of origins) {
+          expect(set?.has(origin), `${label} ${directive} must allow ${origin}`).toBe(true);
+        }
+      }
+    }
   });
 
   it("enforces a single CSP source of truth once vercel.json's copy is removed", async () => {

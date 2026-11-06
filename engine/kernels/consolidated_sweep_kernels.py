@@ -1231,7 +1231,7 @@ def compute_move37_discrete_sindy_team_state(
         if i + 1 < d:
             A_true[i, i + 1] = 0.14
             A_true[i + 1, i] = -0.16
-    Y_plant = X_plant[:-1] @ A_true + rng_plant.uniform(-0.002, 0.002, size=(59, d))
+    Y_plant = X_plant[:-1] @ A_true + rng_plant.normal(0.0, 0.002, size=(59, d))
     p_cols = [X_plant[:-1], X_plant[:-1] ** 2]
     if d >= 2:
         p_cols.append((X_plant[:-1, 0] * X_plant[:-1, 1])[:, None])

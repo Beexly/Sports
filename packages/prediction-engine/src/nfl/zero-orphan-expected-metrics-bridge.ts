@@ -37,6 +37,10 @@ import {
   evaluateWave13SheafNavierStokesPhaseTransition,
   type Wave13EvaluationReceipt,
 } from "./wave13-sheaf-navier-stokes-phase-transition.js";
+import {
+  evaluateMegaSweep5TrackAnd7StepReasoning,
+  type MegaSweep5Track7StepTrace,
+} from "./mega-sweep-2026-11-06-reasoning-engine.js";
 import { fourMinuteRunPrior, redZoneTotalMultiplier } from "./killed-claims.js";
 import { evaluateLbVoidTeRbVsSlotAbsorption } from "./role-isomorphism-realloc.js";
 
@@ -45,37 +49,85 @@ import { evaluateLbVoidTeRbVsSlotAbsorption } from "./role-isomorphism-realloc.j
  * Verified against the filesystem by `zero-orphan-engine-audit.test.ts`.
  */
 export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
-  // src/expected-metrics/ (18 modules)
+  // src/expected-metrics/ (62 modules)
+  "expected-metrics/adjusted-scramble-epa.ts",
+  "expected-metrics/any-a.ts",
+  "expected-metrics/avg-separation-expected.ts",
   "expected-metrics/batch3-sports-physics-bridge.ts",
+  "expected-metrics/cpae-aggregate.ts",
+  "expected-metrics/cpae-surface.ts",
+  "expected-metrics/defensive-fantasy-points-allowed.ts",
+  "expected-metrics/defensive-success-allowed.ts",
+  "expected-metrics/defensive-target-share.ts",
+  "expected-metrics/directional-qb-epa.ts",
+  "expected-metrics/down-conversion.ts",
+  "expected-metrics/drive-failure-rate.ts",
+  "expected-metrics/drive-outcome-distribution.ts",
   "expected-metrics/drives.ts",
+  "expected-metrics/epa-per-target.ts",
   "expected-metrics/expected-completion.ts",
+  "expected-metrics/expected-cushion-separation.ts",
   "expected-metrics/expected-points.ts",
   "expected-metrics/expected-rush-yards.ts",
   "expected-metrics/expected-yac.ts",
+  "expected-metrics/game-script-splits.ts",
   "expected-metrics/index.ts",
   "expected-metrics/linear.ts",
   "expected-metrics/logistic.ts",
+  "expected-metrics/manageable-third-down.ts",
+  "expected-metrics/negative-play-rate.ts",
+  "expected-metrics/neutral-script-epa.ts",
   "expected-metrics/nflverse-pbp-mapper.ts",
   "expected-metrics/numeric.ts",
+  "expected-metrics/opponent-kick-miss.ts",
+  "expected-metrics/pass-defense-fragility-profile.ts",
+  "expected-metrics/play-action-epa-split.ts",
+  "expected-metrics/play-caller-fingerprint.ts",
+  "expected-metrics/play-size-distribution.ts",
+  "expected-metrics/pressure-elusiveness-collision.ts",
+  "expected-metrics/qb-aggressiveness-expected.ts",
+  "expected-metrics/qb-conditioned-receiver-efficiency.ts",
+  "expected-metrics/qb-penalty-epa.ts",
+  "expected-metrics/qb-pressure-change.ts",
+  "expected-metrics/qb-red-zone-carry-share.ts",
+  "expected-metrics/qb-scramble-epa.ts",
+  "expected-metrics/red-zone-carry-share.ts",
+  "expected-metrics/remaining-schedule-difficulty.ts",
   "expected-metrics/rollup.ts",
+  "expected-metrics/scripted-epa-split.ts",
+  "expected-metrics/sequencing-volatility.ts",
+  "expected-metrics/shotgun-split.ts",
   "expected-metrics/situational-expected-metrics-catalog.ts",
+  "expected-metrics/snap-differential.ts",
   "expected-metrics/success-rate.ts",
+  "expected-metrics/target-success.ts",
+  "expected-metrics/te-target-rate.ts",
+  "expected-metrics/team-special-teams-epa.ts",
   "expected-metrics/textbook-algorithms-bridge.ts",
+  "expected-metrics/third-down-sacks.ts",
+  "expected-metrics/third-down-target-share.ts",
+  "expected-metrics/toxic-differential.ts",
   "expected-metrics/types.ts",
   "expected-metrics/validation.ts",
   "expected-metrics/win-probability.ts",
-  // src/nfl/ (61 modules including this bridge)
+  "expected-metrics/wr-depth-after-leader.ts",
+  "expected-metrics/yoy-persistence.ts",
+  // src/nfl/ (68 modules including this bridge)
   "nfl/all-in-one-research-signals.ts",
   "nfl/ats-ablation-harness.ts",
   "nfl/belichick-ten-metrics.ts",
   "nfl/block-poisson.ts",
   "nfl/calibration-map.ts",
+  "nfl/contract-value.ts",
   "nfl/coordinator-psychology-tensor.ts",
   "nfl/coverage-db-metrics.ts",
   "nfl/coverage-scheme.ts",
+  "nfl/ethandojo-game-predictor.ts",
   "nfl/expected-completion.ts",
   "nfl/expected-yac.ts",
+  "nfl/exploit-finder.ts",
   "nfl/fourth-down-aggression.ts",
+  "nfl/fourth-down-grader.ts",
   "nfl/generalized-poisson.ts",
   "nfl/ig-consolidated-conformal-and-kats-signals.ts",
   "nfl/key-number-mass.ts",
@@ -85,6 +137,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/luck-neutralized-epa.ts",
   "nfl/margin-mixture-model.ts",
   "nfl/master-situational-reasoning-aggregator.ts",
+  "nfl/mega-sweep-2026-11-06-reasoning-engine.ts",
   "nfl/metric-birth-certificate.ts",
   "nfl/metric-core.ts",
   "nfl/metric-drift.ts",
@@ -92,6 +145,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/ngs-adjacent-metrics.ts",
   "nfl/ngs-contextual-reconstructed.ts",
   "nfl/no-bet-gate.ts",
+  "nfl/offensive-coordinator.ts",
   "nfl/osf-defense-penalties-and-proe.ts",
   "nfl/osf-math-core.ts",
   "nfl/osf-qb-volatility-and-prospects.ts",
@@ -184,6 +238,7 @@ export interface ZeroOrphanOverlayResult {
   readonly amSweepPrerouterActivation: ReturnType<typeof predictNextSnapPrerouterActivation>;
   readonly textbookAlgorithmsReceipt: TenTextbookAlgorithmsReceipt;
   readonly wave13Receipt: Wave13EvaluationReceipt;
+  readonly megaSweep5Track7StepTrace: MegaSweep5Track7StepTrace;
   readonly roleIsomorphismRealloc: ReturnType<typeof evaluateLbVoidTeRbVsSlotAbsorption>;
   readonly fourMinuteMeasuredRunRate: number;
   readonly familyAdjustments: {
@@ -358,6 +413,23 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
   const fourMinuteMeasuredRunRate =
     fourMinuteRunPrior(0.422) * redZoneTotalMultiplier("current-season-market-shape");
 
+  const megaSweep5Track7StepTrace = evaluateMegaSweep5TrackAnd7StepReasoning({
+    cleanBadThrowRate: w1.cleanBadThrowRate,
+    pressureBadThrowDelta: w1.pressureBadThrowDelta,
+    wrTargetShare: input.wrTargetShare,
+    wrTargetSuccessRate: input.wrTargetSuccessRate,
+    qbMofCompletionRate: input.qbMofCompletionRate,
+    defZoneRate: input.defZoneRate,
+    underCenterEpa: input.underCenterEpa,
+    shotgunEpa: input.shotgunEpa,
+    neutralSnapShare: input.neutralSnapShare,
+    projectedPressureRate: input.projectedPressureRate ?? 0.33,
+    restDaysOffense: input.restDaysOffense ?? 6,
+    restDaysDefense: input.restDaysDefense ?? 6,
+    priorCareerConcussions: input.priorCareerConcussions ?? 1,
+    recent72hSubconcussiveHits: input.recent72hSubconcussiveHits ?? 14,
+  });
+
   // Compute bounded family probability deltas
   const pressureDelta = Number(
     Math.max(
@@ -428,6 +500,7 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     amSweepPrerouterActivation,
     textbookAlgorithmsReceipt,
     wave13Receipt,
+    megaSweep5Track7StepTrace,
     roleIsomorphismRealloc,
     fourMinuteMeasuredRunRate,
     familyAdjustments: {

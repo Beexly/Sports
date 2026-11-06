@@ -271,12 +271,17 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         sack_rate_pct=5.1, pressure_to_sack_rate_pct=17.0, qb_fault_sack_share_pct=19.0,
         pressure_survival_archetype="IN_POCKET_MANIPULATOR"
     ),
+    "Joe Fagnano": QBDisguiseBlitzProfile(
+        "Joe Fagnano", "BAL", 28, 5.65, 74.0, -0.145, 0.310, 12, 5.10, 68.5, -0.195, -0.18, -7.5,
+        sack_rate_pct=8.5, pressure_to_sack_rate_pct=16.8, qb_fault_sack_share_pct=28.0,
+        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
+    ),
 }
 
 TEAM_TO_QB_2026: Dict[str, str] = {
     "ARI": "Jacoby Brissett",
     "ATL": "Michael Penix Jr.",
-    "BAL": "Lamar Jackson",
+    "BAL": "Joe Fagnano",
     "BUF": "Josh Allen",
     "CAR": "Bryce Young",
     "CHI": "Caleb Williams",

@@ -169,7 +169,9 @@ def _build_arg_for_param(
         return total
     if p_low in ("line", "spread_line", "home_line"):
         return spread
-    if p_low in ("margin", "result", "elo_margin_value", "mov"):
+    if p_low == "mov":
+        return abs(margin_est)
+    if p_low in ("margin", "result", "elo_margin_value"):
         return margin_est
     if p_low in ("home_elo", "elo"):
         return 1540.0 + off_epa * 250.0

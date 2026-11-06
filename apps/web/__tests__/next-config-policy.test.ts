@@ -176,6 +176,23 @@ describe("next.config.mjs — security policy", () => {
     expect(csp!).toContain("https://static.cloudflareinsights.com");
   });
 
+  it("production CSP allows Google AdSense script-src, frame-src, and connect-src origins", async () => {
+    const csp = cspForNonEmbed(await prodRules());
+    expect(csp).toBeDefined();
+    for (const origin of [
+      "https://pagead2.googlesyndication.com",
+      "https://www.googletagservices.com",
+      "https://partner.googleadservices.com",
+      "https://tpc.googlesyndication.com",
+      "https://googleads.g.doubleclick.net",
+      "https://www.google.com",
+      "https://*.g.doubleclick.net",
+      "https://ep1.adtrafficquality.google",
+    ]) {
+      expect(csp!).toContain(origin);
+    }
+  });
+
   it("does not advertise framework identity (poweredByHeader off)", () => {
     expect(nextConfig.poweredByHeader).toBe(false);
   });

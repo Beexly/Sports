@@ -1,0 +1,1145 @@
+{
+  "__dc__": "ReasoningTrace",
+  "fields": {
+    "chains": [
+      {
+        "__dc__": "CausalChain",
+        "fields": {
+          "id": "chain_TB_CHI_hierarchy",
+          "links": [
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_ol_collapse",
+                      "metric": "away_ol_pressure_allowed",
+                      "op": ">",
+                      "text": "Away OL pressure allowed > 0.78 breaks clean-pocket thesis",
+                      "threshold": 0.78
+                    }
+                  }
+                ],
+                "cause": "TB OL pressure allowed (0.7499) vs CHI OL pressure allowed (0.6739)",
+                "id": "link_ol_trench",
+                "load_bearing": true,
+                "mechanism": "5-man weak-link clean-pocket survival interacts with opposing DC blitz rate",
+                "outcome": "Trench disruption differential modulates time-to-throw and sack probability",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            },
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_wind_gale",
+                      "metric": "wind_mph",
+                      "op": ">=",
+                      "text": "Outdoor wind >= 24 mph breaks aerial PROE thesis",
+                      "threshold": 24.0
+                    }
+                  }
+                ],
+                "cause": "TB PROE (-0.0142) & PA rate (21.6%)",
+                "id": "link_scheme_proe",
+                "load_bearing": true,
+                "mechanism": "Early-down pass rate over expected and motion/play-action stress defensive box count",
+                "outcome": "Script-adjusted neutral pace and explosive pass rate differential",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            },
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_away_epa_collapse",
+                      "metric": "stat.away_off_epa",
+                      "op": "<",
+                      "text": "Away offensive EPA < -0.25 breaks QB execution thesis",
+                      "threshold": -0.25
+                    }
+                  }
+                ],
+                "cause": "Baker Mayfield (TB) vs Caleb Williams (CHI) verified Week 9 QB1 matchup",
+                "id": "link_qb_execution",
+                "load_bearing": true,
+                "mechanism": "QB completion rate and EPA/play survival under pressure",
+                "outcome": "Post-reasoning EPA/play trajectory shift",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.LIVE_VERIFIED"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "checklist": {
+      "coaching_scheme": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "offensive_line": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "qb_behavior": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "scheme_matchup": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "trust_signals": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      }
+    },
+    "created_at": "2026-11-06T15:58:09+00:00",
+    "depth": {
+      "__enum__": "ReasoningDepth.L5"
+    },
+    "escalation_log": [
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L1"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T15:58:09+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "adversary_review_complete"
+        }
+      }
+    ],
+    "exposure": {
+      "__enum__": "Exposure.PUBLISHED_PICK"
+    },
+    "game": {
+      "away": "TB",
+      "home": "CHI",
+      "season": 2026,
+      "week": 9
+    },
+    "hierarchy_order": [
+      "offensive_line",
+      "coaching_scheme",
+      "scheme_matchup",
+      "qb_behavior",
+      "trust_signals"
+    ],
+    "label": "FINAL",
+    "legs": [
+      {
+        "__dc__": "BetLeg",
+        "fields": {
+          "causal_link_ids": [
+            "link_ol_trench",
+            "link_scheme_proe",
+            "link_qb_execution"
+          ],
+          "description": "TB +6.0 / CHI -6.0",
+          "exposure": 1.0,
+          "id": "leg_TB_CHI_side"
+        }
+      }
+    ],
+    "levels": {
+      "L1": {
+        "claims": [
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market away_team = TB",
+            "value": "TB",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market home_team = CHI",
+            "value": "CHI",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market sport = NFL",
+            "value": "NFL",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market market_type = spread",
+            "value": "spread",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market posted_home_spread = -6.0",
+            "value": -6.0,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market open_home_spread = -3.5",
+            "value": -3.5,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market posted_total = 47.5",
+            "value": 47.5,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market open_total = 48.5",
+            "value": 48.5,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.away_off_epa = -0.094",
+            "value": -0.094,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.home_off_epa = 0.0629",
+            "value": 0.0629,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.away_def_epa = -0.1576",
+            "value": -0.1576,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.home_def_epa = -0.0242",
+            "value": -0.0242,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.TB.proe",
+            "text": "coaching profile coach.TB.proe: -0.0142",
+            "value": -0.0142,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.CHI.proe",
+            "text": "coaching profile coach.CHI.proe: -0.0046",
+            "value": -0.0046,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.TB.dc_blitz_rate",
+            "text": "coaching profile coach.TB.dc_blitz_rate: 0.3754",
+            "value": 0.3754,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.CHI.dc_blitz_rate",
+            "text": "coaching profile coach.CHI.dc_blitz_rate: 0.3557",
+            "value": 0.3557,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.away_blitz_rate = 0.3754",
+            "value": 0.3754,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.home_blitz_rate = 0.3557",
+            "value": 0.3557,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.away_pa_rate = 0.2159",
+            "value": 0.2159,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.home_pa_rate = 0.3295",
+            "value": 0.3295,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.TB.starter",
+            "text": "QB profile qb.TB.starter: Baker Mayfield",
+            "value": "Baker Mayfield",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.CHI.starter",
+            "text": "QB profile qb.CHI.starter: Caleb Williams",
+            "value": "Caleb Williams",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.TB.comp_rate",
+            "text": "QB profile qb.TB.comp_rate: 0.6154",
+            "value": 0.6154,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.CHI.comp_rate",
+            "text": "QB profile qb.CHI.comp_rate: 0.6898",
+            "value": 0.6898,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "single-source until corroborated",
+            "source": "trust-signal intake",
+            "text": "live signal: Week 9 TB @ CHI verified QB1s: Baker Mayfield vs Caleb Williams",
+            "value": null,
+            "verification": "SINGLE_SOURCE"
+          },
+          {
+            "note": "single-source until corroborated",
+            "source": "trust-signal intake",
+            "text": "live signal: Venue Soldier Field: Soldier Field outdoor Bermuda grass SNF (14.5 mph Lake Michigan wind, 47F)",
+            "value": null,
+            "verification": "SINGLE_SOURCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/local_pdf/48ae0d16384ed704",
+            "text": "research corpus: research_corpus/local_pdf/48ae0d16384ed704",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/openalex/W7112540155",
+            "text": "research corpus: research_corpus/openalex/W7112540155",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/arxiv/2609.33664v2",
+            "text": "research corpus: research_corpus/arxiv/2609.33664v2",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/arxiv/2604.01491v2",
+            "text": "research corpus: research_corpus/arxiv/2604.01491v2",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/arxiv/2305.10262v3",
+            "text": "research corpus: research_corpus/arxiv/2305.10262v3",
+            "value": null,
+            "verification": "INFERENCE"
+          }
+        ]
+      },
+      "L2": {
+        "correlations": []
+      },
+      "L3": {
+        "chain_ids": [
+          "chain_TB_CHI_hierarchy"
+        ]
+      },
+      "L4": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "correlated_theses": 1,
+          "killed_thesis_ids": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        }
+      },
+      "L5": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "condition_results": [
+            {
+              "condition_id": "bc_ol_collapse",
+              "met": false,
+              "metric": "away_ol_pressure_allowed",
+              "observed_value": 0.7499,
+              "text": "Away OL pressure allowed > 0.78 breaks clean-pocket thesis",
+              "verifiable": true
+            },
+            {
+              "condition_id": "bc_wind_gale",
+              "met": false,
+              "metric": "wind_mph",
+              "observed_value": 14.5,
+              "text": "Outdoor wind >= 24 mph breaks aerial PROE thesis",
+              "verifiable": true
+            },
+            {
+              "condition_id": "bc_away_epa_collapse",
+              "met": false,
+              "metric": "stat.away_off_epa",
+              "observed_value": -0.094,
+              "text": "Away offensive EPA < -0.25 breaks QB execution thesis",
+              "verifiable": true
+            }
+          ],
+          "correlated_theses": [
+            {
+              "id": "thesis_01",
+              "leg_ids": [
+                "leg_TB_CHI_side"
+              ],
+              "shared_link_ids": [
+                "link_ol_trench",
+                "link_qb_execution",
+                "link_scheme_proe"
+              ]
+            }
+          ],
+          "counter_argument": "No counter-argument could be constructed from the trace: no met breaking conditions, no conflicting evidence, no data gaps, no correlated bundles. The thesis survives adversarial review on the recorded facts.",
+          "gap_assumptions": [],
+          "killed_thesis_ids": [],
+          "notes": [],
+          "pre_mortem": "It is Monday and the 1-leg card went 0-1. What happened: no single recorded falsifier explains it \u2014 the failure mode was outside the declared breaking conditions, which means the L3 chains were missing a link. Expand the chains before the next card.",
+          "thesis_verdicts": {
+            "thesis_01": "SURVIVE"
+          },
+          "weak_link": false,
+          "weak_links": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        },
+        "hierarchy_ok": true,
+        "hierarchy_order": [
+          "offensive_line",
+          "coaching_scheme",
+          "scheme_matchup",
+          "qb_behavior",
+          "trust_signals"
+        ],
+        "killed_legs": [],
+        "recommendation": "Thesis survived L4 adversary (no breaking condition met). Proceed only with the checklist verdicts and weak-link flags attached; final sizing and publication remain downstream gates."
+      }
+    },
+    "observed_values": {
+      "away_ol_pressure_allowed": 0.7499,
+      "home_ol_pressure_allowed": 0.6739,
+      "scheme.away_blitz_rate": 0.3754,
+      "scheme.away_pa_rate": 0.2159,
+      "scheme.home_blitz_rate": 0.3557,
+      "scheme.home_pa_rate": 0.3295,
+      "stat.away_def_epa": -0.1576,
+      "stat.away_off_epa": -0.094,
+      "stat.home_def_epa": -0.0242,
+      "stat.home_off_epa": 0.0629,
+      "wind_mph": 14.5
+    },
+    "question": "Because TB trench protection (25.0% clean pocket) and scheme PROE (-0.014) interact with CHI blitz pressure (35.6%) and QB1 Baker Mayfield vs Caleb Williams -> evaluate Week 9 L5 edge",
+    "stub_tracks": [],
+    "tool_calls": [
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "away_team"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "TB",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "home_team"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "CHI",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "sport"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "NFL",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "market_type"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "spread",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_home_spread"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-6.0",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_home_spread"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-3.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_total"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "47.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_total"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "48.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.TB.proe"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-0.0142",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CHI.proe"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-0.0046",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.TB.dc_blitz_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.3754",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CHI.dc_blitz_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.3557",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.TB.starter"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "Baker Mayfield",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CHI.starter"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "Caleb Williams",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.TB.comp_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.6154",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CHI.comp_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.6898",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "k": 3,
+            "query": "Because TB trench protection (25.0% clean pocket) and scheme PROE (-0.014) interact with CHI blitz pressure (35.6%) and QB1 Baker Mayfield vs Caleb Williams -> evaluate Week 9 L5 edge"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "research_corpus/local_pdf/48ae0d16384ed704; research_corpus/openalex/W7112540155; research_corpus/arxiv/2609.33664v2",
+          "tool": "research_corpus"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "away_team"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "TB",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "home_team"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "CHI",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "sport"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "NFL",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "market_type"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "spread",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_home_spread"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-6.0",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_home_spread"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-3.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_total"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "47.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_total"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "48.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.TB.proe"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-0.0142",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CHI.proe"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-0.0046",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.TB.dc_blitz_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.3754",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CHI.dc_blitz_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.3557",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.TB.starter"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "Baker Mayfield",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CHI.starter"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "Caleb Williams",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.TB.comp_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.6154",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CHI.comp_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.6898",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "k": 3,
+            "query": "Because TB trench protection (25.0% clean pocket) and scheme PROE (-0.014) interact with CHI blitz pressure (35.6%) and QB1 Baker Mayfield vs Caleb Williams -> evaluate Week 9 L5 edge"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "research_corpus/local_pdf/48ae0d16384ed704; research_corpus/openalex/W7112540155; research_corpus/arxiv/2609.33664v2",
+          "tool": "research_corpus"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "away_team"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "TB",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "home_team"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "CHI",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "sport"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "NFL",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "market_type"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "spread",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_home_spread"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-6.0",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_home_spread"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-3.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_total"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "47.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_total"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "48.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.TB.proe"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-0.0142",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CHI.proe"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "-0.0046",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.TB.dc_blitz_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.3754",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CHI.dc_blitz_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.3557",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.TB.starter"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "Baker Mayfield",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CHI.starter"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "Caleb Williams",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.TB.comp_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.6154",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CHI.comp_rate"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "0.6898",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "k": 3,
+            "query": "Because TB trench protection (25.0% clean pocket) and scheme PROE (-0.014) interact with CHI blitz pressure (35.6%) and QB1 Baker Mayfield vs Caleb Williams -> evaluate Week 9 L5 edge"
+          },
+          "at": "2026-11-06T15:58:09+00:00",
+          "returned": "research_corpus/local_pdf/48ae0d16384ed704; research_corpus/openalex/W7112540155; research_corpus/arxiv/2609.33664v2",
+          "tool": "research_corpus"
+        }
+      }
+    ],
+    "trace_id": "2026-11-06T155809Z0000-10d74731",
+    "track_evidence": {}
+  }
+}

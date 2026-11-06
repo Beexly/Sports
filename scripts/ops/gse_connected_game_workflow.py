@@ -2331,6 +2331,9 @@ def compile_stage1_to_stage2_simulation_priors(
     from intelligence.reasoning.full_branch_and_repo_module_registry import (
         evaluate_recovered_branch_and_repo_python_modules,
     )
+    from intelligence.reasoning.mega_sweep_2026_11_06_wiring_engine import (
+        evaluate_5track_l1_to_l5_and_7step_weekly_cycle,
+    )
     full_branch_registry_eval = evaluate_recovered_branch_and_repo_python_modules(
         {
             "away": away_tm,
@@ -2345,6 +2348,27 @@ def compile_stage1_to_stage2_simulation_priors(
         }
     )
     recovered_199_epa_delta = float(full_branch_registry_eval.get("recovered_199_Composite_epa_delta", 0.0))
+    mega_sweep_5track_7step = evaluate_5track_l1_to_l5_and_7step_weekly_cycle(
+        {
+            "away": away_tm,
+            "home": home_tm,
+            "away_pbp": aw_pbp_st,
+            "home_pbp": hm_pbp_st,
+            "env": env_cfg,
+            "away_qb_tier": "STARTER" if away_qb_tier == "QB1" else away_qb_tier,
+            "home_qb_tier": "STARTER" if home_qb_tier == "QB1" else home_qb_tier,
+            "away_ol_starters_out": int(merged_game_context.get("away_ol_starters_out", 0) or 0),
+            "home_ol_starters_out": int(merged_game_context.get("home_ol_starters_out", 2 if home_qb_tier == "EMERGENCY_QB3_UDFA" else 0) or 0),
+            "posted_home_spread": float(env_cfg.get("posted_home_spread", -3.0)),
+            "posted_total": float(env_cfg.get("posted_total", 44.5)),
+        }
+    )
+    mega_sweep_epa_delta = float(mega_sweep_5track_7step.get("final_post_step7_epa_delta", 0.0))
+    gsi_step2_health_delta = float(
+        ((mega_sweep_5track_7step.get("weekly_cycle_steps") or {}).get("2_health") or {}).get(
+            "net_home_minus_away_health_epa_delta", 0.0
+        )
+    )
     restored_ws1_python_receipt = {
         "away_qb_disguise_blitz_2x2": away_qb_2x2,
         "home_qb_disguise_blitz_2x2": home_qb_2x2,
@@ -2355,6 +2379,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "conformal_pass_discipline_verdict": conformal_advisory["verdict"],
         "equation_gate_12304_clamped_delta": eq_gate_12k["clamped_log_odds_delta"],
         "full_branch_and_repo_registry": full_branch_registry_eval,
+        "mega_sweep_2026_11_06_5track_7step_trace": mega_sweep_5track_7step,
     }
 
     l5_trace_info = dict((stage1a_receipt or {}).get("l1_to_l5_specialist_reasoning_trace") or {})
@@ -2379,6 +2404,8 @@ def compile_stage1_to_stage2_simulation_priors(
             + 0.20 * textbook_epa_delta
             + 0.25 * x360_away_epa_delta
             + 0.20 * recovered_199_epa_delta
+            - 0.25 * mega_sweep_epa_delta
+            - 0.20 * gsi_step2_health_delta
             + qb2x2_away_shift,
             -0.065,
             0.065,
@@ -2395,6 +2422,8 @@ def compile_stage1_to_stage2_simulation_priors(
             - 0.20 * textbook_epa_delta
             + 0.25 * x360_home_epa_delta
             - 0.20 * recovered_199_epa_delta
+            + 0.25 * mega_sweep_epa_delta
+            + 0.20 * gsi_step2_health_delta
             + qb2x2_home_shift,
             -0.075,
             0.065,
@@ -2608,6 +2637,8 @@ def compile_stage1_to_stage2_simulation_priors(
         "afml_meta_label_kelly_multiplier": afml_meta_label_kelly_multiplier,
         "james_stein_shrinkage_factor": james_stein_shrinkage_factor,
         "cholesky_6family_whitened_z_shift": round(cholesky_whitened_z_shift, 4),
+        "mega_sweep_5track_7step_epa_delta": round(mega_sweep_epa_delta, 5),
+        "gsi_step2_health_net_epa_delta": round(gsi_step2_health_delta, 5),
         "roster_truth_player_adjustments": roster_truth_player_adjustments,
     }
 
@@ -2672,6 +2703,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "x_and_ig_360_charting": x_and_ig_360_charting,
         "ten_textbook_algorithms_receipt": ten_textbook_receipt,
         "restored_ws1_python_receipt": restored_ws1_python_receipt,
+        "mega_sweep_2026_11_06_5track_7step_trace": mega_sweep_5track_7step,
         "posted_home_spread": posted_home_spread_val,
         "posted_total": posted_total_val,
         "away": {

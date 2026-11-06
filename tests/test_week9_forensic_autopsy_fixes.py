@@ -1500,6 +1500,95 @@ def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() ->
     assert res_1["composite_epa_delta"] != res_2["composite_epa_delta"]
 
 
+# ============================================================================
+# TEST 30: Mega-Sweep 2026-11-06 100% Manifest Coverage & 5-Track / 7-Step Engine
+# ============================================================================
+def test_30_mega_sweep_2026_11_06_100pct_manifest_coverage_and_5track_7step_engine() -> None:
+    """
+    Verifies:
+      1. 100% accounting of the Mega-Sweep 2026-11-06 corpus in `mega_sweep_2026_11_06_coverage_ledger.json`
+         and `docs/engine/research/2026-11-06/mega-sweep-2026-11-06-coverage-ledger.md`:
+         - 516 total manifest items (184 net unique books / 197 files across BOOKS-A..MUST,
+           200 repos across REPOS-A..B, 132 full social dossiers across IG-1..3 + X-1).
+         - 925 SEEN-LEDGER.md rows (538 IG + 28 X + book/repo rows).
+         - 2,998 items in 2026-11-04-MASTER-PULL (4).md (2,221 X + 777 IG).
+         - 0 unaccounted items (`unaccounted_items_count == 0`).
+      2. Mandatory 5-Track L1-L5 reasoning trace (`1_qb_behavior`, `2_coaching_and_scheme`,
+         `3_offensive_line`, `4_trust_signals`, `5_scheme_matchup`), L4 adversary pass,
+         and L5 synthesis in exact order `OL -> scheme -> QB`
+         (`["3_offensive_line", "5_scheme_matchup", "2_coaching_and_scheme", "1_qb_behavior", "4_trust_signals"]`),
+         with zero unchecked items at L3 or deeper (`trace_valid is True`).
+      3. Mandatory 7-Step Weekly Cycle (`1_usage`, `2_health` GSI medical/biomechanics,
+         `3_matchups_available_players`, `4_situations`, `5_venues_weather_referees`,
+         `6_everything_else`, `7_books_last_price_check` with `market_is_headline_reason is False`
+         and `market_weight_in_reasoning <= 0.08`).
+      4. Live wiring into `compile_stage1_to_stage2_simulation_priors` with non-constant
+         cross-game uniqueness across Week 9 matchups.
+    """
+    from intelligence.reasoning.mega_sweep_2026_11_06_wiring_engine import (
+        L5_SYNTHESIS_ORDER_OL_TO_SCHEME_TO_QB,
+        MANDATORY_FIVE_TRACKS,
+        WEEKLY_CYCLE_FIXED_ORDER,
+        evaluate_5track_l1_to_l5_and_7step_weekly_cycle,
+    )
+    from scripts.ops.gse_connected_game_workflow import (
+        compile_stage1_to_stage2_simulation_priors,
+    )
+
+    cov_json_path = REPO_ROOT / "data" / "engine" / "mega_sweep_2026_11_06_coverage_ledger.json"
+    cov_md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "mega-sweep-2026-11-06-coverage-ledger.md"
+    assert cov_json_path.is_file()
+    assert cov_md_path.is_file()
+
+    cov = json.loads(cov_json_path.read_text(encoding="utf-8"))
+    summary = cov["summary"]
+    assert summary["manifest_rows_total"] == 516
+    assert summary["manifest_books_net_unique_count"] == 184
+    assert summary["manifest_books_total_files_count"] == 197
+    assert summary["manifest_repos_rows_count"] == 200
+    assert summary["manifest_social_dossiers_rows_count"] == 132
+    assert summary["seen_ledger_rows_total"] == 925
+    assert summary["seen_ledger_ig_items"] == 538
+    assert summary["seen_ledger_x_items"] == 28
+    assert summary["master_pull_2026_11_04_x_items"] == 2221
+    assert summary["master_pull_2026_11_04_ig_items"] == 777
+    assert summary["unaccounted_items_count"] == 0
+
+    # Verify 5-Track L1-L5 & 7-Step Weekly Cycle evaluation across distinct matchups
+    s1 = compile_stage1_to_stage2_simulation_priors(game_context={"away": "MIN", "home": "DET", "week": 9})
+    s2 = compile_stage1_to_stage2_simulation_priors(game_context={"away": "WAS", "home": "NYG", "week": 9})
+
+    ms1 = s1["mega_sweep_2026_11_06_5track_7step_trace"]
+    ms2 = s2["mega_sweep_2026_11_06_5track_7step_trace"]
+
+    assert ms1["trace_valid"] is True
+    assert ms2["trace_valid"] is True
+    assert ms1["unchecked_items_at_l3_or_deeper"] == 0
+    assert ms1["ol_to_scheme_to_qb_order_enforced"] is True
+    assert ms1["l5_synthesis_order"] == list(L5_SYNTHESIS_ORDER_OL_TO_SCHEME_TO_QB)
+    assert ms1["five_tracks_evaluated"] == list(MANDATORY_FIVE_TRACKS)
+    assert list(ms1["tracks_l1_to_l5"].keys()) == list(L5_SYNTHESIS_ORDER_OL_TO_SCHEME_TO_QB)
+    assert ms1["weekly_cycle_fixed_order"] == list(WEEKLY_CYCLE_FIXED_ORDER)
+
+    step2 = ms1["weekly_cycle_steps"]["2_health"]
+    assert step2["away_gsi_health"]["care_consortium_biomarker_kinetics"]["rule_in_only_doctrine"] is True
+    assert "whim_kth_mps95_corpus_callosum" in step2["away_gsi_health"]
+    assert "delaware_oslo_acl_9mo_monthly_reduction" in step2["away_gsi_health"]
+    assert "jama_cte_top10pct_hit_exposure_index" in step2["away_gsi_health"]
+
+    step7 = ms1["weekly_cycle_steps"]["7_books_last_price_check"]
+    assert step7["executed_after_steps_1_to_6"] is True
+    assert step7["market_is_headline_reason"] is False
+    assert step7["market_weight_in_reasoning"] <= 0.08
+
+    # Cross-game uniqueness
+    assert (
+        ms1["pre_market_reasoning_epa_delta"]
+        != ms2["pre_market_reasoning_epa_delta"]
+    )
+
+
+
 
 
 

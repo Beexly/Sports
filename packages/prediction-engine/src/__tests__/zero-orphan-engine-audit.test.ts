@@ -155,6 +155,13 @@ describe("Zero-Orphan GSE Engine Audit & W1-W14 / F2-F3 Dossier Calculators", ()
     expect(agg.zeroOrphanResult?.batch3CircadianPenalty).toBeDefined();
     expect(agg.zeroOrphanResult?.batch4NeuroCollisionLoad).toBeDefined();
     expect(agg.zeroOrphanResult?.gapHuntHeuerAchDiagnosticity).toBeDefined();
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.traceValid).toBe(true);
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.olToSchemeToQbOrderEnforced).toBe(true);
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.uncheckedItemsAtL3OrDeeper).toBe(0);
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.marketIsHeadlineReason).toBe(false);
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.marketWeightInReasoning).toBeLessThanOrEqual(0.08);
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.receivingMetricsReceipt.yprr.yprr).toBeGreaterThan(0);
+    expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.receivingMetricsReceipt.routeWinRate.routeWinRate).toBeGreaterThan(0);
   });
 
   it("evaluates all 12 Batch 3 / Batch 4 / Gap-Hunt / Repo-Catalog / AM Sweep mathematical operators", () => {

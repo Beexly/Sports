@@ -1,19 +1,19 @@
 {
   "schema": "gse-mind-and-corpus-consolidation-receipt-v1",
-  "generated_at": "2026-11-06T14:34:17.948022+00:00",
+  "generated_at": "2026-11-06T15:49:40.107055+00:00",
   "single_writer_doctrine_respected": true,
   "brain_mind_jsonl_modified": false,
   "staging_directory": "data/mind_staging",
   "output_feed_path": "brain/feeds/unified_mind_staging_waves1_to_12_2026_11_06.jsonl",
-  "output_feed_sha256": "abb264ea93bd00b9be5060261de166b861e6e9acbd4fa3fb6d96ede75c25ab64",
-  "total_staging_files_inspected": 13,
-  "staging_jsonl_files_count": 11,
+  "output_feed_sha256": "d7e51e70d661520b05972a622b34fb68c68e2bae5e5f01577c8818457aaa208d",
+  "total_staging_files_inspected": 14,
+  "staging_jsonl_files_count": 12,
   "staging_manifest_files_count": 2,
   "auxiliary_mind_jsonl_files_count": 1,
-  "raw_staging_jsonl_records": 4386,
-  "raw_staging_plus_manifest_lines": 4405,
-  "raw_total_records_with_auxiliary": 4408,
-  "deduplicated_unified_records": 3035,
+  "raw_staging_jsonl_records": 7601,
+  "raw_staging_plus_manifest_lines": 7620,
+  "raw_total_records_with_auxiliary": 7623,
+  "deduplicated_unified_records": 6250,
   "duplicates_collapsed": 1373,
   "waves_covered": [
     "wave_1_to_4_full_corpus",
@@ -52,10 +52,16 @@
       "unique_new_records": 1389
     },
     {
+      "file": "mind_2026_11_06_mega_sweep_corpus.jsonl",
+      "kind": "staged_mind_jsonl",
+      "line_count": 516,
+      "unique_new_records": 516
+    },
+    {
       "file": "mind_2026_11_06_zero_skip_theorems_and_archeology.jsonl",
       "kind": "staged_mind_jsonl",
-      "line_count": 250,
-      "unique_new_records": 250
+      "line_count": 2949,
+      "unique_new_records": 2949
     },
     {
       "file": "mind_batch3_batch4_gaphunt_repocatalog_am_pm_2026_11_05.jsonl",

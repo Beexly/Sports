@@ -83,8 +83,8 @@
       }
     },
     "l1_to_l5_specialist_reasoning_trace": {
-      "trace_id": "2026-11-06T105006Z0000-81c40954",
-      "content_hash": "f6994568edfc7edf12f893a66e2c1ae300fa7cefad8a1469de7a44cc77a359dc",
+      "trace_id": "2026-11-06T155541Z0000-e61e4688",
+      "content_hash": "f2a810142ab2b3f4ee82e6295630e9d46c15f5af588c83905f1d37dffcfd531e",
       "depth_reached": "L5",
       "hierarchy_order": [
         "offensive_line",
@@ -115,8 +115,8 @@
       "validated_equations_count": 3,
       "l5_epa_signal_delta": -0.0069
     },
-    "coaching_modules_total": 51,
-    "coaching_modules_imported_and_verified": 51,
+    "coaching_modules_total": 52,
+    "coaching_modules_imported_and_verified": 52,
     "coaching_module_registry": {
       "adjustments": {
         "module": "intelligence.coaching.adjustments",
@@ -623,6 +623,15 @@
           "detect_regime_shift"
         ]
       },
+      "rest_days": {
+        "module": "intelligence.coaching.rest_days",
+        "imported": true,
+        "public_callables_count": 2,
+        "public_callables": [
+          "Any",
+          "rest_before"
+        ]
+      },
       "schedule_cleaned_epa": {
         "module": "intelligence.coaching.schedule_cleaned_epa",
         "imported": true,
@@ -732,7 +741,7 @@
       "uncompressed_25k_repo_books_papers_routes_bridge": {
         "module": "intelligence.coaching.uncompressed_25k_repo_books_papers_routes_bridge",
         "imported": true,
-        "public_callables_count": 19,
+        "public_callables_count": 20,
         "public_callables": [
           "Path",
           "Any",
@@ -825,7 +834,7 @@
     },
     "python_31_intelligence_subpackages_and_31_datasets": {
       "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-      "generated_at_utc": "2026-11-06T10:49:51.967761+00:00",
+      "generated_at_utc": "2026-11-06T15:55:16.449029+00:00",
       "datasets_connected_count": 33,
       "datasets_report": {
         "ftn_charting_2026": {
@@ -2517,18 +2526,30 @@
         }
       },
       "intelligence_31_subpackages": {
-        "subpackages_connected_count": 43,
-        "total_intelligence_python_files": 501,
+        "subpackages_connected_count": 49,
+        "total_intelligence_python_files": 558,
         "subpackage_inventory": {
+          "adjustment-layer": {
+            "python_files": 4,
+            "top_level_functions": 27,
+            "top_level_classes": 2,
+            "status": "CONNECTED_AND_AUDITED"
+          },
           "audit": {
             "python_files": 10,
             "top_level_functions": 22,
             "top_level_classes": 0,
             "status": "CONNECTED_AND_AUDITED"
           },
+          "calibration": {
+            "python_files": 2,
+            "top_level_functions": 3,
+            "top_level_classes": 1,
+            "status": "CONNECTED_AND_AUDITED"
+          },
           "coaching": {
-            "python_files": 61,
-            "top_level_functions": 328,
+            "python_files": 62,
+            "top_level_functions": 331,
             "top_level_classes": 21,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2539,7 +2560,7 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "combine_reliability": {
-            "python_files": 5,
+            "python_files": 6,
             "top_level_functions": 20,
             "top_level_classes": 3,
             "status": "CONNECTED_AND_AUDITED"
@@ -2551,8 +2572,14 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "context": {
+            "python_files": 2,
+            "top_level_functions": 6,
+            "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "data_loaders": {
             "python_files": 1,
-            "top_level_functions": 1,
+            "top_level_functions": 13,
             "top_level_classes": 0,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2569,9 +2596,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "gates": {
-            "python_files": 7,
-            "top_level_functions": 31,
-            "top_level_classes": 2,
+            "python_files": 14,
+            "top_level_functions": 105,
+            "top_level_classes": 5,
             "status": "CONNECTED_AND_AUDITED"
           },
           "ingest": {
@@ -2596,6 +2623,12 @@
             "python_files": 32,
             "top_level_functions": 63,
             "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "kernels": {
+            "python_files": 2,
+            "top_level_functions": 3,
+            "top_level_classes": 1,
             "status": "CONNECTED_AND_AUDITED"
           },
           "markets": {
@@ -2647,9 +2680,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "optimizer": {
-            "python_files": 2,
-            "top_level_functions": 14,
-            "top_level_classes": 0,
+            "python_files": 6,
+            "top_level_functions": 16,
+            "top_level_classes": 8,
             "status": "CONNECTED_AND_AUDITED"
           },
           "physics": {
@@ -2665,14 +2698,14 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "props": {
-            "python_files": 11,
-            "top_level_functions": 117,
-            "top_level_classes": 8,
+            "python_files": 15,
+            "top_level_functions": 152,
+            "top_level_classes": 9,
             "status": "CONNECTED_AND_AUDITED"
           },
           "providers": {
-            "python_files": 3,
-            "top_level_functions": 7,
+            "python_files": 4,
+            "top_level_functions": 15,
             "top_level_classes": 1,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2695,27 +2728,27 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "reasoning": {
-            "python_files": 27,
-            "top_level_functions": 321,
+            "python_files": 29,
+            "top_level_functions": 315,
             "top_level_classes": 49,
             "status": "CONNECTED_AND_AUDITED"
           },
           "reasoning_engine": {
-            "python_files": 12,
-            "top_level_functions": 41,
+            "python_files": 14,
+            "top_level_functions": 44,
             "top_level_classes": 0,
             "status": "CONNECTED_AND_AUDITED"
           },
           "research": {
-            "python_files": 5,
-            "top_level_functions": 37,
-            "top_level_classes": 3,
+            "python_files": 16,
+            "top_level_functions": 77,
+            "top_level_classes": 7,
             "status": "CONNECTED_AND_AUDITED"
           },
           "roster": {
-            "python_files": 3,
-            "top_level_functions": 18,
-            "top_level_classes": 4,
+            "python_files": 4,
+            "top_level_functions": 20,
+            "top_level_classes": 6,
             "status": "CONNECTED_AND_AUDITED"
           },
           "routing": {
@@ -2725,8 +2758,8 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "sgp": {
-            "python_files": 7,
-            "top_level_functions": 57,
+            "python_files": 8,
+            "top_level_functions": 62,
             "top_level_classes": 10,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2736,10 +2769,22 @@
             "top_level_classes": 8,
             "status": "CONNECTED_AND_AUDITED"
           },
+          "signals": {
+            "python_files": 1,
+            "top_level_functions": 3,
+            "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
           "situational": {
             "python_files": 2,
             "top_level_functions": 4,
             "top_level_classes": 0,
+            "status": "CONNECTED_AND_AUDITED"
+          },
+          "situational-graph": {
+            "python_files": 5,
+            "top_level_functions": 42,
+            "top_level_classes": 3,
             "status": "CONNECTED_AND_AUDITED"
           },
           "staking": {
@@ -2755,8 +2800,8 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "trust": {
-            "python_files": 10,
-            "top_level_functions": 39,
+            "python_files": 11,
+            "top_level_functions": 41,
             "top_level_classes": 10,
             "status": "CONNECTED_AND_AUDITED"
           },
@@ -2767,9 +2812,9 @@
             "status": "CONNECTED_AND_AUDITED"
           },
           "vision": {
-            "python_files": 37,
-            "top_level_functions": 196,
-            "top_level_classes": 43,
+            "python_files": 42,
+            "top_level_functions": 198,
+            "top_level_classes": 52,
             "status": "CONNECTED_AND_AUDITED"
           },
           "voice_brain": {
@@ -3319,11 +3364,11 @@
     },
     "pbp_reproductions_2026_summary": {},
     "bdb2025_coverage_shell_summary": {},
-    "stage1a_receipt_sha256": "d768826d2ec4345d210cd0fbaf4e68ffece3b6a4f8be70de20fba28364fda2a6"
+    "stage1a_receipt_sha256": "e65c645a6d90165f71464bac669501b251057cbcc74493bb6f9bd693335d9433"
   },
   "stage1b_5367_equations_pre_sim_review": {
     "schema": "gse_stage1b_5367_equations_pre_sim_receipt_v2",
-    "parent_stage1a_receipt_sha256": "d768826d2ec4345d210cd0fbaf4e68ffece3b6a4f8be70de20fba28364fda2a6",
+    "parent_stage1a_receipt_sha256": "e65c645a6d90165f71464bac669501b251057cbcc74493bb6f9bd693335d9433",
     "equation_corpus_inventory": {
       "thousand_equation_matrix_load_bearing": 1666,
       "citable_verified_count": 1340,
@@ -3483,7 +3528,7 @@
       "streams_executed_count": 22,
       "streams_total_count": 22,
       "streams_skipped_count": 0,
-      "stream15i_zero_orphan_modules_evaluated": 81,
+      "stream15i_zero_orphan_modules_evaluated": 131,
       "stream15i_catalog_signals_evaluated": 51,
       "situational_expected_metrics_catalog_descriptors": 40
     },
@@ -5358,6 +5403,6 @@
       "win_prob_from_spread_jax_minus_7_5": 0.7479,
       "rb_regime_mixture_derrick_henry": 60.51
     },
-    "stage1b_receipt_sha256": "f1f8db987e61bcc4566fef853a37fee1adad3c261fa5bc70d5bdafa4e18bb757"
+    "stage1b_receipt_sha256": "131928bf6b23f71de758d86f093fb2ade90ea81f7f16efa9ac861ffdfb77d0d0"
   }
 }
