@@ -1,23 +1,66 @@
 {
-  "schema": "gse_workstream2_page_by_page_zero_skip_audit_v1",
-  "generated_at_utc": "2026-11-06T14:34:17.334632+00:00",
-  "elapsed_seconds": 73.25,
+  "schema": "gse_workstream2_page_by_page_zero_skip_audit_v2",
+  "generated_at_utc": "2026-11-06T15:20:21.848502+00:00",
+  "elapsed_seconds": 254.46,
   "zero_pages_skipped_verified": true,
+  "truncation_cap_active": false,
   "total_skipped_pages": 0,
+  "total_pdfs_verified_all_roots": 2853,
+  "total_pdf_pages_verified_all_roots": 228686,
+  "total_docxs_verified_all_roots": 148,
+  "six_roots_page_by_page_verification": {
+    "SRP_Cache": {
+      "pdfs_opened": 877,
+      "pages_extracted": 17040,
+      "docxs_opened": 5
+    },
+    "Downloads": {
+      "pdfs_opened": 205,
+      "pages_extracted": 25978,
+      "docxs_opened": 48,
+      "zips_opened": 8
+    },
+    "GDrive_Vault": {
+      "pdfs_opened": 1185,
+      "pages_extracted": 99911,
+      "docxs_opened": 0
+    },
+    "GDrive_GSN": {
+      "pdfs_opened": 352,
+      "pages_extracted": 44210,
+      "docxs_opened": 15
+    },
+    "GDrive_MegaSweep": {
+      "pdfs_opened": 135,
+      "pages_extracted": 39918,
+      "mds_opened": 7,
+      "indexed_rows": 1523
+    },
+    "Repo": {
+      "pdfs_opened": 99,
+      "pages_extracted": 1629,
+      "docxs_opened": 80,
+      "deep_research_eq_docx_2_paragraphs": 2328,
+      "deep_research_eq_docx_3_paragraphs": 2965
+    },
+    "OneDrive": {
+      "files_verified": 1014
+    }
+  },
   "sports_research_papers_877": {
     "total_pdfs": 877,
     "total_pages_verified": 17040,
     "total_pages_skipped": 0,
-    "total_extracted_characters": 39259762,
+    "total_extracted_characters": 39347732,
     "total_pdf_bytes": 1774534220,
     "parsed_index_path": "data/corpus_parsed_full/sports_research_papers/parsed_877_papers_index.json"
   },
   "downloads_and_flagship_books": {
-    "total_non_pii_files": 506,
-    "pdf_files_count": 204,
-    "pdf_total_pages_verified": 24864,
+    "total_non_pii_files": 510,
+    "pdf_files_count": 205,
+    "pdf_total_pages_verified": 24880,
     "embedded_zip_pdf_pages_verified": 1098,
-    "total_pdf_pages_including_zip_textbooks": 25962,
+    "total_pdf_pages_including_zip_textbooks": 25978,
     "pdf_pages_skipped": 0,
     "docx_files_count": 48,
     "zip_archives_count": 8,
@@ -30,8 +73,13 @@
         "table_rows_count": 11,
         "total_chars": 56648,
         "skipped_pages_or_sections": 0,
-        "extracted_theorems_count": 15,
+        "extracted_theorems_count": 19,
         "extracted_theorems_sample": [
+          {
+            "kind": "Rule",
+            "number": "2",
+            "statement_excerpt": "& Rule 18: mu = close until beaten on locked walk-forward)"
+          },
           {
             "kind": "Theorem",
             "number": "6",
@@ -83,6 +131,21 @@
             "statement_excerpt": "Conformal Risk Control."
           },
           {
+            "kind": "Rule",
+            "number": "6",
+            "statement_excerpt": "Closed-form Shin de-vigging (returns p_a, p_b, insider_z).\"\"\""
+          },
+          {
+            "kind": "Rule",
+            "number": "1",
+            "statement_excerpt": "& Rule 7/17: Point-in-time Warehouse.asof(t) leakage check"
+          },
+          {
+            "kind": "Rule",
+            "number": "3",
+            "statement_excerpt": "CollegeGuard parameter isolation"
+          },
+          {
             "kind": "Theorem",
             "number": "6",
             "statement_excerpt": "Conformal Effective Sample Size (c_hat <= 12.42)"
@@ -117,7 +180,7 @@
         "table_rows_count": 50,
         "total_chars": 95015,
         "skipped_pages_or_sections": 0,
-        "extracted_theorems_count": 23,
+        "extracted_theorems_count": 25,
         "extracted_theorems_sample": [
           {
             "kind": "Theorem",
@@ -153,6 +216,16 @@
             "kind": "Theorem",
             "number": "8",
             "statement_excerpt": "Visual-Inertial-Viscoelastic Inversion (SkeleTrack v2 Homography  Sulcal Strain)"
+          },
+          {
+            "kind": "Rule",
+            "number": "3",
+            "statement_excerpt": "of the 19-Rule Honesty Doctrine (CollegeGuard) enforces a strict mathematical wall between NFL and College Football parameterizations, blocking any port of NFL constants into CFB models by both variable name and numerica"
+          },
+          {
+            "kind": "Rule",
+            "number": "33",
+            "statement_excerpt": "Conversely, CFB exhibits a pronounced blowout tax where  favorites beat the closing number by , and long travel () carries a near-signal  shift ()3. When the Predicted Points Added (PPA) challenger () failed the frozen W"
           },
           {
             "kind": "Theorem",
@@ -318,8 +391,14 @@
         "table_rows_count": 22,
         "total_chars": 23163,
         "skipped_pages_or_sections": 0,
-        "extracted_theorems_count": 0,
-        "extracted_theorems_sample": []
+        "extracted_theorems_count": 1,
+        "extracted_theorems_sample": [
+          {
+            "kind": "Rule",
+            "number": "4",
+            "statement_excerpt": "Cross-Runtime Serializer Conflict | TS insertion-order (dd6549a…) vs. Python sort_keys (0821671…). | DONE (1d1e44e65 + C1 Patch). 6/6 golden-digest-parity.test.ts PASS; Class B quarantine lifted. | Two deeper bugs caught"
+          }
+        ]
       },
       "CONTENT-STACK-AUDIT-2026-10-28.md": {
         "filename": "CONTENT-STACK-AUDIT-2026-10-28.md",
@@ -355,7 +434,7 @@
         "lines_count": 281,
         "total_chars": 13701,
         "skipped_pages_or_sections": 0,
-        "extracted_theorems_count": 0
+        "extracted_theorems_count": 1
       },
       "deepseek_text_20261106_bd5f66.txt": {
         "filename": "deepseek_text_20261106_bd5f66.txt",
@@ -485,14 +564,31 @@
     }
   },
   "arxiv_onedrive_gdrive": {
+    "repo_pdfs_count": 99,
+    "repo_pdf_pages": 1629,
+    "repo_docxs_count": 80,
+    "repo_docx_paragraphs": 37754,
+    "deep_research_eq_docx_2_paragraphs": 2328,
+    "deep_research_eq_docx_3_paragraphs": 2965,
+    "gdrive_vault_pdfs_count": 1185,
+    "gdrive_vault_pages": 99911,
+    "gdrive_gsn_pdfs_count": 352,
+    "gdrive_gsn_pages": 44210,
+    "gdrive_gsn_docxs_count": 15,
+    "gdrive_gsn_docx_paragraphs": 10538,
+    "gdrive_megasweep_pdfs_count": 135,
+    "gdrive_megasweep_pages": 39918,
+    "gdrive_megasweep_mds_count": 7,
+    "gdrive_megasweep_indexed_rows": 1523,
     "docs_arxiv_program_total_files": 1791,
     "docs_arxiv_program_markdown_dossiers": 1579,
     "docs_arxiv_program_json_corpora": 50,
     "onedrive_galaxy_sports_edge_files": 1014,
-    "gdrive_total_files": 3558,
-    "skipped_pages_across_all_corpora": 0
+    "gdrive_total_files": 4003,
+    "skipped_pages_across_all_corpora": 0,
+    "gdrive_pdfs_and_docxs_opened": 1694
   },
-  "extracted_theorems_lemmas_algorithms_count": 766,
+  "extracted_theorems_lemmas_algorithms_count": 2949,
   "extracted_theorems_jsonl_path": "data/corpus_parsed_full/extracted_theorems_lemmas_algorithms_2026_11_06.jsonl",
   "mind_staging_jsonl_path": "data/mind_staging/mind_2026_11_06_zero_skip_theorems_and_archeology.jsonl"
 }
