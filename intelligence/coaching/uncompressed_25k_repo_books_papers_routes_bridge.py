@@ -266,6 +266,16 @@ CANONICAL_TEXTBOOKS_AND_BOOKS: List[Dict[str, Any]] = [
         ],
         "prior_hook": "mezard_montanari_cavity_susceptibility_modulation",
     },
+    {
+        "book_id": "BOOK_19_MURPHY_MACHINE_LEARNING_PROBABILISTIC_PERSPECTIVE",
+        "title": "Machine Learning: A Probabilistic Perspective (Kevin P. Murphy, 1,098 pp.)",
+        "domain": "dirichlet_multinomial_conjugate_target_posterior_gaussian_process_predictive_variance",
+        "live_operators": [
+            "murphy_dirichlet_multinomial_and_gp_posterior",
+            "laplace_approximation_logistic_posterior_predictive",
+        ],
+        "prior_hook": "murphy_dirichlet_target_and_gp_predictive_variance",
+    },
 ]
 
 # ============================================================================
@@ -817,6 +827,33 @@ def barber_weighted_conformal_prediction(
     }
 
 
+def murphy_dirichlet_multinomial_and_gp_posterior(
+    prior_alphas: List[float],
+    observed_counts: List[float],
+    logit_mean: float = 0.0,
+    logit_var: float = 0.25,
+) -> Dict[str, Any]:
+    """11. Murphy (2012, Ch. 3 & Ch. 8/15) Dirichlet-Multinomial conjugate posterior & Mackay/Probit Laplace predictive."""
+    k = min(len(prior_alphas), len(observed_counts))
+    if k == 0:
+        return {
+            "posterior_predictive_shares": [],
+            "concentration_alpha0": 0.0,
+            "laplace_probit_prob": 0.5,
+        }
+    post_alphas = [max(0.05, float(prior_alphas[i])) + max(0.0, float(observed_counts[i])) for i in range(k)]
+    alpha_0 = sum(post_alphas)
+    shares = [round(a / alpha_0, 6) for a in post_alphas]
+    kappa = 1.0 / math.sqrt(1.0 + (math.pi * max(0.0, float(logit_var)) / 8.0))
+    scaled_logit = max(-8.0, min(8.0, kappa * float(logit_mean)))
+    laplace_prob = 1.0 / (1.0 + math.exp(-scaled_logit))
+    return {
+        "posterior_predictive_shares": shares,
+        "concentration_alpha0": round(alpha_0, 4),
+        "laplace_probit_prob": round(laplace_prob, 6),
+    }
+
+
 def evaluate_uncompressed_books_papers_and_monorepo_priors(
     game_context: Dict[str, Any],
 ) -> Dict[str, Any]:
@@ -921,6 +958,12 @@ def evaluate_uncompressed_books_papers_and_monorepo_priors(
         point_estimate=-spread_home,
         alpha=0.10,
     )
+    tb_murphy = murphy_dirichlet_multinomial_and_gp_posterior(
+        [5.6, 4.4, 3.2, 4.0, 2.8],
+        [7.5 + home_proe * 12.0, 5.8 + away_proe * 8.0, 4.1, 4.9, 3.4],
+        logit_mean=-spread_home * 0.08 + home_proe - away_proe,
+        logit_var=0.18 + 0.08 * uncertainty_sources,
+    )
     composite_tb_epa_delta = round(
         0.15 * float(tb_nocedal["step_vector"][0] if tb_nocedal["step_vector"] else 0.0)
         + 0.12 * float(tb_tsitsiklis["state_values"][0] if tb_tsitsiklis["state_values"] else 0.0)
@@ -930,7 +973,7 @@ def evaluate_uncompressed_books_papers_and_monorepo_priors(
         6,
     )
     ten_textbook_algorithms_receipt = {
-        "algorithms_executed_count": 10,
+        "algorithms_executed_count": 11,
         "composite_epa_delta": composite_tb_epa_delta,
         "lopez_de_prado_afml": tb_afml,
         "boyd_convex_optimization": tb_boyd,
@@ -942,6 +985,7 @@ def evaluate_uncompressed_books_papers_and_monorepo_priors(
         "villani_optimal_transport": tb_villani,
         "mezard_montanari_spin_glass_cavity": tb_mezard,
         "barber_weighted_conformal": tb_barber,
+        "murphy_probabilistic_ml": tb_murphy,
     }
 
     return {

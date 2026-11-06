@@ -796,38 +796,60 @@ def process_single_file(path: Path, idx: int) -> Dict[str, Any]:
             title = f"SQLite Database: {fname} ({len(headers)} tables)"
         elif suffix == ".zip":
             file_status = "ARCHIVE_BUNDLE"
+            zip_pii_substrings = (
+                "fsa-reimbursement-sweep",
+                "hsa-receipts",
+                "vytalus",
+                "lyra_",
+                "heb_pharmacy",
+                "wells-fargo-financial",
+                "rob-wiley-turner",
+                "woodway-collection",
+                "charcuterie-chick",
+                "self-notes-dm-archive",
+            )
             with zipfile.ZipFile(path, "r") as zf:
-                infos = [i for i in zf.infolist() if not i.is_dir()]
+                infos = [
+                    i
+                    for i in zf.infolist()
+                    if not i.is_dir() and not any(sub in i.filename.lower() for sub in zip_pii_substrings)
+                ]
                 names = [i.filename for i in infos]
                 headers = names[:12]
-                inner_snippets = [f"ZIP Archive '{fname}' containing {len(infos)} files:"]
-                inner_snippets.extend(names[:80])
-                if byte_size < 50_000_000:
-                    for info in infos[:8]:
-                        ext_in = Path(info.filename).suffix.lower()
-                        if ext_in in {".md", ".py", ".ts", ".json", ".txt"} and info.file_size < 60_000:
+                inner_snippets = [f"ZIP Archive '{fname}' containing {len(infos)} non-PII files:"]
+                inner_snippets.extend(names[:120])
+                total_acc_chars = sum(len(s) for s in inner_snippets)
+                for info in infos:
+                    if total_acc_chars >= MAX_TEXT_READ_BYTES:
+                        break
+                    ext_in = Path(info.filename).suffix.lower()
+                    if ext_in in {".md", ".py", ".ts", ".json", ".txt"} and info.file_size < 500_000:
+                        try:
+                            sub_txt = zf.read(info).decode("utf-8", errors="replace")[:8000]
+                            chunk = f"\n--- {info.filename} ---\n{sub_txt}"
+                            inner_snippets.append(chunk)
+                            total_acc_chars += len(chunk)
+                        except Exception:
+                            pass
+                    elif ext_in == ".pdf":
+                        try:
                             try:
-                                sub_txt = zf.read(info).decode("utf-8", errors="replace")[:1500]
-                                inner_snippets.append(f"\n--- {info.filename} ---\n{sub_txt}")
-                            except Exception:
-                                pass
-                        elif ext_in == ".pdf":
-                            try:
-                                try:
-                                    import pymupdf as fitz_zip
-                                except ImportError:
-                                    import fitz as fitz_zip
-                                pdf_bytes = zf.read(info)
-                                zdoc = fitz_zip.open(stream=pdf_bytes, filetype="pdf")
-                                zpages = len(zdoc)
-                                headers.append(f"inner_pdf_pages={zpages}")
-                                ztxt = "\n".join((zdoc[i].get_text() or "") for i in range(min(zpages, 8)))
-                                zdoc.close()
-                                inner_snippets.append(f"\n--- {info.filename} ({zpages} pages) ---\n{ztxt[:4000]}")
-                            except Exception:
-                                pass
+                                import pymupdf as fitz_zip
+                            except ImportError:
+                                import fitz as fitz_zip
+                            pdf_bytes = zf.read(info)
+                            zdoc = fitz_zip.open(stream=pdf_bytes, filetype="pdf")
+                            zpages = len(zdoc)
+                            headers.append(f"inner_pdf_pages={zpages}")
+                            ztxt = "\n".join((zdoc[i].get_text() or "") for i in range(zpages))
+                            zdoc.close()
+                            chunk = f"\n--- {info.filename} ({zpages} pages) ---\n{ztxt}"
+                            inner_snippets.append(chunk)
+                            total_acc_chars += len(chunk)
+                        except Exception:
+                            pass
                 full_text = "\n".join(inner_snippets)[:MAX_TEXT_READ_BYTES]
-                title = f"ZIP Archive Bundle: {fname} ({len(infos)} member files)"
+                title = f"ZIP Archive Bundle: {fname} ({len(infos)} non-PII member files)"
         elif suffix in {".png", ".jpeg", ".jpg", ".exe"}:
             file_status = "BINARY_ASSET"
             dims_note = ""

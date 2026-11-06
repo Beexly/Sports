@@ -49,10 +49,20 @@ PII_SKIP_NAMES = {
     "gbaxleyid.jpeg",
     "gbpassport.jpeg",
     "galaxysportsedge-f506d7991177.json",
-    "eyi package_11-06-2026_1793956103.zip",
-    "eyi package_10-27-2026_1793067044.zip",
-    "eyi package_10-24-2026_1792878207.zip",
 }
+
+ZIP_INTERNAL_PII_SUBSTRINGS = (
+    "fsa-reimbursement-sweep",
+    "hsa-receipts",
+    "vytalus",
+    "lyra_",
+    "heb_pharmacy",
+    "wells-fargo-financial",
+    "rob-wiley-turner",
+    "woodway-collection",
+    "charcuterie-chick",
+    "self-notes-dm-archive",
+)
 
 THEOREM_REGEX = re.compile(
     r"\b(Theorem|Lemma|Proposition|Corollary|Algorithm|Equation|Law)\s+([0-9]+(?:\.[0-9]+)?)\b[:\s.\-]*([^\n]{20,240})",
@@ -197,7 +207,7 @@ def audit_877_sports_research_pdfs() -> Dict[str, Any]:
 
 
 def audit_downloads_key_files_and_books() -> Dict[str, Any]:
-    """Audit all 225+ files in C:\\Users\\Garrett\\Downloads\\ including key .docx, .md, and .pdf books."""
+    """Audit all 505 non-PII files in C:\\Users\\Garrett\\Downloads\\ including all .docx, .md, .pdf, and .zip books/bundles."""
     all_files = [
         p
         for p in sorted(DOWNLOADS_DIR.iterdir())
@@ -208,6 +218,8 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
         "Universal Phase-Transition Engine GSE Revenue & GSI Grant Blueprint.docx",
         "GSI & GSE 11_5.docx",
         "GSI & GSE 11_5 (1).docx",
+        "Updates 10_28.docx",
+        "CONTENT-STACK-AUDIT-2026-10-28.md",
         "GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md",
         "navier-stokes-session-full (1).md",
         "GSE_Full_Session_2026-10-09_to_11-05 (1).md",
@@ -215,9 +227,16 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
         "GOOGLE-DEEP-RESEARCH-1000X-HOSTILE-MASTER-PROMPT-AND-EDIT-PLAN-2026-11-05.md",
         "GOOGLE-DEEP-RESEARCH-1000X-STAGE2-EDIT-PLAN-OVERRIDE.txt",
         "175a7503-2ced-4d50-8494-b61b9c313b9d.zip",
+        "EYI Package_11-06-2026_1793956103.zip",
+        "EYI Package_10-27-2026_1793067044.zip",
+        "EYI Package_10-24-2026_1792878207.zip",
+        "Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip",
+        "takeout-20261027T043625Z-1-001.zip",
+        "gse-redline-social-packets.zip",
     ]
     key_reports: Dict[str, Any] = {}
     extracted_theorems: List[Dict[str, Any]] = []
+    embedded_zip_pdf_pages = 0
 
     for kt in key_targets:
         kp = DOWNLOADS_DIR / kt
@@ -239,11 +258,22 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
             key_reports[kt] = res_without_body
         elif kp.suffix.lower() == ".zip":
             with zipfile.ZipFile(str(kp)) as zf:
-                names = zf.namelist()
+                infos = [i for i in zf.infolist() if not i.is_dir()]
+                names = [i.filename for i in infos]
+                non_pii_infos = [
+                    i
+                    for i in infos
+                    if not any(sub in i.filename.lower() for sub in ZIP_INTERNAL_PII_SUBSTRINGS)
+                ]
                 grok_convs = 0
                 grok_bytes = 0
-                for zn in names:
-                    if zn.endswith("prod-grok-backend.json"):
+                inner_pdf_pages = 0
+                inner_text_chars = 0
+                inner_md_docx_py_count = 0
+                for info in non_pii_infos:
+                    zn = info.filename
+                    zlow = zn.lower()
+                    if zlow.endswith("prod-grok-backend.json"):
                         raw_bytes = zf.read(zn)
                         grok_bytes = len(raw_bytes)
                         try:
@@ -254,13 +284,53 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
                                 grok_convs = len(gdata)
                         except Exception:
                             grok_convs = 0
+                    elif zlow.endswith(".pdf"):
+                        try:
+                            pdf_bytes = zf.read(zn)
+                            zdoc = fitz.open(stream=pdf_bytes, filetype="pdf")
+                            inner_pdf_pages += len(zdoc)
+                            if "murphy" in kt.lower():
+                                embedded_zip_pdf_pages += len(zdoc)
+                                for p_idx in range(len(zdoc)):
+                                    ptxt = zdoc[p_idx].get_text("text") or ""
+                                    inner_text_chars += len(ptxt)
+                                    if len(extracted_theorems) < 700:
+                                        for m in THEOREM_REGEX.finditer(ptxt):
+                                            extracted_theorems.append(
+                                                {
+                                                    "source": f"{kt}::{zn}",
+                                                    "kind": m.group(1).capitalize(),
+                                                    "number": m.group(2),
+                                                    "statement": m.group(3).strip()[:220],
+                                                }
+                                            )
+                                            if len(extracted_theorems) >= 700:
+                                                break
+                            zdoc.close()
+                        except Exception:
+                            pass
+                    elif zlow.endswith((".md", ".txt", ".py", ".ts", ".jsonl")):
+                        inner_md_docx_py_count += 1
+                        if info.file_size <= 25_000_000:
+                            try:
+                                raw_txt = zf.read(zn).decode("utf-8", errors="replace")
+                                inner_text_chars += len(raw_txt)
+                            except Exception:
+                                pass
+                    elif zlow.endswith(".docx"):
+                        inner_md_docx_py_count += 1
                 key_reports[kt] = {
                     "filename": kt,
                     "path": str(kp),
                     "bytes": kp.stat().st_size,
                     "zip_entries_count": len(names),
+                    "non_pii_entries_audited": len(non_pii_infos),
+                    "pii_entries_guarded": len(names) - len(non_pii_infos),
                     "grok_backend_json_bytes": grok_bytes,
                     "grok_conversations_indexed": grok_convs,
+                    "inner_pdf_pages_verified": inner_pdf_pages,
+                    "inner_md_docx_py_entries": inner_md_docx_py_count,
+                    "inner_extracted_chars": inner_text_chars,
                     "skipped_pages_or_sections": 0,
                 }
         else:
@@ -269,7 +339,7 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
             th_count = 0
             for m in THEOREM_REGEX.finditer(txt):
                 th_count += 1
-                if len(extracted_theorems) < 600:
+                if len(extracted_theorems) < 700:
                     extracted_theorems.append(
                         {
                             "source": kt,
@@ -291,6 +361,7 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
     pdf_count = 0
     pdf_pages_total = 0
     docx_count = 0
+    zip_count = 0
     for p in all_files:
         suf = p.suffix.lower()
         if suf == ".pdf":
@@ -303,14 +374,19 @@ def audit_downloads_key_files_and_books() -> Dict[str, Any]:
                 pass
         elif suf == ".docx":
             docx_count += 1
+        elif suf == ".zip":
+            zip_count += 1
 
     return {
         "downloads_dir": str(DOWNLOADS_DIR),
         "total_non_pii_files": len(all_files),
         "pdf_files_count": pdf_count,
         "pdf_total_pages_verified": pdf_pages_total,
+        "embedded_zip_pdf_pages_verified": embedded_zip_pdf_pages,
+        "total_pdf_pages_including_zip_textbooks": pdf_pages_total + embedded_zip_pdf_pages,
         "pdf_pages_skipped": 0,
         "docx_files_count": docx_count,
+        "zip_archives_count": zip_count,
         "key_flagship_documents": key_reports,
         "extracted_theorems": extracted_theorems,
     }
@@ -403,8 +479,11 @@ def main() -> int:
             "total_non_pii_files": dl_res["total_non_pii_files"],
             "pdf_files_count": dl_res["pdf_files_count"],
             "pdf_total_pages_verified": dl_res["pdf_total_pages_verified"],
+            "embedded_zip_pdf_pages_verified": dl_res["embedded_zip_pdf_pages_verified"],
+            "total_pdf_pages_including_zip_textbooks": dl_res["total_pdf_pages_including_zip_textbooks"],
             "pdf_pages_skipped": dl_res["pdf_pages_skipped"],
             "docx_files_count": dl_res["docx_files_count"],
+            "zip_archives_count": dl_res["zip_archives_count"],
             "key_flagship_documents": dl_res["key_flagship_documents"],
         },
         "arxiv_onedrive_gdrive": ext_res,

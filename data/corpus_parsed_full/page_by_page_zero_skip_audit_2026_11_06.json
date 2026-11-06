@@ -1,7 +1,7 @@
 {
   "schema": "gse_workstream2_page_by_page_zero_skip_audit_v1",
-  "generated_at_utc": "2026-11-06T10:55:30.484452+00:00",
-  "elapsed_seconds": 11.27,
+  "generated_at_utc": "2026-11-06T14:34:17.334632+00:00",
+  "elapsed_seconds": 73.25,
   "zero_pages_skipped_verified": true,
   "total_skipped_pages": 0,
   "sports_research_papers_877": {
@@ -13,11 +13,14 @@
     "parsed_index_path": "data/corpus_parsed_full/sports_research_papers/parsed_877_papers_index.json"
   },
   "downloads_and_flagship_books": {
-    "total_non_pii_files": 503,
+    "total_non_pii_files": 506,
     "pdf_files_count": 204,
     "pdf_total_pages_verified": 24864,
+    "embedded_zip_pdf_pages_verified": 1098,
+    "total_pdf_pages_including_zip_textbooks": 25962,
     "pdf_pages_skipped": 0,
     "docx_files_count": 48,
+    "zip_archives_count": 8,
     "key_flagship_documents": {
       "GSE + GSI + OpenAI.docx": {
         "filename": "GSE + GSI + OpenAI.docx",
@@ -307,6 +310,26 @@
           }
         ]
       },
+      "Updates 10_28.docx": {
+        "filename": "Updates 10_28.docx",
+        "path": "C:\\Users\\Garrett\\Downloads\\Updates 10_28.docx",
+        "bytes": 26908,
+        "paragraphs_count": 49,
+        "table_rows_count": 22,
+        "total_chars": 23163,
+        "skipped_pages_or_sections": 0,
+        "extracted_theorems_count": 0,
+        "extracted_theorems_sample": []
+      },
+      "CONTENT-STACK-AUDIT-2026-10-28.md": {
+        "filename": "CONTENT-STACK-AUDIT-2026-10-28.md",
+        "path": "C:\\Users\\Garrett\\Downloads\\CONTENT-STACK-AUDIT-2026-10-28.md",
+        "bytes": 11036,
+        "lines_count": 83,
+        "total_chars": 10954,
+        "skipped_pages_or_sections": 0,
+        "extracted_theorems_count": 0
+      },
       "GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md": {
         "filename": "GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md",
         "path": "C:\\Users\\Garrett\\Downloads\\GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md",
@@ -366,8 +389,97 @@
         "path": "C:\\Users\\Garrett\\Downloads\\175a7503-2ced-4d50-8494-b61b9c313b9d.zip",
         "bytes": 1473669424,
         "zip_entries_count": 2426,
+        "non_pii_entries_audited": 2426,
+        "pii_entries_guarded": 0,
         "grok_backend_json_bytes": 705112070,
         "grok_conversations_indexed": 225,
+        "inner_pdf_pages_verified": 0,
+        "inner_md_docx_py_entries": 0,
+        "inner_extracted_chars": 0,
+        "skipped_pages_or_sections": 0
+      },
+      "EYI Package_11-06-2026_1793956103.zip": {
+        "filename": "EYI Package_11-06-2026_1793956103.zip",
+        "path": "C:\\Users\\Garrett\\Downloads\\EYI Package_11-06-2026_1793956103.zip",
+        "bytes": 789180617,
+        "zip_entries_count": 1514,
+        "non_pii_entries_audited": 1481,
+        "pii_entries_guarded": 33,
+        "grok_backend_json_bytes": 0,
+        "grok_conversations_indexed": 0,
+        "inner_pdf_pages_verified": 157,
+        "inner_md_docx_py_entries": 826,
+        "inner_extracted_chars": 42099790,
+        "skipped_pages_or_sections": 0
+      },
+      "EYI Package_10-27-2026_1793067044.zip": {
+        "filename": "EYI Package_10-27-2026_1793067044.zip",
+        "path": "C:\\Users\\Garrett\\Downloads\\EYI Package_10-27-2026_1793067044.zip",
+        "bytes": 657707672,
+        "zip_entries_count": 1368,
+        "non_pii_entries_audited": 1336,
+        "pii_entries_guarded": 32,
+        "grok_backend_json_bytes": 0,
+        "grok_conversations_indexed": 0,
+        "inner_pdf_pages_verified": 89,
+        "inner_md_docx_py_entries": 757,
+        "inner_extracted_chars": 32521153,
+        "skipped_pages_or_sections": 0
+      },
+      "EYI Package_10-24-2026_1792878207.zip": {
+        "filename": "EYI Package_10-24-2026_1792878207.zip",
+        "path": "C:\\Users\\Garrett\\Downloads\\EYI Package_10-24-2026_1792878207.zip",
+        "bytes": 657410657,
+        "zip_entries_count": 1341,
+        "non_pii_entries_audited": 1310,
+        "pii_entries_guarded": 31,
+        "grok_backend_json_bytes": 0,
+        "grok_conversations_indexed": 0,
+        "inner_pdf_pages_verified": 89,
+        "inner_md_docx_py_entries": 731,
+        "inner_extracted_chars": 31805309,
+        "skipped_pages_or_sections": 0
+      },
+      "Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip": {
+        "filename": "Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip",
+        "path": "C:\\Users\\Garrett\\Downloads\\Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip",
+        "bytes": 24018815,
+        "zip_entries_count": 1,
+        "non_pii_entries_audited": 1,
+        "pii_entries_guarded": 0,
+        "grok_backend_json_bytes": 0,
+        "grok_conversations_indexed": 0,
+        "inner_pdf_pages_verified": 1098,
+        "inner_md_docx_py_entries": 0,
+        "inner_extracted_chars": 2387582,
+        "skipped_pages_or_sections": 0
+      },
+      "takeout-20261027T043625Z-1-001.zip": {
+        "filename": "takeout-20261027T043625Z-1-001.zip",
+        "path": "C:\\Users\\Garrett\\Downloads\\takeout-20261027T043625Z-1-001.zip",
+        "bytes": 98476,
+        "zip_entries_count": 22,
+        "non_pii_entries_audited": 22,
+        "pii_entries_guarded": 0,
+        "grok_backend_json_bytes": 0,
+        "grok_conversations_indexed": 0,
+        "inner_pdf_pages_verified": 0,
+        "inner_md_docx_py_entries": 15,
+        "inner_extracted_chars": 314270,
+        "skipped_pages_or_sections": 0
+      },
+      "gse-redline-social-packets.zip": {
+        "filename": "gse-redline-social-packets.zip",
+        "path": "C:\\Users\\Garrett\\Downloads\\gse-redline-social-packets.zip",
+        "bytes": 6440180,
+        "zip_entries_count": 9,
+        "non_pii_entries_audited": 9,
+        "pii_entries_guarded": 0,
+        "grok_backend_json_bytes": 0,
+        "grok_conversations_indexed": 0,
+        "inner_pdf_pages_verified": 0,
+        "inner_md_docx_py_entries": 1,
+        "inner_extracted_chars": 1081,
         "skipped_pages_or_sections": 0
       }
     }
@@ -380,7 +492,7 @@
     "gdrive_total_files": 3558,
     "skipped_pages_across_all_corpora": 0
   },
-  "extracted_theorems_lemmas_algorithms_count": 454,
+  "extracted_theorems_lemmas_algorithms_count": 766,
   "extracted_theorems_jsonl_path": "data/corpus_parsed_full/extracted_theorems_lemmas_algorithms_2026_11_06.jsonl",
   "mind_staging_jsonl_path": "data/mind_staging/mind_2026_11_06_zero_skip_theorems_and_archeology.jsonl"
 }

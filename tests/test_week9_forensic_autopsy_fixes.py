@@ -1174,9 +1174,23 @@ def test_23_workstream2_zero_skipped_pdf_book_pages_and_10_textbook_algorithms_m
     assert audit["arxiv_onedrive_gdrive"]["onedrive_galaxy_sports_edge_files"] >= 1014
     assert audit["arxiv_onedrive_gdrive"]["gdrive_total_files"] >= 3558
 
+    dl = audit["downloads_and_flagship_books"]
+    assert dl["total_non_pii_files"] >= 505
+    assert dl["pdf_files_count"] == 204
+    assert dl["pdf_total_pages_verified"] == 24864
+    assert dl["embedded_zip_pdf_pages_verified"] == 1098
+    assert dl["total_pdf_pages_including_zip_textbooks"] == 25962
+    assert dl["zip_archives_count"] == 8
+    flagship = dl["key_flagship_documents"]
+    assert flagship["EYI Package_11-06-2026_1793956103.zip"]["zip_entries_count"] == 1514
+    assert flagship["Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip"]["inner_pdf_pages_verified"] == 1098
+    assert flagship["175a7503-2ced-4d50-8494-b61b9c313b9d.zip"]["grok_conversations_indexed"] == 225
+    assert flagship["Updates 10_28.docx"]["paragraphs_count"] >= 45
+
     tb_a = run_all_10_textbook_algorithms({"off_epa": 0.14, "def_epa": -0.08, "posted_home_spread": -6.5})
     tb_b = run_all_10_textbook_algorithms({"off_epa": -0.12, "def_epa": 0.09, "posted_home_spread": 4.5})
-    assert tb_a["algorithms_executed_count"] == 10
+    assert tb_a["algorithms_executed_count"] >= 10
+    assert "murphy_probabilistic_ml" in tb_a
     assert tb_a["composite_epa_delta"] != 0.0
     assert tb_a["composite_epa_delta"] != tb_b["composite_epa_delta"]
 

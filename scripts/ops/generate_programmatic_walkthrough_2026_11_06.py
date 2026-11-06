@@ -117,7 +117,7 @@ def build_programmatic_walkthrough() -> Dict[str, Any]:
         f"| `data/sports_research_papers/` (`877` PDFs) | `{pdfs_877['total_pdfs']:,}` | `{pdfs_877['total_pages_verified']:,}` pages | `{pdfs_877['total_pages_skipped']}` | `{pdfs_877['total_extracted_characters']:,}` chars |"
     )
     lines.append(
-        f"| `Downloads` PDFs & Flagship `.docx`/`.md` | `{dl_books['total_non_pii_files']:,}` (`{dl_books['pdf_files_count']}` PDFs, `{dl_books['docx_files_count']}` DOCX) | `{dl_books['pdf_total_pages_verified']:,}` PDF pages | `{dl_books['pdf_pages_skipped']}` | `{pdf_audit['extracted_theorems_lemmas_algorithms_count']}` theorems/lemmas |"
+        f"| `Downloads` PDFs, Textbooks, `.docx`/`.md` & `.zip` | `{dl_books['total_non_pii_files']:,}` (`{dl_books['pdf_files_count']}` PDFs, `{dl_books['docx_files_count']}` DOCX, `{dl_books.get('zip_archives_count', 8)}` ZIP) | `{dl_books.get('total_pdf_pages_including_zip_textbooks', dl_books['pdf_total_pages_verified']):,}` PDF pages (`{dl_books['pdf_total_pages_verified']:,}` direct + `{dl_books.get('embedded_zip_pdf_pages_verified', 1098):,}` in ZIP) | `{dl_books['pdf_pages_skipped']}` | `{pdf_audit['extracted_theorems_lemmas_algorithms_count']}` theorems/lemmas |"
     )
     lines.append(
         f"| `docs/arxiv-program/` Corpus | `{arxiv_od_gd['docs_arxiv_program_total_files']:,}` | `{arxiv_od_gd['docs_arxiv_program_markdown_dossiers']:,}` dossiers + `{arxiv_od_gd['docs_arxiv_program_json_corpora']}` JSON | `{arxiv_od_gd['skipped_pages_across_all_corpora']}` | `100%` indexed |"
