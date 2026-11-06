@@ -176,7 +176,8 @@
     "competitors:harvest": "tsx scripts/competitive-intel/harvest.ts",
     "competitors:sheet": "tsx scripts/competitive-intel/steal-sheet.ts",
     "competitors:discover": "tsx scripts/competitive-intel/discover-contests.ts",
-    "competitors:base": "tsx scripts/competitive-intel/customer-base.ts"
+    "competitors:base": "tsx scripts/competitive-intel/customer-base.ts",
+    "competitors:sql": "tsx scripts/competitive-intel/emit-sql.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

@@ -72,6 +72,13 @@ how a strong player thinks, closer to the model than a projection number is.
 
 ### The id space is the hard part
 
+Open question, with the evidence: the slate listing's `id` (197M range) does not resolve on
+`usernames` (4 of 4 failed), while archived `usernames` ids (42.9M range) work all day. So the
+listing appears to carry a different provider's contest id, and the mapping between the two is
+not exposed on the routes found. Consequences: archived ids plus neighbour probing are the
+working discovery path, and the listing is currently only good for names, dates and prize pools,
+not for queueing harvests.
+
 Contest ids are not a sequence. Neighbouring ids miss, and 40 random samples across a two
 million wide band returned zero. So ids are gathered and then verified:
 
@@ -102,6 +109,14 @@ coverage is luck and narrative, which is where a differentiator is cheapest.
 writes a steal sheet: price posture and a wedge for a price sheet, a family histogram with the
 thinnest families for a feature catalogue. It never fetches, so the sheet is reproducible from
 the artifact alone and carries that artifact's provenance verbatim.
+
+## Loading it
+
+`npm run competitors:sql -- --in .ci-out --org fantasylabs --out .ci-out/load.sql` writes one
+transaction: the org upsert, one asset row per artifact, and prospect_contacts as COPY from
+stdin so 100k people load in one statement. `emailHash` is stable per owner id, so a re-load
+updates rather than duplicates. Handles load at confidence 60, grinders 70, whales 80, because a
+public handle is not an email and should not claim to be.
 
 ## The customer base brief
 
