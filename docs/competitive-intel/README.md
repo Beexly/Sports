@@ -72,6 +72,10 @@ how a strong player thinks, closer to the model than a projection number is.
 
 ### The id space is the hard part
 
+Scope finding first: every contest captured is golf (sportId 5). The slate route answered for no
+other sport on any date in a two week window (sports 1 to 4 and 6 to 40 all empty), so the
+population below is a golf population. NFL contest ids were not surfaced by anything found here.
+
 Open question, with the evidence: the slate listing's `id` (197M range) does not resolve on
 `usernames` (4 of 4 failed), while archived `usernames` ids (42.9M range) work all day. So the
 listing appears to carry a different provider's contest id, and the mapping between the two is

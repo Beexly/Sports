@@ -61,6 +61,8 @@ const coverage = allRows.length === 0 ? 0 : multiContest.length / profiles.lengt
 const lines: string[] = [];
 lines.push("# Customer base: fantasylabs");
 lines.push("");
+lines.push("Scope: every contest pulled is golf (sportId 5). The slate route answered for no other sport in a two week window, so read this as a golf population.");
+lines.push("");
 lines.push(`${contests.size} contest(s) · ${allRows.length} entrant rows · ${profiles.length} unique people`);
 lines.push("");
 lines.push("## Provenance");
