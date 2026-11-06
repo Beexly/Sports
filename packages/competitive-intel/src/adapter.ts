@@ -11,7 +11,7 @@
 
 import type { ZodType } from "zod";
 import type { Provenance, RawArtifact, RivalAssetType } from "./types.js";
-import { provenanceOf, sha256Hex } from "./types.js";
+import { provenanceOf, stableHash } from "./types.js";
 import type { LicenseClass } from "./types.js";
 
 export interface RivalAdapter<T> {
@@ -70,7 +70,7 @@ export async function fetchArtifact(
     tier,
     body,
     httpStatus: res.status,
-    contentHash: sha256Hex(body),
+    contentHash: stableHash(body),
   };
 }
 

@@ -25,7 +25,9 @@ type Rule = { readonly family: SignalFamily; readonly test: RegExp };
  *  - market: fallback for prices and everything priced.
  */
 const RULES: readonly Rule[] = [
-  { family: "TRENCHES", test: /\b(line|linemate|pressure|pressure rate|block|blitz|hits?|sacks?|coverage|gap|trench|pff)\b/i },
+  // Five-letter-plus words drop the leading word boundary on purpose: rivals spell compounds
+  // in camelCase ("TeamDefPressureRate") and a `\bpressure` never fires there.
+  { family: "TRENCHES", test: /\b(line|hits?|gap|pff)\b|(pressure|block|blitz|sacks?|coverage|trench)/i },
   { family: "MICROCLIMATE", test: /\b(weather|wind|temp|temperature|roof|surface|park|altitude|venue|humidity|precip)\b/i },
   { family: "MARKET_MICROSTRUCTURE", test: /(ownership|own%|field%|\bsalary\b|\bvalue\b|leverage|popularity|\btickets?\b|\bhandles?\b|\bmoney\b|consensus)/i },
   { family: "SITUATIONAL", test: /\b(rest|back[- ]to[- ]back|injur|status|snaps?|minutes|travel|schedule|fatigue|probable|questionable)\b/i },

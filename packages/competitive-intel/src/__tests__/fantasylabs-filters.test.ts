@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAdapter, AdapterError } from "../adapter.js";
-import { sha256Hex } from "../types.js";
+import { stableHash } from "../types.js";
 import {
   familyHistogram,
   fantasylabsFiltersAdapter,
@@ -23,7 +23,7 @@ function artifact(body = FIXTURE, status = 200) {
     tier: 3 as const,
     body,
     httpStatus: status,
-    contentHash: sha256Hex(body),
+    contentHash: stableHash(body),
   };
 }
 

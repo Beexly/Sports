@@ -51,8 +51,8 @@ export interface FetchCtx {
   readonly now: () => Date;
 }
 
-export function sha256Hex(input: string): string {
-  // Small, dependency-free, and stable across Node and the browser bundle.
+// FNV-1a pair, not SHA-256. Named honestly; the alias keeps the old call sites working.
+export function stableHash(input: string): string {
   let h1 = 0x811c9dc5;
   let h2 = 0x01000193;
   for (let i = 0; i < input.length; i += 1) {
@@ -64,6 +64,9 @@ export function sha256Hex(input: string): string {
   const b = h2.toString(16).padStart(8, "0");
   return `fnv${a}${b}${input.length.toString(16)}`;
 }
+
+/** @deprecated misnamed; use stableHash. Same output. */
+export const sha256Hex = stableHash;
 
 /** Provenance is stamped from the artifact, never from the caller's optimism. */
 export function provenanceOf(
