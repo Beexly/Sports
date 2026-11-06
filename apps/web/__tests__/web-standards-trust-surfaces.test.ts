@@ -14,9 +14,12 @@ describe("web standards trust surfaces (outside-the-box)", () => {
     expect(src).toMatch(/Expires:/);
   });
 
-  it("ships honest ads.txt (no sellers)", () => {
+  it("ships ads.txt authorizing only the AdSense publisher line", () => {
     const src = readFileSync(join(root, "app/ads.txt/route.ts"), "utf8");
-    expect(src.toLowerCase()).toMatch(/does not sell/);
+    expect(src).toMatch(
+      /google\.com, pub-8151105906877749, DIRECT, f08c47fec0942fa0/,
+    );
+    expect(src.match(/DIRECT|RESELLER/g)).toHaveLength(1);
   });
 
   it("manifest does not claim live odds cadence while board may be dark", () => {
