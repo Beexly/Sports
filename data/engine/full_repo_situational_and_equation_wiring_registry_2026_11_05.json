@@ -1,10 +1,10 @@
 {
   "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
-  "generated_at_utc": "2026-11-06T09:02:30.820848+00:00",
-  "total_ts_modules_cataloged": 1227,
-  "prediction_engine_ts_modules": 1220,
+  "generated_at_utc": "2026-11-06T10:52:39.479208+00:00",
+  "total_ts_modules_cataloged": 1241,
+  "prediction_engine_ts_modules": 1234,
   "mcp_equations_server_ts_modules": 7,
-  "total_python_intelligence_modules_cataloged": 405,
+  "total_python_intelligence_modules_cataloged": 422,
   "x_situational_80_rules_count": 87,
   "consolidated_sweep_signals_count": 29,
   "all_in_one_research_signals_count": 17,
@@ -14,7 +14,7 @@
   "equation_families_count": 279,
   "total_equations_routed": 12304,
   "cholesky_families_orthogonalized": 6,
-  "clamped_log_odds_delta": -0.146918,
+  "clamped_log_odds_delta": 0.065203,
   "x_situational_80_rules": {
     "x_situational_80_rules_count": 87,
     "misleading_stat_firewall_rules_count": 15,
@@ -863,7 +863,7 @@
       4294967295,
       4294967295,
       4294967295,
-      8388607
+      243269631
     ],
     "equation_families_count": 279,
     "active_signal_families_count": 279,
@@ -872,10 +872,19 @@
     "stage_a_filtered_count": 2500,
     "stage_b_hnsw_top_k": 250,
     "stage_c_orthogonal_clusters_count": 25,
-    "stage_d_james_stein_factor": 0.7976,
-    "raw_log_odds_delta": -0.1842,
-    "clamped_log_odds_delta": -0.146918,
-    "max_abs_delta_log_odds_cap": 0.35
+    "marchenko_pastur_denoise_factor": 0.87817,
+    "stage_d_james_stein_factor": 0.82192,
+    "raw_log_odds_delta": 0.07933,
+    "clamped_log_odds_delta": 0.065203,
+    "max_abs_delta_log_odds_cap": 0.35,
+    "domain_equation_sums": {
+      "pressure": 0.5812,
+      "weather": 3.0054,
+      "restFatigue": 1.9785,
+      "coveragePersonnel": -1.1415,
+      "qbSkillScript": -0.1574,
+      "marketMicrostructure": -2.0726
+    }
   },
   "master_6family_cholesky_aggregator": {
     "cholesky_families_orthogonalized": 6,
@@ -909,5 +918,5 @@
     "probability_movement_cap": 0.12,
     "post_overlay_prob": 0.5073
   },
-  "receipt_sha256": "273025479f1395389140cb9dedcc8123c465a6ba5cdd79fd661b831414b45e4e"
+  "receipt_sha256": "61aa111f4cba2adc1c4ed33f6720dc9949de86badab6463c40628e240d71c297"
 }

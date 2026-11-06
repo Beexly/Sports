@@ -16,6 +16,7 @@ import hashlib
 import json
 import math
 import os
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -23,6 +24,8 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 
 # ============================================================================
@@ -267,29 +270,17 @@ def evaluate_measured_reasoning_primitives(game_ctx: Dict[str, Any]) -> Dict[str
 # ============================================================================
 def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Executes the 4-stage Cognitive Router (`packages/mcp-equations-server/src/mcp-cognitive-router.ts`)
-    over `data/engine/master_equation_registry_12k.json` (12,304 equations) and
-    `data/engine/thousand_equation_matrix_2026.json`:
+    Executes the 4-stage Cognitive Router (`packages/mcp-equations-server/src/mcp-cognitive-router.ts`
+    and `intelligence/reasoning/equation_gate.py`) over `data/equations/equation_executable_catalog_12304.json`
+    (12,304 equations) and `data/engine/thousand_equation_matrix_2026.json`:
       - Stage A: 288-bit (`9 x uint32`) context mask across all 279 Signal Families -> 2,500 active premises
       - Stage B: Top 250 premises ranked by sample size n >= 30 and displacement cosine
       - Stage C: 25 orthogonalized spectral cluster representatives via Marchenko-Pastur whitening
       - Stage D: Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage capped at |Δlog-odds| <= 0.35
     """
-    eq_12k_path = REPO_ROOT / "data" / "engine" / "master_equation_registry_12k.json"
+    from intelligence.reasoning.equation_gate import evaluate_12304_equations_cognitive_router
+
     eq_1k_path = REPO_ROOT / "data" / "engine" / "thousand_equation_matrix_2026.json"
-
-    total_12k = 12304
-    if eq_12k_path.is_file():
-        try:
-            with open(eq_12k_path, "r", encoding="utf-8") as fh:
-                raw_12k = json.load(fh)
-                if isinstance(raw_12k, dict) and "equations" in raw_12k:
-                    total_12k = max(12304, len(raw_12k["equations"]))
-                elif isinstance(raw_12k, list):
-                    total_12k = max(12304, len(raw_12k))
-        except Exception:
-            total_12k = 12304
-
     total_1k = 1666
     if eq_1k_path.is_file():
         try:
@@ -302,40 +293,9 @@ def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> 
         except Exception:
             total_1k = 1666
 
-    # Build 288-bit mask (9 x uint32 words) across 279 signal families
-    mask_words = [0] * 9
-    active_families = 0
-    for fam_idx in range(279):
-        # Activate families with n >= 30
-        word_idx = fam_idx // 32
-        bit_idx = fam_idx % 32
-        mask_words[word_idx] |= (1 << bit_idx)
-        active_families += 1
-
-    # Stage C 25 spectral clusters -> Stage D James-Stein shrinkage
-    d_clusters = 25
-    raw_log_odds_delta = -0.1842
-    # Positive-part James-Stein shrinkage factor
-    variance_ratio = 0.22
-    js_shrinkage = max(0.0, 1.0 - ((d_clusters - 2) * variance_ratio) / max(1.0, float(d_clusters)))
-    shrunk_delta = raw_log_odds_delta * js_shrinkage
-    clamped_delta = max(-0.35, min(0.35, shrunk_delta))
-
-    return {
-        "context_mask_bits": 288,
-        "context_mask_words_uint32": mask_words,
-        "equation_families_count": 279,
-        "active_signal_families_count": active_families,
-        "total_equations_routed": total_12k,
-        "thousand_equation_matrix_count": total_1k,
-        "stage_a_filtered_count": 2500,
-        "stage_b_hnsw_top_k": 250,
-        "stage_c_orthogonal_clusters_count": d_clusters,
-        "stage_d_james_stein_factor": round(js_shrinkage, 6),
-        "raw_log_odds_delta": round(raw_log_odds_delta, 6),
-        "clamped_log_odds_delta": round(clamped_delta, 6),
-        "max_abs_delta_log_odds_cap": 0.35,
-    }
+    routed = evaluate_12304_equations_cognitive_router(game_ctx)
+    routed["thousand_equation_matrix_count"] = total_1k
+    return routed
 
 
 # ============================================================================

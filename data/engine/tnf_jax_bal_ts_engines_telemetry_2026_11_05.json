@@ -174,7 +174,7 @@
       {
         "stream": "15I:evaluateZeroOrphanExpectedMetricsOverlay",
         "called": true,
-        "detail": "77 modules / 40 catalog signals"
+        "detail": "81 modules / 40 catalog signals"
       },
       {
         "stream": "14E:emitMindFeedRecord",
@@ -246,12 +246,12 @@
       ]
     },
     "x_situational_80_records_evaluated": 80,
-    "zero_orphan_wired_modules": 77,
+    "zero_orphan_wired_modules": 81,
     "situational_expected_metrics_catalog_count": 40,
     "zero_orphan_family_adjustments": {
-      "pressure": -0.0194,
-      "coveragePersonnel": 0.0118,
-      "qbSkillScript": -0.0013,
+      "pressure": -0.0114,
+      "coveragePersonnel": 0.0148,
+      "qbSkillScript": 0.0011,
       "restFatigue": 0.0042
     },
     "teb_pocket_regime": "RUNAWAY_POCKET_COLLAPSE_AVALANCHE",
@@ -276,7 +276,7 @@
     "streams_executed_count": 22,
     "streams_total_count": 22,
     "streams_skipped_count": 0,
-    "stream15i_zero_orphan_modules_evaluated": 77,
+    "stream15i_zero_orphan_modules_evaluated": 81,
     "stream15i_catalog_signals_evaluated": 51,
     "situational_expected_metrics_catalog_descriptors": 40
   },
@@ -491,13 +491,13 @@
     }
   },
   "prediction_engine_87_domains_inventory": {
-    "total_domains": 87,
-    "total_ts_files": 1217,
-    "total_exported_symbols": 9620,
-    "root_ts_files_count": 250,
+    "total_domains": 89,
+    "total_ts_files": 1231,
+    "total_exported_symbols": 9795,
+    "root_ts_files_count": 251,
     "mcp_equations_server_ts_files_count": 7,
     "mcp_equations_server_exported_symbols_count": 94,
-    "combined_ts_files_count": 1224,
+    "combined_ts_files_count": 1238,
     "domain_names": [
       "_root",
       "automl",
@@ -514,6 +514,7 @@
       "coach-sim",
       "conformal",
       "continual",
+      "copula",
       "decision",
       "devig",
       "dfs",
@@ -582,6 +583,7 @@
       "timeseries",
       "totals",
       "tracking",
+      "verification",
       "watch",
       "weather",
       "win-spread-total",
@@ -589,8 +591,8 @@
     ],
     "domains": {
       "_root": {
-        "ts_files_count": 250,
-        "exported_symbols_count": 1918
+        "ts_files_count": 251,
+        "exported_symbols_count": 1937
       },
       "automl": {
         "ts_files_count": 5,
@@ -621,8 +623,8 @@
         "exported_symbols_count": 21
       },
       "calibration": {
-        "ts_files_count": 27,
-        "exported_symbols_count": 220
+        "ts_files_count": 28,
+        "exported_symbols_count": 223
       },
       "causal": {
         "ts_files_count": 27,
@@ -648,6 +650,10 @@
         "ts_files_count": 8,
         "exported_symbols_count": 49
       },
+      "copula": {
+        "ts_files_count": 1,
+        "exported_symbols_count": 8
+      },
       "decision": {
         "ts_files_count": 57,
         "exported_symbols_count": 585
@@ -669,8 +675,8 @@
         "exported_symbols_count": 5
       },
       "edge-lab": {
-        "ts_files_count": 139,
-        "exported_symbols_count": 1013
+        "ts_files_count": 141,
+        "exported_symbols_count": 1057
       },
       "engine": {
         "ts_files_count": 29,
@@ -697,8 +703,8 @@
         "exported_symbols_count": 40
       },
       "expected-metrics": {
-        "ts_files_count": 17,
-        "exported_symbols_count": 182
+        "ts_files_count": 18,
+        "exported_symbols_count": 205
       },
       "experimental": {
         "ts_files_count": 25,
@@ -769,8 +775,8 @@
         "exported_symbols_count": 4
       },
       "learning": {
-        "ts_files_count": 4,
-        "exported_symbols_count": 93
+        "ts_files_count": 6,
+        "exported_symbols_count": 97
       },
       "literature": {
         "ts_files_count": 11,
@@ -785,8 +791,8 @@
         "exported_symbols_count": 175
       },
       "mcp": {
-        "ts_files_count": 2,
-        "exported_symbols_count": 72
+        "ts_files_count": 3,
+        "exported_symbols_count": 81
       },
       "metalearning": {
         "ts_files_count": 7,
@@ -809,8 +815,8 @@
         "exported_symbols_count": 7
       },
       "nfl": {
-        "ts_files_count": 60,
-        "exported_symbols_count": 650
+        "ts_files_count": 63,
+        "exported_symbols_count": 702
       },
       "nlp": {
         "ts_files_count": 3,
@@ -861,8 +867,8 @@
         "exported_symbols_count": 116
       },
       "reasoning": {
-        "ts_files_count": 14,
-        "exported_symbols_count": 137
+        "ts_files_count": 15,
+        "exported_symbols_count": 142
       },
       "research": {
         "ts_files_count": 7,
@@ -920,6 +926,10 @@
         "ts_files_count": 25,
         "exported_symbols_count": 201
       },
+      "verification": {
+        "ts_files_count": 1,
+        "exported_symbols_count": 8
+      },
       "watch": {
         "ts_files_count": 1,
         "exported_symbols_count": 12
@@ -940,8 +950,8 @@
   },
   "monorepo_25_packages_inventory": {
     "total_packages": 25,
-    "total_ts_files": 2449,
-    "total_exported_symbols": 20077,
+    "total_ts_files": 2464,
+    "total_exported_symbols": 20255,
     "package_names": [
       "ai-council",
       "compliance",
@@ -995,8 +1005,8 @@
         "exported_symbols_count": 31
       },
       "epistemic-twin": {
-        "ts_files_count": 6,
-        "exported_symbols_count": 38
+        "ts_files_count": 7,
+        "exported_symbols_count": 41
       },
       "feature-store": {
         "ts_files_count": 53,
@@ -1039,8 +1049,8 @@
         "exported_symbols_count": 3067
       },
       "prediction-engine": {
-        "ts_files_count": 1233,
-        "exported_symbols_count": 9721
+        "ts_files_count": 1247,
+        "exported_symbols_count": 9896
       },
       "quote-plane": {
         "ts_files_count": 21,

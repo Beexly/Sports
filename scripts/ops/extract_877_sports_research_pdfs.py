@@ -69,7 +69,7 @@ def extract_pdfs(dry_run=False, max_files=10):
         if not dry_run and pdf_reader_lib == "pypdf":
             try:
                 reader = pypdf.PdfReader(str(pdf_path))
-                for page in reader.pages[:3]: # First 3 pages for preview
+                for page in reader.pages:
                     extracted = page.extract_text()
                     if extracted:
                         text += extracted + "\n"
@@ -78,8 +78,9 @@ def extract_pdfs(dry_run=False, max_files=10):
         elif not dry_run and pdf_reader_lib == "fitz":
             try:
                 doc = fitz.open(str(pdf_path))
-                for page_num in range(min(3, len(doc))):
+                for page_num in range(len(doc)):
                     text += doc[page_num].get_text() + "\n"
+                doc.close()
             except Exception as e:
                 text = f"[Error extracting: {e}]"
         else:

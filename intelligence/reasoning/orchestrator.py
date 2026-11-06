@@ -95,6 +95,9 @@ def validate_corpus_and_equation_gate(
         context.profiles["validated_equations"] = list(validated_equations)
         context.profiles["flagged_equations"] = list(flagged_equations)
 
+    from .equation_gate import audit_12304_equation_catalog_integrity
+
+    catalog_audit = audit_12304_equation_catalog_integrity()
     gate_summary: dict[str, Any] = {
         "query": effective_query,
         "corpus_hit_count": len(context.corpus_hits),
@@ -105,7 +108,8 @@ def validate_corpus_and_equation_gate(
         "flagged_equation_count": len(flagged_equations),
         "validated_equations": validated_equations,
         "flagged_equations": flagged_equations,
-        "gate_passed": len(flagged_equations) == 0,
+        "catalog_12304_audit": catalog_audit,
+        "gate_passed": len(flagged_equations) == 0 and bool(catalog_audit.get("gate_passed", True)),
     }
     context.corpus_gate_status = gate_summary
     return gate_summary

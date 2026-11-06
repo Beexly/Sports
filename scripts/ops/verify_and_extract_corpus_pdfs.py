@@ -51,7 +51,7 @@ MINDFEED_PATH = REPO_ROOT / "intelligence" / "corpus" / "corpus_mindfeed.jsonl"
 MIND_STAGING_PATH = REPO_ROOT / "data" / "mind_staging" / "mind_2026_11_05_full_corpus.jsonl"
 REPORT_OUT_PATH = REPO_ROOT / "data" / "engine" / "corpus_pdf_extraction_audit_2026_11_06.json"
 
-MAX_EXTRACT_CHARS = 120_000
+MAX_EXTRACT_CHARS: int | None = None
 
 
 def _get_pymupdf():
@@ -66,8 +66,8 @@ def _get_pymupdf():
             return None
 
 
-def extract_pdf_text(pdf_path: Path, max_chars: int = MAX_EXTRACT_CHARS) -> tuple[str, int, str | None]:
-    """Extract text and page count from a PDF using PyMuPDF."""
+def extract_pdf_text(pdf_path: Path, max_chars: int | None = MAX_EXTRACT_CHARS) -> tuple[str, int, str | None]:
+    """Extract full text and page count from a PDF using PyMuPDF with zero page skipping."""
     pymupdf = _get_pymupdf()
     if pymupdf is None:
         return "", 0, "pymupdf_not_installed"
@@ -78,15 +78,13 @@ def extract_pdf_text(pdf_path: Path, max_chars: int = MAX_EXTRACT_CHARS) -> tupl
     try:
         pages_count = len(doc)
         chunks: list[str] = []
-        total_chars = 0
         for page in doc:
             txt = page.get_text() or ""
             if txt:
                 chunks.append(txt)
-                total_chars += len(txt)
-                if total_chars >= max_chars:
-                    break
-        full_text = "\n".join(chunks)[:max_chars]
+        full_text = "\n".join(chunks)
+        if max_chars is not None:
+            full_text = full_text[:max_chars]
         if not full_text.strip():
             return "", pages_count, "no_text_layer"
         return full_text, pages_count, None

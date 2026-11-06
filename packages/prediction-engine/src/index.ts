@@ -5819,5 +5819,75 @@ export * from "./nfl/x-consolidated-sweep-signals.js";
 // ── IG Consolidated Conformal Selective Abstention, Borghesi/Rosen Priors, Kats CUSUM & Laya Gate ──
 export * from "./nfl/ig-consolidated-conformal-and-kats-signals.js";
 
+// ── Workstream 1–3 Restored Archeology, 10 Textbook Algorithms & Wave 13 Sheaf/Navier–Stokes Bridges ──
+export {
+  computeAfmlFractionalDiffAndMetaLabel,
+  solveBoydConvexKktAllocation,
+  computeNocedalWrightTrustRegionStep,
+  computeCoverThomasInformationMetrics,
+  computeTsitsiklisTdLambdaValueIteration,
+  applyPutermanBellmanContraction,
+  applyGlassermanControlVariateReduction,
+  computeVillaniWassersteinSinkhornShift,
+  computeMezardMontanariCavityBetheFreeEnergy,
+  computeBarberWeightedConformalQuantile,
+  evaluateTenTextbookAlgorithmsBridge,
+  type TenTextbookAlgorithmsInput,
+  type TenTextbookAlgorithmsReceipt,
+} from "./expected-metrics/textbook-algorithms-bridge.js";
+
+export {
+  computeCellularSheafIntegrityCRC,
+  computeNavierStokesPhaseResultantAndBkm,
+  computeTheorem9SpinGlassCavitySusceptibility,
+  computeTheorem12MahlerDualConformalScore,
+  computePade33Approximant,
+  computePade44Approximant,
+  computeShinClosedFormDevig,
+  evaluateWave13SheafNavierStokesPhaseTransition,
+  type Wave13EvaluationInput,
+  type Wave13EvaluationReceipt,
+} from "./nfl/wave13-sheaf-navier-stokes-phase-transition.js";
+
+export {
+  REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES,
+  evaluateZeroOrphanExpectedMetricsOverlay,
+  type ZeroOrphanOverlayInput,
+  type ZeroOrphanOverlayResult,
+} from "./nfl/zero-orphan-expected-metrics-bridge.js";
+
+export {
+  evaluateLbVoidTeRbVsSlotAbsorption,
+  type SinkhornRoleInput,
+  type SinkhornRoleResult,
+} from "./nfl/role-isomorphism-realloc.js";
+
+export {
+  KilledClaimError,
+  SCHEME_FINGERPRINT,
+  RED_ZONE_TD_RATE,
+  FOUR_MINUTE_RUN_RATE,
+  schemeFingerprintDefenceScore,
+  redZoneTotalMultiplier,
+  fourMinuteRunPrior,
+  questionableBurstMultiplier,
+} from "./nfl/killed-claims.js";
+
+export { choleskyGls, choleskyLower } from "./calibration/cholesky-gls.js";
+export {
+  frechetHoeffding,
+  claytonCdf,
+  frankCdf,
+  gumbelCdf,
+  pairingDependence,
+} from "./copula/archimedean-sgp.js";
+export { shrinkPremiseWeight, amplifySuccessRate } from "./learning/grpo-rlvr-updater.js";
+export { synthesizeRegressionTest } from "./learning/postgame-regression-synthesizer.js";
+export { buildContextualBitmask288 } from "./mcp/bitmask-schema.js";
+export { evaluateCausalPrmTrajectory } from "./reasoning/causal-prm.js";
+export { verifyAndBrandCausalReceipt } from "./verification/neuro-symbolic-z3-verifier.js";
+export { evaluateEmissionGate, isEmission } from "./edge-lab/emission-gate.js";
+
+
 
 

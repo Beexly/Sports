@@ -247,7 +247,7 @@ def compile_x_situational_layer2_overlay(game_context: Dict[str, Any]) -> Dict[s
         "completion_prob_floor": round(completion_prob_floor, 4),
         "max_2h_pass_attempts": max_2h_pass_attempts,
         "script_mode": script_mode,
-        "provenance": "SG-3 + SG-9 + Q1/Q17 + 2026-11-03-PM.md:W7 (@HaydenWinks Joe Fagnano QB3)",
+        "provenance": f"SG-3 + SG-9 + Q1/Q17 + 2026-11-03-PM.md:W7 (@HaydenWinks {qb_name} {qb_tier})",
     }
 
     # -----------------------------------------------------------------------
@@ -366,7 +366,10 @@ def compile_x_situational_layer2_overlay(game_context: Dict[str, Any]) -> Dict[s
         "vacated_wr1_target_share_redistributed": vacated_target_share_abs,
         "q50_ex_leader_receiving_yards_proj": round(q50_ex_leader_rec_yards_proj, 1),
         "reallocated_receivers": reallocated_receivers,
-        "provenance": "Q50 (PR #1227) + Q51 (PR #1232) + intel-build-queue.md:4324 (@ScottBarrettDFB Parker Washington YPRR/FP-RR)",
+        "provenance": (
+            f"Q50 (PR #1227) + Q51 (PR #1232) + intel-build-queue.md:4324 "
+            f"(@ScottBarrettDFB {reallocated_receivers[0]['name'] if reallocated_receivers else 'WR2'} YPRR/FP-RR)"
+        ),
     }
 
     # -----------------------------------------------------------------------
@@ -398,7 +401,7 @@ def compile_x_situational_layer2_overlay(game_context: Dict[str, Any]) -> Dict[s
         "second_half_lead_margin": second_half_lead_margin,
         "rule_h2_blowout_preservation_active": h2_blowout_preservation_active,
         "lead_rb_2h_carry_share_delta": lead_rb_2h_carry_share_delta,
-        "provenance": "intel-build-queue.md:90 (@FantasyPtsData Bhayshul Tuten profile) + 2026-11-05-AM (1).md:F6 (@SamHoppen light-box) + Rule H2",
+        "provenance": f"intel-build-queue.md:90 (@FantasyPtsData {rookie_rb_name} profile) + 2026-11-05-AM (1).md:F6 (@SamHoppen light-box) + Rule H2",
     }
 
     # -----------------------------------------------------------------------
@@ -465,7 +468,7 @@ def compile_x_situational_layer2_overlay(game_context: Dict[str, Any]) -> Dict[s
         "lb_blitz_sack_share_boost": lb_blitz_sack_share_boost,
         "q22_third_down_sack_kill_prob": round(third_down_sack_conversion_kill_prob, 4),
         "scheme_tags": [
-            "Campanile Guard-Mug Pressure (MatchQuarters W8)",
+            f"{dc_name} Guard-Mug Pressure (MatchQuarters W8)",
             "Backside A-Gap Run/Play-Action Blitz vs 12P (MatchQuarters W2)",
             "Fire Zones with Quarters Deuce/Tango & 2-Roll (MatchQuarters B2)",
             "Split-Safety Creeper Replacement (@TheHonestNFL)",

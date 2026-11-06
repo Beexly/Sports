@@ -29,13 +29,23 @@ import {
   computeHeuerAchDiagnosticityScore,
   predictNextSnapPrerouterActivation,
 } from "../expected-metrics/batch3-sports-physics-bridge.js";
+import {
+  evaluateTenTextbookAlgorithmsBridge,
+  type TenTextbookAlgorithmsReceipt,
+} from "../expected-metrics/textbook-algorithms-bridge.js";
+import {
+  evaluateWave13SheafNavierStokesPhaseTransition,
+  type Wave13EvaluationReceipt,
+} from "./wave13-sheaf-navier-stokes-phase-transition.js";
+import { fourMinuteRunPrior, redZoneTotalMultiplier } from "./killed-claims.js";
+import { evaluateLbVoidTeRbVsSlotAbsorption } from "./role-isomorphism-realloc.js";
 
 /**
  * Exhaustive manifest of every non-test module in `src/expected-metrics/` and `src/nfl/`.
  * Verified against the filesystem by `zero-orphan-engine-audit.test.ts`.
  */
 export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
-  // src/expected-metrics/ (17 modules)
+  // src/expected-metrics/ (18 modules)
   "expected-metrics/batch3-sports-physics-bridge.ts",
   "expected-metrics/drives.ts",
   "expected-metrics/expected-completion.ts",
@@ -50,10 +60,11 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/rollup.ts",
   "expected-metrics/situational-expected-metrics-catalog.ts",
   "expected-metrics/success-rate.ts",
+  "expected-metrics/textbook-algorithms-bridge.ts",
   "expected-metrics/types.ts",
   "expected-metrics/validation.ts",
   "expected-metrics/win-probability.ts",
-  // src/nfl/ (58 modules including this bridge)
+  // src/nfl/ (61 modules including this bridge)
   "nfl/all-in-one-research-signals.ts",
   "nfl/ats-ablation-harness.ts",
   "nfl/belichick-ten-metrics.ts",
@@ -68,6 +79,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/generalized-poisson.ts",
   "nfl/ig-consolidated-conformal-and-kats-signals.ts",
   "nfl/key-number-mass.ts",
+  "nfl/killed-claims.ts",
   "nfl/kneeldown-mass.ts",
   "nfl/leverage-surplus.ts",
   "nfl/luck-neutralized-epa.ts",
@@ -94,6 +106,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/published-cells-shrinkage.ts",
   "nfl/qb-burden.ts",
   "nfl/receiver-difficulty.ts",
+  "nfl/role-isomorphism-realloc.ts",
   "nfl/role-volatility.ts",
   "nfl/route-shell.ts",
   "nfl/rush-environment.ts",
@@ -110,6 +123,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/teb-avalanche-braid-overlay.ts",
   "nfl/universal-handoff-warehouse-priors.ts",
   "nfl/verify-nfl-injury-evidence.ts",
+  "nfl/wave13-sheaf-navier-stokes-phase-transition.ts",
   "nfl/week7-live.ts",
   "nfl/x-consolidated-sweep-signals.ts",
   "nfl/x-situational-80-rules.ts",
@@ -168,6 +182,10 @@ export interface ZeroOrphanOverlayResult {
   readonly batch3HydrodynamicTrench: ReturnType<typeof computeHydrodynamicTrenchShockwaveAndPercolation>;
   readonly gapHuntHeuerAchDiagnosticity: ReturnType<typeof computeHeuerAchDiagnosticityScore>;
   readonly amSweepPrerouterActivation: ReturnType<typeof predictNextSnapPrerouterActivation>;
+  readonly textbookAlgorithmsReceipt: TenTextbookAlgorithmsReceipt;
+  readonly wave13Receipt: Wave13EvaluationReceipt;
+  readonly roleIsomorphismRealloc: ReturnType<typeof evaluateLbVoidTeRbVsSlotAbsorption>;
+  readonly fourMinuteMeasuredRunRate: number;
   readonly familyAdjustments: {
     readonly pressure: number;
     readonly coveragePersonnel: number;
@@ -294,6 +312,52 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     },
   ]);
 
+  const textbookAlgorithmsReceipt = evaluateTenTextbookAlgorithmsBridge({
+    historicalSeries: [w1.cleanBadThrowRate, w2, w8, w9w10, w12, f3],
+    rawSignalVector: [w2, w8, f2, f3, w12],
+    gradientVector: [w1.pressureBadThrowDelta, w2 - 0.14, w8 - 0.12],
+    priorDistribution: [0.25, 0.25, 0.25, 0.25],
+    posteriorDistribution: [
+      Math.max(0.05, f3 * 0.5),
+      Math.max(0.05, w2),
+      Math.max(0.05, w8),
+      Math.max(0.05, 1 - f3 * 0.5 - w2 - w8),
+    ],
+    driveStateRewards: [w12, f2, f3 - 0.44, w13],
+    mdpActionPayoffs: [w12, f2, w2],
+    mdpTransitionProbs: [f3, w8, 1 - w1.cleanBadThrowRate],
+    simulationSamples: [f3, f3 + 0.04, f3 - 0.03, f3 + 0.02, f3 - 0.01],
+    controlVariateSamples: [0.48, 0.51, 0.46, 0.50, 0.49],
+    controlVariateExpected: 0.488,
+    calibrationNonconformityScores: [0.03, 0.05, 0.07, 0.09, 0.12],
+    pointPrediction: f3,
+    alpha: 0.10,
+  });
+
+  const wave13Receipt = evaluateWave13SheafNavierStokesPhaseTransition({
+    stalkObservations: [w1.cleanBadThrowRate, w2, w8, w9w10, f2, f3],
+    oscillatorPhasesRad: [0.15, 0.22, 0.19, 0.25, 0.18],
+    vorticitySnapSeries: [w9w10, batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard, w1.pressureBadThrowDelta],
+    directionAngleSeriesRad: [0.12, 0.18, 0.15, 0.21],
+    residualVector: [w2 - 0.14, w8 - 0.12, f3 - 0.44],
+    covarianceDiagonal: [0.04, 0.04, 0.05],
+    padeArgumentZ: Math.abs(w12) + 0.25,
+    marketImpliedProbs: [0.5238, 0.5238],
+  });
+
+  const roleIsomorphismRealloc = evaluateLbVoidTeRbVsSlotAbsorption({
+    homeIlb1Out: (input.ilbDogPressureRate ?? 0.22) > 0.25,
+    homeIlb2Out: false,
+    homeNickelCbActive: input.defZoneRate >= 0.5,
+    slotWrName: "SLOT_WR1",
+    te1Name: "TE1",
+    te2Name: "TE2",
+    rbName: "RB1",
+  });
+
+  const fourMinuteMeasuredRunRate =
+    fourMinuteRunPrior(0.422) * redZoneTotalMultiplier("current-season-market-shape");
+
   // Compute bounded family probability deltas
   const pressureDelta = Number(
     Math.max(
@@ -302,12 +366,21 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
         0.04,
         (0.15 - w1.cleanBadThrowRate) * 0.15 -
           w9w10 * 0.05 -
-          (batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard - 0.25) * 0.02,
+          (batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard - 0.25) * 0.02 +
+          wave13Receipt.wave13LogOddsModulation * 0.10,
       ),
     ).toFixed(4),
   );
   const coveragePersonnelDelta = Number(
-    Math.max(-0.04, Math.min(0.04, (w8 - 0.12) * 0.12 + f2 * 0.08)).toFixed(4),
+    Math.max(
+      -0.04,
+      Math.min(
+        0.04,
+        (w8 - 0.12) * 0.12 +
+          f2 * 0.08 +
+          (roleIsomorphismRealloc.targetShare.TE1 + roleIsomorphismRealloc.targetShare.RB - 0.50) * 0.05,
+      ),
+    ).toFixed(4),
   );
   const qbSkillScriptDelta = Number(
     Math.max(
@@ -318,7 +391,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
           w12 * 0.12 +
           (f3 - 0.44) * 0.10 +
           (w3.independentCreationShare - 0.35) * 0.05 +
-          batch4NeuroCollisionLoad.processingSpeedLogitPenalty * 0.15,
+          batch4NeuroCollisionLoad.processingSpeedLogitPenalty * 0.15 +
+          textbookAlgorithmsReceipt.combinedStage2LogOddsDelta * 0.12,
       ),
     ).toFixed(4),
   );
@@ -352,6 +426,10 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     batch3HydrodynamicTrench,
     gapHuntHeuerAchDiagnosticity,
     amSweepPrerouterActivation,
+    textbookAlgorithmsReceipt,
+    wave13Receipt,
+    roleIsomorphismRealloc,
+    fourMinuteMeasuredRunRate,
     familyAdjustments: {
       pressure: pressureDelta,
       coveragePersonnel: coveragePersonnelDelta,

@@ -1,0 +1,1145 @@
+{
+  "__dc__": "ReasoningTrace",
+  "fields": {
+    "chains": [
+      {
+        "__dc__": "CausalChain",
+        "fields": {
+          "id": "chain_DEN_CAR_hierarchy",
+          "links": [
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_ol_collapse",
+                      "metric": "away_ol_pressure_allowed",
+                      "op": ">",
+                      "text": "Away OL pressure allowed > 0.78 breaks clean-pocket thesis",
+                      "threshold": 0.78
+                    }
+                  }
+                ],
+                "cause": "DEN OL pressure allowed (0.5635) vs CAR OL pressure allowed (0.7107)",
+                "id": "link_ol_trench",
+                "load_bearing": true,
+                "mechanism": "5-man weak-link clean-pocket survival interacts with opposing DC blitz rate",
+                "outcome": "Trench disruption differential modulates time-to-throw and sack probability",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            },
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_wind_gale",
+                      "metric": "wind_mph",
+                      "op": ">=",
+                      "text": "Outdoor wind >= 24 mph breaks aerial PROE thesis",
+                      "threshold": 24.0
+                    }
+                  }
+                ],
+                "cause": "DEN PROE (+0.0191) & PA rate (22.7%)",
+                "id": "link_scheme_proe",
+                "load_bearing": true,
+                "mechanism": "Early-down pass rate over expected and motion/play-action stress defensive box count",
+                "outcome": "Script-adjusted neutral pace and explosive pass rate differential",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.COMPUTED"
+                }
+              }
+            },
+            {
+              "__dc__": "CausalLink",
+              "fields": {
+                "breaking_conditions": [
+                  {
+                    "__dc__": "BreakingCondition",
+                    "fields": {
+                      "id": "bc_away_epa_collapse",
+                      "metric": "stat.away_off_epa",
+                      "op": "<",
+                      "text": "Away offensive EPA < -0.25 breaks QB execution thesis",
+                      "threshold": -0.25
+                    }
+                  }
+                ],
+                "cause": "Bo Nix (DEN) vs Bryce Young (CAR) verified Week 9 QB1 matchup",
+                "id": "link_qb_execution",
+                "load_bearing": true,
+                "mechanism": "QB completion rate and EPA/play survival under pressure",
+                "outcome": "Post-reasoning EPA/play trajectory shift",
+                "tags": [],
+                "verification": {
+                  "__enum__": "Verification.LIVE_VERIFIED"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "checklist": {
+      "coaching_scheme": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "offensive_line": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "qb_behavior": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "scheme_matchup": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      },
+      "trust_signals": {
+        "__enum__": "ChecklistVerdict.CLEAR"
+      }
+    },
+    "created_at": "2026-11-06T10:50:41+00:00",
+    "depth": {
+      "__enum__": "ReasoningDepth.L5"
+    },
+    "escalation_log": [
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L1"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": true,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L4"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "requested_depth_floor"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L2"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L3"
+          },
+          "trigger": "level_complete"
+        }
+      },
+      {
+        "__dc__": "EscalationEntry",
+        "fields": {
+          "at": "2026-11-06T10:50:41+00:00",
+          "from_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "skipped": false,
+          "to_depth": {
+            "__enum__": "ReasoningDepth.L5"
+          },
+          "trigger": "adversary_review_complete"
+        }
+      }
+    ],
+    "exposure": {
+      "__enum__": "Exposure.PUBLISHED_PICK"
+    },
+    "game": {
+      "away": "DEN",
+      "home": "CAR",
+      "season": 2026,
+      "week": 9
+    },
+    "hierarchy_order": [
+      "offensive_line",
+      "coaching_scheme",
+      "scheme_matchup",
+      "qb_behavior",
+      "trust_signals"
+    ],
+    "label": "FINAL",
+    "legs": [
+      {
+        "__dc__": "BetLeg",
+        "fields": {
+          "causal_link_ids": [
+            "link_ol_trench",
+            "link_scheme_proe",
+            "link_qb_execution"
+          ],
+          "description": "DEN -2.5 / CAR +2.5",
+          "exposure": 1.0,
+          "id": "leg_DEN_CAR_side"
+        }
+      }
+    ],
+    "levels": {
+      "L1": {
+        "claims": [
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market away_team = DEN",
+            "value": "DEN",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market home_team = CAR",
+            "value": "CAR",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market sport = NFL",
+            "value": "NFL",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market market_type = spread",
+            "value": "spread",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market posted_home_spread = 2.5",
+            "value": 2.5,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market open_home_spread = 3.0",
+            "value": 3.0,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market posted_total = 44.5",
+            "value": 44.5,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "market feed",
+            "text": "market open_total = 42.5",
+            "value": 42.5,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.away_off_epa = -0.0218",
+            "value": -0.0218,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.home_off_epa = 0.031",
+            "value": 0.031,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.away_def_epa = -0.0233",
+            "value": -0.0233,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "observations",
+            "text": "stat.home_def_epa = 0.0285",
+            "value": 0.0285,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.DEN.proe",
+            "text": "coaching profile coach.DEN.proe: 0.0191",
+            "value": 0.0191,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.CAR.proe",
+            "text": "coaching profile coach.CAR.proe: 0.0085",
+            "value": 0.0085,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.DEN.dc_blitz_rate",
+            "text": "coaching profile coach.DEN.dc_blitz_rate: 0.3158",
+            "value": 0.3158,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:coach.CAR.dc_blitz_rate",
+            "text": "coaching profile coach.CAR.dc_blitz_rate: 0.3123",
+            "value": 0.3123,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.away_blitz_rate = 0.3158",
+            "value": 0.3158,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.home_blitz_rate = 0.3123",
+            "value": 0.3123,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.away_pa_rate = 0.2271",
+            "value": 0.2271,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "computed from nflverse play data",
+            "source": "coaching-tendencies pipeline",
+            "text": "scheme.home_pa_rate = 0.276",
+            "value": 0.276,
+            "verification": "COMPUTED"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.DEN.starter",
+            "text": "QB profile qb.DEN.starter: Bo Nix",
+            "value": "Bo Nix",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.CAR.starter",
+            "text": "QB profile qb.CAR.starter: Bryce Young",
+            "value": "Bryce Young",
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.DEN.comp_rate",
+            "text": "QB profile qb.DEN.comp_rate: 0.5889",
+            "value": 0.5889,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "",
+            "source": "profile:qb.CAR.comp_rate",
+            "text": "QB profile qb.CAR.comp_rate: 0.5876",
+            "value": 0.5876,
+            "verification": "CORPUS"
+          },
+          {
+            "note": "single-source until corroborated",
+            "source": "trust-signal intake",
+            "text": "live signal: Week 9 DEN @ CAR verified QB1s: Bo Nix vs Bryce Young",
+            "value": null,
+            "verification": "SINGLE_SOURCE"
+          },
+          {
+            "note": "single-source until corroborated",
+            "source": "trust-signal intake",
+            "text": "live signal: Venue Bank of America Stadium: Bank of America Stadium outdoor turf (6.0 mph wind, 65F)",
+            "value": null,
+            "verification": "SINGLE_SOURCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/openalex/W7112540155",
+            "text": "research corpus: research_corpus/openalex/W7112540155",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/local_pdf/48ae0d16384ed704",
+            "text": "research corpus: research_corpus/local_pdf/48ae0d16384ed704",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/arxiv/2305.10262v3",
+            "text": "research corpus: research_corpus/arxiv/2305.10262v3",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/arxiv/2609.33664v2",
+            "text": "research corpus: research_corpus/arxiv/2609.33664v2",
+            "value": null,
+            "verification": "INFERENCE"
+          },
+          {
+            "note": "GATE: UNVALIDATED \u2014 citation/mechanism use only, not load-bearing evidence in a recommendation.",
+            "source": "research_corpus/arxiv/2604.01491v2",
+            "text": "research corpus: research_corpus/arxiv/2604.01491v2",
+            "value": null,
+            "verification": "INFERENCE"
+          }
+        ]
+      },
+      "L2": {
+        "correlations": []
+      },
+      "L3": {
+        "chain_ids": [
+          "chain_DEN_CAR_hierarchy"
+        ]
+      },
+      "L4": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "correlated_theses": 1,
+          "killed_thesis_ids": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        }
+      },
+      "L5": {
+        "adversary": {
+          "breaking_conditions_met": false,
+          "condition_results": [
+            {
+              "condition_id": "bc_ol_collapse",
+              "met": false,
+              "metric": "away_ol_pressure_allowed",
+              "observed_value": 0.5635,
+              "text": "Away OL pressure allowed > 0.78 breaks clean-pocket thesis",
+              "verifiable": true
+            },
+            {
+              "condition_id": "bc_wind_gale",
+              "met": false,
+              "metric": "wind_mph",
+              "observed_value": 6.0,
+              "text": "Outdoor wind >= 24 mph breaks aerial PROE thesis",
+              "verifiable": true
+            },
+            {
+              "condition_id": "bc_away_epa_collapse",
+              "met": false,
+              "metric": "stat.away_off_epa",
+              "observed_value": -0.0218,
+              "text": "Away offensive EPA < -0.25 breaks QB execution thesis",
+              "verifiable": true
+            }
+          ],
+          "correlated_theses": [
+            {
+              "id": "thesis_01",
+              "leg_ids": [
+                "leg_DEN_CAR_side"
+              ],
+              "shared_link_ids": [
+                "link_ol_trench",
+                "link_qb_execution",
+                "link_scheme_proe"
+              ]
+            }
+          ],
+          "counter_argument": "No counter-argument could be constructed from the trace: no met breaking conditions, no conflicting evidence, no data gaps, no correlated bundles. The thesis survives adversarial review on the recorded facts.",
+          "gap_assumptions": [],
+          "killed_thesis_ids": [],
+          "notes": [],
+          "pre_mortem": "It is Monday and the 1-leg card went 0-1. What happened: no single recorded falsifier explains it \u2014 the failure mode was outside the declared breaking conditions, which means the L3 chains were missing a link. Expand the chains before the next card.",
+          "thesis_verdicts": {
+            "thesis_01": "SURVIVE"
+          },
+          "weak_link": false,
+          "weak_links": []
+        },
+        "checklist": {
+          "coaching_scheme": "CLEAR",
+          "offensive_line": "CLEAR",
+          "qb_behavior": "CLEAR",
+          "scheme_matchup": "CLEAR",
+          "trust_signals": "CLEAR"
+        },
+        "hierarchy_ok": true,
+        "hierarchy_order": [
+          "offensive_line",
+          "coaching_scheme",
+          "scheme_matchup",
+          "qb_behavior",
+          "trust_signals"
+        ],
+        "killed_legs": [],
+        "recommendation": "Thesis survived L4 adversary (no breaking condition met). Proceed only with the checklist verdicts and weak-link flags attached; final sizing and publication remain downstream gates."
+      }
+    },
+    "observed_values": {
+      "away_ol_pressure_allowed": 0.5635,
+      "home_ol_pressure_allowed": 0.7107,
+      "scheme.away_blitz_rate": 0.3158,
+      "scheme.away_pa_rate": 0.2271,
+      "scheme.home_blitz_rate": 0.3123,
+      "scheme.home_pa_rate": 0.276,
+      "stat.away_def_epa": -0.0233,
+      "stat.away_off_epa": -0.0218,
+      "stat.home_def_epa": 0.0285,
+      "stat.home_off_epa": 0.031,
+      "wind_mph": 6.0
+    },
+    "question": "Because DEN trench protection (43.6% clean pocket) and scheme PROE (+0.019) interact with CAR blitz pressure (31.2%) and QB1 Bo Nix vs Bryce Young -> evaluate Week 9 L5 edge",
+    "stub_tracks": [],
+    "tool_calls": [
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "away_team"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "DEN",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "home_team"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "CAR",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "sport"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "NFL",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "market_type"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "spread",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_home_spread"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "2.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_home_spread"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "3.0",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_total"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "44.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_total"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "42.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.DEN.proe"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.0191",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CAR.proe"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.0085",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.DEN.dc_blitz_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.3158",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CAR.dc_blitz_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.3123",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.DEN.starter"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "Bo Nix",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CAR.starter"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "Bryce Young",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.DEN.comp_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.5889",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CAR.comp_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.5876",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "k": 3,
+            "query": "Because DEN trench protection (43.6% clean pocket) and scheme PROE (+0.019) interact with CAR blitz pressure (31.2%) and QB1 Bo Nix vs Bryce Young -> evaluate Week 9 L5 edge"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "research_corpus/openalex/W7112540155; research_corpus/local_pdf/48ae0d16384ed704; research_corpus/arxiv/2305.10262v3",
+          "tool": "research_corpus"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "away_team"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "DEN",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "home_team"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "CAR",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "sport"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "NFL",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "market_type"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "spread",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_home_spread"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "2.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_home_spread"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "3.0",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_total"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "44.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_total"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "42.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.DEN.proe"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.0191",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CAR.proe"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.0085",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.DEN.dc_blitz_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.3158",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CAR.dc_blitz_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.3123",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.DEN.starter"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "Bo Nix",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CAR.starter"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "Bryce Young",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.DEN.comp_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.5889",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CAR.comp_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.5876",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "k": 3,
+            "query": "Because DEN trench protection (43.6% clean pocket) and scheme PROE (+0.019) interact with CAR blitz pressure (31.2%) and QB1 Bo Nix vs Bryce Young -> evaluate Week 9 L5 edge"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "research_corpus/openalex/W7112540155; research_corpus/local_pdf/48ae0d16384ed704; research_corpus/arxiv/2305.10262v3",
+          "tool": "research_corpus"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "away_team"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "DEN",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "home_team"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "CAR",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "sport"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "NFL",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "market_type"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "spread",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_home_spread"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "2.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_home_spread"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "3.0",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "posted_total"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "44.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "key": "open_total"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "42.5",
+          "tool": "market_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.DEN.proe"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.0191",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CAR.proe"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.0085",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.DEN.dc_blitz_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.3158",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "coach": "coach.CAR.dc_blitz_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.3123",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.DEN.starter"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "Bo Nix",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CAR.starter"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "Bryce Young",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.DEN.comp_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.5889",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "qb": "qb.CAR.comp_rate"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "0.5876",
+          "tool": "profile_lookup"
+        }
+      },
+      {
+        "__dc__": "ToolCall",
+        "fields": {
+          "args": {
+            "k": 3,
+            "query": "Because DEN trench protection (43.6% clean pocket) and scheme PROE (+0.019) interact with CAR blitz pressure (31.2%) and QB1 Bo Nix vs Bryce Young -> evaluate Week 9 L5 edge"
+          },
+          "at": "2026-11-06T10:50:41+00:00",
+          "returned": "research_corpus/openalex/W7112540155; research_corpus/local_pdf/48ae0d16384ed704; research_corpus/arxiv/2305.10262v3",
+          "tool": "research_corpus"
+        }
+      }
+    ],
+    "trace_id": "2026-11-06T105041Z0000-5b7b985f",
+    "track_evidence": {}
+  }
+}
