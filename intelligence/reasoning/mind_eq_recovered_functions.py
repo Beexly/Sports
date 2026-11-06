@@ -1,4 +1,4 @@
-"""Complex equation functions. Exact on-disk columns only.
+﻿"""Complex equation functions. Exact on-disk columns only.
 
 Every input name below is a real column already on disk (pbp / engine /
 feature tables). No h_qb_act. No FTN-only fields. No invented mappings.

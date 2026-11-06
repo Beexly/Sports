@@ -1308,6 +1308,55 @@ def test_26_workstream5_revenue_storefront_62_23_1_record_lock_and_guardrails() 
     assert mind_receipt["deduplicated_unified_records"] >= 2960
 
 
+# ============================================================================
+# TEST 27 (Task 1): Exhaustive 308 Branch Modules & 415+ Intelligence Modules Audit
+# ============================================================================
+def test_27_exhaustive_308_branch_modules_and_415_intelligence_modules_audit() -> None:
+    """
+    Pins Review Focus #2 and #4: Verifies all 308+ branch-only code files across
+    all git refs are restored to disk, all 199 functions in engine_plan_recovered_equations.py
+    are executed live, and 0 Python files in intelligence/ are unindexed orphans.
+    """
+    from intelligence.reasoning.full_branch_and_repo_module_registry import (
+        audit_all_intelligence_and_recovered_modules,
+        evaluate_recovered_branch_and_repo_python_modules,
+    )
+
+    recon_path = REPO_ROOT / "data" / "engine" / "git_commit_archeology_reconciliation_2026_11_06.json"
+    recon = json.loads(recon_path.read_text(encoding="utf-8"))
+    assert recon["total_repo_commits_scanned"] >= 11559
+    assert recon["reconciled_commits_and_modules_count"] >= 340
+    assert (REPO_ROOT / "intelligence" / "adjustment-layer" / "apply_seam.py").is_file()
+    assert (REPO_ROOT / "intelligence" / "situational-graph" / "graph.py").is_file()
+    assert (REPO_ROOT / "intelligence" / "optimizer" / "gpp_game_stack_optimizer.py").is_file()
+    assert (
+        REPO_ROOT
+        / "packages"
+        / "prediction-engine"
+        / "src"
+        / "edge-lab"
+        / "kernel"
+        / "slots"
+        / "dirichlet-multinomial.ts"
+    ).is_file()
+
+    audit = audit_all_intelligence_and_recovered_modules()
+    assert audit["total_intelligence_py_files"] >= 450
+    assert audit["unindexed_or_orphan_files"] == []
+    assert audit["named_equations_executed"] >= 199
+
+    ev_a = evaluate_recovered_branch_and_repo_python_modules(
+        {"away": "CIN", "home": "ATL", "off_epa": 0.12, "def_epa": -0.05, "spread_home": 3.0, "total_line": 48.5}
+    )
+    ev_b = evaluate_recovered_branch_and_repo_python_modules(
+        {"away": "TB", "home": "CHI", "off_epa": -0.09, "def_epa": 0.07, "spread_home": -6.0, "total_line": 41.0}
+    )
+    assert ev_a["engine_plan_199_functions_evaluated"] >= 199
+    assert ev_a["composite_branch_signal_delta"] != 0.0
+    assert ev_a["composite_branch_signal_delta"] != ev_b["composite_branch_signal_delta"]
+
+
+
 
 
 

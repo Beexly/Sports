@@ -271,42 +271,17 @@ QB_PROFILES_2026: Dict[str, QBDisguiseBlitzProfile] = {
         sack_rate_pct=5.1, pressure_to_sack_rate_pct=17.0, qb_fault_sack_share_pct=19.0,
         pressure_survival_archetype="IN_POCKET_MANIPULATOR"
     ),
-    "Joe Fagnano": QBDisguiseBlitzProfile(
-        "Joe Fagnano", "BAL", 28, 4.85, 62.4, -0.312, 0.340, 14, 4.12, 54.0, -0.385, -0.34, -14.2,
-        sack_rate_pct=10.8, pressure_to_sack_rate_pct=21.4, qb_fault_sack_share_pct=38.0,
-        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
-    ),
-    "Jalen Hurts": QBDisguiseBlitzProfile(
-        "Jalen Hurts", "PHI", 136, 7.64, 98.2, 0.118, 0.292, 52, 6.95, 89.4, 0.024, 0.09, 3.1,
-        sack_rate_pct=6.8, pressure_to_sack_rate_pct=13.6, qb_fault_sack_share_pct=26.0,
-        pressure_survival_archetype="SCRAMBLE_CREATOR"
-    ),
-    "Shedeur Sanders": QBDisguiseBlitzProfile(
-        "Shedeur Sanders", "CLE", 118, 6.82, 88.5, 0.014, 0.298, 46, 6.12, 79.4, -0.082, -0.06, -2.1,
-        sack_rate_pct=8.2, pressure_to_sack_rate_pct=16.4, qb_fault_sack_share_pct=32.0,
-        pressure_survival_archetype="IN_POCKET_MANIPULATOR"
-    ),
-    "Fernando Mendoza": QBDisguiseBlitzProfile(
-        "Fernando Mendoza", "LV", 112, 6.94, 90.1, 0.028, 0.286, 44, 6.34, 82.6, -0.054, -0.03, -1.2,
-        sack_rate_pct=6.5, pressure_to_sack_rate_pct=13.0, qb_fault_sack_share_pct=23.0,
-        pressure_survival_archetype="STRUCTURED_POCKET_PASSER"
-    ),
-    "Jaxson Dart": QBDisguiseBlitzProfile(
-        "Jaxson Dart", "NYG", 122, 7.18, 92.4, 0.046, 0.290, 48, 6.48, 84.0, -0.042, 0.03, 1.4,
-        sack_rate_pct=6.9, pressure_to_sack_rate_pct=13.8, qb_fault_sack_share_pct=25.0,
-        pressure_survival_archetype="SCRAMBLE_CREATOR"
-    ),
 }
 
 TEAM_TO_QB_2026: Dict[str, str] = {
     "ARI": "Jacoby Brissett",
-    "ATL": "Kirk Cousins",
-    "BAL": "Joe Fagnano",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Lamar Jackson",
     "BUF": "Josh Allen",
     "CAR": "Bryce Young",
     "CHI": "Caleb Williams",
     "CIN": "Joe Burrow",
-    "CLE": "Shedeur Sanders",
+    "CLE": "Deshaun Watson",
     "DAL": "Dak Prescott",
     "DEN": "Bo Nix",
     "DET": "Jared Goff",
@@ -318,14 +293,14 @@ TEAM_TO_QB_2026: Dict[str, str] = {
     "LA": "Matthew Stafford",
     "LAR": "Matthew Stafford",
     "LAC": "Justin Herbert",
-    "LV": "Fernando Mendoza",
+    "LV": "Kirk Cousins",
     "MIA": "Malik Willis",
     "MIN": "Kyler Murray",
     "NE": "Drake Maye",
     "NO": "Tyler Shough",
-    "NYG": "Jaxson Dart",
+    "NYG": "Jameis Winston",
     "NYJ": "Geno Smith",
-    "PHI": "Jalen Hurts",
+    "PHI": "Tanner McKee",
     "PIT": "Aaron Rodgers",
     "SEA": "Sam Darnold",
     "SF": "Brock Purdy",

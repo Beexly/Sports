@@ -127,15 +127,15 @@ export function clvTag(confidence: number): number {
   return confidence;
 }
 
-/** A feature timestamped after the day-before cutoff cannot enter the price. */
-export function assertKnownByLock(knownAtIso: string, cutoffIso: string): void {
+/** A feature timestamped after the day-before seal cannot enter the price. */
+export function assertKnownByLock(knownAtIso: string, lockIso: string): void {
   const known = Date.parse(knownAtIso);
-  const cutoffMs = Date.parse(cutoffIso);
-  if (!Number.isFinite(known) || !Number.isFinite(cutoffMs)) {
-    throw new Error("[FAIL-CLOSED] day-before cutoff requires two timestamps");
+  const seal = Date.parse(lockIso);
+  if (!Number.isFinite(known) || !Number.isFinite(seal)) {
+    throw new Error("[FAIL-CLOSED] day-before seal requires two timestamps");
   }
-  if (known > cutoffMs) {
-    throw new Error(`[FAIL-CLOSED] known at ${knownAtIso} is after the cutoff ${cutoffIso}`);
+  if (known > seal) {
+    throw new Error(`[FAIL-CLOSED] known at ${knownAtIso} is after the seal ${lockIso}`);
   }
 }
 

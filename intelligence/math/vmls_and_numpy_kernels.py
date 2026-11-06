@@ -257,7 +257,7 @@ if __name__ == "__main__":
     assert np.allclose(drv["drive_sums"], [9.0, 23.0, 12.0])
     assert np.allclose(drv["player_totals"], [2.0, 15.0, 27.0])
 
-    A_test = rng.uniform(-1.5, 1.5, size=(30, 5))
+    A_test = rng.normal(size=(30, 5))
     x_true = np.array([1.5, -2.0, 0.5, 3.0, -1.0])
     b_test = A_test @ x_true
     x_qr = qr_least_squares(A_test, b_test)

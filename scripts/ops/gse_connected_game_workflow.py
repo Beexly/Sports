@@ -2328,6 +2328,23 @@ def compile_stage1_to_stage2_simulation_priors(
     conformal_cal = ConformalCalibrator()
     conformal_advisory = conformal_cal.advise(float(env_cfg["posted_home_spread"]))
     eq_gate_12k = evaluate_12304_equations_cognitive_router(merged_game_context)
+    from intelligence.reasoning.full_branch_and_repo_module_registry import (
+        evaluate_recovered_branch_and_repo_python_modules,
+    )
+    full_branch_registry_eval = evaluate_recovered_branch_and_repo_python_modules(
+        {
+            "away": away_tm,
+            "home": home_tm,
+            "week": wk_num,
+            "posted_home_spread": float(env_cfg.get("posted_home_spread", -3.0)),
+            "posted_total": float(env_cfg.get("posted_total", 44.5)),
+            "away_off_epa": base_away_off_epa,
+            "home_off_epa": base_home_off_epa,
+            "wind_mph": float(env_cfg.get("wind_mph", 6.0)),
+            "temp_f": float(env_cfg.get("temp_f", 62.0)),
+        }
+    )
+    recovered_199_epa_delta = float(full_branch_registry_eval.get("recovered_199_Composite_epa_delta", 0.0))
     restored_ws1_python_receipt = {
         "away_qb_disguise_blitz_2x2": away_qb_2x2,
         "home_qb_disguise_blitz_2x2": home_qb_2x2,
@@ -2337,6 +2354,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "sinkhorn_hydrodynamic_kl": round(float(sinkhorn_hydro["kl_divergence"]), 6),
         "conformal_pass_discipline_verdict": conformal_advisory["verdict"],
         "equation_gate_12304_clamped_delta": eq_gate_12k["clamped_log_odds_delta"],
+        "full_branch_and_repo_registry": full_branch_registry_eval,
     }
 
     l5_trace_info = dict((stage1a_receipt or {}).get("l1_to_l5_specialist_reasoning_trace") or {})
@@ -2360,6 +2378,7 @@ def compile_stage1_to_stage2_simulation_priors(
             + 0.30 * wave13_epa_signal_delta
             + 0.20 * textbook_epa_delta
             + 0.25 * x360_away_epa_delta
+            + 0.20 * recovered_199_epa_delta
             + qb2x2_away_shift,
             -0.065,
             0.065,
@@ -2375,6 +2394,7 @@ def compile_stage1_to_stage2_simulation_priors(
             - 0.30 * wave13_epa_signal_delta
             - 0.20 * textbook_epa_delta
             + 0.25 * x360_home_epa_delta
+            - 0.20 * recovered_199_epa_delta
             + qb2x2_home_shift,
             -0.075,
             0.065,
