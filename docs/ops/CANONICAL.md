@@ -12,6 +12,7 @@
 | Free data + settle | `apps/web/lib/data-sources/*` · multi-source · `free-spine-health` cron |
 | AI dispatch | `apps/web/lib/ai-control-plane/*` (LiteLLM optional, not required) |
 | Agents | draft-only · `externalActions: NONE` · no public auto-publish |
+| Competitor intel | `packages/competitive-intel/*` · `reconciliation/rival-delta.mjs` · `docs/competitive-intel/README.md` · read-only rivals, provenance on every row, `publishes_pick` stays false |
 | Law | LIVE_BOARD off · oddsApiRequired=false · refuse-default · CPA blocked |
 
 ## Thin ops docs (live root only)
