@@ -13,6 +13,7 @@ import type { SignalFamily } from "@sports/types";
 export const RIVAL_ASSET_TYPES = [
   "paywall_recipe",
   "projection_file",
+  "price_sheet",
   "model_weight",
   "odds_key",
   "pick_archive",
