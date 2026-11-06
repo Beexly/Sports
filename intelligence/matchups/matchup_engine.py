@@ -34,6 +34,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent
 while REPO.name != "Sports" and REPO.parent != REPO:
     REPO = REPO.parent
+if REPO.name != "Sports":
+    REPO = Path(__file__).resolve().parents[2]
 SOURCES = REPO / "docs" / "data-sources" / "research"
 OUTROOT = REPO / "docs" / "predictions" / "research"
 
@@ -714,18 +716,10 @@ def build_matchups(home: str, away: str) -> dict:
     return report
 
 
-def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Path, dict]:
-    rep = build_matchups(home, away)
-    lines = [
-        f"# {rep['game']} - Matchup Report",
-        "",
-        f"generated_utc: {rep['generated_utc']}",
-        ""
-    ]
-
-    lines.append("## Receiver vs coverage pairings")
-    lines.append("")
-    for p in rep["pairings"]:
+def _render_pairings_section(pairings: list[dict]) -> list[str]:
+    """Render the receiver vs coverage pairings markdown section."""
+    lines = ["## Receiver vs coverage pairings", ""]
+    for p in pairings:
         lines.append(f"### {p['side']} - {p['usage_title']}: {p['receiver']}")
         f = p["receiver_form"]
         basis = f.get("usage_basis") or "targets"
@@ -755,10 +749,13 @@ def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Pat
         lines.append(f"- opposing coverage OUT/limited: {', '.join(cs['out_or_limited']) or '(none listed)'}")
         lines.append(f"- opposing coverage QUESTIONABLE: {', '.join(cs['questionable']) or '(none)'}")
         lines.append("")
+    return lines
 
-    lines.append("## OL vs pass-rush")
-    lines.append("")
-    for tm in rep["trench_matchups"]:
+
+def _render_trench_section(trench_matchups: list[dict]) -> list[str]:
+    """Render the OL vs pass-rush trench matchups markdown section."""
+    lines = ["## OL vs pass-rush", ""]
+    for tm in trench_matchups:
         lines.append(f"### {tm['side']}")
         lines.append(f"- offensive line starters: {', '.join(tm.get('ol_starters', [])) or '(none listed)'}")
         if tm.get("ol_down"):
@@ -777,11 +774,14 @@ def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Pat
         lines.append(f"- front DOWN: {', '.join(tm.get('front_down', [])) or '(none)'}")
         lines.append(f"- front QUESTIONABLE: {', '.join(tm.get('front_questionable', [])) or '(none)'}")
         lines.append("")
+    return lines
 
-    lines.append("## Sovereign Signal Plane (Vision + FTN + QBR + Snaps + Cognitive)")
-    lines.append("")
-    for role_lbl, t_sigs in (("HOME", rep.get("sovereign_signals", {}).get("home", {})),
-                             ("AWAY", rep.get("sovereign_signals", {}).get("away", {}))):
+
+def _render_signals_section(sovereign_signals: dict) -> list[str]:
+    """Render the Sovereign Signal Plane markdown section."""
+    lines = ["## Sovereign Signal Plane (Vision + FTN + QBR + Snaps + Cognitive)", ""]
+    for role_lbl, t_sigs in (("HOME", sovereign_signals.get("home", {})),
+                             ("AWAY", sovereign_signals.get("away", {}))):
         if t_sigs:
             lines.append(
                 f"- **{role_lbl}**: "
@@ -801,19 +801,43 @@ def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Pat
                 f"`cognitive.tendency_break={t_sigs.get('cognitive.tendency_break', 0.0):+.2f}`"
             )
     lines.append("")
+    return lines
 
-    lines.append("## Matchup chains (each cites its file)")
-    lines.append("")
-    for i, c in enumerate(rep["chains"], 1):
+
+def _render_chains_section(chains: list[str]) -> list[str]:
+    """Render the matchup chains markdown section."""
+    lines = ["## Matchup chains (each cites its file)", ""]
+    for i, c in enumerate(chains, 1):
         lines.append(f"{i}. {c}")
     lines.append("")
+    return lines
 
-    if rep["gaps"]:
-        lines.append("## Honest gaps")
-        lines.append("")
-        for g in rep["gaps"]:
-            lines.append(f"- {g}")
-        lines.append("")
+
+def _render_gaps_section(gaps: list[str]) -> list[str]:
+    """Render the honest gaps markdown section."""
+    if not gaps:
+        return []
+    lines = ["## Honest gaps", ""]
+    for g in gaps:
+        lines.append(f"- {g}")
+    lines.append("")
+    return lines
+
+
+def emit_matchup_md(home: str, away: str, date: str = "2026-10-18") -> tuple[Path, dict]:
+    rep = build_matchups(home, away)
+    lines = [
+        f"# {rep['game']} - Matchup Report",
+        "",
+        f"generated_utc: {rep['generated_utc']}",
+        ""
+    ]
+
+    lines.extend(_render_pairings_section(rep["pairings"]))
+    lines.extend(_render_trench_section(rep["trench_matchups"]))
+    lines.extend(_render_signals_section(rep.get("sovereign_signals", {})))
+    lines.extend(_render_chains_section(rep["chains"]))
+    lines.extend(_render_gaps_section(rep["gaps"]))
 
     outdir = OUTROOT / date
     outdir.mkdir(parents=True, exist_ok=True)
