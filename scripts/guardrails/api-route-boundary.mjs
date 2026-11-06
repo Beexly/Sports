@@ -50,6 +50,8 @@ const GUARD_PATTERNS = [
   /requireAdmin|requireSession|requireAuth|requireRole|assertAdmin/,
   // API key / entitlement
   /requireApiKey|verifyApiKey|api[_-]?key|API_KEY/,
+  // sovereign operator key (x-gse-operator-key), used on storefront maintenance routes
+  /x-gse-operator-key|GSE_OPERATOR_KEY|OPERATOR_KEY/,
   /entitlement|requireEntitlement/i,
   // cron
   /cronAuthError|cronAuthorize|assertCron|CRON_SECRET/,
@@ -87,8 +89,17 @@ function routePath(root, file) {
   return "/api" + (normalised.length ? "/" + normalised.join("/") : "");
 }
 
+/**
+ * An alias route that re-exports or delegates to another route handler inherits that handler's
+ * guard. Static analysis cannot follow the import target here, so a delegation import counts
+ * on its own: `import { GET as x, POST as y } from "../other/route"`.
+ */
+const DELEGATION_PATTERNS = [
+  /import\s*\{[^}]*\b(GET|POST|PUT|PATCH|DELETE)\s+as\s+\w+[^}]*\}\s*from\s*"[^"]*\/route"/,
+];
+
 function isGuarded(text) {
-  return GUARD_PATTERNS.some((re) => re.test(text));
+  return GUARD_PATTERNS.some((re) => re.test(text)) || DELEGATION_PATTERNS.some((re) => re.test(text));
 }
 
 function parseArgs(argv) {

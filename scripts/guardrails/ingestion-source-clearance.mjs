@@ -72,6 +72,7 @@ const REGISTRY_PATH = resolve(ROOT, "apps/web/lib/scraping/source-rights-registr
 
 /** Roots where an extraction job could plausibly live. */
 const SCAN_TARGETS = [
+  "packages/competitive-intel/src",
   "packages/data-ingestion/src",
   "packages/prediction-engine/src",
   "apps/web/lib/ingestion",

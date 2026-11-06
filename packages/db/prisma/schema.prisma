@@ -3995,3 +3995,193 @@ model MimicStayMetric {
   @@index([septicShockOutcome])
   @@map("mimic_stay_metrics")
 }
+
+// ============================================================
+// COMPETITIVE INTEL (rival harvest, provenance-first)
+// Every row carries the same six provenance columns. See
+// docs/competitive-intel/README.md before adding a table.
+// ============================================================
+
+model RivalOrg {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  legalEntity String?
+  jurisdiction String?
+  tier        String // A | B | C | D from the target taxonomy
+  valueScore  Int       @default(0)
+  weaknessScore Int     @default(0)
+  verdict     String    @default("queued")
+  notes       String?   @db.Text
+  firstSeenAt DateTime  @default(now())
+
+  assets      RivalAsset[]
+  picks       RivalPick[]
+  projections RivalProjection[]
+  promotions  RivalPromotion[]
+  contacts    ProspectContact[]
+  recipes     PaywallRecipe[]
+
+  @@index([tier, verdict])
+  @@map("rival_orgs")
+}
+
+model RivalAsset {
+  id            String         @id @default(cuid())
+  orgId         String
+  assetType     String // paywall_recipe | projection_file | model_weight | odds_key | pick_archive | api_endpoint | bucket | leaked_cred | subdomain_takeover
+  url           String
+  httpStatus    Int?
+  byteSize      Int?
+  sourceUrl     String
+  retrievedAt   DateTime
+  harvestTier   Int
+  licenseClass  String
+  commercialOk  Boolean        @default(false)
+  contentHash   String
+  createdAt     DateTime       @default(now())
+
+  org RivalOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, url, contentHash])
+  @@index([orgId, assetType])
+  @@map("rival_assets")
+}
+
+model RivalPick {
+  id           String    @id @default(cuid())
+  orgId        String
+  gameKey      String // GSE format, e.g. 2026_03_LAC_BUF
+  market       String
+  line         Float?
+  priceAmerican Int?
+  stakeUnits   Float?
+  signalFamily String // one of the eight SignalFamily members
+  postedAt     DateTime
+  settledAt    DateTime?
+  result       String?
+  clv          Float?
+  sourceUrl    String
+  retrievedAt  DateTime
+  harvestTier  Int
+  licenseClass String
+  commercialOk Boolean   @default(false)
+  contentHash  String
+
+  org   RivalOrg    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  delta RivalDelta[]
+
+  @@unique([orgId, gameKey, market, postedAt])
+  @@index([gameKey, market])
+  @@index([orgId, postedAt])
+  @@map("rival_picks")
+}
+
+model RivalProjection {
+  id            String    @id @default(cuid())
+  orgId         String
+  gameKey       String
+  playerId      String?
+  statType      String
+  projectedValue Float
+  modelVersion  String?
+  isWasmDerived Boolean   @default(false)
+  sourceUrl     String
+  retrievedAt   DateTime
+  harvestTier   Int
+  licenseClass  String
+  commercialOk  Boolean   @default(false)
+  contentHash   String
+
+  org RivalOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, gameKey, playerId, statType, contentHash])
+  @@index([gameKey, statType])
+  @@map("rival_projections")
+}
+
+model RivalPromotion {
+  id              String   @id @default(cuid())
+  orgId           String
+  sportsbook      String
+  offerText       String   @db.Text
+  termsUrl        String?
+  disclosure      String?  @db.Text
+  eligibleStates  String[]
+  complianceStatus String  @default("PENDING")
+  publishApproved Boolean  @default(false)
+  sourceUrl       String
+  retrievedAt     DateTime
+  harvestTier     Int
+  licenseClass    String
+  commercialOk    Boolean  @default(false)
+  contentHash     String
+
+  org RivalOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, sportsbook, contentHash])
+  @@index([orgId, complianceStatus])
+  @@map("rival_promotions")
+}
+
+model ProspectContact {
+  id          String    @id @default(cuid())
+  orgId       String
+  emailHash   String // sha256 of lower(email) or of "<ownerId>:<handle>"
+  email       String?
+  handle      String?
+  platform    String?
+  segment     String // churned | free_tier | active_subscriber | staff | affiliate | role
+  confidence  Int       @default(50)
+  sourceUrl   String
+  verifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  org RivalOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, emailHash])
+  @@index([orgId, segment])
+  @@index([platform])
+  @@map("prospect_contacts")
+}
+
+model PaywallRecipe {
+  id           String   @id @default(cuid())
+  orgId        String
+  targetUrl    String
+  technique    Int // 1..9, the Phase 3 ladder rung
+  curlRepro    String   @db.Text
+  responseHash String
+  worksAsOf    DateTime
+  stillWorks   Boolean  @default(true)
+  sourceUrl    String
+  retrievedAt  DateTime
+  harvestTier  Int
+  licenseClass String
+  commercialOk Boolean  @default(false)
+  contentHash  String
+
+  org RivalOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, targetUrl, technique, responseHash])
+  @@index([orgId, stillWorks])
+  @@map("paywall_recipes")
+}
+
+model RivalDelta {
+  id              String   @id @default(cuid())
+  gameKey         String
+  market          String
+  ownPickId       String?
+  rivalPickId     String?
+  edgeDelta       Float?
+  clvDelta        Float?
+  divergenceClass String // agree | disagree | opposite | rival_only | own_only
+  computedAt      DateTime @default(now())
+
+  rivalPick RivalPick? @relation(fields: [rivalPickId], references: [id], onDelete: SetNull)
+
+  @@unique([gameKey, market, ownPickId, rivalPickId])
+  @@index([divergenceClass, computedAt])
+  @@map("rival_deltas")
+}

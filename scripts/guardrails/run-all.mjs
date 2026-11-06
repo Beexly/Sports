@@ -61,6 +61,8 @@ const GUARDS = [
   ["secret-scan", ["node", "scripts/guardrails/secret-scan.mjs", "--all"]],
   ["api-v1-boundary", ["node", "scripts/guardrails/api-v1-boundary.mjs"]],
   ["api-route-boundary", ["node", "scripts/guardrails/api-route-boundary.mjs"]],
+  ["ingestion-source-clearance", ["node", "scripts/guardrails/ingestion-source-clearance.mjs"]],
+  ["provenance-audit", ["node", "scripts/competitive-intel/provenance-audit.mjs", "--schema"]],
   ["shell-defensive", ["node", "scripts/guardrails/shell-defensive.mjs"]],
   ["solidity-compile", ["node", "scripts/guardrails/solidity-compile.mjs"]],
   ["sql-identifier-case", ["node", "scripts/guardrails/sql-identifier-case.mjs"]],

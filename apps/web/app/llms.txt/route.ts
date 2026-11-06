@@ -14,7 +14,7 @@ export async function GET() {
 - **Film & Trench Matchup Grading:** Every NFL matchup is graded from offensive and defensive line pass protection, blitz and stunt rates, man/zone coverage shells, neutral pace, and red-zone play-calling tendencies.
 - **Verified 32-Team Injury & Depth Chart Tracking:** Tracks active starters, mid-week practice participation, and target/carry redistribution before any spread, total, prop, or DFS lineup is published.
 - **De-Vigged Line Value & Pass Discipline:** Compares our fair football price against two-sided de-vigged sportsbook lines. Any market without clear value is marked PASS · NO BET.
-- **Verified Official NFL Record:** 62-23-1 (72.9% win rate · +26.50u), including a 22-8-1 (+12.40u) Week 8 card and a 7-0 sweep on 1.00u max-conviction releases.
+- **Verified Official NFL Record (nflverse-graded):** 62-23-1 (72.9% win rate · +26.50u), including a 22-8-1 (+12.40u) Week 8 card and a 7-0 sweep on 1.00u max-conviction releases.
 
 ## Verify our record yourself
 - [Official Verified NFL Board](${siteUrl}/board): Live spreads, totals, player props, XX/100 conviction scores, and pass discipline notes.

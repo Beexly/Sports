@@ -6,7 +6,7 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Pricing & Plans | Galaxy Sports Edge",
   description:
-    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Syndicate Data Feed ($499). Backed by our verified 62-23-1 (72.9% · +26.50u) official NFL record.",
+    "Galaxy Sports Edge pricing plans: Single Game Pass ($9), Weekly All-Access ($29), VIP Season Pass ($199), and Pro Syndicate Data Feed ($499). Backed by our verified 62-23-1 (72.9% · +26.50u) official NFL record, nflverse-graded.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -160,7 +160,7 @@ export default function PricingPage(): JSX.Element {
           ))}
         </div>
 
-        {/* Verification Guarantee & Pass Discipline */}
+        {/* Verification Guarantee (evidence-graded) & Pass Discipline */}
         <div className="mt-16 rounded-xl border border-[#252833] bg-[#0E1015] p-8 text-center sm:p-10">
           <h2 className="font-display text-2xl uppercase tracking-wide text-white sm:text-3xl">
             Honest Football Grading &amp; Strict Pass Discipline

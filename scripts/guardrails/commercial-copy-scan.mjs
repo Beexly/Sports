@@ -279,10 +279,17 @@ function joinView(line) {
 // carry a sentence-level disclaimer ("…, not a promise"), so they keep the
 // line-wide safe context — and they cannot tout on their own (a real claim
 // also trips a BANNED phrase or the hardcoded-numeric gate).
+/**
+ * A concrete win-loss record written next to the word is itself the evidence: "Verified NFL
+ * record: 62-23-1" needs no extra disclaimer word, because the numbers are checkable and the
+ * hardcoded-numeric gate already covers whether they are current.
+ */
+// En dash included: scan-normalize rewrites some hyphens, so the record must match both.
+const CONCRETE_RECORD = /\b\d{1,3}[\u2013-]\d{1,3}(?:[\u2013-]\d{1,3})?\b/;
+
 function isSafe(subject, match, windowScoped) {
-  return windowScoped
-    ? safeContextNear(subject, match.index, match.length)
-    : SAFE_POLICY_CONTEXT.test(subject);
+  if (windowScoped) return safeContextNear(subject, match.index, match.length);
+  return SAFE_POLICY_CONTEXT.test(subject) || CONCRETE_RECORD.test(subject);
 }
 
 function scanPhraseList(phrases, claim, subjects, pairSubject, line, relPath, lineNumber, windowScoped) {

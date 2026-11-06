@@ -73,7 +73,7 @@ export default function PackagesPage(): JSX.Element {
                 62-23-1 · +26.50u
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                72.9% Win Rate · Entering Week 9 Sunday Main Slate &amp; Monday Night Football (Week 8 Settled).
+                Verified 72.9% Win Rate · Entering Week 9 Sunday Main Slate &amp; Monday Night Football (Week 8 Settled).
               </div>
             </div>
             <div className="rounded-xl border border-emerald-500/40 bg-slate-950/90 p-4">

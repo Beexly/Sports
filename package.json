@@ -170,7 +170,9 @@
     "turbo:affected:build": "turbo build --filter=...[origin/main]",
     "mobile:start": "npm --prefix apps/mobile run start",
     "mobile:verify": "sh apps/mobile/scripts/verify.sh",
-    "mobile:test": "npm --prefix apps/mobile run test"
+    "mobile:test": "npm --prefix apps/mobile run test",
+    "provenance:audit": "node scripts/competitive-intel/provenance-audit.mjs",
+    "competitors:reconcile": "node reconciliation/rival-delta.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

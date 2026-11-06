@@ -187,3 +187,27 @@ ledger, `content_hash` discipline already used by `data/gse-dataset/nflverse-ing
   licence being noncommercial makes the answer "internal analysis only" until decided.
 - Whether `RivalPromotion` should reuse `CockpitComplianceStatus` (schema :1854) verbatim or
   a parallel enum. Reuse is cheaper and already has an `APPROVED` value.
+
+## Implemented surface (2026-11-06)
+
+Package `packages/competitive-intel`:
+
+| File | Job |
+|---|---|
+| `src/types.ts` | provenance shape, asset types, hash. No row shape exists without the six columns |
+| `src/family-map.ts` | rival feature name to SignalFamily, rule order fixed, pure |
+| `src/adapter.ts` | fetch, normalize, validate, provenance; strict zod, fail the batch |
+| `src/adapters/fantasylabs-filters.ts` | first real adapter, 968-feature catalogue |
+| `src/__tests__/fantasylabs-filters.test.ts` | offline fixture replay, 7 cases |
+
+Tables: `rival_orgs`, `rival_assets`, `rival_picks`, `rival_projections`, `rival_promotions`,
+`prospect_contacts`, `paywall_recipes`, `rival_deltas` (migration
+`20261106120000_competitive_intel`).
+
+Jobs: `npm run provenance:audit` (guard `provenance-audit`, schema mode in CI),
+`npm run competitors:reconcile`.
+
+Guard wiring: `packages/competitive-intel/src` added to `SCAN_TARGETS` in
+`ingestion-source-clearance`, so an adapter that fetches a source not in the registry fails
+the suite. `ingestion-source-clearance` was also added to the `run-all.mjs` manifest, where it
+was missing before.

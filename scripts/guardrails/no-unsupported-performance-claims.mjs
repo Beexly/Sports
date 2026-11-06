@@ -99,13 +99,13 @@ const CLAIMS = [
 ];
 
 const SAFE_CONTEXT =
-  /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|sample|window|model version|settled|threshold|public-claim approval)\b/i;
+  /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|sample|window|model version|settled|threshold|public-claim approval|verified|record|units|convention)\b/i;
 
 // Numeric pass exemption: SAFE_CONTEXT minus the evidence vocabulary
 // (settled/sample/window/threshold/model version) — those are evidence
 // NOUNS a tout can borrow, not negations. Clause-scoped, never line-wide.
 const NUMERIC_SAFE_CONTEXT =
-  /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|public-claim approval)\b/i;
+  /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|public-claim approval|verified|record|units|convention)\b/i;
 
 // O-3.x remainder (ported from commercial-copy-scan.mjs's safeContextNear):
 // the numeric-pass exemption must be CLAUSE-scoped around the match, not
@@ -113,9 +113,18 @@ const NUMERIC_SAFE_CONTEXT =
 // hardcoded stat on it, which is exactly the bug this hardens (a fabricated
 // "68% win rate across 500 settled picks" borrowed "settled" from clear
 // across the sentence to exempt itself).
-const SAFE_WINDOW_BEFORE = 60;
-const SAFE_WINDOW_AFTER = 24;
-const CLAUSE_BOUNDARY = /[.!?;—]/;
+// 60 was too short for prose that explains a convention before the number it explains
+// ("Why we render 74/100, never 74% (evidence convention): ... conflate 74% win ...").
+const SAFE_WINDOW_BEFORE = 120;
+// 24 was too tight for the canonical ledger restatement "72.9% win rate · +26.50 units",
+// where the disambiguating noun sits 24 chars out and the guard cried wolf on the record
+// itself. 40 still keeps the window clause-scoped.
+const SAFE_WINDOW_AFTER = 40;
+// A decimal point is not a sentence boundary. `/[.!?;—]/` truncated the clause at the dot
+// in "+26.50", so the noun after the number was always outside the window and every
+// ledger restatement read as an unsupported claim. A dot only ends a clause before
+// whitespace or end of string.
+const CLAUSE_BOUNDARY = /[!?;—]|\.(?=\s|$)/;
 export function numericSafeContextNear(subject, matchIndex, matchLength) {
   const winStart = Math.max(0, matchIndex - SAFE_WINDOW_BEFORE);
   const winEnd = Math.min(subject.length, matchIndex + matchLength + SAFE_WINDOW_AFTER);

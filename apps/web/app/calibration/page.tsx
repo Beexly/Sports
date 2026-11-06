@@ -50,7 +50,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
           <div className="rounded-2xl border border-emerald-500/30 bg-slate-900/60 p-6 shadow-xl">
             <div className="text-xs uppercase tracking-wider text-slate-400">Official Verified Record</div>
             <div className="mt-2 font-mono text-4xl font-extrabold text-emerald-400">62-23-1</div>
-            <div className="mt-1 text-sm font-semibold text-slate-200">72.9% Win Rate · +26.50 Units</div>
+            <div className="mt-1 text-sm font-semibold text-slate-200">Verified 72.9% Win Rate · +26.50 Units</div>
             <div className="mt-2 text-xs text-slate-400">Verified official sealed card ledger</div>
           </div>
 
@@ -114,7 +114,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
           </div>
 
           <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs leading-relaxed text-slate-400">
-            <strong className="text-slate-200">Why we render 74/100, never 74%:</strong> Industry research proves sports bettors conflate 74% win probability with a 100% certainty, triggering irrational Kelly over-betting. Our bounded index displays honest conviction without misleading decimal claims.
+            <strong className="text-slate-200">Why we render 74/100, never 74% (evidence convention):</strong> Industry research proves sports bettors conflate 74% win probability with a 100% certainty, triggering irrational Kelly over-betting. Our bounded index displays honest conviction without misleading decimal claims.
           </div>
         </div>
 
