@@ -290,6 +290,56 @@ def test_evolve_validates_its_arguments():
         solver.evolve(t_span=(0.02, 0.0), dt=0.00025, nu=0.005)
 
 
+def test_compute_substepping():
+    s32 = CylindricalSpectralSolver(Nr=32, Nz=32)
+    sub, h, limit = s32._compute_substepping(dt=0.00025, nu=0.005)
+    assert sub == 1
+    assert h == 0.00025
+    assert limit > 0.00025
+
+    # With zero viscosity, limit is inf and sub should be 1
+    sub_inv, h_inv, limit_inv = s32._compute_substepping(dt=0.00025, nu=0.0)
+    assert sub_inv == 1
+    assert h_inv == 0.00025
+    assert math.isinf(limit_inv)
+
+    # For a stiff resolution, sub should be greater than 1
+    s64 = CylindricalSpectralSolver(Nr=64, Nz=64)
+    sub64, h64, limit64 = s64._compute_substepping(dt=0.00025, nu=0.005)
+    assert sub64 > 1
+    assert h64 == 0.00025 / sub64
+    assert h64 <= limit64 * 0.9
+
+
+def test_rhs_viscous():
+    solver = CylindricalSpectralSolver(Nr=16, Nz=16)
+    ur, ut, uz = solver.initialize_harper_seed(alpha=8.0, delta_r=0.3, delta_z=0.15)
+    rhs_r, rhs_t, rhs_z = solver._rhs_viscous(nu=0.005, u_r=ur, u_theta=ut, u_z=uz)
+    assert rhs_r.shape == ur.shape
+    assert rhs_t.shape == ut.shape
+    assert rhs_z.shape == uz.shape
+    # Regularity in RHS theta component at r=0
+    assert np.allclose(rhs_t[0, :], 0.0)
+    # Zero viscosity yields identically zero RHS
+    z_r, z_t, z_z = solver._rhs_viscous(nu=0.0, u_r=ur, u_theta=ut, u_z=uz)
+    assert np.allclose(z_r, 0.0)
+    assert np.allclose(z_t, 0.0)
+    assert np.allclose(z_z, 0.0)
+
+
+def test_advance_rk4_substep():
+    solver = CylindricalSpectralSolver(Nr=16, Nz=16)
+    ur, ut, uz = solver.initialize_harper_seed(alpha=8.0, delta_r=0.3, delta_z=0.15)
+    ur_next, ut_next, uz_next = solver._advance_rk4_substep(nu=0.005, h=1e-4, u_r=ur, u_theta=ut, u_z=uz)
+    assert ur_next.shape == ur.shape
+    assert ut_next.shape == ut.shape
+    assert uz_next.shape == uz.shape
+    # Pole regularity preserved
+    assert np.allclose(ut_next[0, :], 0.0)
+    # Dissipation: maximum of u_theta decreases slightly after one substep
+    assert np.max(np.abs(ut_next)) < np.max(np.abs(ut))
+
+
 def test_theta_component_operator_is_the_cartesian_one():
     """
     The -u_theta/r^2 term is PHYSICS, not a cylindrical-coordinate artifact.
