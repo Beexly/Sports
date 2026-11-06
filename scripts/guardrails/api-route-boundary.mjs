@@ -53,6 +53,8 @@ const GUARD_PATTERNS = [
   // sovereign operator key (x-gse-operator-key), used on storefront maintenance routes
   /x-gse-operator-key|GSE_OPERATOR_KEY|OPERATOR_KEY/,
   /entitlement|requireEntitlement/i,
+  // durable public-form budget: not auth, but the accepted floor for a public writer
+  /consumePublicFormRateLimit|consumeRateLimit/,
   // cron
   /cronAuthError|cronAuthorize|assertCron|CRON_SECRET/,
   // webhook signatures
