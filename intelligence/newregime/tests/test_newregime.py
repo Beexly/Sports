@@ -23,7 +23,8 @@ from newregime import (maml_new_regime_check, nggp_new_regime_check,
                        drift_acceptance_check, knn_impute,
                        all_research_lanes, EstimandTaxonomy,
                        ResearchGradeNotEvaluated, STATUS_UNTESTED,
-                       is_layoff_return, blanket_candidate, archetype_flag)
+                       is_layoff_return, blanket_candidate, archetype_flag,
+                       MamlConfig, MetaTrainConfig, meta_train)
 
 PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -64,6 +65,43 @@ def test_maml_beats_baseline_on_held_out_regimes():
     res = maml_new_regime_check()
     assert res["n_test_tasks"] > 0
     assert res["brier_maml"] < res["brier_baseline"]
+
+
+def test_maml_config_and_meta_train_parameters():
+    """Verify MamlConfig grouping, defaults, and parameter handling in meta_train."""
+    from newregime.dgp import sample_meta_tasks
+    import numpy as np
+
+    cfg = MamlConfig()
+    assert cfg.meta_iters == 400
+    assert cfg.outer_lr == 0.05
+    assert cfg.inner_steps == 3
+    assert cfg.inner_lr == 1.0
+    assert MetaTrainConfig is MamlConfig
+
+    custom_cfg = MamlConfig(meta_iters=5, inner_steps=2, seed=42)
+    assert custom_cfg.meta_iters == 5
+    assert custom_cfg.inner_steps == 2
+    assert custom_cfg.seed == 42
+
+    data = sample_meta_tasks(seed=42, n_tasks=10, d=4, n_support=4, n_query=10)
+    tasks = data["tasks"]
+
+    # 1. Calling meta_train with MamlConfig
+    w_cfg, b_cfg = meta_train(tasks, 4, config=custom_cfg)
+    assert isinstance(w_cfg, np.ndarray) and len(w_cfg) == 4
+    assert isinstance(b_cfg, float)
+
+    # 2. Calling meta_train with legacy keyword arguments
+    w_kw, b_kw = meta_train(tasks, 4, meta_iters=5, inner_steps=2, seed=42)
+    assert np.allclose(w_cfg, w_kw)
+    assert np.isclose(b_cfg, b_kw)
+
+    # 3. Calling meta_train with legacy positional arguments:
+    # (tasks, d, meta_iters, outer_lr, inner_steps, inner_lr, seed)
+    w_pos, b_pos = meta_train(tasks, 4, 5, 0.05, 2, 1.0, 42)
+    assert np.allclose(w_cfg, w_pos)
+    assert np.isclose(b_cfg, b_pos)
 
 
 # ---------------------------------------------------------------------------

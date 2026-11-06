@@ -20,7 +20,7 @@
 
 """New-regime prediction module: MAML vs NGGP race + supporting lanes."""
 
-from .maml import maml_new_regime_check
+from .maml import maml_new_regime_check, MamlConfig, MetaTrainConfig, meta_train
 from .nggp import nggp_new_regime_check
 from .feature_store import FeatureStore, BackfillRunner, leak_injection_test
 from .drift import (DriftEnsemble, drift_acceptance_check, knn_impute,
@@ -62,6 +62,9 @@ def research_lanes_status():
 
 __all__ = [
     "maml_new_regime_check",
+    "meta_train",
+    "MamlConfig",
+    "MetaTrainConfig",
     "nggp_new_regime_check",
     "research_lanes_status",
     "FeatureStore",
