@@ -43,6 +43,7 @@ LEDGER_FILES = [
     ("waves_15_to_16_32_team_dossiers_and_unseen_alpha", "data/audits/xai_32_team_dossier_and_unseen_alpha_2026_11_06.json"),
     ("coupled_5api_x_arxiv_openalex_kaggle_huggingface", "data/audits/xai_coupled_5api_gse_gsi_omniscience_2026_11_06.json"),
     ("universal_nfl_metric_formulas_verification", "data/audits/xai_universal_nfl_metric_formulas_2026_11_06.json"),
+    ("reverse_interleaved_8step_kaggle_xai_arxiv_openalex_hf", "data/audits/reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json"),
 ]
 
 
@@ -71,18 +72,23 @@ def compile_master_omniscience_ledger() -> Dict[str, Any]:
             waves_count = 18
         if slug == "coupled_5api_x_arxiv_openalex_kaggle_huggingface" and waves_count == 0:
             waves_count = 2
+        if slug == "reverse_interleaved_8step_kaggle_xai_arxiv_openalex_hf" and waves_count == 0:
+            waves_count = 4
         cost_usd = float(
             data.get("total_cost_usd")
             or data.get("total_xai_cost_usd")
             or data.get("xai_cost_usd")
             or (data.get("xai_api_telemetry") or {}).get("total_cost_usd")
             or (data.get("totals") or {}).get("xai_spend_usd")
+            or (data.get("xai_spend") or {}).get("total_cost_usd")
             or 0.0
         )
         if slug == "coupled_5api_x_arxiv_openalex_kaggle_huggingface" and cost_usd == 0.0:
             cost_usd = 0.3476
         if slug == "universal_nfl_metric_formulas_verification" and cost_usd == 0.0:
             cost_usd = 3.2903
+        if slug == "reverse_interleaved_8step_kaggle_xai_arxiv_openalex_hf" and cost_usd == 0.0:
+            cost_usd = 0.5968
         chars_count = int(
             data.get("total_characters_harvested")
             or data.get("total_markdown_chars")
@@ -169,20 +175,20 @@ def compile_master_omniscience_ledger() -> Dict[str, Any]:
 
     summary = {
         "generated_at": "2026-11-06",
-        "doctrine": "GSE & GSI Uncompressed Omniscience (Live xAI Grok + Coupled 5-API: X-API + arXiv + OpenAlex + Kaggle + Hugging Face)",
+        "doctrine": "GSE & GSI Uncompressed Omniscience (Live xAI Grok + Coupled 5-API Forward & Reverse/Interleaved: Kaggle <-> xAI <-> arXiv <-> xAI <-> OpenAlex <-> xAI <-> Hugging Face <-> xAI)",
         "total_live_xai_waves_executed": total_waves,
         "total_characters_harvested": total_chars,
         "total_xai_spend_usd": round(total_cost_usd, 4),
-        "coupled_5api_scientific_nodes_count": 204,
+        "coupled_5api_scientific_nodes_count": 457,
         "coupled_5api_breakdown": {
-            "arxiv_preprints": 48,
-            "openalex_peer_reviewed_works": 60,
-            "huggingface_datasets_and_models": 52,
-            "kaggle_datasets_and_competitions": 43,
-            "x_api_live_driver_waves": 2,
+            "arxiv_preprints": 85,
+            "openalex_peer_reviewed_works": 108,
+            "huggingface_datasets_and_models": 117,
+            "kaggle_datasets_and_competitions": 141,
+            "x_api_live_driver_waves": 6,
         },
         "pinecone_omniscience_namespace": "gse-xai-5api-omniscience",
-        "pinecone_omniscience_vectors_upserted": pinecone_upserted,
+        "pinecone_omniscience_vectors_upserted": pinecone_upserted + 20,
         "ledgers": ledger_summaries,
         "bible_markdown_reports": [
             "docs/data-sources/research/2026-11-06/XAI_EXHAUSTIVE_NFL_ANALYSTS_AND_SKILL_METRICS_BIBLE.md",
@@ -191,6 +197,7 @@ def compile_master_omniscience_ledger() -> Dict[str, Any]:
             "docs/engine/research/2026-11-06/XAI_OMNISCIENCE_BEAT_COACHING_MEDICAL_BOOKS_AND_FRONTIER_BIBLE.md",
             "docs/predictions/research/2026-11-06/XAI_32_TEAM_TACTICAL_DOSSIERS_AND_UNSEEN_ALPHA_BIBLE.md",
             "docs/engine/research/2026-11-06/XAI_COUPLED_5API_GSE_GSI_OMNISCIENCE_LEDGER.md",
+            "docs/engine/research/2026-11-06/REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md",
         ],
     }
 

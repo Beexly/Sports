@@ -1,0 +1,81 @@
+# packages/prediction-engine/BUILD.bazel — Fine-Grained TypeScript Build & Test Targets
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "universal_nfl_metric_engine_ts",
+    srcs = [
+        "src/nfl/universal-nfl-metric-engine.ts",
+    ],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+)
+
+ts_project(
+    name = "mega_sweep_reasoning_engine_ts",
+    srcs = [
+        "src/engine/mega-sweep-2026-11-06-reasoning-engine.ts",
+    ],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        ":universal_nfl_metric_engine_ts",
+    ],
+)
+
+ts_project(
+    name = "master_situational_aggregator_ts",
+    srcs = [
+        "src/nfl/master-situational-reasoning-aggregator.ts",
+        "src/nfl/x-situational-80-rules.ts",
+    ],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        ":universal_nfl_metric_engine_ts",
+    ],
+)
+
+ts_project(
+    name = "prediction_engine_ts",
+    srcs = [
+        "src/index.ts",
+        "src/calibration-map.ts",
+        "src/no-bet-gate.ts",
+        "src/sgp-copula.ts",
+    ],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        ":master_situational_aggregator_ts",
+        ":mega_sweep_reasoning_engine_ts",
+        ":universal_nfl_metric_engine_ts",
+    ],
+)
+
+js_library(
+    name = "prediction_engine",
+    srcs = [
+        ":prediction_engine_ts",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "prediction_engine_test",
+    srcs = [
+        "src/__tests__/zero-orphan-engine-audit.test.ts",
+    ],
+    declaration = False,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        ":prediction_engine_ts",
+    ],
+)

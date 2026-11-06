@@ -1079,22 +1079,44 @@ export function computeGsiSportsMedicineAndCoupled5ApiOverlay(
   };
 }
 
-export function evaluateUniversalNfl360MetricAndSituationalDossier() {
+export interface UniversalNfl360DossierOverrides {
+  readonly qb?: UniversalQbMetricsInput;
+  readonly receiving?: UniversalReceivingMetricsInput;
+  readonly rushing?: UniversalRushingMetricsInput;
+  readonly trench?: UniversalTrenchMetricsInput;
+  readonly defenseIdp?: UniversalDefenseAndIdpInput;
+  readonly situational?: UniversalSituationalContextInput;
+  readonly causalSkill?: CausalDeconfoundedSkillInput;
+  readonly qbTrauma?: QbTraumaAndDisguiseInput;
+  readonly trenchTut?: TrenchTutAndWeakLinkInput;
+  readonly scriptCliff?: CoordinatorScriptCliffInput;
+  readonly refMarket?: RefereeAndMarketReflexivityInput;
+  readonly gsi5Api?: GsiSportsMedicineAndCoupled5ApiInput;
+}
+
+export function evaluateUniversalNfl360MetricAndSituationalDossier(
+  overrides: UniversalNfl360DossierOverrides = {},
+) {
   return {
     schema: "gse_universal_nfl_360_metric_and_deep_non_stationary_dossier_v2" as const,
-    qb_suite: computeUniversalQbMetrics(),
-    receiving_suite: computeUniversalReceivingMetrics(),
-    rushing_suite: computeUniversalRushingMetrics(),
-    trench_suite: computeUniversalTrenchMetrics(),
-    defense_and_idp_suite: computeUniversalDefenseAndIdpMetrics(),
-    situational_context_suite: computeUniversalSituationalContextOverlay(),
+    qb_suite: computeUniversalQbMetrics(overrides.qb),
+    receiving_suite: computeUniversalReceivingMetrics(overrides.receiving),
+    rushing_suite: computeUniversalRushingMetrics(overrides.rushing),
+    trench_suite: computeUniversalTrenchMetrics(overrides.trench),
+    defense_and_idp_suite: computeUniversalDefenseAndIdpMetrics(overrides.defenseIdp),
+    situational_context_suite: computeUniversalSituationalContextOverlay(overrides.situational),
     deep_non_stationary_kernels: {
-      causal_deconfounded_skill: computeCausalDeconfoundedSkillVector(),
-      qb_trauma_and_disguise_hysteresis: computeQbTraumaAndDisguiseHysteresis(),
-      trench_tut_fatigue_and_weak_link: computeTrenchTutFatigueAndWeakLinkExploitation(),
-      coordinator_script_cliff_and_tendency_trap: computeCoordinatorScriptCliffAndTendencyTrap(),
-      referee_and_market_reflexivity: computeRefereeAndMarketReflexivity(),
-      gsi_sports_medicine_and_coupled_5api: computeGsiSportsMedicineAndCoupled5ApiOverlay(),
+      causal_deconfounded_skill: computeCausalDeconfoundedSkillVector(overrides.causalSkill),
+      qb_trauma_and_disguise_hysteresis: computeQbTraumaAndDisguiseHysteresis(overrides.qbTrauma),
+      trench_tut_fatigue_and_weak_link: computeTrenchTutFatigueAndWeakLinkExploitation(
+        overrides.trenchTut,
+      ),
+      coordinator_script_cliff_and_tendency_trap:
+        computeCoordinatorScriptCliffAndTendencyTrap(overrides.scriptCliff),
+      referee_and_market_reflexivity: computeRefereeAndMarketReflexivity(overrides.refMarket),
+      gsi_sports_medicine_and_coupled_5api: computeGsiSportsMedicineAndCoupled5ApiOverlay(
+        overrides.gsi5Api,
+      ),
     },
     analyst_and_metric_registry: UNIVERSAL_NFL_ANALYST_AND_METRIC_REGISTRY,
     all_6_suites_active: true as const,

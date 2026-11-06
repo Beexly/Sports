@@ -1,0 +1,244 @@
+/**
+ * apps/web/lib/content-os/video-and-revenue-engine.ts
+ *
+ * Typed Content-OS & Multi-Stream Revenue / Short-Form Video / DFS / Week 9 Commercial Posture surface.
+ * Strictly adheres to:
+ *  - Official New Engine Verified Record (`62-23-1`, `72.9%`, `+26.50 Units` entering Week 9:
+ *    `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
+ *  - Customer-Facing Human Copy Doctrine (natural football-film & matchup analysis; zero internal pipeline jargon).
+ *  - Paywall Protection Doctrine (public previews share game-environment analytics; official plays & full DFS lineups stay behind `/packages` and `/fantasy/dfs`).
+ */
+
+export interface OfficialVerifiedRecordSummary {
+  readonly record: "62-23-1";
+  readonly wins: 62;
+  readonly losses: 23;
+  readonly pushes: 1;
+  readonly winRateLabel: "72.9%";
+  readonly netUnits: 26.5;
+  readonly preWeek8Record: "16-5-0";
+  readonly preWeek8Units: 10.45;
+  readonly week8SettledRecord: "46-18-1";
+  readonly week8SettledUnits: 16.05;
+  readonly paywallCheckoutUrl: "https://www.galaxysportsedge.com/packages";
+  readonly dfsHubUrl: "https://www.galaxysportsedge.com/fantasy/dfs";
+}
+
+export interface ShortFormVideoScriptPacket {
+  readonly videoId: string;
+  readonly title: string;
+  readonly platforms: readonly ("TikTok" | "YouTube Shorts" | "Instagram Reels" | "X Video")[];
+  readonly durationSeconds: number;
+  readonly aspectRatio: "9:16 (1080x1920 60fps)";
+  readonly hook0To3s: string;
+  readonly filmBreakdown3To25s: string;
+  readonly matchupOverlay25To45s: string;
+  readonly ctaPaywallAndFollow45To60s: string;
+  readonly remotionCompositionId: string;
+  readonly paywallSafe: true;
+}
+
+export interface RevenueStreamAttributionItem {
+  readonly streamId: string;
+  readonly channel: string;
+  readonly identifierOrUrl: string;
+  readonly monetizationRole: string;
+  readonly posthogEvents: readonly string[];
+  readonly active: true;
+}
+
+export interface DfsAndPlaysCommercialPosture {
+  readonly verifiedRecord: OfficialVerifiedRecordSummary;
+  readonly fullBoardMarketTypesReviewed: 77;
+  readonly dfsPlatformsSupported: readonly ["DraftKings", "FanDuel"];
+  readonly publicTeasersShareEnvironmentOnly: true;
+  readonly officialPicksAndLineupsGated: true;
+  readonly adsensePublisherId: "ca-pub-8151105906877749";
+  readonly posthogProjectId: "516325";
+}
+
+const VERIFIED_RECORD_SUMMARY: OfficialVerifiedRecordSummary = {
+  record: "62-23-1",
+  wins: 62,
+  losses: 23,
+  pushes: 1,
+  winRateLabel: "72.9%",
+  netUnits: 26.5,
+  preWeek8Record: "16-5-0",
+  preWeek8Units: 10.45,
+  week8SettledRecord: "46-18-1",
+  week8SettledUnits: 16.05,
+  paywallCheckoutUrl: "https://www.galaxysportsedge.com/packages",
+  dfsHubUrl: "https://www.galaxysportsedge.com/fantasy/dfs",
+};
+
+const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
+  {
+    videoId: "VID-W9-01",
+    title: "Why Road Offenses Lose 0.2 Seconds at the Snap in Loud Indoor Stadiums",
+    platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
+    durationSeconds: 52,
+    aspectRatio: "9:16 (1080x1920 60fps)",
+    hook0To3s:
+      "Watch the right guard's left hand right before the snap—this silent-count delay is why road pass protection breaks down in loud domes.",
+    filmBreakdown3To25s:
+      "In a loud indoor stadium, offensive tackles cannot hear the quarterback's cadence. They wait for the guard's hand tap and the center's head bob while the defensive end keys the football directly—giving the pass rusher a clean first-step advantage off the edge.",
+    matchupOverlay25To45s:
+      "When an offensive tackle loses that initial half-step against a wide-9 speed rusher, the quarterback must get the ball out in under 2.4 seconds to his slot receiver or tight end.",
+    ctaPaywallAndFollow45To60s:
+      "We broke down every Week 9 trench matchup for our 62-23-1 (+26.50u) verified card. Follow now and unlock the full Week 9 board at galaxysportsedge.com/packages.",
+    remotionCompositionId: "GseVerticalFilmBreakdownV1",
+    paywallSafe: true,
+  },
+  {
+    videoId: "VID-W9-02",
+    title: "How Two-High Safety Disguises Trap Quarterbacks After the Snap",
+    platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
+    durationSeconds: 48,
+    aspectRatio: "9:16 (1080x1920 60fps)",
+    hook0To3s:
+      "Before the snap, this looks like standard two-high zone—watch what happens the instant the football is snapped.",
+    filmBreakdown3To25s:
+      "The boundary safety spins down into the middle robber window while the slot defender brings pressure. By the time the quarterback resets his eyes from the rotating safety to his backside progression, interior pressure closes the pocket.",
+    matchupOverlay25To45s:
+      "Against disguised post-snap safety rotations, running back checkdowns and underneath tight end option routes spike while deep boundary throws stall.",
+    ctaPaywallAndFollow45To60s:
+      "Our verified engine is 62-23-1 (+26.50 units) entering Week 9. Follow for daily film analysis and unlock every official Week 9 play at galaxysportsedge.com/packages.",
+    remotionCompositionId: "GseVerticalSafetySpinV1",
+    paywallSafe: true,
+  },
+  {
+    videoId: "VID-W9-03",
+    title: "The 1st-Quarter Scripted Play-Call Edge on the Week 9 Board",
+    platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
+    durationSeconds: 50,
+    aspectRatio: "9:16 (1080x1920 60fps)",
+    hook0To3s:
+      "The first 15 plays of an NFL game are scripted all week—making 1st-quarter markets completely distinct from full-game lines.",
+    filmBreakdown3To25s:
+      "Before second-half score effects take over, offensive coordinators dial up their highest-percentage schemed touches on Drive 1 and Drive 2.",
+    matchupOverlay25To45s:
+      "Offenses that script high early-down pass rates in the opening quarter create concentrated early receiving volume before defensive adjustments at halftime.",
+    ctaPaywallAndFollow45To60s:
+      "We review all 77 market types on every game—backed by our 62-23-1 (+26.50u) verified record. Unlock full Week 9 access at galaxysportsedge.com/packages.",
+    remotionCompositionId: "GseVerticalFirstQuarterScriptV1",
+    paywallSafe: true,
+  },
+  {
+    videoId: "VID-W9-04",
+    title: "How to Structure Week 9 DraftKings & FanDuel Tournament Stacks",
+    platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
+    durationSeconds: 55,
+    aspectRatio: "9:16 (1080x1920 60fps)",
+    hook0To3s:
+      "Stop building uncorrelated DFS lineups—here is how sharp tournament players structure Week 9 stacks for ceiling.",
+    filmBreakdown3To25s:
+      "Large-field tournament wins require concentrated play volume in high-pace games where a fourth-quarter score forces the trailing offense to pass on every snap.",
+    matchupOverlay25To45s:
+      "Pairing a high-ceiling quarterback with his primary red-zone target and a low-owned secondary pass catcher captures the 300-yard bonus while separating from chalk lineups.",
+    ctaPaywallAndFollow45To60s:
+      "Our Week 9 DraftKings and FanDuel Cash Core and GPP leverage stacks are live now at galaxysportsedge.com/fantasy/dfs.",
+    remotionCompositionId: "GseVerticalDfsStackBlueprintV1",
+    paywallSafe: true,
+  },
+  {
+    videoId: "VID-W9-05",
+    title: "Why Kicking Points & Defensive Sack Props Hold Massive Week 9 Value",
+    platforms: ["TikTok", "YouTube Shorts", "Instagram Reels", "X Video"],
+    durationSeconds: 47,
+    aspectRatio: "9:16 (1080x1920 60fps)",
+    hook0To3s:
+      "Most bettors only look at passing yards—while the biggest pricing gaps sit in kicking points and defensive sack markets.",
+    filmBreakdown3To25s:
+      "When an offense moves efficiently between the 20s but faces a condensed red-zone defense indoors, drives repeatedly stall between the 15 and 28 yard line—setting up multiple field-goal attempts.",
+    matchupOverlay25To45s:
+      "On the defensive side, when a premier edge rusher faces a backup tackle against a pass-heavy game script, half-sack clearance opportunities climb sharply.",
+    ctaPaywallAndFollow45To60s:
+      "Our 360-degree Week 9 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the 62-23-1 (+26.50u) card at galaxysportsedge.com/packages.",
+    remotionCompositionId: "GseVerticalKickingAndIdpEdgeV1",
+    paywallSafe: true,
+  },
+];
+
+const REVENUE_ATTRIBUTION_MATRIX: readonly RevenueStreamAttributionItem[] = [
+  {
+    streamId: "REV-01",
+    channel: "Stripe Subscriptions & Day/Week Passes",
+    identifierOrUrl: "https://www.galaxysportsedge.com/packages",
+    monetizationRole: "Instant paywall unlock for official Week 9 sides, totals, player props, SGP tickets, and DFS cores.",
+    posthogEvents: ["package_checkout_started", "subscription_activated"],
+    active: true,
+  },
+  {
+    streamId: "REV-02",
+    channel: "Google AdSense Display Monetization",
+    identifierOrUrl: "ca-pub-8151105906877749",
+    monetizationRole: "Verified ads.txt & AdSense display monetization on public research and preview pages (suppressed on /embed/*).",
+    posthogEvents: ["public_research_viewed", "adsense_slot_rendered"],
+    active: true,
+  },
+  {
+    streamId: "REV-03",
+    channel: "Whop Storefront & VIP Community",
+    identifierOrUrl: "https://whop.com/galaxy-sports-edge",
+    monetizationRole: "Cross-platform membership checkout & automated community entitlement sync.",
+    posthogEvents: ["whop_storefront_clicked", "whop_membership_synced"],
+    active: true,
+  },
+  {
+    streamId: "REV-04",
+    channel: "Impact.com Partner Network",
+    identifierOrUrl: "Impact Account 8111208",
+    monetizationRole: "Verified CPA and revenue-share attribution across partner sportsbooks and fantasy platforms.",
+    posthogEvents: ["affiliate_partner_clicked", "impact_conversion_logged"],
+    active: true,
+  },
+  {
+    streamId: "REV-05",
+    channel: "OddsJam Execution Referral",
+    identifierOrUrl: "https://oddsjam.com/?ref=zwniodg",
+    monetizationRole: "Partner referral attribution on line-shopping and price-comparison tools.",
+    posthogEvents: ["oddsjam_referral_clicked"],
+    active: true,
+  },
+  {
+    streamId: "REV-06",
+    channel: "CapperTek Verified Leaderboard Funnel",
+    identifierOrUrl: "CapperTek Verified Tracker (62-23-1, +26.50u)",
+    monetizationRole: "Verified third-party record distribution driving high-intent subscribers to /packages.",
+    posthogEvents: ["cappertek_referral_landed", "package_checkout_started"],
+    active: true,
+  },
+  {
+    streamId: "REV-07",
+    channel: "Short-Form Video Creator Monetization (TikTok, Shorts, Reels, X)",
+    identifierOrUrl: "VID-W9-01..05 Vertical Storyboard Feed",
+    monetizationRole: "Platform video ad-share plus organic follower flywheel routing to /packages and /fantasy/dfs.",
+    posthogEvents: ["video_hook_viewed", "social_cta_clicked", "dfs_hub_viewed"],
+    active: true,
+  },
+];
+
+export function getWeek9VideoAndRevenueSummary(): OfficialVerifiedRecordSummary {
+  return VERIFIED_RECORD_SUMMARY;
+}
+
+export function getMultiChannelVideoScripts(): readonly ShortFormVideoScriptPacket[] {
+  return MULTI_CHANNEL_VIDEO_SCRIPTS;
+}
+
+export function getDfsAndPlaysCommercialPosture(): DfsAndPlaysCommercialPosture {
+  return {
+    verifiedRecord: VERIFIED_RECORD_SUMMARY,
+    fullBoardMarketTypesReviewed: 77,
+    dfsPlatformsSupported: ["DraftKings", "FanDuel"],
+    publicTeasersShareEnvironmentOnly: true,
+    officialPicksAndLineupsGated: true,
+    adsensePublisherId: "ca-pub-8151105906877749",
+    posthogProjectId: "516325",
+  };
+}
+
+export function getRevenueStreamAttributionMatrix(): readonly RevenueStreamAttributionItem[] {
+  return REVENUE_ATTRIBUTION_MATRIX;
+}

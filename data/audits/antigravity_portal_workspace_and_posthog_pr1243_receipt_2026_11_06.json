@@ -1,0 +1,89 @@
+{
+  "schema": "gse_antigravity_portal_workspace_and_posthog_wizard_v1",
+  "antigravity_and_ide_docs_count": 10,
+  "antigravity_and_ide_docs": [
+    {
+      "id": "ag-doc-01",
+      "url": "https://antigravity.google/docs/ide/extensions/zed/",
+      "title": "Antigravity Zed IDE Extension & Agent Client Protocol (ACP)",
+      "integration_target": "Zed ACP multi-buffer agent editing and sub-millisecond Rust workspace indexing"
+    },
+    {
+      "id": "ag-doc-02",
+      "url": "https://www.eclipse.org/",
+      "title": "Eclipse Foundation IDE & OSGi Modular Plugin Architecture",
+      "integration_target": "Cross-IDE workspace metadata and JVM/C++ build graph interoperability"
+    },
+    {
+      "id": "ag-doc-03",
+      "url": "https://antigravity.google/docs/overview/",
+      "title": "Antigravity Agentic Coding Platform Overview",
+      "integration_target": "Multi-agent subagent orchestration, brain artifacts, and reactive wakeup bus"
+    },
+    {
+      "id": "ag-doc-04",
+      "url": "https://antigravity.google/docs/cli/gcli-migration/",
+      "title": "GCLI to Antigravity CLI Migration Specification",
+      "integration_target": "Unified `.gemini/antigravity-cli/settings.json` and headless CLI runner"
+    },
+    {
+      "id": "ag-doc-05",
+      "url": "https://antigravity.google/docs/firebase-studio-migration/",
+      "title": "Firebase Studio (Project IDX) to Antigravity Migration",
+      "integration_target": "Cloud-to-local workspace parity and preview server port forwarding"
+    },
+    {
+      "id": "ag-doc-06",
+      "url": "https://antigravity.google/docs/migration/workflows-to-skills/",
+      "title": "Workflows-to-Skills (`SKILL.md`) Migration Standard",
+      "integration_target": "YAML frontmatter `SKILL.md` progressive disclosure across `.agents/skills` and `.gemini/config/skills`"
+    },
+    {
+      "id": "ag-doc-07",
+      "url": "https://antigravity.google/docs/build-plugins/",
+      "title": "Building Antigravity Plugins (`plugin.json` + Skills + MCP)",
+      "integration_target": "Custom plugin packaging in `.gemini/config/plugins/` with MCP server registration"
+    },
+    {
+      "id": "ag-doc-08",
+      "url": "https://antigravity.google/docs/ide/workflows/",
+      "title": "Antigravity IDE Slash-Command Workflows",
+      "integration_target": "Deterministic multi-stage workflows (`/plan`, `/goal`, `/teamwork`, `/boost`, `gse-connected-game-workflow`)"
+    },
+    {
+      "id": "ag-doc-09",
+      "url": "https://antigravity.google/docs/plugins/",
+      "title": "Antigravity First-Party & Partner Plugins",
+      "integration_target": "Connected Google Workspace (Drive, Docs, Slides), Chrome DevTools, and Superpowers plugins"
+    },
+    {
+      "id": "ag-doc-10",
+      "url": "https://antigravity.google/docs/marketplace",
+      "title": "Antigravity Skill & Plugin Marketplace",
+      "integration_target": "Automated skill discovery (`antigravity-skills-manager`) and `bazel-build-optimization` integration"
+    }
+  ],
+  "google_workspace_portal_status": {
+    "portal_connected": true,
+    "google_drive_connected": true,
+    "google_docs_connected": true,
+    "google_slides_connected": true,
+    "local_drive_mirror_path": "G:\\My Drive\\MEGA-SWEEP-2026-11-06",
+    "drive_total_files_indexed": 4003,
+    "mega_sweep_unique_books_extracted": 197,
+    "mega_sweep_pdf_files_scanned": 395,
+    "mega_sweep_md_waves_scanned": 41,
+    "posthog_wizard_pr_merged": 1243,
+    "posthog_wizard_run_id": "01a1b27d-e008-7d7d-9800-dc0b7ba74b50",
+    "posthog_wizard_branch": "posthog/wizard-01a1b27de008",
+    "posthog_wizard_commit": "6d06d3a228207a7f6000170c08afd3de43482b39"
+  },
+  "verified_posthog_files": [
+    "apps/web/components/observability/PostHogClientInit.tsx",
+    "apps/web/lib/observability/posthog-ai.ts",
+    "apps/web/lib/observability/posthog-logs.ts",
+    "apps/web/lib/analytics/posthog-context-layer.ts",
+    "intelligence/telemetry/posthog_cloud_context_layer.py"
+  ],
+  "all_posthog_wizard_files_present": true
+}

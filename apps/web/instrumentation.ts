@@ -115,6 +115,16 @@ export async function register(): Promise<void> {
   // Literal NEXT_RUNTIME check + dynamic import → graded-pool (and its node:zlib
   // dep) is excluded from the Edge instrumentation bundle by dead-code elimination.
   if (process.env.NEXT_RUNTIME === "nodejs") {
+    const { emitPostHogLog, flushPostHogLogs, initializePostHogLogCapture } = await import(
+      "@/lib/observability/posthog-logs"
+    );
+    initializePostHogLogCapture();
+    emitPostHogLog("posthog_log_capture_initialized", {
+      runtime: "nodejs",
+      event: "observability.log_capture_initialized",
+    });
+    await flushPostHogLogs();
+
     const { loadAndRegisterGradedProvider } = await import("@/lib/integrations/graded-pool");
     // NON-BLOCKING: we deliberately do NOT await the graded-pool load. It fetches
     // several MB of nflverse/ffverse data; awaiting it here would delay EVERY

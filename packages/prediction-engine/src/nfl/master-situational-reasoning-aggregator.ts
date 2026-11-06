@@ -87,6 +87,15 @@ import {
   type ZeroOrphanOverlayInput,
   type ZeroOrphanOverlayResult,
 } from "./zero-orphan-expected-metrics-bridge.js";
+import {
+  evaluateUniversalNfl360MetricAndSituationalDossier,
+  type UniversalNfl360DossierOverrides,
+} from "../engine/universal-nfl-metric-and-situational-engine.js";
+import {
+  evaluateMegaSweep20261106Pipeline,
+  type MegaSweepPipelineInput,
+  type MegaSweepPipelineOutput,
+} from "../engine/mega-sweep-2026-11-06-reasoning-engine.js";
 
 export const FAMILY_NAMES = [
   "pressure",
@@ -599,6 +608,10 @@ export interface OverlayInput {
   tebAvalancheBraidInput?: TebAvalancheBraidInput;
   /** Optional Zero-Orphan Expected-Metrics & W1-W14/F1-F4 Dossier overlay input. */
   zeroOrphanOverlay?: ZeroOrphanOverlayInput;
+  /** Optional Universal NFL 360 Metric & Deep Non-Stationary Kernel overrides. */
+  universal360Overrides?: UniversalNfl360DossierOverrides;
+  /** Optional Mega-Sweep 2026-11-06 Reasoning & Hardware-Aware Pipeline input. */
+  megaSweepPipelineInput?: MegaSweepPipelineInput;
 }
 
 export interface OverlayResult {
@@ -624,6 +637,8 @@ export interface OverlayResult {
   stage0Verified?: { week: number; asOf: string; candidateCount: number };
   tebAvalancheBraid?: ReturnType<typeof computeTebAvalancheBraidOverlay>;
   zeroOrphanResult?: ZeroOrphanOverlayResult;
+  universal360AndDeepKernels: ReturnType<typeof evaluateUniversalNfl360MetricAndSituationalDossier>;
+  megaSweep20261106Pipeline: MegaSweepPipelineOutput;
   orthogonalization: OrthogonalizationResult;
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
@@ -655,6 +670,12 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
   }
   const result: OverlayResult = {
     streamCalls: calls,
+    universal360AndDeepKernels: evaluateUniversalNfl360MetricAndSituationalDossier(
+      input.universal360Overrides,
+    ),
+    megaSweep20261106Pipeline: evaluateMegaSweep20261106Pipeline(
+      input.megaSweepPipelineInput,
+    ),
     orthogonalization: orthogonalizeAndShrink(familyDeltas, input.marketAnchorProb),
     ...(fwlResidual ? { fwlResidual } : {}),
     independentEdgeDecision: input.independentEdgeDecision,
@@ -799,6 +820,16 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
       `${result.zeroOrphanResult.wiredModuleCount} modules / ${result.zeroOrphanResult.catalogSignalCount} catalog signals`,
     );
   }
+  mark(
+    "15J:evaluateUniversalNfl360MetricAndSituationalDossier",
+    true,
+    "6 Universal NFL Suites + 6 Deep Non-Stationary Kernels evaluated",
+  );
+  mark(
+    "15K:evaluateMegaSweep20261106Pipeline",
+    true,
+    "5-Track L1-L5 + 7-Step Weekly Cycle + Double-DQN/PER/CPC + gse-ml-service 5-Model + 30 CSVs/10 Kernels evaluated",
+  );
 
   const canonicalInputs = {
     familyDeltas: input.familyDeltas,
@@ -841,6 +872,187 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
   );
   mark("14E:emitMindFeedRecord", true, `${result.feedRecord.lineBytes} bytes to ${result.feedRecord.feedPath}`);
   return result;
+}
+
+export interface PreProjectionSimulationConditionedInput {
+  readonly awayTeam?: string;
+  readonly homeTeam?: string;
+  readonly week?: number;
+  readonly marketAnchorProb?: number;
+  readonly independentEdgeDecision?: "SPEAK" | "PASS";
+  readonly universal360Overrides?: UniversalNfl360DossierOverrides;
+  readonly megaSweepPipelineInput?: MegaSweepPipelineInput;
+  readonly baseFamilyDeltas?: FamilyDeltas;
+}
+
+export interface SimulationTrajectoryConditioners {
+  readonly scripted1To15EpaBoost: number;
+  readonly postScript16To65CliffDelta: number;
+  readonly secondHalfTutFatigueMultiplier: number;
+  readonly qbTraumaPhantomBailoutProb: number;
+  readonly causalTrueUnschemedDuressEpa: number;
+  readonly doubleDqnRecommendedFourthDownAction: "go_for_it" | "field_goal" | "punt";
+  readonly doubleDqnOverestimationBiasRemoved: number;
+  readonly cpcRegularizedDriveTdProb: number;
+  readonly gsiReturnToPlaySnapCap: number;
+  readonly gseMlService5ModelCompositeEpaDelta: number;
+  readonly morningSweepNgsCommercialCompositeEpa: number;
+  readonly compositePreProjectionEpaDelta: number;
+  readonly conditionAppliedTo10kWorlds175Snaps: true;
+}
+
+export interface PreProjectionSimulationConditionedOverlayResult {
+  readonly awayTeam: string;
+  readonly homeTeam: string;
+  readonly week: number;
+  readonly universal360Dossier: ReturnType<typeof evaluateUniversalNfl360MetricAndSituationalDossier>;
+  readonly megaSweepPipeline: MegaSweepPipelineOutput;
+  readonly conditionedFamilyDeltas: FamilyDeltas;
+  readonly masterOverlayResult: OverlayResult;
+  readonly simulationTrajectoryConditioners: SimulationTrajectoryConditioners;
+}
+
+/**
+ * Dedicated pre-projection & simulation conditioning hook in `@sports/prediction-engine`.
+ * Evaluates all 6 Universal NFL Metric Suites, all 6 Deep Non-Stationary Second/Third-Order
+ * Kernels, and the full Mega-Sweep 2026-11-06 Pipeline (5-Track L1-L5, 7-Step Weekly Cycle,
+ * Double-DQN, PER-DQN, CPC/SimCLR, Autoresearch Gate, Laptop Hardware Governor,
+ * `gse-ml-service` 5-Model Ensemble, Kats BOCPD, NOFX 4-Plan Gate, and 30 CSVs + 10 Kernels),
+ * modulates the 6 physical situational families before `orthogonalizeAndShrink`, and produces
+ * deterministic snap-level trajectory conditioners for the 10,000-world x 175-snap simulator.
+ */
+export function computePreProjectionAndSimulationConditionedOverlay(
+  matchupInput: PreProjectionSimulationConditionedInput = {},
+): PreProjectionSimulationConditionedOverlayResult {
+  const awayTeam = (matchupInput.awayTeam ?? "JAX").toUpperCase();
+  const homeTeam = (matchupInput.homeTeam ?? "BAL").toUpperCase();
+  const week = matchupInput.week ?? 9;
+  const marketAnchorProb = matchupInput.marketAnchorProb ?? 0.56;
+  const independentEdgeDecision = matchupInput.independentEdgeDecision ?? "SPEAK";
+
+  const universal360Dossier = evaluateUniversalNfl360MetricAndSituationalDossier(
+    matchupInput.universal360Overrides,
+  );
+  const megaSweepPipeline = evaluateMegaSweep20261106Pipeline(
+    matchupInput.megaSweepPipelineInput,
+  );
+
+  const deep = universal360Dossier.deep_non_stationary_kernels;
+  const trench = universal360Dossier.trench_suite;
+  const sit = universal360Dossier.situational_context_suite;
+
+  const pressureDelta = Number(
+    (
+      0.0015 * (trench.pff_pass_blocking_efficiency - 84.0) -
+      0.02 * deep.trench_tut_fatigue_and_weak_link.weak_link_collapse_prob -
+      0.015 * deep.qb_trauma_and_disguise_hysteresis.phantom_pressure_bailout_prob
+    ).toFixed(6),
+  );
+  const weatherDelta = Number(
+    (
+      0.012 * (sit.stadium_surface_and_microclimate_index - 1.0) -
+      0.008 *
+        megaSweepPipeline.morningSweep30CsvAnd10InnovationKernels.innovationKernels10
+          .navier_stokes_wind_drag
+    ).toFixed(6),
+  );
+  const restFatigueDelta = Number(
+    (
+      -0.018 * sit.circadian_rest_travel_fatigue_index -
+      0.015 * deep.trench_tut_fatigue_and_weak_link.lactate_fatigue_index
+    ).toFixed(6),
+  );
+  const coveragePersonnelDelta = Number(
+    (
+      0.02 * deep.causal_deconfounded_skill.projected_post_dc_clamp_epa +
+      0.015 * (deep.gsi_sports_medicine_and_coupled_5api.projected_snap_share_cap - 0.75)
+    ).toFixed(6),
+  );
+  const qbSkillScriptDelta = Number(
+    (
+      0.025 * universal360Dossier.qb_suite.dakota_composite +
+      0.02 * deep.coordinator_script_cliff_and_tendency_trap.script_cliff_epa_delta +
+      0.25 * megaSweepPipeline.compositePreProjectionEpaDelta
+    ).toFixed(6),
+  );
+  const marketMicrostructureDelta = Number(
+    (
+      0.015 * (deep.referee_and_market_reflexivity.true_information_steam_prob - 0.5) +
+      0.01 * deep.gsi_sports_medicine_and_coupled_5api.td_vs_team_total_contradiction_edge
+    ).toFixed(6),
+  );
+
+  const baseDeltas = matchupInput.baseFamilyDeltas ?? {};
+  const conditionedFamilyDeltas: FamilyDeltas = {
+    pressure:
+      typeof baseDeltas.pressure === "number"
+        ? baseDeltas.pressure + pressureDelta
+        : pressureDelta,
+    weather:
+      typeof baseDeltas.weather === "number" ? baseDeltas.weather + weatherDelta : weatherDelta,
+    restFatigue:
+      typeof baseDeltas.restFatigue === "number"
+        ? baseDeltas.restFatigue + restFatigueDelta
+        : restFatigueDelta,
+    coveragePersonnel:
+      typeof baseDeltas.coveragePersonnel === "number"
+        ? baseDeltas.coveragePersonnel + coveragePersonnelDelta
+        : coveragePersonnelDelta,
+    qbSkillScript:
+      typeof baseDeltas.qbSkillScript === "number"
+        ? baseDeltas.qbSkillScript + qbSkillScriptDelta
+        : qbSkillScriptDelta,
+    marketMicrostructure:
+      typeof baseDeltas.marketMicrostructure === "number"
+        ? baseDeltas.marketMicrostructure + marketMicrostructureDelta
+        : marketMicrostructureDelta,
+  };
+
+  const masterOverlayResult = runMasterSituationalReasoningOverlay({
+    familyDeltas: conditionedFamilyDeltas,
+    marketAnchorProb,
+    independentEdgeDecision,
+    universal360Overrides: matchupInput.universal360Overrides,
+    megaSweepPipelineInput: matchupInput.megaSweepPipelineInput,
+  });
+
+  const simulationTrajectoryConditioners: SimulationTrajectoryConditioners = {
+    scripted1To15EpaBoost: Number(
+      Math.max(0.01, -0.35 * deep.coordinator_script_cliff_and_tendency_trap.script_cliff_epa_delta).toFixed(6),
+    ),
+    postScript16To65CliffDelta: deep.coordinator_script_cliff_and_tendency_trap.script_cliff_epa_delta,
+    secondHalfTutFatigueMultiplier: Number(
+      Math.max(0.78, 1.0 - 0.14 * deep.trench_tut_fatigue_and_weak_link.lactate_fatigue_index).toFixed(6),
+    ),
+    qbTraumaPhantomBailoutProb:
+      deep.qb_trauma_and_disguise_hysteresis.phantom_pressure_bailout_prob,
+    causalTrueUnschemedDuressEpa: deep.causal_deconfounded_skill.true_unschemed_duress_epa,
+    doubleDqnRecommendedFourthDownAction:
+      megaSweepPipeline.doubleDqnFourthDown.recommendedAction,
+    doubleDqnOverestimationBiasRemoved:
+      megaSweepPipeline.doubleDqnFourthDown.overestimationBiasRemoved,
+    cpcRegularizedDriveTdProb:
+      megaSweepPipeline.cpcContrastiveDriveAlignment.regularizedDriveTdProb,
+    gsiReturnToPlaySnapCap:
+      deep.gsi_sports_medicine_and_coupled_5api.projected_snap_share_cap,
+    gseMlService5ModelCompositeEpaDelta:
+      megaSweepPipeline.gseMlService5ModelEnsemble.compositeEpaDelta,
+    morningSweepNgsCommercialCompositeEpa:
+      megaSweepPipeline.morningSweep30CsvAnd10InnovationKernels.ngsAndCommercialCompositeEpa,
+    compositePreProjectionEpaDelta: megaSweepPipeline.compositePreProjectionEpaDelta,
+    conditionAppliedTo10kWorlds175Snaps: true,
+  };
+
+  return {
+    awayTeam,
+    homeTeam,
+    week,
+    universal360Dossier,
+    megaSweepPipeline,
+    conditionedFamilyDeltas,
+    masterOverlayResult,
+    simulationTrajectoryConditioners,
+  };
 }
 
 export { mean, computeTebAvalancheBraidOverlay, type TebAvalancheBraidInput, type TebAvalancheBraidResult };

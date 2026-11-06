@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   shouldRenderCloudflareAnalytics,
   shouldRenderMicrosoftClarity,
+  shouldRenderPostHogAnalytics,
 } from "@/lib/analytics/provider-gating";
 
 // OP-004 regression: apps/web/app/layout.tsx used to gate BOTH Cloudflare
@@ -64,6 +65,23 @@ describe("analytics provider gating (OP-004)", () => {
     it("Clarity renders while Cloudflare does not, when only the CF token is missing", () => {
       expect(shouldRenderCloudflareAnalytics("true", undefined)).toBe(false);
       expect(shouldRenderMicrosoftClarity("true", "clarity-id")).toBe(true);
+    });
+  });
+
+  describe("shouldRenderPostHogAnalytics", () => {
+    it("renders when the master flag is on and a valid PostHog key is present", () => {
+      expect(shouldRenderPostHogAnalytics("true", "phc_valid_project_key")).toBe(true);
+    });
+
+    it("does not render when the master flag is off or missing", () => {
+      expect(shouldRenderPostHogAnalytics("false", "phc_valid_project_key")).toBe(false);
+      expect(shouldRenderPostHogAnalytics(undefined, "phc_valid_project_key")).toBe(false);
+    });
+
+    it("does not render when the PostHog key is missing or blank", () => {
+      expect(shouldRenderPostHogAnalytics("true", undefined)).toBe(false);
+      expect(shouldRenderPostHogAnalytics("true", "")).toBe(false);
+      expect(shouldRenderPostHogAnalytics("true", "   ")).toBe(false);
     });
   });
 });

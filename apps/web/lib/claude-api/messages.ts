@@ -1,3 +1,4 @@
+import { captureAiGeneration } from "@/lib/observability/posthog-ai";
 import { pickModelForSurface, type ClaudeSurface } from "./model-router";
 
 interface AnthropicTextBlock {
@@ -97,13 +98,27 @@ export async function callClaudeMessages(request: ClaudeMessagesRequest): Promis
   const payload = (await response.json()) as AnthropicMessagesResponse;
   const text = extractText(payload);
 
-  return {
+  const result = {
     text,
     modelName,
     inputTokens: payload.usage?.input_tokens ?? 0,
     outputTokens: payload.usage?.output_tokens ?? 0,
     durationMs,
   };
+  await captureAiGeneration({
+    provider: "anthropic",
+    model: result.modelName,
+    system: request.system,
+    user: request.user,
+    output: result.text,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+    latencyMs: result.durationMs,
+    maxTokens: request.maxTokens,
+    temperature: request.temperature,
+  });
+
+  return result;
 }
 
 function extractText(response: AnthropicMessagesResponse): string {

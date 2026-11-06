@@ -1,0 +1,45 @@
+# apps/web/BUILD.bazel — Storefront, Cockpit, Observatory & Surface Truth Targets
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "web_intelligence_lib",
+    srcs = [
+        "lib/cockpit/capability-registry.ts",
+        "lib/engine/connected-workflow-loader.ts",
+        "lib/intelligence/coverage-map.ts",
+        "lib/observatory/growth-observatory.ts",
+    ],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        "//packages/prediction-engine:prediction_engine_ts",
+    ],
+)
+
+js_library(
+    name = "web_app",
+    srcs = [
+        ":web_intelligence_lib",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "surface_truth_test",
+    srcs = [
+        "__tests__/csp-single-source.test.ts",
+        "__tests__/next-config-policy.test.ts",
+        "__tests__/vercel-config-drift.test.ts",
+        "__tests__/web-standards-trust-surfaces.test.ts",
+    ],
+    declaration = False,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        ":web_intelligence_lib",
+    ],
+)

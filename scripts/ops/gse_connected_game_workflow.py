@@ -2334,6 +2334,9 @@ def compile_stage1_to_stage2_simulation_priors(
     from intelligence.reasoning.mega_sweep_2026_11_06_wiring_engine import (
         evaluate_5track_l1_to_l5_and_7step_weekly_cycle,
     )
+    from scripts.ops.gse_coach_mind_simulator import (
+        compute_pre_projection_universal_and_deep_non_stationary_priors,
+    )
     full_branch_registry_eval = evaluate_recovered_branch_and_repo_python_modules(
         {
             "away": away_tm,
@@ -2363,6 +2366,30 @@ def compile_stage1_to_stage2_simulation_priors(
             "posted_total": float(env_cfg.get("posted_total", 44.5)),
         }
     )
+    pre_projection_universal_and_deep_priors = compute_pre_projection_universal_and_deep_non_stationary_priors(
+        away_tm,
+        home_tm,
+        context={
+            "away_off_epa_base": base_away_off_epa,
+            "home_off_epa_base": base_home_off_epa,
+            "away_proe": float(aw_pbp_st.get("proe", 0.024)),
+            "home_proe": float(hm_pbp_st.get("proe", -0.018)),
+            "away_qb_tier": away_qb_tier,
+            "home_qb_tier": home_qb_tier,
+            "wind_mph": float(env_cfg.get("wind_mph", 6.0)),
+            "temp_f": float(env_cfg.get("temp_f", 62.0)),
+            "is_indoor": bool(env_cfg.get("is_indoor", False)),
+            "posted_home_spread": float(env_cfg.get("posted_home_spread", -3.0)),
+            "posted_total": float(env_cfg.get("posted_total", 44.5)),
+            "open_home_spread": float(env_cfg.get("open_home_spread", env_cfg.get("posted_home_spread", -3.0))),
+            "away_ol_starters_out": int(merged_game_context.get("away_ol_starters_out", 0) or 0),
+            "home_ol_starters_out": int(merged_game_context.get("home_ol_starters_out", 2 if home_qb_tier == "EMERGENCY_QB3_UDFA" else 0) or 0),
+            "away_dc_blitz_rate": float(aw_pbp_st.get("dc_blitz_rate", 0.275)),
+            "home_dc_blitz_rate": float(hm_pbp_st.get("dc_blitz_rate", 0.265)),
+            "away_dc_man_rate": float(aw_pbp_st.get("dc_man_rate", 0.28)),
+            "home_dc_man_rate": float(hm_pbp_st.get("dc_man_rate", 0.28)),
+        },
+    )
     mega_sweep_epa_delta = float(mega_sweep_5track_7step.get("final_post_step7_epa_delta", 0.0))
     gsi_step2_health_delta = float(
         ((mega_sweep_5track_7step.get("weekly_cycle_steps") or {}).get("2_health") or {}).get(
@@ -2380,6 +2407,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "equation_gate_12304_clamped_delta": eq_gate_12k["clamped_log_odds_delta"],
         "full_branch_and_repo_registry": full_branch_registry_eval,
         "mega_sweep_2026_11_06_5track_7step_trace": mega_sweep_5track_7step,
+        "pre_projection_universal_and_deep_priors": pre_projection_universal_and_deep_priors,
     }
 
     l5_trace_info = dict((stage1a_receipt or {}).get("l1_to_l5_specialist_reasoning_trace") or {})
@@ -2640,6 +2668,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "mega_sweep_5track_7step_epa_delta": round(mega_sweep_epa_delta, 5),
         "gsi_step2_health_net_epa_delta": round(gsi_step2_health_delta, 5),
         "roster_truth_player_adjustments": roster_truth_player_adjustments,
+        "pre_projection_universal_and_deep_priors": pre_projection_universal_and_deep_priors,
     }
 
     away_wr1_share = 9.1 if wr1_is_decoy_trap else 25.8
@@ -2704,6 +2733,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "ten_textbook_algorithms_receipt": ten_textbook_receipt,
         "restored_ws1_python_receipt": restored_ws1_python_receipt,
         "mega_sweep_2026_11_06_5track_7step_trace": mega_sweep_5track_7step,
+        "pre_projection_universal_and_deep_priors": pre_projection_universal_and_deep_priors,
         "posted_home_spread": posted_home_spread_val,
         "posted_total": posted_total_val,
         "away": {

@@ -37,9 +37,11 @@ from intelligence.retrieval.pinecone_hybrid_corpus_index import (
     build_uncompressed_full_corpus_documents,
 )
 from intelligence.telemetry.posthog_cloud_context_layer import (
+    POSTHOG_WAREHOUSE_TABLES,
     ContextMillCompactor,
     DuckgresHoglakeEngine,
     PostHogCloudContextClient,
+    PostHogWarehouseSyncEngine,
 )
 from research.nfl_big_data_bowl_2027.open_track_pre_snap_motion_and_coverage_disguise import (
     PlayerTrackingFrame10Hz,
@@ -183,6 +185,32 @@ def test_posthog_cloud_context_layer() -> None:
         assert rows[0]["repos"] == 372
 
 
+def test_posthog_warehouse_sync_engine() -> None:
+    client = PostHogCloudContextClient(offline_mode=True)
+    warehouse = PostHogWarehouseSyncEngine(client=client)
+    schemas = warehouse.get_table_schemas()
+    expected_tables = {
+        "nfl_pre_projection_priors",
+        "jev_snap_simulations_10k",
+        "conformal_residuals_2026",
+        "xai_5api_omniscience_catalog",
+        "gsi_orthopedic_return_curves",
+    }
+    assert set(schemas.keys()) == expected_tables
+    assert set(POSTHOG_WAREHOUSE_TABLES.keys()) == expected_tables
+
+    bootstrap_summary = warehouse.bootstrap_default_pre_projection_warehouse(game_id="NFL-2026-W9-JAX-BAL")
+    assert bootstrap_summary["tables_bootstrapped"] == 5
+    assert set(bootstrap_summary["receipts"].keys()) == expected_tables
+
+    readiness = warehouse.run_pre_projection_hogql_check(game_id="NFL-2026-W9-JAX-BAL")
+    assert readiness["warehouse_ready"] is True
+    assert set(readiness["verified_tables"]) == expected_tables
+    assert readiness["jev_world_count"] == 10000
+    assert readiness["conformal_gate_passed"] is True
+    assert 0.5 < readiness["orthopedic_efficiency_multiplier"] < 1.0
+
+
 def test_inbox_zero_grant_and_ops_triage() -> None:
     engine = InboxZeroGrantOpsTriageEngine(encrypt_secret="unit-test-ephemeral-secret-key-32b")
     assert len(engine.programs) == 121
@@ -288,12 +316,32 @@ def test_zero_secrets_and_zero_etc_in_component4_files() -> None:
         REPO_ROOT / "intelligence" / "ops" / "inbox_zero_grant_and_ops_triage.py",
         REPO_ROOT / "research" / "nfl_big_data_bowl_2027" / "open_track_pre_snap_motion_and_coverage_disguise.py",
         REPO_ROOT / "research" / "nfl_big_data_bowl_2027" / "README.md",
+        REPO_ROOT / "scripts" / "ops" / "reverse_interleaved_8step_5api_xai_cascade.py",
+        REPO_ROOT / "data" / "audits" / "reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json",
+        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md",
     ]
     etc_pattern = re.compile(r"\betc\.", re.IGNORECASE)
-    secret_pattern = re.compile(r"(pcsk_[A-Za-z0-9_]+|phx_[A-Za-z0-9_]+|phc_[A-Za-z0-9_]+|2Gs3eVvQZz8Tl4dOu905vrsMg3Qw5cFx83Y5eDEzfbE=)")
+    secret_pattern = re.compile(r"(xai-[A-Za-z0-9]{20,}|pcsk_[A-Za-z0-9_]+|phx_[A-Za-z0-9_]+|phc_[A-Za-z0-9_]+|2Gs3eVvQZz8Tl4dOu905vrsMg3Qw5cFx83Y5eDEzfbE=)")
 
     for fpath in component4_files:
         assert fpath.is_file(), f"Missing Component 4 file: {fpath}"
         content = fpath.read_text(encoding="utf-8")
         assert not etc_pattern.search(content), f"Forbidden abbreviation found in {fpath}"
         assert not secret_pattern.search(content), f"Forbidden raw secret found in {fpath}"
+
+
+def test_reverse_interleaved_8step_5api_xai_cascade_artifacts() -> None:
+    json_path = REPO_ROOT / "data" / "audits" / "reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json"
+    md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md"
+    assert json_path.is_file()
+    assert md_path.is_file()
+
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    assert payload["xai_interrogation_summary"]["completed_waves"] == 4
+    assert payload["step1_kaggle_seed"]["live_datasets_discovered"] >= 50
+    assert payload["step3_arxiv_seed"]["live_preprints_discovered"] >= 20
+    assert payload["step5_openalex_seed"]["live_clinical_works_discovered"] >= 20
+    assert payload["step7_huggingface_seed"]["live_models_discovered"] >= 20
+    assert payload["pinecone_upsert_receipt"]["namespace"] == "gse-xai-5api-omniscience"
+    assert payload["pinecone_upsert_receipt"]["vectors_upserted"] == 20
+    assert payload["posthog_warehouse_sync"]["tables_synced"] == 5

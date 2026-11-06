@@ -468,6 +468,140 @@ function selectCandidatePremisesFromLoadedMatrix(
 }
 
 // ============================================================================
+// STAGE 2 PRE-PROJECTION UNIVERSAL 360 + 2ND/3RD-ORDER + 8-STEP 5-API CASCADE
+// ============================================================================
+
+export interface PreProjectionOmniscienceRouterInput {
+  readonly causalUnschemedEpaDelta?: number;
+  readonly qbTraumaCompressionSec?: number;
+  readonly trenchWeakLinkCollapseProb?: number;
+  readonly coordinatorScriptCliffDelta?: number;
+  readonly refereeMarketTrueSteamProb?: number;
+  readonly gsiBiomechanicalEfficiencyLossPct?: number;
+  readonly kaggleVoronoiControlAdvantage?: number;
+  readonly arxivOptimalTransportDisguiseKl?: number;
+  readonly openAlexOrthopedicSnapCap?: number;
+  readonly huggingFaceAll22StanceTellScore?: number;
+  readonly tauHatCoach?: number;
+}
+
+export interface PreProjectionCognitiveRouterOutput {
+  readonly routerResult: StageDCoupledResult & { readonly contextMask: Uint32Array };
+  readonly injectedSignalsCount: number;
+  readonly snapTransitionPriorDelta: number;
+  readonly passEfficiencyPriorDelta: number;
+  readonly pressureDisruptionHazardDelta: number;
+  readonly secondHalfTutFatigueDecayRate: number;
+  readonly gsiSnapShareCap: number;
+  readonly reverse8Step5ApiCascadeActive: true;
+}
+
+/**
+ * Converts the 6 Deep Second/Third-Order Non-Stationary Kernels + 8-Step Reverse/Interleaved
+ * 5-API (`Kaggle -> xAI -> arXiv -> xAI -> OpenAlex -> xAI -> Hugging Face -> xAI`) priors
+ * into canonical 288-bit `Signal[]` entries (`N >= 30`) across all 6 situational families.
+ */
+export function buildUniversalAndSecondOrderCognitiveSignals(
+  input: PreProjectionOmniscienceRouterInput = {},
+): Signal[] {
+  return [
+    // Family 12: Pressure & Weakest-Link Trench Collapse
+    {
+      family: 12,
+      displacement: (input.trenchWeakLinkCollapseProb ?? 0.58) - 0.35,
+      n: 120,
+    },
+    // Family 48: QB Post-Hit Trauma Hysteresis & Clean-Pocket Clock Compression
+    {
+      family: 48,
+      displacement: input.qbTraumaCompressionSec ?? -0.26,
+      n: 85,
+    },
+    // Family 94: Causal FWL Unschemed Skill vs Scheme-Manufactured Volume
+    {
+      family: 94,
+      displacement: input.causalUnschemedEpaDelta ?? 0.14,
+      n: 140,
+    },
+    // Family 132: Coordinator Opening-15 Script Cliff & 3-Snap Tendency Trap
+    {
+      family: 132,
+      displacement: input.coordinatorScriptCliffDelta ?? -0.35,
+      n: 65,
+    },
+    // Family 176: GSI Sports Medicine & OpenAlex Orthopedic Return-to-Play Degradation
+    {
+      family: 176,
+      displacement: -(input.gsiBiomechanicalEfficiencyLossPct ?? 0.12),
+      n: 95,
+    },
+    // Family 210: Kaggle BDB Voronoi Control + arXiv Disguise KL + HF All-22 Pre-Snap Tell
+    {
+      family: 210,
+      displacement:
+        0.4 * (input.kaggleVoronoiControlAdvantage ?? 0.11) +
+        0.35 * (input.arxivOptimalTransportDisguiseKl ?? 0.18) +
+        0.25 * (input.huggingFaceAll22StanceTellScore ?? 0.15),
+      n: 110,
+    },
+    // Family 254: Referee Score-State Reflexivity & True Steam vs Head-Fake Buyback
+    {
+      family: 254,
+      displacement: (input.refereeMarketTrueSteamProb ?? 0.72) - 0.5,
+      n: 75,
+    },
+  ];
+}
+
+/**
+ * Executes the full Stage 2 4-Stage Cognitive Router (`buildContextMask` 288-bit mask ->
+ * `stageC` Spectral Cluster Orthogonalization -> `stageD` Cross-Equation Jacobian Coupling
+ * & Positive-Part James-Stein Shrinkage capped at |Δ log-odds| <= 0.35) conditioned on
+ * the Universal 360-Metric, 6-Kernel Second/Third-Order Non-Stationary, and 8-Step
+ * Reverse-Cascade (`Kaggle -> xAI -> arXiv -> xAI -> OpenAlex -> xAI -> HF -> xAI`) priors.
+ */
+export function routePreProjectionWithUniversalAndOmnisciencePriors(
+  baseSignals: readonly Signal[] = [],
+  input: PreProjectionOmniscienceRouterInput = {},
+): PreProjectionCognitiveRouterOutput {
+  const omniscienceSignals = buildUniversalAndSecondOrderCognitiveSignals(input);
+  const combinedSignals = [...baseSignals, ...omniscienceSignals];
+  const routerResult = routeInMemoryFourStage(combinedSignals, {
+    tauHatCoach: input.tauHatCoach ?? 0.46,
+  });
+
+  const clampedDelta = routerResult.clampedTotalLogOddsDelta;
+  const traumaSec = input.qbTraumaCompressionSec ?? -0.26;
+  const collapseProb = input.trenchWeakLinkCollapseProb ?? 0.58;
+  const gsiLoss = input.gsiBiomechanicalEfficiencyLossPct ?? 0.12;
+
+  const snapTransitionPriorDelta = Number((0.45 * clampedDelta).toFixed(6));
+  const passEfficiencyPriorDelta = Number(
+    (0.35 * clampedDelta + 0.15 * (input.causalUnschemedEpaDelta ?? 0.14) - 0.25 * gsiLoss).toFixed(6),
+  );
+  const pressureDisruptionHazardDelta = Number(
+    (0.22 * Math.max(0, collapseProb - 0.35) + 0.18 * Math.abs(traumaSec)).toFixed(6),
+  );
+  const secondHalfTutFatigueDecayRate = Number(
+    (0.045 + 0.06 * collapseProb + 0.04 * gsiLoss).toFixed(6),
+  );
+  const gsiSnapShareCap = Number(
+    Math.max(0.45, Math.min(1.0, input.openAlexOrthopedicSnapCap ?? 1.0 - 1.5 * gsiLoss)).toFixed(6),
+  );
+
+  return {
+    routerResult,
+    injectedSignalsCount: omniscienceSignals.length,
+    snapTransitionPriorDelta,
+    passEfficiencyPriorDelta,
+    pressureDisruptionHazardDelta,
+    secondHalfTutFatigueDecayRate,
+    gsiSnapShareCap,
+    reverse8Step5ApiCascadeActive: true,
+  };
+}
+
+// ============================================================================
 // QUAD-ENGINE CROSSWALK INTEGRATION (Task 1 & 2)
 // ============================================================================
 

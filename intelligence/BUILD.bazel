@@ -1,0 +1,65 @@
+# intelligence/BUILD.bazel — Fine-Grained Python Coaching, Situational, Corpus & Telemetry Targets
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+
+package(default_visibility = ["//visibility:public"])
+
+py_library(
+    name = "universal_nfl_metric_engine_py",
+    srcs = [
+        "coaching/universal_nfl_metric_engine.py",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "mega_sweep_wiring_engine_py",
+    srcs = [
+        "coaching/mega_sweep_2026_11_06_wiring_engine.py",
+        "reasoning/mega_sweep_2026_11_06_wiring_engine.py",
+    ],
+    deps = [
+        ":universal_nfl_metric_engine_py",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "pinecone_hybrid_corpus_py",
+    srcs = [
+        "corpus/pinecone_hybrid_corpus.py",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "posthog_cloud_context_py",
+    srcs = [
+        "telemetry/posthog_cloud_context.py",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "inbox_zero_triage_py",
+    srcs = [
+        "ops/inbox_zero_triage.py",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_test(
+    name = "mega_sweep_and_forensic_py_test",
+    srcs = [
+        "//tests:test_week9_forensic_autopsy_fixes.py",
+    ],
+    main = "//tests:test_week9_forensic_autopsy_fixes.py",
+    deps = [
+        ":inbox_zero_triage_py",
+        ":mega_sweep_wiring_engine_py",
+        ":pinecone_hybrid_corpus_py",
+        ":posthog_cloud_context_py",
+        ":universal_nfl_metric_engine_py",
+    ],
+    size = "medium",
+    timeout = "moderate",
+)

@@ -1,0 +1,20 @@
+# Root BUILD.bazel — Galaxy Sports Edge (GSE + GSI) Monorepo
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "package.json",
+    "package-lock.json",
+    "tsconfig.json",
+    "pytest.ini",
+    "AGENTS.md",
+])
+
+filegroup(
+    name = "monorepo_governance_configs",
+    srcs = [
+        "AGENTS.md",
+        "package.json",
+        "pytest.ini",
+        "tsconfig.json",
+    ],
+)

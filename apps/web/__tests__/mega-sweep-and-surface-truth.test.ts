@@ -6,6 +6,12 @@ import { METRIC_COVERAGE, clearedMetrics } from "@/lib/metrics/coverage-map";
 import { shouldRenderPostHogAnalytics } from "@/lib/analytics/provider-gating";
 import { SOCIAL } from "@/lib/brand";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
+import {
+  getWeek9VideoAndRevenueSummary,
+  getMultiChannelVideoScripts,
+  getDfsAndPlaysCommercialPosture,
+  getRevenueStreamAttributionMatrix,
+} from "@/lib/content-os/video-and-revenue-engine";
 
 describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
   it("elevates Jarvis Capability Registry wiring score from 44/100 to 67/100 (Building) without claiming false autonomy", () => {
@@ -15,20 +21,22 @@ describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
     expect(CAPABILITY_REGISTRY.every((c) => c.canExecute === false)).toBe(true);
   });
 
-  it("wires 210 books, 372 repos/URLs, 40 Morning Sweep CSVs/Kernels, 624 Pinecone vectors, 48 xAI waves, and 204 Coupled 5-API GSE/GSI nodes into Growth Observatory", () => {
+  it("wires 210 books, 372 repos/URLs, 40 Morning Sweep CSVs/Kernels, 631 Pinecone vectors, 71 xAI waves, 8-step reverse cascade, and 204 Coupled 5-API GSE/GSI nodes into Growth Observatory", () => {
     const snap = buildIntelligenceGrowthSnapshot();
     expect(snap.quadEngineCounts.megaSweepBooksIngested).toBe(210);
     expect(snap.quadEngineCounts.megaSweepReposAndUrlsWired).toBe(372);
     expect(snap.quadEngineCounts.morningSweepCsvsAndKernels).toBe(40);
-    expect(snap.quadEngineCounts.pineconeHybridVectors).toBe(624);
-    expect(snap.quadEngineCounts.xaiOmniscienceWavesExecuted).toBe(48);
+    expect(snap.quadEngineCounts.pineconeHybridVectors).toBe(631);
+    expect(snap.quadEngineCounts.xaiOmniscienceWavesExecuted).toBe(71);
     expect(snap.quadEngineCounts.coupled5ApiScientificNodes).toBe(204);
-    expect(snap.quadEngineCounts.totalCanonicalNodes).toBe(4622);
-    expect(snap.routerFunnel.stageA).toBe(4622);
+    expect(snap.quadEngineCounts.reverseInterleaved8StepCascadeNodes).toBe(8);
+    expect(snap.quadEngineCounts.posthogDataWarehouseTablesSynced).toBe(5);
+    expect(snap.quadEngineCounts.totalCanonicalNodes).toBe(4653);
+    expect(snap.routerFunnel.stageA).toBe(4653);
     expect(snap.postGameAutopsyStats.brierTrajectory.some((p) => p.week === "W9_TNF")).toBe(true);
   });
 
-  it("exposes verified 2026-11-06 Mega-Sweep and Coupled 5-API GSE/GSI Omniscience summaries in Connected Workflow Loader", () => {
+  it("exposes verified 2026-11-06 Mega-Sweep, Coupled 5-API + 8-Step Reverse Cascade, and Pre-Projection/Simulation Conditioned Overlay in Connected Workflow Loader", () => {
     const bundle = loadVerifiedConnectedWorkflowBundle();
     expect(bundle.status).toBe("CONNECTED_WORKFLOW_VERIFIED");
     expect(bundle.megaSweep20261106Summary).toEqual({
@@ -44,13 +52,31 @@ describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
       ngsAndCommercialFullIngestActive: true,
     });
     expect(bundle.coupled5ApiOmniscienceSummary).toEqual({
-      xaiWavesExecuted: 48,
+      xaiWavesExecuted: 71,
       arxivPreprintsHarvested: 48,
       openalexWorksHarvested: 60,
       huggingfaceAssetsHarvested: 52,
       kaggleDatasetsHarvested: 43,
       totalCrossApiScientificNodes: 204,
       gseAndGsiDualEngineActive: true,
+      reverseInterleaved8StepCascadeActive: true,
+      reverseCascadeOrder: [
+        "kaggle_to_xai",
+        "arxiv_to_xai",
+        "openalex_to_xai",
+        "huggingface_to_xai",
+      ],
+      posthogDataWarehouseTablesSynced: 5,
+      pineconeHybridVectorsIndexed: 631,
+      bazelBuildOptimizationConfigured: true,
+    });
+    expect(bundle.preProjectionAndSimulationConditionedOverlay).toEqual({
+      universal360SuitesActive: true,
+      deepNonStationaryKernelsCount: 6,
+      stage2CognitiveRouterInjectedSignals: 7,
+      stage3SimulationWorldsConditioned: 10000,
+      stage3SnapsPerWorld: 175,
+      subSecondVectorizedExecutionVerified: true,
     });
   });
 
@@ -85,5 +111,22 @@ describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
     expect(posture.verifiedGrantStackUsd).toBe(55656.31);
     expect(posture.submittedPipelineCount).toBe(24);
     expect(JSON.stringify(posture)).not.toContain("secret_do_not_leak");
+  });
+
+  it("wires Week 9 Plays (62-23-1, +26.50u), DraftKings/FanDuel DFS, 5 Multi-Channel Short-Form Video Scripts, and 7 Revenue Attribution Streams without leaking paid picks", () => {
+    const summary = getWeek9VideoAndRevenueSummary();
+    const scripts = getMultiChannelVideoScripts();
+    const dfsPosture = getDfsAndPlaysCommercialPosture();
+    const streams = getRevenueStreamAttributionMatrix();
+
+    expect(summary.record).toBe("62-23-1");
+    expect(summary.winRateLabel).toBe("72.9%");
+    expect(summary.netUnits).toBe(26.5);
+    expect(scripts.length).toBe(5);
+    expect(scripts.every((s) => s.paywallSafe === true)).toBe(true);
+    expect(dfsPosture.verifiedRecord.record).toBe("62-23-1");
+    expect(dfsPosture.dfsPlatformsSupported).toEqual(["DraftKings", "FanDuel"]);
+    expect(dfsPosture.officialPicksAndLineupsGated).toBe(true);
+    expect(streams.length).toBe(7);
   });
 });

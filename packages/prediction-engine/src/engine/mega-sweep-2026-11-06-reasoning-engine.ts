@@ -1418,3 +1418,105 @@ export function evaluateMorningSweep30CsvAnd10InnovationKernels(
     provenance: "commit:84d88751f+docs/research/2026-11-06/full-tables/30-csvs",
   };
 }
+
+export interface MegaSweepPipelineInput {
+  readonly weeklyCycle?: Partial<MegaSweepReasoningInput>;
+  readonly doubleDqn?: DoubleDqnFourthDownInput;
+  readonly perTd?: PerTdSurpriseInput;
+  readonly cpcDrive?: CpcContrastiveDriveInput;
+  readonly hardware?: LaptopHardwarePlanInput;
+  readonly gseMlService?: GseMlService5ModelInput;
+  readonly katsBocpd?: KatsBocpdInput;
+  readonly nofxGate?: NofxFourPlanGateInput;
+  readonly morningSweep?: MorningSweep30CsvAnd10KernelsInput;
+}
+
+export interface MegaSweepPipelineOutput {
+  readonly schema: "gse_mega_sweep_2026_11_06_full_pipeline_v1";
+  readonly fiveTrackAndSevenStepCycle: MegaSweep5Track7StepTrace;
+  readonly doubleDqnFourthDown: DoubleDqnFourthDownOutput;
+  readonly perTdSurprisePriority: PerTdSurpriseOutput;
+  readonly cpcContrastiveDriveAlignment: CpcContrastiveDriveOutput;
+  readonly autoresearchKeepOrResetGate: AutoresearchGateOutput;
+  readonly laptopHardwareExecutionPlan: LaptopHardwarePlanOutput;
+  readonly gseMlService5ModelEnsemble: GseMlService5ModelOutput;
+  readonly katsBocpdRegimeChangepoint: KatsBocpdOutput;
+  readonly nofxFourPlanConjunctionGate: NofxFourPlanGateOutput;
+  readonly morningSweep30CsvAnd10InnovationKernels: MorningSweep30CsvAnd10KernelsOutput;
+  readonly compositePreProjectionEpaDelta: number;
+  readonly allKernelsActive: true;
+}
+
+export function evaluateMegaSweep20261106Pipeline(
+  input: MegaSweepPipelineInput = {},
+): MegaSweepPipelineOutput {
+  const defaultReasoningInput: MegaSweepReasoningInput = {
+    cleanBadThrowRate: 0.11,
+    pressureBadThrowDelta: 0.08,
+    wrTargetShare: 0.26,
+    wrTargetSuccessRate: 0.56,
+    qbMofCompletionRate: 0.64,
+    defZoneRate: 0.68,
+    underCenterEpa: 0.14,
+    shotgunEpa: 0.06,
+    neutralSnapShare: 0.58,
+    projectedPressureRate: 0.31,
+    restDaysOffense: 7,
+    restDaysDefense: 7,
+    priorCareerConcussions: 0,
+    recent72hSubconcussiveHits: 6,
+    ...input.weeklyCycle,
+  };
+  const fiveTrackAndSevenStepCycle =
+    evaluateMegaSweep5TrackAnd7StepReasoning(defaultReasoningInput);
+  const doubleDqnFourthDown = computeDoubleDqnFourthDownQValues(input.doubleDqn);
+  const perTdSurprisePriority = computePerTdSurprisePriority(input.perTd);
+  const cpcContrastiveDriveAlignment = computeCpcContrastiveDriveAlignment(input.cpcDrive);
+  const autoresearchKeepOrResetGate = evaluateAutoresearchKeepOrReset(
+    0.1912,
+    0.1935,
+    0.0182,
+    0.018,
+  );
+  const laptopHardwareExecutionPlan = evaluateLaptopHardwareExecutionPlan(input.hardware);
+  const gseMlService5ModelEnsemble = computeGseMlService5ModelEnsemble(input.gseMlService);
+  const katsBocpdRegimeChangepoint = computeKatsBocpdRegimeChangepoint(input.katsBocpd);
+  const nofxFourPlanConjunctionGate = evaluateNofxFourPlanConjunctionGate(
+    input.nofxGate ?? {
+      situationalEdgeEpa: 0.042,
+      devigClv: 0.024,
+      conformalIntervalWidth: 0.14,
+      currentDrawdown: 0.03,
+    },
+  );
+  const morningSweep30CsvAnd10InnovationKernels =
+    evaluateMorningSweep30CsvAnd10InnovationKernels(input.morningSweep);
+
+  const compositePreProjectionEpaDelta = Number(
+    (
+      fiveTrackAndSevenStepCycle.postL4AdversaryReasoningDeltaEpa +
+      0.35 * gseMlService5ModelEnsemble.compositeEpaDelta +
+      0.35 * morningSweep30CsvAnd10InnovationKernels.ngsAndCommercialCompositeEpa +
+      0.015 * (cpcContrastiveDriveAlignment.regularizedDriveTdProb - 0.5)
+    ).toFixed(6),
+  );
+
+  return {
+    schema: "gse_mega_sweep_2026_11_06_full_pipeline_v1",
+    fiveTrackAndSevenStepCycle,
+    doubleDqnFourthDown,
+    perTdSurprisePriority,
+    cpcContrastiveDriveAlignment,
+    autoresearchKeepOrResetGate,
+    laptopHardwareExecutionPlan,
+    gseMlService5ModelEnsemble,
+    katsBocpdRegimeChangepoint,
+    nofxFourPlanConjunctionGate,
+    morningSweep30CsvAnd10InnovationKernels,
+    compositePreProjectionEpaDelta,
+    allKernelsActive: true,
+  };
+}
+
+export const evaluateMegaSweep20261106FullPipeline = evaluateMegaSweep20261106Pipeline;
+

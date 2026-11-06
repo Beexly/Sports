@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import posthog from "posthog-js";
 
 /**
  * Web Push opt-in — client-side subscribe/unsubscribe state machine.
@@ -134,6 +135,7 @@ export function usePushSubscription(): UsePushSubscriptionResult {
         throw new Error(`Server rejected the subscription (HTTP ${res.status}).`);
       }
 
+      posthog.capture("push_alert_opted_in");
       setStatus("subscribed");
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -149,11 +151,15 @@ export function usePushSubscription(): UsePushSubscriptionResult {
       if (subscription) {
         const { endpoint } = subscription;
         await subscription.unsubscribe();
-        await fetch("/api/push/unsubscribe", {
+        const res = await fetch("/api/push/unsubscribe", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ endpoint }),
         });
+        if (!res.ok) {
+          throw new Error(`Server rejected the unsubscribe request (HTTP ${res.status}).`);
+        }
+        posthog.capture("push_alert_opted_out");
       }
       setStatus("default");
     } catch (err) {

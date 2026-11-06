@@ -130,7 +130,7 @@ const ADSENSE_PINNED_ORIGINS: Readonly<Record<string, readonly string[]>> = {
  * hard failure — which is what stops the duplicate from quietly coming back
  * later with the same value and passing the pin all over again.
  */
-const OWNER_ACTION_PENDING = true;
+const OWNER_ACTION_PENDING = false;
 
 interface HeaderEntry {
   readonly key: string;

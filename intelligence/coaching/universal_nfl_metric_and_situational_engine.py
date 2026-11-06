@@ -987,6 +987,12 @@ def evaluate_universal_nfl_360_metric_and_situational_dossier(
 
     return {
         "schema": "gse_universal_nfl_360_metric_and_deep_non_stationary_dossier_v2",
+        "qb": qb,
+        "receiving": receiving,
+        "rushing": rushing,
+        "trench": trench,
+        "defense_idp": defense_idp,
+        "situational": situational,
         "qb_suite": qb,
         "receiving_suite": receiving,
         "rushing_suite": rushing,

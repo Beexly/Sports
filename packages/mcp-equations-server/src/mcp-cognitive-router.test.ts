@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   buildContextMask,
+  buildUniversalAndSecondOrderCognitiveSignals,
   maskToArray,
   MASK_WORDS,
   MAX_ABS_DELTA_LOG_ODDS,
   MIN_SAMPLE,
+  routePreProjectionWithUniversalAndOmnisciencePriors,
   SIGNAL_FAMILIES,
   stageC,
   stageD,
@@ -103,5 +105,28 @@ describe("Stage C spectral orthogonalization & Stage D James-Stein Jacobian coup
     expect(quarantined?.spectralScore).toBe(0);
     const res = stageD(spectral, { noiseVarianceSigma2: 0.0025, tauHatCoach: 0.42 });
     expect(res.selectedPremises.find((p) => p.id === "ramanujan")?.shrunkLogOddsDelta).toBe(0);
+  });
+
+  it("wires Universal 360 + 2nd/3rd-Order Non-Stationary + 8-Step 5-API Cascade priors into Stage 2 Pre-Projection routing", () => {
+    const signals = buildUniversalAndSecondOrderCognitiveSignals({
+      trenchWeakLinkCollapseProb: 0.64,
+      qbTraumaCompressionSec: -0.32,
+      gsiBiomechanicalEfficiencyLossPct: 0.14,
+    });
+    expect(signals.length).toBe(7);
+    const out = routePreProjectionWithUniversalAndOmnisciencePriors([], {
+      trenchWeakLinkCollapseProb: 0.64,
+      qbTraumaCompressionSec: -0.32,
+      gsiBiomechanicalEfficiencyLossPct: 0.14,
+      openAlexOrthopedicSnapCap: 0.72,
+    });
+    expect(out.reverse8Step5ApiCascadeActive).toBe(true);
+    expect(out.injectedSignalsCount).toBe(7);
+    expect(Math.abs(out.routerResult.clampedTotalLogOddsDelta)).toBeLessThanOrEqual(
+      MAX_ABS_DELTA_LOG_ODDS,
+    );
+    expect(out.pressureDisruptionHazardDelta).toBeGreaterThan(0);
+    expect(out.secondHalfTutFatigueDecayRate).toBeGreaterThan(0.05);
+    expect(out.gsiSnapShareCap).toBeCloseTo(0.72, 5);
   });
 });
