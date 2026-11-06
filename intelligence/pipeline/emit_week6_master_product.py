@@ -337,9 +337,8 @@ def run_all_week6_matchups(w6_games: List[Dict[str, Any]], date_str: str = "2026
     return reports
 
 
-def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Join upcoming Week 6 players against the 12 upcoming archived DraftKings prop files + Neon DB 2026 player_game_stats."""
-    archive_dir = SOURCES / "props-archive"
+def _load_upcoming_dk_props(archive_dir: Path) -> Dict[str, Dict[str, Dict[str, Any]]]:
+    """Load and index upcoming Week 6 DraftKings lines, excluding completed TNF and kicked-off London."""
     dk_files = sorted(archive_dir.glob("*_20261018T09.json"))
     all_dk_props: Dict[str, Dict[str, Dict[str, Any]]] = collections.defaultdict(dict)
 
@@ -349,11 +348,11 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
         # Operational Timing Gate: Strictly exclude completed TNF (2026-10-16) and kicked-off London HOU@JAX (2026-10-18T13:30Z)
         if commence < "2026-10-18T17:00Z":
             continue
-        for l in d.get("lines") or []:
-            m = l.get("propMarket")
+        for line_item in d.get("lines") or []:
+            m = line_item.get("propMarket")
             if m in DK_TARGET_MARKETS:
-                pname = l.get("playerName")
-                line = l.get("line")
+                pname = line_item.get("playerName")
+                line = line_item.get("line")
                 if not pname or line is None:
                     continue
                 cat_label, cat_key = DK_TARGET_MARKETS[m]
@@ -362,11 +361,15 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
                     "prop_market": m,
                     "category": cat_label,
                     "line": float(line),
-                    "open_line": float(l.get("openLine")) if l.get("openLine") is not None else float(line),
-                    "line_moved": bool(l.get("lineMoved", False)),
+                    "open_line": float(line_item.get("openLine")) if line_item.get("openLine") is not None else float(line),
+                    "line_moved": bool(line_item.get("lineMoved", False)),
                     "game": d.get("game", ""),
                 }
+    return all_dk_props
 
+
+def _build_player_team_map(inj_map: Dict[str, Dict[str, str]]) -> Dict[str, str]:
+    """Map normalized player names to canonical team abbreviations using depth charts and injury records."""
     dc_data = _load_json(SOURCES / "2026-10-13" / "depthcharts" / "espn-depthcharts-2026.json") or {}
     player_to_team: Dict[str, str] = {}
     for t_abbr, units in (dc_data.get("teams") or {}).items():
@@ -378,17 +381,19 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
     for nm, info in inj_map.items():
         if info.get("team"):
             player_to_team.setdefault(nm, canon_team(info["team"]))
+    return player_to_team
 
-    usage_data = _load_json(SOURCES / "2026-10-13" / "linestar" / "linestar_usage_2026-10-13.json") or {}
-    usage_by_name = {_norm_name(r.get("name") or ""): r for r in (usage_data.get("players") or [])}
 
-    ngs_rec = _load_json(SOURCES / "2026-10-13" / "ngs" / "raw_statboard_receiving.json") or {}
-    ngs_rush = _load_json(SOURCES / "2026-10-13" / "ngs" / "raw_statboard_rushing.json") or {}
-    ngs_pass = _load_json(SOURCES / "2026-10-13" / "ngs" / "raw_statboard_passing.json") or {}
-
+def _evaluate_receiver_props(
+    ngs_rec: Dict[str, Any],
+    player_to_team: Dict[str, str],
+    inj_map: Dict[str, Dict[str, str]],
+    all_dk_props: Dict[str, Dict[str, Dict[str, Any]]],
+    db_pgs: Dict[str, Dict[str, Any]],
+    usage_by_name: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    """Evaluate receiver (WR/TE) receiving yard props cross-checked against 2026 player_game_stats."""
     prop_edges: List[Dict[str, Any]] = []
-
-    # 1. Evaluate Receivers (WR/TE) — Cross-checked against Neon DB player_game_stats
     for r in ngs_rec.get("stats") or []:
         p_info = r.get("player") or {}
         pname = p_info.get("displayName") or r.get("playerName") or ""
@@ -481,8 +486,19 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
                 f"Projects mu={mu:.1f} yds vs DK line {line} (open {open_line}) -> LogNormal P({pick})={win_p*100:.1f}%."
             ),
         })
+    return prop_edges
 
-    # 2. Evaluate Rushers (RB) — Cross-checked against Neon DB player_game_stats & DK Carries Line
+
+def _evaluate_rusher_props(
+    ngs_rush: Dict[str, Any],
+    player_to_team: Dict[str, str],
+    inj_map: Dict[str, Dict[str, str]],
+    all_dk_props: Dict[str, Dict[str, Dict[str, Any]]],
+    db_pgs: Dict[str, Dict[str, Any]],
+    usage_by_name: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    """Evaluate rusher (RB) rushing yard props cross-checked against 2026 player_game_stats & carries lines."""
+    prop_edges: List[Dict[str, Any]] = []
     for r in ngs_rush.get("stats") or []:
         p_info = r.get("player") or {}
         pname = p_info.get("displayName") or r.get("playerName") or ""
@@ -573,8 +589,17 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
                 f"LogNormal P({pick})={win_p*100:.1f}%."
             ),
         })
+    return prop_edges
 
-    # 3. Evaluate Passers (QB)
+
+def _evaluate_passer_props(
+    ngs_pass: Dict[str, Any],
+    player_to_team: Dict[str, str],
+    inj_map: Dict[str, Dict[str, str]],
+    all_dk_props: Dict[str, Dict[str, Dict[str, Any]]],
+) -> List[Dict[str, Any]]:
+    """Evaluate passer (QB) passing yard props cross-checked against 2026 NGS passing data."""
+    prop_edges: List[Dict[str, Any]] = []
     for r in ngs_pass.get("stats") or []:
         p_info = r.get("player") or {}
         pname = p_info.get("displayName") or r.get("playerName") or ""
@@ -650,7 +675,11 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
                 f"[raw_statboard_passing.json]. Projects mu={mu:.1f} yds vs DK line {line} (open {open_line}) -> LogNormal P({pick})={win_p*100:.1f}%."
             ),
         })
+    return prop_edges
 
+
+def _rank_and_dedup_props(prop_edges: List[Dict[str, Any]], top_n: int = 20) -> List[Dict[str, Any]]:
+    """Sort props by conviction score and eliminate exact score ties."""
     prop_edges.sort(key=lambda x: x["conviction_score"], reverse=True)
 
     seen_scores: set = set()
@@ -661,7 +690,28 @@ def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str
         seen_scores.add(s)
         p["conviction_score"] = s
 
-    return prop_edges[:20]
+    return prop_edges[:top_n]
+
+
+def build_week6_props_board(inj_map: Dict[str, Dict[str, str]], db_pgs: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Join upcoming Week 6 players against the 12 upcoming archived DraftKings prop files + Neon DB 2026 player_game_stats."""
+    archive_dir = SOURCES / "props-archive"
+    all_dk_props = _load_upcoming_dk_props(archive_dir)
+    player_to_team = _build_player_team_map(inj_map)
+
+    usage_data = _load_json(SOURCES / "2026-10-13" / "linestar" / "linestar_usage_2026-10-13.json") or {}
+    usage_by_name = {_norm_name(r.get("name") or ""): r for r in (usage_data.get("players") or [])}
+
+    ngs_rec = _load_json(SOURCES / "2026-10-13" / "ngs" / "raw_statboard_receiving.json") or {}
+    ngs_rush = _load_json(SOURCES / "2026-10-13" / "ngs" / "raw_statboard_rushing.json") or {}
+    ngs_pass = _load_json(SOURCES / "2026-10-13" / "ngs" / "raw_statboard_passing.json") or {}
+
+    prop_edges: List[Dict[str, Any]] = []
+    prop_edges.extend(_evaluate_receiver_props(ngs_rec, player_to_team, inj_map, all_dk_props, db_pgs, usage_by_name))
+    prop_edges.extend(_evaluate_rusher_props(ngs_rush, player_to_team, inj_map, all_dk_props, db_pgs, usage_by_name))
+    prop_edges.extend(_evaluate_passer_props(ngs_pass, player_to_team, inj_map, all_dk_props))
+
+    return _rank_and_dedup_props(prop_edges, top_n=20)
 
 
 def build_week6_sgp_parlays(inj_map: Dict[str, Dict[str, str]]) -> List[Dict[str, Any]]:
