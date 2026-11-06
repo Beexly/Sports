@@ -281,6 +281,17 @@ const ALLOWLISTED_DEFINITION_LINES = new Map([
     ],
   ],
   [
+    // GOVERNANCE JARGON LIST in the root memory doc. AGENTS.md bullet
+    // "Never render internal math/pipeline jargon (...)" names the banned
+    // positioning phrases as a forbid-list, exactly the way the integrity
+    // ledger describes the sharp-money failure mode it prevents. The phrases
+    // appear only as detection terms in that one bullet; GSE's own public
+    // copy still hits. Pattern is anchored to the bullet's verb phrase so an
+    // unattributed AGENTS.md claim elsewhere still fails.
+    "AGENTS.md",
+    [/Never render internal math\/pipeline jargon/],
+  ],
+  [
     // The REQUIRED risk-disclosure footer on evidence-pack drafts. It reads
     // "Not PROVEN. No guaranteed outcome. Past results do not guarantee future
     // results." — every occurrence of "guarantee" here is NEGATED, and the

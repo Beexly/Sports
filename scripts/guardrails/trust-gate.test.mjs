@@ -150,3 +150,13 @@ test("the guaranteedMultiplier exemption cannot smuggle a real guarantee claim",
     assert.equal(r.code, 1, `expected refusal for: ${rel}`);
   }
 });
+
+test("governance jargon list in AGENTS.md is exempt; public copy still hits", () => {
+  const bullet = '- **Zero AI / Robotic Math-Dump:** Never render internal math/pipeline jargon ("22,750,000 snap evaluations", "10-Layer Autonomous Engine", "31-11 banner is retracted", "TNF card 14-6") on customer-facing UI.\n';
+  // AGENTS.md (root memory doc) names the banned phrases to forbid them.
+  assert.equal(scan({ "AGENTS.md": bullet }).code, 0, scan({ "AGENTS.md": bullet }).out);
+  // The same phrases in public copy still fail.
+  const pub = scan({ "apps/web/app/pricing/page.tsx": 'export const x = "Powered by our 10-Layer Autonomous Engine with 22,750,000 snap evaluations";\n' });
+  assert.equal(pub.code, 1, pub.out);
+  assert.match(pub.out, /banned\.positioning\./);
+});

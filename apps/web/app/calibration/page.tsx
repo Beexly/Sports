@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function CalibrationProofRoomPage(): JSX.Element {
   const calibrationBands = [
-    { band: "60–69 / 100", expected: "64.8%", realized: "63.2%", sample: 38, status: "Honest / Conservative" },
-    { band: "70–79 / 100", expected: "74.5%", realized: "74.5%", sample: 47, status: "Perfect Calibration" },
-    { band: "80–89 / 100", expected: "82.5%", realized: "81.8%", sample: 22, status: "High-Conviction Alignment" },
-    { band: "90–99 / 100", expected: "91.2%", realized: "90.0%", sample: 10, status: "Top-Tier Alignment" },
+    { band: "60-69 / 100", expected: "64.8%", realized: "63.2%", sample: 38, status: "Honest / Conservative" },
+    { band: "70-79 / 100", expected: "74.5%", realized: "74.5%", sample: 47, status: "Perfect Calibration" },
+    { band: "80-89 / 100", expected: "82.5%", realized: "81.8%", sample: 22, status: "High-Conviction Alignment" },
+    { band: "90-99 / 100", expected: "91.2%", realized: "90.0%", sample: 10, status: "Top-Tier Alignment" },
   ];
 
   const recentSettlements = [
